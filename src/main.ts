@@ -1,5 +1,6 @@
 import { Color3, CreateGround, StandardMaterial } from './core/babylon';
 import { Renderer } from './core/Engine';
+import { Input } from './core/input/Input';
 import { Loop } from './core/Loop';
 import { Stats } from './core/Stats';
 import { bus } from './core/EventBus';
@@ -57,9 +58,15 @@ async function boot(): Promise<void> {
   ground.receiveShadows = true;
 
   progress(0.85, 'Setting the sun');
+  const input = new Input(canvas);
+
   const loop = new Loop({
     update: (dt, elapsedMs) => {
+      // Fold held keys into intent before anything reads it, and clear the
+      // edge-triggered fields after. A jump press consumed twice is a hover.
+      input.beginFrame();
       bus.emit('tick', { dt, elapsedMs });
+      input.endFrame();
     },
     render: () => {
       renderer.render();
@@ -86,7 +93,7 @@ async function boot(): Promise<void> {
   window.setTimeout(() => bootEl?.remove(), 450);
 
   // Keep a handle for debugging and for the eventual soak test.
-  (window as unknown as Record<string, unknown>).__tetherbound = { renderer, loop, scene, bus };
+  (window as unknown as Record<string, unknown>).__tetherbound = { renderer, loop, scene, bus, input };
 }
 
 boot().catch(fatal);

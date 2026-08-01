@@ -84,3 +84,5 @@ import '@babylonjs/core/Meshes/thinInstanceMesh';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 // getEngine().getGlInfo() and friends, used by the ?stats=1 overlay.
 import '@babylonjs/core/Engines/Extensions/engine.query';
+
+// glTF loading is deliberately NOT here. See src/core/babylonLoaders.ts.

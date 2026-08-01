@@ -219,6 +219,22 @@ comment quotes the barrel import it exists to prevent. A rule that cannot be
 explained in prose beside the code it governs is a bad rule, so the scanner
 learned to read code instead of the documentation learning to avoid words.
 
+### D18. The glTF parser is a separate on-demand chunk
+
+There are two engine facades, not one. `src/core/babylon.ts` holds the engine
+symbols; `src/core/babylonLoaders.ts` holds the glTF loader and its extensions,
+and is reached only through a dynamic import inside `AssetLoader.ts`.
+
+Measured: folding the loaders into the main facade grew the engine chunk from
+1.56 MB raw / 359 KB gzipped to 2.51 MB / 566 KB. That is 207 KB gzipped of
+parser on the boot path for something no milestone before M5 touches, because
+`ASSETS.md` puts every real model behind M5 and everything before it is colored
+primitives.
+
+`tests/bundle.test.ts` enforces both halves: no file outside the two facades may
+import `@babylonjs`, and no file may import `babylonLoaders` statically, since a
+static import would quietly pull the parser back into the boot chunk.
+
 ### D17. Frame delta is clamped at 250 ms
 
 A tab restored after five minutes in the background reports a 300 second delta.

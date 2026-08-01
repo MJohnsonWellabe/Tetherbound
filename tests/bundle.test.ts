@@ -20,7 +20,17 @@ import { join, relative, sep } from 'node:path';
  */
 
 const ROOT = join(__dirname, '..');
-const FACADE = join('src', 'core', 'babylon.ts');
+
+/**
+ * The two files allowed to import @babylonjs.
+ *
+ * They are split rather than merged because the glTF parser costs 207 KB
+ * gzipped and nothing before milestone M5 loads a model. babylonLoaders.ts is
+ * reached only through a dynamic import in AssetLoader.ts, which keeps it in
+ * its own chunk and off the boot path.
+ */
+const FACADES = [join('src', 'core', 'babylon.ts'), join('src', 'core', 'babylonLoaders.ts')];
+const FACADE = FACADES[0] as string;
 
 /** Directories whose contents must never touch the renderer. */
 const ENGINE_FREE_DIRS = [
@@ -68,9 +78,9 @@ function stripComments(src: string): string {
 }
 
 describe('engine import discipline', () => {
-  it('only src/core/babylon.ts imports from @babylonjs', () => {
+  it('only the engine facades import from @babylonjs', () => {
     const offenders = walk(join(ROOT, 'src'), isTs)
-      .filter((f) => relative(ROOT, f) !== FACADE)
+      .filter((f) => !FACADES.includes(relative(ROOT, f)))
       .filter((f) =>
         /from\s+['"]@babylonjs|import\s+['"]@babylonjs/.test(stripComments(readFileSync(f, 'utf8')))
       )
@@ -83,13 +93,31 @@ describe('engine import discipline', () => {
     ).toEqual([]);
   });
 
-  it('the facade never imports the @babylonjs/core barrel', () => {
-    const src = stripComments(readFileSync(join(ROOT, FACADE), 'utf8'));
-    // A barrel import is one whose path is exactly the package root.
+  it('no facade imports a @babylonjs barrel', () => {
+    // A barrel import is one whose path is exactly the package root. The
+    // loaders barrel is the expensive one: it drags in OBJ, STL, Draco and
+    // every KHR extension alongside the glTF parser we actually want.
+    const offenders = FACADES.filter((f) =>
+      /['"]@babylonjs\/(core|loaders)['"]/.test(stripComments(readFileSync(join(ROOT, f), 'utf8')))
+    );
     expect(
-      /['"]@babylonjs\/(core|loaders)['"]/.test(src),
-      'The facade must deep-import specific modules, never the package root.'
-    ).toBe(false);
+      offenders,
+      'Facades must deep-import specific modules, never the package root.'
+    ).toEqual([]);
+  });
+
+  it('only AssetLoader reaches the glTF facade, and only dynamically', () => {
+    // A static import anywhere would pull the parser back into the boot chunk
+    // and undo the split.
+    const offenders = walk(join(ROOT, 'src'), isTs)
+      .filter((f) => !FACADES.includes(relative(ROOT, f)))
+      .filter((f) => /^\s*import\s.*from\s+['"].*babylonLoaders['"]/m.test(stripComments(readFileSync(f, 'utf8'))))
+      .map((f) => relative(ROOT, f));
+
+    expect(
+      offenders,
+      'Import babylonLoaders with a dynamic import() so the glTF parser stays out of the boot chunk.'
+    ).toEqual([]);
   });
 
   it('no HTML entry point imports @babylonjs inline', () => {

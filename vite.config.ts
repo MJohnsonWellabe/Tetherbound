@@ -25,6 +25,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id: string): string | undefined {
+          // The glTF parser is 207 KB gzipped and nothing before M5 loads a
+          // model, so it gets its own chunk reached only through the dynamic
+          // import in AssetLoader.ts.
+          if (id.includes('node_modules/@babylonjs/loaders/')) return 'babylon-gltf';
           if (id.includes('node_modules/@babylonjs/')) return 'babylon';
           if (id.includes('node_modules/firebase/') || id.includes('node_modules/@firebase/')) {
             return 'firebase';
