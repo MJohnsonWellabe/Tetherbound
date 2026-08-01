@@ -30,6 +30,24 @@ export interface GameEvents {
   harvested: { key: string; drops: { id: string; n: number }[] };
   /** Party composition or pal state changed. */
   partyChanged: Record<string, never>;
+  /** Combat Mode entered. Not a scene load; the world keeps rendering. */
+  combatStarted: { species: string; level: number };
+  /** Combat Mode left, with how it ended. */
+  combatEnded: { phase: string };
+  /** The enemy began a power attack wind-up. This is the dodge window. */
+  enemyTelegraph: { ms: number };
+  /** A party pal dropped to 0 HP. Fainted, never lost. */
+  palFainted: { uid: string };
+  /** A neglected pal refused to commit to a power attack. */
+  palHesitated: { uid: string };
+  /** The fight was won. */
+  combatWon: { xp: number; day: number };
+  /** An orb bounced off a collared pal. Not a failed roll, a refusal. */
+  orbBounced: Record<string, never>;
+  /** An orb broke. Carries what the odds actually were. */
+  catchFailed: { chance: number; shakes: number };
+  /** A sixth capture needs a release decision before it can be resolved. */
+  releaseNeeded: Record<string, never>;
 }
 
 export type EventName = keyof GameEvents;

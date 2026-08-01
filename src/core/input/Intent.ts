@@ -30,6 +30,14 @@ export interface Intent {
   dodge: DodgeDir;
   /** Edge-triggered. The party slot the player asked to swap to. */
   slot: PartySlot;
+  /**
+   * Edge-triggered. Throw an orb.
+   *
+   * Its own channel rather than a modifier on `primary`, because the throw is
+   * always available from the first frame of a fight (CLAUDE.md hard constraint
+   * 3) and must never queue behind an attack's charge.
+   */
+  throwOrb: boolean;
 }
 
 /**
@@ -51,7 +59,8 @@ export function neutralIntent(): Intent {
     interact: false,
     primary: { down: false, heldMs: 0 },
     dodge: 0,
-    slot: null
+    slot: null,
+    throwOrb: false
   };
 }
 
@@ -67,6 +76,7 @@ export function clearEdges(intent: Intent): void {
   intent.interact = false;
   intent.dodge = 0;
   intent.slot = null;
+  intent.throwOrb = false;
   intent.look.x = 0;
   intent.look.y = 0;
 }

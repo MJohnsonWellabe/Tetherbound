@@ -98,6 +98,7 @@ export class DesktopLayer {
       e.preventDefault();
     }
     if (e.code === 'KeyE') this.intent.interact = true;
+    if (e.code === 'KeyR') this.intent.throwOrb = true;
 
     const slot = SLOT_CODES[e.code];
     if (slot) this.intent.slot = slot;

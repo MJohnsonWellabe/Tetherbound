@@ -7,6 +7,15 @@ import { InputHint } from './ui/InputHint';
 import { HarvestHud } from './ui/HarvestHud';
 import { HarvestController } from './survival/HarvestController';
 import { add, createInventory } from './survival/Inventory';
+import { CombatMode } from './combat/CombatMode';
+import { Encounter } from './combat/Encounter';
+import { PalVisuals } from './entities/PalVisual';
+import { SpawnManager } from './entities/SpawnManager';
+import { Party } from './party/Party';
+import { ReleaseFlow } from './party/Release';
+import { createPal } from './entities/Species';
+import { CombatHud } from './ui/CombatHud';
+import { mulberry32, hashSeed } from './world/gen/Rng';
 import { Player } from './entities/Player';
 import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
@@ -105,7 +114,26 @@ async function boot(): Promise<void> {
   add(inventory, 'stone_axe', 1);
   add(inventory, 'stone_pick', 1);
   add(inventory, 'flint_knife', 1);
+  add(inventory, 'worn_orb', 3);
   const harvest = new HarvestController(inventory, props);
+
+  // Pals, combat and the party. M3's opening scene hands over a starter; until
+  // then one is granted so a fight is reachable from a cold boot.
+  const party = new Party();
+  const starterRng = mulberry32(hashSeed(resolveSeed(), 1));
+  party.add(createPal('bramblit', 5, 1, performance.now(), starterRng, 'starter'));
+
+  const palVisuals = new PalVisuals(scene);
+  const spawner = new SpawnManager(terrain, palVisuals);
+  const combat = new CombatMode(party, input);
+  const release = new ReleaseFlow(party);
+  const encounter = new Encounter(combat, spawner, party, release, inventory, input);
+  const combatHud = new CombatHud(
+    document.getElementById('combat') as HTMLElement,
+    combat,
+    party,
+    release
+  );
   const harvestHud = new HarvestHud(
     document.getElementById('gather') as HTMLElement,
     harvest
@@ -142,6 +170,34 @@ async function boot(): Promise<void> {
         )
       );
       harvestHud.update(player.state.position.x, player.state.position.z);
+
+      spawner.update(
+        player.state.position.x,
+        player.state.position.z,
+        dt,
+        time.cycle,
+        time.day
+      );
+      encounter.update(player.state.position.x, player.state.position.z, dt, time.day);
+      if (input.intent.throwOrb) combatHud.reportThrow(encounter.throwOrb(time.day));
+
+      // The release screen is driven by the same slot input the party uses:
+      // pick a number to select, press it again to confirm, throw to cancel.
+      if (release.stage !== 'closed') {
+        const slot = input.intent.slot;
+        if (input.intent.throwOrb) release.cancel();
+        else if (slot !== null) {
+          const candidate = release.candidates(time.day)[slot - 1];
+          if (candidate) {
+            if (release.stage === 'confirming' && release.selectedUid === candidate.pal.uid) {
+              release.confirm(time.day);
+            } else {
+              release.select(candidate.pal.uid);
+            }
+          }
+        }
+      }
+      combatHud.update(time.day);
 
       // Water follows the player so one plane covers the visible world without
       // being large enough to lose float precision at the horizon.
@@ -187,6 +243,11 @@ async function boot(): Promise<void> {
     player,
     harvest,
     inventory,
+    party,
+    spawner,
+    combat,
+    encounter,
+    release,
     chunks,
     props,
     terrain,
@@ -198,6 +259,8 @@ async function boot(): Promise<void> {
       player.dispose();
       chunks.dispose();
       props.dispose();
+      spawner.dispose();
+      palVisuals.dispose();
       disposePrototypes(prototypes);
       water.dispose();
       renderer.dispose();
