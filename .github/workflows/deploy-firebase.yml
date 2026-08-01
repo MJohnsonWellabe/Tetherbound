@@ -87,6 +87,12 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
         run: |
+          # pipefail is NOT optional here. Piping the CLI into `tail` makes the
+          # pipeline's exit status tail's, which is always 0, so a failed deploy
+          # reported as a green job. That happened: a run went fully green while
+          # the log contained a 403 from serviceusage.googleapis.com. A deploy
+          # that lies about succeeding is worse than one that simply fails.
+          set -o pipefail
           # The project is named literally rather than read from .firebaserc.
           # `require('./.firebaserc')` threw on every run so far, because Node's
           # require cannot load a file with no recognised extension. The failure
