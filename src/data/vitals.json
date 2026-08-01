@@ -1,0 +1,28 @@
+{
+  "$comment": "Survival tuning, GAME_DESIGN.md section 4 (the middle tier). Every number a designer would reach for lives here; Vitals.ts contains no literals.",
+
+  "baseMaxHealth": 100,
+  "baseMaxStamina": 100,
+  "maxHunger": 100,
+
+  "hungerMsPerPoint": 45000,
+
+  "starveMsPerDamage": 3000,
+  "starveDamage": 1,
+  "starvingRegenMultiplier": 0.5,
+
+  "staminaRegenDelayMs": 1200,
+  "staminaRegenPerSecond": 18,
+
+  "$comment_regenHungerFloor": "Regen scales with hunger rather than switching off. At full hunger you get the whole rate; at empty you get this fraction of it, then starvingRegenMultiplier on top. A player who cannot regen at all cannot walk home to eat.",
+  "regenHungerFloor": 0.4,
+
+  "sprintStaminaPerSecond": 9,
+  "jumpStaminaCost": 8,
+  "placeStaminaCost": 5,
+
+  "buffSlots": 3,
+
+  "$comment_faint": "GAME_DESIGN.md section 4: the player collapses and wakes at their last bed. They wake with a fraction of health so they are not immediately at risk again, and with hunger untouched, because the walk back to your satchel is meant to be the cost.",
+  "faintHealthRestoreFraction": 0.5
+}
