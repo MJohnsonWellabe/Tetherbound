@@ -1,0 +1,70 @@
+# Deploy Firestore security rules and index definitions.
+#
+# The rules are version-controlled and deployed by CI, so nobody pastes JSON
+# into a console. Only firestore:rules and firestore:indexes are touched, never
+# Hosting: the game is served from GitHub Pages and Firebase Hosting stays
+# unused even if it was switched on during project setup.
+#
+# DORMANT until the FIREBASE_SERVICE_ACCOUNT repo secret exists. Until then the
+# job no-ops cleanly rather than failing red and cluttering the Actions tab.
+name: Deploy Firebase Rules
+
+on:
+  push:
+    branches:
+      - main
+      - claude/tetherbound-game-plan-w40lbs
+    paths:
+      - 'firestore.rules'
+      - 'firestore.indexes.json'
+      - 'firebase.json'
+      - '.firebaserc'
+      - '.github/workflows/deploy-firebase.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the service account secret is configured
+        id: gate
+        env:
+          SVC: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SVC" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT is not set. Skipping the rules deploy."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ready == 'true'
+        with:
+          node-version: 20
+
+      - name: Write the service-account key
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/sa.json"
+          # Fail with a useful message rather than an opaque CLI error if the
+          # secret was pasted as a fragment instead of the whole key file.
+          node -e "JSON.parse(require('fs').readFileSync(process.env.RUNNER_TEMP + '/sa.json','utf8'))" \
+            || { echo '::error::FIREBASE_SERVICE_ACCOUNT is not valid JSON. Paste the ENTIRE downloaded key file, braces included.'; exit 1; }
+
+      - name: Deploy Firestore rules and indexes
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: |
+          npx --yes firebase-tools@13 deploy \
+            --only firestore:rules,firestore:indexes \
+            --project "$(node -p "require('./.firebaserc').projects.default")" \
+            --non-interactive
