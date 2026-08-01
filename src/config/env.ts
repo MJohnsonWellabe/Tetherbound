@@ -42,15 +42,18 @@ export const PROD_HOSTNAMES: readonly string[] = ['mjohnsonwellabe.github.io'];
 /**
  * The production Firebase project.
  *
- * These are public identifiers and committing them is correct and standard.
- * `apiKey` is the one value still to be filled in from the console
- * (Project settings -> Your apps -> SDK setup and configuration -> Config).
- * Until it is, `cloudEnabled` stays false and the whole game runs local-only
- * with no cloud code loaded. That dormancy is deliberate: it means the game is
- * always shippable, configured or not.
+ * These are public identifiers and committing them is correct and standard
+ * practice. `apiKey` in particular is not a credential: it names a project and
+ * authorises nothing. Security is entirely firestore.rules plus the
+ * Authorized-domains allowlist.
+ *
+ * `storageBucket` and `messagingSenderId` come with the console's snippet but
+ * are omitted here. We use neither Storage nor Cloud Messaging, and config a
+ * reader has to check against reality is worse than config that is obviously
+ * complete.
  */
 const PROD_FIREBASE: FirebaseConfig = {
-  apiKey: '',
+  apiKey: 'AIzaSyBlTN98zHJUfZC8uUFiUGn1EMnGq4PUyr0',
   authDomain: 'tetherbound-5fdd8.firebaseapp.com',
   projectId: 'tetherbound-5fdd8',
   appId: '1:772258546214:web:dc1c7afcda1318e4bf1ce7'
