@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- viewport-fit=cover + the safe-area insets below keep the HUD clear of
+         the notch and the home indicator. Mobile is the primary target. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#1d2417" />
+    <meta name="description" content="Tetherbound - survive the Meadows, keep five pals, take the Halls." />
+    <!-- Fullscreen-ish when added to the iOS home screen, which also exempts
+         the site from ITP's 7-day storage eviction. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Tetherbound</title>
+    <link rel="stylesheet" href="./src/ui/styles/base.css" />
+  </head>
+  <body>
+    <canvas id="scene" touch-action="none"></canvas>
+
+    <!-- Boot overlay. Removed once the first frame is on screen. -->
+    <div id="boot" class="boot">
+      <div class="boot__mark">TETHERBOUND</div>
+      <div class="boot__bar"><div id="bootFill" class="boot__fill"></div></div>
+      <div id="bootMsg" class="boot__msg">Waking the Meadows</div>
+    </div>
+
+    <!-- Performance readout. Hidden unless ?stats=1. -->
+    <div id="stats" class="stats" hidden></div>
+
+    <!-- Fatal-error surface. A black screen with a console message is not a
+         bug report; this is. -->
+    <div id="fatal" class="fatal" hidden>
+      <h1 class="fatal__title">The Meadows would not load</h1>
+      <p id="fatalMsg" class="fatal__msg"></p>
+      <button id="fatalReload" class="btn">Try again</button>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

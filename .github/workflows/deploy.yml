@@ -1,0 +1,69 @@
+# Build and deploy the game to GitHub Pages.
+#
+# A failing typecheck or test blocks the deploy, per ARCHITECTURE.md. That is
+# the whole point of running them here rather than trusting a local run.
+#
+# Deploys from `main` and from the active development branch, so the game is
+# phone-testable on a real URL without merging first. Pages keeps one live
+# deployment, so whichever branch pushed last is what is live -- fine while one
+# person is building, worth revisiting when that stops being true.
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - claude/tetherbound-game-plan-w40lbs
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never cancel a deploy in flight -- a half-published Pages site is worse than
+# a slightly stale one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npx vite build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

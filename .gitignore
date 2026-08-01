@@ -1,0 +1,25 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Raw asset downloads. Only converted, manifest-logged output belongs in public/.
+assets_raw/
+
+.DS_Store
+Thumbs.db
+
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+*.log
+npm-debug.log*
+.env
+.env.*
+!.env.example
+
+# Firebase CLI scratch
+.firebase/
+firebase-debug.log
+firestore-debug.log

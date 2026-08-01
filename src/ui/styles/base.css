@@ -1,0 +1,200 @@
+/*
+ * Base layout and the boot/error/stats chrome. Gameplay HUD lives in hud.css.
+ *
+ * Mobile first, per CLAUDE.md: every interactive target is at least 44px, and
+ * nothing here depends on hover. Test at 390x844 before anything wider.
+ */
+
+:root {
+  /* Warm meadow greens and golds, desaturated stone, one hot accent reserved
+     for Tether and danger. Straight from ASSETS.md's art direction. */
+  --meadow-deep: #1d2417;
+  --meadow: #3f5a2e;
+  --meadow-lit: #7fa356;
+  --gold: #d9b45b;
+  --stone: #8d8b82;
+  --stone-dark: #4a4842;
+  --bone: #efe9dc;
+  --tether: #d2691e;
+  --danger: #c0392b;
+
+  --ui-pad: 12px;
+  --tap: 44px;
+
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+
+  --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--meadow-deep);
+  color: var(--bone);
+  font-family: var(--font);
+  /* A double-tap that zooms mid-fight is a lost fight. */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+  touch-action: none;
+}
+
+/* --- boot ---------------------------------------------------------------- */
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: radial-gradient(circle at 50% 40%, #2b3720 0%, var(--meadow-deep) 70%);
+  transition: opacity 400ms ease;
+}
+
+.boot--gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boot__mark {
+  font-size: clamp(24px, 7vw, 40px);
+  letter-spacing: 0.34em;
+  font-weight: 600;
+  color: var(--gold);
+  /* letter-spacing pads the right edge; pull it back so the word looks centred. */
+  text-indent: 0.34em;
+}
+
+.boot__bar {
+  width: min(240px, 60vw);
+  height: 3px;
+  background: rgba(239, 233, 220, 0.16);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.boot__fill {
+  height: 100%;
+  width: 0%;
+  background: var(--meadow-lit);
+  transition: width 220ms ease;
+}
+
+.boot__msg {
+  font-size: 13px;
+  color: var(--stone);
+  min-height: 1.2em;
+}
+
+/* --- stats readout ------------------------------------------------------- */
+
+.stats {
+  position: fixed;
+  top: calc(var(--safe-t) + 6px);
+  right: calc(var(--safe-r) + 6px);
+  z-index: 90;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: rgba(12, 15, 10, 0.72);
+  color: var(--meadow-lit);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.stats--warn {
+  color: var(--gold);
+}
+
+.stats--bad {
+  color: var(--tether);
+}
+
+/* --- fatal error --------------------------------------------------------- */
+
+.fatal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+  background: var(--meadow-deep);
+}
+
+.fatal__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.fatal__msg {
+  margin: 0;
+  max-width: 46ch;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--stone);
+  /* Error text is the one place a user may legitimately want to select. */
+  -webkit-user-select: text;
+  user-select: text;
+  word-break: break-word;
+}
+
+/* --- shared button ------------------------------------------------------- */
+
+.btn {
+  min-height: var(--tap);
+  min-width: var(--tap);
+  padding: 0 20px;
+  border: 1px solid var(--meadow-lit);
+  border-radius: 8px;
+  background: var(--meadow);
+  color: var(--bone);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn:active {
+  background: var(--meadow-lit);
+}
+
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
