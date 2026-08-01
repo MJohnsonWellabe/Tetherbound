@@ -174,3 +174,62 @@ body {
   user-select: text;
   word-break: break-word;
 }
+
+/* --- control prompt and fullscreen ---------------------------------------- */
+
+/*
+ * The prompt sits bottom-centre, above the safe-area inset. It is deliberately
+ * quiet: it is a reminder, not a HUD element, and it must not compete with the
+ * world. The urgent variant is the exception, because a player who cannot work
+ * out how to look around has no game at all.
+ */
+.hint {
+  position: fixed;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 20;
+  max-width: min(92vw, 720px);
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(6, 9, 7, 0.55);
+  color: rgba(233, 240, 232, 0.72);
+  font-size: 13px;
+  line-height: 1.3;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transition: opacity var(--slow) var(--ease);
+}
+
+.hint--urgent {
+  background: rgba(6, 9, 7, 0.82);
+  color: var(--text);
+  box-shadow: 0 0 0 1px rgba(124, 255, 155, 0.35);
+}
+
+.fs-btn {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top));
+  right: calc(10px + env(safe-area-inset-right));
+  z-index: 20;
+  /* 44px minimum touch target, and the Ally's touchscreen is a real input. */
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(6, 9, 7, 0.5);
+  color: rgba(233, 240, 232, 0.8);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.fs-btn:hover,
+.fs-btn:focus-visible {
+  background: rgba(6, 9, 7, 0.75);
+  color: var(--text);
+}

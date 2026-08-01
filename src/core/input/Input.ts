@@ -1,7 +1,11 @@
 import { detectDevice } from '../Engine';
 import { clearEdges, type Intent, type InputMode, neutralIntent } from './Intent';
 import { DesktopLayer } from './DesktopLayer';
+import { GamepadLayer } from './GamepadLayer';
 import { TouchLayer } from './TouchLayer';
+
+/** Which device the player most recently actually used. Drives HUD prompts. */
+export type InputSource = 'gamepad' | 'keyboard' | 'touch';
 
 /**
  * The single input entry point. Gameplay reads `input.intent` and nothing else.
@@ -16,11 +20,17 @@ export class Input {
   readonly intent: Intent = neutralIntent();
   private readonly touch: TouchLayer | null;
   private readonly desktop: DesktopLayer;
+  private readonly gamepad: GamepadLayer;
   private mode: InputMode = 'explore';
+  private source: InputSource;
 
   constructor(canvas: HTMLCanvasElement, overlayTarget: HTMLElement = document.body) {
     const device = detectDevice();
     this.desktop = new DesktopLayer(canvas, this.intent);
+    // Always mounted. A pad can be plugged in at any moment, and on a handheld
+    // it is the primary device, so there is nothing to detect at boot.
+    this.gamepad = new GamepadLayer(this.intent);
+    this.source = device.isTouch ? 'touch' : 'keyboard';
     // Mount the touch layer whenever the hardware reports any touch point,
     // which is a wider net than the coarse-pointer check used for render
     // quality. Being wrong here costs an unused listener; being wrong the
@@ -45,6 +55,7 @@ export class Input {
     this.mode = mode;
     this.desktop.setMode(mode);
     this.touch?.setMode(mode);
+    this.gamepad.setMode(mode);
     // Anything mid-gesture belongs to the old mode. Carrying a half-finished
     // swipe across the boundary produces a dodge on the first frame of a fight.
     this.intent.move.x = 0;
@@ -80,9 +91,10 @@ export class Input {
    */
   beginFrame(): void {
     this.desktop.poll();
+    this.gamepad.poll();
 
-    let x = this.desktop.move.x + (this.touch?.move.x ?? 0);
-    let y = this.desktop.move.y + (this.touch?.move.y ?? 0);
+    let x = this.desktop.move.x + (this.touch?.move.x ?? 0) + this.gamepad.move.x;
+    let y = this.desktop.move.y + (this.touch?.move.y ?? 0) + this.gamepad.move.y;
     // Summing can exceed the unit circle if someone drives both at once.
     const mag = Math.hypot(x, y);
     if (mag > 1) {
@@ -91,7 +103,25 @@ export class Input {
     }
     this.intent.move.x = x;
     this.intent.move.y = y;
-    this.intent.sprint = this.desktop.sprint || (this.touch?.sprint ?? false);
+    this.intent.sprint =
+      this.desktop.sprint || (this.touch?.sprint ?? false) || this.gamepad.sprint;
+
+    // Whichever device is actually being driven owns the on-screen prompts. A
+    // handheld has a pad, a touchscreen and a keyboard all attached at once, so
+    // a capability check cannot answer this; only recent use can.
+    if (this.gamepad.active) this.source = 'gamepad';
+    else if (this.desktop.active) this.source = 'keyboard';
+    else if (this.touch?.move.x || this.touch?.move.y) this.source = 'touch';
+  }
+
+  /** The device most recently used, for HUD prompts. */
+  get inputSource(): InputSource {
+    return this.source;
+  }
+
+  /** True when mouse look needs a click to engage and has not had one yet. */
+  get needsPointerLockHint(): boolean {
+    return this.source === 'keyboard' && !this.desktop.isLooking;
   }
 
   /** Clear edge-triggered fields. Call once per frame, after update. */
@@ -109,6 +139,7 @@ export class Input {
   dispose(): void {
     this.desktop.dispose();
     this.touch?.dispose();
+    this.gamepad.dispose();
   }
 }
 

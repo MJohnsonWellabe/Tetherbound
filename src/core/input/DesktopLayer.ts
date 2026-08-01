@@ -1,3 +1,4 @@
+import config from '../../data/input.json';
 import type { Intent, InputMode, PartySlot } from './Intent';
 
 /**
@@ -12,8 +13,7 @@ import type { Intent, InputMode, PartySlot } from './Intent';
  * scattering across the keyboard.
  */
 
-const LOOK_SENS_X = 0.0022;
-const LOOK_SENS_Y = 0.0019;
+const { mouse: MOUSE } = config;
 
 /** Below this, a keypress is a dodge tap rather than a strafe hold. */
 const DODGE_TAP_MS = 180;
@@ -34,6 +34,10 @@ export class DesktopLayer {
   private primaryDownMs = 0;
   private primaryActive = false;
   private locked = false;
+  /** Right button held: look without pointer lock. */
+  private dragging = false;
+  /** True once the keyboard or mouse has actually been used. */
+  active = false;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -83,6 +87,7 @@ export class DesktopLayer {
 
   private onKeyDown(e: KeyboardEvent): void {
     if (e.repeat) return;
+    this.active = true;
     this.held.add(e.code);
     this.pressedAt.set(e.code, performance.now());
 
@@ -114,8 +119,26 @@ export class DesktopLayer {
     }
   }
 
+  /**
+   * True when mouse look is currently engaged, by either route.
+   *
+   * The HUD uses this to decide whether to tell the player how to look around.
+   * Pointer lock needs a click, nothing on screen said so, and the reported
+   * symptom was "on pc I don't know how to look around but I can move".
+   */
+  get isLooking(): boolean {
+    return this.locked || this.dragging;
+  }
+
   private onMouseDown(e: MouseEvent): void {
-    if (!this.locked && this.mode === 'explore') {
+    this.active = true;
+    if (e.button === 2) {
+      // Right-drag looks without pointer lock. Lock is still the better path,
+      // but a game that appears to have no camera control at all is worse than
+      // one with a slightly clumsy one, and some setups refuse lock outright.
+      this.dragging = true;
+    }
+    if (!this.locked && e.button === 0 && this.mode === 'explore') {
       void this.canvas.requestPointerLock?.();
     }
     if (e.button === 0) {
@@ -127,6 +150,7 @@ export class DesktopLayer {
   }
 
   private onMouseUp(e: MouseEvent): void {
+    if (e.button === 2) this.dragging = false;
     if (e.button === 0 && this.primaryActive) {
       this.intent.primary.down = false;
       this.intent.primary.heldMs = performance.now() - this.primaryDownMs;
@@ -135,11 +159,18 @@ export class DesktopLayer {
   }
 
   private onMouseMove(e: MouseEvent): void {
-    // Unlocked, the cursor belongs to the UI. Rotating the world under a menu
+    if (this.locked) {
+      this.intent.look.x += e.movementX * MOUSE.sensX;
+      this.intent.look.y += e.movementY * MOUSE.sensY;
+      return;
+    }
+    if (this.dragging) {
+      this.intent.look.x += e.movementX * MOUSE.dragSensX;
+      this.intent.look.y += e.movementY * MOUSE.dragSensY;
+      return;
+    }
+    // Otherwise the cursor belongs to the UI. Rotating the world under a menu
     // the player is reading is disorienting.
-    if (!this.locked) return;
-    this.intent.look.x += e.movementX * LOOK_SENS_X;
-    this.intent.look.y += e.movementY * LOOK_SENS_Y;
   }
 
   /**
@@ -186,6 +217,7 @@ export class DesktopLayer {
   private releaseAll(): void {
     this.held.clear();
     this.pressedAt.clear();
+    this.dragging = false;
     this.move.x = 0;
     this.move.y = 0;
     this.sprint = false;

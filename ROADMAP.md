@@ -14,6 +14,15 @@ Philosophy: build quick, iterate. Every milestone ends with something deployed t
 
 **Done when:** you can walk around a seeded world on your phone at 60fps, live on Pages.
 
+**Shipped.** Babylon rather than Three (D1). Seeded heightfield, 128m chunks at
+view distance 3, LOD, full disposal. Props batched by spatial cell rather than
+by chunk (D29). Capsule controller, third person camera. Input as three layers
+behind one Intent: keyboard/mouse, touch, and gamepad (D31). Day/night with fog
+tuned to the prop draw distances. `?stats=1` readout.
+
+Perf, measured at 1280x720 in a dense grove: **67 draw calls, 137k triangles**,
+down from 1576 and 224k. Retargeted from phone to ROG Ally (D28).
+
 ---
 
 ## M1 — Survive and build (target: 2 sessions)
@@ -27,6 +36,10 @@ Philosophy: build quick, iterate. Every milestone ends with something deployed t
 - localStorage save and load.
 
 **Done when:** you can chop, cook, build a shack, sleep, and reload into it.
+
+**Partial.** Vitals, inventory and crafting are in and unit tested. Harvest
+nodes, tools, build mode, the stations and save are not started. `PropBatcher`
+exposes `nodesNear()` ready for harvesting to hang off.
 
 ---
 

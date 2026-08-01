@@ -34,6 +34,14 @@
       <div id="bootMsg" class="boot__msg">Waking the Meadows</div>
     </div>
 
+    <!-- Control prompt. Follows the device actually in use, not the one
+         attached: a handheld has a pad, a touchscreen and a keyboard at once. -->
+    <div id="hint" class="hint"></div>
+
+    <!-- Fullscreen. Browser chrome costs real screen on a 7in handheld and
+         F11 is not reachable without a keyboard. -->
+    <button id="fullscreen" class="fs-btn" type="button" aria-label="Toggle fullscreen">⛶</button>
+
     <!-- Performance readout. Hidden unless ?stats=1. -->
     <div id="stats" class="stats" hidden></div>
 

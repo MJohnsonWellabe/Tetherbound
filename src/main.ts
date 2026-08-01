@@ -3,6 +3,7 @@ import { Renderer } from './core/Engine';
 import { Input } from './core/input/Input';
 import { Loop } from './core/Loop';
 import { Stats } from './core/Stats';
+import { InputHint } from './ui/InputHint';
 import { Player } from './entities/Player';
 import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
@@ -94,6 +95,11 @@ async function boot(): Promise<void> {
   progress(0.8, 'Setting the sun');
   const time = new TimeOfDay(scene, sun, sky, 0.2, 1);
   const input = new Input(canvas);
+  const hint = new InputHint(
+    document.getElementById('hint') as HTMLElement,
+    input,
+    document.getElementById('fullscreen')
+  );
 
   const loop = new Loop({
     update: (dt, elapsedMs) => {
@@ -123,6 +129,7 @@ async function boot(): Promise<void> {
       // chunk builds.
       chunks.processQueue();
       props.processQueue();
+      hint.update();
       renderer.render();
       stats?.sample(performance.now());
     }
@@ -156,6 +163,7 @@ async function boot(): Promise<void> {
     time,
     dispose: (): void => {
       loop.stop();
+      hint.dispose();
       input.dispose();
       player.dispose();
       chunks.dispose();

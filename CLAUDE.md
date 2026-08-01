@@ -21,7 +21,7 @@ Stop and ask only when the choice would be expensive to reverse: schema shape, t
 5. **Every tunable number lives in `src/data/*.json`.** If you type a stat, cost, rate, duration, or curve constant into a system file, you have made a mistake.
 6. **No `Math.random()` in world generation.** Seeded RNG only.
 7. **CC0 assets only**, logged in `ASSET_MANIFEST.md` before commit.
-8. **Mobile is the primary target.** Test at 390x844 first. Any feature that needs hover or a keyboard is wrong.
+8. **PC handheld is the primary target.** The reference device is a ROG Ally: 1080p, 120Hz, gamepad plus touchscreen. Test at 1280x720 first. Nothing may depend on hover, and every control must be reachable on a gamepad. Touch stays supported and must keep working, but it no longer constrains the perf budget, the view distance, or the UI layout. Changed from mobile-first at the owner's direction, logged as D28.
 
 ## Code standards
 
