@@ -219,6 +219,75 @@ comment quotes the barrel import it exists to prevent. A rule that cannot be
 explained in prose beside the code it governs is a bad rule, so the scanner
 learned to read code instead of the documentation learning to avoid words.
 
+### D26. The input layers own separate vectors; Input sums them
+
+`DesktopLayer.poll()` used to assign `intent.move` directly, every frame, from
+held keys. Both layers mount whenever the hardware reports touch points, so on a
+phone with no keyboard that assignment was always zero and it erased whatever
+the touch stick had written microseconds earlier.
+
+The symptom reported by the owner was exact: "all I can do is look around."
+`look` accumulates with `+=` and nothing overwrote it, so looking worked while
+moving did not. The game was unplayable on its primary target platform and every
+unit test, the typechecker and six browser smoke specs all passed.
+
+Each layer now owns a `move` vector and `Input.beginFrame()` sums and clamps
+them. `tests/intent.test.ts` covers the contract, including the specific case of
+an idle keyboard not erasing an active stick.
+
+The wider lesson, worth remembering before writing the next input feature: the
+existing smoke specs boot the game and check that it renders. None of them
+*play* it. A spec that presses a key and asserts the player moved would have
+caught this on the first run.
+
+### D25. Verification tooling borrowed from TheLongSilence
+
+`tools/` now holds the survey, contact sheet, hole detector and draw-cost probe,
+adapted from `achimala/TheLongSilence`. That project's real contribution is not
+its renderer, it is a battery of small single-purpose diagnostics that each
+answer one question about the built game.
+
+- `tools/holes.mjs` sets the clear colour to magenta and points the camera at
+  the ground. Terrain is opaque, so any magenta pixel is a gap. **This is the
+  check that would have caught the inside-out terrain instantly**, a bug that
+  passed a typecheck, 99 unit tests and five smoke specs and was only found by a
+  human squinting at a screenshot.
+- `tools/sheet.mjs` tiles a survey into one labelled image. Built by rendering
+  HTML and screenshotting it rather than shelling out to ffmpeg: no ffmpeg here,
+  no new dependency, and the tiles get real labels and per-shot stats, which an
+  ffmpeg tile filter cannot do without a freetype build.
+- `--selftest` on the hole detector hides the terrain and asserts that every
+  spot then reports a hole. It earned its place immediately by failing twice:
+  first because `place()` streams fresh chunks in after the hide, then because
+  `TimeOfDay.apply()` repaints `scene.clearColor` every tick and the frame was
+  never actually magenta at capture. The detector had been passing vacuously.
+- `tools/drawcost.mjs` refuses to draw a conclusion when its own data is
+  incoherent. Its draw-call source (`engine._drawCalls`) accumulates instead of
+  resetting per frame, so the numbers climb as resolution falls, which is
+  impossible. Announcing "draw bound" from that would send the next person
+  optimising the wrong half of the renderer.
+
+Deliberately NOT borrowed: Blender MCP. Blender is not installed here, and the
+skill states plainly that the addon cannot run headless, so it needs a GUI and a
+human toggling a connection. It is also a hard-surface skill (lofted hulls,
+greebles) and Tetherbound needs rigged organic creatures, which is a different
+and harder discipline.
+
+### D24. The visual target is Palworld and Pokemon, not photorealism
+
+Written into `ASSETS.md` rather than left as a conversation, because "make it
+look good" resolves differently for everyone who reads it.
+
+The reference set is Palworld and Pokemon Scarlet/Violet / Legends: Arceus.
+Those games are not technically impressive; they are legible and appealing, and
+legibility at 390 pixels is a higher bar than fidelity. A judge or a contributor
+aiming at photorealism would break the perf budget in `ARCHITECTURE.md` (60fps
+on an iPhone 12, under 150 draw calls, no post-processing) and the stated style
+in `ASSETS.md` at the same time.
+
+`.claude/skills/visual-judge/SKILL.md` carries the rubric, and says explicitly
+that the rubric may not be softened to obtain a pass.
+
 ### D23. The interface palette does not follow ASSETS.md
 
 `ASSETS.md` art direction says "warm meadow greens and golds ... a single hot

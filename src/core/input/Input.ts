@@ -49,6 +49,12 @@ export class Input {
     // swipe across the boundary produces a dodge on the first frame of a fight.
     this.intent.move.x = 0;
     this.intent.move.y = 0;
+    this.desktop.move.x = 0;
+    this.desktop.move.y = 0;
+    if (this.touch) {
+      this.touch.move.x = 0;
+      this.touch.move.y = 0;
+    }
     this.intent.primary.down = false;
     this.intent.primary.heldMs = 0;
     clearEdges(this.intent);
@@ -58,9 +64,34 @@ export class Input {
     return this.mode;
   }
 
-  /** Fold held keys into the intent. Call once per frame, before update. */
+  /**
+   * Combine both layers into the shared Intent. Call once per frame, before
+   * update.
+   *
+   * Each layer owns its own vector and this sums them, rather than each layer
+   * writing straight into the Intent. The direct-write version had a bug that
+   * made the game unplayable on a phone: both layers mount whenever the
+   * hardware reports touch points, `desktop.poll()` runs every frame and
+   * unconditionally assigned `intent.move` from held keys, and with no keyboard
+   * attached that assignment was always zero. The touch stick wrote a vector
+   * and had it erased microseconds later, every frame. Looking around still
+   * worked, because `look` accumulates with `+=` and no poll overwrites it, so
+   * the symptom was "I can look but not move".
+   */
   beginFrame(): void {
     this.desktop.poll();
+
+    let x = this.desktop.move.x + (this.touch?.move.x ?? 0);
+    let y = this.desktop.move.y + (this.touch?.move.y ?? 0);
+    // Summing can exceed the unit circle if someone drives both at once.
+    const mag = Math.hypot(x, y);
+    if (mag > 1) {
+      x /= mag;
+      y /= mag;
+    }
+    this.intent.move.x = x;
+    this.intent.move.y = y;
+    this.intent.sprint = this.desktop.sprint || (this.touch?.sprint ?? false);
   }
 
   /** Clear edge-triggered fields. Call once per frame, after update. */

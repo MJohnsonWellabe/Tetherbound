@@ -24,3 +24,6 @@ npm-debug.log*
 firebase-debug.log
 firestore-debug.log
 tests/smoke/.output/
+
+# Survey output. Regenerate with `npm run survey`.
+shots/

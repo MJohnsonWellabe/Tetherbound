@@ -14,7 +14,11 @@
     "test:watch": "vitest",
     "assets": "node scripts/optimize-assets.mjs",
     "smoke": "playwright test",
-    "smoke:update": "playwright test --update-snapshots"
+    "smoke:update": "playwright test --update-snapshots",
+    "survey": "node tools/survey.mjs",
+    "sheet": "node tools/sheet.mjs",
+    "holes": "node tools/holes.mjs",
+    "drawcost": "node tools/drawcost.mjs"
   },
   "dependencies": {
     "@babylonjs/core": "^8.30.0",

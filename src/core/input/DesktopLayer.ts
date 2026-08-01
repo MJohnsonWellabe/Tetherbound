@@ -32,6 +32,7 @@ export class DesktopLayer {
   private readonly teardown: Array<() => void> = [];
   private mode: InputMode = 'explore';
   private primaryDownMs = 0;
+  private primaryActive = false;
   private locked = false;
 
   constructor(
@@ -121,13 +122,15 @@ export class DesktopLayer {
       this.intent.primary.down = true;
       this.intent.primary.heldMs = 0;
       this.primaryDownMs = performance.now();
+      this.primaryActive = true;
     }
   }
 
   private onMouseUp(e: MouseEvent): void {
-    if (e.button === 0) {
+    if (e.button === 0 && this.primaryActive) {
       this.intent.primary.down = false;
       this.intent.primary.heldMs = performance.now() - this.primaryDownMs;
+      this.primaryActive = false;
     }
   }
 
@@ -139,7 +142,19 @@ export class DesktopLayer {
     this.intent.look.y += e.movementY * LOOK_SENS_Y;
   }
 
-  /** Fold held keys into move/sprint. Called once per frame by Input. */
+  /**
+   * This layer's own movement vector.
+   *
+   * Deliberately NOT written straight into the shared Intent. Both layers mount
+   * whenever the hardware reports touch points, so writing directly meant this
+   * poll zeroed the touch stick's vector every single frame: on a phone the
+   * player could look around and never move, because `look` accumulates and
+   * `move` was overwritten. Input.beginFrame() combines the two.
+   */
+  readonly move = { x: 0, y: 0 };
+  sprint = false;
+
+  /** Fold held keys into this layer's own move/sprint. Called once per frame. */
   poll(): void {
     let x = 0;
     let y = 0;
@@ -157,11 +172,13 @@ export class DesktopLayer {
       x /= mag;
       y /= mag;
     }
-    this.intent.move.x = x;
-    this.intent.move.y = y;
-    this.intent.sprint = this.held.has('ShiftLeft') || this.held.has('ShiftRight');
+    this.move.x = x;
+    this.move.y = y;
+    this.sprint = this.held.has('ShiftLeft') || this.held.has('ShiftRight');
 
-    if (this.intent.primary.down) {
+    // Only advance the charge this layer started. Otherwise a touch-initiated
+    // hold gets its heldMs recomputed against a stale mouse-down timestamp.
+    if (this.primaryActive && this.intent.primary.down) {
       this.intent.primary.heldMs = performance.now() - this.primaryDownMs;
     }
   }
@@ -169,9 +186,10 @@ export class DesktopLayer {
   private releaseAll(): void {
     this.held.clear();
     this.pressedAt.clear();
-    this.intent.move.x = 0;
-    this.intent.move.y = 0;
-    this.intent.sprint = false;
+    this.move.x = 0;
+    this.move.y = 0;
+    this.sprint = false;
+    this.primaryActive = false;
     this.intent.primary.down = false;
     this.intent.primary.heldMs = 0;
   }

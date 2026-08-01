@@ -60,6 +60,15 @@ interface LookState {
 }
 
 export class TouchLayer {
+  /**
+   * This layer's own movement vector, combined with the desktop layer's by
+   * Input.beginFrame(). See the note in DesktopLayer: writing straight into the
+   * shared Intent meant whichever layer polled last won, and the keyboard poll
+   * runs every frame with no keys held, so the stick was silently zeroed.
+   */
+  readonly move = { x: 0, y: 0 };
+  sprint = false;
+
   private stick: StickState | null = null;
   private look: LookState | null = null;
   private readonly teardown: Array<() => void> = [];
@@ -149,16 +158,16 @@ export class TouchLayer {
       const moved = applyDeadZone(nx, ny, DEAD_ZONE);
 
       // Screen y grows downward; forward is negative y.
-      this.intent.move.x = moved.x;
-      this.intent.move.y = -moved.y;
+      this.move.x = moved.x;
+      this.move.y = -moved.y;
 
       const mag = Math.hypot(moved.x, moved.y);
       if (mag >= SPRINT_THRESHOLD) {
         if (this.stick.atFullSince === 0) this.stick.atFullSince = performance.now();
-        this.intent.sprint = performance.now() - this.stick.atFullSince >= SPRINT_HOLD_MS;
+        this.sprint = performance.now() - this.stick.atFullSince >= SPRINT_HOLD_MS;
       } else {
         this.stick.atFullSince = 0;
-        this.intent.sprint = false;
+        this.sprint = false;
       }
 
       this.onStickChange?.({ x: this.stick.originX, y: this.stick.originY }, dx, dy);
@@ -206,9 +215,9 @@ export class TouchLayer {
   private onUp(e: PointerEvent): void {
     if (this.stick && e.pointerId === this.stick.pointerId) {
       this.stick = null;
-      this.intent.move.x = 0;
-      this.intent.move.y = 0;
-      this.intent.sprint = false;
+      this.move.x = 0;
+      this.move.y = 0;
+      this.sprint = false;
       this.onStickChange?.(null, 0, 0);
       return;
     }

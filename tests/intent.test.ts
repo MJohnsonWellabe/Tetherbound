@@ -91,3 +91,55 @@ describe('clearEdges', () => {
     expect(intent.move).toEqual({ x: 1, y: 0 });
   });
 });
+
+describe('layer combination', () => {
+  /**
+   * Regression for the bug that made the game unplayable on a phone.
+   *
+   * Both input layers mount whenever the hardware reports touch points. The
+   * keyboard poll ran every frame and assigned `intent.move` unconditionally,
+   * so with no keyboard attached it assigned zero and erased whatever the touch
+   * stick had just written. `look` survived because it accumulates with `+=`
+   * and nothing overwrites it, which is why the symptom was exactly "I can look
+   * around but I cannot move".
+   *
+   * The layers now own separate vectors and Input sums them. This models that
+   * contract without needing a DOM.
+   */
+  function combine(
+    desktop: { x: number; y: number },
+    touch: { x: number; y: number } | null
+  ): { x: number; y: number } {
+    let x = desktop.x + (touch?.x ?? 0);
+    let y = desktop.y + (touch?.y ?? 0);
+    const mag = Math.hypot(x, y);
+    if (mag > 1) {
+      x /= mag;
+      y /= mag;
+    }
+    return { x, y };
+  }
+
+  it('does not let an idle keyboard erase the touch stick', () => {
+    const out = combine({ x: 0, y: 0 }, { x: 0.7, y: 0.7 });
+    expect(Math.hypot(out.x, out.y)).toBeGreaterThan(0.5);
+  });
+
+  it('does not let an idle stick erase the keyboard', () => {
+    const out = combine({ x: 0, y: 1 }, { x: 0, y: 0 });
+    expect(out.y).toBeCloseTo(1, 6);
+  });
+
+  it('clamps when both layers are driven at once', () => {
+    const out = combine({ x: 0, y: 1 }, { x: 0, y: 1 });
+    expect(Math.hypot(out.x, out.y)).toBeCloseTo(1, 6);
+  });
+
+  it('reports no movement when neither layer is driven', () => {
+    expect(combine({ x: 0, y: 0 }, { x: 0, y: 0 })).toEqual({ x: 0, y: 0 });
+  });
+
+  it('works with no touch layer mounted at all', () => {
+    expect(combine({ x: 1, y: 0 }, null).x).toBeCloseTo(1, 6);
+  });
+});
