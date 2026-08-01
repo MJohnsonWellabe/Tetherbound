@@ -1,0 +1,23 @@
+{
+  "$comment": "Quick attacks sit in the 8-14 power band and power attacks in the 40-70 band, per GAME_DESIGN.md section 5. 'charge' is how much meter a quick attack builds; a power attack costs the full 100. castMs is the commit window, windupMs the visible tell before a power attack lands (the dodge window the enemy telegraph opens).",
+
+  "leaf_cut":       { "name": "Leaf Cut",       "type": "verdant", "kind": "quick", "power": 10, "castMs": 500, "charge": 12 },
+  "thorn_rake":     { "name": "Thorn Rake",     "type": "verdant", "kind": "quick", "power": 12, "castMs": 520, "charge": 12 },
+  "horn_jab":       { "name": "Horn Jab",       "type": "verdant", "kind": "quick", "power": 11, "castMs": 480, "charge": 12 },
+  "dust_beat":      { "name": "Dust Beat",      "type": "verdant", "kind": "quick", "power": 8,  "castMs": 440, "charge": 14 },
+  "dew_lash":       { "name": "Dew Lash",       "type": "tide",    "kind": "quick", "power": 11, "castMs": 500, "charge": 12 },
+  "ember_nip":      { "name": "Ember Nip",      "type": "ember",   "kind": "quick", "power": 13, "castMs": 520, "charge": 11 },
+  "pebble_strike":  { "name": "Pebble Strike",  "type": "stone",   "kind": "quick", "power": 9,  "castMs": 540, "charge": 13 },
+  "static_jab":     { "name": "Static Jab",     "type": "spark",   "kind": "quick", "power": 14, "castMs": 460, "charge": 11 },
+
+  "bramble_crush":  { "name": "Bramble Crush",  "type": "verdant", "kind": "power", "power": 52, "castMs": 1100, "windupMs": 600 },
+  "pollen_bloom":   { "name": "Pollen Bloom",   "type": "verdant", "kind": "power", "power": 40, "castMs": 1100, "windupMs": 600 },
+  "stampede":       { "name": "Stampede",       "type": "verdant", "kind": "power", "power": 56, "castMs": 1100, "windupMs": 600 },
+  "tide_break":     { "name": "Tide Break",     "type": "tide",    "kind": "power", "power": 55, "castMs": 1100, "windupMs": 600 },
+  "undertow":       { "name": "Undertow",       "type": "tide",    "kind": "power", "power": 50, "castMs": 1100, "windupMs": 600 },
+  "cinder_burst":   { "name": "Cinder Burst",   "type": "ember",   "kind": "power", "power": 64, "castMs": 1100, "windupMs": 600 },
+  "flare_kick":     { "name": "Flare Kick",     "type": "ember",   "kind": "power", "power": 58, "castMs": 1100, "windupMs": 600 },
+  "stone_fall":     { "name": "Stone Fall",     "type": "stone",   "kind": "power", "power": 54, "castMs": 1200, "windupMs": 640 },
+  "rockslide":      { "name": "Rockslide",      "type": "stone",   "kind": "power", "power": 68, "castMs": 1200, "windupMs": 640 },
+  "arc_bolt":       { "name": "Arc Bolt",       "type": "spark",   "kind": "power", "power": 60, "castMs": 1000, "windupMs": 560 }
+}

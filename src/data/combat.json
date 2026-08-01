@@ -1,0 +1,125 @@
+{
+  "$comment": "Every tunable number in combat/, party/ and the throw. GAME_DESIGN.md sections 5 and 7. No system file may restate any of these.",
+
+  "typeRing": {
+    "$comment": "Verdant beats Tide beats Ember beats Stone beats Spark beats Verdant. Each type beats exactly one and loses to exactly one, so no chart is needed to teach it.",
+    "order": ["verdant", "tide", "ember", "stone", "spark"],
+    "strong": 1.6,
+    "weak": 0.625,
+    "neutral": 1.0
+  },
+
+  "stats": {
+    "$comment": "stat = floor(base * (1 + level * levelGain) * variance), variance rolled once at spawn and locked for life.",
+    "levelGain": 0.035,
+    "varianceMin": 0.9,
+    "varianceMax": 1.1
+  },
+
+  "damage": {
+    "$comment": "dmg = (ATK/DEF) * movePower * typeMult * affinityMult * rand(rollMin,rollMax) * (1 + levelDiffPerLevel * levelDiff), floored at minimum so nothing is ever fully immune.",
+    "rollMin": 0.9,
+    "rollMax": 1.1,
+    "levelDiffPerLevel": 0.02,
+    "levelDiffClamp": 20,
+    "minimum": 1,
+    "collaredAttackMultiplier": 1.15
+  },
+
+  "affinity": {
+    "$comment": "Above highThreshold a pal hits harder. Below lowThreshold it sometimes refuses a power attack. This is the emotional cost of the five-slot rule made mechanical.",
+    "start": 50,
+    "max": 100,
+    "highThreshold": 75,
+    "highDamageBonus": 0.08,
+    "lowThreshold": 25,
+    "hesitateChance": 0.25,
+    "onWin": 4,
+    "onFaint": -12,
+    "onCapture": 0,
+    "onEat": 2,
+    "collaredPenalty": 10
+  },
+
+  "charge": {
+    "$comment": "A power attack costs the full meter. Quick attacks build it by their own 'charge' value in moves.json.",
+    "max": 100,
+    "powerCost": 100,
+    "holdToChargeMs": 700,
+    "powerUnlockLevel": 8
+  },
+
+  "pacing": {
+    "$comment": "How often the enemy acts. The delay scales inversely with SPD against referenceSpd, so a fast pal acts more often rather than hitting harder, which is what stops SPD being a stat nobody reads.",
+    "throwFlightMs": 520,
+    "enemyThinkBaseMs": 1100,
+    "enemyThinkReferenceSpd": 30,
+    "enemyThinkFloorMs": 420
+  },
+
+  "dodge": {
+    "$comment": "A dodge started inside the enemy telegraph negates the hit entirely. iframes are generous on purpose: this is a phone game and a swipe has latency a keypress does not.",
+    "windowMs": 420,
+    "cooldownMs": 650,
+    "staminaCost": 0
+  },
+
+  "swap": {
+    "vulnerabilityMs": 1500
+  },
+
+  "flee": {
+    "$comment": "Wild pals bail at 20% HP with a 25% chance per second. This is the pressure that makes throwing early correct rather than grinding the enemy to 1 HP.",
+    "hpFraction": 0.2,
+    "chancePerSecond": 0.25
+  },
+
+  "throw": {
+    "$comment": "Catch formula from GAME_DESIGN.md section 7, verbatim. The clamp is what guarantees no throw is ever certain and none is ever hopeless.",
+    "hpTermWeight": 0.75,
+    "levelTermPerLevel": 0.03,
+    "levelTermMin": 0.35,
+    "levelTermMax": 1.0,
+    "ringBonus": { "none": 1.0, "good": 1.3, "great": 1.7 },
+    "ringGoodBelow": 0.45,
+    "ringGreatBelow": 0.18,
+    "ringPeriodMs": 1400,
+    "staggeredMod": 1.25,
+    "chanceMin": 0.01,
+    "chanceMax": 0.95,
+    "shakes": 3,
+    "shakeMs": 620,
+    "freeAttackOnFailMs": 900
+  },
+
+  "xp": {
+    "$comment": "xpToNext(level) = curveA * level^curveB. A win awards winBase * defeatedLevel, multiplied when the type ring favoured you. Benched party members take partyShare of it.",
+    "curveA": 12,
+    "curveB": 1.6,
+    "winBase": 18,
+    "typeAdvantageBonus": 1.1,
+    "partyShare": 0.4,
+    "maxLevel": 50
+  },
+
+  "revive": {
+    "$comment": "A fainted pal is never lost. Four minutes of real time, or thirty seconds at a campfire.",
+    "naturalMs": 240000,
+    "campfireMs": 30000,
+    "healthOnRevive": 0.5
+  },
+
+  "encounter": {
+    "$comment": "Walking within triggerRange of a pal starts a fight. Aggressive species start it themselves from further out.",
+    "triggerRange": 4,
+    "aggroRange": 10,
+    "arenaRadius": 14,
+    "maxActivePals": 12,
+    "cullDistance": 192
+  },
+
+  "party": {
+    "$comment": "The number this whole game is built around. Enforced in Party.add() and nowhere else.",
+    "cap": 5
+  }
+}

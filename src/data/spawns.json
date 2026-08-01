@@ -1,0 +1,57 @@
+{
+  "$comment": "Spawn tables by biome and time of day. GAME_DESIGN.md section 9: density caps at 12 active pals within view distance, night raises levels by 2-4 and unlocks night-only species. Phases are cycle fractions matching TimeOfDay: dawn 0-0.12, day 0.12-0.57, dusk 0.57-0.70, night 0.70-1.0.",
+
+  "phases": {
+    "dawn": [0, 0.12],
+    "day": [0.12, 0.57],
+    "dusk": [0.57, 0.7],
+    "night": [0.7, 1.0]
+  },
+
+  "nightLevelBonus": [2, 4],
+
+  "$tables": "Weights are relative within a biome+phase. A species absent from a list cannot spawn there at all, which is what keeps Rillnewt on the river and Ashmane out of the village fields.",
+
+  "tables": {
+    "meadow": {
+      "dawn": { "tuftmoth": 30, "grazehorn": 20, "sparrowick": 16, "pebblit": 12, "emberhop": 14, "thistleback": 6 },
+      "day": { "tuftmoth": 34, "grazehorn": 24, "sparrowick": 18, "pebblit": 12, "thistleback": 8, "voltvole": 4 },
+      "dusk": { "tuftmoth": 22, "grazehorn": 18, "sparrowick": 14, "emberhop": 20, "thistleback": 10, "voltvole": 6 },
+      "night": { "sparrowick": 14, "voltvole": 22, "pebblit": 14, "thistleback": 16, "ashmane": 8, "grazehorn": 10 }
+    },
+    "grove": {
+      "dawn": { "tuftmoth": 26, "thistleback": 22, "emberhop": 16, "grazehorn": 14, "sparrowick": 10 },
+      "day": { "tuftmoth": 28, "thistleback": 26, "grazehorn": 16, "sparrowick": 12, "voltvole": 6 },
+      "dusk": { "thistleback": 24, "emberhop": 22, "tuftmoth": 18, "ashmane": 8, "voltvole": 8 },
+      "night": { "thistleback": 24, "voltvole": 20, "ashmane": 14, "tuftmoth": 10 }
+    },
+    "rock": {
+      "dawn": { "pebblit": 34, "cragpup": 22, "voltvole": 12, "sparrowick": 8 },
+      "day": { "pebblit": 36, "cragpup": 24, "voltvole": 10, "sparrowick": 8 },
+      "dusk": { "pebblit": 28, "cragpup": 26, "emberhop": 14, "ashmane": 8 },
+      "night": { "pebblit": 24, "cragpup": 28, "voltvole": 18, "ashmane": 14 }
+    },
+    "riverbank": {
+      "dawn": { "rillnewt": 34, "tuftmoth": 16, "grazehorn": 12, "pebblit": 8 },
+      "day": { "rillnewt": 38, "tuftmoth": 18, "grazehorn": 14, "sparrowick": 8 },
+      "dusk": { "rillnewt": 30, "mirefin": 16, "emberhop": 12, "tuftmoth": 10 },
+      "night": { "mirefin": 34, "rillnewt": 22, "voltvole": 14, "sparrowick": 6 }
+    },
+    "water": {
+      "dawn": {},
+      "day": {},
+      "dusk": {},
+      "night": {}
+    }
+  },
+
+  "$density": "Chunks are 64m. One roll per chunk per attempt, gated by these so the world is populated without being a petting zoo.",
+  "density": {
+    "perChunkChance": 0.55,
+    "minSpacing": 9,
+    "despawnDistance": 210,
+    "spawnRadiusMin": 34,
+    "spawnRadiusMax": 150,
+    "repopulateMs": 4000
+  }
+}

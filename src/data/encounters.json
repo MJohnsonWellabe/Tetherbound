@@ -1,0 +1,50 @@
+{
+  "$comment": "Scripted fights. GAME_DESIGN.md section 10: two grunts at 2 pals each, both beatable at party level 10, then Bracken with three. Every enemy pal here is `collared`, which means it hits harder, never dodges, and cannot be caught. That last part is the point: it teaches that Tether's pals are not catchable and reserves the throw for the wild.",
+
+  "grunt_a": {
+    "name": "Tether Grunt",
+    "dialogue": "grunt_a",
+    "afterDialogue": "grunt_a_beaten",
+    "flag": "grunt_a_down",
+    "team": [
+      { "species": "pebblit", "level": 9 },
+      { "species": "sparrowick", "level": 10 }
+    ]
+  },
+
+  "grunt_b": {
+    "name": "Tether Grunt",
+    "dialogue": "grunt_b",
+    "afterDialogue": "grunt_b_beaten",
+    "flag": "grunt_b_down",
+    "team": [
+      { "species": "rillnewt", "level": 10 },
+      { "species": "cragpup", "level": 11 }
+    ]
+  },
+
+  "bracken": {
+    "name": "Bracken Holt",
+    "title": "Warden of the Meadows Hall",
+    "dialogue": "bracken_intro",
+    "afterDialogue": "bracken_defeat",
+    "flag": "bracken_down",
+    "warden": true,
+    "team": [
+      { "species": "cragpup", "level": 14 },
+      { "species": "thistleback", "level": 15 },
+      { "species": "loamking", "level": 17 }
+    ]
+  },
+
+  "$rewards": "Awarded once, on the victory sequence rather than on the last hit, so a player who closes the tab mid-cutscene does not lose the badge.",
+  "rewards": {
+    "bracken": {
+      "flags": ["badge_meadow"],
+      "badge": { "id": "meadow_sigil", "name": "Meadow Sigil" },
+      "items": [{ "id": "amber", "n": 2 }],
+      "recruit": { "species": "loamking", "level": 17, "dialogue": "loamking_offer" },
+      "freed": 4
+    }
+  }
+}
