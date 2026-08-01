@@ -45,6 +45,21 @@
     }
   },
 
+  "$ai": "The wander/graze/flee/aggro state machine. Speeds are m/s. A wild pal roams around the point it spawned at rather than wandering off across the world, so a player who backs off and returns finds it roughly where they left it.",
+  "ai": {
+    "roamRadius": 18,
+    "wanderSpeed": 1.6,
+    "fleeSpeed": 4.4,
+    "aggroSpeed": 3.4,
+    "grazeMsMin": 1500,
+    "grazeMsMax": 4500,
+    "wanderMsMax": 7000,
+    "arriveDistance": 1.2,
+    "fleeUntilDistance": 26,
+    "skittishRange": 9,
+    "turnRate": 7
+  },
+
   "$density": "Chunks are 64m. One roll per chunk per attempt, gated by these so the world is populated without being a petting zoo.",
   "density": {
     "perChunkChance": 0.55,
