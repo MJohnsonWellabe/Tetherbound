@@ -4,6 +4,9 @@ import { Input } from './core/input/Input';
 import { Loop } from './core/Loop';
 import { Stats } from './core/Stats';
 import { InputHint } from './ui/InputHint';
+import { HarvestHud } from './ui/HarvestHud';
+import { HarvestController } from './survival/HarvestController';
+import { add, createInventory } from './survival/Inventory';
 import { Player } from './entities/Player';
 import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
@@ -95,6 +98,18 @@ async function boot(): Promise<void> {
   progress(0.8, 'Setting the sun');
   const time = new TimeOfDay(scene, sun, sky, 0.2, 1);
   const input = new Input(canvas);
+
+  // Grandpa Orin's satchel. M3 hands these over in the opening scene; until
+  // that scene exists the player starts with them so gathering is reachable.
+  const inventory = createInventory();
+  add(inventory, 'stone_axe', 1);
+  add(inventory, 'stone_pick', 1);
+  add(inventory, 'flint_knife', 1);
+  const harvest = new HarvestController(inventory, props);
+  const harvestHud = new HarvestHud(
+    document.getElementById('gather') as HTMLElement,
+    harvest
+  );
   const hint = new InputHint(
     document.getElementById('hint') as HTMLElement,
     input,
@@ -114,6 +129,19 @@ async function boot(): Promise<void> {
         player.state.position.z
       );
       if (time.tick(dt)) bus.emit('dayChanged', { day: time.day });
+
+      // Stamina is not wired to vitals yet, so swings are free for now. The
+      // signature already takes it so that hooking Vitals up is one argument.
+      harvestHud.report(
+        harvest.update(
+          input.intent,
+          player.state.position.x,
+          player.state.position.z,
+          time.day,
+          Number.POSITIVE_INFINITY
+        )
+      );
+      harvestHud.update(player.state.position.x, player.state.position.z);
 
       // Water follows the player so one plane covers the visible world without
       // being large enough to lose float precision at the horizon.
@@ -157,6 +185,8 @@ async function boot(): Promise<void> {
     bus,
     input,
     player,
+    harvest,
+    inventory,
     chunks,
     props,
     terrain,

@@ -233,3 +233,21 @@ body {
   background: rgba(6, 9, 7, 0.75);
   color: var(--text);
 }
+
+/* Gathering readout. Sits above the control prompt, same quiet treatment. */
+.gather {
+  position: fixed;
+  left: 50%;
+  bottom: calc(52px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 20;
+  max-width: min(92vw, 720px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}

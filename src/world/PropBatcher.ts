@@ -53,6 +53,8 @@ export class PropBatcher {
   private readonly cells = new Map<string, PropCell>();
   private readonly queue: Array<{ family: FamilyConfig; ix: number; iz: number }> = [];
   private readonly queued = new Set<string>();
+  /** Node keys the player has harvested. Excluded from every rebuild. */
+  private readonly harvested = new Set<string>();
   private lastX = Number.NaN;
   private lastZ = Number.NaN;
 
@@ -166,7 +168,7 @@ export class PropBatcher {
       this.queued.delete(key);
       if (this.cells.has(key)) continue;
 
-      const cell = buildPropCell(this.terrain, this.prototypes, next.family, next.ix, next.iz);
+      const cell = this.build(next.family, next.ix, next.iz);
       this.cells.set(key, cell);
 
       // A freshly built cell has to be considered for casting immediately, or
@@ -181,6 +183,10 @@ export class PropBatcher {
         }
       }
     }
+  }
+
+  private build(family: FamilyConfig, ix: number, iz: number): PropCell {
+    return buildPropCell(this.terrain, this.prototypes, family, ix, iz, this.harvested);
   }
 
   private disposeCell(cell: PropCell): void {
@@ -229,6 +235,44 @@ export class PropBatcher {
       (a, b) => (a.x - x) ** 2 + (a.z - z) ** 2 - ((b.x - x) ** 2 + (b.z - z) ** 2)
     );
     return out;
+  }
+
+  /**
+   * Remove a harvested node from the world.
+   *
+   * The instance lives inside a packed matrix buffer, so the cell it belongs to
+   * is rebuilt rather than patched. That is one scatter pass and one buffer
+   * upload, which is fine for something that only happens when a player
+   * deliberately swings a tool, and much simpler than maintaining a free list
+   * inside the instance buffer.
+   *
+   * `harvested` is consulted by buildPropCell, so a rebuild for any other
+   * reason keeps the node gone, and a save that restores the set restores the
+   * stumps with it.
+   */
+  markHarvested(node: PropNode): void {
+    if (this.harvested.has(node.key)) return;
+    this.harvested.add(node.key);
+
+    const size = node.cellSize;
+    const ix = Math.floor(node.x / size);
+    const iz = Math.floor(node.z / size);
+    const key = cellKey(node.family, ix, iz);
+    const cell = this.cells.get(key);
+    if (!cell) return;
+    const family = cell.family;
+    this.disposeCell(cell);
+    this.cells.set(key, this.build(family, ix, iz));
+  }
+
+  /** Restore harvested state from a save, before the first update(). */
+  restoreHarvested(keys: Iterable<string>): void {
+    for (const k of keys) this.harvested.add(k);
+    this.lastX = Number.NaN;
+  }
+
+  get harvestedKeys(): string[] {
+    return [...this.harvested];
   }
 
   /** Rescale every family's draw distance. The quality governor calls this. */

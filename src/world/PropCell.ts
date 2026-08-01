@@ -26,6 +26,8 @@ export interface PropNode {
   x: number;
   y: number;
   z: number;
+  /** The family's cell size, so a harvest can find the cell to rebuild. */
+  cellSize: number;
 }
 
 /** One family's entry in scatter.json. */
@@ -66,7 +68,8 @@ export function buildPropCell(
   prototypes: PrototypeSet,
   family: FamilyConfig,
   ix: number,
-  iz: number
+  iz: number,
+  harvested: ReadonlySet<string> = new Set()
 ): PropCell {
   const size = family.cellSize;
   const minX = ix * size;
@@ -125,9 +128,12 @@ export function buildPropCell(
   let minY = Number.POSITIVE_INFINITY;
   let maxY = Number.NEGATIVE_INFINITY;
 
+  let written = 0;
   for (let i = 0; i < points.length; i++) {
     const p = points[i];
     if (!p) continue;
+    // A harvested node leaves no stump: it is simply absent until it regrows.
+    if (harvested.has(p.key)) continue;
     const s = minScale + p.roll * (maxScale - minScale);
     const y = terrain.heightAt(p.x, p.z);
 
@@ -138,7 +144,8 @@ export function buildPropCell(
     position.set(p.x, y, p.z);
     Quaternion.RotationYawPitchRollToRef(p.rotation, 0, 0, rotation);
     Matrix.ComposeToRef(scale, rotation, position, matrix);
-    matrix.copyToArray(matrices, i * 16);
+    matrix.copyToArray(matrices, written * 16);
+    written++;
 
     if (y < minY) minY = y;
     if (y > maxY) maxY = y;
@@ -153,14 +160,28 @@ export function buildPropCell(
         resource: family.harvest,
         x: p.x,
         y,
-        z: p.z
+        z: p.z,
+        cellSize: size
       });
     }
   }
 
   // `true` marks the buffer static: it never changes after upload, so Babylon
   // keeps it GPU-side instead of re-uploading it every frame.
-  mesh.thinInstanceSetBuffer('matrix', matrices, 16, true);
+  if (written === 0) {
+    // Every candidate in this cell has been harvested.
+    mesh.dispose(false, false);
+    return cell;
+  }
+  // Upload only the slots actually written. Harvested nodes are skipped above,
+  // so the tail of the buffer would otherwise be zero matrices, which collapse
+  // their geometry to a point at the world origin.
+  mesh.thinInstanceSetBuffer(
+    'matrix',
+    written === points.length ? matrices : matrices.subarray(0, written * 16),
+    16,
+    true
+  );
 
   // Bounds MUST be set explicitly. A clone inherits the prototype's bounding
   // box, which describes one small prop at the origin, so every batch would be

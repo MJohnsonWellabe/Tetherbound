@@ -24,6 +24,10 @@ export interface GameEvents {
   saveStatus: { status: string; reason?: string };
   /** Inventory contents changed. */
   inventoryChanged: Record<string, never>;
+  /** A tool connected with a node but did not fell it yet. */
+  harvestSwing: { key: string; progress: number };
+  /** A node was felled. `drops` is what actually fit in the satchel. */
+  harvested: { key: string; drops: { id: string; n: number }[] };
   /** Party composition or pal state changed. */
   partyChanged: Record<string, never>;
 }
