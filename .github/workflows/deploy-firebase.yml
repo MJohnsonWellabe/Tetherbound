@@ -104,8 +104,22 @@ jobs:
           # Not pinned to firebase-tools@13 any more either. A pin that old was
           # a guess, and auth handling is exactly the area where it could
           # differ from what the current API expects.
+          # Rules only, deliberately.
+          #
+          # Deploying indexes as well needs datastore.indexes.update on top of
+          # everything rules needs, and it failed on exactly one call: the
+          # field override that exempts `payload` from indexing. That exemption
+          # is a write-cost optimisation on a field nothing will ever query,
+          # while the rules are what stand between a player's save and everyone
+          # else. Letting the optimisation gate the security boundary is the
+          # wrong dependency, and each extra API here has meant another IAM
+          # round trip.
+          #
+          # firestore.indexes.json stays in the repo as the source of truth. To
+          # apply it, grant the service account Cloud Datastore Index Admin
+          # (roles/datastore.indexAdmin) and add firestore:indexes back here.
           npx --yes firebase-tools deploy \
-            --only firestore:rules,firestore:indexes \
+            --only firestore:rules \
             --project tetherbound-5fdd8 \
             --non-interactive \
-            --debug 2>&1 | tail -60
+            --debug 2>&1 | tail -40
