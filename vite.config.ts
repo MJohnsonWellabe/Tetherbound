@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 /**
@@ -23,6 +24,14 @@ export default defineConfig({
     // engine, and the Firebase chunk stays reachable only through the dynamic
     // imports in src/cloud/, so it never loads for a local-only player.
     rollupOptions: {
+      // styleguide.html is a second entry: a living reference for the design
+      // system, rendered from the same components.css the game ships. A style
+      // guide maintained separately from the real stylesheet drifts within a
+      // week and then actively misleads.
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        styleguide: resolve(__dirname, 'styleguide.html')
+      },
       output: {
         manualChunks(id: string): string | undefined {
           // The glTF parser is 207 KB gzipped and nothing before M5 loads a

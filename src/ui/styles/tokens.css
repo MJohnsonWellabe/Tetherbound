@@ -1,0 +1,118 @@
+/*
+ * TETHERBOUND design tokens.
+ *
+ * Midnight forest with neon flora: a near-black green base, with accents that
+ * read as glowing moss, spores and night-blooming flowers.
+ *
+ * This deliberately does NOT follow the palette in ASSETS.md ("warm meadow
+ * greens and golds"). That guidance governs WORLD art, where warm daylight
+ * grassland is right. The interface is a separate surface and a warm gold UI
+ * put this too close to the studio's golf game. Logged as DECISIONS.md D23.
+ *
+ * Rules for using these:
+ *
+ * 1. Never write a raw hex value in a component. If a colour is missing, add
+ *    a token here so a future retheme is one file.
+ * 2. `--tether-*` is reserved for Team Tether, enemies and danger. Nothing
+ *    friendly is ever allowed to use it, so the colour keeps its meaning.
+ * 3. Accents carry semantics, not decoration: lime is "you can act on this",
+ *    magenta is party and affinity, cyan is orbs and capture.
+ */
+
+:root {
+  /* --- surfaces, darkest to lightest ---------------------------------- */
+  --bg: #0a0f0c;
+  --bg-deep: #060907;
+  --surface: #111a14;
+  --surface-2: #18241b;
+  --surface-3: #223226;
+  --line: #2c4033;
+  --line-soft: #1e2c23;
+
+  /* --- text ------------------------------------------------------------ */
+  --text: #e8f5ea;
+  --text-dim: #9fb4a6;
+  --text-faint: #63796b;
+
+  /* --- accents. Semantic, not decorative. ------------------------------ */
+  /* Primary action, confirmation, "this is interactive". */
+  --spore: #7cff9b;
+  --spore-dim: #4bbf6a;
+  --spore-glow: rgba(124, 255, 155, 0.35);
+
+  /* Party, pals, affinity. */
+  --bloom: #ff5cc8;
+  --bloom-dim: #c23f97;
+  --bloom-glow: rgba(255, 92, 200, 0.32);
+
+  /* Orbs, capture, the throw. */
+  --dew: #4fd8ff;
+  --dew-dim: #2e9fbf;
+  --dew-glow: rgba(79, 216, 255, 0.32);
+
+  /* Badges, sigils, rewards. Used sparingly so it stays special. */
+  --sigil: #ffd76e;
+
+  /* --- danger. Team Tether only. --------------------------------------- */
+  --tether: #ff6b4a;
+  --tether-dim: #c14a30;
+  --tether-glow: rgba(255, 107, 74, 0.3);
+
+  /* --- vitals ---------------------------------------------------------- */
+  --health: #ff5c72;
+  --stamina: #7cff9b;
+  --hunger: #ffb45c;
+
+  /* --- geometry -------------------------------------------------------- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  --pad-xs: 6px;
+  --pad-sm: 10px;
+  --pad-md: 16px;
+  --pad-lg: 24px;
+
+  /* Minimum touch target. CLAUDE.md: 44 CSS pixels, no exceptions. */
+  --tap: 44px;
+
+  /* --- elevation ------------------------------------------------------- */
+  --shadow-panel: 0 18px 48px rgba(0, 0, 0, 0.62);
+  --shadow-inset: inset 0 1px 0 rgba(232, 245, 234, 0.06);
+
+  /* --- motion ---------------------------------------------------------- */
+  --fast: 120ms;
+  --base: 220ms;
+  --slow: 400ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* --- type ------------------------------------------------------------ */
+  --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --fs-xs: 11px;
+  --fs-sm: 13px;
+  --fs-md: 15px;
+  --fs-lg: 19px;
+  --fs-xl: 26px;
+
+  /* --- safe areas ------------------------------------------------------ */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+}
+
+/*
+ * Respect a stated preference for less motion. Glow pulses and panel slides
+ * are decoration; nothing here carries information that only the animation
+ * conveys, so removing them costs the player nothing.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --fast: 0ms;
+    --base: 0ms;
+    --slow: 0ms;
+  }
+}

@@ -1,34 +1,12 @@
 /*
- * Base layout and the boot/error/stats chrome. Gameplay HUD lives in hud.css.
+ * Reset, page shell, and the boot/error/stats chrome.
  *
- * Mobile first, per CLAUDE.md: every interactive target is at least 44px, and
- * nothing here depends on hover. Test at 390x844 before anything wider.
+ * Mobile first, per CLAUDE.md: every interactive target is at least 44px and
+ * nothing depends on hover. Test at 390x844 before anything wider.
  */
 
-:root {
-  /* Warm meadow greens and golds, desaturated stone, one hot accent reserved
-     for Tether and danger. Straight from ASSETS.md's art direction. */
-  --meadow-deep: #1d2417;
-  --meadow: #3f5a2e;
-  --meadow-lit: #7fa356;
-  --gold: #d9b45b;
-  --stone: #8d8b82;
-  --stone-dark: #4a4842;
-  --bone: #efe9dc;
-  --tether: #d2691e;
-  --danger: #c0392b;
-
-  --ui-pad: 12px;
-  --tap: 44px;
-
-  --safe-t: env(safe-area-inset-top, 0px);
-  --safe-b: env(safe-area-inset-bottom, 0px);
-  --safe-l: env(safe-area-inset-left, 0px);
-  --safe-r: env(safe-area-inset-right, 0px);
-
-  --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-}
+@import './tokens.css';
+@import './components.css';
 
 * {
   box-sizing: border-box;
@@ -40,9 +18,10 @@ body {
   padding: 0;
   height: 100%;
   overflow: hidden;
-  background: var(--meadow-deep);
-  color: var(--bone);
+  background: var(--bg-deep);
+  color: var(--text);
   font-family: var(--font);
+  font-size: var(--fs-md);
   /* A double-tap that zooms mid-fight is a lost fight. */
   touch-action: none;
   -webkit-user-select: none;
@@ -61,84 +40,6 @@ body {
   touch-action: none;
 }
 
-/* --- boot ---------------------------------------------------------------- */
-
-.boot {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  background: radial-gradient(circle at 50% 40%, #2b3720 0%, var(--meadow-deep) 70%);
-  transition: opacity 400ms ease;
-}
-
-.boot--gone {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.boot__mark {
-  font-size: clamp(24px, 7vw, 40px);
-  letter-spacing: 0.34em;
-  font-weight: 600;
-  color: var(--gold);
-  /* letter-spacing pads the right edge; pull it back so the word looks centred. */
-  text-indent: 0.34em;
-}
-
-.boot__bar {
-  width: min(240px, 60vw);
-  height: 3px;
-  background: rgba(239, 233, 220, 0.16);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.boot__fill {
-  height: 100%;
-  width: 0%;
-  background: var(--meadow-lit);
-  transition: width 220ms ease;
-}
-
-.boot__msg {
-  font-size: 13px;
-  color: var(--stone);
-  min-height: 1.2em;
-}
-
-/* --- stats readout ------------------------------------------------------- */
-
-.stats {
-  position: fixed;
-  top: calc(var(--safe-t) + 6px);
-  right: calc(var(--safe-r) + 6px);
-  z-index: 90;
-  padding: 6px 9px;
-  border-radius: 6px;
-  background: rgba(12, 15, 10, 0.72);
-  color: var(--meadow-lit);
-  font-family: var(--mono);
-  font-size: 11px;
-  line-height: 1.45;
-  white-space: pre;
-  pointer-events: none;
-}
-
-.stats--warn {
-  color: var(--gold);
-}
-
-.stats--bad {
-  color: var(--tether);
-}
-
-/* --- fatal error --------------------------------------------------------- */
-
 /*
  * `[hidden]` must be restated for anything that sets `display`.
  *
@@ -152,6 +53,94 @@ body {
   display: none;
 }
 
+/* --- boot ---------------------------------------------------------------- */
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(124, 255, 155, 0.09) 0%, transparent 58%),
+    radial-gradient(circle at 50% 62%, rgba(79, 216, 255, 0.06) 0%, transparent 55%),
+    var(--bg-deep);
+  transition: opacity var(--slow) var(--ease);
+}
+
+.boot--gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boot__mark {
+  font-size: clamp(22px, 6.5vw, 38px);
+  font-weight: 600;
+  letter-spacing: 0.36em;
+  color: var(--text);
+  /* letter-spacing pads the right edge; pull it back so the word looks centred. */
+  text-indent: 0.36em;
+  text-shadow: 0 0 26px var(--spore-glow);
+}
+
+.boot__bar {
+  width: min(240px, 58vw);
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.boot__fill {
+  height: 100%;
+  width: 0%;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--dew), var(--spore));
+  box-shadow: 0 0 12px var(--spore-glow);
+  transition: width var(--base) var(--ease);
+}
+
+.boot__msg {
+  font-size: var(--fs-sm);
+  color: var(--text-faint);
+  min-height: 1.2em;
+  letter-spacing: 0.02em;
+}
+
+/* --- stats readout ------------------------------------------------------- */
+
+.stats {
+  position: fixed;
+  top: calc(var(--safe-t) + 6px);
+  right: calc(var(--safe-r) + 6px);
+  z-index: 90;
+  padding: 7px 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm);
+  background: rgba(6, 9, 7, 0.78);
+  color: var(--spore);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.stats--warn {
+  color: var(--hunger);
+  border-color: var(--hunger);
+}
+
+.stats--bad {
+  color: var(--tether);
+  border-color: var(--tether-dim);
+}
+
+/* --- fatal error --------------------------------------------------------- */
+
 .fatal {
   position: fixed;
   inset: 0;
@@ -160,54 +149,28 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 24px;
+  gap: var(--pad-md);
+  padding: var(--pad-lg);
   text-align: center;
-  background: var(--meadow-deep);
+  background: var(--bg-deep);
 }
 
 .fatal__title {
   margin: 0;
-  font-size: 20px;
+  font-size: var(--fs-xl);
   font-weight: 600;
-  color: var(--gold);
+  color: var(--tether);
 }
 
 .fatal__msg {
   margin: 0;
   max-width: 46ch;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: var(--fs-xs);
   line-height: 1.6;
-  color: var(--stone);
+  color: var(--text-dim);
   /* Error text is the one place a user may legitimately want to select. */
   -webkit-user-select: text;
   user-select: text;
   word-break: break-word;
-}
-
-/* --- shared button ------------------------------------------------------- */
-
-.btn {
-  min-height: var(--tap);
-  min-width: var(--tap);
-  padding: 0 20px;
-  border: 1px solid var(--meadow-lit);
-  border-radius: 8px;
-  background: var(--meadow);
-  color: var(--bone);
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-
-.btn:active {
-  background: var(--meadow-lit);
-}
-
-.btn[disabled] {
-  opacity: 0.5;
-  cursor: default;
 }
