@@ -59,12 +59,47 @@ jobs:
           node -e "JSON.parse(require('fs').readFileSync(process.env.RUNNER_TEMP + '/sa.json','utf8'))" \
             || { echo '::error::FIREBASE_SERVICE_ACCOUNT is not valid JSON. Paste the ENTIRE downloaded key file, braces included.'; exit 1; }
 
+      # A 403 from firebaserules tells you a permission is missing but never
+      # WHICH identity was refused, and the two likely causes look identical
+      # from the outside: a role granted to the wrong principal, or a key
+      # generated from a different project entirely. Printing the two
+      # non-secret fields turns a guessing game into a lookup. The private key
+      # is never touched.
+      - name: Report which identity is being used
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          node -e '
+            const sa = JSON.parse(require("fs").readFileSync(process.env.RUNNER_TEMP + "/sa.json", "utf8"));
+            const want = JSON.parse(require("fs").readFileSync(".firebaserc", "utf8")).projects.default;
+            console.log("service account : " + sa.client_email);
+            console.log("key project_id  : " + sa.project_id);
+            console.log("target project  : " + want);
+            if (sa.project_id !== want) {
+              console.log("::error::The key belongs to project \"" + sa.project_id +
+                "\" but we are deploying to \"" + want +
+                "\". Generate the key from the target project.");
+              process.exit(1);
+            }
+          '
+
       - name: Deploy Firestore rules and indexes
         if: steps.gate.outputs.ready == 'true'
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
         run: |
-          npx --yes firebase-tools@13 deploy \
+          # The project is named literally rather than read from .firebaserc.
+          # `require('./.firebaserc')` threw on every run so far, because Node's
+          # require cannot load a file with no recognised extension. The failure
+          # was invisible: the command substitution collapsed to an empty
+          # string, `--project ""` fell through to the CLI's own .firebaserc
+          # lookup, and the deploy carried on against the right project while
+          # printing a stack trace nobody read.
+          #
+          # Not pinned to firebase-tools@13 any more either. A pin that old was
+          # a guess, and auth handling is exactly the area where it could
+          # differ from what the current API expects.
+          npx --yes firebase-tools deploy \
             --only firestore:rules,firestore:indexes \
-            --project "$(node -p "require('./.firebaserc').projects.default")" \
-            --non-interactive
+            --project tetherbound-5fdd8 \
+            --non-interactive \
+            --debug 2>&1 | tail -60
