@@ -219,6 +219,50 @@ comment quotes the barrel import it exists to prevent. A rule that cannot be
 explained in prose beside the code it governs is a bad rule, so the scanner
 learned to read code instead of the documentation learning to avoid words.
 
+### D20. Scatter separates `mask` from `density`
+
+Two parameters that sound like one, doing genuinely different jobs at
+different points in the pipeline.
+
+`mask` is hard exclusion (water, cliffs, the village footprint) and applies
+BEFORE the spacing pass, so an excluded candidate never suppresses a valid
+neighbour. Filtering it afterwards instead would let a candidate standing in a
+river suppress the tree on the bank, leaving a bald ring around every
+shoreline.
+
+`density` is thinning and applies AFTER the spacing pass, which is the only
+place it can control the count. This was caught by a test rather than
+reasoned out in advance: thinning candidates beforehand took a 300x300m plot
+from 837 points to 830, a 1% reduction from a parameter set to 0.5. Minimum
+spacing is the binding constraint, so removing half the candidates just lets
+the survivors close ranks. Post-filtering also leaves irregular gaps, which is
+what a thinner stand of trees should look like anyway.
+
+### D19. Scatter uses a global jittered grid, not per-chunk Poisson-disk
+
+`ARCHITECTURE.md` asks for "Poisson-disk scatter ... from a deterministic
+per-chunk RNG". Implemented as a global jittered grid with priority-based
+suppression instead, which satisfies the intent and fixes a flaw in the letter
+of it.
+
+Running Bridson's algorithm inside each chunk spaces samples only against
+others in the same chunk, so props clump along every chunk seam. Worse, the
+result depends on which chunks happen to be resident, so walking away and back
+regenerates a different layout, and a save that recorded "harvested node #7"
+would point at a different bush.
+
+Instead every cell of a global grid derives one candidate and one priority from
+`hash(seed, cellX, cellZ)`, and a candidate survives if no higher-priority
+candidate within `minDistance` exists nearby. Because acceptance compares
+against a fixed neighbourhood using a deterministic priority, it is
+order-independent: a cell resolves identically whether evaluated first, last,
+or in a chunk loaded alone. Chunk seams stop existing as a concept, and every
+point carries a stable key that `worldDeltas` can reference across sessions.
+
+`tests/scatter.test.ts` asserts the property directly: sampling a region whole
+equals sampling it in quarters, and equals sampling it on a different grid
+offset.
+
 ### D18. The glTF parser is a separate on-demand chunk
 
 There are two engine facades, not one. `src/core/babylon.ts` holds the engine
