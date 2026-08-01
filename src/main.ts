@@ -7,6 +7,7 @@ import { Player } from './entities/Player';
 import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
 import { ChunkManager } from './world/ChunkManager';
+import { PropBatcher } from './world/PropBatcher';
 import { createPrototypes, disposePrototypes } from './world/Prototypes';
 import { Terrain, WATER_LEVEL } from './world/gen/Terrain';
 import { TimeOfDay } from './world/TimeOfDay';
@@ -60,15 +61,21 @@ async function boot(): Promise<void> {
   progress(0.3, 'Shaping the Meadows');
   const terrain = new Terrain(resolveSeed());
   const prototypes = createPrototypes(scene);
-  const chunks = new ChunkManager(scene, terrain, prototypes, shadows);
-  const water = buildWaterPlane(scene, 4096, WATER_LEVEL);
+  const chunks = new ChunkManager(scene, terrain);
+  // Props stream independently of terrain chunks, batched by their own draw
+  // distance. See the header of PropBatcher.ts for why they are separate.
+  const props = new PropBatcher(terrain, prototypes, shadows);
+  // 1024m is comfortably past the 384m terrain view distance, and small enough
+  // that its subdivisions are ~43m, so per-vertex fog interpolates sensibly.
+  // It follows the player, so it never needs to be world-sized.
+  const water = buildWaterPlane(scene, 1024, WATER_LEVEL);
 
   // One adapter, so the controller and the camera both see exactly the terrain
   // the renderer drew rather than a second opinion about it.
   const world: ControllerWorld = {
     heightAt: (x, z) => terrain.heightAt(x, z),
     slopeAt: (x, z) => terrain.slopeAt(x, z),
-    collidersNear: (x, z, r) => chunks.collidersNear(x, z, r)
+    collidersNear: (x, z, r) => props.collidersNear(x, z, r)
   };
 
   progress(0.5, 'Waking Hollowbrook');
@@ -76,10 +83,13 @@ async function boot(): Promise<void> {
   // solid ground regardless of seed.
   const player = new Player(scene, camera, { x: 0, y: terrain.heightAt(0, 0), z: 0 }, shadows);
 
-  // Build the chunks around the spawn before the first frame, so the player
-  // never sees themselves standing on nothing.
+  // Build the ground around the spawn before the first frame, so the player
+  // never sees themselves standing on nothing. Props can arrive a frame or two
+  // later; bare terrain reads as "still loading", a hole reads as broken.
   chunks.update(0, 0);
   chunks.processQueue(2000);
+  props.update(0, 0);
+  props.processQueue(1500);
 
   progress(0.8, 'Setting the sun');
   const time = new TimeOfDay(scene, sun, sky, 0.2, 1);
@@ -91,6 +101,12 @@ async function boot(): Promise<void> {
 
       player.update(input, world, dt);
       chunks.update(player.state.position.x, player.state.position.z);
+      props.update(player.state.position.x, player.state.position.z);
+      renderer.focusShadows(
+        player.state.position.x,
+        player.state.position.y,
+        player.state.position.z
+      );
       if (time.tick(dt)) bus.emit('dayChanged', { day: time.day });
 
       // Water follows the player so one plane covers the visible world without
@@ -106,6 +122,7 @@ async function boot(): Promise<void> {
       // a frame that owes several simulation steps does not also owe several
       // chunk builds.
       chunks.processQueue();
+      props.processQueue();
       renderer.render();
       stats?.sample(performance.now());
     }
@@ -134,6 +151,7 @@ async function boot(): Promise<void> {
     input,
     player,
     chunks,
+    props,
     terrain,
     time,
     dispose: (): void => {
@@ -141,6 +159,7 @@ async function boot(): Promise<void> {
       input.dispose();
       player.dispose();
       chunks.dispose();
+      props.dispose();
       disposePrototypes(prototypes);
       water.dispose();
       renderer.dispose();

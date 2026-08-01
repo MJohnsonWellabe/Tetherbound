@@ -9,15 +9,18 @@ import type { BiomeKind, Terrain } from './gen/Terrain';
  * proportional to chunk count rather than to biome variety.
  */
 
-export const CHUNK_SIZE = 64;
+export const CHUNK_SIZE = 128;
 
 /**
  * Quads per chunk edge at each LOD. Halving per level keeps the vertex count
- * dropping fast enough that the outer ring of a 5-chunk view is nearly free.
- * LOD 0 gives a 2m grid, which is fine detail for terrain the player walks on
- * given the heightfield's own detail octave is 42m.
+ * dropping fast enough that the outer ring of the view is nearly free. LOD 0
+ * gives a 2m grid, which is fine detail for terrain the player walks on given
+ * the heightfield's own detail octave is 42m.
+ *
+ * Doubled alongside CHUNK_SIZE going 64 -> 128, so the grid spacing at every
+ * level is unchanged and only the number of draw calls moved.
  */
-const LOD_RESOLUTION = [32, 16, 8] as const;
+const LOD_RESOLUTION = [64, 32, 16] as const;
 
 const BIOME_COLOR: Record<BiomeKind, Color3> = {
   meadow: new Color3(0.42, 0.55, 0.24),
@@ -137,15 +140,51 @@ export function buildChunkMesh(
   return mesh;
 }
 
-/** Water is one shared plane rather than per-chunk geometry. */
-export function buildWaterPlane(scene: Scene, size: number, level: number): Mesh {
+/**
+ * Water is one shared plane rather than per-chunk geometry.
+ *
+ * SUBDIVIDED, and that is not cosmetic. Babylon's StandardMaterial computes fog
+ * in the vertex shader and interpolates it across the triangle, so a quad with
+ * four corners 4096m apart interpolates one fog value over the entire visible
+ * world. The result was a pale sheet lying across the landscape with a hard
+ * diagonal seam down the middle: the boundary between the quad's two triangles.
+ * It only became obvious when the fog was thickened to match the new prop draw
+ * distances, but the geometry was always wrong.
+ *
+ * The mesh is also NOT world-matrix frozen. It follows the player, and freezing
+ * silently discarded every position update, which is why a plane meant to track
+ * the camera had sat at the world origin since it was written.
+ */
+export function buildWaterPlane(scene: Scene, size: number, level: number, segments = 24): Mesh {
   const mesh = new Mesh('water', scene);
   const data = new VertexData();
+
   const h = size / 2;
-  data.positions = [-h, level, -h, h, level, -h, h, level, h, -h, level, h];
-  data.normals = [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0];
-  // Same left-handed winding as the terrain grid above.
-  data.indices = [0, 1, 2, 0, 2, 3];
+  const step = size / segments;
+  const positions: number[] = [];
+  const normals: number[] = [];
+  const indices: number[] = [];
+
+  for (let iz = 0; iz <= segments; iz++) {
+    for (let ix = 0; ix <= segments; ix++) {
+      positions.push(-h + ix * step, level, -h + iz * step);
+      normals.push(0, 1, 0);
+    }
+  }
+  for (let iz = 0; iz < segments; iz++) {
+    for (let ix = 0; ix < segments; ix++) {
+      const a = iz * (segments + 1) + ix;
+      const b = a + 1;
+      const c = a + (segments + 1);
+      const d = c + 1;
+      // Same left-handed winding as the terrain grid above.
+      indices.push(a, b, c, b, d, c);
+    }
+  }
+
+  data.positions = positions;
+  data.normals = normals;
+  data.indices = indices;
   data.applyToMesh(mesh, false);
 
   const mat = new StandardMaterial('mat_water', scene);
@@ -154,7 +193,6 @@ export function buildWaterPlane(scene: Scene, size: number, level: number): Mesh
   mat.alpha = 0.78;
   mesh.material = mat;
   mesh.isPickable = false;
-  mesh.freezeWorldMatrix();
   return mesh;
 }
 

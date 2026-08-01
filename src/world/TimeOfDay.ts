@@ -33,7 +33,13 @@ const NOON: Palette = {
   fog: new Color3(0.64, 0.73, 0.82),
   sunIntensity: 1.75,
   ambientIntensity: 0.55,
-  fogDensity: 0.0018
+  // Fog density is set from the prop draw distances in scatter.json, not from
+  // taste. Trees stop at 224m and terrain runs to 384m, so the fog has to be
+  // thick enough to hide the tree line or the world ends in a visible ring of
+  // bare ground. EXP2 at 0.0035 leaves the treeline about half fogged and the
+  // terrain horizon about 85% fogged, which reads as depth rather than as a
+  // draw distance.
+  fogDensity: 0.0035
 };
 
 const GOLDEN: Palette = {
@@ -43,7 +49,7 @@ const GOLDEN: Palette = {
   fog: new Color3(0.78, 0.6, 0.45),
   sunIntensity: 1.25,
   ambientIntensity: 0.42,
-  fogDensity: 0.0032
+  fogDensity: 0.0048
 };
 
 const NIGHT: Palette = {

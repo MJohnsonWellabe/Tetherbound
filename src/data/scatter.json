@@ -1,0 +1,113 @@
+{
+  "$comment": "Prop scatter and batching. Every number the Meadows looks like lives here; PropBatcher.ts and Prototypes.ts contain no tuning literals. Moving this into a per-biome file is the M6 job, when a second biome exists to justify the schema.",
+
+  "$comment_batching": "Props are batched by (family x spatial cell), NOT by terrain chunk. Per-chunk batching cost one draw call per chunk per family and measured 1576 draw calls against a budget of 150. A cell is sized to its family's own draw distance, so at most 3x3 cells of any family are ever resident and each is one draw call.",
+
+  "$comment_cellSize": "cellSize == drawDistance is deliberate. The disc of radius R around the player reaches at most one cell in each direction when cells are R across, capping resident cells per family at 9 before distance culling. Larger cells mean fewer draws but more wasted instances behind the player; smaller cells invert that.",
+
+  "colliderQueryPadding": 2,
+
+  "families": [
+    {
+      "id": "oak",
+      "$comment": "Sparse oak groves in grassland, GAME_DESIGN.md section 9. The meadow gets the occasional lone tree, the grove gets a stand.",
+      "minDistance": 11,
+      "drawDistance": 224,
+      "cellSize": 224,
+      "castsShadow": true,
+      "shadowDistance": 140,
+      "collisionRadius": 0.5,
+      "harvest": "wood",
+      "biomes": ["meadow", "grove"],
+      "maxSlope": 24,
+      "density": { "grove": 0.85, "default": 0.1 },
+      "scaleRange": [0.82, 1.25]
+    },
+    {
+      "id": "pine",
+      "$comment": "Kept as its own family so groves mix silhouettes.",
+      "minDistance": 13,
+      "drawDistance": 224,
+      "cellSize": 224,
+      "castsShadow": true,
+      "shadowDistance": 140,
+      "collisionRadius": 0.45,
+      "harvest": "wood",
+      "biomes": ["grove"],
+      "maxSlope": 28,
+      "density": { "default": 0.35 },
+      "scaleRange": [0.85, 1.3]
+    },
+    {
+      "id": "rock",
+      "minDistance": 7,
+      "drawDistance": 128,
+      "cellSize": 128,
+      "castsShadow": true,
+      "shadowDistance": 90,
+      "collisionRadius": 0.8,
+      "harvest": "stone",
+      "biomes": ["rock", "meadow", "riverbank"],
+      "maxSlope": 90,
+      "density": { "rock": 0.8, "default": 0.08 },
+      "scaleRange": [0.6, 2.1]
+    },
+    {
+      "id": "bush",
+      "minDistance": 6,
+      "drawDistance": 112,
+      "cellSize": 112,
+      "castsShadow": true,
+      "shadowDistance": 70,
+      "collisionRadius": 0.55,
+      "harvest": "fiber",
+      "biomes": ["meadow", "grove"],
+      "maxSlope": 30,
+      "density": { "default": 0.3 },
+      "scaleRange": [0.7, 1.4]
+    },
+    {
+      "id": "reed",
+      "minDistance": 2.2,
+      "drawDistance": 64,
+      "cellSize": 64,
+      "castsShadow": false,
+      "shadowDistance": 0,
+      "collisionRadius": 0,
+      "harvest": null,
+      "biomes": ["riverbank"],
+      "maxSlope": 90,
+      "density": { "default": 0.7 },
+      "scaleRange": [0.7, 1.5]
+    },
+    {
+      "id": "flower",
+      "minDistance": 3.4,
+      "drawDistance": 64,
+      "cellSize": 64,
+      "castsShadow": false,
+      "shadowDistance": 0,
+      "collisionRadius": 0,
+      "harvest": null,
+      "biomes": ["meadow"],
+      "maxSlope": 22,
+      "density": { "default": 0.45 },
+      "scaleRange": [0.8, 1.3]
+    },
+    {
+      "id": "grass",
+      "$comment": "The densest family by an order of magnitude, so it gets the shortest draw distance. At the old 192m near-ring radius this alone was roughly 40k instances and blew the whole triangle budget.",
+      "minDistance": 1.9,
+      "drawDistance": 44,
+      "cellSize": 44,
+      "castsShadow": false,
+      "shadowDistance": 0,
+      "collisionRadius": 0,
+      "harvest": null,
+      "biomes": ["meadow", "grove"],
+      "maxSlope": 35,
+      "density": { "default": 0.8 },
+      "scaleRange": [0.7, 1.6]
+    }
+  ]
+}

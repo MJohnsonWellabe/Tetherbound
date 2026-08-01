@@ -73,7 +73,28 @@ export async function place(page, { x, z, yaw = 0, pitch = 0.18, settleMs = 6000
     },
     [x, z]
   );
-  await page.waitForTimeout(settleMs);
+  // Wait for the streaming queue to actually drain, not for a guessed duration.
+  // A fixed timeout produced measurements of a half-built world: draw calls
+  // read 203, then 219, then 1013 across three samples taken 400ms apart, and
+  // the tool reported its own data as incoherent because the number kept
+  // climbing. It was not incoherent, it was early. Chunk building is time-
+  // sliced to 4ms per frame, so under SwiftShader a full 5-chunk radius takes
+  // far longer to populate than any constant somebody would think to write.
+  await page
+    .waitForFunction(
+      () => {
+        const g = window.__tetherbound;
+        return g.chunks.pendingCount === 0 && g.props.pendingCount === 0;
+      },
+      null,
+      {
+        timeout: settleMs * 10,
+        polling: 250
+      }
+    )
+    .catch(() => {}); // fall through and measure anyway rather than throwing
+  // A short settle after the queue empties, so the last built chunk is drawn.
+  await page.waitForTimeout(500);
 
   // Pose after settling. The player's own camera rig runs every frame, so this
   // has to be the last thing that touches the camera before the shutter.
@@ -103,24 +124,51 @@ export async function setTimeOfDay(page, cycle) {
   }, cycle);
 }
 
-/** Draw calls, triangles, active meshes and measured frame time. */
+/**
+ * Draw calls, triangles, active meshes and measured frame time.
+ *
+ * The draw call figure is PER FRAME, which it previously was not. `_drawCalls`
+ * is a Babylon PerfCounter, and a PerfCounter only rolls its running total into
+ * `.current` when something calls `fetchNewFrame()`. Nothing does, unless a
+ * SceneInstrumentation is attached (which is why the ?stats=1 overlay reads
+ * correctly and this did not). Reading `.current` off an un-fetched counter
+ * returns an accumulating total, so the number climbed for as long as the tool
+ * ran and every measurement it produced was meaningless.
+ *
+ * Resetting the counter immediately before the frame we sample is enough, and
+ * avoids attaching instrumentation that would itself perturb the timing.
+ */
 export async function stats(page, sampleMs = 2500) {
   return page.evaluate(async (ms) => {
     const g = window.__tetherbound;
     const scene = g.scene;
     const engine = g.renderer.handles.engine;
 
+    // Warm up before sampling. The first renders after a teleport still carry
+    // churn from the frame the camera was posed on, and reading a single frame
+    // out of that produced draw counts of 74, 90, 141 and 166 for a scene that
+    // is actually a stable 74. A number that changes every time you ask is not
+    // a measurement.
+    for (let i = 0; i < 8; i++) scene.render();
+
     // Time explicit render() calls. A headless tab is throttled to roughly one
     // rAF per second, so engine.getFps() measures the throttle, not the game.
     const frames = 40;
+    const draws = [];
     const t0 = performance.now();
-    for (let i = 0; i < frames; i++) scene.render();
+    for (let i = 0; i < frames; i++) {
+      engine._drawCalls?.fetchNewFrame();
+      scene.render();
+      draws.push(engine._drawCalls?.current ?? 0);
+    }
     const frameMs = (performance.now() - t0) / frames;
+    draws.sort((a, b) => a - b);
 
     await new Promise((r) => setTimeout(r, Math.min(ms, 50)));
     return {
       frameMs: +frameMs.toFixed(2),
-      drawCalls: engine._drawCalls?.current ?? null,
+      // Median across the sampled frames, not the last one.
+      drawCalls: draws[Math.floor(draws.length / 2)] ?? null,
       triangles: Math.round(scene.getActiveIndices() / 3),
       activeMeshes: scene.getActiveMeshes().length,
       totalMeshes: scene.meshes.length,

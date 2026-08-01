@@ -9,6 +9,7 @@ import {
   ShadowGenerator,
   Vector3
 } from './babylon';
+import render from '../data/render.json';
 
 /**
  * Renderer bootstrap: engine, scene, lighting rig, resize handling, and
@@ -55,6 +56,9 @@ export class Renderer {
   readonly handles: RendererHandles;
   private readonly canvas: HTMLCanvasElement;
   private readonly teardown: Array<() => void> = [];
+  /** Where the shadow box currently sits. NaN forces the first follow. */
+  private shadowFocusX = Number.NaN;
+  private shadowFocusZ = Number.NaN;
   /** Fired when the GPU context is lost and then restored, so the game can
    *  re-upload anything it owns. */
   onContextRestored: (() => void) | null = null;
@@ -83,9 +87,9 @@ export class Renderer {
     scene.blockMaterialDirtyMechanism = true;
 
     const camera = new FreeCamera('camera', new Vector3(0, 8, -12), scene);
-    camera.minZ = 0.35;
-    camera.maxZ = 900;
-    camera.fov = 0.9;
+    camera.minZ = render.camera.minZ;
+    camera.maxZ = render.camera.maxZ;
+    camera.fov = render.camera.fov;
     // The camera rig drives this manually from the player transform; Babylon's
     // built-in input would fight it.
     camera.inputs.clear();
@@ -100,14 +104,21 @@ export class Renderer {
     sky.diffuse = new Color3(0.72, 0.8, 0.92);
     sky.groundColor = new Color3(0.28, 0.3, 0.2);
 
+    // The shadow frustum is pinned to a box around the player rather than
+    // fitted to the caster list. autoUpdateExtends walks every caster every
+    // frame and the bounds it finds span the whole view distance, so a 1024
+    // map was spread over 384m at roughly 0.4m per texel. The same map over a
+    // 70m box is about 0.07m per texel.
+    sun.shadowMinZ = render.shadow.minZ;
+    sun.shadowMaxZ = render.shadow.maxZ;
+
     const shadows = new ShadowGenerator(device.shadowMapSize, sun);
     shadows.usePercentageCloserFiltering = !device.isTouch;
     shadows.filteringQuality = ShadowGenerator.QUALITY_LOW;
     shadows.bias = 0.008;
     shadows.normalBias = 0.02;
-    // Static scenery dominates the shadow map. Regenerating it every frame is
-    // pure waste; world systems call getShadowMap().refreshRate when something
-    // actually moves.
+    // Which meshes cast is decided by PropBatcher, by distance. Nothing is in
+    // the list until it puts something there.
     shadows.getShadowMap()?.renderList?.splice(0);
 
     this.handles = { engine, scene, camera, sun, sky, shadows, device };
@@ -161,6 +172,30 @@ export class Renderer {
       this.canvas.removeEventListener('webglcontextlost', onLost);
       this.canvas.removeEventListener('webglcontextrestored', onRestored);
     });
+  }
+
+  /**
+   * Recentre the shadow box on the player.
+   *
+   * The box is small so shadow texels are small, which means it has to travel
+   * with the player or they walk out of their own shadow. Recentring is
+   * deliberately hysteretic: moving it every frame makes shadow texels crawl
+   * visibly across static geometry, which reads worse than a box that is a few
+   * meters off centre.
+   */
+  focusShadows(x: number, y: number, z: number): void {
+    const dx = x - this.shadowFocusX;
+    const dz = z - this.shadowFocusZ;
+    if (dx * dx + dz * dz < render.shadow.refollowDistance ** 2) return;
+    this.shadowFocusX = x;
+    this.shadowFocusZ = z;
+
+    // A directional light's position is not where the light is, it is where its
+    // shadow frustum is anchored. Lifting it along the reversed light direction
+    // keeps the whole scene in front of the near plane.
+    const dir = this.handles.sun.direction;
+    const lift = render.shadow.heightAbovePlayer;
+    this.handles.sun.position.set(x - dir.x * lift, y - dir.y * lift, z - dir.z * lift);
   }
 
   render(): void {
