@@ -52,7 +52,13 @@ jobs:
       - name: Build
         run: npx vite build
 
+      # `enablement: true` turns Pages on via the API on the first run instead
+      # of failing with "Get Pages site failed" until somebody visits repo
+      # Settings and picks GitHub Actions as the source. If the token is not
+      # allowed to do that, the manual switch is Settings -> Pages -> Source.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
