@@ -13,6 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "assets": "node scripts/optimize-assets.mjs",
+    "decisions": "node tools/decisions.mjs",
     "smoke": "playwright test",
     "smoke:update": "playwright test --update-snapshots",
     "survey": "node tools/survey.mjs",

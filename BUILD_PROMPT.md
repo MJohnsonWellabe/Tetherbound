@@ -9,7 +9,7 @@ Paste the block below into Claude Code in an empty repo that already contains `C
 ```
 Read CLAUDE.md, ARCHITECTURE.md, GAME_DESIGN.md, ASSETS.md, and ROADMAP.md in full before writing anything. They are the spec.
 
-Build milestones M0 and M1 from ROADMAP.md in one pass. Do not ask me questions along the way. Where a small decision is ambiguous, choose, log it in DECISIONS.md, and continue.
+Build milestones M0 and M1 from ROADMAP.md in one pass. Do not ask me questions along the way. Where a small decision is ambiguous, choose, log it as a new file in docs/decisions/, and continue.
 
 M0 deliverables:
 - Vite + TypeScript + Three.js project scaffold with strict mode, vitest configured, and vite.config.ts base set to the repo name for GitHub Pages.
@@ -40,7 +40,7 @@ All UI is mobile-first. 44px minimum touch targets. Test your layout assumptions
 
 Placeholder art only. Do not download any assets in this pass.
 
-When you finish, run typecheck and tests, commit, push, confirm the Pages deploy succeeded, and give me the live URL plus a short list of everything you logged in DECISIONS.md.
+When you finish, run typecheck and tests, commit, push, confirm the Pages deploy succeeded, and give me the live URL plus a short list of every decision you logged in docs/decisions/.
 ```
 
 ---
