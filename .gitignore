@@ -23,3 +23,4 @@ npm-debug.log*
 .firebase/
 firebase-debug.log
 firestore-debug.log
+tests/smoke/.output/

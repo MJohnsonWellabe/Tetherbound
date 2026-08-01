@@ -1,9 +1,15 @@
-import { Color3, CreateGround, StandardMaterial } from './core/babylon';
+import { bus } from './core/EventBus';
 import { Renderer } from './core/Engine';
 import { Input } from './core/input/Input';
 import { Loop } from './core/Loop';
 import { Stats } from './core/Stats';
-import { bus } from './core/EventBus';
+import { Player } from './entities/Player';
+import type { ControllerWorld } from './entities/CharacterController';
+import { buildWaterPlane } from './world/ChunkMesh';
+import { ChunkManager } from './world/ChunkManager';
+import { createPrototypes, disposePrototypes } from './world/Prototypes';
+import { Terrain, WATER_LEVEL } from './world/gen/Terrain';
+import { TimeOfDay } from './world/TimeOfDay';
 
 /**
  * Boot. Keep this file thin: it wires systems together and owns nothing.
@@ -32,43 +38,74 @@ function fatal(err: unknown): void {
   console.error('[boot] fatal', err);
   if (bootEl) bootEl.classList.add('boot--gone');
   if (fatalMsg) {
-    const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
-    fatalMsg.textContent = detail;
+    fatalMsg.textContent = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
   }
   if (fatalEl) fatalEl.hidden = false;
 }
 
 fatalReload?.addEventListener('click', () => location.reload());
 
+/** The world seed. Overridable with ?seed= so a bug report is reproducible. */
+function resolveSeed(): string {
+  return new URLSearchParams(location.search).get('seed') ?? 'hollowbrook';
+}
+
 async function boot(): Promise<void> {
   if (!canvas) throw new Error('Canvas #scene is missing from index.html');
 
-  progress(0.15, 'Starting the renderer');
+  progress(0.1, 'Starting the renderer');
   const renderer = new Renderer(canvas);
-  const { scene } = renderer.handles;
+  const { scene, camera, sun, sky, shadows } = renderer.handles;
 
-  progress(0.55, 'Shaping the ground');
-  // Placeholder ground so M0 has something to stand on before WorldGen lands
-  // in Phase C. Replaced wholesale, not extended.
-  const ground = CreateGround('placeholder-ground', { width: 200, height: 200, subdivisions: 32 }, scene);
-  const groundMat = new StandardMaterial('placeholder-ground-mat', scene);
-  groundMat.diffuseColor = new Color3(0.36, 0.46, 0.24);
-  groundMat.specularColor = new Color3(0, 0, 0);
-  ground.material = groundMat;
-  ground.receiveShadows = true;
+  progress(0.3, 'Shaping the Meadows');
+  const terrain = new Terrain(resolveSeed());
+  const prototypes = createPrototypes(scene);
+  const chunks = new ChunkManager(scene, terrain, prototypes, shadows);
+  const water = buildWaterPlane(scene, 4096, WATER_LEVEL);
 
-  progress(0.85, 'Setting the sun');
+  // One adapter, so the controller and the camera both see exactly the terrain
+  // the renderer drew rather than a second opinion about it.
+  const world: ControllerWorld = {
+    heightAt: (x, z) => terrain.heightAt(x, z),
+    slopeAt: (x, z) => terrain.slopeAt(x, z),
+    collidersNear: (x, z, r) => chunks.collidersNear(x, z, r)
+  };
+
+  progress(0.5, 'Waking Hollowbrook');
+  // Hollowbrook is at the origin and its plateau is flat, so this is always
+  // solid ground regardless of seed.
+  const player = new Player(scene, camera, { x: 0, y: terrain.heightAt(0, 0), z: 0 }, shadows);
+
+  // Build the chunks around the spawn before the first frame, so the player
+  // never sees themselves standing on nothing.
+  chunks.update(0, 0);
+  chunks.processQueue(2000);
+
+  progress(0.8, 'Setting the sun');
+  const time = new TimeOfDay(scene, sun, sky, 0.2, 1);
   const input = new Input(canvas);
 
   const loop = new Loop({
     update: (dt, elapsedMs) => {
-      // Fold held keys into intent before anything reads it, and clear the
-      // edge-triggered fields after. A jump press consumed twice is a hover.
       input.beginFrame();
+
+      player.update(input, world, dt);
+      chunks.update(player.state.position.x, player.state.position.z);
+      if (time.tick(dt)) bus.emit('dayChanged', { day: time.day });
+
+      // Water follows the player so one plane covers the visible world without
+      // being large enough to lose float precision at the horizon.
+      water.position.x = player.state.position.x;
+      water.position.z = player.state.position.z;
+
       bus.emit('tick', { dt, elapsedMs });
       input.endFrame();
     },
     render: () => {
+      // Streaming runs in the render phase, outside the fixed-step update, so
+      // a frame that owes several simulation steps does not also owe several
+      // chunk builds.
+      chunks.processQueue();
       renderer.render();
       stats?.sample(performance.now());
     }
@@ -76,13 +113,10 @@ async function boot(): Promise<void> {
 
   const stats = Stats.enabled() && statsEl ? new Stats(scene, loop, statsEl) : null;
 
-  // Hand the renderer a way to rebuild after a GPU context loss.
   renderer.onContextRestored = (): void => {
     scene.markAllMaterialsAsDirty(1);
   };
 
-  // Wait for the first real frame before tearing down the boot overlay, so we
-  // never flash an empty canvas.
   await new Promise<void>((resolve) => {
     scene.onAfterRenderObservable.addOnce(() => resolve());
     loop.start();
@@ -92,8 +126,26 @@ async function boot(): Promise<void> {
   bootEl?.classList.add('boot--gone');
   window.setTimeout(() => bootEl?.remove(), 450);
 
-  // Keep a handle for debugging and for the eventual soak test.
-  (window as unknown as Record<string, unknown>).__tetherbound = { renderer, loop, scene, bus, input };
+  (window as unknown as Record<string, unknown>).__tetherbound = {
+    renderer,
+    loop,
+    scene,
+    bus,
+    input,
+    player,
+    chunks,
+    terrain,
+    time,
+    dispose: (): void => {
+      loop.stop();
+      input.dispose();
+      player.dispose();
+      chunks.dispose();
+      disposePrototypes(prototypes);
+      water.dispose();
+      renderer.dispose();
+    }
+  };
 }
 
 boot().catch(fatal);

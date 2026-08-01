@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "assets": "node scripts/optimize-assets.mjs"
+    "assets": "node scripts/optimize-assets.mjs",
+    "smoke": "playwright test",
+    "smoke:update": "playwright test --update-snapshots"
   },
   "dependencies": {
     "@babylonjs/core": "^8.30.0",
@@ -22,6 +24,7 @@
     "simplex-noise": "^4.0.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@types/howler": "^2.2.12",
     "typescript": "^5.7.3",
     "vite": "^6.0.11",

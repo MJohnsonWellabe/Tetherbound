@@ -139,6 +139,19 @@ body {
 
 /* --- fatal error --------------------------------------------------------- */
 
+/*
+ * `[hidden]` must be restated for anything that sets `display`.
+ *
+ * The browser's own `[hidden] { display: none }` is a user-agent rule, and any
+ * author rule beats it. So `.fatal { display: flex }` alone left the error
+ * screen permanently on top of a perfectly working game, with an empty message
+ * because nothing had actually failed. Caught by the boot smoke test.
+ */
+.fatal[hidden],
+.stats[hidden] {
+  display: none;
+}
+
 .fatal {
   position: fixed;
   inset: 0;

@@ -219,6 +219,54 @@ comment quotes the barrel import it exists to prevent. A rule that cannot be
 explained in prose beside the code it governs is a bad rule, so the scanner
 learned to read code instead of the documentation learning to avoid words.
 
+### D22. Browser smoke specs, separate from `npm run test`
+
+`tests/smoke/` runs Playwright against a real build: does it boot, does it
+render, does the player stand on the ground, does the same seed rebuild the
+same world, does everything dispose.
+
+Kept out of `npm run test` and out of the deploy workflow deliberately. A
+headless WebGL render under SwiftShader is flakier than any pure test, and a
+flaky render must never be able to block a deploy. `npm run smoke` is a thing
+you run and read.
+
+It paid for itself immediately, catching three bugs that every unit test and
+the typechecker were blind to. All three are in D21.
+
+Note that timing assertions are meaningless here: software rendering runs at a
+few frames per second, so the streaming spec asserts forward progress rather
+than a drained queue.
+
+### D21. Three rendering bugs the smoke specs caught
+
+Recorded because each was invisible to typechecking, invisible to unit tests,
+and would have shipped.
+
+**The error screen was always on.** `.fatal { display: flex }` is an author
+rule, and any author rule beats the browser's own `[hidden] { display: none }`.
+So the fatal-error overlay sat on top of a perfectly working game from the
+first load, showing an empty message because nothing had actually failed. Fixed
+with an explicit `.fatal[hidden] { display: none }`. Anything that sets
+`display` now has to restate `[hidden]`.
+
+**The ground rendered inside-out.** Babylon is left-handed by default, so the
+triangle winding that looks correct under the right-hand rule produces a
+surface facing down. The terrain was culled from above: the player floated over
+a grey void with a distant horizon band, which looks far more like a camera bug
+than a winding bug and cost the most time to find. Diagnosed by toggling
+`backFaceCulling` at runtime in a browser session.
+
+**Thin-instance batches inherited the wrong bounds.** A clone takes the
+prototype's bounding box, which describes one small prop at the origin, so
+every prop batch would be frustum-culled as soon as the camera looked away from
+world zero. Bounds are now built explicitly from the chunk footprint, which is
+also much cheaper than `thinInstanceRefreshBoundingInfo` walking every matrix.
+
+Related, and worth stating because it looks like free performance:
+`doNotSyncBoundingInfo` on static terrain chunks is not safe. It leaves bounds
+that do not describe where the vertices are, and the chunks nearest the camera
+get culled.
+
 ### D20. Scatter separates `mask` from `density`
 
 Two parameters that sound like one, doing genuinely different jobs at
