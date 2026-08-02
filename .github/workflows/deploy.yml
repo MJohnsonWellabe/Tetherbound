@@ -7,13 +7,17 @@
 # phone-testable on a real URL without merging first. Pages keeps one live
 # deployment, so whichever branch pushed last is what is live -- fine while one
 # person is building, worth revisiting when that stops being true.
+#
+# The active branch is now the M5 integration branch. M0 through M2 were built
+# on two branches that forked and each implemented M2 independently; that fork
+# is resolved there, and it is the only branch with all of the work on it.
 name: Deploy
 
 on:
   push:
     branches:
       - main
-      - claude/tetherbound-game-plan-w40lbs
+      - claude/m5-roadmap-milestone-kbxxg9
     paths-ignore:
       - '**/*.md'
       - 'docs/**'
