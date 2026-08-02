@@ -1,0 +1,56 @@
+{
+  "$comment": "The art mapping: which shipped GLB each visible thing uses, at what scale. Consumed by PropModels/ResolveModels; the primitive builders remain the permanent per-slot fallback, so a missing or broken file degrades that one thing to a primitive instead of breaking boot (D44). Scales are applied and baked at load time, so retuning a silhouette is an edit here, not a pipeline re-run.",
+
+  "$comment_props": "Per family: variant list, first entry is the one the batcher uses today (one mesh per family is the PropBatcher contract). The extra variants ship so the judge-loop fix for 'every tree looks the same' is a batcher upgrade, not an asset hunt. `scale` normalises each kit model to the world size the primitives established; heights measured post-merge.",
+  "props": {
+    "oak": {
+      "variants": [
+        { "url": "models/props/oak_b.glb", "scale": 3.8 },
+        { "url": "models/props/oak_a.glb", "scale": 5.3 },
+        { "url": "models/props/oak_c.glb", "scale": 4.9 }
+      ]
+    },
+    "pine": {
+      "variants": [
+        { "url": "models/props/pine_a.glb", "scale": 5.2 },
+        { "url": "models/props/pine_b.glb", "scale": 4.6 }
+      ]
+    },
+    "rock": {
+      "variants": [
+        { "url": "models/props/rock_c.glb", "scale": 2.0 },
+        { "url": "models/props/rock_a.glb", "scale": 3.4 },
+        { "url": "models/props/rock_b.glb", "scale": 2.8 }
+      ]
+    },
+    "bush": {
+      "variants": [
+        { "url": "models/props/bush_b.glb", "scale": 3.0 },
+        { "url": "models/props/bush_a.glb", "scale": 4.4 }
+      ]
+    },
+    "grass": {
+      "variants": [
+        { "url": "models/props/grass_a.glb", "scale": 2.2 },
+        { "url": "models/props/grass_b.glb", "scale": 2.0 }
+      ]
+    },
+    "reed": {
+      "variants": [{ "url": "models/props/reed_a.glb", "scale": 2.4 }]
+    },
+    "flower": {
+      "variants": [
+        { "url": "models/props/flower_a.glb", "scale": 1.4 },
+        { "url": "models/props/flower_b.glb", "scale": 1.2 },
+        { "url": "models/props/flower_c.glb", "scale": 1.6 }
+      ]
+    }
+  },
+
+  "$comment_later": "buildings, stations, characters and pals are appended by their phases; the schema test only validates sections that exist and are non-empty.",
+  "buildings": {},
+  "stations": {},
+  "characters": {},
+  "pals": {},
+  "accessories": {}
+}

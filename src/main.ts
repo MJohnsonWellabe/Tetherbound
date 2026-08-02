@@ -32,7 +32,8 @@ import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
 import { ChunkManager } from './world/ChunkManager';
 import { PropBatcher } from './world/PropBatcher';
-import { createPrototypes, disposePrototypes } from './world/Prototypes';
+import { disposePrototypes } from './world/Prototypes';
+import { resolvePrototypes } from './world/PropModels';
 import { Terrain, WATER_LEVEL } from './world/gen/Terrain';
 import { TimeOfDay } from './world/TimeOfDay';
 
@@ -90,7 +91,10 @@ async function boot(): Promise<void> {
 
   progress(0.3, 'Shaping the Meadows');
   const terrain = new Terrain(resolveSeed());
-  const prototypes = createPrototypes(scene);
+  // Real prop models, with the primitives as a per-family fallback. Awaited
+  // before chunk streaming so the first-built cells already carry the real
+  // silhouettes; a failed download costs one family its look, never the boot.
+  const prototypes = await resolvePrototypes(scene);
   const chunks = new ChunkManager(scene, terrain);
   // Props stream independently of terrain chunks, batched by their own draw
   // distance. See the header of PropBatcher.ts for why they are separate.
