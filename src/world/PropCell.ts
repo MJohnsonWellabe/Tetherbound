@@ -115,10 +115,24 @@ export function buildPropCell(
   const proto = prototypes.meshes.get(family.id as PropFamilyId);
   if (!proto) return cell;
 
-  // A clone shares the prototype's geometry and material, so a batch costs one
-  // draw call and uploads no new vertex data.
+  // A clone shares the prototype's material, so a batch is still one draw call.
+  //
+  // The GEOMETRY must not be shared, though a clone shares it by default.
+  // `thinInstanceSetBuffer` below routes through `Mesh.setVerticesBuffer`,
+  // which delegates to `Geometry.setVerticesBuffer`, which keeps ONE buffer per
+  // kind and disposes whatever was there before. Every resident cell of a
+  // family would write its world0..world3 matrices into the same geometry and
+  // only the last writer would survive. The build queue is sorted nearest
+  // first, so the last cell built is the FARTHEST one, and every batch of the
+  // family drew the distant cell's matrices: trees on the horizon, bare ground
+  // underfoot, while the harvest nodes and colliders (plain per-cell arrays)
+  // stayed correct at your feet and told you to swing a knife at nothing.
+  //
+  // This has to happen before the buffer upload and before buildBoundingInfo,
+  // because makeGeometryUnique reapplies the geometry and rebuilds the bounds.
   const mesh = proto.clone(`${family.id}_${ix}_${iz}`, null, true);
   if (!mesh) return cell;
+  mesh.makeGeometryUnique();
   mesh.setEnabled(true);
   mesh.isPickable = false;
   mesh.receiveShadows = false;

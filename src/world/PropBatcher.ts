@@ -192,8 +192,10 @@ export class PropBatcher {
   private disposeCell(cell: PropCell): void {
     if (cell.mesh) {
       if (this.shadows && cell.casting) this.shadows.removeShadowCaster(cell.mesh, false);
-      // Geometry is shared with the prototype, which Babylon refcounts, so the
-      // prototype keeps it alive and only this clone's instance buffer goes.
+      // Each cell owns its geometry (PropCell calls makeGeometryUnique, which
+      // it must, or cells overwrite each other's instance buffers). Disposing
+      // the mesh takes that copy and its instance buffer with it, and leaves
+      // the prototype and the shared material alone.
       cell.mesh.dispose(false, false);
     }
     cell.mesh = null;
