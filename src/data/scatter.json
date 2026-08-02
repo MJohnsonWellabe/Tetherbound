@@ -21,7 +21,7 @@
       "maxSlope": 24,
       "density": {
         "grove": 0.85,
-        "default": 0.3
+        "default": 0.22
       },
       "scaleRange": [
         0.82,
@@ -67,7 +67,7 @@
       "maxSlope": 90,
       "density": {
         "rock": 0.8,
-        "default": 0.2
+        "default": 0.16
       },
       "scaleRange": [
         0.6,
@@ -77,8 +77,8 @@
     {
       "id": "bush",
       "minDistance": 5,
-      "drawDistance": 144,
-      "cellSize": 144,
+      "drawDistance": 120,
+      "cellSize": 120,
       "castsShadow": true,
       "shadowDistance": 70,
       "collisionRadius": 0.55,
@@ -89,7 +89,7 @@
       ],
       "maxSlope": 30,
       "density": {
-        "default": 0.7
+        "default": 0.5
       },
       "scaleRange": [
         0.7,
@@ -99,8 +99,8 @@
     {
       "id": "reed",
       "minDistance": 2.2,
-      "drawDistance": 88,
-      "cellSize": 88,
+      "drawDistance": 80,
+      "cellSize": 80,
       "castsShadow": false,
       "shadowDistance": 0,
       "collisionRadius": 0,
@@ -110,7 +110,7 @@
       ],
       "maxSlope": 90,
       "density": {
-        "default": 0.85
+        "default": 0.7
       },
       "scaleRange": [
         0.7,
@@ -120,8 +120,8 @@
     {
       "id": "flower",
       "minDistance": 3.4,
-      "drawDistance": 88,
-      "cellSize": 88,
+      "drawDistance": 80,
+      "cellSize": 80,
       "castsShadow": false,
       "shadowDistance": 0,
       "collisionRadius": 0,
@@ -131,7 +131,7 @@
       ],
       "maxSlope": 22,
       "density": {
-        "default": 0.5
+        "default": 0.4
       },
       "scaleRange": [
         0.8,
@@ -142,8 +142,8 @@
       "id": "grass",
       "$comment": "The densest family by an order of magnitude, so it still gets the shortest draw distance. It used to stop at 44m against a 384m terrain view, which is why the meadow read as a bare golf course; the leaf-tuft source (36 tris, was 224) bought the range back at a third of the old triangle cost (D51).",
       "minDistance": 2.1,
-      "drawDistance": 88,
-      "cellSize": 88,
+      "drawDistance": 72,
+      "cellSize": 72,
       "castsShadow": false,
       "shadowDistance": 0,
       "collisionRadius": 0,
@@ -154,7 +154,7 @@
       ],
       "maxSlope": 35,
       "density": {
-        "default": 0.9
+        "default": 0.65
       },
       "scaleRange": [
         0.9,

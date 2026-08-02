@@ -126,6 +126,44 @@ HUD is a text readout until M5.
 
 **Done when:** you would hand it to a stranger without apologizing.
 
+### What actually shipped
+
+The CC0-only constraint was waived by the owner partway through, which
+changed the ceiling on everything visual (D42). `ASSET_MANIFEST.md` is now a
+provenance log rather than a licence gate.
+
+- **Asset pipeline.** `npm run assets` drives a declarative job list from
+  gitignored `assets_raw/` into `public/`, baking prop palettes to vertex
+  colours and regenerating the manifest. Two long-standing pipeline lies were
+  found and fixed: the simplify pass had never once run, and freshness meant
+  "the output file exists", so editing a job was a silent no-op (D52).
+- **World.** Every prop, building, station and standing stone is a real model
+  with the primitive builders kept permanently as the per-slot fallback (D44).
+  Terrain gained a detail texture, water gained scroll and bob, and the sky
+  gained a gradient dome.
+- **Creatures and people.** All fifteen species are distinct rigged,
+  skeletal-animated creatures addressed by game verb through a clip map
+  (D45); the player and NPCs are rigged humanoids. The active party pal now
+  follows you around the world, which is the loudest signal the game is a
+  creature-collector.
+- **Combat presentation.** Fights stage both creatures on a facing line, play
+  real attack and hit clips, throw a visible orb along an arc, and frame
+  themselves with a camera request the player rig owns (D46). The ASCII combat
+  readout is gone.
+- **Interface.** Real vitals bars, a compass that will not overprint itself,
+  nameplates over wild pals, and the interaction prompt separated from
+  persistent state.
+- **Two rendering bugs worth remembering.** Placed structures were drawn
+  inside out because a mirrored transform was carried on every clone (D47),
+  and every prop in the world was drawn mirrored across the origin because
+  `Mesh.clone(name, null)` does not detach a clone from its parent (D53).
+  The second one is why the Meadows looked empty through several sessions of
+  density tuning that could not possibly have worked.
+
+**Deferred to M5b:** the audio pass, the balance pass on catch rates and
+Bracken, and onboarding. The visual-judge loop also left open items on
+shadows, night legibility and aerial perspective.
+
 ---
 
 ## M6 — Biome template (target: 1 session)
