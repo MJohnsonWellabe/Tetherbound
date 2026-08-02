@@ -9,6 +9,22 @@ import { InputHint } from './ui/InputHint';
 import { HarvestHud } from './ui/HarvestHud';
 import { HarvestController } from './survival/HarvestController';
 import { add, createInventory } from './survival/Inventory';
+import { CombatMode } from './combat/CombatMode';
+import { Encounter } from './combat/Encounter';
+import { PalVisuals } from './entities/PalVisual';
+import { SpawnManager } from './entities/SpawnManager';
+import { Party } from './party/Party';
+import { ReleaseFlow } from './party/Release';
+import { createPal } from './entities/Species';
+import { CombatHud } from './ui/CombatHud';
+import { mulberry32, hashSeed } from './world/gen/Rng';
+import { BuildMode } from './building/BuildMode';
+import { SaveManager, type SaveV1 } from './core/SaveManager';
+import { createVitals, tickVitals, spendStamina } from './survival/Vitals';
+import { Stations } from './survival/Stations';
+import { Satchel } from './survival/Satchel';
+import { Homestead } from './survival/Homestead';
+import { StationViews } from './world/StationViews';
 import { Player } from './entities/Player';
 import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
@@ -51,6 +67,12 @@ function fatal(err: unknown): void {
 }
 
 fatalReload?.addEventListener('click', () => location.reload());
+
+/** Autosave cadence, per ARCHITECTURE.md section "Save". */
+const AUTOSAVE_MS = 60_000;
+/** Stamina per tool swing. Matches the tool costs in items.json closely enough
+ *  that the exact per-tool value can move there when tools get their own pass. */
+const HARVEST_STAMINA = 6;
 
 /** The world seed. Overridable with ?seed= so a bug report is reproducible. */
 function resolveSeed(): string {
@@ -107,7 +129,36 @@ async function boot(): Promise<void> {
   add(inventory, 'stone_axe', 1);
   add(inventory, 'stone_pick', 1);
   add(inventory, 'flint_knife', 1);
+  add(inventory, 'worn_orb', 3);
+  add(inventory, 'hammer', 1);
+  add(inventory, 'wood', 40);
   const harvest = new HarvestController(inventory, props);
+
+  // Pals, combat and the party. M3's opening scene hands over a starter; until
+  // then one is granted so a fight is reachable from a cold boot.
+  const party = new Party();
+  const starterRng = mulberry32(hashSeed(resolveSeed(), 1));
+  party.add(createPal('bramblit', 5, 1, performance.now(), starterRng, 'starter'));
+
+  const palVisuals = new PalVisuals(scene);
+  const spawner = new SpawnManager(terrain, palVisuals);
+  const combat = new CombatMode(party, input);
+  const release = new ReleaseFlow(party);
+  const encounter = new Encounter(combat, spawner, party, release, inventory, input);
+  const vitals = createVitals();
+  const build = new BuildMode(scene, inventory, world);
+  const saves = new SaveManager();
+  const stationsOwned = new Stations();
+  const satchel = new Satchel();
+  const stationViews = new StationViews(scene, stationsOwned, satchel);
+  const homestead = new Homestead(stationsOwned, satchel, party, spawner, inventory, world);
+
+  const combatHud = new CombatHud(
+    document.getElementById('combat') as HTMLElement,
+    combat,
+    party,
+    release
+  );
   const harvestHud = new HarvestHud(
     document.getElementById('gather') as HTMLElement,
     harvest
@@ -120,6 +171,69 @@ async function boot(): Promise<void> {
 
   const fx = new Fx(scene, document.getElementById('fx') as HTMLElement);
   const unmountFeel = mountHarvestFeel(fx);
+
+  // Load before the first frame, so the player never sees the default world
+  // flash before their own.
+  const loaded = saves.load();
+  if (loaded.ok) {
+    player.state.position.x = loaded.save.player.pos.x;
+    player.state.position.y = loaded.save.player.pos.y;
+    player.state.position.z = loaded.save.player.pos.z;
+    vitals.health = loaded.save.player.health;
+    vitals.stamina = loaded.save.player.stamina;
+    vitals.hunger = loaded.save.player.hunger;
+    props.restoreHarvested(loaded.save.worldDeltas.harvested);
+    build.restore(loaded.save.structures);
+    stationsOwned.restore(loaded.save.stations ?? []);
+    homestead.respawn = loaded.save.respawn ?? null;
+    satchel.restore(loaded.save.satchel ?? null);
+    for (let i = 0; i < loaded.save.inventory.length && i < inventory.length; i++) {
+      inventory[i] = loaded.save.inventory[i] ?? null;
+    }
+    chunks.update(player.state.position.x, player.state.position.z);
+    chunks.processQueue(2000);
+    props.update(player.state.position.x, player.state.position.z);
+    props.processQueue(1500);
+  }
+
+  function snapshotSave(): SaveV1 {
+    return {
+      schemaVersion: 1,
+      seed: resolveSeed(),
+      createdAt: loaded.ok ? loaded.save.createdAt : Date.now(),
+      savedAt: Date.now(),
+      player: {
+        pos: {
+          x: player.state.position.x,
+          y: player.state.position.y,
+          z: player.state.position.z
+        },
+        rot: player.state.yaw,
+        health: vitals.health,
+        stamina: vitals.stamina,
+        hunger: vitals.hunger
+      },
+      inventory: [...inventory],
+      party: [...party.members],
+      releasedLedger: [...party.ledger],
+      structures: [...build.structures],
+      stations: [...stationsOwned.all],
+      respawn: homestead.respawn,
+      satchel: satchel.marker,
+      worldDeltas: { harvested: props.harvestedKeys, bossesDown: {} },
+      progress: { badges: [], flags: [], day: time.day, timeOfDay: time.cycle }
+    };
+  }
+
+  // Autosave every 60s and on visibility change, per ARCHITECTURE.md.
+  let sinceSaveMs = 0;
+  const flush = (): void => {
+    const result = saves.save(snapshotSave());
+    bus.emit('saveStatus', result.ok ? { status: 'saved' } : { status: 'failed', reason: result.reason ?? '' });
+  };
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flush();
+  });
 
   const loop = new Loop({
     update: (dt, elapsedMs) => {
@@ -146,21 +260,101 @@ async function boot(): Promise<void> {
 
       // Stamina is not wired to vitals yet, so swings are free for now. The
       // signature already takes it so that hooking Vitals up is one argument.
-      harvestHud.report(
-        harvest.update(
-          input.intent,
-          player.state.position.x,
-          player.state.position.z,
-          time.day,
-          Number.POSITIVE_INFINITY
-        )
+      tickVitals(vitals, dt * 1000, input.intent.sprint && !combat.isFighting);
+
+      // Building takes over the interact button while the hammer is out, so
+      // the two never compete for the same press.
+      const hammerOut = harvest.equippedId === 'hammer';
+      build.update(
+        input.intent,
+        hammerOut,
+        player.state.position.x,
+        player.state.position.z,
+        player.cameraYaw
       );
-      harvestHud.update(player.state.position.x, player.state.position.z);
+
+      const swing = hammerOut
+        ? null
+        : harvest.update(
+            input.intent,
+            player.state.position.x,
+            player.state.position.z,
+            time.day,
+            vitals.stamina
+          );
+      // Charge the swing only once it actually connected.
+      if (swing && !swing.refusal) spendStamina(vitals, HARVEST_STAMINA);
+      harvestHud.report(swing);
+      harvestHud.update(player.state.position.x, player.state.position.z, vitals);
+
+      spawner.update(
+        player.state.position.x,
+        player.state.position.z,
+        dt,
+        time.cycle,
+        time.day
+      );
+      encounter.update(player.state.position.x, player.state.position.z, dt, time.day);
+      if (input.intent.throwOrb) combatHud.reportThrow(encounter.throwOrb(time.day));
+
+      // The release screen is driven by the same slot input the party uses:
+      // pick a number to select, press it again to confirm, throw to cancel.
+      if (release.stage !== 'closed') {
+        const slot = input.intent.slot;
+        if (input.intent.throwOrb) release.cancel();
+        else if (slot !== null) {
+          const candidate = release.candidates(time.day)[slot - 1];
+          if (candidate) {
+            if (release.stage === 'confirming' && release.selectedUid === candidate.pal.uid) {
+              release.confirm(time.day);
+            } else {
+              release.select(candidate.pal.uid);
+            }
+          }
+        }
+      }
+      combatHud.update(time.day);
 
       // Water follows the player so one plane covers the visible world without
       // being large enough to lose float precision at the horizon.
       water.position.x = player.state.position.x;
       water.position.z = player.state.position.z;
+
+      const homeAction = homestead.update(
+        input.intent,
+        player.state.position.x,
+        player.state.position.z,
+        dt
+      );
+      if (homeAction === 'slept') {
+        // Skip to morning. TimeOfDay owns the cycle, so this asks it rather
+        // than rewriting the clock in two places.
+        time.cycle = homestead.wakeCycle;
+        time.tick(0);
+        bus.emit('slept', { day: time.day });
+      }
+
+      // Fainting: satchel drops here, the player wakes at their bed.
+      if (vitals.health <= 0) {
+        const wake = homestead.faint(
+          vitals,
+          player.state.position.x,
+          player.state.position.y,
+          player.state.position.z
+        );
+        player.state.position.x = wake.x;
+        player.state.position.y = wake.y + 1;
+        player.state.position.z = wake.z;
+        player.state.velocity.x = 0;
+        player.state.velocity.y = 0;
+        player.state.velocity.z = 0;
+      }
+
+      sinceSaveMs += dt * 1000;
+      if (sinceSaveMs >= AUTOSAVE_MS) {
+        sinceSaveMs = 0;
+        flush();
+      }
 
       fx.update(dt);
 
@@ -173,6 +367,7 @@ async function boot(): Promise<void> {
       // chunk builds.
       chunks.processQueue();
       props.processQueue();
+      stationViews.sync();
       hint.update();
       // After the camera rig has run and before the draw, so the shake offset
       // lands in the frame it was computed for.
@@ -206,6 +401,18 @@ async function boot(): Promise<void> {
     player,
     harvest,
     inventory,
+    party,
+    spawner,
+    combat,
+    encounter,
+    release,
+    build,
+    stationsOwned,
+    satchel,
+    homestead,
+    vitals,
+    saves,
+    snapshotSave,
     chunks,
     props,
     terrain,
@@ -220,6 +427,10 @@ async function boot(): Promise<void> {
       player.dispose();
       chunks.dispose();
       props.dispose();
+      spawner.dispose();
+      palVisuals.dispose();
+      build.dispose();
+      stationViews.dispose();
       disposePrototypes(prototypes);
       water.dispose();
       renderer.dispose();

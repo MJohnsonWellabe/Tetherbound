@@ -305,3 +305,31 @@ body {
   pointer-events: none;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
 }
+
+/*
+ * Combat overlay. Monospace and pre-wrapped because it is a readout, not a
+ * layout: M5 replaces it with real bars and portraits, and until then legibility
+ * beats decoration.
+ */
+.combat {
+  position: fixed;
+  left: 50%;
+  top: calc(14px + env(safe-area-inset-top));
+  transform: translateX(-50%);
+  z-index: 25;
+  margin: 0;
+  padding: 12px 18px;
+  max-width: min(94vw, 620px);
+  border-radius: 12px;
+  background: rgba(6, 9, 7, 0.78);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.combat[hidden] {
+  display: none;
+}

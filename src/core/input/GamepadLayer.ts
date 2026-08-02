@@ -131,6 +131,9 @@ export class GamepadLayer {
       else this.intent.jump = true;
     }
     if (this.edge(pad, BTN.x)) this.intent.interact = true;
+    // B throws. Reachable with the thumb without leaving the right stick,
+    // because the throw has to be available at any instant.
+    if (this.edge(pad, BTN.b)) this.intent.throwOrb = true;
 
     // Shoulders dodge left and right. In explore they do nothing, because the
     // player has no dodge outside a fight.

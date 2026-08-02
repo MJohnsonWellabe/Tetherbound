@@ -1,0 +1,19 @@
+{
+  "$comment": "The five-element ring, GAME_DESIGN.md section 5. Damage.ts contains no literals. Each type beats exactly one and loses to exactly one, which is legible enough to teach without a chart and still makes Hall counters matter.",
+
+  "$comment_ring": "Verdant -> Tide -> Ember -> Stone -> Spark -> Verdant. The arrow means 'is strong against'. beats[t] is the single type t is strong against; everything else falls out of that, so the matrix cannot drift out of sync with itself.",
+
+  "order": ["verdant", "tide", "ember", "stone", "spark"],
+
+  "beats": {
+    "verdant": "tide",
+    "tide": "ember",
+    "ember": "stone",
+    "stone": "spark",
+    "spark": "verdant"
+  },
+
+  "strong": 1.6,
+  "weak": 0.625,
+  "neutral": 1.0
+}

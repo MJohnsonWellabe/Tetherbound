@@ -1,0 +1,93 @@
+{
+  "$comment": "Build pieces, GAME_DESIGN.md section 8. Wood tier only in M1; stone tier is listed in the design doc and lands with the Hall. PieceRegistry.ts and SnapGrid.ts contain no literals.",
+
+  "$comment_grid": "Valheim-style snap grid. A socket matches another within snapRadius, which is 0.5m per the design doc. Sockets are named so a wall cannot snap to a roof ridge.",
+  "snapRadius": 0.5,
+  "gridSize": 2,
+  "rotationStepRadians": 1.5707963267948966,
+  "elevationStep": 0.25,
+
+  "$comment_refund": "Removing a piece refunds fully for a grace period, then partially. Section 8: 50% within 60 seconds of placement, 25% after.",
+  "fullRefundMs": 60000,
+  "fullRefundFraction": 0.5,
+  "lateRefundFraction": 0.25,
+
+  "$comment_stamina": "Placement costs stamina, which is what stops a base appearing in one unbroken drag.",
+  "placeStaminaCost": 4,
+
+  "$comment_reach": "Meters in front of the player that the ghost can be placed.",
+  "placeReach": 5.5,
+
+  "pieces": {
+    "wood_floor": {
+      "name": "Wood Floor", "tier": "wood",
+      "size": [2, 0.2, 2],
+      "cost": [{ "id": "wood", "n": 4 }],
+      "sockets": ["floor"],
+      "accepts": ["floor", "ground"]
+    },
+    "wood_wall": {
+      "name": "Wood Wall", "tier": "wood",
+      "size": [2, 2, 0.2],
+      "cost": [{ "id": "wood", "n": 4 }],
+      "sockets": ["wall"],
+      "accepts": ["floor", "wall"]
+    },
+    "wood_half_wall": {
+      "name": "Wood Half Wall", "tier": "wood",
+      "size": [2, 1, 0.2],
+      "cost": [{ "id": "wood", "n": 2 }],
+      "sockets": ["wall"],
+      "accepts": ["floor", "wall"]
+    },
+    "wood_doorway": {
+      "name": "Wood Doorway", "tier": "wood",
+      "size": [2, 2, 0.2],
+      "cost": [{ "id": "wood", "n": 5 }],
+      "sockets": ["wall"],
+      "accepts": ["floor", "wall"]
+    },
+    "wood_window_wall": {
+      "name": "Window Wall", "tier": "wood",
+      "size": [2, 2, 0.2],
+      "cost": [{ "id": "wood", "n": 5 }],
+      "sockets": ["wall"],
+      "accepts": ["floor", "wall"]
+    },
+    "wood_roof_26": {
+      "name": "Roof 26", "tier": "wood",
+      "size": [2, 1, 2],
+      "cost": [{ "id": "wood", "n": 4 }],
+      "sockets": ["roof"],
+      "accepts": ["wall", "roof"]
+    },
+    "wood_roof_45": {
+      "name": "Roof 45", "tier": "wood",
+      "size": [2, 2, 2],
+      "cost": [{ "id": "wood", "n": 4 }],
+      "sockets": ["roof"],
+      "accepts": ["wall", "roof"]
+    },
+    "wood_stair": {
+      "name": "Wood Stair", "tier": "wood",
+      "size": [2, 2, 2],
+      "cost": [{ "id": "wood", "n": 6 }],
+      "sockets": ["floor"],
+      "accepts": ["floor", "ground"]
+    },
+    "wood_pole": {
+      "name": "Wood Pole", "tier": "wood",
+      "size": [0.25, 2, 0.25],
+      "cost": [{ "id": "wood", "n": 2 }],
+      "sockets": ["pole"],
+      "accepts": ["floor", "ground", "pole"]
+    },
+    "wood_beam": {
+      "name": "Wood Beam", "tier": "wood",
+      "size": [2, 0.25, 0.25],
+      "cost": [{ "id": "wood", "n": 2 }],
+      "sockets": ["pole"],
+      "accepts": ["pole", "wall"]
+    }
+  }
+}

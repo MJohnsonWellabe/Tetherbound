@@ -37,9 +37,22 @@ down from 1576 and 224k. Retargeted from phone to ROG Ally (D28).
 
 **Done when:** you can chop, cook, build a shack, sleep, and reload into it.
 
-**Partial.** Vitals, inventory and crafting are in and unit tested. Harvest
-nodes, tools, build mode, the stations and save are not started. `PropBatcher`
-exposes `nodesNear()` ready for harvesting to hang off.
+**Shipped.** Vitals, inventory and crafting. Harvest nodes on trees, rocks and
+bushes with seeded drops and tool-action matching, and the no-weapon rule
+enforced as an allowlist (D33). Build mode on the hammer with pure snap logic.
+Workbench, campfire, bed, tanning rack and orb bench as placeable stations; the
+campfire revives fainted pals one at a time, the bed sets the respawn point and
+sleeps to morning when nothing hostile is near. Faint drops the satchel, keeps
+tools, and wakes you at your bed. SaveManager on the SaveV1 schema with autosave,
+base64 export/import, a rollback slot and the party clamped to five on load.
+
+Verified in a browser: 40 wood placed a floor for 4 and refunded 2 on undo, a
+campfire revived a fainted pal after 30s, fainting dropped 40 wood and kept the
+axe, collecting returned all 43 items, and stations plus respawn survived
+export/import.
+
+**Not done:** the drag-and-drop inventory screen and the radial build menu.
+Both are UI over systems that already work, and both land with M3's screens.
 
 ---
 
@@ -54,6 +67,26 @@ exposes `nodesNear()` ready for harvesting to hang off.
 - XP, levels, affinity, faint and revive.
 
 **Done when:** you can find a Tuftmoth, fight it, throw an orb, catch it, and it fights for you at level 4.
+
+**Shipped.** All 15 Meadows species in `species.json` with stat blocks, catch
+rates, level bands, time windows and the model mapping ASSETS.md specifies.
+Wander/graze/flee/aggro FSM, pooled at the 12-pal cap, seeded spawn tables by
+biome and time of day with night level bonuses. Combat Mode as a state, not a
+scene (D34). Quick and power attacks off hold length, enemy telegraph with a
+dodge window that negates entirely, swap vulnerability. The throw available from
+frame one, catch ring, three shakes, and the exact section 7 formula. Flee at
+20% HP. Party with the cap in `add()` and nowhere else, the two-step release
+screen, XP, levels and affinity.
+
+Verified in a browser: a grazehorn L9 spawned, walking into it entered combat,
+the fifth orb held, and the party went from one pal to two. A sixth capture was
+refused and opened the release screen; the party never held six.
+
+99 unit tests on the pure math, including all 25 type pairs and a 3,240-case
+sweep of the catch clamp.
+
+**Not done:** the pal detail screen and portrait pips as real UI; the combat
+HUD is a text readout until M5.
 
 ---
 

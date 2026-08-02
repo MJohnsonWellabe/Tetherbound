@@ -1,0 +1,61 @@
+{
+  "$comment": "Spawn tables by chunk biome and time of day, GAME_DESIGN.md sections 6 and 9. SpawnManager.ts contains no literals.",
+
+  "$comment_cap": "Density caps at 12 active pals within view distance (section 9). The pool is sized to match, so a spawn is a reset rather than an allocation.",
+  "maxActive": 12,
+  "poolSize": 12,
+
+  "spawnRadiusMin": 26,
+  "spawnRadiusMax": 90,
+  "despawnRadius": 150,
+  "spawnIntervalMs": 2600,
+
+  "$comment_night": "Night raises spawn levels by 2 to 4 and unlocks night-only species (section 9).",
+  "nightLevelBonusMin": 2,
+  "nightLevelBonusMax": 4,
+
+  "$comment_windows": "Fractions of the 20 minute cycle. 0 is dawn.",
+  "windows": {
+    "dawn": [0.0, 0.12],
+    "day": [0.12, 0.6],
+    "dusk": [0.6, 0.72],
+    "night": [0.72, 1.0]
+  },
+
+  "$comment_tables": "Weights are relative within a biome. A species whose own timeWindows or biomes in species.json exclude the current conditions is skipped, so this table never has to repeat those rules.",
+  "tables": {
+    "meadow": [
+      { "species": "tuftmoth", "weight": 30 },
+      { "species": "grazehorn", "weight": 20 },
+      { "species": "sparrowick", "weight": 16 },
+      { "species": "pebblit", "weight": 12 },
+      { "species": "emberhop", "weight": 8 },
+      { "species": "thistleback", "weight": 6 },
+      { "species": "voltvole", "weight": 4 },
+      { "species": "ashmane", "weight": 2 }
+    ],
+    "grove": [
+      { "species": "tuftmoth", "weight": 24 },
+      { "species": "thistleback", "weight": 20 },
+      { "species": "grazehorn", "weight": 14 },
+      { "species": "sparrowick", "weight": 12 },
+      { "species": "cragpup", "weight": 10 },
+      { "species": "emberhop", "weight": 8 },
+      { "species": "ashmane", "weight": 4 }
+    ],
+    "rock": [
+      { "species": "pebblit", "weight": 32 },
+      { "species": "cragpup", "weight": 26 },
+      { "species": "voltvole", "weight": 16 },
+      { "species": "ashmane", "weight": 8 },
+      { "species": "sparrowick", "weight": 8 }
+    ],
+    "riverbank": [
+      { "species": "rillnewt", "weight": 34 },
+      { "species": "mirefin", "weight": 20 },
+      { "species": "tuftmoth", "weight": 16 },
+      { "species": "dewdrake", "weight": 4 },
+      { "species": "grazehorn", "weight": 10 }
+    ]
+  }
+}

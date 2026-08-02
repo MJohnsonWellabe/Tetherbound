@@ -1,0 +1,50 @@
+{
+  "$comment": "Placeable stations, GAME_DESIGN.md section 8. Stations.ts contains no literals.",
+
+  "$comment_provides": "Service names are what the systems ask for, so adding a station that also cooks is a data change. 'craft1' is the workbench tier-1 gate; tier 2 additionally needs a roof, which is the M4 job.",
+
+  "stations": {
+    "workbench": {
+      "name": "Workbench",
+      "radius": 10,
+      "color": "#8a6a3f",
+      "size": [1.4, 0.9, 0.8],
+      "provides": ["craft1"]
+    },
+    "campfire": {
+      "name": "Campfire",
+      "radius": 6,
+      "color": "#d2712f",
+      "size": [1.1, 0.5, 1.1],
+      "provides": ["cook", "warmth", "revive"]
+    },
+    "bed": {
+      "name": "Bed",
+      "radius": 3,
+      "color": "#a8b0bd",
+      "size": [1.0, 0.5, 2.0],
+      "provides": ["sleep", "respawn"]
+    },
+    "tanning_rack": {
+      "name": "Tanning Rack",
+      "radius": 6,
+      "color": "#9c8557",
+      "size": [1.6, 1.4, 0.4],
+      "provides": ["tan"]
+    },
+    "orb_bench": {
+      "name": "Orb Bench",
+      "radius": 6,
+      "color": "#5d7f6a",
+      "size": [1.4, 1.0, 0.9],
+      "provides": ["orbs"]
+    }
+  },
+
+  "$comment_sleep": "Sleeping skips to morning if nearby threats are clear. 'Clear' means no aggressive pal inside this radius.",
+  "sleepThreatRadius": 28,
+  "sleepWakeCycle": 0.08,
+
+  "$comment_revive": "A campfire revives fainted pals one at a time, 30s each, per section 8.",
+  "reviveMsPerPal": 30000
+}

@@ -1,0 +1,36 @@
+{
+  "$comment": "XP, levels and affinity, GAME_DESIGN.md section 5. Progression.ts contains no literals.",
+
+  "maxLevel": 50,
+  "minLevel": 1,
+
+  "$comment_xp": "xpToNext(level) = xpBase * level^xpExponent. Strictly increasing, and level 50 is reachable, both asserted in tests.",
+  "xpBase": 12,
+  "xpExponent": 1.6,
+
+  "$comment_award": "18 * defeatedLevel, times a bonus when the winner had type advantage. Party members who did not fight get partyShare of the active pal's award, so a benched pal falls behind but never stalls.",
+  "xpPerDefeatedLevel": 18,
+  "typeAdvantageBonus": 1.1,
+  "partyShare": 0.4,
+
+  "$comment_stat": "stat = floor(base * (1 + level * levelStatGain) * variance). Variance is rolled once at spawn and locked for life.",
+  "levelStatGain": 0.035,
+  "varianceMin": 0.9,
+  "varianceMax": 1.1,
+
+  "$comment_affinity": "0 to 100. Above high it grants a damage bonus; below low the pal occasionally hesitates on a power attack. This is the emotional cost of the five-slot rule, so the numbers are deliberately slow to climb and fast to fall.",
+  "affinityStart": 50,
+  "affinityMax": 100,
+  "affinityMin": 0,
+  "affinityPerWin": 4,
+  "affinityPerMeal": 2,
+  "affinityPerFaint": -12,
+  "affinityHighThreshold": 75,
+  "affinityLowThreshold": 25,
+  "affinityHighDamageBonus": 0.08,
+  "affinityLowHesitateChance": 0.2,
+
+  "$comment_revive": "A fainted pal is not lost. It wakes at a campfire in reviveAtCampfireMs, or on its own after reviveAloneMs of real time.",
+  "reviveAtCampfireMs": 30000,
+  "reviveAloneMs": 240000
+}

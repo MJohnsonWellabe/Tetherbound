@@ -1,0 +1,51 @@
+{
+  "$comment": "Move powers, GAME_DESIGN.md section 5. Quick attacks sit in the 8-14 band, power attacks in 40-70. MoveResolver.ts and Damage.ts contain no literals.",
+
+  "$comment_charge": "A quick attack builds charge; a power attack spends all of it. The numbers here are the contract between the two, so a species whose quick builds more charge reaches its power attack sooner.",
+  "quickChargeGain": 12,
+  "powerChargeCost": 100,
+
+  "$comment_timing": "Milliseconds. The 0.6s telegraph on a power attack is the dodge window, and GAME_DESIGN.md section 7 is explicit that a correctly timed dodge negates it entirely.",
+  "quickCastMs": 500,
+  "powerWindupMs": 1100,
+  "telegraphMs": 600,
+  "dodgeWindowMs": 320,
+  "swapVulnerabilityMs": 1500,
+
+  "moves": {
+    "vine_lash": { "name": "Vine Lash", "type": "verdant", "kind": "quick", "power": 11 },
+    "bramble_slam": { "name": "Bramble Slam", "type": "verdant", "kind": "power", "power": 52 },
+    "leaf_cut": { "name": "Leaf Cut", "type": "verdant", "kind": "quick", "power": 12 },
+    "thorn_burst": { "name": "Thorn Burst", "type": "verdant", "kind": "power", "power": 58 },
+    "gore": { "name": "Gore", "type": "verdant", "kind": "quick", "power": 13 },
+    "stampede": { "name": "Stampede", "type": "verdant", "kind": "power", "power": 61 },
+    "dust_flick": { "name": "Dust Flick", "type": "verdant", "kind": "quick", "power": 8 },
+    "pollen_burst": { "name": "Pollen Burst", "type": "verdant", "kind": "power", "power": 41 },
+
+    "dew_spit": { "name": "Dew Spit", "type": "tide", "kind": "quick", "power": 11 },
+    "tide_pull": { "name": "Tide Pull", "type": "tide", "kind": "power", "power": 55 },
+    "ripple": { "name": "Ripple", "type": "tide", "kind": "quick", "power": 10 },
+    "undertow": { "name": "Undertow", "type": "tide", "kind": "power", "power": 49 },
+    "brine_snap": { "name": "Brine Snap", "type": "tide", "kind": "quick", "power": 13 },
+    "deluge": { "name": "Deluge", "type": "tide", "kind": "power", "power": 63 },
+
+    "ember_nip": { "name": "Ember Nip", "type": "ember", "kind": "quick", "power": 12 },
+    "cinder_rush": { "name": "Cinder Rush", "type": "ember", "kind": "power", "power": 60 },
+    "spark_hop": { "name": "Spark Hop", "type": "ember", "kind": "quick", "power": 10 },
+    "flare_kick": { "name": "Flare Kick", "type": "ember", "kind": "power", "power": 47 },
+    "ash_rake": { "name": "Ash Rake", "type": "ember", "kind": "quick", "power": 14 },
+    "wildfire": { "name": "Wildfire", "type": "ember", "kind": "power", "power": 68 },
+
+    "pebble_toss": { "name": "Pebble Toss", "type": "stone", "kind": "quick", "power": 9 },
+    "rockfall": { "name": "Rockfall", "type": "stone", "kind": "power", "power": 45 },
+    "headbutt": { "name": "Headbutt", "type": "stone", "kind": "quick", "power": 12 },
+    "boulder_drop": { "name": "Boulder Drop", "type": "stone", "kind": "power", "power": 57 },
+    "crag_smash": { "name": "Crag Smash", "type": "stone", "kind": "quick", "power": 14 },
+    "tremor": { "name": "Tremor", "type": "stone", "kind": "power", "power": 70 },
+
+    "static_nip": { "name": "Static Nip", "type": "spark", "kind": "quick", "power": 10 },
+    "arc_bolt": { "name": "Arc Bolt", "type": "spark", "kind": "power", "power": 50 },
+    "jolt": { "name": "Jolt", "type": "spark", "kind": "quick", "power": 13 },
+    "thunderclap": { "name": "Thunderclap", "type": "spark", "kind": "power", "power": 59 }
+  }
+}
