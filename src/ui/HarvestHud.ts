@@ -1,6 +1,7 @@
 import type { HarvestController, HarvestResult } from '../survival/HarvestController';
 import { harvestableBy, isHarvestable } from '../survival/Harvest';
 import { itemDef } from '../survival/Inventory';
+import { maxHealth, maxStamina, type VitalsState } from '../survival/Vitals';
 
 /**
  * The gathering readout: what is equipped, what is in reach, what you just got.
@@ -47,8 +48,14 @@ export class HarvestHud {
   }
 
   /** Called once per fixed step. */
-  update(x: number, z: number): void {
+  update(x: number, z: number, vitals: VitalsState): void {
     if (this.messageSteps > 0) this.messageSteps--;
+
+    const vit = [
+      `HP ${Math.round(vitals.health)}/${Math.round(maxHealth(vitals))}`,
+      `ST ${Math.round(vitals.stamina)}/${Math.round(maxStamina(vitals))}`,
+      `FD ${Math.round(vitals.hunger)}`
+    ].join('  ');
 
     const tool = this.harvest.equippedId;
     const held = tool ? (itemDef(tool)?.name ?? tool) : 'Empty hands';
@@ -61,7 +68,7 @@ export class HarvestHud {
         : `${node.family} needs ${actionName(node.family)}`;
     }
 
-    const text = [held, prompt, this.messageSteps > 0 ? this.message : '']
+    const text = [vit, held, prompt, this.messageSteps > 0 ? this.message : '']
       .filter(Boolean)
       .join('     ');
     if (text === this.lastPaint) return;

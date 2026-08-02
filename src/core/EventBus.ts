@@ -48,6 +48,10 @@ export interface GameEvents {
   catchFailed: { chance: number; shakes: number };
   /** A sixth capture needs a release decision before it can be resolved. */
   releaseNeeded: Record<string, never>;
+  /** A build piece was placed. */
+  builtPiece: { pieceId: string };
+  /** A placement was refused, with why. */
+  buildBlocked: { reason: string };
 }
 
 export type EventName = keyof GameEvents;

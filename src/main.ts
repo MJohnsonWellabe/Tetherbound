@@ -16,6 +16,9 @@ import { ReleaseFlow } from './party/Release';
 import { createPal } from './entities/Species';
 import { CombatHud } from './ui/CombatHud';
 import { mulberry32, hashSeed } from './world/gen/Rng';
+import { BuildMode } from './building/BuildMode';
+import { SaveManager, type SaveV1 } from './core/SaveManager';
+import { createVitals, tickVitals, spendStamina } from './survival/Vitals';
 import { Player } from './entities/Player';
 import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
@@ -58,6 +61,12 @@ function fatal(err: unknown): void {
 }
 
 fatalReload?.addEventListener('click', () => location.reload());
+
+/** Autosave cadence, per ARCHITECTURE.md section "Save". */
+const AUTOSAVE_MS = 60_000;
+/** Stamina per tool swing. Matches the tool costs in items.json closely enough
+ *  that the exact per-tool value can move there when tools get their own pass. */
+const HARVEST_STAMINA = 6;
 
 /** The world seed. Overridable with ?seed= so a bug report is reproducible. */
 function resolveSeed(): string {
@@ -115,6 +124,8 @@ async function boot(): Promise<void> {
   add(inventory, 'stone_pick', 1);
   add(inventory, 'flint_knife', 1);
   add(inventory, 'worn_orb', 3);
+  add(inventory, 'hammer', 1);
+  add(inventory, 'wood', 40);
   const harvest = new HarvestController(inventory, props);
 
   // Pals, combat and the party. M3's opening scene hands over a starter; until
@@ -128,6 +139,10 @@ async function boot(): Promise<void> {
   const combat = new CombatMode(party, input);
   const release = new ReleaseFlow(party);
   const encounter = new Encounter(combat, spawner, party, release, inventory, input);
+  const vitals = createVitals();
+  const build = new BuildMode(scene, inventory, world);
+  const saves = new SaveManager();
+
   const combatHud = new CombatHud(
     document.getElementById('combat') as HTMLElement,
     combat,
@@ -143,6 +158,63 @@ async function boot(): Promise<void> {
     input,
     document.getElementById('fullscreen')
   );
+
+  // Load before the first frame, so the player never sees the default world
+  // flash before their own.
+  const loaded = saves.load();
+  if (loaded.ok) {
+    player.state.position.x = loaded.save.player.pos.x;
+    player.state.position.y = loaded.save.player.pos.y;
+    player.state.position.z = loaded.save.player.pos.z;
+    vitals.health = loaded.save.player.health;
+    vitals.stamina = loaded.save.player.stamina;
+    vitals.hunger = loaded.save.player.hunger;
+    props.restoreHarvested(loaded.save.worldDeltas.harvested);
+    build.restore(loaded.save.structures);
+    for (let i = 0; i < loaded.save.inventory.length && i < inventory.length; i++) {
+      inventory[i] = loaded.save.inventory[i] ?? null;
+    }
+    chunks.update(player.state.position.x, player.state.position.z);
+    chunks.processQueue(2000);
+    props.update(player.state.position.x, player.state.position.z);
+    props.processQueue(1500);
+  }
+
+  function snapshotSave(): SaveV1 {
+    return {
+      schemaVersion: 1,
+      seed: resolveSeed(),
+      createdAt: loaded.ok ? loaded.save.createdAt : Date.now(),
+      savedAt: Date.now(),
+      player: {
+        pos: {
+          x: player.state.position.x,
+          y: player.state.position.y,
+          z: player.state.position.z
+        },
+        rot: player.state.yaw,
+        health: vitals.health,
+        stamina: vitals.stamina,
+        hunger: vitals.hunger
+      },
+      inventory: [...inventory],
+      party: [...party.members],
+      releasedLedger: [...party.ledger],
+      structures: [...build.structures],
+      worldDeltas: { harvested: props.harvestedKeys, bossesDown: {} },
+      progress: { badges: [], flags: [], day: time.day, timeOfDay: time.cycle }
+    };
+  }
+
+  // Autosave every 60s and on visibility change, per ARCHITECTURE.md.
+  let sinceSaveMs = 0;
+  const flush = (): void => {
+    const result = saves.save(snapshotSave());
+    bus.emit('saveStatus', result.ok ? { status: 'saved' } : { status: 'failed', reason: result.reason ?? '' });
+  };
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flush();
+  });
 
   const loop = new Loop({
     update: (dt, elapsedMs) => {
@@ -160,16 +232,32 @@ async function boot(): Promise<void> {
 
       // Stamina is not wired to vitals yet, so swings are free for now. The
       // signature already takes it so that hooking Vitals up is one argument.
-      harvestHud.report(
-        harvest.update(
-          input.intent,
-          player.state.position.x,
-          player.state.position.z,
-          time.day,
-          Number.POSITIVE_INFINITY
-        )
+      tickVitals(vitals, dt * 1000, input.intent.sprint && !combat.isFighting);
+
+      // Building takes over the interact button while the hammer is out, so
+      // the two never compete for the same press.
+      const hammerOut = harvest.equippedId === 'hammer';
+      build.update(
+        input.intent,
+        hammerOut,
+        player.state.position.x,
+        player.state.position.z,
+        player.cameraYaw
       );
-      harvestHud.update(player.state.position.x, player.state.position.z);
+
+      const swing = hammerOut
+        ? null
+        : harvest.update(
+            input.intent,
+            player.state.position.x,
+            player.state.position.z,
+            time.day,
+            vitals.stamina
+          );
+      // Charge the swing only once it actually connected.
+      if (swing && !swing.refusal) spendStamina(vitals, HARVEST_STAMINA);
+      harvestHud.report(swing);
+      harvestHud.update(player.state.position.x, player.state.position.z, vitals);
 
       spawner.update(
         player.state.position.x,
@@ -203,6 +291,12 @@ async function boot(): Promise<void> {
       // being large enough to lose float precision at the horizon.
       water.position.x = player.state.position.x;
       water.position.z = player.state.position.z;
+
+      sinceSaveMs += dt * 1000;
+      if (sinceSaveMs >= AUTOSAVE_MS) {
+        sinceSaveMs = 0;
+        flush();
+      }
 
       bus.emit('tick', { dt, elapsedMs });
       input.endFrame();
@@ -248,6 +342,10 @@ async function boot(): Promise<void> {
     combat,
     encounter,
     release,
+    build,
+    vitals,
+    saves,
+    snapshotSave,
     chunks,
     props,
     terrain,
@@ -261,6 +359,7 @@ async function boot(): Promise<void> {
       props.dispose();
       spawner.dispose();
       palVisuals.dispose();
+      build.dispose();
       disposePrototypes(prototypes);
       water.dispose();
       renderer.dispose();
