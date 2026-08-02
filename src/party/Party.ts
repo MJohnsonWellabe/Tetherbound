@@ -37,9 +37,28 @@ export class Party {
    */
   static fromSave(members: PalState[], ledger: ReleaseRecord[]): Party {
     const party = new Party();
-    for (const pal of members.slice(0, MAX_PARTY)) party.pals.push(pal);
-    party.released.push(...ledger);
+    party.restore(members, ledger);
     return party;
+  }
+
+  /**
+   * Refill an existing party from a save, in place.
+   *
+   * The boot sequence builds the party before it knows whether there is a save,
+   * because everything downstream holds a reference to it. Handing out a NEW
+   * Party from `fromSave` at that point would leave combat, the HUD and the
+   * release flow all pointing at the empty one, which is how a loaded save
+   * shows up as an empty party in the HUD while the fight still works.
+   *
+   * Same clamp as `fromSave`, for the same reason: a save is user-editable and
+   * must not be able to smuggle in a sixth pal.
+   */
+  restore(members: PalState[], ledger: ReleaseRecord[]): void {
+    this.pals.length = 0;
+    this.released.length = 0;
+    for (const pal of members.slice(0, MAX_PARTY)) this.pals.push(pal);
+    this.released.push(...ledger);
+    this.activeIndex = 0;
   }
 
   get members(): readonly PalState[] {

@@ -29,6 +29,18 @@ export interface PalState {
   caughtOnDay: number;
   /** Real ms at capture, for the same reason. */
   caughtAtMs: number;
+  /**
+   * Team Tether uses collars instead of orbs (GAME_DESIGN.md sections 3 and 10).
+   *
+   * One flag carries three rules: the pal hits harder, it never dodges because
+   * its affinity is floored, and an orb thrown at it bounces instead of rolling.
+   * Set from `encounters.json`, not from a check on who the trainer is, so a
+   * future Warden is a data entry rather than a branch in the combat code.
+   *
+   * Optional because every pal the player owns is uncollared, and a save
+   * written before this existed must still load.
+   */
+  collared?: boolean;
 }
 
 /** One line in the released-pal ledger. Released pals never return. */

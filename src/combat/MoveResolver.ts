@@ -19,7 +19,8 @@ export const TIMING = {
   dodgeWindowMs: moves.dodgeWindowMs,
   swapVulnerabilityMs: moves.swapVulnerabilityMs,
   quickChargeGain: moves.quickChargeGain,
-  powerChargeCost: moves.powerChargeCost
+  powerChargeCost: moves.powerChargeCost,
+  collarDamageMultiplier: moves.collarDamageMultiplier
 } as const;
 
 export interface AttackResult {
@@ -59,7 +60,10 @@ export function resolveAttack(
     return { damage: 0, typeAdvantage: false, hesitated: false, dodged: false, moveName: '' };
   }
 
-  if (options.kind === 'power' && hesitates(attacker.affinity, rand)) {
+  // A collared pal never hesitates. Hesitation is what a neglected pal does
+  // when it could refuse; a collar removes the choice, which is the whole
+  // point of the mechanic and why Tether uses them.
+  if (options.kind === 'power' && !attacker.collared && hesitates(attacker.affinity, rand)) {
     return { damage: 0, typeAdvantage: false, hesitated: true, dodged: false, moveName: move.name };
   }
 
@@ -78,8 +82,11 @@ export function resolveAttack(
     rand
   );
 
+  // The collar's half of the trade: harder hits, bought with the pal's will.
+  const collared = attacker.collared ? dealt * TIMING.collarDamageMultiplier : dealt;
+
   return {
-    damage: dealt,
+    damage: collared,
     typeAdvantage: advantage,
     hesitated: false,
     dodged: false,

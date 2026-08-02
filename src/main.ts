@@ -3,6 +3,10 @@ import { Renderer } from './core/Engine';
 import { Input } from './core/input/Input';
 import { Loop } from './core/Loop';
 import { Stats } from './core/Stats';
+import { buildWorld } from './game/World';
+import { Story } from './game/Story';
+import { HUD } from './ui/HUD';
+import { DialoguePanel } from './ui/DialoguePanel';
 import { Fx } from './fx/Fx';
 import { mountHarvestFeel } from './fx/HarvestFeel';
 import { InputHint } from './ui/InputHint';
@@ -15,9 +19,7 @@ import { PalVisuals } from './entities/PalVisual';
 import { SpawnManager } from './entities/SpawnManager';
 import { Party } from './party/Party';
 import { ReleaseFlow } from './party/Release';
-import { createPal } from './entities/Species';
 import { CombatHud } from './ui/CombatHud';
-import { mulberry32, hashSeed } from './world/gen/Rng';
 import { BuildMode } from './building/BuildMode';
 import { SaveManager, type SaveV1 } from './core/SaveManager';
 import { createVitals, tickVitals, spendStamina } from './survival/Vitals';
@@ -98,12 +100,27 @@ async function boot(): Promise<void> {
   // It follows the player, so it never needs to be world-sized.
   const water = buildWaterPlane(scene, 1024, WATER_LEVEL);
 
+  // Hollowbrook, the standing stones, the Hall, and the people in them. All
+  // three are seeded, so this is deterministic for a seed and needs no save
+  // data of its own.
+  const built = buildWorld(scene, terrain, resolveSeed(), shadows);
+
   // One adapter, so the controller and the camera both see exactly the terrain
   // the renderer drew rather than a second opinion about it.
+  //
+  // Landmark colliders are appended to whatever the streamed props report:
+  // buildings are fixed and few and never unload, so registering them into the
+  // streaming system would be bookkeeping for no gain.
   const world: ControllerWorld = {
     heightAt: (x, z) => terrain.heightAt(x, z),
     slopeAt: (x, z) => terrain.slopeAt(x, z),
-    collidersNear: (x, z, r) => props.collidersNear(x, z, r)
+    collidersNear: (x, z, r) => {
+      const near = props.collidersNear(x, z, r);
+      for (const collider of built.colliders) {
+        if (Math.hypot(collider.x - x, collider.z - z) <= r + collider.radius) near.push(collider);
+      }
+      return near;
+    }
   };
 
   progress(0.5, 'Waking Hollowbrook');
@@ -134,11 +151,11 @@ async function boot(): Promise<void> {
   add(inventory, 'wood', 40);
   const harvest = new HarvestController(inventory, props);
 
-  // Pals, combat and the party. M3's opening scene hands over a starter; until
-  // then one is granted so a fight is reachable from a cold boot.
+  // Pals, combat and the party. The party starts EMPTY: Grandpa Orin hands
+  // over the starter, and which one is the player's first real decision
+  // (GAME_DESIGN.md section 3). A pal granted here would make that choice
+  // decorative, which is what it was while M3 did not exist yet.
   const party = new Party();
-  const starterRng = mulberry32(hashSeed(resolveSeed(), 1));
-  party.add(createPal('bramblit', 5, 1, performance.now(), starterRng, 'starter'));
 
   const palVisuals = new PalVisuals(scene);
   const spawner = new SpawnManager(terrain, palVisuals);
@@ -172,6 +189,22 @@ async function boot(): Promise<void> {
   const fx = new Fx(scene, document.getElementById('fx') as HTMLElement);
   const unmountFeel = mountHarvestFeel(fx);
 
+  // M3 and M4: the compass and party HUD, the conversations, and the Hall.
+  const hud = new HUD();
+  const dialoguePanel = new DialoguePanel();
+  const story = new Story(
+    built,
+    party,
+    combat,
+    release,
+    inventory,
+    input,
+    hud,
+    dialoguePanel,
+    resolveSeed()
+  );
+  hud.updateParty(party);
+
   // Load before the first frame, so the player never sees the default world
   // flash before their own.
   const loaded = saves.load();
@@ -190,6 +223,14 @@ async function boot(): Promise<void> {
     for (let i = 0; i < loaded.save.inventory.length && i < inventory.length; i++) {
       inventory[i] = loaded.save.inventory[i] ?? null;
     }
+    // The party and the story were being written to the save and never read
+    // back: a reload returned you to Hollowbrook with no pals and Orin ready to
+    // hand over a starter you already had.
+    party.restore([...loaded.save.party], [...loaded.save.releasedLedger]);
+    story.restore(loaded.save.progress);
+    time.day = loaded.save.progress.day;
+    time.cycle = loaded.save.progress.timeOfDay;
+    hud.updateParty(party);
     chunks.update(player.state.position.x, player.state.position.z);
     chunks.processQueue(2000);
     props.update(player.state.position.x, player.state.position.z);
@@ -221,7 +262,7 @@ async function boot(): Promise<void> {
       respawn: homestead.respawn,
       satchel: satchel.marker,
       worldDeltas: { harvested: props.harvestedKeys, bossesDown: {} },
-      progress: { badges: [], flags: [], day: time.day, timeOfDay: time.cycle }
+      progress: { ...story.snapshot(), day: time.day, timeOfDay: time.cycle }
     };
   }
 
@@ -262,6 +303,18 @@ async function boot(): Promise<void> {
       // signature already takes it so that hooking Vitals up is one argument.
       tickVitals(vitals, dt * 1000, input.intent.sprint && !combat.isFighting);
 
+      // People first. A conversation, or a Hall fight, owns the interact
+      // button outright: talking to Orin while chopping the tree behind him
+      // would fire both, and the Hall sequence must not be walkable-away-from
+      // by swinging an axe.
+      const busyTalking = story.update(
+        player.state.position.x,
+        player.state.position.z,
+        player.cameraYaw
+      );
+      hud.updateVitals(vitals);
+      hud.updateDay(time.day, time.isNight);
+
       // Building takes over the interact button while the hammer is out, so
       // the two never compete for the same press.
       const hammerOut = harvest.equippedId === 'hammer';
@@ -273,7 +326,7 @@ async function boot(): Promise<void> {
         player.cameraYaw
       );
 
-      const swing = hammerOut
+      const swing = hammerOut || busyTalking
         ? null
         : harvest.update(
             input.intent,
@@ -294,7 +347,11 @@ async function boot(): Promise<void> {
         time.cycle,
         time.day
       );
-      encounter.update(player.state.position.x, player.state.position.z, dt, time.day);
+      // A scripted Hall fight drives CombatMode itself, so the wild encounter
+      // loop stands down. Without this the two race for the same fight and a
+      // wandering Tuftmoth can interrupt Bracken.
+      if (story.inScriptedFight) combat.update(dt, time.day);
+      else encounter.update(player.state.position.x, player.state.position.z, dt, time.day);
       if (input.intent.throwOrb) combatHud.reportThrow(encounter.throwOrb(time.day));
 
       // The release screen is driven by the same slot input the party uses:
@@ -422,6 +479,9 @@ async function boot(): Promise<void> {
       loop.stop();
       unmountFeel();
       fx.dispose();
+      dialoguePanel.dispose();
+      hud.dispose();
+      built.dispose();
       hint.dispose();
       input.dispose();
       player.dispose();
