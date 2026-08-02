@@ -12,8 +12,10 @@ import {
 } from '../core/babylon';
 import type { Input } from '../core/input/Input';
 import models from '../data/models.json';
+import cameraRig from '../data/cameraRig.json';
 import { AnimDriver } from '../anim/AnimDriver';
 import { mountRig, type RigEntry } from '../anim/Rigs';
+import { resolveBoomDistance, smoothBoomDistance, type BoomConfig } from './CameraBoom';
 import {
   createState,
   DEFAULT_CONFIG,
@@ -58,6 +60,13 @@ export interface CameraFraming {
   blendMs: number;
 }
 
+const BOOM_CONFIG: BoomConfig = {
+  steps: cameraRig.boom.steps,
+  floor: cameraRig.boom.floor,
+  groundClearance: cameraRig.boom.groundClearance,
+  colliderMargin: cameraRig.boom.colliderMargin
+};
+
 const DEFAULT_FRAMING: CameraFraming = {
   distance: CAMERA_DISTANCE,
   height: CAMERA_HEIGHT,
@@ -79,6 +88,8 @@ export class Player {
 
   /** The rig parameters actually in use this frame, lerped toward `framing`. */
   private rig = { distance: CAMERA_DISTANCE, height: CAMERA_HEIGHT, shoulder: CAMERA_SHOULDER };
+  /** Boom distance actually in use, eased toward the collision-resolved target each frame. */
+  private boomDistance = CAMERA_DISTANCE;
   private framing: CameraFraming = DEFAULT_FRAMING;
   /** While a framing blends in, pitch eases toward its request too. */
   private framingPitchBlend = 0;
@@ -197,7 +208,7 @@ export class Player {
     );
 
     this.syncTransform();
-    this.updateCamera(world);
+    this.updateCamera(world, dt);
   }
 
   private syncTransform(): void {
@@ -206,11 +217,13 @@ export class Player {
   }
 
   /**
-   * Orbit the camera behind the player, then pull it in if terrain would be
-   * between it and the head. Without the pullback, walking backwards into a
-   * hillside puts the camera underground and the screen fills with dirt.
+   * Orbit the camera behind the player, then pull it in if terrain or a
+   * building wall would be between it and the head. Without the pullback,
+   * walking backwards into a hillside (or turning your back to a house)
+   * puts the camera past the obstruction and the screen fills with dirt,
+   * or worse, the inside of a building whose near wall culls away.
    */
-  private updateCamera(world: ControllerWorld): void {
+  private updateCamera(world: ControllerWorld, dt: number): void {
     const focusX = this.state.position.x;
     const focusY = this.state.position.y + this.rig.height;
     const focusZ = this.state.position.z;
@@ -220,26 +233,29 @@ export class Player {
     const dirZ = -Math.cos(this.yaw) * cosPitch;
     const dirY = Math.sin(this.pitch);
 
-    // Shoulder offset, perpendicular to the view direction.
+    // Shoulder offset, perpendicular to the view direction. It does not
+    // scale with boom distance, so folding it into the march origin keeps
+    // resolveBoomDistance a plain point-plus-direction march.
     const shoulderX = Math.cos(this.yaw) * this.rig.shoulder;
     const shoulderZ = -Math.sin(this.yaw) * this.rig.shoulder;
 
-    let distance = this.rig.distance;
-    // March along the boom and stop short of the ground. Cheaper than a ray
-    // cast against chunk meshes, and the heightfield is the only thing big
-    // enough to matter at this distance.
-    const STEPS = 6;
-    for (let i = 1; i <= STEPS; i++) {
-      const d = (this.rig.distance * i) / STEPS;
-      const px = focusX + dirX * d + shoulderX;
-      const pz = focusZ + dirZ * d + shoulderZ;
-      const py = focusY + dirY * d;
-      const ground = world.heightAt(px, pz) + 0.5;
-      if (py < ground) {
-        distance = Math.max(1.4, (this.rig.distance * (i - 1)) / STEPS);
-        break;
-      }
-    }
+    const colliders = world.collidersNear(focusX, focusZ, this.rig.distance + cameraRig.boom.colliderMargin);
+    const targetDistance = resolveBoomDistance(
+      { x: focusX + shoulderX, y: focusY, z: focusZ + shoulderZ },
+      { x: dirX, y: dirY, z: dirZ },
+      this.rig.distance,
+      world.heightAt,
+      colliders,
+      BOOM_CONFIG
+    );
+    this.boomDistance = smoothBoomDistance(
+      this.boomDistance,
+      targetDistance,
+      dt,
+      cameraRig.boom.lerpInRate,
+      cameraRig.boom.lerpOutRate
+    );
+    const distance = this.boomDistance;
 
     this.camera.position.set(
       focusX + dirX * distance + shoulderX,

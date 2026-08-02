@@ -1,0 +1,16 @@
+{
+  "$comment": "Third-person boom tuning. The boom marches from the player's focus point toward the camera and pulls in short of terrain or building colliders; see src/entities/CameraBoom.ts.",
+  "boom": {
+    "$comment_steps": "Sample points along the boom. Six matched the old inline march; building walls are thin enough at this distance that more samples buys little and costs a query per step.",
+    "steps": 6,
+    "$comment_floor": "Camera never sits closer than this, or a corner pull-in puts it inside the player's own head.",
+    "floor": 1.4,
+    "$comment_groundClearance": "Height above the sampled terrain the boom must clear before it counts as blocked.",
+    "groundClearance": 0.5,
+    "$comment_colliderMargin": "Extra radius added to each collider before testing the boom sample against it. A wall collider's radius alone stops the camera AT the wall; from there the near face is still close enough to the lens to disappear at a glancing angle. The margin buys a hair of standoff so the wall reads as solid.",
+    "colliderMargin": 0.3,
+    "$comment_lerp": "Rates are 1 - exp(-rate * dt) blends, not raw per-frame fractions, so they read the same at any framerate. Pulling in must be quick enough that a wall never gets a frame to show through; easing back out is slower so the boom does not visibly snap to full length the instant a corner clears.",
+    "lerpInRate": 40,
+    "lerpOutRate": 6
+  }
+}
