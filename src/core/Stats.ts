@@ -1,5 +1,7 @@
 import { Scene, SceneInstrumentation } from './babylon';
 import type { Loop } from './Loop';
+import type { ChunkManager } from '../world/ChunkManager';
+import type { PropBatcher } from '../world/PropBatcher';
 
 /**
  * The ?stats=1 performance readout.
@@ -37,7 +39,9 @@ export class Stats {
   constructor(
     private readonly scene: Scene,
     private readonly loop: Loop,
-    el: HTMLElement
+    el: HTMLElement,
+    private readonly chunks: ChunkManager,
+    private readonly props: PropBatcher
   ) {
     this.el = el;
     this.el.hidden = false;
@@ -78,11 +82,25 @@ export class Stats {
       (triangles > BUDGET.triangles ? 1 : 0);
 
     this.el.className = over >= 2 ? 'stats stats--bad' : over === 1 ? 'stats stats--warn' : 'stats';
+
+    // Per-family instance counts, so a family reading zero near the player
+    // while others read normally is diagnosable at a glance (the instancing
+    // symptom this line exists to catch, per CLAUDE.md's own note that
+    // "vegetation mostly doesn't render" means instancing, not scatter).
+    const counts = this.props.instanceCountsByFamily();
+    const families = Object.keys(counts).sort();
+    const propsLine =
+      families.length > 0
+        ? families.map((f) => `${f}:${counts[f]}`).join(' ')
+        : '(none resident)';
+
     this.el.textContent = [
       `${fps.toFixed(0).padStart(3)} fps   ${frameMs.toFixed(1)} ms`,
       `draws  ${String(drawCalls).padStart(5)} / ${BUDGET.drawCalls}`,
       `tris   ${fmtK(triangles).padStart(5)} / ${fmtK(BUDGET.triangles)}`,
-      `meshes ${String(meshes).padStart(5)}`
+      `meshes ${String(meshes).padStart(5)}`,
+      `chunks ${String(this.chunks.loadedCount).padStart(5)} loaded  ${this.chunks.pendingCount} pending`,
+      `props  ${propsLine}`
     ].join('\n');
   }
 

@@ -42,6 +42,7 @@ import { PropBatcher } from './world/PropBatcher';
 import { disposePrototypes } from './world/Prototypes';
 import { resolvePrototypes } from './world/PropModels';
 import { SkyDome } from './world/SkyDome';
+import type { DebugGrid } from './world/DebugBuildGrid';
 import { Terrain, WATER_LEVEL } from './world/gen/Terrain';
 import { TimeOfDay } from './world/TimeOfDay';
 
@@ -147,6 +148,26 @@ async function boot(): Promise<void> {
   chunks.processQueue(2000);
   props.update(0, 0);
   props.processQueue(1500);
+
+  // `?debug=build`: every building/station/piece laid out on a grid so a
+  // solidity or winding problem is checkable in one screenshot. Costs
+  // nothing when the flag is off; the module isn't even asked to run.
+  const debugBuildMode = new URLSearchParams(location.search).get('debug') === 'build';
+  let debugGrid: DebugGrid | null = null;
+  if (debugBuildMode) {
+    progress(0.6, 'Building the debug grid');
+    const { buildDebugGrid } = await import('./world/DebugBuildGrid');
+    chunks.update(0, 260);
+    chunks.processQueue(2000);
+    props.update(0, 260);
+    props.processQueue(1500);
+    debugGrid = await buildDebugGrid(scene, terrain, shadows);
+    // Stand back from the grid, facing into it.
+    player.state.position.x = 0;
+    player.state.position.z = 250;
+    player.state.position.y = terrain.heightAt(0, 250) + 1;
+    player.state.yaw = 0;
+  }
 
   progress(0.8, 'Setting the sun');
   const dome = new SkyDome(scene);
@@ -499,7 +520,7 @@ async function boot(): Promise<void> {
     }
   });
 
-  const stats = Stats.enabled() && statsEl ? new Stats(scene, loop, statsEl) : null;
+  const stats = Stats.enabled() && statsEl ? new Stats(scene, loop, statsEl, chunks, props) : null;
 
   renderer.onContextRestored = (): void => {
     scene.markAllMaterialsAsDirty(1);
@@ -569,6 +590,7 @@ async function boot(): Promise<void> {
       palVisuals.dispose();
       build.dispose();
       doorPrompt.dispose();
+      debugGrid?.dispose();
       stationViews.dispose();
       disposePrototypes(prototypes);
       dome.dispose();

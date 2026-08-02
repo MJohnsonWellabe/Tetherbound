@@ -299,6 +299,21 @@ export class PropBatcher {
     return this.queue.length;
   }
 
+  /**
+   * Live thin-instance count per family, summed across every resident cell.
+   * For the `?stats=1` readout: a family whose count reads zero near the
+   * player while others read normally is the instancing-broke symptom, not a
+   * scatter-density one.
+   */
+  instanceCountsByFamily(): Record<string, number> {
+    const out: Record<string, number> = {};
+    for (const cell of this.cells.values()) {
+      const id = cell.family.id;
+      out[id] = (out[id] ?? 0) + (cell.mesh?.thinInstanceCount ?? 0);
+    }
+    return out;
+  }
+
   dispose(): void {
     for (const cell of this.cells.values()) this.disposeCell(cell);
     this.cells.clear();
