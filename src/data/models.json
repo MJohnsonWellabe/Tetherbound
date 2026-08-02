@@ -323,17 +323,16 @@
     },
     "cindercub": {
       "url": "models/creatures/cindercub.glb",
-      "scale": 0.33,
+      "scale": 0.5,
       "clips": {
-        "idle": "idle",
-        "walk": "walk",
-        "run": "run",
-        "attack": null,
-        "hit": null,
-        "faint": null,
-        "ambient": "eat"
-      },
-      "yOffset": 0.1
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Gallop",
+        "attack": "Attack",
+        "hit": "Idle_HitReact_Left",
+        "faint": "Death",
+        "ambient": "Eating"
+      }
     },
     "dewdrake": {
       "url": "models/creatures/dewdrake.glb",
@@ -376,31 +375,28 @@
     },
     "sparrowick": {
       "url": "models/creatures/sparrowick.glb",
-      "scale": 0.32,
+      "scale": 0.45,
       "clips": {
-        "idle": "idle",
-        "walk": "walk",
-        "run": "run",
-        "attack": null,
-        "hit": null,
-        "faint": null,
-        "ambient": "eat"
-      },
-      "yOffset": 0.1
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Walk",
+        "attack": "CharacterArmature|Bite_Front",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death"
+      }
     },
     "grazehorn": {
       "url": "models/creatures/grazehorn.glb",
-      "scale": 0.47,
+      "scale": 0.6,
       "clips": {
-        "idle": "idle",
-        "walk": "walk",
-        "run": "run",
-        "attack": null,
-        "hit": null,
-        "faint": null,
-        "ambient": "eat"
-      },
-      "yOffset": 0.14
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Gallop",
+        "attack": "Attack_Headbutt",
+        "hit": "Idle_HitReact_Left",
+        "faint": "Death",
+        "ambient": "Eating"
+      }
     },
     "rillnewt": {
       "url": "models/creatures/rillnewt.glb",
@@ -428,31 +424,28 @@
     },
     "thistleback": {
       "url": "models/creatures/thistleback.glb",
-      "scale": 0.46,
+      "scale": 0.55,
       "clips": {
-        "idle": "idle",
-        "walk": "walk",
-        "run": "run",
-        "attack": null,
-        "hit": null,
-        "faint": null,
-        "ambient": "eat"
-      },
-      "yOffset": 0.14
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Walk",
+        "attack": "CharacterArmature|Bite_Front",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death"
+      }
     },
     "cragpup": {
       "url": "models/creatures/cragpup.glb",
-      "scale": 0.38,
+      "scale": 0.5,
       "clips": {
-        "idle": "idle",
-        "walk": "walk",
-        "run": "run",
-        "attack": null,
-        "hit": null,
-        "faint": null,
-        "ambient": "eat"
-      },
-      "yOffset": 0.11
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Gallop",
+        "attack": "Attack",
+        "hit": "Idle_HitReact_Left",
+        "faint": "Death",
+        "ambient": "Eating"
+      }
     },
     "voltvole": {
       "url": "models/creatures/voltvole.glb",
@@ -481,17 +474,16 @@
     },
     "ashmane": {
       "url": "models/creatures/ashmane.glb",
-      "scale": 0.57,
+      "scale": 0.65,
       "clips": {
-        "idle": "idle",
-        "walk": "walk",
-        "run": "run",
-        "attack": null,
-        "hit": null,
-        "faint": null,
-        "ambient": "eat"
-      },
-      "yOffset": 0.17
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Gallop",
+        "attack": "Attack",
+        "hit": "Idle_HitReact_Left",
+        "faint": "Death",
+        "ambient": "Eating"
+      }
     },
     "loamking": {
       "url": "models/creatures/loamking.glb",

@@ -229,6 +229,139 @@ export async function mergeSeated(
   return document;
 }
 
+/**
+ * Bake an armature node's uniform scale out of a skinned document, preserving
+ * the world result exactly.
+ *
+ * Quaternius exports carry the FBX unit convention: an armature node scaled
+ * 100x over centimetre-sized geometry. Babylon renders that correctly only
+ * when the skeleton has a single root joint; the Animated Animals rigs park
+ * their IK and pole-target bones directly under the armature as extra roots,
+ * and every primitive skinned to one of those gets the 100x applied twice --
+ * the screen-filling shards D56 blamed on the files themselves. The shape is
+ * fixable by conjugation: with the armature scale S moved into the data
+ * (descendant translations, IBM translations, translation animation tracks
+ * and skinned vertex positions all multiplied by S), every joint world matrix
+ * becomes W' = W * S^-1 and the skinning product W' * IBM' * v' reproduces
+ * W * IBM * v bit-for-bit, with no scale left for Babylon to misapply.
+ */
+export function normalizeArmatureScale(document) {
+  const root = document.getRoot();
+  if (root.listSkins().length === 0) return document;
+  const scene = root.getDefaultScene() ?? root.listScenes()[0];
+
+  const joints = new Set();
+  for (const skin of root.listSkins()) for (const j of skin.listJoints()) joints.add(j);
+
+  const hasJointBelow = (n) => {
+    for (const c of n.listChildren()) if (joints.has(c) || hasJointBelow(c)) return true;
+    return false;
+  };
+
+  // Armatures: non-joint nodes with a uniform non-1 scale and joints below.
+  const armatures = [];
+  const findArmatures = (n) => {
+    const s = n.getScale();
+    const uniform = Math.abs(s[0] - s[1]) < 1e-5 && Math.abs(s[1] - s[2]) < 1e-5;
+    if (!joints.has(n) && hasJointBelow(n) && uniform && Math.abs(s[0] - 1) > 1e-5) {
+      armatures.push({ node: n, scale: s[0] });
+      return; // nested scaled armatures are out of scope; none exist in the packs
+    }
+    for (const c of n.listChildren()) findArmatures(c);
+  };
+  for (const n of scene.listChildren()) findArmatures(n);
+  if (armatures.length === 0) return document;
+
+  const descendants = (n, out = []) => {
+    for (const c of n.listChildren()) {
+      out.push(c);
+      descendants(c, out);
+    }
+    return out;
+  };
+
+  const scalePositions = (mesh, s) => {
+    for (const prim of mesh.listPrimitives()) {
+      const pos = prim.getAttribute('POSITION');
+      pos.setArray(Float32Array.from(pos.getArray(), (v) => v * s));
+    }
+  };
+
+  const scaledIbms = new Set();
+  const scaledAnims = new Set();
+  const scaledMeshes = new Set();
+  // Which armature's scale governs a given skin, by joint membership.
+  const skinScale = new Map();
+
+  for (const { node: arm, scale: s } of armatures) {
+    arm.setScale([1, 1, 1]);
+    const below = new Set(descendants(arm));
+
+    for (const skin of root.listSkins()) {
+      if (skin.listJoints().some((j) => below.has(j))) skinScale.set(skin, s);
+    }
+
+    for (const d of below) {
+      const t = d.getTranslation();
+      d.setTranslation([t[0] * s, t[1] * s, t[2] * s]);
+      // A static mesh hanging off a bone (an accessory) must grow with the
+      // rig or it renders at 1/s of its old size.
+      const mesh = d.getMesh();
+      if (mesh && !d.getSkin() && !scaledMeshes.has(mesh)) {
+        scaledMeshes.add(mesh);
+        scalePositions(mesh, s);
+      }
+    }
+
+    for (const anim of root.listAnimations()) {
+      for (const channel of anim.listChannels()) {
+        if (channel.getTargetPath() !== 'translation') continue;
+        if (!below.has(channel.getTargetNode())) continue;
+        const output = channel.getSampler()?.getOutput();
+        if (!output || scaledAnims.has(output)) continue;
+        scaledAnims.add(output);
+        output.setArray(Float32Array.from(output.getArray(), (v) => v * s));
+      }
+    }
+  }
+
+  // Conjugate each governed skin: IBM translations and the skinned vertex
+  // positions both grow by S, so W' * IBM' * v' lands exactly where
+  // W * IBM * v did.
+  for (const [skin, s] of skinScale) {
+    const acc = skin.getInverseBindMatrices();
+    if (acc && !scaledIbms.has(acc)) {
+      scaledIbms.add(acc);
+      const arr = Float32Array.from(acc.getArray());
+      for (let o = 0; o < arr.length; o += 16) {
+        arr[o + 12] *= s;
+        arr[o + 13] *= s;
+        arr[o + 14] *= s;
+      }
+      acc.setArray(arr);
+    }
+  }
+
+  // Skinned vertices live in mesh space, which the conjugation grew by S. The
+  // skinned mesh node's own transform is ignored by the glTF spec, so zero
+  // its scale as well rather than leave a number Babylon might misread.
+  const fixSkinnedNodes = (n) => {
+    const skin = n.getSkin();
+    if (skin && skinScale.has(skin)) {
+      const mesh = n.getMesh();
+      if (mesh && !scaledMeshes.has(mesh)) {
+        scaledMeshes.add(mesh);
+        scalePositions(mesh, skinScale.get(skin));
+      }
+      n.setScale([1, 1, 1]);
+    }
+    for (const c of n.listChildren()) fixSkinnedNodes(c);
+  };
+  for (const n of scene.listChildren()) fixSkinnedNodes(n);
+
+  return document;
+}
+
 /** Standard slimming pass for models that keep their textures/rigs. */
 export async function slim(document, { textureSize = 512, keepAnimations = true, keepClips = null } = {}) {
   // The source packs ship every animation twice (bare and armature-prefixed

@@ -84,15 +84,18 @@ const textures = [
  * are small; the shared-rig humanoids carry more texture and clip data, so
  * they get their own budget ceiling.
  *
- * Six species are EXCLUDED here (see BROKEN_RIG_SPECIES below): their
- * poly.pizza source explodes into screen-filling shards in Babylon even when
- * loaded raw with no game code touching it (tools/_oracle.mjs proved this per
- * file, D56). They ship from Kenney Cube Pets instead.
+ * All fifteen species come from the poly.pizza originals again. Six were
+ * recast to Kenney Cube Pets under D56's "explodes even loaded raw" verdict,
+ * but that probe (tools/_oracle.mjs) read pipeline output from public/, not
+ * the raw files, and the pipeline it tested predates slim() sparing skinned
+ * models their geometry passes. Re-tested through the current pipeline and
+ * the owner rejected the blocky look, so the originals are back; see the
+ * decision record superseding D56.
  */
 const SPECIES = [
-  'bramblit', 'dewdrake', 'tuftmoth', 'pebblit',
-  'rillnewt', 'emberhop', 'voltvole',
-  'mirefin', 'loamking'
+  'bramblit', 'cindercub', 'dewdrake', 'tuftmoth', 'pebblit',
+  'sparrowick', 'grazehorn', 'rillnewt', 'emberhop', 'thistleback',
+  'cragpup', 'voltvole', 'mirefin', 'ashmane', 'loamking'
 ];
 const creatures = SPECIES.map((id) => ({
   group: 'creatures',
@@ -102,37 +105,6 @@ const creatures = SPECIES.map((id) => ({
   sources: [{ file: `pizza/creatures/${id}.glb` }],
   out: `models/creatures/${id}.glb`,
   provenance: { source: 'https://poly.pizza/u/Quaternius', author: 'Quaternius', license: 'CC0 1.0' }
-}));
-
-/**
- * The six species Babylon cannot render from their original poly.pizza
- * source (D56). Kenney Cube Pets: NOT skinned (node-TRS animation only), so
- * there is no skeleton for the bug class to reach. Its clip set is
- * {static, idle, walk, run, eat, dance, gesture-positive, gesture-negative} -
- * no attack/hit/faint, mapped to null in models.json per the existing "a
- * missing verb is data, not a crash" pattern (D45).
- *
- * `scale`/`yOffset` bring each source (raw height ~1.5-2.1, base sitting
- * ~0.30 below its own pivot) to the same real-world size convention the other
- * species use, and lift the feet back onto the ground.
- */
-const CUBE_PETS = 'cube-pets/Models/GLB format';
-const BROKEN_RIG_SPECIES = [
-  { id: 'cindercub', file: 'animal-fox', scale: 0.33, yOffset: 0.1 },
-  { id: 'sparrowick', file: 'animal-parrot', scale: 0.32, yOffset: 0.1 },
-  { id: 'grazehorn', file: 'animal-deer', scale: 0.47, yOffset: 0.14 },
-  { id: 'thistleback', file: 'animal-hog', scale: 0.46, yOffset: 0.14 },
-  { id: 'cragpup', file: 'animal-dog', scale: 0.38, yOffset: 0.11 },
-  { id: 'ashmane', file: 'animal-lion', scale: 0.57, yOffset: 0.17 }
-];
-const recastCreatures = BROKEN_RIG_SPECIES.map(({ id, file }) => ({
-  group: 'creatures',
-  transform: 'rigged',
-  textureSize: 256,
-  budgetKB: 1000,
-  sources: [{ file: `${CUBE_PETS}/${file}.glb` }],
-  out: `models/creatures/${id}.glb`,
-  provenance: { source: 'https://kenney.nl/assets/cube-pets', author: 'Kenney', license: 'CC0' }
 }));
 
 const ROLES = ['player', 'villager_m', 'villager_f', 'tether', 'warden'];
@@ -372,6 +344,5 @@ export const JOBS = [
   ...buildings,
   ...stations,
   ...creatures,
-  ...recastCreatures,
   ...characters
 ];

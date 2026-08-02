@@ -39,7 +39,14 @@ function clipsFor(outPath) {
   }
   return null;
 }
-import { bakeToVertexColors, getIO, mergeSeated, slim, stats } from './lib/glbtool.mjs';
+import {
+  bakeToVertexColors,
+  getIO,
+  mergeSeated,
+  normalizeArmatureScale,
+  slim,
+  stats
+} from './lib/glbtool.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const RAW = join(ROOT, 'assets_raw');
@@ -127,6 +134,10 @@ async function runJob(io, job) {
       quantizeOut: job.quantize ?? false
     });
   } else if (job.transform === 'rigged') {
+    // Babylon double-applies a scaled armature's scale to secondary root
+    // joints (the Animated Animals IK bones), so the FBX 100x convention is
+    // baked out before anything else sees the file.
+    normalizeArmatureScale(doc);
     await slim(doc, {
       textureSize: job.textureSize ?? 512,
       keepAnimations: true,
