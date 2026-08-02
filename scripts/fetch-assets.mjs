@@ -51,7 +51,30 @@ const ZIPS = [
  * entry added to it. Kept in one flat list so the summary table reads well.
  */
 export const PIZZA = [
-  // { id: '3rUm1cN3yp', as: 'creatures/dragon.glb' }  -- filled in by curation
+  // Pals: one distinct rigged creature per species, curated against the
+  // species reads in GAME_DESIGN.md section 6. All Quaternius.
+  { id: 'irZjWFARyl', as: 'creatures/bramblit.glb' }, // Bunny (Ultimate Monsters)
+  { id: 'Bc97C66HKi', as: 'creatures/cindercub.glb' }, // Fox (Animated Animals)
+  { id: '3rUm1cN3yp', as: 'creatures/dewdrake.glb' }, // Dragon
+  { id: '42djT5zJnx', as: 'creatures/tuftmoth.glb' }, // Armabee
+  { id: '71gomWolax', as: 'creatures/pebblit.glb' }, // Goleling
+  { id: 'gZ2ExU9OAB', as: 'creatures/sparrowick.glb' }, // Birb
+  { id: 'T6Cs7tmMHJ', as: 'creatures/grazehorn.glb' }, // Deer
+  { id: '37wofOCOzG', as: 'creatures/rillnewt.glb' }, // Frog (monster)
+  { id: '9Z2V8fpazF', as: 'creatures/emberhop.glb' }, // Frog (animal hopper)
+  { id: 'IoWG5F9WUc', as: 'creatures/thistleback.glb' }, // Green Spiky Blob
+  { id: 'wcWiuEqwzq', as: 'creatures/cragpup.glb' }, // Husky
+  { id: 'iltq5bVNaV', as: 'creatures/voltvole.glb' }, // Rat
+  { id: 'MRjSlwCjHM', as: 'creatures/mirefin.glb' }, // Anglerfish
+  { id: 'P1gU3Qkr9r', as: 'creatures/ashmane.glb' }, // Wolf
+  { id: 'BldaiPtyJa', as: 'creatures/loamking.glb' }, // Giant
+  // Humanoids: one shared 24-clip rig across all five, so one verb map
+  // covers the player and every NPC.
+  { id: 'ZwF0K7WBmu', as: 'characters/player.glb' }, // Adventurer
+  { id: '7pn3R6hPvE', as: 'characters/villager_m.glb' }, // Farmer
+  { id: 'nIItLV9nxS', as: 'characters/villager_f.glb' }, // Animated Woman
+  { id: 'y9KWOVG21R', as: 'characters/tether.glb' }, // Hooded Adventurer
+  { id: 'I1gTjmuK2m', as: 'characters/warden.glb' } // King
 ];
 
 const args = process.argv.slice(2);

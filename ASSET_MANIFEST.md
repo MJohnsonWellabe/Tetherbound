@@ -19,9 +19,9 @@ licenses are recorded as found at the source so attribution stays a lookup, not 
 | public/models/props/grass_a.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (20 KB) |
 | public/models/props/grass_b.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (12 KB) |
 | public/models/props/reed_a.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (24 KB) |
-| public/models/props/flower_a.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (7 KB) |
-| public/models/props/flower_b.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (7 KB) |
-| public/models/props/flower_c.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (7 KB) |
+| public/models/props/flower_a.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (6 KB) |
+| public/models/props/flower_b.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (6 KB) |
+| public/models/props/flower_c.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (6 KB) |
 | public/models/props/stone_tall_a.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (11 KB) |
 | public/models/props/stone_tall_b.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (12 KB) |
 | public/models/props/stone_tall_c.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (6 KB) |

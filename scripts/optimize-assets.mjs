@@ -95,7 +95,7 @@ async function runJob(io, job) {
   // wasm would cost more than these files weigh. Props are a few KB plain.
   if (job.transform === 'prop' || job.transform === 'composite') {
     await bakeToVertexColors(doc);
-    await mergeSeated(doc, { scale: job.scale ?? 1 });
+    await mergeSeated(doc, { scale: job.scale ?? 1, simplifyRatio: job.simplify ?? null });
   } else if (job.transform === 'rigged') {
     await slim(doc, { textureSize: job.textureSize ?? 512, keepAnimations: true });
   } else if (job.transform === 'model') {

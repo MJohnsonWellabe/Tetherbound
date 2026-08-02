@@ -46,12 +46,23 @@ describe('lighting data', () => {
   it('every palette carries a full set of values', () => {
     for (const [name, raw] of Object.entries(lighting.palettes)) {
       const p = raw as Record<string, unknown>;
-      for (const key of ['sun', 'ambient', 'ground', 'fog']) {
+      for (const key of ['sun', 'ambient', 'ground', 'fog', 'zenith', 'horizon']) {
         expect(p[key], `${name}.${key}`).toHaveLength(3);
       }
       expect(typeof p['sunIntensity'], `${name}.sunIntensity`).toBe('number');
       expect(typeof p['ambientIntensity'], `${name}.ambientIntensity`).toBe('number');
       expect(typeof p['fogDensity'], `${name}.fogDensity`).toBe('number');
+    }
+  });
+
+  it('the sky horizon equals the fog colour, per palette', () => {
+    // The dome is not fogged (it sits at infinite distance), so the ONLY
+    // thing hiding the terrain/sky seam is this equality. A palette whose
+    // horizon drifts from its fog paints a visible line across every frame,
+    // which is exactly the class of defect the visual judge hunts.
+    for (const [name, raw] of Object.entries(lighting.palettes)) {
+      const p = raw as { fog: number[]; horizon: number[] };
+      expect(p.horizon, `${name}: horizon must equal fog`).toEqual(p.fog);
     }
   });
 });

@@ -14,10 +14,12 @@ import {
   joinPrimitives,
   prune,
   resample,
+  simplify,
   textureCompress,
   transformMesh,
   weld
 } from '@gltf-transform/functions';
+import { MeshoptSimplifier } from 'meshoptimizer';
 import { fromTranslation, fromScaling, multiply } from 'gl-matrix/esm/mat4.js';
 import sharp from 'sharp';
 
@@ -119,8 +121,14 @@ export async function bakeToVertexColors(document) {
  * height alone, and matches the `seat()` semantics of the primitive
  * prototypes. Scale is baked so the runtime never compensates.
  */
-export async function mergeSeated(document, { scale = 1 } = {}) {
+export async function mergeSeated(document, { scale = 1, simplifyRatio = null } = {}) {
   await document.transform(flatten(), dedup());
+  // Ground cover renders by the thousand through thin instances, so a 200-tri
+  // grass tuft is a triangle budget problem, not a detail win. Simplify BEFORE
+  // the merge so the weld cannot fuse what the simplifier needs separate.
+  if (simplifyRatio) {
+    await document.transform(weld(), simplify({ simplifier: MeshoptSimplifier, ratio: simplifyRatio, error: 0.01 }));
+  }
 
   const root = document.getRoot();
   const scene = root.getDefaultScene() ?? root.listScenes()[0];

@@ -1,5 +1,6 @@
 import { Color3, Color4, DirectionalLight, HemisphericLight, Scene, Vector3 } from '../core/babylon';
 import lighting from '../data/lighting.json';
+import type { SkyDome } from './SkyDome';
 
 /**
  * Day and night. GAME_DESIGN.md section 9: 20 real minutes per full cycle,
@@ -22,6 +23,9 @@ export interface Palette {
   ambient: Color3;
   ground: Color3;
   fog: Color3;
+  /** Sky dome gradient. Horizon equals fog per palette, enforced by test. */
+  zenith: Color3;
+  horizon: Color3;
   sunIntensity: number;
   ambientIntensity: number;
   fogDensity: number;
@@ -32,6 +36,8 @@ interface RawPalette {
   ambient: number[];
   ground: number[];
   fog: number[];
+  zenith: number[];
+  horizon: number[];
   sunIntensity: number;
   ambientIntensity: number;
   fogDensity: number;
@@ -96,6 +102,8 @@ export function paletteAt(cycle: number): Palette {
     ambient: mixColor(from.ambient, to.ambient, k),
     ground: mixColor(from.ground, to.ground, k),
     fog: mixColor(from.fog, to.fog, k),
+    zenith: mixColor(from.zenith, to.zenith, k),
+    horizon: mixColor(from.horizon, to.horizon, k),
     sunIntensity: lerp(from.sunIntensity, to.sunIntensity, k),
     ambientIntensity: lerp(from.ambientIntensity, to.ambientIntensity, k),
     fogDensity: lerp(from.fogDensity, to.fogDensity, k)
@@ -118,7 +126,8 @@ export class TimeOfDay {
     private readonly sun: DirectionalLight,
     private readonly sky: HemisphericLight,
     startCycle = 0.2,
-    startDay = 1
+    startDay = 1,
+    private readonly dome: SkyDome | null = null
   ) {
     this.cycle = startCycle;
     this.day = startDay;
@@ -164,6 +173,7 @@ export class TimeOfDay {
 
     this.scene.fogColor = p.fog;
     this.scene.fogDensity = p.fogDensity;
+    this.dome?.update(p);
     // Clear colour matches the fog so the horizon has no visible seam where
     // terrain ends and sky begins.
     this.scene.clearColor = new Color4(p.fog.r, p.fog.g, p.fog.b, 1);

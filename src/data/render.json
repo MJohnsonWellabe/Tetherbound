@@ -1,12 +1,10 @@
 {
   "$comment": "Renderer tuning. Engine.ts contains no literals. Targets a ROG Ally class handheld at 1080p, per DECISIONS.md D27.",
-
   "camera": {
     "minZ": 0.35,
     "maxZ": 900,
     "fov": 0.9
   },
-
   "$comment_shadow": "The directional light's shadow frustum is pinned to a box around the player instead of letting Babylon fit it to the caster list. autoUpdateExtends walks every caster every frame to compute bounds, and the bounds it finds span the whole view distance, so a 1024 map spread over 384m gave roughly 0.4m per texel and shadows looked like stair-stepped mush. A 70m box on the same map is about 0.07m per texel.",
   "shadow": {
     "extent": 70,
@@ -16,6 +14,20 @@
     "$comment_refollow": "Meters the player may move before the shadow box is recentred. Recentring every frame makes shadow texels crawl across static geometry, which is more distracting than a slightly off-centre box.",
     "refollowDistance": 8
   },
-
-  "$comment_props": "Per-family shadow casting distance lives in scatter.json next to the draw distances it relates to."
+  "$comment_props": "Per-family shadow casting distance lives in scatter.json next to the draw distances it relates to.",
+  "$comment_terrain": "Terrain detail: a desaturated tiling texture multiplied by the per-vertex biome colours. The vertex colour stays authoritative (the texture is near-grey), so biomes keep their palette and the texture only adds surface frequency. tileMeters is world metres per texture repeat.",
+  "terrain": {
+    "detailTexture": "textures/detail_grass.webp",
+    "tileMeters": 9
+  },
+  "$comment_water": "Water animation. bob is a slow vertical sine on the plane's vertices (metres/seconds); caustic is a procedural scrolling sparkle layer, tile in metres and offsets in uv/second. All render-side; the sim never sees any of it.",
+  "water": {
+    "bobAmplitude": 0.06,
+    "bobWavelengthM": 17,
+    "bobSpeed": 0.5,
+    "causticTileM": 26,
+    "scrollU": 0.008,
+    "scrollV": 0.005,
+    "causticStrength": 0.07
+  }
 }

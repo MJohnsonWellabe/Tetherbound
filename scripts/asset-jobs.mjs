@@ -30,21 +30,24 @@ const props = [
   { file: `${NK}/plant_bush.glb`, out: 'bush_a' },
   { file: `${NK}/plant_bushDetailed.glb`, out: 'bush_b' },
   // Ground cover. Bamboo stalks are the kit's only real reed silhouette.
-  { file: `${NK}/grass_large.glb`, out: 'grass_a' },
-  { file: `${NK}/grass.glb`, out: 'grass_b' },
-  { file: `${NK}/crops_bambooStageA.glb`, out: 'reed_a' },
-  { file: `${NK}/flower_purpleA.glb`, out: 'flower_a' },
-  { file: `${NK}/flower_redA.glb`, out: 'flower_b' },
-  { file: `${NK}/flower_yellowA.glb`, out: 'flower_c' },
+  // Ground cover is simplified hard: it renders by the thousand and reads at
+  // 40m, where a 60-tri tuft and a 224-tri tuft are the same pixels.
+  { file: `${NK}/grass_large.glb`, out: 'grass_a', simplify: 0.28 },
+  { file: `${NK}/grass.glb`, out: 'grass_b', simplify: 0.35 },
+  { file: `${NK}/crops_bambooStageA.glb`, out: 'reed_a', simplify: 0.35 },
+  { file: `${NK}/flower_purpleA.glb`, out: 'flower_a', simplify: 0.45 },
+  { file: `${NK}/flower_redA.glb`, out: 'flower_b', simplify: 0.45 },
+  { file: `${NK}/flower_yellowA.glb`, out: 'flower_c', simplify: 0.45 },
   // Landmark and dressing pieces (consumed from Phase 4 on).
   { file: `${NK}/stone_tallA.glb`, out: 'stone_tall_a' },
   { file: `${NK}/stone_tallB.glb`, out: 'stone_tall_b' },
   { file: `${NK}/stone_tallG.glb`, out: 'stone_tall_c' },
   { file: `${NK}/log_large.glb`, out: 'log' },
   { file: `${NK}/stump_round.glb`, out: 'stump' }
-].map(({ file, out }) => ({
+].map(({ file, out, simplify }) => ({
   group: 'props',
   transform: 'prop',
+  simplify: simplify ?? null,
   sources: [{ file }],
   out: `models/props/${out}.glb`,
   provenance: { source: 'https://kenney.nl/assets/nature-kit', author: 'Kenney', license: 'CC0' }

@@ -34,6 +34,7 @@ import { ChunkManager } from './world/ChunkManager';
 import { PropBatcher } from './world/PropBatcher';
 import { disposePrototypes } from './world/Prototypes';
 import { resolvePrototypes } from './world/PropModels';
+import { SkyDome } from './world/SkyDome';
 import { Terrain, WATER_LEVEL } from './world/gen/Terrain';
 import { TimeOfDay } from './world/TimeOfDay';
 
@@ -141,7 +142,8 @@ async function boot(): Promise<void> {
   props.processQueue(1500);
 
   progress(0.8, 'Setting the sun');
-  const time = new TimeOfDay(scene, sun, sky, 0.2, 1);
+  const dome = new SkyDome(scene);
+  const time = new TimeOfDay(scene, sun, sky, 0.2, 1, dome);
   const input = new Input(canvas);
 
   // Grandpa Orin's satchel. M3 hands these over in the opening scene; until
@@ -501,6 +503,7 @@ async function boot(): Promise<void> {
       build.dispose();
       stationViews.dispose();
       disposePrototypes(prototypes);
+      dome.dispose();
       water.dispose();
       renderer.dispose();
     }
