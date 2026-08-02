@@ -3,6 +3,7 @@ import { Renderer } from './core/Engine';
 import { Input } from './core/input/Input';
 import { Loop } from './core/Loop';
 import { Stats } from './core/Stats';
+import { Game } from './game/Game';
 import { Player } from './entities/Player';
 import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
@@ -63,12 +64,23 @@ async function boot(): Promise<void> {
   const chunks = new ChunkManager(scene, terrain, prototypes, shadows);
   const water = buildWaterPlane(scene, 4096, WATER_LEVEL);
 
+  // Landmark colliders are fixed and few, so they are appended to whatever the
+  // streamed chunks report rather than being registered into the chunk system.
+  // Buildings do not unload; chunk props do.
+  let fixedColliders: { x: number; z: number; radius: number }[] = [];
+
   // One adapter, so the controller and the camera both see exactly the terrain
   // the renderer drew rather than a second opinion about it.
   const world: ControllerWorld = {
     heightAt: (x, z) => terrain.heightAt(x, z),
     slopeAt: (x, z) => terrain.slopeAt(x, z),
-    collidersNear: (x, z, r) => chunks.collidersNear(x, z, r)
+    collidersNear: (x, z, r) => {
+      const near = chunks.collidersNear(x, z, r);
+      for (const collider of fixedColliders) {
+        if (Math.hypot(collider.x - x, collider.z - z) <= r + collider.radius) near.push(collider);
+      }
+      return near;
+    }
   };
 
   progress(0.5, 'Waking Hollowbrook');
@@ -85,11 +97,31 @@ async function boot(): Promise<void> {
   const time = new TimeOfDay(scene, sun, sky, 0.2, 1);
   const input = new Input(canvas);
 
+  progress(0.9, 'Raising the Hall');
+  const game = new Game({
+    scene,
+    camera,
+    shadows,
+    terrain,
+    seed: resolveSeed(),
+    player,
+    time,
+    input
+  });
+  fixedColliders = game.world.colliders;
+  // A reload drops the player back where they were; a cold start meets Orin.
+  game.restore();
+  game.begin();
+
   const loop = new Loop({
     update: (dt, elapsedMs) => {
       input.beginFrame();
 
-      player.update(input, world, dt);
+      // The player keeps simulating during dialogue but not during a fight,
+      // where the camera belongs to the arena and a stray stick input would
+      // walk them out of it.
+      if (game.mode !== 'combat') player.update(input, world, dt);
+      game.update(dt * 1000);
       chunks.update(player.state.position.x, player.state.position.z);
       if (time.tick(dt)) bus.emit('dayChanged', { day: time.day });
 
@@ -106,6 +138,7 @@ async function boot(): Promise<void> {
       // a frame that owes several simulation steps does not also owe several
       // chunk builds.
       chunks.processQueue();
+      game.animate(performance.now());
       renderer.render();
       stats?.sample(performance.now());
     }
@@ -136,8 +169,10 @@ async function boot(): Promise<void> {
     chunks,
     terrain,
     time,
+    game,
     dispose: (): void => {
       loop.stop();
+      game.dispose();
       input.dispose();
       player.dispose();
       chunks.dispose();
@@ -146,6 +181,13 @@ async function boot(): Promise<void> {
       renderer.dispose();
     }
   };
+
+  // Autosave on the way out. visibilitychange is the only hook a phone
+  // reliably fires; 'beforeunload' does not run when iOS kills a background
+  // tab, which is exactly when a save matters most.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') game.save();
+  });
 }
 
 boot().catch(fatal);

@@ -125,8 +125,15 @@ test('streaming keeps up as the player moves', async ({ page }) => {
   // phase under a 4ms budget, so a full 81-chunk radius genuinely cannot
   // finish here. On a real GPU it does. What this can honestly verify is that
   // streaming is making forward progress and not wedged.
+  //
+  // There used to be a `pendingChunks` shrank assertion here, which contradicted
+  // the paragraph above and failed on an untouched tree about half the time. A
+  // teleport enqueues the whole new radius over the following fixed steps, so
+  // the queue legitimately GROWS faster than a 4ms-per-frame budget drains it,
+  // and whether it was already full when `first` was sampled came down to
+  // whether a fixed step landed between the teleport and the read. Forward
+  // progress is the property that actually matters, and it is the one measured.
   expect(second.loadedChunks, 'chunks should keep arriving').toBeGreaterThan(first.loadedChunks);
-  expect(second.pendingChunks, 'the queue should be shrinking').toBeLessThan(first.pendingChunks);
   expect(second.loadedChunks, 'the new area should be populated').toBeGreaterThan(10);
 });
 

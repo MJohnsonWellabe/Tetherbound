@@ -194,6 +194,12 @@ export class PalMesh {
  * Fixed-capacity pool. `acquire` returns null when exhausted rather than
  * growing, so the active-pal cap from combat.json is enforced by the thing that
  * owns the memory instead of being a number a caller has to remember.
+ *
+ * Rigs are built on first use rather than all at boot. Pooling still holds:
+ * once a rig exists it is reused forever and never reallocated. Preallocating
+ * the full capacity meant 60 meshes in the scene before a single pal had
+ * spawned, and Babylon walks `scene.meshes` every frame to pick active meshes,
+ * so an empty pool was costing frame time in the village where nothing spawns.
  */
 export class PalMeshPool {
   private readonly free: PalMesh[] = [];
@@ -201,19 +207,17 @@ export class PalMeshPool {
 
   constructor(
     private readonly scene: Scene,
-    shadows: ShadowGenerator | null,
-    capacity: number
-  ) {
-    for (let i = 0; i < capacity; i++) {
-      const mesh = new PalMesh(scene, shadows);
-      this.all.push(mesh);
-      this.free.push(mesh);
-    }
-  }
+    private readonly shadows: ShadowGenerator | null,
+    private readonly capacity: number
+  ) {}
 
   acquire(def: SpeciesDef, collared: boolean): PalMesh | null {
-    const mesh = this.free.pop();
-    if (!mesh) return null;
+    let mesh = this.free.pop();
+    if (!mesh) {
+      if (this.all.length >= this.capacity) return null;
+      mesh = new PalMesh(this.scene, this.shadows);
+      this.all.push(mesh);
+    }
     mesh.apply(this.scene, def, collared);
     mesh.setEnabled(true);
     return mesh;
@@ -224,8 +228,9 @@ export class PalMeshPool {
     if (!this.free.includes(mesh)) this.free.push(mesh);
   }
 
+  /** Slots that could still be handed out: idle rigs plus unbuilt capacity. */
   get available(): number {
-    return this.free.length;
+    return this.free.length + (this.capacity - this.all.length);
   }
 
   dispose(): void {
