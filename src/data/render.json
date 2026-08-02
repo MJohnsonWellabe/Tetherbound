@@ -5,12 +5,22 @@
     "maxZ": 900,
     "fov": 0.9
   },
-  "$comment_shadow": "The directional light's shadow frustum is pinned to a box around the player instead of letting Babylon fit it to the caster list. autoUpdateExtends walks every caster every frame to compute bounds, and the bounds it finds span the whole view distance, so a 1024 map spread over 384m gave roughly 0.4m per texel and shadows looked like stair-stepped mush. A 70m box on the same map is about 0.07m per texel.",
+  "$comment_shadow": "The directional light's shadow frustum is PINNED to a box around the player (`extent` -> DirectionalLight.shadowFrustumSize) instead of letting Babylon fit it to the caster list. This block described that for a long time without anything reading `extent`, so the light stayed on autoUpdateExtends, the box grew to fit every caster in the view distance, and a 1024 map ended up spread over ~650m at 0.63m per texel. Nothing smaller than a barn cast a visible shadow. An 80m box on the same map is 0.078m per texel.",
+  "$comment_shadowDepth": "minZ/maxZ bracket the light-space depth range, and they matter more than they look because `bias` is a FRACTION of that range. At minZ 1 / maxZ 400 the old 0.008 bias was 3.2 metres of depth offset, which is more than the height of anything the player stands next to, so every contact shadow was pushed off its caster and the world floated. The light sits `heightAbovePlayer` up the reversed light direction, so casters land near that depth; the range only has to cover the hills either side of it.",
   "shadow": {
-    "extent": 70,
-    "minZ": 1,
-    "maxZ": 400,
+    "extent": 80,
+    "minZ": 30,
+    "maxZ": 300,
     "heightAbovePlayer": 160,
+    "bias": 0.0002,
+    "normalBias": 0.05,
+    "$comment_darkness": "Value the shadow keeps, 0 is black and 1 is no shadow at all. Stylised daylight wants a tint, not a hole; the ambient rig already fills shadowed ground, and this stops the fill from being fought by a pure black multiply.",
+    "darkness": 0.14,
+    "$comment_mapSize": "Shadow map resolution. A phone renders the same 80m box, so it gets the same metres per texel argument at a quarter of the memory.",
+    "mapSize": {
+      "touch": 512,
+      "desktop": 1024
+    },
     "$comment_refollow": "Meters the player may move before the shadow box is recentred. Recentring every frame makes shadow texels crawl across static geometry, which is more distracting than a slightly off-centre box.",
     "refollowDistance": 8
   },

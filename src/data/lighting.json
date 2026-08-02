@@ -1,5 +1,5 @@
 {
-  "$comment": "Day and night. GAME_DESIGN.md section 9: 20 real minutes per cycle, 14 day and 6 night. TimeOfDay.ts contains no colour or timing literals; it interpolates whatever is here. This was three hardcoded Color3 palettes and a hand-written if/else ladder, which meant every lighting change was a code change against CLAUDE.md rule 5.",
+  "$comment": "Day and night. GAME_DESIGN.md section 9: 20 real minutes per cycle, 14 day and 6 night. TimeOfDay.ts and SkyDome.ts contain no colour, timing or curve literals; they interpolate and paint whatever is here. This was three hardcoded Color3 palettes and a hand-written if/else ladder, which meant every lighting change was a code change against CLAUDE.md rule 5.",
   "cycleSeconds": 1200,
   "$comment_dayFraction": "Fraction of the cycle that is daylight. 0 is dawn, dayFraction is dusk. The sun's arc is derived from this, so shortening the day also steepens the arc.",
   "dayFraction": 0.7,
@@ -9,177 +9,264 @@
     "swing": 0.8,
     "tilt": 0.36
   },
-  "$comment_palettes": "Fog density is derived from the prop draw distances in scatter.json, not from taste. Trees stop at 224m and terrain runs to 384m, so the fog has to be thick enough to hide the tree line or the world ends in a visible ring of bare ground. EXP2 at 0.0035 leaves the treeline about half fogged and the terrain horizon about 85% fogged, which reads as depth rather than as a draw distance.",
+  "$comment_sky": "Sky dome gradient shape and geometry. `diameter` MUST enclose everything the camera can draw. The dome writes depth like any other opaque mesh, and infiniteDistance only pins it to the camera; it does not push it to the far plane. At the old diameter of 100 the dome sat 50m from the camera and won the depth test against every piece of terrain further away than that, so the world beyond 50 metres was quietly replaced by sky. That is what made the horizon a hard band with no recession: there was no distance left to fog. Radius here is 700, which clears the 384m terrain draw distance and stays inside camera.maxZ of 900. `horizonFalloff` is the exponent applied to sin(elevation) when blending horizon -> zenith, and it is why the sky reads at all. A third person camera sits at head height and pitches DOWN, so the visible sky is roughly the first 25 degrees above the horizon and nothing more. A linear ramp spends its whole range overhead where nobody looks, and the survey frames came back byte-identical at zenith and horizon: one flat fill. An exponent below 1 pulls the gradient down into the band the camera actually sees. 0.5 reaches halfway to the zenith colour by 20 degrees.",
+  "sky": {
+    "diameter": 1400,
+    "segments": 16,
+    "rampHeight": 256,
+    "horizonFalloff": 0.5,
+    "$comment_repaint": "Colour delta (max channel) that justifies repainting the ramp canvas. Small enough that dusk never steps, large enough that this is a few writes per in-game hour rather than one per frame.",
+    "repaintEpsilon": 0.004
+  },
+  "$comment_palettes": "Fog is the depth cue, not a draw-distance hack. Trees stop at 224m and terrain runs to 384m, and EXP2 at these densities leaves a 150m hill about 40% washed toward the sky colour and the terrain horizon almost fully washed. The earlier densities (0.0035 at noon) were tuned only to hide the tree line, which left distant hills DARKER than near grass: a hard band across the horizon and no recession at all. Every palette's fog is brighter than the ground it sits behind, which is what makes distance recede instead of closing in.",
+  "$comment_night": "Night is moonlit, not black. The old night palette rendered the whole frame under luminance 30 and the player silhouette did not exist, which is a bug report rather than atmosphere. The floor is carried by a saturated blue hemispheric ambient with a much darker groundColor, so characters are lit from above and read as shapes, plus a weak cool directional for the edge. Night still reads as night because the hue is blue and the zenith is nearly black; it is the ground that is navigable.",
   "palettes": {
     "night": {
-      "$comment": "Moonlight, not black. A night the player cannot navigate at all is not atmospheric, it is a bug report.",
       "sun": [
-        0.42,
-        0.5,
-        0.72
+        0.55,
+        0.68,
+        1.0
       ],
       "ambient": [
-        0.2,
-        0.26,
-        0.4
+        0.5,
+        0.62,
+        0.9
       ],
       "ground": [
-        0.08,
         0.1,
-        0.14
+        0.13,
+        0.22
       ],
       "fog": [
-        0.06,
-        0.08,
-        0.13
+        0.16,
+        0.2,
+        0.32
       ],
-      "sunIntensity": 0.32,
-      "ambientIntensity": 0.22,
-      "fogDensity": 0.0072,
+      "sunIntensity": 0.55,
+      "ambientIntensity": 0.85,
+      "fogDensity": 0.009,
       "zenith": [
-        0.02,
         0.03,
-        0.08
+        0.05,
+        0.14
       ],
       "horizon": [
-        0.06,
-        0.08,
-        0.13
+        0.16,
+        0.2,
+        0.32
       ]
     },
     "dawn": {
       "$comment": "Cooler and thicker than dusk. Morning haze sits in the low ground and the light has not burned it off yet, which is what separates a sunrise from a sunset when the palette either side is the same.",
       "sun": [
-        1,
-        0.78,
-        0.62
-      ],
-      "ambient": [
-        0.54,
-        0.56,
-        0.68
-      ],
-      "ground": [
-        0.22,
-        0.23,
-        0.2
-      ],
-      "fog": [
         0.72,
-        0.68,
-        0.66
-      ],
-      "sunIntensity": 1.1,
-      "ambientIntensity": 0.44,
-      "fogDensity": 0.0058,
-      "zenith": [
-        0.35,
-        0.42,
-        0.62
-      ],
-      "horizon": [
         0.72,
-        0.68,
-        0.66
-      ]
-    },
-    "golden": {
-      "sun": [
-        1,
-        0.72,
-        0.44
-      ],
-      "ambient": [
-        0.6,
-        0.55,
-        0.55
-      ],
-      "ground": [
-        0.26,
-        0.22,
-        0.17
-      ],
-      "fog": [
-        0.78,
-        0.6,
-        0.45
-      ],
-      "sunIntensity": 1.25,
-      "ambientIntensity": 0.42,
-      "fogDensity": 0.0048,
-      "zenith": [
-        0.36,
-        0.48,
-        0.72
-      ],
-      "horizon": [
-        0.78,
-        0.6,
-        0.45
-      ]
-    },
-    "noon": {
-      "sun": [
-        1,
-        0.96,
         0.86
       ],
       "ambient": [
-        0.72,
-        0.8,
-        0.92
+        0.54,
+        0.58,
+        0.76
+      ],
+      "ground": [
+        0.18,
+        0.2,
+        0.24
+      ],
+      "fog": [
+        0.62,
+        0.64,
+        0.72
+      ],
+      "sunIntensity": 0.7,
+      "ambientIntensity": 0.8,
+      "fogDensity": 0.0075,
+      "zenith": [
+        0.18,
+        0.28,
+        0.55
+      ],
+      "horizon": [
+        0.62,
+        0.64,
+        0.72
+      ]
+    },
+    "sunrise": {
+      "$comment": "The warm low sun, half an hour after dawn. Warm horizon under a blue that is already opening up.",
+      "sun": [
+        1.0,
+        0.78,
+        0.56
+      ],
+      "ambient": [
+        0.6,
+        0.64,
+        0.78
+      ],
+      "ground": [
+        0.22,
+        0.22,
+        0.2
+      ],
+      "fog": [
+        0.88,
+        0.7,
+        0.54
+      ],
+      "sunIntensity": 1.15,
+      "ambientIntensity": 0.4,
+      "fogDensity": 0.0062,
+      "zenith": [
+        0.26,
+        0.42,
+        0.7
+      ],
+      "horizon": [
+        0.88,
+        0.7,
+        0.54
+      ]
+    },
+    "day": {
+      "$comment": "Open daylight. The widest zenith-to-horizon spread of any palette, because a blue sky over a pale horizon is the single strongest depth cue a stylised renderer gets for free.",
+      "sun": [
+        1.0,
+        0.93,
+        0.78
+      ],
+      "ambient": [
+        0.6,
+        0.7,
+        0.86
       ],
       "ground": [
         0.28,
         0.3,
-        0.2
+        0.22
       ],
       "fog": [
-        0.64,
-        0.73,
-        0.82
+        0.7,
+        0.79,
+        0.88
       ],
-      "sunIntensity": 1.75,
-      "ambientIntensity": 0.55,
-      "fogDensity": 0.0035,
+      "sunIntensity": 0.86,
+      "ambientIntensity": 0.34,
+      "fogDensity": 0.005,
       "zenith": [
-        0.32,
-        0.55,
-        0.86
+        0.24,
+        0.47,
+        0.84
       ],
       "horizon": [
+        0.7,
+        0.79,
+        0.88
+      ]
+    },
+    "dusk": {
+      "$comment": "Sunset proper. Deep orange at the horizon against a blue that has not gone yet, so a dusk frame cannot be mistaken for a morning one.",
+      "sun": [
+        1.0,
+        0.6,
+        0.32
+      ],
+      "ambient": [
         0.64,
-        0.73,
-        0.82
+        0.55,
+        0.56
+      ],
+      "ground": [
+        0.24,
+        0.19,
+        0.16
+      ],
+      "fog": [
+        0.92,
+        0.56,
+        0.34
+      ],
+      "sunIntensity": 1.25,
+      "ambientIntensity": 0.7,
+      "fogDensity": 0.0058,
+      "zenith": [
+        0.22,
+        0.32,
+        0.62
+      ],
+      "horizon": [
+        0.92,
+        0.56,
+        0.34
+      ]
+    },
+    "ember": {
+      "$comment": "The last light. Red going purple, the sun already under the horizon, ten minutes before the stars.",
+      "sun": [
+        0.86,
+        0.42,
+        0.36
+      ],
+      "ambient": [
+        0.46,
+        0.44,
+        0.6
+      ],
+      "ground": [
+        0.15,
+        0.14,
+        0.18
+      ],
+      "fog": [
+        0.58,
+        0.32,
+        0.34
+      ],
+      "sunIntensity": 0.55,
+      "ambientIntensity": 0.98,
+      "fogDensity": 0.0072,
+      "zenith": [
+        0.1,
+        0.13,
+        0.3
+      ],
+      "horizon": [
+        0.58,
+        0.32,
+        0.34
       ]
     }
   },
   "$comment_stops": "Keyframes through the cycle, smoothstepped between neighbours. Must be sorted by `at`, must start at 0 and end at 1, and the first and last palette must match or the cycle jumps at midnight. tests/lighting.test.ts enforces all three.",
-  "$comment_tuning": "Dawn is its own stop rather than reusing golden. The original ladder ran night -> golden -> noon, which gave sunrise the same warm cast as sunset and made 05:00 and 18:00 indistinguishable in a screenshot. Dusk still falls faster than dawn rises (0.06 of the cycle against 0.12), because losing the light quickly is what makes night feel like it arrived.",
+  "$comment_tuning": "Dawn is its own stop rather than reusing the sunset warmth, so 05:00 and 18:00 are not the same screenshot. The survey shoots the village at 0.20 and again at 0.66; those land exactly on `day` and on `dusk`, so the two frames are as far apart as the cycle goes. Night falls faster than it lifts (0.16 of the cycle against 0.20), because losing the light quickly is what makes night feel like it arrived.",
   "stops": [
     {
       "at": 0.0,
       "palette": "night"
     },
     {
-      "at": 0.06,
+      "at": 0.03,
       "palette": "dawn"
     },
     {
-      "at": 0.16,
-      "palette": "golden"
+      "at": 0.12,
+      "palette": "sunrise"
     },
     {
-      "at": 0.28,
-      "palette": "noon"
+      "at": 0.2,
+      "palette": "day"
     },
     {
-      "at": 0.57,
-      "palette": "noon"
+      "at": 0.6,
+      "palette": "day"
     },
     {
-      "at": 0.7,
-      "palette": "golden"
+      "at": 0.66,
+      "palette": "dusk"
+    },
+    {
+      "at": 0.71,
+      "palette": "ember"
     },
     {
       "at": 0.76,
@@ -190,5 +277,5 @@
       "palette": "night"
     }
   ],
-  "$comment_sky": "zenith/horizon drive the sky dome gradient. horizon MUST equal fog per palette or the dome visibly detaches from the fogged terrain at the horizon line; tests/lighting.test.ts enforces the equality."
+  "$comment_horizon": "zenith/horizon drive the sky dome gradient. horizon MUST equal fog per palette or the dome visibly detaches from the fogged terrain at the horizon line; tests/lighting.test.ts enforces the equality."
 }

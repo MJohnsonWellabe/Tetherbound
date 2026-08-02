@@ -1,6 +1,46 @@
 import { describe, expect, it } from 'vitest';
 import lighting from '../src/data/lighting.json';
+import render from '../src/data/render.json';
 import { isNight, paletteAt } from '../src/world/TimeOfDay';
+
+/** Rec.709 luminance, the same weighting the visual survey samples with. */
+function luma(c: { r: number; g: number; b: number }): number {
+  return 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
+}
+
+/**
+ * How much light lands on flat ground facing up, at a point in the cycle.
+ *
+ * The hemispheric ambient reaches an up-facing surface at full strength and
+ * the directional at cos(elevation), and StandardMaterial CLAMPS their sum to
+ * 1 before it ever touches the albedo. That clamp is the reason this helper
+ * exists rather than a comparison of raw intensities: the palettes once summed
+ * to 2.2 on open ground, every lit pixel and every shadowed pixel saturated to
+ * the same value, and the whole world rendered as flat albedo with no shading
+ * and no visible shadows at all.
+ */
+function groundLight(cycle: number): { lit: number; shadowed: number; clipped: boolean } {
+  const p = paletteAt(cycle);
+  const angle = (cycle / lighting.dayFraction) * Math.PI;
+  const elevation = Math.sin(Math.min(Math.max(angle, 0), Math.PI));
+  const y = Math.max(lighting.sun.minElevation, elevation);
+  const x = -Math.cos(angle) * lighting.sun.swing;
+  const z = lighting.sun.tilt;
+  const nDotL = y / Math.hypot(x, y, z);
+
+  const channel = (a: number, s: number, k: number): number => a * p.ambientIntensity + s * p.sunIntensity * nDotL * k;
+  const at = (k: number): { r: number; g: number; b: number } => ({
+    r: Math.min(1, channel(p.ambient.r, p.sun.r, k)),
+    g: Math.min(1, channel(p.ambient.g, p.sun.g, k)),
+    b: Math.min(1, channel(p.ambient.b, p.sun.b, k))
+  });
+  const raw = Math.max(
+    channel(p.ambient.r, p.sun.r, 1),
+    channel(p.ambient.g, p.sun.g, 1),
+    channel(p.ambient.b, p.sun.b, 1)
+  );
+  return { lit: luma(at(1)), shadowed: luma(at(render.shadow.darkness)), clipped: raw > 1 };
+}
 
 /**
  * Day-night lighting.
@@ -52,6 +92,37 @@ describe('lighting data', () => {
       expect(typeof p['sunIntensity'], `${name}.sunIntensity`).toBe('number');
       expect(typeof p['ambientIntensity'], `${name}.ambientIntensity`).toBe('number');
       expect(typeof p['fogDensity'], `${name}.fogDensity`).toBe('number');
+    }
+  });
+
+  it('gives every palette a sky that is not one flat fill', () => {
+    // The survey sampled zenith and horizon on the village frames and got the
+    // same three bytes twice: no gradient anywhere in the sky. Part of that was
+    // the ramp shape, but a palette whose zenith and horizon nearly match
+    // cannot produce a gradient however it is painted.
+    for (const [name, raw] of Object.entries(lighting.palettes)) {
+      const p = raw as { zenith: number[]; horizon: number[] };
+      const delta = Math.max(
+        ...[0, 1, 2].map((i) => Math.abs((p.zenith[i] as number) - (p.horizon[i] as number)))
+      );
+      expect(delta, `${name}: zenith and horizon are too close to read apart`).toBeGreaterThan(0.1);
+    }
+  });
+
+  it('keeps fog brighter than the ground it hides, so distance recedes', () => {
+    // Aerial perspective only works in one direction. When the fog colour is
+    // darker than the terrain, distance gets DARKER and the horizon becomes a
+    // hard band instead of a soft recession. The survey measured exactly that:
+    // near grass at luminance 74 against a far hill at 56.
+    for (const [name, raw] of Object.entries(lighting.palettes)) {
+      const p = raw as { fog: number[]; ground: number[] };
+      const fog = luma({ r: p.fog[0] as number, g: p.fog[1] as number, b: p.fog[2] as number });
+      const ground = luma({
+        r: p.ground[0] as number,
+        g: p.ground[1] as number,
+        b: p.ground[2] as number
+      });
+      expect(fog, `${name}: fog must be lighter than the ground tone`).toBeGreaterThan(ground);
     }
   });
 
@@ -122,7 +193,11 @@ describe('paletteAt', () => {
     const night = paletteAt(0.85);
     const noon = paletteAt(0.4);
     expect(night.sunIntensity).toBeLessThan(noon.sunIntensity);
-    expect(night.ambientIntensity).toBeLessThan(noon.ambientIntensity);
+    // The comparison is on the light that lands on the ground, not on the
+    // ambient scalar. Night carries its floor with a strong blue hemispheric
+    // and a weak moon, so its ambientIntensity is deliberately the higher of
+    // the two; what must stay true is that the night frame is darker overall.
+    expect(groundLight(0.85).lit).toBeLessThan(groundLight(0.4).lit);
     // Thicker fog at night is what drops visibility, per GAME_DESIGN.md 9.
     expect(night.fogDensity).toBeGreaterThan(noon.fogDensity);
   });
@@ -139,9 +214,17 @@ describe('paletteAt', () => {
 
   it('falls into night faster than it rises out of it', () => {
     // Losing the light quickly is what makes night feel like it arrived.
-    const duskSpan = 0.76 - 0.7;
-    const dawnSpan = 0.16 - 0.06;
-    expect(duskSpan).toBeLessThan(dawnSpan);
+    // Measured off the data rather than off two written-down constants, which
+    // is what this was and which meant it kept passing after the stops moved.
+    const day = STOPS.filter((s) => s.palette === 'day').map((s) => s.at);
+    const night = STOPS.filter((s) => s.palette === 'night').map((s) => s.at);
+    const firstDay = Math.min(...day);
+    const lastDay = Math.max(...day);
+    const rise = firstDay - Math.min(...night);
+    const fall = Math.min(...night.filter((t) => t > lastDay)) - lastDay;
+    expect(rise).toBeGreaterThan(0);
+    expect(fall).toBeGreaterThan(0);
+    expect(fall).toBeLessThan(rise);
   });
 });
 

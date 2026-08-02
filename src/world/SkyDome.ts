@@ -6,6 +6,7 @@ import {
   Scene,
   StandardMaterial
 } from '../core/babylon';
+import lighting from '../data/lighting.json';
 import type { Palette } from './TimeOfDay';
 
 /**
@@ -13,31 +14,44 @@ import type { Palette } from './TimeOfDay';
  * camera at infinite distance.
  *
  * Before this the sky was `scene.clearColor`, one flat colour edge to edge,
- * which is the single strongest "programmer art" tell in a screenshot. A
- * zenith-to-horizon gradient is what makes daylight read as depth.
+ * which is the single strongest "programmer art" tell in a screenshot.
  *
- * The gradient lives in a 1x128 DynamicTexture ramp, repainted only when the
- * interpolated palette moves past an epsilon: a canvas write a few times per
- * in-game hour instead of per frame. The dome's horizon colour equals the fog
- * colour by data contract (lighting.json, tested), so the fogged terrain and
- * the dome meet without a seam and the horizon line disappears.
+ * The gradient is painted against ELEVATION, not against texture rows. That
+ * distinction is the whole fix. A linear zenith-to-horizon ramp spends most of
+ * its range on the top of the dome, and a third person camera at head height
+ * pitched down never looks above ~25 degrees: every survey frame came back
+ * with the zenith sample and the horizon sample byte-identical, because both
+ * were sampling the same near-horizon slice of a ramp whose interesting part
+ * was overhead. `sky.horizonFalloff` in lighting.json pulls the gradient down
+ * into the band the camera can actually see.
+ *
+ * The ramp lives in a 1xN DynamicTexture, repainted only when the interpolated
+ * palette moves past an epsilon: a canvas write a few times per in-game hour
+ * instead of per frame. The dome's horizon colour equals the fog colour by
+ * data contract (lighting.json, tested), so the fogged terrain and the dome
+ * meet without a seam and the horizon line disappears.
  */
 
-const RAMP_HEIGHT = 128;
-/** Colour delta (max channel) that justifies repainting the ramp. */
-const REPAINT_EPSILON = 0.004;
+const SKY = lighting.sky;
 
 export class SkyDome {
   private readonly mesh: Mesh;
   private readonly material: StandardMaterial;
   private readonly ramp: DynamicTexture;
+  private readonly pixels: ImageData;
   private lastZenith = new Color3(-1, -1, -1);
   private lastHorizon = new Color3(-1, -1, -1);
 
   constructor(scene: Scene) {
     // Radius only has to beat the camera's near plane comfortably;
-    // infiniteDistance pins it to the camera so it never parallaxes.
-    this.mesh = CreateSphere('sky', { diameter: 100, segments: 8, sideOrientation: Mesh.BACKSIDE }, scene);
+    // infiniteDistance pins it to the camera so it never parallaxes. Segments
+    // matter now that the gradient is steep near the horizon: too few and the
+    // linear UV interpolation across each band shows as visible stripes.
+    this.mesh = CreateSphere(
+      'sky',
+      { diameter: SKY.diameter, segments: SKY.segments, sideOrientation: Mesh.BACKSIDE },
+      scene
+    );
     this.mesh.infiniteDistance = true;
     this.mesh.isPickable = false;
     // The fog would eat the dome (it sits at "infinity"), and the whole point
@@ -47,7 +61,10 @@ export class SkyDome {
     this.mesh.renderingGroupId = 0;
     this.mesh.alphaIndex = -1;
 
-    this.ramp = new DynamicTexture('sky_ramp', { width: 1, height: RAMP_HEIGHT }, scene, false);
+    this.ramp = new DynamicTexture('sky_ramp', { width: 1, height: SKY.rampHeight }, scene, false);
+    const ctx = this.ramp.getContext() as CanvasRenderingContext2D;
+    this.pixels = ctx.createImageData(1, SKY.rampHeight);
+
     this.material = new StandardMaterial('mat_sky', scene);
     this.material.emissiveTexture = this.ramp;
     this.material.disableLighting = true;
@@ -61,21 +78,27 @@ export class SkyDome {
   update(palette: Palette): void {
     const dz = maxDelta(palette.zenith, this.lastZenith);
     const dh = maxDelta(palette.horizon, this.lastHorizon);
-    if (dz < REPAINT_EPSILON && dh < REPAINT_EPSILON) return;
+    if (dz < SKY.repaintEpsilon && dh < SKY.repaintEpsilon) return;
     this.lastZenith.copyFrom(palette.zenith);
     this.lastHorizon.copyFrom(palette.horizon);
 
+    const height = SKY.rampHeight;
+    const data = this.pixels.data;
+    for (let y = 0; y < height; y++) {
+      // Babylon's sphere runs v from 0 at the apex to 1 at the base, and
+      // `ramp.update(false)` uploads canvas row 0 as v 0, so row 0 is straight
+      // up. cos gives sin(elevation): +1 overhead, 0 at the horizon line.
+      const up = Math.cos((Math.PI * y) / (height - 1));
+      const k = up > 0 ? Math.pow(up, SKY.horizonFalloff) : 0;
+      const i = y * 4;
+      data[i] = channel(palette.horizon.r, palette.zenith.r, k);
+      data[i + 1] = channel(palette.horizon.g, palette.zenith.g, k);
+      data[i + 2] = channel(palette.horizon.b, palette.zenith.b, k);
+      data[i + 3] = 255;
+    }
     const ctx = this.ramp.getContext() as CanvasRenderingContext2D;
-    const gradient = ctx.createLinearGradient(0, 0, 0, RAMP_HEIGHT);
-    // Sphere UV v runs 0 at the south pole to 1 at the north pole; the canvas
-    // y axis runs top-down. Keep the horizon in the middle band so the colour
-    // below the horizon (under terrain, visible only through water gaps)
-    // stays the horizon tone rather than mirroring the zenith.
-    gradient.addColorStop(0, css(palette.zenith));
-    gradient.addColorStop(0.45, css(palette.horizon));
-    gradient.addColorStop(1, css(palette.horizon));
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 1, RAMP_HEIGHT);
+    ctx.putImageData(this.pixels, 0, 0);
+    // invertY false: canvas row 0 must stay v 0, which is the top of the dome.
     this.ramp.update(false);
   }
 
@@ -86,11 +109,8 @@ export class SkyDome {
   }
 }
 
-function css(c: Color3): string {
-  const r = Math.round(c.r * 255);
-  const g = Math.round(c.g * 255);
-  const b = Math.round(c.b * 255);
-  return `rgb(${r},${g},${b})`;
+function channel(low: number, high: number, k: number): number {
+  return Math.round(Math.min(1, Math.max(0, low + (high - low) * k)) * 255);
 }
 
 function maxDelta(a: Color3, b: Color3): number {

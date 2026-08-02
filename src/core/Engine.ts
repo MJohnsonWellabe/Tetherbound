@@ -1,5 +1,4 @@
 import {
-  Color3,
   Color4,
   DirectionalLight,
   Engine,
@@ -38,7 +37,7 @@ export function detectDevice(): DeviceProfile {
   return {
     isTouch,
     maxPixelRatio: isTouch ? 1.5 : 2,
-    shadowMapSize: isTouch ? 512 : 1024
+    shadowMapSize: isTouch ? render.shadow.mapSize.touch : render.shadow.mapSize.desktop
   };
 }
 
@@ -59,6 +58,7 @@ export class Renderer {
   /** Where the shadow box currently sits. NaN forces the first follow. */
   private shadowFocusX = Number.NaN;
   private shadowFocusZ = Number.NaN;
+  private shadowFocusY = 0;
   /** Fired when the GPU context is lost and then restored, so the game can
    *  re-upload anything it owns. */
   onContextRestored: (() => void) | null = null;
@@ -80,7 +80,11 @@ export class Renderer {
     engine.setHardwareScalingLevel(1 / Math.min(window.devicePixelRatio || 1, device.maxPixelRatio));
 
     const scene = new Scene(engine);
-    scene.clearColor = new Color4(0.42, 0.55, 0.68, 1);
+    // Clear colour, light colours and light intensities all belong to the
+    // day/night palette in lighting.json. TimeOfDay writes every one of them
+    // on construction, before the first frame, so there are no colour literals
+    // here to drift out of step with the palette.
+    scene.clearColor = new Color4(0, 0, 0, 1);
     // Prop collision uses our own sphere/AABB tests against a per-chunk list,
     // so Babylon never needs to consider a mesh for picking.
     scene.skipPointerMovePicking = true;
@@ -95,28 +99,27 @@ export class Renderer {
     camera.inputs.clear();
 
     // ARCHITECTURE.md: a single directional light casting, plus cheap ambient.
+    // Direction, colour and intensity are all TimeOfDay's, from lighting.json.
     const sun = new DirectionalLight('sun', new Vector3(-0.45, -0.82, 0.36), scene);
-    sun.intensity = 1.7;
-    sun.diffuse = new Color3(1, 0.96, 0.86);
-
     const sky = new HemisphericLight('sky', new Vector3(0, 1, 0), scene);
-    sky.intensity = 0.55;
-    sky.diffuse = new Color3(0.72, 0.8, 0.92);
-    sky.groundColor = new Color3(0.28, 0.3, 0.2);
 
-    // The shadow frustum is pinned to a box around the player rather than
-    // fitted to the caster list. autoUpdateExtends walks every caster every
-    // frame and the bounds it finds span the whole view distance, so a 1024
-    // map was spread over 384m at roughly 0.4m per texel. The same map over a
-    // 70m box is about 0.07m per texel.
+    // Pin the shadow frustum to a box around the player. Setting
+    // shadowFrustumSize is what takes Babylon off autoUpdateExtends, which
+    // fits the box to the caster list and therefore to the whole view
+    // distance: a 1024 map spread over ~650m, 0.63m per texel, no shadow small
+    // enough to sit under a lamp post. See render.json for the measurements.
+    sun.shadowFrustumSize = render.shadow.extent;
     sun.shadowMinZ = render.shadow.minZ;
     sun.shadowMaxZ = render.shadow.maxZ;
 
     const shadows = new ShadowGenerator(device.shadowMapSize, sun);
     shadows.usePercentageCloserFiltering = !device.isTouch;
     shadows.filteringQuality = ShadowGenerator.QUALITY_LOW;
-    shadows.bias = 0.008;
-    shadows.normalBias = 0.02;
+    // bias is a fraction of (shadowMaxZ - shadowMinZ), so it only means metres
+    // once that range is pinned too. Both live in render.json for that reason.
+    shadows.bias = render.shadow.bias;
+    shadows.normalBias = render.shadow.normalBias;
+    shadows.setDarkness(render.shadow.darkness);
     // Which meshes cast is decided by PropBatcher, by distance. Nothing is in
     // the list until it puts something there.
     shadows.getShadowMap()?.renderList?.splice(0);
@@ -186,16 +189,30 @@ export class Renderer {
   focusShadows(x: number, y: number, z: number): void {
     const dx = x - this.shadowFocusX;
     const dz = z - this.shadowFocusZ;
-    if (dx * dx + dz * dz < render.shadow.refollowDistance ** 2) return;
-    this.shadowFocusX = x;
-    this.shadowFocusZ = z;
+    const moved = !(dx * dx + dz * dz < render.shadow.refollowDistance ** 2);
+    if (moved) {
+      this.shadowFocusX = x;
+      this.shadowFocusZ = z;
+      this.shadowFocusY = y;
+    }
 
     // A directional light's position is not where the light is, it is where its
     // shadow frustum is anchored. Lifting it along the reversed light direction
-    // keeps the whole scene in front of the near plane.
+    // keeps the whole scene in front of the near plane, and puts the centre of
+    // the pinned box exactly on the focus point.
+    //
+    // This runs on every call, not only when the player moved. The sun swings
+    // through the day, and the anchor is 160m up that direction, so an anchor
+    // computed for this morning's sun is tens of metres off centre by noon.
+    // With a box only 80m across that walks the player out of their own
+    // shadow, which reads as shadows switching off rather than as a bug.
     const dir = this.handles.sun.direction;
     const lift = render.shadow.heightAbovePlayer;
-    this.handles.sun.position.set(x - dir.x * lift, y - dir.y * lift, z - dir.z * lift);
+    this.handles.sun.position.set(
+      this.shadowFocusX - dir.x * lift,
+      this.shadowFocusY - dir.y * lift,
+      this.shadowFocusZ - dir.z * lift
+    );
   }
 
   render(): void {
