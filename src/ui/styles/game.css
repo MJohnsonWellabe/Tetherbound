@@ -326,41 +326,34 @@
   background: var(--bloom);
 }
 
-/* Talking to somebody. Same slot family as the harvest prompt in base.css, one
-   band higher so the two can never print on top of each other. Lime, because
-   lime is "you can act on this". */
-.hud__prompt {
-  position: absolute;
-  bottom: calc(var(--safe-b) + 162px);
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: var(--fs-md);
-  font-weight: 600;
-  color: var(--spore);
-  background: color-mix(in srgb, var(--bg-deep) 82%, transparent);
-  padding: 8px 16px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--spore-dim);
-  text-shadow: 0 1px 3px var(--bg-deep);
-}
-
-.hud__prompt[hidden] { display: none; }
-
-/* The interact button itself, thumb-reachable on the right. */
+/* The single "talk to X" / "harvest" affordance: readable prompt text plus a
+   key/button hint, in one element that is itself tappable. Same slot family
+   as the harvest prompt in base.css, one band higher so the two can never
+   print on top of each other. Lime, because lime is "you can act on this".
+   Thumb-reachable on the right, since that is the corner touch actually
+   needs; a keyboard or pad player only has to read it, not reach it. */
 .hud__interact {
   position: absolute;
   right: calc(var(--safe-r) + var(--pad-lg));
   bottom: calc(var(--safe-b) + 158px);
+  max-width: min(60vw, 320px);
   pointer-events: auto;
   min-width: 96px;
   min-height: var(--tap);
+  padding: 8px 16px;
   border-radius: var(--r-pill);
   border: 1px solid var(--spore-dim);
-  background: color-mix(in srgb, var(--spore) 16%, var(--bg-deep));
+  background: color-mix(in srgb, var(--bg-deep) 82%, transparent);
   color: var(--spore);
   font-size: var(--fs-sm);
+  font-weight: 600;
   font-family: var(--font);
+  text-shadow: 0 1px 3px var(--bg-deep);
+  white-space: normal;
+  line-height: 1.3;
 }
+
+.hud__interact[hidden] { display: none; }
 
 .hud__toasts {
   position: absolute;
@@ -477,16 +470,14 @@
   gap: 4px;
 }
 
-.cb__orbs,
-.cb__slots,
-.cb__actions {
+.cb__slots {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.cb__actions { justify-content: space-between; align-items: center; }
-
+/* Generic pill button. Still used by ReleasePanel's confirm row, so this
+   stays even though the combat actions below no longer use it. */
 .cb__btn {
   min-height: var(--tap);
   min-width: var(--tap);
@@ -500,34 +491,8 @@
 }
 
 .cb__btn:disabled { opacity: 0.38; }
-
-.cb__btn--attack {
-  flex: 1;
-  border-color: var(--spore-dim);
-  color: var(--spore);
-}
-
-/* Charged and held: the power attack is available. */
-.cb__btn--attack.is-ready { box-shadow: 0 0 0 2px var(--dew-glow); }
-.cb__btn--attack.is-charging { background: color-mix(in srgb, var(--dew) 22%, var(--surface-2)); }
-
-.cb__btn--dodge { border-color: var(--dew-dim); color: var(--dew); }
 .cb__btn--flee { border-color: var(--line); color: var(--text-faint); }
 .cb__btn--flee.is-holding { background: var(--tether-dim); color: var(--text); }
-
-.cb__orb {
-  min-height: 36px;
-  padding: 0 var(--pad-sm);
-  border-radius: var(--r-pill);
-  border: 1px solid var(--dew-dim);
-  background: color-mix(in srgb, var(--dew) 12%, var(--bg-deep));
-  color: var(--dew);
-  font-size: var(--fs-xs);
-  font-family: var(--font);
-}
-
-.cb__orb:disabled { opacity: 0.35; }
-.cb__noorbs { font-size: var(--fs-xs); color: var(--text-faint); }
 
 .cb__slot {
   width: var(--tap);
@@ -541,6 +506,112 @@
 
 .cb__slot.is-active { border-color: var(--bloom); color: var(--bloom); }
 .cb__slot.is-out { opacity: 0.3; }
+
+/* --- the combat action diamond -------------------------------------------- */
+
+/*
+ * Quick, power, orb and run, arranged around the centre-framed target the
+ * same way the face buttons sit around an Xbox pad's thumb: quick at the
+ * bottom (A), power at the right (B), orb at the left (X), run at the top
+ * (Y). Owner's ROG Ally playtest asked for exactly this reading.
+ *
+ * `--cb-diamond-r` is a vmin-based radius, not a fixed pixel count, so the
+ * ring of buttons holds its shape on a 390px phone and a 1280x720 handheld
+ * alike without ever colliding with the catch ring (radius 120px) sharing
+ * the same centre point.
+ */
+.cb__diamond {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  --cb-diamond-r: clamp(138px, 24vmin, 196px);
+  pointer-events: none;
+}
+
+.cb__dbtn {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 76px;
+  height: 60px;
+  padding: 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg-deep) 74%, transparent);
+  color: var(--text-dim);
+  font-family: var(--font);
+  transition:
+    border-color var(--fast) var(--ease),
+    box-shadow var(--fast) var(--ease),
+    background var(--fast) var(--ease),
+    color var(--fast) var(--ease);
+}
+
+.cb__dbtn--bottom { top: var(--cb-diamond-r); left: 0; }
+.cb__dbtn--right { top: 0; left: var(--cb-diamond-r); }
+.cb__dbtn--left { top: 0; left: calc(var(--cb-diamond-r) * -1); }
+.cb__dbtn--top { top: calc(var(--cb-diamond-r) * -1); left: 0; }
+
+.cb__dbtn-letter {
+  font-family: var(--mono);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.cb__dbtn-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.cb__dbtn-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  padding: 1px 4px;
+  border-radius: var(--r-pill);
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.cb__dbtn-count:empty { display: none; }
+
+/*
+ * The glow IS the recommendation: "the buttons should light up as you more
+ * increasingly should choose them" (owner, verbatim). Every button stays at
+ * full opacity and fully pressable whether or not it is lit; only the border,
+ * glow and text colour change, never a disabled state.
+ */
+.cb__dbtn.is-suggested {
+  border-color: var(--spore-dim);
+  background: color-mix(in srgb, var(--spore) 16%, var(--bg-deep));
+  color: var(--spore);
+  box-shadow: 0 0 0 2px rgba(124, 255, 155, 0.18), 0 0 22px var(--spore-glow);
+  animation: cbSuggestPulse 1100ms var(--ease) infinite;
+}
+
+@keyframes cbSuggestPulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(124, 255, 155, 0.18), 0 0 22px var(--spore-glow); }
+  50% { box-shadow: 0 0 0 2px rgba(124, 255, 155, 0.3), 0 0 30px var(--spore-glow); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cb__dbtn.is-suggested { animation: none; }
+}
 
 /* --- the catch ring ------------------------------------------------------ */
 

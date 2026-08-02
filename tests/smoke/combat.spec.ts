@@ -46,6 +46,11 @@ async function forceFight(page: Page): Promise<void> {
     g.party.add(starter);
     void rng;
 
+    // The satchel starts EMPTY (main.ts: Orin hands over the starting orbs
+    // through dialogue this test skips), so the throw assertions below need
+    // their own orb rather than assuming one is already there.
+    g.inventory[0] = { id: 'worn_orb', n: 3 };
+
     // Spawn a wild pal right next to the player and let the encounter loop
     // trip over it naturally.
     const px = g.player.state.position.x;
@@ -70,21 +75,26 @@ test('a wild encounter runs on the real combat screen', async ({ page }) => {
   await bootGame(page);
   await forceFight(page);
 
-  // The HUD swapped in: enemy bar, actions, ring — all the .cb__* DOM.
+  // The HUD swapped in: enemy bar, the diamond of four buttons, ring — all
+  // the .cb__* DOM. The diamond's own element is a zero-size anchor its
+  // buttons are positioned from, so Playwright's visibility check has to
+  // land on a button rather than the anchor.
   await expect(page.locator('#combat')).toBeVisible();
-  await expect(page.locator('.cb__actions')).toBeVisible();
+  await expect(page.locator('.cb__dbtn')).toHaveCount(4);
+  await expect(page.locator('.cb__dbtn--bottom')).toBeVisible();
   await expect(page.locator('.cb__enemy .cb__name')).not.toHaveText('');
   await expect(page.locator('.ring')).toBeVisible();
   await expect(page.locator('.ring__mark')).toBeVisible();
 
-  // Attack: click the button until the hit lands. A single swing can
-  // legitimately hesitate (affinity roll), so one click is not a fair test.
+  // Quick attack (bottom of the diamond, the A button): click until the hit
+  // lands. A single swing can legitimately hesitate (affinity roll), so one
+  // click is not a fair test.
   const hpBefore = await page.evaluate(
     () => (window as Win).__tetherbound.combat.snapshot().enemy.currentHp as number
   );
   let hpAfter = hpBefore;
   for (let i = 0; i < 6 && hpAfter >= hpBefore; i++) {
-    await page.locator('.cb__btn--attack').click();
+    await page.locator('.cb__dbtn--bottom').click();
     await page.waitForTimeout(400);
     hpAfter = await page.evaluate(
       () => (window as Win).__tetherbound.combat.snapshot().enemy.currentHp as number
@@ -132,7 +142,7 @@ test('a wild encounter runs on the real combat screen', async ({ page }) => {
   );
   if (fighting) {
     await expect(page.locator('#combat')).toBeVisible();
-    await expect(page.locator('.cb__actions')).toBeVisible();
+    await expect(page.locator('.cb__dbtn--bottom')).toBeVisible();
   } else {
     await expect(page.locator('#combat')).toBeHidden();
   }

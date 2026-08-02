@@ -1,5 +1,6 @@
 import type { CombatMode } from '../combat/CombatMode';
 import { TIMING } from '../combat/MoveResolver';
+import { suggestActions } from '../combat/Suggestion';
 import { ringQualityAt } from '../combat/Throw';
 import { bus } from '../core/EventBus';
 import type { Intent } from '../core/input/Intent';
@@ -7,24 +8,21 @@ import { speciesDef } from '../entities/Species';
 import type { Party } from '../party/Party';
 import { xpToNext } from '../party/Progression';
 import { count, type Slots } from '../survival/Inventory';
+import { CombatButtons } from './CombatButtons';
 
 /**
- * The combat HUD, replacing the ASCII readout: enemy bar up top, ally card and
- * actions along the bottom, the catch ring over everything while a throw is
- * worth timing.
+ * The combat HUD: enemy bar up top, the four action buttons in a diamond
+ * around the centre-framed target, the ally card and party slots along the
+ * bottom, the catch ring over everything while a throw is worth timing.
  *
  * DOM, not in-canvas, per ARCHITECTURE.md; every class it emits already exists
- * in game.css. The buttons write into the shared Intent exactly the way the
- * input layers do, so a tap, a key and a trigger all arrive at CombatMode as
- * the same edge. Built once, shown and hidden; a fight must cost zero DOM
- * construction.
+ * in game.css. CombatButtons writes into the shared Intent exactly the way
+ * the gamepad layer does, so a tap, a key and a trigger all arrive at
+ * CombatMode as the same edge. Built once, shown and hidden; a fight must
+ * cost zero DOM construction.
  */
 
-const ORB_LABELS: [string, string][] = [
-  ['worn_orb', 'Worn'],
-  ['keen_orb', 'Keen'],
-  ['truestone_orb', 'True']
-];
+const ORB_IDS = ['worn_orb', 'keen_orb', 'truestone_orb'];
 
 const LOG_LINES = 4;
 
@@ -39,18 +37,11 @@ export class CombatScreen {
   private readonly allyFill: HTMLElement;
   private readonly xpFill: HTMLElement;
   private readonly chargeFill: HTMLElement;
-  private readonly attackBtn: HTMLButtonElement;
-  private readonly orbBtn: HTMLButtonElement;
+  private readonly buttons: CombatButtons;
   private readonly slots: HTMLButtonElement[] = [];
   private readonly ring: HTMLElement;
   private readonly ringMark: HTMLElement;
 
-  private attackDownAt = 0;
-  private attackHeld = false;
-  /** Fixed steps the current press has been visible to the sim. */
-  private downSteps = 0;
-  /** A release waiting until the press has been sampled at least once. */
-  private releaseHeldMs: number | null = null;
   private readonly unsubs: (() => void)[] = [];
 
   constructor(
@@ -71,6 +62,7 @@ export class CombatScreen {
         <div class="cb__telegraph" data-e="telegraph" hidden>INCOMING — DODGE</div>
       </div>
       <div class="cb__log" data-e="log"></div>
+      <div class="cb__diamond" data-e="diamond"></div>
       <div class="cb__bottom">
         <div class="cb__ally">
           <div class="cb__row"><span class="cb__name" data-e="allyName"></span></div>
@@ -79,11 +71,6 @@ export class CombatScreen {
           <div class="bar bar--charge"><div class="bar__fill bar__fill--charge" data-e="charge"></div></div>
         </div>
         <div class="cb__slots" data-e="slots"></div>
-        <div class="cb__actions">
-          <button type="button" class="cb__btn cb__btn--attack" data-e="attack">Attack</button>
-          <button type="button" class="cb__btn cb__btn--dodge" data-e="dodge">Dodge</button>
-          <button type="button" class="cb__orb" data-e="orb"></button>
-        </div>
       </div>
       <div class="ring" data-e="ring" hidden>
         <div class="ring__mark" data-e="ringMark"></div>
@@ -102,10 +89,10 @@ export class CombatScreen {
     this.allyFill = q('allyHp');
     this.xpFill = q('xp');
     this.chargeFill = q('charge');
-    this.attackBtn = q<HTMLButtonElement>('attack');
-    this.orbBtn = q<HTMLButtonElement>('orb');
     this.ring = q('ring');
     this.ringMark = q('ringMark');
+
+    this.buttons = new CombatButtons(q('diamond'), this.intent);
 
     const slotsBox = q('slots');
     for (let i = 0; i < 5; i++) {
@@ -120,38 +107,6 @@ export class CombatScreen {
       slotsBox.appendChild(b);
       this.slots.push(b);
     }
-
-    // Attack: hold to charge, release to commit. Mirrors DesktopLayer's
-    // primary handling so Encounter sees identical edges.
-    this.attackBtn.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      this.attackDownAt = performance.now();
-      this.attackHeld = true;
-      this.downSteps = 0;
-      this.releaseHeldMs = null;
-      this.intent.primary.down = true;
-      this.intent.primary.heldMs = 0;
-    });
-    // A fast click can go down and up between two fixed steps; releasing the
-    // intent immediately would mean the sim never saw the press at all. The
-    // release waits (in update()) until the press has been sampled once.
-    const releaseAttack = (): void => {
-      if (!this.attackHeld) return;
-      this.attackHeld = false;
-      this.releaseHeldMs = performance.now() - this.attackDownAt;
-    };
-    this.attackBtn.addEventListener('pointerup', releaseAttack);
-    this.attackBtn.addEventListener('pointercancel', releaseAttack);
-    this.attackBtn.addEventListener('pointerleave', releaseAttack);
-
-    q('dodge').addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      this.intent.dodge = 1;
-    });
-    this.orbBtn.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      this.intent.throwOrb = true;
-    });
 
     this.unsubs.push(
       bus.on('attackResolved', (ev) => {
@@ -177,17 +132,6 @@ export class CombatScreen {
 
   /** Called once per fixed step. */
   update(): void {
-    // The press/release relay for the attack button (see the listener note).
-    if (this.intent.primary.down && (this.attackHeld || this.releaseHeldMs !== null)) {
-      this.downSteps++;
-      if (this.attackHeld) this.intent.primary.heldMs = performance.now() - this.attackDownAt;
-    }
-    if (this.releaseHeldMs !== null && this.downSteps > 0) {
-      this.intent.primary.heldMs = this.releaseHeldMs;
-      this.intent.primary.down = false;
-      this.releaseHeldMs = null;
-    }
-
     if (!this.combat.isFighting) {
       if (!this.root.hidden) this.root.hidden = true;
       return;
@@ -207,18 +151,17 @@ export class CombatScreen {
     this.allyFill.style.width = pct(s.active.currentHp, s.activeMaxHp);
     this.xpFill.style.width = pct(s.active.xp, xpToNext(s.active.level));
     this.chargeFill.style.width = pct(s.charge, TIMING.powerChargeCost);
-    this.attackBtn.classList.toggle('is-ready', s.charge >= TIMING.powerChargeCost);
-    this.attackBtn.classList.toggle(
-      'is-charging',
-      this.attackHeld && performance.now() - this.attackDownAt >= 200
-    );
 
-    const orbs = ORB_LABELS.map(([id, label]) => [label, count(this.inventory, id)] as const).filter(
-      ([, n]) => n > 0
-    );
-    const first = orbs[0];
-    this.orbBtn.disabled = !first;
-    this.orbBtn.textContent = first ? `Orb ×${first[1]} (${first[0]})` : 'No orbs';
+    const orbsHeld = ORB_IDS.reduce((sum, id) => sum + count(this.inventory, id), 0);
+    const suggested = suggestActions({
+      allyHpFraction: fraction(s.active.currentHp, s.activeMaxHp),
+      enemyHpFraction: fraction(s.enemy.currentHp, s.enemyMaxHp),
+      chargeAvailable: s.charge >= TIMING.powerChargeCost,
+      orbsHeld,
+      // Mirrors CombatMode.leave(): only a collared, scripted duel refuses.
+      canFlee: s.enemy.collared !== true
+    });
+    this.buttons.update(suggested, orbsHeld);
 
     for (let i = 0; i < this.slots.length; i++) {
       const btn = this.slots[i];
@@ -256,4 +199,9 @@ export class CombatScreen {
 function pct(current: number, max: number): string {
   if (max <= 0) return '0%';
   return `${Math.max(0, Math.min(100, (current / max) * 100)).toFixed(1)}%`;
+}
+
+function fraction(current: number, max: number): number {
+  if (max <= 0) return 0;
+  return Math.max(0, Math.min(1, current / max));
 }
