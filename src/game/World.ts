@@ -1,4 +1,5 @@
 import { Scene, ShadowGenerator, Vector3 } from '../core/babylon';
+import type { DoorRegistry } from '../building/DoorRegistry';
 import landmarks from '../data/landmarks.json';
 import { Npc, NpcRegistry } from '../entities/NPC';
 import { buildHall, type BuiltHall } from '../world/Hall';
@@ -8,7 +9,8 @@ import {
   buildVillage,
   disposeStructurePalette,
   pointNear,
-  type BuiltStructure
+  type BuiltStructure,
+  type HomeAnchor
 } from '../world/Structures';
 import type { Terrain } from '../world/gen/Terrain';
 import type { CompassMarker } from '../ui/HUD';
@@ -27,8 +29,16 @@ export interface WorldHandle {
   hall: BuiltHall;
   stonesPlacement: Placement;
   npcs: NpcRegistry;
-  /** Every fixed collider, for the character controller. */
-  colliders: { x: number; z: number; radius: number }[];
+  /**
+   * Every fixed collider, for the character controller. A getter rather than
+   * a snapshot array: the village's house colliders start as a placeholder
+   * (primitive-sized) ring and are replaced in place once each house's real
+   * model has resolved, and this must see that swap rather than the array
+   * `buildWorld` happened to have at the moment it returned.
+   */
+  readonly colliders: { x: number; z: number; radius: number }[];
+  /** Where the player's furnished house sits, for the wake-up spawn a later milestone adds. */
+  home: HomeAnchor | undefined;
   markers: CompassMarker[];
   dispose: () => void;
 }
@@ -37,7 +47,8 @@ export function buildWorld(
   scene: Scene,
   terrain: Terrain,
   seed: string,
-  shadows: ShadowGenerator | null
+  shadows: ShadowGenerator | null,
+  doorRegistry: DoorRegistry
 ): WorldHandle {
   const hallAt = hallPlacement(terrain, seed);
   const stonesAt = stonesPlacement(terrain, seed);
@@ -47,7 +58,7 @@ export function buildWorld(
   // covering all of it. At that span a distant building contributes nothing a
   // player can see while costing a shadow-map draw every frame. Measured at 94
   // casters before this; the far landmarks were most of them.
-  const village = buildVillage(scene, terrain, seed, shadows);
+  const village = buildVillage(scene, terrain, seed, shadows, doorRegistry);
   const stones = buildStandingStones(scene, stonesAt, terrain, seed, null);
   const hall = buildHall(scene, hallAt, terrain, null);
 
@@ -143,8 +154,6 @@ export function buildWorld(
     )
   );
 
-  const colliders = [...village.colliders, ...stones.colliders, ...hall.colliders];
-
   const markers: CompassMarker[] = [
     { label: 'Hollowbrook', x: 0, z: 0, kind: 'village' },
     { label: landmarks.standingStones.name, x: stonesAt.x, z: stonesAt.z, kind: 'stones' },
@@ -157,7 +166,10 @@ export function buildWorld(
     hall,
     stonesPlacement: stonesAt,
     npcs,
-    colliders,
+    get colliders() {
+      return [...village.colliders, ...stones.colliders, ...hall.colliders];
+    },
+    home: village.home,
     markers,
     dispose: (): void => {
       npcs.dispose();

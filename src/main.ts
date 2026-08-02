@@ -27,6 +27,7 @@ import { CombatScreen } from './ui/CombatScreen';
 import { ReleasePanel } from './ui/ReleasePanel';
 import { Nameplates } from './ui/Nameplates';
 import { BuildMode } from './building/BuildMode';
+import { DoorRegistry } from './building/DoorRegistry';
 import pieces from './data/pieces.json';
 import pauseMenuConfig from './data/pauseMenu.json';
 import { SaveManager, type SaveV1 } from './core/SaveManager';
@@ -116,10 +117,15 @@ async function boot(): Promise<void> {
   // It follows the player, so it never needs to be world-sized.
   const water = buildWaterPlane(scene, 1024, WATER_LEVEL);
 
+  // One registry every door (player-built or a house's own) registers into,
+  // so the E-to-open path below is a single lookup regardless of which
+  // system built the door in front of the player.
+  const doorRegistry = new DoorRegistry();
+
   // Hollowbrook, the standing stones, the Hall, and the people in them. All
   // three are seeded, so this is deterministic for a seed and needs no save
   // data of its own.
-  const built = buildWorld(scene, terrain, resolveSeed(), shadows);
+  const built = buildWorld(scene, terrain, resolveSeed(), shadows, doorRegistry);
 
   // One adapter, so the controller and the camera both see exactly the terrain
   // the renderer drew rather than a second opinion about it.
@@ -201,7 +207,7 @@ async function boot(): Promise<void> {
   const release = new ReleaseFlow(party);
   const encounter = new Encounter(combat, spawner, party, release, inventory, input);
   const vitals = createVitals();
-  const build = new BuildMode(scene, inventory, world);
+  const build = new BuildMode(scene, inventory, world, doorRegistry);
   const saves = new SaveManager();
   const stationsOwned = new Stations();
   const satchel = new Satchel();
@@ -428,16 +434,16 @@ async function boot(): Promise<void> {
       );
       // Doors keep swinging (and stay interactable) whether or not the hammer
       // is out, so this runs unconditionally rather than joining build.update.
-      build.updateDoors(dt);
+      doorRegistry.stepAll(dt * 1000);
 
       // A door in reach owns the interact button the same way talking and
       // building do: pressing E on a door must not also swing a nearby tool.
       const nearDoor =
         !hammerOut && !busyTalking
-          ? build.nearestDoor(player.state.position.x, player.state.position.z, pieces.doorInteractReach)
+          ? doorRegistry.nearest(player.state.position.x, player.state.position.z, pieces.doorInteractReach)
           : null;
-      if (nearDoor && input.intent.interact) build.toggleDoor(nearDoor);
-      doorPrompt.update(nearDoor !== null, nearDoor?.open === true);
+      if (nearDoor && input.intent.interact) nearDoor.toggle();
+      doorPrompt.update(nearDoor !== null, nearDoor?.isOpen() === true);
 
       const swing = hammerOut || busyTalking || nearDoor
         ? null
@@ -598,6 +604,7 @@ async function boot(): Promise<void> {
     encounter,
     release,
     build,
+    doorRegistry,
     stationsOwned,
     satchel,
     homestead,

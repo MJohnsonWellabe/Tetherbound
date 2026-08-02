@@ -144,8 +144,12 @@ const roofRing4 = (name, e, y) => [
 ];
 
 // houseA: 2x2 one-storey cottage, pyramid hip of four roof corners.
+// The front tile uses wall-doorway-square rather than wall-door: wall-door is
+// a solid panel with a door carved in relief and no opening, so nothing was
+// walkable there. wall-doorway-square cuts a real 0.4x0.75-tile hole (Door.ts
+// on the runtime side hangs a procedural leaf in it via models.json).
 const houseA = [
-  piece('wall-door', -0.5, 0, -0.5, R90),
+  piece('wall-doorway-square', -0.5, 0, -0.5, R90),
   piece('wall-window-shutters', 0.5, 0, -0.5, R90),
   piece('wall', -0.5, 0, 0.5, R270),
   piece('wall', 0.5, 0, 0.5, R270),
@@ -158,7 +162,7 @@ const houseA = [
 
 // houseB: 3x3, hip roof with a pyramid cap over the centre tile.
 const houseB = [
-  piece('wall-door', 0, 0, -1, R90),
+  piece('wall-doorway-square', 0, 0, -1, R90),
   piece('wall-window-shutters', -1, 0, -1, R90),
   piece('wall-window-shutters', 1, 0, -1, R90),
   piece('wall', -1, 0, 1, R270),
@@ -192,7 +196,7 @@ const ringC = (names, y) => {
 const houseC = [
   ...ringC(
     {
-      front: ['wall', 'wall-door', 'wall-window-stone', 'wall'],
+      front: ['wall', 'wall-doorway-square', 'wall-window-stone', 'wall'],
       back: ['wall', 'wall', 'wall-window-stone', 'wall'],
       east: ['wall', 'wall-window-stone', 'wall', 'wall'],
       west: ['wall', 'wall-window-stone', 'wall', 'wall']

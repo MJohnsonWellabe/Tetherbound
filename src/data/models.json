@@ -98,21 +98,27 @@
   "$comment_later": "buildings, stations, characters and pals are appended by their phases; the schema test only validates sections that exist and are non-empty.",
   "$comment_buildings": "Composites are baked to world size in the pipeline, so scale here is a retune knob that defaults to 1. Village houses cycle through the variants around the ring. Dressing is placed verbatim in village-local metres; collider 0 means walk-through. Stones stretch the shipped menhir props: scaleXZ/scaleY are [min,max] ranges the seeded rng picks inside, so girth stays near the primitive silhouette the 1.1 collider was tuned for.",
   "buildings": {
+    "$comment_houses_door": "Per-variant doorway anchor in the house's own local frame (front is -z, same convention Hall.ts uses). x/z/width/height are metres, measured from the wall-doorway-square aperture baked into each composite by scripts/asset-jobs.mjs (the kit's 0.4x0.75-tile hole, scaled by the house's baked-in composite scale) and z is the front wall's plane. yaw is the leaf's closed-facing rotation added on top of the house's own yaw, 0 for a leaf that swings out of a wall running along local x.",
     "houses": {
       "variants": [
         {
           "url": "models/buildings/house_a.glb",
-          "scale": 1.0
+          "scale": 1.0,
+          "door": { "x": -1.5, "z": -3.0, "yaw": 0, "width": 1.2, "height": 2.25 }
         },
         {
           "url": "models/buildings/house_b.glb",
-          "scale": 1.0
+          "scale": 1.0,
+          "door": { "x": 0, "z": -3.9, "yaw": 0, "width": 1.04, "height": 1.95 }
         },
         {
           "url": "models/buildings/house_c.glb",
-          "scale": 1.0
+          "scale": 1.0,
+          "door": { "x": -1.1, "z": -3.3, "yaw": 0, "width": 0.88, "height": 1.65 }
         }
-      ]
+      ],
+      "$comment_doorLeaf": "The procedural leaf mounted in the doorway aperture (Structures.ts), sized as a fraction of the aperture so a frame's worth of clearance shows on every side.",
+      "doorLeaf": { "widthFraction": 0.9, "heightFraction": 0.96, "depth": 0.08 }
     },
     "hall": {
       "shell": {

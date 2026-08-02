@@ -3,6 +3,7 @@ import { bus } from '../core/EventBus';
 import type { Intent } from '../core/input/Intent';
 import { add, count, remove, type Slots } from '../survival/Inventory';
 import { hingeSettled, stepHinge, targetAngle } from './Door';
+import { DoorRegistry, type DoorHandle } from './DoorRegistry';
 import {
   BUILD_CONFIG,
   isInteractivePiece,
@@ -26,15 +27,20 @@ import {
  *
  * A door is two boxes and a pivot: a static frame, plus a leaf parented to a
  * TransformNode sitting at the hinge edge so rotating the pivot swings the
- * leaf rather than spinning it in place. `updateDoors` runs every step
- * regardless of whether the hammer is out, because a door must keep swinging
- * (and stay interactable) after the player puts the hammer away.
+ * leaf rather than spinning it in place. Each mounted door registers a
+ * `DoorHandle` into the shared DoorRegistry, which is what lets `main.ts`
+ * find and toggle it (and Structures.ts's house doors) through one path
+ * instead of this class exposing its own nearest/toggle/step API. The
+ * registry steps every door every fixed step regardless of whether the
+ * hammer is out, because a door must keep swinging (and stay interactable)
+ * after the player puts the hammer away.
  */
 
 interface DoorRig {
   piece: PlacedPiece;
   pivot: TransformNode;
   angle: number;
+  unregister: () => void;
 }
 
 export interface WorldProbe {
@@ -59,7 +65,8 @@ export class BuildMode {
   constructor(
     private readonly scene: Scene,
     private readonly slots: Slots,
-    private readonly world: WorldProbe
+    private readonly world: WorldProbe,
+    private readonly doorRegistry: DoorRegistry
   ) {
     this.valid = tinted(scene, 'mat_ghost_ok', new Color3(0.45, 0.9, 0.5), 0.42);
     this.invalid = tinted(scene, 'mat_ghost_no', new Color3(0.95, 0.35, 0.3), 0.42);
@@ -164,44 +171,6 @@ export class BuildMode {
     }
   }
 
-  /** The nearest placed door within `maxDist`, or null. Drives the interact prompt. */
-  nearestDoor(px: number, pz: number, maxDist: number): PlacedPiece | null {
-    let best: PlacedPiece | null = null;
-    let bestDist = maxDist;
-    for (const rig of this.doors.values()) {
-      const d = Math.hypot(rig.piece.x - px, rig.piece.z - pz);
-      if (d < bestDist) {
-        bestDist = d;
-        best = rig.piece;
-      }
-    }
-    return best;
-  }
-
-  /** Flip a door's open state. The leaf eases toward it over updateDoors(). */
-  toggleDoor(piece: PlacedPiece): void {
-    const rig = this.doors.get(piece);
-    if (!rig) return;
-    piece.open = !piece.open;
-    bus.emit('doorToggled', { open: piece.open === true, at: { x: piece.x, y: piece.y, z: piece.z } });
-  }
-
-  /**
-   * Swing every door's leaf toward its target angle. Runs every fixed step
-   * unconditionally, independent of hammerEquipped: a door must keep opening
-   * after the player has put the hammer away and walked up to it.
-   */
-  updateDoors(dt: number): void {
-    if (this.doors.size === 0) return;
-    const dtMs = dt * 1000;
-    for (const rig of this.doors.values()) {
-      const open = rig.piece.open === true;
-      if (hingeSettled(rig.angle, open)) continue;
-      rig.angle = stepHinge(rig.angle, open, dtMs);
-      rig.pivot.rotation.y = rig.piece.rot + rig.angle;
-    }
-  }
-
   /**
    * Build the leaf + hinge pivot for a placed door piece.
    *
@@ -236,12 +205,29 @@ export class BuildMode {
     const angle = targetAngle(piece.open === true);
     pivot.rotation.y = piece.rot + (instant ? angle : 0);
 
-    this.doors.set(piece, { piece, pivot, angle: instant ? angle : 0 });
+    const rig: DoorRig = { piece, pivot, angle: instant ? angle : 0, unregister: () => {} };
+    const handle: DoorHandle = {
+      position: { x: piece.x, z: piece.z },
+      isOpen: () => piece.open === true,
+      toggle: () => {
+        piece.open = !piece.open;
+        bus.emit('doorToggled', { open: piece.open === true, at: { x: piece.x, y: piece.y, z: piece.z } });
+      },
+      step: (dtMs: number) => {
+        const open = piece.open === true;
+        if (hingeSettled(rig.angle, open)) return;
+        rig.angle = stepHinge(rig.angle, open, dtMs);
+        rig.pivot.rotation.y = piece.rot + rig.angle;
+      }
+    };
+    rig.unregister = this.doorRegistry.register(handle);
+    this.doors.set(piece, rig);
   }
 
   private unmountDoor(piece: PlacedPiece): void {
     const rig = this.doors.get(piece);
     if (!rig) return;
+    rig.unregister();
     rig.pivot.dispose(false, false);
     this.doors.delete(piece);
   }
@@ -300,7 +286,10 @@ export class BuildMode {
     this.ghost?.dispose();
     for (const mesh of this.meshes.values()) mesh.dispose();
     this.meshes.clear();
-    for (const rig of this.doors.values()) rig.pivot.dispose(false, false);
+    for (const rig of this.doors.values()) {
+      rig.unregister();
+      rig.pivot.dispose(false, false);
+    }
     this.doors.clear();
     this.placed.length = 0;
     this.valid.dispose();

@@ -29,9 +29,9 @@ licenses are recorded as found at the source so attribution stays a lookup, not 
 | public/models/props/stump.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (5 KB) |
 | public/textures/detail_grass.webp | https://ambientcg.com/view?id=Grass004 | ambientCG | CC0 | 2026-08-02 | texture (86 KB) |
 | public/textures/detail_rock.webp | https://ambientcg.com/view?id=Rock030 | ambientCG | CC0 | 2026-08-02 | texture (69 KB) |
-| public/models/buildings/house_a.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (38 KB) |
-| public/models/buildings/house_b.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (67 KB) |
-| public/models/buildings/house_c.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (116 KB) |
+| public/models/buildings/house_a.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (30 KB) |
+| public/models/buildings/house_b.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (59 KB) |
+| public/models/buildings/house_c.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (108 KB) |
 | public/models/buildings/hall.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (330 KB) |
 | public/models/buildings/banner.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (11 KB) |
 | public/models/buildings/well.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (138 KB) |
