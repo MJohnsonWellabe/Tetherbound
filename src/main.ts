@@ -106,7 +106,8 @@ async function boot(): Promise<void> {
     seed: resolveSeed(),
     player,
     time,
-    input
+    input,
+    collidersNear: (x, z, r) => world.collidersNear(x, z, r)
   });
   fixedColliders = game.world.colliders;
   // A reload drops the player back where they were; a cold start meets Orin.

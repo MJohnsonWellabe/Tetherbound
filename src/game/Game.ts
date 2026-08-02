@@ -8,7 +8,7 @@ import type { TimeOfDay } from '../world/TimeOfDay';
 import type { Player } from '../entities/Player';
 import { SpawnManager, type WildPal } from '../entities/SpawnManager';
 import { CombatMode } from './CombatMode';
-import type { BattleEvent, Outcome } from '../combat/Battle';
+import type { Battle, BattleEvent, Outcome } from '../combat/Battle';
 import { Party } from '../party/Party';
 import { makePal, type PalState } from '../party/Pal';
 import { awardXp, benchShare, tickRevive } from '../party/Progression';
@@ -47,6 +47,9 @@ export interface GameContext {
   player: Player;
   time: TimeOfDay;
   input: Input;
+  /** The same collider query the character controller uses, so the arena
+   *  camera and the follow camera agree on what is solid. */
+  collidersNear: (x: number, z: number, radius: number) => { x: number; z: number; radius: number }[];
 }
 
 export class Game {
@@ -85,7 +88,8 @@ export class Game {
       scene: ctx.scene,
       camera: ctx.camera,
       shadows: ctx.shadows,
-      heightAt: (x, z) => ctx.terrain.heightAt(x, z)
+      heightAt: (x, z) => ctx.terrain.heightAt(x, z),
+      collidersNear: (x, z, r) => ctx.collidersNear(x, z, r)
     });
 
     this.wireUi();
@@ -747,6 +751,17 @@ export class Game {
 
   hasFlag(flag: string): boolean {
     return this.flags.has(flag);
+  }
+
+  /** The fight in progress, or null. Read-only handle for the stats readout
+   *  and the Hall walkthrough spec. */
+  get battle(): Battle | null {
+    return this.combatMode.current;
+  }
+
+  /** Badges earned. The Meadow Sigil is the first of eight. */
+  get earnedBadges(): readonly string[] {
+    return this.badges;
   }
 
   dispose(): void {

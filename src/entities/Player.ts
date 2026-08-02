@@ -136,17 +136,37 @@ export class Player {
     const shoulderZ = -Math.sin(this.yaw) * CAMERA_SHOULDER;
 
     let distance = CAMERA_DISTANCE;
-    // March along the boom and stop short of the ground. Cheaper than a ray
-    // cast against chunk meshes, and the heightfield is the only thing big
-    // enough to matter at this distance.
-    const STEPS = 6;
+    // March along the boom and stop short of anything solid.
+    //
+    // Terrain alone is not enough. Indoors, the boom pushes straight through a
+    // wall and the camera ends up outside the building looking at its back
+    // face, which renders as a black screen. That is not hypothetical: it is
+    // what the whole Meadows Hall interior looked like, which is the one room
+    // the player has to fight three times in. Prop and structure colliders are
+    // already available through the same adapter the controller uses, so the
+    // fix is to test them here too.
+    const STEPS = 8;
+    const colliders = world.collidersNear(focusX, focusZ, CAMERA_DISTANCE + 2);
     for (let i = 1; i <= STEPS; i++) {
       const d = (CAMERA_DISTANCE * i) / STEPS;
       const px = focusX + dirX * d + shoulderX;
       const pz = focusZ + dirZ * d + shoulderZ;
       const py = focusY + dirY * d;
-      const ground = world.heightAt(px, pz) + 0.5;
-      if (py < ground) {
+
+      let blocked = py < world.heightAt(px, pz) + 0.5;
+      if (!blocked) {
+        for (const collider of colliders) {
+          // A little padding, or the camera sits flush inside the wall face and
+          // near-plane clipping shows through it anyway.
+          const clearance = collider.radius + 0.35;
+          if ((px - collider.x) ** 2 + (pz - collider.z) ** 2 < clearance * clearance) {
+            blocked = true;
+            break;
+          }
+        }
+      }
+
+      if (blocked) {
         distance = Math.max(1.4, (CAMERA_DISTANCE * (i - 1)) / STEPS);
         break;
       }

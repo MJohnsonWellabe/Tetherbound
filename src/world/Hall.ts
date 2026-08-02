@@ -11,18 +11,23 @@ import {
 } from '../core/babylon';
 import landmarks from '../data/landmarks.json';
 import type { Terrain } from './gen/Terrain';
-import { highestUnder, type Placement } from './Landmarks';
+import type { Placement } from './Landmarks';
 import { structurePalette } from './Structures';
 
 /**
  * The Meadows Hall. A stone longhall with four chained pals in alcoves and
  * Bracken Holt waiting at the far end (GAME_DESIGN.md section 10).
  *
- * Built on a raised platform rather than on the raw heightfield. The placement
- * search prefers flat ground but is allowed to settle for the flattest it
- * found, so a plinth sitting at the highest point under the footprint is what
- * guarantees no corner of the building ends up underground on an awkward seed.
- * See DECISIONS.md.
+ * The floor sits at the terrain height of the Hall's centre, and the plinth
+ * hangs DOWNWARD from it to fill whatever dip the ground has under the
+ * footprint.
+ *
+ * The first version raised the floor above the highest ground instead, which
+ * looked correct and was unplayable: the character controller walks on the
+ * heightfield and knows nothing about a platform, so the player and every
+ * combat pal stood more than a metre below the floor they could see, inside the
+ * plinth. There is no physics engine here by design (ARCHITECTURE.md), so the
+ * building has to meet the terrain rather than the other way round.
  *
  * Local space runs -z at the door to +z at the Warden, and the whole node is
  * yawed to face the village. Everything inside is positioned in that local
@@ -31,7 +36,8 @@ import { structurePalette } from './Structures';
 
 const HALL = landmarks.hall;
 const { width: WIDTH, depth: DEPTH, wallHeight: WALL_HEIGHT } = HALL.footprint;
-const PLATFORM_HEIGHT = 1.2;
+/** How far the plinth hangs below the floor. Deep enough to bridge a dip. */
+const PLATFORM_DEPTH = 8;
 const WALL_THICKNESS = 1.2;
 const DOOR_WIDTH = 5;
 
@@ -80,10 +86,11 @@ export function buildHall(
   const root = new TransformNode('meadows_hall', scene);
   const meshes: Mesh[] = [];
 
-  const baseY = highestUnder(terrain, placement.x, placement.z, HALL.flattenRadius * 0.6);
-  const floorY = baseY + PLATFORM_HEIGHT;
+  // The floor is the ground at the centre, because that is where the player
+  // actually stands. Local Y in this node is measured from the floor.
+  const floorY = terrain.heightAt(placement.x, placement.z);
 
-  root.position.set(placement.x, baseY, placement.z);
+  root.position.set(placement.x, floorY, placement.z);
   root.rotation.y = placement.yaw;
 
   const add = (mesh: Mesh, cast = true): Mesh => {
@@ -95,21 +102,23 @@ export function buildHall(
     return mesh;
   };
 
-  // Plinth. Slightly larger than the building so it reads as a foundation.
+  // Plinth, hanging below the floor to bridge whatever the ground does under
+  // the footprint. Slightly larger than the building so it reads as a step up.
   const platform = CreateBox(
     'hall_platform',
-    { width: WIDTH + 6, depth: DEPTH + 6, height: PLATFORM_HEIGHT },
+    { width: WIDTH + 6, depth: DEPTH + 6, height: PLATFORM_DEPTH },
     scene
   );
-  platform.position.y = PLATFORM_HEIGHT / 2;
+  platform.position.y = -PLATFORM_DEPTH / 2;
   add(platform, false);
 
+  // The floor slab is flush with the ground, set just into it so no seam shows.
   const floor = CreateBox('hall_floor', { width: WIDTH, depth: DEPTH, height: 0.3 }, scene);
-  floor.position.y = PLATFORM_HEIGHT + 0.15;
+  floor.position.y = -0.06;
   floor.material = p.road;
   add(floor, false);
 
-  const wallY = PLATFORM_HEIGHT + WALL_HEIGHT / 2;
+  const wallY = WALL_HEIGHT / 2;
 
   // Long walls.
   for (const side of [-1, 1]) {
@@ -149,7 +158,7 @@ export function buildHall(
     { width: DOOR_WIDTH, depth: WALL_THICKNESS, height: 1.4 },
     scene
   );
-  lintel.position.set(0, PLATFORM_HEIGHT + WALL_HEIGHT - 0.7, -(DEPTH - WALL_THICKNESS) / 2);
+  lintel.position.set(0, WALL_HEIGHT - 0.7, -(DEPTH - WALL_THICKNESS) / 2);
   add(lintel);
 
   // Roof: a shallow ridge. Left open at the door end so the interior is lit and
@@ -160,7 +169,7 @@ export function buildHall(
     scene
   );
   roof.rotation.set(Math.PI / 2, Math.PI / 4, 0);
-  roof.position.set(0, PLATFORM_HEIGHT + WALL_HEIGHT + 0.6, DEPTH * 0.09);
+  roof.position.set(0, WALL_HEIGHT + 0.6, DEPTH * 0.09);
   roof.material = p.timber;
   add(roof);
 
@@ -179,7 +188,7 @@ export function buildHall(
       { height: 2.6, diameter: 0.5, tessellation: 6 },
       scene
     );
-    post.position.set(localX, PLATFORM_HEIGHT + 1.3, localZ);
+    post.position.set(localX, 1.3, localZ);
     post.material = p.iron;
     add(post);
 
@@ -189,7 +198,7 @@ export function buildHall(
   // Tether's banner behind the Warden. The only large flat iron-orange in the
   // world, which is what makes the far end of the room read as theirs.
   const banner = CreateBox('hall_banner', { width: 5.5, depth: 0.2, height: 5 }, scene);
-  banner.position.set(0, PLATFORM_HEIGHT + WALL_HEIGHT * 0.6, (DEPTH - WALL_THICKNESS) / 2 - 0.8);
+  banner.position.set(0, WALL_HEIGHT * 0.6, (DEPTH - WALL_THICKNESS) / 2 - 0.8);
   banner.material = p.iron;
   add(banner);
 

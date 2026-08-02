@@ -69,7 +69,16 @@ test('boots to a rendered world with no console errors', async ({ page }) => {
   expect(fatalVisible, 'the fatal-error overlay should not be showing').toBe(false);
 
   const d = await diagnostics(page);
-  expect(d.loadedChunks, 'chunks should have streamed in around the spawn').toBeGreaterThan(10);
+  // How many chunks exist at this instant is a time budget divided by a
+  // per-chunk cost: main.ts spends 2000ms building the spawn ring before the
+  // first frame, and a chunk costs ~180ms under SwiftShader. That lands near
+  // eleven on an idle machine and near ten on a loaded one, so a threshold of
+  // >10 sat exactly on the boundary and failed whenever this spec ran late in
+  // the suite. Measured 11/11/13/11/11 in isolation, 10 under load.
+  //
+  // The property worth asserting is that streaming produced a real world around
+  // the spawn, not the exact count the budget happened to buy.
+  expect(d.loadedChunks, 'chunks should have streamed in around the spawn').toBeGreaterThan(7);
   expect(d.activeMeshes, 'something should be rendering').toBeGreaterThan(5);
   expect(d.totalVertices, 'terrain geometry should exist').toBeGreaterThan(1000);
 

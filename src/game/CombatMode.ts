@@ -30,12 +30,17 @@ import { Battle, type BattleEvent, type BattleOptions } from '../combat/Battle';
 const SEPARATION = 6.5;
 /** Lunge distance when a pal commits to an attack. */
 const LUNGE = 1.5;
+/** Side-on camera boom for the arena, and how far in it may be forced. */
+const ARENA_CAMERA_DISTANCE = 9.5;
+const ARENA_CAMERA_MIN = 3.4;
 
 export interface CombatContext {
   scene: Scene;
   camera: FreeCamera;
   shadows: ShadowGenerator | null;
   heightAt: (x: number, z: number) => number;
+  /** Structures the arena camera must not end up inside. */
+  collidersNear: (x: number, z: number, radius: number) => { x: number; z: number; radius: number }[];
 }
 
 export class CombatMode {
@@ -203,13 +208,42 @@ export class CombatMode {
    * behind-the-shoulder camera hides the enemy's telegraph behind your own pal,
    * and the telegraph is the one thing the player must be able to read.
    */
+  /**
+   * How far the camera can sit along a bearing before it is inside something.
+   * Returns the full distance when the line is clear.
+   */
+  private clearDistance(bearing: number): number {
+    const colliders = this.ctx.collidersNear(this.centreX, this.centreZ, ARENA_CAMERA_DISTANCE + 2);
+    const STEPS = 6;
+    for (let i = 1; i <= STEPS; i++) {
+      const d = (ARENA_CAMERA_DISTANCE * i) / STEPS;
+      const x = this.centreX + Math.sin(bearing) * d;
+      const z = this.centreZ + Math.cos(bearing) * d;
+      for (const collider of colliders) {
+        const clearance = collider.radius + 0.35;
+        if ((x - collider.x) ** 2 + (z - collider.z) ** 2 < clearance * clearance) {
+          return Math.max(ARENA_CAMERA_MIN, (ARENA_CAMERA_DISTANCE * (i - 1)) / STEPS);
+        }
+      }
+    }
+    return ARENA_CAMERA_DISTANCE;
+  }
+
   private placeCamera(): void {
-    const perpendicular = this.axis + Math.PI / 2;
-    const distance = 9.5;
     const height = 4.6;
 
-    const cx = this.centreX + Math.sin(perpendicular) * distance;
-    const cz = this.centreZ + Math.cos(perpendicular) * distance;
+    // Two of the three Hall fights happen indoors, where a fixed boom puts the
+    // camera through a wall and fills the screen with the outside of the
+    // building. Try both sides of the fight axis and take the roomier one.
+    const left = this.axis + Math.PI / 2;
+    const right = this.axis - Math.PI / 2;
+    const leftReach = this.clearDistance(left);
+    const rightReach = this.clearDistance(right);
+    const bearing = rightReach > leftReach ? right : left;
+    const reach = Math.max(leftReach, rightReach);
+
+    const cx = this.centreX + Math.sin(bearing) * reach;
+    const cz = this.centreZ + Math.cos(bearing) * reach;
     const ground = this.ctx.heightAt(cx, cz);
     const cy = Math.max(this.ctx.heightAt(this.centreX, this.centreZ) + height, ground + 1.8);
 
