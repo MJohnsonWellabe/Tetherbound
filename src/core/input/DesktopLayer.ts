@@ -114,6 +114,16 @@ export class DesktopLayer {
     }
     if (e.code === 'KeyE') this.intent.interact = true;
     if (e.code === 'KeyR') this.intent.throwOrb = true;
+    // Keyboard equivalents of the four face buttons (owner's ROG Ally
+    // playtest: A/B/X/Y for quick, power, orb, run). Left/right click cover
+    // quick and power too, below; these exist for a keyboard with no mouse
+    // button free, and both write the same edge so neither path is "the"
+    // real one.
+    if (this.mode === 'combat') {
+      if (e.code === 'KeyF') this.intent.quickAttack = true;
+      if (e.code === 'KeyG') this.intent.powerAttack = true;
+      if (e.code === 'KeyQ') this.intent.flee = true;
+    }
     // Only fires unlocked; the locked case is handled by lockChange, because
     // the browser eats this keydown while the lock is held.
     if (e.code === 'Escape' && !this.locked) {
@@ -155,15 +165,26 @@ export class DesktopLayer {
   private onMouseDown(e: MouseEvent): void {
     this.active = true;
     if (e.button === 2) {
-      // Right-drag looks without pointer lock. Lock is still the better path,
-      // but a game that appears to have no camera control at all is worse than
-      // one with a slightly clumsy one, and some setups refuse lock outright.
-      this.dragging = true;
+      if (this.mode === 'combat') {
+        // Right click is power attack in a fight, mirroring left click for
+        // quick: two buttons for two attacks, the same way the shoulders
+        // already give directional dodge two buttons. Outside a fight it
+        // still drags the camera below, so nothing here changes when there
+        // is no fight to attack in.
+        this.intent.powerAttack = true;
+      } else {
+        // Right-drag looks without pointer lock. Lock is still the better
+        // path, but a game that appears to have no camera control at all is
+        // worse than one with a slightly clumsy one, and some setups refuse
+        // lock outright.
+        this.dragging = true;
+      }
     }
     if (!this.locked && e.button === 0 && this.mode === 'explore') {
       void this.canvas.requestPointerLock?.();
     }
     if (e.button === 0) {
+      if (this.mode === 'combat') this.intent.quickAttack = true;
       this.intent.primary.down = true;
       this.intent.primary.heldMs = 0;
       this.primaryDownMs = performance.now();

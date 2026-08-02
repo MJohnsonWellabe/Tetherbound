@@ -426,6 +426,10 @@ async function boot(): Promise<void> {
       }
 
       player.update(input, world, dt);
+      // After player.update() so this frame's camera actually uses the
+      // locked yaw, not last frame's; see CombatStage.update()'s own header
+      // for why a fight needs this every step rather than once on entry.
+      combatStage.update(player.state.position.x, player.state.position.z);
       chunks.update(player.state.position.x, player.state.position.z);
       props.update(player.state.position.x, player.state.position.z);
       renderer.focusShadows(
@@ -530,8 +534,13 @@ async function boot(): Promise<void> {
       // loop stands down. Without this the two race for the same fight and a
       // wandering Tuftmoth can interrupt Bracken.
       if (story.inScriptedFight) combat.update(dt, time.day);
-      else encounter.update(player.state.position.x, player.state.position.z, dt, time.day);
+      // busyTalking only gates STARTING a new fight; one already running
+      // keeps ticking regardless, inside Encounter.update() itself.
+      else encounter.update(player.state.position.x, player.state.position.z, dt, time.day, busyTalking);
       if (input.intent.throwOrb) encounter.throwOrb(time.day);
+      // Refused for a collared, scripted duel; Encounter.flee() itself
+      // decides and toasts either way.
+      if (input.intent.flee) encounter.flee();
 
       // The release screen is driven by the same slot input the party uses:
       // pick a number to select, press it again to confirm, throw to cancel.

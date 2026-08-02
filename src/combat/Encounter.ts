@@ -4,6 +4,7 @@ import type { PalState } from '../party/PalState';
 import type { Party } from '../party/Party';
 import type { ReleaseFlow } from '../party/Release';
 import type { SpawnManager } from '../entities/SpawnManager';
+import moves from '../data/moves.json';
 import { TIMING } from './MoveResolver';
 import type { CombatMode } from './CombatMode';
 import { remove, count, type Slots } from '../survival/Inventory';
@@ -12,21 +13,24 @@ import type { HUD } from '../ui/HUD';
 /**
  * Glue between exploring and fighting.
  *
- * Decides when a fight starts, translates the primary input into quick versus
- * power, spends orbs on throws, and routes a sixth capture into the release
- * flow. Kept out of CombatMode so that file stays about the fight itself.
+ * Decides when a fight starts and ends, reads the four combat buttons, spends
+ * orbs on throws, and routes a sixth capture into the release flow. Kept out
+ * of CombatMode so that file stays about the fight itself.
  */
 
 /** Walking within this many meters of a pal starts a fight (section 7). */
-const APPROACH_METERS = 4;
-/** Held longer than this, the primary input is a power attack. */
-const POWER_HOLD_MS = 420;
+const APPROACH_METERS = moves.approachMeters;
+/**
+ * Past this many meters from the target, a running fight ends on its own.
+ * Nothing used to check distance once a fight had started, so walking away
+ * left the combat HUD up forever.
+ */
+const LEASH_METERS = moves.leashMeters;
 
 /** Orbs in the order the game will spend them: worst first. */
 const ORB_PRIORITY = ['worn_orb', 'keen_orb', 'truestone_orb'];
 
 export class Encounter {
-  private primaryWasDown = false;
   /** Fires once per session, the first time an empty party stands next to a
    *  wild pal, so the fight-is-unreachable state never reads as a bug. */
   private toldToSeeOrin = false;
@@ -41,8 +45,14 @@ export class Encounter {
     private readonly hud: HUD
   ) {}
 
-  /** One fixed step. */
-  update(x: number, z: number, dt: number, day: number): void {
+  /**
+   * One fixed step. `busyTalking` comes from Story: a conversation owns the
+   * interact button outright, and now it also owns whether a NEW fight is
+   * allowed to start, so a wild pal wandering into range mid-conversation
+   * cannot interrupt it. A fight already running keeps ticking either way,
+   * because the gate is on starting one, not on finishing one.
+   */
+  update(x: number, z: number, dt: number, day: number, busyTalking = false): void {
     // The release screen is modal: it pauses the loop below it, because the
     // decision is the point and it must not be resolvable by walking away.
     if (this.release.stage !== 'closed') return;
@@ -50,13 +60,15 @@ export class Encounter {
     if (this.combat.isFighting) {
       this.combat.update(dt, day);
       this.readAttacks(day);
+      this.checkLeash(x, z);
       return;
     }
 
     // Clear a finished fight BEFORE looking for a new one. Doing it after meant
     // settle() tore down the fight maybeStart() had just begun, in the same
     // tick, and combat could never last longer than one step.
-    this.settle(day);
+    this.settle();
+    if (busyTalking) return;
     this.maybeStart(x, z);
   }
 
@@ -76,27 +88,52 @@ export class Encounter {
     if (near) this.combat.enter(near);
   }
 
+  /** Ends a running fight once the player has walked far enough from it. */
+  private checkLeash(x: number, z: number): void {
+    const target = this.combat.target;
+    if (!target) return;
+    if (Math.hypot(target.x - x, target.z - z) <= LEASH_METERS) return;
+    if (this.combat.leave()) this.hud.toast('Too far to keep fighting.', 'plain');
+  }
+
   /**
-   * Quick versus power comes from how long the button was held, which is the
-   * same gesture on a mouse, a thumb and a trigger. The decision happens on
-   * RELEASE, so the charge is visible before it commits.
+   * Retreat on request (the Run button). Always instant outside a scripted
+   * duel; see CombatMode.leave() for the collared refusal.
+   */
+  flee(): 'left' | 'refused' | 'not-fighting' {
+    if (!this.combat.isFighting) return 'not-fighting';
+    if (this.combat.leave()) {
+      this.hud.toast('You pulled back.', 'plain');
+      return 'left';
+    }
+    this.hud.toast('Cannot retreat from this fight.', 'bad');
+    return 'refused';
+  }
+
+  /**
+   * Quick and power are each their own button now (A and B, or the on-screen
+   * Quick/Power buttons), committed the instant they are pressed. Nothing
+   * left here to time: CombatMode.attack() decides whether a power attack
+   * actually lands. Both can legally edge-trigger the same tick (a click and
+   * a key landing together), so both are read rather than picking one.
    */
   private readAttacks(day: number): void {
-    const primary = this.input.intent.primary;
-    if (primary.down) {
-      this.primaryWasDown = true;
-      return;
-    }
-    if (!this.primaryWasDown) return;
-    this.primaryWasDown = false;
-    this.combat.attack(primary.heldMs >= POWER_HOLD_MS ? 'power' : 'quick', day);
+    const intent = this.input.intent;
+    if (intent.quickAttack) this.combat.attack('quick', day);
+    if (intent.powerAttack) this.combat.attack('power', day);
   }
 
   /** Throw the cheapest orb the player has. */
   throwOrb(day: number): 'no-orbs' | 'bounced' | 'missed' | 'caught' | 'not-fighting' {
     if (!this.combat.isFighting) return 'not-fighting';
     const orb = ORB_PRIORITY.find((id) => count(this.slots, id) > 0);
-    if (!orb) return 'no-orbs';
+    if (!orb) {
+      // The button has to say something happened, not nothing: the throw
+      // being always LEGAL (CLAUDE.md hard constraint 3) is a different
+      // promise than there being an orb to spend.
+      bus.emit('orbThrown', { outcome: 'no-orbs', shakes: 0 });
+      return 'no-orbs';
+    }
 
     // The orb is spent whether or not it holds. A failed throw costing nothing
     // would make throwing strictly better than fighting.
@@ -137,23 +174,24 @@ export class Encounter {
    * fight in progress, and tearing either of those down is how a fight ends
    * before it starts.
    */
-  private settle(day: number): void {
+  private settle(): void {
     const phase = this.combat.phase;
     if (phase === 'idle' || phase === 'fighting') return;
 
     const target = this.combat.target;
-    // A defeated, caught or fled pal leaves the world. A loss does not: the
-    // pal that beat you is still standing there.
-    if (target && phase !== 'lost') this.spawns.release(target);
+    // A defeated, caught or (wild-)fled pal leaves the world. A loss does
+    // not, and neither does the player's own retreat ('left'): the enemy
+    // that beat you, or the one you walked away from, is still standing
+    // there.
+    if (target && phase !== 'lost' && phase !== 'left') this.spawns.release(target);
     this.combat.reset();
-    void day;
-  }
-
-  get powerHoldMs(): number {
-    return POWER_HOLD_MS;
   }
 
   get swapVulnerabilityMs(): number {
     return TIMING.swapVulnerabilityMs;
+  }
+
+  get leashMeters(): number {
+    return LEASH_METERS;
   }
 }

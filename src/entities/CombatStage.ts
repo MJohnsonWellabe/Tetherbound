@@ -14,7 +14,7 @@ import type { Player, CameraFraming } from './Player';
 import type { PalBody, PalVisuals } from './PalVisual';
 import type { WildPal } from './SpawnManager';
 import type { CombatMode } from '../combat/CombatMode';
-import { placeStage } from '../combat/stagePlacement';
+import { facingYaw, placeStage } from '../combat/stagePlacement';
 
 /**
  * The renderer side of a fight. CombatMode stays pure and event-driven; this
@@ -102,6 +102,24 @@ export class CombatStage {
     this.player.setCameraFraming(stage.camera as CameraFraming);
   }
 
+  /**
+   * One fixed step while a fight is running. Pins the player's own camera
+   * yaw at the enemy every tick, rather than leaving it to free look: the
+   * owner's ROG Ally playtest asked for the target to stay centre-framed for
+   * the whole fight, and `intent.look` keeps accumulating in combat (mouse
+   * drag, the right stick) with nothing else to stop it drifting off the
+   * enemy over a long fight. The enemy is `held` and does not move, so this
+   * is exact and cheap: recompute the angle, hand it to the one legal camera
+   * writer (D46) the same way a spawn already seeds facing with `setYaw`,
+   * just every step instead of once. Pitch is left alone; that is still the
+   * player's, per D46's "look input cancels the pitch blend".
+   */
+  update(playerX: number, playerZ: number): void {
+    const enemy = this.enemy;
+    if (!enemy) return;
+    this.player.setYaw(facingYaw(playerX, playerZ, enemy.x, enemy.z));
+  }
+
   private end(phase: string): void {
     this.player.setCameraFraming(null);
     this.combat.setAiming(false);
@@ -168,7 +186,10 @@ export class CombatStage {
   }
 
   /** Fly the orb from the player to the enemy, then show the outcome. */
-  private onThrow(outcome: 'bounced' | 'missed' | 'caught'): void {
+  private onThrow(outcome: 'bounced' | 'missed' | 'caught' | 'no-orbs'): void {
+    // Pressing throw with an empty satchel is a refusal, not a throw. There is
+    // no orb to fly and nothing was spent, so the fight carries on untouched.
+    if (outcome === 'no-orbs') return;
     const enemy = this.enemy;
     if (!enemy) {
       // Nothing to fly at, so do not leave the enemy held forever.

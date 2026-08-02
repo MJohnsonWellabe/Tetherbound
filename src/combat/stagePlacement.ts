@@ -26,6 +26,17 @@ export interface StagePlacement {
   enemy: StagePose;
 }
 
+/**
+ * The yaw that faces `toX,toZ` from `fromX,fromZ`, in the convention this
+ * codebase uses everywhere a body or a camera turns to face a point: 0 faces
+ * +Z, and a mesh's local forward is (sin(yaw), cos(yaw)). Shared by the ally
+ * and enemy facings below and by CombatStage's per-frame camera lock, so the
+ * two can never quietly disagree about which way "facing the fight" is.
+ */
+export function facingYaw(fromX: number, fromZ: number, toX: number, toZ: number): number {
+  return Math.atan2(toX - fromX, toZ - fromZ);
+}
+
 export function placeStage(
   playerX: number,
   playerZ: number,
@@ -57,7 +68,7 @@ export function placeStage(
     fromAlly >= config.gap
       ? { x: enemyX, z: enemyZ, yaw: 0 }
       : { x: ally.x + dx * config.gap, z: ally.z + dz * config.gap, yaw: 0 };
-  enemy.yaw = Math.atan2(ally.x - enemy.x, ally.z - enemy.z);
+  enemy.yaw = facingYaw(enemy.x, enemy.z, ally.x, ally.z);
 
   return { ally, enemy };
 }

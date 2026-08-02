@@ -21,7 +21,15 @@ import { catchChance, ringQualityAt, rollCatch, shouldFlee, THROW_CONFIG } from 
  * be called on the opening tick and will resolve.
  */
 
-export type CombatPhase = 'idle' | 'fighting' | 'won' | 'lost' | 'fled' | 'caught';
+/**
+ * `fled` is the WILD pal bolting on its own (Throw.ts `shouldFlee`); `left`
+ * is the PLAYER choosing to disengage (the Run button, or Encounter's leash).
+ * They read the same to the player ("the fight is over, no rewards") but
+ * `Encounter.settle()` treats them oppositely: a pal that fled ran off and
+ * leaves the world, a pal the player walked away from is still standing
+ * there.
+ */
+export type CombatPhase = 'idle' | 'fighting' | 'won' | 'lost' | 'fled' | 'caught' | 'left';
 
 export interface CombatSnapshot {
   phase: CombatPhase;
@@ -223,12 +231,33 @@ export class CombatMode {
     }
   }
 
-  /** Player attacks. `kind` is decided by how long primary was held. */
+  /**
+   * Retreat from the fight. Always instant and free: no roll, no channel
+   * time, no cost, matching the "forgiving first fight" direction the rest
+   * of the combat clock was retuned under (D55). Refuses only for a collared
+   * pal, the same signal that already stops a Tether pal fleeing on its own
+   * (this file's own comment above `shouldFlee`'s call site): a scripted
+   * duel is not something the player walks away from either.
+   */
+  leave(): boolean {
+    if (this.phase !== 'fighting' || !this.enemy) return false;
+    if (this.enemy.state.collared) return false;
+    this.exit('left');
+    return true;
+  }
+
+  /** Player attacks, committed the instant the button is pressed. */
   attack(kind: 'quick' | 'power', day: number, rand: () => number = Math.random): void {
     if (this.phase !== 'fighting' || !this.enemy) return;
     const active = this.party.active;
     if (!active || active.fainted) return;
-    if (kind === 'power' && this.charge < TIMING.powerChargeCost) return;
+    if (kind === 'power' && this.charge < TIMING.powerChargeCost) {
+      // The button has to say SOMETHING happened. Silently doing nothing is
+      // indistinguishable from a broken input, which is exactly the bug this
+      // event exists to close.
+      bus.emit('attackDenied', { kind: 'power', reason: 'not-charged' });
+      return;
+    }
 
     const result = resolveAttack(active, this.enemy.state, {
       kind,

@@ -1,8 +1,8 @@
 {
   "$comment": "Move powers, GAME_DESIGN.md section 5. Quick attacks sit in the 8-14 band, power attacks in 40-70. MoveResolver.ts and Damage.ts contain no literals.",
 
-  "$comment_charge": "A quick attack builds charge; a power attack spends all of it. The numbers here are the contract between the two, so a species whose quick builds more charge reaches its power attack sooner.",
-  "quickChargeGain": 12,
+  "$comment_charge": "A quick attack builds charge; a power attack spends all of it. Raised from 12 to 25 at the owner's direction (ROG Ally playtest): at 12, a power attack needed 9 landed quick hits while a Meadows-tier enemy dies in about 5, so the bar was mathematically unreachable in a first fight. At 25 it fills on the 4th hit, leaving the 5th as a realistic power finish. tests/powerAttack.test.ts asserts this against the real formulas for a level 5 starter versus a level 4 tuftmoth rather than pinning these numbers.",
+  "quickChargeGain": 25,
   "powerChargeCost": 100,
 
   "$comment_collar": "GAME_DESIGN.md section 10: Bracken's pals 'hit at 1.15x but their affinity penalty means they never dodge'. Only the multiplier needs a number. Enemy pals do not dodge in this implementation at all, so the second half of that trade already holds, and a collared pal never hesitates because hesitation is the low-affinity behaviour of a pal that chose to be here.",
@@ -22,6 +22,13 @@
 
   "$comment_cadence": "Floor on how often any enemy may attack. A species may be slower via its own attackCadenceMs in species.json, never faster.",
   "minAttackIntervalMs": 4000,
+
+  "$comment_range": "Encounter.ts's own numbers: how close starts a fight, and how far ends one. approachMeters matches GAME_DESIGN.md section 7. leashMeters is new: nothing used to check distance once a fight was running, so walking away left the combat HUD up forever. Set well past the staged ally-enemy gap in combatStage.json (allyForward + gap, about 9.7m) so ordinary repositioning during a fight (backing up to aim a throw) cannot trip it, but genuinely leaving cannot avoid it either.",
+  "approachMeters": 4,
+  "leashMeters": 16,
+
+  "$comment_suggest": "The button-glow read (src/combat/Suggestion.ts). Power and orb have their own signals (the charge bar, catch realism); this is the ally HP fraction at or below which retreating is the suggested read. A hit is roughly 15-20% of a Meadows pal's max HP, so under 30% is one bad exchange from a faint.",
+  "suggestRunHpFraction": 0.3,
 
   "moves": {
     "vine_lash": { "name": "Vine Lash", "type": "verdant", "kind": "quick", "power": 11 },

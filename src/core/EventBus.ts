@@ -70,11 +70,22 @@ export interface GameEvents {
   palFainted: { uid: string };
   /** A neglected pal refused to commit to a power attack. */
   palHesitated: { uid: string };
+  /**
+   * A power attack was pressed but the charge bar does not cover it yet.
+   * The button still has to say SOMETHING happened, or an unready power
+   * attack is indistinguishable from a broken one (the exact defect this
+   * event exists to close).
+   */
+  attackDenied: { kind: 'quick' | 'power'; reason: 'not-charged' };
   /** The fight was won. */
   combatWon: { xp: number; day: number };
   /** An orb bounced off a collared pal. Not a failed roll, a refusal. */
-  /** An orb was spent. Presentation flies the arc, then shows the outcome. */
-  orbThrown: { outcome: 'bounced' | 'missed' | 'caught'; shakes: number };
+  /**
+   * An orb was spent. Presentation flies the arc, then shows the outcome.
+   * `no-orbs` never flies anything: it is the honest answer to pressing the
+   * throw button with none held, rather than the press doing nothing.
+   */
+  orbThrown: { outcome: 'bounced' | 'missed' | 'caught' | 'no-orbs'; shakes: number };
   /** A wild pal was successfully caught. Carries the species so Story can
    *  route dialogue on it without reaching back into the party or the throw. */
   palCaught: { species: string };

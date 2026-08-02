@@ -55,16 +55,21 @@ export function moveDef(id: string): MoveDef | undefined {
   return MOVES[id];
 }
 
-/** The two moves a species knows. Power unlocks at level 8 (section 5). */
-export const POWER_UNLOCK_LEVEL = 8;
-
+/**
+ * The two moves a species knows, both available from level 1.
+ *
+ * GAME_DESIGN.md section 5 gated the power move behind level 8. That made the
+ * power button a dead press for most of a first fight: `MoveResolver` saw no
+ * move and returned zero damage with no number, no FX and no log line,
+ * indistinguishable from broken input. The charge bar is the gate now
+ * (`TIMING.powerChargeCost` in MoveResolver.ts): a species always KNOWS its
+ * power move, whether the player has earned the charge to use it is a
+ * separate, honest question CombatMode answers on every press.
+ */
 export function movesFor(pal: PalState): { quick: MoveDef | undefined; power: MoveDef | undefined } {
   const def = speciesDef(pal.species);
   if (!def) return { quick: undefined, power: undefined };
-  return {
-    quick: moveDef(def.moves[0]),
-    power: pal.level >= POWER_UNLOCK_LEVEL ? moveDef(def.moves[1]) : undefined
-  };
+  return { quick: moveDef(def.moves[0]), power: moveDef(def.moves[1]) };
 }
 
 export interface DerivedStats {
