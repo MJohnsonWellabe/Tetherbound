@@ -29,3 +29,8 @@ tests/smoke/.output/
 # before/after pairs a visual comparison needs.
 shots/
 shots-*/
+
+# Scratch checkouts the agent harness creates so parallel work does not collide.
+# Transient by definition: the work lands on a branch, and the directory is
+# removed once it is merged.
+.claude/worktrees/
