@@ -19,6 +19,7 @@ interface RawNode {
   next?: string;
   choices?: { label: string; goto: string; effect?: string }[];
   effect?: string;
+  effects?: string[];
   end?: boolean;
 }
 
@@ -57,11 +58,17 @@ describe('the dialogue data', () => {
   });
 
   it('uses only effect kinds the game knows how to apply', () => {
-    const KNOWN = new Set(['flag', 'starter', 'fight', 'victory', 'recruit']);
+    // `give` was missing here while Story has always applied it, so the one
+    // test guarding this could not have caught a typo in a give: effect.
+    const KNOWN = new Set(['flag', 'starter', 'give', 'fight', 'victory', 'recruit']);
     for (const id of IDS) {
       const convo = (dialogue as unknown as Record<string, { nodes: Record<string, RawNode> }>)[id];
       for (const node of Object.values(convo?.nodes ?? {})) {
-        for (const effect of [node.effect, ...(node.choices ?? []).map((c) => c.effect)]) {
+        for (const effect of [
+          node.effect,
+          ...(node.effects ?? []),
+          ...(node.choices ?? []).map((c) => c.effect)
+        ]) {
           if (!effect) continue;
           expect(KNOWN.has(parseEffect(effect).kind), `unknown effect "${effect}"`).toBe(true);
         }

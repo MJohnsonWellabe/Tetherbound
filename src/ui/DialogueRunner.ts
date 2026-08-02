@@ -24,6 +24,8 @@ export interface DialogueNode {
   next?: string;
   choices?: DialogueChoice[];
   effect?: string;
+  /** Several effects on one line, for beats that hand over a whole satchel. */
+  effects?: string[];
   end?: boolean;
 }
 
@@ -138,6 +140,7 @@ export class DialogueRunner {
   private collectEffect(): void {
     const effect = this.node?.effect;
     if (effect) this.pending.push(effect);
+    for (const extra of this.node?.effects ?? []) this.pending.push(extra);
   }
 }
 
