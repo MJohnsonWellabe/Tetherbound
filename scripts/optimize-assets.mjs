@@ -53,7 +53,7 @@ const only = args.find((a) => !a.startsWith('--')) ?? null;
 /** A composite positions several sources before the merge. */
 async function readComposite(io, sources) {
   const { Document } = await import('@gltf-transform/core');
-  const { mergeDocuments } = await import('@gltf-transform/functions');
+  const { mergeDocuments, unpartition } = await import('@gltf-transform/functions');
   const { fromRotationTranslationScale } = await import('gl-matrix/esm/mat4.js');
   const { fromEuler } = await import('gl-matrix/esm/quat.js');
 
@@ -78,6 +78,8 @@ async function readComposite(io, sources) {
       merged.dispose();
     }
   }
+  // mergeDocuments imports one buffer per source document; GLB allows one.
+  await target.transform(unpartition());
   return target;
 }
 
@@ -108,7 +110,11 @@ async function runJob(io, job) {
   // wasm would cost more than these files weigh. Props are a few KB plain.
   if (job.transform === 'prop' || job.transform === 'composite') {
     await bakeToVertexColors(doc);
-    await mergeSeated(doc, { scale: job.scale ?? 1, simplifyRatio: job.simplify ?? null });
+    await mergeSeated(doc, {
+      scale: job.scale ?? 1,
+      simplifyRatio: job.simplify ?? null,
+      quantizeOut: job.quantize ?? false
+    });
   } else if (job.transform === 'rigged') {
     await slim(doc, {
       textureSize: job.textureSize ?? 512,

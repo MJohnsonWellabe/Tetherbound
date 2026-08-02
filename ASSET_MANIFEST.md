@@ -29,6 +29,21 @@ licenses are recorded as found at the source so attribution stays a lookup, not 
 | public/models/props/stump.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (5 KB) |
 | public/textures/detail_grass.webp | https://ambientcg.com/view?id=Grass004 | ambientCG | CC0 | 2026-08-02 | texture (86 KB) |
 | public/textures/detail_rock.webp | https://ambientcg.com/view?id=Rock030 | ambientCG | CC0 | 2026-08-02 | texture (69 KB) |
+| public/models/buildings/house_a.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (38 KB) |
+| public/models/buildings/house_b.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (67 KB) |
+| public/models/buildings/house_c.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (116 KB) |
+| public/models/buildings/hall.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (330 KB) |
+| public/models/buildings/banner.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (11 KB) |
+| public/models/buildings/well.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (138 KB) |
+| public/models/buildings/stall.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (25 KB) |
+| public/models/buildings/cart.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (51 KB) |
+| public/models/buildings/fence.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (8 KB) |
+| public/models/buildings/lantern.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (15 KB) |
+| public/models/stations/campfire.glb | https://kenney.nl/assets/survival-kit | Kenney | CC0 | 2026-08-02 | prop (28 KB) |
+| public/models/stations/workbench.glb | https://kenney.nl/assets/survival-kit | Kenney | CC0 | 2026-08-02 | prop (22 KB) |
+| public/models/stations/bed.glb | https://kenney.nl/assets/furniture-kit | Kenney | CC0 | 2026-08-02 | prop (16 KB) |
+| public/models/stations/tanning_rack.glb | https://kenney.nl/assets/survival-kit | Kenney | CC0 | 2026-08-02 | prop (15 KB) |
+| public/models/stations/orb_bench.glb | https://kenney.nl/assets/survival-kit | Kenney | CC0 | 2026-08-02 | prop (29 KB) |
 | public/models/creatures/bramblit.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (323 KB) |
 | public/models/creatures/cindercub.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (685 KB) |
 | public/models/creatures/dewdrake.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (145 KB) |

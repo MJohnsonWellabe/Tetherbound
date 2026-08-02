@@ -122,17 +122,52 @@ export async function bakeToVertexColors(document) {
  * height alone, and matches the `seat()` semantics of the primitive
  * prototypes. Scale is baked so the runtime never compensates.
  */
-export async function mergeSeated(document, { scale = 1, simplifyRatio = null } = {}) {
-  await document.transform(flatten(), dedup());
+export async function mergeSeated(
+  document,
+  { scale = 1, simplifyRatio = null, quantizeOut = false } = {}
+) {
+  await document.transform(flatten());
+
+  const root = document.getRoot();
+  const scene = root.getDefaultScene() ?? root.listScenes()[0];
+
+  // Bake node transforms into the vertex data before dedup or join can see
+  // them. joinPrimitives reads raw primitives and silently drops node TRS,
+  // which is exactly where a composite keeps its piece placement (and where
+  // some kits keep their up-axis conversion). flatten() left the full world
+  // transform on each scene-root node, so one transformMesh per node makes
+  // the join safe. Identity transforms (every prop shipped before this
+  // existed) are a no-op. This runs BEFORE dedup so no two nodes share a
+  // mesh yet; the unshare pass covers sources that instanced their own.
+  const identity = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  const seen = new Set();
+  for (const node of scene.listChildren()) {
+    const mesh = node.getMesh();
+    if (!mesh) continue;
+    if (seen.has(mesh)) {
+      const copy = document.createMesh(mesh.getName());
+      for (const p of mesh.listPrimitives()) copy.addPrimitive(p.clone());
+      node.setMesh(copy);
+    } else {
+      seen.add(mesh);
+    }
+  }
+  for (const node of scene.listChildren()) {
+    const mesh = node.getMesh();
+    if (!mesh) continue;
+    const matrix = node.getMatrix();
+    if (matrix.every((v, i) => Math.abs(v - identity[i]) < 1e-9)) continue;
+    transformMesh(mesh, matrix);
+    node.setMatrix([...identity]);
+  }
+
+  await document.transform(dedup());
   // Ground cover renders by the thousand through thin instances, so a 200-tri
   // grass tuft is a triangle budget problem, not a detail win. Simplify BEFORE
   // the merge so the weld cannot fuse what the simplifier needs separate.
   if (simplifyRatio) {
     await document.transform(weld(), simplify({ simplifier: MeshoptSimplifier, ratio: simplifyRatio, error: 0.01 }));
   }
-
-  const root = document.getRoot();
-  const scene = root.getDefaultScene() ?? root.listScenes()[0];
 
   // Join every primitive into one. joinPrimitives needs compatible vertex
   // layouts, which bakeToVertexColors guarantees (POSITION/NORMAL/COLOR_0).
@@ -177,6 +212,11 @@ export async function mergeSeated(document, { scale = 1, simplifyRatio = null } 
   transformMesh(mesh, matrix);
 
   await document.transform(weld(), prune());
+  // Large composites (the Hall is ~14k vertices) blow the byte budget on
+  // float32 attributes alone. 16-bit positions and 8-bit colours are exact
+  // at kit precision, 8-bit normals are plenty for flat-shaded facets, and
+  // the runtime facade registers KHR_mesh_quantization.
+  if (quantizeOut) await document.transform(quantize({ quantizeNormal: 8 }));
   return document;
 }
 

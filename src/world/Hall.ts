@@ -10,8 +10,11 @@ import {
   Vector3
 } from '../core/babylon';
 import landmarks from '../data/landmarks.json';
+import models from '../data/models.json';
 import type { Terrain } from './gen/Terrain';
 import type { Placement } from './Landmarks';
+import { buildPrimitiveHallBanner, buildPrimitiveHallShell } from './HallShell';
+import { loadStructureSources, placeStructure } from './StructureModels';
 import { structurePalette } from './Structures';
 
 /**
@@ -35,6 +38,7 @@ import { structurePalette } from './Structures';
  */
 
 const HALL = landmarks.hall;
+const HALL_MODELS = models.buildings.hall;
 const { width: WIDTH, depth: DEPTH, wallHeight: WALL_HEIGHT } = HALL.footprint;
 /** How far the plinth hangs below the floor. Deep enough to bridge a dip. */
 const PLATFORM_DEPTH = 8;
@@ -118,60 +122,57 @@ export function buildHall(
   floor.material = p.road;
   add(floor, false);
 
-  const wallY = WALL_HEIGHT / 2;
+  // The shell: walls, roof and banner from the Fantasy Town Kit composite,
+  // arriving async so the boot never waits on it. Its 28m width overhangs the
+  // 26m collider footprint by a metre a side, which reads as wall thickness
+  // from inside; the door gap in the composite sits exactly where the collider
+  // gap and door anchor already are. On any load failure the old primitive
+  // shell goes up instead, so the smoke spec has a building either way.
+  let shellDisposed = false;
+  const shellDims = {
+    width: WIDTH,
+    depth: DEPTH,
+    wallHeight: WALL_HEIGHT,
+    wallThickness: WALL_THICKNESS,
+    doorWidth: DOOR_WIDTH
+  };
+  void (async () => {
+    const sources = await loadStructureSources(scene, [
+      HALL_MODELS.shell.url,
+      HALL_MODELS.banner.url
+    ]);
+    if (shellDisposed || scene.isDisposed) return;
 
-  // Long walls.
-  for (const side of [-1, 1]) {
-    const wall = CreateBox(
-      'hall_wall_long',
-      { width: WALL_THICKNESS, depth: DEPTH, height: WALL_HEIGHT },
-      scene
-    );
-    wall.position.set((side * (WIDTH - WALL_THICKNESS)) / 2, wallY, 0);
-    add(wall);
-  }
+    const shell = sources.get(HALL_MODELS.shell.url) ?? null;
+    if (shell) {
+      const mesh = placeStructure(scene, shell, 'hall_shell', root);
+      mesh.scaling.scaleInPlace(HALL_MODELS.shell.scale);
+      shadows?.addShadowCaster(mesh, false);
+      mesh.freezeWorldMatrix();
+    } else {
+      buildPrimitiveHallShell(scene, root, shellDims);
+    }
 
-  // Back wall, behind the Warden.
-  const back = CreateBox(
-    'hall_wall_back',
-    { width: WIDTH, depth: WALL_THICKNESS, height: WALL_HEIGHT },
-    scene
-  );
-  back.position.set(0, wallY, (DEPTH - WALL_THICKNESS) / 2);
-  add(back);
-
-  // Front wall, split around the doorway.
-  const frontSegment = (WIDTH - DOOR_WIDTH) / 2;
-  for (const side of [-1, 1]) {
-    const wall = CreateBox(
-      'hall_wall_front',
-      { width: frontSegment, depth: WALL_THICKNESS, height: WALL_HEIGHT },
-      scene
-    );
-    wall.position.set(side * (DOOR_WIDTH + frontSegment) * 0.5, wallY, -(DEPTH - WALL_THICKNESS) / 2);
-    add(wall);
-  }
-
-  // Lintel over the door, so the opening reads as a doorway and not a gap.
-  const lintel = CreateBox(
-    'hall_lintel',
-    { width: DOOR_WIDTH, depth: WALL_THICKNESS, height: 1.4 },
-    scene
-  );
-  lintel.position.set(0, WALL_HEIGHT - 0.7, -(DEPTH - WALL_THICKNESS) / 2);
-  add(lintel);
-
-  // Roof: a shallow ridge. Left open at the door end so the interior is lit and
-  // the player can actually see the fight they walked into.
-  const roof = CreateCylinder(
-    'hall_roof',
-    { height: DEPTH * 0.82, diameterTop: 0, diameterBottom: WIDTH * 1.14, tessellation: 4 },
-    scene
-  );
-  roof.rotation.set(Math.PI / 2, Math.PI / 4, 0);
-  roof.position.set(0, WALL_HEIGHT + 0.6, DEPTH * 0.09);
-  roof.material = p.timber;
-  add(roof);
+    // Tether's banner behind the Warden: the red kit banner when it loaded,
+    // the old iron-orange slab when it did not. Either way the far end of the
+    // room reads as theirs.
+    const banner = sources.get(HALL_MODELS.banner.url) ?? null;
+    if (banner) {
+      const slot = new TransformNode('hall_banner_slot', scene);
+      slot.parent = root;
+      slot.position.set(
+        0,
+        HALL_MODELS.banner.baseY,
+        (DEPTH - WALL_THICKNESS) / 2 - HALL_MODELS.banner.inset
+      );
+      slot.rotation.y = Math.PI / 2;
+      const mesh = placeStructure(scene, banner, 'hall_banner', slot);
+      mesh.scaling.scaleInPlace(HALL_MODELS.banner.scale);
+      mesh.freezeWorldMatrix();
+    } else {
+      buildPrimitiveHallBanner(scene, root, shellDims);
+    }
+  })();
 
   // Four alcoves down the long walls, each with a tether post. These are the
   // chained pals the whole milestone is about cutting loose.
@@ -194,13 +195,6 @@ export function buildHall(
 
     alcoves.push(toWorld(placement, floorY, localX, localZ));
   }
-
-  // Tether's banner behind the Warden. The only large flat iron-orange in the
-  // world, which is what makes the far end of the room read as theirs.
-  const banner = CreateBox('hall_banner', { width: 5.5, depth: 0.2, height: 5 }, scene);
-  banner.position.set(0, WALL_HEIGHT * 0.6, (DEPTH - WALL_THICKNESS) / 2 - 0.8);
-  banner.material = p.iron;
-  add(banner);
 
   // The road stub, pointing back at Hollowbrook. Laid in segments that follow
   // the ground rather than one long box, or it floats over every dip.
@@ -268,6 +262,7 @@ export function buildHall(
     },
     colliders,
     dispose: (): void => {
+      shellDisposed = true;
       for (const m of meshes) m.dispose();
       roadRoot.dispose(false, false);
       root.dispose(false, false);

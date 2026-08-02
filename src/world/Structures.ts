@@ -2,7 +2,6 @@ import {
   Color3,
   CreateBox,
   CreateCylinder,
-  Mesh,
   Scene,
   ShadowGenerator,
   StandardMaterial,
@@ -10,20 +9,25 @@ import {
   Vector3
 } from '../core/babylon';
 import landmarks from '../data/landmarks.json';
+import models from '../data/models.json';
 import { subRng } from './gen/Rng';
 import type { Terrain } from './gen/Terrain';
 import type { Placement } from './Landmarks';
+import {
+  disposeStructureModelMaterial,
+  loadStructureSources,
+  placeStructure
+} from './StructureModels';
 
 /**
- * Hollowbrook and the standing stones, built from primitives.
+ * Hollowbrook, built from Fantasy Town Kit composites with the original
+ * primitive builders kept as the per-slot fallback (same shape as
+ * PropModels.ts / Prototypes.ts): placements and colliders are computed
+ * synchronously from the same layout numbers as ever, the models arrive
+ * async, and a failed download costs one building its silhouette rather than
+ * the boot or a collider.
  *
- * ASSETS.md places real CC0 models at M5 and is explicit that anything missing
- * from a kit "gets built from primitives in code, which is acceptable and
- * fast". Silhouette is what has to be right at phone size, so these are shaped
- * for readability at distance rather than detail up close.
- *
- * Materials are shared module-wide, per the draw-call budget. One stone
- * material serves every stone in the world.
+ * Materials are shared module-wide, per the draw-call budget.
  */
 
 interface Palette {
@@ -59,21 +63,22 @@ export function structurePalette(scene: Scene): Palette {
 }
 
 export function disposeStructurePalette(): void {
+  disposeStructureModelMaterial();
   if (!palette) return;
   for (const mat of Object.values(palette)) mat.dispose();
   palette = null;
 }
 
-/** A box with a pyramid roof. The whole village vocabulary. */
-function house(
+/** A box with a pyramid roof. The fallback village vocabulary. */
+export function primitiveHouse(
   scene: Scene,
   parent: TransformNode,
-  p: Palette,
   width: number,
   depth: number,
   height: number,
   shadows: ShadowGenerator | null
 ): TransformNode {
+  const p = structurePalette(scene);
   const node = new TransformNode('house', scene);
   node.parent = parent;
 
@@ -111,9 +116,24 @@ export interface BuiltStructure {
   dispose: () => void;
 }
 
+interface DressingEntry {
+  url: string;
+  x: number;
+  z: number;
+  rotY: number;
+  collider: number;
+}
+
+const HOUSE_VARIANTS = models.buildings.houses.variants;
+const DRESSING = models.buildings.dressing as DressingEntry[];
+
 /**
  * Hollowbrook. Always at the origin, on the plateau Terrain already flattens,
  * so this needs no placement search of its own.
+ *
+ * The rng draws are byte-identical to the primitive-only version: every draw
+ * still happens, in the same order, so positions and colliders match what
+ * every earlier save and screenshot established.
  */
 export function buildVillage(
   scene: Scene,
@@ -121,14 +141,21 @@ export function buildVillage(
   seed: string,
   shadows: ShadowGenerator | null
 ): BuiltStructure {
-  const p = structurePalette(scene);
   const root = new TransformNode('hollowbrook', scene);
   const rng = subRng(seed, 'village');
   const colliders: { x: number; z: number; radius: number }[] = [];
-  const meshes: Mesh[] = [];
 
   const count = landmarks.village.houses;
   const ring = landmarks.village.radius * 0.55;
+
+  interface Slot {
+    node: TransformNode;
+    width: number;
+    depth: number;
+    height: number;
+    variant: (typeof HOUSE_VARIANTS)[number];
+  }
+  const slots: Slot[] = [];
 
   for (let i = 0; i < count; i++) {
     // Spread around a ring with jitter, leaving the middle clear so the village
@@ -142,81 +169,60 @@ export function buildVillage(
     const depth = 7 + rng() * 3;
     const height = 3.4 + rng() * 0.8;
 
-    const node = house(scene, root, p, width, depth, height, shadows);
+    const node = new TransformNode(`house_slot_${i}`, scene);
+    node.parent = root;
     node.position.set(x, terrain.heightAt(x, z), z);
     node.rotation.y = angle + Math.PI / 2 + (rng() - 0.5) * 0.4;
 
+    slots.push({ node, width, depth, height, variant: HOUSE_VARIANTS[i % HOUSE_VARIANTS.length]! });
     colliders.push({ x, z, radius: Math.max(width, depth) * 0.5 });
   }
+
+  for (const d of DRESSING) {
+    if (d.collider > 0) colliders.push({ x: d.x, z: d.z, radius: d.collider });
+  }
+
+  let disposed = false;
+
+  void (async () => {
+    const urls = [...slots.map((s) => s.variant.url), ...DRESSING.map((d) => d.url)];
+    const sources = await loadStructureSources(scene, urls);
+    if (disposed || scene.isDisposed) return;
+
+    for (const slot of slots) {
+      const source = sources.get(slot.variant.url) ?? null;
+      if (source) {
+        const mesh = placeStructure(scene, source, 'house_model', slot.node);
+        mesh.scaling.scaleInPlace(slot.variant.scale);
+        shadows?.addShadowCaster(mesh, false);
+        mesh.freezeWorldMatrix();
+      } else {
+        primitiveHouse(scene, slot.node, slot.width, slot.depth, slot.height, shadows);
+      }
+    }
+
+    // Dressing is garnish: a piece that failed to load is simply absent. Its
+    // collider stands either way, which beats a walk-through stall.
+    for (const [i, d] of DRESSING.entries()) {
+      const source = sources.get(d.url) ?? null;
+      if (!source) continue;
+      const node = new TransformNode(`dressing_${i}`, scene);
+      node.parent = root;
+      node.position.set(d.x, terrain.heightAt(d.x, d.z), d.z);
+      node.rotation.y = d.rotY;
+      const mesh = placeStructure(scene, source, 'dressing_model', node);
+      shadows?.addShadowCaster(mesh, false);
+      mesh.freezeWorldMatrix();
+    }
+  })();
 
   return {
     root,
     colliders,
     dispose: () => {
-      for (const m of meshes) m.dispose();
+      disposed = true;
       root.dispose(false, false);
     }
-  };
-}
-
-/**
- * The standing stones, and the Loamking's ground.
- *
- * A ring of leaning monoliths. The lean is what stops seven identical boxes
- * from reading as a fence.
- */
-export function buildStandingStones(
-  scene: Scene,
-  placement: Placement,
-  terrain: Terrain,
-  seed: string,
-  shadows: ShadowGenerator | null
-): BuiltStructure {
-  const p = structurePalette(scene);
-  const root = new TransformNode('standing_stones', scene);
-  const rng = subRng(seed, 'stones');
-  const colliders: { x: number; z: number; radius: number }[] = [];
-
-  const count = landmarks.standingStones.stones;
-  const radius = landmarks.standingStones.ringRadius;
-
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2;
-    const x = placement.x + Math.cos(angle) * radius;
-    const z = placement.z + Math.sin(angle) * radius;
-    const height = 4.5 + rng() * 2.5;
-
-    const stone = CreateBox(
-      'standing_stone',
-      { width: 1.5 + rng() * 0.8, depth: 0.9 + rng() * 0.4, height },
-      scene
-    );
-    stone.material = p.stone;
-    stone.position.set(x, terrain.heightAt(x, z) + height / 2 - 0.4, z);
-    stone.rotation.set((rng() - 0.5) * 0.18, angle, (rng() - 0.5) * 0.18);
-    stone.isPickable = false;
-    stone.parent = root;
-    shadows?.addShadowCaster(stone, false);
-
-    colliders.push({ x, z, radius: 1.1 });
-  }
-
-  // A low altar in the middle, so the ring has a centre worth walking to.
-  const altar = CreateCylinder(
-    'stones_altar',
-    { height: 0.7, diameter: 4.4, tessellation: 7 },
-    scene
-  );
-  altar.material = p.stone;
-  altar.position.set(placement.x, terrain.heightAt(placement.x, placement.z) + 0.35, placement.z);
-  altar.isPickable = false;
-  altar.parent = root;
-  shadows?.addShadowCaster(altar, false);
-
-  return {
-    root,
-    colliders,
-    dispose: () => root.dispose(false, false)
   };
 }
 
@@ -230,3 +236,5 @@ export function pointNear(placement: Placement, forward: number, side = 0): Vect
     placement.z + cos * forward - sin * side
   );
 }
+
+export { buildStandingStones } from './StandingStones';

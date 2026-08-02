@@ -96,8 +96,55 @@
     }
   },
   "$comment_later": "buildings, stations, characters and pals are appended by their phases; the schema test only validates sections that exist and are non-empty.",
-  "buildings": {},
-  "stations": {},
+  "$comment_buildings": "Composites are baked to world size in the pipeline, so scale here is a retune knob that defaults to 1. Village houses cycle through the variants around the ring. Dressing is placed verbatim in village-local metres; collider 0 means walk-through. Stones stretch the shipped menhir props: scaleXZ/scaleY are [min,max] ranges the seeded rng picks inside, so girth stays near the primitive silhouette the 1.1 collider was tuned for.",
+  "buildings": {
+    "houses": {
+      "variants": [
+        { "url": "models/buildings/house_a.glb", "scale": 1.0 },
+        { "url": "models/buildings/house_b.glb", "scale": 1.0 },
+        { "url": "models/buildings/house_c.glb", "scale": 1.0 }
+      ]
+    },
+    "hall": {
+      "shell": { "url": "models/buildings/hall.glb", "scale": 1.0 },
+      "banner": { "url": "models/buildings/banner.glb", "scale": 1.0, "baseY": 3.4, "inset": 1.0 }
+    },
+    "stones": {
+      "variants": [
+        "models/props/stone_tall_a.glb",
+        "models/props/stone_tall_b.glb",
+        "models/props/stone_tall_c.glb"
+      ],
+      "scaleXZ": [2.2, 3.0],
+      "scaleY": [5.0, 7.0]
+    },
+    "dressing": [
+      { "url": "models/buildings/well.glb", "x": -7, "z": 2, "rotY": 0, "collider": 2.3 },
+      { "url": "models/buildings/stall.glb", "x": 10, "z": -6, "rotY": 2.5, "collider": 1.5 },
+      { "url": "models/buildings/cart.glb", "x": -6, "z": -12, "rotY": 0.9, "collider": 1.2 },
+      { "url": "models/buildings/lantern.glb", "x": 5, "z": 9, "rotY": 0, "collider": 0.4 },
+      { "url": "models/buildings/lantern.glb", "x": -10, "z": -5, "rotY": 0, "collider": 0.4 },
+      { "url": "models/buildings/fence.glb", "x": 14, "z": 7, "rotY": 0, "collider": 1.0 },
+      { "url": "models/buildings/fence.glb", "x": 14, "z": 9.5, "rotY": 0, "collider": 1.0 },
+      { "url": "models/buildings/fence.glb", "x": 14, "z": 12, "rotY": 0, "collider": 1.0 }
+    ]
+  },
+  "$comment_stations": "One GLB per station type, baked to world size; StationViews clones per placement and falls back to the old primitive box per type. ember/orb are the code-built glow accents that survive the model swap.",
+  "stations": {
+    "campfire": {
+      "url": "models/stations/campfire.glb",
+      "scale": 1.0,
+      "ember": { "diameter": 0.55, "y": 0.16 }
+    },
+    "workbench": { "url": "models/stations/workbench.glb", "scale": 1.0 },
+    "bed": { "url": "models/stations/bed.glb", "scale": 1.0 },
+    "tanning_rack": { "url": "models/stations/tanning_rack.glb", "scale": 1.0 },
+    "orb_bench": {
+      "url": "models/stations/orb_bench.glb",
+      "scale": 1.0,
+      "orb": { "diameter": 0.32, "y": 1.5 }
+    }
+  },
   "characters": {
     "player": {
       "url": "models/characters/player.glb",
