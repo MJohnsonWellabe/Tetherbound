@@ -44,8 +44,17 @@ import { bakeToVertexColors, getIO, mergeSeated, slim, stats } from './lib/glbto
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const RAW = join(ROOT, 'assets_raw');
 const PUB = join(ROOT, 'public');
-/** Editing a job must invalidate what that job produced. */
-const JOBS_PATH = join(ROOT, 'scripts', 'asset-jobs.mjs');
+/**
+ * Editing a job, or the code that executes a job, must invalidate what that
+ * job produced. Watching only the job list was the same mistake one level up:
+ * a change to the transform library reported every asset `fresh`.
+ */
+const RECIPE_PATHS = [
+  join(ROOT, 'scripts', 'asset-jobs.mjs'),
+  join(ROOT, 'scripts', 'lib', 'glbtool.mjs'),
+  join(ROOT, 'scripts', 'optimize-assets.mjs')
+];
+const RECIPE_MTIME = Math.max(...RECIPE_PATHS.map((p) => statSync(p).mtimeMs));
 const BUDGET_KB = 420;
 
 const args = process.argv.slice(2);
@@ -154,7 +163,7 @@ for (const job of JOBS) {
   const fresh =
     existsSync(out) &&
     !force &&
-    statSync(out).mtimeMs >= statSync(JOBS_PATH).mtimeMs &&
+    statSync(out).mtimeMs >= RECIPE_MTIME &&
     (job.sources ?? []).every((s) => {
       const src = join(RAW, s.file);
       return !existsSync(src) || statSync(out).mtimeMs >= statSync(src).mtimeMs;
