@@ -469,6 +469,11 @@ async function boot(): Promise<void> {
     homestead,
     vitals,
     saves,
+    // The story and the built world, so the smoke tools can drive the Hall
+    // spine without walking 1100m and winning three fights by hand.
+    story,
+    built,
+    hud,
     snapshotSave,
     chunks,
     props,
