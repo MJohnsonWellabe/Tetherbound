@@ -1,6 +1,7 @@
 import {
   AssetContainer,
   Color3,
+  Material,
   Mesh,
   Scene,
   StandardMaterial,
@@ -68,6 +69,13 @@ function bakedPrototype(url: string, source: Mesh): Mesh {
   const proto = source.clone(`structure_proto_${prototypes.size}`, null);
   proto.makeGeometryUnique();
   proto.bakeTransformIntoVertices(source.computeWorldMatrix(true));
+  // The bake flips the indices back to counter-clockwise fronts (negative
+  // determinant triggers flipFaces), but the loader stamped the mesh with
+  // clockwise-front for the mirrored transform it was born under, and clone()
+  // copies that stamp. Left standing, every placed structure renders inside
+  // out: the walls you see are the unlit interior faces, and from some angles
+  // whole panels vanish. Verified by flipping this live in a browser.
+  proto.overrideMaterialSideOrientation = Material.CounterClockWiseSideOrientation;
   // bakeTransformIntoVertices bakes the given matrix but leaves the node's
   // own local transform standing; without this reset it applies twice.
   proto.position.setAll(0);
