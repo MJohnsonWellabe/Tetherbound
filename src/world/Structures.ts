@@ -15,7 +15,7 @@ import { hingeSettled, stepHinge } from '../building/Door';
 import { DoorRegistry, type DoorHandle } from '../building/DoorRegistry';
 import landmarks from '../data/landmarks.json';
 import models from '../data/models.json';
-import { subRng } from './gen/Rng';
+import { villageHousePlacements } from './Landmarks';
 import type { Terrain } from './gen/Terrain';
 import {
   disposeStructureModelMaterial,
@@ -181,7 +181,6 @@ export function buildVillage(
   doorRegistry: DoorRegistry
 ): BuiltStructure {
   const root = new TransformNode('hollowbrook', scene);
-  const rng = subRng(seed, 'village');
   const p = structurePalette(scene);
   // A house's OWN circular collider used to be `Math.max(width, depth) * 0.5`
   // of the primitive fallback's dimensions, sized well under the real
@@ -192,8 +191,8 @@ export function buildVillage(
   // a gap at the doorway.
   const colliders: WallCollider[] = [];
 
-  const count = landmarks.village.houses;
-  const ring = landmarks.village.radius * 0.55;
+  const houses = villageHousePlacements(terrain, seed);
+  const count = houses.length;
   const homeIndex = Math.min(HOME.houseIndex, count - 1);
 
   interface Slot {
@@ -205,24 +204,19 @@ export function buildVillage(
   }
   const slots: Slot[] = [];
 
-  for (let i = 0; i < count; i++) {
-    // Spread around a ring with jitter, leaving the middle clear so the village
-    // reads as a place with a square rather than a pile of buildings.
-    const angle = (i / count) * Math.PI * 2 + (rng() - 0.5) * 0.5;
-    const distance = ring * (0.75 + rng() * 0.4);
-    const x = Math.cos(angle) * distance;
-    const z = Math.sin(angle) * distance;
-
-    const width = 6 + rng() * 3;
-    const depth = 7 + rng() * 3;
-    const height = 3.4 + rng() * 0.8;
-
+  for (const [i, h] of houses.entries()) {
     const node = new TransformNode(`house_slot_${i}`, scene);
     node.parent = root;
-    node.position.set(x, terrain.heightAt(x, z), z);
-    node.rotation.y = angle + Math.PI / 2 + (rng() - 0.5) * 0.4;
+    node.position.set(h.x, h.y, h.z);
+    node.rotation.y = h.yaw;
 
-    slots.push({ node, width, depth, height, variant: HOUSE_VARIANTS[i % HOUSE_VARIANTS.length]! });
+    slots.push({
+      node,
+      width: h.width,
+      depth: h.depth,
+      height: h.height,
+      variant: HOUSE_VARIANTS[i % HOUSE_VARIANTS.length]!
+    });
   }
 
   const dressingColliders: WallCollider[] = [];

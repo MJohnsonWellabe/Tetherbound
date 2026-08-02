@@ -133,4 +133,56 @@ export function stonesPlacement(terrain: Terrain, seed: string): Placement {
   });
 }
 
+export interface VillageHousePlacement {
+  x: number;
+  z: number;
+  y: number;
+  /** Facing, radians, matching the house's own model/primitive yaw convention. */
+  yaw: number;
+  /** Placeholder box dimensions: what the wall collider uses before a real
+   *  model resolves, and what a per-house clearing sizes itself to. */
+  width: number;
+  depth: number;
+  height: number;
+}
+
+/**
+ * Seeded layout for every house on Hollowbrook's ring: position, jittered
+ * facing, and the placeholder box dimensions.
+ *
+ * Structures.ts (to place the buildings) and Clearings.ts (to keep scatter
+ * off their floors) both need exactly the same positions. Two copies of this
+ * maths is how the village clearing bug happened in the first place: the
+ * clearing used the village's own centre and radius instead of where the
+ * houses actually landed. One function, called from both places, makes that
+ * class of drift impossible.
+ *
+ * The rng draws are byte-identical to the pre-extraction version: same order,
+ * same count per house, so every existing seed's houses land exactly where
+ * they always have.
+ */
+export function villageHousePlacements(terrain: Terrain, seed: string): VillageHousePlacement[] {
+  const rng = subRng(seed, 'village');
+  const count = landmarks.village.houses;
+  const ring = landmarks.village.radius * 0.55;
+
+  const houses: VillageHousePlacement[] = [];
+  for (let i = 0; i < count; i++) {
+    // Spread around a ring with jitter, leaving the middle clear so the village
+    // reads as a place with a square rather than a pile of buildings.
+    const angle = (i / count) * Math.PI * 2 + (rng() - 0.5) * 0.5;
+    const distance = ring * (0.75 + rng() * 0.4);
+    const x = Math.cos(angle) * distance;
+    const z = Math.sin(angle) * distance;
+
+    const width = 6 + rng() * 3;
+    const depth = 7 + rng() * 3;
+    const height = 3.4 + rng() * 0.8;
+    const yaw = angle + Math.PI / 2 + (rng() - 0.5) * 0.4;
+
+    houses.push({ x, z, y: terrain.heightAt(x, z), yaw, width, depth, height });
+  }
+  return houses;
+}
+
 export const LANDMARK_CONFIG = landmarks;

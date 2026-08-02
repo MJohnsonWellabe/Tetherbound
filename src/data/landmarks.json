@@ -9,6 +9,8 @@
     "$comment": "Terrain.ts already flattens a plateau here, so no search is needed.",
     "$comment_walls": "Spacing between wall-ring collider spheres, Structures.ts. A house wall run is only 6-9m, so a coarse step (the old 1.4, radius 1.05) pulled the walkable interior in by more than a metre a side once the player's own capsule radius is added at test time. 0.5 (radius 0.375) still overlaps along a straight run with room to spare (WallRing.pushRun's 0.75x-of-step multiplier only needs step/2 of overlap), so the wall stays solid; it just costs more, cheap, colliders to trace the same footprint.",
     "wallColliderStep": 0.5,
+    "$comment_houseClearingMargin": "Clearings.ts: metres added past each house's own half-diagonal (from villageHousePlacements' placeholder width/depth) when it suppresses scatter around that one building. Covers the real loaded model, which can run a little larger than the placeholder box, and the doorway apron so nothing sprouts on the threshold.",
+    "houseClearingMargin": 1.5,
     "$comment_home": "House index 0's furniture, marking it as the player's home for the wake-up scene a later milestone spawns into. Offsets are local to that house's own frame (front at -z, same convention as the door anchors in models.json).",
     "home": {
       "houseIndex": 0,

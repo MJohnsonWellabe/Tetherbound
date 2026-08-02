@@ -1,4 +1,5 @@
 import { clear, el, setFill, show, tapButton } from './dom';
+import type { Input, InputSource } from '../core/input/Input';
 import type { PalState } from '../party/PalState';
 import { derive, speciesDef } from '../entities/Species';
 import type { Party } from '../party/Party';
@@ -33,6 +34,18 @@ export interface CompassMarker {
 /** Fallback strip width, used only before the first layout read. */
 const COMPASS_FALLBACK_PX = 460;
 
+/**
+ * The interact button's key/button hint, appended to the prompt text so a
+ * keyboard or pad player knows which control fires it without a second,
+ * separately-positioned label duplicating the same "talk to X" text. Touch
+ * needs no hint: the button itself is the affordance, tap it.
+ */
+const INTERACT_HINT: Record<InputSource, string | null> = {
+  gamepad: 'X',
+  keyboard: 'E',
+  touch: null
+};
+
 export class HUD {
   readonly root: HTMLElement;
 
@@ -45,7 +58,6 @@ export class HUD {
   private readonly buffRow: HTMLElement;
   private readonly pips: HTMLElement;
   private readonly compass: HTMLElement;
-  private readonly prompt: HTMLElement;
   private readonly toastRow: HTMLElement;
   private readonly dayLabel: HTMLElement;
 
@@ -59,7 +71,11 @@ export class HUD {
   onPartyTap: (() => void) | null = null;
   onInteract: (() => void) | null = null;
 
-  constructor(parent: HTMLElement = document.body) {
+  constructor(
+    parent: HTMLElement = document.body,
+    /** Read-only: only its `inputSource` decides the interact hint suffix. */
+    private readonly input: Input | null = null
+  ) {
     this.healthFill = el('i', 'meter__fill meter__fill--health');
     this.staminaFill = el('i', 'meter__fill meter__fill--stamina');
     this.hungerFill = el('i', 'meter__fill meter__fill--hunger');
@@ -85,14 +101,14 @@ export class HUD {
       this.onPartyTap?.();
     });
 
-    this.prompt = el('div', 'hud__prompt');
-    this.prompt.hidden = true;
-
     this.toastRow = el('div', 'hud__toasts');
 
-    const interact = tapButton('', 'hud__interact', () => this.onInteract?.());
-    interact.hidden = true;
-    this.interactButton = interact;
+    // The single "talk to X" / "harvest" affordance: readable prompt text for
+    // a keyboard or pad player, a tappable pill for a touch player. Used to be
+    // two separate elements (a centred label and a right-side button) printing
+    // the same text at once.
+    this.interactButton = tapButton('', 'hud__interact', () => this.onInteract?.());
+    this.interactButton.hidden = true;
 
     this.root = el(
       'div',
@@ -100,8 +116,7 @@ export class HUD {
       el('div', 'hud__top', this.compass, this.dayLabel),
       vitals,
       this.toastRow,
-      this.prompt,
-      interact,
+      this.interactButton,
       this.pips
     );
     parent.append(this.root);
@@ -197,16 +212,14 @@ export class HUD {
     return this.compassWidth || COMPASS_FALLBACK_PX;
   }
 
-  /** The "press to talk" affordance. Text null hides both prompt and button. */
+  /** The "press to talk" affordance. Text null hides it. */
   setPrompt(text: string | null): void {
     if (!text) {
-      this.prompt.hidden = true;
       this.interactButton.hidden = true;
       return;
     }
-    this.prompt.textContent = text;
-    this.prompt.hidden = false;
-    this.interactButton.textContent = text;
+    const hint = this.input ? INTERACT_HINT[this.input.inputSource] : null;
+    this.interactButton.textContent = hint ? `${text}  ·  ${hint}` : text;
     this.interactButton.hidden = false;
   }
 

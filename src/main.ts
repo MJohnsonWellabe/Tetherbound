@@ -153,12 +153,13 @@ async function boot(): Promise<void> {
   // matters for a fresh game.
   const wakePos = built.home?.position ?? { x: 0, y: terrain.heightAt(0, 0), z: 0 };
   const player = new Player(scene, camera, { x: wakePos.x, y: wakePos.y, z: wakePos.z }, shadows);
-  // built.home.yaw is the HOUSE's own facing, which points the player at the
-  // back wall (the front, and the door, is local -z); +PI turns them around
-  // to face the doorway instead. This also seeds the camera's own yaw
-  // (Player.setYaw), which used to be left at its constructor default of 0
-  // regardless of where the body faced.
-  if (built.home) player.setYaw(built.home.yaw + Math.PI);
+  // built.wakeYaw faces the player at Orin, who they are told to talk to on
+  // the very first frame (see WorldHandle.wakeYaw's own comment for why this
+  // beats facing the doorway). Falls back to the house's own facing turned
+  // around, only reachable if a home somehow built with no wake yaw. This
+  // also seeds the camera's own yaw (Player.setYaw), which used to be left at
+  // its constructor default of 0 regardless of where the body faced.
+  if (built.home) player.setYaw(built.wakeYaw ?? built.home.yaw + Math.PI);
 
   // Build the ground around the spawn before the first frame, so the player
   // never sees themselves standing on nothing. Props can arrive a frame or two
@@ -210,7 +211,7 @@ async function boot(): Promise<void> {
   // The HUD is built early, ahead of everything below that needs to toast or
   // prompt through it (Encounter's "talk to Orin first" hint among them),
   // rather than only once M3/M4's dialogue and compass work needed it.
-  const hud = new HUD();
+  const hud = new HUD(document.body, input);
   // Touch has no E key, so the on-screen prompt button (built but never
   // wired) is the only interact affordance a touch player has that does not
   // depend on the right-half-tap-to-interact gesture TouchLayer infers.

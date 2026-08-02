@@ -39,6 +39,18 @@ export interface WorldHandle {
   readonly colliders: { x: number; z: number; radius: number }[];
   /** Where the player's furnished house sits, for the wake-up spawn a later milestone adds. */
   home: HomeAnchor | undefined;
+  /**
+   * Facing for the player's first frame: from the spawn point (home.position)
+   * toward Orin, not the house's own back-wall-facing yaw turned around.
+   *
+   * Orin's offset (landmarks.json's orinOffset, forward toward the back of the
+   * room) and the house's own doorway (front, at -z) sit roughly 157 degrees
+   * apart as seen from spawn, which is wider than any reasonable camera FOV.
+   * A save titled "wake up, talk to Grandpa Orin" has to show Orin, so this
+   * wins over showing the doorway; the player finds the door by turning
+   * around once, the same as in any other room they have not looked at yet.
+   */
+  wakeYaw: number | undefined;
   markers: CompassMarker[];
   dispose: () => void;
 }
@@ -83,6 +95,9 @@ export function buildWorld(
   const orinYaw = home
     ? Math.atan2(home.position.x - orinPos.x, home.position.z - orinPos.z)
     : Math.PI;
+  // The mirror of orinYaw: from the spawn point toward Orin instead of Orin
+  // toward the spawn point.
+  const wakeYaw = home ? Math.atan2(orinPos.x - home.position.x, orinPos.z - home.position.z) : undefined;
   npcs.add(
     new Npc(
       scene,
@@ -187,6 +202,7 @@ export function buildWorld(
       return [...village.colliders, ...stones.colliders, ...hall.colliders];
     },
     home: village.home,
+    wakeYaw,
     markers,
     dispose: (): void => {
       npcs.dispose();

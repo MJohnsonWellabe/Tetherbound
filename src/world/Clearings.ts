@@ -1,5 +1,5 @@
 import landmarks from '../data/landmarks.json';
-import { hallPlacement, stonesPlacement } from './Landmarks';
+import { hallPlacement, stonesPlacement, villageHousePlacements } from './Landmarks';
 import type { Terrain } from './gen/Terrain';
 
 /**
@@ -19,6 +19,16 @@ import type { Terrain } from './gen/Terrain';
  *
  * Clearings are derived from the same seeded placements the buildings use, so
  * this needs no state of its own and cannot drift out of sync with them.
+ *
+ * The village clearing below is centred on the settlement as a whole, so it
+ * only reaches ground cover (grass, flowers, reeds) within a fraction of the
+ * village radius: a village-sized bald patch of dirt looks worse than a few
+ * blades of grass near a fence. But the houses themselves sit on a ring at
+ * `radius * 0.55`, outside that ground-cover reach, so that alone still let
+ * scatter plant grass and flowers straight through house floors. Each house
+ * gets its own tight clearing below, sized to its own footprint, which
+ * suppresses every family including ground cover: there is no version of a
+ * lawn growing up through the floorboards that reads as intentional.
  */
 
 interface Clearing {
@@ -40,6 +50,8 @@ export function clearingsFor(terrain: Terrain, seed: string): Clearing[] {
 
   const hall = hallPlacement(terrain, seed);
   const stones = stonesPlacement(terrain, seed);
+  const houses = villageHousePlacements(terrain, seed);
+  const margin = landmarks.village.houseClearingMargin as number;
 
   const clearings: Clearing[] = [
     {
@@ -63,7 +75,16 @@ export function clearingsFor(terrain: Terrain, seed: string): Clearing[] {
       // one landmark the player is told to walk to.
       radius: 30,
       groundRadius: 14
-    }
+    },
+    // One clearing per house, sized to that house's own footprint rather than
+    // the village as a whole. `radius === groundRadius`: unlike the wider
+    // clearings above, ground cover has to go too, or grass and flowers still
+    // plant themselves inside the walls this ring's own houses stand on.
+    ...houses.map((h): Clearing => {
+      const halfDiagonal = Math.hypot(h.width, h.depth) / 2;
+      const radius = halfDiagonal + margin;
+      return { x: h.x, z: h.z, radius, groundRadius: radius };
+    })
   ];
 
   cache = { seed, clearings };
