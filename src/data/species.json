@@ -1,0 +1,115 @@
+{
+  "$comment": "The Meadows roster, GAME_DESIGN.md section 6. Three starters plus twelve wild. Every stat, catch rate and spawn weight lives here; no system file contains any of it.",
+
+  "$comment_stats": "Base blocks are tuned to the role in the design doc, not to a flat total. Bramblit is tanky and slow, Cindercub is a glass cannon, Dewdrake is balanced and fast. stat = floor(base * (1 + level * 0.035) * variance).",
+
+  "$comment_model": "ASSETS.md section 'Pal model strategy': six base bodies varied by tint, scale and one accessory. Placeholder primitives render from these same fields until M5 swaps in CC0 models, so the swap is a data change and touches no gameplay code.",
+
+  "$comment_catchRate": "0.05 to 0.60. Tuftmoth is the tutorial catch and is deliberately near the ceiling; Voltvole and the Loamking are the floor.",
+
+  "species": {
+    "bramblit": {
+      "name": "Bramblit", "type": "verdant", "role": "starter",
+      "base": { "hp": 62, "atk": 30, "def": 46, "spd": 24 },
+      "catchRate": 0.35, "moves": ["vine_lash", "bramble_slam"],
+      "model": { "body": "quadruped", "tint": "#4c7a33", "scale": 0.9, "accessory": "bramble" }
+    },
+    "cindercub": {
+      "name": "Cindercub", "type": "ember", "role": "starter",
+      "base": { "hp": 44, "atk": 52, "def": 26, "spd": 38 },
+      "catchRate": 0.35, "moves": ["ember_nip", "cinder_rush"],
+      "model": { "body": "smallMammal", "tint": "#c25a2a", "scale": 0.85, "accessory": "emberTail" }
+    },
+    "dewdrake": {
+      "name": "Dewdrake", "type": "tide", "role": "starter",
+      "base": { "hp": 52, "atk": 39, "def": 34, "spd": 45 },
+      "catchRate": 0.35, "moves": ["dew_spit", "tide_pull"],
+      "model": { "body": "amphibian", "tint": "#3f8f9c", "scale": 0.88, "accessory": "dewCrest" }
+    },
+
+    "tuftmoth": {
+      "name": "Tuftmoth", "type": "verdant", "role": "wild", "rarity": "common",
+      "levelBand": [2, 6],
+      "base": { "hp": 34, "atk": 22, "def": 20, "spd": 34 },
+      "catchRate": 0.58, "moves": ["dust_flick", "pollen_burst"],
+      "model": { "body": "birdlike", "tint": "#8fae5c", "scale": 0.6, "accessory": "plume" }
+    },
+    "pebblit": {
+      "name": "Pebblit", "type": "stone", "role": "wild", "rarity": "common",
+      "levelBand": [2, 7],
+      "base": { "hp": 46, "atk": 26, "def": 42, "spd": 14 },
+      "catchRate": 0.5, "moves": ["pebble_toss", "rockfall"],
+      "model": { "body": "bulky", "tint": "#7d7a72", "scale": 0.7, "accessory": "mossPatch" }
+    },
+    "sparrowick": {
+      "name": "Sparrowick", "type": "spark", "role": "wild", "rarity": "common",
+      "levelBand": [3, 8], "flees": true,
+      "base": { "hp": 30, "atk": 34, "def": 18, "spd": 52 },
+      "catchRate": 0.42, "moves": ["static_nip", "arc_bolt"],
+      "model": { "body": "birdlike", "tint": "#d9c04a", "scale": 0.62, "accessory": "sparkRing" }
+    },
+    "grazehorn": {
+      "name": "Grazehorn", "type": "verdant", "role": "wild", "rarity": "common",
+      "levelBand": [4, 9], "herd": 3,
+      "base": { "hp": 58, "atk": 33, "def": 33, "spd": 26 },
+      "catchRate": 0.45, "moves": ["gore", "stampede"],
+      "model": { "body": "horned", "tint": "#6d8a48", "scale": 1.0, "accessory": "horn" }
+    },
+    "rillnewt": {
+      "name": "Rillnewt", "type": "tide", "role": "wild", "rarity": "common",
+      "levelBand": [3, 8], "biomes": ["riverbank"],
+      "base": { "hp": 40, "atk": 29, "def": 27, "spd": 38 },
+      "catchRate": 0.47, "moves": ["ripple", "undertow"],
+      "model": { "body": "amphibian", "tint": "#4f9b86", "scale": 0.68, "accessory": "finCrest" }
+    },
+    "emberhop": {
+      "name": "Emberhop", "type": "ember", "role": "wild", "rarity": "uncommon",
+      "levelBand": [5, 10], "timeWindows": ["dawn", "dusk"],
+      "base": { "hp": 42, "atk": 44, "def": 24, "spd": 41 },
+      "catchRate": 0.32, "moves": ["spark_hop", "flare_kick"],
+      "model": { "body": "smallMammal", "tint": "#d4703a", "scale": 0.72, "accessory": "emberTail" }
+    },
+    "thistleback": {
+      "name": "Thistleback", "type": "verdant", "role": "wild", "rarity": "uncommon",
+      "levelBand": [6, 12], "counters": true,
+      "base": { "hp": 55, "atk": 36, "def": 44, "spd": 22 },
+      "catchRate": 0.28, "moves": ["leaf_cut", "thorn_burst"],
+      "model": { "body": "quadruped", "tint": "#3f6b2c", "scale": 0.95, "accessory": "bramble" }
+    },
+    "cragpup": {
+      "name": "Cragpup", "type": "stone", "role": "wild", "rarity": "uncommon",
+      "levelBand": [6, 12],
+      "base": { "hp": 60, "atk": 32, "def": 52, "spd": 16 },
+      "catchRate": 0.26, "moves": ["headbutt", "boulder_drop"],
+      "model": { "body": "bulky", "tint": "#6f6b63", "scale": 0.85, "accessory": "stoneSpur" }
+    },
+    "voltvole": {
+      "name": "Voltvole", "type": "spark", "role": "wild", "rarity": "uncommon",
+      "levelBand": [7, 13], "burrows": true,
+      "base": { "hp": 38, "atk": 47, "def": 22, "spd": 56 },
+      "catchRate": 0.14, "moves": ["jolt", "thunderclap"],
+      "model": { "body": "smallMammal", "tint": "#e0cc55", "scale": 0.6, "accessory": "sparkRing" }
+    },
+    "mirefin": {
+      "name": "Mirefin", "type": "tide", "role": "wild", "rarity": "uncommon",
+      "levelBand": [8, 14], "timeWindows": ["night"], "biomes": ["riverbank"],
+      "base": { "hp": 54, "atk": 41, "def": 34, "spd": 35 },
+      "catchRate": 0.24, "moves": ["brine_snap", "deluge"],
+      "model": { "body": "amphibian", "tint": "#2f6a78", "scale": 0.92, "accessory": "finCrest" }
+    },
+    "ashmane": {
+      "name": "Ashmane", "type": "ember", "role": "wild", "rarity": "rare",
+      "levelBand": [10, 16], "aggroRange": 10,
+      "base": { "hp": 58, "atk": 58, "def": 32, "spd": 44 },
+      "catchRate": 0.12, "moves": ["ash_rake", "wildfire"],
+      "model": { "body": "quadruped", "tint": "#a8452c", "scale": 1.05, "accessory": "emberMane" }
+    },
+    "loamking": {
+      "name": "Loamking", "type": "stone", "role": "boss",
+      "levelBand": [18, 18],
+      "base": { "hp": 96, "atk": 54, "def": 62, "spd": 20 },
+      "catchRate": 0.05, "moves": ["crag_smash", "tremor"],
+      "model": { "body": "bulky", "tint": "#5c5347", "scale": 1.6, "accessory": "stoneCrown" }
+    }
+  }
+}

@@ -92,10 +92,13 @@ Set `base` in `vite.config.ts` to `/<repo-name>/` or Pages will 404 every asset.
 
 ## Performance budget
 
-Target 60fps on an iPhone 12 and a 2019 mid-range Android, 60fps on any desktop from the last six years.
+Target 120fps on a ROG Ally at 1080p, and 60fps on any desktop from the last six years. Phones are supported but no longer set the budget (D28).
+
+The frame time budget is **8ms**, not 16ms. A 120Hz handheld panel has 8.3ms to work with, and half a frame of headroom now is what leaves room for M2's pals, orbs and particles later.
 
 | Metric | Budget |
 |---|---|
+| Frame time | < 8 ms |
 | Draw calls | < 150 |
 | Triangles on screen | < 300k |
 | Textures resident | < 120 MB |

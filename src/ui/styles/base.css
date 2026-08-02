@@ -1,0 +1,336 @@
+/*
+ * Reset, page shell, and the boot/error/stats chrome.
+ *
+ * Mobile first, per CLAUDE.md: every interactive target is at least 44px and
+ * nothing depends on hover. Test at 390x844 before anything wider.
+ */
+
+@import './tokens.css';
+@import './components.css';
+@import './game.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--fs-md);
+  /* A double-tap that zooms mid-fight is a lost fight. */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+  touch-action: none;
+}
+
+/*
+ * `[hidden]` must be restated for anything that sets `display`.
+ *
+ * The browser's own `[hidden] { display: none }` is a user-agent rule, and any
+ * author rule beats it. So `.fatal { display: flex }` alone left the error
+ * screen permanently on top of a perfectly working game, with an empty message
+ * because nothing had actually failed. Caught by the boot smoke test.
+ */
+.fatal[hidden],
+.stats[hidden] {
+  display: none;
+}
+
+/* --- boot ---------------------------------------------------------------- */
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(124, 255, 155, 0.09) 0%, transparent 58%),
+    radial-gradient(circle at 50% 62%, rgba(79, 216, 255, 0.06) 0%, transparent 55%),
+    var(--bg-deep);
+  transition: opacity var(--slow) var(--ease);
+}
+
+.boot--gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boot__mark {
+  font-size: clamp(22px, 6.5vw, 38px);
+  font-weight: 600;
+  letter-spacing: 0.36em;
+  color: var(--text);
+  /* letter-spacing pads the right edge; pull it back so the word looks centred. */
+  text-indent: 0.36em;
+  text-shadow: 0 0 26px var(--spore-glow);
+}
+
+.boot__bar {
+  width: min(240px, 58vw);
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.boot__fill {
+  height: 100%;
+  width: 0%;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--dew), var(--spore));
+  box-shadow: 0 0 12px var(--spore-glow);
+  transition: width var(--base) var(--ease);
+}
+
+.boot__msg {
+  font-size: var(--fs-sm);
+  color: var(--text-faint);
+  min-height: 1.2em;
+  letter-spacing: 0.02em;
+}
+
+/* --- stats readout ------------------------------------------------------- */
+
+.stats {
+  position: fixed;
+  top: calc(var(--safe-t) + 6px);
+  right: calc(var(--safe-r) + 6px);
+  z-index: 90;
+  padding: 7px 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm);
+  background: rgba(6, 9, 7, 0.78);
+  color: var(--spore);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.stats--warn {
+  color: var(--hunger);
+  border-color: var(--hunger);
+}
+
+.stats--bad {
+  color: var(--tether);
+  border-color: var(--tether-dim);
+}
+
+/* --- fatal error --------------------------------------------------------- */
+
+.fatal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pad-md);
+  padding: var(--pad-lg);
+  text-align: center;
+  background: var(--bg-deep);
+}
+
+.fatal__title {
+  margin: 0;
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  color: var(--tether);
+}
+
+.fatal__msg {
+  margin: 0;
+  max-width: 46ch;
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--text-dim);
+  /* Error text is the one place a user may legitimately want to select. */
+  -webkit-user-select: text;
+  user-select: text;
+  word-break: break-word;
+}
+
+/* --- control prompt and fullscreen ---------------------------------------- */
+
+/*
+ * The prompt sits bottom-centre, above the safe-area inset. It is deliberately
+ * quiet: it is a reminder, not a HUD element, and it must not compete with the
+ * world. The urgent variant is the exception, because a player who cannot work
+ * out how to look around has no game at all.
+ */
+.hint {
+  position: fixed;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 20;
+  max-width: min(92vw, 720px);
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(6, 9, 7, 0.55);
+  color: rgba(233, 240, 232, 0.72);
+  font-size: 13px;
+  line-height: 1.3;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transition: opacity var(--slow) var(--ease);
+}
+
+.hint--urgent {
+  background: rgba(6, 9, 7, 0.82);
+  color: var(--text);
+  box-shadow: 0 0 0 1px rgba(124, 255, 155, 0.35);
+}
+
+.fs-btn {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top));
+  right: calc(10px + env(safe-area-inset-right));
+  z-index: 20;
+  /* 44px minimum touch target, and the Ally's touchscreen is a real input. */
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(6, 9, 7, 0.5);
+  color: rgba(233, 240, 232, 0.8);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.fs-btn:hover,
+.fs-btn:focus-visible {
+  background: rgba(6, 9, 7, 0.75);
+  color: var(--text);
+}
+
+/*
+ * Floating numbers. Pooled nodes owned by src/fx/DamageNumbers.ts.
+ *
+ * The layer covers the viewport and never takes a pointer event, so it can sit
+ * above the canvas without stealing a tap from the touch controls underneath.
+ * `contain` keeps a moving number from invalidating layout for the whole page,
+ * and the nodes are promoted to their own compositor layer because their
+ * transform changes every frame.
+ */
+.fx {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.floater {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform, opacity;
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  /* The world behind these is anything from noon grass to midnight fog, so
+   * they carry their own contrast rather than trusting the backdrop. */
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 0 12px rgba(0, 0, 0, 0.55);
+}
+
+/* Semantics from tokens.css. Lime is "something went your way". */
+.floater--gain {
+  color: var(--spore);
+}
+
+.floater--loss {
+  color: var(--text-dim);
+}
+
+/* Damage is danger, and danger is Tether orange. Nothing friendly borrows it. */
+.floater--damage {
+  color: var(--tether);
+}
+
+.floater--info {
+  color: var(--text);
+}
+
+/* Gathering readout. Sits above the control prompt, same quiet treatment. */
+.gather {
+  position: fixed;
+  left: 50%;
+  bottom: calc(52px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 20;
+  max-width: min(92vw, 720px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+/*
+ * Combat overlay. Monospace and pre-wrapped because it is a readout, not a
+ * layout: M5 replaces it with real bars and portraits, and until then legibility
+ * beats decoration.
+ */
+.combat {
+  position: fixed;
+  left: 50%;
+  top: calc(14px + env(safe-area-inset-top));
+  transform: translateX(-50%);
+  z-index: 25;
+  margin: 0;
+  padding: 12px 18px;
+  max-width: min(94vw, 620px);
+  border-radius: 12px;
+  background: rgba(6, 9, 7, 0.78);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.combat[hidden] {
+  display: none;
+}

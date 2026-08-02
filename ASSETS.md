@@ -28,6 +28,26 @@ Pull from these first. All are reliably CC0.
 
 ## Art direction
 
+### The target: Palworld and Pokemon on Switch
+
+The bar is **Palworld** and **Pokemon Scarlet/Violet / Legends: Arceus**, not
+photorealism and not the "programmer art but shipped" look either. Those games
+are not technically impressive and that is the point: they are legible and
+appealing. Readable stylised worlds, creature silhouettes you can identify at a
+glance, warm daylight, cheap but intentional lighting, clear UI hierarchy.
+
+Legibility at 390 pixels wide is a higher bar than fidelity, and it is the one
+that decides whether this game reads on a phone. Anything that trades
+readability for detail is the wrong trade here.
+
+Explicitly NOT the target: photorealism, physically based materials, heavy
+post-processing. `ARCHITECTURE.md` budgets 60fps on an iPhone 12 with under 150
+draw calls and no post-processing in v0.1. Chasing a photoreal look would break
+that budget and the style at the same time.
+
+`.claude/skills/visual-judge/SKILL.md` holds the review rubric and the tooling
+that produces the frames to judge.
+
 Low-poly, flat-shaded, saturated. Chunky silhouettes that read at phone size. Think Kenney's Nature Kit as the baseline and match everything to it. Consistency of style beats fidelity of any single asset.
 
 - Palette: warm meadow greens and golds, desaturated stone greys, a single hot accent (Tether iron-orange) reserved for enemies and danger.

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- viewport-fit=cover + the safe-area insets below keep the HUD clear of
+         the notch and the home indicator. Mobile is the primary target. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#060907" />
+    <meta name="description" content="Tetherbound - survive the Meadows, keep five pals, take the Halls." />
+    <!-- Fullscreen-ish when added to the iOS home screen, which also exempts
+         the site from ITP's 7-day storage eviction. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Tetherbound</title>
+    <!-- Inline SVG data URI rather than a file: browsers request /favicon.ico
+         unprompted, and on GitHub Pages a missing one is a 404 on every load.
+         A Pact Orb, in the meadow palette. -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%233f5a2e'/%3E%3Cpath d='M2 16h28' stroke='%23d9b45b' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23efe9dc'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./src/ui/styles/base.css" />
+  </head>
+  <body>
+    <canvas id="scene" touch-action="none"></canvas>
+
+    <!-- Boot overlay. Removed once the first frame is on screen. -->
+    <div id="boot" class="boot">
+      <div class="boot__mark">TETHERBOUND</div>
+      <div class="boot__bar"><div id="bootFill" class="boot__fill"></div></div>
+      <div id="bootMsg" class="boot__msg">Waking the Meadows</div>
+    </div>
+
+    <!-- Combat overlay and the release screen. Hidden outside a fight; Combat
+         Mode is a state, so this is shown and hidden, never built. -->
+    <pre id="combat" class="combat" hidden></pre>
+
+    <!-- Gathering readout: equipped tool, what is in reach, what you just
+         picked up. Replaced by M1's inventory screen. -->
+    <div id="gather" class="gather"></div>
+
+    <!-- Floating numbers. Pooled DOM rather than in-canvas text, so they cost
+         no draw calls against the budget. Owned by src/fx/. -->
+    <div id="fx" class="fx"></div>
+
+    <!-- Control prompt. Follows the device actually in use, not the one
+         attached: a handheld has a pad, a touchscreen and a keyboard at once. -->
+    <div id="hint" class="hint"></div>
+
+    <!-- Fullscreen. Browser chrome costs real screen on a 7in handheld and
+         F11 is not reachable without a keyboard. -->
+    <button id="fullscreen" class="fs-btn" type="button" aria-label="Toggle fullscreen">⛶</button>
+
+    <!-- Performance readout. Hidden unless ?stats=1. -->
+    <div id="stats" class="stats" hidden></div>
+
+    <!-- Fatal-error surface. A black screen with a console message is not a
+         bug report; this is. -->
+    <div id="fatal" class="fatal" hidden>
+      <h1 class="fatal__title">The Meadows would not load</h1>
+      <p id="fatalMsg" class="fatal__msg"></p>
+      <button id="fatalReload" class="btn">Try again</button>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

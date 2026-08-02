@@ -1,0 +1,38 @@
+{
+  "$comment": "Harvest nodes, GAME_DESIGN.md section 8. Harvest.ts contains no literals. Keyed by prop family from scatter.json, and by tool ACTION rather than tool id, so a better axe is a data change and not a code change.",
+
+  "$comment_reach": "Meters. Generous, because a third-person camera makes precise positioning annoying and nothing is competing for the same button yet.",
+  "reachMeters": 3.4,
+
+  "$comment_respawn": "In-game days before a harvested node returns. GAME_DESIGN.md section 8 via the M1 brief.",
+  "respawnDays": 2,
+
+  "nodes": {
+    "oak": {
+      "action": "chop",
+      "swings": 4,
+      "drops": [{ "id": "wood", "min": 3, "max": 5 }]
+    },
+    "pine": {
+      "action": "chop",
+      "swings": 4,
+      "drops": [{ "id": "wood", "min": 3, "max": 6 }]
+    },
+    "rock": {
+      "action": "mine",
+      "swings": 3,
+      "drops": [
+        { "id": "stone", "min": 2, "max": 4 },
+        { "id": "flint", "min": 0, "max": 2 }
+      ]
+    },
+    "bush": {
+      "action": "cut",
+      "swings": 1,
+      "drops": [
+        { "id": "fiber", "min": 2, "max": 4 },
+        { "id": "berries", "min": 0, "max": 3 }
+      ]
+    }
+  }
+}
