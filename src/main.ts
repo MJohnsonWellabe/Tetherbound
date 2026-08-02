@@ -28,7 +28,10 @@ import { ReleasePanel } from './ui/ReleasePanel';
 import { Nameplates } from './ui/Nameplates';
 import { BuildMode } from './building/BuildMode';
 import pieces from './data/pieces.json';
+import pauseMenuConfig from './data/pauseMenu.json';
 import { SaveManager, type SaveV1 } from './core/SaveManager';
+import { SaveWiring } from './game/SaveWiring';
+import { PauseMenu } from './ui/PauseMenu';
 import { createVitals, tickVitals, spendStamina } from './survival/Vitals';
 import { Stations } from './survival/Stations';
 import { Satchel } from './survival/Satchel';
@@ -320,19 +323,63 @@ async function boot(): Promise<void> {
     };
   }
 
-  // Autosave every 60s and on visibility change, per ARCHITECTURE.md.
+  // Autosave every 60s and on visibility change, per ARCHITECTURE.md. Routed
+  // through SaveWiring so Start Over's wipe guard covers both call sites from
+  // one place; see the header of src/game/SaveWiring.ts for why that matters.
+  const saveWiring = new SaveWiring(saves, snapshotSave);
   let sinceSaveMs = 0;
-  const flush = (): void => {
-    const result = saves.save(snapshotSave());
-    bus.emit('saveStatus', result.ok ? { status: 'saved' } : { status: 'failed', reason: result.reason ?? '' });
-  };
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') flush();
+    if (document.visibilityState === 'hidden') saveWiring.flush();
   });
+
+  // The pause menu. Reachable from any state, so its own flag gates the
+  // simulation update ahead of everything else, including the hit-pause gate.
+  let paused = false;
+  const menu = new PauseMenu(document.getElementById('menu') as HTMLElement, {
+    onResume: () => {
+      paused = false;
+      menu.close();
+    },
+    onStartOver: () => {
+      saveWiring.startOver();
+      location.reload();
+    },
+    onCopySave: () => saves.export(snapshotSave())
+  });
+
+  // Touch has no Escape and no Start button, so it gets a corner button of its
+  // own. Size and inset come from src/data/pauseMenu.json rather than living
+  // in this file or in the stylesheet.
+  const pauseBtnEl = document.getElementById('pauseBtn') as HTMLButtonElement | null;
+  if (pauseBtnEl) {
+    const { touchButton } = pauseMenuConfig;
+    pauseBtnEl.style.width = `${touchButton.sizePx}px`;
+    pauseBtnEl.style.height = `${touchButton.sizePx}px`;
+    pauseBtnEl.style.top = `calc(${touchButton.insetTopPx}px + env(safe-area-inset-top))`;
+    pauseBtnEl.style.left = `calc(${touchButton.insetLeftPx}px + env(safe-area-inset-left))`;
+  }
+  const onPauseBtnDown = (e: PointerEvent): void => {
+    e.preventDefault();
+    input.intent.pause = true;
+  };
+  pauseBtnEl?.addEventListener('pointerdown', onPauseBtnDown);
 
   const loop = new Loop({
     update: (dt, elapsedMs) => {
       input.beginFrame();
+
+      // The pause menu is reachable from any state, so it is checked ahead of
+      // the hit-pause gate below rather than folded into it: a fight freezing
+      // the world on a hit must never also block the player from pausing.
+      if (input.intent.pause) {
+        paused = !paused;
+        if (paused) menu.open();
+        else menu.close();
+      }
+      if (paused) {
+        input.endFrame();
+        return;
+      }
 
       // A hit pause withholds simulation steps; it never scales dt and never
       // skips a frame. See src/fx/hitPause.ts for why both alternatives are
@@ -488,7 +535,7 @@ async function boot(): Promise<void> {
       sinceSaveMs += dt * 1000;
       if (sinceSaveMs >= AUTOSAVE_MS) {
         sinceSaveMs = 0;
-        flush();
+        saveWiring.flush();
       }
 
       fx.update(dt);
@@ -556,6 +603,8 @@ async function boot(): Promise<void> {
     homestead,
     vitals,
     saves,
+    saveWiring,
+    menu,
     // The story and the built world, so the smoke tools can drive the Hall
     // spine without walking 1100m and winning three fights by hand.
     story,
@@ -572,6 +621,8 @@ async function boot(): Promise<void> {
     dispose: (): void => {
       loop.stop();
       unmountFeel();
+      pauseBtnEl?.removeEventListener('pointerdown', onPauseBtnDown);
+      menu.dispose();
       combatStage.dispose();
       combatScreen.dispose();
       releasePanel.dispose();

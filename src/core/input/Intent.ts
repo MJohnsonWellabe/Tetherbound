@@ -38,6 +38,14 @@ export interface Intent {
    * 3) and must never queue behind an attack's charge.
    */
   throwOrb: boolean;
+  /**
+   * Edge-triggered. Open or close the pause menu.
+   *
+   * Reachable from exploring, dialogue and a fight alike, so nothing gates it
+   * the way `interact` is gated by whichever system currently owns that
+   * button. There is exactly one pause menu and it never has to compete.
+   */
+  pause: boolean;
 }
 
 /**
@@ -60,16 +68,17 @@ export function neutralIntent(): Intent {
     primary: { down: false, heldMs: 0 },
     dodge: 0,
     slot: null,
-    throwOrb: false
+    throwOrb: false,
+    pause: false
   };
 }
 
 /**
  * Clear the edge-triggered fields after a frame has consumed them.
  *
- * `jump`, `interact`, `dodge` and `slot` are events, not states. Leaving them
- * set means one tap reads as a held button for as long as the frame rate
- * allows, which is how a single jump press becomes a hover.
+ * `jump`, `interact`, `dodge`, `slot`, `throwOrb` and `pause` are events, not
+ * states. Leaving them set means one tap reads as a held button for as long
+ * as the frame rate allows, which is how a single jump press becomes a hover.
  */
 export function clearEdges(intent: Intent): void {
   intent.jump = false;
@@ -77,6 +86,7 @@ export function clearEdges(intent: Intent): void {
   intent.dodge = 0;
   intent.slot = null;
   intent.throwOrb = false;
+  intent.pause = false;
   intent.look.x = 0;
   intent.look.y = 0;
 }

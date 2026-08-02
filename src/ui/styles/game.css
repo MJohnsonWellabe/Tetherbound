@@ -729,6 +729,62 @@
 .party__empty { font-size: var(--fs-sm); color: var(--text-faint); }
 .party__close { align-self: flex-start; }
 
+/*
+ * The pause menu. Sits above everything, including combat and dialogue,
+ * because it has to be reachable from either. src/ui/PauseMenu.ts.
+ */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--bg-deep) 88%, transparent);
+  padding: var(--pad-md);
+}
+
+.menu[hidden] { display: none; }
+
+.menu__panel {
+  width: min(92vw, 380px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad-md);
+  padding: var(--pad-lg);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+}
+
+.menu__title {
+  margin: 0;
+  font-size: var(--fs-xl);
+  color: var(--text);
+  text-align: center;
+}
+
+.menu__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad-sm);
+}
+
+.menu__btn { width: 100%; }
+
+/* Armed: the second press of Start Over will actually wipe. */
+.menu__btn--armed {
+  box-shadow: 0 0 0 2px var(--tether-glow);
+}
+
+.menu__status {
+  min-height: 1.4em;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--tether);
+  text-align: center;
+}
+
 /* --- victory ------------------------------------------------------------- */
 
 .victory {

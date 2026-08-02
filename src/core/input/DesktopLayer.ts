@@ -34,6 +34,9 @@ export class DesktopLayer {
   private primaryDownMs = 0;
   private primaryActive = false;
   private locked = false;
+  /** Set only inside dispose(), so lockChange can tell a requested exit from
+   *  the player hitting Escape mid-lock. */
+  private exitingForDispose = false;
   /** Right button held: look without pointer lock. */
   private dragging = false;
   /** True once the keyboard or mouse has actually been used. */
@@ -57,7 +60,16 @@ export class DesktopLayer {
     const mouseUp = (e: MouseEvent): void => this.onMouseUp(e);
     const mouseMove = (e: MouseEvent): void => this.onMouseMove(e);
     const lockChange = (): void => {
-      this.locked = document.pointerLockElement === this.canvas;
+      const nowLocked = document.pointerLockElement === this.canvas;
+      // Escape does not reach onKeyDown while the lock is held; the browser
+      // reserves it to release the lock itself. So an exit the game did not
+      // ask for (dispose() is the only caller of exitPointerLock) is read as
+      // the player's pause request instead. Without this, Escape does nothing
+      // during ordinary play, which is the one moment a player most wants it.
+      if (this.locked && !nowLocked && !this.exitingForDispose) {
+        this.intent.pause = true;
+      }
+      this.locked = nowLocked;
     };
     const contextMenu = (e: Event): void => e.preventDefault();
     const blur = (): void => this.releaseAll();
@@ -99,6 +111,12 @@ export class DesktopLayer {
     }
     if (e.code === 'KeyE') this.intent.interact = true;
     if (e.code === 'KeyR') this.intent.throwOrb = true;
+    // Only fires unlocked; the locked case is handled by lockChange, because
+    // the browser eats this keydown while the lock is held.
+    if (e.code === 'Escape' && !this.locked) {
+      this.intent.pause = true;
+      e.preventDefault();
+    }
 
     const slot = SLOT_CODES[e.code];
     if (slot) this.intent.slot = slot;
@@ -230,6 +248,7 @@ export class DesktopLayer {
   dispose(): void {
     for (const fn of this.teardown.splice(0)) fn();
     this.releaseAll();
+    this.exitingForDispose = true;
     if (document.pointerLockElement === this.canvas) document.exitPointerLock?.();
   }
 }

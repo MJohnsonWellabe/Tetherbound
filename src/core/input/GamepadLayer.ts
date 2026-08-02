@@ -35,6 +35,8 @@ const BTN = {
   lt: 6,
   rt: 7,
   leftStick: 10,
+  /** XInput Start. The only button reserved for the pause menu. */
+  start: 9,
   dpadUp: 12,
   dpadDown: 13,
   dpadLeft: 14,
@@ -131,6 +133,9 @@ export class GamepadLayer {
       else this.intent.jump = true;
     }
     if (this.edge(pad, BTN.x)) this.intent.interact = true;
+    // Opens and closes the pause menu regardless of mode; a fight or a
+    // conversation must not be able to block it.
+    if (this.edge(pad, BTN.start)) this.intent.pause = true;
     // B throws. Reachable with the thumb without leaving the right stick,
     // because the throw has to be available at any instant.
     if (this.edge(pad, BTN.b)) this.intent.throwOrb = true;

@@ -40,6 +40,10 @@
     <div id="combat" class="cb" hidden></div>
     <div id="release" class="rel" hidden></div>
 
+    <!-- Pause menu. Reachable from any state: exploring, dialogue, a fight.
+         Owned by src/ui/PauseMenu.ts. -->
+    <div id="menu" class="menu" hidden></div>
+
     <!-- Gathering readout: equipped tool and the last pickup. The contextual
          "press E to chop" prompt is a separate .prompt element that HarvestHud
          creates next to this one, so a transient hint is never mistaken for
@@ -57,6 +61,10 @@
     <!-- Fullscreen. Browser chrome costs real screen on a 7in handheld and
          F11 is not reachable without a keyboard. -->
     <button id="fullscreen" class="fs-btn" type="button" aria-label="Toggle fullscreen">⛶</button>
+
+    <!-- Touch has no Escape and no Start button, so it gets its own corner.
+         Opposite the fullscreen button so the two never compete for a thumb. -->
+    <button id="pauseBtn" class="pause-btn" type="button" aria-label="Pause">☰</button>
 
     <!-- Performance readout. Hidden unless ?stats=1. -->
     <div id="stats" class="stats" hidden></div>

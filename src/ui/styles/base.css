@@ -238,6 +238,30 @@ body {
 }
 
 /*
+ * The touch pause button. Mirrors .fs-btn but top-left, and its size and inset
+ * come from src/data/pauseMenu.json rather than being typed here twice, since
+ * PauseMenu.ts sets them inline on the element at construction.
+ */
+.pause-btn {
+  position: fixed;
+  z-index: 20;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(6, 9, 7, 0.5);
+  color: rgba(233, 240, 232, 0.8);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.pause-btn:hover,
+.pause-btn:focus-visible {
+  background: rgba(6, 9, 7, 0.75);
+  color: var(--text);
+}
+
+/*
  * Floating numbers. Pooled nodes owned by src/fx/DamageNumbers.ts.
  *
  * The layer covers the viewport and never takes a pointer event, so it can sit

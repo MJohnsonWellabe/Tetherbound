@@ -75,6 +75,7 @@ describe('clearEdges', () => {
     intent.sprint = true;
     intent.primary = { down: true, heldMs: 420 };
     intent.move = { x: 1, y: 0 };
+    intent.pause = true;
 
     clearEdges(intent);
 
@@ -83,12 +84,26 @@ describe('clearEdges', () => {
     expect(intent.dodge).toBe(0);
     expect(intent.slot).toBeNull();
     expect(intent.look).toEqual({ x: 0, y: 0 });
+    expect(intent.pause).toBe(false);
 
     // Held state survives. A charge that reset every frame could never reach
     // the 100 charge a power attack needs.
     expect(intent.sprint).toBe(true);
     expect(intent.primary).toEqual({ down: true, heldMs: 420 });
     expect(intent.move).toEqual({ x: 1, y: 0 });
+  });
+});
+
+describe('pause', () => {
+  it('starts neutral', () => {
+    expect(neutralIntent().pause).toBe(false);
+  });
+
+  it('is a one-frame edge like the other events', () => {
+    const intent = neutralIntent();
+    intent.pause = true;
+    clearEdges(intent);
+    expect(intent.pause).toBe(false);
   });
 });
 
