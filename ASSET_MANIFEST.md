@@ -33,10 +33,10 @@ licenses are recorded as found at the source so attribution stays a lookup, not 
 | public/models/buildings/house_b.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (59 KB) |
 | public/models/buildings/house_c.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (108 KB) |
 | public/models/buildings/hall.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | composite (330 KB) |
-| public/models/buildings/village_house_b.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (213 KB) |
-| public/models/buildings/village_house_c.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (265 KB) |
-| public/models/buildings/village_inn.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (248 KB) |
-| public/models/buildings/village_blacksmith.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (245 KB) |
+| public/models/buildings/village_house_b.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (183 KB) |
+| public/models/buildings/village_house_c.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (229 KB) |
+| public/models/buildings/village_inn.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (177 KB) |
+| public/models/buildings/village_blacksmith.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (194 KB) |
 | public/models/buildings/banner.glb | https://kenney.nl/assets/fantasy-town-kit | Kenney | CC0 | 2026-08-02 | prop (11 KB) |
 | public/models/buildings/well.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (125 KB) |
 | public/models/buildings/cart.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | prop (158 KB) |

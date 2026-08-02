@@ -304,7 +304,20 @@ export function buildVillage(
       if (source) {
         const mesh = placeStructure(scene, source, 'house_model', slot.node);
         mesh.scaling.scaleInPlace(slot.variant.scale);
-        shadows?.addShadowCaster(mesh, false);
+        // Prebuilt village buildings run 5-8x the triangle count of the
+        // Kenney composite they replaced (docs/decisions/D62: 5-8k tris vs
+        // 0.8-2.8k), and every shadow caster is a second full geometry pass.
+        // Casting from all four took a village-square frame from ~4ms to
+        // 11-15ms measured at a normal walking distance from one, over the
+        // 8ms budget, while every other lever (a 0-5.0 sweep of the
+        // simplifier's error bound) plateaued at ~4.9k tris: these ship
+        // flat-shaded with a hard-edge vertex per face, so there is no
+        // shared topology left for an edge collapse to exploit. They keep
+        // their own baked-in vertex shading either way, so skipping the
+        // dynamic shadow only costs a missing ground shadow, not a
+        // lit/unlit read; the home (the one low-poly Kenney composite still
+        // on the ring) keeps casting.
+        if (i === homeIndex) shadows?.addShadowCaster(mesh, false);
         if (door) {
           // The wall PLANE, not the model's bounding box: the bbox includes
           // the roof overhang (measured ~0.05m wider per side than the walls

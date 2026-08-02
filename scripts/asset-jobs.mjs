@@ -328,12 +328,21 @@ const buildings = [
     group: 'buildings',
     transform: 'prop',
     scale,
+    // Measured (docs/decisions/D62): these raw models run 5.7k-7.8k tris
+    // apiece against 0.8k-2.8k for the Kenney composites they sit beside on
+    // the same ring, and every one of them is also a shadow caster, so four
+    // of them nearly quadrupled the village's shadow-pass vertex count and
+    // took the square from ~4ms to ~13-15ms a frame under SwiftShader.
+    // Simplified before the merge, same lever ground cover already uses,
+    // because a building is read as a silhouette across a village square,
+    // not inspected close up the way its texture-mapped source was designed
+    // to be.
+    simplify: 0.4,
     // Whole prebuilt buildings carry far more geometry than a Kenney kit
-    // tile, so float32 attributes put every one of these over the 420 KB
-    // gate the same way the Hall composite did. Same fix: quantize (D47's
-    // 16-bit positions/8-bit colours are exact well past kit precision at
-    // building scale, tested at ~0.1mm) rather than a wider budget or a
-    // lossy simplify pass that would touch the silhouette.
+    // tile even simplified, so float32 attributes put every one of these
+    // over the 420 KB gate the same way the Hall composite did. Same fix:
+    // quantize (D47's 16-bit positions/8-bit colours are exact well past
+    // kit precision at building scale, tested at ~0.1mm).
     quantize: true,
     sources: [{ file }],
     out: `models/buildings/${out}.glb`,
