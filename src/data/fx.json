@@ -110,7 +110,12 @@
     "fell_wood": { "trauma": 0.52, "pauseMs": 70, "particles": "leaf_burst" },
     "fell_stone": { "trauma": 0.6, "pauseMs": 85, "particles": "stone_chips" },
     "fell_soft": { "trauma": 0.3, "pauseMs": 45, "particles": "fibre_puff" },
-    "faint": { "trauma": 0.95, "pauseMs": 120, "particles": "faint_puff" }
+    "faint": { "trauma": 0.95, "pauseMs": 120, "particles": "faint_puff" },
+    "quick_hit": { "trauma": 0.26, "pauseMs": 40, "particles": "hit_spark" },
+    "power_hit": { "trauma": 0.55, "pauseMs": 90, "particles": "hit_spark" },
+    "orb_bounce": { "trauma": 0.34, "pauseMs": 60, "particles": "stone_chips" },
+    "catch_shake": { "trauma": 0.16, "pauseMs": 0, "particles": "hit_spark" },
+    "catch_success": { "trauma": 0.4, "pauseMs": 80, "particles": "faint_puff" }
   },
 
   "$comment_harvest": "Which impact each harvestable prop family feels like. Keyed by family rather than by tool action so a future stone tree and a wooden rock are one row each, and so adding a family to scatter.json surfaces here as a failing test rather than as a silent dull hit. Every harvestable family in harvest.json must appear.",

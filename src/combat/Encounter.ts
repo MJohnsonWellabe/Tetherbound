@@ -1,3 +1,4 @@
+import { bus } from '../core/EventBus';
 import type { Input } from '../core/input/Input';
 import type { PalState } from '../party/PalState';
 import type { Party } from '../party/Party';
@@ -86,8 +87,13 @@ export class Encounter {
     // would make throwing strictly better than fighting.
     remove(this.slots, orb, 1);
     const result = this.combat.tryThrow(orb, day, performance.now());
-    if (!result.caught) return result.bounced ? 'bounced' : 'missed';
+    if (!result.caught) {
+      const outcome = result.bounced ? 'bounced' : 'missed';
+      bus.emit('orbThrown', { outcome, shakes: result.bounced ? 0 : 1 });
+      return outcome;
+    }
 
+    bus.emit('orbThrown', { outcome: 'caught', shakes: 3 });
     this.accept(result.pal, day);
     return 'caught';
   }

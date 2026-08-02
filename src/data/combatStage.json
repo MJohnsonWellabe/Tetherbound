@@ -1,0 +1,31 @@
+{
+  "$comment": "Combat presentation tuning: where the fighters stand, how the camera frames them, how the orb flies. Consumed by CombatStage/stagePlacement/Player camera framing.",
+  "placement": {
+    "$comment": "allyForward: metres ahead of the player the ally takes the field. gap: minimum ally-to-enemy distance; a closer enemy is pushed back to it.",
+    "allyForward": 3.2,
+    "gap": 6.5
+  },
+  "camera": {
+    "$comment": "The combat framing Player lerps toward while a fight runs: pulled back, raised, over the shoulder, looking across the ally at the enemy.",
+    "distance": 7.4,
+    "height": 2.6,
+    "shoulder": 1.05,
+    "pitch": 0.3,
+    "blendMs": 550
+  },
+  "orb": {
+    "flightMs": 520,
+    "arcHeight": 2.4,
+    "shakeMs": 420,
+    "radius": 0.16
+  },
+  "telegraph": {
+    "$comment": "The enemy tell: a crouch-and-swell on the root while cb__telegraph flashes.",
+    "crouchScale": 0.86,
+    "swellScale": 1.12
+  },
+  "nameplates": {
+    "showWithinM": 26,
+    "poolSize": 8
+  }
+}

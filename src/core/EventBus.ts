@@ -55,6 +55,17 @@ export interface GameEvents {
   combatEnded: { phase: string };
   /** The enemy began a power attack wind-up. This is the dodge window. */
   enemyTelegraph: { ms: number };
+  /**
+   * An attack resolved, either direction. Presentation only: the stage plays
+   * the attacker's clip and the defender's reaction from this one event.
+   */
+  attackResolved: {
+    attacker: 'ally' | 'enemy';
+    kind: 'quick' | 'power';
+    damage: number;
+    dodged: boolean;
+    defeated: boolean;
+  };
   /** A party pal dropped to 0 HP. Fainted, never lost. */
   palFainted: { uid: string };
   /** A neglected pal refused to commit to a power attack. */
@@ -62,6 +73,8 @@ export interface GameEvents {
   /** The fight was won. */
   combatWon: { xp: number; day: number };
   /** An orb bounced off a collared pal. Not a failed roll, a refusal. */
+  /** An orb was spent. Presentation flies the arc, then shows the outcome. */
+  orbThrown: { outcome: 'bounced' | 'missed' | 'caught'; shakes: number };
   orbBounced: Record<string, never>;
   /** An orb broke. Carries what the odds actually were. */
   catchFailed: { chance: number; shakes: number };

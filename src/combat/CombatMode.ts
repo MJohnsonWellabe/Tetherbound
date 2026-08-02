@@ -133,7 +133,7 @@ export class CombatMode {
         defenderDodged: this.dodgeMs > 0,
         rand
       });
-      this.landOnPlayer(active, result.damage, result.dodged);
+      this.landOnPlayer(active, result.damage, result.dodged, 'power');
       this.enemyCooldownMs = TIMING.quickCastMs * 2;
       return;
     }
@@ -150,15 +150,31 @@ export class CombatMode {
     }
 
     const result = resolveAttack(enemy, active, { kind: 'quick', defenderDodged: false, rand });
-    this.landOnPlayer(active, result.damage, false);
+    this.landOnPlayer(active, result.damage, false, 'quick');
     this.enemyCooldownMs = TIMING.quickCastMs + TIMING.quickCastMs * rand();
   }
 
-  private landOnPlayer(active: PalState, amount: number, dodged: boolean): void {
-    if (dodged || amount <= 0) return;
+  private landOnPlayer(
+    active: PalState,
+    amount: number,
+    dodged: boolean,
+    kind: 'quick' | 'power'
+  ): void {
+    if (dodged || amount <= 0) {
+      bus.emit('attackResolved', { attacker: 'enemy', kind, damage: 0, dodged, defeated: false });
+      return;
+    }
     // A pal caught mid-swap eats extra, which is what makes the swap a cost.
     const scaled = this.swapLockMs > 0 ? Math.ceil(amount * 1.5) : amount;
-    if (applyDamage(active, scaled)) {
+    const fainted = applyDamage(active, scaled);
+    bus.emit('attackResolved', {
+      attacker: 'enemy',
+      kind,
+      damage: scaled,
+      dodged: false,
+      defeated: fainted
+    });
+    if (fainted) {
       adjustAffinity(active, -12);
       bus.emit('palFainted', { uid: active.uid });
       // Fall through to the next healthy pal, or lose.
@@ -187,7 +203,15 @@ export class CombatMode {
     if (kind === 'power') this.charge = 0;
     else this.charge = chargeAfterQuick(this.charge);
 
-    if (applyDamage(this.enemy.state, result.damage)) {
+    const defeated = applyDamage(this.enemy.state, result.damage);
+    bus.emit('attackResolved', {
+      attacker: 'ally',
+      kind,
+      damage: result.damage,
+      dodged: false,
+      defeated
+    });
+    if (defeated) {
       this.win(active, this.enemy.state, result.typeAdvantage, day);
     }
   }

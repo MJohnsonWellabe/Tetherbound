@@ -44,6 +44,28 @@ const CAMERA_SHOULDER = 0.65;
 const PITCH_MIN = -0.9;
 const PITCH_MAX = 1.15;
 
+/**
+ * A framing request: combat pulls the camera back and up for the length of a
+ * fight, then hands it back. Player owns the rig and LERPS its own parameters
+ * toward the request, so there is exactly one camera writer and the fx shake
+ * stays additive on top (D46).
+ */
+export interface CameraFraming {
+  distance: number;
+  height: number;
+  shoulder: number;
+  pitch: number;
+  blendMs: number;
+}
+
+const DEFAULT_FRAMING: CameraFraming = {
+  distance: CAMERA_DISTANCE,
+  height: CAMERA_HEIGHT,
+  shoulder: CAMERA_SHOULDER,
+  pitch: 0.18,
+  blendMs: 550
+};
+
 export class Player {
   readonly root: TransformNode;
   readonly state: ControllerState;
@@ -54,6 +76,12 @@ export class Player {
   private cancelRig: (() => void) | null = null;
   private yaw = 0;
   private pitch = 0.18;
+
+  /** The rig parameters actually in use this frame, lerped toward `framing`. */
+  private rig = { distance: CAMERA_DISTANCE, height: CAMERA_HEIGHT, shoulder: CAMERA_SHOULDER };
+  private framing: CameraFraming = DEFAULT_FRAMING;
+  /** While a framing blends in, pitch eases toward its request too. */
+  private framingPitchBlend = 0;
 
   constructor(
     scene: Scene,
@@ -104,6 +132,16 @@ export class Player {
     this.driver.play(verb, performance.now());
   }
 
+  /**
+   * Request a camera framing, or null to return to the exploring default.
+   * The rig eases toward it over the framing's blendMs; look input keeps
+   * working throughout, so the player is never wrestled for the camera.
+   */
+  setCameraFraming(framing: CameraFraming | null): void {
+    this.framing = framing ?? DEFAULT_FRAMING;
+    this.framingPitchBlend = 1;
+  }
+
   /** After a faint-and-wake, let animation run again. */
   revive(): void {
     this.driver.revive();
@@ -123,6 +161,18 @@ export class Player {
 
     this.yaw += intent.look.x;
     this.pitch = Math.min(PITCH_MAX, Math.max(PITCH_MIN, this.pitch + intent.look.y));
+
+    // Ease the rig toward the requested framing. Touching the pitch cancels
+    // the pitch part of the blend: the player took over.
+    if (intent.look.y !== 0) this.framingPitchBlend = 0;
+    const blend = Math.min(1, (dt * 3000) / Math.max(1, this.framing.blendMs));
+    this.rig.distance += (this.framing.distance - this.rig.distance) * blend;
+    this.rig.height += (this.framing.height - this.rig.height) * blend;
+    this.rig.shoulder += (this.framing.shoulder - this.rig.shoulder) * blend;
+    if (this.framingPitchBlend > 0) {
+      this.pitch += (this.framing.pitch - this.pitch) * blend;
+      if (Math.abs(this.pitch - this.framing.pitch) < 0.01) this.framingPitchBlend = 0;
+    }
 
     const { forward, right } = intentToWorld(intent.move.x, intent.move.y, this.yaw);
     step(
@@ -162,7 +212,7 @@ export class Player {
    */
   private updateCamera(world: ControllerWorld): void {
     const focusX = this.state.position.x;
-    const focusY = this.state.position.y + CAMERA_HEIGHT;
+    const focusY = this.state.position.y + this.rig.height;
     const focusZ = this.state.position.z;
 
     const cosPitch = Math.cos(this.pitch);
@@ -171,22 +221,22 @@ export class Player {
     const dirY = Math.sin(this.pitch);
 
     // Shoulder offset, perpendicular to the view direction.
-    const shoulderX = Math.cos(this.yaw) * CAMERA_SHOULDER;
-    const shoulderZ = -Math.sin(this.yaw) * CAMERA_SHOULDER;
+    const shoulderX = Math.cos(this.yaw) * this.rig.shoulder;
+    const shoulderZ = -Math.sin(this.yaw) * this.rig.shoulder;
 
-    let distance = CAMERA_DISTANCE;
+    let distance = this.rig.distance;
     // March along the boom and stop short of the ground. Cheaper than a ray
     // cast against chunk meshes, and the heightfield is the only thing big
     // enough to matter at this distance.
     const STEPS = 6;
     for (let i = 1; i <= STEPS; i++) {
-      const d = (CAMERA_DISTANCE * i) / STEPS;
+      const d = (this.rig.distance * i) / STEPS;
       const px = focusX + dirX * d + shoulderX;
       const pz = focusZ + dirZ * d + shoulderZ;
       const py = focusY + dirY * d;
       const ground = world.heightAt(px, pz) + 0.5;
       if (py < ground) {
-        distance = Math.max(1.4, (CAMERA_DISTANCE * (i - 1)) / STEPS);
+        distance = Math.max(1.4, (this.rig.distance * (i - 1)) / STEPS);
         break;
       }
     }

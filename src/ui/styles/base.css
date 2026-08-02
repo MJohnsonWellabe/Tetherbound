@@ -271,6 +271,22 @@ body {
     0 0 12px rgba(0, 0, 0, 0.55);
 }
 
+/* Wild pal labels: same layer, quieter than a floater. */
+.nameplate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  font-family: var(--font);
+  font-size: var(--fs-xs);
+  color: var(--text);
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--bg-deep) 62%, transparent);
+  border: 1px solid var(--line-soft);
+}
+
 /* Semantics from tokens.css. Lime is "something went your way". */
 .floater--gain {
   color: var(--spore);

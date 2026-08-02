@@ -14,13 +14,16 @@ import { HarvestHud } from './ui/HarvestHud';
 import { HarvestController } from './survival/HarvestController';
 import { add, createInventory } from './survival/Inventory';
 import { CombatMode } from './combat/CombatMode';
+import { CombatStage } from './entities/CombatStage';
 import { Encounter } from './combat/Encounter';
 import { PalVisuals } from './entities/PalVisual';
 import { SpawnManager } from './entities/SpawnManager';
 import { Companion } from './entities/Companion';
 import { Party } from './party/Party';
 import { ReleaseFlow } from './party/Release';
-import { CombatHud } from './ui/CombatHud';
+import { CombatScreen } from './ui/CombatScreen';
+import { ReleasePanel } from './ui/ReleasePanel';
+import { Nameplates } from './ui/Nameplates';
 import { BuildMode } from './building/BuildMode';
 import { SaveManager, type SaveV1 } from './core/SaveManager';
 import { createVitals, tickVitals, spendStamina } from './survival/Vitals';
@@ -178,10 +181,15 @@ async function boot(): Promise<void> {
   const stationViews = new StationViews(scene, stationsOwned, satchel);
   const homestead = new Homestead(stationsOwned, satchel, party, spawner, inventory, world);
 
-  const combatHud = new CombatHud(
+  const combatScreen = new CombatScreen(
     document.getElementById('combat') as HTMLElement,
     combat,
     party,
+    input.intent,
+    inventory
+  );
+  const releasePanel = new ReleasePanel(
+    document.getElementById('release') as HTMLElement,
     release
   );
   const harvestHud = new HarvestHud(
@@ -196,6 +204,19 @@ async function boot(): Promise<void> {
 
   const fx = new Fx(scene, document.getElementById('fx') as HTMLElement);
   const unmountFeel = mountHarvestFeel(fx);
+
+  // The renderer side of a fight: bodies on a facing line, clips from events,
+  // the orb arc, the camera pull. CombatMode itself stays pure.
+  const combatStage = new CombatStage(
+    scene,
+    combat,
+    party,
+    palVisuals,
+    player,
+    fx,
+    (x, z) => terrain.heightAt(x, z)
+  );
+  const nameplates = new Nameplates(document.getElementById('fx') as HTMLElement, spawner);
 
   // M3 and M4: the compass and party HUD, the conversations, and the Hall.
   const hud = new HUD();
@@ -371,7 +392,7 @@ async function boot(): Promise<void> {
       // wandering Tuftmoth can interrupt Bracken.
       if (story.inScriptedFight) combat.update(dt, time.day);
       else encounter.update(player.state.position.x, player.state.position.z, dt, time.day);
-      if (input.intent.throwOrb) combatHud.reportThrow(encounter.throwOrb(time.day));
+      if (input.intent.throwOrb) encounter.throwOrb(time.day);
 
       // The release screen is driven by the same slot input the party uses:
       // pick a number to select, press it again to confirm, throw to cancel.
@@ -389,7 +410,8 @@ async function boot(): Promise<void> {
           }
         }
       }
-      combatHud.update(time.day);
+      combatScreen.update();
+      releasePanel.update(time.day);
 
       // Water follows the player so one plane covers the visible world without
       // being large enough to lose float precision at the horizon.
@@ -448,6 +470,14 @@ async function boot(): Promise<void> {
       // After the camera rig has run and before the draw, so the shake offset
       // lands in the frame it was computed for.
       fx.render(scene, camera, renderer.handles.engine);
+      nameplates.render(
+        scene,
+        camera,
+        renderer.handles.engine.getRenderWidth(),
+        renderer.handles.engine.getRenderHeight(),
+        player.state.position.x,
+        player.state.position.z
+      );
       renderer.render();
       stats?.sample(performance.now());
     }
@@ -503,6 +533,10 @@ async function boot(): Promise<void> {
     dispose: (): void => {
       loop.stop();
       unmountFeel();
+      combatStage.dispose();
+      combatScreen.dispose();
+      releasePanel.dispose();
+      nameplates.dispose();
       fx.dispose();
       dialoguePanel.dispose();
       hud.dispose();

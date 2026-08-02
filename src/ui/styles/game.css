@@ -399,13 +399,14 @@
 
 /* --- the catch ring ------------------------------------------------------ */
 
+/* The ring is a live timing dial, up for the whole fight (the throw is always
+   available), so it must neither dim the fight nor eat the action buttons. */
 .ring {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  pointer-events: auto;
-  background: color-mix(in srgb, var(--bg-deep) 30%, transparent);
+  pointer-events: none;
 }
 
 .ring[hidden] { display: none; }
