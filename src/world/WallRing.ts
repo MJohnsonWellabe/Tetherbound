@@ -78,6 +78,15 @@ function pushRun(
  * given. A ring beats a single inscribed circle on two counts: it hugs the
  * real footprint instead of leaving the corners open, and it can carry a
  * doorway gap at all.
+ *
+ * The two runs bordering the gap stop one collider RADIUS short of the gap's
+ * true edge rather than running exactly to it, so the boundary sphere's own
+ * bulk sits outside the doorway and its EDGE, not its centre, is what meets
+ * the gap line. Centring a fat sphere (radius `step * 0.75`, chosen for
+ * generous overlap along a straight run) directly on the gap boundary would
+ * have eaten most of a house door's ~1m aperture, which is barely wider than
+ * the player capsule to start with; this keeps the full configured gap
+ * walkable regardless of step size.
  */
 export function wallRingColliders(opts: WallRingOptions): WallCollider[] {
   const out: WallCollider[] = [];
@@ -94,9 +103,12 @@ export function wallRingColliders(opts: WallRingOptions): WallCollider[] {
     return out;
   }
 
+  const colliderRadius = opts.step * 0.75;
   const gapMin = Math.max(-hw, doorX - gapWidth / 2);
   const gapMax = Math.min(hw, doorX + gapWidth / 2);
-  pushRun(out, opts, -hw, -hd, gapMin, -hd);
-  pushRun(out, opts, gapMax, -hd, hw, -hd);
+  const leftEdge = Math.max(-hw, gapMin - colliderRadius);
+  const rightEdge = Math.min(hw, gapMax + colliderRadius);
+  pushRun(out, opts, -hw, -hd, leftEdge, -hd);
+  pushRun(out, opts, rightEdge, -hd, hw, -hd);
   return out;
 }

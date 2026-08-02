@@ -56,6 +56,23 @@ describe('wallRingColliders', () => {
     }
   });
 
+  it('keeps the boundary colliders reach clear of the gap, not just their centres', () => {
+    // A fat sphere centred exactly on the gap edge would bulge into it by a
+    // full radius; the nearest collider's EDGE, not centre, must be what
+    // meets the gap line.
+    const doorX = 0;
+    const gapWidth = 1.0;
+    const colliders = wallRingColliders({ ...base, doorGapWidth: gapWidth, doorX, step: 1 });
+    const front = colliders.filter((c) => Math.abs(c.z - -4) < 1e-6);
+    for (const c of front) {
+      const reachMin = c.x - c.radius;
+      const reachMax = c.x + c.radius;
+      // Every front collider's own bulk must stay outside the gap interval.
+      const outsideGap = reachMax <= doorX - gapWidth / 2 + 1e-6 || reachMin >= doorX + gapWidth / 2 - 1e-6;
+      expect(outsideGap).toBe(true);
+    }
+  });
+
   it('defaults to a centred gap when doorX is omitted', () => {
     const colliders = wallRingColliders({ ...base, doorGapWidth: 1 });
     const front = colliders.filter((c) => Math.abs(c.z - -4) < 1e-6);
