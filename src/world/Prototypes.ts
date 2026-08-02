@@ -177,9 +177,16 @@ export function createPrototypes(scene: Scene): PrototypeSet {
     foliage
   );
 
+  // `segments: 2` here was not merely ugly, it was broken. Babylon's sphere
+  // builder degenerates at that subdivision, and the batcher then scales rocks
+  // up to 2.1x (scatter.json), which stretched one of the bad triangles into a
+  // fog-coloured wedge that cut across the whole frame from a distance. It was
+  // visible in three of the nine survey shots and read as a rendering fault
+  // rather than as a rock. `segments: 3` is the lowest value that produces a
+  // closed solid, and costs 8 triangles per rock prototype, not per instance.
   register(
     'rock',
-    seat(CreateSphere('proto_rock', { diameter: 1.8, segments: 2 }, scene), 0.35),
+    seat(CreateSphere('proto_rock', { diameter: 1.8, segments: 3 }, scene), 0.35),
     flat('mat_stone', STONE)
   );
   register(
