@@ -1,0 +1,69 @@
+{
+  "$comment": "Day and night. GAME_DESIGN.md section 9: 20 real minutes per cycle, 14 day and 6 night. TimeOfDay.ts contains no colour or timing literals; it interpolates whatever is here. This was three hardcoded Color3 palettes and a hand-written if/else ladder, which meant every lighting change was a code change against CLAUDE.md rule 5.",
+
+  "cycleSeconds": 1200,
+  "$comment_dayFraction": "Fraction of the cycle that is daylight. 0 is dawn, dayFraction is dusk. The sun's arc is derived from this, so shortening the day also steepens the arc.",
+  "dayFraction": 0.7,
+
+  "$comment_sun": "The sun tracks a LOW arc. A light directly overhead at noon flattens low-poly terrain into a single shade, because every face of a cone or a boxy rock catches the same amount of it. minElevation stops the light going edge-on at dawn and dusk, where the shadow frustum degenerates and shadows stretch to the horizon.",
+  "sun": {
+    "minElevation": 0.25,
+    "swing": 0.8,
+    "tilt": 0.36
+  },
+
+  "$comment_palettes": "Fog density is derived from the prop draw distances in scatter.json, not from taste. Trees stop at 224m and terrain runs to 384m, so the fog has to be thick enough to hide the tree line or the world ends in a visible ring of bare ground. EXP2 at 0.0035 leaves the treeline about half fogged and the terrain horizon about 85% fogged, which reads as depth rather than as a draw distance.",
+  "palettes": {
+    "night": {
+      "$comment": "Moonlight, not black. A night the player cannot navigate at all is not atmospheric, it is a bug report.",
+      "sun": [0.42, 0.5, 0.72],
+      "ambient": [0.2, 0.26, 0.4],
+      "ground": [0.08, 0.1, 0.14],
+      "fog": [0.06, 0.08, 0.13],
+      "sunIntensity": 0.32,
+      "ambientIntensity": 0.22,
+      "fogDensity": 0.0072
+    },
+    "dawn": {
+      "$comment": "Cooler and thicker than dusk. Morning haze sits in the low ground and the light has not burned it off yet, which is what separates a sunrise from a sunset when the palette either side is the same.",
+      "sun": [1, 0.78, 0.62],
+      "ambient": [0.54, 0.56, 0.68],
+      "ground": [0.22, 0.23, 0.2],
+      "fog": [0.72, 0.68, 0.66],
+      "sunIntensity": 1.1,
+      "ambientIntensity": 0.44,
+      "fogDensity": 0.0058
+    },
+    "golden": {
+      "sun": [1, 0.72, 0.44],
+      "ambient": [0.6, 0.55, 0.55],
+      "ground": [0.26, 0.22, 0.17],
+      "fog": [0.78, 0.6, 0.45],
+      "sunIntensity": 1.25,
+      "ambientIntensity": 0.42,
+      "fogDensity": 0.0048
+    },
+    "noon": {
+      "sun": [1, 0.96, 0.86],
+      "ambient": [0.72, 0.8, 0.92],
+      "ground": [0.28, 0.3, 0.2],
+      "fog": [0.64, 0.73, 0.82],
+      "sunIntensity": 1.75,
+      "ambientIntensity": 0.55,
+      "fogDensity": 0.0035
+    }
+  },
+
+  "$comment_stops": "Keyframes through the cycle, smoothstepped between neighbours. Must be sorted by `at`, must start at 0 and end at 1, and the first and last palette must match or the cycle jumps at midnight. tests/lighting.test.ts enforces all three.",
+  "$comment_tuning": "Dawn is its own stop rather than reusing golden. The original ladder ran night -> golden -> noon, which gave sunrise the same warm cast as sunset and made 05:00 and 18:00 indistinguishable in a screenshot. Dusk still falls faster than dawn rises (0.06 of the cycle against 0.12), because losing the light quickly is what makes night feel like it arrived.",
+  "stops": [
+    { "at": 0.0, "palette": "night" },
+    { "at": 0.06, "palette": "dawn" },
+    { "at": 0.16, "palette": "golden" },
+    { "at": 0.28, "palette": "noon" },
+    { "at": 0.57, "palette": "noon" },
+    { "at": 0.7, "palette": "golden" },
+    { "at": 0.76, "palette": "night" },
+    { "at": 1.0, "palette": "night" }
+  ]
+}

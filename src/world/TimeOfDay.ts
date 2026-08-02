@@ -1,4 +1,5 @@
 import { Color3, Color4, DirectionalLight, HemisphericLight, Scene, Vector3 } from '../core/babylon';
+import lighting from '../data/lighting.json';
 
 /**
  * Day and night. GAME_DESIGN.md section 9: 20 real minutes per full cycle,
@@ -8,15 +9,15 @@ import { Color3, Color4, DirectionalLight, HemisphericLight, Scene, Vector3 } fr
  * the save and survives a reload at the same hour.
  */
 
-export const CYCLE_SECONDS = 20 * 60;
+export const CYCLE_SECONDS = lighting.cycleSeconds;
 /** Fraction of the cycle that is daylight. The rest is night. */
-const DAY_FRACTION = 14 / 20;
+const DAY_FRACTION = lighting.dayFraction;
 
-/** 0 is dawn, 0.35 is noon, DAY_FRACTION is dusk. */
+/** 0 is dawn, DAY_FRACTION is dusk. */
 const DAWN = 0;
 const DUSK = DAY_FRACTION;
 
-interface Palette {
+export interface Palette {
   sun: Color3;
   ambient: Color3;
   ground: Color3;
@@ -26,103 +27,78 @@ interface Palette {
   fogDensity: number;
 }
 
-const NOON: Palette = {
-  sun: new Color3(1, 0.96, 0.86),
-  ambient: new Color3(0.72, 0.8, 0.92),
-  ground: new Color3(0.28, 0.3, 0.2),
-  fog: new Color3(0.64, 0.73, 0.82),
-  sunIntensity: 1.75,
-  ambientIntensity: 0.55,
-  // Fog density is set from the prop draw distances in scatter.json, not from
-  // taste. Trees stop at 224m and terrain runs to 384m, so the fog has to be
-  // thick enough to hide the tree line or the world ends in a visible ring of
-  // bare ground. EXP2 at 0.0035 leaves the treeline about half fogged and the
-  // terrain horizon about 85% fogged, which reads as depth rather than as a
-  // draw distance.
-  fogDensity: 0.0035
-};
+interface RawPalette {
+  sun: number[];
+  ambient: number[];
+  ground: number[];
+  fog: number[];
+  sunIntensity: number;
+  ambientIntensity: number;
+  fogDensity: number;
+}
 
-const GOLDEN: Palette = {
-  sun: new Color3(1, 0.72, 0.44),
-  ambient: new Color3(0.6, 0.55, 0.55),
-  ground: new Color3(0.26, 0.22, 0.17),
-  fog: new Color3(0.78, 0.6, 0.45),
-  sunIntensity: 1.25,
-  ambientIntensity: 0.42,
-  fogDensity: 0.0048
-};
+const PALETTES = lighting.palettes as unknown as Record<string, RawPalette>;
+const STOPS = lighting.stops as { at: number; palette: string }[];
 
-const NIGHT: Palette = {
-  // Moonlight, not black. A night the player cannot navigate at all is not
-  // atmospheric, it is a bug report.
-  sun: new Color3(0.42, 0.5, 0.72),
-  ambient: new Color3(0.2, 0.26, 0.4),
-  ground: new Color3(0.08, 0.1, 0.14),
-  fog: new Color3(0.06, 0.08, 0.13),
-  sunIntensity: 0.32,
-  ambientIntensity: 0.22,
-  fogDensity: 0.0072
-};
-
-function lerpColor(a: Color3, b: Color3, t: number, out: Color3): Color3 {
-  out.r = a.r + (b.r - a.r) * t;
-  out.g = a.g + (b.g - a.g) * t;
-  out.b = a.b + (b.b - a.b) * t;
-  return out;
+function rawAt(name: string): RawPalette {
+  const raw = PALETTES[name];
+  if (!raw) throw new Error(`lighting.json names a missing palette "${name}"`);
+  return raw;
 }
 
 function smoothstep(edge0: number, edge1: number, x: number): number {
+  if (edge1 <= edge0) return 0;
   const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
   return t * t * (3 - 2 * t);
 }
 
-/** Blend the three palettes for a point in the cycle. Pure, so it is testable. */
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+function mixColor(a: number[], b: number[], t: number): Color3 {
+  return new Color3(
+    lerp(a[0] as number, b[0] as number, t),
+    lerp(a[1] as number, b[1] as number, t),
+    lerp(a[2] as number, b[2] as number, t)
+  );
+}
+
+/**
+ * Blend the keyframes for a point in the cycle. Pure, so it is testable.
+ *
+ * This was a hand-written if/else ladder over three hardcoded palettes. Making
+ * it a generic walk over sorted stops is what lets `lighting.json` add a dawn
+ * that is cooler than dusk without touching this file, and it is why adding a
+ * fifth palette is a data edit rather than another branch.
+ */
 export function paletteAt(cycle: number): Palette {
   const t = ((cycle % 1) + 1) % 1;
-  const sun = new Color3();
-  const ambient = new Color3();
-  const ground = new Color3();
-  const fog = new Color3();
 
-  let from: Palette;
-  let to: Palette;
-  let k: number;
-
-  if (t < 0.12) {
-    // Dawn: night giving way to full day.
-    from = NIGHT;
-    to = GOLDEN;
-    k = smoothstep(0, 0.12, t);
-  } else if (t < 0.25) {
-    from = GOLDEN;
-    to = NOON;
-    k = smoothstep(0.12, 0.25, t);
-  } else if (t < DUSK - 0.13) {
-    from = NOON;
-    to = NOON;
-    k = 0;
-  } else if (t < DUSK) {
-    from = NOON;
-    to = GOLDEN;
-    k = smoothstep(DUSK - 0.13, DUSK, t);
-  } else if (t < DUSK + 0.06) {
-    from = GOLDEN;
-    to = NIGHT;
-    k = smoothstep(DUSK, DUSK + 0.06, t);
-  } else {
-    from = NIGHT;
-    to = NIGHT;
-    k = 0;
+  let lo = STOPS[0] as { at: number; palette: string };
+  let hi = STOPS[STOPS.length - 1] as { at: number; palette: string };
+  for (let i = 0; i < STOPS.length - 1; i++) {
+    const a = STOPS[i] as { at: number; palette: string };
+    const b = STOPS[i + 1] as { at: number; palette: string };
+    if (t >= a.at && t <= b.at) {
+      lo = a;
+      hi = b;
+      break;
+    }
   }
 
+  const from = rawAt(lo.palette);
+  const to = rawAt(hi.palette);
+  const k = smoothstep(lo.at, hi.at, t);
+
   return {
-    sun: lerpColor(from.sun, to.sun, k, sun),
-    ambient: lerpColor(from.ambient, to.ambient, k, ambient),
-    ground: lerpColor(from.ground, to.ground, k, ground),
-    fog: lerpColor(from.fog, to.fog, k, fog),
-    sunIntensity: from.sunIntensity + (to.sunIntensity - from.sunIntensity) * k,
-    ambientIntensity: from.ambientIntensity + (to.ambientIntensity - from.ambientIntensity) * k,
-    fogDensity: from.fogDensity + (to.fogDensity - from.fogDensity) * k
+    sun: mixColor(from.sun, to.sun, k),
+    ambient: mixColor(from.ambient, to.ambient, k),
+    ground: mixColor(from.ground, to.ground, k),
+    fog: mixColor(from.fog, to.fog, k),
+    sunIntensity: lerp(from.sunIntensity, to.sunIntensity, k),
+    ambientIntensity: lerp(from.ambientIntensity, to.ambientIntensity, k),
+    fogDensity: lerp(from.fogDensity, to.fogDensity, k)
   };
 }
 
@@ -175,9 +151,9 @@ export class TimeOfDay {
     const angle = (this.cycle / DAY_FRACTION) * Math.PI;
     const elevation = Math.sin(Math.min(Math.max(angle, 0), Math.PI));
     this.sun.direction = new Vector3(
-      -Math.cos(angle) * 0.8,
-      -Math.max(0.25, elevation),
-      0.36
+      -Math.cos(angle) * lighting.sun.swing,
+      -Math.max(lighting.sun.minElevation, elevation),
+      lighting.sun.tilt
     ).normalize();
     this.sun.diffuse = p.sun;
     this.sun.intensity = p.sunIntensity;

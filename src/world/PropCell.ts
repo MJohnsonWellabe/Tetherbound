@@ -1,5 +1,6 @@
 import { Matrix, Mesh, Quaternion, Vector3 } from '../core/babylon';
 import { scatterInRect } from './gen/Scatter';
+import { allowedInClearings, clearingsFor } from './Clearings';
 import type { BiomeKind, Terrain } from './gen/Terrain';
 import type { PropFamilyId, PrototypeSet } from './Prototypes';
 
@@ -86,12 +87,18 @@ export function buildPropCell(
     casting: false
   };
 
+  const clearings = clearingsFor(terrain, terrain.seed);
+
   const points = scatterInRect(
     {
       seed: terrain.seed,
       label: family.id,
       mask: (x, z) =>
-        allowedBiomes.has(terrain.biomeAt(x, z)) && terrain.slopeAt(x, z) < family.maxSlope,
+        allowedBiomes.has(terrain.biomeAt(x, z)) &&
+        terrain.slopeAt(x, z) < family.maxSlope &&
+        // Landmarks were placed on ground the scatter had already claimed, so
+        // oaks grew through the village roofs and one sat on the spawn point.
+        allowedInClearings(clearings, family.id, x, z),
       density: (x, z) => {
         const biome = terrain.biomeAt(x, z);
         return family.density[biome] ?? family.density['default'] ?? 1;
