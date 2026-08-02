@@ -1,6 +1,6 @@
 import config from '../../data/input.json';
 import { FIXED_DT } from '../Loop';
-import { applyDeadZone, NEUTRAL_DODGE, type Intent, type InputMode, type PartySlot } from './Intent';
+import { applyDeadZone, type Intent, type InputMode, type PartySlot } from './Intent';
 
 /**
  * Gamepad input. The primary path on a ROG Ally (DECISIONS.md D27).
@@ -44,17 +44,20 @@ const BTN = {
 } as const;
 
 /**
- * Party slots on the d-pad plus Y.
+ * Party slots on the d-pad, plus Y outside a fight.
  *
- * Five slots and four directions, so the fifth goes somewhere. Y is the least
- * used face button in this game because the player never swings a weapon.
+ * Five slots and four d-pad directions, so the fifth goes somewhere. Y used
+ * to always be the fifth; in combat it now means "run" (owner's ROG Ally
+ * playtest: quick, power, orb and flee belong on the four face buttons), so
+ * slot five is only reachable from the d-pad's four directions while
+ * exploring and is handled with the other mode-gated buttons in `poll()`
+ * rather than in this table.
  */
 const SLOT_BUTTONS: Array<[number, PartySlot]> = [
   [BTN.dpadUp, 1],
   [BTN.dpadLeft, 2],
   [BTN.dpadRight, 3],
-  [BTN.dpadDown, 4],
-  [BTN.y, 5]
+  [BTN.dpadDown, 4]
 ];
 
 /** The fields device selection needs, so it is testable without a real Gamepad. */
@@ -186,21 +189,29 @@ export class GamepadLayer {
     this.pollLook(pad);
 
     this.sprint = this.pressed(pad, BTN.leftStick);
+    // The four face buttons: quick, power, orb, run in a fight; jump,
+    // interact and slot five outside one. Owner's ROG Ally playtest asked for
+    // exactly this A/B/X/Y layout so the buttons read the same as the
+    // controller in the player's hands. This retires A's neutral dodge
+    // (D61); Space and the shoulders still dodge, see below.
     if (this.edge(pad, BTN.a)) {
-      // A is jump while exploring and a neutral (straight-back) dodge in a
-      // fight. This used to write 0, which IS the neutral value CombatMode
-      // treats as "no dodge" (`dodge !== 0` in CombatMode.ts), so A never
-      // dodged at all; NEUTRAL_DODGE is the nonzero stand-in for "no lean".
-      if (this.mode === 'combat') this.intent.dodge = NEUTRAL_DODGE;
+      if (this.mode === 'combat') this.intent.quickAttack = true;
       else this.intent.jump = true;
     }
-    if (this.edge(pad, BTN.x)) this.intent.interact = true;
+    if (this.edge(pad, BTN.b)) {
+      if (this.mode === 'combat') this.intent.powerAttack = true;
+    }
+    if (this.edge(pad, BTN.x)) {
+      if (this.mode === 'combat') this.intent.throwOrb = true;
+      else this.intent.interact = true;
+    }
+    if (this.edge(pad, BTN.y)) {
+      if (this.mode === 'combat') this.intent.flee = true;
+      else this.intent.slot = 5;
+    }
     // Opens and closes the pause menu regardless of mode; a fight or a
     // conversation must not be able to block it.
     if (this.edge(pad, BTN.start)) this.intent.pause = true;
-    // B throws. Reachable with the thumb without leaving the right stick,
-    // because the throw has to be available at any instant.
-    if (this.edge(pad, BTN.b)) this.intent.throwOrb = true;
 
     // Shoulders dodge left and right. In explore they do nothing, because the
     // player has no dodge outside a fight.

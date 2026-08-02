@@ -36,6 +36,12 @@ export interface Intent {
   /**
    * The one combat verb. `heldMs` drives the power-attack charge, so it has to
    * survive across frames rather than being a per-frame edge.
+   *
+   * Superseded by `quickAttack` / `powerAttack` below (the owner's ROG Ally
+   * playtest: deciding the move by how long a button was held is invisible on
+   * a handheld). Left wired rather than torn out, since input/* was being
+   * edited by another pass at the same time and this channel costs nothing
+   * left idle; nothing in combat/* reads it any more.
    */
   primary: { down: boolean; heldMs: number };
   /** Edge-triggered. Set for exactly one frame when a dodge is committed. */
@@ -50,6 +56,25 @@ export interface Intent {
    * 3) and must never queue behind an attack's charge.
    */
   throwOrb: boolean;
+  /**
+   * Edge-triggered. Commit a quick attack now. Maps to the A face button, the
+   * left mouse click and the on-screen Quick button: one press, one attack,
+   * no charge to read.
+   */
+  quickAttack: boolean;
+  /**
+   * Edge-triggered. Commit a power attack now, if the charge bar covers it.
+   * CombatMode.attack() is the only place that decides whether it lands; this
+   * is just the request. Maps to the B face button, the right mouse click
+   * (in combat only) and the on-screen Power button.
+   */
+  powerAttack: boolean;
+  /**
+   * Edge-triggered. Retreat from the current fight. Maps to the Y face
+   * button and the on-screen Run button. CombatMode.leave() decides whether
+   * it succeeds; a collared, scripted duel refuses it.
+   */
+  flee: boolean;
   /**
    * Edge-triggered. Open or close the pause menu.
    *
@@ -81,6 +106,9 @@ export function neutralIntent(): Intent {
     dodge: 0,
     slot: null,
     throwOrb: false,
+    quickAttack: false,
+    powerAttack: false,
+    flee: false,
     pause: false
   };
 }
@@ -88,9 +116,10 @@ export function neutralIntent(): Intent {
 /**
  * Clear the edge-triggered fields after a frame has consumed them.
  *
- * `jump`, `interact`, `dodge`, `slot`, `throwOrb` and `pause` are events, not
- * states. Leaving them set means one tap reads as a held button for as long
- * as the frame rate allows, which is how a single jump press becomes a hover.
+ * `jump`, `interact`, `dodge`, `slot`, `throwOrb`, `quickAttack`,
+ * `powerAttack`, `flee` and `pause` are events, not states. Leaving them set
+ * means one tap reads as a held button for as long as the frame rate allows,
+ * which is how a single jump press becomes a hover.
  */
 export function clearEdges(intent: Intent): void {
   intent.jump = false;
@@ -98,6 +127,9 @@ export function clearEdges(intent: Intent): void {
   intent.dodge = 0;
   intent.slot = null;
   intent.throwOrb = false;
+  intent.quickAttack = false;
+  intent.powerAttack = false;
+  intent.flee = false;
   intent.pause = false;
   intent.look.x = 0;
   intent.look.y = 0;
