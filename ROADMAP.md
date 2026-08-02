@@ -101,6 +101,42 @@ HUD is a text readout until M5.
 
 **Done when:** a new player can start cold, pick a starter, and know what to do next without being told.
 
+**Shipped.** The village, Orin, the dialogue system, the full roster and the
+Loamking already existed from earlier sessions; this pass closed the actual
+gap in the "done when": a fresh game landed the player at the world origin
+with an empty party and nothing on screen telling them anything, so combat
+was silently unreachable until someone happened to walk into Orin.
+
+- **The wake-up.** A new game now spawns inside the player's own furnished
+  house (`Structures.ts`'s `HomeAnchor`) instead of the bare origin, reusing
+  the existing boot-overlay fade rather than adding a second one. A loaded
+  save is untouched: it overwrites the spawn point with its own saved
+  position, same as before.
+- **The starting kit moved into the scene.** `main.ts` no longer pre-stuffs
+  the inventory; `orin_intro`'s `give:` effects (already written) are now the
+  only source of the axe, pick, knife, hammer, wood and three orbs.
+- **`Objectives.ts` / `objectives.json`.** A short, ordered, data-driven
+  objective chain (talk to Orin, catch a tuftmoth, head east) with three
+  predicate kinds (flag, party size, item count), rendered through the
+  existing `HUD.setPrompt` and compass, that a loaded save catches up on
+  silently rather than toasting stale progress.
+- **A guaranteed, docile first catch.** `SpawnManager.spawnScripted` places a
+  specific pal at a specific spot; a new `docile` pin on `PalAI.stepAi` locks
+  it to wander/graze regardless of its species' own aggro/flee data; a new
+  `guaranteed` term in `Throw.ts`'s catch formula (`orbs.json`'s
+  `guaranteedChance`) makes the first orb thrown at it land, exactly once,
+  while `first_catch` is unset (D60).
+- **The unreachable fight now says why.** Walking up to a wild pal with an
+  empty party shows a one-time "Talk to Grandpa Orin first" toast instead of
+  silently doing nothing.
+
+Verified end to end on a wiped save with the real build (`npm run build` +
+`npm run preview`): empty inventory and party at boot, the prompt and compass
+pin tracking the active step, Orin's kit and starter landing correctly, the
+scripted tuftmoth spawning docile and catching on the first orb, the party
+reaching two, and the objective chain advancing to "follow the road east."
+439 pre-existing tests plus 24 new ones, all green; `npm run typecheck` clean.
+
 ---
 
 ## M4 — The Meadows Hall (target: 2 sessions)
