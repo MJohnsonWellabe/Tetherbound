@@ -1,0 +1,37 @@
+{
+  "$comment": "Fixed points with seeded placement, GAME_DESIGN.md section 9. Hollowbrook is always at the origin. The Hall and the standing stones are placed at seeded angles inside a distance band, always on ground flat enough to build on. Landmarks.ts searches the band with the world RNG and never calls Math.random.",
+
+  "village": {
+    "name": "Hollowbrook",
+    "at": [0, 0],
+    "radius": 42,
+    "houses": 5,
+    "$comment": "Terrain.ts already flattens a plateau here, so no search is needed."
+  },
+
+  "standingStones": {
+    "name": "The Standing Stones",
+    "distance": [500, 700],
+    "maxSlope": 12,
+    "flattenRadius": 26,
+    "stones": 7,
+    "ringRadius": 11,
+    "boss": "loamking",
+    "respawnDays": 3
+  },
+
+  "hall": {
+    "name": "The Meadows Hall",
+    "distance": [900, 1200],
+    "maxSlope": 9,
+    "flattenRadius": 46,
+    "$comment": "The building is axis-aligned to its own yaw. Interior is one room, entry at -z, Bracken at +z, four alcoves down the long walls.",
+    "footprint": { "width": 26, "depth": 44, "wallHeight": 8 },
+    "alcoves": 4,
+    "roadWidth": 5,
+    "$road": "The road stub points back toward the village so a player who finds the Hall from any direction has a thread to follow home, and a player following the road from the village arrives at the door."
+  },
+
+  "$search": "Both searched landmarks sample candidate angles from the seeded RNG and take the first that clears maxSlope and sits above the waterline. If no candidate in `attempts` qualifies, the flattest seen wins, so world generation always terminates with a placement.",
+  "search": { "attempts": 64 }
+}

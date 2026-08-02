@@ -1,0 +1,205 @@
+{
+  "$comment": "All spoken text, data driven. CLAUDE.md writing style: terse, grounded, no em dashes, no speeches. A node either advances via `next` or ends. `choices` branch. `effect` names a flag or action the DialogueRunner applies; the runner refuses any effect it does not recognise rather than failing silently.",
+
+  "orin_intro": {
+    "speaker": "Grandpa Orin",
+    "nodes": {
+      "start": {
+        "text": "You're going, then. I thought you might.",
+        "next": "orbs"
+      },
+      "orbs": {
+        "text": "Three Worn Pact Orbs. They were mine. They're yours now, and they're all you get from me.",
+        "next": "hall"
+      },
+      "hall": {
+        "text": "The Meadows Hall has been dark six years. Team Tether chained the pals inside it to run their lights.",
+        "next": "east"
+      },
+      "east": {
+        "text": "It's east of here. Follow the road stub when you find it. You'll know the building.",
+        "next": "five"
+      },
+      "five": {
+        "text": "One rule I'll hold you to. Five pals. Never six. You want a sixth, you let one go first, and you do it looking at them.",
+        "next": "choose"
+      },
+      "choose": {
+        "text": "I kept three back from my walking days. Take one.",
+        "choices": [
+          { "label": "Bramblit", "effect": "starter:bramblit", "goto": "picked" },
+          { "label": "Cindercub", "effect": "starter:cindercub", "goto": "picked" },
+          { "label": "Dewdrake", "effect": "starter:dewdrake", "goto": "picked" }
+        ]
+      },
+      "picked": {
+        "text": "Good. Feed it, fight beside it, and don't get it killed to save yourself a walk.",
+        "effect": "flag:met_orin",
+        "next": "end"
+      },
+      "end": {
+        "text": "Go on. I'll be here.",
+        "end": true
+      }
+    }
+  },
+
+  "orin_repeat": {
+    "speaker": "Grandpa Orin",
+    "nodes": {
+      "start": {
+        "text": "East. The Hall. Same as it was this morning.",
+        "end": true
+      }
+    }
+  },
+
+  "orin_victory": {
+    "speaker": "Grandpa Orin",
+    "nodes": {
+      "start": {
+        "text": "You cut them loose. All four.",
+        "next": "sigil"
+      },
+      "sigil": {
+        "text": "That's a Meadow Sigil on your satchel. First of eight, if you've got the legs for it.",
+        "next": "bench"
+      },
+      "bench": {
+        "text": "Bracken's orb bench plans came back with you. Build one and you can make Truestone. You'll want them for what's north.",
+        "end": true
+      }
+    }
+  },
+
+  "villager_farrow": {
+    "speaker": "Farrow",
+    "nodes": {
+      "start": {
+        "text": "Tether came through in the spring. Took two of my grazehorns and left a receipt.",
+        "end": true
+      }
+    }
+  },
+  "villager_mabe": {
+    "speaker": "Mabe",
+    "nodes": {
+      "start": {
+        "text": "Standing stones south of here. Something big sits on them. Don't go at it with one pal.",
+        "end": true
+      }
+    }
+  },
+
+  "grunt_a": {
+    "speaker": "Tether Grunt",
+    "nodes": {
+      "start": {
+        "text": "Hall's closed. Warden's orders.",
+        "next": "warn"
+      },
+      "warn": {
+        "text": "You've got orbs on your belt, so you think you're somebody. Let's log it.",
+        "effect": "fight:grunt_a",
+        "end": true
+      }
+    }
+  },
+  "grunt_a_beaten": {
+    "speaker": "Tether Grunt",
+    "nodes": {
+      "start": {
+        "text": "Fine. Go up. Holt will sort you out.",
+        "end": true
+      }
+    }
+  },
+  "grunt_b": {
+    "speaker": "Tether Grunt",
+    "nodes": {
+      "start": {
+        "text": "You're not on the list.",
+        "next": "warn"
+      },
+      "warn": {
+        "text": "Nobody gets to the tether floor. Not even the ones who ask nicely.",
+        "effect": "fight:grunt_b",
+        "end": true
+      }
+    }
+  },
+  "grunt_b_beaten": {
+    "speaker": "Tether Grunt",
+    "nodes": {
+      "start": {
+        "text": "Door's behind me. I'm not stopping you twice.",
+        "end": true
+      }
+    }
+  },
+
+  "bracken_intro": {
+    "speaker": "Bracken Holt",
+    "nodes": {
+      "start": {
+        "text": "Six years I've kept this Hall. You're the first one to get past the door.",
+        "next": "why"
+      },
+      "why": {
+        "text": "I was a ranger. I know what the collars do. I took the post so it wouldn't go to someone who didn't care.",
+        "next": "collar"
+      },
+      "collar": {
+        "text": "Don't waste an orb on my three. Collared pals don't answer a pact. It'll bounce.",
+        "next": "fight"
+      },
+      "fight": {
+        "text": "Cut the tethers if you can hold your five together. I'd rather it was you than the next one.",
+        "effect": "fight:bracken",
+        "end": true
+      }
+    }
+  },
+
+  "bracken_defeat": {
+    "speaker": "Bracken Holt",
+    "nodes": {
+      "start": {
+        "text": "That's enough. Collars off.",
+        "next": "cut"
+      },
+      "cut": {
+        "text": "Four go back to the grass. The big one has been down there eighteen levels' worth of angry.",
+        "next": "sigil"
+      },
+      "sigil": {
+        "text": "Meadow Sigil. Take it. And the orb bench plans, they're no use to me now.",
+        "next": "warn"
+      },
+      "warn": {
+        "text": "Seven Halls left. The Steward runs them all and he does not take the job as gently as I did.",
+        "effect": "victory:meadow",
+        "end": true
+      }
+    }
+  },
+
+  "loamking_offer": {
+    "speaker": "Loamking",
+    "nodes": {
+      "start": {
+        "text": "The collar is off. It watches you and does not leave.",
+        "next": "ask"
+      },
+      "ask": {
+        "text": "It wants to come.",
+        "choices": [
+          { "label": "Take it", "effect": "recruit:loamking", "goto": "taken" },
+          { "label": "Leave it", "goto": "left" }
+        ]
+      },
+      "taken": { "text": "It falls in behind you.", "end": true },
+      "left": { "text": "It turns back toward the stones.", "end": true }
+    }
+  }
+}
