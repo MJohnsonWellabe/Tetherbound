@@ -41,6 +41,28 @@ a state read out of a running browser before you say a thing works.
   over axe, pick, knife, hammer, 40 wood and 3 worn orbs, grants exactly one
   starter, sets `met_orin` and `took_starter`, and the objective advances to
   "Catch a tuftmoth in the meadow past the fence".
+- **Vegetation renders where you stand.** Every prop cell of a family shared one
+  Geometry, and `thinInstanceSetBuffer` writes matrices into the geometry, so
+  all nine resident cells overwrote each other and the nearest-first build queue
+  meant the FARTHEST cell won. Trees on the horizon, bare ground underfoot,
+  while the per-cell harvest colliders stayed correct, which is why an invisible
+  bush still asked for a knife. `makeGeometryUnique()` per cell.
+- **Gamepad picks the standard-mapping pad.** Nothing was unmapped; the picker
+  took the first `getGamepads()` entry without checking `mapping`, and an Ally
+  enumerates several HID devices. See the unverified caveat below (D61).
+- **One dialogue tap advances one screen.** The panel advanced on pointerdown
+  and the same touch bubbled to TouchLayer and advanced again. Proven by
+  disabling and restoring the guard.
+- **The wake-up room is legible.** Boom resolved to 1.73m indoors with a 1.67m
+  visible extent against a 1.8m character, so the screen was the player's back.
+  Now 2.4m and 2.32m. Plus all three door bugs, and the Hall entrance which was
+  fully impassable.
+- **Combat is readable (D63 pending).** Four actions on the face buttons in a
+  diamond around a centre-framed target, lit by `suggestActions()`. Verified in
+  a real fight against a real tuftmoth.
+- **Hollowbrook is prebuilt Quaternius buildings (D62).** The pack bakes shading
+  into its albedo (0.10-0.16 mean per channel against 0.48-0.67 for Kenney), so
+  every job from it bakes through a gamma of 0.4 or it renders as silhouettes.
 - **Story bugs.** Orin replayed his whole introduction (starter choice
   included) on every talk; the starter was farmable by releasing your only pal;
   the Loamking offer granted the pal before asking, so "Leave it" gave it to
@@ -49,32 +71,31 @@ a state read out of a running browser before you say a thing works.
 
 ## Known gaps, honestly stated
 
-- **The guaranteed first catch is agent-verified, not orchestrator-verified.**
-  A subagent drove it end to end with screenshots (docile tuftmoth at (65,0),
-  one orb, party reaches 2, `first_catch` set). My own probe of the spawner
-  pool returned zero pals of any kind, which means my accessor was wrong rather
-  than the spawn, but I did not close that loop. Verify it before trusting it.
-- **Toon shading is committed but not judged.** It is real, correctly scoped to
-  pals/NPCs/player via `mountRig`, and config-gated in `lighting.json` with a
-  `?toon=0` override. Both the implementing agent and I read it as a marginal
-  improvement, not the Palworld transformation the owner asked for: these
-  models already shade nearly flat per face, so band quantization has little
-  gradient to bite on. Next levers are `rimStrength`/`rimPower` or dropping to
-  2 bands. Run the `visual-judge` skill against a real contact sheet before
-  deciding it earns its place.
-- **The furnished home house has no real light.** `PointLight` is not exported
-  from `src/core/babylon.ts`, so it ships an emissive lamp mesh that reads warm
-  but casts nothing. Add the export and a real light.
-- **Combat polish never happened.** All of these are diagnosed and unfixed:
-  no leash (walk away and the fight HUD stays up forever), encounters can start
-  mid-dialogue, the power attack is a dead silent button below level 8 (the
-  charge bar needs 9 quick hits and early enemies die in 5, and `MoveResolver`
-  returns 0 damage with no feedback), the telegraph and dodge never fire against
-  sub-level-8 enemies which is every early Meadows spawn, and there is no ALERT
-  pose during the 2.5s opening grace.
-- **Pages deploy is blocked.** Pushing `claude/tetherbound-game-plan-w40lbs`
-  was denied by the permission classifier. It is a clean fast-forward from
-  main. The owner has to approve it or deploy another way.
+**Performance is over budget near the new village buildings.** Measured at
+1280x720: 11.9 to 13.7ms frame time within about 7m of the four Quaternius
+buildings, against an 8ms budget, and 154 to 171 draw calls against a ceiling
+of 150. Open meadow is fine (3.0 to 3.4ms, 132 draws). The buildings are 5,700
+to 7,800 raw triangles against 760 to 2,840 for the Kenney composites they
+replaced. Already tried and did NOT close it: simplify at ratio 0.4, and
+dropping shadow casting on village houses. The models ship flat shaded with a
+unique vertex per face, so the simplifier has no shared topology to collapse
+and an error sweep from 0 to 5.0 plateaus. Best current theory, reached by
+elimination rather than proof: main pass fragment overdraw from these
+buildings' own open architecture (stilts, overhangs, see-through archways).
+Suggested next steps: normal-smoothed LOD proxies, or pick less open models
+for the slots nearest the player. Recorded in D62.
+
+**The starter trio is spread along the wrong axis.** The picker works and the
+creatures are visible, but they line up in depth rather than left to right, so
+the third card's creature sits partly behind the card row. `starterPicker.json`
+is tuned as far as data alone goes; fixing it properly means changing the
+placement code in `src/ui/starterPlacement.ts`.
+
+**The gamepad fix has never been tested on real hardware.** There is no
+physical pad in this environment. It is proven only by unit tests over the
+selection function and a mocked dual-pad enumeration. The `?stats=1` overlay
+now prints the chosen pad id and flags a non-standard mapping, which is the
+first thing to read if the owner reports it still broken.
 
 ## Harness trap that will cost you an hour
 
