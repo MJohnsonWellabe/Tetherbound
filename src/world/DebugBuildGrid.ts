@@ -20,7 +20,7 @@ import type { Terrain } from './gen/Terrain';
  * param is present, and nothing here runs at import time.
  */
 
-const SPACING = 6;
+const SPACING = 9;
 const COLUMNS = 6;
 /** Well clear of Hollowbrook and the standing stones, so it never overlaps them. */
 const GRID_ORIGIN = { x: 0, z: 260 };
@@ -37,7 +37,12 @@ export async function buildDebugGrid(
   const root = new TransformNode('debug_build_grid', scene);
 
   const houseUrls = models.buildings.houses.variants.map((v) => v.url);
+  const villageUrls = models.buildings.village.variants.map((v) => v.url);
   const stationEntries = Object.entries(models.stations) as [string, { url: string; scale: number }][];
+  const furnitureEntries = Object.entries(models.buildings.houses.homeFurniture) as [
+    string,
+    { url: string; scale: number }
+  ][];
   const dressingUrls = (models.buildings.dressing as { url: string }[]).map((d) => d.url);
   const pieceIds = allPieceIds();
 
@@ -48,13 +53,29 @@ export async function buildDebugGrid(
       url: v.url,
       scale: v.scale
     })),
+    ...models.buildings.village.variants.map((v, i) => ({
+      label: `village_${i}`,
+      kind: 'structure' as const,
+      url: v.url,
+      scale: v.scale
+    })),
     { label: 'hall_shell', kind: 'structure', url: models.buildings.hall.shell.url, scale: models.buildings.hall.shell.scale },
     ...stationEntries.map(([id, s]) => ({ label: id, kind: 'structure' as const, url: s.url, scale: s.scale })),
+    ...furnitureEntries.map(([id, f]) => ({ label: `furniture_${id}`, kind: 'structure' as const, url: f.url, scale: f.scale })),
     ...dressingUrls.map((url, i) => ({ label: `dressing_${i}`, kind: 'structure' as const, url, scale: 1 })),
     ...pieceIds.map((id) => ({ label: id, kind: 'piece' as const }))
   ];
 
-  const structureUrls = [...new Set([...houseUrls, models.buildings.hall.shell.url, ...stationEntries.map(([, s]) => s.url), ...dressingUrls])];
+  const structureUrls = [
+    ...new Set([
+      ...houseUrls,
+      ...villageUrls,
+      models.buildings.hall.shell.url,
+      ...stationEntries.map(([, s]) => s.url),
+      ...furnitureEntries.map(([, f]) => f.url),
+      ...dressingUrls
+    ])
+  ];
   const sources = await loadStructureSources(scene, structureUrls);
 
   for (let i = 0; i < cells.length; i++) {

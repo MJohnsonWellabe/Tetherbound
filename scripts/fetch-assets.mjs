@@ -74,7 +74,28 @@ export const PIZZA = [
   { id: '7pn3R6hPvE', as: 'characters/villager_m.glb' }, // Farmer
   { id: 'nIItLV9nxS', as: 'characters/villager_f.glb' }, // Animated Woman
   { id: 'y9KWOVG21R', as: 'characters/tether.glb' }, // Hooded Adventurer
-  { id: 'I1gTjmuK2m', as: 'characters/warden.glb' } // King
+  { id: 'I1gTjmuK2m', as: 'characters/warden.glb' }, // King
+  // Village: Quaternius Medieval Village Pack, whole prebuilt buildings so
+  // Hollowbrook stops being hand-stacked wall/roof tiles (roofs were 36-51%
+  // of total building height, see docs/decisions/D62). Same artist as every
+  // creature and humanoid above, so the village stops clashing with the
+  // people standing in it. The player's own home stays the Kenney composite
+  // (house_a) because it needs an interior and a working door; these are set
+  // dressing, so a solid shell is all they need.
+  { id: 'BH2XHWUNmF', as: 'village/house_b.glb' }, // Fantasy House B
+  { id: 'dcPho4SUA3', as: 'village/house_c.glb' }, // Fantasy House C
+  { id: 'x3ZcGn3jr4', as: 'village/inn.glb' }, // Inn
+  { id: 'bV52eTG1Aj', as: 'village/blacksmith.glb' }, // Blacksmith
+  { id: 'QlqncKYxXb', as: 'village/well.glb' }, // Well
+  { id: 'Azj9hJwwwG', as: 'village/bonfire.glb' }, // Bonfire
+  { id: 'hts7l0NZxW', as: 'village/market_stand.glb' }, // Market Stand
+  { id: 'DGIM5HGISb', as: 'village/market_stand_2.glb' }, // Market Stand 2
+  { id: 'l7bDe7ak6j', as: 'village/cart.glb' }, // Cart
+  { id: 'jLxjFxFRpw', as: 'village/bench.glb' }, // Bench
+  { id: '7uSlZo3n9Y', as: 'village/bench_2.glb' }, // Bench 2
+  { id: 'zjCQP1TAci', as: 'village/barrel.glb' }, // Barrel
+  { id: '3OEFd1AWfa', as: 'village/crate.glb' }, // Crate
+  { id: 'UXmKfG81fG', as: 'village/fence.glb' } // Fence
 ];
 
 const args = process.argv.slice(2);

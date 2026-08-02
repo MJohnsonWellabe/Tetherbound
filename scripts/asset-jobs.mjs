@@ -287,6 +287,8 @@ const hall = [
 ];
 
 const KENNEY = (kit) => ({ source: `https://kenney.nl/assets/${kit}`, author: 'Kenney', license: 'CC0' });
+const QUATERNIUS = { source: 'https://poly.pizza/u/Quaternius', author: 'Quaternius', license: 'CC0 1.0' };
+const PZ = 'pizza/village';
 
 // Composites ship quantized: float32 attributes alone put the 150-piece hall
 // over the 420 KB gate, and quantization is exact at kit precision. The
@@ -306,24 +308,85 @@ const buildings = [
   out: `models/buildings/${out}.glb`,
   provenance: KENNEY('fantasy-town-kit')
 })).concat(
+  // Whole prebuilt village buildings, Quaternius Medieval Village Pack. Every
+  // village house used to be Fantasy Town Kit wall/roof tiles stacked by
+  // roofRing4 above, and the roof alone ran 36-51% of total building height
+  // (the Hall's own hip rings excepted, this file's houseA/B/C). These are
+  // single already-composed GLBs, so the 'prop' transform (bake to vertex
+  // colours, merge to one mesh, seat at y=0) is the right path: same
+  // contract PropModels.ts already uses, no composite positioning needed.
+  // Scale targets a plausible real-world cottage/landmark height per model
+  // (measured from the raw GLB, docs/decisions/D62); the player's own home
+  // stays the Kenney house_a composite above because only it has a doorway
+  // aperture and the furnishHome() numbers below are tuned to its footprint.
+  [
+    { file: `${PZ}/house_b.glb`, out: 'village_house_b', scale: 1.35 },
+    { file: `${PZ}/house_c.glb`, out: 'village_house_c', scale: 1.5 },
+    { file: `${PZ}/inn.glb`, out: 'village_inn', scale: 1.6 },
+    { file: `${PZ}/blacksmith.glb`, out: 'village_blacksmith', scale: 1.45 }
+  ].map(({ file, out, scale }) => ({
+    group: 'buildings',
+    transform: 'prop',
+    scale,
+    // Whole prebuilt buildings carry far more geometry than a Kenney kit
+    // tile, so float32 attributes put every one of these over the 420 KB
+    // gate the same way the Hall composite did. Same fix: quantize (D47's
+    // 16-bit positions/8-bit colours are exact well past kit precision at
+    // building scale, tested at ~0.1mm) rather than a wider budget or a
+    // lossy simplify pass that would touch the silhouette.
+    quantize: true,
+    sources: [{ file }],
+    out: `models/buildings/${out}.glb`,
+    provenance: QUATERNIUS
+  }))
+).concat(
   // Single-piece village dressing and the Hall banner. The 'prop' transform
   // recentres XZ and seats y=0, so placement code needs no per-model fixups.
+  // well/cart/fence keep their Fantasy Town Kit output names but now come
+  // from the Quaternius pack, dressing the square in the same family as the
+  // buildings above; 'stall' is retired in favour of the two market stands.
   [
-    { file: `${FT}/banner-red.glb`, out: 'banner', scale: 4.0 },
-    { file: `${FT}/fountain-round-detail.glb`, out: 'well', scale: 2.2 },
-    { file: `${FT}/stall-red.glb`, out: 'stall', scale: 2.5 },
-    { file: `${FT}/cart.glb`, out: 'cart', scale: 2.2 },
-    { file: `${FT}/fence.glb`, out: 'fence', scale: 2.5 },
-    { file: `${FT}/lantern.glb`, out: 'lantern', scale: 2.0 }
-  ].map(({ file, out, scale }) => ({
+    { file: `${FT}/banner-red.glb`, out: 'banner', scale: 4.0, provenance: KENNEY('fantasy-town-kit') },
+    { file: `${PZ}/well.glb`, out: 'well', scale: 1.4, provenance: QUATERNIUS },
+    { file: `${PZ}/cart.glb`, out: 'cart', scale: 1.4, provenance: QUATERNIUS },
+    { file: `${PZ}/fence.glb`, out: 'fence', scale: 3.3, provenance: QUATERNIUS },
+    { file: `${PZ}/bonfire.glb`, out: 'bonfire', scale: 2.6, provenance: QUATERNIUS },
+    { file: `${PZ}/market_stand.glb`, out: 'market_stand', scale: 2.1, provenance: QUATERNIUS },
+    { file: `${PZ}/market_stand_2.glb`, out: 'market_stand_2', scale: 2.1, provenance: QUATERNIUS },
+    { file: `${PZ}/bench.glb`, out: 'bench', scale: 1.55, provenance: QUATERNIUS },
+    { file: `${PZ}/bench_2.glb`, out: 'bench_2', scale: 2.4, provenance: QUATERNIUS },
+    { file: `${PZ}/barrel.glb`, out: 'barrel', scale: 3.75, provenance: QUATERNIUS },
+    { file: `${PZ}/crate.glb`, out: 'crate', scale: 3.1, provenance: QUATERNIUS },
+    { file: `${FT}/lantern.glb`, out: 'lantern', scale: 2.0, provenance: KENNEY('fantasy-town-kit') }
+  ].map(({ file, out, scale, provenance }) => ({
     group: 'buildings',
     transform: 'prop',
     scale,
     sources: [{ file }],
     out: `models/buildings/${out}.glb`,
-    provenance: KENNEY('fantasy-town-kit')
+    provenance
   }))
 );
+
+// The player's home furniture: furniture-kit pieces to replace the
+// unsupported floating lamp and give the one furnished house a lived-in
+// read. Scale follows the same bedSingle convention already shipped
+// (models/stations/bed.glb): the kit's raw units come out close to real
+// metres once multiplied, measured per model below.
+const furniture = [
+  { file: `${FK}/sideTable.glb`, out: 'side_table', scale: 1.3 },
+  { file: `${FK}/chair.glb`, out: 'chair', scale: 1.6 },
+  { file: `${FK}/bookcaseOpen.glb`, out: 'bookcase', scale: 1.5 },
+  { file: `${FK}/rugRound.glb`, out: 'rug', scale: 1.6 },
+  { file: `${FK}/lampRoundTable.glb`, out: 'lamp', scale: 1.35 }
+].map(({ file, out, scale }) => ({
+  group: 'furniture',
+  transform: 'prop',
+  scale,
+  sources: [{ file }],
+  out: `models/furniture/${out}.glb`,
+  provenance: KENNEY('furniture-kit')
+}));
 
 // Stations: scale baked so the shipped mesh is world-sized; models.json keeps
 // a runtime scale knob at 1 for retuning without a pipeline re-run.
@@ -347,6 +410,7 @@ export const JOBS = [
   ...textures,
   ...buildings,
   ...stations,
+  ...furniture,
   ...creatures,
   ...characters
 ];

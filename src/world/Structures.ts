@@ -158,10 +158,31 @@ const HOUSE_VARIANTS = models.buildings.houses.variants;
 const DRESSING = models.buildings.dressing as DressingEntry[];
 type HouseVariant = (typeof HOUSE_VARIANTS)[number];
 type HouseDoorConfig = NonNullable<HouseVariant['door']>;
+
+/**
+ * What a ring slot actually gets built from. The player's own home is always
+ * `HOME_VARIANT` (house_a, the one Kenney composite with a doorway aperture
+ * and furnishHome() numbers tuned to its footprint); every other slot cycles
+ * through `VILLAGE_VARIANTS`, whole prebuilt Quaternius buildings with no
+ * `door` field at all. That absence is what keeps a village house a sealed
+ * shell: the `if (door)` branches below never register a DoorRegistry entry,
+ * mount a leaf, or cut a wall-ring gap for one, and the collider falls
+ * through to the real loaded model's own bounding box instead of an
+ * aperture-plane guess (docs/decisions/D62).
+ */
+interface HouseSlotVariant {
+  url: string;
+  scale: number;
+  door?: HouseDoorConfig;
+}
+const HOME_VARIANT: HouseSlotVariant = HOUSE_VARIANTS[0]!;
+const VILLAGE_VARIANTS: HouseSlotVariant[] = models.buildings.village.variants;
+
 const WALL_STEP = landmarks.village.wallColliderStep;
 const HOME = landmarks.village.home;
 const DOOR_LEAF = models.buildings.houses.doorLeaf;
 const BED_MODEL = models.stations.bed;
+const HOME_FURNITURE = models.buildings.houses.homeFurniture;
 /** See landmarks.json's playerRadius comment for why this is duplicated here. */
 const PLAYER_RADIUS = landmarks.playerRadius;
 
@@ -200,7 +221,7 @@ export function buildVillage(
     width: number;
     depth: number;
     height: number;
-    variant: HouseVariant;
+    variant: HouseSlotVariant;
   }
   const slots: Slot[] = [];
 
@@ -215,7 +236,7 @@ export function buildVillage(
       width: h.width,
       depth: h.depth,
       height: h.height,
-      variant: HOUSE_VARIANTS[i % HOUSE_VARIANTS.length]!
+      variant: i === homeIndex ? HOME_VARIANT : VILLAGE_VARIANTS[i % VILLAGE_VARIANTS.length]!
     });
   }
 
@@ -257,7 +278,15 @@ export function buildVillage(
   const doorUnregisters: (() => void)[] = [];
 
   void (async () => {
-    const urls = [...slots.map((s) => s.variant.url), ...DRESSING.map((d) => d.url), BED_MODEL.url];
+    const furnitureUrls = [
+      BED_MODEL.url,
+      HOME_FURNITURE.table.url,
+      HOME_FURNITURE.lamp.url,
+      HOME_FURNITURE.chair.url,
+      HOME_FURNITURE.bookcase.url,
+      HOME_FURNITURE.rug.url
+    ];
+    const urls = [...slots.map((s) => s.variant.url), ...DRESSING.map((d) => d.url), ...furnitureUrls];
     const sources = await loadStructureSources(scene, urls);
     if (disposed || scene.isDisposed) return;
 
@@ -314,7 +343,13 @@ export function buildVillage(
 
       if (door) doorUnregisters.push(mountHouseDoor(scene, slot.node, door, doorRegistry, shadows, p));
       if (i === homeIndex) {
-        furnishHome(scene, slot.node, shadows, p, sources.get(BED_MODEL.url) ?? null);
+        furnishHome(scene, slot.node, shadows, p, sources.get(BED_MODEL.url) ?? null, {
+          table: sources.get(HOME_FURNITURE.table.url) ?? null,
+          lamp: sources.get(HOME_FURNITURE.lamp.url) ?? null,
+          chair: sources.get(HOME_FURNITURE.chair.url) ?? null,
+          bookcase: sources.get(HOME_FURNITURE.bookcase.url) ?? null,
+          rug: sources.get(HOME_FURNITURE.rug.url) ?? null
+        });
       }
     }
 
@@ -409,24 +444,41 @@ function mountHouseDoor(
   return doorRegistry.register(handle);
 }
 
+/** The home's Furniture Kit pieces, once (or if) each has loaded. See furnishHome. */
+interface HomeFurnitureSources {
+  table: Mesh | null;
+  lamp: Mesh | null;
+  chair: Mesh | null;
+  bookcase: Mesh | null;
+  rug: Mesh | null;
+}
+
 /**
- * Furniture for the player's home: a floor slab, a bed, and a warm point
- * light by it, so this one house reads as lived-in rather than a gray shell
- * like every other one. Everything here is a child of the house's own node
- * so it disposes with the house automatically (TransformNode.dispose walks
- * every descendant Node, lights included, not only meshes).
+ * Furniture for the player's home: a floor slab, a bed, a nightstand and lamp,
+ * a chair, a bookcase, a rug, and a warm point light, so this one house reads
+ * as lived-in rather than a gray shell like every other one. Everything here
+ * is a child of the house's own node so it disposes with the house
+ * automatically (TransformNode.dispose walks every descendant Node, lights
+ * included, not only meshes).
  *
  * `bedSource` is the real furniture-kit bed model once it has loaded
  * (models.stations.bed, the same GLB the bed station already places, so this
  * needs no new asset job); a box frame and a bedding slab stand in per the
  * D44 degrade-one-thing rule while it is in flight or if it never arrives.
+ * `furniture` follows the same rule for the table (a plain box, so the lamp
+ * always has something to stand on) and the lamp itself (the old emissive
+ * cylinder). The chair, bookcase and rug are pure dressing with no
+ * gameplay stake in being there, so they are simply absent rather than
+ * primitive stand-ins if their model never arrives, same as village
+ * dressing below.
  */
 function furnishHome(
   scene: Scene,
   houseNode: TransformNode,
   shadows: ShadowGenerator | null,
   p: Palette,
-  bedSource: Mesh | null
+  bedSource: Mesh | null,
+  furniture: HomeFurnitureSources
 ): void {
   const node = new TransformNode('home_furniture', scene);
   node.parent = houseNode;
@@ -472,19 +524,88 @@ function furnishHome(
     bedding.parent = bedSlot;
   }
 
-  const lamp = CreateCylinder(
-    'home_lamp',
-    { height: HOME.lamp.radius * 2, diameter: HOME.lamp.radius * 2, tessellation: 8 },
-    scene
-  );
-  lamp.position.set(HOME.lamp.x, HOME.lamp.y, HOME.lamp.z);
-  lamp.material = p.lamp;
-  lamp.isPickable = false;
-  lamp.parent = node;
+  // The nightstand and its lamp: the lamp was a bare emissive cylinder
+  // floating at HOME.lamp.y with nothing under it (D62). tableTopY is the
+  // real table's own baked height, reused for the fallback stand-in too, so
+  // the lamp lands at the same height either way.
+  const tableSlot = new TransformNode('home_table_slot', scene);
+  tableSlot.parent = node;
+  tableSlot.position.set(HOME.table.x, 0, HOME.table.z);
+  tableSlot.rotation.y = (HOME.table.yawDeg * Math.PI) / 180;
+
+  const tableTopY = HOME_FURNITURE.table.height;
+  if (furniture.table) {
+    const mesh = placeStructure(scene, furniture.table, 'home_table_model', tableSlot);
+    mesh.scaling.scaleInPlace(HOME_FURNITURE.table.scale);
+    shadows?.addShadowCaster(mesh, false);
+    mesh.freezeWorldMatrix();
+  } else {
+    const stand = CreateBox('home_table_stand', { width: 0.6, depth: 0.4, height: tableTopY }, scene);
+    stand.position.set(0, tableTopY / 2, 0);
+    stand.material = p.timber;
+    stand.isPickable = false;
+    stand.parent = tableSlot;
+    shadows?.addShadowCaster(stand, false);
+  }
+
+  const lampSlot = new TransformNode('home_lamp_slot', scene);
+  lampSlot.parent = tableSlot;
+  lampSlot.position.set(0, tableTopY, 0);
+
+  if (furniture.lamp) {
+    const mesh = placeStructure(scene, furniture.lamp, 'home_lamp_model', lampSlot);
+    mesh.scaling.scaleInPlace(HOME_FURNITURE.lamp.scale);
+    shadows?.addShadowCaster(mesh, false);
+    mesh.freezeWorldMatrix();
+  } else {
+    const lamp = CreateCylinder(
+      'home_lamp',
+      { height: HOME.lamp.radius * 2, diameter: HOME.lamp.radius * 2, tessellation: 8 },
+      scene
+    );
+    lamp.position.set(0, HOME.lamp.radius, 0);
+    lamp.material = p.lamp;
+    lamp.isPickable = false;
+    lamp.parent = lampSlot;
+  }
+
+  // Chair, bookcase, rug: garnish, same "absent beats a stall" rule the
+  // village dressing loop uses. None of them carries a collider; the room is
+  // one small square and the wall ring already keeps the player inside it.
+  if (furniture.chair) {
+    const slot = new TransformNode('home_chair_slot', scene);
+    slot.parent = node;
+    slot.position.set(HOME.chair.x, 0, HOME.chair.z);
+    slot.rotation.y = (HOME.chair.yawDeg * Math.PI) / 180;
+    const mesh = placeStructure(scene, furniture.chair, 'home_chair_model', slot);
+    mesh.scaling.scaleInPlace(HOME_FURNITURE.chair.scale);
+    shadows?.addShadowCaster(mesh, false);
+    mesh.freezeWorldMatrix();
+  }
+  if (furniture.bookcase) {
+    const slot = new TransformNode('home_bookcase_slot', scene);
+    slot.parent = node;
+    slot.position.set(HOME.bookcase.x, 0, HOME.bookcase.z);
+    slot.rotation.y = (HOME.bookcase.yawDeg * Math.PI) / 180;
+    const mesh = placeStructure(scene, furniture.bookcase, 'home_bookcase_model', slot);
+    mesh.scaling.scaleInPlace(HOME_FURNITURE.bookcase.scale);
+    shadows?.addShadowCaster(mesh, false);
+    mesh.freezeWorldMatrix();
+  }
+  if (furniture.rug) {
+    const slot = new TransformNode('home_rug_slot', scene);
+    slot.parent = node;
+    slot.position.set(HOME.rug.x, 0.01, HOME.rug.z);
+    slot.rotation.y = (HOME.rug.yawDeg * Math.PI) / 180;
+    const mesh = placeStructure(scene, furniture.rug, 'home_rug_model', slot);
+    mesh.scaling.scaleInPlace(HOME_FURNITURE.rug.scale);
+    mesh.freezeWorldMatrix();
+  }
 
   // The only PointLight in the game (a handheld target keeps it to one):
-  // the emissive cylinder above reads as a lamp but casts nothing, which is
-  // why the room read as pitch black even standing right beside it.
+  // neither the real lamp mesh nor its emissive-cylinder fallback casts
+  // anything on its own, which is why the room read as pitch black even
+  // standing right beside it before this light existed.
   const light = new PointLight(
     'home_lamp_light',
     new Vector3(HOME.lamp.x, HOME.lamp.y, HOME.lamp.z),
