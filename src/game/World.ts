@@ -64,8 +64,25 @@ export function buildWorld(
 
   const npcs = new NpcRegistry();
 
-  // Hollowbrook. Orin stands just off the origin so the player spawns facing
-  // him rather than inside him.
+  // Hollowbrook. Orin waits inside the player's own home house rather than
+  // walking in to meet them: there is no NPC movement system at all
+  // (src/entities/NPC.ts has no per-frame update, NpcRegistry has no tick),
+  // so "he comes in to greet you" has to mean "he is already there" instead.
+  // Offset from the room's centre (exactly where the player wakes up, see
+  // main.ts's wakePos) so the two do not spawn standing inside each other,
+  // and faced back toward that centre so he is not turned to the wall.
+  const home = village.home;
+  const orinOffset = landmarks.village.home.orinOffset;
+  const orinPos = home
+    ? pointNear(
+        { x: home.position.x, y: home.position.y, z: home.position.z, yaw: home.yaw },
+        orinOffset.forward,
+        orinOffset.side
+      )
+    : new Vector3(4, terrain.heightAt(4, 6), 6);
+  const orinYaw = home
+    ? Math.atan2(home.position.x - orinPos.x, home.position.z - orinPos.z)
+    : Math.PI;
   npcs.add(
     new Npc(
       scene,
@@ -73,8 +90,8 @@ export function buildWorld(
         id: 'orin',
         name: 'Grandpa Orin',
         role: 'elder',
-        position: new Vector3(4, terrain.heightAt(4, 6), 6),
-        yaw: Math.PI,
+        position: orinPos,
+        yaw: orinYaw,
         dialogue: 'orin_intro'
       },
       shadows

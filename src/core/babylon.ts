@@ -66,6 +66,9 @@ export { MaterialPluginBase } from '@babylonjs/core/Materials/materialPluginBase
 // --- lights and shadows ----------------------------------------------------
 export { DirectionalLight } from '@babylonjs/core/Lights/directionalLight';
 export { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
+// The home house's lamp. One PointLight, total, per the ROG Ally budget: see
+// its call site in src/world/Structures.ts.
+export { PointLight } from '@babylonjs/core/Lights/pointLight';
 export { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 
 // --- cameras ---------------------------------------------------------------

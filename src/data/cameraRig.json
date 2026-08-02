@@ -12,5 +12,14 @@
     "$comment_lerp": "Rates are 1 - exp(-rate * dt) blends, not raw per-frame fractions, so they read the same at any framerate. Pulling in must be quick enough that a wall never gets a frame to show through; easing back out is slower so the boom does not visibly snap to full length the instant a corner clears.",
     "lerpInRate": 40,
     "lerpOutRate": 6
+  },
+  "$comment_indoor": "Player.ts requests this framing on its own (the same setCameraFraming request combat uses, D46) whenever the boom resolves at or under boomThreshold: a room-scale space fills the frame with the back of the player's head at the outdoor rig's shoulder height and shallow pitch. distance is a room-scale max for the boom march, not the outdoor 5.2m: resolveBoomDistance only samples boom.steps points across it, and sampling the outdoor span inside a ~6m room let a sample land INSIDE a wall and snap the resolved distance back to a much shorter, coarser one. A steeper pitch also helps on its own: more of the boom's length goes into height rather than the horizontal reach a wall collider actually tests, so the boom can resolve farther before a sample lands inside one.",
+  "indoor": {
+    "boomThreshold": 3.6,
+    "distance": 3.6,
+    "height": 2.0,
+    "shoulder": 0.3,
+    "pitch": 0.3,
+    "blendMs": 350
   }
 }

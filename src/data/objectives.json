@@ -7,6 +7,8 @@
     {
       "id": "meet_orin",
       "prompt": "Talk to Grandpa Orin",
+      "$comment_marker": "Orin's actual spot is village.home offset by landmarks.json's home.orinOffset, which is seed-dependent (Structures.buildVillage draws house positions from the seeded RNG); this literal is that offset resolved for the default 'hollowbrook' seed only (see World.ts). A custom ?seed= drifts, same caveat as every other static marker here.",
+      "marker": { "label": "Grandpa Orin", "x": 21.1, "z": 1.0 },
       "predicate": { "kind": "flag", "flag": "met_orin" }
     },
     {

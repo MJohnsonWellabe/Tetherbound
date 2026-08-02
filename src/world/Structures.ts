@@ -2,6 +2,8 @@ import {
   Color3,
   CreateBox,
   CreateCylinder,
+  Mesh,
+  PointLight,
   Scene,
   ShadowGenerator,
   StandardMaterial,
@@ -15,13 +17,12 @@ import landmarks from '../data/landmarks.json';
 import models from '../data/models.json';
 import { subRng } from './gen/Rng';
 import type { Terrain } from './gen/Terrain';
-import type { Placement } from './Landmarks';
 import {
   disposeStructureModelMaterial,
   loadStructureSources,
   placeStructure
 } from './StructureModels';
-import { toWorld, wallRingColliders, type WallCollider } from './WallRing';
+import { doorLeafPivotX, toWorld, wallRingColliders, type WallCollider } from './WallRing';
 
 /**
  * Hollowbrook, built from Fantasy Town Kit composites with the original
@@ -160,6 +161,9 @@ type HouseDoorConfig = NonNullable<HouseVariant['door']>;
 const WALL_STEP = landmarks.village.wallColliderStep;
 const HOME = landmarks.village.home;
 const DOOR_LEAF = models.buildings.houses.doorLeaf;
+const BED_MODEL = models.stations.bed;
+/** See landmarks.json's playerRadius comment for why this is duplicated here. */
+const PLAYER_RADIUS = landmarks.playerRadius;
 
 /**
  * Hollowbrook. Always at the origin, on the plateau Terrain already flattens,
@@ -240,7 +244,8 @@ export function buildVillage(
           originX: slot.node.position.x,
           originZ: slot.node.position.z,
           yaw: slot.node.rotation.y,
-          step: WALL_STEP
+          step: WALL_STEP,
+          playerRadius: PLAYER_RADIUS
         })
       );
     }
@@ -258,7 +263,7 @@ export function buildVillage(
   const doorUnregisters: (() => void)[] = [];
 
   void (async () => {
-    const urls = [...slots.map((s) => s.variant.url), ...DRESSING.map((d) => d.url)];
+    const urls = [...slots.map((s) => s.variant.url), ...DRESSING.map((d) => d.url), BED_MODEL.url];
     const sources = await loadStructureSources(scene, urls);
     if (disposed || scene.isDisposed) return;
 
@@ -277,13 +282,22 @@ export function buildVillage(
         const mesh = placeStructure(scene, source, 'house_model', slot.node);
         mesh.scaling.scaleInPlace(slot.variant.scale);
         shadows?.addShadowCaster(mesh, false);
-        // Real footprint, not the primitive fallback's width/depth: the
-        // Kenney composite this house actually placed is bigger than the
-        // fallback box that used to size its collider, which is what let a
-        // player and the camera boom both stand inside the wall line.
-        const box = mesh.getBoundingInfo().boundingBox;
-        halfWidth = ((box.maximum.x - box.minimum.x) / 2) * slot.variant.scale;
-        halfDepth = ((box.maximum.z - box.minimum.z) / 2) * slot.variant.scale;
+        if (door) {
+          // The wall PLANE, not the model's bounding box: the bbox includes
+          // the roof overhang (measured ~0.05m wider per side than the walls
+          // at house_a's scale), which used to size the collider ring
+          // outside the real walls and let both the player and the camera
+          // boom stand inside them. door.z is models.json's own name for the
+          // front wall's plane, and every shipped house variant is a square
+          // footprint (scripts/asset-jobs.mjs's houseA/B/C tile grids), so
+          // one measurement doubles as both half-extents.
+          halfWidth = Math.abs(door.z) * slot.variant.scale;
+          halfDepth = halfWidth;
+        } else {
+          const box = mesh.getBoundingInfo().boundingBox;
+          halfWidth = ((box.maximum.x - box.minimum.x) / 2) * slot.variant.scale;
+          halfDepth = ((box.maximum.z - box.minimum.z) / 2) * slot.variant.scale;
+        }
         mesh.freezeWorldMatrix();
       } else {
         primitiveHouse(scene, slot.node, slot.width, slot.depth, slot.height, shadows);
@@ -299,12 +313,15 @@ export function buildVillage(
           originZ: slot.node.position.z,
           yaw: slot.node.rotation.y,
           step: WALL_STEP,
+          playerRadius: PLAYER_RADIUS,
           ...(door ? { doorGapWidth: door.width, doorX: door.x } : {})
         })
       );
 
       if (door) doorUnregisters.push(mountHouseDoor(scene, slot.node, door, doorRegistry, shadows, p));
-      if (i === homeIndex) furnishHome(scene, slot.node, shadows, p);
+      if (i === homeIndex) {
+        furnishHome(scene, slot.node, shadows, p, sources.get(BED_MODEL.url) ?? null);
+      }
     }
 
     colliders.length = 0;
@@ -358,7 +375,14 @@ function mountHouseDoor(
 
   const pivot = new TransformNode('house_door_pivot', scene);
   pivot.parent = houseNode;
-  pivot.position.set(door.x, 0, door.z);
+  // door.x is the APERTURE's centre; the pivot is the LEAF's own left edge
+  // (same convention BuildMode.mountDoor uses below, leaf.position.x =
+  // leafWidth/2 relative to the pivot). Placing the pivot straight at the
+  // aperture centre put every leaf half a width to the right of where it
+  // belonged: it covered the right half of the hole and continued across
+  // solid wall. doorLeafPivotX centres the (slightly narrower) leaf on the
+  // aperture instead.
+  pivot.position.set(doorLeafPivotX(door.x, leafWidth), 0, door.z);
 
   const leaf = CreateBox('house_door_leaf', { width: leafWidth, height: leafHeight, depth: DOOR_LEAF.depth }, scene);
   leaf.parent = pivot;
@@ -392,12 +416,24 @@ function mountHouseDoor(
 }
 
 /**
- * Furniture for the player's home: a floor slab, a bed, and a warm glow by
- * it, so this one house reads as lived-in rather than a gray shell like
- * every other one. Everything here is a child of the house's own node so it
- * disposes with the house automatically.
+ * Furniture for the player's home: a floor slab, a bed, and a warm point
+ * light by it, so this one house reads as lived-in rather than a gray shell
+ * like every other one. Everything here is a child of the house's own node
+ * so it disposes with the house automatically (TransformNode.dispose walks
+ * every descendant Node, lights included, not only meshes).
+ *
+ * `bedSource` is the real furniture-kit bed model once it has loaded
+ * (models.stations.bed, the same GLB the bed station already places, so this
+ * needs no new asset job); a box frame and a bedding slab stand in per the
+ * D44 degrade-one-thing rule while it is in flight or if it never arrives.
  */
-function furnishHome(scene: Scene, houseNode: TransformNode, shadows: ShadowGenerator | null, p: Palette): void {
+function furnishHome(
+  scene: Scene,
+  houseNode: TransformNode,
+  shadows: ShadowGenerator | null,
+  p: Palette,
+  bedSource: Mesh | null
+): void {
   const node = new TransformNode('home_furniture', scene);
   node.parent = houseNode;
 
@@ -408,30 +444,39 @@ function furnishHome(scene: Scene, houseNode: TransformNode, shadows: ShadowGene
   floor.parent = node;
 
   const yaw = (HOME.bed.yawDeg * Math.PI) / 180;
+  const bedSlot = new TransformNode('home_bed_slot', scene);
+  bedSlot.parent = node;
+  bedSlot.position.set(HOME.bed.x, 0, HOME.bed.z);
+  bedSlot.rotation.y = yaw;
 
-  const frame = CreateBox(
-    'home_bed_frame',
-    { width: HOME.bed.width, depth: HOME.bed.length, height: HOME.bed.height },
-    scene
-  );
-  frame.position.set(HOME.bed.x, HOME.bed.height / 2, HOME.bed.z);
-  frame.rotation.y = yaw;
-  frame.material = p.timber;
-  frame.isPickable = false;
-  frame.parent = node;
-  shadows?.addShadowCaster(frame, false);
+  if (bedSource) {
+    const mesh = placeStructure(scene, bedSource, 'home_bed_model', bedSlot);
+    mesh.scaling.scaleInPlace(BED_MODEL.scale);
+    shadows?.addShadowCaster(mesh, false);
+    mesh.freezeWorldMatrix();
+  } else {
+    const frame = CreateBox(
+      'home_bed_frame',
+      { width: HOME.bed.width, depth: HOME.bed.length, height: HOME.bed.height },
+      scene
+    );
+    frame.position.set(0, HOME.bed.height / 2, 0);
+    frame.material = p.timber;
+    frame.isPickable = false;
+    frame.parent = bedSlot;
+    shadows?.addShadowCaster(frame, false);
 
-  const beddingHeight = HOME.bed.height * 0.4;
-  const bedding = CreateBox(
-    'home_bedding',
-    { width: HOME.bed.width * 0.92, depth: HOME.bed.length * 0.92, height: beddingHeight },
-    scene
-  );
-  bedding.position.set(HOME.bed.x, HOME.bed.height + beddingHeight / 2, HOME.bed.z);
-  bedding.rotation.y = yaw;
-  bedding.material = p.bedding;
-  bedding.isPickable = false;
-  bedding.parent = node;
+    const beddingHeight = HOME.bed.height * 0.4;
+    const bedding = CreateBox(
+      'home_bedding',
+      { width: HOME.bed.width * 0.92, depth: HOME.bed.length * 0.92, height: beddingHeight },
+      scene
+    );
+    bedding.position.set(0, HOME.bed.height + beddingHeight / 2, 0);
+    bedding.material = p.bedding;
+    bedding.isPickable = false;
+    bedding.parent = bedSlot;
+  }
 
   const lamp = CreateCylinder(
     'home_lamp',
@@ -442,10 +487,37 @@ function furnishHome(scene: Scene, houseNode: TransformNode, shadows: ShadowGene
   lamp.material = p.lamp;
   lamp.isPickable = false;
   lamp.parent = node;
+
+  // The only PointLight in the game (a handheld target keeps it to one):
+  // the emissive cylinder above reads as a lamp but casts nothing, which is
+  // why the room read as pitch black even standing right beside it.
+  const light = new PointLight(
+    'home_lamp_light',
+    new Vector3(HOME.lamp.x, HOME.lamp.y, HOME.lamp.z),
+    scene
+  );
+  light.diffuse = Color3.FromHexString(HOME.lamp.light.color);
+  light.specular = new Color3(0, 0, 0);
+  light.intensity = HOME.lamp.light.intensity;
+  light.range = HOME.lamp.light.range;
+  light.parent = node;
+}
+
+/**
+ * A structure's own placement, narrowed to only what `pointNear` needs:
+ * `Placement` (Landmarks.ts) satisfies this structurally, and so does a
+ * `HomeAnchor` spread with its x/z pulled out of `position`, without either
+ * caller owing this file a `slope` it has no use for.
+ */
+export interface PointNearAnchor {
+  x: number;
+  y: number;
+  z: number;
+  yaw: number;
 }
 
 /** Where the player stands to talk to someone, offset from a structure centre. */
-export function pointNear(placement: Placement, forward: number, side = 0): Vector3 {
+export function pointNear(placement: PointNearAnchor, forward: number, side = 0): Vector3 {
   const sin = Math.sin(placement.yaw);
   const cos = Math.cos(placement.yaw);
   return new Vector3(

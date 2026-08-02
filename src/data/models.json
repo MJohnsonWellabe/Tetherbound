@@ -114,7 +114,7 @@
         {
           "url": "models/buildings/house_c.glb",
           "scale": 1.0,
-          "door": { "x": -1.1, "z": -3.3, "yaw": 0, "width": 0.88, "height": 1.65 }
+          "door": { "x": -1.1, "z": -4.4, "yaw": 0, "width": 0.88, "height": 1.65 }
         }
       ],
       "$comment_doorLeaf": "The procedural leaf mounted in the doorway aperture (Structures.ts), sized as a fraction of the aperture so a frame's worth of clearance shows on every side.",

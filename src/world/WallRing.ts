@@ -35,6 +35,13 @@ export interface WallRingOptions {
   doorGapWidth?: number;
   /** Local x of the doorway's centre. Defaults to 0 (centred on the wall). */
   doorX?: number;
+  /**
+   * The character capsule's radius, so the door gap is sized for what the
+   * controller actually tests (`collider.radius + player.radius`, see
+   * CharacterController.resolveHorizontal) rather than the collider radius
+   * alone. Omitted or zero reproduces the old (too-narrow) behaviour.
+   */
+  playerRadius?: number;
 }
 
 /** A point in the structure's local frame, rotated and translated into world space. */
@@ -79,14 +86,17 @@ function pushRun(
  * real footprint instead of leaving the corners open, and it can carry a
  * doorway gap at all.
  *
- * The two runs bordering the gap stop one collider RADIUS short of the gap's
- * true edge rather than running exactly to it, so the boundary sphere's own
- * bulk sits outside the doorway and its EDGE, not its centre, is what meets
- * the gap line. Centring a fat sphere (radius `step * 0.75`, chosen for
- * generous overlap along a straight run) directly on the gap boundary would
- * have eaten most of a house door's ~1m aperture, which is barely wider than
- * the player capsule to start with; this keeps the full configured gap
- * walkable regardless of step size.
+ * The two runs bordering the gap stop short of the gap's true edge by one
+ * collider RADIUS plus `playerRadius`, rather than running exactly to it, so
+ * the boundary sphere's own bulk sits outside the doorway and the point the
+ * CONTROLLER actually stops a capsule at (`collider.radius + player.radius`,
+ * CharacterController.resolveHorizontal), not the bare sphere edge, is what
+ * meets the gap line. Pulling back by the collider radius alone (the old
+ * behaviour) left the controller's own player-radius reach eating into the
+ * gap uncounted, so the walkable slot came out `doorGapWidth - 2 *
+ * playerRadius` wide instead of the full configured width; a house door
+ * ~1m across lost most of its aperture to a player capsule barely narrower
+ * than it.
  */
 export function wallRingColliders(opts: WallRingOptions): WallCollider[] {
   const out: WallCollider[] = [];
@@ -104,11 +114,25 @@ export function wallRingColliders(opts: WallRingOptions): WallCollider[] {
   }
 
   const colliderRadius = opts.step * 0.75;
+  const pullback = colliderRadius + (opts.playerRadius ?? 0);
   const gapMin = Math.max(-hw, doorX - gapWidth / 2);
   const gapMax = Math.min(hw, doorX + gapWidth / 2);
-  const leftEdge = Math.max(-hw, gapMin - colliderRadius);
-  const rightEdge = Math.min(hw, gapMax + colliderRadius);
+  const leftEdge = Math.max(-hw, gapMin - pullback);
+  const rightEdge = Math.min(hw, gapMax + pullback);
   pushRun(out, opts, -hw, -hd, leftEdge, -hd);
   pushRun(out, opts, rightEdge, -hd, hw, -hd);
   return out;
+}
+
+/**
+ * Local x for a door leaf's hinge pivot (its own left edge, the convention
+ * BuildMode.mountDoor and Structures.mountHouseDoor both use), so a leaf
+ * narrower than its aperture (see models.json's doorLeaf.widthFraction) ends
+ * up CENTRED on the doorway instead of pinned to one edge of it. Centring
+ * on `doorX` and subtracting half the LEAF's own width, not half the full
+ * aperture's width, is what leaves an even reveal on both sides rather than
+ * shoving the whole gap to one side.
+ */
+export function doorLeafPivotX(doorX: number, leafWidth: number): number {
+  return doorX - leafWidth / 2;
 }

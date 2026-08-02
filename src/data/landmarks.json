@@ -7,14 +7,23 @@
     "radius": 42,
     "houses": 5,
     "$comment": "Terrain.ts already flattens a plateau here, so no search is needed.",
-    "$comment_walls": "Spacing between wall-ring collider spheres, Structures.ts. Tighter than the Hall's 3m step because a house wall run is a fraction of the Hall's length, and a coarse step there would leave corner-sized gaps on a building this small.",
-    "wallColliderStep": 1.4,
+    "$comment_walls": "Spacing between wall-ring collider spheres, Structures.ts. A house wall run is only 6-9m, so a coarse step (the old 1.4, radius 1.05) pulled the walkable interior in by more than a metre a side once the player's own capsule radius is added at test time. 0.5 (radius 0.375) still overlaps along a straight run with room to spare (WallRing.pushRun's 0.75x-of-step multiplier only needs step/2 of overlap), so the wall stays solid; it just costs more, cheap, colliders to trace the same footprint.",
+    "wallColliderStep": 0.5,
     "$comment_home": "House index 0's furniture, marking it as the player's home for the wake-up scene a later milestone spawns into. Offsets are local to that house's own frame (front at -z, same convention as the door anchors in models.json).",
     "home": {
       "houseIndex": 0,
       "floor": { "width": 4.2, "depth": 5.2, "inset": 0.15 },
       "bed": { "x": 1.1, "z": 1.6, "width": 1.9, "length": 0.9, "height": 0.5, "yawDeg": 90 },
-      "lamp": { "x": -1.3, "z": 1.6, "y": 1.3, "radius": 0.16 }
+      "$comment_lamp": "The one light this scene is allowed (a handheld target keeps it to one, src/core/babylon.ts's PointLight). color/intensity/range are the only tunables; the fixture itself is still the emissive cylinder in Structures.ts.",
+      "lamp": {
+        "x": -1.3,
+        "z": 1.6,
+        "y": 1.3,
+        "radius": 0.16,
+        "light": { "color": "#ffb066", "intensity": 0.85, "range": 6.5 }
+      },
+      "$comment_orinOffset": "Where Grandpa Orin waits at a fresh spawn (Structures.pointNear, forward/side local to the house frame), clear of the player's own spawn point at the room's centre. There is no NPC movement system (src/entities/NPC.ts has no per-frame update), so this is where he stands rather than where he walks in from.",
+      "orinOffset": { "forward": 1.4, "side": -0.6 }
     }
   },
 
@@ -42,5 +51,8 @@
   },
 
   "$search": "Both searched landmarks sample candidate angles from the seeded RNG and take the first that clears maxSlope and sits above the waterline. If no candidate in `attempts` qualifies, the flattest seen wins, so world generation always terminates with a placement.",
-  "search": { "attempts": 64 }
+  "search": { "attempts": 64 },
+
+  "$comment_playerRadius": "The character capsule's radius (src/entities/CharacterController.ts DEFAULT_CONFIG.radius), duplicated here because that file is TypeScript, not a data file, and is off limits this session (another pass owns src/core/input, HUD, DialoguePanel and Story). WallRing.ts's door-gap maths needs it to size a walkable slot the controller actually agrees is walkable; a future pass should have CharacterController read this value instead of the reverse.",
+  "playerRadius": 0.36
 }

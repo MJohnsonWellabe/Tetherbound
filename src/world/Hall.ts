@@ -16,6 +16,7 @@ import type { Placement } from './Landmarks';
 import { buildPrimitiveHallBanner, buildPrimitiveHallShell } from './HallShell';
 import { loadStructureSources, placeStructure } from './StructureModels';
 import { structurePalette } from './Structures';
+import { wallRingColliders, type WallCollider } from './WallRing';
 
 /**
  * The Meadows Hall. A stone longhall with four chained pals in alcoves and
@@ -42,8 +43,16 @@ const HALL_MODELS = models.buildings.hall;
 const { width: WIDTH, depth: DEPTH, wallHeight: WALL_HEIGHT } = HALL.footprint;
 /** How far the plinth hangs below the floor. Deep enough to bridge a dip. */
 const PLATFORM_DEPTH = 8;
-const WALL_THICKNESS = 1.2;
-const DOOR_WIDTH = 5;
+/** Exported so tests/hall.test.ts can check the door gap against the exact
+ *  numbers buildHall uses, rather than a second, hand-copied set. */
+export const WALL_THICKNESS = 1.2;
+export const DOOR_WIDTH = 5;
+/** Spacing between wall-ring collider spheres. Coarser than the village's
+ *  houses (landmarks.json's wallColliderStep): the Hall's walls run far
+ *  longer, so the same overlap needs fewer, bigger spheres to hold. */
+export const WALL_STEP = 3;
+/** See landmarks.json's playerRadius comment for why this is duplicated here. */
+const PLAYER_RADIUS = landmarks.playerRadius;
 
 export interface HallAnchor {
   /** World position. */
@@ -219,33 +228,28 @@ export function buildHall(
     meshes.push(segment);
   }
 
-  // Colliders: the four walls as spheres along their length. Cheap, and at this
-  // density the controller's per-chunk list handles it without a broadphase.
-  const colliders: { x: number; z: number; radius: number }[] = [];
-  const pushWallColliders = (
-    fromX: number,
-    fromZ: number,
-    toX: number,
-    toZ: number,
-    step: number
-  ): void => {
-    const length = Math.hypot(toX - fromX, toZ - fromZ);
-    const steps = Math.max(1, Math.round(length / step));
-    for (let i = 0; i <= steps; i++) {
-      const lx = fromX + ((toX - fromX) * i) / steps;
-      const lz = fromZ + ((toZ - fromZ) * i) / steps;
-      const world = toWorld(placement, floorY, lx, lz);
-      colliders.push({ x: world.x, z: world.z, radius: step * 0.75 });
-    }
-  };
+  // Colliders: the four walls as spheres along their length, via the same
+  // WallRing maths the village's houses use (extracted from what used to be
+  // this function's own inline pushWallColliders/toWorld pair). The two used
+  // to disagree on the door: this one pulled its boundary spheres back by the
+  // collider radius alone, never the player capsule's own radius, so the
+  // reach the controller actually tests (`collider.radius + player.radius`)
+  // met in the middle of the 5m gap and the Hall's front entrance was fully
+  // impassable. Cheap either way, and at this density the controller's
+  // per-chunk list handles it without a broadphase.
   const halfW = (WIDTH - WALL_THICKNESS) / 2;
   const halfD = (DEPTH - WALL_THICKNESS) / 2;
-  pushWallColliders(-halfW, -halfD, -halfW, halfD, 3);
-  pushWallColliders(halfW, -halfD, halfW, halfD, 3);
-  pushWallColliders(-halfW, halfD, halfW, halfD, 3);
-  // Front wall, skipping the doorway so the player can get in.
-  pushWallColliders(-halfW, -halfD, -DOOR_WIDTH / 2, -halfD, 3);
-  pushWallColliders(DOOR_WIDTH / 2, -halfD, halfW, -halfD, 3);
+  const colliders: WallCollider[] = wallRingColliders({
+    halfWidth: halfW,
+    halfDepth: halfD,
+    originX: placement.x,
+    originZ: placement.z,
+    yaw: placement.yaw,
+    step: WALL_STEP,
+    doorGapWidth: DOOR_WIDTH,
+    doorX: 0,
+    playerRadius: PLAYER_RADIUS
+  });
 
   const facing = placement.yaw + Math.PI; // into the Hall, away from the village
 

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { toWorld, wallRingColliders } from '../src/world/WallRing';
+import { doorLeafPivotX, toWorld, wallRingColliders } from '../src/world/WallRing';
+import landmarks from '../src/data/landmarks.json';
+import models from '../src/data/models.json';
 
 /**
  * Wall-ring colliders back both Structures.ts's houses and (indirectly, via
@@ -105,5 +107,114 @@ describe('wallRingColliders', () => {
     const colliders = wallRingColliders({ ...base, originX: 50, originZ: -20, doorGapWidth: 0 });
     expect(colliders.every((c) => c.x >= 47 && c.x <= 53)).toBe(true);
     expect(colliders.every((c) => c.z >= -24 && c.z <= -16)).toBe(true);
+  });
+
+  /** The x-interval a player capsule can actually stand in, given the front
+   *  colliders on either side of the gap: each one blocks within its own
+   *  `radius + playerRadius` reach, the same test CharacterController.
+   *  resolveHorizontal runs. */
+  function walkableGapWidth(
+    colliders: ReturnType<typeof wallRingColliders>,
+    doorX: number,
+    playerRadius: number,
+    frontZ: number
+  ): number {
+    const front = colliders.filter((c) => Math.abs(c.z - frontZ) < 1e-6);
+    const left = front.filter((c) => c.x < doorX);
+    const right = front.filter((c) => c.x > doorX);
+    const leftReach = Math.max(...left.map((c) => c.x + c.radius + playerRadius));
+    const rightReach = Math.min(...right.map((c) => c.x - c.radius - playerRadius));
+    return rightReach - leftReach;
+  }
+
+  it('keeps the door WALKABLE once the player capsule radius is subtracted from the collider reach', () => {
+    // Regression for the bug: pulling the boundary spheres back by the
+    // collider radius alone (not also the player's own radius) left the
+    // controller's real reach eating into the gap uncounted, so the walkable
+    // slot came out narrower than the configured door width by 2x the
+    // player radius.
+    const playerRadius = 0.36;
+    const doorX = 0.4;
+    const gapWidth = 1.2;
+    const colliders = wallRingColliders({ ...base, doorGapWidth: gapWidth, doorX, playerRadius });
+    const walkable = walkableGapWidth(colliders, doorX, playerRadius, -4);
+    expect(walkable).toBeGreaterThanOrEqual(gapWidth - 1e-6);
+  });
+
+  it('reproduces the pre-fix narrowing when playerRadius is omitted', () => {
+    // Documents the bug this test suite would have caught: without
+    // playerRadius the walkable slot is gapWidth - 2*playerRadius, not
+    // gapWidth. Asserted here so a future regression (accidentally dropping
+    // the option) shows up as a widening, not a silent pass.
+    const playerRadius = 0.36;
+    const doorX = 0;
+    const gapWidth = 1.2;
+    const withRadius = wallRingColliders({ ...base, doorGapWidth: gapWidth, doorX, playerRadius });
+    const withoutRadius = wallRingColliders({ ...base, doorGapWidth: gapWidth, doorX });
+    const walkableWith = walkableGapWidth(withRadius, doorX, playerRadius, -4);
+    const walkableWithout = walkableGapWidth(withoutRadius, doorX, playerRadius, -4);
+    expect(walkableWith).toBeGreaterThan(walkableWithout);
+    expect(walkableWithout).toBeCloseTo(gapWidth - 2 * playerRadius, 1);
+  });
+
+  it('every shipped house door is walkable for the real player radius, at the real village wall step', () => {
+    const step = landmarks.village.wallColliderStep;
+    const playerRadius = landmarks.playerRadius;
+    for (const variant of models.buildings.houses.variants) {
+      const door = variant.door;
+      const colliders = wallRingColliders({
+        halfWidth: 10,
+        halfDepth: 10,
+        originX: 0,
+        originZ: 0,
+        yaw: 0,
+        step,
+        doorGapWidth: door.width,
+        doorX: door.x,
+        playerRadius
+      });
+      const walkable = walkableGapWidth(colliders, door.x, playerRadius, -10);
+      expect(walkable).toBeGreaterThanOrEqual(door.width - 1e-6);
+    }
+  });
+});
+
+describe('doorLeafPivotX', () => {
+  it('centres a narrower leaf on the aperture, not on the aperture\'s own left edge', () => {
+    const doorX = -1.5;
+    const doorWidth = 1.2;
+    const leafFraction = 0.9;
+    const leafWidth = doorWidth * leafFraction;
+    const pivotX = doorLeafPivotX(doorX, leafWidth);
+    // The leaf spans [pivotX, pivotX + leafWidth]; its own centre must land
+    // back on the aperture's centre (doorX), with an even reveal on both
+    // sides, not shifted a half-width to the right of it.
+    const leafCentre = pivotX + leafWidth / 2;
+    expect(leafCentre).toBeCloseTo(doorX, 10);
+    expect(pivotX).toBeGreaterThan(doorX - doorWidth / 2 - 1e-6);
+    expect(pivotX + leafWidth).toBeLessThan(doorX + doorWidth / 2 + 1e-6);
+  });
+
+  it('does not reproduce the old bug of sitting a half-width past the aperture', () => {
+    // The old code placed the pivot AT doorX itself, putting the leaf's
+    // range at [doorX, doorX + leafWidth]: entirely past the aperture centre
+    // and half a width into solid wall for any door narrower than 2x itself.
+    const doorX = -1.5;
+    const leafWidth = 1.08;
+    const pivotX = doorLeafPivotX(doorX, leafWidth);
+    expect(pivotX).not.toBeCloseTo(doorX, 5);
+    expect(pivotX).toBeLessThan(doorX);
+  });
+
+  it('spans every shipped house door leaf inside its own aperture, centred', () => {
+    const leafFraction = models.buildings.houses.doorLeaf.widthFraction;
+    for (const variant of models.buildings.houses.variants) {
+      const door = variant.door;
+      const leafWidth = door.width * leafFraction;
+      const pivotX = doorLeafPivotX(door.x, leafWidth);
+      expect(pivotX + leafWidth / 2).toBeCloseTo(door.x, 10);
+      expect(pivotX).toBeGreaterThanOrEqual(door.x - door.width / 2 - 1e-9);
+      expect(pivotX + leafWidth).toBeLessThanOrEqual(door.x + door.width / 2 + 1e-9);
+    }
   });
 });

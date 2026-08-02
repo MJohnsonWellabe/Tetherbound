@@ -75,6 +75,26 @@ const DEFAULT_FRAMING: CameraFraming = {
   blendMs: 550
 };
 
+/**
+ * Requested automatically (not by an external caller) whenever the boom
+ * resolves inside `cameraRig.indoor.boomThreshold`: a room-scale space fills
+ * the frame with the back of the player's head at the outdoor rig's shoulder
+ * height and shallow pitch, so this one lifts the camera and angles it down
+ * over the player instead. `distance` is also shortened, which matters more
+ * than it looks: resolveBoomDistance samples a fixed `cameraRig.boom.steps`
+ * across it, and sampling the outdoor 5.2m span inside a ~6m room let a
+ * sample land INSIDE a wall and snap the resolved distance back to the
+ * previous, much shorter sample. A room-scale max distance samples finely
+ * enough to resolve close to the real wall instead.
+ */
+const INDOOR_FRAMING: CameraFraming = {
+  distance: cameraRig.indoor.distance,
+  height: cameraRig.indoor.height,
+  shoulder: cameraRig.indoor.shoulder,
+  pitch: cameraRig.indoor.pitch,
+  blendMs: cameraRig.indoor.blendMs
+};
+
 export class Player {
   readonly root: TransformNode;
   readonly state: ControllerState;
@@ -158,12 +178,32 @@ export class Player {
     this.driver.revive();
   }
 
+  /**
+   * Seed BOTH the body's facing and the camera's own, independent yaw before
+   * the first frame (a wake-up spawn, say). `state.yaw` alone used to be set
+   * here, which turned the character to face the given direction but left
+   * the camera's private `yaw` at its constructor default of 0, so the two
+   * disagreed the moment play started.
+   */
+  setYaw(yaw: number): void {
+    this.state.yaw = yaw;
+    this.yaw = yaw;
+    this.syncTransform();
+  }
+
   get position(): Vector3 {
     return new Vector3(this.state.position.x, this.state.position.y, this.state.position.z);
   }
 
   get cameraYaw(): number {
     return this.yaw;
+  }
+
+  /** The boom length actually in use this frame, post-collision and
+   *  post-smoothing. Read by the verification tooling under tools/ to check
+   *  the visible-extent maths against; nothing in gameplay code needs it. */
+  get resolvedBoomDistance(): number {
+    return this.boomDistance;
   }
 
   /** One fixed simulation step. */
@@ -248,6 +288,7 @@ export class Player {
       colliders,
       BOOM_CONFIG
     );
+    this.applyIndoorFraming(targetDistance);
     this.boomDistance = smoothBoomDistance(
       this.boomDistance,
       targetDistance,
@@ -263,6 +304,20 @@ export class Player {
       focusZ + dirZ * distance + shoulderZ
     );
     this.camera.setTarget(new Vector3(focusX + shoulderX * 0.5, focusY, focusZ + shoulderZ * 0.5));
+  }
+
+  /**
+   * Switch to (or back out of) the indoor framing on its own, reusing the
+   * same request `setCameraFraming` exposes to combat (D46) rather than a
+   * second camera writer. The reference checks against DEFAULT_FRAMING and
+   * INDOOR_FRAMING, not a boolean flag, so this never fights an external
+   * request (combat's own framing is a third object reference and is left
+   * alone either way) and only ever moves between the two states it owns.
+   */
+  private applyIndoorFraming(resolvedBoomDistance: number): void {
+    const indoor = resolvedBoomDistance <= cameraRig.indoor.boomThreshold;
+    if (indoor && this.framing === DEFAULT_FRAMING) this.setCameraFraming(INDOOR_FRAMING);
+    else if (!indoor && this.framing === INDOOR_FRAMING) this.setCameraFraming(null);
   }
 
   dispose(): void {

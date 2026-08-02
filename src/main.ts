@@ -153,7 +153,12 @@ async function boot(): Promise<void> {
   // matters for a fresh game.
   const wakePos = built.home?.position ?? { x: 0, y: terrain.heightAt(0, 0), z: 0 };
   const player = new Player(scene, camera, { x: wakePos.x, y: wakePos.y, z: wakePos.z }, shadows);
-  if (built.home) player.state.yaw = built.home.yaw;
+  // built.home.yaw is the HOUSE's own facing, which points the player at the
+  // back wall (the front, and the door, is local -z); +PI turns them around
+  // to face the doorway instead. This also seeds the camera's own yaw
+  // (Player.setYaw), which used to be left at its constructor default of 0
+  // regardless of where the body faced.
+  if (built.home) player.setYaw(built.home.yaw + Math.PI);
 
   // Build the ground around the spawn before the first frame, so the player
   // never sees themselves standing on nothing. Props can arrive a frame or two
@@ -180,7 +185,7 @@ async function boot(): Promise<void> {
     player.state.position.x = 0;
     player.state.position.z = 250;
     player.state.position.y = terrain.heightAt(0, 250) + 1;
-    player.state.yaw = 0;
+    player.setYaw(0);
   }
 
   progress(0.8, 'Setting the sun');
@@ -206,6 +211,14 @@ async function boot(): Promise<void> {
   // prompt through it (Encounter's "talk to Orin first" hint among them),
   // rather than only once M3/M4's dialogue and compass work needed it.
   const hud = new HUD();
+  // Touch has no E key, so the on-screen prompt button (built but never
+  // wired) is the only interact affordance a touch player has that does not
+  // depend on the right-half-tap-to-interact gesture TouchLayer infers.
+  // Mirrors the pause button below: a HUD tap just sets the same edge the
+  // keyboard and pad set.
+  hud.onInteract = (): void => {
+    input.intent.interact = true;
+  };
 
   const palVisuals = new PalVisuals(scene);
   const spawner = new SpawnManager(terrain, palVisuals);
@@ -609,7 +622,8 @@ async function boot(): Promise<void> {
     }
   });
 
-  const stats = Stats.enabled() && statsEl ? new Stats(scene, loop, statsEl, chunks, props) : null;
+  const stats =
+    Stats.enabled() && statsEl ? new Stats(scene, loop, statsEl, chunks, props, input) : null;
 
   renderer.onContextRestored = (): void => {
     scene.markAllMaterialsAsDirty(1);
