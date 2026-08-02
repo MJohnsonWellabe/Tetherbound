@@ -11,6 +11,7 @@ import { Fx } from './fx/Fx';
 import { mountHarvestFeel } from './fx/HarvestFeel';
 import { InputHint } from './ui/InputHint';
 import { HarvestHud } from './ui/HarvestHud';
+import { DoorPrompt } from './ui/DoorPrompt';
 import { HarvestController } from './survival/HarvestController';
 import { add, createInventory } from './survival/Inventory';
 import { loadContainerOwned } from './core/AssetLoader';
@@ -26,6 +27,7 @@ import { CombatScreen } from './ui/CombatScreen';
 import { ReleasePanel } from './ui/ReleasePanel';
 import { Nameplates } from './ui/Nameplates';
 import { BuildMode } from './building/BuildMode';
+import pieces from './data/pieces.json';
 import { SaveManager, type SaveV1 } from './core/SaveManager';
 import { createVitals, tickVitals, spendStamina } from './survival/Vitals';
 import { Stations } from './survival/Stations';
@@ -197,6 +199,7 @@ async function boot(): Promise<void> {
     document.getElementById('gather') as HTMLElement,
     harvest
   );
+  const doorPrompt = new DoorPrompt(document.getElementById('gather') as HTMLElement);
   const hint = new InputHint(
     document.getElementById('hint') as HTMLElement,
     input,
@@ -355,8 +358,20 @@ async function boot(): Promise<void> {
         player.state.position.z,
         player.cameraYaw
       );
+      // Doors keep swinging (and stay interactable) whether or not the hammer
+      // is out, so this runs unconditionally rather than joining build.update.
+      build.updateDoors(dt);
 
-      const swing = hammerOut || busyTalking
+      // A door in reach owns the interact button the same way talking and
+      // building do: pressing E on a door must not also swing a nearby tool.
+      const nearDoor =
+        !hammerOut && !busyTalking
+          ? build.nearestDoor(player.state.position.x, player.state.position.z, pieces.doorInteractReach)
+          : null;
+      if (nearDoor && input.intent.interact) build.toggleDoor(nearDoor);
+      doorPrompt.update(nearDoor !== null, nearDoor?.open === true);
+
+      const swing = hammerOut || busyTalking || nearDoor
         ? null
         : harvest.update(
             input.intent,
@@ -553,6 +568,7 @@ async function boot(): Promise<void> {
       companion.dispose();
       palVisuals.dispose();
       build.dispose();
+      doorPrompt.dispose();
       stationViews.dispose();
       disposePrototypes(prototypes);
       dome.dispose();

@@ -1,9 +1,11 @@
-import { Color3, Mesh, CreateBox, Scene, StandardMaterial } from '../core/babylon';
+import { Color3, Mesh, CreateBox, Scene, StandardMaterial, TransformNode } from '../core/babylon';
 import { bus } from '../core/EventBus';
 import type { Intent } from '../core/input/Intent';
 import { add, count, remove, type Slots } from '../survival/Inventory';
+import { hingeSettled, stepHinge, targetAngle } from './Door';
 import {
   BUILD_CONFIG,
+  isInteractivePiece,
   pieceDef,
   pieceIds,
   refundFor,
@@ -21,7 +23,19 @@ import {
  * Pieces are boxes for now. ASSETS.md is explicit that anything missing from a
  * kit "gets built from primitives in code, which is acceptable and fast", and
  * because a piece is referenced by id the M5 model swap is a data change.
+ *
+ * A door is two boxes and a pivot: a static frame, plus a leaf parented to a
+ * TransformNode sitting at the hinge edge so rotating the pivot swings the
+ * leaf rather than spinning it in place. `updateDoors` runs every step
+ * regardless of whether the hammer is out, because a door must keep swinging
+ * (and stay interactable) after the player puts the hammer away.
  */
+
+interface DoorRig {
+  piece: PlacedPiece;
+  pivot: TransformNode;
+  angle: number;
+}
 
 export interface WorldProbe {
   heightAt(x: number, z: number): number;
@@ -36,6 +50,7 @@ export class BuildMode {
   private ghost: Mesh | null = null;
   private readonly placed: PlacedPiece[] = [];
   private readonly meshes = new Map<PlacedPiece, Mesh>();
+  private readonly doors = new Map<PlacedPiece, DoorRig>();
   private readonly valid: StandardMaterial;
   private readonly invalid: StandardMaterial;
   private readonly solid: StandardMaterial;
@@ -122,6 +137,7 @@ export class BuildMode {
     const piece: PlacedPiece = { pieceId: this.selectedId, x, y, z, rot, placedAtMs: performance.now() };
     this.placed.push(piece);
     this.meshes.set(piece, this.buildMesh(piece));
+    if (isInteractivePiece(piece.pieceId)) this.mountDoor(piece);
     this.elevation = 0;
     bus.emit('builtPiece', { pieceId: piece.pieceId });
   }
@@ -132,23 +148,110 @@ export class BuildMode {
     if (!piece) return false;
     this.meshes.get(piece)?.dispose();
     this.meshes.delete(piece);
+    this.unmountDoor(piece);
     for (const back of refundFor(piece.pieceId, piece.placedAtMs, performance.now())) {
       add(this.slots, back.id, back.n);
     }
     return true;
   }
 
-  /** Rebuild from a save. */
-  restore(pieces: PlacedPiece[]): void {
-    for (const piece of pieces) {
+  /** Rebuild from a save. Doors resume at their saved open/closed state. */
+  restore(saved: PlacedPiece[]): void {
+    for (const piece of saved) {
       this.placed.push(piece);
       this.meshes.set(piece, this.buildMesh(piece));
+      if (isInteractivePiece(piece.pieceId)) this.mountDoor(piece, true);
     }
+  }
+
+  /** The nearest placed door within `maxDist`, or null. Drives the interact prompt. */
+  nearestDoor(px: number, pz: number, maxDist: number): PlacedPiece | null {
+    let best: PlacedPiece | null = null;
+    let bestDist = maxDist;
+    for (const rig of this.doors.values()) {
+      const d = Math.hypot(rig.piece.x - px, rig.piece.z - pz);
+      if (d < bestDist) {
+        bestDist = d;
+        best = rig.piece;
+      }
+    }
+    return best;
+  }
+
+  /** Flip a door's open state. The leaf eases toward it over updateDoors(). */
+  toggleDoor(piece: PlacedPiece): void {
+    const rig = this.doors.get(piece);
+    if (!rig) return;
+    piece.open = !piece.open;
+    bus.emit('doorToggled', { open: piece.open === true, at: { x: piece.x, y: piece.y, z: piece.z } });
+  }
+
+  /**
+   * Swing every door's leaf toward its target angle. Runs every fixed step
+   * unconditionally, independent of hammerEquipped: a door must keep opening
+   * after the player has put the hammer away and walked up to it.
+   */
+  updateDoors(dt: number): void {
+    if (this.doors.size === 0) return;
+    const dtMs = dt * 1000;
+    for (const rig of this.doors.values()) {
+      const open = rig.piece.open === true;
+      if (hingeSettled(rig.angle, open)) continue;
+      rig.angle = stepHinge(rig.angle, open, dtMs);
+      rig.pivot.rotation.y = rig.piece.rot + rig.angle;
+    }
+  }
+
+  /**
+   * Build the leaf + hinge pivot for a placed door piece.
+   *
+   * The pivot sits at the piece's world position and yaw. The leaf is parented
+   * to it, offset along the pivot's own local +x by half its width MINUS half
+   * the frame's width, so the leaf's hinge-side edge lands on the pivot
+   * (local x=0) and rotating the pivot swings the leaf like a door rather
+   * than spinning it in place around its own centre.
+   *
+   * `instant` skips the opening animation (used on load: a save should not
+   * replay every door swinging open on boot).
+   */
+  private mountDoor(piece: PlacedPiece, instant = false): void {
+    const def = pieceDef(piece.pieceId);
+    const size = def?.size ?? [1, 1, 1];
+    const leafWidth = size[0] * 0.94;
+    const leafDepth = Math.max(0.06, size[2] * 0.5);
+
+    const pivot = new TransformNode(`door_pivot_${this.placed.length}`, this.scene);
+    pivot.position.set(piece.x, piece.y, piece.z);
+
+    const leaf = CreateBox(
+      `door_leaf_${this.placed.length}`,
+      { width: leafWidth, height: size[1], depth: leafDepth },
+      this.scene
+    );
+    leaf.parent = pivot;
+    leaf.position.set(leafWidth / 2, size[1] / 2, 0);
+    leaf.material = this.solid;
+    leaf.isPickable = false;
+
+    const angle = targetAngle(piece.open === true);
+    pivot.rotation.y = piece.rot + (instant ? angle : 0);
+
+    this.doors.set(piece, { piece, pivot, angle: instant ? angle : 0 });
+  }
+
+  private unmountDoor(piece: PlacedPiece): void {
+    const rig = this.doors.get(piece);
+    if (!rig) return;
+    rig.pivot.dispose(false, false);
+    this.doors.delete(piece);
   }
 
   private buildMesh(piece: PlacedPiece): Mesh {
     const def = pieceDef(piece.pieceId);
     const size = def?.size ?? [1, 1, 1];
+    // A door's frame is the same footprint minus the leaf's footprint down
+    // the middle, so the opening reads as an opening even while the leaf sits
+    // closed across it (the leaf itself is a separate mesh on the hinge).
     const mesh = CreateBox(
       `build_${piece.pieceId}_${this.placed.length}`,
       { width: size[0], height: size[1], depth: size[2] },
@@ -158,6 +261,12 @@ export class BuildMode {
     mesh.rotation.y = piece.rot;
     mesh.material = this.solid;
     mesh.isPickable = false;
+    // A door's frame stays visible as the surround; only the leaf (mounted
+    // separately) needs to be solid-looking, so the frame is thinned to a
+    // slim outline by leaving its own box mostly hollow-reading via alpha.
+    // Simplicity wins here: the frame box is cheap and the leaf sits in front
+    // of it, so the frame is not rendered for doors at all.
+    if (isInteractivePiece(piece.pieceId)) mesh.setEnabled(false);
     mesh.freezeWorldMatrix();
     return mesh;
   }
@@ -191,6 +300,8 @@ export class BuildMode {
     this.ghost?.dispose();
     for (const mesh of this.meshes.values()) mesh.dispose();
     this.meshes.clear();
+    for (const rig of this.doors.values()) rig.pivot.dispose(false, false);
+    this.doors.clear();
     this.placed.length = 0;
     this.valid.dispose();
     this.invalid.dispose();

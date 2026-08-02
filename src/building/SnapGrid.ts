@@ -19,6 +19,8 @@ export interface PieceDef {
   cost: { id: string; n: number }[];
   sockets: string[];
   accepts: string[];
+  /** True for pieces the player can interact with after placing, e.g. a door. */
+  interactive?: boolean;
 }
 
 export interface PlacedPiece {
@@ -29,6 +31,13 @@ export interface PlacedPiece {
   rot: number;
   /** Real ms at placement, for the refund grace period. */
   placedAtMs: number;
+  /** Door state. Absent means closed; old saves without the field default here. */
+  open?: boolean;
+}
+
+/** Whether this piece id names an interactive piece (a door, today). */
+export function isInteractivePiece(pieceId: string): boolean {
+  return pieceDef(pieceId)?.interactive === true;
 }
 
 export interface SnapResult {

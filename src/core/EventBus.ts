@@ -82,6 +82,8 @@ export interface GameEvents {
   releaseNeeded: Record<string, never>;
   /** A build piece was placed. */
   builtPiece: { pieceId: string };
+  /** A placed door was opened or closed. Sound is stubbed until the audio pass. */
+  doorToggled: { open: boolean; at: { x: number; y: number; z: number } };
   /** A placement was refused, with why. */
   buildBlocked: { reason: string };
   /** A station was placed. */
