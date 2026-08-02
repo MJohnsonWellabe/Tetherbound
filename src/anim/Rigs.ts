@@ -105,14 +105,7 @@ export function mountRig(
         // place toon shading gets applied (ASSETS.md D24). Terrain, water,
         // the sky dome and the frozen/instanced prop materials never mount
         // through mountRig and are never touched.
-        if (node.material) {
-          try {
-            applyToonShading(node.material);
-          } catch (e) {
-            // eslint-disable-next-line no-console
-            console.error('[DEBUG toon apply]', e);
-          }
-        }
+        if (node.material) applyToonShading(node.material);
       }
 
       const groups = new Map<string, AnimationGroup>();

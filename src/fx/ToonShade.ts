@@ -69,22 +69,32 @@ export const TOON_SHADING_ENABLED: boolean = resolveEnabled(
 
 const PLUGIN_NAME = 'ToonShade';
 
+/**
+ * Baked once from CFG, not per-instance: every material that gets this
+ * plugin shares the same global tuning (there is no per-species toon
+ * dial), so the injected GLSL is the same string for all of them and
+ * Babylon's shader cache hits.
+ *
+ * MaterialPluginBase's own constructor calls `_addPlugin(this)` partway
+ * through `super()`, which synchronously calls `getCustomCode()` to collect
+ * this plugin's injection points -- before the subclass constructor body
+ * below `super()` ever runs. Any field this class tried to set on `this`
+ * after `super()` and then read inside `getCustomCode` would be read as
+ * `undefined` on that first, construction-time call. Module-level constants
+ * have no such ordering problem.
+ */
+const BANDS = CFG.bands.toFixed(1);
+const SOFTNESS = CFG.edgeSoftness.toFixed(4);
+const RIM_STRENGTH = CFG.rimStrength.toFixed(4);
+const RIM_POWER = CFG.rimPower.toFixed(2);
+
 class ToonShadePlugin extends MaterialPluginBase {
-  constructor(material: Material, cfg: ToonConfig) {
+  constructor(material: Material) {
     // addToPluginList=true, enable=true: MaterialPluginBase defaults `enable`
     // to false (it exists for plugins toggled after construction), and a
     // plugin that never activates never runs its shader code.
     super(material, PLUGIN_NAME, 200, undefined, true, true);
-    this.bands = cfg.bands;
-    this.edgeSoftness = cfg.edgeSoftness;
-    this.rimStrength = cfg.rimStrength;
-    this.rimPower = cfg.rimPower;
   }
-
-  private readonly bands: number;
-  private readonly edgeSoftness: number;
-  private readonly rimStrength: number;
-  private readonly rimPower: number;
 
   override getClassName(): string {
     return 'ToonShadePlugin';
@@ -93,23 +103,18 @@ class ToonShadePlugin extends MaterialPluginBase {
   override getCustomCode(shaderType: string): Record<string, string> | null {
     if (shaderType !== 'fragment') return null;
 
-    const bands = this.bands.toFixed(1);
-    const softness = this.edgeSoftness.toFixed(4);
-    const rimStrength = this.rimStrength.toFixed(4);
-    const rimPower = this.rimPower.toFixed(2);
-
     return {
       // A named helper, not inlined, so the before-fog block stays one clear
       // read: quantize, rescale, lift the rim.
       CUSTOM_FRAGMENT_DEFINITIONS: `
 float tbShadeBand(float x) {
-  float bands = ${bands};
+  float bands = ${BANDS};
   float lo = floor(x * bands);
   float hi = lo + 1.0;
   // A hard floor() here is what makes a cel-shaded edge crawl and alias
   // frame to frame as the sun moves or the creature turns; smoothstep across
   // a narrow window keeps the step but lets it settle instead of shimmer.
-  float t = smoothstep(0.5 - ${softness}, 0.5 + ${softness}, fract(x * bands));
+  float t = smoothstep(0.5 - ${SOFTNESS}, 0.5 + ${SOFTNESS}, fract(x * bands));
   return mix(lo, hi, t) / bands;
 }`,
       // finalColor and diffuseBase are locals already alive in this scope;
@@ -125,8 +130,8 @@ float tbShadeBand(float x) {
   // Cheap fresnel rim so a creature's silhouette lifts off a same-toned
   // background; understated on purpose (ASSETS.md: outline/rim is optional
   // and only if it stays inexpensive).
-  float tbRim = pow(1.0 - clamp(dot(normalW, viewDirectionW), 0.0, 1.0), ${rimPower});
-  finalColor.rgb += tbRim * ${rimStrength};
+  float tbRim = pow(1.0 - clamp(dot(normalW, viewDirectionW), 0.0, 1.0), ${RIM_POWER});
+  finalColor.rgb += tbRim * ${RIM_STRENGTH};
 }`
     };
   }
@@ -141,5 +146,5 @@ float tbShadeBand(float x) {
 export function applyToonShading(material: Material): void {
   if (!TOON_SHADING_ENABLED) return;
   if (material.pluginManager?.getPlugin(PLUGIN_NAME)) return;
-  new ToonShadePlugin(material, CFG);
+  new ToonShadePlugin(material);
 }
