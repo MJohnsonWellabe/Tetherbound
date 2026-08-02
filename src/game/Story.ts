@@ -1,15 +1,17 @@
 import { bus } from '../core/EventBus';
 import type { Input } from '../core/input/Input';
 import type { CombatMode } from '../combat/CombatMode';
+import { facingYaw } from '../combat/stagePlacement';
 import type { WildPal } from '../entities/SpawnManager';
 import { createPal } from '../entities/Species';
 import type { Party } from '../party/Party';
 import type { ReleaseFlow } from '../party/Release';
 import type { PalState } from '../party/PalState';
 import { add, type Slots } from '../survival/Inventory';
-import { conversationExists, DialogueRunner, parseEffect } from '../ui/DialogueRunner';
+import { conversationExists, DialogueRunner, parseEffect, type DialogueChoice } from '../ui/DialogueRunner';
 import type { DialoguePanel } from '../ui/DialoguePanel';
 import type { CompassMarker, HUD } from '../ui/HUD';
+import type { StarterPicker } from '../ui/StarterPicker';
 import { hashSeed, mulberry32 } from '../world/gen/Rng';
 import dialogueData from '../data/dialogue.json';
 import { buildTeam, encounterDef, encounterIds, rewardFor } from './Encounters';
@@ -70,12 +72,17 @@ export class Story {
     private readonly input: Input,
     private readonly hud: HUD,
     private readonly panel: DialoguePanel,
+    private readonly starterPicker: StarterPicker,
     private readonly seed: string
   ) {
     // The panel is a view: it renders a line and reports taps. The runner owns
     // where the conversation is. Story is the only thing that knows both.
     this.panel.onAdvance = (): void => this.step(() => this.runner.advance());
     this.panel.onChoose = (index): void => this.step(() => this.runner.choose(index));
+    // The starter choice is the same thing wearing a different view: three
+    // cards over three creatures instead of three plain buttons, but picking
+    // one still just calls choose(index) on the same runner.
+    this.starterPicker.onChoose = (index): void => this.step(() => this.runner.choose(index));
 
     // The first catch of the game, whatever it is, flips Orin's lines and the
     // "catch a tuftmoth" objective. Listened for here rather than called
@@ -99,13 +106,40 @@ export class Story {
     const line = this.runner.line;
     if (!line || !this.runner.isActive) {
       this.panel.hide();
+      this.starterPicker.hide();
       // Effects are drained on close rather than per line, so a conversation
       // that hands over a starter and then says goodbye does both in order and
       // neither lands while the panel is still covering the screen.
       this.applyEffects();
       return;
     }
+    // Orin's starter choice gets the picker (three bodies, three cards)
+    // instead of the plain text panel; every other line in the game keeps
+    // the panel it always had.
+    if (isStarterChoice(line.choices)) {
+      this.panel.hide();
+      this.starterPicker.show(line.text, line.choices, this.starterAnchor());
+      return;
+    }
+    this.starterPicker.hide();
     this.panel.show(line);
+  }
+
+  /**
+   * Where the three starters stand: in front of Orin, facing the way he
+   * does. Re-derived from his live position rather than cached, since
+   * neither he nor the house move but there is no reason to assume that.
+   */
+  private starterAnchor(): { x: number; y: number; z: number; yaw: number } {
+    const orin = this.world.npcs.byId('orin');
+    const home = this.world.home;
+    if (!orin || !home) return { x: 0, y: 0, z: 0, yaw: 0 };
+    return {
+      x: orin.position.x,
+      y: orin.position.y,
+      z: orin.position.z,
+      yaw: facingYaw(orin.position.x, orin.position.z, home.position.x, home.position.z)
+    };
   }
 
   get flags(): readonly string[] {
@@ -152,6 +186,19 @@ export class Story {
     }
 
     if (this.runner.isActive) {
+      if (this.starterPicker.isOpen) {
+        // Keep the trio centre-framed even if the player wanders (CombatStage
+        // pins the camera on a fight target the same way, for the same
+        // reason: D46 only lets Player write the camera, so "look at this"
+        // has to mean "tell it where to point", every step, not once).
+        this.starterPicker.update(x, z);
+        // Digit1/2/3 and the d-pad already mean "slot N" everywhere else in
+        // the game (party swap, hotbar, release); reusing it here needs no
+        // new input mapping and gives keyboard/gamepad a path that does not
+        // depend on a cursor over a card.
+        const slot = this.input.intent.slot;
+        if (slot !== null && slot <= 3) this.step(() => this.runner.choose(slot - 1));
+      }
       // While talking, interact advances the conversation and nothing else.
       if (this.pressedInteract()) this.step(() => this.runner.advance());
       this.hud.setPrompt(null);
@@ -428,4 +475,14 @@ function asWild(state: PalState): WildPal {
     held: false,
     docile: false
   };
+}
+
+/**
+ * True for a line whose choices are all `starter:` effects. Exported for its
+ * own test rather than exercised only through the whole Story class, which
+ * needs a world, a party, a combat mode and four other collaborators just to
+ * construct.
+ */
+export function isStarterChoice(choices: readonly DialogueChoice[]): boolean {
+  return choices.length > 0 && choices.every((choice) => choice.effect?.startsWith('starter:') === true);
 }

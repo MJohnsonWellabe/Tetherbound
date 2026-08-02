@@ -8,6 +8,7 @@ import { Story } from './game/Story';
 import { Objectives, TUFTMOTH_SPAWN } from './game/Objectives';
 import { HUD } from './ui/HUD';
 import { DialoguePanel } from './ui/DialoguePanel';
+import { StarterPicker } from './ui/StarterPicker';
 import { Fx } from './fx/Fx';
 import { mountHarvestFeel } from './fx/HarvestFeel';
 import { InputHint } from './ui/InputHint';
@@ -276,6 +277,15 @@ async function boot(): Promise<void> {
   // M3 and M4: the conversations and the Hall. (The HUD itself was built
   // earlier, next to the party, so Encounter could toast through it too.)
   const dialoguePanel = new DialoguePanel();
+  // Grandpa Orin's starter choice: three real bodies and three cards instead
+  // of three plain buttons. Reuses palVisuals (the same acquire() combat
+  // borrows for the ally) and player (the same setCameraFraming request
+  // combat uses, D46), so it needs both to already exist.
+  const starterPicker = new StarterPicker(
+    document.getElementById('starter') as HTMLElement,
+    palVisuals,
+    player
+  );
   const story = new Story(
     built,
     party,
@@ -285,6 +295,7 @@ async function boot(): Promise<void> {
     input,
     hud,
     dialoguePanel,
+    starterPicker,
     resolveSeed()
   );
   hud.updateParty(party);
@@ -678,6 +689,7 @@ async function boot(): Promise<void> {
     built,
     objectives,
     hud,
+    starterPicker,
     snapshotSave,
     // Debug-only: lets harness probes load a GLB with no game wrappers.
     loadContainerOwned: (url: string) => loadContainerOwned(scene, url),
@@ -697,6 +709,7 @@ async function boot(): Promise<void> {
       nameplates.dispose();
       fx.dispose();
       dialoguePanel.dispose();
+      starterPicker.dispose();
       hud.dispose();
       built.dispose();
       hint.dispose();

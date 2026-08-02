@@ -1,4 +1,5 @@
 import { clear, el, setFill, show, tapButton } from './dom';
+import { bus } from '../core/EventBus';
 import type { Input, InputSource } from '../core/input/Input';
 import type { PalState } from '../party/PalState';
 import { derive, speciesDef } from '../entities/Species';
@@ -60,12 +61,15 @@ export class HUD {
   private readonly compass: HTMLElement;
   private readonly toastRow: HTMLElement;
   private readonly dayLabel: HTMLElement;
+  /** Compass strip plus the day label: the two explore-only widgets that share a row. */
+  private readonly topRow: HTMLElement;
 
   /** Cached so the compass does not force a layout read every single frame. */
   private compassWidth = 0;
   private readonly onResize = (): void => {
     this.compassWidth = 0;
   };
+  private readonly unsubs: (() => void)[] = [];
 
   /** Callbacks the game wires up. Null until then, so the HUD is inert alone. */
   onPartyTap: (() => void) | null = null;
@@ -110,10 +114,11 @@ export class HUD {
     this.interactButton = tapButton('', 'hud__interact', () => this.onInteract?.());
     this.interactButton.hidden = true;
 
+    this.topRow = el('div', 'hud__top', this.compass, this.dayLabel);
     this.root = el(
       'div',
       'hud',
-      el('div', 'hud__top', this.compass, this.dayLabel),
+      this.topRow,
       vitals,
       this.toastRow,
       this.interactButton,
@@ -121,6 +126,30 @@ export class HUD {
     );
     parent.append(this.root);
     window.addEventListener('resize', this.onResize);
+
+    // The compass, day and party pips read the world outside a fight, and the
+    // interact prompt reads a thing to press E on; none of that is true once
+    // CombatScreen owns the screen. Its own panels do not cover the full
+    // viewport, so without this the explore HUD was visible in the gaps: the
+    // party pip row and the objective prompt both sat under the combat UI.
+    // Vitals stay: the player's own health/stamina/hunger keep ticking
+    // through a fight (tickVitals runs every frame regardless) and can still
+    // hit zero, so hiding them would hide a real threat.
+    this.unsubs.push(
+      bus.on('combatStarted', () => this.setExploreVisible(false)),
+      bus.on('combatEnded', () => this.setExploreVisible(true))
+    );
+  }
+
+  /** Toggle the widgets that only mean something outside a fight. */
+  private setExploreVisible(on: boolean): void {
+    show(this.topRow, on);
+    show(this.pips, on);
+    // Not restored to visible here even when `on`: whether a prompt belongs
+    // on screen depends on whether anything is in reach, which the next
+    // setPrompt() call (driven by Story/Objectives, not by this event) is
+    // what actually knows.
+    if (!on) this.interactButton.hidden = true;
   }
 
   private readonly interactButton: HTMLButtonElement;
@@ -236,6 +265,8 @@ export class HUD {
 
   dispose(): void {
     window.removeEventListener('resize', this.onResize);
+    for (const unsub of this.unsubs) unsub();
+    this.unsubs.length = 0;
     this.root.remove();
   }
 }

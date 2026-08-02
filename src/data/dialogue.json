@@ -7,6 +7,14 @@
 
   "$comment_routes": "Which conversation an NPC uses once a flag is set. Checked in order and the LAST match wins, so later entries are later in the story. Trainers are not listed here; encounters.json already routes those through their own afterDialogue.",
 
+  "$starterReads": {
+    "bramblit": "Bramble-backed hare. Tanky and slow, built to take the hit.",
+    "cindercub": "Ash-furred fox kit. Fast and fragile, built to end things quick.",
+    "dewdrake": "Dew-slick newt. Balanced and quick on its feet, no bad matchups."
+  },
+
+  "$comment_starterReads": "The one-line read StarterPicker shows on each starter's card. GAME_DESIGN.md section 6 has the source reads; these are trimmed to fit a card rather than quoted verbatim.",
+
   "$comment": "All spoken text, data driven. CLAUDE.md writing style: terse, grounded, no em dashes, no speeches. A node either advances via `next` or ends. `choices` branch. `effect` names a flag or action the DialogueRunner applies; the runner refuses any effect it does not recognise rather than failing silently.",
 
   "orin_intro": {

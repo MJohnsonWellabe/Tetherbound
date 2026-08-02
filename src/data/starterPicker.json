@@ -1,0 +1,16 @@
+{
+  "$comment": "Grandpa Orin's starter choice, staged. Consumed by StarterPicker/starterPlacement.",
+  "placement": {
+    "$comment": "forward/spread: metres from Orin along his own facing (negative is behind him, away from the spawn point he faces), and metres between neighbouring starters. Negative forward matters: Orin stands roughly 1.5m from where the player wakes (landmarks.json's orinOffset), so a POSITIVE forward here walks the trio most of the way to the player's own feet, and the camera pin below degenerates when its target is that close. Standing them past Orin instead keeps them a readable distance from wherever the player is.",
+    "forward": -1.9,
+    "spread": 1.25
+  },
+  "camera": {
+    "$comment": "The framing Player lerps toward while the picker is open (D46). Distance stays under cameraRig.json's indoor.distance for the same reason that cap exists: the boom only samples cameraRig.boom.steps points across it, and sampling too far inside a small room lets a sample land inside a wall and collapse the resolved distance to something far shorter and much closer than intended.",
+    "distance": 3.0,
+    "height": 1.5,
+    "shoulder": 0,
+    "pitch": 0.06,
+    "blendMs": 500
+  }
+}

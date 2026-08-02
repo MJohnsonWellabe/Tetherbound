@@ -61,6 +61,8 @@
   gap: var(--pad-xs);
 }
 
+.hud__top[hidden] { display: none; }
+
 .hud__compass {
   position: relative;
   width: min(76vw, 460px);
@@ -282,6 +284,8 @@
   padding: var(--pad-xs);
   min-height: var(--tap);
 }
+
+.hud__pips[hidden] { display: none; }
 
 .pip {
   width: 58px;
@@ -698,6 +702,78 @@
 
 .dlg__hint { font-size: var(--fs-xs); color: var(--text-faint); text-align: right; }
 .dlg__hint[hidden] { display: none; }
+
+/*
+ * The starter picker. Same bottom-sheet position as .dlg (it stands in for
+ * the dialogue panel for exactly one node), but the panel only owns the
+ * text; the three creatures it is captioning stand in the world above it.
+ */
+.starter {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--pad-md);
+  padding-bottom: calc(var(--safe-b) + var(--pad-lg));
+  pointer-events: none;
+}
+
+.starter[hidden] { display: none; }
+
+.starter__panel {
+  width: min(94vw, 720px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad-sm);
+  pointer-events: auto;
+}
+
+.starter__speaker {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--spore);
+  margin: 0 0 0 var(--pad-sm);
+}
+
+.starter__text {
+  margin: 0;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-panel);
+  padding: var(--pad-md);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.starter__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--pad-sm);
+}
+
+/* .card carries the background, border and layout; this only overrides the
+   bits a release card does not need: left-aligned text and a focus ring for
+   the Tab-and-Enter keyboard path tapButton() already wires up. */
+.starter__card {
+  text-align: left;
+  min-height: var(--tap);
+}
+
+.starter__card:focus-visible {
+  outline: 2px solid var(--spore);
+  outline-offset: 2px;
+}
+
+.starter__num {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  color: var(--text-faint);
+}
 
 /* --- release and party --------------------------------------------------- */
 
