@@ -2,8 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!-- viewport-fit=cover + the safe-area insets below keep the HUD clear of
-         the notch and the home indicator. Mobile is the primary target. -->
+    <!-- viewport-fit=cover + the safe-area insets keep the HUD clear of a notch
+         or a home indicator. The handheld is the primary target (D28), and its
+         rounded bezel is handled by the --pad-lg inset the chrome sits at. -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
@@ -39,8 +40,10 @@
     <div id="combat" class="cb" hidden></div>
     <div id="release" class="rel" hidden></div>
 
-    <!-- Gathering readout: equipped tool, what is in reach, what you just
-         picked up. Replaced by M1's inventory screen. -->
+    <!-- Gathering readout: equipped tool and the last pickup. The contextual
+         "press E to chop" prompt is a separate .prompt element that HarvestHud
+         creates next to this one, so a transient hint is never mistaken for
+         persistent state. Both are replaced by M1's inventory screen. -->
     <div id="gather" class="gather"></div>
 
     <!-- Floating numbers. Pooled DOM rather than in-canvas text, so they cost

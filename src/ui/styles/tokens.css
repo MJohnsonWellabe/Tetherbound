@@ -59,9 +59,12 @@
   --tether-glow: rgba(255, 107, 74, 0.3);
 
   /* --- vitals ---------------------------------------------------------- */
+  /* Food is a warm YELLOW, not an orange. It used to sit at #ffb45c, close
+     enough to --tether that a friendly bar and a danger marker read as the
+     same colour and the danger accent stopped meaning anything. */
   --health: #ff5c72;
   --stamina: #7cff9b;
-  --hunger: #ffb45c;
+  --hunger: #ffcf3d;
 
   /* --- geometry -------------------------------------------------------- */
   --r-sm: 6px;

@@ -63,59 +63,194 @@
 
 .hud__compass {
   position: relative;
-  width: min(92vw, 520px);
-  height: 34px;
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--bg-deep) 62%, transparent);
+  width: min(76vw, 460px);
+  height: 48px;
+  /* Not a pill: a 24px corner radius shaved the ends off any label pushed to
+     the edge of the strip, and a landmark you can half read is worse than one
+     you cannot see. */
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--bg-deep) 72%, transparent);
   border: 1px solid var(--line-soft);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
   overflow: hidden;
+}
+
+/*
+ * Where you are pointing: a nub on the top edge plus a soft column behind
+ * everything. A hard full-height rule drew a line straight through the name of
+ * whatever you were standing in.
+ */
+.hud__compass::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 6px;
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
+  background: var(--spore);
+}
+
+.hud__compass::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--spore) 14%, transparent),
+    transparent
+  );
+}
+
+/* The rose, along the bottom. Landmarks own the top band; the two never share
+   a row, so neither can print over the other. */
+.compass__tick {
+  position: absolute;
+  bottom: 3px;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  line-height: 1;
+}
+
+.compass__tick--major {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
 }
 
 .compass__pin {
   position: absolute;
-  top: 50%;
+  top: 18px;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  line-height: 1.1;
+  gap: 1px;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
+.compass__head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Kind is carried by the dot, so the label itself can stay legible off-white
+   and the danger accent is not spent on a signpost. */
+.compass__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-dim);
+}
+
 .compass__label {
-  font-size: var(--fs-xs);
-  letter-spacing: 0.04em;
-  color: var(--text-dim);
-}
-
-.compass__distance {
-  font-size: 9px;
-  font-family: var(--mono);
-  color: var(--text-faint);
-}
-
-.compass__pin--hall .compass__label { color: var(--tether); }
-.compass__pin--stones .compass__label { color: var(--sigil); }
-.compass__pin--village .compass__label { color: var(--spore); }
-.compass__pin--satchel .compass__label { color: var(--dew); }
-/* A marker behind you still says which way to turn. */
-.compass__pin--behind { opacity: 0.4; }
-
-.hud__day {
-  font-size: var(--fs-xs);
-  font-family: var(--mono);
-  color: var(--text-faint);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
   text-shadow: 0 1px 3px var(--bg-deep);
 }
 
+.compass__distance {
+  font-size: 12px;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  text-shadow: 0 1px 3px var(--bg-deep);
+}
+
+.compass__pin--stones .compass__dot { background: var(--sigil); }
+.compass__pin--village .compass__dot { background: var(--spore); }
+.compass__pin--satchel .compass__dot { background: var(--dew); }
+/* A Tether Hall is hostile. This is the one compass mark the danger accent is
+   allowed on, and it is a mark, not the text. */
+.compass__pin--hall .compass__dot { background: var(--tether); }
+/* A marker behind you still says which way to turn. */
+.compass__pin--behind { opacity: 0.5; }
+
+.hud__day {
+  font-size: var(--fs-sm);
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  text-shadow: 0 1px 3px var(--bg-deep);
+}
+
+/*
+ * Vitals block, inset to --pad-lg. A handheld's bezel is rounded and its panel
+ * can overscan, so nothing lands in the first 24px of either edge.
+ */
 .hud__vitals {
   position: absolute;
-  top: calc(var(--safe-t) + 58px);
-  left: calc(var(--safe-l) + var(--pad-sm));
-  width: 132px;
+  top: calc(var(--safe-t) + var(--pad-lg));
+  left: calc(var(--safe-l) + var(--pad-lg));
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.75));
+}
+
+.vital {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* Widths differ on purpose: three identical rectangles are three unlabelled
+   rectangles, and the shape alone should say which row you are looking at. */
+.vital--health { width: 178px; color: var(--health); }
+.vital--stamina { width: 152px; color: var(--stamina); }
+.vital--hunger { width: 128px; color: var(--hunger); }
+
+/* Tinted by `currentColor` from the row, so a token change moves both. */
+.vital__icon {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.vital--health .vital__icon {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.2 3.5 12.7a5.4 5.4 0 0 1 7.7-7.6l.8.8.8-.8a5.4 5.4 0 0 1 7.7 7.6Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.2 3.5 12.7a5.4 5.4 0 0 1 7.7-7.6l.8.8.8-.8a5.4 5.4 0 0 1 7.7 7.6Z'/%3E%3C/svg%3E");
+}
+
+.vital--stamina .vital__icon {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M13.6 2 4 13.4h5.6L8.4 22 20 10.2h-6.2Z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M13.6 2 4 13.4h5.6L8.4 22 20 10.2h-6.2Z'/%3E%3C/svg%3E");
+}
+
+.vital--hunger .vital__icon {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 11h20a10 10 0 0 1-20 0Z'/%3E%3Cpath d='M7 2.5v3.8M12 1.6v4.7M17 2.5v3.8' stroke='black' stroke-width='1.9' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 11h20a10 10 0 0 1-20 0Z'/%3E%3Cpath d='M7 2.5v3.8M12 1.6v4.7M17 2.5v3.8' stroke='black' stroke-width='1.9' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+}
+
+.vital__num {
+  flex: 0 0 auto;
+  min-width: 26px;
+  text-align: right;
+  font-size: var(--fs-xs);
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  text-shadow: 0 1px 3px var(--bg-deep);
 }
 
 .hud__buffs {
@@ -188,24 +323,31 @@
   background: var(--bloom);
 }
 
+/* Talking to somebody. Same slot family as the harvest prompt in base.css, one
+   band higher so the two can never print on top of each other. Lime, because
+   lime is "you can act on this". */
 .hud__prompt {
   position: absolute;
-  bottom: calc(var(--safe-b) + 108px);
+  bottom: calc(var(--safe-b) + 162px);
   left: 50%;
   transform: translateX(-50%);
-  font-size: var(--fs-sm);
-  color: var(--text-dim);
-  background: color-mix(in srgb, var(--bg-deep) 76%, transparent);
-  padding: 6px 12px;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--spore);
+  background: color-mix(in srgb, var(--bg-deep) 82%, transparent);
+  padding: 8px 16px;
   border-radius: var(--r-pill);
-  border: 1px solid var(--line-soft);
+  border: 1px solid var(--spore-dim);
+  text-shadow: 0 1px 3px var(--bg-deep);
 }
+
+.hud__prompt[hidden] { display: none; }
 
 /* The interact button itself, thumb-reachable on the right. */
 .hud__interact {
   position: absolute;
-  right: calc(var(--safe-r) + var(--pad-md));
-  bottom: calc(var(--safe-b) + 150px);
+  right: calc(var(--safe-r) + var(--pad-lg));
+  bottom: calc(var(--safe-b) + 158px);
   pointer-events: auto;
   min-width: 96px;
   min-height: var(--tap);
@@ -219,8 +361,8 @@
 
 .hud__toasts {
   position: absolute;
-  top: calc(var(--safe-t) + 110px);
-  right: calc(var(--safe-r) + var(--pad-sm));
+  top: calc(var(--safe-t) + 118px);
+  right: calc(var(--safe-r) + var(--pad-lg));
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -632,7 +774,6 @@
 /* --- wider screens ------------------------------------------------------- */
 
 @media (min-width: 760px) {
-  .hud__vitals { width: 180px; }
   .pip { width: 74px; }
   .cb__bottom { padding: 0 var(--pad-lg); }
 }

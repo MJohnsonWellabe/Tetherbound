@@ -115,8 +115,9 @@ body {
 
 .stats {
   position: fixed;
-  top: calc(var(--safe-t) + 6px);
-  right: calc(var(--safe-r) + 6px);
+  /* Below the fullscreen button, which shares this corner. */
+  top: calc(var(--safe-t) + var(--pad-lg) + 52px);
+  right: calc(var(--safe-r) + var(--pad-lg));
   z-index: 90;
   padding: 7px 10px;
   border: 1px solid var(--line-soft);
@@ -187,7 +188,8 @@ body {
 .hint {
   position: fixed;
   left: 50%;
-  bottom: calc(14px + env(safe-area-inset-bottom));
+  /* Clears the party pips, which own the bottom of the centre column. */
+  bottom: calc(70px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 20;
   max-width: min(92vw, 720px);
@@ -213,8 +215,8 @@ body {
 
 .fs-btn {
   position: fixed;
-  top: calc(10px + env(safe-area-inset-top));
-  right: calc(10px + env(safe-area-inset-right));
+  top: calc(var(--pad-lg) + env(safe-area-inset-top));
+  right: calc(var(--pad-lg) + env(safe-area-inset-right));
   z-index: 20;
   /* 44px minimum touch target, and the Ally's touchscreen is a real input. */
   width: 44px;
@@ -305,22 +307,67 @@ body {
   color: var(--text);
 }
 
-/* Gathering readout. Sits above the control prompt, same quiet treatment. */
+/*
+ * What is in your hand, and what you last picked up. PERSISTENT state, so it
+ * lives in its own corner chip rather than sharing a centred line with a
+ * transient prompt. Inset to the same --pad-lg safe margin as the vitals.
+ */
 .gather {
   position: fixed;
-  left: 50%;
-  bottom: calc(52px + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
+  left: calc(var(--pad-lg) + env(safe-area-inset-left));
+  bottom: calc(var(--pad-lg) + env(safe-area-inset-bottom));
   z-index: 20;
-  max-width: min(92vw, 720px);
-  padding: 6px 14px;
-  border-radius: 999px;
+  max-width: 42vw;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-soft);
+  background: color-mix(in srgb, var(--bg-deep) 74%, transparent);
   color: var(--text);
-  font-size: 14px;
-  text-align: center;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.01em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   pointer-events: none;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+.gather:empty { display: none; }
+
+/*
+ * The contextual interaction prompt. It used to be concatenated onto the stat
+ * readout at the same size and weight, so a line that appears for two seconds
+ * looked exactly like the line that is always there. Own element, own band,
+ * lime for "you can act on this".
+ */
+.prompt {
+  position: fixed;
+  left: 50%;
+  bottom: calc(116px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 21;
+  padding: 8px 16px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--spore-dim);
+  background: color-mix(in srgb, var(--bg-deep) 82%, transparent);
+  color: var(--spore);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-align: center;
+  text-shadow: 0 1px 3px var(--bg-deep);
+  pointer-events: none;
+}
+
+.prompt[hidden] { display: none; }
+
+/* Something you cannot work yet is not an action, so it does not get the
+   action colour. */
+.prompt--blocked {
+  border-color: var(--line);
+  color: var(--text-dim);
+  font-weight: 500;
 }
 
 /*

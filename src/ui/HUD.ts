@@ -4,13 +4,19 @@ import { derive, speciesDef } from '../entities/Species';
 import type { Party } from '../party/Party';
 import type { VitalsState } from '../survival/Vitals';
 import { maxHealth, maxStamina, VITALS_CONFIG } from '../survival/Vitals';
+import {
+  layOutCardinals,
+  layOutCompass,
+  type CardinalMark,
+  type CompassCandidate
+} from './compass';
 
 /**
  * The exploration HUD: vitals, party pips, compass, and the interact prompt.
  *
- * DOM overlay, mobile first. Every touch target is at least the --tap token
- * (44px), nothing depends on hover, and the layout is built for 390x844 before
- * anything wider.
+ * DOM overlay. Built for a handheld first (D28): every touch target is at least
+ * the --tap token (44px), nothing depends on hover, and the chrome is inset to
+ * the --pad-lg safe margin so a rounded or overscanned panel cannot clip it.
  *
  * The HUD is a VIEW. It reads state handed to it and never reaches back into a
  * system to ask a question, which is what keeps a repaint from being able to
@@ -24,12 +30,18 @@ export interface CompassMarker {
   kind: 'hall' | 'stones' | 'village' | 'satchel';
 }
 
+/** Fallback strip width, used only before the first layout read. */
+const COMPASS_FALLBACK_PX = 460;
+
 export class HUD {
   readonly root: HTMLElement;
 
   private readonly healthFill: HTMLElement;
   private readonly staminaFill: HTMLElement;
   private readonly hungerFill: HTMLElement;
+  private readonly healthNum: HTMLElement;
+  private readonly staminaNum: HTMLElement;
+  private readonly hungerNum: HTMLElement;
   private readonly buffRow: HTMLElement;
   private readonly pips: HTMLElement;
   private readonly compass: HTMLElement;
@@ -37,23 +49,32 @@ export class HUD {
   private readonly toastRow: HTMLElement;
   private readonly dayLabel: HTMLElement;
 
+  /** Cached so the compass does not force a layout read every single frame. */
+  private compassWidth = 0;
+  private readonly onResize = (): void => {
+    this.compassWidth = 0;
+  };
+
   /** Callbacks the game wires up. Null until then, so the HUD is inert alone. */
   onPartyTap: (() => void) | null = null;
   onInteract: (() => void) | null = null;
 
   constructor(parent: HTMLElement = document.body) {
-    this.healthFill = el('i', 'bar__fill bar__fill--health');
-    this.staminaFill = el('i', 'bar__fill bar__fill--stamina');
-    this.hungerFill = el('i', 'bar__fill bar__fill--hunger');
+    this.healthFill = el('i', 'meter__fill meter__fill--health');
+    this.staminaFill = el('i', 'meter__fill meter__fill--stamina');
+    this.hungerFill = el('i', 'meter__fill meter__fill--hunger');
+    this.healthNum = el('span', 'vital__num', '100');
+    this.staminaNum = el('span', 'vital__num', '100');
+    this.hungerNum = el('span', 'vital__num', '100');
     this.buffRow = el('div', 'hud__buffs');
     this.dayLabel = el('div', 'hud__day', 'Day 1');
 
     const vitals = el(
       'div',
       'hud__vitals',
-      el('div', 'bar', this.healthFill),
-      el('div', 'bar', this.staminaFill),
-      el('div', 'bar', this.hungerFill),
+      vitalRow('health', this.healthFill, this.healthNum),
+      vitalRow('stamina', this.staminaFill, this.staminaNum),
+      vitalRow('hunger', this.hungerFill, this.hungerNum),
       this.buffRow
     );
 
@@ -84,6 +105,7 @@ export class HUD {
       this.pips
     );
     parent.append(this.root);
+    window.addEventListener('resize', this.onResize);
   }
 
   private readonly interactButton: HTMLButtonElement;
@@ -97,6 +119,10 @@ export class HUD {
     setFill(this.healthFill, state.health / maxHealth(state));
     setFill(this.staminaFill, state.stamina / maxStamina(state));
     setFill(this.hungerFill, state.hunger / VITALS_CONFIG.maxHunger);
+
+    this.healthNum.textContent = String(Math.round(state.health));
+    this.staminaNum.textContent = String(Math.round(state.stamina));
+    this.hungerNum.textContent = String(Math.round(state.hunger));
 
     clear(this.buffRow);
     for (const buff of state.buffs) {
@@ -145,8 +171,9 @@ export class HUD {
 
   /**
    * Compass strip. Markers are placed by bearing relative to where the player
-   * is looking, and clamped to the edges rather than hidden, so a marker
-   * behind you still tells you which way to turn.
+   * is looking. Every marker used to be drawn, which meant three landmarks in
+   * roughly the same direction printed on top of each other and none of them
+   * could be read. `layOutCompass` drops the lower-priority label instead.
    */
   updateCompass(
     playerX: number,
@@ -155,27 +182,19 @@ export class HUD {
     markers: readonly CompassMarker[]
   ): void {
     clear(this.compass);
-    for (const marker of markers) {
-      const bearing = Math.atan2(marker.x - playerX, marker.z - playerZ);
-      let relative = bearing - yaw;
-      while (relative > Math.PI) relative -= Math.PI * 2;
-      while (relative < -Math.PI) relative += Math.PI * 2;
+    const width = this.stripWidth();
 
-      // Half the field of view either side maps across the strip.
-      const HALF_FOV = Math.PI * 0.75;
-      const t = Math.max(-1, Math.min(1, relative / HALF_FOV));
-      const distance = Math.round(Math.hypot(marker.x - playerX, marker.z - playerZ));
-
-      const pin = el(
-        'div',
-        `compass__pin compass__pin--${marker.kind}`,
-        el('span', 'compass__label', marker.label),
-        el('span', 'compass__distance', `${distance}m`)
-      );
-      pin.style.left = `${50 + t * 50}%`;
-      if (Math.abs(relative) > HALF_FOV) pin.classList.add('compass__pin--behind');
-      this.compass.append(pin);
+    for (const mark of layOutCardinals(yaw, width)) {
+      this.compass.append(cardinalNode(mark));
     }
+    for (const pin of layOutCompass(markers, playerX, playerZ, yaw, width)) {
+      this.compass.append(pinNode(pin));
+    }
+  }
+
+  private stripWidth(): number {
+    if (this.compassWidth === 0) this.compassWidth = this.compass.clientWidth;
+    return this.compassWidth || COMPASS_FALLBACK_PX;
   }
 
   /** The "press to talk" affordance. Text null hides both prompt and button. */
@@ -203,6 +222,39 @@ export class HUD {
   }
 
   dispose(): void {
+    window.removeEventListener('resize', this.onResize);
     this.root.remove();
   }
+}
+
+/** Icon, track, numeral. The colour alone never has to carry the meaning. */
+function vitalRow(kind: string, fill: HTMLElement, num: HTMLElement): HTMLElement {
+  return el(
+    'div',
+    `vital vital--${kind}`,
+    el('i', 'vital__icon'),
+    el('div', 'meter meter--hud', fill),
+    num
+  );
+}
+
+function pinNode(pin: CompassCandidate): HTMLElement {
+  const node = el(
+    'div',
+    `compass__pin compass__pin--${pin.kind}${pin.behind ? ' compass__pin--behind' : ''}`,
+    el('div', 'compass__head', el('i', 'compass__dot'), el('span', 'compass__label', pin.label)),
+    el('span', 'compass__distance', `${pin.distance} m`)
+  );
+  node.style.left = `${pin.centrePx}px`;
+  return node;
+}
+
+function cardinalNode(mark: CardinalMark): HTMLElement {
+  const node = el(
+    'div',
+    `compass__tick${mark.major ? ' compass__tick--major' : ''}`,
+    mark.label
+  );
+  node.style.left = `${mark.centrePx}px`;
+  return node;
 }
