@@ -166,7 +166,16 @@ export async function mergeSeated(
   // grass tuft is a triangle budget problem, not a detail win. Simplify BEFORE
   // the merge so the weld cannot fuse what the simplifier needs separate.
   if (simplifyRatio) {
-    await document.transform(weld(), simplify({ simplifier: MeshoptSimplifier, ratio: simplifyRatio, error: 0.01 }));
+    // `error` is the cap, and it is what actually decides how far the
+    // simplifier goes: at the old 0.01 (1% of mesh extent) collapsing a
+    // multi-blade tuft blew the bound immediately and every ratio silently
+    // no-opped, so a "simplified" 224-tri grass model shipped at 224 tris.
+    // Ground cover is read at 40m+, where a generous bound costs nothing
+    // visible and the ratio is allowed to bite.
+    await document.transform(
+      weld(),
+      simplify({ simplifier: MeshoptSimplifier, ratio: simplifyRatio, error: 0.5 })
+    );
   }
 
   // Join every primitive into one. joinPrimitives needs compatible vertex

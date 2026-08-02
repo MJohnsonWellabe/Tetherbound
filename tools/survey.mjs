@@ -49,7 +49,9 @@ for (const [name, x, z, yaw, tod] of SPOTS) {
   await setTimeOfDay(page, tod);
   const s = await stats(page);
   const file = `${OUT}/${name}.png`;
-  await page.screenshot({ path: file });
+  // Software rendering on a loaded box can take well past Playwright's 30s
+  // default to compose one 1280x720 frame. A slow capture is not a failure.
+  await page.screenshot({ path: file, timeout: 180_000 });
   manifest.push({ name, file, x, z, ...s });
   console.log(`${s.frameMs}ms  ${s.drawCalls ?? '?'} draws  ${s.triangles} tris`);
 }

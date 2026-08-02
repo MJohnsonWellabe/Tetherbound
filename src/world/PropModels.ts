@@ -41,7 +41,6 @@ export async function resolvePrototypes(scene: Scene): Promise<PrototypeSet> {
   const shared = new StandardMaterial('mat_prop_models', scene);
   shared.diffuseColor = new Color3(1, 1, 1);
   shared.specularColor = new Color3(0, 0, 0);
-  shared.freeze();
   materials.push(shared);
 
   for (const plan of planProps(loaded)) {
@@ -59,8 +58,18 @@ export async function resolvePrototypes(scene: Scene): Promise<PrototypeSet> {
     proto.makeGeometryUnique();
     proto.scaling.setAll(plan.variant.scale);
     // Thin instances replace the world matrix outright, so the scale has to
-    // live in the vertices, same reason Prototypes.ts bakes its seating.
+    // live in the vertices, same reason Prototypes.ts bakes its seating. This
+    // bakes the full WORLD matrix, which is what we want: the glTF loader puts
+    // its right-to-left-handed conversion on the container's `__root__`, and a
+    // prop that drops it comes out mirrored.
     proto.bakeCurrentTransformIntoVertices();
+    // ...and then the parent MUST go. `clone(name, null)` does not detach: a
+    // null parent argument means "leave the parent alone", so the clone stayed
+    // a child of `__root__`. With the conversion baked into the vertices AND
+    // still applied by the parent at render time, every prop was mirrored
+    // across the world origin, which put the trees near the player 2x their
+    // distance away and left the Meadows looking empty (D53).
+    proto.parent = null;
     proto.material = shared;
     proto.setEnabled(false);
     proto.isPickable = false;

@@ -44,6 +44,8 @@ import { bakeToVertexColors, getIO, mergeSeated, slim, stats } from './lib/glbto
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const RAW = join(ROOT, 'assets_raw');
 const PUB = join(ROOT, 'public');
+/** Editing a job must invalidate what that job produced. */
+const JOBS_PATH = join(ROOT, 'scripts', 'asset-jobs.mjs');
 const BUDGET_KB = 420;
 
 const args = process.argv.slice(2);
@@ -145,7 +147,18 @@ let ran = 0;
 for (const job of JOBS) {
   if (only && job.group !== only) continue;
   const out = join(PUB, job.out);
-  const fresh = existsSync(out) && !force;
+  // "The output exists" is not freshness: retargeting a job at a different
+  // source model, or changing its simplify ratio, left the old file in place
+  // and the change silently did nothing. Rebuild whenever the output is older
+  // than any of its sources or than the job list that describes it.
+  const fresh =
+    existsSync(out) &&
+    !force &&
+    statSync(out).mtimeMs >= statSync(JOBS_PATH).mtimeMs &&
+    (job.sources ?? []).every((s) => {
+      const src = join(RAW, s.file);
+      return !existsSync(src) || statSync(out).mtimeMs >= statSync(src).mtimeMs;
+    });
   try {
     if (!fresh) {
       await runJob(io, job);

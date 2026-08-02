@@ -29,12 +29,15 @@ const props = [
   // Bushes.
   { file: `${NK}/plant_bush.glb`, out: 'bush_a' },
   { file: `${NK}/plant_bushDetailed.glb`, out: 'bush_b' },
-  // Ground cover. Bamboo stalks are the kit's only real reed silhouette.
-  // Ground cover is simplified hard: it renders by the thousand and reads at
-  // 40m, where a 60-tri tuft and a 224-tri tuft are the same pixels.
-  { file: `${NK}/grass_large.glb`, out: 'grass_a', simplify: 0.28 },
-  { file: `${NK}/grass.glb`, out: 'grass_b', simplify: 0.35 },
-  { file: `${NK}/crops_bambooStageA.glb`, out: 'reed_a', simplify: 0.35 },
+  // Ground cover. This is the whole triangle budget: it renders by the
+  // thousand through thin instances, so the SOURCE choice matters more than
+  // any simplifier pass. The kit's leaf-tuft and flat-plant models carry the
+  // same silhouette at 40m as the detailed tufts for a sixth of the
+  // triangles, which is what buys the draw distance that makes a meadow read
+  // as a meadow instead of a golf course (D51).
+  { file: `${NK}/grass_leafs.glb`, out: 'grass_a' },
+  { file: `${NK}/plant_flatTall.glb`, out: 'grass_b' },
+  { file: `${NK}/plant_flatShort.glb`, out: 'reed_a' },
   { file: `${NK}/flower_purpleA.glb`, out: 'flower_a', simplify: 0.45 },
   { file: `${NK}/flower_redA.glb`, out: 'flower_b', simplify: 0.45 },
   { file: `${NK}/flower_yellowA.glb`, out: 'flower_c', simplify: 0.45 },
