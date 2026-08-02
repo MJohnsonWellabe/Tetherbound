@@ -41,7 +41,10 @@ async function runDialogue(page: Page, choice: number | null = null): Promise<vo
       await page.waitForTimeout(300);
       continue;
     }
-    const open = await page.evaluate(() => !document.querySelector('.dlg')?.hidden);
+    // `hidden` lives on HTMLElement, not Element, and tsconfig covers tests/.
+    const open = await page.evaluate(
+      () => !document.querySelector<HTMLElement>('.dlg')?.hidden
+    );
     if (!open) return;
     await page.keyboard.press('KeyE');
     await page.waitForTimeout(260);
