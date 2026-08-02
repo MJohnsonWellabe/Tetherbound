@@ -13,6 +13,7 @@ import {
   flatten,
   joinPrimitives,
   prune,
+  quantize,
   resample,
   simplify,
   textureCompress,
@@ -180,9 +181,21 @@ export async function mergeSeated(document, { scale = 1, simplifyRatio = null } 
 }
 
 /** Standard slimming pass for models that keep their textures/rigs. */
-export async function slim(document, { textureSize = 512, keepAnimations = true } = {}) {
-  const transforms = [dedup(), prune()];
+export async function slim(document, { textureSize = 512, keepAnimations = true, keepClips = null } = {}) {
+  // The source packs ship every animation twice (bare and armature-prefixed
+  // names) and carry clips the game never plays. Dropping everything outside
+  // the verb map halves most rigged files.
+  if (keepClips) {
+    const keep = new Set(keepClips);
+    for (const anim of document.getRoot().listAnimations()) {
+      if (!keep.has(anim.getName())) anim.dispose();
+    }
+  }
+  const transforms = [dedup(), prune(), weld()];
   if (keepAnimations) transforms.push(resample());
+  // 16-bit attributes via KHR_mesh_quantization, which the runtime loader
+  // registers. Roughly halves rigged geometry.
+  transforms.push(quantize());
   transforms.push(
     textureCompress({ encoder: sharp, targetFormat: 'webp', resize: [textureSize, textureSize] })
   );

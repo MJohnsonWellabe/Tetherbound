@@ -29,3 +29,23 @@ licenses are recorded as found at the source so attribution stays a lookup, not 
 | public/models/props/stump.glb | https://kenney.nl/assets/nature-kit | Kenney | CC0 | 2026-08-02 | prop (5 KB) |
 | public/textures/detail_grass.webp | https://ambientcg.com/view?id=Grass004 | ambientCG | CC0 | 2026-08-02 | texture (86 KB) |
 | public/textures/detail_rock.webp | https://ambientcg.com/view?id=Rock030 | ambientCG | CC0 | 2026-08-02 | texture (69 KB) |
+| public/models/creatures/bramblit.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (323 KB) |
+| public/models/creatures/cindercub.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (685 KB) |
+| public/models/creatures/dewdrake.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (145 KB) |
+| public/models/creatures/tuftmoth.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (97 KB) |
+| public/models/creatures/pebblit.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (128 KB) |
+| public/models/creatures/sparrowick.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (89 KB) |
+| public/models/creatures/grazehorn.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (652 KB) |
+| public/models/creatures/rillnewt.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (231 KB) |
+| public/models/creatures/emberhop.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (318 KB) |
+| public/models/creatures/thistleback.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (111 KB) |
+| public/models/creatures/cragpup.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (651 KB) |
+| public/models/creatures/voltvole.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (319 KB) |
+| public/models/creatures/mirefin.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (111 KB) |
+| public/models/creatures/ashmane.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (700 KB) |
+| public/models/creatures/loamking.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (139 KB) |
+| public/models/characters/player.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (909 KB) |
+| public/models/characters/villager_m.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (782 KB) |
+| public/models/characters/villager_f.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (869 KB) |
+| public/models/characters/tether.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (920 KB) |
+| public/models/characters/warden.glb | https://poly.pizza/u/Quaternius | Quaternius | CC0 1.0 | 2026-08-02 | rigged (1063 KB) |

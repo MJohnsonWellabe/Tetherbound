@@ -1,56 +1,370 @@
 {
   "$comment": "The art mapping: which shipped GLB each visible thing uses, at what scale. Consumed by PropModels/ResolveModels; the primitive builders remain the permanent per-slot fallback, so a missing or broken file degrades that one thing to a primitive instead of breaking boot (D44). Scales are applied and baked at load time, so retuning a silhouette is an edit here, not a pipeline re-run.",
-
   "$comment_props": "Per family: variant list, first entry is the one the batcher uses today (one mesh per family is the PropBatcher contract). The extra variants ship so the judge-loop fix for 'every tree looks the same' is a batcher upgrade, not an asset hunt. `scale` normalises each kit model to the world size the primitives established; heights measured post-merge.",
   "props": {
     "oak": {
       "variants": [
-        { "url": "models/props/oak_b.glb", "scale": 3.8 },
-        { "url": "models/props/oak_a.glb", "scale": 5.3 },
-        { "url": "models/props/oak_c.glb", "scale": 4.9 }
+        {
+          "url": "models/props/oak_b.glb",
+          "scale": 3.8
+        },
+        {
+          "url": "models/props/oak_a.glb",
+          "scale": 5.3
+        },
+        {
+          "url": "models/props/oak_c.glb",
+          "scale": 4.9
+        }
       ]
     },
     "pine": {
       "variants": [
-        { "url": "models/props/pine_a.glb", "scale": 5.2 },
-        { "url": "models/props/pine_b.glb", "scale": 4.6 }
+        {
+          "url": "models/props/pine_a.glb",
+          "scale": 5.2
+        },
+        {
+          "url": "models/props/pine_b.glb",
+          "scale": 4.6
+        }
       ]
     },
     "rock": {
       "variants": [
-        { "url": "models/props/rock_c.glb", "scale": 2.0 },
-        { "url": "models/props/rock_a.glb", "scale": 3.4 },
-        { "url": "models/props/rock_b.glb", "scale": 2.8 }
+        {
+          "url": "models/props/rock_c.glb",
+          "scale": 2.0
+        },
+        {
+          "url": "models/props/rock_a.glb",
+          "scale": 3.4
+        },
+        {
+          "url": "models/props/rock_b.glb",
+          "scale": 2.8
+        }
       ]
     },
     "bush": {
       "variants": [
-        { "url": "models/props/bush_b.glb", "scale": 3.0 },
-        { "url": "models/props/bush_a.glb", "scale": 4.4 }
+        {
+          "url": "models/props/bush_b.glb",
+          "scale": 3.0
+        },
+        {
+          "url": "models/props/bush_a.glb",
+          "scale": 4.4
+        }
       ]
     },
     "grass": {
       "variants": [
-        { "url": "models/props/grass_a.glb", "scale": 2.2 },
-        { "url": "models/props/grass_b.glb", "scale": 2.0 }
+        {
+          "url": "models/props/grass_a.glb",
+          "scale": 2.2
+        },
+        {
+          "url": "models/props/grass_b.glb",
+          "scale": 2.0
+        }
       ]
     },
     "reed": {
-      "variants": [{ "url": "models/props/reed_a.glb", "scale": 2.4 }]
+      "variants": [
+        {
+          "url": "models/props/reed_a.glb",
+          "scale": 2.4
+        }
+      ]
     },
     "flower": {
       "variants": [
-        { "url": "models/props/flower_a.glb", "scale": 1.4 },
-        { "url": "models/props/flower_b.glb", "scale": 1.2 },
-        { "url": "models/props/flower_c.glb", "scale": 1.6 }
+        {
+          "url": "models/props/flower_a.glb",
+          "scale": 1.4
+        },
+        {
+          "url": "models/props/flower_b.glb",
+          "scale": 1.2
+        },
+        {
+          "url": "models/props/flower_c.glb",
+          "scale": 1.6
+        }
       ]
     }
   },
-
   "$comment_later": "buildings, stations, characters and pals are appended by their phases; the schema test only validates sections that exist and are non-empty.",
   "buildings": {},
   "stations": {},
-  "characters": {},
-  "pals": {},
-  "accessories": {}
+  "characters": {
+    "player": {
+      "url": "models/characters/player.glb",
+      "scale": 0.55,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Run",
+        "attack": "CharacterArmature|Sword_Slash",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death",
+        "interact": "CharacterArmature|Interact",
+        "dodge": "CharacterArmature|Roll",
+        "wave": "CharacterArmature|Wave"
+      }
+    },
+    "villager_m": {
+      "url": "models/characters/villager_m.glb",
+      "scale": 0.55,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Run",
+        "attack": "CharacterArmature|Interact",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death",
+        "interact": "CharacterArmature|Interact",
+        "dodge": "CharacterArmature|Roll",
+        "wave": "CharacterArmature|Wave"
+      }
+    },
+    "villager_f": {
+      "url": "models/characters/villager_f.glb",
+      "scale": 0.55,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Run",
+        "attack": "CharacterArmature|Interact",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death",
+        "interact": "CharacterArmature|Interact",
+        "dodge": "CharacterArmature|Roll",
+        "wave": "CharacterArmature|Wave"
+      }
+    },
+    "tether": {
+      "url": "models/characters/tether.glb",
+      "scale": 0.55,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Run",
+        "attack": "CharacterArmature|Sword_Slash",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death",
+        "interact": "CharacterArmature|Interact",
+        "dodge": "CharacterArmature|Roll",
+        "wave": "CharacterArmature|Wave"
+      }
+    },
+    "warden": {
+      "url": "models/characters/warden.glb",
+      "scale": 0.55,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Run",
+        "attack": "CharacterArmature|Sword_Slash",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death",
+        "interact": "CharacterArmature|Interact",
+        "dodge": "CharacterArmature|Roll",
+        "wave": "CharacterArmature|Wave"
+      }
+    }
+  },
+  "pals": {
+    "bramblit": {
+      "url": "models/creatures/bramblit.glb",
+      "scale": 0.55,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Run",
+        "attack": "CharacterArmature|Punch",
+        "hit": "CharacterArmature|HitReact",
+        "faint": "CharacterArmature|Death"
+      }
+    },
+    "cindercub": {
+      "url": "models/creatures/cindercub.glb",
+      "scale": 0.5,
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Gallop",
+        "attack": "Attack",
+        "hit": "Idle_HitReact_Left",
+        "faint": "Death",
+        "ambient": "Eating"
+      }
+    },
+    "dewdrake": {
+      "url": "models/creatures/dewdrake.glb",
+      "scale": 0.55,
+      "clips": {
+        "idle": "CharacterArmature|Flying_Idle",
+        "walk": "CharacterArmature|Fast_Flying",
+        "run": "CharacterArmature|Fast_Flying",
+        "attack": "CharacterArmature|Headbutt",
+        "hit": "CharacterArmature|HitReact",
+        "faint": "CharacterArmature|Death"
+      },
+      "yOffset": 0.4
+    },
+    "tuftmoth": {
+      "url": "models/creatures/tuftmoth.glb",
+      "scale": 0.45,
+      "clips": {
+        "idle": "CharacterArmature|Flying_Idle",
+        "walk": "CharacterArmature|Fast_Flying",
+        "run": "CharacterArmature|Fast_Flying",
+        "attack": "CharacterArmature|Headbutt",
+        "hit": "CharacterArmature|HitReact",
+        "faint": "CharacterArmature|Death"
+      },
+      "yOffset": 0.5
+    },
+    "pebblit": {
+      "url": "models/creatures/pebblit.glb",
+      "scale": 0.45,
+      "clips": {
+        "idle": "CharacterArmature|Flying_Idle",
+        "walk": "CharacterArmature|Fast_Flying",
+        "run": "CharacterArmature|Fast_Flying",
+        "attack": "CharacterArmature|Punch",
+        "hit": "CharacterArmature|HitReact",
+        "faint": "CharacterArmature|Death"
+      },
+      "yOffset": 0.2
+    },
+    "sparrowick": {
+      "url": "models/creatures/sparrowick.glb",
+      "scale": 0.45,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Walk",
+        "attack": "CharacterArmature|Bite_Front",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death"
+      }
+    },
+    "grazehorn": {
+      "url": "models/creatures/grazehorn.glb",
+      "scale": 0.6,
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Gallop",
+        "attack": "Attack_Headbutt",
+        "hit": "Idle_HitReact_Left",
+        "faint": "Death",
+        "ambient": "Eating"
+      }
+    },
+    "rillnewt": {
+      "url": "models/creatures/rillnewt.glb",
+      "scale": 0.45,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Run",
+        "attack": "CharacterArmature|Punch",
+        "hit": "CharacterArmature|HitReact",
+        "faint": "CharacterArmature|Death"
+      }
+    },
+    "emberhop": {
+      "url": "models/creatures/emberhop.glb",
+      "scale": 0.5,
+      "clips": {
+        "idle": "FrogArmature|Frog_Idle",
+        "walk": "FrogArmature|Frog_Jump",
+        "run": "FrogArmature|Frog_Jump",
+        "attack": "FrogArmature|Frog_Attack",
+        "hit": null,
+        "faint": "FrogArmature|Frog_Death"
+      }
+    },
+    "thistleback": {
+      "url": "models/creatures/thistleback.glb",
+      "scale": 0.55,
+      "clips": {
+        "idle": "CharacterArmature|Idle",
+        "walk": "CharacterArmature|Walk",
+        "run": "CharacterArmature|Walk",
+        "attack": "CharacterArmature|Bite_Front",
+        "hit": "CharacterArmature|HitRecieve",
+        "faint": "CharacterArmature|Death"
+      }
+    },
+    "cragpup": {
+      "url": "models/creatures/cragpup.glb",
+      "scale": 0.5,
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Gallop",
+        "attack": "Attack",
+        "hit": "Idle_HitReact_Left",
+        "faint": "Death",
+        "ambient": "Eating"
+      }
+    },
+    "voltvole": {
+      "url": "models/creatures/voltvole.glb",
+      "scale": 0.4,
+      "clips": {
+        "idle": "RatArmature|Rat_Idle",
+        "walk": "RatArmature|Rat_Walk",
+        "run": "RatArmature|Rat_Run",
+        "attack": "RatArmature|Rat_Attack",
+        "hit": null,
+        "faint": "RatArmature|Rat_Death"
+      }
+    },
+    "mirefin": {
+      "url": "models/creatures/mirefin.glb",
+      "scale": 0.5,
+      "clips": {
+        "idle": "Fish_Armature|Swimming_Normal",
+        "walk": "Fish_Armature|Swimming_Normal",
+        "run": "Fish_Armature|Swimming_Fast",
+        "attack": "Fish_Armature|Attack",
+        "hit": "Fish_Armature|Swimming_Impulse",
+        "faint": "Fish_Armature|Death"
+      },
+      "yOffset": 0.4
+    },
+    "ashmane": {
+      "url": "models/creatures/ashmane.glb",
+      "scale": 0.65,
+      "clips": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Gallop",
+        "attack": "Attack",
+        "hit": "Idle_HitReact_Left",
+        "faint": "Death",
+        "ambient": "Eating"
+      }
+    },
+    "loamking": {
+      "url": "models/creatures/loamking.glb",
+      "scale": 1.1,
+      "clips": {
+        "idle": "EnemyArmature|EnemyArmature|EnemyArmature|Idle",
+        "walk": "EnemyArmature|EnemyArmature|EnemyArmature|Walk",
+        "run": "EnemyArmature|EnemyArmature|EnemyArmature|Run",
+        "attack": "EnemyArmature|EnemyArmature|EnemyArmature|Attack",
+        "hit": "EnemyArmature|EnemyArmature|EnemyArmature|HitRecieve",
+        "faint": "EnemyArmature|EnemyArmature|EnemyArmature|Death"
+      }
+    }
+  },
+  "accessories": {},
+  "$comment_pals": "One DISTINCT rigged creature per species (Quaternius, via poly.pizza; see fetch-assets PIZZA list). `clips` maps game verbs to exact AnimationGroup names in each GLB; null means the model lacks the verb and the procedural pose layer covers it. `scale` is applied at instantiation; creature GLBs are authored 1-2m tall and species read comes from the model itself now, so species.json tint/accessory become optional garnish. yOffset lifts flyers/swimmers off the ground."
 }

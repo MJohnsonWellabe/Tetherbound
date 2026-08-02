@@ -26,6 +26,19 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { JOBS } from './asset-jobs.mjs';
+import modelsData from '../src/data/models.json' with { type: 'json' };
+
+/** Clip names the game actually plays for a given output, from models.json. */
+function clipsFor(outPath) {
+  for (const section of [modelsData.pals, modelsData.characters]) {
+    for (const entry of Object.values(section ?? {})) {
+      if (entry.url === outPath) {
+        return Object.values(entry.clips ?? {}).filter(Boolean);
+      }
+    }
+  }
+  return null;
+}
 import { bakeToVertexColors, getIO, mergeSeated, slim, stats } from './lib/glbtool.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -97,7 +110,11 @@ async function runJob(io, job) {
     await bakeToVertexColors(doc);
     await mergeSeated(doc, { scale: job.scale ?? 1, simplifyRatio: job.simplify ?? null });
   } else if (job.transform === 'rigged') {
-    await slim(doc, { textureSize: job.textureSize ?? 512, keepAnimations: true });
+    await slim(doc, {
+      textureSize: job.textureSize ?? 512,
+      keepAnimations: true,
+      keepClips: clipsFor(job.out)
+    });
   } else if (job.transform === 'model') {
     await slim(doc, { textureSize: job.textureSize ?? 512, keepAnimations: false });
   } else {
@@ -129,8 +146,9 @@ for (const job of JOBS) {
       ran++;
     }
     const sizeKB = Math.round(statSync(out).size / 1024);
-    if (job.out.endsWith('.glb') && sizeKB > BUDGET_KB) {
-      throw new Error(`over budget: ${sizeKB} KB > ${BUDGET_KB} KB`);
+    const budget = job.budgetKB ?? BUDGET_KB;
+    if (job.out.endsWith('.glb') && sizeKB > budget) {
+      throw new Error(`over budget: ${sizeKB} KB > ${budget} KB`);
     }
     rows.push(manifestRow(job, sizeKB));
     console.log(`  ${fresh ? 'fresh' : 'built'}  ${job.out}`);

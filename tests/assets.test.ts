@@ -60,9 +60,12 @@ describe('asset manifest', () => {
   });
 
   it('keeps models inside the payload budget', () => {
+    // Rigged models are lazy-loaded per spawn, never on the boot path, so
+    // they get a looser ceiling than world props (which download in bulk).
     for (const file of shipped.filter((f) => f.endsWith('.glb'))) {
       const kb = statSync(join(ROOT, file)).size / 1024;
-      expect(kb, `${file} is ${Math.round(kb)} KB`).toBeLessThan(420);
+      const rigged = file.includes('/creatures/') || file.includes('/characters/');
+      expect(kb, `${file} is ${Math.round(kb)} KB`).toBeLessThan(rigged ? 1600 : 420);
     }
   });
 });

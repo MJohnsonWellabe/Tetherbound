@@ -76,13 +76,39 @@ const textures = [
 ];
 
 /**
- * Buildings, stations, creatures and characters are appended by the curation
- * passes (see git history for the session that filled each). They use the
- * 'composite', 'model' and 'rigged' transforms.
+ * Rigged models from poly.pizza (fetched by the PIZZA list in
+ * fetch-assets.mjs). Slimmed, textures crunched, animations kept. Creatures
+ * are small; the shared-rig humanoids carry more texture and clip data, so
+ * they get their own budget ceiling.
  */
+const SPECIES = [
+  'bramblit', 'cindercub', 'dewdrake', 'tuftmoth', 'pebblit', 'sparrowick',
+  'grazehorn', 'rillnewt', 'emberhop', 'thistleback', 'cragpup', 'voltvole',
+  'mirefin', 'ashmane', 'loamking'
+];
+const creatures = SPECIES.map((id) => ({
+  group: 'creatures',
+  transform: 'rigged',
+  textureSize: 256,
+  budgetKB: 780,
+  sources: [{ file: `pizza/creatures/${id}.glb` }],
+  out: `models/creatures/${id}.glb`,
+  provenance: { source: 'https://poly.pizza/u/Quaternius', author: 'Quaternius', license: 'CC0 1.0' }
+}));
+
+const ROLES = ['player', 'villager_m', 'villager_f', 'tether', 'warden'];
+const characters = ROLES.map((id) => ({
+  group: 'characters',
+  transform: 'rigged',
+  textureSize: 256,
+  budgetKB: 1600,
+  sources: [{ file: `pizza/characters/${id}.glb` }],
+  out: `models/characters/${id}.glb`,
+  provenance: { source: 'https://poly.pizza/u/Quaternius', author: 'Quaternius', license: 'CC0 1.0' }
+}));
+
+/** Buildings and stations are appended by the Phase 4 pass. */
 const buildings = [];
 const stations = [];
-const creatures = [];
-const characters = [];
 
 export const JOBS = [...props, ...textures, ...buildings, ...stations, ...creatures, ...characters];
