@@ -25,12 +25,13 @@ import {
 import { doorLeafPivotX, toWorld, wallRingColliders, type WallCollider } from './WallRing';
 
 /**
- * Hollowbrook, built from Fantasy Town Kit composites with the original
- * primitive builders kept as the per-slot fallback (same shape as
- * PropModels.ts / Prototypes.ts): placements and colliders are computed
- * synchronously from the same layout numbers as ever, the models arrive
- * async, and a failed download costs one building its silhouette rather than
- * the boot or a collider.
+ * Hollowbrook. The player's own home is the Kenney Fantasy Town Kit
+ * composite (house_a); every other ring house is a whole prebuilt Quaternius
+ * building (D62). Both kinds fall back to the same primitive box-and-roof
+ * builder per slot (same shape as PropModels.ts / Prototypes.ts):
+ * placements and colliders are computed synchronously from the same layout
+ * numbers as ever, the models arrive async, and a failed download costs one
+ * building its silhouette rather than the boot or a collider.
  *
  * Materials are shared module-wide, per the draw-call budget.
  */
