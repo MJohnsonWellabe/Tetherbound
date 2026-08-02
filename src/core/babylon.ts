@@ -58,6 +58,10 @@ export { Material } from '@babylonjs/core/Materials/material';
 export { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 export { Texture } from '@babylonjs/core/Materials/Textures/texture';
 export { DynamicTexture } from '@babylonjs/core/Materials/Textures/dynamicTexture';
+// The toon-shading plugin (src/fx/ToonShade.ts) hooks the lit-material
+// fragment shader through the plugin API rather than writing a whole custom
+// shader.
+export { MaterialPluginBase } from '@babylonjs/core/Materials/materialPluginBase';
 
 // --- lights and shadows ----------------------------------------------------
 export { DirectionalLight } from '@babylonjs/core/Lights/directionalLight';

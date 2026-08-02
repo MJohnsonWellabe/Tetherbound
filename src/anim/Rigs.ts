@@ -6,6 +6,7 @@ import {
   type Scene
 } from '../core/babylon';
 import { loadContainerOwned } from '../core/AssetLoader';
+import { applyToonShading } from '../fx/ToonShade';
 
 /**
  * Mounting rigged models onto live entities without making anyone's
@@ -99,6 +100,19 @@ export function mountRig(
       for (const node of root.getChildMeshes()) {
         node.isPickable = false;
         (node as AbstractMesh).doNotSyncBoundingInfo = false;
+        // Every rig mounted through here is a pal, an NPC, or the player:
+        // this is the one seam all three pass through, so it is the one
+        // place toon shading gets applied (ASSETS.md D24). Terrain, water,
+        // the sky dome and the frozen/instanced prop materials never mount
+        // through mountRig and are never touched.
+        if (node.material) {
+          try {
+            applyToonShading(node.material);
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error('[DEBUG toon apply]', e);
+          }
+        }
       }
 
       const groups = new Map<string, AnimationGroup>();

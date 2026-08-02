@@ -18,6 +18,14 @@
     "$comment_repaint": "Colour delta (max channel) that justifies repainting the ramp canvas. Small enough that dusk never steps, large enough that this is a few writes per in-game hour rather than one per frame.",
     "repaintEpsilon": 0.004
   },
+  "$comment_toon": "src/fx/ToonShade.ts. Toon-shades pals, NPCs and the player rig only (the seam is Rigs.ts mountRig, not terrain/water/props). `enabled` is the master switch; `?toon=0` in the URL overrides it off for a same-build comparison, `?toon=1` forces it on. `bands` is how many discrete lit steps the N-dot-L response is quantized into; ASSETS.md D24 calls for three. `edgeSoftness` is the width (as a fraction of one band, 0 to ~0.49) of the smoothstep blend at each band boundary; 0 would be a razor 2-tone cel edge that crawls under the moving sun, this keeps it soft. `rimStrength` is a flat additive lift on silhouette edges (0 disables it); `rimPower` shapes how tightly it hugs the edge, higher is a thinner rim.",
+  "toon": {
+    "enabled": true,
+    "bands": 3,
+    "edgeSoftness": 0.12,
+    "rimStrength": 0.06,
+    "rimPower": 2.5
+  },
   "$comment_palettes": "Fog is the depth cue, not a draw-distance hack. Trees stop at 224m and terrain runs to 384m, and EXP2 at these densities leaves a 150m hill about 40% washed toward the sky colour and the terrain horizon almost fully washed. The earlier densities (0.0035 at noon) were tuned only to hide the tree line, which left distant hills DARKER than near grass: a hard band across the horizon and no recession at all. Every palette's fog is brighter than the ground it sits behind, which is what makes distance recede instead of closing in.",
   "$comment_night": "Night is moonlit, not black. The old night palette rendered the whole frame under luminance 30 and the player silhouette did not exist, which is a bug report rather than atmosphere. The floor is carried by a saturated blue hemispheric ambient with a much darker groundColor, so characters are lit from above and read as shapes, plus a weak cool directional for the edge. Night still reads as night because the hue is blue and the zenith is nearly black; it is the ground that is navigable.",
   "palettes": {
