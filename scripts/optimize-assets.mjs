@@ -127,7 +127,7 @@ async function runJob(io, job) {
   // extension set on purpose (see src/core/babylonLoaders.ts), and a decoder
   // wasm would cost more than these files weigh. Props are a few KB plain.
   if (job.transform === 'prop' || job.transform === 'composite') {
-    await bakeToVertexColors(doc);
+    await bakeToVertexColors(doc, { gamma: job.gamma ?? 1 });
     await mergeSeated(doc, {
       scale: job.scale ?? 1,
       simplifyRatio: job.simplify ?? null,

@@ -47,8 +47,20 @@ export async function getIO() {
  * The output matches the game's prop contract (white material + COLOR_0), it
  * keeps the existing per-instance tint multiplying correctly, and props cost
  * zero texture memory at runtime. Recorded as D43.
+ *
+ * `gamma` (default 1, a no-op) is a per-channel `c ^ gamma` applied after
+ * sampling, for a source pack whose textures bake shading/AO into the
+ * albedo instead of shipping it flat. Measured on the Quaternius Medieval
+ * Village Pack (docs/decisions/D62): every piece averaged 0.04-0.16 per
+ * channel against 0.48-0.67 for the Kenney kit pieces sitting beside it in
+ * the same scene, so under this engine's single directional light (no
+ * baked-in fill to begin with) it rendered as a near-black silhouette. A
+ * gamma under 1 lifts shadows more than highlights, closer to how the eye
+ * expects a properly-lit flat colour to look than a flat multiply (which
+ * clips the highlights a plain multiply large enough to fix the shadows
+ * would need).
  */
-export async function bakeToVertexColors(document) {
+export async function bakeToVertexColors(document, { gamma = 1 } = {}) {
   const root = document.getRoot();
 
   // Decode every texture once up front.
@@ -91,9 +103,9 @@ export async function bakeToVertexColors(document) {
           g = (image.data[at + 1] / 255) * baseColor[1];
           b = (image.data[at + 2] / 255) * baseColor[2];
         }
-        colors[i * 4] = r;
-        colors[i * 4 + 1] = g;
-        colors[i * 4 + 2] = b;
+        colors[i * 4] = gamma === 1 ? r : Math.pow(r, gamma);
+        colors[i * 4 + 1] = gamma === 1 ? g : Math.pow(g, gamma);
+        colors[i * 4 + 2] = gamma === 1 ? b : Math.pow(b, gamma);
         colors[i * 4 + 3] = 1;
       }
 

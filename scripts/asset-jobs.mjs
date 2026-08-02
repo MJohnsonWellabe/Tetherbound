@@ -344,6 +344,11 @@ const buildings = [
     // quantize (D47's 16-bit positions/8-bit colours are exact well past
     // kit precision at building scale, tested at ~0.1mm).
     quantize: true,
+    // The whole pack bakes shading into its textures: measured average
+    // vertex colour 0.10-0.16 per channel against 0.48-0.67 for the Kenney
+    // pieces it now stands beside, which read as a near-black silhouette
+    // under this engine's single directional light (docs/decisions/D62).
+    gamma: 0.4,
     sources: [{ file }],
     out: `models/buildings/${out}.glb`,
     provenance: QUATERNIUS
@@ -354,23 +359,28 @@ const buildings = [
   // well/cart/fence keep their Fantasy Town Kit output names but now come
   // from the Quaternius pack, dressing the square in the same family as the
   // buildings above; 'stall' is retired in favour of the two market stands.
+  // Every Quaternius piece gets the same gamma brighten as the buildings
+  // above, measured per-piece and just as dark (docs/decisions/D62); the two
+  // Kenney holdovers (banner, lantern) already sit in the kit's normal
+  // brightness range and get none.
   [
     { file: `${FT}/banner-red.glb`, out: 'banner', scale: 4.0, provenance: KENNEY('fantasy-town-kit') },
-    { file: `${PZ}/well.glb`, out: 'well', scale: 1.4, provenance: QUATERNIUS },
-    { file: `${PZ}/cart.glb`, out: 'cart', scale: 1.4, provenance: QUATERNIUS },
-    { file: `${PZ}/fence.glb`, out: 'fence', scale: 3.3, provenance: QUATERNIUS },
-    { file: `${PZ}/bonfire.glb`, out: 'bonfire', scale: 2.6, provenance: QUATERNIUS },
-    { file: `${PZ}/market_stand.glb`, out: 'market_stand', scale: 2.1, provenance: QUATERNIUS },
-    { file: `${PZ}/market_stand_2.glb`, out: 'market_stand_2', scale: 2.1, provenance: QUATERNIUS },
-    { file: `${PZ}/bench.glb`, out: 'bench', scale: 1.55, provenance: QUATERNIUS },
-    { file: `${PZ}/bench_2.glb`, out: 'bench_2', scale: 2.4, provenance: QUATERNIUS },
-    { file: `${PZ}/barrel.glb`, out: 'barrel', scale: 3.75, provenance: QUATERNIUS },
-    { file: `${PZ}/crate.glb`, out: 'crate', scale: 3.1, provenance: QUATERNIUS },
+    { file: `${PZ}/well.glb`, out: 'well', scale: 1.4, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/cart.glb`, out: 'cart', scale: 1.4, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/fence.glb`, out: 'fence', scale: 3.3, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/bonfire.glb`, out: 'bonfire', scale: 2.6, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/market_stand.glb`, out: 'market_stand', scale: 2.1, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/market_stand_2.glb`, out: 'market_stand_2', scale: 2.1, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/bench.glb`, out: 'bench', scale: 1.55, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/bench_2.glb`, out: 'bench_2', scale: 2.4, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/barrel.glb`, out: 'barrel', scale: 3.75, provenance: QUATERNIUS, gamma: 0.4 },
+    { file: `${PZ}/crate.glb`, out: 'crate', scale: 3.1, provenance: QUATERNIUS, gamma: 0.4 },
     { file: `${FT}/lantern.glb`, out: 'lantern', scale: 2.0, provenance: KENNEY('fantasy-town-kit') }
-  ].map(({ file, out, scale, provenance }) => ({
+  ].map(({ file, out, scale, provenance, gamma }) => ({
     group: 'buildings',
     transform: 'prop',
     scale,
+    ...(gamma ? { gamma } : {}),
     sources: [{ file }],
     out: `models/buildings/${out}.glb`,
     provenance
