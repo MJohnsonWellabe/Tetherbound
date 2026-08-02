@@ -7,10 +7,11 @@ import type { Party } from '../party/Party';
 import type { ReleaseFlow } from '../party/Release';
 import type { PalState } from '../party/PalState';
 import { add, type Slots } from '../survival/Inventory';
-import { DialogueRunner, parseEffect } from '../ui/DialogueRunner';
+import { conversationExists, DialogueRunner, parseEffect } from '../ui/DialogueRunner';
 import type { DialoguePanel } from '../ui/DialoguePanel';
 import type { HUD } from '../ui/HUD';
 import { hashSeed, mulberry32 } from '../world/gen/Rng';
+import dialogueData from '../data/dialogue.json';
 import { buildTeam, encounterDef, encounterIds, rewardFor } from './Encounters';
 import type { WorldHandle } from './World';
 
@@ -33,6 +34,16 @@ import type { WorldHandle } from './World';
 /** Reach for talking to somebody, in metres. Generous, per the harvest reach. */
 const TALK_RANGE = 4.5;
 
+interface DialogueRoute {
+  npc: string;
+  flag: string;
+  dialogue: string;
+}
+
+/** Flag-driven line swaps for non-trainer NPCs. See dialogue.json $routes. */
+const DIALOGUE_ROUTES: readonly DialogueRoute[] =
+  (dialogueData as unknown as { $routes?: DialogueRoute[] }).$routes ?? [];
+
 export interface StoryProgress {
   badges: string[];
   flags: string[];
@@ -45,6 +56,8 @@ export class Story {
 
   /** The trainer fight in progress, if any. */
   private activeEncounter: string | null = null;
+  /** The pal a victory has offered, held until the player answers the offer. */
+  private pendingRecruit: { species: string; level: number; dialogue: string } | null = null;
   private queue: PalState[] = [];
   private interactWasDown = false;
 
@@ -161,6 +174,9 @@ export class Story {
         case 'flag':
           this.flagSet.add(value);
           break;
+        case 'victory':
+          this.flagSet.add(`victory_${value}`);
+          break;
         case 'starter':
           this.grantStarter(value);
           break;
@@ -170,10 +186,16 @@ export class Story {
         case 'fight':
           this.startScripted(value);
           break;
+        case 'recruit':
+          this.takeRecruit(value);
+          break;
         default:
           console.warn(`[story] unknown dialogue effect "${raw}"`);
       }
     }
+    // A flag set mid-conversation can change who says what, and the player may
+    // walk straight back into that NPC, so re-route before they can.
+    this.syncNpcDialogue();
     this.hud.updateParty(this.party);
   }
 
@@ -186,7 +208,9 @@ export class Story {
   }
 
   private grantStarter(speciesId: string): void {
-    if (this.party.size > 0 && this.has('took_starter')) return;
+    // Guarded on the flag alone. Guarding on party size as well meant that
+    // releasing your only pal put the starter choice back on the table.
+    if (this.has('took_starter')) return;
     const rand = mulberry32(hashSeed(this.seed, `starter:${speciesId}`.length));
     const pal = createPal(speciesId, 5, 1, performance.now(), rand, `starter:${speciesId}`);
     this.party.add(pal);
@@ -294,6 +318,18 @@ export class Story {
    * other capture and opens the release screen when it is refused.
    */
   private offerRecruit(recruit: { species: string; level: number; dialogue: string }): void {
+    // Ask, then grant. This used to add the pal the instant the fight ended,
+    // which meant the "Leave it" branch of the offer handed you the pal
+    // anyway and the choice was decoration.
+    this.pendingRecruit = recruit;
+    this.talk(recruit.dialogue);
+  }
+
+  /** The player accepted the offer. `value` names the species for safety. */
+  private takeRecruit(value: string): void {
+    const recruit = this.pendingRecruit;
+    this.pendingRecruit = null;
+    if (!recruit || recruit.species !== value) return;
     const rand = mulberry32(hashSeed(this.seed, `recruit:${recruit.species}`.length));
     const pal = createPal(
       recruit.species,
@@ -325,12 +361,26 @@ export class Story {
     this.syncNpcDialogue();
   }
 
-  /** A beaten trainer says something different next time. */
+  /**
+   * A beaten trainer says something different next time, and so does anyone
+   * whose lines are routed by a story flag.
+   *
+   * Without the second loop Orin replayed his whole introduction, starter
+   * choice included, every time you walked back into him, which made the one
+   * irreversible decision in the opening look like a menu you could reopen.
+   * Routes are checked in order and the last match wins, so a later story
+   * beat overrides an earlier one.
+   */
   private syncNpcDialogue(): void {
     for (const id of encounterIds()) {
       const def = encounterDef(id);
       const npc = this.world.npcs.byId(id);
       if (def && npc && this.flagSet.has(def.flag)) npc.dialogue = def.afterDialogue;
+    }
+    for (const route of DIALOGUE_ROUTES) {
+      if (!this.flagSet.has(route.flag)) continue;
+      const npc = this.world.npcs.byId(route.npc);
+      if (npc && conversationExists(route.dialogue)) npc.dialogue = route.dialogue;
     }
   }
 }

@@ -1,4 +1,12 @@
 {
+  "$routes": [
+    { "npc": "orin", "flag": "first_catch", "dialogue": "orin_caught" },
+    { "npc": "orin", "flag": "met_orin", "dialogue": "orin_repeat" },
+    { "npc": "orin", "flag": "badge_meadow", "dialogue": "orin_victory" }
+  ],
+
+  "$comment_routes": "Which conversation an NPC uses once a flag is set. Checked in order and the LAST match wins, so later entries are later in the story. Trainers are not listed here; encounters.json already routes those through their own afterDialogue.",
+
   "$comment": "All spoken text, data driven. CLAUDE.md writing style: terse, grounded, no em dashes, no speeches. A node either advances via `next` or ends. `choices` branch. `effect` names a flag or action the DialogueRunner applies; the runner refuses any effect it does not recognise rather than failing silently.",
 
   "orin_intro": {
