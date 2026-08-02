@@ -52,6 +52,12 @@ export interface GameEvents {
   builtPiece: { pieceId: string };
   /** A placement was refused, with why. */
   buildBlocked: { reason: string };
+  /** A station was placed. */
+  stationPlaced: { id: string };
+  /** The player fainted and their satchel landed here. */
+  satchelDropped: { x: number; y: number; z: number; count: number };
+  /** The player slept through to morning. */
+  slept: { day: number };
 }
 
 export type EventName = keyof GameEvents;

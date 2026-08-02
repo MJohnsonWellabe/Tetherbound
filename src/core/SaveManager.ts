@@ -2,6 +2,8 @@ import type { ItemStack } from '../survival/Inventory';
 import { MAX_PARTY } from '../party/Party';
 import type { PalState, ReleaseRecord } from '../party/PalState';
 import type { PlacedPiece } from '../building/SnapGrid';
+import type { PlacedStation } from '../survival/Stations';
+import type { SatchelContents } from '../survival/Satchel';
 
 /**
  * Save, load, export, import.
@@ -44,6 +46,11 @@ export interface SaveV1 {
   party: PalState[];
   releasedLedger: ReleaseRecord[];
   structures: PlacedPiece[];
+  stations: PlacedStation[];
+  /** Where the player wakes. Null until a bed exists. */
+  respawn: { x: number; y: number; z: number } | null;
+  /** The single faint drop. Null when there is nothing on the ground. */
+  satchel: SatchelContents | null;
   worldDeltas: {
     harvested: string[];
     bossesDown: Record<string, number>;
@@ -196,6 +203,17 @@ export function validate(data: unknown): LoadResult {
     structures: Array.isArray(working['structures'])
       ? (working['structures'] as PlacedPiece[])
       : [],
+    stations: Array.isArray(working['stations'])
+      ? (working['stations'] as PlacedStation[])
+      : [],
+    respawn:
+      typeof working['respawn'] === 'object' && working['respawn'] !== null
+        ? vec3Or(working['respawn'])
+        : null,
+    satchel:
+      typeof working['satchel'] === 'object' && working['satchel'] !== null
+        ? (working['satchel'] as SatchelContents)
+        : null,
     worldDeltas: {
       harvested: Array.isArray(deltas['harvested']) ? (deltas['harvested'] as string[]) : [],
       bossesDown:

@@ -59,6 +59,9 @@ function makeSave(overrides: Partial<SaveV1> = {}): SaveV1 {
     party: [pal('a'), pal('b', 9)],
     releasedLedger: [{ species: 'pebblit', level: 4, day: 2 }],
     structures: [{ pieceId: 'wood_floor', x: 2, y: 6, z: 4, rot: 0, placedAtMs: 500 }],
+    stations: [{ id: 'bed', x: 3, y: 6, z: 5, rot: 0 }],
+    respawn: { x: 3, y: 6, z: 5 },
+    satchel: { x: -8, y: 5, z: 2, items: [{ id: 'fiber', n: 6 }] },
     worldDeltas: { harvested: ['oak:3,-1', 'rock:0,0'], bossesDown: { loamking: 4 } },
     progress: { badges: ['meadow_sigil'], flags: ['met_orin'], day: 6, timeOfDay: 0.42 },
     ...overrides
@@ -87,6 +90,9 @@ describe('save round trip', () => {
     expect(loaded.save.party).toEqual(original.party);
     expect(loaded.save.releasedLedger).toEqual(original.releasedLedger);
     expect(loaded.save.structures).toEqual(original.structures);
+    expect(loaded.save.stations).toEqual(original.stations);
+    expect(loaded.save.respawn).toEqual(original.respawn);
+    expect(loaded.save.satchel).toEqual(original.satchel);
     expect(loaded.save.worldDeltas).toEqual(original.worldDeltas);
     expect(loaded.save.progress).toEqual(original.progress);
   });
@@ -172,6 +178,9 @@ describe('validation', () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.save.party).toEqual([]);
+    expect(result.save.stations).toEqual([]);
+    expect(result.save.respawn).toBeNull();
+    expect(result.save.satchel).toBeNull();
     expect(result.save.worldDeltas.harvested).toEqual([]);
     expect(result.save.progress.day).toBe(1);
     expect(result.save.player.health).toBe(100);

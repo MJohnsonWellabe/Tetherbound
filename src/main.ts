@@ -19,6 +19,10 @@ import { mulberry32, hashSeed } from './world/gen/Rng';
 import { BuildMode } from './building/BuildMode';
 import { SaveManager, type SaveV1 } from './core/SaveManager';
 import { createVitals, tickVitals, spendStamina } from './survival/Vitals';
+import { Stations } from './survival/Stations';
+import { Satchel } from './survival/Satchel';
+import { Homestead } from './survival/Homestead';
+import { StationViews } from './world/StationViews';
 import { Player } from './entities/Player';
 import type { ControllerWorld } from './entities/CharacterController';
 import { buildWaterPlane } from './world/ChunkMesh';
@@ -142,6 +146,10 @@ async function boot(): Promise<void> {
   const vitals = createVitals();
   const build = new BuildMode(scene, inventory, world);
   const saves = new SaveManager();
+  const stationsOwned = new Stations();
+  const satchel = new Satchel();
+  const stationViews = new StationViews(scene, stationsOwned, satchel);
+  const homestead = new Homestead(stationsOwned, satchel, party, spawner, inventory, world);
 
   const combatHud = new CombatHud(
     document.getElementById('combat') as HTMLElement,
@@ -171,6 +179,9 @@ async function boot(): Promise<void> {
     vitals.hunger = loaded.save.player.hunger;
     props.restoreHarvested(loaded.save.worldDeltas.harvested);
     build.restore(loaded.save.structures);
+    stationsOwned.restore(loaded.save.stations ?? []);
+    homestead.respawn = loaded.save.respawn ?? null;
+    satchel.restore(loaded.save.satchel ?? null);
     for (let i = 0; i < loaded.save.inventory.length && i < inventory.length; i++) {
       inventory[i] = loaded.save.inventory[i] ?? null;
     }
@@ -201,6 +212,9 @@ async function boot(): Promise<void> {
       party: [...party.members],
       releasedLedger: [...party.ledger],
       structures: [...build.structures],
+      stations: [...stationsOwned.all],
+      respawn: homestead.respawn,
+      satchel: satchel.marker,
       worldDeltas: { harvested: props.harvestedKeys, bossesDown: {} },
       progress: { badges: [], flags: [], day: time.day, timeOfDay: time.cycle }
     };
@@ -292,6 +306,36 @@ async function boot(): Promise<void> {
       water.position.x = player.state.position.x;
       water.position.z = player.state.position.z;
 
+      const homeAction = homestead.update(
+        input.intent,
+        player.state.position.x,
+        player.state.position.z,
+        dt
+      );
+      if (homeAction === 'slept') {
+        // Skip to morning. TimeOfDay owns the cycle, so this asks it rather
+        // than rewriting the clock in two places.
+        time.cycle = homestead.wakeCycle;
+        time.tick(0);
+        bus.emit('slept', { day: time.day });
+      }
+
+      // Fainting: satchel drops here, the player wakes at their bed.
+      if (vitals.health <= 0) {
+        const wake = homestead.faint(
+          vitals,
+          player.state.position.x,
+          player.state.position.y,
+          player.state.position.z
+        );
+        player.state.position.x = wake.x;
+        player.state.position.y = wake.y + 1;
+        player.state.position.z = wake.z;
+        player.state.velocity.x = 0;
+        player.state.velocity.y = 0;
+        player.state.velocity.z = 0;
+      }
+
       sinceSaveMs += dt * 1000;
       if (sinceSaveMs >= AUTOSAVE_MS) {
         sinceSaveMs = 0;
@@ -307,6 +351,7 @@ async function boot(): Promise<void> {
       // chunk builds.
       chunks.processQueue();
       props.processQueue();
+      stationViews.sync();
       hint.update();
       renderer.render();
       stats?.sample(performance.now());
@@ -343,6 +388,9 @@ async function boot(): Promise<void> {
     encounter,
     release,
     build,
+    stationsOwned,
+    satchel,
+    homestead,
     vitals,
     saves,
     snapshotSave,
@@ -360,6 +408,7 @@ async function boot(): Promise<void> {
       spawner.dispose();
       palVisuals.dispose();
       build.dispose();
+      stationViews.dispose();
       disposePrototypes(prototypes);
       water.dispose();
       renderer.dispose();
