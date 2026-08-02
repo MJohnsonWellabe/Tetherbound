@@ -25,5 +25,7 @@ firebase-debug.log
 firestore-debug.log
 tests/smoke/.output/
 
-# Survey output. Regenerate with `npm run survey`.
+# Survey output. Regenerate with `npm run survey`, `npm run feelcheck`, and the
+# before/after pairs a visual comparison needs.
 shots/
+shots-*/

@@ -38,6 +38,10 @@
          picked up. Replaced by M1's inventory screen. -->
     <div id="gather" class="gather"></div>
 
+    <!-- Floating numbers. Pooled DOM rather than in-canvas text, so they cost
+         no draw calls against the budget. Owned by src/fx/. -->
+    <div id="fx" class="fx"></div>
+
     <!-- Control prompt. Follows the device actually in use, not the one
          attached: a handheld has a pad, a touchscreen and a keyboard at once. -->
     <div id="hint" class="hint"></div>

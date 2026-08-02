@@ -81,7 +81,12 @@ export class HarvestController {
     }
 
     if (this.progress < swingsFor(node.family)) {
-      bus.emit('harvestSwing', { key: node.key, progress: this.progress });
+      bus.emit('harvestSwing', {
+        key: node.key,
+        family: node.family,
+        progress: this.progress,
+        at: { x: node.x, y: node.y, z: node.z }
+      });
       return { node, felled: false, drops: [] };
     }
 
@@ -103,7 +108,12 @@ export class HarvestController {
     // around with a full satchel, and silently dropping it with no explanation
     // is how players conclude the game is broken.
     if (overflowed) result.refusal = 'inventory-full';
-    bus.emit('harvested', { key: node.key, drops: taken });
+    bus.emit('harvested', {
+      key: node.key,
+      family: node.family,
+      drops: taken,
+      at: { x: node.x, y: node.y, z: node.z }
+    });
     return result;
   }
 

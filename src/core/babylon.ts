@@ -30,6 +30,9 @@ export { EngineStore } from '@babylonjs/core/Engines/engineStore';
 export { Vector2, Vector3, Quaternion, Matrix } from '@babylonjs/core/Maths/math.vector';
 export { Color3, Color4 } from '@babylonjs/core/Maths/math.color';
 export { Scalar } from '@babylonjs/core/Maths/math.scalar';
+// Vector3.Project needs one of these to map a world point to a pixel. The
+// floating damage numbers are DOM nodes, so they need that mapping every frame.
+export { Viewport } from '@babylonjs/core/Maths/math.viewport';
 
 // --- scene graph -----------------------------------------------------------
 export { Node } from '@babylonjs/core/node';
@@ -63,6 +66,12 @@ export { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator'
 
 // --- cameras ---------------------------------------------------------------
 export { FreeCamera } from '@babylonjs/core/Cameras/freeCamera';
+
+// --- particles -------------------------------------------------------------
+// The CPU particle system, not the GPU one. GPU particles need a WebGL2 compute
+// path and a fallback for devices without it, which is two code paths and a
+// vertex-buffer upload for bursts of a dozen chips. See src/fx/Particles.ts.
+export { ParticleSystem } from '@babylonjs/core/Particles/particleSystem';
 
 // --- picking and culling ---------------------------------------------------
 export { Ray } from '@babylonjs/core/Culling/ray';

@@ -24,10 +24,29 @@ export interface GameEvents {
   saveStatus: { status: string; reason?: string };
   /** Inventory contents changed. */
   inventoryChanged: Record<string, never>;
-  /** A tool connected with a node but did not fell it yet. */
-  harvestSwing: { key: string; progress: number };
+  /**
+   * A tool connected with a node but did not fell it yet.
+   *
+   * `at` and `family` are carried on the event rather than looked up by the
+   * listener because both consumers are positional: the feel layer sprays
+   * chips at the impact point and the audio layer places the sound in 3D. A
+   * listener that had to resolve `key` back to a node would need a reference
+   * to the batcher, which is a renderer object, and that is how a HUD widget
+   * ends up importing the world.
+   */
+  harvestSwing: {
+    key: string;
+    family: string;
+    progress: number;
+    at: { x: number; y: number; z: number };
+  };
   /** A node was felled. `drops` is what actually fit in the satchel. */
-  harvested: { key: string; drops: { id: string; n: number }[] };
+  harvested: {
+    key: string;
+    family: string;
+    drops: { id: string; n: number }[];
+    at: { x: number; y: number; z: number };
+  };
   /** Party composition or pal state changed. */
   partyChanged: Record<string, never>;
 }

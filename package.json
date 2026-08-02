@@ -17,6 +17,7 @@
     "smoke": "playwright test",
     "smoke:update": "playwright test --update-snapshots",
     "survey": "node tools/survey.mjs",
+    "feelcheck": "node tools/feelcheck.mjs",
     "sheet": "node tools/sheet.mjs",
     "holes": "node tools/holes.mjs",
     "drawcost": "node tools/drawcost.mjs"

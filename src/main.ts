@@ -3,6 +3,8 @@ import { Renderer } from './core/Engine';
 import { Input } from './core/input/Input';
 import { Loop } from './core/Loop';
 import { Stats } from './core/Stats';
+import { Fx } from './fx/Fx';
+import { mountHarvestFeel } from './fx/HarvestFeel';
 import { InputHint } from './ui/InputHint';
 import { HarvestHud } from './ui/HarvestHud';
 import { HarvestController } from './survival/HarvestController';
@@ -116,9 +118,21 @@ async function boot(): Promise<void> {
     document.getElementById('fullscreen')
   );
 
+  const fx = new Fx(scene, document.getElementById('fx') as HTMLElement);
+  const unmountFeel = mountHarvestFeel(fx);
+
   const loop = new Loop({
     update: (dt, elapsedMs) => {
       input.beginFrame();
+
+      // A hit pause withholds simulation steps; it never scales dt and never
+      // skips a frame. See src/fx/hitPause.ts for why both alternatives are
+      // wrong. Input still runs, so its edge detection does not bank a press
+      // for the moment the world resumes.
+      if (fx.frozen(dt)) {
+        input.endFrame();
+        return;
+      }
 
       player.update(input, world, dt);
       chunks.update(player.state.position.x, player.state.position.z);
@@ -148,6 +162,8 @@ async function boot(): Promise<void> {
       water.position.x = player.state.position.x;
       water.position.z = player.state.position.z;
 
+      fx.update(dt);
+
       bus.emit('tick', { dt, elapsedMs });
       input.endFrame();
     },
@@ -158,6 +174,9 @@ async function boot(): Promise<void> {
       chunks.processQueue();
       props.processQueue();
       hint.update();
+      // After the camera rig has run and before the draw, so the shake offset
+      // lands in the frame it was computed for.
+      fx.render(scene, camera, renderer.handles.engine);
       renderer.render();
       stats?.sample(performance.now());
     }
@@ -191,8 +210,11 @@ async function boot(): Promise<void> {
     props,
     terrain,
     time,
+    fx,
     dispose: (): void => {
       loop.stop();
+      unmountFeel();
+      fx.dispose();
       hint.dispose();
       input.dispose();
       player.dispose();
