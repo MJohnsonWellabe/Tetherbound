@@ -104,6 +104,7 @@ export class CombatStage {
 
   private end(phase: string): void {
     this.player.setCameraFraming(null);
+    this.combat.setAiming(false);
 
     const enemy = this.enemy;
     this.enemy = null;
@@ -169,7 +170,11 @@ export class CombatStage {
   /** Fly the orb from the player to the enemy, then show the outcome. */
   private onThrow(outcome: 'bounced' | 'missed' | 'caught'): void {
     const enemy = this.enemy;
-    if (!enemy) return;
+    if (!enemy) {
+      // Nothing to fly at, so do not leave the enemy held forever.
+      this.combat.setAiming(false);
+      return;
+    }
     const from = new Vector3(
       this.player.state.position.x,
       this.player.state.position.y + 1.4,
@@ -192,6 +197,8 @@ export class CombatStage {
         return;
       }
       this.orb.setEnabled(false);
+      // The orb has landed: the enemy is free again, whatever the outcome.
+      this.combat.setAiming(false);
       this.landOrb(outcome, to);
     };
     requestAnimationFrame(step);

@@ -2,7 +2,6 @@ import {
   AnimationGroup,
   Mesh,
   TransformNode,
-  Vector3,
   type AbstractMesh,
   type Scene
 } from '../core/babylon';
@@ -68,15 +67,22 @@ export function mountRig(
       });
 
       const root = new TransformNode(name, scene);
+      // Scale and lift the WHOLE instance from its shared root, never node by
+      // node. A rigged model can arrive as several sibling roots (the skinned
+      // mesh and its armature are separate roots in some packs), and a
+      // skinned mesh is posed by bone matrices resolved in the skeleton's
+      // space. Scaling the mesh root and the armature root as independent
+      // nodes puts those two spaces at different scales, and the vertices fly
+      // apart into the screen-filling shards that were being blamed on the
+      // renderer. One transform, applied once, above all of them.
+      root.scaling.setAll(entry.scale);
+      root.position.y = entry.yOffset ?? 0;
       for (const node of instance.rootNodes) {
         // instantiateModelsToScene returns Node[], but glTF roots are always
         // TransformNodes (the loader synthesizes one when the file lacks it).
-        const t = node as TransformNode;
-        t.parent = root;
         // glTF models arrive Z-forward; the game's entities face +Z with yaw
-        // applied by their owners, so only scale and lift are baked here.
-        t.scaling.scaleInPlace(entry.scale);
-        t.position.addInPlace(new Vector3(0, entry.yOffset ?? 0, 0));
+        // applied by their owners, so nothing is rotated here.
+        (node as TransformNode).parent = root;
       }
 
       for (const node of root.getChildMeshes()) {

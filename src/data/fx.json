@@ -1,6 +1,5 @@
 {
   "$comment": "Feel layer tuning. Nothing in src/fx/ contains a literal; every magnitude, duration and count is here. M2 combat adds entries to `impacts` rather than adding numbers to code.",
-
   "$comment_shake": "Trauma-based screen shake, the Squirrel Eiserloh model. Callers add trauma 0..1; the offset scales with trauma SQUARED, which is what keeps a light tap subtle while a heavy hit still slams. Linear trauma makes every magnitude feel like the same shake at different volumes.",
   "shake": {
     "$comment_decay": "Trauma units shed per second. 1.6 means a full-trauma hit is visually done in about 0.6s, which is roughly one harvest swing apart.",
@@ -11,13 +10,11 @@
     "maxOffset": 0.34,
     "maxTrauma": 1
   },
-
-  "$comment_hitPause": "Freeze frames. Withholds simulation steps while rendering continues; see src/fx/hitPause.ts for why this may not be done by scaling delta.",
+  "$comment_hitPause": "Freeze frames. Withholds simulation steps while rendering continues; see src/fx/hitPause.ts for why this may not be done by scaling delta. The ceiling was 140ms, which silently clamped the combat pauses to a fifth of what they asked for, so raising the combat numbers alone would have done nothing. It is still a ceiling: it caps a single freeze and stops repeated hits compounding into a hang (D55).",
   "hitPause": {
     "$comment_maxMs": "Hard ceiling on a single freeze. A pause longer than this stops reading as impact and starts reading as a hang, and it is also the guard that keeps repeated hits from compounding into a lockup.",
-    "maxMs": 140
+    "maxMs": 560
   },
-
   "$comment_numbers": "Floating numbers are pooled DOM nodes, not meshes, so they cost zero draw calls and inherit tokens.css. The pool is fixed: at capacity the oldest is recycled rather than a new node being created mid-frame.",
   "numbers": {
     "poolSize": 32,
@@ -32,7 +29,6 @@
     "$comment_hideBehindCamera": "Numbers spawned behind the camera project to a mirrored on-screen position. Without this check a chop behind you paints a number in front of you.",
     "worldOffsetY": 1.2
   },
-
   "$comment_particles": "One pooled emitter per preset. Systems are built at boot and restarted on emit, because constructing a ParticleSystem mid-frame allocates buffers and shows up as a hitch exactly when something interesting is happening.",
   "particles": {
     "poolPerPreset": 3,
@@ -41,88 +37,260 @@
     "presets": {
       "wood_chips": {
         "count": 14,
-        "lifeMs": [320, 640],
-        "size": [0.07, 0.16],
-        "speed": [1.6, 3.4],
+        "lifeMs": [
+          320,
+          640
+        ],
+        "size": [
+          0.07,
+          0.16
+        ],
+        "speed": [
+          1.6,
+          3.4
+        ],
         "gravity": -9.5,
         "cone": 0.75,
-        "colorFrom": [0.55, 0.38, 0.2, 1],
-        "colorTo": [0.35, 0.24, 0.13, 0]
+        "colorFrom": [
+          0.55,
+          0.38,
+          0.2,
+          1
+        ],
+        "colorTo": [
+          0.35,
+          0.24,
+          0.13,
+          0
+        ]
       },
       "stone_chips": {
         "count": 12,
-        "lifeMs": [260, 520],
-        "size": [0.05, 0.12],
-        "speed": [2.1, 4.2],
+        "lifeMs": [
+          260,
+          520
+        ],
+        "size": [
+          0.05,
+          0.12
+        ],
+        "speed": [
+          2.1,
+          4.2
+        ],
         "gravity": -11,
         "cone": 0.62,
-        "colorFrom": [0.66, 0.65, 0.62, 1],
-        "colorTo": [0.4, 0.4, 0.38, 0]
+        "colorFrom": [
+          0.66,
+          0.65,
+          0.62,
+          1
+        ],
+        "colorTo": [
+          0.4,
+          0.4,
+          0.38,
+          0
+        ]
       },
       "leaf_burst": {
         "count": 20,
-        "lifeMs": [900, 1800],
-        "size": [0.12, 0.26],
-        "speed": [0.4, 1.4],
+        "lifeMs": [
+          900,
+          1800
+        ],
+        "size": [
+          0.12,
+          0.26
+        ],
+        "speed": [
+          0.4,
+          1.4
+        ],
         "gravity": -3.6,
         "cone": 1.1,
-        "colorFrom": [0.32, 0.52, 0.21, 1],
-        "colorTo": [0.24, 0.36, 0.15, 0]
+        "colorFrom": [
+          0.32,
+          0.52,
+          0.21,
+          1
+        ],
+        "colorTo": [
+          0.24,
+          0.36,
+          0.15,
+          0
+        ]
       },
       "fibre_puff": {
         "count": 10,
-        "lifeMs": [400, 900],
-        "size": [0.09, 0.19],
-        "speed": [0.9, 2.1],
+        "lifeMs": [
+          400,
+          900
+        ],
+        "size": [
+          0.09,
+          0.19
+        ],
+        "speed": [
+          0.9,
+          2.1
+        ],
         "gravity": -3.2,
         "cone": 0.95,
-        "colorFrom": [0.5, 0.6, 0.3, 1],
-        "colorTo": [0.34, 0.42, 0.22, 0]
+        "colorFrom": [
+          0.5,
+          0.6,
+          0.3,
+          1
+        ],
+        "colorTo": [
+          0.34,
+          0.42,
+          0.22,
+          0
+        ]
       },
       "faint_puff": {
         "count": 26,
-        "lifeMs": [600, 1300],
-        "size": [0.22, 0.5],
-        "speed": [0.5, 1.7],
+        "lifeMs": [
+          600,
+          1300
+        ],
+        "size": [
+          0.22,
+          0.5
+        ],
+        "speed": [
+          0.5,
+          1.7
+        ],
         "gravity": 0.7,
         "cone": 1.3,
-        "colorFrom": [0.72, 0.74, 0.78, 0.85],
-        "colorTo": [0.5, 0.52, 0.56, 0]
+        "colorFrom": [
+          0.72,
+          0.74,
+          0.78,
+          0.85
+        ],
+        "colorTo": [
+          0.5,
+          0.52,
+          0.56,
+          0
+        ]
       },
       "hit_spark": {
         "count": 18,
-        "lifeMs": [180, 420],
-        "size": [0.08, 0.2],
-        "speed": [3.2, 6.5],
+        "lifeMs": [
+          180,
+          420
+        ],
+        "size": [
+          0.08,
+          0.2
+        ],
+        "speed": [
+          3.2,
+          6.5
+        ],
         "gravity": -4,
         "cone": 1.2,
-        "colorFrom": [1, 0.92, 0.6, 1],
-        "colorTo": [1, 0.45, 0.2, 0]
+        "colorFrom": [
+          1,
+          0.92,
+          0.6,
+          1
+        ],
+        "colorTo": [
+          1,
+          0.45,
+          0.2,
+          0
+        ]
       }
     }
   },
-
-  "$comment_impacts": "The vocabulary of feel. A caller names an impact; it never names a shake magnitude and a particle preset separately, so 'what a felled oak feels like' is one row here rather than four arguments at a call site. M2 adds quick_hit, power_hit, catch_shake, catch_success and orb_break to this table.",
+  "$comment_impacts": "The vocabulary of feel. A caller names an impact; it never names a shake magnitude and a particle preset separately, so 'what a felled oak feels like' is one row here rather than four arguments at a call site. M2 adds quick_hit, power_hit, catch_shake, catch_success and orb_break to this table. Combat hit-pauses were raised to 0.4s at the owner's direction so a first-time player reads the swing, the number and the health bar as one event rather than three things that happened at once (D55).",
   "impacts": {
-    "swing_wood": { "trauma": 0.14, "pauseMs": 0, "particles": "wood_chips" },
-    "swing_stone": { "trauma": 0.18, "pauseMs": 0, "particles": "stone_chips" },
-    "swing_soft": { "trauma": 0.1, "pauseMs": 0, "particles": "fibre_puff" },
-    "fell_wood": { "trauma": 0.52, "pauseMs": 70, "particles": "leaf_burst" },
-    "fell_stone": { "trauma": 0.6, "pauseMs": 85, "particles": "stone_chips" },
-    "fell_soft": { "trauma": 0.3, "pauseMs": 45, "particles": "fibre_puff" },
-    "faint": { "trauma": 0.95, "pauseMs": 120, "particles": "faint_puff" },
-    "quick_hit": { "trauma": 0.26, "pauseMs": 40, "particles": "hit_spark" },
-    "power_hit": { "trauma": 0.55, "pauseMs": 90, "particles": "hit_spark" },
-    "orb_bounce": { "trauma": 0.34, "pauseMs": 60, "particles": "stone_chips" },
-    "catch_shake": { "trauma": 0.16, "pauseMs": 0, "particles": "hit_spark" },
-    "catch_success": { "trauma": 0.4, "pauseMs": 80, "particles": "faint_puff" }
+    "swing_wood": {
+      "trauma": 0.14,
+      "pauseMs": 0,
+      "particles": "wood_chips"
+    },
+    "swing_stone": {
+      "trauma": 0.18,
+      "pauseMs": 0,
+      "particles": "stone_chips"
+    },
+    "swing_soft": {
+      "trauma": 0.1,
+      "pauseMs": 0,
+      "particles": "fibre_puff"
+    },
+    "fell_wood": {
+      "trauma": 0.52,
+      "pauseMs": 70,
+      "particles": "leaf_burst"
+    },
+    "fell_stone": {
+      "trauma": 0.6,
+      "pauseMs": 85,
+      "particles": "stone_chips"
+    },
+    "fell_soft": {
+      "trauma": 0.3,
+      "pauseMs": 45,
+      "particles": "fibre_puff"
+    },
+    "faint": {
+      "trauma": 0.95,
+      "pauseMs": 120,
+      "particles": "faint_puff"
+    },
+    "quick_hit": {
+      "trauma": 0.26,
+      "pauseMs": 400,
+      "particles": "hit_spark"
+    },
+    "power_hit": {
+      "trauma": 0.55,
+      "pauseMs": 520,
+      "particles": "hit_spark"
+    },
+    "orb_bounce": {
+      "trauma": 0.34,
+      "pauseMs": 60,
+      "particles": "stone_chips"
+    },
+    "catch_shake": {
+      "trauma": 0.16,
+      "pauseMs": 0,
+      "particles": "hit_spark"
+    },
+    "catch_success": {
+      "trauma": 0.4,
+      "pauseMs": 80,
+      "particles": "faint_puff"
+    }
   },
-
   "$comment_harvest": "Which impact each harvestable prop family feels like. Keyed by family rather than by tool action so a future stone tree and a wooden rock are one row each, and so adding a family to scatter.json surfaces here as a failing test rather than as a silent dull hit. Every harvestable family in harvest.json must appear.",
   "harvest": {
-    "oak": { "swing": "swing_wood", "fell": "fell_wood" },
-    "pine": { "swing": "swing_wood", "fell": "fell_wood" },
-    "rock": { "swing": "swing_stone", "fell": "fell_stone" },
-    "bush": { "swing": "swing_soft", "fell": "fell_soft" }
+    "oak": {
+      "swing": "swing_wood",
+      "fell": "fell_wood"
+    },
+    "pine": {
+      "swing": "swing_wood",
+      "fell": "fell_wood"
+    },
+    "rock": {
+      "swing": "swing_stone",
+      "fell": "fell_stone"
+    },
+    "bush": {
+      "swing": "swing_soft",
+      "fell": "fell_soft"
+    }
   }
 }

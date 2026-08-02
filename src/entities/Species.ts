@@ -27,6 +27,8 @@ export interface SpeciesDef {
   levelBand?: [number, number];
   base: { hp: number; atk: number; def: number; spd: number };
   catchRate: number;
+  /** Milliseconds between this species' attacks. Floored by moves.json. */
+  attackCadenceMs?: number;
   moves: [string, string];
   model: { body: string; tint: string; scale: number; accessory: string };
   timeWindows?: string[];

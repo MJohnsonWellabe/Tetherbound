@@ -18,6 +18,8 @@ export const TIMING = {
   telegraphMs: moves.telegraphMs,
   dodgeWindowMs: moves.dodgeWindowMs,
   swapVulnerabilityMs: moves.swapVulnerabilityMs,
+  openingGraceMs: moves.openingGraceMs,
+  minAttackIntervalMs: moves.minAttackIntervalMs,
   quickChargeGain: moves.quickChargeGain,
   powerChargeCost: moves.powerChargeCost,
   collarDamageMultiplier: moves.collarDamageMultiplier

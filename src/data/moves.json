@@ -8,12 +8,20 @@
   "$comment_collar": "GAME_DESIGN.md section 10: Bracken's pals 'hit at 1.15x but their affinity penalty means they never dodge'. Only the multiplier needs a number. Enemy pals do not dodge in this implementation at all, so the second half of that trade already holds, and a collared pal never hesitates because hesitation is the low-affinity behaviour of a pal that chose to be here.",
   "collarDamageMultiplier": 1.15,
 
-  "$comment_timing": "Milliseconds. The 0.6s telegraph on a power attack is the dodge window, and GAME_DESIGN.md section 7 is explicit that a correctly timed dodge negates it entirely.",
+  "$comment_timing": "Milliseconds. The whole combat clock. Retuned at the owner's direction so a first-time player can read a fight: the old numbers produced fights that were over in about five seconds, which is not enough time to learn what any button did (D55).",
   "quickCastMs": 500,
   "powerWindupMs": 1100,
-  "telegraphMs": 600,
+
+  "$comment_telegraph": "GAME_DESIGN.md section 7 specifies 0.6s here. The owner raised it to 1.2s because at 0.6s the tell and the hit read as one event to someone who has never seen it before. The spec loses this one deliberately; the dodge window it opens is unchanged in meaning (D55).",
+  "telegraphMs": 1200,
   "dodgeWindowMs": 320,
   "swapVulnerabilityMs": 1500,
+
+  "$comment_opening": "The opening grace. A wild pal holds still in its alert pose for this long at the start of a fight, so the player gets an uncontested look at the situation and a free early throw. GAME_DESIGN.md section 7 already promises the throw is available from the opening second; this makes that promise usable rather than theoretical.",
+  "openingGraceMs": 2500,
+
+  "$comment_cadence": "Floor on how often any enemy may attack. A species may be slower via its own attackCadenceMs in species.json, never faster.",
+  "minAttackIntervalMs": 4000,
 
   "moves": {
     "vine_lash": { "name": "Vine Lash", "type": "verdant", "kind": "quick", "power": 11 },

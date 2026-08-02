@@ -44,6 +44,12 @@ export class CombatMode {
   private telegraphMs = 0;
   private dodgeMs = 0;
   private swapLockMs = 0;
+  /**
+   * True from the moment the player commits to a throw until the orb lands.
+   * The enemy holds its attacks for the duration: aiming is never punished,
+   * which is what lets a new player take the time to aim at all.
+   */
+  private aiming = false;
 
   constructor(
     private readonly party: Party,
@@ -67,7 +73,10 @@ export class CombatMode {
     this.phase = 'fighting';
     this.charge = 0;
     this.ringMs = 0;
-    this.enemyCooldownMs = TIMING.quickCastMs;
+    // The opening grace: the wild pal holds its alert pose and does nothing
+    // while the player reads the fight. The throw is legal throughout, which
+    // is what makes this a window rather than a pause.
+    this.enemyCooldownMs = TIMING.openingGraceMs;
     this.telegraphMs = 0;
     this.dodgeMs = 0;
     this.swapLockMs = 0;
@@ -122,7 +131,21 @@ export class CombatMode {
     void day;
   }
 
+  /**
+   * Hold or release the enemy while the player aims a throw. Presentation
+   * calls this: the aim begins on the input that starts the throw and ends
+   * when the orb lands, so nothing lands on the player mid-arc.
+   */
+  setAiming(on: boolean): void {
+    this.aiming = on;
+  }
+
   private tickEnemy(dtMs: number, active: PalState, enemy: PalState, rand: () => number): void {
+    // Mid-throw the enemy waits. A telegraph already in flight still resolves,
+    // because cancelling a wind-up the player has already been warned about
+    // would teach the wrong lesson about the dodge.
+    if (this.aiming && this.telegraphMs <= 0) return;
+
     if (this.telegraphMs > 0) {
       this.telegraphMs -= dtMs;
       if (this.telegraphMs > 0) return;
@@ -134,7 +157,8 @@ export class CombatMode {
         rand
       });
       this.landOnPlayer(active, result.damage, result.dodged, 'power');
-      this.enemyCooldownMs = TIMING.quickCastMs * 2;
+      // A power attack costs the enemy a longer recovery than a jab.
+      this.enemyCooldownMs = this.cadenceFor(enemy) * 1.5;
       return;
     }
 
@@ -151,7 +175,17 @@ export class CombatMode {
 
     const result = resolveAttack(enemy, active, { kind: 'quick', defenderDodged: false, rand });
     this.landOnPlayer(active, result.damage, false, 'quick');
-    this.enemyCooldownMs = TIMING.quickCastMs + TIMING.quickCastMs * rand();
+    this.enemyCooldownMs = this.cadenceFor(enemy) * (1 + 0.25 * rand());
+  }
+
+  /**
+   * How long this species waits between attacks. A species may be slower than
+   * the floor, never faster, so no Meadows creature can out-pace a player who
+   * is still learning which button is which.
+   */
+  private cadenceFor(enemy: PalState): number {
+    const own = speciesDef(enemy.species)?.attackCadenceMs;
+    return Math.max(TIMING.minAttackIntervalMs, own ?? 0);
   }
 
   private landOnPlayer(

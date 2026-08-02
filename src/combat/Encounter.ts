@@ -86,6 +86,9 @@ export class Encounter {
     // The orb is spent whether or not it holds. A failed throw costing nothing
     // would make throwing strictly better than fighting.
     remove(this.slots, orb, 1);
+    // The enemy holds from here until the orb lands. CombatStage releases it
+    // when the arc finishes, so a throw is never punished mid-flight.
+    this.combat.setAiming(true);
     const result = this.combat.tryThrow(orb, day, performance.now());
     if (!result.caught) {
       const outcome = result.bounced ? 'bounced' : 'missed';
