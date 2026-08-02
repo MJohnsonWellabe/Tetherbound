@@ -93,7 +93,7 @@ const creatures = SPECIES.map((id) => ({
   group: 'creatures',
   transform: 'rigged',
   textureSize: 256,
-  budgetKB: 780,
+  budgetKB: 1000,
   sources: [{ file: `pizza/creatures/${id}.glb` }],
   out: `models/creatures/${id}.glb`,
   provenance: { source: 'https://poly.pizza/u/Quaternius', author: 'Quaternius', license: 'CC0 1.0' }
@@ -104,7 +104,7 @@ const characters = ROLES.map((id) => ({
   group: 'characters',
   transform: 'rigged',
   textureSize: 256,
-  budgetKB: 1600,
+  budgetKB: 1900,
   sources: [{ file: `pizza/characters/${id}.glb` }],
   out: `models/characters/${id}.glb`,
   provenance: { source: 'https://poly.pizza/u/Quaternius', author: 'Quaternius', license: 'CC0 1.0' }

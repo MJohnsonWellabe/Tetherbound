@@ -65,7 +65,7 @@ describe('asset manifest', () => {
     for (const file of shipped.filter((f) => f.endsWith('.glb'))) {
       const kb = statSync(join(ROOT, file)).size / 1024;
       const rigged = file.includes('/creatures/') || file.includes('/characters/');
-      expect(kb, `${file} is ${Math.round(kb)} KB`).toBeLessThan(rigged ? 1600 : 420);
+      expect(kb, `${file} is ${Math.round(kb)} KB`).toBeLessThan(rigged ? 1900 : 420);
     }
   });
 });

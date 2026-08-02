@@ -5,7 +5,7 @@ import {
   type AbstractMesh,
   type Scene
 } from '../core/babylon';
-import { loadContainer } from '../core/AssetLoader';
+import { loadContainerOwned } from '../core/AssetLoader';
 
 /**
  * Mounting rigged models onto live entities without making anyone's
@@ -57,14 +57,25 @@ export function mountRig(
   let cancelled = false;
   let mounted: MountedRig | null = null;
 
-  loadContainer(scene, entry.url)
+  loadContainerOwned(scene, entry.url)
     .then((container) => {
-      if (cancelled) return;
+      if (cancelled) {
+        container.dispose();
+        return;
+      }
 
       const name = `rig_${mountSerial++}`;
-      const instance = container.instantiateModelsToScene((source) => `${name}_${source}`, false, {
-        doNotInstantiate: false
-      });
+      // The entity OWNS this container outright: no instantiate, no clone, no
+      // animation retargeting. Cloning from a shared container mis-maps bone
+      // indices on files with multiple skins or bone/joint mismatches, and a
+      // few stretched triangles turned birds and deer into screen-filling
+      // shards (D56). addAllToScene renders the container's own nodes, whose
+      // animation groups already target them.
+      container.addAllToScene();
+      const instance = {
+        rootNodes: container.rootNodes,
+        animationGroups: container.animationGroups
+      };
 
       const root = new TransformNode(name, scene);
       // Scale and lift the WHOLE instance from its shared root, never node by
@@ -109,9 +120,10 @@ export function mountRig(
           return clip ? (groups.get(clip) ?? null) : null;
         },
         dispose(): void {
-          for (const group of groups.values()) group.dispose();
+          // The container owns every node, skeleton, group and texture the
+          // mount created; one call releases it all.
           root.dispose(false, false);
-          for (const node of instance.rootNodes) node.dispose(false, false);
+          container.dispose();
         }
       };
       onReady(mounted);

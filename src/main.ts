@@ -13,6 +13,7 @@ import { InputHint } from './ui/InputHint';
 import { HarvestHud } from './ui/HarvestHud';
 import { HarvestController } from './survival/HarvestController';
 import { add, createInventory } from './survival/Inventory';
+import { loadContainerOwned } from './core/AssetLoader';
 import { CombatMode } from './combat/CombatMode';
 import { CombatStage } from './entities/CombatStage';
 import { Encounter } from './combat/Encounter';
@@ -525,6 +526,8 @@ async function boot(): Promise<void> {
     built,
     hud,
     snapshotSave,
+    // Debug-only: lets harness probes load a GLB with no game wrappers.
+    loadContainerOwned: (url: string) => loadContainerOwned(scene, url),
     chunks,
     props,
     terrain,

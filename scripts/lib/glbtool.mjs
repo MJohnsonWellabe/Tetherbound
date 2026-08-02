@@ -240,11 +240,16 @@ export async function slim(document, { textureSize = 512, keepAnimations = true,
       if (!keep.has(anim.getName())) anim.dispose();
     }
   }
-  const transforms = [dedup(), prune(), weld()];
-  if (keepAnimations) transforms.push(resample());
-  // 16-bit attributes via KHR_mesh_quantization, which the runtime loader
-  // registers. Roughly halves rigged geometry.
-  transforms.push(quantize());
+  // SKINNED MODELS GET NO GEOMETRY PASSES. Measured: dedup/prune/weld/resample
+  // rewrite the inverse bind matrices (raw IBM scale 1.0 -> 0.014 after the
+  // pipeline), and Babylon renders the result as screen-filling shards for
+  // some models - the giant wedges that were blamed on the renderer for
+  // several sessions (D56). Clip pruning above plus texture compression here
+  // do all the shrinking that is safe; the skin ships exactly as authored.
+  const skinned = document.getRoot().listSkins().length > 0;
+  const transforms = skinned ? [] : [dedup(), prune(), weld()];
+  if (!skinned && keepAnimations) transforms.push(resample());
+  if (!skinned) transforms.push(quantize());
   transforms.push(
     textureCompress({ encoder: sharp, targetFormat: 'webp', resize: [textureSize, textureSize] })
   );

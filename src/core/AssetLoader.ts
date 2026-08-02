@@ -115,6 +115,33 @@ export function loadContainer(
 }
 
 /**
+ * Load a model bypassing the cache: a container the caller OWNS outright.
+ *
+ * For rigged entities. `instantiateModelsToScene` on a shared container
+ * mis-maps bone indices for files with multiple skins or bone/joint count
+ * mismatches, and a handful of stretched triangles turns a bird into a
+ * screen-filling shard (D56). A fresh parse per entity is exactly what the
+ * pack authors' own viewers do; the browser HTTP cache still makes the
+ * download itself free after the first fetch.
+ */
+export function loadContainerOwned(
+  scene: Scene,
+  url: string,
+  timeoutMs = DEFAULT_TIMEOUT_MS
+): Promise<AssetContainer> {
+  const load = ensureLoaders().then(({ LoadAssetContainerAsync }) =>
+    LoadAssetContainerAsync(url, scene)
+  );
+  return withTimeout(load, timeoutMs, url).then((container) => {
+    if (scene.isDisposed) {
+      container.dispose();
+      throw new SceneGoneError(url);
+    }
+    return container;
+  });
+}
+
+/**
  * Load several models, reporting progress. A single failure does not fail the
  * batch: a missing prop should degrade the scene, not refuse to start the game.
  * Rejected entries come back as null and are logged.
