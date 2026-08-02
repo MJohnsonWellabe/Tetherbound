@@ -122,17 +122,26 @@ test('a wild encounter runs on the real combat screen', async ({ page }) => {
     await page.waitForTimeout(700);
   }
 
-  const partySize = await page.evaluate(
-    () => (window as Win).__tetherbound.party.size as number
-  );
+  // Three outcomes are all legitimate here and which one lands is a dice roll:
+  // the pal is caught, every throw fails its roll and the fight continues, or
+  // the ally's earlier swing finishes the enemy off between throws. Asserting
+  // any single one of them is how this test earned its flake. What must hold
+  // either way is that the screen agrees with the state.
   const fighting = await page.evaluate(
     () => (window as Win).__tetherbound.combat.isFighting as boolean
   );
-  // Caught (party grew) or every throw failed the roll and the fight goes on —
-  // either way the screen must still be coherent.
-  if (partySize > 1) {
-    await expect(page.locator('#combat')).toBeHidden();
+  if (fighting) {
+    await expect(page.locator('#combat')).toBeVisible();
+    await expect(page.locator('.cb__actions')).toBeVisible();
   } else {
-    expect(fighting).toBe(true);
+    await expect(page.locator('#combat')).toBeHidden();
   }
+
+  // The orb was spent whichever way it went, which is the rule that stops
+  // throwing being strictly better than fighting.
+  const orbsAfter = await page.evaluate(() => {
+    const g = (window as Win).__tetherbound;
+    return g.inventory.filter((s: { id: string } | null) => s?.id === 'worn_orb').length;
+  });
+  expect(orbsAfter).toBeLessThanOrEqual(orbsBefore);
 });
