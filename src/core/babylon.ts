@@ -83,6 +83,9 @@ export type { Observer } from '@babylonjs/core/Misc/observable';
 export type { Nullable } from '@babylonjs/core/types';
 export { Tools } from '@babylonjs/core/Misc/tools';
 export { AssetContainer } from '@babylonjs/core/assetContainer';
+// Skeletal animation playback for the rigged creatures and characters.
+export { AnimationGroup } from '@babylonjs/core/Animations/animationGroup';
+export { Skeleton } from '@babylonjs/core/Bones/skeleton';
 export { SceneInstrumentation } from '@babylonjs/core/Instrumentation/sceneInstrumentation';
 
 // --- side-effect registrations ---------------------------------------------

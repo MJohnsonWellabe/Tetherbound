@@ -338,18 +338,19 @@ export class Story {
 /**
  * Wrap a bare pal in the shape `CombatMode` expects.
  *
- * No mesh, because a trainer's pal is never in the world to be walked up to;
+ * No body, because a trainer's pal is never in the world to be walked up to;
  * it exists for the length of one fight. `CombatMode` reads only `.state`.
  */
 function asWild(state: PalState): WildPal {
   return {
     state,
     ai: { mood: 'aggro', timer: 0, heading: 0, homeX: 0, homeZ: 0 },
-    mesh: null,
+    body: null,
     x: 0,
     y: 0,
     z: 0,
     yaw: 0,
-    active: true
+    active: true,
+    held: false
   };
 }

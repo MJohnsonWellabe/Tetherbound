@@ -4,28 +4,41 @@ import {
   CreateSphere,
   Mesh,
   Scene,
-  StandardMaterial
+  StandardMaterial,
+  TransformNode
 } from '../core/babylon';
+import models from '../data/models.json';
+import { AnimDriver } from '../anim/AnimDriver';
+import { mountRig, type RigEntry } from '../anim/Rigs';
 import { speciesDef } from './Species';
 
 /**
- * Placeholder pal geometry, and the pool that draws it.
+ * Pal bodies: one DISTINCT rigged, skeletal-animated creature per species
+ * (models.json `pals`), mounted asynchronously over an instant capsule
+ * placeholder.
  *
- * ASSETS.md: "A pal is a capsule with a tinted sphere head." Real CC0 models
- * arrive in M5, and because every pal is described by `model.body`, `tint`,
- * `scale` and `accessory` in species.json, that swap is a data change.
+ * `acquire` returns a PalBody synchronously: a root node carrying the old
+ * tinted capsule, plus an AnimDriver. When the creature's GLB lands (cached
+ * per file after the first spawn of a species), the capsule is swapped for
+ * the rigged model and the driver starts resolving verbs. A failed download
+ * means that pal stays a capsule; nothing else notices, which is the whole
+ * fallback contract (models.json header).
  *
- * One mesh per body type, cloned per active pal, one material per species.
- * With the spawn cap at 12 that is at most 12 extra draw calls on top of the
- * world's 67, which keeps the whole frame inside ARCHITECTURE.md's 150.
- *
- * Pooled from the first frame, per CLAUDE.md's performance discipline:
- * allocating a mesh every time something spawns is the thing you cannot
- * retrofit later.
+ * Owners write position/yaw to `body.root` and call `body.driver.play(verb)`.
  */
 
 const BODY_TYPES = ['quadruped', 'smallMammal', 'amphibian', 'birdlike', 'horned', 'bulky'] as const;
 export type BodyType = (typeof BODY_TYPES)[number];
+
+/** A live pal body: a root the owner moves, and a driver it animates. */
+export interface PalBody {
+  root: TransformNode;
+  driver: AnimDriver;
+  speciesId: string;
+  dispose(): void;
+}
+
+let palSerial = 0;
 
 /** Proportions per body, so six silhouettes read differently at a glance. */
 const SHAPE: Record<BodyType, { height: number; radius: number; head: number; headY: number }> = {
@@ -66,23 +79,49 @@ export class PalVisuals {
     }
   }
 
-  /** A drawable body for a species. Caller owns disposal via releaseMesh. */
-  acquireMesh(speciesId: string): Mesh | null {
+  /** A drawable, animatable body for a species. Caller owns disposal. */
+  acquire(speciesId: string): PalBody | null {
     const def = speciesDef(speciesId);
     if (!def) return null;
-    const body = (BODY_TYPES as readonly string[]).includes(def.model.body)
+    const bodyType = (BODY_TYPES as readonly string[]).includes(def.model.body)
       ? (def.model.body as BodyType)
       : 'quadruped';
-    const proto = this.prototypes.get(body);
+    const proto = this.prototypes.get(bodyType);
     if (!proto) return null;
 
-    const mesh = proto.clone(`pal_${speciesId}_${Math.floor(performance.now())}`, null, true);
-    if (!mesh) return null;
-    mesh.material = this.materialFor(speciesId, def.model.tint);
-    mesh.scaling.setAll(def.model.scale);
-    mesh.setEnabled(true);
-    mesh.isPickable = false;
-    return mesh;
+    const root = new TransformNode(`pal_${speciesId}_${palSerial++}`, this.scene);
+    const driver = new AnimDriver();
+
+    // The instant placeholder. Swapped out when the rig mounts.
+    const capsule = proto.clone(`${root.name}_placeholder`, root, true);
+    if (capsule) {
+      capsule.material = this.materialFor(speciesId, def.model.tint);
+      capsule.scaling.setAll(def.model.scale);
+      capsule.setEnabled(true);
+      capsule.isPickable = false;
+    }
+
+    const entry = (models.pals as Record<string, RigEntry | undefined>)[speciesId];
+    let cancelRig: (() => void) | null = null;
+    if (entry) {
+      cancelRig = mountRig(this.scene, entry, (rig) => {
+        capsule?.dispose(false, false);
+        rig.root.parent = root;
+        driver.attach(rig);
+        driver.play('idle', performance.now());
+      });
+    }
+
+    return {
+      root,
+      driver,
+      speciesId,
+      dispose(): void {
+        cancelRig?.();
+        driver.dispose();
+        root.dispose(false, false);
+      }
+    };
   }
 
   /** One material per species, shared by every individual of it. */

@@ -17,6 +17,7 @@ import { CombatMode } from './combat/CombatMode';
 import { Encounter } from './combat/Encounter';
 import { PalVisuals } from './entities/PalVisual';
 import { SpawnManager } from './entities/SpawnManager';
+import { Companion } from './entities/Companion';
 import { Party } from './party/Party';
 import { ReleaseFlow } from './party/Release';
 import { CombatHud } from './ui/CombatHud';
@@ -165,6 +166,7 @@ async function boot(): Promise<void> {
 
   const palVisuals = new PalVisuals(scene);
   const spawner = new SpawnManager(terrain, palVisuals);
+  const companion = new Companion(palVisuals, (x, z) => terrain.heightAt(x, z));
   const combat = new CombatMode(party, input);
   const release = new ReleaseFlow(party);
   const encounter = new Encounter(combat, spawner, party, release, inventory, input);
@@ -342,7 +344,10 @@ async function boot(): Promise<void> {
             vitals.stamina
           );
       // Charge the swing only once it actually connected.
-      if (swing && !swing.refusal) spendStamina(vitals, HARVEST_STAMINA);
+      if (swing && !swing.refusal) {
+        spendStamina(vitals, HARVEST_STAMINA);
+        player.playVerb('interact');
+      }
       harvestHud.report(swing);
       harvestHud.update(player.state.position.x, player.state.position.z, vitals);
 
@@ -352,6 +357,14 @@ async function boot(): Promise<void> {
         dt,
         time.cycle,
         time.day
+      );
+      companion.update(
+        party,
+        player.state.position.x,
+        player.state.position.z,
+        player.state.yaw,
+        dt,
+        combat.isFighting || busyTalking
       );
       // A scripted Hall fight drives CombatMode itself, so the wild encounter
       // loop stands down. Without this the two race for the same fight and a
@@ -466,6 +479,7 @@ async function boot(): Promise<void> {
     inventory,
     party,
     spawner,
+    companion,
     combat,
     encounter,
     release,
@@ -499,6 +513,7 @@ async function boot(): Promise<void> {
       chunks.dispose();
       props.dispose();
       spawner.dispose();
+      companion.dispose();
       palVisuals.dispose();
       build.dispose();
       stationViews.dispose();

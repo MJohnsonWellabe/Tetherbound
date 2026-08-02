@@ -11,6 +11,9 @@ import {
   Vector3
 } from '../core/babylon';
 import type { Input } from '../core/input/Input';
+import models from '../data/models.json';
+import { AnimDriver } from '../anim/AnimDriver';
+import { mountRig, type RigEntry } from '../anim/Rigs';
 import {
   createState,
   DEFAULT_CONFIG,
@@ -23,10 +26,16 @@ import {
 /**
  * The player: a capsule the controller drives, plus the third-person camera rig.
  *
- * Placeholder geometry per ASSETS.md. The mesh is a capsule with a tinted
- * sphere head, and the whole thing is parented to one node so swapping in a
- * real model at M5 touches this file and nothing else.
+ * The physics stays a capsule; the visible body is the rigged character from
+ * models.json, mounted async over the capsule placeholder. Locomotion verbs
+ * come from controller speed; one-shots (interact, faint) come from the game
+ * via `playVerb`.
  */
+
+/** Above this ground speed the walk clip reads wrong and run takes over. */
+const RUN_SPEED = 4.6;
+/** Below this the player is standing still, whatever the analog stick says. */
+const IDLE_SPEED = 0.4;
 
 /** Over-the-shoulder framing. */
 const CAMERA_DISTANCE = 5.2;
@@ -41,6 +50,8 @@ export class Player {
   private readonly body: Mesh;
   private readonly head: Mesh;
   private readonly material: StandardMaterial;
+  private readonly driver = new AnimDriver();
+  private cancelRig: (() => void) | null = null;
   private yaw = 0;
   private pitch = 0.18;
 
@@ -73,6 +84,29 @@ export class Player {
 
     shadows?.addShadowCaster(this.body, true);
     this.syncTransform();
+
+    const entry = (models.characters as Record<string, RigEntry | undefined>).player;
+    if (entry) {
+      this.cancelRig = mountRig(scene, entry, (rig) => {
+        this.body.setEnabled(false);
+        this.head.setEnabled(false);
+        shadows?.removeShadowCaster(this.body, true);
+        rig.root.parent = this.root;
+        for (const mesh of rig.root.getChildMeshes()) shadows?.addShadowCaster(mesh, false);
+        this.driver.attach(rig);
+        this.driver.play('idle', performance.now());
+      });
+    }
+  }
+
+  /** One-shot animation from the game: 'interact' on harvest, 'faint', 'wave'. */
+  playVerb(verb: string): void {
+    this.driver.play(verb, performance.now());
+  }
+
+  /** After a faint-and-wake, let animation run again. */
+  revive(): void {
+    this.driver.revive();
   }
 
   get position(): Vector3 {
@@ -102,10 +136,15 @@ export class Player {
     // The body faces where it is going, not where the camera looks, so
     // strafing reads as strafing.
     const speed = Math.hypot(this.state.velocity.x, this.state.velocity.z);
-    if (speed > 0.4) {
+    if (speed > IDLE_SPEED) {
       const target = Math.atan2(this.state.velocity.x, this.state.velocity.z);
       this.state.yaw = angleLerp(this.state.yaw, target, Math.min(1, 12 * dt));
     }
+
+    this.driver.play(
+      speed > RUN_SPEED ? 'run' : speed > IDLE_SPEED ? 'walk' : 'idle',
+      performance.now()
+    );
 
     this.syncTransform();
     this.updateCamera(world);
@@ -161,6 +200,8 @@ export class Player {
   }
 
   dispose(): void {
+    this.cancelRig?.();
+    this.driver.dispose();
     this.body.dispose();
     this.head.dispose();
     this.material.dispose();

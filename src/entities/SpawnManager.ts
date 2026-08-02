@@ -1,10 +1,9 @@
-import type { Mesh } from '../core/babylon';
 import spawns from '../data/spawns.json';
 import type { PalState } from '../party/PalState';
 import type { Terrain } from '../world/gen/Terrain';
 import { hashSeed, mulberry32 } from '../world/gen/Rng';
-import { createAi, stepAi, type AiState } from './PalAI';
-import type { PalVisuals } from './PalVisual';
+import { createAi, stepAi, type AiState, type PalMood } from './PalAI';
+import type { PalBody, PalVisuals } from './PalVisual';
 import { createPal, derive, speciesDef, type SpeciesDef } from './Species';
 
 /**
@@ -20,13 +19,23 @@ import { createPal, derive, speciesDef, type SpeciesDef } from './Species';
 export interface WildPal {
   state: PalState;
   ai: AiState;
-  mesh: Mesh | null;
+  body: PalBody | null;
   x: number;
   z: number;
   y: number;
   yaw: number;
   active: boolean;
+  /** Combat staged this pal: AI and despawn leave it alone until released. */
+  held: boolean;
 }
+
+/** AI moods map onto animation verbs the rigged models carry. */
+const MOOD_VERB: Record<PalMood, string> = {
+  wander: 'walk',
+  graze: 'idle',
+  flee: 'run',
+  aggro: 'run'
+};
 
 interface SpawnRow {
   species: string;
@@ -59,12 +68,13 @@ export class SpawnManager {
       this.pool.push({
         state: null as unknown as PalState,
         ai: null as unknown as AiState,
-        mesh: null,
+        body: null,
         x: 0,
         z: 0,
         y: 0,
         yaw: 0,
-        active: false
+        active: false,
+        held: false
       });
     }
   }
@@ -91,14 +101,14 @@ export class SpawnManager {
 
   private despawnFar(playerX: number, playerZ: number): void {
     for (const pal of this.pool) {
-      if (!pal.active) continue;
+      if (!pal.active || pal.held) continue;
       if (Math.hypot(pal.x - playerX, pal.z - playerZ) > spawns.despawnRadius) this.release(pal);
     }
   }
 
   private driveAi(playerX: number, playerZ: number, dt: number): void {
     for (const pal of this.pool) {
-      if (!pal.active || !pal.mesh) continue;
+      if (!pal.active || !pal.body || pal.held) continue;
       const def = speciesDef(pal.state.species);
       if (!def) continue;
 
@@ -127,8 +137,9 @@ export class SpawnManager {
         pal.yaw = out.heading;
       }
       pal.y = this.terrain.heightAt(pal.x, pal.z);
-      pal.mesh.position.set(pal.x, pal.y, pal.z);
-      pal.mesh.rotation.y = pal.yaw;
+      pal.body.root.position.set(pal.x, pal.y, pal.z);
+      pal.body.root.rotation.y = pal.yaw;
+      pal.body.driver.play(MOOD_VERB[out.mood] ?? 'idle', performance.now());
     }
   }
 
@@ -176,15 +187,21 @@ export class SpawnManager {
     slot.z = z;
     slot.y = this.terrain.heightAt(x, z);
     slot.yaw = rng() * Math.PI * 2;
-    slot.mesh = this.visuals.acquireMesh(picked.species);
-    slot.active = slot.mesh !== null;
+    slot.body = this.visuals.acquire(picked.species);
+    slot.active = slot.body !== null;
+    slot.held = false;
+    if (slot.body) {
+      slot.body.root.position.set(slot.x, slot.y, slot.z);
+      slot.body.root.rotation.y = slot.yaw;
+    }
   }
 
   /** Take a pal out of the world, after a catch or a despawn. */
   release(pal: WildPal): void {
-    pal.mesh?.dispose(false, false);
-    pal.mesh = null;
+    pal.body?.dispose();
+    pal.body = null;
     pal.active = false;
+    pal.held = false;
   }
 
   /** Nearest active pal within `radius`, for the encounter check. */

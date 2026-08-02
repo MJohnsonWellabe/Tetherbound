@@ -9,17 +9,32 @@ import {
   TransformNode,
   Vector3
 } from '../core/babylon';
+import models from '../data/models.json';
+import { AnimDriver } from '../anim/AnimDriver';
+import { mountRig, type RigEntry } from '../anim/Rigs';
+import { hashSeed } from '../world/gen/Rng';
 
 /**
  * People. Grandpa Orin, two villagers, two Tether grunts, and Bracken Holt.
  *
- * ASSETS.md says to retexture one humanoid base for all of them, so that is
- * what this is: one capsule-and-sphere rig, tinted per role. Tether wears the
- * iron-orange accent the palette reserves for enemies and danger, which is the
- * only cue the player needs to know who is going to stop them.
+ * Each role maps to a rigged character in models.json, mounted async over the
+ * old capsule-and-sphere placeholder; villagers alternate between the two
+ * villager models by id so a pair standing together reads as two people.
+ * Tether keeps the iron-orange sash on the placeholder only; the rigged
+ * models carry their own identity.
  */
 
 export type NpcRole = 'elder' | 'villager' | 'tether' | 'warden';
+
+/** Which rigged character each role wears. Villager picks by id hash. */
+function characterFor(role: NpcRole, id: string): RigEntry | undefined {
+  const characters = models.characters as Record<string, RigEntry | undefined>;
+  if (role === 'villager') {
+    return hashSeed(id) % 2 === 0 ? characters.villager_m : characters.villager_f;
+  }
+  if (role === 'elder') return characters.villager_m;
+  return characters[role];
+}
 
 const ROLE_TINT: Record<NpcRole, string> = {
   elder: '#6a6f8c',
@@ -62,6 +77,8 @@ export class Npc {
   dialogue: string;
   private readonly root: TransformNode;
   private readonly parts: Mesh[] = [];
+  private readonly driver = new AnimDriver();
+  private cancelRig: (() => void) | null = null;
   private visible = true;
 
   constructor(scene: Scene, spec: NpcSpec, shadows: ShadowGenerator | null) {
@@ -100,7 +117,27 @@ export class Npc {
       shadows?.addShadowCaster(mesh, false);
     }
 
+    const entry = characterFor(spec.role, spec.id);
+    if (entry) {
+      this.cancelRig = mountRig(scene, entry, (rig) => {
+        for (const mesh of this.parts) {
+          shadows?.removeShadowCaster(mesh, false);
+          mesh.dispose(false, false);
+        }
+        this.parts.length = 0;
+        rig.root.parent = this.root;
+        for (const mesh of rig.root.getChildMeshes()) shadows?.addShadowCaster(mesh, false);
+        this.driver.attach(rig);
+        this.driver.play('idle', performance.now());
+      });
+    }
+
     if (spec.hidden) this.setVisible(false);
+  }
+
+  /** One-shot gesture: 'wave' on greet, 'interact' when working a station. */
+  playVerb(verb: string): void {
+    this.driver.play(verb, performance.now());
   }
 
   get position(): Vector3 {
@@ -126,6 +163,8 @@ export class Npc {
   }
 
   dispose(): void {
+    this.cancelRig?.();
+    this.driver.dispose();
     for (const mesh of this.parts) mesh.dispose();
     this.parts.length = 0;
     this.root.dispose();
