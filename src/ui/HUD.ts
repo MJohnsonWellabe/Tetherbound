@@ -27,7 +27,7 @@ export interface CompassMarker {
   label: string;
   x: number;
   z: number;
-  kind: 'hall' | 'stones' | 'village' | 'satchel';
+  kind: 'hall' | 'stones' | 'village' | 'satchel' | 'objective';
 }
 
 /** Fallback strip width, used only before the first layout read. */

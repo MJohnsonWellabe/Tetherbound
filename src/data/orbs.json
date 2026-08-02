@@ -31,5 +31,7 @@
   "shakeCount": 3,
   "$comment_flee": "Wild pals bolt at low health, GAME_DESIGN.md section 7. Retuned at the owner's direction: at 20%/25%-per-second a first fight usually ended with the target running away, which teaches nothing. Later and rarer keeps the pressure without stealing the catch (D55).",
   "fleeHpFraction": 0.1,
-  "fleeChancePerSecond": 0.12
+  "fleeChancePerSecond": 0.12,
+  "$comment_guarantee": "The first-fifteen-minutes tuftmoth (Objectives.ts / objectives.json) must land on the first orb, or a new player can lose the game's first catch to bad luck before they know what a shake animation means. Applied only to that one scripted, docile pal, and only while the first_catch flag is unset; see Throw.ts ThrowInput.guaranteed.",
+  "guaranteedChance": 1.0
 }

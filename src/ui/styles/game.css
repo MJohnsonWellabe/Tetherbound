@@ -176,6 +176,9 @@
 /* A Tether Hall is hostile. This is the one compass mark the danger accent is
    allowed on, and it is a mark, not the text. */
 .compass__pin--hall .compass__dot { background: var(--tether); }
+/* The current objective step. Gold, same accent as a badge, since it marks
+   what the player is working toward rather than a fixed landmark. */
+.compass__pin--objective .compass__dot { background: var(--sigil); }
 /* A marker behind you still says which way to turn. */
 .compass__pin--behind { opacity: 0.5; }
 

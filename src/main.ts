@@ -5,6 +5,7 @@ import { Loop } from './core/Loop';
 import { Stats } from './core/Stats';
 import { buildWorld } from './game/World';
 import { Story } from './game/Story';
+import { Objectives, TUFTMOTH_SPAWN } from './game/Objectives';
 import { HUD } from './ui/HUD';
 import { DialoguePanel } from './ui/DialoguePanel';
 import { Fx } from './fx/Fx';
@@ -13,7 +14,7 @@ import { InputHint } from './ui/InputHint';
 import { HarvestHud } from './ui/HarvestHud';
 import { DoorPrompt } from './ui/DoorPrompt';
 import { HarvestController } from './survival/HarvestController';
-import { add, createInventory } from './survival/Inventory';
+import { createInventory } from './survival/Inventory';
 import { loadContainerOwned } from './core/AssetLoader';
 import { CombatMode } from './combat/CombatMode';
 import { CombatStage } from './entities/CombatStage';
@@ -146,16 +147,20 @@ async function boot(): Promise<void> {
   };
 
   progress(0.5, 'Waking Hollowbrook');
-  // Hollowbrook is at the origin and its plateau is flat, so this is always
-  // solid ground regardless of seed.
-  const player = new Player(scene, camera, { x: 0, y: terrain.heightAt(0, 0), z: 0 }, shadows);
+  // A new game wakes the player at their own furnished house rather than the
+  // bare village origin (GAME_DESIGN.md section 3's "wake-up"). A loaded save
+  // overwrites this with its own saved position below, so this line only ever
+  // matters for a fresh game.
+  const wakePos = built.home?.position ?? { x: 0, y: terrain.heightAt(0, 0), z: 0 };
+  const player = new Player(scene, camera, { x: wakePos.x, y: wakePos.y, z: wakePos.z }, shadows);
+  if (built.home) player.state.yaw = built.home.yaw;
 
   // Build the ground around the spawn before the first frame, so the player
   // never sees themselves standing on nothing. Props can arrive a frame or two
   // later; bare terrain reads as "still loading", a hole reads as broken.
-  chunks.update(0, 0);
+  chunks.update(wakePos.x, wakePos.z);
   chunks.processQueue(2000);
-  props.update(0, 0);
+  props.update(wakePos.x, wakePos.z);
   props.processQueue(1500);
 
   // `?debug=build`: every building/station/piece laid out on a grid so a
@@ -183,15 +188,12 @@ async function boot(): Promise<void> {
   const time = new TimeOfDay(scene, sun, sky, 0.2, 1, dome);
   const input = new Input(canvas);
 
-  // Grandpa Orin's satchel. M3 hands these over in the opening scene; until
-  // that scene exists the player starts with them so gathering is reachable.
+  // The satchel starts EMPTY. Grandpa Orin hands over the axe, pick, knife,
+  // hammer, wood and three orbs through orin_intro's `give:` effects
+  // (dialogue.json), which is the opening scene this used to stand in for. A
+  // loaded save overwrites this with its own inventory a few lines down, so
+  // this only ever matters for a fresh game.
   const inventory = createInventory();
-  add(inventory, 'stone_axe', 1);
-  add(inventory, 'stone_pick', 1);
-  add(inventory, 'flint_knife', 1);
-  add(inventory, 'worn_orb', 3);
-  add(inventory, 'hammer', 1);
-  add(inventory, 'wood', 40);
   const harvest = new HarvestController(inventory, props);
 
   // Pals, combat and the party. The party starts EMPTY: Grandpa Orin hands
@@ -200,12 +202,17 @@ async function boot(): Promise<void> {
   // decorative, which is what it was while M3 did not exist yet.
   const party = new Party();
 
+  // The HUD is built early, ahead of everything below that needs to toast or
+  // prompt through it (Encounter's "talk to Orin first" hint among them),
+  // rather than only once M3/M4's dialogue and compass work needed it.
+  const hud = new HUD();
+
   const palVisuals = new PalVisuals(scene);
   const spawner = new SpawnManager(terrain, palVisuals);
   const companion = new Companion(palVisuals, (x, z) => terrain.heightAt(x, z));
   const combat = new CombatMode(party, input);
   const release = new ReleaseFlow(party);
-  const encounter = new Encounter(combat, spawner, party, release, inventory, input);
+  const encounter = new Encounter(combat, spawner, party, release, inventory, input, hud);
   const vitals = createVitals();
   const build = new BuildMode(scene, inventory, world, doorRegistry);
   const saves = new SaveManager();
@@ -252,8 +259,8 @@ async function boot(): Promise<void> {
   );
   const nameplates = new Nameplates(document.getElementById('fx') as HTMLElement, spawner);
 
-  // M3 and M4: the compass and party HUD, the conversations, and the Hall.
-  const hud = new HUD();
+  // M3 and M4: the conversations and the Hall. (The HUD itself was built
+  // earlier, next to the party, so Encounter could toast through it too.)
   const dialoguePanel = new DialoguePanel();
   const story = new Story(
     built,
@@ -299,6 +306,15 @@ async function boot(): Promise<void> {
     props.update(player.state.position.x, player.state.position.z);
     props.processQueue(1500);
   }
+
+  // The opening objective chain (GAME_DESIGN.md section 3). Built after the
+  // save restore above so a loaded game that is already past a step does not
+  // toast it complete on the very first frame; see the header of Objectives.ts.
+  const objectives = new Objectives(story, party, inventory, hud);
+  // The guaranteed, docile first catch: placed once, the moment the "catch a
+  // tuftmoth" step becomes the active one, and never again. A save loaded
+  // past that step never sees `currentId` equal this, so it never respawns.
+  let tuftmothSpawned = false;
 
   function snapshotSave(): SaveV1 {
     return {
@@ -410,6 +426,24 @@ async function boot(): Promise<void> {
       // signature already takes it so that hooking Vitals up is one argument.
       tickVitals(vitals, dt * 1000, input.intent.sprint && !combat.isFighting);
 
+      // The objective chain reads Story/Party/inventory state and never
+      // writes it, so it runs ahead of Story itself without ordering risk.
+      objectives.update();
+      if (!tuftmothSpawned && objectives.currentId === 'catch_tuftmoth') {
+        // Guaranteed only while the flag it flips is still unset. A save
+        // loaded mid-step (Story.restore already ran, above) inherits
+        // whatever `first_catch` was at save time, so a player who somehow
+        // reaches this step twice never gets a second guaranteed catch.
+        spawner.spawnScripted('tuftmoth', TUFTMOTH_SPAWN.x, TUFTMOTH_SPAWN.z, {
+          level: TUFTMOTH_SPAWN.level,
+          day: time.day,
+          uid: 'story_tuftmoth',
+          docile: true,
+          guaranteedCatch: !story.has('first_catch')
+        });
+        tuftmothSpawned = true;
+      }
+
       // People first. A conversation, or a Hall fight, owns the interact
       // button outright: talking to Orin while chopping the tree behind him
       // would fire both, and the Hall sequence must not be walkable-away-from
@@ -417,7 +451,9 @@ async function boot(): Promise<void> {
       const busyTalking = story.update(
         player.state.position.x,
         player.state.position.z,
-        player.cameraYaw
+        player.cameraYaw,
+        objectives.prompt,
+        objectives.markers
       );
       hud.updateVitals(vitals);
       hud.updateDay(time.day, time.isNight);
@@ -616,6 +652,7 @@ async function boot(): Promise<void> {
     // spine without walking 1100m and winning three fights by hand.
     story,
     built,
+    objectives,
     hud,
     snapshotSave,
     // Debug-only: lets harness probes load a GLB with no game wrappers.

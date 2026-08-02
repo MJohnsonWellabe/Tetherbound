@@ -7,6 +7,7 @@ import type { SpawnManager } from '../entities/SpawnManager';
 import { TIMING } from './MoveResolver';
 import type { CombatMode } from './CombatMode';
 import { remove, count, type Slots } from '../survival/Inventory';
+import type { HUD } from '../ui/HUD';
 
 /**
  * Glue between exploring and fighting.
@@ -26,6 +27,9 @@ const ORB_PRIORITY = ['worn_orb', 'keen_orb', 'truestone_orb'];
 
 export class Encounter {
   private primaryWasDown = false;
+  /** Fires once per session, the first time an empty party stands next to a
+   *  wild pal, so the fight-is-unreachable state never reads as a bug. */
+  private toldToSeeOrin = false;
 
   constructor(
     private readonly combat: CombatMode,
@@ -33,7 +37,8 @@ export class Encounter {
     private readonly party: Party,
     private readonly release: ReleaseFlow,
     private readonly slots: Slots,
-    private readonly input: Input
+    private readonly input: Input,
+    private readonly hud: HUD
   ) {}
 
   /** One fixed step. */
@@ -56,7 +61,17 @@ export class Encounter {
   }
 
   private maybeStart(x: number, z: number): void {
-    if (this.party.size === 0 || this.party.allFainted) return;
+    if (this.party.size === 0) {
+      // Before the starter is granted, a fight is silently unreachable. Say
+      // why, once, rather than let a new player think walking into a pal is
+      // supposed to do nothing.
+      if (!this.toldToSeeOrin && this.spawns.nearest(x, z, APPROACH_METERS)) {
+        this.hud.toast('Talk to Grandpa Orin first.', 'plain');
+        this.toldToSeeOrin = true;
+      }
+      return;
+    }
+    if (this.party.allFainted) return;
     const near = this.spawns.nearest(x, z, APPROACH_METERS);
     if (near) this.combat.enter(near);
   }
@@ -97,6 +112,7 @@ export class Encounter {
     }
 
     bus.emit('orbThrown', { outcome: 'caught', shakes: 3 });
+    bus.emit('palCaught', { species: result.pal.species });
     this.accept(result.pal, day);
     return 'caught';
   }

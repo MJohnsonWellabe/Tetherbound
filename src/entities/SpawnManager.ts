@@ -27,6 +27,19 @@ export interface WildPal {
   active: boolean;
   /** Combat staged this pal: AI and despawn leave it alone until released. */
   held: boolean;
+  /** Pinned to wander/graze: never aggros, never flees. See `spawnScripted`. */
+  docile: boolean;
+}
+
+/** One placement for `spawnScripted`. `uid` must be unique among live scripted spawns. */
+export interface ScriptedSpawnOptions {
+  level: number;
+  day: number;
+  uid: string;
+  /** Pinned to wander/graze, ignoring the species' own aggro/flee data. */
+  docile?: boolean;
+  /** See `PalState.guaranteedCatch`. */
+  guaranteedCatch?: boolean;
 }
 
 /** AI moods map onto animation verbs the rigged models carry. */
@@ -74,7 +87,8 @@ export class SpawnManager {
         y: 0,
         yaw: 0,
         active: false,
-        held: false
+        held: false,
+        docile: false
       });
     }
   }
@@ -125,7 +139,8 @@ export class SpawnManager {
           headingHome: Math.atan2(pal.ai.homeX - pal.x, pal.ai.homeZ - pal.z)
         },
         dt,
-        rng
+        rng,
+        pal.docile
       );
 
       if (out.throttle > 0) {
@@ -190,10 +205,44 @@ export class SpawnManager {
     slot.body = this.visuals.acquire(picked.species);
     slot.active = slot.body !== null;
     slot.held = false;
+    slot.docile = false;
     if (slot.body) {
       slot.body.root.position.set(slot.x, slot.y, slot.z);
       slot.body.root.rotation.y = slot.yaw;
     }
+  }
+
+  /**
+   * Place a specific pal at a specific spot, outside the weighted spawn
+   * tables. The opening scene's tuftmoth (Objectives.ts) is the only caller
+   * today, but this is deliberately generic: any future scripted pal, wild or
+   * otherwise, goes through the same pool rather than a one-off code path.
+   *
+   * Deterministic: the only randomness here (variance roll, facing) comes from
+   * a seeded stream keyed on `opts.uid`, so the same seed and uid place the
+   * same pal facing the same way every time.
+   */
+  spawnScripted(speciesId: string, x: number, z: number, opts: ScriptedSpawnOptions): WildPal | null {
+    const slot = this.pool.find((p) => !p.active);
+    if (!slot) return null;
+
+    const rng = mulberry32(hashSeed(`${this.terrain.seed}:scripted:${opts.uid}`));
+    slot.state = createPal(speciesId, opts.level, opts.day, performance.now(), rng, opts.uid);
+    if (opts.guaranteedCatch) slot.state.guaranteedCatch = true;
+    slot.ai = createAi(x, z, rng);
+    slot.x = x;
+    slot.z = z;
+    slot.y = this.terrain.heightAt(x, z);
+    slot.yaw = rng() * Math.PI * 2;
+    slot.body = this.visuals.acquire(speciesId);
+    slot.active = slot.body !== null;
+    slot.held = false;
+    slot.docile = opts.docile === true;
+    if (slot.body) {
+      slot.body.root.position.set(slot.x, slot.y, slot.z);
+      slot.body.root.rotation.y = slot.yaw;
+    }
+    return slot.active ? slot : null;
   }
 
   /** Take a pal out of the world, after a catch or a despawn. */
@@ -202,6 +251,7 @@ export class SpawnManager {
     pal.body = null;
     pal.active = false;
     pal.held = false;
+    pal.docile = false;
   }
 
   /** Nearest active pal within `radius`, for the encounter check. */

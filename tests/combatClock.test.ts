@@ -31,7 +31,8 @@ function wild(speciesId: string, level: number): WildPal {
     z: 0,
     yaw: 0,
     active: true,
-    held: false
+    held: false,
+    docile: false
   };
 }
 

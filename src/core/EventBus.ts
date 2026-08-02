@@ -75,6 +75,9 @@ export interface GameEvents {
   /** An orb bounced off a collared pal. Not a failed roll, a refusal. */
   /** An orb was spent. Presentation flies the arc, then shows the outcome. */
   orbThrown: { outcome: 'bounced' | 'missed' | 'caught'; shakes: number };
+  /** A wild pal was successfully caught. Carries the species so Story can
+   *  route dialogue on it without reaching back into the party or the throw. */
+  palCaught: { species: string };
   orbBounced: Record<string, never>;
   /** An orb broke. Carries what the odds actually were. */
   catchFailed: { chance: number; shakes: number };

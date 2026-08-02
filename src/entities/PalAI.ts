@@ -70,7 +70,8 @@ export function stepAi(
   def: SpeciesDef,
   perception: Perception,
   dt: number,
-  rand: () => number
+  rand: () => number,
+  docile = false
 ): AiOutput {
   state.timer -= dt;
 
@@ -82,19 +83,26 @@ export function stepAi(
     return { mood: 'wander', throttle: 0.6, heading: state.heading };
   }
 
-  const aggroRange = def.aggroRange ?? DEFAULT_AGGRO_RANGE;
-  if (aggroRange > 0 && perception.distanceToPlayer <= aggroRange) {
-    state.mood = 'aggro';
-    state.heading = perception.bearingToPlayer;
-    return { mood: 'aggro', throttle: 1, heading: state.heading };
-  }
+  // A docile pal (the opening scene's scripted tuftmoth) is pinned to wander
+  // and graze no matter what its species data says. Checked here rather than
+  // by leaving aggroRange/flees off the species, because tuftmoth is also a
+  // normal wild spawn everywhere else in the Meadows and this must not change
+  // that pal's behaviour for anyone else.
+  if (!docile) {
+    const aggroRange = def.aggroRange ?? DEFAULT_AGGRO_RANGE;
+    if (aggroRange > 0 && perception.distanceToPlayer <= aggroRange) {
+      state.mood = 'aggro';
+      state.heading = perception.bearingToPlayer;
+      return { mood: 'aggro', throttle: 1, heading: state.heading };
+    }
 
-  // Skittish species bolt rather than stand there being approached.
-  if (def.flees && perception.distanceToPlayer <= FLEE_RANGE) {
-    state.mood = 'flee';
-    state.timer = FLEE_S;
-    state.heading = perception.bearingToPlayer + Math.PI;
-    return { mood: 'flee', throttle: 1, heading: state.heading };
+    // Skittish species bolt rather than stand there being approached.
+    if (def.flees && perception.distanceToPlayer <= FLEE_RANGE) {
+      state.mood = 'flee';
+      state.timer = FLEE_S;
+      state.heading = perception.bearingToPlayer + Math.PI;
+      return { mood: 'flee', throttle: 1, heading: state.heading };
+    }
   }
 
   if (state.timer > 0) {

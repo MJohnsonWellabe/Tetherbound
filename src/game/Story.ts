@@ -9,7 +9,7 @@ import type { PalState } from '../party/PalState';
 import { add, type Slots } from '../survival/Inventory';
 import { conversationExists, DialogueRunner, parseEffect } from '../ui/DialogueRunner';
 import type { DialoguePanel } from '../ui/DialoguePanel';
-import type { HUD } from '../ui/HUD';
+import type { CompassMarker, HUD } from '../ui/HUD';
 import { hashSeed, mulberry32 } from '../world/gen/Rng';
 import dialogueData from '../data/dialogue.json';
 import { buildTeam, encounterDef, encounterIds, rewardFor } from './Encounters';
@@ -76,6 +76,17 @@ export class Story {
     // where the conversation is. Story is the only thing that knows both.
     this.panel.onAdvance = (): void => this.step(() => this.runner.advance());
     this.panel.onChoose = (index): void => this.step(() => this.runner.choose(index));
+
+    // The first catch of the game, whatever it is, flips Orin's lines and the
+    // "catch a tuftmoth" objective. Listened for here rather than called
+    // directly from Encounter, because a catch has no reason to know the story
+    // cares about it at all (see EventBus.ts's header: events announce, they
+    // never ask).
+    bus.on('palCaught', () => {
+      if (this.flagSet.has('first_catch')) return;
+      this.flagSet.add('first_catch');
+      this.syncNpcDialogue();
+    });
   }
 
   /** Move the conversation, then repaint or close it. */
@@ -118,9 +129,22 @@ export class Story {
     return this.activeEncounter !== null;
   }
 
-  /** One fixed step. Returns true when it consumed the interact press. */
-  update(x: number, z: number, yaw: number): boolean {
-    this.hud.updateCompass(x, z, yaw, this.world.markers);
+  /**
+   * One fixed step. Returns true when it consumed the interact press.
+   *
+   * `fallbackPrompt` and `extraMarkers` come from Objectives: the current
+   * objective's text and compass pin. Talking to somebody always outranks
+   * them, since that is the thing the interact button will actually do; the
+   * fallback only shows while nobody is in reach.
+   */
+  update(
+    x: number,
+    z: number,
+    yaw: number,
+    fallbackPrompt: string | null = null,
+    extraMarkers: readonly CompassMarker[] = []
+  ): boolean {
+    this.hud.updateCompass(x, z, yaw, [...this.world.markers, ...extraMarkers]);
 
     if (this.activeEncounter) {
       this.advanceScripted();
@@ -135,7 +159,7 @@ export class Story {
     }
 
     const npc = this.world.npcs.nearest(x, z, TALK_RANGE);
-    this.hud.setPrompt(npc ? `Talk to ${npc.name}` : null);
+    this.hud.setPrompt(npc ? `Talk to ${npc.name}` : fallbackPrompt);
     if (!npc) {
       this.pressedInteract();
       return false;
@@ -401,6 +425,7 @@ function asWild(state: PalState): WildPal {
     z: 0,
     yaw: 0,
     active: true,
-    held: false
+    held: false,
+    docile: false
   };
 }

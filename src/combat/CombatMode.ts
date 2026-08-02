@@ -120,7 +120,13 @@ export class CombatMode {
 
     // A collared pal cannot flee: it is not there by choice, and a Hall fight
     // that Bracken's Loamking could walk out of at 20% HP is not a boss fight.
-    if (!enemy.collared && shouldFlee(enemy.currentHp, derive(enemy).maxHp, dt, rand)) {
+    // The guaranteed tuftmoth cannot flee either: a new player fumbling the
+    // fight before they throw must not be able to lose it to bad luck twice.
+    if (
+      !enemy.collared &&
+      !enemy.guaranteedCatch &&
+      shouldFlee(enemy.currentHp, derive(enemy).maxHp, dt, rand)
+    ) {
       // A flee ends the fight with no rewards, which is the pressure that makes
       // throwing early the right instinct rather than grinding it down.
       this.exit('fled');
@@ -284,7 +290,8 @@ export class CombatMode {
       // Was `species === 'collared'`, which no species is ever named, so the
       // bounce could never fire and every Tether pal was quietly catchable.
       // The collar is a flag on the pal now, set from encounters.json.
-      collared: this.enemy.state.collared === true
+      collared: this.enemy.state.collared === true,
+      guaranteed: this.enemy.state.guaranteedCatch === true
     };
 
     // A collared pal bounces the orb. Distinguishable from a bad roll, because

@@ -191,3 +191,46 @@ describe('ring bonuses', () => {
     expect(ringBonus('great')).toBe(1.7);
   });
 });
+
+describe('the guaranteed opening catch', () => {
+  // GAME_DESIGN.md section 3 / Objectives.ts: the scripted tuftmoth must land
+  // on the first orb, whatever the roll. This is applied per-pal by whoever
+  // spawns it (SpawnManager.spawnScripted), not by anything in this file, so
+  // these only check the formula itself is an honest override.
+
+  it('bypasses every other term, even the worst possible throw', () => {
+    const c = catchChance({
+      ...BASE,
+      guaranteed: true,
+      speciesCatchRate: 0.01,
+      currentHp: 100,
+      palLevel: 50,
+      highestPartyLevel: 1,
+      ring: 'none',
+      orb: 'worn_orb',
+      staggered: false
+    });
+    expect(c).toBe(1);
+  });
+
+  it('never fails to catch, across the whole roll range a real rng produces', () => {
+    // `rand()` is documented (and every seeded generator in this codebase
+    // guarantees) to return [0, 1), never touching 1 itself, so i < 100
+    // covers everything a real roll can produce.
+    for (let i = 0; i < 100; i++) {
+      expect(rollCatch({ ...BASE, guaranteed: true }, () => i / 100).caught).toBe(true);
+    }
+  });
+
+  it('does not apply when the flag is unset, i.e. when nothing marks the pal guaranteed', () => {
+    // A normal pal (guaranteed omitted, same as false) is not certain to be
+    // caught even under a bad roll, unlike the guaranteed pal above.
+    expect(rollCatch({ ...BASE, currentHp: 100, ring: 'none' }, () => 0.999).caught).toBe(false);
+  });
+
+  it('a collared pal stays uncatchable even if it were somehow also flagged guaranteed', () => {
+    // Collared is Tether's rule; guaranteed is the opening scene's. Collared
+    // wins, because nothing should ever be able to make a Tether pal catchable.
+    expect(catchChance({ ...BASE, collared: true, guaranteed: true })).toBe(0);
+  });
+});

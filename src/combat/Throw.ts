@@ -29,6 +29,13 @@ export interface ThrowInput {
    * reserves the throw for the wild.
    */
   collared: boolean;
+  /**
+   * The scripted, docile tuftmoth of the opening scene (Objectives.ts). While
+   * true this bypasses the whole formula below, the same way `collared`
+   * bypasses it at the other end: a rule, not a favourable roll. Decided once,
+   * at spawn time, by whoever places that one pal; nothing else may set it.
+   */
+  guaranteed?: boolean;
 }
 
 export interface CatchResult {
@@ -66,6 +73,10 @@ export function ringBonus(ring: RingQuality): number {
  */
 export function catchChance(input: ThrowInput): number {
   if (input.collared) return 0;
+  // Outside the clamp on purpose, like the collared rule above it: a promise,
+  // not a very good roll. Only the opening scene's scripted tuftmoth ever sets
+  // this, and only until it is caught (GAME_DESIGN.md section 3).
+  if (input.guaranteed) return config.guaranteedChance;
 
   const hpFraction = input.maxHp > 0 ? input.currentHp / input.maxHp : 1;
   const hpTerm = 1 - hpFraction * config.hpWeight;

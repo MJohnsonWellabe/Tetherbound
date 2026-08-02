@@ -41,6 +41,13 @@ export interface PalState {
    * written before this existed must still load.
    */
   collared?: boolean;
+  /**
+   * The opening scene's scripted tuftmoth (GAME_DESIGN.md section 3). Set only
+   * by `SpawnManager.spawnScripted`, and only while `first_catch` is unset, so
+   * the first throw of the game cannot fail. Never true for anything else, and
+   * never persisted: a caught pal has no more use for it.
+   */
+  guaranteedCatch?: boolean;
 }
 
 /** One line in the released-pal ledger. Released pals never return. */
