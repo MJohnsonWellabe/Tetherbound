@@ -3,23 +3,29 @@
 # A failing typecheck or test blocks the deploy, per ARCHITECTURE.md. That is
 # the whole point of running them here rather than trusting a local run.
 #
-# ONE branch deploys, and it is this one.
+# `main` is the trunk. Everything is built and deployed from it.
 #
-# The `github-pages` environment carries a protection rule naming the branches
-# allowed to deploy, and only `claude/tetherbound-game-plan-w40lbs` is on it.
-# Pushing from anywhere else -- including `main` -- builds and tests green and
-# then fails the deploy job in about two seconds with no steps run, which reads
-# like an infrastructure outage rather than a permission check. Do not add a
-# branch here without adding it to the environment first, or the failure looks
-# like the build broke.
+# READ THIS BEFORE DEBUGGING A FAILED DEPLOY. Listing a branch below is only
+# half of the permission. The `github-pages` ENVIRONMENT carries its own
+# protection rule naming which branches may deploy, and the two are configured
+# in different places. When a branch is in this list but not in the
+# environment, the build and test jobs pass, and then the deploy job fails in
+# about two seconds having run no steps at all. There is no error message on
+# any step, because no step ran. It reads like an infrastructure outage and it
+# is a permission check.
 #
-# So this branch is the trunk in practice: the M5 integration, which is where
-# the two forked M2 implementations were reconciled, is fast-forwarded onto it.
+# To allow a branch: GitHub → Settings → Environments → github-pages →
+# "Deployment branches and tags" → add it there, then add it here.
+#
+# `claude/tetherbound-game-plan-w40lbs` stays listed only because it is
+# currently the branch the environment allows. Once `main` is added to the
+# environment, that line can go and this file becomes main-only.
 name: Deploy
 
 on:
   push:
     branches:
+      - main
       - claude/tetherbound-game-plan-w40lbs
     paths-ignore:
       - '**/*.md'
