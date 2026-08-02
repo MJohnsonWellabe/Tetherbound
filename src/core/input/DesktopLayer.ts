@@ -1,5 +1,5 @@
 import config from '../../data/input.json';
-import type { Intent, InputMode, PartySlot } from './Intent';
+import { NEUTRAL_DODGE, type Intent, type InputMode, type PartySlot } from './Intent';
 
 /**
  * Keyboard and mouse. Writes into the same Intent the touch layer does.
@@ -104,8 +104,11 @@ export class DesktopLayer {
     this.pressedAt.set(e.code, performance.now());
 
     if (e.code === 'Space') {
-      // Space is jump while exploring and a neutral dodge in a fight.
-      if (this.mode === 'combat') this.intent.dodge = 0;
+      // Space is jump while exploring and a neutral (straight-back) dodge in
+      // a fight. This used to write 0, which IS the neutral value CombatMode
+      // treats as "no dodge" (`dodge !== 0` in CombatMode.ts), so Space never
+      // dodged at all; NEUTRAL_DODGE is the nonzero stand-in for "no lean".
+      if (this.mode === 'combat') this.intent.dodge = NEUTRAL_DODGE;
       else this.intent.jump = true;
       e.preventDefault();
     }

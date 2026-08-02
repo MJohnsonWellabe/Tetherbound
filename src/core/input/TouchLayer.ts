@@ -80,6 +80,7 @@ export class TouchLayer {
 
   constructor(
     private readonly target: HTMLElement,
+    private readonly canvas: HTMLCanvasElement,
     private readonly intent: Intent
   ) {
     this.bind();
@@ -115,6 +116,18 @@ export class TouchLayer {
 
   private onDown(e: PointerEvent): void {
     if (e.pointerType === 'mouse') return; // desktop layer owns the mouse
+
+    // A gesture has to START on the 3D view to become a stick or a look
+    // drag. This listener is mounted on `target` (document.body, per
+    // Input.ts) rather than the canvas so a thumb sliding off the render area
+    // mid-drag is not stranded, but that means every DOM overlay's own tap
+    // handler ALSO sees the same pointerdown bubble up here. A tap on the
+    // dialogue panel used to double-advance the conversation this way:
+    // DialoguePanel's own pointerdown handler advanced it once, and the same
+    // touch then read as a gameplay tap here (right half sets `interact` on
+    // release, left half grabs the movement stick), which fed a second
+    // advance into Story.update() on the next fixed step.
+    if (e.target !== this.canvas) return;
 
     if (this.isLeftHalf(e.clientX) && !this.stick) {
       this.stick = {

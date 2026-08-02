@@ -1,7 +1,7 @@
 import { detectDevice } from '../Engine';
 import { clearEdges, type Intent, type InputMode, neutralIntent } from './Intent';
 import { DesktopLayer } from './DesktopLayer';
-import { GamepadLayer } from './GamepadLayer';
+import { GamepadLayer, type SelectedPadInfo } from './GamepadLayer';
 import { TouchLayer } from './TouchLayer';
 
 /** Which device the player most recently actually used. Drives HUD prompts. */
@@ -37,7 +37,7 @@ export class Input {
     // other way costs a player who cannot move.
     this.touch =
       device.isTouch || navigator.maxTouchPoints > 0
-        ? new TouchLayer(overlayTarget, this.intent)
+        ? new TouchLayer(overlayTarget, canvas, this.intent)
         : null;
   }
 
@@ -122,6 +122,12 @@ export class Input {
   /** True when mouse look needs a click to engage and has not had one yet. */
   get needsPointerLockHint(): boolean {
     return this.source === 'keyboard' && !this.desktop.isLooking;
+  }
+
+  /** The pad actually driving input, for the ?stats=1 overlay and a remote bug
+   *  report. Null until a pad has been read at least once this session. */
+  get gamepadStatus(): SelectedPadInfo | null {
+    return this.gamepad.selectedPad;
   }
 
   /** Clear edge-triggered fields. Call once per frame, after update. */

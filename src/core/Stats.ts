@@ -2,6 +2,7 @@ import { Scene, SceneInstrumentation } from './babylon';
 import type { Loop } from './Loop';
 import type { ChunkManager } from '../world/ChunkManager';
 import type { PropBatcher } from '../world/PropBatcher';
+import type { Input } from './input/Input';
 
 /**
  * The ?stats=1 performance readout.
@@ -41,7 +42,8 @@ export class Stats {
     private readonly loop: Loop,
     el: HTMLElement,
     private readonly chunks: ChunkManager,
-    private readonly props: PropBatcher
+    private readonly props: PropBatcher,
+    private readonly input: Input
   ) {
     this.el = el;
     this.el.hidden = false;
@@ -100,7 +102,8 @@ export class Stats {
       `tris   ${fmtK(triangles).padStart(5)} / ${fmtK(BUDGET.triangles)}`,
       `meshes ${String(meshes).padStart(5)}`,
       `chunks ${String(this.chunks.loadedCount).padStart(5)} loaded  ${this.chunks.pendingCount} pending`,
-      `props  ${propsLine}`
+      `props  ${propsLine}`,
+      `pad    ${padLine(this.input.gamepadStatus)}`
     ].join('\n');
   }
 
@@ -113,4 +116,18 @@ export class Stats {
 
 function fmtK(n: number): string {
   return n >= 1000 ? `${Math.round(n / 1000)}k` : String(n);
+}
+
+/**
+ * One line for whichever pad GamepadLayer picked, so the exact ROG Ally
+ * defect (a vendor HID interface selected over the standard-mapping pad,
+ * leaving every button and the right stick wrong) is visible without a
+ * repro. A non-standard mapping is flagged loudly: it is the one state that
+ * produces "only the left stick works".
+ */
+function padLine(pad: { id: string; mapping: string } | null): string {
+  if (!pad) return '(none connected)';
+  const id = pad.id.length > 40 ? `${pad.id.slice(0, 37)}...` : pad.id;
+  const flag = pad.mapping === 'standard' ? 'standard' : 'NON-STANDARD';
+  return `${flag}  ${id}`;
 }

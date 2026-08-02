@@ -13,6 +13,18 @@
 export type DodgeDir = -1 | 0 | 1;
 export type PartySlot = 1 | 2 | 3 | 4 | 5 | null;
 
+/**
+ * The dodge value for an input with no inherent left/right lean: the A
+ * button and Space bar, a straight-back hop rather than a lunge either way.
+ * `DodgeDir` has no fourth "directionless" value, and CombatMode only ever
+ * checks `dodge !== 0` to open the dodge window (src/combat/CombatMode.ts);
+ * direction only matters to the shoulder/A-D dodges and to BuildMode's reuse
+ * of this field for rotation. So this picks 1, matching the single on-screen
+ * dodge button in CombatScreen.ts, which has the same "one button, no
+ * direction" shape and already settled on the same answer.
+ */
+export const NEUTRAL_DODGE: DodgeDir = 1;
+
 export interface Intent {
   /** Desired movement in camera space. Each axis -1..1, magnitude clamped to 1. */
   move: { x: number; y: number };
