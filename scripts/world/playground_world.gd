@@ -15,6 +15,7 @@ extends Node3D
 
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
+const VEGETATION := preload("res://scripts/world/vegetation.gd")
 
 ## Terrain3D.CollisionMode. 3 is FULL_GAME: real collision shapes across the
 ## loaded regions, which is what the character controller needs to walk on.
@@ -29,6 +30,7 @@ const SPAWN_CLEARANCE := 2.0
 @onready var _camera: Camera3D = $CameraRig/Camera3D
 
 var _terrain: Node3D = null
+var _vegetation: Node3D = null
 
 
 func _ready() -> void:
@@ -67,6 +69,7 @@ func _ready() -> void:
 	if _terrain.has_method("set_camera"):
 		_terrain.call("set_camera", _camera)
 	_place_player()
+	_dress_the_meadow()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
@@ -121,6 +124,23 @@ func _apply_placeholder_material() -> void:
 		return
 	material.set("show_checkered", false)
 	material.set("show_colormap", true)
+
+
+## Scatter grass, bushes, trees and rocks across the playground.
+##
+## Built at runtime from a seeded rule rather than saved into the scene, for the
+## same reason the terrain is: a scene full of ten thousand placed nodes is
+## unreadable, unmergeable, and impossible to retune. The seed makes it
+## identical every run, so a survey frame taken today is comparable with one
+## taken after a change.
+func _dress_the_meadow() -> void:
+	var config := _load_terrain_config()
+	_vegetation = VEGETATION.new()
+	_vegetation.name = "Vegetation"
+	add_child(_vegetation)
+	_vegetation.call("build", float(config.get("world_size", 512)))
+	var stats: Dictionary = _vegetation.call("stats")
+	print("[playground] scattered %d props in %d batches" % [stats["instances"], stats["batches"]])
 
 
 ## Ground height at a world x/z, or NAN where there is no terrain.

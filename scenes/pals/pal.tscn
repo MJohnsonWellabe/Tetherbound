@@ -17,6 +17,14 @@ floor_snap_length = 0.4
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 
+; The art hangs off this pivot, so procedural motion (bob, squash, lean) can be
+; applied to the LOOK without ever touching the body's real position. The
+; creature's collider and its gameplay position are the manager's; this is not.
+[node name="Model" type="Node3D" parent="."]
+
+; Fallback capsule. Kept, not deleted: a species whose model is missing renders
+; as this and pushes an error, which is a great deal easier to diagnose than a
+; creature that silently is not there.
 [node name="Body" type="MeshInstance3D" parent="."]
 
 [node name="Head" type="MeshInstance3D" parent="."]

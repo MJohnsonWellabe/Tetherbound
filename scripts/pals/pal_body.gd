@@ -31,6 +31,14 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const GROUND_PROBE_UP := 120.0
 const GROUND_PROBE_DOWN := 300.0
 
+## How much wider than its collider a creature's art may be.
+##
+## Above 1 because a quadruped's body legitimately overhangs the capsule that
+## represents it — a fox is longer than it is wide and the collider is a
+## cylinder. Far above 1 and creatures visibly interpenetrate before their
+## colliders touch, which reads as attacks landing at the wrong distance.
+const FOOTPRINT_ALLOWANCE := 2.4
+
 var species_id: String = ""
 var display_name: String = ""
 
@@ -62,9 +70,24 @@ var arena: Node = null
 ## The world node that answers `ground_height_at`. Found once, then cached.
 var _ground_source: Node = null
 
+## True when a real model loaded. False means the capsule fallback is showing,
+## which is a visible, reported failure rather than a silent one.
+var _has_model: bool = false
+
 @onready var _collision: CollisionShape3D = $Collision
+@onready var _model: Node3D = $Model
 @onready var _body: MeshInstance3D = $Body
 @onready var _head: MeshInstance3D = $Head
+
+
+## The pivot the art hangs off. Procedural motion moves this, never the body:
+## the body's position is gameplay and belongs to the combat manager.
+func model_pivot() -> Node3D:
+	return _model
+
+
+func has_model() -> bool:
+	return _has_model
 
 
 func _ready() -> void:
@@ -114,8 +137,122 @@ func _build_placeholder() -> void:
 	var look: Dictionary = SPECIES.placeholder(species_id)
 	_height = float(look.get("height", 1.0))
 	_radius = float(look.get("radius", 0.4))
-	var colour := Color(str(look.get("colour", "#cccccc")))
 
+	# The collider is built from the SPECIES, never from the art.
+	#
+	# Gameplay size is `height` and `radius`, and those drive the capsule, the
+	# hit cone's reach, and the catch accuracy bonus through `body_radius()`.
+	# Art is then scaled to fit that. The other way round — letting a model's
+	# bounding box set the collider — means importing a new creature silently
+	# retunes combat, and a fight that changes because an artist exported at a
+	# different scale is not a fight anybody can tune.
+	var shape := CapsuleShape3D.new()
+	shape.radius = _radius
+	shape.height = maxf(_height, _radius * 2.0 + 0.01)
+	_collision.shape = shape
+	_collision.position = Vector3(0.0, _height * 0.5, 0.0)
+
+	if not _build_model(look):
+		_build_capsule(look)
+
+
+## Load the species' model and fit it to the gameplay size. Returns false when
+## there is nothing to load or it failed, so the caller can fall back.
+func _build_model(look: Dictionary) -> bool:
+	var path := str(look.get("model", ""))
+	if path == "":
+		return false
+	if not ResourceLoader.exists(path):
+		push_error("species '%s' names a model at %s that does not exist" % [species_id, path])
+		return false
+	var packed: PackedScene = load(path) as PackedScene
+	if packed == null:
+		push_error("species '%s' model at %s did not load as a scene" % [species_id, path])
+		return false
+
+	for child in _model.get_children():
+		child.free()
+	var art: Node3D = packed.instantiate() as Node3D
+	if art == null:
+		push_error("species '%s' model root is not a Node3D" % species_id)
+		return false
+	_model.add_child(art)
+	_fit(art, float(look.get("model_scale", 1.0)))
+
+	# Sourced models point in whatever direction their author chose, and there
+	# is no convention to rely on. Combat faces creatures along +Z (`facing()`),
+	# so this is the per-species correction, verified by looking at a survey
+	# frame rather than assumed.
+	_model.rotation.y = deg_to_rad(float(look.get("model_yaw", 0.0)))
+
+	_body.visible = false
+	_head.visible = false
+	_has_model = true
+	return true
+
+
+## Scale and centre an imported model so it stands on the node's origin at the
+## species' gameplay height.
+##
+## Every model arrives differently: measured across the three shipped creatures,
+## one was 263 units tall with its origin at its middle, one was 94 units with
+## the same problem, and one was 3.8 units standing on its feet. Hand-tuning a
+## scale and an offset per model is three magic numbers per species that nobody
+## can check. Measuring the bounds and fitting is none.
+func _fit(art: Node3D, extra_scale: float) -> void:
+	var box := _bounds(art)
+	if box.size.y <= 0.0001:
+		push_warning("model for '%s' has no measurable height; leaving it unscaled" % species_id)
+		return
+
+	# Fit to the gameplay VOLUME, not just to the height.
+	#
+	# Scaling by height alone works for something upright and fails badly for
+	# anything low and long: the shipped rabbit measures nearly as wide and deep
+	# as it is tall, so matching its height gave a two-metre-wide rabbit sitting
+	# next to a fox half its footprint. Taking the tighter of the two fits keeps
+	# a creature inside the space its collider claims.
+	var footprint := maxf(box.size.x, box.size.z)
+	var fit := _height / box.size.y
+	if footprint > 0.0001:
+		fit = minf(fit, (_radius * 2.0 * FOOTPRINT_ALLOWANCE) / footprint)
+	fit *= maxf(extra_scale, 0.01)
+	art.scale = Vector3.ONE * fit
+	# Feet to the origin, and centred on it horizontally.
+	art.position = Vector3(
+		-(box.position.x + box.size.x * 0.5) * fit,
+		-box.position.y * fit,
+		-(box.position.z + box.size.z * 0.5) * fit
+	)
+
+
+func _bounds(node: Node) -> AABB:
+	var box := AABB()
+	var started := false
+	for mesh in _mesh_instances(node):
+		var local: AABB = mesh.transform * mesh.mesh.get_aabb()
+		if started:
+			box = box.merge(local)
+		else:
+			box = local
+			started = true
+	return box
+
+
+func _mesh_instances(node: Node) -> Array[MeshInstance3D]:
+	var found: Array[MeshInstance3D] = []
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		found.append(node as MeshInstance3D)
+	for child in node.get_children():
+		found.append_array(_mesh_instances(child))
+	return found
+
+
+## The original capsule, now only a fallback. A missing model renders as this
+## and says so, rather than leaving an invisible creature the player can still
+## be killed by.
+func _build_capsule(look: Dictionary) -> void:
+	var colour := Color(str(look.get("colour", "#cccccc")))
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.85
@@ -126,6 +263,7 @@ func _build_placeholder() -> void:
 	_body.mesh = torso
 	_body.material_override = material
 	_body.position = Vector3(0.0, _height * 0.5, 0.0)
+	_body.visible = true
 
 	# A smaller sphere forward and high, so the capsule has a front. Without it
 	# there is no reading which way a creature is facing — and in a fight where
@@ -136,12 +274,8 @@ func _build_placeholder() -> void:
 	_head.mesh = snout
 	_head.material_override = material
 	_head.position = Vector3(0.0, _height * 0.82, _radius * 0.9)
-
-	var shape := CapsuleShape3D.new()
-	shape.radius = _radius
-	shape.height = maxf(_height, _radius * 2.0 + 0.01)
-	_collision.shape = shape
-	_collision.position = Vector3(0.0, _height * 0.5, 0.0)
+	_head.visible = true
+	_has_model = false
 
 
 func body_height() -> float:

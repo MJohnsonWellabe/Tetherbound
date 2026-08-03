@@ -14,6 +14,17 @@ at the time it was fetched, not as remembered.
 |---|---|---|---|---|---|---|
 | Meadows key art board | Owner-supplied (AI-generated) | Provided by owner | Owner's own | No | `docs/reference/tetherbound-meadows-keyart.png` | None |
 | Palworld screenshots ×5 | Pocketpair | Owner-supplied screenshots | Reference only, not shipped | No | `docs/reference/palworld-0*.jpg` | None |
+| Trainer character (`character-a`) | Kenney | [Blocky Characters](https://kenney.nl/assets/blocky-characters) | CC0 1.0 | No | `assets/characters/trainer.glb` | Renamed. 27 baked clips kept as-is. |
+| Trainer textures | Kenney | [Blocky Characters](https://kenney.nl/assets/blocky-characters) | CC0 1.0 | No | `assets/characters/Textures/` | None |
+| Meadow Hopper (rabbit) | Google (Poly) | [Poly Pizza](https://poly.pizza/m/dyeBDJxhDwP) | CC-BY 3.0 | No | `assets/pals/meadow_hopper.glb` | Renamed. Scaled at runtime to the gameplay collider. |
+| Thornback (boar) | Google (Poly) | [Poly Pizza](https://poly.pizza/m/57fSWum6F1P) | CC-BY 3.0 | No | `assets/pals/thornback.glb` | Renamed. Scaled at runtime. |
+| Bramblit (fox) | Google (Poly) | [Poly Pizza](https://poly.pizza/m/10u8FYPC5Br) | CC-BY 3.0 | No | `assets/pals/bramblit.glb` | Renamed. Scaled at runtime. |
+| Nature Kit — 27 models | Kenney | [Nature Kit](https://kenney.nl/assets/nature-kit) | CC0 1.0 | No | `assets/environment/nature/*.glb` | Curated subset of 329; trees, bushes, grass, flowers, rocks, logs. Unmodified. |
+
+**CC-BY 3.0 carries an attribution obligation.** The three creature models are
+placeholders standing in for bespoke art (see `docs/decisions/D10`), but while
+they are in the build the credits owe Google and Poly Pizza a line. Kenney's CC0
+work does not require it; crediting him anyway is good manners.
 
 ## Rules
 

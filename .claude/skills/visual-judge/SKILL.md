@@ -27,18 +27,45 @@ Then spawn a sub-agent, hand it the sheet, the individual frames, and
 
 ## The target
 
-`docs/reference/tetherbound-meadows-keyart.png` is the primary reference — the
-project's own art direction board. `docs/reference/README.md` explains what
-each image is for and, importantly, how they may not be used.
+Two references, used for different things.
+
+**`docs/reference/tetherbound-meadows-keyart.png`** — the project's own art
+direction board, and the primary reference for palette and mood.
+
+**`docs/reference/palworld-0*.jpg`** — five screenshots of Palworld, and the
+explicit **bar the owner set for this project**. These are the comparison that
+decides whether the work passes.
 
 `GAME_DESIGN.md` §25: stylised realism between Valheim and Palworld. Vibrant,
 readable colours on a natural palette. Silhouettes and landmarks visible from
 distance. Cozy and inviting with hints of mystery.
 
-Never score against photography. Never score per-pixel fidelity against the key
-art: it is painted concept work with per-leaf canopy detail and painterly
-global illumination, and no real-time stylised game reaches it. Judge palette,
-composition, landmark language, silhouette and mood.
+### How each may be compared
+
+The Palworld shots are a **real-time game at shipping quality**, so comparing
+against them is fair in a way comparing against concept art is not. Judge
+against them on: ground and foliage density, how much of the frame is empty,
+colour saturation and value range, silhouette clarity of creatures against
+terrain, how lived-in the world reads, and whether a fight looks like an event.
+
+**Creatures and characters are in scope, and are the point.** The bar this
+project set is Palworld, whose creature and character art is bespoke and
+expressive. If the creatures or the trainer in these frames do not hold up
+against that — if they look sourced, generic, mismatched in style with each
+other or with the world, wrong in proportion, or simply not good enough to be
+the thing a game is named after — **say so first and say it plainly.** An
+asset being a stand-in is a reason it might be inadequate, never a reason to
+excuse it.
+
+Do **not** compare against them on: UI design, or anything requiring a budget
+or a frame rate the images cannot show.
+
+Never score per-pixel fidelity against the **key art**: it is painted concept
+work with per-leaf canopy detail and painterly global illumination, and no
+real-time stylised game reaches it. Judge palette, composition, landmark
+language, silhouette and mood.
+
+Never score against photography.
 
 ## Two things the critic must NOT be told
 
@@ -75,12 +102,28 @@ and tint" is useful. "Lighting could be better" is not.
 7. **Artefacts.** Z-fighting, seams, popping, stretched textures, geometry
    poking through geometry, anything that reads as a bug rather than a choice.
 
-Finish with **the three things that most separate these frames from the
-reference**, ranked, each saying concretely what the reference does that these
-do not.
+## The verdict
 
-Do not soften the rubric to obtain a pass. If the rubric is wrong, argue that
-with the human; do not quietly rewrite it.
+This is acceptance criteria, not commentary. Finish with both of these.
+
+**1. The three things that most separate these frames from the references**,
+ranked, each saying concretely what a reference does that these do not, and
+naming the frame.
+
+**2. The bar question, answered directly:**
+
+> Shown these frames beside `docs/reference/palworld-0*.jpg`, would someone say
+> these are trying to be the same kind of game?
+
+Answer **yes** or **no**, then say what carried it or what sank it. If the
+answer is no, say which of the gaps are fixable by changing the scene — density,
+palette, lighting, composition, scatter — and which are not, because they need
+art that is not in the build. That split is the deliverable: the fixable half
+becomes work, and the rest becomes evidence for what has to be bought or made.
+
+Do not soften the rubric to obtain a pass, and do not soften it to be kind. A
+"no" with three specific reasons is worth more than a "yes" with none. If the
+rubric is wrong, argue that with the human; do not quietly rewrite it.
 
 ## Honest limits of this setup
 
@@ -90,11 +133,16 @@ with the human; do not quietly rewrite it.
   composition, terrain shape, colour and framing; not for fine lighting
   judgements. On a real GPU, switch `tools/survey.sh` to `vulkan`. (D06)
 - **Software rendering.** Frame times are meaningless. Never quote them.
-- **Placeholder art.** `CLAUDE.md` is explicit that biome look, creature appeal
-  and combat readability must not be judged on placeholders. Before M7/M11 this
-  harness is for catching rendering defects, not for art direction — its first
-  run found the ground rendering as a grey checkerboard while every data-level
-  test passed.
+- **Creature and character art is judged, not excused.** `CLAUDE.md` says
+  creature appeal must not be judged on *placeholders* — that rule exists so
+  nobody condemns a design on the strength of a grey capsule. It does not
+  protect sourced art that is being proposed as the real thing. The creatures
+  and the trainer in these frames are being offered as the game's look, so
+  judge them as the game's look.
+
+  This caveat used to say the harness was for rendering defects and not for art
+  direction. That was true while everything was a coloured capsule. It is not
+  true now, and a critic that hides behind it is not doing the job.
 - **Static frames.** Popping, aliasing in motion and traversal feel are
   invisible in a still. A human on the Ally remains the real test.
 

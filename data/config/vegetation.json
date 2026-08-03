@@ -1,0 +1,138 @@
+{
+  "_comment": "What grows in the Meadows playground, and where. ALL of it is TUNABLE. The expected feedback is 'too sparse', 'too busy', 'the trees are on the cliffs' — every one of those has to be answerable here rather than in a scene.",
+  "_comment_authored": "This dresses the M1 MOVEMENT PLAYGROUND, not the real Meadows. M7 authors the actual geography and its placement will be authored rather than scattered. The RULES survive that; the specific clump centres do not.",
+  "_comment_clumping": "Every layer clusters. Evenly-spread props at uniform scale are the readable signature of generator output — the visual rubric names it — so each layer places clumps and scatters within them, leaving clearings between. `strays` fills the gaps so the clumps do not read as islands.",
+  "seed": 20260803,
+  "layers": {
+    "trees": {
+      "_comment": "Broadleaf, in copses. The largest silhouette in the meadow and therefore the thing that gives distance a scale — without trees the hills could be any size.",
+      "models": [
+        "res://assets/environment/nature/tree_oak.glb",
+        "res://assets/environment/nature/tree_default.glb",
+        "res://assets/environment/nature/tree_detailed.glb",
+        "res://assets/environment/nature/tree_fat.glb",
+        "res://assets/environment/nature/tree_blocks.glb"
+      ],
+      "clumps": 26,
+      "per_clump": 9,
+      "clump_radius": 17.0,
+      "strays": 60,
+      "_comment_slope": "Trees stop well before the rocky rises. A tree growing out of a cliff face is the cheapest way to destroy the sense that a place was authored.",
+      "max_slope_deg": 21.0,
+      "scale_min": 0.8,
+      "scale_max": 1.7,
+      "_comment_clear": "The spawn pad stays clear. The player's first sight of the game should not be the inside of a tree.",
+      "clear_radius": 14.0,
+      "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
+      "base_scale": 3.4
+    },
+    "bushes": {
+      "_comment": "The middle layer. Without something between grass height and tree height the ground reads as a lawn with poles on it.",
+      "models": [
+        "res://assets/environment/nature/plant_bush.glb",
+        "res://assets/environment/nature/plant_bushDetailed.glb",
+        "res://assets/environment/nature/plant_bushLarge.glb",
+        "res://assets/environment/nature/plant_bushSmall.glb"
+      ],
+      "clumps": 40,
+      "per_clump": 14,
+      "clump_radius": 12.0,
+      "strays": 140,
+      "max_slope_deg": 27.0,
+      "scale_min": 0.7,
+      "scale_max": 1.5,
+      "clear_radius": 9.0,
+      "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
+      "base_scale": 1.5
+    },
+    "grass": {
+      "_comment": "Tufts, not a ground texture. These are what make the terrain read as a meadow rather than as a painted surface, and they are the layer whose density most separates these frames from the reference.",
+      "models": [
+        "res://assets/environment/nature/grass.glb",
+        "res://assets/environment/nature/grass_large.glb",
+        "res://assets/environment/nature/grass_leafs.glb",
+        "res://assets/environment/nature/grass_leafsLarge.glb"
+      ],
+      "clumps": 90,
+      "per_clump": 40,
+      "clump_radius": 16.0,
+      "strays": 900,
+      "max_slope_deg": 30.0,
+      "scale_min": 0.7,
+      "scale_max": 1.6,
+      "clear_radius": 4.0,
+      "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
+      "base_scale": 1.2
+    },
+    "flowers": {
+      "_comment": "Colour accents, sparse and clustered hard. Wildflowers grow in patches; spread evenly they read as confetti.",
+      "models": [
+        "res://assets/environment/nature/flower_purpleA.glb",
+        "res://assets/environment/nature/flower_redA.glb",
+        "res://assets/environment/nature/flower_yellowA.glb",
+        "res://assets/environment/nature/flower_yellowB.glb"
+      ],
+      "clumps": 34,
+      "per_clump": 26,
+      "clump_radius": 7.0,
+      "strays": 60,
+      "max_slope_deg": 22.0,
+      "scale_min": 0.8,
+      "scale_max": 1.4,
+      "clear_radius": 6.0,
+      "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
+      "base_scale": 1.1
+    },
+    "rocks": {
+      "_comment": "Rocks go where trees will not: they are the layer that makes the steep ground read as stone rather than as grass at an angle.",
+      "models": [
+        "res://assets/environment/nature/rock_largeA.glb",
+        "res://assets/environment/nature/rock_largeC.glb",
+        "res://assets/environment/nature/rock_smallA.glb",
+        "res://assets/environment/nature/rock_smallD.glb",
+        "res://assets/environment/nature/rock_tallA.glb"
+      ],
+      "clumps": 30,
+      "per_clump": 8,
+      "clump_radius": 11.0,
+      "strays": 120,
+      "_comment_slope": "The only layer with a MINIMUM slope as well as a maximum, so boulders gather on the shoulders and rises where they belong instead of sitting on flat grass like dropped props.",
+      "min_slope_deg": 6.0,
+      "max_slope_deg": 44.0,
+      "scale_min": 0.6,
+      "scale_max": 2.2,
+      "clear_radius": 10.0,
+      "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
+      "base_scale": 1.6
+    },
+    "deadfall": {
+      "_comment": "Logs and mushrooms, near where trees are. Sparse on purpose: this layer is detail for the moments the player is standing still, and at any real density it becomes clutter.",
+      "models": [
+        "res://assets/environment/nature/log.glb",
+        "res://assets/environment/nature/log_large.glb",
+        "res://assets/environment/nature/mushroom_red.glb"
+      ],
+      "clumps": 18,
+      "per_clump": 4,
+      "clump_radius": 9.0,
+      "strays": 24,
+      "max_slope_deg": 18.0,
+      "scale_min": 0.8,
+      "scale_max": 1.3,
+      "clear_radius": 12.0,
+      "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
+      "base_scale": 1.3
+    }
+  },
+  "_comment_retint": "Kenney's Nature Kit ships a bright teal-green palette (#73ecdc grass, #6fe5d5 leaves). It is cohesive with itself and wrong for this project: against our grass terrain it reads as cyan plastic, and the key art board is a warm olive/leaf palette. So every source material is remapped by NAME to data/config/palette.json. Retinting rather than re-sourcing keeps the models' silhouettes, which are good.",
+  "retint": {
+    "grass": "#6f8f3c",
+    "leafsGreen": "#496c34",
+    "woodBark": "#5b4433",
+    "woodInner": "#a98a63",
+    "dirt": "#8d8a80",
+    "colorRed": "#c25f5c",
+    "colorYellow": "#d9b340",
+    "colorPurple": "#8f7bb0"
+  }
+}

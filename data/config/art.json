@@ -1,0 +1,72 @@
+{
+  "_comment": "Presentation. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'too dark', 'the grass is the wrong green', 'the creatures don't move enough' — every one of those has to be answerable by editing this file rather than by editing a scene.",
+  "_comment_scale": "Nothing here sets a collider or a hit range. Art is fitted to the gameplay size the species and the controller already declare; if a value in this file could change how far an attack reaches, it is in the wrong file.",
+
+  "trainer": {
+    "model": "res://assets/characters/trainer.glb",
+    "_comment_height": "Metres, matched to the CharacterBody3D capsule in scenes/player/player.tscn. The model is measured and scaled to this, so a replacement of any size drops in without touching the scene.",
+    "height": 1.8,
+    "_comment_yaw": "Degrees of correction for which way the source model faces. Verified from a survey frame, not assumed — there is no convention across asset packs.",
+    "model_yaw": 0.0,
+    "_comment_clips": "Clip names as they exist in the .glb. Kenney's Blocky Characters ship 27; these are the six the game currently drives. A replacement model with different names is a data edit here.",
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "idle",
+      "throw": "pick-up"
+    }
+  },
+
+  "creature_motion": {
+    "_comment": "PROCEDURAL animation, standing in for clips the shipped creature models do not have. The three placeholder creatures are static single-mesh scans with no rig, so a bob while moving, a squash on impact and a lean into a wind-up are what stop them sliding around like furniture. Replaced wholesale when rigged creatures arrive; see docs/decisions/D10.",
+
+    "_comment_bob": "Vertical hop while moving. `bob_height` in metres, `bob_speed` in cycles per second at full speed. Enough to read as locomotion from the combat camera, small enough not to look like a bouncing ball.",
+    "bob_height": 0.09,
+    "bob_speed": 3.4,
+    "_comment_lean": "Degrees the body tips forward while running, and back while winding up an attack. The wind-up lean is the readable half: it is the only shape change the telegraph has.",
+    "run_lean_degrees": 7.0,
+    "windup_lean_degrees": -14.0,
+    "_comment_squash": "How far the body compresses when it lands a hit or takes one, and how fast it springs back.",
+    "hit_squash": 0.18,
+    "squash_recovery": 7.0,
+    "lean_speed": 9.0
+  },
+
+  "sky": {
+    "_comment": "Mid-morning, high summer, clear. Taken from the key art board rather than invented: a warm low-contrast sky over saturated grass is most of what makes the reference read as inviting rather than as a tech demo.",
+    "top_colour": "#3b6f93",
+    "horizon_colour": "#b9c8cf",
+    "ground_horizon_colour": "#b9c8cf",
+    "ground_bottom_colour": "#4a5648",
+    "sun_angle_max_deg": 24.0,
+    "sun_curve": 0.18
+  },
+
+  "sun": {
+    "_comment": "One directional light. `pitch` well above the horizon so shadows are short and readable under a top-down-ish combat camera; long raking shadows look dramatic in a screenshot and hide the opponent in a fight.",
+    "pitch_deg": -46.0,
+    "yaw_deg": -40.0,
+    "energy": 1.25,
+    "colour": "#fff3e0",
+    "shadow_max_distance": 220.0,
+    "_comment_shadow": "Normal bias fights the acne that a heightmap terrain produces at grazing angles. Raise it if the ground looks striped; lower it if small props stop casting.",
+    "shadow_normal_bias": 1.4
+  },
+
+  "environment": {
+    "_comment": "Tonemap and fog. ACES holds highlights on sunlit grass instead of clipping them to white, which was the single worst thing about the previous prototype's look.",
+    "tonemap": "aces",
+    "exposure": 1.0,
+    "white": 6.0,
+    "ambient_energy": 1.0,
+    "_comment_fog": "Very light, and warm rather than grey. It exists to separate near hills from far ones; at any strength where you notice it as fog, it is too strong.",
+    "fog_enabled": true,
+    "fog_colour": "#c4d2d8",
+    "fog_density": 0.0016,
+    "fog_sky_affect": 0.0,
+    "ssao_enabled": true,
+    "ssao_intensity": 1.6,
+    "ssao_radius": 1.2
+  }
+}

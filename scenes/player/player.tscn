@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_ctl"]
 [ext_resource type="Script" path="res://scripts/player/camera_rig.gd" id="2_cam"]
+[ext_resource type="Script" path="res://scripts/player/trainer_model.gd" id="3_model"]
 
 [sub_resource type="CapsuleShape3D" id="Shape_1"]
 radius = 0.4
@@ -21,7 +22,13 @@ camera_rig_path = NodePath("../CameraRig")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("Shape_1")
 
+; The rigged trainer is loaded and fitted at runtime from data/config/art.json.
+; The capsule below stays in the scene as the fallback and is hidden once a
+; model loads, so a missing asset is a trainer who looks wrong rather than a
+; trainer who is not there.
 [node name="Model" type="Node3D" parent="."]
+script = ExtResource("3_model")
+player_path = NodePath("..")
 
 [node name="Body" type="MeshInstance3D" parent="Model"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
