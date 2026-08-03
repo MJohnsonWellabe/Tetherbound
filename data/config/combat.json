@@ -1,5 +1,5 @@
 {
-  "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' — every one of those has to be answerable by editing this file.",
+  "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their pal, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
   "damage": {
     "_comment": "damage = power * scale * attack / (attack + defence). Bounded on purpose: a raw attack/defence ratio explodes when defence is low and produces one-shot kills that read as bugs. With scale 2, equal attack and defence deals exactly the move's power.",
@@ -63,7 +63,9 @@
     "_comment_reposition": "After recovering it backs off and circles for this long before closing again. Without it the fight is two creatures standing in each other's faces trading hits, which is exactly the static fight this model replaced.",
     "reposition_time": 1.0,
     "reposition_distance": 5.0,
-    "first_attack_delay": 1.5
+    "first_attack_delay": 1.5,
+    "_comment_body_clearance": "How far apart two creatures stand, as a multiple of their combined body radii. It FLOORS `preferred_range` rather than replacing it: the config still decides how much breathing room a fight wants, and this only refuses to let it be less than the two bodies occupy. The flat 2.1m below was written when every creature was the same capsule; with real models it is smaller than the pair, so the opponent walked to 2.1m and stopped with its head inside the other creature's flank. The blind critic found that in five of seven combat frames, once with antlers coming out of the other creature's back. Reach and reposition distance are floored to match, or a creature spaces itself to exactly where it can no longer hit anything. Raised from 1.35: `body_radius` is the GAMEPLAY collider, and pal_body fits art to it with a footprint allowance of 2.4, so a model is routinely wider than the capsule that represents it. Spacing by the collider alone still left the meshes overlapping.",
+    "body_clearance": 1.8
   },
   "arena": {
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
@@ -71,10 +73,11 @@
     "_comment_boundary": "Height and opacity of the drawn wall. It has to be visible enough to be read as a boundary and faint enough not to obscure the fight happening inside it.",
     "_comment_short": "Short and reasonably solid rather than tall and faint. A tall translucent drum reads as haze across the horizon; a bright band at ground level reads as an edge.",
     "boundary_height": 1.1,
-    "boundary_alpha": 0.22,
+    "boundary_alpha": 0.5,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
     "deploy_offset": 2.6,
-    "separation": 5.0
+    "separation": 5.0,
+    "_comment_boundary_alpha": "Higher than it looks, because the boundary is now ADDITIVE with a vertical falloff baked into its vertex colours \u2014 brightest at the ground, gone by the top \u2014 rather than a flat translucent cylinder. The old flat version read as a hard-edged khaki band splatted onto the terrain, in the same hue family as the hills behind it."
   },
   "flow": {
     "_comment": "Engagement and resolution timing.",
@@ -106,5 +109,24 @@
     "notice_range": 9.0,
     "pause_min": 1.5,
     "pause_max": 4.0
+  },
+  "impact": {
+    "_comment": "The visual event of a blow landing. ALL tunable presentation; nothing here touches damage, reach or timing.",
+    "_comment_measured": "The blind critic counted bright warm pixels at the instant of contact: 10 in `combat/05-quick-attack-lands`, 295 in `combat/06`, and 24,623 in `palworld-01` \u2014 roughly ten thousand times the visual energy for the same beat. Its reading was that the only difference between the frame before a hit and the frame of the hit was that the health bar got shorter. Turn `enabled` off to get that back.",
+    "enabled": true,
+    "quick": {
+      "colour": "#ffd27a",
+      "radius": 0.85,
+      "duration": 0.26,
+      "strength": 1.0
+    },
+    "_comment_charged": "Bigger and warmer than a quick hit. If the expensive move looks like the free one, building energy was never worth doing.",
+    "charged": {
+      "colour": "#ffb257",
+      "radius": 1.15,
+      "duration": 0.34,
+      "strength": 1.3
+    },
+    "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
   }
 }

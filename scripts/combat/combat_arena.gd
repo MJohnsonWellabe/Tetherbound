@@ -89,11 +89,25 @@ func _build_boundary() -> void:
 	wall.cap_top = false
 	wall.cap_bottom = false
 	wall.radial_segments = 64
+	# Segmented vertically so the gradient below has vertices to interpolate
+	# across. One ring of quads fades linearly over its whole height and reads as
+	# a solid band; sixteen give it a falloff.
+	wall.rings = 16
 
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.albedo_color = Color(0.85, 0.70, 0.25, _boundary_alpha)
+	# Teal, not gold.
+	#
+	# It was #d9b340, which is the same yellow-ochre family as the sunlit hills
+	# behind it, so the blind critic read it as "a hard-edged flat khaki band
+	# splatted onto the terrain with no falloff" — the second-largest colour mass
+	# in the combat frames, fighting the depth read as well as the composition.
+	# A boundary is UI drawn in the world: it should sit outside the biome's
+	# palette so it never reads as ground.
+	material.albedo_color = Color(0.35, 0.82, 0.86, _boundary_alpha)
+	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	material.vertex_color_use_as_albedo = true
 	material.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_DISABLED
 
 	# Only the FAR wall is ever drawn.
@@ -111,8 +125,34 @@ func _build_boundary() -> void:
 
 	var mesh := MeshInstance3D.new()
 	mesh.name = "Boundary"
-	mesh.mesh = wall
+	mesh.mesh = _faded(wall)
 	mesh.material_override = material
 	mesh.position = Vector3(0.0, _boundary_height * 0.5, 0.0)
 	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mesh)
+
+
+## Bake a vertical alpha gradient into the wall's vertex colours.
+##
+## Brightest where it meets the ground and fading out upward, so the boundary
+## reads as a line on the ground with a glow above it rather than as a wall of
+## flat colour. The critic's complaint was "no falloff" and this is the falloff:
+## it is what makes a boundary read as an effect instead of as geometry.
+##
+## Vertex colours rather than a shader, because the whole arena is placeholder
+## and a one-off shader here would outlive the thing it was written for.
+func _faded(source: Mesh) -> ArrayMesh:
+	var out := ArrayMesh.new()
+	for surface in source.get_surface_count():
+		var arrays: Array = source.surface_get_arrays(surface)
+		var points: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var colours := PackedColorArray()
+		colours.resize(points.size())
+		for i in points.size():
+			# `height * 0.5` above and below the mesh origin.
+			var up: float = clampf(points[i].y / maxf(0.001, _boundary_height) + 0.5, 0.0, 1.0)
+			var alpha: float = pow(1.0 - up, 2.0)
+			colours[i] = Color(1.0, 1.0, 1.0, alpha)
+		arrays[Mesh.ARRAY_COLOR] = colours
+		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return out

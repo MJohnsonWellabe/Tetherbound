@@ -104,25 +104,20 @@ func _run() -> void:
 
 	# A quick attack landing. Catching the impact rather than the lull is the
 	# point: the frame has to show whether a hit reads as a hit.
-	await _drive_pal_towards_enemy(120, 1.9)
+	await _drive_pal_towards_enemy(120, 2.8)
 	await _press("combat_quick")
-	for i in 8:
-		await physics_frame
-	await _capture("05-quick-attack-lands")
+	await _capture_the_impact("05-quick-attack-lands")
 
 	# The charged attack. It costs a full meter and roots you for half a second,
 	# so it has to look heavier than a quick attack or there was no decision.
 	while not bool(_manager.call("charged_ready")) and bool(_manager.call("is_fighting")):
-		await _drive_pal_towards_enemy(30, 1.9)
+		await _drive_pal_towards_enemy(30, 2.8)
 		await _press("combat_quick")
 		for j in 24:
 			await physics_frame
-	await _drive_pal_towards_enemy(60, 1.9)
+	await _drive_pal_towards_enemy(60, 2.8)
 	await _press("combat_charged")
-	# Past the wind-up, onto the frame the hit lands.
-	for i in 34:
-		await physics_frame
-	await _capture("06-charged-attack-lands")
+	await _capture_the_impact("06-charged-attack-lands")
 
 	# Aim mode. The camera leaves the pal and goes over the trainer's shoulder,
 	# and this frame answers whether that reads as aiming at all — a reticle over
@@ -268,3 +263,56 @@ func _capture(name: String) -> void:
 		return
 	_written.append(path)
 	print("  %-22s -> %s" % [name, path])
+
+
+## Shoot the frame the blow actually lands on, not a guess at it.
+##
+## These two frames used to capture a fixed number of physics frames after the
+## button press — 8 for the quick attack, whose wind-up alone is 0.18s, so the
+## frame named "quick attack lands" was reliably taken BEFORE the hit. The blind
+## critic measured 10 warm pixels of impact in it and concluded that a blow
+## produces no visual event; part of what it was measuring was the survey
+## photographing the wrong moment.
+##
+## So wait for `hit_landed`, then give the burst a few frames to open. A timing
+## guess has no place in a harness whose whole job is to show what a moment
+## looks like.
+const IMPACT_FRAMES := 5
+const IMPACT_TIMEOUT := 240
+
+
+func _capture_the_impact(name: String) -> void:
+	var landed := [false]
+	var handler := func(_on_enemy: bool, _amount: float) -> void: landed[0] = true
+	_manager.connect("hit_landed", handler)
+
+	var waited := 0
+	while not landed[0] and waited < IMPACT_TIMEOUT and bool(_manager.call("is_fighting")):
+		await physics_frame
+		waited += 1
+	if _manager.is_connected("hit_landed", handler):
+		_manager.disconnect("hit_landed", handler)
+
+	if not landed[0]:
+		_failures.append("%s: no hit landed within %d frames; the frame shows the lull, not the blow" % [
+			name, IMPACT_TIMEOUT
+		])
+
+	# Let the burst open, THEN stop the clock before composing the shot.
+	#
+	# Both halves are needed and each was wrong on its own. A node added
+	# mid-frame does not run its first `_physics_process` until the next tick, so
+	# pausing immediately freezes an effect that has not drawn anything yet. And
+	# without pausing, a single frame under software rendering costs an
+	# appreciable fraction of a second of REAL time while physics keeps ticking,
+	# so a 0.3-second effect is long dead by the time the shutter opens.
+	#
+	# That combination is why four separate explanations for "the impact flash is
+	# invisible" — the render clock, the culling bounds, the parent node, the
+	# blend mode — were all wrong. Nothing was ever wrong with the effect. The
+	# camera was slower than the thing it was photographing.
+	for i in IMPACT_FRAMES:
+		await physics_frame
+	paused = true
+	await _capture(name)
+	paused = false

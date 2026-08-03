@@ -19,7 +19,34 @@ const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
 const ENERGY_READY := Color(0.85, 0.70, 0.25)
 const ENERGY_FILLING := Color(0.55, 0.48, 0.30)
-const TRACK := Color(0.07, 0.07, 0.08, 0.72)
+## Nearly opaque. At 0.72 the enemy's health bar showed tree trunks and canopy
+## through its interior, which the blind critic read as a rendering fault rather
+## than as a style.
+const TRACK := Color(0.05, 0.05, 0.06, 0.94)
+
+## Every label is outlined and shadowed rather than plated.
+##
+## Measured contrast on the old unplated white text was 1.45:1, 1.38:1 and
+## 1.45:1 against a large-text minimum of 3:1 — in one frame the em dash and
+## half a word were simply invisible against a hillside. Every text element in
+## the Palworld references either sits on a dark plate or carries a heavy
+## outline.
+##
+## Outline rather than plate because the HUD has to work over a meadow, a cliff
+## and a sunset without a designer choosing a plate colour for each; an outline
+## is the same decision everywhere and costs no layout.
+const OUTLINE := Color(0.03, 0.04, 0.05, 0.95)
+const OUTLINE_SIZE := 7
+const SHADOW := Color(0.0, 0.0, 0.0, 0.55)
+const SHADOW_OFFSET := Vector2(0.0, 3.0)
+
+## Unavailable verbs are dimmed, not blanked.
+##
+## The prompt row used to render `[ ]` for a verb on cooldown — an empty pair of
+## brackets, in every combat frame, which reads as a missing glyph rather than
+## as a disabled button. The button never changes; its availability does.
+const VERB_READY := "e8f0e0"
+const VERB_DIMMED := "8b9184"
 
 @export var manager_path: NodePath
 @export var director_path: NodePath
@@ -41,8 +68,8 @@ var _miss_text: String = ""
 @onready var _ally_box: VBoxContainer = $Root/Ally
 @onready var _ally_name: Label = $Root/Ally/Name
 @onready var _ally_health: ProgressBar = $Root/Ally/Health
-@onready var _ally_energy: ProgressBar = $Root/Ally/Energy
-@onready var _actions: Label = $Root/Actions
+@onready var _ally_energy: ProgressBar = $Root/Ally/EnergyRow/Energy
+@onready var _actions: RichTextLabel = $Root/Actions
 @onready var _prompt: Label = $Root/Prompt
 @onready var _outcome: Label = $Root/Outcome
 @onready var _orbs: Label = $Root/Orbs
@@ -60,6 +87,8 @@ func _ready() -> void:
 	_dress(_enemy_health, _enemy_health_fill)
 	_dress(_ally_energy, _energy_fill)
 
+	_make_text_legible($Root)
+
 	if _manager != null:
 		_manager.connect("exited", _on_exited)
 		_manager.connect("attack_missed", _on_missed)
@@ -67,6 +96,24 @@ func _ready() -> void:
 		_manager.connect("catch_resolved", _on_catch_resolved)
 		_manager.connect("orb_shook", _on_orb_shook)
 	_show_fight(false)
+
+
+## Outline and shadow every piece of text in the tree, whatever gets added later.
+##
+## Walked rather than set per node on purpose: the failure being fixed is a label
+## somebody adds next month with no override on it, and a list of node paths here
+## would not catch that.
+func _make_text_legible(node: Node) -> void:
+	if node is Label or node is RichTextLabel:
+		var control := node as Control
+		control.add_theme_constant_override("outline_size", OUTLINE_SIZE)
+		control.add_theme_color_override("font_outline_color", OUTLINE)
+		control.add_theme_color_override("font_shadow_color", SHADOW)
+		control.add_theme_constant_override("shadow_offset_x", int(SHADOW_OFFSET.x))
+		control.add_theme_constant_override("shadow_offset_y", int(SHADOW_OFFSET.y))
+		control.add_theme_constant_override("shadow_outline_size", 2)
+	for child in node.get_children():
+		_make_text_legible(child)
 
 
 func _style(colour: Color) -> StyleBoxFlat:
@@ -140,7 +187,11 @@ func _draw_enemy() -> void:
 	if bool(_manager.call("enemy_is_winding_up")):
 		_telegraph.text = "!  incoming — move"
 	elif bool(_manager.call("enemy_is_rooted")):
-		_telegraph.text = "open"
+		# Was the bare word `open`, which is the name of a state in the AI and not
+		# something to say to a player. It appeared in three survey frames and the
+		# blind critic flagged it as a debug string left in the HUD, which is
+		# exactly what it was.
+		_telegraph.text = "↯  it's open — hit it"
 	else:
 		_telegraph.text = ""
 
@@ -169,19 +220,36 @@ func _draw_actions() -> void:
 	_orbs.text = "Orbs  %d" % orbs
 
 	if _miss_left > 0.0:
-		_actions.text = _miss_text
+		_actions.text = "[center]%s[/center]" % _miss_text
 		return
 
 	# Aiming has its own verb list. Showing Quick and Charged while the player is
 	# looking down a reticle would offer two moves their pal cannot make.
 	if bool(_manager.call("is_aiming")):
-		_actions.text = "[F] Throw      [B] Cancel       your pal is undefended"
+		_actions.text = "[center]%s     %s     [color=#%s]your pal is undefended[/color][/center]" % [
+			_verb("F", "Throw", true), _verb("B", "Cancel", true), VERB_DIMMED
+		]
 		return
 
-	var quick := "[A] Quick" if bool(_manager.call("quick_ready")) else "[ ] Quick"
-	var charged := "[X] Charged" if bool(_manager.call("charged_ready")) else "[ ] Charged"
-	var throw := "[F] Throw" if orbs > 0 else "[ ] No orbs"
-	_actions.text = "%s   %s   %s   [B] Run" % [quick, charged, throw]
+	_actions.text = "[center]%s    %s    %s    %s[/center]" % [
+		_verb("A", "Quick", bool(_manager.call("quick_ready"))),
+		_verb("X", "Charged", bool(_manager.call("charged_ready"))),
+		_verb("F", "Throw", orbs > 0) if orbs > 0 else _verb("F", "No orbs", false),
+		_verb("B", "Run", true),
+	]
+
+
+## One verb in the prompt row: the button, then what it does.
+##
+## The button glyph is ALWAYS drawn. It used to be replaced by `[ ]` when the
+## verb was on cooldown, which put an empty pair of brackets in every combat
+## frame and read as a missing icon. Which button does a thing never changes;
+## only whether you can press it right now does, and that is what the dimming
+## says.
+func _verb(button: String, label: String, ready: bool) -> String:
+	return "[color=#%s][b][%s][/b] %s[/color]" % [
+		VERB_READY if ready else VERB_DIMMED, button, label
+	]
 
 
 ## A miss has to be legible or it reads as the game dropping the input.

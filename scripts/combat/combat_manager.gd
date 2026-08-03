@@ -25,6 +25,7 @@ const ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const FLASH := preload("res://scripts/combat/impact_flash.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -360,6 +361,7 @@ func _resolve_player_strike() -> void:
 	var killed: bool = _enemy.take_damage(damage)
 	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
 	_wild.call("play_faint" if killed else "play_hit")
+	_flash_at(_wild.call("centre"), not bool(_pending_move.get("is_quick", false)))
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -433,10 +435,36 @@ func _read_player_input() -> void:
 
 
 func _start_action(move: Dictionary) -> void:
-	_pending_move = move
+	_pending_move = _with_reach_for_the_bodies(move)
 	_action = Action.WINDUP
 	_action_timer = float(move.get("windup", 0.18))
 	state_changed.emit()
+
+
+## Floor a move's reach by the two creatures' actual sizes.
+##
+## Reach is measured centre to centre, and the configured 2.6m was written when
+## every creature was the same capsule. Against a large opponent, two bodies
+## that are merely touching are already further apart than that, so the player's
+## attack whiffs at point-blank range — which reads as the game dropping the
+## input, and is the single complaint most likely to end a playtest.
+##
+## The wild pal applies the same floor to its own attacks. Both sides space
+## themselves by their bodies; both sides reach as far as they have spaced.
+func _with_reach_for_the_bodies(move: Dictionary) -> Dictionary:
+	if _ally_body == null or _wild == null:
+		return move
+	var mine := 0.5
+	var theirs := 0.5
+	if _ally_body.has_method("body_radius"):
+		mine = float(_ally_body.call("body_radius"))
+	if _wild.has_method("body_radius"):
+		theirs = float(_wild.call("body_radius"))
+
+	var clearance: float = float(MATH.config().get("enemy", {}).get("body_clearance", 1.35))
+	var adjusted := move.duplicate()
+	adjusted["range"] = maxf(float(move.get("range", 2.6)), (mine + theirs) * clearance + 0.5)
+	return adjusted
 
 
 ## The opponent announces its swing when its wind-up completes; whether it
@@ -448,7 +476,12 @@ func _on_enemy_strike() -> void:
 	if pal == null or _enemy == null:
 		return
 
-	var cfg: Dictionary = MATH.config().get("enemy", {})
+	# The creature's OWN numbers, not the raw config: it spaces itself by how big
+	# the two bodies are, and its reach grows with that spacing. Testing the
+	# swing against the config's flat 2.6m while it stands further out than that
+	# is a creature that walks to exactly where it can no longer hit anything.
+	var cfg: Dictionary = _wild.call("combat_config") if _wild.has_method("combat_config") \
+		else MATH.config().get("enemy", {})
 	var origin: Vector3 = _wild.call("centre")
 	var facing: Vector3 = _wild.call("facing")
 	var target: Vector3 = _ally_body.call("centre")
@@ -467,11 +500,43 @@ func _on_enemy_strike() -> void:
 	var killed: bool = pal.take_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
 	_ally_body.call("play_faint" if killed else "play_hit")
+	_flash_at(_ally_body.call("centre"), false)
 
 	hit_landed.emit(false, damage)
 	state_changed.emit()
 	if killed:
 		_begin_resolve("lost")
+
+
+## A blow that landed has to look like one.
+##
+## The blind critic counted bright warm pixels at the moment of contact:
+## `combat/05-quick-attack-lands` held ten of them, `palworld-01` held 24,623,
+## and its summary of the beat was that the health bar got shorter and nothing
+## else happened. Damage numbers are state; this is the event.
+##
+## Charged hits burst larger and warmer than quick ones. If the expensive move
+## and the free one look the same, building energy was never worth doing.
+func _flash_at(where: Vector3, charged: bool) -> void:
+	var cfg: Dictionary = MATH.config().get("impact", {})
+	if not bool(cfg.get("enabled", true)):
+		return
+	var key := "charged" if charged else "quick"
+	var spec: Dictionary = cfg.get(key, {})
+	# Parented into the WORLD, not to this manager. CombatManager is a plain
+	# Node, and a Node3D hung under one is outside the 3D transform chain: the
+	# burst was created correctly twelve times in a row and rendered none of
+	# them. The arena is a Node3D that already exists for exactly the length of
+	# the fight, so it also cleans these up on its way out.
+	var host: Node = _arena if _arena != null else _player.get_parent()
+	FLASH.burst(
+		host,
+		where,
+		Color(str(spec.get("colour", "#ffd27a"))),
+		float(spec.get("radius", 1.5)),
+		float(spec.get("duration", 0.34)),
+		float(spec.get("strength", 1.0))
+	)
 
 
 ## --- catching -------------------------------------------------------------

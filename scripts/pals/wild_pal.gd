@@ -225,7 +225,7 @@ func _tick_combat(delta: float) -> void:
 	to.y = 0.0
 	var distance := to.length()
 
-	var next: int = AI.decide(_intent, distance, _beat_left, _cooldown, _combat_cfg)
+	var next: int = AI.decide(_intent, distance, _beat_left, _cooldown, _spaced_config())
 	if next != _intent:
 		_enter(next)
 		# Entering a beat can end the fight underneath us: a completed wind-up
@@ -245,6 +245,50 @@ func _tick_combat(delta: float) -> void:
 	var direction := AI.movement_for(_intent, to, _side_sign)
 	if direction != Vector3.ZERO:
 		request_move(direction, AI.speed_for(_intent, _combat_cfg))
+
+
+## The numbers this creature is actually fighting with, spacing included.
+##
+## Public because the combat manager resolves the strike and has to test against
+## the same reach the creature positioned itself for. Reading the raw config
+## there while this one stands further out is a creature that walks to exactly
+## where it can no longer hit anything.
+func combat_config() -> Dictionary:
+	return _spaced_config()
+
+
+## The combat config, with `preferred_range` floored by how big the two
+## creatures actually are.
+##
+## The configured 2.1m is centre to centre, and it was written when every
+## creature was the same capsule. With real models it is smaller than the pair's
+## own bodies: a Triceratops fitted to a 0.72m collider renders well over a
+## metre to each side, and a frog adds its own. So the opponent walked to 2.1m
+## and stopped with its head inside the other creature's flank — which the blind
+## critic found in five of seven combat frames, in one case with antlers coming
+## out of the other creature's back.
+##
+## Floored rather than replaced: the config still decides how much breathing
+## room a fight wants, and this only refuses to let it be less than the two
+## bodies occupy. A large creature stands further out than a small one for the
+## same reason a person does.
+func _spaced_config() -> Dictionary:
+	if _opponent == null:
+		return _combat_cfg
+	var mine: float = body_radius()
+	var theirs: float = float(_opponent.call("body_radius")) if _opponent.has_method("body_radius") else 0.5
+	var floor_at: float = (mine + theirs) * float(_combat_cfg.get("body_clearance", 1.35))
+
+	var preferred: float = maxf(float(_combat_cfg.get("preferred_range", 2.1)), floor_at)
+	var spaced := _combat_cfg.duplicate()
+	spaced["preferred_range"] = preferred
+	# Reach grows with the spacing, or the creature stands exactly where it can
+	# no longer hit anything and whiffs forever. Two bodies further apart are
+	# further apart at the SURFACE by the same amount, so the swing that used to
+	# connect still does.
+	spaced["range"] = maxf(float(_combat_cfg.get("range", 2.6)), preferred + 0.5)
+	spaced["reposition_distance"] = maxf(float(_combat_cfg.get("reposition_distance", 5.0)), preferred + 2.4)
+	return spaced
 
 
 func _enter(intent: int) -> void:
