@@ -1,0 +1,58 @@
+{
+  "_comment": "Shape of the M1 movement playground. This is a TEST AREA, not the Meadows. Its only job is to give walking, sprinting, jumping, camera orbit, stamina and fall damage something honest to work against; a flat field proves none of them. The real Meadows is authored later against docs/reference/tetherbound-meadows-keyart.png and replaces this wholesale.",
+  "_authored_not_procedural": "Per the owner's direction, terrain is authored macro geography. The noise here is a deterministic recipe for one specific test area, seeded and fixed, not a world generator. Nothing at runtime generates terrain; this is baked to disk once and loaded as data.",
+  "_regenerate": "godot --headless --path . --script scripts/world/build_playground_terrain.gd",
+
+  "seed": 20260803,
+
+  "world_size": 512,
+  "_comment_world": "Playground edge in metres. A few minutes of walking end to end: large enough that the horizon is not always in view, small enough that it stays a playground rather than a map.",
+  "region_size": 256,
+  "_comment_region": "Terrain3D's storage granularity, NOT the world size. world_size must be an exact multiple of it, or the baked image straddles region boundaries and leaves flat unfilled gaps inside partially-written regions. 512 over 256 fills exactly four regions.",
+  "vertex_spacing": 1.0,
+
+  "hills": {
+    "_comment": "The base rolling ground. Low frequency, gentle. This is what most of the walking happens on.",
+    "frequency": 0.0035,
+    "octaves": 4,
+    "amplitude": 15.0
+  },
+  "detail": {
+    "_comment": "Surface break-up so slopes are not billiard-smooth. Small enough not to trip the character controller's step offset.",
+    "frequency": 0.018,
+    "octaves": 3,
+    "amplitude": 2.2
+  },
+  "valley": {
+    "_comment": "One broad low basin, so there is somewhere that reads as down. Centre is in world metres from the region origin; radius is where the depression fades out entirely.",
+    "centre": [-120.0, 130.0],
+    "radius": 150.0,
+    "depth": 22.0
+  },
+  "rises": {
+    "_comment": "Steeper rocky ground, for testing slope limits and fall damage. `sharpness` above 1 makes the sides steeper than a cosine bell; these are the only places the 45-degree slope limit should actually bite.",
+    "sharpness": 2.1,
+    "peaks": [
+      { "centre": [140.0, -90.0], "radius": 78.0, "height": 46.0 },
+      { "centre": [-165.0, -150.0], "radius": 58.0, "height": 34.0 },
+      { "centre": [60.0, 175.0], "radius": 44.0, "height": 25.0 }
+    ]
+  },
+  "spawn_pad": {
+    "_comment": "A gently flattened area around the player's start, so the first thing anyone tests is not a slope. Blends back to natural ground by `radius`.",
+    "centre": [0.0, 0.0],
+    "radius": 34.0,
+    "flatten": 0.85
+  },
+
+  "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. This stands in for real splatmapped textures until an art pass: it gives grass on walkable ground, soil on the shoulders and rock on genuinely steep faces, from one generated image and zero texture assets. Colours come from data/config/palette.json.",
+  "colour": {
+    "grass_low": "#496c34",
+    "grass_high": "#7f8c3d",
+    "soil": "#d1b37e",
+    "rock": "#b4b1a6",
+    "soil_slope_deg": 24.0,
+    "rock_slope_deg": 38.0,
+    "blend_deg": 7.0
+  }
+}

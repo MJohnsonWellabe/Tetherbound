@@ -1,0 +1,69 @@
+{
+  "_comment": "Third-person movement tuning. ALL of it is TUNABLE and none of it is a mechanic. These are starting values chosen to be playable, not balanced; the owner's job in M1 is to say 'too floaty', 'sprint too slow', 'camera too close', and these are the numbers that answer that. Nothing here should be treated as settled until traversal feels good on the Ally.",
+
+  "locomotion": {
+    "walk_speed": 4.2,
+    "sprint_speed": 7.6,
+    "_comment_accel": "Metres per second squared. Ground acceleration high enough that the character does not feel like it is on ice, air acceleration low enough that mid-jump direction changes read as momentum rather than flight.",
+    "ground_acceleration": 42.0,
+    "ground_friction": 38.0,
+    "air_acceleration": 9.0,
+    "_comment_turn": "How fast the character model swings to face travel direction, radians/sec. Too low reads as sluggish, too high reads as a turret.",
+    "turn_speed": 11.0
+  },
+
+  "jump": {
+    "_comment": "Height in metres, converted to launch velocity against gravity so retuning gravity does not silently change jump height.",
+    "height": 1.35,
+    "gravity": 26.0,
+    "_comment_gravity": "Well above real 9.8. Realistic gravity in a third-person game reads as floating; this is the single biggest lever on 'too floaty' feedback.",
+    "fall_gravity_multiplier": 1.35,
+    "_comment_fall_mult": "Falling accelerates faster than rising. Standard platformer trick that makes a jump feel weighty without shortening its rise.",
+    "coyote_time": 0.12,
+    "buffer_time": 0.12,
+    "_comment_forgiveness": "Coyote time lets a jump register just after walking off an edge; buffer lets a jump pressed just before landing fire on touchdown. Both are invisible when they work and infuriating when absent."
+  },
+
+  "stamina": {
+    "max": 100.0,
+    "sprint_drain_per_second": 12.0,
+    "jump_cost": 8.0,
+    "regen_per_second": 18.0,
+    "_comment_delay": "Seconds after the last stamina spend before regeneration starts. Without a delay, tapping sprint costs nothing and the meter is decoration.",
+    "regen_delay": 1.1,
+    "_comment_exhausted": "Below this, sprint is refused until the meter recovers past it. Stops a stutter-sprint exploit at 1 stamina.",
+    "exhausted_below": 10.0
+  },
+
+  "fall_damage": {
+    "_comment": "Damage is driven by impact SPEED, not by fall distance: the same landing hurts the same whether it came off a cliff or a launch. safe_speed is roughly a 2.5m drop under the gravity above.",
+    "safe_speed": 12.0,
+    "lethal_speed": 34.0,
+    "_comment_curve": "Exponent on the normalised speed between safe and lethal. Above 1 makes small overshoots cheap and big ones brutal, which is what makes a player judge a drop rather than avoid all of them.",
+    "curve": 2.0,
+    "max_damage": 100.0
+  },
+
+  "health": {
+    "max": 100.0
+  },
+
+  "camera": {
+    "_comment": "Orbit camera on a spring arm. distance/height are the resting pose; the arm shortens automatically when terrain intrudes.",
+    "distance": 5.2,
+    "height": 1.75,
+    "_comment_pitch": "Degrees. Negative looks down. The lower bound stops the camera going under the terrain, the upper stops it looking at the sky behind the player's head.",
+    "pitch_min_deg": -60.0,
+    "pitch_max_deg": 32.0,
+    "pitch_start_deg": -12.0,
+    "_comment_sensitivity": "Gamepad is degrees/second at full stick. Mouse is degrees per pixel of motion. They are separate numbers because tuning one to fix the other always makes the other worse.",
+    "gamepad_sensitivity": 190.0,
+    "mouse_sensitivity": 0.16,
+    "_comment_deadzone": "The Ally's sticks rest slightly off centre and drift with wear. Applied on top of the input map's own deadzone.",
+    "stick_deadzone": 0.18,
+    "invert_y": false,
+    "_comment_follow": "How quickly the arm's origin catches up to the player, and how quickly it recovers after terrain pushes it in. Collision recovery is deliberately slower than intrusion, so the camera snaps away from a wall but eases back out.",
+    "follow_lag": 14.0,
+    "collision_recover_speed": 4.0
+  }
+}

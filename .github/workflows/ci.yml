@@ -65,14 +65,21 @@ jobs:
       - name: Add Godot to PATH
         run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
 
-      - name: Import project
-        # Catches nearly everything an agent breaks: a script that no longer
-        # parses, a scene referencing a missing resource, a malformed
-        # project.godot. Run twice because a first import on a clean checkout
-        # generates the class cache that a second pass then validates against.
-        run: |
-          godot --headless --path . --import
-          godot --headless --path . --import
+      - name: Import project (cold)
+        # The FIRST import on a clean checkout exits non-zero. Terrain3D's
+        # GDExtension registers its classes during that cold scan and Godot
+        # aborts on shutdown afterwards, AFTER the import work has completed.
+        # Verified: the abort happens with the terrain data removed entirely,
+        # and the second pass is clean and instant, so the cache it wrote is
+        # good. Tolerated here rather than hidden — the pass below is the one
+        # that has to be green.
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        # This is the authoritative import check. Non-zero here is a real
+        # failure: a script that no longer parses, a scene referencing a
+        # missing resource, a malformed project.godot.
+        run: godot --headless --path . --import
 
       - name: Fail on script or scene errors
         run: |
@@ -85,6 +92,15 @@ jobs:
 
       - name: Run tests
         run: godot --headless --path . --script tests/run_tests.gd
+
+      - name: Smoke-test the playground
+        # Boots the real main scene and asserts the terrain loaded, the player
+        # was placed on it, and it is standing on collision. Unit tests cannot
+        # see any of that. An earlier version of this check passed while NO
+        # terrain was loaded at all, because it read a property that returned
+        # null and skipped its own assertion; it now range-checks instead, and
+        # is verified to fail when the baked terrain is removed.
+        run: godot --headless --path . --script tests/smoke_playground.gd
 
       - name: Export Windows build
         run: |

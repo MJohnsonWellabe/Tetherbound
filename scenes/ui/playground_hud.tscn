@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/playground_hud.gd" id="1_hud"]
+
+[node name="PlaygroundHUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+player_path = NodePath("../Player")
+
+[node name="Root" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Bars" type="VBoxContainer" parent="Root"]
+offset_left = 40.0
+offset_top = 32.0
+offset_right = 460.0
+offset_bottom = 110.0
+theme_override_constants/separation = 10
+
+[node name="Health" type="ProgressBar" parent="Root/Bars"]
+custom_minimum_size = Vector2(420, 26)
+value = 100.0
+show_percentage = false
+
+[node name="Stamina" type="ProgressBar" parent="Root/Bars"]
+custom_minimum_size = Vector2(420, 26)
+value = 100.0
+show_percentage = false
+
+[node name="Readout" type="Label" parent="Root"]
+offset_left = 40.0
+offset_top = 140.0
+offset_right = 900.0
+offset_bottom = 640.0
+theme_override_font_sizes/font_size = 24
+text = "waiting for player"

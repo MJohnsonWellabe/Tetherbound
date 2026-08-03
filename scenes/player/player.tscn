@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_ctl"]
+[ext_resource type="Script" path="res://scripts/player/camera_rig.gd" id="2_cam"]
+
+[sub_resource type="CapsuleShape3D" id="Shape_1"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="Mesh_1"]
+radius = 0.4
+height = 1.8
+
+[node name="Player" type="CharacterBody3D"]
+floor_max_angle = 0.7854
+floor_snap_length = 0.4
+script = ExtResource("1_ctl")
+camera_rig_path = NodePath("../CameraRig")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("Shape_1")
+
+[node name="Model" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("Mesh_1")
+
+[node name="Nose" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 1.35, 0.42)
+mesh = SubResource("Mesh_1")

@@ -15,7 +15,7 @@ config_version=5
 
 config/name="Tetherbound"
 config/description="Third-person survival creature-training game. Meadows vertical slice."
-run/main_scene="res://scenes/world/boot.tscn"
+run/main_scene="res://scenes/world/meadows_playground.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 

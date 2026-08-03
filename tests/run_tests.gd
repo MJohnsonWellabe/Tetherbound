@@ -21,13 +21,24 @@ func _init() -> void:
 	var failure_lines: Array[String] = []
 
 	for path in files:
+		# A script with a parse error still loads as a GDScript object; it just
+		# cannot be instantiated. Checking for null alone let a broken test file
+		# through and the runner then spun on a null instance instead of failing.
 		var script: GDScript = load(path)
-		if script == null:
-			failure_lines.append("%s: could not be loaded" % path)
+		if script == null or not script.can_instantiate():
+			print("  FAIL  %s :: could not be parsed or instantiated" % path.get_file())
+			failure_lines.append("%s: parse error, see SCRIPT ERROR above" % path)
 			failed += 1
+			total += 1
 			continue
 
 		var instance: Object = script.new()
+		if instance == null:
+			print("  FAIL  %s :: instantiation returned null" % path.get_file())
+			failure_lines.append("%s: instantiation returned null" % path)
+			failed += 1
+			total += 1
+			continue
 		var file_name := path.get_file()
 
 		for method in _test_methods(script):

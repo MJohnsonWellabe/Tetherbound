@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
+[ext_resource type="Script" path="res://scripts/player/camera_rig.gd" id="3_cam"]
+[ext_resource type="Script" path="res://scripts/world/playground_world.gd" id="4_world"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
+sky_top_color = Color(0.231, 0.435, 0.576, 1)
+sky_horizon_color = Color(0.706, 0.769, 0.804, 1)
+ground_bottom_color = Color(0.286, 0.337, 0.298, 1)
+ground_horizon_color = Color(0.706, 0.769, 0.804, 1)
+sun_angle_max = 24.0
+
+[sub_resource type="Sky" id="Sky_2"]
+sky_material = SubResource("Sky_1")
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 2
+sky = SubResource("Sky_2")
+ambient_light_source = 3
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_white = 6.0
+ssao_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.706, 0.769, 0.804, 1)
+fog_density = 0.0012
+fog_sky_affect = 0.0
+
+[node name="MeadowsPlayground" type="Node3D"]
+script = ExtResource("4_world")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766, -0.353, 0.537, 0, 0.836, 0.549, -0.643, -0.42, 0.64, 0, 60, 0)
+light_energy = 1.15
+light_color = Color(1, 0.965, 0.898, 1)
+shadow_enabled = true
+directional_shadow_mode = 2
+directional_shadow_max_distance = 220.0
+
+[node name="CameraRig" type="SpringArm3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+spring_length = 5.2
+margin = 0.3
+script = ExtResource("3_cam")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+current = true
+fov = 70.0
+far = 2000.0
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 40, 0)
+
+[node name="PlaygroundHUD" parent="." instance=ExtResource("2_hud")]
