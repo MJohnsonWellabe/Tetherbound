@@ -46,6 +46,8 @@ func _ready() -> void:
 	_terrain.set("data_directory", DATA_DIR)
 	await get_tree().process_frame
 
+	_apply_placeholder_material()
+
 	# Terrain3D needs a camera to decide which regions to keep resident. Without
 	# it the extension logs an error every physics frame and stops processing.
 	if _terrain.has_method("set_camera"):
@@ -72,6 +74,30 @@ func _build_terrain() -> Node3D:
 	terrain.set("collision_mode", COLLISION_FULL_GAME)
 	add_child(terrain)
 	return terrain
+
+
+## Show the baked colour map instead of Terrain3D's "no textures assigned"
+## checkerboard.
+##
+## This is only visible on a rendered frame, which is how it was missed: every
+## check up to this point read terrain DATA — heights, region counts, collision
+## — and all of them passed while the ground rendered as a grey checker. The
+## first screenshot ever taken of this scene found it immediately.
+##
+## `show_colormap` is nominally a debug view, and using it as the ground
+## treatment is deliberate for M1: it renders the slope-driven grass/soil/rock
+## map from data/config/terrain_playground.json with zero texture assets. It is
+## a placeholder and is replaced by real splatmapped Terrain3DAssets at the art
+## pass, not kept.
+func _apply_placeholder_material() -> void:
+	if _terrain == null:
+		return
+	var material: Object = _terrain.get("material")
+	if material == null:
+		push_warning("terrain has no material; ground will render as the default checker")
+		return
+	material.set("show_checkered", false)
+	material.set("show_colormap", true)
 
 
 func _load_terrain_config() -> Dictionary:

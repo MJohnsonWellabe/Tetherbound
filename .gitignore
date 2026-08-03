@@ -29,3 +29,7 @@ assets_raw/
 # Godot's own crash/log output
 logs/
 *.log
+
+# Survey output. Regenerate with tools/survey.sh + tools/contact_sheet.gd.
+shots/
+shots-*/
