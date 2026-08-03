@@ -46,6 +46,20 @@ func _ready() -> void:
 	_terrain.set("data_directory", DATA_DIR)
 	await get_tree().process_frame
 
+	# collision_mode is set HERE, after the data is loaded, and then read back.
+	#
+	# Setting it before the node entered the tree silently reverted to 1
+	# (Dynamic/Game), which builds collision only inside a 64m bubble. Everything
+	# looked correct: the terrain rendered, the player spawned on the ground, and
+	# the smoke test passed — because all of that happens within the bubble. Walk
+	# a couple of hundred metres and the ground stops existing and you fall
+	# through the world at terminal velocity.
+	_terrain.set("collision_mode", COLLISION_FULL_GAME)
+	var applied: int = int(_terrain.get("collision_mode"))
+	if applied != COLLISION_FULL_GAME:
+		push_error("terrain collision_mode is %d, expected %d (Full/Game). " % [applied, COLLISION_FULL_GAME] +
+			"The player will fall through the world outside the dynamic collision radius.")
+
 	_apply_placeholder_material()
 
 	# Terrain3D needs a camera to decide which regions to keep resident. Without
@@ -71,7 +85,7 @@ func _build_terrain() -> Node3D:
 	terrain.name = "Terrain"
 	terrain.set("region_size", int(config.get("region_size", 256)))
 	terrain.set("vertex_spacing", float(config.get("vertex_spacing", 1.0)))
-	terrain.set("collision_mode", COLLISION_FULL_GAME)
+	# collision_mode is deliberately NOT set here; see _ready() for why.
 	add_child(terrain)
 	return terrain
 

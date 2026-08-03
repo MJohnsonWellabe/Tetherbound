@@ -110,6 +110,13 @@ jobs:
         # does nothing while this passes, the fault is upstream of Godot.
         run: godot --headless --path . --script tests/smoke_input.gd
 
+      - name: Smoke-test traversal
+        # Walks ~190m per leg. A short walk proves only that the spawn point
+        # works: collision_mode silently reverting to Dynamic/Game built ground
+        # in a 64m bubble, and every other check passed inside it while the
+        # player fell to y=-49950 outside it.
+        run: godot --headless --path . --script tests/smoke_traversal.gd
+
       - name: Export Windows build
         run: |
           mkdir -p build/windows
