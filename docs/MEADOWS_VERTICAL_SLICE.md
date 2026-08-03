@@ -61,7 +61,18 @@ Use placeholder trainer + two placeholder pal models if necessary.
 - Run
 - Switch architecture even if only one pal initially
 
+**Amended by `docs/decisions/D07-combat-is-piloted-not-commanded.md`.** Combat is
+piloted rather than commanded: on entering Combat Mode the player takes over the
+deployed pal, both fighters move freely inside a bounded arena, and attacks are
+aimed. Add to the list above:
+- camera and control transfer from trainer to pal
+- a bounded arena with a visible soft boundary
+- directional melee with a forgiving cone
+- an opponent that closes, commits and backs off
+- movement is the dodge; no dodge button
+
 **Acceptance:** repeat the fight 10 times without obvious frustration.
+The real bar is higher and is the owner's: *you want an eleventh fight.*
 
 ### M3 — Catching
 - Throw Orb command

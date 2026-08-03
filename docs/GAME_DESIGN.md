@@ -401,6 +401,16 @@ Rules:
 - Switching has a cooldown.
 - No dodge in initial design unless playtest demands it.
 
+**Amended by `docs/decisions/D07-combat-is-piloted-not-commanded.md`.** The five
+commands above are not a menu. On entering Combat Mode the player takes over the
+deployed pal — camera and controls transfer to the creature — and both fighters
+move freely inside a bounded arena centred on where the fight started. Attacks
+are aimed and can miss. The trainer still never attacks and cannot be targeted.
+
+There is still no dodge button: **movement is the dodge**. That resolves the
+"unless playtest demands it" clause above by removing the verb rather than
+adding one.
+
 ### Critical trainer safety rule
 Once combat mode begins, attacks are **pal-vs-pal**. The enemy does not simply attack the human while the combat UI is active.
 

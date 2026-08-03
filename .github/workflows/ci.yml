@@ -117,6 +117,21 @@ jobs:
         # player fell to y=-49950 outside it.
         run: godot --headless --path . --script tests/smoke_traversal.gd
 
+      - name: Smoke-test combat
+        # Walks up to a wild pal, engages, and PILOTS the fight to a win through
+        # injected input (docs/decisions/D07). Asserts the things unit tests
+        # cannot see: the pal actually moves on the stick, the arena boundary
+        # holds it in without ending the fight, a swing at empty air is reported
+        # as a miss, a swing at the opponent connects and earns energy, the
+        # opponent closes and telegraphs and leaves an opening, and control and
+        # camera come back afterwards.
+        #
+        # The bug this exists for: the deployed pal became a CharacterBody3D and
+        # spent every run standing invisibly inside the trainer, so the two
+        # bodies shoved each other and launched the player off the playground at
+        # 500 m/s. Every unit test still passed.
+        run: godot --headless --path . --script tests/smoke_combat.gd
+
       - name: Export Windows build
         run: |
           mkdir -p build/windows

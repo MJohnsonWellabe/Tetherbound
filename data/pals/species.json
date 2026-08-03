@@ -1,0 +1,31 @@
+{
+  "_comment": "Species definitions. Base stats and presentation only; a live creature's current HP and energy belong to a pal_instance, never here (TECHNICAL_START.md, Pal Data vs Pal Instance). M11 replaces `model` and the colours with real rigged creatures without touching combat code.",
+  "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance — clearly different silhouettes and clearly different colours — and nothing else.",
+
+  "species": {
+    "starter_ground": {
+      "display_name": "Bramblit",
+      "type": "ground",
+      "base_hp": 120.0,
+      "base_attack": 22.0,
+      "base_defence": 20.0,
+      "placeholder": {
+        "colour": "#7f8c3d",
+        "height": 1.35,
+        "radius": 0.5
+      }
+    },
+    "wild_rabbit": {
+      "display_name": "Meadow Hopper",
+      "type": "ground",
+      "base_hp": 95.0,
+      "base_attack": 18.0,
+      "base_defence": 16.0,
+      "placeholder": {
+        "colour": "#a8622f",
+        "height": 1.0,
+        "radius": 0.42
+      }
+    }
+  }
+}

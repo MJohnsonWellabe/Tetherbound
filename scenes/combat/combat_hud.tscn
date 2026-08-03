@@ -1,0 +1,126 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/combat_hud.gd" id="1_hud"]
+
+; Combat HUD. Not the real interface — GAME_DESIGN.md's UI work is much later —
+; but the fight is unreadable without health, energy and the verb list, and an
+; unreadable fight cannot be judged.
+;
+; Layout follows the fighters: the enemy reads at the top, your pal at the
+; bottom left with the energy meter directly under its health, so "am I close to
+; a charged attack" is one glance and not a hunt. Bar colours are applied in
+; code so a health bar that changes colour as it drains stays one place.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="CombatHUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Enemy" type="VBoxContainer" parent="Root"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 48.0
+offset_right = 300.0
+offset_bottom = 140.0
+grow_horizontal = 2
+theme_override_constants/separation = 6
+
+[node name="Name" type="Label" parent="Root/Enemy"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 34
+text = "—"
+
+[node name="Health" type="ProgressBar" parent="Root/Enemy"]
+custom_minimum_size = Vector2(0, 26)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Telegraph" type="Label" parent="Root/Enemy"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 30
+text = ""
+
+[node name="Ally" type="VBoxContainer" parent="Root"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = -230.0
+offset_right = 664.0
+offset_bottom = -110.0
+grow_vertical = 0
+theme_override_constants/separation = 6
+
+[node name="Name" type="Label" parent="Root/Ally"]
+theme_override_font_sizes/font_size = 34
+text = "—"
+
+[node name="Health" type="ProgressBar" parent="Root/Ally"]
+custom_minimum_size = Vector2(0, 26)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Energy" type="ProgressBar" parent="Root/Ally"]
+custom_minimum_size = Vector2(0, 18)
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="Actions" type="Label" parent="Root"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -520.0
+offset_top = -96.0
+offset_right = 520.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 30
+text = ""
+
+[node name="Prompt" type="Label" parent="Root"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -520.0
+offset_top = -190.0
+offset_right = 520.0
+offset_bottom = -134.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 34
+text = ""
+
+[node name="Outcome" type="Label" parent="Root"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -520.0
+offset_top = -40.0
+offset_right = 520.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 56
+text = ""

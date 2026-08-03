@@ -31,6 +31,22 @@ var _recover_speed: float = 4.0
 var _target: Node3D = null
 var _mouse_delta := Vector2.ZERO
 
+## Defaults from movement.json, kept so a combat profile can be handed back.
+var _base_distance: float = 5.2
+var _base_height: float = 1.75
+
+## While a fight is running the rig follows the player's pal instead of the
+## trainer, at a shorter creature's height. Combat is piloted (D07), and a
+## piloted pal wants exactly this camera — so it is re-pointed rather than
+## replaced by a second one that would have to be kept in sync.
+var _retarget_lag: float = 0.0
+
+## The camera hanging off the end of the arm. A combat profile narrows its lens:
+## the exploration 70 is right for looking at a landscape and wrong for looking
+## at two creatures four metres away.
+@onready var _camera: Camera3D = get_node_or_null(^"Camera3D") as Camera3D
+var _base_fov: float = 70.0
+
 
 func _ready() -> void:
 	_load_config()
@@ -59,12 +75,51 @@ func _load_config() -> void:
 	_invert_y = bool(cfg.get("invert_y", false))
 	_follow_lag = float(cfg.get("follow_lag", _follow_lag))
 	_recover_speed = float(cfg.get("collision_recover_speed", _recover_speed))
+	_base_distance = _distance
+	_base_height = _height
+	if _camera != null:
+		_base_fov = _camera.fov
 
 
-func set_target(target: Node3D) -> void:
+## Follow a new target, optionally with an override profile.
+##
+## An empty profile restores the exploration defaults, which is how combat hands
+## the camera back. The first call has no previous target and snaps; later calls
+## ease, because a fight opening with a hard cut loses the connection between
+## "the animal I walked up to" and "the animal I am fighting".
+func set_target(target: Node3D, profile: Dictionary = {}) -> void:
+	var had_target := _target != null
 	_target = target
-	if target != null:
+
+	_distance = float(profile.get("distance", _base_distance))
+	_height = float(profile.get("height", _base_height))
+	_retarget_lag = float(profile.get("retarget_lag", 0.0))
+	if _camera != null:
+		_camera.fov = float(profile.get("fov", _base_fov))
+		# Over-the-shoulder. A follow camera sitting exactly behind the creature
+		# you are driving puts that creature between you and whatever you are
+		# facing, and in a fight what you are facing is the opponent — so the
+		# thing you most need to see is the thing your own pal is standing in
+		# front of. Sliding the lens off-centre reveals it.
+		_camera.position.x = float(profile.get("shoulder_offset", 0.0))
+	if profile.has("pitch_start_deg"):
+		pitch = clampf(deg_to_rad(float(profile["pitch_start_deg"])),
+			deg_to_rad(_pitch_min), deg_to_rad(_pitch_max))
+
+	# The arm has to ignore whatever it is following.
+	#
+	# SpringArm3D excludes its own parent automatically, and this rig is
+	# `top_level` so it has no parent to exclude. Following the player's pal put
+	# the arm's origin inside that creature's capsule, the arm collided with it
+	# on the first cast and collapsed to nothing, and the whole fight was played
+	# from a camera buried in the back of your own pal.
+	clear_excluded_objects()
+	if target is CollisionObject3D:
+		add_excluded_object((target as CollisionObject3D).get_rid())
+
+	if target != null and not had_target:
 		global_position = target.global_position + Vector3.UP * _height
+		spring_length = _distance
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -107,13 +162,22 @@ func _follow(delta: float) -> void:
 	# Exponential smoothing written frame-rate independently. A raw lerp by
 	# `lag * delta` changes behaviour with frame rate, which shows up as the
 	# camera feeling different on the handheld than on the desktop.
-	var weight := 1.0 - exp(-_follow_lag * delta)
+	#
+	# `retarget_lag` slows the follow while a fight is opening or closing, so the
+	# swap between trainer and pal is a glide rather than a snap.
+	var lag := _retarget_lag if _retarget_lag > 0.0 else _follow_lag
+	var weight := 1.0 - exp(-lag * delta)
 	global_position = global_position.lerp(desired, weight)
+
+	# Once the rig has arrived, hand pacing back to the normal follow lag —
+	# otherwise the whole fight is played through a camera that lags behind
+	# every dodge.
+	if _retarget_lag > 0.0 and global_position.distance_to(desired) < 0.3:
+		_retarget_lag = 0.0
 
 	# The spring arm collapses instantly on intrusion (SpringArm3D's own
 	# behaviour) and is eased back out here, so leaving cover is smooth.
-	if spring_length < _distance:
-		spring_length = move_toward(spring_length, _distance, _recover_speed * delta)
+	spring_length = move_toward(spring_length, _distance, _recover_speed * delta)
 
 
 ## Forward direction on the horizontal plane, for translating stick input into

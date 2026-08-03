@@ -1,0 +1,22 @@
+[gd_scene load_steps=1 format=3]
+
+; One creature body, used for both the player's pal and wild ones.
+;
+; Deliberately scriptless: scripts/combat/encounter_director.gd attaches
+; pal_body.gd or wild_pal.gd depending on the role. Two scenes would mean M11's
+; real creature model has to be wired in twice.
+;
+; The mesh and the collision shape are both empty here and built in code from
+; data/pals/species.json, so a species' size is data rather than a scene edit —
+; and so the capsule the player sees is guaranteed to be the capsule attacks
+; collide with.
+
+[node name="Pal" type="CharacterBody3D"]
+floor_max_angle = 0.9599
+floor_snap_length = 0.4
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="."]
+
+[node name="Head" type="MeshInstance3D" parent="."]

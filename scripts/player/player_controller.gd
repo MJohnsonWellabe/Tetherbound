@@ -46,6 +46,11 @@ var _fall_speed: float = 0.0
 var _was_on_floor: bool = true
 var _sprinting: bool = false
 
+## Cleared while a fight is running. Gravity, landing and stamina keep ticking —
+## the trainer is still a body standing in the world, and switching them off
+## leaves the player hovering wherever combat happened to open.
+var _locomotion_enabled: bool = true
+
 
 func _ready() -> void:
 	_load_config()
@@ -123,6 +128,10 @@ func _apply_gravity(delta: float) -> void:
 
 func _apply_movement(delta: float) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	if not _locomotion_enabled:
+		# Read as no input rather than skipped entirely, so the existing friction
+		# brings the trainer to a stop instead of freezing them mid-stride.
+		input = Vector2.ZERO
 	var direction := Vector3.ZERO
 	if input != Vector2.ZERO and _camera_rig != null and _camera_rig.has_method("planar_basis"):
 		var basis_value: Basis = _camera_rig.call("planar_basis")
@@ -155,6 +164,8 @@ func _face(direction: Vector3, delta: float) -> void:
 
 
 func _try_jump() -> void:
+	if not _locomotion_enabled:
+		return
 	var grounded_enough := is_on_floor() or _airborne_for <= _coyote_time
 	var asked_recently := _jump_buffered_for <= _buffer_time
 	if not (grounded_enough and asked_recently):
@@ -184,3 +195,15 @@ func ground_speed() -> float:
 
 func is_sprinting() -> bool:
 	return _sprinting
+
+
+## Suspend or restore walking and jumping. Called by the encounter director when
+## a fight opens and closes; nothing here knows what combat is.
+func set_locomotion_enabled(enabled: bool) -> void:
+	_locomotion_enabled = enabled
+	if not enabled:
+		_jump_buffered_for = INF
+
+
+func locomotion_enabled() -> bool:
+	return _locomotion_enabled
