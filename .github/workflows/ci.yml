@@ -102,6 +102,14 @@ jobs:
         # is verified to fail when the baked terrain is removed.
         run: godot --headless --path . --script tests/smoke_playground.gd
 
+      - name: Smoke-test the input path
+        # Injects actions and asserts the character actually moves. Catches the
+        # class of bug where input is read correctly and then silently
+        # discarded — a null camera rig makes every direction resolve to zero
+        # with no error anywhere. It cannot test the DEVICE layer; if hardware
+        # does nothing while this passes, the fault is upstream of Godot.
+        run: godot --headless --path . --script tests/smoke_input.gd
+
       - name: Export Windows build
         run: |
           mkdir -p build/windows
