@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/combat/combat_manager.gd" id="5_combat"]
 [ext_resource type="Script" path="res://scripts/combat/encounter_director.gd" id="6_encounter"]
 [ext_resource type="PackedScene" path="res://scenes/combat/combat_hud.tscn" id="8_combat_hud"]
+[ext_resource type="Script" path="res://scripts/world/world_look.gd" id="9_look"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -67,6 +68,14 @@ script = ExtResource("6_encounter")
 player_path = NodePath("../Player")
 manager_path = NodePath("../CombatManager")
 camera_rig_path = NodePath("../CameraRig")
+
+; Sun, sky, tonemap and fog all come from data/config/art.json at run time.
+; They used to live only in this scene, so every lighting value written into the
+; config was ignored and the frames stayed flat-lit.
+[node name="WorldLook" type="Node" parent="."]
+script = ExtResource("9_look")
+sun_path = NodePath("../Sun")
+environment_path = NodePath("../WorldEnvironment")
 
 [node name="PlaygroundHUD" parent="." instance=ExtResource("2_hud")]
 

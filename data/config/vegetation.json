@@ -24,7 +24,9 @@
       "_comment_clear": "The spawn pad stays clear. The player's first sight of the game should not be the inside of a tree.",
       "clear_radius": 14.0,
       "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
-      "base_scale": 3.4
+      "base_scale": 3.4,
+      "collides": true,
+      "collision_radius": 0.55
     },
     "bushes": {
       "_comment": "The middle layer. Without something between grass height and tree height the ground reads as a lawn with poles on it.",
@@ -43,7 +45,8 @@
       "scale_max": 1.5,
       "clear_radius": 9.0,
       "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
-      "base_scale": 1.5
+      "base_scale": 1.5,
+      "collides": false
     },
     "grass": {
       "_comment": "Tufts, not a ground texture. These are what make the terrain read as a meadow rather than as a painted surface, and they are the layer whose density most separates these frames from the reference.",
@@ -62,7 +65,8 @@
       "scale_max": 1.6,
       "clear_radius": 4.0,
       "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
-      "base_scale": 1.2
+      "base_scale": 1.2,
+      "collides": false
     },
     "flowers": {
       "_comment": "Colour accents, sparse and clustered hard. Wildflowers grow in patches; spread evenly they read as confetti.",
@@ -81,7 +85,8 @@
       "scale_max": 1.4,
       "clear_radius": 6.0,
       "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
-      "base_scale": 1.1
+      "base_scale": 1.1,
+      "collides": false
     },
     "rocks": {
       "_comment": "Rocks go where trees will not: they are the layer that makes the steep ground read as stone rather than as grass at an angle.",
@@ -103,7 +108,9 @@
       "scale_max": 2.2,
       "clear_radius": 10.0,
       "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
-      "base_scale": 1.6
+      "base_scale": 1.6,
+      "collides": true,
+      "collision_radius": 0.7
     },
     "deadfall": {
       "_comment": "Logs and mushrooms, near where trees are. Sparse on purpose: this layer is detail for the moments the player is standing still, and at any real density it becomes clutter.",
@@ -121,7 +128,8 @@
       "scale_max": 1.3,
       "clear_radius": 12.0,
       "_comment_base_scale": "Kenney's models are authored around one unit. A tree at one unit is knee-high next to a 1.8m trainer, which makes every hill read as a mound. This is the per-layer correction; scale_min/max vary around it.",
-      "base_scale": 1.3
+      "base_scale": 1.3,
+      "collides": false
     }
   },
   "_comment_retint": "Kenney's Nature Kit ships a bright teal-green palette (#73ecdc grass, #6fe5d5 leaves). It is cohesive with itself and wrong for this project: against our grass terrain it reads as cyan plastic, and the key art board is a warm olive/leaf palette. So every source material is remapped by NAME to data/config/palette.json. Retinting rather than re-sourcing keeps the models' silhouettes, which are good.",
@@ -134,5 +142,27 @@
     "colorRed": "#c25f5c",
     "colorYellow": "#d9b340",
     "colorPurple": "#8f7bb0"
-  }
+  },
+  "_comment_collision": "Layers marked `collides` get real static collision. Two reasons, and the second is the urgent one: a tree you can walk through reads as a hologram, and — because the camera's SpringArm3D only stops at things with collision — a bush with none lets the camera end up INSIDE it. Two survey frames came back showing nothing but green because the camera was inside a bush during a fight. Grass and flowers must never collide; you walk through those.",
+  "_comment_clearings": "Open ground kept clear of every layer. These match the wild pal spawn points in scripts/combat/encounter_director.gd, because a fight starts where a creature is standing and the arena is 11m across: without this, the trees are inside the arena and stand between the camera and the fight. The radius is arena radius plus margin.",
+  "clearings": [
+    {
+      "x": 0.0,
+      "z": 0.0,
+      "radius": 16.0,
+      "_why": "spawn"
+    },
+    {
+      "x": 14.0,
+      "z": -10.0,
+      "radius": 15.0,
+      "_why": "peaceful pal, and the arena around it"
+    },
+    {
+      "x": -6.0,
+      "z": 26.0,
+      "radius": 15.0,
+      "_why": "aggressive pal, and the arena around it"
+    }
+  ]
 }

@@ -78,5 +78,29 @@
     "rock_slope_deg": 44.0,
     "blend_deg": 7.0,
     "_comment_measured": "First render came back with white peaks: #b4b1a6 is the palette's masonry grey, correct for a cliff face in shade and far too light for a sunlit slope after tonemapping. Darkened and warmed toward exposed earth, which is what a meadow hillside actually shows. Slope thresholds raised too, so only genuinely steep faces lose their grass."
-  }
+  },
+  "_comment_textures": "Real PBR ground, replacing the `show_colormap` debug view that stood in for it from M1 to the first art pass. Terrain3D's auto shader picks texture 0 on walkable ground and texture 1 on slopes, so the grass/soil/rock intent the bake already encodes is expressed with albedo and normal detail instead of flat vertex colour. `uv_scale` is metres per tile: too large and the ground is mush at distance, too small and it visibly repeats.",
+  "textures": [
+    {
+      "name": "grass",
+      "albedo": "res://assets/environment/terrain/Grass004_Color.jpg",
+      "normal": "res://assets/environment/terrain/Grass004_NormalGL.jpg",
+      "uv_scale": 0.18,
+      "tint": "#e4edbe"
+    },
+    {
+      "name": "rock",
+      "albedo": "res://assets/environment/terrain/Rock030_Color.jpg",
+      "normal": "res://assets/environment/terrain/Rock030_NormalGL.jpg",
+      "uv_scale": 0.12,
+      "tint": "#cfc9ba"
+    },
+    {
+      "name": "soil",
+      "albedo": "res://assets/environment/terrain/Ground003_Color.jpg",
+      "normal": "res://assets/environment/terrain/Ground003_NormalGL.jpg",
+      "uv_scale": 0.16,
+      "tint": "#dcc49c"
+    }
+  ]
 }

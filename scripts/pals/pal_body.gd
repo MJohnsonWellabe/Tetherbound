@@ -19,6 +19,7 @@ extends CharacterBody3D
 
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const ANIMATOR := preload("res://scripts/pals/pal_animator.gd")
 
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
@@ -73,6 +74,10 @@ var _ground_source: Node = null
 ## True when a real model loaded. False means the capsule fallback is showing,
 ## which is a visible, reported failure rather than a silent one.
 var _has_model: bool = false
+
+## Drives the model's clips. Null when a creature fell back to the capsule,
+## which has nothing to animate.
+var _animator: RefCounted = null
 
 @onready var _collision: CollisionShape3D = $Collision
 @onready var _model: Node3D = $Model
@@ -188,7 +193,21 @@ func _build_model(look: Dictionary) -> bool:
 	_body.visible = false
 	_head.visible = false
 	_has_model = true
+	_build_animator(art, look)
 	return true
+
+
+## Wire the model's AnimationPlayer to the role names the species declares.
+##
+## Clip names are per-pack and live in data: the shipped creatures use
+## `Armature|Frog_Attack` and `Armature|Triceratops_Run`. Nothing in code knows
+## those strings, so a new creature is a data edit.
+func _build_animator(art: Node3D, look: Dictionary) -> void:
+	var players: Array[Node] = art.find_children("*", "AnimationPlayer", true, false)
+	if players.is_empty():
+		push_warning("model for '%s' has no AnimationPlayer; it will not animate" % species_id)
+		return
+	_animator = ANIMATOR.new(players[0] as AnimationPlayer, look.get("animations", {}))
 
 
 ## Scale and centre an imported model so it stands on the node's origin at the
@@ -226,11 +245,21 @@ func _fit(art: Node3D, extra_scale: float) -> void:
 	)
 
 
-func _bounds(node: Node) -> AABB:
+## Measure a model as it will actually render.
+##
+## `mesh.mesh.get_aabb()` is the resource's own bind-pose box and `mesh.transform`
+## is only the step to its immediate parent — for a skinned model under a
+## Skeleton3D under an Armature, that pair is meaningless. It produced a fitted
+## Triceratops 528 metres tall.
+##
+## `MeshInstance3D.get_aabb()` accounts for skinning, and composing global
+## transforms walks the whole chain, so this is the box the renderer draws.
+func _bounds(node: Node3D) -> AABB:
 	var box := AABB()
 	var started := false
+	var to_local := node.global_transform.affine_inverse()
 	for mesh in _mesh_instances(node):
-		var local: AABB = mesh.transform * mesh.mesh.get_aabb()
+		var local: AABB = (to_local * mesh.global_transform) * mesh.get_aabb()
 		if started:
 			box = box.merge(local)
 		else:
@@ -344,12 +373,41 @@ func _physics_process(delta: float) -> void:
 	if arena != null:
 		arena.call("hold_inside", self)
 
+	if _animator != null:
+		var moving := Vector3(velocity.x, 0.0, velocity.z).length()
+		_animator.call("tick", delta, moving, _speed)
+
 	_requested = Vector3.ZERO
 
 
 func _turn_towards(direction: Vector3, delta: float) -> void:
 	var target_yaw := atan2(direction.x, direction.z)
 	rotation.y = rotate_toward(rotation.y, target_yaw, _turn_speed * delta)
+
+
+## --- animation, poked by combat ---------------------------------------------
+##
+## Speed tells the body how to move; it cannot tell it that a blow just landed.
+## These are the three moments combat has to announce.
+
+func play_attack() -> void:
+	if _animator != null:
+		_animator.call("play_once", "attack")
+
+
+func play_hit() -> void:
+	if _animator != null:
+		_animator.call("play_once", "hit")
+
+
+func play_faint() -> void:
+	if _animator != null:
+		_animator.call("play_faint")
+
+
+func revive_animation() -> void:
+	if _animator != null:
+		_animator.call("revive")
 
 
 ## Turn to face a world point, immediately. Used when a fight is arranged and by

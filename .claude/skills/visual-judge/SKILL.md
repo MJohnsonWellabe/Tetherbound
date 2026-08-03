@@ -110,12 +110,18 @@ This is acceptance criteria, not commentary. Finish with both of these.
 ranked, each saying concretely what a reference does that these do not, and
 naming the frame.
 
-**2. The bar question, answered directly:**
+**2. The two bar questions, answered directly.** The owner's gate names both
+references, so both need an answer.
 
-> Shown these frames beside `docs/reference/palworld-0*.jpg`, would someone say
-> these are trying to be the same kind of game?
+> **A.** Do these frames read as belonging to the world in
+> `docs/reference/tetherbound-meadows-keyart.png` — the project's own art
+> direction?
+>
+> **B.** Shown these frames beside `docs/reference/palworld-0*.jpg`, would
+> someone say these are trying to be the same kind of game?
 
-Answer **yes** or **no**, then say what carried it or what sank it. If the
+Answer each **yes** or **no** separately — they can differ, and it is useful
+when they do. Then say what carried it or what sank it. If the
 answer is no, say which of the gaps are fixable by changing the scene — density,
 palette, lighting, composition, scatter — and which are not, because they need
 art that is not in the build. That split is the deliverable: the fixable half

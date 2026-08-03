@@ -41,7 +41,7 @@ static func config() -> Dictionary:
 ## Slope is the main gate. Trees growing out of a cliff face and grass on a
 ## vertical rock are the two artefacts that most cheaply destroy the illusion
 ## that a place was authored.
-static func allowed(layer: Dictionary, height: float, slope: float, distance_from_spawn: float) -> bool:
+static func allowed(layer: Dictionary, height: float, slope: float, distance_from_spawn: float, spot: Vector2 = Vector2.INF) -> bool:
 	if slope > float(layer.get("max_slope_deg", 26.0)):
 		return false
 	if slope < float(layer.get("min_slope_deg", -1.0)):
@@ -54,7 +54,22 @@ static func allowed(layer: Dictionary, height: float, slope: float, distance_fro
 	# should not be the inside of a bush.
 	if distance_from_spawn < float(layer.get("clear_radius", 0.0)):
 		return false
+	# Authored clearings. Fights happen where creatures stand, the arena is
+	# eleven metres across, and a tree inside it ends up between the camera and
+	# the whole fight — which is what made two survey frames show nothing but
+	# green.
+	if spot != Vector2.INF and _inside_a_clearing(spot):
+		return false
 	return true
+
+
+static func _inside_a_clearing(spot: Vector2) -> bool:
+	for entry: Variant in config().get("clearings", []):
+		var clearing: Dictionary = entry
+		var centre := Vector2(float(clearing.get("x", 0.0)), float(clearing.get("z", 0.0)))
+		if spot.distance_to(centre) < float(clearing.get("radius", 0.0)):
+			return true
+	return false
 
 
 ## Build every placement for one layer.
@@ -105,7 +120,7 @@ static func _consider(
 	if is_nan(height):
 		return
 	var slope: float = field.slope_degrees_at(spot.x, spot.y)
-	if not allowed(layer, height, slope, spot.length()):
+	if not allowed(layer, height, slope, spot.length(), spot):
 		return
 
 	# `base_scale` corrects the pack's authoring scale for the whole layer;

@@ -188,6 +188,11 @@ func _release() -> void:
 	_orb.connect("struck", _on_struck)
 	_orb.connect("missed", _on_missed)
 	_orb.call("launch", origin, forward, _speed, _target)
+	# The trainer throws rather than standing there. Their model is on a child
+	# node, so this reaches past the body to the thing that animates.
+	var body: Node = _player.get_node_or_null(^"Model")
+	if body != null and body.has_method("play_throw"):
+		body.call("play_throw")
 
 	aim_exited.emit()
 

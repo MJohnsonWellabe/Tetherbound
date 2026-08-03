@@ -64,6 +64,7 @@ func _run() -> void:
 	_ally = _director.call("ally_body") as Node3D
 	_check_the_fight_opened()
 
+	_the_camera_can_see_the_fight()
 	await _the_pal_moves_on_the_stick()
 	await _the_arena_holds_you_in()
 	await _a_swing_at_empty_air_misses()
@@ -170,6 +171,41 @@ func _check_the_fight_opened() -> void:
 	var to_trainer := _rig.global_position.distance_to(_player.global_position)
 	if to_pal > to_trainer:
 		_fail("the camera is still following the trainer (%.1fm) not the pal (%.1fm)" % [to_trainer, to_pal])
+
+
+## Can the camera actually see the fight?
+##
+## Two survey frames once came back showing nothing but green because the camera
+## had ended up inside a bush. Every check in this file passed on those frames:
+## the fight was running, both creatures were alive, the HUD was correct. Only
+## looking at the pixels caught it.
+##
+## So this asks the question directly — is anything solid standing between the
+## camera and the creature the player is driving.
+func _the_camera_can_see_the_fight() -> void:
+	if _ally == null:
+		return
+	var camera: Camera3D = _rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null:
+		_fail("the camera rig has no camera")
+		return
+
+	var eye := camera.global_position
+	var subject: Vector3 = _ally.call("centre")
+	var query := PhysicsRayQueryParameters3D.create(eye, subject)
+	query.collide_with_areas = false
+	query.exclude = [(_ally as CollisionObject3D).get_rid()]
+	var blocked: Dictionary = _rig.get_world_3d().direct_space_state.intersect_ray(query)
+
+	var distance := eye.distance_to(subject)
+	print("camera %.1fm from the pal, line of sight %s" % [
+		distance, "blocked" if not blocked.is_empty() else "clear"
+	])
+	if not blocked.is_empty():
+		_fail("something solid is between the camera and the player's pal; the fight is not visible")
+	# Inside the creature is its own kind of blind.
+	if distance < 1.0:
+		_fail("the camera is %.2fm from the pal; it is inside the creature" % distance)
 
 
 ## The whole point of the change. If the stick does not move the pal, combat is
@@ -290,9 +326,27 @@ func _a_swing_at_the_enemy_connects() -> void:
 ## Without this the fight is a punching bag with a health bar.
 func _the_enemy_closes_and_hits_back() -> void:
 	var pal: RefCounted = _manager.call("active_pal")
+
+	# Start watching from a clean beat.
+	#
+	# The previous step ends at point-blank range, so the enemy is usually
+	# already mid-wind-up when this one begins. Opening the window there means
+	# the telegraph started before anyone was looking: the blow lands on the
+	# first or second frame, the assertion sees only RECOVER, and the test
+	# reports "the enemy attacked with no visible wind-up" about a wind-up that
+	# happened correctly and unobserved. That failed once and the fight was fine.
+	#
+	# So wait for the enemy to be un-rooted first. Everything after that point is
+	# a complete beat, and a strike with no telegraph in it is then a real bug.
+	for i in 240:
+		if not bool(_manager.call("is_fighting")) or not bool(_manager.call("enemy_is_rooted")):
+			break
+		await physics_frame
+
 	var hp_before: float = pal.hp
 	var saw_telegraph := false
 	var saw_opening := false
+	var struck_unannounced := false
 
 	# Stand still and let it come. Long enough for it to close, commit, recover
 	# and come again.
@@ -305,13 +359,16 @@ func _the_enemy_closes_and_hits_back() -> void:
 		elif bool(_manager.call("enemy_is_rooted")):
 			saw_opening = true
 		if pal.hp < hp_before:
+			# Ordering matters more than occurrence: a wind-up that arrives after
+			# the damage is not a warning.
+			struck_unannounced = not saw_telegraph
 			break
 
 	if pal.hp >= hp_before:
 		_fail("the enemy never landed a hit in 15 seconds of standing still")
 	else:
 		print("enemy dealt damage: ally %.1f -> %.1f hp" % [hp_before, pal.hp])
-	if not saw_telegraph:
+	if struck_unannounced or not saw_telegraph:
 		_fail("the enemy attacked with no visible wind-up; the fight has no warning")
 	if not saw_opening:
 		_fail("the enemy was never seen recovering; there is no window to punish")

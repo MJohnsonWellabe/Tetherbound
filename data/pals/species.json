@@ -14,12 +14,21 @@
       "aggressive": false,
       "placeholder": {
         "colour": "#7f8c3d",
-        "height": 1.35,
-        "radius": 0.5,
-        "_comment_model": "The model is fitted to `height` at load: measured, scaled and stood on its origin by pal_body._fit(). `model_scale` is a nudge on top of that, not the fit itself. `model_yaw` corrects which way the source model faces, because there is no convention and combat faces creatures along +Z.",
-        "model": "res://assets/pals/bramblit.glb",
+        "height": 1.85,
+        "radius": 0.72,
+        "model": "res://assets/pals/bramblit.fbx",
         "model_scale": 1.0,
-        "model_yaw": 0.0
+        "model_yaw": 0.0,
+        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_animations": "Role to clip name. Every pack names its clips differently, so nothing in code knows these strings; a new creature is a data edit. A role a pack lacks falls back (pal_animator._fallbacks) rather than freezing the creature mid-pose.",
+        "animations": {
+          "idle": "Armature|Triceratops_Idle",
+          "attack": "Armature|Triceratops_Attack",
+          "faint": "Armature|Triceratops_Death",
+          "walk": "Armature|Triceratops_Walk",
+          "run": "Armature|Triceratops_Run"
+        },
+        "_comment_size": "Gameplay size, and the art is fitted to it. Raised from the first pass: at a metre the creatures read as small animals underfoot rather than as the things the game is named after, and they were barely legible at combat distance. Combat reach scales off `radius` (combat.json ranges), so these two numbers are tuning, not decoration."
       }
     },
     "wild_rabbit": {
@@ -33,12 +42,21 @@
       "aggressive": false,
       "placeholder": {
         "colour": "#a8622f",
-        "height": 1.0,
-        "radius": 0.42,
-        "_comment_model": "The model is fitted to `height` at load: measured, scaled and stood on its origin by pal_body._fit(). `model_scale` is a nudge on top of that, not the fit itself. `model_yaw` corrects which way the source model faces, because there is no convention and combat faces creatures along +Z.",
-        "model": "res://assets/pals/meadow_hopper.glb",
+        "height": 1.35,
+        "radius": 0.55,
+        "model": "res://assets/pals/meadow_hopper.fbx",
         "model_scale": 1.0,
-        "model_yaw": 0.0
+        "model_yaw": 0.0,
+        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_animations": "Role to clip name. Every pack names its clips differently, so nothing in code knows these strings; a new creature is a data edit. A role a pack lacks falls back (pal_animator._fallbacks) rather than freezing the creature mid-pose.",
+        "animations": {
+          "idle": "Armature|Frog_Idle",
+          "attack": "Armature|Frog_Attack",
+          "faint": "Armature|Frog_Death",
+          "walk": "Armature|Frog_Jump",
+          "run": "Armature|Frog_Jump"
+        },
+        "_comment_size": "Gameplay size, and the art is fitted to it. Raised from the first pass: at a metre the creatures read as small animals underfoot rather than as the things the game is named after, and they were barely legible at combat distance. Combat reach scales off `radius` (combat.json ranges), so these two numbers are tuning, not decoration."
       }
     },
     "wild_bristler": {
@@ -51,14 +69,22 @@
       "catch_rate": 0.28,
       "aggressive": true,
       "placeholder": {
-        "_comment_colour": "Plum from the key art board, and a heavier silhouette. It has to be tellable from the peaceful Hopper at a glance and from across the meadow, because that reading is the only warning the player gets before it closes.",
         "colour": "#704f71",
-        "height": 1.25,
-        "radius": 0.56,
-        "_comment_model": "The model is fitted to `height` at load: measured, scaled and stood on its origin by pal_body._fit(). `model_scale` is a nudge on top of that, not the fit itself. `model_yaw` corrects which way the source model faces, because there is no convention and combat faces creatures along +Z.",
-        "model": "res://assets/pals/thornback.glb",
+        "height": 1.75,
+        "radius": 0.8,
+        "model": "res://assets/pals/thornback.fbx",
         "model_scale": 1.0,
-        "model_yaw": 0.0
+        "model_yaw": 0.0,
+        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_animations": "Role to clip name. Every pack names its clips differently, so nothing in code knows these strings; a new creature is a data edit. A role a pack lacks falls back (pal_animator._fallbacks) rather than freezing the creature mid-pose.",
+        "animations": {
+          "idle": "Armature|Stegosaurus_Idle",
+          "attack": "Armature|Stegosaurus_Attack",
+          "faint": "Armature|Stegosaurus_Death",
+          "walk": "Armature|Stegosaurus_Walk",
+          "run": "Armature|Stegosaurus_Run"
+        },
+        "_comment_size": "Gameplay size, and the art is fitted to it. Raised from the first pass: at a metre the creatures read as small animals underfoot rather than as the things the game is named after, and they were barely legible at combat distance. Combat reach scales off `radius` (combat.json ranges), so these two numbers are tuning, not decoration."
       }
     }
   }

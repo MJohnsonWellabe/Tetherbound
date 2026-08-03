@@ -62,7 +62,7 @@ func _ready() -> void:
 		push_error("terrain collision_mode is %d, expected %d (Full/Game). " % [applied, COLLISION_FULL_GAME] +
 			"The player will fall through the world outside the dynamic collision radius.")
 
-	_apply_placeholder_material()
+	_apply_ground_materials()
 
 	# Terrain3D needs a camera to decide which regions to keep resident. Without
 	# it the extension logs an error every physics frame and stops processing.
@@ -102,28 +102,75 @@ func _build_terrain() -> Node3D:
 	return terrain
 
 
-## Show the baked colour map instead of Terrain3D's "no textures assigned"
-## checkerboard.
+## Give the ground real PBR materials.
 ##
-## This is only visible on a rendered frame, which is how it was missed: every
-## check up to this point read terrain DATA — heights, region counts, collision
-## — and all of them passed while the ground rendered as a grey checker. The
-## first screenshot ever taken of this scene found it immediately.
+## Until now this switched on `show_colormap`, a Terrain3D DEBUG VIEW, and used
+## it as the ground treatment. It was flagged as a placeholder when it went in
+## and it survived three milestones. The blind critic measured what it cost:
+## 78–91% of the lower half of every exploration frame was featureless flat
+## fill, against 3–13% for the references — because a vertex colour map has no
+## albedo detail at any distance.
 ##
-## `show_colormap` is nominally a debug view, and using it as the ground
-## treatment is deliberate for M1: it renders the slope-driven grass/soil/rock
-## map from data/config/terrain_playground.json with zero texture assets. It is
-## a placeholder and is replaced by real splatmapped Terrain3DAssets at the art
-## pass, not kept.
-func _apply_placeholder_material() -> void:
+## Terrain3D's auto shader picks between the textures by slope, so the same
+## grass/soil/rock intent the bake already encodes is expressed with real
+## materials instead of flat colour.
+func _apply_ground_materials() -> void:
 	if _terrain == null:
 		return
 	var material: Object = _terrain.get("material")
 	if material == null:
 		push_warning("terrain has no material; ground will render as the default checker")
 		return
+
+	var textures := _build_texture_list()
+	if textures == null:
+		# The colour map is still better than a grey checkerboard, so a missing
+		# texture is a downgrade rather than a broken world.
+		push_warning("no terrain textures; falling back to the flat colour map")
+		material.set("show_checkered", false)
+		material.set("show_colormap", true)
+		return
+
+	_terrain.set("assets", textures)
 	material.set("show_checkered", false)
-	material.set("show_colormap", true)
+	material.set("show_colormap", false)
+	# The auto shader blends the second texture onto slopes, which is what makes
+	# the rocky rises read as stone rather than as grass at an angle.
+	material.set("auto_shader", true)
+	material.set("world_background", 1)
+
+
+## Build a Terrain3DAssets from data/config/terrain_playground.json.
+##
+## Returns null rather than half a texture list, so the caller can fall back
+## cleanly instead of rendering one texture and a checkerboard.
+func _build_texture_list() -> Object:
+	if not ClassDB.class_exists("Terrain3DAssets") or not ClassDB.class_exists("Terrain3DTextureAsset"):
+		return null
+	var entries: Array = _load_terrain_config().get("textures", [])
+	if entries.is_empty():
+		return null
+
+	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
+	var index := 0
+	for entry: Variant in entries:
+		var spec: Dictionary = entry
+		var albedo: String = str(spec.get("albedo", ""))
+		if not ResourceLoader.exists(albedo):
+			push_error("terrain texture missing: %s" % albedo)
+			return null
+		var texture: Object = ClassDB.instantiate("Terrain3DTextureAsset")
+		texture.set("name", str(spec.get("name", "texture%d" % index)))
+		texture.set("id", index)
+		texture.set("albedo_texture", load(albedo))
+		var normal: String = str(spec.get("normal", ""))
+		if ResourceLoader.exists(normal):
+			texture.set("normal_texture", load(normal))
+		texture.set("uv_scale", float(spec.get("uv_scale", 0.1)))
+		texture.set("albedo_color", Color(str(spec.get("tint", "#ffffff"))))
+		assets.call("set_texture", index, texture)
+		index += 1
+	return assets
 
 
 ## Scatter grass, bushes, trees and rocks across the playground.

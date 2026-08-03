@@ -92,6 +92,37 @@ func _the_creatures_in_the_world_loaded_their_models() -> void:
 			])
 		else:
 			print("  %-16s model %.2fm, collider %.2fm" % [id, actual, wanted])
+		_the_creature_has_the_clips_it_claims(body, id)
+
+
+## Every clip a species names must exist on its model, under that exact name.
+##
+## Clip names are per-pack — the shipped creatures use `Armature|Frog_Attack`
+## and `Armature|Triceratops_Run` — so a rename in data or a swapped model
+## silently produces a creature that never animates. Nothing that reads game
+## state can see that: the fight resolves perfectly against a creature frozen
+## mid-pose.
+func _the_creature_has_the_clips_it_claims(body: Node3D, id: String) -> void:
+	var clips: Dictionary = SPECIES.placeholder(id).get("animations", {})
+	if clips.is_empty():
+		_fail("'%s' declares no animations; it will stand rigid through every fight" % id)
+		return
+
+	var anim := _find_animation_player(body)
+	if anim == null:
+		_fail("'%s' has no AnimationPlayer despite declaring %d clips" % [id, clips.size()])
+		return
+
+	for role: String in clips.keys():
+		var clip := str(clips[role])
+		if not anim.has_animation(clip):
+			_fail("'%s' names a '%s' clip called '%s', which its model does not have" % [id, role, clip])
+
+	# The four combat actually drives. A creature with no attack clip swings
+	# invisibly, which reads as the hit not happening.
+	for required in ["idle", "attack", "faint"]:
+		if not clips.has(required):
+			_fail("'%s' has no '%s' clip; combat drives that one" % [id, required])
 
 
 func _the_trainer_has_a_model_and_animations() -> void:

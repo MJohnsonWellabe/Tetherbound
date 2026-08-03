@@ -347,6 +347,7 @@ func _resolve_player_strike() -> void:
 	var target: Vector3 = _wild.call("centre")
 
 	_ally_body.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)))
+	_ally_body.call("play_attack")
 
 	if not MATH.move_connects(_pending_move, origin, facing, target):
 		attack_missed.emit(true)
@@ -358,6 +359,7 @@ func _resolve_player_strike() -> void:
 	)
 	var killed: bool = _enemy.take_damage(damage)
 	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
+	_wild.call("play_faint" if killed else "play_hit")
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -452,6 +454,7 @@ func _on_enemy_strike() -> void:
 	var target: Vector3 = _ally_body.call("centre")
 
 	_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
+	_wild.call("play_attack")
 
 	if not MATH.move_connects(cfg, origin, facing, target):
 		attack_missed.emit(false)
@@ -463,6 +466,7 @@ func _on_enemy_strike() -> void:
 	)
 	var killed: bool = pal.take_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
+	_ally_body.call("play_faint" if killed else "play_hit")
 
 	hit_landed.emit(false, damage)
 	state_changed.emit()

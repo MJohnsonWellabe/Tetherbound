@@ -68,18 +68,71 @@ func _build(path: String) -> bool:
 	_art.rotation.y = deg_to_rad(_model_yaw)
 	_anim = _find_animation_player(_art)
 	if _anim == null:
-		push_warning("trainer model has no AnimationPlayer; it will not animate")
+		# KayKit's characters ship with no clips at all, so Godot creates no
+		# AnimationPlayer for them. One is added here for the libraries to be
+		# merged into; its root is the character, which is what the library
+		# clips' track paths are relative to.
+		_anim = AnimationPlayer.new()
+		_anim.name = "AnimationPlayer"
+		_art.add_child(_anim)
+		_anim.root_node = _anim.get_path_to(_art)
+	_merge_libraries()
 	return true
+
+
+## Pull clips from separate animation files onto this character.
+##
+## KayKit ships the mesh and the motion apart: the character .glb carries a
+## 23-bone rig and zero clips, and the clips live in shared libraries built on
+## that same rig. Godot will not connect them on its own, so the libraries are
+## loaded and their animations copied across.
+##
+## They must share a skeleton for this to mean anything. If a library is built
+## on a different rig the clips load and drive nothing, which looks exactly like
+## a model with no animations — hence the count in the log.
+func _merge_libraries() -> void:
+	var paths: Array = _load_config().get("animation_libraries", [])
+	var added := 0
+	for entry: Variant in paths:
+		var path := str(entry)
+		if not ResourceLoader.exists(path):
+			push_error("trainer animation library missing: %s" % path)
+			continue
+		var packed: PackedScene = load(path) as PackedScene
+		if packed == null:
+			continue
+		var source: Node = packed.instantiate()
+		var player := _find_animation_player(source)
+		if player != null:
+			for clip in player.get_animation_list():
+				var animation: Animation = player.get_animation(clip)
+				if animation != null and not _anim.has_animation(clip):
+					_library().add_animation(clip, animation.duplicate())
+					added += 1
+		source.queue_free()
+	print("[trainer] merged %d animation clips" % added)
+
+
+func _library() -> AnimationLibrary:
+	# Godot 4 keeps clips in named libraries; the imported character has an empty
+	# default one, or none at all if it shipped with no clips.
+	if not _anim.has_animation_library(""):
+		_anim.add_animation_library("", AnimationLibrary.new())
+	return _anim.get_animation_library("")
 
 
 ## Same measure-and-fit as pal_body: the model is scaled to the collider, never
 ## the other way round. A trainer whose art is a head taller than the capsule
 ## the camera frames on is a trainer who floats.
 func _fit() -> void:
+	# Same measurement as pal_body._bounds, and for the same reason: a skinned
+	# mesh's resource AABB and its local transform say nothing about how big it
+	# renders.
 	var box := AABB()
 	var started := false
+	var to_local := _art.global_transform.affine_inverse()
 	for mesh in _mesh_instances(_art):
-		var local: AABB = mesh.transform * mesh.mesh.get_aabb()
+		var local: AABB = (to_local * mesh.global_transform) * mesh.get_aabb()
 		if started:
 			box = box.merge(local)
 		else:

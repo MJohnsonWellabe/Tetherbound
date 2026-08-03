@@ -1,7 +1,6 @@
 {
   "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' — every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their pal, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
-
   "damage": {
     "_comment": "damage = power * scale * attack / (attack + defence). Bounded on purpose: a raw attack/defence ratio explodes when defence is low and produces one-shot kills that read as bugs. With scale 2, equal attack and defence deals exactly the move's power.",
     "scale": 2.0,
@@ -9,14 +8,12 @@
     "variance": 0.1,
     "minimum": 1.0
   },
-
   "energy": {
     "_comment": "Charged attacks are gated on energy, and energy comes only from LANDING quick attacks. Since a quick attack can now miss, the meter is earned by connecting rather than by pressing, which is the whole spam-vs-nuke decision plus a reason to care where you are standing.",
     "max": 100.0,
     "gain_per_quick": 26.0,
     "charged_cost": 100.0
   },
-
   "pal_movement": {
     "_comment": "How a creature moves while a fight is running. Faster than a walk and slower than the trainer's sprint: the fight should feel busy without turning into a foot race. TUNABLE and expected to change first if combat feels sluggish.",
     "speed": 5.0,
@@ -27,7 +24,6 @@
     "_comment_impulse": "How fast an attack lunge or a knockback decays, in units per second. High enough that an impulse is a punch rather than a shove.",
     "impulse_damping": 9.0
   },
-
   "player_quick": {
     "_comment": "The bread-and-butter attack. Short wind-up, short recovery, wide arc: it should be usable under pressure without feeling like a commitment.",
     "power": 9.0,
@@ -40,7 +36,6 @@
     "cone_degrees": 100.0,
     "lunge": 3.6
   },
-
   "player_charged": {
     "_comment": "The commitment. Long wind-up and long recovery mean throwing it at the wrong moment is punished by the opponent closing on a rooted target; that spatial cost is what makes it a decision rather than just a better button.",
     "power": 38.0,
@@ -52,7 +47,6 @@
     "cone_degrees": 75.0,
     "lunge": 6.0
   },
-
   "enemy": {
     "_comment": "The opponent's brain lives in scripts/combat/combat_ai.gd; these are its numbers. It closes, commits to an attack, is rooted while it recovers, then backs off and comes again. The recovery window is the player's punish opportunity and is the single most important number here.",
     "power": 8.0,
@@ -71,19 +65,17 @@
     "reposition_distance": 5.0,
     "first_attack_delay": 1.5
   },
-
   "arena": {
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
     "radius": 11.0,
     "_comment_boundary": "Height and opacity of the drawn wall. It has to be visible enough to be read as a boundary and faint enough not to obscure the fight happening inside it.",
     "_comment_short": "Short and reasonably solid rather than tall and faint. A tall translucent drum reads as haze across the horizon; a bright band at ground level reads as an edge.",
-    "boundary_height": 1.6,
-    "boundary_alpha": 0.42,
+    "boundary_height": 1.1,
+    "boundary_alpha": 0.22,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
     "deploy_offset": 2.6,
     "separation": 5.0
   },
-
   "flow": {
     "_comment": "Engagement and resolution timing.",
     "engage_range": 6.0,
@@ -93,7 +85,6 @@
     "_comment_guard": "Seconds of player input ignored at the start of a fight. Engage and charged attack are the same physical button (X), and without this the press that opens the fight is also read as the first attack of it.",
     "input_guard": 0.25
   },
-
   "camera": {
     "_comment": "The fight reuses the exploration orbit camera rather than adding a second one: a piloted pal wants exactly the third-person camera M1 already tuned, re-pointed at a shorter creature. These are the overrides while a fight is running.",
     "_comment_distance": "Close. These are metre-tall creatures, not a 1.8m trainer: at the exploration camera's 5.2m they read as specks and the fight is unreadable.",
@@ -108,7 +99,6 @@
     "_comment_blend": "How fast the rig eases onto the pal when a fight opens, and back onto the trainer when it ends.",
     "retarget_lag": 6.0
   },
-
   "wild": {
     "_comment": "How a wild pal behaves before it is engaged. It never initiates: GAME_DESIGN.md 14 requires proximity not to start a fight with a peaceful pal. It wanders so it does not read as scenery, and it stops and looks at you so there is a cue that it can be engaged at all.",
     "wander_radius": 7.0,

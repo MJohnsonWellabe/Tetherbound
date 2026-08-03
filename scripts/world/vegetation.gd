@@ -24,6 +24,7 @@ const SINK := 0.06
 
 var _placed: int = 0
 var _draw_calls: int = 0
+var _solid: int = 0
 
 
 ## Build the whole scatter. `world_size` should match the terrain's.
@@ -32,6 +33,7 @@ func build(world_size: float) -> void:
 		child.queue_free()
 	_placed = 0
 	_draw_calls = 0
+	_solid = 0
 	_tints.clear()
 
 	var cfg: Dictionary = RULES.config()
@@ -130,6 +132,53 @@ func _build_batch(model_path: String, placements: Array) -> void:
 
 	_placed += placements.size()
 	_draw_calls += 1
+	_add_collision(model_path, placements)
+
+
+## Give the solid layers real collision.
+##
+## MultiMesh draws but does not collide, and two things depend on collision that
+## are easy to miss. A tree you walk through reads as a hologram. And the
+## camera's SpringArm3D only stops at colliders — with none, the camera walks
+## straight into a bush and the entire fight disappears behind two green
+## polygons, which is exactly what happened to two survey frames.
+##
+## One StaticBody3D holding many shapes rather than a body per prop: the physics
+## server handles that far better, and none of these ever move.
+func _add_collision(model_path: String, placements: Array) -> void:
+	var layer := _layer_for(model_path)
+	if layer.is_empty() or not bool(layer.get("collides", false)):
+		return
+	var radius := float(layer.get("collision_radius", 0.5))
+
+	var body := StaticBody3D.new()
+	body.name = "%s_Collision" % model_path.get_file().get_basename()
+	add_child(body)
+	for entry: Variant in placements:
+		var placement: Dictionary = entry
+		var scale := float(placement["scale"])
+		var shape := CylinderShape3D.new()
+		shape.radius = radius * scale
+		# Tall enough to stop a camera at head height, short enough that it is a
+		# trunk rather than an invisible wall.
+		shape.height = 4.0 * scale
+		var node := CollisionShape3D.new()
+		node.shape = shape
+		node.position = (placement["position"] as Vector3) + Vector3.UP * (shape.height * 0.5)
+		body.add_child(node)
+	_solid += placements.size()
+
+
+## Which layer a model belongs to. Models are grouped by mesh for drawing, so the
+## layer has to be recovered to know whether it is solid.
+func _layer_for(model_path: String) -> Dictionary:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	for name: String in layers.keys():
+		if name.begins_with("_"):
+			continue
+		if model_path in (layers[name] as Dictionary).get("models", []):
+			return layers[name]
+	return {}
 
 
 ## Flatten an imported .glb down to a single Mesh.
@@ -167,4 +216,4 @@ func _collect(node: Node, into: Array[MeshInstance3D]) -> void:
 ## rendering cannot measure frame time honestly (D06) — but "how much did we
 ## just put in the world" is worth being able to say out loud.
 func stats() -> Dictionary:
-	return {"instances": _placed, "batches": _draw_calls}
+	return {"instances": _placed, "batches": _draw_calls, "solid": _solid}

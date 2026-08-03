@@ -308,6 +308,7 @@ func revive_at_home() -> void:
 	visible = true
 	rotation = Vector3.ZERO
 	set_physics_process(true)
+	revive_animation()
 	set_engaged(false)
 	place_on_ground(home)
 	_target = home
