@@ -20,8 +20,16 @@ extends CharacterBody3D
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 
-const GROUND_PROBE_UP := 12.0
-const GROUND_PROBE_DOWN := 60.0
+## The grounding ray starts this far above the requested spot and traces this far
+## down.
+##
+## Generous on purpose. At 12m up, a spawn point on a hill started the ray
+## *inside* the terrain — a downward ray from underground never exits, so the
+## placement failed silently and the creature was never spawned at all. The
+## playground's relief is about 72m, so the start has to clear the tallest thing
+## that can be above a point the caller thought was ground level.
+const GROUND_PROBE_UP := 120.0
+const GROUND_PROBE_DOWN := 300.0
 
 var species_id: String = ""
 var display_name: String = ""
@@ -50,6 +58,9 @@ var _impulse_damping: float = 9.0
 ## Optional arena that holds this creature inside a boundary. Null outside
 ## combat, which is why the wild pal can wander freely before it is engaged.
 var arena: Node = null
+
+## The world node that answers `ground_height_at`. Found once, then cached.
+var _ground_source: Node = null
 
 @onready var _collision: CollisionShape3D = $Collision
 @onready var _body: MeshInstance3D = $Body
@@ -137,6 +148,13 @@ func body_height() -> float:
 	return _height
 
 
+## What counts as a clean hit on this creature. Read by the orb for collision and
+## by the catch formula for accuracy, so a bigger creature is genuinely easier to
+## hit and that shows up in the odds rather than only in the physics.
+func body_radius() -> float:
+	return _radius
+
+
 ## Where an attack aimed at this creature should be measured to: the middle of
 ## the body rather than the point between its feet.
 func centre() -> Vector3:
@@ -210,32 +228,70 @@ func face_towards(point: Vector3) -> void:
 	rotation.y = atan2(to.x, to.z)
 
 
-## Move to an x/z position and sit on whatever is under it.
+## Move to an x/z position and sit on the ground under it.
 ##
-## A downward ray rather than a terrain height lookup, so this works over the
-## terrain, over a rock, and over anything built later, and so it does not have
-## to know Terrain3D exists.
+## Asks the world for the ground height first, and only falls back to a ray.
+##
+## The ray used to be the whole implementation, and it was wrong. Downward rays
+## against Terrain3D's heightmap collision miss roughly a quarter of the time at
+## points where the ground is definitely present — a shape query at the same
+## spot collides and the character walks over it happily, because `move_and_slide`
+## uses shape casts and only rays lie. A wild pal placed by ray simply never
+## spawned: no error, no body, no encounter.
+##
+## The fallback stays for anything the terrain does not know about — a rock, a
+## structure, whatever M8 builds — where a ray is the only answer available.
 func place_on_ground(target: Vector3) -> bool:
 	if not is_inside_tree():
 		return false
-	var world := get_world_3d()
-	if world == null:
-		return false
-	var space := world.direct_space_state
-	if space == null:
+
+	var height := _ground_height(target.x, target.z)
+	if is_nan(height):
+		height = _ray_ground(target)
+	if is_nan(height):
+		# Leaving it where it is beats teleporting it into the sky, and the
+		# caller is told so it can pick somewhere else.
 		return false
 
-	var from := Vector3(target.x, target.y + GROUND_PROBE_UP, target.z)
-	var to := from + Vector3.DOWN * GROUND_PROBE_DOWN
-	var query := PhysicsRayQueryParameters3D.create(from, to)
-	query.collide_with_areas = false
-	query.exclude = [get_rid()]
-	var hit: Dictionary = space.intersect_ray(query)
-	if hit.is_empty():
-		# No ground found. Leaving it where it is beats teleporting it into the
-		# sky, and the caller gets told so it can pick somewhere else.
-		return false
-	global_position = hit["position"]
+	global_position = Vector3(target.x, height, target.z)
 	velocity = Vector3.ZERO
 	_impulse = Vector3.ZERO
 	return true
+
+
+## The world's own ground query, found by walking up the tree. Cached, because
+## this runs every frame for a wandering creature.
+##
+## Discovered rather than injected so a pal can be dropped into any scene: a
+## world that offers `ground_height_at` is used, and one that does not falls
+## through to the ray without anybody having to wire anything.
+func _ground_height(x: float, z: float) -> float:
+	if _ground_source == null or not is_instance_valid(_ground_source):
+		_ground_source = _find_ground_source()
+	if _ground_source == null:
+		return NAN
+	return float(_ground_source.call("ground_height_at", x, z))
+
+
+func _find_ground_source() -> Node:
+	var node: Node = get_parent()
+	while node != null:
+		if node.has_method("ground_height_at"):
+			return node
+		node = node.get_parent()
+	return null
+
+
+func _ray_ground(target: Vector3) -> float:
+	var world := get_world_3d()
+	if world == null:
+		return NAN
+	var space := world.direct_space_state
+	if space == null:
+		return NAN
+	var from := Vector3(target.x, target.y + GROUND_PROBE_UP, target.z)
+	var query := PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * GROUND_PROBE_DOWN)
+	query.collide_with_areas = false
+	query.exclude = [get_rid()]
+	var hit: Dictionary = space.intersect_ray(query)
+	return NAN if hit.is_empty() else float((hit["position"] as Vector3).y)

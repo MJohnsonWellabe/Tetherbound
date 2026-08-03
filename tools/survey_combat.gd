@@ -21,6 +21,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const CATCH := preload("res://scripts/combat/catch_math.gd")
 const OUT_DIR := "res://shots/combat"
 
 const SETTLE_FRAMES := 240
@@ -123,6 +124,25 @@ func _run() -> void:
 		await physics_frame
 	await _capture("06-charged-attack-lands")
 
+	# Aim mode. The camera leaves the pal and goes over the trainer's shoulder,
+	# and this frame answers whether that reads as aiming at all — a reticle over
+	# a creature several metres away, with your own pal standing undefended in
+	# shot.
+	if await _open_the_aim():
+		await _capture("07-aiming-the-orb")
+
+		# The orb in flight. It is a placeholder sphere, so this checks that a
+		# small fast object stays readable against sunlit grass — the background
+		# of every throw in the Meadows — and nothing about how the orb looks.
+		await _press("combat_throw")
+		for i in 7:
+			await physics_frame
+		await _capture("08-orb-in-flight")
+	else:
+		_failures.append("could not open the aim; no throw frames captured")
+
+
+
 	print("")
 	print("%d frames -> %s" % [_written.size(), OUT_DIR])
 	print("Placeholder capsules and software rendering: composition and readability only.")
@@ -132,6 +152,37 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
+
+
+## Wait for the pal to finish whatever it is committed to, then open the aim and
+## wait until it is actually open.
+##
+## Waiting on STATE rather than counting frames. A fixed wait captured the tail
+## of the charged attack's recovery, during which the throw press is correctly
+## ignored — so the survey came back with two frames of ordinary combat labelled
+## as aiming.
+func _open_the_aim() -> bool:
+	for i in 240:
+		if not bool(_manager.call("is_fighting")):
+			return false
+		if not bool(_manager.call("player_is_committed")):
+			break
+		await physics_frame
+
+	await _press("combat_throw")
+	for i in 240:
+		if bool(_manager.call("is_aiming")):
+			break
+		await physics_frame
+	if not bool(_manager.call("is_aiming")):
+		return false
+
+	# Let the rig arrive behind the trainer. Under software rendering the camera
+	# blends on PROCESS frames, of which there are only a few per second.
+	for i in 8:
+		await process_frame
+		_aim_at_the_enemy()
+	return true
 
 
 func _approach() -> void:
@@ -173,6 +224,25 @@ func _drive_pal_towards_enemy(frames: int, stop_at: float) -> void:
 			Input.action_release("move_forward")
 		await physics_frame
 	Input.action_release("move_forward")
+
+
+## Lead the target so a thrown orb would land on it. The orb flies a real arc,
+## so pointing straight at the creature aims under it.
+func _aim_at_the_enemy() -> void:
+	var rig := _world.get_node_or_null(^"CameraRig")
+	if rig == null or _wild == null:
+		return
+	var cfg: Dictionary = CATCH.config().get("throw", {})
+	var speed := float(cfg.get("speed", 17.0))
+	var gravity := float(cfg.get("gravity", 14.0))
+
+	var origin := _player.global_position + Vector3.UP * float(cfg.get("spawn_height", 1.5))
+	var to: Vector3 = (_wild.call("centre") as Vector3) - origin
+	var flat := Vector2(to.x, to.z).length()
+	var flight := flat / maxf(speed, 0.01)
+
+	rig.set("yaw", atan2(-to.x, -to.z))
+	rig.set("pitch", atan2(to.y + 0.5 * gravity * flight * flight, maxf(flat, 0.01)))
 
 
 func _press(action: String) -> void:

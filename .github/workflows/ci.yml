@@ -132,6 +132,22 @@ jobs:
         # 500 m/s. Every unit test still passed.
         run: godot --headless --path . --script tests/smoke_combat.gd
 
+      - name: Smoke-test catching
+        # Aims, misses, and lands a throw through injected input. Asserts the
+        # things the catch maths cannot see: aiming hands the camera to the
+        # trainer and abandons the pal, the orb is a projectile that can go
+        # wide, an orb is spent on a throw and not on a cancel, and a faint is a
+        # refusal rather than long odds.
+        run: godot --headless --path . --script tests/smoke_catching.gd
+
+      - name: Smoke-test aggression
+        # Two halves, and the second matters more: an aggressive pal must start
+        # a fight on its own, and a peaceful one must never do so no matter how
+        # long the trainer stands next to it. GAME_DESIGN.md §14 allows the
+        # first and forbids the second, and one word in species.json is the only
+        # thing between them.
+        run: godot --headless --path . --script tests/smoke_aggression.gd
+
       - name: Export Windows build
         run: |
           mkdir -p build/windows

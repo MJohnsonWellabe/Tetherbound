@@ -45,6 +45,8 @@ var _miss_text: String = ""
 @onready var _actions: Label = $Root/Actions
 @onready var _prompt: Label = $Root/Prompt
 @onready var _outcome: Label = $Root/Outcome
+@onready var _orbs: Label = $Root/Orbs
+@onready var _reticle: Label = $Root/Reticle
 
 
 func _ready() -> void:
@@ -61,6 +63,9 @@ func _ready() -> void:
 	if _manager != null:
 		_manager.connect("exited", _on_exited)
 		_manager.connect("attack_missed", _on_missed)
+		_manager.connect("catch_refused", _on_catch_refused)
+		_manager.connect("catch_resolved", _on_catch_resolved)
+		_manager.connect("orb_shook", _on_orb_shook)
 	_show_fight(false)
 
 
@@ -104,6 +109,10 @@ func _show_fight(visible_now: bool) -> void:
 	$Root/Enemy.visible = visible_now
 	_ally_box.visible = visible_now
 	_actions.visible = visible_now
+	_orbs.visible = visible_now
+	# The reticle only exists while aiming. A crosshair sitting on screen during
+	# normal combat would promise an aim the game is not taking.
+	_reticle.visible = visible_now and _manager != null and bool(_manager.call("is_aiming"))
 
 
 func _draw_prompt() -> void:
@@ -156,12 +165,23 @@ func _draw_ally() -> void:
 ## whether the fight is worth repeating, and a player who has forgotten that the
 ## charged attack exists is answering a different question.
 func _draw_actions() -> void:
+	var orbs: int = int(_manager.call("orbs_left"))
+	_orbs.text = "Orbs  %d" % orbs
+
 	if _miss_left > 0.0:
 		_actions.text = _miss_text
 		return
+
+	# Aiming has its own verb list. Showing Quick and Charged while the player is
+	# looking down a reticle would offer two moves their pal cannot make.
+	if bool(_manager.call("is_aiming")):
+		_actions.text = "[F] Throw      [B] Cancel       your pal is undefended"
+		return
+
 	var quick := "[A] Quick" if bool(_manager.call("quick_ready")) else "[ ] Quick"
 	var charged := "[X] Charged" if bool(_manager.call("charged_ready")) else "[ ] Charged"
-	_actions.text = "%s      %s      [B] Run       move to dodge" % [quick, charged]
+	var throw := "[F] Throw" if orbs > 0 else "[ ] No orbs"
+	_actions.text = "%s   %s   %s   [B] Run" % [quick, charged, throw]
 
 
 ## A miss has to be legible or it reads as the game dropping the input.
@@ -174,8 +194,40 @@ func _on_missed(by_player: bool) -> void:
 	_miss_left = 0.9
 
 
+## A throw the game declined to make, and why.
+##
+## Separate from a failed catch on purpose. "It fainted, too late" and "it broke
+## out" are different things to have just done, and collapsing them into one
+## message teaches the player nothing about which mistake they made.
+func _on_catch_refused(reason: String) -> void:
+	_miss_text = reason
+	_miss_left = 1.6
+
+
+## Count the wobbles out loud. The shakes come from a decision already made
+## (`catch_math.resolve`), so this is showing the player something true — a near
+## miss really does shake longer than a hopeless throw.
+func _on_orb_shook(index: int) -> void:
+	_miss_text = "%s" % "•".repeat(index)
+	_miss_left = 0.7
+
+
+func _on_catch_resolved(success: bool, shakes: int) -> void:
+	if success:
+		var foe: RefCounted = _manager.call("enemy")
+		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
+		_outcome_left = 2.4
+		return
+	_miss_text = "it broke out" if shakes >= 2 else "not even close"
+	_miss_left = 1.6
+
+
 func _on_exited(outcome: String) -> void:
 	match outcome:
+		"caught":
+			# Already announced by _on_catch_resolved, which knows the name.
+			# Overwriting it here would replace the moment with a generic line.
+			return
 		"won":
 			_outcome.text = "The wild pal is beaten."
 		"lost":

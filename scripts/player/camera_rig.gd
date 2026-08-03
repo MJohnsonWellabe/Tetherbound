@@ -47,6 +47,16 @@ var _retarget_lag: float = 0.0
 @onready var _camera: Camera3D = get_node_or_null(^"Camera3D") as Camera3D
 var _base_fov: float = 70.0
 
+## Over-the-shoulder offset, in metres, applied to the ARM's pivot rather than
+## to the camera hanging off it.
+##
+## The obvious implementation — sliding the child Camera3D sideways — silently
+## does nothing. SpringArm3D rewrites its children's transforms every frame to
+## place them at the end of the arm, so the offset was wiped before it was ever
+## drawn, and combat spent a whole survey with the camera dead behind the pal
+## while the config confidently said 1.5.
+var _shoulder: float = 0.0
+
 
 func _ready() -> void:
 	_load_config()
@@ -94,14 +104,9 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_distance = float(profile.get("distance", _base_distance))
 	_height = float(profile.get("height", _base_height))
 	_retarget_lag = float(profile.get("retarget_lag", 0.0))
+	_shoulder = float(profile.get("shoulder_offset", 0.0))
 	if _camera != null:
 		_camera.fov = float(profile.get("fov", _base_fov))
-		# Over-the-shoulder. A follow camera sitting exactly behind the creature
-		# you are driving puts that creature between you and whatever you are
-		# facing, and in a fight what you are facing is the opponent — so the
-		# thing you most need to see is the thing your own pal is standing in
-		# front of. Sliding the lens off-centre reveals it.
-		_camera.position.x = float(profile.get("shoulder_offset", 0.0))
 	if profile.has("pitch_start_deg"):
 		pitch = clampf(deg_to_rad(float(profile["pitch_start_deg"])),
 			deg_to_rad(_pitch_min), deg_to_rad(_pitch_max))
@@ -159,6 +164,10 @@ func _apply_look(delta: float) -> void:
 
 func _follow(delta: float) -> void:
 	var desired := _target.global_position + Vector3.UP * _height
+	if not is_zero_approx(_shoulder):
+		# Sideways relative to where the camera is looking, so the offset stays
+		# on the same shoulder as you turn.
+		desired += Basis(Vector3.UP, yaw).x * _shoulder
 	# Exponential smoothing written frame-rate independently. A raw lerp by
 	# `lag * delta` changes behaviour with frame rate, which shows up as the
 	# camera feeling different on the handheld than on the desktop.

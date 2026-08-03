@@ -1,0 +1,92 @@
+{
+  "_comment": "Catching and orbs. ALL of it is TUNABLE. M3 exists to answer one question: does landing a good throw feel satisfying? The expected feedback is 'catching is too hard', 'aiming is fiddly', 'I never know if I was close' — every one of those has to be answerable by editing this file.",
+  "_comment_model": "Throwing hands camera and control to the trainer for a real-time over-the-shoulder aim (docs/decisions/D08). Your pal is undefended while you aim and the opponent does not stop attacking it. That cost is the whole design: it is what makes throwing a decision rather than something you spam between attacks.",
+
+  "chance": {
+    "_comment": "catch_chance = species_rate * hp_factor * orb_multiplier * accuracy_bonus, clamped. Nothing is ever certain and nothing that is legal is ever impossible; a throw that cannot succeed should be REFUSED with a reason, not rolled at zero.",
+
+    "_comment_hp": "GAME_DESIGN.md 15: full-health throws are allowed, and powerful/full-health pals should be extremely difficult to catch. So this curve is steep. At full health you are multiplying the species rate by 0.10; at a sliver you are multiplying by 1.0.",
+    "hp_factor_full": 0.10,
+    "hp_factor_empty": 1.0,
+    "_comment_curve": "Exponent on the (1 - hp_fraction) term. Above 1 the reward is back-loaded, so chipping a pal down to half does much less for you than taking it to a sliver — which is what keeps 'damage it first' a real risk against 'over-damage it and lose the catch'.",
+    "hp_curve": 1.6,
+
+    "_comment_accuracy": "How much a good throw is worth. `centre_bonus` applies to a dead-centre hit, `edge_bonus` to one that barely clipped. This is the ONLY reason the aiming skill exists; if these are equal, aiming is decoration and the milestone has no subject.",
+    "centre_bonus": 1.45,
+    "edge_bonus": 0.75,
+
+    "min": 0.02,
+    "max": 0.95
+  },
+
+  "orbs": {
+    "_comment": "Orb types. M3 ships one; better orbs are M8+ crafting rewards. GAME_DESIGN.md 15: basic orbs should be affordable enough that players are encouraged to try, and never so scarce that they are afraid to experiment.",
+    "basic": {
+      "display_name": "Tether Orb",
+      "multiplier": 1.0
+    },
+    "_comment_stock": "M3-ONLY placeholder. There is no inventory until M8, so the trainer carries this many and the stock refills whenever the practice pal respawns. Do not turn this into a resource system here.",
+    "starting_stock": 15
+  },
+
+  "throw": {
+    "_comment": "The projectile. A real arc, not a hitscan — GAME_DESIGN.md 15 forbids throwing without player aim, and an instant hit gives nothing to aim.",
+    "speed": 17.0,
+    "gravity": 14.0,
+    "_comment_radius": "Collision radius of the orb in metres. The FIRST lever to reach for if aiming feels fiddly on the handheld: widen this before touching anything else, because it forgives the input without removing the skill.",
+    "radius": 0.42,
+    "spawn_height": 1.5,
+    "spawn_forward": 0.6,
+    "max_flight_time": 4.0,
+
+    "_comment_windup": "Seconds between committing to the throw and the orb leaving the trainer's hand. Short — the commitment already happened when you entered aim mode.",
+    "release_windup": 0.18,
+    "_comment_lockout": "Seconds after a throw resolves before another can be started. Stops a failed catch from being instantly re-thrown while the wobble is still on screen.",
+    "cooldown": 0.9
+  },
+
+  "aim": {
+    "_comment": "The over-the-shoulder aim camera, expressed as a camera_rig profile. Reuses scripts/player/camera_rig.gd's set_target(target, profile) rather than adding a third camera — the same reasoning that deleted combat_camera.gd in M2.",
+    "_comment_distance": "Far enough back that the trainer does not fill the frame. At 2.4m their body covered the whole view and the reticle sat on their shoulder — you were aiming at your own trainer.",
+    "distance": 3.4,
+    "height": 1.78,
+    "fov": 52.0,
+    "_comment_shoulder": "Wide, because in aim mode the trainer is close to the lens and would otherwise sit on top of the reticle. The orb is thrown at whatever the reticle is over rather than parallel to the camera, so this offset does not put the throw somewhere other than where you aimed.",
+    "shoulder_offset": 1.45,
+    "retarget_lag": 14.0,
+    "pitch_min_deg": -35.0,
+    "pitch_max_deg": 20.0,
+    "_comment_sensitivity": "Aiming wants a slower stick than looking around does. This scales the rig's normal gamepad sensitivity while aim mode is active.",
+    "sensitivity_scale": 0.55,
+    "_comment_guard": "Seconds of input ignored on entering aim mode, so the press that opens the aim is not also read as the release."
+  },
+
+  "resolve": {
+    "_comment": "The wobble. The outcome is DECIDED ONCE when the orb lands and the shakes are derived from it — they never re-roll. Tension built on a lie is what makes catch animations feel cheap, and a wobble that can contradict the result already computed is exactly that lie.",
+    "shakes_on_success": 3,
+    "_comment_failure": "A near miss shakes more times before breaking out than a hopeless one, so the wobble count is honest information about how close the throw was.",
+    "max_shakes_on_failure": 3,
+    "near_miss_threshold": 0.75,
+    "shake_interval": 0.55,
+    "settle_pause": 0.6,
+    "success_banner": 2.4
+  },
+
+  "faint": {
+    "_comment": "GAME_DESIGN.md 15: over-damaging a pal and causing a faint ends the capture opportunity, and fainted wild pals remain visible temporarily but cannot be captured. The lingering body is not decoration — it is what makes the lost chance legible instead of the creature simply vanishing.",
+    "linger_seconds": 4.0,
+    "slump_degrees": 72.0
+  },
+
+  "aggression": {
+    "_comment": "Aggressive wild pals, per GAME_DESIGN.md pillar 3 and 14 ('Aggressive pal initiates'). The 'not simple proximity' rule in 14 is scoped to PEACEFUL pals; these are the other kind. Deliberately thin: notice, close, initiate. No stalking, no growl phase, no standing your ground — those are a behaviour system and this is a flag and a chase.",
+    "notice_range": 14.0,
+    "_comment_engage": "Metres at which it forces the fight. Under the peaceful engage_range so you cannot be ambushed from further away than you could have chosen to fight from.",
+    "engage_range": 3.2,
+    "chase_speed": 3.4,
+    "_comment_giveup": "Metres from its home beyond which it loses interest and walks back. Without this an aggressive pal follows you across the whole meadow and the only escape is a fight.",
+    "give_up_distance": 26.0,
+    "_comment_grace": "Seconds after a fight ends before it will come at you again. Being re-engaged the instant you win is not danger, it is a soft lock.",
+    "grace_after_combat": 8.0
+  }
+}

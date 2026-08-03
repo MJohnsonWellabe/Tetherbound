@@ -22,14 +22,27 @@ extends Node
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
+const CATCH := preload("res://scripts/combat/catch_math.gd")
+const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
+const SPECIES := preload("res://scripts/pals/pal_species.gd")
 
 signal entered()
 signal exited(outcome: String)
 signal state_changed()
 signal hit_landed(on_enemy: bool, amount: float)
 signal attack_missed(by_player: bool)
+## A throw finished resolving. `shakes` is how many times the orb wobbled, and
+## comes from the single decision made when it landed — it is never re-rolled.
+signal catch_resolved(success: bool, shakes: int)
+signal catch_refused(reason: String)
+signal orb_shook(index: int)
 
 enum State { INACTIVE, ACTIVE, RESOLVING }
+
+## Why a fight ended. "caught" is new in M3 and is deliberately distinct from
+## "won": beating a creature and keeping one are different outcomes and the
+## world needs to treat them differently.
+const OUTCOME_CAUGHT := "caught"
 
 ## What the player's pal is doing. Wind-up and recovery are ROOTED: committing
 ## to an attack costs you your mobility, which is the whole reason a charged
@@ -68,12 +81,31 @@ var _outcome: String = ""
 ## attack of it.
 var _input_guard: float = 0.0
 
+## Catching. The aim and the projectile live in throw_aim.gd; what lives here is
+## deciding whether a throw is allowed and what its result means to the fight.
+var _throw: Node = null
+var _catch_shakes_left: int = 0
+var _catch_shake_timer: float = 0.0
+var _catch_succeeded: bool = false
+var _catch_index: int = 0
+
 var _rng := RandomNumberGenerator.new()
 
 
 func _ready() -> void:
 	_rng.randomize()
 	set_physics_process(false)
+
+	_throw = THROW_AIM.new()
+	_throw.name = "ThrowAim"
+	add_child(_throw)
+	_throw.connect("orb_struck", _on_orb_struck)
+	_throw.connect("orb_missed", _on_orb_missed)
+	_throw.connect("throw_refused", func(reason: String) -> void: catch_refused.emit(reason))
+
+
+func throw_aim() -> Node:
+	return _throw
 
 
 func active_pal() -> RefCounted:
@@ -127,8 +159,12 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	_outcome = ""
 	_input_guard = float(MATH.config().get("flow", {}).get("input_guard", 0.25))
 
+	_catch_shakes_left = 0
+	_catch_shake_timer = 0.0
+
 	_open_arena()
 	_place_fighters()
+	_throw.call("arm", _player, _wild, _camera_rig)
 
 	if not _wild.is_connected("strike_ready", _on_enemy_strike):
 		_wild.connect("strike_ready", _on_enemy_strike)
@@ -210,7 +246,10 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 		return
 	var side := forward.cross(Vector3.UP).normalized()
 	var centre: Vector3 = _arena.global_position
-	var spot := centre + side * (float(_arena.get("radius")) * 0.78) - forward * 1.5
+	# Well inside the boundary rather than on it. The aim camera sits several
+	# metres behind the trainer, and standing them at the very edge put that
+	# camera outside the arena looking in through the wall.
+	var spot := centre + side * (float(_arena.get("radius")) * 0.55) - forward * 1.2
 	_player.global_position = spot
 	_player.velocity = Vector3.ZERO
 
@@ -265,6 +304,10 @@ func _tick_active(delta: float) -> void:
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
 	_input_guard = maxf(0.0, _input_guard - delta)
+
+	if _catch_shakes_left > 0:
+		_tick_catch_wobble(delta)
+		return
 
 	_tick_action(delta)
 	_drive_player_pal()
@@ -334,6 +377,12 @@ func _drive_player_pal() -> void:
 		return
 	if _action != Action.READY:
 		return
+	# Aiming abandons your pal. It stops taking stick input while you line up the
+	# throw and the opponent does not stop attacking it — that is the entire cost
+	# of catching, and without it throwing is free and the correct play is to
+	# throw constantly between attacks.
+	if bool(_throw.call("is_aiming")):
+		return
 
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	if input == Vector2.ZERO:
@@ -349,11 +398,21 @@ func _read_player_input() -> void:
 	if pal == null:
 		return
 
+	# While aiming, throw_aim.gd owns the input: Run cancels the aim rather than
+	# ending the fight, and the attack buttons release the orb. Reading them here
+	# too would make one press do two things.
+	if bool(_throw.call("is_busy")):
+		return
+
 	if Input.is_action_just_pressed("combat_run"):
 		_begin_resolve("fled")
 		return
 
 	if _action != Action.READY:
+		return
+
+	if Input.is_action_just_pressed("combat_throw"):
+		_try_throw()
 		return
 
 	if Input.is_action_just_pressed("combat_charged") and _charged_cooldown <= 0.0:
@@ -411,6 +470,108 @@ func _on_enemy_strike() -> void:
 		_begin_resolve("lost")
 
 
+## --- catching -------------------------------------------------------------
+
+## Legality is checked before the aim opens, not after the orb lands.
+##
+## §15 says a faint ENDS the capture opportunity. That is a refusal, not a very
+## low chance, and telling the player before they spend an orb and a vulnerable
+## second of aiming is the difference between a rule and a punishment.
+func _try_throw() -> void:
+	if _enemy == null:
+		return
+	var allowed: bool = CATCH.can_be_caught(_enemy.fainted, false)
+	_throw.call("try_begin_aim", allowed, "%s is out cold — too late to catch it" % _enemy.display_name)
+	state_changed.emit()
+
+
+func _on_orb_struck(_target: Node3D, offset: float) -> void:
+	if state != State.ACTIVE or _enemy == null:
+		return
+
+	# Re-checked at the moment of impact as well as before the aim: the opponent
+	# can faint to your pal's attack while the orb is still in the air, and an
+	# orb that lands on a corpse must not catch it.
+	if not CATCH.can_be_caught(_enemy.fainted, false):
+		catch_refused.emit("%s fainted before the orb landed" % _enemy.display_name)
+		_throw.call("clear_orb")
+		state_changed.emit()
+		return
+
+	var radius := 0.5
+	if _wild != null and _wild.has_method("body_radius"):
+		radius = float(_wild.call("body_radius"))
+
+	# The decision, made once. Everything after this dramatises it.
+	var decision: Dictionary = CATCH.resolve(
+		SPECIES.catch_rate(_enemy.species_id),
+		_enemy.hp_fraction(),
+		"basic",
+		offset,
+		radius,
+		_rng.randf()
+	)
+	_catch_succeeded = bool(decision["caught"])
+	_catch_shakes_left = int(decision["shakes"])
+	_catch_index = 0
+	_catch_shake_timer = 0.0
+
+	# The creature goes into the orb for the duration either way. Watching it
+	# stand there unbothered while the orb wobbles beside it would tell the
+	# player the throw had already failed.
+	if _wild != null:
+		_wild.visible = false
+	state_changed.emit()
+
+
+func _on_orb_missed() -> void:
+	if state != State.ACTIVE:
+		return
+	# A clean miss is not a failed catch. It costs an orb and the moment, and it
+	# gets its own message, because "you missed" and "it broke out" are different
+	# things to have just done.
+	catch_refused.emit("the orb went wide")
+	state_changed.emit()
+
+
+func _tick_catch_wobble(delta: float) -> void:
+	var cfg: Dictionary = CATCH.config().get("resolve", {})
+	_catch_shake_timer -= delta
+	if _catch_shake_timer > 0.0:
+		return
+
+	if _catch_index < _catch_shakes_left:
+		_catch_index += 1
+		orb_shook.emit(_catch_index)
+		_catch_shake_timer = float(cfg.get("shake_interval", 0.55))
+		return
+
+	_catch_shakes_left = 0
+	_finish_catch(float(cfg.get("settle_pause", 0.6)))
+
+
+func _finish_catch(_settle: float) -> void:
+	_throw.call("clear_orb")
+	catch_resolved.emit(_catch_succeeded, _catch_index)
+
+	if _catch_succeeded:
+		_begin_resolve(OUTCOME_CAUGHT)
+		return
+
+	# It broke out. Back on its feet, back in the fight, no free damage either
+	# way — the cost of a failed catch is the orb and the seconds you spent
+	# standing still, which is quite enough.
+	if _wild != null:
+		_wild.visible = true
+	state_changed.emit()
+
+
+## The instance the player just caught, for the director to keep. Valid only
+## between `catch_resolved(true, ...)` and the end of the fight.
+func caught_instance() -> RefCounted:
+	return _enemy if _outcome == OUTCOME_CAUGHT else null
+
+
 ## --- resolution -----------------------------------------------------------
 
 func _begin_resolve(outcome: String) -> void:
@@ -430,6 +591,7 @@ func _finish() -> void:
 	state = State.INACTIVE
 	set_physics_process(false)
 
+	_throw.call("disarm")
 	if _ally_body != null:
 		_ally_body.visible = false
 		_ally_body.set("arena", null)
@@ -478,6 +640,21 @@ func enemy_is_rooted() -> bool:
 
 func outcome() -> String:
 	return _outcome
+
+
+func is_aiming() -> bool:
+	return _throw != null and bool(_throw.call("is_aiming"))
+
+
+func orbs_left() -> int:
+	return int(_throw.get("stock")) if _throw != null else 0
+
+
+## True while an orb is wobbling. The fight is paused around it: neither fighter
+## acts, because a creature landing a hit on an orb that is deciding whether it
+## caught something is nonsense.
+func is_resolving_catch() -> bool:
+	return _catch_shakes_left > 0
 
 
 ## Where the two fighters are, for anything that needs to frame them.

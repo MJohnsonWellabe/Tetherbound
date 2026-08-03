@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/orb.gd" id="1_orb"]
+
+; A thrown orb. The mesh is empty here and built in code from
+; data/config/catching.json, so the orb's size matches the collision radius the
+; catch actually tests against — the two drifting apart is how a projectile ends
+; up visibly passing through a target it did not hit.
+
+[node name="Orb" type="Node3D"]
+script = ExtResource("1_orb")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]

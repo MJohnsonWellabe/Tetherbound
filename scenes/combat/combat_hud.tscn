@@ -109,6 +109,39 @@ horizontal_alignment = 1
 theme_override_font_sizes/font_size = 34
 text = ""
 
+[node name="Orbs" type="Label" parent="Root"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -364.0
+offset_top = -230.0
+offset_right = -64.0
+offset_bottom = -180.0
+grow_horizontal = 0
+grow_vertical = 0
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 32
+text = ""
+
+[node name="Reticle" type="Label" parent="Root"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 44
+text = "+"
+
 [node name="Outcome" type="Label" parent="Root"]
 anchors_preset = 8
 anchor_left = 0.5

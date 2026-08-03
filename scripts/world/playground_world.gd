@@ -85,6 +85,15 @@ func _build_terrain() -> Node3D:
 	terrain.name = "Terrain"
 	terrain.set("region_size", int(config.get("region_size", 256)))
 	terrain.set("vertex_spacing", float(config.get("vertex_spacing", 1.0)))
+	# One collision shape per region rather than the 16m default, which over a
+	# 512m playground would ask for 1024 shapes instead of four. Set before the
+	# node enters the tree: the shape pool is allocated once, so changing this
+	# later and calling build() does nothing.
+	#
+	# This is a cost choice, not a correctness one. The playground is solid at
+	# either setting — see ground_height_at() below for the thing that actually
+	# was broken.
+	terrain.set("collision_shape_size", int(config.get("region_size", 256)))
 	# collision_mode is deliberately NOT set here; see _ready() for why.
 	add_child(terrain)
 	return terrain
@@ -112,6 +121,30 @@ func _apply_placeholder_material() -> void:
 		return
 	material.set("show_checkered", false)
 	material.set("show_colormap", true)
+
+
+## Ground height at a world x/z, or NAN where there is no terrain.
+##
+## Anything that needs to stand something on the ground should ask this rather
+## than casting a ray downwards.
+##
+## Raycasts against Terrain3D's heightmap collision are unreliable: measured
+## across the playground, roughly a quarter of downward rays return no hit at
+## points where the ground is unquestionably present — a sphere query at the
+## same spot collides, the character walks over it without falling, and
+## `data.get_height` returns a sane value. `move_and_slide` uses shape casts, so
+## the world has always been solid to walk on; only rays lie about it.
+##
+## That cost an entire creature. The M3 wild pal was placed by raycast, the ray
+## silently missed, and the creature was never spawned at all — no error, no
+## body, just an encounter that could not happen.
+func ground_height_at(x: float, z: float) -> float:
+	if _terrain == null:
+		return NAN
+	var data: Object = _terrain.get("data")
+	if data == null:
+		return NAN
+	return float(data.call("get_height", Vector3(x, 0.0, z)))
 
 
 func _load_terrain_config() -> Dictionary:

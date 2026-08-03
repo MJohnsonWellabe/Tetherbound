@@ -1,6 +1,8 @@
 {
   "_comment": "Species definitions. Base stats and presentation only; a live creature's current HP and energy belong to a pal_instance, never here (TECHNICAL_START.md, Pal Data vs Pal Instance). M11 replaces `model` and the colours with real rigged creatures without touching combat code.",
   "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance — clearly different silhouettes and clearly different colours — and nothing else.",
+  "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
+  "_comment_aggressive": "`aggressive` decides whether a wild pal will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL pal, and the same list allows 'Aggressive pal initiates' — so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
 
   "species": {
     "starter_ground": {
@@ -9,6 +11,8 @@
       "base_hp": 120.0,
       "base_attack": 22.0,
       "base_defence": 20.0,
+      "catch_rate": 0.3,
+      "aggressive": false,
       "placeholder": {
         "colour": "#7f8c3d",
         "height": 1.35,
@@ -21,10 +25,29 @@
       "base_hp": 95.0,
       "base_attack": 18.0,
       "base_defence": 16.0,
+      "_comment": "The practice creature. Peaceful, common, and generous to catch: it is the one the owner will throw at twenty times while deciding whether throwing is fun, and a rare target would make that a test of patience instead.",
+      "catch_rate": 0.55,
+      "aggressive": false,
       "placeholder": {
         "colour": "#a8622f",
         "height": 1.0,
         "radius": 0.42
+      }
+    },
+    "wild_bristler": {
+      "display_name": "Thornback",
+      "type": "ground",
+      "_comment": "The one that comes at you. Tougher and rarer than the Hopper, because being ambushed should be a moment rather than an interruption — and because the first thing anyone does when something charges them is find out whether they can beat it.",
+      "base_hp": 130.0,
+      "base_attack": 24.0,
+      "base_defence": 19.0,
+      "catch_rate": 0.28,
+      "aggressive": true,
+      "placeholder": {
+        "_comment_colour": "Plum from the key art board, and a heavier silhouette. It has to be tellable from the peaceful Hopper at a glance and from across the meadow, because that reading is the only warning the player gets before it closes.",
+        "colour": "#704f71",
+        "height": 1.25,
+        "radius": 0.56
       }
     }
   }

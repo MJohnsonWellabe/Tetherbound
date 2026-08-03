@@ -83,6 +83,16 @@ The real bar is higher and is the owner's: *you want an eleventh fight.*
 - full-health throws allowed
 - faint removes catch opportunity
 
+**Extended by `docs/decisions/D08-catching-costs-you-your-pal.md`.** Throwing
+hands camera and control back to the trainer for a real-time over-the-shoulder
+aim, and leaves your pal undefended for the duration. That cost is what makes
+throwing a decision rather than a free extra button.
+
+**Also in this milestone, from `GAME_DESIGN.md` pillar 3 and §14:**
+- an `aggressive` flag on a species
+- a wild pal that closes on the trainer and starts the fight itself
+- peaceful pals still never initiate
+
 **Acceptance:** landing a good throw feels satisfying.
 
 ### M4 — Party

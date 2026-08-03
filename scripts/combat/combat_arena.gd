@@ -93,12 +93,21 @@ func _build_boundary() -> void:
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.albedo_color = Color(0.85, 0.70, 0.25, _boundary_alpha)
-	# Fades out with height, so the wall reads as a boundary on the ground
-	# rather than as a solid drum the fight is inside.
 	material.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_DISABLED
+
+	# Only the FAR wall is ever drawn.
+	#
+	# The trainer stands near the edge and the aim camera sits several metres
+	# behind them, which puts it outside the circle — and with both faces drawn
+	# the near wall then hung across the entire view as a translucent sheet with
+	# the fight behind it. Culling front faces means the boundary is always
+	# something you see across the arena, never something you look through.
+	material.cull_mode = BaseMaterial3D.CULL_FRONT
+	# It marks a line on the ground; it should never occlude a creature standing
+	# behind it, and it has no business writing depth for anything else.
 	material.no_depth_test = false
+	material.disable_receive_shadows = true
 
 	var mesh := MeshInstance3D.new()
 	mesh.name = "Boundary"

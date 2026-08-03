@@ -50,3 +50,17 @@ static func spawn(species_id: String) -> RefCounted:
 static func placeholder(species_id: String) -> Dictionary:
 	var entry: Variant = definition(species_id).get("placeholder")
 	return entry if entry is Dictionary else {"colour": "#cccccc", "height": 1.0, "radius": 0.4}
+
+
+## Will this creature start a fight on its own?
+##
+## Defaults to false, which is the safe direction: a species that forgets to
+## declare itself behaves like every creature did before M3 rather than
+## surprising the player by charging them.
+static func is_aggressive(species_id: String) -> bool:
+	return bool(definition(species_id).get("aggressive", false))
+
+
+## The species' base share of the catch formula. Lower is rarer.
+static func catch_rate(species_id: String) -> float:
+	return float(definition(species_id).get("catch_rate", 0.3))
