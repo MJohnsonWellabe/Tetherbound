@@ -134,9 +134,9 @@
     },
     {
       "id": "reed",
-      "minDistance": 2.2,
-      "drawDistance": 80,
-      "cellSize": 80,
+      "minDistance": 2.6,
+      "drawDistance": 72,
+      "cellSize": 72,
       "castsShadow": false,
       "shadowDistance": 0,
       "collisionRadius": 0,
@@ -197,9 +197,9 @@
       "id": "grass",
       "$comment": "The densest family by an order of magnitude, so it still gets the shortest draw distance. It used to stop at 44m against a 384m terrain view, which is why the meadow read as a bare golf course; the leaf-tuft source (36 tris, was 224) bought the range back at a third of the old triangle cost (D51).",
       "$comment_density": "minDistance is the binding constraint on lushness, not `density`: the achievable ceiling is about 0.318*density/minDistance^2, so no value of `density` could ever have thickened this. D51 cut the per-tuft triangle cost 6x and spent the whole saving on draw distance and on OTHER families, which is why the meadow stayed a golf course you could see further across. 2.1 -> 1.25 is roughly 4x the tufts. It is not lowered further because the Poisson pass costs 25 mask() calls per grid cell and each mask() is ~80 noise evaluations, so cost grows as 1/minDistance^2 and going under 1.0 turns chunk streaming into a soft hang.",
-      "minDistance": 1.25,
-      "drawDistance": 88,
-      "cellSize": 88,
+      "minDistance": 1.7,
+      "drawDistance": 72,
+      "cellSize": 72,
       "castsShadow": false,
       "shadowDistance": 0,
       "collisionRadius": 0,
@@ -210,7 +210,7 @@
       ],
       "maxSlope": 35,
       "density": {
-        "default": 0.95
+        "default": 0.9
       },
       "$comment_scale": "Scaled up alongside the density rise. Overlapping tufts are what turn scattered objects into ground cover, and enlarging costs no instances at all.",
       "scaleRange": [
@@ -225,7 +225,8 @@
         ],
         "value": 0.11,
         "warm": 0.05
-      }
+      },
+      "$comment_cost": "Instance count is roughly 0.318*density/minDistance^2 per square metre, times the ~9 resident cells of cellSize^2. Multiply by the model triangle count BEFORE changing any of the three, or the meadow silently costs several million triangles."
     }
   ],
   "$comment_tint": "Per-instance colour, multiplied onto each model baked vertex colours. The bases sit at 1: they briefly carried heavy corrections to rescue the Kenney kit foliage, which was the wrong fix for a bad silhouette (D65). What is left is the per-instance SPREAD, which is what stops a stand of trees reading as one stamped mesh. `value` is the half-width of the brightness jitter, `warm` pushes red up and blue down together, which is the axis foliage actually varies along."
