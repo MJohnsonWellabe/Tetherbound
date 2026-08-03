@@ -34,11 +34,11 @@
     "_comment": "One directional light. `pitch` well above the horizon so shadows are short and readable under a top-down-ish combat camera; long raking shadows look dramatic in a screenshot and hide the opponent in a fight.",
     "pitch_deg": -52.0,
     "yaw_deg": -40.0,
-    "energy": 1.7,
+    "energy": 1.35,
     "colour": "#fff6e6",
     "shadow_max_distance": 220.0,
     "_comment_shadow": "Normal bias fights the acne that a heightmap terrain produces at grazing angles. Raise it if the ground looks striped; lower it if small props stop casting.",
-    "shadow_normal_bias": 1.4,
+    "shadow_normal_bias": 2.0,
     "_comment_energy": "Bright. The first pass at real lighting overshot into gloom: the arena went near-black and the creatures stopped being readable, which is a worse failure than the flat lighting it replaced. Value RANGE was the goal — bright sun, real shadows — not darkness."
   },
   "environment": {
@@ -46,17 +46,54 @@
     "tonemap": "aces",
     "exposure": 1.05,
     "white": 6.0,
-    "ambient_energy": 1.35,
+    "ambient_energy": 1.25,
     "_comment_fog": "Very light, and warm rather than grey. It exists to separate near hills from far ones; at any strength where you notice it as fog, it is too strong.",
+    "_comment_fog_measured": "Halved from 0.0022. At the old density the blind critic measured `03-rise-overlook` at mean saturation 0.235 against 0.51 for a frame in the same biome, and said fog was 'eating the world rather than describing depth' — every object past ~150m a grey stamp. The reference does the same job with comparable haze and keeps a saturated tree band in front of it, so the fix is less fog, not less distance.",
     "fog_enabled": true,
-    "fog_colour": "#c4d2d8",
-    "fog_density": 0.0022,
+    "fog_colour": "#cbd2cd",
+    "fog_density": 0.0011,
     "fog_sky_affect": 0.0,
     "ssao_enabled": true,
     "ssao_intensity": 1.6,
     "ssao_radius": 1.2,
-    "ambient_sky_contribution": 0.85,
-    "aerial_perspective": 0.45
+    "_comment_ambient": "Sky ambient with a real colour underneath it. `sky_contribution` blends between the two. Quadrupling ambient energy with pure sky ambient moved the survey frames by NOTHING — sky radiance does not reach the terrain under the Compatibility renderer the harness is forced to use — while an explicit colour lifted the shaded ground by 55%. Specifying both means shaded ground is filled under either renderer, and 'shadows are filled by this much of this colour' is a decision somebody made rather than a side effect of a procedural sky.",
+    "ambient_colour": "#a8bccc",
+    "ambient_sky_contribution": 0.5,
+    "aerial_perspective": 0.35
+  },
+  "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above.",
+  "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it — 46.8% of the image pixel-for-pixel the same — because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",
+  "times": {
+    "day": {
+      "_comment": "Mid-morning, high summer, clear. The default, and what the biome is designed around."
+    },
+    "golden": {
+      "_comment": "Late afternoon. Long shadows, warm key, the sky's blue pushed down and the horizon lifted to amber. This is the mood the key art's own sunset panel is selling, and it is the one hour where the meadow gets its warm end of the palette for free.",
+      "sun": {
+        "pitch_deg": -13.0,
+        "yaw_deg": -66.0,
+        "energy": 1.5,
+        "colour": "#ffd9a3",
+        "shadow_normal_bias": 1.8
+      },
+      "sky": {
+        "top_colour": "#2f5f8f",
+        "horizon_colour": "#e8b784",
+        "ground_horizon_colour": "#e0ad7c",
+        "ground_bottom_colour": "#4b4436",
+        "sun_angle_max_deg": 32.0,
+        "sun_curve": 0.09,
+        "energy": 1.08
+      },
+      "environment": {
+        "fog_colour": "#e2bb92",
+        "fog_density": 0.0016,
+        "ambient_energy": 1.15,
+        "ambient_colour": "#8f9ec4",
+        "ambient_sky_contribution": 0.45,
+        "exposure": 1.0
+      }
+    }
   },
   "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips — faking motion on top of that would fight the animation."
 }

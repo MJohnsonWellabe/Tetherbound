@@ -15,17 +15,72 @@ extends Node
 
 const CONFIG_PATH := "res://data/config/art.json"
 
+const DEFAULT_TIME := "day"
+
 @export var sun_path: NodePath
 @export var environment_path: NodePath
 
+var _config: Dictionary = {}
+var _time: String = DEFAULT_TIME
+
 
 func _ready() -> void:
-	var cfg := _load()
-	if cfg.is_empty():
+	_config = _load()
+	if _config.is_empty():
 		push_warning("art.json missing or unreadable; the scene keeps its authored look")
 		return
-	_apply_sun(cfg.get("sun", {}))
-	_apply_environment(cfg.get("environment", {}), cfg.get("sky", {}))
+	apply_time(DEFAULT_TIME)
+
+
+## Set the hour, and let everything that depends on it move together.
+##
+## The last survey shipped two frames named `01-spawn-outward` and
+## `05-spawn-low-sun` whose skies were BIT-IDENTICAL — 46.8% of the whole frame
+## pixel-for-pixel the same — because the only thing the low-sun frame changed
+## was the DirectionalLight3D's pitch. The sun disc, the sky gradient, the
+## horizon haze and the fog colour all stayed at noon. The key art board asks
+## for "day and night create different moods", and a sky that does not
+## participate in the time of day cannot deliver one.
+##
+## So the hour is a single named value, and sun, sky, fog and ambient are all
+## derived from it. Anything that wants to change the light asks for a time
+## rather than reaching for the light directly — which is the only way they
+## cannot drift apart again.
+func apply_time(name: String) -> void:
+	if _config.is_empty():
+		return
+	var times: Dictionary = _config.get("times", {})
+	if not times.has(name):
+		if name != DEFAULT_TIME:
+			push_warning("no time-of-day called '%s' in art.json; using '%s'" % [name, DEFAULT_TIME])
+		name = DEFAULT_TIME
+	_time = name
+
+	var over: Dictionary = times.get(name, {})
+	_apply_sun(_merged("sun", over))
+	_apply_environment(_merged("environment", over), _merged("sky", over))
+
+
+func time_of_day() -> String:
+	return _time
+
+
+func times_available() -> Array:
+	var found: Array = []
+	for key: String in _config.get("times", {}).keys():
+		if not key.begins_with("_"):
+			found.append(key)
+	return found
+
+
+## A time-of-day states only what it changes; everything else comes from the
+## base block. Full copies of every value per hour is how two of them end up
+## silently disagreeing about something nobody meant to vary.
+func _merged(section: String, over: Dictionary) -> Dictionary:
+	var base: Dictionary = (_config.get(section, {}) as Dictionary).duplicate(true)
+	for key: String in (over.get(section, {}) as Dictionary).keys():
+		base[key] = over[section][key]
+	return base
 
 
 func _load() -> Dictionary:
@@ -79,6 +134,7 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 		sky.ground_bottom_color = Color(str(sky_cfg.get("ground_bottom_colour", "#4a5648")))
 		sky.sun_angle_max = float(sky_cfg.get("sun_angle_max_deg", 24.0))
 		sky.sun_curve = float(sky_cfg.get("sun_curve", 0.18))
+		sky.energy_multiplier = float(sky_cfg.get("energy", 1.0))
 
 	if cfg.is_empty():
 		return
@@ -92,6 +148,20 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# Ambient from the sky, dialled DOWN. Full-strength sky ambient fills every
 	# shadow back in, which is precisely how a scene ends up with no darks.
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	# ...but a real colour underneath it, because sky ambient is not portable.
+	#
+	# Measured: quadrupling `ambient_energy` with sky ambient changed the survey
+	# frames by nothing at all — not one thousandth — while an explicit colour
+	# ambient lifted the shaded near ground by 55%. Sky radiance does not reach
+	# the terrain under the Compatibility renderer the survey is forced to use
+	# (D06), so a scene lit only by sky ambient has ZERO fill in every frame a
+	# critic ever sees, while looking correct in the Forward+ build that ships.
+	#
+	# `sky_contribution` blends between this colour and the sky, so specifying
+	# both means shaded ground is lit under either renderer. It is also just the
+	# more honest way to state it: "shadows are filled by this much of this
+	# colour" is a decision, and reading it off a procedural sky was never one.
+	env.ambient_light_color = Color(str(cfg.get("ambient_colour", "#9fb4c6")))
 	env.ambient_light_sky_contribution = float(cfg.get("ambient_sky_contribution", 0.55))
 
 	env.ssao_enabled = bool(cfg.get("ssao_enabled", true))

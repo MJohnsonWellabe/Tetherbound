@@ -137,7 +137,72 @@ func _apply_ground_materials() -> void:
 	# The auto shader blends the second texture onto slopes, which is what makes
 	# the rocky rises read as stone rather than as grass at an angle.
 	material.set("auto_shader", true)
-	material.set("world_background", 1)
+	_apply_ground_shader(material)
+
+
+## Push data/config/terrain_playground.json's `shader` block at the material.
+##
+## Split from the texture list because these are two different kinds of thing:
+## which textures exist is a content question, and how they are drawn is a
+## presentation one. The distinction matters because the presentation half is
+## what answers two of the blind critic's measured complaints — the world edge
+## and the tiling — and both were invisible from the config until now.
+##
+## Named properties go through `set`; everything else is a shader uniform. The
+## split is by name because Terrain3D exposes some of the shader's uniforms as
+## real properties and leaves the rest reachable only through
+## `set_shader_param`, and setting one the wrong way fails silently.
+func _apply_ground_shader(material: Object) -> void:
+	# Terrain3DMaterial exposes exactly TWO of these as real properties. The rest
+	# — auto_slope, blend_sharpness, dual_scale_*, mipmap_bias and the macro
+	# variation colours — are shader uniforms, reachable only through
+	# set_shader_param.
+	#
+	# This list was longer, and `material.set()` on a name that is not a property
+	# returns quietly having done nothing. So five settings were written to the
+	# config, read back from the config, and never reached the shader: two
+	# consecutive surveys came back byte-identical after retuning dual scaling,
+	# which is the only reason it was noticed at all. If a value here appears to
+	# do nothing, check which side of this line it is on before tuning it further.
+	const PROPERTIES := ["world_background", "texture_filtering"]
+	const COLOURS := ["macro_variation1", "macro_variation2"]
+
+	var cfg: Dictionary = _load_terrain_config().get("shader", {})
+	if cfg.is_empty():
+		# FLAT rather than NOISE, matching the shader's own default, so a missing
+		# config is the old look rather than an unlit void.
+		material.set("world_background", 1)
+		return
+
+	var ignored: Array[String] = []
+	for key: String in cfg.keys():
+		if key.begins_with("_"):
+			continue
+		var value: Variant = cfg[key]
+		if COLOURS.has(key):
+			value = Color(str(value))
+		if PROPERTIES.has(key):
+			material.set(key, value)
+			continue
+		if not material.has_method("set_shader_param"):
+			ignored.append(key)
+			continue
+		material.call("set_shader_param", key, value)
+		# Read back. A uniform that does not exist under this name accepts the
+		# write and returns null, which is indistinguishable from working right
+		# up until a survey comes back unchanged.
+		if material.call("get_shader_param", key) == null:
+			ignored.append(key)
+	if not ignored.is_empty():
+		push_warning("terrain shader ignored %d setting(s), which will look exactly like tuning them did nothing: %s" % [
+			ignored.size(), ", ".join(ignored)
+		])
+
+	var background: int = int(material.get("world_background"))
+	if background != int(cfg.get("world_background", 1)):
+		push_warning("terrain world_background is %d, not the %d the config asked for; " % [
+			background, int(cfg.get("world_background", 1))
+		] + "the world will have a visible edge at the end of the baked regions.")
 
 
 ## Build a Terrain3DAssets from data/config/terrain_playground.json.
@@ -153,6 +218,29 @@ func _build_texture_list() -> Object:
 
 	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
 	var index := 0
+	# Every texture in the array must be the same size. Terrain3D builds one
+	# Texture2DArray, and a single odd resolution makes the whole array fail —
+	# silently, leaving a terrain drawn from the colour map alone.
+	#
+	# That cost two rounds. A 2K grass dropped into a set of 1K textures turned
+	# the ground into a flat pale field with no albedo at all, and because it
+	# still LOOKED like ground, the next hour went into tuning sun energy and
+	# ambient against a surface that had no texture on it to tune.
+	var uniform_size := Vector2i.ZERO
+	for entry: Variant in entries:
+		var path: String = str((entry as Dictionary).get("albedo", ""))
+		if not ResourceLoader.exists(path):
+			continue
+		var size: Vector2i = (load(path) as Texture2D).get_size()
+		if uniform_size == Vector2i.ZERO:
+			uniform_size = size
+		elif size != uniform_size:
+			push_error("terrain texture %s is %dx%d but the set is %dx%d. " % [
+				path.get_file(), size.x, size.y, uniform_size.x, uniform_size.y
+			] + "Terrain3D needs one size for the whole array; the ground will draw " +
+				"from the colour map with no albedo detail at all.")
+			return null
+
 	for entry: Variant in entries:
 		var spec: Dictionary = entry
 		var albedo: String = str(spec.get("albedo", ""))
@@ -166,6 +254,24 @@ func _build_texture_list() -> Object:
 		var normal: String = str(spec.get("normal", ""))
 		if ResourceLoader.exists(normal):
 			texture.set("normal_texture", load(normal))
+		# Normal depth well under 1.0, and this is the single most consequential
+		# number in the file.
+		#
+		# At full strength a photographic grass normal map turns most of its
+		# texels away from a 52-degree sun, and the ground within about thirty
+		# metres of the camera goes black — measured luminance 0.071 against
+		# 0.27-0.60 across the references, with the mottled high-contrast fizz the
+		# critic called "high-frequency mottled noise, not grass". It flattens
+		# with distance because the mip average cancels the perturbation, which is
+		# why the far hills looked fine and the foreground did not, and why three
+		# confident explanations for it were all wrong.
+		texture.set("normal_depth", float(spec.get("normal_depth", 0.35)))
+		texture.set("ao_strength", float(spec.get("ao_strength", 0.3)))
+		texture.set("roughness_mod", float(spec.get("roughness_mod", 0.0)))
+		# Detiling rotates and shifts the tile per region so a 2K texture stops
+		# announcing its own repeat period.
+		texture.set("detiling_rotation", float(spec.get("detiling_rotation", 0.25)))
+		texture.set("detiling_shift", float(spec.get("detiling_shift", 0.3)))
 		texture.set("uv_scale", float(spec.get("uv_scale", 0.1)))
 		texture.set("albedo_color", Color(str(spec.get("tint", "#ffffff"))))
 		assets.call("set_texture", index, texture)

@@ -33,39 +33,76 @@ const OUT_DIR := "res://shots"
 const SETTLE_FRAMES := 240
 ## Frames to let rendering settle after posing, before the shutter.
 const POSE_FRAMES := 4
+## Physics frames for the trainer to settle onto the ground after being moved.
+const SETTLE_AFTER_MOVE := 20
+## How far below the camera's aim line the trainer is parked when a viewpoint
+## asks for one, as a fraction of the distance to them. Keeps the figure in the
+## lower third rather than silhouetted on the horizon.
+const ACTOR_CLEARANCE := 0.4
+
+## Vertical FOV, matching the gameplay camera. The horizon maths below depends
+## on it, and Godot treats `fov` as the vertical angle at 16:9.
+const FOV := 70.0
+
+## Where the horizon should sit, as a fraction of frame height from the top.
+##
+## Half of every frame in the last survey was empty sky: measured 39.8%-52.4%
+## against 2.2%-21.1% across the Palworld references and 17.8% on the key art
+## board. The cameras were aimed at points roughly level with themselves, which
+## puts the horizon dead centre — the least interesting place it can be, and it
+## costs half the frame for a two-stop gradient carrying no information.
+##
+## Set per viewpoint rather than globally, so the five frames are not five
+## copies of the same composition.
+const DEFAULT_HORIZON := 0.30
 
 ## name, eye XZ, eye height above ground, look-at XZ, look-at height above
-## ground, sun pitch degrees (negative is a lower sun).
+## ground, and which named time of day from data/config/art.json.
+##
+## `horizon` is where the true horizon lands in frame; see `_pose`. `actor`, if
+## present, moves the trainer to that XZ so there is a character in shot.
+##
+## `time` names an hour rather than setting a sun pitch. The previous version of
+## this file rotated the DirectionalLight3D directly, which is how `01` and `05`
+## ended up sharing a bit-identical sky while claiming to be different times of
+## day. The sun is no longer the survey's to move.
 const VIEWPOINTS := [
 	{
 		"name": "01-spawn-outward",
 		"eye": Vector2(0.0, 0.0), "eye_h": 2.2,
 		"target": Vector2(150.0, 120.0), "target_h": 6.0,
-		"sun_pitch": -42.0,
+		"time": "day", "horizon": 0.28,
+		"actor": Vector2(9.0, 7.0),
 	},
 	{
 		"name": "02-valley-floor",
 		"eye": Vector2(-120.0, 130.0), "eye_h": 2.2,
 		"target": Vector2(40.0, 40.0), "target_h": 20.0,
-		"sun_pitch": -42.0,
+		"time": "day", "horizon": 0.32,
+		"actor": Vector2(-108.0, 118.0),
 	},
 	{
+		# Eye raised from 6m and moved 14m off the peak. At the old height the
+		# denser copses put a single tree three metres in front of the lens and it
+		# filled two thirds of the frame — the shot is meant to be the one that
+		# shows distance, and it was showing one leaf blob.
 		"name": "03-rise-overlook",
-		"eye": Vector2(140.0, -90.0), "eye_h": 6.0,
+		"eye": Vector2(148.0, -102.0), "eye_h": 11.0,
 		"target": Vector2(-60.0, 60.0), "target_h": 0.0,
-		"sun_pitch": -42.0,
+		"time": "day", "horizon": 0.24,
 	},
 	{
 		"name": "04-three-quarter",
 		"eye": Vector2(70.0, 40.0), "eye_h": 8.0,
 		"target": Vector2(-90.0, -60.0), "target_h": 4.0,
-		"sun_pitch": -42.0,
+		"time": "day", "horizon": 0.26,
 	},
 	{
 		"name": "05-spawn-low-sun",
 		"eye": Vector2(0.0, 0.0), "eye_h": 2.2,
 		"target": Vector2(150.0, 120.0), "target_h": 6.0,
-		"sun_pitch": -11.0,
+		"time": "golden", "horizon": 0.34,
+		"actor": Vector2(9.0, 7.0),
 	},
 ]
 
@@ -109,7 +146,8 @@ func _run() -> void:
 	world.add_child(camera)
 	camera.make_current()
 
-	var sun: DirectionalLight3D = world.get_node_or_null(^"Sun") as DirectionalLight3D
+	var look: Node = world.get_node_or_null(^"WorldLook")
+	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
 	var field: RefCounted = HEIGHTFIELD.new()
 
 	var written: Array[String] = []
@@ -120,11 +158,16 @@ func _run() -> void:
 		var name: String = str(view["name"])
 
 		_pose(camera, field, view)
-		if sun != null:
-			# Yaw is kept fixed so only the elevation differs between the day and
-			# low-sun frames; two variables would make them incomparable.
-			sun.rotation = Vector3(deg_to_rad(float(view["sun_pitch"])), deg_to_rad(-38.0), 0.0)
+		_place_actor(player, field, camera, view)
+		if look != null:
+			look.call("apply_time", str(view.get("time", "day")))
+		else:
+			failures.append("%s: no WorldLook node, so the time of day is whatever the scene was saved with" % name)
 
+		# Physics frames, not process frames, because the trainer has to settle
+		# onto the ground after being moved.
+		for i in SETTLE_AFTER_MOVE:
+			await physics_frame
 		for i in POSE_FRAMES:
 			await process_frame
 		await RenderingServer.frame_post_draw
@@ -170,7 +213,55 @@ func _pose(camera: Camera3D, field: RefCounted, view: Dictionary) -> void:
 	var eye := Vector3(eye_xz.x, eye_ground + float(view["eye_h"]), eye_xz.y)
 	var target := Vector3(target_xz.x, target_ground + float(view["target_h"]), target_xz.y)
 	camera.global_position = eye
+	# look_at fixes the heading; the pitch is then overridden so the horizon
+	# lands where the composition wants it rather than wherever the target
+	# happened to be. Heading is a content choice, pitch is a framing one.
 	camera.look_at(target, Vector3.UP)
+	camera.rotation = Vector3(
+		_pitch_for_horizon(float(view.get("horizon", DEFAULT_HORIZON))),
+		camera.rotation.y,
+		0.0
+	)
+
+
+## Stand the trainer in shot, for viewpoints that ask for one.
+##
+## The last survey had the player in none of the five exploration frames, so the
+## critic's first and most important criterion — is the player readable against
+## the ground? — could not be answered at all. It called that a survey-framing
+## failure, correctly: a survey of a third-person game with no character in it
+## is not a survey of the game.
+##
+## The trainer is moved rather than the camera, so the viewpoints stay exactly
+## where they were and remain comparable with every earlier sheet.
+func _place_actor(player: Node3D, field: RefCounted, camera: Camera3D, view: Dictionary) -> void:
+	if player == null:
+		return
+	if not view.has("actor"):
+		# Parked far out of shot rather than hidden: hiding it disables the body,
+		# and a disabled body is a different scene from the one being surveyed.
+		player.global_position = Vector3(9000.0, 200.0, 9000.0)
+		return
+
+	var xz: Vector2 = view["actor"]
+	player.global_position = Vector3(xz.x, field.height_at(xz.x, xz.y) + ACTOR_CLEARANCE, xz.y)
+	# Facing away from the camera and slightly across it, which is how the game
+	# actually frames them and what the key art's own panels show.
+	var away := player.global_position - camera.global_position
+	player.rotation = Vector3(0.0, atan2(away.x, away.z) + 0.35, 0.0)
+
+
+## The pitch that puts the true horizon at `fraction` of frame height.
+##
+## The horizon is the camera's own level plane at infinity, so for a pinhole
+## camera it lands at exactly `0.5 - 0.5 * tan(pitch) / tan(fov/2)` down the
+## frame. Solving that for pitch means the framing is stated as the thing being
+## composed — "sky is 28% of this shot" — instead of as a rotation nobody can
+## check. It also means the number the critic measures and the number in this
+## file are the same number.
+func _pitch_for_horizon(fraction: float) -> float:
+	var half := tan(deg_to_rad(FOV) * 0.5)
+	return -atan((0.5 - clampf(fraction, 0.05, 0.95)) * 2.0 * half)
 
 
 ## Rough measure of how much the frame varies. Sampled on a grid rather than

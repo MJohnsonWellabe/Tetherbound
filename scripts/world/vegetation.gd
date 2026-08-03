@@ -56,6 +56,28 @@ func build(world_size: float) -> void:
 
 	for model: String in by_model.keys():
 		_build_batch(model, by_model[model])
+	_warn_about_shared_models(by_layer)
+
+
+## A model used by two layers cannot carry two different tints.
+##
+## Batches are grouped by MESH, and the per-layer tint override is looked up from
+## the model. Sharing a model across layers is therefore silently
+## last-writer-wins — which is exactly the kind of thing that shows up as one
+## odd-coloured patch in a survey frame and takes an afternoon to trace.
+func _warn_about_shared_models(by_layer: Dictionary) -> void:
+	var owner_of: Dictionary = {}
+	for layer_name: String in RULES.config().get("layers", {}).keys():
+		if layer_name.begins_with("_"):
+			continue
+		var layer: Dictionary = RULES.config()["layers"][layer_name]
+		for entry: Variant in (layer.get("models", []) as Array):
+			var model := str(entry)
+			if owner_of.has(model) and owner_of[model] != layer_name:
+				push_warning("%s is in both '%s' and '%s'; only one layer's retint can apply" % [
+					model.get_file(), owner_of[model], layer_name
+				])
+			owner_of[model] = layer_name
 
 
 ## Materials, cached by source name so every tree in the meadow shares one.
@@ -70,9 +92,14 @@ var _tints: Dictionary = {}
 ## silhouettes are good, so the models stay and the colours are remapped by
 ## material NAME, which survives a model being swapped for another from the same
 ## pack.
-func _retint(mesh: Mesh) -> Mesh:
+## A layer may override any entry in the global map — see `_tint_for`. That is
+## what lets one mesh family carry two palettes: the same Kenney tufts read as
+## green grass in one layer and dry gold straw in another, which is most of the
+## hue breadth the meadow has. The critic counted 2 hue families against the key
+## art board's 6, and the ground cannot supply the difference on its own.
+func _retint(mesh: Mesh, overrides: Dictionary) -> Mesh:
 	var map: Dictionary = RULES.config().get("retint", {})
-	if map.is_empty():
+	if map.is_empty() and overrides.is_empty():
 		return mesh
 
 	var out := ArrayMesh.new()
@@ -81,17 +108,28 @@ func _retint(mesh: Mesh) -> Mesh:
 		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 		var source: Material = mesh.surface_get_material(surface)
 		var key := "" if source == null else source.resource_name
-		out.surface_set_material(surface, _tint_for(key, source))
+		out.surface_set_material(surface, _tint_for(key, source, overrides))
 	return out
 
 
-func _tint_for(name: String, source: Material) -> Material:
-	if _tints.has(name):
-		return _tints[name]
+func _tint_for(name: String, source: Material, overrides: Dictionary) -> Material:
 	var map: Dictionary = RULES.config().get("retint", {})
+	var colour := ""
+	if overrides.has(name):
+		colour = str(overrides[name])
+	elif map.has(name):
+		colour = str(map[name])
+
+	# Keyed by the colour it resolves to rather than by the material name, so two
+	# layers overriding the same source material get two materials while
+	# everything else still shares one.
+	var cache_key := "%s|%s" % [name, colour]
+	if _tints.has(cache_key):
+		return _tints[cache_key]
+
 	var material := StandardMaterial3D.new()
-	if map.has(name):
-		material.albedo_color = Color(str(map[name]))
+	if colour != "":
+		material.albedo_color = Color(colour)
 	elif source is StandardMaterial3D:
 		# Unmapped materials keep their original colour rather than turning
 		# white, so adding a model from the pack degrades to "slightly off"
@@ -99,7 +137,7 @@ func _tint_for(name: String, source: Material) -> Material:
 		material.albedo_color = (source as StandardMaterial3D).albedo_color
 	material.roughness = 0.94
 	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
-	_tints[name] = material
+	_tints[cache_key] = material
 	return material
 
 
@@ -111,7 +149,7 @@ func _build_batch(model_path: String, placements: Array) -> void:
 
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	multi.mesh = _retint(mesh)
+	multi.mesh = _retint(mesh, _layer_for(model_path).get("retint", {}))
 	multi.instance_count = placements.size()
 
 	for i in placements.size():
@@ -125,9 +163,24 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	var node := MultiMeshInstance3D.new()
 	node.name = model_path.get_file().get_basename()
 	node.multimesh = multi
-	# Props cast but do not receive: a grass tuft receiving a shadow from its
-	# neighbour costs real time and reads as dirt at this scale.
-	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	# Shadow casting is per layer, and the small layers must not.
+	#
+	# Everything cast until now. At the densities this scatter runs at — several
+	# thousand tufts, most of them within thirty metres of the camera — every
+	# blade drops its own hard shadow onto terrain that does receive, and they
+	# overlap into a black carpet. Measured: the near-field ground read at
+	# luminance 0.068 against 0.27-0.60 across the references, and three of five
+	# survey frames had a foreground that was simply dark.
+	#
+	# A tuft's shadow is not information at this scale; a tree's is. Trees,
+	# bushes, rocks and deadfall place themselves on the ground with theirs,
+	# which is the thing shadows are actually for here.
+	var layer := _layer_for(model_path)
+	node.cast_shadow = (
+		GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		if bool(layer.get("casts_shadow", true))
+		else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	)
 	add_child(node)
 
 	_placed += placements.size()

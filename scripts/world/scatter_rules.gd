@@ -58,7 +58,15 @@ static func allowed(layer: Dictionary, height: float, slope: float, distance_fro
 	# eleven metres across, and a tree inside it ends up between the camera and
 	# the whole fight — which is what made two survey frames show nothing but
 	# green.
-	if spot != Vector2.INF and _inside_a_clearing(spot):
+	#
+	# A clearing keeps out what can BLOCK, not everything that grows. Applying it
+	# to every layer is what left the spawn — where the camera always starts —
+	# as forty metres of bare terrain in every frame, with the foreground of the
+	# game's first sight of itself carrying no content at all. Grass and
+	# wildflowers are walked straight through and cannot occlude a fight, so
+	# there was never a reason to strip them; the reason was written for trees
+	# and applied to everything within reach of it.
+	if spot != Vector2.INF and bool(layer.get("cleared_by_clearings", true)) and _inside_a_clearing(spot):
 		return false
 	return true
 

@@ -108,8 +108,20 @@ func _run() -> void:
 
 
 ## Slope-driven ground colour. Grass on walkable ground, soil on the shoulders,
-## rock on genuinely steep faces. This stands in for splatmapped textures until
-## an art pass and keeps the playground cohesive with zero texture assets.
+## rock on genuinely steep faces.
+##
+## This is a MULTIPLIER over the PBR albedo, not a paint layer, and that changed
+## what belongs in it. It was authored when the colour map WAS the ground — real
+## grass green, real soil brown, no textures anywhere — and those values kept
+## being multiplied into the textures after the textures arrived. Grass albedo at
+## luminance 0.40 times a #496c34 colour map at 0.36 is a ground of 0.14 before
+## a photon reaches it, which is why the near field measured 0.096 against
+## 0.27-0.60 across the references and why nothing about the lighting fixed it:
+## the surface was dark on paper.
+##
+## So these are near-white now. The textures carry the colour; this carries the
+## slope-driven VARIATION, which is the job it is actually good at. Anything
+## much below #c0 here is a brightness change pretending to be a colour.
 func _ground_colour(slope_degrees: float, cfg: Dictionary) -> Color:
 	var grass_low := Color(str(cfg.get("grass_low", "#496c34")))
 	var grass_high := Color(str(cfg.get("grass_high", "#7f8c3d")))
