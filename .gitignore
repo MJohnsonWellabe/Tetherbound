@@ -1,36 +1,31 @@
-node_modules/
-dist/
-dist-ssr/
-*.local
+# Godot 4 editor cache and import artifacts. Regenerated on open; committing
+# them causes noisy diffs and cross-machine conflicts.
+.godot/
+.import/
 
-# Raw asset downloads. Only converted, manifest-logged output belongs in public/.
-assets_raw/
+# Export output. Built by `godot --export-*`, never checked in.
+build/
+*.exe
+*.pck
+*.zip
 
+# Godot writes these next to the project on some platforms.
+export_presets.cfg.bak
+*.translation
+
+# The editor's per-user settings, which are machine-specific.
+.vscode/
+.idea/
+*.tmp
+
+# OS noise
 .DS_Store
 Thumbs.db
 
-.vscode/*
-!.vscode/extensions.json
-.idea/
+# Raw asset downloads awaiting import. Only committed, licence-logged output
+# belongs under assets/. See docs/ASSET_LEDGER.md.
+assets_raw/
 
+# Godot's own crash/log output
+logs/
 *.log
-npm-debug.log*
-.env
-.env.*
-!.env.example
-
-# Firebase CLI scratch
-.firebase/
-firebase-debug.log
-firestore-debug.log
-tests/smoke/.output/
-
-# Survey output. Regenerate with `npm run survey`, `npm run feelcheck`, and the
-# before/after pairs a visual comparison needs.
-shots/
-shots-*/
-
-# Scratch checkouts the agent harness creates so parallel work does not collide.
-# Transient by definition: the work lands on a branch, and the directory is
-# removed once it is merged.
-.claude/worktrees/

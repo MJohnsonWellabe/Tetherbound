@@ -1,0 +1,26 @@
+{
+  "_comment": "The Meadows palette, sampled from docs/reference/tetherbound-meadows-keyart.png. One source for materials, UI and lighting, so they cannot drift apart. The previous prototype tuned its sky colour and its ambient light as two separate values and they disagreed for months without anyone being able to name why.",
+  "_caveat": "Sampled from a painted board, so treat these as the intended relationships rather than as final surface albedo. A colour that reads correct in concept art is usually too saturated once a real directional light multiplies it.",
+  "_reserved": "tether_oxblood is the danger accent. It appears only on Team Tether banners, equipment and uniforms, never on friendly or neutral elements. A reserved colour is what lets a player read threat at distance without a marker.",
+
+  "meadow": {
+    "leaf_green_deep": "#496c34",
+    "grass_olive": "#7f8c3d",
+    "flower_gold": "#d9b340",
+    "trail_wheat": "#d1b37e",
+    "stone_sand": "#c3ad82"
+  },
+  "structure": {
+    "stone_grey": "#b4b1a6",
+    "slate_cool": "#6e818e",
+    "timber_brown": "#402e2b"
+  },
+  "sky": {
+    "day_blue": "#3b6f93",
+    "dusk_periwinkle": "#5a5c92",
+    "night_plum": "#704f71"
+  },
+  "accent": {
+    "tether_oxblood": "#332228"
+  }
+}

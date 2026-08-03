@@ -1,0 +1,177 @@
+; Tetherbound — Godot project settings.
+;
+; Engine is LOCKED to Godot 4 (docs/GAME_DESIGN.md §4). Pinned to 4.7-stable;
+; see docs/decisions/D01-godot-version-and-renderer.md before changing it.
+;
+; Most of this file is the input map. It is here rather than in code because
+; docs/TECHNICAL_START.md §Input requires actions, never raw device checks
+; scattered through gameplay. Every action carries a keyboard/mouse binding AND
+; an Xbox-layout gamepad binding, because controller is the primary input and
+; keyboard is the fallback, not the other way round.
+
+config_version=5
+
+[application]
+
+config/name="Tetherbound"
+config/description="Third-person survival creature-training game. Meadows vertical slice."
+run/main_scene="res://scenes/world/boot.tscn"
+config/features=PackedStringArray("4.7", "Forward Plus")
+config/icon="res://icon.svg"
+
+[display]
+
+; ROG Ally is 1920x1080 at 7 inches. Authoring at native resolution and letting
+; canvas_items stretch handles desktop windows without a second UI layout, and
+; keeps HUD text legible at handheld pixel density.
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[input_devices]
+
+; The Ally's sticks rest slightly off-centre. 0.2 is a starting value and is
+; tunable; anything lower produces camera drift on a worn pad.
+pointing/emulate_touch_from_mouse=false
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+; Shadows are the single defect that killed the previous prototype. Godot gives
+; real directional shadows out of the box; these are just the defaults made
+; explicit so nobody has to guess what they were.
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=2
+anti_aliasing/quality/msaa_3d=2
+environment/defaults/default_clear_color=Color(0.23, 0.44, 0.58, 1)
+
+[input]
+
+move_forward={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":87,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":1,"axis_value":-1.0,"script":null)
+]
+}
+move_back={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":83,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":1,"axis_value":1.0,"script":null)
+]
+}
+move_left={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":65,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":0,"axis_value":-1.0,"script":null)
+]
+}
+move_right={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":68,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":0,"axis_value":1.0,"script":null)
+]
+}
+look_up={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"device":-1,"axis":3,"axis_value":-1.0,"script":null)
+]
+}
+look_down={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"device":-1,"axis":3,"axis_value":1.0,"script":null)
+]
+}
+look_left={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"device":-1,"axis":2,"axis_value":-1.0,"script":null)
+]
+}
+look_right={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"device":-1,"axis":2,"axis_value":1.0,"script":null)
+]
+}
+jump={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":32,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":0,"pressed":false,"script":null)
+]
+}
+sprint={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194325,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":7,"pressed":false,"script":null)
+]
+}
+interact={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":69,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+]
+}
+inventory={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":73,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
+]
+}
+map={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":77,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":4,"pressed":false,"script":null)
+]
+}
+tool_cycle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":81,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
+]
+}
+combat_quick={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":0,"pressed":false,"script":null)
+]
+}
+combat_charged={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+]
+}
+combat_throw={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":70,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
+]
+}
+combat_run={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194305,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+]
+}
+combat_switch_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194319,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":13,"pressed":false,"script":null)
+]
+}
+combat_switch_right={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194321,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
+]
+}
+menu_confirm={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194309,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":0,"pressed":false,"script":null)
+]
+}
+menu_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194305,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+]
+}

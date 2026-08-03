@@ -1,69 +1,117 @@
-# CLAUDE.md — Working Agreement
+# CLAUDE.md — TETHERBOUND CODING AGENT INSTRUCTIONS
 
-You are building **TETHERBOUND**, a Babylon.js open-world survival-craft creature-collector that deploys to GitHub Pages and must play well on a PC handheld.
+You are implementing **Tetherbound**, a Godot-based Windows-first third-person survival/crafting creature-training game.
 
-The renderer is Babylon, not the Three.js named in `ARCHITECTURE.md`. `docs/decisions/D01-renderer-is-babylon-not-three.md` has the reasoning and the guardrail that keeps it reversible. Only `src/core/babylon.ts` and `src/core/babylonLoaders.ts` may import the engine, and `tests/bundle.test.ts` fails the build if anything else does.
+Before coding, read:
+1. `docs/GAME_DESIGN.md`
+2. `docs/MEADOWS_VERTICAL_SLICE.md`
+3. `docs/TECHNICAL_START.md`
 
-Read `GAME_DESIGN.md`, `ARCHITECTURE.md`, `ASSETS.md`, and `ROADMAP.md` before writing code. They are the source of truth. If something here conflicts with them, they win, and you flag the conflict.
+These documents are authoritative.
 
-## Development philosophy
+## Mission
 
-Build quick, iterate. Working and ugly beats elegant and unfinished. Ship each milestone to Pages before starting the next one. When a design decision is ambiguous and both options are reasonable, pick one, write it down as a new file in `docs/decisions/`, and keep moving. Do not stop to ask about small things. `DECISIONS.md` explains the format; `npm run decisions` lists what is already recorded, and reading that list first will save you rediscovering a bug someone already paid for.
+Build the Meadows vertical slice quickly and iteratively. The goal is not maximum feature count. The goal is a game the owner voluntarily wants to keep playing.
 
-Stop and ask only when the choice would be expensive to reverse: schema shape, the party cap, the input abstraction, the biome data boundary.
+## Hard Rules
 
-## Hard constraints, never violate
+- Godot is locked.
+- Windows/ROG Ally is primary.
+- Controller first.
+- Solo.
+- Player can own only five pals total.
+- Never implement pal storage beyond five.
+- Human cannot fight.
+- Pals do not perform base jobs.
+- Combat is real-time pal-vs-pal.
+- No shields.
+- Catching is available during wild combat.
+- Trainer-owned pals cannot be caught.
+- No hunting/butchering.
+- Food buffs; no starvation-death meter.
+- Slot/stack inventory; no carry-weight system.
+- Multiple death satchels persist.
+- No Biome 2 work until Meadows passes its exit gate.
+- Do not silently invent major design decisions.
 
-1. **Party cap is five.** Enforced in `Party.add()` and nowhere else. There is no code path that produces a party of six.
-2. **The player never wields a weapon.** Tools gather and build. They cannot target pals or people.
-3. **The throw is always available in combat**, from the first frame of a fight.
-4. **No storage box, no pal bank.** Releasing is permanent.
-5. **Every tunable number lives in `src/data/*.json`.** If you type a stat, cost, rate, duration, or curve constant into a system file, you have made a mistake.
-6. **No `Math.random()` in world generation.** Seeded RNG only.
-7. **CC0 assets only**, logged in `ASSET_MANIFEST.md` before commit.
-8. **PC handheld is the primary target.** The reference device is a ROG Ally: 1080p, 120Hz, gamepad plus touchscreen. Test at 1280x720 first. Nothing may depend on hover, and every control must be reachable on a gamepad. Touch stays supported and must keep working, but it no longer constrains the perf budget, the view distance, or the UI layout. Changed from mobile-first at the owner's direction, logged as D28.
+## Working Style
 
-## Code standards
+Prefer small, playable increments.
 
-- TypeScript strict. No `any` outside third-party shims.
-- Pure functions for all game math. Side effects live in systems, never in formulas.
-- One responsibility per file. If a file passes 300 lines, split it.
-- Fixed 60Hz simulation via the accumulator in `Loop.ts`. Never multiply gameplay values by raw frame delta.
-- Dispose every geometry, material, and texture you create. Chunk unload must be leak-free.
-- Comments explain why, not what. Skip the obvious ones.
-- No new dependency without a one-line justification in `docs/decisions/`. The approved list is @babylonjs/core, @babylonjs/loaders, howler, simplex-noise and firebase (D01, D05). Dev dependencies are freer.
+For each milestone:
+1. State the concrete player-visible outcome.
+2. Implement the smallest coherent version.
+3. Run the game/tests.
+4. Fix obvious regressions.
+5. Record meaningful technical/design decisions in `docs/decisions/`.
+6. Keep data out of gameplay code when it will clearly vary by species/move/item.
+7. Do not over-generalize speculative future systems.
 
-## Commands
+## Asset Work
 
-```bash
-npm run dev        # local, opens on network so a phone can hit it
-npm run typecheck
-npm run test
-npm run build
-npm run preview
-npm run assets     # optimize assets_raw into public
-npm run decisions  # index of docs/decisions/, and the next free number
-```
+You may source candidate assets. They do not need to be CC0 for this private project, but:
+- maintain visual cohesion
+- record provenance/license in `docs/ASSET_LEDGER.md`
+- never assume an asset is redistributable
+- prefer assets with animations appropriate to their role
+- test scale/materials in-engine before committing to a roster
 
-`npm run dev` must bind `--host` so the phone on the same wifi can load it. Print the LAN URL.
+## Prototyping
 
-## Workflow
+Placeholder assets are acceptable to prove mechanics.
 
-- One milestone per branch, squash merge to `main`.
-- Every commit must pass typecheck and tests. The deploy workflow enforces this.
-- After each milestone: update `ROADMAP.md` with what actually shipped, add any new files to `docs/decisions/`, and post the Pages URL.
-- Write the test before the formula for anything in `combat/` or `party/`.
+However, do not judge final:
+- biome look
+- creature appeal
+- combat readability
+- emotional release scene
+- stronghold presentation
 
-## Performance discipline
+using ugly placeholders. Representative art is required before those systems are considered successful.
 
-Check `?stats=1` at the end of every session. If draw calls pass 150 or frame time passes 8ms at 1080p, fix it before adding the next feature. Performance debt in a web renderer compounds faster than any other kind.
+## Tunable Values
 
-Instanced meshes and shared materials from day one. Object pools for pals, orbs, particles, and damage numbers from day one. Retrofitting these is a rewrite.
+You may choose temporary numbers for:
+- speeds
+- cooldowns
+- damage
+- energy
+- stamina
+- HP
+- catch rates
+- build costs
+- spawn rates
 
-## Writing style for all docs and in-game text
+Put them in data/config and label them tunable.
 
-Direct and specific. No filler, no marketing voice. No em dashes. Avoid "not X, but Y" constructions. In-game dialogue is terse and grounded; Grandpa Orin does not make speeches.
+Do not turn temporary numbers into a new permanent mechanic.
 
-## What to do when stuck
+## Ask/Flag Instead of Inventing
 
-If a system is fighting you for more than 30 minutes, cut scope and note it in `docs/decisions/`. A simpler version that ships this session is worth more than the right version next week. Structural integrity was cut this way already and the game is better for it.
+Flag a design decision if work truly requires choosing among fundamentally different game behaviors.
+
+Examples:
+- adding dodge/block
+- changing party limit
+- introducing weapons
+- changing type system
+- adding storage
+- major story rewrite
+- changing traversal philosophy
+- adding mandatory hunger/thirst
+- changing stronghold structure
+
+## First Objective
+
+Start with **M0 and M1** from `MEADOWS_VERTICAL_SLICE.md`:
+- clean Godot project
+- Windows export preset
+- controller input
+- third-person movement playground
+- walk/sprint/jump
+- stamina
+- fall damage
+- camera orbit
+- representative rolling meadow test terrain
+
+Do not start creature content until movement is comfortable.

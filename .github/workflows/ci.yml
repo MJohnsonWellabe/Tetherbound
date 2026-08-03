@@ -1,0 +1,109 @@
+name: CI
+
+# Three checks, in the order they catch things:
+#
+#   1. the project imports from a clean checkout with no script errors
+#   2. the tests pass
+#   3. the Windows executable actually exports
+#
+# The point is that a broken project fails here rather than when the owner next
+# opens the editor or, worse, at the end of a milestone when the export is
+# tried for the first time. Export templates are a 1.2 GB download, which is
+# why they are cached.
+#
+# What this CANNOT check: whether the game feels good. That is the owner
+# playing it on the Ally, and no amount of green here substitutes.
+
+on:
+  push:
+    branches: [main, 'claude/**']
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # Pinned deliberately. See docs/decisions/D01-godot-version-and-renderer.md.
+  # Export templates must match the editor exactly or the export fails with a
+  # message that does not obviously say "version mismatch".
+  GODOT_VERSION: 4.7-stable
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          # Godot looks for the directory named after the version as it reports
+          # it: "4.7.stable", not "4.7-stable".
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Import project
+        # Catches nearly everything an agent breaks: a script that no longer
+        # parses, a scene referencing a missing resource, a malformed
+        # project.godot. Run twice because a first import on a clean checkout
+        # generates the class cache that a second pass then validates against.
+        run: |
+          godot --headless --path . --import
+          godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
+      - name: Run tests
+        run: godot --headless --path . --script tests/run_tests.gd
+
+      - name: Export Windows build
+        run: |
+          mkdir -p build/windows
+          godot --headless --path . --export-debug "Windows Desktop" build/windows/Tetherbound.exe
+
+      - name: Verify the export is a real Windows binary
+        # An export can "succeed" and leave a stub behind. Check the file is
+        # actually a PE executable and is not implausibly small.
+        run: |
+          set -euo pipefail
+          file build/windows/Tetherbound.exe
+          file build/windows/Tetherbound.exe | grep -q "PE32+ executable"
+          SIZE=$(stat -c%s build/windows/Tetherbound.exe)
+          echo "exe size: ${SIZE} bytes"
+          test "$SIZE" -gt 10000000
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Tetherbound-windows-debug
+          path: build/windows/
+          retention-days: 14
