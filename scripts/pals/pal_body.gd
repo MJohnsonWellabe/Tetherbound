@@ -45,6 +45,7 @@ var display_name: String = ""
 
 var _height: float = 1.0
 var _radius: float = 0.4
+var _footprint_allowance: float = FOOTPRINT_ALLOWANCE
 
 ## Requested movement for this physics frame, cleared after it is consumed.
 ## Cleared rather than latched on purpose: a driver that stops driving stops the
@@ -142,6 +143,10 @@ func _build_placeholder() -> void:
 	var look: Dictionary = SPECIES.placeholder(species_id)
 	_height = float(look.get("height", 1.0))
 	_radius = float(look.get("radius", 0.4))
+	# How long a body may be for its width, as a multiple of its collider
+	# diameter. Per species because it is a fact about the animal: a triceratops
+	# is genuinely several times longer than it is wide and a frog is not.
+	_footprint_allowance = float(look.get("footprint_allowance", FOOTPRINT_ALLOWANCE))
 
 	# The collider is built from the SPECIES, never from the art.
 	#
@@ -231,10 +236,30 @@ func _fit(art: Node3D, extra_scale: float) -> void:
 	# as it is tall, so matching its height gave a two-metre-wide rabbit sitting
 	# next to a fox half its footprint. Taking the tighter of the two fits keeps
 	# a creature inside the space its collider claims.
+	#
+	# But the clamp must never shrink a creature QUIETLY, and it used to.
+	#
+	# A long quadruped fitted to its height overruns a footprint allowance
+	# written for compact creatures, so it was scaled back down — and rendered
+	# visibly shorter than the height its own collider claims, while a stubby
+	# creature beside it got its full declared size. That is the exact "art and
+	# gameplay disagree" failure this function exists to prevent, and it hid
+	# because `smoke_art` allowed 0.35m of slack. The owner spotted it before any
+	# test did.
+	#
+	# So: the allowance is per species, because how long a body is for its width
+	# is a fact about the animal; and when the clamp does bite, it says so.
 	var footprint := maxf(box.size.x, box.size.z)
 	var fit := _height / box.size.y
 	if footprint > 0.0001:
-		fit = minf(fit, (_radius * 2.0 * FOOTPRINT_ALLOWANCE) / footprint)
+		var allowed: float = (_radius * 2.0 * _footprint_allowance) / footprint
+		if allowed < fit:
+			push_warning(("'%s' is %.0f%% longer than its footprint allowance and " % [
+				species_id, (fit / allowed - 1.0) * 100.0
+			]) + ("has been scaled down to %.2fm instead of the %.2fm its collider claims. " % [
+				_height * allowed / fit, _height
+			]) + "Raise `footprint_allowance` or `radius` for this species.")
+		fit = minf(fit, allowed)
 	fit *= maxf(extra_scale, 0.01)
 	art.scale = Vector3.ONE * fit
 	# Feet to the origin, and centred on it horizontally.

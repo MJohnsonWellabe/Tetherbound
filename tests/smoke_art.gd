@@ -16,9 +16,19 @@ const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 
 const SETTLE_FRAMES := 300
-## Art is fitted to the gameplay height, but a quadruped's mesh legitimately
-## sits a little under the capsule that represents it.
-const HEIGHT_TOLERANCE := 0.35
+## How far a rendered model may sit under the collider that represents it.
+##
+## Was 0.35m, which is wide enough to hide a real bug and did. `pal_body._fit()`
+## clamps a model's scale by its footprint, and a long quadruped tripped that
+## clamp and rendered visibly shorter than its declared height while a compact
+## creature beside it got its full size — so the largest creature in the game
+## read as the smallest. The owner spotted it in a screenshot; this test did not,
+## because a third of a metre of slack covered it.
+##
+## 0.08m is tight enough that any silent rescale fails here. A creature that
+## genuinely cannot meet its height needs `footprint_allowance` raising in data,
+## which is a decision somebody makes rather than a clamp applying quietly.
+const HEIGHT_TOLERANCE := 0.08
 
 var _failures: Array[String] = []
 var _world: Node = null

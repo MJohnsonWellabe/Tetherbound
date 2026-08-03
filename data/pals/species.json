@@ -14,8 +14,10 @@
       "aggressive": false,
       "placeholder": {
         "colour": "#7f8c3d",
-        "height": 1.85,
-        "radius": 0.72,
+        "height": 2.45,
+        "radius": 1.02,
+        "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and pal_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
+        "footprint_allowance": 3.1,
         "model": "res://assets/pals/bramblit.fbx",
         "model_scale": 1.0,
         "model_yaw": 0.0,
@@ -28,7 +30,7 @@
           "walk": "Armature|Triceratops_Walk",
           "run": "Armature|Triceratops_Run"
         },
-        "_comment_size": "Gameplay size, and the art is fitted to it. Raised from the first pass: at a metre the creatures read as small animals underfoot rather than as the things the game is named after, and they were barely legible at combat distance. Combat reach scales off `radius` (combat.json ranges), so these two numbers are tuning, not decoration."
+        "_comment_size": "Gameplay size, and the art is fitted to it. Combat reach and the catch accuracy bonus scale off `radius` (combat.json), so these are tuning, not decoration. Scaled against the 1.8m trainer so the roster has a real size hierarchy: the practice creature is smaller than you, your partner is bigger than you, and the one that ambushes you is bigger still. Everything was previously within half a metre of everything else, which made the largest creature in the game read as a dog."
       }
     },
     "wild_rabbit": {
@@ -42,8 +44,9 @@
       "aggressive": false,
       "placeholder": {
         "colour": "#a8622f",
-        "height": 1.35,
-        "radius": 0.55,
+        "height": 0.95,
+        "radius": 0.46,
+        "footprint_allowance": 2.6,
         "model": "res://assets/pals/meadow_hopper.fbx",
         "model_scale": 1.0,
         "model_yaw": 0.0,
@@ -56,7 +59,7 @@
           "walk": "Armature|Frog_Jump",
           "run": "Armature|Frog_Jump"
         },
-        "_comment_size": "Gameplay size, and the art is fitted to it. Raised from the first pass: at a metre the creatures read as small animals underfoot rather than as the things the game is named after, and they were barely legible at combat distance. Combat reach scales off `radius` (combat.json ranges), so these two numbers are tuning, not decoration."
+        "_comment_size": "Gameplay size, and the art is fitted to it. Combat reach and the catch accuracy bonus scale off `radius` (combat.json), so these are tuning, not decoration. Scaled against the 1.8m trainer so the roster has a real size hierarchy: the practice creature is smaller than you, your partner is bigger than you, and the one that ambushes you is bigger still. Everything was previously within half a metre of everything else, which made the largest creature in the game read as a dog."
       }
     },
     "wild_bristler": {
@@ -70,8 +73,9 @@
       "aggressive": true,
       "placeholder": {
         "colour": "#704f71",
-        "height": 1.75,
-        "radius": 0.8,
+        "height": 2.25,
+        "radius": 0.98,
+        "footprint_allowance": 3.3,
         "model": "res://assets/pals/thornback.fbx",
         "model_scale": 1.0,
         "model_yaw": 0.0,
@@ -84,7 +88,7 @@
           "walk": "Armature|Stegosaurus_Walk",
           "run": "Armature|Stegosaurus_Run"
         },
-        "_comment_size": "Gameplay size, and the art is fitted to it. Raised from the first pass: at a metre the creatures read as small animals underfoot rather than as the things the game is named after, and they were barely legible at combat distance. Combat reach scales off `radius` (combat.json ranges), so these two numbers are tuning, not decoration."
+        "_comment_size": "Gameplay size, and the art is fitted to it. Combat reach and the catch accuracy bonus scale off `radius` (combat.json), so these are tuning, not decoration. Scaled against the 1.8m trainer so the roster has a real size hierarchy: the practice creature is smaller than you, your partner is bigger than you, and the one that ambushes you is bigger still. Everything was previously within half a metre of everything else, which made the largest creature in the game read as a dog."
       }
     }
   }
