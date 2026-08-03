@@ -1,0 +1,136 @@
+name: Release
+
+# Publishes a downloadable Windows build and the download page.
+#
+# The CI workflow already exports an .exe, but it uploads a GitHub *artifact* —
+# which needs a login to download and expires after 14 days. That is fine for
+# checking an export still works and useless as "the link I use to get the
+# game". This produces a permanent, no-login URL instead:
+#
+#   https://github.com/<owner>/<repo>/releases/latest/download/Tetherbound-windows.zip
+#
+# That URL is stable forever and always points at the newest build, which is
+# what the download button on the site links to. Nothing has to be edited when
+# a new build ships.
+#
+# Release, not debug. The CI export is `--export-debug` because a debug build
+# reports errors usefully in a test harness. What the owner plays on the Ally
+# should be the real thing.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Needed to create releases and to publish the Pages site.
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+env:
+  GODOT_VERSION: 4.7-stable
+
+concurrency:
+  # A newer push supersedes an older one; there is only ever one "latest".
+  group: release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Import project
+        # The first import on a clean checkout exits non-zero while Terrain3D's
+        # GDExtension registers its classes; the second pass is authoritative.
+        # Same reasoning as ci.yml, which explains it at length.
+        run: |
+          godot --headless --path . --import || true
+          godot --headless --path . --import
+
+      - name: Export Windows release build
+        run: |
+          set -euo pipefail
+          mkdir -p build/windows
+          godot --headless --path . --export-release "Windows Desktop" build/windows/Tetherbound.exe
+
+      - name: Verify the export is a real Windows binary
+        # An export can "succeed" and leave a stub behind, and a download page
+        # serving a 2 KB stub is worse than one serving nothing.
+        run: |
+          set -euo pipefail
+          file build/windows/Tetherbound.exe | grep -q "PE32+ executable"
+          test "$(stat -c%s build/windows/Tetherbound.exe)" -gt 10000000
+          ls -la build/windows/
+
+      - name: Package
+        # Zipped because a Godot export is an .exe next to a .pck and a
+        # Terrain3D .dll, and all three have to travel together. Downloading a
+        # bare .exe and finding it will not start is the obvious failure here.
+        run: |
+          set -euo pipefail
+          cd build/windows
+          zip -r ../../Tetherbound-windows.zip .
+          cd ../..
+          unzip -l Tetherbound-windows.zip
+
+      - name: Publish the rolling latest release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Tetherbound — latest build
+          body: |
+            Automatic build of `main`, commit ${{ github.sha }}.
+
+            **Windows / ROG Ally.** Unzip and run `Tetherbound.exe` — keep the
+            `.pck` and the `.dll` next to it.
+
+            This is a vertical-slice prototype in progress, not a finished game.
+            The creature and character art are stand-ins; see
+            `docs/decisions/D10`.
+          files: Tetherbound-windows.zip
+          prerelease: true
+          make_latest: true
+
+  pages:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4

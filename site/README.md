@@ -1,0 +1,61 @@
+# The download page
+
+Published to GitHub Pages by `.github/workflows/release.yml` on every push to
+`main`, alongside the Windows build it links to.
+
+## The download link never needs editing
+
+The button points at:
+
+```
+https://github.com/MJohnsonWellabe/Tetherbound/releases/latest/download/Tetherbound-windows.zip
+```
+
+That URL is permanent and always resolves to the newest release asset, so
+shipping a new build is a push and nothing else. It also needs no login, which
+is the whole reason this exists — CI already uploaded a Windows build, but as a
+GitHub *artifact*, which expires after 14 days and requires signing in.
+
+## The images are real frames
+
+`site/img/*.jpg` are in-game captures, not concept art and not mock-ups. To
+refresh them after a visual change:
+
+```bash
+tools/survey.sh                                            # exploration frames
+tools/survey_combat.sh                                     # combat frames
+python3 - <<'EOF'
+from PIL import Image
+for src, out in [
+    ("shots/01-spawn-outward.png", "site/img/01-spawn-outward.jpg"),
+    ("shots/03-rise-overlook.png", "site/img/03-rise-overlook.jpg"),
+    ("shots/05-spawn-low-sun.png", "site/img/05-spawn-low-sun.jpg"),
+    ("shots/combat/02-arena-opens.png", "site/img/02-arena-opens.jpg"),
+    ("shots/combat/06-charged-attack-lands.png", "site/img/06-charged-attack-lands.jpg"),
+    ("shots/combat/08-orb-in-flight.png", "site/img/08-orb-in-flight.jpg"),
+]:
+    Image.open(src).convert("RGB").save(out, quality=82, optimize=True)
+EOF
+```
+
+`shots/` is gitignored and regenerated; `site/img/` is committed, because the
+page has to keep working without anyone re-running a survey first.
+
+**Do not touch these up.** A download page that shows something the build does
+not do is the fastest way to stop being able to trust your own screenshots —
+and the blind visual critic reads the same frames.
+
+## Colours
+
+`index.html` uses `data/config/palette.json` verbatim, the same file the game's
+materials, lighting and UI read. The site and the build cannot drift apart in
+palette without somebody editing that file.
+
+`--oxblood` is the reserved danger accent. In game it appears only on Team
+Tether; here it is used once, on the "vertical slice" mark, which is the single
+warning on the page.
+
+## One-time setup
+
+GitHub Pages has to be switched to **GitHub Actions** as its source, in
+Settings → Pages. The workflow cannot do that for you.

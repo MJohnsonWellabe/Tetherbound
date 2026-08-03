@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tetherbound</title>
+<meta name="description" content="A third-person survival, crafting and creature-training game. Windows and ROG Ally build.">
+<meta property="og:title" content="Tetherbound">
+<meta property="og:description" content="Five pals. No storage. Your pal does the fighting, and you have to be there.">
+<meta property="og:image" content="img/05-spawn-low-sun.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🌿</text></svg>">
+
+<!--
+  Tetherbound's download page.
+
+  Every image on this page is a REAL in-game frame from tools/survey.sh, not
+  concept art and not a mock-up. That is deliberate: a download page that
+  promises something the build does not do is the fastest way to stop trusting
+  your own screenshots. When the game looks better, these get replaced by
+  re-running the survey.
+
+  Colours are data/config/palette.json — the same file the game's materials,
+  lighting and UI read. The site and the build cannot drift apart in palette
+  without somebody changing that file.
+
+  Everything is inline. No fonts, no analytics, no CDN: the page is one request
+  plus its images, and it works offline once loaded.
+-->
+
+<style>
+:root{
+  /* data/config/palette.json, verbatim. */
+  --leaf-deep:#496c34;
+  --grass-olive:#7f8c3d;
+  --flower-gold:#d9b340;
+  --trail-wheat:#d1b37e;
+  --stone-sand:#c3ad82;
+  --slate-cool:#6e818e;
+  --timber:#402e2b;
+  --day-blue:#3b6f93;
+  --dusk:#5a5c92;
+  --night-plum:#704f71;
+  /* Reserved for danger in-game; used here only for the "prototype" mark,
+     which is the one warning on the page. */
+  --oxblood:#332228;
+
+  --ink:#f2f0e6;
+  --ink-dim:#b9b8ac;
+  --shadow:0 2px 18px rgba(0,0,0,.55);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:#12160f;
+  color:var(--ink);
+  font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:var(--flower-gold)}
+
+/* ---------- hero ---------- */
+
+.hero{
+  position:relative;
+  min-height:min(92vh,820px);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:clamp(1.5rem,5vw,5rem);
+  isolation:isolate;
+  overflow:hidden;
+}
+.hero-art{
+  position:absolute; inset:0; z-index:-2;
+  background:url("img/05-spawn-low-sun.jpg") center 38%/cover no-repeat;
+  /* Very slight scale so the edges never show a seam while the gradient sits
+     over it. */
+  transform:scale(1.04);
+}
+.hero::after{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:
+    linear-gradient(to top, #12160f 4%, rgba(18,22,15,.72) 34%, rgba(18,22,15,.15) 68%, rgba(59,111,147,.10) 100%);
+}
+.wordmark{
+  font-size:clamp(2.9rem,10vw,6.5rem);
+  line-height:.95;
+  margin:0 0 .3em;
+  font-weight:800;
+  letter-spacing:-.03em;
+  text-shadow:var(--shadow);
+}
+.wordmark span{
+  background:linear-gradient(100deg,var(--flower-gold),var(--trail-wheat) 55%,var(--stone-sand));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.tagline{
+  max-width:36ch;
+  font-size:clamp(1.05rem,2.4vw,1.45rem);
+  color:var(--ink);
+  text-shadow:0 1px 10px rgba(0,0,0,.8);
+  margin:0 0 2rem;
+}
+
+/* ---------- download ---------- */
+
+.get{display:flex;flex-wrap:wrap;gap:1rem 1.4rem;align-items:center}
+.btn{
+  display:inline-flex; align-items:center; gap:.8rem;
+  padding:1.05rem 1.9rem;
+  border-radius:12px;
+  background:linear-gradient(180deg,var(--grass-olive),var(--leaf-deep));
+  color:#fbfaf2;
+  font-size:1.12rem; font-weight:700; text-decoration:none;
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 6px 22px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.16);
+  transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+.btn:hover,.btn:focus-visible{
+  transform:translateY(-2px);
+  filter:brightness(1.08);
+  box-shadow:0 10px 28px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.22);
+}
+.btn:active{transform:translateY(0)}
+.btn svg{flex:none}
+.btn small{display:block;font-size:.78rem;font-weight:500;opacity:.85;letter-spacing:.02em}
+.get-note{color:var(--ink-dim);font-size:.92rem;max-width:34ch}
+.get-note code{
+  background:rgba(255,255,255,.09); padding:.12em .42em; border-radius:5px;
+  font-size:.92em;
+}
+
+.flag{
+  display:inline-block; margin-bottom:1.1rem;
+  padding:.34rem .8rem; border-radius:999px;
+  background:var(--oxblood); color:#e9d9c6;
+  font-size:.76rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.14);
+}
+
+/* ---------- body ---------- */
+
+.wrap{max-width:1180px;margin:0 auto;padding:clamp(2.5rem,6vw,5.5rem) clamp(1.2rem,5vw,3rem)}
+h2{
+  font-size:clamp(1.5rem,3.4vw,2.1rem); letter-spacing:-.02em;
+  margin:0 0 .35em;
+}
+.lede{color:var(--ink-dim);max-width:62ch;margin:0 0 2.6rem}
+
+.rules{
+  display:grid; gap:1.1rem;
+  grid-template-columns:repeat(auto-fit,minmax(255px,1fr));
+  list-style:none; margin:0; padding:0;
+}
+.rules li{
+  background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.09);
+  border-left:3px solid var(--grass-olive);
+  border-radius:10px;
+  padding:1.15rem 1.25rem;
+}
+.rules b{display:block;color:var(--flower-gold);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+
+.shots{
+  display:grid; gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  margin-top:1rem;
+}
+figure{margin:0;border-radius:12px;overflow:hidden;background:#0d1009;border:1px solid rgba(255,255,255,.08)}
+figure img{display:block;width:100%;height:auto}
+figcaption{padding:.7rem .95rem;color:var(--ink-dim);font-size:.86rem}
+.wide{grid-column:1/-1}
+
+.band{
+  background:
+    linear-gradient(rgba(18,22,15,.86),rgba(18,22,15,.94)),
+    url("img/03-rise-overlook.jpg") center/cover fixed no-repeat;
+  border-top:1px solid rgba(255,255,255,.07);
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+footer{color:var(--ink-dim);font-size:.87rem;padding:2.5rem clamp(1.2rem,5vw,3rem) 3.5rem;max-width:1180px;margin:0 auto}
+footer p{margin:.4rem 0}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .btn{transition:none}
+  .band{background-attachment:scroll}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-art" role="img" aria-label="The Meadows at golden hour, from an in-game frame"></div>
+  <span class="flag">Vertical slice · in progress</span>
+  <h1 class="wordmark"><span>Tetherbound</span></h1>
+  <p class="tagline">Five pals. No storage, no second chances at the roster. Your pal does the fighting — and you are in there with it.</p>
+
+  <div class="get">
+    <a class="btn" href="https://github.com/MJohnsonWellabe/Tetherbound/releases/latest/download/Tetherbound-windows.zip">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 3v10.6l3.3-3.3 1.4 1.4L12 17.4l-4.7-5.7 1.4-1.4L12 13.6V3z"/>
+        <path d="M4 19h16v2H4z"/>
+      </svg>
+      <span>Download for Windows<small>ROG Ally · handheld ready</small></span>
+    </a>
+    <p class="get-note">
+      Unzip anywhere and run <code>Tetherbound.exe</code>. Keep the <code>.pck</code>
+      and the <code>.dll</code> beside it. Controller first — a gamepad is the
+      way this is meant to be played.
+    </p>
+  </div>
+</header>
+
+<main>
+  <section class="wrap">
+    <h2>What it is</h2>
+    <p class="lede">
+      A third-person survival, crafting and creature-training game built in Godot,
+      aimed at a handheld first. This build is the Meadows vertical slice: walk
+      the biome, find a wild pal, and fight it yourself.
+    </p>
+
+    <ul class="rules">
+      <li><b>Five, and only five</b>Your whole roster is five pals. There is no storage box to park the rest in, so every catch is a decision about what you give up.</li>
+      <li><b>You pilot the fight</b>Combat hands you the controls of your pal inside a bounded arena. There is no dodge button — moving is the dodge, and attacks are aimed and can miss.</li>
+      <li><b>Catching costs you</b>To throw, you take the camera back to your trainer and aim. Your pal is left undefended while you do it, and the opponent does not stop.</li>
+      <li><b>The human cannot fight</b>You have no weapon. What you have is a pal, a throw, and where you chose to stand.</li>
+    </ul>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>The Meadows</h2>
+      <p class="lede">
+        Every image on this page is a real in-game frame, captured by the
+        project's own survey tool. No concept art, no touch-ups.
+      </p>
+      <div class="shots">
+        <figure class="wide">
+          <img src="img/01-spawn-outward.jpg" alt="Rolling meadow with copses of trees and wildflowers, the trainer standing in the middle distance" loading="lazy" width="1280" height="720">
+          <figcaption>Spawn, looking out across the biome.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/06-charged-attack-lands.jpg" alt="Two creatures fighting, a charged attack landing in a burst of light" loading="lazy" width="1280" height="720">
+          <figcaption>A charged attack landing. You are driving the grey one.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/08-orb-in-flight.jpg" alt="An orb arcing through the air toward a wild creature, trailing light" loading="lazy" width="1280" height="720">
+          <figcaption>The throw. Aimed from the trainer's shoulder, and missable.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/02-arena-opens.jpg" alt="The combat arena opening around two creatures" loading="lazy" width="1280" height="720">
+          <figcaption>The arena forms where you engaged, not in a separate scene.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/05-spawn-low-sun.jpg" alt="The meadow at golden hour, long shadows across the grass" loading="lazy" width="1280" height="720">
+          <figcaption>Golden hour. Sun, sky and fog all move together.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2>Honest state of it</h2>
+    <p class="lede">
+      This is a prototype, and the parts that are not finished are worth naming
+      rather than cropping out of the screenshots. The creature and character
+      models are sourced stand-ins, kept because they prove the rigging,
+      animation and scaling systems around them — not because they are the art.
+      A blind reviewer looks at every build and says so; those reviews are in the
+      repository alongside the code.
+    </p>
+    <div class="get">
+      <a class="btn" href="https://github.com/MJohnsonWellabe/Tetherbound">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2z"/>
+        </svg>
+        <span>Source on GitHub<small>Design docs, decisions, reviews</small></span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Built with Godot 4.7. Windows and ROG Ally.</p>
+  <p>Creature, character, environment and terrain assets are CC0 from Quaternius, Kay Lousberg, Kenney and ambientCG — full provenance in <a href="https://github.com/MJohnsonWellabe/Tetherbound/blob/main/docs/ASSET_LEDGER.md">the asset ledger</a>.</p>
+</footer>
+
+</body>
+</html>
