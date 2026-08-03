@@ -1,4 +1,8 @@
-# TETHERBOUND — Asset Policy and Sourcing
+# 04 — Asset Pipeline
+
+See `docs/02_ART_BIBLE.md` for the style these assets must match once loaded,
+and its critic-loop process, which every batch of new assets should pass
+through after import.
 
 ## The rule
 
@@ -27,26 +31,6 @@ Pull from these first. All are reliably CC0.
 | **Google Fonts (OFL)** | Typography | OFL is fine for embedding. |
 
 ## Art direction
-
-### The target: Palworld and Pokemon on Switch
-
-The bar is **Palworld** and **Pokemon Scarlet/Violet / Legends: Arceus**, not
-photorealism and not the "programmer art but shipped" look either. Those games
-are not technically impressive and that is the point: they are legible and
-appealing. Readable stylised worlds, creature silhouettes you can identify at a
-glance, warm daylight, cheap but intentional lighting, clear UI hierarchy.
-
-Legibility at 390 pixels wide is a higher bar than fidelity, and it is the one
-that decides whether this game reads on a phone. Anything that trades
-readability for detail is the wrong trade here.
-
-Explicitly NOT the target: photorealism, physically based materials, heavy
-post-processing. `ARCHITECTURE.md` budgets 60fps on an iPhone 12 with under 150
-draw calls and no post-processing in v0.1. Chasing a photoreal look would break
-that budget and the style at the same time.
-
-`.claude/skills/visual-judge/SKILL.md` holds the review rubric and the tooling
-that produces the frames to judge.
 
 Low-poly, flat-shaded, saturated. Chunky silhouettes that read at phone size. Think Kenney's Nature Kit as the baseline and match everything to it. Consistency of style beats fidelity of any single asset.
 
@@ -92,4 +76,13 @@ Ship a `scripts/optimize-assets.sh` that runs step 2 across `assets_raw/`.
 
 ## Placeholder policy
 
-Milestone 0 and 1 use colored primitives. A pal is a capsule with a tinted sphere head. A tree is a cylinder and a cone. This is correct and expected. Do not spend a day sourcing models before the character controller feels good on a phone.
+Colored primitives are fine only for proving out logic that isn't yet ready
+for its critic pass — a capsule standing in for a pal while you're still
+tuning the character controller's movement feel, before that system is the
+one being visually judged. They are not acceptable in anything marked done
+in `docs/05_ROADMAP.md`. Per `CLAUDE.md`'s development philosophy, quality
+wins over pace: if a milestone's deadline arrives and the real assets aren't
+ready, the milestone isn't done yet, or the scope gets cut, the bar doesn't
+move. Source real CC0 assets or build real procedural surfaces per
+`docs/02_ART_BIBLE.md` before a system goes through its critic loop, not
+after.

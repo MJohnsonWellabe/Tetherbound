@@ -3,7 +3,7 @@ import { evaluatePredicate, type ObjectiveContext, type ObjectivePredicate } fro
 import objectivesData from '../src/data/objectives.json';
 
 /**
- * The opening objective chain (GAME_DESIGN.md section 3). `evaluatePredicate`
+ * The opening objective chain (docs/01_GAME_DESIGN.md section 3). `evaluatePredicate`
  * is pure, so the predicate kinds are tested here on their own, ahead of
  * anything wiring them to Story, Party or the inventory, same as any other
  * formula CLAUDE.md asks to be tested before it exists.

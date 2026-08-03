@@ -20,7 +20,7 @@ import { wallRingColliders, type WallCollider } from './WallRing';
 
 /**
  * The Meadows Hall. A stone longhall with four chained pals in alcoves and
- * Bracken Holt waiting at the far end (GAME_DESIGN.md section 10).
+ * Bracken Holt waiting at the far end (docs/01_GAME_DESIGN.md section 10).
  *
  * The floor sits at the terrain height of the Hall's centre, and the plinth
  * hangs DOWNWARD from it to fill whatever dip the ground has under the
@@ -30,7 +30,7 @@ import { wallRingColliders, type WallCollider } from './WallRing';
  * looked correct and was unplayable: the character controller walks on the
  * heightfield and knows nothing about a platform, so the player and every
  * combat pal stood more than a metre below the floor they could see, inside the
- * plinth. There is no physics engine here by design (ARCHITECTURE.md), so the
+ * plinth. There is no physics engine here by design (docs/03_TECHNICAL_ARCHITECTURE.md), so the
  * building has to meet the terrain rather than the other way round.
  *
  * Local space runs -z at the door to +z at the Warden, and the whole node is

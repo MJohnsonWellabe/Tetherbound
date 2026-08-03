@@ -4,6 +4,7 @@ import {
   CreateSphere,
   Mesh,
   Scene,
+  ShadowGenerator,
   StandardMaterial,
   TransformNode
 } from '../core/babylon';
@@ -54,7 +55,15 @@ export class PalVisuals {
   private readonly prototypes = new Map<BodyType, Mesh>();
   private readonly materials = new Map<string, StandardMaterial>();
 
-  constructor(private readonly scene: Scene) {
+  constructor(
+    private readonly scene: Scene,
+    /** Optional so the headless tests can build visuals without a light rig.
+     *  Without it pals cast nothing, which is what shipped until now and is
+     *  the single loudest "these are pasted on" tell in a frame: a creature
+     *  standing on grass with no contact shadow does not look like it is
+     *  standing anywhere. */
+    private readonly shadows: ShadowGenerator | null = null
+  ) {
     for (const body of BODY_TYPES) {
       const shape = SHAPE[body];
       const trunk = CreateCapsule(
@@ -99,6 +108,7 @@ export class PalVisuals {
       capsule.scaling.setAll(def.model.scale);
       capsule.setEnabled(true);
       capsule.isPickable = false;
+      this.shadows?.addShadowCaster(capsule, true);
     }
 
     const entry = (models.pals as Record<string, RigEntry | undefined>)[speciesId];
@@ -109,6 +119,11 @@ export class PalVisuals {
         rig.root.parent = root;
         driver.attach(rig);
         driver.play('idle', performance.now());
+        // The placeholder went with the capsule above, so the real rig has to
+        // be added on mount rather than once at construction.
+        if (this.shadows) {
+          for (const mesh of rig.root.getChildMeshes()) this.shadows.addShadowCaster(mesh, false);
+        }
       });
     }
 

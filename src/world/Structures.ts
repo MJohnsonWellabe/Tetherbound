@@ -76,7 +76,7 @@ export function structurePalette(scene: Scene): Palette {
     thatch: flat(scene, 'mat_thatch', '#9a7b3e'),
     stone: flat(scene, 'mat_stone_block', '#7d7a72'),
     road: flat(scene, 'mat_road', '#6b5d47'),
-    // The one hot accent ASSETS.md reserves for Tether and danger.
+    // The one hot accent docs/02_ART_BIBLE.md reserves for Tether and danger.
     iron: flat(scene, 'mat_tether_iron', '#c25a1e'),
     bedding: flat(scene, 'mat_bedding', '#7a3535'),
     lamp: glow(scene, 'mat_home_lamp', '#ffb066')

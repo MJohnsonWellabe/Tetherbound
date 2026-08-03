@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 /**
  * `base: './'` rather than `/<repo-name>/`.
  *
- * ARCHITECTURE.md calls for the repo-name path because GitHub Pages serves a
+ * docs/03_TECHNICAL_ARCHITECTURE.md calls for the repo-name path because GitHub Pages serves a
  * project site from a subpath. Relative URLs satisfy that without hard-coding
  * the repo name, and they also survive `vite preview`, a custom domain, and
  * the LAN URL a phone hits during `npm run dev --host`. One less thing to get
@@ -18,7 +18,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2022',
-    // The perf budget in ARCHITECTURE.md is "initial bundle + first chunk
+    // The perf budget in docs/03_TECHNICAL_ARCHITECTURE.md is "initial bundle + first chunk
     // < 8 MB". Splitting the two vendors into their own stable-hash chunks
     // means a gameplay-only deploy does not force phones to re-download the
     // engine, and the Firebase chunk stays reachable only through the dynamic

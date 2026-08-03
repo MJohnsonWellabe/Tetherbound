@@ -1,20 +1,20 @@
 {
   "$comment": "The art mapping: which shipped GLB each visible thing uses, at what scale. Consumed by PropModels/ResolveModels; the primitive builders remain the permanent per-slot fallback, so a missing or broken file degrades that one thing to a primitive instead of breaking boot (D44). Scales are applied and baked at load time, so retuning a silhouette is an edit here, not a pipeline re-run.",
-  "$comment_props": "Per family: variant list, first entry is the one the batcher uses today (one mesh per family is the PropBatcher contract). The extra variants ship so the judge-loop fix for 'every tree looks the same' is a batcher upgrade, not an asset hunt. `scale` normalises each kit model to the world size the primitives established; heights measured post-merge.",
+  "$comment_props": "Per family: variant list, first entry is the one the batcher uses today (one mesh per family is the PropBatcher contract). The extra variants ship so the judge-loop fix for every-tree-looks-the-same is a batcher upgrade, not an asset hunt. Vegetation is Quaternius Stylized Nature as of D65; unlike the Kenney kit it replaced, these models arrive at real metre scale, so the scales here are near 1 instead of the 3-5x the kit needed. Heights measured from the built GLB, post-merge.",
   "props": {
     "oak": {
       "variants": [
         {
-          "url": "models/props/oak_b.glb",
-          "scale": 3.8
+          "url": "models/props/oak_a.glb",
+          "scale": 1.15
         },
         {
-          "url": "models/props/oak_a.glb",
-          "scale": 5.3
+          "url": "models/props/oak_b.glb",
+          "scale": 1.15
         },
         {
           "url": "models/props/oak_c.glb",
-          "scale": 4.9
+          "scale": 2.2
         }
       ]
     },
@@ -22,59 +22,71 @@
       "variants": [
         {
           "url": "models/props/pine_a.glb",
-          "scale": 5.2
+          "scale": 0.92
         },
         {
           "url": "models/props/pine_b.glb",
-          "scale": 4.6
+          "scale": 1.08
         }
       ]
     },
     "rock": {
       "variants": [
         {
-          "url": "models/props/rock_c.glb",
-          "scale": 2.0
+          "url": "models/props/rock_b.glb",
+          "scale": 0.6
         },
         {
           "url": "models/props/rock_a.glb",
-          "scale": 3.4
+          "scale": 0.5
         },
         {
-          "url": "models/props/rock_b.glb",
-          "scale": 2.8
+          "url": "models/props/rock_c.glb",
+          "scale": 0.48
         }
       ]
     },
     "bush": {
       "variants": [
         {
-          "url": "models/props/bush_b.glb",
-          "scale": 3.0
+          "url": "models/props/bush_f.glb",
+          "scale": 0.72
         },
         {
           "url": "models/props/bush_a.glb",
-          "scale": 4.4
+          "scale": 0.62
+        },
+        {
+          "url": "models/props/bush_d.glb",
+          "scale": 0.42
         }
       ]
     },
     "grass": {
       "variants": [
         {
+          "url": "models/props/grass_c.glb",
+          "scale": 0.34
+        },
+        {
           "url": "models/props/grass_a.glb",
-          "scale": 5.0
+          "scale": 0.4
         },
         {
           "url": "models/props/grass_b.glb",
-          "scale": 4.6
+          "scale": 0.62
         }
       ]
     },
     "reed": {
       "variants": [
         {
+          "url": "models/props/grass_c.glb",
+          "scale": 0.62
+        },
+        {
           "url": "models/props/reed_a.glb",
-          "scale": 6.0
+          "scale": 0.12
         }
       ]
     },
@@ -82,15 +94,11 @@
       "variants": [
         {
           "url": "models/props/flower_a.glb",
-          "scale": 1.89
+          "scale": 0.5
         },
         {
           "url": "models/props/flower_b.glb",
-          "scale": 1.62
-        },
-        {
-          "url": "models/props/flower_c.glb",
-          "scale": 2.16
+          "scale": 0.28
         }
       ]
     }
@@ -103,50 +111,100 @@
       "variants": [
         {
           "url": "models/buildings/house_a.glb",
-          "scale": 1.0,
-          "door": { "x": -1.5, "z": -3.0, "yaw": 0, "width": 1.2, "height": 2.25 }
+          "scale": 1,
+          "door": {
+            "x": -1.5,
+            "z": -3,
+            "yaw": 0,
+            "width": 1.2,
+            "height": 2.25
+          }
         },
         {
           "url": "models/buildings/house_b.glb",
-          "scale": 1.0,
-          "door": { "x": 0, "z": -3.9, "yaw": 0, "width": 1.04, "height": 1.95 }
+          "scale": 1,
+          "door": {
+            "x": 0,
+            "z": -3.9,
+            "yaw": 0,
+            "width": 1.04,
+            "height": 1.95
+          }
         },
         {
           "url": "models/buildings/house_c.glb",
-          "scale": 1.0,
-          "door": { "x": -1.1, "z": -4.4, "yaw": 0, "width": 0.88, "height": 1.65 }
+          "scale": 1,
+          "door": {
+            "x": -1.1,
+            "z": -4.4,
+            "yaw": 0,
+            "width": 0.88,
+            "height": 1.65
+          }
         }
       ],
       "$comment_doorLeaf": "The procedural leaf mounted in the doorway aperture (Structures.ts), sized as a fraction of the aperture so a frame's worth of clearance shows on every side.",
-      "doorLeaf": { "widthFraction": 0.9, "heightFraction": 0.96, "depth": 0.08 },
+      "doorLeaf": {
+        "widthFraction": 0.9,
+        "heightFraction": 0.96,
+        "depth": 0.08
+      },
       "$comment_homeFurniture": "The one furnished house, so the lamp has something to stand on and the room reads as lived-in rather than a gray shell (docs/decisions/D62). Every URL below is a Kenney Furniture Kit prop, scale baked at the pipeline. `lamp` sits on top of `table`, not on the floor, at the door-agnostic offset furnishHome() computes from `table`'s own baked height.",
       "homeFurniture": {
-        "table": { "url": "models/furniture/side_table.glb", "scale": 1.0, "height": 0.494 },
-        "lamp": { "url": "models/furniture/lamp.glb", "scale": 1.0 },
-        "chair": { "url": "models/furniture/chair.glb", "scale": 1.0 },
-        "bookcase": { "url": "models/furniture/bookcase.glb", "scale": 1.0 },
-        "rug": { "url": "models/furniture/rug.glb", "scale": 1.0 }
+        "table": {
+          "url": "models/furniture/side_table.glb",
+          "scale": 1,
+          "height": 0.494
+        },
+        "lamp": {
+          "url": "models/furniture/lamp.glb",
+          "scale": 1
+        },
+        "chair": {
+          "url": "models/furniture/chair.glb",
+          "scale": 1
+        },
+        "bookcase": {
+          "url": "models/furniture/bookcase.glb",
+          "scale": 1
+        },
+        "rug": {
+          "url": "models/furniture/rug.glb",
+          "scale": 1
+        }
       }
     },
     "village": {
       "$comment": "Whole prebuilt Quaternius buildings for every ring house that is not the player's own home (docs/decisions/D62). No door: these are set dressing, walked around not into, so Structures.ts sizes their collider from the real loaded model's bounding box instead of an aperture plane.",
       "variants": [
-        { "url": "models/buildings/village_house_b.glb", "scale": 1.0 },
-        { "url": "models/buildings/village_house_c.glb", "scale": 1.0 },
-        { "url": "models/buildings/village_inn.glb", "scale": 1.0 },
-        { "url": "models/buildings/village_blacksmith.glb", "scale": 1.0 }
+        {
+          "url": "models/buildings/village_house_b.glb",
+          "scale": 1
+        },
+        {
+          "url": "models/buildings/village_house_c.glb",
+          "scale": 1
+        },
+        {
+          "url": "models/buildings/village_inn.glb",
+          "scale": 1
+        },
+        {
+          "url": "models/buildings/village_blacksmith.glb",
+          "scale": 1
+        }
       ]
     },
     "hall": {
       "shell": {
         "url": "models/buildings/hall.glb",
-        "scale": 1.0
+        "scale": 1
       },
       "banner": {
         "url": "models/buildings/banner.glb",
-        "scale": 1.0,
+        "scale": 1,
         "baseY": 3.4,
-        "inset": 1.0
+        "inset": 1
       }
     },
     "stones": {
@@ -157,11 +215,11 @@
       ],
       "scaleXZ": [
         2.2,
-        3.0
+        3
       ],
       "scaleY": [
-        5.0,
-        7.0
+        5,
+        7
       ]
     },
     "dressing": [
@@ -183,7 +241,7 @@
         "url": "models/buildings/bench.glb",
         "x": -4,
         "z": 5,
-        "rotY": 2.0,
+        "rotY": 2,
         "collider": 0.55
       },
       {
@@ -269,7 +327,7 @@
   "stations": {
     "campfire": {
       "url": "models/stations/campfire.glb",
-      "scale": 1.0,
+      "scale": 1,
       "ember": {
         "diameter": 0.55,
         "y": 0.16
@@ -277,19 +335,19 @@
     },
     "workbench": {
       "url": "models/stations/workbench.glb",
-      "scale": 1.0
+      "scale": 1
     },
     "bed": {
       "url": "models/stations/bed.glb",
-      "scale": 1.0
+      "scale": 1
     },
     "tanning_rack": {
       "url": "models/stations/tanning_rack.glb",
-      "scale": 1.0
+      "scale": 1
     },
     "orb_bench": {
       "url": "models/stations/orb_bench.glb",
-      "scale": 1.0,
+      "scale": 1,
       "orb": {
         "diameter": 0.32,
         "y": 1.5

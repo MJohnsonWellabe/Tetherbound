@@ -12,7 +12,7 @@ import {
 /**
  * Placeholder prop geometry, built from primitives in code.
  *
- * ASSETS.md is explicit that this is correct and expected through M0 and M1:
+ * docs/02_ART_BIBLE.md is explicit that this is correct and expected through M0 and M1:
  * "A pal is a capsule with a tinted sphere head. A tree is a cylinder and a
  * cone." Real CC0 models arrive in M5, and because every prop is referenced by
  * family id rather than by mesh, that swap is a data change.

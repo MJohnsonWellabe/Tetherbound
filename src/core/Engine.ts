@@ -1,5 +1,7 @@
 import {
   Color4,
+  ColorCurves,
+  DefaultRenderingPipeline,
   DirectionalLight,
   Engine,
   FreeCamera,
@@ -88,7 +90,6 @@ export class Renderer {
     // Prop collision uses our own sphere/AABB tests against a per-chunk list,
     // so Babylon never needs to consider a mesh for picking.
     scene.skipPointerMovePicking = true;
-    scene.blockMaterialDirtyMechanism = true;
 
     const camera = new FreeCamera('camera', new Vector3(0, 8, -12), scene);
     camera.minZ = render.camera.minZ;
@@ -98,7 +99,7 @@ export class Renderer {
     // built-in input would fight it.
     camera.inputs.clear();
 
-    // ARCHITECTURE.md: a single directional light casting, plus cheap ambient.
+    // docs/03_TECHNICAL_ARCHITECTURE.md: a single directional light casting, plus cheap ambient.
     // Direction, colour and intensity are all TimeOfDay's, from lighting.json.
     const sun = new DirectionalLight('sun', new Vector3(-0.45, -0.82, 0.36), scene);
     const sky = new HemisphericLight('sky', new Vector3(0, 1, 0), scene);
@@ -124,10 +125,90 @@ export class Renderer {
     // the list until it puts something there.
     shadows.getShadowMap()?.renderList?.splice(0);
 
+    this.grade(scene, camera);
+
+    // LAST. Two engine behaviours make the ordering in this constructor
+    // load-bearing rather than stylistic:
+    //
+    // 1. `blockMaterialDirtyMechanism` makes _markAllSubMeshesAsDirty a no-op.
+    //    Attaching the pipeline sets imageProcessingConfiguration.
+    //    applyByPostProcess, which every material listens for and forwards into
+    //    exactly that call. Blocked, materials keep compiling without
+    //    toLinearSpace while the post-process still applies toGammaSpace, and
+    //    the whole frame comes out washed grey. It reads as a tuning problem
+    //    and is not one.
+    // 2. Material.freeze() sets checkReadyOnlyOnce, and five call sites freeze.
+    //
+    // Every material in the game is created after `new Renderer()` in main.ts,
+    // so with the pipeline already attached they all compile with the right
+    // defines the first time and nothing ever needs marking dirty.
+    scene.blockMaterialDirtyMechanism = true;
+
     this.handles = { engine, scene, camera, sun, sky, shadows, device };
 
     this.bindResize();
+
     this.bindContextLoss();
+  }
+
+  /**
+   * The colour grade: tone mapping, exposure, contrast, bloom, FXAA, vignette.
+   *
+   * Ordering inside Babylon's applyImageProcessing is exposure -> vignette ->
+   * tonemap -> toGammaSpace -> contrast -> curves, and the tonemap runs in
+   * LINEAR space. Worth knowing before tuning, because it means tone mapping
+   * barely touches mid-tones here (a gamma 0.5 mid-tone is linear 0.21) and
+   * mostly serves to stop bloom-lifted highlights clipping flat. The visible
+   * wins in this rig are, in order: bloom, contrast, curves, FXAA.
+   *
+   * Bloom runs BEFORE exposure, on the raw 0..1 material output, so its
+   * threshold has to sit below 1.0 to catch anything at all.
+   */
+  private grade(scene: Scene, camera: FreeCamera): void {
+    const g = render.post;
+
+    // `hdr: true` is not cosmetic. It switches the intermediate targets to
+    // half-float; with false you get an 8-bit LINEAR intermediate, and linear
+    // 8-bit banding across shadowed grass is glaring.
+    const pipeline = new DefaultRenderingPipeline('grade', true, scene, [camera]);
+
+    pipeline.bloomEnabled = g.bloom.enabled;
+    pipeline.bloomThreshold = g.bloom.threshold;
+    pipeline.bloomWeight = g.bloom.weight;
+    pipeline.bloomKernel = g.bloom.kernel;
+    pipeline.bloomScale = g.bloom.scale;
+    pipeline.fxaaEnabled = g.fxaa;
+
+    // Pinned off rather than left at defaults, so a future Babylon default
+    // cannot switch an expensive effect on without anyone choosing it.
+    pipeline.depthOfFieldEnabled = false;
+    pipeline.grainEnabled = false;
+    pipeline.chromaticAberrationEnabled = false;
+    pipeline.sharpenEnabled = false;
+
+    const ip = scene.imageProcessingConfiguration;
+    ip.toneMappingEnabled = g.toneMapping.enabled;
+    ip.toneMappingType = g.toneMapping.type;
+    ip.exposure = g.exposure;
+    ip.contrast = g.contrast;
+    ip.vignetteEnabled = g.vignette.enabled;
+    ip.vignetteWeight = g.vignette.weight;
+    ip.vignetteStretch = g.vignette.stretch;
+    ip.vignetteCameraFov = g.vignette.fov;
+
+    // Saturation lives here rather than in the palettes. The reference frames
+    // are considerably more saturated than anything a physically-plausible
+    // light rig produces, and lifting every palette to chase that would push
+    // the shadowed side to grey. A global curve moves both ends together.
+    const curves = new ColorCurves();
+    curves.globalSaturation = g.curves.globalSaturation;
+    curves.highlightsSaturation = g.curves.highlightsSaturation;
+    curves.shadowsSaturation = g.curves.shadowsSaturation;
+    curves.globalHue = g.curves.globalHue;
+    ip.colorCurves = curves;
+    ip.colorCurvesEnabled = true;
+
+    this.teardown.push(() => pipeline.dispose());
   }
 
   private bindResize(): void {

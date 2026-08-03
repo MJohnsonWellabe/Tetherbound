@@ -5,7 +5,7 @@ import type { Terrain } from './gen/Terrain';
 /**
  * Where the fixed points of the Meadows end up.
  *
- * GAME_DESIGN.md section 9: Hollowbrook is always at the origin, the Hall sits
+ * docs/01_GAME_DESIGN.md section 9: Hollowbrook is always at the origin, the Hall sits
  * at a seeded angle 900 to 1200m out on flat ground with a road stub pointing
  * back at the village, and the standing stones at a second seeded angle 500 to
  * 700m out.

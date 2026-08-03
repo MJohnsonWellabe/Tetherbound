@@ -18,6 +18,48 @@
     "$comment_repaint": "Colour delta (max channel) that justifies repainting the ramp canvas. Small enough that dusk never steps, large enough that this is a few writes per in-game hour rather than one per frame.",
     "repaintEpsilon": 0.004
   },
+  "$comment_sunDisc": "src/world/SunDisc.ts. A billboarded additive disc parked `distance` up the reversed light vector. It exists for the grade as much as for itself: bloom runs on raw material output, the whole world is StandardMaterial whose lighting term clamps to 1.0 before albedo, and before this nothing in any frame was bright enough to cross the bloom threshold. `gain` lifts the tint past 1 so it survives into the half-float pipeline as a real highlight. `size` is in the same units as `distance`; the ratio is the apparent angle, about 4 degrees here.",
+  "sunDisc": {
+    "distance": 620,
+    "size": 46,
+    "gain": 2.6,
+    "textureSize": 128,
+    "coreStop": 0.18,
+    "haloStop": 0.46
+  },
+  "$comment_ridge": "src/world/FarRidge.ts. Concentric ridgeline curtains, camera-locked. It does NOT sample the real heightfield and must not be 'fixed' to: the continent octave is +-24m over 900m, so a true hill at a true 2km subtends about one degree. `baseFrequency` is how many ridges go round the circle at the first octave, `roughness` the per-octave amplitude decay, `zenithMix` how far each band's tint is pulled off the horizon colour toward the zenith (0 makes the range vanish into the sky, 1 makes it a hard cutout). `peakHaze`/`baseHaze` are vertex-colour values that bake the aerial perspective in, since the bands opt out of fog exactly as the dome does. Bands sit inside the cloud shell and the dome so depth sorts all three with no ordering hack.",
+  "ridge": {
+    "baseFrequency": 3,
+    "skirt": 260,
+    "baseOffsetY": 0,
+    "zenithMix": 0.16,
+    "bands": [
+      {
+        "radius": 680,
+        "height": 96,
+        "columns": 128,
+        "roughness": 0.5,
+        "peakHaze": 0.9,
+        "baseHaze": 1.0
+      },
+      {
+        "radius": 640,
+        "height": 74,
+        "columns": 96,
+        "roughness": 0.45,
+        "peakHaze": 0.83,
+        "baseHaze": 0.97
+      },
+      {
+        "radius": 600,
+        "height": 54,
+        "columns": 80,
+        "roughness": 0.42,
+        "peakHaze": 0.76,
+        "baseHaze": 0.94
+      }
+    ]
+  },
   "$comment_toon": "src/fx/ToonShade.ts. Toon-shades pals, NPCs and the player rig only (the seam is Rigs.ts mountRig, not terrain/water/props). `enabled` is the master switch; `?toon=0` in the URL overrides it off for a same-build comparison, `?toon=1` forces it on. `bands` is how many discrete lit steps the N-dot-L response is quantized into; ASSETS.md D24 calls for three. `edgeSoftness` is the width (as a fraction of one band, 0 to ~0.49) of the smoothstep blend at each band boundary; 0 would be a razor 2-tone cel edge that crawls under the moving sun, this keeps it soft. `rimStrength` is a flat additive lift on silhouette edges (0 disables it); `rimPower` shapes how tightly it hugs the edge, higher is a thinner rim.",
   "toon": {
     "enabled": true,

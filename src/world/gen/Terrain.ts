@@ -6,7 +6,7 @@ import { mulberry32, hashSeed } from './Rng';
  * camera, prop placement and spawn logic all sample this same function, so the
  * player always stands on the terrain they can see.
  *
- * Units are meters. GAME_DESIGN.md talks in meters throughout ("within 4
+ * Units are meters. docs/01_GAME_DESIGN.md talks in meters throughout ("within 4
  * meters of a pal", "a 10m build radius"), so the heightfield does too.
  *
  * Composition, coarse to fine:
@@ -177,7 +177,7 @@ export class Terrain {
     if (h < WATER_LEVEL) return 'water';
 
     // Riverbank is the strip you can stand on and touch the water from, not
-    // the whole valley. GAME_DESIGN.md gates Rillnewt to "river banks only",
+    // the whole valley. docs/01_GAME_DESIGN.md gates Rillnewt to "river banks only",
     // so a loose threshold here would scatter a river species across a sixth
     // of the world. The valley shoulder stays meadow.
     if (this.riverFalloff(this.riverDistance(x, z), 0.34) > 0.82) return 'riverbank';

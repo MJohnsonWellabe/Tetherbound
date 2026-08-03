@@ -44,7 +44,7 @@ const ZIPS = [
  * Rigged models from poly.pizza, by model-page id.
  *
  * `as` is the local filename the pipeline refers to. The list is curated by
- * hand against the species reads in GAME_DESIGN.md section 6; changing a
+ * hand against the species reads in docs/01_GAME_DESIGN.md section 6; changing a
  * species' look means changing one id here and re-running.
  *
  * Populated by the curation pass (Phase 5); the resolver below works for any
@@ -52,7 +52,7 @@ const ZIPS = [
  */
 export const PIZZA = [
   // Pals: one distinct rigged creature per species, curated against the
-  // species reads in GAME_DESIGN.md section 6. All Quaternius.
+  // species reads in docs/01_GAME_DESIGN.md section 6. All Quaternius.
   { id: 'irZjWFARyl', as: 'creatures/bramblit.glb' }, // Bunny (Ultimate Monsters)
   { id: 'Bc97C66HKi', as: 'creatures/cindercub.glb' }, // Fox (Animated Animals)
   { id: '3rUm1cN3yp', as: 'creatures/dewdrake.glb' }, // Dragon
@@ -95,7 +95,39 @@ export const PIZZA = [
   { id: '7uSlZo3n9Y', as: 'village/bench_2.glb' }, // Bench 2
   { id: 'zjCQP1TAci', as: 'village/barrel.glb' }, // Barrel
   { id: '3OEFd1AWfa', as: 'village/crate.glb' }, // Crate
-  { id: 'UXmKfG81fG', as: 'village/fence.glb' } // Fence
+  { id: 'UXmKfG81fG', as: 'village/fence.glb' }, // Fence
+  // Vegetation: Quaternius Stylized Nature. This replaces the Kenney Nature
+  // Kit outright rather than retinting it. The kit's plants are flat-shaded
+  // spiked fans, and a captured frame of them at real density read as a field
+  // of green starfish; no tint, scale or density value fixes a silhouette.
+  // Going to the same artist as the creatures, the humanoids and the village
+  // is the point: the world stops being three art styles in one frame.
+  { id: '9nvGuZlbpE', as: 'nature/tree_a.glb' }, // Tree
+  { id: 'i4QMw4L64D', as: 'nature/tree_b.glb' }, // Tree
+  { id: '2paAm1ja4w', as: 'nature/tree_c.glb' }, // Tree
+  { id: 'igSu0cPoBz', as: 'nature/pine_a.glb' }, // Pine
+  { id: 'Zt62gceKXZ', as: 'nature/pine_b.glb' }, // Pine
+  { id: '92EytlU1El', as: 'nature/bush_a.glb' }, // Bush
+  { id: 'ooG6CkLyE8', as: 'nature/bush_b.glb' }, // Bush
+  { id: 'U1ymDy8tbY', as: 'nature/bush_c.glb' }, // Bush with Flowers
+  { id: 'Db4UVcNWnF', as: 'nature/grass_a.glb' }, // Grass
+  { id: 'AkGoA1SaHA', as: 'nature/grass_b.glb' }, // Grass
+  { id: 'JSIYtscPmP', as: 'nature/grass_tall.glb' }, // Tall Grass
+  { id: 'dOO6kMDd8L', as: 'nature/flower_a.glb' }, // Flowers
+  { id: 'NBUxHir6FJ', as: 'nature/flower_b.glb' }, // Flowers
+  { id: 'jqcanvH7D6', as: 'nature/fern.glb' }, // Fern
+  { id: 's1OJ3bBzqc', as: 'nature/rock_a.glb' }, // Rock Medium
+  { id: 'KZdEP3uUpa', as: 'nature/rock_b.glb' }, // Rock Medium
+  { id: 'JQxF95498B', as: 'nature/rock_c.glb' }, // Rock Medium
+  { id: 'BVYSNurXMV', as: 'nature/bush_d.glb' }, // Bush, rounded and opaque
+  { id: 'MZdeiQApSb', as: 'nature/plant_small.glb' }, // Small Plant
+  // The rounded blob shrub. The other four "Bush" entries in the pack are leaf
+  // rosettes: agave silhouettes, which is the same complaint that moved the
+  // whole family off the Kenney kit. Measured 1.91 x 1.58 x 1.97, which is the
+  // aspect a shrub should have.
+  { id: 'EoTERLq3z2', as: 'nature/bush_e.glb' }, // Bush, rounded blob
+  { id: 'TSbIxkDtxF', as: 'nature/bush_f.glb' }, // Bush with Berries
+  { id: 'J2h3HrO356', as: 'nature/bush_g.glb' } // Bushes
 ];
 
 const args = process.argv.slice(2);

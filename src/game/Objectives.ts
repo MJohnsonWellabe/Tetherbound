@@ -6,7 +6,7 @@ import type { Story } from './Story';
 import objectivesData from '../data/objectives.json';
 
 /**
- * The opening objective chain: GAME_DESIGN.md section 3, "the first fifteen
+ * The opening objective chain: docs/01_GAME_DESIGN.md section 3, "the first fifteen
  * minutes". Wake up, talk to Grandpa Orin, catch a tuftmoth, head east.
  *
  * A short, ordered, one-way list. It never looks backward: once a step's

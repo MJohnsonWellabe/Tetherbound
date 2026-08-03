@@ -1,20 +1,26 @@
-# TETHERBOUND — Architecture
+# 03 — Technical Architecture
+
+See `docs/vision/00_EXECUTIVE_VISION.md` for the pitch, `docs/01_GAME_DESIGN.md`
+for the systems this implements, and `docs/02_ART_BIBLE.md` for the visual
+standard `ChunkManager` and material code must hit.
 
 ## Stack
 
 | Layer | Choice | Why |
 |---|---|---|
-| Renderer | Three.js (latest stable, npm) | Requirement |
+| Renderer | Babylon.js (latest stable, npm, ES modules) | Requirement |
 | Language | TypeScript, strict mode | Catches data-shape errors early in a data-driven game |
 | Bundler | Vite | Fast HMR, trivial GitHub Pages build |
 | State | Plain TS modules and a small event bus. No React, no Redux. | The HUD is DOM overlay, not a component tree |
 | UI | HTML/CSS overlay on top of the canvas | Cheaper and more accessible than in-canvas UI |
-| Physics | Custom capsule-vs-heightfield character controller. No physics engine. | A full physics lib is scope we do not need |
-| Audio | Howler.js | Mobile autoplay handling is already solved there |
+| Physics | Babylon's built-in character controller helpers where they fit (capsule collider + `scene.gravity` + `moveWithCollisions`), custom heightfield sampling for terrain-following. No full physics engine (Havok/Cannon/Ammo) in v0.1. | Babylon's collision system covers what a walking-pace survival game needs; a full physics engine is scope we don't need yet |
+| Audio | Babylon's built-in `Sound`/`AudioEngine` (WebAudio-backed) | Native to the engine, handles mobile unlock-on-gesture already |
 | Save | localStorage + base64 export | No backend |
 | Deploy | GitHub Actions to GitHub Pages | Requirement |
 
 Set `base` in `vite.config.ts` to `/<repo-name>/` or Pages will 404 every asset.
+Babylon's `SceneLoader` and `Engine` both work fine under a Vite dev server
+and a static Pages build with no special configuration beyond that base path.
 
 ## Repo layout
 
@@ -92,13 +98,10 @@ Set `base` in `vite.config.ts` to `/<repo-name>/` or Pages will 404 every asset.
 
 ## Performance budget
 
-Target 120fps on a ROG Ally at 1080p, and 60fps on any desktop from the last six years. Phones are supported but no longer set the budget (D28).
-
-The frame time budget is **8ms**, not 16ms. A 120Hz handheld panel has 8.3ms to work with, and half a frame of headroom now is what leaves room for M2's pals, orbs and particles later.
+Target 60fps on an iPhone 12 and a 2019 mid-range Android, 60fps on any desktop from the last six years.
 
 | Metric | Budget |
 |---|---|
-| Frame time | < 8 ms |
 | Draw calls | < 150 |
 | Triangles on screen | < 300k |
 | Textures resident | < 120 MB |
@@ -107,14 +110,15 @@ The frame time budget is **8ms**, not 16ms. A 120Hz handheld panel has 8.3ms to 
 
 Techniques required from milestone 1, not retrofitted later:
 
-- `InstancedMesh` for all scatter props. Grass, trees, rocks, and flowers are instanced per chunk.
-- Shared materials. One material per prop family, tinted with instance color attributes.
+- `Mesh.thinInstanceAdd` (ThinInstances) for all scatter props. Grass, trees, rocks, and flowers are instanced per chunk, one base mesh per prop family, thousands of instances at a handful of draw calls.
+- Shared materials. One `PBRMaterial` per prop family, tinted via `thinInstanceSetAttributeAt` on a per-instance color buffer, not per-instance materials.
 - Object pooling for pals, damage numbers, particles, and orbs.
-- Frustum culling on, plus a manual distance cull for pals beyond 3 chunks.
-- Texture atlasing for props. KTX2 with Basis where the loader supports it, WebP fallback.
-- Cap `pixelRatio` at 2, and at 1.5 on touch devices.
-- Shadow map at 1024 on desktop, 512 on mobile, single directional light casting.
-- No post-processing in v0.1 except an optional cheap vignette.
+- Babylon's built-in frustum culling on (`mesh.alwaysSelectAsActiveMesh = false`, the default), plus a manual distance cull for pals beyond 3 chunks.
+- Texture compression: KTX2/Basis via Babylon's `KhronosTextureContainer2` loader where supported, WebP fallback.
+- Cap `engine.setHardwareScalingLevel` so effective pixel ratio stays at or below 2 on desktop, 1.5 on touch devices.
+- `ShadowGenerator` at 1024 on desktop, 512 on mobile, single directional light casting, soft shadows via PCF.
+- No post-processing pipeline in v0.1 except an optional cheap vignette through Babylon's `DefaultRenderingPipeline` if it's free.
+- Procedural surface textures via `CustomProceduralTexture` per `docs/02_ART_BIBLE.md`, baked once at load, not re-rendered per frame.
 
 Add a `?stats=1` URL flag that shows an FPS, draw call, and triangle readout. Use it every session.
 

@@ -42,6 +42,12 @@ export interface ScatterPoint {
   roll: number;
   /** Rotation in radians. */
   rotation: number;
+  /** 0..1, uniform, INDEPENDENT of `roll`. Drives per-instance colour.
+   *
+   *  Its own draw rather than a reuse of `roll` for the reason stated below on
+   *  thinning: `roll` already picks scale and doubles as the density coin flip,
+   *  so tinting from it would make every big oak the pale one. */
+  tint: number;
 }
 
 function cellPoint(
@@ -50,19 +56,25 @@ function cellPoint(
   cellX: number,
   cellZ: number,
   cellSize: number
-): { x: number; z: number; priority: number; roll: number; rotation: number } {
+): { x: number; z: number; priority: number; roll: number; rotation: number; tint: number } {
   const rng = mulberry32(hashSeed(`${seed}:${label}`, cellX, cellZ));
   const jitterX = rng();
   const jitterZ = rng();
   const priority = rng();
   const roll = rng();
   const rotation = rng() * Math.PI * 2;
+  // APPENDED, never inserted. Every draw above keeps its position in the
+  // sequence, so every existing seed still generates the identical world and
+  // every saved harvest key still points at the same bush. Inserting a draw
+  // here would silently regenerate the whole world and orphan every delta.
+  const tint = rng();
   return {
     x: (cellX + jitterX) * cellSize,
     z: (cellZ + jitterZ) * cellSize,
     priority,
     roll,
-    rotation
+    rotation,
+    tint
   };
 }
 
@@ -173,7 +185,8 @@ export function scatterInRect(
         z: candidate.z,
         key: `${label}:${cx},${cz}`,
         roll: candidate.roll,
-        rotation: candidate.rotation
+        rotation: candidate.rotation,
+        tint: candidate.tint
       });
     }
   }

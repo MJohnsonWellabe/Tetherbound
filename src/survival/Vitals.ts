@@ -1,7 +1,7 @@
 import config from '../data/vitals.json';
 
 /**
- * Health, stamina and hunger. GAME_DESIGN.md section 4, the middle tier.
+ * Health, stamina and hunger. docs/01_GAME_DESIGN.md section 4, the middle tier.
  *
  * Pure and engine-free so it runs headless under vitest. Every number comes
  * from src/data/vitals.json; there are no tuning literals in this file.
@@ -230,7 +230,7 @@ export function tickVitals(state: VitalsState, dtMs: number, sprinting = false):
 }
 
 /**
- * Wake at the bed. GAME_DESIGN.md section 4: inventory drops to a satchel at
+ * Wake at the bed. docs/01_GAME_DESIGN.md section 4: inventory drops to a satchel at
  * the faint location (the caller handles that), pals are never dropped, and
  * hunger is deliberately NOT restored, because the walk back to your satchel
  * is meant to be the cost.

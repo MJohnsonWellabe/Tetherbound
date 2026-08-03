@@ -17,11 +17,11 @@ import {
 /**
  * Build mode: the ghost, the placement, the pieces in the world.
  *
- * Opens when the hammer is equipped, per GAME_DESIGN.md section 8. The snap
+ * Opens when the hammer is equipped, per docs/01_GAME_DESIGN.md section 8. The snap
  * logic lives in SnapGrid.ts and is pure; this file owns the meshes and the
  * inventory side effects.
  *
- * Pieces are boxes for now. ASSETS.md is explicit that anything missing from a
+ * Pieces are boxes for now. docs/02_ART_BIBLE.md is explicit that anything missing from a
  * kit "gets built from primitives in code, which is acceptable and fast", and
  * because a piece is referenced by id the M5 model swap is a data change.
  *

@@ -45,7 +45,7 @@ export interface AttackOptions {
 /**
  * Resolve an attack.
  *
- * A correctly timed dodge negates a power attack ENTIRELY (GAME_DESIGN.md
+ * A correctly timed dodge negates a power attack ENTIRELY (docs/01_GAME_DESIGN.md
  * section 7), not partially. Partial mitigation would make the dodge feel like
  * a stat rather than a skill, and the telegraph exists precisely so the player
  * can earn the whole thing.

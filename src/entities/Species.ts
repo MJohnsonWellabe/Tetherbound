@@ -58,7 +58,7 @@ export function moveDef(id: string): MoveDef | undefined {
 /**
  * The two moves a species knows, both available from level 1.
  *
- * GAME_DESIGN.md section 5 gated the power move behind level 8. That made the
+ * docs/01_GAME_DESIGN.md section 5 gated the power move behind level 8. That made the
  * power button a dead press for most of a first fight: `MoveResolver` saw no
  * move and returned zero damage with no number, no FX and no log line,
  * indistinguishable from broken input. The charge bar is the gate now
@@ -96,7 +96,7 @@ export function derive(pal: PalState): DerivedStats {
 /**
  * Build a fresh individual.
  *
- * `variance` is rolled once here and never again; GAME_DESIGN.md section 5 is
+ * `variance` is rolled once here and never again; docs/01_GAME_DESIGN.md section 5 is
  * explicit that it is locked for life, which is also why it is stored in the
  * save rather than recomputed.
  */

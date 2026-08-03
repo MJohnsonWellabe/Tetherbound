@@ -11,7 +11,7 @@ import { catchChance, ringQualityAt, rollCatch, shouldFlee, THROW_CONFIG } from 
 /**
  * Combat Mode: a STATE, not a scene.
  *
- * ARCHITECTURE.md rule 5 and GAME_DESIGN.md section 7. The world keeps
+ * docs/03_TECHNICAL_ARCHITECTURE.md rule 5 and docs/01_GAME_DESIGN.md section 7. The world keeps
  * rendering, the terrain stays live, no chunk unloads and no loading screen
  * ever appears. Entering a fight changes the camera framing, the input mode and
  * the HUD, and nothing else.

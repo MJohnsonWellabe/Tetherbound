@@ -198,7 +198,7 @@ describe('paletteAt', () => {
     // and a weak moon, so its ambientIntensity is deliberately the higher of
     // the two; what must stay true is that the night frame is darker overall.
     expect(groundLight(0.85).lit).toBeLessThan(groundLight(0.4).lit);
-    // Thicker fog at night is what drops visibility, per GAME_DESIGN.md 9.
+    // Thicker fog at night is what drops visibility, per docs/01_GAME_DESIGN.md 9.
     expect(night.fogDensity).toBeGreaterThan(noon.fogDensity);
   });
 

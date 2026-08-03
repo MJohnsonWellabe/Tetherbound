@@ -11,6 +11,9 @@
     "wallColliderStep": 0.5,
     "$comment_houseClearingMargin": "Clearings.ts: metres added past each house's own half-diagonal (from villageHousePlacements' placeholder width/depth) when it suppresses scatter around that one building. Covers the real loaded model, which can run a little larger than the placeholder box, and the doorway apron so nothing sprouts on the threshold.",
     "houseClearingMargin": 1.5,
+    "$comment_clearingFractions": "Clearings.ts multiplies `radius` by these for the village-wide suppression discs. groundClearingFraction is 0 on purpose: grass and flowers now grow right up to the walls, and the per-house discs above (radius === groundRadius, sized to each building's own footprint) are what keep them off the floorboards. It used to be 0.45, which emptied a 19m circle centred on the spawn point and was the reason the opening frame was bare ground. treeClearingFraction was `radius + 6` = 48m; the houses sit at 0.55 of the radius (23m), so 0.8 puts the tree line at 34m where it reads as the settlement edge rather than a distant wall.",
+    "groundClearingFraction": 0,
+    "treeClearingFraction": 0.8,
     "$comment_home": "House index 0's furniture, marking it as the player's home for the wake-up scene a later milestone spawns into. Offsets are local to that house's own frame (front at -z, same convention as the door anchors in models.json). house_a's own wall plane sits at half-extent 3.0 (models.json's door.z), so floor/table/chair/bookcase/rug all stay inside +-2.8 to clear the walls.",
     "home": {
       "houseIndex": 0,

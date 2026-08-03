@@ -13,14 +13,23 @@ transfers; the target does not.
 
 This is the whole point and it is easy to get wrong. Tetherbound is:
 
-- **Mobile first.** 60fps on an iPhone 12. Under 150 draw calls, under 300k
-  triangles, no post-processing (`ARCHITECTURE.md`).
-- **Stylised, not photoreal.** `ASSETS.md`: low-poly, flat-shaded, saturated,
-  chunky silhouettes that read at phone size.
+- **A PC handheld game.** The reference device is a ROG Ally at 1080p (D28).
+  Judge at 1280x720.
+- **Stylised, not photoreal.** `docs/02_ART_BIBLE.md`: rounded low-poly forms,
+  thick readable silhouettes, saturated colour, warm directional light.
 
-A judge that asks for photorealism will push the renderer through the perf
-budget toward an aesthetic the design documents explicitly reject. Chasing
-Starfield here would make the game worse and slower at the same time.
+A judge that asks for photorealism will push the renderer toward an aesthetic
+the design documents explicitly reject. Chasing Starfield here would make the
+game worse and slower at the same time.
+
+**Do not reject a frame for having a colour grade, bloom, or more than 150 draw
+calls.** Earlier versions of this rubric said the target was 60fps on an iPhone
+12 with no post-processing, quoting documents that D28 had already superseded
+and that nobody updated. D63 lifted that ceiling deliberately: the whole world
+is `StandardMaterial`, whose lighting term clamps to 1.0 before albedo, so
+without a grade there is no highlight in the frame at all and the world renders
+flat by construction. Judge the image, not the budget. Perf is measured with
+`?stats=1` on real hardware, and it is not this rubric's job.
 
 The right references are **Palworld** and **Pokemon Scarlet/Violet** and
 **Legends: Arceus**: readable stylised worlds, appealing creature silhouettes,
@@ -101,7 +110,10 @@ it does not, the fix did not land, and saying it did is worse than not fixing it
 - **Software rendering.** No GPU here. Shading is correct, timings are not.
 - **Static frames.** Popping, aliasing in motion and traversal feel are invisible
   in a still. A human on a phone remains the real test.
-- **Placeholder art.** Until M5 the props are primitives by design
-  (`ASSETS.md`). Judging silhouettes and lighting is still useful now; judging
-  model quality is not, and a judge told to review asset fidelity before M5 will
-  produce a long list of things already scheduled.
+- **Placeholder art is gone.** This limit used to say the props were primitives
+  by design until M5 and that model quality was out of scope. It no longer
+  applies: every prop, creature, character and building is a real sourced model.
+  Model quality, and especially silhouette at density, is now squarely in scope
+  and is exactly what the last round of criticism turned on (D64).
+- **A human is still the real test.** A frame at 1280x720 hides what motion and
+  a real GPU show.

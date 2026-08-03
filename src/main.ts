@@ -48,6 +48,8 @@ import { PropBatcher } from './world/PropBatcher';
 import { disposePrototypes } from './world/Prototypes';
 import { resolvePrototypes } from './world/PropModels';
 import { SkyDome } from './world/SkyDome';
+import { SunDisc } from './world/SunDisc';
+import { FarRidge } from './world/FarRidge';
 import type { DebugGrid } from './world/DebugBuildGrid';
 import { Terrain, WATER_LEVEL } from './world/gen/Terrain';
 import { TimeOfDay } from './world/TimeOfDay';
@@ -86,7 +88,7 @@ function fatal(err: unknown): void {
 
 fatalReload?.addEventListener('click', () => location.reload());
 
-/** Autosave cadence, per ARCHITECTURE.md section "Save". */
+/** Autosave cadence, per docs/03_TECHNICAL_ARCHITECTURE.md section "Save". */
 const AUTOSAVE_MS = 60_000;
 /** Stamina per tool swing. Matches the tool costs in items.json closely enough
  *  that the exact per-tool value can move there when tools get their own pass. */
@@ -149,7 +151,7 @@ async function boot(): Promise<void> {
 
   progress(0.5, 'Waking Hollowbrook');
   // A new game wakes the player at their own furnished house rather than the
-  // bare village origin (GAME_DESIGN.md section 3's "wake-up"). A loaded save
+  // bare village origin (docs/01_GAME_DESIGN.md section 3's "wake-up"). A loaded save
   // overwrites this with its own saved position below, so this line only ever
   // matters for a fresh game.
   const wakePos = built.home?.position ?? { x: 0, y: terrain.heightAt(0, 0), z: 0 };
@@ -192,7 +194,9 @@ async function boot(): Promise<void> {
 
   progress(0.8, 'Setting the sun');
   const dome = new SkyDome(scene);
-  const time = new TimeOfDay(scene, sun, sky, 0.2, 1, dome);
+  const sunDisc = new SunDisc(scene);
+  const farRidge = new FarRidge(scene, terrain.seed);
+  const time = new TimeOfDay(scene, sun, sky, 0.2, 1, dome, [sunDisc, farRidge]);
   const input = new Input(canvas);
 
   // The satchel starts EMPTY. Grandpa Orin hands over the axe, pick, knife,
@@ -205,7 +209,7 @@ async function boot(): Promise<void> {
 
   // Pals, combat and the party. The party starts EMPTY: Grandpa Orin hands
   // over the starter, and which one is the player's first real decision
-  // (GAME_DESIGN.md section 3). A pal granted here would make that choice
+  // (docs/01_GAME_DESIGN.md section 3). A pal granted here would make that choice
   // decorative, which is what it was while M3 did not exist yet.
   const party = new Party();
 
@@ -222,7 +226,7 @@ async function boot(): Promise<void> {
     input.intent.interact = true;
   };
 
-  const palVisuals = new PalVisuals(scene);
+  const palVisuals = new PalVisuals(scene, shadows);
   const spawner = new SpawnManager(terrain, palVisuals);
   const companion = new Companion(palVisuals, (x, z) => terrain.heightAt(x, z));
   const combat = new CombatMode(party, input);
@@ -332,7 +336,7 @@ async function boot(): Promise<void> {
     props.processQueue(1500);
   }
 
-  // The opening objective chain (GAME_DESIGN.md section 3). Built after the
+  // The opening objective chain (docs/01_GAME_DESIGN.md section 3). Built after the
   // save restore above so a loaded game that is already past a step does not
   // toast it complete on the very first frame; see the header of Objectives.ts.
   const objectives = new Objectives(story, party, inventory, hud);
@@ -370,7 +374,7 @@ async function boot(): Promise<void> {
     };
   }
 
-  // Autosave every 60s and on visibility change, per ARCHITECTURE.md. Routed
+  // Autosave every 60s and on visibility change, per docs/03_TECHNICAL_ARCHITECTURE.md. Routed
   // through SaveWiring so Start Over's wipe guard covers both call sites from
   // one place; see the header of src/game/SaveWiring.ts for why that matters.
   const saveWiring = new SaveWiring(saves, snapshotSave);
@@ -450,6 +454,10 @@ async function boot(): Promise<void> {
         player.state.position.z
       );
       if (time.tick(dt)) bus.emit('dayChanged', { day: time.day });
+      // Both are camera-parked rather than world-placed, and the sun also
+      // tracks the light direction, which time.tick() just moved.
+      sunDisc.follow(camera, sun);
+      farRidge.follow(camera);
 
       // Stamina is not wired to vitals yet, so swings are free for now. The
       // signature already takes it so that hooking Vitals up is one argument.
@@ -726,6 +734,8 @@ async function boot(): Promise<void> {
       stationViews.dispose();
       disposePrototypes(prototypes);
       dome.dispose();
+      sunDisc.dispose();
+      farRidge.dispose();
       water.dispose();
       renderer.dispose();
     }

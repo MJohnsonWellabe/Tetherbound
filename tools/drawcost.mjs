@@ -10,7 +10,7 @@
 //   Draw-bound   -> frame time barely moves with resolution. Fix by merging
 //                   meshes, batching instances, cutting material count.
 //
-// ARCHITECTURE.md budgets 150 draw calls and 16ms. This says which of those two
+// docs/03_TECHNICAL_ARCHITECTURE.md budgets 150 draw calls and 16ms. This says which of those two
 // numbers is actually costing the frame.
 //
 // Software rendering exaggerates fill cost badly, so treat the ratio as the

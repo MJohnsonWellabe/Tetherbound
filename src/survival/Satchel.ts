@@ -4,7 +4,7 @@ import { add, isTool, type ItemStack, type Slots } from './Inventory';
 /**
  * The faint drop.
  *
- * GAME_DESIGN.md section 4: at 0 health the player collapses and wakes at their
+ * docs/01_GAME_DESIGN.md section 4: at 0 health the player collapses and wakes at their
  * last bed. All inventory items drop into a Satchel marker at the faint
  * location. Pals are never dropped. Equipped tools are never dropped.
  *

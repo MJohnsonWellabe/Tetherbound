@@ -1,9 +1,13 @@
-# TETHERBOUND — Game Design Document
+# 01 — Game Design Document
 
 **Version:** 0.1 (Meadows vertical slice)
 **Platform:** Web, single build for phone and desktop, deployed to GitHub Pages
-**Engine:** Three.js
+**Engine:** Babylon.js
 **Players:** Single player, local save
+
+See `docs/vision/00_EXECUTIVE_VISION.md` for the pitch this document
+implements, `docs/02_ART_BIBLE.md` for how it should look, and
+`docs/03_TECHNICAL_ARCHITECTURE.md` for how it's built.
 
 ---
 

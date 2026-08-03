@@ -1,7 +1,7 @@
 /**
  * Fixed-timestep simulation with decoupled, interpolated rendering.
  *
- * ARCHITECTURE.md is unambiguous: never scale gameplay by raw frame delta. A
+ * docs/03_TECHNICAL_ARCHITECTURE.md is unambiguous: never scale gameplay by raw frame delta. A
  * 144Hz desktop and a thermally-throttled phone must run the same simulation,
  * or every tuned constant in the game (stamina drain, the 0.6s telegraph, the
  * catch-ring shrink) means something different per device.

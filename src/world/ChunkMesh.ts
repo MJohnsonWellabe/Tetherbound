@@ -23,12 +23,26 @@ export const CHUNK_SIZE = 128;
  */
 const LOD_RESOLUTION = [64, 32, 16] as const;
 
+/**
+ * Biome tints, carried in the vertex colours.
+ *
+ * These are ALBEDO, not the colour that reaches the screen. The detail texture
+ * multiplies under them (mean luma ~0.55) and the day palette lands under 1.0
+ * of light on top, so the shipped value is roughly what a frame shows times
+ * three. The previous meadow green measured as brown dirt on captured frames
+ * for exactly that reason: 0.42,0.55,0.24 through two multiplies is mud.
+ *
+ * Raised and pushed toward yellow-green, which is the axis a sunlit meadow
+ * actually sits on. Keep the red channel high; a green-dominant meadow reads
+ * as artificial turf, and every reference frame has more red in the grass than
+ * feels right when you read the numbers cold.
+ */
 const BIOME_COLOR: Record<BiomeKind, Color3> = {
-  meadow: new Color3(0.42, 0.55, 0.24),
-  grove: new Color3(0.3, 0.44, 0.2),
-  rock: new Color3(0.46, 0.45, 0.42),
-  riverbank: new Color3(0.56, 0.52, 0.36),
-  water: new Color3(0.29, 0.36, 0.3)
+  meadow: new Color3(0.44, 0.63, 0.29),
+  grove: new Color3(0.33, 0.5, 0.25),
+  rock: new Color3(0.6, 0.59, 0.54),
+  riverbank: new Color3(0.64, 0.6, 0.42),
+  water: new Color3(0.36, 0.48, 0.38)
 };
 
 export function chunkMaterial(scene: Scene): StandardMaterial {

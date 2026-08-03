@@ -3,7 +3,7 @@ import type { PalState, ReleaseRecord } from './PalState';
 /**
  * The party, and the five-slot cap.
  *
- * CLAUDE.md hard constraint 1 and ARCHITECTURE.md rule 2: the cap is enforced
+ * CLAUDE.md hard constraint 1 and docs/03_TECHNICAL_ARCHITECTURE.md rule 2: the cap is enforced
  * in `add()` and nowhere else, and there is no code path that produces a party
  * of six. `members` is exposed read-only for exactly that reason. Anything that
  * wants a pal in the party goes through `add()`, including the Loamking's offer
@@ -11,7 +11,7 @@ import type { PalState, ReleaseRecord } from './PalState';
  *
  * `add()` does not throw when full. It returns a `needsRelease` signal carrying
  * all six candidates, because the sixth capture is a decision the player makes
- * (GAME_DESIGN.md section 5) and they are allowed to release the newcomer. A
+ * (docs/01_GAME_DESIGN.md section 5) and they are allowed to release the newcomer. A
  * throw would force every caller to handle the game's central mechanic as an
  * error case.
  */
@@ -33,7 +33,7 @@ export class Party {
    *
    * Clamps to the cap rather than trusting the file. A save is user-editable
    * and a corrupted or hand-edited one must not be able to smuggle in a sixth
-   * pal; ARCHITECTURE.md requires the clamp on load and this is where it lands.
+   * pal; docs/03_TECHNICAL_ARCHITECTURE.md requires the clamp on load and this is where it lands.
    */
   static fromSave(members: PalState[], ledger: ReleaseRecord[]): Party {
     const party = new Party();

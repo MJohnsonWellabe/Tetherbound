@@ -4,7 +4,7 @@ import fx from '../data/fx.json';
 /**
  * Floating numbers: "+3 Wood" now, damage in M2.
  *
- * These are pooled DOM nodes, not meshes or sprites. ARCHITECTURE.md already
+ * These are pooled DOM nodes, not meshes or sprites. docs/03_TECHNICAL_ARCHITECTURE.md already
  * puts the HUD in an HTML overlay, and the same reasoning applies harder here:
  * text in-canvas needs a font atlas, a material and a draw call per batch,
  * while a `<span>` costs nothing against the 150-draw-call budget, gets real

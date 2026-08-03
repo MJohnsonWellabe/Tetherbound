@@ -19,7 +19,7 @@ export interface PalState {
   xp: number;
   /**
    * The +/-10% roll applied at spawn and locked for life
-   * (GAME_DESIGN.md section 5). Stored, because it can never be recomputed.
+   * (docs/01_GAME_DESIGN.md section 5). Stored, because it can never be recomputed.
    */
   variance: number;
   affinity: number;
@@ -30,7 +30,7 @@ export interface PalState {
   /** Real ms at capture, for the same reason. */
   caughtAtMs: number;
   /**
-   * Team Tether uses collars instead of orbs (GAME_DESIGN.md sections 3 and 10).
+   * Team Tether uses collars instead of orbs (docs/01_GAME_DESIGN.md sections 3 and 10).
    *
    * One flag carries three rules: the pal hits harder, it never dodges because
    * its affinity is floored, and an orb thrown at it bounces instead of rolling.
@@ -42,7 +42,7 @@ export interface PalState {
    */
   collared?: boolean;
   /**
-   * The opening scene's scripted tuftmoth (GAME_DESIGN.md section 3). Set only
+   * The opening scene's scripted tuftmoth (docs/01_GAME_DESIGN.md section 3). Set only
    * by `SpawnManager.spawnScripted`, and only while `first_catch` is unset, so
    * the first throw of the game cannot fail. Never true for anything else, and
    * never persisted: a caught pal has no more use for it.

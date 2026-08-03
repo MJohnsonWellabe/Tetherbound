@@ -95,7 +95,7 @@ describe('release', () => {
   });
 
   it('lets a released species be caught again, but as a new individual', () => {
-    // GAME_DESIGN.md section 5: released pals never return. A later catch of
+    // docs/01_GAME_DESIGN.md section 5: released pals never return. A later catch of
     // the same species is a different pal, and the ledger still remembers.
     const party = new Party();
     party.add(pal('first', 7));
@@ -107,7 +107,7 @@ describe('release', () => {
 
 describe('loading a save', () => {
   it('clamps an over-long party rather than trusting the file', () => {
-    // ARCHITECTURE.md: SaveManager.load() clamps party.length to 5. A hand
+    // docs/03_TECHNICAL_ARCHITECTURE.md: SaveManager.load() clamps party.length to 5. A hand
     // edited or corrupted save must not be able to smuggle in a sixth.
     const party = Party.fromSave(
       Array.from({ length: 9 }, (_, i) => pal(`p${i}`)),

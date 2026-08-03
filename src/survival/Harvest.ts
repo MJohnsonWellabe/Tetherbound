@@ -53,7 +53,7 @@ export function isHarvestable(family: string): boolean {
 }
 
 /**
- * CLAUDE.md hard constraint 2, GAME_DESIGN.md pillar 2: the player never wields
+ * CLAUDE.md hard constraint 2, docs/01_GAME_DESIGN.md pillar 2: the player never wields
  * a weapon, and tools "cannot target pals or people".
  *
  * Written as an explicit allowlist rather than left implicit in the absence of

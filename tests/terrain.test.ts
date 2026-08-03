@@ -75,7 +75,7 @@ describe('Terrain shape', () => {
   });
 
   it('keeps Hollowbrook flat and buildable', () => {
-    // GAME_DESIGN.md section 9: the village always sits at world origin. It
+    // docs/01_GAME_DESIGN.md section 9: the village always sits at world origin. It
     // needs ground you can actually place a workbench on.
     let min = Infinity;
     let max = -Infinity;

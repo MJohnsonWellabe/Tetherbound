@@ -8,7 +8,7 @@ import type { SatchelContents } from '../survival/Satchel';
 /**
  * Save, load, export, import.
  *
- * The schema is `SaveV1` from ARCHITECTURE.md. Two rules from that document
+ * The schema is `SaveV1` from docs/03_TECHNICAL_ARCHITECTURE.md. Two rules from that document
  * shape the whole file:
  *
  *   "SaveManager.load() validates, clamps party.length to 5, and refuses to
@@ -111,7 +111,7 @@ export class SaveManager {
    * Import a pasted string.
    *
    * Validates BEFORE overwriting anything, and keeps the current save in the
-   * rollback slot, per ARCHITECTURE.md.
+   * rollback slot, per docs/03_TECHNICAL_ARCHITECTURE.md.
    */
   import(encoded: string): LoadResult {
     let json: string;

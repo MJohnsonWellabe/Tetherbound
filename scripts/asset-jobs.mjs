@@ -14,43 +14,82 @@ const NK = 'nature-kit/Models/GLTF format';
 
 /** Prop families. Multiple variants per family become separate outputs the
  *  prototype resolver picks between; each is one merged vertex-coloured mesh. */
+/**
+ * Vegetation is Quaternius Stylized Nature, not the Kenney Nature Kit.
+ *
+ * The kit's plants are flat-shaded spiked fans. Rendered at real density in a
+ * captured frame they read as a field of green starfish, and no combination of
+ * tint, scale or density fixes a silhouette. Every creature, humanoid and
+ * village building already comes from Quaternius, so this also stops the world
+ * being three art styles in one frame.
+ *
+ * The cost is real and is accepted: these carry 3x to 16x the triangles of the
+ * Kenney models they replace (grass 96 vs 36, bush ~360 vs 104, tree ~1800 vs
+ * 114). D51's rule still holds -- for a family you meet a thousand at a time,
+ * the source model IS the budget -- so the two dense families take the two
+ * cheapest models in the pack, and only the trees carry a simplify pass.
+ *
+ * Like every Quaternius asset here, the pack bakes shading into its albedo, so
+ * each job needs the same gamma brighten the village buildings take (D62).
+ */
+const NATURE = 'pizza/nature';
+const QUAT_NATURE = {
+  source: 'https://poly.pizza/u/Quaternius',
+  author: 'Quaternius',
+  license: 'CC0'
+};
+
 const props = [
-  // Oaks: broad leafy silhouettes. Plain + detailed for in-family variety.
-  { file: `${NK}/tree_oak.glb`, out: 'oak_a' },
-  { file: `${NK}/tree_default.glb`, out: 'oak_b' },
-  { file: `${NK}/tree_detailed.glb`, out: 'oak_c' },
-  // Pines: the default silhouettes read better than the tall ones at scale.
-  { file: `${NK}/tree_pineDefaultA.glb`, out: 'pine_a' },
-  { file: `${NK}/tree_pineDefaultB.glb`, out: 'pine_b' },
-  // Rocks: chunky boulders. D has the strongest height for outcrops.
-  { file: `${NK}/rock_largeA.glb`, out: 'rock_a' },
-  { file: `${NK}/rock_largeC.glb`, out: 'rock_b' },
-  { file: `${NK}/rock_largeD.glb`, out: 'rock_c' },
-  // Bushes.
-  { file: `${NK}/plant_bush.glb`, out: 'bush_a' },
-  { file: `${NK}/plant_bushDetailed.glb`, out: 'bush_b' },
-  // Ground cover. This is the whole triangle budget: it renders by the
-  // thousand through thin instances, so the SOURCE choice matters more than
-  // any simplifier pass. The kit's leaf-tuft and flat-plant models carry the
-  // same silhouette at 40m as the detailed tufts for a sixth of the
-  // triangles, which is what buys the draw distance that makes a meadow read
-  // as a meadow instead of a golf course (D51).
-  { file: `${NK}/grass_leafs.glb`, out: 'grass_a' },
-  { file: `${NK}/plant_flatTall.glb`, out: 'grass_b' },
-  { file: `${NK}/plant_flatShort.glb`, out: 'reed_a' },
-  { file: `${NK}/flower_purpleA.glb`, out: 'flower_a', simplify: 0.45 },
-  { file: `${NK}/flower_redA.glb`, out: 'flower_b', simplify: 0.45 },
-  { file: `${NK}/flower_yellowA.glb`, out: 'flower_c', simplify: 0.45 },
-  // Landmark and dressing pieces (consumed from Phase 4 on).
+  // Oaks: broad leafy silhouettes. Simplified because they are the only
+  // vegetation family heavy enough to be worth it and numerous enough to care.
+  { file: `${NATURE}/tree_a.glb`, out: 'oak_a', simplify: 0.6 },
+  { file: `${NATURE}/tree_b.glb`, out: 'oak_b', simplify: 0.6 },
+  { file: `${NATURE}/tree_c.glb`, out: 'oak_c', simplify: 0.6 },
+  { file: `${NATURE}/pine_a.glb`, out: 'pine_a', simplify: 0.6 },
+  { file: `${NATURE}/pine_b.glb`, out: 'pine_b', simplify: 0.6 },
+  { file: `${NATURE}/rock_a.glb`, out: 'rock_a' },
+  { file: `${NATURE}/rock_b.glb`, out: 'rock_b' },
+  { file: `${NATURE}/rock_c.glb`, out: 'rock_c' },
+  { file: `${NATURE}/bush_a.glb`, out: 'bush_a' },
+  { file: `${NATURE}/bush_b.glb`, out: 'bush_b' },
+  { file: `${NATURE}/bush_c.glb`, out: 'bush_c' },
+  { file: `${NATURE}/bush_d.glb`, out: 'bush_d' },
+  { file: `${NATURE}/bush_e.glb`, out: 'bush_e' },
+  { file: `${NATURE}/bush_f.glb`, out: 'bush_f' },
+  { file: `${NATURE}/bush_g.glb`, out: 'bush_g' },
+  { file: `${NATURE}/plant_small.glb`, out: 'plant_small' },
+  // Ground cover. grass_a is the cheapest tuft in the pack at 96 triangles and
+  // is the one that renders by the thousand; the taller one is a silhouette
+  // accent, not a carpet, so it stays a variant.
+  { file: `${NATURE}/grass_a.glb`, out: 'grass_a' },
+  { file: `${NATURE}/grass_b.glb`, out: 'grass_b' },
+  { file: `${NATURE}/grass_tall.glb`, out: 'grass_c' },
+  { file: `${NATURE}/fern.glb`, out: 'reed_a' },
+  { file: `${NATURE}/flower_a.glb`, out: 'flower_a' },
+  { file: `${NATURE}/flower_b.glb`, out: 'flower_b' }
+].map(({ file, out, simplify }) => ({
+  group: 'props',
+  transform: 'prop',
+  simplify: simplify ?? null,
+  gamma: 0.4,
+  sources: [{ file }],
+  out: `models/props/${out}.glb`,
+  provenance: QUAT_NATURE
+}));
+
+/** Landmark and dressing pieces. Still Kenney: they are met one at a time,
+ *  they are stone and wood rather than foliage, and the silhouette complaint
+ *  that moved the vegetation does not apply to a boulder. */
+const dressing = [
   { file: `${NK}/stone_tallA.glb`, out: 'stone_tall_a' },
   { file: `${NK}/stone_tallB.glb`, out: 'stone_tall_b' },
   { file: `${NK}/stone_tallG.glb`, out: 'stone_tall_c' },
   { file: `${NK}/log_large.glb`, out: 'log' },
   { file: `${NK}/stump_round.glb`, out: 'stump' }
-].map(({ file, out, simplify }) => ({
+].map(({ file, out }) => ({
   group: 'props',
   transform: 'prop',
-  simplify: simplify ?? null,
+  simplify: null,
   sources: [{ file }],
   out: `models/props/${out}.glb`,
   provenance: { source: 'https://kenney.nl/assets/nature-kit', author: 'Kenney', license: 'CC0' }
@@ -426,6 +465,7 @@ const stations = [
 
 export const JOBS = [
   ...props,
+  ...dressing,
   ...textures,
   ...buildings,
   ...stations,

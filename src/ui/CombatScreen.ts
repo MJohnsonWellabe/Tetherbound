@@ -15,7 +15,7 @@ import { CombatButtons } from './CombatButtons';
  * around the centre-framed target, the ally card and party slots along the
  * bottom, the catch ring over everything while a throw is worth timing.
  *
- * DOM, not in-canvas, per ARCHITECTURE.md; every class it emits already exists
+ * DOM, not in-canvas, per docs/03_TECHNICAL_ARCHITECTURE.md; every class it emits already exists
  * in game.css. CombatButtons writes into the shared Intent exactly the way
  * the gamepad layer does, so a tap, a key and a trigger all arrive at
  * CombatMode as the same edge. Built once, shown and hidden; a fight must

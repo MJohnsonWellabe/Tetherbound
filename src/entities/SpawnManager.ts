@@ -9,7 +9,7 @@ import { createPal, derive, speciesDef, type SpeciesDef } from './Species';
 /**
  * Spawns wild pals around the player and drives their AI.
  *
- * Capped at 12 active within view (GAME_DESIGN.md section 9) and pooled from
+ * Capped at 12 active within view (docs/01_GAME_DESIGN.md section 9) and pooled from
  * the first frame, so walking across the Meadows does not allocate a mesh per
  * encounter. Spawn choice is seeded per attempt rather than from
  * `Math.random()`, so a seed plus a position plus a time reproduces the same

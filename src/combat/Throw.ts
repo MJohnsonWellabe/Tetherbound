@@ -3,12 +3,12 @@ import config from '../data/orbs.json';
 /**
  * The catch roll.
  *
- * Pure, per ARCHITECTURE.md, and unit tested against the clamp because a catch
+ * Pure, per docs/03_TECHNICAL_ARCHITECTURE.md, and unit tested against the clamp because a catch
  * chance that escapes its band is either a guaranteed catch or an impossible
  * one, and both break the five-slot decision the game is built on.
  *
  * The throw itself is always available, from the first frame of a fight
- * (GAME_DESIGN.md section 7, and CLAUDE.md hard constraint 3). Nothing in this
+ * (docs/01_GAME_DESIGN.md section 7, and CLAUDE.md hard constraint 3). Nothing in this
  * file gates on combat state, and nothing should ever be added that does.
  */
 
@@ -60,7 +60,7 @@ export function ringBonus(ring: RingQuality): number {
 }
 
 /**
- * GAME_DESIGN.md section 7, verbatim:
+ * docs/01_GAME_DESIGN.md section 7, verbatim:
  *
  *   base      = species.catchRate
  *   hpTerm    = 1 - (currentHP / maxHP) * 0.75
@@ -75,7 +75,7 @@ export function catchChance(input: ThrowInput): number {
   if (input.collared) return 0;
   // Outside the clamp on purpose, like the collared rule above it: a promise,
   // not a very good roll. Only the opening scene's scripted tuftmoth ever sets
-  // this, and only until it is caught (GAME_DESIGN.md section 3).
+  // this, and only until it is caught (docs/01_GAME_DESIGN.md section 3).
   if (input.guaranteed) return config.guaranteedChance;
 
   const hpFraction = input.maxHp > 0 ? input.currentHp / input.maxHp : 1;

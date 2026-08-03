@@ -16,7 +16,7 @@ import type { Input } from './input/Input';
  * hooks per-frame observables and is not free; a released player pays nothing.
  */
 
-/** ARCHITECTURE.md performance budget. */
+/** docs/03_TECHNICAL_ARCHITECTURE.md performance budget. */
 const BUDGET = {
   frameMs: 16,
   drawCalls: 150,

@@ -2,9 +2,22 @@
 
 You are building **TETHERBOUND**, a Babylon.js open-world survival-craft creature-collector that deploys to GitHub Pages and must play well on a PC handheld.
 
-The renderer is Babylon, not the Three.js named in `ARCHITECTURE.md`. `docs/decisions/D01-renderer-is-babylon-not-three.md` has the reasoning and the guardrail that keeps it reversible. Only `src/core/babylon.ts` and `src/core/babylonLoaders.ts` may import the engine, and `tests/bundle.test.ts` fails the build if anything else does.
+The renderer is Babylon, not the Three.js named in `docs/03_TECHNICAL_ARCHITECTURE.md`. `docs/decisions/D01-renderer-is-babylon-not-three.md` has the reasoning and the guardrail that keeps it reversible. Only `src/core/babylon.ts` and `src/core/babylonLoaders.ts` may import the engine, and `tests/bundle.test.ts` fails the build if anything else does.
 
-Read `GAME_DESIGN.md`, `ARCHITECTURE.md`, `ASSETS.md`, and `ROADMAP.md` before writing code. They are the source of truth. If something here conflicts with them, they win, and you flag the conflict.
+The game bible lives in `docs/`. Read in this order before writing code:
+
+1. `docs/00_EXECUTIVE_VISION.md` — the pitch and the one rule everything serves
+2. `docs/01_GAME_DESIGN.md` — every system, stat, formula and content list
+3. `docs/02_ART_BIBLE.md` — the visual target and the critic-loop process
+4. `docs/06_VISUAL_SYSTEM_PHASING.md` — the system-by-system order and status
+5. `docs/03_TECHNICAL_ARCHITECTURE.md` — the stack and the repo structure
+6. `docs/04_ASSET_PIPELINE.md` — sourcing and the manifest requirement
+7. `docs/05_ROADMAP.md` — milestone order and the full biome plan
+
+They are the source of truth. If something here conflicts with them, they win, and you flag the conflict. Two exceptions, both already decided and both recorded, where the docs are wrong and this file is right:
+
+- **Assets are not CC0-only.** `docs/04_ASSET_PIPELINE.md` still says they are. The owner waived it twice (D42, and again with these documents). `ASSET_MANIFEST.md` is a provenance log, not a licence gate.
+- **Post-processing is allowed and the phone budget is dead.** `docs/03_TECHNICAL_ARCHITECTURE.md` still budgets an iPhone 12 at under 150 draw calls with no post-processing. D28 moved the target to a ROG Ally; D63 lifted the ceiling and added the colour grade.
 
 ## Development philosophy
 
@@ -20,7 +33,7 @@ Stop and ask only when the choice would be expensive to reverse: schema shape, t
 4. **No storage box, no pal bank.** Releasing is permanent.
 5. **Every tunable number lives in `src/data/*.json`.** If you type a stat, cost, rate, duration, or curve constant into a system file, you have made a mistake.
 6. **No `Math.random()` in world generation.** Seeded RNG only.
-7. **CC0 assets only**, logged in `ASSET_MANIFEST.md` before commit.
+7. **Every shipped asset has a manifest row** in `ASSET_MANIFEST.md` before commit. Licence is not a gate (D42); provenance is. `tests/assets.test.ts` checks coverage both ways, so a file cannot ship without a row and a row cannot outlive its file.
 8. **PC handheld is the primary target.** The reference device is a ROG Ally: 1080p, 120Hz, gamepad plus touchscreen. Test at 1280x720 first. Nothing may depend on hover, and every control must be reachable on a gamepad. Touch stays supported and must keep working, but it no longer constrains the perf budget, the view distance, or the UI layout. Changed from mobile-first at the owner's direction, logged as D28.
 
 ## Code standards
@@ -41,9 +54,26 @@ npm run typecheck
 npm run test
 npm run build
 npm run preview
-npm run assets     # optimize assets_raw into public
-npm run decisions  # index of docs/decisions/, and the next free number
+npm run assets         # optimize assets_raw into public, and rewrite the manifest
+npm run assets:fetch   # download sources into assets_raw/ (gitignored)
+npm run decisions      # index of docs/decisions/, and the next free number
 ```
+
+Looking at what the game renders, which is not optional before claiming a
+visual change worked:
+
+```bash
+export CHROMIUM_PATH=/opt/pw-browsers/chromium   # or the tools launch nothing
+npm run build && npm run preview -- --port 4173 --strictPort &
+node tools/probe.mjs shots-x --close   # 3 frames, fast, head height
+node tools/survey.mjs --out shots-x    # all 9, slow
+node tools/sheet.mjs --in shots-x --out shots-x/_sheet.png
+```
+
+Use `probe` while iterating and `survey` for the record. `--close` is the only
+framing that shows ground cover honestly; the survey's 3.2m eye pitched down
+flattens a tuft into a speck. Frame times from either are software-rendered and
+are not a device measurement.
 
 `npm run dev` must bind `--host` so the phone on the same wifi can load it. Print the LAN URL.
 
@@ -51,7 +81,7 @@ npm run decisions  # index of docs/decisions/, and the next free number
 
 - One milestone per branch, squash merge to `main`.
 - Every commit must pass typecheck and tests. The deploy workflow enforces this.
-- After each milestone: update `ROADMAP.md` with what actually shipped, add any new files to `docs/decisions/`, and post the Pages URL.
+- After each milestone: update `docs/05_ROADMAP.md` with what actually shipped, add any new files to `docs/decisions/`, and post the Pages URL.
 - Write the test before the formula for anything in `combat/` or `party/`.
 
 ## Performance discipline

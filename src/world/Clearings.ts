@@ -52,6 +52,8 @@ export function clearingsFor(terrain: Terrain, seed: string): Clearing[] {
   const stones = stonesPlacement(terrain, seed);
   const houses = villageHousePlacements(terrain, seed);
   const margin = landmarks.village.houseClearingMargin as number;
+  const villagePad = landmarks.village.treeClearingFraction as number;
+  const villageGroundFraction = landmarks.village.groundClearingFraction as number;
 
   const clearings: Clearing[] = [
     {
@@ -59,8 +61,16 @@ export function clearingsFor(terrain: Terrain, seed: string): Clearing[] {
       z: landmarks.village.at[1] as number,
       // A little wider than the village itself, so the tree line reads as the
       // edge of the settlement rather than as a wall of trunks against it.
-      radius: (landmarks.village.radius as number) + 6,
-      groundRadius: (landmarks.village.radius as number) * 0.45
+      //
+      // The village-wide GROUND radius is now 0. It was 0.45 of the village
+      // radius, 18.9m, and it is the single reason the player's first frame was
+      // a bald plane: the spawn sits inside it and terrain is flattened to a
+      // literal plane out to 55m, so the opening shot had no ground cover AND
+      // no form. The per-house clearings below already keep grass out of the
+      // floorboards, sized to each house's own footprint, so this one was doing
+      // nothing except emptying the view.
+      radius: (landmarks.village.radius as number) * villagePad,
+      groundRadius: (landmarks.village.radius as number) * villageGroundFraction
     },
     {
       x: hall.x,

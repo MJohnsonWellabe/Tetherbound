@@ -5,7 +5,7 @@ import types from '../data/types.json';
  * The type ring, the damage formula, and stat scaling.
  *
  * Pure. Takes numbers, returns numbers, touches no globals, imports no engine.
- * ARCHITECTURE.md requires exactly this of combat math so it can be unit
+ * docs/03_TECHNICAL_ARCHITECTURE.md requires exactly this of combat math so it can be unit
  * tested, and CLAUDE.md requires the tests to be written first.
  *
  * Randomness is injected rather than called, so a test can pin the roll and a
@@ -48,7 +48,7 @@ export function typeMultiplier(attacker: PalType, defender: PalType): number {
  * Damage bonus from affinity.
  *
  * Above the high threshold a bonded pal hits harder. Below the low threshold it
- * does NOT hit softer: GAME_DESIGN.md section 5 says a neglected pal hesitates
+ * does NOT hit softer: docs/01_GAME_DESIGN.md section 5 says a neglected pal hesitates
  * on power attacks, which MoveResolver handles. Applying both would be a hidden
  * double penalty on the pal the player already feels worst about.
  */
@@ -59,7 +59,7 @@ export function affinityMultiplier(affinity: number): number {
 }
 
 /**
- * GAME_DESIGN.md section 7:
+ * docs/01_GAME_DESIGN.md section 7:
  *   dmg = (ATK / DEF) * movePower * typeMult * affinityMult
  *         * rand(0.9, 1.1) * (1 + 0.02 * levelDiff)
  *
@@ -92,7 +92,7 @@ export function statAt(base: number, level: number, variance: number): number {
  * Tuning that belongs to the formula rather than to a pal.
  *
  * These are the only numbers in this file and they come straight from the
- * formula as written in GAME_DESIGN.md section 7. MIN_LEVEL_SCALE stops a
+ * formula as written in docs/01_GAME_DESIGN.md section 7. MIN_LEVEL_SCALE stops a
  * 50-level gap from inverting the sign of the whole expression, which would
  * make an overlevelled attacker heal its target.
  */

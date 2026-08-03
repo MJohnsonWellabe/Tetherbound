@@ -11,7 +11,7 @@ import {
 
 describe('the no-weapon rule', () => {
   /**
-   * GAME_DESIGN.md pillar 2 and CLAUDE.md hard constraint 2: the player never
+   * docs/01_GAME_DESIGN.md pillar 2 and CLAUDE.md hard constraint 2: the player never
    * wields a weapon, and tools cannot target pals or people. This is the test
    * that has to keep passing forever, so it goes first.
    */

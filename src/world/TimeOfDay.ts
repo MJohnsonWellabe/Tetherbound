@@ -3,7 +3,7 @@ import lighting from '../data/lighting.json';
 import type { SkyDome } from './SkyDome';
 
 /**
- * Day and night. GAME_DESIGN.md section 9: 20 real minutes per full cycle,
+ * Day and night. docs/01_GAME_DESIGN.md section 9: 20 real minutes per full cycle,
  * 14 day and 6 night, night drops visibility hard and campfire light matters.
  *
  * Time is stored as a 0..1 fraction of the cycle so it serialises cleanly into
@@ -116,6 +116,11 @@ export function isNight(cycle: number): boolean {
   return t < DAWN || t >= DUSK;
 }
 
+/** Anything that repaints itself when the lighting palette moves. */
+export interface SkyLayer {
+  update(palette: Palette): void;
+}
+
 export class TimeOfDay {
   /** 0..1 through the cycle. 0 is dawn. */
   cycle: number;
@@ -127,7 +132,11 @@ export class TimeOfDay {
     private readonly sky: HemisphericLight,
     startCycle = 0.2,
     startDay = 1,
-    private readonly dome: SkyDome | null = null
+    private readonly dome: SkyDome | null = null,
+    /** Anything else painted by the palette: clouds, the sun disc, the far
+     *  ridge. Kept as a list rather than named fields so adding a sky layer
+     *  never touches this file again. */
+    private readonly layers: readonly SkyLayer[] = []
   ) {
     this.cycle = startCycle;
     this.day = startDay;
@@ -174,6 +183,7 @@ export class TimeOfDay {
     this.scene.fogColor = p.fog;
     this.scene.fogDensity = p.fogDensity;
     this.dome?.update(p);
+    for (const layer of this.layers) layer.update(p);
     // Clear colour matches the fog so the horizon has no visible seam where
     // terrain ends and sky begins.
     this.scene.clearColor = new Color4(p.fog.r, p.fog.g, p.fog.b, 1);

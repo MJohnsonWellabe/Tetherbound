@@ -11,7 +11,7 @@ import type { Terrain } from './gen/Terrain';
  * every prop family at once. Props are now grouped by their own draw distance
  * and this file went back to doing one job.
  *
- * Two rules from ARCHITECTURE.md still drive the shape of it:
+ * Two rules from docs/03_TECHNICAL_ARCHITECTURE.md still drive the shape of it:
  *
  * "Dispose everything. Every geometry, material, and texture created by
  * ChunkManager gets disposed on unload. Leaks kill mobile within minutes."

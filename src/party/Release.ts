@@ -6,7 +6,7 @@ import { speciesDef } from '../entities/Species';
 /**
  * The sixth-capture decision.
  *
- * GAME_DESIGN.md section 11: "Release confirmation is deliberately heavy. It
+ * docs/01_GAME_DESIGN.md section 11: "Release confirmation is deliberately heavy. It
  * shows the pal's level, affinity, time with you, and a two-step confirm. This
  * screen should feel bad."
  *

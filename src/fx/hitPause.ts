@@ -5,7 +5,7 @@
  * are wrong here:
  *
  * 1. **Scaling delta.** Multiplying dt by zero (or by 0.05 for slow motion)
- *    breaks the first rule in ARCHITECTURE.md: simulation runs at a fixed 60Hz
+ *    breaks the first rule in docs/03_TECHNICAL_ARCHITECTURE.md: simulation runs at a fixed 60Hz
  *    and gameplay is never scaled by a variable delta. Every constant in the
  *    game (stamina drain, the 0.6s telegraph, the catch-ring shrink) is tuned
  *    against a fixed step, and a variable one silently retunes all of them.

@@ -9,7 +9,7 @@ import type { PrototypeSet } from './Prototypes';
  *
  * This is the renderer half that world/gen/Scatter.ts refers to, and it exists
  * because the previous arrangement, one mesh per prop family per TERRAIN chunk,
- * measured 1576 draw calls against ARCHITECTURE.md's budget of 150. Chunks are
+ * measured 1576 draw calls against docs/03_TECHNICAL_ARCHITECTURE.md's budget of 150. Chunks are
  * sized for terrain streaming, and a grass tuft and an oak have no business
  * sharing that size: grass is invisible past ~40m and an oak reads at 200m, so
  * batching both at 64m meant hundreds of near-empty draw calls for the grass

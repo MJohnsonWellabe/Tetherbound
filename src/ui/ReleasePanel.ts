@@ -4,7 +4,7 @@ import { speciesDef } from '../entities/Species';
 /**
  * The sixth-capture screen, as cards instead of ASCII rows.
  *
- * Deliberately heavy per GAME_DESIGN.md section 11: level, affinity, days
+ * Deliberately heavy per docs/01_GAME_DESIGN.md section 11: level, affinity, days
  * held, and a two-step confirm. Clicking a card selects; the sticky confirm
  * strip does the rest. The keyboard/gamepad slot path in main.ts keeps
  * working; this panel adds pointers, it does not replace anything.

@@ -102,7 +102,7 @@ export function mountRig(
         (node as AbstractMesh).doNotSyncBoundingInfo = false;
         // Every rig mounted through here is a pal, an NPC, or the player:
         // this is the one seam all three pass through, so it is the one
-        // place toon shading gets applied (ASSETS.md D24). Terrain, water,
+        // place toon shading gets applied (docs/02_ART_BIBLE.md D24). Terrain, water,
         // the sky dome and the frozen/instanced prop materials never mount
         // through mountRig and are never touched.
         if (node.material) applyToonShading(node.material);

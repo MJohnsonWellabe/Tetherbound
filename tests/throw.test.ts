@@ -24,7 +24,7 @@ const BASE: ThrowInput = {
 
 describe('catch chance clamping', () => {
   it('never leaves the 0.01 to 0.95 band across the whole input range', () => {
-    // ARCHITECTURE.md names this explicitly as required coverage.
+    // docs/03_TECHNICAL_ARCHITECTURE.md names this explicitly as required coverage.
     for (const rate of [0.05, 0.2, 0.35, 0.6]) {
       for (const hpFrac of [0, 0.01, 0.25, 0.5, 0.99, 1]) {
         for (const palLevel of [1, 5, 18, 30, 50]) {
@@ -117,7 +117,7 @@ describe('what makes a catch likelier', () => {
 
 describe('collared pals', () => {
   it('cannot be caught at all', () => {
-    // GAME_DESIGN.md section 10: the orb bounces off Team Tether's pals. This
+    // docs/01_GAME_DESIGN.md section 10: the orb bounces off Team Tether's pals. This
     // is a rule, not a low roll, so it has to be zero and not merely small.
     expect(catchChance({ ...BASE, collared: true })).toBe(0);
   });
@@ -173,7 +173,7 @@ describe('shakes', () => {
 });
 
 describe('orb tiers', () => {
-  it('matches the table in GAME_DESIGN.md section 7', () => {
+  it('matches the table in docs/01_GAME_DESIGN.md section 7', () => {
     expect(ballMod('worn_orb')).toBe(1.0);
     expect(ballMod('keen_orb')).toBe(1.6);
     expect(ballMod('truestone_orb')).toBe(2.4);
@@ -185,7 +185,7 @@ describe('orb tiers', () => {
 });
 
 describe('ring bonuses', () => {
-  it('matches the table in GAME_DESIGN.md section 7', () => {
+  it('matches the table in docs/01_GAME_DESIGN.md section 7', () => {
     expect(ringBonus('none')).toBe(1.0);
     expect(ringBonus('good')).toBe(1.3);
     expect(ringBonus('great')).toBe(1.7);
@@ -193,7 +193,7 @@ describe('ring bonuses', () => {
 });
 
 describe('the guaranteed opening catch', () => {
-  // GAME_DESIGN.md section 3 / Objectives.ts: the scripted tuftmoth must land
+  // docs/01_GAME_DESIGN.md section 3 / Objectives.ts: the scripted tuftmoth must land
   // on the first orb, whatever the roll. This is applied per-pal by whoever
   // spawns it (SpawnManager.spawnScripted), not by anything in this file, so
   // these only check the formula itself is an honest override.

@@ -45,6 +45,11 @@ export interface FamilyConfig {
   maxSlope: number;
   density: Record<string, number>;
   scaleRange: number[];
+  /** Per-instance colour, multiplied onto the model's baked vertex colours.
+   *  `base` re-tints the whole family (the kit models ship a cold cyan-green
+   *  that fights the ground); `value` and `warm` are the half-widths of the
+   *  per-instance spread either side of it. Absent means untinted. */
+  tint?: { base: number[]; value: number; warm: number };
 }
 
 export interface PropCell {
@@ -135,9 +140,24 @@ export function buildPropCell(
   mesh.makeGeometryUnique();
   mesh.setEnabled(true);
   mesh.isPickable = false;
-  mesh.receiveShadows = false;
+  // Only the solid families take shadows. Ground cover is thousands of tiny
+  // instances whose own geometry is smaller than a shadow texel at 80m/1024,
+  // so shading it resolves to acne rather than to shape and costs the most
+  // where it shows the least. `castsShadow` is the right proxy: it already
+  // marks the families big enough for the shadow map to say anything about.
+  mesh.receiveShadows = family.castsShadow;
 
   const matrices = new Float32Array(points.length * 16);
+  // Per-instance colour. Babylon routes a thin-instance 'color' buffer to the
+  // `instanceColor` attribute (NOT ColorKind), sets the INSTANCESCOLOR define
+  // itself, and `vertexColorMixing` then does `vColor *= instanceColor`. So
+  // this MULTIPLIES the GLB's baked COLOR_0 rather than replacing it, which is
+  // what lets one shared material carry both a family base tint and per-prop
+  // variation. Alpha must stay exactly 1: it multiplies into the alpha path.
+  const tints = new Float32Array(points.length * 4);
+  const base = family.tint?.base ?? [1, 1, 1];
+  const valueSpread = family.tint?.value ?? 0;
+  const warmSpread = family.tint?.warm ?? 0;
   const minScale = family.scaleRange[0] ?? 1;
   const maxScale = family.scaleRange[1] ?? 1;
 
@@ -166,6 +186,19 @@ export function buildPropCell(
     Quaternion.RotationYawPitchRollToRef(p.rotation, 0, 0, rotation);
     Matrix.ComposeToRef(scale, rotation, position, matrix);
     matrix.copyToArray(matrices, written * 16);
+
+    // `tint` is centred on 0, so a family reads as its base colour on average
+    // and individuals sit either side of it. `warm` pushes red up and blue down
+    // together, which is the axis foliage actually varies along (sun-bleached
+    // to shaded) rather than a hue rotation, which goes muddy fast.
+    const t = p.tint * 2 - 1;
+    const v = 1 + t * valueSpread;
+    const w = t * warmSpread;
+    tints[written * 4] = Math.max(0, (base[0] ?? 1) * v + w);
+    tints[written * 4 + 1] = Math.max(0, (base[1] ?? 1) * v);
+    tints[written * 4 + 2] = Math.max(0, (base[2] ?? 1) * v - w);
+    tints[written * 4 + 3] = 1;
+
     written++;
 
     if (y < minY) minY = y;
@@ -201,6 +234,14 @@ export function buildPropCell(
     'matrix',
     written === points.length ? matrices : matrices.subarray(0, written * 16),
     16,
+    true
+  );
+  // Same aliasing hazard as the matrix buffer above, so it goes through the
+  // same unique geometry and must come after makeGeometryUnique().
+  mesh.thinInstanceSetBuffer(
+    'color',
+    written === points.length ? tints : tints.subarray(0, written * 4),
+    4,
     true
   );
 

@@ -41,7 +41,7 @@ describe('the type ring', () => {
     for (const t of ALL_TYPES) expect(typeMultiplier(t, t)).toBe(1);
   });
 
-  it('follows the ring in GAME_DESIGN.md section 5', () => {
+  it('follows the ring in docs/01_GAME_DESIGN.md section 5', () => {
     expect(typeMultiplier('verdant', 'tide')).toBeGreaterThan(1);
     expect(typeMultiplier('tide', 'ember')).toBeGreaterThan(1);
     expect(typeMultiplier('ember', 'stone')).toBeGreaterThan(1);

@@ -26,7 +26,16 @@
       "scaleRange": [
         0.82,
         1.25
-      ]
+      ],
+      "tint": {
+        "base": [
+          1,
+          1,
+          1.05
+        ],
+        "value": 0.14,
+        "warm": 0.05
+      }
     },
     {
       "id": "pine",
@@ -48,7 +57,16 @@
       "scaleRange": [
         0.85,
         1.3
-      ]
+      ],
+      "tint": {
+        "base": [
+          0.98,
+          1,
+          0.98
+        ],
+        "value": 0.13,
+        "warm": 0.05
+      }
     },
     {
       "id": "rock",
@@ -72,7 +90,16 @@
       "scaleRange": [
         0.6,
         2.1
-      ]
+      ],
+      "tint": {
+        "base": [
+          1,
+          1,
+          1
+        ],
+        "value": 0.12,
+        "warm": 0.04
+      }
     },
     {
       "id": "bush",
@@ -89,12 +116,21 @@
       ],
       "maxSlope": 30,
       "density": {
-        "default": 0.5
+        "default": 0.3
       },
       "scaleRange": [
-        0.7,
-        1.4
-      ]
+        0.8,
+        1.45
+      ],
+      "tint": {
+        "base": [
+          0.95,
+          2.05,
+          1
+        ],
+        "value": 0.13,
+        "warm": 0.05
+      }
     },
     {
       "id": "reed",
@@ -113,15 +149,25 @@
         "default": 0.7
       },
       "scaleRange": [
-        0.7,
+        0.8,
         1.5
-      ]
+      ],
+      "tint": {
+        "base": [
+          0.88,
+          0.98,
+          1.15
+        ],
+        "value": 0.14,
+        "warm": 0.05
+      }
     },
     {
       "id": "flower",
-      "minDistance": 3.4,
-      "drawDistance": 80,
-      "cellSize": 80,
+      "$comment": "Flower carpets are the strongest single colour accent in the reference shots, and one bloom per 87 square metres is not a carpet. Tightened from 3.4 and thinned less. maxSlope stays low so they read as meadow floor rather than hillside speckle.",
+      "minDistance": 1.9,
+      "drawDistance": 88,
+      "cellSize": 88,
       "castsShadow": false,
       "shadowDistance": 0,
       "collisionRadius": 0,
@@ -131,19 +177,29 @@
       ],
       "maxSlope": 22,
       "density": {
-        "default": 0.4
+        "default": 0.8
       },
       "scaleRange": [
-        0.8,
-        1.3
-      ]
+        0.6,
+        1.05
+      ],
+      "tint": {
+        "base": [
+          1.15,
+          1.05,
+          1.1
+        ],
+        "value": 0.26,
+        "warm": 0.16
+      }
     },
     {
       "id": "grass",
       "$comment": "The densest family by an order of magnitude, so it still gets the shortest draw distance. It used to stop at 44m against a 384m terrain view, which is why the meadow read as a bare golf course; the leaf-tuft source (36 tris, was 224) bought the range back at a third of the old triangle cost (D51).",
-      "minDistance": 2.1,
-      "drawDistance": 72,
-      "cellSize": 72,
+      "$comment_density": "minDistance is the binding constraint on lushness, not `density`: the achievable ceiling is about 0.318*density/minDistance^2, so no value of `density` could ever have thickened this. D51 cut the per-tuft triangle cost 6x and spent the whole saving on draw distance and on OTHER families, which is why the meadow stayed a golf course you could see further across. 2.1 -> 1.25 is roughly 4x the tufts. It is not lowered further because the Poisson pass costs 25 mask() calls per grid cell and each mask() is ~80 noise evaluations, so cost grows as 1/minDistance^2 and going under 1.0 turns chunk streaming into a soft hang.",
+      "minDistance": 1.25,
+      "drawDistance": 88,
+      "cellSize": 88,
       "castsShadow": false,
       "shadowDistance": 0,
       "collisionRadius": 0,
@@ -154,12 +210,23 @@
       ],
       "maxSlope": 35,
       "density": {
-        "default": 0.65
+        "default": 0.95
       },
+      "$comment_scale": "Scaled up alongside the density rise. Overlapping tufts are what turn scattered objects into ground cover, and enlarging costs no instances at all.",
       "scaleRange": [
-        0.9,
-        1.8
-      ]
+        0.85,
+        1.7
+      ],
+      "tint": {
+        "base": [
+          0.9,
+          0.98,
+          1.3
+        ],
+        "value": 0.11,
+        "warm": 0.05
+      }
     }
-  ]
+  ],
+  "$comment_tint": "Per-instance colour, multiplied onto each model baked vertex colours. The bases sit at 1: they briefly carried heavy corrections to rescue the Kenney kit foliage, which was the wrong fix for a bad silhouette (D65). What is left is the per-instance SPREAD, which is what stops a stand of trees reading as one stamped mesh. `value` is the half-width of the brightness jitter, `warm` pushes red up and blue down together, which is the axis foliage actually varies along."
 }

@@ -153,7 +153,7 @@ export class TouchLayer {
         lastMoveMs: performance.now()
       };
       // In combat the throw and both attacks live under this thumb, so the
-      // press begins a charge immediately. GAME_DESIGN.md section 7: the throw
+      // press begins a charge immediately. docs/01_GAME_DESIGN.md section 7: the throw
       // is available from the first frame of a fight.
       if (this.mode === 'combat') {
         this.intent.primary.down = true;

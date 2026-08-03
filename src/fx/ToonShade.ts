@@ -2,7 +2,7 @@ import { Material, MaterialPluginBase } from '../core/babylon';
 import lighting from '../data/lighting.json';
 
 /**
- * Toon shading for pals, NPCs and the player rig (ASSETS.md D24: "Palworld
+ * Toon shading for pals, NPCs and the player rig (docs/02_ART_BIBLE.md D24: "Palworld
  * and Pokemon on Switch", not photoreal PBR response).
  *
  * The glTF loader (src/core/babylonLoaders.ts) hands every rigged model a
@@ -128,7 +128,7 @@ float tbShadeBand(float x) {
   float tbScale = tbLum > 0.0005 ? tbBanded / tbLum : 1.0;
   finalColor.rgb *= tbScale;
   // Cheap fresnel rim so a creature's silhouette lifts off a same-toned
-  // background; understated on purpose (ASSETS.md: outline/rim is optional
+  // background; understated on purpose (docs/02_ART_BIBLE.md: outline/rim is optional
   // and only if it stays inexpensive).
   float tbRim = pow(1.0 - clamp(dot(normalW, viewDirectionW), 0.0, 1.0), ${RIM_POWER});
   finalColor.rgb += tbRim * ${RIM_STRENGTH};

@@ -5,13 +5,13 @@ import type { PalState } from './PalState';
  * XP, levels, affinity.
  *
  * Pure functions plus two that mutate the pal they are handed, which is the
- * boundary ARCHITECTURE.md draws: the curve is maths and gets tested, applying
+ * boundary docs/03_TECHNICAL_ARCHITECTURE.md draws: the curve is maths and gets tested, applying
  * it is a system. Every number lives in progression.json.
  */
 
 export const MAX_LEVEL = config.maxLevel;
 
-/** xpToNext(level) = 12 * level^1.6, per GAME_DESIGN.md section 5. */
+/** xpToNext(level) = 12 * level^1.6, per docs/01_GAME_DESIGN.md section 5. */
 export function xpToNext(level: number): number {
   if (level >= MAX_LEVEL) return Number.POSITIVE_INFINITY;
   return Math.max(1, Math.floor(config.xpBase * Math.pow(level, config.xpExponent)));
@@ -77,7 +77,7 @@ export function adjustAffinity(pal: PalState, delta: number): number {
 /**
  * Whether a neglected pal balks at a power attack.
  *
- * GAME_DESIGN.md section 5: below 25 affinity a pal "will occasionally hesitate
+ * docs/01_GAME_DESIGN.md section 5: below 25 affinity a pal "will occasionally hesitate
  * on a power attack". It is a refusal to act, not reduced damage; see the note
  * in Damage.affinityMultiplier for why those are kept separate.
  */

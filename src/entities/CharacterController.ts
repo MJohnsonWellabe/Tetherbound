@@ -1,6 +1,6 @@
 /**
  * Capsule-against-heightfield character controller. Pure maths, no renderer,
- * no physics library, per ARCHITECTURE.md.
+ * no physics library, per docs/03_TECHNICAL_ARCHITECTURE.md.
  *
  * The contract is deliberately narrow: given a position, an intent, and the
  * ability to sample terrain height and nearby prop colliders, produce the next

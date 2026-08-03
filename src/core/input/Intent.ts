@@ -1,5 +1,5 @@
 /**
- * The intent layer from ARCHITECTURE.md.
+ * The intent layer from docs/03_TECHNICAL_ARCHITECTURE.md.
  *
  * Gameplay reads this and nothing else. It never sees a KeyboardEvent, a
  * PointerEvent, or a device capability check. Touch and desktop are two
@@ -89,7 +89,7 @@ export interface Intent {
  * What the input layer should read the same gestures as.
  *
  * In `explore`, A/D strafe and a horizontal swipe rotates the camera. In
- * `combat`, the player never controls pal movement (GAME_DESIGN.md section 7),
+ * `combat`, the player never controls pal movement (docs/01_GAME_DESIGN.md section 7),
  * so the same inputs mean dodge instead. One flag, set by CombatMode, rather
  * than every consumer branching on game state.
  */

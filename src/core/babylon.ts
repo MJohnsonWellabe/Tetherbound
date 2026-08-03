@@ -6,7 +6,7 @@
  * whether you touch it or not. Measured on the sibling GolfModel project, the
  * barrel produced a 6.75 MB raw / 1.48 MB gzipped vendor chunk for a game that
  * used 33 symbols; deep imports cut it to 682 KB gzipped. That is most of
- * ARCHITECTURE.md's entire 8 MB first-load budget, recovered by an import
+ * docs/03_TECHNICAL_ARCHITECTURE.md's entire 8 MB first-load budget, recovered by an import
  * style.
  *
  * So: every Babylon symbol the game uses is deep-imported here exactly once
@@ -73,6 +73,20 @@ export { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator'
 
 // --- cameras ---------------------------------------------------------------
 export { FreeCamera } from '@babylonjs/core/Cameras/freeCamera';
+
+// --- post-processing -------------------------------------------------------
+// docs/03_TECHNICAL_ARCHITECTURE.md banned post-processing for a phone budget that D28 retired
+// when the target became a ROG Ally; D63 records the lift. This is the single
+// biggest lever on "does it look like the reference", because the whole world
+// is StandardMaterial, whose lighting term is clamped to 1.0 before albedo:
+// without a grade there is no contrast, no highlight and nothing to bloom.
+//
+// This costs more than one symbol. defaultRenderingPipeline pulls GlowLayer,
+// DepthOfField, Sharpen, Grain and ChromaticAberration in whether they are
+// enabled or not, roughly 70-100 KB raw on the vendor chunk. Paid deliberately.
+export { DefaultRenderingPipeline } from '@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline';
+export { ImageProcessingConfiguration } from '@babylonjs/core/Materials/imageProcessingConfiguration';
+export { ColorCurves } from '@babylonjs/core/Materials/colorCurves';
 
 // --- particles -------------------------------------------------------------
 // The CPU particle system, not the GPU one. GPU particles need a WebGL2 compute

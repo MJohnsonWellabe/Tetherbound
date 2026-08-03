@@ -5,7 +5,7 @@
  * Measured: folding the glTF loader and its extensions into src/core/babylon.ts
  * grew the engine chunk from 1.56 MB raw / 359 KB gzipped to 2.51 MB / 566 KB.
  * That is 207 KB gzipped of parser that milestones M0 through M4 never touch,
- * because ASSETS.md puts every real model behind M5 and everything before it is
+ * because docs/02_ART_BIBLE.md puts every real model behind M5 and everything before it is
  * colored primitives.
  *
  * So AssetLoader.ts imports this module dynamically. A player who never loads a

@@ -1,7 +1,7 @@
 /**
  * Minimal DOM helpers.
  *
- * ARCHITECTURE.md picked an HTML overlay over in-canvas UI and no framework, so
+ * docs/03_TECHNICAL_ARCHITECTURE.md picked an HTML overlay over in-canvas UI and no framework, so
  * this is the whole abstraction: build an element, set a class, append children.
  * Anything more would be the component tree the stack decision rejected.
  */

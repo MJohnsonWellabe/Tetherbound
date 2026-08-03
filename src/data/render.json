@@ -5,6 +5,40 @@
     "maxZ": 900,
     "fov": 0.9
   },
+  "$comment_post": "The colour grade, D63. ARCHITECTURE.md banned post-processing to hold a phone budget that D28 retired; this is the lift. Read by Engine.grade(), which contains no literals. Tuning notes that are easy to get wrong: bloom runs BEFORE exposure on the raw 0..1 material output, so `threshold` must sit under 1.0 or nothing blooms at all; and the tonemap runs in LINEAR space, where a gamma 0.5 mid-tone is only 0.21, so tone mapping is close to a no-op on mid-tones and mostly stops lifted highlights clipping flat.",
+  "$comment_toneMappingType": "0 = Standard (1 - exp2(-1.59x), gentle), 1 = ACES (filmic, desaturates and darkens), 2 = KHR PBR Neutral (identity below linear 0.76, peak only). Standard is the pick: ACES fights the saturated stylised palette the reference has, which is the opposite of the goal.",
+  "post": {
+    "toneMapping": {
+      "enabled": true,
+      "type": 0
+    },
+    "$comment_exposure": "Above 1 on purpose. The whole world is StandardMaterial, whose lighting term clamps to 1.0 before albedo, so the frame arrives dim with no headroom. This is the lever that lifts it, and it is why the grade matters more here than it would over a PBR world.",
+    "$comment_measured": "First pass ran exposure 1.5 / contrast 1.32 / globalSaturation 62 and the captured frames came back neon: pure-green foliage, mustard ground, blown building walls and crushed shadows. These are the pulled-back values. The lesson is that the grade multiplies the albedo rise underneath it, so the two cannot be tuned independently.",
+    "exposure": 1.16,
+    "contrast": 1.1,
+    "bloom": {
+      "enabled": true,
+      "threshold": 0.75,
+      "weight": 0.34,
+      "kernel": 48,
+      "scale": 0.5
+    },
+    "fxaa": true,
+    "$comment_vignette": "Light. Enough to settle the eye toward the middle of the frame, not enough to read as an effect. 1.4 read as an effect.",
+    "vignette": {
+      "enabled": true,
+      "weight": 0.55,
+      "stretch": 0.35,
+      "fov": 1.1
+    },
+    "$comment_curves": "Saturation lives here, not in the palettes. The reference frames are more saturated than any plausible light rig produces, and lifting the palettes to chase it would push the shadowed side to grey; a curve moves both ends together. Shadows get the most because that is where a clamped LDR render goes colourless first.",
+    "curves": {
+      "globalSaturation": 16,
+      "highlightsSaturation": 8,
+      "shadowsSaturation": 26,
+      "globalHue": 0
+    }
+  },
   "$comment_shadow": "The directional light's shadow frustum is PINNED to a box around the player (`extent` -> DirectionalLight.shadowFrustumSize) instead of letting Babylon fit it to the caster list. This block described that for a long time without anything reading `extent`, so the light stayed on autoUpdateExtends, the box grew to fit every caster in the view distance, and a 1024 map ended up spread over ~650m at 0.63m per texel. Nothing smaller than a barn cast a visible shadow. An 80m box on the same map is 0.078m per texel.",
   "$comment_shadowDepth": "minZ/maxZ bracket the light-space depth range, and they matter more than they look because `bias` is a FRACTION of that range. At minZ 1 / maxZ 400 the old 0.008 bias was 3.2 metres of depth offset, which is more than the height of anything the player stands next to, so every contact shadow was pushed off its caster and the world floated. The light sits `heightAbovePlayer` up the reversed light direction, so casters land near that depth; the range only has to cover the hills either side of it.",
   "shadow": {

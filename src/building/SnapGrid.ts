@@ -8,7 +8,7 @@ import pieces from '../data/pieces.json';
  * preview and the real placement both call this, which is what stops the
  * preview from lying about where a piece will land.
  *
- * No structural integrity in v0.1: GAME_DESIGN.md section 8 cuts it
+ * No structural integrity in v0.1: docs/01_GAME_DESIGN.md section 8 cuts it
  * deliberately, and DECISIONS.md records that the game is better for it.
  */
 
