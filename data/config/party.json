@@ -36,6 +36,32 @@
     "minimum": 1
   },
 
+  "recovery": {
+    "_comment": "What it costs to get a fainted pal back on its feet, read by scripts/pals/recovery.gd and scripts/pals/home.gd. ALL TUNABLE and none of it is a mechanic: GAME_DESIGN.md 16 fixes the SHAPE (a pal at 0 HP does not auto-revive in the field; it comes back from a revival item or from its pal bed at home, and beds also speed normal HP recovery) and puts a number on none of it. The expected feedback is 'recovering takes too long' or 'fainting costs nothing', and both have to be answerable by editing this file.",
+    "_comment_not_here": "There is NO field-recovery number, and its absence is deliberate. 16 says beds 'speed normal HP recovery', which implies some baseline recovery away from a bed — but it does not say what, nothing in the build has ever had one, and inventing one here would add a healing system 16 only hints at. A pal's HP moves in a fight, at a bed, or from an item, and nowhere else.",
+
+    "_comment_bed_revive": "Seconds a FAINTED pal must lie in its pal bed before it stands up. This is the whole cost of a faint, so it has to be long enough to be a decision — 'do I go home now, or fight the next one with four' — and short enough that going home is not an errand. 45s is about the time it takes to walk back and place a piece.",
+    "bed_revive_seconds": 45.0,
+    "_comment_bed_revive_hp": "How much of its maximum a pal stands up with. Below 1.0 so a revived pal is not immediately fightable and the bed keeps working on it afterwards; well above 0 so it is not a creature that faints again to the next scratch.",
+    "bed_revive_hp_fraction": 0.35,
+    "_comment_bed_hp": "HP per second a pal regains while resting in a bed, once it is conscious. Against the shipping roster (95-130 base HP) 4/s is a full bar in about half a minute, so a scratched pal is a short sit and a nearly-dead one is a real stay.",
+    "bed_hp_per_second": 4.0,
+
+    "_comment_home_radius": "Metres from the trainer's bed that still count as 'at home'. 16 says a pal recovers in 'its physical pal bed AT HOME', so a pal bed dropped in the wilderness is not a recovery point — this number is what 'at home' means. Big enough to cover a house and its yard.",
+    "home_radius": 16.0,
+    "_comment_home_slack": "Extra metres a pal keeps resting for once it has started, so standing on the edge of the radius does not make pals stand up and lie down every other step.",
+    "home_leave_slack": 5.0,
+
+    "_comment_item": "The revival item, by id into data/items/items.json. 16 calls it 'a special revival item' and names nothing else about it. It revives higher than a bed does because it is finite and a bed is not.",
+    "revival_item": "revival_draught",
+    "revival_item_hp_fraction": 0.5,
+    "_comment_starting_stock": "How many the player starts with. 3, story frame: Grandpa hands over a starter and the beginning of a journey, and this is the rest of that parcel. It is NOT a supply — there is no recipe, no shop and no drop table yet, so these run out and the pal beds are what you are left with. That is the intended shape of the milestone.",
+    "starting_revival_items": 3,
+
+    "_comment_rest_clip": "The animation a resting pal plays, by clip name. A STOPGAP and in the wrong file: clip names belong per species in data/pals/species.json beside idle/walk/run/attack/hit/faint, and recovery.gd prefers `animations.rest` from there whenever a species declares one. This is the fallback for the three shipped creatures, which all come from one pack and all carry `sit`. There is no sleep or lie-down clip in that pack; sitting down at its bed is the most honest thing the art can actually do.",
+    "rest_clip": "sit"
+  },
+
   "growth": {
     "_comment": "Fraction of the species base stat added per level, LINEARLY: `base * (1 + per_level * (level - 1))`. Not compounding. A 9%-per-level compound reaches 74x by level 50 and turns every fight into either a walkover or a wall; linear reaches about 5x, which keeps a low-level pal usable and a high-level one clearly better.",
     "hp_per_level": 0.09,

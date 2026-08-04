@@ -159,6 +159,61 @@ func clear() -> void:
 	_refusal = ""
 
 
+## --- who can still fight --------------------------------------------------
+##
+## GAME_DESIGN.md §16 makes a fainted pal "unavailable", and by M6 four separate
+## systems need to ask about it: the engage prompt, the Switch command, the party
+## menu and pal recovery. These are the questions, answered once.
+##
+## READ-ONLY, and deliberately so. `set_active()` is NOT taught to refuse a
+## fainted pal: a save being restored can legitimately point at one, and a party
+## whose loader could refuse its own record is a party that loses a pal to a
+## faint. Whether a downed creature may be SENT OUT is a question for whoever is
+## sending it, and `combat_manager.Switchboard` and `party_screen` both already
+## ask it.
+
+
+## The members that could still be deployed.
+func standing() -> Array:
+	return standing_in(_members)
+
+
+## True when the player owns pals and every one of them is down.
+##
+## An empty party is NOT all-down. Owning nothing and having lost everything are
+## different situations with different things to say to the player, and a caller
+## that could not tell them apart would tell a new player to go and rest pals
+## they do not have.
+func all_down() -> bool:
+	return none_standing(_members)
+
+
+func first_standing_index() -> int:
+	for i in _members.size():
+		var pal: RefCounted = _members[i]
+		if pal != null and not bool(pal.get("fainted")):
+			return i
+	return -1
+
+
+## The same two questions over a roster that came out of `members()`.
+##
+## Static, because the roster is what most callers already hold: `party_manager`
+## forwards `members()` and not much else, so anything holding the manager rather
+## than the party can still ask without a new forwarder being added for each one.
+static func standing_in(roster: Array) -> Array:
+	var out: Array = []
+	for entry: Variant in roster:
+		var pal: RefCounted = entry as RefCounted
+		if pal != null and not bool(pal.get("fainted")):
+			out.append(pal)
+	return out
+
+
+static func none_standing(roster: Array) -> bool:
+	return not roster.is_empty() and standing_in(roster).is_empty()
+
+
 ## --- persistence ----------------------------------------------------------
 
 ## The serialisable form, and the primary one (structures.gd, same discipline).

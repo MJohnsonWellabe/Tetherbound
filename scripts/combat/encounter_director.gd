@@ -19,6 +19,12 @@ const SPECIES := preload("res://scripts/pals/pal_species.gd")
 ## data/config/party.json. Loaded through pal_instance so there is one reader of
 ## that file rather than two that can disagree about its defaults.
 const PAL := preload("res://scripts/pals/pal_instance.gd")
+## For the "is anyone still standing" questions. The party node forwards a small
+## surface and `members()` is on it, so these are the static half of party.gd.
+const PARTY := preload("res://scripts/pals/party.gd")
+## So the prompt can name the revival item in the words items.json gives it,
+## rather than hard-coding a display name that a data edit would falsify.
+const DEFS := preload("res://scripts/items/item_defs.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
@@ -50,6 +56,23 @@ signal xp_awarded(pal: RefCounted, amount: int, deployed: bool)
 ## levels and each one is its own moment; `gained` is how many this award bought.
 signal pal_levelled(pal: RefCounted, level: int, gained: int)
 
+## Every pal the player owns is down. Emitted once, on the edge, when a fight
+## ends that way.
+##
+## This is the emotional low point M6 exists to create, and it is announced
+## rather than left to be discovered: with the blanket post-fight heal gone it is
+## genuinely reachable, and a player who has just lost their last standing pal
+## must be told what to do instead of finding a game that refuses every button.
+## `_update_prompt()` below is what says it in words; this is for anything that
+## wants to do more than write a line — a sting, a vignette, a camera move.
+signal party_all_down()
+
+## A wild creature landed a blow on the TRAINER. `amount` is the damage that
+## actually went in, so a listener can flash the screen without recomputing it.
+##
+## Only ever emitted while every owned pal is fainted — see `Hunt` below.
+signal trainer_struck(by: Node3D, amount: float)
+
 ## Ids into data/pals/species.json, so swapping any of them is a data edit.
 ##
 ## Two wild creatures in M3: one peaceful to practise throwing at, and one that
@@ -61,6 +84,99 @@ const WILD_SPAWNS := [
 	{"species": "wild_rabbit", "offset": Vector3(14.0, 0.0, -10.0)},
 	{"species": "wild_bristler", "offset": Vector3(-6.0, 0.0, 26.0)},
 ]
+
+## What the meadow does to a trainer with nothing left to fight with.
+##
+## GAME_DESIGN.md §14 protects the trainer absolutely: "Once combat mode begins,
+## attacks are pal-vs-pal", and outside a fight an aggressive pal can "threaten"
+## them. §16 does not say what happens when every owned pal is fainted and the
+## player is fine. THE OWNER HAS AMENDED §14 FOR EXACTLY THAT CASE: with no pal
+## able to fight, the trainer is a target in the world. They keep walking, they
+## are not teleported and nothing is taken from them — but they are hunted, they
+## bleed, and the honest answer is to get home and recover the party.
+##
+## What has NOT changed, and will not:
+##
+##   * The trainer cannot fight back. There is no attack on the human anywhere in
+##     this file, no weapon, no combat verb. CLAUDE.md's "human cannot fight" is
+##     a hard rule; being hurtable is a different thing from being a fighter.
+##   * This is not Combat Mode. No arena opens, no camera transfers, the human is
+##     never a party member and never has a slot in a fight. A creature that
+##     would have started a fight harasses them in the world instead.
+##   * One standing pal and the whole thing is off. §14's protection returns in
+##     full the instant a pal is revived by an item or recovered at a bed, and
+##     `tick()` below is written so that is a single check rather than a state
+##     machine that could get stuck.
+##
+## An object rather than four loose fields on the director, for `Switchboard`'s
+## reason: everything it decides is decidable from a clock, a distance and a
+## flag, none of which needs a scene. That is what lets tests/test_recovery.gd
+## prove the rules headlessly — including the one that matters most, which is
+## that healing a pal ends it.
+class Hunt extends RefCounted:
+
+	## Which species come for a defenceless trainer. Data, not taste: see the
+	## `hunters` note in data/config/combat.json.
+	const HUNTERS_ALL := "all"
+
+	var enabled: bool = true
+	## Seconds after the last pal drops before anything lands a blow. There MUST
+	## be one: being swarmed the instant you lose, with no chance to run, is a
+	## worse experience than being hunted while you retreat.
+	var grace_seconds: float = 6.0
+	var strike_interval: float = 2.2
+	var strike_range: float = 3.8
+	var damage: float = 12.0
+	var only_aggressive: bool = true
+
+	var _grace_left: float = 0.0
+	## Per-creature, so two hunters cannot share one cooldown and take it in turns
+	## to be the only one that ever connects.
+	var _cooldowns: Dictionary = {}
+
+	func configure(cfg: Dictionary) -> void:
+		enabled = bool(cfg.get("enabled", true))
+		grace_seconds = maxf(0.0, float(cfg.get("grace_seconds", 6.0)))
+		strike_interval = maxf(0.05, float(cfg.get("strike_interval", 2.2)))
+		strike_range = maxf(0.5, float(cfg.get("strike_range", 3.8)))
+		damage = maxf(0.0, float(cfg.get("damage", 12.0)))
+		only_aggressive = str(cfg.get("hunters", "aggressive")) != HUNTERS_ALL
+		_grace_left = grace_seconds
+		_cooldowns.clear()
+
+	## Advance the clocks. `defenceless` is "every owned pal is fainted", asked
+	## fresh by the caller every frame. Returns true when the trainer is fair game
+	## RIGHT NOW — defenceless AND out of grace.
+	##
+	## The recovery is unconditional and comes first: one available pal resets the
+	## grace, forgets every cooldown and returns false, so there is no state left
+	## for a healed party to be stuck in.
+	func tick(delta: float, defenceless: bool) -> bool:
+		if not defenceless or not enabled:
+			_grace_left = grace_seconds
+			_cooldowns.clear()
+			return false
+		for key: Variant in _cooldowns.keys():
+			_cooldowns[key] = maxf(0.0, float(_cooldowns[key]) - delta)
+		_grace_left = maxf(0.0, _grace_left - delta)
+		return _grace_left <= 0.0
+
+	## Seconds of head start left. What a HUD would count down.
+	func grace_left() -> float:
+		return _grace_left
+
+	## Would this creature land a blow this frame? `tick()` has already decided
+	## whether anything may.
+	func may_strike(who: Object, aggressive: bool, distance: float) -> bool:
+		if only_aggressive and not aggressive:
+			return false
+		if distance > strike_range:
+			return false
+		return float(_cooldowns.get(who, 0.0)) <= 0.0
+
+	func struck(who: Object) -> void:
+		_cooldowns[who] = strike_interval
+
 
 ## Seconds before a defeated wild pal is back on its feet. M2 only: the milestone
 ## exists to find out whether the owner wants another fight, and making them
@@ -110,6 +226,7 @@ func _ready() -> void:
 		set_process(false)
 		return
 	_manager.connect("exited", _on_combat_exited)
+	_hunt.configure(MATH.config().get("defenceless", {}))
 
 	# `_ready` runs while the parent is still setting up its children, and
 	# add_child() is refused during that. One frame is enough to be out of it.
@@ -270,6 +387,7 @@ func prompt() -> String:
 func _process(delta: float) -> void:
 	_tick_respawn(delta)
 	_update_prompt()
+	_report_the_party_state()
 
 
 ## Engage is read on the physics tick, not the idle tick.
@@ -279,8 +397,76 @@ func _process(delta: float) -> void:
 ## actions from `_physics_process` means one press can be seen by one and missed
 ## by the other depending on where in the frame it landed. It cost a survey run
 ## that captured four frames of a fight that had never started.
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	_read_engage_input()
+	_tick_hunt(delta)
+
+
+## --- the trainer is the target --------------------------------------------
+
+var _hunt := Hunt.new()
+## The creature currently on the player, for the prompt. Null when nothing is.
+var _hunter: Node3D = null
+
+
+## Run the hunt for one physics step.
+##
+## On the physics tick and not the idle one, because it measures distances
+## against creatures that move under `move_and_slide` — reading a position
+## halfway through a physics step is how a blow lands from somewhere the creature
+## was not.
+func _tick_hunt(delta: float) -> void:
+	_hunter = null
+	if _player == null or _manager == null:
+		return
+	# Never during a fight. §14's protection inside Combat Mode is absolute and is
+	# not what the owner amended — and a fight cannot be running with no pal to
+	# fight it with anyway, so this is a belt to that brace.
+	var open := _hunt.tick(delta, _defenceless() and not bool(_manager.call("is_fighting")))
+	if not open:
+		return
+
+	for wild in _wild_pals:
+		if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
+			continue
+		var distance := _player.global_position.distance_to(wild.global_position)
+		if not _hunt.may_strike(wild, bool(wild.get("aggressive")), distance):
+			# Still the thing chasing you, even between blows — the prompt should
+			# name it while it is winding back up, not only in the frame it hits.
+			if _hunter == null and distance <= _hunt.strike_range * 2.0 and bool(wild.get("aggressive")):
+				_hunter = wild
+			continue
+		_hunter = wild
+		_strike_the_trainer(wild)
+
+
+## Every pal the player owns is fainted.
+##
+## Asked fresh from the party every frame rather than latched, so reviving a pal
+## ends the hunt on the next tick. A cached flag here is precisely how a player
+## who has just healed a pal ends up still being chased.
+func _defenceless() -> bool:
+	return PARTY.none_standing(_party.call("members") if _party != null else [])
+
+
+## One blow. The creature swings, the trainer takes it, and nothing else happens
+## — no arena, no camera move, no fight.
+func _strike_the_trainer(wild: Node3D) -> void:
+	_hunt.struck(wild)
+	if wild.has_method("face_towards"):
+		wild.call("face_towards", _player.global_position)
+	if wild.has_method("play_attack"):
+		wild.call("play_attack")
+
+	var dealt := 0.0
+	if _player.has_method("hurt"):
+		dealt = float(_player.call("hurt", _hunt.damage))
+	else:
+		# A player rig without the M6 damage entry point is a wiring mistake, not
+		# a reason to silently make the trainer invulnerable — that would look
+		# exactly like the hunt working.
+		push_warning("the player has no hurt(); a defenceless trainer cannot be harmed")
+	trainer_struck.emit(wild, dealt)
 
 
 ## Two clocks per knocked-out creature: how long its body lies there, and how
@@ -335,20 +521,81 @@ func _engageable() -> Node3D:
 	return best
 
 
+## --- what the trainer is told ---------------------------------------------
+##
+## Three states, and the last two are new in M6. A downed pal used to produce
+## "Bramblit is out of the fight." and stop there — true, and useless: it says
+## what happened and nothing about what to do, and while the post-fight heal
+## existed it was on screen for about a second anyway. Now that a faint lasts
+## until the player does something about it, the prompt has to name the something.
+
+const PROMPT_ENGAGE := "[X] / [E]   Engage %s"
+const PROMPT_DEPLOYED_DOWN := "%s is out of the fight.    [Y] / [P]   Send out another"
+## §16's two routes, in the order the player can act on them: the item is in
+## their hand, the bed is a walk away.
+const PROMPT_ALL_DOWN := "Every pal is down.    Use a %s, or rest them in a pal bed at home."
+## And the same state once something has come for you. The verb changes because
+## the situation has: reading a menu is no longer the first thing to do.
+const PROMPT_HUNTED := "%s is on you and every pal is down.    Run for home — or use a %s."
+
+
+## The line to show, given who is deployed, the whole roster, whatever is in
+## engage range, and whatever is currently hunting the trainer.
+##
+## Static and pure so `tests/test_recovery.gd` can assert that the all-down
+## message actually names both ways out. A player stranded in a field with five
+## unconscious creatures is the one moment in this milestone where a missing
+## sentence is indistinguishable from a broken game, and it is not something to
+## find out about from a screenshot.
+static func prompt_for(
+	deployed: RefCounted, roster: Array, candidate_name: String, hunter_name: String = ""
+) -> String:
+	if PARTY.none_standing(roster):
+		if not hunter_name.is_empty():
+			return PROMPT_HUNTED % [hunter_name, revival_item_name()]
+		return PROMPT_ALL_DOWN % revival_item_name()
+	if deployed != null and deployed.fainted:
+		# Someone else can still go out. The party menu is where that is done, so
+		# the prompt names its button rather than describing the problem twice.
+		return PROMPT_DEPLOYED_DOWN % deployed.display()
+	if not candidate_name.is_empty():
+		return PROMPT_ENGAGE % candidate_name
+	return ""
+
+
+## The revival item's name, in the words items.json gives it.
+static func revival_item_name() -> String:
+	var id := str(PAL.config().get("recovery", {}).get("revival_item", "revival_draught"))
+	return DEFS.display_name(id)
+
+
 func _update_prompt() -> void:
 	var text := ""
-	var deployed := _active_pal()
-	if bool(_manager.call("is_fighting")):
-		text = ""
-	elif deployed != null and deployed.fainted:
-		text = "%s is out of the fight." % deployed.display()
-	else:
+	if not bool(_manager.call("is_fighting")):
 		var candidate := _engageable()
-		if candidate != null:
-			text = "[X] / [E]   Engage %s" % str(candidate.get("display_name"))
+		text = prompt_for(
+			_active_pal(),
+			_party.call("members") if _party != null else [],
+			str(candidate.get("display_name")) if candidate != null else "",
+			str(_hunter.get("display_name")) if _hunter != null else ""
+		)
 	if text != _prompt:
 		_prompt = text
 		prompt_changed.emit(text)
+
+
+## Announce the all-down edge, once.
+##
+## Edge-triggered rather than per-frame: this is a signal something plays a sting
+## on, and a sting once per frame is a noise.
+var _reported_all_down: bool = false
+
+
+func _report_the_party_state() -> void:
+	var down := PARTY.none_standing(_party.call("members") if _party != null else [])
+	if down and not _reported_all_down:
+		party_all_down.emit()
+	_reported_all_down = down
 
 
 func _read_engage_input() -> void:
@@ -452,25 +699,23 @@ func _on_combat_exited(outcome: String) -> void:
 	if outcome == "won" or outcome == CAUGHT:
 		award_xp(defeated, roster, deployed, outcome == CAUGHT)
 
-	# There is no healing system, no camp and no bond yet, so the player's pals
-	# are restored between fights. That is a placeholder for M5's stronghold rest
-	# and M6's pal beds, and it is deliberately generous: this milestone is
-	# measuring whether the fight is worth repeating, and a recovery chore in
-	# front of the second one measures something else.
+	# NOTHING IS HEALED HERE, AND THAT IS THE MILESTONE.
 	#
-	# The WHOLE party, not just the pal that finished. It was just the deployed
-	# one, which was the same thing while only one pal could ever fight. Now that
-	# Switch works, a pal swapped out at a sliver of health would sit there for
-	# the rest of the session with nothing in the game able to heal it — and a
-	# command you cannot afford to use twice is a trap, not a command.
+	# Until M6 this function ended by restoring the whole party's health, with a
+	# comment saying it was a placeholder for pal beds. It was doing more damage
+	# than it looked: GAME_DESIGN.md §16 says a pal at 0 HP "does not auto-revive
+	# with time in the field", and a fight that ends by clearing every faint flag
+	# means NOTHING IN THE GAME could ever put a pal into the state §16 describes.
+	# `pal_instance.fainted` existed, `party_screen` had words for a downed pal,
+	# `Switchboard` skipped one and `_engageable()` below refuses to deploy one —
+	# four guards, none of them reachable.
 	#
-	# Read fresh rather than reusing the roster snapshot above, so a creature
-	# caught in this fight is healed too instead of joining the party at the 8%
-	# health you had to leave it at to catch it.
-	for entry: Variant in (_party.call("members") if _party != null else []):
-		var pal: RefCounted = entry as RefCounted
-		if pal != null:
-			pal.heal_fully()
+	# The two ways back are `scripts/pals/recovery.gd`: a revival item, or a pal
+	# bed at home. Both cost something, which is the point.
+	#
+	# Whether the player is now out of pals is watched every frame in `_process`
+	# rather than decided here, because recovery can undo it between fights and a
+	# flag set once at the end of a fight would go stale in exactly that gap.
 
 
 ## --- rewards --------------------------------------------------------------

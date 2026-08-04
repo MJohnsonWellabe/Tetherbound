@@ -95,6 +95,25 @@
     "_comment_guard": "Seconds of player input ignored at the start of a fight. Engage and charged attack are the same physical button (X), and without this the press that opens the fight is also read as the first attack of it.",
     "input_guard": 0.25
   },
+  "defenceless": {
+    "_comment": "What the meadow does to a trainer whose whole party is fainted. AN OWNER AMENDMENT to GAME_DESIGN.md 14's trainer-safety rule, and the answer to a question 16 left open: with every pal down the player is no longer protected, wild creatures come for them directly, and the pressure to get home and recover the party is a real one rather than a message telling them to. ALL TUNABLE.",
+    "_comment_not_a_fighter": "The trainer STILL CANNOT FIGHT. There is no attack here, no weapon and no route into Combat Mode for the human; CLAUDE.md's hard rule is untouched. The amendment is that they can be HURT. A creature that hunts a defenceless trainer harasses them in the WORLD — it never becomes a fight, the human is never a party member, and nothing here gives them a slot in one.",
+    "_comment_ends": "This state ends the instant ANY owned pal is available again — revived by an item, or recovered at a pal bed. A player who has just healed a pal and is still being chased would read the game as broken.",
+    "enabled": true,
+
+    "_comment_hunters": "Which species come for a defenceless trainer: 'aggressive' (those already carrying the `aggressive` flag in species.json) or 'all'. It is 'aggressive', so this makes THE DANGEROUS CREATURE dangerous rather than making the whole biome hostile — 14 says peaceful pals never initiate, and a Meadow Hopper mauling you the moment you are weak would read as the meadow itself turning. Per-species because the flag is already per-species data; this only picks the policy.",
+    "hunters": "aggressive",
+
+    "_comment_grace": "Seconds after your last pal drops before anything will land a blow. Being swarmed the instant you lose is a different and worse experience than being hunted while you retreat — this is the head start. It stacks with the aggression grace in data/config/catching.json, which keeps a creature you just fought off you for a while longer.",
+    "grace_seconds": 6.0,
+
+    "_comment_strike": "Metres at which a hunter can reach the trainer, and seconds between its blows. The reach is a little over the 3.2m `engage_range` in catching.json that an aggressive pal closes to, so a creature that has run you down is in range rather than standing just outside it.",
+    "strike_range": 3.8,
+    "strike_interval": 2.2,
+
+    "_comment_damage": "Damage per blow against a 100 HP trainer (data/config/movement.json). Eight blows is death, which at 2.2s apart is about eighteen seconds of standing still and doing nothing — long enough to run home from most of the playground, short enough that ignoring it is not an option. There is no armour term yet; 18's equipment is M9's and reduces this on the way in.",
+    "damage": 12.0
+  },
   "camera": {
     "_comment": "The fight reuses the exploration orbit camera rather than adding a second one: a piloted pal wants exactly the third-person camera M1 already tuned, re-pointed at a shorter creature. These are the overrides while a fight is running.",
     "_comment_distance": "Close. These are metre-tall creatures, not a 1.8m trainer: at the exploration camera's 5.2m they read as specks and the fight is unreadable.",

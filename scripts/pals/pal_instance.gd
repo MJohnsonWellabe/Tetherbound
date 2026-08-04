@@ -15,6 +15,32 @@ extends RefCounted
 ## and one trait. The split above is what makes those safe to add — a level is a
 ## property of THIS creature, and writing it onto the species table would level
 ## up every Meadow Hopper in the biome at once.
+##
+## M6 added the other end of a creature's life. GAME_DESIGN.md §16 is four lines
+## and this file owns two of them: a pal at 0 HP "passes out", is "unavailable",
+## and "does not auto-revive with time in the field". So there are now two ways
+## back up and they are deliberately different functions:
+##
+##   * `heal()` tops up a pal that is STILL STANDING. It refuses a fainted one
+##     outright — no amount of healing un-faints a creature, because §16 says
+##     recovery comes from an item or a bed and a `heal()` that quietly cleared
+##     the flag would be that rule's back door.
+##   * `revive()` is the way back from fainted, and the only one. Whoever calls
+##     it has already paid §16's price: `scripts/pals/recovery.gd` calls it after
+##     a stay in a pal bed, or after spending a revival item.
+##
+## `heal_fully()` still exists and still clears the flag, and is now documented
+## as what it always was: the WORLD's reset for a wild body being put back on the
+## hillside, not a recovery path for a pal the player owns.
+##
+## FAINTING COSTS NO XP AND NO LEVEL, and that is a decision rather than an
+## omission. §16 lists what happens to a pal at 0 HP — passes out, unavailable,
+## no auto-revive — and progression is not on the list; §22 settles the same
+## question for the player ("no XP loss, no level loss") and there is no reason
+## the creature you are carrying should be treated more harshly than the person
+## carrying it; and with five pals and no sixth, an XP penalty compounds on a
+## party that cannot be replaced. The cost of a faint is the time and the item,
+## which is exactly the cost §16 names.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const TRAITS := preload("res://scripts/pals/pal_traits.gd")
@@ -134,10 +160,65 @@ func spend_charged() -> bool:
 	return true
 
 
+## The WORLD's reset, not a recovery path.
+##
+## This is what `wild_pal.revive_at_home()` calls when it puts a fresh creature
+## back on the hillside — a body that is about to be a different individual
+## anyway. It clears the faint flag, which is precisely why nothing that owns a
+## pal the PLAYER holds may call it: GAME_DESIGN.md §16 says a fainted pal does
+## not come back without an item or a bed, and this function is the one line in
+## the file that would let it.
+##
+## `encounter_director._on_combat_exited()` used to run this over the whole party
+## every time a fight ended, with a comment admitting it was a placeholder for
+## this milestone. That single loop meant nothing in the game could ever leave a
+## pal in the state `fainted` describes, so every guard that tests for it — the
+## party menu's refusal, `Switchboard`'s skip, `_engageable()` — was unreachable
+## code. It is gone.
 func heal_fully() -> void:
 	hp = max_hp
 	energy = 0.0
 	fainted = false
+
+
+## Top up a pal that is still on its feet. Returns how much HP was actually
+## restored, so a caller healing over time can tell "full" from "healing".
+##
+## REFUSES A FAINTED PAL, and returns nothing rather than clamping up from zero.
+## See the header: a faint is undone by `revive()` and by nothing else.
+func heal(amount: float) -> float:
+	if fainted or amount <= 0.0:
+		return 0.0
+	var before := hp
+	hp = minf(max_hp, hp + amount)
+	return hp - before
+
+
+## Back on its feet, at `hp_fraction` of its maximum.
+##
+## The one way out of `fainted`, and it is not free at any call site: §16 allows
+## exactly two — a revival item, or recovery in a pal bed at home. Returns false
+## for a pal that was never down, so a revival item spent on a healthy creature
+## is refused before it is consumed rather than after.
+##
+## Never comes back on zero HP. A pal revived onto nothing is a pal that faints
+## again to the next scratch, which reads as the revive having failed.
+func revive(hp_fraction: float = 1.0) -> bool:
+	if not fainted:
+		return false
+	fainted = false
+	hp = clampf(max_hp * clampf(hp_fraction, 0.0, 1.0), minf(1.0, max_hp), max_hp)
+	energy = 0.0
+	return true
+
+
+## Can this pal be deployed, switched to, or sent into a fight?
+##
+## §16's "unavailable" in one function, so the several places that ask — the
+## party menu, the switch, the engage prompt — cannot drift into asking it three
+## slightly different ways.
+func is_available() -> bool:
+	return not fainted
 
 
 func hp_fraction() -> float:
