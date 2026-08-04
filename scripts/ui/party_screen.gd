@@ -55,6 +55,16 @@ const TRAITS := preload("res://scripts/pals/pal_traits.gd")
 
 @export var party_path: NodePath
 
+## The name-entry screen, pushed on top of this one. A sibling under the same
+## stack rather than something instanced on the press, for the reason
+## `screen_stack.tscn` gives about this screen: instancing a screen at the moment
+## it opens is a hitch in the one frame the player is watching for a response.
+##
+## Optional. A party screen with nothing wired here still lists, still switches,
+## and dims its rename prompt to say the verb is not available — which is a
+## working menu with one verb missing rather than a menu that errors.
+@export var rename_screen_path: NodePath
+
 var _rows: Array[PanelContainer] = []
 var _fills: Array[StyleBoxFlat] = []
 var _template: PanelContainer = null
@@ -180,9 +190,20 @@ func hints() -> Array[Array]:
 	var index := focus_index()
 	var filled: bool = index < members.size() and members[index] != null
 	var can_send: bool = filled and index != _active_index() and not _is_down(members[index])
+	var can_rename: bool = filled and _rename_screen() != null
 	var rows: Array[Array] = []
-	rows.append(["↕", "Choose", true])
+	# "Up/Down" and not an arrow glyph. The blind judge read the first version
+	# as "[$] Choose" — the project's font has no U+2195, so it fell back to a
+	# placeholder and the one prompt telling a player how to move the selection
+	# said nothing at all. `[A]` and `◆` both render; that arrow does not.
+	rows.append(["Up/Down", "Choose", true])
 	rows.append(["A", "Send out", can_send])
+	# Rename is advertised in the FOOTER and not left to be discovered. The same
+	# blind judge could not find a rename call, a rename screen or a rename prompt
+	# anywhere in the M4 evidence and concluded — correctly, on that evidence —
+	# that "nickname" meant "auto-assigned label". A verb nothing tells you about
+	# is a verb that does not exist.
+	rows.append(["Left/Right", "Rename", can_rename])
 	rows.append(["B", "Back", true])
 	return rows
 

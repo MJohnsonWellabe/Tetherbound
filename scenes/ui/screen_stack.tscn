@@ -25,7 +25,7 @@
 process_mode = 3
 layer = 10
 script = ExtResource("1_stack")
-toggle_action = &"inventory"
+toggle_action = &"party_menu"
 toggle_screen_path = NodePath("PartyScreen")
 
 [node name="PartyScreen" parent="." instance=ExtResource("2_party")]

@@ -112,6 +112,7 @@ combat_path = NodePath("../CombatManager")
 ; is — the same "one door in and out" rule encounter_director uses for fights.
 [node name="ScreenStack" parent="." instance=ExtResource("13_screens")]
 player_path = NodePath("../Player")
+hide_while_open = [NodePath("../PlaygroundHUD"), NodePath("../BuildPalette")]
 
 [node name="PartyScreen" parent="ScreenStack" index="0"]
 party_path = NodePath("../../Party")

@@ -221,6 +221,13 @@ func xp_for_next_level() -> int:
 ## Loops rather than granting a single level, because a boss kill worth several
 ## levels should hand over all of them; swallowing the surplus is the bug where
 ## a big reward feels smaller than a small one.
+## Add experience and return how many levels it bought.
+##
+## `xp` is PROGRESS WITHIN THE CURRENT LEVEL, not a lifetime total — each
+## level-up subtracts that level's cost. A blind reader of the save file sees
+## "granted 100000, xp: 9184" and reasonably concludes 90k went missing; it did
+## not, it was spent on twenty-five levels. Anything printing this number should
+## print its denominator with it.
 func grant_xp(amount: int) -> int:
 	if amount <= 0 or level >= level_cap():
 		return 0

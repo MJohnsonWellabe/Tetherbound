@@ -123,6 +123,12 @@ inventory={
 , Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
 ]
 }
+party_menu={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":80,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
+]
+}
 map={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":77,"pressed":false,"script":null)

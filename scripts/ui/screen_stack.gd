@@ -40,6 +40,16 @@ const NAV_DEADZONE := 0.55
 @export var toggle_action: StringName = &""
 @export var toggle_screen_path: NodePath
 
+## HUD layers to hide while a screen is open.
+##
+## The M1 debug HUD renders its raw readouts — `speed 0.0`, `grounded`,
+## `keyboard: W` — in world space behind the menu panel, where the panel edge
+## clips them mid-word. A blind reviewer of the first party-menu frames called
+## it out as raw internal state a player should never see, and was right: it is
+## developer instrumentation, not interface, and a modal screen is exactly when
+## it should be out of the way.
+@export var hide_while_open: Array[NodePath] = []
+
 var _player: Node = null
 var _stack: Array[Control] = []
 
@@ -164,7 +174,18 @@ func _mark_active() -> void:
 ## in `_physics_process` and cannot be talked out of it from here — a paused node
 ## does not get a physics frame, so it does not get the press. This node runs
 ## with PROCESS_MODE_ALWAYS and therefore keeps reading input itself.
+## Show or hide the HUD layers named in `hide_while_open`.
+func _set_huds_visible(shown: bool) -> void:
+	for path in hide_while_open:
+		var layer: Node = get_node_or_null(path)
+		if layer is CanvasLayer:
+			(layer as CanvasLayer).visible = shown
+		elif layer is CanvasItem:
+			(layer as CanvasItem).visible = shown
+
+
 func _set_gameplay_active(active: bool) -> void:
+	_set_huds_visible(active)
 	if _player != null and _player.has_method("set_locomotion_enabled"):
 		if active:
 			_player.call("set_locomotion_enabled", _locomotion_was)

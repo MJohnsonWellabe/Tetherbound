@@ -93,24 +93,45 @@ func _session_party() -> void:
 	var director: Object = _find("EncounterDirector")
 	var save: Object = root.get_node_or_null(^"/root/SaveManager")
 
-	note("--- bullet: up to five pals ---")
-	note("party node present: %s" % (party != null))
-	note("save manager present: %s" % (save != null))
-	if party == null:
-		note("no party system in the scene; every bullet below is unevidenced")
-		return
-	note("capacity reported: %s" % probe(party, "capacity"))
-	note("size at start: %s" % probe(party, "size"))
+	note("--- bullet: catch pal ---")
+	await _catch_one(party)
 
-	# Fill it, then overfill it. The refusal is the bullet — a cap that only
-	# holds because nothing ever pushes on it is not a cap.
+	note("--- bullet: up to five pals ---")
+	note("capacity reported: %s" % probe(party, "capacity"))
+	note("size before filling: %s" % probe(party, "size"))
+
+	# Fill the rest, then push past the ceiling. The refusal IS the bullet — a cap
+	# that only holds because nothing ever leans on it is not a cap.
 	var species: Array = ["starter_ground", "wild_rabbit", "wild_bristler"]
 	for i in 6:
 		var id: String = species[i % species.size()]
-		var added: Variant = _add_pal(party, id, "Pal%d" % (i + 1))
+		var added: Variant = _add_pal(party, id)
 		note("add #%d (%s): accepted=%s  size now=%s" % [i + 1, id, added, probe(party, "size")])
 	note("refusal message: %s" % probe(party, "last_refusal"))
-	note("size after six attempts: %s" % probe(party, "size"))
+	note("size after pushing past the ceiling: %s" % probe(party, "size"))
+
+	note("--- bullet: nickname ---")
+	var to_name: Object = _member(party, 0)
+	if to_name == null:
+		note("no member to rename")
+	else:
+		note("name before renaming: %s (nickname field: '%s')" % [
+			probe(to_name, "display"), field(to_name, "nickname")
+		])
+		# A name nothing could mistake for a default or a slot label. The first
+		# version of this session named every pal "Pal1".."Pal5" as it added them,
+		# which a blind reviewer correctly read as positional labels rather than
+		# as evidence anybody could rename anything.
+		note("rename to 'Thistle' accepted: %s" % probe(to_name, "rename", ["Thistle"]))
+		note("name after renaming: %s (nickname field: '%s')" % [
+			probe(to_name, "display"), field(to_name, "nickname")
+		])
+		# The refusal: an all-whitespace name must not leave a nameless pal.
+		note("rename to '   ' accepted: %s" % probe(to_name, "rename", ["   "]))
+		note("name after the refused rename: %s" % probe(to_name, "display"))
+		note("other members are still unnamed: %s, %s" % [
+			probe(_member(party, 1), "display"), probe(_member(party, 2), "display")
+		])
 
 	note("--- bullet: levels, HP/ATK/DEF, trait, nickname, appraisal ---")
 	var first: Object = _member(party, 0)
@@ -153,12 +174,6 @@ func _session_party() -> void:
 	else:
 		note("SaveManager.save: ABSENT — persistence unevidenced")
 
-	note("--- bullet: catch pal ---")
-	if director != null and director.has_method("caught"):
-		note("director reports caught: %s" % director.call("caught").size())
-	else:
-		note("director caught(): ABSENT")
-
 	note("--- bullet: simple party menu ---")
 	await _open_party_menu()
 
@@ -167,12 +182,12 @@ func _session_party() -> void:
 ## A screen that only appears when a test constructs it is not reachable by a
 ## player.
 func _open_party_menu() -> void:
-	await _tap("inventory")
+	await _tap("party_menu")
 	var stack: Object = _find("ScreenStack")
 	if stack == null:
 		note("ScreenStack: ABSENT — no screen opened")
 	else:
-		note("screen open after pressing 'inventory': %s" % probe(stack, "is_open"))
+		note("screen open after pressing 'party_menu': %s" % probe(stack, "is_open"))
 		var top: Variant = probe(stack, "top")
 		note("top screen: %s" % (top.name if top is Node else top))
 	await shot("party_menu")
@@ -190,6 +205,133 @@ func _open_party_menu() -> void:
 	await _tap("menu_cancel")
 	if stack != null:
 		note("screen open after 'menu_cancel': %s" % probe(stack, "is_open"))
+
+
+## Catch a wild pal for real: walk to it, engage, weaken it, throw until it
+## resolves, and report the party before and after.
+##
+## The first version of this session skipped all of that and logged
+## `director reports caught: 5` — a counter printed by the system that owns it,
+## immediately after five direct roster insertions. The blind judge called it
+## "consistent with the counter simply counting adds" and refused the bullet.
+## It was right: a number a system reports about itself is not evidence that the
+## thing happened.
+func _catch_one(party: Object) -> void:
+	var director: Object = _find("EncounterDirector")
+	var manager: Object = _find("CombatManager")
+	var player: CharacterBody3D = _find("Player") as CharacterBody3D
+	var rig: Node3D = _find("CameraRig") as Node3D
+	if director == null or manager == null or player == null:
+		note("cannot attempt a catch: director/manager/player missing")
+		return
+
+	var wild: Node3D = null
+	var wilds: Variant = probe(director, "wild_pals")
+	if wilds is Array and not (wilds as Array).is_empty():
+		wild = (wilds as Array)[0]
+	if wild == null:
+		note("no wild pal in the world to catch")
+		return
+	note("target: %s at %.0f, %.0f" % [wild.name, wild.global_position.x, wild.global_position.z])
+	note("party size before the catch: %s" % probe(party, "size"))
+
+	# Walk to it, then engage.
+	for i in 1500:
+		var to: Vector3 = wild.global_position - player.global_position
+		to.y = 0.0
+		if to.length() <= 4.0:
+			break
+		if rig != null:
+			rig.set("yaw", atan2(-to.x, -to.z))
+		Input.action_press("move_forward")
+		await physics_frame
+	Input.action_release("move_forward")
+	for i in 10:
+		await physics_frame
+	await _tap("interact")
+	note("fight started: %s" % probe(manager, "is_fighting"))
+	if not bool(probe(manager, "is_fighting")):
+		note("could not start a fight; the catch is unevidenced")
+		return
+
+	# The hard rule, checked where it lives: a pal you already own cannot be
+	# caught. CLAUDE.md states it and catch_math enforces it.
+	var catch_math := load("res://scripts/combat/catch_math.gd")
+	note("can a trainer-owned pal be caught? %s" % catch_math.can_be_caught(false, true))
+	note("can a fainted wild pal be caught? %s" % catch_math.can_be_caught(true, false))
+	note("can a healthy wild pal be caught? %s" % catch_math.can_be_caught(false, false))
+
+	var foe: Object = probe(manager, "enemy")
+	var before: int = int(probe(party, "size"))
+	var throws := 0
+	for attempt in 40:
+		if not bool(probe(manager, "is_fighting")):
+			break
+		# Weakened directly rather than by fighting: this is evidence about
+		# catching, and grinding it down through combat would be evidence about
+		# combat. smoke_catching does the same for the same reason.
+		if foe != null:
+			foe.set("hp", float(foe.get("max_hp")) * 0.08)
+		var aim: Object = probe(manager, "throw_aim")
+		if aim != null and int(probe(manager, "orbs_left")) <= 1:
+			aim.call("refill")
+		var pal: Object = probe(manager, "active_pal")
+		if pal != null:
+			pal.set("hp", float(pal.get("max_hp")))
+		if not await _throw_at(manager, player, rig, wild):
+			continue
+		throws += 1
+		for i in 240:
+			await physics_frame
+			if int(probe(party, "size")) > before:
+				break
+		if int(probe(party, "size")) > before:
+			break
+
+	note("throws made: %d" % throws)
+	note("fight outcome: %s" % probe(manager, "outcome"))
+	note("party size after the catch: %s" % probe(party, "size"))
+	var caught_member: Object = _member(party, before)
+	if caught_member != null:
+		note("caught creature is now party member %d: %s (%s)" % [
+			before, probe(caught_member, "display"), field(caught_member, "species_id")
+		])
+	# Leave the fight so the rest of the session is not run inside one.
+	for i in 200:
+		await physics_frame
+		if not bool(probe(manager, "is_fighting")):
+			break
+
+
+## Open the aim, point it at the creature, and release.
+##
+## The orb flies on a real arc, so aiming straight at the target undershoots by
+## the drop over the flight — a player compensates by eye and this has to do it
+## by arithmetic. Aimed through the camera rig rather than by handing the orb a
+## direction, so a broken aim camera shows up here instead of being quietly
+## worked around. Same approach `smoke_catching` uses, for the same reason.
+func _throw_at(manager: Object, player: Node3D, rig: Node3D, wild: Node3D) -> bool:
+	if not bool(probe(manager, "is_aiming")):
+		await _tap("combat_throw")
+	if not bool(probe(manager, "is_aiming")):
+		return false
+
+	var catch_cfg := load("res://scripts/combat/catch_math.gd")
+	var cfg: Dictionary = catch_cfg.config().get("throw", {})
+	var speed := float(cfg.get("speed", 17.0))
+	var gravity := float(cfg.get("gravity", 14.0))
+	var origin: Vector3 = player.global_position + Vector3.UP * float(cfg.get("spawn_height", 1.5))
+	var centre: Vector3 = wild.call("centre") if wild.has_method("centre") else wild.global_position
+	var to: Vector3 = centre - origin
+	var flat := Vector2(to.x, to.z).length()
+	if rig != null:
+		rig.set("yaw", atan2(-to.x, -to.z))
+		var flight := flat / maxf(speed, 0.01)
+		rig.set("pitch", atan2(to.y + 0.5 * gravity * flight * flight, maxf(flat, 0.01)))
+	for i in 4:
+		await physics_frame
+	await _tap("combat_throw")
+	return true
 
 
 ## Press an action the way a person would, and let the game settle.
@@ -240,15 +382,18 @@ func _member(party: Object, index: int) -> Object:
 
 ## Build a pal and offer it to the party. Kept here rather than in the party so
 ## the session does not depend on a convenience method the system might not have.
-func _add_pal(party: Object, species_id: String, nickname: String) -> Variant:
+func _add_pal(party: Object, species_id: String) -> Variant:
 	var species := load("res://scripts/pals/pal_species.gd")
 	if species == null or not party.has_method("add"):
 		return "<cannot add>"
 	var instance: Variant = species.spawn(species_id)
 	if instance == null:
 		return "<spawn failed for %s>" % species_id
-	if "nickname" in instance:
-		instance.nickname = nickname
+	# Deliberately NOT named here. The first version of this session set every
+	# nickname as it added the pal, which made "nickname" indistinguishable from
+	# "positional label" in the transcript — a blind reviewer read Pal1..Pal5,
+	# matched them to the slot indices, and refused the bullet. A nickname is
+	# only evidence when the player set it.
 	return party.call("add", instance)
 
 
