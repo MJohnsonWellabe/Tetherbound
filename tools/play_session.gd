@@ -83,6 +83,22 @@ func _run() -> void:
 	# this one's evidence and the transcript records that it could not.
 	_claim_the_shots_directory()
 
+	# And the save file goes BEFORE THE WORLD IS BUILT, not after.
+	#
+	# This used to happen inside the session body, which was harmless for as long
+	# as nothing in the game loaded a save. The moment SaveDirector started
+	# restoring slot 0 at boot, it stopped being harmless: the world would come up
+	# holding a previous run's party and buildings, the session would then delete
+	# the file, and every "party at session start" line would be describing
+	# somebody else's game. The transcript would have been wrong in a way that
+	# read as perfectly ordinary.
+	#
+	# One process frame first, because under `--script` Godot attaches autoloads
+	# only after `_init()` returns, so `/root/SaveManager` does not exist yet.
+	# Same reason `save_director._boot()` waits, and the same trap.
+	await process_frame
+	_wipe_save_before_boot()
+
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	for i in SETTLE_FRAMES:
@@ -260,13 +276,14 @@ func _session_release() -> void:
 	else:
 		note("director's 'caught_refused' signal: ABSENT — a catch made while full cannot be witnessed as an event")
 
-	# Start from no save file at all, so that everything read back off the disk at
-	# the end was written by THIS session. A reload that loads a file an earlier
-	# run left behind is not evidence about this one.
+	# The wipe itself happened before the world was built — see `_run()`. This is
+	# the check that it held, taken from inside the running game: if a save file
+	# exists now, something wrote one during boot and everything below about
+	# "the party at session start" is describing a restored game rather than a
+	# new one.
 	if save != null and save.has_method("has_slot"):
-		note("save slot 0 existed before this session: %s" % save.call("has_slot", 0))
-		note("deleted save slot 0 before starting: %s" % probe(save, "delete_slot", [0]))
-		note("save slot 0 exists now: %s" % probe(save, "has_slot", [0]))
+		note("a save file exists now, after boot: %s (the session deleted slot 0 before the world was built)"
+			% save.call("has_slot", 0))
 	else:
 		note("SaveManager: ABSENT — nothing in this session can speak to persistence")
 
@@ -1240,6 +1257,26 @@ func shot(label: String) -> void:
 	var size := _file_size(path)
 	_manifest.append("%s  %s  %d bytes" % [path.get_file(), label, size])
 	note("frame '%s' -> %s (%d bytes)" % [label, path, size])
+
+
+## Delete slot 0 before the world exists, so nothing this session reports was
+## inherited from a previous run.
+##
+## Logged as facts either way. "There was a save and I deleted it" and "there was
+## nothing to delete" are different states, and a judge reading a transcript that
+## says neither cannot tell whether the party on screen was caught or restored.
+func _wipe_save_before_boot() -> void:
+	var save: Node = root.get_node_or_null(^"/root/SaveManager")
+	if save == null:
+		note("SaveManager was not attached before the world was built; no save could be cleared")
+		return
+	var existed: bool = bool(save.call("has_slot", 0)) if save.has_method("has_slot") else false
+	note("a save file existed before this session: %s" % existed)
+	if existed and save.has_method("delete_slot"):
+		note("deleted it before building the world: %s" % save.call("delete_slot", 0))
+	note("save slot 0 exists going into the world: %s" % (
+		save.call("has_slot", 0) if save.has_method("has_slot") else "unknown"
+	))
 
 
 func _file_size(path: String) -> int:
