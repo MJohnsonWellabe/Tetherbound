@@ -29,6 +29,17 @@
     ],
     "_comment_retarget_bones": "SOURCE bone : TARGET bone, and every entry on both sides was read off the two skeletons rather than assumed. The first draft of this map was written from the Rigify convention and had three bones the KayKit rig does not own (`upperchest`, `neck`, `shoulder.l/r`) and one the knight does not (`root`, whose root is `DEF-spine`). Bones absent from EITHER side are left out rather than mapped hopefully: `unmapped()` reports them, and a mapping that names a bone nobody has is a limb missing from all twenty-five clips at once.",
     "_comment_retarget_chain": "The rigs disagree about how many bones a spine is. Ours is hips-spine-chest-head; Rigify's is DEF-spine through .006 with the neck at .004/.005. Each of ours goes to the target bone that does the same STRUCTURAL job — `chest` to `DEF-spine.003` because that is where Rigify hangs the shoulders, which is what our chest is for. The unmapped links in between hold their rest pose, so the neck stays straight rather than being driven by a bone that does not exist.",
+    "_comment_align_rest": "SOURCE bone names whose two rest poses are different POSES rather than different conventions. Measured, not guessed: with the delta transfer correct, every mapped bone's animated direction sits a CONSTANT angle from the source's at every frame of the cycle, and that constant is its rest difference — 0.6° at the chest, 5.1° at the thighs, 14.5° at the pelvis, and 52–60° down the whole arm. The arm figure is the T-pose the KayKit rig rests in against the 52° A-pose the knight rests in, so every clip's arm track spends ~78° lowering an arm that is already lowered, and his hands ended up crossed in front of his groin. Bones listed here are AIMED BY THE CLIP instead. The spine is deliberately absent: its 14.5° is Rigify curving a back that KayKit stacks straight, which is the knight's build and what his mesh is skinned around — flattening it to match would be trading a real difference for a fake one. The legs are absent because 5° is nothing.",
+    "retarget_align_rest": [
+      "upperarm.l",
+      "lowerarm.l",
+      "wrist.l",
+      "hand.l",
+      "upperarm.r",
+      "lowerarm.r",
+      "wrist.r",
+      "hand.r"
+    ],
     "retarget_bones": {
       "hips": "DEF-spine",
       "spine": "DEF-spine.001",

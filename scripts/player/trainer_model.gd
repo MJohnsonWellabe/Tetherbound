@@ -170,7 +170,12 @@ func _merge_libraries() -> void:
 					# path is relative to the AnimationPlayer's root — which is the
 					# character, not the skeleton.
 					_anim.get_node(_anim.root_node).get_path_to(target),
-					_height_ratio(source_skeleton, target)
+					_height_ratio(source_skeleton, target),
+					# The bones whose two rest poses are different POSES rather
+					# than different conventions — the arms, because KayKit rests
+					# in a T-pose and the knight in an A-pose. Data, because it is
+					# a fact about these two art packs.
+					PackedStringArray(cfg.get("retarget_align_rest", []))
 				)
 
 			for clip in player.get_animation_list():
