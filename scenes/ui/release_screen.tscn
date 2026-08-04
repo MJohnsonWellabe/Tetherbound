@@ -1,0 +1,131 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/release_screen.gd" id="1_release"]
+
+; The six. Only what makes this screen different from the others is here — the
+; panel, title, rule and footer come from `screen.gd`, which reparents everything
+; below into its content area when the screen enters the tree.
+;
+; A GRID AND NOT A LIST, and that is the milestone rather than a preference.
+; MEADOWS_VERTICAL_SLICE.md M5: "Do not settle for a generic 'delete' dialog." A
+; column of six rows with a Delete button ticks every other bullet and fails that
+; one, because the player is not deleting a record — they are choosing between six
+; creatures they can see at once. Three across and two down is what fits six cards
+; wide enough to carry a name, a level, a health bar and a trait at 1920x1080.
+;
+; The appraisal sits BELOW the six rather than beside them, which is the one place
+; this screen departs from `party_screen.tscn`. There the detail column is right:
+; five rows and one panel fit side by side. Here a side panel would squeeze six
+; cards into a third of the width and the comparison — the entire point — would go
+; with it.
+;
+; CardTemplate is the one authored card. `release_screen.gd` removes it and
+; duplicates it six times, exactly as the party menu does with SlotTemplate and
+; the rename grid does with CellTemplate. Six hand-written copies here stay
+; identical for about a week.
+;
+; The Tag line is on EVERY card, not only on the newcomer. A label that only one
+; card carries reads as an annotation somebody stuck on; a label every card
+; carries reads as a fact about all of them, which is what "five of these are
+; yours and one is not" is.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="ReleaseScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_release")
+title = "Six pals.  You may keep five."
+
+[node name="Body" type="VBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="Grid" type="GridContainer" parent="Body"]
+columns = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 14
+
+[node name="CardTemplate" type="PanelContainer" parent="Body/Grid"]
+visible = false
+custom_minimum_size = Vector2(0, 178)
+size_flags_horizontal = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Grid/CardTemplate"]
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Lines" type="VBoxContainer" parent="Body/Grid/CardTemplate/Pad"]
+theme_override_constants/separation = 6
+
+; "one of your five" / "just caught — not yours yet". Set in code, because which
+; answer a card gets is the one thing on this screen the player must not have to
+; work out.
+[node name="Tag" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines"]
+theme_override_font_sizes/font_size = 22
+text = ""
+
+[node name="Head" type="HBoxContainer" parent="Body/Grid/CardTemplate/Pad/Lines"]
+
+[node name="Name" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines/Head"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "—"
+
+[node name="Level" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines/Head"]
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 30
+text = ""
+
+; The same bar and the same green the fight and the party menu draw. Colour is
+; applied in code so a health bar that changes colour as it drains stays in one
+; place.
+[node name="Health" type="ProgressBar" parent="Body/Grid/CardTemplate/Pad/Lines"]
+custom_minimum_size = Vector2(0, 16)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Foot" type="HBoxContainer" parent="Body/Grid/CardTemplate/Pad/Lines"]
+
+[node name="Trait" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines/Foot"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = ""
+
+[node name="Vitals" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines/Foot"]
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 22
+text = ""
+
+; Whichever card the cursor is on, at length — the appraisal, the trait and what
+; the trait does, in `pal_card.gd`'s words. The same paragraph the party menu has
+; shown since M4: this is the last screen where a differently-worded second
+; opinion would help anybody.
+[node name="Detail" type="PanelContainer" parent="Body"]
+size_flags_vertical = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Detail"]
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="Lines" type="VBoxContainer" parent="Body/Detail/Pad"]
+theme_override_constants/separation = 8
+
+[node name="Who" type="Label" parent="Body/Detail/Pad/Lines"]
+theme_override_font_sizes/font_size = 34
+text = "—"
+
+[node name="Appraisal" type="RichTextLabel" parent="Body/Detail/Pad/Lines"]
+bbcode_enabled = true
+scroll_active = false
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 24
+text = ""

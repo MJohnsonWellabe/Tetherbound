@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://scripts/pals/party_manager.gd" id="12_party"]
 [ext_resource type="PackedScene" path="res://scenes/ui/screen_stack.tscn" id="13_screens"]
 [ext_resource type="PackedScene" path="res://scenes/ui/build_palette.tscn" id="14_palette"]
+[ext_resource type="Script" path="res://scripts/pals/release_prompt.gd" id="15_release"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -116,6 +117,18 @@ hide_while_open = [NodePath("../PlaygroundHUD"), NodePath("../BuildPalette")]
 
 [node name="PartyScreen" parent="ScreenStack" index="0"]
 party_path = NodePath("../../Party")
+
+; The only thing that can open the release ceremony. EncounterDirector emits
+; `caught_refused` and deliberately does nothing about it — deciding what a full
+; party means would make the director a second place the five-pal rule is
+; interpreted (D13). This node is the translation, and it is the reason a sixth
+; catch reaches the player as a decision instead of a warning in the log.
+[node name="ReleasePrompt" type="Node" parent="."]
+script = ExtResource("15_release")
+encounter_path = NodePath("../EncounterDirector")
+party_path = NodePath("../Party")
+screen_stack_path = NodePath("../ScreenStack")
+release_screen_path = NodePath("../ScreenStack/ReleaseScreen")
 
 ; The build palette was missing entirely: build_mode has exposed selected_name(),
 ; ghost_valid() and refusal() since it shipped, and nothing read any of them, so

@@ -1,0 +1,112 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/farewell_screen.gd" id="1_farewell"]
+
+; One pal, by name. Only what makes this screen different from the others is here
+; — the panel, title, rule and footer come from `screen.gd`, which reparents
+; everything below into its content area when the screen enters the tree.
+;
+; PUSHED ON TOP of the six, never replacing them. `screen_stack.gd` says why it
+; matters here specifically: hiding the screen underneath "made M5's 'keep one,
+; release one' confirm appear to throw the six pals away and then bring them
+; back, which is precisely the anxiety that screen exists to avoid." The six stay
+; visible and dim; the deeper scrim comes from `set_stacked()` in the base class,
+; which the stack calls on every push and pop.
+;
+; THE NAME IS THE LARGEST THING ON THE SCREEN, at 76px against the party menu's
+; 32px rows. That is the difference between this screen and the grid behind it:
+; the grid is a comparison between six creatures, and this is about one of them.
+; GAME_DESIGN.md asks for "an emotional physical presentation rather than a
+; sterile list when practical"; until the pal itself can be posed here, the name
+; at more than twice the weight of any row in the game is the presentation.
+;
+; The Giving panel is hidden by the script once the release is confirmed. A list
+; of what the creature was worth, still on screen under the word "Goodbye", reads
+; as an invoice.
+;
+; No template and no duplication here — there is exactly one pal on this screen,
+; which is the whole point of it.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="FarewellScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_farewell")
+title = "Letting one go"
+
+[node name="Body" type="VBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 22
+
+[node name="Who" type="PanelContainer" parent="Body"]
+
+[node name="Pad" type="MarginContainer" parent="Body/Who"]
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Lines" type="VBoxContainer" parent="Body/Who/Pad"]
+theme_override_constants/separation = 4
+
+[node name="Name" type="Label" parent="Body/Who/Pad/Lines"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 76
+text = "—"
+
+; The species and the level under the name. Shown even when the pal has no
+; nickname and the two lines nearly repeat, unlike the party menu — here the
+; species is part of what is being lost, and it is the half of it the player can
+; still catch another of.
+[node name="Kind" type="Label" parent="Body/Who/Pad/Lines"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 30
+text = ""
+
+[node name="Giving" type="PanelContainer" parent="Body"]
+size_flags_vertical = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Giving"]
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Lines" type="VBoxContainer" parent="Body/Giving/Pad"]
+theme_override_constants/separation = 12
+
+[node name="Heading" type="Label" parent="Body/Giving/Pad/Lines"]
+theme_override_font_sizes/font_size = 24
+text = "What goes with it"
+
+; Sentences, not a stat block. The comparison already happened on the six; what
+; belongs here is what this one creature has that nothing else will have again —
+; the level it reached, the experience it earned, the trait it was born with.
+[node name="Body" type="RichTextLabel" parent="Body/Giving/Pad/Lines"]
+bbcode_enabled = true
+scroll_active = false
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 28
+text = ""
+
+; What "release" actually means, spelled out and never abbreviated. This line is
+; the reason the screen is not a delete dialog.
+[node name="Closing" type="RichTextLabel" parent="Body"]
+custom_minimum_size = Vector2(0, 88)
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 32
+text = ""
+
+[node name="Notice" type="RichTextLabel" parent="Body"]
+custom_minimum_size = Vector2(0, 34)
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 26
+text = ""

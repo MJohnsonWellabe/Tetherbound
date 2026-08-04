@@ -101,19 +101,35 @@ func _on_caught_refused(token: String, instance: RefCounted) -> void:
 ## which is a window wide enough that a player would eventually find it.
 func _on_ceremony_resolved(released_name: String) -> void:
 	_last_released = released_name
-	_close_screens()
+
+	# Saved BEFORE the screens come down, not after. If the save were last, the
+	# player would see the ceremony close — the game telling them it is done —
+	# with the file still holding six pals' worth of history. Saving first means
+	# the only order the player can observe is "written, then finished".
 	if _party != null and _party.has_method("save"):
 		_party.call("save")
+
+	_close_screens()
 	_ceremony = null
 	ceremony_closed.emit(released_name)
 
 
+## A backstop, and on the normal path it does nothing.
+##
+## The screens unwind themselves: the farewell pops before it announces, and the
+## release screen pops after it re-emits, each guarding on being the top of the
+## stack first. By the time this runs the depth is usually already back. It stays
+## because a ceremony that finished with a screen still up would leave the player
+## in a menu with nothing left to decide, and the failure would be silent.
+##
+## Pops by DEPTH rather than by identity: the ceremony is one screen or two
+## depending on how far the player got, and popping "until the release screen is
+## off" would need this file to know which node that is on a stack it does not
+## own. The guard is there because a `pop()` that ever stopped reducing depth
+## would otherwise hang the game rather than misdraw it.
 func _close_screens() -> void:
 	if _stack == null:
 		return
-	# Pop by DEPTH, not by identity. The ceremony is one screen or two depending
-	# on where the player got to, and popping "until the release screen is off"
-	# would need this file to know which node that is on a stack it does not own.
 	var guard := 8
 	while int(_stack.call("depth")) > _depth_before and guard > 0:
 		_stack.call("pop")

@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/screen_stack.gd" id="1_stack"]
 [ext_resource type="PackedScene" path="res://scenes/ui/party_screen.tscn" id="2_party"]
 [ext_resource type="PackedScene" path="res://scenes/ui/rename_screen.tscn" id="3_rename"]
+[ext_resource type="PackedScene" path="res://scenes/ui/release_screen.tscn" id="4_release"]
+[ext_resource type="PackedScene" path="res://scenes/ui/farewell_screen.tscn" id="5_farewell"]
 
 ; The menu layer, ready to drop into a world scene. Set `player_path` at the
 ; trainer and `party_screen_path`'s target — the PartyScreen below — at the party
@@ -43,4 +45,27 @@ rename_screen_path = NodePath("../RenameScreen")
 ; `party_path`, and that index is positional; a screen inserted above would
 ; silently move the party wiring onto the wrong node.
 [node name="RenameScreen" parent="." instance=ExtResource("3_rename")]
+visible = false
+
+; The release ceremony. Two screens, and neither is opened by a button — nothing
+; the player can press reaches them. `release_prompt.gd` pushes ReleaseScreen
+; when a catch is refused because the party is full, which is the only way a
+; sixth pal can exist (D13: there is no overflow storage anywhere).
+;
+; They live here, authored and hidden, for the reason at the top of this file:
+; instancing a screen at the moment it opens is a hitch in the one frame the
+; player is watching for a response — and this is the worst frame in the game to
+; hitch, because the player has just caught something and does not yet know they
+; are about to lose one.
+;
+; Both go AFTER PartyScreen and RenameScreen, and anything added later goes after
+; these. `meadows_playground.tscn` reaches in with index="0" to set the party
+; wiring, and that index is positional.
+[node name="ReleaseScreen" parent="." instance=ExtResource("4_release")]
+visible = false
+farewell_screen_path = NodePath("../FarewellScreen")
+
+; Pushed ON TOP of the six by ReleaseScreen itself, never opened directly, so it
+; has no path back to anything — it only ever knows the one pal it is about.
+[node name="FarewellScreen" parent="." instance=ExtResource("5_farewell")]
 visible = false

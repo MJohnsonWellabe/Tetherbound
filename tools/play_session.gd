@@ -40,6 +40,14 @@ var _system: String = ""
 var _shots: int = 0
 var _world: Node = null
 
+## What the director said about a pal it caught and could not keep. Recorded from
+## its signal rather than asked for afterwards, because "the game caught a sixth
+## creature while full" is an event, and an event you did not watch happen can
+## only be inferred from state that several other things could also have produced.
+var _refusals: int = 0
+var _refused_token: String = ""
+var _refused_instance: Object = null
+
 
 func _init() -> void:
 	_run()
@@ -63,6 +71,8 @@ func _run() -> void:
 	match _system:
 		"party":
 			await _session_party()
+		"release":
+			await _session_release()
 		_:
 			note("no session is written for '%s' yet" % _system)
 
@@ -184,6 +194,396 @@ func _session_party() -> void:
 	await _open_party_menu()
 
 
+## M5 — Release ceremony.
+##
+## Written from the acceptance bullets WITHOUT reading the ceremony's
+## implementation, and deliberately not adjusted afterwards to suit what got
+## built. Nothing below calls a method that belongs to the ceremony: it presses
+## the actions a player presses, reads back the text the game actually put on the
+## screen, and compares the party before and after. A session written against the
+## implementation only ever proves the implementation agrees with itself.
+##
+## The bullets, verbatim:
+##   - Capture while full.
+##   - Present six.
+##   - Inspect meaningful info.
+##   - Keep one / release one.
+##   - Released pal leaves permanently.
+func _session_release() -> void:
+	var party: Object = _find("Party")
+	var stack: Object = _find("ScreenStack")
+	var director: Object = _find("EncounterDirector")
+	var save: Object = root.get_node_or_null(^"/root/SaveManager")
+
+	# The director announces a creature it caught and could not hand to the party.
+	# Connected BEFORE anything is caught, so the transcript records the event and
+	# not a state left behind by it.
+	if director != null and director.has_signal("caught_refused"):
+		director.connect("caught_refused", _on_caught_refused)
+		note("listening to the director's 'caught_refused' signal")
+	else:
+		note("director's 'caught_refused' signal: ABSENT — a catch made while full cannot be witnessed as an event")
+
+	# Start from no save file at all, so that everything read back off the disk at
+	# the end was written by THIS session. A reload that loads a file an earlier
+	# run left behind is not evidence about this one.
+	if save != null and save.has_method("has_slot"):
+		note("save slot 0 existed before this session: %s" % save.call("has_slot", 0))
+		note("deleted save slot 0 before starting: %s" % probe(save, "delete_slot", [0]))
+		note("save slot 0 exists now: %s" % probe(save, "has_slot", [0]))
+	else:
+		note("SaveManager: ABSENT — nothing in this session can speak to persistence")
+
+	note("--- bullet: capture while full — first, fill the party by catching ---")
+	note("capacity reported: %s" % probe(party, "capacity"))
+	note("party at session start: size %s = %s" % [
+		probe(party, "size"), ", ".join(_names(party))
+	])
+
+	# Filled by CATCHING, one creature at a time, not by handing the party five
+	# instances. "Capture while full" is a bullet about what happens at the sixth
+	# catch, and a party filled by fiat has never been caught into.
+	var capacity: int = int(probe(party, "capacity"))
+	for attempt in 10:
+		if int(probe(party, "size")) >= capacity:
+			break
+		note("- catch %d, to fill the party -" % (attempt + 1))
+		await _wait_for_wild()
+		await _attempt_catch(party, false)
+		note("party size now: %s (%s)" % [probe(party, "size"), ", ".join(_names(party))])
+
+	if int(probe(party, "size")) < capacity:
+		# Said plainly rather than papered over: the judge has to be able to weigh
+		# how the party got full.
+		note("THE SESSION COULD NOT FILL THE PARTY BY CATCHING; the remaining slots below were")
+		note("filled by handing instances to the party directly. Those are not catches.")
+		for i in 6:
+			if int(probe(party, "size")) >= capacity:
+				break
+			note("direct add (%s): accepted=%s  size now=%s" % [
+				"wild_rabbit", _add_pal(party, "wild_rabbit"), probe(party, "size")
+			])
+
+	# Distinct names, so that "which pal left" has one unambiguous answer later.
+	# Renaming is M4's bullet and is evidenced in the party session; it is used
+	# here only to tell six creatures of three species apart in a transcript.
+	note("--- setup: give each member a distinct name so six pals can be told apart ---")
+	var chosen: Array[String] = ["Thistle", "Bracken", "Sorrel", "Clover", "Nettle"]
+	for i in int(probe(party, "size")):
+		var member: Object = _member(party, i)
+		var was: Variant = probe(member, "display")
+		note("member %d renamed '%s' -> '%s': accepted=%s" % [
+			i, was, chosen[i % chosen.size()], probe(member, "rename", [chosen[i % chosen.size()]])
+		])
+
+	note("--- the party immediately before the sixth catch ---")
+	note("size: %s   capacity: %s   full: %s" % [
+		probe(party, "size"), probe(party, "capacity"),
+		int(probe(party, "size")) >= capacity
+	])
+	var full_names: PackedStringArray = _names(party)
+	note("the five: %s" % ", ".join(full_names))
+	for i in int(probe(party, "size")):
+		var member: Object = _member(party, i)
+		note("  member %d: %s  species=%s  level=%s  hp=%s/%s  trait=%s" % [
+			i, probe(member, "display"), field(member, "species_id"), field(member, "level"),
+			field(member, "hp"), field(member, "max_hp"), field(member, "trait_id")
+		])
+	note("records: %s" % [probe(party, "to_records")])
+	note("one more add offered to a full party: accepted=%s, refusal='%s'" % [
+		_add_pal(party, "wild_rabbit"), probe(party, "last_refusal")
+	])
+
+	note("--- bullet: capture while full — now catch a sixth ---")
+	await _wait_for_wild()
+	var caught_sixth: bool = await _attempt_catch(party, true)
+	note("party size straight after the sixth catch: %s" % probe(party, "size"))
+	note("times the director reported a caught pal it could not keep: %d" % _refusals)
+	note("the pal caught while full: %s (species %s)" % [
+		probe(_refused_instance, "display"), field(_refused_instance, "species_id")
+	])
+	if _refused_instance != null:
+		note("its appraisal: %s" % [probe(_refused_instance, "appraisal")])
+
+	# The six the player is choosing between: the five they had, plus the one just
+	# caught. Named here so every later line can be checked against this list.
+	var six: PackedStringArray = full_names.duplicate()
+	if _refused_instance != null:
+		six.append(str(probe(_refused_instance, "display")))
+	note("the six, by name: %s" % ", ".join(six))
+
+	note("--- bullet: present six ---")
+	# Wait for a screen rather than assuming one is already up: the catch resolves
+	# over several frames and a screen that arrives late is still a screen.
+	for i in 300:
+		if _screen_open():
+			break
+		await physics_frame
+	if not _screen_open():
+		note("no screen opened in the 300 frames after the sixth catch")
+	_dump_screens(stack, "presented")
+	_count_names(_screen_lines(stack), six)
+	_probe_for_a_count(stack)
+	await shot("ceremony_presented")
+
+	note("--- bullet: inspect meaningful info ---")
+	# Step the selection and photograph it each time. What changes between these
+	# dumps is what the screen tells a player about the pal they are looking at.
+	for step in 3:
+		await _tap("move_back")
+		note("- after pressing 'move_back' %d time(s) -" % (step + 1))
+		_dump_screens(stack, "moved %d" % (step + 1))
+		await shot("ceremony_moved_%d" % (step + 1))
+
+	note("--- can the choice be left without making it? ---")
+	var size_before_cancel: Variant = probe(party, "size")
+	await _tap("menu_cancel")
+	note("after 'menu_cancel': screen open=%s  depth=%s  party size %s -> %s" % [
+		probe(stack, "is_open"), probe(stack, "depth"), size_before_cancel, probe(party, "size")
+	])
+	_dump_screens(stack, "after cancel")
+	await shot("ceremony_after_cancel")
+	# Pressing B a second time, in case the first one only backed out of a
+	# sub-state. A screen that survives both is refusing to be left.
+	await _tap("menu_cancel")
+	note("after a second 'menu_cancel': screen open=%s  depth=%s  party size=%s" % [
+		probe(stack, "is_open"), probe(stack, "depth"), probe(party, "size")
+	])
+	_dump_screens(stack, "after second cancel")
+
+	# If backing out closed the ceremony for good, the keep/release bullet would go
+	# unexercised for a reason that is itself a finding. Catch another sixth so
+	# both facts end up in the transcript.
+	if not _screen_open():
+		note("the ceremony is not on screen after the cancel presses; catching another sixth pal")
+		note("so that the keep/release choice can still be exercised")
+		await _wait_for_wild()
+		await _attempt_catch(party, true)
+		for i in 300:
+			if _screen_open():
+				break
+			await physics_frame
+		note("screen open again: %s (top: %s)" % [probe(stack, "is_open"), _top_name(stack)])
+		six = _names(party)
+		if _refused_instance != null:
+			six.append(str(probe(_refused_instance, "display")))
+		note("the six, by name, now: %s" % ", ".join(six))
+		_dump_screens(stack, "re-presented")
+		await shot("ceremony_re_presented")
+
+	note("--- bullet: keep one / release one ---")
+	var before_names: PackedStringArray = _names(party)
+	note("party before the choice: %d = %s" % [before_names.size(), ", ".join(before_names)])
+	note("records before the choice: %s" % [probe(party, "to_records")])
+	await shot("ceremony_choice")
+
+	# Confirm, then look. Repeated only while nothing has changed, so a ceremony
+	# that takes two presses is followed through and one that takes one press is
+	# not pressed a second time into releasing another pal.
+	var presses := 0
+	for step in 4:
+		if not _screen_open():
+			note("no screen is open; nothing left to confirm")
+			break
+		note("- what is on screen at the moment of press %d -" % (step + 1))
+		_dump_screens(stack, "before press %d" % (step + 1))
+		await _tap("menu_confirm")
+		presses += 1
+		for i in 40:
+			await physics_frame
+		note("after press %d: screen open=%s  depth=%s  party size=%s" % [
+			presses, probe(stack, "is_open"), probe(stack, "depth"), probe(party, "size")
+		])
+		_dump_screens(stack, "after press %d" % presses)
+		await shot("ceremony_after_press_%d" % presses)
+		var now: PackedStringArray = _names(party)
+		note("party after press %d: %d = %s" % [presses, now.size(), ", ".join(now)])
+		if now != before_names:
+			note("the party's contents changed on press %d" % presses)
+			break
+
+	note("--- what the party holds after the ceremony ---")
+	var after_names: PackedStringArray = _names(party)
+	note("size: %s" % probe(party, "size"))
+	note("names: %s" % ", ".join(after_names))
+	note("records: %s" % [probe(party, "to_records")])
+	for pal_name: String in six:
+		note("  of the six, '%s' is in the party now: %s" % [pal_name, after_names.has(pal_name)])
+	if _refused_instance != null:
+		var members: Variant = probe(party, "members")
+		var same_object: bool = members is Array and (members as Array).has(_refused_instance)
+		note("the exact instance caught while full is in the party now (object identity): %s" % same_object)
+
+	# A frame of the party the player is left with, opened the way a player opens
+	# it. The stack must be clear first or the toggle will not open from inside
+	# another screen.
+	if _screen_open():
+		note("a screen is still open before opening the party menu: %s" % _top_name(stack))
+		for i in 3:
+			if not _screen_open():
+				break
+			await _tap("menu_cancel")
+	await _tap("party_menu")
+	note("party menu open: %s (top: %s)" % [probe(stack, "is_open"), _top_name(stack)])
+	_dump_screens(stack, "party after release")
+	await shot("party_after_release")
+	await _tap("menu_cancel")
+
+	note("--- bullet: released pal leaves permanently ---")
+	if save == null or not save.has_method("save"):
+		note("SaveManager.save: ABSENT — permanence unevidenced")
+		return
+	note("save(0) returned: %s" % save.call("save", 0))
+	var path: String = str(probe(save, "slot_path", [0]))
+	note("save file: %s" % path)
+	note("save file exists on disk: %s" % FileAccess.file_exists(path))
+	var text: String = FileAccess.get_file_as_string(path)
+	note("save file size on disk: %d bytes" % text.length())
+	# The bytes themselves. A released pal that is still written to the file has
+	# not left, whatever the running party says, and this is also where a hidden
+	# sixth slot would show up.
+	var file_lines: PackedStringArray = text.split("\n")
+	note("save file contents (%d lines):" % file_lines.size())
+	for i in mini(file_lines.size(), 400):
+		note("  save| %s" % file_lines[i])
+	if file_lines.size() > 400:
+		note("  save| ... %d further lines not printed" % (file_lines.size() - 400))
+	for pal_name: String in six:
+		note("  occurrences of '%s' in the file on disk: %d" % [pal_name, text.count(pal_name)])
+
+	# Cleared in memory first. Reading a number back out of the same object that
+	# still holds it proves nothing about a file.
+	if party.has_method("clear"):
+		party.call("clear")
+	note("party size after clearing it in memory: %s" % probe(party, "size"))
+	note("load_slot(0) returned: %s" % probe(save, "load_slot", [0]))
+	var reloaded: PackedStringArray = _names(party)
+	note("size after reloading from disk: %s" % probe(party, "size"))
+	note("names after reloading from disk: %s" % ", ".join(reloaded))
+	note("records after reloading from disk: %s" % [probe(party, "to_records")])
+	for pal_name: String in six:
+		note("  of the six, '%s' came back from disk: %s" % [pal_name, reloaded.has(pal_name)])
+
+	await _tap("party_menu")
+	note("party menu open after the reload: %s (top: %s)" % [probe(stack, "is_open"), _top_name(stack)])
+	_dump_screens(stack, "party after reload")
+	await shot("party_after_reload")
+	await _tap("menu_cancel")
+
+	note("the sixth catch reached a resolution: %s" % caught_sixth)
+
+
+func _on_caught_refused(token: String, instance: RefCounted) -> void:
+	_refusals += 1
+	_refused_token = token
+	_refused_instance = instance
+	note("the director reports a pal it caught and could not keep: token='%s', species=%s, name=%s" % [
+		token, field(instance, "species_id"), probe(instance, "display")
+	])
+
+
+## --- reading what is on the screen -----------------------------------------
+##
+## Everything here reads the RENDERED tree — the text nodes the game filled in —
+## rather than asking a screen what it thinks it is showing. A screen's own
+## account of its contents is the screen marking its own homework, and this
+## session is not allowed to know that a screen has such a method anyway.
+
+func _screen_open() -> bool:
+	var stack: Object = _find("ScreenStack")
+	return stack != null and bool(probe(stack, "is_open"))
+
+
+func _top_name(stack: Object) -> String:
+	var top: Variant = probe(stack, "top")
+	return (top as Node).name if top is Node else str(top)
+
+
+## Every visible string in the whole menu layer, in tree order. The layer, not
+## just the top screen: the stack deliberately leaves lower screens visible, so
+## what a player is looking at is the whole thing.
+func _screen_lines(stack: Object) -> PackedStringArray:
+	if stack == null:
+		return PackedStringArray()
+	return _visible_text(stack as Node)
+
+
+func _visible_text(node: Node) -> PackedStringArray:
+	var out := PackedStringArray()
+	if node == null:
+		return out
+	var layer := node as CanvasLayer
+	if layer != null and not layer.visible:
+		return out
+	var item := node as CanvasItem
+	if item != null and not item.is_visible_in_tree():
+		return out
+	var text: Variant = node.get("text")
+	if text is String and not (text as String).strip_edges().is_empty():
+		# Newlines escaped rather than printed, so one label is one transcript
+		# line and the characters can be counted.
+		out.append("%s: '%s'" % [node.name, (text as String).replace("\n", "\\n")])
+	for child in node.get_children():
+		out.append_array(_visible_text(child))
+	return out
+
+
+func _dump_screens(stack: Object, label: String) -> void:
+	if stack == null:
+		note("[%s] ScreenStack: ABSENT" % label)
+		return
+	note("[%s] screen open=%s  depth=%s  top=%s" % [
+		label, probe(stack, "is_open"), probe(stack, "depth"), _top_name(stack)
+	])
+	var lines: PackedStringArray = _screen_lines(stack)
+	note("[%s] %d visible strings on screen:" % [label, lines.size()])
+	for line: String in lines:
+		note("[%s]   %s" % [label, line])
+
+
+## How many of the pals this session knows about are named on the screen.
+##
+## Counted from the text the game rendered rather than from a count the screen
+## reports, because "present six" is a claim about what a player can see.
+func _count_names(lines: PackedStringArray, names: PackedStringArray) -> void:
+	var found := 0
+	for wanted: String in names:
+		var hits := 0
+		for line: String in lines:
+			if line.contains(wanted):
+				hits += 1
+		if hits > 0:
+			found += 1
+		note("  '%s' appears in %d of the screen's visible strings" % [wanted, hits])
+	note("  distinct known pals named on screen: %d of %d" % [found, names.size()])
+
+
+## A blind sweep for a count and a cursor. Nothing here is known to exist; each
+## line is a fact about whether it does, and an absent name is as informative as
+## a present one.
+func _probe_for_a_count(stack: Object) -> void:
+	var top: Variant = probe(stack, "top")
+	if not (top is Object):
+		note("  no top screen to ask for a count")
+		return
+	var screen: Object = top
+	for method: String in ["count", "entry_count", "option_count", "choice_count", "size"]:
+		note("  top screen %s(): %s" % [method, probe(screen, method)])
+	for property: String in ["entries", "options", "choices", "candidates", "pals", "index", "cursor", "selected", "selected_index"]:
+		var value: Variant = field(screen, property)
+		if value is Array:
+			note("  top screen .%s: Array of %d" % [property, (value as Array).size()])
+		else:
+			note("  top screen .%s: %s" % [property, value])
+
+
+func _names(party: Object) -> PackedStringArray:
+	var out := PackedStringArray()
+	for i in int(probe(party, "size")):
+		out.append(str(probe(_member(party, i), "display")))
+	return out
+
+
 ## Open the party screen through the real input action, not by instancing it.
 ## A screen that only appears when a test constructs it is not reachable by a
 ## player.
@@ -257,21 +657,29 @@ func _open_party_menu() -> void:
 ## It was right: a number a system reports about itself is not evidence that the
 ## thing happened.
 func _catch_one(party: Object) -> void:
+	await _attempt_catch(party, false)
+
+
+## The catch itself. Returns true if the party grew by it.
+##
+## `watch_screens` is for the catch made while the party is FULL: that one cannot
+## grow the party, so the loop has to stop on something else — the director
+## reporting a creature it could not keep, or a screen appearing. Without it the
+## session would keep throwing orbs at a world the ceremony has just paused.
+func _attempt_catch(party: Object, watch_screens: bool) -> bool:
 	var director: Object = _find("EncounterDirector")
 	var manager: Object = _find("CombatManager")
 	var player: CharacterBody3D = _find("Player") as CharacterBody3D
 	var rig: Node3D = _find("CameraRig") as Node3D
 	if director == null or manager == null or player == null:
 		note("cannot attempt a catch: director/manager/player missing")
-		return
+		return false
 
-	var wild: Node3D = null
-	var wilds: Variant = probe(director, "wild_pals")
-	if wilds is Array and not (wilds as Array).is_empty():
-		wild = (wilds as Array)[0]
+	var wild: Node3D = _catchable_wild(director)
 	if wild == null:
 		note("no wild pal in the world to catch")
-		return
+		return false
+	var refusals_before: int = _refusals
 	note("target: %s at %.0f, %.0f" % [wild.name, wild.global_position.x, wild.global_position.z])
 	note("party size before the catch: %s" % probe(party, "size"))
 
@@ -292,7 +700,7 @@ func _catch_one(party: Object) -> void:
 	note("fight started: %s" % probe(manager, "is_fighting"))
 	if not bool(probe(manager, "is_fighting")):
 		note("could not start a fight; the catch is unevidenced")
-		return
+		return false
 
 	# The hard rule, checked where it lives: a pal you already own cannot be
 	# caught. CLAUDE.md states it and catch_math enforces it.
@@ -306,6 +714,11 @@ func _catch_one(party: Object) -> void:
 	var throws := 0
 	for attempt in 25:
 		if not bool(probe(manager, "is_fighting")):
+			break
+		if watch_screens and (_refusals > refusals_before or _screen_open()):
+			note("stopping the throws: the game has taken over (refusals=%d, screen open=%s)" % [
+				_refusals - refusals_before, _screen_open()
+			])
 			break
 		# Weakened directly rather than by fighting: this is evidence about
 		# catching, and grinding it down through combat would be evidence about
@@ -325,7 +738,11 @@ func _catch_one(party: Object) -> void:
 			await physics_frame
 			if int(probe(party, "size")) > before:
 				break
+			if watch_screens and (_refusals > refusals_before or _screen_open()):
+				break
 		if int(probe(party, "size")) > before:
+			break
+		if watch_screens and (_refusals > refusals_before or _screen_open()):
 			break
 
 	note("throws made: %d" % throws)
@@ -336,11 +753,43 @@ func _catch_one(party: Object) -> void:
 		note("caught creature is now party member %d: %s (%s)" % [
 			before, probe(caught_member, "display"), field(caught_member, "species_id")
 		])
-	# Leave the fight so the rest of the session is not run inside one.
+	# Leave the fight so the rest of the session is not run inside one. Not waited
+	# out when a screen is up: the ceremony pauses the tree, so the fight cannot
+	# end until the screen does, and waiting here would deadlock the session.
 	for i in 200:
+		if watch_screens and _screen_open():
+			break
 		await physics_frame
 		if not bool(probe(manager, "is_fighting")):
 			break
+	return int(probe(party, "size")) > before or _refusals > refusals_before
+
+
+## The first wild creature that is actually there to be fought.
+##
+## A caught one is hidden and comes back on the director's respawn timer, so
+## picking `wild_pals[0]` every time — which is what the party session did with
+## one catch to make — would send the player to walk at something invisible.
+func _catchable_wild(director: Object) -> Node3D:
+	var wilds: Variant = probe(director, "wild_pals")
+	if not (wilds is Array):
+		return null
+	for wild: Node3D in (wilds as Array):
+		if is_instance_valid(wild) and wild.visible:
+			return wild
+	return null
+
+
+## Wait for one to be back on the hillside. Six catches need more creatures than
+## the world holds at once, so the session waits for the world to put them back
+## rather than conjuring them.
+func _wait_for_wild() -> void:
+	var director: Object = _find("EncounterDirector")
+	for i in 900:
+		if _catchable_wild(director) != null:
+			return
+		await physics_frame
+	note("waited 900 frames and no wild pal became available")
 
 
 ## Open the aim, point it at the creature, and release.
