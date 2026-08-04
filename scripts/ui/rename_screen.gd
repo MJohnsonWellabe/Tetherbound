@@ -150,8 +150,11 @@ func _build_cells() -> void:
 			# have been a rename that worked for sixty-four keys and renamed nothing
 			# on the sixty-fifth.
 			_add_cell(template, _grid, row[i], "Key%d" % _cells.size())
-	# A space is a legal character in a name but has no glyph, so it is a WORD key
-	# rather than a blank cell. A blank cell in a grid reads as a missing key.
+	# The space is legal in a name but has no glyph, so on the grid it is the WORD
+	# key below rather than a blank cell — a blank cell in a grid reads as a key
+	# that failed to draw. It still has to be in `_allowed`, because the keyboard
+	# path validates against that string and a space bar that did nothing here
+	# would be the one key a typist reaches for without looking.
 	_allowed += " "
 
 	for i in COMMANDS.size():

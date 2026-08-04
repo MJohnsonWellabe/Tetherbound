@@ -558,6 +558,58 @@ func _refusal_words(token: String) -> String:
 			return "that pal cannot go out right now"
 
 
+## Left or right on a slot opens the rename screen for that pal.
+##
+## LEFT/RIGHT AND NOT A THIRD BUTTON, and the reason is the input map rather than
+## taste. `screen_stack.gd` hands a screen exactly three things — `navigate`,
+## `confirm` and `cancel` — on purpose, so that no screen polls raw input behind
+## the stack's back. A rename button would therefore need a new menu action in
+## `project.godot`, or it would have to borrow a combat one; the input map is
+## emphatic about the second ("Nothing else may read these — build mode did, and
+## it made the pal switch un-rebindable"). `on_nudge` is already plumbed, already
+## comes from the `move_*` actions every other screen uses, and costs nothing.
+##
+## Direction is ignored. `screen.gd` passes it because a row with a VALUE on it
+## wants to know which way you pushed; a row that opens a screen does not, and
+## making left and right do different things here would be a coin flip the player
+## has to remember.
+func on_nudge(index: int, _direction: int) -> void:
+	var members := _members()
+	if index >= members.size() or members[index] == null:
+		_say("that slot is empty — nothing to name yet")
+		return
+	var screen := _rename_screen()
+	if screen == null:
+		# Named as wiring rather than as a refusal the player caused. This is the
+		# same distinction `_draw_detail` draws for a missing party node: a screen
+		# that is not pointed at anything is a mistake in the scene, and saying so
+		# is how somebody finds it.
+		_say("no rename screen is wired to this menu")
+		return
+	var stack := get_parent()
+	if stack == null or not stack.has_method("push"):
+		_say("there is nowhere to open the rename screen")
+		return
+
+	# Subject first, then push. `on_pushed()` takes no arguments and the stack is
+	# never going to grow a way to pass one — it does not know what a screen
+	# contains, which is why it can hold any of them.
+	screen.call("open_for", members[index])
+	stack.call("push", screen)
+
+
+## The rename screen, or null if this menu was never pointed at one.
+##
+## Checked by method rather than by class, like `_party()` above: it is a
+## separate scene that may be absent in a test harness, and a party menu that
+## cannot rename is still a party menu.
+func _rename_screen() -> Control:
+	var node := get_node_or_null(rename_screen_path) as Control
+	if node == null or not node.has_method("open_for"):
+		return null
+	return node
+
+
 func on_pushed() -> void:
 	# Open on whoever is out. The pal you are looking at is almost always the one
 	# you were just fighting with, and starting the cursor at slot one means

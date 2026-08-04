@@ -202,6 +202,16 @@ func _open_party_menu() -> void:
 	await _tap("move_back")
 	await shot("party_menu_moved")
 
+	# The rename screen, reached the way a player reaches it. The API-level
+	# rename earlier in this session proves the data layer supports it; this
+	# proves a person can actually get there, which is the half the blind judge
+	# said was missing.
+	await _tap("move_right")
+	var top_now: Variant = probe(stack, "top") if stack != null else null
+	note("screen after pressing right on a pal: %s" % (top_now.name if top_now is Node else top_now))
+	await shot("rename_screen")
+	await _tap("menu_cancel")
+
 	await _tap("menu_cancel")
 	if stack != null:
 		note("screen open after 'menu_cancel': %s" % probe(stack, "is_open"))

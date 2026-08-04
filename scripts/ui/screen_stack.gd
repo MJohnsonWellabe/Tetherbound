@@ -110,9 +110,18 @@ func push(screen: Control) -> void:
 		screen.call("on_pushed")
 	_mark_active()
 
+	# EVERY push swallows a frame, not just the first. It used to guard only when
+	# the stack opened from empty, which was fine while a screen could only be
+	# opened by a button — and stopped being fine the moment one screen could open
+	# another from a DIRECTION. The party menu opens the rename grid on left/right;
+	# without this, the stick that is still held over carries straight through into
+	# the new screen and walks its cursor before the player has seen it appear.
+	# The guard also clears the hold-to-repeat timer, so the first step in the new
+	# screen costs a fresh NAV_DELAY rather than inheriting one mid-repeat.
+	_guard = true
+
 	if _stack.size() == 1:
 		_set_gameplay_active(false)
-		_guard = true
 		opened.emit()
 
 
@@ -126,9 +135,12 @@ func pop() -> void:
 		screen.call("on_popped")
 	_mark_active()
 
+	# Same on the way back down: the press that closed the top screen must not also
+	# land on the screen underneath it.
+	_guard = true
+
 	if _stack.is_empty():
 		_set_gameplay_active(true)
-		_guard = true
 		closed.emit()
 
 
@@ -241,6 +253,19 @@ func _read_navigation(delta: float) -> void:
 	# `get_axis(negative, positive)` returns positive - negative, so pushing
 	# forward reads NEGATIVE here. That matches screen space, where up is -Y.
 	var vertical := Input.get_axis("move_forward", "move_back")
+
+	# MENUS MOVE IN STRAIGHT LINES. A stick shoved into a corner clears the
+	# deadzone on both axes at once, and until the party screen grew a left/right
+	# verb that was harmless because horizontal did nothing. It is not harmless
+	# now: a diagonal would open the rename screen AND step the party cursor off
+	# the pal it opened for, so coming back would leave the highlight one row from
+	# where it was. The dominant axis wins and the other is dropped; on a grid of
+	# letters this is also just what a player means by "left".
+	if absf(horizontal) >= absf(vertical):
+		vertical = 0.0
+	else:
+		horizontal = 0.0
+
 	var step := Vector2i(_step(horizontal), _step(vertical))
 
 	if step == Vector2i.ZERO:
