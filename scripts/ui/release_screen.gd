@@ -166,7 +166,7 @@ func _start_focus() -> void:
 	if count <= 0:
 		set_focus_index(0)
 		return
-	var newcomer := 0
+	var newcomer := _newcomer_index()
 	set_focus_index(newcomer if newcomer >= 0 and newcomer < count else count - 1)
 
 
