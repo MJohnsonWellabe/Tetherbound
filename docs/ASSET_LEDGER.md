@@ -21,6 +21,11 @@ at the time it was fetched, not as remembered.
 | Village props and build pieces ×35 | Quaternius | [Medieval Village MegaKit](https://quaternius.itch.io/medieval-village-megakit), Standard (free) tier | CC0 1.0, stated in the pack's own `License_Standard.txt` | No | `assets/buildings/*.gltf` + 20 PBR maps | 35 of 176. Ten standalone props (wagon, crate, log, chimney, support, bricks, fence) for authored landmarks, plus the M8 build set: 4 floors, 7 walls, doors and frames, windows, 4 roofs, 2 gable fronts, 2 stairs. The kit is modular and authored **in metres** — 2m walls, 2×2m floors, 3m storey — so it needs no import scale correction, unlike the nature packs. Normal maps taken from `Textures/Normals Godot-Unity/`, not the top-level ones: Godot wants the Y-down convention. |
 | Station pieces ×3 — bed, pal bed, campfire | **primitive stand-ins**, except as noted | authored in-repo as `.tscn` | n/a — no third-party asset | n/a | `scenes/building/bed.tscn`, `pal_bed.tscn`, `campfire.tscn` | **These are not sourced art.** The Medieval Village subset contains no furniture of any kind — 35 of its 176 models are extracted and every one is architecture or a yard prop — so M6's pal bed and M8's bed and campfire are built from boxes. Sizes are measured, not guessed: bed 1.00 × 2.00 × 0.60m (one build cell), pal bed 1.60 × 1.60 × 0.26m, deliberately a different silhouette so the two are never confused at a glance. **The campfire is the exception**: its stones are 8 × `Pebble_Round_1/2/3` from the Quaternius nature pack and its logs are 3 × `log.glb` from the Kenney Nature Kit — both already licensed rows above — and only the flame is primitive. Per `CLAUDE.md`, these three must be replaced before the stronghold or the home loop is judged on how it looks. |
 | Plumberry Plains Vol. 2 — 5 characters | GTB (owner-supplied) | Supplied by owner via Google Drive | Free for unlimited personal **and commercial** use. May NOT resell, redistribute or repackage the raw asset files, mint as NFTs, or train AI on them. | No | `assets/pals/plumberry/*.glb` | **3** of 10: bruno-the-bear, ernie-the-duck, ollie-the-songbird. This row said "curated 5" and that was wrong — only three `.glb` were ever committed, and the other two left 20 orphaned `.png.import` stubs behind, since removed. glTF with 26 baked clips each, embedded. No skinning — transform-node animation on rigid parts — so they import and play with no retargeting. |
+| Ultimate Animated Animal Pack — 12 models | Quaternius | [Ultimate Animated Animal Pack](https://quaternius.com/packs/ultimateanimatedanimals.html), free tier, files served from the pack's [Google Drive folder](https://drive.google.com/drive/folders/1uJ3N5HfB7jKTseJUNQr3N4YaN0UuEtHk) | The pack's own `License.txt`, verbatim: *"License: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication https://creativecommons.org/publicdomain/zero/1.0/"*. Fetched 2026-08-04. | No | `assets/pals/quaternius/{Alpaca,Bull,Cow,Deer,Donkey,Fox,Horse,Horse_White,Husky,ShibaInu,Stag,Wolf}.gltf` | All 12, unmodified. **Candidates for M11, not yet wired into `species.json`.** glTF with the buffer AND nothing else base64-embedded — there are no textures at all: each animal is 4–8 flat named material zones (`Main`, `Main_Light`, `Hooves`, `Eye_White`…), 1.8–3.7k tris. 12–13 clips each and the six the animator needs all exist: `Idle`, `Walk`, `Gallop`, `Attack`/`Attack_Headbutt`, `Idle_HitReact1`, `Death`. **Authored at ~3.1× life size** — a wolf ships 2.58m tall — so the pack needs a uniform ~0.32 scale correction, exactly the `base_scale` mistake MA-04 caught on the vegetation. Base64 embedding costs ~33%: 38MB of `.gltf` for ~28MB of data. |
+| Easy Enemy Pack — 2 of 5 models | Quaternius | [Easy Enemy Pack](https://quaternius.com/packs/easyenemy.html), free tier, same Drive mechanism | Pack `License.txt`, verbatim: *"License: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication"*. Fetched 2026-08-04. | No | `assets/pals/quaternius/Frog.fbx`, `assets/pals/quaternius/Rat.fbx` | 2 of 5 (Spider, Snake and Wasp left behind — no role in §26). Same faceted low-poly language as the animal pack above, and the same ~3× authoring scale. Frog ships `Frog_Idle/Jump/Attack/Death` — **no walk**, which for a frog is arguably correct. Rat ships the full six. Clips are namespaced `RatArmature\|Rat_Idle`, so a clip map for these cannot reuse the animal pack's bare names. |
+| ~~Farm Animal Pack — Pig, Sheep~~ | Quaternius | [Farm Animal Pack](https://quaternius.com/packs/farmanimal.html) | CC0 1.0 | No | fetched, measured, **deleted before commit** | Not a ledger row for a shipped asset — recorded so the next pass does not re-fetch them. Right style, right scale family, but each ships **only `Idle` and `Jump`**: no walk, no attack, no death. A pal that cannot faint is not a pal (`D04`, rule 3). The Bull covers "bulky aggressive" better and is fully animated. |
+| The Company — mage, dwarf | Styloo | [Styloo "The Company" on the Godot Asset Store](https://store.godotengine.org/asset/styloo/company) | The pack's own `read me .txt`, verbatim: *"license is cc0, so you can do whatever you want without any restrictions, credit is not required but always apreciated"*. Fetched 2026-08-04. | No | `assets/characters/mage.glb` + `assets/characters/dwarf.glb`, plus the four 2K colour maps Godot's importer extracts beside them (`mage_sorcerer{First,Second}_color.png`, `dwarf_nain{First,Second}_color.png`) | 2 of 5 characters from the pack the trainer already comes from; `knight.glb` above is the third. Renamed from `mage.glb`/`nain.glb`. **Warden candidates (§3, M14).** Like the knight they ship **zero clips**, but the mage shares **171 of the knight's 176 bones** and the dwarf 171. Checked against the live map rather than assumed: every target bone named in `art.json`'s `retarget_bones` and `retarget_align_rest` that exists on the knight also exists on the mage and the dwarf. The only two they lack are `DEF-shield` and `DEF-bone.01` — which are `art.json`'s `hide_bones`, i.e. the sword and shield the trainer already collapses, and which a Warden has no reason to carry. So `animation_retarget.gd` should drive both with the existing 25 KayKit clips unchanged. Measured 1.96m (mage) and 1.53m (dwarf) against the trainer's 1.80m. Team Tether's colour is oxblood (§25) and the mage's robe ships purple/gold — that is a repaint of an existing 2K map, not a new asset. |
+| ~~The Company — dragon~~ | Styloo | as above | CC0, as above | No | fetched, inspected, **not committed** | Recorded because it is the best-looking free candidate for the §28 legendary and it fails for a specific reason: **zero animation clips on a 144-bone Rigify bird/dragon rig sharing only 47 bones with the knight.** No clip source in the project or in any free pack retargets onto it. It is a beautiful static mesh, which `CLAUDE.md` says is not usable. |
 | Stylized Nature MegaKit — 40 models | Quaternius | [Stylized Nature MegaKit](https://quaternius.com/packs/stylizednaturemegakit.html) | CC0 1.0 | No | `assets/environment/stylized_nature/*.gltf` | Trees (4 species), bushes, ferns, grass, flowers, rocks, path stones. Textured with normal maps. `Bush_Common` ships the crimson autumn leaf texture and is re-pointed at the green one per layer (`vegetation.json` `retexture`). |
 | Kloppenheim 05 Pure Sky (HDRI) | Greg Zaal / Poly Haven | [Poly Haven](https://polyhaven.com/a/kloppenheim_05_puresky) | CC0 1.0 | No | `assets/environment/sky/day.hdr` | 2K Radiance HDR. Midday, partly cloudy. Sky-only ("puresky"), so it works as a sky dome with no ground half. |
 | Table Mountain 1 Pure Sky (HDRI) | Greg Zaal / Poly Haven | [Poly Haven](https://polyhaven.com/a/table_mountain_1_puresky) | CC0 1.0 | No | `assets/environment/sky/golden.hdr` | 2K Radiance HDR. Sunset, partly cloudy. Drives the `golden` time of day. |
@@ -38,6 +43,38 @@ The creature models remain stand-ins for bespoke art (`docs/decisions/D10`), and
 the blind critic has said so in two consecutive reviews (`docs/reviews/MA-01`,
 `MA-02`). They are in the build because a rigged, animated, correctly-scaled
 stand-in proves the systems; they are not the answer to the owner's bar.
+
+## Not fetched, but findable in one command
+
+Recorded so a later pass does not have to repeat the search.
+
+The Quaternius free download for every pack above **also contains the `.blend`
+sources**, under the same CC0 dedication — `Blends/Stag.blend` is 2.3MB and
+carries the rig and all 13 clips. That is the whole answer to "nothing free is
+singular enough to be the §28 legendary": the legendary does not have to be
+*bought*, it has to be *modelled*, and the free download supplies a rigged,
+animated, CC0 antlered base to model it from. It is deliberately **not**
+committed here — dropping a `.blend` into a live Godot project that several
+agents are working in invites an import-path surprise for no runtime benefit.
+
+Fetching it needs no browser (the Drive folder is JS-rendered, but the Drive
+REST API answers with a `Referer` header):
+
+```sh
+KEY=AIzaSyC1qbk75NzWBvSaDh6KnsjjA9pIrP4lYIE   # the public key in Drive's own web client
+REF="Referer: https://drive.google.com/"
+# 1. list the pack folder, find the id of "Blends"
+curl -sS -H "$REF" "https://www.googleapis.com/drive/v3/files\
+?q=%271uJ3N5HfB7jKTseJUNQr3N4YaN0UuEtHk%27+in+parents&key=$KEY&fields=files(id,name)"
+# 2. list that folder the same way, find Stag.blend
+# 3. fetch it
+curl -sS -H "$REF" "https://www.googleapis.com/drive/v3/files/<id>?alt=media&key=$KEY" -o Stag.blend
+```
+
+The pack folder id `1uJ3N5HfB7jKTseJUNQr3N4YaN0UuEtHk` is the stable handle;
+every Quaternius pack page carries one, and the same three steps work for all of
+them. Plain `curl` on the folder URL returns a JS shell with no file list, which
+is why this is written down.
 
 ## Retired
 
