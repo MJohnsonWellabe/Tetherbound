@@ -196,25 +196,74 @@
       "collision_radius": 0.9
     },
     "path_stones": {
-      "_comment": "Flat rock plates, scattered thinly on walkable ground. Not a path yet — M7 authors real paths — but a warm grey stone note at ground level, which is a hue the meadow has none of. The critic measured one frame at 0.7% desaturated pixels and observed there is 'no stone, no wood, no built thing, no path anywhere in that frame', where every Palworld reference carries 18-30% desaturated grey.",
+      "_comment": "Flat rock plates laid along an AUTHORED LINE. Was a scatter, with a comment admitting 'not a path yet' — and a density can never become one: every other layer answers 'how much of this and where is it allowed', where a path answers 'from here, to there, past that'.",
       "models": [
         "res://assets/environment/stylized_nature/RockPath_Round_Small_1.gltf",
         "res://assets/environment/stylized_nature/RockPath_Round_Small_2.gltf",
         "res://assets/environment/stylized_nature/RockPath_Round_Thin.gltf",
         "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf"
       ],
-      "clumps": 26,
-      "per_clump": 12,
-      "clump_radius": 8.0,
-      "strays": 90,
-      "max_slope_deg": 14.0,
+      "max_slope_deg": 26.0,
       "scale_min": 0.6,
       "scale_max": 1.4,
-      "clear_radius": 3.0,
+      "clear_radius": 12.0,
       "base_scale": 1.0,
       "casts_shadow": false,
       "cleared_by_clearings": false,
-      "collides": false
+      "collides": false,
+      "_comment_why": "The critic measured one frame at 0.7% desaturated pixels against 18-30% across the Palworld references — 'no stone, no wood, no built thing, no path anywhere in that frame' — and its third-ranked gap was that the eye is given nothing to do. A path is the standard answer to the second half of that: it says where to enter a landscape and where you are being led.",
+      "_comment_route": "World coordinates, authored against the terrain's own geography, for the same reason the terrain is authored rather than seeded. It leaves the spawn pad north-east, swings around the western shoulder of the valley, runs down to the pond's eastern shore and climbs away toward the big rise. Catmull-Rom through these points, so it bends rather than turning corners, and every stone takes its height from the field, so it drapes over the ground instead of cutting through it.",
+      "_comment_random": "What is random is only the scatter ACROSS the line — how far each stone strays from the centre, its yaw and its size — so the result reads as trodden rather than as tiling.",
+      "route": [
+        [
+          26.0,
+          -14.0
+        ],
+        [
+          -6.0,
+          26.0
+        ],
+        [
+          -48.0,
+          58.0
+        ],
+        [
+          -88.0,
+          86.0
+        ],
+        [
+          -104.0,
+          124.0
+        ],
+        [
+          -62.0,
+          168.0
+        ],
+        [
+          6.0,
+          182.0
+        ],
+        [
+          74.0,
+          150.0
+        ],
+        [
+          118.0,
+          86.0
+        ],
+        [
+          136.0,
+          10.0
+        ],
+        [
+          128.0,
+          -58.0
+        ]
+      ],
+      "route_spacing": 1.7,
+      "route_width": 1.4,
+      "route_per_step": 2,
+      "_comment_clear": "The path is the one layer that SHOULD come near the spawn — a path you cannot find is not doing its job — so this is small rather than zero. Zero fails test_every_layer_keeps_the_spawn_clear_at_all, and that test is right even here: it leaves the few metres the player is actually standing on clear, which no route should be paving anyway."
     },
     "tree_skirt": {
       "_comment": "Undergrowth banked around the base of every common tree. NOT a scatter: this layer reads the placements of the layer it names and rings each one, so every trunk gets growth rather than some trunks getting lucky.",

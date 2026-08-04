@@ -155,10 +155,13 @@ static func all_placements(field: RefCounted, world_size: float, base_seed: int)
 	# Two passes, because a skirt layer needs the layer it skirts to exist first
 	# and dictionary order is not a dependency graph.
 	for name: String in layers.keys():
-		if name.begins_with("_") or (layers[name] as Dictionary).has("skirt_of"):
+		var layer_cfg: Dictionary = layers[name] if not name.begins_with("_") else {}
+		if name.begins_with("_") or layer_cfg.has("skirt_of"):
 			continue
 		var layer: Dictionary = layers[name]
-		built[name] = placements_for(layer, field, world_size, base_seed + offset * 7919)
+		built[name] = route_for(layer, field, world_size, base_seed + offset * 7919) \
+			if layer.has("route") \
+			else placements_for(layer, field, world_size, base_seed + offset * 7919)
 		offset += 1
 	for name: String in layers.keys():
 		if name.begins_with("_") or not (layers[name] as Dictionary).has("skirt_of"):
@@ -167,6 +170,90 @@ static func all_placements(field: RefCounted, world_size: float, base_seed: int)
 		built[name] = skirt_for(layer, built, field, world_size, base_seed + offset * 7919)
 		offset += 1
 	return built
+
+
+## Stones laid along an authored line, rather than sprinkled over an area.
+##
+## A path is the one thing in this file that a density cannot produce. Every
+## other layer answers "how much of this, and where is it allowed" — a path
+## answers "from here, to there, past that", and no amount of tuning clumps and
+## strays gets you a line. `path_stones` had been a scatter with a comment
+## admitting as much: *"Not a path yet."*
+##
+## It matters because the references all use one compositionally. A path is what
+## tells the eye where to enter a landscape and where it is being led, and the
+## critic's third-ranked gap was that its frames give the eye nothing to do.
+##
+## The waypoints are world coordinates in config, authored against the terrain's
+## own geography — this is the same argument as the terrain itself being authored
+## rather than seeded. What is randomised is only the scatter ACROSS the path:
+## how far each stone strays from the centre line, its yaw and its size, so the
+## result reads as trodden rather than as tiling.
+##
+## Catmull-Rom through the waypoints, so a path bends rather than turning
+## corners. Height comes from the field at every stone, so it drapes over the
+## ground it crosses instead of cutting through hills.
+static func route_for(
+	layer: Dictionary, field: RefCounted, world_size: float, seed_value: int
+) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var models: Array = layer.get("models", [])
+	var route: Array = layer.get("route", [])
+	if models.is_empty() or route.size() < 2:
+		return out
+
+	var points: Array[Vector2] = []
+	for entry: Variant in route:
+		var at: Array = entry
+		points.append(Vector2(float(at[0]), float(at[1])))
+
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
+	var half := world_size * 0.5
+	var spacing := float(layer.get("route_spacing", 1.6))
+	var width := float(layer.get("route_width", 1.5))
+	var per_step := int(layer.get("route_per_step", 2))
+
+	# Duplicated ends give Catmull-Rom the control points it needs at the
+	# extremities without inventing a curve beyond them.
+	var control: Array[Vector2] = [points[0]]
+	control.append_array(points)
+	control.append(points[points.size() - 1])
+
+	for segment in control.size() - 3:
+		var a: Vector2 = control[segment]
+		var b: Vector2 = control[segment + 1]
+		var c: Vector2 = control[segment + 2]
+		var d: Vector2 = control[segment + 3]
+		# Steps sized from the straight-line length, so a long span gets more
+		# stones than a short one instead of every segment getting the same count.
+		var steps: int = maxi(2, int(b.distance_to(c) / spacing))
+		for step in steps:
+			var t := float(step) / float(steps)
+			var centre := _spline(a, b, c, d, t)
+			var ahead := _spline(a, b, c, d, minf(1.0, t + 0.01))
+			var across := (ahead - centre).orthogonal().normalized()
+			if across == Vector2.ZERO:
+				continue
+			for i in per_step:
+				# Across the path, not along it: the line is authored and only
+				# the wander off it is random.
+				var spot := centre + across * rng.randf_range(-width, width)
+				_consider(out, layer, field, models, spot, half, rng)
+	return out
+
+
+## Catmull-Rom, so the path bends through its waypoints instead of turning
+## corners at them. A path made of straight segments reads as a survey line.
+static func _spline(a: Vector2, b: Vector2, c: Vector2, d: Vector2, t: float) -> Vector2:
+	var t2 := t * t
+	var t3 := t2 * t
+	return 0.5 * (
+		2.0 * b
+		+ (c - a) * t
+		+ (2.0 * a - 5.0 * b + 4.0 * c - d) * t2
+		+ (-a + 3.0 * b - 3.0 * c + d) * t3
+	)
 
 
 ## Small growth banked around the base of something else.
