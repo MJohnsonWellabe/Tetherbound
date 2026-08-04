@@ -76,9 +76,23 @@ Then the questions that a bullet list cannot ask:
    does the happy path and silently allows the sixth is worse than one that does
    neither, because it looks finished. Look for the refusal *in the transcript*,
    with its message.
-2. **Does it survive a reload?** State that exists only in memory is a demo. If
-   the transcript does not show a save, a reload, and the same state afterwards,
-   persistence is NOT SHOWN.
+2. **Does it survive a reload — one the GAME performs, not one the harness
+   performs?** State that exists only in memory is a demo. If the transcript
+   does not show a save, a reload, and the same state afterwards, persistence is
+   NOT SHOWN.
+
+   And read that transcript carefully, because there are two very different
+   things it can be showing. A harness that calls `save()` and `load_slot()`
+   itself proves the *save format* round-trips. It proves nothing about whether
+   the game ever calls them. M4 passed this question on exactly that evidence,
+   and an audit afterwards found that **nothing in the shipping game loaded a
+   save at boot and nothing autosaved** — a player closing the window lost their
+   party and everything they had built, while the transcript said "size after
+   reloading from disk: 5" and was not lying.
+
+   So: if the only save and load in the evidence are ones the session made,
+   persistence of the *system* is MET and persistence of the *game* is NOT
+   SHOWN. Say both. The bullet is about the second one.
 3. **Is the state real or reported?** A count printed by the system that owns it
    proves less than a count read back after a reload. Prefer the latter and say
    when you only have the former.
