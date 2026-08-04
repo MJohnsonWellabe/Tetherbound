@@ -80,13 +80,13 @@
   "environment": {
     "_comment": "Tonemap and fog. ACES holds highlights on sunlit grass instead of clipping them to white, which was the single worst thing about the previous prototype's look.",
     "tonemap": "aces",
-    "exposure": 1.05,
+    "exposure": 1.28,
     "white": 6.0,
     "ambient_energy": 1.45,
     "_comment_fog": "Very light, and warm rather than grey. It exists to separate near hills from far ones; at any strength where you notice it as fog, it is too strong.",
     "_comment_fog_measured": "Halved from 0.0022. At the old density the blind critic measured `03-rise-overlook` at mean saturation 0.235 against 0.51 for a frame in the same biome, and said fog was 'eating the world rather than describing depth' — every object past ~150m a grey stamp. The reference does the same job with comparable haze and keeps a saturated tree band in front of it, so the fix is less fog, not less distance.",
     "fog_enabled": true,
-    "fog_colour": "#cbd2cd",
+    "fog_colour": "#b4c3b8",
     "fog_density": 0.0006,
     "fog_sky_affect": 0.0,
     "ssao_enabled": true,
@@ -97,7 +97,9 @@
     "ambient_sky_contribution": 0.5,
     "aerial_perspective": 0.22,
     "_comment_fog_round4": "Halved again, from 0.0011. frame_stats puts `03-rise-overlook` at chroma 10.7% against the references' 31-74% — the one frame that looks furthest is the one with almost no colour left in it. That is the same finding as round 3, which means the previous halving did not go far enough. Aerial perspective is cut with it, because the two compound and tuning one while leaving the other is how the last round under-shot.",
-    "_comment_ambient_round4": "Raised from 1.25 alongside the ground tint and colour map. Those two decide the albedo; this decides how much light reaches the parts of it the sun does not, which under a -52 degree sun is most of the near field."
+    "_comment_ambient_round4": "Raised from 1.25 alongside the ground tint and colour map. Those two decide the albedo; this decides how much light reaches the parts of it the sun does not, which under a -52 degree sun is most of the near field.",
+    "_comment_exposure_round4": "Raised from 1.05. With the tint and colour map near white there is no multiply headroom left, and the photographic albedo's own value of 0.52 is then the floor: 0.52 x 0.84 is a 0.44 diffuse albedo rendering at 0.33, so the shortfall against Palworld's 0.45 median is a LIGHTING one, not an albedo one. Exposure is the lever that says so.",
+    "_comment_fog_colour_round4": "Darkened and pulled green. Raising exposure lifts the distance as well as the near field, and the distance is already the bright end — it measures 0.62 against the near field's 0.33 because fog is painting it with a 0.82-value grey. A darker fog colour keeps the exposure gain in the foreground where the deficit is."
   },
   "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above.",
   "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it — 46.8% of the image pixel-for-pixel the same — because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",

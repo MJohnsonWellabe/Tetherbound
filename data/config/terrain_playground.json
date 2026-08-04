@@ -71,8 +71,8 @@
   "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. It MULTIPLIES the PBR albedo — it does not replace it. These were authored when the colour map was the entire ground treatment and there were no textures at all; they stayed after the textures arrived, and grass albedo at luminance 0.40 times a #496c34 map at 0.36 is a surface of 0.14 before any light reaches it. That is the whole reason the near field measured 0.096 against 0.27-0.60 across the references, and why no amount of sun, shadow, ambient or normal tuning moved it: nothing was wrong with the lighting.",
   "_comment_colour_now": "Near-white, so this modulates rather than paints. The textures carry the colour; this carries the slope-driven variation and the macro break-up that stops a 2K tile reading as wallpaper. Keep everything here above roughly #c0 — below that it is a brightness change wearing a colour's clothes, which is the mistake this comment exists to stop being repeated.",
   "colour": {
-    "grass_low": "#dbe9ae",
-    "grass_high": "#e8eec2",
+    "grass_low": "#e8f2c4",
+    "grass_high": "#f0f4d2",
     "soil": "#ecdcb8",
     "rock": "#dedcd4",
     "soil_slope_deg": 30.0,
@@ -114,15 +114,16 @@
       "name": "grass",
       "albedo": "res://assets/environment/terrain/Grass008_Color.jpg",
       "normal": "res://assets/environment/terrain/Grass008_NormalGL.jpg",
-      "uv_scale": 0.55,
+      "uv_scale": 1.1,
       "normal_depth": 0.12,
       "ao_strength": 0.25,
       "roughness_mod": 0.1,
       "detiling_rotation": 0.28,
       "detiling_shift": 0.35,
-      "tint": "#dfeab8",
+      "tint": "#eaf2cc",
       "_comment_normal_depth": "Cut from 0.30 to 0.12. Flat, BOTH textures look like grass — the 'fractured plates with dark fissure lines' the critic measured were RELIEF, not albedo: a photographic normal map at a grazing view angle carves shadow valleys that read as cracks in stone, and mip averaging smears them into plates at distance. This is the knob for that, not the texture.",
-      "_comment_tint_round4": "Lifted from #b9cf82. The tint MULTIPLIES the photographic albedo, so it is the knob that decides how dark the ground can be before any light reaches it. Raised toward white and pulled toward neutral: a multiply cannot desaturate, but lifting value turns the critic's 'maximally saturated near-black olive' into olive, which is most of the complaint."
+      "_comment_tint_round4": "Lifted from #b9cf82. The tint MULTIPLIES the photographic albedo, so it is the knob that decides how dark the ground can be before any light reaches it. Raised toward white and pulled toward neutral: a multiply cannot desaturate, but lifting value turns the critic's 'maximally saturated near-black olive' into olive, which is most of the complaint.",
+      "_comment_uv_round4": "Halved the tile from ~1.8m to ~0.9m. Lifting the albedo moved near-field luminance 0.28 to 0.33 exactly as the multiply model predicted, and the ground STILL read as cracked rock — because the darkness and the cracks are different problems. The cracks are the photograph's own dark gaps between grass blades, and at a 1.8m tile they are metre-scale features that the eye files as fissures in stone. At 0.9m the same gaps are fine texture. This is the knob for that; `normal_depth` was the knob for the RELIEF version of the same complaint and is already down at 0.12."
     },
     {
       "name": "rock",
