@@ -15,6 +15,10 @@ extends Node
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
+## For the XP curve and the reward table, both of which live in
+## data/config/party.json. Loaded through pal_instance so there is one reader of
+## that file rather than two that can disagree about its defaults.
+const PAL := preload("res://scripts/pals/pal_instance.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
@@ -31,6 +35,20 @@ signal prompt_changed(text: String)
 ## ceremony is what listens to this: capture-while-full is the only way that
 ## scene is ever reached.
 signal caught_refused(token: String, instance: RefCounted)
+
+## A pal was paid for a fight. `deployed` separates the one that fought from the
+## ones that watched, because they are paid differently and a HUD that showed
+## them the same way would be describing a rule the game does not have.
+##
+## Emitted as an EVENT rather than left for something to notice a stat moving:
+## an evidence session can log "Bramblit gained 44 XP" honestly, and the M4 gate
+## passed once already on a progression system whose only observable symptom
+## would have been a number that never changed.
+signal xp_awarded(pal: RefCounted, amount: int, deployed: bool)
+
+## A pal levelled. Separate from `xp_awarded` because one award can buy several
+## levels and each one is its own moment; `gained` is how many this award bought.
+signal pal_levelled(pal: RefCounted, level: int, gained: int)
 
 ## Ids into data/pals/species.json, so swapping any of them is a data edit.
 ##
@@ -59,7 +77,6 @@ var _camera_rig: Node = null
 var _wild_pals: Array[Node3D] = []
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
-var _ally: RefCounted = null
 
 var _engage_range: float = 6.0
 var _prompt: String = ""
@@ -159,22 +176,30 @@ func _spawn_creatures() -> void:
 			push_error("starter species '%s' is missing from species.json" % STARTER_SPECIES)
 		elif not bool(_party.call("add", starter)):
 			push_error("could not grant the starter: %s" % _party.call("last_refusal"))
-	_ally = _active_pal()
-	if _ally == null:
+
+	var deployed := _active_pal()
+	if deployed == null:
 		push_error("no pal to deploy: the party is empty and the starter could not be granted")
 	else:
-		# The BODY is built from whoever is deployed, not from a hardcoded
-		# species. Skipping this is how you get a party that says one creature is
-		# out and a fight that shows a different one.
-		_ally_body.call("setup", _ally.species_id)
+		# Dressing the body early is a courtesy to the first fight, not the
+		# decision about who fights it. CombatManager.begin() re-deploys the body
+		# from the party every time a fight opens, so changing the deployment in
+		# the menu changes what walks out — which was the entire point of this
+		# line and was not true while the answer was cached here.
+		_ally_body.call("setup", deployed.species_id)
 
 
 ## Whichever pal the party currently has deployed.
 ##
 ## Read through the party rather than cached, so `set_active()` from the menu and
 ## the in-fight switch cannot disagree about who is out.
+##
+## That sentence used to sit above a function whose only caller cached the result
+## at world load. Nothing calls it and keeps the answer now: the prompt asks per
+## frame, the fight asks at the moment it opens, and CombatManager asks the party
+## again on every switch.
 func _active_pal() -> RefCounted:
-	return _party.call("active") if _party != null else null
+	return (_party.call("active") as RefCounted) if _party != null else null
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
@@ -233,8 +258,9 @@ func ally_body() -> Node3D:
 	return _ally_body
 
 
+## The pal that would fight if a fight started now.
 func ally_instance() -> RefCounted:
-	return _ally
+	return _active_pal()
 
 
 func prompt() -> String:
@@ -291,7 +317,8 @@ func _refill_orbs() -> void:
 
 ## The nearest wild pal the player could choose to fight right now.
 func _engageable() -> Node3D:
-	if _ally == null or _manager == null or _ally.fainted:
+	var deployed := _active_pal()
+	if deployed == null or _manager == null or deployed.fainted:
 		return null
 	if bool(_manager.call("is_fighting")):
 		return null
@@ -310,10 +337,11 @@ func _engageable() -> Node3D:
 
 func _update_prompt() -> void:
 	var text := ""
+	var deployed := _active_pal()
 	if bool(_manager.call("is_fighting")):
 		text = ""
-	elif _ally != null and _ally.fainted:
-		text = "%s is out of the fight." % _ally.display_name
+	elif deployed != null and deployed.fainted:
+		text = "%s is out of the fight." % deployed.display()
 	else:
 		var candidate := _engageable()
 		if candidate != null:
@@ -345,7 +373,8 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 	if not bool(wild.get("aggressive")):
 		push_error("%s asked to initiate but is not aggressive" % wild.name)
 		return
-	if _ally == null or _ally.fainted or bool(_manager.call("is_fighting")):
+	var deployed := _active_pal()
+	if deployed == null or deployed.fainted or bool(_manager.call("is_fighting")):
 		return
 	if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 		return
@@ -356,8 +385,17 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 ## exploration or hand over the camera would be a bug that only shows up when
 ## something ambushes you.
 func _start_fight(wild: Node3D) -> void:
-	var party: Array[RefCounted] = [_ally]
-	if not bool(_manager.call("begin", _player, wild, _ally_body, party, _camera_rig)):
+	# The PARTY goes in, not a snapshot of it.
+	#
+	# This line used to build `[_ally]` — a one-element array holding a pal read
+	# once at world load. Three things followed from that and all three read as
+	# separate bugs: choosing a different pal in the menu did not change who
+	# fought, the deployed BODY never changed species, and CombatManager's index
+	# had nothing to move through, so the Switch command could not exist.
+	var deployed := _active_pal()
+	if deployed == null or deployed.fainted:
+		return
+	if not bool(_manager.call("begin", _player, wild, _ally_body, _party, _camera_rig)):
 		return
 	_engaged_with = wild
 	_set_exploration_active(false)
@@ -367,6 +405,15 @@ func _on_combat_exited(outcome: String) -> void:
 	_set_exploration_active(true)
 	var wild := _engaged_with
 	_engaged_with = null
+
+	# Read BEFORE the match, because the match can change both.
+	#
+	# The roster especially: a creature caught in this fight joins the party
+	# inside `_keep()` below, and paying it a share for its own capture would
+	# hand the player a levelled newcomer for a fight it was on the wrong side of.
+	var roster: Array = _party.call("members") if _party != null else []
+	var deployed := _active_pal()
+	var defeated: RefCounted = _manager.call("enemy") as RefCounted
 
 	if wild != null and is_instance_valid(wild):
 		match outcome:
@@ -398,13 +445,174 @@ func _on_combat_exited(outcome: String) -> void:
 					wild.call("hand_instance_to_owner")
 				_respawn_timers[wild] = RESPAWN_DELAY
 
-	# M2 has no healing system, no camp and no bond, so the player's pal is
-	# restored between fights. That is a placeholder for M5's stronghold rest and
-	# is deliberately generous: this milestone is measuring whether throwing is
-	# satisfying, and a recovery chore in front of the second throw measures
-	# something else.
-	if _ally != null:
-		_ally.heal_fully()
+	# GAME_DESIGN.md §11: combat is the primary source of XP. Paid here, on the
+	# way out of the fight, for both outcomes that mean the fight was won —
+	# and before the heal below, so a level-up's HP is handed over on top of the
+	# damage the fight did rather than into an already-full bar.
+	if outcome == "won" or outcome == CAUGHT:
+		award_xp(defeated, roster, deployed, outcome == CAUGHT)
+
+	# There is no healing system, no camp and no bond yet, so the player's pals
+	# are restored between fights. That is a placeholder for M5's stronghold rest
+	# and M6's pal beds, and it is deliberately generous: this milestone is
+	# measuring whether the fight is worth repeating, and a recovery chore in
+	# front of the second one measures something else.
+	#
+	# The WHOLE party, not just the pal that finished. It was just the deployed
+	# one, which was the same thing while only one pal could ever fight. Now that
+	# Switch works, a pal swapped out at a sliver of health would sit there for
+	# the rest of the session with nothing in the game able to heal it — and a
+	# command you cannot afford to use twice is a trap, not a command.
+	#
+	# Read fresh rather than reusing the roster snapshot above, so a creature
+	# caught in this fight is healed too instead of joining the party at the 8%
+	# health you had to leave it at to catch it.
+	for entry: Variant in (_party.call("members") if _party != null else []):
+		var pal: RefCounted = entry as RefCounted
+		if pal != null:
+			pal.heal_fully()
+
+
+## --- rewards --------------------------------------------------------------
+##
+## GAME_DESIGN.md §11: "Combat is primary XP." Until this section existed,
+## `pal_instance.grant_xp()` had no caller anywhere in `scripts/` — the level
+## curve, the stat growth, the cap and six passing unit tests all worked
+## perfectly on a number that never moved in a real session. Every pal the owner
+## has ever played with was level 1.
+
+
+## What beating this creature is worth, in XP, to the pal that finished the fight.
+##
+## Scaled off the DEFEATED creature, never off the player's own progress: §11
+## forbids scaling wild levels to the player, and §27 asks for danger that rises
+## with geography instead. A flat number would make the Thornback that ambushes
+## you and the Hopper you practise on worth the same afternoon, which is exactly
+## the difference §27 will need to express.
+##
+## Two things scale it, and only one of them can bite today:
+##
+##   * The creature's WEIGHT — its species' base HP, attack and defence added up
+##     and measured against `reference_stat_total`. Nothing sets wild levels yet,
+##     so every creature in the Meadows is level 1 and this is the only thing
+##     that separates one fight from another. It is also the honest measure: a
+##     kill is worth what it cost to make.
+##   * The LEVEL DIFFERENCE, `defeated.level - earner.level`. Inert right now
+##     (every difference is zero and the multiplier is exactly 1.0) and built in
+##     anyway, because §27's deeper Meadows needs it and retrofitting it later
+##     would silently rebalance every reward already in a save.
+##
+## `cfg` is passed in rather than read inside, for the reason catch_math.resolve()
+## gives about its roll: a function that reaches for the shipping config cannot
+## be tested against any other one, and a reward that cannot be tested against a
+## known table is a reward nobody can prove came from the table at all.
+static func xp_for_defeating(defeated: RefCounted, earner: RefCounted, caught: bool, cfg: Dictionary) -> int:
+	if defeated == null or earner == null:
+		return 0
+
+	var reference := maxf(1.0, float(cfg.get("reference_stat_total", 160.0)))
+	var weight: float = (
+		float(defeated.base_hp) + float(defeated.base_attack) + float(defeated.base_defence)
+	) / reference
+	var level := float(maxi(1, int(defeated.level)))
+	var difference := float(int(defeated.level) - int(earner.level))
+	var multiplier := clampf(
+		1.0 + float(cfg.get("level_difference_step", 0.12)) * difference,
+		float(cfg.get("level_difference_min", 0.35)),
+		float(cfg.get("level_difference_max", 2.0))
+	)
+
+	var award: float = float(cfg.get("win_base", 55.0)) \
+		* pow(level, float(cfg.get("level_exponent", 1.2))) \
+		* weight \
+		* multiplier
+
+	# A catch pays less than a kill, and not nothing.
+	#
+	# Nothing was the tempting answer — §15 and D08 already make catching cost
+	# you orbs, a weakened target and seconds of your pal standing undefended,
+	# and the creature itself is the reward. But a zero would mean the fastest
+	# way to level is to kill the pals you would rather keep, which is a perverse
+	# incentive pointed straight at the verb the game is named for.
+	#
+	# A fraction says the true thing instead: your pal did the work of wearing it
+	# down and is paid for that, and the fight simply ended before the last blow,
+	# so it is paid less. Winning stays the better XP route, catching stays the
+	# better acquisition route, and the two verbs remain worth choosing between.
+	if caught:
+		award *= float(cfg.get("caught_fraction", 0.5))
+
+	return maxi(int(cfg.get("minimum", 1)), int(round(award)))
+
+
+## What the pals that did NOT fight are each paid.
+##
+## Not zero, and not the full share.
+##
+## Deployed-only is the obvious answer and it quietly breaks the five-pal design.
+## The party is capped at five and CLAUDE.md says so twice; the whole emotional
+## bet is that the owner knows all five. Pay only the one that fights and the
+## first pal runs twenty levels ahead within an afternoon, the other four become
+## too weak to deploy without losing, and the player settles on a party of one
+## they are afraid to switch out of — which also makes the Switch command
+## pointless, and §14 lists it as one of five.
+##
+## Paying everyone equally breaks it from the other side: deploying stops being a
+## choice, and switching costs nothing.
+##
+## A full share for the pal that stood in the fight and a quarter for the ones
+## that watched keeps deployment a real decision while stopping the rest of the
+## five falling permanently out of the game. Fainted members are paid nothing —
+## they were not watching.
+static func xp_for_watching(award: int, cfg: Dictionary) -> int:
+	if award <= 0:
+		return 0
+	var share := float(award) * float(cfg.get("bench_fraction", 0.25))
+	return maxi(int(cfg.get("minimum", 1)), int(round(share)))
+
+
+## Pay out a won fight.
+##
+## `roster` is the party as it stood when the fight ENDED, `deployed` is the pal
+## that was out at the final blow, and `caught` says whether the fight ended in
+## an orb rather than a faint.
+##
+## Public, and called from exactly one place. It takes everything it needs as
+## arguments and touches no node, so tests/test_combat_rewards.gd can prove the
+## payout — including the signals — without standing up a scene. The one thing
+## worse than an untested reward is the reward this replaced, which was tested
+## thoroughly and never called.
+func award_xp(defeated: RefCounted, roster: Array, deployed: RefCounted, caught: bool) -> void:
+	if defeated == null or deployed == null:
+		return
+	var cfg: Dictionary = PAL.config().get("rewards", {})
+
+	var award := xp_for_defeating(defeated, deployed, caught, cfg)
+	_grant(deployed, award, true)
+
+	var share := xp_for_watching(award, cfg)
+	for entry: Variant in roster:
+		var pal: RefCounted = entry as RefCounted
+		# `pal == defeated` is not paranoia: a caught creature is the opponent AND
+		# a party member moments later, and the roster is snapshotted early
+		# precisely so it cannot be both here.
+		if pal == null or pal == deployed or pal == defeated or pal.fainted:
+			continue
+		_grant(pal, share, false)
+
+
+func _grant(pal: RefCounted, amount: int, deployed: bool) -> void:
+	if pal == null or amount <= 0:
+		return
+	# A capped pal is told nothing rather than told it gained XP it cannot spend.
+	# grant_xp() correctly refuses at the cap; announcing an award it discarded
+	# would put a number on screen that no bar can account for.
+	if pal.level >= PAL.level_cap():
+		return
+	var gained: int = pal.grant_xp(amount)
+	xp_awarded.emit(pal, amount, deployed)
+	if gained > 0:
+		pal_levelled.emit(pal, int(pal.level), gained)
 
 
 ## Hand control back and forth between exploration and combat. One place, so a

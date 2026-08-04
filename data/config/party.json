@@ -10,10 +10,30 @@
   },
 
   "xp": {
-    "_comment": "XP needed to leave a level: `base * level^exponent`, rounded. Progress resets to zero at each level rather than accumulating a lifetime total, so `xp_for_next_level()` is the only number a bar ever has to divide by. Combat is the primary source (GAME_DESIGN.md 11); nothing awards XP yet, so these are a shape rather than a balance.",
+    "_comment": "XP needed to leave a level: `base * level^exponent`, rounded. Progress resets to zero at each level rather than accumulating a lifetime total, so `xp_for_next_level()` is the only number a bar ever has to divide by. Combat is the primary source (GAME_DESIGN.md 11) and `rewards` below is what pays it.",
     "base": 60.0,
     "_comment_exponent": "Above 1 so later levels cost more, low enough that level 20 is not a wall. At 1.55 the first level costs 60 and the tenth costs about 2100 — roughly the curve of an afternoon's fights rather than a season's.",
     "exponent": 1.55
+  },
+
+  "rewards": {
+    "_comment": "What a won fight pays, read by scripts/combat/encounter_director.gd. ALL TUNABLE. This block is the other half of `xp` above: that one says what a level costs, this one says how fast it arrives, and 'levelling takes forever' is answerable from either. Until this existed, `grant_xp()` had no caller in the whole game and every pal in a real session stayed at level 1 forever.",
+    "_comment_shape": "award = win_base * defeated_level^level_exponent * (defeated species stat total / reference_stat_total) * level_difference_multiplier. Scaled off the DEFEATED creature and never off the player: GAME_DESIGN.md 11 forbids scaling wild levels to the player, and 27 wants danger to rise with geography instead.",
+    "win_base": 55.0,
+    "_comment_win_base": "At 1.0 weight and level 1 this is the award. Against the shipping roster that is 44 for a Meadow Hopper (129 stat total) and 59 for a Thornback (173), while leaving level 1 costs 60 — so the practice creature is about two fights per early level and the one that ambushes you is about one. Raise this first if the owner says levelling drags.",
+    "_comment_level_exponent": "How much a higher-level opponent is worth beyond its stats. Above 1 so a level 9 creature is worth more than nine level 1 ones would be individually; nothing sets wild levels yet, so this cannot bite until 27's deeper Meadows does.",
+    "level_exponent": 1.2,
+    "_comment_reference": "The stat total (base HP + attack + defence) that scores a weight of exactly 1.0. Set near the starter's 162 so the starter's own species is the yardstick. This is what makes a tough creature worth more than a weak one TODAY, when every wild pal is level 1 and the level terms are all inert.",
+    "reference_stat_total": 160.0,
+    "_comment_difference": "Multiplier on `1 + step * (defeated level - earner level)`, clamped. Punching up pays more, farming trivial creatures pays less, and the floor exists so a high-level pal mopping up is never paid literally nothing. Every wild pal is level 1 today, so every difference is 0 and every multiplier is exactly 1.0 — this is here early because retro-fitting it would silently rebalance every reward already sitting in a save.",
+    "level_difference_step": 0.12,
+    "level_difference_min": 0.35,
+    "level_difference_max": 2.0,
+    "_comment_caught": "A catch pays this fraction of a kill. Not 0: catching already costs orbs, a weakened target and seconds of your pal undefended (15, and docs/decisions/D08), and a zero would make killing the pals you want to keep the fastest way to level. Not 1: winning has to stay the better XP route or deciding between the two verbs is decided for you.",
+    "caught_fraction": 0.5,
+    "_comment_bench": "What each party member that did NOT fight is paid, as a fraction of the winner's award. Not 0, because five pals is the design (CLAUDE.md, twice) and deployed-only produces one pal twenty levels ahead and four that can no longer be sent out — a party of one, and a Switch command nobody would ever press. Not 1, or deploying stops being a choice. Fainted members are paid nothing.",
+    "bench_fraction": 0.25,
+    "minimum": 1
   },
 
   "growth": {

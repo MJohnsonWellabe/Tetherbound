@@ -16,9 +16,17 @@ extends Node
 ## the player controller, the camera rig, the HUD — is told, and does not ask.
 ##
 ## M2 scope: one wild pal, one of yours, quick and charged attacks, and three
-## ways out. No catching, no party, no types, no switching UI. The switch SEAM
-## is here (`_active_index` into `_party`) so M4 adds members rather than
-## restructuring this file.
+## ways out. No catching, no party, no types, no switching UI.
+##
+## M4 was supposed to grow that into a party and a Switch command. It half did:
+## the party arrived, and this file kept `_active_index` into a private
+## `Array[RefCounted]` that the director filled with exactly one pal and that
+## nothing ever moved. Two indices for one fact, one of them frozen at zero.
+##
+## The array is gone. This holds the PARTY ITSELF and addresses the fighter
+## through `party.active()`, so `set_active()` from the menu and `Switchboard`
+## below are the same move on the same number, and the menu and the fight cannot
+## come apart.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
@@ -38,6 +46,14 @@ signal catch_resolved(success: bool, shakes: int)
 signal catch_refused(reason: String)
 signal orb_shook(index: int)
 
+## The deployed pal changed mid-fight. `index` is the party slot, and it is the
+## party's own `active_index` — not a copy of it.
+signal switched(index: int, pal: RefCounted)
+## A switch was asked for and refused, with one of Switchboard's tokens. Emitted
+## rather than swallowed because "nothing happened" and "you cannot do that yet"
+## are different things to have just pressed a button for.
+signal switch_refused(token: String)
+
 enum State { INACTIVE, ACTIVE, RESOLVING }
 
 ## Why a fight ended. "caught" is new in M3 and is deliberately distinct from
@@ -50,13 +66,107 @@ const OUTCOME_CAUGHT := "caught"
 ## attack is a decision rather than a better button.
 enum Action { READY, WINDUP, RECOVERY }
 
+
+## The Switch command — GAME_DESIGN.md §14's fifth, beside Quick, Charged, Throw
+## and Run — as an object rather than as three loose fields on the manager.
+##
+## Everything a switch decides is decidable from the party and a clock: who is
+## eligible, whether the cooldown has run down, and which slot to land on. None
+## of it needs an arena, a camera, a body or a scene, so none of it lives in the
+## fight. That is what lets tests/test_combat_rewards.gd prove the RULES
+## headlessly, per docs/decisions/D02, while the manager above adds only the
+## presentation — the body's species, the entry lag, the signals.
+##
+## It MOVES THE PARTY rather than keeping an index of its own. That is the whole
+## repair: `party.active_index` is the single fact, the menu writes it through
+## `set_active()`, this writes it through `set_active()`, and there is no second
+## copy left to disagree with.
+class Switchboard extends RefCounted:
+	## Refusal tokens, in party.gd's idiom: a stable token and never a sentence,
+	## because the HUD has to be able to shorten, lengthen or translate it.
+	const REFUSED_NO_PARTY := "no_party"
+	const REFUSED_ALONE := "alone"
+	const REFUSED_COOLING := "cooling_down"
+	const REFUSED_ALL_DOWN := "all_down"
+
+	## Seconds between switches. §14 requires a cooldown and names no number; the
+	## one that ships is `switch.cooldown` in data/config/combat.json and is
+	## TUNABLE. This default exists only so a missing config block cannot make
+	## switching free.
+	var period: float = 4.0
+	var remaining: float = 0.0
+
+	func configure(cfg: Dictionary) -> void:
+		period = maxf(0.0, float(cfg.get("cooldown", 4.0)))
+		remaining = 0.0
+
+	func tick(delta: float) -> void:
+		remaining = maxf(0.0, remaining - delta)
+
+	func ready() -> bool:
+		return remaining <= 0.0
+
+	func seconds_left() -> float:
+		return remaining
+
+	## The slot a switch of `step` would land on, or -1 if there is nobody to
+	## switch to.
+	##
+	## Fainted members are stepped OVER rather than landed on. §16 makes a
+	## fainted pal unavailable, and a switch that deploys an unconscious creature
+	## is a switch that loses the fight for you — so with two pals and one of them
+	## down, this is a refusal rather than a very bad move.
+	func target(party: Object, step: int) -> int:
+		if party == null:
+			return -1
+		var count := int(party.call("size"))
+		if count <= 1:
+			return -1
+		var from := int(party.get("active_index"))
+		var direction := 1 if step >= 0 else -1
+		for i in range(1, count):
+			var index: int = posmod(from + direction * i, count)
+			var pal: RefCounted = party.call("at", index) as RefCounted
+			if pal != null and not bool(pal.get("fainted")):
+				return index
+		return -1
+
+	## Why a switch would be refused right now, or "" if it would go through.
+	func refusal(party: Object, step: int) -> String:
+		if party == null:
+			return REFUSED_NO_PARTY
+		if int(party.call("size")) <= 1:
+			# One pal is not a roster. Refusing here rather than letting the wrap
+			# land back on the same creature is the difference between "you cannot
+			# do that" and a button that appears to work and changes nothing.
+			return REFUSED_ALONE
+		if not ready():
+			return REFUSED_COOLING
+		if target(party, step) < 0:
+			return REFUSED_ALL_DOWN
+		return ""
+
+	## Move the party's deployed pal one step. Returns the new slot, or -1 if the
+	## switch was refused.
+	##
+	## The party's own `set_active()` is what moves. Nothing here caches the
+	## result, so there is no way for the fight to believe one thing and the menu
+	## another.
+	func switch(party: Object, step: int) -> int:
+		if not refusal(party, step).is_empty():
+			return -1
+		var index := target(party, step)
+		if not bool(party.call("set_active", index)):
+			return -1
+		remaining = period
+		return index
+
 var state: State = State.INACTIVE
 
-## The player's pals. Length one for M2; M4 grows it. Combat always addresses
-## the active fighter through this index so switching is an index change rather
-## than a rewrite.
-var _party: Array[RefCounted] = []
-var _active_index: int = 0
+## The player's pals — the party object itself, duck-typed so either
+## `scripts/pals/party.gd` or the `PartyManager` node wrapping it will do. There
+## is no index here on purpose: `party.active_index` is the only one.
+var _party: Object = null
 var _enemy: RefCounted = null
 
 var _player: Node3D = null
@@ -73,6 +183,9 @@ var _charged_cooldown: float = 0.0
 
 var _resolve_timer: float = 0.0
 var _outcome: String = ""
+
+## The Switch command's rules and its cooldown clock.
+var _switchboard := Switchboard.new()
 
 ## Seconds after the fight opens during which player input is ignored.
 ##
@@ -109,10 +222,11 @@ func throw_aim() -> Node:
 	return _throw
 
 
+## Whoever the party currently has deployed. Asked every time rather than cached:
+## a cached copy is exactly how the M4 build ended up fighting with a pal the
+## party menu had already replaced.
 func active_pal() -> RefCounted:
-	if _active_index < 0 or _active_index >= _party.size():
-		return null
-	return _party[_active_index]
+	return (_party.call("active") as RefCounted) if _party != null else null
 
 
 func enemy() -> RefCounted:
@@ -127,13 +241,23 @@ func arena() -> Node3D:
 	return _arena
 
 
-## Begin a fight. `ally_body` is the player's deployed pal, `camera_rig` is the
-## exploration camera that will be re-pointed at it.
-func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted], camera_rig: Node = null) -> bool:
+## Begin a fight. `ally_body` is the body the player's pal is drawn on,
+## `camera_rig` is the exploration camera that will be re-pointed at it.
+##
+## `party` is the PARTY, not a list of fighters. It used to be an
+## `Array[RefCounted]` and the director passed `[cached_pal]` — a one-element
+## array built at world load — so the fight opened with whoever had been deployed
+## when the scene started, forever. Taking the party itself means the fight reads
+## the deployment at the moment it opens, which is what §10 ("player chooses which
+## pal to deploy when combat begins") actually says.
+func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Object, camera_rig: Node = null) -> bool:
 	if is_fighting():
 		return false
-	if player == null or wild == null or ally_body == null or party.is_empty():
-		push_error("cannot begin combat without a player, a wild pal, a deployed body and a party")
+	if player == null or wild == null or ally_body == null:
+		push_error("cannot begin combat without a player, a wild pal and a deployed body")
+		return false
+	if party == null or not party.has_method("active") or int(party.call("size")) == 0:
+		push_error("cannot begin combat without a party to deploy from")
 		return false
 
 	_player = player
@@ -141,7 +265,6 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	_ally_body = ally_body
 	_camera_rig = camera_rig
 	_party = party
-	_active_index = 0
 	_enemy = wild.get("instance")
 	if _enemy == null:
 		push_error("wild pal has no instance")
@@ -150,6 +273,11 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	var pal := active_pal()
 	if pal == null or pal.fainted:
 		return false
+	# The body is built from whoever is deployed RIGHT NOW. Doing this once at
+	# world load is how a party that says one creature is out produces a fight
+	# that shows a different one.
+	_deploy_body(pal)
+	_switchboard.configure(MATH.config().get("switch", {}))
 
 	_action = Action.READY
 	_action_timer = 0.0
@@ -183,6 +311,24 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 
 
 ## --- setup ----------------------------------------------------------------
+
+## Put the deployed pal's species onto the body the player drives.
+##
+## ONE body for the whole fight — the same collider, the same position, the same
+## node the opponent is targeting — and only its species changes. Instancing a
+## second body per switch would hitch in the one frame that most needs not to,
+## and would hand the enemy a target that had moved, which is the free dodge this
+## file is careful not to sell.
+##
+## Skipped when the species is already right, so re-deploying the same creature
+## does not rebuild its art.
+func _deploy_body(pal: RefCounted) -> void:
+	if _ally_body == null or pal == null:
+		return
+	if str(_ally_body.get("species_id")) == pal.species_id:
+		return
+	_ally_body.call("setup", pal.species_id)
+
 
 ## The arena is centred between the two fighters, not on the trainer. Centring
 ## it on the trainer would put them at the middle of a circle they are supposed
@@ -305,6 +451,7 @@ func _tick_active(delta: float) -> void:
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
 	_input_guard = maxf(0.0, _input_guard - delta)
+	_switchboard.tick(delta)
 
 	if _catch_shakes_left > 0:
 		_tick_catch_wobble(delta)
@@ -413,6 +560,17 @@ func _read_player_input() -> void:
 		return
 
 	if _action != Action.READY:
+		return
+
+	# Below this line the pal is uncommitted. Switching sits here rather than
+	# beside Run on purpose: swapping out of your own recovery would cancel the
+	# punish window the opponent just earned, which is the free dodge D08 refused
+	# to sell for throwing.
+	if Input.is_action_just_pressed("combat_switch_right"):
+		switch_active(1)
+		return
+	if Input.is_action_just_pressed("combat_switch_left"):
+		switch_active(-1)
 		return
 
 	if Input.is_action_just_pressed("combat_throw"):
@@ -537,6 +695,52 @@ func _flash_at(where: Vector3, charged: bool) -> void:
 		float(spec.get("duration", 0.34)),
 		float(spec.get("strength", 1.0))
 	)
+
+
+## --- switching ------------------------------------------------------------
+
+## Swap the deployed pal mid-fight. `step` is +1 for the next member and -1 for
+## the previous; fainted members are skipped.
+##
+## This is the whole of GAME_DESIGN.md §14's Switch command, and it is
+## deliberately NOT an escape:
+##
+##  * The body does not move. Whoever arrives inherits the position, the
+##    spacing and the opponent's attention.
+##  * The opponent's clocks are untouched. Its wind-up keeps winding up and
+##    `_on_enemy_strike` resolves against `active_pal()` — so a switch made into
+##    a telegraph means the NEWCOMER eats the blow.
+##  * The arriving pal cannot attack for `switch.entry_lag` seconds, and the
+##    cooldown means it cannot be undone on the next frame.
+##
+## D08 settled the same argument for throwing: the cost is what turns a button
+## into a decision.
+func switch_active(step: int) -> bool:
+	var reason := _switchboard.refusal(_party, step)
+	if not reason.is_empty():
+		switch_refused.emit(reason)
+		return false
+
+	var index := _switchboard.switch(_party, step)
+	if index < 0:
+		# The party refused a slot the rules had already cleared. Nothing should
+		# be able to reach here; if it does, the fight must not silently continue
+		# believing a switch happened.
+		switch_refused.emit(Switchboard.REFUSED_NO_PARTY)
+		return false
+
+	var pal := active_pal()
+	_deploy_body(pal)
+
+	var lag := float(MATH.config().get("switch", {}).get("entry_lag", 0.6))
+	# Floored rather than overwritten: switching must not be a way to wipe an
+	# attack cooldown you were waiting out.
+	_quick_cooldown = maxf(_quick_cooldown, lag)
+	_charged_cooldown = maxf(_charged_cooldown, lag)
+
+	switched.emit(index, pal)
+	state_changed.emit()
+	return true
 
 
 ## --- catching -------------------------------------------------------------
@@ -687,6 +891,18 @@ func charged_ready() -> bool:
 	var pal := active_pal()
 	return pal != null and pal.can_use_charged() \
 		and _action == Action.READY and _charged_cooldown <= 0.0
+
+
+## Whether pressing Switch right now would do anything, and how long until it
+## would. §14 lists Switch beside Quick, Charged, Throw and Run, so the verb row
+## has to be able to grey it out and count it down the way it does the others —
+## and scripts/ui is not allowed to reach into `_switchboard` to find out.
+func switch_ready() -> bool:
+	return state == State.ACTIVE and _switchboard.refusal(_party, 1).is_empty()
+
+
+func switch_cooldown_left() -> float:
+	return _switchboard.seconds_left()
 
 
 ## True while the player's pal is committed and cannot move.

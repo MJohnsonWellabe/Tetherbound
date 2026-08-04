@@ -67,6 +67,13 @@
     "_comment_body_clearance": "How far apart two creatures stand, as a multiple of their combined body radii. It FLOORS `preferred_range` rather than replacing it: the config still decides how much breathing room a fight wants, and this only refuses to let it be less than the two bodies occupy. The flat 2.1m below was written when every creature was the same capsule; with real models it is smaller than the pair, so the opponent walked to 2.1m and stopped with its head inside the other creature's flank. The blind critic found that in five of seven combat frames, once with antlers coming out of the other creature's back. Reach and reposition distance are floored to match, or a creature spaces itself to exactly where it can no longer hit anything. Raised from 1.35: `body_radius` is the GAMEPLAY collider, and pal_body fits art to it with a footprint allowance of 2.4, so a model is routinely wider than the capsule that represents it. Spacing by the collider alone still left the meshes overlapping.",
     "body_clearance": 1.8
   },
+  "switch": {
+    "_comment": "The fifth combat command — GAME_DESIGN.md 14 lists Quick Attack, Charged Attack, Throw Orb, Run and Switch. Both numbers here are TUNABLE placeholders: 14 requires a cooldown ('Switching has a cooldown') and gives no value, so these were chosen against the opponent's rhythm rather than measured, and are expected to move the first time a five-pal fight is played on the handheld.",
+    "_comment_cooldown": "Seconds between switches. The opponent's whole cycle — telegraph 0.55, recovery 0.75, reposition 1.0, attack_cooldown 1.1 — runs about 3.4s, so 4.0 is roughly one switch per attack it makes: fast enough to answer what the fight is doing, slow enough that swapping is a commitment rather than a rotation. Lower it if switching feels like a menu; raise it if fights turn into a carousel.",
+    "cooldown": 4.0,
+    "_comment_entry_lag": "Seconds the arriving pal cannot attack for. Switching must not become the dodge the design removed (D07: 'movement is the dodge'), so the swap buys you a fresh creature, not a free frame: the body does not move, the opponent's clocks keep running, and a switch made into a wind-up means the newcomer takes the blow. About one telegraph long, on purpose. It also floors the attack cooldowns rather than clearing them, so switching cannot be used to wipe one.",
+    "entry_lag": 0.6
+  },
   "arena": {
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
     "radius": 11.0,
