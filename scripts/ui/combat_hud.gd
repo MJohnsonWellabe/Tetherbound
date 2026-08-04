@@ -15,10 +15,30 @@ const PALETTE_PATH := "res://data/config/palette.json"
 ## Health bar colour at full and at empty. The slide between them is the only
 ## warning the player gets that the fight is going badly, since a placeholder
 ## capsule cannot look hurt.
+## YOUR pal's health, and the OPPONENT's, in two different hues.
+##
+## They used to be the same green — measured identical by the blind critic at
+## (0.349, 0.620, 0.278) in both bars, top-centre and bottom-left. In a fight
+## where both are draining, you cannot tell at a glance which one just moved,
+## which is the one thing a health bar exists to tell you.
+##
+## Yours stays the friendly green. Theirs is a warm amber-to-red, which is also
+## the direction it drains toward, so a damaged opponent reads as damaged
+## without needing the number.
+##
+## Neither is the reserved Team Tether oxblood (`palette.json` `_reserved`) —
+## the critic confirmed that discipline is holding at 0.004-0.07% across every
+## world frame, and an HP bar is not where it should start leaking.
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
-const ENERGY_READY := Color(0.85, 0.70, 0.25)
-const ENERGY_FILLING := Color(0.55, 0.48, 0.30)
+const ENEMY_HEALTH_FULL := Color(0.84, 0.55, 0.20)
+const ENEMY_HEALTH_LOW := Color(0.68, 0.17, 0.14)
+const ENERGY_READY := Color(0.95, 0.80, 0.30)
+const ENERGY_FILLING := Color(0.58, 0.52, 0.34)
+## The energy TRACK is lighter than the health track, because an empty energy
+## bar is a normal state and an empty black slot reads as a broken widget. The
+## critic saw it at zero in all eight combat frames and called it exactly that.
+const ENERGY_TRACK := Color(0.20, 0.19, 0.16, 0.92)
 ## Nearly opaque. At 0.72 the enemy's health bar showed tree trunks and canopy
 ## through its interior, which the blind critic read as a rendering fault rather
 ## than as a style.
@@ -81,11 +101,11 @@ func _ready() -> void:
 	_director = get_node_or_null(director_path)
 
 	_ally_health_fill = _style(HEALTH_FULL)
-	_enemy_health_fill = _style(HEALTH_FULL)
+	_enemy_health_fill = _style(ENEMY_HEALTH_FULL)
 	_energy_fill = _style(ENERGY_FILLING)
 	_dress(_ally_health, _ally_health_fill)
 	_dress(_enemy_health, _enemy_health_fill)
-	_dress(_ally_energy, _energy_fill)
+	_dress(_ally_energy, _energy_fill, ENERGY_TRACK)
 
 	_make_text_legible($Root)
 
@@ -126,8 +146,8 @@ func _style(colour: Color) -> StyleBoxFlat:
 	return box
 
 
-func _dress(bar: ProgressBar, fill: StyleBoxFlat) -> void:
-	var track := _style(TRACK)
+func _dress(bar: ProgressBar, fill: StyleBoxFlat, track_colour: Color = TRACK) -> void:
+	var track := _style(track_colour)
 	track.border_width_left = 2
 	track.border_width_right = 2
 	track.border_width_top = 2
@@ -175,7 +195,7 @@ func _draw_enemy() -> void:
 	_enemy_name.text = str(foe.display_name)
 	var fraction: float = foe.hp_fraction()
 	_enemy_health.value = fraction * 100.0
-	_enemy_health_fill.bg_color = HEALTH_LOW.lerp(HEALTH_FULL, fraction)
+	_enemy_health_fill.bg_color = ENEMY_HEALTH_LOW.lerp(ENEMY_HEALTH_FULL, fraction)
 
 	# The enemy's wind-up and its recovery, in words, because a placeholder
 	# capsule has no animation to show either with. Scaffolding for real
@@ -258,7 +278,10 @@ func _verb(button: String, label: String, ready: bool) -> String:
 ## and nothing happened" — and the difference between a bug and a mechanic is
 ## whether the game says which one it was.
 func _on_missed(by_player: bool) -> void:
-	_miss_text = "missed — too far, or facing the wrong way" if by_player else "it missed you"
+	# Player voice, not developer voice. This read "missed — too far, or facing
+	# the wrong way", which is a debug string explaining the two branches of
+	# `move_connects()` to the person who wrote it.
+	_miss_text = "swung wide" if by_player else "it missed you"
 	_miss_left = 0.9
 
 

@@ -73,7 +73,7 @@
     "_comment_boundary": "Height and opacity of the drawn wall. It has to be visible enough to be read as a boundary and faint enough not to obscure the fight happening inside it.",
     "_comment_short": "Short and reasonably solid rather than tall and faint. A tall translucent drum reads as haze across the horizon; a bright band at ground level reads as an edge.",
     "boundary_height": 1.1,
-    "boundary_alpha": 0.5,
+    "boundary_alpha": 0.34,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
     "deploy_offset": 2.6,
     "separation": 5.0,
@@ -115,18 +115,19 @@
     "_comment_measured": "The blind critic counted bright warm pixels at the instant of contact: 10 in `combat/05-quick-attack-lands`, 295 in `combat/06`, and 24,623 in `palworld-01` \u2014 roughly ten thousand times the visual energy for the same beat. Its reading was that the only difference between the frame before a hit and the frame of the hit was that the health bar got shorter. Turn `enabled` off to get that back.",
     "enabled": true,
     "quick": {
-      "colour": "#ffd27a",
-      "radius": 0.85,
-      "duration": 0.26,
+      "colour": "#ffffff",
+      "radius": 0.95,
+      "duration": 0.28,
       "strength": 1.0
     },
     "_comment_charged": "Bigger and warmer than a quick hit. If the expensive move looks like the free one, building energy was never worth doing.",
     "charged": {
-      "colour": "#ffb257",
-      "radius": 1.15,
-      "duration": 0.34,
-      "strength": 1.3
+      "colour": "#fff0c0",
+      "radius": 1.3,
+      "duration": 0.36,
+      "strength": 1.35
     },
-    "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
+    "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion.",
+    "_comment_contrast": "Near-WHITE, not beige. The critic measured the old burst at 2.47-3.10:1 contrast against olive ground and observed that a landing hit was lower-contrast than the trainer standing still: 'a landing hit should be the highest-contrast event in the frame'. Against a mid-green world the highest-contrast thing available is white, and the warmth can come from the charged variant rather than from dulling both."
   }
 }

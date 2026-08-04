@@ -1,16 +1,29 @@
 extends SceneTree
+
+## Throwaway rig probe. The paths and questions change with whatever asset is
+## being fitted; it stays in the tree because every retarget starts by finding
+## out what the two rigs actually say, and guessing costs a whole round.
+
+const KNIGHT := "res://assets/characters/knight.glb"
+
+
 func _init() -> void:
-	for path in ["res://assets/pals/bramblit.fbx", "res://assets/pals/thornback.fbx"]:
-		var packed: PackedScene = load(path)
-		if packed == null: print(path, " FAILED"); continue
-		var s: Node = packed.instantiate(); root.add_child(s)
-		for sk in s.find_children("*", "Skeleton3D", true, false):
-			var skel := sk as Skeleton3D
-			var names: Array[String] = []
-			for i in skel.get_bone_count(): names.append(skel.get_bone_name(i))
-			print("%s  bones=%d" % [path.get_file(), skel.get_bone_count()])
-			print("  ", ", ".join(names.slice(0, 26)))
-		for ap in s.find_children("*", "AnimationPlayer", true, false):
-			print("  clips: ", (ap as AnimationPlayer).get_animation_list())
-		root.remove_child(s); s.queue_free()
+	var knight: Node = (load(KNIGHT) as PackedScene).instantiate()
+	root.add_child(knight)
+	for m in knight.find_children("*", "MeshInstance3D", true, false):
+		var mesh := m as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		print("%s: %d surfaces" % [mesh.name, mesh.mesh.get_surface_count()])
+		for i in mesh.mesh.get_surface_count():
+			var mat: Material = mesh.mesh.surface_get_material(i)
+			var pts: PackedVector3Array = mesh.mesh.surface_get_arrays(i)[Mesh.ARRAY_VERTEX]
+			var box := AABB(pts[0], Vector3.ZERO)
+			for v in pts:
+				box = box.expand(v)
+			print("  %d  %-14s verts=%d  x %+.2f..%+.2f  y %+.2f..%+.2f" % [
+				i, mat.resource_name if mat else "<none>", pts.size(),
+				box.position.x, box.position.x + box.size.x,
+				box.position.y, box.position.y + box.size.y
+			])
 	quit(0)

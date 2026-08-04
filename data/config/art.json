@@ -2,7 +2,7 @@
   "_comment": "Presentation. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'too dark', 'the grass is the wrong green', 'the creatures don't move enough' \u2014 every one of those has to be answerable by editing this file rather than by editing a scene.",
   "_comment_scale": "Nothing here sets a collider or a hit range. Art is fitted to the gameplay size the species and the controller already declare; if a value in this file could change how far an attack reaches, it is in the wrong file.",
   "trainer": {
-    "model": "res://assets/characters/Ranger.glb",
+    "model": "res://assets/characters/knight.glb",
     "_comment_height": "Metres, matched to the CharacterBody3D capsule in scenes/player/player.tscn. The model is measured and scaled to this, so a replacement of any size drops in without touching the scene.",
     "height": 1.8,
     "_comment_yaw": "Degrees of correction for which way the source model faces. Verified from a survey frame, not assumed \u2014 there is no convention across asset packs.",
@@ -19,7 +19,35 @@
     "animation_libraries": [
       "res://assets/characters/Rig_Medium_General.glb",
       "res://assets/characters/Rig_Medium_MovementBasic.glb"
-    ]
+    ],
+    "_comment_model": "Styloo 'The Company' knight (CC0). Replaces the KayKit Ranger, whom the critic measured as a Mii: skin pixels outnumbering clothing 1.36:1, 2.01:1 and 4.50:1 across three frames, because the survey sees him from behind and he is a bald flesh-coloured egg \u2014 'in 05 the character is, numerically, mostly a floating head'. Its verdict was that the trainer alone decides the Palworld read before anything else in the frame is considered. This one is armoured, proportioned, and 2K-textured.",
+    "_comment_retarget": "The knight ships ZERO clips on a 216-bone Rigify skeleton that shares no bone names with the 23-bone KayKit rig the 25 clips are authored on. `animation_retarget.gd` replays them across using the map below. Rotation only, as a delta from each rig's own rest pose \u2014 copying raw rotations puts the arms at whatever angle the OTHER rig rests at, which is wrong by a constant in every clip.",
+    "_comment_hide_bones": "Bones whose vertices should not be drawn. `DEF-shield` and the unparented `DEF-bone.01` chain carry a shield and a sword modelled into the same skinned mesh as the body; no clip drives them, so they hang in bind pose beside the trainer. They would have to go even if they sat correctly on his back: the human cannot fight, so arming him promises the wrong game.",
+    "hide_bones": ["DEF-shield", "DEF-bone.01"],
+    "_comment_retarget_bones": "SOURCE bone : TARGET bone, and every entry on both sides was read off the two skeletons rather than assumed. The first draft of this map was written from the Rigify convention and had three bones the KayKit rig does not own (`upperchest`, `neck`, `shoulder.l/r`) and one the knight does not (`root`, whose root is `DEF-spine`). Bones absent from EITHER side are left out rather than mapped hopefully: `unmapped()` reports them, and a mapping that names a bone nobody has is a limb missing from all twenty-five clips at once.",
+    "_comment_retarget_chain": "The rigs disagree about how many bones a spine is. Ours is hips-spine-chest-head; Rigify's is DEF-spine through .006 with the neck at .004/.005. Each of ours goes to the target bone that does the same STRUCTURAL job — `chest` to `DEF-spine.003` because that is where Rigify hangs the shoulders, which is what our chest is for. The unmapped links in between hold their rest pose, so the neck stays straight rather than being driven by a bone that does not exist.",
+    "retarget_bones": {
+      "hips": "DEF-spine",
+      "spine": "DEF-spine.001",
+      "chest": "DEF-spine.003",
+      "head": "DEF-spine.006",
+      "upperarm.l": "DEF-upper_arm.L",
+      "lowerarm.l": "DEF-forearm.L",
+      "wrist.l": "DEF-forearm.L.001",
+      "hand.l": "DEF-hand.L",
+      "upperarm.r": "DEF-upper_arm.R",
+      "lowerarm.r": "DEF-forearm.R",
+      "wrist.r": "DEF-forearm.R.001",
+      "hand.r": "DEF-hand.R",
+      "upperleg.l": "DEF-thigh.L",
+      "lowerleg.l": "DEF-shin.L",
+      "foot.l": "DEF-foot.L",
+      "toes.l": "DEF-toe.L",
+      "upperleg.r": "DEF-thigh.R",
+      "lowerleg.r": "DEF-shin.R",
+      "foot.r": "DEF-foot.R",
+      "toes.r": "DEF-toe.R"
+    }
   },
   "sky": {
     "_comment": "Mid-morning, high summer, clear. Taken from the key art board rather than invented: a warm low-contrast sky over saturated grass is most of what makes the reference read as inviting rather than as a tech demo.",
