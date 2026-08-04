@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Run every smoke test, HEADLESS, and assert each one's own success line.
+#
+#   tools/run_smokes.sh [godot-binary]
+#
+# TWO mistakes are baked out of this script, both of which cost a full session.
+#
+# 1. RUN THEM HEADLESS. Every smoke's docstring says `godot --headless`, and
+#    running them under xvfb with `--rendering-driver opengl3` instead makes
+#    them render all ~18,000 scattered props for every one of the 10,800
+#    physics frames smoke_traversal simulates. Measured: traversal took over
+#    2400s under rendering and did not finish its second leg; headless it
+#    passes in 191s. All seven together take about 200s. Nothing in these tests
+#    looks at a pixel — the surveys do that, and they are a separate tool.
+#
+# 2. ASSERT THE POSITIVE. Grepping the output for "FAIL" and finding none is
+#    NOT a pass: a test killed by `timeout` prints nothing at all and looks
+#    identical to a clean run. Four smokes were reported green on exactly that
+#    reasoning while they were in fact timing out. So this checks the exit code
+#    AND the test's own "OK" line, and it is an error for either to be missing.
+set -uo pipefail
+
+GODOT="${1:-${GODOT:-/opt/godot/godot}}"
+cd "$(dirname "$0")/.."
+
+SMOKES=(smoke_art smoke_playground smoke_input smoke_traversal smoke_combat smoke_catching smoke_aggression)
+failed=0
+
+for s in "${SMOKES[@]}"; do
+	start=$(date +%s)
+	out="$("$GODOT" --headless --path . --script "tests/$s.gd" 2>&1)"
+	code=$?
+	elapsed=$(( $(date +%s) - start ))
+	# Each smoke prints its own sentence; they do not share one format.
+	line="$(printf '%s' "$out" | grep -E ': OK|smoke: OK' | head -1)"
+	if [[ $code -ne 0 || -z "$line" ]]; then
+		failed=$((failed + 1))
+		printf '  FAIL  %-20s exit=%d %ds\n' "$s" "$code" "$elapsed"
+		printf '%s' "$out" | grep -E 'FAIL|SCRIPT ERROR' | head -5 | sed 's/^/         /'
+	else
+		printf '  ok    %-20s %3ds  %s\n' "$s" "$elapsed" "$line"
+	fi
+done
+
+echo
+if [[ $failed -gt 0 ]]; then
+	echo "$failed of ${#SMOKES[@]} smokes failed"
+	exit 1
+fi
+echo "${#SMOKES[@]} smokes passed"
