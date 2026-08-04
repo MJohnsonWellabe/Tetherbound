@@ -317,6 +317,135 @@
       "collides": false,
       "casts_shadow": false,
       "_comment_clear": "Inherited from the host layer, minus this skirt's widest ring. A skirt cannot reach the spawn pad unless its host tree does, so this is implied rather than independent — but 'implied' is exactly what test_every_layer_keeps_the_spawn_clear_at_all refuses to accept, and it is right to. An invariant that holds because of a relationship between two config blocks is one config edit away from not holding."
+    },
+    "fence": {
+      "_comment": "A short run of wooden fence beside the path, north of the spawn. The first BUILT thing in the world.",
+      "_comment_why": "The critic measured 02-valley-floor at 0.7% desaturated pixels against 18-30% across the Palworld references: 'no stone, no wood, no built thing'. Wood and worked timber are a hue and a texture family the meadow owns none of, and a fence says somebody lives here in a way no amount of grass can.",
+      "_comment_short": "Deliberately SHORT — nine or ten panels. A fence that runs the length of the path is a wall around the world; a fence that stops is a boundary somebody drew for a reason, and the eye reads the difference immediately.",
+      "_comment_align": "`route_align` turns off the random yaw. A fence panel is a flat 2m board and a random yaw turns a fence into scattered planks. `route_spacing` is the panel's measured width, so they meet end to end rather than overlapping or leaving gaps.",
+      "models": [
+        "res://assets/buildings/Prop_WoodenFence_Single.gltf",
+        "res://assets/buildings/Prop_WoodenFence_Extension1.gltf",
+        "res://assets/buildings/Prop_WoodenFence_Extension2.gltf"
+      ],
+      "route": [
+        [
+          -14.0,
+          34.0
+        ],
+        [
+          -30.0,
+          48.0
+        ],
+        [
+          -46.0,
+          58.0
+        ],
+        [
+          -62.0,
+          64.0
+        ]
+      ],
+      "route_spacing": 2.02,
+      "route_width": 0.0,
+      "route_per_step": 1,
+      "route_align": true,
+      "max_slope_deg": 22.0,
+      "scale_min": 1.0,
+      "scale_max": 1.0,
+      "base_scale": 1.0,
+      "clear_radius": 12.0,
+      "cleared_by_clearings": false,
+      "collides": false,
+      "casts_shadow": true
+    },
+    "landmarks": {
+      "_comment": "Individually placed objects, exactly where somebody put them. The only layer in this file with no randomness in it whatsoever.",
+      "_comment_why": "A landmark is not a density and it is not a line — it is one object, in one place, chosen because that is where it should be. A wagon that lands somewhere different each seed is not a landmark, it is litter. This is the answer to the critic's 'there is nothing to look at': a small abandoned camp where the path turns toward the pond, and a second marker up on the eastern shoulder so there is something to walk toward from a distance.",
+      "_comment_height": "Only the HEIGHT is computed, from the terrain. Position, facing and size are all stated, so retuning the terrain moves a landmark up and down but never sideways.",
+      "_comment_scale": "Measured in-engine, in metres: the wagon is 4.0m long, a crate 1.05m, a fence panel 2.05m. They are real-world scale already, so `scale` here is variety and not correction.",
+      "models": [
+        "res://assets/buildings/Prop_Wagon.gltf"
+      ],
+      "at": [
+        {
+          "model": "res://assets/buildings/Prop_Wagon.gltf",
+          "x": -72.0,
+          "z": 70.0,
+          "yaw_deg": 34.0,
+          "scale": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "x": -68.6,
+          "z": 73.4,
+          "yaw_deg": 12.0,
+          "scale": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "x": -67.7,
+          "z": 74.3,
+          "yaw_deg": -40.0,
+          "scale": 0.92,
+          "lift": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "x": -70.2,
+          "z": 75.1,
+          "yaw_deg": 68.0,
+          "scale": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "x": -76.5,
+          "z": 66.0,
+          "yaw_deg": 118.0,
+          "scale": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Brick1.gltf",
+          "x": -70.9,
+          "z": 68.2,
+          "yaw_deg": 20.0,
+          "scale": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Brick3.gltf",
+          "x": -70.1,
+          "z": 67.6,
+          "yaw_deg": -70.0,
+          "scale": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Chimney.gltf",
+          "x": 112.0,
+          "z": 78.0,
+          "yaw_deg": -24.0,
+          "scale": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Support.gltf",
+          "x": 114.6,
+          "z": 80.4,
+          "yaw_deg": 52.0,
+          "scale": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "x": 109.6,
+          "z": 80.9,
+          "yaw_deg": 8.0,
+          "scale": 1.0
+        }
+      ],
+      "base_scale": 1.0,
+      "collides": false,
+      "casts_shadow": true,
+      "cleared_by_clearings": false,
+      "_comment_clear": "Enforced by `authored_for` as a real guard, not as a value that quietly does nothing. None of the scatter's other questions mean anything for a landmark — it is on a slope because somebody chose that slope — but the spawn pad still has to stay clear, and 'the coordinates are typed by hand so it will be fine' is exactly the assumption that puts a wagon on the player's head one refactor later.",
+      "clear_radius": 20.0
     }
   },
   "_comment_retint": "Mostly EMPTY now, and that is the point. The Kenney kit shipped a bright teal-green palette that had to be remapped wholesale; this pack ships real textures, and `albedo_color` multiplies them, so an unmapped material passes through as authored. Only the deliberate per-layer modulates above apply. A strong colour here would come out as shadow, not as hue.",

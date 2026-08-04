@@ -159,9 +159,12 @@ static func all_placements(field: RefCounted, world_size: float, base_seed: int)
 		if name.begins_with("_") or layer_cfg.has("skirt_of"):
 			continue
 		var layer: Dictionary = layers[name]
-		built[name] = route_for(layer, field, world_size, base_seed + offset * 7919) \
-			if layer.has("route") \
-			else placements_for(layer, field, world_size, base_seed + offset * 7919)
+		if layer.has("at"):
+			built[name] = authored_for(layer, field)
+		elif layer.has("route"):
+			built[name] = route_for(layer, field, world_size, base_seed + offset * 7919)
+		else:
+			built[name] = placements_for(layer, field, world_size, base_seed + offset * 7919)
 		offset += 1
 	for name: String in layers.keys():
 		if name.begins_with("_") or not (layers[name] as Dictionary).has("skirt_of"):
@@ -213,6 +216,7 @@ static func route_for(
 	var spacing := float(layer.get("route_spacing", 1.6))
 	var width := float(layer.get("route_width", 1.5))
 	var per_step := int(layer.get("route_per_step", 2))
+	var align := bool(layer.get("route_align", false))
 
 	# Duplicated ends give Catmull-Rom the control points it needs at the
 	# extremities without inventing a curve beyond them.
@@ -239,7 +243,55 @@ static func route_for(
 				# Across the path, not along it: the line is authored and only
 				# the wander off it is random.
 				var spot := centre + across * rng.randf_range(-width, width)
+				var before := out.size()
 				_consider(out, layer, field, models, spot, half, rng)
+				# A fence panel is a flat 2m board, and a random yaw turns a
+				# fence into scattered planks. Stones want the random yaw and
+				# panels want the path's heading, so it is a per-layer choice
+				# rather than a rule about routes.
+				if align and out.size() > before:
+					var heading := ahead - centre
+					if heading != Vector2.ZERO:
+						out[out.size() - 1]["yaw"] = atan2(heading.x, heading.y)
+	return out
+
+
+## Individually placed objects, exactly where somebody put them.
+##
+## The third and last layer type, and the only one with no randomness in it at
+## all. A landmark is not a density and it is not a line — it is one object, in
+## one place, chosen because that is where it should be. A wagon that lands
+## somewhere different each seed is not a landmark; it is litter.
+##
+## Only the HEIGHT is computed, from the field, so an authored landmark sits on
+## the ground rather than needing its elevation typed in and retyped every time
+## the terrain moves. Everything else — position, facing, size — is stated.
+static func authored_for(layer: Dictionary, field: RefCounted) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var base := float(layer.get("base_scale", 1.0))
+	# The spawn clearance is enforced here rather than through `allowed()`,
+	# because none of `allowed()`'s other questions mean anything for an authored
+	# object: it is on a slope because somebody chose that slope. But the spawn
+	# pad still has to stay clear, and "the coordinates are typed by hand so it
+	# will be fine" is precisely the assumption that puts a wagon on top of the
+	# player one refactor later.
+	var clear := float(layer.get("clear_radius", 0.0))
+	for entry: Variant in layer.get("at", []):
+		var item: Dictionary = entry
+		var spot := Vector2(float(item.get("x", 0.0)), float(item.get("z", 0.0)))
+		if spot.length() < clear:
+			push_warning("authored landmark '%s' is inside the spawn clearing" % item.get("model", "?"))
+			continue
+		var height: float = field.height_at(spot.x, spot.y)
+		if is_nan(height):
+			push_warning("authored landmark '%s' is off the terrain" % item.get("model", "?"))
+			continue
+		out.append({
+			"model": str(item.get("model", "")),
+			"position": Vector3(spot.x, height + float(item.get("lift", 0.0)), spot.y),
+			"yaw": deg_to_rad(float(item.get("yaw_deg", 0.0))),
+			"scale": float(item.get("scale", 1.0)) * base,
+		})
 	return out
 
 
