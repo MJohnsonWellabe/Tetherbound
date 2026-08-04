@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/screen_stack.tscn" id="13_screens"]
 [ext_resource type="PackedScene" path="res://scenes/ui/build_palette.tscn" id="14_palette"]
 [ext_resource type="Script" path="res://scripts/pals/release_prompt.gd" id="15_release"]
+[ext_resource type="Script" path="res://scripts/world/save_director.gd" id="16_save"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -40,6 +41,22 @@ fog_sky_affect = 0.0
 
 [node name="MeadowsPlayground" type="Node3D"]
 script = ExtResource("4_world")
+
+; The save lifecycle: restore slot 0 at boot, autosave, and write on the window
+; close request. SaveManager has been able to do all of this since M4 and nothing
+; in the shipping game ever asked it to, so closing the window lost the session.
+;
+; FIRST CHILD on purpose. `_ready` runs in child order, and this node's boot
+; waits a process frame for the SaveManager autoload to attach (see D14 — under
+; `--script` it is not there yet). Being first means it resumes from that frame
+; before EncounterDirector does, so a restored party is already in place when the
+; director decides whether to grant a starter pal. Later in the list and a
+; returning player is briefly granted a sixth creature that the load then throws
+; away.
+[node name="SaveDirector" type="Node" parent="."]
+script = ExtResource("16_save")
+combat_path = NodePath("../CombatManager")
+build_path = NodePath("../BuildMode")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_1")

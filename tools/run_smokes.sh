@@ -28,10 +28,40 @@ cd "$(dirname "$0")/.."
 # a smoke file is not adding a smoke; the list is the runner, and a file missing
 # from it fails in exactly the way this script's header warns about — silently,
 # and looking identical to a pass.
-SMOKES=(smoke_art smoke_playground smoke_input smoke_traversal smoke_combat smoke_catching smoke_aggression smoke_build)
+SMOKES=(smoke_art smoke_playground smoke_input smoke_traversal smoke_combat smoke_catching smoke_aggression smoke_build smoke_persistence)
 failed=0
 
+# EVERY SMOKE STARTS FROM A NEW INSTALL.
+#
+# This was free until `scripts/world/save_director.gd` existed, because nothing
+# in the shipping game ever loaded a save and a leftover `user://save_0.json`
+# could not reach a running world. The game now restores slot 0 at boot and
+# autosaves when a fight ends or a piece is placed, which means smoke_combat
+# leaves a save behind and smoke_catching then boots into it — a party with a
+# caught rabbit in it, at whatever HP the previous smoke left, deciding the
+# outcome of a fight the next smoke thinks it set up itself.
+#
+# Nothing failed when that was measured. That is not reassuring: it makes the
+# suite's result depend on the ORDER it ran in and on what the last run left on
+# disk, which is precisely the "looks identical to a pass" failure this script's
+# header exists to prevent. `smoke_build` already wiped the save for its own
+# sake; this does it for all of them.
+#
+# `user://` is not reachable from bash, so it is reconstructed here. If the guess
+# is wrong the wipe silently stops wiping — the exact dead-cleanup-step bug
+# smoke_build's SAVE_PATH comment records — so a missing directory is reported
+# rather than shrugged at.
+if [[ -n "${APPDATA:-}" ]]; then
+	USER_DATA="$APPDATA/Godot/app_userdata/Tetherbound"
+else
+	USER_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/godot/app_userdata/Tetherbound"
+fi
+if [[ ! -d "$USER_DATA" ]]; then
+	echo "  note  no user data dir at $USER_DATA; smokes will run against whatever is there"
+fi
+
 for s in "${SMOKES[@]}"; do
+	rm -f "$USER_DATA"/save_*.json
 	start=$(date +%s)
 	out="$("$GODOT" --headless --path . --script "tests/$s.gd" 2>&1)"
 	code=$?

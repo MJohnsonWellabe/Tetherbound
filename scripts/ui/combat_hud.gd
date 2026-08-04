@@ -182,12 +182,39 @@ func _draw_actions() -> void:
 		]
 		return
 
-	_actions.text = "[center]%s    %s    %s    %s[/center]" % [
+	# Five verbs, because §14 specifies five commands and Switch was the missing
+	# one. It was missing from the HUD for the same reason it was missing from
+	# the game — the buttons were bound and nothing read them — so a row that
+	# still showed four would now be hiding a command that works.
+	#
+	# The cooldown is shown as a number rather than by dimming alone. A greyed
+	# verb answers "can I?" and this one also has to answer "when?", because a
+	# switch you are waiting on is a decision you are making right now.
+	_actions.text = "[center]%s    %s    %s    %s    %s[/center]" % [
 		_verb("A", "Quick", bool(_manager.call("quick_ready"))),
 		_verb("X", "Charged", bool(_manager.call("charged_ready"))),
 		_verb("F", "Throw", orbs > 0) if orbs > 0 else _verb("F", "No orbs", false),
+		_switch_verb(),
 		_verb("B", "Run", true),
 	]
+
+
+## The Switch verb, with its cooldown when it is running.
+##
+## `switch_ready()` and `switch_cooldown_left()` mirror `quick_ready()`, so this
+## asks the manager the same way every other verb does rather than reaching into
+## the party to work out whether a switch is possible.
+func _switch_verb() -> String:
+	if not _manager.has_method("switch_ready"):
+		return _verb("LB/RB", "Switch", false)
+	var ready := bool(_manager.call("switch_ready"))
+	if ready:
+		return _verb("LB/RB", "Switch", true)
+	var left := float(_manager.call("switch_cooldown_left"))
+	if left <= 0.0:
+		# Not on cooldown and still not ready: one pal, or the rest are down.
+		return _verb("LB/RB", "Switch", false)
+	return _verb("LB/RB", "Switch %.1fs" % left, false)
 
 
 ## One verb in the prompt row: the button, then what it does.
