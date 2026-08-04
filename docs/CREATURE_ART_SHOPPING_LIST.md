@@ -1,6 +1,7 @@
 # Creature and character art — what to buy, and why free art will not do it
 
 **Status:** for the owner to decide. Nothing here has been bought.
+**Budget:** **$50 total for creatures**, set by the owner. Rewritten against it.
 **Written:** August 2026. Prices and licences checked on that date and will rot.
 
 ## Why this document exists
@@ -68,88 +69,98 @@ FBX natively including animation, which is already proven — the current
 creatures are FBX. A pack that is only a Unity `.unitypackage` of prefabs is
 hours of unpicking.
 
-## Candidates
+## The budget, and what it changes
 
-Ranked by how directly each closes the gap above.
+The owner set it after this document's first draft:
 
-### 1. Meshtint — buy the roster one creature at a time ★ recommended
+> *"I'm not going to spend over $100 on assets. find creatures in the $10-$50
+> range. total I'll spend $50 on creatures but I'm also going to try to find more
+> free ones."*
 
-- **Price:** roughly $10–20 per creature; themed packs of 9–10 around $109–130.
-- **Format:** FBX + PNG, and separately a Unity package. FBX is the one we need.
-- **Style:** stylised, textured, rigged and animated, with idle/move/attack/die.
-- **Why it fits:** this is the only option on the list that lets you buy
-  **exactly the six silhouettes `GAME_DESIGN.md` §26 asks for, from one studio**,
-  instead of buying 40 creatures to get 6 usable ones. Cohesion is the specific
-  thing the critic keeps failing us on, and one studio's hand across six models
-  buys it directly.
-- **Cost to fix the roster:** roughly **$60–120** for six creatures.
-- **Risk:** slightly simpler and cuter than Palworld's register — closer to the
-  cartoon end. May land nearer the key art board than the Palworld bar.
+**$50, total, for creatures.** That is a smaller number than the first draft was
+written against, and it does not just scale the recommendation down — it changes
+which recommendation is right.
+
+The original argument was *buy the whole roster from one studio*, because
+cohesion is the complaint that survived two blind reviews and six creatures from
+six artists fail the same review that six from one artist pass. At $60–120 that
+was affordable. At $50 it is not: six creatures at $10–20 each is $60 at the
+absolute floor and realistically $90.
+
+So the strategy inverts. **Do not spread $50 across six mediocre buys.** Buy
+**three** creatures from one studio at $10–20 each — the party cap is five and
+the vertical slice needs far fewer than that — and fill the rest of the roster
+from the free packs already in the ledger. Three good cohesive creatures beside
+three decent free ones is a better picture than six uniformly cheap ones, and it
+leaves the free-vs-paid comparison visible in the same frame, which is exactly
+the evidence needed to decide whether to spend more later.
+
+## Candidates, re-ranked against $50
+
+### 1. Meshtint — three creatures, individually ★ recommended
+
+- **Price:** roughly **$10–20 each**; **three for $30–50**, inside the cap.
+- **Format:** FBX + PNG alongside the Unity package. FBX is the one we need, and
+  Godot 4.7 imports FBX with animation natively — already proven, the current
+  creatures are FBX.
+- **Style:** stylised, textured, rigged, with idle/move/attack/die — which is the
+  minimum `smoke_art` enforces and the thing most free packs fail.
+- **Why it survives the budget cut:** it is the only option that sells creatures
+  **one at a time**. Every other candidate is a bundle, and a bundle at any price
+  above $50 is simply out regardless of how good it is.
+- **Which three:** pick from the `GAME_DESIGN.md` §26 silhouette row, choosing on
+  the critic's own criteria rather than on taste — hue-opposed to a green meadow,
+  readable at 40px, and a silhouette that reads as a combatant.
 - [meshtint.com](https://www.meshtint.com/) · also on the Unity Asset Store
 
-### 2. N-hance Studio — Stylized Fantasy Creatures Bundle
+### 2. Everything else on the original list — out on price alone
 
-- **Price:** **$149.99** (Unity Asset Store, v2.0.1, 580 MB).
-- **Style:** the closest match on this list to Palworld's actual register —
-  stylised but textured, with hue-shift colour customisation, which would let one
-  mesh serve several species without looking recoloured.
-- **Risk:** listed as **URP only**, which means the *materials* are Unity-specific
-  even though the meshes are not. Budget time for rebuilding materials in Godot,
-  and confirm FBX is in the package before buying.
-- **Note:** this is the pack whose pirated copy appeared on `desirefx.me`. It is
-  buyable from the actual publisher and that is the only way it should enter this
-  project.
-- [Unity Asset Store](https://marketplace.unity.com/packages/3d/characters/animals/stylized-fantasy-creatures-bundle-184409)
+Recorded so none of it gets re-priced later.
 
-### 3. PROTOFACTOR — Heroic Fantasy Creatures Full Pack Vol 1
+| Pack | Price | Verdict against a $50 cap |
+|---|---|---|
+| N-hance *Stylized Fantasy Creatures Bundle* | $149.99 | **3× the budget.** Was second choice, and is the closest match to Palworld's register on this list. Also URP-only materials, so it costs rebuild time on top of money. |
+| PROTOFACTOR *Heroic Fantasy Creatures Vol 1* | $349.99 | **7× the budget**, and was already not recommended — semi-realistic, past the target rather than short of it. |
+| Synty POLYGON | $349.99 / $30 per month | **7× the budget**, and would buy the exact flat-shaded untextured look the critic has now rejected twice. The worst outcome available at any price. |
+| CGTrader *Animalz — Cartoon 3D Animals* | $49.00 | **Inside the budget and still a no.** Ships `.blend` only — 16 files, 1.56 GB, no FBX or glTF — and this environment has neither Blender nor `bpy`, so the files cannot be opened or converted. Its advertised "50 poses" are rig poses, not baked clips, so it would not solve the animation problem either. Paying $49 for unopenable files is the one mistake this table exists to prevent. |
 
-- **Price:** **$349.99** (Unity Asset Store, 2.8 GB).
-- **Style:** semi-realistic fantasy monsters, heavily animated.
-- **Verdict:** likely **past** the target rather than short of it. `GAME_DESIGN.md`
-  §25 asks for stylised realism between Valheim and Palworld, and this sits on the
-  far realistic side. It would also fight the Kenney/Quaternius world art badly.
-  Listed for completeness, not recommended.
-- [Unity Asset Store](https://assetstore.unity.com/packages/3d/characters/creatures/heroic-fantasy-creatures-full-pack-volume-1-5730)
+## What free art has already covered
 
-### 4. Synty POLYGON — do not buy for this
+Since the first draft, three of the four things this document said would need
+buying turned out not to.
 
-- **Price:** $349.99 per pack, or $30/month for the library.
-- **Why not:** Synty is flat-shaded untextured low-poly. That is **precisely the
-  art language the critic has now rejected twice.** It is excellent work and it is
-  the same category of thing we already have for free from Quaternius and Kenney.
-  Spending $350 to arrive at the same review would be the worst outcome available.
-- Recorded here so the question does not get asked again.
+- **The trainer.** Styloo's "The Company" knight is CC0 and now in the build —
+  2K textures, a real silhouette, and the critic's "numerically, mostly a
+  floating head" complaint answered for free. It shipped no animation at all,
+  which is why `animation_retarget.gd` exists (`docs/decisions/D11`).
+- **The creatures, partly.** The owner supplied `Animals.glb` and the roster is
+  now designed animals rather than a frog standing in for a rabbit. Their five
+  quadrupeds share one bone-naming convention, so the same retargeter animates
+  all of them from one map.
+- **Landmarks.** Quaternius Medieval Village MegaKit, CC0, 170 models free.
+- **Water.** Needed no asset at all — one disc and a shader.
 
-## The trainer is a separate and cheaper problem
-
-The trainer does **not** need buying. **Quaternius Universal Base Characters +
-Modular Character Outfits (Fantasy)** are CC0, free, glTF, humanoid-rigged and
-retargetable, and give 12 outfits over a proper base body. That addresses the
-proportion and material complaints the critic raised about the trainer
-(measured 1:2.2 head-to-body against the key art's 1:6.5) at no cost.
-
-Landmarks are likewise free: **Quaternius Medieval Village MegaKit**, CC0, 170
-models in the free tier, which is the answer to *"nothing in the scatter system
-produces a landmark"* and to Settlements being one of five promised key-art
-features that the build delivers zero of.
-
-**So the paid decision is only about creatures.** Everything else on the
-critic's "needs art that is not in the build" list has a free answer.
+**So the paid question is now narrower than it was: three creatures, $50.**
+Everything else on the critic's "needs art that is not in the build" list has
+been answered without spending anything.
 
 ## Recommendation
 
-Buy **six Meshtint creatures, from one studio, matched to the `GAME_DESIGN.md`
-§26 silhouette row**, for roughly $60–120. It is the cheapest option, it is the
-only one that buys cohesion directly, and cohesion is the complaint that has now
-survived two reviews.
+Buy **three Meshtint creatures for $30–50**, chosen from the §26 silhouette row
+on measured criteria, and keep the free roster for the rest.
 
-If a round of blind review after that still says the creatures are short, the
-next step is N-hance at $149.99, and at that point the honest question is
-whether the answer is a marketplace pack at all rather than commissioned art.
+If a blind round after that still leads with the creatures, the honest question
+is no longer which pack to buy — it is whether a marketplace pack closes this at
+all, or whether the answer is commissioned art. `docs/decisions/D10` is where
+that decision belongs.
 
 ## What not to do
 
 - Do not buy Synty for creatures. See above.
+- Do not buy a bundle to get three creatures. Every bundle on this list costs
+  more than the whole budget, and buying one to use a fifth of it is how a $50
+  cap turns into $150.
+- Do not buy anything that ships `.blend` only. There is no Blender here.
 - Do not download from `desirefx.me` or similar. It redistributes commercial
   packs without licence; the pack it was offering retails for $150.
 - Do not use `CC BY-NC` models (e.g. the Sketchfab Desert Dragon). NonCommercial

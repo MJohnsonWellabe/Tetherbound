@@ -17,6 +17,7 @@ extends Node3D
 
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const WATER_CONFIG := "res://data/config/water.json"
 
 ## Props are sunk very slightly so their bases never float over a slope. The
 ## terrain under a prop is sampled at a single point, but the prop has width.
@@ -41,6 +42,7 @@ func build(world_size: float) -> void:
 		return
 	var field: RefCounted = HEIGHTFIELD.new()
 	var by_layer: Dictionary = RULES.all_placements(field, world_size, int(cfg.get("seed", 1)))
+	_drown(by_layer, field)
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should
 	# share one MultiMesh, or the draw-call saving is thrown away by the
@@ -57,6 +59,73 @@ func build(world_size: float) -> void:
 	for model: String in by_model.keys():
 		_build_batch(model, by_model[model])
 	_warn_about_shared_models(by_layer)
+
+
+## Remove anything the pond would be standing in.
+##
+## Applied AFTER placement rather than as a scatter rule, and on purpose: the
+## water's surface height is not a number anyone authored, it is the terrain's
+## own height at the pond's centre plus a fill depth. A rule in
+## `scatter_rules.gd` would have to sample the heightfield at a completely
+## different point from the one it is judging, which is not what that file's
+## `allowed(height, slope, distance)` signature means and not a shape worth
+## bending it into for one pond.
+##
+## The threshold is the water level, not the shoreline. Grass an inch above the
+## surface is a reed bed and is welcome; grass an inch below it is a bush
+## growing underwater, which is the artefact this exists to prevent.
+func _drown(by_layer: Dictionary, field: RefCounted) -> void:
+	var bodies: Array = _water_bodies(field)
+	if bodies.is_empty():
+		return
+	var removed := 0
+	for layer_name: String in by_layer.keys():
+		var kept: Array = []
+		for entry: Variant in (by_layer[layer_name] as Array):
+			var placement: Dictionary = entry
+			var at: Vector3 = placement["position"]
+			var drowned := false
+			for body: Dictionary in bodies:
+				var centre: Vector2 = body["centre"]
+				if Vector2(at.x, at.z).distance_to(centre) <= float(body["radius"]) \
+						and at.y < float(body["level"]):
+					drowned = true
+					break
+			if drowned:
+				removed += 1
+			else:
+				kept.append(placement)
+		by_layer[layer_name] = kept
+	if removed > 0:
+		print("[scatter] %d props removed from open water" % removed)
+
+
+## Water bodies with their surface heights resolved, read from the same config
+## the pond itself is built from.
+##
+## The height comes from the HEIGHTFIELD, which is the recipe the terrain was
+## baked from — the same answer `playground_world.ground_height_at` gets from the
+## baked data, arrived at independently. That is deliberate here and would be a
+## mistake in a test: a check that used the same call as the thing it checks
+## would be testing the call.
+func _water_bodies(field: RefCounted) -> Array:
+	var file := FileAccess.open(WATER_CONFIG, FileAccess.READ)
+	if file == null:
+		return []
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return []
+	var out: Array = []
+	for entry: Variant in (parsed as Dictionary).get("bodies", []):
+		var body: Dictionary = entry
+		var at: Array = body.get("centre", [0.0, 0.0])
+		var centre := Vector2(float(at[0]), float(at[1]))
+		out.append({
+			"centre": centre,
+			"radius": float(body.get("radius", 0.0)),
+			"level": float(field.call("height_at", centre.x, centre.y)) + float(body.get("fill", 1.2)),
+		})
+	return out
 
 
 ## A model used by two layers cannot carry two different tints.
