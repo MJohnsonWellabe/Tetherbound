@@ -227,6 +227,16 @@ func on_popped() -> void:
 
 # --------------------------------------------------------------------- drawing
 
+## The name as it currently stands in the buffer.
+##
+## Read by `tools/play_session.gd`, which has to be able to show a blind judge
+## that pressing buttons actually put characters somewhere — the alternative is a
+## transcript that proves the screen opened and proves nothing about whether it
+## works.
+func typed_name() -> String:
+	return _typed
+
+
 func screen_title() -> String:
 	if _member == null:
 		return "Rename"

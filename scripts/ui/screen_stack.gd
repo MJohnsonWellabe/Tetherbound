@@ -123,6 +123,7 @@ func push(screen: Control) -> void:
 	if _stack.size() == 1:
 		_set_gameplay_active(false)
 		opened.emit()
+	_mark_stacking()
 
 
 ## Take the top screen off. Closes the stack when it was the last one.
@@ -142,6 +143,7 @@ func pop() -> void:
 	if _stack.is_empty():
 		_set_gameplay_active(true)
 		closed.emit()
+	_mark_stacking()
 
 
 ## Everything off, in order, so each screen still gets its `on_popped`. Used when
@@ -170,6 +172,16 @@ func depth() -> int:
 ## appear to throw the six pals away and then bring them back, which is precisely
 ## the anxiety that screen exists to avoid. A dimmed list you can still see reads
 ## as "this is about those", which is true.
+## Tell each screen whether something is on top of it, so it can deepen its own
+## scrim. Called after every push and pop, because the answer changes for the
+## screen underneath as well as for the one arriving.
+func _mark_stacking() -> void:
+	for i in _stack.size():
+		var screen: Control = _stack[i]
+		if screen != null and screen.has_method("set_stacked"):
+			screen.call("set_stacked", i > 0)
+
+
 func _mark_active() -> void:
 	for i in _stack.size():
 		var screen := _stack[i]

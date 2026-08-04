@@ -139,12 +139,42 @@ func _spawn_creatures() -> void:
 	_ally_body.name = "AllyPal"
 	_ally_body.set_script(BODY_SCRIPT)
 	get_parent().add_child(_ally_body)
-	_ally_body.call("setup", STARTER_SPECIES)
 	_ally_body.visible = false
 
-	_ally = SPECIES.spawn(STARTER_SPECIES)
+	# The deployed pal comes FROM THE PARTY.
+	#
+	# It used to be a separately-spawned starter that the party never knew about,
+	# which is how a fight could begin with `party size: 0` — a blind reviewer
+	# spotted exactly that in the transcript and asked, reasonably, what was
+	# fighting on the player's behalf when they owned nothing. The seam existed
+	# because M3 needed something to fight with before a party existed; it should
+	# have closed the moment one did.
+	#
+	# The starter is granted INTO the party rather than held beside it, so there
+	# is exactly one answer to "which pals does the player have" and switching in
+	# a fight is switching the same list the menu shows.
+	if _party != null and int(_party.call("size")) == 0:
+		var starter: RefCounted = SPECIES.spawn(STARTER_SPECIES)
+		if starter == null:
+			push_error("starter species '%s' is missing from species.json" % STARTER_SPECIES)
+		elif not bool(_party.call("add", starter)):
+			push_error("could not grant the starter: %s" % _party.call("last_refusal"))
+	_ally = _active_pal()
 	if _ally == null:
-		push_error("starter species '%s' is missing from species.json" % STARTER_SPECIES)
+		push_error("no pal to deploy: the party is empty and the starter could not be granted")
+	else:
+		# The BODY is built from whoever is deployed, not from a hardcoded
+		# species. Skipping this is how you get a party that says one creature is
+		# out and a fight that shows a different one.
+		_ally_body.call("setup", _ally.species_id)
+
+
+## Whichever pal the party currently has deployed.
+##
+## Read through the party rather than cached, so `set_active()` from the menu and
+## the in-fight switch cannot disagree about who is out.
+func _active_pal() -> RefCounted:
+	return _party.call("active") if _party != null else null
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:

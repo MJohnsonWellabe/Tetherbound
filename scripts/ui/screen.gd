@@ -32,6 +32,8 @@ const STYLE := preload("res://scripts/ui/ui_style.gd")
 ## the panel keeps a proportional-looking margin at any size.
 const PANEL_INSET := Vector2(180.0, 96.0)
 
+var _scrim: ColorRect = null
+
 ## Screens under the top one are dimmed rather than hidden. See
 ## `screen_stack._mark_active()` for why.
 const INACTIVE_TINT := Color(0.55, 0.55, 0.55, 1.0)
@@ -73,6 +75,7 @@ func _build_chrome() -> void:
 	var scrim := ColorRect.new()
 	scrim.name = "Scrim"
 	scrim.color = STYLE.SCRIM
+	_scrim = scrim
 	scrim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	scrim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(scrim)
@@ -270,3 +273,14 @@ func set_screen_active(active: bool) -> void:
 		return
 	_screen_active = active
 	modulate = Color.WHITE if active else INACTIVE_TINT
+
+
+## Deepen the scrim when this screen is stacked on another one.
+##
+## Called by the stack on push and pop. A screen at the bottom dims the WORLD,
+## which should stay visible; a screen above another dims a SCREEN, which should
+## not — otherwise two panels, two titles and two hint rows are all legible at
+## once and a player cannot tell which is live.
+func set_stacked(stacked: bool) -> void:
+	if _scrim != null:
+		_scrim.color = STYLE.SCRIM_STACKED if stacked else STYLE.SCRIM

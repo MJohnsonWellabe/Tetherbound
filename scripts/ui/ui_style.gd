@@ -89,9 +89,24 @@ const VERB_DIMMED := "8b9184"
 ## Menu chrome. Dark and neutral: a screen sits over the meadow, over a cliff and
 ## over a fight, and a panel tinted toward any of the world palettes reads as
 ## belonging to one of them.
-const PANEL_BG := Color(0.06, 0.07, 0.06, 0.95)
+## OPAQUE, and it has to stay that way.
+##
+## At 0.95 the five percent that showed through was enough for a blind reviewer
+## to read `Bramblit`, `Lv 1` and `Steady 124/124 HP` through the rename panel —
+## and worse, both screens put their hint row at the same height, so the footers
+## superimposed and it was impossible to tell which buttons were live. A stacked
+## screen has to be able to cover the one beneath it; the SCRIM is what lets the
+## world show through, not the panel.
+const PANEL_BG := Color(0.06, 0.07, 0.06, 1.0)
 const PANEL_EDGE := Color(0.60, 0.65, 0.54, 0.32)
 const SCRIM := Color(0.0, 0.0, 0.0, 0.58)
+
+## The scrim a screen uses when it is NOT the bottom of the stack.
+##
+## Heavier, because what is behind a second screen is not the world — it is
+## another screen, with its own panel, title and footer, and 42% of that is
+## still perfectly readable.
+const SCRIM_STACKED := Color(0.0, 0.0, 0.0, 0.86)
 
 ## A row you are not on, a row you are on, and a row with nothing in it.
 ##

@@ -129,9 +129,15 @@ func _session_party() -> void:
 		# The refusal: an all-whitespace name must not leave a nameless pal.
 		note("rename to '   ' accepted: %s" % probe(to_name, "rename", ["   "]))
 		note("name after the refused rename: %s" % probe(to_name, "display"))
-		note("other members are still unnamed: %s, %s" % [
-			probe(_member(party, 1), "display"), probe(_member(party, 2), "display")
-		])
+		# EVERY other member, not a sample. The first version printed two of the
+		# three distinct species in the party, and a blind reviewer noticed the
+		# omission — "a summary line that does not match the party it just
+		# described is a line to fix before it is trusted on something less
+		# checkable."
+		var others: Array[String] = []
+		for i in range(1, int(probe(party, "size"))):
+			others.append(str(probe(_member(party, i), "display")))
+		note("every other member, still unnamed: %s" % ", ".join(others))
 
 	note("--- bullet: levels, HP/ATK/DEF, trait, nickname, appraisal ---")
 	var first: Object = _member(party, 0)
