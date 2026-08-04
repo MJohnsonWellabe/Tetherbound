@@ -1,6 +1,6 @@
 {
   "_comment": "What grows in the Meadows playground, and where. ALL of it is TUNABLE. The expected feedback is 'too sparse', 'too busy', 'the trees are on the cliffs' — every one of those has to be answerable here rather than in a scene.",
-  "_comment_authored": "This dresses the M1 MOVEMENT PLAYGROUND, not the real Meadows. M7 authors the actual geography and its placement will be authored rather than scattered. The RULES survive that; the specific clump centres do not.",
+  "_comment_authored": "M7 authored the actual geography and this file now reflects it. Placement here comes in FOUR kinds, and which kind a thing is is the whole of GAME_DESIGN.md §7's split between authored macro geography and procedural dressing. A `clumps`/`strays` layer is a density: how much of this, and where is it allowed. A `clump_at` layer is a density inside AUTHORED PLACES: the oak grove is at those coordinates because the road goes through it. A `route_from` layer follows a named polyline in trails.json. A `sites` layer expands buildings from data/config/settlement.json. Only the first kind is free to move when the seed changes.",
   "_comment_clumping": "Every layer clusters. Evenly-spread props at uniform scale are the readable signature of generator output — the visual rubric names it — so each layer places clumps and scatters within them, leaving clearings between. `strays` fills the gaps so the clumps do not read as islands.",
   "_comment_pack": "Quaternius Stylized Nature MegaKit (CC0), replacing Kenney's Nature Kit. The blind critic's verdict on the Kenney set was that every tree was the same tree — 'one straight tapered trunk, one 6-8 face canopy, two greens, varied only by uniform scale' — and that the far tree line read as 'a row of identical cards at near-uniform spacing along a contour: a fence of icons'. It measured mid-distance trees at 1.00:1 luminance contrast against the ground behind them, meaning invisible. This pack ships four genuinely different tree species with real bark and leaf TEXTURES and normal maps, which is what that complaint was actually about.",
   "_comment_scale": "These models are authored in METRES, unlike Kenney's which were about one unit tall and needed a 3.4x per-layer correction. So `base_scale` is near 1.0 here and mostly trims rather than multiplies. Measured with tools/measure_models.gd rather than guessed — guessing produced a meadow of knee-high trees once already.",
@@ -15,24 +15,45 @@
         "res://assets/environment/stylized_nature/CommonTree_4.gltf",
         "res://assets/environment/stylized_nature/CommonTree_5.gltf"
       ],
-      "_comment_clumping": "Fewer, tighter, larger copses rather than more small ones. 26 clumps of 9 spread over 512m is close enough to even that it reads as a distribution; twelve dense copses with real gaps between them reads as somebody deciding where a wood goes.",
-      "clumps": 13,
-      "per_clump": 16,
-      "clump_radius": 20.0,
-      "strays": 22,
+      "_comment_clumping": "Copses, placed by rule but kept OFF the authored places: the oak grove is its own layer and the settlement stands in cleared ground. Twelve dense copses with real gaps between them reads as somebody deciding where a wood goes; twenty-six evenly spread reads as a distribution.",
+      "clumps": 18,
+      "per_clump": 17,
+      "clump_radius": 22.0,
+      "strays": 60,
       "_comment_slope": "Trees stop well before the rocky rises. A tree growing out of a cliff face is the cheapest way to destroy the sense that a place was authored.",
       "max_slope_deg": 21.0,
-      "_comment_scale": "A 2.5x spread inside one copse. Uniform prop scale is one of the two readable signatures of generator output, and a wood with saplings and old trees in it is the difference between a grove and a stamp.",
-      "scale_min": 0.55,
-      "scale_max": 1.35,
+      "_comment_scale": "Native height is 7.0-9.4m, so this renders 5.3-13.7m. Raised from 0.55-1.35 (3.9-12.7m): the blind critic measured the tallest tree in the build at 9.8m against a key art board that wants 15-25m, and a meadow whose biggest tree is five times the player is a meadow with no vertical event in it. The common tree is the everyday one and stays under the grove oaks; the grove is where the 15-25m band is actually met.",
+      "scale_min": 0.75,
+      "scale_max": 1.45,
       "_comment_clear": "The spawn pad stays clear. The player's first sight of the game should not be the inside of a tree.",
       "clear_radius": 14.0,
       "base_scale": 1.0,
       "collides": true,
-      "collision_radius": 0.6
+      "collision_radius": 0.6,
+      "off_trail": 2.6,
+      "clump_at": [
+        [
+          -52.0,
+          84.0
+        ],
+        [
+          -70.0,
+          92.0
+        ],
+        [
+          -40.0,
+          70.0
+        ],
+        [
+          -66.0,
+          108.0
+        ]
+      ],
+      "_comment_authored": "Four of the fifteen copses are STATED, and they ring the oak grove. The grove's twisted oaks carry the pack's crimson autumn leaf and six stands of them alone read as one solid red mass rather than as a wood; green common trees mixed through and around them turn it into a wood with a red heart. The other eleven copses are wherever the seed puts them, which is what a copse is.",
+      "_comment_strays": "Raised from 26. The mid-distance — roughly 80m to 250m out — was the flattest part of every frame: an unbroken pale green sheet with the authored places sitting on it and nothing between them. Strays are what fill that, because a clump reads as one object at that range and a scatter reads as a landscape."
     },
     "grove": {
-      "_comment": "The ancient twisted oaks, 15-19m and far broader. A genuinely DIFFERENT species, not the same mesh retinted — which was the previous version of this layer and exactly what the critic caught. These are the landmark trees: at twice the height of a common tree and three times the canopy, a stand of them reads from across the playground.",
+      "_comment": "THE OAK GROVE. §25 lists oak woodland patches as one of the five things the Meadows is; the milestone asks for a grove, singular, and a grove is a PLACE rather than a density. So these six stands have stated centres, the road runs through the middle of them, and they are still in the same field when the seed changes. Ancient twisted oaks, 15-19m native and far broader than anything else in the world — at twice the height of a common tree and three times the canopy, a stand of them reads from across the meadow, which is the entire job of a landmark tree.",
       "models": [
         "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
         "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
@@ -42,18 +63,47 @@
       ],
       "_comment_count": "Deliberately few. A 10,000-triangle tree is thirty times a Kenney one, and these are the biggest thing in the world — a stand of six is a landmark, forty is a forest nobody can walk through.",
       "clumps": 6,
-      "per_clump": 5,
-      "clump_radius": 26.0,
-      "strays": 8,
-      "max_slope_deg": 19.0,
-      "scale_min": 0.55,
-      "scale_max": 1.0,
+      "per_clump": 6,
+      "clump_radius": 19.0,
+      "strays": 6,
+      "max_slope_deg": 17.0,
+      "scale_min": 0.72,
+      "scale_max": 1.15,
       "clear_radius": 22.0,
-      "base_scale": 0.85,
+      "base_scale": 1.0,
       "collides": true,
       "collision_radius": 1.1,
       "_comment_retexture": "The pack ships `Leaves_TwistedTree_C` as a CRIMSON autumn leaf. Left alone it made the biggest trees in the meadow blood red and they dominated every frame. Warm hue has to come from the flowers, the dry grass and the golden hour, not from painting the whole canopy.",
-      "_comment_colour": "These stay CRIMSON, at the owner's call: 'I actually really like the red trees.'\n\nIt is also the right call against the review. The critic measured the palette as a single yellow-green wedge — 60-90% of pixels in one hue family in every frame — and said the board's golds and warm ends appear nowhere. A stand of turning oaks is the one thing in the meadow carrying a second hue family at tree height, and it does it with the pack's own authored texture rather than a tint.\n\nKept DELIBERATELY few for that reason: 6 clumps of 5. Warm accent against green reads as autumn; warm everywhere reads as a different biome. The bushes still get retextured green (they share this material) because 800 red bushes is a carpet, not an accent."
+      "_comment_colour": "These stay CRIMSON, at the owner's call: 'I actually really like the red trees.'\n\nIt is also the right call against the review. The critic measured the palette as a single yellow-green wedge — 60-90% of pixels in one hue family in every frame — and said the board's golds and warm ends appear nowhere. A stand of turning oaks is the one thing in the meadow carrying a second hue family at tree height, and it does it with the pack's own authored texture rather than a tint.\n\nKept DELIBERATELY few for that reason: 6 clumps of 5. Warm accent against green reads as autumn; warm everywhere reads as a different biome. The bushes still get retextured green (they share this material) because 800 red bushes is a carpet, not an accent.",
+      "_comment_where": "Sited astride the trail's western half, between the pond and the spawn, so the player walks THROUGH the grove on the way to the water. It is also dead centre of the survey's `03` viewpoint, which is the frame the critic said had nothing in it to walk toward.",
+      "clump_at": [
+        [
+          -62.0,
+          96.0
+        ],
+        [
+          -46.0,
+          78.0
+        ],
+        [
+          -72.0,
+          80.0
+        ],
+        [
+          -38.0,
+          60.0
+        ],
+        [
+          -84.0,
+          102.0
+        ],
+        [
+          -54.0,
+          110.0
+        ]
+      ],
+      "_comment_scale": "15.7-19.0m native, rendering 11.3-21.8m. It was base_scale 0.85 at 0.55-1.00, which is 7.3-16m — and the critic's measurement of the tallest tree in the build at 9.8m against the board's 15-25m was taken with that in force. These are the trees that meet the band.",
+      "off_trail": 3.4
     },
     "deadfall": {
       "_comment": "Dead trees and mushrooms. The dead trees are 9-13m bare silhouettes and do a job no living tree can: they break a green tree line with a grey vertical, which is most of what stops a treeline reading as a hedge.",
@@ -64,7 +114,7 @@
         "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
         "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
       ],
-      "clumps": 14,
+      "clumps": 12,
       "per_clump": 3,
       "clump_radius": 12.0,
       "strays": 20,
@@ -73,7 +123,8 @@
       "scale_max": 1.0,
       "clear_radius": 16.0,
       "base_scale": 0.7,
-      "collides": false
+      "collides": false,
+      "off_trail": 2.4
     },
     "bushes": {
       "_comment": "The middle layer. Without something between grass height and tree height the ground reads as a lawn with poles on it. Ferns and broad plants included, because undergrowth banked at the base of a tree is what makes a copse read as a wood rather than as trees standing on a lawn.",
@@ -99,7 +150,8 @@
       "_comment_retexture": "Bush_Common and Bush_Common_Flowers use the material `Leaves_TwistedTree`, whose texture the pack ships CRIMSON — it is the autumn variant of the twisted oak. Unswapped, every bush in the meadow came out blood red, and no colour multiply turns red into green. This points them at the pack's own green leaf instead.",
       "retexture": {
         "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
-      }
+      },
+      "off_trail": 2.2
     },
     "grass": {
       "_comment": "Tufts, not a ground texture. These are what make the terrain read as a meadow rather than as a painted surface, and they are the layer whose density most separates these frames from the reference — Palworld's meadows measure 3-9% featureless ground against this build's 56-66%.",
@@ -107,23 +159,26 @@
         "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
         "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf"
       ],
-      "clumps": 110,
-      "per_clump": 70,
+      "clumps": 150,
+      "per_clump": 78,
       "clump_radius": 16.0,
-      "strays": 2000,
+      "strays": 2600,
       "max_slope_deg": 30.0,
       "_comment_scale": "The source tufts are 1.3-1.9m, which is head-high grass. Trimmed to roughly knee height, with a 2.5x spread.",
       "scale_min": 0.26,
       "scale_max": 0.78,
       "clear_radius": 1.5,
-      "base_scale": 0.32,
+      "base_scale": 0.4,
       "_comment_shadow": "No shadow. Thousands of tufts each casting one overlap into a black carpet on terrain that does receive — measured at luminance 0.068 in the near field against 0.27-0.60 across the references. A blade's shadow is not information at this scale.",
       "casts_shadow": false,
       "_comment_clearings": "Walked straight through, so it cannot hide a creature or block a camera — the arena clearings do not apply. Stripping it left the spawn as forty metres of bare ground in the foreground of every survey frame.",
       "cleared_by_clearings": false,
       "collides": false,
       "_comment_density": "Denser than the sparse tufts the critic saw, and pulled back from a first attempt at 21,300. That version took the whole scatter to 28,949 props and the combat survey stopped finishing inside ten minutes — which is a software renderer, so not a frame-rate measurement (D06), but 29k instances is a real cost on the handheld this targets and the coverage was not where it needed to be anyway. Spreading four times the tufts over 512m is not a dense FOREGROUND, it is a thin lawn everywhere. Bigger tufts at moderate count cover more of the near field, which is the half of frame the critic actually measured.",
-      "_comment_base_scale": "Corrects the PACK's authoring scale, and was left at 1.0 while it should never have been. Round 4 measured grass tufts at 1.9m and a wildflower at 2.1m against the 1.80m trainer — head height on the player. Confirmed from the source models: Grass_Common_Tall is 1.87m native, Flower_4_Group is 2.49m, and the layer scales were multiplying those by 0.26-0.78 rather than correcting them. The critic's reading of the damage is the reason this is the first fix and not a small one: it 'makes the world read as a miniature diorama, makes the trainer read as a doll, and lets very few instances cover the ground — which is part of why the density looks thin.' Meadow grass is 0.2-0.5m."
+      "_comment_base_scale": "Corrects the PACK's authoring scale, and was left at 1.0 while it should never have been. Round 4 measured grass tufts at 1.9m and a wildflower at 2.1m against the 1.80m trainer — head height on the player. Confirmed from the source models: Grass_Common_Tall is 1.87m native, Flower_4_Group is 2.49m, and the layer scales were multiplying those by 0.26-0.78 rather than correcting them. The critic's reading of the damage is the reason this is the first fix and not a small one: it 'makes the world read as a miniature diorama, makes the trainer read as a doll, and lets very few instances cover the ground — which is part of why the density looks thin.' Meadow grass is 0.2-0.5m.",
+      "off_trail": 1.9,
+      "_comment_offtrail": "The trail is the one place nothing grows. A line of stones with meadow closing over it from both sides is a decorative border, not a path — what reads as trodden ground is the ABSENCE of grass on it, and the bake paints the same strip brown underneath.",
+      "_comment_density_round2": "Raised with the ground fix. The previous numbers were tuned against a meadow whose flat ground was rendering the ROCK texture, and 'the grass looks thin' was competing with 'the ground looks like cracked stone'. With real grass under it the near field reads as a mown lawn at that density. 150 clumps of 90 plus 3200 strays is 16,700 tufts, and the scale is up from 0.16-0.47m to 0.20-0.58m — still meadow grass against a 1.8m trainer, which is the measurement round 4 was actually about."
     },
     "drygrass": {
       "_comment": "The wispy tufts, warmer and looser, in their own patches. Two grass textures where there was one. The critic counted 2 hue families against the key art board's 6 and said the board's golds appear nowhere below the horizon; this and the flowers are where the warm end comes from.",
@@ -131,23 +186,24 @@
         "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf",
         "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"
       ],
-      "_comment_retint": "A warm straw modulate over the grass texture. Multiplies, so it stays light.",
+      "_comment_retint": "A warm straw modulate over the grass texture. Multiplies, so it stays light. Pulled back from #e8d89a, which came out as bright yellow spikes against the new green ground rather than as dry grass.",
       "retint": {
-        "Grass": "#e8d89a"
+        "Grass": "#ddd0a8"
       },
-      "clumps": 52,
-      "per_clump": 48,
+      "clumps": 62,
+      "per_clump": 55,
       "clump_radius": 19.0,
-      "strays": 700,
+      "strays": 900,
       "max_slope_deg": 30.0,
       "scale_min": 0.25,
       "scale_max": 0.6,
       "clear_radius": 2.0,
-      "base_scale": 0.34,
+      "base_scale": 0.42,
       "casts_shadow": false,
       "cleared_by_clearings": false,
       "collides": false,
-      "_comment_base_scale": "Same correction as `grass`; Grass_Wispy_Tall is 1.67m native."
+      "_comment_base_scale": "Same correction as `grass`; Grass_Wispy_Tall is 1.67m native.",
+      "off_trail": 1.9
     },
     "flowers": {
       "_comment": "Colour accents, clustered hard. Wildflowers grow in patches; spread evenly they read as confetti. Clover is in here because a flower patch with nothing between the blooms reads as pins in a board.",
@@ -160,10 +216,10 @@
         "res://assets/environment/stylized_nature/Clover_1.gltf",
         "res://assets/environment/stylized_nature/Clover_2.gltf"
       ],
-      "clumps": 76,
-      "per_clump": 54,
+      "clumps": 90,
+      "per_clump": 58,
       "clump_radius": 9.0,
-      "strays": 440,
+      "strays": 600,
       "max_slope_deg": 22.0,
       "scale_min": 0.35,
       "scale_max": 0.8,
@@ -172,7 +228,8 @@
       "casts_shadow": false,
       "cleared_by_clearings": false,
       "collides": false,
-      "_comment_base_scale": "Same correction. Flower_4_Group is 2.49m native — taller than the player before this."
+      "_comment_base_scale": "Same correction. Flower_4_Group is 2.49m native — taller than the player before this.",
+      "off_trail": 1.9
     },
     "rocks": {
       "_comment": "Rocks go where trees will not: they are the layer that makes the steep ground read as stone rather than as grass at an angle. The critic found the previous rocks read as 'dollops of moss' because their lit top face was the same hue as grass — these carry a real rock texture instead of a tinted flat colour.",
@@ -196,7 +253,8 @@
       "clear_radius": 10.0,
       "base_scale": 1.0,
       "collides": true,
-      "collision_radius": 0.9
+      "collision_radius": 0.9,
+      "off_trail": 2.0
     },
     "path_stones": {
       "_comment": "Flat rock plates laid along an AUTHORED LINE. Was a scatter, with a comment admitting 'not a path yet' — and a density can never become one: every other layer answers 'how much of this and where is it allowed', where a path answers 'from here, to there, past that'.",
@@ -206,67 +264,27 @@
         "res://assets/environment/stylized_nature/RockPath_Round_Thin.gltf",
         "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf"
       ],
-      "max_slope_deg": 26.0,
-      "scale_min": 0.6,
-      "scale_max": 1.4,
-      "clear_radius": 12.0,
+      "max_slope_deg": 33.0,
+      "scale_min": 0.4,
+      "scale_max": 0.85,
+      "clear_radius": 6.0,
       "base_scale": 1.0,
       "casts_shadow": false,
       "cleared_by_clearings": false,
       "collides": false,
       "_comment_why": "The critic measured one frame at 0.7% desaturated pixels against 18-30% across the Palworld references — 'no stone, no wood, no built thing, no path anywhere in that frame' — and its third-ranked gap was that the eye is given nothing to do. A path is the standard answer to the second half of that: it says where to enter a landscape and where you are being led.",
-      "_comment_route": "World coordinates, authored against the terrain's own geography, for the same reason the terrain is authored rather than seeded. It leaves the spawn pad north-east, swings around the western shoulder of the valley, runs down to the pond's eastern shore and climbs away toward the big rise. Catmull-Rom through these points, so it bends rather than turning corners, and every stone takes its height from the field, so it drapes over the ground instead of cutting through it.",
+      "_comment_route": "World coordinates now live in data/config/trails.json and NOT here, because three systems need this polyline and they have to agree to the metre: the terrain bake paints the worn track into the ground colour along it, this lays the stones on it, and every ground-cover layer refuses to grow within `off_trail` of it. Three copies is three polylines the moment anybody moves one. Catmull-Rom through the waypoints, so it bends rather than turning corners, and every stone takes its height from the field so it drapes over the ground instead of cutting through it.",
       "_comment_random": "What is random is only the scatter ACROSS the line — how far each stone strays from the centre, its yaw and its size — so the result reads as trodden rather than as tiling.",
-      "route": [
-        [
-          26.0,
-          -14.0
-        ],
-        [
-          -6.0,
-          26.0
-        ],
-        [
-          -48.0,
-          58.0
-        ],
-        [
-          -88.0,
-          86.0
-        ],
-        [
-          -104.0,
-          124.0
-        ],
-        [
-          -62.0,
-          168.0
-        ],
-        [
-          6.0,
-          182.0
-        ],
-        [
-          74.0,
-          150.0
-        ],
-        [
-          118.0,
-          86.0
-        ],
-        [
-          136.0,
-          10.0
-        ],
-        [
-          128.0,
-          -58.0
-        ]
-      ],
-      "route_spacing": 1.7,
-      "route_width": 1.4,
+      "route_spacing": 2.6,
+      "route_width": 1.0,
       "route_per_step": 2,
-      "_comment_clear": "The path is the one layer that SHOULD come near the spawn — a path you cannot find is not doing its job — so this is small rather than zero. Zero fails test_every_layer_keeps_the_spawn_clear_at_all, and that test is right even here: it leaves the few metres the player is actually standing on clear, which no route should be paving anyway."
+      "_comment_clear": "Small rather than zero. The road passes the spawn at about seven metres and the player's first step should be onto it — arriving somewhere rather than being dropped in a field. Zero would fail test_every_layer_keeps_the_spawn_clear_at_all, and that test is right even here: it leaves the few metres the player is actually standing on unpaved, which no road should be paving anyway.",
+      "route_from": "meadow_spine",
+      "_comment_slope": "Raised from 26. The last stretch of the road climbs out of the settlement toward the stronghold bluff and genuinely crosses ground at 29 degrees; at 26 the stones simply stopped being drawn there, which reads as a path that evaporates rather than as a path that climbs. The bake names every waypoint the stones would refuse, which is how this was found.",
+      "retint": {
+        "PathRocks": "#9d9384"
+      },
+      "_comment_stones_round2": "Smaller, closer to the centreline, denser along it, and knocked off white. The first render had them at 0.6-1.4 scale wandering 1.5m either side of the line at one per step: they came out as bright white clumps with two-metre gaps, which reads as scattered marshmallows rather than as a laid path. The pack's `PathRocks` material is a very light stone and it was the brightest thing in the frame; the retint takes it to a warm grey that belongs next to a dirt track."
     },
     "tree_skirt": {
       "_comment": "Undergrowth banked around the base of every common tree. NOT a scatter: this layer reads the placements of the layer it names and rings each one, so every trunk gets growth rather than some trunks getting lucky.",
@@ -295,7 +313,8 @@
       "collides": false,
       "casts_shadow": false,
       "_comment_clear": "Inherited from the host layer, minus this skirt's widest ring. A skirt cannot reach the spawn pad unless its host tree does, so this is implied rather than independent — but 'implied' is exactly what test_every_layer_keeps_the_spawn_clear_at_all refuses to accept, and it is right to. An invariant that holds because of a relationship between two config blocks is one config edit away from not holding.",
-      "_comment_base_scale": "Same pack, same correction — the skirt models are the oversized grass and clover."
+      "_comment_base_scale": "Same pack, same correction — the skirt models are the oversized grass and clover.",
+      "off_trail": 2.4
     },
     "grove_skirt": {
       "_comment": "The same root flare for the grove oaks, which need it most: they are the widest trunks in the world, so their straight cut into the ground is the most visible one.",
@@ -321,136 +340,159 @@
       "collides": false,
       "casts_shadow": false,
       "_comment_clear": "Inherited from the host layer, minus this skirt's widest ring. A skirt cannot reach the spawn pad unless its host tree does, so this is implied rather than independent — but 'implied' is exactly what test_every_layer_keeps_the_spawn_clear_at_all refuses to accept, and it is right to. An invariant that holds because of a relationship between two config blocks is one config edit away from not holding.",
-      "_comment_base_scale": "Same correction, a little larger because a grove oak's flare should out-scale a common tree's."
+      "_comment_base_scale": "Same correction, a little larger because a grove oak's flare should out-scale a common tree's.",
+      "off_trail": 3.0
     },
-    "fence": {
-      "_comment": "A short run of wooden fence beside the path, north of the spawn. The first BUILT thing in the world.",
-      "_comment_why": "The critic measured 02-valley-floor at 0.7% desaturated pixels against 18-30% across the Palworld references: 'no stone, no wood, no built thing'. Wood and worked timber are a hue and a texture family the meadow owns none of, and a fence says somebody lives here in a way no amount of grass can.",
-      "_comment_short": "Deliberately SHORT — nine or ten panels. A fence that runs the length of the path is a wall around the world; a fence that stops is a boundary somebody drew for a reason, and the eye reads the difference immediately.",
-      "_comment_align": "`route_align` turns off the random yaw. A fence panel is a flat 2m board and a random yaw turns a fence into scattered planks. `route_spacing` is the panel's measured width, so they meet end to end rather than overlapping or leaving gaps.",
+    "outcrop": {
+      "_comment": "THE ROCK OUTCROP. A tor at (-138,-46) with a boulder field on and around it. The terrain supplies the landform — a short steep-toed rise, sharpness 2.8 — and this supplies the stone that makes it read as geology rather than as a green pimple. Sited on the sightline of the survey's `04` camera, which is the frame that had nothing in it.",
+      "_comment_scale": "Big. Rock_Medium is 3.0-3.5m native and these render 3.6-9.6m, which is house-sized — an outcrop made of knee-high pebbles is a gravel patch. They are the only rocks in the world at this scale and that is what makes the place identifiable from a distance.",
       "models": [
-        "res://assets/buildings/Prop_WoodenFence_Single.gltf",
-        "res://assets/buildings/Prop_WoodenFence_Extension1.gltf",
-        "res://assets/buildings/Prop_WoodenFence_Extension2.gltf"
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
       ],
-      "route": [
+      "clump_at": [
         [
-          -14.0,
-          34.0
+          -138.0,
+          -46.0
         ],
         [
-          -30.0,
-          48.0
+          -130.0,
+          -58.0
         ],
         [
-          -46.0,
-          58.0
+          -148.0,
+          -38.0
         ],
         [
-          -62.0,
-          64.0
+          -126.0,
+          -34.0
+        ],
+        [
+          -152.0,
+          -58.0
+        ],
+        [
+          -142.0,
+          -22.0
         ]
       ],
-      "route_spacing": 2.02,
-      "route_width": 0.0,
-      "route_per_step": 1,
-      "route_align": true,
-      "max_slope_deg": 22.0,
-      "scale_min": 1.0,
-      "scale_max": 1.0,
+      "clumps": 6,
+      "per_clump": 9,
+      "clump_radius": 13.0,
+      "strays": 14,
+      "max_slope_deg": 52.0,
+      "scale_min": 1.2,
+      "scale_max": 2.8,
       "base_scale": 1.0,
-      "clear_radius": 12.0,
+      "clear_radius": 18.0,
+      "collides": true,
+      "collision_radius": 1.5,
       "cleared_by_clearings": false,
-      "collides": false,
-      "casts_shadow": true
+      "off_trail": 3.0
     },
-    "landmarks": {
-      "_comment": "Individually placed objects, exactly where somebody put them. The only layer in this file with no randomness in it whatsoever.",
-      "_comment_why": "A landmark is not a density and it is not a line — it is one object, in one place, chosen because that is where it should be. A wagon that lands somewhere different each seed is not a landmark, it is litter. This is the answer to the critic's 'there is nothing to look at': a small abandoned camp where the path turns toward the pond, and a second marker up on the eastern shoulder so there is something to walk toward from a distance.",
-      "_comment_height": "Only the HEIGHT is computed, from the terrain. Position, facing and size are all stated, so retuning the terrain moves a landmark up and down but never sideways.",
-      "_comment_scale": "Measured in-engine, in metres: the wagon is 4.0m long, a crate 1.05m, a fence panel 2.05m. They are real-world scale already, so `scale` here is variety and not correction.",
+    "bluff_scree": {
+      "_comment": "Scree on the stronghold bluff's flanks. Killing the rock texture out of the auto shader (see terrain_playground.json) fixed the black veins across the whole meadow and cost the one place that genuinely wanted stone: the bluff came out a smooth tan dome, which reads as a bald hill rather than as a crag. Boulders put the stone back where it belongs — as geometry standing on the slope rather than as a texture smeared across every lawn in the world.",
+      "_comment_slope": "The only layer allowed above 44 degrees. `min_slope_deg` keeps it OFF the summit, which is the ruin's ground, and off the meadow at the foot.",
       "models": [
-        "res://assets/buildings/Prop_Wagon.gltf"
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
       ],
-      "at": [
-        {
-          "model": "res://assets/buildings/Prop_Wagon.gltf",
-          "x": -72.0,
-          "z": 70.0,
-          "yaw_deg": 34.0,
-          "scale": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Prop_Crate.gltf",
-          "x": -68.6,
-          "z": 73.4,
-          "yaw_deg": 12.0,
-          "scale": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Prop_Crate.gltf",
-          "x": -67.7,
-          "z": 74.3,
-          "yaw_deg": -40.0,
-          "scale": 0.92,
-          "lift": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Prop_Crate.gltf",
-          "x": -70.2,
-          "z": 75.1,
-          "yaw_deg": 68.0,
-          "scale": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Roof_Log.gltf",
-          "x": -76.5,
-          "z": 66.0,
-          "yaw_deg": 118.0,
-          "scale": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Prop_Brick1.gltf",
-          "x": -70.9,
-          "z": 68.2,
-          "yaw_deg": 20.0,
-          "scale": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Prop_Brick3.gltf",
-          "x": -70.1,
-          "z": 67.6,
-          "yaw_deg": -70.0,
-          "scale": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Prop_Chimney.gltf",
-          "x": 112.0,
-          "z": 78.0,
-          "yaw_deg": -24.0,
-          "scale": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Prop_Support.gltf",
-          "x": 114.6,
-          "z": 80.4,
-          "yaw_deg": 52.0,
-          "scale": 1.0
-        },
-        {
-          "model": "res://assets/buildings/Prop_Crate.gltf",
-          "x": 109.6,
-          "z": 80.9,
-          "yaw_deg": 8.0,
-          "scale": 1.0
-        }
+      "clump_at": [
+        [
+          60.0,
+          148.0
+        ],
+        [
+          36.0,
+          162.0
+        ],
+        [
+          86.0,
+          166.0
+        ],
+        [
+          74.0,
+          204.0
+        ],
+        [
+          40.0,
+          196.0
+        ],
+        [
+          92.0,
+          186.0
+        ],
+        [
+          52.0,
+          142.0
+        ],
+        [
+          96.0,
+          160.0
+        ]
       ],
+      "clumps": 8,
+      "per_clump": 7,
+      "clump_radius": 11.0,
+      "strays": 0,
+      "min_slope_deg": 17.0,
+      "max_slope_deg": 62.0,
+      "scale_min": 0.7,
+      "scale_max": 2.1,
       "base_scale": 1.0,
-      "collides": false,
+      "clear_radius": 60.0,
+      "collides": true,
+      "collision_radius": 1.1,
+      "cleared_by_clearings": false
+    },
+    "buildings": {
+      "_comment": "THE AUTHORED ARCHITECTURE. Layouts live in data/config/settlement.json as grid coordinates and piece ids from the player's own build catalogue; this layer only says which sites are in the world and how they are rendered and collided. See scatter_rules.buildings_for().",
+      "_comment_models": "Every model any site can use has to be listed here, for two reasons that are both load-bearing: `vegetation.gd` recovers a prop's LAYER by looking its model up in these lists, which is how a wall gets box collision instead of a tree's cylinder; and test_every_model_named_in_the_config_exists reads exactly this list. The boulders the stronghold uses as standing stones are deliberately NOT here — they resolve to the `rocks` layer, which is the correct treatment for a rock.",
+      "sites": [
+        "grandpa",
+        "village_hall",
+        "village_cottage_a",
+        "village_cottage_b",
+        "village_barn",
+        "wayside_camp",
+        "stronghold"
+      ],
+      "models": [
+        "res://assets/buildings/Floor_WoodDark.gltf",
+        "res://assets/buildings/Floor_WoodLight.gltf",
+        "res://assets/buildings/Floor_Brick.gltf",
+        "res://assets/buildings/Floor_UnevenBrick.gltf",
+        "res://assets/buildings/Wall_Plaster_Straight.gltf",
+        "res://assets/buildings/Wall_Plaster_Window_Wide_Round.gltf",
+        "res://assets/buildings/Wall_Plaster_Door_Round.gltf",
+        "res://assets/buildings/Wall_UnevenBrick_Straight.gltf",
+        "res://assets/buildings/Wall_UnevenBrick_Window_Wide_Round.gltf",
+        "res://assets/buildings/Wall_UnevenBrick_Door_Round.gltf",
+        "res://assets/buildings/Roof_RoundTiles_4x4.gltf",
+        "res://assets/buildings/Roof_RoundTiles_6x6.gltf",
+        "res://assets/buildings/Roof_RoundTiles_6x8.gltf",
+        "res://assets/buildings/Prop_WoodenFence_Single.gltf",
+        "res://assets/buildings/Prop_WoodenFence_Extension1.gltf",
+        "res://assets/buildings/Prop_WoodenFence_Extension2.gltf",
+        "res://assets/buildings/Prop_Chimney.gltf",
+        "res://assets/buildings/Prop_Crate.gltf",
+        "res://assets/buildings/Prop_Support.gltf",
+        "res://assets/buildings/Prop_Wagon.gltf",
+        "res://assets/buildings/Prop_Brick1.gltf",
+        "res://assets/buildings/Prop_Brick3.gltf",
+        "res://assets/buildings/Roof_Log.gltf",
+        "res://assets/buildings/Door_1_Round.gltf",
+        "res://assets/buildings/Door_2_Round.gltf"
+      ],
+      "_comment_collision": "Real box colliders, taken from the catalogue's own measured `collider_centre`/`collider_extents`, rotated with the piece. A cylinder is right for a tree trunk and wrong for a 2m wall — walk into a cottage with cylinder collision and you slide around the outside of an invisible barrel.",
+      "collision_from_pieces": true,
+      "collides": true,
       "casts_shadow": true,
       "cleared_by_clearings": false,
-      "_comment_clear": "Enforced by `authored_for` as a real guard, not as a value that quietly does nothing. None of the scatter's other questions mean anything for a landmark — it is on a slope because somebody chose that slope — but the spawn pad still has to stay clear, and 'the coordinates are typed by hand so it will be fine' is exactly the assumption that puts a wagon on the player's head one refactor later.",
-      "clear_radius": 20.0
+      "clear_radius": 20.0,
+      "base_scale": 1.0
     }
   },
   "_comment_retint": "Mostly EMPTY now, and that is the point. The Kenney kit shipped a bright teal-green palette that had to be remapped wholesale; this pack ships real textures, and `albedo_color` multiplies them, so an unmapped material passes through as authored. Only the deliberate per-layer modulates above apply. A strong colour here would come out as shadow, not as hue.",
@@ -475,6 +517,24 @@
       "z": 26.0,
       "radius": 15.0,
       "_why": "aggressive pal, and the arena around it"
+    },
+    {
+      "x": 54.0,
+      "z": 12.0,
+      "radius": 17.0,
+      "_why": "Grandpa's yard. A copse inside the garden is not a garden."
+    },
+    {
+      "x": 80.0,
+      "z": 76.0,
+      "radius": 30.0,
+      "_why": "the settlement green, and room for the road through it"
+    },
+    {
+      "x": 60.0,
+      "z": 178.0,
+      "radius": 26.0,
+      "_why": "the stronghold bluff's summit — a wood on top of the landmark destroys the silhouette that is its entire job"
     }
   ]
 }

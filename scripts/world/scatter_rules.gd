@@ -18,22 +18,103 @@ extends RefCounted
 ## clumps and scatters within them, with a few strays for the spaces between.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+## The build kit's own measurements — 2m cell, 3m storey. Read, never written:
+## D12 established that these are measured off the art pack's glTF accessors
+## rather than chosen, so the settlement quotes them instead of restating them.
+## If the kit is ever replaced, the village follows it without an edit here.
+const GRID := preload("res://scripts/building/build_grid.gd")
 const CONFIG_PATH := "res://data/config/vegetation.json"
+const SETTLEMENT_PATH := "res://data/config/settlement.json"
+const TRAILS_PATH := "res://data/config/trails.json"
+const PIECES_PATH := "res://data/building/pieces.json"
 
 static var _config: Dictionary = {}
+static var _settlement: Dictionary = {}
+static var _trails: Dictionary = {}
+static var _pieces: Dictionary = {}
 
 
 static func config() -> Dictionary:
 	if not _config.is_empty():
 		return _config
-	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	_config = _read(CONFIG_PATH, "vegetation.json")
+	return _config
+
+
+## The authored architecture: what stands where, in grid coordinates.
+static func settlement() -> Dictionary:
+	if not _settlement.is_empty():
+		return _settlement
+	_settlement = _read(SETTLEMENT_PATH, "settlement.json")
+	return _settlement
+
+
+## The authored routes. One source of truth for the trail, because three
+## different things need it and they must agree to the metre: the bake paints
+## the track into the ground colour, the path stones are laid along it, and the
+## grass layers refuse to grow on it. Three copies of a polyline is three
+## polylines the moment anybody moves one.
+static func trails() -> Dictionary:
+	if not _trails.is_empty():
+		return _trails
+	_trails = _read(TRAILS_PATH, "trails.json")
+	return _trails
+
+
+## The build catalogue, READ ONLY. This is the same file the player's build mode
+## places from, which is the whole argument for authoring the world's
+## architecture out of it: the kit the player builds with and the kit the world
+## is built from being the same kit is why a house they raise beside Grandpa's
+## looks like it belongs there.
+static func pieces() -> Dictionary:
+	if not _pieces.is_empty():
+		return _pieces
+	_pieces = _read(PIECES_PATH, "pieces.json").get("pieces", {})
+	return _pieces
+
+
+static func _read(path: String, label: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
-		push_error("vegetation.json missing at %s" % CONFIG_PATH)
+		push_error("%s missing at %s" % [label, path])
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if parsed is Dictionary:
-		_config = parsed
-	return _config
+	return parsed if parsed is Dictionary else {}
+
+
+## Route waypoints, parsed once and kept. `allowed()` asks for the trail on every
+## candidate placement in every ground-cover layer — tens of thousands of times
+## per build — and rebuilding a fifteen-point array each time is the kind of cost
+## that only shows up as the world taking a second longer to appear.
+static var _route_points: Dictionary = {}
+
+
+## The named route's waypoints, in world metres.
+static func trail_points(name: String) -> Array[Vector2]:
+	if _route_points.has(name):
+		return _route_points[name]
+	var out: Array[Vector2] = []
+	var route: Dictionary = trails().get("routes", {}).get(name, {})
+	for entry: Variant in route.get("points", []):
+		var at: Array = entry
+		out.append(Vector2(float(at[0]), float(at[1])))
+	_route_points[name] = out
+	return out
+
+
+## Metres from the nearest point on a named route's polyline.
+static func distance_to_trail(name: String, spot: Vector2) -> float:
+	var points := trail_points(name)
+	if points.size() < 2:
+		return INF
+	var best := INF
+	for i in range(points.size() - 1):
+		var a := points[i]
+		var span := points[i + 1] - a
+		var length_squared := span.length_squared()
+		var t := 0.0 if length_squared <= 0.0 else clampf((spot - a).dot(span) / length_squared, 0.0, 1.0)
+		best = minf(best, spot.distance_to(a + span * t))
+	return best
 
 
 ## May a prop of this layer stand here?
@@ -68,6 +149,17 @@ static func allowed(layer: Dictionary, height: float, slope: float, distance_fro
 	# and applied to everything within reach of it.
 	if spot != Vector2.INF and bool(layer.get("cleared_by_clearings", true)) and _inside_a_clearing(spot):
 		return false
+	# Nothing grows on a trodden path. This is what turns a line of stones into
+	# a track: the stones alone read as a decorative border laid THROUGH the
+	# meadow, because the meadow closes over them from both sides and there is
+	# no bare ground anywhere along it. A path is defined by the absence of
+	# vegetation at least as much as by what is laid on it.
+	if spot != Vector2.INF and float(layer.get("off_trail", 0.0)) > 0.0:
+		for name: String in trails().get("routes", {}).keys():
+			if name.begins_with("_"):
+				continue
+			if distance_to_trail(name, spot) < float(layer["off_trail"]):
+				return false
 	return true
 
 
@@ -100,8 +192,28 @@ static func placements_for(
 	var spread := float(layer.get("clump_radius", 14.0))
 	var strays := int(layer.get("strays", 0))
 
+	# AUTHORED clump centres, when the layer states them.
+	#
+	# This is the line between the two halves of GAME_DESIGN.md §7. Where a wood
+	# goes is macro geography and belongs to whoever is composing the region;
+	# which tree stands where inside it is dressing and belongs to a rule. A
+	# random clump centre gives you trees in a group, which is not the same thing
+	# as a GROVE — a grove is a place, it has a name, the road goes through it,
+	# and it is still there when the seed changes.
+	##
+	## Authored centres come FIRST and rule-based ones fill in after, so a layer
+	## can be both: the wood by the grove is where somebody put it, and the other
+	## eleven copses are wherever the seed likes. `clumps` is still the total.
+	var authored: Array = layer.get("clump_at", [])
+	clumps = maxi(clumps, authored.size())
+
 	for clump in clumps:
+		# The rng is consumed either way, so adding an authored centre does not
+		# reshuffle the copses that follow it.
 		var centre := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+		if clump < authored.size():
+			var at: Array = authored[clump]
+			centre = Vector2(float(at[0]), float(at[1]))
 		for i in per_clump:
 			# Square root of a uniform sample gives a disc that is denser at the
 			# middle, which is what a copse looks like. Sampling the radius
@@ -159,9 +271,11 @@ static func all_placements(field: RefCounted, world_size: float, base_seed: int)
 		if name.begins_with("_") or layer_cfg.has("skirt_of"):
 			continue
 		var layer: Dictionary = layers[name]
-		if layer.has("at"):
+		if layer.has("sites"):
+			built[name] = buildings_for(layer, field)
+		elif layer.has("at"):
 			built[name] = authored_for(layer, field)
-		elif layer.has("route"):
+		elif layer.has("route") or layer.has("route_from"):
 			built[name] = route_for(layer, field, world_size, base_seed + offset * 7919)
 		else:
 			built[name] = placements_for(layer, field, world_size, base_seed + offset * 7919)
@@ -201,14 +315,17 @@ static func route_for(
 ) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var models: Array = layer.get("models", [])
-	var route: Array = layer.get("route", [])
-	if models.is_empty() or route.size() < 2:
+	# `route_from` names a route in trails.json instead of restating one. The
+	# trail is drawn by three different systems and they have to agree to the
+	# metre or the path stones sit beside the painted track rather than on it.
+	var points: Array[Vector2] = trail_points(str(layer.get("route_from", ""))) \
+		if layer.has("route_from") else []
+	if points.is_empty():
+		for entry: Variant in layer.get("route", []):
+			var at: Array = entry
+			points.append(Vector2(float(at[0]), float(at[1])))
+	if models.is_empty() or points.size() < 2:
 		return out
-
-	var points: Array[Vector2] = []
-	for entry: Variant in route:
-		var at: Array = entry
-		points.append(Vector2(float(at[0]), float(at[1])))
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
@@ -355,3 +472,226 @@ static func skirt_for(
 			var spot := Vector2(at.x, at.z) + Vector2(sin(angle), cos(angle)) * radius
 			_consider(out, layer, field, models, spot, half, rng)
 	return out
+
+
+## ---------------------------------------------------------------------------
+## Authored architecture
+## ---------------------------------------------------------------------------
+##
+## The fourth and last layer type. Scatter answers "how much of this and where
+## is it allowed", a route answers "from here to there", a landmark answers
+## "this one object, exactly here" — and a building answers none of those. A
+## building is a set of pieces in a fixed relationship to each other, and the
+## only coordinates worth writing down for one are the grid's.
+##
+## So `data/config/settlement.json` states sites in CELLS and piece ids, and
+## this expands them. Two consequences worth stating, because both were the
+## reason for doing it this way:
+##
+##   * The world's architecture and the player's build kit are the same 28
+##     pieces from `data/building/pieces.json`, read here and never written. A
+##     cabin the player raises next to Grandpa's is made of the same walls, so
+##     it belongs there. Nothing in `scripts/building/` is touched.
+##   * A building is one draw call per distinct piece across the WHOLE
+##     settlement, because the renderer batches by mesh. Four cottages, a
+##     gatehouse and a fort perimeter cost about as much as one cottage.
+##
+## A site takes ONE ground height, sampled at its own origin. Buildings do not
+## drape. Every site stands on a levelled pad in `terrain_playground.json`, and
+## the pad's target height is read from the same heightfield, so the two cannot
+## drift apart.
+static func buildings_for(layer: Dictionary, field: RefCounted) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var sites: Dictionary = settlement().get("sites", {})
+	var clear := float(layer.get("clear_radius", 0.0))
+	for entry: Variant in layer.get("sites", []):
+		var name := str(entry)
+		if not sites.has(name):
+			push_warning("settlement.json has no site called '%s'" % name)
+			continue
+		var site: Dictionary = sites[name]
+		var at: Array = site.get("origin", [0.0, 0.0])
+		var origin := Vector2(float(at[0]), float(at[1]))
+		# Same guard as an authored landmark, and for the same reason: the
+		# coordinates are typed by hand, and "typed by hand so it will be fine"
+		# is how a wall ends up through the player's spawn one edit later.
+		if origin.length() < clear:
+			push_warning("site '%s' is inside the spawn clearing" % name)
+			continue
+		var ground: float = field.height_at(origin.x, origin.y)
+		if is_nan(ground):
+			push_warning("site '%s' is off the terrain" % name)
+			continue
+		_expand_site(out, site, origin, ground + float(site.get("lift", 0.0)))
+	return out
+
+
+static func _expand_site(
+	out: Array[Dictionary], site: Dictionary, origin: Vector2, ground: float
+) -> void:
+	var yaw := deg_to_rad(float(site.get("yaw_deg", 0.0)))
+	var local: Array[Dictionary] = []
+	for entry: Variant in site.get("rooms", []):
+		_expand_room(local, entry)
+	for entry: Variant in site.get("runs", []):
+		_expand_run(local, entry)
+	for entry: Variant in site.get("props", []):
+		_expand_prop(local, entry)
+
+	# GODOT'S handedness, not the textbook 2D one. `Basis(Vector3.UP, yaw)` is a
+	# right-handed rotation about +Y, so local +Z swings toward +X and local +X
+	# swings toward -Z. The renderer turns each piece with that basis; if the
+	# LAYOUT were turned with the textbook (cos, sin / -sin, cos) matrix instead,
+	# the two would disagree in the sign of Z and every rotated building would
+	# come out mirrored — walls on the outside of the floors they bound, the door
+	# on the wrong face. Which reads as a placement bug and is not one.
+	var turn_cos := cos(yaw)
+	var turn_sin := sin(yaw)
+	for piece: Dictionary in local:
+		var flat: Vector2 = piece["at"]
+		# Rotate the whole site about its origin, so a cottage can face the
+		# trail without every piece in it being re-authored.
+		var turned := Vector2(
+			flat.x * turn_cos + flat.y * turn_sin,
+			-flat.x * turn_sin + flat.y * turn_cos
+		)
+		out.append({
+			"model": str(piece["model"]),
+			"position": Vector3(origin.x + turned.x, ground + float(piece["y"]), origin.y + turned.y),
+			"yaw": float(piece["yaw"]) + yaw,
+			"scale": float(piece.get("scale", 1.0)),
+		})
+
+
+## An enclosed building: floors, a perimeter of walls with one doorway and some
+## windows, and a roof over the lot.
+##
+## The layout rule is the same one `tools/preview_build.gd` proves in a picture:
+## every cell gets a floor, every cell edge that is NOT shared with another cell
+## of the same room gets a wall, and the roof goes at the room's centre one
+## storey up. Interior edges are skipped or the room comes out subdivided.
+static func _expand_room(out: Array[Dictionary], entry: Variant) -> void:
+	var room: Dictionary = entry
+	var cells := Vector2i(
+		int((room.get("cells", [1, 1]) as Array)[0]),
+		int((room.get("cells", [1, 1]) as Array)[1])
+	)
+	if cells.x < 1 or cells.y < 1:
+		return
+	var base := Vector2(
+		float((room.get("at", [0.0, 0.0]) as Array)[0]),
+		float((room.get("at", [0.0, 0.0]) as Array)[1])
+	)
+	var storeys: int = maxi(1, int(room.get("storeys", 1)))
+	var wall := str(room.get("wall", "wall_plaster_straight"))
+	var window := str(room.get("window", ""))
+	var door := str(room.get("door", ""))
+	var leaf := str(room.get("door_leaf", ""))
+	var door_side := str(room.get("door_side", "south"))
+	var door_index := int(room.get("door_index", cells.x / 2))
+	var floor_piece := str(room.get("floor", ""))
+	var roof := str(room.get("roof", ""))
+	var walls_only := bool(room.get("walls_only", false))
+
+	const SIDES := {
+		"east": Vector2i(1, 0), "west": Vector2i(-1, 0),
+		"north": Vector2i(0, 1), "south": Vector2i(0, -1),
+	}
+
+	for storey in storeys:
+		var lift: float = float(storey) * GRID.STOREY
+		for cx in cells.x:
+			for cz in cells.y:
+				var centre := base + Vector2(float(cx) * GRID.CELL, float(cz) * GRID.CELL)
+				if storey == 0 and floor_piece != "" and not walls_only:
+					_emit(out, floor_piece, centre, 0.0, lift)
+				for key: String in SIDES.keys():
+					var side: Vector2i = SIDES[key]
+					var neighbour := Vector2i(cx + side.x, cz + side.y)
+					if neighbour.x >= 0 and neighbour.x < cells.x \
+							and neighbour.y >= 0 and neighbour.y < cells.y:
+						continue
+					var along := cx if side.y != 0 else cz
+					var piece := wall
+					if storey == 0 and door != "" and key == door_side and along == door_index:
+						piece = door
+					elif window != "" and (cx + cz + storey) % 2 == 0:
+						piece = window
+					var spot := centre + Vector2(float(side.x), float(side.y)) * (GRID.CELL * 0.5)
+					# A wall lying on an X-facing edge runs along Z. That is not
+					# a preference, it is what the kit's own origin means, and
+					# getting it wrong puts every wall half a cell out and reads
+					# as a rotation bug (D12).
+					var facing: float = PI * 0.5 if side.x != 0 else 0.0
+					_emit(out, piece, spot, facing, lift)
+					# The kit splits a doorway into the WALL WITH A HOLE IN IT and
+					# the door that hangs in it, and they are two separate pieces
+					# on the same edge. Placing only the first gives a cottage
+					# with a dark rectangle where its front door should be, which
+					# is what the first render of Grandpa's house showed.
+					if piece == door and leaf != "":
+						_emit(out, leaf, spot, facing, lift)
+
+	if roof != "" and not walls_only:
+		var centre := base + Vector2(
+			float(cells.x - 1) * GRID.CELL * 0.5,
+			float(cells.y - 1) * GRID.CELL * 0.5
+		)
+		_emit(out, roof, centre, 0.0, float(storeys) * GRID.STOREY)
+
+
+## A straight run of pieces: a stretch of curtain wall, a garden fence, a
+## palisade. Whatever a room's perimeter rule would give you all four sides of
+## when you wanted one.
+static func _expand_run(out: Array[Dictionary], entry: Variant) -> void:
+	var run: Dictionary = entry
+	var piece := str(run.get("piece", ""))
+	var count: int = maxi(0, int(run.get("count", 0)))
+	if piece == "" or count == 0:
+		return
+	var start := Vector2(
+		float((run.get("from", [0.0, 0.0]) as Array)[0]),
+		float((run.get("from", [0.0, 0.0]) as Array)[1])
+	)
+	var along_x := str(run.get("axis", "x")) == "x"
+	var step := float(run.get("spacing", GRID.CELL))
+	var storeys: int = maxi(1, int(run.get("storeys", 1)))
+	var direction := Vector2(step, 0.0) if along_x else Vector2(0.0, step)
+	# A run along X is a wall standing across X, so its edge faces Z: yaw 0.
+	var yaw: float = 0.0 if along_x else PI * 0.5
+	for storey in storeys:
+		for i in count:
+			_emit(out, piece, start + direction * float(i), yaw, float(storey) * GRID.STOREY)
+
+
+## One stated object. Either a catalogue piece by id, or a raw model path for
+## the props that are not build pieces at all — a wagon, a crate, a boulder
+## standing in for a monolith.
+static func _expand_prop(out: Array[Dictionary], entry: Variant) -> void:
+	var prop: Dictionary = entry
+	var at := Vector2(
+		float((prop.get("at", [0.0, 0.0]) as Array)[0]),
+		float((prop.get("at", [0.0, 0.0]) as Array)[1])
+	)
+	var model := str(prop.get("model", ""))
+	if model == "":
+		model = str(pieces().get(str(prop.get("piece", "")), {}).get("model", ""))
+	if model == "":
+		push_warning("settlement prop names neither a model nor a known piece: %s" % prop)
+		return
+	out.append({
+		"model": model,
+		"at": at,
+		"y": float(prop.get("lift", 0.0)),
+		"yaw": deg_to_rad(float(prop.get("yaw_deg", 0.0))),
+		"scale": float(prop.get("scale", 1.0)),
+	})
+
+
+static func _emit(out: Array[Dictionary], piece_id: String, at: Vector2, yaw: float, lift: float) -> void:
+	var piece: Dictionary = pieces().get(piece_id, {})
+	var model := str(piece.get("model", ""))
+	if model == "":
+		push_warning("settlement names a piece the catalogue does not have: '%s'" % piece_id)
+		return
+	out.append({"model": model, "at": at, "y": lift, "yaw": yaw, "scale": 1.0})

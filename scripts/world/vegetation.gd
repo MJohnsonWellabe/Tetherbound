@@ -125,6 +125,26 @@ func _water_bodies(field: RefCounted) -> Array:
 			"radius": float(body.get("radius", 0.0)),
 			"level": float(field.call("height_at", centre.x, centre.y)) + float(body.get("fill", 1.2)),
 		})
+	# A stream is a chain of small discs here, exactly as `water.gd` records it.
+	# Nothing about the drowning test needed to learn what a ribbon is: "is this
+	# point inside a circle of water and below its surface" is the same question
+	# a hundred and fifty times over.
+	for entry: Variant in (parsed as Dictionary).get("streams", []):
+		var stream: Dictionary = entry
+		var fill := float(stream.get("fill", 0.5))
+		var start_width := float(stream.get("width_start", 1.6))
+		var end_width := float(stream.get("width_end", 3.4))
+		var spine: Array = field.call(
+			"channel_centreline", int(stream.get("channel", 0)), float(stream.get("sample", 2.5))
+		)
+		for i in spine.size():
+			var spot: Vector3 = spine[i]
+			var t := float(i) / float(maxi(1, spine.size() - 1))
+			out.append({
+				"centre": Vector2(spot.x, spot.z),
+				"radius": lerpf(start_width, end_width, t) + 0.5,
+				"level": spot.y + fill,
+			})
 	return out
 
 
@@ -339,6 +359,9 @@ func _add_collision(model_path: String, placements: Array) -> void:
 	var layer := _layer_for(model_path)
 	if layer.is_empty() or not bool(layer.get("collides", false)):
 		return
+	if bool(layer.get("collision_from_pieces", false)):
+		_add_piece_collision(model_path, placements)
+		return
 	var radius := float(layer.get("collision_radius", 0.5))
 
 	var body := StaticBody3D.new()
@@ -357,6 +380,71 @@ func _add_collision(model_path: String, placements: Array) -> void:
 		node.position = (placement["position"] as Vector3) + Vector3.UP * (shape.height * 0.5)
 		body.add_child(node)
 	_solid += placements.size()
+
+
+## Real box colliders for build pieces, from the catalogue's own measurements.
+##
+## A cylinder is right for a tree trunk and wrong for a wall. `pieces.json`
+## records every piece's collider as a measured centre and extents — read off
+## the glTF accessors by the script that generated the file, never typed — and a
+## 2m wall given a cylinder is an invisible barrel the player slides around the
+## outside of, in a cottage they were supposed to be able to walk into.
+##
+## The catalogue is READ. Nothing in `scripts/building/` is touched: the player's
+## build mode and the world's architecture agree about what a wall is because
+## they are looking at the same file, not because two files were kept in step.
+func _add_piece_collision(model_path: String, placements: Array) -> void:
+	var piece := _piece_for(model_path)
+	if piece.is_empty():
+		# A prop with no catalogue entry — a wagon, a crate — is scenery. Better
+		# no collision than a guessed box in the middle of the village green.
+		return
+	var centre: Array = piece.get("collider_centre", [0.0, 0.0, 0.0])
+	var extents: Array = piece.get("collider_extents", [0.5, 0.5, 0.5])
+	var offset := Vector3(float(centre[0]), float(centre[1]), float(centre[2]))
+	var half := Vector3(float(extents[0]), float(extents[1]), float(extents[2]))
+	if half.x <= 0.0 or half.y <= 0.0 or half.z <= 0.0:
+		return
+
+	var body := StaticBody3D.new()
+	body.name = "%s_Collision" % model_path.get_file().get_basename()
+	add_child(body)
+	for entry: Variant in placements:
+		var placement: Dictionary = entry
+		var scale := float(placement["scale"])
+		var yaw := float(placement["yaw"])
+		var shape := BoxShape3D.new()
+		shape.size = half * 2.0 * scale
+		var node := CollisionShape3D.new()
+		node.shape = shape
+		var basis := Basis(Vector3.UP, yaw)
+		# The collider's own offset turns with the piece. A wall's box is not
+		# centred on its origin — the origin is the bottom-centre of the edge it
+		# lies on — so rotating the piece without rotating the offset leaves the
+		# collision a third of a metre out of the wall, on the wrong side.
+		node.transform = Transform3D(basis, (placement["position"] as Vector3) + basis * (offset * scale))
+		body.add_child(node)
+	_solid += placements.size()
+
+
+## The catalogue entry for a model path, or an empty dictionary.
+## The catalogue carries comment keys alongside real pieces — three `_todo_*`
+## strings, at the time of writing — and a typed `Dictionary` assignment against
+## one of those aborts the whole lookup at runtime, silently, leaving every wall
+## in the settlement without collision. It printed eleven identical script errors
+## into the traversal smoke and nothing else went wrong, which is exactly how
+## much warning this class of bug gives.
+func _piece_for(model_path: String) -> Dictionary:
+	for id: String in RULES.pieces().keys():
+		if id.begins_with("_"):
+			continue
+		var entry: Variant = RULES.pieces()[id]
+		if not entry is Dictionary:
+			continue
+		var piece: Dictionary = entry
+		if str(piece.get("model", "")) == model_path:
+			return piece
+	return {}
 
 
 ## Which layer a model belongs to. Models are grouped by mesh for drawing, so the

@@ -1,0 +1,77 @@
+{
+  "_comment": "The Meadows' authored routes. GAME_DESIGN.md §7 lists roads under AUTHORED macro geography, alongside rivers, villages and sightlines — a path is the one thing in this world that no density can produce. Every other question the scatter answers is 'how much of this, and where is it allowed'. A trail answers 'from here, to there, past that'.",
+  "_comment_one_source": "THIS FILE IS THE ONLY COPY OF THESE POLYLINES. Three separate systems need the trail and they have to agree to the metre or the result is worse than having no trail at all: `build_playground_terrain.gd` paints the worn track into the ground colour map, `vegetation.json`'s `path_stones` layer lays stones along it, and every ground-cover layer with an `off_trail` radius refuses to grow on it. When those three disagree you get stones beside a brown stripe with grass growing through both, which is exactly what a path is not.",
+  "_comment_tunable": "Widths are TUNABLE. Coordinates are not — they are composition, chosen against the terrain's own geography and against the five fixed survey viewpoints, and moving one moves what the player is being led toward.",
+  "routes": {
+    "meadow_spine": {
+      "_comment": "The one road through the Meadows, and the spine of the whole region. It starts at the pond's eastern shore, climbs east through the oak grove, passes the spawn within fifteen metres, reaches Grandpa's door, runs on to the settlement, and then bends north and keeps going toward the stronghold bluff before leaving the frame. That last stretch is the point of the whole thing: a road that ends where you can still see where it was going is how a landscape says the story continues over there.",
+      "_comment_spawn": "It passes the spawn at about 7 metres rather than through it. The player's first step is onto a road, which is the difference between being dropped in a field and arriving somewhere.",
+      "points": [
+        [
+          -78.0,
+          106.0
+        ],
+        [
+          -58.0,
+          90.0
+        ],
+        [
+          -38.0,
+          68.0
+        ],
+        [
+          -22.0,
+          44.0
+        ],
+        [
+          -14.0,
+          22.0
+        ],
+        [
+          -6.0,
+          2.0
+        ],
+        [
+          10.0,
+          -6.0
+        ],
+        [
+          28.0,
+          4.0
+        ],
+        [
+          40.0,
+          16.0
+        ],
+        [
+          56.0,
+          34.0
+        ],
+        [
+          70.0,
+          50.0
+        ],
+        [
+          85.0,
+          67.0
+        ],
+        [
+          90.0,
+          96.0
+        ],
+        [
+          80.0,
+          118.0
+        ],
+        [
+          76.0,
+          130.0
+        ]
+      ],
+      "_comment_paint": "Metres either side of the centreline that the bake darkens into a worn track, and how far past that it feathers back into meadow. The bare strip is deliberately NARROWER than the stone scatter and the vegetation exclusion: a track is a hard core of trodden ground with a scruffy margin, and a path with a crisp edge on both sides reads as a decal.",
+      "paint_half_width": 1.4,
+      "paint_edge": 2.1,
+      "_comment_end": "The last waypoint stops at the FOOT of the stronghold bluff and not on it. The bluff's flank runs to sixty degrees and the path stones refuse anything over twenty-six, so a route that climbed it would simply stop being drawn halfway up — which reads as a path that evaporates. `build_playground_terrain.gd` prints the steepest waypoint on every bake for exactly this reason; it caught this one at 62.6 degrees."
+    }
+  }
+}

@@ -21,6 +21,7 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/water.json"
 const SHADER_PATH := "res://shaders/water.gdshader"
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 
 ## Rings and radial segments of each disc. Enough that the vertex swell has
 ## somewhere to happen and the shore gradient interpolates smoothly; a disc of
@@ -48,6 +49,10 @@ func build(ground_height: Callable) -> void:
 	if shader == null:
 		push_error("water shader missing: %s" % SHADER_PATH)
 		return
+
+	var field: RefCounted = HEIGHTFIELD.new()
+	for entry: Variant in cfg.get("streams", []):
+		_build_stream(entry, shader, field)
 
 	for entry: Variant in cfg.get("bodies", []):
 		var body: Dictionary = entry
@@ -78,6 +83,128 @@ func build(ground_height: Callable) -> void:
 		mesh.position = Vector3(centre.x, level, centre.y)
 
 		_bodies.append({"name": mesh.name, "centre": centre, "radius": radius, "level": level})
+
+
+## Running water, laid down the bed the terrain already cut for it.
+##
+## The milestone spec asks for a stream, and the honest objection to answering
+## that with the pond code is exactly right: a stream is a route with a
+## direction, not a flat disc, and a long thin pond is a long thin pond. What
+## makes this one a stream is upstream of here — `playground_heightfield.gd`
+## cuts a channel along an authored route and FORCES its bed to fall, `min_fall`
+## metres per metre travelled, so the bed is descending by construction. This
+## reads that bed back and lays a surface on it, so the water surface descends
+## with it. Every quad of it is at a different height, and it is running downhill
+## from a source at the foot of the stronghold bluff into the valley pond.
+##
+## The ribbon also NARROWS and WIDENS along its length, which is the other thing
+## a still frame can use to say which way water is going.
+##
+## WHAT IS HONESTLY MISSING: there is no flow ANIMATION. The surface does not
+## scroll. `shaders/water.gdshader` computes its ripples from two standing wave
+## sets in world space with no directional term, and adding one means adding a
+## uniform to a shader this milestone does not own. So the direction is carried
+## by the geometry — the fall, the taper, the banks — and not by the material.
+## That is a real gap and it is the first thing to fix when the shader is next
+## opened.
+func _build_stream(entry: Variant, shader: Shader, field: RefCounted) -> void:
+	var stream: Dictionary = entry
+	var index := int(stream.get("channel", 0))
+	var spine: Array = field.call("channel_centreline", index, float(stream.get("sample", 2.0)))
+	if spine.size() < 2:
+		push_warning("water stream '%s' names channel %d, which the terrain has no bed for" % [
+			stream.get("name", "?"), index
+		])
+		return
+
+	var fill := float(stream.get("fill", 0.5))
+	var start_width := float(stream.get("width_start", 1.6))
+	var end_width := float(stream.get("width_end", 3.4))
+
+	var mesh := MeshInstance3D.new()
+	mesh.name = str(stream.get("name", "Stream"))
+	mesh.mesh = _ribbon(spine, fill, start_width, end_width)
+	mesh.material_override = _material(shader, stream, maxf(start_width, end_width))
+	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(mesh)
+
+	# Recorded as a chain of small discs rather than as one body, so everything
+	# that already knows how to ask "is there water at this point" — the scatter's
+	# drowning pass, `level_at` — keeps working unchanged. A stream is a pond
+	# that is a hundred and fifty metres long and two metres wide.
+	for i in spine.size():
+		var at: Vector3 = spine[i]
+		var t := float(i) / float(maxi(1, spine.size() - 1))
+		_bodies.append({
+			"name": "%s_%d" % [mesh.name, i],
+			"centre": Vector2(at.x, at.z),
+			"radius": lerpf(start_width, end_width, t) + 0.4,
+			"level": at.y + fill,
+		})
+
+
+## A quad strip following the spine, with the vertex RED channel carrying
+## distance ACROSS the water rather than distance from a centre.
+##
+## That is the only change the shader needs to work on a stream instead of a
+## disc: it reads `COLOR.r` as "how close is this fragment to the edge", uses it
+## to blend shallow to deep and to lay the foam line. On a disc that is radius;
+## on a ribbon it is how far off the centreline you are. So a brook gets foam
+## along BOTH banks, which is where a brook's foam is.
+func _ribbon(spine: Array, fill: float, start_width: float, end_width: float) -> ArrayMesh:
+	var points := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var tangents := PackedFloat32Array()
+	var colours := PackedColorArray()
+	var indices := PackedInt32Array()
+
+	var count := spine.size()
+	for i in count:
+		var at: Vector3 = spine[i]
+		var t := float(i) / float(maxi(1, count - 1))
+		var ahead: Vector3 = spine[mini(i + 1, count - 1)]
+		var behind: Vector3 = spine[maxi(i - 1, 0)]
+		var along := Vector2(ahead.x - behind.x, ahead.z - behind.z)
+		if along == Vector2.ZERO:
+			along = Vector2(0.0, 1.0)
+		var across := along.orthogonal().normalized() * lerpf(start_width, end_width, t)
+		# The surface is FLAT across the channel and falls along it — which is
+		# what water does, and is only possible because the bed underneath was
+		# cut to a monotonically falling profile.
+		var level := at.y + fill
+		for side in [-1.0, 1.0]:
+			points.append(Vector3(at.x + across.x * side, level, at.z + across.y * side))
+			normals.append(Vector3.UP)
+			# Tangent along +X, matching the disc, so the shader's ripple
+			# derivatives land on the world axes it expects.
+			tangents.append_array([1.0, 0.0, 0.0, 1.0])
+			colours.append(Color(1.0, 0.0, 0.0, 1.0))
+		# A third vertex down the middle, so the deep colour has somewhere to be.
+		# Two-vertex-wide strips are all shore and all foam.
+		points.append(Vector3(at.x, level, at.z))
+		normals.append(Vector3.UP)
+		tangents.append_array([1.0, 0.0, 0.0, 1.0])
+		colours.append(Color(0.0, 0.0, 0.0, 1.0))
+
+	for i in count - 1:
+		var a := i * 3
+		var b := (i + 1) * 3
+		# left bank -> middle
+		indices.append_array([a, b, a + 2, a + 2, b, b + 2])
+		# middle -> right bank
+		indices.append_array([a + 2, b + 2, a + 1, a + 1, b + 2, b + 1])
+
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = points
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_TANGENT] = tangents
+	arrays[Mesh.ARRAY_COLOR] = colours
+	arrays[Mesh.ARRAY_INDEX] = indices
+
+	var out := ArrayMesh.new()
+	out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return out
 
 
 ## What got built, for tests and for the export check. A pond that failed to
@@ -151,7 +278,10 @@ func _material(shader: Shader, body: Dictionary, radius: float) -> ShaderMateria
 	# Every remaining uniform is optional and per-body, so a second pond can be
 	# a different colour without a second shader.
 	for key: String in body.keys():
-		if key.begins_with("_") or key in ["centre", "radius", "fill", "name"]:
+		if key.begins_with("_") or key in [
+			"centre", "radius", "fill", "name",
+			"channel", "sample", "width_start", "width_end",
+		]:
 			continue
 		var value: Variant = body[key]
 		if value is String and (value as String).begins_with("#"):

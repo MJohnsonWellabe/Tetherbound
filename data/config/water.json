@@ -8,23 +8,49 @@
     {
       "name": "ValleyPond",
       "centre": [
-        -120.0,
-        130.0
+        -96.0,
+        116.0
       ],
-      "radius": 64.0,
-      "fill": 0.85,
+      "radius": 32.0,
+      "fill": 4.2,
       "_comment_colour": "Cool green-blue in the shallows going to a deep slate blue. Chosen AGAINST the meadow rather than to match it — the whole point is a hue the biome does not already own.",
-      "shallow_colour": "#3f7d7c",
-      "deep_colour": "#173347",
+      "shallow_colour": "#357370",
+      "deep_colour": "#10283a",
       "foam_colour": "#cfe4e6",
       "foam_width": 0.11,
       "wave_strength": 0.13,
       "swell_height": 0.05,
       "_comment_round4": "First render was wrong in two ways at once and both are visible in `02-valley-floor`. It measured saturation 0.62 against the references' 0.41-0.47 and read as a flat bright cyan sheet with no depth to it; and at radius 130 over a basin this shallow it flooded far more ground than a pond should, putting the valley-floor camera inside the water. The basin is a 22m-deep bell over 150m, so a 1.15m fill reaches roughly 22m from the centre in theory and much further wherever the detail noise dips — the radius was sized off the VALLEY rather than off the waterline it would actually produce.",
-      "alpha_shallow": 0.52,
-      "alpha_deep": 0.8,
+      "alpha_shallow": 0.66,
+      "alpha_deep": 0.94,
       "specular_water": 0.55,
-      "roughness_water": 0.14
+      "roughness_water": 0.14,
+      "_comment_round_m7": "Radius cut from 64 to 34 and the fill raised from 0.85m to 4.2m, because a new negative peak in terrain_playground.json gives the pond a real 8m basin to sit in. At the old numbers the water was a 130m-wide translucent plane over ground whose grass texture was still legible through it, ending in a dead-straight line across the frame where the disc ran out — the disc-occluded-by-terrain trick only works when the terrain actually comes up. Now it does."
+    }
+  ],
+  "_comment_streams": "THE BROOK. The milestone asks for a stream and the honest objection to answering that with the pond code is right: a stream is a route with a direction, not a flat disc, and a long thin pond is a long thin pond. What makes this one a stream is not here — it is in terrain_playground.json's `channels`, which cuts a bed along an authored route and forces that bed to FALL, so the water laid on it is descending by construction. `channel` indexes that list. What is honestly missing is flow ANIMATION: shaders/water.gdshader builds its ripples from two standing wave sets with no directional term, and this milestone does not own that shader. The direction is carried by the fall, the taper and the banks, not by the material.",
+  "streams": [
+    {
+      "name": "StrongholdBrook",
+      "channel": 0,
+      "_comment_sample": "Metres between cross-sections. The bed is a straight-segment polyline so this only has to be fine enough that the WIDTH taper and the fall read as smooth.",
+      "sample": 2.5,
+      "_comment_fill": "Metres of water above the cut bed. Less than the channel's 1.35m depth, so the surface sits below the bank tops and the brook is in a gully rather than sheeted across the meadow. Ankle deep: there is no swimming, and adding one is on CLAUDE.md's flag-don't-invent list.",
+      "fill": 0.5,
+      "_comment_width": "Half-widths in metres at the source and at the mouth. A brook that widens as it goes is the second thing a STILL frame can use to say which way the water is running; the first is that the bed visibly falls.",
+      "width_start": 1.1,
+      "width_end": 3.0,
+      "shallow_colour": "#4d8b83",
+      "deep_colour": "#1e4152",
+      "foam_colour": "#d8e8e8",
+      "_comment_foam": "Wider than the pond's. On a ribbon the vertex red channel is distance ACROSS rather than distance from a centre, so this lays a broken white line along BOTH banks — which is where a brook's foam is, and most of what makes running water read as running.",
+      "foam_width": 0.34,
+      "wave_strength": 0.2,
+      "swell_height": 0.03,
+      "alpha_shallow": 0.42,
+      "alpha_deep": 0.72,
+      "specular_water": 0.6,
+      "roughness_water": 0.1
     }
   ]
 }

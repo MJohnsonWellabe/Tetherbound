@@ -1,0 +1,694 @@
+{
+  "_comment": "The Meadows' AUTHORED ARCHITECTURE, in grid coordinates and piece ids. GAME_DESIGN.md §7 puts villages and strongholds under authored macro geography; §25 says the player lives with Grandpa in a small settlement. This is that, as data.",
+  "_comment_same_kit": "Every id below resolves through `data/building/pieces.json` — the SAME 28-piece catalogue the player's build mode places from. That is the point, and it is the whole reason this is a config rather than a set of bespoke models: a cabin the player raises next to Grandpa's is made of the same walls, sits on the same 2m grid and takes the same light, so it belongs there. `tools/preview_build.gd` proved a house can be authored this way; this is the same trick at settlement scale. Nothing in `scripts/building/` is modified — the catalogue is read.",
+  "_comment_coordinates": "A site's `origin` is world XZ. Everything inside it is LOCAL METRES from that origin, rotated by the site's `yaw_deg`, so a cottage can be turned to face the road without re-authoring a single wall. Cell (cx, cz) sits at local (cx * 2, cz * 2), because the kit's cell is 2m and `build_grid.gd` says so.",
+  "_comment_height": "A site takes ONE ground height, sampled at its own origin. Buildings do not drape over terrain. Every site here stands on a levelled pad in `terrain_playground.json`, or on the stronghold bluff's own flat top, and the pad's height is read from the same heightfield the site is — so retuning the hills moves the village with them and can never leave a wall in the air.",
+  "_comment_tunable": "The LAYOUTS are composition and not tuning. What is genuinely tunable is which wall texture a building uses and how many storeys the ruin has.",
+  "sites": {
+    "grandpa": {
+      "_comment": "GRANDPA'S HOME. §25: 'player lives with Grandpa, small settlement, Grandpa's home is safe starting location.' Fifty-three metres from the spawn and about twenty-eight degrees right of the camera's opening heading, so it is the first built thing in frame without standing in front of everything behind it. The door and both windows face the road.",
+      "origin": [
+        54.0,
+        12.0
+      ],
+      "yaw_deg": -28.0,
+      "rooms": [
+        {
+          "_comment": "A 3x3-cell cottage, 6m square. It was 3x2, and the roof made the mistake obvious: `Roof_RoundTiles_6x6` is 8.25m by 8.03m and the kit sizes its roofs by the room they cover, so on a 6x4 room it overhung by two metres on both long sides and the house read as a mushroom with the walls hidden under the eaves. The kit ships no 6x4 roof, so the room grew to match the roof rather than the other way round.",
+          "cells": [
+            3,
+            3
+          ],
+          "at": [
+            -2.0,
+            -2.0
+          ],
+          "floor": "floor_wooddark",
+          "wall": "wall_plaster_straight",
+          "window": "wall_plaster_window_wide_round",
+          "door": "wall_plaster_door_round",
+          "door_side": "south",
+          "door_index": 1,
+          "roof": "roof_roundtiles_6x6",
+          "storeys": 1,
+          "door_leaf": "door_1_round",
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+        }
+      ],
+      "runs": [
+        {
+          "_comment": "The paddock fence, clear of the house and running away from it. Deliberately SHORT and open at the far end — a fence that runs out of the frame is a wall around the world; a fence that stops is a boundary somebody drew for a reason.",
+          "piece": "prop_woodenfence_single",
+          "from": [
+            -10.0,
+            5.0
+          ],
+          "axis": "x",
+          "count": 7,
+          "spacing": 2.02
+        }
+      ],
+      "props": [
+        {
+          "_why": "Chimney against the gable, standing on the ground where a chimney stands. It was floating at lift 2.4 beside the roof, which is a box hanging in the air.",
+          "model": "res://assets/buildings/Prop_Chimney.gltf",
+          "at": [
+            0.0,
+            4.3
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "_why": "The woodpile and the everyday clutter of somebody who lives here.",
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -5.2,
+            -3.4
+          ],
+          "yaw_deg": 18.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -6.0,
+            -2.5
+          ],
+          "yaw_deg": -34.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -5.5,
+            -3.0
+          ],
+          "yaw_deg": 6.0,
+          "lift": 1.05
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -7.4,
+            0.4
+          ],
+          "yaw_deg": 90.0,
+          "scale": 0.34
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -7.4,
+            1.0
+          ],
+          "yaw_deg": 90.0,
+          "scale": 0.34,
+          "lift": 0.42
+        }
+      ]
+    },
+    "village_hall": {
+      "_comment": "THE SETTLEMENT, four buildings and a yard around a green at 113m from spawn, six degrees left of the opening camera heading. The key art's own settlement panel is a cluster of roofs in a shallow bowl with a road running into it and hills closing the horizon behind — that composition is what the terrain's `pads` and the backdrop ridge at (152,126) exist to reproduce. The hall is the biggest roof and the one that reads first.",
+      "origin": [
+        74.0,
+        82.0
+      ],
+      "yaw_deg": 14.0,
+      "rooms": [
+        {
+          "cells": [
+            3,
+            3
+          ],
+          "at": [
+            -2.0,
+            -2.0
+          ],
+          "floor": "floor_brick",
+          "wall": "wall_unevenbrick_straight",
+          "window": "wall_unevenbrick_window_wide_round",
+          "door": "wall_unevenbrick_door_round",
+          "door_side": "south",
+          "door_index": 1,
+          "roof": "roof_roundtiles_6x6",
+          "storeys": 1,
+          "door_leaf": "door_2_round",
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+        }
+      ],
+      "props": [
+        {
+          "model": "res://assets/buildings/Prop_Chimney.gltf",
+          "at": [
+            -4.3,
+            0.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Wagon.gltf",
+          "at": [
+            6.5,
+            -4.5
+          ],
+          "yaw_deg": 118.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            5.0,
+            -3.0
+          ],
+          "yaw_deg": 24.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            5.9,
+            -2.2
+          ],
+          "yaw_deg": -40.0
+        }
+      ]
+    },
+    "village_cottage_a": {
+      "origin": [
+        92.0,
+        72.0
+      ],
+      "yaw_deg": -104.0,
+      "rooms": [
+        {
+          "cells": [
+            3,
+            3
+          ],
+          "at": [
+            -2.0,
+            -2.0
+          ],
+          "floor": "floor_wooddark",
+          "wall": "wall_plaster_straight",
+          "window": "wall_plaster_window_wide_round",
+          "door": "wall_plaster_door_round",
+          "door_side": "south",
+          "door_index": 1,
+          "roof": "roof_roundtiles_6x6",
+          "storeys": 1,
+          "_comment": "A 3x3-cell cottage, 6m square. It was 3x2, and the roof made the mistake obvious: `Roof_RoundTiles_6x6` is 8.25m by 8.03m and the kit sizes its roofs by the room they cover, so on a 6x4 room it overhung by two metres on both long sides and the house read as a mushroom with the walls hidden under the eaves. The kit ships no 6x4 roof, so the room grew to match the roof rather than the other way round.",
+          "door_leaf": "door_1_round",
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+        }
+      ],
+      "props": [
+        {
+          "model": "res://assets/buildings/Prop_Chimney.gltf",
+          "at": [
+            4.3,
+            0.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -4.2,
+            -2.4
+          ],
+          "yaw_deg": -12.0
+        }
+      ]
+    },
+    "village_cottage_b": {
+      "origin": [
+        70.0,
+        62.0
+      ],
+      "yaw_deg": 168.0,
+      "rooms": [
+        {
+          "cells": [
+            2,
+            2
+          ],
+          "at": [
+            -1.0,
+            -1.0
+          ],
+          "floor": "floor_woodlight",
+          "wall": "wall_plaster_straight",
+          "window": "wall_plaster_window_wide_round",
+          "door": "wall_plaster_door_round",
+          "door_side": "south",
+          "door_index": 0,
+          "roof": "roof_roundtiles_4x4",
+          "storeys": 1,
+          "door_leaf": "door_1_round",
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+        }
+      ],
+      "props": [
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            3.1,
+            2.2
+          ],
+          "yaw_deg": 40.0
+        },
+        {
+          "piece": "prop_woodenfence_single",
+          "at": [
+            -3.4,
+            2.4
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "piece": "prop_woodenfence_extension2",
+          "at": [
+            -1.4,
+            2.4
+          ],
+          "yaw_deg": 0.0
+        }
+      ]
+    },
+    "village_barn": {
+      "_comment": "The barn, two storeys and a long roof, so the settlement's skyline is not four identical bungalows. `Roof_RoundTiles_6x8` is the longest roof the kit ships and it wants a 3x4-cell room under it.",
+      "origin": [
+        93.0,
+        91.0
+      ],
+      "yaw_deg": 76.0,
+      "rooms": [
+        {
+          "cells": [
+            3,
+            4
+          ],
+          "at": [
+            -2.0,
+            -3.0
+          ],
+          "floor": "floor_unevenbrick",
+          "wall": "wall_unevenbrick_straight",
+          "window": "wall_unevenbrick_window_wide_round",
+          "door": "wall_unevenbrick_door_round",
+          "door_side": "south",
+          "door_index": 1,
+          "roof": "roof_roundtiles_6x8",
+          "storeys": 1,
+          "door_leaf": "door_2_round",
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+        }
+      ],
+      "runs": [
+        {
+          "piece": "prop_woodenfence_single",
+          "from": [
+            -6.5,
+            -5.0
+          ],
+          "axis": "x",
+          "count": 7,
+          "spacing": 2.02
+        }
+      ],
+      "props": [
+        {
+          "model": "res://assets/buildings/Prop_Wagon.gltf",
+          "at": [
+            -6.0,
+            3.5
+          ],
+          "yaw_deg": 22.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            4.6,
+            4.2
+          ],
+          "yaw_deg": 8.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            5.4,
+            5.0
+          ],
+          "yaw_deg": -28.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            4.9,
+            4.6
+          ],
+          "yaw_deg": 62.0,
+          "lift": 1.05
+        }
+      ]
+    },
+    "wayside_camp": {
+      "_comment": "The abandoned camp where the road bends away from the pond, carried over from the M1 dressing because it earned its place: it is the only thing in the western half of the meadow that says somebody has been here. Now a settlement site rather than a loose landmark layer, so all authored placement of build-kit props lives in one file.",
+      "origin": [
+        -72.0,
+        70.0
+      ],
+      "yaw_deg": 34.0,
+      "props": [
+        {
+          "model": "res://assets/buildings/Prop_Wagon.gltf",
+          "at": [
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            3.4,
+            3.6
+          ],
+          "yaw_deg": -22.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            4.3,
+            4.5
+          ],
+          "yaw_deg": -74.0,
+          "scale": 0.92,
+          "lift": 1.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            1.8,
+            5.3
+          ],
+          "yaw_deg": 34.0
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -4.5,
+            -4.0
+          ],
+          "yaw_deg": 84.0,
+          "scale": 0.4
+        },
+        {
+          "model": "res://assets/buildings/Prop_Brick1.gltf",
+          "at": [
+            1.1,
+            -1.8
+          ],
+          "yaw_deg": -14.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Brick3.gltf",
+          "at": [
+            1.9,
+            -2.4
+          ],
+          "yaw_deg": -104.0
+        }
+      ]
+    },
+    "stronghold": {
+      "_comment": "TEAM TETHER'S STRONGHOLD, on the summit of the bluff at 185m. §3 and §28: an ancient sacred site, visibly occupied and industrialised — old stone and natural forms contrasted with machinery, cables, barricades and cages. It is here so the player can SEE where the story goes, and it is deliberately not a place: the bluff's flanks average sixty degrees, well past the character controller's forty-five-degree limit, so the landmark is unreachable because of its own geography rather than because of an invisible wall.",
+      "_comment_reads_at_distance": "Everything here is chosen for SILHOUETTE, because at 185m through haze that is all there is. Two square towers three storeys high flanking a gatehouse — the outline of the key art's own stronghold panel — with a low ruined curtain behind them, standing stones the fort was built around, and scaffolding and stacks bolted on top. What it must not be is a fussy interior nobody can see.",
+      "_comment_honest": "The monoliths are `Rock_Medium` boulders at 3.4x, which is honest at this distance and would not survive being walked up to. Nothing else here is scaled: the towers are real 2m walls and a real 3m storey, so the ruin is 9.4m of actual masonry and reads at the right size against the bluff.",
+      "origin": [
+        60.0,
+        178.0
+      ],
+      "yaw_deg": -34.0,
+      "rooms": [
+        {
+          "_comment": "West tower. `walls_only` — no floor and no roof, because this is a ruin and because nothing inside it is ever visible.",
+          "cells": [
+            2,
+            2
+          ],
+          "at": [
+            -12.0,
+            -6.0
+          ],
+          "wall": "wall_unevenbrick_straight",
+          "walls_only": true,
+          "storeys": 3
+        },
+        {
+          "_comment": "East tower.",
+          "cells": [
+            2,
+            2
+          ],
+          "at": [
+            8.0,
+            -6.0
+          ],
+          "wall": "wall_unevenbrick_straight",
+          "walls_only": true,
+          "storeys": 3
+        }
+      ],
+      "runs": [
+        {
+          "_comment": "The gatehouse front, two storeys, in two halves with the gate between them.",
+          "piece": "wall_unevenbrick_straight",
+          "from": [
+            -8.0,
+            -7.0
+          ],
+          "axis": "x",
+          "count": 4,
+          "storeys": 2
+        },
+        {
+          "piece": "wall_unevenbrick_straight",
+          "from": [
+            2.0,
+            -7.0
+          ],
+          "axis": "x",
+          "count": 4,
+          "storeys": 2
+        },
+        {
+          "_comment": "The curtain, one storey and broken — the walls that fell are the ones nobody rebuilt.",
+          "piece": "wall_unevenbrick_straight",
+          "from": [
+            -11.0,
+            -4.0
+          ],
+          "axis": "z",
+          "count": 5,
+          "storeys": 1
+        },
+        {
+          "piece": "wall_unevenbrick_straight",
+          "from": [
+            11.0,
+            -4.0
+          ],
+          "axis": "z",
+          "count": 5,
+          "storeys": 1
+        },
+        {
+          "piece": "wall_unevenbrick_straight",
+          "from": [
+            -8.0,
+            6.0
+          ],
+          "axis": "x",
+          "count": 9,
+          "storeys": 1
+        }
+      ],
+      "props": [
+        {
+          "_why": "The gate itself.",
+          "piece": "wall_unevenbrick_door_round",
+          "at": [
+            0.0,
+            -7.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "piece": "wall_unevenbrick_straight",
+          "at": [
+            0.0,
+            -7.0
+          ],
+          "yaw_deg": 0.0,
+          "lift": 3.0
+        },
+        {
+          "_why": "The standing stones the fort was built around. Older than everything else on this hill, and the reason Team Tether is on it.",
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+          "at": [
+            -4.0,
+            1.5
+          ],
+          "yaw_deg": 20.0,
+          "scale": 3.4
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+          "at": [
+            4.5,
+            2.0
+          ],
+          "yaw_deg": -70.0,
+          "scale": 3.1
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+          "at": [
+            0.5,
+            3.5
+          ],
+          "yaw_deg": 140.0,
+          "scale": 3.8
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+          "at": [
+            -9.0,
+            9.0
+          ],
+          "yaw_deg": -20.0,
+          "scale": 2.6
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+          "at": [
+            10.0,
+            -12.0
+          ],
+          "yaw_deg": 96.0,
+          "scale": 2.2
+        },
+        {
+          "_why": "Team Tether. Scaffolding lashed to the old stone, and stacks that were never part of a sacred site.",
+          "model": "res://assets/buildings/Prop_Support.gltf",
+          "at": [
+            -13.5,
+            -2.0
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "model": "res://assets/buildings/Prop_Support.gltf",
+          "at": [
+            -13.5,
+            -5.0
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6,
+          "lift": 4.4
+        },
+        {
+          "model": "res://assets/buildings/Prop_Support.gltf",
+          "at": [
+            13.5,
+            -2.0
+          ],
+          "yaw_deg": -90.0,
+          "scale": 2.6
+        },
+        {
+          "model": "res://assets/buildings/Prop_Support.gltf",
+          "at": [
+            13.5,
+            -5.0
+          ],
+          "yaw_deg": -90.0,
+          "scale": 2.6,
+          "lift": 4.4
+        },
+        {
+          "model": "res://assets/buildings/Prop_Support.gltf",
+          "at": [
+            -4.0,
+            -8.4
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.2
+        },
+        {
+          "model": "res://assets/buildings/Prop_Support.gltf",
+          "at": [
+            4.0,
+            -8.4
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.2
+        },
+        {
+          "model": "res://assets/buildings/Prop_Chimney.gltf",
+          "at": [
+            -6.0,
+            4.0
+          ],
+          "yaw_deg": 12.0,
+          "scale": 2.4
+        },
+        {
+          "model": "res://assets/buildings/Prop_Chimney.gltf",
+          "at": [
+            6.5,
+            4.5
+          ],
+          "yaw_deg": -22.0,
+          "scale": 2.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -2.5,
+            -10.0
+          ],
+          "yaw_deg": 14.0,
+          "scale": 1.4
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -0.5,
+            -10.6
+          ],
+          "yaw_deg": -36.0,
+          "scale": 1.4
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -1.5,
+            -10.3
+          ],
+          "yaw_deg": 60.0,
+          "scale": 1.4,
+          "lift": 1.5
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            7.0,
+            8.0
+          ],
+          "yaw_deg": 8.0,
+          "scale": 1.4
+        }
+      ]
+    }
+  }
+}
