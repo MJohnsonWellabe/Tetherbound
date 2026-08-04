@@ -77,22 +77,176 @@ func _run() -> void:
 ## says so IN THE LOG rather than skipping quietly — an admitted gap is evidence,
 ## a silent one is a lie by omission.
 
+## M4 — Party.
+##
+## Written from the acceptance bullets in `docs/MEADOWS_VERTICAL_SLICE.md`
+## BEFORE the system was built, and deliberately not adjusted afterwards to suit
+## what got built. That ordering is the point: a session written from the
+## implementation only ever exercises the parts that happen to work, and its
+## silences are exactly where the bugs live.
+##
+## It walks the ten bullets in order. Anything missing is reported as missing —
+## `probe()` below never crashes on an absent API, because a session that dies
+## halfway produces a short transcript that reads like a clean run.
 func _session_party() -> void:
-	var director: Node = _world.get_node_or_null(^"EncounterDirector")
-	var party: Node = _world.get_node_or_null(^"Party")
-	if director == null:
-		note("EncounterDirector: ABSENT")
-		return
+	var party: Object = _find("Party")
+	var director: Object = _find("EncounterDirector")
+	var save: Object = root.get_node_or_null(^"/root/SaveManager")
 
-	note("--- catching, and the cap ---")
+	note("--- bullet: up to five pals ---")
+	note("party node present: %s" % (party != null))
+	note("save manager present: %s" % (save != null))
 	if party == null:
-		note("Party node: ABSENT — no party system is present in the scene")
-	else:
-		note("party size at start: %d" % int(party.call("size")))
-		note("party capacity: %d" % int(party.call("capacity")))
+		note("no party system in the scene; every bullet below is unevidenced")
+		return
+	note("capacity reported: %s" % probe(party, "capacity"))
+	note("size at start: %s" % probe(party, "size"))
 
-	note("--- what the transcript could not reach ---")
-	note("this session is a stub; the party steps are written when the system exists")
+	# Fill it, then overfill it. The refusal is the bullet — a cap that only
+	# holds because nothing ever pushes on it is not a cap.
+	var species: Array = ["starter_ground", "wild_rabbit", "wild_bristler"]
+	for i in 6:
+		var id: String = species[i % species.size()]
+		var added: Variant = _add_pal(party, id, "Pal%d" % (i + 1))
+		note("add #%d (%s): accepted=%s  size now=%s" % [i + 1, id, added, probe(party, "size")])
+	note("refusal message: %s" % probe(party, "last_refusal"))
+	note("size after six attempts: %s" % probe(party, "size"))
+
+	note("--- bullet: levels, HP/ATK/DEF, trait, nickname, appraisal ---")
+	var first: Object = _member(party, 0)
+	if first == null:
+		note("no member at index 0; per-pal bullets unevidenced")
+	else:
+		note("member 0 display: %s" % probe(first, "display"))
+		for name: String in ["level", "xp", "nickname", "trait_id", "hp", "max_hp", "attack", "defence"]:
+			note("member 0 %s: %s" % [name, field(first, name)])
+		note("member 0 appraisal: %s" % probe(first, "appraisal"))
+		if first.has_method("grant_xp"):
+			var before: Variant = field(first, "level")
+			first.call("grant_xp", 100000)
+			note("after granting 100000 xp: level %s -> %s, max_hp now %s" % [
+				before, field(first, "level"), field(first, "max_hp")
+			])
+		else:
+			note("grant_xp: ABSENT — levelling unevidenced")
+
+	note("--- bullet: switching ---")
+	note("active index before: %s" % field(party, "active_index"))
+	note("set_active(2) accepted: %s" % probe(party, "set_active", [2]))
+	note("active index after: %s" % field(party, "active_index"))
+	note("set_active(99) accepted: %s" % probe(party, "set_active", [99]))
+	note("active index after out-of-range: %s" % field(party, "active_index"))
+
+	note("--- bullet: persistent party data ---")
+	var before_records: Variant = probe(party, "to_records")
+	note("records before save: %s" % before_records)
+	if save != null and save.has_method("save"):
+		note("save() returned: %s" % save.call("save", 0))
+		# Clear in memory, then reload. Reading back a number the same object
+		# still holds proves nothing about persistence.
+		if party.has_method("clear"):
+			party.call("clear")
+			note("size after clearing in memory: %s" % probe(party, "size"))
+		note("load_slot(0) returned: %s" % save.call("load_slot", 0))
+		note("size after reload: %s" % probe(party, "size"))
+		note("records after reload: %s" % probe(party, "to_records"))
+	else:
+		note("SaveManager.save: ABSENT — persistence unevidenced")
+
+	note("--- bullet: catch pal ---")
+	if director != null and director.has_method("caught"):
+		note("director reports caught: %s" % director.call("caught").size())
+	else:
+		note("director caught(): ABSENT")
+
+	note("--- bullet: simple party menu ---")
+	await _open_party_menu()
+
+
+## Open the party screen through the real input action, not by instancing it.
+## A screen that only appears when a test constructs it is not reachable by a
+## player.
+func _open_party_menu() -> void:
+	Input.action_press("inventory")
+	await physics_frame
+	Input.action_release("inventory")
+	for i in 20:
+		await physics_frame
+	var stack: Object = _find("ScreenStack")
+	if stack == null:
+		note("ScreenStack: ABSENT — no screen opened")
+	else:
+		note("screen open after pressing 'inventory': %s" % probe(stack, "is_open"))
+		var top: Variant = probe(stack, "top")
+		note("top screen: %s" % (top.name if top is Node else top))
+	await shot("party_menu")
+
+	# Move the selection and photograph it again, so the judge can see whether
+	# selection is visible at all.
+	Input.action_press("move_back")
+	await physics_frame
+	Input.action_release("move_back")
+	for i in 12:
+		await physics_frame
+	await shot("party_menu_moved")
+
+	Input.action_press("menu_cancel")
+	await physics_frame
+	Input.action_release("menu_cancel")
+	for i in 12:
+		await physics_frame
+	if stack != null:
+		note("screen open after 'menu_cancel': %s" % probe(stack, "is_open"))
+
+
+## --- probes ---------------------------------------------------------------
+##
+## Everything below refuses to crash. An absent method is a FACT about the
+## build and belongs in the transcript; an exception is a truncated transcript
+## that a reader cannot tell apart from a short clean run.
+
+func _find(node_name: String) -> Object:
+	if _world == null:
+		return null
+	var direct: Node = _world.get_node_or_null(NodePath(node_name))
+	if direct != null:
+		return direct
+	var found: Array[Node] = _world.find_children(node_name, "", true, false)
+	return found[0] if not found.is_empty() else null
+
+
+func probe(target: Object, method: String, args: Array = []) -> Variant:
+	if target == null:
+		return "<no object>"
+	if not target.has_method(method):
+		return "<no method %s>" % method
+	return target.callv(method, args)
+
+
+func field(target: Object, property: String) -> Variant:
+	if target == null:
+		return "<no object>"
+	var value: Variant = target.get(property)
+	return value if value != null else "<no property %s>" % property
+
+
+func _member(party: Object, index: int) -> Object:
+	var got: Variant = probe(party, "at", [index])
+	return got if got is Object else null
+
+
+## Build a pal and offer it to the party. Kept here rather than in the party so
+## the session does not depend on a convenience method the system might not have.
+func _add_pal(party: Object, species_id: String, nickname: String) -> Variant:
+	var species := load("res://scripts/pals/pal_species.gd")
+	if species == null or not party.has_method("add"):
+		return "<cannot add>"
+	var instance: Variant = species.spawn(species_id)
+	if instance == null:
+		return "<spawn failed for %s>" % species_id
+	if "nickname" in instance:
+		instance.nickname = nickname
+	return party.call("add", instance)
 
 
 ## --- recording ------------------------------------------------------------
