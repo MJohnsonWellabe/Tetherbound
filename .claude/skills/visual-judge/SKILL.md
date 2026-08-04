@@ -101,6 +101,21 @@ and tint" is useful. "Lighting could be better" is not.
 6. **Interface.** Safe area, hierarchy, legibility at a glance.
 7. **Artefacts.** Z-fighting, seams, popping, stretched textures, geometry
    poking through geometry, anything that reads as a bug rather than a choice.
+8. **Scale agreement.** Do the objects in frame agree about how big a metre is?
+   **There is a ruler in the picture: the trainer is 1.80m.** Measure against
+   them. Is each creature the size its role implies — is the one you fight
+   alongside bigger than the one you practise on? Are trees, rocks and props
+   plausible beside a person? Two things that should differ in size by three
+   times and differ by a tenth is a defect you can see in a still.
+
+   This criterion was added after a round where the owner spotted, instantly,
+   that the largest creature in the game rendered smaller than a frog — and this
+   rubric had no question that would have found it. Every other criterion asks
+   how something *looks*; none asked how big it is. Wrong relative scale is one
+   of the loudest errors a 3D game can make and a still frame shows it perfectly.
+
+   Judge relative scale, which is checkable. Do not judge whether a species
+   *should* be large — that is a design decision and not yours.
 
 ## The verdict
 
