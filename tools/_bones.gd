@@ -1,29 +1,25 @@
 extends SceneTree
 
-## Throwaway rig probe. The paths and questions change with whatever asset is
-## being fitted; it stays in the tree because every retarget starts by finding
-## out what the two rigs actually say, and guessing costs a whole round.
-
-const KNIGHT := "res://assets/characters/knight.glb"
-
+## Throwaway probe. Round 4: "no character casts a shadow" — trainer, pal and
+## enemy all sit on the terrain with no contact while trees beside them cast.
+## Nothing in our code turns that off, so the question is whether the IMPORT
+## does.
 
 func _init() -> void:
-	var knight: Node = (load(KNIGHT) as PackedScene).instantiate()
-	root.add_child(knight)
-	for m in knight.find_children("*", "MeshInstance3D", true, false):
-		var mesh := m as MeshInstance3D
-		if mesh.mesh == null:
+	for path in [
+		"res://assets/characters/knight.glb",
+		"res://assets/pals/bramblit.fbx",
+		"res://assets/environment/stylized_nature/CommonTree_1.gltf",
+	]:
+		if not ResourceLoader.exists(path):
+			print(path, " MISSING")
 			continue
-		print("%s: %d surfaces" % [mesh.name, mesh.mesh.get_surface_count()])
-		for i in mesh.mesh.get_surface_count():
-			var mat: Material = mesh.mesh.surface_get_material(i)
-			var pts: PackedVector3Array = mesh.mesh.surface_get_arrays(i)[Mesh.ARRAY_VERTEX]
-			var box := AABB(pts[0], Vector3.ZERO)
-			for v in pts:
-				box = box.expand(v)
-			print("  %d  %-14s verts=%d  x %+.2f..%+.2f  y %+.2f..%+.2f" % [
-				i, mat.resource_name if mat else "<none>", pts.size(),
-				box.position.x, box.position.x + box.size.x,
-				box.position.y, box.position.y + box.size.y
+		var n: Node = (load(path) as PackedScene).instantiate()
+		root.add_child(n)
+		for m in n.find_children("*", "MeshInstance3D", true, false):
+			var mesh := m as MeshInstance3D
+			print("%-28s %-22s cast_shadow=%d visible=%s" % [
+				path.get_file(), mesh.name, mesh.cast_shadow, mesh.visible
 			])
+		root.remove_child(n)
 	quit(0)

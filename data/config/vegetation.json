@@ -116,13 +116,14 @@
       "scale_min": 0.26,
       "scale_max": 0.78,
       "clear_radius": 1.5,
-      "base_scale": 1.0,
+      "base_scale": 0.32,
       "_comment_shadow": "No shadow. Thousands of tufts each casting one overlap into a black carpet on terrain that does receive — measured at luminance 0.068 in the near field against 0.27-0.60 across the references. A blade's shadow is not information at this scale.",
       "casts_shadow": false,
       "_comment_clearings": "Walked straight through, so it cannot hide a creature or block a camera — the arena clearings do not apply. Stripping it left the spawn as forty metres of bare ground in the foreground of every survey frame.",
       "cleared_by_clearings": false,
       "collides": false,
-      "_comment_density": "Denser than the sparse tufts the critic saw, and pulled back from a first attempt at 21,300. That version took the whole scatter to 28,949 props and the combat survey stopped finishing inside ten minutes — which is a software renderer, so not a frame-rate measurement (D06), but 29k instances is a real cost on the handheld this targets and the coverage was not where it needed to be anyway. Spreading four times the tufts over 512m is not a dense FOREGROUND, it is a thin lawn everywhere. Bigger tufts at moderate count cover more of the near field, which is the half of frame the critic actually measured."
+      "_comment_density": "Denser than the sparse tufts the critic saw, and pulled back from a first attempt at 21,300. That version took the whole scatter to 28,949 props and the combat survey stopped finishing inside ten minutes — which is a software renderer, so not a frame-rate measurement (D06), but 29k instances is a real cost on the handheld this targets and the coverage was not where it needed to be anyway. Spreading four times the tufts over 512m is not a dense FOREGROUND, it is a thin lawn everywhere. Bigger tufts at moderate count cover more of the near field, which is the half of frame the critic actually measured.",
+      "_comment_base_scale": "Corrects the PACK's authoring scale, and was left at 1.0 while it should never have been. Round 4 measured grass tufts at 1.9m and a wildflower at 2.1m against the 1.80m trainer — head height on the player. Confirmed from the source models: Grass_Common_Tall is 1.87m native, Flower_4_Group is 2.49m, and the layer scales were multiplying those by 0.26-0.78 rather than correcting them. The critic's reading of the damage is the reason this is the first fix and not a small one: it 'makes the world read as a miniature diorama, makes the trainer read as a doll, and lets very few instances cover the ground — which is part of why the density looks thin.' Meadow grass is 0.2-0.5m."
     },
     "drygrass": {
       "_comment": "The wispy tufts, warmer and looser, in their own patches. Two grass textures where there was one. The critic counted 2 hue families against the key art board's 6 and said the board's golds appear nowhere below the horizon; this and the flowers are where the warm end comes from.",
@@ -142,10 +143,11 @@
       "scale_min": 0.25,
       "scale_max": 0.6,
       "clear_radius": 2.0,
-      "base_scale": 1.0,
+      "base_scale": 0.34,
       "casts_shadow": false,
       "cleared_by_clearings": false,
-      "collides": false
+      "collides": false,
+      "_comment_base_scale": "Same correction as `grass`; Grass_Wispy_Tall is 1.67m native."
     },
     "flowers": {
       "_comment": "Colour accents, clustered hard. Wildflowers grow in patches; spread evenly they read as confetti. Clover is in here because a flower patch with nothing between the blooms reads as pins in a board.",
@@ -166,10 +168,11 @@
       "scale_min": 0.35,
       "scale_max": 0.8,
       "clear_radius": 2.5,
-      "base_scale": 1.0,
+      "base_scale": 0.26,
       "casts_shadow": false,
       "cleared_by_clearings": false,
-      "collides": false
+      "collides": false,
+      "_comment_base_scale": "Same correction. Flower_4_Group is 2.49m native — taller than the player before this."
     },
     "rocks": {
       "_comment": "Rocks go where trees will not: they are the layer that makes the steep ground read as stone rather than as grass at an angle. The critic found the previous rocks read as 'dollops of moss' because their lit top face was the same hue as grass — these carry a real rock texture instead of a tinted flat colour.",
@@ -286,12 +289,13 @@
       "max_slope_deg": 34.0,
       "scale_min": 0.5,
       "scale_max": 1.05,
-      "base_scale": 0.85,
+      "base_scale": 0.34,
       "clear_radius": 11.0,
       "cleared_by_clearings": false,
       "collides": false,
       "casts_shadow": false,
-      "_comment_clear": "Inherited from the host layer, minus this skirt's widest ring. A skirt cannot reach the spawn pad unless its host tree does, so this is implied rather than independent — but 'implied' is exactly what test_every_layer_keeps_the_spawn_clear_at_all refuses to accept, and it is right to. An invariant that holds because of a relationship between two config blocks is one config edit away from not holding."
+      "_comment_clear": "Inherited from the host layer, minus this skirt's widest ring. A skirt cannot reach the spawn pad unless its host tree does, so this is implied rather than independent — but 'implied' is exactly what test_every_layer_keeps_the_spawn_clear_at_all refuses to accept, and it is right to. An invariant that holds because of a relationship between two config blocks is one config edit away from not holding.",
+      "_comment_base_scale": "Same pack, same correction — the skirt models are the oversized grass and clover."
     },
     "grove_skirt": {
       "_comment": "The same root flare for the grove oaks, which need it most: they are the widest trunks in the world, so their straight cut into the ground is the most visible one.",
@@ -311,12 +315,13 @@
       "max_slope_deg": 34.0,
       "scale_min": 0.5,
       "scale_max": 1.05,
-      "base_scale": 1.0,
+      "base_scale": 0.42,
       "clear_radius": 18.0,
       "cleared_by_clearings": false,
       "collides": false,
       "casts_shadow": false,
-      "_comment_clear": "Inherited from the host layer, minus this skirt's widest ring. A skirt cannot reach the spawn pad unless its host tree does, so this is implied rather than independent — but 'implied' is exactly what test_every_layer_keeps_the_spawn_clear_at_all refuses to accept, and it is right to. An invariant that holds because of a relationship between two config blocks is one config edit away from not holding."
+      "_comment_clear": "Inherited from the host layer, minus this skirt's widest ring. A skirt cannot reach the spawn pad unless its host tree does, so this is implied rather than independent — but 'implied' is exactly what test_every_layer_keeps_the_spawn_clear_at_all refuses to accept, and it is right to. An invariant that holds because of a relationship between two config blocks is one config edit away from not holding.",
+      "_comment_base_scale": "Same correction, a little larger because a grove oak's flare should out-scale a common tree's."
     },
     "fence": {
       "_comment": "A short run of wooden fence beside the path, north of the spawn. The first BUILT thing in the world.",
