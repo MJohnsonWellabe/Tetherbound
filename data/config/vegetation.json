@@ -40,10 +40,6 @@
         "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
         "res://assets/environment/stylized_nature/TwistedTree_5.gltf"
       ],
-      "_comment_retint": "The twisted oaks keep their warm leaf, pulled from crimson toward amber. This is the ONLY warm foliage in the meadow and it is deliberate: the critic measured the palette as a single yellow-green wedge with the board's golds appearing nowhere, and a handful of turning oaks is the cheapest honest way to put a second hue family at tree height. Modulates the texture, so it lightens and shifts rather than repaints.",
-      "retint": {
-        "Leaves_TwistedTree": "#ffd9a0"
-      },
       "_comment_count": "Deliberately few. A 10,000-triangle tree is thirty times a Kenney one, and these are the biggest thing in the world \u2014 a stand of six is a landmark, forty is a forest nobody can walk through.",
       "clumps": 6,
       "per_clump": 5,
@@ -55,7 +51,9 @@
       "clear_radius": 22.0,
       "base_scale": 0.85,
       "collides": true,
-      "collision_radius": 1.1
+      "collision_radius": 1.1,
+      "_comment_retexture": "The pack ships `Leaves_TwistedTree_C` as a CRIMSON autumn leaf. Left alone it made the biggest trees in the meadow blood red and they dominated every frame. Warm hue has to come from the flowers, the dry grass and the golden hour, not from painting the whole canopy.",
+      "_comment_colour": "These stay CRIMSON, at the owner's call: 'I actually really like the red trees.'\n\nIt is also the right call against the review. The critic measured the palette as a single yellow-green wedge \u2014 60-90% of pixels in one hue family in every frame \u2014 and said the board's golds and warm ends appear nowhere. A stand of turning oaks is the one thing in the meadow carrying a second hue family at tree height, and it does it with the pack's own authored texture rather than a tint.\n\nKept DELIBERATELY few for that reason: 6 clumps of 5. Warm accent against green reads as autumn; warm everywhere reads as a different biome. The bushes still get retextured green (they share this material) because 800 red bushes is a carpet, not an accent."
     },
     "deadfall": {
       "_comment": "Dead trees and mushrooms. The dead trees are 9-13m bare silhouettes and do a job no living tree can: they break a green tree line with a grey vertical, which is most of what stops a treeline reading as a hedge.",
@@ -109,21 +107,22 @@
         "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
         "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf"
       ],
-      "clumps": 120,
-      "per_clump": 52,
+      "clumps": 110,
+      "per_clump": 70,
       "clump_radius": 16.0,
-      "strays": 1400,
+      "strays": 2000,
       "max_slope_deg": 30.0,
       "_comment_scale": "The source tufts are 1.3-1.9m, which is head-high grass. Trimmed to roughly knee height, with a 2.5x spread.",
-      "scale_min": 0.22,
-      "scale_max": 0.55,
+      "scale_min": 0.26,
+      "scale_max": 0.78,
       "clear_radius": 1.5,
       "base_scale": 1.0,
       "_comment_shadow": "No shadow. Thousands of tufts each casting one overlap into a black carpet on terrain that does receive \u2014 measured at luminance 0.068 in the near field against 0.27-0.60 across the references. A blade's shadow is not information at this scale.",
       "casts_shadow": false,
       "_comment_clearings": "Walked straight through, so it cannot hide a creature or block a camera \u2014 the arena clearings do not apply. Stripping it left the spawn as forty metres of bare ground in the foreground of every survey frame.",
       "cleared_by_clearings": false,
-      "collides": false
+      "collides": false,
+      "_comment_density": "Denser than the sparse tufts the critic saw, and pulled back from a first attempt at 21,300. That version took the whole scatter to 28,949 props and the combat survey stopped finishing inside ten minutes \u2014 which is a software renderer, so not a frame-rate measurement (D06), but 29k instances is a real cost on the handheld this targets and the coverage was not where it needed to be anyway. Spreading four times the tufts over 512m is not a dense FOREGROUND, it is a thin lawn everywhere. Bigger tufts at moderate count cover more of the near field, which is the half of frame the critic actually measured."
     },
     "drygrass": {
       "_comment": "The wispy tufts, warmer and looser, in their own patches. Two grass textures where there was one. The critic counted 2 hue families against the key art board's 6 and said the board's golds appear nowhere below the horizon; this and the flowers are where the warm end comes from.",
@@ -136,9 +135,9 @@
         "Grass": "#e8d89a"
       },
       "clumps": 52,
-      "per_clump": 46,
+      "per_clump": 48,
       "clump_radius": 19.0,
-      "strays": 520,
+      "strays": 700,
       "max_slope_deg": 30.0,
       "scale_min": 0.25,
       "scale_max": 0.6,

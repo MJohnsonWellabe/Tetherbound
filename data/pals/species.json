@@ -1,8 +1,8 @@
 {
   "_comment": "Species definitions. Base stats and presentation only; a live creature's current HP and energy belong to a pal_instance, never here (TECHNICAL_START.md, Pal Data vs Pal Instance). M11 replaces `model` and the colours with real rigged creatures without touching combat code.",
-  "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance — clearly different silhouettes and clearly different colours — and nothing else.",
+  "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance \u2014 clearly different silhouettes and clearly different colours \u2014 and nothing else.",
   "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
-  "_comment_aggressive": "`aggressive` decides whether a wild pal will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL pal, and the same list allows 'Aggressive pal initiates' — so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
+  "_comment_aggressive": "`aggressive` decides whether a wild pal will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL pal, and the same list allows 'Aggressive pal initiates' \u2014 so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
   "species": {
     "starter_ground": {
       "display_name": "Bramblit",
@@ -13,24 +13,27 @@
       "catch_rate": 0.3,
       "aggressive": false,
       "placeholder": {
-        "colour": "#7f8c3d",
-        "height": 2.45,
-        "radius": 1.02,
+        "colour": "#9c5224",
+        "height": 1.2,
+        "radius": 0.46,
         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and pal_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
-        "footprint_allowance": 3.1,
-        "model": "res://assets/pals/bramblit.fbx",
+        "model": "res://assets/pals/plumberry/bruno-the-bear.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
-        "_comment_animations": "Role to clip name. Every pack names its clips differently, so nothing in code knows these strings; a new creature is a data edit. A role a pack lacks falls back (pal_animator._fallbacks) rather than freezing the creature mid-pose.",
+        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_animations": "26 clips ship baked into each .glb, so nothing is retargeted and nothing can be mangled. `pain` and `fall_over` are what hit and faint have wanted since M2; `uppercut` is a real committed swing rather than a lunge with no animation.",
         "animations": {
-          "idle": "Armature|Triceratops_Idle",
-          "attack": "Armature|Triceratops_Attack",
-          "faint": "Armature|Triceratops_Death",
-          "walk": "Armature|Triceratops_Walk",
-          "run": "Armature|Triceratops_Run"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "uppercut",
+          "hit": "pain",
+          "faint": "fall_over"
         },
-        "_comment_size": "Gameplay size, and the art is fitted to it. Combat reach and the catch accuracy bonus scale off `radius` (combat.json), so these are tuning, not decoration. Scaled against the 1.8m trainer so the roster has a real size hierarchy: the practice creature is smaller than you, your partner is bigger than you, and the one that ambushes you is bigger still. Everything was previously within half a metre of everything else, which made the largest creature in the game read as a dog."
+        "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
+        "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
+        "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own pal is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
+        "_comment_role": "Your partner, and therefore the one that must never be lost in a frame \u2014 so it gets the most saturated character in the pack."
       }
     },
     "wild_rabbit": {
@@ -43,52 +46,58 @@
       "catch_rate": 0.55,
       "aggressive": false,
       "placeholder": {
-        "colour": "#a8622f",
+        "colour": "#f2c14f",
         "height": 0.95,
-        "radius": 0.46,
-        "footprint_allowance": 2.6,
-        "model": "res://assets/pals/meadow_hopper.fbx",
+        "radius": 0.38,
+        "model": "res://assets/pals/plumberry/ernie-the-duck.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
-        "_comment_animations": "Role to clip name. Every pack names its clips differently, so nothing in code knows these strings; a new creature is a data edit. A role a pack lacks falls back (pal_animator._fallbacks) rather than freezing the creature mid-pose.",
+        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_animations": "26 clips ship baked into each .glb, so nothing is retargeted and nothing can be mangled. `pain` and `fall_over` are what hit and faint have wanted since M2; `uppercut` is a real committed swing rather than a lunge with no animation.",
         "animations": {
-          "idle": "Armature|Frog_Idle",
-          "attack": "Armature|Frog_Attack",
-          "faint": "Armature|Frog_Death",
-          "walk": "Armature|Frog_Jump",
-          "run": "Armature|Frog_Jump"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "uppercut",
+          "hit": "pain",
+          "faint": "fall_over"
         },
-        "_comment_size": "Gameplay size, and the art is fitted to it. Combat reach and the catch accuracy bonus scale off `radius` (combat.json), so these are tuning, not decoration. Scaled against the 1.8m trainer so the roster has a real size hierarchy: the practice creature is smaller than you, your partner is bigger than you, and the one that ambushes you is bigger still. Everything was previously within half a metre of everything else, which made the largest creature in the game read as a dog."
+        "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
+        "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
+        "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own pal is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
+        "_comment_role": "The practice creature. Bright gold at value 0.95 reads instantly against dark grass, which matters for the one you throw at twenty times."
       }
     },
     "wild_bristler": {
       "display_name": "Thornback",
       "type": "ground",
-      "_comment": "The one that comes at you. Tougher and rarer than the Hopper, because being ambushed should be a moment rather than an interruption — and because the first thing anyone does when something charges them is find out whether they can beat it.",
+      "_comment": "The one that comes at you. Tougher and rarer than the Hopper, because being ambushed should be a moment rather than an interruption \u2014 and because the first thing anyone does when something charges them is find out whether they can beat it.",
       "base_hp": 130.0,
       "base_attack": 24.0,
       "base_defence": 19.0,
       "catch_rate": 0.28,
       "aggressive": true,
       "placeholder": {
-        "colour": "#704f71",
-        "height": 2.25,
-        "radius": 0.98,
-        "footprint_allowance": 3.3,
-        "model": "res://assets/pals/thornback.fbx",
+        "colour": "#76a9b8",
+        "height": 1.45,
+        "radius": 0.52,
+        "model": "res://assets/pals/plumberry/ollie-the-songbird.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
-        "_comment_animations": "Role to clip name. Every pack names its clips differently, so nothing in code knows these strings; a new creature is a data edit. A role a pack lacks falls back (pal_animator._fallbacks) rather than freezing the creature mid-pose.",
+        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_animations": "26 clips ship baked into each .glb, so nothing is retargeted and nothing can be mangled. `pain` and `fall_over` are what hit and faint have wanted since M2; `uppercut` is a real committed swing rather than a lunge with no animation.",
         "animations": {
-          "idle": "Armature|Stegosaurus_Idle",
-          "attack": "Armature|Stegosaurus_Attack",
-          "faint": "Armature|Stegosaurus_Death",
-          "walk": "Armature|Stegosaurus_Walk",
-          "run": "Armature|Stegosaurus_Run"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "uppercut",
+          "hit": "pain",
+          "faint": "fall_over"
         },
-        "_comment_size": "Gameplay size, and the art is fitted to it. Combat reach and the catch accuracy bonus scale off `radius` (combat.json), so these are tuning, not decoration. Scaled against the 1.8m trainer so the roster has a real size hierarchy: the practice creature is smaller than you, your partner is bigger than you, and the one that ambushes you is bigger still. Everything was previously within half a metre of everything else, which made the largest creature in the game read as a dog."
+        "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
+        "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
+        "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own pal is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
+        "_comment_role": "The one that comes at you. Blue is the only cool hue in the pack and the only thing in the biome opposed to green rather than adjacent to it."
       }
     }
   }

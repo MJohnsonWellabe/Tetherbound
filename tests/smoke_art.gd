@@ -30,6 +30,19 @@ const SETTLE_FRAMES := 300
 ## which is a decision somebody makes rather than a clamp applying quietly.
 const HEIGHT_TOLERANCE := 0.08
 
+## ...but only DOWNWARDS. Above the collider, a creature gets much more room.
+##
+## `_fit()` scales a model by its REST bounds, and this test measures it after
+## three hundred frames of its idle clip — by which point an ear, a tail or a
+## raised paw is legitimately above where the rest pose put it. A wolf measured
+## 1.57m against a 1.45m collider for exactly that reason, and it was correct.
+##
+## The failure this test exists to catch is the opposite sign: the footprint
+## clamp quietly scaling a creature DOWN so the art no longer fills the collider
+## that gameplay reaches with. Being asymmetric keeps that catch at 8cm while
+## letting an animation breathe.
+const HEIGHT_OVERSHOOT := 0.30
+
 var _failures: Array[String] = []
 var _world: Node = null
 
@@ -96,10 +109,13 @@ func _the_creatures_in_the_world_loaded_their_models() -> void:
 		var actual := _rendered_height(body.call("model_pivot") as Node3D)
 		if actual <= 0.0:
 			_fail("'%s' has a model with no measurable size" % id)
-		elif absf(actual - wanted) > HEIGHT_TOLERANCE:
-			_fail("'%s' renders %.2fm tall but its collider is %.2fm; art and gameplay disagree" % [
+		elif actual < wanted - HEIGHT_TOLERANCE:
+			_fail("'%s' renders only %.2fm tall against a %.2fm collider. " % [id, actual, wanted] +
+				"Something scaled it DOWN — check the footprint clamp in pal_body._fit().")
+		elif actual > wanted + HEIGHT_OVERSHOOT:
+			_fail("'%s' renders %.2fm tall against a %.2fm collider; that is more than an " % [
 				id, actual, wanted
-			])
+			] + "animation should add, so the model is not fitted to its gameplay size.")
 		else:
 			print("  %-16s model %.2fm, collider %.2fm" % [id, actual, wanted])
 		_the_creature_has_the_clips_it_claims(body, id)

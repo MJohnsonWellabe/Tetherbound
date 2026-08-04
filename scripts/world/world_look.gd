@@ -120,21 +120,58 @@ func _apply_sun(cfg: Dictionary) -> void:
 	sun.shadow_blur = float(cfg.get("shadow_blur", 1.0))
 
 
+## An image sky if the time of day names one, the procedural gradient otherwise.
+##
+## The blind critic measured the procedural sky's horizontal variation at
+## **0.020** against **0.140–0.289** across the Palworld references — seven to
+## fourteen times less — and called it out plainly: no clouds, no sun disc, "the
+## build sky contributes nothing". It named this the cheapest large win
+## available, and it was right: a `ProceduralSkyMaterial` can produce a vertical
+## gradient and a soft sun blob and nothing else, ever. There is no amount of
+## tuning that puts a cumulus in it.
+##
+## So a time of day may name an HDRI panorama instead. The gradient stays as the
+## fallback, because a missing texture should degrade to the old sky rather than
+## to a black void, and because the procedural path is still the right answer for
+## anywhere that wants a stylised flat sky later.
+func _apply_sky(sky: Sky, cfg: Dictionary) -> void:
+	var panorama := str(cfg.get("panorama", ""))
+	if panorama != "" and ResourceLoader.exists(panorama):
+		var image := sky.sky_material as PanoramaSkyMaterial
+		if image == null:
+			image = PanoramaSkyMaterial.new()
+			sky.sky_material = image
+		image.panorama = load(panorama) as Texture2D
+		image.energy_multiplier = float(cfg.get("energy", 1.0))
+		# Filtering on, because a 2K panorama stretched across a sky dome shows
+		# its texels at the horizon otherwise, which reads as banding.
+		image.filter = true
+		return
+
+	if panorama != "":
+		push_warning("time of day names a sky panorama that does not exist: %s" % panorama)
+
+	var gradient := sky.sky_material as ProceduralSkyMaterial
+	if gradient == null:
+		gradient = ProceduralSkyMaterial.new()
+		sky.sky_material = gradient
+	gradient.sky_top_color = Color(str(cfg.get("top_colour", "#3b6f93")))
+	gradient.sky_horizon_color = Color(str(cfg.get("horizon_colour", "#b9c8cf")))
+	gradient.ground_horizon_color = Color(str(cfg.get("ground_horizon_colour", "#b9c8cf")))
+	gradient.ground_bottom_color = Color(str(cfg.get("ground_bottom_colour", "#4a5648")))
+	gradient.sun_angle_max = float(cfg.get("sun_angle_max_deg", 24.0))
+	gradient.sun_curve = float(cfg.get("sun_curve", 0.18))
+	gradient.energy_multiplier = float(cfg.get("energy", 1.0))
+
+
 func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	var holder: WorldEnvironment = get_node_or_null(environment_path) as WorldEnvironment
 	if holder == null or holder.environment == null:
 		return
 	var env := holder.environment
 
-	if not sky_cfg.is_empty() and env.sky != null and env.sky.sky_material is ProceduralSkyMaterial:
-		var sky := env.sky.sky_material as ProceduralSkyMaterial
-		sky.sky_top_color = Color(str(sky_cfg.get("top_colour", "#3b6f93")))
-		sky.sky_horizon_color = Color(str(sky_cfg.get("horizon_colour", "#b9c8cf")))
-		sky.ground_horizon_color = Color(str(sky_cfg.get("ground_horizon_colour", "#b9c8cf")))
-		sky.ground_bottom_color = Color(str(sky_cfg.get("ground_bottom_colour", "#4a5648")))
-		sky.sun_angle_max = float(sky_cfg.get("sun_angle_max_deg", 24.0))
-		sky.sun_curve = float(sky_cfg.get("sun_curve", 0.18))
-		sky.energy_multiplier = float(sky_cfg.get("energy", 1.0))
+	if not sky_cfg.is_empty() and env.sky != null:
+		_apply_sky(env.sky, sky_cfg)
 
 	if cfg.is_empty():
 		return
