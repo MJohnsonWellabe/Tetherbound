@@ -2,21 +2,29 @@
   "_comment": "Standing water. ALL TUNABLE. Nothing here is a mechanic — there is no swimming, no drowning and no water damage; the player wades and the terrain's own collision carries them. If any value in this file could change how the player moves, it is in the wrong file.",
   "_comment_why": "The art board lists Streams & Ponds as one of the Meadows' five pillars and the build had none of it. The blind critic measured `02-valley-floor` at 0.7% desaturated pixels and led its third-ranked gap with 'there is nothing to look at'. Water buys a hue family nothing else in the biome owns and the only specular highlight in the frame, for one draw call.",
   "_comment_placement": "`centre` is world metres, matching `terrain_playground.json`'s `valley`. The surface height is NOT authored: it is sampled from the terrain at the centre and raised by `fill`, so retuning the valley's depth moves the water with it instead of leaving a disc hanging over a crater.",
-  "_comment_radius": "Deliberately WIDER than the water actually reaches. Wherever the ground rises above the surface the ground occludes the disc, so the shoreline is the basin's own contour — irregular, and free. It is capped at 130 rather than the valley's 150 because the basin centre sits 120m west and a 150m disc would run off the 512m world's edge, where there is no terrain to hide it.",
+  "_comment_radius": "Deliberately WIDER than the water actually reaches: wherever the ground rises above the surface the ground occludes the disc, so the shoreline is the basin's own contour — irregular, and free. Sized off the WATERLINE, not off the valley. The first attempt used the valley's own 150m radius and flooded most of the basin, because a 22m-deep bell over 150m is very gentle and a 1.15m fill reaches a long way across it. 64m is comfortably past where the ground comes up, so the occlusion trick still works, without putting the valley-floor camera in the water.",
   "_comment_fill": "Metres above the basin floor. Knee-deep on purpose. A pond you can walk into and out of needs no new traversal state; a lake needs swimming, and adding a traversal mechanic is on CLAUDE.md's flag-don't-invent list.",
   "bodies": [
     {
       "name": "ValleyPond",
-      "centre": [-120.0, 130.0],
-      "radius": 130.0,
-      "fill": 1.15,
+      "centre": [
+        -120.0,
+        130.0
+      ],
+      "radius": 64.0,
+      "fill": 0.85,
       "_comment_colour": "Cool green-blue in the shallows going to a deep slate blue. Chosen AGAINST the meadow rather than to match it — the whole point is a hue the biome does not already own.",
-      "shallow_colour": "#4a9490",
-      "deep_colour": "#173b52",
-      "foam_colour": "#dceff2",
+      "shallow_colour": "#3f7d7c",
+      "deep_colour": "#173347",
+      "foam_colour": "#cfe4e6",
       "foam_width": 0.11,
-      "wave_strength": 0.16,
-      "swell_height": 0.05
+      "wave_strength": 0.13,
+      "swell_height": 0.05,
+      "_comment_round4": "First render was wrong in two ways at once and both are visible in `02-valley-floor`. It measured saturation 0.62 against the references' 0.41-0.47 and read as a flat bright cyan sheet with no depth to it; and at radius 130 over a basin this shallow it flooded far more ground than a pond should, putting the valley-floor camera inside the water. The basin is a 22m-deep bell over 150m, so a 1.15m fill reaches roughly 22m from the centre in theory and much further wherever the detail noise dips — the radius was sized off the VALLEY rather than off the waterline it would actually produce.",
+      "alpha_shallow": 0.52,
+      "alpha_deep": 0.8,
+      "specular_water": 0.55,
+      "roughness_water": 0.14
     }
   ]
 }
