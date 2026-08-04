@@ -66,7 +66,10 @@
     "yaw_deg": -40.0,
     "energy": 1.35,
     "colour": "#fff6e6",
-    "shadow_max_distance": 220.0,
+    "shadow_max_distance": 280.0,
+    "_comment_shadow_fade": "Fraction of `shadow_max_distance` at which shadows start dissolving, and whether cascade splits are blended. Both exist to kill the same artefact: the critic found 'a hard shadow-distance cutoff as a horizontal line across 04'. Raising the distance alone only moves the line and costs resolution everywhere nearer, so the distance moved a little and the EDGE became a gradient.",
+    "shadow_fade_start": 0.68,
+    "shadow_blend_splits": true,
     "_comment_shadow": "Normal bias fights the acne that a heightmap terrain produces at grazing angles. Raise it if the ground looks striped; lower it if small props stop casting.",
     "shadow_normal_bias": 2.0,
     "_comment_energy": "Bright. The first pass at real lighting overshot into gloom: the arena went near-black and the creatures stopped being readable, which is a worse failure than the flat lighting it replaced. Value RANGE was the goal \u2014 bright sun, real shadows \u2014 not darkness."

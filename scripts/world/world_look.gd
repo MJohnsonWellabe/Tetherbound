@@ -119,6 +119,24 @@ func _apply_sun(cfg: Dictionary) -> void:
 	sun.shadow_bias = float(cfg.get("shadow_bias", 0.06))
 	sun.shadow_blur = float(cfg.get("shadow_blur", 1.0))
 
+	# Fade the last splits out instead of stopping dead.
+	#
+	# The critic found "a hard shadow-distance cutoff as a horizontal line across
+	# 04" — everything nearer than `shadow_max_distance` shaded, everything past
+	# it uniformly lit, with a visible seam between. That seam is the artefact,
+	# not the distance: pushing the distance out just moves the line further away
+	# while costing shadow resolution everywhere nearer.
+	#
+	# `fade_start` is a FRACTION of the max distance at which the fade begins, so
+	# 0.7 means the outer third dissolves. The line becomes a gradient, which the
+	# aerial perspective and fog then finish hiding.
+	sun.directional_shadow_fade_start = clampf(float(cfg.get("shadow_fade_start", 0.7)), 0.0, 1.0)
+	# Splits blended into each other rather than butted together, which removes
+	# the same seam at each of the three interior cascade boundaries. It is the
+	# identical defect three more times over, just closer to the camera and so
+	# smaller and easier to miss.
+	sun.directional_shadow_blend_splits = bool(cfg.get("shadow_blend_splits", true))
+
 
 ## An image sky if the time of day names one, the procedural gradient otherwise.
 ##

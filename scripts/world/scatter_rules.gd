@@ -152,10 +152,67 @@ static func all_placements(field: RefCounted, world_size: float, base_seed: int)
 	var layers: Dictionary = config().get("layers", {})
 	var built: Dictionary = {}
 	var offset := 0
+	# Two passes, because a skirt layer needs the layer it skirts to exist first
+	# and dictionary order is not a dependency graph.
 	for name: String in layers.keys():
-		if name.begins_with("_"):
+		if name.begins_with("_") or (layers[name] as Dictionary).has("skirt_of"):
 			continue
 		var layer: Dictionary = layers[name]
 		built[name] = placements_for(layer, field, world_size, base_seed + offset * 7919)
 		offset += 1
+	for name: String in layers.keys():
+		if name.begins_with("_") or not (layers[name] as Dictionary).has("skirt_of"):
+			continue
+		var layer: Dictionary = layers[name]
+		built[name] = skirt_for(layer, built, field, world_size, base_seed + offset * 7919)
+		offset += 1
 	return built
+
+
+## Small growth banked around the base of something else.
+##
+## The critic's artefact list included, for four frames running: *"trunks meet
+## the ground with a straight cut, no root flare, no AO, no tuft"*. A tree model
+## ends at a flat disc where its trunk was cut off, and a scatter that places
+## trees independently of ferns will only ever put a fern near a trunk by luck.
+##
+## So this layer type does not scatter at all — it reads another layer's
+## placements and rings each one. That is the difference between "there is
+## sometimes a plant near a tree" and "every tree has something growing out of
+## its base", and only the second one reads as a root flare.
+##
+## Placed in an ANNULUS, not a disc: `skirt_inner` keeps the tufts off the trunk
+## itself, where they would be swallowed by it and cost their draw call for
+## nothing. The ring scales with the tree, so a big one gets a wide skirt.
+static func skirt_for(
+	layer: Dictionary, built: Dictionary, field: RefCounted, world_size: float, seed_value: int
+) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var models: Array = layer.get("models", [])
+	var source: Array = built.get(str(layer.get("skirt_of", "")), [])
+	if models.is_empty() or source.is_empty():
+		return out
+
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
+	var half := world_size * 0.5
+	var per := int(layer.get("skirt_count", 4))
+	var inner := float(layer.get("skirt_inner", 0.35))
+	var outer := float(layer.get("skirt_outer", 1.1))
+	var chance := float(layer.get("skirt_chance", 1.0))
+
+	for entry: Variant in source:
+		var host: Dictionary = entry
+		if rng.randf() > chance:
+			continue
+		# The host's own scale sets the ring, so the skirt fits the tree it
+		# belongs to rather than being one size for a layer whose members vary
+		# by 40%.
+		var host_scale := float(host.get("scale", 1.0))
+		var at: Vector3 = host["position"]
+		for i in per:
+			var angle := rng.randf_range(0.0, TAU)
+			var radius := rng.randf_range(inner, outer) * host_scale
+			var spot := Vector2(at.x, at.z) + Vector2(sin(angle), cos(angle)) * radius
+			_consider(out, layer, field, models, spot, half, rng)
+	return out
