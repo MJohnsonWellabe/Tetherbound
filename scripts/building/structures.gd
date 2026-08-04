@@ -26,9 +26,17 @@ extends Node3D
 ## thousand instances. If it ever does bite, the right move is freezing a
 ## FINISHED building into one baked mesh — not starting there and losing the
 ## ability to delete a wall.
+##
+## Reason 3 above — identity — is also what lets a piece DO something. A piece
+## whose definition carries a `station` block gets a behaviour node attached here
+## when it is placed, saved with its placement, rebuilt on load, and released
+## before it is destroyed. See `scripts/building/station.gd`. Everything else
+## about such a piece is ordinary, which is the point: a bed is a wall that
+## answers questions, not a special case with its own placement rules.
 
 const CATALOGUE_PATH := "res://data/building/pieces.json"
 const GRID := preload("res://scripts/building/build_grid.gd")
+const STATION := preload("res://scripts/building/station.gd")
 
 ## This file used to own `user://structures.json` outright — its own path, its
 ## own version constant, its own refusal logic. It is now one CONTRIBUTOR to the
@@ -40,9 +48,19 @@ const SAVE_DOMAIN := "structures"
 ## anything else. Tunable; not a design decision.
 const SAVE_SLOT := 0
 
-## Placed pieces, in placement order. Each is the serialisable record and its
-## live node together, so saving never has to walk the scene tree and read
-## transforms back out of it.
+## A piece with behaviour has just been built, or is about to be destroyed.
+##
+## Emitted rather than polled so that a system which cares about beds — pal
+## recovery, respawn — can react to one appearing instead of rescanning the
+## whole village every frame. `station_removing` fires while the station is
+## still valid and before anything is freed, which is the only moment a listener
+## can safely let go of it.
+signal station_placed(station: Node)
+signal station_removing(station: Node)
+
+## Placed pieces, in placement order. Each is the serialisable record, its live
+## node and its station (or null) together, so saving never has to walk the
+## scene tree and read transforms back out of it.
 var _placed: Array[Dictionary] = []
 
 ## How many pieces the last `load_data()` rebuilt. `load_saved()` reports it,
@@ -57,17 +75,31 @@ var _materials: Dictionary = {}
 
 
 func _ready() -> void:
-	_catalogue = _load_catalogue()
+	_ensure_catalogue()
 	_register()
 
 
 ## Every piece the palette can offer, as `{id: definition}`.
 func catalogue() -> Dictionary:
+	_ensure_catalogue()
 	return _catalogue
 
 
 func definition(piece_id: String) -> Dictionary:
+	_ensure_catalogue()
 	return _catalogue.get(piece_id, {})
+
+
+## Read the catalogue if it has not been read, rather than only in `_ready()`.
+##
+## `_ready()` never runs for a structures node that has not been handed to a
+## running tree, and there are two such callers already: `tools/preview_build.gd`
+## builds one to photograph, and a test builds one to place into. Both would
+## otherwise get "no build piece called ..." for every id in the file — an empty
+## catalogue that reads as a missing data file.
+func _ensure_catalogue() -> void:
+	if _catalogue.is_empty():
+		_catalogue = _load_catalogue()
 
 
 ## Build one piece and keep it. Returns the node, or null if the id is unknown.
@@ -77,7 +109,17 @@ func definition(piece_id: String) -> Dictionary:
 ## places what it is told to, so that a load from disk and a fresh placement go
 ## down exactly the same path. A loader with its own placement code is a loader
 ## that drifts.
-func place(piece_id: String, position: Vector3, yaw: float, storey: int = 0) -> Node3D:
+##
+## `station_state` is what a previously-saved station said about itself, and is
+## empty for a fresh placement — the same argument the loader passes back in, so
+## that a reloaded campfire and a newly-lit one are built by one function.
+func place(
+	piece_id: String,
+	position: Vector3,
+	yaw: float,
+	storey: int = 0,
+	station_state: Dictionary = {}
+) -> Node3D:
 	var piece := definition(piece_id)
 	if piece.is_empty():
 		push_error("no build piece called '%s'" % piece_id)
@@ -91,7 +133,16 @@ func place(piece_id: String, position: Vector3, yaw: float, storey: int = 0) -> 
 	var node := Node3D.new()
 	node.name = "%s_%d" % [piece_id, _placed.size()]
 	add_child(node)
-	node.global_position = position
+	# `global_position` requires the node to be inside the scene tree and returns
+	# a silent (0,0,0) when it is not, so a structures node built outside a
+	# running world — a preview tool, a test — would stack every piece on the
+	# origin. `position` is the same coordinate whenever this node is itself at
+	# the origin, which is how the scene ships and how every such caller builds
+	# one.
+	if is_inside_tree():
+		node.global_position = position
+	else:
+		node.position = position
 	node.rotation.y = yaw
 
 	# The whole imported scene, not one extracted mesh: the kit's pieces are
@@ -103,6 +154,16 @@ func place(piece_id: String, position: Vector3, yaw: float, storey: int = 0) -> 
 
 	node.add_child(_body(piece))
 
+	# The behaviour hook. Attached AFTER the art, because a station may need to
+	# find a node inside it — the campfire's flame is named by the definition and
+	# located in the model.
+	var station: Node = STATION.create(piece)
+	if station != null:
+		node.add_child(station)
+		station.call("setup", piece_id, STATION.config_of(piece), position)
+		if not station_state.is_empty():
+			station.call("load_state", station_state)
+
 	var record := {
 		"piece": piece_id,
 		"x": position.x,
@@ -111,29 +172,52 @@ func place(piece_id: String, position: Vector3, yaw: float, storey: int = 0) -> 
 		"yaw_deg": rad_to_deg(yaw),
 		"storey": storey,
 	}
-	_placed.append({"record": record, "node": node})
+	_placed.append({"record": record, "node": node, "station": station})
+	if station != null:
+		station_placed.emit(station)
 	return node
 
 
 ## Remove the piece nearest a point, within `radius`. Returns true if one went.
+##
+## Distance is measured against the RECORD, not against the node's
+## `global_position`. The record is where the piece was told to go, it is exact,
+## and `occupied()` two functions down already compares records for the same
+## reason — asking the node instead means asking the physics/transform state,
+## which is empty for a node not inside a running tree.
 func remove_nearest(point: Vector3, radius: float) -> bool:
 	var best := -1
 	var best_distance := radius
 	for i in _placed.size():
-		var node: Node3D = _placed[i]["node"]
-		if not is_instance_valid(node):
-			continue
-		var distance := node.global_position.distance_to(point)
+		var distance := _position_of(_placed[i]["record"]).distance_to(point)
 		if distance <= best_distance:
 			best_distance = distance
 			best = i
 	if best < 0:
 		return false
-	var doomed: Node3D = _placed[best]["node"]
-	if is_instance_valid(doomed):
-		doomed.queue_free()
+	_demolish(_placed[best])
 	_placed.remove_at(best)
 	return true
+
+
+## Take one placed entry out of the world, station and all.
+##
+## The station is released BEFORE the node is freed, while it is still valid: a
+## pal asleep in a bed the player has just deleted has to be woken by the bed, or
+## it is left holding a reference to a freed node, which is a crash waiting for
+## the next time anything asks it where it is sleeping.
+func _demolish(entry: Dictionary) -> void:
+	var station: Node = entry.get("station")
+	if station != null and is_instance_valid(station):
+		station_removing.emit(station)
+		station.call("release")
+	var node: Node3D = entry["node"]
+	if is_instance_valid(node):
+		node.queue_free()
+
+
+func _position_of(record: Dictionary) -> Vector3:
+	return Vector3(float(record["x"]), float(record["y"]), float(record["z"]))
 
 
 ## Is anything already occupying this spot? Used to refuse a placement that
@@ -159,11 +243,56 @@ func count() -> int:
 
 
 ## Placement records only, for tests and for the save file.
+##
+## A station's state is merged in HERE rather than kept up to date in the record
+## as it changes. The record is the placement — where and which — and it is
+## written once; the station's state moves while the player plays, and reading it
+## at the moment of saving is the only way it cannot be stale.
 func records() -> Array:
 	var out: Array = []
 	for entry: Dictionary in _placed:
-		out.append((entry["record"] as Dictionary).duplicate())
+		out.append(STATION.write_record(entry["record"] as Dictionary, entry.get("station")))
 	return out
+
+
+## --- stations -------------------------------------------------------------
+##
+## The world's answer to "where can a pal sleep" and "which campfire is that".
+## Queried rather than registered elsewhere: `structures.gd` already owns every
+## placed piece and their lifetimes, and a second list of beds somewhere else is
+## a second list that can disagree with this one about which beds exist.
+
+
+## Every placed station, optionally only those of one behaviour.
+func stations(behaviour: String = "") -> Array:
+	var out: Array = []
+	for entry: Dictionary in _placed:
+		var station: Node = entry.get("station")
+		if station == null or not is_instance_valid(station):
+			continue
+		if behaviour.is_empty() or str(station.get("behaviour")) == behaviour:
+			out.append(station)
+	return out
+
+
+## The station on a placed piece, or null if that piece is only geometry.
+func station_of(piece_node: Node) -> Node:
+	return STATION.of(piece_node)
+
+
+## The nearest station to a point, within `radius`. Null if there is none.
+##
+## This is how "is a pal resting here" gets asked: find the nearest pal bed to
+## where the pal is standing, then ask the bed.
+func nearest_station(point: Vector3, radius: float, behaviour: String = "") -> Node:
+	var best: Node = null
+	var best_distance := radius
+	for station: Node in stations(behaviour):
+		var distance: float = float(station.call("distance_to", point))
+		if distance <= best_distance:
+			best_distance = distance
+			best = station
+	return best
 
 
 ## --- the `structures` save domain -----------------------------------------
@@ -194,7 +323,8 @@ func load_data(data: Dictionary) -> void:
 			str(record.get("piece", "")),
 			Vector3(float(record.get("x", 0.0)), float(record.get("y", 0.0)), float(record.get("z", 0.0))),
 			deg_to_rad(float(record.get("yaw_deg", 0.0))),
-			int(record.get("storey", 0))
+			int(record.get("storey", 0)),
+			STATION.read_record(record)
 		)
 		if node != null:
 			_last_loaded += 1
@@ -248,9 +378,7 @@ func _register(manager: Node = null) -> void:
 
 func clear() -> void:
 	for entry: Dictionary in _placed:
-		var node: Node3D = entry["node"]
-		if is_instance_valid(node):
-			node.queue_free()
+		_demolish(entry)
 	_placed.clear()
 
 

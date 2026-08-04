@@ -3,8 +3,13 @@
   "_comment_measured": "Every collider was MEASURED from the model's own glTF accessors by the script that generated this file, never typed. A piece that claims a footprint its art does not have is a wall you can walk through or a floor with an invisible kerb, and both read as physics bugs rather than as data errors.",
   "_comment_anchor": "`cell` snaps to the middle of a 2m cell, `edge` to the middle of one of its four sides. Not a preference: the kit uses TWO origins. A floor's origin is the centre of its tile; a wall's is the bottom-centre of a 2m EDGE. Snapping both the same way puts every wall half a cell out, which reads as a rotation bug and is not one.",
   "_comment_size_cells": "Footprint in 2m cells, used to sample the terrain under all four corners before allowing a placement. Roofs are named in the kit by their INTERIOR span in metres, so `Roof_RoundTiles_4x4` covers 2x2 cells and overhangs ~0.75m past them on every side.",
-  "_comment_scope": "The M8 list from MEADOWS_VERTICAL_SLICE.md: floor, wall, doorway/door, roof, fence — plus stairs and windows, which the kit gives for free and which a house needs. Campfire, bed, pal bed, workbench, storage and berry plot are also on the M8 list and are deliberately NOT here: each is a station with behaviour, not a piece of geometry.",
+  "_comment_scope": "The M8 list from MEADOWS_VERTICAL_SLICE.md: floor, wall, doorway/door, roof, fence — plus stairs and windows, which the kit gives for free and which a house needs. This comment used to end 'campfire, bed, pal bed, workbench, storage and berry plot are deliberately NOT here: each is a station with behaviour, not a piece of geometry', which was true and was also a permanent excuse, because nothing was ever going to write the behaviour. `scripts/building/station.gd` is now that behaviour, and the first three of the six are below. The other three are listed as `_todo_` entries in this file rather than as half-pieces, so a reader can see what is missing and why.",
+  "_comment_station": "A piece may carry a `station` block. If it does, `structures.place()` attaches the matching node from scripts/building/station.gd as a child called `Station`, and anything that station says is state comes back in the save file under the record's own `station` key. Everything else about a station piece is ordinary: same grid, same anchor, same measured collider, same record. A piece with NO `station` block behaves exactly as it did before stations existed, which is what keeps the twenty-eight above a non-event.",
+  "_comment_cost": "There are still no build costs. GAME_DESIGN.md §20 has building consume Wood/Stone/Fiber and D12 records why nothing does yet: there is no inventory to spend from. When there is one, the cost goes on each piece HERE, beside `model` and `anchor`, and the refusal goes in `build_mode._check()` beside 'too far away' — because a refusal the player has to read is a placement refusal. No placeholder `cost` key is left in the pieces below, so nothing can be mistaken for a working one.",
   "pieces": {
+    "_todo_workbench": "M8 owns it. Waiting on crafting recipes — a bench with nothing to craft is a decoration with extra steps.",
+    "_todo_storage": "M9 owns it. Waiting on the slot/stack inventory container — a chest is a view onto one, not a second one.",
+    "_todo_berry_plot": "M8 / GAME_DESIGN.md §21 owns it. Waiting on plant/grow/harvest and a berry item to yield.",
     "floor_wooddark": {
       "display_name": "Wooden Floor",
       "model": "res://assets/buildings/Floor_WoodDark.gltf",
@@ -564,6 +569,86 @@
         0.419,
         0.055
       ]
+    },
+    "bed_simple": {
+      "_comment": "The trainer's bed: rest point and respawn point, per GAME_DESIGN.md §20's 'safety, recovery, respawn and rest'. Capacity one, and that one is the player. STAND-IN ART — the extracted kit has no furniture at all, so scenes/building/bed.tscn is honest primitive geometry at honest dimensions rather than a crate dressed up as a bed. Swapping it is this one `model` line plus a re-measure.",
+      "display_name": "Bed",
+      "model": "res://scenes/building/bed.tscn",
+      "category": "bed",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.3,
+        0.0
+      ],
+      "collider_extents": [
+        0.5,
+        0.3,
+        1.0
+      ],
+      "station": {
+        "behaviour": "rest",
+        "rests": "player",
+        "capacity": 1,
+        "respawn": true
+      }
+    },
+    "pal_bed_straw": {
+      "_comment": "M6's pal bed. Somewhere a pal sleeps — NOT a workstation, and nothing here may ever make it one (CLAUDE.md: pals do not perform base jobs). CAPACITY IS ONE, so five pals need five beds; the reasoning is in the RestStation header in scripts/building/station.gd and this is the number to change if the owner wants the other answer. STAND-IN ART, same reason as the bed above.",
+      "display_name": "Pal Bed",
+      "model": "res://scenes/building/pal_bed.tscn",
+      "category": "bed",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.13,
+        0.0
+      ],
+      "collider_extents": [
+        0.8,
+        0.13,
+        0.8
+      ],
+      "station": {
+        "behaviour": "rest",
+        "rests": "pal",
+        "capacity": 1
+      }
+    },
+    "campfire_stone": {
+      "_comment": "Light now, cooking later (M9 owns food). `flame_node` names the node inside the art that holds the fire and its light, so the Hearth station can put it out without the code hard-coding a path into a scene. The collider is measured around the STONE RING ONLY and deliberately excludes the flame: a box the full 0.85m height of the fire would be an invisible wall you cannot walk up to the campfire through.",
+      "display_name": "Campfire",
+      "model": "res://scenes/building/campfire.tscn",
+      "category": "light",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.001,
+        0.168,
+        -0.005
+      ],
+      "collider_extents": [
+        0.806,
+        0.175,
+        0.802
+      ],
+      "station": {
+        "behaviour": "hearth",
+        "light_radius": 6.0,
+        "lit_on_place": true,
+        "flame_node": "Flame"
+      }
     }
   }
 }
