@@ -35,9 +35,17 @@ const OUT := "res://shots/_ceremony_%s.png"
 ## not finished sizing photographs as if the content fitted.
 const SETTLE := 30
 
+## Long enough for a held direction to be seen by `_physics_process`, and long
+## enough after release that the next press is a fresh one rather than the
+## hold-to-repeat of this one. `screen_stack.gd`'s NAV_DELAY is 0.40s; 8 frames
+## at 60Hz is well inside it.
+const HOLD_FRAMES := 8
+const RELEASE_FRAMES := 6
+
 var _stack: Node = null
 var _release: Control = null
 var _shots: int = 0
+var _last_fingerprint: String = ""
 
 
 func _init() -> void:
@@ -77,18 +85,18 @@ func _run() -> void:
 
 	# The longest card, focused. The first frame lands on the newcomer; step to
 	# the pal with the longest trait description, which is the one that clips.
-	_press("move_right")
+	await _press("move_right")
 	await _settle()
 	await _shot("six_focused")
 
 	# Refused exit — the screen has to say why and stay, and the message is extra
 	# text in a panel that was already the tightest thing here.
-	_press("menu_cancel")
+	await _press("menu_cancel")
 	await _settle()
 	await _shot("six_refused")
 
 	# Into the farewell. Confirm on a card chooses it and pushes.
-	_press("menu_confirm")
+	await _press("menu_confirm")
 	await _settle()
 	await _shot("farewell")
 	print("stack depth at the farewell: %d" % int(_stack.call("depth")))
@@ -162,9 +170,26 @@ func _names(members: Array) -> PackedStringArray:
 
 ## Press through the real actions, so a screen that does not respond here does
 ## not respond on the handheld either.
+##
+## HELD across physics frames, not pressed and released in one call. The two
+## kinds of input in `screen_stack.gd` are read differently: buttons come from
+## `Input.is_action_just_pressed()`, which latches for the frame the press was
+## recorded in, but DIRECTIONS come from `Input.get_axis()`, which reports what
+## is held right now. A press and release inside one call is never held during a
+## physics frame, so the axis reads zero and the cursor does not move.
+##
+## The first version of this file did exactly that, and the cost was the shape of
+## the mistake rather than its size: frames 01 and 02 came out byte-identical, so
+## the tool reported photographing "the focused card" while photographing the
+## same card twice. A harness that silently does nothing is worse than one that
+## fails, because its output looks like evidence.
 func _press(action: StringName) -> void:
 	Input.action_press(action)
+	for i in HOLD_FRAMES:
+		await physics_frame
 	Input.action_release(action)
+	for i in RELEASE_FRAMES:
+		await physics_frame
 
 
 func _settle() -> void:
@@ -172,13 +197,30 @@ func _settle() -> void:
 		await process_frame
 
 
+## Capture, and say so out loud when the picture did not change.
+##
+## Every frame here is taken after an input that is supposed to have changed
+## something. Two identical frames therefore mean the input did nothing, and that
+## is precisely the failure this tool shipped with: a press-and-release that
+## never survived to a physics frame produced two byte-identical PNGs, and the
+## log said "frame 'six_focused'" over a photograph of the unfocused screen.
+##
+## Nothing here fails the run — this is a preview, not a test. But a harness that
+## quietly does nothing is worse than one that breaks, because its output still
+## looks like evidence, so the fact goes in the log where it cannot be missed.
 func _shot(name: String) -> void:
 	await process_frame
 	var image := root.get_texture().get_image()
 	_shots += 1
 	var path := OUT % ("%02d_%s" % [_shots, name])
 	image.save_png(path)
-	print("frame '%s' -> %s" % [name, path])
+
+	var fingerprint: String = image.get_data().get_string_from_ascii().sha256_text()
+	var note := ""
+	if fingerprint == _last_fingerprint:
+		note = "   <-- IDENTICAL to the previous frame; the input before it changed nothing"
+	_last_fingerprint = fingerprint
+	print("frame '%s' -> %s%s" % [name, path, note])
 
 
 ## Something behind the menus that is not black, so a panel's edge is visible
