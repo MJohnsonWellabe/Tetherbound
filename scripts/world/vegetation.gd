@@ -134,19 +134,43 @@ func _water_bodies(field: RefCounted) -> Array:
 ## the model. Sharing a model across layers is therefore silently
 ## last-writer-wins — which is exactly the kind of thing that shows up as one
 ## odd-coloured patch in a survey frame and takes an afternoon to trace.
+##
+## It warns on CONFLICTING OVERRIDES, not on sharing. Sharing alone is fine and
+## is in fact unavoidable: the nature pack has 42 models and every one of them is
+## already spoken for, so a new layer cannot be given a private set. Warning on
+## sharing made this fire six times the moment the tree skirts were added, for
+## six models that no layer tints at all — and a warning that cries wolf on
+## every build is one nobody reads on the build where it matters.
+##
+## It is still coarser than the truth, and deliberately so. `bushes` carries a
+## retexture and `tree_skirt` does not, so Fern_1 and Plant_1 still warn even
+## though that retexture is keyed on the material `Leaves_TwistedTree` and
+## neither model has it — both use plain `Leaves`, so nothing can actually
+## differ. Narrowing further means loading each mesh to intersect its material
+## names with the override's keys, and a warning that has to load geometry to
+## decide whether to fire is worse than one that occasionally over-reports. The
+## rule kept is: warn when two layers ASK for different things, and leave
+## "would it have mattered" to whoever reads it.
 func _warn_about_shared_models(by_layer: Dictionary) -> void:
 	var owner_of: Dictionary = {}
+	var overrides_of: Dictionary = {}
 	for layer_name: String in RULES.config().get("layers", {}).keys():
 		if layer_name.begins_with("_"):
 			continue
 		var layer: Dictionary = RULES.config()["layers"][layer_name]
+		var mine := {
+			"retint": layer.get("retint", {}),
+			"retexture": layer.get("retexture", {}),
+		}
 		for entry: Variant in (layer.get("models", []) as Array):
 			var model := str(entry)
-			if owner_of.has(model) and owner_of[model] != layer_name:
-				push_warning("%s is in both '%s' and '%s'; only one layer's retint can apply" % [
+			if owner_of.has(model) and owner_of[model] != layer_name \
+					and overrides_of[model] != mine:
+				push_warning("%s is in both '%s' and '%s' with DIFFERENT retints; only one can apply" % [
 					model.get_file(), owner_of[model], layer_name
 				])
 			owner_of[model] = layer_name
+			overrides_of[model] = mine
 
 
 ## Materials, cached by source name so every tree in the meadow shares one.
