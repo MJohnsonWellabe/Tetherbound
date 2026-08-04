@@ -258,28 +258,39 @@ func _session_release() -> void:
 
 	# HOW THE PARTY GETS FULL, stated plainly so the judge can weigh it.
 	#
-	# The playground holds two wild creatures, and an earlier run of this session
-	# established what happens when you keep catching them: the second catch of the
-	# same creature comes back from the director as `token='already_held'`, because
-	# the respawned creature carries the same instance that is already in the
-	# party. So five pals cannot be caught in this world — there are not five
-	# distinct creatures in it.
+	# The playground holds two wild creatures. Two of the five slots are therefore
+	# filled by REAL catches — the second of them on a creature of a species the
+	# party is already holding, which is the case that used to be impossible: the
+	# respawned body carried the very instance already in the party, so the
+	# director answered a second catch with `token='already_held'`. Both catches
+	# below are driven through the aim and the throw, like a player's.
 	#
-	# What follows therefore does one REAL catch, fills the middle by handing
-	# instances to the party (and says so), and saves the second, never-caught
-	# creature for the catch this bullet is actually about — the one made while the
-	# party is full. That catch is real, driven by input, on a creature the party
-	# has never held.
+	# The remaining slots are handed to the party directly, and the transcript
+	# says so in capitals rather than letting the count speak for itself. Filling
+	# all five by catching would mean about forty more throws, and the bullet in
+	# question is what happens on the SIXTH catch — which is real, on a creature
+	# the party has never held.
 	var capacity: int = int(probe(party, "capacity"))
-	note("- one real catch -")
+	note("- real catch 1 -")
 	await _wait_for_wild()
 	await _attempt_catch(party, false)
 	note("party size now: %s (%s)" % [probe(party, "size"), ", ".join(_names(party))])
 
+	# The second catch, of the same creature the first came from. Logged as its
+	# own question because a refusal here is a fact worth having either way.
+	note("- real catch 2, on a creature of a species the party already holds -")
+	var before_second: int = int(probe(party, "size"))
+	await _wait_for_wild()
+	await _attempt_catch(party, false)
+	var after_second: int = int(probe(party, "size"))
+	note("party size before the second catch: %d, after: %d" % [before_second, after_second])
+	note("the second catch of that species was kept: %s" % (after_second > before_second))
+	note("party size now: %s (%s)" % [probe(party, "size"), ", ".join(_names(party))])
+
 	if int(probe(party, "size")) < capacity:
 		note("THE REMAINING SLOTS ARE NOT FILLED BY CATCHING. The adds below hand instances")
-		note("to the party directly, because the world does not contain five catchable")
-		note("creatures. They are not catches and nothing below should be read as one.")
+		note("to the party directly, to keep this run to a workable length. They are not")
+		note("catches and nothing below should be read as one.")
 		for i in 6:
 			if int(probe(party, "size")) >= capacity:
 				break
