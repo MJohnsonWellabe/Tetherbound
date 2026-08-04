@@ -403,12 +403,27 @@ func _session_release() -> void:
 	# a first run of this session pressed only down and the selection went back and
 	# forth between the same two pals, which shows that the cursor moves but not
 	# that every pal can be looked at.
-	var walk: Array[String] = ["move_right", "move_right", "move_right", "move_back"]
+	#
+	# SIX steps, not four. "Inspect meaningful info" is a claim about all six, and
+	# a walk that stops at four leaves two of them uninspected — which a blind
+	# reviewer noticed and counted against the bullet, correctly. Six presses in a
+	# 3x2 grid returns the cursor to where it started, so the last frame also
+	# evidences that the wrap is not a dead end.
+	var walk: Array[String] = [
+		"move_right", "move_right", "move_right",
+		"move_right", "move_right", "move_right",
+	]
+	var seen := PackedStringArray()
 	for step in walk.size():
 		await _tap(walk[step])
 		note("- after pressing '%s' (step %d) -" % [walk[step], step + 1])
+		var focused := _focused_name(stack)
+		if focused != "" and not seen.has(focused):
+			seen.append(focused)
+		note("the pal the screen is now describing: '%s'" % focused)
 		_dump_screens(stack, "moved %d" % (step + 1))
 		await shot("ceremony_moved_%d" % (step + 1))
+	note("distinct pals the walk inspected: %d — %s" % [seen.size(), ", ".join(seen)])
 
 	note("--- can the choice be left without making it? ---")
 	var size_before_cancel: Variant = probe(party, "size")
@@ -669,6 +684,25 @@ func _visible_text(node: Node) -> PackedStringArray:
 	return out
 
 
+## Which pal the top screen says it is describing, asked of the screen rather
+## than read off its own hint text.
+##
+## The distinction is the whole reason this exists. "[A] Say goodbye to Thistle"
+## is the screen agreeing with itself; `focused_name()` is an answer a reviewer
+## can hold against the picture. Falls back to the rendered heading when the
+## screen has no such accessor, and says which it used.
+func _focused_name(stack: Object) -> String:
+	var screen: Object = probe(stack, "top") as Object
+	if screen == null:
+		return ""
+	if screen.has_method("focused_name"):
+		return str(screen.call("focused_name"))
+	var heading: Node = (screen as Node).find_child("Who", true, false)
+	if heading != null:
+		return "%s (read from the heading; the screen has no focused_name())" % heading.get("text")
+	return "(the screen does not say)"
+
+
 func _dump_screens(stack: Object, label: String) -> void:
 	if stack == null:
 		note("[%s] ScreenStack: ABSENT" % label)
@@ -892,6 +926,14 @@ func _attempt_catch(party: Object, watch_screens: bool) -> bool:
 	var foe: Object = probe(manager, "enemy")
 	var before: int = int(probe(party, "size"))
 	var throws := 0
+	# `_resolutions` and `_catch_refusals` run for the whole session, and this
+	# block reports one fight. Printing their sizes under a per-fight heading is
+	# how the transcript came to say "throws made: 11, orbs that resolved: 9"
+	# followed by 19 misses — three numbers that cannot all describe one fight,
+	# which cost the transcript's credibility on every count in it. Slice from
+	# here so the arithmetic is checkable.
+	var resolutions_at_start: int = _resolutions.size()
+	var refusals_at_start: int = _catch_refusals.size()
 	# More attempts for the catch that matters. Orbs miss, rolls fail, and running
 	# out of attempts on the catch made while the party is full would leave the
 	# whole ceremony unevidenced for the sake of a shorter session.
@@ -937,11 +979,19 @@ func _attempt_catch(party: Object, watch_screens: bool) -> bool:
 		if watch_screens and (_refusals > refusals_before or _screen_open()):
 			break
 
-	note("throws made: %d" % throws)
-	note("orbs that resolved into a catch attempt: %d (successes: %s)" % [
-		_resolutions.size(), _resolutions
+	var resolved: Array = _resolutions.slice(resolutions_at_start)
+	var missed: PackedStringArray = _catch_refusals.slice(refusals_at_start)
+	note("throws made in this fight: %d" % throws)
+	note("of those, orbs that resolved into a catch attempt: %d (successes: %s)" % [
+		resolved.size(), resolved
 	])
-	note("orbs the game refused or that missed: %s" % [_catch_refusals]) 
+	note("of those, orbs the game refused or that missed: %d %s" % [missed.size(), missed])
+	note("(resolved %d + missed %d = %d, against %d thrown)" % [
+		resolved.size(), missed.size(), resolved.size() + missed.size(), throws
+	])
+	note("session totals so far: %d resolved, %d missed" % [
+		_resolutions.size(), _catch_refusals.size()
+	]) 
 	note("fight outcome: %s" % probe(manager, "outcome"))
 	note("party size after the catch: %s" % probe(party, "size"))
 	var caught_member: Object = _member(party, before)

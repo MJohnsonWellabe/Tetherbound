@@ -577,7 +577,10 @@ func on_activate(index: int) -> void:
 func cancel() -> bool:
 	if _count() <= 0:
 		return false
-	_say("there is nowhere to put a sixth — no box, no storage, nothing waiting "
+	# Capitalised. It read as a truncated fragment mid-sentence, which is the last
+	# thing this line should look like — it is the screen's answer to the player
+	# asking to leave, not a footnote.
+	_say("There is nowhere to put a sixth — no box, no storage, nothing waiting "
 		+ "outside. One of these six goes back to the meadow before you do.")
 	return true
 
@@ -586,6 +589,21 @@ func on_pushed() -> void:
 	_notice = ""
 	_notice_left = 0.0
 	_start_focus()
+
+
+## Which pal the screen is currently describing, by name.
+##
+## `focus_index()` on the base class already says WHICH SLOT has the cursor. This
+## says which creature that is, and it exists because of what the M5 evidence
+## could not do without it: every statement in that transcript about what was
+## selected was read out of the hint line the screen itself renders — "[A] Say
+## goodbye to Thistle". That is the screen agreeing with itself. A reviewer
+## rightly counted it as no independent evidence of selection at all.
+func focused_name() -> String:
+	var index := focus_index()
+	if index < 0 or index >= _count():
+		return ""
+	return str(_facts(index).get("name", ""))
 
 
 func _farewell_screen() -> Control:

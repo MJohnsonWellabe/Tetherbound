@@ -162,13 +162,35 @@ func focus_count() -> int:
 	return 0 if _closing else 1
 
 
+## While the goodbye is up, A finishes it now instead of waiting out the hold.
+##
+## `focus_count()` is zero here, so the base class would route this nowhere —
+## which is what made the goodbye a screen you could only leave by waiting. The
+## pal is already gone by this point; the only thing A can still do is stop
+## making the player watch.
+func confirm() -> void:
+	if _closing:
+		_finish()
+		return
+	super.confirm()
+
+
 func hints() -> Array[Array]:
 	var rows: Array[Array] = []
 	if _closing:
-		# Both glyphs still drawn, both dimmed. `ui_style.gd`: a widget that
-		# vanishes reads as broken; one that changes reads as an answer.
-		rows.append(["A", "Let go", false])
-		rows.append(["B", "Back to the six", false])
+		# ONE LIVE HINT, not two dimmed ones.
+		#
+		# This used to keep both glyphs and grey them both out, on the principle
+		# in `ui_style.gd` that a widget which vanishes reads as broken while one
+		# that changes reads as an answer. That principle is right and this was
+		# the wrong application of it: a blind reviewer looking at the goodbye
+		# frame found two greyed prompts describing actions that no longer exist
+		# and no indication of how to leave, and called it a dead end.
+		#
+		# The screen does leave on its own after GOODBYE_SECONDS. That is not
+		# visible in a still frame, and it is not something the player should
+		# have to discover by waiting.
+		rows.append(["A", "Close", true])
 		return rows
 	var pal := _chosen()
 	var pal_name := _display_name_of(pal)
