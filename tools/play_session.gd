@@ -216,7 +216,31 @@ func _open_party_menu() -> void:
 	var top_now: Variant = probe(stack, "top") if stack != null else null
 	note("screen after pressing right on a pal: %s" % (top_now.name if top_now is Node else top_now))
 	await shot("rename_screen")
+
+	# TYPE, rather than opening the grid and walking away from it.
+	#
+	# The sharpest thing the last review found was that no player input in the
+	# whole session ever changed party state: navigation was proven
+	# controller-to-model, and every mutation went through a direct API call.
+	# Pressing confirm on the grid is the difference between "the screen opens"
+	# and "the screen works".
+	var rename_screen: Object = _find("RenameScreen")
+	note("characters in the name buffer before typing: '%s'" % probe(rename_screen, "typed_name"))
+	for i in 3:
+		await _tap("menu_confirm")
+	note("characters in the name buffer after three presses: '%s'" % probe(rename_screen, "typed_name"))
+	await shot("rename_typed")
 	await _tap("menu_cancel")
+	note("name after cancelling the rename: %s" % probe(_member(_find("Party"), 0), "display"))
+
+	# Deploy a pal the player is not already out with, by pressing the button.
+	var party_node: Object = _find("Party")
+	note("active index before pressing Send out: %s" % field(party_node, "active_index"))
+	await _tap("move_back")
+	await _tap("menu_confirm")
+	note("active index after pressing Send out: %s" % field(party_node, "active_index"))
+	note("deployed pal is now: %s" % probe(probe(party_node, "active"), "display"))
+	await shot("party_menu_deployed")
 
 	await _tap("menu_cancel")
 	if stack != null:
