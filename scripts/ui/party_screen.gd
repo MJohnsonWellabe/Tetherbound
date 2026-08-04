@@ -49,10 +49,9 @@ const KEY_NAMES := {
 	"overall": "Overall",
 }
 
-## Keys that are the appraisal's own summary rather than one of its rows. If the
-## data layer supplies one of these as a String, it is used verbatim as the
-## verdict and is not repeated in the list below it.
-const SUMMARY_KEYS := ["summary", "grade", "verdict"]
+## What a trait is CALLED. Read-only, and one direction only — the UI may ask the
+## data layer to name a trait; the data layer must never ask the UI anything.
+const TRAITS := preload("res://scripts/pals/pal_traits.gd")
 
 @export var party_path: NodePath
 
@@ -296,18 +295,21 @@ func _draw_detail(member: Object) -> void:
 
 	_detail_name.text = _display_of(member)
 	var lines: Array[String] = []
-	var species := str(member.get("species_id"))
-	var display := _display_of(member)
-	# Only worth saying when the nickname hides it. "Meadow Hopper (meadow
-	# hopper)" is noise.
-	if species != "" and species != "<null>" and not display.to_lower().contains(species.replace("_", " ")):
-		lines.append("[color=#%s]%s[/color]" % [STYLE.INK_DIM, _humanise(species)])
+	# The SPECIES name, and only when a nickname is hiding it. `display_name` is
+	# the species' own name — "Bramblit" — where `species_id` is `starter_ground`,
+	# an id that belongs in a data file and not on a screen. Showing it under a
+	# pal that has no nickname would also just repeat the heading.
+	var species_name := str(member.get("display_name"))
+	if species_name != "" and species_name != "<null>" and species_name != _display_of(member):
+		lines.append("[color=#%s]%s[/color]" % [STYLE.INK_DIM, species_name])
 	lines.append("[b]Level %d[/b]        %d / %d HP" % [
 		int(_number(member, "level", 1.0)),
 		roundi(_number(member, "hp", 0.0)),
 		roundi(_number(member, "max_hp", 1.0)),
 	])
-	lines.append("[color=#%s]Trait[/color]  %s" % [STYLE.INK_DIM, _trait_of(member)])
+	# The trait is NOT repeated here — `_appraisal_lines` states it once, with the
+	# description that says what it does. It was in both places and read as the
+	# screen stuttering.
 	lines.append("")
 	lines.append_array(_appraisal_lines(member))
 	_detail_body.text = "\n".join(lines)
@@ -336,77 +338,89 @@ func _appraisal_lines(member: Object) -> Array[String]:
 		return ["[color=#%s]Not appraised yet.[/color]" % STYLE.INK_DIM]
 
 	var appraisal: Dictionary = data
-	var rows: Array[String] = []
-	var scores: Array[float] = []
-	var summary := ""
-
-	for key: Variant in appraisal.keys():
-		var name := str(key)
-		# `_comment` and friends. `palette.json` and `species.json` both carry
-		# keys like that and there is no reason an appraisal would not.
-		if name.begins_with("_"):
-			continue
-		var value: Variant = appraisal[key]
-		if SUMMARY_KEYS.has(name) and value is String:
-			summary = str(value)
-			continue
-		var fraction := _as_fraction(value)
-		if is_nan(fraction):
-			rows.append("[color=#%s]%s[/color]  %s" % [STYLE.INK_DIM, _label_for(name), _as_text(value)])
-			continue
-		scores.append(fraction)
-		rows.append("[color=#%s]%s[/color]  %s" % [
-			STYLE.INK_DIM, _label_for(name), STYLE.stars(fraction)
-		])
-
 	var lines: Array[String] = []
-	if summary == "" and not scores.is_empty():
-		var total := 0.0
-		for score in scores:
-			total += score
-		summary = _verdict(total / float(scores.size()))
-	if summary != "":
-		lines.append("[color=#%s]Appraisal[/color]  [b]%s[/b]" % [STYLE.INK_DIM, summary])
-	else:
-		lines.append("[color=#%s]Appraisal[/color]" % STYLE.INK_DIM)
-	lines.append_array(rows)
+
+	# The overall verdict, from the appraisal's own rating rather than from an
+	# average this screen computes. The data layer decides what a pal is worth;
+	# this only decides how to say it.
+	var max_stars := maxi(1, int(appraisal.get("max_stars", STYLE.STARS)))
+	var overall := int(appraisal.get("stars", 0))
+	lines.append("[color=#%s]Appraisal[/color]  [b]%s[/b]   %s" % [
+		STYLE.INK_DIM,
+		_verdict(overall, max_stars),
+		STYLE.star_row(overall, max_stars),
+	])
+
+	# Per stat, compared against the species baseline at this level.
+	var stats: Variant = appraisal.get("stats")
+	if stats is Dictionary:
+		for name: String in (stats as Dictionary).keys():
+			var entry: Variant = (stats as Dictionary)[name]
+			if not entry is Dictionary:
+				continue
+			var stat: Dictionary = entry
+			# The star row and the pal's actual stat, never the ratio behind them.
+			# `data/config/party.json` is explicit: "the UI is expected to draw the
+			# stars and may draw the bars, but must not print the ratios." The
+			# value is what this pal's attack IS; the ratio is the IV read-out
+			# GAME_DESIGN.md §11 says not to build.
+			lines.append("[color=#%s]%s[/color]  %s   [color=#%s]%d[/color]" % [
+				STYLE.INK_DIM,
+				_label_for(name),
+				STYLE.star_row(int(stat.get("stars", 0)), max_stars),
+				STYLE.INK_DIM,
+				roundi(float(stat.get("value", 0.0))),
+			])
+
+	# Progress toward the next level, as a sentence rather than as stars — it is
+	# a count, and the first version of this screen rendered `xp: 0` as an empty
+	# five-star rating because it treated every integer in the appraisal as a
+	# score. A generic renderer over a structured payload will always find a
+	# number it can misread.
+	# The trait, with what it actually DOES. The name on its own is a word the
+	# player has to take on trust, and the description is the single line that
+	# makes one pal worth keeping over another — which is the whole question M5's
+	# release ceremony asks. The data layer already wrote it; not showing it was
+	# throwing away the only prose in the payload.
+	var trait_entry: Variant = appraisal.get("trait")
+	var trait_dict: Dictionary = trait_entry if trait_entry is Dictionary else {}
+	var trait_name := str(trait_dict.get("display_name", ""))
+	# Falls back to the row's own answer rather than to nothing. Every pal has a
+	# trait (§11: "Each pal starts with one trait"), so a blank where the name
+	# should be is a data fault, and saying the id out loud is how somebody finds
+	# it.
+	if trait_name == "":
+		trait_name = _trait_of(member)
+	lines.append("")
+	lines.append("[color=#%s]Trait[/color]  [b]%s[/b]" % [STYLE.INK_DIM, trait_name])
+	var description := str(trait_dict.get("description", ""))
+	if description != "":
+		lines.append("[color=#%s]%s[/color]" % [STYLE.INK_DIM, description])
+
+	var xp := int(appraisal.get("xp", 0))
+	var needed := int(appraisal.get("xp_for_next_level", 0))
+	if needed > 0:
+		lines.append("")
+		lines.append("[color=#%s]Next level in %d xp[/color]" % [STYLE.INK_DIM, maxi(needed - xp, 0)])
 	return lines
 
 
-func _verdict(fraction: float) -> String:
-	var index := clampi(int(clampf(fraction, 0.0, 0.999) * float(VERDICTS.size())), 0, VERDICTS.size() - 1)
-	return VERDICTS[index]
-
-
-## A number turned into a 0-1 rating, or NAN if it plainly is not one.
+## A word for a star count.
 ##
-## TWO conventions are accepted and they are told apart by TYPE, not by value: a
-## float is read as a 0-1 fraction, an int as a count of stars out of five. That
-## is the only way to tell `1` meaning "one star" from `1.0` meaning "perfect",
-## and it is a genuine trap — if the party ever hands back `{"attack": 1}` meaning
-## a perfect roll, this will draw one star and be confidently wrong. The fix, if
-## it comes up, belongs on the data side: appraisals should be floats in 0-1.
-func _as_fraction(value: Variant) -> float:
-	if value is float:
-		var number: float = value
-		return number if number >= 0.0 and number <= 1.0 else NAN
-	if value is int:
-		var count: int = value
-		return float(count) / float(STYLE.STARS) if count >= 0 and count <= STYLE.STARS else NAN
-	return NAN
-
-
-func _as_text(value: Variant) -> String:
-	if value is bool:
-		return "yes" if value else "no"
-	if value is float:
-		return "%.1f" % (value as float)
-	if value is Array:
-		var parts: Array[String] = []
-		for entry: Variant in value:
-			parts.append(str(entry))
-		return ", ".join(parts)
-	return str(value)
+## Mapped from the COUNT, not from a fraction of it. Dividing by `max_stars` and
+## banding the result put "Poor" and "Excellent" out of reach entirely and made a
+## four-star pal read identically to a perfect one — which is exactly backwards
+## for a screen whose job is to help somebody decide which pal to release.
+##
+## Five words over however many stars the data uses, so a `party.json` that moves
+## `max_stars` moves the words with it rather than pinning "Exceptional" to a five
+## that no longer exists.
+func _verdict(stars: int, total: int) -> String:
+	var last := VERDICTS.size() - 1
+	if total <= 1:
+		return VERDICTS[last]
+	var position := float(clampi(stars, 1, total) - 1) / float(total - 1)
+	return VERDICTS[clampi(int(position * float(last) + 0.5), 0, last)]
 
 
 func _label_for(key: String) -> String:
@@ -429,21 +443,26 @@ func _display_of(member: Object) -> String:
 	return fallback if fallback != "" and fallback != "<null>" else "?"
 
 
-## The trait, in words.
+## The trait, in words, for a slot row.
 ##
-## `trait_id` is an id — `sturdy`, `quick_footed` — and there is no trait
-## catalogue on the data side yet (`data/traits/` is empty). Until there is, this
-## humanises the id, which is right often enough to be useful and wrong in a way
-## that is obvious. If the party grows a `trait_name()` it is used instead, so
-## the fix on that side needs no change on this one.
+## Asks the trait table directly rather than humanising `trait_id`, so the row and
+## the appraisal panel beside it cannot end up calling the same trait two
+## different things. `pal_traits.gd` caches its table in a static, so five lookups
+## a frame is five dictionary reads.
+##
+## Reading from `scripts/pals/` is one-way and stays that way: the UI may ask the
+## data layer what a trait is called, and the data layer must never ask the UI
+## anything. The humanised id survives as the fallback for a trait that is in a
+## pal but not in the table, which is a data bug that should still leave a
+## readable screen.
 func _trait_of(member: Object) -> String:
-	if member.has_method("trait_name"):
-		var named := str(member.call("trait_name"))
-		if named != "":
-			return named
 	var id := str(member.get("trait_id"))
 	if id == "" or id == "<null>":
 		return "no trait"
+	if TRAITS.has(id):
+		var named := str(TRAITS.display_name(id))
+		if named != "":
+			return named
 	return _humanise(id)
 
 
@@ -478,7 +497,44 @@ func on_activate(index: int) -> void:
 	if not party.has_method("set_active"):
 		_say("this party cannot switch")
 		return
-	party.call("set_active", index)
+
+	# The checks above catch the refusals this screen can EXPLAIN — empty, down,
+	# already out. `set_active` can still say no for a reason this file has never
+	# heard of, and swallowing that would put the press back in the "nothing
+	# happened" category that every refusal message here exists to keep it out of.
+	# `party_manager` records why in `last_refusal()`; if it ever stops, the
+	# generic line is still better than silence.
+	if bool(party.call("set_active", index)):
+		return
+	var token := ""
+	if party.has_method("last_refusal"):
+		token = str(party.call("last_refusal"))
+	_say(_refusal_words(token))
+
+
+## A refusal token, in player voice.
+##
+## `party.gd` refuses with machine tokens — `no_such_member`, `party_full` — and
+## its `refused(token: String)` signal says so in the name. Putting one of those
+## on screen unchanged is the mistake `combat_hud` had to undo twice: the bare
+## word `open` from the AI's state machine, and "missed — too far, or facing the
+## wrong way", which was a developer explaining a branch to himself. The token is
+## for code to switch on. This is the sentence.
+##
+## An unrecognised token falls back to a general line rather than being printed,
+## because a token nobody has translated yet is still a token.
+func _refusal_words(token: String) -> String:
+	match token:
+		"party_full":
+			return "your party is full — five is the limit"
+		"already_held":
+			return "that one is already with you"
+		"no_such_member":
+			return "there is no pal in that slot"
+		"not_a_pal":
+			return "that cannot join a party"
+		_:
+			return "that pal cannot go out right now"
 
 
 func on_pushed() -> void:

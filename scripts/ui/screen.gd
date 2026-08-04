@@ -135,6 +135,12 @@ func _build_chrome() -> void:
 
 
 func _process(_delta: float) -> void:
+	# A screen that is not on the stack is still in the tree and still gets a
+	# frame. Screens are authored as hidden children of the stack so that opening
+	# one is not an instantiation hitch, which means without this guard every
+	# screen in the game redraws itself every frame of the entire session.
+	if not visible:
+		return
 	_draw_chrome()
 	refresh()
 

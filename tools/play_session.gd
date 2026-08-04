@@ -120,7 +120,7 @@ func _session_party() -> void:
 		note("member 0 display: %s" % probe(first, "display"))
 		for name: String in ["level", "xp", "nickname", "trait_id", "hp", "max_hp", "attack", "defence"]:
 			note("member 0 %s: %s" % [name, field(first, name)])
-		note("member 0 appraisal: %s" % probe(first, "appraisal"))
+		note("member 0 appraisal: %s" % [probe(first, "appraisal")])
 		if first.has_method("grant_xp"):
 			var before: Variant = field(first, "level")
 			first.call("grant_xp", 100000)
@@ -139,7 +139,7 @@ func _session_party() -> void:
 
 	note("--- bullet: persistent party data ---")
 	var before_records: Variant = probe(party, "to_records")
-	note("records before save: %s" % before_records)
+	note("records before save: %s" % [before_records])
 	if save != null and save.has_method("save"):
 		note("save() returned: %s" % save.call("save", 0))
 		# Clear in memory, then reload. Reading back a number the same object
@@ -149,7 +149,7 @@ func _session_party() -> void:
 			note("size after clearing in memory: %s" % probe(party, "size"))
 		note("load_slot(0) returned: %s" % save.call("load_slot", 0))
 		note("size after reload: %s" % probe(party, "size"))
-		note("records after reload: %s" % probe(party, "to_records"))
+		note("records after reload: %s" % [probe(party, "to_records")])
 	else:
 		note("SaveManager.save: ABSENT — persistence unevidenced")
 
@@ -167,11 +167,7 @@ func _session_party() -> void:
 ## A screen that only appears when a test constructs it is not reachable by a
 ## player.
 func _open_party_menu() -> void:
-	Input.action_press("inventory")
-	await physics_frame
-	Input.action_release("inventory")
-	for i in 20:
-		await physics_frame
+	await _tap("inventory")
 	var stack: Object = _find("ScreenStack")
 	if stack == null:
 		note("ScreenStack: ABSENT — no screen opened")
@@ -183,20 +179,27 @@ func _open_party_menu() -> void:
 
 	# Move the selection and photograph it again, so the judge can see whether
 	# selection is visible at all.
-	Input.action_press("move_back")
-	await physics_frame
-	Input.action_release("move_back")
-	for i in 12:
-		await physics_frame
+	#
+	# Held for several frames rather than one. A single-physics-frame press is
+	# 1/60th of a second, which is shorter than any tap a person can make, and a
+	# menu that required one would be unusable — so a one-frame press tests the
+	# harness's timing rather than the menu's.
+	await _tap("move_back")
 	await shot("party_menu_moved")
 
-	Input.action_press("menu_cancel")
-	await physics_frame
-	Input.action_release("menu_cancel")
-	for i in 12:
-		await physics_frame
+	await _tap("menu_cancel")
 	if stack != null:
 		note("screen open after 'menu_cancel': %s" % probe(stack, "is_open"))
+
+
+## Press an action the way a person would, and let the game settle.
+func _tap(action: String) -> void:
+	Input.action_press(action)
+	for i in 8:
+		await physics_frame
+	Input.action_release(action)
+	for i in 14:
+		await physics_frame
 
 
 ## --- probes ---------------------------------------------------------------

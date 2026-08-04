@@ -175,10 +175,29 @@ static func hint_row(hints: Array[Array]) -> String:
 
 ## `fraction` of five stars, as bbcode. Filled stars in `colour`, hollow ones
 ## dimmed, so the rating reads at a glance and the scale still reads at all.
+## Five even bands, floored rather than rounded.
+##
+## Rounding gave a 0.9 pal the same five stars as a perfect one, which makes the
+## top of the scale meaningless in the one place — a keep-or-release decision —
+## where the player most needs it to mean something. Floored, the fifth star is
+## the top fifth of the range and nothing else.
 static func stars(fraction: float, colour: String = GOOD) -> String:
-	var filled := int(round(clampf(fraction, 0.0, 1.0) * float(STARS)))
+	return star_row(int(clampf(fraction, 0.0, 1.0) * float(STARS)), STARS, colour)
+
+
+## `filled` out of `total`, when the caller already has both as counts.
+##
+## Prefer this over `stars()` whenever the number came from the data layer as an
+## integer. `pal_instance.appraisal()` hands back a star COUNT, and the obvious
+## thing — divide by max_stars, hand the fraction to `stars()`, multiply back —
+## is off by one for a third of its inputs: 3.0/5.0 is 0.5999999999999999 in
+## binary, times five is 2.9999999999999996, and `int()` truncates that to two.
+## A three-star pal drew two stars. Counts in, counts out, no float in between.
+static func star_row(filled: int, total: int, colour: String = GOOD) -> String:
+	var cap := maxi(1, total)
+	var lit := clampi(filled, 0, cap)
 	return "[color=#%s]%s[/color][color=#%s]%s[/color]" % [
-		colour, STAR_FULL.repeat(filled), INK_DIM, STAR_EMPTY.repeat(STARS - filled)
+		colour, STAR_FULL.repeat(lit), INK_DIM, STAR_EMPTY.repeat(cap - lit)
 	]
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" path="res://scripts/building/structures.gd" id="10_structures"]
 [ext_resource type="Script" path="res://scripts/building/build_mode.gd" id="11_build"]
 [ext_resource type="Script" path="res://scripts/pals/party_manager.gd" id="12_party"]
+[ext_resource type="PackedScene" path="res://scenes/ui/screen_stack.tscn" id="13_screens"]
+[ext_resource type="PackedScene" path="res://scenes/ui/build_palette.tscn" id="14_palette"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -105,3 +107,17 @@ player_path = NodePath("../Player")
 world_path = NodePath("..")
 structures_path = NodePath("../Structures")
 combat_path = NodePath("../CombatManager")
+
+; The menu layer. It owns which screen is open and suspends gameplay while one
+; is — the same "one door in and out" rule encounter_director uses for fights.
+[node name="ScreenStack" parent="." instance=ExtResource("13_screens")]
+player_path = NodePath("../Player")
+
+[node name="PartyScreen" parent="ScreenStack" index="0"]
+party_path = NodePath("../../Party")
+
+; The build palette was missing entirely: build_mode has exposed selected_name(),
+; ghost_valid() and refusal() since it shipped, and nothing read any of them, so
+; the player had no way to know what they were about to place.
+[node name="BuildPalette" parent="." instance=ExtResource("14_palette")]
+build_path = NodePath("../BuildMode")
