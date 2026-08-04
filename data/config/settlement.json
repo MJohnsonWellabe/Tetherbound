@@ -1,12 +1,12 @@
 {
-  "_comment": "The Meadows' AUTHORED ARCHITECTURE, in grid coordinates and piece ids. GAME_DESIGN.md §7 puts villages and strongholds under authored macro geography; §25 says the player lives with Grandpa in a small settlement. This is that, as data.",
-  "_comment_same_kit": "Every id below resolves through `data/building/pieces.json` — the SAME 28-piece catalogue the player's build mode places from. That is the point, and it is the whole reason this is a config rather than a set of bespoke models: a cabin the player raises next to Grandpa's is made of the same walls, sits on the same 2m grid and takes the same light, so it belongs there. `tools/preview_build.gd` proved a house can be authored this way; this is the same trick at settlement scale. Nothing in `scripts/building/` is modified — the catalogue is read.",
+  "_comment": "The Meadows' AUTHORED ARCHITECTURE, in grid coordinates and piece ids. GAME_DESIGN.md \u00a77 puts villages and strongholds under authored macro geography; \u00a725 says the player lives with Grandpa in a small settlement. This is that, as data.",
+  "_comment_same_kit": "Every id below resolves through `data/building/pieces.json` \u2014 the SAME 28-piece catalogue the player's build mode places from. That is the point, and it is the whole reason this is a config rather than a set of bespoke models: a cabin the player raises next to Grandpa's is made of the same walls, sits on the same 2m grid and takes the same light, so it belongs there. `tools/preview_build.gd` proved a house can be authored this way; this is the same trick at settlement scale. Nothing in `scripts/building/` is modified \u2014 the catalogue is read.",
   "_comment_coordinates": "A site's `origin` is world XZ. Everything inside it is LOCAL METRES from that origin, rotated by the site's `yaw_deg`, so a cottage can be turned to face the road without re-authoring a single wall. Cell (cx, cz) sits at local (cx * 2, cz * 2), because the kit's cell is 2m and `build_grid.gd` says so.",
-  "_comment_height": "A site takes ONE ground height, sampled at its own origin. Buildings do not drape over terrain. Every site here stands on a levelled pad in `terrain_playground.json`, or on the stronghold bluff's own flat top, and the pad's height is read from the same heightfield the site is — so retuning the hills moves the village with them and can never leave a wall in the air.",
+  "_comment_height": "A site takes ONE ground height, sampled at its own origin. Buildings do not drape over terrain. Every site here stands on a levelled pad in `terrain_playground.json`, or on the stronghold bluff's own flat top, and the pad's height is read from the same heightfield the site is \u2014 so retuning the hills moves the village with them and can never leave a wall in the air.",
   "_comment_tunable": "The LAYOUTS are composition and not tuning. What is genuinely tunable is which wall texture a building uses and how many storeys the ruin has.",
   "sites": {
     "grandpa": {
-      "_comment": "GRANDPA'S HOME. §25: 'player lives with Grandpa, small settlement, Grandpa's home is safe starting location.' Fifty-three metres from the spawn and about twenty-eight degrees right of the camera's opening heading, so it is the first built thing in frame without standing in front of everything behind it. The door and both windows face the road.",
+      "_comment": "GRANDPA'S HOME. \u00a725: 'player lives with Grandpa, small settlement, Grandpa's home is safe starting location.' Fifty-three metres from the spawn and about twenty-eight degrees right of the camera's opening heading, so it is the first built thing in frame without standing in front of everything behind it. The door and both windows face the road.",
       "origin": [
         54.0,
         12.0
@@ -27,17 +27,21 @@
           "wall": "wall_plaster_straight",
           "window": "wall_plaster_window_wide_round",
           "door": "wall_plaster_door_round",
-          "door_side": "south",
+          "door_side": "west",
           "door_index": 1,
           "roof": "roof_roundtiles_6x6",
-          "storeys": 1,
+          "storeys": 2,
           "door_leaf": "door_1_round",
-          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be.",
+          "roof_underlay": 0.06,
+          "_comment_door": "The door faces WEST, which is both the road and the spawn camera's line of sight. MA-05 on `01-spawn-outward`: 'The near cottage has no door \u2014 its facade is a bare box with one plank stuck on at a random angle.' It had a door the whole time, on the far side. A door is the only thing in a building that states its scale, so putting it on the blind face costs the reading of the whole house.",
+          "_comment_storeys": "TWO COURSES. See `_comment_roof_ma05`: the wall band was a quarter of the building and the review read the whole house as chest height because of it. Nothing is scaled \u2014 these are the same 2m wall pieces on the same 3m storey (D12), stacked twice, which is the only way this kit makes a taller building.",
+          "ceiling": true
         }
       ],
       "runs": [
         {
-          "_comment": "The paddock fence, clear of the house and running away from it. Deliberately SHORT and open at the far end — a fence that runs out of the frame is a wall around the world; a fence that stops is a boundary somebody drew for a reason.",
+          "_comment": "The paddock fence, clear of the house and running away from it. Deliberately SHORT and open at the far end \u2014 a fence that runs out of the frame is a wall around the world; a fence that stops is a boundary somebody drew for a reason.",
           "piece": "prop_woodenfence_single",
           "from": [
             -10.0,
@@ -50,13 +54,15 @@
       ],
       "props": [
         {
-          "_why": "Chimney against the gable, standing on the ground where a chimney stands. It was floating at lift 2.4 beside the roof, which is a box hanging in the air.",
+          "_why": "A chimney breast on the outside of the gable wall, starting part-way up it. At 1.0 on the ground it is 3.2m and vanishes entirely under a two-storey 5.2m eave; the first correction scaled it to 2.2x and produced a 1.1m-wide block of masonry driven straight through the wall face, which is what the render showed. Lifted and slimmed, it stands clear of the wall and clears the eave by a metre.",
           "model": "res://assets/buildings/Prop_Chimney.gltf",
           "at": [
-            0.0,
-            4.3
+            3.9,
+            0.0
           ],
-          "yaw_deg": 0.0
+          "yaw_deg": 90.0,
+          "scale": 1.25,
+          "lift": 2.4
         },
         {
           "_why": "The woodpile and the everyday clutter of somebody who lives here.",
@@ -106,7 +112,7 @@
       ]
     },
     "village_hall": {
-      "_comment": "THE SETTLEMENT, four buildings and a yard around a green at 113m from spawn, six degrees left of the opening camera heading. The key art's own settlement panel is a cluster of roofs in a shallow bowl with a road running into it and hills closing the horizon behind — that composition is what the terrain's `pads` and the backdrop ridge at (152,126) exist to reproduce. The hall is the biggest roof and the one that reads first.",
+      "_comment": "THE SETTLEMENT, four buildings and a yard around a green at 113m from spawn, six degrees left of the opening camera heading. The key art's own settlement panel is a cluster of roofs in a shallow bowl with a road running into it and hills closing the horizon behind \u2014 that composition is what the terrain's `pads` and the backdrop ridge at (152,126) exist to reproduce. The hall is the biggest roof and the one that reads first.",
       "origin": [
         74.0,
         82.0
@@ -129,19 +135,25 @@
           "door_side": "south",
           "door_index": 1,
           "roof": "roof_roundtiles_6x6",
-          "storeys": 1,
+          "storeys": 2,
           "door_leaf": "door_2_round",
-          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be.",
+          "roof_underlay": 0.06,
+          "_comment_storeys": "TWO COURSES. See `_comment_roof_ma05`: the wall band was a quarter of the building and the review read the whole house as chest height because of it. Nothing is scaled \u2014 these are the same 2m wall pieces on the same 3m storey (D12), stacked twice, which is the only way this kit makes a taller building.",
+          "ceiling": true
         }
       ],
       "props": [
         {
           "model": "res://assets/buildings/Prop_Chimney.gltf",
           "at": [
-            -4.3,
+            3.9,
             0.0
           ],
-          "yaw_deg": 90.0
+          "yaw_deg": 90.0,
+          "scale": 1.25,
+          "_why": "A chimney breast on the outside of the gable wall, starting part-way up it. At 1.0 on the ground it is 3.2m and vanishes entirely under a two-storey 5.2m eave; the first correction scaled it to 2.2x and produced a 1.1m-wide block of masonry driven straight through the wall face, which is what the render showed. Lifted and slimmed, it stands clear of the wall and clears the eave by a metre.",
+          "lift": 2.4
         },
         {
           "model": "res://assets/buildings/Prop_Wagon.gltf",
@@ -189,13 +201,15 @@
           "wall": "wall_plaster_straight",
           "window": "wall_plaster_window_wide_round",
           "door": "wall_plaster_door_round",
-          "door_side": "south",
+          "door_side": "north",
           "door_index": 1,
           "roof": "roof_roundtiles_6x6",
           "storeys": 1,
           "_comment": "A 3x3-cell cottage, 6m square. It was 3x2, and the roof made the mistake obvious: `Roof_RoundTiles_6x6` is 8.25m by 8.03m and the kit sizes its roofs by the room they cover, so on a 6x4 room it overhung by two metres on both long sides and the house read as a mushroom with the walls hidden under the eaves. The kit ships no 6x4 roof, so the room grew to match the roof rather than the other way round.",
           "door_leaf": "door_1_round",
-          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be.",
+          "roof_underlay": 0.06,
+          "ceiling": true
         }
       ],
       "props": [
@@ -237,12 +251,14 @@
           "wall": "wall_plaster_straight",
           "window": "wall_plaster_window_wide_round",
           "door": "wall_plaster_door_round",
-          "door_side": "south",
+          "door_side": "east",
           "door_index": 0,
           "roof": "roof_roundtiles_4x4",
           "storeys": 1,
           "door_leaf": "door_1_round",
-          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be.",
+          "roof_underlay": 0.06,
+          "ceiling": true
         }
       ],
       "props": [
@@ -296,9 +312,12 @@
           "door_side": "south",
           "door_index": 1,
           "roof": "roof_roundtiles_6x8",
-          "storeys": 1,
+          "storeys": 2,
           "door_leaf": "door_2_round",
-          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be."
+          "_comment_leaf": "The kit splits a doorway into the wall with the hole and the door that hangs in it. Without the second the cottage has a dark rectangle where its front door should be.",
+          "roof_underlay": 0.06,
+          "_comment_storeys": "TWO COURSES. See `_comment_roof_ma05`: the wall band was a quarter of the building and the review read the whole house as chest height because of it. Nothing is scaled \u2014 these are the same 2m wall pieces on the same 3m storey (D12), stacked twice, which is the only way this kit makes a taller building.",
+          "ceiling": true
         }
       ],
       "runs": [
@@ -419,8 +438,8 @@
       ]
     },
     "stronghold": {
-      "_comment": "TEAM TETHER'S STRONGHOLD, on the summit of the bluff at 185m. §3 and §28: an ancient sacred site, visibly occupied and industrialised — old stone and natural forms contrasted with machinery, cables, barricades and cages. It is here so the player can SEE where the story goes, and it is deliberately not a place: the bluff's flanks average sixty degrees, well past the character controller's forty-five-degree limit, so the landmark is unreachable because of its own geography rather than because of an invisible wall.",
-      "_comment_reads_at_distance": "Everything here is chosen for SILHOUETTE, because at 185m through haze that is all there is. Two square towers three storeys high flanking a gatehouse — the outline of the key art's own stronghold panel — with a low ruined curtain behind them, standing stones the fort was built around, and scaffolding and stacks bolted on top. What it must not be is a fussy interior nobody can see.",
+      "_comment": "TEAM TETHER'S STRONGHOLD, on the summit of the bluff at 185m. \u00a73 and \u00a728: an ancient sacred site, visibly occupied and industrialised \u2014 old stone and natural forms contrasted with machinery, cables, barricades and cages. It is here so the player can SEE where the story goes, and it is deliberately not a place: the bluff's flanks average sixty degrees, well past the character controller's forty-five-degree limit, so the landmark is unreachable because of its own geography rather than because of an invisible wall.",
+      "_comment_reads_at_distance": "Everything here is chosen for SILHOUETTE, because at 185m through haze that is all there is. Two square towers three storeys high flanking a gatehouse \u2014 the outline of the key art's own stronghold panel \u2014 with a low ruined curtain behind them, standing stones the fort was built around, and scaffolding and stacks bolted on top. What it must not be is a fussy interior nobody can see.",
       "_comment_honest": "The monoliths are `Rock_Medium` boulders at 3.4x, which is honest at this distance and would not survive being walked up to. Nothing else here is scaled: the towers are real 2m walls and a real 3m storey, so the ruin is 9.4m of actual masonry and reads at the right size against the bluff.",
       "origin": [
         60.0,
@@ -429,7 +448,7 @@
       "yaw_deg": -34.0,
       "rooms": [
         {
-          "_comment": "West tower. `walls_only` — no floor and no roof, because this is a ruin and because nothing inside it is ever visible.",
+          "_comment": "West tower. `walls_only` \u2014 no floor and no roof, because this is a ruin and because nothing inside it is ever visible.",
           "cells": [
             2,
             2
@@ -440,7 +459,7 @@
           ],
           "wall": "wall_unevenbrick_straight",
           "walls_only": true,
-          "storeys": 3
+          "storeys": 4
         },
         {
           "_comment": "East tower.",
@@ -454,12 +473,40 @@
           ],
           "wall": "wall_unevenbrick_straight",
           "walls_only": true,
+          "storeys": 4
+        },
+        {
+          "_comment": "North-west tower, three courses \u2014 the shorter pair, so the skyline steps.",
+          "cells": [
+            2,
+            2
+          ],
+          "at": [
+            -12.0,
+            8.0
+          ],
+          "wall": "wall_unevenbrick_straight",
+          "walls_only": true,
+          "storeys": 3
+        },
+        {
+          "_comment": "North-east tower.",
+          "cells": [
+            2,
+            2
+          ],
+          "at": [
+            8.0,
+            8.0
+          ],
+          "wall": "wall_unevenbrick_straight",
+          "walls_only": true,
           "storeys": 3
         }
       ],
       "runs": [
         {
-          "_comment": "The gatehouse front, two storeys, in two halves with the gate between them.",
+          "_comment": "The gatehouse front, three courses, in two halves with the gate between them.",
           "piece": "wall_unevenbrick_straight",
           "from": [
             -8.0,
@@ -467,7 +514,7 @@
           ],
           "axis": "x",
           "count": 4,
-          "storeys": 2
+          "storeys": 3
         },
         {
           "piece": "wall_unevenbrick_straight",
@@ -477,34 +524,34 @@
           ],
           "axis": "x",
           "count": 4,
+          "storeys": 3
+        },
+        {
+          "_comment": "The curtain, two courses down each flank and broken along the back \u2014 the walls that fell are the ones nobody rebuilt.",
+          "piece": "wall_unevenbrick_straight",
+          "from": [
+            -13.0,
+            -4.0
+          ],
+          "axis": "z",
+          "count": 6,
           "storeys": 2
         },
         {
-          "_comment": "The curtain, one storey and broken — the walls that fell are the ones nobody rebuilt.",
           "piece": "wall_unevenbrick_straight",
           "from": [
-            -11.0,
+            13.0,
             -4.0
           ],
           "axis": "z",
-          "count": 5,
-          "storeys": 1
-        },
-        {
-          "piece": "wall_unevenbrick_straight",
-          "from": [
-            11.0,
-            -4.0
-          ],
-          "axis": "z",
-          "count": 5,
-          "storeys": 1
+          "count": 6,
+          "storeys": 2
         },
         {
           "piece": "wall_unevenbrick_straight",
           "from": [
             -8.0,
-            6.0
+            10.0
           ],
           "axis": "x",
           "count": 9,
@@ -577,63 +624,6 @@
           "scale": 2.2
         },
         {
-          "_why": "Team Tether. Scaffolding lashed to the old stone, and stacks that were never part of a sacred site.",
-          "model": "res://assets/buildings/Prop_Support.gltf",
-          "at": [
-            -13.5,
-            -2.0
-          ],
-          "yaw_deg": 90.0,
-          "scale": 2.6
-        },
-        {
-          "model": "res://assets/buildings/Prop_Support.gltf",
-          "at": [
-            -13.5,
-            -5.0
-          ],
-          "yaw_deg": 90.0,
-          "scale": 2.6,
-          "lift": 4.4
-        },
-        {
-          "model": "res://assets/buildings/Prop_Support.gltf",
-          "at": [
-            13.5,
-            -2.0
-          ],
-          "yaw_deg": -90.0,
-          "scale": 2.6
-        },
-        {
-          "model": "res://assets/buildings/Prop_Support.gltf",
-          "at": [
-            13.5,
-            -5.0
-          ],
-          "yaw_deg": -90.0,
-          "scale": 2.6,
-          "lift": 4.4
-        },
-        {
-          "model": "res://assets/buildings/Prop_Support.gltf",
-          "at": [
-            -4.0,
-            -8.4
-          ],
-          "yaw_deg": 0.0,
-          "scale": 2.2
-        },
-        {
-          "model": "res://assets/buildings/Prop_Support.gltf",
-          "at": [
-            4.0,
-            -8.4
-          ],
-          "yaw_deg": 0.0,
-          "scale": 2.2
-        },
-        {
           "model": "res://assets/buildings/Prop_Chimney.gltf",
           "at": [
             -6.0,
@@ -687,8 +677,270 @@
           ],
           "yaw_deg": 8.0,
           "scale": 1.4
+        },
+        {
+          "piece": "wall_unevenbrick_straight",
+          "at": [
+            0.0,
+            -7.0
+          ],
+          "yaw_deg": 0.0,
+          "lift": 6.0
+        },
+        {
+          "_why": "Spoil and rubble at the foot of the wall; mass at ground level is what stops a ruin reading as a fence.",
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+          "at": [
+            -9.0,
+            -7.6
+          ],
+          "yaw_deg": 14.0,
+          "scale": 2.0
+        },
+        {
+          "_why": "Spoil and rubble at the foot of the wall; mass at ground level is what stops a ruin reading as a fence.",
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+          "at": [
+            9.0,
+            -7.6
+          ],
+          "yaw_deg": -14.0,
+          "scale": 2.0
+        },
+        {
+          "_why": "Spoil and rubble at the foot of the wall; mass at ground level is what stops a ruin reading as a fence.",
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+          "at": [
+            -6.0,
+            11.0
+          ],
+          "yaw_deg": 8.0,
+          "scale": 1.8
+        },
+        {
+          "_why": "Spoil and rubble at the foot of the wall; mass at ground level is what stops a ruin reading as a fence.",
+          "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+          "at": [
+            6.5,
+            11.4
+          ],
+          "yaw_deg": -30.0,
+          "scale": 1.8
+        },
+        {
+          "model": "res://assets/buildings/Prop_Chimney.gltf",
+          "at": [
+            -11.0,
+            -4.5
+          ],
+          "yaw_deg": 6.0,
+          "scale": 2.8
+        },
+        {
+          "model": "res://assets/buildings/Prop_Chimney.gltf",
+          "at": [
+            11.5,
+            -4.0
+          ],
+          "yaw_deg": -18.0,
+          "scale": 2.6
+        }
+      ],
+      "_comment_ma05": "REWORKED after MA-05, which is blunt about it: 'The stronghold ruin is 4-5m \u2014 smaller than a barn \u2014 where the key art has a monumental gatehouse. The biome's hero landmark currently reads as rubble.' And: 'Remove the windmill sails from the ruin. Four-blade sails are mounted on top of a castellated wall with a fifth poking through the wall face. It is a category error.'\n\nThe sails were six `Prop_Support` at 2.6x \u2014 a 1.7m diagonal brace scaled to 4.4m and lifted clear of the wall, which from 185m is four crossed blades on a tower. Every one is gone; nothing replaces them, because a brace bolted to a wall is a detail that cannot read at this range and the only thing that can is MASS.\n\nSo the mass went up rather than the scale: the towers are four courses instead of three (12.5m of real 3m-storey masonry), the gatehouse front is three, the curtain is two, and there are now four towers instead of two so the silhouette is wide as well as tall. WHAT THIS STILL IS NOT: a monumental gatehouse. The kit has 2m wall panels, four roofs and no arch, tower cap, buttress, crenellation or gate large enough to be one \u2014 MA-05's own second list names 'a stronghold with real mass' as art that has to be bought or made, and that is the honest verdict. This is the largest ruin those 28 pieces can be."
+    },
+    "village_green": {
+      "_comment": "THE VILLAGE GREEN. MA-05: 'Three prefabs on open grass with no fence, connecting path, well, cart or arranged props.' The buildings were already there and nothing between them was. This site holds no building at all \u2014 it is the ground between the other four: a paddock fence closing the north side of the green, a second fence line along the road, carts, a woodpile, a stack of brick and crates where somebody was working. Composition, not density; every piece here is at a stated coordinate because the frame wanted it there.\n\nWhat is honestly missing is a WELL, a trough and a cart-shed \u2014 the kit ships none of those, and MA-05's own second list ('art that must be bought or made') names a settlement prop kit for exactly this reason. This is what the existing 28 pieces can compose.",
+      "origin": [
+        82.0,
+        76.0
+      ],
+      "yaw_deg": 14.0,
+      "runs": [
+        {
+          "_comment": "The north paddock fence, closing the green behind the hall.",
+          "piece": "prop_woodenfence_single",
+          "from": [
+            -14.0,
+            14.0
+          ],
+          "axis": "x",
+          "count": 12,
+          "spacing": 2.02
+        },
+        {
+          "_comment": "The road side, running with the trail rather than across it.",
+          "piece": "prop_woodenfence_extension1",
+          "from": [
+            -15.0,
+            -9.0
+          ],
+          "axis": "z",
+          "count": 8,
+          "spacing": 2.02
+        },
+        {
+          "piece": "prop_woodenfence_extension2",
+          "from": [
+            10.0,
+            -11.0
+          ],
+          "axis": "x",
+          "count": 6,
+          "spacing": 2.02
+        }
+      ],
+      "props": [
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -11.5,
+            6.0
+          ],
+          "yaw_deg": 90.0,
+          "scale": 0.36
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -11.5,
+            6.6
+          ],
+          "yaw_deg": 90.0,
+          "scale": 0.36
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -11.5,
+            7.2
+          ],
+          "yaw_deg": 90.0,
+          "scale": 0.36
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -11.5,
+            6.3
+          ],
+          "yaw_deg": 90.0,
+          "scale": 0.36,
+          "lift": 0.42
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -11.5,
+            6.9
+          ],
+          "yaw_deg": 90.0,
+          "scale": 0.36,
+          "lift": 0.42
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            -11.5,
+            6.6
+          ],
+          "yaw_deg": 90.0,
+          "scale": 0.36,
+          "lift": 0.84
+        },
+        {
+          "model": "res://assets/buildings/Prop_Wagon.gltf",
+          "at": [
+            -6.0,
+            -6.5
+          ],
+          "yaw_deg": 62.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Wagon.gltf",
+          "at": [
+            12.0,
+            6.0
+          ],
+          "yaw_deg": -18.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -8.5,
+            -5.0
+          ],
+          "yaw_deg": 12.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -7.6,
+            -4.2
+          ],
+          "yaw_deg": -38.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            -8.0,
+            -4.6
+          ],
+          "yaw_deg": 64.0,
+          "lift": 1.05
+        },
+        {
+          "model": "res://assets/buildings/Prop_Brick1.gltf",
+          "at": [
+            3.0,
+            11.0
+          ],
+          "yaw_deg": -22.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Brick3.gltf",
+          "at": [
+            3.9,
+            10.4
+          ],
+          "yaw_deg": 104.0
+        },
+        {
+          "model": "res://assets/buildings/Prop_Brick1.gltf",
+          "at": [
+            3.4,
+            10.7
+          ],
+          "yaw_deg": 46.0,
+          "lift": 0.6
+        },
+        {
+          "model": "res://assets/buildings/Prop_Crate.gltf",
+          "at": [
+            13.5,
+            5.0
+          ],
+          "yaw_deg": -6.0
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            9.0,
+            12.0
+          ],
+          "yaw_deg": 24.0,
+          "scale": 0.42
+        },
+        {
+          "model": "res://assets/buildings/Roof_Log.gltf",
+          "at": [
+            9.4,
+            12.6
+          ],
+          "yaw_deg": 28.0,
+          "scale": 0.42
         }
       ]
     }
-  }
+  },
+  "_comment_roof_ma05": "TWO ROOF FIXES, and one thing deliberately NOT done.\n\nMA-05 measured the cottage at 'a ~2.5-3.0m ridge with the eave at the player's chest' and concluded the trainer could not stand up inside his own house. Measured against the kit's own glTF accessors, that reading is wrong: `Wall_Plaster_Straight` draws to Y 3.123 and `Roof_RoundTiles_6x6` spans -0.782 to 4.890, so a one-storey cottage was already a 7.9m ridge over a 3.12m wall. What the critic was actually seeing is the ratio it also named correctly in the same paragraph \u2014 'the wall band under the eaves is a third of the roof's pitch height'. The roof hangs 0.78m below its own origin, so it swallowed the top quarter of every wall and 72% of the visible building was roof. The house was never small; it was all hat.\n\nThe first attempt at this raised the roof clear of the wall with a `roof_lift`. That is the wrong fix and the render said so immediately: the kit's roofs are authored to sit at the storey line and to overlap the wall top, and lifting one opened the gable triangle so you could see straight into the roof void from outside. The kit's own answer to a squat house is MORE COURSES, which is what the review asked for and what is done here \u2014 Grandpa's, the hall and the barn are two storeys, so the visible wall band goes from 2.2m to 5.2m against the same 5.7m of pitch. The two cottages stay single-storey, because four buildings at one height is the flat skyline the settlement had before.\n\n`roof_underlay` places a second copy of the roof 6% smaller directly inside the first. `Roof_RoundTiles_*` has real gaps between its tile rows and terrain shows through them across whole roofs \u2014 the most visible artefact in the survey at full size. The mesh is not ours to edit, so the seams now show roof."
 }

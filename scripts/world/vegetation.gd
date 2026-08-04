@@ -23,6 +23,12 @@ const WATER_CONFIG := "res://data/config/water.json"
 ## terrain under a prop is sampled at a single point, but the prop has width.
 const SINK := 0.06
 
+## Fallback cell size for spatial batching. See `_build_batch`.
+const DEFAULT_BATCH_CELL := 64.0
+## Below this many instances a model is not worth splitting; the draw call costs
+## more than the culling saves.
+const CHUNK_ABOVE := 400
+
 var _placed: int = 0
 var _draw_calls: int = 0
 var _solid: int = 0
@@ -36,6 +42,7 @@ func build(world_size: float) -> void:
 	_draw_calls = 0
 	_solid = 0
 	_tints.clear()
+	_meshes.clear()
 
 	var cfg: Dictionary = RULES.config()
 	if cfg.is_empty():
@@ -297,28 +304,112 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 	return material
 
 
+## One model's placements, split into spatial cells.
+##
+## A MultiMesh has ONE bounding box for the whole batch, and Godot culls at that
+## granularity — so sixty thousand grass tufts spread over 512 metres are either
+## all drawn or none are, and from anywhere inside the meadow the answer is
+## always "all". That is the ceiling this file used to run into: density could
+## not go up because every extra tuft was drawn from every camera in the world.
+##
+## Cutting each model into `batch_cell`-metre cells gives each chunk its own AABB
+## and lets the frustum throw most of them away. It costs draw calls — one per
+## populated cell instead of one per model — which is the trade this project can
+## afford and the one the reviewer's highest-leverage item requires. Only the
+## genuinely big layers are split; below `CHUNK_ABOVE` instances the extra draw
+## call is worth more than the culling.
+##
+## ROG Ally note: the draw-call count is reported by `stats()` and the cell size
+## is a tunable in `vegetation.json`. Bigger cells mean fewer draw calls and
+## worse culling.
 func _build_batch(model_path: String, placements: Array) -> void:
+	var cell := float(RULES.config().get("batch_cell", DEFAULT_BATCH_CELL))
+	if placements.size() <= CHUNK_ABOVE or cell <= 0.0:
+		_emit_multimesh(model_path, placements, "")
+		_add_collision(model_path, placements)
+		return
+
+	var cells: Dictionary = {}
+	for entry: Variant in placements:
+		var placement: Dictionary = entry
+		var at: Vector3 = placement["position"]
+		var key := Vector2i(int(floor(at.x / cell)), int(floor(at.z / cell)))
+		if not cells.has(key):
+			cells[key] = []
+		(cells[key] as Array).append(placement)
+
+	# The chunks hang under ONE node named after the model, not off the root.
+	#
+	# Two other systems read this tree by NAME and neither should have to learn
+	# what a chunk is. `harvestable.gd` searches recursively and matches a batch's
+	# kind with `begins_with`, so it is fine either way; `tests/smoke_art.gd`
+	# checks that every layer in the config has a direct child of `Vegetation`
+	# named after one of its models, and chunking broke that outright — it
+	# reported grass, drygrass and flowers as "no props in the world" while
+	# seventy thousand of them were on screen. A grouping node keeps the name at
+	# the level the contract expects.
+	var group := Node3D.new()
+	group.name = model_path.get_file().get_basename()
+	add_child(group)
+	for key: Vector2i in cells.keys():
+		_emit_multimesh(model_path, cells[key], "_%d_%d" % [key.x, key.y], group)
+	# Collision stays ONE body for the model. Physics bodies are not frustum
+	# culled, so splitting them buys nothing and costs a node per cell.
+	_add_collision(model_path, placements)
+
+
+## The retinted mesh for a model, built once and shared by every chunk of it.
+##
+## Chunking turned one batch per model into up to sixty-four, and each of them
+## was re-instantiating the source PackedScene and rebuilding an ArrayMesh with
+## fresh surfaces — sixty-four identical copies of the same grass tuft, in
+## memory and in the load. A MultiMesh only ever READS its mesh, so one is
+## enough.
+var _meshes: Dictionary = {}
+
+
+func _ready_mesh(model_path: String) -> Mesh:
+	if _meshes.has(model_path):
+		return _meshes[model_path]
 	var mesh := _mesh_for(model_path)
+	if mesh == null:
+		return null
+	var layer_cfg := _layer_for(model_path)
+	var out := _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}))
+	_meshes[model_path] = out
+	return out
+
+
+func _emit_multimesh(model_path: String, placements: Array, suffix: String, into: Node = null) -> void:
+	var mesh := _ready_mesh(model_path)
 	if mesh == null:
 		push_error("scatter model %s could not be loaded; that layer will be missing" % model_path)
 		return
 
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	var layer_cfg := _layer_for(model_path)
-	multi.mesh = _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}))
+	multi.mesh = mesh
 	multi.instance_count = placements.size()
 
 	for i in placements.size():
 		var placement: Dictionary = placements[i]
-		var basis := Basis(Vector3.UP, float(placement["yaw"])).scaled(
-			Vector3.ONE * float(placement["scale"])
-		)
+		var basis := Basis(Vector3.UP, float(placement["yaw"]))
+		# A LEAN, where the layer asks for one. Trees that all stand perfectly
+		# plumb are the second-loudest signature of generator output after even
+		# spacing — the critic named "uniform height, lean, canopy size and
+		# spacing" as one complaint. The tilt is about a horizontal axis chosen
+		# per prop, so a copse leans in several directions rather than combing.
+		var tilt := float(placement.get("tilt", 0.0))
+		if tilt != 0.0:
+			var axis := Vector3(cos(float(placement.get("tilt_dir", 0.0))), 0.0,
+				sin(float(placement.get("tilt_dir", 0.0))))
+			basis = Basis(axis, tilt) * basis
+		basis = basis.scaled(Vector3.ONE * float(placement["scale"]))
 		var spot: Vector3 = placement["position"]
 		multi.set_instance_transform(i, Transform3D(basis, spot - Vector3.UP * SINK))
 
 	var node := MultiMeshInstance3D.new()
-	node.name = model_path.get_file().get_basename()
+	node.name = model_path.get_file().get_basename() + suffix
 	node.multimesh = multi
 	# Shadow casting is per layer, and the small layers must not.
 	#
@@ -338,11 +429,10 @@ func _build_batch(model_path: String, placements: Array) -> void:
 		if bool(layer.get("casts_shadow", true))
 		else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	)
-	add_child(node)
+	(into if into != null else self).add_child(node)
 
 	_placed += placements.size()
 	_draw_calls += 1
-	_add_collision(model_path, placements)
 
 
 ## Give the solid layers real collision.

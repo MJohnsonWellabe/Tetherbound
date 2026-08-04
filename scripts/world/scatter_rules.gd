@@ -187,10 +187,17 @@ static func placements_for(
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var half := world_size * 0.5
+	# THE HANDHELD DIAL. Ground cover is the layer whose count actually matters
+	# on a ROG Ally — everything else in the meadow is in the low thousands and
+	# this is in the tens of thousands — so the layers that carry it are marked
+	# `density_scaled` and one number in vegetation.json moves all of them
+	# together. It is a presentation tunable and nothing reads it but this.
+	var density := 1.0 if not bool(layer.get("density_scaled", false)) \
+		else maxf(0.0, float(config().get("ground_cover_density", 1.0)))
 	var clumps := int(layer.get("clumps", 20))
-	var per_clump := int(layer.get("per_clump", 12))
+	var per_clump: int = maxi(0, int(round(float(layer.get("per_clump", 12)) * density)))
 	var spread := float(layer.get("clump_radius", 14.0))
-	var strays := int(layer.get("strays", 0))
+	var strays: int = maxi(0, int(round(float(layer.get("strays", 0)) * density)))
 
 	# AUTHORED clump centres, when the layer states them.
 	#
@@ -250,11 +257,28 @@ static func _consider(
 	var base := float(layer.get("base_scale", 1.0))
 	var low := float(layer.get("scale_min", 0.85)) * base
 	var high := float(layer.get("scale_max", 1.25)) * base
+	# SCALE IS BIASED SMALL. A uniform draw between two limits gives a population
+	# clustered around the middle, which is how a stand of trees ends up "at
+	# uniform height" even with a 2:1 range configured — the extremes are rare and
+	# the eye reads the mode. Squaring the sample makes small the common case and
+	# large the exception, which is the size distribution a real wood has: a lot
+	# of saplings, a few giants. `size_bias` 1.0 restores the old uniform draw.
+	var bias := maxf(0.05, float(layer.get("size_bias", 1.0)))
+	var pick: float = pow(rng.randf(), bias)
+	# A LEAN. Nothing in a meadow stands perfectly plumb, and every tree in this
+	# one did. Degrees of tilt off vertical, about a random horizontal axis.
+	# `lean_min_deg` is what turns the same mechanism into FALLEN TIMBER: a dead
+	# trunk at 70-100 degrees is lying on the ground, and a grove floor with logs
+	# on it is a place rather than a tree density.
+	var lean := deg_to_rad(float(layer.get("lean_deg", 0.0)))
+	var lean_min := deg_to_rad(float(layer.get("lean_min_deg", 0.0)))
 	out.append({
 		"model": str(models[rng.randi_range(0, models.size() - 1)]),
 		"position": Vector3(spot.x, height, spot.y),
 		"yaw": rng.randf_range(0.0, TAU),
-		"scale": rng.randf_range(low, high),
+		"scale": lerpf(low, high, pick),
+		"tilt": 0.0 if lean <= 0.0 else rng.randf_range(lean_min, lean) * (1.0 if rng.randf() < 0.5 else -1.0),
+		"tilt_dir": rng.randf_range(0.0, TAU),
 	})
 
 
@@ -637,7 +661,56 @@ static func _expand_room(out: Array[Dictionary], entry: Variant) -> void:
 			float(cells.x - 1) * GRID.CELL * 0.5,
 			float(cells.y - 1) * GRID.CELL * 0.5
 		)
-		_emit(out, roof, centre, 0.0, float(storeys) * GRID.STOREY)
+		# THE ROOF SITS ON TOP OF THE WALL, not part-way down it.
+		#
+		# The kit's roofs hang 0.78m below their own origin, so a roof placed at
+		# storey height puts its eave at 2.22m over a wall that draws to 3.12m —
+		# the top third of every wall in the settlement was inside the roof, and
+		# what was left read as a wall band one third of the roof's pitch. That is
+		# exactly the "the cottage is 2.5m tall and the eave is at his chest"
+		# reading in MA-05: the buildings are not small, they are 72% roof.
+		#
+		# `roof_lift` raises the roof so the eave meets the wall top. Nothing about
+		# the grid moves — the walls are still 2m pieces on a 3m storey (D12) — and
+		# the ridge goes from 7.9m to 8.8m as a consequence rather than as a scale
+		# multiplier.
+		var top: float = float(storeys) * GRID.STOREY + float(room.get("roof_lift", 0.0))
+		_emit(out, roof, centre, 0.0, top)
+		# A SECOND ROOF, slightly smaller, directly inside the first.
+		#
+		# The tile rows in `Roof_RoundTiles_*` do not quite meet, and terrain shows
+		# through the seams across whole roofs — the most visible artefact in the
+		# survey at full size. The mesh is not ours to edit and the gaps are
+		# geometric, not a sorting problem, so this backs them with roof instead of
+		# with meadow. A gable roof is star-shaped about its own centre, so a
+		# uniform shrink about that point lies strictly inside the shell; the
+		# shrink is a few centimetres of offset, which is more than the seams are
+		# wide, so the two sets of gaps cannot line up.
+		var under := float(room.get("roof_underlay", 0.0))
+		if under > 0.0:
+			_emit(out, roof, centre, 0.0, top, 1.0 - under)
+
+		# AND A CEILING, because the shrunken roof alone does not finish the job.
+		#
+		# A uniform shrink moves a seam at radius r by r*(1-s), so the offset
+		# between the two shells' seams is proportional to distance from the
+		# centre — it lands on half a tile pitch at one radius and back on zero at
+		# another. Measured in the render: most seams closed, a band of them still
+		# showed grass. There is no single scale that misaligns a periodic pattern
+		# everywhere.
+		#
+		# A floor laid across the room at the wall top is not periodic and not
+		# nearly-parallel to the line of sight. Any seam over the room now shows
+		# floorboards. It costs nine instances in a batch these buildings already
+		# have, and it is what a real house has under its rafters anyway.
+		if bool(room.get("ceiling", false)) and floor_piece != "":
+			for cx in cells.x:
+				for cz in cells.y:
+					_emit(
+						out, floor_piece,
+						base + Vector2(float(cx) * GRID.CELL, float(cz) * GRID.CELL),
+						0.0, float(storeys) * GRID.STOREY
+					)
 
 
 ## A straight run of pieces: a stretch of curtain wall, a garden fence, a
@@ -688,10 +761,13 @@ static func _expand_prop(out: Array[Dictionary], entry: Variant) -> void:
 	})
 
 
-static func _emit(out: Array[Dictionary], piece_id: String, at: Vector2, yaw: float, lift: float) -> void:
+static func _emit(
+	out: Array[Dictionary], piece_id: String, at: Vector2, yaw: float,
+	lift: float, scale: float = 1.0
+) -> void:
 	var piece: Dictionary = pieces().get(piece_id, {})
 	var model := str(piece.get("model", ""))
 	if model == "":
 		push_warning("settlement names a piece the catalogue does not have: '%s'" % piece_id)
 		return
-	out.append({"model": model, "at": at, "y": lift, "yaw": yaw, "scale": 1.0})
+	out.append({"model": model, "at": at, "y": lift, "yaw": yaw, "scale": scale})

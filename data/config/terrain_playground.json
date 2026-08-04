@@ -30,7 +30,7 @@
     "depth": 22.0
   },
   "rises": {
-    "_comment": "Steeper ground. `sharpness` above 1 makes the sides steeper than a cosine bell; `flat_top` turns a hill into a bluff by levelling the inner disc and putting the whole rise in the annulus outside it. Every peak here is AUTHORED — it is at those coordinates because a sightline wanted it there, not because a noise function put it there.",
+    "_comment": "Steeper ground. `sharpness` above 1 makes the sides steeper than a cosine bell; `flat_top` turns a hill into a bluff by levelling the inner disc and putting the whole rise in the annulus outside it. Every peak here is AUTHORED \u2014 it is at those coordinates because a sightline wanted it there, not because a noise function put it there.",
     "sharpness": 2.1,
     "peaks": [
       {
@@ -62,7 +62,7 @@
         "sharpness": 2.8
       },
       {
-        "_why": "THE STRONGHOLD BLUFF. GAME_DESIGN §28 wants an ancient sacred site industrialised by Team Tether, and this milestone wants it as a SILHOUETTE the player can see the story from rather than as a place. `flat_top` gives it a 16m summit to stand a ruin on; the flank averages 48 degrees, past the character controller's 45-degree limit, so the landmark is unreachable because of its own geography rather than because of an invisible wall. Sited at 185m from spawn and about 34 degrees off both the `01`/`05` and the `03` camera headings, so three of the five survey frames contain it. Cut from 58m to 33m after the first render: at 58 it was a black cone occupying a quarter of the frame at spawn and reading as a volcano rather than as somewhere on the horizon. A landmark has to be the tallest thing you can see and not the only thing.",
+        "_why": "THE STRONGHOLD BLUFF. GAME_DESIGN \u00a728 wants an ancient sacred site industrialised by Team Tether, and this milestone wants it as a SILHOUETTE the player can see the story from rather than as a place. `flat_top` gives it a 16m summit to stand a ruin on; the flank averages 48 degrees, past the character controller's 45-degree limit, so the landmark is unreachable because of its own geography rather than because of an invisible wall. Sited at 185m from spawn and about 34 degrees off both the `01`/`05` and the `03` camera headings, so three of the five survey frames contain it. Cut from 58m to 33m after the first render: at 58 it was a black cone occupying a quarter of the frame at spawn and reading as a volcano rather than as somewhere on the horizon. A landmark has to be the tallest thing you can see and not the only thing.",
         "centre": [
           60.0,
           178.0
@@ -73,7 +73,7 @@
         "flat_top": 0.36
       },
       {
-        "_why": "The wooded ridge behind the settlement. Not a landmark and not a climb — a BACKDROP, so the frames looking north-east have something between the village roofs and the sky. The key art's own settlement panel puts the hamlet in a shallow bowl with hills closing it, and an open horizon behind a village makes it read as three houses in a field.",
+        "_why": "The wooded ridge behind the settlement. Not a landmark and not a climb \u2014 a BACKDROP, so the frames looking north-east have something between the village roofs and the sky. The key art's own settlement panel puts the hamlet in a shallow bowl with hills closing it, and an open horizon behind a village makes it read as three houses in a field.",
         "centre": [
           152.0,
           126.0
@@ -83,7 +83,7 @@
         "sharpness": 1.5
       },
       {
-        "_why": "THE POND'S BOWL — a NEGATIVE peak, which is the same maths carving instead of raising. The broad valley alone is a 22m bell over 150m, which is so gentle that any fill deep enough to read as water sheets out across a hundred metres of meadow: the first render put a translucent blue plane over grass you could still see the texture of, with a dead-straight edge where the disc ended. A pond needs a BASIN, and this is it — 8m deep over 40m, so the water has somewhere to be deep and the shoreline is where the ground comes up. Sited at (-96,116) rather than at the valley's own centre, and that is a framing decision: the survey's `02` camera stands at (-120,130) two metres above the ground, and with the basin under its feet it was two metres UNDER the water looking up through the surface. The pond is now 28m in front of that camera, on its heading, with the camera on the bank.",
+        "_why": "THE POND'S BOWL \u2014 a NEGATIVE peak, which is the same maths carving instead of raising. The broad valley alone is a 22m bell over 150m, which is so gentle that any fill deep enough to read as water sheets out across a hundred metres of meadow: the first render put a translucent blue plane over grass you could still see the texture of, with a dead-straight edge where the disc ended. A pond needs a BASIN, and this is it \u2014 8m deep over 40m, so the water has somewhere to be deep and the shoreline is where the ground comes up. Sited at (-96,116) rather than at the valley's own centre, and that is a framing decision: the survey's `02` camera stands at (-120,130) two metres above the ground, and with the basin under its feet it was two metres UNDER the water looking up through the surface. The pond is now 28m in front of that camera, on its heading, with the camera on the bank.",
         "centre": [
           -96.0,
           116.0
@@ -103,7 +103,7 @@
     "radius": 34.0,
     "flatten": 0.85
   },
-  "_comment_pads": "LEVELLED TERRACES, and the reason they are not just more spawn pads is that a spawn pad is never actually flat. It lerps toward its centre height with a smoothstep falloff, so the only truly level point on it is the middle — fine for standing on, useless for building on. `build_grid.gd` refuses a placement across more than 0.55m of step measured at the footprint's four CORNERS, and a house that squeaks past that check still shows a stripe of daylight under one wall. So a pad here is exactly flat inside `flat_radius` and blends back to the noise by `radius`. Every settlement building in data/config/settlement.json stands on one, and its `level` comes from the terrain rather than being typed, so retuning the hills moves the village with them.",
+  "_comment_pads": "LEVELLED TERRACES, and the reason they are not just more spawn pads is that a spawn pad is never actually flat. It lerps toward its centre height with a smoothstep falloff, so the only truly level point on it is the middle \u2014 fine for standing on, useless for building on. `build_grid.gd` refuses a placement across more than 0.55m of step measured at the footprint's four CORNERS, and a house that squeaks past that check still shows a stripe of daylight under one wall. So a pad here is exactly flat inside `flat_radius` and blends back to the noise by `radius`. Every settlement building in data/config/settlement.json stands on one, and its `level` comes from the terrain rather than being typed, so retuning the hills moves the village with them.",
   "pads": [
     {
       "_why": "Grandpa's yard. The player starts on the spawn pad and walks to this door across open ground, so the two are deliberately continuous rather than being two shelves with a step between them.",
@@ -115,7 +115,7 @@
       "radius": 32.0
     },
     {
-      "_why": "The settlement green. Big enough to hold four buildings, their yards and the road running through them — the barn's far corner is 25m from this centre and a building whose pad runs out under one wall is a building with a stripe of daylight under it.",
+      "_why": "The settlement green. Big enough to hold four buildings, their yards and the road running through them \u2014 the barn's far corner is 25m from this centre and a building whose pad runs out under one wall is a building with a stripe of daylight under it.",
       "centre": [
         82.0,
         76.0
@@ -133,7 +133,7 @@
       "radius": 20.0
     }
   ],
-  "_comment_channels": "THE BROOK. A stream is not a long thin pond: it has a source, a direction and a fall, and none of those are properties of a disc of water. This cuts a bed into the terrain along an authored route, and `playground_heightfield.gd` forces the bed's profile to DESCEND — `min_fall` metres of drop per metre travelled — so the channel deepens wherever the route crosses level ground and the water in it is running somewhere by construction. water.json lays a surface down the same bed. It rises at the foot of the stronghold bluff and runs into the valley pond, which is the one line on the map that connects the thing you are being pointed at to the place you can actually reach.",
+  "_comment_channels": "THE BROOK. A stream is not a long thin pond: it has a source, a direction and a fall, and none of those are properties of a disc of water. This cuts a bed into the terrain along an authored route, and `playground_heightfield.gd` forces the bed's profile to DESCEND \u2014 `min_fall` metres of drop per metre travelled \u2014 so the channel deepens wherever the route crosses level ground and the water in it is running somewhere by construction. water.json lays a surface down the same bed. It rises at the foot of the stronghold bluff and runs into the valley pond, which is the one line on the map that connects the thing you are being pointed at to the place you can actually reach.",
   "channels": [
     {
       "name": "StrongholdBrook",
@@ -167,72 +167,73 @@
           118.0
         ]
       ],
-      "_comment_half_width": "Metres of flat bed either side of the centreline. Two and a half metres of water is a brook you step over at a ford and cannot swim in, which is the right size given there is no swimming (water.json, and CLAUDE.md's flag-don't-invent rule).",
-      "half_width": 2.6,
-      "_comment_bank": "How far the cut blends back into the meadow. Wide relative to the bed on purpose: a channel with narrow banks is a trench, and the thing that reads as a watercourse from a distance is the shallow green hollow around it, not the water.",
-      "bank": 9.0,
-      "depth": 1.35,
+      "_comment_half_width": "Metres of flat bed either side of the centreline. The water ribbon in water.json is narrower than this, so the surface sits inside the cut bed instead of spilling onto the bank.",
+      "half_width": 2.2,
+      "_comment_bank": "How far the cut blends back into the meadow. NARROWED from 9m and the depth raised from 1.35m, because the two together were the reason MA-05 saw 'a stream ribbon lying on top of the hillside with a razor edge, no channel, no banks'. The bed-cutting was reaching the render exactly as written \u2014 it was just invisible: 1.35m of drop spread over 2.6m of bed plus 9m of bank either side is a 23m-wide dish falling 6%, which at fifty metres is not a channel, it is the meadow. At 2.6m over a 4.5m bank the flanks run at about 30 degrees \u2014 still walkable, so the traversal smoke keeps passing, and now visibly a gully with the water down inside it rather than a stripe laid across the grass.",
+      "bank": 4.5,
+      "depth": 2.6,
       "min_fall": 0.022
     }
   ],
-  "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. It MULTIPLIES the PBR albedo — it does not replace it. These were authored when the colour map was the entire ground treatment and there were no textures at all; they stayed after the textures arrived, and grass albedo at luminance 0.40 times a #496c34 map at 0.36 is a surface of 0.14 before any light reaches it. That is the whole reason the near field measured 0.096 against 0.27-0.60 across the references, and why no amount of sun, shadow, ambient or normal tuning moved it: nothing was wrong with the lighting.",
-  "_comment_colour_now": "Near-white, so this modulates rather than paints. The textures carry the colour; this carries the slope-driven variation and the macro break-up that stops a 2K tile reading as wallpaper. Keep everything here above roughly #c0 — below that it is a brightness change wearing a colour's clothes, which is the mistake this comment exists to stop being repeated.",
+  "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. It MULTIPLIES the PBR albedo \u2014 it does not replace it. These were authored when the colour map was the entire ground treatment and there were no textures at all; they stayed after the textures arrived, and grass albedo at luminance 0.40 times a #496c34 map at 0.36 is a surface of 0.14 before any light reaches it. That is the whole reason the near field measured 0.096 against 0.27-0.60 across the references, and why no amount of sun, shadow, ambient or normal tuning moved it: nothing was wrong with the lighting.",
+  "_comment_colour_now": "Near-white, so this modulates rather than paints. The textures carry the colour; this carries the slope-driven variation and the macro break-up that stops a 2K tile reading as wallpaper. Keep everything here above roughly #c0 \u2014 below that it is a brightness change wearing a colour's clothes, which is the mistake this comment exists to stop being repeated.",
   "colour": {
     "grass_low": "#dde6ce",
     "grass_high": "#eef0dc",
     "soil": "#e6d4b0",
     "rock": "#d8d6ce",
-    "soil_slope_deg": 30.0,
-    "rock_slope_deg": 44.0,
-    "blend_deg": 7.0,
-    "_comment_trail": "The colour map is also where the TRAIL is drawn. Painting it into Terrain3D's control map would give real dirt with its own albedo and normal; that is NOT what happens here and the reason is recorded in build_playground_terrain.gd — the control layer is a uint32 bitfield nothing in this project has ever written, and getting it subtly wrong costs a whole bake to discover. So the track is a warm multiply over the grass instead, and it is the right next move for the ground. That is honest about what it is: a worn strip, darker and browner than the meadow either side of it, with the path stones from vegetation.json laid along the same route and the grass layers refusing to grow on it. It reads as a track from any distance and as trodden grass from two metres, which is what it is.",
+    "soil_slope_deg": 25.0,
+    "rock_slope_deg": 46.0,
+    "blend_deg": 18.0,
+    "_comment_trail": "The colour map is also where the TRAIL is drawn. Painting it into Terrain3D's control map would give real dirt with its own albedo and normal; that is NOT what happens here and the reason is recorded in build_playground_terrain.gd \u2014 the control layer is a uint32 bitfield nothing in this project has ever written, and getting it subtly wrong costs a whole bake to discover. So the track is a warm multiply over the grass instead, and it is the right next move for the ground. That is honest about what it is: a worn strip, darker and browner than the meadow either side of it, with the path stones from vegetation.json laid along the same route and the grass layers refusing to grow on it. It reads as a track from any distance and as trodden grass from two metres, which is what it is.",
     "trail_colour": "#bda87c",
     "trail_half_width": 1.9,
     "trail_edge": 2.6,
     "_comment_shingle": "Pale shingle either side of the brook, for the same reason. A watercourse whose banks are the same green as the meadow reads as a puddle in a lawn.",
-    "shingle_colour": "#cfc3a4",
-    "shingle_half_width": 3.4,
-    "shingle_edge": 4.2,
-    "_comment_trail_round2": "Lifted from #a08a5e. At that value the multiply read as a shadow lying across the meadow rather than as worn ground, which is what a dark neutral multiply over green always does."
+    "shingle_colour": "#c6b795",
+    "shingle_half_width": 3.0,
+    "shingle_edge": 5.0,
+    "_comment_trail_round2": "Lifted from #a08a5e. At that value the multiply read as a shadow lying across the meadow rather than as worn ground, which is what a dark neutral multiply over green always does.",
+    "_comment_blend": "How many degrees of slope the grass-to-soil and soil-to-rock transitions take. Raised from 7, which is what MA-05 saw as an 'unblended tan/green terrain splat boundary' in `02-valley-floor`: seven degrees of slope on a rolling hill is a couple of metres of ground, so the colour map switched from meadow to bare earth across a hard line that follows a contour and reads as a paint edge. Eighteen degrees puts the transition across the whole shoulder, which is where a real grass line is."
   },
-  "_comment_shader": "Terrain3D shader settings. Every one of these is TUNABLE presentation and none of them touches collision or height — the bake is authored data and this is only how it is drawn.",
+  "_comment_shader": "Terrain3D shader settings. Every one of these is TUNABLE presentation and none of them touches collision or height \u2014 the bake is authored data and this is only how it is drawn.",
   "shader": {
-    "_comment_background": "2 = NOISE. It was 1 = FLAT, which draws an infinite plane at y=0 past the baked 512m and fogs it to a uniform sheet. That produced a measured 0.146 luminance step across the ENTIRE width of `03-rise-overlook` at row 252 — the blind critic found it independently and called it the first thing the eye lands on. Noise gives the distance real shape instead, so the world stops having a visible edge.",
+    "_comment_background": "2 = NOISE. It was 1 = FLAT, which draws an infinite plane at y=0 past the baked 512m and fogs it to a uniform sheet. That produced a measured 0.146 luminance step across the ENTIRE width of `03-rise-overlook` at row 252 \u2014 the blind critic found it independently and called it the first thing the eye lands on. Noise gives the distance real shape instead, so the world stops having a visible edge.",
     "world_background": 2,
     "world_noise_scale": 2.6,
-    "_comment_noise_height_units": "MULTIPLIED BY TEN INSIDE THE SHADER — `world_noise(...) * world_noise_height * 10.0`. At 58 that is 580m of relief, so the land beyond the baked 512m was a mountain range two to five kilometres out, standing well above the true horizon and fully saturated by fog. It is what put a flat cream band across the top third of every survey frame, and it is what the blind critic measured as 'past 40% depth flattens to one cream value'. It is also why nothing could ever read as a distant landmark: the background was already taller than anything the meadow could put on the skyline. At 2.4 the background rolls to about 24m, which is under the baked terrain's own relief, so the horizon belongs to the authored geography and the stronghold bluff is the tallest thing on it.",
+    "_comment_noise_height_units": "MULTIPLIED BY TEN INSIDE THE SHADER \u2014 `world_noise(...) * world_noise_height * 10.0`. At 58 that is 580m of relief, so the land beyond the baked 512m was a mountain range two to five kilometres out, standing well above the true horizon and fully saturated by fog. It is what put a flat cream band across the top third of every survey frame, and it is what the blind critic measured as 'past 40% depth flattens to one cream value'. It is also why nothing could ever read as a distant landmark: the background was already taller than anything the meadow could put on the skyline. At 2.4 the background rolls to about 24m, which is under the baked terrain's own relief, so the horizon belongs to the authored geography and the stronghold bluff is the tallest thing on it.",
     "world_noise_height": 1.7,
     "_comment_blend": "How far into the baked regions the noise blends. Too low and the seam comes back as a ring instead of a line.",
     "world_noise_region_blend": 0.42,
     "world_noise_lod_distance": 3000.0,
     "world_noise_max_octaves": 5,
     "world_noise_min_octaves": 2,
-    "_comment_macro": "Macro variation tints the ground at two large scales, which is the only thing that stops a 2K tile reading as tiling. The critic measured the previous ground as high-frequency mottled noise with 'no blade direction and no scale cue' — a texture repeating every few metres with nothing varying above that.",
-    "_comment_macro_multiply": "These MULTIPLY the albedo — the shader does `macrov = mix(colour1, white, noise1); macrov *= mix(colour2, white, noise2)`. So they can only ever darken, and two mid-tones compound: the first attempt used #c6d18a and #8fa06a, which multiply out to roughly 0.47 at their overlap and took the near-field ground from luminance 0.124 to 0.054 — a black foreground in every frame. Keep both near white and let them tint, not shade. Anything below about #b0 here is a brightness change wearing a colour's clothes.",
+    "_comment_macro": "Macro variation tints the ground at two large scales, which is the only thing that stops a 2K tile reading as tiling. The critic measured the previous ground as high-frequency mottled noise with 'no blade direction and no scale cue' \u2014 a texture repeating every few metres with nothing varying above that.",
+    "_comment_macro_multiply": "These MULTIPLY the albedo \u2014 the shader does `macrov = mix(colour1, white, noise1); macrov *= mix(colour2, white, noise2)`. So they can only ever darken, and two mid-tones compound: the first attempt used #c6d18a and #8fa06a, which multiply out to roughly 0.47 at their overlap and took the near-field ground from luminance 0.124 to 0.054 \u2014 a black foreground in every frame. Keep both near white and let them tint, not shade. Anything below about #b0 here is a brightness change wearing a colour's clothes.",
     "macro_variation1": "#eef0d8",
     "macro_variation2": "#ccd3b6",
     "noise1_scale": 0.022,
     "noise2_scale": 0.055,
     "noise1_angle": 0.7,
-    "_comment_dual_scale_removed": "Terrain3D's dual-scaling uniforms (dual_scale_texture/near/far/reduction) are NOT reachable through set_shader_param on this build — the shader only compiles them in behind a feature this API does not expose, and writing them returns quietly having done nothing. They were configured here for two rounds while the surveys came back byte-identical. `_apply_ground_shader` now reads every uniform back and warns by name, which is how this was finally caught.",
+    "_comment_dual_scale_removed": "Terrain3D's dual-scaling uniforms (dual_scale_texture/near/far/reduction) are NOT reachable through set_shader_param on this build \u2014 the shader only compiles them in behind a feature this API does not expose, and writing them returns quietly having done nothing. They were configured here for two rounds while the surveys came back byte-identical. `_apply_ground_shader` now reads every uniform back and warns by name, which is how this was finally caught.",
     "_comment_auto": "Auto shader thresholds: how readily slope switches from grass to the overlay texture.",
-    "_comment_auto_textures": "THE SINGLE LARGEST RENDERING BUG IN THIS BUILD, and it was invisible from every test. Terrain3D's auto shader computes `auto_blend = clamp(auto_slope*2*(normal.y - 1) + 1, 0, 1)` — which is 1.0 on FLAT ground and falls to 0 on slopes — and then uses that blend to mix from `auto_base_texture` toward `auto_overlay_texture`. Blend 1 is the OVERLAY. So with the defaults (base 0, overlay 1) the flat meadow rendered entirely as texture 1, which is Rock030, and the grass texture only ever appeared on the steep faces. Every complaint the blind critic made about the ground — 'fractured plates', 'cracked fissure lines', a brown near field under a green horizon — was a photograph of wet rock, and four rounds of tuning were spent on `Grass008`'s uv_scale, tint and normal_depth, a texture that was not on screen. Base is the SLOPE material and overlay is the FLAT one.\n\nSECOND FINDING, from the render after the fix: the slope material must be LIGHT. Terrain3D always evaluates both textures when the blend is anything under 1.0, and the blend only reaches exactly 1.0 on perfectly level ground — so a few percent of the slope material is mixed into the whole meadow, and because the mix is height-weighted it appears as thin dendritic veins rather than as an even tint. With Rock030 (mean luminance 0.30) as the base those veins were dark grey-brown cracks across bright green, which is the 'fractured plates' artefact the blind critic named in three consecutive rounds. No amount of `blend_sharpness` removes them, because the problem is CONTRAST, not sharpness: a multiply cannot lighten a dark albedo. So the base is now Ground003, a light warm soil — three percent of that in grass is invisible, and a whole bank of it reads as an earth bank, which is what the key art puts on its hill shoulders anyway. Rock030 stays in the array, unselected by the auto shader; steep faces still read as stone through the colour map's near-white rock tint and through the boulders standing on them.",
+    "_comment_auto_textures": "THE SINGLE LARGEST RENDERING BUG IN THIS BUILD, and it was invisible from every test. Terrain3D's auto shader computes `auto_blend = clamp(auto_slope*2*(normal.y - 1) + 1, 0, 1)` \u2014 which is 1.0 on FLAT ground and falls to 0 on slopes \u2014 and then uses that blend to mix from `auto_base_texture` toward `auto_overlay_texture`. Blend 1 is the OVERLAY. So with the defaults (base 0, overlay 1) the flat meadow rendered entirely as texture 1, which is Rock030, and the grass texture only ever appeared on the steep faces. Every complaint the blind critic made about the ground \u2014 'fractured plates', 'cracked fissure lines', a brown near field under a green horizon \u2014 was a photograph of wet rock, and four rounds of tuning were spent on `Grass008`'s uv_scale, tint and normal_depth, a texture that was not on screen. Base is the SLOPE material and overlay is the FLAT one.\n\nSECOND FINDING, from the render after the fix: the slope material must be LIGHT. Terrain3D always evaluates both textures when the blend is anything under 1.0, and the blend only reaches exactly 1.0 on perfectly level ground \u2014 so a few percent of the slope material is mixed into the whole meadow, and because the mix is height-weighted it appears as thin dendritic veins rather than as an even tint. With Rock030 (mean luminance 0.30) as the base those veins were dark grey-brown cracks across bright green, which is the 'fractured plates' artefact the blind critic named in three consecutive rounds. No amount of `blend_sharpness` removes them, because the problem is CONTRAST, not sharpness: a multiply cannot lighten a dark albedo. So the base is now Ground003, a light warm soil \u2014 three percent of that in grass is invisible, and a whole bank of it reads as an earth bank, which is what the key art puts on its hill shoulders anyway. Rock030 stays in the array, unselected by the auto shader; steep faces still read as stone through the colour map's near-white rock tint and through the boulders standing on them.",
     "auto_base_texture": 2,
     "auto_overlay_texture": 0,
-    "_comment_auto_slope": "How readily the ground switches from the flat material to the slope material. blend = 1 - auto_slope*2*(1 - cos(slope)), so at 1.6 a 20-degree hillside is still 80% grass and a 35-degree face is 40%. It was 2.4, which put rock on every shoulder in the meadow — invisible at the time, because with the base and overlay the wrong way round the flat ground was rock too.",
+    "_comment_auto_slope": "How readily the ground switches from the flat material to the slope material. blend = 1 - auto_slope*2*(1 - cos(slope)), so at 1.6 a 20-degree hillside is still 80% grass and a 35-degree face is 40%. It was 2.4, which put rock on every shoulder in the meadow \u2014 invisible at the time, because with the base and overlay the wrong way round the flat ground was rock too.",
     "auto_slope": 1.0,
     "auto_height_reduction": 0.12,
     "blend_sharpness": 0.12,
     "mipmap_bias": 0.92,
-    "_comment_blend_sharpness": "Cut from 0.62, and this was the cause of the black cracks in the grass that four rounds of review called 'fractured plates' and 'fissure lines'. Terrain3D height-blends its two textures: `sharpness = 56*blend_sharpness + 8`, and that exponent is applied to the texture's own height channel. At 0.62 the exponent is 42, which is not a blend at all — it is a hard height-based SELECTION, so even a 3% rock contribution on nearly level ground appears as thin black veins wherever the rock's height map is high. At 0.12 the exponent is 15 and 3% of rock is 3% of rock: invisible, which is what 3% should look like."
+    "_comment_blend_sharpness": "Cut from 0.62, and this was the cause of the black cracks in the grass that four rounds of review called 'fractured plates' and 'fissure lines'. Terrain3D height-blends its two textures: `sharpness = 56*blend_sharpness + 8`, and that exponent is applied to the texture's own height channel. At 0.62 the exponent is 42, which is not a blend at all \u2014 it is a hard height-based SELECTION, so even a 3% rock contribution on nearly level ground appears as thin black veins wherever the rock's height map is high. At 0.12 the exponent is 15 and 3% of rock is 3% of rock: invisible, which is what 3% should look like."
   },
   "_comment_textures": "Real PBR ground, replacing the `show_colormap` debug view that stood in for it from M1 to the first art pass. Terrain3D's auto shader picks texture 0 on walkable ground and texture 1 on slopes, so the grass/soil/rock intent the bake already encodes is expressed with albedo and normal detail instead of flat vertex colour. `uv_scale` is metres per tile: too large and the ground is mush at distance, too small and it visibly repeats.",
-  "_comment_uv_scale": "Metres per tile is 1/uv_scale, so 0.34 tiles every ~3m. It was 0.18 (~5.5m), and at that size the near ground showed the photograph's own brown patches rather than its average — a green meadow with a brown foreground, reading as two materials. Tighter tiling averages to grass; too tight and it visibly repeats, which is what the macro variation and detiling above are for.",
-  "_comment_normal_depth": "The most consequential number in this file. A photographic grass normal map at full strength turns most of its texels away from a 52-degree sun, and the ground within ~30m of the camera goes black — measured at luminance 0.071 against 0.27-0.60 across the references, with exactly the high-frequency mottled fizz the critic described. It flattens with distance because the mip average cancels the perturbation, which is why the far hills looked correct and the foreground did not. Raise it for more relief; if the near ground starts crushing to black again, this is the cause.",
+  "_comment_uv_scale": "Metres per tile is 1/uv_scale, so 0.34 tiles every ~3m. It was 0.18 (~5.5m), and at that size the near ground showed the photograph's own brown patches rather than its average \u2014 a green meadow with a brown foreground, reading as two materials. Tighter tiling averages to grass; too tight and it visibly repeats, which is what the macro variation and detiling above are for.",
+  "_comment_normal_depth": "The most consequential number in this file. A photographic grass normal map at full strength turns most of its texels away from a 52-degree sun, and the ground within ~30m of the camera goes black \u2014 measured at luminance 0.071 against 0.27-0.60 across the references, with exactly the high-frequency mottled fizz the critic described. It flattens with distance because the mip average cancels the perturbation, which is why the far hills looked correct and the foreground did not. Raise it for more relief; if the near ground starts crushing to black again, this is the cause.",
   "_comment_detiling": "Rotates and shifts the tile per region so a 2K texture stops announcing its own repeat period. Together with the shader's macro variation, this is what separates 'ground material' from 'wallpaper'.",
   "textures": [
     {
-      "_comment_which_grass": "Grass004, replacing Grass008. Both are 1K ambientCG photographs of lawn and Grass008 was picked by a script that scored them on one defect — the long dark filaments that read as cracked plates. That defect was never the texture's: with the auto shader's base and overlay reversed, the flat meadow was rendering Rock030 and the cracks were a photograph of wet stone. With that fixed the real question is which of these two looks like a MEADOW, and Grass008 is a bowling green: uniform blade noise with nothing varying above a centimetre, which is exactly the 'flat untextured colour fill' the critic named. Grass004 is a wilder, tufted, patchy grass with structure at 10cm and at 50cm, so the ground has form under raking light instead of being a colour.",
+      "_comment_which_grass": "Grass004, replacing Grass008. Both are 1K ambientCG photographs of lawn and Grass008 was picked by a script that scored them on one defect \u2014 the long dark filaments that read as cracked plates. That defect was never the texture's: with the auto shader's base and overlay reversed, the flat meadow was rendering Rock030 and the cracks were a photograph of wet stone. With that fixed the real question is which of these two looks like a MEADOW, and Grass008 is a bowling green: uniform blade noise with nothing varying above a centimetre, which is exactly the 'flat untextured colour fill' the critic named. Grass004 is a wilder, tufted, patchy grass with structure at 10cm and at 50cm, so the ground has form under raking light instead of being a colour.",
       "name": "grass",
       "albedo": "res://assets/environment/terrain/Grass004_Color.jpg",
       "normal": "res://assets/environment/terrain/Grass004_NormalGL.jpg",
@@ -242,16 +243,16 @@
       "roughness_mod": 0.1,
       "detiling_rotation": 0.28,
       "detiling_shift": 0.35,
-      "_comment_tint": "Pulled a long way down from #eaf2cc, and this is a consequence of the auto-shader fix rather than a change of mind. Every tint round before this one was lifting a ROCK texture toward a meadow's brightness; pointed at grass, the same numbers rendered a fluorescent lime at 185,218,89 — luminance 0.78 against the references' 0.28-0.60. The multiply is also the only lever on the hue, and it is a weak one: an albedo with almost no blue in it cannot be desaturated by multiplying, so the blue channel is held near 1.0 while red and green come down, which is as close to olive as a multiply can get.",
+      "_comment_tint": "Pulled a long way down from #eaf2cc, and this is a consequence of the auto-shader fix rather than a change of mind. Every tint round before this one was lifting a ROCK texture toward a meadow's brightness; pointed at grass, the same numbers rendered a fluorescent lime at 185,218,89 \u2014 luminance 0.78 against the references' 0.28-0.60. The multiply is also the only lever on the hue, and it is a weak one: an albedo with almost no blue in it cannot be desaturated by multiplying, so the blue channel is held near 1.0 while red and green come down, which is as close to olive as a multiply can get.",
       "tint": "#b6bda6"
     },
     {
-      "_comment": "The slope material. `auto_base_texture` names this one, so it is what the shader falls toward as the ground steepens — cliffs, the flanks of the stronghold bluff, and the toe of the outcrop.",
+      "_comment": "The slope material. `auto_base_texture` names this one, so it is what the shader falls toward as the ground steepens \u2014 cliffs, the flanks of the stronghold bluff, and the toe of the outcrop.",
       "name": "rock",
       "albedo": "res://assets/environment/terrain/Rock030_Color.jpg",
       "normal": "res://assets/environment/terrain/Rock030_NormalGL.jpg",
       "uv_scale": 0.12,
-      "_comment_normal_depth": "Cut from 0.6 with the blend sharpness. Rock relief is right on a cliff face and wrong where the auto shader is mixing three percent of it into a lawn — the relief was half of what made the veins read as cracks.",
+      "_comment_normal_depth": "Cut from 0.6 with the blend sharpness. Rock relief is right on a cliff face and wrong where the auto shader is mixing three percent of it into a lawn \u2014 the relief was half of what made the veins read as cracks.",
       "normal_depth": 0.3,
       "ao_strength": 0.4,
       "roughness_mod": 0.0,
@@ -260,7 +261,7 @@
       "tint": "#c2beb2"
     },
     {
-      "_comment": "The SLOPE material — `auto_base_texture` names this one, so it is what the ground falls toward as it steepens, and what a few percent of is mixed into every square metre of the meadow. It is here rather than the rock for exactly that reason; see the shader block's `_comment_auto_textures`. uv_scale raised from 0.16 (a 6m tile, visibly blurry at the range banks are seen from) to 0.45, a 2.2m tile.",
+      "_comment": "The SLOPE material \u2014 `auto_base_texture` names this one, so it is what the ground falls toward as it steepens, and what a few percent of is mixed into every square metre of the meadow. It is here rather than the rock for exactly that reason; see the shader block's `_comment_auto_textures`. uv_scale raised from 0.16 (a 6m tile, visibly blurry at the range banks are seen from) to 0.45, a 2.2m tile.",
       "name": "soil",
       "albedo": "res://assets/environment/terrain/Ground003_Color.jpg",
       "normal": "res://assets/environment/terrain/Ground003_NormalGL.jpg",
@@ -273,5 +274,5 @@
       "tint": "#dccfae"
     }
   ],
-  "_comment_colour_round4": "Lifted with the texture tint, because the two MULTIPLY and neither alone has the headroom. The photographic albedo's own value is 0.52; times the old tint (0.81) times the old colour map (0.83) is 0.35 before a single light touches it, and frame_stats measured the result at 0.12-0.43 near-field luminance against Palworld's 0.28-0.60. This map is BAKED — changing it means re-running build_playground_terrain.gd, which is why it is easy to forget it is part of the answer."
+  "_comment_colour_round4": "Lifted with the texture tint, because the two MULTIPLY and neither alone has the headroom. The photographic albedo's own value is 0.52; times the old tint (0.81) times the old colour map (0.83) is 0.35 before a single light touches it, and frame_stats measured the result at 0.12-0.43 near-field luminance against Palworld's 0.28-0.60. This map is BAKED \u2014 changing it means re-running build_playground_terrain.gd, which is why it is easy to forget it is part of the answer."
 }
