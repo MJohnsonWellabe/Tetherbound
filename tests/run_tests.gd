@@ -47,10 +47,30 @@ func _init() -> void:
 			instance.before_each()
 			instance.callv(method, [])
 			instance.after_each()
-			assertions += instance.assertion_count
+			var made: int = instance.assertion_count
+			assertions += made
 			instance.assertion_count = 0
 
-			if instance.failures.is_empty():
+			# A METHOD THAT ASSERTED NOTHING IS A FAILURE, not a pass.
+			#
+			# This runner used to report `ok` for any method whose failure list was
+			# empty, and a method that dies on its first line has an empty failure
+			# list. GDScript does not raise a catchable error — a bad call prints to
+			# stderr, the method stops, and this loop sees a clean run.
+			#
+			# It cost a real bug: a static `is_tool()` on an item loader collided
+			# with `Script.is_tool()`, every call failed with "expected 0 arguments",
+			# and the test covering it printed `ok` for as long as it existed. The
+			# suite was green over a function that could not be called at all.
+			#
+			# Zero assertions does not prove a method died — it might be a stub —
+			# but there is no reason to have either, and both should be loud.
+			if made == 0:
+				failed += 1
+				print("  FAIL  %s :: %s" % [file_name, method])
+				print("          asserted nothing — a stub, or it died before its first assertion")
+				failure_lines.append("%s :: %s — asserted nothing" % [file_name, method])
+			elif instance.failures.is_empty():
 				print("  ok    %s :: %s" % [file_name, method])
 			else:
 				failed += 1
