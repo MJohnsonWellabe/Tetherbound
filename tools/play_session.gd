@@ -48,6 +48,20 @@ var _refusals: int = 0
 var _refused_token: String = ""
 var _refused_instance: Object = null
 
+## What the combat manager said about each orb: whether it resolved into a catch
+## attempt, and what it refused. Read from its own signals rather than inferred
+## from the party growing, because a party that does not grow could mean the orb
+## missed, the roll failed, or the party was full — three different facts.
+var _resolutions: Array[bool] = []
+var _catch_refusals: PackedStringArray = []
+var _catch_wired: bool = false
+
+## Wild creatures this session has already thrown at. The playground holds two,
+## and a creature that has been caught once is already in the party as the very
+## same instance — so the catch made while the party is full has to be made on one
+## that has never been caught, or the party refuses it for the wrong reason.
+var _tried_wilds: Array[Node3D] = []
+
 
 func _init() -> void:
 	_run()
@@ -234,29 +248,38 @@ func _session_release() -> void:
 	else:
 		note("SaveManager: ABSENT — nothing in this session can speak to persistence")
 
-	note("--- bullet: capture while full — first, fill the party by catching ---")
+	note("--- bullet: capture while full — getting the party to five ---")
 	note("capacity reported: %s" % probe(party, "capacity"))
 	note("party at session start: size %s = %s" % [
 		probe(party, "size"), ", ".join(_names(party))
 	])
+	var wilds: Variant = probe(director, "wild_pals")
+	note("wild creatures the world is holding: %d" % ((wilds as Array).size() if wilds is Array else 0))
 
-	# Filled by CATCHING, one creature at a time, not by handing the party five
-	# instances. "Capture while full" is a bullet about what happens at the sixth
-	# catch, and a party filled by fiat has never been caught into.
+	# HOW THE PARTY GETS FULL, stated plainly so the judge can weigh it.
+	#
+	# The playground holds two wild creatures, and an earlier run of this session
+	# established what happens when you keep catching them: the second catch of the
+	# same creature comes back from the director as `token='already_held'`, because
+	# the respawned creature carries the same instance that is already in the
+	# party. So five pals cannot be caught in this world — there are not five
+	# distinct creatures in it.
+	#
+	# What follows therefore does one REAL catch, fills the middle by handing
+	# instances to the party (and says so), and saves the second, never-caught
+	# creature for the catch this bullet is actually about — the one made while the
+	# party is full. That catch is real, driven by input, on a creature the party
+	# has never held.
 	var capacity: int = int(probe(party, "capacity"))
-	for attempt in 10:
-		if int(probe(party, "size")) >= capacity:
-			break
-		note("- catch %d, to fill the party -" % (attempt + 1))
-		await _wait_for_wild()
-		await _attempt_catch(party, false)
-		note("party size now: %s (%s)" % [probe(party, "size"), ", ".join(_names(party))])
+	note("- one real catch -")
+	await _wait_for_wild()
+	await _attempt_catch(party, false)
+	note("party size now: %s (%s)" % [probe(party, "size"), ", ".join(_names(party))])
 
 	if int(probe(party, "size")) < capacity:
-		# Said plainly rather than papered over: the judge has to be able to weigh
-		# how the party got full.
-		note("THE SESSION COULD NOT FILL THE PARTY BY CATCHING; the remaining slots below were")
-		note("filled by handing instances to the party directly. Those are not catches.")
+		note("THE REMAINING SLOTS ARE NOT FILLED BY CATCHING. The adds below hand instances")
+		note("to the party directly, because the world does not contain five catchable")
+		note("creatures. They are not catches and nothing below should be read as one.")
 		for i in 6:
 			if int(probe(party, "size")) >= capacity:
 				break
@@ -295,10 +318,23 @@ func _session_release() -> void:
 	])
 
 	note("--- bullet: capture while full — now catch a sixth ---")
-	await _wait_for_wild()
-	var caught_sixth: bool = await _attempt_catch(party, true)
+	# Anything recorded from here on belongs to this catch, not to an earlier one.
+	_refused_instance = null
+	_refused_token = ""
+	var refusals_before_sixth: int = _refusals
+	var caught_sixth := false
+	for try_number in 3:
+		await _wait_for_wild()
+		if try_number > 0:
+			note("- the sixth catch did not resolve; going back for another creature (attempt %d) -" % (try_number + 1))
+		caught_sixth = await _attempt_catch(party, true)
+		if _refusals > refusals_before_sixth or _screen_open():
+			break
 	note("party size straight after the sixth catch: %s" % probe(party, "size"))
-	note("times the director reported a caught pal it could not keep: %d" % _refusals)
+	note("times the director reported a caught pal it could not keep, during this catch: %d" % [
+		_refusals - refusals_before_sixth
+	])
+	note("the refusal token it gave: '%s'" % _refused_token)
 	note("the pal caught while full: %s (species %s)" % [
 		probe(_refused_instance, "display"), field(_refused_instance, "species_id")
 	])
@@ -323,15 +359,21 @@ func _session_release() -> void:
 		note("no screen opened in the 300 frames after the sixth catch")
 	_dump_screens(stack, "presented")
 	_count_names(_screen_lines(stack), six)
+	_tally_labels(_screen_lines(stack))
 	_probe_for_a_count(stack)
 	await shot("ceremony_presented")
 
 	note("--- bullet: inspect meaningful info ---")
 	# Step the selection and photograph it each time. What changes between these
 	# dumps is what the screen tells a player about the pal they are looking at.
-	for step in 3:
-		await _tap("move_back")
-		note("- after pressing 'move_back' %d time(s) -" % (step + 1))
+	# Right three times and then down, rather than four presses in one direction:
+	# a first run of this session pressed only down and the selection went back and
+	# forth between the same two pals, which shows that the cursor moves but not
+	# that every pal can be looked at.
+	var walk: Array[String] = ["move_right", "move_right", "move_right", "move_back"]
+	for step in walk.size():
+		await _tap(walk[step])
+		note("- after pressing '%s' (step %d) -" % [walk[step], step + 1])
 		_dump_screens(stack, "moved %d" % (step + 1))
 		await shot("ceremony_moved_%d" % (step + 1))
 
@@ -375,6 +417,29 @@ func _session_release() -> void:
 	var before_names: PackedStringArray = _names(party)
 	note("party before the choice: %d = %s" % [before_names.size(), ", ".join(before_names)])
 	note("records before the choice: %s" % [probe(party, "to_records")])
+
+	# Move onto a pal the player ALREADY OWNS, by reading the screen.
+	#
+	# Not a preference about the game: an earlier rendered run confirmed on the
+	# newly caught creature, and the party afterwards was the same five names it
+	# was before. Nothing left the party in that run, so the party's contents
+	# before and after could not show anything leaving. Releasing one of the five
+	# is the case where they can.
+	#
+	# WHICH pal the button is pointing at is read off the screen's own prompt —
+	# the same sentence the player reads before pressing A — and the cursor is
+	# stepped with the same direction presses a player would use.
+	var aimed_at: String = _who_the_button_would_release(stack)
+	note("the screen says the confirm button would say goodbye to: '%s'" % aimed_at)
+	for step in 8:
+		if aimed_at != "" and before_names.has(aimed_at):
+			break
+		await _tap("move_right")
+		aimed_at = _who_the_button_would_release(stack)
+		note("after pressing right, the confirm button would say goodbye to: '%s'" % aimed_at)
+	note("the pal the session is about to release: '%s' (one of the five already owned: %s)" % [
+		aimed_at, before_names.has(aimed_at)
+	])
 	await shot("ceremony_choice")
 
 	# Confirm, then look. Repeated only while nothing has changed, so a ceremony
@@ -385,7 +450,9 @@ func _session_release() -> void:
 		if not _screen_open():
 			note("no screen is open; nothing left to confirm")
 			break
-		note("- what is on screen at the moment of press %d -" % (step + 1))
+		note("- what is on screen at the moment of press %d (the button points at '%s') -" % [
+			step + 1, _who_the_button_would_release(stack)
+		])
 		_dump_screens(stack, "before press %d" % (step + 1))
 		await _tap("menu_confirm")
 		presses += 1
@@ -417,12 +484,19 @@ func _session_release() -> void:
 	# A frame of the party the player is left with, opened the way a player opens
 	# it. The stack must be clear first or the toggle will not open from inside
 	# another screen.
-	if _screen_open():
-		note("a screen is still open before opening the party menu: %s" % _top_name(stack))
-		for i in 3:
-			if not _screen_open():
-				break
-			await _tap("menu_cancel")
+	# The farewell has its own pace; the session waits it out rather than mashing
+	# past it, and says what was still up if it never cleared.
+	for i in 12:
+		if not _screen_open():
+			break
+		note("a screen is still up: %s" % _top_name(stack))
+		await _tap("menu_confirm")
+		if not _screen_open():
+			break
+		await _tap("menu_cancel")
+	note("screen open before opening the party menu: %s (%s)" % [
+		probe(stack, "is_open"), _top_name(stack)
+	])
 	await _tap("party_menu")
 	note("party menu open: %s (top: %s)" % [probe(stack, "is_open"), _top_name(stack)])
 	_dump_screens(stack, "party after release")
@@ -449,7 +523,14 @@ func _session_release() -> void:
 	if file_lines.size() > 400:
 		note("  save| ... %d further lines not printed" % (file_lines.size() - 400))
 	for pal_name: String in six:
-		note("  occurrences of '%s' in the file on disk: %d" % [pal_name, text.count(pal_name)])
+		note("  occurrences of the name '%s' in the file on disk: %d" % [pal_name, text.count(pal_name)])
+	# A pal with no nickname is written by species alone, so the name count above
+	# cannot speak for it. This counts records instead, and a sixth kept anywhere
+	# in the file would show up here.
+	note("  pal records written to the file: %d" % text.count("\"species\""))
+	note("  occurrences of 'wild_bristler' in the file on disk: %d" % text.count("wild_bristler"))
+	note("  occurrences of 'starter_ground' in the file on disk: %d" % text.count("starter_ground"))
+	note("  occurrences of 'wild_rabbit' in the file on disk: %d" % text.count("wild_rabbit"))
 
 	# Cleared in memory first. Reading a number back out of the same object that
 	# still holds it proves nothing about a file.
@@ -471,6 +552,33 @@ func _session_release() -> void:
 	await _tap("menu_cancel")
 
 	note("the sixth catch reached a resolution: %s" % caught_sixth)
+
+
+## The combat manager's own account of every orb. Wired once, before the first
+## throw, so each line below is an event the game announced rather than a state
+## the session went looking for afterwards.
+func _wire_catch_signals(manager: Object) -> void:
+	if _catch_wired or manager == null:
+		return
+	_catch_wired = true
+	if manager.has_signal("catch_resolved"):
+		manager.connect("catch_resolved", _on_catch_resolved)
+	else:
+		note("CombatManager has no 'catch_resolved' signal; throws can only be judged by their effect")
+	if manager.has_signal("catch_refused"):
+		manager.connect("catch_refused", _on_catch_refused)
+	else:
+		note("CombatManager has no 'catch_refused' signal; a refused throw will look like a miss")
+
+
+func _on_catch_resolved(success: bool, shakes: int) -> void:
+	_resolutions.append(success)
+	note("  the orb landed and resolved: caught=%s after %d shakes" % [success, shakes])
+
+
+func _on_catch_refused(reason: String) -> void:
+	_catch_refusals.append(reason)
+	note("  the orb did not resolve into an attempt: '%s'" % reason)
 
 
 func _on_caught_refused(token: String, instance: RefCounted) -> void:
@@ -558,6 +666,24 @@ func _count_names(lines: PackedStringArray, names: PackedStringArray) -> void:
 	note("  distinct known pals named on screen: %d of %d" % [found, names.size()])
 
 
+## How many of each kind of label the screen put up. Six of something repeated is
+## how "present six" looks from outside: the count comes from the rendered tree
+## rather than from a number the screen reports about itself.
+func _tally_labels(lines: PackedStringArray) -> void:
+	var tally: Dictionary = {}
+	var order: PackedStringArray = []
+	for line: String in lines:
+		var label: String = line.get_slice(":", 0)
+		if not tally.has(label):
+			tally[label] = 0
+			order.append(label)
+		tally[label] = int(tally[label]) + 1
+	var parts: PackedStringArray = []
+	for label: String in order:
+		parts.append("%s x%d" % [label, int(tally[label])])
+	note("  repeated labels on screen: %s" % ", ".join(parts))
+
+
 ## A blind sweep for a count and a cursor. Nothing here is known to exist; each
 ## line is a fact about whether it does, and an absent name is as informative as
 ## a present one.
@@ -575,6 +701,22 @@ func _probe_for_a_count(stack: Object) -> void:
 			note("  top screen .%s: Array of %d" % [property, (value as Array).size()])
 		else:
 			note("  top screen .%s: %s" % [property, value])
+
+
+## Who the confirm button is pointing at, read out of the sentence the screen puts
+## in front of the player rather than out of the screen's own state. If the game
+## and its prompt disagree, that disagreement is a fact worth catching here.
+func _who_the_button_would_release(stack: Object) -> String:
+	for line: String in _screen_lines(stack):
+		var at: int = line.find("goodbye to ")
+		if at < 0:
+			continue
+		var rest: String = line.substr(at + "goodbye to ".length())
+		var cut: int = rest.find("[")
+		if cut >= 0:
+			rest = rest.substr(0, cut)
+		return rest.strip_edges()
+	return ""
 
 
 func _names(party: Object) -> PackedStringArray:
@@ -675,12 +817,17 @@ func _attempt_catch(party: Object, watch_screens: bool) -> bool:
 		note("cannot attempt a catch: director/manager/player missing")
 		return false
 
+	_wire_catch_signals(manager)
+
 	var wild: Node3D = _catchable_wild(director)
 	if wild == null:
 		note("no wild pal in the world to catch")
 		return false
 	var refusals_before: int = _refusals
-	note("target: %s at %.0f, %.0f" % [wild.name, wild.global_position.x, wild.global_position.z])
+	_tried_wilds.append(wild)
+	note("target: %s at %.0f, %.0f (this session has thrown at it before: %s)" % [
+		wild.name, wild.global_position.x, wild.global_position.z, _tried_wilds.count(wild) > 1
+	])
 	note("party size before the catch: %s" % probe(party, "size"))
 
 	# Walk to it, then engage.
@@ -712,7 +859,10 @@ func _attempt_catch(party: Object, watch_screens: bool) -> bool:
 	var foe: Object = probe(manager, "enemy")
 	var before: int = int(probe(party, "size"))
 	var throws := 0
-	for attempt in 25:
+	# More attempts for the catch that matters. Orbs miss, rolls fail, and running
+	# out of attempts on the catch made while the party is full would leave the
+	# whole ceremony unevidenced for the sake of a shorter session.
+	for attempt in (40 if watch_screens else 25):
 		if not bool(probe(manager, "is_fighting")):
 			break
 		if watch_screens and (_refusals > refusals_before or _screen_open()):
@@ -731,21 +881,34 @@ func _attempt_catch(party: Object, watch_screens: bool) -> bool:
 		var pal: Object = probe(manager, "active_pal")
 		if pal != null:
 			pal.set("hp", float(pal.get("max_hp")))
+		var events_before: int = _resolutions.size() + _catch_refusals.size()
 		if not await _throw_at(manager, player, rig, wild):
+			note("throw %d: the aim would not open; no orb left the hand" % (throws + 1))
 			continue
 		throws += 1
-		for i in 120:
+		# Wait for the ORB to land, not for the party to change. An orb is a
+		# projectile with a flight time, and "the party did not grow" covers a miss,
+		# a failed roll and a full party without telling them apart.
+		for i in 300:
 			await physics_frame
+			if _resolutions.size() + _catch_refusals.size() > events_before:
+				break
 			if int(probe(party, "size")) > before:
 				break
 			if watch_screens and (_refusals > refusals_before or _screen_open()):
 				break
+		if _resolutions.size() + _catch_refusals.size() == events_before:
+			note("throw %d: never resolved within 300 frames" % throws)
 		if int(probe(party, "size")) > before:
 			break
 		if watch_screens and (_refusals > refusals_before or _screen_open()):
 			break
 
 	note("throws made: %d" % throws)
+	note("orbs that resolved into a catch attempt: %d (successes: %s)" % [
+		_resolutions.size(), _resolutions
+	])
+	note("orbs the game refused or that missed: %s" % [_catch_refusals]) 
 	note("fight outcome: %s" % probe(manager, "outcome"))
 	note("party size after the catch: %s" % probe(party, "size"))
 	var caught_member: Object = _member(party, before)
@@ -775,6 +938,9 @@ func _catchable_wild(director: Object) -> Node3D:
 	if not (wilds is Array):
 		return null
 	for wild: Node3D in (wilds as Array):
+		if is_instance_valid(wild) and wild.visible and not _tried_wilds.has(wild):
+			return wild
+	for wild: Node3D in (wilds as Array):
 		if is_instance_valid(wild) and wild.visible:
 			return wild
 	return null
@@ -800,27 +966,81 @@ func _wait_for_wild() -> void:
 ## direction, so a broken aim camera shows up here instead of being quietly
 ## worked around. Same approach `smoke_catching` uses, for the same reason.
 func _throw_at(manager: Object, player: Node3D, rig: Node3D, wild: Node3D) -> bool:
-	if not bool(probe(manager, "is_aiming")):
-		await _tap("combat_throw")
+	# The aim does not reopen the instant a throw resolves — there is a cooldown
+	# while the wobble is still on screen — so this asks a few times rather than
+	# reporting "the aim would not open" for what is really "not yet".
+	for tries in 5:
+		if bool(probe(manager, "is_aiming")):
+			break
+		await _press("combat_throw")
+		for i in 25:
+			await physics_frame
 	if not bool(probe(manager, "is_aiming")):
 		return false
 
+	# Sample the creature over a few frames so the throw can LEAD it.
+	#
+	# A run of this session put seven orbs in a row into the grass, each one
+	# reported by the game as 'the orb went wide'. The orb is 0.42m across, it
+	# leaves the hand about a fifth of a second after the button, and a creature
+	# circling an arena has moved further than that in the meantime. Leading a
+	# moving target is what a player does by eye; this has to do it by arithmetic.
+	var first: Vector3 = _centre_of(wild)
+	for i in 4:
+		await physics_frame
+	var velocity: Vector3 = (_centre_of(wild) - first) * 15.0
+
+	_aim_at(rig, player, wild, velocity)
+	await _press("combat_throw")
+	return true
+
+
+func _centre_of(wild: Node3D) -> Vector3:
+	if wild == null or not is_instance_valid(wild):
+		return Vector3.ZERO
+	return wild.call("centre") if wild.has_method("centre") else wild.global_position
+
+
+## Point the camera so a thrown orb lands on the creature. The orb flies on a real
+## arc, so aiming straight at it undershoots by the drop over the flight; a player
+## compensates by eye and this has to do it by arithmetic. Aimed through the rig
+## rather than by handing the orb a direction, so a broken aim camera shows up
+## here instead of being quietly worked around.
+func _aim_at(rig: Node3D, player: Node3D, wild: Node3D, velocity: Vector3 = Vector3.ZERO) -> void:
+	if rig == null or player == null or wild == null:
+		return
 	var catch_cfg := load("res://scripts/combat/catch_math.gd")
 	var cfg: Dictionary = catch_cfg.config().get("throw", {})
 	var speed := float(cfg.get("speed", 17.0))
 	var gravity := float(cfg.get("gravity", 14.0))
+	var windup := float(cfg.get("release_windup", 0.18))
 	var origin: Vector3 = player.global_position + Vector3.UP * float(cfg.get("spawn_height", 1.5))
-	var centre: Vector3 = wild.call("centre") if wild.has_method("centre") else wild.global_position
-	var to: Vector3 = centre - origin
-	var flat := Vector2(to.x, to.z).length()
-	if rig != null:
-		rig.set("yaw", atan2(-to.x, -to.z))
-		var flight := flat / maxf(speed, 0.01)
-		rig.set("pitch", atan2(to.y + 0.5 * gravity * flight * flight, maxf(flat, 0.01)))
-	for i in 4:
-		await physics_frame
-	await _tap("combat_throw")
-	return true
+	var centre: Vector3 = _centre_of(wild)
+
+	# Where it will be when the orb gets there, solved by going round twice.
+	var target: Vector3 = centre
+	var flat := 0.0
+	for i in 3:
+		var to: Vector3 = target - origin
+		flat = Vector2(to.x, to.z).length()
+		target = centre + velocity * (windup + flat / maxf(speed, 0.01))
+
+	var aim: Vector3 = target - origin
+	flat = Vector2(aim.x, aim.z).length()
+	rig.set("yaw", atan2(-aim.x, -aim.z))
+	var flight := flat / maxf(speed, 0.01)
+	rig.set("pitch", atan2(aim.y + 0.5 * gravity * flight * flight, maxf(flat, 0.01)))
+
+
+## A brief press, for a game action rather than a menu. `_tap` holds for eight
+## frames so a menu sees a press a person could actually make; a throw wants the
+## button down and up again while the aim is still pointing where it was aimed.
+func _press(action: String) -> void:
+	Input.action_press(action)
+	await physics_frame
+	await physics_frame
+	Input.action_release(action)
+	await physics_frame
 
 
 ## Press an action the way a person would, and let the game settle.

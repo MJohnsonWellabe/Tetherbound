@@ -170,7 +170,28 @@ static func vitals_line(member: Object) -> String:
 ## say it. That split is deliberate — what makes a pal good is a design question
 ## that belongs in `scripts/pals/`, and a formatter that hard-codes the four
 ## stats it knows about is one that silently drops the fifth.
+##
+## Assembled from `appraisal_stat_lines` and `trait_lines` rather than written out
+## again, so the single-column panel the party menu draws and the two-column one
+## the release ceremony draws cannot word the same pal differently. The output is
+## unchanged, line for line, from when this was one function.
 static func appraisal_lines(member: Object) -> Array[String]:
+	var lines := appraisal_stat_lines(member)
+	if member == null or not member.has_method("appraisal") or appraisal_of(member).is_empty():
+		# The "no appraisal" and "not appraised yet" cases are one line and nothing
+		# after it: there is no trait block to put under a pal we cannot read.
+		return lines
+	lines.append("")
+	lines.append_array(trait_lines(member))
+	return lines
+
+
+## The verdict and the per-stat star rows. What the pal IS.
+##
+## The top half of `appraisal_lines`, split out so a caller with two columns to
+## fill can put this in one of them. It keeps the two "we cannot appraise this"
+## answers, because a column that renders as nothing at all reads as a bug.
+static func appraisal_stat_lines(member: Object) -> Array[String]:
 	if member == null or not member.has_method("appraisal"):
 		return ["[color=#%s]No appraisal available for this one.[/color]" % STYLE.INK_DIM]
 	var appraisal := appraisal_of(member)
@@ -210,6 +231,22 @@ static func appraisal_lines(member: Object) -> Array[String]:
 				STYLE.INK_DIM,
 				roundi(float(stat.get("value", 0.0))),
 			])
+	return lines
+
+
+## The trait, what it does, and how far this pal is from its next level. What the
+## pal CARRIES.
+##
+## `spaced` is how the one-column and two-column panels differ, and it is the only
+## way they differ. A blank line is the single-column panel's paragraph break; in
+## a column of its own the gap between the two columns already does that work, and
+## spending a line height on it is spending the height this split was made to
+## save. Defaulted to true so `appraisal_lines` reads exactly as it did.
+static func trait_lines(member: Object, spaced: bool = true) -> Array[String]:
+	var lines: Array[String] = []
+	if member == null:
+		return lines
+	var appraisal := appraisal_of(member)
 
 	# The trait, with what it actually DOES. The name on its own is a word the
 	# player has to take on trust, and the description is the single line that
@@ -223,7 +260,6 @@ static func appraisal_lines(member: Object) -> Array[String]:
 	# it.
 	if trait_name == "":
 		trait_name = trait_of(member)
-	lines.append("")
 	lines.append("[color=#%s]Trait[/color]  [b]%s[/b]" % [STYLE.INK_DIM, trait_name])
 	var description := str(trait_dict.get("description", ""))
 	if description != "":
@@ -235,9 +271,47 @@ static func appraisal_lines(member: Object) -> Array[String]:
 	var xp := int(appraisal.get("xp", 0))
 	var needed := int(appraisal.get("xp_for_next_level", 0))
 	if needed > 0:
-		lines.append("")
+		if spaced:
+			lines.append("")
 		lines.append("[color=#%s]Next level in %d xp[/color]" % [STYLE.INK_DIM, maxi(needed - xp, 0)])
 	return lines
+
+
+# ------------------------------------------------------------- two columns
+
+## `detail_lines`, cut down the middle: what the pal IS, and what it CARRIES.
+##
+## THE SAME WORDS AS `detail_lines`, in the same order, with the blank lines that
+## separated the paragraphs removed — the gap between two columns already says
+## what a blank line says, and on the release ceremony's panel a blank line is a
+## line of the trait description that the player never gets to read.
+##
+## This exists because of a measured clip, not a preference. The release screen
+## puts six cards above its appraisal panel and the panel that is left over is
+## about six lines tall; the worst-case pal needs thirteen. Attack, Defence, the
+## trait, its description and the xp line were all below the fold — computed,
+## logged, and never shown. Halving the line count is what fits them, and it uses
+## width the panel already had and was wasting.
+##
+## Two functions rather than one returning a pair, so a caller that only has room
+## for one of the halves can ask for that half.
+static func vitals_column(member: Object) -> Array[String]:
+	var lines: Array[String] = []
+	if member == null:
+		return lines
+	# The SPECIES name, and only when a nickname is hiding it — `detail_lines`'
+	# rule, for `detail_lines`' reason: under a pal with no nickname it would just
+	# repeat the heading.
+	var species_name := species_of(member)
+	if species_name != "" and species_name != display_of(member):
+		lines.append("[color=#%s]%s[/color]" % [STYLE.INK_DIM, species_name])
+	lines.append(vitals_line(member))
+	lines.append_array(appraisal_stat_lines(member))
+	return lines
+
+
+static func trait_column(member: Object) -> Array[String]:
+	return trait_lines(member, false)
 
 
 ## The trait sub-dictionary of an appraisal: id, display_name, description,

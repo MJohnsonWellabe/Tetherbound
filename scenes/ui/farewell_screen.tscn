@@ -24,6 +24,17 @@
 ; of what the creature was worth, still on screen under the word "Goodbye", reads
 ; as an invoice.
 ;
+; ITS BODY MUST FIT. The first rendered farewell sliced "You appraised it
+; Promising ★★★☆☆" horizontally through the middle of the letters — six lines of
+; content in a panel with room for five and a half — and that line is the
+; emotional payload of the screen, the judgement the player has been reading in
+; the party menu all game, arriving on the one press that cannot be taken back.
+; The 22px between the Body rows and the 28px body font were each a couple of
+; pixels of vanity that the last line was paying for; 16 and 26 give it about
+; thirty pixels of slack in the worst case the data can produce. The Name stays
+; at 76: it is the largest thing on the screen on purpose and it is not what was
+; overflowing.
+;
 ; No template and no duplication here — there is exactly one pal on this screen,
 ; which is the whole point of it.
 ;
@@ -40,7 +51,7 @@ title = "Letting one go"
 
 [node name="Body" type="VBoxContainer" parent="."]
 size_flags_vertical = 3
-theme_override_constants/separation = 22
+theme_override_constants/separation = 16
 
 [node name="Who" type="PanelContainer" parent="Body"]
 
@@ -77,7 +88,7 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="Lines" type="VBoxContainer" parent="Body/Giving/Pad"]
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="Heading" type="Label" parent="Body/Giving/Pad/Lines"]
 theme_override_font_sizes/font_size = 24
@@ -90,7 +101,7 @@ text = "What goes with it"
 bbcode_enabled = true
 scroll_active = false
 size_flags_vertical = 3
-theme_override_font_sizes/normal_font_size = 28
+theme_override_font_sizes/normal_font_size = 26
 text = ""
 
 ; What "release" actually means, spelled out and never abbreviated. This line is

@@ -111,9 +111,16 @@ combat_path = NodePath("../CombatManager")
 
 ; The menu layer. It owns which screen is open and suspends gameplay while one
 ; is — the same "one door in and out" rule encounter_director uses for fights.
+;
+; CombatHUD is in `hide_while_open` because of what the release ceremony looks
+; like without it: the ceremony opens the instant a catch resolves, so the first
+; rendered frame of it had the fight's verb row ("[A] Quick  [X] Charged
+; [F] Throw  [B] Run"), the orb count and the opponent's name plate all drawn
+; around a modal that had just taken those buttons over. Two screens telling the
+; player what A does, at the same time, disagreeing.
 [node name="ScreenStack" parent="." instance=ExtResource("13_screens")]
 player_path = NodePath("../Player")
-hide_while_open = [NodePath("../PlaygroundHUD"), NodePath("../BuildPalette")]
+hide_while_open = [NodePath("../PlaygroundHUD"), NodePath("../BuildPalette"), NodePath("../CombatHUD")]
 
 [node name="PartyScreen" parent="ScreenStack" index="0"]
 party_path = NodePath("../../Party")

@@ -98,7 +98,10 @@ var _notice_left: float = 0.0
 @onready var _grid: GridContainer = $Body/Grid
 @onready var _detail: PanelContainer = $Body/Detail
 @onready var _detail_name: Label = $Body/Detail/Pad/Lines/Who
-@onready var _detail_body: RichTextLabel = $Body/Detail/Pad/Lines/Appraisal
+@onready var _detail_note: RichTextLabel = $Body/Detail/Pad/Lines/Note
+@onready var _detail_vitals: RichTextLabel = $Body/Detail/Pad/Lines/Columns/Vitals
+@onready var _detail_trait: RichTextLabel = $Body/Detail/Pad/Lines/Columns/Trait
+@onready var _detail_notice: RichTextLabel = $Body/Detail/Pad/Lines/Notice
 
 
 func _ready() -> void:
@@ -397,18 +400,30 @@ func _draw_card(index: int, card: PanelContainer, facts: Dictionary) -> void:
 ## writes the paragraph, so this is the same appraisal, in the same words, that
 ## the player has been reading in the party menu since M4 — the one screen where
 ## a differently-worded second opinion would be actively harmful.
+##
+## IN TWO COLUMNS, and that is the fix for a measured clip rather than a taste.
+## Written as one column this panel drew six of the thirteen lines the worst-case
+## pal produces and dropped Attack, Defence, the trait, its description and the xp
+## line off the bottom — the appraisal was computed, logged and then not shown,
+## which fails M5's "inspect meaningful info" directly. Splitting what the pal IS
+## from what it CARRIES roughly halves the height and spends width the panel
+## already had. See `pal_card.vitals_column` for where the seam is.
 func _draw_detail(count: int) -> void:
 	if count <= 0:
 		# Honest about which failure this is. An empty ceremony is a wiring fault,
 		# not a decision, and `cancel()` lets the player out of it.
 		_detail_name.text = "Nobody to present"
-		_detail_body.text = (
-			"[color=#%s]This screen was opened without a release ceremony to run.\n\n"
+		# Full width, not a column: this is prose about the screen rather than facts
+		# about a pal, and there is no second half of it to put beside it.
+		_write(_detail_note, (
+			"[color=#%s]This screen was opened without a release ceremony to run. "
 			% STYLE.INK_DIM
 			+ "It is handed the six through [b]set_ceremony()[/b] before it is pushed. "
 			+ "Nothing has been released and nothing has been lost.[/color]"
-		)
-		_append_notice()
+		))
+		_write(_detail_vitals, "")
+		_write(_detail_trait, "")
+		_draw_notice()
 		return
 
 	var index := focus_index()
@@ -416,38 +431,64 @@ func _draw_detail(count: int) -> void:
 	var pal := _at(index)
 	_detail_name.text = str(facts.get("name", "?"))
 
-	var lines: Array[String] = []
+	# The newcomer's sentence sits above both columns. It is a fact about the whole
+	# card and not about either half of it, and at full width it is one line rather
+	# than the two it wraps to inside a column.
 	if bool(facts.get("newcomer", false)):
-		lines.append("[color=#%s]%s[/color]" % [
+		_write(_detail_note, "[color=#%s]%s[/color]" % [
 			NEW_MARK,
 			"The one you just caught. It is not part of your five until you make room for it.",
 		])
-		lines.append("")
+	else:
+		_write(_detail_note, "")
+
 	if pal == null:
 		# Everything the summary knew, when the pal itself is out of reach. A card
-		# with no appraisal is still a card the player can choose between.
+		# with no appraisal is still a card the player can choose between, and it is
+		# still laid out in the same two columns so the panel does not change shape
+		# as the cursor passes over it.
+		var left: Array[String] = []
 		var species := str(facts.get("species", ""))
 		if species != "":
-			lines.append("[color=#%s]%s[/color]" % [STYLE.INK_DIM, species])
-		lines.append("[b]Level %d[/b]        %d / %d HP" % [
+			left.append("[color=#%s]%s[/color]" % [STYLE.INK_DIM, species])
+		left.append("[b]Level %d[/b]        %d / %d HP" % [
 			int(facts.get("level", 1)),
 			roundi(float(facts.get("hp", 0.0))),
 			roundi(float(facts.get("max_hp", 1.0))),
 		])
-		lines.append("")
-		lines.append("[color=#%s]Trait  [b]%s[/b][/color]" % [
+		_write(_detail_vitals, "\n".join(left))
+		_write(_detail_trait, "[color=#%s]Trait  [b]%s[/b][/color]" % [
 			STYLE.INK_DIM, str(facts.get("trait", "no trait"))
 		])
 	else:
-		lines.append_array(CARD.detail_lines(pal))
-	_detail_body.text = "\n".join(lines)
-	_append_notice()
+		_write(_detail_vitals, "\n".join(CARD.vitals_column(pal)))
+		_write(_detail_trait, "\n".join(CARD.trait_column(pal)))
+	_draw_notice()
 
 
-func _append_notice() -> void:
+## A refusal, on its own full-width line under the columns.
+##
+## Its own label rather than appended to the appraisal text, which is what it used
+## to be: appended, the answer to "why did B not work" arrived at the bottom of
+## the one panel on the screen that was already overflowing, so the single message
+## this screen exists to deliver was the message it could not show. On its own row
+## it cannot push anything off, because `fit_content` makes it zero-height on
+## every frame there is nothing to say.
+func _draw_notice() -> void:
 	if _notice == "":
+		_write(_detail_notice, "")
 		return
-	_detail_body.text += "\n\n[color=#%s]%s[/color]" % [STYLE.WARN, _notice]
+	_write(_detail_notice, "[color=#%s]%s[/color]" % [STYLE.WARN, _notice])
+
+
+## Assign only on a change.
+##
+## A RichTextLabel re-parses its bbcode on every write to `text`, and this panel
+## is redrawn every frame from a pal that changes on almost none of them —
+## `screen.gd` compares its title and footer before assigning for the same reason.
+static func _write(label: RichTextLabel, wanted: String) -> void:
+	if label.text != wanted:
+		label.text = wanted
 
 
 # --------------------------------------------------------------------- the grid

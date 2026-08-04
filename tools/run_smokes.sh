@@ -23,7 +23,12 @@ set -uo pipefail
 GODOT="${1:-${GODOT:-/opt/godot/godot}}"
 cd "$(dirname "$0")/.."
 
-SMOKES=(smoke_art smoke_playground smoke_input smoke_traversal smoke_combat smoke_catching smoke_aggression)
+# `smoke_build` was written, committed and then never listed here, so for two
+# milestones the build system's only automated check was one nobody ran. Adding
+# a smoke file is not adding a smoke; the list is the runner, and a file missing
+# from it fails in exactly the way this script's header warns about — silently,
+# and looking identical to a pass.
+SMOKES=(smoke_art smoke_playground smoke_input smoke_traversal smoke_combat smoke_catching smoke_aggression smoke_build)
 failed=0
 
 for s in "${SMOKES[@]}"; do

@@ -386,6 +386,16 @@ func _on_combat_exited(outcome: String) -> void:
 				# It is a different individual from the one now in the party —
 				# the party holds the instance that was caught, and this is the
 				# world putting another of its species back on the hillside.
+				#
+				# That sentence sat here before anything made it true. The body
+				# kept the very object the party had just taken, so the hillside
+				# and the party shared one pal: reviving the body healed a party
+				# member, and catching that species again came back
+				# `already_held`. The handover below is what the comment always
+				# claimed, and it happens NOW rather than at respawn — the moment
+				# the party owns a pal, the world has to stop touching it.
+				if wild.has_method("hand_instance_to_owner"):
+					wild.call("hand_instance_to_owner")
 				_respawn_timers[wild] = RESPAWN_DELAY
 
 	# M2 has no healing system, no camp and no bond, so the player's pal is
