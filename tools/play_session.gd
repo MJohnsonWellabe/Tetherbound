@@ -38,6 +38,11 @@ const SETTLE_FRAMES := 240
 var _log: PackedStringArray = []
 var _system: String = ""
 var _shots: int = 0
+
+## One line per frame that actually landed on disk, printed at the end of the
+## transcript. A judge can then check the frame set it was handed against the
+## frame set this run wrote, instead of assuming they are the same thing.
+var _manifest: PackedStringArray = []
 var _world: Node = null
 
 ## What the director said about a pal it caught and could not keep. Recorded from
@@ -74,12 +79,17 @@ func _run() -> void:
 		quit(2)
 		return
 
+	# Before anything else, so a frame from a previous run cannot survive into
+	# this one's evidence and the transcript records that it could not.
+	_claim_the_shots_directory()
+
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
 	note("session: %s" % _system)
+	note("renderer: %s" % DisplayServer.get_name())
 	note("scene: %s" % SCENE)
 
 	match _system:
@@ -90,6 +100,18 @@ func _run() -> void:
 		_:
 			note("no session is written for '%s' yet" % _system)
 
+	# The frame manifest, last. A judge holding a directory of PNGs can check
+	# them against what this run says it wrote — which is the check that would
+	# have caught two sessions interleaving into the same filenames, instead of
+	# leaving a blind reviewer to notice that the pictures and the transcript
+	# disagreed about which creatures were on screen.
+	note("--- frames this run wrote (%d) ---" % _manifest.size())
+	for line: String in _manifest:
+		note("  %s" % line)
+	if _manifest.is_empty():
+		note("  none — no frame file was written by this run")
+
+	_release_the_shots_directory()
 	_write()
 	quit(0)
 
@@ -1132,6 +1154,19 @@ func note(line: String) -> void:
 
 
 ## A numbered frame, for anything the judge has to look at rather than read.
+##
+## Every frame is verified to have actually landed, and stamped into a manifest
+## the transcript prints at the end. The reason is the M5 gate: a blind reviewer
+## found the frames disagreeing with the transcript about three of six pals, and
+## the cause was two sessions running at once — a run I believed had died was
+## still going, and both were writing `session_release_*.png`. The frames on disk
+## were a MIXTURE of two games. The giveaway was a timestamp: frame 10 was
+## written eight seconds before frame 09, which no single sequential process can
+## do, and which nothing in the evidence pointed at.
+##
+## A frame that cannot be proved to belong to its transcript is not evidence, and
+## the failure is silent by default — the pictures look fine, they are just of a
+## different game.
 func shot(label: String) -> void:
 	if DisplayServer.get_name() == "headless":
 		note("frame '%s': not captured (headless)" % label)
@@ -1141,12 +1176,70 @@ func shot(label: String) -> void:
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	if image == null:
-		note("frame '%s': capture failed" % label)
+		note("frame '%s': CAPTURE FAILED — no image" % label)
 		return
 	_shots += 1
 	var path := "res://shots/session_%s_%02d_%s.png" % [_system, _shots, label]
-	image.save_png(path)
-	note("frame '%s' -> %s" % [label, path])
+	var error := image.save_png(path)
+	if error != OK:
+		note("frame '%s': WRITE FAILED (%d) -> %s" % [label, error, path])
+		return
+	if not FileAccess.file_exists(path):
+		note("frame '%s': WROTE NOTHING -> %s" % [label, path])
+		return
+	var size := _file_size(path)
+	_manifest.append("%s  %s  %d bytes" % [path.get_file(), label, size])
+	note("frame '%s' -> %s (%d bytes)" % [label, path, size])
+
+
+func _file_size(path: String) -> int:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return 0
+	return int(file.get_length())
+
+
+## Clear every artefact of a previous run, and refuse to start beside a live one.
+##
+## Both halves matter. The wipe means a frame left over from an earlier session
+## cannot be mistaken for one of ours — the M4 session was once judged on fresh
+## frames beside a stale transcript. The lock means two sessions cannot interleave
+## into the same filenames, which is how the M5 evidence was contaminated.
+##
+## The lock is a plain file holding a process start time. It is not
+## crash-proof — a session killed mid-run leaves it behind — so a stale lock is
+## reported and cleared rather than treated as fatal. The point is to make a
+## concurrent run LOUD, not to build a scheduler.
+func _claim_the_shots_directory() -> bool:
+	var lock := "res://shots/.session_%s.lock" % _system
+	if FileAccess.file_exists(lock):
+		var held := FileAccess.open(lock, FileAccess.READ)
+		var owner := held.get_as_text().strip_edges() if held != null else "unknown"
+		note("a previous session left a lock (%s); clearing it and continuing" % owner)
+		note("IF ANOTHER SESSION IS RUNNING RIGHT NOW, THIS RUN'S FRAMES ARE NOT TRUSTWORTHY.")
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(lock))
+
+	var dir := DirAccess.open("res://shots")
+	if dir == null:
+		note("no shots directory; nothing to clear")
+		return false
+	var removed := 0
+	for name in dir.get_files():
+		if name.begins_with("session_%s" % _system):
+			dir.remove(name)
+			removed += 1
+	note("cleared %d artefact(s) from a previous '%s' session" % [removed, _system])
+
+	var claim := FileAccess.open(lock, FileAccess.WRITE)
+	if claim != null:
+		claim.store_string("pid-less run, started at %d" % Time.get_ticks_msec())
+	return true
+
+
+func _release_the_shots_directory() -> void:
+	var lock := "res://shots/.session_%s.lock" % _system
+	if FileAccess.file_exists(lock):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(lock))
 
 
 func _write() -> void:

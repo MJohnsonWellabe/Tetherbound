@@ -81,6 +81,7 @@ func _run() -> void:
 	_release.call("set_ceremony", ceremony)
 	_stack.call("push", _release)
 	await _settle()
+	_audit_cards(ceremony)
 	await _shot("six")
 
 	# The longest card, focused. The first frame lands on the newcomer; step to
@@ -112,12 +113,23 @@ func _run() -> void:
 ## enough that the xp line is at its widest.
 func _worst_case_party() -> RefCounted:
 	var party: RefCounted = PARTY.new()
-	var trait_id := _longest_trait()
 	var species := _longest_species()
 	var levels := [1, 9, 14, 22, 37]
+	# A DIFFERENT trait on every pal.
+	#
+	# The first version of this gave all five the longest trait description, to
+	# make the panel as tall as it could be. That made the layout worst case and
+	# the identity best case: every card showed the same trait, so a screen
+	# drawing card 3 from pal 1 would have looked perfectly correct. A real run
+	# then produced six cards whose traits disagreed with the party, and this
+	# tool could not have caught it.
+	#
+	# Length is still covered — `_longest_trait()` is first in the list, so one
+	# card always carries the tallest text.
+	var traits := _distinct_traits()
 	for i in PARTY.MAX_PARTY:
 		var pal: RefCounted = SPECIES.spawn(species)
-		pal.assign_trait(trait_id)
+		pal.assign_trait(str(traits[i % traits.size()]))
 		pal.set_level(int(levels[i]))
 		# A name at the width the rename screen allows, so the card is not
 		# photographed with a short one and called fine.
@@ -135,6 +147,16 @@ func _worst_case_newcomer() -> RefCounted:
 	# to its species display name, which is the longest string that line can hold.
 	pal.hp = pal.max_hp * 0.02
 	return pal
+
+
+## Every trait in the data, longest description first so the tall case is always
+## on a card, and so no two pals in the preview share one.
+func _distinct_traits() -> Array:
+	var ids: Array = TRAITS.ids().duplicate()
+	ids.sort_custom(func(a: String, b: String) -> bool:
+		return str(TRAITS.definition(a).get("description", "")).length() \
+			> str(TRAITS.definition(b).get("description", "")).length())
+	return ids
 
 
 func _longest_trait() -> String:
@@ -163,6 +185,61 @@ func _names(members: Array) -> PackedStringArray:
 	var out := PackedStringArray()
 	for member: Variant in members:
 		out.append(str((member as RefCounted).call("display")))
+	return out
+
+
+## --- does the screen show the pals it was given? ----------------------------
+
+## Compare, card by card, what the screen DREW against what the ceremony HOLDS.
+##
+## The M5 gate refused on exactly this and it took a blind reviewer to see it:
+## the transcript's reading of the card labels said one thing and the rendered
+## pixels said another, for three of six pals, with the trait and the max HP
+## moving together — which is the signature of a card drawn from the wrong pal
+## rather than of a formatting slip.
+##
+## Comparing a label to the object it is supposed to be describing is the check
+## that finds that, and it costs nothing. Reading the label alone cannot: a card
+## showing a plausible trait for a plausible creature looks right in isolation,
+## and it is only wrong relative to what it was asked to draw.
+func _audit_cards(ceremony: RefCounted) -> void:
+	var drawn := _trait_labels(_release)
+	var count: int = int(ceremony.call("count"))
+	print("--- what each card DREW vs what the ceremony HOLDS ---")
+	if drawn.size() != count:
+		print("  %d trait labels on screen for %d candidates" % [drawn.size(), count])
+
+	var wrong := 0
+	for i in count:
+		var pal: RefCounted = ceremony.call("at", i) as RefCounted
+		var held := "<none>" if pal == null else str(pal.get("trait_id"))
+		var expected := TRAITS.display_name(held) if TRAITS.has(held) else held
+		var shown: String = str(drawn[i]) if i < drawn.size() else "<no label>"
+		var agrees := shown == expected
+		if not agrees:
+			wrong += 1
+		print("  card %d: drew '%s'   ceremony holds '%s' (%s)%s" % [
+			i, shown, expected, held, "" if agrees else "   <-- MISMATCH"
+		])
+	if wrong > 0:
+		print("  %d of %d cards are drawing a pal the ceremony did not give them" % [wrong, count])
+	else:
+		print("  every card drew the pal it was given")
+
+
+## The `Trait` label of each card, in the order they are laid out. Same walk the
+## evidence session uses, so the two agree about what "on screen" means.
+func _trait_labels(node: Node) -> PackedStringArray:
+	var out := PackedStringArray()
+	var item := node as CanvasItem
+	if item != null and not item.is_visible_in_tree():
+		return out
+	if node.name == &"Trait":
+		var text: Variant = node.get("text")
+		if text is String and not (text as String).is_empty():
+			out.append(text as String)
+	for child in node.get_children():
+		out.append_array(_trait_labels(child))
 	return out
 
 
