@@ -1,0 +1,86 @@
+{
+  "_comment": "Item definitions: what a thing IS. How many of it fit in a slot, and how long a tool lasts, are TUNABLE and live here so 'my bag is always full' and 'the axe breaks too fast' are answerable by editing this file rather than by editing code. Scoped to MEADOWS_VERTICAL_SLICE.md M8 and nothing beyond it: four materials, five tools, one orb.",
+  "_comment_firewall": "What an item IS lives here. What a RECIPE costs will live in data/recipes/, and what a BUILD PIECE costs lives with the piece — because a cost is a relationship between two things and this file describes one thing at a time. If a value here could change the price of something, it is in the wrong file.",
+  "_comment_no_weight": "There is NO weight, mass, bulk or encumbrance field, and its absence is a hard rule rather than an oversight. GAME_DESIGN.md 19 says 'No weight limit' and CLAUDE.md repeats it. A field that exists gets used, and the first use anyone finds for a weight is refusing a pickup.",
+  "_comment_no_pals": "Items never name a creature. CLAUDE.md forbids pal storage beyond the five in the party, and an item that could hold a pal id is the first half of a pal box.",
+  "_comment_schema": "Every item declares display_name, category and stack_limit. A tool additionally declares max_durability. Nothing else — no icon, no rarity, no sell value, no equipment slot, because none of those systems exist and a speculative field is a field that gets filled in wrongly. GAME_DESIGN.md 18's armour slots are a later milestone and will not need a change here to arrive.",
+
+  "inventory": {
+    "_comment": "TUNABLE. The trainer's slot count, and the only limit the inventory has.",
+    "_comment_slots": "24 reads as a 6x4 grid, which is what a controller can walk across without the cursor travelling for a second and a half. Expected feedback is 'I keep running out of room'; the answer is this number, not a weight system and not a second bag.",
+    "slots": 24
+  },
+
+  "items": {
+    "_comment_materials": "M8's minimal set: Wood, Stone, Fiber, Berries. No fifth 'special mineral' yet — M8 allows one 'if actually needed', and nothing needs it. There is deliberately no meat and no leather: GAME_DESIGN.md 19 forbids a hunting economy outright.",
+
+    "wood": {
+      "display_name": "Wood",
+      "category": "material",
+      "stack_limit": 99
+    },
+    "stone": {
+      "display_name": "Stone",
+      "category": "material",
+      "stack_limit": 99
+    },
+    "fiber": {
+      "display_name": "Fiber",
+      "category": "material",
+      "stack_limit": 99
+    },
+    "berries": {
+      "display_name": "Berries",
+      "category": "material",
+      "_comment": "A material for now, and filed as one on purpose. GAME_DESIGN.md 18 wants food to BUFF with no starvation meter, but no food system exists yet and inventing a `food` category with nothing to read it would be a shape with one member. When M9's buffs land, this entry gains what they need.",
+      "_comment_stack": "TUNABLE, and smaller than the other three so the per-item limit is a real number rather than decoration. Berries are the one thing gathered with bare hands, and a smaller stack is what makes a berry run feel like a trip.",
+      "stack_limit": 30
+    },
+
+    "_comment_tools": "The five tools from M8 and GAME_DESIGN.md 19. Each has durability and each repairs FOR FREE at a station: 19 says so, and free repair is why a worn-out tool is broken rather than destroyed. None of them can damage a pal or a human, which is why there is no damage value here — the trainer cannot fight (CLAUDE.md), so a tool is never a weapon.",
+    "_comment_tool_stacking": "Tools do NOT stack, and scripts/items/item_defs.gd forces stack_limit to 1 for anything with durability whatever this file says. A stack of five axes has one durability value shared between them, and there is no honest answer to which axe the 40% belongs to; the alternative is an array of durabilities that every split, merge and repair would need an index into. One tool, one slot, one number.",
+    "_comment_durability": "ALL TUNABLE, and all provisional. The units are uses, not seconds — what a use COSTS belongs to whatever swings the tool, not here. Ordered by how much of the loop each tool carries: the hammer builds constantly and lasts longest, the knife and the rod are occasional.",
+
+    "axe": {
+      "display_name": "Axe",
+      "category": "tool",
+      "stack_limit": 1,
+      "max_durability": 120
+    },
+    "pickaxe": {
+      "display_name": "Pickaxe",
+      "category": "tool",
+      "stack_limit": 1,
+      "max_durability": 120
+    },
+    "hammer": {
+      "display_name": "Hammer",
+      "category": "tool",
+      "stack_limit": 1,
+      "max_durability": 200
+    },
+    "knife": {
+      "display_name": "Knife",
+      "category": "tool",
+      "_comment": "Cutting fiber and crafting. NOT butchering — GAME_DESIGN.md 19: 'There is no hunting/butchering gameplay. Do not create a meat/leather economy that assumes killing pals/wildlife.'",
+      "stack_limit": 1,
+      "max_durability": 80
+    },
+    "fishing_rod": {
+      "display_name": "Fishing Rod",
+      "category": "tool",
+      "stack_limit": 1,
+      "max_durability": 60
+    },
+
+    "_comment_orb": "The catch orb, as an ITEM. It already exists in the game as a hardcoded stock of 15 that refills whenever the practice pal respawns (scripts/combat/encounter_director.gd `_refill_orbs`), because M3 shipped before there was anywhere to keep one. This entry is the destination for that stock and NOTHING here wires it up; catching still reads its own numbers from data/config/catching.json until a later pass moves it across.",
+    "_comment_orb_firewall": "What the orb DOES — its catch multiplier, its flight, its wobble — stays in data/config/catching.json. This file only knows that the orb is a thing you can be holding. If a value here could change a catch chance, it is in the wrong file.",
+
+    "tether_orb": {
+      "display_name": "Tether Orb",
+      "category": "orb",
+      "_comment_stack": "TUNABLE. Above the 15 that catching.json hands out today, so the whole current stock fits in one slot — an orb count split across two slots would make the one number the player actually watches during a fight into two numbers. GAME_DESIGN.md 15 wants basic orbs affordable enough to encourage trying and never scarce enough to fear experimenting with, so this is generous on purpose.",
+      "stack_limit": 20
+    }
+  }
+}
