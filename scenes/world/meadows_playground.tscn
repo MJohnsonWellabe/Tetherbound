@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/world/world_look.gd" id="9_look"]
 [ext_resource type="Script" path="res://scripts/building/structures.gd" id="10_structures"]
 [ext_resource type="Script" path="res://scripts/building/build_mode.gd" id="11_build"]
+[ext_resource type="Script" path="res://scripts/pals/party_manager.gd" id="12_party"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -65,11 +66,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 40, 0)
 [node name="CombatManager" type="Node" parent="."]
 script = ExtResource("5_combat")
 
+; The party holds every pal the player owns, capped at five. It is a plain Node
+; wrapping a RefCounted, so the pals themselves survive a scene change and can be
+; tested without one.
+[node name="Party" type="Node" parent="."]
+script = ExtResource("12_party")
+
 [node name="EncounterDirector" type="Node" parent="."]
 script = ExtResource("6_encounter")
 player_path = NodePath("../Player")
 manager_path = NodePath("../CombatManager")
 camera_rig_path = NodePath("../CameraRig")
+party_path = NodePath("../Party")
 
 ; Sun, sky, tonemap and fog all come from data/config/art.json at run time.
 ; They used to live only in this scene, so every lighting value written into the

@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/screen_stack.gd" id="1_stack"]
+[ext_resource type="PackedScene" path="res://scenes/ui/party_screen.tscn" id="2_party"]
+
+; The menu layer, ready to drop into a world scene. Set `player_path` at the
+; trainer and `party_screen_path`'s target — the PartyScreen below — at the party
+; node, and pressing Y / I opens the party.
+;
+; The party screen is a CHILD rather than something instanced when the button is
+; pressed. Instancing a screen at the moment it opens is a hitch in the one frame
+; the player is watching for a response; `encounter_director` keeps the ally's
+; body in the world for the same reason. Screens authored here start hidden —
+; `screen_stack.gd` hides them on ready, so a menu wired into the world cannot
+; make the game boot into a menu.
+;
+; `process_mode = 3` is PROCESS_MODE_ALWAYS. The stack pauses the tree while a
+; screen is open and has to keep running through the pause it caused; the script
+; sets this too, so an instance built in code cannot come up frozen.
+;
+; Layer 10 puts menus over the combat HUD and the build strip, which are both on
+; the default layer. A party menu drawn under a health bar is not a menu.
+
+[node name="ScreenStack" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+script = ExtResource("1_stack")
+toggle_action = &"inventory"
+toggle_screen_path = NodePath("PartyScreen")
+
+[node name="PartyScreen" parent="." instance=ExtResource("2_party")]
+visible = false

@@ -27,6 +27,11 @@ const WILD_SCRIPT := preload("res://scripts/pals/wild_pal.gd")
 
 signal prompt_changed(text: String)
 
+## A catch that could not be kept, with the party's refusal token. M5's release
+## ceremony is what listens to this: capture-while-full is the only way that
+## scene is ever reached.
+signal caught_refused(token: String, instance: RefCounted)
+
 ## Ids into data/pals/species.json, so swapping any of them is a data edit.
 ##
 ## Two wild creatures in M3: one peaceful to practise throwing at, and one that
@@ -65,16 +70,20 @@ var _prompt: String = ""
 var _faint_timers: Dictionary = {}
 var _respawn_timers: Dictionary = {}
 
-## Everything the player has caught. The party and the five-slot rule are M4;
-## this list is the seam they attach to, exactly as CombatManager's `_party` and
-## `_active_index` are the seam for switching.
+## Where a caught pal goes.
 ##
-## CLAUDE.md forbids implementing storage beyond five pals. This is not storage —
-## it is a milestone-local record that catching worked, and M4 replaces it.
-var _caught: Array[RefCounted] = []
+## This used to be `var _caught: Array[RefCounted]` — an unbounded list with a
+## comment admitting it was "a milestone-local record that catching worked", and
+## an accessor nothing ever called. It is gone. Caught pals now go to the party,
+## which is capped at five and refuses a sixth, so CLAUDE.md's hard rule is
+## enforced by the code that holds the pals rather than by prose above a list
+## that could not enforce it.
+@export var party_path: NodePath
+var _party: Node = null
 
 
 func _ready() -> void:
+	_party = get_node_or_null(party_path)
 	_engage_range = float(MATH.config().get("flow", {}).get("engage_range", 6.0))
 	_player = get_node_or_null(player_path) as CharacterBody3D
 	_manager = get_node_or_null(manager_path)
@@ -161,8 +170,26 @@ func wild_pals() -> Array[Node3D]:
 	return _wild_pals
 
 
-func caught() -> Array[RefCounted]:
-	return _caught
+## What the player is holding. Answered by the party, which is the only place a
+## pal can be.
+func caught() -> Array:
+	return _party.call("members") if _party != null else []
+
+
+## Hand a caught pal to the party.
+##
+## The refusal is not swallowed. A full party refusing a sixth is the moment
+## M5's release ceremony exists to resolve, and a director that quietly dropped
+## the creature on the floor would make that ceremony unreachable — the player
+## would simply never learn they had caught anything.
+func _keep(instance: RefCounted) -> void:
+	if _party == null:
+		push_warning("caught %s with no party to put it in" % instance.species_id)
+		return
+	if not bool(_party.call("add", instance)):
+		var token := str(_party.call("last_refusal"))
+		push_warning("could not keep %s: %s" % [instance.species_id, token])
+		caught_refused.emit(token, instance)
 
 
 func _wild_of_species(id: String) -> Node3D:
@@ -323,10 +350,12 @@ func _on_combat_exited(outcome: String) -> void:
 			CAUGHT:
 				var kept: RefCounted = _manager.call("caught_instance")
 				if kept != null:
-					_caught.append(kept)
+					_keep(kept)
 				wild.visible = false
-				# M3-only: the caught creature comes back so the owner can keep
-				# testing throws. M4 owns it properly and this goes away.
+				# The creature comes back so the owner can keep testing throws.
+				# It is a different individual from the one now in the party —
+				# the party holds the instance that was caught, and this is the
+				# world putting another of its species back on the hillside.
 				_respawn_timers[wild] = RESPAWN_DELAY
 
 	# M2 has no healing system, no camp and no bond, so the player's pal is

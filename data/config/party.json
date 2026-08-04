@@ -1,0 +1,49 @@
+{
+  "_comment": "How a pal GROWS and how its worth is read. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'levelling takes forever', 'a level-up doesn't feel like anything happened', 'every pal I catch appraises the same', 'I never see a rare trait' — every one of those has to be answerable by editing this file rather than by editing code.",
+  "_comment_firewall": "What a TRAIT is — its name, its description, what it multiplies — lives in data/traits/traits.json. This file may only say how OFTEN one is rolled. If a value here could change what a trait DOES, it is in the wrong file.",
+  "_comment_capacity": "The five-pal limit is NOT in this file, and its absence is the point. CLAUDE.md makes it a hard rule twice over ('Player can own only five pals total', 'Never implement pal storage beyond five'), so it is a const in scripts/pals/party.gd where it cannot be turned by editing data. Nothing here should ever be able to make room for a sixth.",
+
+  "levels": {
+    "_comment": "GAME_DESIGN.md 11 fixes the range at 1-50. The cap is therefore closer to design than to tuning, but it lives here because the Meadows slice will never approach it and a lower cap is the obvious lever if levelling in one biome outruns the content.",
+    "cap": 50,
+    "start": 1
+  },
+
+  "xp": {
+    "_comment": "XP needed to leave a level: `base * level^exponent`, rounded. Progress resets to zero at each level rather than accumulating a lifetime total, so `xp_for_next_level()` is the only number a bar ever has to divide by. Combat is the primary source (GAME_DESIGN.md 11); nothing awards XP yet, so these are a shape rather than a balance.",
+    "base": 60.0,
+    "_comment_exponent": "Above 1 so later levels cost more, low enough that level 20 is not a wall. At 1.55 the first level costs 60 and the tenth costs about 2100 — roughly the curve of an afternoon's fights rather than a season's.",
+    "exponent": 1.55
+  },
+
+  "growth": {
+    "_comment": "Fraction of the species base stat added per level, LINEARLY: `base * (1 + per_level * (level - 1))`. Not compounding. A 9%-per-level compound reaches 74x by level 50 and turns every fight into either a walkover or a wall; linear reaches about 5x, which keeps a low-level pal usable and a high-level one clearly better.",
+    "hp_per_level": 0.09,
+    "attack_per_level": 0.07,
+    "defence_per_level": 0.07,
+    "_comment_hp_leads": "HP grows fastest on purpose. Attack and defence both feed the same bounded damage formula in combat_math.base_damage, so raising them together barely moves time-to-kill; HP is the stat that actually makes a levelled pal survive a fight it used to lose."
+  },
+
+  "appraisal": {
+    "_comment": "How this individual's stats are turned into stars. GAME_DESIGN.md 11: 'show appraisal through stars/bars, not exact IV numbers'. scripts/pals/pal_instance.gd `appraisal()` returns the raw ratios AND the star count; the UI is expected to draw the stars and may draw the bars, but must not print the ratios.",
+    "max_stars": 5,
+    "_comment_bands": "Ascending thresholds on `stat / species baseline at this level`. A pal clears one star to begin with and gains one for each band it passes, so four bands give five stars. Tight around 1.0 because the trait modifiers in data/traits/traits.json only span about 0.86-1.18 — wider bands would make every pal a three.",
+    "bands": [0.94, 0.99, 1.03, 1.09]
+  },
+
+  "trait_roll": {
+    "_comment": "Relative likelihood of each trait when a pal is created. Keys are trait ids from data/traits/traits.json. Weights are relative, not percentages, so a new trait can be added without renormalising the rest.",
+    "_comment_default": "Any trait present in traits.json but missing from `weights` is rolled at this weight rather than never appearing. A trait that is invisible because someone forgot a line here is the kind of bug that is only found by not finding a trait.",
+    "default_weight": 1.0,
+    "_comment_steady": "Steady is the boring one and is weighted to be the most common. The strong traits only feel strong because most pals do not have one.",
+    "weights": {
+      "steady": 4.0,
+      "hardy": 2.0,
+      "fierce": 2.0,
+      "stoic": 2.0,
+      "keen": 2.0,
+      "gentle": 1.0,
+      "brittle": 0.6
+    }
+  }
+}

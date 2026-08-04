@@ -19,6 +19,14 @@ run/main_scene="res://scenes/world/meadows_playground.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+; One autoload, and a high bar for the next one. SaveManager is here because the
+; save file must outlive every scene that contributes to it — a system that
+; unloads mid-session still has to have been written. Systems that live inside a
+; scene stay inside that scene.
+SaveManager="*res://autoload/save_manager.gd"
+
 [display]
 
 ; ROG Ally is 1920x1080 at 7 inches. Authoring at native resolution and letting
@@ -121,6 +129,9 @@ map={
 , Object(InputEventJoypadButton,"device":-1,"button_index":4,"pressed":false,"script":null)
 ]
 }
+; M8 tools. Build mode used to borrow this to rotate its ghost, which meant
+; rebinding "cycle tool" silently rebound "rotate the wall". It has its own
+; action now; this one is the tool cycle again and nothing reads it yet.
 tool_cycle={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":81,"pressed":false,"script":null)
@@ -131,6 +142,30 @@ build_toggle={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":66,"pressed":false,"script":null)
 , Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
+]
+}
+; Build mode's own palette controls. They share the D-pad with the combat pal
+; switch on purpose — cycling is what a D-pad is for, and the two modes cannot
+; be open at once (`build_mode._set_open` refuses to open mid-fight). Sharing a
+; BUTTON is fine; sharing an ACTION is what went wrong, because it made the two
+; features impossible to rebind separately and hid the pal switch behind a
+; building feature. Keyboard is , / . / R, the building-game idiom.
+build_cycle_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":44,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":13,"pressed":false,"script":null)
+]
+}
+build_cycle_right={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":46,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
+]
+}
+build_rotate={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":82,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
 ]
 }
 combat_quick={
@@ -157,6 +192,8 @@ combat_run={
 , Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
 ]
 }
+; Reserved for the M4 party: swapping the deployed pal mid-fight. Nothing else
+; may read these — build mode did, and it made the pal switch un-rebindable.
 combat_switch_left={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":4194319,"pressed":false,"script":null)

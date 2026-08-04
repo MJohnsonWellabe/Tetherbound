@@ -117,11 +117,14 @@ func _physics_process(_delta: float) -> void:
 		_input_guard = false
 		return
 
-	if Input.is_action_just_pressed("combat_switch_right"):
+	# Build mode's OWN actions. It used to read `combat_switch_*` and `tool_cycle`
+	# — the M4 pal switch and the M8 tool wheel — which worked only for as long
+	# as neither of those existed.
+	if Input.is_action_just_pressed("build_cycle_right"):
 		_cycle(1)
-	elif Input.is_action_just_pressed("combat_switch_left"):
+	elif Input.is_action_just_pressed("build_cycle_left"):
 		_cycle(-1)
-	if Input.is_action_just_pressed("tool_cycle"):
+	if Input.is_action_just_pressed("build_rotate"):
 		_yaw = GRID.snap_yaw(_yaw + GRID.YAW_STEP)
 
 	_update_ghost()

@@ -8,6 +8,7 @@ extends RefCounted
 
 const SPECIES_PATH := "res://data/pals/species.json"
 const INSTANCE := preload("res://scripts/pals/pal_instance.gd")
+const TRAITS := preload("res://scripts/pals/pal_traits.gd")
 
 static var _table: Dictionary = {}
 
@@ -37,11 +38,23 @@ static func definition(species_id: String) -> Dictionary:
 ## Build a live creature. Returns null for an unknown id rather than a
 ## half-populated instance, so a typo in a species name fails loudly at the
 ## point of the mistake.
-static func spawn(species_id: String) -> RefCounted:
+## `trait_roll` is taken rather than generated, for the reason
+## `catch_math.resolve()` gives about its own roll: a function that reaches for
+## `randf()` internally cannot be tested and cannot be replayed. Pass a value in
+## [0, 1) to decide the trait; leave it negative and one is drawn here.
+##
+## Every pal gets a trait. `GAME_DESIGN.md` §11 says so, and until this line the
+## whole trait system existed, loaded, and was tested while nothing in the game
+## ever called it — every creature in the build had `trait_id == ""`.
+static func spawn(species_id: String, trait_roll: float = -1.0) -> RefCounted:
 	if not has(species_id):
 		push_error("unknown species '%s'; known: %s" % [species_id, ", ".join(table().keys())])
 		return null
-	return INSTANCE.from_species(species_id, definition(species_id))
+	var instance: RefCounted = INSTANCE.from_species(species_id, definition(species_id))
+	if instance != null:
+		var roll: float = trait_roll if trait_roll >= 0.0 else randf()
+		instance.assign_trait(TRAITS.roll(roll))
+	return instance
 
 
 ## Placeholder presentation: colour and capsule dimensions. M2 renders creatures

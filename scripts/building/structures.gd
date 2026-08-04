@@ -28,17 +28,26 @@ extends Node3D
 ## ability to delete a wall.
 
 const CATALOGUE_PATH := "res://data/building/pieces.json"
-const SAVE_PATH := "user://structures.json"
 const GRID := preload("res://scripts/building/build_grid.gd")
 
-## Bumped when the record shape changes, so an old file is refused rather than
-## half-read. `TECHNICAL_START.md` asks for versioned saves from the start.
-const SAVE_VERSION := 1
+## This file used to own `user://structures.json` outright — its own path, its
+## own version constant, its own refusal logic. It is now one CONTRIBUTOR to the
+## single envelope `SaveManager` writes, under this key. See
+## `autoload/save_manager.gd` for why there is only one file.
+const SAVE_DOMAIN := "structures"
+
+## Everything writes to slot 0 until there is a slot-picking screen to write
+## anything else. Tunable; not a design decision.
+const SAVE_SLOT := 0
 
 ## Placed pieces, in placement order. Each is the serialisable record and its
 ## live node together, so saving never has to walk the scene tree and read
 ## transforms back out of it.
 var _placed: Array[Dictionary] = []
+
+## How many pieces the last `load_data()` rebuilt. `load_saved()` reports it,
+## because SaveManager hands state out and does not count what came back.
+var _last_loaded: int = 0
 
 var _catalogue: Dictionary = {}
 ## One material per source material name, shared across every piece that uses
@@ -49,6 +58,7 @@ var _materials: Dictionary = {}
 
 func _ready() -> void:
 	_catalogue = _load_catalogue()
+	_register()
 
 
 ## Every piece the palette can offer, as `{id: definition}`.
@@ -156,49 +166,29 @@ func records() -> Array:
 	return out
 
 
-## Write to `user://`, never `res://`.
+## --- the `structures` save domain -----------------------------------------
 ##
-## Not into `data/config/vegetation.json` beside the authored landmarks, however
-## similar the record shape is: that file is read-only content, memoised in a
-## `static var` by `scatter_rules.config()`, so a runtime write would not even be
-## seen by the process that made it.
-func save() -> bool:
-	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file == null:
-		push_error("could not write structures to %s" % SAVE_PATH)
-		return false
-	file.store_string(JSON.stringify({
-		"version": SAVE_VERSION,
-		"structures": records(),
-	}, "  "))
-	return true
+## Write to `user://`, never `res://`. That is SaveManager's rule now, but the
+## reason was found here and is worth keeping where it was learnt: the obvious
+## place to put placed pieces is `data/config/vegetation.json`, beside the
+## authored landmarks whose record shape they resemble. That file is read-only
+## content, memoised in a `static var` by `scatter_rules.config()`, so a runtime
+## write would not even be seen by the process that made it.
 
 
-## Rebuild from `user://`. Returns how many pieces came back.
+## What goes under the `structures` key of the save envelope.
+func save_data() -> Dictionary:
+	return {"pieces": records()}
+
+
+## Rebuild from a saved envelope.
 ##
 ## Everything goes through `place()`, so a loaded wall is constructed by the same
 ## code as a placed one and cannot end up subtly different from it.
-func load_saved() -> int:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return 0
-	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if file == null:
-		return 0
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if not parsed is Dictionary:
-		push_warning("structures save is not readable; starting empty")
-		return 0
-	var data: Dictionary = parsed
-	var version := int(data.get("version", 0))
-	if version != SAVE_VERSION:
-		push_warning("structures save is version %d, this build writes %d; ignoring it" % [
-			version, SAVE_VERSION
-		])
-		return 0
-
+func load_data(data: Dictionary) -> void:
 	clear()
-	var loaded := 0
-	for entry: Variant in data.get("structures", []):
+	_last_loaded = 0
+	for entry: Variant in data.get("pieces", []):
 		var record: Dictionary = entry
 		var node := place(
 			str(record.get("piece", "")),
@@ -207,8 +197,53 @@ func load_saved() -> int:
 			int(record.get("storey", 0))
 		)
 		if node != null:
-			loaded += 1
-	return loaded
+			_last_loaded += 1
+
+
+## Save the whole game, of which structures are one part.
+##
+## Kept because build mode and the smoke test say "save the buildings" and that
+## should stay the sentence they can write. It is no longer a private file.
+func save() -> bool:
+	var manager := _save_manager()
+	if manager == null:
+		return false
+	return bool(manager.call("save", SAVE_SLOT))
+
+
+## Load the whole game. Returns how many pieces came back.
+func load_saved() -> int:
+	_last_loaded = 0
+	var manager := _save_manager()
+	if manager == null:
+		return 0
+	if not bool(manager.call("load_slot", SAVE_SLOT)):
+		return 0
+	return _last_loaded
+
+
+## Found by path rather than by the global autoload identifier, so that a scene
+## opened without the singleton — a tool script, an isolated test harness —
+## degrades to "cannot save" instead of failing to parse.
+func _save_manager() -> Node:
+	var manager := get_node_or_null(^"/root/SaveManager")
+	if manager == null:
+		push_error("no SaveManager autoload; structures cannot be saved or loaded")
+		return null
+	# Re-registering here, not only in `_ready()`, because under `--script` the
+	# autoloads are attached to the tree AFTER the script's `_init()` returns —
+	# and the smokes build their world inside `_init()`. Their `_ready()` runs
+	# with no singleton to register with. `register()` is idempotent for exactly
+	# this reason.
+	_register(manager)
+	return manager
+
+
+func _register(manager: Node = null) -> void:
+	if manager == null:
+		manager = get_node_or_null(^"/root/SaveManager")
+	if manager != null:
+		manager.call("register", SAVE_DOMAIN, self)
 
 
 func clear() -> void:

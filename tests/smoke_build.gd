@@ -17,7 +17,16 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const GRID := preload("res://scripts/building/build_grid.gd")
 const SETTLE_FRAMES := 240
-const SAVE_PATH := "user://structures.json"
+## Where the save actually lives NOW.
+##
+## This said `user://structures.json` until building stopped owning its own file
+## and became one domain inside SaveManager's envelope. The constant kept
+## pointing at the old path, so the wipe below silently stopped wiping anything —
+## the test still passed, because it saves before it loads within a single run,
+## but it had quietly lost its guarantee of starting from nothing. A stale path
+## in a cleanup step is the most comfortable kind of dead code: everything stays
+## green while the thing the greenness depended on is gone.
+const SAVE_PATH := "user://save_0.json"
 
 
 func _init() -> void:

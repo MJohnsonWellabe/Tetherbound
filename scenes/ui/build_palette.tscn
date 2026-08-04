@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/build_palette.gd" id="1_palette"]
+
+; The build mode strip. Instance it beside the combat HUD and point `build_path`
+; at the BuildMode node; it reads that node's existing accessors and adds nothing
+; to it.
+;
+; Bottom-centre, above where the combat HUD puts its verb row, because the ghost
+; sits in front of the trainer and the strip must not be where the player is
+; looking. Two elements: the strip itself, which is only up while build mode is,
+; and one message line above it, which is up whenever something has just been
+; refused — including the refusal to open build mode during a fight, which
+; happens when the strip is not drawn at all.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="BuildPalette" type="CanvasLayer"]
+script = ExtResource("1_palette")
+
+[node name="Root" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Strip" type="PanelContainer" parent="Root"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -206.0
+offset_right = 560.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Pad" type="MarginContainer" parent="Root/Strip"]
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Lines" type="VBoxContainer" parent="Root/Strip/Pad"]
+theme_override_constants/separation = 4
+
+[node name="Piece" type="Label" parent="Root/Strip/Pad/Lines"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 36
+text = "—"
+
+; RichTextLabel, not Label: the status line is green when the ghost will place
+; and amber with a reason when it will not, and a Label cannot colour its own
+; text.
+[node name="Status" type="RichTextLabel" parent="Root/Strip/Pad/Lines"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 26
+text = ""
+
+[node name="Hints" type="RichTextLabel" parent="Root/Strip/Pad/Lines"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 24
+text = ""
+
+[node name="Message" type="RichTextLabel" parent="Root"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -272.0
+offset_right = 560.0
+offset_bottom = -212.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 30
+text = ""

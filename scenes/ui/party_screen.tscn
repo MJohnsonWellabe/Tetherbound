@@ -1,0 +1,104 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/party_screen.gd" id="1_party"]
+
+; The party menu. Only what makes this screen different from the others is here —
+; the panel, title, rule and footer come from `screen.gd`, which reparents
+; everything below into its content area when the screen enters the tree.
+;
+; Two columns: the five slots on the left, the appraisal of whichever one the
+; cursor is on to the right. Side by side rather than a list that opens into a
+; detail page, because comparing two pals is the entire reason to look at this
+; screen and a page you have to leave to compare is a page you compare from
+; memory.
+;
+; SlotTemplate is the one authored row. `party_screen.gd` removes it and
+; duplicates it five times. Five hand-written copies here stay identical for
+; about a week.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="PartyScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_party")
+title = "Party"
+
+[node name="Body" type="HBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 28
+
+[node name="Slots" type="VBoxContainer" parent="Body"]
+custom_minimum_size = Vector2(760, 0)
+theme_override_constants/separation = 12
+
+[node name="SlotTemplate" type="PanelContainer" parent="Body/Slots"]
+visible = false
+custom_minimum_size = Vector2(0, 104)
+
+[node name="Pad" type="MarginContainer" parent="Body/Slots/SlotTemplate"]
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Lines" type="VBoxContainer" parent="Body/Slots/SlotTemplate/Pad"]
+theme_override_constants/separation = 6
+
+[node name="Head" type="HBoxContainer" parent="Body/Slots/SlotTemplate/Pad/Lines"]
+
+[node name="Name" type="Label" parent="Body/Slots/SlotTemplate/Pad/Lines/Head"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "—"
+
+[node name="Level" type="Label" parent="Body/Slots/SlotTemplate/Pad/Lines/Head"]
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 32
+text = ""
+
+; The same bar, the same green, as the fight draws. Colour is applied in code so
+; a health bar that changes colour as it drains stays in one place.
+[node name="Health" type="ProgressBar" parent="Body/Slots/SlotTemplate/Pad/Lines"]
+custom_minimum_size = Vector2(0, 16)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Foot" type="HBoxContainer" parent="Body/Slots/SlotTemplate/Pad/Lines"]
+
+[node name="Trait" type="Label" parent="Body/Slots/SlotTemplate/Pad/Lines/Foot"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = ""
+
+[node name="State" type="Label" parent="Body/Slots/SlotTemplate/Pad/Lines/Foot"]
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 24
+text = ""
+
+[node name="Detail" type="PanelContainer" parent="Body"]
+size_flags_horizontal = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Detail"]
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="Lines" type="VBoxContainer" parent="Body/Detail/Pad"]
+theme_override_constants/separation = 12
+
+[node name="Who" type="Label" parent="Body/Detail/Pad/Lines"]
+theme_override_font_sizes/font_size = 38
+text = "—"
+
+[node name="Appraisal" type="RichTextLabel" parent="Body/Detail/Pad/Lines"]
+bbcode_enabled = true
+scroll_active = false
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 26
+text = ""

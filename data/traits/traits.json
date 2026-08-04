@@ -1,0 +1,78 @@
+{
+  "_comment": "Trait definitions: the thing that makes two pals of the same species different from each other. GAME_DESIGN.md 11 asks for exactly this under Individuality — 'same-species pals have slightly different underlying stat quality' and 'each pal starts with one trait'. The expected owner feedback is 'my pals all feel identical', 'the trait doesn't change how it fights', 'I got the boring one again' — the first two are answerable by editing the modifiers here, and the third by editing the roll weights in data/config/party.json.",
+  "_comment_firewall": "What a trait IS lives here. How OFTEN it is rolled lives in data/config/party.json under `trait_roll`, because rarity is tuning and a trait's identity is not. If a value here could change how likely a trait is, it is in the wrong file.",
+  "_comment_modifiers": "Multipliers on the species base stat, applied once when the trait is assigned and recomputed from the baseline on every level-up (never compounded — see scripts/pals/pal_instance.gd `_recompute_stats`). 1.0 means untouched. Every trait must declare all three of hp/attack/defence even when one is 1.0: tests/test_pal_traits.gd fails the build on a missing stat, because a missing key silently defaults to 1.0 and 'I meant to make this one frail' is not visible in a diff.",
+  "_comment_range": "Kept inside roughly 0.85-1.20. GAME_DESIGN.md 11 wants appraisal shown as stars and bars rather than exact numbers, which only works if the spread is narrow enough that a good roll is a nudge and not a different creature. A trait that doubles attack would make the roll matter more than every other decision in a fight.",
+  "_comment_tradeoffs": "Most traits give AND take. A roster of pure upgrades turns appraisal into a single 'is it good' number, and there is then no reason to keep the frail one that hits hard. Trade-offs are what make the M5 keep/release ceremony a decision rather than an arithmetic comparison.",
+  "traits": {
+    "steady": {
+      "display_name": "Steady",
+      "description": "Nothing remarkable, and nothing wrong with it either.",
+      "_comment": "The common case, and deliberately dull. If every pal arrived with a strong quirk, no quirk would read as strong. It is a small all-round nudge rather than exactly 1.0 so that 'Steady' still says something on the appraisal screen.",
+      "modifiers": {
+        "hp": 1.03,
+        "attack": 1.03,
+        "defence": 1.03
+      }
+    },
+    "hardy": {
+      "display_name": "Hardy",
+      "description": "Takes a beating and keeps standing.",
+      "_comment": "The one that survives a catch attempt gone long. Extra HP is worth more than it looks in M3's fights, because the health bar is also the catch window.",
+      "modifiers": {
+        "hp": 1.12,
+        "attack": 0.98,
+        "defence": 1.04
+      }
+    },
+    "fierce": {
+      "display_name": "Fierce",
+      "description": "Hits first, hits hard, and worries about it later.",
+      "modifiers": {
+        "hp": 1.0,
+        "attack": 1.14,
+        "defence": 0.94
+      }
+    },
+    "stoic": {
+      "display_name": "Stoic",
+      "description": "Absorbs a charged attack like it was a nudge.",
+      "_comment": "The mirror of Fierce, and the reason the two are equally weighted: a defensive roll has to be as exciting to get as an offensive one or the appraisal only ever reads as 'good' or 'bad'.",
+      "modifiers": {
+        "hp": 1.0,
+        "attack": 0.96,
+        "defence": 1.14
+      }
+    },
+    "brittle": {
+      "display_name": "Brittle",
+      "description": "Devastating for exactly as long as it lasts.",
+      "_comment": "The glass cannon, and the rarest roll in data/config/party.json. It is the clearest test of whether the appraisal screen communicates a SHAPE rather than a score — a Brittle pal is genuinely better in a short fight and genuinely worse in a long one, and if the UI cannot say that, the UI is wrong rather than the trait.",
+      "modifiers": {
+        "hp": 0.86,
+        "attack": 1.18,
+        "defence": 0.96
+      }
+    },
+    "gentle": {
+      "display_name": "Gentle",
+      "description": "Would rather not, but will if you ask.",
+      "_comment": "Weak in a fight on purpose. GAME_DESIGN.md 12 has bond growing through fighting together, time together and resting, so there is a designed home for a pal that is poor at combat and good at everything else. Until bond lands (post-M4) this reads as a bad roll, which is honest.",
+      "modifiers": {
+        "hp": 1.08,
+        "attack": 0.90,
+        "defence": 1.06
+      }
+    },
+    "keen": {
+      "display_name": "Keen",
+      "description": "Reads the fight a beat ahead of everything else in it.",
+      "_comment": "A mild Fierce with no real downside, and therefore the trait most likely to need its weight cut rather than its numbers. Kept mild for that reason.",
+      "modifiers": {
+        "hp": 0.98,
+        "attack": 1.06,
+        "defence": 1.02
+      }
+    }
+  }
+}
