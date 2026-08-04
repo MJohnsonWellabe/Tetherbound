@@ -164,6 +164,15 @@ jobs:
           echo "exe size: ${SIZE} bytes"
           test "$SIZE" -gt 10000000
 
+      - name: Verify the exported build runs and has ground under the player
+        # Exports for Linux and RUNS it. Every other test in this file runs the
+        # project from source, where res:// is a real directory and addons load
+        # from the project tree — so none of them can see an export-only fault.
+        # A build shipped with no terrain in it and all of them were green.
+        run: |
+          sudo apt-get install -y -qq xvfb >/dev/null
+          tools/verify_export.sh
+
       - uses: actions/upload-artifact@v4
         with:
           name: Tetherbound-windows-debug

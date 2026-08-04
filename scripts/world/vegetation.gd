@@ -97,9 +97,9 @@ var _tints: Dictionary = {}
 ## green grass in one layer and dry gold straw in another, which is most of the
 ## hue breadth the meadow has. The critic counted 2 hue families against the key
 ## art board's 6, and the ground cannot supply the difference on its own.
-func _retint(mesh: Mesh, overrides: Dictionary) -> Mesh:
+func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}) -> Mesh:
 	var map: Dictionary = RULES.config().get("retint", {})
-	if map.is_empty() and overrides.is_empty():
+	if map.is_empty() and overrides.is_empty() and swaps.is_empty():
 		return mesh
 
 	var out := ArrayMesh.new()
@@ -108,11 +108,11 @@ func _retint(mesh: Mesh, overrides: Dictionary) -> Mesh:
 		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 		var source: Material = mesh.surface_get_material(surface)
 		var key := "" if source == null else source.resource_name
-		out.surface_set_material(surface, _tint_for(key, source, overrides))
+		out.surface_set_material(surface, _tint_for(key, source, overrides, swaps))
 	return out
 
 
-func _tint_for(name: String, source: Material, overrides: Dictionary) -> Material:
+func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dictionary = {}) -> Material:
 	var map: Dictionary = RULES.config().get("retint", {})
 	var colour := ""
 	if overrides.has(name):
@@ -120,21 +120,64 @@ func _tint_for(name: String, source: Material, overrides: Dictionary) -> Materia
 	elif map.has(name):
 		colour = str(map[name])
 
-	# Keyed by the colour it resolves to rather than by the material name, so two
-	# layers overriding the same source material get two materials while
-	# everything else still shares one.
-	var cache_key := "%s|%s" % [name, colour]
+	# A layer may also swap the TEXTURE, not just tint it.
+	#
+	# Colour alone cannot fix a texture that is the wrong colour, because
+	# `albedo_color` multiplies: the Quaternius pack ships `Leaves_TwistedTree_C`
+	# as a crimson autumn leaf, and `Bush_Common` uses that same material — so
+	# eight hundred bushes came out blood red, and no multiply turns red green.
+	# Swapping the texture for the pack's own green leaf does.
+	var swap := str(swaps.get(name, ""))
+
+	# Keyed by everything that can change the result, so two layers overriding
+	# the same source material get two materials while everything else still
+	# shares one.
+	var cache_key := "%s|%s|%s" % [name, colour, swap]
 	if _tints.has(cache_key):
 		return _tints[cache_key]
 
 	var material := StandardMaterial3D.new()
-	if colour != "":
+	var standard := source as StandardMaterial3D
+
+	# A TEXTURED source keeps its texture, and the colour modulates it.
+	#
+	# This function was written when every prop was one flat colour, so it built
+	# a fresh material and threw the source away. Pointed at a textured pack that
+	# would discard the bark, leaf and rock textures entirely and repaint the
+	# whole meadow in flat blocks — deleting the exact thing worth having, in the
+	# name of palette consistency.
+	#
+	# In Godot `albedo_color` MULTIPLIES the albedo texture, so an unmapped
+	# material passing through white is the texture exactly as authored, and a
+	# mapped one is a tint over it. That means a strong colour from the old flat
+	# palette would come out near-black over a texture — which is why mapped
+	# colours for textured packs belong near white. See vegetation.json.
+	if standard != null and standard.albedo_texture != null:
+		material.albedo_texture = standard.albedo_texture
+		if swap != "" and ResourceLoader.exists(swap):
+			material.albedo_texture = load(swap) as Texture2D
+		elif swap != "":
+			push_warning("layer asks to swap material '%s' to '%s', which does not exist" % [name, swap])
+		material.normal_texture = standard.normal_texture
+		# Foliage packs carry per-vertex tint; dropping it flattens the canopy
+		# variation the pack authored.
+		material.vertex_color_use_as_albedo = standard.vertex_color_use_as_albedo
+		material.normal_enabled = standard.normal_enabled
+		material.albedo_color = Color(colour) if colour != "" else Color.WHITE
+		# Foliage is alpha-cut, not blended: leaves are cards with holes in them,
+		# and alpha blending would sort them against each other every frame for
+		# thousands of instances.
+		material.transparency = standard.transparency
+		material.alpha_scissor_threshold = standard.alpha_scissor_threshold
+		material.cull_mode = standard.cull_mode
+	elif colour != "":
 		material.albedo_color = Color(colour)
-	elif source is StandardMaterial3D:
-		# Unmapped materials keep their original colour rather than turning
-		# white, so adding a model from the pack degrades to "slightly off"
-		# instead of "glowing".
-		material.albedo_color = (source as StandardMaterial3D).albedo_color
+	elif standard != null:
+		# Unmapped, untextured materials keep their original colour rather than
+		# turning white, so adding a model from the pack degrades to "slightly
+		# off" instead of "glowing".
+		material.albedo_color = standard.albedo_color
+
 	material.roughness = 0.94
 	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
 	_tints[cache_key] = material
@@ -149,7 +192,8 @@ func _build_batch(model_path: String, placements: Array) -> void:
 
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	multi.mesh = _retint(mesh, _layer_for(model_path).get("retint", {}))
+	var layer_cfg := _layer_for(model_path)
+	multi.mesh = _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}))
 	multi.instance_count = placements.size()
 
 	for i in placements.size():

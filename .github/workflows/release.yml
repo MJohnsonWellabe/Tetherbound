@@ -94,6 +94,21 @@ jobs:
           test "$(stat -c%s build/windows/Tetherbound.exe)" -gt 10000000
           ls -la build/windows/
 
+      - name: Verify the exported build actually runs
+        # The check that matters, and the one that did not exist when a build
+        # shipped that fell through the world forever. It exports, runs the
+        # EXPORTED BINARY, and asserts there is terrain under the player.
+        #
+        # Everything else here checks the file. This checks the game.
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb >/dev/null
+          tools/verify_export.sh
+
+      - name: Stage GDExtension libraries for shipping
+        # Godot writes them flat next to the executable; the engine looks for
+        # them at their res:// path relative to it. Ship both.
+        run: tools/stage_gdextension_libs.sh build/windows
+
       - name: Package
         # Zipped because a Godot export is an .exe next to a .pck and a
         # Terrain3D .dll, and all three have to travel together. Downloading a

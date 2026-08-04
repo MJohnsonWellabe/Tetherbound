@@ -71,6 +71,36 @@ func _ready() -> void:
 	_place_player()
 	_dress_the_meadow()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_report_for_export_check()
+
+
+## A liveness report an EXPORTED build can actually be tested against.
+##
+## Run with `--verify-export`, the world says whether it stood itself up and
+## then quits. Nothing else in the game reads this flag.
+##
+## It exists because a shipped build fell through the world forever and there
+## was no way to find out from outside. Three separate mechanisms defeated the
+## obvious approaches: a release export strips `print()`, so the spawn line the
+## world already logged never reached stdout; `--quit-after` is an editor flag
+## and is ignored by an export, so the process had to be killed, which flushed
+## nothing; and `--quit` exits before the terrain has finished loading, which is
+## the exact thing being checked.
+##
+## `push_warning` survives all three — it goes through the error macros, which
+## release builds keep, and it is written immediately rather than buffered.
+func _report_for_export_check() -> void:
+	if not OS.get_cmdline_args().has("--verify-export"):
+		return
+	var solid := _terrain != null and _terrain.get("data") != null
+	var height: float = ground_height_at(_player.global_position.x, _player.global_position.z)
+	push_warning("EXPORT-CHECK terrain=%s ground_at_spawn=%s player_y=%.2f props=%d" % [
+		"yes" if solid else "NO",
+		"NaN" if is_nan(height) else "%.2f" % height,
+		_player.global_position.y,
+		int((_vegetation.call("stats") as Dictionary).get("instances", 0)) if _vegetation != null else 0
+	])
+	get_tree().quit(0 if solid and not is_nan(height) else 1)
 
 
 func _build_terrain() -> Node3D:
@@ -78,7 +108,24 @@ func _build_terrain() -> Node3D:
 		push_error("Terrain3D addon is not installed or failed to load. " +
 			"Check addons/terrain_3d/ and that the extension matches this Godot build.")
 		return null
-	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(DATA_DIR)):
+	# Checked through res://, NOT through the OS filesystem.
+	#
+	# This was `DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(...))`,
+	# and it shipped a build that fell through the world forever.
+	#
+	# In the editor, `res://` IS a real directory, so globalizing it gives a path
+	# that exists and the check passes. In an EXPORTED build the terrain lives
+	# inside the .pck and there is no such directory on disk, so the check failed
+	# every time, `_build_terrain()` returned null, and the player spawned in
+	# mid-air over an empty world. The data was in the pack the whole time; the
+	# guard against it being missing was the only thing missing it.
+	#
+	# The general form, for the third time in this project: a check that uses a
+	# different mechanism from the thing it checks is testing the mechanism.
+	# `move_and_slide` uses shape casts while the probe used rays (D09); the
+	# smoke tests run from source while players run an export; and here the
+	# guard read the OS filesystem while the game reads a resource pack.
+	if not DirAccess.dir_exists_absolute(DATA_DIR):
 		push_error("No baked terrain at %s. Run: godot --headless --path . " % DATA_DIR +
 			"--script scripts/world/build_playground_terrain.gd")
 		return null
