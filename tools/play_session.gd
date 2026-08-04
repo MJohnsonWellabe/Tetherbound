@@ -274,14 +274,14 @@ func _catch_one(party: Object) -> void:
 	var foe: Object = probe(manager, "enemy")
 	var before: int = int(probe(party, "size"))
 	var throws := 0
-	for attempt in 40:
+	for attempt in 25:
 		if not bool(probe(manager, "is_fighting")):
 			break
 		# Weakened directly rather than by fighting: this is evidence about
 		# catching, and grinding it down through combat would be evidence about
 		# combat. smoke_catching does the same for the same reason.
 		if foe != null:
-			foe.set("hp", float(foe.get("max_hp")) * 0.08)
+			foe.set("hp", float(foe.get("max_hp")) * 0.02)
 		var aim: Object = probe(manager, "throw_aim")
 		if aim != null and int(probe(manager, "orbs_left")) <= 1:
 			aim.call("refill")
@@ -291,7 +291,7 @@ func _catch_one(party: Object) -> void:
 		if not await _throw_at(manager, player, rig, wild):
 			continue
 		throws += 1
-		for i in 240:
+		for i in 120:
 			await physics_frame
 			if int(probe(party, "size")) > before:
 				break
@@ -414,6 +414,11 @@ func _add_pal(party: Object, species_id: String) -> Variant:
 func note(line: String) -> void:
 	_log.append(line)
 	print("  %s" % line)
+	# Flushed on every line, not at the end. A session killed by its timeout used
+	# to leave fresh frames beside a stale transcript from an earlier run, and
+	# nothing on disk said they came from different games. Writing as we go costs
+	# nothing and makes a truncated transcript obviously truncated.
+	_write()
 
 
 ## A numbered frame, for anything the judge has to look at rather than read.
