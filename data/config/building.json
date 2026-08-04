@@ -1,0 +1,31 @@
+{
+  "_comment": "How building FEELS. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'the grid is too coarse', 'I can't place it far enough away', 'the ghost is hard to read against grass' — every one of those has to be answerable by editing this file rather than by editing code.",
+  "_comment_firewall": "What a piece IS lives in data/building/pieces.json: its model, its footprint, its collider. If a value in this file could change the size or shape of a placed building, it is in the wrong file.",
+  "_comment_no_costs": "There are no build costs here yet, and their absence is deliberate rather than an oversight. GAME_DESIGN.md 20 says recipes unlock through materials, MEADOWS_VERTICAL_SLICE.md M8 names Wood/Stone/Fiber/Berries — and NO INVENTORY EXISTS. Building cannot cost what the game cannot hold. Costs get added here, labelled tunable, when M8's gathering lands; until then placement is free and that is a stated scope decision, not a balance one.",
+
+  "_comment_grid": "The grid is NOT tunable in the way the rest of this file is, and it is here to be read rather than turned. Every value was measured off the Quaternius kit's own glTF accessors: walls are 2.000m wide and 3.123m tall, floors are 2x2m, stairs rise exactly 1m. Changing these numbers without changing the art pack makes pieces stop meeting each other. They live in scripts/building/build_grid.gd as constants; these are the copies the placement rules quote, and D12 records why.",
+  "grid": {
+    "cell": 2.0,
+    "storey": 3.0,
+    "yaw_step_deg": 90.0
+  },
+
+  "_comment_reach": "How far from the trainer a piece may be placed, in metres. Far enough to build a wall without standing inside it, short enough that you cannot decorate a hillside you have never walked to.",
+  "reach": 9.0,
+  "_comment_reach_min": "Refuse placements closer than this, so a piece never spawns inside the player's own capsule.",
+  "reach_min": 1.6,
+
+  "_comment_ground": "Terrain rules for a foundation. `max_slope_deg` is checked across the piece's four footprint CORNERS rather than at its centre — a 2m tile can have a perfectly level centre while bridging a gully, and the corner check is the only one that notices. Sampled from the heightfield, never a raycast (D09).",
+  "max_slope_deg": 18.0,
+  "_comment_max_step": "Metres of height difference tolerated across a footprint. Belt and braces with the slope check: the slope can read flat across a small tile that still sits on a ledge.",
+  "max_step": 0.55,
+
+  "_comment_ghost": "The preview piece. Green where it can go, amber where it cannot — and it stays VISIBLE when refused rather than disappearing. combat_hud.gd learned this the hard way with cooldown verbs: 'the prompt row used to render [ ] for a verb on cooldown, which reads as a missing glyph rather than as a disabled button'. A ghost that vanishes reads as a broken preview; one that turns amber reads as an answer.",
+  "ghost_valid_colour": "#8fd694",
+  "_comment_ghost_invalid": "Amber, NOT the palette's tether_oxblood. palette.json reserves oxblood for Team Tether danger and says so in a `_reserved` key; a refused placement is a hint, not a threat.",
+  "ghost_invalid_colour": "#e0a05a",
+  "ghost_alpha": 0.55,
+
+  "_comment_removal": "Radius in metres within which a piece can be targeted for removal. Generous, because aiming at a wall you have already built is a chore and there is no cost to getting it wrong while building is free.",
+  "remove_radius": 3.0
+}

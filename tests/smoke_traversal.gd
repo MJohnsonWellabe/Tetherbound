@@ -27,9 +27,72 @@ const LEG_FRAMES := 2700
 const THROUGH_THE_FLOOR := -80.0
 const COLLISION_FULL_GAME := 3
 
+## Frames of continuous airborne after which the failure is described rather
+## than merely counted.
+##
+## The counter alone says "the ground is not continuous", which turned out to be
+## a guess dressed as a finding: this test failed one run in three with the
+## player sitting at y = 0.4 — ground level — for three thousand frames without
+## ever falling. Not through the floor, not falling, just never on it. Three
+## explanations fit that equally well (wedged against a prop collider, a hole in
+## terrain collision, a face steeper than the controller's floor limit) and they
+## want opposite fixes.
+##
+## Well before the 240-frame failure threshold, so the diagnosis prints on runs
+## that go on to pass too — a rare failure is best understood next to the near
+## misses.
+const DIAGNOSE_AFTER := 90
+
 
 func _init() -> void:
 	_run()
+
+
+## Say WHY the player is off the floor, at the moment it is happening.
+##
+## Each line separates two of the three candidate causes, so one printout
+## settles it rather than narrowing it:
+##
+## - the collision list distinguishes "wedged against a prop" (a collider with a
+##   name, a horizontal normal) from "on a steep face" (the terrain, a normal
+##   tilted past the controller's floor limit) from "touching nothing at all";
+## - terrain height against player height distinguishes "the heightfield says
+##   there is ground here and physics disagrees" from "there is genuinely a
+##   hole". These are different bugs with different owners, and D09 is the
+##   standing warning that the two mechanisms can disagree;
+## - velocity distinguishes wedged from sliding, which the position alone does
+##   not: a player creeping down a slope and a player pinned against a trunk
+##   both look stationary over a single frame.
+func _diagnose(player: CharacterBody3D, world: Node, direction: String) -> void:
+	var at := player.global_position
+	var ground: float = float(world.call("ground_height_at", at.x, at.z)) \
+		if world.has_method("ground_height_at") else NAN
+
+	print("  --- ungrounded %d frames while holding %s ---" % [DIAGNOSE_AFTER, direction])
+	print("      at %.2f, %.2f, %.2f   velocity %.2f, %.2f, %.2f" % [
+		at.x, at.y, at.z, player.velocity.x, player.velocity.y, player.velocity.z
+	])
+	if is_nan(ground):
+		print("      terrain height: NaN — no terrain at this point at all")
+	else:
+		print("      terrain height %.2f, player %.2f, gap %+.2f" % [ground, at.y, at.y - ground])
+
+	var hits := player.get_slide_collision_count()
+	if hits == 0:
+		print("      touching nothing")
+	for i in hits:
+		var hit := player.get_slide_collision(i)
+		var normal := hit.get_normal()
+		var collider: Object = hit.get_collider()
+		# The angle is what the controller actually tests, so report the number
+		# it tests rather than the raw vector.
+		print("      hit %d: %s  normal %.2f, %.2f, %.2f  (%.1f deg from up)" % [
+			i,
+			(collider as Node).name if collider is Node else str(collider),
+			normal.x, normal.y, normal.z,
+			rad_to_deg(normal.angle_to(Vector3.UP))
+		])
+	print("      floor_max_angle %.1f deg" % rad_to_deg(player.floor_max_angle))
 
 
 func _run() -> void:
@@ -70,6 +133,8 @@ func _run() -> void:
 			# frames. Falling through does not come back.
 			ungrounded_streak = 0 if player.is_on_floor() else ungrounded_streak + 1
 			worst_streak = maxi(worst_streak, ungrounded_streak)
+			if ungrounded_streak == DIAGNOSE_AFTER:
+				_diagnose(player, world, direction)
 
 			if pos.y < THROUGH_THE_FLOOR:
 				Input.action_release(direction)
@@ -94,7 +159,15 @@ func _run() -> void:
 	if furthest < 100.0:
 		failures.append("only reached %.0fm from spawn; too short to prove anything about collision" % furthest)
 	if worst_streak > 240:
-		failures.append("airborne for %d consecutive frames; the ground is not continuous" % worst_streak)
+		# Deliberately does NOT say "the ground is not continuous" any more. It
+		# used to, and that was a conclusion rather than a measurement: the one
+		# time it fired, the ground was continuous and present, and the player
+		# was underneath it. A failure message that names a cause it did not
+		# observe sends the next reader to the wrong file.
+		failures.append(
+			"airborne for %d consecutive frames — see the diagnosis above for whether that is "
+			% worst_streak + "a hole, a prop, a slope, or a body inside the terrain"
+		)
 
 	print("")
 	if failures.is_empty():

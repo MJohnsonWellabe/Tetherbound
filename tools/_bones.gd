@@ -8,7 +8,6 @@ extends SceneTree
 func _init() -> void:
 	for path in [
 		"res://assets/characters/knight.glb",
-		"res://assets/pals/bramblit.fbx",
 		"res://assets/environment/stylized_nature/CommonTree_1.gltf",
 	]:
 		if not ResourceLoader.exists(path):

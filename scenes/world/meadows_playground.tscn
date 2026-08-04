@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -8,6 +8,8 @@
 [ext_resource type="Script" path="res://scripts/combat/encounter_director.gd" id="6_encounter"]
 [ext_resource type="PackedScene" path="res://scenes/combat/combat_hud.tscn" id="8_combat_hud"]
 [ext_resource type="Script" path="res://scripts/world/world_look.gd" id="9_look"]
+[ext_resource type="Script" path="res://scripts/building/structures.gd" id="10_structures"]
+[ext_resource type="Script" path="res://scripts/building/build_mode.gd" id="11_build"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -82,3 +84,16 @@ environment_path = NodePath("../WorldEnvironment")
 [node name="CombatHUD" parent="." instance=ExtResource("8_combat_hud")]
 manager_path = NodePath("../CombatManager")
 director_path = NodePath("../EncounterDirector")
+
+; Building. Structures is a Node3D because it PARENTS what the player places;
+; BuildMode is a plain Node because it owns state and a ghost, not a place in
+; the world. Same split as CombatManager beside them.
+[node name="Structures" type="Node3D" parent="."]
+script = ExtResource("10_structures")
+
+[node name="BuildMode" type="Node" parent="."]
+script = ExtResource("11_build")
+player_path = NodePath("../Player")
+world_path = NodePath("..")
+structures_path = NodePath("../Structures")
+combat_path = NodePath("../CombatManager")

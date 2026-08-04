@@ -20,8 +20,12 @@ signal died()
 var vitals: RefCounted = VITALS.new()
 
 @export var camera_rig_path: NodePath
+## The world, for `ground_height_at`. Defaults to the parent, which is where the
+## playground puts the player; exported so a test scene can point elsewhere.
+@export var world_path: NodePath = NodePath("..")
 var _camera_rig: Node3D = null
 var _model: Node3D = null
+var _world: Node = null
 
 var _walk_speed: float = 4.2
 var _sprint_speed: float = 7.6
@@ -51,11 +55,30 @@ var _sprinting: bool = false
 ## leaves the player hovering wherever combat happened to open.
 var _locomotion_enabled: bool = true
 
+## How far below the heightfield the body may legitimately sit before it is
+## treated as embedded rather than as noise.
+##
+## Not zero. The heightfield is SAMPLED and the collider is MESHED from it, so
+## the two disagree by centimetres on any slope, and a rescue that fired on every
+## such disagreement would be teleporting the player constantly. The observed
+## embedding was 0.52-0.74m, so this sits well clear of both.
+var _embed_tolerance: float = 0.35
+
+## Rescues so far, and how many get a warning before it goes quiet. A body that
+## embeds once is an incident; one that embeds every frame is a different bug,
+## and a log with ten thousand identical lines in it hides that rather than
+## showing it.
+var _embed_rescues: int = 0
+const EMBED_WARN_LIMIT := 5
+
 
 func _ready() -> void:
 	_load_config()
 	_camera_rig = get_node_or_null(camera_rig_path) as Node3D
 	_model = get_node_or_null(^"Model") as Node3D
+	_world = get_node_or_null(world_path)
+	if _world != null and not _world.has_method("ground_height_at"):
+		_world = null
 	if _camera_rig != null and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", self)
 
@@ -100,8 +123,63 @@ func _physics_process(delta: float) -> void:
 	var falling_speed := -velocity.y
 	move_and_slide()
 	_resolve_landing(falling_speed)
+	_stay_above_ground()
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
+
+
+## Refuse to be underneath the terrain.
+##
+## `smoke_traversal` failed one run in three, and the counter said "the ground is
+## not continuous", which was a conclusion rather than a finding. Instrumented,
+## the same three words came out every time:
+##
+##     at -6.40, 0.57, 21.12   velocity 0.00, -54.06, 0.00
+##     terrain height 1.18, player 0.57, gap -0.61
+##     hit 0..5: Terrain  normal -0.00, -0.00, -1.00  (90.0 deg from up)
+##
+## The player is **inside the ground** — half a metre under the surface, gaining
+## fall speed it never converts into movement, in contact with six perfectly
+## axis-aligned VERTICAL faces. Not a hole, not a prop, not a slope past the
+## floor limit: embedded in the collision mesh, where depenetration can only push
+## sideways and `is_on_floor()` can never become true. Which is why the streak ran
+## for three thousand frames instead of ending in a fall.
+##
+## This is a floor of last resort, and D09 is the reason it is allowed to be one:
+## `ground_height_at` reads Terrain3D's own heightmap rather than asking the
+## physics server, so it is the one source that cannot be wrong in the way the
+## collider just was. When the two disagree about which side of the ground the
+## player is on, the heightfield wins.
+##
+## HONEST LIMIT: this contains the symptom, it does not explain it. Why the body
+## gets embedded at all — most likely a collision chunk rebuilding around it as
+## regions stream — is not established, and this net will keep it playable
+## rather than making it correct. It is deliberately silent about small
+## disagreements and loud about large ones, so if the real cause ever gets worse
+## the warnings say so instead of the net hiding it.
+func _stay_above_ground() -> void:
+	if _world == null:
+		return
+	var ground: float = float(_world.call("ground_height_at", global_position.x, global_position.z))
+	if is_nan(ground):
+		return
+
+	# The capsule sits at +0.9 local with a 1.8 height, so its base is exactly at
+	# the body origin: `global_position.y` IS the height of the feet.
+	var below := ground - global_position.y
+	if below <= _embed_tolerance:
+		return
+
+	global_position.y = ground
+	# The fall is over — it ended in the ground rather than on it. Leaving the
+	# accumulated speed would apply it again on the next frame and drive the body
+	# straight back in.
+	velocity.y = 0.0
+	_embed_rescues += 1
+	if _embed_rescues <= EMBED_WARN_LIMIT:
+		push_warning("player was %.2fm inside the terrain at %.1f, %.1f; lifted to the heightfield" % [
+			below, global_position.x, global_position.z
+		])
 
 
 func _track_airborne(delta: float) -> void:

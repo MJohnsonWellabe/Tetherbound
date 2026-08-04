@@ -1,0 +1,569 @@
+{
+  "_comment": "The build palette. CONTENT, not tuning — this says what a piece IS, and data/config/building.json says how building FEELS. A number here that changes how placement feels is in the wrong file.",
+  "_comment_measured": "Every collider was MEASURED from the model's own glTF accessors by the script that generated this file, never typed. A piece that claims a footprint its art does not have is a wall you can walk through or a floor with an invisible kerb, and both read as physics bugs rather than as data errors.",
+  "_comment_anchor": "`cell` snaps to the middle of a 2m cell, `edge` to the middle of one of its four sides. Not a preference: the kit uses TWO origins. A floor's origin is the centre of its tile; a wall's is the bottom-centre of a 2m EDGE. Snapping both the same way puts every wall half a cell out, which reads as a rotation bug and is not one.",
+  "_comment_size_cells": "Footprint in 2m cells, used to sample the terrain under all four corners before allowing a placement. Roofs are named in the kit by their INTERIOR span in metres, so `Roof_RoundTiles_4x4` covers 2x2 cells and overhangs ~0.75m past them on every side.",
+  "_comment_scope": "The M8 list from MEADOWS_VERTICAL_SLICE.md: floor, wall, doorway/door, roof, fence — plus stairs and windows, which the kit gives for free and which a house needs. Campfire, bed, pal bed, workbench, storage and berry plot are also on the M8 list and are deliberately NOT here: each is a station with behaviour, not a piece of geometry.",
+  "pieces": {
+    "floor_wooddark": {
+      "display_name": "Wooden Floor",
+      "model": "res://assets/buildings/Floor_WoodDark.gltf",
+      "category": "floor",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "collider_extents": [
+        1.0,
+        0.02,
+        1.0
+      ]
+    },
+    "floor_woodlight": {
+      "display_name": "Pale Wooden Floor",
+      "model": "res://assets/buildings/Floor_WoodLight.gltf",
+      "category": "floor",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "collider_extents": [
+        1.0,
+        0.02,
+        1.0
+      ]
+    },
+    "floor_brick": {
+      "display_name": "Brick Floor",
+      "model": "res://assets/buildings/Floor_Brick.gltf",
+      "category": "floor",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "collider_extents": [
+        1.0,
+        0.02,
+        1.0
+      ]
+    },
+    "floor_unevenbrick": {
+      "display_name": "Cobbled Floor",
+      "model": "res://assets/buildings/Floor_UnevenBrick.gltf",
+      "category": "floor",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "collider_extents": [
+        1.0,
+        0.02,
+        1.0
+      ]
+    },
+    "wall_plaster_straight": {
+      "display_name": "Plaster Wall",
+      "model": "res://assets/buildings/Wall_Plaster_Straight.gltf",
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.56,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.562,
+        0.203
+      ]
+    },
+    "wall_unevenbrick_straight": {
+      "display_name": "Brick Wall",
+      "model": "res://assets/buildings/Wall_UnevenBrick_Straight.gltf",
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ]
+    },
+    "wall_plaster_window_wide_round": {
+      "display_name": "Plaster Wall, Window",
+      "model": "res://assets/buildings/Wall_Plaster_Window_Wide_Round.gltf",
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ]
+    },
+    "wall_unevenbrick_window_wide_round": {
+      "display_name": "Brick Wall, Window",
+      "model": "res://assets/buildings/Wall_UnevenBrick_Window_Wide_Round.gltf",
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ]
+    },
+    "wall_plaster_door_round": {
+      "display_name": "Plaster Wall, Doorway",
+      "model": "res://assets/buildings/Wall_Plaster_Door_Round.gltf",
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ]
+    },
+    "wall_unevenbrick_door_round": {
+      "display_name": "Brick Wall, Doorway",
+      "model": "res://assets/buildings/Wall_UnevenBrick_Door_Round.gltf",
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ]
+    },
+    "wall_arch": {
+      "display_name": "Open Arch",
+      "model": "res://assets/buildings/Wall_Arch.gltf",
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        1.5,
+        0.032
+      ],
+      "collider_extents": [
+        1.0,
+        1.5,
+        0.032
+      ]
+    },
+    "doorframe_round_brick": {
+      "display_name": "Door Frame, Stone",
+      "model": "res://assets/buildings/DoorFrame_Round_Brick.gltf",
+      "category": "door",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.003,
+        1.291,
+        -0.057
+      ],
+      "collider_extents": [
+        0.802,
+        1.293,
+        0.239
+      ]
+    },
+    "doorframe_round_wooddark": {
+      "display_name": "Door Frame, Timber",
+      "model": "res://assets/buildings/DoorFrame_Round_WoodDark.gltf",
+      "category": "door",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.273,
+        0.029
+      ],
+      "collider_extents": [
+        0.703,
+        1.282,
+        0.269
+      ]
+    },
+    "door_1_round": {
+      "display_name": "Door",
+      "model": "res://assets/buildings/Door_1_Round.gltf",
+      "category": "door",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.514,
+        1.192,
+        0.003
+      ],
+      "collider_extents": [
+        0.56,
+        1.159,
+        0.06
+      ]
+    },
+    "door_2_round": {
+      "display_name": "Panelled Door",
+      "model": "res://assets/buildings/Door_2_Round.gltf",
+      "category": "door",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.515,
+        1.192,
+        -0.003
+      ],
+      "collider_extents": [
+        0.558,
+        1.164,
+        0.13
+      ]
+    },
+    "window_wide_round1": {
+      "display_name": "Window",
+      "model": "res://assets/buildings/Window_Wide_Round1.gltf",
+      "category": "window",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        1.879,
+        0.013
+      ],
+      "collider_extents": [
+        0.682,
+        0.863,
+        0.265
+      ]
+    },
+    "windowshutters_wide_round_open": {
+      "display_name": "Shutters",
+      "model": "res://assets/buildings/WindowShutters_Wide_Round_Open.gltf",
+      "category": "window",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.048,
+        1.917,
+        0.327
+      ],
+      "collider_extents": [
+        1.152,
+        0.824,
+        0.236
+      ]
+    },
+    "roof_roundtiles_4x4": {
+      "display_name": "Tiled Roof 2x2",
+      "model": "res://assets/buildings/Roof_RoundTiles_4x4.gltf",
+      "category": "roof",
+      "anchor": "cell",
+      "size_cells": [
+        2,
+        2
+      ],
+      "collider_centre": [
+        0.0,
+        1.609,
+        0.041
+      ],
+      "collider_extents": [
+        2.757,
+        2.125,
+        2.781
+      ]
+    },
+    "roof_roundtiles_4x6": {
+      "display_name": "Tiled Roof 2x3",
+      "model": "res://assets/buildings/Roof_RoundTiles_4x6.gltf",
+      "category": "roof",
+      "anchor": "cell",
+      "size_cells": [
+        2,
+        3
+      ],
+      "collider_centre": [
+        0.0,
+        1.601,
+        0.0
+      ],
+      "collider_extents": [
+        2.757,
+        2.117,
+        3.786
+      ]
+    },
+    "roof_roundtiles_6x6": {
+      "display_name": "Tiled Roof 3x3",
+      "model": "res://assets/buildings/Roof_RoundTiles_6x6.gltf",
+      "category": "roof",
+      "anchor": "cell",
+      "size_cells": [
+        3,
+        3
+      ],
+      "collider_centre": [
+        0.0,
+        2.054,
+        0.078
+      ],
+      "collider_extents": [
+        4.125,
+        2.836,
+        4.016
+      ]
+    },
+    "roof_roundtiles_6x8": {
+      "display_name": "Tiled Roof 3x4",
+      "model": "res://assets/buildings/Roof_RoundTiles_6x8.gltf",
+      "category": "roof",
+      "anchor": "cell",
+      "size_cells": [
+        3,
+        4
+      ],
+      "collider_centre": [
+        0.0,
+        2.054,
+        0.013
+      ],
+      "collider_extents": [
+        4.125,
+        2.836,
+        4.841
+      ]
+    },
+    "roof_front_brick4": {
+      "display_name": "Gable End, 2 wide",
+      "model": "res://assets/buildings/Roof_Front_Brick4.gltf",
+      "category": "roof",
+      "anchor": "edge",
+      "size_cells": [
+        2,
+        1
+      ],
+      "collider_centre": [
+        0.016,
+        1.402,
+        0.23
+      ],
+      "collider_extents": [
+        2.2,
+        1.534,
+        0.565
+      ]
+    },
+    "roof_front_brick6": {
+      "display_name": "Gable End, 3 wide",
+      "model": "res://assets/buildings/Roof_Front_Brick6.gltf",
+      "category": "roof",
+      "anchor": "edge",
+      "size_cells": [
+        3,
+        1
+      ],
+      "collider_centre": [
+        0.001,
+        2.126,
+        0.23
+      ],
+      "collider_extents": [
+        3.347,
+        2.258,
+        0.565
+      ]
+    },
+    "stairs_exterior_straight": {
+      "display_name": "Stone Steps",
+      "model": "res://assets/buildings/Stairs_Exterior_Straight.gltf",
+      "category": "stair",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.398,
+        -0.038
+      ],
+      "collider_extents": [
+        1.0,
+        0.602,
+        1.039
+      ]
+    },
+    "stair_interior_simple": {
+      "display_name": "Staircase",
+      "model": "res://assets/buildings/Stair_Interior_Simple.gltf",
+      "category": "stair",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        2
+      ],
+      "collider_centre": [
+        0.003,
+        1.507,
+        -2.275
+      ],
+      "collider_extents": [
+        0.838,
+        1.517,
+        2.31
+      ]
+    },
+    "prop_woodenfence_single": {
+      "display_name": "Fence",
+      "model": "res://assets/buildings/Prop_WoodenFence_Single.gltf",
+      "category": "fence",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.001,
+        0.391,
+        0.0
+      ],
+      "collider_extents": [
+        1.032,
+        0.419,
+        0.06
+      ]
+    },
+    "prop_woodenfence_extension1": {
+      "display_name": "Fence, Weathered",
+      "model": "res://assets/buildings/Prop_WoodenFence_Extension1.gltf",
+      "category": "fence",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.01,
+        0.391,
+        -0.0
+      ],
+      "collider_extents": [
+        1.023,
+        0.419,
+        0.055
+      ]
+    },
+    "prop_woodenfence_extension2": {
+      "display_name": "Fence, Broken",
+      "model": "res://assets/buildings/Prop_WoodenFence_Extension2.gltf",
+      "category": "fence",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.019,
+        0.391,
+        -0.0
+      ],
+      "collider_extents": [
+        1.014,
+        0.419,
+        0.055
+      ]
+    }
+  }
+}
