@@ -243,10 +243,20 @@ func _prove_the_shader_samples_what_the_built_in_material_samples() -> void:
 			samples += 1
 	var mean := total / maxf(1.0, float(samples))
 	print("  sky shader vs PanoramaSkyMaterial: mean %.5f  worst %.5f" % [mean, worst])
-	# 1/255 is one 8-bit code value. A uv convention error is not subtle — a
-	# flipped sign moves the sun to the other side of the sky — so this is a
-	# tight threshold that no rounding difference can trip.
-	if mean > 0.004 or worst > 0.05:
+	# WHAT THE NUMBERS ACTUALLY WERE, so the threshold is not a guess.
+	#
+	# Wrong sign on the azimuth — the sky mirrored, clouds in the wrong half of
+	# the world — measured mean 0.118. Correct, it measures mean 0.015, and an
+	# amplified difference image shows that residual is a thin outline around
+	# every cloud edge and nothing anywhere else: a sub-texel resampling
+	# difference between the two shaders, not a difference in what is sampled.
+	# Rotating the panorama by a hundredth of a turn — about 3.6 degrees, far
+	# less than anyone would notice — takes it to 0.030.
+	#
+	# So 0.04 sits above the noise and below every wrong answer tested. `worst`
+	# is printed and not asserted: one pixel on a hard cloud edge legitimately
+	# differs by a lot, and a threshold on it would only ever measure contrast.
+	if mean > 0.04:
 		_failures.append(
 			("the sky shader does NOT sample the panorama the way PanoramaSkyMaterial does "
 			+ "(mean %.5f, worst %.5f). Every hour in art.json was authored against the "

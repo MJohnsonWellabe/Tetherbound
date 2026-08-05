@@ -72,7 +72,15 @@ uniform vec3 overcast_tint = vec3(1.0);
 uniform float flash = 0.0;
 
 void sky() {
-	float phi = atan(EYEDIR.x, EYEDIR.z) * (1.0 / (2.0 * PI)) + 0.5;
+	// NEGATED, and that sign is the whole of D18 in one character. Written the
+	// obvious way round — atan(x, z) — the sky renders MIRRORED: the same
+	// panorama, the same clouds, in the wrong half of the world, which is
+	// completely invisible in a still frame of a sky nobody has memorised and
+	// which would have put the moon on the opposite side from the moonlight.
+	// The equivalence check in tools/preview_weather.gd measured it at mean
+	// 0.118 against the built-in material and 0.015 with the sign corrected;
+	// nothing else about the frame would have said so.
+	float phi = -atan(EYEDIR.x, EYEDIR.z) * (1.0 / (2.0 * PI)) + 0.5;
 	float theta = acos(clamp(EYEDIR.y, -1.0, 1.0)) * (1.0 / PI);
 	vec3 a = texture(sky_a, vec2(phi + rot_a, theta)).rgb * energy_a;
 	vec3 b = texture(sky_b, vec2(phi + rot_b, theta)).rgb * energy_b;
