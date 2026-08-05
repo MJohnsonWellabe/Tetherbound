@@ -10,11 +10,26 @@ to violate by accident.
 
 ## Your job this iteration
 
-1. Read `prd.json`. Pick the **lowest-numbered story with `passes: false`** whose
-   milestone's dependencies are met. One story. Not two.
-2. Implement it.
-3. Get it through its gate.
-4. Update `prd.json` and commit.
+1. Read `prd.json`. Find the **lowest-numbered milestone that still has any story
+   with `passes: false`**. That milestone is your iteration. Not two milestones.
+2. Make every one of its stories true in the running game.
+3. Produce **one** evidence session covering that milestone, and put it through
+   **one** blind judge.
+4. Update `prd.json` — flipping each story according to the judge's per-bullet
+   verdict — and commit.
+
+**A milestone, not a story.** The stories are the granularity the judge *scores*
+at; the milestone is the granularity it *runs* at. A judge reads one transcript
+and answers every acceptance bullet from it, so a loop that took one bullet per
+iteration would boot the game, drive a full session and spawn a judge in order
+to flip a single line — twenty-one times over for M8. The per-bullet rows exist
+so that a partial pass is recorded honestly: a judge that meets four bullets and
+refuses the fifth leaves four `true` and one `false`, and the next iteration
+picks the milestone up again knowing exactly what is outstanding.
+
+If some of the milestone's stories are already `true`, you are finishing it, not
+starting it. Read their `review` paths first — the refusal that left them false
+is the brief.
 
 If the story is already implemented but never gated — which is true of most of
 M0–M9 — then your job is the **evidence and the gate**, not new code. Check

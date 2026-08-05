@@ -79,7 +79,13 @@
     "sun_angle_max_deg": 24.0,
     "sun_curve": 0.18,
     "_comment_panorama": "An HDRI panorama, when the time of day names one. The procedural gradient below is the FALLBACK and stays because a missing texture should degrade to the old sky rather than to a black void. The critic measured the procedural sky's horizontal variation at 0.020 against Palworld's 0.140-0.289 and said the build sky 'contributes nothing' — a ProceduralSkyMaterial can make a vertical gradient and a soft sun blob and nothing else, ever. No amount of tuning puts a cloud in it.",
-    "panorama": "res://assets/environment/sky/day.hdr"
+    "panorama": "res://assets/environment/sky/day.hdr",
+    "_comment_rotation": "Degrees the panorama is spun about the vertical axis. Exists because dawn REUSES the sunset HDRI: a sunrise sky and a sunset sky are the same photograph seen from the other side, so `dawn` names golden.hdr at 180 degrees and puts its own sun disc where its DirectionalLight is coming from. Without this the light would rake from the east while the bright patch of sky sat in the west, which is the kind of mismatch D18 is about — verify it in a frame rather than trusting the number.",
+    "rotation_deg": 0.0,
+    "_comment_overcast": "The cloud dome that WEATHER draws over whatever sky the hour picked, and how bright it is at this hour. One overcast HDRI serves cloudy, rain, storm and fog; `overcast_energy` and `overcast_tint` are what make the same photograph read as a grey afternoon at noon and as a starless lid at midnight. Blended in by the `overcast` knob in the `weather` block below.",
+    "overcast_panorama": "res://assets/environment/sky/overcast.hdr",
+    "overcast_energy": 1.0,
+    "overcast_tint": "#ffffff"
   },
   "sun": {
     "_comment": "One directional light. `pitch` well above the horizon so shadows are short and readable under a top-down-ish combat camera; long raking shadows look dramatic in a screenshot and hide the opponent in a fight.",
@@ -87,6 +93,8 @@
     "yaw_deg": -40.0,
     "energy": 1.35,
     "colour": "#fff6e6",
+    "_comment_angular": "Degrees of angular width for the light source, which is what makes a shadow edge soften with distance. Stated in the base block rather than left to the code default so that every named hour HAS the key: the day/night cycle interpolates between two hours, and a value only one of them declares cannot be interpolated. The moon is a much wider soft source than the sun, and that difference is most of why moonlight reads as moonlight.",
+    "angular_distance": 0.6,
     "shadow_max_distance": 280.0,
     "_comment_shadow_fade": "Fraction of `shadow_max_distance` at which shadows start dissolving, and whether cascade splits are blended. Both exist to kill the same artefact: the critic found 'a hard shadow-distance cutoff as a horizontal line across 04'. Raising the distance alone only moves the line and costs resolution everywhere nearer, so the distance moved a little and the EDGE became a gradient.",
     "shadow_fade_start": 0.68,
@@ -121,11 +129,84 @@
   },
   "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above.",
   "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it — 46.8% of the image pixel-for-pixel the same — because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",
+  "_comment_times_at_hour": "M10: each hour now states WHERE ON THE CLOCK IT SITS, and `scripts/world/sky_cycle.gd` runs a clock across them. Between two named hours every number here is INTERPOLATED — energies, colours, fog, exposure — and the sky cross-fades between the two panoramas in a sky shader. So these four are keyframes on a curve, not four separate presets, and the spacing between them is the schedule: the meadow spends seven and a half hours drifting from `day` towards `golden` and only three and a half getting there from `dawn`, because MA-05 measured `05-spawn-low-sun` as the one frame that nearly carried the key art and recommended shipping golden hour as the default look. With a cycle that recommendation becomes a scheduling decision, and this is where it is made — along with `clock.start_hour` in data/config/weather.json, which is set to late afternoon so a session OPENS in that light.",
+  "_comment_times_yaw": "Yaw runs -66 at dusk through -66 at midnight, so the moon sits where the sun set, and swings to +114 for dawn — 180 degrees round, matching the 180-degree `rotation_deg` on dawn's reused sunset panorama. `day` and `golden` keep the exact pitch, yaw, energy and colour they were tuned to; an hour asked for by name renders bit-for-bit what it rendered before this milestone, which is what keeps tools/survey.gd comparable with every earlier contact sheet.",
   "times": {
+    "night": {
+      "_comment": "Moonlit, clear. The light is a wide, cold, dim disc high overhead: `angular_distance` 2.2 against the sun's 0.6 is what makes the shadow edges go soft, and a high pitch keeps them short so a creature is still readable in a fight. NOT a dimmed day — day.hdr has a sun in it and a blue-scattered dome, and no amount of energy reduction turns that into a night sky. This one has stars, a moon and a moonpath.",
+      "_comment_readable": "Deliberately not dark-for-the-sake-of-it. §24 wants night to be a different DANGER, not a screen you cannot read; MA-05's complaint was too little value variation, and answering it with a black frame would be the same failure at the other end. Exposure is raised and the ambient is a real deep blue so shaded ground still has a colour, while the sun energy drops by a factor of eight — the RANGE moves, not just the level.",
+      "at_hour": 0.0,
+      "sun": {
+        "pitch_deg": -62.0,
+        "yaw_deg": -66.0,
+        "energy": 0.17,
+        "colour": "#93aae0",
+        "angular_distance": 2.2,
+        "shadow_normal_bias": 2.6
+      },
+      "sky": {
+        "panorama": "res://assets/environment/sky/night.hdr",
+        "rotation_deg": 0.0,
+        "energy": 0.26,
+        "overcast_energy": 0.09,
+        "overcast_tint": "#4a5a86",
+        "top_colour": "#0a1224",
+        "horizon_colour": "#1b2743",
+        "ground_horizon_colour": "#1b2743",
+        "ground_bottom_colour": "#080d18",
+        "sun_angle_max_deg": 10.0,
+        "sun_curve": 0.35
+      },
+      "environment": {
+        "exposure": 1.5,
+        "ambient_energy": 0.95,
+        "ambient_colour": "#40548a",
+        "ambient_sky_contribution": 0.3,
+        "fog_colour": "#212f4e",
+        "fog_density": 0.0011,
+        "aerial_perspective": 0.3
+      }
+    },
+    "dawn": {
+      "_comment": "First light. Reuses golden.hdr spun 180 degrees — a sunrise and a sunset are the same photograph from the other side — with the key cooled and pinked rather than amber, and a little more haze, because the one thing a morning has that an evening does not is ground mist.",
+      "at_hour": 6.2,
+      "sun": {
+        "pitch_deg": -7.0,
+        "yaw_deg": 114.0,
+        "energy": 1.15,
+        "colour": "#ffcbb0",
+        "angular_distance": 1.0,
+        "shadow_normal_bias": 1.9
+      },
+      "sky": {
+        "panorama": "res://assets/environment/sky/golden.hdr",
+        "rotation_deg": 180.0,
+        "energy": 0.95,
+        "overcast_energy": 0.5,
+        "overcast_tint": "#d9cfd6",
+        "top_colour": "#33608f",
+        "horizon_colour": "#e6bfae",
+        "ground_horizon_colour": "#d8b3a4",
+        "ground_bottom_colour": "#454338",
+        "sun_angle_max_deg": 30.0,
+        "sun_curve": 0.1
+      },
+      "environment": {
+        "exposure": 1.08,
+        "ambient_energy": 1.2,
+        "ambient_colour": "#9aa8cc",
+        "ambient_sky_contribution": 0.45,
+        "fog_colour": "#cfc3bd",
+        "fog_density": 0.0014,
+        "aerial_perspective": 0.28
+      }
+    },
     "day": {
-      "_comment": "Mid-morning, high summer, clear. The default, and what the biome is designed around."
+      "_comment": "Mid-morning, high summer, clear. The default, and what the biome is designed around.",
+      "at_hour": 11.0
     },
     "golden": {
+      "at_hour": 18.0,
       "_comment": "Late afternoon. Long shadows, warm key, the sky's blue pushed down and the horizon lifted to amber. This is the mood the key art's own sunset panel is selling, and it is the one hour where the meadow gets its warm end of the palette for free.",
       "sun": {
         "pitch_deg": -13.0,
@@ -142,7 +223,9 @@
         "sun_angle_max_deg": 32.0,
         "sun_curve": 0.09,
         "energy": 1.0,
-        "panorama": "res://assets/environment/sky/golden.hdr"
+        "panorama": "res://assets/environment/sky/golden.hdr",
+        "overcast_energy": 0.62,
+        "overcast_tint": "#e8cbb4"
       },
       "environment": {
         "fog_colour": "#e2bb92",
@@ -152,6 +235,102 @@
         "ambient_sky_contribution": 0.45,
         "exposure": 1.0
       }
+    }
+  },
+  "_comment_weather": "WHAT EACH WEATHER LOOKS LIKE. GAME_DESIGN.md §24 names five: clear, cloudy, rain, thunderstorms, fog. This block is the LOOK half of them; the behaviour half — how long they last, how they are chosen, and which creatures they bring out — is data/config/weather.json, keyed by the same five ids. The split is the same one the rest of the project uses: a value that could be argued about on a screenshot lives here, a value that changes what happens lives there.",
+  "_comment_weather_shape": "Deliberately NOT the same shape as a time-of-day override. An hour states absolute values because it IS a look; a weather states MULTIPLIERS and MIX AMOUNTS because it has to sit on top of whichever of the four hours is currently underneath it. `sun_energy: 0.35` means a third of whatever this hour's sun was, so one rain entry darkens a noon and a midnight correctly instead of needing twenty combinations written out. Colours are `_mix` amounts towards a stated colour for the same reason: mixing 60% of a grey into a midnight blue leaves it blue, while an absolute grey would turn midnight into an afternoon.",
+  "_comment_weather_overcast": "`overcast` is how much of the cloud dome (sky.overcast_panorama) is drawn over the hour's own sky, cross-faded in a sky shader. `overcast_energy` multiplies the hour's own `sky.overcast_energy`, which is how the SAME grey cloud photograph reads as an overcast afternoon at 11:00 and as a starless lid at midnight.",
+  "_comment_weather_renderer": "NO VOLUMETRIC FOG ANYWHERE IN THIS BLOCK, and that is a constraint rather than taste. D06: the survey and previews are forced onto the Compatibility renderer because Terrain3D segfaults under lavapipe, and Compatibility has no volumetric fog, no SSAO and no screen-space or depth reads. Everything here is depth fog, tonemap, light energy and a sky texture — all of which render in both pipelines, so what a critic judges is what the game ships. Godrays through cloud, wet-surface reflections and rain splashes on the ground all need reads that are not available and are deliberately absent rather than half-present.",
+  "weather": {
+    "clear": {
+      "_comment": "The identity. Every multiplier is 1 and every mix is 0, so `clear` is exactly the hour with nothing on top of it — which is also what makes it safe as the fallback when a weather id is misspelt.",
+      "overcast": 0.0,
+      "overcast_energy": 1.0,
+      "sun_energy": 1.0,
+      "sun_softness": 0.0,
+      "sun_colour": "#ffffff",
+      "sun_mix": 0.0,
+      "ambient_energy": 1.0,
+      "ambient_colour": "#ffffff",
+      "ambient_mix": 0.0,
+      "exposure": 1.0,
+      "fog_density": 1.0,
+      "fog_colour": "#ffffff",
+      "fog_mix": 0.0,
+      "fog_sky_affect": 0.0,
+      "aerial": 1.0
+    },
+    "cloudy": {
+      "_comment": "Cloud cover with no water in it. The key drops by a third and widens — a cloud is a very large light source, which is the whole reason overcast shadows are soft — and the ambient comes UP, because the shadows a cloudy day loses to contrast it gets back as fill. Net value range narrows; the picture does not get darker.",
+      "overcast": 0.88,
+      "overcast_energy": 1.0,
+      "sun_energy": 0.62,
+      "sun_softness": 2.4,
+      "sun_colour": "#e8eef6",
+      "sun_mix": 0.45,
+      "ambient_energy": 1.2,
+      "ambient_colour": "#b8c4d0",
+      "ambient_mix": 0.4,
+      "exposure": 0.98,
+      "fog_density": 2.2,
+      "fog_colour": "#b9c3cc",
+      "fog_mix": 0.55,
+      "fog_sky_affect": 0.12,
+      "aerial": 1.3
+    },
+    "rain": {
+      "_comment": "Rain. The particles are in weather.json; this is the light it falls through. Key down to a quarter and very soft — there is no sun disc in a rainstorm, only a bright patch — and the fog pulled hard towards a cold grey so distance closes in. `fog_sky_affect` is up at 0.35: the note on fog_sky_affect above warns that tinting the sky produces a hard grey band, and that is true at low densities where fog and sky disagree; under a full cloud dome they already agree, and letting fog reach the sky is what stops the horizon reading as a cut-out.",
+      "overcast": 1.0,
+      "overcast_energy": 0.72,
+      "sun_energy": 0.3,
+      "sun_softness": 3.4,
+      "sun_colour": "#cfdae6",
+      "sun_mix": 0.65,
+      "ambient_energy": 1.05,
+      "ambient_colour": "#9fb0c0",
+      "ambient_mix": 0.55,
+      "exposure": 0.94,
+      "fog_density": 5.5,
+      "fog_colour": "#93a3b0",
+      "fog_mix": 0.75,
+      "fog_sky_affect": 0.35,
+      "aerial": 1.6
+    },
+    "storm": {
+      "_comment": "A thunderstorm: rain, harder, under a much darker lid, plus lightning. The flash is not in this block because it is a moment rather than a look — sky_cycle.gd rolls it from `lightning_per_minute` in weather.json and hands world_look a 0..1 scalar that lifts the sky and the ambient for a few frames. It is additive light, not a post-process, so it renders under Compatibility.",
+      "overcast": 1.0,
+      "overcast_energy": 0.42,
+      "sun_energy": 0.2,
+      "sun_softness": 4.0,
+      "sun_colour": "#b9c6d6",
+      "sun_mix": 0.75,
+      "ambient_energy": 0.9,
+      "ambient_colour": "#7f8fa2",
+      "ambient_mix": 0.65,
+      "exposure": 0.9,
+      "fog_density": 7.5,
+      "fog_colour": "#7d8b98",
+      "fog_mix": 0.8,
+      "fog_sky_affect": 0.45,
+      "aerial": 1.8
+    },
+    "fog": {
+      "_comment": "Meadow fog. The one weather that is mostly ONE number: density up by a factor of eighteen, which at art.json's 0.0006 base is still only 0.011 — enough to lose the far hills and keep the near field. Cover is partial rather than total because meadow fog sits under a sky rather than replacing it, and the light stays warmer and stronger than rain: fog is bright, which is the thing that most often gets it wrong.",
+      "overcast": 0.55,
+      "overcast_energy": 1.15,
+      "sun_energy": 0.55,
+      "sun_softness": 3.0,
+      "sun_colour": "#f0eee8",
+      "sun_mix": 0.5,
+      "ambient_energy": 1.35,
+      "ambient_colour": "#ccd2d4",
+      "ambient_mix": 0.5,
+      "exposure": 1.0,
+      "fog_density": 18.0,
+      "fog_colour": "#c9d0d2",
+      "fog_mix": 0.85,
+      "fog_sky_affect": 0.6,
+      "aerial": 2.0
     }
   },
   "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips — faking motion on top of that would fight the animation.",

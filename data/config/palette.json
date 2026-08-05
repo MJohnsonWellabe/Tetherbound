@@ -20,7 +20,19 @@
     "dusk_periwinkle": "#5a5c92",
     "night_plum": "#704f71"
   },
+  "_comment_accent": "TEAM TETHER'S COLOUR, spent in M13. Until now `accent` held one value and nothing in the game read it — `map_canvas.gd`, `ui_style.gd` and `release_screen.gd` each say in a comment that they are deliberately NOT using it, which is the reservation working, but a reserved colour that is never spent is just an unused key. `scripts/trainers/tether_dress.gd` is the one reader, and it is the only file allowed to be one.\n\nFOUR VALUES, ONE ACCENT. `tether_oxblood` is unchanged and is still the definition; the other three are the same accent at the three other jobs it has to do, because one hex cannot be a banner, a machine and a live cable at once. Every one of them is under the same reservation: never on a friendly or neutral element, never in the HUD, never on the meadow.",
+
   "accent": {
-    "tether_oxblood": "#332228"
+    "_comment_oxblood": "THE DEFINITION, unchanged since it was reserved. Sampled off the key art's banner in shadow. As an albedo under the meadow's 1.15-energy sun it renders near-black with a plum cast, which is right for deep folds of cloth and wrong for everything else — a whole banner at this value reads as a black rectangle at forty metres, and the accent's entire job is to be readable at distance. Hence the three below.",
+    "tether_oxblood": "#332228",
+
+    "_comment_cloth": "THE BANNER. The same hue driven up in value and saturation until it survives being multiplied by a directional light. The file's own `_caveat` warns that a painted-board colour is usually too saturated once a real light multiplies it; this is that caveat running the other way, and it was set by rendering a banner at the Warden's post and looking at it, not by picking a number. Bright enough to read as blood at distance, dark enough that it is never mistaken for the meadow's flower gold or the HUD's warm amber.",
+    "tether_cloth": "#7a2331",
+
+    "_comment_iron": "THE MACHINERY. Barricades, pylons, cable drums and cage frames. Deliberately NOT oxblood: §28 asks for old stone and natural forms CONTRASTED with machinery, and a stronghold where the equipment is the same colour as the flags has no contrast in it. A cold near-black with a blue cast, which is the one value in this palette that appears nowhere in the meadow and nowhere on a building.",
+    "tether_iron": "#1d2126",
+
+    "_comment_live": "THE TETHER ITSELF. The cable that holds a creature, and the only thing in the game allowed to emit this colour. It is the accent pushed past cloth into something that is obviously powered rather than dyed, so a player who has learned that oxblood means Team Tether reads a glowing one as Team Tether doing something. Goes dark the moment the tether is cut.",
+    "tether_live": "#c8384a"
   }
 }

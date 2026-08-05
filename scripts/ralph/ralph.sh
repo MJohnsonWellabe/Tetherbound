@@ -36,22 +36,32 @@ remaining() { python3 -c "
 import json;d=json.load(open('$PRD'))
 print(sum(1 for s in d['stories'] if not s['passes']))"; }
 
-next_story() { python3 -c "
+# Milestones, not stories. An iteration is one milestone: one evidence session,
+# one judge, every bullet answered from the same transcript. See prompt.md.
+milestones_left() { python3 -c "
 import json;d=json.load(open('$PRD'))
-o=[s for s in d['stories'] if not s['passes']]
-print(f\"{o[0]['id']}  {o[0]['story']}\" if o else '')"; }
+print(len({s['milestone'] for s in d['stories'] if not s['passes']}))"; }
 
-echo "Ralph: $(remaining) stories ungated, max $MAX iterations"
+next_milestone() { python3 -c "
+import json;d=json.load(open('$PRD'))
+o={s['milestone'] for s in d['stories'] if not s['passes']}
+if not o: print(''); raise SystemExit
+m=min(o, key=lambda x:int(x[1:]))
+rows=[s for s in d['stories'] if s['milestone']==m]
+open_=[s for s in rows if not s['passes']]
+print(f\"{m} {rows[0]['milestone_title']} — {len(open_)}/{len(rows)} bullets open\")"; }
+
+echo "Ralph: $(milestones_left) milestones / $(remaining) bullets ungated, max $MAX iterations"
 
 for i in $(seq 1 "$MAX"); do
 	left="$(remaining)"
 	if [ "$left" -eq 0 ]; then
-		echo "Ralph: backlog is fully gated after $((i-1)) iterations"
+		echo "Ralph: every milestone is gated, after $((i-1)) iterations"
 		exit 0
 	fi
 
 	echo ""
-	echo "=== iteration $i/$MAX — $left ungated — next: $(next_story)"
+	echo "=== iteration $i/$MAX — $(milestones_left) milestones left — next: $(next_milestone)"
 
 	# A fresh process every time. Deliberately NOT --continue and NOT --resume:
 	# a loop that carries its own context is just one long agent, and loses the
@@ -69,9 +79,9 @@ for i in $(seq 1 "$MAX"); do
 	# The loop's own honesty check. An iteration that commits nothing and gates
 	# nothing has not moved, and running nine more of it will not help.
 	if [ "$(remaining)" -eq "$left" ]; then
-		echo "Ralph: iteration $i gated nothing (still $left)"
+		echo "Ralph: iteration $i gated nothing (still $left bullets open)"
 	fi
 done
 
 echo ""
-echo "Ralph: stopped after $MAX iterations with $(remaining) stories ungated"
+echo "Ralph: stopped after $MAX iterations with $(milestones_left) milestones / $(remaining) bullets ungated"
