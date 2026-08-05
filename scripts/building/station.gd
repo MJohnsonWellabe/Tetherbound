@@ -34,14 +34,21 @@ extends RefCounted
 ##     `staff()`, the rule has been broken and the design decision has to go back
 ##     to the owner rather than into this file.
 ##
-## COSTS ARE NOT HERE, AND THIS IS THE SEAM. `GAME_DESIGN.md` §20 has building
-## consume Wood/Stone/Fiber, and D12 records why nothing consumes anything yet:
-## there is no inventory to spend from. When there is one, the cost belongs on
-## the piece definition in `pieces.json` beside `model` and `anchor`, and the
-## check belongs in `build_mode._check()` beside "too far away" and "ground is
-## too uneven" — because a refusal the player must read is a placement refusal,
-## not a station concern. No currency is invented here and no empty `cost` key is
-## left lying around to be mistaken for a working one.
+## COSTS ARE NOT HERE, AND THIS WAS THE SEAM. `GAME_DESIGN.md` §20 has building
+## consume Wood/Stone/Fiber, and this file used to record why nothing did: there
+## was no inventory to spend from. There is one now. The cost sits on the piece
+## definition in `pieces.json` beside `model` and `anchor`, and the check sits in
+## `build_mode._check()` beside "too far away" and "ground is too uneven" —
+## because a refusal the player must read is a placement refusal, not a station
+## concern. Nothing about that arrived in this file, which is the point of having
+## called the seam in advance.
+##
+## WHAT A STATION MAY SPEND IS DIFFERENT, and three of the stations below do it:
+## a workbench spends materials to make a tool, a berry plot spends a berry to
+## plant one. Those are the STATION'S OWN transaction rather than the price of
+## putting it down, and each takes the inventory as an argument rather than going
+## looking for one — so a station can be exercised with a bag built by a test and
+## never has to know where the real one lives.
 
 
 ## The child node a station is attached as. One name, so `of()` and the tests and
@@ -58,19 +65,40 @@ const KEY := "station"
 ## reported as one rather than placing a piece that silently does nothing.
 const BEHAVIOUR_REST := "rest"
 const BEHAVIOUR_HEARTH := "hearth"
+const BEHAVIOUR_WORKBENCH := "workbench"
+const BEHAVIOUR_STORAGE := "storage"
+const BEHAVIOUR_BERRY_PLOT := "berry_plot"
 
-## STILL TO COME, and deliberately not stubbed. An empty station that places and
-## does nothing is worse than no station: it looks finished in a palette, passes
-## every test, and is the "written and never called" shape this project keeps
-## getting bitten by. Each of these is one entry in the match below plus a class,
-## on the day the system it feeds exists:
+## The three above this line used to be a "still to come" list, deliberately not
+## stubbed, because "an empty station that places and does nothing is worse than
+## no station: it looks finished in a palette, passes every test, and is the
+## 'written and never called' shape this project keeps getting bitten by." Each
+## waited on something real, and each of those things now exists:
 ##
-##   - `workbench`  — M8. Waiting on crafting recipes; a bench with nothing to
-##                    craft is a decoration with extra steps.
-##   - `storage`    — M9. Waiting on the slot/stack inventory container, which is
-##                    being built now; a chest is a view onto one, not a new one.
-##   - `berry_plot` — M8/§21 farming. Waiting on plant/grow/harvest and a berry
-##                    item to yield.
+##   - `workbench`  — waited on crafting recipes. `data/recipes/crafting.json`.
+##                    It also repairs, which §19 asks for and which needs no
+##                    recipes at all.
+##   - `storage`    — waited on the slot/stack inventory container.
+##                    `scripts/items/inventory.gd`. A chest is a VIEW onto one of
+##                    those, never a second kind of container.
+##   - `berry_plot` — waited on plant/grow/harvest and a berry item to yield.
+##                    `berries` is in items.json and the growth is below.
+##
+## The list is kept rather than deleted because the bar it set is the one any
+## future station has to clear.
+
+## The inventory a chest is made of, and the item table a recipe is priced in.
+##
+## `preload` at the top of the file rather than inside the classes: an inner
+## class that preloads its own copy is a second reference to the same script, and
+## the whole point of a chest holding an `inventory.gd` is that there is exactly
+## one kind of container in this game.
+const INVENTORY := preload("res://scripts/items/inventory.gd")
+
+## Where the workbench's recipes come from. Data, not code, for the reason
+## CLAUDE.md gives: what a thing costs will vary and must be rebalanceable
+## without touching a line of this file.
+const RECIPES_PATH := "res://data/recipes/crafting.json"
 
 
 ## Build the station a piece definition asks for, or null if it asks for none.
@@ -89,6 +117,12 @@ static func create(definition: Dictionary) -> Node:
 			station = RestStation.new()
 		BEHAVIOUR_HEARTH:
 			station = Hearth.new()
+		BEHAVIOUR_WORKBENCH:
+			station = Workbench.new()
+		BEHAVIOUR_STORAGE:
+			station = Storage.new()
+		BEHAVIOUR_BERRY_PLOT:
+			station = BerryPlot.new()
 		_:
 			push_error("build piece asks for station behaviour '%s', which does not exist" % behaviour)
 			return null
@@ -442,3 +476,530 @@ class Hearth extends Station:
 		if piece == null or flame_name.is_empty():
 			return null
 		return piece.find_child(flame_name, true, false) as Node3D
+
+
+## A workbench. Where tools are made and where they are mended.
+##
+## §19 gives it two jobs and this class does both:
+##
+##   1. REPAIR, and it is FREE. "Tools have durability; repair for free at
+##      appropriate station." The station is a PLACE, not a price, so `repair()`
+##      takes no cost argument and does no partial restore — `item_stack.repair()`
+##      already knows what repairing means and this only decides where it may
+##      happen.
+##   2. CRAFT, from `data/recipes/crafting.json`. Five recipes, all of them a
+##      tool, all of them priced in Wood/Stone/Fiber.
+##
+## THE RULE THIS CLASS WAS NEARLY THE BREACH OF: "Do not ship a workbench that
+## places and does nothing." A bench with no recipes is a decoration with extra
+## steps, and it would have been very easy to put one down and call the milestone
+## finished. So there are recipes, and there is a repair, and both are exercised
+## by `tests/test_build_costs.gd`.
+##
+## PALS DO NOT WORK HERE. There is no `assign`, no `staff`, no worker slot and no
+## throughput. `craft()` is the TRAINER'S verb: it takes an inventory and spends
+## from it, it happens instantly, and there is nothing for a creature to be put
+## into. `GAME_DESIGN.md` §20: "Pals do not work jobs."
+class Workbench extends Station:
+
+	signal crafted(recipe_id: String, item_id: String, count: int)
+	signal repaired(slot: int)
+
+	## Refusal tokens, not sentences. `party.gd`'s idiom.
+	const REFUSED_NO_RECIPE := "no_such_recipe"
+	const REFUSED_WRONG_STATION := "wrong_station"
+	const REFUSED_NO_INVENTORY := "no_inventory"
+	const REFUSED_NOT_ENOUGH := "not_enough"
+	const REFUSED_NO_ROOM := "no_room"
+	const REFUSED_NOTHING_TO_MEND := "nothing_to_mend"
+
+	static var _recipe_table: Dictionary = {}
+
+	var _refusal: String = ""
+
+	func last_refusal() -> String:
+		return _refusal
+
+	## Every recipe this bench can make, as `{recipe_id: recipe}`.
+	##
+	## Filtered by the recipe's own `station` key against this piece's id, so a
+	## later forge or cooking fire is a data entry rather than a code change, and
+	## so a recipe that names a station nobody built simply does not appear.
+	func recipes() -> Dictionary:
+		var out: Dictionary = {}
+		for id: String in recipe_table().keys():
+			var recipe: Dictionary = recipe_table()[id]
+			if str(recipe.get("station", "")) == piece_id:
+				out[id] = recipe
+		return out
+
+	func recipe(recipe_id: String) -> Dictionary:
+		var entry: Variant = recipes().get(recipe_id, {})
+		return entry if entry is Dictionary else {}
+
+	## What a recipe costs, as `{item_id: count}`.
+	func costs(recipe_id: String) -> Dictionary:
+		var entry: Variant = recipe(recipe_id).get("costs", {})
+		var out: Dictionary = {}
+		if entry is Dictionary:
+			for item: String in (entry as Dictionary).keys():
+				out[item] = int((entry as Dictionary)[item])
+		return out
+
+	## What is missing before `purse` could pay, as `{item_id: shortfall}`. Empty
+	## means it can. Separate from `can_craft()` because a palette wants to draw
+	## "3 more Wood", not "no".
+	func shortfall(purse: Object, recipe_id: String) -> Dictionary:
+		var out: Dictionary = {}
+		if purse == null or not purse.has_method("count_of"):
+			return out
+		for item: String in costs(recipe_id).keys():
+			var short: int = int(costs(recipe_id)[item]) - int(purse.call("count_of", item))
+			if short > 0:
+				out[item] = short
+		return out
+
+	func can_craft(purse: Object, recipe_id: String) -> bool:
+		_refusal = ""
+		if recipe(recipe_id).is_empty():
+			_refusal = REFUSED_NO_RECIPE if not recipe_table().has(recipe_id) else REFUSED_WRONG_STATION
+			return false
+		if purse == null or not purse.has_method("count_of"):
+			_refusal = REFUSED_NO_INVENTORY
+			return false
+		if not shortfall(purse, recipe_id).is_empty():
+			_refusal = REFUSED_NOT_ENOUGH
+			return false
+		return true
+
+	## Make one. ALL OR NOTHING, the same discipline `inventory.add()` keeps: the
+	## materials are only spent once the output is known to fit, so a full bag
+	## cannot eat the wood and hand back nothing.
+	func craft(purse: Object, recipe_id: String) -> bool:
+		if not can_craft(purse, recipe_id):
+			return false
+		var made := str(recipe(recipe_id).get("makes", ""))
+		var count := maxi(1, int(recipe(recipe_id).get("count", 1)))
+		if not bool(purse.call("add", made, count)):
+			_refusal = REFUSED_NO_ROOM
+			return false
+		for item: String in costs(recipe_id).keys():
+			if not bool(purse.call("remove", item, int(costs(recipe_id)[item]))):
+				# Cannot happen after the shortfall check, and is handled anyway:
+				# taking the tool back is cheaper than shipping a duplication bug.
+				purse.call("remove", made, count)
+				_refusal = REFUSED_NOT_ENOUGH
+				return false
+		crafted.emit(recipe_id, made, count)
+		return true
+
+	## Free repair, §19. `bag` is the `inventory.gd` instance, because a slot index
+	## is meaningless to anything else.
+	func repair(bag: Object, slot: int) -> bool:
+		_refusal = ""
+		if bag == null or not bag.has_method("repair"):
+			_refusal = REFUSED_NO_INVENTORY
+			return false
+		if not bool(bag.call("repair", slot)):
+			_refusal = str(bag.call("last_refusal"))
+			return false
+		repaired.emit(slot)
+		return true
+
+	## Mend everything worn in one go. Returns how many tools were mended.
+	##
+	## Because free repair with a per-slot click is a chore that teaches nothing:
+	## the interesting decision is whether to walk back to the bench, and that
+	## decision is already made by the time the player is standing at it.
+	func repair_all(bag: Object) -> int:
+		_refusal = ""
+		if bag == null or not bag.has_method("slots"):
+			_refusal = REFUSED_NO_INVENTORY
+			return 0
+		var mended := 0
+		var slots: Array = bag.call("slots")
+		for i in slots.size():
+			var stack: Variant = slots[i]
+			if stack == null:
+				continue
+			var held: RefCounted = stack
+			if not bool(held.call("is_durable")):
+				continue
+			if int(held.get("durability")) >= int(held.call("max_durability")):
+				continue
+			if bool(bag.call("repair", i)):
+				mended += 1
+				repaired.emit(i)
+		if mended == 0:
+			_refusal = REFUSED_NOTHING_TO_MEND
+		return mended
+
+	## A bench holds no state of its own: what it can make is in the catalogue and
+	## what it has made is in the player's bag. `save_state()` is left at the
+	## Station default deliberately, so a reloaded bench is byte-for-byte a fresh
+	## one — which is exactly right and is why there is no override here.
+
+	## Memoised on the script, like `item_defs.table()`, so five recipes are
+	## parsed once however many benches the player builds.
+	static func recipe_table() -> Dictionary:
+		if not _recipe_table.is_empty():
+			return _recipe_table
+		var file := FileAccess.open(RECIPES_PATH, FileAccess.READ)
+		if file == null:
+			push_error("recipes missing at %s" % RECIPES_PATH)
+			return {}
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		if not parsed is Dictionary:
+			push_error("recipes are not readable: %s" % RECIPES_PATH)
+			return {}
+		var out: Dictionary = {}
+		var entries: Variant = (parsed as Dictionary).get("recipes", {})
+		if entries is Dictionary:
+			for id: String in (entries as Dictionary).keys():
+				if not id.begins_with("_"):
+					out[id] = (entries as Dictionary)[id]
+		_recipe_table = out
+		return _recipe_table
+
+
+## A chest. Somewhere to put things down.
+##
+## §20 lists "storage" among what a base is for, and this is that and nothing
+## more: a second `inventory.gd` with its own slot count, sitting in the world.
+##
+## IT CANNOT HOLD A CREATURE, AND THAT IS STRUCTURAL RATHER THAN MISSING.
+## CLAUDE.md: "Player can own only five pals total. Never implement pal storage
+## beyond five." A chest is the single most obvious place that rule dies, so:
+##
+##   1. THE ONLY WAY IN IS `put(item_id: String, count: int)`. There is no
+##      overload that takes an Object, a Node, a pal instance or a record. A
+##      `String` is not a creature and cannot be made into one.
+##   2. That String goes straight to `inventory.add()`, which REFUSES any id that
+##      is not in `data/items/items.json` — `REFUSED_UNKNOWN_ITEM`. Nothing else
+##      can put a stack in.
+##   3. `items.json` contains no creature and, by its own header, may not: "Items
+##      never name a creature... an item that could hold a pal id is the first
+##      half of a pal box." `tests/test_build_costs.gd` asserts the item table and
+##      the species table are disjoint, so adding a `pal_bruno` item is a red
+##      build.
+##   4. This class has no `store`, `deposit`, `withdraw` or `release` verb that
+##      takes anything but an item id, and the same test asserts that too.
+##
+## So a pal cannot get in through a wrong argument, a stale id, a save file or a
+## data edit. It would take a new method, and that method would fail the tests
+## that exist to stop somebody writing it.
+class Storage extends Station:
+
+	signal changed()
+	## The contents at the moment the chest is destroyed, so they are ANNOUNCED
+	## rather than silently deleted. Whoever owns death satchels (§22) can catch
+	## this; `build_mode` refuses to remove a chest that still has something in it,
+	## which is the cheaper half of the same problem.
+	signal emptied(records: Array)
+
+	const REFUSED_NO_ROOM := "no_room"
+	const REFUSED_NOT_HELD := "not_held"
+
+	## Slots in the chest. TUNABLE, and it lives in the piece's station block in
+	## `pieces.json` rather than here.
+	var capacity: int = 12
+
+	var _items: RefCounted = null
+	var _refusal: String = ""
+
+	func _configured() -> void:
+		capacity = maxi(1, int(config.get("capacity", 12)))
+		_items = INVENTORY.new(capacity)
+
+	## The chest's inventory itself, so a UI can drive it with the same code it
+	## drives the trainer's with. A chest is a VIEW onto an inventory, never a
+	## second kind of container — which is the whole reason `inventory.gd` has a
+	## `slots` argument.
+	func contents() -> RefCounted:
+		return _items
+
+	func slot_count() -> int:
+		return 0 if _items == null else int(_items.call("slot_count"))
+
+	func is_empty() -> bool:
+		return _items == null or bool(_items.call("is_empty"))
+
+	func count_of(item_id: String) -> int:
+		return 0 if _items == null else int(_items.call("count_of", item_id))
+
+	func last_refusal() -> String:
+		return _refusal
+
+	## Put items in. `item_id` is a String and there is no other way in — see the
+	## numbered note above this class.
+	func put(item_id: String, count: int = 1) -> bool:
+		_refusal = ""
+		if _items == null:
+			_refusal = REFUSED_NO_ROOM
+			return false
+		if not bool(_items.call("add", item_id, count)):
+			_refusal = str(_items.call("last_refusal"))
+			return false
+		changed.emit()
+		return true
+
+	## Take items out.
+	func take(item_id: String, count: int = 1) -> bool:
+		_refusal = ""
+		if _items == null:
+			_refusal = REFUSED_NOT_HELD
+			return false
+		if not bool(_items.call("remove", item_id, count)):
+			_refusal = str(_items.call("last_refusal"))
+			return false
+		changed.emit()
+		return true
+
+	## Move a stack across from a bag, keeping its durability — the path a
+	## 40%-worn axe has to travel to end up in a chest still 40% worn.
+	func stow(stack: RefCounted) -> bool:
+		_refusal = ""
+		if _items == null or stack == null:
+			_refusal = REFUSED_NO_ROOM
+			return false
+		if not bool(_items.call("place", stack)):
+			_refusal = str(_items.call("last_refusal"))
+			return false
+		changed.emit()
+		return true
+
+	func save_state() -> Dictionary:
+		if _items == null:
+			return {}
+		var records: Array = _items.call("to_records")
+		return {} if records.is_empty() else {"items": records}
+
+	func load_state(state: Dictionary) -> void:
+		var records: Variant = state.get("items", [])
+		if not records is Array:
+			return
+		_items = INVENTORY.from_records(records as Array, capacity)
+		changed.emit()
+
+	func _release() -> void:
+		if _items == null:
+			return
+		var records: Array = _items.call("to_records")
+		if not records.is_empty():
+			push_warning("a storage station was removed holding %d stack(s)" % records.size())
+			emptied.emit(records)
+
+
+## A berry plot. §21: "Plant → wait → harvest. No watering chores."
+##
+## Three states and no more: nothing planted, growing, ripe. There is no water
+## meter, no fertiliser, no soil quality and no season — §21 says so in as many
+## words, and every one of those is a chore looking for a system to live in.
+##
+## IT KEEPS GROWING AFTER A HARVEST. Picking it returns the plot to GROWING
+## rather than to EMPTY, so a plot is planted once and then visited. Replanting
+## after every pick is precisely the watering chore §21 rules out, and a standing
+## supply of berries is what makes the plot worth its build cost when the meadow
+## already has 195 wild berry bushes in it.
+##
+## GROWTH IS WALL-CLOCK-FREE. It advances while the game is running and not while
+## it is closed, because the alternative — crediting real elapsed time on load —
+## is a system that has to be right about clock changes, and a player who comes
+## back to a ripe plot they did not watch grow has learnt nothing about the
+## timer. The half-grown state itself DOES survive a reload, which is the part
+## that matters: `save_state()` writes the seconds.
+##
+## NO PAL TENDS IT. There is no assignment, no worker and no speed-up for having
+## a creature nearby. CLAUDE.md: "Pals do not perform base jobs."
+class BerryPlot extends Station:
+
+	signal planted()
+	signal ripened()
+	signal picked(item_id: String, count: int)
+
+	const STATE_EMPTY := "empty"
+	const STATE_GROWING := "growing"
+	const STATE_RIPE := "ripe"
+
+	const REFUSED_ALREADY_PLANTED := "already_planted"
+	const REFUSED_NOTHING_PLANTED := "nothing_planted"
+	const REFUSED_NOT_RIPE := "not_ripe"
+	const REFUSED_NO_INVENTORY := "no_inventory"
+	const REFUSED_NO_SEED := "no_seed"
+	const REFUSED_NO_ROOM := "no_room"
+
+	## ALL TUNABLE, all from the piece's station block in `pieces.json`.
+	var seed_item: String = "berries"
+	var seed_count: int = 1
+	var crop_item: String = "berries"
+	var crop_count: int = 6
+	var grow_seconds: float = 240.0
+	## Fraction of the growth after which the plot stops looking like sprouts and
+	## starts looking like bushes.
+	var sprout_until: float = 0.4
+
+	var _state: String = STATE_EMPTY
+	var _grown: float = 0.0
+	var _refusal: String = ""
+
+	var _seedling: Node3D = null
+	var _growing: Node3D = null
+	var _ripe: Node3D = null
+
+	func _configured() -> void:
+		seed_item = str(config.get("seed_item", seed_item))
+		seed_count = maxi(0, int(config.get("seed_count", seed_count)))
+		crop_item = str(config.get("crop_item", crop_item))
+		crop_count = maxi(1, int(config.get("crop_count", crop_count)))
+		grow_seconds = maxf(1.0, float(config.get("grow_seconds", grow_seconds)))
+		sprout_until = clampf(float(config.get("sprout_until", sprout_until)), 0.0, 1.0)
+		_seedling = _stage(str(config.get("seedling_node", "Seedling")))
+		_growing = _stage(str(config.get("growing_node", "Growing")))
+		_ripe = _stage(str(config.get("ripe_node", "Ripe")))
+		_show()
+
+	func state() -> String:
+		return _state
+
+	func is_ripe() -> bool:
+		return _state == STATE_RIPE
+
+	func is_planted() -> bool:
+		return _state != STATE_EMPTY
+
+	## 0.0 to 1.0. What a progress ring draws, and what makes "half-grown" a thing
+	## anybody can check.
+	func growth() -> float:
+		if _state == STATE_RIPE:
+			return 1.0
+		if _state == STATE_EMPTY:
+			return 0.0
+		return clampf(_grown / grow_seconds, 0.0, 1.0)
+
+	func seconds_left() -> float:
+		return 0.0 if _state != STATE_GROWING else maxf(0.0, grow_seconds - _grown)
+
+	func last_refusal() -> String:
+		return _refusal
+
+	## Plant it. `purse` pays the seed — an inventory, or anything answering
+	## `count_of`/`remove`. A plot whose `seed_count` is zero can be planted with
+	## no purse at all, which is the seam a tutorial or a gift would use.
+	func plant(purse: Object = null) -> bool:
+		_refusal = ""
+		if _state != STATE_EMPTY:
+			_refusal = REFUSED_ALREADY_PLANTED
+			return false
+		if seed_count > 0:
+			if purse == null or not purse.has_method("remove"):
+				_refusal = REFUSED_NO_INVENTORY
+				return false
+			if int(purse.call("count_of", seed_item)) < seed_count:
+				_refusal = REFUSED_NO_SEED
+				return false
+			if not bool(purse.call("remove", seed_item, seed_count)):
+				_refusal = REFUSED_NO_SEED
+				return false
+		_state = STATE_GROWING
+		_grown = 0.0
+		_show()
+		planted.emit()
+		return true
+
+	## Pick it. Returns the plot to GROWING, not to EMPTY — see the class note.
+	func pick(purse: Object) -> bool:
+		_refusal = ""
+		if _state == STATE_EMPTY:
+			_refusal = REFUSED_NOTHING_PLANTED
+			return false
+		if _state != STATE_RIPE:
+			_refusal = REFUSED_NOT_RIPE
+			return false
+		if purse == null or not purse.has_method("add"):
+			_refusal = REFUSED_NO_INVENTORY
+			return false
+		if not bool(purse.call("add", crop_item, crop_count)):
+			# Refused BEFORE the crop is cleared, so a full bag costs the player a
+			# walk rather than the harvest.
+			_refusal = REFUSED_NO_ROOM
+			return false
+		_state = STATE_GROWING
+		_grown = 0.0
+		_show()
+		picked.emit(crop_item, crop_count)
+		return true
+
+	## Dig it up. The only way back to EMPTY, and it returns nothing: the seed is
+	## in the ground.
+	func clear_plot() -> bool:
+		_refusal = ""
+		if _state == STATE_EMPTY:
+			_refusal = REFUSED_NOTHING_PLANTED
+			return false
+		_state = STATE_EMPTY
+		_grown = 0.0
+		_show()
+		return true
+
+	func _process(delta: float) -> void:
+		tick(delta)
+
+	## Advance the crop. Split out from `_process` so a test can grow four minutes
+	## in one call without a tree or a clock — `save_director.tick()` keeps the
+	## same seam for the same reason.
+	func tick(delta: float) -> void:
+		if _state != STATE_GROWING or delta <= 0.0:
+			return
+		var was := growth()
+		_grown += delta
+		if _grown >= grow_seconds:
+			_state = STATE_RIPE
+			_show()
+			ripened.emit()
+			return
+		# Only when the plot crosses from sprouts to bushes, rather than every
+		# frame: `_show()` walks three nodes and this runs on every plot the player
+		# has built.
+		if was < sprout_until and growth() >= sprout_until:
+			_show()
+
+	## Exactly one stage visible, the same way the campfire's `Flame` is one
+	## visibility flag. This is what makes a half-grown plot LOOK half-grown,
+	## including after a reload.
+	func _show() -> void:
+		var stage := STATE_EMPTY if _state == STATE_EMPTY else _state
+		_visible(_seedling, stage == STATE_GROWING and growth() < sprout_until)
+		_visible(_growing, stage == STATE_GROWING and growth() >= sprout_until)
+		_visible(_ripe, stage == STATE_RIPE)
+
+	func _visible(node: Node3D, value: bool) -> void:
+		if node != null and is_instance_valid(node):
+			node.visible = value
+
+	## Searched from the PIECE, not from this node: the station is a sibling of the
+	## art, both children of the placed piece. Same as `Hearth._find_flame`, and
+	## `find_child` walks the node tree rather than the scene tree, so it works
+	## before the piece is added to a running world.
+	func _stage(stage_name: String) -> Node3D:
+		var piece := get_parent()
+		if piece == null or stage_name.is_empty():
+			return null
+		return piece.find_child(stage_name, true, false) as Node3D
+
+	## A HALF-GROWN PLOT COMES BACK HALF-GROWN. This is the whole reason a record
+	## carries station state: the catalogue knows a plot is empty, and only the
+	## save file knows this one is three minutes into a four-minute crop.
+	func save_state() -> Dictionary:
+		if _state == STATE_EMPTY:
+			return {}
+		return {"crop": _state, "grown": snappedf(_grown, 0.1)}
+
+	func load_state(state: Dictionary) -> void:
+		var crop := str(state.get("crop", STATE_EMPTY))
+		if not [STATE_EMPTY, STATE_GROWING, STATE_RIPE].has(crop):
+			crop = STATE_EMPTY
+		_state = crop
+		_grown = clampf(float(state.get("grown", 0.0)), 0.0, grow_seconds)
+		if _state == STATE_RIPE:
+			_grown = grow_seconds
+		_show()

@@ -116,6 +116,18 @@ func _first_session() -> Dictionary:
 	var party_size: int = int(party.call("size"))
 	print("party after catching: %d" % party_size)
 
+	# --- the player has been gathering --------------------------------------
+	# Building COSTS materials now, and a new trainer starts with an axe, a pickaxe
+	# and nothing to build with — so a smoke that walked straight into build mode
+	# would be refused for entirely the right reason and fail for the wrong one.
+	# Through `TrainerInventory.add()`, which is the same call gathering makes.
+	var bag: Node = world.get_node_or_null(^"TrainerInventory")
+	if bag == null:
+		_fail("the scene is missing TrainerInventory; building cannot be paid for")
+		return {}
+	for material: String in ["wood", "stone", "fiber"]:
+		bag.call("add", material, 90)
+
 	# --- the player builds something ----------------------------------------
 	# Driven through the real input actions and the real BuildMode, because the
 	# point is that BUILDING triggers a save. `structures.place()` called directly

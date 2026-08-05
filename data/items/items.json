@@ -76,6 +76,17 @@
     "_comment_orb": "The catch orb, as an ITEM. It already exists in the game as a hardcoded stock of 15 that refills whenever the practice pal respawns (scripts/combat/encounter_director.gd `_refill_orbs`), because M3 shipped before there was anywhere to keep one. This entry is the destination for that stock and NOTHING here wires it up; catching still reads its own numbers from data/config/catching.json until a later pass moves it across.",
     "_comment_orb_firewall": "What the orb DOES — its catch multiplier, its flight, its wobble — stays in data/config/catching.json. This file only knows that the orb is a thing you can be holding. If a value here could change a catch chance, it is in the wrong file.",
 
+    "_comment_revival": "MEADOWS_VERTICAL_SLICE.md M6 and GAME_DESIGN.md 16's first route back: 'Revive via: 1. Special revival item.' It lives here, as an item, rather than as a special case in the recovery code — the same reason the orb has an entry. What it DOES (how much health a pal comes back on) is in data/config/party.json under `recovery`, because that is a relationship between the item and a creature; this file only knows the draught is a thing you can be holding.",
+    "_comment_revival_source": "There is no recipe and no drop table, so the only draughts in the game are the ones the player starts with (`recovery.starting_revival_items`). Story frame 3: Grandpa sends you off with a starter and the beginning of a journey. When M8's crafting exists this is a workbench recipe — berries plus a Meadows herb — and until then it is finite on purpose: running out is what makes the pal bed matter.",
+    "_comment_revival_category": "Filed as a `material`, and it is not one. scripts/items/item_defs.gd enumerates three categories (material, tool, orb) and a `consumable` category is the right home for this and for berries both; adding one is an edit to that file, which this milestone does not own. Berries carry the same note for the same reason.",
+
+    "revival_draught": {
+      "display_name": "Revival Draught",
+      "category": "material",
+      "_comment_stack": "TUNABLE, and small. A pal bed is the repeatable answer and the draught is the emergency one; a stack of ninety-nine would make fainting free and the beds decoration.",
+      "stack_limit": 5
+    },
+
     "tether_orb": {
       "display_name": "Tether Orb",
       "category": "orb",

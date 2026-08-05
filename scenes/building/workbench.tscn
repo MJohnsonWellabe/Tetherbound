@@ -1,0 +1,76 @@
+[gd_scene load_steps=8 format=3]
+
+; A workbench. A STAND-IN, and recorded as one.
+;
+; Same situation as bed.tscn: 35 of the Quaternius Medieval Village kit's 176
+; models are in the repo and none of them is furniture. This is honest primitive
+; geometry at honest dimensions rather than a crate dressed up as a bench —
+; 1.60 x 0.70m, 0.90m to the worktop, against a 1.80m trainer, and it occupies
+; exactly one 2m build cell.
+;
+; It is not the answer to the owner's bar and must not be used to judge how the
+; home reads. It exists so the bench's BEHAVIOUR — free tool repair per
+; GAME_DESIGN.md 19, and the five tool recipes in data/recipes/crafting.json —
+; can be built, seen and tested now.
+;
+; Replacing it is a one-line change to `model` in data/building/pieces.json plus
+; a re-measure of the collider. Nothing in code names this file.
+
+[sub_resource type="StandardMaterial3D" id="mat_timber"]
+albedo_color = Color(0.29, 0.19, 0.11, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="mat_top"]
+albedo_color = Color(0.45, 0.32, 0.19, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="mat_iron"]
+albedo_color = Color(0.22, 0.23, 0.25, 1)
+roughness = 0.6
+metallic = 0.4
+
+[sub_resource type="BoxMesh" id="box_top"]
+material = SubResource("mat_top")
+size = Vector3(1.6, 0.08, 0.7)
+
+[sub_resource type="BoxMesh" id="box_leg"]
+material = SubResource("mat_timber")
+size = Vector3(0.1, 0.82, 0.1)
+
+[sub_resource type="BoxMesh" id="box_shelf"]
+material = SubResource("mat_timber")
+size = Vector3(1.5, 0.06, 0.6)
+
+[sub_resource type="BoxMesh" id="box_anvil"]
+material = SubResource("mat_iron")
+size = Vector3(0.3, 0.16, 0.3)
+
+[node name="Workbench" type="Node3D"]
+
+[node name="Top" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.86, 0)
+mesh = SubResource("box_top")
+
+[node name="LegA" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.72, 0.41, 0.28)
+mesh = SubResource("box_leg")
+
+[node name="LegB" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.72, 0.41, 0.28)
+mesh = SubResource("box_leg")
+
+[node name="LegC" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.72, 0.41, -0.28)
+mesh = SubResource("box_leg")
+
+[node name="LegD" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.72, 0.41, -0.28)
+mesh = SubResource("box_leg")
+
+[node name="Shelf" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, 0)
+mesh = SubResource("box_shelf")
+
+[node name="Anvil" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.98, 0)
+mesh = SubResource("box_anvil")

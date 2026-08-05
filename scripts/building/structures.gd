@@ -67,6 +67,9 @@ var _placed: Array[Dictionary] = []
 ## because SaveManager hands state out and does not count what came back.
 var _last_loaded: int = 0
 
+## The piece id `remove_nearest()` last took out. Read by build mode to refund it.
+var _last_removed: String = ""
+
 var _catalogue: Dictionary = {}
 ## One material per source material name, shared across every piece that uses
 ## it — the same trick `vegetation._tints` uses, so two hundred walls hold two
@@ -88,6 +91,28 @@ func catalogue() -> Dictionary:
 func definition(piece_id: String) -> Dictionary:
 	_ensure_catalogue()
 	return _catalogue.get(piece_id, {})
+
+
+## What a piece costs, as `{item_id: count}`.
+##
+## Read from the catalogue and COPIED, never handed out live: a palette that got
+## the real dictionary could edit the price of a wall by accident, and building
+## would quietly become free.
+##
+## Note what this function does NOT do: it does not spend anything and it does
+## not refuse anything. `place()` is the one door a fresh placement and a load
+## from disk both go through, and charging in here would charge for every piece
+## in the save file every time the game boots. The spending lives in
+## `build_mode`, with the refusal the player reads.
+func cost_of(piece_id: String) -> Dictionary:
+	var entry: Variant = definition(piece_id).get("cost", {})
+	var out: Dictionary = {}
+	if entry is Dictionary:
+		for item: String in (entry as Dictionary).keys():
+			var count := int((entry as Dictionary)[item])
+			if count > 0:
+				out[item] = count
+	return out
 
 
 ## Read the catalogue if it has not been read, rather than only in `_ready()`.
@@ -186,6 +211,22 @@ func place(
 ## reason — asking the node instead means asking the physics/transform state,
 ## which is empty for a node not inside a running tree.
 func remove_nearest(point: Vector3, radius: float) -> bool:
+	var best := nearest_index(point, radius)
+	if best < 0:
+		_last_removed = ""
+		return false
+	_last_removed = str((_placed[best]["record"] as Dictionary).get("piece", ""))
+	_demolish(_placed[best])
+	_placed.remove_at(best)
+	return true
+
+
+## Which placed piece is nearest a point, as an index, or -1.
+##
+## Split out of `remove_nearest` so that build mode can ask WHAT it is about to
+## delete before deleting it — a chest with something in it is refused, and a
+## refund has to know what it is refunding.
+func nearest_index(point: Vector3, radius: float) -> int:
 	var best := -1
 	var best_distance := radius
 	for i in _placed.size():
@@ -193,11 +234,29 @@ func remove_nearest(point: Vector3, radius: float) -> bool:
 		if distance <= best_distance:
 			best_distance = distance
 			best = i
-	if best < 0:
-		return false
-	_demolish(_placed[best])
-	_placed.remove_at(best)
-	return true
+	return best
+
+
+## The piece id of the nearest placement, or "" if there is none in range.
+func nearest_piece(point: Vector3, radius: float) -> String:
+	var at := nearest_index(point, radius)
+	return "" if at < 0 else str((_placed[at]["record"] as Dictionary).get("piece", ""))
+
+
+## The station on the nearest placement, or null. What build mode asks before it
+## deletes something that might be holding the player's belongings.
+func nearest_placed_station(point: Vector3, radius: float) -> Node:
+	var at := nearest_index(point, radius)
+	if at < 0:
+		return null
+	var station: Node = _placed[at].get("station")
+	return station if station != null and is_instance_valid(station) else null
+
+
+## What `remove_nearest` last took out, so a refund knows what it is refunding.
+## Empty after a removal that found nothing.
+func last_removed() -> String:
+	return _last_removed
 
 
 ## Take one placed entry out of the world, station and all.

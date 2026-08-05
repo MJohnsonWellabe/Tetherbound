@@ -1,7 +1,7 @@
 {
   "_comment": "How building FEELS. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'the grid is too coarse', 'I can't place it far enough away', 'the ghost is hard to read against grass' — every one of those has to be answerable by editing this file rather than by editing code.",
   "_comment_firewall": "What a piece IS lives in data/building/pieces.json: its model, its footprint, its collider. If a value in this file could change the size or shape of a placed building, it is in the wrong file.",
-  "_comment_no_costs": "There are no build costs here yet, and their absence is deliberate rather than an oversight. GAME_DESIGN.md 20 says recipes unlock through materials, MEADOWS_VERTICAL_SLICE.md M8 names Wood/Stone/Fiber/Berries — and NO INVENTORY EXISTS. Building cannot cost what the game cannot hold. Costs get added here, labelled tunable, when M8's gathering lands; until then placement is free and that is a stated scope decision, not a balance one.",
+  "_comment_costs": "The build costs themselves are NOT in this file and never will be. A cost is a property of a PIECE, so it lives on the piece in data/building/pieces.json beside `model` — the firewall above is why: a number that changes what a wall costs is a number about that wall, not about how building feels. What lives here is the one cost RULE that is about the feel of the mode.",
 
   "_comment_grid": "The grid is NOT tunable in the way the rest of this file is, and it is here to be read rather than turned. Every value was measured off the Quaternius kit's own glTF accessors: walls are 2.000m wide and 3.123m tall, floors are 2x2m, stairs rise exactly 1m. Changing these numbers without changing the art pack makes pieces stop meeting each other. They live in scripts/building/build_grid.gd as constants; these are the copies the placement rules quote, and D12 records why.",
   "grid": {
@@ -26,6 +26,9 @@
   "ghost_invalid_colour": "#e0a05a",
   "ghost_alpha": 0.55,
 
-  "_comment_removal": "Radius in metres within which a piece can be targeted for removal. Generous, because aiming at a wall you have already built is a chore and there is no cost to getting it wrong while building is free.",
-  "remove_radius": 3.0
+  "_comment_removal": "Radius in metres within which a piece can be targeted for removal. Generous, because aiming at a wall you have already built is a chore and getting it wrong costs nothing while removal refunds in full.",
+  "remove_radius": 3.0,
+
+  "_comment_refund": "TUNABLE. Whether taking a piece down hands its materials back. TRUE, and in full: building is free-form, nothing decays and nothing needs repair, so a removal tax would only ever punish a player for misjudging a thumbstick — and this is a controller-first game aiming a ghost down a fixed line in front of the trainer, where misjudging it is the normal case. Turning this off, or making it partial, would be a design decision about whether experimenting with your own house should cost something, and it belongs to the owner rather than to a balance pass.",
+  "refund_on_remove": true
 }

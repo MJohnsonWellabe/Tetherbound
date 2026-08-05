@@ -31,6 +31,9 @@ const CATALOGUE := "res://data/building/pieces.json"
 const PAL_BED := "pal_bed_straw"
 const BED := "bed_simple"
 const CAMPFIRE := "campfire_stone"
+const WORKBENCH := "workbench_timber"
+const STORAGE := "storage_crate"
+const BERRY_PLOT := "berry_plot"
 
 
 ## A stand-in for whatever ends up resting in a bed. The bed is deliberately
@@ -346,16 +349,22 @@ func test_reading_a_record_with_no_station_gives_nothing_rather_than_junk() -> v
 
 # --- the catalogue agrees with the code -----------------------------------
 
-func test_the_three_station_pieces_are_in_the_catalogue() -> void:
+func test_the_station_pieces_are_in_the_catalogue() -> void:
 	var pieces := _pieces()
-	for id: String in [BED, PAL_BED, CAMPFIRE]:
+	for id: String in [BED, PAL_BED, CAMPFIRE, WORKBENCH, STORAGE, BERRY_PLOT]:
 		assert_true(pieces.has(id), "the M8 list needs '%s'" % id)
 		assert_true(ResourceLoader.exists(str((pieces[id] as Dictionary)["model"])),
 			"'%s' names a model that does not exist" % id)
 
 
 func test_every_station_in_the_catalogue_names_a_behaviour_that_exists() -> void:
-	var known := [STATION.BEHAVIOUR_REST, STATION.BEHAVIOUR_HEARTH]
+	var known := [
+		STATION.BEHAVIOUR_REST,
+		STATION.BEHAVIOUR_HEARTH,
+		STATION.BEHAVIOUR_WORKBENCH,
+		STATION.BEHAVIOUR_STORAGE,
+		STATION.BEHAVIOUR_BERRY_PLOT,
+	]
 	var found := 0
 	for id: String in _pieces().keys():
 		var config := STATION.config_of(_pieces()[id] as Dictionary)
@@ -364,13 +373,15 @@ func test_every_station_in_the_catalogue_names_a_behaviour_that_exists() -> void
 		found += 1
 		assert_true(known.has(str(config.get("behaviour", ""))),
 			"piece '%s' asks for behaviour '%s', which nothing implements" % [id, config.get("behaviour", "")])
-	assert_eq(found, 3, "three pieces carry behaviour; the rest are geometry")
+	# Six: bed, pal bed and campfire came with the hook; workbench, storage and
+	# berry plot came with M8's gathering, which is what they were waiting on.
+	assert_eq(found, 6, "six pieces carry behaviour; the rest are geometry")
 
 
 func test_stations_place_on_the_same_grid_as_everything_else() -> void:
 	# A station is a normal piece. If one of these ever needed its own anchor or
 	# its own footprint it would be a special case in placement, and it is not.
-	for id: String in [BED, PAL_BED, CAMPFIRE]:
+	for id: String in [BED, PAL_BED, CAMPFIRE, WORKBENCH, STORAGE, BERRY_PLOT]:
 		var piece := _piece(id)
 		var cells: Array = piece["size_cells"]
 		assert_eq(str(piece["anchor"]), "cell", "'%s' must snap like any other piece" % id)
@@ -380,16 +391,14 @@ func test_stations_place_on_the_same_grid_as_everything_else() -> void:
 			"'%s' must fit one cell" % id)
 
 
-func test_no_piece_carries_a_build_cost_yet() -> void:
-	# There is no inventory to spend from, and a placeholder `cost` key is the
-	# kind of thing that gets read as working. When costs arrive they go on every
-	# piece at once, and this test is the one to delete.
-	var without := 0
-	for id: String in _pieces().keys():
-		assert_false((_pieces()[id] as Dictionary).has("cost"),
-			"piece '%s' has a cost, but nothing can pay it yet" % id)
-		without += 1
-	assert_eq(without, _pieces().size())
+## `test_no_piece_carries_a_build_cost_yet` used to live here and asserted the
+## opposite of what is now true: it failed if any piece had a `cost` key, because
+## there was no inventory to spend from and a placeholder cost is the kind of
+## thing that gets read as working. There is an inventory now, every piece has a
+## price, and `tests/test_build_costs.gd` is where the replacement lives — it
+## asserts the stronger thing, which is that every piece has a cost, that every
+## cost names a real item, and that the reference cottage adds up to a session's
+## work rather than an afternoon's.
 
 
 func test_no_station_can_be_told_to_work() -> void:
@@ -397,8 +406,17 @@ func test_no_station_can_be_told_to_work() -> void:
 	# somewhere a pal sleeps. The day one of these answers to `assign` or
 	# `produce`, the hard rule has been broken by whoever added the method and
 	# this is where it should stop.
-	for id: String in [BED, PAL_BED, CAMPFIRE]:
+	#
+	# The workbench and the berry plot are the two most likely to break it, so
+	# they are in the list: a bench with a worker slot and a plot with a tender
+	# are exactly the shape §20 forbids. What they DO have — `craft` and `pick` —
+	# takes an inventory, happens instantly and has nowhere to put a creature.
+	for id: String in [BED, PAL_BED, CAMPFIRE, WORKBENCH, STORAGE, BERRY_PLOT]:
 		var station := _station(id)
-		for verb: String in ["assign", "work", "produce", "staff", "set_worker", "output"]:
+		assert_ne(station, null, "'%s' must build a station" % id)
+		for verb: String in [
+			"assign", "work", "produce", "staff", "set_worker", "output",
+			"tend", "worker", "employ", "job",
+		]:
 			assert_false(station.has_method(verb),
 				"station '%s' has a '%s' method; pals do not perform base jobs" % [id, verb])

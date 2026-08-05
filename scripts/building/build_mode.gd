@@ -17,7 +17,18 @@ extends Node
 ## walking around with a ghost stuck to their face.
 
 const GRID := preload("res://scripts/building/build_grid.gd")
+const DEFS := preload("res://scripts/items/item_defs.gd")
 const CONFIG_PATH := "res://data/config/building.json"
+
+## Where the trainer's inventory is expected to be, when the scene names one.
+##
+## The trainer's inventory belongs to another system entirely. This file reaches
+## it through a duck-typed surface — `count_of`, `add`, `remove`, `last_refusal`
+## — the way the UI reaches its systems, and never builds one of its own. A
+## second inventory would be a second opinion about what the player is carrying,
+## and the first thing that would disagree about is whether they can afford a
+## wall.
+const INVENTORY_NODE := "TrainerInventory"
 
 signal opened()
 signal closed()
@@ -49,6 +60,7 @@ var _reach_min: float = 1.6
 var _max_slope_deg: float = 18.0
 var _max_step: float = 0.55
 var _remove_radius: float = 3.0
+var _refund_on_remove: bool = true
 var _ghost_alpha: float = 0.55
 var _valid_colour: Color = Color("#8fd694")
 var _invalid_colour: Color = Color("#e0a05a")
@@ -72,6 +84,50 @@ func _ready() -> void:
 	if _structures != null:
 		_ids.assign(_structures.call("catalogue").keys())
 		_ids.sort()
+	# DEFERRED, because `_ready()` runs inside the parent's own `add_child()` and
+	# a node added to a parent that is busy setting up its children is refused.
+	_mount_field_systems.call_deferred()
+
+
+## MOUNT THE M8 FIELD SYSTEMS, AND MOVE THIS THE DAY THE SCENE CAN CARRY THEM.
+##
+## `scripts/world/harvestable.gd` and `scripts/items/tools.gd` are two nodes with
+## no scene of their own. They belong in `scenes/world/meadows_playground.tscn`
+## beside `Structures` and `BuildMode`, as:
+##
+##   [node name="Harvestable" type="Node3D" parent="."]
+##   script = <res://scripts/world/harvestable.gd>
+##   [node name="Tools" type="Node" parent="."]
+##   script = <res://scripts/items/tools.gd>
+##   player_path = NodePath("../Player")
+##   harvestable_path = NodePath("../Harvestable")
+##   build_path = NodePath("../BuildMode")
+##   combat_path = NodePath("../CombatManager")
+##
+## They are created HERE instead because the milestone that wrote them did not own
+## that scene file and three other agents were editing it at the time. This is
+## wiring, not design: it creates nothing if the scene already provides the nodes,
+## so adding them properly is a scene edit and the deletion of this function, in
+## either order.
+##
+## The alternative was shipping M8's gathering as two well-tested files that
+## nothing in the running game ever called — which is the "written and never
+## called" shape this project keeps getting bitten by, and which `save_director.gd`
+## exists because of.
+func _mount_field_systems() -> void:
+	var world := get_parent()
+	if world == null:
+		return
+	var harvestable := world.get_node_or_null(^"Harvestable")
+	if harvestable == null:
+		harvestable = (load("res://scripts/world/harvestable.gd") as GDScript).new()
+		harvestable.name = "Harvestable"
+		world.add_child(harvestable)
+	if world.get_node_or_null(^"Tools") == null:
+		var kit: Node = (load("res://scripts/items/tools.gd") as GDScript).new()
+		kit.name = "Tools"
+		world.add_child(kit)
+		kit.call("bind", _player, harvestable, self, _combat)
 
 
 func is_open() -> bool:
@@ -237,6 +293,20 @@ func _check(where: Vector3, yaw: float, piece: Dictionary) -> bool:
 	if _player == null or _world == null:
 		return false
 
+	# AFFORDABILITY IS CHECKED FIRST, BEFORE ANYTHING POSITIONAL, and the order is
+	# the whole answer to "a piece the player cannot afford must be visibly
+	# unaffordable BEFORE they try to place it".
+	#
+	# `_update_ghost()` runs `_check()` every physics frame, so a piece you cannot
+	# pay for turns the ghost amber the moment it is selected and stays amber
+	# wherever you point it — and `refusal()`, which the palette already reads,
+	# says which material is short. Checking it after the ground rules would mean
+	# a player walked around hunting for flat ground to be told no on.
+	var missing := shortfall_of(selected_id())
+	if not missing.is_empty():
+		_refusal = describe_shortfall(missing)
+		return false
+
 	var flat := Vector2(where.x - _player.global_position.x, where.z - _player.global_position.z)
 	if flat.length() > _reach:
 		_refusal = "too far away"
@@ -274,20 +344,171 @@ func _check(where: Vector3, yaw: float, piece: Dictionary) -> bool:
 	return true
 
 
+## Put the selected piece down, and pay for it.
+##
+## THE MATERIALS ARE SPENT BEFORE THE PIECE IS BUILT, and put back if the build
+## fails. The other order — build, then charge — has a failure mode where the
+## charge is refused and a wall is standing that nobody paid for, and there is no
+## way to tell that apart from a wall that was paid for. Spending first means the
+## only failure is a refund, which is exact.
 func _try_place() -> void:
 	if not _valid:
 		refused.emit(_refusal if _refusal != "" else "cannot build there")
 		return
 	var id := selected_id()
-	if _structures.call("place", id, _ghost.global_position, _ghost.rotation.y) != null:
-		placed.emit(id)
+	var cost: Dictionary = _structures.call("cost_of", id)
+	if not _spend(cost):
+		refused.emit(_refusal if _refusal != "" else "you cannot afford that")
+		return
+	if _structures.call("place", id, _ghost.global_position, _ghost.rotation.y) == null:
+		_give(cost)
+		refused.emit("that piece could not be built")
+		return
+	placed.emit(id)
 
 
+## Take a piece back, and hand its materials back with it.
+##
+## FULL REFUND, and it is a tunable (`refund_on_remove`) rather than a mechanic.
+## Building here is free-form, placed pieces have no durability and nothing
+## decays, so a removal tax would only ever punish a player for misjudging a
+## thumbstick — and this is a controller-first game aiming a ghost down a fixed
+## line in front of the trainer, where misjudging it is the normal case. Charging
+## for experimentation would teach people to stop experimenting with the one
+## system whose whole appeal is that it is theirs.
+##
+## A CHEST WITH SOMETHING IN IT IS REFUSED. Deleting it would delete the
+## contents, and "I lost everything I had stored" is not a mistake a player
+## should be able to make with one button.
 func _try_remove() -> void:
 	if _structures == null:
 		return
-	if not bool(_structures.call("remove_nearest", _aim_point(), _remove_radius)):
+	var at := _aim_point()
+	var station: Node = _structures.call("nearest_placed_station", at, _remove_radius)
+	if station != null and station.has_method("is_empty") and not bool(station.call("is_empty")):
+		refused.emit("empty it before you take it down")
+		return
+	if not bool(_structures.call("remove_nearest", at, _remove_radius)):
 		refused.emit("nothing here to remove")
+		return
+	if _refund_on_remove:
+		_give(_structures.call("cost_of", str(_structures.call("last_removed"))))
+
+
+## --- paying for it ----------------------------------------------------------
+
+## What a piece costs, as `{item_id: count}`. For the palette.
+func cost_of(piece_id: String) -> Dictionary:
+	return {} if _structures == null else _structures.call("cost_of", piece_id)
+
+
+## What the trainer is short of before they could build `piece_id`, as
+## `{item_id: count}`. Empty means they can afford it.
+func shortfall_of(piece_id: String) -> Dictionary:
+	return shortfall(_purse(), cost_of(piece_id))
+
+
+func can_afford(piece_id: String) -> bool:
+	return shortfall_of(piece_id).is_empty()
+
+
+## What is missing before `purse` could pay `cost`.
+##
+## Static and duck-typed, so a test can hand it a bare `inventory.gd` and the
+## running game can hand it whatever façade the trainer's inventory lives behind.
+## A NULL PURSE CANNOT AFFORD ANYTHING — never a silent success. There is no
+## fallback inventory here and there must never be one: the day building charges
+## a bag of its own is the day the player's real bag stops being the truth.
+static func shortfall(purse: Object, cost: Dictionary) -> Dictionary:
+	var missing: Dictionary = {}
+	if cost.is_empty():
+		return missing
+	if purse == null or not purse.has_method("count_of"):
+		return cost.duplicate()
+	for item: String in cost.keys():
+		var short: int = int(cost[item]) - int(purse.call("count_of", item))
+		if short > 0:
+			missing[item] = short
+	return missing
+
+
+## "4 Wood, 2 Stone". Uses the item table's display names, so a rename in
+## items.json reaches the palette without anyone editing a string here.
+static func describe_cost(cost: Dictionary) -> String:
+	var parts: Array[String] = []
+	for item: String in cost.keys():
+		parts.append("%d %s" % [int(cost[item]), DEFS.display_name(item)])
+	return ", ".join(parts)
+
+
+## "you need 4 more Wood". The refusal a player reads, and the reason it names
+## the material: "you cannot afford that" sends them out to gather the wrong
+## thing.
+static func describe_shortfall(missing: Dictionary) -> String:
+	if missing.is_empty():
+		return ""
+	var parts: Array[String] = []
+	for item: String in missing.keys():
+		parts.append("%d more %s" % [int(missing[item]), DEFS.display_name(item)])
+	return "you need %s" % ", ".join(parts)
+
+
+## Spend a cost. All or nothing, the same discipline `inventory.remove()` keeps.
+func _spend(cost: Dictionary) -> bool:
+	if cost.is_empty():
+		return true
+	var purse := _purse()
+	if purse == null:
+		# REFUSED, never waived. A missing inventory means the trainer's bag has
+		# not been built yet, not that building is free; letting the placement
+		# through would put up a stronghold the player never paid for and could
+		# never have paid for.
+		_refusal = "there is nothing to pay from"
+		return false
+	var missing := shortfall(purse, cost)
+	if not missing.is_empty():
+		_refusal = describe_shortfall(missing)
+		return false
+	for item: String in cost.keys():
+		if not bool(purse.call("remove", item, int(cost[item]))):
+			_refusal = describe_shortfall({item: int(cost[item])})
+			return false
+	return true
+
+
+## Hand materials back — a refund, or an undo after a failed placement.
+func _give(cost: Dictionary) -> void:
+	var purse := _purse()
+	if purse == null or cost.is_empty():
+		return
+	for item: String in cost.keys():
+		if not bool(purse.call("add", item, int(cost[item]))):
+			# A refund that will not fit is a full bag, not a lost wall. Said out
+			# loud rather than swallowed, because materials quietly evaporating is
+			# the hardest kind of bug to report.
+			push_warning("could not refund %d %s; the trainer's inventory is full" % [
+				int(cost[item]), item
+			])
+
+
+## The trainer's inventory, or null.
+##
+## Looked up rather than cached: it is built by another system and may arrive
+## after this node does, and a cached null would mean building was free for the
+## rest of the session. Two shapes are accepted and both answer the same four
+## methods — a `TrainerInventory` node beside this one in the world scene, or the
+## player's own `inventory()`.
+func _purse() -> Object:
+	var node := get_parent()
+	if node != null:
+		var found := node.get_node_or_null(NodePath(INVENTORY_NODE))
+		if found != null and found.has_method("count_of") and found.has_method("remove"):
+			return found
+	if _player != null and is_instance_valid(_player) and _player.has_method("inventory"):
+		var held: Variant = _player.call("inventory")
+		if held is Object and (held as Object).has_method("count_of"):
+			return held
+	return null
 
 
 ## A translucent copy of the selected piece, with no collider.
@@ -344,6 +565,7 @@ func _load_config() -> void:
 	_max_slope_deg = float(config.get("max_slope_deg", _max_slope_deg))
 	_max_step = float(config.get("max_step", _max_step))
 	_remove_radius = float(config.get("remove_radius", _remove_radius))
+	_refund_on_remove = bool(config.get("refund_on_remove", _refund_on_remove))
 	_ghost_alpha = float(config.get("ghost_alpha", _ghost_alpha))
 	_valid_colour = Color(str(config.get("ghost_valid_colour", "#8fd694")))
 	_invalid_colour = Color(str(config.get("ghost_invalid_colour", "#e0a05a")))

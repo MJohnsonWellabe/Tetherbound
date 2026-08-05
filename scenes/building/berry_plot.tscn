@@ -1,0 +1,111 @@
+[gd_scene load_steps=8 format=3]
+
+; A berry plot. GAME_DESIGN.md 21: "Plant -> wait -> harvest. No watering
+; chores."
+;
+; PART STAND-IN, PART REAL. The soil bed and its timber rim are primitive
+; geometry at honest dimensions (1.70 x 1.70m, 0.14m deep, one 2m build cell).
+; The plants are the meadow's own `Bush_Common` and `Bush_Common_Flowers` from
+; the Quaternius Stylized Nature MegaKit, scaled down — so a cultivated berry
+; bush is visibly the same plant as the wild ones the player has been foraging
+; from, which is most of what makes farming read as farming.
+;
+; THE THREE GROWTH STAGES ARE THE POINT OF THIS FILE. `Seedling`, `Growing` and
+; `Ripe` are three sibling nodes and the BerryPlot station in
+; scripts/building/station.gd shows exactly one of them, the same way the
+; campfire's Hearth shows and hides `Flame`. That is what makes a half-grown plot
+; visibly half-grown, including after a reload. If these nodes are renamed,
+; rename them in data/building/pieces.json too — the definition names them there
+; rather than the code hard-coding a path into a scene.
+
+[ext_resource type="PackedScene" path="res://assets/environment/stylized_nature/Bush_Common.gltf" id="bush"]
+
+[ext_resource type="PackedScene" path="res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf" id="berry_bush"]
+
+[sub_resource type="StandardMaterial3D" id="mat_soil"]
+albedo_color = Color(0.19, 0.14, 0.1, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="mat_rim"]
+albedo_color = Color(0.33, 0.24, 0.15, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="mat_sprout"]
+albedo_color = Color(0.36, 0.5, 0.24, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="box_soil"]
+material = SubResource("mat_soil")
+size = Vector3(1.7, 0.14, 1.7)
+
+[sub_resource type="BoxMesh" id="box_rim"]
+material = SubResource("mat_rim")
+size = Vector3(1.8, 0.1, 0.12)
+
+[sub_resource type="CylinderMesh" id="cone_sprout"]
+material = SubResource("mat_sprout")
+top_radius = 0.0
+bottom_radius = 0.07
+height = 0.22
+radial_segments = 6
+rings = 1
+
+[node name="BerryPlot" type="Node3D"]
+
+[node name="Soil" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+mesh = SubResource("box_soil")
+
+[node name="RimNorth" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, -0.86)
+mesh = SubResource("box_rim")
+
+[node name="RimSouth" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0.86)
+mesh = SubResource("box_rim")
+
+[node name="RimEast" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.86, 0.09, 0)
+mesh = SubResource("box_rim")
+
+[node name="RimWest" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.86, 0.09, 0)
+mesh = SubResource("box_rim")
+
+[node name="Seedling" type="Node3D" parent="."]
+
+[node name="SproutA" type="MeshInstance3D" parent="Seedling"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.24, -0.45)
+mesh = SubResource("cone_sprout")
+
+[node name="SproutB" type="MeshInstance3D" parent="Seedling"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.24, -0.42)
+mesh = SubResource("cone_sprout")
+
+[node name="SproutC" type="MeshInstance3D" parent="Seedling"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24, 0.45)
+mesh = SubResource("cone_sprout")
+
+[node name="Growing" type="Node3D" parent="."]
+visible = false
+
+[node name="BushA" parent="Growing" instance=ExtResource("bush")]
+transform = Transform3D(0.26, 0, 0, 0, 0.26, 0, 0, 0, 0.26, -0.45, 0.14, -0.45)
+
+[node name="BushB" parent="Growing" instance=ExtResource("bush")]
+transform = Transform3D(0.19, 0, -0.18, 0, 0.26, 0, 0.18, 0, 0.19, 0.45, 0.14, -0.42)
+
+[node name="BushC" parent="Growing" instance=ExtResource("bush")]
+transform = Transform3D(-0.13, 0, -0.23, 0, 0.26, 0, 0.23, 0, -0.13, 0, 0.14, 0.45)
+
+[node name="Ripe" type="Node3D" parent="."]
+visible = false
+
+[node name="BerryA" parent="Ripe" instance=ExtResource("berry_bush")]
+transform = Transform3D(0.36, 0, 0, 0, 0.36, 0, 0, 0, 0.36, -0.45, 0.14, -0.45)
+
+[node name="BerryB" parent="Ripe" instance=ExtResource("berry_bush")]
+transform = Transform3D(0.26, 0, -0.25, 0, 0.36, 0, 0.25, 0, 0.26, 0.45, 0.14, -0.42)
+
+[node name="BerryC" parent="Ripe" instance=ExtResource("berry_bush")]
+transform = Transform3D(-0.18, 0, -0.31, 0, 0.36, 0, 0.31, 0, -0.18, 0, 0.14, 0.45)

@@ -1,0 +1,95 @@
+{
+  "_comment": "What the meadow gives up, and to which tool. CONTENT for the left-hand column (which prop is which kind), TUNABLE for every number. MEADOWS_VERTICAL_SLICE.md M8: 'Minimal materials only — Wood, Stone, Fiber, Berries'. There is nothing here that comes off a creature, and there must never be: GAME_DESIGN.md 19 forbids a hunting economy outright and CLAUDE.md repeats it as a hard rule.",
+  "_comment_firewall": "What an ITEM is lives in data/items/items.json. What a BUILD PIECE costs lives on the piece in data/building/pieces.json. This file is the third relationship — what a PROP yields — and it is here rather than in either of those because a harvest is a relationship between a thing in the world and an item, and neither of those files describes two things at once.",
+  "_comment_no_nodes": "The props are drawn as MultiMesh instances — around 70,000 of them across the meadow at the time of writing — and a MultiMesh instance is an index, not a node. scripts/world/harvestable.gd builds a spatial hash from the batches themselves rather than giving every tree a node; the `models` lists below are how a batch is recognised, because a batch is named after the model it draws.",
+
+  "_comment_cell": "TUNABLE. Spatial hash cell size in metres. Bigger cells mean fewer buckets and more props to scan inside each one; 4m is about two strides and puts a handful of props in a bucket in the thickest grove.",
+  "cell": 4.0,
+
+  "_comment_reach": "TUNABLE. How far in front of the trainer a swing can find something, in metres. Deliberately shorter than build reach (9m): you build at arm's length plus a bit, but you chop what you are standing at.",
+  "reach": 3.2,
+
+  "_comment_model_match": "A batch node is named after its model, plus a `_x_y` suffix when vegetation.gd splits it into spatial cells. Matching is by LONGEST model name the node name starts with, which is what keeps `Bush_Common_Flowers` (berries) from being read as `Bush_Common` (fiber).",
+
+  "_comment_depletion": "THE MODEL: a prop DEPLETES and REGROWS; it is not consumed and the forest does not thin out. `uses` swings empty it, `regrow` seconds bring it back. See docs/decisions/D19 for why nothing vanishes.",
+  "_comment_uses": "TUNABLE. `amount` is the yield PER SWING and `uses` is how many swings the prop has in it, so a tree is worth amount x uses in total. `durability` is what one swing costs the tool, in the units items.json counts.",
+  "_comment_tool": "`tool` is the item id a swing needs. An empty string means bare hands. `hand_amount`/`hand_uses`, where present, are what BARE HANDS get from a prop that has a proper tool — the tool improves the yield rather than being a key. Trees and boulders have no hand entry on purpose: punching a tree is the survival-game cliche this design does not want, and durability only means something if the tool is the only way in.",
+
+  "kinds": {
+    "tree": {
+      "_comment": "The wood supply. Four swings of an axe, twelve wood, and seven minutes before that tree is worth visiting again — so a cottage is six trees and a short walk rather than one tree and a loading bar.",
+      "display_name": "Tree",
+      "models": [
+        "CommonTree_1", "CommonTree_2", "CommonTree_3", "CommonTree_4", "CommonTree_5",
+        "TwistedTree_1", "TwistedTree_2", "TwistedTree_3", "TwistedTree_4", "TwistedTree_5"
+      ],
+      "tool": "axe",
+      "yields": "wood",
+      "amount": 3,
+      "uses": 4,
+      "durability": 2,
+      "regrow": 420.0
+    },
+    "deadfall": {
+      "_comment": "The bootstrap. Dead standing timber you can break up by hand, so a trainer with an empty inventory can reach a workbench and a first axe without punching a living tree. Four wood a piece and only 55 of them in the meadow, which is enough to start and nowhere near enough to build with.",
+      "display_name": "Fallen Timber",
+      "models": ["DeadTree_1", "DeadTree_2", "DeadTree_3"],
+      "tool": "",
+      "yields": "wood",
+      "amount": 2,
+      "uses": 2,
+      "durability": 0,
+      "regrow": 300.0
+    },
+    "rock": {
+      "_comment": "The stone supply. Same shape as a tree, and deliberately scarcer: 203 boulders against 288 trees, so stone is the material a stone-built cottage is actually gated on.",
+      "display_name": "Boulder",
+      "models": ["Rock_Medium_1", "Rock_Medium_2", "Rock_Medium_3"],
+      "tool": "pickaxe",
+      "yields": "stone",
+      "amount": 2,
+      "uses": 4,
+      "durability": 2,
+      "regrow": 420.0
+    },
+    "pebble": {
+      "_comment": "The other half of the bootstrap: loose stones you pick up. One stone each and 66 in the meadow, which pays for a workbench and a knife and then stops mattering.",
+      "display_name": "Loose Stone",
+      "models": ["Pebble_Round_1", "Pebble_Round_2", "Pebble_Round_3"],
+      "tool": "",
+      "yields": "stone",
+      "amount": 1,
+      "uses": 1,
+      "durability": 0,
+      "regrow": 240.0
+    },
+    "bush": {
+      "_comment": "Fiber. The one kind where the tool is an UPGRADE rather than a key — bare hands tear one fiber off, a knife takes three twice over. That is what makes the knife worth crafting without making fiber unreachable before you have one, which would deadlock the whole recipe chain.",
+      "display_name": "Bush",
+      "models": [
+        "Bush_Common", "Fern_1", "Plant_1", "Plant_1_Big", "Plant_7", "Plant_7_Big"
+      ],
+      "tool": "knife",
+      "yields": "fiber",
+      "amount": 3,
+      "uses": 2,
+      "durability": 1,
+      "hand_amount": 1,
+      "hand_uses": 1,
+      "regrow": 240.0
+    },
+    "berry_bush": {
+      "_comment": "GAME_DESIGN.md 21's foraging half. Bare hands, one pass, three berries, back in three minutes. Bush_Common_Flowers is a STAND-IN: the Quaternius nature pack has no berry bush, and the flowering bush is the closest silhouette in the meadow. 195 of them, so a berry run is a real trip and the berry plot is still worth building.",
+      "display_name": "Berry Bush",
+      "models": ["Bush_Common_Flowers"],
+      "tool": "",
+      "yields": "berries",
+      "amount": 3,
+      "uses": 1,
+      "durability": 0,
+      "regrow": 180.0
+    }
+  },
+
+  "_comment_not_here": "Grass, flowers, clover, mushrooms, path stones and the village buildings are NOT harvestable and are not in the lists above. Grass alone is 61,000 instances; indexing it would multiply the spatial hash by twenty-five to sell fiber that bushes already sell better. Mushrooms are left out because they read as food and M9 owns food; a mushroom that yielded fiber would be a lie about what it is."
+}
