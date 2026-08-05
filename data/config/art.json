@@ -15,6 +15,13 @@
       "jump": "Jump_Idle",
       "throw": "Throw"
     },
+    "_comment_looping": "Roles above whose clip is HELD for as long as the state lasts, and must therefore cycle. glTF carries no loop flag and KayKit does not use Godot's `-loop` name suffix, so all 25 clips import with loop_mode 0 and play exactly once: `Running_A` is 0.80s, so holding sprint animated for eight tenths of a second and then froze mid-stride while the trainer kept sliding forward at 7.6 m/s. That is the owner's \"his animation stopped about half the time\" — half, because a tap of the stick ends before the cycle does and a held stick does not. `throw` is deliberately absent: it is fired once and must end.",
+    "looping_clips": [
+      "idle",
+      "walk",
+      "sprint",
+      "jump"
+    ],
     "_comment_libraries": "KayKit ships characters and animations separately: Ranger.glb has the mesh and a 23-bone rig but zero clips, and the clips live in shared libraries built on the same rig. These are merged into the character's AnimationPlayer at load. Getting this wrong is a trainer frozen in a T-pose.",
     "animation_libraries": [
       "res://assets/characters/Rig_Medium_General.glb",

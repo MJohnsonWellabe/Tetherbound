@@ -364,6 +364,7 @@ func test_every_station_in_the_catalogue_names_a_behaviour_that_exists() -> void
 		STATION.BEHAVIOUR_WORKBENCH,
 		STATION.BEHAVIOUR_STORAGE,
 		STATION.BEHAVIOUR_BERRY_PLOT,
+		STATION.BEHAVIOUR_DOOR,
 	]
 	var found := 0
 	for id: String in _pieces().keys():
@@ -373,9 +374,11 @@ func test_every_station_in_the_catalogue_names_a_behaviour_that_exists() -> void
 		found += 1
 		assert_true(known.has(str(config.get("behaviour", ""))),
 			"piece '%s' asks for behaviour '%s', which nothing implements" % [id, config.get("behaviour", "")])
-	# Six: bed, pal bed and campfire came with the hook; workbench, storage and
-	# berry plot came with M8's gathering, which is what they were waiting on.
-	assert_eq(found, 6, "six pieces carry behaviour; the rest are geometry")
+	# Eight: bed, pal bed and campfire came with the hook; workbench, storage and
+	# berry plot came with M8's gathering, which is what they were waiting on;
+	# and the two door leaves came last, because the owner played the game and
+	# found that the one piece everybody expects to WORK was a static mesh.
+	assert_eq(found, 8, "eight pieces carry behaviour; the rest are geometry")
 
 
 func test_stations_place_on_the_same_grid_as_everything_else() -> void:

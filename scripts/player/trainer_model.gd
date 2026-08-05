@@ -187,11 +187,56 @@ func _merge_libraries() -> void:
 					_library().add_animation(clip, animation.duplicate())
 					added += 1
 		source.queue_free()
+	_apply_loops(cfg)
 	print("[trainer] merged %d animation clips%s" % [
 		added, " (retargeted)" if not bone_map.is_empty() else ""
 	])
 	if added == 0:
 		push_error("the trainer has no animation clips; it will stand in its bind pose in every frame")
+
+
+## Mark the clips the game HOLDS as looping.
+##
+## THE CLIPS SHIP WITHOUT LOOPS. All 25 come out of the KayKit libraries with
+## `loop_mode` 0 — measured, every one, in both files — because glTF carries no
+## loop flag and Godot's scene importer only infers one from a name ending in a
+## suffix like `-loop`. KayKit's do not: they are called `Walking_A`,
+## `Running_A`, `Idle_A`.
+##
+## A clip with no loop runs ONCE. `Running_A` is 0.80 seconds long, so holding
+## sprint played eight tenths of a second of running and then stopped dead: the
+## AnimationPlayer idle, the skeleton holding the last frame it was handed, and
+## the trainer sliding across the meadow at 7.6 m/s in a fixed pose. Nothing was
+## wrong upstream of it — `_clip_for_state` kept returning `Running_A` and
+## `_play` kept correctly declining to restart the clip that was already current.
+## That is the "his animation stopped about half the time" the owner reported;
+## half, because a tap of the stick ends before the cycle does and a held stick
+## does not.
+##
+## WHICH clips cycle is data, not a name in this file — it is a fact about the
+## animation pack, like which bone is which. `Throw` is deliberately absent: a
+## throw that looped would be a trainer winding up forever.
+func _apply_loops(cfg: Dictionary) -> void:
+	for clip in looping_clips(cfg):
+		if not _anim.has_animation(clip):
+			push_warning("trainer looping_clips names '%s', which no library provides" % clip)
+			continue
+		_anim.get_animation(clip).loop_mode = Animation.LOOP_LINEAR
+
+
+## The clip NAMES the trainer holds, resolved from the ROLES named in the config.
+##
+## Roles rather than clip names in `looping_clips`, so swapping the animation pack
+## is one edit to `clips` rather than two lists that can quietly disagree. Static
+## so `tests/test_trainer_animation.gd` can ask the same question of the same data.
+static func looping_clips(cfg: Dictionary) -> PackedStringArray:
+	var clips: Dictionary = cfg.get("clips", {})
+	var out := PackedStringArray()
+	for role: Variant in cfg.get("looping_clips", []):
+		var clip := str(clips.get(str(role), ""))
+		if clip != "" and not out.has(clip):
+			out.append(clip)
+	return out
 
 
 ## The AnimationPlayer drives bones through the Skeleton3D, so a retarget needs
@@ -244,9 +289,8 @@ func _fit() -> void:
 	var hidden := _hidden_bones()
 	var box := AABB()
 	var started := false
-	var to_local := _art.global_transform.affine_inverse()
 	for mesh in _mesh_instances(_art):
-		var local: AABB = (to_local * mesh.global_transform) * _bounds(mesh, hidden)
+		var local: AABB = _relative(mesh, _art) * _bounds(mesh, hidden)
 		if started:
 			box = box.merge(local)
 		else:
@@ -261,6 +305,24 @@ func _fit() -> void:
 		-box.position.y * fit,
 		-(box.position.z + box.size.z * 0.5) * fit
 	)
+
+
+## `node`'s transform in `ancestor`'s space, accumulated from local transforms.
+##
+## The same answer as `ancestor.global_transform.affine_inverse() *
+## node.global_transform`, and unlike it this one is also correct outside the
+## scene tree: `global_transform` on a detached node returns identity and logs an
+## error, so a trainer measured before being added to the tree would be fitted to
+## a box built in the wrong space. Which is not hypothetical — the clips are
+## checked outside a tree (`tests/test_trainer_animation.gd`) precisely because
+## that is the cheap way to ask what came out of the merge.
+static func _relative(node: Node3D, ancestor: Node3D) -> Transform3D:
+	var out := Transform3D.IDENTITY
+	var walk: Node = node
+	while walk is Node3D and walk != ancestor:
+		out = (walk as Node3D).transform * out
+		walk = walk.get_parent()
+	return out
 
 
 ## One mesh's bounds, ignoring the vertices that `hide_bones` collapsed.
@@ -387,12 +449,23 @@ func _clip_for_state() -> String:
 
 
 func _play(clip: String) -> void:
-	if clip == _current or not _anim.has_animation(clip):
+	if not _anim.has_animation(clip):
 		return
-	_current = clip
+	# `is_playing()` is half the condition, not a belt on top of braces. A clip
+	# with no loop RUNS OUT: the player goes idle, the skeleton holds its last
+	# frame, and `_current` still names a clip that is no longer running — so the
+	# first half of this test on its own is a guarantee that it will never start
+	# again. `_apply_loops` is what stops that happening; this is what stops it
+	# being permanent if a clip ever arrives without a loop again.
+	if clip == _current and _anim.is_playing():
+		return
 	# Cross-faded rather than cut. A trainer who snaps between walk and idle
-	# reads as broken even when the states are correct.
-	_anim.play(clip, 0.18)
+	# reads as broken even when the states are correct. Restarting the SAME clip
+	# is not blended: there is nothing to blend from, and a 0.18s fade into the
+	# pose it is already holding is 0.18s of the trainer not moving.
+	var blend := 0.0 if clip == _current else 0.18
+	_current = clip
+	_anim.play(clip, blend)
 
 
 ## Called when a throw is released, so the body commits to the animation for its

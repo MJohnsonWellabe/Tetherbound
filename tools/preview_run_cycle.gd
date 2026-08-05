@@ -27,18 +27,26 @@ extends SceneTree
 ## figures rather than in an impression.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const OUT := "res://shots/_run_cycle.png"
+const OUT := "res://shots/_run_cycle%s.png"
 
-## Long enough for terrain to stream and collision to build. Same figure the
-## smokes use.
-const SETTLE_FRAMES := 240
+## Long enough for terrain to stream and collision to build.
+const SETTLE_FRAMES := 150
 
-## Physics frames between samples, and how many samples. 12 frames is 0.2s, so
-## sixteen samples span 3.2 seconds — four times the length of `Running_A`, which
-## is what it takes for "it stopped after one cycle" to be visible rather than
-## arguable.
-const SAMPLE_EVERY := 12
-const SAMPLES := 16
+## Physics frames between samples, and how many samples. 10 frames is a sixth of
+## a second, so twelve samples span two seconds — two and a half times the length
+## of `Running_A`, which is what it takes for "it stopped after one cycle" to be
+## visible rather than arguable.
+const SAMPLE_EVERY := 10
+const SAMPLES := 12
+
+## `-- broken` puts the locomotion clips back to `loop_mode` 0 after the scene has
+## loaded, which is exactly what the game shipped before this was fixed.
+##
+## The comparison is worth having in one file rather than in one file and a
+## `git stash`: the before and the after then differ by one property on three
+## resources, and nothing else about the run — same seed, same terrain, same
+## camera, same input — can be blamed for the difference between the strips.
+const BROKEN_ARG := "broken"
 
 const CROP := Vector2i(300, 440)
 
@@ -52,6 +60,12 @@ func _init() -> void:
 
 
 func _run() -> void:
+	# Nothing between the shots needs to be drawn, and drawing it is what the run
+	# costs: a software-rendered frame of a meadow with 73,000 props in it is
+	# about a second, and there are several hundred frames of settling and running
+	# to get through. `_shoot` turns the render loop back on for the one frame it
+	# actually wants.
+	RenderingServer.render_loop_enabled = false
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
 	for i in SETTLE_FRAMES:
@@ -70,6 +84,22 @@ func _run() -> void:
 		quit(1)
 		return
 
+	var broken := OS.get_cmdline_user_args().has(BROKEN_ARG)
+	if broken:
+		# Both halves of what shipped, put back. The clips lose their loops, and
+		# the body stops choosing them — because the old `_play` issued `play()`
+		# ONCE on entering a state and returned early on every frame afterwards,
+		# which is behaviourally identical to a single `play()` and no driver at
+		# all for as long as the state lasts. Reverting only the loops would leave
+		# the new `_play` restarting the clip and hide the very thing this run is
+		# meant to photograph.
+		for clip in anim.get_animation_list():
+			anim.get_animation(clip).loop_mode = Animation.LOOP_NONE
+		model.set_process(false)
+		anim.play("Running_A", 0.18)
+	print("locomotion clips: %s" % ["loop_mode 0, issued once (as shipped before the fix)"
+		if broken else "looping, driven by the trainer's own state machine"])
+
 	var camera := Camera3D.new()
 	camera.fov = 42.0
 	world.add_child(camera)
@@ -84,6 +114,13 @@ func _run() -> void:
 	for s in SAMPLES:
 		for i in SAMPLE_EVERY:
 			await physics_frame
+		# EVERYTHING STOPS WHILE THE PICTURE IS TAKEN. A software-rendered frame of
+		# this scene takes about a second of wall clock, and the trainer covers
+		# seven metres in a second — so a camera placed before the shutter opens is
+		# aimed at where he was, and the strip photographs the meadow he has left.
+		# Pausing also freezes the AnimationPlayer, which is what makes the printed
+		# pose and the rendered pose the same instant rather than two.
+		paused = true
 		var pose := _fingerprint(skeleton)
 		print("%5.2f  %5.2f  %-12s  %-7s  %5.2f  %s%s" % [
 			(s + 1) * SAMPLE_EVERY / 60.0,
@@ -96,6 +133,7 @@ func _run() -> void:
 		])
 		last = pose
 		var shot := await _shoot(camera, player, model)
+		paused = false
 		if shot != null:
 			frames.append(shot)
 
@@ -104,9 +142,10 @@ func _run() -> void:
 
 	var strip := _tile(frames)
 	if strip != null:
-		strip.save_png(OUT)
+		var path: String = OUT % ("_broken" if broken else "")
+		strip.save_png(path)
 		print("wrote %s  (%d frames, %.2fs apart, left to right)" % [
-			OUT, frames.size(), SAMPLE_EVERY / 60.0
+			path, frames.size(), SAMPLE_EVERY / 60.0
 		])
 	quit(0)
 
@@ -120,11 +159,14 @@ func _shoot(camera: Camera3D, player: Node3D, model: Node3D) -> Image:
 	var feet := player.global_position
 	camera.global_position = feet + eye
 	camera.look_at(feet + Vector3(0.0, 0.95, 0.0), Vector3.UP)
+	camera.make_current()
+	RenderingServer.render_loop_enabled = true
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var shot := root.get_texture().get_image()
 	if shot == null:
 		return null
+	RenderingServer.render_loop_enabled = false
 	var at := Vector2i(
 		int((shot.get_width() - CROP.x) * 0.5), int((shot.get_height() - CROP.y) * 0.5)
 	)

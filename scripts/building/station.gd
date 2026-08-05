@@ -68,6 +68,7 @@ const BEHAVIOUR_HEARTH := "hearth"
 const BEHAVIOUR_WORKBENCH := "workbench"
 const BEHAVIOUR_STORAGE := "storage"
 const BEHAVIOUR_BERRY_PLOT := "berry_plot"
+const BEHAVIOUR_DOOR := "door"
 
 ## The three above this line used to be a "still to come" list, deliberately not
 ## stubbed, because "an empty station that places and does nothing is worse than
@@ -123,6 +124,8 @@ static func create(definition: Dictionary) -> Node:
 			station = Storage.new()
 		BEHAVIOUR_BERRY_PLOT:
 			station = BerryPlot.new()
+		BEHAVIOUR_DOOR:
+			station = Door.new()
 		_:
 			push_error("build piece asks for station behaviour '%s', which does not exist" % behaviour)
 			return null
@@ -199,11 +202,19 @@ class Station extends Node:
 	## true: a placed piece never moves.
 	var origin: Vector3 = Vector3.ZERO
 
-	func setup(id: String, station_config: Dictionary, at: Vector3) -> void:
+	## Which way the piece was placed, in radians about Y. STORED for the same
+	## reason as `origin` — `Node3D.rotation` needs a node, and a placed piece
+	## never turns. Only the door reads it so far, and it reads it because "swing
+	## away from the player" is a question about the door's own local frame and
+	## cannot be answered in world space.
+	var facing: float = 0.0
+
+	func setup(id: String, station_config: Dictionary, at: Vector3, yaw: float = 0.0) -> void:
 		piece_id = id
 		config = station_config.duplicate(true)
 		behaviour = str(config.get("behaviour", ""))
 		origin = at
+		facing = yaw
 		_configured()
 
 	## Subclass hook, run once the config and origin are in place.
@@ -1003,3 +1014,174 @@ class BerryPlot extends Station:
 		if _state == STATE_RIPE:
 			_grown = grow_seconds
 		_show()
+
+
+## A door. The one build piece the player is supposed to be able to WORK.
+##
+## The owner's report was "on the pre built houses, there's no way to open
+## doors". It was exactly true: `pieces.json` had two door leaves and two door
+## frames, all four of them placed, saved and reloaded as static meshes, and
+## nothing anywhere turned one. A door is the piece where "geometry with no
+## behaviour" is most obviously wrong, because a door that does not open is not a
+## door — it is a wall with a handle painted on.
+##
+## THE LEAF ROTATES BY ROTATING THE PIECE NODE, not a child of it, and that is
+## the whole trick this class rests on. The kit hinges its door models on their
+## own origin: `Door_1_Round` spans x -0.046..1.074, so its origin is the hinge
+## edge and the leaf hangs off it in +X. `structures.place()` puts the piece node
+## exactly there (see the `hangs` offset in `pieces.json`), so turning the node
+## about Y turns the leaf about its hinge — and the collider, which is a child of
+## the same node, goes with it. One number moves the art and the physics
+## together, which is the only way an open door can be guaranteed not to leave a
+## slab across its own doorway.
+##
+## SWINGS AWAY FROM WHOEVER OPENED IT. Not politeness: a door that always swings
+## the same way sweeps its collider through the player half the time, and a
+## StaticBody3D moving through a CharacterBody3D is how somebody ends up inside
+## geometry. `toggle()` takes the point the player is standing at and picks the
+## sign of the swing from it, so the leaf always travels into the space the
+## player is not in.
+##
+## IT CANNOT SEAL ANYONE IN. The leaf's collider is the leaf — 1.1m x 2.3m x
+## 0.06m, measured — and it is the only thing this station adds to the world. The
+## doorway it hangs in is clear whether the door is open or shut (`collider_boxes`
+## in `pieces.json` gives the doorway wall two piers and a lintel instead of one
+## sealed box), and `toggle()` works from either side, so there is no state and no
+## side from which the door cannot be opened again.
+##
+## NO LOCKS, NO KEYS, NO OWNERSHIP. Those are a design decision about whether
+## buildings can be denied to the player, and CLAUDE.md says to flag that rather
+## than invent it. This class has no `lock()` and must not grow one without the
+## owner asking.
+class Door extends Station:
+
+	## Hang a sound, a prompt or an animation off these. Two signals rather than
+	## one `changed(bool)` because the two events want different sounds, and a
+	## listener that only cares about one should not have to filter.
+	signal opened()
+	signal closed()
+
+	## Degrees the leaf swings. TUNABLE, from the piece's station block. Ninety
+	## would be flush with the wall; a couple more clears the jamb and reads as
+	## "wide open" rather than "exactly shut, sideways".
+	var open_degrees: float = 92.0
+	## Seconds to travel. Also tunable. Zero snaps.
+	var swing_seconds: float = 0.32
+
+	var _open: bool = false
+	## +1 or -1: which way the leaf is swung, i.e. which side the last person to
+	## open it was standing on. Saved, because a door reloaded swinging the wrong
+	## way is a door standing in a wall.
+	var _swing: int = 1
+	## Radians, signed, where the leaf actually is right now. Animated towards
+	## `_target`.
+	var _angle: float = 0.0
+	var _target: float = 0.0
+
+	## The placed piece itself — the node whose origin is the hinge.
+	var _leaf: Node3D = null
+
+	func _configured() -> void:
+		open_degrees = absf(float(config.get("open_degrees", open_degrees)))
+		swing_seconds = maxf(0.0, float(config.get("swing_seconds", swing_seconds)))
+		_leaf = get_parent() as Node3D
+		_angle = 0.0
+		_target = 0.0
+		_apply()
+
+	func is_open() -> bool:
+		return _open
+
+	## Which way it is currently swung, as +1 or -1. For a test, and for anything
+	## that wants to know which side of the wall the leaf is sticking out on.
+	func swing() -> int:
+		return _swing
+
+	## Where the leaf is, in radians, right now. Zero is shut.
+	func angle() -> float:
+		return _angle
+
+	## Open it if it is shut, shut it if it is open. `from` is where the person
+	## doing it is standing, in world space, and it is not optional: it is the
+	## only input that decides which way the leaf travels.
+	func toggle(from: Vector3) -> bool:
+		return set_open(not _open, from)
+
+	func set_open(value: bool, from: Vector3) -> bool:
+		if value == _open:
+			return false
+		if value:
+			_swing = swing_for(from)
+		_open = value
+		_retarget()
+		if _open:
+			opened.emit()
+		else:
+			closed.emit()
+		return true
+
+	## Which sign of swing takes the leaf AWAY from `from`.
+	##
+	## The maths, once, because it is the bit that is easy to get backwards: a
+	## rotation of +theta about +Y maps the leaf's local +X to (cos, 0, -sin), so a
+	## POSITIVE angle carries the free edge towards local -Z. Somebody standing at
+	## local +Z therefore wants a positive swing. A caller standing exactly in the
+	## plane of the door gets +1, which is arbitrary and has to be: there is no
+	## "away" from a point that is not on either side.
+	func swing_for(from: Vector3) -> int:
+		var local := Basis(Vector3.UP, -facing) * (from - origin)
+		return 1 if local.z >= 0.0 else -1
+
+	## Finish the swing this instant. Used by `load_state` — a reloaded door is
+	## already where it was, it does not swing open again in front of the player —
+	## and by the preview tool, which photographs a state rather than an animation.
+	func snap() -> void:
+		_angle = _target
+		_apply()
+
+	func _retarget() -> void:
+		_target = deg_to_rad(open_degrees) * float(_swing) if _open else 0.0
+		if swing_seconds <= 0.0:
+			snap()
+
+	func _process(delta: float) -> void:
+		swing_towards(delta)
+
+	## Advance the swing. Split out of `_process` for the reason `BerryPlot.tick`
+	## is: a test must be able to run a door through its whole travel without a
+	## tree and without waiting a third of a second.
+	func swing_towards(delta: float) -> void:
+		if is_equal_approx(_angle, _target) or delta <= 0.0:
+			return
+		if swing_seconds <= 0.0:
+			snap()
+			return
+		var step := deg_to_rad(open_degrees) * (delta / swing_seconds)
+		_angle = move_toward(_angle, _target, step)
+		_apply()
+
+	## The one place the world is touched: the piece node's own yaw.
+	##
+	## `facing + _angle`, never `rotation.y += ...`, so a door told to open twice
+	## cannot drift. The placement record keeps `facing` on its own and is not
+	## written from the node, which is what makes this safe to overwrite.
+	func _apply() -> void:
+		if _leaf != null and is_instance_valid(_leaf):
+			_leaf.rotation.y = facing + _angle
+
+	## A door left open comes back open, and swinging the same way. Same reason
+	## the campfire persists `lit`: the catalogue knows a door starts shut, and
+	## only the save file knows this one was left standing open.
+	func save_state() -> Dictionary:
+		return {"open": _open, "swing": _swing}
+
+	func load_state(state: Dictionary) -> void:
+		_open = bool(state.get("open", _open))
+		_swing = 1 if int(state.get("swing", _swing)) >= 0 else -1
+		_retarget()
+		snap()
+
+	## Shut it before it goes, so nothing is left listening to a door that is
+	## mid-swing. Nothing else to undo: the collider is the piece's own.
+	func _release() -> void:
+		pass

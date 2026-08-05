@@ -26,6 +26,9 @@
   "ghost_invalid_colour": "#e0a05a",
   "ghost_alpha": 0.55,
 
+  "_comment_door_reach": "How close the trainer has to be to work a door, in metres. Measured from the door's HINGE, which is at one edge of a 1.1m leaf rather than in the middle of it, so this has to reach across the leaf as well as across the gap the player is standing in. Generous on purpose: a door you have to line yourself up with is a door that reads as broken. The action is `interact` — the existing binding, E and gamepad button 2 — shared with picking up a satchel and engaging a wild pal.",
+  "door_reach": 3.0,
+
   "_comment_removal": "Radius in metres within which a piece can be targeted for removal. Generous, because aiming at a wall you have already built is a chore and getting it wrong costs nothing while removal refunds in full.",
   "remove_radius": 3.0,
 

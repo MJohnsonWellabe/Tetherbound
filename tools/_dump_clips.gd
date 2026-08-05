@@ -1,5 +1,18 @@
 extends SceneTree
 
+## What the animation libraries actually contain, as imported.
+##
+##   /opt/godot/godot --headless --path . --script tools/_dump_clips.gd
+##
+## Length, loop mode, step and track count for every clip in the two KayKit rigs
+## the trainer wears. Written to answer one question and it answered it: all 25
+## clips import with `loop_mode` 0, including `Walking_A` (1.07s), `Running_A`
+## (0.80s) and `Idle_A` (1.07s) — which is why a held sprint animated for eight
+## tenths of a second and then held its last frame. `trainer_model._apply_loops`
+## exists because of this output.
+##
+## Keep it for the next animation pack. The same question will be worth asking.
+
 func _init() -> void:
 	for path in [
 		"res://assets/characters/Rig_Medium_General.glb",

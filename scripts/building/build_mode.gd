@@ -20,6 +20,7 @@ extends Node
 
 const GRID := preload("res://scripts/building/build_grid.gd")
 const DEFS := preload("res://scripts/items/item_defs.gd")
+const STRUCTURES := preload("res://scripts/building/structures.gd")
 const CONFIG_PATH := "res://data/config/building.json"
 
 ## Where the trainer's inventory is expected to be, when the scene names one.
@@ -133,6 +134,16 @@ func _mount_field_systems() -> void:
 		kit.name = "Tools"
 		world.add_child(kit)
 		kit.call("bind", _player, harvestable, self, _combat)
+	# `scripts/building/doors.gd` — the `interact` press that opens a door, and
+	# the doors the world's own cottages need hung in them. Mounted here for the
+	# same reason as the two above, and it belongs in the scene beside them.
+	if world.get_node_or_null(^"Doors") == null:
+		var doors: Node = (load("res://scripts/building/doors.gd") as GDScript).new()
+		doors.name = "Doors"
+		# Bound BEFORE it enters the tree: its `_ready()` defers the settlement
+		# pass, and that pass needs the structures node to hang doors into.
+		doors.call("bind", _player, _structures, self, _combat)
+		world.add_child(doors)
 
 
 func is_open() -> bool:
@@ -359,7 +370,10 @@ func _check(where: Vector3, yaw: float, piece: Dictionary) -> bool:
 			_refusal = "that is under water"
 			return false
 
-	if bool(_structures.call("occupied", where, yaw)):
+	# The piece id goes in, because a door leaf and the doorway it hangs in
+	# legitimately share a grid slot and nothing else does. See
+	# `structures.occupied()`.
+	if bool(_structures.call("occupied", where, yaw, selected_id())):
 		_refusal = "something is already there"
 		return false
 	return true
@@ -547,10 +561,22 @@ func _build_ghost() -> void:
 	if not ResourceLoader.exists(model_path):
 		return
 
-	_ghost = (load(model_path) as PackedScene).instantiate() as Node3D
-	if _ghost == null:
-		return
+	# A HOLDER, with the art inside it, rather than the art itself.
+	#
+	# `_try_place()` reads `_ghost.global_position` and hands it to
+	# `structures.place()`, so the ghost's own origin has to stay ON the grid
+	# point. A door leaf does not sit on its grid point — it hangs half a leaf to
+	# one side of it (`hangs`, in pieces.json) — and a preview that ignored that
+	# would show the door in a different place from where the button puts it,
+	# which is the worst possible kind of preview.
+	_ghost = Node3D.new()
 	add_child(_ghost)
+	var art: Node3D = (load(model_path) as PackedScene).instantiate() as Node3D
+	if art == null:
+		_clear_ghost()
+		return
+	art.position = STRUCTURES.hang_offset(piece)
+	_ghost.add_child(art)
 
 	_ghost_material = StandardMaterial3D.new()
 	_ghost_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED

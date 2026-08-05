@@ -4,6 +4,8 @@
   "_comment_anchor": "`cell` snaps to the middle of a 2m cell, `edge` to the middle of one of its four sides. Not a preference: the kit uses TWO origins. A floor's origin is the centre of its tile; a wall's is the bottom-centre of a 2m EDGE. Snapping both the same way puts every wall half a cell out, which reads as a rotation bug and is not one.",
   "_comment_size_cells": "Footprint in 2m cells, used to sample the terrain under all four corners before allowing a placement. Roofs are named in the kit by their INTERIOR span in metres, so `Roof_RoundTiles_4x4` covers 2x2 cells and overhangs ~0.75m past them on every side.",
   "_comment_scope": "The M8 list from MEADOWS_VERTICAL_SLICE.md: floor, wall, doorway/door, roof, fence \u2014 plus stairs and windows, which the kit gives for free and which a house needs. This comment used to end 'campfire, bed, pal bed, workbench, storage and berry plot are deliberately NOT here: each is a station with behaviour, not a piece of geometry', which was true and was also a permanent excuse, because nothing was ever going to write the behaviour. `scripts/building/station.gd` is now that behaviour, and ALL SIX are below: bed, pal bed and campfire arrived with the hook, and workbench, storage and berry plot arrived with M8's gathering, which is what the `_todo_` entries that used to sit at the top of this list were waiting on.",
+  "_comment_opening": "THE KIT SPLITS A DOOR IN TWO, and the two halves do not share an origin. A doorway wall or a door frame is a piece with a HOLE in it and is marked `opening`; the leaf that hangs in that hole is a separate model, and its origin is its HINGE EDGE rather than its centre. Measured off the accessors: Wall_Plaster_Door_Round is x -1.000..1.000 with the hole at x -0.650..0.655 (centre +0.003), and Door_1_Round is x -0.0463..1.0737 (centre +0.5137). Place the leaf at the wall's own origin and it hangs 0.511m to the right of the hole, half over the pier — which is exactly the 'half offset' the owner reported. So a leaf declares `hangs`, the offset in its OWN local frame that puts it in the middle of the opening, and structures.place() applies it after the yaw. This is the same class of trap as `anchor` above and has the same shape: two origins in one kit.",
+  "_comment_collider_boxes": "A piece with a hole in it needs MORE THAN ONE BOX or the hole is not a hole. `collider_centre`/`collider_extents` stay as the single measured bound — scripts/world/vegetation.gd reads them for the authored settlement — and `collider_boxes` is the honest shape where one box would seal a doorway shut. Two piers and a lintel, taken from the same accessors: the opening is 1.305m wide and clear to the arch springing line at 2.156m, which a 1.80m trainer walks through. The arch above that line is boxed off rather than followed; nothing in this game is tall enough for the difference to exist.",
   "_comment_station": "A piece may carry a `station` block. If it does, `structures.place()` attaches the matching node from scripts/building/station.gd as a child called `Station`, and anything that station says is state comes back in the save file under the record's own `station` key. Everything else about a station piece is ordinary: same grid, same anchor, same measured collider, same record. A piece with NO `station` block behaves exactly as it did before stations existed, which is what keeps the twenty-eight above a non-event.",
   "_comment_cost": "EVERY PIECE COSTS SOMETHING, and every number is TUNABLE. GAME_DESIGN.md 20 has building consume Wood/Stone/Fiber; scripts/building/station.gd called the seam in advance and this is it — the cost sits on the piece beside `model`, and the refusal sits in build_mode._check() beside 'too far away', because a refusal the player has to read is a placement refusal. build_mode also REFUNDS the cost in full when a piece is removed: building is free-form, there is no decay and no repair, and taxing a misplaced wall would only teach the player not to experiment with a grid they are aiming at with a thumbstick.",
   "_comment_cost_shape": "Costs are priced off what the meadow actually yields (data/config/gathering.json): a tree is 12 wood, a boulder 8 stone, a bush 6 fiber with a knife. The reference build is the 20 tutorial's shelter-bed-campfire — a 2x2 cell cottage of four floors, seven plaster walls, a doorway, a door, a 2x2 roof, a bed and a campfire — which totals 72 wood, 28 stone and 32 fiber: about six trees, four boulders and six bushes. That is a session's work and not a chore, which is the bar CLAUDE.md sets for a temporary number.",
@@ -224,6 +226,24 @@
         1.0,
         1.561,
         0.203
+      ],
+      "opening": true,
+      "collider_boxes": [
+        {
+          "_why": "left pier",
+          "centre": [-0.825, 1.5613, -0.111],
+          "extents": [0.175, 1.5613, 0.203]
+        },
+        {
+          "_why": "right pier",
+          "centre": [0.8275, 1.5613, -0.111],
+          "extents": [0.1725, 1.5613, 0.203]
+        },
+        {
+          "_why": "lintel, from the arch springing line up to the wall top",
+          "centre": [0.0, 2.6394, -0.111],
+          "extents": [1.0, 0.4834, 0.203]
+        }
       ]
     },
     "wall_unevenbrick_door_round": {
@@ -248,6 +268,24 @@
         1.0,
         1.561,
         0.203
+      ],
+      "opening": true,
+      "collider_boxes": [
+        {
+          "_why": "left pier",
+          "centre": [-0.825, 1.5613, -0.111],
+          "extents": [0.175, 1.5613, 0.203]
+        },
+        {
+          "_why": "right pier",
+          "centre": [0.8275, 1.5613, -0.111],
+          "extents": [0.1725, 1.5613, 0.203]
+        },
+        {
+          "_why": "lintel, from the arch springing line up to the wall top",
+          "centre": [0.0, 2.6394, -0.111],
+          "extents": [1.0, 0.4834, 0.203]
+        }
       ]
     },
     "wall_arch": {
@@ -294,6 +332,24 @@
         0.802,
         1.293,
         0.239
+      ],
+      "opening": true,
+      "collider_boxes": [
+        {
+          "_why": "left jamb",
+          "centre": [-0.6806, 1.291, -0.057],
+          "extents": [0.1236, 1.293, 0.239]
+        },
+        {
+          "_why": "right jamb",
+          "centre": [0.678, 1.291, -0.057],
+          "extents": [0.121, 1.293, 0.239]
+        },
+        {
+          "_why": "head, from the arch springing line up",
+          "centre": [-0.0026, 2.3172, -0.057],
+          "extents": [0.8016, 0.2673, 0.239]
+        }
       ]
     },
     "doorframe_round_wooddark": {
@@ -317,6 +373,24 @@
         0.703,
         1.282,
         0.269
+      ],
+      "opening": true,
+      "collider_boxes": [
+        {
+          "_why": "left jamb",
+          "centre": [-0.6313, 1.273, 0.029],
+          "extents": [0.0723, 1.282, 0.269]
+        },
+        {
+          "_why": "right jamb",
+          "centre": [0.6313, 1.273, 0.029],
+          "extents": [0.0723, 1.282, 0.269]
+        },
+        {
+          "_why": "head, from the arch springing line up",
+          "centre": [0.0, 2.3024, 0.029],
+          "extents": [0.7035, 0.2524, 0.269]
+        }
       ]
     },
     "door_1_round": {
@@ -341,7 +415,13 @@
         0.56,
         1.159,
         0.06
-      ]
+      ],
+      "hangs": [-0.511, 0.0, 0.0],
+      "station": {
+        "behaviour": "door",
+        "open_degrees": 92.0,
+        "swing_seconds": 0.32
+      }
     },
     "door_2_round": {
       "display_name": "Panelled Door",
@@ -365,7 +445,13 @@
         0.558,
         1.164,
         0.13
-      ]
+      ],
+      "hangs": [-0.512, 0.0, 0.0],
+      "station": {
+        "behaviour": "door",
+        "open_degrees": 92.0,
+        "swing_seconds": 0.32
+      }
     },
     "window_wide_round1": {
       "display_name": "Window",

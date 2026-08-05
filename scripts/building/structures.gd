@@ -93,6 +93,33 @@ func definition(piece_id: String) -> Dictionary:
 	return _catalogue.get(piece_id, {})
 
 
+## Where a piece hangs relative to the point it was snapped to, in its OWN frame.
+##
+## Zero for the thirty pieces that sit on their own origin. Non-zero for the two
+## door leaves, whose origin is the hinge edge of the leaf rather than the middle
+## of the doorway — see `_comment_opening` in `pieces.json` for the measurement.
+## Static and taking a definition, so build mode can offset its ghost by the same
+## number without owning a structures node.
+static func hang_offset(piece: Dictionary) -> Vector3:
+	var entry: Variant = piece.get("hangs", null)
+	if not entry is Array or (entry as Array).size() < 3:
+		return Vector3.ZERO
+	var values: Array = entry
+	return Vector3(float(values[0]), float(values[1]), float(values[2]))
+
+
+## Does this piece hang IN an opening rather than beside one? True for a door
+## leaf. Used so a leaf and the doorway it belongs in may share a grid slot.
+static func hangs_in_an_opening(piece: Dictionary) -> bool:
+	return piece.has("hangs")
+
+
+## Does this piece HAVE an opening a leaf can hang in? True for the two doorway
+## walls and the two door frames.
+static func is_an_opening(piece: Dictionary) -> bool:
+	return bool(piece.get("opening", false))
+
+
 ## What a piece costs, as `{item_id: count}`.
 ##
 ## Read from the catalogue and COPIED, never handed out live: a palette that got
@@ -143,7 +170,8 @@ func place(
 	position: Vector3,
 	yaw: float,
 	storey: int = 0,
-	station_state: Dictionary = {}
+	station_state: Dictionary = {},
+	fixed: bool = false
 ) -> Node3D:
 	var piece := definition(piece_id)
 	if piece.is_empty():
@@ -164,10 +192,23 @@ func place(
 	# origin. `position` is the same coordinate whenever this node is itself at
 	# the origin, which is how the scene ships and how every such caller builds
 	# one.
+	# WHERE THE PIECE ACTUALLY GOES is not always where it was snapped to.
+	#
+	# A door leaf's origin is its HINGE, not its centre, and the doorway it hangs
+	# in is snapped to the middle of a cell edge. Placing the leaf at that point
+	# hangs it half a leaf-width to one side, over the pier, which is precisely
+	# the "half offset" the owner reported on the pre-built houses. `hangs` is
+	# that correction, measured, in the piece's OWN frame — so it turns with the
+	# piece and is right on all four edges of a cell.
+	#
+	# The RECORD keeps the snapped point, not this one. The grid coordinate is
+	# what `occupied()` compares and what a save file should carry, and applying
+	# the offset here rather than there means a reload runs it exactly once.
+	var world_at := position + Basis(Vector3.UP, yaw) * hang_offset(piece)
 	if is_inside_tree():
-		node.global_position = position
+		node.global_position = world_at
 	else:
-		node.position = position
+		node.position = world_at
 	node.rotation.y = yaw
 
 	# The whole imported scene, not one extracted mesh: the kit's pieces are
@@ -185,7 +226,10 @@ func place(
 	var station: Node = STATION.create(piece)
 	if station != null:
 		node.add_child(station)
-		station.call("setup", piece_id, STATION.config_of(piece), position)
+		# The station is told where the piece REALLY is and which way it faces.
+		# A door cannot decide which way to swing without the second: "away from
+		# the player" is a question in the piece's own local frame.
+		station.call("setup", piece_id, STATION.config_of(piece), world_at, yaw)
 		if not station_state.is_empty():
 			station.call("load_state", station_state)
 
@@ -197,10 +241,30 @@ func place(
 		"yaw_deg": rad_to_deg(yaw),
 		"storey": storey,
 	}
-	_placed.append({"record": record, "node": node, "station": station})
+	_placed.append({"record": record, "node": node, "station": station, "fixed": fixed})
 	if station != null:
 		station_placed.emit(station)
 	return node
+
+
+## A piece the WORLD owns rather than the player.
+##
+## Identical to `place()` in every way that reaches the screen — same grid, same
+## art, same measured collider, same station — and different in exactly three
+## ways that reach the save file and the build tool: it is not in `records()`, it
+## is not counted by `count()`, and `remove_nearest()` will not take it down.
+##
+## The one thing that needs this is the door hung in a pre-built cottage. The
+## settlement is content, drawn by the scatter next door from
+## `data/config/settlement.json`; a door in it has to be a real node with a real
+## station or it cannot open, but it must not turn up in the player's save as
+## something they built and can demolish for a refund of materials they never
+## paid. `clear()` leaves these standing for the same reason: a load wipes what
+## the player put up, and Grandpa's front door is not that.
+func place_fixed(
+	piece_id: String, position: Vector3, yaw: float, storey: int = 0
+) -> Node3D:
+	return place(piece_id, position, yaw, storey, {}, true)
 
 
 ## Remove the piece nearest a point, within `radius`. Returns true if one went.
@@ -230,6 +294,11 @@ func nearest_index(point: Vector3, radius: float) -> int:
 	var best := -1
 	var best_distance := radius
 	for i in _placed.size():
+		# A world-owned piece is not the player's to find here. `nearest_index` is
+		# what removal and refunds run through, and the build tool must not be able
+		# to demolish a pre-built cottage's door for materials nobody paid.
+		if bool(_placed[i].get("fixed", false)):
+			continue
 		var distance := _position_of(_placed[i]["record"]).distance_to(point)
 		if distance <= best_distance:
 			best_distance = distance
@@ -286,19 +355,39 @@ func _position_of(record: Dictionary) -> Vector3:
 ## the same grid slot always land on exactly the same coordinates, so an exact
 ## comparison is both cheaper and more honest than a physics query that would
 ## also trip on a roof legitimately overhanging a wall.
-func occupied(position: Vector3, yaw: float) -> bool:
+## A DOOR AND ITS DOORWAY ARE THE ONE PAIR ALLOWED TO SHARE A SLOT, which is why
+## this takes the piece id at all. They are two models of one thing — the kit
+## splits every doorway into the wall with the hole and the leaf that hangs in it
+## — and they snap to the same edge of the same cell by construction. Without
+## this exception the player can place a doorway and is then told "something is
+## already there" when they try to hang a door in it, which makes the two door
+## pieces in the palette unusable together and is not a rule anybody chose.
+func occupied(position: Vector3, yaw: float, piece_id: String = "") -> bool:
+	var incoming := definition(piece_id)
 	for entry: Dictionary in _placed:
 		var record: Dictionary = entry["record"]
 		if absf(record["x"] - position.x) < 0.05 \
 				and absf(record["y"] - position.y) < 0.05 \
 				and absf(record["z"] - position.z) < 0.05 \
 				and absf(angle_difference(deg_to_rad(record["yaw_deg"]), yaw)) < 0.05:
+			var sitting := definition(str(record.get("piece", "")))
+			if hangs_in_an_opening(incoming) and is_an_opening(sitting):
+				continue
+			if is_an_opening(incoming) and hangs_in_an_opening(sitting):
+				continue
 			return true
 	return false
 
 
+## How many pieces the PLAYER has built. World-owned pieces are excluded: they
+## are content, they are not in the save file, and `clear()` does not take them
+## down, so counting them here would mean `clear()` visibly failed to clear.
 func count() -> int:
-	return _placed.size()
+	var total := 0
+	for entry: Dictionary in _placed:
+		if not bool(entry.get("fixed", false)):
+			total += 1
+	return total
 
 
 ## Placement records only, for tests and for the save file.
@@ -310,6 +399,8 @@ func count() -> int:
 func records() -> Array:
 	var out: Array = []
 	for entry: Dictionary in _placed:
+		if bool(entry.get("fixed", false)):
+			continue
 		out.append(STATION.write_record(entry["record"] as Dictionary, entry.get("station")))
 	return out
 
@@ -435,29 +526,73 @@ func _register(manager: Node = null) -> void:
 		manager.call("register", SAVE_DOMAIN, self)
 
 
+## Take down everything the PLAYER built.
+##
+## World-owned pieces survive, which is what makes them world-owned: `load_data()`
+## clears before it rebuilds from the save, and a door hung in Grandpa's cottage
+## by the world is not in that save and must not disappear when one is loaded.
 func clear() -> void:
+	var kept: Array[Dictionary] = []
 	for entry: Dictionary in _placed:
+		if bool(entry.get("fixed", false)):
+			kept.append(entry)
+			continue
 		_demolish(entry)
-	_placed.clear()
+	_placed = kept
 
 
-## A static body carrying one box, sized from the piece's MEASURED bounds.
+## A static body carrying the piece's MEASURED collision.
 ##
 ## The extents come from the catalogue, which a generator read off the model's
 ## own glTF accessors. Nobody typed them, because a collider that disagrees with
 ## its art is a wall you walk through or a floor with an invisible kerb, and both
 ## get reported as physics bugs rather than as data errors.
+##
+## ONE BOX IS NOT ENOUGH FOR A PIECE WITH A HOLE IN IT, and that was the quieter
+## half of "there's no way to open doors": a doorway wall's measured bound is 2m
+## x 3.12m of solid box, and a bounding box has no doorway in it. Every doorway
+## in the game — placed or authored — was sealed shut, which makes an opening
+## door theatre. So a piece may carry `collider_boxes`, piers and a lintel, and
+## gets one shape per box; `collider_centre`/`collider_extents` stay as the single
+## measured bound for the solid pieces and for the settlement renderer next door,
+## which reads them.
 func _body(piece: Dictionary) -> StaticBody3D:
 	var body := StaticBody3D.new()
-	var shape := BoxShape3D.new()
-	var extents: Array = piece.get("collider_extents", [1.0, 1.0, 1.0])
-	shape.size = Vector3(float(extents[0]), float(extents[1]), float(extents[2])) * 2.0
-	var collider := CollisionShape3D.new()
-	collider.shape = shape
-	var centre: Array = piece.get("collider_centre", [0.0, 0.0, 0.0])
-	collider.position = Vector3(float(centre[0]), float(centre[1]), float(centre[2]))
-	body.add_child(collider)
+	for box: Dictionary in collider_boxes(piece):
+		var shape := BoxShape3D.new()
+		var extents: Array = box["extents"]
+		shape.size = Vector3(float(extents[0]), float(extents[1]), float(extents[2])) * 2.0
+		var collider := CollisionShape3D.new()
+		collider.shape = shape
+		var centre: Array = box["centre"]
+		collider.position = Vector3(float(centre[0]), float(centre[1]), float(centre[2]))
+		body.add_child(collider)
 	return body
+
+
+## Every box a piece's collision is made of, as `[{centre, extents}]`.
+##
+## One entry for a solid piece, three for a doorway. Static, and the same shape
+## either way, so a caller never has to ask which kind it is holding —
+## `scripts/building/doors.gd` rebuilds the settlement's doorway collision from
+## exactly this list.
+static func collider_boxes(piece: Dictionary) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var boxes: Variant = piece.get("collider_boxes", null)
+	if boxes is Array:
+		for entry: Variant in boxes as Array:
+			if entry is Dictionary and (entry as Dictionary).has("centre") \
+					and (entry as Dictionary).has("extents"):
+				out.append({
+					"centre": (entry as Dictionary)["centre"],
+					"extents": (entry as Dictionary)["extents"],
+				})
+	if out.is_empty():
+		out.append({
+			"centre": piece.get("collider_centre", [0.0, 0.0, 0.0]),
+			"extents": piece.get("collider_extents", [1.0, 1.0, 1.0]),
+		})
+	return out
 
 
 ## Point every mesh at one shared material per source material name.
