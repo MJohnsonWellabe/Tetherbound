@@ -235,6 +235,8 @@ var _respawn_timers: Dictionary = {}
 ## player can neither see nor reach it and nothing is printed.
 var _world: Node = null
 var _party: Node = null
+## M10's clock and weather. Optional — see `_ready()`.
+var _sky: Node = null
 
 ## M13's Team Tether route, when one is mounted. Duck-typed and optional: the
 ## director works exactly as it did without one, which is what lets every
@@ -260,6 +262,14 @@ func _ready() -> void:
 
 	_party = get_node_or_null(party_path)
 	_world = _find_the_world()
+	# M10's clock, if the scene carries one. OPTIONAL and duck-typed: without a
+	# SkyCycle every `spawn_weight` call is skipped and the meadow populates
+	# exactly as it did before, which is what keeps every smoke that builds a
+	# bare world working.
+	_sky = get_parent().get_node_or_null(^"SkyCycle") if get_parent() != null else null
+	if _sky != null and not _sky.has_method("spawn_weight"):
+		push_warning("a SkyCycle is present but cannot answer spawn_weight; spawns will ignore the clock")
+		_sky = null
 	_engage_range = float(MATH.config().get("flow", {}).get("engage_range", 6.0))
 	_player = get_node_or_null(player_path) as CharacterBody3D
 	_manager = get_node_or_null(manager_path)
@@ -385,6 +395,10 @@ var _asked_for: int = 0
 var _skipped_no_ground: int = 0
 var _skipped_too_steep: int = 0
 var _skipped_crowded: int = 0
+## How many spawns the clock and the weather turned away. Counted and printed
+## with the others, because "the meadow is emptier than usual" and "the spawner
+## is broken" look identical from outside, and only this number tells them apart.
+var _out_of_season: int = 0
 
 
 static func spawn_config() -> Dictionary:
@@ -429,6 +443,17 @@ func _populate_the_meadow(origin: Vector3) -> void:
 		var far := maxf(near + 1.0, float(band.get("far", 160.0)))
 		for i in int(band.get("count", 0)):
 			_asked_for += 1
+			# M10's habitat + time + weather gate (§24). `spawn_weight` is a FLOAT
+			# rather than a bool so the roll happens here, against the seeded
+			# generator this loop already owns — which keeps the meadow
+			# reproducible from spawns.json's seed instead of depending on what
+			# the sky happened to be doing.
+			#
+			# A species with no condition returns 1.0, so the common creatures are
+			# unaffected and the whole gate is opt-in from data.
+			if _sky != null and rng.randf() >= float(_sky.call("spawn_weight", species)):
+				_out_of_season += 1
+				continue
 			var at: Variant = _find_a_home(origin, rng, near, far, max_slope, separation, taken)
 			if at == null:
 				continue
@@ -525,6 +550,10 @@ func _report_population() -> void:
 	if _skipped_no_ground > 0 or _skipped_crowded > 0:
 		print("[meadow] %d spawn points asked for, %d found no ground, %d found no room" % [
 			_asked_for, _skipped_no_ground, _skipped_crowded
+		])
+	if _sky != null:
+		print("[meadow] %s, %s — %d spawn(s) were out of season" % [
+			_sky.call("phase"), _sky.call("weather"), _out_of_season
 		])
 
 
