@@ -29,7 +29,7 @@ const OUT_DIR := "res://shots/weather"
 
 ## Terrain streams in over several frames and builds collision after that.
 const SETTLE_FRAMES := 240
-const POSE_FRAMES := 6
+const POSE_FRAMES := 20
 ## Rain has a 1.1s lifetime; capturing before a full generation has fallen gives
 ## a frame with a thin band of drops near the top and clear air below it.
 const RAIN_FILL_FRAMES := 70
@@ -123,10 +123,21 @@ func _run() -> void:
 
 	cycle.call("set_paused", true)
 
+	# `-- night` renders only the shots whose name contains "night". A full set is
+	# eighteen software-rendered frames of a 74,000-prop meadow, and tuning one
+	# hour by re-rendering the other seventeen is most of an hour per round.
+	var only := ""
+	for argument in OS.get_cmdline_user_args():
+		only = str(argument)
+	if only != "":
+		print("  filtering to shots matching '%s'" % only)
+
 	var written: Array[String] = []
 	for entry: Variant in SHOTS:
 		var shot: Dictionary = entry
 		var name := str(shot["name"])
+		if only != "" and not name.contains(only):
+			continue
 		if not bool(cycle.call("force_weather", str(shot["weather"]))):
 			_failures.append("%s: no weather state called '%s'" % [name, shot["weather"]])
 			continue

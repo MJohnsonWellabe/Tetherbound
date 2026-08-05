@@ -96,7 +96,7 @@ func _ready() -> void:
 
 	_build_rain()
 	_announce()
-	_push()
+	_push(true)
 	# Printed at boot for the same reason `_report_population()` prints the
 	# creature census: a clock nobody can see is indistinguishable from a clock
 	# that is not running, and an evidence session should be able to say what
@@ -150,7 +150,7 @@ func set_hour(at: float) -> void:
 	if _look != null:
 		_look.call("release")
 	_announce()
-	_push()
+	_push(true)
 
 
 ## Jump the clock forward. Negative runs it back.
@@ -204,7 +204,7 @@ func force_weather(id: String) -> bool:
 		_look.call("release")
 	_reset_rain()
 	_announce()
-	_push()
+	_push(true)
 	return true
 
 
@@ -395,8 +395,8 @@ func _build_rain() -> void:
 
 	var material := StandardMaterial3D.new()
 	# Unshaded, because a rain drop lit by a directional light in a rainstorm is
-	# lit by nothing — and because shading 900 alpha quads is the one part of
-	# this that would actually cost something on the handheld.
+	# lit by nothing — and because shading fifteen hundred alpha quads is the one
+	# part of this that would actually cost something on the handheld.
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
@@ -406,10 +406,36 @@ func _build_rain() -> void:
 	material.vertex_color_use_as_albedo = true
 	material.albedo_color = colour
 	material.disable_receive_shadows = true
+	if bool(cfg.get("soft_ends", true)):
+		material.albedo_texture = _drop_texture()
 	quad.material = material
 
 	add_child(_rain)
 	_reset_rain()
+
+
+## A vertical alpha ramp, so a drop fades out at both ends.
+##
+## The first render of the rain came back with what read as scattered WHITE
+## POLES: a bare quad terminates in a flat edge at both ends, and at the size a
+## rain streak has to be, that edge is a visible rectangle. This is the whole
+## fix, and it is four kilobytes generated at load rather than an asset — a file
+## would need a ledger row for something a loop can state in six lines.
+##
+## Brightest in the middle and transparent at the tips, which is what a drop
+## smeared across an exposure actually looks like.
+func _drop_texture() -> ImageTexture:
+	const WIDE := 4
+	const TALL := 32
+	var image := Image.create_empty(WIDE, TALL, false, Image.FORMAT_RGBA8)
+	for y in TALL:
+		# 0 at both ends, 1 in the middle, eased so the falloff is not a triangle.
+		var along := float(y) / float(TALL - 1)
+		var fade := sin(along * PI)
+		var alpha := pow(fade, 0.6)
+		for x in WIDE:
+			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, alpha))
+	return ImageTexture.create_from_image(image)
 
 
 ## How hard it is raining right now, 0..1-ish, blended across a weather change.
@@ -549,10 +575,42 @@ static func phase_at(phases: Dictionary, at: float) -> String:
 ## --- driving the look ------------------------------------------------------
 
 
-func _push() -> void:
+## The hour the look was last built at, and what it was built with. Re-applying
+## an identical moment is pure cost.
+var _pushed_hour: float = -99.0
+var _pushed_key: String = ""
+var _pushed_flash: float = -1.0
+
+## How far the clock may move before the look is rebuilt.
+##
+## `apply_moment` interpolates three dictionaries and writes about twenty
+## properties; doing it every frame for a value that has moved by a
+## seven-hundredth of an hour is work the ROG Ally does not need to do. At the
+## default 24-minute day this is roughly eight in-game seconds, or one rebuild
+## every eight frames at 60fps — and no two frames eight apart differ by
+## anything an eye can see, because the whole curve spans 24 hours.
+##
+## Weather, blend and flash bypass it entirely: a lightning strike has to land
+## on the frame it lands on.
+const HOUR_STEP := 0.002
+
+
+func _push(force: bool = false) -> void:
 	if _look == null:
 		return
-	_look.call("apply_moment", _hour, _current, _next, _blend, flash())
+	var key := "%s>%s@%.3f" % [_current, _next, _blend]
+	var lit := flash()
+	if (
+		not force
+		and key == _pushed_key
+		and is_equal_approx(lit, _pushed_flash)
+		and absf(_hour - _pushed_hour) < HOUR_STEP
+	):
+		return
+	_pushed_hour = _hour
+	_pushed_key = key
+	_pushed_flash = lit
+	_look.call("apply_moment", _hour, _current, _next, _blend, lit)
 
 
 func _announce() -> void:
