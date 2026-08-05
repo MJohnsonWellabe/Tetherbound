@@ -24,6 +24,13 @@ const M8_ITEMS := [
 	# assertion below still means "nothing has crept in that no milestone asked
 	# for" — this one was asked for by name.
 	"revival_draught",
+	# M12's saddle. GAME_DESIGN.md §17: "Ride/swim/fly require crafted
+	# saddle/harness-type equipment", and it is ONE entry because the same
+	# section says the riding saddle is generic across every compatible pal.
+	# Listed by name for the reason the draught is: this assertion means
+	# "nothing has crept in that no milestone asked for", and a saddle per
+	# species would show up here as four names nobody could point at a bullet.
+	"riding_saddle",
 ]
 
 ## A stackable material and a tool, picked once so the tests below read as

@@ -13,6 +13,11 @@ extends CharacterBody3D
 
 const CONFIG_PATH := "res://data/config/movement.json"
 const VITALS := preload("res://scripts/player/player_vitals.gd")
+## M12's riding. Built as a child here rather than placed in the world scene: the
+## mount is a thing that happens TO the trainer, it needs nothing the trainer does
+## not already have, and a node in the scene file would be a fourth path to keep
+## pointed at him. See `scripts/pals/mount.gd`.
+const MOUNT := preload("res://scripts/pals/mount.gd")
 
 ## The key this node owns inside `SaveManager`'s one envelope (D14).
 ##
@@ -40,6 +45,9 @@ var vitals: RefCounted = VITALS.new()
 var _camera_rig: Node3D = null
 var _model: Node3D = null
 var _world: Node = null
+## The rider. Never null after `_ready`; ask it `is_mounted()` rather than
+## keeping a second flag here that could disagree with it.
+var _mount: Node = null
 
 var _walk_speed: float = 4.2
 var _sprint_speed: float = 7.6
@@ -95,6 +103,14 @@ func _ready() -> void:
 		_world = null
 	if _camera_rig != null and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", self)
+	_build_mount()
+
+
+func _build_mount() -> void:
+	_mount = MOUNT.new()
+	_mount.name = "Mount"
+	add_child(_mount)
+	_mount.call("bind", self, _camera_rig)
 
 
 func _load_config() -> void:
@@ -130,6 +146,25 @@ func _load_config() -> void:
 
 func _physics_process(delta: float) -> void:
 	if _settling_after_load():
+		return
+	if is_mounted():
+		# THE TRAINER IS CARGO WHILE HE IS ON A CREATURE'S BACK. No gravity, no
+		# input, no `move_and_slide` — `mount.gd` puts him on the saddle every
+		# physics frame, and a body that also simulated would spend the frame
+		# falling out of a position something else keeps restoring.
+		#
+		# `is_on_floor()` therefore holds whatever it read on the frame he got on,
+		# which is true, and that is deliberate: `trainer_model` asks it to decide
+		# between the grounded clips and the jump clip, and a rider in a
+		# free-falling pose would be worse than a rider in a standing one.
+		#
+		# Vitals still tick, at rest. Riding does not cost the trainer stamina —
+		# his legs are not doing anything, the creature's are, and the creature has
+		# its own meter (`mount.Legs`). It regenerates while you ride, which is
+		# the small extra reason to.
+		velocity = Vector3.ZERO
+		_sprinting = false
+		vitals.tick(delta, false)
 		return
 	_track_airborne(delta)
 	_apply_gravity(delta)
@@ -257,6 +292,17 @@ func _face(direction: Vector3, delta: float) -> void:
 	_model.rotation.y = rotate_toward(_model.rotation.y, target_yaw, _turn_speed * delta)
 
 
+## Point the trainer's body somewhere directly, in radians.
+##
+## The body's own yaw is never touched — the capsule is axis-free and the camera
+## rig owns where "forward" is — so this turns the MODEL, which is the same thing
+## `_face` above turns. `mount.gd` is the caller: a rider who kept facing the way
+## he was walking when he got on would ride sideways.
+func set_model_yaw(yaw: float) -> void:
+	if _model != null:
+		_model.rotation.y = yaw
+
+
 func _try_jump() -> void:
 	if not _locomotion_enabled:
 		return
@@ -328,10 +374,32 @@ func set_locomotion_enabled(enabled: bool) -> void:
 	_locomotion_enabled = enabled
 	if not enabled:
 		_jump_buffered_for = INF
+		# GETTING OFF IS PART OF LOSING CONTROL OF THE TRAINER, and this is the
+		# only place that has to know it. A fight opening, a menu opening and a
+		# death all come through here already, so riding does not add a fourth
+		# thing every one of them must remember to do — and the creature being
+		# ridden is the party's active pal, which is the creature the fight was
+		# about to deploy anyway.
+		if _mount != null and is_instance_valid(_mount):
+			_mount.call("forced_dismount")
 
 
 func locomotion_enabled() -> bool:
 	return _locomotion_enabled
+
+
+## --- riding -----------------------------------------------------------------
+##
+## The trainer forwards; `mount.gd` decides. Two accessors rather than a mirrored
+## flag, for `party_manager`'s reason: a second copy of a piece of state is a
+## second thing that can be wrong about it.
+
+func mount() -> Node:
+	return _mount
+
+
+func is_mounted() -> bool:
+	return _mount != null and is_instance_valid(_mount) and bool(_mount.call("is_mounted"))
 
 
 ## --- the trainer's things ---------------------------------------------------

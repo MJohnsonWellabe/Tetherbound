@@ -87,6 +87,17 @@
       "stack_limit": 5
     },
 
+    "_comment_saddle": "MEADOWS_VERTICAL_SLICE.md M12 and GAME_DESIGN.md 17: 'Ride/swim/fly require crafted saddle/harness-type equipment' and 'Riding saddle is generic across compatible rideable pals'. There is ONE saddle entry and there is never going to be a second: M12's last bullet is 'no species-specific saddle clutter', so a `stag_saddle` beside this one would be the milestone failing rather than the milestone growing. Which creatures it fits is a `rideable` flag in data/pals/species.json — a property of the animal, not of the tack.",
+    "_comment_saddle_firewall": "What the saddle IS lives here. How fast a mount travels, what its gallop costs and where the rider sits live in data/config/movement.json and data/pals/species.json, because those are relationships between a creature, a trainer and the ground. If a value here could change a riding speed, it is in the wrong file.",
+    "_comment_saddle_category": "Filed as a `material`, and it is not one — it is EQUIPMENT. scripts/items/item_defs.gd enumerates four categories (material, tool, orb, consumable) and adding a fifth is an edit to that file, which this milestone does not own; berries and the revival draught carry the same note for the same reason.\n\nIt is deliberately NOT a `tool`. A tool declares durability and scripts/items/tools.gd puts every tool in the hand cycle, so filing it there would give the trainer a saddle he can select and swing next to the axe — and 19's tools 'cannot damage pals or humans' would be being tested by a stirrup.",
+
+    "riding_saddle": {
+      "display_name": "Riding Saddle",
+      "category": "material",
+      "_comment_stack": "ONE, and not for want of room. The saddle is generic, so a second one fits nothing the first does not; a stack of them would be pure clutter in a 24-slot bag. Owning one is the whole state.",
+      "stack_limit": 1
+    },
+
     "tether_orb": {
       "display_name": "Tether Orb",
       "category": "orb",

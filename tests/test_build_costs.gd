@@ -267,7 +267,12 @@ func test_every_recipe_makes_a_real_item_from_real_materials() -> void:
 			assert_true(DEFS.has(item), "recipe '%s' costs '%s', which is not an item" % [id, item])
 			assert_false(SPECIES.has(item), "recipe '%s' costs a creature" % id)
 		checked += 1
-	assert_eq(checked, 5, "M8 asks for five tools")
+	# M8's five tools, plus M12's riding saddle — §17 says traversal equipment is
+	# CRAFTED, so the bench is where a saddle comes from. Still one saddle: the
+	# milestone's own bullet is "no species-specific saddle clutter", and a
+	# seventh recipe here making a `stag_saddle` would be that clutter arriving
+	# through the workbench.
+	assert_eq(checked, 6, "M8's five tools and M12's one saddle")
 
 
 func test_the_five_tools_are_all_craftable() -> void:

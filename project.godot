@@ -186,6 +186,31 @@ build_rotate={
 , Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
 ]
 }
+; M12's mount/dismount. A NEW ACTION, after checking that no existing one fits.
+;
+; `interact` is the obvious candidate and it is the wrong one. It is already
+; read by three systems — `encounter_director` engages a wild pal within 6m,
+; `doors` opens a door, `satchel` loots a bag — and mounting collides with the
+; first of those in a way nothing can arbitrate: calling your mount and engaging
+; a creature are both legal with a rideable pal in the party and a wild pal in
+; range, so one press would do both, in the same frame, forever. That is exactly
+; the failure the `party_menu` comment below records — two actions on gamepad Y,
+; one press firing both, only one screen ever winning — and it was resolved
+; there in the input map rather than papered over in the code that reads it.
+;
+; The button is the D-PAD DOWN, which is the only face, shoulder or D-pad button
+; on an Xbox layout that nothing in this file binds: up is `build_rotate`, left
+; and right are `build_cycle_*` and `combat_switch_*` sharing on purpose. The
+; gallop is not here — it is `sprint`, because that button already means "go
+; faster" and the trainer's own legs are not being used.
+;
+; Keyboard G, which is free and under the left hand at WASD.
+mount={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":71,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+]
+}
 combat_quick={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"script":null)

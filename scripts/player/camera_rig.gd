@@ -121,10 +121,55 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	clear_excluded_objects()
 	if target is CollisionObject3D:
 		add_excluded_object((target as CollisionObject3D).get_rid())
+	_reapply_exclusions()
 
 	if target != null and not had_target:
 		global_position = target.global_position + Vector3.UP * _height
 		spring_length = _distance
+
+
+## --- things the arm must see through ----------------------------------------
+##
+## Bodies other than the target that the spring arm must not collide with.
+##
+## M12's mount is the first: the trainer sits ON a creature, so the thing
+## between the camera and its target is that creature's hindquarters, and a
+## SpringArm3D collapses on the first thing it touches. Without this the entire
+## ride is played from inside a rump — which is the same defect `set_target`
+## above records about the player's pal during a fight, arriving from the other
+## direction.
+##
+## Kept as a LIST here rather than being added straight to the arm, because
+## `set_target` calls `clear_excluded_objects()` and would otherwise silently
+## drop them the next time anything re-pointed the camera. A fight starting while
+## mounted does exactly that.
+var _excluded: Array[CollisionObject3D] = []
+
+
+func exclude_from_arm(object: CollisionObject3D) -> void:
+	if object == null or _excluded.has(object):
+		return
+	_excluded.append(object)
+	add_excluded_object(object.get_rid())
+
+
+func stop_excluding(object: CollisionObject3D) -> void:
+	_excluded.erase(object)
+	# The arm has no "remove one" that survives a freed body, so the set is
+	# rebuilt from what is left. Cheap: this list is never more than one long.
+	clear_excluded_objects()
+	if _target is CollisionObject3D:
+		add_excluded_object((_target as CollisionObject3D).get_rid())
+	_reapply_exclusions()
+
+
+func _reapply_exclusions() -> void:
+	var live: Array[CollisionObject3D] = []
+	for object in _excluded:
+		if is_instance_valid(object):
+			live.append(object)
+			add_excluded_object(object.get_rid())
+	_excluded = live
 
 
 func _unhandled_input(event: InputEvent) -> void:

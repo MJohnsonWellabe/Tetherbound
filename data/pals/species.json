@@ -9,6 +9,8 @@
   "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
   "_comment_aggressive": "`aggressive` decides whether a wild pal will start a fight on its own. GAME_DESIGN.md §14 forbids simple proximity starting a fight with a PEACEFUL pal, and the same list allows 'Aggressive pal initiates' — so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
   "_comment_legendary": "§28's unique Ground legendary — the ultimate riding mount — IS NOT HERE, and that is a decision. No free finished asset carries it; the sourcing pass established that and separately flagged that §28 wants Ground while every awe-inspiring free candidate is a flyer. The nearest thing in this pack is the Stag, and a scaled-up Stag standing next to `wild_grazer` — which IS the Stag — would be the padding this roster is meant not to do. docs/ASSET_LEDGER.md records the real answer: Quaternius ships the CC0 .blend sources, so the legendary does not have to be bought, it has to be MODELLED from a rigged antlered base. Until it is, M14's slot is empty and says so.",
+  "_comment_rideable": "M12. `rideable` decides whether a saddled trainer can get on this creature's back, and every species declares one — the same rule `aggressive` follows, so adding a species is a decision rather than a default.\n\nTHE RULE IS PHYSICAL AND IT IS MEASURED: a creature is rideable when the top of its back, behind the shoulders, clears the trainer's own hip by 15cm. The trainer is 1.80m and his pelvis reads 1.055m (data/config/movement.json `rider_hip_height`), so the bar is 1.20m. Below the hip he is not riding, he is straddling — and the 15cm on top is not arithmetic, it is what the RENDERED FRAMES said: at 10cm of clearance the rider's boot is on the grass (shots/riding/evolved_wolf-1-mounted-side.png) and at 16cm it is not (shots/riding/wild_grazer-1-mounted-side.png).\n\nMeasured on each fitted creature from BONE POSES and rest-pose vertices under its idle clip, never from `Mesh.get_aabb()`: on a skinned mesh Godot pads that box to cover every pose in every clip, which is how a 1.4m alpaca measures 5.40m — its rear-up attack, not its height.\n\n    Thornback   1.87   rideable\n    Palehorn    1.21   rideable\n    -------------------------- 1.20, the bar\n    Gloamfang   1.15   the one close call; see its entry\n    -------------------------- 1.05, the trainer's hip\n    Bramblit    0.71\n    Duskpup     0.61\n    Cindertail  0.59\n    Rillcroak   0.36\n    Hopper      0.26\n\nTwo of eight, and only one creature is anywhere near the line: the tallest refusal after the Gloamfang is half a metre short. WHAT THE THRESHOLD IS REALLY ABOUT is the trainer, not the creatures — his animation library has no seated clip, so he rides in a borrowed bent-legged pose that hangs lower than a real seat would. A seated clip would lower this bar and is the thing to fix before adding a smaller mount.\n\nWHY NOT MORE: the pack holds a Deer, a Donkey, two Horses and a Cow that would all fill this role, and the roster note above refuses to ship four large brown quadrupeds with different names. Riding does not change that — one saddle fits everything that qualifies (data/items/items.json), so a fourth mount would add tack-free clutter and no verb.",
+  "_comment_ride_block": "`ride` carries what riding needs to know about THIS creature and nothing else:\n\n  back_height  / back_forward   Where the saddle sits, in the creature's own body-local metres, measured as above. The rider's origin is `back_height - rider_hip_height` — one number from here, one from the trainer's file. That split is deliberate: 'he sits too high on everything' is a trainer-side edit and 'he sits too high on the Thornback' is a creature-side one, and neither can be fixed in the place that would make the other worse.\n\n  speed_scale                   A multiple of the ride speeds in data/config/movement.json. A stag and a bull should not travel alike; this is the only per-species speed number and there is no per-species stamina, acceleration or turn rate, because none of those has yet been a thing anyone wanted to say about one creature.\n\nThere is NO saddle id here, and that absence is the milestone's 'no species-specific saddle clutter' bullet expressed as a schema: a creature cannot name its own tack, so nobody can add a second saddle without first inventing somewhere to put it.",
   "_comment_evolution": "§11: evolution is limited, starters do not evolve, some rare pals do, and it 'must visually make sense with available assets'. One line exists — `wild_pup` into `evolved_wolf` — and `evolves_into` is inert data: no code reads it, because the requirement (level + high bond + item) is a system nobody has built. What it does today is let tests/test_roster.gd assert the thing that was WRONG when the pack landed: at the pack's own scale the ShibaInu is 0.94m and the Wolf is 0.80m, so the evolution SHRANK. Sizes here are authored, not inherited, and the evolved form is a head taller and more than twice as long.",
   "species": {
     "starter_ground": {
@@ -21,6 +23,7 @@
       "base_defence": 24.0,
       "catch_rate": 0.3,
       "aggressive": false,
+      "rideable": false,
       "placeholder": {
         "colour": "#e0873a",
         "height": 1.25,
@@ -49,6 +52,7 @@
       "base_defence": 11.0,
       "catch_rate": 0.55,
       "aggressive": false,
+      "rideable": false,
       "placeholder": {
         "colour": "#f2c14f",
         "height": 0.36,
@@ -77,6 +81,7 @@
       "base_defence": 17.0,
       "catch_rate": 0.45,
       "aggressive": false,
+      "rideable": false,
       "placeholder": {
         "colour": "#2f8fb5",
         "height": 0.42,
@@ -105,6 +110,7 @@
       "base_defence": 13.0,
       "catch_rate": 0.3,
       "aggressive": true,
+      "rideable": false,
       "placeholder": {
         "colour": "#a83232",
         "height": 0.68,
@@ -133,6 +139,7 @@
       "base_defence": 15.0,
       "catch_rate": 0.22,
       "aggressive": false,
+      "rideable": false,
       "evolves_into": "evolved_wolf",
       "placeholder": {
         "colour": "#7b7ab5",
@@ -163,6 +170,8 @@
       "catch_rate": 0.1,
       "aggressive": true,
       "evolves_from": "wild_pup",
+      "rideable": false,
+      "_comment_ride": "NOT RIDEABLE, and it is the only close call in the roster. Its back measures 1.15m against a 1.05m hip, so it passes the arithmetic and fails the frame: rendered with a trainer on it (shots/riding/), the rider's boot is ON THE GRASS and the animal is too narrow for his legs to disappear into, so it reads as a man standing inside a wolf rather than on one. That is where the 15cm of clearance in `_comment_rideable` came from — it is a number the pictures produced, not one chosen to exclude this creature, and the Palehorn clears it by a single centimetre.\n\nIf a seated trainer clip ever lands (see data/config/movement.json `trainer_pose`), this is the first entry to re-render and reconsider.",
       "placeholder": {
         "colour": "#343a63",
         "height": 1.35,
@@ -191,6 +200,15 @@
       "base_defence": 24.0,
       "catch_rate": 0.28,
       "aggressive": true,
+      "rideable": true,
+      "_comment_ride": "The best-proportioned mount in the roster and nobody designed it that way: the Bull carries its weight in a shoulder hump, so its back reads 1.87m and a seated 1.80m trainer's feet land almost exactly at its belly line. §17 says traversal pals stay viable combat pals, and this is the clearest case of it — the thing that ambushed you becomes the thing you cross the meadow on.",
+      "ride": {
+        "back_height": 1.866,
+        "back_forward": -0.249,
+        "_comment_measured": "Same method as the Palehorn. Measured behind the hump rather than on it: the hump's crown is the tallest point on the whole animal (1.95m, which is where its declared height comes from) and seating a rider there would put him on its neck.",
+        "_comment_speed": "Slower than the deer and it should be. A bull is a mass being moved; 0.90 keeps it comfortably above the trainer's sprint while making the Palehorn the one you pick for distance.",
+        "speed_scale": 0.90
+      },
       "placeholder": {
         "colour": "#4a2f2a",
         "height": 1.95,
@@ -219,6 +237,15 @@
       "base_defence": 27.0,
       "catch_rate": 0.16,
       "aggressive": false,
+      "rideable": true,
+      "_comment_ride": "M12's mount, and the one §26 names for the role. Its back reads 1.21m against the trainer's 1.05m hip — the CLOSEST of the three to being too small, which is a real fact about this creature rather than about deer: the Stag is 2.10m to the antler tips and only 1.21m at the withers, so most of what makes it the tallest thing in the meadow is horn. A rider sits with his feet about 15cm off the grass.",
+      "ride": {
+        "back_height": 1.207,
+        "back_forward": -0.141,
+        "_comment_measured": "Top of the back surface at |x| < 0.25 in the z band -0.25..-0.05 — behind the front shoulders (z 0.199) and ahead of the rump — with the idle clip posed at t=0 on the fitted body.",
+        "_comment_speed": "The reference mount. Every other speed_scale is read against this one, so it stays 1.0 unless the base speeds in movement.json are what is wrong.",
+        "speed_scale": 1.0
+      },
       "placeholder": {
         "colour": "#ded4bb",
         "height": 2.1,

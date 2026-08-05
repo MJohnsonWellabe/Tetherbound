@@ -60,6 +60,19 @@
         "wood": 3,
         "fiber": 4
       }
+    },
+    "riding_saddle": {
+      "_comment": "M12. GAME_DESIGN.md 17 says traversal equipment is CRAFTED, so this is the line that makes riding reachable rather than granted — there is no saddle in the starting kit and none scattered in the meadow. ONE recipe, for the one generic saddle: the milestone's last bullet is 'no species-specific saddle clutter', and a second entry here would be that clutter arriving through the back door.",
+      "_comment_cost": "TUNABLE. Priced above every tool and payable without one: fiber is the bulk of it and bushes give fiber, so a saddle is a gathering trip rather than a tech step. Deliberately the most expensive thing the bench makes — it is the item that changes how far the meadow is.",
+      "_comment_no_hide": "Wood and fiber, and no leather. 19: 'Do not create a meat/leather economy that assumes killing pals/wildlife.' A saddle is the single most tempting place in this file to break that rule.",
+      "display_name": "Riding Saddle",
+      "station": "workbench_timber",
+      "makes": "riding_saddle",
+      "count": 1,
+      "costs": {
+        "wood": 4,
+        "fiber": 12
+      }
     }
   }
 }
