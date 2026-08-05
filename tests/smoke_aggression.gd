@@ -172,8 +172,25 @@ func _a_peaceful_pal_never_does() -> void:
 
 	# And it is still engageable by choice — "it never initiates" must not have
 	# been achieved by breaking it.
+	#
+	# WALK BACK TO IT FIRST. Wild creatures wander, and the patience loop above
+	# deliberately stands still for hundreds of frames without pressing anything,
+	# so by the end of it the creature has usually strolled somewhere else. The
+	# claim being tested is "this can still be fought by choice", not "it stayed
+	# where it was put" — asserting the prompt from wherever the trainer happens
+	# to be standing tests the creature's wander speed against the frame budget.
+	#
+	# This failed on CI and passed locally, twice, which is the signature of a
+	# timing-dependent assertion rather than a broken game. It got much easier to
+	# hit when the meadow went from two creatures to thirty-six: `_engageable()`
+	# answers about the NEAREST creature in range, so the prompt is now a
+	# statement about a crowd rather than about this one.
+	await _walk_towards(wild, 2.5)
+	var closed := _player.global_position.distance_to(wild.global_position)
 	if str(_director.call("prompt")) == "":
-		_fail("no engage prompt next to the peaceful pal; it cannot be fought at all")
+		_fail("stood %.1fm from %s and there was no engage prompt; it cannot be fought at all" % [
+			closed, str(wild.get("display_name"))
+		])
 
 
 func _walk_towards(wild: Node3D, stop_at: float) -> void:
