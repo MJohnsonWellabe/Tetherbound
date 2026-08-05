@@ -1,0 +1,33 @@
+{
+  "_comment": "WHO LIVES IN THE MEADOW, AND WHERE. Tunable.",
+
+  "_comment_why": "The world used to spawn exactly TWO creatures, at two offsets hardcoded in encounter_director.WILD_SPAWNS, in a 512m meadow. Eight species were defined in species.json and six of them never appeared anywhere in the running game. The owner played that build and reported it as 'a version that had no creatures', which was very nearly literally true — you had to walk to one of two specific spots to meet anything at all.",
+
+  "_comment_seed": "Seeded, so the meadow is the same every run. Same discipline as scatter_rules.gd and for the same reason: a world that reshuffles its inhabitants on every launch cannot be learned, and D05 already settled that the geography is authored rather than generated per save. Change the seed to reshuffle deliberately; do not remove it.",
+  "seed": 20250805,
+
+  "_comment_starter_pair": "The two the milestones depend on, kept at their exact original offsets. M2 needs a peaceful creature to practise on and M3 needs an aggressive one to be ambushed by, both close enough to spawn that the tutorial does not begin with a hike. smoke_combat, smoke_catching and smoke_aggression all walk to these, so moving them breaks three smokes for no gain.",
+  "near_spawn": [
+    { "species": "wild_rabbit", "offset": [14.0, 0.0, -10.0] },
+    { "species": "wild_bristler", "offset": [-6.0, 0.0, 26.0] }
+  ],
+
+  "_comment_population": "Everything else, scattered in a ring band around the spawn pad. `count` is how many of that species; `near` and `far` are metres from spawn. The bands are the whole of GAME_DESIGN 27's 'geographically rising danger' that exists today: the gentle creatures are close, the dangerous ones are further out, so walking away from home is what raises the stakes. It is deliberately crude — 27 says the real numbers come from playtesting.",
+  "_comment_headroom": "34 creatures against ~74,000 scattered props. Each carries a body, a collider and an AI tick, so this is the number to pull back on the handheld before touching ground cover — ground cover is what makes the meadow look alive, and creatures are what make it dangerous.",
+  "population": [
+    { "species": "wild_rabbit",   "count": 8, "near": 30.0,  "far": 150.0 },
+    { "species": "wild_croaker",  "count": 5, "near": 40.0,  "far": 120.0 },
+    { "species": "wild_pup",      "count": 5, "near": 60.0,  "far": 180.0 },
+    { "species": "wild_grazer",   "count": 6, "near": 70.0,  "far": 200.0 },
+    { "species": "wild_stalker",  "count": 4, "near": 110.0, "far": 220.0 },
+    { "species": "wild_bristler", "count": 4, "near": 120.0, "far": 230.0 },
+    { "species": "evolved_wolf",  "count": 2, "near": 170.0, "far": 240.0 }
+  ],
+
+  "_comment_placement": "Placement reads the heightfield, never a downward ray. D09: roughly a quarter of downward rays miss terrain that is demonstrably there, and a creature that misses is left at the world origin under the map, where the player can neither see nor reach it and nothing is printed. A spawn point that cannot be resolved is skipped and counted in the boot log rather than silently producing an invisible creature.",
+  "_comment_slope": "Creatures are not placed on ground steeper than this. The character controller's own limit is 45 degrees, so anything past this is somewhere the player cannot follow — and a creature you can see and cannot reach is worse than one that is not there.",
+  "max_slope_deg": 34.0,
+  "_comment_clear": "Metres kept clear of the spawn pad and of each other, so the meadow does not open with a creature standing on the player and so a band does not pile up into a herd.",
+  "spawn_pad_clear": 22.0,
+  "min_separation": 9.0
+}

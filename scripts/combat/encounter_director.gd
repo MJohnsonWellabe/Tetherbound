@@ -80,6 +80,13 @@ signal trainer_struck(by: Node3D, amount: float)
 ## you walk into rather than something that happens while you are aiming at the
 ## other one.
 const STARTER_SPECIES := "starter_ground"
+## Where the rest of the roster lives. See the file itself for why it exists.
+const SPAWNS_PATH := "res://data/pals/spawns.json"
+
+## The two the milestones depend on: M2 needs something peaceful to practise on
+## and M3 needs something aggressive to be ambushed by, both near enough to spawn
+## that the tutorial does not open with a hike. Three smokes walk to these exact
+## offsets. Everything ELSE in the meadow comes from spawns.json.
 const WILD_SPAWNS := [
 	{"species": "wild_rabbit", "offset": Vector3(14.0, 0.0, -10.0)},
 	{"species": "wild_bristler", "offset": Vector3(-6.0, 0.0, 26.0)},
@@ -212,11 +219,22 @@ var _respawn_timers: Dictionary = {}
 ## enforced by the code that holds the pals rather than by prose above a list
 ## that could not enforce it.
 @export var party_path: NodePath
+
+## The node that answers `ground_height_at`. Found by walking up rather than
+## exported, because every scene this director is dropped into has one somewhere
+## above it and an export is one more path to wire wrong.
+##
+## D09 is why placement asks it at all instead of casting a ray downward: about a
+## quarter of downward rays miss terrain that is demonstrably there, and a
+## creature whose ray missed is left at the world origin under the map, where the
+## player can neither see nor reach it and nothing is printed.
+var _world: Node = null
 var _party: Node = null
 
 
 func _ready() -> void:
 	_party = get_node_or_null(party_path)
+	_world = _find_the_world()
 	_engage_range = float(MATH.config().get("flow", {}).get("engage_range", 6.0))
 	_player = get_node_or_null(player_path) as CharacterBody3D
 	_manager = get_node_or_null(manager_path)
@@ -250,21 +268,11 @@ func _spawn_creatures() -> void:
 
 	for entry: Variant in WILD_SPAWNS:
 		var spawn: Dictionary = entry
-		var species := str(spawn["species"])
-		var wild: Node3D = PAL_SCENE.instantiate()
-		wild.name = "Wild_%s" % species
-		wild.set_script(WILD_SCRIPT)
-		get_parent().add_child(wild)
-		if not await _stand_on_ground(wild, origin + (spawn["offset"] as Vector3)):
-			push_error("no ground under the %s spawn point; it will be unreachable" % species)
-		wild.call("populate", species, _player)
-		wild.call("configure", MATH.config().get("wild", {}))
-		wild.set("home", wild.global_position)
-		# An aggressive pal asks; this node decides. Keeping the decision here
-		# means every route into a fight goes through one place, so a new one
-		# cannot forget to suspend exploration or hand over the camera.
-		wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
-		_wild_pals.append(wild)
+		await _place_one(str(spawn["species"]), origin + (spawn["offset"] as Vector3), true)
+
+	await _populate_the_meadow(origin)
+
+	_report_population()
 
 	# The player's pal exists as a body in the world the whole time and is simply
 	# hidden outside combat. Instancing it at the moment a fight opens is a hitch
@@ -306,6 +314,158 @@ func _spawn_creatures() -> void:
 		_ally_body.call("setup", deployed.species_id)
 
 
+## --- populating the meadow -------------------------------------------------
+
+## How many spawn points were asked for, and how many found ground. Printed at
+## boot rather than kept quiet: a creature that could not be placed is a species
+## the player will never meet, and the failure is otherwise invisible.
+var _asked_for: int = 0
+var _skipped_no_ground: int = 0
+var _skipped_too_steep: int = 0
+var _skipped_crowded: int = 0
+
+
+static func spawn_config() -> Dictionary:
+	var file := FileAccess.open(SPAWNS_PATH, FileAccess.READ)
+	if file == null:
+		push_error("no spawn table at %s; the meadow will hold only its starter pair" % SPAWNS_PATH)
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## Scatter the roster across the meadow.
+##
+## The world used to hold TWO creatures, at two offsets hardcoded above, while
+## species.json defined eight. Six species existed only in a data file. The owner
+## played that build and called it "a version that had no creatures", which was
+## very nearly the literal truth.
+##
+## Seeded, so the meadow is the same every launch — same reasoning as
+## `scatter_rules.gd`, and D05's: the geography is authored rather than rolled
+## per save, and inhabitants that reshuffle cannot be learned.
+func _populate_the_meadow(origin: Vector3) -> void:
+	var config := spawn_config()
+	var population: Array = config.get("population", [])
+	if population.is_empty():
+		return
+
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(config.get("seed", 20250805))
+	var pad_clear := float(config.get("spawn_pad_clear", 22.0))
+	var separation := float(config.get("min_separation", 9.0))
+	var max_slope := deg_to_rad(float(config.get("max_slope_deg", 34.0)))
+	var taken: Array[Vector3] = []
+
+	for entry: Variant in population:
+		var band: Dictionary = entry
+		var species := str(band.get("species", ""))
+		if species.is_empty() or not SPECIES.has(species):
+			push_warning("spawn table names '%s', which is not in species.json" % species)
+			continue
+		var near := maxf(pad_clear, float(band.get("near", 40.0)))
+		var far := maxf(near + 1.0, float(band.get("far", 160.0)))
+		for i in int(band.get("count", 0)):
+			_asked_for += 1
+			var at: Variant = _find_a_home(origin, rng, near, far, max_slope, separation, taken)
+			if at == null:
+				continue
+			taken.append(at as Vector3)
+			await _place_one(species, at as Vector3, false)
+
+
+## Look for somewhere in the band this creature can actually stand.
+##
+## Returns null rather than a fallback position. A creature dropped at a spot
+## that failed its checks is a creature standing in a lake, on a cliff, or inside
+## another one — all of which read as the world being broken, and all of which
+## are worse than one fewer rabbit.
+func _find_a_home(
+	origin: Vector3, rng: RandomNumberGenerator, near: float, far: float,
+	max_slope: float, separation: float, taken: Array[Vector3]
+) -> Variant:
+	if _world == null:
+		return null
+	for attempt in 24:
+		var angle := rng.randf() * TAU
+		# sqrt, so points spread evenly over the RING rather than bunching at its
+		# inner edge — uniform radius puts far too many creatures close in.
+		var t := sqrt(rng.randf())
+		var radius: float = near + (far - near) * t
+		var at := origin + Vector3(cos(angle), 0.0, sin(angle)) * radius
+
+		var height: float = float(_world.call("ground_height_at", at.x, at.z))
+		if is_nan(height):
+			continue
+		at.y = height
+
+		if _slope_at(at) > max_slope:
+			continue
+
+		var crowded := false
+		for other: Vector3 in taken:
+			if Vector2(other.x - at.x, other.z - at.z).length() < separation:
+				crowded = true
+				break
+		if crowded:
+			continue
+		return at
+
+	# Which check ran out is worth knowing — "the band is all cliff" and "the band
+	# is full" want different edits to the table.
+	_skipped_crowded += 1
+	return null
+
+
+## Slope from the heightfield, never a ray. D09: about a quarter of downward rays
+## miss terrain that is demonstrably there.
+func _slope_at(at: Vector3) -> float:
+	if _world == null:
+		return 0.0
+	const STEP := 1.5
+	var here: float = float(_world.call("ground_height_at", at.x, at.z))
+	var east: float = float(_world.call("ground_height_at", at.x + STEP, at.z))
+	var north: float = float(_world.call("ground_height_at", at.x, at.z + STEP))
+	if is_nan(here) or is_nan(east) or is_nan(north):
+		return 0.0
+	var fall := Vector2(east - here, north - here).length()
+	return atan2(fall, STEP)
+
+
+## One creature, standing on the ground, wired to the one route into a fight.
+func _place_one(species: String, at: Vector3, required: bool) -> void:
+	var wild: Node3D = PAL_SCENE.instantiate()
+	wild.name = "Wild_%s" % species
+	wild.set_script(WILD_SCRIPT)
+	get_parent().add_child(wild)
+	if not await _stand_on_ground(wild, at):
+		_skipped_no_ground += 1
+		if required:
+			push_error("no ground under the %s spawn point; it will be unreachable" % species)
+		wild.queue_free()
+		return
+	wild.call("populate", species, _player)
+	wild.call("configure", MATH.config().get("wild", {}))
+	wild.set("home", wild.global_position)
+	# An aggressive creature asks; this node decides. Keeping the decision here
+	# means every route into a fight goes through one place, so a new one cannot
+	# forget to suspend exploration or hand over the camera.
+	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
+	_wild_pals.append(wild)
+
+
+func _report_population() -> void:
+	var by_species: Dictionary = {}
+	for wild: Node3D in _wild_pals:
+		var id := str(wild.get("species_id"))
+		by_species[id] = int(by_species.get(id, 0)) + 1
+	print("[meadow] %d creatures live here: %s" % [_wild_pals.size(), by_species])
+	if _skipped_no_ground > 0 or _skipped_crowded > 0:
+		print("[meadow] %d spawn points asked for, %d found no ground, %d found no room" % [
+			_asked_for, _skipped_no_ground, _skipped_crowded
+		])
+
+
 ## Whichever pal the party currently has deployed.
 ##
 ## Read through the party rather than cached, so `set_active()` from the menu and
@@ -317,6 +477,16 @@ func _spawn_creatures() -> void:
 ## again on every switch.
 func _active_pal() -> RefCounted:
 	return (_party.call("active") as RefCounted) if _party != null else null
+
+
+## The nearest ancestor that can answer for the ground.
+func _find_the_world() -> Node:
+	var node: Node = get_parent()
+	while node != null:
+		if node.has_method("ground_height_at"):
+			return node
+		node = node.get_parent()
+	return null
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
