@@ -14,12 +14,26 @@ extends CharacterBody3D
 const CONFIG_PATH := "res://data/config/movement.json"
 const VITALS := preload("res://scripts/player/player_vitals.gd")
 
+## The key this node owns inside `SaveManager`'s one envelope (D14).
+##
+## The TRAINER — where they are standing, what their meters read, and what they
+## have eaten. Not their items: those are `TrainerInventory`'s domain, because the
+## bag is a thing in its own right that a satchel and a chest also talk to.
+##
+## `SaveDirector` finds contributors by walking the tree for `save_data` /
+## `load_data` plus this constant, so being a save domain costs this file nothing
+## but the two methods at the bottom.
+const SAVE_DOMAIN := "trainer"
+
 signal landed(impact_speed: float, damage: float)
 signal died()
 
 var vitals: RefCounted = VITALS.new()
 
 @export var camera_rig_path: NodePath
+## The trainer's bag. M9's `TrainerInventory` node, which is what `inventory()`
+## below hands out — see its header for the interface other systems call.
+@export var inventory_path: NodePath = NodePath("../TrainerInventory")
 ## The world, for `ground_height_at`. Defaults to the parent, which is where the
 ## playground puts the player; exported so a test scene can point elsewhere.
 @export var world_path: NodePath = NodePath("..")
@@ -115,6 +129,8 @@ func _load_config() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _settling_after_load():
+		return
 	_track_airborne(delta)
 	_apply_gravity(delta)
 	_apply_movement(delta)
@@ -255,6 +271,37 @@ func _try_jump() -> void:
 	_airborne_for = _coyote_time + 1.0   # consume coyote so one press is one jump
 
 
+## Something in the world hurt the trainer. Returns the damage actually taken.
+##
+## The ONE way anything other than a fall can damage the player, so that "what
+## can kill me" is a list of callers of this function rather than a search for
+## writes to `vitals.health`.
+##
+## GAME_DESIGN.md §14 says the trainer is not attacked while a fight is running
+## and, outside one, that aggressive wild pals can threaten them. The owner has
+## amended what "threaten" means when every owned pal is fainted: the creature
+## does not merely posture, it hurts you, and getting home is the answer. That
+## decision is `encounter_director.Hunt`'s to make and this is only where the
+## damage lands.
+##
+## The trainer has no way to hit back and is not going to get one. There is no
+## `attack()` beside this, no weapon slot, and no route into combat for the human
+## — CLAUDE.md's "human cannot fight" is a hard rule and being hurtable is not
+## the same thing as being a fighter.
+##
+## DEATH IS NOT IMPLEMENTED HERE. `died` is emitted, exactly as a lethal fall
+## already emits it, and nothing listens. §22's satchel, the respawn at the bed
+## and the "pals go home" rule are MEADOWS_VERTICAL_SLICE M9's player-death
+## bullet, with their own rules about dropped inventory.
+func hurt(amount: float) -> float:
+	if vitals.is_dead():
+		return 0.0
+	var dealt: float = vitals.take_damage(amount)
+	if dealt > 0.0 and vitals.is_dead():
+		died.emit()
+	return dealt
+
+
 func _resolve_landing(falling_speed: float) -> void:
 	var on_floor := is_on_floor()
 	if on_floor and not _was_on_floor:
@@ -285,3 +332,115 @@ func set_locomotion_enabled(enabled: bool) -> void:
 
 func locomotion_enabled() -> bool:
 	return _locomotion_enabled
+
+
+## --- the trainer's things ---------------------------------------------------
+
+## The bag, as the `inventory.gd` instance itself.
+##
+## Reached THROUGH the player because that is how the rest of the game already
+## asks — `scripts/pals/recovery.gd` looks for an `inventory()` on whatever it is
+## pointed at, and a gathering system holding the trainer would otherwise have to
+## know the shape of the world scene to find their pockets. It forwards and owns
+## nothing: `TrainerInventory` is the owner and the save contributor.
+func inventory() -> RefCounted:
+	var bag: Node = get_node_or_null(inventory_path)
+	if bag == null or not bag.has_method("inventory"):
+		return null
+	return bag.call("inventory") as RefCounted
+
+
+## --- save contributor -------------------------------------------------------
+##
+## Position, facing and vitals. A player who quits on a hilltop should not come
+## back at the spawn point with full health, and — the part that matters after M9
+## — a player who dies, wakes up at their bed and closes the window must not come
+## back standing where they died.
+
+func save_data() -> Dictionary:
+	var record: Dictionary = {
+		"x": global_position.x,
+		"y": global_position.y,
+		"z": global_position.z,
+		"yaw": 0.0 if _model == null else _model.rotation.y,
+	}
+	record.merge(vitals.to_record())
+	return record
+
+
+func load_data(data: Dictionary) -> void:
+	global_position = Vector3(
+		float(data.get("x", global_position.x)),
+		float(data.get("y", global_position.y)),
+		float(data.get("z", global_position.z))
+	)
+	# A restored body that keeps the velocity it had while the world was being
+	# rebuilt resumes that motion on the first frame.
+	velocity = Vector3.ZERO
+	_restore_to = global_position
+	_settle_frames = 0
+	if _model != null:
+		_model.rotation.y = float(data.get("yaw", _model.rotation.y))
+	vitals.from_record(data)
+
+
+## A RESTORED BODY DOES NOT SIMULATE UNTIL THERE IS GROUND UNDER IT.
+##
+## `SaveDirector` restores a frame after the scene is built, and the world is
+## still setting itself up at that point: `playground_world._ready()` awaits two
+## process frames for Terrain3D to publish its data before it drops the player
+## onto the baked ground. A position restored inside that window is a position
+## with no collision under it yet — and when the collision does arrive, the body
+## is INSIDE it.
+##
+## MEASURED, and it is not subtle: a trainer restored to 0, 0, 0 was ejected by
+## depenetration at 456 metres per second and was two kilometres away and still
+## accelerating three hundred frames later. It looked like a save bug ("the
+## trainer came back 2249m from where they were left") and it was a physics one.
+##
+## So the body holds still — no gravity, no input, no `move_and_slide` — until the
+## heightfield can answer for the spot it was restored to, and is then placed just
+## above it. D09: the height comes from `ground_height_at`, never a raycast. The
+## frame budget is a floor of last resort so a world with no heightfield at all
+## simulates normally rather than freezing the player forever.
+const RESTORE_SETTLE_FRAMES := 240
+## The same two metres `playground_world.SPAWN_CLEARANCE` drops a new player from,
+## and for the reason written there: the collision mesh is BAKED from the
+## heightfield and the two disagree by up to half a metre on a slope, so a body
+## put down flush against the sampled height can arrive inside the collider.
+##
+## A tenth of a metre was tried first. It produced exactly the 456 m/s ejection
+## this whole mechanism exists to prevent — the settle was working and the landing
+## was still inside the ground. Two metres and a short fall is the honest answer.
+const RESTORE_CLEARANCE := 2.0
+
+## Where a load put the body, while it waits for ground. `Vector3.INF` when there
+## is nothing to settle.
+var _restore_to: Vector3 = Vector3.INF
+var _settle_frames: int = 0
+
+
+func _settling_after_load() -> bool:
+	if _restore_to == Vector3.INF:
+		return false
+	velocity = Vector3.ZERO
+	global_position = _restore_to
+	_settle_frames += 1
+
+	if _world == null:
+		_restore_to = Vector3.INF
+		return false
+
+	var ground: float = float(_world.call("ground_height_at", _restore_to.x, _restore_to.z))
+	if not is_nan(ground):
+		global_position = Vector3(
+			_restore_to.x, maxf(_restore_to.y, ground + RESTORE_CLEARANCE), _restore_to.z
+		)
+		_restore_to = Vector3.INF
+		return false
+
+	if _settle_frames >= RESTORE_SETTLE_FRAMES:
+		push_warning("no heightfield under the restored trainer after %d frames; simulating anyway"
+			% RESTORE_SETTLE_FRAMES)
+		_restore_to = Vector3.INF
+	return true

@@ -40,6 +40,16 @@ const INACTIVE_TINT := Color(0.55, 0.55, 0.55, 1.0)
 
 @export var title: String = "Screen"
 
+## The action that opens this screen from the world, or empty for a screen that
+## is only ever pushed by something else (the rename grid, the release ceremony).
+##
+## Declared BY THE SCREEN rather than by a table on the stack, because M9 adds two
+## more openable screens and the alternative was two parallel exported arrays in
+## `screen_stack` whose indices have to line up. A screen knows which button it
+## is; `screen_stack._read_toggle()` asks each of its children and never polls
+## input on a screen's behalf.
+@export var open_action: StringName = &""
+
 ## Where a concrete screen's authored content ends up. A VBoxContainer, so a
 ## screen that authors two roots stacks them instead of overlapping them.
 var content: VBoxContainer = null

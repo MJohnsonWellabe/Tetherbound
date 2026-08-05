@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/screen_stack.gd" id="1_stack"]
 [ext_resource type="PackedScene" path="res://scenes/ui/party_screen.tscn" id="2_party"]
 [ext_resource type="PackedScene" path="res://scenes/ui/rename_screen.tscn" id="3_rename"]
 [ext_resource type="PackedScene" path="res://scenes/ui/release_screen.tscn" id="4_release"]
 [ext_resource type="PackedScene" path="res://scenes/ui/farewell_screen.tscn" id="5_farewell"]
+[ext_resource type="PackedScene" path="res://scenes/ui/inventory_screen.tscn" id="6_inventory"]
+[ext_resource type="PackedScene" path="res://scenes/ui/map_screen.tscn" id="7_map"]
 
 ; The menu layer, ready to drop into a world scene. Set `player_path` at the
 ; trainer and `party_screen_path`'s target — the PartyScreen below — at the party
@@ -69,3 +71,30 @@ farewell_screen_path = NodePath("../FarewellScreen")
 ; has no path back to anything — it only ever knows the one pal it is about.
 [node name="FarewellScreen" parent="." instance=ExtResource("5_farewell")]
 visible = false
+
+; M9's two, and the first screens to open themselves rather than being opened by
+; the stack's single `toggle_action`. Each declares its own `open_action` —
+; `inventory` (I / Y) and `map` (M / View) — and `screen_stack._read_toggle()`
+; asks its children which button they are. Three exported paths on the stack with
+; three actions beside them would have been three chances for the indices to stop
+; lining up.
+;
+; Wired with `../../` paths, which resolve into the world scene this stack is
+; instanced in. A stack loaded on its own — `tools/preview_ceremony.gd` does
+; exactly that — finds nothing at the end of them and both screens draw their
+; honest "nothing is wired to this screen" state instead of erroring.
+;
+; They go AFTER the four above, and anything added later goes after these:
+; `meadows_playground.tscn` reaches in with index="0" to set the party wiring, and
+; that index is positional.
+[node name="InventoryScreen" parent="." instance=ExtResource("6_inventory")]
+visible = false
+inventory_path = NodePath("../../TrainerInventory")
+player_path = NodePath("../../Player")
+
+[node name="MapScreen" parent="." instance=ExtResource("7_map")]
+visible = false
+map_path = NodePath("../../WorldMap")
+player_path = NodePath("../../Player")
+home_path = NodePath("../../Home")
+satchels_path = NodePath("../../Satchels")

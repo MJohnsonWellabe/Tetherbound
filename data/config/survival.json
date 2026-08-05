@@ -1,0 +1,52 @@
+{
+  "_comment": "M9's survival loop, in numbers. ALL TUNABLE. The expected owner feedback is 'the buff is over before I get anywhere', 'dying costs too much', 'I cannot find my satchel' and 'the map fills in too slowly' — every one of those has to be answerable by editing this file rather than by editing code.",
+  "_comment_firewall": "What an ITEM is lives in data/items/. What a FOOD DOES lives in data/items/consumables.json beside the item it belongs to, because a buff is a property of the berry and not of the survival loop. This file only holds numbers that belong to the loop itself: what the trainer starts with, what dying costs, and how the map fills in. If a value here could change what one specific item does, it is in the wrong file.",
+  "_comment_no_hunger": "THERE IS NO HUNGER BLOCK, NO THIRST BLOCK AND NO DECAY RATE, and their absence is a hard rule rather than an oversight. CLAUDE.md: 'Food buffs; no starvation-death meter', and 'adding mandatory hunger/thirst' is on the list of things an agent may not decide. Eating grants a timed benefit; not eating costs exactly nothing. A number here called `hunger_per_second` would be the whole banned mechanic in one line, so there is nothing for one to hide among.",
+
+  "starting_kit": {
+    "_comment": "What the trainer is holding at the start of a new game, as item id -> count. Applied ONCE, when there is no save to restore; a loaded game gets whatever it had. TUNABLE.",
+    "_comment_draughts": "The three revival draughts are story frame 3's parcel from Grandpa and they used to be seeded by scripts/pals/recovery.gd into a private bag of its own, because nothing in the scene owned the trainer's inventory. Something does now, so the seeding moved here with the bag. data/config/party.json `recovery.starting_revival_items` still holds the same 3 and is now inert for the shipping scene — recovery.gd only seeds a bag it owns, and it no longer owns one. Keep the two numbers the same until that file's seeding is deleted.",
+    "_comment_tools": "The axe and the pickaxe are here so that M8's gathering has something to gather WITH from the first minute, and so that tool durability and free repair are reachable without a crafting system that does not exist yet. They are the starting parcel, not a supply: there is no recipe for a second axe, which is exactly what makes a broken one a trip home.",
+    "items": {
+      "revival_draught": 3,
+      "axe": 1,
+      "pickaxe": 1
+    }
+  },
+
+  "food": {
+    "_comment": "How eating behaves, as opposed to what any one food does. GAME_DESIGN.md 18: 'Valheim-like buff philosophy: no starvation death; eating improves health/stamina/regeneration or other preparation stats.' So a meal is a timed BONUS on top of the trainer's own numbers, and having eaten nothing is the baseline rather than a penalty.",
+    "_comment_seconds_scale": "A global multiplier on every food's duration. TUNABLE, and the first dial to turn if the owner says 'the buff is gone before I have walked anywhere' — one number rather than editing every entry in consumables.json.",
+    "seconds_scale": 1.0,
+    "_comment_no_slot_cap": "There is deliberately NO cap on how many different foods can be active at once. Valheim has three slots; the Meadows has one edible item, so a cap would be a rule invented for a situation that cannot occur. Two different foods stack their bonuses and eating the same one again REFRESHES its timer rather than extending it, which is the only part of the shape worth fixing now.",
+    "_comment_no_heal": "Eating does NOT heal on the spot. It raises the ceiling and the regeneration, and the trainer climbs to it. An instant heal would make food a potion, and a potion is the thing you drink at 5 HP rather than the thing you eat before setting out."
+  },
+
+  "death": {
+    "_comment": "GAME_DESIGN.md 22. Carried inventory drops into a satchel where you fell, old satchels do not move, several can coexist, each is marked on the map, and NO XP OR LEVELS ARE LOST. The last of those is not a number and is not in this file: nothing in the death path touches a pal's xp or level, and tests/test_satchel.gd asserts it.",
+
+    "_comment_keeps": "Item ids the satchel does NOT take, as 22's 'exact item exemptions can be tuned'. EMPTY on purpose: everything carried drops. An exemption list is the wrong place to soften a death — the satchel is permanent and mapped, so the cost of dying is the walk back and not the loss, and carving out favourites would make the walk optional. Worn equipment is not in the satchel either, and that is not an exemption: 22 drops CARRIED inventory and armour is worn.",
+    "keeps": [],
+
+    "_comment_respawn": "What the trainer wakes up on, as a fraction of maximum. Not full, so dying is felt; well clear of dead, so waking up next to the thing that killed you is survivable. TUNABLE.",
+    "respawn_health_fraction": 0.6,
+    "respawn_stamina_fraction": 0.5,
+    "_comment_respawn_buffs": "Food buffs are cleared by death. A meal eaten before the fight should not survive the fight killing you.",
+
+    "_comment_loot_range": "Metres from a satchel that the trainer can reach into it. About an arm's length plus the placeholder's own size.",
+    "loot_range": 2.6,
+    "_comment_marker_height": "Metres above the ground the satchel's placeholder marker floats, so it is visible over grass rather than buried in it. Placeholder art; see docs/ASSET_LEDGER.md when a real bag model lands."
+  },
+
+  "map": {
+    "_comment": "GAME_DESIGN.md 23: the world map starts BLANK and reveals through exploration. These are the numbers that decide how fast that happens.",
+    "_comment_cell": "Metres per revealed cell. The playground is 512m across (data/config/terrain_playground.json `world_size`), so 16m cells make a 32x32 grid — coarse enough that walking reveals a satisfying patch and fine enough that the revealed shape is recognisably where you went.",
+    "cell_size": 16.0,
+    "_comment_reveal": "Metres around the trainer that count as seen. Bigger than the cell so walking a straight line opens a corridor rather than a single-cell thread. Roughly how far you can make out ground detail from the third-person camera.",
+    "reveal_radius": 40.0,
+    "_comment_minimap": "Metres from edge to edge of the minimap disc. Small enough to be a local view (23: 'local terrain'), big enough that a satchel dropped in a fight is on it before you have walked back.",
+    "minimap_range": 120.0,
+    "_comment_markers": "How many manual markers the player may place. 23 asks for manual markers and puts no number on it; a cap exists so the map cannot become a field of pins, and it is generous enough that nobody sensible will meet it.",
+    "max_markers": 16
+  }
+}

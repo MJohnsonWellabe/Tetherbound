@@ -17,12 +17,33 @@ extends RefCounted
 
 const ITEMS_PATH := "res://data/items/items.json"
 
-## The categories items.json may declare. Named here so a typo in a category
+## The second table. One item table split across two files, merged here.
+##
+## items.json belongs to the milestone that gathers and builds; consumables.json
+## belongs to the milestone that eats. Two milestones editing one file is two
+## sets of merge conflicts over a file neither of them owns outright, and the
+## merge below costs one function.
+##
+## An entry there may EXTEND one here — `berries` is declared in items.json as a
+## material with a comment saying this is where it becomes food, and gains its
+## `food` block and its real category from the other file without items.json
+## changing — or declare a whole new item.
+const CONSUMABLES_PATH := "res://data/items/consumables.json"
+
+## The categories the item tables may declare. Named here so a typo in a category
 ## fails a test rather than silently producing an item nothing can sort.
 const CATEGORY_MATERIAL := "material"
 const CATEGORY_TOOL := "tool"
 const CATEGORY_ORB := "orb"
-const CATEGORIES := [CATEGORY_MATERIAL, CATEGORY_TOOL, CATEGORY_ORB]
+## Something that is USED UP. Not necessarily eaten: the revival draught is spent
+## on a fainted pal and berries are eaten by the trainer, and both are consumed.
+## `is_food()` is the narrower question and it is answered by the presence of a
+## `food` block, not by the category.
+const CATEGORY_CONSUMABLE := "consumable"
+const CATEGORIES := [CATEGORY_MATERIAL, CATEGORY_TOOL, CATEGORY_ORB, CATEGORY_CONSUMABLE]
+
+## Where a food's timed bonus lives inside an item definition.
+const FOOD_KEY := "food"
 
 static var _table: Dictionary = {}
 static var _config: Dictionary = {}
@@ -31,25 +52,78 @@ static var _config: Dictionary = {}
 static func table() -> Dictionary:
 	if not _table.is_empty():
 		return _table
-	var file := FileAccess.open(ITEMS_PATH, FileAccess.READ)
+	var out: Dictionary = _read_items(ITEMS_PATH, true)
+	if out.is_empty():
+		return {}
+	_merge(out, _read_items(CONSUMABLES_PATH, false))
+	_table = out
+	return _table
+
+
+## One file's `items` block, with its comment keys stripped.
+##
+## Comment keys are stripped rather than trusted to be absent, for the reason
+## pal_traits.gd gives: the files invite `_comment_<topic>` keys inline, and one
+## written a level too high would otherwise become a real item — a nameless thing
+## with a stack limit of 1 that a player could somehow be holding. Stripped at
+## every level, not just the top, so a `_comment` inside a `food` block is not
+## read as a bonus.
+##
+## `required` separates the two tables' failure modes: items.json missing is the
+## game having no items at all and is an error; consumables.json missing costs
+## the food bonuses and nothing else, and a project that has not written it yet
+## should still boot.
+static func _read_items(path: String, required: bool) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
-		push_error("items.json missing at %s" % ITEMS_PATH)
+		if required:
+			push_error("%s missing" % path)
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if not parsed is Dictionary:
-		push_error("items.json is not readable: %s" % ITEMS_PATH)
+		push_error("%s is not readable" % path)
 		return {}
-	# Comment keys are stripped rather than trusted to be absent, for the reason
-	# pal_traits.gd gives: the file invites `_comment_<topic>` keys inline, and one
-	# written a level too high would otherwise become a real item — a nameless
-	# thing with a stack limit of 1 that a player could somehow be holding.
 	var out: Dictionary = {}
-	var entries: Dictionary = (parsed as Dictionary).get("items", {})
-	for id: String in entries.keys():
-		if not id.begins_with("_"):
-			out[id] = entries[id]
-	_table = out
-	return _table
+	var entries: Variant = (parsed as Dictionary).get("items", {})
+	if not entries is Dictionary:
+		return {}
+	for id: String in (entries as Dictionary).keys():
+		if id.begins_with("_"):
+			continue
+		var entry: Variant = (entries as Dictionary)[id]
+		out[id] = _strip_comments(entry) if entry is Dictionary else entry
+	return out
+
+
+static func _strip_comments(entry: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for key: String in entry.keys():
+		if key.begins_with("_"):
+			continue
+		var value: Variant = entry[key]
+		out[key] = _strip_comments(value as Dictionary) if value is Dictionary else value
+	return out
+
+
+## Fold `extra` into `base`, per item, key by key.
+##
+## SHALLOW PER KEY, deliberately. `berries` in consumables.json declares a
+## category and a `food` block and says nothing about its stack limit, so the
+## limit stays the one items.json set; but a `food` block is replaced whole
+## rather than merged field by field, because half a bonus from each file is a
+## number nobody could trace to a line.
+static func _merge(base: Dictionary, extra: Dictionary) -> void:
+	for id: String in extra.keys():
+		var addition: Variant = extra[id]
+		if not addition is Dictionary:
+			continue
+		if not base.has(id) or not base[id] is Dictionary:
+			base[id] = addition
+			continue
+		var merged: Dictionary = (base[id] as Dictionary).duplicate(true)
+		for key: String in (addition as Dictionary).keys():
+			merged[key] = (addition as Dictionary)[key]
+		base[id] = merged
 
 
 static func has(item_id: String) -> bool:
@@ -120,6 +194,37 @@ static func is_durable(item_id: String) -> bool:
 ## arguments" while the test around it still reports green.
 static func is_tool_item(item_id: String) -> bool:
 	return category(item_id) == CATEGORY_TOOL
+
+
+static func is_consumable(item_id: String) -> bool:
+	return category(item_id) == CATEGORY_CONSUMABLE
+
+
+## --- food -----------------------------------------------------------------
+##
+## GAME_DESIGN.md §18: "Valheim-like buff philosophy: No starvation death. Eating
+## improves health/stamina/regeneration or other preparation stats."
+##
+## THE ABSENCE HERE IS THE DESIGN. There is no `hunger()`, no `satiation()`, no
+## decay rate and nothing that counts down when the player has not eaten, because
+## CLAUDE.md makes "no starvation-death meter" a hard rule and lists "adding
+## mandatory hunger/thirst" among the decisions an agent may not make. A food's
+## whole effect is the timed bonus below; not eating costs nothing.
+
+## The timed bonus an item grants, or empty for the vast majority of items that
+## grant none. What is IN the block is scripts/player/player_vitals.gd's business
+## — this file only knows the block is item data and belongs beside the item.
+static func food(item_id: String) -> Dictionary:
+	var block: Variant = definition(item_id).get(FOOD_KEY, {})
+	return (block as Dictionary).duplicate(true) if block is Dictionary else {}
+
+
+## Can the trainer eat this? The presence of a bonus, not the category: the
+## revival draught is a consumable that is spent on a pal and can never be eaten,
+## and it says so by having no `food` block rather than by being a fourth
+## category.
+static func is_food(item_id: String) -> bool:
+	return not food(item_id).is_empty()
 
 
 ## --- tunables -------------------------------------------------------------

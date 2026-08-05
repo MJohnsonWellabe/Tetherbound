@@ -70,8 +70,38 @@ func _process(delta: float) -> void:
 		"health     %.0f / %.0f" % [vitals.health, vitals.max_health],
 		"worst landing  %.1f m/s  (%.0f damage)" % [_peak_fall, _last_damage],
 	]
+	lines.append_array(_food_lines(vitals))
 	lines.append_array(_input_diagnostics())
 	_readout.text = "\n".join(lines)
+
+
+## What the trainer has eaten, and how long it has left.
+##
+## On the debug readout because M9's food buffs are otherwise only visible on a
+## screen the player has to open, and a buff nobody can see while playing is a
+## buff nobody can tell is working. The maxima above already move when a meal
+## lands; this says WHY they moved.
+##
+## The "no meal" line is not padding. Every survival game the owner has played
+## puts a hunger meter about here, and the only way to say this one does not have
+## one is to say so where they would look for it — GAME_DESIGN.md §18 and
+## CLAUDE.md both make food a bonus and forbid the meter.
+func _food_lines(vitals: RefCounted) -> Array[String]:
+	var lines: Array[String] = ["", "--- fed ---"]
+	var buffs: Array = vitals.food_buffs()
+	if buffs.is_empty():
+		lines.append("no meal in effect  (that costs you nothing)")
+		return lines
+	for entry: Variant in buffs:
+		var meal: Dictionary = entry
+		var left := int(maxf(0.0, float(meal.get("left", 0.0))))
+		lines.append("%-14s %d:%02d  +%.0f hp  +%.0f stam  +%.0f/s" % [
+			str(meal.get("item", "")), left / 60, left % 60,
+			float(meal.get("max_health", 0.0)),
+			float(meal.get("max_stamina", 0.0)),
+			float(meal.get("stamina_regen", 0.0)),
+		])
+	return lines
 
 
 ## Live input diagnostics.

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -15,6 +15,13 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/build_palette.tscn" id="14_palette"]
 [ext_resource type="Script" path="res://scripts/pals/release_prompt.gd" id="15_release"]
 [ext_resource type="Script" path="res://scripts/world/save_director.gd" id="16_save"]
+[ext_resource type="Script" path="res://scripts/pals/home.gd" id="17_home"]
+[ext_resource type="Script" path="res://scripts/pals/recovery.gd" id="18_recovery"]
+[ext_resource type="Script" path="res://scripts/player/trainer_inventory.gd" id="19_bag"]
+[ext_resource type="Script" path="res://scripts/player/satchel.gd" id="20_satchels"]
+[ext_resource type="Script" path="res://scripts/player/death.gd" id="21_death"]
+[ext_resource type="Script" path="res://scripts/ui/world_map.gd" id="22_map"]
+[ext_resource type="PackedScene" path="res://scenes/ui/minimap.tscn" id="23_minimap"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -92,6 +99,41 @@ script = ExtResource("5_combat")
 [node name="Party" type="Node" parent="."]
 script = ExtResource("12_party")
 
+; M9's survival loop. The trainer's bag, the bags they drop by dying, and what
+; they have walked.
+;
+; `TrainerInventory` is the owner `scripts/items/inventory.gd` never had: a
+; complete, tested slot/stack container that nothing in the shipping scene ever
+; instantiated. Gathering adds to it, build costs spend from it, `recovery.gd`
+; takes revival draughts out of it (its `inventory_path` points here), the
+; inventory screen draws it, and dying empties it into a satchel.
+;
+; BEFORE the Player in this file, so that a `Player` whose `inventory_path`
+; default points at it resolves on the first look rather than lazily.
+[node name="TrainerInventory" type="Node" parent="."]
+script = ExtResource("19_bag")
+player_path = NodePath("../Player")
+home_path = NodePath("../Home")
+
+; Every bag the player has ever dropped by dying. A Node3D because it PARENTS the
+; markers in the world — the same split Structures and BuildMode use beside it.
+;
+; GAME_DESIGN.md 22 and CLAUDE.md: multiple satchels persist. This is a list and
+; nothing in it replaces an existing bag.
+[node name="Satchels" type="Node3D" parent="."]
+script = ExtResource("20_satchels")
+player_path = NodePath("../Player")
+inventory_path = NodePath("../TrainerInventory")
+world_path = NodePath("..")
+
+; What the player has explored, and what they have pinned. Read by the minimap
+; and by the map screen; it holds neither the bed nor the satchels, because Home
+; and Satchels already know where those are and a second copy is a pin that can
+; point at something that is gone.
+[node name="WorldMap" type="Node" parent="."]
+script = ExtResource("22_map")
+player_path = NodePath("../Player")
+
 [node name="EncounterDirector" type="Node" parent="."]
 script = ExtResource("6_encounter")
 player_path = NodePath("../Player")
@@ -137,7 +179,7 @@ combat_path = NodePath("../CombatManager")
 ; player what A does, at the same time, disagreeing.
 [node name="ScreenStack" parent="." instance=ExtResource("13_screens")]
 player_path = NodePath("../Player")
-hide_while_open = [NodePath("../PlaygroundHUD"), NodePath("../BuildPalette"), NodePath("../CombatHUD")]
+hide_while_open = [NodePath("../PlaygroundHUD"), NodePath("../BuildPalette"), NodePath("../CombatHUD"), NodePath("../Minimap")]
 
 [node name="PartyScreen" parent="ScreenStack" index="0"]
 party_path = NodePath("../../Party")
@@ -159,3 +201,49 @@ release_screen_path = NodePath("../ScreenStack/ReleaseScreen")
 ; the player had no way to know what they were about to place.
 [node name="BuildPalette" parent="." instance=ExtResource("14_palette")]
 build_path = NodePath("../BuildMode")
+
+; Fainting, and the two ways back from it (GAME_DESIGN.md §16).
+;
+; LAST IN THE SCENE on purpose. `SaveDirector` finds save contributors by walking
+; the tree, and `SaveManager` hands domains back in registration order, so being
+; last means Recovery's records are applied after the party and the village they
+; refer to have been rebuilt. It retries for a few seconds anyway rather than
+; depending on that, but the ordering is free and the retry is a fallback.
+;
+; Home answers "where is home and which beds are in it" and touches no pal.
+; Recovery owns the pals and calls INTO the beds — the bed never reaches out,
+; because a pal bed is somewhere a pal sleeps and not a job (CLAUDE.md).
+[node name="Home" type="Node" parent="."]
+script = ExtResource("17_home")
+structures_path = NodePath("../Structures")
+
+[node name="Recovery" type="Node" parent="."]
+script = ExtResource("18_recovery")
+party_path = NodePath("../Party")
+home_path = NodePath("../Home")
+player_path = NodePath("../Player")
+combat_path = NodePath("../CombatManager")
+world_path = NodePath("..")
+inventory_path = NodePath("../TrainerInventory")
+
+; What dying means. GAME_DESIGN.md 22, in one node: the carried inventory falls
+; into a satchel where you died, the pals go home to their beds, and you wake up
+; at your own bed — or where your journey started, if you have not built one.
+;
+; LAST, after Home and Recovery, because it calls into both. `player_controller`
+; has emitted `died` since M1 and nothing listened; this is the listener.
+[node name="PlayerDeath" type="Node" parent="."]
+script = ExtResource("21_death")
+player_path = NodePath("../Player")
+inventory_path = NodePath("../TrainerInventory")
+satchels_path = NodePath("../Satchels")
+party_path = NodePath("../Party")
+recovery_path = NodePath("../Recovery")
+home_path = NodePath("../Home")
+world_path = NodePath("..")
+save_director_path = NodePath("../SaveDirector")
+
+; 23's minimap: local terrain, compass, the bed, and every satchel. It draws with
+; the same script the full map does, so the two cannot disagree about what a pin
+; means.
+[node name="Minimap" parent="." instance=ExtResource("23_minimap")]

@@ -241,20 +241,50 @@ func _physics_process(delta: float) -> void:
 	_read_buttons()
 
 
+## One button, one screen — and now more than one pair.
+##
+## `toggle_action` / `toggle_screen_path` is the original wiring and still works;
+## after it, every child screen that declares an `open_action` of its own gets a
+## look. M9 adds the inventory and the map, and three exported paths on the stack
+## with three exported actions beside them is three chances for the indices to
+## stop lining up. A screen naming its own button cannot drift from itself.
+##
+## FIRST MATCH WINS AND STOPS. That matters because two actions can be bound to
+## the same physical button — `inventory` and `party_menu` were both on gamepad Y
+## until M9 moved the party to the Menu button — and when they are, the press must
+## open ONE screen rather than whichever one the loop happened to reach second.
 func _read_toggle() -> void:
-	if toggle_action == &"" or not InputMap.has_action(toggle_action):
+	if _try_toggle(toggle_action, get_node_or_null(toggle_screen_path) as Control):
 		return
-	if not Input.is_action_just_pressed(toggle_action):
-		return
-	var screen := get_node_or_null(toggle_screen_path) as Control
-	if screen == null:
-		return
+	for child in get_children():
+		var screen := child as Control
+		if screen == null:
+			continue
+		var declared: Variant = screen.get("open_action")
+		if declared == null:
+			continue
+		if _try_toggle(StringName(declared), screen):
+			return
+
+
+## Returns true when the press was CONSUMED, whether or not a screen moved.
+func _try_toggle(action: StringName, screen: Control) -> bool:
+	if action == &"" or screen == null or not InputMap.has_action(action):
+		return false
+	if not Input.is_action_just_pressed(action):
+		return false
 	# The same button closes it, but only from its own screen. Pressing Y inside
 	# a confirm dialog should not tear the confirm and its parent down together.
 	if top() == screen:
 		pop()
-	elif _stack.is_empty():
+		return true
+	if _stack.is_empty():
 		push(screen)
+		return true
+	# Something else is open. The press is ignored rather than swapping screens
+	# under the player, and it is not consumed, so a stack whose own toggle is
+	# elsewhere still gets its turn.
+	return false
 
 
 ## Stick and D-pad, with a repeat. The `move_*` actions rather than a separate set

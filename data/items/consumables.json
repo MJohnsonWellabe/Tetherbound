@@ -1,0 +1,28 @@
+{
+  "_comment": "The second item table. data/items/items.json says what a thing IS; this says what a thing you EAT does, and scripts/items/item_defs.gd merges the two into one table at load. An entry here may add fields to an item items.json already declares — that is what `berries` below is — or declare a whole new one.",
+  "_comment_why_two_files": "Because items.json belongs to the milestone that gathers and builds, and this belongs to the milestone that eats. One file edited by two systems is one file with two sets of merge conflicts; a merged table costs one function and lets each milestone own its own data. The merge is per-item and shallow-per-key, so `berries` keeps its display_name and its stack limit from items.json and gains what is here.",
+  "_comment_no_hunger": "CLAUDE.md: 'Food buffs; no starvation-death meter.' There is therefore no `hunger_restored`, no `satiation`, no `calories` and no `spoilage` field in this schema, and nothing anywhere reads one. A food's entire effect is the timed bonus in its `food` block. Not eating costs nothing at all.",
+  "_comment_schema": "A consumable declares `category: consumable` and, if the trainer can eat it, a `food` block:\n  seconds        — how long the bonus lasts, before data/config/survival.json `food.seconds_scale`\n  max_health     — added to the trainer's maximum health for the duration\n  max_stamina    — added to the trainer's maximum stamina for the duration\n  stamina_regen  — added to stamina regenerated per second for the duration\nThose three are GAME_DESIGN.md 18's 'improves health/stamina/regeneration' and nothing beyond them is invented: there is no attack stat on the trainer to buff (the human cannot fight), no carry weight to raise (there is none), and no cold resistance until a biome asks for one. A field omitted is a bonus of zero.",
+  "_comment_tunable": "EVERY NUMBER BELOW IS TUNABLE and all of them are provisional.",
+
+  "items": {
+    "berries": {
+      "_comment": "items.json files berries as a `material` and says: 'When M9's buffs land, this entry gains what they need.' This is that. It becomes a consumable and it is the only thing in the Meadows the trainer can eat — gathered by hand, eaten raw, no cooking, because a campfire that cooks is waiting on recipes that do not exist (scripts/building/station.gd).",
+      "category": "consumable",
+      "food": {
+        "_comment_seconds": "Five minutes. Long enough to cover the walk out and a fight, short enough that it is a thing you top up before setting off rather than something you did once an hour ago.",
+        "seconds": 300.0,
+        "_comment_bonuses": "Modest on purpose. Berries are the bare-handed, first-minute food and the floor of whatever the food ladder becomes; a berry that added forty health would leave nothing for a cooked meal to be better than. The stamina regen is the part the player will actually feel, because stamina is what movement spends.",
+        "max_health": 12.0,
+        "max_stamina": 15.0,
+        "stamina_regen": 3.0
+      }
+    },
+
+    "revival_draught": {
+      "_comment": "Re-filed, not changed. items.json calls it a `material` and its own comment says so apologetically: 'Filed as a material, and it is not one... a consumable category is the right home for this and for berries both; adding one is an edit to scripts/items/item_defs.gd, which this milestone does not own.' M9 owns that file, so the category is now right.",
+      "_comment_not_food": "It has NO `food` block and the trainer cannot eat it. A draught is spent on a fainted PAL, by scripts/pals/recovery.gd, and 16 gives it no other job. `consumable` means 'is used up', not 'is eaten'.",
+      "category": "consumable"
+    }
+  }
+}

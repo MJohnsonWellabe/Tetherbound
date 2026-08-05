@@ -1,0 +1,67 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/map_screen.gd" id="1_map"]
+[ext_resource type="Script" path="res://scripts/ui/map_canvas.gd" id="2_canvas"]
+
+; The world map. The panel, title, rule and footer come from `screen.gd`; what is
+; here is the picture and the list of places beside it.
+;
+; The canvas is the SAME script the minimap uses, in its other framing — one
+; drawing routine, two zooms, so a satchel pin cannot be one colour here and
+; another in the corner of the screen.
+;
+; The map is given the larger share of the width because it is the thing being
+; read; the list needs enough for a name and a distance and no more.
+
+[node name="MapScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_map")
+title = "Map"
+open_action = &"map"
+
+[node name="Body" type="HBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Canvas" type="Control" parent="Body"]
+custom_minimum_size = Vector2(980, 0)
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("2_canvas")
+mode = "fit"
+show_compass = true
+
+[node name="Side" type="PanelContainer" parent="Body"]
+size_flags_horizontal = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Side"]
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Lines" type="VBoxContainer" parent="Body/Side/Pad"]
+theme_override_constants/separation = 12
+
+[node name="Head" type="Label" parent="Body/Side/Pad/Lines"]
+theme_override_font_sizes/font_size = 30
+text = "Places"
+
+[node name="Places" type="RichTextLabel" parent="Body/Side/Pad/Lines"]
+bbcode_enabled = true
+scroll_active = false
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 24
+text = ""
+
+; The key. A RichTextLabel so each word can carry the colour of the pin it names
+; — a legend printed in one colour is a list of words, not a key.
+[node name="Legend" type="RichTextLabel" parent="Body/Side/Pad/Lines"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 20
+text = ""
