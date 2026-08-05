@@ -274,6 +274,22 @@ func _a_fainted_pal_cannot_be_caught() -> void:
 		_fail("the wild pal never came back after being caught; the fainted case could not be tested")
 		return
 
+	# Put the player's pal back on its feet before walking over.
+	#
+	# Aiming abandons your pal (D08) and this test throws at a creature twenty-five
+	# times, so the pal takes a beating. Until M6 the encounter director healed the
+	# whole party every time a fight ended and that damage evaporated; §16 now says
+	# a pal recovers from a bed or an item and from nothing else, and a fight
+	# cannot be entered with a pal that is down. This test is about THROWS, so it
+	# pays §16's price directly rather than building a base first — the same reason
+	# it tops the pal up between attempts above, and `tests/test_recovery.gd` is
+	# where recovery itself is proven.
+	var mine: RefCounted = _director.call("ally_instance")
+	if mine != null:
+		if mine.fainted:
+			mine.revive(1.0)
+		mine.hp = mine.max_hp
+
 	await _walk_to_the_wild_pal()
 	await _engage()
 	if not bool(_manager.call("is_fighting")):

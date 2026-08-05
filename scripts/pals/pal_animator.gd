@@ -66,11 +66,21 @@ func tick(delta: float, speed: float, top_speed: float) -> void:
 
 
 ## Play a one-shot and hold locomotion off until it finishes.
+##
+## A ONE-SHOT NEVER FALLS BACK, and that is the difference between this and
+## `tick()`. Locomotion falling back is right — a pack with no walk cycle should
+## run or stand rather than freeze. A one-shot falling back is not: `_hold` is
+## set to the length of whatever clip was found, so a creature with no flinch
+## would "play" its idle as a hit reaction and stop moving for the ENTIRE length
+## of that idle every time it was struck. Two of the eight shipped species have
+## no hit reaction (`data/pals/species.json`), so this is a real case and not a
+## hypothetical one. A missing flinch is a missing beat; a creature rooted for
+## three seconds mid-fight is a broken creature.
 func play_once(role: String) -> void:
 	if _player == null or _finished:
 		return
-	var clip := _resolve(role)
-	if clip == "":
+	var clip := str(_clips.get(role, ""))
+	if clip == "" or not _player.has_animation(clip):
 		return
 	_hold = _player.get_animation(clip).length
 	_play(role, false)
@@ -120,17 +130,15 @@ func _resolve(role: String) -> String:
 	return ""
 
 
+## Locomotion only. The one-shot roles used to have fallbacks here and they were
+## removed with the change in `play_once` above: a hit or a faint that resolves
+## to the idle clip is not a degraded animation, it is a creature that stops
+## moving for as long as its idle lasts.
 func _fallbacks(role: String) -> Array[String]:
 	match role:
 		RUN:
 			return [WALK, IDLE]
 		WALK:
 			return [RUN, IDLE]
-		HIT:
-			return [IDLE]
-		ATTACK:
-			return [IDLE]
-		FAINT:
-			return [IDLE]
 		_:
 			return []

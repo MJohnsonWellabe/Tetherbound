@@ -3,8 +3,14 @@ extends RefCounted
 ## The species table, loaded from data/pals/species.json.
 ##
 ## Thin on purpose. Its whole job is to keep species stats out of gameplay code
-## so M11 can swap placeholder capsules for real rigged creatures, and rebalance
-## every creature, without a single line of combat code changing.
+## so a creature can be added, re-modelled, resized, recoloured or rebalanced
+## without a single line of combat code changing.
+##
+## M11 is the test of that and it held: the roster went from three species to
+## eight, every model was replaced, every stat was rewritten, sizes went from a
+## 1.5x spread to 5.8x, and the only code that changed was one retint function in
+## `pal_body.gd`, one fallback rule in `pal_animator.gd`, and the accessors
+## below. Nothing in `scripts/combat/` was touched.
 
 const SPECIES_PATH := "res://data/pals/species.json"
 const INSTANCE := preload("res://scripts/pals/pal_instance.gd")
@@ -63,6 +69,51 @@ static func spawn(species_id: String, trait_roll: float = -1.0) -> RefCounted:
 static func placeholder(species_id: String) -> Dictionary:
 	var entry: Variant = definition(species_id).get("placeholder")
 	return entry if entry is Dictionary else {"colour": "#cccccc", "height": 1.0, "radius": 0.4}
+
+
+## Every species id in the table, sorted, so a caller enumerating the roster
+## gets the same order every time. `table().keys()` does not promise one.
+static func ids() -> Array[String]:
+	var out: Array[String] = []
+	for id: String in table().keys():
+		out.append(id)
+	out.sort()
+	return out
+
+
+## The name a player sees. Falls back to the id, which is ugly on purpose: an
+## unnamed species should be obvious in a screenshot.
+static func display_name(species_id: String) -> String:
+	return str(definition(species_id).get("display_name", species_id))
+
+
+## One of GAME_DESIGN.md §8's eight locked types.
+##
+## NOTHING IN THE GAME READS THIS YET. There is no chart, no multiplier and no
+## same-type bonus; §8 says the chart is "tunable and should be defined before
+## full Meadows balancing", and building it is a separate system. The accessor
+## exists so that when the chart is built it has one place to ask, and so
+## tests/test_roster.gd can assert the field is at least populated and legal.
+static func type_of(species_id: String) -> String:
+	return str(definition(species_id).get("type", "ground"))
+
+
+## The species this one becomes, or "" for the great majority that never do.
+##
+## §11: evolution is limited, not universal, and starters do not evolve. Inert
+## data — the requirement (level + high bond + item/condition) is a system
+## nobody has built, so no code acts on this. It is here because the pair it
+## names is the one thing about evolution that can be got wrong today: the
+## evolved form has to be the visibly bigger, more dangerous creature, and at the
+## pack's own scale it was the smaller one.
+static func evolves_into(species_id: String) -> String:
+	return str(definition(species_id).get("evolves_into", ""))
+
+
+## The creature's gameplay height in metres. The collider is built from this and
+## the art is fitted to it, so it is the one number that is true of both.
+static func body_height(species_id: String) -> float:
+	return float(placeholder(species_id).get("height", 1.0))
 
 
 ## Will this creature start a fight on its own?

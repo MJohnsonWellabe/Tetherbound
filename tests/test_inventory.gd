@@ -18,6 +18,12 @@ const M8_ITEMS := [
 	"wood", "stone", "fiber", "berries",
 	"axe", "pickaxe", "hammer", "knife", "fishing_rod",
 	"tether_orb",
+	# M6's revival item. GAME_DESIGN.md §16's first route back from a faint is
+	# "a special revival item", and it is an item rather than a special case for
+	# the same reason the orb is one. Listed here rather than exempted, so the
+	# assertion below still means "nothing has crept in that no milestone asked
+	# for" — this one was asked for by name.
+	"revival_draught",
 ]
 
 ## A stackable material and a tool, picked once so the tests below read as

@@ -39,6 +39,10 @@ var _misses: int = 0
 var _hits_on_enemy: int = 0
 var _hits_on_ally: int = 0
 
+## The player's pal's health at the moment the fight was decided, set once inside
+## the resolve pause. Negative until then. See `_fight_to_a_finish`.
+var _hp_when_the_fight_was_decided: float = -1.0
+
 
 func _init() -> void:
 	_run()
@@ -379,9 +383,22 @@ func _fight_to_a_finish() -> void:
 	var frames := 0
 	while bool(_manager.call("is_fighting")) and frames < FIGHT_FRAME_LIMIT:
 		var pal: RefCounted = _manager.call("active_pal")
+		# The fight is DECIDED but not yet finished: the manager holds an outcome
+		# and is running out its resolve pause, and neither creature can act. That
+		# is the one window where the player's pal can be put on a known number
+		# that nothing else will move — so `_exploration_is_restored` can assert
+		# the number is still there afterwards.
+		#
+		# GAME_DESIGN.md §16: a fight ending is not a cure. The director used to
+		# heal the whole party here, and this is the check that would have caught
+		# it in the real scene rather than in a unit test.
+		if pal != null and _hp_when_the_fight_was_decided < 0.0 \
+				and str(_manager.call("outcome")) != "":
+			pal.hp = pal.max_hp * 0.5
+			_hp_when_the_fight_was_decided = pal.hp
 		# Keep the ally alive long enough to win: heal it rather than tune the
 		# fight, because this test is about wiring, not balance.
-		if pal != null and pal.hp_fraction() < 0.4:
+		elif pal != null and pal.hp_fraction() < 0.4:
 			pal.hp = pal.max_hp
 
 		var to := _wild.global_position - _ally.global_position
@@ -427,6 +444,24 @@ func _exploration_is_restored() -> void:
 	var to_trainer := _rig.global_position.distance_to(_player.global_position)
 	if to_trainer > 4.0:
 		_fail("the camera did not return to the trainer (%.1fm away)" % to_trainer)
+
+	# The fight left the pal on half health. It has to still be on half health.
+	#
+	# GAME_DESIGN.md §16: a pal recovers from a revival item or from its pal bed
+	# at home, and from nothing else. Until M6 the encounter director restored the
+	# whole party the moment a fight ended, which made every faint in the game
+	# temporary and §16 unreachable. This is that rule in the real scene.
+	var pal: RefCounted = _director.call("ally_instance")
+	if pal == null:
+		_fail("there is no deployed pal after the fight")
+	elif _hp_when_the_fight_was_decided < 0.0:
+		_fail("never caught the fight's resolve window; the post-fight health check did not run")
+	elif pal.hp > _hp_when_the_fight_was_decided + 0.01:
+		_fail("the fight ended and the pal was healed (%.1f -> %.1f of %.1f); recovery is supposed to cost a bed or an item" % [
+			_hp_when_the_fight_was_decided, pal.hp, pal.max_hp
+		])
+	else:
+		print("the pal kept its wounds after the fight: %.1f / %.1f hp" % [pal.hp, pal.max_hp])
 
 	# And you can actually move again.
 	var before := _player.global_position
