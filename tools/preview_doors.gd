@@ -23,6 +23,7 @@ extends SceneTree
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const STATION := preload("res://scripts/building/station.gd")
+const STRUCTURES := preload("res://scripts/building/structures.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT := "res://shots/_doors_%s.png"
 
@@ -115,9 +116,18 @@ func _run() -> void:
 		await _shoot("%s_inside_%s" % [site, state])
 
 	# --- and the part a picture cannot answer ---------------------------------
+	#
+	# THROUGH THE MIDDLE OF THE DOORWAY, WHICH IS NOT WHERE THE DOOR IS. A door
+	# station's origin is its HINGE — that is the whole point of the `hangs`
+	# offset — so a ray fired through it runs down the jamb and, with the door
+	# open, straight through the leaf standing there. The first run of this probe
+	# reported the doorway sealed for exactly that reason while the frames beside
+	# it showed daylight through it. Undo the offset to get the opening's middle.
+	var hinge := STRUCTURES.hang_offset(RULES.pieces().get(str(door.get("piece_id")), {}))
+	var mouth: Vector3 = at - Basis(Vector3.UP, facing) * hinge
 	var space := (world as Node3D).get_world_3d().direct_space_state
-	var outside := at + outward * 1.6 + Vector3.UP * CHEST
-	var inside := at - outward * 1.6 + Vector3.UP * CHEST
+	var outside := mouth + outward * 1.6 + Vector3.UP * CHEST
+	var inside := mouth - outward * 1.6 + Vector3.UP * CHEST
 	var through_doorway := _ray(space, outside, inside)
 	var through_pier := _ray(space, outside + along * PIER, inside + along * PIER)
 	print("with the door OPEN:")
