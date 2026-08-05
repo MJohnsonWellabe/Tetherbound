@@ -28,6 +28,11 @@ const DEFS := preload("res://scripts/items/item_defs.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
+## Team Tether. `tether_roster` puts the Meadows legendary into the species table
+## before any save is restored; `stronghold_route` is the road they stand on and
+## is mounted from `_mount_the_stronghold_route()` below.
+const TETHER_ROSTER := preload("res://scripts/trainers/tether_roster.gd")
+const STRONGHOLD_ROUTE := preload("res://scripts/trainers/stronghold_route.gd")
 const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
 ## pal.tscn carries no script; one body shape serves both roles and the script
 ## is chosen here. The alternative is two near-identical scenes, which means
@@ -231,8 +236,28 @@ var _respawn_timers: Dictionary = {}
 var _world: Node = null
 var _party: Node = null
 
+## M13's Team Tether route, when one is mounted. Duck-typed and optional: the
+## director works exactly as it did without one, which is what lets every
+## existing smoke and the M2-M12 scenes carry on unchanged.
+##
+## It is asked rather than reading input of its own, because of what
+## `_read_engage_input` below records: `is_action_just_pressed` is scoped to the
+## frame the press was recorded in, and two systems reading it from different
+## ticks will each sometimes see a different half of one press. There is one
+## engage button in this game and this file owns it.
+var _challenges: Node = null
+
 
 func _ready() -> void:
+	# SYNCHRONOUSLY, and first. The Meadows legendary is not in species.json (see
+	# data/trainers/species_addendum.json for why), and `pal_instance.from_record`
+	# rebuilds a saved pal by asking the species table for its id. `SaveDirector`
+	# is the scene's FIRST child and waits a process frame before restoring, so
+	# doing this here — not deferred, not awaited — puts the table in order before
+	# any record is looked up. A legendary that saved and then vanished on load
+	# would be the worst failure available to this milestone.
+	TETHER_ROSTER.register()
+
 	_party = get_node_or_null(party_path)
 	_world = _find_the_world()
 	_engage_range = float(MATH.config().get("flow", {}).get("engage_range", 6.0))
@@ -250,6 +275,43 @@ func _ready() -> void:
 	# add_child() is refused during that. One frame is enough to be out of it.
 	await get_tree().process_frame
 	await _spawn_creatures()
+	_mount_the_stronghold_route()
+
+
+## MOUNT M13/M14's TEAM TETHER ROUTE, AND MOVE THIS THE DAY THE SCENE CAN CARRY
+## IT.
+##
+## `scripts/trainers/stronghold_route.gd` is a Node3D with no scene of its own.
+## It belongs in `scenes/world/meadows_playground.tscn` beside `EncounterDirector`
+## and `Structures`, as:
+##
+##   [node name="StrongholdRoute" type="Node3D" parent="."]
+##   script = <res://scripts/trainers/stronghold_route.gd>
+##
+## with the four paths it needs bound the same way `Recovery` binds its five.
+##
+## It is created HERE instead for exactly the reason `build_mode._mount_field_
+## systems()` gives above its own copy of this comment: the milestone that wrote
+## it did not own that scene file and two other agents were editing it at the
+## time. This is wiring, not design. It creates nothing if the scene already
+## provides the node, so adding it properly is a scene edit and the deletion of
+## this function, in either order.
+##
+## The alternative was shipping a trainer battle nothing in the running game
+## could reach — the "written and never called" shape this project keeps getting
+## bitten by, which `save_director.gd` and D13's dead `_caught` array both exist
+## because of.
+func _mount_the_stronghold_route() -> void:
+	var world := get_parent()
+	if world == null or world.get_node_or_null(^"StrongholdRoute") != null:
+		return
+	var route: Node3D = STRONGHOLD_ROUTE.new()
+	route.name = "StrongholdRoute"
+	# Bound BEFORE it enters the tree: its `_ready()` defers straight into raising
+	# the posts, and that needs a player to face and a world to stand on.
+	route.call("bind", _player, self, _manager, _world)
+	world.add_child(route)
+	set_challenge_source(route)
 
 
 ## How many physics frames to keep trying to stand the wild pal on the ground.
@@ -541,6 +603,45 @@ func _wild_of_species(id: String) -> Node3D:
 	return null
 
 
+## Register whatever offers challenges — `scripts/trainers/stronghold_route.gd`
+## today. Optional, and separate from the mount above so a scene that provides
+## the node itself can point this at it without going through `_ready`.
+func set_challenge_source(node: Node) -> void:
+	_challenges = node
+
+
+## Start a fight against a creature somebody else brought.
+##
+## The public face of `_start_fight`, for `scripts/trainers/tether_trainer.gd`.
+## A trainer battle is N ordinary fights in a row, and every one of them has to
+## come through the same door a wild encounter does — the door that suspends
+## exploration, hands over the camera, and deploys from the party. A second
+## entrance that forgot half of that would be a bug that only appears when you
+## are being fought by a person.
+func engage(opponent: Node3D) -> bool:
+	if opponent == null or not is_instance_valid(opponent):
+		return false
+	_start_fight(opponent)
+	return _engaged_with == opponent
+
+
+## A creature offered to the player by something that is not a catch.
+##
+## M14's legendary is the only caller. It goes through `_keep()`, which is the
+## same function a capture goes through, which calls `Party.add()`, which refuses
+## a sixth with `REFUSED_PARTY_FULL`, which is re-emitted as `caught_refused` and
+## which `scripts/pals/release_prompt.gd` has opened the release ceremony on
+## since M5.
+##
+## No second path, no second ceremony, no holding pen. D13 and D16 are explicit
+## that the moment a pal can enter the party — or wait beside it — by any other
+## route, the five-pal cap has an exception and the ceremony becomes optional.
+## The most important creature in the region therefore arrives through the
+## narrowest door in the codebase, and that is deliberate.
+func offer_pal(instance: RefCounted) -> void:
+	_keep(instance)
+
+
 func ally_body() -> Node3D:
 	return _ally_body
 
@@ -718,7 +819,8 @@ const PROMPT_HUNTED := "%s is on you and every pal is down.    Run for home — 
 ## sentence is indistinguishable from a broken game, and it is not something to
 ## find out about from a screenshot.
 static func prompt_for(
-	deployed: RefCounted, roster: Array, candidate_name: String, hunter_name: String = ""
+	deployed: RefCounted, roster: Array, candidate_name: String, hunter_name: String = "",
+	challenge: String = ""
 ) -> String:
 	if PARTY.none_standing(roster):
 		if not hunter_name.is_empty():
@@ -728,6 +830,16 @@ static func prompt_for(
 		# Someone else can still go out. The party menu is where that is done, so
 		# the prompt names its button rather than describing the problem twice.
 		return PROMPT_DEPLOYED_DOWN % deployed.display()
+	# A person standing in front of you outranks a rabbit behind them. M13 puts
+	# Team Tether ON the road, so a trainer and a wild creature are routinely in
+	# range at the same time, and the press does the challenge — `try_engage`
+	# below resolves it in this same order, so the line and the button agree.
+	#
+	# BELOW the two states above, not above them: with the whole party down there
+	# is nothing to challenge anybody with, and offering the fight anyway would be
+	# a prompt for a button that refuses.
+	if not challenge.is_empty():
+		return challenge
 	if not candidate_name.is_empty():
 		return PROMPT_ENGAGE % candidate_name
 	return ""
@@ -747,7 +859,8 @@ func _update_prompt() -> void:
 			_active_pal(),
 			_party.call("members") if _party != null else [],
 			str(candidate.get("display_name")) if candidate != null else "",
-			str(_hunter.get("display_name")) if _hunter != null else ""
+			str(_hunter.get("display_name")) if _hunter != null else "",
+			str(_challenges.call("prompt")) if _challenges != null else ""
 		)
 	if text != _prompt:
 		_prompt = text
@@ -771,6 +884,15 @@ func _report_the_party_state() -> void:
 func _read_engage_input() -> void:
 	if not Input.is_action_just_pressed("interact"):
 		return
+	# Team Tether first, and only when there is something to fight with. A player
+	# whose whole party is down pressing X at a Warden must not open a battle they
+	# cannot deploy into — `_engageable()` below already refuses that for wild
+	# creatures and the same rule has to hold for a person.
+	var deployed := _active_pal()
+	if _challenges != null and deployed != null and not deployed.fainted \
+		and not bool(_manager.call("is_fighting")):
+		if bool(_challenges.call("try_engage")):
+			return
 	var candidate := _engageable()
 	if candidate == null:
 		return
@@ -832,7 +954,30 @@ func _on_combat_exited(outcome: String) -> void:
 	var deployed := _active_pal()
 	var defeated: RefCounted = _manager.call("enemy") as RefCounted
 
-	if wild != null and is_instance_valid(wild):
+	# A creature somebody else owns is not the meadow's to put back.
+	#
+	# `scripts/trainers/tether_trainer.gd` listens to the same `exited` signal and
+	# decides what happens to its own team — recall it, send the next one, or
+	# restore the lot if the player broke off. Running the wild bookkeeping over
+	# it as well would be actively destructive, not merely redundant:
+	# `_respawn_timers` fires `revive_at_home()`, which runs the world's own full
+	# reset over the instance — so it would UN-FAINT a creature the player had
+	# just knocked out, six seconds after they knocked it out, in the middle of
+	# the battle. The trainer's team would put itself back up as the fight went
+	# on. (`tests/test_recovery.gd` asserts that this file never names that reset
+	# directly, which is why it is described rather than quoted.)
+	#
+	# The slump and the linger are left to the trainer too, for the same reason:
+	# there is one owner of that body and it is not this file.
+	var trainer_owned := wild != null and is_instance_valid(wild) \
+		and wild.has_method("is_trainer_owned") and bool(wild.call("is_trainer_owned"))
+
+	if wild != null and is_instance_valid(wild) and trainer_owned:
+		if outcome == "won":
+			# The body slumps where it fell — the same feedback a wild faint gives,
+			# and the thing the player is looking at while the next one comes out.
+			wild.call("notify_fainted")
+	elif wild != null and is_instance_valid(wild):
 		match outcome:
 			"won":
 				# It stays on the ground for a moment before it clears. §15: the

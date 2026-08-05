@@ -750,11 +750,41 @@ func switch_active(step: int) -> bool:
 ## §15 says a faint ENDS the capture opportunity. That is a refusal, not a very
 ## low chance, and telling the player before they spend an orb and a vulnerable
 ## second of aiming is the difference between a rule and a punishment.
+## Is the creature being fought owned by another trainer?
+##
+## CLAUDE.md, hard rule: "Trainer-owned pals cannot be caught."
+##
+## `catch_math.can_be_caught()` has taken an `already_owned` argument since M3
+## and this file passed a literal `false` to it in both places, with a comment
+## in `catch_math` saying the rule was "enforced here so every future path into
+## catching inherits it". Nothing ever passed `true`. The rule was written,
+## documented, unit-tested and UNREACHABLE — correctly, because until M13 there
+## was no creature in the world that anybody else owned. This is the argument
+## arriving.
+##
+## Duck-typed rather than a flag on `wild_pal`: `scripts/trainers/tether_pal.gd`
+## answers yes by HAVING the method, so an ordinary wild creature answers no by
+## not having it. There is no way to build a trainer's creature that forgets to
+## say so, and no way to give a wild one the wrong answer by leaving a boolean
+## unset.
+func _opponent_is_trainer_owned() -> bool:
+	return _wild != null \
+		and _wild.has_method("is_trainer_owned") \
+		and bool(_wild.call("is_trainer_owned"))
+
+
 func _try_throw() -> void:
 	if _enemy == null:
 		return
-	var allowed: bool = CATCH.can_be_caught(_enemy.fainted, false)
-	_throw.call("try_begin_aim", allowed, "%s is out cold — too late to catch it" % _enemy.display_name)
+	var owned := _opponent_is_trainer_owned()
+	var allowed: bool = CATCH.can_be_caught(_enemy.fainted, owned)
+	# Two different refusals, because they are two different facts about the
+	# world and the player should be able to tell which one they have hit. "It
+	# fainted" is a mistake you made; "it belongs to somebody" is a rule, and a
+	# rule stated once is a rule you stop testing.
+	var refusal := "%s belongs to Team Tether — it cannot be caught" if owned \
+		else "%s is out cold — too late to catch it"
+	_throw.call("try_begin_aim", allowed, refusal % _enemy.display_name)
 	state_changed.emit()
 
 
@@ -765,8 +795,18 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	# Re-checked at the moment of impact as well as before the aim: the opponent
 	# can faint to your pal's attack while the orb is still in the air, and an
 	# orb that lands on a corpse must not catch it.
-	if not CATCH.can_be_caught(_enemy.fainted, false):
-		catch_refused.emit("%s fainted before the orb landed" % _enemy.display_name)
+	#
+	# The ownership half is re-checked here for a different reason — not because
+	# it can change mid-flight, but because this is the second door into
+	# `CATCH.resolve()` and a hard rule guarded at one of two doors is a hard rule
+	# with a hole in it. An orb already in the air when a trainer battle opens
+	# would otherwise land on a creature the game has just decided cannot be
+	# caught.
+	if not CATCH.can_be_caught(_enemy.fainted, _opponent_is_trainer_owned()):
+		catch_refused.emit(
+			"%s belongs to Team Tether" % _enemy.display_name if _opponent_is_trainer_owned()
+			else "%s fainted before the orb landed" % _enemy.display_name
+		)
 		_throw.call("clear_orb")
 		state_changed.emit()
 		return

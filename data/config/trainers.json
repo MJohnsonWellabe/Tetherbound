@@ -58,14 +58,14 @@
       "count": 2
     },
     "barricade": {
-      "_comment": "Kit pieces, not new art: the settlement's own fence and crate, stood across the road and tinted to Tether's iron. Reusing the village's carpentry is the point — Team Tether did not ship a fort in, they nailed one onto somebody's road.",
+      "_comment": "Kit pieces, not new art: the settlement's own fence and crate, stood across the road. Reusing the village's carpentry is the point AND the story — Team Tether did not ship a fort in, they nailed one onto somebody's road out of somebody's lumber.",
+      "_comment_pieces": "`Prop_Support` was here and is gone: it is a diagonal roof brace, and stood on the ground it renders as a large floating X. They are NOT tinted — see `barricade()` in scripts/trainers/tether_dress.gd for the frame that settled that.",
       "pieces": [
         "res://assets/buildings/Prop_WoodenFence_Single.gltf",
         "res://assets/buildings/Prop_Crate.gltf",
-        "res://assets/buildings/Prop_Support.gltf"
+        "res://assets/buildings/Prop_WoodenFence_Extension1.gltf"
       ],
-      "colour": "tether_iron",
-      "spread": 3.2
+      "spread": 3.4
     },
     "pylon": {
       "_comment": "The tether machinery: a drum on a footing, with cables running out of it. §28's 'machinery, cables, barricades, cages' against 'old stone and natural forms'.",
@@ -73,10 +73,10 @@
       "radius": 0.55,
       "colour": "tether_iron",
       "cable_colour": "tether_live",
-      "cable_radius": 0.055,
+      "cable_radius": 0.045,
       "_comment_cable": "How far the cable sags between the drum and the creature, as a fraction of the span. A straight line reads as a laser; a sag reads as a cable under load.",
       "cable_sag": 0.18,
-      "cable_segments": 10
+      "cable_segments": 14
     }
   },
 

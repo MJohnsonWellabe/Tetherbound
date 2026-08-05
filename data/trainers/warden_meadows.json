@@ -1,0 +1,31 @@
+{
+  "_comment": "MEADOWS_VERTICAL_SLICE.md M14: 'first regional trainer boss', 'meaningful difficulty'. §3's step 2 of the stronghold conclusion, standing at the gate with the ruin on the skyline behind him.\n\nHE IS THE SAME SYSTEM AS THE TWO PICKETS BELOW HIM. No boss-only code path exists anywhere; what makes him the Warden is three fields — a longer team, higher levels, and the `warden` tether grade — plus the fact that the legendary is wired to a pylon behind him.",
+
+  "id": "warden_meadows",
+  "display_name": "Warden Calloch",
+  "title": "Warden of the Meadows",
+
+  "_comment_model": "The Styloo mage at 1.96m, against the trainer's 1.80m and the picket's own 1.80m. A DIFFERENT BODY from the road trainers on purpose: they are staff and he is not, and the read has to survive being seen from thirty metres away with a boss's banner behind him. Ships zero clips like the knight, on a 191-bone skeleton that carries every bone named in art.json's retarget map — so the same 25 KayKit clips drive him unchanged (docs/ASSET_LEDGER.md).",
+  "model": "res://assets/characters/mage.glb",
+  "height": 1.96,
+  "model_yaw": 0.0,
+  "_comment_dress": "The robe is left exactly as the artist made it — near-black plum with gold trim, which is already a boss and already reads against the meadow. Tinting it to the accent was tried and is in `shots/warden/02-the-warden-close.png` from the first pass: multiplying an already-dark robe by a dark red produces black, and the Warden lost his silhouette. He wears Team Tether's tabard over it like everybody else on the road.",
+  "_comment_props": "The mage ships a staff and a spellbook modelled into the same skinned mesh, riding `DEF-staffMaster` and `DEF-bookMaster` off the spine — bones no KayKit clip touches, so they hang beside him in bind pose. `tether_trainer_model` collapses both, for the reason art.json gives for collapsing the knight's sword: the human cannot fight, and a Warden holding a staff promises a boss battle this game does not have.",
+
+  "_comment_lines": "PLACEHOLDER TEXT. §3's conflicted Warden — the one who knows exactly what the pylon behind him is and has an argument ready for it.",
+  "challenge": "Nobody up here wanted this posting. Turn around and neither of us has to explain it.",
+  "defeat": "Then cut it. And when the next lot come, you can be the one standing here.",
+
+  "_comment_difficulty": "MEANINGFUL DIFFICULTY, and how it is legible.\n\nThree things, and none of them is a bigger health bar:\n\n1. THREE CREATURES, IN SEQUENCE, WITH NOTHING HEALED BETWEEN THEM. The player's damage carries from the first fight into the third; his does not, because breaking off restores his team (data/config/trainers.json, `restore_on_disengage`). So the boss is one continuous run and the resource being spent is the party — which is the five-pal design being asked for, in a fight, for the first time.\n\n2. THE `warden` TETHER GRADE. Every one of his creatures runs a quarter faster on the telegraph and the recovery and a third faster between attacks. The player has fought thirty untethered creatures by now and knows the rhythm; this is that rhythm sped up, with the cable that is doing it visible on the creature.\n\n3. A DEFENSIVE LEAD, A GLASS CANNON, THEN THE HEAVY. Palehorn has the highest defence in the roster and almost no attack — it costs you TIME, not health, and time is what the run is short of. Cindertail then has the highest attack and the lowest defence of anything here: it dies quickly and it takes a bar off whoever is standing in front of it, which is the moment the player is meant to switch. Gloamfang is the only creature in the region that is both, and it arrives against a party that has already spent something.\n\nLevels are a deliberately SMALL edge (7/8/9). Damage in this game is bounded — `power * 2 * attack / (attack + defence)` — so raising an opponent's level raises its defence and its health together and multiplies time-to-kill much faster than it raises the threat. A level-14 Gloamfang would be a forty-hit sponge that could not kill anybody. That is the wall this milestone is required not to build.",
+
+  "team": [
+    { "species": "wild_grazer", "level": 7, "tether": "warden" },
+    { "species": "wild_stalker", "level": 8, "tether": "warden" },
+    { "species": "evolved_wolf", "level": 9, "tether": "warden" }
+  ],
+
+  "banners": 4,
+
+  "_comment_holds": "The Warden holds the tether that the legendary is on. Beating him cuts it — see `legendary` in data/config/trainers.json, and scripts/trainers/legendary_offer.gd.",
+  "holds_legendary": true
+}

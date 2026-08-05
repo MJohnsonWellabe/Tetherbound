@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -22,6 +22,7 @@
 [ext_resource type="Script" path="res://scripts/player/death.gd" id="21_death"]
 [ext_resource type="Script" path="res://scripts/ui/world_map.gd" id="22_map"]
 [ext_resource type="PackedScene" path="res://scenes/ui/minimap.tscn" id="23_minimap"]
+[ext_resource type="Script" path="res://scripts/world/sky_cycle.gd" id="24_sky"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -148,6 +149,19 @@ party_path = NodePath("../Party")
 script = ExtResource("9_look")
 sun_path = NodePath("../Sun")
 environment_path = NodePath("../WorldEnvironment")
+
+; M10. The clock and the weather state machine, from data/config/weather.json.
+;
+; A Node3D rather than a Node because it PARENTS the rain — the same split
+; Structures and Satchels use beside it. It owns no look values at all: every
+; colour, energy and density is in art.json and applied by WorldLook above, and
+; this only ever says what hour it is and what the weather is doing.
+;
+; AFTER WorldLook, because it drives it. WorldLook poses the default hour in its
+; own `_ready`; this takes over on the first frame after.
+[node name="SkyCycle" type="Node3D" parent="."]
+script = ExtResource("24_sky")
+look_path = NodePath("../WorldLook")
 
 [node name="PlaygroundHUD" parent="." instance=ExtResource("2_hud")]
 

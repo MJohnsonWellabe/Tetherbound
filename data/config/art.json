@@ -135,11 +135,11 @@
     "night": {
       "_comment": "Moonlit, clear. The light is a wide, cold, dim disc high overhead: `angular_distance` 2.2 against the sun's 0.6 is what makes the shadow edges go soft, and a high pitch keeps them short so a creature is still readable in a fight. NOT a dimmed day — day.hdr has a sun in it and a blue-scattered dome, and no amount of energy reduction turns that into a night sky. This one has stars, a moon and a moonpath.",
       "_comment_readable": "Deliberately not dark-for-the-sake-of-it. §24 wants night to be a different DANGER, not a screen you cannot read; MA-05's complaint was too little value variation, and answering it with a black frame would be the same failure at the other end. Exposure is raised and the ambient is a real deep blue so shaded ground still has a colour, while the sun energy drops by a factor of eight — the RANGE moves, not just the level.",
-      "at_hour": 0.0,
+      "at_hour": 21.5,
       "sun": {
         "pitch_deg": -62.0,
         "yaw_deg": -66.0,
-        "energy": 0.17,
+        "energy": 0.13,
         "colour": "#93aae0",
         "angular_distance": 2.2,
         "shadow_normal_bias": 2.6
@@ -147,8 +147,8 @@
       "sky": {
         "panorama": "res://assets/environment/sky/night.hdr",
         "rotation_deg": 0.0,
-        "energy": 0.26,
-        "overcast_energy": 0.09,
+        "energy": 0.22,
+        "overcast_energy": 0.05,
         "overcast_tint": "#4a5a86",
         "top_colour": "#0a1224",
         "horizon_colour": "#1b2743",
@@ -158,8 +158,8 @@
         "sun_curve": 0.35
       },
       "environment": {
-        "exposure": 1.5,
-        "ambient_energy": 0.95,
+        "exposure": 0.98,
+        "ambient_energy": 0.6,
         "ambient_colour": "#40548a",
         "ambient_sky_contribution": 0.3,
         "fog_colour": "#212f4e",
@@ -167,9 +167,15 @@
         "aerial_perspective": 0.3
       }
     },
+    "night_late": {
+      "_comment": "NIGHT, HELD. `same_as` takes every value from the entry above and moves it to a different hour, which is the only way a plateau exists on an interpolated curve: with one night keyframe the meadow spends every dark hour ramping towards either dusk or dawn, and the first render of this system showed exactly that — a moon and a star field over grass at very nearly its noon brightness at 23:00. Two keyframes at 21:30 and 04:00 make the six and a half hours between them flat, and leave a fast two-hour ramp into dawn.",
+      "_comment_not_copied": "Stated as an inheritance rather than a second copy of fourteen numbers, because two copies of one look is how they end up silently disagreeing about something nobody meant to vary — the same reason a time of day states only what it changes.",
+      "same_as": "night",
+      "at_hour": 4.0
+    },
     "dawn": {
       "_comment": "First light. Reuses golden.hdr spun 180 degrees — a sunrise and a sunset are the same photograph from the other side — with the key cooled and pinked rather than amber, and a little more haze, because the one thing a morning has that an evening does not is ground mist.",
-      "at_hour": 6.2,
+      "at_hour": 6.0,
       "sun": {
         "pitch_deg": -7.0,
         "yaw_deg": 114.0,
@@ -182,7 +188,7 @@
         "panorama": "res://assets/environment/sky/golden.hdr",
         "rotation_deg": 180.0,
         "energy": 0.95,
-        "overcast_energy": 0.5,
+        "overcast_energy": 0.45,
         "overcast_tint": "#d9cfd6",
         "top_colour": "#33608f",
         "horizon_colour": "#e6bfae",
@@ -224,7 +230,7 @@
         "sun_curve": 0.09,
         "energy": 1.0,
         "panorama": "res://assets/environment/sky/golden.hdr",
-        "overcast_energy": 0.62,
+        "overcast_energy": 0.5,
         "overcast_tint": "#e8cbb4"
       },
       "environment": {
@@ -263,7 +269,7 @@
     "cloudy": {
       "_comment": "Cloud cover with no water in it. The key drops by a third and widens — a cloud is a very large light source, which is the whole reason overcast shadows are soft — and the ambient comes UP, because the shadows a cloudy day loses to contrast it gets back as fill. Net value range narrows; the picture does not get darker.",
       "overcast": 0.88,
-      "overcast_energy": 1.0,
+      "overcast_energy": 0.45,
       "sun_energy": 0.62,
       "sun_softness": 2.4,
       "sun_colour": "#e8eef6",
@@ -281,7 +287,7 @@
     "rain": {
       "_comment": "Rain. The particles are in weather.json; this is the light it falls through. Key down to a quarter and very soft — there is no sun disc in a rainstorm, only a bright patch — and the fog pulled hard towards a cold grey so distance closes in. `fog_sky_affect` is up at 0.35: the note on fog_sky_affect above warns that tinting the sky produces a hard grey band, and that is true at low densities where fog and sky disagree; under a full cloud dome they already agree, and letting fog reach the sky is what stops the horizon reading as a cut-out.",
       "overcast": 1.0,
-      "overcast_energy": 0.72,
+      "overcast_energy": 0.33,
       "sun_energy": 0.3,
       "sun_softness": 3.4,
       "sun_colour": "#cfdae6",
@@ -299,7 +305,7 @@
     "storm": {
       "_comment": "A thunderstorm: rain, harder, under a much darker lid, plus lightning. The flash is not in this block because it is a moment rather than a look — sky_cycle.gd rolls it from `lightning_per_minute` in weather.json and hands world_look a 0..1 scalar that lifts the sky and the ambient for a few frames. It is additive light, not a post-process, so it renders under Compatibility.",
       "overcast": 1.0,
-      "overcast_energy": 0.42,
+      "overcast_energy": 0.2,
       "sun_energy": 0.2,
       "sun_softness": 4.0,
       "sun_colour": "#b9c6d6",
@@ -317,7 +323,7 @@
     "fog": {
       "_comment": "Meadow fog. The one weather that is mostly ONE number: density up by a factor of eighteen, which at art.json's 0.0006 base is still only 0.011 — enough to lose the far hills and keep the near field. Cover is partial rather than total because meadow fog sits under a sky rather than replacing it, and the light stays warmer and stronger than rain: fog is bright, which is the thing that most often gets it wrong.",
       "overcast": 0.55,
-      "overcast_energy": 1.15,
+      "overcast_energy": 0.6,
       "sun_energy": 0.55,
       "sun_softness": 3.0,
       "sun_colour": "#f0eee8",
