@@ -64,32 +64,54 @@ static func snap_to_cell(point: Vector3) -> Vector3:
 ##
 ## The player's yaw only breaks ties, by choosing which of the two axes to prefer
 ## when a point sits almost exactly on a corner.
-static func snap_to_edge(point: Vector3) -> Dictionary:
+## `turns` moves the piece to the NEXT EDGE round the cell, and does not spin it.
+##
+## This is the whole reason the parameter exists. A wall lies ALONG the edge it
+## sits on, and the edge decides its facing — so adding a quarter turn to that
+## facing does not rotate the wall, it lays it ACROSS its own edge, through the
+## corner, which is not a placement anybody wants. Build mode did exactly that
+## and the owner reported it as "rotate doesn't work": on a wall it produced
+## nonsense, and on a square floor it produced nothing visible at all.
+##
+## So rotating an edge-anchored piece cycles which of the cell's four edges it
+## is on — north, east, south, west — which is what a player pressing rotate
+## against a wall is actually asking for.
+static func snap_to_edge(point: Vector3, turns: int = 0) -> Dictionary:
 	var cell := snap_to_cell(point)
 	var offset := point - cell
-	# Whichever axis the point is further along decides which pair of edges is
-	# in play; the sign then picks one of that pair.
+	# Which edge the aim falls nearest, as a quarter-turn index:
+	# 0 = +Z, 1 = +X, 2 = -Z, 3 = -X. Whichever axis the point is further along
+	# decides the pair; the sign picks one of that pair.
+	var index: int
 	if absf(offset.x) >= absf(offset.z):
-		var side: float = signf(offset.x) if offset.x != 0.0 else 1.0
-		return {
-			"position": Vector3(cell.x + side * CELL * 0.5, point.y, cell.z),
-			# A wall on an X-facing edge runs along Z.
-			"yaw": PI * 0.5,
-		}
-	var side_z: float = signf(offset.z) if offset.z != 0.0 else 1.0
-	return {
-		"position": Vector3(cell.x, point.y, cell.z + side_z * CELL * 0.5),
-		"yaw": 0.0,
-	}
+		index = 1 if offset.x >= 0.0 else 3
+	else:
+		index = 0 if offset.z >= 0.0 else 2
+	index = posmod(index + turns, 4)
+
+	# A wall on an X-facing edge (1, 3) runs along Z, so it is the odd indices
+	# that carry the quarter turn.
+	var along_z: bool = index % 2 == 1
+	var step: float = CELL * 0.5
+	var position := cell
+	match index:
+		0: position = Vector3(cell.x, point.y, cell.z + step)
+		1: position = Vector3(cell.x + step, point.y, cell.z)
+		2: position = Vector3(cell.x, point.y, cell.z - step)
+		3: position = Vector3(cell.x - step, point.y, cell.z)
+	return {"position": position, "yaw": PI * 0.5 if along_z else 0.0}
 
 
 ## Snap a point for a piece of the given anchor kind.
 ##
 ## The single entry point callers should use, so "which anchor does this piece
 ## want" is asked once here rather than at every call site.
-static func snap(point: Vector3, anchor: String) -> Dictionary:
+static func snap(point: Vector3, anchor: String, turns: int = 0) -> Dictionary:
 	if anchor == ANCHOR_EDGE:
-		return snap_to_edge(point)
+		return snap_to_edge(point, turns)
+	# A cell-anchored piece has no facing of its own, so the caller's turns are
+	# its whole rotation. `NAN` says "nothing to combine with" rather than 0.0,
+	# which would be a real facing that happened to be zero.
 	return {"position": snap_to_cell(point), "yaw": NAN}
 
 

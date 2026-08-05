@@ -5,16 +5,18 @@ extends Node
 ## Same shape as `combat_manager.gd`, and its header says why better than a new
 ## comment would: the world keeps rendering, the trainer stays standing where
 ## they opened it, nothing is unloaded and nothing is instanced from a separate
-## scene. Entering build mode suspends locomotion and shows a ghost. That is all
-## it is.
+## scene. Entering build mode shows a ghost. That is all it is.
+##
+## THE TRAINER KEEPS WALKING while it is open, which is the opposite of what a
+## fight does and is deliberate. The ghost sits a fixed distance in front of the
+## trainer, so walking IS how you aim it.
 ##
 ## This is the single place that knows building is happening. The HUD is told and
 ## does not ask; `structures.gd` is told what to place and does not decide.
 ##
 ## ONE WAY IN AND ONE WAY OUT, for the reason `encounter_director` gives about
 ## fights: "One place, so a new way of entering a fight cannot forget half of
-## it." A second route that forgot to suspend locomotion would leave the player
-## walking around with a ghost stuck to their face.
+## it." Here that one place is what guarantees the ghost is always torn down.
 
 const GRID := preload("res://scripts/building/build_grid.gd")
 const DEFS := preload("res://scripts/items/item_defs.gd")
@@ -51,7 +53,10 @@ var _ghost: Node3D = null
 var _ghost_material: StandardMaterial3D = null
 var _selected: int = 0
 var _ids: Array[String] = []
-var _yaw: float = 0.0
+## Quarter turns of the rotate button. An INT, not an angle: for an
+## edge-anchored piece it selects which of the cell's four edges the piece sits
+## on, and only a cell-anchored piece turns it into a yaw. See `build_grid.snap_to_edge`.
+var _turns: int = 0
 var _valid: bool = false
 var _refusal: String = ""
 
@@ -181,7 +186,7 @@ func _physics_process(_delta: float) -> void:
 	elif Input.is_action_just_pressed("build_cycle_left"):
 		_cycle(-1)
 	if Input.is_action_just_pressed("build_rotate"):
-		_yaw = GRID.snap_yaw(_yaw + GRID.YAW_STEP)
+		_turns = posmod(_turns + 1, 4)
 
 	_update_ghost()
 
@@ -203,12 +208,21 @@ func _set_open(value: bool) -> void:
 		return
 
 	_open = value
-	if _player != null:
-		_player.call("set_locomotion_enabled", not _open)
+
+	# THE PLAYER KEEPS WALKING. Build mode used to call
+	# `set_locomotion_enabled(false)` here, freezing the trainer in place for as
+	# long as the ghost was up.
+	#
+	# Nobody decided that; it was copied from how `encounter_director` suspends
+	# exploration for a fight, where stopping the player is the point. Building
+	# is the opposite: the ghost sits a fixed distance in front of the trainer
+	# (`_aim_point()`), so walking IS how you aim it, and a builder who cannot
+	# walk can only ever place pieces in one ring around wherever they happened
+	# to stop. The owner hit it immediately.
 
 	if _open:
 		_input_guard = true
-		_yaw = 0.0
+		_turns = 0
 		_build_ghost()
 		opened.emit()
 	else:
@@ -246,12 +260,19 @@ func _update_ghost() -> void:
 	if piece.is_empty():
 		return
 
-	var snapped: Dictionary = GRID.snap(_aim_point(), str(piece.get("anchor", GRID.ANCHOR_CELL)))
+	var snapped: Dictionary = GRID.snap(
+		_aim_point(), str(piece.get("anchor", GRID.ANCHOR_CELL)), _turns
+	)
 	var where: Vector3 = snapped["position"]
-	# An edge anchor decides its own facing — a wall lies ALONG the edge it is
-	# on, so taking yaw from the player here would float walls diagonally across
-	# cell corners. The manual yaw still turns cell-anchored pieces.
-	var yaw: float = _yaw if is_nan(float(snapped.get("yaw", NAN))) else float(snapped["yaw"]) + _yaw
+	# An edge anchor decides its own facing — a wall lies ALONG the edge it is on
+	# — so the turns went INTO the snap, which moved the piece to a different
+	# edge, and the yaw that comes back is already the right one. Adding to it
+	# here is what laid walls across their own edges and read as rotate being
+	# broken. A cell anchor has no facing of its own, so there the turns are the
+	# whole rotation.
+	var yaw: float = float(_turns) * GRID.YAW_STEP
+	if not is_nan(float(snapped.get("yaw", NAN))):
+		yaw = float(snapped["yaw"])
 
 	var ground := _ground_under(where, piece, yaw)
 	if not is_nan(ground):

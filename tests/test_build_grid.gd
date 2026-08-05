@@ -196,3 +196,60 @@ func _pieces() -> Dictionary:
 			if not id.begins_with("_"):
 				out[id] = (parsed as Dictionary)["pieces"][id]
 	return out
+
+
+# --- rotating a piece -------------------------------------------------------
+#
+# None of these existed, which is why the bug shipped. The owner reported
+# "rotate doesn't work", and it was true twice over: on a square floor rotating
+# changed nothing visible, and on a wall it added a quarter turn to a facing the
+# EDGE had already decided — laying the wall across its own edge, through the
+# corner.
+#
+# So rotation of an edge-anchored piece is a change of EDGE, not of angle.
+
+func test_rotating_a_wall_moves_it_to_the_next_edge_of_the_same_cell() -> void:
+	var aim := Vector3(1.9, 0.0, 1.0)
+	var first: Vector3 = (GRID.snap_to_edge(aim, 0) as Dictionary)["position"]
+	var second: Vector3 = (GRID.snap_to_edge(aim, 1) as Dictionary)["position"]
+	assert_false(first.is_equal_approx(second),
+		"a quarter turn left the wall on the same edge at %s" % first)
+	# Same cell: both edges are half a cell from its centre.
+	var centre: Vector3 = GRID.snap_to_cell(aim)
+	assert_almost_eq(first.distance_to(centre), GRID.CELL * 0.5, 0.001)
+	assert_almost_eq(second.distance_to(centre), GRID.CELL * 0.5, 0.001)
+
+
+func test_four_turns_bring_a_wall_back_where_it_started() -> void:
+	var aim := Vector3(1.9, 0.0, 1.0)
+	var start: Dictionary = GRID.snap_to_edge(aim, 0)
+	var round_trip: Dictionary = GRID.snap_to_edge(aim, 4)
+	assert_true((start["position"] as Vector3).is_equal_approx(round_trip["position"]),
+		"four quarter turns did not return to the starting edge")
+	assert_almost_eq(float(start["yaw"]), float(round_trip["yaw"]), 0.001)
+
+
+func test_a_wall_always_lies_along_its_edge_however_far_it_is_turned() -> void:
+	# The defect in one assertion: whatever the turn count, the yaw that comes
+	# back must be one the edge itself chose, never that plus an extra turn.
+	var aim := Vector3(1.9, 0.0, 1.0)
+	var centre: Vector3 = GRID.snap_to_cell(aim)
+	for turns in 8:
+		var edge: Dictionary = GRID.snap_to_edge(aim, turns)
+		var offset: Vector3 = (edge["position"] as Vector3) - centre
+		var yaw := float(edge["yaw"])
+		# An edge offset along X carries a quarter turn; one along Z carries none.
+		var expected: float = PI * 0.5 if absf(offset.x) > absf(offset.z) else 0.0
+		assert_almost_eq(yaw, expected, 0.001,
+			"turn %d put a wall at %s facing %.3f, across its own edge" % [turns, offset, yaw])
+
+
+func test_turning_a_floor_rotates_it_rather_than_moving_it() -> void:
+	# A cell anchor has no facing of its own, so it reports NAN and the caller's
+	# turns are the whole rotation. Position must not move.
+	var aim := Vector3(1.9, 0.0, 1.0)
+	var a: Dictionary = GRID.snap(aim, GRID.ANCHOR_CELL, 0)
+	var b: Dictionary = GRID.snap(aim, GRID.ANCHOR_CELL, 1)
+	assert_true((a["position"] as Vector3).is_equal_approx(b["position"]),
+		"turning a cell-anchored piece moved it")
+	assert_true(is_nan(float(a["yaw"])), "a cell anchor claimed a facing of its own")
