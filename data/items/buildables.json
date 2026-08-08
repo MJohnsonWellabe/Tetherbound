@@ -1,0 +1,22 @@
+{
+  "_comment": "The build menu's catalogue. Lives beside items.json because a buildable is spent inventory turned into a placed thing, and splitting the two put the cost in one file and the thing it buys in another.",
+  "_comment_scope": "GAME_DESIGN.md 20 lists a dozen categories (floors, walls, roofs, doors, beds, lights...). One entry ships here on purpose: the menu is the work, and the eleventh entry after this one costs a JSON block and no code.",
+  "_comment_camp": "GAME_DESIGN.md 20's mandatory tutorial is shelter, bed, campfire, rest. The camp is the smallest thing that lets that sequence exist — a fire and somewhere to sleep, as one buy rather than three, so the first build cannot leave the player with a bed and no light.",
+  "_comment_cost": "TUNABLE. Costs are set so the camp is roughly one gathering trip and are not balanced against anything, because nothing yet produces these at a known rate.",
+  "_comment_placement": "Nothing here places geometry. Confirming a buildable sets GameState.pending_build, which is the seam the building system reads when M8 gives it one. A build menu that silently did nothing would read as a bug; one that arms a selection is honest about where the work stops.",
+
+  "buildables": [
+    {
+      "id": "camp",
+      "name": "Camp",
+      "category": "shelter",
+      "blurb": "A ring of stones and a bedroll. Light, warmth, and somewhere to wake up.",
+      "contains": ["Campfire", "Bedroll"],
+      "cost": [
+        { "id": "wood", "n": 12 },
+        { "id": "stone", "n": 8 },
+        { "id": "fibre", "n": 10 }
+      ]
+    }
+  ]
+}
