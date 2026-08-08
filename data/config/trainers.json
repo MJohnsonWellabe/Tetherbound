@@ -1,0 +1,114 @@
+{
+  "_comment": "TEAM TETHER, as wiring and tunables. MEADOWS_VERTICAL_SLICE.md M13 and M14. The trainers themselves are content and live one per file in data/trainers/; this file is the route they stand on, the timing of a team battle, and the tether grades that make the Warden hard. ALL TUNABLE unless a key says otherwise.",
+
+  "_comment_one_system": "M13 and M14 are one system. The Warden IS the Team Tether trainer fight, at the top of the route, with a bigger team and a harder tether grade. Nothing below distinguishes a boss from a picket except the numbers, which is the point: building two trainer-battle systems would mean two places the 'trainer-owned pals cannot be caught' rule has to be remembered.",
+
+  "engage": {
+    "_comment": "Metres at which a Tether trainer offers a challenge, and how far the player has to walk away before it clears. Wider than the wild engage range in combat.json (6.0), because a human standing on a road is a bigger, more obvious thing to walk up to than a rabbit in the grass, and a challenge prompt that only appears inside a rabbit's radius reads as the trainer being shy.",
+    "range": 8.5,
+    "release_range": 12.0
+  },
+
+  "flow": {
+    "_comment": "The beats of a team battle. A trainer battle is N ordinary fights in a row against the same person, and these are the gaps between them.",
+    "_comment_send_out": "Seconds between the trainer's creature going down and the next one arriving. Long enough to be a moment — the Warden recalls, the player sees how many are left, and decides whether to switch — and short enough that it is not a loading pause. Nothing is healed in this gap on EITHER side; see `restore_on_disengage`.",
+    "send_out_delay": 1.6,
+    "_comment_first": "Seconds after the challenge is accepted before the lead creature is deployed. The trainer plays their send-out animation into this.",
+    "challenge_delay": 0.7,
+    "_comment_restore": "When the player breaks off — runs, or loses their deployed pal — the trainer's whole team comes back to full health and the battle starts again from their lead.\n\nTHIS IS A DIFFICULTY MECHANIC AND NOT A CONVENIENCE. Without it, a five-pal player beats any trainer by attrition across as many attempts as they like, and 'meaningful difficulty' (M14) becomes 'meaningful patience'. With it, a trainer battle is one continuous run: your damage carries, theirs does not, and the decision of when to switch is the fight. Set it false only to find out how much easier that is.",
+    "restore_on_disengage": true
+  },
+
+  "_comment_tether_grades": "WHAT THE TETHER DOES TO A CREATURE, and the whole of M14's 'meaningful difficulty'.\n\nEvery number here multiplies a TIMING in `combat.json`'s `enemy` block. NOT a stat. There is deliberately no hp, attack or defence multiplier anywhere in this file or in data/trainers/*.json, and tests/test_trainer_battle.gd asserts that there is not — because a boss that wins by having ten times the health is a wall, not a difficulty, and it is the single easiest thing to add here by accident.\n\nWhat a tethered creature is instead: FASTER. Its wind-up is shorter, so the warning you read arrives later. Its recovery is shorter, so the punish window you were taught to use in M2 is smaller. Its cooldown is shorter, so it comes at you again sooner. It closes faster, so backing off buys less.\n\nThat is legible from inside the fight without a single number on screen: the player already knows what an untethered creature's rhythm feels like, because they have fought thirty of them in the meadow, and a tethered one is visibly the same creature run fast. The oxblood cable on it is the reason, standing right there in the frame.",
+  "tether_grades": {
+    "none": {
+      "_comment": "An untethered creature fights exactly like a wild one. Used by the first picket's lead, so the player's first trainer battle teaches the FORMAT (a team, in sequence, that cannot be caught) before it teaches the difficulty.",
+      "beat_scale": 1.0,
+      "cooldown_scale": 1.0,
+      "chase_scale": 1.0,
+      "live": false
+    },
+    "standard": {
+      "_comment": "Team Tether's field harness. A tenth off every beat: noticeable across a fight, not noticeable in any single exchange, which is the right weight for the two trainers on the road up.",
+      "beat_scale": 0.9,
+      "cooldown_scale": 0.88,
+      "chase_scale": 1.06,
+      "live": true
+    },
+    "warden": {
+      "_comment": "The Warden's rig. A quarter off the telegraph and the recovery — the wind-up you have 0.55s to read becomes 0.41s, and the 0.75s opening you punish becomes 0.56s — and a third off the gap between its attacks. Measured against the player's own numbers rather than chosen: the quick attack's wind-up plus recovery is 0.40s, so a 0.56s opening is still enough for exactly one quick attack and no longer enough to be casual about. The charged attack's 1.05s of commitment no longer fits in the opening at all, which is what turns 'when do I spend the meter' from a habit back into a decision.",
+      "beat_scale": 0.75,
+      "cooldown_scale": 0.68,
+      "chase_scale": 1.15,
+      "live": true
+    }
+  },
+
+  "_comment_dress": "THE VISUAL LANGUAGE (M13's fifth bullet). Colours are ids into data/config/palette.json's reserved `accent` block and are never hexes here — one source, so a banner and a cable cannot drift apart.",
+  "dress": {
+    "banner": {
+      "_comment": "A pole and a hanging cloth at each post. The cloth is the thing that reads at distance; the pole exists so it is not floating.",
+      "pole_height": 3.4,
+      "pole_radius": 0.055,
+      "cloth_width": 0.95,
+      "cloth_height": 1.9,
+      "cloth_colour": "tether_cloth",
+      "pole_colour": "tether_iron",
+      "_comment_count": "Banners per post. Two at a picket, more at the stronghold gate — an occupation gets denser as you climb, which is the road telling you where you are going.",
+      "count": 2
+    },
+    "barricade": {
+      "_comment": "Kit pieces, not new art: the settlement's own fence and crate, stood across the road. Reusing the village's carpentry is the point AND the story — Team Tether did not ship a fort in, they nailed one onto somebody's road out of somebody's lumber.",
+      "_comment_pieces": "`Prop_Support` was here and is gone: it is a diagonal roof brace, and stood on the ground it renders as a large floating X. They are NOT tinted — see `barricade()` in scripts/trainers/tether_dress.gd for the frame that settled that.",
+      "pieces": [
+        "res://assets/buildings/Prop_WoodenFence_Single.gltf",
+        "res://assets/buildings/Prop_Crate.gltf",
+        "res://assets/buildings/Prop_WoodenFence_Extension1.gltf"
+      ],
+      "spread": 3.4
+    },
+    "pylon": {
+      "_comment": "The tether machinery: a drum on a footing, with cables running out of it. §28's 'machinery, cables, barricades, cages' against 'old stone and natural forms'.",
+      "height": 2.6,
+      "radius": 0.55,
+      "colour": "tether_iron",
+      "cable_colour": "tether_live",
+      "cable_radius": 0.045,
+      "_comment_cable": "How far the cable sags between the drum and the creature, as a fraction of the span. A straight line reads as a laser; a sag reads as a cable under load.",
+      "cable_sag": 0.18,
+      "cable_segments": 14
+    }
+  },
+
+  "_comment_route": "M13's 'simple authored stronghold route'.\n\nAUTHORED, in world coordinates, against the road that already exists: `data/config/trails.json`'s `meadow_spine` bends north out of the settlement at (85, 67) and its last waypoint stops at (76, 130), the foot of the stronghold bluff. These three posts sit on that last stretch, so walking the road IS the route and no new geography was needed — which matters, because the terrain and the world scene belong to other agents this milestone.\n\nThe ground was measured before these were chosen, not assumed: the shelf at the bluff's foot runs 14-19 degrees and is walkable; from z=136 north the flank goes 30, then 43, then 50 degrees against the controller's 45-degree limit. So the Warden stands at the GATE and not on the summit, and the summit ruin stays exactly what `settlement.json` says it is — a landmark you can see and cannot climb.\n\nCoordinates are composition and are NOT tunable. Moving one moves where the story happens.",
+  "route": {
+    "posts": [
+      {
+        "trainer": "tether_picket",
+        "at": [85.0, 67.0],
+        "_comment": "The bend. The road turns north here and leaves the settlement behind, and this is the first time the player is stopped by a person rather than by a creature. Banners either side, one fence across the verge."
+      },
+      {
+        "trainer": "tether_wrangler",
+        "at": [88.0, 100.0],
+        "_comment": "The cable run, halfway up. Flat ground, and the last flat ground: everything past this climbs."
+      },
+      {
+        "trainer": "warden_meadows",
+        "at": [78.0, 131.0],
+        "_comment": "The gate, on the shelf at the foot of the bluff, with the ruin on the skyline above and behind. M14's first regional trainer boss."
+      }
+    ]
+  },
+
+  "_comment_legendary": "M14's captive. §28: a Ground legendary, the ultimate riding mount, held at the first stronghold. It stands behind the Warden, on the last walkable ground before the flank, wired to a pylon by two live cables. Beating the Warden cuts them.",
+  "legendary": {
+    "species": "meadows_legendary",
+    "at": [75.0, 135.5],
+    "pylon_at": [72.5, 137.0],
+    "_comment_approach": "Where it comes to stand once it is free, relative to the Warden's post. It walks DOWN to the player rather than the player climbing to it; the flank above is a 43-degree wall and there is nothing up there to walk to.",
+    "approach": [77.0, 128.0],
+    "_comment_offer": "Metres at which the freed creature's offer can be accepted. Generous, because this is a story moment and hunting for the sweet spot on a prompt would be the wrong thing to be doing during one.",
+    "offer_range": 7.0
+  }
+}

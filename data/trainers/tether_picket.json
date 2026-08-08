@@ -1,0 +1,25 @@
+{
+  "_comment": "THE FIRST TEAM TETHER TRAINER IN THE GAME. MEADOWS_VERTICAL_SLICE.md M13's 'world encounter/trainer'.\n\nHis job is to teach the FORMAT, not to be hard: a person stops you on the road, they have more than one creature, the creatures come out one after another, and none of them can be caught. Two creatures, low levels, and his lead is not even tethered — so the first thing the player fights on this road behaves exactly like the meadow they have just walked out of, and the difference they notice is that when it goes down another one arrives.",
+
+  "id": "tether_picket",
+  "display_name": "Picket Ovan",
+  "title": "Team Tether",
+
+  "_comment_model": "The knight, i.e. the same body the player's own trainer wears, in Tether's colours. Deliberate: §3 asks that Team Tether not be written as universally cartoonish, and the road trainers being visibly the same KIND of person as you — same build, same kit, different flag — is the cheapest way to say that in a silhouette. The Warden gets a different body precisely because he is not one of these.",
+  "model": "res://assets/characters/knight.glb",
+  "height": 1.8,
+  "model_yaw": 0.0,
+  "_comment_dress": "There is no `dress` here and there is no per-model colour anywhere in these files. Team Tether's colour is a TABARD, hung on the chest bone by `tether_dress.tabard()` — the same one on all three trainers. The first pass tinted the model's own material instead and `shots/warden/01-the-three-of-them.png` shows why that is gone: the knight's two surfaces split by texture atlas, not by object, so `knightfirst` carries the tunic AND the skin and the picket came out with bright red hands and face.",
+
+  "_comment_lines": "PLACEHOLDER TEXT. Two lines each, shown in the world prompt — there is no dialogue system and this milestone is not the place to build one. §3: 'Some members are true believers, employees, opportunists, conflicted Wardens.' This one is an employee.",
+  "challenge": "Road's shut. I don't make the rules, I just stand on them.",
+  "defeat": "Fine. Fine. Go on up — it's not me you have to get past.",
+
+  "_comment_team": "Species ids into data/pals/species.json — Team Tether fields LOCAL creatures, which is what §3's 'holding exceptional pals' costs the region. `level` is the only stat knob that exists here on purpose; see the tether_grades comment in data/config/trainers.json for why there is no hp/attack/defence multiplier anywhere in this file.",
+  "team": [
+    { "species": "wild_rabbit", "level": 4, "tether": "none" },
+    { "species": "wild_pup", "level": 5, "tether": "standard" }
+  ],
+
+  "banners": 2
+}

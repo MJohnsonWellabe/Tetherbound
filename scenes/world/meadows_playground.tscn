@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -8,6 +8,21 @@
 [ext_resource type="Script" path="res://scripts/combat/encounter_director.gd" id="6_encounter"]
 [ext_resource type="PackedScene" path="res://scenes/combat/combat_hud.tscn" id="8_combat_hud"]
 [ext_resource type="Script" path="res://scripts/world/world_look.gd" id="9_look"]
+[ext_resource type="Script" path="res://scripts/building/structures.gd" id="10_structures"]
+[ext_resource type="Script" path="res://scripts/building/build_mode.gd" id="11_build"]
+[ext_resource type="Script" path="res://scripts/pals/party_manager.gd" id="12_party"]
+[ext_resource type="PackedScene" path="res://scenes/ui/screen_stack.tscn" id="13_screens"]
+[ext_resource type="PackedScene" path="res://scenes/ui/build_palette.tscn" id="14_palette"]
+[ext_resource type="Script" path="res://scripts/pals/release_prompt.gd" id="15_release"]
+[ext_resource type="Script" path="res://scripts/world/save_director.gd" id="16_save"]
+[ext_resource type="Script" path="res://scripts/pals/home.gd" id="17_home"]
+[ext_resource type="Script" path="res://scripts/pals/recovery.gd" id="18_recovery"]
+[ext_resource type="Script" path="res://scripts/player/trainer_inventory.gd" id="19_bag"]
+[ext_resource type="Script" path="res://scripts/player/satchel.gd" id="20_satchels"]
+[ext_resource type="Script" path="res://scripts/player/death.gd" id="21_death"]
+[ext_resource type="Script" path="res://scripts/ui/world_map.gd" id="22_map"]
+[ext_resource type="PackedScene" path="res://scenes/ui/minimap.tscn" id="23_minimap"]
+[ext_resource type="Script" path="res://scripts/world/sky_cycle.gd" id="24_sky"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -34,6 +49,22 @@ fog_sky_affect = 0.0
 
 [node name="MeadowsPlayground" type="Node3D"]
 script = ExtResource("4_world")
+
+; The save lifecycle: restore slot 0 at boot, autosave, and write on the window
+; close request. SaveManager has been able to do all of this since M4 and nothing
+; in the shipping game ever asked it to, so closing the window lost the session.
+;
+; FIRST CHILD on purpose. `_ready` runs in child order, and this node's boot
+; waits a process frame for the SaveManager autoload to attach (see D14 — under
+; `--script` it is not there yet). Being first means it resumes from that frame
+; before EncounterDirector does, so a restored party is already in place when the
+; director decides whether to grant a starter pal. Later in the list and a
+; returning player is briefly granted a sixth creature that the load then throws
+; away.
+[node name="SaveDirector" type="Node" parent="."]
+script = ExtResource("16_save")
+combat_path = NodePath("../CombatManager")
+build_path = NodePath("../BuildMode")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_1")
@@ -63,11 +94,53 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 40, 0)
 [node name="CombatManager" type="Node" parent="."]
 script = ExtResource("5_combat")
 
+; The party holds every pal the player owns, capped at five. It is a plain Node
+; wrapping a RefCounted, so the pals themselves survive a scene change and can be
+; tested without one.
+[node name="Party" type="Node" parent="."]
+script = ExtResource("12_party")
+
+; M9's survival loop. The trainer's bag, the bags they drop by dying, and what
+; they have walked.
+;
+; `TrainerInventory` is the owner `scripts/items/inventory.gd` never had: a
+; complete, tested slot/stack container that nothing in the shipping scene ever
+; instantiated. Gathering adds to it, build costs spend from it, `recovery.gd`
+; takes revival draughts out of it (its `inventory_path` points here), the
+; inventory screen draws it, and dying empties it into a satchel.
+;
+; BEFORE the Player in this file, so that a `Player` whose `inventory_path`
+; default points at it resolves on the first look rather than lazily.
+[node name="TrainerInventory" type="Node" parent="."]
+script = ExtResource("19_bag")
+player_path = NodePath("../Player")
+home_path = NodePath("../Home")
+
+; Every bag the player has ever dropped by dying. A Node3D because it PARENTS the
+; markers in the world — the same split Structures and BuildMode use beside it.
+;
+; GAME_DESIGN.md 22 and CLAUDE.md: multiple satchels persist. This is a list and
+; nothing in it replaces an existing bag.
+[node name="Satchels" type="Node3D" parent="."]
+script = ExtResource("20_satchels")
+player_path = NodePath("../Player")
+inventory_path = NodePath("../TrainerInventory")
+world_path = NodePath("..")
+
+; What the player has explored, and what they have pinned. Read by the minimap
+; and by the map screen; it holds neither the bed nor the satchels, because Home
+; and Satchels already know where those are and a second copy is a pin that can
+; point at something that is gone.
+[node name="WorldMap" type="Node" parent="."]
+script = ExtResource("22_map")
+player_path = NodePath("../Player")
+
 [node name="EncounterDirector" type="Node" parent="."]
 script = ExtResource("6_encounter")
 player_path = NodePath("../Player")
 manager_path = NodePath("../CombatManager")
 camera_rig_path = NodePath("../CameraRig")
+party_path = NodePath("../Party")
 
 ; Sun, sky, tonemap and fog all come from data/config/art.json at run time.
 ; They used to live only in this scene, so every lighting value written into the
@@ -77,8 +150,114 @@ script = ExtResource("9_look")
 sun_path = NodePath("../Sun")
 environment_path = NodePath("../WorldEnvironment")
 
+; M10. The clock and the weather state machine, from data/config/weather.json.
+;
+; A Node3D rather than a Node because it PARENTS the rain — the same split
+; Structures and Satchels use beside it. It owns no look values at all: every
+; colour, energy and density is in art.json and applied by WorldLook above, and
+; this only ever says what hour it is and what the weather is doing.
+;
+; AFTER WorldLook, because it drives it. WorldLook poses the default hour in its
+; own `_ready`; this takes over on the first frame after.
+[node name="SkyCycle" type="Node3D" parent="."]
+script = ExtResource("24_sky")
+look_path = NodePath("../WorldLook")
+
 [node name="PlaygroundHUD" parent="." instance=ExtResource("2_hud")]
 
 [node name="CombatHUD" parent="." instance=ExtResource("8_combat_hud")]
 manager_path = NodePath("../CombatManager")
 director_path = NodePath("../EncounterDirector")
+
+; Building. Structures is a Node3D because it PARENTS what the player places;
+; BuildMode is a plain Node because it owns state and a ghost, not a place in
+; the world. Same split as CombatManager beside them.
+[node name="Structures" type="Node3D" parent="."]
+script = ExtResource("10_structures")
+
+[node name="BuildMode" type="Node" parent="."]
+script = ExtResource("11_build")
+player_path = NodePath("../Player")
+world_path = NodePath("..")
+structures_path = NodePath("../Structures")
+combat_path = NodePath("../CombatManager")
+
+; The menu layer. It owns which screen is open and suspends gameplay while one
+; is — the same "one door in and out" rule encounter_director uses for fights.
+;
+; CombatHUD is in `hide_while_open` because of what the release ceremony looks
+; like without it: the ceremony opens the instant a catch resolves, so the first
+; rendered frame of it had the fight's verb row ("[A] Quick  [X] Charged
+; [F] Throw  [B] Run"), the orb count and the opponent's name plate all drawn
+; around a modal that had just taken those buttons over. Two screens telling the
+; player what A does, at the same time, disagreeing.
+[node name="ScreenStack" parent="." instance=ExtResource("13_screens")]
+player_path = NodePath("../Player")
+hide_while_open = [NodePath("../PlaygroundHUD"), NodePath("../BuildPalette"), NodePath("../CombatHUD"), NodePath("../Minimap")]
+
+[node name="PartyScreen" parent="ScreenStack" index="0"]
+party_path = NodePath("../../Party")
+
+; The only thing that can open the release ceremony. EncounterDirector emits
+; `caught_refused` and deliberately does nothing about it — deciding what a full
+; party means would make the director a second place the five-pal rule is
+; interpreted (D13). This node is the translation, and it is the reason a sixth
+; catch reaches the player as a decision instead of a warning in the log.
+[node name="ReleasePrompt" type="Node" parent="."]
+script = ExtResource("15_release")
+encounter_path = NodePath("../EncounterDirector")
+party_path = NodePath("../Party")
+screen_stack_path = NodePath("../ScreenStack")
+release_screen_path = NodePath("../ScreenStack/ReleaseScreen")
+
+; The build palette was missing entirely: build_mode has exposed selected_name(),
+; ghost_valid() and refusal() since it shipped, and nothing read any of them, so
+; the player had no way to know what they were about to place.
+[node name="BuildPalette" parent="." instance=ExtResource("14_palette")]
+build_path = NodePath("../BuildMode")
+
+; Fainting, and the two ways back from it (GAME_DESIGN.md §16).
+;
+; LAST IN THE SCENE on purpose. `SaveDirector` finds save contributors by walking
+; the tree, and `SaveManager` hands domains back in registration order, so being
+; last means Recovery's records are applied after the party and the village they
+; refer to have been rebuilt. It retries for a few seconds anyway rather than
+; depending on that, but the ordering is free and the retry is a fallback.
+;
+; Home answers "where is home and which beds are in it" and touches no pal.
+; Recovery owns the pals and calls INTO the beds — the bed never reaches out,
+; because a pal bed is somewhere a pal sleeps and not a job (CLAUDE.md).
+[node name="Home" type="Node" parent="."]
+script = ExtResource("17_home")
+structures_path = NodePath("../Structures")
+
+[node name="Recovery" type="Node" parent="."]
+script = ExtResource("18_recovery")
+party_path = NodePath("../Party")
+home_path = NodePath("../Home")
+player_path = NodePath("../Player")
+combat_path = NodePath("../CombatManager")
+world_path = NodePath("..")
+inventory_path = NodePath("../TrainerInventory")
+
+; What dying means. GAME_DESIGN.md 22, in one node: the carried inventory falls
+; into a satchel where you died, the pals go home to their beds, and you wake up
+; at your own bed — or where your journey started, if you have not built one.
+;
+; LAST, after Home and Recovery, because it calls into both. `player_controller`
+; has emitted `died` since M1 and nothing listened; this is the listener.
+[node name="PlayerDeath" type="Node" parent="."]
+script = ExtResource("21_death")
+player_path = NodePath("../Player")
+inventory_path = NodePath("../TrainerInventory")
+satchels_path = NodePath("../Satchels")
+party_path = NodePath("../Party")
+recovery_path = NodePath("../Recovery")
+home_path = NodePath("../Home")
+world_path = NodePath("..")
+save_director_path = NodePath("../SaveDirector")
+
+; 23's minimap: local terrain, compass, the bed, and every satchel. It draws with
+; the same script the full map does, so the two cannot disagree about what a pin
+; means.
+[node name="Minimap" parent="." instance=ExtResource("23_minimap")]

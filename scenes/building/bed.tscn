@@ -1,0 +1,82 @@
+[gd_scene load_steps=13 format=3]
+
+; The trainer's bed. A STAND-IN, and recorded as one.
+;
+; The extracted Quaternius Medieval Village subset contains no bed — 35 of the
+; kit's 176 models are in the repo and none of them is furniture. Rather than
+; dress a crate up as a bed and call it art, this is honest primitive geometry
+; at honest dimensions: 1.00 x 2.00m footprint, 0.75m to the top of the
+; headboard, against a 1.80m trainer. It occupies exactly one 2m build cell.
+;
+; It is not the answer to the owner's bar and must not be used to judge how the
+; home reads. It exists so the bed's BEHAVIOUR — respawn point, rest point —
+; can be built, seen and tested now.
+;
+; Replacing it is a one-line change to `model` in data/building/pieces.json,
+; plus re-measuring the collider. Nothing in code names this file.
+
+[sub_resource type="StandardMaterial3D" id="mat_wood"]
+albedo_color = Color(0.26, 0.17, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="mat_linen"]
+albedo_color = Color(0.62, 0.58, 0.5, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="mat_wool"]
+albedo_color = Color(0.42, 0.21, 0.17, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="mat_pillow"]
+albedo_color = Color(0.72, 0.69, 0.61, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="box_frame"]
+material = SubResource("mat_wood")
+size = Vector3(1, 0.3, 1.8)
+
+[sub_resource type="BoxMesh" id="box_head"]
+material = SubResource("mat_wood")
+size = Vector3(1, 0.6, 0.1)
+
+[sub_resource type="BoxMesh" id="box_foot"]
+material = SubResource("mat_wood")
+size = Vector3(1, 0.34, 0.1)
+
+[sub_resource type="BoxMesh" id="box_mattress"]
+material = SubResource("mat_linen")
+size = Vector3(0.9, 0.18, 1.72)
+
+[sub_resource type="BoxMesh" id="box_blanket"]
+material = SubResource("mat_wool")
+size = Vector3(0.94, 0.22, 0.9)
+
+[sub_resource type="BoxMesh" id="box_pillow"]
+material = SubResource("mat_pillow")
+size = Vector3(0.62, 0.12, 0.34)
+
+[node name="Bed" type="Node3D"]
+
+[node name="Frame" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+mesh = SubResource("box_frame")
+
+[node name="Headboard" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -0.95)
+mesh = SubResource("box_head")
+
+[node name="Footboard" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, 0.95)
+mesh = SubResource("box_foot")
+
+[node name="Mattress" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39, 0)
+mesh = SubResource("box_mattress")
+
+[node name="Blanket" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41, 0.42)
+mesh = SubResource("box_blanket")
+
+[node name="Pillow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.54, -0.68)
+mesh = SubResource("box_pillow")

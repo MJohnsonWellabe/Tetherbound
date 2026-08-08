@@ -19,6 +19,14 @@ run/main_scene="res://scenes/world/meadows_playground.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+; One autoload, and a high bar for the next one. SaveManager is here because the
+; save file must outlive every scene that contributes to it — a system that
+; unloads mid-session still has to have been written. Systems that live inside a
+; scene stay inside that scene.
+SaveManager="*res://autoload/save_manager.gd"
+
 [display]
 
 ; ROG Ally is 1920x1080 at 7 inches. Authoring at native resolution and letting
@@ -115,16 +123,104 @@ inventory={
 , Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
 ]
 }
+; The party moved off gamepad Y in M9 (it collided with `inventory` — one press
+; of Y fired both actions and only one screen could ever win), took the Start
+; button, and has now moved again: Start is the PAUSE MENU, the owner's "there
+; doesn't seem to be a menu button", and the party is a row ON that menu. The
+; party is not stranded — `pause_menu` below opens a menu whose second row is
+; the party — so this action keeps only keyboard P, unchanged since M4, and no
+; pad button at all. Giving it one would repeat the exact collision M9 resolved,
+; because every face, shoulder and D-pad button on an Xbox layout is now spoken
+; for; the input map is where that gets resolved, not the code that reads it.
+party_menu={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":80,"pressed":false,"script":null)
+]
+}
+; The front door to every screen: Resume / Party / Inventory / Map / Settings /
+; Save & Quit. Start, because on an Xbox-layout handheld Start IS the menu
+; button — the owner reached for it and found nothing there.
+;
+; Keyboard is TAB, NOT ESCAPE, and that is a collision decision, not taste:
+; Escape is already `menu_cancel` AND `combat_run`, so an Escape-bound pause
+; would open the menu on the same frame the fight reads "flee" — the two-
+; actions-one-frame failure recorded twice in this file. Tab is bound to
+; nothing, sits under the left hand at WASD, and toggles the same way it opens
+; map overlays in every survival game on PC.
+pause_menu={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194306,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":6,"pressed":false,"script":null)
+]
+}
 map={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":77,"pressed":false,"script":null)
 , Object(InputEventJoypadButton,"device":-1,"button_index":4,"pressed":false,"script":null)
 ]
 }
+; M8 tools. Build mode used to borrow this to rotate its ghost, which meant
+; rebinding "cycle tool" silently rebound "rotate the wall". It has its own
+; action now; this one is the tool cycle again and nothing reads it yet.
 tool_cycle={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":81,"pressed":false,"script":null)
 , Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
+]
+}
+build_toggle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":66,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
+]
+}
+; Build mode's own palette controls. They share the D-pad with the combat pal
+; switch on purpose — cycling is what a D-pad is for, and the two modes cannot
+; be open at once (`build_mode._set_open` refuses to open mid-fight). Sharing a
+; BUTTON is fine; sharing an ACTION is what went wrong, because it made the two
+; features impossible to rebind separately and hid the pal switch behind a
+; building feature. Keyboard is , / . / R, the building-game idiom.
+build_cycle_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":44,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":13,"pressed":false,"script":null)
+]
+}
+build_cycle_right={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":46,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
+]
+}
+build_rotate={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":82,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
+]
+}
+; M12's mount/dismount. A NEW ACTION, after checking that no existing one fits.
+;
+; `interact` is the obvious candidate and it is the wrong one. It is already
+; read by three systems — `encounter_director` engages a wild pal within 6m,
+; `doors` opens a door, `satchel` loots a bag — and mounting collides with the
+; first of those in a way nothing can arbitrate: calling your mount and engaging
+; a creature are both legal with a rideable pal in the party and a wild pal in
+; range, so one press would do both, in the same frame, forever. That is exactly
+; the failure the `party_menu` comment below records — two actions on gamepad Y,
+; one press firing both, only one screen ever winning — and it was resolved
+; there in the input map rather than papered over in the code that reads it.
+;
+; The button is the D-PAD DOWN, which is the only face, shoulder or D-pad button
+; on an Xbox layout that nothing in this file binds: up is `build_rotate`, left
+; and right are `build_cycle_*` and `combat_switch_*` sharing on purpose. The
+; gallop is not here — it is `sprint`, because that button already means "go
+; faster" and the trainer's own legs are not being used.
+;
+; Keyboard G, which is free and under the left hand at WASD.
+mount={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":71,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
 ]
 }
 combat_quick={
@@ -151,6 +247,8 @@ combat_run={
 , Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
 ]
 }
+; Reserved for the M4 party: swapping the deployed pal mid-fight. Nothing else
+; may read these — build mode did, and it made the pal switch un-rebindable.
 combat_switch_left={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":4194319,"pressed":false,"script":null)

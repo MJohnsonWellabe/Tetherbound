@@ -1,0 +1,78 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/remap_screen.gd" id="1_remap"]
+
+; Button mapping. Only what makes this screen different is here — panel, title,
+; rule and footer come from `screen.gd`. RowTemplate is the one authored row;
+; `remap_screen.gd` duplicates it once per action THE INPUTMAP HAS, plus a
+; reset row, so the scene never knows how many actions the game grew.
+;
+; The rows live in a ScrollContainer because there are near thirty actions and
+; the panel holds about fifteen at this row height; the screen scrolls the
+; focused row into view rather than shrinking the text until it fits, because
+; this is read at 7 inches.
+;
+; Three columns: the action, its keyboard binding, its pad binding. Both
+; devices shown at once — the remap screen is the one place the player is
+; explicitly thinking about the OTHER device too.
+;
+; No `open_action`: reached through Settings only.
+
+[node name="RemapScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_remap")
+title = "Button Mapping"
+
+[node name="Body" type="VBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="Scroll" type="ScrollContainer" parent="Body"]
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+mouse_filter = 2
+
+[node name="Rows" type="VBoxContainer" parent="Body/Scroll"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="RowTemplate" type="PanelContainer" parent="Body/Scroll/Rows"]
+visible = false
+custom_minimum_size = Vector2(0, 52)
+
+[node name="Pad" type="MarginContainer" parent="Body/Scroll/Rows/RowTemplate"]
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="Line" type="HBoxContainer" parent="Body/Scroll/Rows/RowTemplate/Pad"]
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="Body/Scroll/Rows/RowTemplate/Pad/Line"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 26
+text = "Action"
+
+[node name="Keys" type="Label" parent="Body/Scroll/Rows/RowTemplate/Pad/Line"]
+custom_minimum_size = Vector2(340, 0)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 2
+text = "Key"
+
+[node name="Buttons" type="Label" parent="Body/Scroll/Rows/RowTemplate/Pad/Line"]
+custom_minimum_size = Vector2(340, 0)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 2
+text = "Button"
+
+[node name="Footnote" type="RichTextLabel" parent="Body"]
+custom_minimum_size = Vector2(0, 44)
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 24

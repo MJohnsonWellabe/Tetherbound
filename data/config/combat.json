@@ -1,5 +1,5 @@
 {
-  "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
+  "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' — every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their pal, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
   "damage": {
     "_comment": "damage = power * scale * attack / (attack + defence). Bounded on purpose: a raw attack/defence ratio explodes when defence is low and produces one-shot kills that read as bugs. With scale 2, equal attack and defence deals exactly the move's power.",
@@ -49,23 +49,35 @@
   },
   "enemy": {
     "_comment": "The opponent's brain lives in scripts/combat/combat_ai.gd; these are its numbers. It closes, commits to an attack, is rooted while it recovers, then backs off and comes again. The recovery window is the player's punish opportunity and is the single most important number here.",
+    "_comment_slowed": "TUNABLE, and slowed on the owner's verdict after playing: 'too fast'. Telegraph and cooldown are UP and the chase is DOWN from M2's numbers (telegraph 0.55, recovery 0.75, cooldown 1.1, chase 4.6) so every beat can be read before it lands. The tether grades in data/config/trainers.json multiply THESE values, so a tethered creature is 'the meadow's rhythm, run fast' against the new rhythm automatically — tests/test_trainer_battle.gd holds the Warden's window between one quick attack and one charged attack, and these numbers were chosen to keep that true.",
     "power": 8.0,
     "range": 2.6,
     "cone_degrees": 90.0,
     "lunge": 3.4,
     "_comment_preferred": "It stops closing at this distance and attacks from there. Must be under `range` or it stands just outside its own reach and whiffs forever.",
     "preferred_range": 2.1,
-    "chase_speed": 4.6,
-    "reposition_speed": 3.8,
-    "telegraph": 0.55,
-    "recovery": 0.75,
-    "attack_cooldown": 1.1,
+    "chase_speed": 3.9,
+    "reposition_speed": 3.4,
+    "telegraph": 0.85,
+    "recovery": 0.9,
+    "attack_cooldown": 1.7,
     "_comment_reposition": "After recovering it backs off and circles for this long before closing again. Without it the fight is two creatures standing in each other's faces trading hits, which is exactly the static fight this model replaced.",
-    "reposition_time": 1.0,
+    "reposition_time": 1.25,
     "reposition_distance": 5.0,
-    "first_attack_delay": 1.5,
+    "first_attack_delay": 1.9,
     "_comment_body_clearance": "How far apart two creatures stand, as a multiple of their combined body radii. It FLOORS `preferred_range` rather than replacing it: the config still decides how much breathing room a fight wants, and this only refuses to let it be less than the two bodies occupy. The flat 2.1m below was written when every creature was the same capsule; with real models it is smaller than the pair, so the opponent walked to 2.1m and stopped with its head inside the other creature's flank. The blind critic found that in five of seven combat frames, once with antlers coming out of the other creature's back. Reach and reposition distance are floored to match, or a creature spaces itself to exactly where it can no longer hit anything. Raised from 1.35: `body_radius` is the GAMEPLAY collider, and pal_body fits art to it with a footprint allowance of 2.4, so a model is routinely wider than the capsule that represents it. Spacing by the collider alone still left the meshes overlapping.",
     "body_clearance": 1.8
+  },
+  "pace": {
+    "_comment": "TUNABLE. One knob over the enemy's whole rhythm, for the Settings slider another agent is building. `speed_scale` is applied to the `enemy` block's TIMING KEYS when combat.json is loaded (scripts/combat/combat_math.gd `paced_enemy`): the beat and cooldown times are DIVIDED by it and the chase/reposition speeds are MULTIPLIED by it, so 1.2 is a fight a fifth faster and 0.8 a fifth slower. The default is 1.0 — the slowed values above ARE the default cadence, and the slider scales away from them. Tether grades multiply the paced values, so the Warden stays proportionally harder at any slider position. Nothing here may ever touch a stat: power, range and cone are not timing and are not scaled.",
+    "speed_scale": 1.0
+  },
+  "switch": {
+    "_comment": "The fifth combat command — GAME_DESIGN.md 14 lists Quick Attack, Charged Attack, Throw Orb, Run and Switch. Both numbers here are TUNABLE placeholders: 14 requires a cooldown ('Switching has a cooldown') and gives no value, so these were chosen against the opponent's rhythm rather than measured, and are expected to move the first time a five-pal fight is played on the handheld.",
+    "_comment_cooldown": "Seconds between switches. The opponent's whole cycle — telegraph 0.85, recovery 0.9, reposition 1.25, attack_cooldown 1.7 — runs about 4.7s, so 4.0 is a little under one switch per attack it makes: fast enough to answer what the fight is doing, slow enough that swapping is a commitment rather than a rotation. Lower it if switching feels like a menu; raise it if fights turn into a carousel.",
+    "cooldown": 4.0,
+    "_comment_entry_lag": "Seconds the arriving pal cannot attack for. Switching must not become the dodge the design removed (D07: 'movement is the dodge'), so the swap buys you a fresh creature, not a free frame: the body does not move, the opponent's clocks keep running, and a switch made into a wind-up means the newcomer takes the blow. About one telegraph long, on purpose. It also floors the attack cooldowns rather than clearing them, so switching cannot be used to wipe one.",
+    "entry_lag": 0.6
   },
   "arena": {
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
@@ -73,11 +85,11 @@
     "_comment_boundary": "Height and opacity of the drawn wall. It has to be visible enough to be read as a boundary and faint enough not to obscure the fight happening inside it.",
     "_comment_short": "Short and reasonably solid rather than tall and faint. A tall translucent drum reads as haze across the horizon; a bright band at ground level reads as an edge.",
     "boundary_height": 1.1,
-    "boundary_alpha": 0.5,
+    "boundary_alpha": 0.34,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
     "deploy_offset": 2.6,
     "separation": 5.0,
-    "_comment_boundary_alpha": "Higher than it looks, because the boundary is now ADDITIVE with a vertical falloff baked into its vertex colours \u2014 brightest at the ground, gone by the top \u2014 rather than a flat translucent cylinder. The old flat version read as a hard-edged khaki band splatted onto the terrain, in the same hue family as the hills behind it."
+    "_comment_boundary_alpha": "Higher than it looks, because the boundary is now ADDITIVE with a vertical falloff baked into its vertex colours — brightest at the ground, gone by the top — rather than a flat translucent cylinder. The old flat version read as a hard-edged khaki band splatted onto the terrain, in the same hue family as the hills behind it."
   },
   "flow": {
     "_comment": "Engagement and resolution timing.",
@@ -87,6 +99,25 @@
     "run_delay": 0.5,
     "_comment_guard": "Seconds of player input ignored at the start of a fight. Engage and charged attack are the same physical button (X), and without this the press that opens the fight is also read as the first attack of it.",
     "input_guard": 0.25
+  },
+  "defenceless": {
+    "_comment": "What the meadow does to a trainer whose whole party is fainted. AN OWNER AMENDMENT to GAME_DESIGN.md 14's trainer-safety rule, and the answer to a question 16 left open: with every pal down the player is no longer protected, wild creatures come for them directly, and the pressure to get home and recover the party is a real one rather than a message telling them to. ALL TUNABLE.",
+    "_comment_not_a_fighter": "The trainer STILL CANNOT FIGHT. There is no attack here, no weapon and no route into Combat Mode for the human; CLAUDE.md's hard rule is untouched. The amendment is that they can be HURT. A creature that hunts a defenceless trainer harasses them in the WORLD — it never becomes a fight, the human is never a party member, and nothing here gives them a slot in one.",
+    "_comment_ends": "This state ends the instant ANY owned pal is available again — revived by an item, or recovered at a pal bed. A player who has just healed a pal and is still being chased would read the game as broken.",
+    "enabled": true,
+
+    "_comment_hunters": "Which species come for a defenceless trainer: 'aggressive' (those already carrying the `aggressive` flag in species.json) or 'all'. It is 'aggressive', so this makes THE DANGEROUS CREATURE dangerous rather than making the whole biome hostile — 14 says peaceful pals never initiate, and a Meadow Hopper mauling you the moment you are weak would read as the meadow itself turning. Per-species because the flag is already per-species data; this only picks the policy.",
+    "hunters": "aggressive",
+
+    "_comment_grace": "Seconds after your last pal drops before anything will land a blow. Being swarmed the instant you lose is a different and worse experience than being hunted while you retreat — this is the head start. It stacks with the aggression grace in data/config/catching.json, which keeps a creature you just fought off you for a while longer.",
+    "grace_seconds": 6.0,
+
+    "_comment_strike": "Metres at which a hunter can reach the trainer, and seconds between its blows. The reach is a little over the 3.2m `engage_range` in catching.json that an aggressive pal closes to, so a creature that has run you down is in range rather than standing just outside it.",
+    "strike_range": 3.8,
+    "strike_interval": 2.2,
+
+    "_comment_damage": "Damage per blow against a 100 HP trainer (data/config/movement.json). Eight blows is death, which at 2.2s apart is about eighteen seconds of standing still and doing nothing — long enough to run home from most of the playground, short enough that ignoring it is not an option. There is no armour term yet; 18's equipment is M9's and reduces this on the way in.",
+    "damage": 12.0
   },
   "camera": {
     "_comment": "The fight reuses the exploration orbit camera rather than adding a second one: a piloted pal wants exactly the third-person camera M1 already tuned, re-pointed at a shorter creature. These are the overrides while a fight is running.",
@@ -112,21 +143,52 @@
   },
   "impact": {
     "_comment": "The visual event of a blow landing. ALL tunable presentation; nothing here touches damage, reach or timing.",
-    "_comment_measured": "The blind critic counted bright warm pixels at the instant of contact: 10 in `combat/05-quick-attack-lands`, 295 in `combat/06`, and 24,623 in `palworld-01` \u2014 roughly ten thousand times the visual energy for the same beat. Its reading was that the only difference between the frame before a hit and the frame of the hit was that the health bar got shorter. Turn `enabled` off to get that back.",
+    "_comment_measured": "The blind critic counted bright warm pixels at the instant of contact: 10 in `combat/05-quick-attack-lands`, 295 in `combat/06`, and 24,623 in `palworld-01` — roughly ten thousand times the visual energy for the same beat. Its reading was that the only difference between the frame before a hit and the frame of the hit was that the health bar got shorter. Turn `enabled` off to get that back.",
     "enabled": true,
     "quick": {
-      "colour": "#ffd27a",
-      "radius": 0.85,
-      "duration": 0.26,
-      "strength": 1.0
+      "colour": "#ffffff",
+      "radius": 1.35,
+      "duration": 0.3,
+      "strength": 1.25
     },
     "_comment_charged": "Bigger and warmer than a quick hit. If the expensive move looks like the free one, building energy was never worth doing.",
     "charged": {
-      "colour": "#ffb257",
-      "radius": 1.15,
-      "duration": 0.34,
-      "strength": 1.3
+      "colour": "#fff0c0",
+      "radius": 1.85,
+      "duration": 0.38,
+      "strength": 1.6
     },
-    "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
+    "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide — it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion.",
+    "_comment_contrast": "Near-WHITE, not beige. The critic measured the old burst at 2.47-3.10:1 contrast against olive ground and observed that a landing hit was lower-contrast than the trainer standing still: 'a landing hit should be the highest-contrast event in the frame'. Against a mid-green world the highest-contrast thing available is white, and the warmth can come from the charged variant rather than from dulling both.",
+    "_comment_measured_round4": "Re-measured after the rebuild. tools/frame_stats.py puts the build's `hit%` at 0.2-1.4 against Palworld's 3.1-10.5 — still an order of magnitude short, so the rebuild moved it from 'ten thousand times less' to 'ten times less' and stopped there. Radii and strength raised again, and this time the ceiling is a MEASUREMENT rather than a feeling: the target is the reference band, and the counter-argument below (a five-metre ground decal reads as a texture bug) is why it is not simply doubled until the number lands.",
+
+    "_comment_knockback": "TUNABLE. Fraction of the attacker's lunge handed to the defender as a shove. It was a hard-coded 0.4 in combat_manager.gd; nothing about the maths changed when it moved here.",
+    "knockback_fraction": 0.4,
+
+    "_comment_hit_stop": "TUNABLE presentation. A blink of near-frozen time at the instant a blow lands, timed on the WALL clock (scripts/combat/fx.gd) so it is the same beat at any frame rate and costs nothing measurable in headless runs. `scale` is Engine.time_scale during the stop; `duration` is real seconds. Keep it under a tenth of a second — at 0.2 it reads as the game hitching, not the hit landing.",
+    "hit_stop": {
+      "enabled": true,
+      "scale": 0.05,
+      "duration": 0.05
+    },
+
+    "_comment_ko": "TUNABLE presentation. The beat of slow motion and the particle burst when a creature is knocked out. Subtle by default: `scale` is the time_scale during the beat, `duration` is real seconds, and the burst is CPUParticles (allowed under D06 — no depth reads, no volumetrics).",
+    "ko": {
+      "slowmo_scale": 0.45,
+      "slowmo_duration": 0.55,
+      "burst_amount": 28,
+      "burst_colour": "#fff0c0",
+      "burst_lifetime": 0.7,
+      "burst_speed": 5.5
+    },
+
+    "_comment_damage_numbers": "TUNABLE presentation. A world-space number at the point of impact, drifting up and fading, so a blow says how hard it landed without the eye leaving the fight for the health bar. Colours are NOT here: they are ui_style.gd's own bar colours (amber for damage you deal — the hue their bar drains in — and the health-low red for damage your pal takes), read by scripts/combat/fx.gd so the number and the bar that moved always agree.",
+    "damage_numbers": {
+      "enabled": true,
+      "rise_metres": 1.4,
+      "duration": 0.9,
+      "font_size": 96,
+      "charged_scale": 1.35
+    }
   }
 }

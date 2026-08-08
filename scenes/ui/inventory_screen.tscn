@@ -1,0 +1,163 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/inventory_screen.gd" id="1_inventory"]
+
+; The bag. Only what makes this screen different from the others is here — the
+; panel, title, rule and footer come from `screen.gd`, which reparents everything
+; below into its content area when the screen enters the tree.
+;
+; Two columns. The grid on the left is the inventory itself; the right column is
+; what the cursor is on, then what is worn, then what has been eaten. Side by
+; side rather than pages, for `party_screen.tscn`'s reason: a page you have to
+; leave to compare is a page you compare from memory.
+;
+; CellTemplate is the one authored cell. `inventory_screen.gd` removes it and
+; duplicates it once per slot, so the cell layout is a thing you change once.
+; Twenty-four hand-written copies here would stay identical for about a week.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="InventoryScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_inventory")
+title = "Inventory"
+open_action = &"inventory"
+
+[node name="Body" type="HBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 28
+
+[node name="Left" type="VBoxContainer" parent="Body"]
+custom_minimum_size = Vector2(880, 0)
+theme_override_constants/separation = 12
+
+[node name="Grid" type="GridContainer" parent="Body/Left"]
+columns = 6
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="CellTemplate" type="PanelContainer" parent="Body/Left/Grid"]
+visible = false
+custom_minimum_size = Vector2(140, 108)
+
+[node name="Pad" type="MarginContainer" parent="Body/Left/Grid/CellTemplate"]
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Lines" type="VBoxContainer" parent="Body/Left/Grid/CellTemplate/Pad"]
+theme_override_constants/separation = 4
+
+[node name="Name" type="Label" parent="Body/Left/Grid/CellTemplate/Pad/Lines"]
+size_flags_vertical = 3
+autowrap_mode = 3
+theme_override_font_sizes/font_size = 21
+text = "—"
+
+; Only drawn for tools. The bar is the same shape and the same colour ramp as a
+; pal's health, so "green is fine, red is nearly gone" is one thing to learn.
+[node name="Wear" type="ProgressBar" parent="Body/Left/Grid/CellTemplate/Pad/Lines"]
+custom_minimum_size = Vector2(0, 8)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Foot" type="HBoxContainer" parent="Body/Left/Grid/CellTemplate/Pad/Lines"]
+
+[node name="Kind" type="Label" parent="Body/Left/Grid/CellTemplate/Pad/Lines/Foot"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = ""
+
+[node name="Count" type="Label" parent="Body/Left/Grid/CellTemplate/Pad/Lines/Foot"]
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 22
+text = ""
+
+[node name="Capacity" type="Label" parent="Body/Left"]
+theme_override_font_sizes/font_size = 22
+text = ""
+
+[node name="Right" type="VBoxContainer" parent="Body"]
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+; THE DETAIL PANEL HAS A FLOOR, and it is not decoration. Without it the three
+; panels in this column simply share what is left after the two below take their
+; natural height — and when the Fed panel grew from one meal to two, this one
+; collapsed to its title and the axe's condition line vanished entirely. Every
+; assertion still passed. That is the exact failure `tools/preview_ceremony.gd`
+; was written for, one screen later.
+[node name="Detail" type="PanelContainer" parent="Body/Right"]
+custom_minimum_size = Vector2(0, 260)
+size_flags_vertical = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Right/Detail"]
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Lines" type="VBoxContainer" parent="Body/Right/Detail/Pad"]
+theme_override_constants/separation = 10
+
+[node name="What" type="Label" parent="Body/Right/Detail/Pad/Lines"]
+theme_override_font_sizes/font_size = 34
+text = "—"
+
+[node name="About" type="RichTextLabel" parent="Body/Right/Detail/Pad/Lines"]
+custom_minimum_size = Vector2(0, 160)
+bbcode_enabled = true
+scroll_active = false
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 24
+text = ""
+
+[node name="Worn" type="PanelContainer" parent="Body/Right"]
+
+[node name="Pad" type="MarginContainer" parent="Body/Right/Worn"]
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="Lines" type="VBoxContainer" parent="Body/Right/Worn/Pad"]
+theme_override_constants/separation = 8
+
+[node name="Head" type="Label" parent="Body/Right/Worn/Pad/Lines"]
+theme_override_font_sizes/font_size = 26
+text = "Worn"
+
+[node name="Slots" type="RichTextLabel" parent="Body/Right/Worn/Pad/Lines"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 20
+text = ""
+
+[node name="Fed" type="PanelContainer" parent="Body/Right"]
+
+[node name="Pad" type="MarginContainer" parent="Body/Right/Fed"]
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="Lines" type="VBoxContainer" parent="Body/Right/Fed/Pad"]
+theme_override_constants/separation = 8
+
+[node name="Head" type="Label" parent="Body/Right/Fed/Pad/Lines"]
+theme_override_font_sizes/font_size = 26
+text = "Fed"
+
+[node name="Buffs" type="RichTextLabel" parent="Body/Right/Fed/Pad/Lines"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 20
+text = ""

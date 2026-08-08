@@ -83,6 +83,33 @@ func populate(id: String, player: Node3D) -> bool:
 	return instance != null
 
 
+## The party has taken this creature. Let go of it and become a different one.
+##
+## Before this existed, `populate()` was the only thing that ever assigned
+## `instance`, so a caught creature left the party and the hillside holding the
+## SAME object. Two things followed, both of which the game presented as normal:
+##
+## 1. The world kept driving a pal the player owned. `revive_at_home()` calls
+##    `heal_fully()`, so a wild body respawning quietly healed a pal sitting in
+##    the party — and every fight that body took part in damaged it.
+## 2. Catching that species again came back `already_held`, because it was
+##    literally the same instance. `encounter_director` says in a comment that
+##    the respawned creature "is a different individual from the one now in the
+##    party"; that was the intent, and nothing implemented it.
+##
+## The evidence session found (2) first: it could not fill a party by catching,
+## because the second catch of a creature was refused as one the player already
+## owned. (1) was the more expensive half and had no symptom anyone would report.
+##
+## A fresh spawn, so the replacement rolls its own stats and its own trait rather
+## than being a copy of the one that was taken.
+func hand_instance_to_owner() -> bool:
+	if species_id.is_empty():
+		return false
+	instance = SPECIES.spawn(species_id)
+	return instance != null
+
+
 func is_alive() -> bool:
 	return instance != null and not instance.fainted
 

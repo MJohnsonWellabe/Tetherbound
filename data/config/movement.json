@@ -48,6 +48,46 @@
     "max": 100.0
   },
 
+  "_comment_riding": "M12. GAME_DESIGN.md 17: 'Traversal pals ... ride/swim/fly require crafted saddle/harness-type equipment' and 'Riding saddle is generic across compatible rideable pals'. Riding is the ONLY traversal verb in this slice — 32 forbids swimming, flying and teleporting, and none of them is here.\n\nWHAT LIVES HERE AND WHAT DOES NOT: this block holds facts about the RIDE and about the TRAINER's body. Which creatures can be ridden, and how high each one's back is, are facts about the CREATURE and live in data/pals/species.json under `ride`. If a value here would have to be written once per species, it is in the wrong file — that is the same firewall that keeps a saddle from becoming five saddles.",
+
+  "riding": {
+    "_comment": "ALL TUNABLE. Expected owner feedback is 'riding is not worth it', 'the gallop runs out too fast' and 'I sit too high', and each of those is one number here.",
+
+    "_comment_speed": "THE MILESTONE BULLET IS 'clear advantage over running', so it is a comparison and both halves are in this file. Walk is 4.2 and sprint is 7.6, above. Riding beats sprinting even at its resting pace, and the gallop is 1.8x it.\n\nThe advantage is much larger than those ratios, because sprint is not a speed the trainer can hold: 100 stamina at 12/s is 8.3 seconds of it, and the recovery is walked. A trainer averages about 6.1 m/s across a long crossing; the SLOWEST mount holds 9.0 indefinitely and the fastest gallops at 15.0. Crossing the 512m playground is roughly 84s on foot against 34s at a gallop.\n\nThe floor is what matters and it is asserted: tests/test_mount.gd fails the build if the slowest mount, at its resting pace, is not at least 15% faster than a sprint. Those two numbers live in one file so that retuning `sprint_speed` cannot silently delete the milestone bullet.",
+    "base_speed": 10.0,
+    "gallop_speed": 15.0,
+
+    "_comment_gallop_button": "The gallop is `sprint` — the button already means 'go faster' and it does nothing at all for a trainer whose own legs are not being used. A second speed button would be a new verb for a mode that has one stick and one action.",
+
+    "_comment_stamina": "THE MOUNT'S STAMINA, NOT THE TRAINER'S, and that separation is the decision. The trainer's meter means 'what my body can still do' — spend it on a creature's legs and jumping, sprinting and travelling start competing for one bar, and arriving somewhere leaves you unable to climb the hill you arrived at. So the trainer's stamina is untouched while mounted and in fact recovers, because he is sitting down.\n\nA limit exists at all because 17 promises legendary mounts 'exceptional stamina', which is worth nothing unless ordinary ones tire. It costs only the GALLOP: the 9.0 base pace is free forever, so running out slows you to something still faster than sprinting rather than dumping you on the grass.\n\n9/s against 14/s regen and a 100 pool: about 11 seconds of gallop (150m) for 7 seconds of cantering back. TUNABLE, and the first number to turn if the owner says the gallop is a tease.",
+    "stamina": {
+      "max": 100.0,
+      "gallop_drain_per_second": 9.0,
+      "regen_per_second": 14.0,
+      "regen_delay": 0.8,
+      "_comment_exhausted": "Below this the gallop is refused until the meter climbs back past it, the same anti-stutter rule the trainer's own sprint uses. Without it, tapping sprint at zero gallops for one frame per press.",
+      "exhausted_below": 20.0
+    },
+
+    "_comment_seat": "How far the trainer's ORIGIN — the point between his feet — sits below his hips, in metres. Measured from bone poses on the fitted trainer under his idle clip: `DEF-spine`, the pelvis, reads 1.055 on a body scaled to 1.80m.\n\nThis is the TRAINER half of the seat. The CREATURE half is `ride.back_height` in species.json, measured the same way on each mount. Where the rider ends up is one minus the other, so 'he sits too high on everything' is this one number and 'he sits too high on the Thornback' is that species' line — which is exactly the split that stops a seat becoming a per-species pile of offsets.",
+    "rider_hip_height": 1.05,
+
+    "_comment_pose": "The clip the trainer HOLDS while riding, or \"\" to leave his normal state machine alone.\n\nTHE ANIMATION LIBRARY HAS NO SEATED CLIP. All 25 that KayKit's two libraries merge onto him were listed: idles, walks, runs, jumps, a throw, a pick-up, hits and deaths. There is no sit, no mount and no ride, so a mounted trainer left alone stands bolt upright on the animal's back — which is exactly the 'trainer riding in a T-pose' defect that no assertion can see and one frame can.\n\nThe pose is HELD AT ONE FRAME (`trainer_pose_at`, seconds) rather than played, because these are all animations and they move. `Jump_Idle` was the obvious first pick and it is wrong: a second into its loop the arms are spread wide for balance, which from the game's own camera — which is BEHIND the player — is a trainer riding in a T-pose. Twelve clips were rendered from behind and from the side, mounted, at several times each; `Jump_Start` at t=0 is the only frame in the library where the arms hang at the sides AND the knee is bent with the boot tucked under the belly. That comparison is what chose it, not the clip's name.\n\nIt is a BORROWED pose and not a riding animation: it does not bend to the mount, and a rider on a narrower creature still hangs below the belly — which is why the rideable bar in species.json is 15cm above the trainer's hip rather than level with it. The real fix is a seated clip in the animation library plus a `ride` role in data/config/art.json, neither of which M12 owns.",
+    "trainer_pose": "Jump_Start",
+    "trainer_pose_at": 0.0,
+
+    "_comment_dismount": "Metres to the creature's left that the trainer is set down on getting off. Far enough to be clear of the body, close enough to still be standing beside it. The ground under that spot comes from the world's own heightfield, never a downward ray — docs/decisions/D09.",
+    "dismount_side": 1.3,
+    "dismount_clearance": 0.3,
+
+    "_comment_camera": "The exploration camera framed on a trainer standing on the ground. Mounted, the same target is a metre higher and the thing under it is three metres long, so the arm is lengthened and its height lowered — the height is added ON TOP of the target, and the target has already risen.",
+    "_comment_camera_lag": "There is deliberately NO `retarget_lag` here. It exists for the combat handover, where it eases the swap and then hands pacing back once the rig is within 30cm of where it wants to be — a condition a rig chasing a 15 m/s mount never meets, so a riding profile that set it would use the slow lag for the ENTIRE ride and leave the trainer drifting toward the bottom of the frame.",
+    "camera": {
+      "distance": 6.6,
+      "height": 1.3
+    }
+  },
+
   "camera": {
     "_comment": "Orbit camera on a spring arm. distance/height are the resting pose; the arm shortens automatically when terrain intrudes.",
     "distance": 5.2,

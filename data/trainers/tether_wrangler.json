@@ -1,0 +1,24 @@
+{
+  "_comment": "The second post on the stronghold route, at the cable run halfway up. Three creatures, all tethered, all a couple of levels above the picket's. This is where the player finds out that a trainer battle is an ATTRITION problem: three fights back to back with no healing in between, against someone whose team resets if you break off.",
+
+  "id": "tether_wrangler",
+  "display_name": "Wrangler Sethe",
+  "title": "Team Tether",
+
+  "model": "res://assets/characters/dwarf.glb",
+  "_comment_model": "The dwarf, 1.53m against the picket's 1.80m and the Warden's 1.96m. Three Tether trainers, three heights, in ascending order up the road — so the route has a rising silhouette without a single line of dialogue explaining rank.",
+  "height": 1.53,
+  "model_yaw": 0.0,
+
+  "_comment_lines": "PLACEHOLDER TEXT. §3's true believer: the one who thinks the tether is a kindness.",
+  "challenge": "They're better off on the line. Steadier. You'll see when you've lost.",
+  "defeat": "You think you freed something. You made it somebody else's problem.",
+
+  "team": [
+    { "species": "wild_croaker", "level": 6, "tether": "standard" },
+    { "species": "wild_stalker", "level": 7, "tether": "standard" },
+    { "species": "wild_bristler", "level": 8, "tether": "standard" }
+  ],
+
+  "banners": 3
+}

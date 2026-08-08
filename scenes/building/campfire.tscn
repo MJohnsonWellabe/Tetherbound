@@ -1,0 +1,111 @@
+[gd_scene load_steps=9 format=3]
+
+; A campfire. The stones are real kit art; the flame is a STAND-IN.
+;
+; The extracted subset has no campfire model, so this composes one from assets
+; already in the ledger: eight `Pebble_Round_*` from the Quaternius Stylized
+; Nature MegaKit laid in a 1.1m ring, three Kenney `log.glb` stacked in the
+; middle. Those are the real thing at their authored scale. Only the flame
+; itself is primitive geometry, because no pack in the repo has one.
+;
+; EVERYTHING THE FIRE DOES LIVES UNDER `Flame`: the two emissive cones and the
+; light, together, so `Hearth.set_lit()` in scripts/building/station.gd turns
+; the whole fire on and off with one visibility flag. An unlit campfire is
+; visibly a cold ring of stones. If this node is renamed, rename it in
+; `data/building/pieces.json` too — the definition names it there rather than
+; the code hard-coding it.
+;
+; The light casts no shadows on purpose. A shadow-casting omni light is one of
+; the most expensive things a scene can contain, and the player may build many
+; of these; the sun already carries the scene's shadows.
+
+[ext_resource type="PackedScene" path="res://assets/environment/stylized_nature/Pebble_Round_1.gltf" id="stone_1"]
+
+[ext_resource type="PackedScene" path="res://assets/environment/stylized_nature/Pebble_Round_2.gltf" id="stone_2"]
+
+[ext_resource type="PackedScene" path="res://assets/environment/stylized_nature/Pebble_Round_3.gltf" id="stone_3"]
+
+[ext_resource type="PackedScene" path="res://assets/environment/nature/log.glb" id="log"]
+
+[sub_resource type="StandardMaterial3D" id="mat_flame_outer"]
+albedo_color = Color(0.6, 0.22, 0.05, 1)
+roughness = 1.0
+emission_enabled = true
+emission = Color(0.98, 0.45, 0.12, 1)
+emission_energy_multiplier = 1.1
+
+[sub_resource type="StandardMaterial3D" id="mat_flame_inner"]
+albedo_color = Color(0.85, 0.6, 0.18, 1)
+roughness = 1.0
+emission_enabled = true
+emission = Color(1, 0.86, 0.42, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="CylinderMesh" id="cone_outer"]
+material = SubResource("mat_flame_outer")
+top_radius = 0.0
+bottom_radius = 0.17
+height = 0.45
+radial_segments = 10
+rings = 1
+
+[sub_resource type="CylinderMesh" id="cone_inner"]
+material = SubResource("mat_flame_inner")
+top_radius = 0.0
+bottom_radius = 0.09
+height = 0.26
+radial_segments = 8
+rings = 1
+
+[node name="Campfire" type="Node3D"]
+
+[node name="Stone1" parent="." instance=ExtResource("stone_1")]
+transform = Transform3D(0.6603, 0, -0.4517, 0, 0.8, 0, 0.4517, 0, 0.6603, 0.55, 0, 0)
+
+[node name="Stone2" parent="." instance=ExtResource("stone_2")]
+transform = Transform3D(0.1475, 0, -0.7863, 0, 0.8, 0, 0.7863, 0, 0.1475, 0.3889, 0, 0.3889)
+
+[node name="Stone3" parent="." instance=ExtResource("stone_3")]
+transform = Transform3D(-0.4517, 0, -0.6603, 0, 0.8, 0, 0.6603, 0, -0.4517, 0, 0, 0.55)
+
+[node name="Stone4" parent="." instance=ExtResource("stone_1")]
+transform = Transform3D(-0.7863, 0, -0.1475, 0, 0.8, 0, 0.1475, 0, -0.7863, -0.3889, 0, 0.3889)
+
+[node name="Stone5" parent="." instance=ExtResource("stone_2")]
+transform = Transform3D(-0.6603, 0, 0.4517, 0, 0.8, 0, -0.4517, 0, -0.6603, -0.55, 0, 0)
+
+[node name="Stone6" parent="." instance=ExtResource("stone_3")]
+transform = Transform3D(-0.1475, 0, 0.7863, 0, 0.8, 0, -0.7863, 0, -0.1475, -0.3889, 0, -0.3889)
+
+[node name="Stone7" parent="." instance=ExtResource("stone_1")]
+transform = Transform3D(0.4517, 0, 0.6603, 0, 0.8, 0, -0.6603, 0, 0.4517, -0, 0, -0.55)
+
+[node name="Stone8" parent="." instance=ExtResource("stone_2")]
+transform = Transform3D(0.7863, 0, 0.1475, 0, 0.8, 0, -0.1475, 0, 0.7863, 0.3889, 0, -0.3889)
+
+[node name="Log1" parent="." instance=ExtResource("log")]
+transform = Transform3D(1, 0, -0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+
+[node name="Log2" parent="." instance=ExtResource("log")]
+transform = Transform3D(0.4695, 0, -0.8829, 0, 1, 0, 0.8829, 0, 0.4695, 0, 0.14, 0)
+
+[node name="Log3" parent="." instance=ExtResource("log")]
+transform = Transform3D(-0.515, 0, -0.8572, 0, 1, 0, 0.8572, 0, -0.515, 0, 0.22, 0)
+
+[node name="Flame" type="Node3D" parent="."]
+
+[node name="Outer" type="MeshInstance3D" parent="Flame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("cone_outer")
+cast_shadow = 0
+
+[node name="Inner" type="MeshInstance3D" parent="Flame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("cone_inner")
+cast_shadow = 0
+
+[node name="Light" type="OmniLight3D" parent="Flame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+light_color = Color(1, 0.72, 0.42, 1)
+light_energy = 2.2
+omni_range = 6.0

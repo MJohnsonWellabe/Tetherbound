@@ -1,0 +1,57 @@
+{
+  "_comment": "Standing water. ALL TUNABLE. Nothing here is a mechanic \u2014 there is no swimming, no drowning and no water damage; the player wades and the terrain's own collision carries them. If any value in this file could change how the player moves, it is in the wrong file.",
+  "_comment_why": "The art board lists Streams & Ponds as one of the Meadows' five pillars and the build had none of it. The blind critic measured `02-valley-floor` at 0.7% desaturated pixels and led its third-ranked gap with 'there is nothing to look at'. Water buys a hue family nothing else in the biome owns and the only specular highlight in the frame, for one draw call.",
+  "_comment_placement": "`centre` is world metres, matching `terrain_playground.json`'s `valley`. The surface height is NOT authored: it is sampled from the terrain at the centre and raised by `fill`, so retuning the valley's depth moves the water with it instead of leaving a disc hanging over a crater.",
+  "_comment_radius": "Deliberately WIDER than the water actually reaches: wherever the ground rises above the surface the ground occludes the disc, so the shoreline is the basin's own contour \u2014 irregular, and free. Sized off the WATERLINE, not off the valley. The first attempt used the valley's own 150m radius and flooded most of the basin, because a 22m-deep bell over 150m is very gentle and a 1.15m fill reaches a long way across it. 64m is comfortably past where the ground comes up, so the occlusion trick still works, without putting the valley-floor camera in the water.",
+  "_comment_fill": "Metres above the basin floor. Knee-deep on purpose. A pond you can walk into and out of needs no new traversal state; a lake needs swimming, and adding a traversal mechanic is on CLAUDE.md's flag-don't-invent list.",
+  "bodies": [
+    {
+      "name": "ValleyPond",
+      "centre": [
+        -96.0,
+        116.0
+      ],
+      "radius": 16.0,
+      "fill": 2.1,
+      "_comment_colour": "Cool green-blue in the shallows going to a deep slate blue. Chosen AGAINST the meadow rather than to match it \u2014 the whole point is a hue the biome does not already own.",
+      "shallow_colour": "#2e6a6b",
+      "deep_colour": "#08192a",
+      "foam_colour": "#cfe4e6",
+      "foam_width": 0.13,
+      "wave_strength": 0.1,
+      "swell_height": 0.05,
+      "_comment_round4": "First render was wrong in two ways at once and both are visible in `02-valley-floor`. It measured saturation 0.62 against the references' 0.41-0.47 and read as a flat bright cyan sheet with no depth to it; and at radius 130 over a basin this shallow it flooded far more ground than a pond should, putting the valley-floor camera inside the water. The basin is a 22m-deep bell over 150m, so a 1.15m fill reaches roughly 22m from the centre in theory and much further wherever the detail noise dips \u2014 the radius was sized off the VALLEY rather than off the waterline it would actually produce.",
+      "alpha_shallow": 0.5,
+      "alpha_deep": 0.97,
+      "specular_water": 0.4,
+      "roughness_water": 0.14,
+      "_comment_round_m7": "Radius cut from 64 to 34 and the fill raised from 0.85m to 4.2m, because a new negative peak in terrain_playground.json gives the pond a real 8m basin to sit in. At the old numbers the water was a 130m-wide translucent plane over ground whose grass texture was still legible through it, ending in a dead-straight line across the frame where the disc ran out \u2014 the disc-occluded-by-terrain trick only works when the terrain actually comes up. Now it does.",
+      "_comment_shoreline_ma05": "RADIUS CUT TO THE WATERLINE, and the fill with it. Two separate defects, one cause.\n\nD18 recorded the first: the disc was 32m wide while the water actually reached about 18m, so the shader's `shore` gradient \u2014 which runs 0 at the disc's centre to 1 at its RIM, not at the waterline \u2014 only ever got to about 0.55 anywhere you could see it. The deep colour lives at shore near 0 and the foam band at shore above 1 minus `foam_width`, so the pond rendered as one uniform pastel cyan with no depth darkening and no shoreline at all, ending in hard polygonal chords wherever the rim did clear the ground. A disc sized to the waterline puts the whole gradient on screen.\n\nThe second is that MA-05 read the water as drawing OVER the character. It is not a sort-order bug: at a 4.2m fill the pond was 4.2m deep and the trainer is 1.80m, so he was standing on the bed fully submerged and the survey was photographing him through two metres of water. This file has said 'knee-deep on purpose, the player wades' since it was written; the fill had drifted to four times that. 2.1m is chest-deep at the very middle and ankle-deep for most of the pond, which is what the no-swimming rule requires."
+    }
+  ],
+  "_comment_streams": "THE BROOK. The milestone asks for a stream and the honest objection to answering that with the pond code is right: a stream is a route with a direction, not a flat disc, and a long thin pond is a long thin pond. What makes this one a stream is not here \u2014 it is in terrain_playground.json's `channels`, which cuts a bed along an authored route and forces that bed to FALL, so the water laid on it is descending by construction. `channel` indexes that list. What is honestly missing is flow ANIMATION: shaders/water.gdshader builds its ripples from two standing wave sets with no directional term, and this milestone does not own that shader. The direction is carried by the fall, the taper and the banks, not by the material.",
+  "streams": [
+    {
+      "name": "StrongholdBrook",
+      "channel": 0,
+      "_comment_sample": "Metres between cross-sections. The bed is a straight-segment polyline so this only has to be fine enough that the WIDTH taper and the fall read as smooth.",
+      "sample": 2.5,
+      "_comment_fill": "Metres of water above the cut bed. Less than the channel's 1.35m depth, so the surface sits below the bank tops and the brook is in a gully rather than sheeted across the meadow. Ankle deep: there is no swimming, and adding one is on CLAUDE.md's flag-don't-invent list.",
+      "fill": 0.55,
+      "_comment_width": "Half-widths in metres at the source and at the mouth. A brook that widens as it goes is the second thing a STILL frame can use to say which way the water is running; the first is that the bed visibly falls.",
+      "width_start": 0.9,
+      "width_end": 1.9,
+      "shallow_colour": "#3a746f",
+      "deep_colour": "#16323f",
+      "foam_colour": "#d8e8e8",
+      "_comment_foam": "Wider than the pond's. On a ribbon the vertex red channel is distance ACROSS rather than distance from a centre, so this lays a broken white line along BOTH banks \u2014 which is where a brook's foam is, and most of what makes running water read as running.",
+      "foam_width": 0.4,
+      "wave_strength": 0.2,
+      "swell_height": 0.03,
+      "alpha_shallow": 0.42,
+      "alpha_deep": 0.72,
+      "specular_water": 0.45,
+      "roughness_water": 0.1
+    }
+  ]
+}

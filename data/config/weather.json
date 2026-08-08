@@ -1,0 +1,100 @@
+{
+  "_comment": "M10. The CLOCK, the weather state machine, and which creatures each combination brings out. ALL OF IT IS TUNABLE and none of it is a mechanic — the expected feedback is 'a day is too short', 'it rains too much', 'I never see a Gloamfang', and every one of those has to be answerable by editing this file.",
+
+  "_comment_split": "This file is the BEHAVIOUR half of weather. The LOOK half — what each of the five states does to the sun, the sky, the fog and the tonemap — is the `weather` block in data/config/art.json, keyed by the same five ids. Same split the rest of the project uses: a value you would argue about while looking at a screenshot lives in art.json, a value that changes what happens lives here. `scripts/world/sky_cycle.gd` reads this one; `scripts/world/world_look.gd` reads that one and is the only thing that touches a light.",
+
+  "_comment_clock": "The in-game day, in real minutes. 24 minutes means one real minute is one in-game hour, which is fast for a survival game and right for a vertical slice: the point of M10 is to find out whether night and rain are worth having, and a 90-minute day would let a whole play session miss both. Raise it once the answer is yes.",
+  "_comment_start_hour": "17:00. THIS IS THE MA-05 DECISION. The blind critic measured this world's ground-half value variation at 0.082-0.113 against Palworld's ~0.20, said `05-spawn-low-sun` was the one frame of five that nearly carried the key art, and recommended shipping golden hour as the default look. A day/night cycle turns 'which preset is default' into 'where does the clock start', and it starts an hour before the golden keyframe — so the game OPENS in the light that reviewed best, drifts into dusk while the player is still learning the controls, and reaches night about eight real minutes in.",
+  "clock": {
+    "minutes_per_day": 24.0,
+    "start_hour": 17.0,
+    "paused": false
+  },
+
+  "_comment_phases": "Names for stretches of the clock, used for spawn conditions and for anything that wants to say 'at night' without knowing about hours. These are NOT the same thing as the four keyframes in art.json — the keyframes are where the look is authored, these are where the rules bite, and they deliberately do not line up: `night` starts at 20:00, two hours after the `golden` keyframe and four before the `night` one, because it gets dangerous while it is still getting dark. `night` wraps past midnight and is the only one that does.",
+  "phases": {
+    "dawn": { "from": 5.0, "to": 8.0 },
+    "day": { "from": 8.0, "to": 16.0 },
+    "dusk": { "from": 16.0, "to": 20.0 },
+    "night": { "from": 20.0, "to": 5.0 }
+  },
+
+  "_comment_states": "The five weathers of §24. `rain` is how heavily it falls, 0 to 1, and scales the particle count; `lightning_per_minute` is the expected number of flashes per real minute and is what separates a thunderstorm from rain.",
+  "_comment_hold": "`hold_seconds` is how long a state lasts before another is rolled, in REAL seconds. `blend_seconds` is how long the look takes to cross-fade into it — long, deliberately: weather that snaps reads as a bug, and a 12-second ramp across a 24-minute day is about 8 in-game minutes of sky closing over, which is roughly right.",
+  "states": {
+    "clear": { "hold_seconds": [70.0, 160.0], "blend_seconds": 14.0, "rain": 0.0, "lightning_per_minute": 0.0 },
+    "cloudy": { "hold_seconds": [60.0, 130.0], "blend_seconds": 14.0, "rain": 0.0, "lightning_per_minute": 0.0 },
+    "rain": { "hold_seconds": [45.0, 100.0], "blend_seconds": 10.0, "rain": 1.0, "lightning_per_minute": 0.0 },
+    "storm": { "hold_seconds": [35.0, 70.0], "blend_seconds": 8.0, "rain": 1.55, "lightning_per_minute": 7.0 },
+    "fog": { "hold_seconds": [45.0, 95.0], "blend_seconds": 16.0, "rain": 0.0, "lightning_per_minute": 0.0 }
+  },
+
+  "_comment_schedule": "How the next weather is chosen: a weighted roll over the states, with the weights depending on the PHASE. Fog is a dawn thing and almost never a midday one; storms build in the afternoon; nights are clearer than days because a clear night is when the interesting creatures come out and burying that under permanent cloud would waste the whole feature.",
+  "_comment_no_repeat": "A state cannot immediately follow itself — its own weight is zeroed on the roll — because a re-roll into the same weather is indistinguishable from the timer not working, which is exactly the class of bug that hides for a milestone.",
+  "_comment_seed": "Seeded, like data/pals/spawns.json and scatter_rules.gd and for the same reason: a run that cannot be repeated cannot be debugged, and a survey frame that cannot be reproduced cannot be compared with the next one. Every launch sees the same weather in the same order. Change the seed to reshuffle deliberately.",
+  "schedule": {
+    "seed": 20250810,
+    "weights": {
+      "dawn": { "clear": 34.0, "cloudy": 22.0, "rain": 10.0, "storm": 2.0, "fog": 32.0 },
+      "day": { "clear": 42.0, "cloudy": 28.0, "rain": 16.0, "storm": 8.0, "fog": 6.0 },
+      "dusk": { "clear": 36.0, "cloudy": 26.0, "rain": 16.0, "storm": 14.0, "fog": 8.0 },
+      "night": { "clear": 46.0, "cloudy": 24.0, "rain": 14.0, "storm": 6.0, "fog": 10.0 }
+    }
+  },
+
+  "_comment_rain_cost": "THE PARTICLE BUDGET, AND WHAT IT COSTS ON THE ROG ALLY. The meadow already draws ~74,000 scattered props in ~708 batches; rain adds ONE more draw call and `particles` more transparent quads. CPUParticles3D rather than GPU on purpose — the previews and the survey run Compatibility under llvmpipe (D06) and CPU particles render identically in both pipelines, so what a critic judges is what ships. The cost is CPU: 1500 drops is 1500 position integrations per frame on one thread, well under a millisecond on a desktop core and expected around 1-2ms on the Ally's, plus 1500 alpha-blended quads of overdraw which is the part that will actually be felt on a handheld. THIS IS THE NUMBER TO PULL if rain hurts, and it degrades gracefully: at 800 it is thinner rain, whereas halving `fall_speed` or `box` is instantly wrong. Storm multiplies it by its own `rain` value, so the worst case is `particles * 1.55` = 2325. NOT PROFILED ON THE DEVICE — nothing in this project has been, and D06 forbids reading performance off the software renderer, so treat the millisecond figures as estimates and measure them on the Ally.",
+  "_comment_rain_headless": "Not created at all when there is no display, so headless smokes and the test runner never integrate a particle.",
+  "_comment_rain_follow": "The emitter is a box that follows whatever camera is current, at `height` above it — the player's, the combat camera's or a survey camera's. Following the CAMERA rather than the player is what keeps rain in frame during a fight, when the camera is on the pal and the trainer is somewhere behind it.",
+  "_comment_rain_read": "MEASURED FROM THE RENDER AND CORRECTED. The first pass put 900 drops in a 36m box with 0.62m quads at alpha 0.42, and the frames came back with what read as scattered WHITE POLES rather than rain: sparse enough to count, long enough to look architectural, and hard-edged at both ends because a bare quad has no falloff. Three things fix it and none of them is 'more particles' alone — the box came in to 26m so the same count is three times the density where the camera is, the quads got shorter, the alpha came down, and `soft_ends` puts a fade on the top and bottom of every drop so a streak stops being a rectangle.",
+  "rain": {
+    "particles": 1500,
+    "box": [ 26.0, 3.0, 26.0 ],
+    "height": 12.0,
+    "fall_speed": 27.0,
+    "spread_speed": 3.0,
+    "drop_width": 0.03,
+    "drop_length": 0.4,
+    "colour": "#c6d8ea",
+    "alpha": 0.34,
+    "lifetime": 0.85,
+    "_comment_soft_ends": "Generated in code, not an asset: a 4x32 vertical alpha ramp so each drop fades out at both ends instead of terminating in a flat edge. A file would be four kilobytes and one more row in the ledger for something a Gradient can state in one line.",
+    "soft_ends": true
+  },
+
+  "_comment_lightning": "A flash is a 0..1 scalar handed to world_look.apply_moment(), which adds it to the sky colour and lifts the ambient. `rise_seconds` to full and `fall_seconds` back down, plus a chance of an immediate second strike, because a single clean flash reads as a lighting glitch and a double reads as lightning.",
+  "lightning": { "strength": 0.75, "rise_seconds": 0.04, "fall_seconds": 0.42, "double_chance": 0.45 },
+
+  "_comment_spawn": "SPAWN CONDITIONS — §24's 'rare pals can depend on habitat, time and weather'. Habitat is already covered: data/pals/spawns.json gives every species a distance band from the home pad, which is the geography half. This block adds the other two.",
+  "_comment_spawn_contract": "sky_cycle.gd exposes `spawn_weight(species_id) -> float` and `allows_spawn(species_id) -> bool` over this table, plus a `conditions_changed(phase, weather)` signal. Nothing here spawns anything — building a second spawner beside scripts/combat/encounter_director.gd would be the worst possible answer to this milestone. A species not named below is always weight 1.0, which is why seven of the eight entries in spawns.json need no line here.",
+  "_comment_spawn_elsewhere": "`elsewhere` is the weight when the conditions are NOT met. 0.0 means genuinely absent — the Gloamfang is a night creature and there is no such thing as a daytime one. Anything above zero means rarer rather than gone, which is the honest answer for a creature that merely prefers a time: a player who walks the same hill at noon and midnight should notice a difference in the ODDS, not find a species that has been deleted.",
+  "_comment_spawn_choices": "Chosen from the roster's own fiction rather than invented for the mechanic. The Duskpup and the Gloamfang are one creature at two ages and are named for the hour they belong to. The Rillcroak is the water species — a frog that comes out when the meadow is wet, which is also the only weather-gated line the player can reasonably guess. The Meadow Hopper is the tutorial creature and stays common at every hour on purpose; a milestone that made the practice target scarce at night would be teaching the wrong lesson.",
+  "spawn_conditions": {
+    "evolved_wolf": {
+      "_comment": "THE RARE ONE, and the only entry gated on all three of §24's axes at once: habitat (spawns.json puts it 170-240m out, further than anything else), time (night) and weather (a clear or foggy one — it will not come out in rain). Absent otherwise.",
+      "phases": [ "night" ],
+      "weather": [ "clear", "fog" ],
+      "elsewhere": 0.0
+    },
+    "wild_pup": {
+      "_comment": "THE NOCTURNAL ONE. Out at dusk and through the night, and a third as likely in daylight — rarer rather than gone, because it is the Gloamfang's young form and a player who has only ever played at noon should still be able to meet one.",
+      "phases": [ "dusk", "night" ],
+      "elsewhere": 0.35
+    },
+    "wild_stalker": {
+      "_comment": "The aggressive skulker. Night and dusk, and half as likely by day. This is §24's 'night can be more dangerous because of different species' — the danger at night is which creatures are out, not a level bonus on the same ones, which §24 explicitly forbids.",
+      "phases": [ "dusk", "night" ],
+      "elsewhere": 0.5
+    },
+    "wild_croaker": {
+      "_comment": "THE WEATHER-CONDITIONED ONE. A frog comes out when it is wet. Common in rain, storm and fog; sparse otherwise.",
+      "weather": [ "rain", "storm", "fog" ],
+      "elsewhere": 0.3
+    },
+    "wild_grazer": {
+      "_comment": "The mount grazes in the open by day and shelters in bad weather. Two conditions with an AND between them, which is what makes it the test case for the combined rule: a clear night and a rainy noon should both fail it.",
+      "phases": [ "dawn", "day", "dusk" ],
+      "weather": [ "clear", "cloudy", "fog" ],
+      "elsewhere": 0.45
+    }
+  }
+}

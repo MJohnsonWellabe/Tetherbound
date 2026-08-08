@@ -97,15 +97,19 @@ func _build_boundary() -> void:
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	# Teal, not gold.
+	# Warm gold, and NOT the teal it was for one round.
 	#
-	# It was #d9b340, which is the same yellow-ochre family as the sunlit hills
-	# behind it, so the blind critic read it as "a hard-edged flat khaki band
-	# splatted onto the terrain with no falloff" — the second-largest colour mass
-	# in the combat frames, fighting the depth read as well as the composition.
-	# A boundary is UI drawn in the world: it should sit outside the biome's
-	# palette so it never reads as ground.
-	material.albedo_color = Color(0.35, 0.82, 0.86, _boundary_alpha)
+	# Teal was chosen to sit outside the biome palette, which was right in
+	# principle and wrong in fact: additive cyan over green terrain produced "a
+	# blue-cyan haze band lying on the terrain and cutting across objects...
+	# the same trunk is pale blue above the band and brown below, with a hard
+	# boundary", and on a hillside it read as water in a biome whose art board
+	# promises streams. A fix that ships a new artefact is not a fix.
+	#
+	# Gold is close enough to the sunlit grass that additive blending brightens
+	# rather than recolours, so where it crosses a trunk the trunk stays brown.
+	# The falloff below does the separating instead of the hue.
+	material.albedo_color = Color(0.98, 0.86, 0.52, _boundary_alpha)
 	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	material.vertex_color_use_as_albedo = true
 	material.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_DISABLED
@@ -151,7 +155,10 @@ func _faded(source: Mesh) -> ArrayMesh:
 		for i in points.size():
 			# `height * 0.5` above and below the mesh origin.
 			var up: float = clampf(points[i].y / maxf(0.001, _boundary_height) + 0.5, 0.0, 1.0)
-			var alpha: float = pow(1.0 - up, 2.0)
+			# Steeper than the square it was, so the band hugs the ground and has
+			# essentially nothing left by the height of a tree trunk — which is
+			# where it was being seen crossing things it should never touch.
+			var alpha: float = pow(1.0 - up, 3.5)
 			colours[i] = Color(1.0, 1.0, 1.0, alpha)
 		arrays[Mesh.ARRAY_COLOR] = colours
 		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)

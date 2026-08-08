@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/map_canvas.gd" id="1_canvas"]
+
+; The minimap. GAME_DESIGN.md 23: local terrain, a compass, the player, discovered
+; locations, the bed and the death satchels.
+;
+; The SAME script the full-screen map draws with, in its other framing. One
+; drawing routine at two zooms, so the satchel that is amber on the map is amber
+; in the corner too — a player should not have to learn the key twice.
+;
+; TOP RIGHT. The M1 debug HUD owns the top left with its bars and its readout, the
+; combat HUD owns the middle and the bottom, and the corner opposite the health
+; bar is the one piece of screen nothing else has claimed.
+;
+; Layer 1: above the debug HUD, below the menus at layer 10. A minimap drawn over
+; an open inventory is not a minimap; `meadows_playground.tscn` also lists this in
+; the screen stack's `hide_while_open` so it goes away entirely while a screen is
+; up.
+;
+; Anchored to the right edge rather than positioned, so a desktop window at another
+; aspect ratio does not push it off the screen.
+
+[node name="Minimap" type="CanvasLayer"]
+layer = 1
+
+[node name="Canvas" type="Control" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -332.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 332.0
+mouse_filter = 2
+script = ExtResource("1_canvas")
+mode = "follow"
+show_compass = true
+map_path = NodePath("../../WorldMap")
+player_path = NodePath("../../Player")
+home_path = NodePath("../../Home")
+satchels_path = NodePath("../../Satchels")
+world_path = NodePath("../..")

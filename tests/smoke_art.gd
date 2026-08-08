@@ -66,13 +66,34 @@ func _run() -> void:
 
 ## Species data must name a model, and the model must exist. A typo here shows
 ## up as a capsule in a screenshot and nowhere else.
+##
+## ONE EXEMPTION, AND IT HAS TO BE ASKED FOR IN WRITING. A species may declare
+## `placeholder.unmodelled: true`, which means "there is deliberately no art for
+## this creature yet and its capsule is the honest picture". M14's Meadows
+## legendary is the only one: the asset pass rejected every free candidate on
+## evidence and its conclusion was that this creature has to be modelled rather
+## than found (`docs/ASSET_LEDGER.md`), so it ships as a labelled placeholder
+## rather than as a scaled-up stag wearing a legendary's name.
+##
+## The flag is a DECLARATION, not a bypass. The failure this check exists to
+## catch is a typo — and a typo produces either a path that does not resolve,
+## which is still caught below, or an empty path with no flag beside it, which is
+## still caught here. What it can no longer do is force somebody to invent art to
+## make a smoke go green, which is the worse of the two failures.
 func _every_species_has_art() -> void:
 	for id: String in SPECIES.table().keys():
 		var look: Dictionary = SPECIES.placeholder(id)
 		var path := str(look.get("model", ""))
 		if path == "":
-			_fail("species '%s' names no model" % id)
+			if bool(look.get("unmodelled", false)):
+				print("  %-16s DECLARED UNMODELLED — draws as the capsule fallback" % id)
+			else:
+				_fail("species '%s' names no model" % id)
 			continue
+		if bool(look.get("unmodelled", false)):
+			_fail("species '%s' is flagged unmodelled AND names a model (%s); one of those is stale" % [
+				id, path
+			])
 		if not ResourceLoader.exists(path):
 			_fail("species '%s' names a model that does not exist: %s" % [id, path])
 

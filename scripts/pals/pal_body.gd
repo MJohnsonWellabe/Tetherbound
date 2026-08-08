@@ -14,12 +14,22 @@ extends CharacterBody3D
 ## one share one movement implementation while being driven by a stick and by a
 ## state machine respectively.
 ##
-## M11 replaces `_build_placeholder` with a rigged model. Nothing else here
-## changes.
+## M11 took the roster from three species to eight out of one CC0 pack, and the
+## only thing that changed in this file was `_retint()` below. Sizes, colliders,
+## clip maps, yaw and colours are all data. The `placeholder` key in species.json
+## is a misnomer now
+## — it has held real rigged art since M2's capsules were replaced — and it is
+## kept because `pal_species.placeholder()` is called from files this milestone
+## does not own.
 
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/pals/pal_animator.gd")
+
+const ART_CONFIG_PATH := "res://data/config/art.json"
+
+## Per-species, per-material colours from data/config/art.json. Read once.
+static var _art: Dictionary = {}
 
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
@@ -188,6 +198,7 @@ func _build_model(look: Dictionary) -> bool:
 		return false
 	_model.add_child(art)
 	_fit(art, float(look.get("model_scale", 1.0)))
+	_retint(art)
 
 	# Sourced models point in whatever direction their author chose, and there
 	# is no convention to rely on. Combat faces creatures along +Z (`facing()`),
@@ -200,6 +211,72 @@ func _build_model(look: Dictionary) -> bool:
 	_has_model = true
 	_build_animator(art, look)
 	return true
+
+
+## Repaint a creature from `creatures.retint` in data/config/art.json.
+##
+## Two of the fourteen sourced models are unreadable in this biome as shipped —
+## the Wolf is pale grey at roughly the ground's own value and the Frog is green
+## on green — which is MA-02's "your own pal is the least readable object in your
+## own fight" arriving again from a different pack. Lighting cannot reach either
+## one: they are naturalistic animal colours in a game that is not naturalistic.
+##
+## Keyed by MATERIAL NAME, the same handle data/config/vegetation.json uses on
+## foliage, and it works here for the same reason: this pack ships no textures at
+## all, only four to eight flat named zones per animal. A name survives the model
+## being swapped for another in the pack; a surface index does not.
+##
+## Applied as a per-instance SURFACE OVERRIDE and never by writing to the Mesh.
+## The imported .gltf's mesh resource is shared by every creature of that species
+## and cached by the resource loader, so mutating it would repaint every wolf in
+## the world from one spawn — and would persist into whatever loaded it next.
+func _retint(art: Node3D) -> void:
+	var colours: Dictionary = _retint_map(species_id)
+	if colours.is_empty():
+		return
+	var used := {}
+	for mesh in _mesh_instances(art):
+		var source_mesh: Mesh = mesh.mesh
+		for surface in source_mesh.get_surface_count():
+			var source: Material = source_mesh.surface_get_material(surface)
+			if source == null:
+				continue
+			var key := source.resource_name
+			if not colours.has(key):
+				continue
+			used[key] = true
+			# Duplicated rather than rebuilt, so roughness, culling and the
+			# pack's own shading survive and only the colour changes.
+			var repainted: StandardMaterial3D = (source as StandardMaterial3D).duplicate()
+			if repainted == null:
+				continue
+			repainted.albedo_color = Color(str(colours[key]))
+			mesh.set_surface_override_material(surface, repainted)
+
+	# A colour keyed on a material the model does not have is silent otherwise:
+	# the creature simply keeps the pack's default and nobody finds out until a
+	# review says it is grey.
+	for key: String in colours.keys():
+		if not used.has(key):
+			push_warning("art.json retints '%s' material '%s', which its model does not have" % [
+				species_id, key])
+
+
+func _retint_map(id: String) -> Dictionary:
+	if _art.is_empty():
+		var file := FileAccess.open(ART_CONFIG_PATH, FileAccess.READ)
+		if file != null:
+			var parsed: Variant = JSON.parse_string(file.get_as_text())
+			if parsed is Dictionary:
+				_art = parsed
+	var entry: Variant = _art.get("creatures", {}).get("retint", {}).get(id, {})
+	if not (entry is Dictionary):
+		return {}
+	var colours := {}
+	for key: String in (entry as Dictionary).keys():
+		if not key.begins_with("_"):
+			colours[key] = (entry as Dictionary)[key]
+	return colours
 
 
 ## Wire the model's AnimationPlayer to the role names the species declares.
@@ -433,6 +510,14 @@ func play_faint() -> void:
 func revive_animation() -> void:
 	if _animator != null:
 		_animator.call("revive")
+
+
+## Play a settled beat — grazing, an idle variant — and hold it for `seconds`
+## rather than the clip's own length. `companion.gd`'s peaceful idle, which times
+## its own beats; nothing here decides how long one lasts.
+func play_hold(role: String, seconds: float) -> void:
+	if _animator != null:
+		_animator.call("play_hold", role, seconds)
 
 
 ## Turn to face a world point, immediately. Used when a fight is arranged and by

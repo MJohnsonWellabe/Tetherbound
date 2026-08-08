@@ -16,9 +16,17 @@ extends Node
 ## the player controller, the camera rig, the HUD — is told, and does not ask.
 ##
 ## M2 scope: one wild pal, one of yours, quick and charged attacks, and three
-## ways out. No catching, no party, no types, no switching UI. The switch SEAM
-## is here (`_active_index` into `_party`) so M4 adds members rather than
-## restructuring this file.
+## ways out. No catching, no party, no types, no switching UI.
+##
+## M4 was supposed to grow that into a party and a Switch command. It half did:
+## the party arrived, and this file kept `_active_index` into a private
+## `Array[RefCounted]` that the director filled with exactly one pal and that
+## nothing ever moved. Two indices for one fact, one of them frozen at zero.
+##
+## The array is gone. This holds the PARTY ITSELF and addresses the fighter
+## through `party.active()`, so `set_active()` from the menu and `Switchboard`
+## below are the same move on the same number, and the menu and the fight cannot
+## come apart.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
@@ -26,6 +34,7 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+const FX := preload("res://scripts/combat/fx.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -37,6 +46,14 @@ signal attack_missed(by_player: bool)
 signal catch_resolved(success: bool, shakes: int)
 signal catch_refused(reason: String)
 signal orb_shook(index: int)
+
+## The deployed pal changed mid-fight. `index` is the party slot, and it is the
+## party's own `active_index` — not a copy of it.
+signal switched(index: int, pal: RefCounted)
+## A switch was asked for and refused, with one of Switchboard's tokens. Emitted
+## rather than swallowed because "nothing happened" and "you cannot do that yet"
+## are different things to have just pressed a button for.
+signal switch_refused(token: String)
 
 enum State { INACTIVE, ACTIVE, RESOLVING }
 
@@ -50,13 +67,107 @@ const OUTCOME_CAUGHT := "caught"
 ## attack is a decision rather than a better button.
 enum Action { READY, WINDUP, RECOVERY }
 
+
+## The Switch command — GAME_DESIGN.md §14's fifth, beside Quick, Charged, Throw
+## and Run — as an object rather than as three loose fields on the manager.
+##
+## Everything a switch decides is decidable from the party and a clock: who is
+## eligible, whether the cooldown has run down, and which slot to land on. None
+## of it needs an arena, a camera, a body or a scene, so none of it lives in the
+## fight. That is what lets tests/test_combat_rewards.gd prove the RULES
+## headlessly, per docs/decisions/D02, while the manager above adds only the
+## presentation — the body's species, the entry lag, the signals.
+##
+## It MOVES THE PARTY rather than keeping an index of its own. That is the whole
+## repair: `party.active_index` is the single fact, the menu writes it through
+## `set_active()`, this writes it through `set_active()`, and there is no second
+## copy left to disagree with.
+class Switchboard extends RefCounted:
+	## Refusal tokens, in party.gd's idiom: a stable token and never a sentence,
+	## because the HUD has to be able to shorten, lengthen or translate it.
+	const REFUSED_NO_PARTY := "no_party"
+	const REFUSED_ALONE := "alone"
+	const REFUSED_COOLING := "cooling_down"
+	const REFUSED_ALL_DOWN := "all_down"
+
+	## Seconds between switches. §14 requires a cooldown and names no number; the
+	## one that ships is `switch.cooldown` in data/config/combat.json and is
+	## TUNABLE. This default exists only so a missing config block cannot make
+	## switching free.
+	var period: float = 4.0
+	var remaining: float = 0.0
+
+	func configure(cfg: Dictionary) -> void:
+		period = maxf(0.0, float(cfg.get("cooldown", 4.0)))
+		remaining = 0.0
+
+	func tick(delta: float) -> void:
+		remaining = maxf(0.0, remaining - delta)
+
+	func ready() -> bool:
+		return remaining <= 0.0
+
+	func seconds_left() -> float:
+		return remaining
+
+	## The slot a switch of `step` would land on, or -1 if there is nobody to
+	## switch to.
+	##
+	## Fainted members are stepped OVER rather than landed on. §16 makes a
+	## fainted pal unavailable, and a switch that deploys an unconscious creature
+	## is a switch that loses the fight for you — so with two pals and one of them
+	## down, this is a refusal rather than a very bad move.
+	func target(party: Object, step: int) -> int:
+		if party == null:
+			return -1
+		var count := int(party.call("size"))
+		if count <= 1:
+			return -1
+		var from := int(party.get("active_index"))
+		var direction := 1 if step >= 0 else -1
+		for i in range(1, count):
+			var index: int = posmod(from + direction * i, count)
+			var pal: RefCounted = party.call("at", index) as RefCounted
+			if pal != null and not bool(pal.get("fainted")):
+				return index
+		return -1
+
+	## Why a switch would be refused right now, or "" if it would go through.
+	func refusal(party: Object, step: int) -> String:
+		if party == null:
+			return REFUSED_NO_PARTY
+		if int(party.call("size")) <= 1:
+			# One pal is not a roster. Refusing here rather than letting the wrap
+			# land back on the same creature is the difference between "you cannot
+			# do that" and a button that appears to work and changes nothing.
+			return REFUSED_ALONE
+		if not ready():
+			return REFUSED_COOLING
+		if target(party, step) < 0:
+			return REFUSED_ALL_DOWN
+		return ""
+
+	## Move the party's deployed pal one step. Returns the new slot, or -1 if the
+	## switch was refused.
+	##
+	## The party's own `set_active()` is what moves. Nothing here caches the
+	## result, so there is no way for the fight to believe one thing and the menu
+	## another.
+	func switch(party: Object, step: int) -> int:
+		if not refusal(party, step).is_empty():
+			return -1
+		var index := target(party, step)
+		if not bool(party.call("set_active", index)):
+			return -1
+		remaining = period
+		return index
+
 var state: State = State.INACTIVE
 
-## The player's pals. Length one for M2; M4 grows it. Combat always addresses
-## the active fighter through this index so switching is an index change rather
-## than a rewrite.
-var _party: Array[RefCounted] = []
-var _active_index: int = 0
+## The player's pals — the party object itself, duck-typed so either
+## `scripts/pals/party.gd` or the `PartyManager` node wrapping it will do. There
+## is no index here on purpose: `party.active_index` is the only one.
+var _party: Object = null
 var _enemy: RefCounted = null
 
 var _player: Node3D = null
@@ -74,6 +185,9 @@ var _charged_cooldown: float = 0.0
 var _resolve_timer: float = 0.0
 var _outcome: String = ""
 
+## The Switch command's rules and its cooldown clock.
+var _switchboard := Switchboard.new()
+
 ## Seconds after the fight opens during which player input is ignored.
 ##
 ## Engage and charged attack are the same physical button (X / interact and
@@ -85,6 +199,9 @@ var _input_guard: float = 0.0
 ## Catching. The aim and the projectile live in throw_aim.gd; what lives here is
 ## deciding whether a throw is allowed and what its result means to the fight.
 var _throw: Node = null
+## Presentation for events this file has already resolved: damage numbers,
+## hit-stop, the KO beat, orb puffs. It decides nothing; see fx.gd's header.
+var _fx: Node = null
 var _catch_shakes_left: int = 0
 var _catch_shake_timer: float = 0.0
 var _catch_succeeded: bool = false
@@ -103,16 +220,22 @@ func _ready() -> void:
 	_throw.connect("orb_struck", _on_orb_struck)
 	_throw.connect("orb_missed", _on_orb_missed)
 	_throw.connect("throw_refused", func(reason: String) -> void: catch_refused.emit(reason))
+	_throw.connect("aim_exited", _on_aim_exited)
+
+	_fx = FX.new()
+	_fx.name = "CombatFX"
+	add_child(_fx)
 
 
 func throw_aim() -> Node:
 	return _throw
 
 
+## Whoever the party currently has deployed. Asked every time rather than cached:
+## a cached copy is exactly how the M4 build ended up fighting with a pal the
+## party menu had already replaced.
 func active_pal() -> RefCounted:
-	if _active_index < 0 or _active_index >= _party.size():
-		return null
-	return _party[_active_index]
+	return (_party.call("active") as RefCounted) if _party != null else null
 
 
 func enemy() -> RefCounted:
@@ -127,13 +250,23 @@ func arena() -> Node3D:
 	return _arena
 
 
-## Begin a fight. `ally_body` is the player's deployed pal, `camera_rig` is the
-## exploration camera that will be re-pointed at it.
-func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted], camera_rig: Node = null) -> bool:
+## Begin a fight. `ally_body` is the body the player's pal is drawn on,
+## `camera_rig` is the exploration camera that will be re-pointed at it.
+##
+## `party` is the PARTY, not a list of fighters. It used to be an
+## `Array[RefCounted]` and the director passed `[cached_pal]` — a one-element
+## array built at world load — so the fight opened with whoever had been deployed
+## when the scene started, forever. Taking the party itself means the fight reads
+## the deployment at the moment it opens, which is what §10 ("player chooses which
+## pal to deploy when combat begins") actually says.
+func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Object, camera_rig: Node = null) -> bool:
 	if is_fighting():
 		return false
-	if player == null or wild == null or ally_body == null or party.is_empty():
-		push_error("cannot begin combat without a player, a wild pal, a deployed body and a party")
+	if player == null or wild == null or ally_body == null:
+		push_error("cannot begin combat without a player, a wild pal and a deployed body")
+		return false
+	if party == null or not party.has_method("active") or int(party.call("size")) == 0:
+		push_error("cannot begin combat without a party to deploy from")
 		return false
 
 	_player = player
@@ -141,7 +274,6 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	_ally_body = ally_body
 	_camera_rig = camera_rig
 	_party = party
-	_active_index = 0
 	_enemy = wild.get("instance")
 	if _enemy == null:
 		push_error("wild pal has no instance")
@@ -150,6 +282,11 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	var pal := active_pal()
 	if pal == null or pal.fainted:
 		return false
+	# The body is built from whoever is deployed RIGHT NOW. Doing this once at
+	# world load is how a party that says one creature is out produces a fight
+	# that shows a different one.
+	_deploy_body(pal)
+	_switchboard.configure(MATH.config().get("switch", {}))
 
 	_action = Action.READY
 	_action_timer = 0.0
@@ -183,6 +320,24 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 
 
 ## --- setup ----------------------------------------------------------------
+
+## Put the deployed pal's species onto the body the player drives.
+##
+## ONE body for the whole fight — the same collider, the same position, the same
+## node the opponent is targeting — and only its species changes. Instancing a
+## second body per switch would hitch in the one frame that most needs not to,
+## and would hand the enemy a target that had moved, which is the free dodge this
+## file is careful not to sell.
+##
+## Skipped when the species is already right, so re-deploying the same creature
+## does not rebuild its art.
+func _deploy_body(pal: RefCounted) -> void:
+	if _ally_body == null or pal == null:
+		return
+	if str(_ally_body.get("species_id")) == pal.species_id:
+		return
+	_ally_body.call("setup", pal.species_id)
+
 
 ## The arena is centred between the two fighters, not on the trainer. Centring
 ## it on the trainer would put them at the middle of a circle they are supposed
@@ -305,6 +460,7 @@ func _tick_active(delta: float) -> void:
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
 	_input_guard = maxf(0.0, _input_guard - delta)
+	_switchboard.tick(delta)
 
 	if _catch_shakes_left > 0:
 		_tick_catch_wobble(delta)
@@ -359,9 +515,13 @@ func _resolve_player_strike() -> void:
 		float(_pending_move.get("power", 9.0)), pal.attack, _enemy.defence, _rng.randf()
 	)
 	var killed: bool = _enemy.take_damage(damage)
-	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
+	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * _knockback_fraction())
 	_wild.call("play_faint" if killed else "play_hit")
-	_flash_at(_wild.call("centre"), not bool(_pending_move.get("is_quick", false)))
+	var charged := not bool(_pending_move.get("is_quick", false))
+	_flash_at(_wild.call("centre"), charged)
+	_fx.call("hit", _fx_host(), _wild.call("centre"), damage, true, charged)
+	if killed:
+		_fx.call("ko", _fx_host(), _wild.call("centre"))
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -413,6 +573,17 @@ func _read_player_input() -> void:
 		return
 
 	if _action != Action.READY:
+		return
+
+	# Below this line the pal is uncommitted. Switching sits here rather than
+	# beside Run on purpose: swapping out of your own recovery would cancel the
+	# punish window the opponent just earned, which is the free dodge D08 refused
+	# to sell for throwing.
+	if Input.is_action_just_pressed("combat_switch_right"):
+		switch_active(1)
+		return
+	if Input.is_action_just_pressed("combat_switch_left"):
+		switch_active(-1)
 		return
 
 	if Input.is_action_just_pressed("combat_throw"):
@@ -498,9 +669,12 @@ func _on_enemy_strike() -> void:
 		float(cfg.get("power", 8.0)), _enemy.attack, pal.defence, _rng.randf()
 	)
 	var killed: bool = pal.take_damage(damage)
-	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
+	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * _knockback_fraction())
 	_ally_body.call("play_faint" if killed else "play_hit")
 	_flash_at(_ally_body.call("centre"), false)
+	_fx.call("hit", _fx_host(), _ally_body.call("centre"), damage, false, false)
+	if killed:
+		_fx.call("ko", _fx_host(), _ally_body.call("centre"))
 
 	hit_landed.emit(false, damage)
 	state_changed.emit()
@@ -523,20 +697,75 @@ func _flash_at(where: Vector3, charged: bool) -> void:
 		return
 	var key := "charged" if charged else "quick"
 	var spec: Dictionary = cfg.get(key, {})
-	# Parented into the WORLD, not to this manager. CombatManager is a plain
-	# Node, and a Node3D hung under one is outside the 3D transform chain: the
-	# burst was created correctly twelve times in a row and rendered none of
-	# them. The arena is a Node3D that already exists for exactly the length of
-	# the fight, so it also cleans these up on its way out.
-	var host: Node = _arena if _arena != null else _player.get_parent()
 	FLASH.burst(
-		host,
+		_fx_host(),
 		where,
 		Color(str(spec.get("colour", "#ffd27a"))),
 		float(spec.get("radius", 1.5)),
 		float(spec.get("duration", 0.34)),
 		float(spec.get("strength", 1.0))
 	)
+
+
+## Where an effect must be parented to render: into the WORLD, not this manager.
+## CombatManager is a plain Node, and a Node3D hung under one is outside the 3D
+## transform chain — the first impact burst was created correctly twelve times
+## in a row and rendered none of them. The arena is a Node3D that exists for
+## exactly the length of the fight, so it also cleans effects up on its way out.
+func _fx_host() -> Node:
+	return _arena if _arena != null else _player.get_parent()
+
+
+## How much of the attacker's lunge the defender is shoved by. TUNABLE in
+## combat.json's `impact` block; presentation-weight only, never damage.
+func _knockback_fraction() -> float:
+	return float(MATH.config().get("impact", {}).get("knockback_fraction", 0.4))
+
+
+## --- switching ------------------------------------------------------------
+
+## Swap the deployed pal mid-fight. `step` is +1 for the next member and -1 for
+## the previous; fainted members are skipped.
+##
+## This is the whole of GAME_DESIGN.md §14's Switch command, and it is
+## deliberately NOT an escape:
+##
+##  * The body does not move. Whoever arrives inherits the position, the
+##    spacing and the opponent's attention.
+##  * The opponent's clocks are untouched. Its wind-up keeps winding up and
+##    `_on_enemy_strike` resolves against `active_pal()` — so a switch made into
+##    a telegraph means the NEWCOMER eats the blow.
+##  * The arriving pal cannot attack for `switch.entry_lag` seconds, and the
+##    cooldown means it cannot be undone on the next frame.
+##
+## D08 settled the same argument for throwing: the cost is what turns a button
+## into a decision.
+func switch_active(step: int) -> bool:
+	var reason := _switchboard.refusal(_party, step)
+	if not reason.is_empty():
+		switch_refused.emit(reason)
+		return false
+
+	var index := _switchboard.switch(_party, step)
+	if index < 0:
+		# The party refused a slot the rules had already cleared. Nothing should
+		# be able to reach here; if it does, the fight must not silently continue
+		# believing a switch happened.
+		switch_refused.emit(Switchboard.REFUSED_NO_PARTY)
+		return false
+
+	var pal := active_pal()
+	_deploy_body(pal)
+
+	var lag := float(MATH.config().get("switch", {}).get("entry_lag", 0.6))
+	# Floored rather than overwritten: switching must not be a way to wipe an
+	# attack cooldown you were waiting out.
+	_quick_cooldown = maxf(_quick_cooldown, lag)
+	_charged_cooldown = maxf(_charged_cooldown, lag)
+
+	switched.emit(index, pal)
+	state_changed.emit()
+	return true
 
 
 ## --- catching -------------------------------------------------------------
@@ -546,11 +775,41 @@ func _flash_at(where: Vector3, charged: bool) -> void:
 ## §15 says a faint ENDS the capture opportunity. That is a refusal, not a very
 ## low chance, and telling the player before they spend an orb and a vulnerable
 ## second of aiming is the difference between a rule and a punishment.
+## Is the creature being fought owned by another trainer?
+##
+## CLAUDE.md, hard rule: "Trainer-owned pals cannot be caught."
+##
+## `catch_math.can_be_caught()` has taken an `already_owned` argument since M3
+## and this file passed a literal `false` to it in both places, with a comment
+## in `catch_math` saying the rule was "enforced here so every future path into
+## catching inherits it". Nothing ever passed `true`. The rule was written,
+## documented, unit-tested and UNREACHABLE — correctly, because until M13 there
+## was no creature in the world that anybody else owned. This is the argument
+## arriving.
+##
+## Duck-typed rather than a flag on `wild_pal`: `scripts/trainers/tether_pal.gd`
+## answers yes by HAVING the method, so an ordinary wild creature answers no by
+## not having it. There is no way to build a trainer's creature that forgets to
+## say so, and no way to give a wild one the wrong answer by leaving a boolean
+## unset.
+func _opponent_is_trainer_owned() -> bool:
+	return _wild != null \
+		and _wild.has_method("is_trainer_owned") \
+		and bool(_wild.call("is_trainer_owned"))
+
+
 func _try_throw() -> void:
 	if _enemy == null:
 		return
-	var allowed: bool = CATCH.can_be_caught(_enemy.fainted, false)
-	_throw.call("try_begin_aim", allowed, "%s is out cold — too late to catch it" % _enemy.display_name)
+	var owned := _opponent_is_trainer_owned()
+	var allowed: bool = CATCH.can_be_caught(_enemy.fainted, owned)
+	# Two different refusals, because they are two different facts about the
+	# world and the player should be able to tell which one they have hit. "It
+	# fainted" is a mistake you made; "it belongs to somebody" is a rule, and a
+	# rule stated once is a rule you stop testing.
+	var refusal := "%s belongs to Team Tether — it cannot be caught" if owned \
+		else "%s is out cold — too late to catch it"
+	_throw.call("try_begin_aim", allowed, refusal % _enemy.display_name)
 	state_changed.emit()
 
 
@@ -561,8 +820,24 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	# Re-checked at the moment of impact as well as before the aim: the opponent
 	# can faint to your pal's attack while the orb is still in the air, and an
 	# orb that lands on a corpse must not catch it.
-	if not CATCH.can_be_caught(_enemy.fainted, false):
-		catch_refused.emit("%s fainted before the orb landed" % _enemy.display_name)
+	#
+	# The ownership half is re-checked here for a different reason — not because
+	# it can change mid-flight, but because this is the second door into
+	# `CATCH.resolve()` and a hard rule guarded at one of two doors is a hard rule
+	# with a hole in it. An orb already in the air when a trainer battle opens
+	# would otherwise land on a creature the game has just decided cannot be
+	# caught. Asked once and held in `owned` — the check and the refusal message
+	# below both read the same answer.
+	var owned := _opponent_is_trainer_owned()
+	if not CATCH.can_be_caught(_enemy.fainted, owned):
+		catch_refused.emit(
+			"%s belongs to Team Tether" % _enemy.display_name if owned
+			else "%s fainted before the orb landed" % _enemy.display_name
+		)
+		# Camera first, orb second: the rig is still following the trainer from
+		# the aim, but freeing a node something might be told to follow later is
+		# the order that eventually dangles.
+		_take_camera()
 		_throw.call("clear_orb")
 		state_changed.emit()
 		return
@@ -583,13 +858,23 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	_catch_succeeded = bool(decision["caught"])
 	_catch_shakes_left = int(decision["shakes"])
 	_catch_index = 0
-	_catch_shake_timer = 0.0
+	# A held beat before the first shake, and a longer one before each shake
+	# after it (fx.shake_pause) — rising tension around a count that was decided
+	# once and is never re-rolled.
+	_catch_shake_timer = FX.shake_pause(0, CATCH.config().get("resolve", {}))
 
 	# The creature goes into the orb for the duration either way. Watching it
 	# stand there unbothered while the orb wobbles beside it would tell the
 	# player the throw had already failed.
 	if _wild != null:
 		_wild.visible = false
+
+	# The moment gets its dressing: a puff where the orb struck, and the camera
+	# pushed in on the one object that matters for the next two seconds.
+	var orb: Node3D = _throw.call("resting_orb") as Node3D
+	var puff_at: Vector3 = orb.global_position if orb != null else (_wild.call("centre") as Vector3)
+	_fx.call("orb_puff", _fx_host(), puff_at)
+	_wobble_camera(0)
 	state_changed.emit()
 
 
@@ -598,9 +883,45 @@ func _on_orb_missed() -> void:
 		return
 	# A clean miss is not a failed catch. It costs an orb and the moment, and it
 	# gets its own message, because "you missed" and "it broke out" are different
-	# things to have just done.
+	# things to have just done. The camera goes back to the pal the player is
+	# about to be driving again.
+	_take_camera()
 	catch_refused.emit("the orb went wide")
 	state_changed.emit()
+
+
+## The aim closed without a throw (cancel, or a refused release). The rig was
+## parked behind the trainer for the aim, and before this handler existed it
+## simply STAYED there — the rest of the fight was played from the aim camera.
+## A released orb keeps the trainer's view while it flies (`is_busy`); the
+## resolution paths above and below re-point the rig when the orb lands.
+func _on_aim_exited() -> void:
+	if state != State.ACTIVE:
+		return
+	if bool(_throw.call("is_busy")):
+		return
+	_take_camera()
+
+
+## Push the camera in on the wobbling orb, one step closer per shake.
+##
+## Dramatises the wait, never the answer: the framing tightens with the count
+## the decision already produced, and nothing here can change what settles.
+func _wobble_camera(step: int) -> void:
+	var cfg: Dictionary = CATCH.config().get("wobble_camera", {})
+	if not bool(cfg.get("enabled", true)):
+		return
+	if _camera_rig == null or not _camera_rig.has_method("set_target"):
+		return
+	var orb: Node3D = _throw.call("resting_orb") as Node3D
+	if orb == null:
+		return
+	_camera_rig.call("set_target", orb, {
+		"distance": maxf(1.6, float(cfg.get("distance", 4.4)) - float(cfg.get("step_in", 0.5)) * float(step)),
+		"height": float(cfg.get("height", 0.9)),
+		"fov": float(cfg.get("fov", 55.0)),
+		"retarget_lag": float(cfg.get("retarget_lag", 4.5)),
+	})
 
 
 func _tick_catch_wobble(delta: float) -> void:
@@ -612,7 +933,9 @@ func _tick_catch_wobble(delta: float) -> void:
 	if _catch_index < _catch_shakes_left:
 		_catch_index += 1
 		orb_shook.emit(_catch_index)
-		_catch_shake_timer = float(cfg.get("shake_interval", 0.55))
+		_fx.call("wobble_orb", _throw.call("resting_orb"), _catch_index)
+		_wobble_camera(_catch_index)
+		_catch_shake_timer = FX.shake_pause(_catch_index, cfg)
 		return
 
 	_catch_shakes_left = 0
@@ -620,18 +943,33 @@ func _tick_catch_wobble(delta: float) -> void:
 
 
 func _finish_catch(_settle: float) -> void:
+	# The camera leaves the orb BEFORE the orb is freed: a rig following a freed
+	# node is a dangling reference, not a shot. On a catch the trainer gets the
+	# frame — it is their moment (D08: catching is the one thing they do); on a
+	# break-out the player is about to be driving the pal again.
+	var orb: Node3D = _throw.call("resting_orb") as Node3D
+	if _catch_succeeded:
+		_release_camera()
+	else:
+		_take_camera()
 	_throw.call("clear_orb")
 	catch_resolved.emit(_catch_succeeded, _catch_index)
 
 	if _catch_succeeded:
+		if orb != null:
+			_fx.call("orb_puff", _fx_host(), orb.global_position)
 		_begin_resolve(OUTCOME_CAUGHT)
 		return
 
 	# It broke out. Back on its feet, back in the fight, no free damage either
 	# way — the cost of a failed catch is the orb and the seconds you spent
-	# standing still, which is quite enough.
+	# standing still, which is quite enough. The flinch and the puff are the
+	# clear miss beat: the creature bursts back OUT of the orb rather than
+	# reappearing as if nothing happened.
 	if _wild != null:
 		_wild.visible = true
+		_wild.call("play_hit")
+		_fx.call("orb_puff", _fx_host(), _wild.call("centre"))
 	state_changed.emit()
 
 
@@ -660,6 +998,9 @@ func _finish() -> void:
 	state = State.INACTIVE
 	set_physics_process(false)
 
+	# Whatever beat was mid-flight — a hit-stop, the KO slow-mo — the world's
+	# clock leaves the fight at 1.0.
+	_fx.call("clear")
 	_throw.call("disarm")
 	if _ally_body != null:
 		_ally_body.visible = false
@@ -689,6 +1030,18 @@ func charged_ready() -> bool:
 		and _action == Action.READY and _charged_cooldown <= 0.0
 
 
+## Whether pressing Switch right now would do anything, and how long until it
+## would. §14 lists Switch beside Quick, Charged, Throw and Run, so the verb row
+## has to be able to grey it out and count it down the way it does the others —
+## and scripts/ui is not allowed to reach into `_switchboard` to find out.
+func switch_ready() -> bool:
+	return state == State.ACTIVE and _switchboard.refusal(_party, 1).is_empty()
+
+
+func switch_cooldown_left() -> float:
+	return _switchboard.seconds_left()
+
+
 ## True while the player's pal is committed and cannot move.
 func player_is_committed() -> bool:
 	return _action != Action.READY
@@ -713,6 +1066,40 @@ func outcome() -> String:
 
 func is_aiming() -> bool:
 	return _throw != null and bool(_throw.call("is_aiming"))
+
+
+## What the reticle should say about this throw, asked every frame like every
+## other readout here.
+##
+## `chance` is the odds of a DEAD-CENTRE hit — the ceiling the aim skill is
+## reaching for — computed by the same `catch_math.catch_chance` the landing orb
+## will use, so the number on the reticle and the roll that resolves can never
+## come from different arithmetic. A sloppier hit lands lower (the accuracy
+## term), which is the skill, not a lie in the display.
+##
+## When the throw would be refused, `reason` says which rule: a faint is a
+## mistake the player made, ownership is a rule they should stop testing, and
+## the reticle should name the one they are looking at (D08).
+func catch_preview() -> Dictionary:
+	if _enemy == null:
+		return {}
+	var owned := _opponent_is_trainer_owned()
+	if owned or _enemy.fainted:
+		return {
+			"legal": false,
+			"chance": 0.0,
+			"reason": "Team Tether's — cannot be caught" if owned else "fainted — too late",
+		}
+	var radius := 0.5
+	if _wild != null and _wild.has_method("body_radius"):
+		radius = float(_wild.call("body_radius"))
+	return {
+		"legal": true,
+		"chance": CATCH.catch_chance(
+			SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), "basic", 0.0, radius
+		),
+		"reason": "",
+	}
 
 
 func orbs_left() -> int:

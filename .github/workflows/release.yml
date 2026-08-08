@@ -7,11 +7,23 @@ name: Release
 # checking an export still works and useless as "the link I use to get the
 # game". This produces a permanent, no-login URL instead:
 #
-#   https://github.com/<owner>/<repo>/releases/latest/download/Tetherbound-windows.zip
+#   https://github.com/<owner>/<repo>/releases/download/latest/Tetherbound-windows.zip
 #
 # That URL is stable forever and always points at the newest build, which is
 # what the download button on the site links to. Nothing has to be edited when
 # a new build ships.
+#
+# NOTE THE URL SHAPE: `/releases/download/latest/…`, addressing the TAG named
+# "latest". It is NOT `/releases/latest/download/…`, which is a different
+# lookup — "the repository's latest release" — and which DELIBERATELY EXCLUDES
+# PRERELEASES. Because this workflow publishes with `prerelease: true` (below,
+# and correctly — this is a prototype), that second form returns 404 forever.
+#
+# The site shipped with the wrong one of those two. The .exe was built, verified
+# as a real PE32+ binary, verified by actually running it, uploaded, and sat
+# there fully downloadable while every visitor to the download page got an
+# error. Nothing in CI could have caught it: CI checks the artefact, and the
+# broken thing was the sentence pointing at it.
 #
 # Release, not debug. The CI export is `--export-debug` because a debug build
 # reports errors usefully in a test harness. What the owner plays on the Ally
@@ -135,8 +147,42 @@ jobs:
             The creature and character art are stand-ins; see
             `docs/decisions/D10`.
           files: Tetherbound-windows.zip
+          # Honest: this is a vertical-slice prototype, not a finished game.
           prerelease: true
+          # Requested, but GitHub will not honour it for a prerelease — the
+          # "latest release" pointer only ever names a full release. Kept so the
+          # intent is on the record, and so nobody reads its absence as the
+          # reason /releases/latest/ 404s. The download link does not depend on
+          # it; it addresses the tag directly. See the header.
           make_latest: true
+
+      # The check that would have caught the broken download page.
+      #
+      # Everything above verifies the BUILD: that the .exe is a real PE32+
+      # binary, that it is big enough not to be a stub, that it actually boots
+      # with ground under the player. All of it passed while the download button
+      # on the site returned 404 to every visitor, because the broken thing was
+      # not the artefact — it was the URL pointing at it.
+      #
+      # So: fetch the exact URL `site/index.html` links to, and fail if it does
+      # not serve bytes. Reading the link out of the page rather than repeating
+      # it here is the point — a copy would drift, and a check that verifies its
+      # own copy of the answer verifies nothing.
+      - name: The download link on the site must actually download
+        run: |
+          set -euo pipefail
+          URL="$(grep -o 'https://github.com/[^"]*Tetherbound-windows\.zip' site/index.html | head -1)"
+          if [ -z "$URL" ]; then
+            echo "no download link found in site/index.html"
+            exit 1
+          fi
+          echo "the site links to: $URL"
+          CODE="$(curl -sS -o /dev/null -w '%{http_code}' -L -r 0-1023 "$URL")"
+          echo "it answered: $CODE"
+          case "$CODE" in
+            200|206) echo "the download page works" ;;
+            *) echo "the download page is broken; visitors get $CODE"; exit 1 ;;
+          esac
 
   pages:
     needs: build

@@ -1,0 +1,958 @@
+{
+  "_comment": "The build palette. CONTENT, not tuning \u2014 this says what a piece IS, and data/config/building.json says how building FEELS. A number here that changes how placement feels is in the wrong file.",
+  "_comment_measured": "Every collider was MEASURED from the model's own glTF accessors by the script that generated this file, never typed. A piece that claims a footprint its art does not have is a wall you can walk through or a floor with an invisible kerb, and both read as physics bugs rather than as data errors.",
+  "_comment_anchor": "`cell` snaps to the middle of a 2m cell, `edge` to the middle of one of its four sides. Not a preference: the kit uses TWO origins. A floor's origin is the centre of its tile; a wall's is the bottom-centre of a 2m EDGE. Snapping both the same way puts every wall half a cell out, which reads as a rotation bug and is not one.",
+  "_comment_size_cells": "Footprint in 2m cells, used to sample the terrain under all four corners before allowing a placement. Roofs are named in the kit by their INTERIOR span in metres, so `Roof_RoundTiles_4x4` covers 2x2 cells and overhangs ~0.75m past them on every side.",
+  "_comment_scope": "The M8 list from MEADOWS_VERTICAL_SLICE.md: floor, wall, doorway/door, roof, fence \u2014 plus stairs and windows, which the kit gives for free and which a house needs. This comment used to end 'campfire, bed, pal bed, workbench, storage and berry plot are deliberately NOT here: each is a station with behaviour, not a piece of geometry', which was true and was also a permanent excuse, because nothing was ever going to write the behaviour. `scripts/building/station.gd` is now that behaviour, and ALL SIX are below: bed, pal bed and campfire arrived with the hook, and workbench, storage and berry plot arrived with M8's gathering, which is what the `_todo_` entries that used to sit at the top of this list were waiting on.",
+  "_comment_opening": "THE KIT SPLITS A DOOR IN TWO, and the two halves do not share an origin. A doorway wall or a door frame is a piece with a HOLE in it and is marked `opening`; the leaf that hangs in that hole is a separate model, and its origin is its HINGE EDGE rather than its centre. Measured off the accessors: Wall_Plaster_Door_Round is x -1.000..1.000 with the hole at x -0.650..0.655 (centre +0.003), and Door_1_Round is x -0.0463..1.0737 (centre +0.5137). Place the leaf at the wall's own origin and it hangs 0.511m to the right of the hole, half over the pier — which is exactly the 'half offset' the owner reported. So a leaf declares `hangs`, the offset in its OWN local frame that puts it in the middle of the opening, and structures.place() applies it after the yaw. This is the same class of trap as `anchor` above and has the same shape: two origins in one kit.",
+  "_comment_collider_boxes": "A piece with a hole in it needs MORE THAN ONE BOX or the hole is not a hole. `collider_centre`/`collider_extents` stay as the single measured bound — scripts/world/vegetation.gd reads them for the authored settlement — and `collider_boxes` is the honest shape where one box would seal a doorway shut. Two piers and a lintel, taken from the same accessors: the opening is 1.305m wide and clear to the arch springing line at 2.156m, which a 1.80m trainer walks through. The arch above that line is boxed off rather than followed; nothing in this game is tall enough for the difference to exist.",
+  "_comment_station": "A piece may carry a `station` block. If it does, `structures.place()` attaches the matching node from scripts/building/station.gd as a child called `Station`, and anything that station says is state comes back in the save file under the record's own `station` key. Everything else about a station piece is ordinary: same grid, same anchor, same measured collider, same record. A piece with NO `station` block behaves exactly as it did before stations existed, which is what keeps the twenty-eight above a non-event.",
+  "_comment_cost": "EVERY PIECE COSTS SOMETHING, and every number is TUNABLE. GAME_DESIGN.md 20 has building consume Wood/Stone/Fiber; scripts/building/station.gd called the seam in advance and this is it — the cost sits on the piece beside `model`, and the refusal sits in build_mode._check() beside 'too far away', because a refusal the player has to read is a placement refusal. build_mode also REFUNDS the cost in full when a piece is removed: building is free-form, there is no decay and no repair, and taxing a misplaced wall would only teach the player not to experiment with a grid they are aiming at with a thumbstick.",
+  "_comment_cost_shape": "Costs are priced off what the meadow actually yields (data/config/gathering.json): a tree is 12 wood, a boulder 8 stone, a bush 6 fiber with a knife. The reference build is the 20 tutorial's shelter-bed-campfire — a 2x2 cell cottage of four floors, seven plaster walls, a doorway, a door, a 2x2 roof, a bed and a campfire — which totals 72 wood, 28 stone and 32 fiber: about six trees, four boulders and six bushes. That is a session's work and not a chore, which is the bar CLAUDE.md sets for a temporary number.",
+  "_comment_cost_material": "Timber pieces are priced in wood, brick and plaster in stone, and anything woven, thatched or stuffed — roofs, beds, fences, doors — asks for fiber. Not decoration: it is what makes the three materials worth gathering separately, and it is why the brick cottage is the more expensive one.",
+  "pieces": {
+    "floor_wooddark": {
+      "display_name": "Wooden Floor",
+      "model": "res://assets/buildings/Floor_WoodDark.gltf",
+      "cost": {
+        "wood": 4
+      },
+      "category": "floor",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "collider_extents": [
+        1.0,
+        0.02,
+        1.0
+      ]
+    },
+    "floor_woodlight": {
+      "display_name": "Pale Wooden Floor",
+      "model": "res://assets/buildings/Floor_WoodLight.gltf",
+      "cost": {
+        "wood": 4
+      },
+      "category": "floor",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "collider_extents": [
+        1.0,
+        0.02,
+        1.0
+      ]
+    },
+    "floor_brick": {
+      "display_name": "Brick Floor",
+      "model": "res://assets/buildings/Floor_Brick.gltf",
+      "cost": {
+        "wood": 2,
+        "stone": 4
+      },
+      "category": "floor",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "collider_extents": [
+        1.0,
+        0.02,
+        1.0
+      ]
+    },
+    "floor_unevenbrick": {
+      "display_name": "Cobbled Floor",
+      "model": "res://assets/buildings/Floor_UnevenBrick.gltf",
+      "cost": {
+        "wood": 2,
+        "stone": 4
+      },
+      "category": "floor",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "collider_extents": [
+        1.0,
+        0.02,
+        1.0
+      ]
+    },
+    "wall_plaster_straight": {
+      "display_name": "Plaster Wall",
+      "model": "res://assets/buildings/Wall_Plaster_Straight.gltf",
+      "cost": {
+        "wood": 4,
+        "stone": 2,
+        "fiber": 2
+      },
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.56,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.562,
+        0.203
+      ]
+    },
+    "wall_unevenbrick_straight": {
+      "display_name": "Brick Wall",
+      "model": "res://assets/buildings/Wall_UnevenBrick_Straight.gltf",
+      "cost": {
+        "wood": 2,
+        "stone": 6
+      },
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ]
+    },
+    "wall_plaster_window_wide_round": {
+      "display_name": "Plaster Wall, Window",
+      "model": "res://assets/buildings/Wall_Plaster_Window_Wide_Round.gltf",
+      "cost": {
+        "wood": 4,
+        "stone": 2,
+        "fiber": 2
+      },
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ]
+    },
+    "wall_unevenbrick_window_wide_round": {
+      "display_name": "Brick Wall, Window",
+      "model": "res://assets/buildings/Wall_UnevenBrick_Window_Wide_Round.gltf",
+      "cost": {
+        "wood": 2,
+        "stone": 6
+      },
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ]
+    },
+    "wall_plaster_door_round": {
+      "display_name": "Plaster Wall, Doorway",
+      "model": "res://assets/buildings/Wall_Plaster_Door_Round.gltf",
+      "cost": {
+        "wood": 4,
+        "stone": 2,
+        "fiber": 2
+      },
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ],
+      "opening": true,
+      "collider_boxes": [
+        {
+          "_why": "left pier",
+          "centre": [-0.825, 1.5613, -0.111],
+          "extents": [0.175, 1.5613, 0.203]
+        },
+        {
+          "_why": "right pier",
+          "centre": [0.8275, 1.5613, -0.111],
+          "extents": [0.1725, 1.5613, 0.203]
+        },
+        {
+          "_why": "lintel, from the arch springing line up to the wall top",
+          "centre": [0.0, 2.6394, -0.111],
+          "extents": [1.0, 0.4834, 0.203]
+        }
+      ]
+    },
+    "wall_unevenbrick_door_round": {
+      "display_name": "Brick Wall, Doorway",
+      "model": "res://assets/buildings/Wall_UnevenBrick_Door_Round.gltf",
+      "cost": {
+        "wood": 2,
+        "stone": 6
+      },
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.561,
+        -0.111
+      ],
+      "collider_extents": [
+        1.0,
+        1.561,
+        0.203
+      ],
+      "opening": true,
+      "collider_boxes": [
+        {
+          "_why": "left pier",
+          "centre": [-0.825, 1.5613, -0.111],
+          "extents": [0.175, 1.5613, 0.203]
+        },
+        {
+          "_why": "right pier",
+          "centre": [0.8275, 1.5613, -0.111],
+          "extents": [0.1725, 1.5613, 0.203]
+        },
+        {
+          "_why": "lintel, from the arch springing line up to the wall top",
+          "centre": [0.0, 2.6394, -0.111],
+          "extents": [1.0, 0.4834, 0.203]
+        }
+      ]
+    },
+    "wall_arch": {
+      "display_name": "Open Arch",
+      "model": "res://assets/buildings/Wall_Arch.gltf",
+      "cost": {
+        "stone": 8
+      },
+      "category": "wall",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        1.5,
+        0.032
+      ],
+      "collider_extents": [
+        1.0,
+        1.5,
+        0.032
+      ]
+    },
+    "doorframe_round_brick": {
+      "display_name": "Door Frame, Stone",
+      "model": "res://assets/buildings/DoorFrame_Round_Brick.gltf",
+      "cost": {
+        "stone": 6
+      },
+      "category": "door",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.003,
+        1.291,
+        -0.057
+      ],
+      "collider_extents": [
+        0.802,
+        1.293,
+        0.239
+      ],
+      "opening": true,
+      "collider_boxes": [
+        {
+          "_why": "left jamb",
+          "centre": [-0.6806, 1.291, -0.057],
+          "extents": [0.1236, 1.293, 0.239]
+        },
+        {
+          "_why": "right jamb",
+          "centre": [0.678, 1.291, -0.057],
+          "extents": [0.121, 1.293, 0.239]
+        },
+        {
+          "_why": "head, from the arch springing line up",
+          "centre": [-0.0026, 2.3172, -0.057],
+          "extents": [0.8016, 0.2673, 0.239]
+        }
+      ]
+    },
+    "doorframe_round_wooddark": {
+      "display_name": "Door Frame, Timber",
+      "model": "res://assets/buildings/DoorFrame_Round_WoodDark.gltf",
+      "cost": {
+        "wood": 6
+      },
+      "category": "door",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.0,
+        1.273,
+        0.029
+      ],
+      "collider_extents": [
+        0.703,
+        1.282,
+        0.269
+      ],
+      "opening": true,
+      "collider_boxes": [
+        {
+          "_why": "left jamb",
+          "centre": [-0.6313, 1.273, 0.029],
+          "extents": [0.0723, 1.282, 0.269]
+        },
+        {
+          "_why": "right jamb",
+          "centre": [0.6313, 1.273, 0.029],
+          "extents": [0.0723, 1.282, 0.269]
+        },
+        {
+          "_why": "head, from the arch springing line up",
+          "centre": [0.0, 2.3024, 0.029],
+          "extents": [0.7035, 0.2524, 0.269]
+        }
+      ]
+    },
+    "door_1_round": {
+      "display_name": "Door",
+      "model": "res://assets/buildings/Door_1_Round.gltf",
+      "cost": {
+        "wood": 5,
+        "fiber": 2
+      },
+      "category": "door",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.514,
+        1.192,
+        0.003
+      ],
+      "collider_extents": [
+        0.56,
+        1.159,
+        0.06
+      ],
+      "hangs": [-0.511, 0.0, 0.0],
+      "station": {
+        "behaviour": "door",
+        "open_degrees": 92.0,
+        "swing_seconds": 0.32
+      }
+    },
+    "door_2_round": {
+      "display_name": "Panelled Door",
+      "model": "res://assets/buildings/Door_2_Round.gltf",
+      "cost": {
+        "wood": 6,
+        "fiber": 2
+      },
+      "category": "door",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.515,
+        1.192,
+        -0.003
+      ],
+      "collider_extents": [
+        0.558,
+        1.164,
+        0.13
+      ],
+      "hangs": [-0.512, 0.0, 0.0],
+      "station": {
+        "behaviour": "door",
+        "open_degrees": 92.0,
+        "swing_seconds": 0.32
+      }
+    },
+    "window_wide_round1": {
+      "display_name": "Window",
+      "model": "res://assets/buildings/Window_Wide_Round1.gltf",
+      "cost": {
+        "wood": 3,
+        "fiber": 2
+      },
+      "category": "window",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        1.879,
+        0.013
+      ],
+      "collider_extents": [
+        0.682,
+        0.863,
+        0.265
+      ]
+    },
+    "windowshutters_wide_round_open": {
+      "display_name": "Shutters",
+      "model": "res://assets/buildings/WindowShutters_Wide_Round_Open.gltf",
+      "cost": {
+        "wood": 3
+      },
+      "category": "window",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        -0.048,
+        1.917,
+        0.327
+      ],
+      "collider_extents": [
+        1.152,
+        0.824,
+        0.236
+      ]
+    },
+    "roof_roundtiles_4x4": {
+      "display_name": "Tiled Roof 2x2",
+      "model": "res://assets/buildings/Roof_RoundTiles_4x4.gltf",
+      "cost": {
+        "wood": 10,
+        "stone": 4,
+        "fiber": 6
+      },
+      "category": "roof",
+      "anchor": "cell",
+      "size_cells": [
+        2,
+        2
+      ],
+      "collider_centre": [
+        0.0,
+        1.609,
+        0.041
+      ],
+      "collider_extents": [
+        2.757,
+        2.125,
+        2.781
+      ]
+    },
+    "roof_roundtiles_4x6": {
+      "display_name": "Tiled Roof 2x3",
+      "model": "res://assets/buildings/Roof_RoundTiles_4x6.gltf",
+      "cost": {
+        "wood": 15,
+        "stone": 6,
+        "fiber": 9
+      },
+      "category": "roof",
+      "anchor": "cell",
+      "size_cells": [
+        2,
+        3
+      ],
+      "collider_centre": [
+        0.0,
+        1.601,
+        0.0
+      ],
+      "collider_extents": [
+        2.757,
+        2.117,
+        3.786
+      ]
+    },
+    "roof_roundtiles_6x6": {
+      "display_name": "Tiled Roof 3x3",
+      "model": "res://assets/buildings/Roof_RoundTiles_6x6.gltf",
+      "cost": {
+        "wood": 22,
+        "stone": 9,
+        "fiber": 13
+      },
+      "category": "roof",
+      "anchor": "cell",
+      "size_cells": [
+        3,
+        3
+      ],
+      "collider_centre": [
+        0.0,
+        2.054,
+        0.078
+      ],
+      "collider_extents": [
+        4.125,
+        2.836,
+        4.016
+      ]
+    },
+    "roof_roundtiles_6x8": {
+      "display_name": "Tiled Roof 3x4",
+      "model": "res://assets/buildings/Roof_RoundTiles_6x8.gltf",
+      "cost": {
+        "wood": 30,
+        "stone": 12,
+        "fiber": 18
+      },
+      "category": "roof",
+      "anchor": "cell",
+      "size_cells": [
+        3,
+        4
+      ],
+      "collider_centre": [
+        0.0,
+        2.054,
+        0.013
+      ],
+      "collider_extents": [
+        4.125,
+        2.836,
+        4.841
+      ]
+    },
+    "roof_front_brick4": {
+      "display_name": "Gable End, 2 wide",
+      "model": "res://assets/buildings/Roof_Front_Brick4.gltf",
+      "cost": {
+        "wood": 3,
+        "stone": 6
+      },
+      "category": "roof",
+      "anchor": "edge",
+      "size_cells": [
+        2,
+        1
+      ],
+      "collider_centre": [
+        0.016,
+        1.402,
+        0.23
+      ],
+      "collider_extents": [
+        2.2,
+        1.534,
+        0.565
+      ]
+    },
+    "roof_front_brick6": {
+      "display_name": "Gable End, 3 wide",
+      "model": "res://assets/buildings/Roof_Front_Brick6.gltf",
+      "cost": {
+        "wood": 4,
+        "stone": 9
+      },
+      "category": "roof",
+      "anchor": "edge",
+      "size_cells": [
+        3,
+        1
+      ],
+      "collider_centre": [
+        0.001,
+        2.126,
+        0.23
+      ],
+      "collider_extents": [
+        3.347,
+        2.258,
+        0.565
+      ]
+    },
+    "stairs_exterior_straight": {
+      "display_name": "Stone Steps",
+      "model": "res://assets/buildings/Stairs_Exterior_Straight.gltf",
+      "cost": {
+        "stone": 8
+      },
+      "category": "stair",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.398,
+        -0.038
+      ],
+      "collider_extents": [
+        1.0,
+        0.602,
+        1.039
+      ]
+    },
+    "stair_interior_simple": {
+      "display_name": "Staircase",
+      "model": "res://assets/buildings/Stair_Interior_Simple.gltf",
+      "cost": {
+        "wood": 12,
+        "fiber": 2
+      },
+      "category": "stair",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        2
+      ],
+      "collider_centre": [
+        0.003,
+        1.507,
+        -2.275
+      ],
+      "collider_extents": [
+        0.838,
+        1.517,
+        2.31
+      ]
+    },
+    "prop_woodenfence_single": {
+      "display_name": "Fence",
+      "model": "res://assets/buildings/Prop_WoodenFence_Single.gltf",
+      "cost": {
+        "wood": 2,
+        "fiber": 1
+      },
+      "category": "fence",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.001,
+        0.391,
+        0.0
+      ],
+      "collider_extents": [
+        1.032,
+        0.419,
+        0.06
+      ]
+    },
+    "prop_woodenfence_extension1": {
+      "display_name": "Fence, Weathered",
+      "model": "res://assets/buildings/Prop_WoodenFence_Extension1.gltf",
+      "cost": {
+        "wood": 2,
+        "fiber": 1
+      },
+      "category": "fence",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.01,
+        0.391,
+        -0.0
+      ],
+      "collider_extents": [
+        1.023,
+        0.419,
+        0.055
+      ]
+    },
+    "prop_woodenfence_extension2": {
+      "display_name": "Fence, Broken",
+      "model": "res://assets/buildings/Prop_WoodenFence_Extension2.gltf",
+      "cost": {
+        "wood": 2,
+        "fiber": 1
+      },
+      "category": "fence",
+      "anchor": "edge",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.019,
+        0.391,
+        -0.0
+      ],
+      "collider_extents": [
+        1.014,
+        0.419,
+        0.055
+      ]
+    },
+    "bed_simple": {
+      "_comment": "The trainer's bed: rest point and respawn point, per GAME_DESIGN.md \u00a720's 'safety, recovery, respawn and rest'. Capacity one, and that one is the player. STAND-IN ART \u2014 the extracted kit has no furniture at all, so scenes/building/bed.tscn is honest primitive geometry at honest dimensions rather than a crate dressed up as a bed. Swapping it is this one `model` line plus a re-measure.",
+      "display_name": "Bed",
+      "model": "res://scenes/building/bed.tscn",
+      "cost": {
+        "wood": 6,
+        "fiber": 8
+      },
+      "category": "bed",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.3,
+        0.0
+      ],
+      "collider_extents": [
+        0.5,
+        0.3,
+        1.0
+      ],
+      "station": {
+        "behaviour": "rest",
+        "rests": "player",
+        "capacity": 1,
+        "respawn": true
+      }
+    },
+    "pal_bed_straw": {
+      "_comment": "M6's pal bed. Somewhere a pal sleeps \u2014 NOT a workstation, and nothing here may ever make it one (CLAUDE.md: pals do not perform base jobs). CAPACITY IS ONE, so five pals need five beds; the reasoning is in the RestStation header in scripts/building/station.gd and this is the number to change if the owner wants the other answer. STAND-IN ART, same reason as the bed above.",
+      "display_name": "Pal Bed",
+      "model": "res://scenes/building/pal_bed.tscn",
+      "cost": {
+        "wood": 4,
+        "fiber": 10
+      },
+      "category": "bed",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.13,
+        0.0
+      ],
+      "collider_extents": [
+        0.8,
+        0.13,
+        0.8
+      ],
+      "station": {
+        "behaviour": "rest",
+        "rests": "pal",
+        "capacity": 1
+      }
+    },
+    "campfire_stone": {
+      "_comment": "Light now, cooking later (M9 owns food). `flame_node` names the node inside the art that holds the fire and its light, so the Hearth station can put it out without the code hard-coding a path into a scene. The collider is measured around the STONE RING ONLY and deliberately excludes the flame: a box the full 0.85m height of the fire would be an invisible wall you cannot walk up to the campfire through.",
+      "display_name": "Campfire",
+      "model": "res://scenes/building/campfire.tscn",
+      "cost": {
+        "stone": 8,
+        "wood": 3
+      },
+      "category": "light",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.001,
+        0.168,
+        -0.005
+      ],
+      "collider_extents": [
+        0.806,
+        0.175,
+        0.802
+      ],
+      "station": {
+        "behaviour": "hearth",
+        "light_radius": 6.0,
+        "lit_on_place": true,
+        "flame_node": "Flame"
+      }
+    },
+    "workbench_timber": {
+      "_comment": "M8's crafting bench. It does TWO things and both are real: it mends any worn tool for free (GAME_DESIGN.md 19, 'repair for free at appropriate station'), and it makes the five tools from data/recipes/crafting.json. Recipes name THIS piece id in their `station` key, so a later forge is a data entry rather than a code change. STAND-IN ART, same reason as the bed: the extracted kit has no furniture at all. The collider is the bench's own measured box, 1.6 x 0.7m and knee-to-hip high, so you can walk right up to it.",
+      "display_name": "Workbench",
+      "model": "res://scenes/building/workbench.tscn",
+      "cost": {
+        "wood": 12,
+        "stone": 4
+      },
+      "category": "station",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.53,
+        0.0
+      ],
+      "collider_extents": [
+        0.8,
+        0.53,
+        0.35
+      ],
+      "station": {
+        "behaviour": "workbench"
+      }
+    },
+    "storage_crate": {
+      "_comment": "Somewhere to put things down. `capacity` is TUNABLE and is SLOTS \u2014 half the trainer's 24, so a chest is a real decision about what to leave behind rather than a second bag. IT HOLDS ITEMS AND CANNOT HOLD A CREATURE: the only way in is an item id checked against items.json, and scripts/building/station.gd's Storage class carries the four-point argument for why that is structural rather than merely absent. CLAUDE.md: 'Never implement pal storage beyond five.' Real kit art for once \u2014 Prop_Crate is a 1.08m crate from the Quaternius Medieval Village pack, measured from its own glTF accessors.",
+      "display_name": "Storage Crate",
+      "model": "res://assets/buildings/Prop_Crate.gltf",
+      "cost": {
+        "wood": 10,
+        "fiber": 4
+      },
+      "category": "station",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.533,
+        0.0
+      ],
+      "collider_extents": [
+        0.542,
+        0.53,
+        0.542
+      ],
+      "station": {
+        "behaviour": "storage",
+        "capacity": 12
+      }
+    },
+    "berry_plot": {
+      "_comment": "GAME_DESIGN.md 21's farming half: plant, wait, harvest, no watering chores. EVERY NUMBER IN THE STATION BLOCK IS TUNABLE. It costs three berries to build and one to plant, and pays six a crop, so a plot is worth more than the wild bush it came from and still had to be earned. The three growth stages are NODE NAMES inside the art, shown one at a time the way the campfire's `Flame` is \u2014 which is what makes a half-grown plot visibly half-grown after a reload. The collider is the soil bed only and is ankle-high on purpose: a box the height of the bushes would be an invisible wall around the garden.",
+      "display_name": "Berry Plot",
+      "model": "res://scenes/building/berry_plot.tscn",
+      "cost": {
+        "wood": 4,
+        "fiber": 6,
+        "berries": 3
+      },
+      "category": "station",
+      "anchor": "cell",
+      "size_cells": [
+        1,
+        1
+      ],
+      "collider_centre": [
+        0.0,
+        0.07,
+        0.07
+      ],
+      "collider_extents": [
+        0.9,
+        0.07,
+        0.9
+      ],
+      "station": {
+        "behaviour": "berry_plot",
+        "seed_item": "berries",
+        "seed_count": 1,
+        "crop_item": "berries",
+        "crop_count": 6,
+        "grow_seconds": 240.0,
+        "sprout_until": 0.4,
+        "seedling_node": "Seedling",
+        "growing_node": "Growing",
+        "ripe_node": "Ripe"
+      }
+    }
+  }
+}

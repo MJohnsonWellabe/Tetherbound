@@ -17,7 +17,18 @@ extends SceneTree
 ## rubric was missing (`docs/reviews/MA-03`, the calibration miss).
 
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
-const BODY := preload("res://scripts/pals/pal_body.gd")
+## The SCENE, not the script.
+##
+## This used to be `preload(".../pal_body.gd")` and `BODY.new()`, which attaches
+## the script to a bare Node3D with none of the scene's children. Every
+## `@onready var _head := $Head` then resolves to null, `_ready` aborts on the
+## first one, and the creature never builds — so the tool wrote a card with
+## three reference bars and NOTHING BESIDE THEM, and kept doing it silently.
+##
+## That blank card went into a blind review as the roster shot, and the critic
+## led its verdict with "`_creatures.png` contains no creatures". It was right,
+## and about the tool rather than the game.
+const BODY := preload("res://scenes/pals/pal.tscn")
 const OUT := "res://shots/_creatures.png"
 
 ## Metres of the trainer, drawn as a reference bar beside every creature.
@@ -57,7 +68,7 @@ func _run() -> void:
 	var spacing := 2.2
 	var x := -spacing * (ids.size() - 1) * 0.5
 	for id: String in ids:
-		var body: Node3D = BODY.new()
+		var body: Node3D = BODY.instantiate()
 		body.species_id = id
 		world.add_child(body)
 		body.global_position = Vector3(x, 0.0, 0.0)

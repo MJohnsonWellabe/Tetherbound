@@ -17,10 +17,17 @@ extends Node3D
 
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const WATER_CONFIG := "res://data/config/water.json"
 
 ## Props are sunk very slightly so their bases never float over a slope. The
 ## terrain under a prop is sampled at a single point, but the prop has width.
 const SINK := 0.06
+
+## Fallback cell size for spatial batching. See `_build_batch`.
+const DEFAULT_BATCH_CELL := 64.0
+## Below this many instances a model is not worth splitting; the draw call costs
+## more than the culling saves.
+const CHUNK_ABOVE := 400
 
 var _placed: int = 0
 var _draw_calls: int = 0
@@ -35,12 +42,14 @@ func build(world_size: float) -> void:
 	_draw_calls = 0
 	_solid = 0
 	_tints.clear()
+	_meshes.clear()
 
 	var cfg: Dictionary = RULES.config()
 	if cfg.is_empty():
 		return
 	var field: RefCounted = HEIGHTFIELD.new()
 	var by_layer: Dictionary = RULES.all_placements(field, world_size, int(cfg.get("seed", 1)))
+	_drown(by_layer, field)
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should
 	# share one MultiMesh, or the draw-call saving is thrown away by the
@@ -59,25 +68,136 @@ func build(world_size: float) -> void:
 	_warn_about_shared_models(by_layer)
 
 
+## Remove anything the pond would be standing in.
+##
+## Applied AFTER placement rather than as a scatter rule, and on purpose: the
+## water's surface height is not a number anyone authored, it is the terrain's
+## own height at the pond's centre plus a fill depth. A rule in
+## `scatter_rules.gd` would have to sample the heightfield at a completely
+## different point from the one it is judging, which is not what that file's
+## `allowed(height, slope, distance)` signature means and not a shape worth
+## bending it into for one pond.
+##
+## The threshold is the water level, not the shoreline. Grass an inch above the
+## surface is a reed bed and is welcome; grass an inch below it is a bush
+## growing underwater, which is the artefact this exists to prevent.
+func _drown(by_layer: Dictionary, field: RefCounted) -> void:
+	var bodies: Array = _water_bodies(field)
+	if bodies.is_empty():
+		return
+	var removed := 0
+	for layer_name: String in by_layer.keys():
+		var kept: Array = []
+		for entry: Variant in (by_layer[layer_name] as Array):
+			var placement: Dictionary = entry
+			var at: Vector3 = placement["position"]
+			var drowned := false
+			for body: Dictionary in bodies:
+				var centre: Vector2 = body["centre"]
+				if Vector2(at.x, at.z).distance_to(centre) <= float(body["radius"]) \
+						and at.y < float(body["level"]):
+					drowned = true
+					break
+			if drowned:
+				removed += 1
+			else:
+				kept.append(placement)
+		by_layer[layer_name] = kept
+	if removed > 0:
+		print("[scatter] %d props removed from open water" % removed)
+
+
+## Water bodies with their surface heights resolved, read from the same config
+## the pond itself is built from.
+##
+## The height comes from the HEIGHTFIELD, which is the recipe the terrain was
+## baked from — the same answer `playground_world.ground_height_at` gets from the
+## baked data, arrived at independently. That is deliberate here and would be a
+## mistake in a test: a check that used the same call as the thing it checks
+## would be testing the call.
+func _water_bodies(field: RefCounted) -> Array:
+	var file := FileAccess.open(WATER_CONFIG, FileAccess.READ)
+	if file == null:
+		return []
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return []
+	var out: Array = []
+	for entry: Variant in (parsed as Dictionary).get("bodies", []):
+		var body: Dictionary = entry
+		var at: Array = body.get("centre", [0.0, 0.0])
+		var centre := Vector2(float(at[0]), float(at[1]))
+		out.append({
+			"centre": centre,
+			"radius": float(body.get("radius", 0.0)),
+			"level": float(field.call("height_at", centre.x, centre.y)) + float(body.get("fill", 1.2)),
+		})
+	# A stream is a chain of small discs here, exactly as `water.gd` records it.
+	# Nothing about the drowning test needed to learn what a ribbon is: "is this
+	# point inside a circle of water and below its surface" is the same question
+	# a hundred and fifty times over.
+	for entry: Variant in (parsed as Dictionary).get("streams", []):
+		var stream: Dictionary = entry
+		var fill := float(stream.get("fill", 0.5))
+		var start_width := float(stream.get("width_start", 1.6))
+		var end_width := float(stream.get("width_end", 3.4))
+		var spine: Array = field.call(
+			"channel_centreline", int(stream.get("channel", 0)), float(stream.get("sample", 2.5))
+		)
+		for i in spine.size():
+			var spot: Vector3 = spine[i]
+			var t := float(i) / float(maxi(1, spine.size() - 1))
+			out.append({
+				"centre": Vector2(spot.x, spot.z),
+				"radius": lerpf(start_width, end_width, t) + 0.5,
+				"level": spot.y + fill,
+			})
+	return out
+
+
 ## A model used by two layers cannot carry two different tints.
 ##
 ## Batches are grouped by MESH, and the per-layer tint override is looked up from
 ## the model. Sharing a model across layers is therefore silently
 ## last-writer-wins — which is exactly the kind of thing that shows up as one
 ## odd-coloured patch in a survey frame and takes an afternoon to trace.
+##
+## It warns on CONFLICTING OVERRIDES, not on sharing. Sharing alone is fine and
+## is in fact unavoidable: the nature pack has 42 models and every one of them is
+## already spoken for, so a new layer cannot be given a private set. Warning on
+## sharing made this fire six times the moment the tree skirts were added, for
+## six models that no layer tints at all — and a warning that cries wolf on
+## every build is one nobody reads on the build where it matters.
+##
+## It is still coarser than the truth, and deliberately so. `bushes` carries a
+## retexture and `tree_skirt` does not, so Fern_1 and Plant_1 still warn even
+## though that retexture is keyed on the material `Leaves_TwistedTree` and
+## neither model has it — both use plain `Leaves`, so nothing can actually
+## differ. Narrowing further means loading each mesh to intersect its material
+## names with the override's keys, and a warning that has to load geometry to
+## decide whether to fire is worse than one that occasionally over-reports. The
+## rule kept is: warn when two layers ASK for different things, and leave
+## "would it have mattered" to whoever reads it.
 func _warn_about_shared_models(by_layer: Dictionary) -> void:
 	var owner_of: Dictionary = {}
+	var overrides_of: Dictionary = {}
 	for layer_name: String in RULES.config().get("layers", {}).keys():
 		if layer_name.begins_with("_"):
 			continue
 		var layer: Dictionary = RULES.config()["layers"][layer_name]
+		var mine := {
+			"retint": layer.get("retint", {}),
+			"retexture": layer.get("retexture", {}),
+		}
 		for entry: Variant in (layer.get("models", []) as Array):
 			var model := str(entry)
-			if owner_of.has(model) and owner_of[model] != layer_name:
-				push_warning("%s is in both '%s' and '%s'; only one layer's retint can apply" % [
+			if owner_of.has(model) and owner_of[model] != layer_name \
+					and overrides_of[model] != mine:
+				push_warning("%s is in both '%s' and '%s' with DIFFERENT retints; only one can apply" % [
 					model.get_file(), owner_of[model], layer_name
 				])
 			owner_of[model] = layer_name
+			overrides_of[model] = mine
 
 
 ## Materials, cached by source name so every tree in the meadow shares one.
@@ -184,28 +304,112 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 	return material
 
 
+## One model's placements, split into spatial cells.
+##
+## A MultiMesh has ONE bounding box for the whole batch, and Godot culls at that
+## granularity — so sixty thousand grass tufts spread over 512 metres are either
+## all drawn or none are, and from anywhere inside the meadow the answer is
+## always "all". That is the ceiling this file used to run into: density could
+## not go up because every extra tuft was drawn from every camera in the world.
+##
+## Cutting each model into `batch_cell`-metre cells gives each chunk its own AABB
+## and lets the frustum throw most of them away. It costs draw calls — one per
+## populated cell instead of one per model — which is the trade this project can
+## afford and the one the reviewer's highest-leverage item requires. Only the
+## genuinely big layers are split; below `CHUNK_ABOVE` instances the extra draw
+## call is worth more than the culling.
+##
+## ROG Ally note: the draw-call count is reported by `stats()` and the cell size
+## is a tunable in `vegetation.json`. Bigger cells mean fewer draw calls and
+## worse culling.
 func _build_batch(model_path: String, placements: Array) -> void:
+	var cell := float(RULES.config().get("batch_cell", DEFAULT_BATCH_CELL))
+	if placements.size() <= CHUNK_ABOVE or cell <= 0.0:
+		_emit_multimesh(model_path, placements, "")
+		_add_collision(model_path, placements)
+		return
+
+	var cells: Dictionary = {}
+	for entry: Variant in placements:
+		var placement: Dictionary = entry
+		var at: Vector3 = placement["position"]
+		var key := Vector2i(int(floor(at.x / cell)), int(floor(at.z / cell)))
+		if not cells.has(key):
+			cells[key] = []
+		(cells[key] as Array).append(placement)
+
+	# The chunks hang under ONE node named after the model, not off the root.
+	#
+	# Two other systems read this tree by NAME and neither should have to learn
+	# what a chunk is. `harvestable.gd` searches recursively and matches a batch's
+	# kind with `begins_with`, so it is fine either way; `tests/smoke_art.gd`
+	# checks that every layer in the config has a direct child of `Vegetation`
+	# named after one of its models, and chunking broke that outright — it
+	# reported grass, drygrass and flowers as "no props in the world" while
+	# seventy thousand of them were on screen. A grouping node keeps the name at
+	# the level the contract expects.
+	var group := Node3D.new()
+	group.name = model_path.get_file().get_basename()
+	add_child(group)
+	for key: Vector2i in cells.keys():
+		_emit_multimesh(model_path, cells[key], "_%d_%d" % [key.x, key.y], group)
+	# Collision stays ONE body for the model. Physics bodies are not frustum
+	# culled, so splitting them buys nothing and costs a node per cell.
+	_add_collision(model_path, placements)
+
+
+## The retinted mesh for a model, built once and shared by every chunk of it.
+##
+## Chunking turned one batch per model into up to sixty-four, and each of them
+## was re-instantiating the source PackedScene and rebuilding an ArrayMesh with
+## fresh surfaces — sixty-four identical copies of the same grass tuft, in
+## memory and in the load. A MultiMesh only ever READS its mesh, so one is
+## enough.
+var _meshes: Dictionary = {}
+
+
+func _ready_mesh(model_path: String) -> Mesh:
+	if _meshes.has(model_path):
+		return _meshes[model_path]
 	var mesh := _mesh_for(model_path)
+	if mesh == null:
+		return null
+	var layer_cfg := _layer_for(model_path)
+	var out := _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}))
+	_meshes[model_path] = out
+	return out
+
+
+func _emit_multimesh(model_path: String, placements: Array, suffix: String, into: Node = null) -> void:
+	var mesh := _ready_mesh(model_path)
 	if mesh == null:
 		push_error("scatter model %s could not be loaded; that layer will be missing" % model_path)
 		return
 
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	var layer_cfg := _layer_for(model_path)
-	multi.mesh = _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}))
+	multi.mesh = mesh
 	multi.instance_count = placements.size()
 
 	for i in placements.size():
 		var placement: Dictionary = placements[i]
-		var basis := Basis(Vector3.UP, float(placement["yaw"])).scaled(
-			Vector3.ONE * float(placement["scale"])
-		)
+		var basis := Basis(Vector3.UP, float(placement["yaw"]))
+		# A LEAN, where the layer asks for one. Trees that all stand perfectly
+		# plumb are the second-loudest signature of generator output after even
+		# spacing — the critic named "uniform height, lean, canopy size and
+		# spacing" as one complaint. The tilt is about a horizontal axis chosen
+		# per prop, so a copse leans in several directions rather than combing.
+		var tilt := float(placement.get("tilt", 0.0))
+		if tilt != 0.0:
+			var axis := Vector3(cos(float(placement.get("tilt_dir", 0.0))), 0.0,
+				sin(float(placement.get("tilt_dir", 0.0))))
+			basis = Basis(axis, tilt) * basis
+		basis = basis.scaled(Vector3.ONE * float(placement["scale"]))
 		var spot: Vector3 = placement["position"]
 		multi.set_instance_transform(i, Transform3D(basis, spot - Vector3.UP * SINK))
 
 	var node := MultiMeshInstance3D.new()
-	node.name = model_path.get_file().get_basename()
+	node.name = model_path.get_file().get_basename() + suffix
 	node.multimesh = multi
 	# Shadow casting is per layer, and the small layers must not.
 	#
@@ -225,11 +429,10 @@ func _build_batch(model_path: String, placements: Array) -> void:
 		if bool(layer.get("casts_shadow", true))
 		else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	)
-	add_child(node)
+	(into if into != null else self).add_child(node)
 
 	_placed += placements.size()
 	_draw_calls += 1
-	_add_collision(model_path, placements)
 
 
 ## Give the solid layers real collision.
@@ -245,6 +448,9 @@ func _build_batch(model_path: String, placements: Array) -> void:
 func _add_collision(model_path: String, placements: Array) -> void:
 	var layer := _layer_for(model_path)
 	if layer.is_empty() or not bool(layer.get("collides", false)):
+		return
+	if bool(layer.get("collision_from_pieces", false)):
+		_add_piece_collision(model_path, placements)
 		return
 	var radius := float(layer.get("collision_radius", 0.5))
 
@@ -264,6 +470,71 @@ func _add_collision(model_path: String, placements: Array) -> void:
 		node.position = (placement["position"] as Vector3) + Vector3.UP * (shape.height * 0.5)
 		body.add_child(node)
 	_solid += placements.size()
+
+
+## Real box colliders for build pieces, from the catalogue's own measurements.
+##
+## A cylinder is right for a tree trunk and wrong for a wall. `pieces.json`
+## records every piece's collider as a measured centre and extents — read off
+## the glTF accessors by the script that generated the file, never typed — and a
+## 2m wall given a cylinder is an invisible barrel the player slides around the
+## outside of, in a cottage they were supposed to be able to walk into.
+##
+## The catalogue is READ. Nothing in `scripts/building/` is touched: the player's
+## build mode and the world's architecture agree about what a wall is because
+## they are looking at the same file, not because two files were kept in step.
+func _add_piece_collision(model_path: String, placements: Array) -> void:
+	var piece := _piece_for(model_path)
+	if piece.is_empty():
+		# A prop with no catalogue entry — a wagon, a crate — is scenery. Better
+		# no collision than a guessed box in the middle of the village green.
+		return
+	var centre: Array = piece.get("collider_centre", [0.0, 0.0, 0.0])
+	var extents: Array = piece.get("collider_extents", [0.5, 0.5, 0.5])
+	var offset := Vector3(float(centre[0]), float(centre[1]), float(centre[2]))
+	var half := Vector3(float(extents[0]), float(extents[1]), float(extents[2]))
+	if half.x <= 0.0 or half.y <= 0.0 or half.z <= 0.0:
+		return
+
+	var body := StaticBody3D.new()
+	body.name = "%s_Collision" % model_path.get_file().get_basename()
+	add_child(body)
+	for entry: Variant in placements:
+		var placement: Dictionary = entry
+		var scale := float(placement["scale"])
+		var yaw := float(placement["yaw"])
+		var shape := BoxShape3D.new()
+		shape.size = half * 2.0 * scale
+		var node := CollisionShape3D.new()
+		node.shape = shape
+		var basis := Basis(Vector3.UP, yaw)
+		# The collider's own offset turns with the piece. A wall's box is not
+		# centred on its origin — the origin is the bottom-centre of the edge it
+		# lies on — so rotating the piece without rotating the offset leaves the
+		# collision a third of a metre out of the wall, on the wrong side.
+		node.transform = Transform3D(basis, (placement["position"] as Vector3) + basis * (offset * scale))
+		body.add_child(node)
+	_solid += placements.size()
+
+
+## The catalogue entry for a model path, or an empty dictionary.
+## The catalogue carries comment keys alongside real pieces — three `_todo_*`
+## strings, at the time of writing — and a typed `Dictionary` assignment against
+## one of those aborts the whole lookup at runtime, silently, leaving every wall
+## in the settlement without collision. It printed eleven identical script errors
+## into the traversal smoke and nothing else went wrong, which is exactly how
+## much warning this class of bug gives.
+func _piece_for(model_path: String) -> Dictionary:
+	for id: String in RULES.pieces().keys():
+		if id.begins_with("_"):
+			continue
+		var entry: Variant = RULES.pieces()[id]
+		if not entry is Dictionary:
+			continue
+		var piece: Dictionary = entry
+		if str(piece.get("model", "")) == model_path:
+			return piece
+	return {}
 
 
 ## Which layer a model belongs to. Models are grouped by mesh for drawing, so the

@@ -13,15 +13,51 @@ extends CharacterBody3D
 
 const CONFIG_PATH := "res://data/config/movement.json"
 const VITALS := preload("res://scripts/player/player_vitals.gd")
+## M12's riding. Built as a child here rather than placed in the world scene: the
+## mount is a thing that happens TO the trainer, it needs nothing the trainer does
+## not already have, and a node in the scene file would be a fourth path to keep
+## pointed at him. See `scripts/pals/mount.gd`.
+const MOUNT := preload("res://scripts/pals/mount.gd")
+## The active party pal, walking beside the trainer. Same reasoning as `MOUNT`
+## above, one line up — see `scripts/pals/companion.gd`.
+const COMPANION := preload("res://scripts/pals/companion.gd")
+
+## The key this node owns inside `SaveManager`'s one envelope (D14).
+##
+## The TRAINER — where they are standing, what their meters read, and what they
+## have eaten. Not their items: those are `TrainerInventory`'s domain, because the
+## bag is a thing in its own right that a satchel and a chest also talk to.
+##
+## `SaveDirector` finds contributors by walking the tree for `save_data` /
+## `load_data` plus this constant, so being a save domain costs this file nothing
+## but the two methods at the bottom.
+const SAVE_DOMAIN := "trainer"
 
 signal landed(impact_speed: float, damage: float)
 signal died()
+## The trainer has walked into the world's rim band and is being eased back —
+## or has left it. Emitted on the TRANSITION, not per frame, so a HUD can show
+## "the meadow ends here" without filtering sixty duplicates a second. Nothing
+## listens yet; the fence ring in vegetation.json is the visible half.
+signal world_edge_resisted(active: bool)
 
 var vitals: RefCounted = VITALS.new()
 
 @export var camera_rig_path: NodePath
+## The trainer's bag. M9's `TrainerInventory` node, which is what `inventory()`
+## below hands out — see its header for the interface other systems call.
+@export var inventory_path: NodePath = NodePath("../TrainerInventory")
+## The world, for `ground_height_at`. Defaults to the parent, which is where the
+## playground puts the player; exported so a test scene can point elsewhere.
+@export var world_path: NodePath = NodePath("..")
 var _camera_rig: Node3D = null
 var _model: Node3D = null
+var _world: Node = null
+## The rider. Never null after `_ready`; ask it `is_mounted()` rather than
+## keeping a second flag here that could disagree with it.
+var _mount: Node = null
+## The follower. Also never null after `_ready`; ask `is_out()`.
+var _companion: Node = null
 
 var _walk_speed: float = 4.2
 var _sprint_speed: float = 7.6
@@ -51,13 +87,73 @@ var _sprinting: bool = false
 ## leaves the player hovering wherever combat happened to open.
 var _locomotion_enabled: bool = true
 
+## How far below the heightfield the body may legitimately sit before it is
+## treated as embedded rather than as noise.
+##
+## Not zero. The heightfield is SAMPLED and the collider is MESHED from it, so
+## the two disagree by centimetres on any slope, and a rescue that fired on every
+## such disagreement would be teleporting the player constantly. The observed
+## embedding was 0.52-0.74m, so this sits well clear of both.
+var _embed_tolerance: float = 0.35
+
+## Rescues so far, and how many get a warning before it goes quiet. A body that
+## embeds once is an incident; one that embeds every frame is a different bug,
+## and a log with ten thousand identical lines in it hides that rather than
+## showing it.
+var _embed_rescues: int = 0
+const EMBED_WARN_LIMIT := 5
+
+## --- the edge of the world --------------------------------------------------
+##
+## The baked terrain ends at half of terrain_playground.json's `world_size` and
+## past it there is no heightfield and no collision: a sprinting player crossed
+## the rim and simply fell out of the world. The boundary is a soft PUSH, not an
+## invisible wall you smack — inside the last few metres an inward force grows
+## with every metre of overshoot, so at a walk you drift to a stop and at a
+## sprint you wade a couple of metres in and are eased back out. The fence ring
+## in vegetation.json stands on the same line so the resistance has a visible
+## cause. A hard clamp two metres from the rim is the floor of last resort, for
+## whatever future force is stronger than the push.
+const TERRAIN_CONFIG_PATH := "res://data/config/terrain_playground.json"
+## Read from `world_size`; this default only covers a missing config.
+var _world_half: float = 256.0
+## Metres inside the rim where the push begins / where nothing can pass. The
+## fence ring stands at `_world_half - 6.0`, on the start of the band. TUNABLE —
+## overridable by a `world_edge` block in movement.json; defaults live here so
+## that file is not edited for a feature it never mentions.
+var _edge_band: float = 6.0
+var _edge_stop: float = 2.0
+## Inward acceleration per metre of overshoot. 18 turns a full 7.6 m/s sprint
+## around in under two metres of band (x = v / sqrt(k)).
+var _edge_push: float = 18.0
+var _at_world_edge: bool = false
+
 
 func _ready() -> void:
 	_load_config()
 	_camera_rig = get_node_or_null(camera_rig_path) as Node3D
 	_model = get_node_or_null(^"Model") as Node3D
+	_world = get_node_or_null(world_path)
+	if _world != null and not _world.has_method("ground_height_at"):
+		_world = null
 	if _camera_rig != null and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", self)
+	_build_mount()
+	_build_companion()
+
+
+func _build_mount() -> void:
+	_mount = MOUNT.new()
+	_mount.name = "Mount"
+	add_child(_mount)
+	_mount.call("bind", self, _camera_rig)
+
+
+func _build_companion() -> void:
+	_companion = COMPANION.new()
+	_companion.name = "Companion"
+	add_child(_companion)
+	_companion.call("bind", self, _camera_rig)
 
 
 func _load_config() -> void:
@@ -79,6 +175,12 @@ func _load_config() -> void:
 	_air_accel = float(loco.get("air_acceleration", _air_accel))
 	_turn_speed = float(loco.get("turn_speed", _turn_speed))
 
+	var edge: Dictionary = config.get("world_edge", {})
+	_edge_band = float(edge.get("band", _edge_band))
+	_edge_stop = float(edge.get("stop", _edge_stop))
+	_edge_push = float(edge.get("push", _edge_push))
+	_load_world_extent()
+
 	var jump: Dictionary = config.get("jump", {})
 	_gravity = float(jump.get("gravity", _gravity))
 	_fall_multiplier = float(jump.get("fall_gravity_multiplier", _fall_multiplier))
@@ -92,16 +194,135 @@ func _load_config() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _settling_after_load():
+		return
+	if is_mounted():
+		# THE TRAINER IS CARGO WHILE HE IS ON A CREATURE'S BACK. No gravity, no
+		# input, no `move_and_slide` — `mount.gd` puts him on the saddle every
+		# physics frame, and a body that also simulated would spend the frame
+		# falling out of a position something else keeps restoring.
+		#
+		# `is_on_floor()` therefore holds whatever it read on the frame he got on,
+		# which is true, and that is deliberate: `trainer_model` asks it to decide
+		# between the grounded clips and the jump clip, and a rider in a
+		# free-falling pose would be worse than a rider in a standing one.
+		#
+		# Vitals still tick, at rest. Riding does not cost the trainer stamina —
+		# his legs are not doing anything, the creature's are, and the creature has
+		# its own meter (`mount.Legs`). It regenerates while you ride, which is
+		# the small extra reason to.
+		velocity = Vector3.ZERO
+		_sprinting = false
+		vitals.tick(delta, false)
+		return
 	_track_airborne(delta)
 	_apply_gravity(delta)
 	_apply_movement(delta)
+	_resist_world_edge(delta)
 	_try_jump()
 
 	var falling_speed := -velocity.y
 	move_and_slide()
 	_resolve_landing(falling_speed)
+	_stay_above_ground()
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
+
+
+## Refuse to be underneath the terrain.
+##
+## `smoke_traversal` failed one run in three, and the counter said "the ground is
+## not continuous", which was a conclusion rather than a finding. Instrumented,
+## the same three words came out every time:
+##
+##     at -6.40, 0.57, 21.12   velocity 0.00, -54.06, 0.00
+##     terrain height 1.18, player 0.57, gap -0.61
+##     hit 0..5: Terrain  normal -0.00, -0.00, -1.00  (90.0 deg from up)
+##
+## The player is **inside the ground** — half a metre under the surface, gaining
+## fall speed it never converts into movement, in contact with six perfectly
+## axis-aligned VERTICAL faces. Not a hole, not a prop, not a slope past the
+## floor limit: embedded in the collision mesh, where depenetration can only push
+## sideways and `is_on_floor()` can never become true. Which is why the streak ran
+## for three thousand frames instead of ending in a fall.
+##
+## This is a floor of last resort, and D09 is the reason it is allowed to be one:
+## `ground_height_at` reads Terrain3D's own heightmap rather than asking the
+## physics server, so it is the one source that cannot be wrong in the way the
+## collider just was. When the two disagree about which side of the ground the
+## player is on, the heightfield wins.
+##
+## HONEST LIMIT: this contains the symptom, it does not explain it. Why the body
+## gets embedded at all — most likely a collision chunk rebuilding around it as
+## regions stream — is not established, and this net will keep it playable
+## rather than making it correct. It is deliberately silent about small
+## disagreements and loud about large ones, so if the real cause ever gets worse
+## the warnings say so instead of the net hiding it.
+func _stay_above_ground() -> void:
+	if _world == null:
+		return
+	var ground: float = float(_world.call("ground_height_at", global_position.x, global_position.z))
+	if is_nan(ground):
+		return
+
+	# The capsule sits at +0.9 local with a 1.8 height, so its base is exactly at
+	# the body origin: `global_position.y` IS the height of the feet.
+	var below := ground - global_position.y
+	if below <= _embed_tolerance:
+		return
+
+	global_position.y = ground
+	# The fall is over — it ended in the ground rather than on it. Leaving the
+	# accumulated speed would apply it again on the next frame and drive the body
+	# straight back in.
+	velocity.y = 0.0
+	_embed_rescues += 1
+	if _embed_rescues <= EMBED_WARN_LIMIT:
+		push_warning("player was %.2fm inside the terrain at %.1f, %.1f; lifted to the heightfield" % [
+			below, global_position.x, global_position.z
+		])
+
+
+## The world's extent, from the terrain's own config — the same file the
+## heightfield is baked from, so the boundary and the ground can never disagree
+## about where the ground stops.
+func _load_world_extent() -> void:
+	var file := FileAccess.open(TERRAIN_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary:
+		_world_half = float((parsed as Dictionary).get("world_size", _world_half * 2.0)) * 0.5
+
+
+## Ease the trainer back from the rim of the baked world. See the constants
+## above for why this is a force and not a wall.
+func _resist_world_edge(delta: float) -> void:
+	var band_start := _world_half - _edge_band
+	var over_x := absf(global_position.x) - band_start
+	var over_z := absf(global_position.z) - band_start
+	var pushing := over_x > 0.0 or over_z > 0.0
+
+	if over_x > 0.0:
+		velocity.x -= signf(global_position.x) * over_x * _edge_push * delta
+	if over_z > 0.0:
+		velocity.z -= signf(global_position.z) * over_z * _edge_push * delta
+
+	# The last-resort line. Position is clamped and only the OUTWARD component of
+	# velocity is cleared, so sliding along the rim still works.
+	var limit := _world_half - _edge_stop
+	if absf(global_position.x) > limit:
+		global_position.x = signf(global_position.x) * limit
+		if signf(velocity.x) == signf(global_position.x):
+			velocity.x = 0.0
+	if absf(global_position.z) > limit:
+		global_position.z = signf(global_position.z) * limit
+		if signf(velocity.z) == signf(global_position.z):
+			velocity.z = 0.0
+
+	if pushing != _at_world_edge:
+		_at_world_edge = pushing
+		world_edge_resisted.emit(pushing)
 
 
 func _track_airborne(delta: float) -> void:
@@ -163,6 +384,17 @@ func _face(direction: Vector3, delta: float) -> void:
 	_model.rotation.y = rotate_toward(_model.rotation.y, target_yaw, _turn_speed * delta)
 
 
+## Point the trainer's body somewhere directly, in radians.
+##
+## The body's own yaw is never touched — the capsule is axis-free and the camera
+## rig owns where "forward" is — so this turns the MODEL, which is the same thing
+## `_face` above turns. `mount.gd` is the caller: a rider who kept facing the way
+## he was walking when he got on would ride sideways.
+func set_model_yaw(yaw: float) -> void:
+	if _model != null:
+		_model.rotation.y = yaw
+
+
 func _try_jump() -> void:
 	if not _locomotion_enabled:
 		return
@@ -175,6 +407,37 @@ func _try_jump() -> void:
 	velocity.y = _jump_velocity
 	_jump_buffered_for = INF
 	_airborne_for = _coyote_time + 1.0   # consume coyote so one press is one jump
+
+
+## Something in the world hurt the trainer. Returns the damage actually taken.
+##
+## The ONE way anything other than a fall can damage the player, so that "what
+## can kill me" is a list of callers of this function rather than a search for
+## writes to `vitals.health`.
+##
+## GAME_DESIGN.md §14 says the trainer is not attacked while a fight is running
+## and, outside one, that aggressive wild pals can threaten them. The owner has
+## amended what "threaten" means when every owned pal is fainted: the creature
+## does not merely posture, it hurts you, and getting home is the answer. That
+## decision is `encounter_director.Hunt`'s to make and this is only where the
+## damage lands.
+##
+## The trainer has no way to hit back and is not going to get one. There is no
+## `attack()` beside this, no weapon slot, and no route into combat for the human
+## — CLAUDE.md's "human cannot fight" is a hard rule and being hurtable is not
+## the same thing as being a fighter.
+##
+## DEATH IS NOT IMPLEMENTED HERE. `died` is emitted, exactly as a lethal fall
+## already emits it, and nothing listens. §22's satchel, the respawn at the bed
+## and the "pals go home" rule are MEADOWS_VERTICAL_SLICE M9's player-death
+## bullet, with their own rules about dropped inventory.
+func hurt(amount: float) -> float:
+	if vitals.is_dead():
+		return 0.0
+	var dealt: float = vitals.take_damage(amount)
+	if dealt > 0.0 and vitals.is_dead():
+		died.emit()
+	return dealt
 
 
 func _resolve_landing(falling_speed: float) -> void:
@@ -203,7 +466,145 @@ func set_locomotion_enabled(enabled: bool) -> void:
 	_locomotion_enabled = enabled
 	if not enabled:
 		_jump_buffered_for = INF
+		# GETTING OFF IS PART OF LOSING CONTROL OF THE TRAINER, and this is the
+		# only place that has to know it. A fight opening, a menu opening and a
+		# death all come through here already, so riding does not add a fourth
+		# thing every one of them must remember to do — and the creature being
+		# ridden is the party's active pal, which is the creature the fight was
+		# about to deploy anyway.
+		if _mount != null and is_instance_valid(_mount):
+			_mount.call("forced_dismount")
 
 
 func locomotion_enabled() -> bool:
 	return _locomotion_enabled
+
+
+## --- riding -----------------------------------------------------------------
+##
+## The trainer forwards; `mount.gd` decides. Two accessors rather than a mirrored
+## flag, for `party_manager`'s reason: a second copy of a piece of state is a
+## second thing that can be wrong about it.
+
+func mount() -> Node:
+	return _mount
+
+
+func companion() -> Node:
+	return _companion
+
+
+func is_mounted() -> bool:
+	return _mount != null and is_instance_valid(_mount) and bool(_mount.call("is_mounted"))
+
+
+## --- the trainer's things ---------------------------------------------------
+
+## The bag, as the `inventory.gd` instance itself.
+##
+## Reached THROUGH the player because that is how the rest of the game already
+## asks — `scripts/pals/recovery.gd` looks for an `inventory()` on whatever it is
+## pointed at, and a gathering system holding the trainer would otherwise have to
+## know the shape of the world scene to find their pockets. It forwards and owns
+## nothing: `TrainerInventory` is the owner and the save contributor.
+func inventory() -> RefCounted:
+	var bag: Node = get_node_or_null(inventory_path)
+	if bag == null or not bag.has_method("inventory"):
+		return null
+	return bag.call("inventory") as RefCounted
+
+
+## --- save contributor -------------------------------------------------------
+##
+## Position, facing and vitals. A player who quits on a hilltop should not come
+## back at the spawn point with full health, and — the part that matters after M9
+## — a player who dies, wakes up at their bed and closes the window must not come
+## back standing where they died.
+
+func save_data() -> Dictionary:
+	var record: Dictionary = {
+		"x": global_position.x,
+		"y": global_position.y,
+		"z": global_position.z,
+		"yaw": 0.0 if _model == null else _model.rotation.y,
+	}
+	record.merge(vitals.to_record())
+	return record
+
+
+func load_data(data: Dictionary) -> void:
+	global_position = Vector3(
+		float(data.get("x", global_position.x)),
+		float(data.get("y", global_position.y)),
+		float(data.get("z", global_position.z))
+	)
+	# A restored body that keeps the velocity it had while the world was being
+	# rebuilt resumes that motion on the first frame.
+	velocity = Vector3.ZERO
+	_restore_to = global_position
+	_settle_frames = 0
+	if _model != null:
+		_model.rotation.y = float(data.get("yaw", _model.rotation.y))
+	vitals.from_record(data)
+
+
+## A RESTORED BODY DOES NOT SIMULATE UNTIL THERE IS GROUND UNDER IT.
+##
+## `SaveDirector` restores a frame after the scene is built, and the world is
+## still setting itself up at that point: `playground_world._ready()` awaits two
+## process frames for Terrain3D to publish its data before it drops the player
+## onto the baked ground. A position restored inside that window is a position
+## with no collision under it yet — and when the collision does arrive, the body
+## is INSIDE it.
+##
+## MEASURED, and it is not subtle: a trainer restored to 0, 0, 0 was ejected by
+## depenetration at 456 metres per second and was two kilometres away and still
+## accelerating three hundred frames later. It looked like a save bug ("the
+## trainer came back 2249m from where they were left") and it was a physics one.
+##
+## So the body holds still — no gravity, no input, no `move_and_slide` — until the
+## heightfield can answer for the spot it was restored to, and is then placed just
+## above it. D09: the height comes from `ground_height_at`, never a raycast. The
+## frame budget is a floor of last resort so a world with no heightfield at all
+## simulates normally rather than freezing the player forever.
+const RESTORE_SETTLE_FRAMES := 240
+## The same two metres `playground_world.SPAWN_CLEARANCE` drops a new player from,
+## and for the reason written there: the collision mesh is BAKED from the
+## heightfield and the two disagree by up to half a metre on a slope, so a body
+## put down flush against the sampled height can arrive inside the collider.
+##
+## A tenth of a metre was tried first. It produced exactly the 456 m/s ejection
+## this whole mechanism exists to prevent — the settle was working and the landing
+## was still inside the ground. Two metres and a short fall is the honest answer.
+const RESTORE_CLEARANCE := 2.0
+
+## Where a load put the body, while it waits for ground. `Vector3.INF` when there
+## is nothing to settle.
+var _restore_to: Vector3 = Vector3.INF
+var _settle_frames: int = 0
+
+
+func _settling_after_load() -> bool:
+	if _restore_to == Vector3.INF:
+		return false
+	velocity = Vector3.ZERO
+	global_position = _restore_to
+	_settle_frames += 1
+
+	if _world == null:
+		_restore_to = Vector3.INF
+		return false
+
+	var ground: float = float(_world.call("ground_height_at", _restore_to.x, _restore_to.z))
+	if not is_nan(ground):
+		global_position = Vector3(
+			_restore_to.x, maxf(_restore_to.y, ground + RESTORE_CLEARANCE), _restore_to.z
+		)
+		_restore_to = Vector3.INF
+		return false
+
+	if _settle_frames >= RESTORE_SETTLE_FRAMES:
+		push_warning("no heightfield under the restored trainer after %d frames; simulating anyway"
+			% RESTORE_SETTLE_FRAMES)
+		_restore_to = Vector3.INF
+	return true

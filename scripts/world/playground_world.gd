@@ -16,6 +16,7 @@ extends Node3D
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const WATER := preload("res://scripts/world/water.gd")
 
 ## Terrain3D.CollisionMode. 3 is FULL_GAME: real collision shapes across the
 ## loaded regions, which is what the character controller needs to walk on.
@@ -31,6 +32,7 @@ const SPAWN_CLEARANCE := 2.0
 
 var _terrain: Node3D = null
 var _vegetation: Node3D = null
+var _water: Node3D = null
 
 
 func _ready() -> void:
@@ -69,6 +71,9 @@ func _ready() -> void:
 	if _terrain.has_method("set_camera"):
 		_terrain.call("set_camera", _camera)
 	_place_player()
+	# Water before vegetation, so the scatter can ask where the pond is and
+	# refuse to plant a tree in it.
+	_fill_the_basin()
 	_dress_the_meadow()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_report_for_export_check()
@@ -333,6 +338,29 @@ func _build_texture_list() -> Object:
 ## unreadable, unmergeable, and impossible to retune. The seed makes it
 ## identical every run, so a survey frame taken today is comparable with one
 ## taken after a change.
+## Put water in the valley basin.
+##
+## The terrain has always had one broad low basin; nothing had ever been in it,
+## and the critic counted 0.7% desaturated pixels in the frame that looks
+## straight at it. `water.gd` explains how one disc becomes an irregular
+## shoreline. It is handed `ground_height_at` rather than finding the ground
+## itself, so the pond's surface is derived from the terrain recipe instead of
+## being a number somebody typed that the next terrain edit invalidates.
+func _fill_the_basin() -> void:
+	_water = WATER.new()
+	_water.name = "Water"
+	add_child(_water)
+	_water.call("build", ground_height_at)
+	var stats: Dictionary = _water.call("stats")
+	print("[playground] placed %d water bodies" % stats["bodies"])
+
+
+## The pond's surface height at a point, or NAN where there is no water. Read by
+## the scatter, which must not plant a meadow in a lake.
+func water_level_at(x: float, z: float) -> float:
+	return NAN if _water == null else float(_water.call("level_at", x, z))
+
+
 func _dress_the_meadow() -> void:
 	var config := _load_terrain_config()
 	_vegetation = VEGETATION.new()

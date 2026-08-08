@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/screen.gd" id="1_screen"]
+
+; The bare screen. Almost nothing is authored here on purpose — the panel, title,
+; rule and footer are built by `screen.gd` so that every screen in the game has
+; the same ones, and so a concrete screen's .tscn contains only what makes that
+; screen different from the others.
+;
+; Instance this directly for a screen that is only a title and a footer (a
+; confirmation, a message). Anything with content extends `screen.gd` and
+; authors its own scene, like `party_screen.tscn` does.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="Screen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_screen")
+title = "Screen"

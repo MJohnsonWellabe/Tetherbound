@@ -1,0 +1,71 @@
+[gd_scene load_steps=9 format=3]
+
+; A pal bed. A STAND-IN, and recorded as one.
+;
+; Same problem as the trainer's bed — the extracted kit has no furniture — and
+; the same answer: honest primitive geometry at honest dimensions rather than a
+; crate pretending. A straw mat in a low timber frame, 1.60 x 1.60m and 0.26m
+; tall, inside one 2m build cell.
+;
+; Deliberately a DIFFERENT SILHOUETTE from `bed.tscn`: square instead of long,
+; ankle-high instead of knee-high, no headboard. Two beds that read the same at
+; a glance are two beds the player will build in the wrong place, and §20 lists
+; "beds" and "pal beds" as separate categories.
+;
+; It is somewhere a pal sleeps. It is not a workstation and nothing about it
+; should ever suggest a pal is working — see the hard-rule note in
+; scripts/building/station.gd.
+
+[sub_resource type="StandardMaterial3D" id="mat_straw"]
+albedo_color = Color(0.5, 0.4, 0.18, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="mat_hay"]
+albedo_color = Color(0.63, 0.52, 0.25, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="mat_wood"]
+albedo_color = Color(0.26, 0.17, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="box_mat"]
+material = SubResource("mat_straw")
+size = Vector3(1.4, 0.16, 1.4)
+
+[sub_resource type="BoxMesh" id="box_mound"]
+material = SubResource("mat_hay")
+size = Vector3(1, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="box_rail_x"]
+material = SubResource("mat_wood")
+size = Vector3(1.6, 0.16, 0.14)
+
+[sub_resource type="BoxMesh" id="box_rail_z"]
+material = SubResource("mat_wood")
+size = Vector3(0.14, 0.16, 1.6)
+
+[node name="PalBed" type="Node3D"]
+
+[node name="Mat" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
+mesh = SubResource("box_mat")
+
+[node name="Mound" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21, 0)
+mesh = SubResource("box_mound")
+
+[node name="RailNorth" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -0.73)
+mesh = SubResource("box_rail_x")
+
+[node name="RailSouth" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0.73)
+mesh = SubResource("box_rail_x")
+
+[node name="RailWest" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.73, 0.08, 0)
+mesh = SubResource("box_rail_z")
+
+[node name="RailEast" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.73, 0.08, 0)
+mesh = SubResource("box_rail_z")

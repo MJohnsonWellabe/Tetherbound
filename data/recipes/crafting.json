@@ -1,0 +1,78 @@
+{
+  "_comment": "What the workbench can make. MEADOWS_VERTICAL_SLICE.md M8 asks for tools; GAME_DESIGN.md 20 says 'Recipes primarily unlock through discovering materials'. This is the smallest honest version of that: the five tools, priced in the four materials the meadow yields, and nothing else.",
+  "_comment_firewall": "What an ITEM is lives in data/items/items.json. What a BUILD PIECE costs lives on the piece in data/building/pieces.json. What a PROP yields lives in data/config/gathering.json. A recipe is the fourth relationship and is the only thing in this file — if a value here could change what an item IS, it is in the wrong file.",
+  "_comment_no_creatures": "Nothing here has an ingredient that came off a living thing. GAME_DESIGN.md 19: 'Do not create a meat/leather economy that assumes killing pals/wildlife.' Wood, Stone, Fiber, Berries. The day a recipe here wants hide or bone, the hard rule has been broken by whoever wrote it.",
+
+  "_comment_costs": "ALL TUNABLE, and all provisional. The chain they are built around is the one that has to work from an empty inventory: fallen timber and loose stones are gathered BARE-HANDED (data/config/gathering.json), which pays for the workbench, which makes a knife, which makes fiber worth taking, which makes an axe, which makes everything else. Every number below is priced so that no step in that chain needs the step after it.",
+  "_comment_station": "`station` names the build piece a recipe needs to be standing at. Every recipe here names the workbench; there is deliberately no craft-from-anywhere list, because a bench you never have to visit is a bench that need not exist.",
+  "_comment_discovery": "There is no unlock gating yet and the absence is deliberate rather than an oversight. 20's 'recipes unlock through discovering materials' needs somewhere to record what the player has seen, and inventing a discovery ledger for five recipes would be a system with one customer. When there is one, it goes here as a `discovered_by` key naming a material, and nothing in scripts/building/station.gd has to change to read it.",
+
+  "recipes": {
+    "axe": {
+      "display_name": "Axe",
+      "station": "workbench_timber",
+      "makes": "axe",
+      "count": 1,
+      "costs": {
+        "wood": 3,
+        "fiber": 2
+      }
+    },
+    "pickaxe": {
+      "display_name": "Pickaxe",
+      "station": "workbench_timber",
+      "makes": "pickaxe",
+      "count": 1,
+      "costs": {
+        "wood": 2,
+        "stone": 3
+      }
+    },
+    "knife": {
+      "_comment": "The cheapest of the five and the one the chain leans on: a knife turns a bush from one fiber into six, and everything with fiber in it is reachable after this. NOT a butchering tool — items.json carries the same note and GAME_DESIGN.md 19 is why.",
+      "display_name": "Knife",
+      "station": "workbench_timber",
+      "makes": "knife",
+      "count": 1,
+      "costs": {
+        "wood": 2,
+        "stone": 2
+      }
+    },
+    "hammer": {
+      "display_name": "Hammer",
+      "station": "workbench_timber",
+      "makes": "hammer",
+      "count": 1,
+      "costs": {
+        "wood": 4,
+        "stone": 2,
+        "fiber": 2
+      }
+    },
+    "fishing_rod": {
+      "_comment": "21's fishing half. The rod is craftable now; casting it is M10's and nothing here pretends otherwise.",
+      "display_name": "Fishing Rod",
+      "station": "workbench_timber",
+      "makes": "fishing_rod",
+      "count": 1,
+      "costs": {
+        "wood": 3,
+        "fiber": 4
+      }
+    },
+    "riding_saddle": {
+      "_comment": "M12. GAME_DESIGN.md 17 says traversal equipment is CRAFTED, so this is the line that makes riding reachable rather than granted — there is no saddle in the starting kit and none scattered in the meadow. ONE recipe, for the one generic saddle: the milestone's last bullet is 'no species-specific saddle clutter', and a second entry here would be that clutter arriving through the back door.",
+      "_comment_cost": "TUNABLE. Priced above every tool and payable without one: fiber is the bulk of it and bushes give fiber, so a saddle is a gathering trip rather than a tech step. Deliberately the most expensive thing the bench makes — it is the item that changes how far the meadow is.",
+      "_comment_no_hide": "Wood and fiber, and no leather. 19: 'Do not create a meat/leather economy that assumes killing pals/wildlife.' A saddle is the single most tempting place in this file to break that rule.",
+      "display_name": "Riding Saddle",
+      "station": "workbench_timber",
+      "makes": "riding_saddle",
+      "count": 1,
+      "costs": {
+        "wood": 4,
+        "fiber": 12
+      }
+    }
+  }
+}

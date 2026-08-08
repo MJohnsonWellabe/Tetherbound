@@ -1,0 +1,187 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/release_screen.gd" id="1_release"]
+
+; The six. Only what makes this screen different from the others is here — the
+; panel, title, rule and footer come from `screen.gd`, which reparents everything
+; below into its content area when the screen enters the tree.
+;
+; A GRID AND NOT A LIST, and that is the milestone rather than a preference.
+; MEADOWS_VERTICAL_SLICE.md M5: "Do not settle for a generic 'delete' dialog." A
+; column of six rows with a Delete button ticks every other bullet and fails that
+; one, because the player is not deleting a record — they are choosing between six
+; creatures they can see at once. Three across and two down is what fits six cards
+; wide enough to carry a name, a level, a health bar and a trait at 1920x1080.
+;
+; The appraisal sits BELOW the six rather than beside them, which is the one place
+; this screen departs from `party_screen.tscn`. There the detail column is right:
+; five rows and one panel fit side by side. Here a side panel would squeeze six
+; cards into a third of the width and the comparison — the entire point — would go
+; with it.
+;
+; THE APPRAISAL PANEL IS TWO COLUMNS, and that is a measured fix rather than a
+; layout preference. With one column the panel showed six lines of the thirteen
+; the worst-case pal produces: Attack, Defence, the trait, what the trait does and
+; the xp line were all below the fold, computed and logged and never drawn. M5
+; asks the player to "inspect meaningful info" before an irreversible press, and
+; half a stat block is not that. Turning `scroll_active` on would not have fixed
+; it either — nothing in the controller navigation scrolls that panel, so the
+; text would have stayed unreachable and merely looked reachable.
+;
+; The split is what the pal IS on the left (species, vitals, verdict, stat stars)
+; and what it CARRIES on the right (trait, what it does, distance to the next
+; level). `pal_card.gd` cuts it, so the party menu's one-column panel and this one
+; are still the same words about the same creature.
+;
+; CardTemplate is the one authored card. `release_screen.gd` removes it and
+; duplicates it six times, exactly as the party menu does with SlotTemplate and
+; the rename grid does with CellTemplate. Six hand-written copies here stay
+; identical for about a week.
+;
+; The card's minimum height is 140 and it used to be 178. The contents measure
+; about 134, so 178 was 44px of nothing per row and 88px across two rows — and
+; every one of those pixels was being taken from the panel underneath, which was
+; the only thing on the screen that did not have enough of them.
+;
+; The Tag line is on EVERY card, not only on the newcomer. A label that only one
+; card carries reads as an annotation somebody stuck on; a label every card
+; carries reads as a fact about all of them, which is what "five of these are
+; yours and one is not" is.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="ReleaseScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_release")
+title = "Six pals.  You may keep five."
+
+[node name="Body" type="VBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="Grid" type="GridContainer" parent="Body"]
+columns = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 10
+
+[node name="CardTemplate" type="PanelContainer" parent="Body/Grid"]
+visible = false
+custom_minimum_size = Vector2(0, 132)
+size_flags_horizontal = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Grid/CardTemplate"]
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Lines" type="VBoxContainer" parent="Body/Grid/CardTemplate/Pad"]
+theme_override_constants/separation = 4
+
+; "one of your five" / "just caught — not yours yet". Set in code, because which
+; answer a card gets is the one thing on this screen the player must not have to
+; work out.
+[node name="Tag" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines"]
+theme_override_font_sizes/font_size = 21
+text = ""
+
+[node name="Head" type="HBoxContainer" parent="Body/Grid/CardTemplate/Pad/Lines"]
+
+[node name="Name" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines/Head"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 30
+text = "—"
+
+[node name="Level" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines/Head"]
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 28
+text = ""
+
+; The same bar and the same green the fight and the party menu draw. Colour is
+; applied in code so a health bar that changes colour as it drains stays in one
+; place.
+[node name="Health" type="ProgressBar" parent="Body/Grid/CardTemplate/Pad/Lines"]
+custom_minimum_size = Vector2(0, 12)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Foot" type="HBoxContainer" parent="Body/Grid/CardTemplate/Pad/Lines"]
+
+[node name="Trait" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines/Foot"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
+text = ""
+
+[node name="Vitals" type="Label" parent="Body/Grid/CardTemplate/Pad/Lines/Foot"]
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 21
+text = ""
+
+; Whichever card the cursor is on, at length — the appraisal, the trait and what
+; the trait does, in `pal_card.gd`'s words. The same paragraph the party menu has
+; shown since M4: this is the last screen where a differently-worded second
+; opinion would help anybody.
+[node name="Detail" type="PanelContainer" parent="Body"]
+size_flags_vertical = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Detail"]
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Lines" type="VBoxContainer" parent="Body/Detail/Pad"]
+theme_override_constants/separation = 6
+
+[node name="Who" type="Label" parent="Body/Detail/Pad/Lines"]
+theme_override_font_sizes/font_size = 32
+text = "—"
+
+; The newcomer's sentence, full width and above both columns. It is a fact about
+; the whole card rather than about half of it, and at full width it is one line
+; instead of the two it would wrap to inside a column.
+[node name="Note" type="RichTextLabel" parent="Body/Detail/Pad/Lines"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 22
+text = ""
+
+[node name="Columns" type="HBoxContainer" parent="Body/Detail/Pad/Lines"]
+size_flags_vertical = 3
+theme_override_constants/separation = 40
+
+; What the pal IS. Species, level, health, the verdict word and the stat stars.
+[node name="Vitals" type="RichTextLabel" parent="Body/Detail/Pad/Lines/Columns"]
+bbcode_enabled = true
+scroll_active = false
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 22
+text = ""
+
+; What the pal CARRIES. The trait, what the trait does, and how far it is from
+; its next level — the three lines that were entirely below the fold.
+[node name="Trait" type="RichTextLabel" parent="Body/Detail/Pad/Lines/Columns"]
+bbcode_enabled = true
+scroll_active = false
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 22
+text = ""
+
+; Refusals get their own full-width line at the bottom instead of being appended
+; to the appraisal text. Appended, the answer to "why did B not work" landed below
+; the fold of a panel that was already overflowing, so the one message this screen
+; has to deliver was the one thing it could not show.
+[node name="Notice" type="RichTextLabel" parent="Body/Detail/Pad/Lines"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 22
+text = ""

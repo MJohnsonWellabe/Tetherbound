@@ -17,6 +17,7 @@ extends Node
 
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const ORB_SCENE := preload("res://scenes/combat/orb.tscn")
+const FX := preload("res://scripts/combat/fx.gd")
 
 signal aim_entered()
 signal aim_exited()
@@ -47,15 +48,24 @@ var _cooldown: float = 0.0
 var _guard: float = 0.0
 
 var _speed: float = 17.0
+var _gravity: float = 14.0
+var _max_flight: float = 4.0
 var _spawn_height: float = 1.5
 var _spawn_forward: float = 0.6
 var _release_windup: float = 0.18
 var _throw_cooldown: float = 0.9
 
+## The dotted ballistic path drawn while aiming. Lazily built, hidden the
+## moment the aim closes, freed with the fight.
+var _arc: MeshInstance3D = null
+var _arc_mesh: ImmediateMesh = null
+
 
 func _ready() -> void:
 	var cfg: Dictionary = CATCH.config().get("throw", {})
 	_speed = float(cfg.get("speed", _speed))
+	_gravity = float(cfg.get("gravity", _gravity))
+	_max_flight = float(cfg.get("max_flight_time", _max_flight))
 	_spawn_height = float(cfg.get("spawn_height", _spawn_height))
 	_spawn_forward = float(cfg.get("spawn_forward", _spawn_forward))
 	_release_windup = float(cfg.get("release_windup", _release_windup))
@@ -79,6 +89,10 @@ func disarm() -> void:
 	if state == State.AIMING:
 		_leave_aim()
 	_despawn_orb()
+	if _arc != null and is_instance_valid(_arc):
+		_arc.queue_free()
+	_arc = null
+	_arc_mesh = null
 	state = State.IDLE
 	set_physics_process(false)
 
@@ -101,6 +115,9 @@ func _physics_process(delta: float) -> void:
 
 	if state == State.AIMING:
 		_tick_aiming(delta)
+		_draw_arc()
+	elif _arc != null:
+		_arc.visible = false
 
 
 func _tick_aiming(delta: float) -> void:
@@ -232,6 +249,111 @@ func _aim_camera() -> Camera3D:
 	if _camera_rig == null:
 		return null
 	return _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+
+
+## --- the arc preview --------------------------------------------------------
+##
+## The path the orb will fly, drawn while aiming, from the same origin and
+## direction `_release()` will use and integrated with the same step-and-gravity
+## arithmetic orb.gd flies (fx.simulate_arc). The reticle is a promise (D08);
+## this is the promise shown at full length — where the arc peaks and where it
+## comes down — which is the half of a ballistic throw a crosshair alone cannot
+## say. D06-safe: unshaded quads, no depth or screen reads.
+
+func _draw_arc() -> void:
+	var cfg: Dictionary = CATCH.config().get("arc_preview", {})
+	if not bool(cfg.get("enabled", true)) or _player == null:
+		return
+	var camera := _aim_camera()
+	if camera == null:
+		return
+	if _arc == null:
+		_build_arc()
+		if _arc == null:
+			return
+	_arc.visible = true
+
+	var origin := _player.global_position + Vector3.UP * _spawn_height
+	var forward := _aim_direction(camera, origin)
+	origin += forward * _spawn_forward
+
+	var points := FX.simulate_arc(
+		origin, forward, _speed, _gravity,
+		float(cfg.get("step_seconds", 0.05)), _max_flight, int(cfg.get("max_points", 60))
+	)
+	points = _clip_to_world(points)
+
+	# Dots SHRINK toward the landing point rather than fading: per-vertex alpha
+	# under the Compatibility renderer is how the first impact flash spent a
+	# survey invisible (impact_flash.gd), so the material carries the one alpha
+	# and the geometry carries the taper.
+	var size := float(cfg.get("dot_size", 0.11))
+	var right := camera.global_transform.basis.x
+	var up := camera.global_transform.basis.y
+	_arc_mesh.clear_surfaces()
+	if points.size() < 2:
+		return
+	_arc_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in range(1, points.size()):
+		var t := float(i) / float(points.size() - 1)
+		var half := size * (1.0 - 0.6 * t) * 0.5
+		var centre := points[i]
+		_arc_mesh.surface_add_vertex(centre - right * half - up * half)
+		_arc_mesh.surface_add_vertex(centre + right * half - up * half)
+		_arc_mesh.surface_add_vertex(centre + up * half)
+	_arc_mesh.surface_end()
+
+
+func _build_arc() -> void:
+	if _player == null or _player.get_parent() == null:
+		return
+	var cfg: Dictionary = CATCH.config().get("arc_preview", {})
+	_arc_mesh = ImmediateMesh.new()
+	_arc = MeshInstance3D.new()
+	_arc.name = "ThrowArcPreview"
+	_arc.mesh = _arc_mesh
+	_arc.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# The dots are placed in world space each frame; stated bounds so an
+	# ImmediateMesh with no surfaces yet cannot be culled before its first draw
+	# (the impact_flash lesson).
+	_arc.custom_aabb = AABB(Vector3.ONE * -40.0, Vector3.ONE * 80.0)
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.disable_receive_shadows = true
+	var colour := Color(str(cfg.get("colour", "#ffe9a8")))
+	colour.a = 0.85
+	material.albedo_color = colour
+	_arc.material_override = material
+	_player.get_parent().add_child(_arc)
+
+
+## Truncate the simulated flight at the first thing it would strike — the
+## ground, a rock, or the creature itself. The preview must not promise a path
+## through a hillside.
+func _clip_to_world(points: PackedVector3Array) -> PackedVector3Array:
+	if _player == null or points.size() < 2:
+		return points
+	var world := _player.get_world_3d()
+	if world == null:
+		return points
+	var space := world.direct_space_state
+	if space == null:
+		return points
+	var out := PackedVector3Array([points[0]])
+	for i in range(1, points.size()):
+		var query := PhysicsRayQueryParameters3D.create(points[i - 1], points[i])
+		query.collide_with_areas = false
+		if _player is CollisionObject3D:
+			query.exclude = [(_player as CollisionObject3D).get_rid()]
+		var hit: Dictionary = space.intersect_ray(query)
+		if not hit.is_empty():
+			out.append(hit["position"])
+			return out
+		out.append(points[i])
+	return out
 
 
 func _on_struck(target: Node3D, offset: float) -> void:

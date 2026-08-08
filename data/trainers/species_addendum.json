@@ -1,0 +1,52 @@
+{
+  "_comment": "SPECIES THAT BELONG IN data/pals/species.json AND ARE NOT IN IT YET.\n\nThis file exists for one reason and should stop existing for the same one: `data/pals/species.json` was owned by another agent for the whole of M13/M14, and the Meadows legendary has to be a real species — it goes into the player's party, it is saved, and `pal_instance.from_record()` rebuilds a saved pal by asking `pal_species.spawn()` for its id. A legendary that is not in the species table would join the party, save correctly, and then VANISH on the next load, silently, which is the worst available failure.\n\nSo `scripts/trainers/tether_roster.gd` merges these entries into the live species table at boot, before any save is restored. It is idempotent, it refuses to overwrite anything species.json already defines, and it prints what it added.\n\nTHE DAY species.json CAN BE EDITED: move the `species` block below into it verbatim, delete this file, and delete `tether_roster.register()` and its two call sites. Nothing else changes — everything downstream already treats these as ordinary species, because they are.",
+
+  "species": {
+    "meadows_legendary": {
+      "_comment": "GAME_DESIGN.md §28's first unique pal: Ground type, ultimate riding mount, held at the Meadows stronghold, 'exact species/asset to be chosen later'. It is not chosen here either, and the name below says so.",
+
+      "_comment_placeholder": "THIS CREATURE HAS NO ART AND THE PLACEHOLDER IS LABELLED SO IT CANNOT BE MISTAKEN FOR ANY.\n\n`model` is deliberately empty, so `pal_body._build_model()` declines and the capsule fallback draws instead — a 2.6m pale bone-coloured pill with a snout, which is honestly what this creature currently is. It is NOT a scaled-up Palehorn, and that was the tempting shortcut: the Stag model at 2.6m would photograph as a legendary and would then sit in the game for a year being one.\n\nWhy there is no model: the asset pass fetched and rejected the best free candidate on evidence — Styloo's dragon is a beautiful static mesh with zero clips on a 144-bone rig sharing only 47 bones with the knight, so nothing in this project or in any free pack retargets onto it (docs/ASSET_LEDGER.md). The ledger's own conclusion stands: the legendary does not have to be bought, it has to be MODELLED, and the Quaternius packs ship their CC0 `.blend` sources with rigs and clips to model it from.\n\nWHAT REPLACING IT COSTS: one rigged, animated mesh at `model`, six clip names under `animations`, a `model_scale` and a `model_yaw`. Nothing in code and nothing in any other data file. `pal_body` measures and fits whatever arrives.",
+
+      "display_name": "Meadows Legendary (unmodelled)",
+      "type": "ground",
+
+      "_comment_stats": "Above the whole wild roster and not absurdly so — it arrives AFTER the boss, so it cannot unbalance the fight it is the reward for, and it still has to be a creature the player deploys rather than an autowin. Highest HP and defence in the game, attack between Thornback's and Gloamfang's.",
+      "base_hp": 196.0,
+      "base_attack": 30.0,
+      "base_defence": 32.0,
+
+      "_comment_catch_rate": "ZERO, and it is a belt to the braces. §28 and §3 say the legendary is FREED and then OFFERS to join; there is no route in the game that throws an orb at it — it is never a wild pal, never spawned by the encounter director, and never an opponent in a fight. This makes the arithmetic agree with the fiction anyway.",
+      "catch_rate": 0.0,
+      "aggressive": false,
+
+      "placeholder": {
+        "colour": "#d8c79a",
+        "_comment_colour": "Bone-pale warm neutral. NOT oxblood: it is Team Tether's captive, not their equipment, and the reserved accent has to keep meaning them. Also nothing else in the roster is near this value — the meadow is olive and gold, the creatures are amber, crimson, grey and brown — so the placeholder at least reads as its own object in a frame.",
+        "height": 2.6,
+        "radius": 0.75,
+        "footprint_allowance": 2.0,
+        "model": "",
+        "_comment_unmodelled": "The flag `tests/smoke_art.gd` requires beside an empty `model`. That smoke fails any species with no art, and rightly — a missing model shows up as a capsule in a screenshot and nowhere else. This is the one declared exemption in the game, and it is a DECLARATION rather than a bypass: a typo still produces either a path that does not resolve or an empty path with no flag, and both still fail. Delete this line the day the model arrives; the smoke fails a species that is flagged unmodelled AND names a model, so it cannot be left behind.",
+        "unmodelled": true,
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "animations": {}
+      },
+
+      "_comment_ride": "§28: 'ultimate riding mount', 'substantially better traversal than normal riding pals', 'exceptional speed and/or huge jump'. M14's last bullet.\n\nWRITTEN AGAINST `scripts/pals/mount.gd`'s ACTUAL CONTRACT, which landed while this milestone was being built. Riding reads `rideable` and `ride` straight off the species definition — `mount.is_rideable()` and `mount.ride_data()` — so a species in the table with these two keys is rideable with no registration, no wiring and no code anywhere. That is why there is no hand-off call in `legendary_offer.gd`: there is nothing to hand off to.\n\nThe first draft of this block invented its own field names (`speed_multiplier`, `jump_multiplier`) against a system that did not exist yet, and every one of them would have been silently ignored. They are gone.",
+      "rideable": true,
+      "ride": {
+        "_comment_speed": "`speed_scale` multiplies `riding.base_speed` (9.0) and `riding.gallop_speed` (13.5) in movement.json. The three ordinary mounts are Palehorn 1.0 (the declared reference), Gloamfang 1.05 and Thornback 0.85.\n\n1.6 makes 'substantially better' a thing the player can feel in one ride rather than read in a menu: the legendary CANTERS at 14.4 m/s, which is faster than the fastest ordinary mount can GALLOP (14.2) — and cantering costs no stamina at all, while a gallop runs out in about eleven seconds. So the legendary is not 'a bit quicker', it is the only mount in the region that holds a gallop's pace forever. Its own gallop, at 21.6, is roughly three times the trainer's sustainable 6.1 on foot.\n\nTUNABLE, and the first number to turn if it makes the other three mounts pointless — which it may well; that is a playtest question, and §28 does ask for exactly that outcome.",
+        "speed_scale": 1.6,
+
+        "_comment_seat": "PLACEHOLDER MEASUREMENTS, and they must be re-measured the day the model lands. `back_height` is where the rider's hips go, and every other mount's was measured off the top of the fitted mesh's back under its idle clip (see species.json). This creature has no mesh, so 1.9 is simply 'well above the trainer's 1.05m hip, on a 2.6m animal'. It is the one number in this file that a real asset will certainly change.",
+        "back_height": 1.9,
+        "back_forward": -0.15
+      },
+
+      "_comment_ride_gap": "FLAGGED, NOT RESOLVED: §17 promises legendary mounts 'exceptional stamina', and stamina is not expressible per species — `riding.stamina` in movement.json is one global block, and that file belongs to M12. The legendary sidesteps it (its free canter is already faster than everyone else's gallop) rather than fixing it. A per-species `stamina_scale` in `ride` is the obvious shape if it is ever wanted.\n\nAlso: riding has no jump verb at all, so '§28's huge jump' half of 'exceptional speed and/or huge jump' is unmet by the whole system, not by this creature. The 'and/or' is what makes speed alone a legitimate reading."
+    }
+  },
+
+  "_comment_flag": "AN OPEN DESIGN QUESTION, FLAGGED AND NOT RESOLVED: §28 wants a GROUND legendary that is the ultimate mount, and every awe-inspiring free candidate found so far is a flyer. A ground creature that is 'substantially better' at traversal than a riding deer, in a world whose interesting geography is a 48-degree bluff it is not allowed to climb, is a harder brief than it sounds. Do not resolve it by quietly making the legendary an Air type or by quietly making it fly."
+}

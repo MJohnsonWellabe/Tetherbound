@@ -1,0 +1,37 @@
+{
+  "_comment": "How building FEELS. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'the grid is too coarse', 'I can't place it far enough away', 'the ghost is hard to read against grass' — every one of those has to be answerable by editing this file rather than by editing code.",
+  "_comment_firewall": "What a piece IS lives in data/building/pieces.json: its model, its footprint, its collider. If a value in this file could change the size or shape of a placed building, it is in the wrong file.",
+  "_comment_costs": "The build costs themselves are NOT in this file and never will be. A cost is a property of a PIECE, so it lives on the piece in data/building/pieces.json beside `model` — the firewall above is why: a number that changes what a wall costs is a number about that wall, not about how building feels. What lives here is the one cost RULE that is about the feel of the mode.",
+
+  "_comment_grid": "The grid is NOT tunable in the way the rest of this file is, and it is here to be read rather than turned. Every value was measured off the Quaternius kit's own glTF accessors: walls are 2.000m wide and 3.123m tall, floors are 2x2m, stairs rise exactly 1m. Changing these numbers without changing the art pack makes pieces stop meeting each other. They live in scripts/building/build_grid.gd as constants; these are the copies the placement rules quote, and D12 records why.",
+  "grid": {
+    "cell": 2.0,
+    "storey": 3.0,
+    "yaw_step_deg": 90.0
+  },
+
+  "_comment_reach": "How far from the trainer a piece may be placed, in metres. Far enough to build a wall without standing inside it, short enough that you cannot decorate a hillside you have never walked to.",
+  "reach": 9.0,
+  "_comment_reach_min": "Refuse placements closer than this, so a piece never spawns inside the player's own capsule.",
+  "reach_min": 1.6,
+
+  "_comment_ground": "Terrain rules for a foundation. `max_slope_deg` is checked across the piece's four footprint CORNERS rather than at its centre — a 2m tile can have a perfectly level centre while bridging a gully, and the corner check is the only one that notices. Sampled from the heightfield, never a raycast (D09).",
+  "max_slope_deg": 18.0,
+  "_comment_max_step": "Metres of height difference tolerated across a footprint. Belt and braces with the slope check: the slope can read flat across a small tile that still sits on a ledge.",
+  "max_step": 0.55,
+
+  "_comment_ghost": "The preview piece. Green where it can go, amber where it cannot — and it stays VISIBLE when refused rather than disappearing. combat_hud.gd learned this the hard way with cooldown verbs: 'the prompt row used to render [ ] for a verb on cooldown, which reads as a missing glyph rather than as a disabled button'. A ghost that vanishes reads as a broken preview; one that turns amber reads as an answer.",
+  "ghost_valid_colour": "#8fd694",
+  "_comment_ghost_invalid": "Amber, NOT the palette's tether_oxblood. palette.json reserves oxblood for Team Tether danger and says so in a `_reserved` key; a refused placement is a hint, not a threat.",
+  "ghost_invalid_colour": "#e0a05a",
+  "ghost_alpha": 0.55,
+
+  "_comment_door_reach": "How close the trainer has to be to work a door, in metres. Measured from the door's HINGE, which is at one edge of a 1.1m leaf rather than in the middle of it, so this has to reach across the leaf as well as across the gap the player is standing in. Generous on purpose: a door you have to line yourself up with is a door that reads as broken. The action is `interact` — the existing binding, E and gamepad button 2 — shared with picking up a satchel and engaging a wild pal.",
+  "door_reach": 3.0,
+
+  "_comment_removal": "Radius in metres within which a piece can be targeted for removal. Generous, because aiming at a wall you have already built is a chore and getting it wrong costs nothing while removal refunds in full.",
+  "remove_radius": 3.0,
+
+  "_comment_refund": "TUNABLE. Whether taking a piece down hands its materials back. TRUE, and in full: building is free-form, nothing decays and nothing needs repair, so a removal tax would only ever punish a player for misjudging a thumbstick — and this is a controller-first game aiming a ghost down a fixed line in front of the trainer, where misjudging it is the normal case. Turning this off, or making it partial, would be a design decision about whether experimenting with your own house should cost something, and it belongs to the owner rather than to a balance pass.",
+  "refund_on_remove": true
+}

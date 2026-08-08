@@ -1,16 +1,24 @@
 extends SceneTree
+
+## Throwaway probe. Round 4: "no character casts a shadow" — trainer, pal and
+## enemy all sit on the terrain with no contact while trees beside them cast.
+## Nothing in our code turns that off, so the question is whether the IMPORT
+## does.
+
 func _init() -> void:
-	for path in ["res://assets/pals/bramblit.fbx", "res://assets/pals/thornback.fbx"]:
-		var packed: PackedScene = load(path)
-		if packed == null: print(path, " FAILED"); continue
-		var s: Node = packed.instantiate(); root.add_child(s)
-		for sk in s.find_children("*", "Skeleton3D", true, false):
-			var skel := sk as Skeleton3D
-			var names: Array[String] = []
-			for i in skel.get_bone_count(): names.append(skel.get_bone_name(i))
-			print("%s  bones=%d" % [path.get_file(), skel.get_bone_count()])
-			print("  ", ", ".join(names.slice(0, 26)))
-		for ap in s.find_children("*", "AnimationPlayer", true, false):
-			print("  clips: ", (ap as AnimationPlayer).get_animation_list())
-		root.remove_child(s); s.queue_free()
+	for path in [
+		"res://assets/characters/knight.glb",
+		"res://assets/environment/stylized_nature/CommonTree_1.gltf",
+	]:
+		if not ResourceLoader.exists(path):
+			print(path, " MISSING")
+			continue
+		var n: Node = (load(path) as PackedScene).instantiate()
+		root.add_child(n)
+		for m in n.find_children("*", "MeshInstance3D", true, false):
+			var mesh := m as MeshInstance3D
+			print("%-28s %-22s cast_shadow=%d visible=%s" % [
+				path.get_file(), mesh.name, mesh.cast_shadow, mesh.visible
+			])
+		root.remove_child(n)
 	quit(0)

@@ -201,7 +201,23 @@ footer p{margin:.4rem 0}
   <p class="tagline">Five pals. No storage, no second chances at the roster. Your pal does the fighting — and you are in there with it.</p>
 
   <div class="get">
-    <a class="btn" href="https://github.com/MJohnsonWellabe/Tetherbound/releases/latest/download/Tetherbound-windows.zip">
+    <!--
+      /releases/download/latest/… — the TAG named "latest" — and NOT
+      /releases/latest/download/…, which is what this button used to point at
+      and which returned a 404 to everyone who clicked it.
+
+      The two URLs look like typos of each other and are completely different
+      lookups. `/releases/latest/` asks GitHub for "the latest release", and
+      that endpoint deliberately EXCLUDES prereleases. `release.yml` publishes
+      with `prerelease: true` — correctly, this is a prototype — so GitHub
+      answers 404 while the asset sits there perfectly downloadable under its
+      tag. The build was never broken; only the link was.
+
+      Do not "fix" a future 404 here by dropping `prerelease: true` from the
+      workflow. This form works whether or not the release is a prerelease,
+      because the tag is literally named `latest`.
+    -->
+    <a class="btn" href="https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M12 3v10.6l3.3-3.3 1.4 1.4L12 17.4l-4.7-5.7 1.4-1.4L12 13.6V3z"/>
         <path d="M4 19h16v2H4z"/>

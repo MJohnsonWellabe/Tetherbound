@@ -160,6 +160,51 @@ vertical_alignment = 1
 theme_override_font_sizes/font_size = 44
 text = "+"
 
+; The odds, on the reticle. catch_math computes a capture chance the moment the
+; orb lands; showing the dead-centre figure WHILE aiming is what turns "chip it
+; down first" from advice in a document into arithmetic on screen. When the
+; throw would be refused this shows the reason instead — a faint and an owned
+; creature are different mistakes and the reticle names the one being made.
+; Colour is applied in code from ui_style.
+[node name="ReticleInfo" type="Label" parent="Root"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 48.0
+offset_right = 300.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 34
+text = ""
+
+; The catch, announced. A caught creature is the best thing that happens in the
+; Meadows and the old announcement was the same 56px line every other outcome
+; got. This is the one element allowed to be louder: centred high, larger, gold
+; (applied in code from ui_style's energy-ready hue — the "you earned this"
+; colour the meter already teaches). Driven by catch_resolved, faded in code.
+[node name="CaughtBanner" type="Label" parent="Root"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -620.0
+offset_top = -240.0
+offset_right = 620.0
+offset_bottom = -140.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 84
+text = ""
+
 [node name="Outcome" type="Label" parent="Root"]
 anchors_preset = 8
 anchor_left = 0.5

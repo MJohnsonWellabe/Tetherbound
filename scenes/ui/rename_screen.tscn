@@ -1,0 +1,112 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/rename_screen.gd" id="1_rename"]
+
+; Name entry, for a pad. Only what makes this screen different from the others is
+; here — the panel, title, rule and footer come from `screen.gd`, which reparents
+; everything below into its content area when the screen enters the tree.
+;
+; A GRID OF LETTERS rather than a LineEdit, and that is not a stylistic
+; preference. `screen.gd` says it out loud about the mouse ("this is a
+; controller-first game and there is no mouse-look action in the input map at
+; all"); the same is true of the keyboard. A LineEdit on a ROG Ally is a text
+; field nobody can put a caret in. The grid is driven by the same `move_*`
+; actions and the same `menu_confirm` as every other screen, so a player who can
+; use the party menu can already use this.
+;
+; CellTemplate is the one authored key. `rename_screen.gd` removes it and
+; duplicates it sixty-eight times — sixty-five letters and three commands. Sixty-
+; eight hand-written copies here would not survive one layout change, and the
+; party screen's SlotTemplate already established the pattern.
+;
+; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
+; and stretches canvas_items, so this has to survive a desktop window too.
+
+[node name="RenameScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_rename")
+title = "Rename"
+
+[node name="Body" type="VBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+; What you have typed, above the keys rather than beside them. The one thing the
+; player is actually doing is building this string, and a name entry that hides
+; the name is the whole feature failing quietly.
+[node name="Entry" type="PanelContainer" parent="Body"]
+
+[node name="Pad" type="MarginContainer" parent="Body/Entry"]
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="Lines" type="VBoxContainer" parent="Body/Entry/Pad"]
+theme_override_constants/separation = 8
+
+[node name="Who" type="Label" parent="Body/Entry/Pad/Lines"]
+theme_override_font_sizes/font_size = 26
+text = ""
+
+[node name="Row" type="HBoxContainer" parent="Body/Entry/Pad/Lines"]
+
+[node name="Typed" type="Label" parent="Body/Entry/Pad/Lines/Row"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 54
+text = "_"
+
+; The counter is drawn ALWAYS, not only when the cap is reached. A limit the
+; player discovers by hitting it is a limit that reads as the game dropping
+; presses; a limit they can watch approach is a rule.
+[node name="Count" type="Label" parent="Body/Entry/Pad/Lines/Row"]
+horizontal_alignment = 2
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 28
+text = ""
+
+; Thirteen columns because the alphabet is twenty-six: uppercase is exactly two
+; full rows, lowercase exactly two more, and the digits plus three punctuation
+; keys exactly one. No half-empty row means no place where pressing down lands
+; the cursor somewhere it cannot get back from by pressing up.
+[node name="Grid" type="GridContainer" parent="Body"]
+columns = 13
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="CellTemplate" type="PanelContainer" parent="Body/Grid"]
+visible = false
+custom_minimum_size = Vector2(0, 62)
+size_flags_horizontal = 3
+
+[node name="Pad" type="MarginContainer" parent="Body/Grid/CellTemplate"]
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="Glyph" type="Label" parent="Body/Grid/CellTemplate/Pad"]
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 34
+text = ""
+
+; Space, Backspace and Done are KEYS ON THE GRID, not shoulder buttons. The stack
+; only ever hands a screen `navigate`, `confirm` and `cancel` — deliberately, so
+; no screen polls input behind its back — so a shoulder binding here would either
+; mean a new action in the input map or a screen reading raw input, and the
+; second is exactly what `screen_stack.gd` forbids in its header. Words on cells
+; also cost the player nothing to learn.
+[node name="Commands" type="HBoxContainer" parent="Body"]
+theme_override_constants/separation = 12
+
+[node name="Notice" type="RichTextLabel" parent="Body"]
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+custom_minimum_size = Vector2(0, 34)
+theme_override_font_sizes/normal_font_size = 26
+text = ""
