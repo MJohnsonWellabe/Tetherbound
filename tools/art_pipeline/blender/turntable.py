@@ -87,6 +87,27 @@ def load(path: pathlib.Path) -> None:
         bpy.ops.wm.obj_import(filepath=str(path))
     else:
         raise SystemExit(f"unsupported model format: {path.suffix}")
+    drop_import_phantoms()
+
+
+def drop_import_phantoms() -> None:
+    """Delete the unskinned mesh Blender's glTF importer invents on a rigged file.
+
+    It is not in the GLB — see strip_strays.py for the five-line reproduction —
+    but it IS in the scene this script renders, as a unit sphere at the origin.
+    A blind reviewer reported exactly that from these renders: "detached
+    geometry floating free in the sky, unattached to anything", and argued the
+    asset should be rebuilt. The asset was fine; the render was not. It also
+    doubles the measured bounds, so the camera framed every rigged model to a
+    sphere instead of to the creature.
+    """
+    meshes = [o for o in bpy.data.objects if o.type == "MESH"]
+    if not any(o.vertex_groups for o in meshes):
+        return
+    for obj in meshes:
+        if not obj.vertex_groups and not obj.data.materials:
+            print(f"  dropping Blender import phantom: {obj.name}")
+            bpy.data.objects.remove(obj, do_unlink=True)
 
 
 def world_bounds() -> tuple[Vector, Vector]:

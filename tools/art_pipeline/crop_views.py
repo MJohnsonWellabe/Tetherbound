@@ -127,6 +127,62 @@ def load_config() -> dict:
     return json.loads(CONFIG.read_text())
 
 
+def sheets(config: dict) -> dict:
+    """The species entries, without the notes sitting beside them.
+
+    views.json documents itself in `_comment` keys, and the wild roster's
+    entries needed two of those INSIDE `sheets` — the layout is shared by
+    thirteen species, so the explanation belongs with them and not in a
+    preamble a hundred lines away. Anything underscore-prefixed is prose.
+    """
+    return {name: spec for name, spec in config["sheets"].items()
+            if not name.startswith("_")}
+
+
+## How many pixels either side of a mask rectangle are sampled to find the
+## colour to fill it with. Wide enough to survive JPEG ringing around text,
+## narrow enough not to reach the figure the mask sits next to.
+MASK_RING = 5
+
+
+def apply_masks(sheet: Image.Image, spec: dict) -> Image.Image:
+    """Paint declared rectangles out in the local panel colour, before any cropping.
+
+    The wild sheets put each species' NAME and role line inside the same panel
+    as its hero illustration, close enough that no rectangle contains the
+    figure and excludes the words. Grandpa is the precedent for what happens
+    then: his crops each carried a sliver of a neighbouring figure and the
+    blind critique traced a floating dagger in one candidate straight back to
+    it. A generator models whatever is in frame, including letterforms.
+
+    Filled with the colour sampled from a ring just OUTSIDE each rectangle
+    rather than a constant, because the panels are not all the same grey and a
+    hard-coded fill would show as a patch — which the generator would then
+    model as a plate on the creature's flank.
+    """
+    rects = spec.get("mask")
+    if not rects:
+        return sheet
+    sheet = sheet.copy()
+    pixels = np.asarray(sheet)
+    height, width = pixels.shape[:2]
+    draw = ImageDraw.Draw(sheet)
+    for x0, y0, x1, y1 in rects:
+        ox0, oy0 = max(0, x0 - MASK_RING), max(0, y0 - MASK_RING)
+        ox1, oy1 = min(width, x1 + MASK_RING), min(height, y1 + MASK_RING)
+        ring = np.concatenate([
+            pixels[oy0:y0, ox0:ox1].reshape(-1, 3),
+            pixels[y1:oy1, ox0:ox1].reshape(-1, 3),
+            pixels[oy0:oy1, ox0:x0].reshape(-1, 3),
+            pixels[oy0:oy1, x1:ox1].reshape(-1, 3),
+        ])
+        if ring.size == 0:
+            raise SystemExit(f"mask {[x0, y0, x1, y1]} has no surrounding pixels to sample")
+        fill = tuple(int(c) for c in np.median(ring, axis=0))
+        draw.rectangle([x0, y0, x1 - 1, y1 - 1], fill=fill)
+    return sheet
+
+
 def sample_background(pixels: np.ndarray) -> np.ndarray:
     """The panel colour, taken from the crop's own border.
 
@@ -241,6 +297,62 @@ def flatten_background(crop: Image.Image, background: np.ndarray,
     return Image.fromarray(pixels.astype(np.uint8))
 
 
+## A divider column is faint but present: further from the panel than the
+## panel's own noise, far nearer than any drawn line on a creature.
+DIVIDER_MIN_DISTANCE = 15
+DIVIDER_MAX_DISTANCE = 105
+## Fraction of the band's height a column must hold at that faintness to be a
+## divider. A creature makes no column that is uniformly faint top to bottom.
+DIVIDER_COVERAGE = 0.42
+## Widest run of such columns that is still a divider and not a drawn edge.
+DIVIDER_MAX_WIDTH = 5
+
+
+def erase_dividers(sheet: Image.Image, band: tuple[int, int, int, int]) -> Image.Image:
+    """Paint out the thin grey rules the sheets draw between turnaround views.
+
+    Found the expensive way. Mudsnout's crops each carried the panel divider at
+    their left edge — one or two pixels of pale grey, easy to dismiss on a
+    contact sheet — and one of the three candidates generated from them came
+    back with a flat vertical PLANK standing behind the pig in all four views.
+    The generator modelled the line, exactly as Grandpa's modelled a sliver of
+    his neighbour.
+
+    Detected rather than declared, because the rules do not sit at the same x
+    on all four sheets and there are thirty-eight views. The signature is
+    unmistakable and nothing a creature can produce: a run of at most a few
+    columns that is faintly-but-consistently off-background down the WHOLE
+    height of the band. A drawn feature that tall is not that faint, and a
+    feature that faint is not that tall.
+    """
+    x0, y0, x1, y1 = band
+    pixels = np.asarray(sheet.crop((x0, y0, x1, y1)))
+    background = sample_background(pixels)
+    distance = distance_from(pixels, background)
+    faint = ((distance > DIVIDER_MIN_DISTANCE) & (distance < DIVIDER_MAX_DISTANCE))
+    columns = [i for i, share in enumerate(faint.mean(axis=0)) if share > DIVIDER_COVERAGE]
+
+    runs, run = [], []
+    for column in columns:
+        if run and column == run[-1] + 1:
+            run.append(column)
+        else:
+            if run:
+                runs.append(run)
+            run = [column]
+    if run:
+        runs.append(run)
+
+    sheet = sheet.copy()
+    draw = ImageDraw.Draw(sheet)
+    fill = tuple(int(c) for c in background)
+    for run in runs:
+        if len(run) > DIVIDER_MAX_WIDTH:
+            continue
+        draw.rectangle([x0 + run[0], y0, x0 + run[-1], y1 - 1], fill=fill)
+    return sheet
+
+
 def crop_boxes(name: str, spec: dict, config: dict,
                out_root: pathlib.Path) -> list[pathlib.Path]:
     """Cut explicitly-named boxes, bypassing band/centre/divider entirely.
@@ -248,7 +360,7 @@ def crop_boxes(name: str, spec: dict, config: dict,
     The escape hatch for a panel the automatic split cannot read — see the
     `veridian` entry in views.json for the case that earned it.
     """
-    sheet = Image.open(SHEETS / spec["file"]).convert("RGB")
+    sheet = apply_masks(Image.open(SHEETS / spec["file"]).convert("RGB"), spec)
     out_dir = out_root / name / "reference"
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / ".gdignore").touch()
@@ -278,7 +390,8 @@ def crop_sheet(name: str, spec: dict, config: dict,
     if not source.exists():
         raise SystemExit(f"missing reference sheet: {source}")
 
-    sheet = Image.open(source).convert("RGB")
+    sheet = apply_masks(Image.open(source).convert("RGB"), spec)
+    sheet = erase_dividers(sheet, tuple(spec["band"]))
     x0, y0, x1, y1 = spec["band"]
     band = np.asarray(sheet.crop((x0, y0, x1, y1)))
 
@@ -379,7 +492,7 @@ def write_grid(spec: dict, out_dir: pathlib.Path) -> pathlib.Path:
 
 def write_check_sheet(config: dict, out_root: pathlib.Path) -> pathlib.Path:
     """Every crop in one image, so a bad band or centre is visible at a glance."""
-    names = list(config["sheets"])
+    names = list(sheets(config))
     views = config["views"]
     cell, label = 320, 26
     sheet = Image.new("RGB", (cell * len(views), (cell + label) * len(names)), (24, 24, 26))
@@ -419,12 +532,12 @@ def main() -> None:
 
     if args.grid:
         target = ROOT / "shots" / "reference_grids"
-        for spec in config["sheets"].values():
+        for spec in sheets(config).values():
             print(write_grid(spec, target).relative_to(ROOT))
         return
 
     total = 0
-    for name, spec in config["sheets"].items():
+    for name, spec in sheets(config).items():
         written = crop_sheet(name, spec, config, out_root)
         total += len(written)
         print(f"{name:10s} {len(written)} views -> {written[0].parent.relative_to(ROOT)}")
