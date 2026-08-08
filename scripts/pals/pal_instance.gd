@@ -17,6 +17,15 @@ var species_id: String = ""
 var display_name: String = ""
 var pal_type: String = "ground"
 
+## What the player called it, or empty for "it kept its species name".
+##
+## Empty rather than a copy of `display_name` on purpose. GAME_DESIGN.md 10:
+## "New captures can keep species name by default" — and a party screen has to
+## be able to tell a Terrapup the player never renamed from one they
+## deliberately named "Terrapup". Copying the species name in would erase that
+## difference permanently, and the release ceremony needs it.
+var nickname: String = ""
+
 var max_hp: float = 1.0
 var attack: float = 1.0
 var defence: float = 1.0
@@ -40,7 +49,17 @@ static func from_species(id: String, definition: Dictionary) -> RefCounted:
 	instance.hp = instance.max_hp
 	instance.energy = 0.0
 	instance.fainted = false
+	instance.nickname = ""
 	return instance
+
+
+## What to put on a nameplate or a party row: the nickname if it has one.
+##
+## Every UI goes through this rather than reading `nickname` and falling back
+## itself, because the fallback is the rule and a screen that forgets it shows a
+## blank name.
+func label() -> String:
+	return display_name if nickname.strip_edges().is_empty() else nickname
 
 
 ## Apply damage. Returns true if THIS call caused the faint, so callers can fire

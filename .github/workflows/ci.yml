@@ -148,6 +148,23 @@ jobs:
         # thing between them.
         run: godot --headless --path . --script tests/smoke_aggression.gd
 
+      - name: Smoke-test the menu
+        # Opens the pause menu over the real world and closes it again. Unit
+        # tests cover the satchel's arithmetic and the five-pal cap; none of
+        # them can see the four things that make a menu shippable or not:
+        # the mouse is released and RESTORED to what it was (the world captures
+        # it and never gives it back), the tree actually pauses so the player
+        # is not walking while reading, something holds focus and the focus
+        # neighbours resolve — this ships on a handheld and a menu that needs a
+        # mouse is broken — and the menu yields the Escape/B button while a
+        # fight is running, because `menu_cancel` and `combat_run` share it.
+        #
+        # What it CANNOT check headlessly: mouse capture itself. The dummy
+        # DisplayServer reports VISIBLE whatever was asked for, so the test
+        # verifies the menu records and restores the mode it found and says so
+        # in its own output. The capture is the owner's to confirm on the Ally.
+        run: godot --headless --path . --script tests/smoke_menu.gd
+
       - name: Export Windows build
         run: |
           mkdir -p build/windows

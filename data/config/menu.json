@@ -1,0 +1,41 @@
+{
+  "_comment": "The pause menu, described rather than coded. The previous prototype kept its menu in src/data/pauseMenu.json for the same reason: adding a screen should be a JSON entry plus a tab script, never a new branch in the shell.",
+  "_comment_tabs": "Order is the on-screen order. `script` is the tab body; it must extend scripts/ui/menu_tab.gd. tests/test_menu_config.gd fails the build if a listed script is missing, because a typo'd path would otherwise show as a silently blank tab.",
+  "_comment_open": "`menu_cancel` is Escape / B. It is ALSO `combat_run`'s binding, so the menu refuses to open mid-fight — see docs/decisions/D14. `inventory` (I / Y) opens straight onto the backpack and works everywhere the menu does.",
+  "_comment_cycle": "`tool_cycle` (Q / left shoulder) steps to the next tab. Shoulder buttons are the handheld convention for this and there is no action bound to the RIGHT shoulder for menus; adding one means two new entries in project.godot's input map, which this agent may not write. Until then the tab row is focusable and left/right on it does the same job.",
+
+  "open_action": "menu_cancel",
+  "close_action": "menu_cancel",
+  "cycle_action": "tool_cycle",
+  "shortcuts": {
+    "inventory": "backpack"
+  },
+
+  "tabs": [
+    {
+      "id": "backpack",
+      "label": "Backpack",
+      "script": "res://scripts/ui/tab_backpack.gd"
+    },
+    {
+      "id": "pals",
+      "label": "Pals",
+      "script": "res://scripts/ui/tab_pals.gd"
+    },
+    {
+      "id": "build",
+      "label": "Build",
+      "script": "res://scripts/ui/tab_build.gd"
+    }
+  ],
+
+  "_comment_backpack": "`columns` x rows must equal autoload/inventory.gd's SLOT_COUNT, which tests/test_menu_config.gd checks. `hotbar_columns` is where the quick-select band ends; GAME_DESIGN.md 19 wants quick tool selection and this is the row it will live on.",
+  "backpack": {
+    "columns": 6,
+    "tile_width": 168,
+    "tile_height": 92
+  },
+
+  "_comment_footer": "The button legend. Written out because this ships on a handheld with no manual open beside it.",
+  "footer": "A  Select        B  Close        Q / LB  Next tab"
+}

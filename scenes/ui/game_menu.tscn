@@ -1,0 +1,83 @@
+[gd_scene load_steps=2 format=3]
+
+; The pause menu shell. Layout only; every tab body is built in code from
+; data/config/menu.json, so adding a screen never edits this file.
+;
+; Instanced by the GameState autoload rather than by a world scene, so it exists
+; in scenes nobody has written yet. See autoload/game_state.gd.
+
+[ext_resource type="Script" path="res://scripts/ui/game_menu.gd" id="1_menu"]
+
+[node name="GameMenu" type="CanvasLayer"]
+; Above the combat HUD (layer 1) and the playground HUD. The menu is the
+; frontmost thing on screen whenever it is up.
+layer = 20
+script = ExtResource("1_menu")
+
+[node name="Root" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+
+; The world stays visible behind the menu, dimmed. A full-screen opaque panel
+; would make the pause menu feel like leaving the game rather than stopping it.
+;
+; 0.92 rather than something gentler because the HUDs sit behind this. At 0.62
+; the M1 debug readout was fully legible down the left margin, outside the
+; panel, and read as text belonging to the menu. Outlined HUD text survives a
+; lot of dimming.
+[node name="Dim" type="ColorRect" parent="Root"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.02, 0.03, 0.02, 0.92)
+
+; Margins are generous because the Ally's screen is 7 inches and its bezel eats
+; the edges when it is held.
+[node name="Frame" type="MarginContainer" parent="Root"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 96
+theme_override_constants/margin_top = 56
+theme_override_constants/margin_right = 96
+theme_override_constants/margin_bottom = 56
+
+[node name="Panel" type="PanelContainer" parent="Root/Frame"]
+
+[node name="Body" type="VBoxContainer" parent="Root/Frame/Panel"]
+theme_override_constants/separation = 18
+
+[node name="Header" type="HBoxContainer" parent="Root/Frame/Panel/Body"]
+
+[node name="Title" type="Label" parent="Root/Frame/Panel/Body/Header"]
+theme_override_font_sizes/font_size = 40
+text = "Paused"
+
+[node name="Spacer" type="Control" parent="Root/Frame/Panel/Body/Header"]
+size_flags_horizontal = 3
+
+[node name="Day" type="Label" parent="Root/Frame/Panel/Body/Header"]
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.6, 0.62, 0.55, 1)
+text = "Day 1"
+
+[node name="Tabs" type="HBoxContainer" parent="Root/Frame/Panel/Body"]
+theme_override_constants/separation = 12
+
+[node name="Rule" type="HSeparator" parent="Root/Frame/Panel/Body"]
+
+[node name="Content" type="MarginContainer" parent="Root/Frame/Panel/Body"]
+size_flags_vertical = 3
+
+; One status line for the whole menu. Reserved height so a message appearing
+; does not shove the content up by a row.
+[node name="Status" type="Label" parent="Root/Frame/Panel/Body"]
+custom_minimum_size = Vector2(0, 34)
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.851, 0.702, 0.251, 1)
+
+[node name="Footer" type="Label" parent="Root/Frame/Panel/Body"]
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.55, 0.57, 0.52, 1)

@@ -19,6 +19,14 @@ run/main_scene="res://scenes/world/meadows_playground.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+; The project's one singleton, and it is meant to stay the only one. It owns the
+; party, the satchel and the day, and it stands up the pause menu so the menu
+; exists in every scene rather than being instanced into each world by hand.
+; See autoload/game_state.gd.
+Game="*res://autoload/game_state.gd"
+
 [display]
 
 ; ROG Ally is 1920x1080 at 7 inches. Authoring at native resolution and letting
