@@ -106,6 +106,30 @@ overrides were written against:
   the Meadows. Its presence brings life to the land. It is said the forest
   itself moves when it walks."*
 
+### Measured: how far each of these three references actually gets
+
+Production has now tested this file's warning that `09`–`11` "are too small to
+drive image-to-3D", and the answer is more specific than the warning was.
+
+| | body | head |
+|---|---|---|
+| Grandpa Elias | board `05` crops carried it | board `06`'s head close-up carried it |
+| Warden of the Meadows | board `06` carried it, via text-to-3D | **failed** |
+
+The technique that gives these characters faces is to generate the head on its
+own, so the whole polygon budget lands on it — a whole-figure pass spreads 30k
+polygons over a standing figure and an eye socket comes out smaller than the
+triangles available to describe it. That technique needs a clear head image as
+well as the budget. Grandpa has one. The Warden does not: his only reference is
+a figure on `06`, so a head crop is a ~165px region upscaled, and both
+head candidates came back as unreadable lumps.
+
+**The Warden is therefore the one character in the pack that still needs a
+proper `01`–`04`-quality sheet made before he can be finished.** His body is
+produced and in the game; his face is painted on and reads as a defect at
+close range. The legendary did not need one — board `06`'s stag is large and
+clear enough to have driven a usable model.
+
 `ROSTER_MANIFEST.md`'s production name **Terracrown** and board `06`'s
 **Veridian Stag** are the same character. Use Veridian Stag — the owner picked
 the art, and the art carries the name.

@@ -263,15 +263,26 @@ SPECIES_PROMPTS = {
     # tight: the two capitalised clauses are the two things every round-1
     # candidate got wrong, and they go first.
     "warden": (
-        "stylised human man, commanding antagonist officer. BOTH ARMS HANG "
-        "STRAIGHT DOWN AT HIS SIDES, clear of the body, five separated fingers "
-        "on each gloved hand. HIS FACE IS COVERED BY A HARD MASK: an angular "
-        "visor band across the eyes and a fitted plate over nose and mouth, "
-        "standing proud as solid panels. Short swept hair. Long "
-        "dark green officer's coat open to the shins with gold piping, "
-        "buttoned inner vest so the chest is clothed, thick cream fur collar, "
-        "long cream cape from BOTH shoulders, belt with two hip pouches, dark "
-        "trousers, ankle boots with folded cuffs. Seven heads tall, imposing"),
+        # Round 3. Round 2 fixed the pose and produced a clean coat, and the
+        # gate review then failed it on three counts: a slim waist-cinched
+        # CLOSED frock coat where the board has a broad heavy officer in an
+        # OPEN greatcoat, no cape at all, and — worst — "the face is a texture,
+        # not a mask ... a soft green splodge airbrushed across bare skin".
+        # It also failed him at distance: "coat, trousers, boots, hair and face
+        # markings all sit in one narrow green hue at essentially one value ...
+        # at 300px he is a vertical green rectangle". So the cream cape and
+        # cream fur ruff are stated as LARGE and PALE — they are the only
+        # value break the design has — and the mask is demanded as raised
+        # geometry rather than as a marking.
+        "stylised human man, BROAD HEAVY commanding officer, wide shoulders, "
+        "thick chest, not slim. BOTH ARMS HANG AT HIS SIDES clear of the body, "
+        "five fingers per gloved hand. HIS FACE IS COVERED BY RAISED SCULPTED "
+        "GEOMETRY: a hard visor band standing proud across the brow and a "
+        "fitted cloth wrap over nose and mouth, hard edged, thick, casting "
+        "shadow. Dark green officer's greatcoat worn OPEN, LARGE PALE CREAM "
+        "fur ruff heaped at the collar, LONG SPLIT PALE CREAM CAPE to the "
+        "ankles, cream inner vest, two LARGE BROWN leather hip pouches, wide "
+        "belt, dark trousers, ankle boots. Seven heads tall"),
     # Board 06's Veridian Stag, likewise owner-approved as the legendary.
     "veridian": (
         "majestic large forest stag guardian, four-legged deer anatomy, "
@@ -531,11 +542,34 @@ HEAD_PROMPTS = {
         "projecting nose with a defined tip and nostrils, closed smiling "
         "mouth with modelled lips, defined jaw and chin, ears. Big messy "
         "spiky swept hair falling over the forehead"),
+    # Round 2. The first head grafted cleanly and its FACE was right, but the
+    # gate review called the hair "an outright defect, not a style choice":
+    # a thick bright-white bouffant where the concept has thin receding grey,
+    # and in profile "a mass of blobby waxy lobes with random spikes poking
+    # through, like a cauliflower". It also found the face rounder and younger
+    # than the concept's gaunt, hollow-cheeked old man. Both are named here.
+    # The Warden's head crop is cut from board 06's full figure, so it is a
+    # ~165px region upscaled and visibly soft — REFERENCE_CANON.md's standing
+    # warning about this character's reference is that it is too small to drive
+    # image-to-3D. It is used anyway, because for a MASKED face the image only
+    # has to carry the layout (visor band across the eyes, wrap over nose and
+    # mouth, spiky hair above) and the prompt carries the form. If it returns
+    # mush, the body ships without a graft and the mask stays painted.
+    "warden": (
+        "stylised man's HEAD AND NECK ONLY, bust, no body, masked soldier. "
+        "A THICK HARD VISOR BAND across the eyes, standing proud of the face "
+        "as a raised rigid panel with sharp edges, and a separate FITTED MASK "
+        "PLATE covering nose and mouth, also raised and hard edged, so the "
+        "face is hidden behind two solid layers. Strong jaw below the mask, "
+        "short spiky swept hair, ears"),
     "grandpa": (
-        "stylised elderly man's HEAD AND NECK ONLY, bust, no body. Deep eye "
-        "sockets with eyelids and heavy brows, wrinkled forehead, projecting "
-        "nose, kind closed mouth, VOLUMETRIC full beard and moustache "
-        "covering the jaw, swept hair, round ears"),
+        "stylised elderly man's HEAD AND NECK ONLY, bust, no body. GAUNT "
+        "hollow-cheeked face, sharp cheekbones, lined and wrinkled, HIGH "
+        "RECEDING HAIRLINE with a bare forehead and only THIN SPARSE WISPY "
+        "grey hair swept back close to the skull, never thick, never a full "
+        "bouffant. Deep eye sockets with eyelids and heavy brows, projecting "
+        "bony nose, kind closed mouth, full grey beard and moustache in "
+        "combed directional strands covering the jaw, round ears"),
 }
 
 

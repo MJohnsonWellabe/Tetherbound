@@ -134,6 +134,82 @@ reading the code.
    entirely and deleted whole meshes. `graft_head.py` uses bmesh, which takes
    an explicit geometry list.
 
+## The gate, and it is not a clean sweep
+
+A blind reviewer was given the four finished turnarounds and their concept
+art, told nothing about how any of it was made, and asked §10's question:
+would a player see the model and the drawing side by side and identify them
+as the same designed character?
+
+| | verdict | reads at 3–6 m? |
+|---|---|---|
+| **Trainer** | **yes** | yes — "teal torso / cream midriff / dark legs / brown boots is a clean three-value stack" |
+| **Grandpa** | **yes**, "carried entirely by the wardrobe, not the face" | yes, strongly |
+| **Warden** | **NO** | **no** — "at 300px he is a vertical green rectangle" |
+| **Veridian Stag** | **NO**, decided by the side view | partial, and "for a reason the design didn't earn" |
+
+Two are recorded as embarrassing to ship as they stand:
+
+- **The Warden's face.** "The face is a texture, not a mask ... a soft green
+  splodge airbrushed across bare skin", which "reads as a rendering fault, and
+  it's the villain". The masked-face bet was right in principle and the
+  retexture did not carry it: a mask has to be raised geometry that casts a
+  shadow, not a marking. He also came out slim and closed-coated against a
+  board that shows a broad officer in an open greatcoat with a long cape, and
+  he fails at distance because coat, trousers, boots, hair and face all sit in
+  one green hue at one value.
+- **Grandpa's hair.** "An outright defect, not a style choice" — a thick
+  bright-white bouffant where the concept has thin receding grey, and in
+  profile "a mass of blobby waxy lobes ... like a cauliflower". He is an NPC
+  the player stands still in front of and talks to, so it is on screen large.
+
+### What the re-rounds fixed
+
+Both prompts were rewritten against those exact words and re-run, and both
+failures are addressed in what now ships:
+
+- **Grandpa's hair.** A second head generation, with the prompt naming a high
+  receding hairline and thin sparse hair and explicitly forbidding a full
+  bouffant, came back with directional swept strands and a visible hairline.
+  The face also came out gaunter and more lined, which was the review's
+  secondary complaint. Re-grafted, re-textured, re-rigged.
+- **The Warden.** A fourth round, prompted for a broad heavy build, an OPEN
+  greatcoat, a long pale cape and a large pale fur ruff, fixed the build and —
+  more importantly — fixed the distance failure. The reviewer's objection was
+  that "coat, trousers, boots, hair and face markings all sit in one narrow
+  green hue at essentially one value"; the full cream cape and heaped cream
+  ruff are now the largest shapes on him, so his silhouette carries a hard
+  light/dark break from any angle.
+
+### What the re-rounds did NOT fix: the Warden's face
+
+The trainer-and-Grandpa trick — generate the head alone, graft it — was tried
+on the Warden and **failed**. Both head candidates came back as unusable
+lumpen masses with no readable features at all.
+
+The cause is the one `REFERENCE_CANON.md` has warned about from the start:
+his only reference is a figure on board `06`, so a head crop is a ~165px
+region upscaled, and it is far too soft to drive image-to-3D. The head-only
+technique works because the generator gets a clear image AND the whole polygon
+budget; here it only got the budget.
+
+So he ships with a **painted** mask, which is the thing the gate called a
+rendering fault at close range. That is an accepted, recorded limitation
+rather than a solved problem, and the fix is not another generation round:
+**the Warden needs a proper `01`–`04`-quality reference sheet**, exactly as
+the canon file has said since it was written. He is not in the first fifteen
+minutes, so this does not block the opening sequence.
+
+The reviewer's other
+standing warning is recorded rather than acted on yet: **do the stag's antler
+pass before building a boss encounter around him**, because its rack "fuses
+into one backward-sweeping mass" in profile and writing camera work against a
+silhouette that falls apart from the side is how the mistake gets baked in.
+
+The trainer is judged shippable today apart from its backpack, which the
+concept draws as cream canvas with a stamped emblem and a teal bedroll, and
+which the model replaced with a generic brown pack.
+
 ## Known imperfections
 
 - **The clips are procedural.** Named above, repeated here because it is the
