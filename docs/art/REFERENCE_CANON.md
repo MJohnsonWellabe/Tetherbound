@@ -1,9 +1,25 @@
 # Reference canon — which art wins, and what each image is for
 
-The Meadows art pack contains **four different rosters**. They contradict each
-other on names, on types, and on which creatures exist at all. This file settles
-which is authoritative, so the question is answered once instead of by every
-agent that opens the folder.
+> ## ⚠ The wild roster has moved. `docs/art/wild/` wins.
+>
+> The owner has supplied a **Meadows Wild Canon Pack** — five production
+> sheets and four documents — and it is explicit: *"For the Meadows biome
+> wild-creature roster, treat the art and documents in this folder as the
+> current authoritative source of truth ... When a previous note or
+> placeholder conflicts with this pack, follow this pack."*
+>
+> So for the **twelve wild species and the one evolution**, read
+> `docs/art/wild/21_MEADOWS_WILD_ROSTER_CANON.md`, not the donor table below.
+> The sheets are in `docs/art/reference/wild/`, and unlike boards `05`–`08`
+> they are real turnarounds with palettes, scale charts and build notes — the
+> same quality as sheets `01`–`04`.
+>
+> The pack explicitly does **not** cover the three starters, the legendary,
+> Grandpa, the Warden or the player character. Everything this file says about
+> those still stands, and all six are already produced.
+>
+> What the pack changed, and what it retired, is in
+> `docs/decisions/D13-the-wild-roster-is-recanonised.md`.
 
 It agrees with `docs/art/README.md`, written by the owner, which already says the
 markdown wins: *"The image generator occasionally invented labels while rendering
