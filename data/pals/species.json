@@ -4,6 +4,10 @@
   "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
   "_comment_names": "Ids and display names come from `docs/art/ROSTER_MANIFEST.md` and are canon. The meshes under them do NOT: Bramblebun is a duck today and Tuskroot is a songbird, because both are stand-ins from the Plumberry pack (`docs/decisions/D10`). The pipeline in `docs/art/CLAUDE_BUILD_PROMPTS.md` replaces them.",
   "_comment_scale": "Creatures stand as PEERS to the 1.8m trainer, not as pets at his ankles. The owner set this after seeing the first three starters in the meadow: 'make the pals canonically about the same size as the character... I want them to have more emphasis and focus in the game'. Starters 1.55-1.70m, wild pals 1.35-2.00m so GAME_DESIGN.md 26's 'pal size should vary substantially' still holds around the new centre. The reference sheets' real-world sizes (Terrapup 0.45m at the shoulder) are the CREATURE'S biology, not its game scale, and the two are allowed to differ -- see docs/decisions/D12.",
+  "_comment_wild_stats": "TUNABLE, all of them. The wild roster's statlines are set from the sheets' own ROLE and STRENGTHS lines and from nothing else: a digger is tougher than a scout, a tracker hits harder than it takes, a shell is defence and a raptor is not. Nobody has played a fight with any of them yet, so treat every number below as a first guess that combat feedback is expected to move.",
+
+  "_comment_wild_heights": "Heights follow D13: D12's peer band, with the sheets' RELATIVE ordering preserved. The pack's own centimetre figures (Pipwing 0.25m body length, Galecrest 1.80m) are the creature's biology, not its game scale, exactly as sheets 01-04's figures already are. Pipwing and Bramblebun stay the smallest; Meadowhart, Galecrest and Tuskroot stay the largest.",
+
   "_comment_aggressive": "`aggressive` decides whether a wild pal will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL pal, and the same list allows 'Aggressive pal initiates' \u2014 so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
   "species": {
     "terrapup": {
@@ -114,6 +118,66 @@
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Produced by tools/art_pipeline from the owner's wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. Replaces the Plumberry duck that stood in for it. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        }
+      }
+    },
+    "mudsnout": {
+      "display_name": "Mudsnout",
+      "type": "ground",
+      "_comment": "The pre-evolution, and the only one in the biome (D13). A rooting runt: it is meant to read as young and unthreatening beside the thing it becomes, so it is the softest Ground creature in the roster and the second-easiest to catch after the practice rabbit.",
+      "base_hp": 100.0,
+      "base_attack": 17.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.5,
+      "aggressive": false,
+      "evolves_into": "tuskroot",
+      "_comment_evolution": "Recorded so the link survives in data. There is still no evolution SYSTEM in the project; this and tuskroot's `evolves_from` are the two ends of a rope nothing pulls on yet.",
+      "placeholder": {
+        "colour": "#8a6a44",
+        "height": 1.4,
+        "radius": 0.56,
+        "_comment_footprint": "A low piglet is much longer than it is tall.",
+        "footprint_allowance": 3.0,
+        "model": "res://assets/pals/tetherbound/mudsnout/models/pal_mudsnout_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "Wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md.",
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        }
+      }
+    },
+    "trailpup": {
+      "display_name": "Trailpup",
+      "type": "ground",
+      "_comment": "Tracker and flanker. The sheet's strengths are Speed, Tracking, Loyalty, so it is the roster's glass canine: it hits harder than anything else at its size and takes hits worse. Explicitly NOT the Ground starter -- no stone plates anywhere on it, which the canon pack names as a hard distinction.",
+      "base_hp": 105.0,
+      "base_attack": 23.0,
+      "base_defence": 15.0,
+      "catch_rate": 0.38,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#c2a173",
+        "height": 1.55,
+        "radius": 0.52,
+        "_comment_footprint": "Long-bodied and narrow -- the leanest silhouette in the Ground group.",
+        "footprint_allowance": 3.2,
+        "model": "res://assets/pals/tetherbound/trailpup/models/pal_trailpup_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "Wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md.",
         "animations": {
           "idle": "idle",
           "walk": "walk",

@@ -297,6 +297,62 @@ def flatten_background(crop: Image.Image, background: np.ndarray,
     return Image.fromarray(pixels.astype(np.uint8))
 
 
+## A divider column is faint but present: further from the panel than the
+## panel's own noise, far nearer than any drawn line on a creature.
+DIVIDER_MIN_DISTANCE = 15
+DIVIDER_MAX_DISTANCE = 105
+## Fraction of the band's height a column must hold at that faintness to be a
+## divider. A creature makes no column that is uniformly faint top to bottom.
+DIVIDER_COVERAGE = 0.42
+## Widest run of such columns that is still a divider and not a drawn edge.
+DIVIDER_MAX_WIDTH = 5
+
+
+def erase_dividers(sheet: Image.Image, band: tuple[int, int, int, int]) -> Image.Image:
+    """Paint out the thin grey rules the sheets draw between turnaround views.
+
+    Found the expensive way. Mudsnout's crops each carried the panel divider at
+    their left edge — one or two pixels of pale grey, easy to dismiss on a
+    contact sheet — and one of the three candidates generated from them came
+    back with a flat vertical PLANK standing behind the pig in all four views.
+    The generator modelled the line, exactly as Grandpa's modelled a sliver of
+    his neighbour.
+
+    Detected rather than declared, because the rules do not sit at the same x
+    on all four sheets and there are thirty-eight views. The signature is
+    unmistakable and nothing a creature can produce: a run of at most a few
+    columns that is faintly-but-consistently off-background down the WHOLE
+    height of the band. A drawn feature that tall is not that faint, and a
+    feature that faint is not that tall.
+    """
+    x0, y0, x1, y1 = band
+    pixels = np.asarray(sheet.crop((x0, y0, x1, y1)))
+    background = sample_background(pixels)
+    distance = distance_from(pixels, background)
+    faint = ((distance > DIVIDER_MIN_DISTANCE) & (distance < DIVIDER_MAX_DISTANCE))
+    columns = [i for i, share in enumerate(faint.mean(axis=0)) if share > DIVIDER_COVERAGE]
+
+    runs, run = [], []
+    for column in columns:
+        if run and column == run[-1] + 1:
+            run.append(column)
+        else:
+            if run:
+                runs.append(run)
+            run = [column]
+    if run:
+        runs.append(run)
+
+    sheet = sheet.copy()
+    draw = ImageDraw.Draw(sheet)
+    fill = tuple(int(c) for c in background)
+    for run in runs:
+        if len(run) > DIVIDER_MAX_WIDTH:
+            continue
+        draw.rectangle([x0 + run[0], y0, x0 + run[-1], y1 - 1], fill=fill)
+    return sheet
+
+
 def crop_boxes(name: str, spec: dict, config: dict,
                out_root: pathlib.Path) -> list[pathlib.Path]:
     """Cut explicitly-named boxes, bypassing band/centre/divider entirely.
@@ -335,6 +391,7 @@ def crop_sheet(name: str, spec: dict, config: dict,
         raise SystemExit(f"missing reference sheet: {source}")
 
     sheet = apply_masks(Image.open(source).convert("RGB"), spec)
+    sheet = erase_dividers(sheet, tuple(spec["band"]))
     x0, y0, x1, y1 = spec["band"]
     band = np.asarray(sheet.crop((x0, y0, x1, y1)))
 
