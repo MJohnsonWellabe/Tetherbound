@@ -11,7 +11,7 @@ one rule.
 
 Windows builds are published on every push to `main`:
 
-**[Download the latest build](https://github.com/MJohnsonWellabe/Tetherbound/releases/latest/download/Tetherbound-windows.zip)**
+**[Download the latest build](https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip)**
 
 ## Run it from source
 

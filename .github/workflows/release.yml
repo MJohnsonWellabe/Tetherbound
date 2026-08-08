@@ -7,11 +7,20 @@ name: Release
 # checking an export still works and useless as "the link I use to get the
 # game". This produces a permanent, no-login URL instead:
 #
-#   https://github.com/<owner>/<repo>/releases/latest/download/Tetherbound-windows.zip
+#   https://github.com/<owner>/<repo>/releases/download/latest/Tetherbound-windows.zip
 #
 # That URL is stable forever and always points at the newest build, which is
 # what the download button on the site links to. Nothing has to be edited when
 # a new build ships.
+#
+# Addressed by TAG, not by "latest release". The near-identical
+# `/releases/latest/download/<file>` form resolves through GitHub's idea of the
+# latest release, which excludes prereleases — and this release is a prerelease
+# (see below), and is the only one, so that form 404s. It did for every build
+# up to and including the one that added the produced character art: the asset
+# was uploaded and current, and the download button was dead. The tag here is
+# literally `latest` and is re-pointed on every push, so the by-tag form is
+# just as permanent and ignores the prerelease flag.
 #
 # Release, not debug. The CI export is `--export-debug` because a debug build
 # reports errors usefully in a test harness. What the owner plays on the Ally
@@ -132,10 +141,18 @@ jobs:
             `.pck` and the `.dll` next to it.
 
             This is a vertical-slice prototype in progress, not a finished game.
-            The creature and character art are stand-ins; see
-            `docs/decisions/D10`.
+
+            The three starters, the trainer, Grandpa, the Warden and the
+            Veridian Stag are produced from the project's own concept art.
+            The rest of the wild roster is still stand-ins.
           files: Tetherbound-windows.zip
+          # Truthfully a prerelease: this is a slice, not a game. Keeping the
+          # flag honest is why the download link is addressed by tag — see the
+          # note at the top of this file.
           prerelease: true
+          # No effect while `prerelease: true`; GitHub will not mark a
+          # prerelease as the latest release. Left in place so that clearing
+          # the prerelease flag one day does the right thing on its own.
           make_latest: true
 
   pages:

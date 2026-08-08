@@ -8,13 +8,33 @@ Published to GitHub Pages by `.github/workflows/release.yml` on every push to
 The button points at:
 
 ```
-https://github.com/MJohnsonWellabe/Tetherbound/releases/latest/download/Tetherbound-windows.zip
+https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip
 ```
 
 That URL is permanent and always resolves to the newest release asset, so
 shipping a new build is a push and nothing else. It also needs no login, which
 is the whole reason this exists — CI already uploaded a Windows build, but as a
 GitHub *artifact*, which expires after 14 days and requires signing in.
+
+### Why `/releases/download/latest/` and not `/releases/latest/download/`
+
+The two read almost identically and only one of them works here.
+
+`/releases/latest/download/<file>` resolves through GitHub's idea of *the
+latest release*, and that expressly **excludes prereleases**. The workflow
+publishes this build with `prerelease: true`, correctly — it is a vertical
+slice, not a finished game — and it is the only release in the repository, so
+there is no "latest" for GitHub to resolve and the URL returns **404**. It did,
+for every build up to and including the one that added the produced character
+art: the release asset was uploaded and current the whole time, and the button
+on this page was dead.
+
+`/releases/download/<tag>/<file>` addresses the release by tag instead. The tag
+is literally `latest` and the workflow re-points it at every push, so this form
+is exactly as permanent and does not care about the prerelease flag.
+
+Marking the release "not a prerelease" would also have fixed the link, and is
+the wrong fix: the flag is telling the truth.
 
 ## The images are real frames
 
