@@ -1,0 +1,27 @@
+{
+  "species": "pipwing",
+  "tier": "preview",
+  "prompt": "tiny round songbird creature, zippy flier. OVERSIZED ROUND TEAL EYES taking up much of the face, SMALL RAISED CREST of feathers on the crown. Slate blue-grey wing and back feathers over a cream face and round chest, tan accents, tiny orange beak, small orange feet, very small and very round, bright and quick. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, paddle tail, beaver tail, long legs, tall slender body, fox proportions",
+  "views": {
+    "front": "assets/pals/tetherbound/pipwing/reference/front.png",
+    "side": "assets/pals/tetherbound/pipwing/reference/side.png",
+    "back": "assets/pals/tetherbound/pipwing/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/pipwing/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019fe33e-827d-7cc0-995e-1a87cd6f3e6b"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019fe33e-8807-7d75-8718-c374d3b4243c"
+    },
+    {
+      "candidate": "c",
+      "task_id": "019fe33e-8dfa-7763-bef3-7a8160416cac"
+    }
+  ]
+}

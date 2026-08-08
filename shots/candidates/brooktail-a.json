@@ -1,0 +1,71 @@
+{
+  "model": "/home/user/Tetherbound/assets_raw/brooktail/a/model.glb",
+  "bounds": {
+    "min": [
+      -0.676,
+      -0.9316,
+      -0.9507
+    ],
+    "max": [
+      0.6809,
+      0.9344,
+      0.9463
+    ],
+    "size": [
+      1.3569,
+      1.866,
+      1.8971
+    ],
+    "height_m": 1.8971,
+    "longest_axis_m": 1.8971,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh0",
+      "vertices": 33209,
+      "edges": 87853,
+      "faces": 54836,
+      "triangles": 54836,
+      "tris": 54836,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 11198,
+      "boundary_edges": 11198,
+      "loose_vertices": 0,
+      "duplicate_vertices": 5770,
+      "components": 271,
+      "debris_components": 242,
+      "flipped_normals": 2473,
+      "uv_layers": 1,
+      "stretched_uv_faces": 5,
+      "materials": [],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 54836,
+    "vertices": 33209,
+    "materials": 0,
+    "animations": 0
+  },
+  "problems": [
+    "54,836 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
+    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (docs/reviews/MA-01, MA-02)",
+    "Mesh0: 11198 non-manifold edges",
+    "Mesh0: 5770 duplicate vertices \u2014 will split under deformation",
+    "Mesh0: 242 microscopic disconnected components",
+    "Mesh0: ~2473 inward-facing faces",
+    "Mesh0: 5 faces with texel density 4.0x off the median",
+    "Mesh0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.9507)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}

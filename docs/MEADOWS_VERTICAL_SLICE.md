@@ -254,8 +254,8 @@ Roles:
 ### Wild roster skeleton
 Ground:
 - rabbit
-- boar-like
-- canine → wolf evolution
+- rooting pig → armoured boar evolution
+- canine
 - rideable deer/horse
 - badger-like
 

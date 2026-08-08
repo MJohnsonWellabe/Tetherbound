@@ -1,0 +1,23 @@
+{
+  "species": "reedwing",
+  "tier": "preview",
+  "prompt": "waterfowl creature, swift glider and swimmer. BROAD FEATHERED WINGS layered for flight, ORANGE BILL and ORANGE WEBBED FEET. Teal and blue-grey layered wing feathers over a cream breast and neck with tan accents, buoyant duck-like body, long graceful neck, bright eyes. Must read as equally at home on water and in the air. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, paddle tail, beaver tail, long legs, tall slender body, fox proportions",
+  "views": {
+    "front": "assets/pals/tetherbound/reedwing/reference/front.png",
+    "side": "assets/pals/tetherbound/reedwing/reference/side.png",
+    "back": "assets/pals/tetherbound/reedwing/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/reedwing/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019fe33f-44b3-7d94-a3e8-3a88cfcd3969"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019fe33f-49b6-7cf3-b0fb-14d493f7023b"
+    }
+  ]
+}

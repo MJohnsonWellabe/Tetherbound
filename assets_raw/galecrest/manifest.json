@@ -1,0 +1,26 @@
+{
+  "species": "galecrest",
+  "tier": "preview",
+  "prompt": "large powerful hawk creature, aerial striker. ENORMOUS BROAD WINGS held open with long layered flight feathers, HOOKED DARK BEAK, HEAVY GRIPPING TALONS. Slate blue and tan layered plumage over a cream chest and face, fierce focused eyes, upright commanding raptor posture. A serious predator, NOT a small cute fox-eared glider. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, paddle tail, beaver tail, long legs, tall slender body, fox proportions",
+  "views": {
+    "side": "assets/pals/tetherbound/galecrest/reference/side.png",
+    "back": "assets/pals/tetherbound/galecrest/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/galecrest/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019fe33e-1661-7cad-b2c3-83ea15dab750"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019fe33e-1b64-76b0-90cf-1fbb579c28a1"
+    },
+    {
+      "candidate": "c",
+      "task_id": "019fe33e-1ff4-7d63-8ce8-87bda014134e"
+    }
+  ]
+}

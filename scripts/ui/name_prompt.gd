@@ -264,7 +264,14 @@ func _activate() -> void:
 
 
 func _confirm() -> void:
-	var chosen := _entry.sanitised()
+	# Typed explicitly rather than inferred. `_entry` is a bare RefCounted — the
+	# grid is loaded by path, not by class — so `sanitised()` has no declared
+	# return type to infer FROM, and `:=` here is a parse error that stops this
+	# whole file loading. The scene then instances as a scriptless CanvasLayer:
+	# no panel, no grid, and `confirmed` is not even a signal to connect to.
+	# Nothing caught it because the unit tests exercise `name_entry.gd`, which is
+	# fine, and nothing loads the panel.
+	var chosen: String = _entry.sanitised()
 	if chosen == "":
 		return
 	close()

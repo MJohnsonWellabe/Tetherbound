@@ -1,0 +1,23 @@
+{
+  "species": "brooktail",
+  "tier": "preview",
+  "prompt": "river otter creature, resourceful diver. SLEEK STREAMLINED BODY with a BROAD FLAT SCALED TAIL like a paddle, WEBBED FEET. Dense chocolate brown fur with a cream muzzle, throat and chest, long pale whiskers, small round ears, bright blue eyes, friendly clever face, semi-aquatic mammal proportions. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, long legs, tall slender body, fox proportions",
+  "views": {
+    "front": "assets/pals/tetherbound/brooktail/reference/front.png",
+    "side": "assets/pals/tetherbound/brooktail/reference/side.png",
+    "back": "assets/pals/tetherbound/brooktail/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/brooktail/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019fe33f-3622-778d-9b48-4fd5901c0227"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019fe33f-3b7a-76e1-9a61-b7577ca7483d"
+    }
+  ]
+}

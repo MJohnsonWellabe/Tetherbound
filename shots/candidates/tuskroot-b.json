@@ -1,0 +1,71 @@
+{
+  "model": "/home/user/Tetherbound/assets_raw/tuskroot/b/model.glb",
+  "bounds": {
+    "min": [
+      -0.4139,
+      -0.9476,
+      -0.5527
+    ],
+    "max": [
+      0.4166,
+      0.9448,
+      0.5479
+    ],
+    "size": [
+      0.8304,
+      1.8925,
+      1.1006
+    ],
+    "height_m": 1.1006,
+    "longest_axis_m": 1.8925,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh0",
+      "vertices": 34166,
+      "edges": 89127,
+      "faces": 55206,
+      "triangles": 55206,
+      "tris": 55206,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 12638,
+      "boundary_edges": 12637,
+      "loose_vertices": 0,
+      "duplicate_vertices": 6561,
+      "components": 335,
+      "debris_components": 302,
+      "flipped_normals": 2249,
+      "uv_layers": 1,
+      "stretched_uv_faces": 12,
+      "materials": [],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 55206,
+    "vertices": 34166,
+    "materials": 0,
+    "animations": 0
+  },
+  "problems": [
+    "55,206 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
+    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (docs/reviews/MA-01, MA-02)",
+    "Mesh0: 12638 non-manifold edges",
+    "Mesh0: 6561 duplicate vertices \u2014 will split under deformation",
+    "Mesh0: 302 microscopic disconnected components",
+    "Mesh0: ~2249 inward-facing faces",
+    "Mesh0: 12 faces with texel density 4.0x off the median",
+    "Mesh0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.5527)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}

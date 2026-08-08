@@ -1,0 +1,71 @@
+{
+  "model": "/home/user/Tetherbound/assets_raw/burrowback/c/model.glb",
+  "bounds": {
+    "min": [
+      -0.5331,
+      -0.9454,
+      -0.5749
+    ],
+    "max": [
+      0.5289,
+      0.95,
+      0.5702
+    ],
+    "size": [
+      1.062,
+      1.8954,
+      1.1451
+    ],
+    "height_m": 1.1451,
+    "longest_axis_m": 1.8954,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh0",
+      "vertices": 33184,
+      "edges": 85733,
+      "faces": 52818,
+      "triangles": 52818,
+      "tris": 52818,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 13012,
+      "boundary_edges": 13012,
+      "loose_vertices": 0,
+      "duplicate_vertices": 6773,
+      "components": 369,
+      "debris_components": 342,
+      "flipped_normals": 1953,
+      "uv_layers": 1,
+      "stretched_uv_faces": 8,
+      "materials": [],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 52818,
+    "vertices": 33184,
+    "materials": 0,
+    "animations": 0
+  },
+  "problems": [
+    "52,818 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
+    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (docs/reviews/MA-01, MA-02)",
+    "Mesh0: 13012 non-manifold edges",
+    "Mesh0: 6773 duplicate vertices \u2014 will split under deformation",
+    "Mesh0: 342 microscopic disconnected components",
+    "Mesh0: ~1953 inward-facing faces",
+    "Mesh0: 8 faces with texel density 4.0x off the median",
+    "Mesh0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.5749)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}

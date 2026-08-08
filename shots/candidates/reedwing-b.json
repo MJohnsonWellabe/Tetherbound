@@ -1,0 +1,71 @@
+{
+  "model": "/home/user/Tetherbound/assets_raw/reedwing/b/model.glb",
+  "bounds": {
+    "min": [
+      -0.5845,
+      -0.9483,
+      -0.9049
+    ],
+    "max": [
+      0.5827,
+      0.9441,
+      0.8983
+    ],
+    "size": [
+      1.1672,
+      1.8924,
+      1.8033
+    ],
+    "height_m": 1.8033,
+    "longest_axis_m": 1.8924,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh0",
+      "vertices": 33660,
+      "edges": 87290,
+      "faces": 53872,
+      "triangles": 53872,
+      "tris": 53872,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 12964,
+      "boundary_edges": 12964,
+      "loose_vertices": 0,
+      "duplicate_vertices": 6722,
+      "components": 333,
+      "debris_components": 298,
+      "flipped_normals": 2395,
+      "uv_layers": 1,
+      "stretched_uv_faces": 4,
+      "materials": [],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 53872,
+    "vertices": 33660,
+    "materials": 0,
+    "animations": 0
+  },
+  "problems": [
+    "53,872 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
+    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (docs/reviews/MA-01, MA-02)",
+    "Mesh0: 12964 non-manifold edges",
+    "Mesh0: 6722 duplicate vertices \u2014 will split under deformation",
+    "Mesh0: 298 microscopic disconnected components",
+    "Mesh0: ~2395 inward-facing faces",
+    "Mesh0: 4 faces with texel density 4.0x off the median",
+    "Mesh0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.9049)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}
