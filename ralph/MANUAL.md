@@ -9,26 +9,15 @@ The loop cannot do any of these. Each one blocks something specific.
   `.github/workflows/ralph-merge.yml` can fast-forward `main`.
 - ~~**Merge the setup pull request.**~~ Done — PR #2 landed at `3d60db6`.
 
-## Before any art task can run — THE ONE THING STILL OPEN
+- ~~**Put the Meshy key where the loop can reach it.**~~ Done, and it needed
+  nothing from the owner in the end. The key is carried in the **Routine's own
+  prompt**, which every fired session reads. There is no tool to set an
+  environment variable on this environment, and the repository is the one place
+  it must never go — GitHub history is permanent and secret scanning would
+  likely revoke the key on push. To change or rotate the key later, edit the
+  Routine, not the repo.
 
-### 1. Put `MESHY_API_KEY` in the environment
-
-**This is not the same as rotating it.** The owner has decided not to rotate the
-key, which is their call and closes that question. But the key currently exists
-only in a chat transcript, and **a fired Ralph session cannot read the
-conversation** — it starts fresh with nothing but the repository and the
-environment. So the key still has to be *placed* somewhere a fresh session can
-reach, and the environment is the only such place: it must never be written to a
-file, because files get committed.
-
-Set `MESHY_API_KEY` as an environment variable on the Claude Code environment
-(`env_01JcoSxnn6SYsHdxGPGCQ8yV`).
-
-**What breaks without it:** the loop runs fine through `R0.4`, the blind
-critique, which needs no credits. It then hard-stops at `R0.5` (retexture) and
-parks every art task. The non-art backlog — the rename, gathering, building,
-save/load — is unaffected and will keep moving, so this is a partial block, not
-a stopped loop.
+## Nothing is blocking the loop
 
 ### 4. Top up Meshy credits when `BLOCKED.md` says so
 Balance was **375**. Retexturing the ten winners costs about **300**. Per the
