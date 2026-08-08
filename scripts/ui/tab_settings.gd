@@ -1,6 +1,6 @@
 extends "res://scripts/ui/menu_tab.gd"
 
-## Settings. Controls first, and for now Controls only.
+## Settings: a temporary Gameplay toggle, then Controls.
 ##
 ## The owner's ask was "I should be able to map controls to whatever buttons I
 ## want", so every row shows BOTH bindings — the keyboard one and the gamepad
@@ -20,8 +20,9 @@ extends "res://scripts/ui/menu_tab.gd"
 ## meaning is about to change.
 ##
 ## Sections are a loop over `settings.sections` in data/config/menu.json. Today
-## that list has one entry. Display and audio are a JSON entry plus a `_build_*`
-## method here, which is the shape the rest of the menu already uses.
+## that list holds Gameplay — one development toggle, free build, which is meant
+## to be deleted before launch — and Controls. Display and audio are a JSON entry
+## plus a `_build_*` method here, which is the shape the rest of the menu uses.
 
 const CONFIG_PATH := "res://data/config/menu.json"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
@@ -50,6 +51,10 @@ var _rows: Array = []
 var _reset_all_button: Button = null
 var _scroll: ScrollContainer = null
 
+## Free build, the temporary development toggle. See the Gameplay section below.
+var _free_build_button: Button = null
+var _free_build_label: String = "Free build"
+
 var _capturing: bool = false
 var _capture_action: String = ""
 var _capture_slot: String = ""
@@ -64,6 +69,7 @@ func build() -> void:
 	_rows.clear()
 	_capturing = false
 	_confirm_left = 0.0
+	_free_build_button = null
 
 	_config = _read_config()
 	var bindings: RefCounted = _bindings()
@@ -85,11 +91,84 @@ func build() -> void:
 		match str(section.get("id", "")):
 			"controls":
 				_build_controls(section, settings.get("controls", {}) as Dictionary)
+			"gameplay":
+				_build_gameplay(section, settings.get("gameplay", {}) as Dictionary)
 			_:
 				# A section named in JSON with nobody to draw it would otherwise be
 				# an invisible gap. Say so rather than skip silently.
 				push_warning("settings section '%s' has no builder" % section.get("id", "?"))
 	poll()
+
+
+# --- the Gameplay section ---------------------------------------------------
+#
+# TEMPORARY. One toggle, free build, which the owner asked for as a development
+# convenience "until we launch the real game". Deleting this whole block, the
+# `gameplay` case above and `_poll_gameplay` removes the settings half of it;
+# see docs/decisions/D16 for the other three files.
+#
+# It is drawn FIRST, above Controls, for one reason: everything in Controls
+# lives inside a ScrollContainer that expands to fill the tab, so a section
+# after it would sit at the bottom of the screen behind a list the player has
+# to scroll past. One row above the list is also one row to delete later.
+
+
+func _build_gameplay(section: Dictionary, gameplay: Dictionary) -> void:
+	var heading := Label.new()
+	heading.add_theme_font_size_override("font_size", 30)
+	heading.text = str(section.get("label", "Gameplay"))
+	add_child(heading)
+
+	# A plain Button in toggle mode rather than a CheckButton: the menu theme
+	# styles `Button` alone, and focus being the loudest thing on screen is what
+	# makes this screen drivable with a stick. The state is in the text as well
+	# as in the pressed style, because a pressed style on a handheld at arm's
+	# length is not a label.
+	_free_build_button = Button.new()
+	_free_build_button.custom_minimum_size = Vector2(560, 56)
+	_free_build_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_free_build_button.focus_mode = Control.FOCUS_ALL
+	_free_build_button.toggle_mode = true
+	_free_build_label = str(gameplay.get("free_build_label", "Free build"))
+	_free_build_button.pressed.connect(_on_free_build)
+	add_child(_free_build_button)
+
+	var note := Label.new()
+	note.add_theme_font_size_override("font_size", 22)
+	note.add_theme_color_override("font_color", COLOUR_QUIET)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note.custom_minimum_size = Vector2(1100, 0)
+	note.text = str(gameplay.get("free_build_note", ""))
+	add_child(note)
+
+
+func _on_free_build() -> void:
+	var game := state()
+	if game == null:
+		return
+	# Read the truth back off the state rather than off the button: the button has
+	# already flipped itself, and the state is what every cost check asks.
+	var wanted := not bool(game.get("free_build"))
+	var saved := bool(game.call("set_free_build", wanted))
+	var said := "Free build is on. Building costs nothing." if wanted \
+		else "Free build is off. Building costs materials again."
+	if not saved:
+		said += " (This session only — the settings file could not be written.)"
+	say(said)
+
+
+## Written every frame, like every other value on this screen: the toggle is
+## GameState's, and the UI must not keep a second copy of it.
+func _poll_gameplay() -> void:
+	if _free_build_button == null:
+		return
+	var game := state()
+	var on := game != null and bool(game.get("free_build"))
+	_free_build_button.button_pressed = on
+	_free_build_button.text = "  %s:  %s" % [_free_build_label, "On" if on else "Off"]
+	_free_build_button.add_theme_color_override(
+		"font_color", COLOUR_CHANGED if on else COLOUR_DEFAULT
+	)
 
 
 # --- the Controls section ---------------------------------------------------
@@ -245,6 +324,8 @@ func revision() -> int:
 
 
 func poll() -> void:
+	_poll_gameplay()
+
 	var bindings: RefCounted = _bindings()
 	if bindings == null:
 		return

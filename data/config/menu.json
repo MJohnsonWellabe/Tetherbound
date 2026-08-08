@@ -44,10 +44,17 @@
   "_comment_settings": "The settings screen, section by section. `sections` is the running order; today it holds Controls alone. Display and audio are entries here plus a builder in scripts/ui/tab_settings.gd when someone actually writes them — the tab already loops this list, so neither is a rewrite.",
   "_comment_controls": "`groups` is what the Controls section draws, in order, and it is the ONLY list of what the player may rebind. Nothing that starts with `ui_` may ever be added: those are Godot's focus navigation, they are what drives this very screen with a stick, and a player who rebound `ui_down` could not reach the control that would undo it. tests/test_controls.gd enforces both that rule and that every action named here is really in the input map.",
   "_comment_glyphs": "Button names for an Xbox-layout pad, which is what the ROG Ally is. A PlayStation glyph set is a swap of this block and nothing else. Keys are the stored binding codes from scripts/ui/key_bindings.gd.",
+  "_comment_gameplay": "TEMPORARY, and meant to be deleted. `free_build` is a development convenience the owner asked for — build without spending materials until the real game launches. To remove the whole feature: delete this block and the gameplay entry in `sections`, `_build_gameplay` in scripts/ui/tab_settings.gd, the free-build block in autoload/game_state.gd, and the banner in scripts/ui/tab_build.gd. See docs/decisions/D16.",
   "settings": {
     "sections": [
+      { "id": "gameplay", "label": "Gameplay" },
       { "id": "controls", "label": "Controls" }
     ],
+
+    "gameplay": {
+      "free_build_label": "Free build",
+      "free_build_note": "Build without spending materials. A development setting, not a game rule — it is off in a normal game, and the Build tab says so while it is on."
+    },
 
     "controls": {
       "groups": [

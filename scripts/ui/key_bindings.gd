@@ -51,6 +51,18 @@ const LOAD_FUTURE := 3
 ## glyph sets should be a JSON edit.
 var glyphs: Dictionary = {}
 
+## Preferences that are not controls, carried verbatim through a save and a load.
+##
+## This class is the ONLY writer of user://settings.json and a save rewrites the
+## whole document, so anything else with a preference to store hands it here
+## rather than opening a second file — otherwise the next rebind would silently
+## erase it. Today it holds one key, `free_build`, owned by autoload/game_state.gd.
+##
+## Unknown keys need no format bump in either direction: an older build reads a
+## version-1 file and ignores this section, and a build that has never seen a key
+## reads it as absent, which is the same as off.
+var gameplay: Dictionary = {}
+
 var _path: String = SETTINGS_PATH
 ## action -> {keyboard: InputEvent|null, gamepad: InputEvent|null, extra: Array}
 var _defaults: Dictionary = {}
@@ -352,6 +364,7 @@ func save() -> bool:
 	var payload := {
 		"version": FORMAT_VERSION,
 		"controls": controls,
+		"gameplay": gameplay,
 	}
 	var directory := _path.get_base_dir()
 	if not directory.is_empty() and not DirAccess.dir_exists_absolute(directory):
@@ -372,6 +385,9 @@ func save() -> bool:
 ## Returns one of the LOAD_* codes so a test can tell the four cases apart.
 func load_overrides() -> int:
 	reset_all()
+	# Anything not adopted below is absent, and absent is the shipped default for
+	# every non-control preference too — see `gameplay`.
+	gameplay.clear()
 	if not FileAccess.file_exists(_path):
 		return LOAD_MISSING
 
@@ -416,6 +432,12 @@ func load_overrides() -> int:
 			var event := from_code(text)
 			if event != null:
 				set_binding(name, str(slot), event)
+
+	# Adopted only on the way to LOAD_OK. A file this build has already called
+	# corrupt, or too new to read, must not be able to switch something on anyway.
+	var extras: Variant = data.get("gameplay", {})
+	if typeof(extras) == TYPE_DICTIONARY:
+		gameplay = (extras as Dictionary).duplicate()
 	return LOAD_OK
 
 

@@ -43,6 +43,19 @@ var day: int = 1
 ## this when there is one; until then it is the honest end of the build screen.
 var pending_build: String = ""
 
+## DEVELOPMENT CONVENIENCE, AND IT IS MEANT TO BE DELETED.
+##
+## The owner asked for "a toggle to free build without cost right now until we
+## launch the real game". Off unless it is switched on in Settings > Gameplay,
+## said out loud on the Build tab the whole time it is on, and confined to this
+## block, one section of data/config/menu.json, one builder in
+## scripts/ui/tab_settings.gd and one banner in scripts/ui/tab_build.gd.
+## Removing it is deleting those four things — see docs/decisions/D16.
+var free_build: bool = false
+
+## The key `free_build` is stored under in user://settings.json.
+const PREF_FREE_BUILD := "free_build"
+
 var _menu: CanvasLayer = null
 
 
@@ -55,6 +68,9 @@ func _ready() -> void:
 		_seed_demo()
 
 	_mount_menu()
+	# After the menu, never before: the menu shell owns the settings file and has
+	# only just read it (docs/decisions/D15).
+	_adopt_preferences()
 
 
 ## The menu, as a child of the autoload rather than of a world scene.
@@ -78,6 +94,76 @@ func menu() -> CanvasLayer:
 func advance_day() -> int:
 	day += 1
 	return day
+
+
+# --- building costs ---------------------------------------------------------
+
+
+## What a buildable costs RIGHT NOW. THE one place that answers that question.
+##
+## Every cost check goes through here, including the ones nobody has written yet:
+## placement (M8) spends what this returns, so it spends nothing while free build
+## is on without ever having heard of free build. That is the whole reason this
+## is a function on the state rather than a boolean five callers each remember to
+## consult — one of them always forgets, and the bug it makes looks like a
+## costing bug rather than a cheat left switched on.
+##
+## Returns the cost entries from data/items/buildables.json, [{id, n}, ...],
+## and an empty array for a piece that costs nothing or does not exist. Ask
+## `can_afford` rather than reading an empty array as "free".
+func build_cost_for(id: String) -> Array:
+	if free_build or items == null:
+		return []
+	var raw: Variant = items.buildable(id).get("cost", [])
+	return raw as Array if typeof(raw) == TYPE_ARRAY else []
+
+
+## Is there enough in the satchel to build this? True for anything real while
+## free build is on.
+func can_afford(id: String) -> bool:
+	if items == null or inventory == null:
+		return false
+	# An id no catalogue entry answers to is not buildable however rich you are.
+	# Without this, free build's empty cost would make every typo affordable.
+	if items.buildable(id).is_empty():
+		return false
+	for requirement in build_cost_for(id):
+		if typeof(requirement) != TYPE_DICTIONARY:
+			continue
+		var entry := requirement as Dictionary
+		if int(inventory.count(str(entry.get("id", "")))) < int(entry.get("n", 0)):
+			return false
+	return true
+
+
+## Turn free build on or off and write it down.
+##
+## Returns whether the choice reached the settings file. False means it holds for
+## this session only, which the settings screen says out loud rather than letting
+## the owner find out on the next launch.
+func set_free_build(on: bool) -> bool:
+	free_build = on
+	var prefs := _preferences()
+	if prefs == null:
+		return false
+	var table: Dictionary = prefs.get("gameplay")
+	table[PREF_FREE_BUILD] = on
+	return bool(prefs.call("save"))
+
+
+func _adopt_preferences() -> void:
+	var prefs := _preferences()
+	if prefs == null:
+		return
+	var table: Dictionary = prefs.get("gameplay")
+	free_build = bool(table.get(PREF_FREE_BUILD, false))
+
+
+## The settings file, which the menu shell owns (docs/decisions/D15). There is
+## exactly one file in user:// and this is how anything that is not a control
+## gets into it.
+func _preferences() -> RefCounted:
+	return _menu.get("bindings") if _menu != null else null
 
 
 ## Build a live pal from a species id. Party membership still goes through
