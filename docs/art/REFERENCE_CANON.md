@@ -29,9 +29,10 @@ the boards; those labels are not game-design authority."*
 
 | Question | Answer comes from |
 |---|---|
-| Names, types, roles, scale, animation lists | `ROSTER_MANIFEST.md`, `CLAUDE_BUILD_PROMPTS.md` |
+| Anything at all about a **wild** species or Tuskroot | `docs/art/wild/`, then its sheets in `docs/art/reference/wild/` |
+| Names, types, roles, scale, animation lists for everyone else | `ROSTER_MANIFEST.md`, `CLAUDE_BUILD_PROMPTS.md` |
 | Style, materials, proportion, rendering language | Sheets `01`–`04` |
-| Silhouette and palette for species with no sheet | Boards `05`–`11`, **names and type icons discarded** |
+| Silhouette and palette for the three characters with no sheet | Boards `05`–`11`, **names and type icons discarded** |
 | Anything still unresolved | `docs/GAME_DESIGN.md` §26 |
 
 **The Meadows has three types: Ground, Water, Air.** Boards `05`–`08` show Grass,
@@ -72,33 +73,64 @@ to drive image-to-3D. Board `07` is itself only 1536×1024, so re-cropping at
 native resolution recovers nothing. **These three characters need proper
 `01`–`04`-quality sheets made before their production starts.**
 
+### The wild sheets — `docs/art/reference/wild/`
+
+Five sheets, owner-supplied with the pack, at `01`–`04` quality: four-view
+turnarounds, palette swatches, silhouette rows and build notes. They cover all
+thirteen wild creatures, which is why the donor rows below are gone.
+
+| File | Creatures on it |
+|---|---|
+| `01_Meadows_Wild_Roster_Master_Guide.png` | The whole roster at a glance. Overview, not a turnaround source. |
+| `02_Meadows_Wild_Ground_Sheet.png` | Ground Sheet A — Bramblebun, Mudsnout, Trailpup |
+| `03_Meadows_Wild_Water_Sheet.png` | Paddlenewt, Mosshell, Brooktail, Reedwing |
+| `04_Meadows_Wild_Air_Sheet.png` | Pipwing, Duskhush, Galecrest |
+| `05_Meadows_Wild_Scale_Palette_Implementation_Guide.png` | **Misnamed — see below.** Ground Sheet B — Meadowhart, Burrowback, Tuskroot |
+
+`05_Meadows_Wild_Scale_Palette_Implementation_Guide.png` IS MISNAMED. It is
+Ground Sheet B — Meadowhart, Burrowback and Tuskroot — not a scale guide. The
+file name is the owner's and is left alone; this note is the correction. The
+same correction is carried in `tools/art_pipeline/views.json`, which is where a
+crop job would otherwise trust the name and cut the wrong band.
+
 ## Donor mapping
 
-Every roster entry, and where its visual source comes from. Fifteen of the
-nineteen have no sheet of their own, so this table is what stops them being
-invented twice.
+Every roster entry and where its visual source comes from. This table used to
+be sixteen donor mappings, because sixteen entries had no sheet. It is now three:
+the starters and the trainer have their own sheets, the thirteen wild creatures
+have theirs, and the only characters still reading a figure off a concept board
+are Grandpa, the Warden and the legendary.
 
 | # | Roster entry | Type | Sheet | Donor | Override required |
 |---|---|---|---|---|---|
 | 1 | Terrapup | Ground | `01` | — | none |
 | 2 | Ripplet | Water | `02` | — | none |
 | 3 | Galewisp | Air | `03` | — | none |
-| 4 | Bramblebun | Ground | — | Hopplet `08`, Hopperoo `06`, Hoppip `05` | Ground, not Normal. Burr and seedpod accents, **no leafy Grass styling**. ~0.35 m. |
-| 5 | Tuskroot | Ground | — | Craglet `08` for the stone vocabulary | No boar donor exists. Build the anatomy from the brief; take stone-plate language from `01`. Appealing, not realistic-boar ugly. ~0.75 m. |
-| 6 | Trailpup | Ground | — | Floxie `05`, Sparkit `06` | **Strip Electric and Fire entirely.** Sandy coat, dark back stripe, cream muzzle, oversized ears and paws. ~0.55 m. |
-| 7 | Ridgewolf | Ground | — | Trailpup, matured | Same individual after evolution — preserve face, colour logic, eyes. Taller, longer-legged, neck ruff, emerging stone ridges. **Not an armoured monster.** ~0.95 m. |
-| 8 | Meadowhart | Ground | — | Veridian stag `05`/`06`/`07` | Tawny, not green. Compact antlers. Scale to ~1.35 m so Terracrown still reads as larger. Generic saddle interface. |
-| 9 | Burrowback | Ground | — | `01` read as an adult | Broader, lower, more mature than Terrapup. Charcoal/brown, cream facial stripe, huge shovel claws, **loose stone nodules, not a full mantle** — it must not look like grown-up Terrapup. ~0.55 m. |
-| 10 | Paddlenewt | Water | — | Aquabit `07`, Pondlet `05`, Dewcale `06` | Aqua skin, cream underside, translucent gill frills, webbed feet. ~0.3 m. |
-| 11 | Mosshell | Water | — | Sproutox `08`, Leafin `08` | **Water primary, moss strictly secondary.** Both donors are Grass turtles; blue-green skin and pond-stone shell are the correction. ~0.45 m shell. |
-| 12 | Brooktail | Water | — | Bobble/Puddlefin `08` palette only | No otter donor. Take material language from `02`. Otter torso, beaver tail, chestnut and cream, aqua accents. ~0.5 m. |
-| 13 | Reedwing | Water/Air | — | Breezee `08` | Must read as **genuinely dual-type**, not a bird painted blue. Teal primaries, cream chest, tan accents, webbed feet. ~0.65 m standing. |
-| 14 | Pipwing | Air | — | Skytuft `05`, Breezee `08` | Tiny, round, cream body, sky-blue wings, dark tips, small crest. Silhouette must hold at ~0.25 m. |
-| 15 | Duskhush | Air | — | `03`'s feather treatment | No owl donor. Grey-blue and cream plumage, ear tufts, broad wings, large eyes **without literal glow**. Calm, not spooky. ~0.55 m. |
-| 16 | Galecrest | Air | — | `03`'s feather treatment | No raptor donor. Slate-blue and cream layers, gold accents, broad wings, strong talons. Powerful but inside the same friendly design language. ~0.8 m. |
+| 4–16 | The twelve wild species and Tuskroot | Ground / Water / Air | `docs/art/reference/wild/02`–`05` | — | **None. Do not use a donor board for these.** Each has a real four-view turnaround; identity, palette, anatomy and the distinction rules come from `docs/art/wild/21_MEADOWS_WILD_ROSTER_CANON.md` and `22_MEADOWS_WILD_ROSTER_ART_MAPPING.md`. |
 | 17 | Grandpa Elias | — | `05` turnaround (best available), `06` head close-ups | `07`, `09` | Retired explorer/trainer, late 60s–70s. Brown, cream, muted green layers. Walking stick, **not a combat staff.** Silhouette must relate to `04` so the player plausibly learned from him. |
 | 18 | Warden of the Meadows | — | **`06`, used directly** | — | See the override note below. |
 | 19 | Veridian Stag (Ground legendary) | Ground | **`06`, used directly** | `05`, `07`, `11` for antler mass | See the override note below. |
+
+### What the wild rows used to say, and why it is worth recording
+
+Rows 4–16 held thirteen donor mappings written when no wild sheet existed, and
+several of them were load-bearing guesses that a builder would otherwise still
+be following:
+
+- **"No boar donor exists"** for Tuskroot, so its anatomy was to be invented
+  from a text brief with stone language borrowed from `01`. Ground Sheet B draws
+  it, and D13 makes it the evolved form of Mudsnout rather than a base species.
+- **Meadowhart was to be built from the Veridian stag**, tawny instead of green.
+  That is precisely the confusion the pack forbids: Meadowhart is drawn on its
+  own sheet, "lighter, friendlier, more practical — less sacred", and must not
+  share the legendary's visual language.
+- **Bramblebun at ~0.35 m**, and every other centimetre figure in those rows.
+  Those were donor-board estimates, not measurements. Creature biology comes off
+  the sheets; **game** height comes from D12's peer scale, 1.20–2.60 m, which
+  D13 re-confirmed. The two are different questions and neither is a fix for
+  the other.
+- **Mudsnout had no row at all**, because it did not exist yet, and Ridgewolf
+  had one, because it did.
 
 ### The Warden and the legendary: overrides lifted
 
@@ -146,9 +178,11 @@ produced and in the game; his face is painted on and reads as a defect at
 close range. The legendary did not need one — board `06`'s stag is large and
 clear enough to have driven a usable model.
 
-`ROSTER_MANIFEST.md`'s production name **Terracrown** and board `06`'s
-**Veridian Stag** are the same character. Use Veridian Stag — the owner picked
-the art, and the art carries the name.
+`ROSTER_MANIFEST.md`'s old production name **Terracrown** and board `06`'s
+**Veridian Stag** are the same character. Veridian Stag is what the project
+uses — the owner picked the art, and the art carries the name. The manifest and
+`CLAUDE_BUILD_PROMPTS.md` have both been moved onto it; Terracrown survives only
+where a document is explaining the rename.
 
 The one thing still inherited from the old override: the legendary is the
 **Ground** legendary per `GAME_DESIGN.md` §26 and `ROSTER_MANIFEST.md`. Board
@@ -171,8 +205,10 @@ and nobody has to rediscover it. When a biome exists that has a use for
 Electric, Sparkit is already drawn.
 
 The same applies to the rest of board `06`'s creatures — Leaflet, Floafluff,
-Hopperoo, Dewcale, Petalynx — which serve this slice as silhouette and palette
-donors under the mapping above, not as species.
+Hopperoo, Dewcale, Petalynx. They were silhouette and palette donors for the
+wild roster until the wild sheets arrived and made them unnecessary. None of
+them is a species, and none of them should be reached for now that every wild
+creature is drawn.
 
 ## Where these files live, and why
 

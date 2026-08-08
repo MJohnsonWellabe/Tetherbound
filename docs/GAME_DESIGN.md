@@ -316,7 +316,7 @@ No generic Speed stat. Cadence/energy lives in move definitions and traits.
 - Starters do not evolve.
 - Some rare pals do.
 - Evolution must visually make sense with available assets.
-- Example: young canine → wolf.
+- Example: rooting pig → armoured boar.
 - Requirements: level + high bond + item/condition.
 - Preserve nickname, appraisal, traits, bond, TMs, Best Pal progress, and history.
 
@@ -734,8 +734,8 @@ Starter roles:
 ### Provisional wild ecological roster
 Ground:
 - rabbit — common/tutorial
-- boar-like — bulky
-- young canine → wolf — rare evolution
+- rooting pig → armoured boar — rare evolution
+- canine — mobile generalist
 - deer/horse-like — rideable
 - badger-like — aggressive
 

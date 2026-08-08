@@ -131,6 +131,12 @@ Use the Markdown specs for:
 
 Never infer a new gameplay mechanic from concept art.
 
+For the **wild** roster specifically — the twelve wild species and Tuskroot —
+the authoritative package is `docs/art/wild/`, with its five sheets in
+`docs/art/reference/wild/`. It is the owner's, it is later than everything else
+here, and it is explicit that it wins over any earlier board or note. See
+`docs/decisions/D13`.
+
 ---
 
 # 3. APPROVED TOOL STACK
@@ -353,9 +359,8 @@ assets/
         galewisp/
       meadows/
         bramblebun/
-        tuskroot/
+        mudsnout/
         trailpup/
-        ridgewolf/
         meadowhart/
         burrowback/
         paddlenewt/
@@ -365,8 +370,9 @@ assets/
         pipwing/
         duskhush/
         galecrest/
+        tuskroot/
       legendary/
-        terracrown/
+        veridian/
 
 tools/
   art_pipeline/
@@ -862,11 +868,12 @@ Proceed in this order:
 5. test style cohesion together in Godot
 6. remaining Meadows wild roster
 7. Meadowhart / rideable Pal
-8. Grandpa
-9. Warden
-10. Terracrown legendary
+8. Tuskroot, the one evolution, after Mudsnout
+9. Grandpa
+10. Warden
+11. Veridian Stag legendary
 
-Do not produce Terracrown cheaply just to complete a checklist.
+Do not produce the Veridian Stag cheaply just to complete a checklist.
 
 The legendary and starters deserve hero-asset treatment.
 
@@ -904,7 +911,7 @@ Do not force exact skeleton sharing if it materially damages character proportio
 
 # 21. LEGENDARY PAL RULE
 
-Terracrown must not look like:
+The Veridian Stag must not look like:
 
 - a normal deer with accessories,
 - a Grass-type cliché,

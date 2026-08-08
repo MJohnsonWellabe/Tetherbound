@@ -37,61 +37,107 @@ been built out of order — systems first, sequence never — so some of this is
 - Three real starters, at peer scale, with six clips each — `species.json`
 - Grandpa's model and its art config — `assets/characters/grandpa/`, the
   `grandpa` block in `data/config/art.json`
+- A party that holds five, and a nickname — `autoload/party.gd` with
+  `MAX_PALS := 5`, owned by the `Game` autoload as `Game.party`, and
+  `nickname` on `pal_instance.gd` with a `display()` that prefers it
+- A pal that follows you — `follower_pal.gd`, spawned by `encounter_director.gd`
 
-### Correction: the party does not exist
+**None of the rest of it is in a scene.** `interactable.gd`,
+`interaction_arbiter.gd`, `npc_body.gd`, `dialogue_runner.gd` with
+`dialogue_panel.tscn`, and `name_prompt.tscn` are all written and unit-tested
+and all unreachable: `scenes/world/meadows_playground.tscn` is still the combat
+sandbox, with no Grandpa, no arbiter node, no panel and no prompt in it. The
+nearest-wins rule itself (`prompt_arbiter.gd`) does run, inside
+`encounter_director.gd`, but nothing except a wild pal ever offers it a
+candidate. The starter choice is not written in any form; `encounter_director`
+exposes `suspend_default_starter()` and `adopt_starter()` for it and nobody
+calls either. A sequence director is being written now — see item 7 below.
 
-This section previously listed "a party that holds five and forces a release at
-six — the M4/M5 work" as **existing**. It does not, and did not when that line
-was written. As of this correction there is no party manager, no five-pal limit
-enforced anywhere, and `pal_instance.gd` has no `nickname` field. The nearest
-thing is `encounter_director._caught`, a flat array whose own comment says it is
-a milestone-local record that M4 replaces.
+### Correction, twice over: what this file has claimed about the party
 
-Recorded rather than quietly deleted, because the line was load-bearing: it is
-the reason this document described the opening as "mostly wiring", and anything
-planned against it was planned against a system that was not there. The party
-and the nickname are being built in parallel (see **Depends on**, below); the
-opening sequence codes against them and does not implement them.
+An early draft listed "a party that holds five and forces a release at six — the
+M4/M5 work" as existing when there was no party manager at all. A later
+correction said flatly that **the party does not exist**. That correction is now
+itself out of date: `autoload/party.gd` and `nickname` both landed, and they are
+listed above.
+
+Both are recorded rather than quietly deleted, because both were load-bearing.
+The first is the reason this document once described the opening as "mostly
+wiring". The second is the reason the seam below was built to work without a
+party at all — a defensive design that is now the thing standing between the
+opening and the party it was waiting for.
 
 ## What is missing, in build order
 
-1. **A conversation system.** There is no dialogue anywhere in the project. The
-   smallest thing that works: a panel, a portrait, a name, a line, advance on
-   the interact button. No branching, no choices in text — the only choice in
-   this sequence is which pal, and that is made by walking up to one.
-2. **An interactable component, and arbitration between prompts.** There is
-   exactly one interact prompt in the whole game today, hardcoded inside
-   `encounter_director._update_prompt()`, and it says "Engage X". Grandpa, three
-   starters and every later resource node all want that same line, so somebody
-   has to decide which one gets it. Nearest wins. Everything below depends on
-   this existing first.
-3. **Grandpa as an NPC.** A body that stands where it is put, faces the player,
-   and offers an interact prompt. He never moves in this sequence.
-4. **A starter-choice interaction.** Three pals standing near him; approaching
-   one offers "Choose <name>"; choosing gives it to the party and leaves the
-   other two standing where they are.
-5. **A naming prompt.** One text field. `GAME_DESIGN.md` §2 lists naming first
-   among the things that make the five matter, and it has never been built. It
-   is also the project's first text input, which makes it the first time mouse
-   capture is released and the first time a handheld has to type without a
-   keyboard — both of those are part of the work, not details of it.
-6. **A follower.** The player's pal is instanced today with `visible = false`
-   and only exists during a fight. It has to be visible and walking behind the
-   trainer, driven through `pal_body.request_move()`.
-7. **A sequence director.** One node that owns the beat list, gates what is
-   possible at each beat, and advances. Everything above is inert without it.
-8. **A home scene.** Grandpa's house does not need an interior — beat 1 can
-   start outside the door with a fade-in. That saves an entire interior art
-   pass for a beat that lasts forty seconds.
+Items 1–3 and 5–6 have since been **written**. Only 6 is in a scene. The rest
+are files that pass their unit tests and that no player can reach, which is a
+different state from missing and should not be mistaken for done. The original
+descriptions are kept because they are the specification, with the current
+status marked.
+
+1. **A conversation system.** *Written — `scripts/story/dialogue_runner.gd`,
+   `scenes/ui/dialogue_panel.tscn`; instanced nowhere.* A panel, a portrait, a
+   name, a line, advance on the interact button. No branching, no choices in
+   text — the only choice in this sequence is which pal, and that is made by
+   walking up to one.
+2. **An interactable component, and arbitration between prompts.** *Half wired.*
+   The comparison is real and running: `scripts/world/prompt_arbiter.gd` decides
+   nearest-wins inside `encounter_director.gd`. What is not in any scene is
+   `interaction_arbiter.gd`, the node that collects `Interactable`s and asks
+   them what they are offering — so there is still exactly one prompt in the
+   game and it still says "Engage X". Grandpa, three starters and every later
+   resource node all want that same line.
+3. **Grandpa as an NPC.** *Written — `scripts/npc/npc_body.gd`; no instance of
+   him exists.* A body that stands where it is put, faces the player, and offers
+   an interact prompt. He never moves in this sequence.
+4. **A starter-choice interaction.** *Not written.* Three pals standing near
+   him; approaching one offers "Choose <name>"; choosing gives it to the party
+   and leaves the other two standing where they are. `encounter_director` has
+   the seams waiting — `suspend_default_starter()` and `adopt_starter()` — and
+   nothing calls them, so the playground still hands you Terrapup by fiat.
+5. **A naming prompt.** *Written — `scenes/ui/name_prompt.tscn`; instanced
+   nowhere.* One text field. `GAME_DESIGN.md` §2 lists naming first among the
+   things that make the five matter. It is also the project's first text input,
+   which makes it the first time mouse capture is released and the first time a
+   handheld has to type without a keyboard — both of those are part of the work,
+   not details of it.
+6. **A follower.** *Done, and in the scene.* `follower_pal.gd`, spawned by
+   `encounter_director.gd`, visible and walking behind the trainer through
+   `pal_body.request_move()`. It used to be instanced with `visible = false` and
+   to exist only during a fight.
+7. **A sequence director.** *Being written now.* One node that owns the beat
+   list, gates what is possible at each beat, and advances. Everything above is
+   inert without it, which is the whole of why beats 1–6 are unreachable rather
+   than unbuilt.
+8. **A home scene.** *Not written.* Grandpa's house does not need an interior —
+   beat 1 can start outside the door with a fade-in. That saves an entire
+   interior art pass for a beat that lasts forty seconds.
 
 ## Depends on
 
-The opening does **not** own the party. It codes against a `GameState` autoload
-holding a party of at most five, and against a `nickname` on `pal_instance.gd`.
-Both are being built alongside this. Where the sequence needs them it calls
-through a narrow seam (`scripts/story/party_seam.gd`) which uses `GameState`
-when it is present and keeps the chosen pal locally when it is not, so the
-opening plays either way and the join is one file.
+The opening does **not** own the party. Where it needs one it calls through a
+narrow seam, `scripts/story/party_seam.gd`, so that the join is one file.
+
+**The seam does not currently reach the party, and this file used to say it
+did.** It was written against a party that had not been built yet and it guessed
+at both the name and the shape:
+
+- it looks up `/root/GameState`; the autoload is registered as **`Game`**
+- it expects `add_pal(instance)`, `party()` and `party_is_full()`; the real API
+  is `Game.party.add(pal)`, `Game.party.members()` and `Game.party.is_full()`
+
+Every lookup misses, so the seam silently falls through to `_fallback`, the
+local array it keeps for the case where no party exists. The opening would play
+end to end and the chosen pal would never enter the party the rest of the game
+reads. That is exactly the failure a duck-typed seam is bad at showing you: it
+degrades quietly instead of erroring.
+
+The nickname half did land — `pal_instance.gd` has the field, and the seam's
+`"nickname" in instance` check finds it.
+
+The seam is being repaired in code in this same round of work. When it is, the
+fallbacks should go and `_state()` should stop being optional, per the file's
+own TODO. Nothing else in the opening changes: every call site goes through it.
 
 ## Decisions taken here, so they are not re-litigated later
 

@@ -59,6 +59,31 @@ idle, hop/walk, run, glide/fly, land, perch, sleep, happy interaction, hurt, fai
 
 ---
 
+# THE WILD ROSTER — READ THIS FIRST
+
+The thirteen prompts below were written before the owner supplied the **Meadows
+Wild Canon Pack**, and they were written from donor concept boards because no
+wild reference sheet existed. Five do now, in `docs/art/reference/wild/`.
+
+**For any wild creature, `docs/art/wild/` wins over this file** — names, types,
+anatomy, palette, silhouette and the three distinction rules. See
+`docs/decisions/D13`. These sections are kept for their animation lists and
+gameplay roles, which the pack does not cover, and because a prompt is easier to
+argue with than a blank page. Everything visual in them should be re-derived
+from the sheet before it drives a generation.
+
+Two structural corrections the pack makes, already applied here: **Ridgewolf is
+retired** — "the canine evolves in Meadows" is named as a superseded assumption
+— and **Tuskroot is not a base wild species**. It is the evolved form of
+Mudsnout, the biome's only evolution, so it is listed after the wild roster
+rather than inside it.
+
+The shoulder-height figures in these sections are donor-board estimates of the
+creature's biology. In-game height is one number per species in
+`data/pals/species.json`, set by D12's peer scale and re-confirmed by D13.
+
+---
+
 # WILD GROUND ROSTER
 
 ## 4. BRAMBLEBUN — Ground rabbit
@@ -69,31 +94,24 @@ Scale: ~0.35 m shoulder.
 Combat read: evasive light Ground attacker.
 Animation: idle sniff, hop locomotion, sprint, dig, kick/quick attack, charged dirt burst, hurt, faint, sleep, friendly nuzzle.
 
-## 5. TUSKROOT — Ground boar-like
+## 5. MUDSNOUT — Ground pig / rooting runt
 
-A medium stocky boar Pal with low center of gravity, short curved tusks, coarse warm-brown fur, darker ear/leg points, stone-hard brow ridge and dirt-caked shoulder plates. Avoid realistic wild-boar ugliness; keep it appealing but powerful.
+Use `docs/art/reference/wild/02_Meadows_Wild_Ground_Sheet.png` as primary authority.
 
-Scale: ~0.75 m shoulder.
-Combat read: bruiser / charge attacker.
-Animation: walk, trot, run/charge, root/sniff, quick headbutt, charged ground slam, hurt, faint, sleep.
+A young rooting piglet: broad pink snout disc, small emerging tusks, bristly coat caked with soil, a bristle ridge along the spine. Round, youthful and low-intensity — **not armoured**. It must read as the creature Tuskroot grew out of, so face, colour logic and ear shape carry forward into the evolved form.
+
+Combat read: scrappy low-tier Ground attacker.
+Animation: idle root/sniff, walk, trot, run, quick snout jab, charged shove, hurt, faint, sleep.
 
 ## 6. TRAILPUP — Ground canine
 
-A young prairie/coyote-inspired canine Pal. Sandy coat, darker back stripe, cream muzzle/chest, oversized ears and paws, bright intelligent eyes. It should look adventurous and trainable, not like a real-world dog breed.
+A lean prairie/coyote-inspired canine Pal. Sandy coat, darker back stripe, cream muzzle/chest, large upright ears, bushy dark-tipped tail, bright intelligent eyes. It should look adventurous and trainable, not like a real-world dog breed. **No stone plates anywhere on it** — the mantle is Terrapup's, and a wild canine that borrows it reads as the Ground starter.
 
 Scale: ~0.55 m shoulder.
-Role: mobile generalist that can later evolve.
+Role: mobile generalist. It does **not** evolve — that was Ridgewolf's premise, and D13 retired it.
 Animation: canine locomotion set, sniff, sit, bark/howl, pounce quick attack, ground-burst charged attack, sleep, interact.
 
-## 7. RIDGEWOLF — Ground evolved form of Trailpup
-
-The same individual after evolution: preserve recognizable face, color logic, eyes, and personality but mature the silhouette substantially. Taller, longer-legged, thicker neck ruff, sharper ear shape, stone/earth ridge formations subtly emerging along shoulders and forelegs. Do not turn it into an armored monster.
-
-Scale: ~0.95 m shoulder.
-Role: stronger evolved combat/traversal-capable canine.
-Animation must support evolution continuity with Trailpup plus heavier attacks.
-
-## 8. MEADOWHART — Ground rideable deer
+## 7. MEADOWHART — Ground rideable deer
 
 A graceful but sturdy stylized deer/elk Pal designed as the first normal riding Pal. Warm tawny coat, cream underside, dark hooves, expressive face, compact branch-like antlers or horn structures incorporating subtle stone/earth growth. Saddle interface must work with the game's generic Riding Saddle.
 
@@ -101,7 +119,7 @@ Scale: ~1.35 m shoulder.
 Role: first major traversal upgrade.
 Animation: idle graze, walk, trot, run, sprint, jump, mount idle, mounted turns, skid/stop, quick antler attack, charged stomp, sleep.
 
-## 9. BURROWBACK — Ground badger-like
+## 8. BURROWBACK — Ground badger-like
 
 A squat powerful digging Pal, visually distinct from Terrapup by being broader, lower, and more mature. Charcoal/brown coat with cream facial stripe, huge shovel claws, a few natural stone nodules on the back rather than a full stone mantle.
 
@@ -113,7 +131,7 @@ Animation: waddle/walk, run, dig, defensive brace, claw quick attack, charged up
 
 # WILD WATER ROSTER
 
-## 10. PADDLENEWT — Water frog/newt
+## 9. PADDLENEWT — Water frog/newt
 
 A small amphibious Pal with a rounded salamander/newt body, bright aqua skin, cream underside, soft translucent crest/gill frills, webbed feet, and friendly eyes. Must work both on land and in shallow water.
 
@@ -121,7 +139,7 @@ Scale: ~0.3 m shoulder.
 Role: early Water wild species.
 Animation: idle breathe, four-legged scurry or frog-like hop, swim, paddle, tongue/head quick attack, water-burst charged attack, sleep.
 
-## 11. MOSSHELL — Water turtle
+## 10. MOSSHELL — Water turtle
 
 A stylized pond turtle Pal with blue-green skin and a broad smooth shell carrying subtle pond-stone and moss textures. Keep Grass styling secondary; primary read is Water. Kind, patient personality.
 
@@ -129,7 +147,7 @@ Scale: ~0.45 m shell height.
 Role: tanky Water species.
 Animation: walk, swim, retract/brace, bite or water quick attack, shell-spin/water charged attack, sleep, faint.
 
-## 12. BROOKTAIL — Water otter/beaver
+## 11. BROOKTAIL — Water otter
 
 A cheerful semi-aquatic mammal Pal: streamlined otter-like torso, broad useful beaver-inspired tail, chestnut-and-cream fur, small aqua accents around tail/paws. Avoid making it simply a realistic otter.
 
@@ -137,7 +155,7 @@ Scale: ~0.5 m shoulder.
 Role: fast balanced Water Pal; natural candidate for later swim utility.
 Animation: quadruped land locomotion, swim, float, tail slap quick attack, charged wave, play, sleep.
 
-## 13. REEDWING — Water/Air waterfowl
+## 12. REEDWING — Water/Air waterfowl
 
 A stylized duck/goose/heron-inspired water bird with teal-blue primary feathers, cream chest, warm tan accents, webbed feet and broad readable wings. It must read as genuinely dual Water/Air rather than a generic bird painted blue.
 
@@ -149,7 +167,7 @@ Animation: walk/waddle, run, takeoff, fly, land, swim/float, wing quick attack, 
 
 # WILD AIR ROSTER
 
-## 14. PIPWING — Air small bird
+## 13. PIPWING — Air small bird
 
 Tiny round meadow songbird Pal with cream body, sky-blue wings, dark wing tips, oversized expressive eyes and a small crest. Strong silhouette even at small screen size.
 
@@ -157,7 +175,7 @@ Scale: ~0.25 m height.
 Role: common early Air species / energy-focused.
 Animation: hop, short flight, sustained flight, perch, peck/gust quick attack, charged gust, sleep.
 
-## 15. DUSKHUSH — Air owl
+## 14. DUSKHUSH — Air owl
 
 A medium owl Pal used as the Meadows nocturnal species. Soft gray-blue and warm cream plumage, large luminous-looking eyes without literal glow, ear/feather tufts, broad silent wings. Calm and mysterious rather than spooky.
 
@@ -165,13 +183,29 @@ Scale: ~0.55 m height.
 Role: nocturnal Air specialist.
 Animation: perch idle, head turns, hop, takeoff, flight, land, talon/gust attack, charged air attack, sleep/fold-wing rest.
 
-## 16. GALECREST — Air hawk/eagle
+## 15. GALECREST — Air hawk/eagle
 
-A larger raptor Pal with confident silhouette, layered slate-blue/cream feathers, gold/tan accents, broad wings and strong talons. Powerful but still within the same friendly stylized design language.
+A larger raptor Pal with confident silhouette, layered slate-blue/cream feathers, gold/tan accents, broad wings and strong talons. Powerful but still within the same friendly stylized design language. It must read as a serious predator and **not** as Galewisp, the cute fox-eared glider.
 
 Scale: ~0.8 m standing height; large wingspan.
 Role: rarer offensive Air wild species.
 Animation: ground idle, hop, takeoff, flight bank, dive, land, talon quick attack, charged wind dive, hurt, faint, rest.
+
+---
+
+# THE ONE EVOLUTION
+
+## 16. TUSKROOT — Ground armoured boar, evolved from Mudsnout
+
+Use `docs/art/reference/wild/05_Meadows_Wild_Scale_Palette_Implementation_Guide.png` as primary authority. That file is misnamed: it is Ground Sheet B, not a scale guide.
+
+The evolved form of Mudsnout and the only evolution in the Meadows. A heavy stocky boar with a low center of gravity, long curved ivory tusks, coarse warm-brown fur, darker ear/leg points, thick stone plates over shoulders and back with moss in the seams. It must read as **Mudsnout grown up** — preserve the face, the colour logic and the eyes — and it must not be realistic-wild-boar ugly.
+
+Scale: ~0.75 m shoulder.
+Combat read: bruiser / charge attacker.
+Animation: walk, trot, run/charge, root/sniff, quick headbutt, charged ground slam, hurt, faint, sleep. Must support evolution continuity with Mudsnout.
+
+The player never meets a wild Tuskroot. It exists only as something a Mudsnout becomes, which is what the ceremony around it has to earn.
 
 ---
 
@@ -199,7 +233,7 @@ Design:
 standard humanoid rig compatible with the player-character skeleton where practical.
 Animations: idle, walk, sit, talk gestures, laugh, concerned, point/explain, hand starter to player, interact with Pal, rest.
 
-## 18. WARDEN LYREN — Meadows Warden
+## 18. WARDEN OF THE MEADOWS
 
 Use `10_Warden_Reference.png` for silhouette/color inspiration, but make the character unmistakably Team Tether rather than a fantasy forest priestess.
 
@@ -221,11 +255,13 @@ Animations: idle command stance, walk, dialogue gestures, deploy Pal, recall Pal
 
 ---
 
-# 19. TERRACROWN — Ground Legendary
+# 19. VERIDIAN STAG — Ground Legendary
 
-Use `11_Ground_Legendary_Reference.png` as the strongest silhouette direction.
+Use board `06` as the strongest silhouette direction; `11_Ground_Legendary_Reference.png` is a 358 px crop out of board `07` and is too small to drive generation.
 
-Terracrown is the unique captive legendary freed after defeating the Meadows Warden. It voluntarily offers to join the player. It must be Ground type and provide a clearly superior version of riding traversal.
+**Terracrown** was this file's earlier production name for the same character. Board `06` names it the Veridian Stag, the owner picked that art, and the art carries the name — see `docs/art/REFERENCE_CANON.md`.
+
+The Veridian Stag is the unique captive legendary freed after defeating the Meadows Warden. It voluntarily offers to join the player. It must be Ground type and provide a clearly superior version of riding traversal.
 
 Concept:
 A majestic ancient stag/elk-like earth guardian, far larger and more awe-inspiring than Meadowhart. Long branching antlers that resemble ancient roots and weathered stone, layered cream/tawny/earth-brown body, moss/lichen used only as environmental age accents, subtle turquoise/teal Tetherbound energy marks around chest/antlers/hooves. It should feel like a living piece of the Meadows, not a Grass deer.
@@ -252,16 +288,17 @@ restrained earth particles, dust, small floating pebbles or subtle teal energy o
 
 # Production order for Claude
 
-1. Lock visual scale chart with player, three starters, Bramblebun, Meadowhart, and Terracrown.
+1. Lock visual scale chart with player, three starters, Bramblebun, Meadowhart, and the Veridian Stag.
 2. Build/obtain representative production-quality meshes for the three starters.
 3. Build one representative wild Ground Pal and one Water/Air Pal.
 4. Validate combat readability in Godot.
 5. Build remaining wild roster in silhouette families.
 6. Build Meadowhart and riding.
-7. Build Grandpa.
-8. Build Warden.
-9. Build Terracrown only once the stronghold/release presentation can show it properly.
-10. Record every sourced/generated asset and license/provenance in `docs/ASSET_LEDGER.md`.
+7. Build Tuskroot, once Mudsnout exists to evolve out of.
+8. Build Grandpa.
+9. Build Warden.
+10. Build the Veridian Stag only once the stronghold/release presentation can show it properly.
+11. Record every sourced/generated asset and license/provenance in `docs/ASSET_LEDGER.md`.
 
 Do not call a creature finished merely because it imports. Validate:
 - third-person readability
