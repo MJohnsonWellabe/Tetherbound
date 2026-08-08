@@ -184,6 +184,21 @@ jobs:
         # stray override there would follow every later step in this job.
         run: godot --headless --path . --script tests/smoke_settings.gd
 
+      - name: Smoke-test the free build toggle
+        # A development toggle that changes what everything costs
+        # (docs/decisions/D16). The unit tests cover the cost rule and the
+        # settings file; this covers the parts that decide whether it is usable
+        # and honest: that it is reachable from where the settings screen puts
+        # the cursor with nothing but a stick, that the button says which way it
+        # is set, that the Build tab admits materials are free the whole time it
+        # is on — hidden, this reads later as a costing bug that it is not — and
+        # that a piece really can be built out of an empty satchel and really
+        # cannot once the toggle goes back off.
+        #
+        # It writes the REAL user://settings.json and clears it afterwards; a
+        # cheat left switched on there would follow every later step in this job.
+        run: godot --headless --path . --script tests/smoke_free_build.gd
+
       - name: Export Windows build
         run: |
           mkdir -p build/windows
