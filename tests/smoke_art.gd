@@ -170,7 +170,39 @@ func _the_trainer_has_a_model_and_animations() -> void:
 		var clip := str(cfg[role])
 		if not anim.has_animation(clip):
 			_fail("the trainer's '%s' clip is named '%s', which the model does not have" % [role, clip])
-	print("  trainer: %d clips available" % anim.get_animation_list().size())
+
+	# And he has to be the SIZE the config asks for.
+	#
+	# This check did not exist, and its absence is exactly why the owner played
+	# a build in which the trainer rendered enormous — "all you can see are his
+	# shoes" — while every test passed. Every SPECIES was measured against its
+	# collider; the one human in the game was checked for clip names only.
+	#
+	# The bug was a race in _fit(): it measured with `global_transform` on the
+	# line after `add_child()`, and the rigged models carry an internal x100
+	# scale, so the same box read 1.80m or 0.018m depending on whether the
+	# transform had propagated. Both readings produce a plausible scale factor.
+	var wanted := float(_art_config().get("trainer", {}).get("height", 1.8))
+	var box := AABB()
+	var started := false
+	for mesh in _mesh_instances(model):
+		var piece: MeshInstance3D = mesh
+		if not piece.visible:
+			continue
+		var world: AABB = piece.global_transform * piece.get_aabb()
+		if started:
+			box = box.merge(world)
+		else:
+			box = world
+			started = true
+	if not started:
+		_fail("the trainer has no visible mesh; he is not on screen at all")
+	elif absf(box.size.y - wanted) > 0.25:
+		_fail("the trainer renders %.2fm tall but data/config/art.json asks for %.2fm" % [
+			box.size.y, wanted])
+	else:
+		print("  trainer          model %.2fm, configured %.2fm, %d clips" % [
+			box.size.y, wanted, anim.get_animation_list().size()])
 
 
 func _the_meadow_was_dressed() -> void:

@@ -124,15 +124,40 @@ func _library() -> AnimationLibrary:
 ## Same measure-and-fit as pal_body: the model is scaled to the collider, never
 ## the other way round. A trainer whose art is a head taller than the capsule
 ## the camera frames on is a trainer who floats.
+## The mesh's transform relative to `_art`, from LOCAL transforms only.
+##
+## This used to use `mesh.global_transform`, and that is a race. A global
+## transform is only correct once the node is in the tree and the transform has
+## propagated, and `_fit()` is called on the line after `add_child()`. Measured:
+## the trainer's box came back 1.8000 immediately after `add_child` and 0.0180
+## one frame later — a factor of exactly 100, because the rigged models carry an
+## internal 0.01 scale node.
+##
+## Both readings then produce a plausible-looking scale factor and one of them
+## is catastrophic: measure 0.018, compute a fit of 100, and the internal x100
+## is applied on top, rendering a 180-metre trainer. That is the "he is enormous
+## and all you can see are his shoes" the owner hit in the exported build, and
+## it is invisible in a headless test that happens to win the race.
+##
+## Walking the parent chain uses only `transform`, which is valid the instant a
+## node exists, so the answer cannot depend on when it is asked.
+func _relative_transform(from: Node3D) -> Transform3D:
+	var chain := Transform3D()
+	var node: Node3D = from
+	while node != null and node != _art:
+		chain = node.transform * chain
+		node = node.get_parent() as Node3D
+	return chain
+
+
 func _fit() -> void:
 	# Same measurement as pal_body._bounds, and for the same reason: a skinned
 	# mesh's resource AABB and its local transform say nothing about how big it
 	# renders.
 	var box := AABB()
 	var started := false
-	var to_local := _art.global_transform.affine_inverse()
 	for mesh in _mesh_instances(_art):
-		var local: AABB = (to_local * mesh.global_transform) * mesh.get_aabb()
+		var local: AABB = _relative_transform(mesh) * mesh.get_aabb()
 		if started:
 			box = box.merge(local)
 		else:
@@ -141,6 +166,14 @@ func _fit() -> void:
 	if not started or box.size.y <= 0.0001:
 		return
 	var fit := _height / box.size.y
+	# A large factor is NOT suspicious here: the rigged models are authored at
+	# about 0.018 units with the compensating scale on the scene root, which
+	# this measurement deliberately excludes and this line replaces. So x100 is
+	# normal and correct. Only a wildly degenerate reading is worth a word.
+	if fit > 1000.0 or fit < 0.001:
+		push_warning(("trainer model measured %.5fm tall and needs a x%.1f correction " % [
+			box.size.y, fit
+		]) + "to reach %.2fm. That is almost certainly a bad measurement." % _height)
 	_art.scale = Vector3.ONE * fit
 	_art.position = Vector3(
 		-(box.position.x + box.size.x * 0.5) * fit,

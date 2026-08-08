@@ -279,12 +279,29 @@ func _fit(art: Node3D, extra_scale: float) -> void:
 ##
 ## `MeshInstance3D.get_aabb()` accounts for skinning, and composing global
 ## transforms walks the whole chain, so this is the box the renderer draws.
+## A mesh's transform relative to `root`, from LOCAL transforms only.
+##
+## Never `global_transform`. That is only correct once the node is in the tree
+## and the transform has propagated, and this is called immediately after the
+## model is added — so the answer depended on winning a race. Measured on the
+## trainer, which shares this pattern: the same box read 1.8000 one moment and
+## 0.0180 the next, a factor of exactly 100, because rigged models carry an
+## internal 0.01 scale node. A wrong reading here does not fail, it silently
+## scales the creature by that factor. See trainer_model._relative_transform.
+func _relative_transform(from: Node3D, root: Node3D) -> Transform3D:
+	var chain := Transform3D()
+	var node: Node3D = from
+	while node != null and node != root:
+		chain = node.transform * chain
+		node = node.get_parent() as Node3D
+	return chain
+
+
 func _bounds(node: Node3D) -> AABB:
 	var box := AABB()
 	var started := false
-	var to_local := node.global_transform.affine_inverse()
 	for mesh in _mesh_instances(node):
-		var local: AABB = (to_local * mesh.global_transform) * mesh.get_aabb()
+		var local: AABB = _relative_transform(mesh, node) * mesh.get_aabb()
 		if started:
 			box = box.merge(local)
 		else:
