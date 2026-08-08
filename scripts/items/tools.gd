@@ -96,11 +96,22 @@ var _refusal: String = ""
 var _swings: int = 0
 
 
+## `bind()` always wins over the exported paths below, whichever runs first.
+## `_ready()`'s own timing is not guaranteed relative to a caller's `bind()` —
+## a node built and bound entirely in code (every preview tool, `test_gathering.gd`'s
+## `_rig()`, and `build_mode._ready()`'s deferred mount of this file) can have its
+## `_ready()` notification land AFTER `bind()` already set these fields, and an
+## unconditional overwrite here would silently wipe them back to null from paths
+## nobody set — the same hazard `mount.gd._ready()` guards against.
 func _ready() -> void:
-	_player = get_node_or_null(player_path) as Node3D
-	_harvestable = get_node_or_null(harvestable_path)
-	_build = get_node_or_null(build_path)
-	_combat = get_node_or_null(combat_path)
+	if _player == null:
+		_player = get_node_or_null(player_path) as Node3D
+	if _harvestable == null:
+		_harvestable = get_node_or_null(harvestable_path)
+	if _build == null:
+		_build = get_node_or_null(build_path)
+	if _combat == null:
+		_combat = get_node_or_null(combat_path)
 	# Registered here as well as being found by `save_director`'s tree scan, for
 	# the reason `harvestable._register()` gives: this node is created at runtime
 	# rather than living in the scene file, and a node added a frame after that
