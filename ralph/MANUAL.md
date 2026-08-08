@@ -2,32 +2,33 @@
 
 The loop cannot do any of these. Each one blocks something specific.
 
-## Before the loop can ship anything
+## Done
 
-### 1. Let GitHub Actions write to the repository
-`Settings → Actions → General → Workflow permissions` → **Read and write
-permissions**.
+- ~~**Let GitHub Actions write to the repository.**~~ Done — `Settings → Actions
+  → General → Workflow permissions` is on **Read and write**, so
+  `.github/workflows/ralph-merge.yml` can fast-forward `main`.
+- ~~**Merge the setup pull request.**~~ Done — PR #2 landed at `3d60db6`.
 
-`.github/workflows/ralph-merge.yml` fast-forwards `main` when CI goes green on a
-`ralph/**` branch. Without write permission it fails on the push and every task
-stops one step short of shipping. There is nothing to "enable auto-merge" for —
-the workflow replaces that, because Ralph's fired sessions have no GitHub MCP
-tools and no `gh` CLI and so cannot open a pull request at all.
+## Before any art task can run — THE ONE THING STILL OPEN
 
-### 2. Merge the setup pull request
-PR **#2**, `claude/roster-artwork-alignment-2j6cat` → `main`. Until it lands,
-`ralph/` does not exist on `main` and every firing will correctly do nothing but
-say it is waiting.
+### 1. Put `MESHY_API_KEY` in the environment
 
-## Before any art task can run
+**This is not the same as rotating it.** The owner has decided not to rotate the
+key, which is their call and closes that question. But the key currently exists
+only in a chat transcript, and **a fired Ralph session cannot read the
+conversation** — it starts fresh with nothing but the repository and the
+environment. So the key still has to be *placed* somewhere a fresh session can
+reach, and the environment is the only such place: it must never be written to a
+file, because files get committed.
 
-### 3. Rotate the Meshy key, then set it on the environment
-The key was pasted into a chat transcript, so treat it as exposed. Rotate it in
-the Meshy dashboard, then set `MESHY_API_KEY` as an **environment variable on
-the Claude Code environment** — fired sessions read the environment and cannot
-see the conversation.
+Set `MESHY_API_KEY` as an environment variable on the Claude Code environment
+(`env_01JcoSxnn6SYsHdxGPGCQ8yV`).
 
-Without it, `R0.5` onward fail immediately.
+**What breaks without it:** the loop runs fine through `R0.4`, the blind
+critique, which needs no credits. It then hard-stops at `R0.5` (retexture) and
+parks every art task. The non-art backlog — the rename, gathering, building,
+save/load — is unaffected and will keep moving, so this is a partial block, not
+a stopped loop.
 
 ### 4. Top up Meshy credits when `BLOCKED.md` says so
 Balance was **375**. Retexturing the ten winners costs about **300**. Per the
