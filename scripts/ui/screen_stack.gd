@@ -19,6 +19,7 @@ extends CanvasLayer
 ## press this one uses to pop it, and the player would lose two screens per press.
 
 const STYLE := preload("res://scripts/ui/ui_style.gd")
+const SETTINGS := preload("res://scripts/ui/settings.gd")
 
 signal opened()
 signal closed()
@@ -81,6 +82,12 @@ func _ready() -> void:
 	# code cannot come up frozen.
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_player = get_node_or_null(player_path)
+
+	# The stack is in every world scene and every menu preview, which makes it
+	# the boot seam for user settings: saved rebinds go onto the InputMap and the
+	# volume onto the Master bus BEFORE the player touches anything. Idempotent,
+	# so a second stack in a harness costs nothing.
+	SETTINGS.apply()
 
 	# Screens authored as children of the stack start hidden. Otherwise a party
 	# menu wired into the world scene is on screen at boot, which reads as the
@@ -218,6 +225,14 @@ func _set_gameplay_active(active: bool) -> void:
 				_locomotion_was = bool(_player.call("locomotion_enabled"))
 			_player.call("set_locomotion_enabled", false)
 	get_tree().paused = not active
+
+
+## The one node that sees every input event in every scene the menus live in,
+## which makes it the feed for `ui_style`'s last-device detector. OBSERVING,
+## not consuming: gameplay input is still read from the Input singleton in
+## `_physics_process` below, and nothing here marks an event handled.
+func _input(event: InputEvent) -> void:
+	STYLE.note_input(event)
 
 
 ## Input is read in `_physics_process`, never `_process`.

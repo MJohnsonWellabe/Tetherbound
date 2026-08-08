@@ -123,21 +123,33 @@ inventory={
 , Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
 ]
 }
-; The party moved off gamepad Y in M9, and it had to. `inventory` above is also
-; bound to Y, and until M9 there was nothing on the other end of it — the party
-; screen was the only screen a button could open, so the duplicate binding was
-; invisible. With a real inventory screen listening, one press of Y fired both
-; actions in the same frame and only one screen could win: whichever the stack
-; checked first, forever, with the other unreachable on a controller. Controller
-; first is a hard rule, so the collision had to be resolved in the input map
-; rather than papered over in the code that reads it.
-;
-; Y stays the inventory, which is what every survival game on this pad has taught
-; the player, and the party takes the Menu button — the one that opens the thing
-; with your stuff in it on a console. Keyboard P is unchanged.
+; The party moved off gamepad Y in M9 (it collided with `inventory` — one press
+; of Y fired both actions and only one screen could ever win), took the Start
+; button, and has now moved again: Start is the PAUSE MENU, the owner's "there
+; doesn't seem to be a menu button", and the party is a row ON that menu. The
+; party is not stranded — `pause_menu` below opens a menu whose second row is
+; the party — so this action keeps only keyboard P, unchanged since M4, and no
+; pad button at all. Giving it one would repeat the exact collision M9 resolved,
+; because every face, shoulder and D-pad button on an Xbox layout is now spoken
+; for; the input map is where that gets resolved, not the code that reads it.
 party_menu={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":80,"pressed":false,"script":null)
+]
+}
+; The front door to every screen: Resume / Party / Inventory / Map / Settings /
+; Save & Quit. Start, because on an Xbox-layout handheld Start IS the menu
+; button — the owner reached for it and found nothing there.
+;
+; Keyboard is TAB, NOT ESCAPE, and that is a collision decision, not taste:
+; Escape is already `menu_cancel` AND `combat_run`, so an Escape-bound pause
+; would open the menu on the same frame the fight reads "flee" — the two-
+; actions-one-frame failure recorded twice in this file. Tab is bound to
+; nothing, sits under the left hand at WASD, and toggles the same way it opens
+; map overlays in every survival game on PC.
+pause_menu={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194306,"pressed":false,"script":null)
 , Object(InputEventJoypadButton,"device":-1,"button_index":6,"pressed":false,"script":null)
 ]
 }

@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/settings_screen.gd" id="1_settings"]
+
+; Settings. Only what makes this screen different is here — panel, title, rule
+; and footer come from `screen.gd`. RowTemplate is the one authored row;
+; `settings_screen.gd` duplicates it per entry.
+;
+; Each row is a name on the left and the current value on the right, in one
+; line, because a settings row is a QUESTION AND ITS ANSWER and splitting them
+; across rows makes the player hold the question in their head.
+;
+; No `open_action`: this screen is only reached through the pause menu. A fifth
+; world button for a screen you visit twice a session is a button the five
+; systems that actually run the game cannot have.
+
+[node name="SettingsScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_settings")
+title = "Settings"
+
+[node name="Body" type="VBoxContainer" parent="."]
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="List" type="VBoxContainer" parent="Body"]
+custom_minimum_size = Vector2(980, 0)
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="RowTemplate" type="PanelContainer" parent="Body/List"]
+visible = false
+custom_minimum_size = Vector2(980, 84)
+
+[node name="Pad" type="MarginContainer" parent="Body/List/RowTemplate"]
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Line" type="HBoxContainer" parent="Body/List/RowTemplate/Pad"]
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="Body/List/RowTemplate/Pad/Line"]
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Setting"
+
+[node name="Value" type="Label" parent="Body/List/RowTemplate/Pad/Line"]
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 2
+text = "Value"
+
+[node name="Footnote" type="RichTextLabel" parent="Body"]
+custom_minimum_size = Vector2(0, 44)
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 24

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/screen_stack.gd" id="1_stack"]
 [ext_resource type="PackedScene" path="res://scenes/ui/party_screen.tscn" id="2_party"]
@@ -7,6 +7,9 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/farewell_screen.tscn" id="5_farewell"]
 [ext_resource type="PackedScene" path="res://scenes/ui/inventory_screen.tscn" id="6_inventory"]
 [ext_resource type="PackedScene" path="res://scenes/ui/map_screen.tscn" id="7_map"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="8_pause"]
+[ext_resource type="PackedScene" path="res://scenes/ui/settings_screen.tscn" id="9_settings"]
+[ext_resource type="PackedScene" path="res://scenes/ui/remap_screen.tscn" id="10_remap"]
 
 ; The menu layer, ready to drop into a world scene. Set `player_path` at the
 ; trainer and `party_screen_path`'s target — the PartyScreen below — at the party
@@ -98,3 +101,28 @@ map_path = NodePath("../../WorldMap")
 player_path = NodePath("../../Player")
 home_path = NodePath("../../Home")
 satchels_path = NodePath("../../Satchels")
+
+; The front door. `pause_menu` (Start / Tab) declares its own `open_action` like
+; the two above, and its rows push the SAME sibling screens the world buttons
+; open — on top of itself, so B from any of them lands back on the menu. Save &
+; Quit reaches through `../../SaveDirector` into the world scene; a stack loaded
+; on its own finds nothing there and says so instead of erroring.
+;
+; Settings and Button Mapping have NO open_action — they are only reached
+; through this menu — and settings/remap/pause all go AFTER the six above, and
+; anything added later goes after THESE: `meadows_playground.tscn` reaches in
+; with `index="0"` to set the party wiring, and that index is positional.
+[node name="PauseMenu" parent="." instance=ExtResource("8_pause")]
+visible = false
+party_screen_path = NodePath("../PartyScreen")
+inventory_screen_path = NodePath("../InventoryScreen")
+map_screen_path = NodePath("../MapScreen")
+settings_screen_path = NodePath("../SettingsScreen")
+save_director_path = NodePath("../../SaveDirector")
+
+[node name="SettingsScreen" parent="." instance=ExtResource("9_settings")]
+visible = false
+remap_screen_path = NodePath("../RemapScreen")
+
+[node name="RemapScreen" parent="." instance=ExtResource("10_remap")]
+visible = false

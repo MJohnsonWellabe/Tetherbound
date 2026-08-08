@@ -1,0 +1,61 @@
+{
+  "_comment": "User-facing settings: the SHIPPING DEFAULTS only. The player's own choices are runtime state and live in user://settings.json (D14: never write res://) — scripts/ui/settings.gd loads this file first, overlays the user file on top, and is the only reader of either. Every value here is TUNABLE.",
+
+  "_comment_free_build": "When true, building costs nothing: build_mode's cost gate pays from a bottomless purse instead of the trainer's inventory (see settings.gd bottomless_purse() and the one authorised line in build_mode._purse()). Ships OFF — it is a sandbox convenience, not the game.",
+  "free_build": false,
+
+  "_comment_speed_scale": "Combat speed, as a multiplier on the opponent's tempo. The Settings screen writes this (Slow 0.75 / Normal 1.0 / Fast 1.25 — see speed_choices below); the fight reads it ONCE at fight start and applies it to the enemy timing block in data/config/combat.json. 1.0 is the authored fight. Coordinated through this file by name — nothing imports across the seam.",
+  "speed_scale": 1.0,
+
+  "_comment_speed_choices": "The three positions of the combat-speed selector, in order. Label and multiplier together, so adding a fourth position is a data edit and not a screen edit.",
+  "speed_choices": [
+    { "label": "Slow", "value": 0.75 },
+    { "label": "Normal", "value": 1.0 },
+    { "label": "Fast", "value": 1.25 }
+  ],
+
+  "_comment_master_volume": "Master bus volume, 0.0-1.0 linear. Applied at boot and whenever the Settings screen changes it.",
+  "master_volume": 1.0,
+
+  "_comment_remap_groups": "Which actions are allowed to SHARE a physical button, for the remap screen's conflict check. Two actions in the SAME group are read in the same game state, so putting them on one button makes one press fire both — the project shipped that twice (inventory + party_menu both on Y; mount nearly on interact) — and a rebind that would do it again is REFUSED, naming the holder. Actions in DIFFERENT groups may share on purpose: A confirms in a menu and jumps in the world because a menu and the world are never live at once. An action missing from every group conflicts with everything (conservative), and still appears on the remap screen — the screen lists what the InputMap has, not what this file has.",
+  "remap_groups": {
+    "world": ["jump", "sprint", "interact", "inventory", "party_menu", "map", "tool_cycle", "build_toggle", "mount", "pause_menu"],
+    "build": ["build_cycle_left", "build_cycle_right", "build_rotate"],
+    "combat": ["combat_quick", "combat_charged", "combat_throw", "combat_run", "combat_switch_left", "combat_switch_right"],
+    "menu": ["menu_confirm", "menu_cancel"],
+    "axes": ["move_forward", "move_back", "move_left", "move_right", "look_up", "look_down", "look_left", "look_right"]
+  },
+
+  "_comment_action_labels": "Player words for action ids, for the remap screen. An action with no entry is prettified from its id (underscores to spaces), so a NEW action appears on the screen without anyone editing this — an entry here is polish, not registration.",
+  "action_labels": {
+    "move_forward": "Move forward",
+    "move_back": "Move back",
+    "move_left": "Move left",
+    "move_right": "Move right",
+    "look_up": "Look up",
+    "look_down": "Look down",
+    "look_left": "Look left",
+    "look_right": "Look right",
+    "jump": "Jump",
+    "sprint": "Sprint",
+    "interact": "Interact",
+    "inventory": "Inventory",
+    "party_menu": "Party",
+    "map": "Map",
+    "pause_menu": "Pause menu",
+    "tool_cycle": "Cycle tool",
+    "build_toggle": "Build mode",
+    "build_cycle_left": "Build: previous piece",
+    "build_cycle_right": "Build: next piece",
+    "build_rotate": "Build: rotate",
+    "mount": "Mount / dismount",
+    "combat_quick": "Quick attack",
+    "combat_charged": "Charged attack",
+    "combat_throw": "Throw orb",
+    "combat_run": "Run from fight",
+    "combat_switch_left": "Switch pal left",
+    "combat_switch_right": "Switch pal right",
+    "menu_confirm": "Menu: confirm",
+    "menu_cancel": "Menu: back"
+  }
+}

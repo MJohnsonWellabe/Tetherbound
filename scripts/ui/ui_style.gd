@@ -174,6 +174,123 @@ static func verb(button: String, label: String, ready: bool) -> String:
 	]
 
 
+# ------------------------------------------------------------ device glyphs
+
+## What the buttons are CALLED, per device, so a prompt can say [RB] on the pad
+## and [F] on a keyboard instead of one of them forever.
+##
+## This exists because the owner playtested on the ROG Ally and the throw
+## prompt said F. There is no F on an Ally. Every hardcoded button string in a
+## verb row is wrong on exactly one of the two devices this game ships for, and
+## which one it is wrong on flips when the player picks up the other input —
+## so the glyph has to come from the ACTION, through the InputMap, at the
+## moment it is drawn. That also means a remapped action names its new button
+## everywhere, for free.
+##
+## Xbox names, because the Ally presents as an Xbox-layout pad and so does
+## every other pad this game is likely to meet. 4 and 6 are "View" and "Start"
+## — the Ally's own labels for them.
+const PAD_BUTTON_GLYPHS := {
+	JOY_BUTTON_A: "A", JOY_BUTTON_B: "B", JOY_BUTTON_X: "X", JOY_BUTTON_Y: "Y",
+	JOY_BUTTON_BACK: "View", JOY_BUTTON_GUIDE: "Guide", JOY_BUTTON_START: "Start",
+	JOY_BUTTON_LEFT_STICK: "LS", JOY_BUTTON_RIGHT_STICK: "RS",
+	JOY_BUTTON_LEFT_SHOULDER: "LB", JOY_BUTTON_RIGHT_SHOULDER: "RB",
+	JOY_BUTTON_DPAD_UP: "D-Pad Up", JOY_BUTTON_DPAD_DOWN: "D-Pad Down",
+	JOY_BUTTON_DPAD_LEFT: "D-Pad Left", JOY_BUTTON_DPAD_RIGHT: "D-Pad Right",
+}
+
+## Axis-and-direction to name, for actions bound to a stick or trigger.
+## Keyed "axis:sign"; sign is the sign of the binding's axis_value.
+const PAD_AXIS_GLYPHS := {
+	"0:-1": "L-Stick Left", "0:1": "L-Stick Right",
+	"1:-1": "L-Stick Up", "1:1": "L-Stick Down",
+	"2:-1": "R-Stick Left", "2:1": "R-Stick Right",
+	"3:-1": "R-Stick Up", "3:1": "R-Stick Down",
+	"4:1": "LT", "5:1": "RT",
+}
+
+## Which device spoke last: 1 pad, 0 keyboard/mouse, -1 nobody yet.
+##
+## Fed by `screen_stack._input()`, which sees every event in every scene the
+## menus exist in. Before the first event the answer is "is a pad plugged in",
+## which on the Ally is yes at boot — controller first is the hard rule, and a
+## handheld must never boot showing keyboard letters.
+static var _last_device: int = -1
+
+
+## Any pad press or real stick deflection flips to pad glyphs; any key or
+## mouse press flips back. The 0.5 floor on motion keeps a worn stick resting
+## off-centre from flickering the whole interface between devices.
+static func note_input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton:
+		_last_device = 1
+	elif event is InputEventJoypadMotion:
+		if absf((event as InputEventJoypadMotion).axis_value) > 0.5:
+			_last_device = 1
+	elif event is InputEventKey or event is InputEventMouseButton:
+		_last_device = 0
+
+
+static func pad_active() -> bool:
+	if _last_device == -1:
+		return not Input.get_connected_joypads().is_empty()
+	return _last_device == 1
+
+
+## The name of the button that fires `action` on the device the player is
+## actually holding. Falls back across devices — an action with only a keyboard
+## binding names its key even on the pad, because a wrong-device name is still
+## infinitely better than a blank — and falls back to the action id itself when
+## nothing is bound, for the cooldown-verb reason: absence reads as a bug.
+static func glyph(action: StringName) -> String:
+	if not InputMap.has_action(action):
+		return str(action)
+	var key_name := ""
+	var pad_name := ""
+	for event in InputMap.action_get_events(action):
+		if event is InputEventKey and key_name == "":
+			key_name = key_glyph(event as InputEventKey)
+		elif event is InputEventJoypadButton and pad_name == "":
+			pad_name = button_glyph(int((event as InputEventJoypadButton).button_index))
+		elif event is InputEventJoypadMotion and pad_name == "":
+			pad_name = axis_glyph(event as InputEventJoypadMotion)
+		elif event is InputEventMouseButton and key_name == "":
+			key_name = mouse_glyph(event as InputEventMouseButton)
+	if pad_active():
+		return pad_name if pad_name != "" else (key_name if key_name != "" else str(action))
+	return key_name if key_name != "" else (pad_name if pad_name != "" else str(action))
+
+
+static func key_glyph(event: InputEventKey) -> String:
+	var code := event.physical_keycode if event.physical_keycode != KEY_NONE else event.keycode
+	var text := OS.get_keycode_string(code)
+	return text if text != "" else "Key %d" % int(code)
+
+
+static func button_glyph(index: int) -> String:
+	return str(PAD_BUTTON_GLYPHS.get(index, "Pad %d" % index))
+
+
+static func axis_glyph(event: InputEventJoypadMotion) -> String:
+	var sign_key := "%d:%d" % [int(event.axis), 1 if event.axis_value >= 0.0 else -1]
+	return str(PAD_AXIS_GLYPHS.get(sign_key, "Axis %d" % int(event.axis)))
+
+
+static func mouse_glyph(event: InputEventMouseButton) -> String:
+	match event.button_index:
+		MOUSE_BUTTON_LEFT: return "LMB"
+		MOUSE_BUTTON_RIGHT: return "RMB"
+		MOUSE_BUTTON_MIDDLE: return "MMB"
+	return "Mouse %d" % int(event.button_index)
+
+
+## `verb()`, with the button looked up from the action instead of hardcoded.
+## New verb rows should use this; the ones that predate it are listed in the
+## remap milestone's audit.
+static func verb_for(action: StringName, label: String, ready: bool) -> String:
+	return verb(glyph(action), label, ready)
+
+
 ## A whole footer row of verbs, centred. Each entry is [button, label, ready].
 ##
 ## Menus and the combat HUD share this formatter so the button language is one
