@@ -26,6 +26,11 @@
       "id": "build",
       "label": "Build",
       "script": "res://scripts/ui/tab_build.gd"
+    },
+    {
+      "id": "settings",
+      "label": "Settings",
+      "script": "res://scripts/ui/tab_settings.gd"
     }
   ],
 
@@ -133,5 +138,5 @@
   },
 
   "_comment_footer": "The button legend. Written out because this ships on a handheld with no manual open beside it.",
-  "footer": "A  Select        B  Close        Q / LB  Next tab"
+  "footer": "A  Select        B  Close        Q / LB  Next tab        Menu + View held, or F10  Reset all controls"
 }

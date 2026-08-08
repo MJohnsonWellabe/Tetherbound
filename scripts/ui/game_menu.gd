@@ -21,12 +21,22 @@ extends CanvasLayer
 
 const CONFIG_PATH := "res://data/config/menu.json"
 const THEME_PATH := "res://scenes/ui/menu_theme.tres"
+const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 
 ## How long a status line stays up. Long enough to read on a handheld held at
 ## arm's length, short enough that it is gone before the next one arrives.
 const STATUS_SECONDS := 3.0
 
+## How long the panic chord has to be held before every control goes back to its
+## default. Long enough that it cannot happen by accident during a fight.
+const PANIC_SECONDS := 1.5
+
 var game: Node = null
+
+## The player's controls. Owned here rather than by the autoload because this
+## node is the settings screen's shell and is mounted at boot in every scene
+## anyway; see docs/decisions/D15.
+var bindings: RefCounted = null
 
 var _config: Dictionary = {}
 var _tabs: Array = []
@@ -44,6 +54,11 @@ var _paused_before: bool = false
 var _status_left: float = 0.0
 var _last_revision: int = -1
 
+## Set while the settings tab is capturing a button. The shell polls actions,
+## and the button being rebound is very often one the shell itself reads.
+var _deaf: bool = false
+var _panic_left: float = PANIC_SECONDS
+
 ## The fight, found by capability rather than by path so this file holds no
 ## knowledge of another agent's scene layout. Re-found when it goes away.
 var _combat: Node = null
@@ -60,6 +75,7 @@ var _combat: Node = null
 func _ready() -> void:
 	game = get_parent()
 	_config = _read_config()
+	_load_bindings()
 
 	var theme_resource: Theme = load(THEME_PATH)
 	if theme_resource != null:
@@ -68,6 +84,26 @@ func _ready() -> void:
 	_footer.text = str(_config.get("footer", ""))
 	_build_tabs()
 	_root.visible = false
+
+
+## Snapshot the input map as project.godot left it, then lay the player's
+## overrides on top.
+##
+## Order matters and so does the timing: this runs at autoload `_ready`, before
+## any world scene has read an action. project.godot is never written back to —
+## it IS the defaults, and an editor pass over it strips its comments.
+##
+## A settings file that is missing, corrupt or from a newer build must not stop
+## the game booting, so `load_overrides` reports what it found rather than
+## failing, and the game carries on with defaults either way.
+func _load_bindings() -> void:
+	bindings = KEY_BINDINGS.new()
+	var settings: Dictionary = _config.get("settings", {}) as Dictionary
+	var controls: Dictionary = settings.get("controls", {}) as Dictionary
+	bindings.glyphs = controls.get("glyphs", {}) as Dictionary
+	var status: int = bindings.load_overrides()
+	if status != KEY_BINDINGS.LOAD_OK and status != KEY_BINDINGS.LOAD_MISSING:
+		push_warning("controls fell back to defaults (status %d)" % status)
 
 
 func _read_config() -> Dictionary:
@@ -163,6 +199,8 @@ func close() -> void:
 		return
 	_open = false
 	_root.visible = false
+	# A tab holding the shell deaf cannot un-hold it once it stops being polled.
+	_deaf = false
 	# Restore, do not assume. A future scene may legitimately open the menu with
 	# the mouse already visible, and slamming it back to CAPTURED would trap a
 	# cursor the player needs.
@@ -182,6 +220,7 @@ func toggle() -> void:
 func select(index: int) -> void:
 	if _tabs.is_empty():
 		return
+	_deaf = false
 	_index = posmod(index, _tabs.size())
 	for i in _bodies.size():
 		_bodies[i].visible = i == _index
@@ -212,6 +251,7 @@ func say(message: String) -> void:
 
 
 func _process(delta: float) -> void:
+	_read_panic(delta)
 	_read_actions()
 	if not _open:
 		return
@@ -251,8 +291,54 @@ func _refresh() -> void:
 ## Cursor movement and button presses are NOT polled: those are Godot's built-in
 ## ui_* actions driving Control focus, which is what makes the menu work on a
 ## stick with no code of ours in the path.
+## Stop reading actions for a moment. Called by the settings tab while it is
+## waiting for a button: without this, binding `menu_cancel` to A would close the
+## menu on the very press that bound it.
+func hold_input(held: bool) -> void:
+	_deaf = held
+
+
+## The way back from a layout the player has broken.
+##
+## READ OFF THE DEVICE, NOT THE INPUT MAP, and that is the entire point. Every
+## other way into this menu goes through an action the player is allowed to move,
+## so every other way can be lost. Hold the pad's Menu and View buttons together,
+## or F10 on a keyboard, for a second and a half.
+##
+## docs/TECHNICAL_START.md says never to scatter raw device checks through
+## gameplay. This is the exception the rule needs: it is the one check that must
+## keep working when the input map cannot be trusted, and it lives in one place.
+func _read_panic(delta: float) -> void:
+	if not _panic_chord_held():
+		_panic_left = PANIC_SECONDS
+		return
+	_panic_left -= delta
+	if _panic_left > 0.0:
+		return
+	_panic_left = PANIC_SECONDS
+
+	if bindings != null:
+		bindings.reset_all()
+		bindings.save()
+	if not _open:
+		open("settings")
+	else:
+		for i in _tabs.size():
+			if str((_tabs[i] as Dictionary).get("id", "")) == "settings":
+				select(i)
+				break
+	say("Every control is back to its default.")
+
+
+func _panic_chord_held() -> bool:
+	if Input.is_key_pressed(KEY_F10):
+		return true
+	return Input.is_joy_button_pressed(0, JOY_BUTTON_START) \
+		and Input.is_joy_button_pressed(0, JOY_BUTTON_BACK)
+
+
 func _read_actions() -> void:
-	if _tabs.is_empty():
+	if _tabs.is_empty() or _deaf:
 		return
 
 	if not _open:
