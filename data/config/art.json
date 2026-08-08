@@ -2,24 +2,22 @@
   "_comment": "Presentation. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'too dark', 'the grass is the wrong green', 'the creatures don't move enough' \u2014 every one of those has to be answerable by editing this file rather than by editing a scene.",
   "_comment_scale": "Nothing here sets a collider or a hit range. Art is fitted to the gameplay size the species and the controller already declare; if a value in this file could change how far an attack reaches, it is in the wrong file.",
   "trainer": {
-    "model": "res://assets/characters/Ranger.glb",
+    "model": "res://assets/characters/trainer/trainer_lod0.glb",
     "_comment_height": "Metres, matched to the CharacterBody3D capsule in scenes/player/player.tscn. The model is measured and scaled to this, so a replacement of any size drops in without touching the scene.",
     "height": 1.8,
     "_comment_yaw": "Degrees of correction for which way the source model faces. Verified from a survey frame, not assumed \u2014 there is no convention across asset packs.",
     "model_yaw": 0.0,
-    "_comment_clips": "Clip names as they exist in the .glb. Kenney's Blocky Characters ship 27; these are the six the game currently drives. A replacement model with different names is a data edit here.",
+    "_comment_clips": "Five clips, authored by tools/art_pipeline/blender/animate_humanoid.py and baked into the .glb, so the role and the clip name are the same string and nothing is retargeted. They are procedural cycles, not hand-animated character work \u2014 the first thing to upgrade.",
     "clips": {
-      "idle": "Idle_A",
-      "walk": "Walking_A",
-      "sprint": "Running_A",
-      "jump": "Jump_Idle",
-      "throw": "Throw"
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
     },
-    "_comment_libraries": "KayKit ships characters and animations separately: Ranger.glb has the mesh and a 23-bone rig but zero clips, and the clips live in shared libraries built on the same rig. These are merged into the character's AnimationPlayer at load. Getting this wrong is a trainer frozen in a T-pose.",
-    "animation_libraries": [
-      "res://assets/characters/Rig_Medium_General.glb",
-      "res://assets/characters/Rig_Medium_MovementBasic.glb"
-    ]
+    "_comment_libraries": "Empty now, and kept as a key because the merge path still works. KayKit's Ranger needed it: that character ships a rig with zero clips and the motion in shared libraries. This model carries its own clips. Its skeleton is also NOT KayKit's \u2014 KayKit's character is about two heads tall and sheet 04's trainer is 6.25, so neither the weights nor the clips transfer between them.",
+    "animation_libraries": [],
+    "_comment_model": "Sheet 04's trainer, produced through tools/art_pipeline. The body and the head were generated separately and grafted: nine whole-figure candidates across three rounds all came back with a blank ovoid for a face, because at a 30k budget spread over a standing figure an eye socket is smaller than the triangles available to describe it."
   },
   "sky": {
     "_comment": "Mid-morning, high summer, clear. Taken from the key art board rather than invented: a warm low-contrast sky over saturated grass is most of what makes the reference read as inviting rather than as a tech demo.",

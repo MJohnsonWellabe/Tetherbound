@@ -51,17 +51,31 @@ def main() -> None:
     if not rigs or not donors:
         raise SystemExit(f"{donor_path.name} must contain an armature and a skinned mesh")
     rig = rigs[0]
-    # The donor is whichever mesh actually carries weights — a stray unskinned
-    # object (an Icosphere turned up riding in one GLB) must not win by being
-    # first in the list. Strays are deleted so they cannot ride into the output
-    # either.
-    donor = max(donors, key=lambda o: len(o.vertex_groups))
-    if not donor.vertex_groups:
+    # The donor is EVERY mesh that carries weights, joined into one surface.
+    #
+    # This used to be `max(donors, key=vertex_group_count)`, which is right for
+    # a single-object creature and silently catastrophic for a modular one: a
+    # character built as body / head / arms / legs / cape gives every part the
+    # same 23 groups, so max() returned whichever came first alphabetically —
+    # an arm — and the whole target was then weighted from nearest faces on
+    # that arm. It reports "0 unweighted" and deforms like nothing on earth.
+    skinned = [obj for obj in donors if obj.vertex_groups]
+    if not skinned:
         raise SystemExit(f"{donor_path.name} has no mesh with vertex groups — rig it first")
     for stray in donors:
-        if stray is not donor:
+        if stray not in skinned:
             print(f"  dropping stray unskinned object: {stray.name}")
             bpy.data.objects.remove(stray, do_unlink=True)
+
+    bpy.ops.object.select_all(action="DESELECT")
+    for part in skinned:
+        part.select_set(True)
+    bpy.context.view_layer.objects.active = skinned[0]
+    if len(skinned) > 1:
+        print(f"  donor is {len(skinned)} skinned parts joined: "
+              f"{', '.join(o.name for o in skinned)}")
+        bpy.ops.object.join()
+    donor = bpy.context.view_layer.objects.active
 
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=str(textured_path))

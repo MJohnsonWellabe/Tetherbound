@@ -476,7 +476,21 @@ def cmd_fetch(args) -> None:
     out = pathlib.Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
 
-    urls = task.get("model_urls") or {}
+    # The generate/texture stages return a `model_urls` map; rigging and
+    # animation instead nest theirs under `result` with per-format keys
+    # (`rigged_character_glb_url`). Both are normalised to the same little
+    # {format: url} dict here, because the first rig task of the project
+    # reported SUCCEEDED and then "returned no GLB" — the file was there, in
+    # a shape this function did not look at.
+    urls = dict(task.get("model_urls") or {})
+    result = task.get("result")
+    if isinstance(result, dict):
+        for key, url in result.items():
+            if not isinstance(url, str) or not key.endswith("_url"):
+                continue
+            for fmt in ("glb", "fbx", "obj"):
+                if f"_{fmt}_" in key or key.endswith(f"_{fmt}_url"):
+                    urls.setdefault(fmt, url)
     if not urls.get("glb"):
         sys.exit(f"{args.task_id} succeeded but returned no GLB")
 

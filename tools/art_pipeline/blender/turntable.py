@@ -61,6 +61,10 @@ FRAME_FILL = 0.78
 WORLD_COLOUR = (0.34, 0.35, 0.38, 1.0)
 WORLD_STRENGTH = 1.0
 SUN_ENERGY = 2.2
+## The key's tilt, and how far round from the camera it sits. A constant
+## offset rather than a fixed world angle — see build_lighting.
+KEY_ELEVATION_DEGREES = 55
+KEY_OFFSET_DEGREES = 35
 GROUND_COLOUR = (0.26, 0.26, 0.29, 1.0)
 
 
@@ -143,13 +147,20 @@ def aim(camera: bpy.types.Object, target: Vector, azimuth: float,
     camera.data.ortho_scale = extent / FRAME_FILL
 
 
-def build_lighting() -> None:
+def build_lighting() -> bpy.types.Object:
     """Flat, even, and boring, so the render shows form rather than lighting.
 
     A key/fill/rim setup makes every candidate look better and makes them look
     better by different amounts depending on their surface — which is exactly
     the confound to avoid when the question is "which of these is most like the
     drawing". The sheets are lit flat; match them.
+
+    Returns the key so the render loop can swing it round with the camera. It
+    used to be nailed to one azimuth while the camera orbited, which meant the
+    back view was lit from behind the subject: a reviewer's verdict on a batch
+    of three was "the back renders are worthless — all three resolve to
+    near-flat silhouettes with no surface shading", on a view whose entire job
+    is to show the nape, the collar and the vest back.
     """
     world = bpy.data.worlds.new("flat")
     world.use_nodes = True
@@ -161,8 +172,9 @@ def build_lighting() -> None:
     data.energy = SUN_ENERGY
     data.angle = math.radians(30)          # soft, so form reads without hard shadow edges
     light = bpy.data.objects.new("key", data)
-    light.rotation_euler = (math.radians(55), 0.0, math.radians(35))
+    light.rotation_euler = (math.radians(55), 0.0, math.radians(KEY_OFFSET_DEGREES))
     bpy.context.scene.collection.objects.link(light)
+    return light
 
 
 def build_ground(extent: float) -> None:
@@ -210,7 +222,7 @@ def main() -> None:
 
     load(model)
     centre, extent = normalise()
-    build_lighting()
+    key = build_lighting()
     build_ground(extent)
     configure_render(size)
     camera = build_camera()
@@ -219,6 +231,11 @@ def main() -> None:
     radius = extent * 4.0     # ortho, so this only has to clear the model
     for view, azimuth in ANGLES.items():
         aim(camera, centre, azimuth, radius, extent)
+        # Swing the key with the camera so every view is lit from the viewer's
+        # own side. The offset stays constant, so the four frames still share
+        # one lighting setup and remain comparable to each other.
+        key.rotation_euler = (math.radians(KEY_ELEVATION_DEGREES), 0.0,
+                              math.radians(azimuth + KEY_OFFSET_DEGREES))
         bpy.context.scene.render.filepath = str(out_dir / f"{view}.png")
         bpy.ops.render.render(write_still=True)
 

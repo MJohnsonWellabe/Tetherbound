@@ -159,6 +159,35 @@
         "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own pal is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
         "_comment_role": "The one that comes at you. Blue is the only cool hue in the pack and the only thing in the biome opposed to green rather than adjacent to it."
       }
+    },
+    "veridian": {
+      "display_name": "Veridian Stag",
+      "type": "ground",
+      "_comment_type": "Board 06 labels it Grass/Earth. The Meadows has three types \u2014 Ground, Water, Air \u2014 and REFERENCE_CANON's precedence rule is that the markdown wins on type while the image wins on looks, so it is the GROUND legendary per GAME_DESIGN.md section 26.",
+      "base_hp": 420.0,
+      "base_attack": 46.0,
+      "base_defence": 44.0,
+      "catch_rate": 0.02,
+      "_comment_catch": "The lowest in the game by a wide margin. A legendary you catch on the second orb is not a legendary. TUNABLE.",
+      "aggressive": true,
+      "placeholder": {
+        "colour": "#4f7a3a",
+        "height": 2.6,
+        "radius": 0.95,
+        "_comment_size": "Above every other creature in the biome, which D12 asked for explicitly: the range recentres at 1.35m for the practice creature and 2.00m for the ambusher, 'and the legendary above all of them'. At 2.6m it stands a head and antlers over the 1.8m trainer.",
+        "model": "res://assets/pals/tetherbound/veridian/models/pal_veridian_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique \u2014 the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        }
+      }
     }
   }
 }

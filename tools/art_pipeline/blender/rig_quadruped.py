@@ -158,9 +158,19 @@ def find_legs(body: bpy.types.Object) -> dict[str, Vector]:
         legs[key] = centre
 
     # Sanity: the pairs must actually be separated, or the "legs" are one blob.
-    size = high - low
-    x_gap = abs(legs["front_l"].x - legs["front_r"].x) / max(size.x, 1e-6)
-    y_gap = abs(legs["front_l"].y - legs["rear_l"].y) / max(size.y, 1e-6)
+    #
+    # Measured against the span of the LEG BAND, not of the whole model. The
+    # whole model's x-span is whatever the widest feature happens to be, and on
+    # the legendary stag that is the antler rack — nearly three times the body's
+    # width. Dividing a real leg separation by an antler span reported 0.15 and
+    # refused to rig a mesh whose legs a reviewer had just called "the cleanest
+    # leg separation of any candidate". The yardstick was wrong, not the mesh.
+    band = [body.matrix_world @ vertex.co for vertex in body.data.vertices
+            if (body.matrix_world @ vertex.co).z <= band_top]
+    band_x = max(p.x for p in band) - min(p.x for p in band)
+    band_y = max(p.y for p in band) - min(p.y for p in band)
+    x_gap = abs(legs["front_l"].x - legs["front_r"].x) / max(band_x, 1e-6)
+    y_gap = abs(legs["front_l"].y - legs["rear_l"].y) / max(band_y, 1e-6)
     if x_gap < MIN_LEG_SEPARATION or y_gap < MIN_LEG_SEPARATION:
         raise SystemExit(
             f"leg clusters are not separated (x {x_gap:.2f}, y {y_gap:.2f} of body; "
