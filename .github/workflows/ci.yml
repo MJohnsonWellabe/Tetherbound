@@ -16,7 +16,13 @@ name: CI
 
 on:
   push:
-    branches: [main, 'claude/**']
+    # `ralph/**` is here because it is the loop's ship action. Ralph's sessions
+    # cannot open a pull request, so pushing the branch is the only signal they
+    # can send, and ralph-merge.yml only lands a branch whose CI went green.
+    # Leaving it out meant CI never ran on those branches at all, so the merge
+    # workflow sat waiting on a success that could not arrive -- the loop would
+    # have pushed work forever and shipped none of it.
+    branches: [main, 'claude/**', 'ralph/**']
   pull_request:
   workflow_dispatch:
 

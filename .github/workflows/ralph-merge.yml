@@ -21,6 +21,11 @@ on:
   workflow_run:
     workflows: ["CI"]
     types: [completed]
+    # Without this, every CI completion on main or a claude/** branch still
+    # starts a run here that immediately skips. Six of those appeared within
+    # five minutes of adding this workflow and read, at a glance, like six
+    # merges. Filtering at the trigger means no run is created at all.
+    branches: ['ralph/**']
 
 permissions:
   contents: write
