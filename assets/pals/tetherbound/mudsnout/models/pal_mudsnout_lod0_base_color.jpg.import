@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1cxjj2ym8hg8"
-path="res://.godot/imported/pal_mudsnout_lod0_base_color.jpg-8484ba18ee748ffbbca358c7a457bfc5.ctex"
+path.s3tc="res://.godot/imported/pal_mudsnout_lod0_base_color.jpg-8484ba18ee748ffbbca358c7a457bfc5.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "41c42bbf377f87a27dc6d3e492612dcd"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/pals/tetherbound/mudsnout/models/pal_mudsnout_lod0_base_color.jpg"
-dest_files=["res://.godot/imported/pal_mudsnout_lod0_base_color.jpg-8484ba18ee748ffbbca358c7a457bfc5.ctex"]
+dest_files=["res://.godot/imported/pal_mudsnout_lod0_base_color.jpg-8484ba18ee748ffbbca358c7a457bfc5.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
