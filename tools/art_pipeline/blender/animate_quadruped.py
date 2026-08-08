@@ -43,13 +43,35 @@ CLIPS = {
     "faint": (36, False),
 }
 
-LEGS = ["front_upper_l", "front_upper_r", "rear_upper_l", "rear_upper_r"]
-LOWER = {"front_upper_l": "front_lower_l", "front_upper_r": "front_lower_r",
-         "rear_upper_l": "rear_lower_l", "rear_upper_r": "rear_lower_r"}
-
+## Two skeleton layouts, detected from the rig itself: rig_quadruped.py's
+## four-legger, and rig_glider.py's two legs + wings. One authoring script
+## for both, because the clip ROLES are the game's and identical either way;
+## only which bones swing differs.
+QUAD_LEGS = ["front_upper_l", "front_upper_r", "rear_upper_l", "rear_upper_r"]
+QUAD_LOWER = {"front_upper_l": "front_lower_l", "front_upper_r": "front_lower_r",
+              "rear_upper_l": "rear_lower_l", "rear_upper_r": "rear_lower_r"}
 ## Diagonal pairs move together in a trot: FL+RR, then FR+RL.
-PHASE = {"front_upper_l": 0.0, "rear_upper_r": 0.0,
-         "front_upper_r": math.pi, "rear_upper_l": math.pi}
+QUAD_PHASE = {"front_upper_l": 0.0, "rear_upper_r": 0.0,
+              "front_upper_r": math.pi, "rear_upper_l": math.pi}
+
+GLIDER_LEGS = ["leg_upper_l", "leg_upper_r"]
+GLIDER_LOWER = {"leg_upper_l": "leg_lower_l", "leg_upper_r": "leg_lower_r"}
+GLIDER_PHASE = {"leg_upper_l": 0.0, "leg_upper_r": math.pi}
+WINGS = ["wing_upper_l", "wing_upper_r"]
+WING_TIPS = {"wing_upper_l": "wing_tip_l", "wing_upper_r": "wing_tip_r"}
+
+# Set by detect() once the rig is loaded.
+LEGS, LOWER, PHASE = QUAD_LEGS, QUAD_LOWER, QUAD_PHASE
+IS_GLIDER = False
+
+
+def detect(rig: bpy.types.Object) -> None:
+    global LEGS, LOWER, PHASE, IS_GLIDER
+    names = {b.name for b in rig.data.bones}
+    if "wing_upper_l" in names:
+        LEGS, LOWER, PHASE = GLIDER_LEGS, GLIDER_LOWER, GLIDER_PHASE
+        IS_GLIDER = True
+        print("  glider skeleton detected: 2 legs + wings")
 
 
 def argv_after_double_dash() -> list[str]:
@@ -100,6 +122,9 @@ def author_idle(rig, frames: int) -> None:
         key(rig, "head", frame, euler=(2.0 * math.sin(t + 0.7), 0, 3.0 * math.sin(t * 0.5)))
         key(rig, "tail_1", frame, euler=(0, 0, 6.0 * math.sin(t * 0.5 + 1.0)))
         key(rig, "tail_2", frame, euler=(0, 0, 5.0 * math.sin(t * 0.5 + 1.6)))
+        for wing in WINGS:
+            # A slow settle, like feathers resettling after a shuffle.
+            key(rig, wing, frame, euler=(0, 0, 2.5 * math.sin(t + (0 if wing.endswith("l") else math.pi))))
 
 
 def author_gait(rig, frames: int, swing: float, bob: float, lean: float) -> None:
@@ -117,12 +142,42 @@ def author_gait(rig, frames: int, swing: float, bob: float, lean: float) -> None
         key(rig, "spine", frame, euler=(bob * math.sin(2 * t + 0.5), 0, 0))
         key(rig, "head", frame, euler=(-bob * 0.8 * math.sin(2 * t + 0.5) - lean * 0.5, 0, 0))
         key(rig, "tail_1", frame, euler=(0, 0, 8.0 * math.sin(t)))
+        if IS_GLIDER:
+            # Wings pump with the gait — shallow in a walk, real flaps in a
+            # run, which is what makes a glider's run read as a glider's.
+            flap = swing * 0.5
+            for wing in WINGS:
+                sign = 1.0 if wing.endswith("l") else -1.0
+                key(rig, wing, frame, euler=(0, sign * flap * math.sin(2 * t), 0))
+                key(rig, WING_TIPS[wing], frame,
+                    euler=(0, sign * flap * 0.6 * math.sin(2 * t - 0.8), 0))
 
 
 def author_attack(rig, frames: int) -> None:
-    """Terrapup's quick attack: rear up, slam both forepaws down. Anticipation
-    on the rear-up is what makes the attack readable at combat distance —
-    §16's requirement — so it gets half the clip."""
+    """The quick attack, with the anticipation half §16 requires.
+
+    Quadruped: rear up, slam both forepaws down (the digger's move).
+    Glider: draw the wings back, then a forward buffet with the head driving —
+    the wings are the glider's paws.
+    """
+    if IS_GLIDER:
+        key(rig, "spine", 0, euler=(0, 0, 0))
+        for wing in WINGS:
+            sign = 1.0 if wing.endswith("l") else -1.0
+            key(rig, wing, 0, euler=(0, 0, 0))
+            key(rig, wing, 10, euler=(0, sign * -50, 0))       # drawn back
+            key(rig, WING_TIPS[wing], 10, euler=(0, sign * -25, 0))
+            key(rig, wing, 15, euler=(0, sign * 35, 0))        # buffet
+            key(rig, WING_TIPS[wing], 15, euler=(0, sign * 30, 0))
+            key(rig, wing, frames, euler=(0, 0, 0))
+            key(rig, WING_TIPS[wing], frames, euler=(0, 0, 0))
+        key(rig, "spine", 10, euler=(-12, 0, 0))
+        key(rig, "head", 10, euler=(-10, 0, 0))
+        key(rig, "spine", 15, euler=(14, 0, 0))
+        key(rig, "head", 15, euler=(16, 0, 0))
+        key(rig, "spine", frames, euler=(0, 0, 0))
+        key(rig, "head", frames, euler=(0, 0, 0))
+        return
     # Anticipation: sit back, head up, paws leave the ground.
     key(rig, "pelvis", 0, euler=(0, 0, 0))
     for name in ("front_upper_l", "front_upper_r"):
@@ -176,6 +231,7 @@ def author_faint(rig, frames: int) -> None:
 
 def author(rig: bpy.types.Object, name: str, frames: int, looping: bool) -> None:
     clear_pose(rig)
+    detect(rig)
     action = bpy.data.actions.new(name)
     rig.animation_data_create()
     rig.animation_data.action = action

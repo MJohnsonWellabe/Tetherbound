@@ -52,7 +52,11 @@ DEFAULT_BUDGET = 60
 STYLE = ("stylized PBR game character, clean readable forms, large clear colour "
          "regions, restrained surface detail, appealing stylised proportions, "
          "single creature, neutral standing pose, T-pose-adjacent, full body")
-NEGATIVE = ("photorealistic fur, strand hair, humanoid anatomy, clothing, armor, "
+## Two negative lists, because the creature one bans "humanoid anatomy" and
+## "clothing" — which, sent with a HUMAN character, tells the generator to
+## fight the subject itself. The first trainer batch went out with exactly
+## that mistake and was resubmitted.
+NEGATIVE_CREATURE = ("photorealistic fur, strand hair, humanoid anatomy, clothing, armor, "
             "weapons, accessories, generic real-world animal, hyperreal claws, "
             "excessive moss, noisy surface detail, wet plastic shading, "
             "text, watermark, multiple creatures, base, pedestal, "
@@ -60,6 +64,15 @@ NEGATIVE = ("photorealistic fur, strand hair, humanoid anatomy, clothing, armor,
             # found in a round-1 candidate.
             "bushy tail, upturned tail, paddle tail, beaver tail, long legs, "
             "tall slender body, fox proportions")
+NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weapons, "
+            "sword, staff, gun, cape, robe, extra fingers, fused fingers, "
+            "noisy surface detail, wet plastic shading, "
+            "text, watermark, multiple people, base, pedestal")
+HUMANS = {"trainer", "grandpa"}
+
+
+def negative_for(species: str) -> str:
+    return NEGATIVE_HUMAN if species in HUMANS else NEGATIVE_CREATURE
 
 ## Per-species prompt, from docs/art/CLAUDE_BUILD_PROMPTS.md. The markdown is
 ## authoritative over anything an image generator wrote onto a sheet, so the
@@ -101,6 +114,17 @@ SPECIES_PROMPTS = {
         "trousers, brown leather boots and fingerless gloves, canvas backpack, "
         "brass and glass orb holder at the belt, brown tousled hair, friendly "
         "confident expression, six and a quarter heads tall"),
+    # From docs/art/CLAUDE_BUILD_PROMPTS.md §17. His reference is the weakest
+    # in the pack — four ~90px figures cut from board 05, not a production
+    # sheet — so the words carry more of the load here than for the starters.
+    "grandpa": (
+        "stylised elderly human man, late 60s, retired explorer, warm kind "
+        "expressive face, white-grey hair and full beard, weathered but "
+        "healthy, practical layered outdoor clothing: muted green vest over "
+        "cream shirt with rolled sleeves, brown trousers, sturdy leather "
+        "boots, green neck scarf, small belt pouches, old field satchel, "
+        "empty hands, no armor, no weapon, no staff, "
+        "six heads tall, gentle grandfather posture"),
 }
 
 
@@ -191,7 +215,7 @@ def cmd_generate(args) -> None:
         "mode": "preview" if args.tier == "preview" else "refine",
         "image_urls": [data_uri(views[v]) for v in VIEWS],
         "prompt": prompt,
-        "negative_prompt": NEGATIVE,
+        "negative_prompt": negative_for(species),
         "should_remesh": True,
         "should_texture": args.tier != "preview",
         "topology": "quad",
@@ -203,7 +227,7 @@ def cmd_generate(args) -> None:
         "species": species,
         "tier": args.tier,
         "prompt": prompt,
-        "negative_prompt": NEGATIVE,
+        "negative_prompt": negative_for(species),
         "views": {v: str(p.relative_to(ROOT)) for v, p in views.items()},
         "polycount": args.polycount,
         "tasks": [],
