@@ -1,7 +1,7 @@
 # D13 — The Meadows wild roster is recanonised by the owner's pack
 
-**Status:** accepted for names, composition and evolution. **One open question
-on scale**, flagged below rather than decided.
+**Status:** accepted, in full. The scale conflict below was put to the owner
+and answered: **D12's peer scale stands.**
 **Decided:** on delivery of `Tetherbound_Meadows_Wild_Canon_Pack.zip`
 
 ## The decision
@@ -34,7 +34,7 @@ creature reading as something the player already knows:
 - **Galecrest** must not read like the Air starter. A true raptor, "not a
   starter-like cute fox-bird hybrid".
 
-## The open question: scale
+## The scale conflict, and how it was settled
 
 **This is the one thing the pack and an existing accepted decision disagree
 about, and it is not being resolved silently.**
@@ -63,13 +63,28 @@ thing, creatures so small they live in the bottom quarter of the frame — but
 they cannot both be entered into `species.json`.
 
 **Asked, not assumed.** `CLAUDE.md` forbids silently inventing a major design
-decision, and the pack itself says to flag conflicts. Until it is answered,
-`species.json` keeps D12's numbers, because they are what the game currently
-ships and what the three produced starters were fitted to.
+decision, and the pack itself says to flag conflicts. It was put to the owner
+with both sets of numbers side by side.
 
-Nothing else in the roster work depends on the answer: heights are one number
-per species in a data file, applied at load by `pal_body._fit()`, so the models
-do not have to be rebuilt whichever way it goes.
+### The answer: D12's peer scale stands
+
+`species.json` keeps 1.35–2.00 m, and the wild roster is built to it. The
+pack's sheets remain authoritative for everything else about these creatures —
+name, anatomy, palette, silhouette, materials, the distinction rules — and its
+scale chart is treated the way sheets `01`–`04`'s centimetre figures already
+are under D12: as the creature's **biology**, true on the page, while game
+scale is a separate question that the owner has answered twice now in the same
+direction.
+
+Practically this means each species is drawn from its sheet and then given a
+height in the D12 band, keeping the sheets' **relative** ordering — Pipwing and
+Bramblebun smallest, Meadowhart, Galecrest and Tuskroot largest — so the
+variety the pack asks for survives even though the floor is higher. The pack's
+own worry, *"do not design the roster as tiny critters plus one giant mount"*,
+is satisfied more comfortably at peer scale than below it.
+
+No model has to be rebuilt for this: height is one number per species in a data
+file, applied at load by `pal_body._fit()`.
 
 ## Consequences for work already done
 

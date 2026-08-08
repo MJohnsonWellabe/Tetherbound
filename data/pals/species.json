@@ -137,6 +137,8 @@
       "base_defence": 19.0,
       "catch_rate": 0.28,
       "aggressive": true,
+      "evolves_from": "mudsnout",
+      "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild \u2014 the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). Recorded here so the link is not lost. There is no evolution SYSTEM in the project yet, and no `mudsnout` entry either: adding a species before its model exists fails tests/smoke_art.gd, which checks every species names a model that loads. Both arrive when Mudsnout is produced.",
       "placeholder": {
         "colour": "#76a9b8",
         "height": 2.0,
@@ -189,5 +191,6 @@
         }
       }
     }
-  }
+  },
+  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ \u2014 twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. Still to come: mudsnout, trailpup, meadowhart, burrowback, paddlenewt, mosshell, brooktail, reedwing, pipwing, duskhush, galecrest. Heights follow D13: D12's peer band, keeping the sheets' relative ordering."
 }

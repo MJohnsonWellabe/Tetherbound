@@ -153,88 +153,118 @@ SPECIES_PROMPTS = {
         "backpack with visible shoulder straps, brass and glass orb holder "
         "device at the belt, brown tousled spiky hair, friendly confident "
         "expression"),
-    # The twelve wild Meadows species, condensed from their sections in
-    # docs/art/CLAUDE_BUILD_PROMPTS.md. Every one states its signature
-    # feature in capitals and first, because five rounds of critique have
-    # now shown the generator drops whatever is mentioned once in passing.
+    # ---------------------------------------------------------------------
+    # The Meadows wild roster: twelve species and one evolution.
+    #
+    # REWRITTEN from the owner's Meadows Wild Canon Pack (docs/art/wild/,
+    # sheets in docs/art/reference/wild/). The previous prompts were written
+    # against exploration boards 05-08, which contradicted each other and had
+    # no turnarounds. These sheets are 01-04 quality and give every species a
+    # front/side/back turnaround, a palette strip, build notes and a scale
+    # figure, so the prompts follow the sheets rather than the old boards --
+    # replacing guesswork with drawn reference is the whole reason the pack
+    # exists.
+    #
+    # Two roster changes come with it (D13): `ridgewolf` is GONE, because the
+    # canine no longer evolves in the Meadows, and `mudsnout` is new as the
+    # biome's only pre-evolution. `tuskroot` stays but is now reached by
+    # evolving Mudsnout rather than met as a base creature.
+    #
+    # Each prompt states its signature feature in capitals and first: six
+    # rounds of blind critique have shown the generator drops whatever is
+    # mentioned once in passing.
+    #
+    # Three carry an explicit NOT clause, straight from the pack's distinction
+    # rules -- each must not read as a character the player already knows.
+    # ---------------------------------------------------------------------
     "bramblebun": (
-        "compact meadow rabbit creature, warm tan fur, pale cream belly, LONG"
-        "expressive upright ears, BROAD powerful hind feet, small burr and"
-        "seedpod accents and earth-tone markings, NO leaves and NO plant"
-        "styling, bright alert eyes, light quick prey-animal silhouette with"
-        "a friendly face"
-    ),
-    "tuskroot": (
-        "stocky powerful boar creature with a LOW centre of gravity and a"
-        "heavy front end, SHORT CURVED TUSKS jutting up from the lower jaw,"
-        "coarse warm brown fur, darker ears and legs, hard stone brow ridge,"
-        "dirt-caked stone plates over the shoulders, small eyes, appealing"
-        "and powerful, never ugly or realistic"
-    ),
+        "meadow rabbit creature, agile forager. LONG upright expressive ears "
+        "with pale pink inner surface, BROAD powerful hind legs built for "
+        "jumping. Living MOSS AND SMALL MEADOW PLANTS with tiny purple "
+        "flowers growing naturally along its back and shoulders, warm brown "
+        "fur, cream chest and belly, short fluffy tail, large teal eyes, "
+        "alert curious face, compact grounded silhouette"),
+    "mudsnout": (
+        "young wild piglet creature, rooting runt. BROAD FLEXIBLE PINK SNOUT "
+        "for rooting in soil, SMALL BLUNT TUSKS just emerging, short sturdy "
+        "legs and a low centre of gravity, rounded youthful body. Bristly "
+        "brown coat caked with dried soil and flecks of moss and leaf litter "
+        "along the back, cream muzzle, dark eyes, playful earthy character. "
+        "Young and rounded, NOT armoured and NOT large"),
     "trailpup": (
-        "young prairie coyote-like canine creature, sandy coat with a darker"
-        "stripe down the back, cream muzzle and chest, OVERSIZED ears and"
-        "OVERSIZED paws, bright intelligent eyes, lean adventurous build,"
-        "never a real-world dog breed"
-    ),
-    "ridgewolf": (
-        "mature prairie wolf creature, sandy coat with a dark back stripe,"
-        "cream muzzle and chest, TALL and LONG-LEGGED, THICK neck ruff, sharp"
-        "pointed ears, subtle stone and earth ridges emerging along the"
-        "shoulders and forelegs, intelligent friendly eyes, noble not"
-        "monstrous, no armour"
-    ),
+        "lean prairie canine creature, tracker and flanker. LONG SLENDER LEGS "
+        "built for speed and endurance, ELONGATED NARROW MUZZLE, large "
+        "upright pointed ears. Sandy tan fur with cream underside and chest, "
+        "darker markings around the eyes, bushy tail with a dark tip, "
+        "coyote-like alert posture. NO stone plates and NO armour of any "
+        "kind, and not a stocky mascot cub"),
     "meadowhart": (
-        "graceful sturdy deer creature built to be ridden, warm tawny coat,"
-        "cream underside, dark hooves, COMPACT branch-like antlers with"
-        "subtle stone growth, expressive gentle face, strong level back, calm"
-        "bearing"
-    ),
+        "graceful rideable meadow deer, mount and pathfinder. BRANCHING "
+        "ANTLERS of modest size, LIGHT SLENDER FRAME with long legs and soft "
+        "hooves. A SADDLE of woven leaves and worn leather over a blanket of "
+        "layered green leaves across its back. Warm tan hide with pale cream "
+        "spots along the flanks, cream throat and underside, large gentle "
+        "teal eyes, friendly practical bearing. An ordinary approachable "
+        "meadow animal, NOT an ancient sacred forest guardian"),
     "burrowback": (
-        "squat broad powerful digging badger creature, LOW to the ground and"
-        "WIDE, charcoal and brown coat with a cream stripe running up the"
-        "face, ENORMOUS shovel claws on the front paws, a few loose stone"
-        "nodules on the back, NOT a full stone shell, small determined eyes"
-    ),
+        "broad low badger creature, digger and defender. ENORMOUS SHOVEL "
+        "CLAWS on powerful forelimbs, BLACK AND WHITE STRIPED FACE with a "
+        "white blaze from nose to crown. LOOSE GREY ROCK NODULES scattered "
+        "in clusters over its back and shoulders with moss in the gaps, "
+        "never one continuous shell. Dark brown shaggy fur, very low heavy "
+        "silhouette close to the ground, small dark eyes, blunt snout"),
+    "tuskroot": (
+        "large heavy armoured boar creature, charger. LONG CURVED IVORY "
+        "TUSKS sweeping up from the jaw, THICK GREY STONE PLATES layered "
+        "across the shoulders and down the back like natural armour with "
+        "moss growing in the seams. Massive forequarters, broad head held "
+        "low, bristly dark brown coat, small fierce eyes, short powerful "
+        "legs, immensely solid and heavy"),
     "paddlenewt": (
-        "small rounded amphibious newt creature, bright aqua skin, cream"
-        "underside, soft translucent frill crest along the head and back,"
-        "WEBBED feet, wide friendly eyes, low four-legged stance, smooth wet-"
-        "looking skin with no fur"
-    ),
+        "small amphibious newt creature, quick swimmer. TRANSLUCENT ORANGE "
+        "FIN FRILLS fanning from the sides of its head and running as a "
+        "crest down its spine, HUGE ROUND GOLDEN-ORANGE EYES. Smooth teal "
+        "blue skin with paler spots and a cream belly, WEBBED TOES, long "
+        "tapering swimming tail, moist glossy skin, curious expressive face"),
     "mosshell": (
-        "stylised pond turtle creature, BLUE-GREEN skin, broad smooth domed"
-        "shell with pond-stone patterning and restrained moss in the seams,"
-        "kind patient face, sturdy legs, WATER creature first and mossy"
-        "second"
-    ),
+        "sturdy pond turtle creature, steady tank. BROAD DOMED SHELL of "
+        "mossy grey stone plates with a pale cream rim, moss and algae "
+        "growing between the plates. Teal green skin, cream underside, "
+        "strong stumpy limbs for lakebed traction, very low centre of "
+        "gravity, gentle rounded head with large dark eyes, calm patient "
+        "expression"),
     "brooktail": (
-        "cheerful semi-aquatic otter creature, streamlined torso, BROAD FLAT"
-        "PADDLE TAIL, chestnut and cream fur, small aqua accents on the tail"
-        "and paws, whiskers, playful bright eyes, low four-legged stance"
-    ),
+        "river otter creature, resourceful diver. SLEEK STREAMLINED BODY "
+        "with a BROAD FLAT SCALED TAIL like a paddle, WEBBED FEET. Dense "
+        "chocolate brown fur with a cream muzzle, throat and chest, long "
+        "pale whiskers, small round ears, bright blue eyes, friendly clever "
+        "face, semi-aquatic mammal proportions"),
     "reedwing": (
-        "stylised water bird, duck and heron influence, TEAL-BLUE primary"
-        "feathers, cream chest, warm tan accents, WEBBED FEET, broad readable"
-        "wings held slightly open, long neck, alert friendly face, reads as"
-        "both a swimmer and a flier"
-    ),
+        "waterfowl creature, swift glider and swimmer. BROAD FEATHERED WINGS "
+        "layered for flight, ORANGE BILL and ORANGE WEBBED FEET. Teal and "
+        "blue-grey layered wing feathers over a cream breast and neck with "
+        "tan accents, buoyant duck-like body, long graceful neck, bright "
+        "eyes. Must read as equally at home on water and in the air"),
     "pipwing": (
-        "tiny round songbird creature, cream body, SKY-BLUE wings with dark"
-        "tips, OVERSIZED expressive eyes, small crest on the head, short"
-        "beak, plump strong silhouette that reads at very small size"
-    ),
+        "tiny round songbird creature, zippy flier. OVERSIZED ROUND TEAL "
+        "EYES taking up much of the face, SMALL RAISED CREST of feathers on "
+        "the crown. Slate blue-grey wing and back feathers over a cream face "
+        "and round chest, tan accents, tiny orange beak, small orange feet, "
+        "very small and very round, bright and quick"),
     "duskhush": (
-        "medium owl creature, soft grey-blue and warm cream plumage, LARGE"
-        "round eyes without any glow, prominent ear tufts, BROAD soft wings,"
-        "calm and gentle expression, mysterious but never spooky, upright"
-        "perching stance"
-    ),
+        "owl creature, silent watcher. BROAD ROUNDED SILENT WINGS, "
+        "PRONOUNCED EAR TUFTS rising from the head, LARGE FORWARD-FACING "
+        "EYES ringed in gold set in a pale facial disc. Grey-blue and cream "
+        "layered plumage with soft feather edges, tan accents, strong "
+        "talons, calm watchful expression. Serene rather than spooky, with "
+        "NO glowing eyes"),
     "galecrest": (
-        "larger raptor creature, hawk and eagle influence, layered slate-blue"
-        "and cream feathers with gold and tan accents, BROAD powerful wings"
-        "held open, STRONG talons, confident upright stance, sharp beak,"
-        "proud expression, powerful but still friendly and stylised"
+        "large powerful hawk creature, aerial striker. ENORMOUS BROAD WINGS "
+        "held open with long layered flight feathers, HOOKED DARK BEAK, "
+        "HEAVY GRIPPING TALONS. Slate blue and tan layered plumage over a "
+        "cream chest and face, fierce focused eyes, upright commanding "
+        "raptor posture. A serious predator, NOT a small cute fox-eared "
+        "glider"
     ),
     # Board 06, owner-approved as the Warden's source over the earlier boards'
     # off-brief priestess (docs/art/REFERENCE_CANON.md).
