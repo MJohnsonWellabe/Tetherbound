@@ -43,7 +43,8 @@
   },
 
   "beats": {
-    "_comment": "Which conversation each beat runs when the player talks to Grandpa. The order of the beats themselves is scripts/story/opening_beats.gd, which is code because it is a state machine rather than content.",
+    "_comment": "The beat ORDER is the key order of `grandpa_conversations`, and each key's value is the conversation Grandpa runs if you talk to him during that beat. scripts/story/opening_beats.gd reads this; scripts/story/sequence_director.gd holds which one is current.",
+    "_comment_correction": "This previously said the order lived in scripts/story/opening_beats.gd, 'which is code because it is a state machine rather than content'. That file did not exist when the line was written and the order was nowhere at all. The order is content — it is the shape of the first fifteen minutes and it will be argued with — so it stays here, and the code reads it.",
     "grandpa_conversations": {
       "wake": "grandpa_intro",
       "approach": "grandpa_intro",
@@ -51,9 +52,18 @@
       "name": "grandpa_waiting",
       "walk_out": "grandpa_encounter_hint",
       "encounter": "grandpa_encounter_hint",
-      "road": "grandpa_road"
+      "road": "grandpa_road",
+      "free_play": ""
     },
-    "named_conversation": "grandpa_named"
+    "_comment_free_play": "Empty means he has nothing scripted left and his prompt goes quiet rather than repeating his send-off forever. His last line offers feeding; feeding is not built, and inventing a line for it here would be inventing content. Put a conversation id here the day there is one.",
+    "named_conversation": "grandpa_named",
+    "_comment_named": "Not reached by walking up to him. The director starts it the instant the name is confirmed, with `$name` substituted into it.",
+    "effects": {
+      "_comment": "What a `beat:` effect out of data/dialogue/opening.json means in beat terms. The writer names MOMENTS ('starter_choice'); the state machine names BEATS ('choose'), and the two vocabularies deliberately do not have to match — the dialogue system has no idea what a beat is and should not acquire one. This is the join, and it is data because both sides of it are.",
+      "starter_choice": "choose",
+      "first_encounter": "walk_out",
+      "free_play": "free_play"
+    }
   },
 
   "fade": {
