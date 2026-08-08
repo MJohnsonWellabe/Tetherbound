@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/playground_hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://scripts/ui/toasts.gd" id="2_toasts"]
 
 [node name="PlaygroundHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -10,6 +11,7 @@ player_path = NodePath("../Player")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="Bars" type="VBoxContainer" parent="Root"]
 offset_left = 40.0
@@ -35,3 +37,43 @@ offset_right = 900.0
 offset_bottom = 640.0
 theme_override_font_sizes/font_size = 24
 text = "waiting for player"
+
+[node name="ContextLine" type="RichTextLabel" parent="Root"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -440.0
+offset_top = -190.0
+offset_right = 440.0
+offset_bottom = -140.0
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/bold_font_size = 26
+
+[node name="ToolLine" type="RichTextLabel" parent="Root"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -92.0
+offset_right = 620.0
+offset_bottom = -40.0
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+
+[node name="Toasts" type="Control" parent="Root"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -480.0
+offset_top = 390.0
+offset_right = -32.0
+offset_bottom = 900.0
+mouse_filter = 2
+script = ExtResource("2_toasts")

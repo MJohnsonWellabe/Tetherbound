@@ -489,6 +489,10 @@ func inspect(point: Vector3, radius: float = -1.0) -> Dictionary:
 		"regrow_left": float(record["regrow_left"]),
 		"tool": str(kind.get("tool", "")),
 		"yields": str(kind.get("yields", "")),
+		# Whether bare hands get anything at all from this prop when a proper
+		# tool is wanted. Description only — `harvest()` already enforces it —
+		# but a prompt cannot word "hands work, a knife works better" without it.
+		"hand_ok": kind.get("tool", "") == "" or kind.has("hand_amount"),
 	}
 
 
@@ -567,6 +571,12 @@ func harvest(point: Vector3, tool_id: String = "") -> Dictionary:
 		_spent.append(index)
 		_set_hidden(record, true)
 		depleted.emit(str(record["kind"]), record["position"])
+		# The depletion BEAT, purely visual: a bush sinks away instead of
+		# blinking out, a tree (still solid, never hidden) shudders and stays.
+		_fx_start(record, FX_SINK)
+	else:
+		# A swing that landed moves the thing it landed on.
+		_fx_start(record, FX_PULSE)
 
 	var result := {
 		"ok": true,
@@ -618,6 +628,7 @@ func put_back(result: Dictionary) -> bool:
 
 func _process(delta: float) -> void:
 	tick(delta)
+	_fx_tick(delta)
 
 
 ## Advance every spent prop's timer. Split out from `_process` so a test can
@@ -638,6 +649,8 @@ func tick(delta: float) -> int:
 		record["uses_left"] = int(kind.get("uses", 1))
 		_set_hidden(record, false)
 		regrown.emit(str(record["kind"]), record["position"])
+		# The regrow beat: pop back in rather than silently reappearing.
+		_fx_start(record, FX_POP)
 		back += 1
 	_spent = still
 	return back
@@ -652,6 +665,10 @@ func tick(delta: float) -> int:
 ##
 ## Refused for anything that has a collider, see the note in `reindex()`.
 func _set_hidden(record: Dictionary, hidden: bool) -> void:
+	# Visual only: a stale animation must not keep writing over the transform
+	# this function is about to decide. `put_back()` restoring a prop mid-sink
+	# is the case that makes this necessary.
+	_fx_cancel(record)
 	if record.get("collider") != null:
 		return
 	var batch: MultiMeshInstance3D = record.get("batch")
@@ -669,6 +686,168 @@ func _set_hidden(record: Dictionary, hidden: bool) -> void:
 	elif record.get("restore") is Transform3D:
 		batch.multimesh.set_instance_transform(index, record["restore"] as Transform3D)
 		record["restore"] = null
+
+
+## --- feedback (visual only) ---------------------------------------------------
+##
+## Everything in this section is PRESENTATION. The rules above have already run
+## and already emitted their signals by the time any of this moves a vertex; a
+## build with this whole section deleted plays identically and merely looks like
+## nothing answered the swing — which is the owner-playtest complaint it exists
+## to fix ("systems work invisibly").
+##
+## It lives HERE, not in a HUD, because the record's `batch` + `index` pair is
+## the only per-instance identity a MultiMesh prop has and this file owns it —
+## the same O(1) transform write `_set_hidden` spends, spent a few more times
+## per swing.
+##
+## THE DUMMY-RENDERER GUARD, again: under `--headless` MultiMesh instance
+## transforms are write-only fiction — `set_instance_transform` is discarded and
+## `get_instance_transform` hands back the identity (see `_origins_of`). An
+## animation keyed off that read-back would capture a garbage base pose and then
+## "restore" it. So `_fx_start` refuses any batch whose `buffer` cannot actually
+## be read, exactly the test `_origins_of` applies, and headless sessions run
+## the rules with no animation at all — which they already could not display.
+
+const FX_PULSE := "pulse"
+const FX_SHUDDER := "shudder"
+const FX_SINK := "sink"
+const FX_POP := "pop"
+
+## TUNABLE. Seconds per beat.
+const FX_TIME := {FX_PULSE: 0.28, FX_SHUDDER: 0.45, FX_SINK: 0.5, FX_POP: 0.4}
+
+## In-flight animations: `{batch, index, base, mode, t}`. `base` is the resting
+## transform the beat departs from and returns to; a handful at most, ticked
+## from `_process` and never from `tick()` so the logic seam stays logic.
+var _fx: Array[Dictionary] = []
+
+
+func _fx_start(record: Dictionary, mode: String) -> void:
+	var batch: MultiMeshInstance3D = record.get("batch")
+	var index := int(record.get("index", -1))
+	if batch == null or not is_instance_valid(batch) or batch.multimesh == null:
+		return
+	var multi := batch.multimesh
+	if index < 0 or index >= multi.instance_count:
+		return
+	if multi.transform_format != MultiMesh.TRANSFORM_3D:
+		return
+	# The guard. An unreadable buffer means the dummy renderer: nothing written
+	# survives and nothing read back is real, so there is nothing to animate.
+	if multi.buffer.size() < multi.instance_count * 12:
+		return
+
+	# A prop that keeps its collider is never hidden (`_set_hidden`'s rule), so
+	# it cannot sink and has nothing to pop back from. It shudders when spent
+	# and pulses when it comes back, and stays standing throughout.
+	if record.get("collider") != null:
+		if mode == FX_SINK:
+			mode = FX_SHUDDER
+		elif mode == FX_POP:
+			mode = FX_PULSE
+
+	# The resting pose. For a sink the truthful base is the transform
+	# `_set_hidden` just squirrelled away — the instance itself already reads as
+	# hidden. For everything else it is what is currently drawn, unless an
+	# animation is already flying on this instance, in which case ITS base is
+	# the resting pose and the current transform is mid-beat garbage.
+	var base: Transform3D
+	if mode == FX_SINK and record.get("restore") is Transform3D:
+		base = record["restore"]
+	else:
+		base = multi.get_instance_transform(index)
+	for i in _fx.size():
+		var flying: Dictionary = _fx[i]
+		if flying["batch"] == batch and int(flying["index"]) == index:
+			if mode != FX_SINK:
+				base = flying["base"]
+			_fx.remove_at(i)
+			break
+
+	var entry := {"batch": batch, "index": index, "base": base, "mode": mode, "t": 0.0}
+	_fx.append(entry)
+	# First frame written immediately: a sink that waited for the next _process
+	# would leave the prop invisible for a frame between `_set_hidden`'s write
+	# and the animation's first, which reads as a flicker.
+	_fx_apply(entry)
+
+
+## Drop any animation on this record's instance without writing anything.
+func _fx_cancel(record: Dictionary) -> void:
+	if _fx.is_empty():
+		return
+	var batch: Variant = record.get("batch")
+	var index := int(record.get("index", -1))
+	for i in range(_fx.size() - 1, -1, -1):
+		if _fx[i]["batch"] == batch and int(_fx[i]["index"]) == index:
+			_fx.remove_at(i)
+
+
+func _fx_tick(delta: float) -> void:
+	if _fx.is_empty() or delta <= 0.0:
+		return
+	var still: Array[Dictionary] = []
+	for entry in _fx:
+		entry["t"] = float(entry["t"]) + delta
+		if _fx_apply(entry):
+			still.append(entry)
+	_fx = still
+
+
+## Write one frame of `entry`. Returns false when the beat is over (its final,
+## exact pose written) or its batch has gone.
+func _fx_apply(entry: Dictionary) -> bool:
+	var batch: MultiMeshInstance3D = entry["batch"]
+	if batch == null or not is_instance_valid(batch) or batch.multimesh == null:
+		return false
+	var index := int(entry["index"])
+	if index < 0 or index >= batch.multimesh.instance_count:
+		return false
+
+	var mode := str(entry["mode"])
+	var base: Transform3D = entry["base"]
+	var duration := float(FX_TIME.get(mode, 0.3))
+	var u := clampf(float(entry["t"]) / duration, 0.0, 1.0)
+
+	if u >= 1.0:
+		# End EXACTLY where the rules left the instance: the hidden pose for a
+		# sink, the resting pose for everything else. No drift, ever.
+		if mode == FX_SINK:
+			batch.multimesh.set_instance_transform(
+				index, Transform3D(base.basis.scaled(Vector3.ONE * HIDDEN_SCALE), base.origin)
+			)
+		else:
+			batch.multimesh.set_instance_transform(index, base)
+		return false
+
+	var scale := 1.0
+	var yaw := 0.0
+	match mode:
+		FX_PULSE:
+			scale = 1.0 + 0.14 * sin(PI * u)
+			yaw = 0.05 * sin(3.0 * PI * u) * (1.0 - u)
+		FX_SHUDDER:
+			scale = 1.0 - 0.05 * sin(PI * u)
+			yaw = 0.10 * sin(5.0 * PI * u) * (1.0 - u)
+		FX_SINK:
+			# Ease-in shrink: hangs for a beat, then goes. Never exactly zero —
+			# HIDDEN_SCALE's degenerate-basis note applies mid-frame too.
+			scale = maxf(HIDDEN_SCALE, 1.0 - u * u)
+		FX_POP:
+			# Small, overshoot, settle.
+			if u < 0.7:
+				scale = lerpf(0.05, 1.18, ease(u / 0.7, 0.5))
+			else:
+				scale = lerpf(1.18, 1.0, (u - 0.7) / 0.3)
+
+	var pose := base.basis
+	if yaw != 0.0:
+		pose = pose * Basis(Vector3.UP, yaw)
+	batch.multimesh.set_instance_transform(
+		index, Transform3D(pose.scaled(Vector3.ONE * scale), base.origin)
+	)
+	return true
 
 
 ## --- the `harvest` save domain ----------------------------------------------
