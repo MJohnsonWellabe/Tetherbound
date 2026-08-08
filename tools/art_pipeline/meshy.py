@@ -71,6 +71,11 @@ STYLE = ("stylized PBR game character, clean readable forms, large clear colour 
 ## "clothing" — which, sent with a HUMAN character, tells the generator to
 ## fight the subject itself. The first trainer batch went out with exactly
 ## that mistake and was resubmitted.
+## The round-2 additions below were each a real fix, but they were written
+## while the roster in production was four compact ground quadrupeds. They are
+## SHAPE bans, and three creatures on the wild sheets are those shapes on
+## purpose — see DROP_FOR_SPECIES. Adding a term here now means asking whether
+## any species is supposed to have it.
 NEGATIVE_CREATURE = ("photorealistic fur, strand hair, humanoid anatomy, clothing, armor, "
             "weapons, accessories, generic real-world animal, hyperreal claws, "
             "excessive moss, noisy surface detail, wet plastic shading, "
@@ -79,6 +84,35 @@ NEGATIVE_CREATURE = ("photorealistic fur, strand hair, humanoid anatomy, clothin
             # found in a round-1 candidate.
             "bushy tail, upturned tail, paddle tail, beaver tail, long legs, "
             "tall slender body, fox proportions")
+
+## Negative terms that must be REMOVED for particular species, because the
+## creature's own canon signature is the thing the term bans.
+##
+## This is the same mistake NEGATIVE_HUMAN exists to prevent, one roster later:
+## a shared negative list telling the generator to fight the subject itself.
+## That one cost a resubmitted trainer batch. These three would each have cost
+## 60 credits of candidates drawn without their defining feature:
+##
+##   Meadowhart  is a DEER. Its prompt asks for "LIGHT SLENDER FRAME with long
+##               legs"; the list bans "long legs, tall slender body". It also
+##               wears "A SADDLE of woven leaves and worn leather" — its single
+##               most important feature, and the reason it is the rideable pal —
+##               against a list banning "clothing, armor, accessories".
+##   Brooktail   is canonically "a BROAD FLAT SCALED TAIL like a paddle"
+##               (Water Sheet). The list bans "paddle tail, beaver tail".
+##   Trailpup    has a "bushy dark-tipped tail" on Ground Sheet A. The list bans
+##               "bushy tail" — which is where that ban came from, when a bushy
+##               tail was an invention on Terrapup rather than canon on the
+##               coyote. It is already built; the entry is here so a rebuild
+##               does not repeat the round-1 result.
+##
+## Removed by exact substring so the rest of the list — the style and quality
+## bans, which every creature still wants — stays intact.
+DROP_FOR_SPECIES = {
+    "meadowhart": ("long legs, ", "tall slender body, ", "clothing, ", "armor, ", "accessories, "),
+    "brooktail": ("paddle tail, ", "beaver tail, "),
+    "trailpup": ("bushy tail, ", "fox proportions"),
+}
 NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weapons, "
             "sword, staff, gun, cape, robe, extra fingers, fused fingers, "
             "noisy surface detail, wet plastic shading, "
@@ -101,7 +135,18 @@ NEGATIVE_PLANT = ("photorealistic bark, realistic deer, scary, skeletal, "
 def negative_for(species: str) -> str:
     if species == "veridian":
         return NEGATIVE_PLANT
-    return NEGATIVE_HUMAN if species in HUMANS else NEGATIVE_CREATURE
+    if species in HUMANS:
+        return NEGATIVE_HUMAN
+    negative = NEGATIVE_CREATURE
+    for term in DROP_FOR_SPECIES.get(species, ()):
+        if term not in negative:
+            # Loud rather than silent: a term that no longer matches means the
+            # list was reworded and this species is quietly being sent a ban on
+            # its own signature again.
+            sys.exit(f"negative_for({species}): '{term.strip(', ')}' is no longer in "
+                     f"NEGATIVE_CREATURE. Re-read DROP_FOR_SPECIES against the list.")
+        negative = negative.replace(term, "", 1)
+    return negative
 
 ## Per-species prompt, from docs/art/CLAUDE_BUILD_PROMPTS.md. The markdown is
 ## authoritative over anything an image generator wrote onto a sheet, so the
