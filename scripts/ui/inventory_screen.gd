@@ -44,6 +44,18 @@ const NOTICE_SECONDS := 2.5
 
 @export var inventory_path: NodePath
 @export var player_path: NodePath
+## The recovery system and the party, for the one verb in this bag that acts on
+## a CREATURE rather than on the trainer: using a revival draught. The owner
+## fainted a pal, opened this screen holding three draughts, and found no way to
+## spend one — `recovery.revive_with_item()` existed, was tested, and nothing a
+## player could press ever called it. The rules stay in `recovery.gd`; this
+## screen only picks who and says what happened.
+##
+## Defaults resolve from where `screen_stack.tscn` is instanced in the world
+## scene. In a test scene they resolve to nothing and the verb refuses in words,
+## which is the same honest degradation `_bag()` already has.
+@export var recovery_path: NodePath = NodePath("../../Recovery")
+@export var party_path: NodePath = NodePath("../../Party")
 
 var _cells: Array[PanelContainer] = []
 var _bars: Array[ProgressBar] = []
@@ -124,6 +136,49 @@ func _vitals() -> RefCounted:
 		return null
 	var vitals: Variant = player.get("vitals")
 	return vitals if vitals is RefCounted else null
+
+
+## The recovery node, checked by the two methods this screen actually calls —
+## `_bag()`'s discipline: another file's node, verified by surface not by class.
+func _recovery() -> Node:
+	var node := get_node_or_null(recovery_path)
+	if node == null or not node.has_method("revive_with_item") \
+			or not node.has_method("revival_item"):
+		return null
+	return node
+
+
+func _party() -> Node:
+	var node := get_node_or_null(party_path)
+	if node == null or not node.has_method("members"):
+		return null
+	return node
+
+
+## Is this stack the revival item? Asked of recovery — the id is that system's
+## config, not this screen's — with the shipped id as the fallback so the verb
+## still reads right in a scene with no recovery wired.
+func _is_revival_item(item_id: String) -> bool:
+	var recovery := _recovery()
+	if recovery != null:
+		return item_id == str(recovery.call("revival_item"))
+	return item_id == "revival_draught"
+
+
+## The first fainted pal in party order — "first" so the choice is predictable:
+## the same order the party screen lists them in.
+func _first_fainted() -> RefCounted:
+	var party := _party()
+	if party == null:
+		return null
+	var members: Variant = party.call("members")
+	if not members is Array:
+		return null
+	for entry: Variant in (members as Array):
+		var pal := entry as RefCounted
+		if pal != null and bool(pal.get("fainted")):
+			return pal
+	return null
 
 
 ## How many cells to draw. Asked of the inventory when there is one, and of the
@@ -291,6 +346,18 @@ func _draw_detail(index: int) -> void:
 			"Used up when something spends it. Not something the trainer eats — a "
 			+ "draught is for a pal that has fainted."
 		])
+		# And the live half: WHO pressing A would revive, right now, in the same
+		# words the press will use. A verb whose target is a surprise is a verb
+		# nobody dares press with one draught left.
+		if _is_revival_item(item_id):
+			var fainted := _first_fainted()
+			lines.append("")
+			if fainted != null:
+				lines.append("[color=#%s]%s is down — using this revives them.[/color]" % [
+					STYLE.GOOD, _pal_name(fainted)
+				])
+			else:
+				lines.append("[color=#%s]No one is fainted right now.[/color]" % STYLE.INK_DIM)
 
 	if stack.is_durable():
 		lines.append("")
@@ -444,6 +511,11 @@ func _verb_for(index: int) -> Dictionary:
 	var item_id := str(stack.item_id)
 	if DEFS.is_food(item_id):
 		return {"action": "eat", "label": "Eat", "ready": true}
+	if _is_revival_item(item_id):
+		# Ready only when the press would actually work — dimmed otherwise, and
+		# the press still answers in words either way, exactly like Repair away
+		# from home.
+		return {"action": "revive", "label": "Use", "ready": _first_fainted() != null}
 	if stack.is_durable():
 		return {"action": "repair", "label": "Repair", "ready": _can_repair()}
 	if EQUIPMENT.is_wearable(item_id):
@@ -458,6 +530,52 @@ func _can_repair() -> bool:
 	return bool(bag.call("can_repair_here"))
 
 
+## Spend a draught on the first fainted pal, through `recovery.revive_with_item`.
+##
+## Every rule stays in recovery.gd — who counts as down, what it costs, how much
+## health they come back on. This function only chooses the target, forwards,
+## and puts the outcome into words: the success says WHO so the player is not
+## left checking the party screen, and every refusal is a sentence rather than
+## silence, because "I pressed it and nothing happened" is indistinguishable
+## from a bug.
+func _use_revival_draught() -> void:
+	var recovery := _recovery()
+	if recovery == null:
+		_say("nothing here can wake a pal — no recovery system is wired to this screen")
+		return
+	var fainted := _first_fainted()
+	if fainted == null:
+		_say("no one is fainted — the draught keeps for when a pal goes down")
+		return
+	if bool(recovery.call("revive_with_item", fainted)):
+		var left := int(recovery.call("revival_items_left"))
+		_say("%s came round — %d left" % [_pal_name(fainted), left])
+		return
+	_say(_recovery_refusal_words(str(recovery.call("last_refusal"))))
+
+
+## The pal's own answer to "what are you called", falling back to something a
+## sentence can hold rather than to an empty string.
+func _pal_name(pal: RefCounted) -> String:
+	if pal != null and pal.has_method("display"):
+		return str(pal.call("display"))
+	return "the pal"
+
+
+## recovery.gd's refusal tokens, in player voice — the same translation duty
+## `_refusal_words` below does for the bag's tokens.
+func _recovery_refusal_words(token: String) -> String:
+	match token:
+		"not_down":
+			return "no one is fainted — the draught keeps for when a pal goes down"
+		"no_revival_item":
+			return "no revival draughts left — a pal bed at home is the other way back"
+		"not_a_pal":
+			return "there is no pal that can drink it"
+		_:
+			return "the draught cannot be used right now"
+
+
 func on_activate(index: int) -> void:
 	var bag := _bag()
 	if bag == null:
@@ -468,6 +586,8 @@ func on_activate(index: int) -> void:
 		"eat":
 			if not bool(bag.call("eat", index)):
 				_say(_refusal_words(str(bag.call("last_refusal"))))
+		"revive":
+			_use_revival_draught()
 		"repair":
 			if bool(bag.call("repair", index)):
 				_say("repaired, free of charge")

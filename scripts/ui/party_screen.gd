@@ -44,6 +44,17 @@ const CARD := preload("res://scripts/ui/pal_card.gd")
 
 @export var party_path: NodePath
 
+## The recovery system, for the one verb a FAINTED row can offer: spending a
+## revival draught. `recovery.revive_with_item()` held every rule and no screen
+## called it — the owner fainted a pal and found the menu could only tell him it
+## was out of the fight. The rules stay in recovery.gd; this screen forwards the
+## pal under the cursor and words the outcome.
+##
+## The default resolves from where `screen_stack.tscn` sits in the world scene.
+## Optional, like the rename screen: without it the fainted row's verb dims and
+## the press explains, which is a working menu with one verb missing.
+@export var recovery_path: NodePath = NodePath("../../Recovery")
+
 ## The name-entry screen, pushed on top of this one. A sibling under the same
 ## stack rather than something instanced on the press, for the reason
 ## `screen_stack.tscn` gives about this screen: instancing a screen at the moment
@@ -162,7 +173,8 @@ func hints() -> Array[Array]:
 	var members := _members()
 	var index := focus_index()
 	var filled: bool = index < members.size() and members[index] != null
-	var can_send: bool = filled and index != _active_index() and not _is_down(members[index])
+	var down: bool = filled and _is_down(members[index])
+	var can_send: bool = filled and index != _active_index() and not down
 	var can_rename: bool = filled and _rename_screen() != null
 	var rows: Array[Array] = []
 	# "Up/Down" and not an arrow glyph. The blind judge read the first version
@@ -170,7 +182,16 @@ func hints() -> Array[Array]:
 	# placeholder and the one prompt telling a player how to move the selection
 	# said nothing at all. `[A]` and `◆` both render; that arrow does not.
 	rows.append(["Up/Down", "Choose", true])
-	rows.append(["A", "Send out", can_send])
+	if down:
+		# On a fainted pal the activate verb changes entirely: you cannot send out
+		# a creature that is down, and the one thing A can honestly offer is the
+		# way back. The count is in the label so "can I afford this" is answered
+		# before the press, and at zero the verb dims but the label still teaches
+		# that the item exists.
+		rows.append(["A", "Use %s (%d left)" % [_draught_name(), _draughts_left()],
+			_recovery() != null and _draughts_left() > 0])
+	else:
+		rows.append(["A", "Send out", can_send])
 	# Rename is advertised in the FOOTER and not left to be discovered. The same
 	# blind judge could not find a rename call, a rename screen or a rename prompt
 	# anywhere in the M4 evidence and concluded — correctly, on that evidence —
@@ -347,10 +368,11 @@ func on_activate(index: int) -> void:
 		_say("that slot is empty")
 		return
 	if _is_down(members[index]):
-		# Refused with a reason rather than silently ignored, for
-		# `combat_hud._on_catch_refused`'s reason: "I pressed it and nothing
+		# A fainted pal cannot be sent out, so A's verb on this row is the revival
+		# draught — the same promise `hints()` makes. Refusals still come in words,
+		# for `combat_hud._on_catch_refused`'s reason: "I pressed it and nothing
 		# happened" is indistinguishable from a bug.
-		_say("%s is out of the fight" % _display_of(members[index]))
+		_revive_with_draught(members[index])
 		return
 	if index == _active_index():
 		_say("%s is already out with you" % _display_of(members[index]))
@@ -371,6 +393,57 @@ func on_activate(index: int) -> void:
 	if party.has_method("last_refusal"):
 		token = str(party.call("last_refusal"))
 	_say(_refusal_words(token))
+
+
+## --- the way back from a faint ----------------------------------------------
+##
+## Forwarded to recovery.gd, which owns every rule — what counts as down, what
+## the draught costs, what health the pal comes back on. This screen only picks
+## the pal under the cursor and words the outcome.
+
+
+## The recovery node, or null. Checked by the methods this screen calls, like
+## `_party()` above: another file's node, verified by surface not by class.
+func _recovery() -> Node:
+	var node := get_node_or_null(recovery_path)
+	if node == null or not node.has_method("revive_with_item") \
+			or not node.has_method("revival_items_left"):
+		return null
+	return node
+
+
+func _draughts_left() -> int:
+	var recovery := _recovery()
+	return int(recovery.call("revival_items_left")) if recovery != null else 0
+
+
+func _draught_name() -> String:
+	var recovery := _recovery()
+	if recovery != null and recovery.has_method("revival_item_name"):
+		return str(recovery.call("revival_item_name"))
+	return "Revival Draught"
+
+
+func _revive_with_draught(member: Object) -> void:
+	var recovery := _recovery()
+	if recovery == null:
+		_say("%s is out of the fight — and no recovery system is wired to this menu"
+			% _display_of(member))
+		return
+	if bool(recovery.call("revive_with_item", member)):
+		_say("%s came round — %d %s left" % [
+			_display_of(member), _draughts_left(), _draught_name().to_lower()
+		])
+		return
+	match str(recovery.call("last_refusal")):
+		"no_revival_item":
+			_say("no %s left — %s recovers in a pal bed at home" % [
+				_draught_name().to_lower() + "s", _display_of(member)
+			])
+		"not_down":
+			_say("%s is not fainted" % _display_of(member))
+		_:
+			_say("%s cannot be revived right now" % _display_of(member))
 
 
 ## A refusal token, in player voice.
