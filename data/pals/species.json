@@ -2,10 +2,12 @@
   "_comment": "Species definitions. Base stats and presentation only; a live creature's current HP and energy belong to a pal_instance, never here (TECHNICAL_START.md, Pal Data vs Pal Instance). M11 replaces `model` and the colours with real rigged creatures without touching combat code.",
   "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance \u2014 clearly different silhouettes and clearly different colours \u2014 and nothing else.",
   "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
+  "_comment_names": "Ids and display names come from `docs/art/ROSTER_MANIFEST.md` and are canon. The meshes under them do NOT: Bramblebun is a duck today and Tuskroot is a songbird, because both are stand-ins from the Plumberry pack (`docs/decisions/D10`). The pipeline in `docs/art/CLAUDE_BUILD_PROMPTS.md` replaces them.",
+  "_comment_scale": "`height` and `radius` are tuned for COMBAT READABILITY against the current stand-ins, not to the reference pack's real-world sizes — the sheets say Terrapup is 0.45m at the shoulder and Bramblebun 0.35m, while these are 1.2 and 0.95 overall. That gap is deliberate for now: chibi companions beside a 1.8m trainer read better in a fight than accurate livestock. Revisit it when real art lands, as ONE decision about the whole roster's register, not per species.",
   "_comment_aggressive": "`aggressive` decides whether a wild pal will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL pal, and the same list allows 'Aggressive pal initiates' \u2014 so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
   "species": {
-    "starter_ground": {
-      "display_name": "Bramblit",
+    "terrapup": {
+      "display_name": "Terrapup",
       "type": "ground",
       "base_hp": 120.0,
       "base_attack": 22.0,
@@ -36,8 +38,8 @@
         "_comment_role": "Your partner, and therefore the one that must never be lost in a frame \u2014 so it gets the most saturated character in the pack."
       }
     },
-    "wild_rabbit": {
-      "display_name": "Meadow Hopper",
+    "bramblebun": {
+      "display_name": "Bramblebun",
       "type": "ground",
       "base_hp": 95.0,
       "base_attack": 18.0,
@@ -68,8 +70,8 @@
         "_comment_role": "The practice creature. Bright gold at value 0.95 reads instantly against dark grass, which matters for the one you throw at twenty times."
       }
     },
-    "wild_bristler": {
-      "display_name": "Thornback",
+    "tuskroot": {
+      "display_name": "Tuskroot",
       "type": "ground",
       "_comment": "The one that comes at you. Tougher and rarer than the Hopper, because being ambushed should be a moment rather than an interruption \u2014 and because the first thing anyone does when something charges them is find out whether they can beat it.",
       "base_hp": 130.0,

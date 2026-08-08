@@ -166,8 +166,8 @@ func test_spending_a_charged_attack_empties_the_meter() -> void:
 # --- creature state -------------------------------------------------------
 
 func test_species_table_loads() -> void:
-	assert_true(SPECIES.has("wild_rabbit"), "wild_rabbit should be defined")
-	assert_true(SPECIES.has("starter_ground"), "starter_ground should be defined")
+	assert_true(SPECIES.has("bramblebun"), "bramblebun should be defined")
+	assert_true(SPECIES.has("terrapup"), "terrapup should be defined")
 
 
 func test_unknown_species_returns_null_rather_than_a_broken_instance() -> void:
@@ -175,7 +175,7 @@ func test_unknown_species_returns_null_rather_than_a_broken_instance() -> void:
 
 
 func test_a_spawned_creature_starts_whole() -> void:
-	var pal: RefCounted = SPECIES.spawn("wild_rabbit")
+	var pal: RefCounted = SPECIES.spawn("bramblebun")
 	assert_eq(pal.hp, pal.max_hp)
 	assert_eq(pal.energy, 0.0)
 	assert_false(pal.fainted)
@@ -185,35 +185,35 @@ func test_a_spawned_creature_starts_whole() -> void:
 func test_two_creatures_of_one_species_have_independent_health() -> void:
 	# The bug this guards: writing current HP onto shared species data gives
 	# every creature of a species the same health bar.
-	var a: RefCounted = SPECIES.spawn("wild_rabbit")
-	var b: RefCounted = SPECIES.spawn("wild_rabbit")
+	var a: RefCounted = SPECIES.spawn("bramblebun")
+	var b: RefCounted = SPECIES.spawn("bramblebun")
 	a.take_damage(30.0)
 	assert_true(b.hp > a.hp, "damaging one rabbit must not damage the other")
 
 
 func test_faint_is_reported_exactly_once() -> void:
-	var pal: RefCounted = SPECIES.spawn("wild_rabbit")
+	var pal: RefCounted = SPECIES.spawn("bramblebun")
 	assert_false(pal.take_damage(1.0), "a survivable hit is not a faint")
 	assert_true(pal.take_damage(9999.0), "the killing blow reports the faint")
 	assert_false(pal.take_damage(9999.0), "hitting a fainted creature must not re-report")
 
 
 func test_health_floors_at_zero() -> void:
-	var pal: RefCounted = SPECIES.spawn("wild_rabbit")
+	var pal: RefCounted = SPECIES.spawn("bramblebun")
 	pal.take_damage(9999.0)
 	assert_eq(pal.hp, 0.0)
 	assert_eq(pal.hp_fraction(), 0.0)
 
 
 func test_a_fainted_creature_cannot_use_a_charged_attack() -> void:
-	var pal: RefCounted = SPECIES.spawn("starter_ground")
+	var pal: RefCounted = SPECIES.spawn("terrapup")
 	pal.energy = MATH.max_energy()
 	pal.take_damage(9999.0)
 	assert_false(pal.can_use_charged(), "a fainted creature should not act")
 
 
 func test_quick_attacks_charge_the_meter_and_charged_spends_it() -> void:
-	var pal: RefCounted = SPECIES.spawn("starter_ground")
+	var pal: RefCounted = SPECIES.spawn("terrapup")
 	assert_false(pal.can_use_charged())
 	for i in MATH.quicks_to_charge():
 		pal.gain_energy_from_quick()
@@ -223,7 +223,7 @@ func test_quick_attacks_charge_the_meter_and_charged_spends_it() -> void:
 
 
 func test_healing_restores_a_fainted_creature() -> void:
-	var pal: RefCounted = SPECIES.spawn("wild_rabbit")
+	var pal: RefCounted = SPECIES.spawn("bramblebun")
 	pal.take_damage(9999.0)
 	pal.heal_fully()
 	assert_eq(pal.hp, pal.max_hp)

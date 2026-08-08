@@ -3,8 +3,8 @@ extends RefCounted
 ## One live creature: the state that changes during a fight.
 ##
 ## Split from species data on purpose (TECHNICAL_START.md, "Pal Data vs Pal
-## Instance"). A species says a Meadow Hopper has 95 base HP; an instance says
-## THIS Meadow Hopper currently has 31. Writing current HP onto shared species
+## Instance"). A species says a Bramblebun has 95 base HP; an instance says
+## THIS Bramblebun currently has 31. Writing current HP onto shared species
 ## data is the bug that makes every creature of a species share a health bar,
 ## and it is much easier to avoid now than to unpick later.
 ##

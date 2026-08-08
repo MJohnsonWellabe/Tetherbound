@@ -33,10 +33,10 @@ signal prompt_changed(text: String)
 ## comes at you. They are separated in the playground so the ambush is something
 ## you walk into rather than something that happens while you are aiming at the
 ## other one.
-const STARTER_SPECIES := "starter_ground"
+const STARTER_SPECIES := "terrapup"
 const WILD_SPAWNS := [
-	{"species": "wild_rabbit", "offset": Vector3(14.0, 0.0, -10.0)},
-	{"species": "wild_bristler", "offset": Vector3(-6.0, 0.0, 26.0)},
+	{"species": "bramblebun", "offset": Vector3(14.0, 0.0, -10.0)},
+	{"species": "tuskroot", "offset": Vector3(-6.0, 0.0, 26.0)},
 ]
 
 ## Seconds before a defeated wild pal is back on its feet. M2 only: the milestone
@@ -150,11 +150,11 @@ func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 ## so tests and tools do not silently start pointing at a different creature when
 ## the spawn list changes.
 func wild_pal() -> Node3D:
-	return _wild_of_species("wild_rabbit")
+	return _wild_of_species("bramblebun")
 
 
 func aggressive_pal() -> Node3D:
-	return _wild_of_species("wild_bristler")
+	return _wild_of_species("tuskroot")
 
 
 func wild_pals() -> Array[Node3D]:
@@ -274,7 +274,7 @@ func _read_engage_input() -> void:
 		return
 	# For a PEACEFUL pal this press is the only way in. GAME_DESIGN.md §14
 	# forbids proximity starting a fight with one, and nothing but this line
-	# starts a fight with the Meadow Hopper.
+	# starts a fight with Bramblebun.
 	_start_fight(candidate)
 
 
