@@ -57,19 +57,30 @@ ours in the path.
 
 ## The consequence worth knowing about
 
-**`menu_cancel` and `combat_run` are the same button.** Both are Escape and
-gamepad button 1 (B) in `project.godot`'s input map. In a fight that button
-already means "flee". The menu therefore refuses to open while a fight is
-running, and `inventory` (I / Y) is the way in that never conflicts.
+**`menu_cancel` and `combat_run` share a DEFAULT binding.** Both ship on Escape
+and gamepad button 1 (B). In a fight that button already means "flee". The menu
+therefore refuses to open while a fight is running, and `inventory` (I / Y) is
+the way in that never conflicts.
 
-This is a compromise, not a design. The right fix is two new input actions —
-`menu_open` on its own binding, and shoulder-button actions for tab switching,
-which is the handheld convention — but adding them means editing the input map,
-and an editor pass over `project.godot` strips its documentation comments. That
-edit should be made deliberately by someone who can check the file afterwards.
+### Superseded, in part: the player can now move it
 
-Until then: the tab row is focusable and left/right on it changes tab, and
-`tool_cycle` (Q / left shoulder) steps forward through the tabs.
+Settings > Controls (D15) makes every action rebindable at run time, so this is
+no longer a thing the player is stuck with — `menu_cancel` can be put on any
+button they like, at which point the clash and the refuse-mid-fight rule stop
+mattering to them. The guard stays in `open()` because the *defaults* still
+overlap and most players will never touch them, but it is now a default a
+player can undo rather than a wall.
+
+What this replaces is the fix that was pencilled in here: adding `menu_open` and
+shoulder-button actions to `project.godot`'s input map. That is no longer worth
+doing on its own account, and the reason it was being avoided is now a rule.
+`project.godot` **is the defaults and is never written to** — the settings
+screen snapshots the input map at boot and lays the player's overrides on top,
+which keeps that file's documentation comments intact and means a default
+changed later still reaches players who already have a settings file.
+
+The tab row also remains focusable, and `tool_cycle` (Q / left shoulder) steps
+forward through the tabs.
 
 ## What was deliberately not built
 
