@@ -327,13 +327,24 @@
       ],
       "runs": [
         {
+          "_comment": "The yard fence south of the barn, in TWO halves with a gateway between them. It was one 7-panel run from x -6.5, which put continuous fence across the barn's whole south face one metre out from the wall — the door is at x -1..1 on that face, so the barn's only exit was fenced shut and the leaf could not even swing clear. The fence panel is 2.06m wide CENTRED on its post (pieces.json collider_extents), so these two pairs cover x -7.5..-3.5 and 3.5..7.6, leaving a 7m gateway centred on the door. A gate leaf would be better than a gap; the kit ships none.",
           "piece": "prop_woodenfence_single",
           "from": [
             -6.5,
             -5.0
           ],
           "axis": "x",
-          "count": 7,
+          "count": 2,
+          "spacing": 2.02
+        },
+        {
+          "piece": "prop_woodenfence_single",
+          "from": [
+            4.5,
+            -5.0
+          ],
+          "axis": "x",
+          "count": 2,
           "spacing": 2.02
         }
       ],
@@ -763,13 +774,14 @@
       "runs": [
         {
           "_comment": "The north paddock fence, closing the green behind the hall.",
+          "_comment_doors": "SHORTENED AND PULLED WEST, from 12 panels at x -14 to 6 at x -16. At 12 its eastern half ran straight across the barn's south front: the barn's door is at world (89.1, 90.0) facing south-west, and panels 6-11 of this run sat 0.0-0.5m off that walk-out line — the owner's 'you can't get out'. Six panels still close the green behind the hall, which is this fence's whole job, and the span now ends 2.8m clear of a ten-metre corridor out of the barn door. Measured against scatter_rules' own expansion (rotation included), not eyeballed; the door approach must stay clear of every run in this file.",
           "piece": "prop_woodenfence_single",
           "from": [
-            -14.0,
+            -16.0,
             14.0
           ],
           "axis": "x",
-          "count": 12,
+          "count": 6,
           "spacing": 2.02
         },
         {

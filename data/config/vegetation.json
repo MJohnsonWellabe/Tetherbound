@@ -673,6 +673,50 @@
       "cleared_by_clearings": false,
       "clear_radius": 20.0,
       "base_scale": 1.0
+    },
+    "world_edge_fence": {
+      "_comment": "THE VISIBLE EDGE OF THE PLAYABLE WORLD. The baked terrain ends at ±256m (terrain_playground.json `world_size`) and beyond it there is no heightfield and no collision — a player who sprints past the rim simply falls out of the world, which the owner did. The honest fix has two halves: player_controller.gd pushes back softly inside the rim, and this layer is the half you can SEE — a kit fence ring at ±250m, six metres inside the edge, so the boundary is a thing somebody built rather than an invisible force. The same `route` mechanism as path_stones, with `route_align` so each panel takes the line's heading instead of a random yaw — a fence with random yaw is scattered planks.",
+      "_comment_reachable": "The whole ring is reachable ground: sampled every 2m around the ±250m square with playground_heightfield, the worst slope on it is 23 degrees against the character's 45-degree limit, so there is no stretch a player cannot walk to and the fence runs the full perimeter. `max_slope_deg` 30 stands guard anyway — if a future terrain retune steepens a stretch past what a fence can stand on, panels drop out there rather than hanging in the air, and the push-back still covers the gap.",
+      "_comment_cost": "THE PROP-COUNT COST, stated: four 500m sides at one 2.02m panel per step is ~980 panels. They share one mesh with the settlement's fences, so vegetation.gd batches them into ONE model group, chunked into 64m cells (~35 populated cells on the ring) — a handful of draw calls, almost all frustum-culled from anywhere inside the meadow. Collision is ~980 static box shapes in one body, which the physics server holds without complaint next to the settlement's own hundreds.",
+      "_comment_not_a_wall": "The panel is 0.81m tall and a 1.35m jump clears it. Deliberate: the fence is the SIGN, the push-back in player_controller is the boundary. A fence tall enough to be the boundary itself would be a wall around the world, which is the exact reading grandpa's paddock comment warns against — this one gets to exist because the world genuinely does end here.",
+      "models": [
+        "res://assets/buildings/Prop_WoodenFence_Single.gltf"
+      ],
+      "route": [
+        [
+          -250.0,
+          -250.0
+        ],
+        [
+          250.0,
+          -250.0
+        ],
+        [
+          250.0,
+          250.0
+        ],
+        [
+          -250.0,
+          250.0
+        ],
+        [
+          -250.0,
+          -250.0
+        ]
+      ],
+      "route_spacing": 2.02,
+      "route_width": 0.0,
+      "route_per_step": 1,
+      "route_align": true,
+      "max_slope_deg": 30.0,
+      "scale_min": 1.0,
+      "scale_max": 1.0,
+      "base_scale": 1.0,
+      "clear_radius": 14.0,
+      "cleared_by_clearings": false,
+      "off_trail": 0.0,
+      "lean_deg": 0.0,
+      "_comment_shared_model": "Prop_WoodenFence_Single is also in the `buildings` layer's model list, DELIBERATELY, and rendering/collision settings for the shared batch come from `buildings` (vegetation.gd's `_layer_for` takes the first layer naming a model): piece-measured box collision, shadows on. This block only decides WHERE the ring's panels stand. No retint and no retexture here, matching `buildings`, so the shared-model warning stays quiet."
     }
   },
   "_comment_retint": "Global material remap, applied to every layer unless a layer overrides it. The pack's bark textures are a pale salmon and read as pink trunks in every frame (D18's open item 4); `albedo_color` multiplies, so a warm grey pulls them to brown without touching the texture's own grain. Leaves and rock pass through unmapped.",

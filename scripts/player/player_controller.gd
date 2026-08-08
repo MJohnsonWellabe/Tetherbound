@@ -35,6 +35,11 @@ const SAVE_DOMAIN := "trainer"
 
 signal landed(impact_speed: float, damage: float)
 signal died()
+## The trainer has walked into the world's rim band and is being eased back —
+## or has left it. Emitted on the TRANSITION, not per frame, so a HUD can show
+## "the meadow ends here" without filtering sixty duplicates a second. Nothing
+## listens yet; the fence ring in vegetation.json is the visible half.
+signal world_edge_resisted(active: bool)
 
 var vitals: RefCounted = VITALS.new()
 
@@ -98,6 +103,31 @@ var _embed_tolerance: float = 0.35
 var _embed_rescues: int = 0
 const EMBED_WARN_LIMIT := 5
 
+## --- the edge of the world --------------------------------------------------
+##
+## The baked terrain ends at half of terrain_playground.json's `world_size` and
+## past it there is no heightfield and no collision: a sprinting player crossed
+## the rim and simply fell out of the world. The boundary is a soft PUSH, not an
+## invisible wall you smack — inside the last few metres an inward force grows
+## with every metre of overshoot, so at a walk you drift to a stop and at a
+## sprint you wade a couple of metres in and are eased back out. The fence ring
+## in vegetation.json stands on the same line so the resistance has a visible
+## cause. A hard clamp two metres from the rim is the floor of last resort, for
+## whatever future force is stronger than the push.
+const TERRAIN_CONFIG_PATH := "res://data/config/terrain_playground.json"
+## Read from `world_size`; this default only covers a missing config.
+var _world_half: float = 256.0
+## Metres inside the rim where the push begins / where nothing can pass. The
+## fence ring stands at `_world_half - 6.0`, on the start of the band. TUNABLE —
+## overridable by a `world_edge` block in movement.json; defaults live here so
+## that file is not edited for a feature it never mentions.
+var _edge_band: float = 6.0
+var _edge_stop: float = 2.0
+## Inward acceleration per metre of overshoot. 18 turns a full 7.6 m/s sprint
+## around in under two metres of band (x = v / sqrt(k)).
+var _edge_push: float = 18.0
+var _at_world_edge: bool = false
+
 
 func _ready() -> void:
 	_load_config()
@@ -145,6 +175,12 @@ func _load_config() -> void:
 	_air_accel = float(loco.get("air_acceleration", _air_accel))
 	_turn_speed = float(loco.get("turn_speed", _turn_speed))
 
+	var edge: Dictionary = config.get("world_edge", {})
+	_edge_band = float(edge.get("band", _edge_band))
+	_edge_stop = float(edge.get("stop", _edge_stop))
+	_edge_push = float(edge.get("push", _edge_push))
+	_load_world_extent()
+
 	var jump: Dictionary = config.get("jump", {})
 	_gravity = float(jump.get("gravity", _gravity))
 	_fall_multiplier = float(jump.get("fall_gravity_multiplier", _fall_multiplier))
@@ -182,6 +218,7 @@ func _physics_process(delta: float) -> void:
 	_track_airborne(delta)
 	_apply_gravity(delta)
 	_apply_movement(delta)
+	_resist_world_edge(delta)
 	_try_jump()
 
 	var falling_speed := -velocity.y
@@ -244,6 +281,48 @@ func _stay_above_ground() -> void:
 		push_warning("player was %.2fm inside the terrain at %.1f, %.1f; lifted to the heightfield" % [
 			below, global_position.x, global_position.z
 		])
+
+
+## The world's extent, from the terrain's own config — the same file the
+## heightfield is baked from, so the boundary and the ground can never disagree
+## about where the ground stops.
+func _load_world_extent() -> void:
+	var file := FileAccess.open(TERRAIN_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary:
+		_world_half = float((parsed as Dictionary).get("world_size", _world_half * 2.0)) * 0.5
+
+
+## Ease the trainer back from the rim of the baked world. See the constants
+## above for why this is a force and not a wall.
+func _resist_world_edge(delta: float) -> void:
+	var band_start := _world_half - _edge_band
+	var over_x := absf(global_position.x) - band_start
+	var over_z := absf(global_position.z) - band_start
+	var pushing := over_x > 0.0 or over_z > 0.0
+
+	if over_x > 0.0:
+		velocity.x -= signf(global_position.x) * over_x * _edge_push * delta
+	if over_z > 0.0:
+		velocity.z -= signf(global_position.z) * over_z * _edge_push * delta
+
+	# The last-resort line. Position is clamped and only the OUTWARD component of
+	# velocity is cleared, so sliding along the rim still works.
+	var limit := _world_half - _edge_stop
+	if absf(global_position.x) > limit:
+		global_position.x = signf(global_position.x) * limit
+		if signf(velocity.x) == signf(global_position.x):
+			velocity.x = 0.0
+	if absf(global_position.z) > limit:
+		global_position.z = signf(global_position.z) * limit
+		if signf(velocity.z) == signf(global_position.z):
+			velocity.z = 0.0
+
+	if pushing != _at_world_edge:
+		_at_world_edge = pushing
+		world_edge_resisted.emit(pushing)
 
 
 func _track_airborne(delta: float) -> void:
