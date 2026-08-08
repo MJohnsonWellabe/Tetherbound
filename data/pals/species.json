@@ -19,7 +19,7 @@
         "height": 1.2,
         "radius": 0.46,
         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and pal_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
-        "model": "res://assets/pals/plumberry/bruno-the-bear.glb",
+        "model": "res://assets/pals/tetherbound/terrapup/models/pal_terrapup_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
@@ -28,9 +28,9 @@
           "idle": "idle",
           "walk": "walk",
           "run": "run",
-          "attack": "uppercut",
-          "hit": "pain",
-          "faint": "fall_over"
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
         },
         "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
         "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",

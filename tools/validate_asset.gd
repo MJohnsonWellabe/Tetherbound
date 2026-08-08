@@ -48,6 +48,13 @@ const DISTANCES := [
 	{"name": "combat", "distance": 6.0, "height": 2.2},
 	{"name": "capture", "distance": 4.0, "height": 1.7},
 	{"name": "closeup", "distance": 1.8, "height": 1.0},
+	# Off-axis, because the first gate review was done from dead front-on
+	# frames and the critic could not see the paw bulk in profile or the stone
+	# mantle at all — "the front-only camera hides the paws' bulk and the
+	# entire back shell." A creature whose identity lives on its back needs at
+	# least one camera that can see its back half.
+	{"name": "combat_3q", "distance": 6.0, "height": 2.2, "azimuth": 40.0},
+	{"name": "closeup_3q", "distance": 2.2, "height": 1.2, "azimuth": 135.0},
 ]
 
 ## Two lighting conditions, because an asset can pass under studio light and
@@ -117,10 +124,12 @@ func _capture_set(lighting: String) -> void:
 	for setup: Dictionary in DISTANCES:
 		var distance := float(setup["distance"])
 		var height := float(setup["height"])
+		var azimuth := deg_to_rad(float(setup.get("azimuth", 0.0)))
+		var offset := Vector3(sin(azimuth) * distance, height, cos(azimuth) * distance)
 		# look_at_from_position, not position-then-look_at: during `_init` the
 		# tree has not finished coming up and `look_at` refuses to run on a node
 		# it does not yet consider in-tree. This form does not care.
-		camera.look_at_from_position(Vector3(0.0, height, distance), focus, Vector3.UP)
+		camera.look_at_from_position(offset, focus, Vector3.UP)
 		await _capture("%s_%s_%s" % [_species_id, lighting, setup["name"]])
 
 	world.queue_free()
@@ -233,13 +242,22 @@ func _build_environment(world: Node3D, lighting: String) -> void:
 		key.light_energy = 1.4
 		key.rotation = Vector3(deg_to_rad(-40.0), deg_to_rad(-35.0), 0.0)
 	else:
-		# Gameplay: the meadow's own sky and sun angle, with shadows, because a
-		# creature is seen under this and not under a studio rig.
+		# Gameplay: the REAL scene's numbers, copied from world_look.gd and
+		# data/config/art.json — sun 1.25, exposure 1.05, tonemap white 6.0 —
+		# not an approximation of them. The first version invented its own
+		# (sun 1.9, hotter ambient) and the gate critic spent its top finding
+		# on a "chocolate-to-ginger colour shift... this looks like a
+		# tonemapping mismatch rather than a texture problem, because the
+		# turntable of the same asset is correct." It was right: the shift was
+		# THIS SCENE lying about the game, which is the one failure a
+		# validation scene must never have.
 		env.background_mode = Environment.BG_COLOR
 		env.background_color = Color(0.55, 0.70, 0.88)
 		env.ambient_light_color = Color(0.52, 0.60, 0.70)
-		env.ambient_light_energy = 0.9
-		key.light_energy = 1.9
+		env.ambient_light_energy = 1.0
+		env.tonemap_exposure = 1.05
+		env.tonemap_white = 6.0
+		key.light_energy = 1.25
 		key.light_color = Color(1.0, 0.96, 0.88)
 		key.rotation = Vector3(deg_to_rad(-52.0), deg_to_rad(30.0), 0.0)
 		key.shadow_enabled = true

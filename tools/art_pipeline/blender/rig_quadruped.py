@@ -83,10 +83,37 @@ def join_and_normalise() -> bpy.types.Object:
     body = bpy.context.view_layer.objects.active
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
+    weld(body)
+
     low, high = bounds(body)
     body.location = Vector((-(low.x + high.x) / 2, -(low.y + high.y) / 2, -low.z))
     bpy.ops.object.transform_apply(location=True)
     return body
+
+
+def weld(body: bpy.types.Object) -> None:
+    """Merge duplicate vertices before weighting — the UV-safe half of cleanup.
+
+    Needed here and not only in cleanup_mesh.py because Meshy's RETEXTURE
+    stage hands back a re-meshed surface: the cleaned 28k-triangle manifold
+    went in, and the textured result came back with 1,614 duplicate vertices
+    and 3,144 non-manifold edges. Those are exactly what makes bone-heat
+    weighting fail, and the full cleanup cannot run again because a voxel
+    remesh would destroy the textures this stage exists to keep.
+
+    Merging by distance is safe on a textured mesh: Blender stores UVs per
+    face corner, so welding coincident positions does not smear the unwrap.
+    """
+    import bmesh
+    mesh = bmesh.new()
+    mesh.from_mesh(body.data)
+    before = len(mesh.verts)
+    bmesh.ops.remove_doubles(mesh, verts=mesh.verts, dist=0.0008)
+    welded = before - len(mesh.verts)
+    mesh.to_mesh(body.data)
+    mesh.free()
+    if welded:
+        print(f"  welded {welded} duplicate vertices before weighting")
 
 
 def bounds(obj: bpy.types.Object) -> tuple[Vector, Vector]:
