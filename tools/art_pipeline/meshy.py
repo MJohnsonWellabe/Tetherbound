@@ -46,6 +46,21 @@ POLL_TIMEOUT = 45 * 60
 ## against a typo in --candidates spending a month's free tier in one command.
 DEFAULT_BUDGET = 60
 
+## Observed credit cost per task, measured against the balance endpoint before
+## and after real batches — NOT taken from the pricing page.
+##
+## These were 5 for every preview tier, which is what the docs imply and what
+## the guard was written around. The real figure is 20, so a "roughly 15" batch
+## actually cost 60 and the guard sat four times too high to ever fire: the
+## three Warden text candidates alone spent a quarter of what was left. Any
+## future correction belongs here, and belongs measured the same way.
+COSTS = {
+    "image_preview": 20,
+    "image_refine": 40,
+    "text_preview": 20,
+    "retexture": 30,
+}
+
 ## What every Tetherbound creature must be, and must not be. Section 8's two
 ## lists, verbatim in intent: the positives keep the species' identity, the
 ## negatives name the specific ways image-to-3D drifts off this project's style.
@@ -69,6 +84,10 @@ NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weap
             "noisy surface detail, wet plastic shading, "
             "text, watermark, multiple people, base, pedestal")
 HUMANS = {"trainer", "grandpa", "warden"}
+
+## Meshy's documented ceiling for /openapi/v2/text-to-3d prompts, counted on
+## the final string including the STYLE suffix. image-to-3d does not enforce it.
+TEXT_PROMPT_LIMIT = 800
 
 
 ## The legendary is made OF plants, so the creature list's "excessive moss"
@@ -219,16 +238,40 @@ SPECIES_PROMPTS = {
     ),
     # Board 06, owner-approved as the Warden's source over the earlier boards'
     # off-brief priestess (docs/art/REFERENCE_CANON.md).
+    # Round 2. Round 1 went through multi-image-to-3d and every candidate came
+    # back with the board's CROSSED ARMS welded into one mass across the belly
+    # — image-to-3D reconstructs the pose it is shown, and no amount of "arms
+    # at his sides" in the text outvoted three views of folded arms. So the
+    # Warden goes through text-to-3D instead: the design is still board 06's,
+    # the pose is the only thing the drawing loses.
+    #
+    # The round-1 critique also charged three defects that turned out to be
+    # MY prompt disagreeing with the art, not the mesh: the board's cape hangs
+    # full from both shoulders (not a half-cape), and his boots are ankle-high
+    # with a folded cuff over a dark greave (not tall riding boots). Corrected
+    # here rather than "fixed" in the models.
+    #
+    # The face is the one thing worth being clever about. Six humanoid
+    # candidates across two characters have now come back with smooth blank
+    # egg heads — the generator does not sculpt faces at preview tier. The
+    # Warden is the one character where that stops mattering, because board 06
+    # already masks him: a hard green visor over the eyes and a mask across
+    # nose and mouth. Asking for the MASK as geometry instead of a face plays
+    # to what the generator can actually do, and it is what the art shows.
+    #
+    # Meshy caps text-to-3D prompts at 800 characters, so this one is written
+    # tight: the two capitalised clauses are the two things every round-1
+    # candidate got wrong, and they go first.
     "warden": (
-        "stylised human man, commanding antagonist officer. THE FACE MUST BE "
-        "FULLY MODELLED: deep eye sockets with visible eyeballs and eyelids, "
-        "eyebrows, projecting nose, cut mouth. A half-mask across the eyes, "
-        "short swept green hair, confident upright stance, arms at his sides. "
-        "Long dark forest-green military coat with gold trim and brass "
-        "buttons, thick cream fur-lined collar, pale half-cape over one "
-        "shoulder, dark trousers, tall leather boots, belt pouches, gloves. "
-        "Five separated fingers on each hand. Seven heads tall, imposing, no "
-        "visible weapon"),
+        "stylised human man, commanding antagonist officer. BOTH ARMS HANG "
+        "STRAIGHT DOWN AT HIS SIDES, clear of the body, five separated fingers "
+        "on each gloved hand. HIS FACE IS COVERED BY A HARD MASK: an angular "
+        "visor band across the eyes and a fitted plate over nose and mouth, "
+        "standing proud as solid panels. Short swept hair. Long "
+        "dark green officer's coat open to the shins with gold piping, "
+        "buttoned inner vest so the chest is clothed, thick cream fur collar, "
+        "long cream cape from BOTH shoulders, belt with two hip pouches, dark "
+        "trousers, ankle boots with folded cuffs. Seven heads tall, imposing"),
     # Board 06's Veridian Stag, likewise owner-approved as the legendary.
     "veridian": (
         "majestic large forest stag guardian, four-legged deer anatomy, "
@@ -344,7 +387,8 @@ def cmd_generate(args) -> None:
     prompt = prompt_for(species)
 
     before = request("GET", "/openapi/v1/balance").get("balance", 0)
-    estimate = args.candidates * (5 if args.tier == "preview" else 20)
+    estimate = args.candidates * COSTS[
+        "image_preview" if args.tier == "preview" else "image_refine"]
     print(f"{species}: {args.candidates} candidate(s), {args.tier} tier")
     print(f"balance {before} credits, this will cost roughly {estimate}")
     if estimate > args.budget and not args.yes:
@@ -464,6 +508,85 @@ def cmd_fetch(args) -> None:
     print("  next: inspect_glb.py, then turntable.py, then compare_sheet.py")
 
 
+## Head-only prompts. Deliberately short and about nothing but the face —
+## naming a jacket here would invite the generator to model one.
+HEAD_PROMPTS = {
+    "trainer": (
+        "stylised human boy's HEAD AND NECK ONLY, bust, no body. Deep eye "
+        "sockets with rounded eyeballs and eyelids, thick angled eyebrows, "
+        "projecting nose with a defined tip and nostrils, closed smiling "
+        "mouth with modelled lips, defined jaw and chin, ears. Big messy "
+        "spiky swept hair falling over the forehead"),
+    "grandpa": (
+        "stylised elderly man's HEAD AND NECK ONLY, bust, no body. Deep eye "
+        "sockets with eyelids and heavy brows, wrinkled forehead, projecting "
+        "nose, kind closed mouth, VOLUMETRIC full beard and moustache "
+        "covering the jaw, swept hair, round ears"),
+}
+
+
+def cmd_head(args) -> None:
+    """Generate a head on its own, because a whole-body pass will not make one.
+
+    Nine humanoid candidates across three characters and three rounds have now
+    come back with the same defect, in the blind critic's words: "there is no
+    face on any of the three ... a featureless ovoid with hair over it". The
+    prompt is not the problem — it has demanded sockets, lids, brows and a cut
+    mouth since round 2, in capitals.
+
+    The problem is resolution allocation. At a 30k budget spread over a whole
+    standing figure, the head is a few percent of the surface area, and an eye
+    socket is smaller than the triangles available to describe it. Generating
+    the head ALONE spends the entire budget on the part that has been failing,
+    which is the one change that has not been tried.
+
+    A head crop is a single image, so this goes through multi-image-to-3d with
+    one view rather than the four a turnaround gives. That is a real cost — the
+    generator invents the back of the skull — but the back of the skull is hair,
+    and hair is the one thing the whole-body passes have consistently got right.
+    """
+    if args.species not in HEAD_PROMPTS:
+        sys.exit(f"no head prompt for '{args.species}'. Known: "
+                 f"{', '.join(HEAD_PROMPTS)}.")
+    crop = REFERENCE_ROOT / args.species / "reference" / "head.png"
+    if not crop.exists():
+        sys.exit(f"{args.species} has no head crop at {crop}. Add a 'head' entry "
+                 f"to tools/art_pipeline/views.json and re-run crop_views.py.")
+
+    prompt = f"{HEAD_PROMPTS[args.species]}. {STYLE}"
+    before = request("GET", "/openapi/v1/balance").get("balance", 0)
+    estimate = args.candidates * COSTS["image_preview"]
+    print(f"{args.species}: {args.candidates} head candidate(s), preview tier")
+    print(f"balance {before} credits, this will cost roughly {estimate}")
+    if estimate > args.budget and not args.yes:
+        sys.exit(f"estimate {estimate} exceeds --budget {args.budget}.")
+
+    manifest = {"species": args.species, "mode": "head-only", "prompt": prompt,
+                "negative_prompt": negative_for(args.species),
+                "views": {"head": str(crop.relative_to(ROOT))}, "tasks": []}
+    for index in range(args.candidates):
+        result = request("POST", ENDPOINTS["generate"], {
+            "mode": "preview",
+            "image_urls": [data_uri(crop)],
+            "prompt": prompt,
+            "negative_prompt": negative_for(args.species),
+            "should_remesh": True,
+            "should_texture": False,
+            "topology": "quad",
+            "target_polycount": args.polycount,
+            "symmetry_mode": "on",
+        })
+        task_id = result.get("result") or result.get("id")
+        letter = f"head-{chr(ord('a') + index)}"
+        manifest["tasks"].append({"candidate": letter, "task_id": task_id})
+        print(f"  candidate {letter}: {task_id}")
+
+    out = RAW_ROOT / args.species
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "head_manifest.json").write_text(json.dumps(manifest, indent=2))
+    print(f"\nmanifest: {out / 'head_manifest.json'}")
+
+
 def cmd_text(args) -> None:
     """Generate from the written spec alone, for a species with no sheet.
 
@@ -481,8 +604,22 @@ def cmd_text(args) -> None:
     independently-generated animals from looking like thirteen packs.
     """
     prompt = prompt_for(args.species)
+    # Meshy rejects text-to-3D prompts over 800 characters, and it rejects them
+    # at submission — after the balance call, and with a message that names the
+    # limit but not the length. The cap applies to the FINAL string, STYLE
+    # suffix included, which is the part that is easy to forget when writing a
+    # species prompt. Fail here, with the arithmetic, instead of at the API.
+    if len(prompt) > TEXT_PROMPT_LIMIT:
+        sys.exit(
+            f"'{args.species}' prompt is {len(prompt)} characters; Meshy's "
+            f"text-to-3D limit is {TEXT_PROMPT_LIMIT}. The STYLE suffix adds "
+            f"{len(prompt) - len(SPECIES_PROMPTS[args.species])}, so "
+            f"SPECIES_PROMPTS['{args.species}'] must be at most "
+            f"{TEXT_PROMPT_LIMIT - (len(prompt) - len(SPECIES_PROMPTS[args.species]))} "
+            f"(currently {len(SPECIES_PROMPTS[args.species])}).")
+
     before = request("GET", "/openapi/v1/balance").get("balance", 0)
-    estimate = args.candidates * 5
+    estimate = args.candidates * COSTS["text_preview"]
     print(f"{args.species}: {args.candidates} candidate(s), text-to-3D preview")
     print(f"balance {before} credits, this will cost roughly {estimate}")
     if estimate > args.budget and not args.yes:
@@ -596,6 +733,14 @@ def main() -> None:
     gen.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
     gen.add_argument("--yes", action="store_true", help="proceed past the budget guard")
     gen.set_defaults(func=cmd_generate)
+
+    head = sub.add_parser("head", help="generate a head alone, for grafting")
+    head.add_argument("species")
+    head.add_argument("--candidates", type=int, default=2)
+    head.add_argument("--polycount", type=int, default=30000)
+    head.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
+    head.add_argument("--yes", action="store_true")
+    head.set_defaults(func=cmd_head)
 
     text = sub.add_parser("text", help="generate from the written spec (no sheet)")
     text.add_argument("species")

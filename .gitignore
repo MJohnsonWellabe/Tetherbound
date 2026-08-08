@@ -33,3 +33,7 @@ logs/
 # Survey output. Regenerate with tools/survey.sh + tools/contact_sheet.gd.
 shots/
 shots-*/
+
+# Python bytecode from the art pipeline tools
+__pycache__/
+*.pyc
