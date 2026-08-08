@@ -1,0 +1,27 @@
+{
+  "species": "burrowback",
+  "tier": "preview",
+  "prompt": "broad low badger creature, digger and defender. ENORMOUS SHOVEL CLAWS on powerful forelimbs, BLACK AND WHITE STRIPED FACE with a white blaze from nose to crown. LOOSE GREY ROCK NODULES scattered in clusters over its back and shoulders with moss in the gaps, never one continuous shell. Dark brown shaggy fur, very low heavy silhouette close to the ground, small dark eyes, blunt snout. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, paddle tail, beaver tail, long legs, tall slender body, fox proportions",
+  "views": {
+    "front": "assets/pals/tetherbound/burrowback/reference/front.png",
+    "side": "assets/pals/tetherbound/burrowback/reference/side.png",
+    "back": "assets/pals/tetherbound/burrowback/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/burrowback/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019fe33d-f2f2-76a5-9bf5-2515c470caad"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019fe33d-f7d9-76a5-8ed0-137f35ae0278"
+    },
+    {
+      "candidate": "c",
+      "task_id": "019fe33d-fd00-774f-b97e-49b76bd14585"
+    }
+  ]
+}

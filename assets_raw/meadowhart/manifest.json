@@ -1,0 +1,27 @@
+{
+  "species": "meadowhart",
+  "tier": "preview",
+  "prompt": "graceful rideable meadow deer, mount and pathfinder. BRANCHING ANTLERS of modest size, LIGHT SLENDER FRAME with long legs and soft hooves. A SADDLE of woven leaves and worn leather over a blanket of layered green leaves across its back. Warm tan hide with pale cream spots along the flanks, cream throat and underside, large gentle teal eyes, friendly practical bearing. An ordinary approachable meadow animal, NOT an ancient sacred forest guardian. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, weapons, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, paddle tail, beaver tail, fox proportions",
+  "views": {
+    "front": "assets/pals/tetherbound/meadowhart/reference/front.png",
+    "side": "assets/pals/tetherbound/meadowhart/reference/side.png",
+    "back": "assets/pals/tetherbound/meadowhart/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/meadowhart/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019fe33d-dcb6-7745-a432-921eb69b6ff4"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019fe33d-e22a-7745-b751-e9169d26391d"
+    },
+    {
+      "candidate": "c",
+      "task_id": "019fe33d-e700-76a4-b9af-03cc2ede6fa2"
+    }
+  ]
+}

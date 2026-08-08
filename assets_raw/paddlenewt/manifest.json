@@ -1,0 +1,23 @@
+{
+  "species": "paddlenewt",
+  "tier": "preview",
+  "prompt": "small amphibious newt creature, quick swimmer. TRANSLUCENT ORANGE FIN FRILLS fanning from the sides of its head and running as a crest down its spine, HUGE ROUND GOLDEN-ORANGE EYES. Smooth teal blue skin with paler spots and a cream belly, WEBBED TOES, long tapering swimming tail, moist glossy skin, curious expressive face. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, paddle tail, beaver tail, long legs, tall slender body, fox proportions",
+  "views": {
+    "front": "assets/pals/tetherbound/paddlenewt/reference/front.png",
+    "side": "assets/pals/tetherbound/paddlenewt/reference/side.png",
+    "back": "assets/pals/tetherbound/paddlenewt/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/paddlenewt/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019fe33e-d76d-7cd0-828d-f2066d585cd7"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019fe33e-dd5e-76cc-a549-0fa7182849f0"
+    }
+  ]
+}

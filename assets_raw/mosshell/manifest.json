@@ -1,0 +1,23 @@
+{
+  "species": "mosshell",
+  "tier": "preview",
+  "prompt": "sturdy pond turtle creature, steady tank. BROAD DOMED SHELL of mossy grey stone plates with a pale cream rim, moss and algae growing between the plates. Teal green skin, cream underside, strong stumpy limbs for lakebed traction, very low centre of gravity, gentle rounded head with large dark eyes, calm patient expression. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, paddle tail, beaver tail, long legs, tall slender body, fox proportions",
+  "views": {
+    "front": "assets/pals/tetherbound/mosshell/reference/front.png",
+    "side": "assets/pals/tetherbound/mosshell/reference/side.png",
+    "back": "assets/pals/tetherbound/mosshell/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/mosshell/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019fe33e-eafa-7cd5-8c2b-d4dd550a8e1c"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019fe33e-f225-76d0-8fc8-bde60f8f65ff"
+    }
+  ]
+}
