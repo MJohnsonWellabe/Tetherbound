@@ -165,6 +165,25 @@ jobs:
         # in its own output. The capture is the owner's to confirm on the Ally.
         run: godot --headless --path . --script tests/smoke_menu.gd
 
+      - name: Smoke-test the settings screen
+        # Rebinds controls through the real screen with injected input. The unit
+        # tests cover the binding model and the settings file; none of them can
+        # see the parts that decide whether this ships: that the tab is
+        # reachable with the same button that changes tab everywhere else, that
+        # focus moves across the two columns and down the rows (this is the
+        # screen a player visits BECAUSE their controls are wrong, so it is the
+        # last one allowed to need a mouse), that the capture reads raw events
+        # ahead of the Control tree — a focused Button swallows the confirm
+        # button, so a capture that read actions would never see anything — and
+        # that binding `menu_cancel` to A does not close the menu on the very
+        # press that bound it.
+        #
+        # It also exercises the panic chord, which reads the DEVICE rather than
+        # the input map, because it is the way back when the input map is what
+        # the player broke. It cleans up user://settings.json afterwards; a
+        # stray override there would follow every later step in this job.
+        run: godot --headless --path . --script tests/smoke_settings.gd
+
       - name: Export Windows build
         run: |
           mkdir -p build/windows
