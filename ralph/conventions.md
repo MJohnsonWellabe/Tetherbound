@@ -24,7 +24,14 @@ on this project already.
 
 ## Shipping
 
-- Branch `ralph/<task-id>` → push → CI → **auto-merge on green**.
+- Branch `ralph/<task-id>` → push → CI → **`.github/workflows/ralph-merge.yml`
+  fast-forwards main on green.** You do not open a pull request and you do not
+  merge anything yourself: a fired session has no GitHub MCP tools and no `gh`
+  CLI, so pushing the branch *is* the ship action.
+- The merge is **fast-forward only**. If main moved while you worked, the
+  workflow fails loudly and you rebase `ralph/<task-id>` on main and push again.
+  Never resolve that by force-pushing main.
+- If CI is red, the branch simply does not ship. Fix it on the same branch.
 - CI always runs: clean-checkout import with no script errors, and the Windows
   export. Both are cheap and catch the failures that make the project unopenable.
 - Run **only the tests your backlog item names**, plus `tests/smoke_art.gd` for

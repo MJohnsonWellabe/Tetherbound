@@ -1,0 +1,82 @@
+name: Ralph auto-merge
+
+# Ships a Ralph task to main once CI is green, and only then.
+#
+# The loop's sessions are fired by a Routine and have no GitHub MCP tools and no
+# `gh` CLI, so they cannot open a pull request or turn on auto-merge themselves.
+# They can only push a branch. This workflow is the other half of that deal: it
+# watches CI finish on a `ralph/**` branch and fast-forwards main if — and only
+# if — the run succeeded.
+#
+# The alternative was letting the loop commit straight to main. That is faster
+# and it is how classic Ralph works, but a bad iteration then breaks main until
+# the next one happens to fix it, and the owner plays whatever main last built.
+# A red branch that never merges is a much cheaper failure.
+#
+# Deliberately NOT a merge commit: main is fast-forwarded, so a task that cannot
+# fast-forward (because main moved under it) fails here rather than silently
+# resolving a conflict nobody reviewed. The loop rebases and pushes again.
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  ship:
+    runs-on: ubuntu-latest
+    # Only green runs, only Ralph's own branches. `head_branch` is the branch
+    # CI actually ran on, not the branch this workflow file lives on.
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      startsWith(github.event.workflow_run.head_branch, 'ralph/')
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: a shallow clone cannot fast-forward.
+          fetch-depth: 0
+          ref: main
+
+      - name: Fast-forward main to the verified commit
+        env:
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          git config user.name  "ralph-bot"
+          git config user.email "ralph-bot@users.noreply.github.com"
+
+          git fetch origin "$BRANCH"
+
+          # Verify the commit CI passed on is the one we are about to ship.
+          # workflow_run fires per run, and a branch can be pushed again while
+          # the run is in flight -- shipping the newer, untested commit would
+          # defeat the whole gate.
+          if [ "$(git rev-parse "origin/$BRANCH")" != "$SHA" ]; then
+            echo "::notice::$BRANCH moved since CI ran ($SHA is no longer its tip). Not shipping; the newer commit gets its own run."
+            exit 0
+          fi
+
+          if git merge-base --is-ancestor "$SHA" origin/main; then
+            echo "::notice::$SHA is already on main. Nothing to do."
+            exit 0
+          fi
+
+          if ! git merge-base --is-ancestor origin/main "$SHA"; then
+            echo "::error::main has moved since $BRANCH branched, so this cannot fast-forward. Rebase $BRANCH on main and push again."
+            exit 1
+          fi
+
+          git merge --ff-only "$SHA"
+          git push origin main
+          echo "::notice::Shipped $BRANCH ($SHA) to main."
+
+      - name: Delete the shipped branch
+        if: success()
+        env:
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+        run: git push origin --delete "$BRANCH" || true
