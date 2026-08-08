@@ -14,6 +14,18 @@ const CONFIG_PATH := "res://data/config/combat.json"
 static var _config: Dictionary = {}
 
 
+## The `enemy` keys `pace.speed_scale` is allowed to touch, and the only ones.
+##
+## The same seven keys the tether grades scale (tether_pal.tethered_config), for
+## the same reason stated there: difficulty and pace are allowed to be TIME and
+## are never allowed to be stats. Times are divided by the scale and speeds are
+## multiplied, so 1.2 is the same fight a fifth faster.
+const PACE_TIME_KEYS := [
+	"telegraph", "recovery", "reposition_time", "attack_cooldown", "first_attack_delay",
+]
+const PACE_SPEED_KEYS := ["chase_speed", "reposition_speed"]
+
+
 static func config() -> Dictionary:
 	if not _config.is_empty():
 		return _config
@@ -24,7 +36,32 @@ static func config() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary:
 		_config = parsed
+		# Applied ONCE, at load, to the cached copy — this is the single door every
+		# consumer of the enemy's rhythm walks through (wild_pal reads it when a
+		# fight opens, tether_pal multiplies it for a graded creature), so scaling
+		# here is what makes the Settings slider and the tether COMPOSE instead of
+		# fight. The JSON on disk keeps the human-readable defaults.
+		_config["enemy"] = paced_enemy(
+			_config.get("enemy", {}),
+			float((_config.get("pace", {}) as Dictionary).get("speed_scale", 1.0))
+		)
 	return _config
+
+
+## The `enemy` block with the pace slider applied. Pure and public so
+## tests/test_combat_feel.gd can prove what it may touch and what it must not.
+static func paced_enemy(base: Dictionary, speed_scale: float) -> Dictionary:
+	var scale := clampf(speed_scale, 0.25, 4.0)
+	if is_equal_approx(scale, 1.0):
+		return base
+	var out := base.duplicate()
+	for key: String in PACE_TIME_KEYS:
+		if base.has(key):
+			out[key] = float(base[key]) / scale
+	for key: String in PACE_SPEED_KEYS:
+		if base.has(key):
+			out[key] = float(base[key]) * scale
+	return out
 
 
 ## Damage for one hit, before variance.

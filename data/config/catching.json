@@ -68,8 +68,38 @@
     "max_shakes_on_failure": 3,
     "near_miss_threshold": 0.75,
     "shake_interval": 0.55,
+    "_comment_growth": "TUNABLE presentation. Seconds ADDED to the interval per successive shake, so the wait before each beat grows and the tension rises. It dramatises the count the decision already produced and never changes it — the D08 rule. Keep the whole wobble (shakes x interval + settle) under about four seconds; tests/smoke_catching.gd waits ~6.6s for a resolution.",
+    "shake_interval_growth": 0.14,
     "settle_pause": 0.6,
     "success_banner": 2.4
+  },
+
+  "arc_preview": {
+    "_comment": "TUNABLE presentation. The throw's ballistic path, drawn as a dotted line while aiming — the same origin, speed and gravity the orb will actually fly (scripts/combat/throw_aim.gd simulates it with the `throw` numbers above), stopping where it meets the ground or the target. Dots shrink toward the landing point instead of fading, because per-vertex alpha is exactly what made the first impact flash invisible under the Compatibility renderer (see scripts/combat/impact_flash.gd). D06-safe: plain unshaded quads, no depth reads.",
+    "enabled": true,
+    "step_seconds": 0.05,
+    "max_points": 60,
+    "dot_size": 0.11,
+    "colour": "#ffe9a8"
+  },
+
+  "wobble_camera": {
+    "_comment": "TUNABLE presentation. While the orb wobbles, the camera leaves the trainer's shoulder and pushes in on the orb — the one object in the world that matters for those two seconds — and steps closer on each shake, so the tension the growing intervals build is also framed. `step_in` metres come off the distance per shake. On a break-out the camera goes back to the pal; on a catch the fight resolves and hands it back to the trainer.",
+    "enabled": true,
+    "distance": 4.4,
+    "step_in": 0.5,
+    "height": 0.9,
+    "fov": 55.0,
+    "retarget_lag": 4.5
+  },
+
+  "impact_puff": {
+    "_comment": "TUNABLE presentation. The CPUParticles puff when the orb strikes home (and again, dirtier, when the creature breaks out). D06-safe.",
+    "enabled": true,
+    "amount": 20,
+    "colour": "#ffe9a8",
+    "lifetime": 0.55,
+    "speed": 4.0
   },
 
   "faint": {

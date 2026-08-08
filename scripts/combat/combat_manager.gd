@@ -34,6 +34,7 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+const FX := preload("res://scripts/combat/fx.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -198,6 +199,9 @@ var _input_guard: float = 0.0
 ## Catching. The aim and the projectile live in throw_aim.gd; what lives here is
 ## deciding whether a throw is allowed and what its result means to the fight.
 var _throw: Node = null
+## Presentation for events this file has already resolved: damage numbers,
+## hit-stop, the KO beat, orb puffs. It decides nothing; see fx.gd's header.
+var _fx: Node = null
 var _catch_shakes_left: int = 0
 var _catch_shake_timer: float = 0.0
 var _catch_succeeded: bool = false
@@ -216,6 +220,11 @@ func _ready() -> void:
 	_throw.connect("orb_struck", _on_orb_struck)
 	_throw.connect("orb_missed", _on_orb_missed)
 	_throw.connect("throw_refused", func(reason: String) -> void: catch_refused.emit(reason))
+	_throw.connect("aim_exited", _on_aim_exited)
+
+	_fx = FX.new()
+	_fx.name = "CombatFX"
+	add_child(_fx)
 
 
 func throw_aim() -> Node:
@@ -506,9 +515,13 @@ func _resolve_player_strike() -> void:
 		float(_pending_move.get("power", 9.0)), pal.attack, _enemy.defence, _rng.randf()
 	)
 	var killed: bool = _enemy.take_damage(damage)
-	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
+	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * _knockback_fraction())
 	_wild.call("play_faint" if killed else "play_hit")
-	_flash_at(_wild.call("centre"), not bool(_pending_move.get("is_quick", false)))
+	var charged := not bool(_pending_move.get("is_quick", false))
+	_flash_at(_wild.call("centre"), charged)
+	_fx.call("hit", _fx_host(), _wild.call("centre"), damage, true, charged)
+	if killed:
+		_fx.call("ko", _fx_host(), _wild.call("centre"))
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -656,9 +669,12 @@ func _on_enemy_strike() -> void:
 		float(cfg.get("power", 8.0)), _enemy.attack, pal.defence, _rng.randf()
 	)
 	var killed: bool = pal.take_damage(damage)
-	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
+	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * _knockback_fraction())
 	_ally_body.call("play_faint" if killed else "play_hit")
 	_flash_at(_ally_body.call("centre"), false)
+	_fx.call("hit", _fx_host(), _ally_body.call("centre"), damage, false, false)
+	if killed:
+		_fx.call("ko", _fx_host(), _ally_body.call("centre"))
 
 	hit_landed.emit(false, damage)
 	state_changed.emit()
@@ -681,20 +697,29 @@ func _flash_at(where: Vector3, charged: bool) -> void:
 		return
 	var key := "charged" if charged else "quick"
 	var spec: Dictionary = cfg.get(key, {})
-	# Parented into the WORLD, not to this manager. CombatManager is a plain
-	# Node, and a Node3D hung under one is outside the 3D transform chain: the
-	# burst was created correctly twelve times in a row and rendered none of
-	# them. The arena is a Node3D that already exists for exactly the length of
-	# the fight, so it also cleans these up on its way out.
-	var host: Node = _arena if _arena != null else _player.get_parent()
 	FLASH.burst(
-		host,
+		_fx_host(),
 		where,
 		Color(str(spec.get("colour", "#ffd27a"))),
 		float(spec.get("radius", 1.5)),
 		float(spec.get("duration", 0.34)),
 		float(spec.get("strength", 1.0))
 	)
+
+
+## Where an effect must be parented to render: into the WORLD, not this manager.
+## CombatManager is a plain Node, and a Node3D hung under one is outside the 3D
+## transform chain — the first impact burst was created correctly twelve times
+## in a row and rendered none of them. The arena is a Node3D that exists for
+## exactly the length of the fight, so it also cleans effects up on its way out.
+func _fx_host() -> Node:
+	return _arena if _arena != null else _player.get_parent()
+
+
+## How much of the attacker's lunge the defender is shoved by. TUNABLE in
+## combat.json's `impact` block; presentation-weight only, never damage.
+func _knockback_fraction() -> float:
+	return float(MATH.config().get("impact", {}).get("knockback_fraction", 0.4))
 
 
 ## --- switching ------------------------------------------------------------
@@ -801,12 +826,18 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	# `CATCH.resolve()` and a hard rule guarded at one of two doors is a hard rule
 	# with a hole in it. An orb already in the air when a trainer battle opens
 	# would otherwise land on a creature the game has just decided cannot be
-	# caught.
-	if not CATCH.can_be_caught(_enemy.fainted, _opponent_is_trainer_owned()):
+	# caught. Asked once and held in `owned` — the check and the refusal message
+	# below both read the same answer.
+	var owned := _opponent_is_trainer_owned()
+	if not CATCH.can_be_caught(_enemy.fainted, owned):
 		catch_refused.emit(
-			"%s belongs to Team Tether" % _enemy.display_name if _opponent_is_trainer_owned()
+			"%s belongs to Team Tether" % _enemy.display_name if owned
 			else "%s fainted before the orb landed" % _enemy.display_name
 		)
+		# Camera first, orb second: the rig is still following the trainer from
+		# the aim, but freeing a node something might be told to follow later is
+		# the order that eventually dangles.
+		_take_camera()
 		_throw.call("clear_orb")
 		state_changed.emit()
 		return
@@ -827,13 +858,23 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	_catch_succeeded = bool(decision["caught"])
 	_catch_shakes_left = int(decision["shakes"])
 	_catch_index = 0
-	_catch_shake_timer = 0.0
+	# A held beat before the first shake, and a longer one before each shake
+	# after it (fx.shake_pause) — rising tension around a count that was decided
+	# once and is never re-rolled.
+	_catch_shake_timer = FX.shake_pause(0, CATCH.config().get("resolve", {}))
 
 	# The creature goes into the orb for the duration either way. Watching it
 	# stand there unbothered while the orb wobbles beside it would tell the
 	# player the throw had already failed.
 	if _wild != null:
 		_wild.visible = false
+
+	# The moment gets its dressing: a puff where the orb struck, and the camera
+	# pushed in on the one object that matters for the next two seconds.
+	var orb: Node3D = _throw.call("resting_orb") as Node3D
+	var puff_at: Vector3 = orb.global_position if orb != null else (_wild.call("centre") as Vector3)
+	_fx.call("orb_puff", _fx_host(), puff_at)
+	_wobble_camera(0)
 	state_changed.emit()
 
 
@@ -842,9 +883,45 @@ func _on_orb_missed() -> void:
 		return
 	# A clean miss is not a failed catch. It costs an orb and the moment, and it
 	# gets its own message, because "you missed" and "it broke out" are different
-	# things to have just done.
+	# things to have just done. The camera goes back to the pal the player is
+	# about to be driving again.
+	_take_camera()
 	catch_refused.emit("the orb went wide")
 	state_changed.emit()
+
+
+## The aim closed without a throw (cancel, or a refused release). The rig was
+## parked behind the trainer for the aim, and before this handler existed it
+## simply STAYED there — the rest of the fight was played from the aim camera.
+## A released orb keeps the trainer's view while it flies (`is_busy`); the
+## resolution paths above and below re-point the rig when the orb lands.
+func _on_aim_exited() -> void:
+	if state != State.ACTIVE:
+		return
+	if bool(_throw.call("is_busy")):
+		return
+	_take_camera()
+
+
+## Push the camera in on the wobbling orb, one step closer per shake.
+##
+## Dramatises the wait, never the answer: the framing tightens with the count
+## the decision already produced, and nothing here can change what settles.
+func _wobble_camera(step: int) -> void:
+	var cfg: Dictionary = CATCH.config().get("wobble_camera", {})
+	if not bool(cfg.get("enabled", true)):
+		return
+	if _camera_rig == null or not _camera_rig.has_method("set_target"):
+		return
+	var orb: Node3D = _throw.call("resting_orb") as Node3D
+	if orb == null:
+		return
+	_camera_rig.call("set_target", orb, {
+		"distance": maxf(1.6, float(cfg.get("distance", 4.4)) - float(cfg.get("step_in", 0.5)) * float(step)),
+		"height": float(cfg.get("height", 0.9)),
+		"fov": float(cfg.get("fov", 55.0)),
+		"retarget_lag": float(cfg.get("retarget_lag", 4.5)),
+	})
 
 
 func _tick_catch_wobble(delta: float) -> void:
@@ -856,7 +933,9 @@ func _tick_catch_wobble(delta: float) -> void:
 	if _catch_index < _catch_shakes_left:
 		_catch_index += 1
 		orb_shook.emit(_catch_index)
-		_catch_shake_timer = float(cfg.get("shake_interval", 0.55))
+		_fx.call("wobble_orb", _throw.call("resting_orb"), _catch_index)
+		_wobble_camera(_catch_index)
+		_catch_shake_timer = FX.shake_pause(_catch_index, cfg)
 		return
 
 	_catch_shakes_left = 0
@@ -864,18 +943,33 @@ func _tick_catch_wobble(delta: float) -> void:
 
 
 func _finish_catch(_settle: float) -> void:
+	# The camera leaves the orb BEFORE the orb is freed: a rig following a freed
+	# node is a dangling reference, not a shot. On a catch the trainer gets the
+	# frame — it is their moment (D08: catching is the one thing they do); on a
+	# break-out the player is about to be driving the pal again.
+	var orb: Node3D = _throw.call("resting_orb") as Node3D
+	if _catch_succeeded:
+		_release_camera()
+	else:
+		_take_camera()
 	_throw.call("clear_orb")
 	catch_resolved.emit(_catch_succeeded, _catch_index)
 
 	if _catch_succeeded:
+		if orb != null:
+			_fx.call("orb_puff", _fx_host(), orb.global_position)
 		_begin_resolve(OUTCOME_CAUGHT)
 		return
 
 	# It broke out. Back on its feet, back in the fight, no free damage either
 	# way — the cost of a failed catch is the orb and the seconds you spent
-	# standing still, which is quite enough.
+	# standing still, which is quite enough. The flinch and the puff are the
+	# clear miss beat: the creature bursts back OUT of the orb rather than
+	# reappearing as if nothing happened.
 	if _wild != null:
 		_wild.visible = true
+		_wild.call("play_hit")
+		_fx.call("orb_puff", _fx_host(), _wild.call("centre"))
 	state_changed.emit()
 
 
@@ -904,6 +998,9 @@ func _finish() -> void:
 	state = State.INACTIVE
 	set_physics_process(false)
 
+	# Whatever beat was mid-flight — a hit-stop, the KO slow-mo — the world's
+	# clock leaves the fight at 1.0.
+	_fx.call("clear")
 	_throw.call("disarm")
 	if _ally_body != null:
 		_ally_body.visible = false
@@ -969,6 +1066,40 @@ func outcome() -> String:
 
 func is_aiming() -> bool:
 	return _throw != null and bool(_throw.call("is_aiming"))
+
+
+## What the reticle should say about this throw, asked every frame like every
+## other readout here.
+##
+## `chance` is the odds of a DEAD-CENTRE hit — the ceiling the aim skill is
+## reaching for — computed by the same `catch_math.catch_chance` the landing orb
+## will use, so the number on the reticle and the roll that resolves can never
+## come from different arithmetic. A sloppier hit lands lower (the accuracy
+## term), which is the skill, not a lie in the display.
+##
+## When the throw would be refused, `reason` says which rule: a faint is a
+## mistake the player made, ownership is a rule they should stop testing, and
+## the reticle should name the one they are looking at (D08).
+func catch_preview() -> Dictionary:
+	if _enemy == null:
+		return {}
+	var owned := _opponent_is_trainer_owned()
+	if owned or _enemy.fainted:
+		return {
+			"legal": false,
+			"chance": 0.0,
+			"reason": "Team Tether's — cannot be caught" if owned else "fainted — too late",
+		}
+	var radius := 0.5
+	if _wild != null and _wild.has_method("body_radius"):
+		radius = float(_wild.call("body_radius"))
+	return {
+		"legal": true,
+		"chance": CATCH.catch_chance(
+			SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), "basic", 0.0, radius
+		),
+		"reason": "",
+	}
 
 
 func orbs_left() -> int:

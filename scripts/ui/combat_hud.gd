@@ -18,6 +18,9 @@ const PALETTE_PATH := "res://data/config/palette.json"
 ## changed in the move — the measurements and the reasons went with them, and
 ## `ui_style.gd` is where to read why any of these numbers are what they are.
 const STYLE := preload("res://scripts/ui/ui_style.gd")
+## For the caught banner's duration only; the odds themselves come through the
+## manager's `catch_preview` readout so this file never does catch arithmetic.
+const CATCH := preload("res://scripts/combat/catch_math.gd")
 
 const HEALTH_FULL := STYLE.HEALTH_FULL
 const HEALTH_LOW := STYLE.HEALTH_LOW
@@ -43,6 +46,8 @@ var _energy_fill: StyleBoxFlat = null
 var _outcome_left: float = 0.0
 var _miss_left: float = 0.0
 var _miss_text: String = ""
+var _banner_left: float = 0.0
+var _banner_total: float = 0.0
 
 @onready var _enemy_name: Label = $Root/Enemy/Name
 @onready var _enemy_health: ProgressBar = $Root/Enemy/Health
@@ -56,6 +61,8 @@ var _miss_text: String = ""
 @onready var _outcome: Label = $Root/Outcome
 @onready var _orbs: Label = $Root/Orbs
 @onready var _reticle: Label = $Root/Reticle
+@onready var _reticle_info: Label = $Root/ReticleInfo
+@onready var _banner: Label = $Root/CaughtBanner
 
 
 func _ready() -> void:
@@ -90,6 +97,7 @@ func _dress(bar: ProgressBar, fill: StyleBoxFlat, track_colour: Color = TRACK) -
 
 func _process(delta: float) -> void:
 	_tick_outcome(delta)
+	_tick_banner(delta)
 	_miss_left = maxf(0.0, _miss_left - delta)
 	_draw_prompt()
 
@@ -101,6 +109,7 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_actions()
+	_draw_reticle_info()
 
 
 func _show_fight(visible_now: bool) -> void:
@@ -110,7 +119,32 @@ func _show_fight(visible_now: bool) -> void:
 	_orbs.visible = visible_now
 	# The reticle only exists while aiming. A crosshair sitting on screen during
 	# normal combat would promise an aim the game is not taking.
-	_reticle.visible = visible_now and _manager != null and bool(_manager.call("is_aiming"))
+	var aiming := visible_now and _manager != null and bool(_manager.call("is_aiming"))
+	_reticle.visible = aiming
+	_reticle_info.visible = aiming
+
+
+## The odds under the crosshair, asked from the manager every frame like every
+## other readout.
+##
+## The number is the DEAD-CENTRE chance — the same `catch_math` arithmetic the
+## landing orb resolves with, at the best placement the aim can earn — so it is
+## a ceiling the skill reaches for, never a promise the roll can contradict.
+## An illegal throw shows the rule instead of a number, in the warn colour the
+## build ghost already taught means "the game is refusing".
+func _draw_reticle_info() -> void:
+	if not _reticle_info.visible or not _manager.has_method("catch_preview"):
+		return
+	var preview: Dictionary = _manager.call("catch_preview")
+	if preview.is_empty():
+		_reticle_info.text = ""
+		return
+	if bool(preview.get("legal", false)):
+		_reticle_info.text = "catch  %d%%" % int(round(float(preview.get("chance", 0.0)) * 100.0))
+		_reticle_info.add_theme_color_override("font_color", Color("#" + STYLE.GOOD))
+	else:
+		_reticle_info.text = str(preview.get("reason", ""))
+		_reticle_info.add_theme_color_override("font_color", Color("#" + STYLE.WARN))
 
 
 func _draw_prompt() -> void:
@@ -262,8 +296,14 @@ func _on_orb_shook(index: int) -> void:
 func _on_catch_resolved(success: bool, shakes: int) -> void:
 	if success:
 		var foe: RefCounted = _manager.call("enemy")
-		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
-		_outcome_left = 2.4
+		# The banner, not the outcome line: catching is the best thing that
+		# happens out here and it gets the one loud element the HUD owns. Gold is
+		# the energy meter's "ready" hue — the interface's existing colour for
+		# "you earned this" — and never the reserved Team Tether accent.
+		_banner.text = "CAUGHT — %s" % (str(foe.display_name) if foe != null else "it")
+		_banner.add_theme_color_override("font_color", STYLE.ENERGY_READY)
+		_banner_total = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
+		_banner_left = _banner_total
 		return
 	_miss_text = "it broke out" if shakes >= 2 else "not even close"
 	_miss_left = 1.6
@@ -291,3 +331,16 @@ func _tick_outcome(delta: float) -> void:
 		_outcome.text = ""
 		return
 	_outcome_left -= delta
+
+
+## The caught banner holds at full strength and fades over its last third, so
+## it is read first and gone before the world comes back.
+func _tick_banner(delta: float) -> void:
+	if _banner_left <= 0.0:
+		_banner.text = ""
+		_banner.modulate = Color.WHITE
+		return
+	_banner_left -= delta
+	var fade_window := _banner_total / 3.0
+	var alpha := 1.0 if _banner_left > fade_window else clampf(_banner_left / maxf(fade_window, 0.01), 0.0, 1.0)
+	_banner.modulate = Color(1.0, 1.0, 1.0, alpha)
