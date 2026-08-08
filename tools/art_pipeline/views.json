@@ -1,0 +1,46 @@
+{
+  "_comment": "Where the four-view turnaround lives on each production reference sheet. Read by tools/art_pipeline/crop_views.py.",
+
+  "_comment_band": "`band` is [x0, y0, x1, y1] in source pixels: a rectangle containing the turnaround row and NOTHING else — no view labels, no head close-up, no swatch strip, no detail panels. Read off a coordinate-grid overlay; regenerate one with `crop_views.py --grid` if a sheet is ever redrawn.",
+
+  "_comment_centres": "`centres` are approximate x positions of the four figures within the band, in source pixels, left to right. Approximate is enough: the script snaps each to the tight bounding box of whatever content sits around it, so being 20px out costs nothing and being 200px out fails loudly.",
+
+  "_comment_why_not_automatic": "An earlier version segmented the four figures automatically from a column-density profile. It worked, but only inside a narrow window of three threshold values across the four sheets — the drop shadows pool at the figures' feet and bridge the gaps, so the parameters that split Terrapup's legs from its neighbour also split Galewisp's wing from its body. Four numbers per sheet, read once off a grid and committed, are more robust than a heuristic tuned to the edge of failure.",
+
+  "_comment_layout": "The four sheets do not share a layout. Sheet 01 puts its FRONT/SIDE/BACK/3-4 labels BELOW the figures and 02 puts them ABOVE, so one hard-coded band would swallow text on one sheet and clip ears on another.",
+
+  "_comment_scale": "All four views on a sheet are drawn at one scale, and the crops preserve it: every view of a species is cut at the same square size and emitted at the same resolution, differing only in horizontal centre. Multi-image-to-3D uses apparent scale to reconcile views, so normalising each view to its own bounding box would tell the generator the creature changes size when it turns around.",
+
+  "views": ["front", "side", "back", "three_quarter"],
+
+  "_comment_output": "1024 square. Source figures are 180-450px wide, so this upscales 2-5x. Deliberate: generators downweight or reject small inputs, and a clean upscale of flat stylised art costs nothing. The real fidelity ceiling is the sheet and no resampling moves it.",
+  "output_size": 1024,
+  "background": [242, 242, 242],
+
+  "sheets": {
+    "terrapup": {
+      "file": "01_Ground_Starter_Terrapup.png",
+      "band": [20, 110, 995, 415],
+      "centres": [128, 360, 650, 895],
+      "_comment": "Labels sit below the feet at y~447, so the band stops at 415. Starts at x=20 to clear the sheet's own black outer frame, which is not background and would otherwise be cropped in beside the front view."
+    },
+    "ripplet": {
+      "file": "02_Water_Starter_Ripplet.png",
+      "band": [10, 155, 940, 490],
+      "centres": [108, 340, 572, 810],
+      "_comment": "Labels are ABOVE this row at y~137, so the band starts at 155. The side and 3/4 tail fins are the widest thing here and must not be clipped — they are a defining feature."
+    },
+    "galewisp": {
+      "file": "03_Air_Starter_Galewisp.png",
+      "band": [10, 116, 1090, 445],
+      "centres": [140, 430, 677, 970],
+      "_comment": "Ear tufts reach y~110 and the spread wings make this the widest turnaround of the four. Labels below at y~463."
+    },
+    "trainer": {
+      "file": "04_Main_Character_Style_Reference.png",
+      "band": [60, 85, 1000, 550],
+      "centres": [197, 432, 655, 903],
+      "_comment": "A standing human, so each figure is much taller than it is wide. Labels below at y~565. Starts at x=60 to clear the TETHERBOUND wordmark."
+    }
+  }
+}
