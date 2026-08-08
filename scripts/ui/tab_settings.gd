@@ -264,7 +264,10 @@ func poll() -> void:
 
 	for record in _rows:
 		var action := str(record["action"])
-		var clashes: Array = bindings.call("current_conflicts", action)
+		# Only clashes the player made. The shipped defaults share four buttons on
+		# purpose, and painting those rows amber on a fresh install would teach
+		# the player to ignore the colour.
+		var clashes: Array = bindings.call("new_conflicts", action)
 		(record["name_label"] as Label).add_theme_color_override(
 			"font_color", COLOUR_CLASH if not clashes.is_empty() else COLOUR_DEFAULT
 		)

@@ -186,11 +186,39 @@ func conflicts(action: String, slot: String, event: InputEvent) -> Array:
 
 ## Everything currently sharing a binding with this one, in either slot.
 func current_conflicts(action: String) -> Array:
+	return _clashes(_current, action)
+
+
+## The clashes the PLAYER made, as opposed to the ones the game shipped with.
+##
+## This is what a row is marked on. A is `jump` and `combat_quick` and
+## `menu_confirm` out of the box, so marking every clash would paint four rows
+## amber on a fresh install and teach the player to ignore the colour — which is
+## the exact opposite of what a warning is for.
+func new_conflicts(action: String) -> Array:
+	var shipped := _clashes(_defaults, action)
 	var out: Array = []
+	for other in current_conflicts(action):
+		if not shipped.has(other):
+			out.append(other)
+	return out
+
+
+func _clashes(table: Dictionary, action: String) -> Array:
+	var out: Array = []
+	if not table.has(action):
+		return out
 	for slot in SLOTS:
-		for other in conflicts(action, str(slot), binding(action, str(slot))):
-			if not out.has(other):
-				out.append(other)
+		var wanted := code(table[action][slot])
+		if wanted.is_empty():
+			continue
+		for other in table.keys():
+			var name := str(other)
+			if name == action or out.has(name):
+				continue
+			if code(table[other][slot]) == wanted:
+				out.append(name)
+	out.sort()
 	return out
 
 

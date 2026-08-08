@@ -215,6 +215,17 @@ func test_a_clash_is_allowed_and_then_visible_from_both_sides() -> void:
 	assert_true(bindings.current_conflicts("inventory").has("map"), "only one row would be flagged")
 
 
+func test_the_defaults_clash_with_themselves_and_that_is_not_a_warning() -> void:
+	# A row is marked on clashes the PLAYER made. If the shipped defaults counted,
+	# four rows would be amber on a fresh install and the colour would stop
+	# meaning anything.
+	assert_true(bindings.current_conflicts("jump").has("combat_quick"))
+	assert_eq(bindings.new_conflicts("jump").size(), 0, "a fresh install is already warning")
+	bindings.set_binding("jump", "keyboard", _key(KEY_I))
+	assert_true(bindings.new_conflicts("jump").has("inventory"))
+	assert_false(bindings.new_conflicts("jump").has("combat_quick"), "a shipped clash was reported as new")
+
+
 func test_an_unbound_slot_is_not_a_clash() -> void:
 	# look_up has no keyboard binding. Every other unbound keyboard slot would
 	# otherwise read as clashing with it.
