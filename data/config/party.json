@@ -3,6 +3,31 @@
   "_comment_firewall": "What a TRAIT is — its name, its description, what it multiplies — lives in data/traits/traits.json. This file may only say how OFTEN one is rolled. If a value here could change what a trait DOES, it is in the wrong file.",
   "_comment_capacity": "The five-pal limit is NOT in this file, and its absence is the point. CLAUDE.md makes it a hard rule twice over ('Player can own only five pals total', 'Never implement pal storage beyond five'), so it is a const in scripts/pals/party.gd where it cannot be turned by editing data. Nothing here should ever be able to make room for a sixth.",
 
+  "companion": {
+    "_comment": "The active pal, OUT in the world beside the trainer, read by scripts/pals/companion.gd. ALL TUNABLE and none of it is a mechanic: the expected feedback is 'it lags behind', 'it crowds me', 'it never grazes', 'it teleports too eagerly' — every one of those is one number here. What is NOT here: whether the creature is out at all (a save-state flag the companion save domain owns), the five-pal cap (party.gd), and which creature it is (always the party's deployed pal — the same one a fight uses, docs/decisions/D24's reasoning extended to walking).",
+    "_comment_distances": "In metres from the trainer. Inside follow_distance the pal settles; it does not set off again until the trainer is beyond catch_up_distance, and the gap between the two is the hysteresis that stops it stuttering at a boundary. Beyond run_distance it runs. Beyond teleport_distance it is re-placed beside the trainer through the world's own ground query (docs/decisions/D09) rather than left behind forever — the number is set past anything a camera at 5.2m can frame.",
+    "follow_distance": 2.6,
+    "catch_up_distance": 4.5,
+    "run_distance": 8.0,
+    "teleport_distance": 26.0,
+    "_comment_speeds": "The run must beat the trainer's 7.6 sprint (movement.json) or the companion is lost by the first hill; tests/test_companion.gd asserts the margin. The walk is under his 4.2 so a strolling trainer is trailed, not orbited.",
+    "walk_speed": 3.6,
+    "run_speed": 8.8,
+    "_comment_spawn": "Metres to the trainer's side the pal appears at when it first comes out, or comes back out after being away.",
+    "spawn_side": 1.7,
+    "_comment_graze": "What a settled companion does with its time: waits, grazes (the pack's `Eating` clip, which every large-pack model carries), and occasionally plays its second idle. Seconds are rolled per beat between min and max; variety_chance is the odds a wait ends in the second idle rather than in grazing; variety_seconds is the fallback hold when the clip's own length cannot be read.",
+    "graze": {
+      "idle_seconds_min": 3.0,
+      "idle_seconds_max": 7.0,
+      "graze_seconds_min": 4.0,
+      "graze_seconds_max": 9.0,
+      "variety_chance": 0.25,
+      "variety_seconds": 2.5
+    },
+    "_comment_fainted": "A fainted deployed pal's body stays down where it fell (GAME_DESIGN.md 16 via M6) instead of walking. Once the trainer is this many metres away the body is quietly put away; it comes back out beside them when the pal is revived.",
+    "fainted_leave_distance": 20.0
+  },
+
   "levels": {
     "_comment": "GAME_DESIGN.md 11 fixes the range at 1-50. The cap is therefore closer to design than to tuning, but it lives here because the Meadows slice will never approach it and a lower cap is the obvious lever if levelling in one biome outruns the content.",
     "cap": 50,
