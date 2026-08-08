@@ -55,19 +55,37 @@ STYLE = ("stylized PBR game character, clean readable forms, large clear colour 
 NEGATIVE = ("photorealistic fur, strand hair, humanoid anatomy, clothing, armor, "
             "weapons, accessories, generic real-world animal, hyperreal claws, "
             "excessive moss, noisy surface detail, wet plastic shading, "
-            "text, watermark, multiple creatures, base, pedestal")
+            "text, watermark, multiple creatures, base, pedestal, "
+            # Round-2 additions, each one a specific invention the blind critique
+            # found in a round-1 candidate.
+            "bushy tail, upturned tail, paddle tail, beaver tail, long legs, "
+            "tall slender body, fox proportions")
 
 ## Per-species prompt, from docs/art/CLAUDE_BUILD_PROMPTS.md. The markdown is
 ## authoritative over anything an image generator wrote onto a sheet, so the
 ## words that drive generation come from there rather than from reading a PNG.
 SPECIES_PROMPTS = {
+    # Round 2 wording. The round-1 prompt said "oversized digging forepaws" and
+    # "short tail with a stone tip" once each, and the blind critique of the
+    # three round-1 meshes found exactly those two features missing: the best
+    # candidate's forepaws were "barely distinguishable from the hind paws" and
+    # two of three tails were invented (one bushy up-curl, one beaver paddle).
+    # What the generator under-weighted is now stated harder and earlier, and
+    # the stance drift the critique named ("too leggy... fox cub") gets its own
+    # clause. The features it got right unprompted (mantle, face) keep their
+    # original weight.
     "terrapup": (
-        "small sturdy quadruped ground creature, badger and canine influence, "
-        "warm brown fur with cream face stripe and cream chest, grey stone plates "
-        "forming a mantle across the shoulders and back, subtle moss between the "
-        "plates, oversized digging forepaws with pale claws, dark paw pads, short "
-        "tail with a stone tip, large expressive teal eyes, friendly and loyal "
-        "rather than aggressive, compact defensive silhouette"),
+        "small sturdy quadruped ground creature, badger and canine influence. "
+        "ENORMOUS oversized front paws, much wider and deeper than the hind "
+        "paws, with long splayed digging claws nearly as tall as the forearm. "
+        "Short thick legs, low-slung belly close to the ground, compact tank-"
+        "like stance. Short LOW-HANGING tail capped with one large faceted "
+        "stone, never bushy, never curled up. Warm brown fur with cream face "
+        "stripe and cream chest, spiky fur crest on the skull, cheek ruff, "
+        "grey stone plates in separate rows forming a mantle across shoulders "
+        "and back with visible gaps between plates, subtle moss in the seams, "
+        "dark paw pads, large expressive teal eyes, friendly and loyal, short "
+        "blunt muzzle with a big round nose"),
     "ripplet": (
         "small playful semi-aquatic creature, otter and newt influence, smooth "
         "turquoise skin, cream belly, translucent fin-like ear frills with pink "
@@ -208,10 +226,20 @@ def cmd_generate(args) -> None:
     print(f"poll with: tools/art_pipeline/meshy.py status <task_id>")
 
 
-def poll(task_id: str, quiet: bool = False) -> dict:
+## Task endpoints, by the stage that created the task. Every Meshy task type
+## lives under its own path and none of them answer for another's ids.
+ENDPOINTS = {
+    "generate": "/openapi/v1/multi-image-to-3d",
+    "texture": "/openapi/v1/retexture",
+    "rig": "/openapi/v1/rigging",
+    "animate": "/openapi/v1/animations",
+}
+
+
+def poll(task_id: str, endpoint: str, quiet: bool = False) -> dict:
     deadline = time.time() + POLL_TIMEOUT
     while time.time() < deadline:
-        task = request("GET", f"/openapi/v1/multi-image-to-3d/{task_id}")
+        task = request("GET", f"{endpoint}/{task_id}")
         status = task.get("status", "?")
         if status in ("SUCCEEDED", "FAILED", "CANCELED", "EXPIRED"):
             return task
@@ -222,7 +250,7 @@ def poll(task_id: str, quiet: bool = False) -> dict:
 
 
 def cmd_status(args) -> None:
-    task = request("GET", f"/openapi/v1/multi-image-to-3d/{args.task_id}")
+    task = request("GET", f"{ENDPOINTS[args.stage]}/{args.task_id}")
     print(f"{args.task_id}: {task.get('status')} {task.get('progress', 0)}%")
     if task.get("task_error"):
         print(f"  error: {task['task_error']}")
@@ -231,7 +259,7 @@ def cmd_status(args) -> None:
 
 
 def cmd_fetch(args) -> None:
-    task = poll(args.task_id)
+    task = poll(args.task_id, ENDPOINTS[args.stage])
     if task.get("status") != "SUCCEEDED":
         sys.exit(f"{args.task_id} finished as {task.get('status')}: "
                  f"{task.get('task_error', 'no detail')}")
@@ -258,7 +286,7 @@ def cmd_fetch(args) -> None:
     # leak.
     (out / "provenance.json").write_text(json.dumps({
         "service": "Meshy",
-        "endpoint": "multi-image-to-3d",
+        "endpoint": ENDPOINTS[args.stage].rsplit("/", 1)[-1],
         "task_id": args.task_id,
         "created_at": task.get("created_at"),
         "finished_at": task.get("finished_at"),
@@ -269,6 +297,70 @@ def cmd_fetch(args) -> None:
     }, indent=2))
     print(f"\n{out}")
     print("  next: inspect_glb.py, then turntable.py, then compare_sheet.py")
+
+
+def cmd_texture(args) -> None:
+    """Texture a local GLB against the species' own concept art.
+
+    Retexture rather than re-generating with textures on, for two reasons.
+    First, §25: form was selected at the cheap tier, and only the winner gets
+    textured. Second, retexture takes `image_style_url` — the 3/4 concept crop
+    itself — which aims the texturing at the drawing instead of at a text
+    description of the drawing. The words come along too, but the image is the
+    stronger signal and it is the exact likeness being scored.
+    """
+    model = pathlib.Path(args.model).resolve()
+    if not model.exists():
+        sys.exit(f"no such model: {model}")
+    views = reference_views(args.species)
+
+    payload = {
+        "model_url": ("data:model/gltf-binary;base64,"
+                      + __import__("base64").b64encode(model.read_bytes()).decode()),
+        "text_style_prompt": prompt_for(args.species)[:600],
+        "image_style_url": data_uri(views["three_quarter"]),
+        "enable_pbr": True,
+        "enable_original_uv": False,
+        "texture_resolution": args.resolution,
+        "ai_model": "latest",
+    }
+    result = request("POST", ENDPOINTS["texture"], payload)
+    task_id = result.get("result") or result.get("id")
+    print(f"texture task: {task_id}")
+    print(f"fetch with: tools/art_pipeline/meshy.py fetch {task_id} "
+          f"--stage texture --out <dir>")
+
+
+def cmd_rig(args) -> None:
+    """Submit a textured GLB for auto-rigging.
+
+    Meshy documents this as HUMANOID-only, and Terrapup is a quadruped, so this
+    is expected to fail or produce nonsense for creatures — it exists because
+    trying costs a few credits and the answer becomes a fact in the production
+    report instead of an assumption. The trainer, when its turn comes, is the
+    real customer.
+    """
+    model = pathlib.Path(args.model).resolve()
+    if not model.exists():
+        sys.exit(f"no such model: {model}")
+    payload = {
+        "model_url": ("data:model/gltf-binary;base64,"
+                      + __import__("base64").b64encode(model.read_bytes()).decode()),
+        "height_meters": args.height,
+    }
+    result = request("POST", ENDPOINTS["rig"], payload)
+    task_id = result.get("result") or result.get("id")
+    print(f"rig task: {task_id}")
+    print(f"fetch with: tools/art_pipeline/meshy.py fetch {task_id} --stage rig --out <dir>")
+
+
+def cmd_animate(args) -> None:
+    payload = {"rig_task_id": args.rig_task_id, "action_id": args.action_id}
+    result = request("POST", ENDPOINTS["animate"], payload)
+    task_id = result.get("result") or result.get("id")
+    print(f"animation task: {task_id}")
+    print(f"fetch with: tools/art_pipeline/meshy.py fetch {task_id} "
+          f"--stage animate --out <dir>")
 
 
 def main() -> None:
@@ -289,12 +381,30 @@ def main() -> None:
     gen.add_argument("--yes", action="store_true", help="proceed past the budget guard")
     gen.set_defaults(func=cmd_generate)
 
+    texture = sub.add_parser("texture", help="retexture a local GLB against the concept art")
+    texture.add_argument("species")
+    texture.add_argument("model", help="path to the winning candidate's GLB")
+    texture.add_argument("--resolution", choices=["2k", "4k"], default="2k")
+    texture.set_defaults(func=cmd_texture)
+
+    rig = sub.add_parser("rig", help="auto-rig a textured GLB (Meshy: humanoid-only)")
+    rig.add_argument("model")
+    rig.add_argument("--height", type=float, default=1.7)
+    rig.set_defaults(func=cmd_rig)
+
+    animate = sub.add_parser("animate", help="apply a library action to a rig task")
+    animate.add_argument("rig_task_id")
+    animate.add_argument("action_id", type=int)
+    animate.set_defaults(func=cmd_animate)
+
     status = sub.add_parser("status", help="one task's progress")
     status.add_argument("task_id")
+    status.add_argument("--stage", choices=list(ENDPOINTS), default="generate")
     status.set_defaults(func=cmd_status)
 
     fetch = sub.add_parser("fetch", help="wait for a task and download it")
     fetch.add_argument("task_id")
+    fetch.add_argument("--stage", choices=list(ENDPOINTS), default="generate")
     fetch.add_argument("--out", required=True)
     fetch.set_defaults(func=cmd_fetch)
 
