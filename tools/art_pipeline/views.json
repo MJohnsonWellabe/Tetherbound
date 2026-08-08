@@ -60,6 +60,115 @@
       },
       "_comment": "EXPLICIT boxes, measured, after the blind critique traced a floating dagger in one candidate and a shredded ghost figure in another back to MY crops: every view carried a sliver of the neighbouring board figure at its left edge, and the generator dutifully modelled it. The staff-holding fourth figure is dropped entirely rather than cropped around, since a staff fused to the arm is exactly what the build prompt forbids. `head` is the board's own portrait at native scale — at full-body 1024 the face is ~150px and the eyes are ~10, which is why all six humanoid candidates came back with no eyes at all."
     },
+    "_comment_wild": "THE MEADOWS WILD ROSTER, from the owner's canon pack (docs/art/reference/wild/). Their sheets are laid out differently from 01-04: each species gets a hero illustration, a THREE-view turnaround (front/side/back — there is no drawn 3/4 view), a head close-up, action poses, a palette strip and a scale figure, and three or four species share one 1448px sheet. So each entry takes the turnaround as its band — three views at one shared scale, which is the signal multi-view reconstruction needs — and adds the HERO as `three_quarter` through extra_boxes, at its own scale. The hero is worth the scale break: a turnaround figure here is 80-170 source pixels wide against 180-450 on sheets 01-04, and the hero is two to three times that. `mask` paints out the species name and role line, which sit inside the hero's own panel with no rectangle that holds the figure and excludes the words.",
+    "_comment_wild_sheet05": "05_Meadows_Wild_Scale_Palette_Implementation_Guide.png IS MISNAMED. It is Ground Sheet B — Meadowhart, Burrowback and Tuskroot — not a scale guide. The file name is the owner's and is left alone; this comment is the correction.",
+
+    "bramblebun": {
+      "file": "wild/02_Meadows_Wild_Ground_Sheet.png",
+      "band": [388, 148, 768, 322],
+      "centres": [425, 562, 706],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [156, 105, 356, 327]}
+    },
+    "mudsnout": {
+      "file": "wild/02_Meadows_Wild_Ground_Sheet.png",
+      "band": [382, 484, 768, 610],
+      "centres": [425, 548, 695],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [138, 470, 352, 614]},
+      "mask": [[20, 442, 152, 478], [30, 480, 102, 506]]
+    },
+    "trailpup": {
+      "file": "wild/02_Meadows_Wild_Ground_Sheet.png",
+      "band": [382, 758, 768, 880],
+      "centres": [422, 568, 712],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [140, 723, 358, 886]},
+      "mask": [[20, 725, 118, 748], [30, 745, 149, 764], [26, 766, 99, 790]],
+      "_comment": "The band starts at 758 because this row's FRONT/SIDE/BACK labels run to y=755, measured — three pixels of 'BACK' survived a band starting at 752 and rode into every crop."
+    },
+    "meadowhart": {
+      "file": "wild/05_Meadows_Wild_Scale_Palette_Implementation_Guide.png",
+      "band": [378, 156, 768, 330],
+      "centres": [413, 553, 692],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [170, 111, 360, 332]},
+      "mask": [[20, 112, 172, 158], [28, 160, 100, 184]]
+    },
+    "burrowback": {
+      "file": "wild/05_Meadows_Wild_Scale_Palette_Implementation_Guide.png",
+      "band": [378, 500, 768, 625],
+      "centres": [423, 557, 700],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [108, 470, 358, 638]},
+      "mask": [[18, 464, 164, 502], [28, 505, 102, 530]]
+    },
+    "tuskroot": {
+      "file": "wild/05_Meadows_Wild_Scale_Palette_Implementation_Guide.png",
+      "band": [380, 784, 768, 895],
+      "centres": [420, 552, 700],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [124, 743, 372, 912]},
+      "mask": [[18, 748, 168, 802], [28, 804, 102, 828]]
+    },
+    "paddlenewt": {
+      "file": "wild/03_Meadows_Wild_Water_Sheet.png",
+      "band": [320, 115, 685, 300],
+      "centres": [372, 496, 620],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [40, 118, 308, 315]},
+      "mask": [[16, 90, 184, 118], [40, 116, 136, 150]]
+    },
+    "mosshell": {
+      "file": "wild/03_Meadows_Wild_Water_Sheet.png",
+      "band": [318, 368, 685, 520],
+      "centres": [372, 498, 618],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [38, 372, 308, 560]},
+      "mask": [[16, 344, 162, 368], [40, 368, 126, 402]]
+    },
+    "brooktail": {
+      "file": "wild/03_Meadows_Wild_Water_Sheet.png",
+      "band": [322, 602, 685, 760],
+      "centres": [376, 495, 620],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [60, 582, 312, 780]},
+      "mask": [[30, 578, 164, 604], [40, 604, 146, 638]]
+    },
+    "reedwing": {
+      "file": "wild/03_Meadows_Wild_Water_Sheet.png",
+      "band": [322, 806, 685, 945],
+      "centres": [372, 495, 618],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [84, 790, 312, 955]},
+      "mask": [[28, 788, 162, 812], [42, 813, 126, 850]]
+    },
+    "pipwing": {
+      "file": "wild/04_Meadows_Wild_Air_Sheet.png",
+      "band": [325, 175, 670, 345],
+      "centres": [376, 488, 598],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [118, 188, 308, 350]},
+      "mask": [[20, 148, 145, 175], [42, 175, 118, 208], [44, 210, 92, 234]]
+    },
+    "duskhush": {
+      "file": "wild/04_Meadows_Wild_Air_Sheet.png",
+      "band": [322, 418, 668, 595],
+      "centres": [375, 495, 598],
+      "views": ["front", "side", "back"],
+      "extra_boxes": {"three_quarter": [122, 388, 314, 605]},
+      "mask": [[20, 388, 168, 414], [42, 418, 133, 455], [44, 458, 94, 482]]
+    },
+    "galecrest": {
+      "file": "wild/04_Meadows_Wild_Air_Sheet.png",
+      "band": [320, 650, 670, 835],
+      "centres": [430, 600],
+      "views": ["side", "back"],
+      "extra_boxes": {"three_quarter": [130, 650, 314, 840]},
+      "mask": [[20, 634, 165, 658], [42, 658, 133, 692], [44, 694, 92, 718]],
+      "_comment": "TWO turnaround views, not three. The sheet prints FRONT and SIDE over a SINGLE wide spread-wing profile figure — there is no separate front view drawn. Declaring three centres here would split that one hawk down the middle and hand the generator two half-birds."
+    },
+
     "veridian": {
       "file": "06_Meadows_Full_Roster_Concept_Board_B.png",
       "boxes": {
