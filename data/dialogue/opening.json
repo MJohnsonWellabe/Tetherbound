@@ -1,0 +1,70 @@
+{
+  "_comment": "Everything spoken in the first fifteen minutes. Text lives here and never in a script, so a rewrite of Grandpa's voice is a data edit and a translator never has to read GDScript.",
+  "_comment_shape": "A conversation is a speaker, a portrait, and an ordered list of lines. NO branching: docs/OPENING_SEQUENCE.md is explicit that the only choice in this sequence is which pal, and that one is made by walking up to it. The previous prototype's DialogueRunner supported choices and this port deliberately drops them — the moment a line can branch, the starter choice starts wanting to be a menu.",
+  "_comment_lines": "A line is a string, or an object when it needs to override the speaker/portrait or emit an effect. Effects are opaque strings handed back to whoever started the conversation; this file knows that finishing the intro emits `beat:starter_choice`, and the dialogue system has no idea what a beat is.",
+  "_comment_voice": "He is warm, brief, and not sad about it. GAME_DESIGN.md 3 gives him one job in this scene: he cannot go, and he is sending you instead. Every line here is either that or getting out of its way.",
+  "conversations": {
+    "grandpa_intro": {
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "There you are. Come and stand where I can see you.",
+        "You'll have heard the name by now. Team Tether. They came back while you were small.",
+        "Eight places of power in this world, and they hold every one. Pals chained to the stones, keeping the lights on for them.",
+        "I walked those roads once. Knew every warden by their first name.",
+        {
+          "text": "Look at me. I get winded crossing my own meadow. I'm not walking anywhere.",
+          "speaker": "Grandpa Elias"
+        },
+        "So you go. And you don't go alone.",
+        "Three of them, stood right there behind me. Ground, water, air. I raised all three from the shell.",
+        {
+          "text": "Walk up to the one you want and say so. Take your time — the other two stay here with me either way.",
+          "effect": "beat:starter_choice"
+        }
+      ]
+    },
+    "grandpa_waiting": {
+      "_comment": "Talking to him again before choosing. Short on purpose: a player who came back to hear the intro twice is a player the game is wasting.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "Still deciding? Go on. Walk up to whichever one keeps catching your eye."
+      ]
+    },
+    "grandpa_named": {
+      "_comment": "Immediately after the name is entered. `$name` is substituted by the sequence director from what the player typed, which is the first time in this game a line says a word the player wrote.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "$name. Good. Say it out loud a few times on the road — it'll come to know it.",
+        "The other two stay with me. That's not me being kind, that's the rule: five is all any trainer carries, and you've just spent your first.",
+        {
+          "text": "There's a bramblebun grazing out past the rise. Slow thing, gentle, and it'll teach you both more than I can. Go and meet it.",
+          "effect": "beat:first_encounter"
+        }
+      ]
+    },
+    "grandpa_road": {
+      "_comment": "Beat 9. He points at the ridge and the sequence gets out of the way. Nothing after this line is scripted.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "You caught it. And you didn't break it doing so — that's the harder half.",
+        "That's the whole of what I know, then. The rest of it you'll only learn walking.",
+        {
+          "text": "See the ridge? Past it the meadow stops being gentle. Go when you're ready. Come back when you want feeding.",
+          "effect": "beat:free_play"
+        }
+      ]
+    },
+    "grandpa_encounter_hint": {
+      "_comment": "Talking to him between the naming and the catch. He does not repeat the whole briefing.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "Out past the rise, I said. Get close and it'll stop and look at you — that's your moment."
+      ]
+    }
+  }
+}

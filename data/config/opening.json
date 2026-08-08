@@ -1,0 +1,64 @@
+{
+  "_comment": "The first fifteen minutes, as data. Beats, placements and the conversations they run — docs/OPENING_SEQUENCE.md is the prose version of this file and the two are meant to be read together.",
+  "_comment_tunable": "Every distance and speed here is TUNABLE and none of it is a mechanic. The expected feedback is 'the walk to Grandpa is too long' and 'my pal keeps treading on me', and both have to be answerable by editing this file.",
+  "_comment_positions": "All offsets are metres from the player's spawn point, which playground_world.gd puts on the baked ground at the world origin. Y is never given: everything is stood on the ground by asking the world for its height (docs/decisions/D09), never by a raycast and never by a hand-placed Y that rots the next time the terrain is baked.",
+
+  "grandpa": {
+    "_comment": "Far enough that beat 2 is a walk worth taking and the meadow gets to be looked at; near enough that a player who wanders off can find him again. About eight seconds at a sprint, twenty-five at a walk.",
+    "offset": [10.0, 0.0, 32.0],
+    "_comment_config": "Which block of data/config/art.json his body comes from.",
+    "art": "grandpa",
+    "display_name": "Grandpa Elias",
+    "prompt": "Talk to Grandpa",
+    "prompt_radius": 4.0
+  },
+
+  "starters": {
+    "_comment": "GAME_DESIGN.md 3: three unique starters, Ground/Water/Air, and the two you do not take stay with him. They are standing bodies you walk up to, NOT a menu — docs/OPENING_SEQUENCE.md calls that decided and load-bearing, and a list box would undo it.",
+    "species": ["terrapup", "ripplet", "galewisp"],
+    "_comment_placement": "A row in front of Grandpa, on his own facing, so he is behind them and the player approaches all three head-on. Ported from the previous prototype's src/ui/starterPlacement.ts, which had the same job.",
+    "forward": 4.5,
+    "_comment_spread": "Metres between neighbours. Wide enough that the interaction arbiter's nearest-wins rule reads as YOUR choice rather than as the game guessing: at 3.5m apart, standing in front of one puts you at least 3m from either of the others.",
+    "spread": 3.5,
+    "prompt_radius": 2.6,
+    "_comment_prompt": "Deliberately tighter than Grandpa's. You have to commit to one by standing in front of it."
+  },
+
+  "follower": {
+    "_comment": "How your pal walks with you. It has no locomotion of its own — every value here is turned into a direction and a speed for pal_body.request_move(), the same call the combat AI and your own stick go through.",
+    "stop_distance": 3.0,
+    "_comment_stop": "Well clear of the trainer's 0.4m capsule plus a 0.65m pal. A follower that stands on the player shoves the camera about.",
+    "resume_distance": 4.2,
+    "_comment_resume": "Hysteresis. Equal to stop_distance, the pal oscillates on the boundary and jitters on the spot.",
+    "run_distance": 8.0,
+    "walk_speed": 3.0,
+    "run_speed": 5.6,
+    "_comment_speeds": "Walk is under the trainer's 4.2 and run is under the 7.6 sprint on purpose: a pal that can always keep up never has to hurry, and the little burst when it falls behind is most of what makes it read as alive."
+  },
+
+  "encounter": {
+    "_comment": "Beat 6-8. The species is not named here: encounter_director.gd already spawns a bramblebun as its peaceful practice pal and this points at that one, so there is one wild creature rather than two standing in the same meadow.",
+    "species": "bramblebun",
+    "_comment_species": "docs/OPENING_SEQUENCE.md: highest catch_rate in species.json (0.55), chosen so the tutorial catch cannot fail twice."
+  },
+
+  "beats": {
+    "_comment": "Which conversation each beat runs when the player talks to Grandpa. The order of the beats themselves is scripts/story/opening_beats.gd, which is code because it is a state machine rather than content.",
+    "grandpa_conversations": {
+      "wake": "grandpa_intro",
+      "approach": "grandpa_intro",
+      "choose": "grandpa_waiting",
+      "name": "grandpa_waiting",
+      "walk_out": "grandpa_encounter_hint",
+      "encounter": "grandpa_encounter_hint",
+      "road": "grandpa_road"
+    },
+    "named_conversation": "grandpa_named"
+  },
+
+  "fade": {
+    "_comment": "Beat 1 is a fade-in from black rather than an interior. docs/OPENING_SEQUENCE.md: that saves an entire interior art pass for a beat that lasts forty seconds.",
+    "seconds": 1.6,
+    "hold_seconds": 0.5
+  }
+}

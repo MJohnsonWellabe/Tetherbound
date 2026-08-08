@@ -15,6 +15,7 @@ extends Node
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
@@ -22,10 +23,27 @@ const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
 ## pal.tscn carries no script; one body shape serves both roles and the script
 ## is chosen here. The alternative is two near-identical scenes, which means
 ## M11's real creature model has to be wired into the game twice.
-const BODY_SCRIPT := preload("res://scripts/pals/pal_body.gd")
 const WILD_SCRIPT := preload("res://scripts/pals/wild_pal.gd")
+## The player's own pal walks around the world now instead of appearing for a
+## fight, so it gets the follower subclass rather than the bare body.
+const FOLLOWER_SCRIPT := preload("res://scripts/pals/follower_pal.gd")
+const OPENING_CONFIG := "res://data/config/opening.json"
 
 signal prompt_changed(text: String)
+
+## The pal the player starts the SANDBOX with.
+##
+## This was `const STARTER_SPECIES := "terrapup"`, which meant the player's pal
+## was decided in code and the starter choice had nowhere to attach. It is a
+## sandbox convenience now and nothing else: `meadows_playground.tscn` is the
+## combat testbed and five smoke tests need something to fight with the moment
+## they boot.
+##
+## The real game does not use it. `scripts/story/sequence_director.gd` calls
+## `suspend_default_starter()` before this node spawns anything, and the pal the
+## player actually owns arrives through `adopt_starter()` — chosen by walking up
+## to one of three creatures, and named.
+@export var default_starter: String = "terrapup"
 
 ## Ids into data/pals/species.json, so swapping any of them is a data edit.
 ##
@@ -33,7 +51,6 @@ signal prompt_changed(text: String)
 ## comes at you. They are separated in the playground so the ambush is something
 ## you walk into rather than something that happens while you are aiming at the
 ## other one.
-const STARTER_SPECIES := "terrapup"
 const WILD_SPAWNS := [
 	{"species": "bramblebun", "offset": Vector3(14.0, 0.0, -10.0)},
 	{"species": "tuskroot", "offset": Vector3(-6.0, 0.0, 26.0)},
@@ -58,6 +75,14 @@ var _ally: RefCounted = null
 
 var _engage_range: float = 6.0
 var _prompt: String = ""
+
+## Set when the scene has an InteractionArbiter to hand the prompt line to.
+##
+## Null in the combat sandbox, where this node is the only thing in the world
+## with anything to say and owning the line outright costs nothing. In the
+## opening scene Grandpa and three starters want the same line, so the decision
+## moves out to the arbiter and this becomes one voice among several.
+var _arbiter: Node = null
 
 ## Pals waiting on their faint to clear, and on their respawn. Keyed by node, so
 ## two creatures can be knocked out at once without one cancelling the other's
@@ -123,19 +148,76 @@ func _spawn_creatures() -> void:
 		wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 		_wild_pals.append(wild)
 
-	# The player's pal exists as a body in the world the whole time and is simply
-	# hidden outside combat. Instancing it at the moment a fight opens is a hitch
-	# in the one frame that most needs to be smooth.
+	if default_starter != "":
+		# Awaited: `adopt_starter` waits for ground under the spawn point, so
+		# calling it bare would hand back a coroutine and leave the pal unplaced.
+		await adopt_starter(default_starter)
+
+
+## Do not spawn the sandbox's default pal; the story is granting one.
+##
+## Called from the sequence director's `_ready`, which is guaranteed to have run
+## by the time `_spawn_creatures` gets here: the spawn is behind
+## `await get_tree().process_frame`, and every `_ready` in the tree completes
+## before the next idle frame does.
+func suspend_default_starter() -> void:
+	default_starter = ""
+
+
+## Give the player a pal, and put it in the world beside them.
+##
+## This is the inversion the opening needed. The pal used to be instanced with
+## `visible = false` and switched on for the length of a fight; now it is
+## visible, standing on the ground, and following. A creature that exists only
+## while you are hitting something with it is a weapon, not a companion.
+##
+## Returns false for an unknown species rather than leaving a body with no
+## health in the world.
+func adopt_starter(species_id: String, nickname: String = "") -> bool:
+	if _ally_body != null and is_instance_valid(_ally_body):
+		push_error("the player already has a pal; adopt_starter is not a swap")
+		return false
+
+	_ally = SPECIES.spawn(species_id)
+	if _ally == null:
+		push_error("starter species '%s' is missing from species.json" % species_id)
+		return false
+	if nickname != "":
+		_ally.display_name = nickname
+
+	# Instanced hidden and only shown once it is standing on the ground. An
+	# invisible body is switched off entirely (pal_body._on_visibility_changed),
+	# and a VISIBLE one at the world origin is a solid capsule inside the
+	# terrain — or inside the trainer, which is the overlap that once launched
+	# the player off the playground at 500 m/s.
 	_ally_body = PAL_SCENE.instantiate()
 	_ally_body.name = "AllyPal"
-	_ally_body.set_script(BODY_SCRIPT)
-	get_parent().add_child(_ally_body)
-	_ally_body.call("setup", STARTER_SPECIES)
+	_ally_body.set_script(FOLLOWER_SCRIPT)
 	_ally_body.visible = false
+	get_parent().add_child(_ally_body)
+	_ally_body.call("setup", species_id)
+	_ally_body.call("configure_following", _follower_config())
+	_ally_body.set("leader", _player)
 
-	_ally = SPECIES.spawn(STARTER_SPECIES)
-	if _ally == null:
-		push_error("starter species '%s' is missing from species.json" % STARTER_SPECIES)
+	# Behind the trainer's right shoulder, which is where it will settle anyway.
+	var spot := _player.global_position - _player.global_basis.z * 2.4 + _player.global_basis.x * 1.2
+	if not await _stand_on_ground(_ally_body, spot):
+		push_error("no ground beside the trainer to put their pal on")
+	_ally_body.visible = true
+	_ally_body.call("face_towards", _player.global_position)
+	_ally_body.call("set_following", true)
+	return true
+
+
+func _follower_config() -> Dictionary:
+	var file := FileAccess.open(OPENING_CONFIG, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	var entry: Variant = (parsed as Dictionary).get("follower", {})
+	return entry if entry is Dictionary else {}
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
@@ -180,8 +262,53 @@ func ally_instance() -> RefCounted:
 	return _ally
 
 
+## The line the HUD draws. Still asked of this node even when the arbiter is
+## deciding it, so `combat_hud.gd` keeps one source for the prompt and does not
+## have to know whether the scene it is in has arbitration.
 func prompt() -> String:
+	if _arbiter != null and is_instance_valid(_arbiter):
+		return str(_arbiter.call("prompt"))
 	return _prompt
+
+
+## Hand the prompt line, and the interact button, to a scene-wide arbiter.
+func set_arbiter(node: Node) -> void:
+	if _arbiter != null and is_instance_valid(_arbiter):
+		_arbiter.call("unregister", self)
+	_arbiter = node
+	if _arbiter != null:
+		_arbiter.call("register", self)
+		# Whatever this node had published is no longer the whole truth.
+		_prompt = ""
+		prompt_changed.emit("")
+
+
+## --- the provider contract, see scripts/world/interaction_arbiter.gd --------
+
+func interaction_offer(from: Vector3) -> Dictionary:
+	if _manager == null or bool(_manager.call("is_fighting")):
+		return {}
+	# A statement rather than an offer, and it outranks everything: with no pal
+	# on its feet there is nothing to fight with, and a "[X] Engage" line the
+	# button refuses is worse than being told why.
+	if _ally != null and _ally.fainted:
+		return PROMPTS.offer("%s is out of the fight." % _ally.display_name, 0.0, 100, false)
+	var candidate := _engageable()
+	if candidate == null:
+		return {}
+	return PROMPTS.offer(
+		"Engage %s" % str(candidate.get("display_name")),
+		from.distance_to(candidate.global_position)
+	)
+
+
+func interaction_activate() -> void:
+	var candidate := _engageable()
+	if candidate == null:
+		return
+	# For a PEACEFUL pal this press is the only way in. GAME_DESIGN.md §14
+	# forbids proximity starting a fight with one.
+	_start_fight(candidate)
 
 
 func _process(delta: float) -> void:
@@ -252,6 +379,10 @@ func _engageable() -> Node3D:
 
 
 func _update_prompt() -> void:
+	# The arbiter is drawing the line now, from `interaction_offer` below.
+	# Computing a second answer here would be a second opinion nobody reads.
+	if _arbiter != null and is_instance_valid(_arbiter):
+		return
 	var text := ""
 	if bool(_manager.call("is_fighting")):
 		text = ""
@@ -267,6 +398,12 @@ func _update_prompt() -> void:
 
 
 func _read_engage_input() -> void:
+	# One reader of `interact` per scene. With an arbiter present it does the
+	# reading and calls `interaction_activate()`; two nodes each calling
+	# `is_action_just_pressed` is how one press starts a fight AND talks to
+	# Grandpa.
+	if _arbiter != null and is_instance_valid(_arbiter):
+		return
 	if not Input.is_action_just_pressed("interact"):
 		return
 	var candidate := _engageable()
@@ -343,3 +480,8 @@ func _on_combat_exited(outcome: String) -> void:
 func _set_exploration_active(active: bool) -> void:
 	if _player != null and _player.has_method("set_locomotion_enabled"):
 		_player.call("set_locomotion_enabled", active)
+	# The combat manager drives the same body while a fight is running. Two
+	# things calling `request_move` on one creature in one frame is one of them
+	# silently losing, and the one that loses is the one the player is piloting.
+	if _ally_body != null and is_instance_valid(_ally_body) and _ally_body.has_method("set_following"):
+		_ally_body.call("set_following", active)
