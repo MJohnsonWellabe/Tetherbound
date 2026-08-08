@@ -1,0 +1,155 @@
+[gd_resource type="Theme" load_steps=10 format=3]
+
+; The menu's only theme.
+;
+; One resource rather than per-node overrides, because the menu will grow tabs
+; and every tab that dresses its own buttons is a tab that looks slightly wrong.
+; scripts/ui/ sets colours in code in exactly one place — the item tile tint,
+; which comes from data/items/items.json and cannot be a theme entry.
+;
+; Colours are the Meadows palette from data/config/palette.json, darkened: the
+; menu sits over a lit meadow and has to read as a surface in front of it rather
+; than as text floating on grass. accent is flower_gold (#d9b340), which is the
+; palette's one warm highlight and is not reserved (tether_oxblood is).
+;
+; FOCUS IS THE LOUDEST STATE HERE. This ships on a handheld with no cursor, so
+; "which thing am I about to press" has to be readable at arm's length on a
+; 7-inch screen. The focus stylebox is a 3px gold border plus a lifted fill; a
+; subtle focus ring is a menu nobody can drive with a stick.
+
+[sub_resource type="StyleBoxFlat" id="panel"]
+bg_color = Color(0.055, 0.062, 0.058, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.2, 0.17, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="btn_normal"]
+bg_color = Color(0.11, 0.125, 0.115, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.11, 0.125, 0.115, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="btn_hover"]
+bg_color = Color(0.17, 0.19, 0.16, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.32, 0.26, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="btn_pressed"]
+bg_color = Color(0.29, 0.24, 0.1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.851, 0.702, 0.251, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="btn_focus"]
+bg_color = Color(0.22, 0.21, 0.13, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.851, 0.702, 0.251, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="btn_disabled"]
+bg_color = Color(0.09, 0.095, 0.09, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.09, 0.095, 0.09, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="progress_bg"]
+bg_color = Color(0.05, 0.05, 0.06, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.02, 0.02, 0.02, 0.85)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="progress_fill"]
+bg_color = Color(0.35, 0.62, 0.28, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="scroll_bg"]
+bg_color = Color(0, 0, 0, 0)
+
+[resource]
+default_font_size = 26
+Button/colors/font_color = Color(0.87, 0.89, 0.84, 1)
+Button/colors/font_disabled_color = Color(0.4, 0.41, 0.39, 1)
+Button/colors/font_focus_color = Color(1, 0.97, 0.87, 1)
+Button/colors/font_hover_color = Color(1, 0.97, 0.87, 1)
+Button/colors/font_pressed_color = Color(1, 0.97, 0.87, 1)
+Button/styles/disabled = SubResource("btn_disabled")
+Button/styles/focus = SubResource("btn_focus")
+Button/styles/hover = SubResource("btn_hover")
+Button/styles/normal = SubResource("btn_normal")
+Button/styles/pressed = SubResource("btn_pressed")
+Label/colors/font_color = Color(0.87, 0.89, 0.84, 1)
+Panel/styles/panel = SubResource("panel")
+PanelContainer/styles/panel = SubResource("panel")
+ProgressBar/styles/background = SubResource("progress_bg")
+ProgressBar/styles/fill = SubResource("progress_fill")
+ScrollContainer/styles/panel = SubResource("scroll_bg")
