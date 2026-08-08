@@ -96,5 +96,35 @@
       }
     }
   },
-  "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips \u2014 faking motion on top of that would fight the animation."
+  "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips \u2014 faking motion on top of that would fight the animation.",
+  "grandpa": {
+    "_comment": "Grandpa Elias. He stands where he is put and talks \u2014 beat 3 of docs/OPENING_SEQUENCE.md \u2014 so `idle` is the only clip he needs today. The other four ship with him because they cost nothing to author on the same skeleton and he will eventually walk.",
+    "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
+    "height": 1.72,
+    "_comment_height": "Shorter than the 1.8m trainer. He is an old man and the silhouette should say so before the dialogue does.",
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "animation_libraries": []
+  },
+  "warden": {
+    "_comment": "The Warden of the Meadows, the biome's final boss. Board 06 used directly, per the owner lifting the earlier override (docs/art/REFERENCE_CANON.md). He does not appear in the first fifteen minutes; he is here so the biome's end is not a stand-in.",
+    "_comment_face": "His face is a painted mask, not modelled features. That is the art, not a shortcut: board 06 masks him, and asking the generator for a hard visor plays to what it can actually do after nine whole-figure candidates came back with blank ovoids.",
+    "model": "res://assets/characters/warden/warden_lod0.glb",
+    "height": 1.85,
+    "model_yaw": 0.0,
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "animation_libraries": []
+  }
 }
