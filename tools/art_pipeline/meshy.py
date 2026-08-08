@@ -134,6 +134,89 @@ SPECIES_PROMPTS = {
         "backpack with visible shoulder straps, brass and glass orb holder "
         "device at the belt, brown tousled spiky hair, friendly confident "
         "expression"),
+    # The twelve wild Meadows species, condensed from their sections in
+    # docs/art/CLAUDE_BUILD_PROMPTS.md. Every one states its signature
+    # feature in capitals and first, because five rounds of critique have
+    # now shown the generator drops whatever is mentioned once in passing.
+    "bramblebun": (
+        "compact meadow rabbit creature, warm tan fur, pale cream belly, LONG"
+        "expressive upright ears, BROAD powerful hind feet, small burr and"
+        "seedpod accents and earth-tone markings, NO leaves and NO plant"
+        "styling, bright alert eyes, light quick prey-animal silhouette with"
+        "a friendly face"
+    ),
+    "tuskroot": (
+        "stocky powerful boar creature with a LOW centre of gravity and a"
+        "heavy front end, SHORT CURVED TUSKS jutting up from the lower jaw,"
+        "coarse warm brown fur, darker ears and legs, hard stone brow ridge,"
+        "dirt-caked stone plates over the shoulders, small eyes, appealing"
+        "and powerful, never ugly or realistic"
+    ),
+    "trailpup": (
+        "young prairie coyote-like canine creature, sandy coat with a darker"
+        "stripe down the back, cream muzzle and chest, OVERSIZED ears and"
+        "OVERSIZED paws, bright intelligent eyes, lean adventurous build,"
+        "never a real-world dog breed"
+    ),
+    "ridgewolf": (
+        "mature prairie wolf creature, sandy coat with a dark back stripe,"
+        "cream muzzle and chest, TALL and LONG-LEGGED, THICK neck ruff, sharp"
+        "pointed ears, subtle stone and earth ridges emerging along the"
+        "shoulders and forelegs, intelligent friendly eyes, noble not"
+        "monstrous, no armour"
+    ),
+    "meadowhart": (
+        "graceful sturdy deer creature built to be ridden, warm tawny coat,"
+        "cream underside, dark hooves, COMPACT branch-like antlers with"
+        "subtle stone growth, expressive gentle face, strong level back, calm"
+        "bearing"
+    ),
+    "burrowback": (
+        "squat broad powerful digging badger creature, LOW to the ground and"
+        "WIDE, charcoal and brown coat with a cream stripe running up the"
+        "face, ENORMOUS shovel claws on the front paws, a few loose stone"
+        "nodules on the back, NOT a full stone shell, small determined eyes"
+    ),
+    "paddlenewt": (
+        "small rounded amphibious newt creature, bright aqua skin, cream"
+        "underside, soft translucent frill crest along the head and back,"
+        "WEBBED feet, wide friendly eyes, low four-legged stance, smooth wet-"
+        "looking skin with no fur"
+    ),
+    "mosshell": (
+        "stylised pond turtle creature, BLUE-GREEN skin, broad smooth domed"
+        "shell with pond-stone patterning and restrained moss in the seams,"
+        "kind patient face, sturdy legs, WATER creature first and mossy"
+        "second"
+    ),
+    "brooktail": (
+        "cheerful semi-aquatic otter creature, streamlined torso, BROAD FLAT"
+        "PADDLE TAIL, chestnut and cream fur, small aqua accents on the tail"
+        "and paws, whiskers, playful bright eyes, low four-legged stance"
+    ),
+    "reedwing": (
+        "stylised water bird, duck and heron influence, TEAL-BLUE primary"
+        "feathers, cream chest, warm tan accents, WEBBED FEET, broad readable"
+        "wings held slightly open, long neck, alert friendly face, reads as"
+        "both a swimmer and a flier"
+    ),
+    "pipwing": (
+        "tiny round songbird creature, cream body, SKY-BLUE wings with dark"
+        "tips, OVERSIZED expressive eyes, small crest on the head, short"
+        "beak, plump strong silhouette that reads at very small size"
+    ),
+    "duskhush": (
+        "medium owl creature, soft grey-blue and warm cream plumage, LARGE"
+        "round eyes without any glow, prominent ear tufts, BROAD soft wings,"
+        "calm and gentle expression, mysterious but never spooky, upright"
+        "perching stance"
+    ),
+    "galecrest": (
+        "larger raptor creature, hawk and eagle influence, layered slate-blue"
+        "and cream feathers with gold and tan accents, BROAD powerful wings"
+        "held open, STRONG talons, confident upright stance, sharp beak,"
+        "proud expression, powerful but still friendly and stylised"
+    ),
     # Board 06, owner-approved as the Warden's source over the earlier boards'
     # off-brief priestess (docs/art/REFERENCE_CANON.md).
     "warden": (
@@ -311,6 +394,7 @@ def cmd_generate(args) -> None:
 ## lives under its own path and none of them answer for another's ids.
 ENDPOINTS = {
     "generate": "/openapi/v1/multi-image-to-3d",
+    "text": "/openapi/v2/text-to-3d",
     "texture": "/openapi/v1/retexture",
     "rig": "/openapi/v1/rigging",
     "animate": "/openapi/v1/animations",
@@ -380,6 +464,53 @@ def cmd_fetch(args) -> None:
     print("  next: inspect_glb.py, then turntable.py, then compare_sheet.py")
 
 
+def cmd_text(args) -> None:
+    """Generate from the written spec alone, for a species with no sheet.
+
+    The three starters, the trainer, Grandpa, the Warden and the legendary all
+    have drawn reference. The twelve wild Meadows species do not — they exist
+    as prose in docs/art/CLAUDE_BUILD_PROMPTS.md and as scattered silhouette
+    donors on the exploration boards, which is not enough to reconcile a
+    multi-view reconstruction.
+
+    So: text-to-3D for the FORM, then `texture` against a starter's concept
+    crop for the STYLE. That second half is the important half. Style cohesion
+    is the complaint that survived two blind reviews of the old roster —
+    "two assets from two different pipelines" — and pointing every wild
+    creature's texture pass at the same drawn reference is what stops thirteen
+    independently-generated animals from looking like thirteen packs.
+    """
+    prompt = prompt_for(args.species)
+    before = request("GET", "/openapi/v1/balance").get("balance", 0)
+    estimate = args.candidates * 5
+    print(f"{args.species}: {args.candidates} candidate(s), text-to-3D preview")
+    print(f"balance {before} credits, this will cost roughly {estimate}")
+    if estimate > args.budget and not args.yes:
+        sys.exit(f"estimate {estimate} exceeds --budget {args.budget}.")
+
+    manifest = {"species": args.species, "mode": "text-to-3d", "prompt": prompt,
+                "negative_prompt": negative_for(args.species), "tasks": []}
+    for index in range(args.candidates):
+        result = request("POST", ENDPOINTS["text"], {
+            "mode": "preview",
+            "prompt": prompt,
+            "negative_prompt": negative_for(args.species),
+            "art_style": "realistic",
+            "should_remesh": True,
+            "topology": "quad",
+            "target_polycount": args.polycount,
+            "symmetry_mode": "auto",
+        })
+        task_id = result.get("result") or result.get("id")
+        letter = chr(ord("a") + index)
+        manifest["tasks"].append({"candidate": letter, "task_id": task_id})
+        print(f"  candidate {letter}: {task_id}")
+
+    out = RAW_ROOT / args.species
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=2))
+
+
 def cmd_texture(args) -> None:
     """Texture a local GLB against the species' own concept art.
 
@@ -393,7 +524,10 @@ def cmd_texture(args) -> None:
     model = pathlib.Path(args.model).resolve()
     if not model.exists():
         sys.exit(f"no such model: {model}")
-    views = reference_views(args.species)
+    # A wild species has no crops of its own; --style-from points its texture
+    # pass at a species that does, which is how thirteen separately-generated
+    # animals end up looking like one pack.
+    views = reference_views(args.style_from or args.species)
 
     payload = {
         "model_url": ("data:model/gltf-binary;base64,"
@@ -463,10 +597,20 @@ def main() -> None:
     gen.add_argument("--yes", action="store_true", help="proceed past the budget guard")
     gen.set_defaults(func=cmd_generate)
 
+    text = sub.add_parser("text", help="generate from the written spec (no sheet)")
+    text.add_argument("species")
+    text.add_argument("--candidates", type=int, default=2)
+    text.add_argument("--polycount", type=int, default=30000)
+    text.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
+    text.add_argument("--yes", action="store_true")
+    text.set_defaults(func=cmd_text)
+
     texture = sub.add_parser("texture", help="retexture a local GLB against the concept art")
     texture.add_argument("species")
     texture.add_argument("model", help="path to the winning candidate's GLB")
     texture.add_argument("--resolution", choices=["2k", "4k"], default="2k")
+    texture.add_argument("--style-from", default=None,
+                         help="take the style image from another species' crops")
     texture.set_defaults(func=cmd_texture)
 
     rig = sub.add_parser("rig", help="auto-rig a textured GLB (Meshy: humanoid-only)")
