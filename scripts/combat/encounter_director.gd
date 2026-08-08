@@ -23,10 +23,27 @@ const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
 ## pal.tscn carries no script; one body shape serves both roles and the script
 ## is chosen here. The alternative is two near-identical scenes, which means
 ## M11's real creature model has to be wired into the game twice.
-const BODY_SCRIPT := preload("res://scripts/pals/pal_body.gd")
 const WILD_SCRIPT := preload("res://scripts/pals/wild_pal.gd")
+## The player's own pal walks around the world now instead of appearing for a
+## fight, so it gets the follower subclass rather than the bare body.
+const FOLLOWER_SCRIPT := preload("res://scripts/pals/follower_pal.gd")
+const OPENING_CONFIG := "res://data/config/opening.json"
 
 signal prompt_changed(text: String)
+
+## The pal the player starts the SANDBOX with.
+##
+## This was `const STARTER_SPECIES := "terrapup"`, which meant the player's pal
+## was decided in code and the starter choice had nowhere to attach. It is a
+## sandbox convenience now and nothing else: `meadows_playground.tscn` is the
+## combat testbed and five smoke tests need something to fight with the moment
+## they boot.
+##
+## The real game does not use it. `scripts/story/sequence_director.gd` calls
+## `suspend_default_starter()` before this node spawns anything, and the pal the
+## player actually owns arrives through `adopt_starter()` — chosen by walking up
+## to one of three creatures, and named.
+@export var default_starter: String = "terrapup"
 
 ## Ids into data/pals/species.json, so swapping any of them is a data edit.
 ##
@@ -34,7 +51,6 @@ signal prompt_changed(text: String)
 ## comes at you. They are separated in the playground so the ambush is something
 ## you walk into rather than something that happens while you are aiming at the
 ## other one.
-const STARTER_SPECIES := "terrapup"
 const WILD_SPAWNS := [
 	{"species": "bramblebun", "offset": Vector3(14.0, 0.0, -10.0)},
 	{"species": "tuskroot", "offset": Vector3(-6.0, 0.0, 26.0)},
@@ -132,19 +148,76 @@ func _spawn_creatures() -> void:
 		wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 		_wild_pals.append(wild)
 
-	# The player's pal exists as a body in the world the whole time and is simply
-	# hidden outside combat. Instancing it at the moment a fight opens is a hitch
-	# in the one frame that most needs to be smooth.
+	if default_starter != "":
+		# Awaited: `adopt_starter` waits for ground under the spawn point, so
+		# calling it bare would hand back a coroutine and leave the pal unplaced.
+		await adopt_starter(default_starter)
+
+
+## Do not spawn the sandbox's default pal; the story is granting one.
+##
+## Called from the sequence director's `_ready`, which is guaranteed to have run
+## by the time `_spawn_creatures` gets here: the spawn is behind
+## `await get_tree().process_frame`, and every `_ready` in the tree completes
+## before the next idle frame does.
+func suspend_default_starter() -> void:
+	default_starter = ""
+
+
+## Give the player a pal, and put it in the world beside them.
+##
+## This is the inversion the opening needed. The pal used to be instanced with
+## `visible = false` and switched on for the length of a fight; now it is
+## visible, standing on the ground, and following. A creature that exists only
+## while you are hitting something with it is a weapon, not a companion.
+##
+## Returns false for an unknown species rather than leaving a body with no
+## health in the world.
+func adopt_starter(species_id: String, nickname: String = "") -> bool:
+	if _ally_body != null and is_instance_valid(_ally_body):
+		push_error("the player already has a pal; adopt_starter is not a swap")
+		return false
+
+	_ally = SPECIES.spawn(species_id)
+	if _ally == null:
+		push_error("starter species '%s' is missing from species.json" % species_id)
+		return false
+	if nickname != "":
+		_ally.display_name = nickname
+
+	# Instanced hidden and only shown once it is standing on the ground. An
+	# invisible body is switched off entirely (pal_body._on_visibility_changed),
+	# and a VISIBLE one at the world origin is a solid capsule inside the
+	# terrain — or inside the trainer, which is the overlap that once launched
+	# the player off the playground at 500 m/s.
 	_ally_body = PAL_SCENE.instantiate()
 	_ally_body.name = "AllyPal"
-	_ally_body.set_script(BODY_SCRIPT)
-	get_parent().add_child(_ally_body)
-	_ally_body.call("setup", STARTER_SPECIES)
+	_ally_body.set_script(FOLLOWER_SCRIPT)
 	_ally_body.visible = false
+	get_parent().add_child(_ally_body)
+	_ally_body.call("setup", species_id)
+	_ally_body.call("configure_following", _follower_config())
+	_ally_body.set("leader", _player)
 
-	_ally = SPECIES.spawn(STARTER_SPECIES)
-	if _ally == null:
-		push_error("starter species '%s' is missing from species.json" % STARTER_SPECIES)
+	# Behind the trainer's right shoulder, which is where it will settle anyway.
+	var spot := _player.global_position - _player.global_basis.z * 2.4 + _player.global_basis.x * 1.2
+	if not await _stand_on_ground(_ally_body, spot):
+		push_error("no ground beside the trainer to put their pal on")
+	_ally_body.visible = true
+	_ally_body.call("face_towards", _player.global_position)
+	_ally_body.call("set_following", true)
+	return true
+
+
+func _follower_config() -> Dictionary:
+	var file := FileAccess.open(OPENING_CONFIG, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	var entry: Variant = (parsed as Dictionary).get("follower", {})
+	return entry if entry is Dictionary else {}
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
@@ -407,3 +480,8 @@ func _on_combat_exited(outcome: String) -> void:
 func _set_exploration_active(active: bool) -> void:
 	if _player != null and _player.has_method("set_locomotion_enabled"):
 		_player.call("set_locomotion_enabled", active)
+	# The combat manager drives the same body while a fight is running. Two
+	# things calling `request_move` on one creature in one frame is one of them
+	# silently losing, and the one that loses is the one the player is piloting.
+	if _ally_body != null and is_instance_valid(_ally_body) and _ally_body.has_method("set_following"):
+		_ally_body.call("set_following", active)
