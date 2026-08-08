@@ -38,7 +38,9 @@
           "run": "Gallop",
           "attack": "Attack_Headbutt",
           "hit": "Idle_HitReact1",
-          "faint": "Death"
+          "faint": "Death",
+          "graze": "Eating",
+          "idle_variant": "Idle_2"
         }
       }
     },
@@ -125,7 +127,9 @@
           "run": "Gallop",
           "attack": "Attack",
           "hit": "Idle_HitReact1",
-          "faint": "Death"
+          "faint": "Death",
+          "graze": "Eating",
+          "idle_variant": "Idle_2"
         }
       }
     },
@@ -155,7 +159,9 @@
           "run": "Gallop",
           "attack": "Attack",
           "hit": "Idle_HitReact1",
-          "faint": "Death"
+          "faint": "Death",
+          "graze": "Eating",
+          "idle_variant": "Idle_2"
         }
       }
     },
@@ -186,7 +192,9 @@
           "run": "Gallop",
           "attack": "Attack",
           "hit": "Idle_HitReact1",
-          "faint": "Death"
+          "faint": "Death",
+          "graze": "Eating",
+          "idle_variant": "Idle_2"
         }
       }
     },
@@ -207,7 +215,7 @@
         "back_forward": -0.249,
         "_comment_measured": "Same method as the Palehorn. Measured behind the hump rather than on it: the hump's crown is the tallest point on the whole animal (1.95m, which is where its declared height comes from) and seating a rider there would put him on its neck.",
         "_comment_speed": "Slower than the deer and it should be. A bull is a mass being moved; 0.90 keeps it comfortably above the trainer's sprint while making the Palehorn the one you pick for distance.",
-        "speed_scale": 0.90
+        "speed_scale": 0.9
       },
       "placeholder": {
         "colour": "#4a2f2a",
@@ -223,7 +231,9 @@
           "run": "Gallop",
           "attack": "Attack_Headbutt",
           "hit": "Idle_HitReact1",
-          "faint": "Death"
+          "faint": "Death",
+          "graze": "Eating",
+          "idle_variant": "Idle_2"
         }
       }
     },
@@ -260,7 +270,9 @@
           "run": "Gallop",
           "attack": "Attack_Headbutt",
           "hit": "Idle_HitReact1",
-          "faint": "Death"
+          "faint": "Death",
+          "graze": "Eating",
+          "idle_variant": "Idle_2"
         }
       }
     }

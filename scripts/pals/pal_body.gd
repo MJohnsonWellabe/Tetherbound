@@ -512,6 +512,14 @@ func revive_animation() -> void:
 		_animator.call("revive")
 
 
+## Play a settled beat — grazing, an idle variant — and hold it for `seconds`
+## rather than the clip's own length. `companion.gd`'s peaceful idle, which times
+## its own beats; nothing here decides how long one lasts.
+func play_hold(role: String, seconds: float) -> void:
+	if _animator != null:
+		_animator.call("play_hold", role, seconds)
+
+
 ## Turn to face a world point, immediately. Used when a fight is arranged and by
 ## the peaceful idle; combat turning goes through `_turn_towards`.
 func face_towards(point: Vector3) -> void:

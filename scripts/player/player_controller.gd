@@ -18,6 +18,9 @@ const VITALS := preload("res://scripts/player/player_vitals.gd")
 ## not already have, and a node in the scene file would be a fourth path to keep
 ## pointed at him. See `scripts/pals/mount.gd`.
 const MOUNT := preload("res://scripts/pals/mount.gd")
+## The active party pal, walking beside the trainer. Same reasoning as `MOUNT`
+## above, one line up — see `scripts/pals/companion.gd`.
+const COMPANION := preload("res://scripts/pals/companion.gd")
 
 ## The key this node owns inside `SaveManager`'s one envelope (D14).
 ##
@@ -48,6 +51,8 @@ var _world: Node = null
 ## The rider. Never null after `_ready`; ask it `is_mounted()` rather than
 ## keeping a second flag here that could disagree with it.
 var _mount: Node = null
+## The follower. Also never null after `_ready`; ask `is_out()`.
+var _companion: Node = null
 
 var _walk_speed: float = 4.2
 var _sprint_speed: float = 7.6
@@ -104,6 +109,7 @@ func _ready() -> void:
 	if _camera_rig != null and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", self)
 	_build_mount()
+	_build_companion()
 
 
 func _build_mount() -> void:
@@ -111,6 +117,13 @@ func _build_mount() -> void:
 	_mount.name = "Mount"
 	add_child(_mount)
 	_mount.call("bind", self, _camera_rig)
+
+
+func _build_companion() -> void:
+	_companion = COMPANION.new()
+	_companion.name = "Companion"
+	add_child(_companion)
+	_companion.call("bind", self, _camera_rig)
 
 
 func _load_config() -> void:
@@ -396,6 +409,10 @@ func locomotion_enabled() -> bool:
 
 func mount() -> Node:
 	return _mount
+
+
+func companion() -> Node:
+	return _companion
 
 
 func is_mounted() -> bool:
