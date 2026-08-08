@@ -80,14 +80,59 @@ invented twice.
 | 14 | Pipwing | Air | — | Skytuft `05`, Breezee `08` | Tiny, round, cream body, sky-blue wings, dark tips, small crest. Silhouette must hold at ~0.25 m. |
 | 15 | Duskhush | Air | — | `03`'s feather treatment | No owl donor. Grey-blue and cream plumage, ear tufts, broad wings, large eyes **without literal glow**. Calm, not spooky. ~0.55 m. |
 | 16 | Galecrest | Air | — | `03`'s feather treatment | No raptor donor. Slate-blue and cream layers, gold accents, broad wings, strong talons. Powerful but inside the same friendly design language. ~0.8 m. |
-| 17 | Grandpa Elias | — | `09` | `05`, `06`, `07` — consistent across all three | Retired explorer/trainer, late 60s–70s. Brown, cream, muted green layers. Walking stick, **not a combat staff.** Silhouette must relate to `04` so the player plausibly learned from him. |
-| 18 | Warden Lyren | — | `10` | `05`, `07` silhouette and green/brass palette | **Team Tether field uniform, not a fantasy forest priestess.** Long coat in forest green, charcoal, cream, restrained brass. Insignia and hardware. Any staff is a ceremonial tether interface, **never a weapon.** |
-| 19 | Terracrown | Ground | `11` | `05`, `06`, `07` stag boards for silhouette and antler mass | **Ancient Ground guardian, not a Grass deer.** Antlers of weathered root and stone. Cream/tawny/earth body. Moss only as age. Subtle teal Tetherbound energy at chest, antlers, hooves. 1.8–2.0 m shoulder. |
+| 17 | Grandpa Elias | — | `05` turnaround (best available), `06` head close-ups | `07`, `09` | Retired explorer/trainer, late 60s–70s. Brown, cream, muted green layers. Walking stick, **not a combat staff.** Silhouette must relate to `04` so the player plausibly learned from him. |
+| 18 | Warden of the Meadows | — | **`06`, used directly** | — | See the override note below. |
+| 19 | Veridian Stag (Ground legendary) | Ground | **`06`, used directly** | `05`, `07`, `11` for antler mass | See the override note below. |
 
-Rows 17–19 carry the heaviest overrides because their donor art is the furthest
-off-brief. `CLAUDE_BUILD_PROMPTS.md` names two of them itself: the Warden must be
-"unmistakably Team Tether rather than a fantasy forest priestess", and Terracrown
-must "feel like a living piece of the Meadows, not a Grass deer."
+### The Warden and the legendary: overrides lifted
+
+Rows 18 and 19 used to carry the heaviest corrections in this table — the
+Warden was to be redirected away from board `07`'s "fantasy forest priestess"
+and the legendary away from being a Grass deer.
+
+**The owner has lifted both:** *"the final boss warden for this biome can come
+from the reference art and so can the legendary."*
+
+Board `06` is the source, and it is a better one than the boards those
+overrides were written against:
+
+- **The Warden of the Meadows** on `06` is not `07`'s Rooklyn. He is a male
+  figure in a long dark-green Team Tether coat with a fur-lined collar, mask
+  or visor, and a confident commanding stance — already the uniformed officer
+  the override was asking for. Board `06`'s own note: *"The Warden commands
+  Team Tether's Meadows outpost. Charismatic and ruthless in equal measure."*
+- **The Veridian Stag** on `06` is the legendary, named. Antlers of wood and
+  leaf, green foliage mane, nature-guardian bearing. Board `06`: *"Guardian of
+  the Meadows. Its presence brings life to the land. It is said the forest
+  itself moves when it walks."*
+
+`ROSTER_MANIFEST.md`'s production name **Terracrown** and board `06`'s
+**Veridian Stag** are the same character. Use Veridian Stag — the owner picked
+the art, and the art carries the name.
+
+The one thing still inherited from the old override: the legendary is the
+**Ground** legendary per `GAME_DESIGN.md` §26 and `ROSTER_MANIFEST.md`. Board
+`06` labels it Grass/Earth, and by this file's own precedence rule the markdown
+wins on type while the image wins on looks.
+
+## Deferred, deliberately: Sparkit
+
+Board `06` carries **Sparkit**, an Electric fox kit — *"The Static Kit Pal.
+Crackling with energy. It stores electricity in its fur and releases it in
+quick bursts."* The owner likes the design.
+
+**Do not generate Sparkit.** It is not part of the Meadows vertical slice:
+`GAME_DESIGN.md` §26 gives the Meadows three types — Ground, Water, Air — and
+an Electric creature would be the first crack in a locked type system that
+`CLAUDE.md` forbids changing without a flag.
+
+It is recorded here as a **future roster candidate**, so the design is not lost
+and nobody has to rediscover it. When a biome exists that has a use for
+Electric, Sparkit is already drawn.
+
+The same applies to the rest of board `06`'s creatures — Leaflet, Floafluff,
+Hopperoo, Dewcale, Petalynx — which serve this slice as silhouette and palette
+donors under the mapping above, not as species.
 
 ## Where these files live, and why
 

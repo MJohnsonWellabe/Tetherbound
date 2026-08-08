@@ -129,8 +129,14 @@ def author_idle(rig, frames: int) -> None:
         key(rig, "tail_1", frame, euler=(0, 0, 6.0 * math.sin(t * 0.5 + 1.0)))
         key(rig, "tail_2", frame, euler=(0, 0, 5.0 * math.sin(t * 0.5 + 1.6)))
         for wing in WINGS:
-            # A slow settle, like feathers resettling after a shuffle.
-            key(rig, wing, frame, euler=(0, 0, 2.5 * math.sin(t + (0 if wing.endswith("l") else math.pi))))
+            # Folded at rest, with a slow settle on top. The generated rest
+            # pose has the wings splayed in a T, and an idle that keeps them
+            # there reads as a creature mid-crash; the gate critique called it
+            # out. Fold = droop and sweep back toward the body.
+            sign = 1.0 if wing.endswith("l") else -1.0
+            key(rig, wing, frame,
+                euler=(0, sign * -38.0, sign * (18.0 + 2.5 * math.sin(t + (0 if sign > 0 else math.pi)))))
+            key(rig, WING_TIPS[wing], frame, euler=(0, sign * -30.0, 0))
         for arm in ARMS:
             # Held paws kneading gently — the concept's "forepaws held in
             # front" is a pose, and an idle that abandons it breaks character.
@@ -153,14 +159,16 @@ def author_gait(rig, frames: int, swing: float, bob: float, lean: float) -> None
         key(rig, "head", frame, euler=(-bob * 0.8 * math.sin(2 * t + 0.5) - lean * 0.5, 0, 0))
         key(rig, "tail_1", frame, euler=(0, 0, 8.0 * math.sin(t)))
         if IS_GLIDER:
-            # Wings pump with the gait — shallow in a walk, real flaps in a
-            # run, which is what makes a glider's run read as a glider's.
+            # Walk: wings stay mostly folded with a soft pump. Run: they open
+            # and flap for real — the glider's run should read as half-flight.
+            fold = -30.0 if swing < 30.0 else -8.0
             flap = swing * 0.5
             for wing in WINGS:
                 sign = 1.0 if wing.endswith("l") else -1.0
-                key(rig, wing, frame, euler=(0, sign * flap * math.sin(2 * t), 0))
+                key(rig, wing, frame,
+                    euler=(0, sign * (fold + flap * math.sin(2 * t)), sign * 12.0))
                 key(rig, WING_TIPS[wing], frame,
-                    euler=(0, sign * flap * 0.6 * math.sin(2 * t - 0.8), 0))
+                    euler=(0, sign * (fold * 0.6 + flap * 0.6 * math.sin(2 * t - 0.8)), 0))
 
 
 def author_attack(rig, frames: int) -> None:
