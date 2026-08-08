@@ -15,6 +15,7 @@ extends Node
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
@@ -58,6 +59,14 @@ var _ally: RefCounted = null
 
 var _engage_range: float = 6.0
 var _prompt: String = ""
+
+## Set when the scene has an InteractionArbiter to hand the prompt line to.
+##
+## Null in the combat sandbox, where this node is the only thing in the world
+## with anything to say and owning the line outright costs nothing. In the
+## opening scene Grandpa and three starters want the same line, so the decision
+## moves out to the arbiter and this becomes one voice among several.
+var _arbiter: Node = null
 
 ## Pals waiting on their faint to clear, and on their respawn. Keyed by node, so
 ## two creatures can be knocked out at once without one cancelling the other's
@@ -180,8 +189,53 @@ func ally_instance() -> RefCounted:
 	return _ally
 
 
+## The line the HUD draws. Still asked of this node even when the arbiter is
+## deciding it, so `combat_hud.gd` keeps one source for the prompt and does not
+## have to know whether the scene it is in has arbitration.
 func prompt() -> String:
+	if _arbiter != null and is_instance_valid(_arbiter):
+		return str(_arbiter.call("prompt"))
 	return _prompt
+
+
+## Hand the prompt line, and the interact button, to a scene-wide arbiter.
+func set_arbiter(node: Node) -> void:
+	if _arbiter != null and is_instance_valid(_arbiter):
+		_arbiter.call("unregister", self)
+	_arbiter = node
+	if _arbiter != null:
+		_arbiter.call("register", self)
+		# Whatever this node had published is no longer the whole truth.
+		_prompt = ""
+		prompt_changed.emit("")
+
+
+## --- the provider contract, see scripts/world/interaction_arbiter.gd --------
+
+func interaction_offer(from: Vector3) -> Dictionary:
+	if _manager == null or bool(_manager.call("is_fighting")):
+		return {}
+	# A statement rather than an offer, and it outranks everything: with no pal
+	# on its feet there is nothing to fight with, and a "[X] Engage" line the
+	# button refuses is worse than being told why.
+	if _ally != null and _ally.fainted:
+		return PROMPTS.offer("%s is out of the fight." % _ally.display_name, 0.0, 100, false)
+	var candidate := _engageable()
+	if candidate == null:
+		return {}
+	return PROMPTS.offer(
+		"Engage %s" % str(candidate.get("display_name")),
+		from.distance_to(candidate.global_position)
+	)
+
+
+func interaction_activate() -> void:
+	var candidate := _engageable()
+	if candidate == null:
+		return
+	# For a PEACEFUL pal this press is the only way in. GAME_DESIGN.md §14
+	# forbids proximity starting a fight with one.
+	_start_fight(candidate)
 
 
 func _process(delta: float) -> void:
@@ -252,6 +306,10 @@ func _engageable() -> Node3D:
 
 
 func _update_prompt() -> void:
+	# The arbiter is drawing the line now, from `interaction_offer` below.
+	# Computing a second answer here would be a second opinion nobody reads.
+	if _arbiter != null and is_instance_valid(_arbiter):
+		return
 	var text := ""
 	if bool(_manager.call("is_fighting")):
 		text = ""
@@ -267,6 +325,12 @@ func _update_prompt() -> void:
 
 
 func _read_engage_input() -> void:
+	# One reader of `interact` per scene. With an arbiter present it does the
+	# reading and calls `interaction_activate()`; two nodes each calling
+	# `is_action_just_pressed` is how one press starts a fight AND talks to
+	# Grandpa.
+	if _arbiter != null and is_instance_valid(_arbiter):
+		return
 	if not Input.is_action_just_pressed("interact"):
 		return
 	var candidate := _engageable()
