@@ -109,22 +109,39 @@ SPECIES_PROMPTS = {
         "feathers with tan accents, enormous feathered ear tufts, wing-membrane "
         "forelimbs, long feathered tail, slender dark scaled legs with talons, "
         "large expressive blue eyes, alert lightweight energetic silhouette"),
+    # Round 2 wording. The blind critique found four SYSTEMATIC defects across
+    # all six round-1 candidates: featureless egg faces ("no eye sockets, no
+    # brow ridge, no mouth... zero nose projection"), ~4.8-head chibi
+    # proportions against the sheet's 6.25, no fingerless gloves anywhere, and
+    # a four-digit maximum on hands. Its verdict: regenerate with those named.
     "trainer": (
-        "stylised young human explorer, teal jacket over cream shirt, dark "
-        "trousers, brown leather boots and fingerless gloves, canvas backpack, "
-        "brass and glass orb holder at the belt, brown tousled hair, friendly "
-        "confident expression, six and a quarter heads tall"),
+        "stylised young human explorer with FULLY SCULPTED FACIAL FEATURES: "
+        "defined eye sockets, eyebrows, projecting nose and mouth geometry. "
+        "Slim teenage build, six and a quarter heads tall, long legs, NOT "
+        "chibi. Five separated fingers on each hand, brown fingerless gloves "
+        "with knuckle cuffs. Teal jacket open over cream shirt, rolled "
+        "sleeves, dark cargo trousers, chunky brown leather boots, canvas "
+        "backpack with visible shoulder straps, brass and glass orb holder "
+        "device at the belt, brown tousled spiky hair, friendly confident "
+        "expression"),
     # From docs/art/CLAUDE_BUILD_PROMPTS.md §17. His reference is the weakest
     # in the pack — four ~90px figures cut from board 05, not a production
     # sheet — so the words carry more of the load here than for the starters.
+    # Round 2 wording. The blind critique of round 1 found humanoid failures
+    # on every candidate — a severed floating forearm, eye regions with "no
+    # lids, no sockets, no brow break", elf ears, mitten hands — so the round-2
+    # prompt names each of those as a requirement, the same move that fixed
+    # Terrapup's paws.
     "grandpa": (
-        "stylised elderly human man, late 60s, retired explorer, warm kind "
-        "expressive face, white-grey hair and full beard, weathered but "
-        "healthy, practical layered outdoor clothing: muted green vest over "
-        "cream shirt with rolled sleeves, brown trousers, sturdy leather "
-        "boots, green neck scarf, small belt pouches, old field satchel, "
-        "empty hands, no armor, no weapon, no staff, "
-        "six heads tall, gentle grandfather posture"),
+        "stylised elderly human man, late 60s, retired explorer. DETAILED "
+        "FACE with clearly sculpted eyes, eyelids and brow, kind warm "
+        "expression, ROUND human ears, VOLUMETRIC full white beard and "
+        "moustache, swept white hair. Both arms complete and symmetrical, "
+        "relaxed A-pose slightly away from the body, five separated fingers "
+        "on each hand. Muted green vest layered over cream shirt with rolled "
+        "sleeves, brown trousers, sturdy leather boots, green neck scarf, "
+        "small belt pouches, old field satchel, empty hands, no armor, no "
+        "weapon, no staff, six heads tall, gentle grandfather posture"),
 }
 
 

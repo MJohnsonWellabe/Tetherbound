@@ -54,24 +54,30 @@ QUAD_LOWER = {"front_upper_l": "front_lower_l", "front_upper_r": "front_lower_r"
 QUAD_PHASE = {"front_upper_l": 0.0, "rear_upper_r": 0.0,
               "front_upper_r": math.pi, "rear_upper_l": math.pi}
 
-GLIDER_LEGS = ["leg_upper_l", "leg_upper_r"]
-GLIDER_LOWER = {"leg_upper_l": "leg_lower_l", "leg_upper_r": "leg_lower_r"}
-GLIDER_PHASE = {"leg_upper_l": 0.0, "leg_upper_r": math.pi}
+BIPED_LEGS = ["leg_upper_l", "leg_upper_r"]
+BIPED_LOWER = {"leg_upper_l": "leg_lower_l", "leg_upper_r": "leg_lower_r"}
+BIPED_PHASE = {"leg_upper_l": 0.0, "leg_upper_r": math.pi}
 WINGS = ["wing_upper_l", "wing_upper_r"]
 WING_TIPS = {"wing_upper_l": "wing_tip_l", "wing_upper_r": "wing_tip_r"}
+ARMS = ["arm_l", "arm_r"]
 
 # Set by detect() once the rig is loaded.
 LEGS, LOWER, PHASE = QUAD_LEGS, QUAD_LOWER, QUAD_PHASE
 IS_GLIDER = False
+IS_SITTER = False
 
 
 def detect(rig: bpy.types.Object) -> None:
-    global LEGS, LOWER, PHASE, IS_GLIDER
+    global LEGS, LOWER, PHASE, IS_GLIDER, IS_SITTER
     names = {b.name for b in rig.data.bones}
     if "wing_upper_l" in names:
-        LEGS, LOWER, PHASE = GLIDER_LEGS, GLIDER_LOWER, GLIDER_PHASE
-        IS_GLIDER = True
+        LEGS, LOWER, PHASE = BIPED_LEGS, BIPED_LOWER, BIPED_PHASE
+        IS_GLIDER, IS_SITTER = True, False
         print("  glider skeleton detected: 2 legs + wings")
+    elif "arm_l" in names:
+        LEGS, LOWER, PHASE = BIPED_LEGS, BIPED_LOWER, BIPED_PHASE
+        IS_GLIDER, IS_SITTER = False, True
+        print("  sitter skeleton detected: 2 legs + held forepaws")
 
 
 def argv_after_double_dash() -> list[str]:
@@ -125,6 +131,10 @@ def author_idle(rig, frames: int) -> None:
         for wing in WINGS:
             # A slow settle, like feathers resettling after a shuffle.
             key(rig, wing, frame, euler=(0, 0, 2.5 * math.sin(t + (0 if wing.endswith("l") else math.pi))))
+        for arm in ARMS:
+            # Held paws kneading gently — the concept's "forepaws held in
+            # front" is a pose, and an idle that abandons it breaks character.
+            key(rig, arm, frame, euler=(4.0 * math.sin(t + (0 if arm.endswith("l") else 1.2)), 0, 0))
 
 
 def author_gait(rig, frames: int, swing: float, bob: float, lean: float) -> None:
@@ -159,7 +169,28 @@ def author_attack(rig, frames: int) -> None:
     Quadruped: rear up, slam both forepaws down (the digger's move).
     Glider: draw the wings back, then a forward buffet with the head driving —
     the wings are the glider's paws.
+    Sitter: a body-driven double paw swipe — wind the spine back, then whip
+    forward with both arms sweeping down, tail counterswinging.
     """
+    if IS_SITTER:
+        key(rig, "spine", 0, euler=(0, 0, 0))
+        key(rig, "spine", 9, euler=(-16, 0, 0))
+        key(rig, "head", 9, euler=(-10, 0, 0))
+        key(rig, "tail_1", 9, euler=(-14, 0, 0))
+        for arm in ARMS:
+            key(rig, arm, 0, euler=(0, 0, 0))
+            key(rig, arm, 9, euler=(-55, 0, 0))
+        key(rig, "spine", 14, euler=(16, 0, 0))
+        key(rig, "head", 14, euler=(12, 0, 0))
+        key(rig, "tail_1", 14, euler=(12, 0, 0))
+        for arm in ARMS:
+            key(rig, arm, 14, euler=(50, 0, 0))
+        key(rig, "spine", frames, euler=(0, 0, 0))
+        key(rig, "head", frames, euler=(0, 0, 0))
+        key(rig, "tail_1", frames, euler=(0, 0, 0))
+        for arm in ARMS:
+            key(rig, arm, frames, euler=(0, 0, 0))
+        return
     if IS_GLIDER:
         key(rig, "spine", 0, euler=(0, 0, 0))
         for wing in WINGS:

@@ -3,7 +3,7 @@
   "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance \u2014 clearly different silhouettes and clearly different colours \u2014 and nothing else.",
   "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
   "_comment_names": "Ids and display names come from `docs/art/ROSTER_MANIFEST.md` and are canon. The meshes under them do NOT: Bramblebun is a duck today and Tuskroot is a songbird, because both are stand-ins from the Plumberry pack (`docs/decisions/D10`). The pipeline in `docs/art/CLAUDE_BUILD_PROMPTS.md` replaces them.",
-  "_comment_scale": "`height` and `radius` are tuned for COMBAT READABILITY against the current stand-ins, not to the reference pack's real-world sizes — the sheets say Terrapup is 0.45m at the shoulder and Bramblebun 0.35m, while these are 1.2 and 0.95 overall. That gap is deliberate for now: chibi companions beside a 1.8m trainer read better in a fight than accurate livestock. Revisit it when real art lands, as ONE decision about the whole roster's register, not per species.",
+  "_comment_scale": "`height` and `radius` are tuned for COMBAT READABILITY against the current stand-ins, not to the reference pack's real-world sizes \u2014 the sheets say Terrapup is 0.45m at the shoulder and Bramblebun 0.35m, while these are 1.2 and 0.95 overall. That gap is deliberate for now: chibi companions beside a 1.8m trainer read better in a fight than accurate livestock. Revisit it when real art lands, as ONE decision about the whole roster's register, not per species.",
   "_comment_aggressive": "`aggressive` decides whether a wild pal will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL pal, and the same list allows 'Aggressive pal initiates' \u2014 so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
   "species": {
     "terrapup": {
@@ -36,6 +36,35 @@
         "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
         "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own pal is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
         "_comment_role": "Your partner, and therefore the one that must never be lost in a frame \u2014 so it gets the most saturated character in the pack."
+      }
+    },
+    "ripplet": {
+      "display_name": "Ripplet",
+      "type": "water",
+      "_comment": "Water starter. GAME_DESIGN.md 26: Water = balanced/efficient, so its statline sits between Terrapup's tank spread and the Air starter's offence.",
+      "base_hp": 105.0,
+      "base_attack": 24.0,
+      "base_defence": 17.0,
+      "catch_rate": 0.3,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#4fb8c9",
+        "height": 1.05,
+        "radius": 0.4,
+        "_comment_footprint": "Upright sitter with a torso-sized tail fan behind it; the fan is most of the footprint.",
+        "footprint_allowance": 3.0,
+        "model": "res://assets/pals/tetherbound/ripplet/models/pal_ripplet_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "Produced by the tools/art_pipeline chain from sheet 02; see docs/art/RIPPLET_PRODUCTION_REPORT.md.",
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        }
       }
     },
     "bramblebun": {

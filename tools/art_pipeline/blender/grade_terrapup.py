@@ -180,8 +180,13 @@ def main() -> None:
             if "NORMAL_MAP" in feeds:
                 continue
             if node.image.colorspace_settings.name == "sRGB":
-                grade_base_colour(node.image)
-                print(f"  graded base colour: {node.image.name}")
+                # --matte-only: the universal §12 material fix without the
+                # Terrapup-specific palette grade. Other species use this when
+                # their texture pass already matched the sheet — Ripplet's
+                # did — and only the wet-plastic problem needs killing.
+                if "--matte-only" not in argv_after_double_dash():
+                    grade_base_colour(node.image)
+                    print(f"  graded base colour: {node.image.name}")
             else:
                 matte_roughness(node.image)
                 print(f"  floored roughness, zeroed metallic: {node.image.name}")
