@@ -57,6 +57,21 @@ func _run() -> void:
 	var lowest := player.global_position.y
 	var ungrounded_streak := 0
 	var worst_streak := 0
+	# Where the worst ungrounded run happened, and whether the player was
+	# LOSING HEIGHT during it.
+	#
+	# Without this the failure message is unfalsifiable: "the ground is not
+	# continuous" was reported on runs where the player never went below
+	# y = -0.4m, i.e. never fell anywhere, which the message cannot explain and
+	# nobody can act on. It also flapped — the same commit passed and failed —
+	# so a report that names a place and a direction is the difference between
+	# fixing it and arguing about it.
+	var streak_start := Vector3.ZERO
+	var streak_start_y := 0.0
+	var worst_start := Vector3.ZERO
+	var worst_drop := 0.0
+	## Deepest the player ever got BELOW the terrain surface under them.
+	var below := 0.0
 
 	for direction in ["move_forward", "move_right", "move_back", "move_left"]:
 		Input.action_press(direction)
@@ -68,8 +83,23 @@ func _run() -> void:
 
 			# A jump or a slope crest legitimately leaves the floor for a few
 			# frames. Falling through does not come back.
-			ungrounded_streak = 0 if player.is_on_floor() else ungrounded_streak + 1
-			worst_streak = maxi(worst_streak, ungrounded_streak)
+			if player.is_on_floor():
+				ungrounded_streak = 0
+			else:
+				if ungrounded_streak == 0:
+					streak_start = pos
+					streak_start_y = pos.y
+				ungrounded_streak += 1
+				if ungrounded_streak > worst_streak:
+					worst_streak = ungrounded_streak
+					worst_start = streak_start
+					worst_drop = streak_start_y - pos.y
+				# The invariant that actually means "fell through the world":
+				# being BELOW the terrain surface at your own x/z. Sampled from
+				# the same heightfield the terrain was baked from, which is the
+				# sanctioned way to ask (D09 — never raycast for ground).
+				var surface: float = float(world.call("ground_height_at", pos.x, pos.z))
+				below = maxf(below, surface - pos.y)
 
 			if pos.y < THROUGH_THE_FLOOR:
 				Input.action_release(direction)
@@ -91,10 +121,38 @@ func _run() -> void:
 		furthest, lowest, worst_streak
 	])
 
+	if worst_streak > 0:
+		print("  longest run began at %.0f, %.0f, %.0f and lost %.2fm of height" % [
+			worst_start.x, worst_start.y, worst_start.z, worst_drop])
+
 	if furthest < 100.0:
 		failures.append("only reached %.0fm from spawn; too short to prove anything about collision" % furthest)
-	if worst_streak > 240:
-		failures.append("airborne for %d consecutive frames; the ground is not continuous" % worst_streak)
+
+	# Ungrounded ALONE is not the bug this test exists to catch, and asserting on
+	# it made this test flap for days.
+	#
+	# The bug it was written for was Terrain3D's collision quietly reverting to
+	# a 64m bubble: two hundred metres out the ground stopped existing and the
+	# player fell to y = -49950. That is ungrounded AND below the ground, and it
+	# never recovers.
+	#
+	# Being ungrounded while holding height is something else entirely. A slope
+	# steeper than floor_max_angle (45 degrees) reports is_on_floor() false while
+	# the player stands on perfectly solid ground, and this playground has hills.
+	# On that basis this test reported "the ground is not continuous" for runs
+	# where the player never went below y = -0.4m — a message nobody could act
+	# on, which is how it came to be red and ignored.
+	#
+	# The invariant that actually distinguishes the two is whether the player is
+	# UNDER the terrain surface at their own x/z. The fell-through-the-world
+	# check above is unchanged and still absolute.
+	if below > 1.5:
+		failures.append("sank %.1fm below the terrain surface; the ground is not continuous" % below)
+	elif worst_streak > 240:
+		print("  NOTE: ungrounded for %d frames near %.0f, %.0f (%.2fm of height lost),"
+			% [worst_streak, worst_start.x, worst_start.z, worst_drop])
+		print("        but never below the terrain surface — a steep slope or a fall down")
+		print("        one, not missing collision. Deepest below surface: %.2fm." % below)
 
 	print("")
 	if failures.is_empty():
