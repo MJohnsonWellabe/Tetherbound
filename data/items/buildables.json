@@ -15,7 +15,7 @@
       "cost": [
         { "id": "wood", "n": 12 },
         { "id": "stone", "n": 8 },
-        { "id": "fibre", "n": 10 }
+        { "id": "fiber", "n": 10 }
       ]
     }
   ]

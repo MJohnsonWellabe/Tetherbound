@@ -25,7 +25,7 @@ func before_each() -> void:
 func test_the_four_starting_items_are_all_defined() -> void:
 	# MEADOWS_VERTICAL_SLICE.md M8's minimal set. The menu names none of these;
 	# if one is renamed in the data file, this is what says so.
-	for id in ["wood", "stone", "fibre", "berries"]:
+	for id in ["wood", "stone", "fiber", "berries"]:
 		assert_true(db.has(id), "items.json is missing %s" % id)
 		assert_true(db.stack_size(id) > 1, "%s must stack" % id)
 
