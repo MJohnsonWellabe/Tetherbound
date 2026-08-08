@@ -4,7 +4,8 @@ Written as a handoff: everything a fresh context needs to pick this up without
 re-deriving it. Read `CLAUDE.md` first for the hard rules, then this.
 
 **Last updated:** end of the session that produced the humanoids, recanonised
-the wild roster, and built the menus, settings and opening sequence.
+the wild roster, built the menus and settings, and wrote — but did not wire —
+the opening sequence's parts.
 
 ---
 
@@ -59,7 +60,7 @@ Only **one** creature evolves in this biome: **Mudsnout → Tuskroot**.
 | Name | Status | Notes |
 |---|---|---|
 | **The trainer** (player) | DONE | Sheet 04. Teal jacket, cream shirt, green scarf, belt orb-holder, backpack. Body and head generated separately and grafted. |
-| **Grandpa Elias** | DONE | Retired explorer. Green vest, cream rolled sleeves, white beard. Wired as an NPC in the opening. |
+| **Grandpa Elias** | DONE | Retired explorer. Green vest, cream rolled sleeves, white beard. The **model** is done and configured in `art.json`. He is not an NPC anywhere: there is no opening scene and nothing instances him. |
 | **Warden of the Meadows** | DONE-ish | Biome boss. Green officer's greatcoat, cream fur ruff, **long cream cape**. **His face is painted, not modelled** — see §6. |
 | **Veridian Stag** | DONE, but failed its gate | Ground legendary, 2.60 m. Leafy antlers, bark body with golden veins. See §6. |
 
@@ -88,10 +89,40 @@ twice. A blind reviewer will call this a 3–4× scale error — it is not.
   go through `GameState.build_cost_for(id)`; it returns empty while on.
 - **`GameState` autoload** — the project's one singleton: party (max five),
   satchel, day counter.
-- **Opening beats 1–6**: interact prompts with nearest-wins arbitration,
-  dialogue, Grandpa as an NPC, pal naming, a following pal, starter choice.
+- **A pal that follows you** — `follower_pal.gd`, spawned by
+  `encounter_director.gd`, which is in the playground scene. This is the one
+  opening beat that is actually live.
 - 247 unit tests. Smoke tests per feature. CI exports a Windows build and
   publishes it on every push to `main`.
+
+### The opening: written, not wired
+
+An earlier version of this section claimed "opening beats 1–6" as built. They
+are not, and the distinction matters enough to spell out, because the parts
+exist and it is easy to mistake a file for a feature.
+
+**Written and unit-tested, but not instanced in any scene:**
+`scripts/world/interactable.gd`, `scripts/world/interaction_arbiter.gd`,
+`scripts/npc/npc_body.gd`, `scripts/story/dialogue_runner.gd` with
+`scenes/ui/dialogue_panel.tscn`, and `scenes/ui/name_prompt.tscn`.
+
+**Live:** the nearest-wins comparison itself. `scripts/world/prompt_arbiter.gd`
+is used by `encounter_director.gd`, so the rule runs every frame — but the
+`InteractionArbiter` node that would collect `Interactable`s is in no scene, so
+the only thing that ever registers a prompt is a wild pal and the only line the
+player can see is still "Engage X".
+
+**Does not exist in any form:** the starter choice. `encounter_director.gd` has
+the seams for it — `suspend_default_starter()` and `adopt_starter()` — and
+nothing calls them. The playground hands you `terrapup` unconditionally.
+
+`scenes/world/meadows_playground.tscn` is still the combat sandbox it was:
+player, camera rig, combat manager, encounter director, world look, two HUDs. No
+Grandpa, no arbiter, no dialogue panel, no name prompt, no beat gating.
+
+A sequence director — the node that would own the beat list and advance it — is
+being written in the same round of work as this update. Until it lands and the
+scene changes, none of the above is reachable by a player.
 
 ---
 
@@ -182,6 +213,14 @@ Recorded because they were written into commit messages and reports:
   still a songbird.
 - **The traversal failure was called a flake from one run, then "isolated" to
   one file from one run per side.** Both conclusions were unfounded.
+- **"Opening beats 1–6" were listed as built, and were not.** Six components
+  were written and tested; one of them, the following pal, is in a scene. The
+  rest are unreachable, and the starter choice was never written at all. The
+  same mistake in a different place had Grandpa "wired as an NPC in the
+  opening" when there is no opening. Both are corrected in §2 and §3. The
+  general shape of this error is worth naming, because it has now happened
+  three times: **a file that exists and passes its unit tests is not a feature
+  until something in a scene instantiates it.**
 
 ---
 

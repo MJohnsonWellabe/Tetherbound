@@ -14,10 +14,18 @@ The repository's Meadows vertical-slice spec requires:
 - strong silhouettes and readable materials
 - Godot / Windows / ROG Ally as the target
 
-The repository's wild-roster skeleton is:
+The repository's wild-roster skeleton, as it stood when this pack was written:
 Ground: rabbit; boar-like; canine -> wolf evolution; rideable deer/horse; badger-like
 Water: frog/newt; turtle; otter/beaver; Water/Air waterfowl
 Air: small bird; owl; hawk/eagle
+
+**The canine no longer evolves; the pig does.** The owner's later Meadows Wild
+Canon Pack — `docs/art/wild/`, sheets in `docs/art/reference/wild/` — is the
+source of truth for the wild roster, and it makes `Mudsnout -> Tuskroot` the
+biome's only evolution and retires the evolved canine. This pack is unaffected
+in every other respect: it never covered the wild roster's individual designs,
+and its starter sheets, style rules and precedence rule all still stand. See
+`docs/decisions/D13`.
 
 ## Important use rule
 The PNG concept boards establish the VISUAL LANGUAGE, proportions, materials, rendering style, silhouette quality, and general creature appeal.
