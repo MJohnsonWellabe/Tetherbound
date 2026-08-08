@@ -1,6 +1,14 @@
-# Reference set
+# Reference set — the world
 
 What each image is for, and how it may be used to judge the build.
+
+**This folder is the world target.** Characters have their own, in
+`docs/art/reference/` — nineteen creature and human references, with
+`docs/art/REFERENCE_CANON.md` deciding which of the four contradictory rosters in
+that pack is authoritative. The visual critic judges terrain, foliage, palette
+and composition against the images here, and creatures and the trainer against
+the sheets there. Neither set substitutes for the other, and item 4 below is the
+seam between them.
 
 ## `tetherbound-meadows-keyart.png` — the primary reference
 
@@ -20,9 +28,13 @@ It carries five usable things:
    screenshot survey, so the build is judged against the panel it is trying to
    be rather than against a general impression.
 4. **A creature silhouette row** — rabbit, boar, deer, raptor, turtle, canine.
-   This is the acceptance test for a creature asset pack: it covers those six
-   cohesively, or the roster in `docs/GAME_DESIGN.md` §26 changes to fit what
-   the pack actually holds.
+   This was the acceptance test for a bought creature pack: cover those six
+   cohesively, or bend `docs/GAME_DESIGN.md` §26 to fit what the pack holds.
+   **That trade is off the table now.** The owner's reference pack names all
+   nineteen characters and gives production sheets for four of them, so the
+   roster is built to the design rather than the design to the roster. The row
+   survives as a silhouette-variety check: if the finished creatures do not
+   spread across it, they are too similar to each other.
 5. **The reserved danger colour.** The oxblood red appears only on Team Tether
    banners in the stronghold panel. Keep it that way.
 

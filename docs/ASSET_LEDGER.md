@@ -13,6 +13,7 @@ at the time it was fetched, not as remembered.
 | Asset | Creator | Source | Licence | Paid | Local path | Modifications |
 |---|---|---|---|---|---|---|
 | Meadows key art board | Owner-supplied (AI-generated) | Provided by owner | Owner's own | No | `docs/reference/tetherbound-meadows-keyart.png` | None |
+| Meadows art pack — 11 reference sheets and boards | Owner-supplied (AI-generated) | Provided by owner, commit `408c757` | Owner's own. Reference only; excluded from the export | No | `docs/art/reference/0*.png`, `1*.png` | Moved from the repository root. One byte-identical duplicate of sheet `04` deleted. Canon and precedence recorded in `docs/art/REFERENCE_CANON.md`. |
 | Palworld screenshots ×5 | Pocketpair | Owner-supplied screenshots | Reference only, not shipped | No | `docs/reference/palworld-0*.jpg` | None |
 | Trainer character (`Ranger`) | KayKit / Kay Lousberg | [KayKit Adventurers](https://kaylousberg.itch.io/kaykit-adventurers) | CC0 1.0 | No | `assets/characters/Ranger.glb` | Renamed from the pack layout. Ships with no AnimationPlayer; one is created at load and the two rigs' libraries are merged onto it (`trainer_model.gd`). |
 | Trainer animation rig — General | KayKit / Kay Lousberg | [KayKit Adventurers](https://kaylousberg.itch.io/kaykit-adventurers) | CC0 1.0 | No | `assets/characters/Rig_Medium_General.glb` | Clip source only; its mesh is never instanced. |

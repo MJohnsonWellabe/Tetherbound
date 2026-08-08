@@ -1,41 +1,44 @@
-# Tetherbound — Meadows Art Pack
+# Tetherbound
 
-This pack is intended to give Claude/Codex and any 3D-generation/modeling workflow a concrete visual target for the Meadows vertical slice.
+A third-person survival/crafting creature-training game. Godot 4, Windows-first,
+built for handheld PCs and the ROG Ally. Controller first, single player.
 
-## Authoritative game-design facts
-The repository's Meadows vertical-slice spec requires:
-- 3 starters: Ground / Water / Air
-- 12 wild species
-- 1 evolved form
-- 1 Ground legendary
-- Grandpa
-- first regional Warden
-- cozy stylized natural-world presentation
-- strong silhouettes and readable materials
-- Godot / Windows / ROG Ally as the target
+You may own **five pals, total.** There is no box and no reserve team. Catching a
+sixth forces a permanent release. Everything else in the design follows from that
+one rule.
 
-The repository's wild-roster skeleton is:
-Ground: rabbit; boar-like; canine -> wolf evolution; rideable deer/horse; badger-like
-Water: frog/newt; turtle; otter/beaver; Water/Air waterfowl
-Air: small bird; owl; hawk/eagle
+## Play it
 
-## Important use rule
-The PNG concept boards establish the VISUAL LANGUAGE, proportions, materials, rendering style, silhouette quality, and general creature appeal.
+Windows builds are published on every push to `main`:
 
-Where a board label or type conflicts with `CLAUDE_BUILD_PROMPTS.md`, the markdown specification wins. The image generator occasionally invented labels while rendering the boards; those labels are not game-design authority.
+**[Download the latest build](https://github.com/MJohnsonWellabe/Tetherbound/releases/latest/download/Tetherbound-windows.zip)**
 
-The three starter sheets are stronger individual references and should be treated as the visual source of truth for:
-- Terrapup — Ground starter
-- Ripplet — Water starter
-- Galewisp — Air starter
+## Run it from source
 
-## Files
-01-03: Starter production-reference sheets
-04: Main trainer style reference, included to keep human/Pal art cohesive
-05-07: Full-biome style / roster exploration boards
-08: cropped Meadows creature-roster visual reference
-09: Grandpa visual reference
-10: Warden visual reference
-11: Ground legendary visual reference
-CLAUDE_BUILD_PROMPTS.md: authoritative per-character modeling / generation prompts
-ROSTER_MANIFEST.md: concise roster map and production priorities
+Install Godot 4.7, then `Import` this folder's `project.godot`. `F5` runs the
+game. `GODOT_AND_CLAUDE_START_HERE.md` is the longer version of that, written for
+someone who has not used Godot before.
+
+## The documents
+
+These are authoritative, in this order:
+
+| Document | What it settles |
+|---|---|
+| `docs/GAME_DESIGN.md` | The whole design. Pillars, systems, roster scope, difficulty. |
+| `docs/MEADOWS_VERTICAL_SLICE.md` | The milestone list currently being built, M0–M15. |
+| `docs/TECHNICAL_START.md` | Project layout, data/code separation, conventions. |
+| `CLAUDE.md` | The rules a coding agent may not break. |
+
+Supporting material:
+
+- `docs/art/` — the Meadows reference-art pack, and which parts of it are canon
+  (`REFERENCE_CANON.md`).
+- `docs/decisions/` — numbered records of technical and design calls, and why.
+- `docs/reviews/` — blind visual critiques of the build, including the failures.
+- `docs/ASSET_LEDGER.md` — provenance and licence for every non-original asset.
+
+## Scope
+
+Meadows only. No second biome until the Meadows vertical slice passes its exit
+gate.
