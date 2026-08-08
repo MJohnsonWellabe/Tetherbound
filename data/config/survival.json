@@ -7,10 +7,12 @@
     "_comment": "What the trainer is holding at the start of a new game, as item id -> count. Applied ONCE, when there is no save to restore; a loaded game gets whatever it had. TUNABLE.",
     "_comment_draughts": "The three revival draughts are story frame 3's parcel from Grandpa and they used to be seeded by scripts/pals/recovery.gd into a private bag of its own, because nothing in the scene owned the trainer's inventory. Something does now, so the seeding moved here with the bag. data/config/party.json `recovery.starting_revival_items` still holds the same 3 and is now inert for the shipping scene — recovery.gd only seeds a bag it owns, and it no longer owns one. Keep the two numbers the same until that file's seeding is deleted.",
     "_comment_tools": "The axe and the pickaxe are here so that M8's gathering has something to gather WITH from the first minute, and so that tool durability and free repair are reachable without a crafting system that does not exist yet. They are the starting parcel, not a supply: there is no recipe for a second axe, which is exactly what makes a broken one a trip home.",
+    "_comment_orbs": "Twenty Tether Orbs, which is exactly the orb's stack_limit in data/items/items.json, so the whole stock reads as ONE number in ONE slot — an orb count split across two slots would turn the one number the player watches during a fight into two. TUNABLE, but keep it at or under the stack limit for that reason. Catching still counts its throwable stock from data/config/catching.json (`_comment_orb` in items.json records that the wiring pass is still owed); this puts the same parcel in the bag the player actually opens.",
     "items": {
       "revival_draught": 3,
       "axe": 1,
-      "pickaxe": 1
+      "pickaxe": 1,
+      "tether_orb": 20
     }
   },
 
