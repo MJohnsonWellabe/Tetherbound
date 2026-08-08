@@ -1,8 +1,8 @@
 {
   "_comment": "The pause menu, described rather than coded. The previous prototype kept its menu in src/data/pauseMenu.json for the same reason: adding a screen should be a JSON entry plus a tab script, never a new branch in the shell.",
   "_comment_tabs": "Order is the on-screen order. `script` is the tab body; it must extend scripts/ui/menu_tab.gd. tests/test_menu_config.gd fails the build if a listed script is missing, because a typo'd path would otherwise show as a silently blank tab.",
-  "_comment_open": "`menu_cancel` is Escape / B. It is ALSO `combat_run`'s binding, so the menu refuses to open mid-fight — see docs/decisions/D14. `inventory` (I / Y) opens straight onto the backpack and works everywhere the menu does.",
-  "_comment_cycle": "`tool_cycle` (Q / left shoulder) steps to the next tab. Shoulder buttons are the handheld convention for this and there is no action bound to the RIGHT shoulder for menus; adding one means two new entries in project.godot's input map, which this agent may not write. Until then the tab row is focusable and left/right on it does the same job.",
+  "_comment_open": "`menu_cancel` is Escape / B by DEFAULT and the player can now move it — Settings > Controls. It shares its default with `combat_run`, so out of the box the menu still refuses to open mid-fight; see docs/decisions/D14. `inventory` (I / Y) opens straight onto the backpack and works everywhere the menu does.",
+  "_comment_cycle": "`tool_cycle` (Q / left shoulder) steps to the next tab. Shoulder buttons are the handheld convention for this. The tab row is also focusable, and left/right on it does the same job.",
 
   "open_action": "menu_cancel",
   "close_action": "menu_cancel",
@@ -34,6 +34,102 @@
     "columns": 6,
     "tile_width": 168,
     "tile_height": 92
+  },
+
+  "_comment_settings": "The settings screen, section by section. `sections` is the running order; today it holds Controls alone. Display and audio are entries here plus a builder in scripts/ui/tab_settings.gd when someone actually writes them — the tab already loops this list, so neither is a rewrite.",
+  "_comment_controls": "`groups` is what the Controls section draws, in order, and it is the ONLY list of what the player may rebind. Nothing that starts with `ui_` may ever be added: those are Godot's focus navigation, they are what drives this very screen with a stick, and a player who rebound `ui_down` could not reach the control that would undo it. tests/test_controls.gd enforces both that rule and that every action named here is really in the input map.",
+  "_comment_glyphs": "Button names for an Xbox-layout pad, which is what the ROG Ally is. A PlayStation glyph set is a swap of this block and nothing else. Keys are the stored binding codes from scripts/ui/key_bindings.gd.",
+  "settings": {
+    "sections": [
+      { "id": "controls", "label": "Controls" }
+    ],
+
+    "controls": {
+      "groups": [
+        {
+          "name": "Moving",
+          "actions": ["move_forward", "move_back", "move_left", "move_right", "jump", "sprint"]
+        },
+        {
+          "name": "Looking around",
+          "note": "The mouse always looks around. That is camera code rather than an input-map action, so it is not listed here and cannot be changed.",
+          "actions": ["look_up", "look_down", "look_left", "look_right"]
+        },
+        {
+          "name": "The world",
+          "actions": ["interact", "inventory", "map", "tool_cycle"]
+        },
+        {
+          "name": "Fighting",
+          "actions": [
+            "combat_quick", "combat_charged", "combat_throw", "combat_run",
+            "combat_switch_left", "combat_switch_right"
+          ]
+        },
+        {
+          "name": "Menus",
+          "actions": ["menu_confirm", "menu_cancel"]
+        }
+      ],
+
+      "labels": {
+        "move_forward": "Walk forward",
+        "move_back": "Walk back",
+        "move_left": "Step left",
+        "move_right": "Step right",
+        "jump": "Jump",
+        "sprint": "Sprint",
+        "look_up": "Look up",
+        "look_down": "Look down",
+        "look_left": "Look left",
+        "look_right": "Look right",
+        "interact": "Interact",
+        "inventory": "Open the backpack",
+        "map": "Map",
+        "tool_cycle": "Next tool  /  next tab",
+        "combat_quick": "Quick attack",
+        "combat_charged": "Charged attack",
+        "combat_throw": "Throw an orb",
+        "combat_run": "Flee the fight",
+        "combat_switch_left": "Send out the previous pal",
+        "combat_switch_right": "Send out the next pal",
+        "menu_confirm": "Confirm",
+        "menu_cancel": "Back  /  close the menu"
+      },
+
+      "glyphs": {
+        "mouse_1": "Left click",
+        "mouse_2": "Right click",
+        "mouse_3": "Middle click",
+        "mouse_4": "Wheel up",
+        "mouse_5": "Wheel down",
+        "pad_0": "A",
+        "pad_1": "B",
+        "pad_2": "X",
+        "pad_3": "Y",
+        "pad_4": "View",
+        "pad_5": "Guide",
+        "pad_6": "Menu",
+        "pad_7": "Left stick click",
+        "pad_8": "Right stick click",
+        "pad_9": "LB",
+        "pad_10": "RB",
+        "pad_11": "D-pad up",
+        "pad_12": "D-pad down",
+        "pad_13": "D-pad left",
+        "pad_14": "D-pad right",
+        "axis_0_-": "Left stick left",
+        "axis_0_+": "Left stick right",
+        "axis_1_-": "Left stick up",
+        "axis_1_+": "Left stick down",
+        "axis_2_-": "Right stick left",
+        "axis_2_+": "Right stick right",
+        "axis_3_-": "Right stick up",
+        "axis_3_+": "Right stick down",
+        "axis_4_+": "LT",
+        "axis_5_+": "RT"
+      }
+    }
   },
 
   "_comment_footer": "The button legend. Written out because this ships on a handheld with no manual open beside it.",
