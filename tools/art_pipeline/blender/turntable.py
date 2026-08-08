@@ -53,10 +53,15 @@ FRAME_FILL = 0.78
 ## touch the floor", the question the plane exists to answer, could not be
 ## asked. Rendering with Standard view transform means there is no filmic
 ## shoulder to catch an overexposure; the numbers have to be right.
-WORLD_COLOUR = (0.72, 0.73, 0.75, 1.0)
+## Darker than feels natural, deliberately. Untextured candidates are near-
+## white, and on the original pale stage they rendered at 194-255 luminance —
+## a blind critic had to contrast-stretch every frame before it could see the
+## form it was asked to judge. A form review that needs post-processing to be
+## legible is a broken review.
+WORLD_COLOUR = (0.34, 0.35, 0.38, 1.0)
 WORLD_STRENGTH = 1.0
-SUN_ENERGY = 1.6
-GROUND_COLOUR = (0.62, 0.62, 0.64, 1.0)
+SUN_ENERGY = 2.2
+GROUND_COLOUR = (0.26, 0.26, 0.29, 1.0)
 
 
 def argv_after_double_dash() -> list[str]:

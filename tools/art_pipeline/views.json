@@ -40,7 +40,33 @@
       "file": "04_Main_Character_Style_Reference.png",
       "band": [60, 85, 1000, 550],
       "centres": [197, 432, 655, 903],
-      "_comment": "A standing human, so each figure is much taller than it is wide. Labels below at y~565. Starts at x=60 to clear the TETHERBOUND wordmark."
+      "extra_boxes": {"head": [1090, 55, 1345, 430]},
+      "_comment": "A standing human, so each figure is much taller than it is wide. Labels below at y~565. Starts at x=60 to clear the TETHERBOUND wordmark. `extra_boxes` adds the sheet's own head close-up at native scale, because the face is ~150px in a full-body crop and every round-1 and round-2 candidate came back with no eye sockets at all."
+    },
+    "warden": {
+      "file": "06_Meadows_Full_Roster_Concept_Board_B.png",
+      "band": [490, 522, 790, 712],
+      "centres": [535, 630, 737],
+      "views": ["front", "side", "back"],
+      "_comment": "THREE views, not four: board 06 gives the Warden front/side/back plus a head close-up, and a bust at a different scale is not a fourth turnaround view. The owner approved this board as the Warden's source (docs/art/REFERENCE_CANON.md), replacing board 07's off-brief priestess."
+    },
+    "grandpa": {
+      "file": "05_Meadows_Full_Roster_Concept_Board_A.png",
+      "boxes": {
+        "front": [588, 55, 664, 320],
+        "back": [666, 55, 744, 320],
+        "side": [745, 55, 800, 320],
+        "head": [893, 48, 966, 142]
+      },
+      "_comment": "EXPLICIT boxes, measured, after the blind critique traced a floating dagger in one candidate and a shredded ghost figure in another back to MY crops: every view carried a sliver of the neighbouring board figure at its left edge, and the generator dutifully modelled it. The staff-holding fourth figure is dropped entirely rather than cropped around, since a staff fused to the arm is exactly what the build prompt forbids. `head` is the board's own portrait at native scale — at full-body 1024 the face is ~150px and the eyes are ~10, which is why all six humanoid candidates came back with no eyes at all."
+    },
+    "veridian": {
+      "file": "06_Meadows_Full_Roster_Concept_Board_B.png",
+      "boxes": {
+        "side": [1022, 518, 1204, 716],
+        "front": [1324, 518, 1448, 716]
+      },
+      "_comment": "EXPLICIT BOXES, not band+centres. Four stags are drawn on this panel at two different scales, two of them overlap antler-to-antler, and an inset eye-detail panel sits under the middle pair — no trough divider can separate that, and the auto-split duly returned one crop containing three animals. Two hand-read boxes around the two hero views are the honest answer; the escape hatch exists for exactly this."
     }
   }
 }

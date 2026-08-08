@@ -35,7 +35,7 @@ REFERENCE_ROOT = ROOT / "assets" / "pals" / "tetherbound"
 RAW_ROOT = ROOT / "assets_raw"
 
 BASE = "https://api.meshy.ai"
-VIEWS = ["front", "side", "back", "three_quarter"]
+VIEWS = ["front", "side", "back", "three_quarter", "head"]
 
 ## Seconds between polls, and how long to wait before giving up. Generation
 ## takes minutes, not seconds; polling harder does not make it faster.
@@ -68,10 +68,20 @@ NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weap
             "sword, staff, gun, cape, robe, extra fingers, fused fingers, "
             "noisy surface detail, wet plastic shading, "
             "text, watermark, multiple people, base, pedestal")
-HUMANS = {"trainer", "grandpa"}
+HUMANS = {"trainer", "grandpa", "warden"}
+
+
+## The legendary is made OF plants, so the creature list's "excessive moss"
+## and the style line's "restrained surface detail" would fight its design.
+NEGATIVE_PLANT = ("photorealistic bark, realistic deer, scary, skeletal, "
+            "humanoid anatomy, clothing, armor, weapons, rider, saddle, "
+            "wet plastic shading, text, watermark, multiple creatures, "
+            "base, pedestal")
 
 
 def negative_for(species: str) -> str:
+    if species == "veridian":
+        return NEGATIVE_PLANT
     return NEGATIVE_HUMAN if species in HUMANS else NEGATIVE_CREATURE
 
 ## Per-species prompt, from docs/art/CLAUDE_BUILD_PROMPTS.md. The markdown is
@@ -124,6 +134,27 @@ SPECIES_PROMPTS = {
         "backpack with visible shoulder straps, brass and glass orb holder "
         "device at the belt, brown tousled spiky hair, friendly confident "
         "expression"),
+    # Board 06, owner-approved as the Warden's source over the earlier boards'
+    # off-brief priestess (docs/art/REFERENCE_CANON.md).
+    "warden": (
+        "stylised human man, commanding antagonist officer. THE FACE MUST BE "
+        "FULLY MODELLED: deep eye sockets with visible eyeballs and eyelids, "
+        "eyebrows, projecting nose, cut mouth. A half-mask across the eyes, "
+        "short swept green hair, confident upright stance, arms at his sides. "
+        "Long dark forest-green military coat with gold trim and brass "
+        "buttons, thick cream fur-lined collar, pale half-cape over one "
+        "shoulder, dark trousers, tall leather boots, belt pouches, gloves. "
+        "Five separated fingers on each hand. Seven heads tall, imposing, no "
+        "visible weapon"),
+    # Board 06's Veridian Stag, likewise owner-approved as the legendary.
+    "veridian": (
+        "majestic large forest stag guardian, four-legged deer anatomy, "
+        "ENORMOUS branching antlers of twisted woody branches with green "
+        "leaves growing along them, spanning wider than the body. Mantle of "
+        "layered overlapping green leaves across neck and chest like a mane, "
+        "body of weathered bark and wood with golden vein patterns winding "
+        "along the flanks and legs, cream muzzle, leaf tuft at the tail, "
+        "calm noble expression, ancient and serene, standing tall and still"),
     # From docs/art/CLAUDE_BUILD_PROMPTS.md §17. His reference is the weakest
     # in the pack — four ~90px figures cut from board 05, not a production
     # sheet — so the words carry more of the load here than for the starters.
@@ -190,12 +221,21 @@ def data_uri(path: pathlib.Path) -> str:
 
 
 def reference_views(species: str) -> dict[str, pathlib.Path]:
+    """Whatever views this species actually has, in VIEWS order.
+
+    Not all of them, for everyone. The Warden's board gives three turnarounds
+    and a bust; the legendary's gives two clean hero views among two
+    contaminated thumbnails; Grandpa's gives three plus a face portrait.
+    Demanding a fixed set either fabricates a view or blocks a character whose
+    reference is simply smaller, and multi-image-to-3D reconciles two good
+    images better than four bad ones.
+    """
     directory = REFERENCE_ROOT / species / "reference"
-    found = {view: directory / f"{view}.png" for view in VIEWS}
-    missing = [v for v, p in found.items() if not p.exists()]
-    if missing:
-        sys.exit(f"{species} is missing {', '.join(missing)} in {directory}.\n"
-                 f"Run tools/art_pipeline/crop_views.py first.")
+    found = {view: directory / f"{view}.png"
+             for view in VIEWS if (directory / f"{view}.png").exists()}
+    if len(found) < 2:
+        sys.exit(f"{species} has {len(found)} reference view(s) in {directory}; "
+                 f"need at least 2.\nRun tools/art_pipeline/crop_views.py first.")
     return found
 
 
@@ -230,7 +270,7 @@ def cmd_generate(args) -> None:
 
     payload = {
         "mode": "preview" if args.tier == "preview" else "refine",
-        "image_urls": [data_uri(views[v]) for v in VIEWS],
+        "image_urls": [data_uri(p) for p in views.values()],
         "prompt": prompt,
         "negative_prompt": negative_for(species),
         "should_remesh": True,
@@ -359,7 +399,8 @@ def cmd_texture(args) -> None:
         "model_url": ("data:model/gltf-binary;base64,"
                       + __import__("base64").b64encode(model.read_bytes()).decode()),
         "text_style_prompt": prompt_for(args.species)[:600],
-        "image_style_url": data_uri(views["three_quarter"]),
+        "image_style_url": data_uri(views.get("three_quarter") or views.get("front")
+                                   or next(iter(views.values()))),
         "enable_pbr": True,
         "enable_original_uv": False,
         "texture_resolution": args.resolution,

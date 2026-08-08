@@ -221,6 +221,17 @@ def figure_bounds(distance: np.ndarray, centres: list[int]) -> list[tuple[int, i
             for centre, low, high in zip(centres, edges, edges[1:])]
 
 
+def trim(figure: Image.Image, background: np.ndarray) -> Image.Image:
+    """Crop a view down to its own content. Only used with per_view_scale."""
+    distance = distance_from(np.asarray(figure), background)
+    ink = distance > EDGE_TOLERANCE
+    rows = np.where(ink.mean(axis=1) > INK_THRESHOLD)[0]
+    cols = np.where(ink.mean(axis=0) > INK_THRESHOLD)[0]
+    if rows.size == 0 or cols.size == 0:
+        return figure
+    return figure.crop((int(cols[0]), int(rows[0]), int(cols[-1]) + 1, int(rows[-1]) + 1))
+
+
 def flatten_background(crop: Image.Image, background: np.ndarray,
                        target: tuple[int, int, int]) -> Image.Image:
     """Replace near-background pixels with one flat colour, touching nothing else."""
@@ -230,8 +241,39 @@ def flatten_background(crop: Image.Image, background: np.ndarray,
     return Image.fromarray(pixels.astype(np.uint8))
 
 
+def crop_boxes(name: str, spec: dict, config: dict,
+               out_root: pathlib.Path) -> list[pathlib.Path]:
+    """Cut explicitly-named boxes, bypassing band/centre/divider entirely.
+
+    The escape hatch for a panel the automatic split cannot read — see the
+    `veridian` entry in views.json for the case that earned it.
+    """
+    sheet = Image.open(SHEETS / spec["file"]).convert("RGB")
+    out_dir = out_root / name / "reference"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / ".gdignore").touch()
+
+    written = []
+    for view, box in spec["boxes"].items():
+        figure = sheet.crop(tuple(box))
+        background = sample_background(np.asarray(figure))
+        figure = trim(figure, background)
+        square = int(max(figure.size) * (1.0 + PADDING * 2))
+        canvas = Image.new("RGB", (square, square), tuple(int(c) for c in background))
+        canvas.paste(figure, ((square - figure.width) // 2, (square - figure.height) // 2))
+        canvas = flatten_background(canvas, background, tuple(config["background"]))
+        size = config["output_size"]
+        path = out_dir / f"{view}.png"
+        canvas.resize((size, size), Image.LANCZOS).save(path)
+        written.append(path)
+    return written
+
+
 def crop_sheet(name: str, spec: dict, config: dict,
                out_root: pathlib.Path) -> list[pathlib.Path]:
+    if "boxes" in spec:
+        return crop_boxes(name, spec, config, out_root)
+
     source = SHEETS / spec["file"]
     if not source.exists():
         raise SystemExit(f"missing reference sheet: {source}")
@@ -243,15 +285,25 @@ def crop_sheet(name: str, spec: dict, config: dict,
     background = sample_background(band)
     distance = distance_from(band, background)
 
+    # A sheet may declare its own view list. Board 06's Warden has three
+    # turnaround views and a bust; calling the bust "three_quarter" would feed
+    # the generator a head at a different scale and call it a body.
+    views = spec.get("views", config["views"])
     centres = [c - x0 for c in spec["centres"]]
-    if len(centres) != len(config["views"]):
-        raise SystemExit(f"{name}: {len(centres)} centres for {len(config['views'])} views")
+    if len(centres) != len(views):
+        raise SystemExit(f"{name}: {len(centres)} centres for {len(views)} views")
 
     bounds = figure_bounds(distance, centres)
     top, bottom = content_rows(distance)
 
-    # ONE square side for all four views, from the tallest and the widest, so
-    # the set stays a turntable. See the module docstring.
+    # ONE square side for all views, from the tallest and the widest, so the
+    # set stays a turntable. See the module docstring.
+    #
+    # UNLESS the sheet says its views are drawn at different sizes. Then each
+    # view gets its own square, because the shared-scale rule assumes a shared
+    # scale exists — and letterboxing a thumbnail into a square sized for a
+    # hero view tells the generator the creature shrinks when it turns.
+    per_view = bool(spec.get("per_view_scale", False))
     side = int(max(bottom - top, max(b - a for a, b in bounds) + MARGIN * 2)
                * (1.0 + PADDING * 2))
 
@@ -266,7 +318,7 @@ def crop_sheet(name: str, spec: dict, config: dict,
     (out_dir / ".gdignore").touch()
 
     written = []
-    for view, (a, b) in zip(config["views"], bounds):
+    for view, (a, b) in zip(views, bounds):
         # Take ONLY this figure's own slice of the sheet, never a square window
         # around it.
         #
@@ -280,14 +332,29 @@ def crop_sheet(name: str, spec: dict, config: dict,
         slice_left = x0 + a - MARGIN
         slice_right = x0 + b + MARGIN
         figure = sheet.crop((slice_left, y0 + top, slice_right, y0 + bottom))
+        if per_view:
+            figure = trim(figure, background)
 
-        canvas = Image.new("RGB", (side, side), tuple(int(c) for c in background))
-        canvas.paste(figure, ((side - figure.width) // 2, (side - figure.height) // 2))
+        square = side if not per_view else int(max(figure.size) * (1.0 + PADDING * 2))
+        canvas = Image.new("RGB", (square, square), tuple(int(c) for c in background))
+        canvas.paste(figure, ((square - figure.width) // 2, (square - figure.height) // 2))
         canvas = flatten_background(canvas, background, tuple(config["background"]))
 
         size = config["output_size"]
         path = out_dir / f"{view}.png"
         canvas.resize((size, size), Image.LANCZOS).save(path)
+        written.append(path)
+
+    for view, box in spec.get("extra_boxes", {}).items():
+        figure = sheet.crop(tuple(box))
+        local_bg = sample_background(np.asarray(figure))
+        figure = trim(figure, local_bg)
+        square = int(max(figure.size) * (1.0 + PADDING * 2))
+        canvas = Image.new("RGB", (square, square), tuple(int(c) for c in local_bg))
+        canvas.paste(figure, ((square - figure.width) // 2, (square - figure.height) // 2))
+        canvas = flatten_background(canvas, local_bg, tuple(config["background"]))
+        path = out_dir / f"{view}.png"
+        canvas.resize((config["output_size"],) * 2, Image.LANCZOS).save(path)
         written.append(path)
 
     return written
