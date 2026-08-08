@@ -1,147 +1,98 @@
-"""Remove unskinned stray meshes from a finished GLB, preserving its clips.
+#!/usr/bin/env python3
+"""Report the meshes a GLB actually contains, by reading the file, not Blender.
 
-    blender --background --python tools/art_pipeline/blender/strip_strays.py \
-            -- <model.glb> [--out <model.glb>]
+    tools/art_pipeline/blender/strip_strays.py <model.glb> [<model.glb> ...]
 
-Defaults to editing in place, because this is a repair rather than a stage.
+Plain Python. It does not need Blender, and that is the entire point.
 
-## What it removes, and why it exists
+## What this used to be, and why it was wrong
 
-Every model this project has shipped — five of them, three creatures and two
-humans — carries a stray 42-vertex **Icosphere**, two units across, centred on
-the origin, with no vertex groups. It comes out of the generator and rides
-through the whole pipeline.
+This file used to remove a stray 42-vertex `Icosphere` — unskinned, no
+material, a unit sphere at the origin — that appeared in every rigged model
+the project had exported. Five production reports record it. A blind reviewer
+found it in renders and called it "detached geometry floating free in the sky".
+The removal ran, reported success, re-imported the file it had just written to
+verify, and found the sphere still there. Every time.
 
-A blind reviewer found it from the renders alone, reporting "detached geometry
-floating free in the sky, unattached to anything" and using it to argue the
-asset should be rebuilt. It does not need a rebuild. It needs this.
+It found it every time because there was never anything to remove. Reading the
+GLB's JSON chunk shows one mesh. The sphere appears only after Blender's glTF
+importer reads the file. Reproduced on Blender 4.2.9 with a cube:
 
-Two reasons it is not cosmetic:
+    add cube, add armature, parent with automatic weights
+    export GLB with this project's settings   -> file contains 1 mesh
+    re-import that file                       -> scene contains 2 meshes,
+                                                 the second a 42-vert Icosphere
 
-1. **It poisons bounds-based fitting.** `pal_body._fit()` measures the model's
-   bounding box and scales it to the species' configured height. A sphere from
-   z = -1 to +1 wrapped around a creature standing from 0 to 2.11 makes the
-   measured height 3.11 instead of 2.11, so the creature is fitted to about
-   two thirds of the size the data asked for. Every creature is affected, and
-   by a different amount, since it depends on each one's own proportions.
-2. **It is real geometry with a real material slot**, so whether it draws
-   depends on nothing more reliable than luck.
+So it is an import artifact of Blender's own round trip, and the consequences
+run opposite to what was believed:
 
-The existing drop in `skin_transfer.py` and `animate_humanoid.py` runs before
-the export and *reports* removing it, and the sphere is in the exported file
-anyway. Rather than trust another in-pipeline drop, this script does the
-removal as its own pass and then **verifies it by re-importing the file it
-just wrote**. A repair that cannot confirm itself is how the sphere survived
-five exports.
+  - **Godot never saw it.** `pal_body._fit()` measures what is in the file.
+    smoke_art's fitted heights were right all along.
+  - **The inspection tool saw it.** A unit sphere wrapped around a creature
+    standing 0..2.0 reports the height as 3.0 and the mesh count as 2. Those
+    numbers were wrong in every report written from `inspect_glb.py`, which
+    now drops the phantom before measuring.
+  - **The reviewer's "floating geometry" was real** — in the RENDER, because
+    `turntable.py` renders the Blender scene, phantom included.
 
-## Clips
+## What it is now
 
-Animations are the reason this is not a one-liner. Imported actions have to be
-re-stashed as NLA tracks or the glTF exporter writes only the active one, and
-the whole roster's clip set would silently collapse to a single animation. The
-script counts clips before and after and refuses to overwrite the file if the
-count drops.
+A check, not a repair. It reads the container and prints what is really in it,
+so the next person who sees an Icosphere in a Blender viewport can confirm in
+one second that their file is clean. If a genuine stray mesh ever does get
+exported, this is what will show it — and the fix then belongs in the stage
+that wrote it, not in a repair pass bolted on afterwards.
 """
 
+import json
 import pathlib
+import struct
 import sys
 
-import bpy
+JSON_CHUNK = 0x4E4F534A
 
 
-def argv_after_double_dash() -> list[str]:
-    return sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+def gltf_json(path: pathlib.Path) -> dict:
+    with path.open("rb") as handle:
+        magic, _version, length = struct.unpack("<III", handle.read(12))
+        if magic != 0x46546C67:
+            raise SystemExit(f"{path.name} is not a GLB")
+        while handle.tell() < length:
+            chunk_length, chunk_type = struct.unpack("<II", handle.read(8))
+            payload = handle.read(chunk_length)
+            if chunk_type == JSON_CHUNK:
+                return json.loads(payload)
+    raise SystemExit(f"{path.name} has no JSON chunk")
 
 
-def option(args: list[str], name: str, default=None):
-    return args[args.index(name) + 1] if name in args else default
+def report(path: pathlib.Path) -> bool:
+    document = gltf_json(path)
+    meshes = document.get("meshes", [])
+    skins = document.get("skins", [])
+    skinned = {node["mesh"] for node in document.get("nodes", [])
+               if node.get("mesh") is not None and node.get("skin") is not None}
 
-
-def load(path: pathlib.Path) -> None:
-    bpy.ops.wm.read_factory_settings(use_empty=True)
-    bpy.ops.import_scene.gltf(filepath=str(path))
-
-
-def strays() -> list[bpy.types.Object]:
-    """Meshes with no vertex groups, on a model whose real mesh is skinned.
-
-    Deliberately conservative: if NOTHING in the file is skinned, this is not a
-    rigged character and every mesh is left alone rather than assuming the
-    biggest one is the subject.
-    """
-    meshes = [o for o in bpy.data.objects if o.type == "MESH"]
-    if not any(o.vertex_groups for o in meshes):
-        return []
-    return [o for o in meshes if not o.vertex_groups]
-
-
-def restash_actions(rig: bpy.types.Object) -> int:
-    """Put every action back on its own NLA track so the exporter writes them all."""
-    if rig is None:
-        return 0
-    rig.animation_data_create()
-    existing = {strip.action.name
-                for track in rig.animation_data.nla_tracks
-                for strip in track.strips if strip.action}
-    stashed = len(existing)
-    for action in bpy.data.actions:
-        if action.name in existing:
-            continue
-        track = rig.animation_data.nla_tracks.new()
-        track.name = action.name
-        track.strips.new(action.name, 1, action)
-        action.use_fake_user = True
-        stashed += 1
-    rig.animation_data.action = None
-    return stashed
+    print(f"{path.name}: {len(meshes)} mesh(es), {len(skins)} skin(s), "
+          f"{len(document.get('animations', []))} clip(s)")
+    strays = []
+    for index, mesh in enumerate(meshes):
+        vertices = sum(document["accessors"][primitive["attributes"]["POSITION"]]["count"]
+                       for primitive in mesh.get("primitives", []))
+        mark = "skinned" if index in skinned else "NOT SKINNED"
+        print(f"    mesh {index}: {mesh.get('name')!r}, {vertices} verts, {mark}")
+        if skinned and index not in skinned:
+            strays.append(index)
+    if strays:
+        print(f"  REAL STRAY(S): {strays} — fix the stage that exported this")
+    return not strays
 
 
 def main() -> None:
-    args = argv_after_double_dash()
-    if not args:
-        raise SystemExit("usage: ... strip_strays.py -- <model.glb> [--out <out.glb>]")
-    model = pathlib.Path(args[0]).resolve()
-    out = pathlib.Path(option(args, "--out", model)).resolve()
-
-    load(model)
-    clips_before = len(bpy.data.actions)
-    doomed = strays()
-    if not doomed:
-        print(f"{model.name}: nothing to strip")
-        return
-    for stray in doomed:
-        print(f"  removing stray: {stray.name} ({len(stray.data.vertices)} verts, "
-              f"no vertex groups)")
-        bpy.data.objects.remove(stray, do_unlink=True)
-
-    rigs = [o for o in bpy.data.objects if o.type == "ARMATURE"]
-    stashed = restash_actions(rigs[0] if rigs else None)
-    print(f"  {stashed} clip(s) stashed as NLA tracks")
-
-    temporary = out.with_suffix(".stripped.glb")
-    bpy.ops.object.select_all(action="SELECT")
-    bpy.ops.export_scene.gltf(
-        filepath=str(temporary), export_format="GLB",
-        export_animations=True, export_animation_mode="NLA_TRACKS",
-        export_skins=True, export_yup=True)
-
-    # Verify against the file actually written, not against the scene in memory.
-    # The in-pipeline version of this removal reported success five times and
-    # shipped the sphere five times.
-    load(temporary)
-    remaining = strays()
-    clips_after = len(bpy.data.actions)
-    if remaining:
-        temporary.unlink(missing_ok=True)
-        raise SystemExit(f"FAILED: {len(remaining)} stray(s) still in the written file")
-    if clips_after < clips_before:
-        temporary.unlink(missing_ok=True)
-        raise SystemExit(f"FAILED: clips dropped {clips_before} -> {clips_after}; "
-                         f"refusing to overwrite {out.name}")
-
-    temporary.replace(out)
-    print(f"  verified: 0 strays, {clips_after} clips (was {clips_before})")
-    print(f"-> {out}")
+    paths = [pathlib.Path(a).resolve() for a in sys.argv[1:] if not a.startswith("-")]
+    if not paths:
+        raise SystemExit(__doc__.splitlines()[2].strip())
+    if not all(report(path) for path in paths):
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

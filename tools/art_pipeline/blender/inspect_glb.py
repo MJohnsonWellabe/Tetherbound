@@ -65,6 +65,45 @@ def load(path: pathlib.Path) -> None:
         raise SystemExit(f"unsupported model format: {path.suffix}")
 
 
+def drop_import_phantoms() -> list[str]:
+    """Delete the mesh Blender's glTF importer invents, which is not in the file.
+
+    Every rigged model this project has exported reads back in Blender with an
+    extra 42-vertex object called `Icosphere`, unskinned, unmaterialled, a unit
+    sphere at the origin. Five production reports treat it as a stray riding
+    through the pipeline, `strip_strays.py` exists to remove it, and that
+    script fails its own re-import verification every time.
+
+    It fails because there is nothing to remove. Reading the GLB's own JSON
+    chunk shows ONE mesh; the sphere appears only after Blender imports the
+    file. Reproduced in five lines on Blender 4.2.9 — cube, armature, parent
+    with automatic weights, export with this project's settings, re-import:
+
+        before export: ARMATURE Armature, MESH Cube
+        after reimport: ARMATURE Armature, MESH Cube(24), MESH Icosphere(42)
+
+    So it is an importer artifact, and the consequences run the other way from
+    what was believed. Godot never sees it — `pal_body._fit()` measures what is
+    in the file, and smoke_art has been reporting correct fitted heights all
+    along. What it does poison is THIS script: a unit sphere around a creature
+    standing 0..2.0 makes the reported height 3.0, and the mesh count 2. Both
+    numbers have been wrong in every report written from this tool.
+
+    Dropped rather than merely excluded from the count, so nothing measured
+    downstream — bounds, components, normals — can pick it up either.
+    """
+    meshes = [o for o in bpy.data.objects if o.type == "MESH"]
+    if not any(o.vertex_groups for o in meshes):
+        return []
+    dropped = []
+    for obj in meshes:
+        if obj.vertex_groups or obj.data.materials:
+            continue
+        dropped.append(f"{obj.name} ({len(obj.data.vertices)} verts)")
+        bpy.data.objects.remove(obj, do_unlink=True)
+    return dropped
+
+
 def mesh_objects() -> list[bpy.types.Object]:
     return [o for o in bpy.data.objects if o.type == "MESH"]
 
@@ -346,6 +385,9 @@ def main() -> None:
 
     clear_scene()
     load(model)
+    phantoms = drop_import_phantoms()
+    for name in phantoms:
+        print(f"  ignoring Blender import phantom: {name} — not present in the file")
 
     meshes = mesh_objects()
     if not meshes:
