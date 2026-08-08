@@ -67,6 +67,35 @@
         }
       }
     },
+    "galewisp": {
+      "display_name": "Galewisp",
+      "type": "air",
+      "_comment": "Air starter. GAME_DESIGN.md 26: Air = aggressive/fast-energy, so the highest attack and the thinnest armour of the three starters.",
+      "base_hp": 92.0,
+      "base_attack": 27.0,
+      "base_defence": 14.0,
+      "catch_rate": 0.3,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#cfe3ea",
+        "height": 1.0,
+        "radius": 0.38,
+        "_comment_footprint": "Spread wings make it far wider than deep; the allowance is for span, not body.",
+        "footprint_allowance": 3.4,
+        "model": "res://assets/pals/tetherbound/galewisp/models/pal_galewisp_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "Produced by the tools/art_pipeline chain from sheet 03; see docs/art/production/.",
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        }
+      }
+    },
     "bramblebun": {
       "display_name": "Bramblebun",
       "type": "ground",

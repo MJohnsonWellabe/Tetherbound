@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dds84bxpun2a3"
-path="res://.godot/imported/pal_ripplet_lod0_metallic_roughness.png-411cba6cdde1bc1adaf68e1e3a0d081e.ctex"
+uid="uid://dlwv4enar2xq5"
+path="res://.godot/imported/pal_ripplet_lod0_base_color.png-eb06920f645ed7a8c711603a1b158f47.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "80eb93afcd4ed08a4a2a5ae9137ad641"
+"md5": "83dcd0ce098c5a74e282f343ecb26906"
 }
 
 [deps]
 
-source_file="res://assets/pals/tetherbound/ripplet/models/pal_ripplet_lod0_metallic_roughness.png"
-dest_files=["res://.godot/imported/pal_ripplet_lod0_metallic_roughness.png-411cba6cdde1bc1adaf68e1e3a0d081e.ctex"]
+source_file="res://assets/pals/tetherbound/ripplet/models/pal_ripplet_lod0_base_color.png"
+dest_files=["res://.godot/imported/pal_ripplet_lod0_base_color.png-eb06920f645ed7a8c711603a1b158f47.ctex"]
 
 [params]
 
