@@ -12,11 +12,12 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-**Eight species done** (Tuskroot, Meadowhart, Burrowback, Paddlenewt,
-Mosshell, Brooktail, Galecrest, Duskhush — `DONE.md`). **Only Pipwing and
-Reedwing remain, and neither is blocked** — the bird-animation blocker
+**Nine species done** (Tuskroot, Meadowhart, Burrowback, Paddlenewt,
+Mosshell, Brooktail, Galecrest, Duskhush, Pipwing — `DONE.md`). **Only
+Reedwing remains, and it is not blocked** — the bird-animation blocker
 below is resolved; the three-command pipeline works for birds exactly
-like it does for quadrupeds now, proved twice (Galecrest, Duskhush).
+like it does for quadrupeds now, proved three times (Galecrest, Duskhush,
+Pipwing). Reedwing finishes R0.6 entirely.
 
 **If `MESHY_API_KEY` is missing from your environment**, check whether this
 firing is a cron firing or a self-scheduled `send_later` resume before
@@ -92,10 +93,10 @@ build otherwise. Add each entry as its model lands, never ahead.
 `model: haiku` · `tests: none`
 
 `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md` exists (written during R0.4).
-**Eight of ten `ASSET_LEDGER.md` rows done** — every finished R0.6 wild
+**Nine of ten `ASSET_LEDGER.md` rows done** — every finished R0.6 wild
 species (Tuskroot, Meadowhart, Burrowback, Paddlenewt, Mosshell, Brooktail,
-Galecrest, Duskhush) has one, added as each model landed. The remaining
-two (Pipwing, Reedwing) land when those species do — no longer blocked on
+Galecrest, Duskhush, Pipwing) has one, added as each model landed. The
+last row (Reedwing) lands with that species — no longer blocked on
 anything, see R0.6. The production report's own "known gap" note (missing
 Bramblebun/Mudsnout/Trailpup candidate-selection record) is resolved —
 see `DONE.md`.

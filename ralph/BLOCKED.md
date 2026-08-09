@@ -47,15 +47,15 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 *(nothing yet)*
 
-Balance at last check: **195**, after Duskhush's texture pass (confirmed
-via `meshy.py check`, was 205 after Galecrest's). **Pipwing, Reedwing
-each still need a full `clean` (free) then `texture` (~10 credits) pass**
-— every R0.5-committed `textured/model.glb` is structurally unusable (see
+Balance at last check: **185**, after Pipwing's texture pass (confirmed
+via `meshy.py check`, was 195 after Duskhush's). **Reedwing still needs a
+full `clean` (free) then `texture` (~10 credits) pass** — every
+R0.5-committed `textured/model.glb` is structurally unusable (see
 `DONE.md`'s Tuskroot entry: R0.5 textured raw candidates directly,
 skipping `clean`, so 50,000+ triangles against a 30,000 budget with
-thousands of non-manifold edges). Confirmed true for Duskhush same as
-Galecrest — budget ~20 credits total for the remaining two, leaving a
-projected balance around 175.
+thousands of non-manifold edges). Confirmed true for Galecrest, Duskhush
+and Pipwing alike — budget ~10 credits, leaving a projected balance
+around 175 after Reedwing, which finishes R0.6.
 
 ---
 

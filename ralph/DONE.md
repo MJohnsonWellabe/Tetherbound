@@ -5,6 +5,38 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.6 — finished Pipwing (third bird species)
+`babd64f` · Same `clean → texture → rig --kind bird → grade → install`
+sequence, no code changes needed for the third time running. Candidate b
+(R0.4 winner), no hard-fail defect — only a cosmetic thin/blade-like
+crest note.
+
+`rig_report.json`: 19 bones, 14,002 vertices, **0 unweighted**, idle
+motion at 86% of walk (well clear of the frozen threshold). Four
+eye-guard rectangles added to `grade.py` — Pipwing's own "oversized teal
+eyes" are large enough relative to its tiny body that they dominate
+several UV islands, the strongest signature of any species yet alongside
+Duskhush's. One ambiguous dark shape right beside a confirmed eye was
+checked and rejected as a likely shading/seam artifact rather than a
+separate instance, same caution used on every prior species.
+
+Verified in Godot: `smoke_art.gd` passes, and the standalone height-fit
+script confirms the rendered model matches the declared 1.20m exactly —
+R0.7's fixed figure, the shortest in the roster — no footprint clamp, all
+six clips present.
+
+`species.json`: `aggressive: false` (Zippy Flier/Spotter, not a fighter);
+lowest HP (78) and defence (10) of the wild roster so far — deliberately
+fragile, matching "tiny and round" — with catch rate (0.5) set just under
+Bramblebun's tutorial-only 0.55 so the tutorial creature keeps the
+highest rate in the game.
+
+Credit balance after this species' texture pass: **185** (was 195,
+confirmed via `meshy.py check`).
+
+CI green, fast-forwarded to `main` at `babd64f` — verified by fetching
+`origin/main` directly; branch auto-deleted post-merge.
+
 ## R0.6 — finished Duskhush (second bird species)
 `a9d9282` · Same `clean → texture → rig --kind bird → grade → install`
 sequence proved on Galecrest, no new code needed — the finish.py fix from
