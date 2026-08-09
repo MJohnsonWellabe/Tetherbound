@@ -90,6 +90,23 @@ reason not to push throwaways at all.
 
 ## Art pipeline traps already paid for
 
+- **A fresh container has no `.godot/` import cache and no Blender/Godot.**
+  `tools/art_pipeline/setup.sh all` fetches both; `godot --headless --path .
+  --import` builds the import cache once (needed before `tools/survey.sh` or
+  any script-driven capture — without it, resources fail to load and
+  viewpoints silently render flat/empty instead of erroring).
+- **`libEGL.so.1` missing breaks both Godot's OpenGL renderer and Blender's
+  EEVEE.** `apt-get install -y libegl1 libegl-mesa0 mesa-vulkan-drivers`
+  fixes it — but run `apt-get update` FIRST if the package index is stale
+  (404s on `libegl-mesa0`/`mesa-vulkan-drivers` are the tell). A stale index
+  aborts the WHOLE `apt-get install` transaction, including packages that
+  would have installed fine — `libegl1` silently did not get installed this
+  way once, and Blender kept aborting with the same "cannot open shared
+  object file" error even though the install command had reported no error
+  for `libegl1` specifically. Verify with `dpkg -l | grep libegl1` if
+  turntable renders keep aborting after installing what looks like the
+  right packages. Ephemeral container — re-run each firing, it is not a
+  standing blocker.
 - **State the signature feature in CAPITALS and first**, or the generator drops it.
 - **Generate heads separately** where a face carries the character — a
   whole-figure pass at 30k polys cannot resolve an eye socket.

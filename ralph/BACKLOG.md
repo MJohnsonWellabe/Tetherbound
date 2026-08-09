@@ -35,37 +35,6 @@ ghost preview and real material costs (old R2.4's core, proving the
 and rest-until-morning advancing the day counter and healing (old R2.8's
 core). What those items still owe is listed under Phase 2 below.
 
-### R0.8.5 — Full blind visual review pass — REQUEUED against the new build
-`model: sonnet` · `tests: none` · **Owner-requested, 2026-08-09.**
-
-Still owed, and the overhaul makes it *more* valuable, not less: nothing in
-the new build — boar-sized creatures (D19), the farmhouse interior, the
-village, the paths — has ever been blind-reviewed, and most of the roster
-never passed a blind gate on its final installed form (only Terrapup did).
-Use the harness that exists: `.claude/skills/visual-judge`, per `D06` and the
-reports in `docs/reviews/`. Scope: every creature (all sixteen plus Grandpa,
-the Warden, the Veridian legendary), the trainer, **the village and farmhouse
-interior** (buildings exist now — the old "nothing to review" note is dead),
-and the meadow with its new paths.
-
-Two operational notes that keep being relearned:
-- `apt-get install -y libegl1 libegl-mesa0` fixes `libEGL.so.1` and makes
-  `turntable.py` genuinely render. Ephemeral container — re-run it each
-  firing, it is not a standing blocker.
-- Known standing defects the review will re-find (not news):
-  Ripplet/Galewisp's ungraded eyes, the Veridian Stag's failed gate, the
-  Warden's painted face, Brooktail's missing paddle tail, Tuskroot still
-  wearing `ollie-the-songbird.glb`, and the per-species "flag for a pass"
-  notes in `DONE.md`. The point is one complete current-state record.
-
-A partial pass already ran on 2026-08-09 against the five download-page
-frames (`docs/reviews/2026-08-09-site-frames-blind-critique.md`) and failed
-both bar questions; treat it as input. Its largest finding is squarely this
-task's remit and is a **flag-for-the-owner, not a silent fix**: the three
-starters do not share a style with each other or with the trainer ("three
-assets from three different store packs"), and unifying them — rework vs
-replace — is an art-direction decision to be made on this review's evidence.
-
 ### R0.11 ▶ Play gate — the owner plays the NEW first day, end to end
 Wake in bed upstairs → downstairs to Grandpa, the belt, orbs and potions →
 out the door to the three starters → choose and name → the village square and
@@ -203,16 +172,31 @@ placed buildings are all intact.
 ### R4.3 — Moves · `model: sonnet` · `tests: test_moves` (new) · §13. `data/moves/` is **empty**.
 ### R4.4 — TMs and teaching moves · `model: sonnet` · `tests: test_moves` · §13
 
-### R4.5 — Tuskroot's REAL model 🔒
+### R4.5 — Tuskroot's REAL model 🔒 — LIKELY ALREADY DONE, needs verification
 `model: sonnet` · `tests: smoke_art`
-The last stand-in — still `ollie-the-songbird.glb`. Since D20 it never spawns
-wild, so the only place it will ever be seen is the evolution ceremony: the
-single most emotionally loaded reveal a creature model gets. `CLAUDE.md`'s
-prototyping rule applies with full force — the ceremony may not be judged
-with a songbird wearing a boar's name. Needs its own call first: fresh
-generation from the sheet, or a graft off Mudsnout's finished model ("must
-read as Mudsnout grown up" argues for the graft; try it first, it costs no
-credits). Height 2.15 per D19; strictly larger than Mudsnout per D17.
+**R0.8.5's full blind review (2026-08-09) found this is probably no longer
+true.** `assets/pals/tetherbound/tuskroot/models/pal_tuskroot_lod0.glb` has
+a different file hash from `ollie-the-songbird.glb`, and a fresh turntable
+render (`docs/reviews/2026-08-09-r0.8.5-full-blind-review.md`) shows a real
+tusked boar carrying the same moss-and-stone material language as Mudsnout —
+exactly the "must read as Mudsnout grown up" brief below. `species.json`
+already has it at height 2.15 against Mudsnout's 1.55, matching D17/D19's
+numbers. What that review did NOT do: run `smoke_art` or check the rig/clip
+wiring, which is what this item's own `tests:` field names. Next firing on
+this item: run `smoke_art`, confirm the model is properly rigged and
+animated (not just present), and if it passes, close this as done instead
+of doing the generation work described below — do not silently invent a
+replacement model over a real one already installed.
+
+Original brief, kept for whoever verifies: the last stand-in was
+`ollie-the-songbird.glb`. Since D20 it never spawns wild, so the only place
+it will ever be seen is the evolution ceremony: the single most emotionally
+loaded reveal a creature model gets. `CLAUDE.md`'s prototyping rule applies
+with full force — the ceremony may not be judged with a songbird wearing a
+boar's name. If verification finds it's NOT actually done: needs its own
+call first, fresh generation from the sheet, or a graft off Mudsnout's
+finished model (try the graft first, it costs no credits). Height 2.15 per
+D19; strictly larger than Mudsnout per D17.
 
 ### R4.6 — Evolution mechanic and ceremony
 `model: opus` · `tests: test_evolution_links, smoke_evolution` (new)
@@ -383,3 +367,28 @@ not the character target.
   auto-merge, which makes them real defects, not noise. A recorded
   fight/run log, the way R4.11 prescribes, beats more CI-output reasoning.
   `model: sonnet`
+- **`tools/survey.gd`'s fixed viewpoints have drifted from the world they
+  were authored against.** Found by R0.8.5's full blind review
+  (`docs/reviews/2026-08-09-r0.8.5-full-blind-review.md`). Viewpoints 01 and
+  05 (`eye: Vector2(0,0)`) render the *inside* of the farmhouse — a dark
+  room with four window-frame shapes — instead of the meadow; the interior
+  appears to sit at/near world origin independent of `HOUSE_AT = (-22,
+  -16)`. Viewpoints 03 and 04 render as if the camera is embedded in or
+  under the terrain — props and sky over a flat navy void, no ground, no
+  horizon — consistent with a stale baked-heightfield sample the D18/D19
+  terrain reshape (village crater walls came down) never updated. Needs the
+  five hardcoded viewpoints re-surveyed against current world geometry, not
+  a scene fix. `model: sonnet` · `tests: none`
+- **`tools/preview_creatures.gd` renders zero creatures.** Also found by
+  R0.8.5. It builds each body via `BODY.new()` (`pal_body.gd` attached to a
+  bare `CharacterBody3D`) instead of instantiating `scenes/pals/pal.tscn`,
+  the scriptless base scene carrying the `$Collision`/`$Model`/`$Body`/
+  `$Head` children `pal_body.gd`'s `@onready` vars require and
+  `encounter_director.gd` always provides before attaching a body script.
+  Every creature's `_ready()` fails silently; only the grey scale-ruler bars
+  render. This is the one tool built to catch cross-species scale errors
+  (`docs/reviews/MA-03`) and it currently cannot be used for that. The
+  direct fix (instantiate `pal.tscn`, `set_script()` after) clears the
+  `$Head` crash but hits a follow-on `is_inside_tree()` failure on
+  `global_position` right after `add_child()` — not yet root-caused.
+  `model: sonnet` · `tests: none`

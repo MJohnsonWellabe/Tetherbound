@@ -117,7 +117,30 @@ backlog items. The loop keeps building past them.
 
 ## Design questions awaiting the owner
 
-*(none open)*
+### Creature and human art-pipeline cohesion — rework vs. replace?
+Raised by the 2026-08-09 site-frames critique for the three starters alone
+("three assets from three different store packs"); **R0.8.5's full blind
+review of the whole roster confirms it's bigger than the starters** and adds
+a second axis the earlier pass never saw because it had no frame with the
+Warden and the trainer together:
+
+- **Creatures**: Paddlenewt, Pipwing and Ripplet render in a glossier,
+  big-eyed toy/gacha finish that doesn't match the painted-matte naturalism
+  the rest of the roster shares (the moss-and-stone material language on
+  Burrowback, Mosshell, Tuskroot and Terrapup is, per the blind critic,
+  "the single best piece of cohesive art direction anywhere in this set" —
+  which makes the mismatch on the other three more visible, not less).
+- **Humans**: the trainer and Grandpa are flat-shaded and low-detail next
+  to the Warden's fully painted, richly textured finish — called out as
+  "the loudest single problem in the whole review" because the trainer is
+  who the player looks at for the entire game, unlike a boss seen once.
+
+Full record: `docs/reviews/2026-08-09-r0.8.5-full-blind-review.md`. Whether
+to rework the mismatched assets or replace them is an art-direction call
+this evidence is for, not a call to make silently.
+
+**Clears when:** the owner decides rework vs. replace (and for which
+assets — the three creatures, the trainer/Grandpa pair, or both).
 
 Anything on `CLAUDE.md`'s flag list goes here rather than being decided:
 dodge/block, party limit, weapons, type system, storage, story rewrites,
