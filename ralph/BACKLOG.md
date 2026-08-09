@@ -12,11 +12,11 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-**All six wild quadrupeds plus Galecrest are done** (Tuskroot, Meadowhart,
-Burrowback, Paddlenewt, Mosshell, Brooktail, Galecrest — `DONE.md`). **Only
-Duskhush, Pipwing, Reedwing remain, and none of them are blocked** — the
-bird-animation blocker below is resolved; the three-command pipeline works
-for birds exactly like it does for quadrupeds now.
+**Eight species done** (Tuskroot, Meadowhart, Burrowback, Paddlenewt,
+Mosshell, Brooktail, Galecrest, Duskhush — `DONE.md`). **Only Pipwing and
+Reedwing remain, and neither is blocked** — the bird-animation blocker
+below is resolved; the three-command pipeline works for birds exactly
+like it does for quadrupeds now, proved twice (Galecrest, Duskhush).
 
 **If `MESHY_API_KEY` is missing from your environment**, check whether this
 firing is a cron firing or a self-scheduled `send_later` resume before
@@ -92,13 +92,13 @@ build otherwise. Add each entry as its model lands, never ahead.
 `model: haiku` · `tests: none`
 
 `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md` exists (written during R0.4).
-**Seven of ten `ASSET_LEDGER.md` rows done** — every finished R0.6 wild
+**Eight of ten `ASSET_LEDGER.md` rows done** — every finished R0.6 wild
 species (Tuskroot, Meadowhart, Burrowback, Paddlenewt, Mosshell, Brooktail,
-Galecrest) has one, added as each model landed. The remaining three
-(Duskhush, Pipwing, Reedwing) land when those species do — no longer
-blocked on anything, see R0.6. The production report's own "known gap"
-note (missing Bramblebun/Mudsnout/Trailpup candidate-selection record) is
-resolved — see `DONE.md`.
+Galecrest, Duskhush) has one, added as each model landed. The remaining
+two (Pipwing, Reedwing) land when those species do — no longer blocked on
+anything, see R0.6. The production report's own "known gap" note (missing
+Bramblebun/Mudsnout/Trailpup candidate-selection record) is resolved —
+see `DONE.md`.
 
 ### R0.9 — Assemble the opening into the real scene
 `model: sonnet` · `tests: smoke_opening`

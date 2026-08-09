@@ -5,6 +5,43 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.6 — finished Duskhush (second bird species)
+`a9d9282` · Same `clean → texture → rig --kind bird → grade → install`
+sequence proved on Galecrest, no new code needed — the finish.py fix from
+last firing just worked. Candidate a (R0.4 winner), no hard-fail defect,
+only a cosmetic brow-ridge note in the production report.
+
+`rig_report.json`: 19 bones, 14,006 vertices, **0 unweighted** — cleaner
+than Galecrest's 6/14,004. Idle motion at 65% of walk (well clear of the
+6%-is-frozen threshold `rig_bird.py` flags in its own self-check). Four
+eye-guard rectangles added to `grade.py`: the clearest eye signature of
+any species so far — a gold outer ring, a blue/teal inner ring, a black
+pupil and a white catchlight, matching the Air Sheet's own "large
+gold-ringed eyes" brief and unmistakable against the grey-blue plumage.
+One dark round blob near a nostril was checked and rejected (no ring, no
+catchlight).
+
+Verified in Godot: `smoke_art.gd` passes, and a standalone script
+(instantiating `pal.tscn` with `wild_pal.gd`, replicating `smoke_art.gd`'s
+`_rendered_height()`) confirms the rendered model matches the declared
+1.55m exactly (R0.7's fixed figure — checked before writing the number,
+learning from Galecrest's mistake), no footprint clamp, all six clips
+present.
+
+`species.json`: `aggressive: false` — the sheet frames Duskhush as
+"Silent Watcher & Night Scout", a stealth/observation role, not a striker
+like Galecrest. Lowest attack of the air roster so far; defence and HP
+sit closer together than Galecrest's spread. `footprint_allowance` reused
+Galewisp's 3.4 (same height, similarly-proportioned owl/fox-bird build)
+rather than Galecrest's 4.2 (a bigger hawk with a wider wingspan).
+
+Credit balance after this species' texture pass: **195** (was 205,
+confirmed via `meshy.py check`, not assumed).
+
+CI green, fast-forwarded to `main` at `a9d9282` — verified by fetching
+`origin/main` directly; the branch was auto-deleted post-merge, confirming
+the fast-forward actually happened rather than just going green.
+
 ## R0.6 — fixed the bird-animation blocker, shipped Galecrest (first bird species)
 `400f749`, `4d078e2` · Investigated the "R0.6's four remaining species need
 `animate_bird.py`" blocker properly before writing anything, by reading

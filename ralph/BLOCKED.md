@@ -47,25 +47,15 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 *(nothing yet)*
 
-Balance at last check: **205**, after Galecrest's texture pass.
-**Correction to a draft note that briefly sat here:** an earlier version of
-this entry said Duskhush/Pipwing/Reedwing could skip straight to `rig`
-using their existing committed `textured/model.glb`, reasoning that
-Galecrest's had turned out to be reusable. That reasoning was wrong —
-caught before it was acted on. `DONE.md`'s Tuskroot entry (R0.6, "R0.5 —
-Retextured the ten R0.4 winners" correction) already recorded that **every
-one of the ten R0.5 outputs was textured in the wrong order and is
-structurally unusable**: R0.5 textured the raw candidates directly,
-skipping `clean`, so every committed `textured/model.glb` — Galecrest's
-included — measures 50,000+ triangles against a 30,000 budget with
-thousands of non-manifold edges, un-rigging-safe and un-cleanable without
-losing the texture. Galecrest's fresh `clean → texture` pass this firing
-was necessary, not avoidable; the ten-species fix Tuskroot's entry
-describes was never actually carried out for the other nine, birds
-included. **Duskhush, Pipwing, Reedwing each still need a full `clean`
-(free) then `texture` (~10 credits) pass**, same as every quadruped and
-Galecrest before them — budget ~30 credits total, leaving a projected
-balance around 175.
+Balance at last check: **195**, after Duskhush's texture pass (confirmed
+via `meshy.py check`, was 205 after Galecrest's). **Pipwing, Reedwing
+each still need a full `clean` (free) then `texture` (~10 credits) pass**
+— every R0.5-committed `textured/model.glb` is structurally unusable (see
+`DONE.md`'s Tuskroot entry: R0.5 textured raw candidates directly,
+skipping `clean`, so 50,000+ triangles against a 30,000 budget with
+thousands of non-manifold edges). Confirmed true for Duskhush same as
+Galecrest — budget ~20 credits total for the remaining two, leaving a
+projected balance around 175.
 
 ---
 
