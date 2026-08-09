@@ -189,6 +189,35 @@
         }
       }
     },
+    "burrowback": {
+      "display_name": "Burrowback",
+      "type": "ground",
+      "_comment": "Defender/Excavator per the sheet's own ROLE line, STRENGTHS Defense, Digging, Control. Broad low silhouette built for digging and defense, powerful forelimbs with shovel-like claws, rock nodules for natural armor -- so it carries the roster's highest defence alongside Trailpup's attack lead, not the other way round. Medium size class keeps HP moderate rather than tanky-huge. Non-aggressive: a defender protects territory when approached, it does not hunt. All tunable; nobody has fought one yet.",
+      "base_hp": 110.0,
+      "base_attack": 15.0,
+      "base_defence": 23.0,
+      "catch_rate": 0.4,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#5c4a3a",
+        "height": 1.7,
+        "radius": 0.62,
+        "_comment_footprint": "Low, broad digging body with heavy forelimbs -- more footprint than a compact biped, similar register to Tuskroot's heavy stance but at Medium rather than Large size class.",
+        "footprint_allowance": 3.2,
+        "model": "res://assets/pals/tetherbound/burrowback/models/pal_burrowback_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate c). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        }
+      }
+    },
     "meadowhart": {
       "display_name": "Meadowhart",
       "type": "ground",

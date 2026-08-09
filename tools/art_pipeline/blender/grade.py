@@ -315,6 +315,27 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+
+    # ------------------------------------------------------------------
+    # BURROWBACK — third of the ten. Same first-pass philosophy.
+    # ------------------------------------------------------------------
+    "burrowback": {
+        # Only ONE eye found by visual inspection of the 2048x2048
+        # base_color atlas -- a clear amber/yellow iris with a white
+        # catchlight, sitting in the black-and-white striped face patch the
+        # canon calls for. The badger's dense stone/moss camouflage pattern
+        # makes a second symmetric eye hard to distinguish from the general
+        # texture noise with confidence; rather than guess a second
+        # rectangle and risk it landing on ordinary fur, only the confirmed
+        # one is guarded. If a later pass finds the second eye getting
+        # graded away, add it then.
+        "eye_guard": [
+            ("uv", 1060, 1080, 1170, 1180),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 
