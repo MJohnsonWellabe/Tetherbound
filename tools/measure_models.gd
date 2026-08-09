@@ -29,7 +29,7 @@ func _init() -> void:
 			continue
 		var names: Array[String] = []
 		for file in dir.get_files():
-			if file.get_extension() in ["gltf", "glb", "fbx"]:
+			if file.get_extension() in ["gltf", "glb", "fbx", "obj"]:
 				names.append(file)
 		names.sort()
 		for file in names:
@@ -38,11 +38,21 @@ func _init() -> void:
 
 
 func _report(path: String) -> void:
-	var packed: PackedScene = load(path) as PackedScene
-	if packed == null:
+	# A .obj imports as a Mesh RESOURCE, not a scene; wrap it so both kinds
+	# measure the same way.
+	var res: Resource = load(path)
+	var scene: Node = null
+	if res is PackedScene:
+		scene = (res as PackedScene).instantiate()
+	elif res is Mesh:
+		var holder := Node3D.new()
+		var mi := MeshInstance3D.new()
+		mi.mesh = res as Mesh
+		holder.add_child(mi)
+		scene = holder
+	if scene == null:
 		print("  %-32s FAILED TO LOAD" % path.get_file())
 		return
-	var scene: Node = packed.instantiate()
 	root.add_child(scene)
 
 	var meshes: Array[MeshInstance3D] = []
