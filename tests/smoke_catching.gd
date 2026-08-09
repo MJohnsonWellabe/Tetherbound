@@ -299,11 +299,15 @@ func _a_fainted_pal_cannot_be_caught() -> void:
 
 func _throw_at_the_target() -> bool:
 	if not bool(_manager.call("is_aiming")):
-		await _press("combat_throw")
-		for i in 25:
-			await physics_frame
-	if not bool(_manager.call("is_aiming")):
-		return false
+		if not await _open_aim():
+			return false
+
+	# The aim camera glides into its combat position over several frames
+	# (`aim.retarget_lag` in catching.json) rather than cutting instantly.
+	# Reading the camera's eye before it arrives means aiming from wherever it
+	# used to be, not from where the throw is actually about to come from.
+	for i in 15:
+		await physics_frame
 
 	_aim_at_the_target()
 	for i in 4:
@@ -313,29 +317,65 @@ func _throw_at_the_target() -> bool:
 	return true
 
 
+## Press Throw until the aim actually opens, or give up.
+##
+## `throw_aim.gd` enforces a silent cooldown after every throw resolves
+## (`throw.cooldown` in catching.json, 0.9s by default) — `try_begin_aim()`
+## just returns false while it is running, with no signal at all, so a single
+## press timed against a throw that just resolved is a coin flip. Left alone,
+## that burns most of `MAX_ATTEMPTS` on presses that never opened an aim at
+## all rather than on throws that missed.
+func _open_aim() -> bool:
+	var cooldown := float(CATCH.config().get("throw", {}).get("cooldown", 0.9))
+	var frame_time := 1.0 / float(Engine.physics_ticks_per_second)
+	var budget := int(ceil(cooldown / frame_time)) + 60
+	while budget > 0:
+		await _press("combat_throw")
+		budget -= 4
+		for i in 6:
+			await physics_frame
+			budget -= 1
+		if bool(_manager.call("is_aiming")):
+			return true
+	return false
+
+
 ## Point the camera so a thrown orb lands on the target.
 ##
-## The orb is on a real arc, so aiming straight at the creature undershoots by
-## the drop over the flight. Leading it is what a player does by eye and what
-## this has to do by arithmetic — aiming through the rig rather than handing the
-## orb a direction means a broken aim camera fails the test rather than being
-## quietly worked around.
+## Aimed from the CAMERA's eye, not the trainer's hand — they sit about a
+## shoulder's width apart (`aim.shoulder_offset` in catching.json), and
+## `_aim_direction()` in throw_aim.gd builds its ray from the eye. Aiming from
+## the hand disagrees with the code actually driving the throw and sends it
+## wide by exactly that offset.
+##
+## No drop compensation, deliberately: `_aim_direction()` snaps the throw
+## straight to the target's centre whenever the camera's ray passes within a
+## body-width of it, discarding any elevation this function adds on top of
+## that. Arcing the aim to compensate for drop only risks pushing the ray
+## outside that snap window; aiming straight at the (leaded) centre keeps it
+## inside instead and lets the snap do the rest.
+##
+## Leaded, because the target keeps moving between this call and the moment
+## the orb actually leaves the hand — the settle above plus
+## `throw.release_windup` — so this aims at where it will be, not where it
+## was when the camera turned.
 func _aim_at_the_target() -> void:
-	var cfg: Dictionary = CATCH.config().get("throw", {})
-	var speed := float(cfg.get("speed", 17.0))
-	var gravity := float(cfg.get("gravity", 14.0))
-	var spawn_height := float(cfg.get("spawn_height", 1.5))
+	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null:
+		return
+	var eye := camera.global_position
 
-	var origin := _player.global_position + Vector3.UP * spawn_height
-	var centre: Vector3 = _wild.call("centre")
-	var to := centre - origin
-	var flat := Vector2(to.x, to.z).length()
+	var velocity := Vector3.ZERO
+	if _wild is CharacterBody3D:
+		velocity = (_wild as CharacterBody3D).velocity
+	var release_windup := float(CATCH.config().get("throw", {}).get("release_windup", 0.18))
+	var lead_time := 8.0 / float(Engine.physics_ticks_per_second) + release_windup
+	var predicted: Vector3 = (_wild.call("centre") as Vector3) + velocity * lead_time
 
+	var to := predicted - eye
 	_aim_camera_along(Vector3(to.x, 0.0, to.z))
-
-	var flight := flat / maxf(speed, 0.01)
-	var drop := 0.5 * gravity * flight * flight
-	_rig.set("pitch", atan2(to.y + drop, maxf(flat, 0.01)))
+	var flat := Vector2(to.x, to.z).length()
+	_rig.set("pitch", atan2(to.y, maxf(flat, 0.01)))
 
 
 func _press(action: String) -> void:
