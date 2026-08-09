@@ -91,8 +91,15 @@ func _run() -> void:
 			if data_ref != null:
 				var ground: float = data_ref.call("get_height", Vector3(pos.x, 0.0, pos.z))
 				print("ground beneath player: %.2f (player %.2f, gap %.2f)" % [ground, pos.y, pos.y - ground])
-				if absf(pos.y - ground) > 2.0:
-					failures.append("player is %.1fm off the terrain surface" % (pos.y - ground))
+				# ABOVE the terrain is legal now — the opening stands the player
+				# on the farmhouse's loft floor, 4m over the heightfield. What
+				# stays illegal is BELOW it (fell through the world) or floating
+				# without a floor (is_on_floor is asserted above). The old
+				# symmetric 2m band predates buildings.
+				if pos.y - ground < -1.0:
+					failures.append("player is %.1fm UNDER the terrain surface" % (ground - pos.y))
+				elif pos.y - ground > 12.0:
+					failures.append("player is %.1fm above the terrain; nothing in the world is that tall to stand on" % (pos.y - ground))
 		if pos.y > 30.0:
 			failures.append("player never fell from the scene's placeholder height")
 		if pos.y < -MAX_DROP:
