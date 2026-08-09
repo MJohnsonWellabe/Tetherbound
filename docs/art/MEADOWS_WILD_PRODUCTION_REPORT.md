@@ -5,14 +5,26 @@ referenced from `data/pals/species.json`'s `_comment_art` fields. One file
 because the roster went through one pipeline (`tools/art_pipeline/meshy.py`),
 not nineteen separate reports like the starters got.
 
-**Known gap, honestly recorded:** Bramblebun, Mudsnout and Trailpup are
-already shipped — real GLBs with textures sit in
+**Gap closed (R0.8):** Bramblebun, Mudsnout and Trailpup are already
+shipped — real GLBs with textures sit in
 `assets/pals/tetherbound/{bramblebun,mudsnout,trailpup}/models/` and
 `species.json` already points at them. Their `_comment_art` fields cite this
-file, but no candidate-selection record for them survived into `ralph/`
-(`DONE.md`'s R0.1 entry accounts for the ten below, not these three). This
-report does not retroactively invent one. Whoever finishes R0.8 should either
-find that record or say plainly that it doesn't exist.
+file, and for a while nobody could find their candidate-selection record —
+it never went through `ralph/DONE.md` (that file's R0.1 entry accounts for
+the ten species above, not these three, which predate the Ralph loop).
+The record does exist, though: it survived in the git history that produced
+these three, not in `ralph/`. Commit `d2520f0` ("Bramblebun stops being a
+duck...") records Bramblebun's full pick — candidate b, on the ears (broad
+with the concept's visible inner cup) and the compact sitting rump, with the
+known miss that none of the three candidates modelled the sheet's dense
+moss/leaf/flower plant mat as densely as drawn. Commit `9ec9eaa` ("Mudsnout
+and Trailpup...") records both: Mudsnout candidate c for the spine bristle
+ridge (on the Terrapup precedent that silhouette beats surface — candidate
+b had the better snout disc and lost on the ridge), Trailpup candidate b for
+its longest/narrowest muzzle and the only clear shoulder ruff. Both commits'
+reasoning is already condensed into `docs/ASSET_LEDGER.md`'s rows for these
+three creatures — this note exists so a future reader does not have to
+git-archaeology it again.
 
 ## R0.4 — blind critique, ten species, candidates picked
 
@@ -62,11 +74,17 @@ in the individual scorecards: `shots/candidates/<species>-compare.md`.
 
 ## What's next
 
-- **R0.5** retextures the ten winners above, 30 credits each, stopping if the
-  balance runs out (see `BLOCKED.md`).
-- **R0.6** takes each winner through cleanup/remesh → rig → six clips → grade
-  → install, one species at a time. The follow-up column above is the input
-  to the "cleanup/remesh" step — none of these are texture problems.
-- **R0.8** owes: a provenance row per creature in `docs/ASSET_LEDGER.md`, and
-  ideally recovering or acknowledging the missing Bramblebun/Mudsnout/Trailpup
-  production record noted above.
+- **R0.5** retextured the ten winners above, 30 credits each (`DONE.md`) —
+  though R0.6 found the first pass was done in the wrong order and every
+  species needed a second retexture; see Tuskroot's `DONE.md` entry.
+- **R0.6** takes each winner through cleanup/remesh → rig → six clips →
+  grade → install, one species at a time. **All six wild quadrupeds are
+  done** (Tuskroot, Meadowhart, Burrowback, Paddlenewt, Mosshell,
+  Brooktail). **The four birds (Galecrest, Duskhush, Pipwing, Reedwing) are
+  blocked**: `finish.py rig`'s animate step is hardcoded to
+  `animate_quadruped.py` regardless of `--kind`, and no `animate_bird.py`
+  exists yet — see `BLOCKED.md`.
+- **R0.8** owes a provenance row per creature in `docs/ASSET_LEDGER.md` —
+  done for all six finished quadrupeds. The missing
+  Bramblebun/Mudsnout/Trailpup production record noted above is now found
+  and cited, not missing.
