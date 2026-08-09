@@ -33,9 +33,84 @@ env:
   GODOT_VERSION: 4.7-stable
 
 jobs:
+  # Roughly half of this workflow's runs change nothing but markdown: the loop
+  # pushes a `<task-id>-record` branch after every task, carrying edits to
+  # BACKLOG.md, DONE.md and BLOCKED.md and nothing else. Each one spent about
+  # nine minutes exporting a Windows executable to verify a changed bullet.
+  #
+  # The obvious fix -- `paths-ignore: ['**.md']` on the push trigger -- is a
+  # trap, and an expensive one. For push events a non-matching path filter means
+  # GitHub creates NO workflow run at all. No run means no `workflow_run` event,
+  # and ralph-merge.yml triggers on exactly that, so a doc-only branch would
+  # never merge, never be deleted, and could not be deleted from a Ralph session
+  # either (the git proxy refuses `push --delete`). It would strand precisely
+  # the branches the loop depends on, and leave nothing red to notice it by.
+  #
+  # So the run must still happen. This job is what makes it happen: it always
+  # runs, so the run always has an executed job and always concludes `success`,
+  # which is the only thing ralph-merge.yml reads. `verify` below then skips
+  # itself when there is nothing to verify. Skipped jobs do not change a run's
+  # conclusion -- but a run where EVERY job skipped concludes `skipped`, not
+  # `success`, and would be refused. Keep this job unconditional.
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Needed to diff against a base that may be many commits back.
+          fetch-depth: 0
+
+      - name: Decide whether anything but documentation changed
+        id: filter
+        env:
+          BEFORE: ${{ github.event.before }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -uo pipefail
+
+          # Only `.md` counts as documentation, deliberately narrowly. Anything
+          # else -- a .json under data/, a .png under docs/, a workflow file --
+          # can reach the export, so it gets the full build. The point is to
+          # catch the loop's bookkeeping commits, not to be clever.
+          base=""
+          if [ -n "${BASE_SHA:-}" ]; then
+            base="$BASE_SHA"
+          elif [ -n "${BEFORE:-}" ] \
+               && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] \
+               && git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            base="$BEFORE"
+          else
+            # A branch's first push has no usable `before`.
+            git fetch --no-tags --depth=0 origin main 2>/dev/null || true
+            base="$(git merge-base origin/main HEAD 2>/dev/null || true)"
+          fi
+
+          if [ -z "$base" ]; then
+            echo "No usable base commit; building."
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed="$(git diff --name-only "$base" HEAD)"
+          echo "Changed against ${base}:"
+          echo "${changed:-  (nothing)}"
+
+          # Fail safe: an empty diff builds rather than silently shipping.
+          if [ -z "$changed" ] || printf '%s\n' "$changed" | grep -qv '\.md$'; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Documentation only; skipping the build."
+            echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
 
     steps:
       - uses: actions/checkout@v4
