@@ -45,10 +45,13 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 ## Blocked on credits
 
-*(nothing — R0.5 finished the whole roster without running out)*
+*(nothing yet)*
 
-Balance at last check: **275** (after R0.5 retextured all ten winners at
-~10 credits each, well under the ~30/species estimate). See `DONE.md`.
+Balance at last check: **265**, after R0.6 discovered R0.5's ten retextures
+were done in the wrong order (see `DONE.md`) and had to redo Tuskroot's
+correctly (~10 credits). **The other nine still need the same redo** before
+R0.6 can rig them — budget ~10 credits each, same as R0.5 estimated, not on
+top of R0.5's spend since R0.5's texture charge was wasted, not saved.
 
 ---
 

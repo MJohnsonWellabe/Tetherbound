@@ -12,18 +12,33 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-Per species, in backlog order: cleanup/remesh → rig (`rig_quadruped.py` for
-Tuskroot, Meadowhart, Burrowback, Paddlenewt, Mosshell, Brooktail;
-`rig_bird.py` for Galecrest, Duskhush, Pipwing, Reedwing) → six procedural clips
-→ grade with the shared `grade.py` → install under
-`assets/creatures/tetherbound/<species>/models/`.
+**Tuskroot done** (`DONE.md`). Remaining, in backlog order: Meadowhart,
+Burrowback, Paddlenewt, Mosshell, Brooktail (`rig_quadruped.py`), then
+Galecrest, Duskhush, Pipwing, Reedwing (`rig_bird.py` — **see the blocker
+below before starting these four**).
 
-Every species needs an eye guard declared in `grade.py`'s `SPECIES` table.
-Grading without one is an error, deliberately — it is how Ripplet's and
-Galewisp's eyes were destroyed.
+Per species: `tools/art_pipeline/finish.py clean <species> <winner-letter>`
+→ `finish.py texture <species>` (needs `MESHY_API_KEY`, ~10 credits — **do
+this even though R0.5 already retextured every winner once; see the R0.5
+correction note in `DONE.md`, the R0.5 output cannot be used**) → `finish.py
+rig <species> --kind quadruped|bird` → add a `SPECIES` entry to `grade.py`
+(eye guard is mandatory — grading refuses to run without one, deliberately,
+it is how Ripplet's and Galewisp's eyes were destroyed) → `finish.py grade
+<species>` → `finish.py install <species>` → point `species.json`'s `model`
+at the installed GLB (for Tuskroot; the other nine get their whole entry from
+R0.7, once their model exists — never before).
 
-Done when: the model loads at its declared height and `_fit()`'s footprint clamp
-is not tripped.
+Install path is `assets/pals/tetherbound/<species>/models/` (not
+`assets/creatures/...` as an older draft of this line said — that path is
+R1.1's future rename target, not the current one).
+
+**Blocker for the four bird species:** `finish.py rig`'s animate step is
+hardcoded to `animate_quadruped.py` regardless of `--kind`, and no
+`animate_bird.py` exists. Whoever reaches Galecrest needs to write one (or
+generalise `animate_quadruped.py`) before `rig_bird.py`'s output can move.
+
+Done when: the model loads at its declared height and `_fit()`'s footprint
+clamp is not tripped (`smoke_art`).
 
 ### R0.7 — Add the ten `species.json` entries
 `model: haiku` · `tests: smoke_art, test_catch_math, test_evolution_links`

@@ -5,6 +5,62 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.6 — Tuskroot finished (first of the ten)
+`6c6e479` · `tools/art_pipeline/finish.py clean → texture → rig → grade →
+install`, then `species.json`'s `tuskroot.placeholder.model` pointed at the
+real GLB. `tests/smoke_art.gd`: **model 2.00m, collider 2.00m, exact match,
+footprint clamp not tripped.**
+
+**Correction to R0.5, found while starting this task: every one of the ten
+R0.5 outputs was textured in the wrong order and none of them can be used.**
+`cleanup_mesh.py`'s voxel remesh is what makes a generated mesh manifold
+enough for bone-heat rigging, and it destroys UVs — its own docstring says so
+and it hard-refuses to run on a model that already carries image textures.
+`finish.py`'s documented order is clean → texture → rig for exactly this
+reason. R0.5 textured the raw candidates directly, skipping `clean`. Measured
+on Tuskroot's R0.5 output: 54,077 triangles (the budget is 30,000), 9,969
+non-manifold edges, 5,170 duplicate vertices — un-rigging-safe, and
+un-cleanable without losing the texture. The fix, done here for Tuskroot and
+needed for the other nine: clean the raw candidate first (28,000 tris, 0
+non-manifold edges, 0 duplicates), *then* retexture the clean mesh — a second
+Meshy charge, ~10 credits, same as the first. Balance after both of
+Tuskroot's texture passes: **265** (was 275, R0.5's own number, before this
+firing's correction pass; see this entry's own spend below for the arithmetic
+that actually matters going forward).
+
+Also found and fixed: `grade.py` had zero `SPECIES` entries for any of the
+ten wild creatures (only the three starters), and `finish.py` never called
+`grade.py` at all — `install` copied the animated GLB straight from `rig`,
+skipping grading entirely. Added a `grade` subcommand to `finish.py`
+(`clean → texture → rig → grade → install`, matching the docstring's promised
+"six commands" for the first time) and a `tuskroot` entry to `grade.py`'s
+`SPECIES` table: three eye-guard rectangles (located by visual inspection of
+the 2048² base_color atlas — this species has no head-close-up reference to
+threshold against, unlike Terrapup), roughness rescaled to `ROUGHNESS_BAND`,
+emissive off, specular 0.20. **Deliberately no hand-tuned palette shifts** —
+unlike Terrapup/Ripplet/Galewisp's entries, no blind gate has reviewed
+Tuskroot's colour yet, so only the structural fixes every creature needs are
+applied. Grade report: eye guard protected 38,373 texels (0.0/255 delta
+inside, confirmed), roughness 0.31–0.73 → 0.60–0.86, emissive map measured 0%
+emission and zeroed.
+
+Rigging: `rig_quadruped.py` on the correctly-cleaned mesh gave **15 bones, 0
+of 14,000 vertices unweighted** — the residual non-manifold edges/duplicate
+verts that Meshy's own retexture re-unwrap reintroduces (6,750 and 3,538,
+down from the original 9,969/5,170) did not break bone-heat in practice, so
+that specific worry did not need a further workaround. 6 clips from
+`animate_quadruped.py`: idle, walk, run, attack, hit, faint.
+
+**Found along the way, not fixed here:** `finish.py rig`'s animate step is
+hardcoded to `animate_quadruped.py` regardless of `--kind`, and no
+`animate_bird.py` exists — recorded in `BACKLOG.md` as a blocker for the four
+bird species (Galecrest, Duskhush, Pipwing, Reedwing), not a blocker for the
+six quadrupeds still ahead of them in backlog order.
+
+Blender 4.2.9 and Godot 4.7-stable were not cached in this container and had
+to be fetched (`tools/art_pipeline/setup.sh`) — routine, not a finding, but
+worth knowing if a future firing's first minutes look unexpectedly slow.
+
 ## R0.5 — Retextured the ten R0.4 winners
 `7ac1f20` · `tools/art_pipeline/meshy.py texture`, `image_style_url` aimed at
 each species' own reference crop under
