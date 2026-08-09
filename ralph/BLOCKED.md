@@ -56,19 +56,64 @@ texture charge was wasted, not saved.
 
 ---
 
-## Resolved — the key reaches the loop
+## Blocked on this firing: no `MESHY_API_KEY` in the environment (again)
 
-The Meshy key is **carried in the Routine's own prompt**, so every fired session
-has it without the owner doing anything. There is no tool to set an environment
-variable on this environment, and the repository is the one place the key must
-never go: GitHub history is permanent and secret scanning would likely revoke
-the key on push.
+**Same shape as the earlier gap this session, now understood rather than
+surprising: `MESHY_API_KEY` only arrives when a firing is cron-fired with the
+credential in its prompt.** A self-scheduled `send_later` resume (used to
+continue past a firing's own stop-at-a-task-boundary point) does not carry
+it, because the credential is never something one firing should write into a
+message for a later one to read back — that would put it somewhere outside
+"the environment and nowhere else". So this is not a rotation, not a balance
+problem (last known balance 235, untouched this firing), and not actually
+unexpected once you notice which kind of firing this is — but it is still a
+real block on continuing R0.6 with `finish.py texture`, and `meshy.py check`
+confirms it the same way it did last time: key simply unset.
+
+**Mosshell's `clean` step is done** (Blender only, no key needed): raw
+candidate `b`, 54,396 → 28,000 tris, manifold, at
+`assets_raw/mosshell/build/clean.glb`. Not committed, will not survive this
+container, and does not need to — `clean` takes under a minute to redo. R0.4's
+report flagged a possible topology issue (a thin protrusion near the
+hindquarters that might read as an errant tail/spike) as worth a check before
+this species is considered finished; `inspect_glb.py`'s structural report
+came back clean of anything specific to that (the usual pre-texture/pre-rig
+findings only — no material, disconnected verts within normal range, no
+armature yet), and a visual turntable render to actually look at the
+silhouette failed in this container (`libEGL.so.1` missing, a headless
+rendering gap unrelated to Meshy). So the concern is neither confirmed nor
+ruled out here — flag it for whoever finishes texturing and rigging this
+species to look at once there is a textured, renderable model to look at.
+
+**This blocks Mosshell (fifth of ten) and everything below it in R0.6's
+order** (Brooktail, then the four birds already blocked on
+`animate_bird.py`). Doing something else instead: `docs/ASSET_LEDGER.md` has
+no per-creature provenance row yet for any of the four R0.6 species shipped
+so far (Tuskroot, Meadowhart, Burrowback, Paddlenewt) despite R0.8 asking for
+exactly that, and it needs neither credits nor the key — so that is this
+firing's actual work.
+
+**Clears when:** a cron-fired firing (the kind whose prompt names
+`MESHY_API_KEY` directly) picks up Mosshell and runs `finish.py texture`.
+
+---
+
+## Resolved — the key reaches a CRON firing, not a self-scheduled resume
+
+The Meshy key is **carried in the cron Routine's own prompt**, so every
+hourly-fired session has it without the owner doing anything. There is no
+tool to set an environment variable on this environment, and the repository
+is the one place the key must never go: GitHub history is permanent and
+secret scanning would likely revoke the key on push. **A firing's own
+`send_later` self-resume is not the cron Routine** — see the entry above,
+found twice now — so do not expect the key there.
 
 Use it by prefixing the one command that needs it. Never write it to a file,
 never echo it, never put it in a commit message, a manifest or a report.
 
-If `meshy.py check` fails to authenticate, the key has been rotated — say so
-here and stop the art tasks rather than guessing.
+If `meshy.py check` fails to authenticate on a firing that SHOULD have the
+key (i.e. a cron firing), the key has been rotated — say so here and stop the
+art tasks rather than guessing.
 
 ---
 
