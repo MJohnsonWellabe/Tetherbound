@@ -27,6 +27,13 @@ Nothing else matters if work cannot ship. Every firing, first:
    merged and its work is sitting unshipped. Finish it on the same branch before
    starting anything new — do not abandon it and open a fresh one, or the
    backlog will quietly fill with orphaned branches.
+   **Green CI is not the same as shipped.** Check the *auto-merge* run too.
+   `ralph-merge.yml` fast-forwards only, so if `main` moved while you worked it
+   refuses and fails red even though your tests passed — and your work sits
+   there looking finished. Two branches were stranded exactly this way. The fix
+   is always the same: **rebase onto the current `main` and push again.** If you
+   cannot force-push, cherry-pick onto a fresh branch cut from `main` instead.
+   Verify the ship by looking at `main`, never by looking at CI.
 3. **If a test fails on your branch that has nothing to do with your change**,
    that is a flake, and a flake is a real defect here: `ralph-merge.yml` only
    ships green branches, so an intermittent test rejects healthy work at random.
