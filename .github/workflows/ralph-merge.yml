@@ -47,6 +47,7 @@ jobs:
           ref: main
 
       - name: Fast-forward main to the verified commit
+        id: ship
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           SHA: ${{ github.event.workflow_run.head_sha }}
@@ -61,6 +62,13 @@ jobs:
           # workflow_run fires per run, and a branch can be pushed again while
           # the run is in flight -- shipping the newer, untested commit would
           # defeat the whole gate.
+          # Every early return below must leave shipped=false. The delete step
+          # keys off this and NOT off step success, because these paths exit 0
+          # -- and the first version of this file deleted a branch it had just
+          # declined to ship, destroying work that had passed CI. `git push
+          # --delete` on unmerged work is unrecoverable from the remote.
+          echo "shipped=false" >> "$GITHUB_OUTPUT"
+
           if [ "$(git rev-parse "origin/$BRANCH")" != "$SHA" ]; then
             echo "::notice::$BRANCH moved since CI ran ($SHA is no longer its tip). Not shipping; the newer commit gets its own run."
             exit 0
@@ -78,10 +86,13 @@ jobs:
 
           git merge --ff-only "$SHA"
           git push origin main
+          echo "shipped=true" >> "$GITHUB_OUTPUT"
           echo "::notice::Shipped $BRANCH ($SHA) to main."
 
       - name: Delete the shipped branch
-        if: success()
+        # Only when main actually moved. Anything else leaves the branch alone
+        # so the work is still there to finish or retry.
+        if: steps.ship.outputs.shipped == 'true'
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: git push origin --delete "$BRANCH" || true
