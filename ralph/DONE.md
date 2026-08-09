@@ -5,6 +5,32 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.8 — ASSET_LEDGER rows for Mosshell/Brooktail; missing-record gap closed
+`b145f2d` · Extends the previous R0.8 partial entry (below) to all six now-
+finished R0.6 wild quadrupeds — every one of Tuskroot, Meadowhart,
+Burrowback, Paddlenewt, Mosshell, Brooktail now has an `ASSET_LEDGER.md`
+row. Still not R0.8 complete: the four bird species have no model yet
+(blocked on `animate_bird.py`), so no row for them.
+
+**Also resolved `MEADOWS_WILD_PRODUCTION_REPORT.md`'s "known gap" note**,
+open since it was written: the report said Bramblebun's, Mudsnout's and
+Trailpup's candidate-selection records "did not survive into `ralph/`" and
+asked whoever finished R0.8 to either find them or say plainly they don't
+exist. They were never actually missing — they predate the Ralph loop
+entirely, so they were never going to be in `ralph/DONE.md`, and looking
+there was looking in the wrong place. The real record is in git history:
+commit `d2520f0` ("Bramblebun stops being a duck...") and `9ec9eaa`
+("Mudsnout and Trailpup...") both carry full candidate-selection reasoning
+in their commit messages, and `ASSET_LEDGER.md`'s existing rows for those
+three creatures already condense that same reasoning (they were written
+from these commits at the time, just never cross-referenced back to them).
+The report now cites both commits directly instead of asking a future
+reader to re-find them. Also brought the report's "What's next" section
+current — it still described R0.5 and R0.6 as not yet started.
+
+CI green (run 31307762531), fast-forwarded to `main` at `b145f2d` —
+verified by fetching `origin/main` directly.
+
 ## R0.8 — ASSET_LEDGER rows for the four shipped R0.6 creatures (partial)
 `92fc1ae` · Not R0.8 complete — six R0.6 species (Mosshell, Brooktail, and the
 four birds) have no model yet, so no row for them either; they land as each

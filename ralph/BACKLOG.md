@@ -77,9 +77,13 @@ build otherwise. Add each entry as its model lands, never ahead.
 ### R0.8 — Production report and ledger rows
 `model: haiku` · `tests: none`
 
-`species.json` references `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md` three
-times and it does not exist. Write it. Add a provenance row per creature to
-`docs/ASSET_LEDGER.md` in the existing style.
+`docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md` exists (written during R0.4).
+**Six of ten `ASSET_LEDGER.md` rows done** — every finished R0.6 wild
+quadruped (Tuskroot, Meadowhart, Burrowback, Paddlenewt, Mosshell,
+Brooktail) has one, added as each model landed. The remaining four land
+when the bird species do, once `animate_bird.py` unblocks them. The
+production report's own "known gap" note (missing Bramblebun/Mudsnout/
+Trailpup candidate-selection record) is resolved — see `DONE.md`.
 
 ### R0.9 — Assemble the opening into the real scene
 `model: sonnet` · `tests: smoke_opening`
