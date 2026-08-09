@@ -25,7 +25,7 @@
       "display_name": "Tether Orb",
       "multiplier": 1.0
     },
-    "_comment_stock": "M3-ONLY placeholder. There is no inventory until M8, so the trainer carries this many and the stock refills whenever the practice pal respawns. Do not turn this into a resource system here.",
+    "_comment_stock": "RETIRED as a live value: orbs are satchel items now (data/items/items.json `orb_basic`), spent by throw_aim.gd from the real inventory, and Grandpa's opening gift is the starting supply (data/dialogue/opening.json give: effects). Kept only so catch_math.starting_stock() keeps answering for anything historical; nothing refills from it.",
     "starting_stock": 15
   },
 
@@ -56,8 +56,12 @@
     "retarget_lag": 14.0,
     "pitch_min_deg": -35.0,
     "pitch_max_deg": 20.0,
-    "_comment_sensitivity": "Aiming wants a slower stick than looking around does. This scales the rig's normal gamepad sensitivity while aim mode is active.",
+    "_comment_sensitivity": "Aiming wants a slower stick than looking around does. This scales the rig's normal gamepad sensitivity while aim mode is active. (It was written on day one and read by nothing until the throw-feel pass — the aim ran at full exploration turn rate, which was most of 'aiming is fiddly'.)",
     "sensitivity_scale": 0.55,
+    "_comment_response": "Exponent on stick deflection while aiming. Above 1 gives a slow, precise centre without costing full-deflection speed. Tunable.",
+    "response_exponent": 2.0,
+    "_comment_near": "Extra sensitivity scale while the reticle is over the creature, so the last degrees of a line-up do not overshoot. Tunable.",
+    "near_target_scale": 0.6,
     "_comment_guard": "Seconds of input ignored on entering aim mode, so the press that opens the aim is not also read as the release."
   },
 

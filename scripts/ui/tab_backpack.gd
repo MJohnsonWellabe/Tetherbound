@@ -17,6 +17,9 @@ extends "res://scripts/ui/menu_tab.gd"
 
 const CONFIG_PATH := "res://data/config/menu.json"
 
+## Same button as the pals tab's "set active": use the focused item.
+const USE_ACTION := "interact"
+
 var _grid: GridContainer = null
 var _summary: Label = null
 var _detail_name: Label = null
@@ -28,6 +31,10 @@ var _buttons: Array = []
 ## stack can never survive into a state where its source slot no longer means
 ## what it did.
 var _held: int = -1
+
+## Slot the cursor is on, for the Use verb. Follows focus the same way the
+## detail panel does.
+var _focused: int = 0
 
 
 func build() -> void:
@@ -71,7 +78,9 @@ func build() -> void:
 		button.pressed.connect(func() -> void: _on_slot(slot))
 		# Inspect follows focus rather than needing its own button: on a
 		# controller, moving the cursor onto a thing IS looking at it.
-		button.focus_entered.connect(func() -> void: _describe(slot))
+		button.focus_entered.connect(func() -> void:
+			_focused = slot
+			_describe(slot))
 		_grid.add_child(button)
 		_buttons.append(button)
 
@@ -117,6 +126,7 @@ func poll() -> void:
 	var inventory: RefCounted = _inventory()
 	if inventory == null or _summary == null:
 		return
+	_read_use()
 
 	var slots: int = int(inventory.call("slot_count"))
 	var used: int = int(inventory.call("used_slots"))
@@ -162,6 +172,54 @@ func _on_slot(index: int) -> void:
 	inventory.call("move_slot", _held, index)
 	_held = -1
 	poll()
+
+
+## Use the focused item, if it is usable. Today that is exactly the healing
+## consumables: one press heals the most-hurt creature on the belt by the
+## item's `heal` value and spends one from the stack. Polled rather than
+## event-driven for the same reason the pals tab's activate verb is: a focused
+## Button eats events, and there is always a focused button here.
+func _read_use() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if not Input.is_action_just_pressed(USE_ACTION):
+		return
+
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	var stack: Dictionary = inventory.call("stack_at", _focused)
+	if stack.is_empty():
+		return
+	var id := str(stack.get("id", ""))
+	var heal := float((db.call("definition", id) as Dictionary).get("heal", 0.0))
+	if heal <= 0.0:
+		say("%s is not something you can use here." % str(db.call("item_name", id)))
+		return
+
+	var game := state()
+	var party: RefCounted = game.get("party") if game != null else null
+	if party == null:
+		return
+	var patient: RefCounted = null
+	var worst := 1.0
+	for member: Variant in (party.call("members") as Array):
+		var pal: RefCounted = member
+		var fraction := float(pal.call("hp_fraction"))
+		if fraction < worst:
+			worst = fraction
+			patient = pal
+	if patient == null:
+		say("Nobody on the belt is hurt.")
+		return
+
+	var restored := float(patient.call("heal", heal))
+	if restored <= 0.0:
+		say("%s is already at full health." % str(patient.call("label")))
+		return
+	inventory.call("remove", id, 1)
+	say("%s recovers %d." % [str(patient.call("label")), int(restored)])
+	# No poll() here — this runs FROM poll(), whose remaining work redraws the
+	# slots with the spent stack. Calling back in would recurse.
 
 
 func _describe(index: int) -> void:

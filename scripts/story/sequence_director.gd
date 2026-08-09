@@ -259,14 +259,46 @@ func _process(delta: float) -> void:
 func _drain_effects() -> void:
 	for effect: String in _dialogue.call("drain_effects"):
 		var parts: Array = RUNNER.parse_effect(effect)
-		if str(parts[0]) != "beat":
-			push_warning("the opening ignored dialogue effect '%s'; it knows about 'beat:' and nothing else" % effect)
-			continue
-		var target := BEATS.beat_for_effect(str(parts[1]))
-		if target == "":
-			push_warning("dialogue asked for '%s' but opening.json's beats.effects does not map it" % effect)
-			continue
-		_set_beat(target)
+		match str(parts[0]):
+			"beat":
+				var target := BEATS.beat_for_effect(str(parts[1]))
+				if target == "":
+					push_warning("dialogue asked for '%s' but opening.json's beats.effects does not map it" % effect)
+					continue
+				_set_beat(target)
+			"give":
+				_give_items(parts)
+			_:
+				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:' and 'give:' and nothing else" % effect)
+
+
+## `give:orb_basic:15` — Grandpa's parting gifts, granted on the line that
+## mentions them so the words and the satchel agree. Into the REAL inventory
+## through the same autoload everything else uses; a full satchel is warned
+## about rather than silently swallowed, because a player who was promised
+## fifteen orbs and got twelve has no way to know.
+##
+## `parse_effect` splits on the FIRST colon only, so parts[1] here is
+## "orb_basic:15" and the id/count split is this function's own job.
+func _give_items(parts: Array) -> void:
+	var rest := str(parts[1]).split(":")
+	if rest.size() != 2 or not str(rest[1]).is_valid_int():
+		push_warning("a give: effect reads give:<item_id>:<count>; got 'give:%s'" % parts[1])
+		return
+	var item_id := str(rest[0])
+	var count := int(str(rest[1]))
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; '%s' was given to nobody" % item_id)
+		return
+	var items: RefCounted = game.get("items")
+	if items != null and not bool(items.call("has", item_id)):
+		push_error("dialogue gives '%s', which data/items/items.json does not define" % item_id)
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var leftover := int(inventory.call("add", item_id, count))
+	if leftover > 0:
+		push_warning("the satchel was full; %d of the %d %s did not fit" % [leftover, count, item_id])
 
 
 ## --- what is possible right now -------------------------------------------------

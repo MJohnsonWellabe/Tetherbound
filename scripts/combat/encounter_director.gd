@@ -353,16 +353,9 @@ func _tick_respawn(delta: float) -> void:
 		_respawn_timers.erase(wild)
 		if is_instance_valid(wild):
 			wild.call("revive_at_home")
-			# M3-only: the orb stock refills with the practice pal, because there
-			# is no inventory until M8 and running dry mid-session would end the
-			# testing rather than teach anything.
-			_refill_orbs()
-
-
-func _refill_orbs() -> void:
-	var throw_aim: Node = _manager.call("throw_aim") as Node
-	if throw_aim != null:
-		throw_aim.call("refill")
+			# Orbs deliberately do NOT refill here any more. They are real
+			# satchel items now — Grandpa's gift is the starting supply, and
+			# running dry is a real state the game is allowed to reach.
 
 
 ## The nearest wild pal the player could choose to fight right now.

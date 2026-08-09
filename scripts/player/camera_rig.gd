@@ -50,6 +50,22 @@ var _mouse_delta := Vector2.ZERO
 ## Defaults from movement.json, kept so a combat profile can be handed back.
 var _base_distance: float = 5.2
 var _base_height: float = 1.75
+var _base_pitch_min: float = -60.0
+var _base_pitch_max: float = 32.0
+
+## Profile-scoped look tuning. catching.json's aim profile carried
+## `sensitivity_scale: 0.55` and pitch bounds from the day it was written, and
+## nothing read them — aim mode ran at the full 190 deg/s exploration turn
+## rate, which is most of what "aiming is fiddly on the stick" was. A profile
+## may now scale sensitivity, bend the stick response (exponent > 1 gives a
+## fine-aim centre without costing full-deflection speed), and narrow pitch.
+var _sensitivity_scale: float = 1.0
+var _response_exponent: float = 1.0
+
+## An extra, per-frame scale pushed in by whoever owns the current aim (the
+## throw slows the stick further when the reticle is near the target). Reset
+## to 1.0 by every set_target.
+var _assist_scale: float = 1.0
 
 ## While a fight is running the rig follows the player's pal instead of the
 ## trainer, at a shorter creature's height. Combat is piloted (D07), and a
@@ -95,6 +111,8 @@ func _load_config() -> void:
 	_height = float(cfg.get("height", _height))
 	_pitch_min = float(cfg.get("pitch_min_deg", _pitch_min))
 	_pitch_max = float(cfg.get("pitch_max_deg", _pitch_max))
+	_base_pitch_min = _pitch_min
+	_base_pitch_max = _pitch_max
 	pitch = float(cfg.get("pitch_start_deg", -12.0))
 	_gamepad_sensitivity = float(cfg.get("gamepad_sensitivity", _gamepad_sensitivity))
 	_mouse_sensitivity = float(cfg.get("mouse_sensitivity", _mouse_sensitivity))
@@ -123,6 +141,11 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_height = float(profile.get("height", _base_height))
 	_retarget_lag = float(profile.get("retarget_lag", 0.0))
 	_shoulder = float(profile.get("shoulder_offset", 0.0))
+	_sensitivity_scale = float(profile.get("sensitivity_scale", 1.0))
+	_response_exponent = maxf(float(profile.get("response_exponent", 1.0)), 0.1)
+	_pitch_min = float(profile.get("pitch_min_deg", _base_pitch_min))
+	_pitch_max = float(profile.get("pitch_max_deg", _base_pitch_max))
+	_assist_scale = 1.0
 	if _camera != null:
 		_camera.fov = float(profile.get("fov", _base_fov))
 	if profile.has("pitch_start_deg"):
@@ -162,8 +185,13 @@ func _apply_look(delta: float) -> void:
 	var stick := Input.get_vector("look_left", "look_right", "look_up", "look_down")
 	if stick.length() < _deadzone:
 		stick = Vector2.ZERO
-	var yaw_change := -stick.x * _gamepad_sensitivity * delta
-	var pitch_change := -stick.y * _gamepad_sensitivity * delta
+	elif _response_exponent != 1.0:
+		# Bend the response so small deflections move slowly and full
+		# deflection keeps its speed — a fine-aim centre for the throw camera.
+		stick = stick.normalized() * pow(stick.length(), _response_exponent)
+	var turn := _gamepad_sensitivity * _sensitivity_scale * _assist_scale
+	var yaw_change := -stick.x * turn * delta
+	var pitch_change := -stick.y * turn * delta
 
 	# Mouse, in degrees per pixel. Not scaled by delta: the motion event already
 	# describes distance moved, and multiplying it by frame time makes fast
@@ -212,3 +240,10 @@ func _follow(delta: float) -> void:
 ## is oriented.
 func planar_basis() -> Basis:
 	return Basis(Vector3.UP, yaw)
+
+
+## Per-frame extra look scaling from whoever owns the current aim — the throw
+## slows the stick further while the reticle is near its target. Reset by
+## every set_target, so a profile change cannot inherit a stale slowdown.
+func set_look_scale(scale_value: float) -> void:
+	_assist_scale = clampf(scale_value, 0.1, 1.0)

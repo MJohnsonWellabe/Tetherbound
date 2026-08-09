@@ -150,9 +150,9 @@ func poll() -> void:
 		# Said plainly, and said before it matters. The sixth capture is a
 		# ceremony, not an error message, and a player who is surprised by the
 		# cap has been let down by this screen.
-		_header.text = "Party  %d / %d      Full. A sixth pal means letting one go." % [size, PARTY.MAX_PALS]
+		_header.text = "Belt  %d / %d      Full. A sixth creature means letting one go." % [size, PARTY.MAX_PALS]
 	else:
-		_header.text = "Party  %d / %d      %d free" % [size, PARTY.MAX_PALS, PARTY.MAX_PALS - size]
+		_header.text = "Belt  %d / %d      %d free" % [size, PARTY.MAX_PALS, PARTY.MAX_PALS - size]
 	if _held >= 0:
 		_header.text += "      holding slot %d" % (_held + 1)
 

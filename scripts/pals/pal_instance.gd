@@ -97,6 +97,18 @@ func heal_fully() -> void:
 	fainted = false
 
 
+## Partial healing, for potions. Returns how much was actually restored so the
+## caller can refuse to waste an item on a full-health creature. A fainted
+## creature is brought back up — a potion that cannot help the pal that needs
+## it most is a trap item.
+func heal(amount: float) -> float:
+	var before := hp
+	hp = clampf(hp + maxf(0.0, amount), 0.0, max_hp)
+	if hp > 0.0:
+		fainted = false
+	return hp - before
+
+
 func hp_fraction() -> float:
 	return 0.0 if max_hp <= 0.0 else clampf(hp / max_hp, 0.0, 1.0)
 

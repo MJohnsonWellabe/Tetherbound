@@ -46,6 +46,7 @@ func _run() -> void:
 		await physics_frame
 
 	await _ensure_ally()
+	_seed_orbs()
 	if not _collect_nodes():
 		_report()
 		return
@@ -79,6 +80,19 @@ func _ensure_ally() -> void:
 	if director == null or director.call("ally_instance") != null:
 		return
 	await director.call("adopt_starter", "terrapup")
+
+
+## Orbs are satchel items now — in the real game Grandpa hands them over in
+## the opening, which this test deliberately bypasses. Seed what he would give.
+func _seed_orbs(count: int = 15) -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		_fail("no Game autoload; nowhere to put the orbs")
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var short: int = count - int(inventory.call("count", "orb_basic"))
+	if short > 0:
+		inventory.call("add", "orb_basic", short)
 
 
 func _collect_nodes() -> bool:
@@ -230,11 +244,10 @@ func _a_weakened_pal_can_be_caught() -> void:
 	for attempt in MAX_ATTEMPTS:
 		if not bool(_manager.call("is_fighting")):
 			break
-		# Top the stock back up. Running dry mid-test would report as "catching
-		# is broken" when it only means the placeholder stock is small.
+		# Top the satchel back up. Running dry mid-test would report as
+		# "catching is broken" when it only means the starting supply is small.
 		if int(_manager.call("orbs_left")) <= 1:
-			var throw_aim: Node = _manager.call("throw_aim") as Node
-			throw_aim.call("refill")
+			_seed_orbs()
 		foe.hp = foe.max_hp * 0.08
 		# Keep the player's pal standing. Aiming genuinely abandons it — that is
 		# the whole design and _aiming_abandons_your_pal asserts it — so a test

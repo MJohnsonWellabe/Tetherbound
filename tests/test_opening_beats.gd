@@ -151,6 +151,39 @@ func test_the_tutorial_creature_is_the_one_with_the_best_catch_rate() -> void:
 			"'%s' is easier to catch than the tutorial creature '%s'" % [other, id])
 
 
+func test_every_gift_in_the_dialogue_is_a_real_item() -> void:
+	# `give:orb_basic:15` grants through the real inventory, and an id typo'd
+	# here is a gift Grandpa announces and never hands over — silent at run
+	# time beyond a push_error nobody watches. items.json is the authority.
+	var items_file := FileAccess.open("res://data/items/items.json", FileAccess.READ)
+	assert_true(items_file != null, "items.json should open")
+	var items: Dictionary = (JSON.parse_string(items_file.get_as_text()) as Dictionary).get("items", {})
+
+	var gifts := 0
+	for id: String in RUNNER.table():
+		var conversation: Dictionary = RUNNER.table()[id]
+		for raw: Variant in conversation.get("lines", []) as Array:
+			if not raw is Dictionary:
+				continue
+			var line: Dictionary = raw
+			var effects: Array = (line.get("effects", []) as Array).duplicate()
+			if str(line.get("effect", "")) != "":
+				effects.append(str(line["effect"]))
+			for effect: Variant in effects:
+				var parts: Array = RUNNER.parse_effect(str(effect))
+				if str(parts[0]) != "give":
+					continue
+				gifts += 1
+				var rest: PackedStringArray = str(parts[1]).split(":")
+				assert_eq(rest.size(), 2, "'%s' should read give:<item_id>:<count>" % effect)
+				assert_true(items.has(str(rest[0])),
+					"'%s' gives '%s', which items.json does not define" % [effect, rest[0]])
+				assert_true(str(rest[1]).is_valid_int() and int(str(rest[1])) > 0,
+					"'%s' should give a positive whole number" % effect)
+	# Zero gifts is legal for THIS test (the dialogue rewrite lands separately);
+	# the smoke test asserts the opening actually grants the orbs.
+
+
 func _beat_effects_in_the_dialogue() -> Array[String]:
 	var out: Array[String] = []
 	for id: String in RUNNER.table():

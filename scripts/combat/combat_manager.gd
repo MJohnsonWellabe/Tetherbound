@@ -806,7 +806,7 @@ func is_aiming() -> bool:
 
 
 func orbs_left() -> int:
-	return int(_throw.get("stock")) if _throw != null else 0
+	return int(_throw.call("stock")) if _throw != null else 0
 
 
 ## True while an orb is wobbling. The fight is paused around it: neither fighter
