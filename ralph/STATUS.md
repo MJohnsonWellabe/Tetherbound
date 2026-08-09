@@ -1,24 +1,27 @@
-# Ralph — live status
+# Ralph — live status and lease
 
-**One file that answers "is the loop working?" from GitHub alone**, with no
-session access, no dashboard, and nobody to ask.
+> ## ⚠ This copy is a placeholder. The live one is on the `ralph-status` branch.
+>
+> Heartbeats are pushed to `ralph-status`, never here. The block below on `main`
+> is frozen and will always read `idle` — reading it for status is exactly the
+> mistake this warning exists to prevent.
 
-Every firing rewrites this before it does anything else, and again as it goes.
-So the timestamp is the heartbeat: if it is hours old and no run is in flight,
-the loop is dead rather than thinking.
+The live file does two jobs:
 
-Trigger-fired sessions do **not** appear in the normal Claude sessions list —
-only under the Routine's own **Runs** tab. That is why this file exists.
+1. **Heartbeat** — answers "is the loop working?" from GitHub alone. Trigger-
+   fired sessions do not appear in the normal Claude sessions list, only under
+   the Routine's own **Runs** tab, so without this there is no external signal.
+2. **Lease** — stops two firings working the same backlog. The cron fires hourly
+   whether or not the previous run finished, which is not configurable, so
+   overlap is the default rather than the exception. It has already happened.
 
 ---
 
-    firing:    (none yet)
+    firing:    (placeholder — see the ralph-status branch)
     session:   —
     task:      —
     state:     idle
     updated:   —
-    note:      Set up by the coordinator session. The first Ralph firing
-               replaces this block.
 
 ---
 

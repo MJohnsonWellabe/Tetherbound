@@ -12,7 +12,7 @@ the loop looked dead when it was working fine. Look here instead:
 
 | Question | Where to look |
 |---|---|
-| **What is it doing?** | `ralph/STATUS.md` on `main` — task, state, timestamp. This is the fastest answer and needs nothing but GitHub. |
+| **What is it doing?** | `ralph/STATUS.md` on the **`ralph-status` branch** — task, state, timestamp. Fastest answer, needs nothing but GitHub. **Not the copy on `main`**, which is a frozen placeholder and always reads `idle`. |
 | **Is it running right now?** | The Routine page → **Runs** tab → click the run. That opens the live transcript. A spinner there means in flight. |
 | **What has it finished?** | `ralph/DONE.md`, newest first, each entry with a commit SHA. |
 | **Why has it stopped?** | `ralph/BLOCKED.md`. A parked loop is a correct outcome, not a failure. |

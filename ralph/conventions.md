@@ -24,6 +24,11 @@ on this project already.
 
 ## Shipping
 
+- **Never push to `main` directly.** Work reaches `main` only through
+  `ralph/<task-id>` and CI; heartbeats go to the `ralph-status` branch. Pushing
+  to `main` mid-firing moves the target under an in-flight task branch and
+  forces a rebase for no reason — the coordinator did exactly that once and
+  caused it.
 - Branch `ralph/<task-id>` → push → CI → **`.github/workflows/ralph-merge.yml`
   fast-forwards main on green.** You do not open a pull request and you do not
   merge anything yourself: a fired session has no GitHub MCP tools and no `gh`
