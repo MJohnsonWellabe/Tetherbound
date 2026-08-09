@@ -5,6 +5,32 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.4 — Blind critique, picked a winner per species
+`46ea130` · Ten fresh subagent critics, each shown only one species'
+`compare.png` and its canon text (roster one-liner + the capitalised
+signature-feature brief from `meshy.py`'s `SPECIES_PROMPTS`), scored
+silhouette, proportion and the signature feature on the untextured white
+candidates. All ten scorecards filled (`shots/candidates/<species>-compare.md`)
+and summarised in the new `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md`.
+
+Winners: Brooktail a, Burrowback c, Duskhush a, Galecrest a, Meadowhart a,
+Mosshell b, Paddlenewt a, Pipwing b, Reedwing a, Tuskroot a.
+
+**Nine clean picks, one flagged defect carried forward:** Brooktail's winner
+still has a HARD FAIL — every candidate for that species is missing the
+canon's broad flat paddle tail (both give a round tapering tail instead).
+Recorded honestly rather than hidden behind score totals; it ships into
+R0.5/R0.6 with the defect flagged for a sculpting pass, since retexturing and
+rigging don't touch the tail's shape. Several other species have shared,
+non-blocking defects noted for the R0.6 cleanup/remesh step (burrowback's
+claws, tuskroot's plate edges, galecrest's talons) — see the production
+report's table.
+
+Also wrote `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md` for the first time
+(R0.8 still owes it a provenance-row pass and the missing
+Bramblebun/Mudsnout/Trailpup production record, both noted as known gaps in
+the file itself).
+
 ## R0.3.5 — Fixed the `smoke_catching` flake
 `5c919ba` · Three bugs in `tests/smoke_catching.gd` itself, no production combat
 code touched:

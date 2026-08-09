@@ -9,25 +9,6 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 
 ## Phase 0 — finish the roster
 
-### R0.4 — Blind critique, pick a winner per species
-`model: sonnet` · `tests: none`
-
-Ten species have candidates rendered and comparison sheets built at
-`shots/candidates/<species>-compare.png`, with a blank scorecard beside each.
-
-For each species, a **fresh critic** sees only the comparison sheet and the
-species' canon text, and is told nothing about what was generated or by whom.
-The blind critique is the mechanism, not a formality: it has caught a real
-defect on every creature so far and repeatedly caught bugs in the tooling.
-
-Judge silhouette, proportion and the signature feature only. **Candidates are
-untextured white geometry** — any judgement about colour is invalid at this
-stage. Fill in the scorecard including its HARD FAIL column; a catastrophic
-failure is a rejection even when the aggregate is high.
-
-Done when: one winner per species recorded in `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md`,
-each with the defect list that picked it.
-
 ### R0.5 — 🔒 Retexture the winners
 `model: sonnet` · `tests: none`
 
