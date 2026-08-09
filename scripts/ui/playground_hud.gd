@@ -13,10 +13,24 @@ const READOUT_INTERVAL := 0.1
 
 @export var player_path: NodePath
 
+## Seconds a pad must be connected with every raw axis pinned near zero before
+## the HUD suggests the Ally-specific cause. Long enough that a player who is
+## simply reading the screen before touching the stick does not get an
+## irrelevant warning; short enough to answer "why won't it move" quickly.
+const STUCK_AXES_HINT_AFTER := 3.0
+const STUCK_AXES_EPSILON := 0.05
+
 var _player: CharacterBody3D = null
 var _since_readout := 0.0
 var _peak_fall := 0.0
 var _last_damage := 0.0
+
+## Tracks whether a connected pad has EVER reported a non-trivial axis value.
+## A single frame's reading cannot tell "not touching the stick right now"
+## apart from "the stick physically cannot reach Godot" — this can, given a
+## few seconds.
+var _pad_connected_for := 0.0
+var _max_raw_axis_seen := 0.0
 
 @onready var _health_bar: ProgressBar = $Root/Bars/Health
 @onready var _stamina_bar: ProgressBar = $Root/Bars/Stamina
@@ -94,6 +108,8 @@ func _input_diagnostics() -> Array[String]:
 		lines.append("controller  NONE DETECTED BY GODOT")
 		lines.append("  the handheld is probably in desktop/mouse mode,")
 		lines.append("  or the window does not have focus")
+		_pad_connected_for = 0.0
+		_max_raw_axis_seen = 0.0
 	else:
 		for device_id in pads:
 			lines.append("controller  %d: %s" % [device_id, Input.get_joy_name(device_id)])
@@ -108,12 +124,29 @@ func _input_diagnostics() -> Array[String]:
 	# zero, the pad is fine and the input map bindings are wrong.
 	if not pads.is_empty():
 		var device: int = pads[0]
-		lines.append("raw axes  L %+.2f %+.2f   R %+.2f %+.2f" % [
-			Input.get_joy_axis(device, JOY_AXIS_LEFT_X),
-			Input.get_joy_axis(device, JOY_AXIS_LEFT_Y),
-			Input.get_joy_axis(device, JOY_AXIS_RIGHT_X),
-			Input.get_joy_axis(device, JOY_AXIS_RIGHT_Y),
-		])
+		var lx: float = Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
+		var ly: float = Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)
+		var rx: float = Input.get_joy_axis(device, JOY_AXIS_RIGHT_X)
+		var ry: float = Input.get_joy_axis(device, JOY_AXIS_RIGHT_Y)
+		lines.append("raw axes  L %+.2f %+.2f   R %+.2f %+.2f" % [lx, ly, rx, ry])
+
+		_max_raw_axis_seen = maxf(_max_raw_axis_seen, maxf(
+			maxf(absf(lx), absf(ly)), maxf(absf(rx), absf(ry))))
+		# On a handheld the readout is throttled to READOUT_INTERVAL, not every
+		# frame, so this advances in those same steps.
+		_pad_connected_for += READOUT_INTERVAL
+
+		# A pad Godot can name and still never hears from is exactly what the
+		# ROG Ally's own "Desktop Mode" produces: the sticks drive the mouse
+		# cursor instead of sending joypad axis events, so the device enumerates
+		# fine and every axis reads a permanent 0.00. Command Center's own
+		# Gamepad Mode is the fix, and it is not a Tetherbound setting — the
+		# game has no way to flip it for the player.
+		if _pad_connected_for >= STUCK_AXES_HINT_AFTER and _max_raw_axis_seen < STUCK_AXES_EPSILON:
+			lines.append("  raw axes have not moved at all since the pad was seen.")
+			lines.append("  On ROG Ally: Command Center -> Gamepad Mode (not Desktop")
+			lines.append("  Mode) — desktop mode sends the sticks to Windows as a")
+			lines.append("  mouse, not to the game as a controller.")
 
 	lines.append("jump %s  sprint %s  interact %s" % [
 		_held("jump"), _held("sprint"), _held("interact")

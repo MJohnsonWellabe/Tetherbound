@@ -28,6 +28,22 @@ var _invert_y: bool = false
 var _follow_lag: float = 14.0
 var _recover_speed: float = 4.0
 
+## How far the arm stops short of whatever it hit. SpringArm3D's own property;
+## kept here as a named default so it is data-driven like the rest of the rig
+## instead of a bare number sitting in the .tscn.
+##
+## The scene shipped this at 0.3, which is standoff-from-the-hit-surface, not
+## standoff-from-the-player. A tree trunk directly behind the player (the
+## `trees`/`grove`/`rocks` vegetation layers collide, `scripts/world/vegetation.gd`
+## `_add_collision()`, radius up to 1.1m) can leave the arm barely longer than
+## the trunk's own radius, and the render is a close-up of whatever the arm
+## stopped against filling the frame — the same failure this file's own header
+## already names happening to the combat camera against a bush, now hit by the
+## exploration camera against the denser Meadows scatter. Raising the margin
+## does not stop the collapse; it stops the collapse from reading as the
+## camera being INSIDE the obstruction.
+var _collision_margin: float = 0.6
+
 var _target: Node3D = null
 var _mouse_delta := Vector2.ZERO
 
@@ -62,6 +78,7 @@ func _ready() -> void:
 	_load_config()
 	top_level = true          # the arm follows the player by code, not by parenting
 	spring_length = _distance
+	margin = _collision_margin
 	pitch = deg_to_rad(clampf(pitch, _pitch_min, _pitch_max))
 
 
@@ -85,6 +102,7 @@ func _load_config() -> void:
 	_invert_y = bool(cfg.get("invert_y", false))
 	_follow_lag = float(cfg.get("follow_lag", _follow_lag))
 	_recover_speed = float(cfg.get("collision_recover_speed", _recover_speed))
+	_collision_margin = float(cfg.get("collision_margin", _collision_margin))
 	_base_distance = _distance
 	_base_height = _height
 	if _camera != null:

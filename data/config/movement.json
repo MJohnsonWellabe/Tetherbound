@@ -64,6 +64,8 @@
     "invert_y": false,
     "_comment_follow": "How quickly the arm's origin catches up to the player, and how quickly it recovers after terrain pushes it in. Collision recovery is deliberately slower than intrusion, so the camera snaps away from a wall but eases back out.",
     "follow_lag": 14.0,
-    "collision_recover_speed": 4.0
+    "collision_recover_speed": 4.0,
+    "_comment_collision_margin": "How far the spring arm stops short of whatever it hit. The Meadows scatter's trees and rocks collide (scripts/world/vegetation.gd), and are dense enough that a trunk can sit almost directly behind the player; the old 0.3 default then read as the camera buried in bark rather than a normal close-up.",
+    "collision_margin": 0.6
   }
 }

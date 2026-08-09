@@ -13,6 +13,13 @@ Windows builds are published on every push to `main`:
 
 **[Download the latest build](https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip)**
 
+**On ROG Ally, the built-in controller needs Gamepad Mode.** Command Center's
+default is Desktop Mode, which sends the sticks and buttons to Windows as a
+mouse and keyboard — the game will boot fine and look completely unresponsive
+because there is no controller for it to see. Command Center → Gamepad Mode
+before launching. The in-game HUD's input readout (M1) will say so directly if
+a pad is detected but never reports a moving stick.
+
 ## Run it from source
 
 Install Godot 4.7, then `Import` this folder's `project.godot`. `F5` runs the

@@ -229,6 +229,15 @@ jobs:
         # thing between them.
         run: godot --headless --path . --script tests/smoke_aggression.gd
 
+      - name: Smoke-test the opening
+        # Walks the first fifteen minutes end to end: fade in, approach
+        # Grandpa, talk, choose a starter, name it with the pad, and confirm
+        # the pal reaches the real party. This wires SequenceDirector,
+        # InteractionArbiter, DialoguePanel and NamePrompt together for the
+        # first time in the run — a regression here is a player who spawns
+        # with no opening at all, and nothing else in this job would notice.
+        run: godot --headless --path . --script tests/smoke_opening.gd
+
       - name: Smoke-test the menu
         # Opens the pause menu over the real world and closes it again. Unit
         # tests cover the satchel's arithmetic and the five-pal cap; none of
