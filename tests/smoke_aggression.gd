@@ -24,6 +24,12 @@ const SETTLE_FRAMES := 300
 ## configured chase speed this is far more than enough for an aggressive pal to
 ## cross its notice range.
 const PATIENCE_FRAMES := 900
+## Physics frames to spend walking toward one creature. The aggressor's cluster
+## (spawns.json's `aggressor` role — Galecrest, at the southern foot of the
+## rocky rise) is ~95m from the practice cluster where the peaceful half leaves
+## the trainer, which is ~1,500 frames at walk speed before slopes; doubled so
+## an undulating line does not time out a walk that is actually progressing.
+const WALK_FRAMES := 4000
 
 var _failures: Array[String] = []
 var _world: Node = null
@@ -194,7 +200,7 @@ func _a_peaceful_pal_never_does() -> void:
 
 
 func _walk_towards(wild: Node3D, stop_at: float) -> void:
-	for i in 2000:
+	for i in WALK_FRAMES:
 		var to := wild.global_position - _player.global_position
 		to.y = 0.0
 		if to.length() <= stop_at:

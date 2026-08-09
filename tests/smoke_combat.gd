@@ -133,7 +133,9 @@ func _collect_nodes() -> bool:
 ## real failure.
 func _walk_to_the_wild_pal() -> void:
 	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
-	for i in 1200:
+	# 1800 frames covers the practice cluster's far edge (~65m from the origin
+	# since spawns.json moved it to [30, -40] r15) with slack for slopes.
+	for i in 1800:
 		var to := _wild.global_position - _player.global_position
 		to.y = 0.0
 		if to.length() <= engage_range * 0.6:

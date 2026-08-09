@@ -45,21 +45,17 @@ signal prompt_changed(text: String)
 ## to one of three creatures, and named.
 @export var default_starter: String = "terrapup"
 
-## Ids into data/pals/species.json, so swapping any of them is a data edit.
-##
-## Two wild creatures in M3: one peaceful to practise throwing at, and one that
-## comes at you. They are separated in the playground so the ambush is something
-## you walk into rather than something that happens while you are aiming at the
-## other one.
-const WILD_SPAWNS := [
-	{"species": "bramblebun", "offset": Vector3(14.0, 0.0, -10.0)},
-	{"species": "tuskroot", "offset": Vector3(-6.0, 0.0, 26.0)},
-]
+## The wild population lives in data, not here. Which species, how many, where
+## they cluster and how fast they come back are exactly the numbers the owner
+## will want to retune after walking the meadow, and every one of them should be
+## an edit to this file rather than to code.
+const SPAWNS_CONFIG := "res://data/config/spawns.json"
 
-## Seconds before a defeated wild pal is back on its feet. M2 only: the milestone
-## exists to find out whether the owner wants another fight, and making them
-## restart the game to have one would answer a different question.
-const RESPAWN_DELAY := 6.0
+## Fallback if spawns.json is missing or does not give respawn_seconds. Matches
+## the file's own value rather than M2's old 6.0: with a whole meadow of
+## creatures there is always another fight to walk to, so a beaten one staying
+## down for a while reads as consequence rather than as a locked door.
+const DEFAULT_RESPAWN_DELAY := 45.0
 
 @export var player_path: NodePath
 @export var manager_path: NodePath
@@ -128,30 +124,71 @@ const GROUND_WAIT_FRAMES := 300
 
 
 func _spawn_creatures() -> void:
-	var origin := _player.global_position
+	var entries: Array = spawns_config().get("spawns", []) as Array
+	if entries.is_empty():
+		push_error("spawns.json has no spawn table; the meadow will be empty")
 
-	for entry: Variant in WILD_SPAWNS:
-		var spawn: Dictionary = entry
-		var species := str(spawn["species"])
-		var wild: Node3D = PAL_SCENE.instantiate()
-		wild.name = "Wild_%s" % species
-		wild.set_script(WILD_SCRIPT)
-		get_parent().add_child(wild)
-		if not await _stand_on_ground(wild, origin + (spawn["offset"] as Vector3)):
-			push_error("no ground under the %s spawn point; it will be unreachable" % species)
-		wild.call("populate", species, _player)
-		wild.call("configure", MATH.config().get("wild", {}))
-		wild.set("home", wild.global_position)
-		# An aggressive pal asks; this node decides. Keeping the decision here
-		# means every route into a fight goes through one place, so a new one
-		# cannot forget to suspend exploration or hand over the camera.
-		wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
-		_wild_pals.append(wild)
+	for index in entries.size():
+		var spawn: Dictionary = entries[index] as Dictionary
+		var species := str(spawn.get("species", ""))
+		if not SPECIES.has(species):
+			push_error("spawns.json names '%s', which is not in species.json" % species)
+			continue
+		var centre := _vector3_of(spawn.get("centre", []))
+		var radius := float(spawn.get("radius", 0.0))
+		var count := int(spawn.get("count", 1))
+
+		# Seeded per entry, and NEVER randomize()d: the same table must produce
+		# the same meadow every boot. A creature the owner met yesterday being
+		# somewhere else today would read as it having wandered — fine — but a
+		# smoke test walking to a spot that moves between CI runs is a flake
+		# factory, and 'the world is deterministic' is the same promise the
+		# terrain bake and the vegetation scatter already make (their seeds are
+		# fixed in data too). The seed is derived from the entry's index so each
+		# cluster gets its own scatter rather than every cluster sharing one.
+		var rng := RandomNumberGenerator.new()
+		rng.seed = hash("wild_spawn_%d" % index)
+
+		for n in count:
+			var wild: Node3D = PAL_SCENE.instantiate()
+			# Indexed, because clusters exist now. Two nodes both named
+			# "Wild_bramblebun" under one parent would be silently auto-renamed
+			# by the engine, and a name nobody chose is a name no log line or
+			# remote-tree screenshot can be matched against.
+			wild.name = "Wild_%s_%d" % [species, n + 1]
+			wild.set_script(WILD_SCRIPT)
+			get_parent().add_child(wild)
+			# sqrt on the radius fraction makes the points uniform over the
+			# disc's AREA; without it they bunch at the centre.
+			var angle := rng.randf_range(0.0, TAU)
+			var distance := radius * sqrt(rng.randf())
+			var spot := centre + Vector3(sin(angle), 0.0, cos(angle)) * distance
+			if not await _stand_on_ground(wild, spot):
+				push_error("no ground under the %s spawn point; it will be unreachable" % species)
+			wild.call("populate", species, _player)
+			wild.call("configure", MATH.config().get("wild", {}))
+			wild.set("home", wild.global_position)
+			# An aggressive pal asks; this node decides. Keeping the decision
+			# here means every route into a fight goes through one place, so a
+			# new one cannot forget to suspend exploration or hand over the
+			# camera.
+			wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
+			_wild_pals.append(wild)
 
 	if default_starter != "":
 		# Awaited: `adopt_starter` waits for ground under the spawn point, so
 		# calling it bare would hand back a coroutine and leave the pal unplaced.
 		await adopt_starter(default_starter)
+
+
+## Positions in spawns.json are absolute world metres — [x, y, z] with y always
+## 0, because nothing here trusts a hand-written height: everything is stood on
+## the ground by asking the world (docs/decisions/D09).
+func _vector3_of(raw: Variant) -> Vector3:
+	var list: Array = raw if raw is Array else []
+	if list.size() < 3:
+		return Vector3.ZERO
+	return Vector3(float(list[0]), float(list[1]), float(list[2]))
 
 
 ## Do not spawn the sandbox's default pal; the story is granting one.
@@ -234,15 +271,48 @@ func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 	return false
 
 
-## The peaceful practice pal. Named for what it is used for rather than by index,
-## so tests and tools do not silently start pointing at a different creature when
-## the spawn list changes.
+## The spawn table, loaded once. Cached because wild_pal()/aggressive_pal() are
+## called from prompts and tests every frame, and re-reading a file per frame to
+## answer "which species is the practice one" would be absurd.
+var _spawns_cfg: Dictionary = {}
+
+
+func spawns_config() -> Dictionary:
+	if not _spawns_cfg.is_empty():
+		return _spawns_cfg
+	var file := FileAccess.open(SPAWNS_CONFIG, FileAccess.READ)
+	if file == null:
+		push_error("spawns.json missing at %s" % SPAWNS_CONFIG)
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary:
+		_spawns_cfg = parsed
+	return _spawns_cfg
+
+
+func _respawn_delay() -> float:
+	return float(spawns_config().get("respawn_seconds", DEFAULT_RESPAWN_DELAY))
+
+
+## Which species currently plays a ROLE — "practice", "aggressor". The roles
+## block exists so this node and the smoke tests never name a species directly:
+## retuning the table (swapping the ambusher, moving the tutorial creature) is
+## then a data edit that cannot silently strand code pointing at a creature that
+## no longer spawns.
+func _role_species(role: String) -> String:
+	var roles: Dictionary = spawns_config().get("roles", {}) as Dictionary
+	return str(roles.get(role, ""))
+
+
+## The peaceful practice pal. Named for what it is used for rather than by
+## species or index, so tests and tools do not silently start pointing at a
+## different creature when the spawn table changes.
 func wild_pal() -> Node3D:
-	return _wild_of_species("bramblebun")
+	return _wild_of_species(_role_species("practice"))
 
 
 func aggressive_pal() -> Node3D:
-	return _wild_of_species("tuskroot")
+	return _wild_of_species(_role_species("aggressor"))
 
 
 func wild_pals() -> Array[Node3D]:
@@ -253,11 +323,24 @@ func caught() -> Array[RefCounted]:
 	return _caught
 
 
+## The NEAREST live instance of a species, now that a species can spawn as a
+## cluster. First-found was fine when each species existed exactly once; with
+## three bramblebuns, "the practice pal" has to mean the one the player is
+## actually standing next to, or the engage-prompt tests would assert against a
+## creature forty metres away.
 func _wild_of_species(id: String) -> Node3D:
+	var best: Node3D = null
+	var best_distance := INF
 	for wild in _wild_pals:
-		if str(wild.get("species_id")) == id:
+		if not is_instance_valid(wild) or str(wild.get("species_id")) != id:
+			continue
+		if _player == null:
 			return wild
-	return null
+		var distance := _player.global_position.distance_to(wild.global_position)
+		if distance < best_distance:
+			best = wild
+			best_distance = distance
+	return best
 
 
 func ally_body() -> Node3D:
@@ -455,7 +538,7 @@ func _on_combat_exited(outcome: String) -> void:
 				# might have caught.
 				wild.call("notify_fainted")
 				_faint_timers[wild] = float(CATCH.config().get("faint", {}).get("linger_seconds", 4.0))
-				_respawn_timers[wild] = RESPAWN_DELAY
+				_respawn_timers[wild] = _respawn_delay()
 			CAUGHT:
 				var kept: RefCounted = _manager.call("caught_instance")
 				if kept != null:
@@ -463,7 +546,7 @@ func _on_combat_exited(outcome: String) -> void:
 				wild.visible = false
 				# M3-only: the caught creature comes back so the owner can keep
 				# testing throws. M4 owns it properly and this goes away.
-				_respawn_timers[wild] = RESPAWN_DELAY
+				_respawn_timers[wild] = _respawn_delay()
 
 	# M2 has no healing system, no camp and no bond, so the player's pal is
 	# restored between fights. That is a placeholder for M5's stronghold rest and

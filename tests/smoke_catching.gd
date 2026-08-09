@@ -294,8 +294,11 @@ func _a_fainted_pal_cannot_be_caught() -> void:
 	# Wait for the practice pal to be back on its feet, then walk over and
 	# engage it again. Waiting for a prompt without moving would never work: the
 	# fight left the trainer at the arena edge, and the pal respawns at its own
-	# home some distance away.
-	for i in 900:
+	# home some distance away. The wait covers the respawn delay, which is data
+	# now (spawns.json respawn_seconds) rather than M2's hardcoded 6 seconds.
+	var respawn := float((_director.call("spawns_config") as Dictionary).get("respawn_seconds", 45.0))
+	var budget := int(ceil(respawn * float(Engine.physics_ticks_per_second))) + 900
+	for i in budget:
 		await physics_frame
 		if _wild.visible and bool(_wild.call("is_alive")):
 			break

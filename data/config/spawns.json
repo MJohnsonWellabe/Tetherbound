@@ -1,0 +1,24 @@
+{
+  "_comment": "The wild population. ALL TUNABLE. Positions are absolute world metres; everything is stood on the ground by asking the world (D09). Tuskroot is deliberately absent: it is the evolved form, only obtainable by evolving a caught Mudsnout (D20). Veridian is the future legendary, also absent.",
+  "_comment_placement": "The playground is 512m on a side (data/config/terrain_playground.json), so everything here sits well inside +/-256. Water species cluster at the pond valley around [-120, 130]. Galecrest and Burrowback were meant for the rocky rise at [140, -90] itself, but that rise's rim is a closed >45-degree band by design (terrain_playground.json: rises are 'the only places the 45-degree slope limit should actually bite') — measured at 71 of 72 radial approaches unwalkable — so a creature up there can never be met, fought or caught. Both live on the meadow at its southern foot instead: the ambush happens on the approach below the danger ground, not on an unreachable plateau. The Bramblebun cluster's nearest edge stays within ~60m of the origin, because the opening walks a brand-new player out to it.",
+  "respawn_seconds": 45.0,
+  "roles": {
+    "_comment": "Species the code and the smoke tests address by ROLE so the table can be retuned without breaking them.",
+    "practice": "bramblebun",
+    "aggressor": "galecrest"
+  },
+  "spawns": [
+    {"species": "bramblebun", "count": 3, "centre": [30.0, 0.0, -40.0], "radius": 15.0},
+    {"species": "mudsnout", "count": 2, "centre": [-60.0, 0.0, 20.0], "radius": 12.0},
+    {"species": "trailpup", "count": 2, "centre": [80.0, 0.0, 60.0], "radius": 18.0},
+    {"species": "burrowback", "count": 1, "centre": [55.0, 0.0, -145.0], "radius": 10.0},
+    {"species": "meadowhart", "count": 2, "centre": [-100.0, 0.0, -60.0], "radius": 20.0},
+    {"species": "paddlenewt", "count": 2, "centre": [-120.0, 0.0, 130.0], "radius": 14.0},
+    {"species": "mosshell", "count": 1, "centre": [-130.0, 0.0, 145.0], "radius": 10.0},
+    {"species": "brooktail", "count": 2, "centre": [-110.0, 0.0, 115.0], "radius": 14.0},
+    {"species": "duskhush", "count": 1, "centre": [60.0, 0.0, 175.0], "radius": 12.0},
+    {"species": "pipwing", "count": 3, "centre": [20.0, 0.0, 80.0], "radius": 20.0},
+    {"species": "reedwing", "count": 2, "centre": [-90.0, 0.0, 100.0], "radius": 15.0},
+    {"species": "galecrest", "count": 1, "centre": [55.0, 0.0, -120.0], "radius": 12.0}
+  ]
+}
