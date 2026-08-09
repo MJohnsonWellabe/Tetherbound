@@ -368,9 +368,9 @@
       "aggressive": true,
       "placeholder": {
         "colour": "#4a6478",
-        "height": 1.85,
+        "height": 2.0,
         "radius": 0.62,
-        "_comment_size": "D13: Galecrest is named explicitly alongside Meadowhart (1.95m) and Tuskroot (2.0m) as the roster's largest tier, keeping the sheet's relative ordering inside D12's 1.35-2.00m peer band.",
+        "_comment_size": "R0.7's height table (BACKLOG.md) fixes Galecrest at 2.00m specifically, tied with Tuskroot for tallest of the roster -- consistent with D13's note that Galecrest sits in the largest tier alongside Meadowhart (1.95m) and Tuskroot (2.0m), inside D12's 1.35-2.00m peer band.",
         "_comment_footprint": "Spread wings in the model's base pose (Meshy prompt asked for 'T-pose-adjacent, full body'), same shape of problem as Galewisp (footprint_allowance 3.4) but a bigger wingspan per the sheet (3.6-4.2m vs the starter's), so scaled up rather than reused as-is.",
         "footprint_allowance": 4.2,
         "model": "res://assets/pals/tetherbound/galecrest/models/pal_galecrest_lod0.glb",
