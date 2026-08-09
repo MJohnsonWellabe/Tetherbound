@@ -409,6 +409,32 @@
         }
       }
     },
+    "pipwing": {
+      "display_name": "Pipwing",
+      "type": "air",
+      "_comment": "Zippy Flier/Spotter per the Air Sheet (docs/art/reference/wild/04_Meadows_Wild_Air_Sheet.png): 'tiny and round with oversized eyes for high readability, built for quick bursts of speed and sharp awareness'. Smallest and lightest creature in the roster (docs/art/wild's own roster canon: 'much smaller/lighter than Galecrest', grouped with Bramblebun as the two smallest). Lowest HP and defence of the wild roster so far -- a fragile scout, not a fighter -- but not the lowest attack, since 'quick bursts of speed' implies a real if glancing strike. Non-aggressive: a spotter watches and flees, it does not initiate. Catch rate high, just under Bramblebun's tutorial-only 0.55 -- common, unthreatening, and easy to read.",
+      "base_hp": 78.0,
+      "base_attack": 20.0,
+      "base_defence": 10.0,
+      "catch_rate": 0.5,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#7a97a8",
+        "height": 1.2,
+        "radius": 0.45,
+        "_comment_size": "R0.7's height table (BACKLOG.md) fixes Pipwing at 1.20m, the shortest in the roster, consistent with D13/the roster canon naming Pipwing and Bramblebun the smallest pair.",
+        "_comment_footprint": "Spread wings in the model's base pose, same shape of problem as every bird so far; a smaller, more conservative allowance than Duskhush/Galecrest's 3.4/4.2 since Pipwing's own sheet calls it 'tiny and round' rather than broad-winged -- verified against the standalone height-fit script with no clamp warning.",
+        "footprint_allowance": 3.0,
+        "model": "res://assets/pals/tetherbound/pipwing/models/pal_pipwing_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "R0.6: third bird species, same --kind bird path proved on Galecrest and Duskhush, no code changes needed. tools/art_pipeline finish.py clean -> texture -> rig --kind bird -> grade -> install, from the R0.4 winner (candidate b, no hard-fail flagged -- only a cosmetic thin/blade-like crest note). rig_report.json: 19 bones, 14002 vertices, 0 unweighted, idle motion at 86% of walk (well clear of the 6%-is-frozen threshold). Four eye-guard rectangles in grade.py -- the sheet's 'oversized teal eyes' dominate several UV islands on this small a creature; one ambiguous dark shape immediately beside a confirmed eye was checked and rejected as a probable shading/seam artifact rather than a separate instance. model_yaw not visually verified -- this container has no libEGL.so.1, so turntable.py cannot render a frame; 0.0 follows the same default every species so far shipped with. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "animations": {
+          "idle": "idle", "walk": "walk", "run": "run",
+          "attack": "attack", "hit": "hit", "faint": "faint"
+        }
+      }
+    },
     "veridian": {
       "display_name": "Veridian Stag",
       "type": "ground",
@@ -439,5 +465,5 @@
       }
     }
   },
-  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ \u2014 twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. Still to come: reedwing, pipwing. Heights follow D13: D12's peer band, keeping the sheets' relative ordering."
+  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ \u2014 twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. Still to come: reedwing. Heights follow D13: D12's peer band, keeping the sheets' relative ordering."
 }

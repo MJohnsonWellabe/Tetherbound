@@ -456,6 +456,28 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+    # ----------------------------------------------------------------
+    "pipwing": {
+        # Third bird species. Every guarded instance shows the sheet's own
+        # "oversized teal eyes" -- a teal ring, a gold/orange outer rim, a
+        # black pupil and (on three of the four) a white catchlight -- the
+        # eyes are large enough on this small songbird that they dominate
+        # several UV islands. Four rectangles found by a full
+        # quadrant-by-quadrant scan of the 2048x2048 atlas. One dark teal
+        # shape immediately below rectangle 2 (~160,1685-275,1785 uv) was
+        # checked and rejected: no catchlight, no clean ring boundary,
+        # reads as the same eye's shadow/edge bleeding across a UV seam
+        # rather than a separate instance.
+        "eye_guard": [
+            ("uv", 0, 995, 145, 1165),
+            ("uv", 185, 1545, 350, 1705),
+            ("uv", 335, 1900, 512, 2048),
+            ("uv", 1600, 1800, 1800, 1980),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 
