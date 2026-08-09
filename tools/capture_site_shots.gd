@@ -28,7 +28,7 @@ const SETTLE_FRAMES := 50
 const SHOTS := {
 	"hero-meadow": [Vector3(58.0, 14.0, 28.0), Vector3(-10.0, 4.0, -12.0)],
 	"village-square": [Vector3(-6.0, 6.5, 4.0), Vector3(14.0, 3.0, -8.0)],
-	"camp-dusk": [Vector3(24.0, 6.0, -30.0), Vector3(30.5, 3.4, -36.0)],
+	"camp-dusk": [Vector3(26.8, 4.8, -32.3), Vector3(30.5, 3.0, -36.0)],
 }
 
 
@@ -40,12 +40,18 @@ func _shots(world: Node) -> Dictionary:
 	# Inside the loft, from the stair end toward the bed in the west corner.
 	var bed: Vector3 = house.call("marker", "bed")
 	shots["opening-bedroom"] = [house.to_global(Vector3(0.8, 5.0, 1.7)), bed + Vector3(0.0, 0.2, 0.0)]
-	# The starter row waits at the outside marker facing the door; shoot along
-	# the row from its south side with the doorway on the left of frame.
-	var outside: Vector3 = house.call("marker", "outside")
-	var door: Vector3 = house.call("marker", "door")
-	var mid := outside.lerp(door, 0.35) + Vector3(0.0, 1.1, 0.0)
-	shots["starters-by-the-door"] = [outside + Vector3(-1.0, 1.9, 7.0), mid]
+	# The starter row waits at the outside marker facing the door. Shoot FROM
+	# the door side, so the creatures face the camera with open meadow and sky
+	# behind their silhouettes — the first cut shot them from behind, pressed
+	# against the house wall, and the blind critique rightly called it the one
+	# frame whose job was to sell the creatures hiding them instead.
+	# Off-axis and back from the row: the straight-down-the-axis attempt put
+	# the camera a metre from the nearest creature's back, which filled a
+	# third of the frame as an out-of-focus blob.
+	shots["starters-by-the-door"] = [
+		house.to_global(Vector3(6.0, 2.6, -2.5)),
+		house.to_global(Vector3(12.6, 0.9, 1.4)),
+	]
 	return shots
 
 
@@ -86,16 +92,12 @@ func _run() -> void:
 	if world.get("_terrain") != null and (world.get("_terrain") as Node).has_method("set_camera"):
 		(world.get("_terrain") as Node).call("set_camera", camera)
 
-	# The opening's staging leaves the player standing ON the mattress; for the
-	# bedroom frame, stand them on the loft floor beside the bed instead.
 	var house: Node3D = world.get_node_or_null(^"GrandpaHouse") as Node3D
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
-	if house != null and player != null:
-		player.global_position = house.to_global(Vector3(-1.6, 3.3, -0.3))
-		player.look_at(Vector3(house.call("marker", "bed")) * Vector3(1, 0, 1)
-			+ Vector3(0.0, player.global_position.y, 0.0))
-		if player is CharacterBody3D:
-			(player as CharacterBody3D).velocity = Vector3.ZERO
+	var sun: DirectionalLight3D = world.get_node_or_null(^"Sun") as DirectionalLight3D
+	var day_transform: Transform3D = sun.global_transform if sun != null else Transform3D()
+	var day_colour: Color = sun.light_color if sun != null else Color.WHITE
+	var day_energy: float = sun.light_energy if sun != null else 1.0
 
 	var shots: Dictionary = _shots(world)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
@@ -105,6 +107,39 @@ func _run() -> void:
 		if FileAccess.file_exists("%s/%s.png" % [OUT, name]):
 			print("skip -> %s.png (already captured)" % name)
 			continue
+
+		# Per-shot staging. The player: beside the bed for the bedroom frame
+		# (the opening leaves them standing ON the mattress), and standing with
+		# the starter row for the door frame — a creature-training game's page
+		# had no frame with a trainer and a creature together until it did.
+		if house != null and player != null:
+			if name == "opening-bedroom":
+				player.global_position = house.to_global(Vector3(-1.6, 3.3, -0.3))
+				player.look_at(Vector3(house.call("marker", "bed")) * Vector3(1, 0, 1)
+					+ Vector3(0.0, player.global_position.y, 0.0))
+			elif name == "starters-by-the-door":
+				player.global_position = house.to_global(Vector3(11.8, 0.1, 4.6))
+				player.look_at(house.to_global(Vector3(8.5, 0.0, 0.5)) * Vector3(1, 0, 1)
+					+ Vector3(0.0, player.global_position.y, 0.0))
+			if player is CharacterBody3D:
+				(player as CharacterBody3D).velocity = Vector3.ZERO
+		# The sun: low and warm for the camp frame — its name promises dusk,
+		# and the same noon sky as every other frame does not deliver it —
+		# restored to the authored day for everything else.
+		if sun != null:
+			if name == "camp-dusk":
+				# Golden hour, not sunset: at 10 degrees of elevation the
+				# cosine on flat ground was ~0.17 and the frame came out as
+				# black mud. 18 degrees keeps the warmth and lets the ground
+				# still be a picture.
+				sun.rotation_degrees = Vector3(-18.0, 250.0, 0.0)
+				sun.light_color = Color(1.0, 0.68, 0.42)
+				sun.light_energy = 1.4
+			else:
+				sun.global_transform = day_transform
+				sun.light_color = day_colour
+				sun.light_energy = day_energy
+
 		var spec: Array = shots[name]
 		camera.global_position = spec[0]
 		camera.look_at(spec[1])
