@@ -22,6 +22,29 @@ on this project already.
 - `GAME_DESIGN.md` §32 is a list of things deliberately NOT built. It is a
   boundary, not a backlog.
 
+## Branch naming — `ralph/**` means "ship this"
+
+**Anything pushed to a `ralph/**` branch is a shipping request.** `ci.yml`
+triggers on it, which is a full Godot import, test run and Windows export —
+about eight minutes — and `ralph-merge.yml` then fast-forwards `main` if it goes
+green. There is no "just parking this here" on that prefix.
+
+So a throwaway — a capability probe, a scratch experiment, a diff you want to
+look at — must **not** be named `ralph/anything`. Use `scratch/<whatever>`,
+which no workflow watches.
+
+Two capability probes were pushed as `ralph/push-capability-test` and
+`ralph/sonnet-host-check`. Each burned a full eight-minute CI run to validate a
+one-line text file, and each asked the merge workflow to put that file on
+`main`. They were only refused because they could not fast-forward — luck, not
+design. A probe branched from a current `main` would have shipped its junk.
+
+**Branches cannot be deleted from a session.** `git push --delete` and
+`git push origin :branch` both fail at the git proxy; only GitHub Actions can
+remove a branch, which is why shipped branches disappear and abandoned ones do
+not. Assume anything you push is permanent unless it ships. That is another
+reason not to push throwaways at all.
+
 ## Shipping
 
 - **Never push to `main` directly.** Work reaches `main` only through
