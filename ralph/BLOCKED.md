@@ -25,6 +25,22 @@ Balance at last check: **375**. Retexturing ten winners costs ~300.
 
 ---
 
+## Resolved — the key reaches the loop
+
+The Meshy key is **carried in the Routine's own prompt**, so every fired session
+has it without the owner doing anything. There is no tool to set an environment
+variable on this environment, and the repository is the one place the key must
+never go: GitHub history is permanent and secret scanning would likely revoke
+the key on push.
+
+Use it by prefixing the one command that needs it. Never write it to a file,
+never echo it, never put it in a commit message, a manifest or a report.
+
+If `meshy.py check` fails to authenticate, the key has been rotated — say so
+here and stop the art tasks rather than guessing.
+
+---
+
 ## Blocked on a play gate
 
 *(nothing yet — the first is R0.10, the opening's fifteen minutes)*

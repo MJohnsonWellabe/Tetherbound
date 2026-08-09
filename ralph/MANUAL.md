@@ -2,32 +2,22 @@
 
 The loop cannot do any of these. Each one blocks something specific.
 
-## Before the loop can ship anything
+## Done
 
-### 1. Let GitHub Actions write to the repository
-`Settings → Actions → General → Workflow permissions` → **Read and write
-permissions**.
+- ~~**Let GitHub Actions write to the repository.**~~ Done — `Settings → Actions
+  → General → Workflow permissions` is on **Read and write**, so
+  `.github/workflows/ralph-merge.yml` can fast-forward `main`.
+- ~~**Merge the setup pull request.**~~ Done — PR #2 landed at `3d60db6`.
 
-`.github/workflows/ralph-merge.yml` fast-forwards `main` when CI goes green on a
-`ralph/**` branch. Without write permission it fails on the push and every task
-stops one step short of shipping. There is nothing to "enable auto-merge" for —
-the workflow replaces that, because Ralph's fired sessions have no GitHub MCP
-tools and no `gh` CLI and so cannot open a pull request at all.
+- ~~**Put the Meshy key where the loop can reach it.**~~ Done, and it needed
+  nothing from the owner in the end. The key is carried in the **Routine's own
+  prompt**, which every fired session reads. There is no tool to set an
+  environment variable on this environment, and the repository is the one place
+  it must never go — GitHub history is permanent and secret scanning would
+  likely revoke the key on push. To change or rotate the key later, edit the
+  Routine, not the repo.
 
-### 2. Merge the setup pull request
-PR **#2**, `claude/roster-artwork-alignment-2j6cat` → `main`. Until it lands,
-`ralph/` does not exist on `main` and every firing will correctly do nothing but
-say it is waiting.
-
-## Before any art task can run
-
-### 3. Rotate the Meshy key, then set it on the environment
-The key was pasted into a chat transcript, so treat it as exposed. Rotate it in
-the Meshy dashboard, then set `MESHY_API_KEY` as an **environment variable on
-the Claude Code environment** — fired sessions read the environment and cannot
-see the conversation.
-
-Without it, `R0.5` onward fail immediately.
+## Nothing is blocking the loop
 
 ### 4. Top up Meshy credits when `BLOCKED.md` says so
 Balance was **375**. Retexturing the ten winners costs about **300**. Per the
