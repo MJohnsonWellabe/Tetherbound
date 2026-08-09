@@ -47,10 +47,10 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 *(nothing yet)*
 
-Balance at last check: **255**, after Burrowback's redo-texture pass (Tuskroot
-and Meadowhart already redone; see `DONE.md`). **Six species still need the
-same redo** (Paddlenewt, Mosshell, Brooktail, then the four birds once
-`animate_bird.py` unblocks them) before R0.6 can rig them — budget ~10
+Balance at last check: **235**, after Paddlenewt's redo-texture pass
+(Tuskroot, Meadowhart, Burrowback already redone; see `DONE.md`). **Six
+species still need the same redo** (Mosshell, Brooktail, then the four birds
+once `animate_bird.py` unblocks them) before R0.6 can rig them — budget ~10
 credits each, same as R0.5 estimated, not on top of R0.5's spend since R0.5's
 texture charge was wasted, not saved.
 

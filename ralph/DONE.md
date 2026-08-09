@@ -5,6 +5,69 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.6 — Paddlenewt finished (fourth of the ten)
+`0f51b2a` · Same pipeline as the first three: clean raw R0.4 winner candidate
+`a` (56,476 → 28,000 tris, manifold) → retexture via Meshy → `rig_quadruped.py`
+(15 bones, 0 of 13,998 vertices unweighted, 6 clips) → `grade.py` SPECIES
+entry → `finish.py grade` → `finish.py install` → `species.json` entry from
+scratch.
+
+**This task spanned two firings because `MESHY_API_KEY` was missing from the
+first one's prompt.** That firing completed the Blender-only `clean` step
+(no key needed), found `meshy.py check` reporting the key simply unset — not
+rejected, not rotated, just absent — recorded it in `BLOCKED.md` as a genuine
+blocker distinct from the credit balance, and pivoted to unblocked work
+instead of guessing a key (that pivot is its own separate, uncommitted
+tangent — see below). The next firing's prompt carried the key correctly;
+the block was reverted since it no longer applied, and the same `clean.glb`
+survived in the same container so nothing was redone.
+
+**Five eye-guard rectangles, not one or two.** The 2048² base_color atlas
+showed the same duplicated-across-UV-islands pattern Galewisp (six
+rectangles) and Tuskroot (three) already showed: every guarded region
+carries an identical amber/gold iris ring around a dark pupil, four of five
+also with a white catchlight — a texel-for-texel-consistent signature no
+ordinary skin blemish produces. Found by a systematic scan (five overlapping
+crops, then all four quadrants of the full atlas checked for anything
+missed) rather than stopping at the first eye found. Two other dark patches
+were checked and rejected: one had no iris ring (a shadowed crease), the
+other an amber smear with no black pupil.
+
+`species.json` entry: height 1.50 (R0.7's list, `D13`), stats from the
+**Water Sheet** (`docs/art/reference/wild/03_Meadows_Wild_Water_Sheet.png`)
+rather than Ground Sheet B — Paddlenewt is the first Water-roster creature
+finished. Its subtitle is "Quick Swimmer & Skirmisher" and build notes read
+"agile amphibious body... webbed toes for quick bursts... soft fins", not a
+sheet with the Ground trio's ROLE/STRENGTHS table format, so the stat
+reasoning is transcribed from the subtitle and build notes instead: lowest
+defence on the roster (12, soft-bodied and unarmoured), attack in the
+upper-middle band (20, a skirmisher hits fast), HP on the low side for a
+small creature (90). Non-aggressive — the sheet's own Water-roster design
+notes call the whole group "friendly... calm spirits" and Paddlenewt's
+listed actions are WATER DASH and PLAYFUL POUNCE, not a hunt.
+
+**R0.4's report flags a cosmetic tail defect on this winner** (short/abrupt
+paddle-fin rather than the canon's long taper) — not a hard fail, so per the
+pipeline's iterate-on-what-exists philosophy it was documented in both
+`grade.py`'s comment and the `species.json` `_comment_art` field rather than
+sculpt-fixed, the same treatment Burrowback's claw-scale note and Tuskroot's
+plate-edge note got.
+
+**Not in `EncounterDirector.WILD_SPAWNS`**, so `smoke_art`'s shared run
+doesn't spawn it directly (though `_every_species_has_art()` confirms the
+model path resolves, and the run stayed green). Height-fit verified with the
+same small standalone script as the previous three: **wanted 1.500m,
+rendered 1.500m, exact match.** Not committed.
+
+CI green (run 31301653288), fast-forwarded to `main` at `0f51b2a` — verified
+by fetching `origin/main` directly.
+
+Meshy balance after this species' texture pass: **235** (was 245 at the start
+of the second firing — 10 lower than the 255 recorded at the end of
+Burrowback's firing, for reasons not accounted for here; balance is read
+directly from `meshy.py check` each time rather than assumed, so this is not
+a discrepancy in the record, just an unexplained gap between two firings).
+
 ## R0.6 — Burrowback finished (third of the ten)
 `ccb295a` · Same pipeline as Tuskroot/Meadowhart: clean raw R0.4 winner
 candidate `c` (52,818 → 28,000 tris, manifold) → retexture via Meshy →
