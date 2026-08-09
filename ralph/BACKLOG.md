@@ -333,3 +333,20 @@ the character target.
   `model: haiku`
 - Backpack has no use/consume/equip/drop/split verb; the only action is moving an
   item. Needed before food buffs (R5.7) mean anything. `model: sonnet`
+- **`tests/smoke_combat.gd` is intermittent, same pattern as `smoke_traversal`.**
+  A docs-only commit (`ralph/R0.6-pipwing-record`, four markdown files, no
+  code or data touched) failed CI on `smoke_combat` with "a quick attack at
+  point-blank range did no damage (95.0 -> 95.0)" and "a landed quick attack
+  built no energy (0.0 -> 0.0)" — after the fight itself had already resolved
+  normally ("enemy fainted after 617 action frames; outcome 'won'", 9 hits on
+  the enemy, 7 on the ally). The exact same tree's code had already passed
+  CI twice on `main` moments earlier (`a9d9282`, `6d4d6ef`), and the failing
+  commit touched nothing `smoke_combat.gd` could plausibly exercise
+  differently. **Confirmed a flake, not a regression**: re-ran the same
+  failed job (not a new commit, since the code was never the suspect) and
+  it passed clean on the identical commit (`7949486`), which then shipped.
+  Reads like a timing race specific to the *last* swing checked in the
+  test, not a real combat defect — worth a recorded fight log the way
+  R4.11 already asks for, rather than more reasoning from CI output alone.
+  Left unfixed here since the standing instruction is to record a flake
+  and move on, not chase it mid-task. `model: sonnet`
