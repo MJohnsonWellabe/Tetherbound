@@ -12,8 +12,8 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-**Tuskroot and Meadowhart done** (`DONE.md`). Remaining, in backlog order:
-Burrowback, Paddlenewt, Mosshell, Brooktail (`rig_quadruped.py`), then
+**Tuskroot, Meadowhart and Burrowback done** (`DONE.md`). Remaining, in
+backlog order: Paddlenewt, Mosshell, Brooktail (`rig_quadruped.py`), then
 Galecrest, Duskhush, Pipwing, Reedwing (`rig_bird.py` — **see the blocker
 below before starting these four**).
 

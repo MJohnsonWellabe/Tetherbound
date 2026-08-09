@@ -5,6 +5,45 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.6 — Burrowback finished (third of the ten)
+`ccb295a` · Same pipeline as Tuskroot/Meadowhart: clean raw R0.4 winner
+candidate `c` (52,818 → 28,000 tris, manifold) → retexture via Meshy →
+`rig_quadruped.py` (15 bones, 0 of 14,004 vertices unweighted, 6 clips,
+`hit` 12 frames / `faint` 36 frames) → `grade.py` SPECIES entry → `finish.py
+grade` → `finish.py install` → `species.json` entry from scratch.
+
+**Only one eye could be guarded with confidence.** The badger's dense
+stone/moss camouflage pattern makes a second symmetric eye hard to
+distinguish from ordinary texture noise in the 2048² base_color atlas —
+rather than guess a rectangle and risk it landing on fur (grading destroys
+whatever it is not told to protect), only the one confirmed amber/yellow
+iris with a white catchlight is guarded. Documented in `grade.py` itself;
+worth revisiting in a later pass if grading is seen eating a second eye.
+Grade report: roughness rescaled 0.494–0.706 → 0.60–0.86, emissive off,
+specular 0.20.
+
+`species.json` entry: height 1.70 (R0.7's list, `D13`), stats from Ground
+Sheet B's own printed ROLE (Defender/Excavator), SIZE CLASS (Medium) and
+STRENGTHS (Defense, Digging, Control) lines — highest defence on the roster
+so far (23, ahead of Tuskroot's attack lead), moderate HP (110) rather than
+tanky-huge for a Medium size class, non-aggressive since a defender protects
+territory rather than hunts. All flagged tunable; nobody has fought one yet.
+
+**Burrowback is not in `EncounterDirector.WILD_SPAWNS`** (still only
+`bramblebun`, `tuskroot`), so `smoke_art`'s shared run does not spawn it
+directly — though its `_every_species_has_art()` pass does confirm the model
+path resolves, and the run stayed green (`bramblebun`, `tuskroot`,
+`terrapup`, trainer, vegetation all OK). Height-fit verified with the same
+small standalone script as Meadowhart (`scenes/pals/pal.tscn` + `wild_pal.gd`
+attached + `setup(id)`, then `smoke_art.gd`'s own `_rendered_height()` copied
+verbatim): **wanted 1.700m, rendered 1.700m, exact match.** Not committed —
+cheap enough (~15 lines) to rewrite per species.
+
+CI green (run 31299327633), fast-forwarded to `main` at `ccb295a` — verified
+by fetching `origin/main` directly, not by trusting the CI badge.
+
+Meshy balance after this species' texture pass: **255** (was 265).
+
 ## R0.6 — Meadowhart finished (second of the ten)
 `f1495d1` · Same pipeline as Tuskroot: `finish.py clean → texture → rig →
 grade → install`, candidate a. `rig_quadruped.py`: 15 bones, 0 of 13,994
