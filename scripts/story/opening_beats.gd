@@ -27,7 +27,12 @@ const CONFIG_PATH := "res://data/config/opening.json"
 ## The beats the machine reacts to by name. Everything else in the list is a
 ## state the player passes through and this file has no opinion about.
 ##
-## Beat 4: the three starters offer their prompts, and only here.
+## Beat 1: in the bed upstairs. The bed's "Get up" is the only prompt in the
+## world, and Grandpa — downstairs — has nothing to say through a floor.
+const WAKE := "wake"
+## Beats 2–3: downstairs. The briefing, the pack, the belt, the door.
+const HOUSE := "house"
+## Beat 4: the three starters outside the door offer their prompts, and only here.
 const CHOOSE := "choose"
 ## Beat 5: the name has been typed and the pal is theirs. Transient — the
 ## director moves off it as soon as Grandpa's reply finishes.
@@ -37,12 +42,12 @@ const WALK_OUT := "walk_out"
 ## Beats 7 and 8, which are one state as far as the sequence is concerned: the
 ## fight and the catch both happen inside CombatManager.
 const ENCOUNTER := "encounter"
-## Beat 9: go back and he points at the ridge.
+## Beat 9: go back and he points you down the dirt road.
 const ROAD := "road"
 ## After beat 9. Nothing is scripted from here on and that is the point.
 const FREE_PLAY := "free_play"
 
-const NAMED_BEATS := [CHOOSE, NAMED, WALK_OUT, ENCOUNTER, ROAD, FREE_PLAY]
+const NAMED_BEATS := [WAKE, HOUSE, CHOOSE, NAMED, WALK_OUT, ENCOUNTER, ROAD, FREE_PLAY]
 
 static var _config: Dictionary = {}
 
@@ -179,6 +184,13 @@ static func grandpa() -> Dictionary:
 	return _block("grandpa")
 
 
+## The bed upstairs: where the player wakes and the "Get up" prompt. The
+## position in the data is a placeholder until the house builder lays out the
+## farmhouse interior.
+static func bed() -> Dictionary:
+	return _block("bed")
+
+
 static func starters() -> Dictionary:
 	return _block("starters")
 
@@ -191,8 +203,9 @@ static func encounter() -> Dictionary:
 	return _block("encounter")
 
 
-## Beat 1 is a fade-in from black instead of an interior, which saves an entire
-## interior art pass for a beat that lasts forty seconds.
+## Beat 1 fades in from black on the bed upstairs. It used to be the stand-in
+## for an interior; the interior is real now and the fade is just how waking
+## up looks.
 static func fade() -> Dictionary:
 	return _block("fade")
 

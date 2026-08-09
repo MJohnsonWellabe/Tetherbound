@@ -1,35 +1,48 @@
 {
   "_comment": "Everything spoken in the first fifteen minutes. Text lives here and never in a script, so a rewrite of Grandpa's voice is a data edit and a translator never has to read GDScript.",
   "_comment_shape": "A conversation is a speaker, a portrait, and an ordered list of lines. NO branching: docs/OPENING_SEQUENCE.md is explicit that the only choice in this sequence is which pal, and that one is made by walking up to it. The previous prototype's DialogueRunner supported choices and this port deliberately drops them — the moment a line can branch, the starter choice starts wanting to be a menu.",
-  "_comment_lines": "A line is a string, or an object when it needs to override the speaker/portrait or emit an effect. Effects are opaque strings handed back to whoever started the conversation; this file knows that finishing the intro emits `beat:starter_choice`, and the dialogue system has no idea what a beat is.",
-  "_comment_voice": "He is warm, brief, and not sad about it. GAME_DESIGN.md 3 gives him one job in this scene: he cannot go, and he is sending you instead. Every line here is either that or getting out of its way.",
+  "_comment_lines": "A line is a string, or an object when it needs to override the speaker/portrait or emit an effect. Effects are opaque strings handed back to whoever started the conversation; this file knows that finishing the briefing emits `beat:starter_choice` and that the pack lines emit `give:orb_basic:15`, and the dialogue system has no idea what a beat or an item is. A `give:` effect sits on the exact line that speaks the gift, so the satchel fills as he says it rather than in a lump after the box closes.",
+  "_comment_voice": "He is warm, brief, and not sad about it. GAME_DESIGN.md 3 gives him one job in this scene: he cannot go, and he is sending you instead — packed, belted, and out the door. Every line here is either that or getting out of its way.",
   "conversations": {
-    "grandpa_intro": {
+    "grandpa_house": {
+      "_comment": "Downstairs, the morning the game starts. The whole briefing in one sitting: why there is a journey, the pack, the belt, and the door. The belt line is the five-pal cap said in fiction, which is the only place a rule this hard should be said.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "There you are. Come and stand where I can see you.",
+        "There you are. I heard the floorboards. Sit and eat something — the bread's still warm.",
+        "I let you sleep late on purpose. I've been up since dark working out how to say this, so I'll just say it.",
         "You'll have heard the name by now. Team Tether. They came back while you were small.",
         "Eight places of power in this world, and they hold every one. Pals chained to the stones, keeping the lights on for them.",
         "I walked those roads once. Knew every warden by their first name.",
+        "Look at me. I get winded crossing my own meadow. I'm not walking anywhere.",
+        "So you go. And you don't go empty-handed.",
         {
-          "text": "Look at me. I get winded crossing my own meadow. I'm not walking anywhere.",
-          "speaker": "Grandpa Elias"
+          "text": "That pack by the door carried me thirty years. It's yours now. Orbs first — fifteen, plain make. A good throw matters more than a good orb.",
+          "effect": "give:orb_basic:15"
         },
-        "So you go. And you don't go alone.",
-        "Three of them, stood right there behind me. Ground, water, air. I raised all three from the shell.",
         {
-          "text": "Walk up to the one you want and say so. Take your time — the other two stay here with me either way.",
+          "text": "Three small potions. Those are for your pal, mind. You get soup, same as always.",
+          "effect": "give:potion_small:3"
+        },
+        {
+          "text": "And berries off my own bushes. Share them on the road. A fed pal forgives a long day.",
+          "effect": "give:berries:5"
+        },
+        "Last of all, this. My creature belt. It holds five, no more — a rule older than Team Tether, older than the stones they're squatting on.",
+        "Five is enough. Five you know by name are worth more than a hundred you don't.",
+        "Now. Three of them are stood outside that door, and they've been up longer than you have. Ground, water, air. I raised all three from the shell.",
+        {
+          "text": "Go on out and walk up to the one you want. Take your time — the other two stay here with me either way.",
           "effect": "beat:starter_choice"
         }
       ]
     },
     "grandpa_waiting": {
-      "_comment": "Talking to him again before choosing. Short on purpose: a player who came back to hear the intro twice is a player the game is wasting.",
+      "_comment": "Talking to him again before choosing. Short on purpose: a player who came back to hear the briefing twice is a player the game is wasting.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "Still deciding? Go on. Walk up to whichever one keeps catching your eye."
+        "Still deciding? Go on out. Walk up to whichever one keeps catching your eye."
       ]
     },
     "grandpa_named": {
@@ -38,23 +51,10 @@
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "$name. Good. Say it out loud a few times on the road — it'll come to know it.",
-        "The other two stay with me. That's not me being kind, that's the rule: five is all any trainer carries, and you've just spent your first.",
+        "The other two stay with me. That's not me being kind, that's the belt: five is all any trainer carries, and you've just spent your first.",
         {
-          "text": "There's a bramblebun grazing out past the rise. Slow thing, gentle, and it'll teach you both more than I can. Go and meet it.",
+          "text": "There's a bramblebun grazing down the path, out past the rise. Slow thing, gentle, and it'll teach the two of you more than I can. Go and meet it.",
           "effect": "beat:first_encounter"
-        }
-      ]
-    },
-    "grandpa_road": {
-      "_comment": "Beat 9. He points at the ridge and the sequence gets out of the way. Nothing after this line is scripted.",
-      "speaker": "Grandpa Elias",
-      "portrait": "res://assets/ui/portraits/grandpa.png",
-      "lines": [
-        "You caught it. And you didn't break it doing so — that's the harder half.",
-        "That's the whole of what I know, then. The rest of it you'll only learn walking.",
-        {
-          "text": "See the ridge? Past it the meadow stops being gentle. Go when you're ready. Come back when you want feeding.",
-          "effect": "beat:free_play"
         }
       ]
     },
@@ -63,7 +63,20 @@
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "Out past the rise, I said. Get close and it'll stop and look at you — that's your moment."
+        "Down the path, past the rise. Get close and it'll stop and look at you — that's your moment."
+      ]
+    },
+    "grandpa_road": {
+      "_comment": "After the catch. The first-day arc in three sentences — the road, the gathering, the camp — and then the sequence gets out of the way. Nothing after this line is scripted.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "You caught it. And you didn't break it doing so — that's the harder half.",
+        "The dirt road out front goes where you're going. Follow it, and stoop for what the verges offer — wood, stone, a berry bush that nobody owns. The road provides, if you let it.",
+        {
+          "text": "And make camp before dark. A fire, a roof of any sort. The meadow is gentle; the night takes some of that back. Go on — I'll be here when the road brings you past again.",
+          "effect": "beat:free_play"
+        }
       ]
     }
   }

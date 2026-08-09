@@ -3,9 +3,17 @@
   "_comment_tunable": "Every distance and speed here is TUNABLE and none of it is a mechanic. The expected feedback is 'the walk to Grandpa is too long' and 'my pal keeps treading on me', and both have to be answerable by editing this file.",
   "_comment_positions": "All offsets are metres from the player's spawn point, which playground_world.gd puts on the baked ground at the world origin. Y is never given: everything is stood on the ground by asking the world for its height (docs/decisions/D09), never by a raycast and never by a hand-placed Y that rots the next time the terrain is baked.",
 
+  "bed": {
+    "_comment": "Beat 1. The player wakes in the bed upstairs and 'Get up' is the only prompt in the house. The position is a PLACEHOLDER — the house builder finalizes it when the farmhouse interior is laid out; nothing should be tuned against it until then.",
+    "position": [-24.0, 0.0, -18.0],
+    "prompt": "Get up"
+  },
+
   "grandpa": {
-    "_comment": "Far enough that beat 2 is a walk worth taking and the meadow gets to be looked at; near enough that a player who wanders off can find him again. About eight seconds at a sprint, twenty-five at a walk.",
+    "_comment": "Where he stands in the meadow once the sequence moves outdoors. Far enough that the walk to the practice bramblebun is worth taking; near enough that a player who wanders off can find him again.",
     "offset": [10.0, 0.0, 32.0],
+    "_comment_indoor": "Where he stands downstairs for the briefing. A PLACEHOLDER like the bed — the house builder finalizes it against the real farmhouse floor plan.",
+    "indoor_position": [-22.0, 0.0, -16.0],
     "_comment_config": "Which block of data/config/art.json his body comes from.",
     "art": "grandpa",
     "display_name": "Grandpa Elias",
@@ -15,6 +23,7 @@
 
   "starters": {
     "_comment": "GAME_DESIGN.md 3: three unique starters, Ground/Water/Air, and the two you do not take stay with him. They are standing bodies you walk up to, NOT a menu — docs/OPENING_SEQUENCE.md calls that decided and load-bearing, and a list box would undo it.",
+    "_comment_staging": "the three wait outside Grandpa's door; the sequence director positions the row relative to the door, not to Grandpa",
     "species": ["terrapup", "ripplet", "galewisp"],
     "_comment_placement": "A row in front of Grandpa, on his own facing, so he is behind them and the player approaches all three head-on. Ported from the previous prototype's src/ui/starterPlacement.ts, which had the same job.",
     "forward": 4.5,
@@ -46,8 +55,8 @@
     "_comment": "The beat ORDER is the key order of `grandpa_conversations`, and each key's value is the conversation Grandpa runs if you talk to him during that beat. scripts/story/opening_beats.gd reads this; scripts/story/sequence_director.gd holds which one is current.",
     "_comment_correction": "This previously said the order lived in scripts/story/opening_beats.gd, 'which is code because it is a state machine rather than content'. That file did not exist when the line was written and the order was nowhere at all. The order is content — it is the shape of the first fifteen minutes and it will be argued with — so it stays here, and the code reads it.",
     "grandpa_conversations": {
-      "wake": "grandpa_intro",
-      "approach": "grandpa_intro",
+      "wake": "",
+      "house": "grandpa_house",
       "choose": "grandpa_waiting",
       "name": "grandpa_waiting",
       "walk_out": "grandpa_encounter_hint",
@@ -55,7 +64,8 @@
       "road": "grandpa_road",
       "free_play": ""
     },
-    "_comment_free_play": "Empty means he has nothing scripted left and his prompt goes quiet rather than repeating his send-off forever. His last line offers feeding; feeding is not built, and inventing a line for it here would be inventing content. Put a conversation id here the day there is one.",
+    "_comment_wake": "Empty for the same reason free_play is: during the wake beat the player is upstairs and he is downstairs, and he has nothing to say through a floor. His prompt stays quiet until they are in the same room.",
+    "_comment_free_play": "Empty means he has nothing scripted left and his prompt goes quiet rather than repeating his send-off forever. His last line promises he'll be here when the road brings the player past again; a homecoming conversation is content for the day homecoming means something. Put a conversation id here then.",
     "named_conversation": "grandpa_named",
     "_comment_named": "Not reached by walking up to him. The director starts it the instant the name is confirmed, with `$name` substituted into it.",
     "effects": {
@@ -67,7 +77,7 @@
   },
 
   "fade": {
-    "_comment": "Beat 1 is a fade-in from black rather than an interior. docs/OPENING_SEQUENCE.md: that saves an entire interior art pass for a beat that lasts forty seconds.",
+    "_comment": "Beat 1 fades in from black on the bed upstairs. This used to say the fade was there INSTEAD of an interior; the interior is now real (docs/OPENING_SEQUENCE.md records the reversal) and the fade is simply how waking up looks.",
     "seconds": 1.6,
     "hold_seconds": 0.5
   }

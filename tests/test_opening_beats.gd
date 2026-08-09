@@ -54,6 +54,10 @@ func test_at_or_after_locks_rather_than_opens_when_it_does_not_know() -> void:
 
 
 func test_the_choice_comes_before_the_name_and_the_fight_before_the_road() -> void:
+	assert_true(BEATS.index_of(BEATS.WAKE) < BEATS.index_of(BEATS.HOUSE),
+		"you wake before you come downstairs")
+	assert_true(BEATS.index_of(BEATS.HOUSE) < BEATS.index_of(BEATS.CHOOSE),
+		"the briefing comes before the door opens on the starters")
 	assert_true(BEATS.index_of(BEATS.CHOOSE) < BEATS.index_of(BEATS.NAMED))
 	assert_true(BEATS.index_of(BEATS.NAMED) < BEATS.index_of(BEATS.WALK_OUT))
 	assert_true(BEATS.index_of(BEATS.WALK_OUT) < BEATS.index_of(BEATS.ENCOUNTER))

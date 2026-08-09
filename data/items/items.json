@@ -39,7 +39,7 @@
       "kind": "gear",
       "stack": 20,
       "colour": "#4a7fa3",
-      "blurb": "A plain catching orb. Thrown at a wild creature mid-fight; a good hit counts."
+      "blurb": "Plain make, from Grandpa's pack. A good throw matters more than a good orb."
     },
     "potion_small": {
       "name": "Small Potion",
@@ -47,7 +47,7 @@
       "stack": 10,
       "colour": "#5aa356",
       "heal": 35,
-      "blurb": "Meadow herbs in a stoppered bottle. Restores a hurt creature."
+      "blurb": "Patches a pal's scrapes. For your pal, mind — you get soup."
     }
   }
 }

@@ -9,6 +9,7 @@ extends "res://tests/test_case.gd"
 ## id is a beat that silently never plays.
 
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+const ITEM_DB := preload("res://autoload/item_db.gd")
 
 var _runner: RefCounted = null
 
@@ -23,7 +24,7 @@ func test_nothing_is_running_before_it_starts() -> void:
 
 
 func test_a_conversation_plays_one_line_at_a_time() -> void:
-	assert_true(_runner.start("grandpa_intro"))
+	assert_true(_runner.start("grandpa_house"))
 	var count := int(_runner.line().get("count", 0))
 	assert_true(count >= 2, "the intro should be more than one line")
 
@@ -55,7 +56,7 @@ func test_an_unknown_conversation_refuses_rather_than_opening_an_empty_box() -> 
 
 
 func test_effects_are_handed_back_rather_than_executed() -> void:
-	_runner.start("grandpa_intro")
+	_runner.start("grandpa_house")
 	var effects: Array[String] = []
 	while _runner.is_active():
 		effects.append_array(_runner.drain_effects())
@@ -68,7 +69,7 @@ func test_effects_are_handed_back_rather_than_executed() -> void:
 
 
 func test_draining_effects_empties_them() -> void:
-	_runner.start("grandpa_intro")
+	_runner.start("grandpa_house")
 	while _runner.is_active():
 		_runner.drain_effects()
 		_runner.advance()
@@ -91,7 +92,7 @@ func test_the_pals_name_is_substituted_into_the_line() -> void:
 
 
 func test_closing_early_ends_it_cleanly() -> void:
-	_runner.start("grandpa_intro")
+	_runner.start("grandpa_house")
 	_runner.close()
 	assert_false(_runner.is_active())
 	assert_true(_runner.line().is_empty())
@@ -106,7 +107,7 @@ func test_closing_early_ends_it_cleanly() -> void:
 ## discovered by a player walking up to Grandpa and getting nothing.
 func test_every_conversation_the_opening_needs_exists_and_speaks() -> void:
 	var needed := [
-		"grandpa_intro",
+		"grandpa_house",
 		"grandpa_waiting",
 		"grandpa_named",
 		"grandpa_encounter_hint",
@@ -142,3 +143,33 @@ func test_the_naming_line_actually_contains_the_placeholder() -> void:
 	for entry: Variant in (raw.get("lines", []) as Array):
 		joined += str(entry) if not entry is Dictionary else str((entry as Dictionary).get("text", ""))
 	assert_true(joined.contains("$name"), "grandpa_named never uses the name the player typed")
+
+
+## Grandpa's briefing hands over the pack through `give:item_id:count` effects.
+## An effect naming an item that data/items/items.json does not define is silent
+## at run time: the line speaks the gift and the satchel gains a grey unknown
+## slot, or nothing at all.
+func test_every_give_effect_names_a_real_item_and_a_real_count() -> void:
+	var db: RefCounted = ITEM_DB.new()
+	var found := 0
+	for id: String in RUNNER.table():
+		var conversation: Dictionary = RUNNER.table()[id]
+		for raw: Variant in conversation.get("lines", []) as Array:
+			if not raw is Dictionary:
+				continue
+			var line: Dictionary = raw
+			var effects: Array = (line.get("effects", []) as Array).duplicate()
+			if str(line.get("effect", "")) != "":
+				effects.append(str(line["effect"]))
+			for effect: Variant in effects:
+				var parts: Array = RUNNER.parse_effect(str(effect))
+				if str(parts[0]) != "give":
+					continue
+				found += 1
+				var pieces: PackedStringArray = str(parts[1]).split(":")
+				var item := pieces[0]
+				assert_true(db.has(item),
+					"'%s' gives '%s', which is not in items.json" % [id, item])
+				assert_true(pieces.size() == 2 and int(pieces[1]) > 0,
+					"'%s' gives '%s' without a positive count" % [id, str(parts[1])])
+	assert_true(found >= 3, "the briefing should hand over the pack in give: lines; found %d" % found)
