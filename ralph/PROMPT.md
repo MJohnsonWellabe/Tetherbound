@@ -37,12 +37,38 @@ Report pipeline health in every completion message, even when it is fine — the
 owner gets a push notification for each firing, and "CI green, shipped R2.1" is
 the one line that tells them the loop is alive and working.
 
+## The heartbeat — do this before any real work
+
+The owner cannot see you. Trigger-fired sessions are hidden from the normal
+sessions list, so a firing that thinks quietly for twenty minutes is
+indistinguishable from one that died on boot. That happened on the first run and
+it is corrosive: an autonomous loop nobody can verify gets trusted at exactly
+the wrong moment.
+
+So **leave evidence early, not only at the end.** As soon as you have picked a
+task, before starting the work:
+
+1. Create the branch `ralph/<task-id>`.
+2. Rewrite `ralph/STATUS.md`'s status block with the firing time, your session
+   id, the task you picked, and `state: started`.
+3. **Push it.** One commit, straight away.
+
+Then update the same block as you go — `state: working` with a `note` saying
+what you are actually doing right now — and finally to `shipped`, `blocked` or
+`play-gate`. Push those updates with your other work rather than as separate
+commits; only the first heartbeat is worth a push of its own.
+
+This costs one extra commit per firing. It buys the owner the ability to answer
+"is it working?" by looking at one file, which is worth far more.
+
 ## The loop
 
 1. **Pick** the topmost item in `BACKLOG.md` that is not blocked and not a `▶`
    play gate. If the topmost item IS a `▶` gate, stop — the owner has to play
-   the game before anything below it is worth building. Say so and end.
-2. **Branch**: `ralph/<task-id>`, e.g. `ralph/R2.1`.
+   the game before anything below it is worth building. Say so and end. **Set
+   `STATUS.md` to `play-gate` and push it even then** — a parked loop and a dead
+   loop must not look the same.
+2. **Branch**: `ralph/<task-id>`, e.g. `ralph/R2.1`, and push the heartbeat.
 3. **Do the work.** Smallest coherent version that delivers the stated outcome.
 4. **Test** exactly what the task's `tests:` field names. Not the full suite —
    that is deliberate, the owner asked for it, and running everything on every

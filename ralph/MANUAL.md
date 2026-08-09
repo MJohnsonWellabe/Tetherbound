@@ -2,6 +2,34 @@
 
 The loop cannot do any of these. Each one blocks something specific.
 
+---
+
+## How to tell if Ralph is alive
+
+**Trigger-fired sessions do not appear in the normal Claude sessions list.**
+That is not a fault; it is how scheduled runs work, and it is the single reason
+the loop looked dead when it was working fine. Look here instead:
+
+| Question | Where to look |
+|---|---|
+| **What is it doing?** | `ralph/STATUS.md` on `main` — task, state, timestamp. This is the fastest answer and needs nothing but GitHub. |
+| **Is it running right now?** | The Routine page → **Runs** tab → click the run. That opens the live transcript. A spinner there means in flight. |
+| **What has it finished?** | `ralph/DONE.md`, newest first, each entry with a commit SHA. |
+| **Why has it stopped?** | `ralph/BLOCKED.md`. A parked loop is a correct outcome, not a failure. |
+| **Did a feature actually ship?** | Commits on `main`, and a fresh Windows build at the download link. |
+
+**Two signals that mislead:**
+
+- **Token usage.** Dashboards lag, and a Sonnet firing is small next to an
+  interactive Opus session. Flat usage does not mean nothing is happening.
+- **No branch yet.** Investigation tasks legitimately produce nothing for a
+  while — reproducing a flaky test means running it repeatedly before a single
+  line changes. `STATUS.md` exists precisely so this is not ambiguous.
+
+A firing that dies leaves a **stale timestamp** in `STATUS.md`. The next hourly
+run should pick the work back up; if two hours pass with no change to that file
+and no run in the Runs tab, the Routine itself needs looking at.
+
 ## Done
 
 - ~~**Let GitHub Actions write to the repository.**~~ Done — `Settings → Actions
