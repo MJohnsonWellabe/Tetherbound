@@ -126,12 +126,19 @@ Two things worth knowing before starting:
   `.gitkeep`) — Phase 2's build pieces (R2.5) haven't been made. Report
   this as "nothing to review" rather than silently skipping it or
   inventing placeholder art to review instead.
-- **This container has no `libEGL.so.1`**, so `turntable.py` cannot render
-  a frame — a persistent, repeatedly-confirmed limitation this session
-  (see `DONE.md`'s Mosshell/Burrowback/Paddlenewt entries). Check for a
-  working GL environment before starting; if this firing's container also
-  lacks it, say so plainly in `BLOCKED.md` with what was tried, rather
-  than attempting the review on un-renderable output.
+- **The `libEGL.so.1` limitation is NOT a hard container wall — it was
+  just two missing apt packages.** Every earlier session that hit this
+  (see `DONE.md`'s Mosshell/Burrowback/Paddlenewt entries) reported it as
+  a persistent, unfixable environment gap and stopped there. Checked
+  again while writing this note: `apt-get install -y libegl1
+  libegl-mesa0` resolves `libEGL.so.1` and `turntable.py` genuinely
+  renders — verified on a real installed model (Burrowback,
+  `pal_burrowback_lod0.glb`), all four angles, real non-blank PNGs
+  written to disk, confirmed by opening one. **Run that `apt-get`
+  command first, before concluding rendering is impossible.** The
+  container is ephemeral, so a fresh one for a later firing will not
+  have the packages installed yet either — this is a one-line fix to
+  re-run each time, not a standing blocker to work around.
 
 Known standing defects already on record that a review will likely
 re-confirm, so they are not a surprise if the review finds them again:
