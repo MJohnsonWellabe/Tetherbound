@@ -43,6 +43,7 @@ func _run() -> void:
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
+	await _ensure_ally()
 	if not _collect_nodes():
 		_report()
 		return
@@ -63,6 +64,22 @@ func _run() -> void:
 func _fighting_species() -> String:
 	var foe: RefCounted = _manager.call("enemy")
 	return "" if foe == null else str(foe.species_id)
+
+
+## `meadows_playground.tscn` now always carries a `SequenceDirector` (R0.9),
+## and its `_ready()` unconditionally calls `suspend_default_starter()` in the
+## one frame window that exists to call it off — the opening always decides
+## which pal the player gets, never the sandbox default. This test is not the
+## opening and never drives it, so the encounter director's own
+## `default_starter` never spawns here either. An aggressive pal starting a
+## fight still needs the player to have something to fight WITH, so this gets
+## a pal directly, the same call `sequence_director.gd` makes once a name is
+## confirmed.
+func _ensure_ally() -> void:
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	if director == null or director.call("ally_instance") != null:
+		return
+	await director.call("adopt_starter", "terrapup")
 
 
 func _collect_nodes() -> bool:
