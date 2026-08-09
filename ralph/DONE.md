@@ -5,6 +5,36 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.3.5 — Fixed the `smoke_catching` flake
+`5c919ba` · Three bugs in `tests/smoke_catching.gd` itself, no production combat
+code touched:
+
+1. `throw_aim.gd`'s silent 0.9s post-throw cooldown made `try_begin_aim()` fail
+   with no signal; the test pressed Throw once and moved on, burning most of
+   its 25 attempts on presses that never opened an aim. Now retries
+   (`_open_aim()`) until the aim actually opens or a budget past the cooldown
+   is exhausted.
+2. The test computed pitch from the trainer's hand; production's
+   `_aim_direction()` deliberately aims from the camera eye, ~1.5m away via
+   `aim.shoulder_offset`. Fixed to read the camera's actual `global_position`.
+3. Added lead compensation via the target's `CharacterBody3D.velocity`,
+   projected over the aim settle + `throw.release_windup`, since the target
+   keeps moving during the aim window.
+
+Also dropped drop compensation entirely — `_aim_direction()` snaps the throw
+straight to the target's centre whenever the ray is within a body-width of it,
+discarding any elevation added on top, so arcing the aim only risked pushing
+the ray outside that snap window. Aiming straight at the (leaded) centre from
+the eye keeps it inside instead.
+
+**Verified 11/11 consecutive headless green** (one standalone confirmation run,
+then 10 more back to back — required bar was 10). CI on `ralph/R0.3.5` also
+went green (run 31290404377).
+
+The earlier "catch versus kill race" diagnosis recorded in a previous backlog
+entry never reproduced and was retracted before this fix; it is not part of
+what changed here.
+
 ## R0.3 — The ten comparison sheets
 `5e0f1cc` · concept row over candidate rows, same four angles at one scale, plus
 a blank scorecard with a HARD FAIL column per species. Meadowhart's sheet
