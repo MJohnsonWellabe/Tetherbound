@@ -56,6 +56,14 @@ Two operational notes that keep being relearned:
   wearing `ollie-the-songbird.glb`, and the per-species "flag for a pass"
   notes in `DONE.md`. The point is one complete current-state record.
 
+A partial pass already ran on 2026-08-09 against the five download-page
+frames (`docs/reviews/2026-08-09-site-frames-blind-critique.md`) and failed
+both bar questions; treat it as input. Its largest finding is squarely this
+task's remit and is a **flag-for-the-owner, not a silent fix**: the three
+starters do not share a style with each other or with the trainer ("three
+assets from three different store packs"), and unifying them — rework vs
+replace — is an art-direction decision to be made on this review's evidence.
+
 ### R0.11 ▶ Play gate — the owner plays the NEW first day, end to end
 Wake in bed upstairs → downstairs to Grandpa, the belt, orbs and potions →
 out the door to the three starters → choose and name → the village square and
@@ -280,6 +288,19 @@ The path network shipped as the wayfinding spine (square → house, pond,
 practice meadow, ridge); finish the language: signposts at the junctions, and
 the **stronghold silhouette on the ridge** — the M7 "distant landmark" that
 makes the far edge of the map a destination instead of a fence.
+
+Three additions from the 2026-08-09 blind critique of the site frames
+(`docs/reviews/2026-08-09-site-frames-blind-critique.md`), all "the meadow
+reads" work:
+- **The world ends 40m out.** Nothing stands on any hill or horizon in any
+  frame; put trees and the landmark into the middle and far distance bands.
+- **The olive/lime ground seam.** The detailed ground texture fades to flat
+  pale terrain colour at distance, splitting every frame in two at a hard
+  line; push the fade distance out or blend the far colour toward the near
+  material's tone.
+- **Continuous ground cover.** Isolated same-size tufts at even density read
+  as confetti; the references stand on continuous grass with clustered
+  variety and real clearings.
 
 ### R7.2 — NPC villagers and interior polish
 `model: sonnet` · `tests: smoke_opening`

@@ -41,10 +41,10 @@
         "res://assets/environment/stylized_nature/TwistedTree_5.gltf"
       ],
       "_comment_count": "Deliberately few. A 10,000-triangle tree is thirty times a Kenney one, and these are the biggest thing in the world \u2014 a stand of six is a landmark, forty is a forest nobody can walk through.",
-      "clumps": 6,
-      "per_clump": 5,
+      "clumps": 3,
+      "per_clump": 4,
       "clump_radius": 26.0,
-      "strays": 8,
+      "strays": 4,
       "max_slope_deg": 19.0,
       "scale_min": 0.55,
       "scale_max": 1.0,
@@ -53,7 +53,8 @@
       "collides": true,
       "collision_radius": 1.1,
       "_comment_retexture": "The pack ships `Leaves_TwistedTree_C` as a CRIMSON autumn leaf. Left alone it made the biggest trees in the meadow blood red and they dominated every frame. Warm hue has to come from the flowers, the dry grass and the golden hour, not from painting the whole canopy.",
-      "_comment_colour": "These stay CRIMSON, at the owner's call: 'I actually really like the red trees.'\n\nIt is also the right call against the review. The critic measured the palette as a single yellow-green wedge \u2014 60-90% of pixels in one hue family in every frame \u2014 and said the board's golds and warm ends appear nowhere. A stand of turning oaks is the one thing in the meadow carrying a second hue family at tree height, and it does it with the pack's own authored texture rather than a tint.\n\nKept DELIBERATELY few for that reason: 6 clumps of 5. Warm accent against green reads as autumn; warm everywhere reads as a different biome. The bushes still get retextured green (they share this material) because 800 red bushes is a carpet, not an accent."
+      "_comment_colour": "These stay CRIMSON, at the owner's call: 'I actually really like the red trees.'\n\nIt is also the right call against the review. The critic measured the palette as a single yellow-green wedge \u2014 60-90% of pixels in one hue family in every frame \u2014 and said the board's golds and warm ends appear nowhere. A stand of turning oaks is the one thing in the meadow carrying a second hue family at tree height, and it does it with the pack's own authored texture rather than a tint.\n\nKept DELIBERATELY few for that reason: 6 clumps of 5. Warm accent against green reads as autumn; warm everywhere reads as a different biome. The bushes still get retextured green (they share this material) because 800 red bushes is a carpet, not an accent.",
+      "_comment_palette": "The twisted trees' canopy is CRIMSON (the pack's leaf texture, not a tint). The key art's Meadows is green-oak country with red held back as an accent, and the blind critique called the old mix (38 red trees, clumped near the spawn) 'autumn-danger everywhere' - red is also supposed to be reserved for Team Tether. ~16 spread across the map keeps them as the landmark accent they were meant to be. TUNABLE."
     },
     "deadfall": {
       "_comment": "Dead trees and mushrooms. The dead trees are 9-13m bare silhouettes and do a job no living tree can: they break a green tree line with a grey vertical, which is most of what stops a treeline reading as a hedge.",
