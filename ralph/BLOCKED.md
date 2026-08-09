@@ -45,9 +45,10 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 ## Blocked on credits
 
-*(nothing yet — R0.5 will add an entry here if the balance runs out mid-roster)*
+*(nothing — R0.5 finished the whole roster without running out)*
 
-Balance at last check: **375**. Retexturing ten winners costs ~300.
+Balance at last check: **275** (after R0.5 retextured all ten winners at
+~10 credits each, well under the ~30/species estimate). See `DONE.md`.
 
 ---
 

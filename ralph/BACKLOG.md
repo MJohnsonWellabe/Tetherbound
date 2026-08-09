@@ -9,15 +9,6 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 
 ## Phase 0 — finish the roster
 
-### R0.5 — 🔒 Retexture the winners
-`model: sonnet` · `tests: none`
-
-`tools/art_pipeline/meshy.py texture <species> <winning glb>`, 30 credits each.
-Balance was **375** at last check; ten costs ~300. Work down the roster in
-backlog order and **stop when credits run out**, recording the exact balance and
-the species reached in `BLOCKED.md`. The owner tops up; do not re-roll to make
-a poor candidate better, iterate on what exists.
-
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 

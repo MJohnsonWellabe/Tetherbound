@@ -5,6 +5,25 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.5 — Retextured the ten R0.4 winners
+`7ac1f20` · `tools/art_pipeline/meshy.py texture`, `image_style_url` aimed at
+each species' own reference crop under
+`assets/pals/tetherbound/<species>/reference/`. All ten went through in one
+pass, no stopping partway: **375 → 275 credits, ~10 each** — a third of the
+~30/species estimate, so the ~300 budgeted for the whole roster covered it
+with 100 to spare.
+
+Force-added like R0.1's candidates — `model.glb`, `provenance.json`,
+`thumbnail.png` per species under `assets_raw/<species>/textured/`, `.fbx`/
+`.obj` left out as duplicate geometry. Balance check: **275 remaining**, no
+`BLOCKED.md` entry needed.
+
+Next up is R0.6 (cleanup/remesh → rig → clips → grade → install), which is
+also where R0.4's flagged defects need addressing: brooktail's missing paddle
+tail (a genuine hard fail carried forward, needs real sculpting), burrowback's
+under-scale claws, tuskroot's plate edges, galecrest's blunt talons — none of
+these are texture problems, so retexturing didn't and couldn't fix them.
+
 ## R0.4 — Blind critique, picked a winner per species
 `46ea130` · Ten fresh subagent critics, each shown only one species'
 `compare.png` and its canon text (roster one-liner + the capitalised
