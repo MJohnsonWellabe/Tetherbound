@@ -5,6 +5,62 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.6 — finished Reedwing (fourth and last bird species). R0.6 is complete.
+`6c14a65` (shipped as `ralph/R0.6-reedwing-v2`, cherry-picked from the
+original `ralph/R0.6-reedwing`'s `f97824a` after a base-mismatch — see
+below). Same `clean → texture → rig --kind bird → grade → install`
+sequence, no code changes needed for the fourth time running. Candidate a
+(R0.4 winner), no hard-fail defect — only a minor neck-proportion note.
+
+`rig_report.json`: 19 bones, 14,006 vertices, **0 unweighted**, idle
+motion at 88% of walk. Five eye-guard rectangles added to `grade.py` —
+Reedwing's eyes read differently from the other three birds: a dark
+pupil-only mass with a soft catchlight rather than a bright iris ring,
+consistent with a waterfowl's eye rather than a raptor's or owl's. A dark
+beak-tip wedge and a glossy neck-feather specular highlight were checked
+and rejected as non-eyes.
+
+Verified in Godot: `smoke_art.gd` passes, and the standalone height-fit
+script confirms the rendered model matches the declared 1.65m exactly
+(R0.7's fixed figure), no footprint clamp, all six clips present.
+
+`species.json`: filed `type: water` per R0.7's explicit instruction
+(canonically Water/Air per `docs/art/wild/21_MEADOWS_WILD_ROSTER_CANON.md`,
+but the schema takes one type) — worth restating plainly since it would
+be easy to mistake the gameplay `type` field for the rig kind: Reedwing
+is still a physical bird and `--kind bird` was correct regardless.
+`aggressive: false`, moderate HP/attack/defence matching its "Swift
+Glider & Messenger... support, utility" role per the Water Sheet — a
+support creature like Brooktail, not a fighter.
+
+**Second branch base-mismatch caught and fixed this session, same shape
+as the Galecrest incident earlier:** `ralph/R0.6-reedwing` was branched
+from what was believed to be current `main`, but `ralph/R0.6-flake-note`
+(a sibling branch, docs-only) had merged moments earlier without a fresh
+`git fetch` immediately before branching — `git merge-base --is-ancestor
+origin/main ralph/R0.6-reedwing` confirmed the fast-forward would fail
+before wasting a ~9-minute CI cycle finding out the hard way. Fixed by
+cutting `ralph/R0.6-reedwing-v2` from the actually-current `main` and
+cherry-picking the same commit (`f97824a` → `6c14a65`) rather than
+force-pushing. The original `ralph/R0.6-reedwing` is abandoned, same as
+the earlier `ralph/R0.6-bird-animation-fix-record` — harmless, cannot be
+deleted from this session, safe to ignore. **Lesson restated plainly for
+future firings: `git fetch origin main` immediately before creating any
+branch pushed within a few minutes of a sibling branch, not "recently".**
+
+Credit balance after this species' texture pass: **175** (was 185,
+confirmed via `meshy.py check`).
+
+**R0.6 is complete.** All twelve wild species plus the three starters now
+have real production art (Tuskroot's evolved-form model remains the one
+stand-in, tracked separately from R0.6's own scope). Nine species shipped
+in this session alone: Burrowback, Paddlenewt, Mosshell, Brooktail,
+Galecrest, Duskhush, Pipwing, Reedwing, plus the `finish.py` bird-rig fix
+that unblocked the last four.
+
+CI green, fast-forwarded to `main` at `6c14a65` — verified by fetching
+`origin/main` directly; branch auto-deleted post-merge.
+
 ## R0.6 — finished Pipwing (third bird species)
 `babd64f` · Same `clean → texture → rig --kind bird → grade → install`
 sequence, no code changes needed for the third time running. Candidate b

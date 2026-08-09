@@ -12,12 +12,12 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-**Nine species done** (Tuskroot, Meadowhart, Burrowback, Paddlenewt,
-Mosshell, Brooktail, Galecrest, Duskhush, Pipwing — `DONE.md`). **Only
-Reedwing remains, and it is not blocked** — the bird-animation blocker
-below is resolved; the three-command pipeline works for birds exactly
-like it does for quadrupeds now, proved three times (Galecrest, Duskhush,
-Pipwing). Reedwing finishes R0.6 entirely.
+**R0.6 is complete.** All twelve wild species plus the three starters
+have real production art — Reedwing, the last, shipped in `6c14a65`. Only
+Tuskroot's evolved-form model remains a stand-in (still
+`ollie-the-songbird.glb`), tracked separately from R0.6's own scope,
+since it needs its own decision about whether that's a fresh generation
+or a graft off Mudsnout's finished model.
 
 **If `MESHY_API_KEY` is missing from your environment**, check whether this
 firing is a cron firing or a self-scheduled `send_later` resume before
@@ -72,34 +72,34 @@ see `DONE.md`. Nothing else about the per-species sequence differs between
 Done when: the model loads at its declared height and `_fit()`'s footprint
 clamp is not tripped (`smoke_art`).
 
-### R0.7 — Add the ten `species.json` entries
+### R0.7 — Add the ten `species.json` entries — DONE, satisfied by R0.6
 `model: haiku` · `tests: smoke_art, test_catch_math, test_evolution_links`
 
-Heights are fixed by `D13` and must keep the sheets' relative ordering:
-Meadowhart 1.95, Galecrest 2.00, Burrowback 1.70, Reedwing 1.65, Mosshell 1.62,
-Duskhush 1.55, Paddlenewt 1.50, Brooktail 1.45, Pipwing 1.20. Tuskroot stays
-2.00 and must remain larger than Mudsnout's 1.40 (`D17`).
+**Already satisfied.** R0.6's own instruction was to add each species'
+`species.json` entry as its model landed rather than batching this for
+later, and every one of the ten did: heights all match this section's
+fixed list exactly (checked directly against `species.json` before
+writing this note, not assumed), stats carry a `_comment` justifying them
+against each sheet's ROLE/STRENGTHS text, `aggressive` is set per-species,
+and Reedwing is filed `water` with a comment explaining the Water/Air
+schema limitation. All three named tests pass (`smoke_art`,
+`test_catch_math`, `test_evolution_links` — run as part of the full
+277-test suite, 0 failed). Nothing left to do here; this section stays as
+the historical record of the height table R0.6 read from.
 
-Stats come from each sheet's own ROLE and STRENGTHS lines and nothing else — a
-shell is defence, a raptor is not, a tracker hits harder than it takes. All
-tunable. `aggressive` only where the sheet's role supports it. Reedwing is
-canonically Water/Air but the schema takes one type: file it `water` and say so
-in a comment.
+Heights, for reference: Meadowhart 1.95, Galecrest 2.00, Burrowback 1.70,
+Reedwing 1.65, Mosshell 1.62, Duskhush 1.55, Paddlenewt 1.50, Brooktail
+1.45, Pipwing 1.20. Tuskroot stays 2.00 and must remain larger than
+Mudsnout's 1.40 (`D17`).
 
-**A species cannot be added before its model exists** — `smoke_art.gd` fails the
-build otherwise. Add each entry as its model lands, never ahead.
-
-### R0.8 — Production report and ledger rows
+### R0.8 — Production report and ledger rows — DONE
 `model: haiku` · `tests: none`
 
 `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md` exists (written during R0.4).
-**Nine of ten `ASSET_LEDGER.md` rows done** — every finished R0.6 wild
-species (Tuskroot, Meadowhart, Burrowback, Paddlenewt, Mosshell, Brooktail,
-Galecrest, Duskhush, Pipwing) has one, added as each model landed. The
-last row (Reedwing) lands with that species — no longer blocked on
-anything, see R0.6. The production report's own "known gap" note (missing
-Bramblebun/Mudsnout/Trailpup candidate-selection record) is resolved —
-see `DONE.md`.
+**All ten `ASSET_LEDGER.md` rows done** — every R0.6 wild species has one,
+added as each model landed, Reedwing's last. The production report's own
+"known gap" note (missing Bramblebun/Mudsnout/Trailpup candidate-selection
+record) is resolved — see `DONE.md`. Nothing left to do here.
 
 ### R0.9 — Assemble the opening into the real scene
 `model: sonnet` · `tests: smoke_opening`
