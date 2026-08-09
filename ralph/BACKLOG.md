@@ -12,7 +12,7 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-**Tuskroot done** (`DONE.md`). Remaining, in backlog order: Meadowhart,
+**Tuskroot and Meadowhart done** (`DONE.md`). Remaining, in backlog order:
 Burrowback, Paddlenewt, Mosshell, Brooktail (`rig_quadruped.py`), then
 Galecrest, Duskhush, Pipwing, Reedwing (`rig_bird.py` — **see the blocker
 below before starting these four**).
@@ -24,9 +24,20 @@ correction note in `DONE.md`, the R0.5 output cannot be used**) → `finish.py
 rig <species> --kind quadruped|bird` → add a `SPECIES` entry to `grade.py`
 (eye guard is mandatory — grading refuses to run without one, deliberately,
 it is how Ripplet's and Galewisp's eyes were destroyed) → `finish.py grade
-<species>` → `finish.py install <species>` → point `species.json`'s `model`
-at the installed GLB (for Tuskroot; the other nine get their whole entry from
-R0.7, once their model exists — never before).
+<species>` → `finish.py install <species>` → add or update `species.json`'s
+entry for it (Tuskroot already had a placeholder to repoint; the other nine
+have no entry at all yet, so add one — R0.6's own "loads at declared height"
+criterion needs it to test against, and R0.7's rule "add each entry as its
+model lands, never ahead" already says do this here, not batched later).
+Stats: sheet's own ROLE/SIZE CLASS/STRENGTHS text on
+`docs/art/reference/wild/`, tunable, flagged as such. Height from R0.7's
+list below. **Verify height-fit directly** — the species is not necessarily
+in `EncounterDirector.WILD_SPAWNS`, so the shared `smoke_art` run may not
+exercise it; Meadowhart's entry used a small standalone script instantiating
+`scenes/pals/pal.tscn` with `wild_pal.gd` attached and calling `setup(id)`,
+replicating `smoke_art.gd`'s own `_rendered_height()` exactly (not
+committed, but worth writing fresh each time — it's ~15 lines). R0.7 is then
+just final stat review across all ten, not first authorship.
 
 Install path is `assets/pals/tetherbound/<species>/models/` (not
 `assets/creatures/...` as an older draft of this line said — that path is

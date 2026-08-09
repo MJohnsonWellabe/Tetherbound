@@ -5,6 +5,33 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.6 — Meadowhart finished (second of the ten)
+`f1495d1` · Same pipeline as Tuskroot: `finish.py clean → texture → rig →
+grade → install`, candidate a. `rig_quadruped.py`: 15 bones, 0 of 13,994
+vertices unweighted. 6 clips.
+
+**Unlike Tuskroot, Meadowhart had no `species.json` entry at all** — Tuskroot
+came with a Plumberry placeholder to repoint, Meadowhart did not exist in the
+table yet. Added one from scratch: height 1.95 (R0.7's list, `D13`), stats
+from Ground Sheet B's own printed ROLE (Rideable/Pathfinder), SIZE CLASS
+(Large) and STRENGTHS (Speed, Stamina, Navigation) lines — moderate HP for
+its size class, attack/defence both below the roster's combat specialists
+since nothing on the sheet says this creature fights. All flagged tunable.
+
+**Meadowhart is not in `EncounterDirector.WILD_SPAWNS`**, so the shared
+`smoke_art` run doesn't spawn it and its height-fit was never actually
+checked by that pass. Verified instead with a small standalone script
+(`scenes/pals/pal.tscn` + `wild_pal.gd` attached + `setup(id)`, then
+`smoke_art.gd`'s own `_rendered_height()` copied verbatim) — **wanted 1.95m,
+rendered 1.95m, exact match, 0.0000 diff.** Not committed; cheap enough
+(~15 lines) to rewrite per species rather than add permanent test
+infrastructure for a gap that R0.9's real spawn work may close anyway. Also
+ran the full unit suite since a new species.json entry touches
+`test_catch_math`/`test_evolution_links` territory: 277 tests, 0 failed.
+
+Grade.py: two eyes, structural fixes only, no hand-tuned palette (same
+first-pass philosophy as Tuskroot).
+
 ## R0.6 — Tuskroot finished (first of the ten)
 `6c6e479` · `tools/art_pipeline/finish.py clean → texture → rig → grade →
 install`, then `species.json`'s `tuskroot.placeholder.model` pointed at the
