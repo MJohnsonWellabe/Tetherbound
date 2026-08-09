@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -8,6 +8,10 @@
 [ext_resource type="Script" path="res://scripts/combat/encounter_director.gd" id="6_encounter"]
 [ext_resource type="PackedScene" path="res://scenes/combat/combat_hud.tscn" id="8_combat_hud"]
 [ext_resource type="Script" path="res://scripts/world/world_look.gd" id="9_look"]
+[ext_resource type="Script" path="res://scripts/world/interaction_arbiter.gd" id="10_arbiter"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_panel.tscn" id="11_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/ui/name_prompt.tscn" id="12_name_prompt"]
+[ext_resource type="Script" path="res://scripts/story/sequence_director.gd" id="13_director"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -82,3 +86,23 @@ environment_path = NodePath("../WorldEnvironment")
 [node name="CombatHUD" parent="." instance=ExtResource("8_combat_hud")]
 manager_path = NodePath("../CombatManager")
 director_path = NodePath("../EncounterDirector")
+
+; player_path deliberately left unset. SequenceDirector calls set_player()
+; once the tree is up (scripts/story/sequence_director.gd _ready()) rather
+; than the scene naming the same body twice.
+[node name="InteractionArbiter" type="Node" parent="."]
+script = ExtResource("10_arbiter")
+
+[node name="DialoguePanel" parent="." instance=ExtResource("11_dialogue")]
+
+[node name="NamePrompt" parent="." instance=ExtResource("12_name_prompt")]
+
+[node name="SequenceDirector" type="Node" parent="."]
+script = ExtResource("13_director")
+player_path = NodePath("../Player")
+arbiter_path = NodePath("../InteractionArbiter")
+encounter_path = NodePath("../EncounterDirector")
+manager_path = NodePath("../CombatManager")
+camera_rig_path = NodePath("../CameraRig")
+dialogue_path = NodePath("../DialoguePanel")
+name_prompt_path = NodePath("../NamePrompt")

@@ -459,7 +459,13 @@ func _walk_to_and_activate(target: Node3D) -> bool:
 	for i in WALK_FRAMES:
 		var to := target.global_position - _player.global_position
 		to.y = 0.0
-		if to.length() <= 2.0:
+		# Close AND actually winning, not just close. The starters overlap on
+		# purpose — 2.6m radius each, 3.5m apart — and a straight line walked at
+		# one from an angle passes inside a neighbour's radius too. Stopping on
+		# raw distance alone can land the player somewhere a neighbour is still
+		# winning; a real player just takes the one more step that changes which
+		# name is on screen, so this keeps walking until the target itself does.
+		if to.length() <= 2.0 and _arbiter.get("_winning_provider") == target:
 			break
 		_rig.set("yaw", atan2(-to.x, -to.z))
 		Input.action_press("move_forward")

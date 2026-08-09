@@ -251,6 +251,20 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 	# metres behind the trainer, and standing them at the very edge put that
 	# camera outside the arena looking in through the wall.
 	var spot := centre + side * (float(_arena.get("radius")) * 0.55) - forward * 1.2
+
+	# Re-grounded rather than trusting the arena centre's own height (D09: ask
+	# the world, never carry a Y across a horizontal move). `centre` is the
+	# midpoint between where the player engaged and the wild pal, and `spot`
+	# is shifted sideways from it — on a slope those two points are at
+	# different heights, and this teleport (a raw position write, not a
+	# physics move) has nothing else to correct it: the trainer fell through
+	# the terrain forever on ground uneven enough for the difference to clear
+	# the collision, `move_and_slide` never finding a floor to catch it on the
+	# way down. A missing ground reading here is a placement to skip, same as
+	# `pal_body.place_on_ground`, rather than a spot to stand on regardless.
+	var height := _ground_height(spot.x, spot.z)
+	if not is_nan(height):
+		spot.y = height
 	_player.global_position = spot
 	_player.velocity = Vector3.ZERO
 
@@ -267,6 +281,18 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 func _place(body: Node3D, spot: Vector3) -> void:
 	if not bool(body.call("place_on_ground", spot)):
 		body.global_position = spot
+
+
+## The world's own ground query, found by walking up the tree — same pattern
+## as `pal_body._ground_height`. Not cached: this is a one-off correction at
+## the moment a fight opens, not a per-frame lookup.
+func _ground_height(x: float, z: float) -> float:
+	var node: Node = get_parent()
+	while node != null:
+		if node.has_method("ground_height_at"):
+			return float(node.call("ground_height_at", x, z))
+		node = node.get_parent()
+	return NAN
 
 
 ## Point the exploration camera at the pal instead of the trainer.

@@ -183,7 +183,13 @@ func adopt_starter(species_id: String, nickname: String = "") -> bool:
 		push_error("starter species '%s' is missing from species.json" % species_id)
 		return false
 	if nickname != "":
-		_ally.display_name = nickname
+		# nickname, not display_name — the same bug already fixed in
+		# party_seam.gd. pal_instance.label() reads nickname first and falls
+		# back to display_name, so overwriting display_name instead loses the
+		# species name for good: a Terrapup named "Bud" would show as "Bud"
+		# everywhere, including the places that specifically want to say what
+		# kind of creature it is.
+		_ally.nickname = nickname
 
 	# Instanced hidden and only shown once it is standing on the ground. An
 	# invisible body is switched off entirely (pal_body._on_visibility_changed),

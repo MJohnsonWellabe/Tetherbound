@@ -53,6 +53,20 @@ const CAUGHT := "caught"
 ## writes `$name` and this is the other half of that agreement.
 const NAME_KEY := "name"
 
+## A collision layer of their own, off the default (1) everything else uses.
+##
+## The middle starter always stands on the dead-straight line from the
+## player's spawn to Grandpa — `starter_offsets()` centres the row on his
+## facing, and that line IS the approach to him. Sharing layer 1 with the
+## player let a walk toward Grandpa collide with that starter's capsule
+## instead of sliding past it: the player mounted onto its rounded top and
+## stopped there, dead, well short of Grandpa. Only the mask changes here,
+## not the layer everything else still checks bodies against, and only for
+## these three temporary display bodies — the real follower pal built by
+## `encounter_director.adopt_starter()` after the choice is a different,
+## unrelated instance with the ordinary collision setup.
+const STARTER_COLLISION_LAYER := 2
+
 ## How many physics frames to keep trying to stand something on the ground.
 ##
 ## Terrain3D builds its collision over several frames after the data directory
@@ -420,6 +434,7 @@ func _spawn_starters(origin: Vector3) -> void:
 		var body: Node3D = PAL_SCENE.instantiate()
 		body.name = "Starter_%s" % id
 		body.set_script(PAL_BODY)
+		body.set("collision_layer", STARTER_COLLISION_LAYER)
 		# Hidden until it is standing on the ground. A visible body at the world
 		# origin is a solid capsule inside the terrain, or inside the trainer —
 		# and two overlapping bodies resolve the overlap by shoving each other
