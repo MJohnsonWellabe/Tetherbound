@@ -15,6 +15,28 @@ Read `docs/GAME_DESIGN.md` and `docs/MEADOWS_VERTICAL_SLICE.md` for the sections
 your task touches. Do not read them end to end; they are long and most of them
 will not be about your task.
 
+## Before you pick anything: is the pipeline healthy?
+
+Nothing else matters if work cannot ship. Every firing, first:
+
+1. **Check `main`'s latest CI run.** If it is red, **fixing that is your task**
+   — ahead of everything in the backlog. A red `main` means the build the owner
+   downloads is the last green one, and every branch after it inherits the
+   problem.
+2. **Check the branch the previous firing pushed.** If its CI failed, it never
+   merged and its work is sitting unshipped. Finish it on the same branch before
+   starting anything new — do not abandon it and open a fresh one, or the
+   backlog will quietly fill with orphaned branches.
+3. **If a test fails on your branch that has nothing to do with your change**,
+   that is a flake, and a flake is a real defect here: `ralph-merge.yml` only
+   ships green branches, so an intermittent test rejects healthy work at random.
+   Say so in your report and add it to the backlog rather than re-running until
+   it passes.
+
+Report pipeline health in every completion message, even when it is fine — the
+owner gets a push notification for each firing, and "CI green, shipped R2.1" is
+the one line that tells them the loop is alive and working.
+
 ## The loop
 
 1. **Pick** the topmost item in `BACKLOG.md` that is not blocked and not a `▶`
