@@ -47,54 +47,12 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 *(nothing yet)*
 
-Balance at last check: **235**, after Paddlenewt's redo-texture pass
-(Tuskroot, Meadowhart, Burrowback already redone; see `DONE.md`). **Six
-species still need the same redo** (Mosshell, Brooktail, then the four birds
-once `animate_bird.py` unblocks them) before R0.6 can rig them — budget ~10
+Balance at last check: **225**, after Mosshell's texture pass (Tuskroot,
+Meadowhart, Burrowback, Paddlenewt already redone; see `DONE.md`). **Five
+species still need the same redo** (Brooktail, then the four birds once
+`animate_bird.py` unblocks them) before R0.6 can rig them — budget ~10
 credits each, same as R0.5 estimated, not on top of R0.5's spend since R0.5's
 texture charge was wasted, not saved.
-
----
-
-## Blocked on this firing: no `MESHY_API_KEY` in the environment (again)
-
-**Same shape as the earlier gap this session, now understood rather than
-surprising: `MESHY_API_KEY` only arrives when a firing is cron-fired with the
-credential in its prompt.** A self-scheduled `send_later` resume (used to
-continue past a firing's own stop-at-a-task-boundary point) does not carry
-it, because the credential is never something one firing should write into a
-message for a later one to read back — that would put it somewhere outside
-"the environment and nowhere else". So this is not a rotation, not a balance
-problem (last known balance 235, untouched this firing), and not actually
-unexpected once you notice which kind of firing this is — but it is still a
-real block on continuing R0.6 with `finish.py texture`, and `meshy.py check`
-confirms it the same way it did last time: key simply unset.
-
-**Mosshell's `clean` step is done** (Blender only, no key needed): raw
-candidate `b`, 54,396 → 28,000 tris, manifold, at
-`assets_raw/mosshell/build/clean.glb`. Not committed, will not survive this
-container, and does not need to — `clean` takes under a minute to redo. R0.4's
-report flagged a possible topology issue (a thin protrusion near the
-hindquarters that might read as an errant tail/spike) as worth a check before
-this species is considered finished; `inspect_glb.py`'s structural report
-came back clean of anything specific to that (the usual pre-texture/pre-rig
-findings only — no material, disconnected verts within normal range, no
-armature yet), and a visual turntable render to actually look at the
-silhouette failed in this container (`libEGL.so.1` missing, a headless
-rendering gap unrelated to Meshy). So the concern is neither confirmed nor
-ruled out here — flag it for whoever finishes texturing and rigging this
-species to look at once there is a textured, renderable model to look at.
-
-**This blocks Mosshell (fifth of ten) and everything below it in R0.6's
-order** (Brooktail, then the four birds already blocked on
-`animate_bird.py`). Doing something else instead: `docs/ASSET_LEDGER.md` has
-no per-creature provenance row yet for any of the four R0.6 species shipped
-so far (Tuskroot, Meadowhart, Burrowback, Paddlenewt) despite R0.8 asking for
-exactly that, and it needs neither credits nor the key — so that is this
-firing's actual work.
-
-**Clears when:** a cron-fired firing (the kind whose prompt names
-`MESHY_API_KEY` directly) picks up Mosshell and runs `finish.py texture`.
 
 ---
 

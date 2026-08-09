@@ -9,19 +9,21 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 
 ## Phase 0 — finish the roster
 
-### R0.6 — 🔒 Finish each creature, one task per species
+### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-**Tuskroot, Meadowhart, Burrowback and Paddlenewt done** (`DONE.md`).
-Remaining, in backlog order: Mosshell, Brooktail (`rig_quadruped.py`), then
-Galecrest, Duskhush, Pipwing, Reedwing (`rig_bird.py` — **see the blocker
-below before starting these four**).
+**Tuskroot, Meadowhart, Burrowback, Paddlenewt and Mosshell done**
+(`DONE.md`). Remaining, in backlog order: Brooktail (`rig_quadruped.py`),
+then Galecrest, Duskhush, Pipwing, Reedwing (`rig_bird.py` — **see the
+blocker below before starting these four**).
 
-**Currently blocked on Mosshell onward: no `MESHY_API_KEY` in this firing's
-environment** (`BLOCKED.md` — this is a self-scheduled resume, not a
-cron-fired session, and only cron firings carry the key). Mosshell's `clean`
-step (Blender only) is done and not committed; `texture` is next and needs
-the key. Skip to R0.8 if this is still true when you read it.
+**If `MESHY_API_KEY` is missing from your environment**, check whether this
+firing is a cron firing or a self-scheduled `send_later` resume before
+concluding the key is actually unavailable — only cron firings have
+consistently carried it this session (`BLOCKED.md`/`DONE.md` have the
+history). If it is genuinely missing, do the Blender-only `clean` step for
+the next species, record the block, and look for other unblocked work
+(R0.8's ledger rows, for instance) rather than idling.
 
 Per species: `tools/art_pipeline/finish.py clean <species> <winner-letter>`
 → `finish.py texture <species>` (needs `MESHY_API_KEY`, ~10 credits — **do

@@ -25,6 +25,59 @@ nothing.
 CI green (run 31303384277), fast-forwarded to `main` at `92fc1ae` — verified
 by fetching `origin/main` directly.
 
+## R0.6 — Mosshell finished (fifth of the ten)
+`e15a204` · Same pipeline as the previous four: clean raw R0.4 winner
+candidate `b` (54,396 → 28,000 tris, manifold) → retexture via Meshy →
+`rig_quadruped.py` (15 bones, 0 of 13,998 vertices unweighted, 6 clips) →
+`grade.py` SPECIES entry → `finish.py grade` → `finish.py install` →
+`species.json` entry from the Water Sheet's own Steady Tank/Shelter role and
+build notes.
+
+**Four eye-guard rectangles**, same duplicated-across-UV-islands pattern the
+previous four species already showed, found by the same systematic
+quadrant-by-quadrant scan of the full 2048² atlas. Several candidates
+checked and rejected this time: a pair of uniform amber blobs matching the
+ordinary scale/wart spots scattered across the rest of the shell texture (no
+pupil at all), a tan almond/slit shape that reads plausibly as a closed
+eyelid rendered into the stone-shell pattern but wasn't confident enough to
+guard, and a dark crevice with an amber edge but no round iris.
+
+**R0.4's report flagged a topology check** — a possible thin protrusion near
+the hindquarters that might read as an errant tail/spike — that this pass
+could neither confirm nor rule out: this container has no `libEGL.so.1`, so
+`turntable.py` cannot render a single frame to actually look at (same gap
+hit on both Burrowback's and Paddlenewt's containers, apparently a property
+of the container rather than a one-off). `inspect_glb.py`'s structural
+report on the graded model showed only the ordinary post-retexture
+non-manifold-edge/duplicate-vertex noise that rigging already tolerated
+fine (0 unweighted vertices) — nothing that specifically flagged a
+hindquarters anomaly, but that report can't see silhouette either.
+Documented honestly in `species.json`'s `_comment_art` for whoever next has
+a rendered frame to check against.
+
+**This task spanned two firings**, same shape as Paddlenewt's: the first
+firing (a `send_later` self-resume) had no `MESHY_API_KEY` — confirmed this
+is specific to self-scheduled resumes, not cron firings, which is now a
+settled fact rather than a surprise each time it happens. That firing did
+Mosshell's Blender-only `clean` step, recorded the block in `BLOCKED.md`,
+and pivoted to real unblocked work instead of idling: `docs/ASSET_LEDGER.md`
+had no per-creature row for any of the four R0.6 species shipped so far,
+despite R0.8 asking for exactly that — added rows for Tuskroot, Meadowhart,
+Burrowback and Paddlenewt (`92fc1ae`, `17b5caa`, both verified shipped to
+`main`). The next firing was cron-fired, carried the key correctly, and the
+same `clean.glb` survived in the same container so nothing was redone.
+
+**Not in `EncounterDirector.WILD_SPAWNS`**, so `smoke_art`'s shared run
+doesn't spawn it directly (though `_every_species_has_art()` confirms the
+model path resolves, and the run stayed green). Height-fit verified with the
+same small standalone script as the previous four: **wanted 1.620m,
+rendered 1.620m, exact match.** Not committed.
+
+CI green (run 31304748414), fast-forwarded to `main` at `e15a204` — verified
+by fetching `origin/main` directly.
+
+Meshy balance after this species' texture pass: **225** (was 235).
+
 ## R0.6 — Paddlenewt finished (fourth of the ten)
 `0f51b2a` · Same pipeline as the first three: clean raw R0.4 winner candidate
 `a` (56,476 → 28,000 tris, manifold) → retexture via Meshy → `rig_quadruped.py`
