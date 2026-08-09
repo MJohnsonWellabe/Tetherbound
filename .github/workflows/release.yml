@@ -142,9 +142,9 @@ jobs:
 
             This is a vertical-slice prototype in progress, not a finished game.
 
-            The three starters, the trainer, Grandpa, the Warden and the
-            Veridian Stag are produced from the project's own concept art.
-            The rest of the wild roster is still stand-ins.
+            Every creature, the trainer, Grandpa, the Warden and the Veridian
+            Stag are produced from the project's own concept art. No stand-ins
+            remain in the roster.
           files: Tetherbound-windows.zip
           # Truthfully a prerelease: this is a slice, not a game. Keeping the
           # flag honest is why the download link is addressed by tag — see the

@@ -29,6 +29,9 @@ on:
 
 permissions:
   contents: write
+  # To dispatch Release after shipping. See the step at the bottom for why a
+  # push alone is not enough.
+  actions: write
 
 jobs:
   ship:
@@ -96,3 +99,30 @@ jobs:
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
         run: git push origin --delete "$BRANCH" || true
+
+      - name: Publish the build
+        # The push above CANNOT trigger Release on its own, and the loop went
+        # twelve hours and twenty-five commits believing otherwise.
+        #
+        # `release.yml` triggers on `push` to main. But GitHub deliberately does
+        # not create workflow runs from events raised with the default
+        # GITHUB_TOKEN -- that is its recursion guard, and the step above pushes
+        # with exactly that token. So every Ralph ship advanced main and
+        # published nothing, while a human merging a PR (a different actor) did
+        # publish. The download link kept serving whatever the last human merge
+        # had built, looking current the whole time.
+        #
+        # workflow_dispatch and repository_dispatch are the two documented
+        # exceptions to that guard, so an explicit dispatch works where the push
+        # does not. This needs `actions: write` above.
+        #
+        # Not gated on the delete step, and `|| true`: a failure to publish must
+        # not fail a merge that already happened. It shows up as a notice, and
+        # the build is one manual dispatch away.
+        if: steps.ship.outputs.shipped == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run release.yml --ref main \
+            && echo "::notice::Dispatched Release for the new main." \
+            || echo "::warning::Could not dispatch Release; run it by hand from the Actions tab."

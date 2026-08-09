@@ -64,9 +64,17 @@ reason not to push throwaways at all.
   export. Both are cheap and catch the failures that make the project unopenable.
 - Run **only the tests your backlog item names**, plus `tests/smoke_art.gd` for
   anything touching creature data or models.
-- Full suite on: the rename, any autoload or save-format change, and nightly on
-  `main`.
-- Every push to `main` publishes a Windows build. That is what the owner plays.
+- Full suite on: the rename, any autoload or save-format change.
+- **A shipped branch publishes a Windows build. That is what the owner plays** —
+  but not because pushing `main` triggers it. `ralph-merge.yml` pushes with the
+  default `GITHUB_TOKEN`, and GitHub refuses to raise workflow events from that
+  token, so `release.yml`'s `on: push` never fires for a Ralph ship. It fired
+  only when a human merged a pull request. The loop ran twelve hours and
+  twenty-five commits publishing nothing while the download link looked current,
+  serving a build with none of the roster and none of the opening in it.
+  `ralph-merge.yml` now dispatches `release.yml` explicitly after a successful
+  fast-forward. **Check the release asset's timestamp, not the merge, when you
+  want to know what the owner can actually play.**
 
 ## Testing traps already paid for
 
