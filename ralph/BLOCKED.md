@@ -6,35 +6,29 @@ design decision rather than inventing one.
 
 ---
 
-## ⛔ THE LOOP IS STOPPED — fired sessions cannot push
+## ✅ RESOLVED — the loop can push again
 
-**Trigger-fired sessions have read-only GitHub access.** `git push` is rejected
-by the git proxy with:
+**This entry is retracted as of the R0.3.5 fix.** The two earlier firings that
+diagnosed read-only access were correct about what they saw, but the
+environment has since been reattached with **write/push** access via a
+persistent host session: `git push` to a new branch, and to `ralph-status`,
+both succeeded and were verified (`ralph/R0.3.5` merged through the normal
+CI → `ralph-merge.yml` path).
 
-    MJohnsonWellabe/Tetherbound is not in this session's authorized repository set
+One residual gap: `git push --delete` (and the GitHub API's branch-delete)
+still returns HTTP 403 at the proxy level, even though creating and pushing
+branches works. Probe branches from the reattachment check could not be
+deleted and, being plain docs commits, one of them (`ralph/PUSH_TEST.md`) went
+green on CI and got auto-merged into `main` before this was noticed — cleaned
+up in the same commit as this entry. **Future firings: do not create
+throwaway probe branches** unless you also plan to leave them merged; there is
+currently no way to delete a remote branch from a fired session.
 
-A direct GitHub API call with the session's own `GITHUB_TOKEN` hits the same
-proxy-level denial, and it points at an `add_repo` mechanism a fired session has
-no tool to reach. Interactive sessions push fine; only the trigger-minted ones
-are read-only.
-
-**Pushing is the loop's only ship mechanism**, so this blocks the entire
-backlog, not one item. The Routine is **paused** — an hourly firing that hits
-this wall spends real tokens and lands nothing.
-
-Both firings behaved correctly: they did the work, hit the wall, wrote it down,
-and declined to schedule a successor that would fail identically. The second
-also discarded its local branch rather than leave dangling state. That is the
-right behaviour and it is why this was diagnosed in two runs rather than twenty.
-
-**What it cost:** the first firing solved `R0.3.5` — three real bugs found and
-fixed, verified 10/10 green — and the commits died with the container. The
-diagnosis was recovered into `BACKLOG.md`; the code was not.
-
-**Clears when** the repository is reattached to the Claude Code environment with
-**write/push** access for trigger-fired sessions. If that is not configurable,
-the cloud-Routine design cannot work and the loop has to move to a local host,
-where push uses the owner's own credentials.
+**What the wall cost while it stood:** the first firing to hit it solved
+`R0.3.5` — three real bugs found and fixed, verified 10/10 green — and the
+commits died with the container. The diagnosis was recovered into
+`BACKLOG.md`; the code was not, and was redone from that diagnosis once push
+access returned.
 
 ---
 
