@@ -40,6 +40,16 @@ func _run() -> void:
 	for i in SETTLE_FRAMES:
 		await process_frame
 
+	# No UI in a beauty shot: the debug HUD, interact prompts and menu all live
+	# on CanvasLayers, and the first hero capture shipped with the movement
+	# readout and a "Get up" prompt baked into it.
+	var stack: Array[Node] = [world]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node is CanvasLayer:
+			(node as CanvasLayer).visible = false
+		stack.append_array(node.get_children())
+
 	# Stage a camp for its shot: the real builder, placed as the placer would.
 	var camp: Node3D = preload("res://scripts/build/camp.gd").new()
 	camp.name = "SiteShotCamp"
@@ -59,6 +69,11 @@ func _run() -> void:
 
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
 	for name: String in SHOTS.keys():
+		# Frames are ~4-8s each under llvmpipe, so a full run does not fit one
+		# timeout budget. Skipping what already landed makes the run resumable.
+		if FileAccess.file_exists("%s/%s.png" % [OUT, name]):
+			print("skip -> %s.png (already captured)" % name)
+			continue
 		var spec: Array = SHOTS[name]
 		camera.global_position = spec[0]
 		camera.look_at(spec[1])

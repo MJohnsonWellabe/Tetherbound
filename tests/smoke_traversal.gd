@@ -26,6 +26,14 @@ const LEG_FRAMES := 2700
 ## playground's lowest point is about -26m.
 const THROUGH_THE_FLOOR := -80.0
 const COLLISION_FULL_GAME := 3
+## The baked world spans ±256m (terrain_playground.json world_size 512, centred
+## on the origin). A leg that reaches this line stops early: past the rim there
+## is legitimately no ground, and walking off it reads as "fell through the
+## world" when nothing is wrong. CI hit exactly that — the forward leg from the
+## (60, -60) start crossed z = -256 unobstructed and fell off the north rim,
+## while the same leg on a local run happened to snag on the rocky rise and
+## never got there. The margin keeps the player clear of edge interpolation.
+const WORLD_EDGE := 240.0
 
 
 func _init() -> void:
@@ -119,6 +127,12 @@ func _run() -> void:
 				])
 				quit(1)
 				return
+
+			if absf(pos.x) > WORLD_EDGE or absf(pos.z) > WORLD_EDGE:
+				print("  %-14s reached the world edge at %.0f, %.0f — leg ends here" % [
+					direction, pos.x, pos.z
+				])
+				break
 		Input.action_release(direction)
 		var here := player.global_position
 		print("  %-14s -> %7.1f, %6.1f, %7.1f   grounded=%s" % [

@@ -44,9 +44,17 @@ refresh them after a visual change:
 ```bash
 tools/survey.sh                                            # exploration frames
 tools/survey_combat.sh                                     # combat frames
+xvfb-run -a -s "-screen 0 960x540x24" godot --path . \
+  --rendering-driver opengl3 --resolution 960x540 \
+  --script tools/capture_site_shots.gd                     # authored page shots
 python3 - <<'EOF'
 from PIL import Image
 for src, out in [
+    ("shots/site/hero-meadow.png", "site/img/hero-meadow.jpg"),
+    ("shots/site/village-square.png", "site/img/village-square.jpg"),
+    ("shots/site/opening-bedroom.png", "site/img/opening-bedroom.jpg"),
+    ("shots/site/starters-by-the-door.png", "site/img/starters-by-the-door.jpg"),
+    ("shots/site/camp-dusk.png", "site/img/camp-dusk.jpg"),
     ("shots/01-spawn-outward.png", "site/img/01-spawn-outward.jpg"),
     ("shots/03-rise-overlook.png", "site/img/03-rise-overlook.jpg"),
     ("shots/05-spawn-low-sun.png", "site/img/05-spawn-low-sun.jpg"),
@@ -57,6 +65,11 @@ for src, out in [
     Image.open(src).convert("RGB").save(out, quality=82, optimize=True)
 EOF
 ```
+
+The page is written to survive missing authored shots: `combat-arena.jpg` and
+`aim-arc.jpg` fall back to the survey combat frames via CSS multi-background,
+and each section keeps a palette gradient as its floor. Skipping a capture
+degrades the page, it does not break it.
 
 `shots/` is gitignored and regenerated; `site/img/` is committed, because the
 page has to keep working without anyone re-running a survey first.

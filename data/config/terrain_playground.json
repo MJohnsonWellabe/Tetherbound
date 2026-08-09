@@ -70,14 +70,15 @@
   },
   "flats": [
     {
-      "_comment": "Building pads: FULL flatten inside radius (a tilted barn reads as a mistake), smoothstep skirt back to natural ground. The two pads carry Grandpa's house and the village square; village.json places structures on them and the opening spawns the player in the house.",
+      "_comment": "Building pads: FULL flatten inside radius (a tilted barn reads as a mistake), smoothstep skirt back to natural ground. The two pads carry Grandpa's house and the village square; village.json places structures on them and the opening spawns the player in the house. Heights are EXPLICIT and near each other: defaulting to the raw height at each centre put the pads 7.3m apart 33m from each other, and the skirts absorbed that step at 79 degrees - a crater wall of smeared grass texture ringing the village in every wide shot. Wide skirts for the same reason: max skirt slope is 1.5 * step / skirt. TUNABLE.",
       "centre": [
         -22.0,
         -16.0
       ],
       "radius": 14.0,
-      "skirt": 8.0,
-      "_why": "Grandpa's house and its yard"
+      "skirt": 20.0,
+      "_why": "Grandpa's house and its yard",
+      "height": 2.2
     },
     {
       "centre": [
@@ -85,8 +86,9 @@
         -10.0
       ],
       "radius": 18.0,
-      "skirt": 10.0,
-      "_why": "the village square"
+      "skirt": 24.0,
+      "_why": "the village square",
+      "height": 0.6
     }
   ],
   "paths": {
