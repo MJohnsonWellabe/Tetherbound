@@ -68,6 +68,116 @@
     "radius": 34.0,
     "flatten": 0.85
   },
+  "flats": [
+    {
+      "_comment": "Building pads: FULL flatten inside radius (a tilted barn reads as a mistake), smoothstep skirt back to natural ground. The two pads carry Grandpa's house and the village square; village.json places structures on them and the opening spawns the player in the house.",
+      "centre": [
+        -22.0,
+        -16.0
+      ],
+      "radius": 14.0,
+      "skirt": 8.0,
+      "_why": "Grandpa's house and its yard"
+    },
+    {
+      "centre": [
+        10.0,
+        -10.0
+      ],
+      "radius": 18.0,
+      "skirt": 10.0,
+      "_why": "the village square"
+    }
+  ],
+  "paths": {
+    "_comment": "Dirt paths, authored polylines in world metres. playground_heightfield.path_factor() is the single reader: the bake tints the colour map along them, the scatter keeps vegetation off them, and they double as wayfinding \u2014 every route starts at the village square and ends somewhere the player is meant to go. ALL TUNABLE.",
+    "width": 3.0,
+    "shoulder": 1.5,
+    "_comment_tint": "Multiplier over the ground albedo along the path, like every colour in `colour` below: worn earth, not a paint stripe.",
+    "tint": "#c8a874",
+    "routes": [
+      {
+        "_why": "the square to Grandpa's door",
+        "points": [
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            -4.0,
+            -13.0
+          ],
+          [
+            -18.0,
+            -15.0
+          ]
+        ]
+      },
+      {
+        "_why": "the square to the practice meadow (the opening's bramblebun)",
+        "points": [
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            18.0,
+            -24.0
+          ],
+          [
+            30.0,
+            -40.0
+          ]
+        ]
+      },
+      {
+        "_why": "the square to the pond valley (the water creatures)",
+        "points": [
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            -14.0,
+            14.0
+          ],
+          [
+            -45.0,
+            45.0
+          ],
+          [
+            -80.0,
+            85.0
+          ],
+          [
+            -105.0,
+            115.0
+          ]
+        ]
+      },
+      {
+        "_why": "the square toward the rocky rise (galecrest, and one day the stronghold sightline)",
+        "points": [
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            45.0,
+            -22.0
+          ],
+          [
+            85.0,
+            -48.0
+          ],
+          [
+            118.0,
+            -72.0
+          ]
+        ]
+      }
+    ]
+  },
   "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. It MULTIPLIES the PBR albedo \u2014 it does not replace it. These were authored when the colour map was the entire ground treatment and there were no textures at all; they stayed after the textures arrived, and grass albedo at luminance 0.40 times a #496c34 map at 0.36 is a surface of 0.14 before any light reaches it. That is the whole reason the near field measured 0.096 against 0.27-0.60 across the references, and why no amount of sun, shadow, ambient or normal tuning moved it: nothing was wrong with the lighting.",
   "_comment_colour_now": "Near-white, so this modulates rather than paints. The textures carry the colour; this carries the slope-driven variation and the macro break-up that stops a 2K tile reading as wallpaper. Keep everything here above roughly #c0 \u2014 below that it is a brightness change wearing a colour's clothes, which is the mistake this comment exists to stop being repeated.",
   "colour": {

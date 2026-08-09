@@ -214,7 +214,9 @@
       "base_scale": 1.0,
       "casts_shadow": false,
       "cleared_by_clearings": false,
-      "collides": false
+      "collides": false,
+      "grows_on_paths": true,
+      "_comment_paths": "The one layer allowed on the dirt paths: stones on a path ARE the path."
     }
   },
   "_comment_retint": "Mostly EMPTY now, and that is the point. The Kenney kit shipped a bright teal-green palette that had to be remapped wholesale; this pack ships real textures, and `albedo_color` multiplies them, so an unmapped material passes through as authored. Only the deliberate per-layer modulates above apply. A strong colour here would come out as shadow, not as hue.",
@@ -229,16 +231,22 @@
       "_why": "spawn"
     },
     {
-      "x": 14.0,
+      "x": 10.0,
       "z": -10.0,
-      "radius": 15.0,
-      "_why": "peaceful pal, and the arena around it"
+      "radius": 22.0,
+      "_why": "the village square and its structures"
     },
     {
-      "x": -6.0,
-      "z": 26.0,
-      "radius": 15.0,
-      "_why": "aggressive pal, and the arena around it"
+      "x": -22.0,
+      "z": -16.0,
+      "radius": 16.0,
+      "_why": "Grandpa's house and its yard"
+    },
+    {
+      "x": 30.0,
+      "z": -40.0,
+      "radius": 16.0,
+      "_why": "the practice meadow: the opening's bramblebun and the arena around it"
     }
   ]
 }

@@ -99,3 +99,42 @@ func test_the_spawn_pad_blends_out() -> void:
 	var outside: float = _field.height_at(radius * 1.08, 0.0)
 	assert_true(absf(inside - outside) < 3.0,
 		"%.2fm step across the spawn pad edge; it should blend" % absf(inside - outside))
+
+
+func test_the_building_pads_are_genuinely_flat() -> void:
+	# A barn on an 0.85-flattened slope still tilts; the flats promise FULL
+	# flatten inside their radius, and the structures placed on them lean on it.
+	for entry: Variant in _config.get("flats", []):
+		if not entry is Dictionary:
+			continue
+		var flat: Dictionary = entry
+		var centre: Array = flat.get("centre", [0.0, 0.0])
+		var radius := float(flat.get("radius", 10.0))
+		var middle: float = _field.height_at(float(centre[0]), float(centre[1]))
+		for angle in [0.0, PI * 0.5, PI, PI * 1.5]:
+			var x := float(centre[0]) + cos(angle) * radius * 0.7
+			var z := float(centre[1]) + sin(angle) * radius * 0.7
+			var rim: float = _field.height_at(x, z)
+			assert_true(absf(rim - middle) < 0.15,
+				"flat at %s rises %.2fm inside its own radius" % [str(centre), absf(rim - middle)])
+
+
+func test_the_paths_reach_where_they_promise() -> void:
+	# path_factor is the single reader every consumer trusts: 1 on the
+	# centreline, gone past the shoulder. A broken segment walk would paint no
+	# road and strip no vegetation, silently.
+	var paths: Dictionary = _config.get("paths", {})
+	var routes: Array = paths.get("routes", [])
+	assert_true(routes.size() >= 3, "the meadow should have a path network, not a single trail")
+	for entry: Variant in routes:
+		var points: Array = (entry as Dictionary).get("points", [])
+		assert_true(points.size() >= 2, "a route needs at least two points")
+		for point: Variant in points:
+			var on: float = _field.path_factor(float(point[0]), float(point[1]))
+			assert_almost_eq(on, 1.0, 0.01, "a route's own waypoint should be fully on the path")
+	var width := float(paths.get("width", 3.0))
+	var shoulder := float(paths.get("shoulder", 1.5))
+	var first: Array = (routes[0] as Dictionary).get("points", [])
+	var far: float = _field.path_factor(float(first[0][0]) + width + shoulder + 5.0,
+		float(first[0][1]) + width + shoulder + 5.0)
+	assert_almost_eq(far, 0.0, 0.01, "well off the road should be untouched meadow")

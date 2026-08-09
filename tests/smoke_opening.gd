@@ -106,7 +106,9 @@ func _run() -> void:
 		return
 
 	await _the_trainer_can_walk()
+	await _the_trainer_gets_up_from_the_bed()
 	await _grandpa_says_his_piece()
+	_grandpa_handed_over_the_pack()
 	await _a_starter_can_be_chosen()
 	await _the_pal_is_named_on_the_grid()
 	_the_named_pal_is_in_the_real_party()
@@ -214,6 +216,41 @@ func _the_trainer_can_walk() -> void:
 	_fail("the trainer never got control; six seconds of holding forward moved them %.2fm" % moved)
 
 
+## The wake beat: the opening starts in the loft bedroom of Grandpa's
+## farmhouse, and the first gate is the bed's own "Get up" prompt. If the
+## prompt is not offered, either the house never built or the bed prompt was
+## never wired; either way the opening is a player stuck upstairs forever.
+func _the_trainer_gets_up_from_the_bed() -> void:
+	var bed := _find_interactable_matching(["get up"])
+	if bed == null:
+		_fail("nothing offers a 'Get up' prompt; the wake beat has no gate and the opening cannot start")
+		return
+	if not await _walk_to_and_activate(bed):
+		return
+	for i in 10:
+		await physics_frame
+	if str(_director.call("beat")) == "wake":
+		_fail("getting up did not advance the wake beat")
+		return
+	print("wake: got up from the bed, beat is now '%s'" % str(_director.call("beat")))
+
+
+## The gifts. Grandpa's conversation carries give: effects on the lines that
+## speak them; if the words play and the satchel stays empty, the opening
+## promised a pack and handed over nothing.
+func _grandpa_handed_over_the_pack() -> void:
+	var inventory: RefCounted = _game.get("inventory")
+	var orbs := int(inventory.call("count", "orb_basic"))
+	var potions := int(inventory.call("count", "potion_small"))
+	if orbs < 15:
+		_fail("Grandpa's talk ended with %d orbs in the satchel; his pack carries 15" % orbs)
+	elif potions < 3:
+		_fail("Grandpa's talk ended with %d potions in the satchel; his pack carries 3" % potions)
+	else:
+		print("the pack: %d orbs, %d potions, %d berries in the satchel" % [
+			orbs, potions, int(inventory.call("count", "berries"))])
+
+
 ## Beat 3. Walk to Grandpa and press the button the prompt is offering.
 ##
 ## The conversation may already be running — the director is free to open it on
@@ -221,6 +258,13 @@ func _the_trainer_can_walk() -> void:
 ## goes looking for him when nothing is.
 func _grandpa_says_his_piece() -> void:
 	if not bool(_dialogue.call("is_open")):
+		# Down the stairs first. The straight line from the loft to Grandpa
+		# goes through the floor; a real player takes the stairs and so does
+		# this, on the house's own waypoints.
+		var house := _world.get_node_or_null(^"GrandpaHouse")
+		if house != null:
+			await _walk_toward_point(house.call("marker", "stairs_top"), 300)
+			await _walk_toward_point(house.call("marker", "stairs_bottom"), 300)
 		var grandpa := _find_interactable_matching(["grandpa", "talk"])
 		if grandpa == null:
 			_fail("nothing in the meadow offers a prompt about Grandpa; beat 3 cannot start")
@@ -256,6 +300,13 @@ func _grandpa_says_his_piece() -> void:
 ## it is made by walking to one — which is also the only way to find out whether
 ## the arbiter hands the prompt to the right creature.
 func _a_starter_can_be_chosen() -> void:
+	# Out of the house first — the starters wait by the door, and the straight
+	# line from Grandpa to a flanking starter runs through the east wall.
+	var house := _world.get_node_or_null(^"GrandpaHouse")
+	if house != null:
+		await _walk_toward_point(house.call("marker", "door"), 400)
+		await _walk_toward_point(house.call("marker", "outside"), 400)
+
 	var starter := _find_interactable_matching(["choose"])
 	if starter == null:
 		_fail("no starter offers a 'Choose ...' prompt; beat 4 cannot happen")
@@ -300,7 +351,7 @@ func _the_pal_is_named_on_the_grid() -> void:
 		if not await _select_cell(entry, character):
 			return
 		var typed_before: String = str(entry.text)
-		await _press("menu_confirm")
+		await _press_polled("menu_confirm")
 		if str(entry.text) == typed_before:
 			_fail("`menu_confirm` on '%s' typed nothing; the grid draws but does not enter" % character)
 			return
@@ -313,7 +364,7 @@ func _the_pal_is_named_on_the_grid() -> void:
 
 	if not await _select_cell(entry, ENTRY.DONE):
 		return
-	await _press("menu_confirm")
+	await _press_polled("menu_confirm")
 	for i in 20:
 		await physics_frame
 
@@ -406,6 +457,22 @@ func _press(action: String) -> void:
 		await physics_frame
 
 
+## For actions the naming panel POLLS (`menu_confirm`): action state only.
+##
+## `_press` above sends the action state AND a parsed InputEventAction, belt
+## and braces — and under a heavy scene the two can land in DIFFERENT physics
+## frames, which a polling reader counts as two presses. Typing "Bud" came out
+## "Buudd". Focus navigation genuinely needs the parsed event (see
+## docs/HANDOFF.md on `ui_*`); confirming a grid cell does not.
+func _press_polled(action: String) -> void:
+	Input.action_press(action)
+	for i in 3:
+		await physics_frame
+	Input.action_release(action)
+	for i in 4:
+		await physics_frame
+
+
 func _send(action: String, pressed: bool) -> void:
 	var event := InputEventAction.new()
 	event.action = action
@@ -450,6 +517,27 @@ func _cell_position(cell: String) -> Vector2i:
 	return Vector2i(-1, -1)
 
 
+## Walk toward a world point until close, or the frame budget runs out. No
+## activation, no arbitration — pure locomotion, for waypoints like the stairs.
+func _walk_toward_point(point: Vector3, frames: int) -> void:
+	for i in frames:
+		var to := point - _player.global_position
+		to.y = 0.0
+		if to.length() <= 0.8:
+			break
+		_rig.set("yaw", atan2(-to.x, -to.z))
+		Input.action_press("move_forward")
+		await physics_frame
+	Input.action_release("move_forward")
+	for i in 5:
+		await physics_frame
+	var remaining := point - _player.global_position
+	remaining.y = 0.0
+	print("  [walk] toward %s -> at %s (%.1fm short)" % [
+		str(point.snapped(Vector3.ONE * 0.1)),
+		str(_player.global_position.snapped(Vector3.ONE * 0.1)), remaining.length()])
+
+
 ## Walk at something until it is the offer on screen, then press interact.
 ##
 ## Deliberately does NOT press until the arbiter is actually offering this one:
@@ -477,6 +565,12 @@ func _walk_to_and_activate(target: Node3D) -> bool:
 	var offered := str(_arbiter.call("prompt"))
 	if offered.is_empty():
 		_fail("standing next to '%s' and the interact prompt is blank" % str(target.get("label")))
+		print("  [debug] player %s, target %s (%.1fm), director beat '%s', target enabled=%s, arbiter enabled=%s" % [
+			str(_player.global_position.snapped(Vector3.ONE * 0.1)),
+			str(target.global_position.snapped(Vector3.ONE * 0.1)),
+			_player.global_position.distance_to(target.global_position),
+			str(_director.call("beat")), str(target.get("enabled")),
+			str(_arbiter.get("_enabled"))])
 		return false
 
 	# Whose offer is on screen, not just whether there is one. The arbiter keeps
@@ -485,9 +579,14 @@ func _walk_to_and_activate(target: Node3D) -> bool:
 	# cannot be fooled by two creatures with the same label.
 	var winning: Object = _arbiter.get("_winning_provider")
 	if winning != target:
+		var target_at: Vector3 = target.global_position
 		_fail("walked to '%s' but the prompt on screen is '%s'; the arbiter picked something else" % [
 			str(target.get("label")), offered
 		])
+		print("  [debug] player at %s, target '%s' at %s (%.1fm away)" % [
+			str(_player.global_position.snapped(Vector3.ONE * 0.1)),
+			str(target.get("label")), str(target_at.snapped(Vector3.ONE * 0.1)),
+			_player.global_position.distance_to(target_at)])
 		return false
 
 	await _press("interact")

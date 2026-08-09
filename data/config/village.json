@@ -1,0 +1,14 @@
+{
+  "_comment": "The settlement around the village square. Structures from the Quaternius Farm Buildings pack (docs/ASSET_LEDGER.md), placed by scripts/world/village.gd: each entry is stood on the ground by asking the world (D09), given a box collider, and scaled by its own `scale` — the pack is authored at roughly 2x real size, so most corrections sit near 0.75. Positions are world metres on and around the square flat at [10,-10] (terrain_playground.json `flats`). ALL TUNABLE.",
+  "_comment_layout": "Grandpa's house (built by grandpa_house.gd, not listed here) sits west at [-22,-16] facing the square. The barns frame the square's north and east, the well marks its middle, the windmill stands off the north-east corner where it reads from the whole meadow, and the fences run along the practice-meadow path so day one is bracketed by the settlement on one side and open grass on the other.",
+  "structures": [
+    { "model": "Well", "at": [10.0, -10.0], "yaw_deg": 0.0, "scale": 0.9, "_why": "the square's centre" },
+    { "model": "SmallBarn", "at": [18.0, -2.0], "yaw_deg": 205.0, "scale": 0.8, "_why": "a neighbour's barn, north-east of the square" },
+    { "model": "Barn", "at": [2.0, 2.0], "yaw_deg": 160.0, "scale": 0.75, "_why": "the big barn, north of the square" },
+    { "model": "ChickenCoop", "at": [21.0, -14.0], "yaw_deg": 260.0, "scale": 0.9, "_why": "east of the square" },
+    { "model": "TowerWindmill", "at": [28.0, 4.0], "yaw_deg": 220.0, "scale": 0.8, "_why": "the landmark; visible from most of the meadow" },
+    { "model": "Fence", "at": [14.0, -20.0], "yaw_deg": 55.0, "scale": 0.85, "_why": "along the practice-meadow path" },
+    { "model": "Fence2", "at": [19.5, -25.5], "yaw_deg": 55.0, "scale": 0.85, "_why": "along the practice-meadow path" },
+    { "model": "Fence", "at": [3.0, -18.0], "yaw_deg": 100.0, "scale": 0.85, "_why": "the yard edge between square and Grandpa's" }
+  ]
+}

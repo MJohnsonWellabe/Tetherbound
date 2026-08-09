@@ -16,6 +16,16 @@ extends Node3D
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const VILLAGE := preload("res://scripts/world/village.gd")
+const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
+const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
+
+## Where Grandpa's house stands: the west building pad in
+## data/config/terrain_playground.json's `flats`. One source of truth would be
+## nicer, but the flat is a terrain concept and the house is a building; they
+## meet at this number and the bake test asserts the pad is genuinely flat.
+const HOUSE_AT := Vector2(-22.0, -16.0)
 
 ## Terrain3D.CollisionMode. 3 is FULL_GAME: real collision shapes across the
 ## loaded regions, which is what the character controller needs to walk on.
@@ -70,6 +80,7 @@ func _ready() -> void:
 		_terrain.call("set_camera", _camera)
 	_place_player()
 	_dress_the_meadow()
+	_build_settlement()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	_report_for_export_check()
 
@@ -341,6 +352,61 @@ func _dress_the_meadow() -> void:
 	_vegetation.call("build", float(config.get("world_size", 512)))
 	var stats: Dictionary = _vegetation.call("stats")
 	print("[playground] scattered %d props in %d batches" % [stats["instances"], stats["batches"]])
+
+
+## Grandpa's house and the village, stood on the building pads the terrain
+## bake flattened for them. After _dress_the_meadow so a scatter regression
+## cannot leave the opening without its house.
+func _build_settlement() -> void:
+	var ground := ground_height_at(HOUSE_AT.x, HOUSE_AT.y)
+	if is_nan(ground):
+		push_error("no ground under the house pad; the opening has nowhere to wake up")
+	else:
+		var house: Node3D = GRANDPA_HOUSE.new()
+		house.name = "GrandpaHouse"
+		house.position = Vector3(HOUSE_AT.x, ground, HOUSE_AT.y)
+		# Door on the east wall faces the village square.
+		add_child(house)
+		house.call("build", _camera_rig, _player)
+
+	var village: Node3D = VILLAGE.new()
+	village.name = "Village"
+	add_child(village)
+	village.call("build")
+
+	_place_harvest_nodes()
+
+	var placer := BUILD_PLACER.new()
+	placer.name = "BuildPlacer"
+	placer.player_path = NodePath("../Player")
+	placer.camera_rig_path = NodePath("../CameraRig")
+	add_child(placer)
+
+
+## The first day's gathering spots, from data/config/harvest.json.
+func _place_harvest_nodes() -> void:
+	var file := FileAccess.open("res://data/config/harvest.json", FileAccess.READ)
+	if file == null:
+		push_warning("harvest.json missing; the first day has nothing to gather")
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return
+	var placed := 0
+	for entry: Variant in (parsed as Dictionary).get("nodes", []):
+		if not entry is Dictionary:
+			continue
+		var spec: Dictionary = entry
+		var at: Array = spec.get("at", [0.0, 0.0])
+		var ground := ground_height_at(float(at[0]), float(at[1]))
+		if is_nan(ground):
+			continue
+		var node: Node3D = HARVEST_NODE.new()
+		node.position = Vector3(float(at[0]), ground, float(at[1]))
+		add_child(node)
+		node.call("setup", spec)
+		placed += 1
+	print("[playground] placed %d harvest nodes" % placed)
 
 
 ## Ground height at a world x/z, or NAN where there is no terrain.

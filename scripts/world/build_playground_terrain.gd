@@ -59,6 +59,9 @@ func _run() -> void:
 	var highest := -INF
 	var steep_samples := 0
 
+	var paths_cfg: Dictionary = config.get("paths", {})
+	var path_tint := Color(str(paths_cfg.get("tint", "#c8a874")))
+
 	for pixel_z in size:
 		var world_z := origin + pixel_z * spacing
 		for pixel_x in size:
@@ -67,7 +70,16 @@ func _run() -> void:
 			height_image.set_pixel(pixel_x, pixel_z, Color(height, 0.0, 0.0, 1.0))
 
 			var slope: float = field.slope_degrees_at(world_x, world_z, spacing)
-			colour_image.set_pixel(pixel_x, pixel_z, _ground_colour(slope, colour_cfg))
+			var ground := _ground_colour(slope, colour_cfg)
+			# Dirt paths are painted into the colour map — a worn-earth tint over
+			# the same textures, not a separate texture layer. The control-map
+			# version (real soil texture under the path) is queued as polish;
+			# this one is visible today, and the scatter keeping plants off the
+			# same line does at least as much for readability.
+			var worn: float = field.path_factor(world_x, world_z)
+			if worn > 0.0:
+				ground = ground.lerp(path_tint, worn * 0.85)
+			colour_image.set_pixel(pixel_x, pixel_z, ground)
 
 			lowest = minf(lowest, height)
 			highest = maxf(highest, height)

@@ -1,0 +1,18 @@
+{
+  "_comment": "The first day's gathering: hand-placed harvest spots along the tutorial path, read by scripts/world/harvest_node.gd. NOT the real M8 harvesting loop (tools, durability, the vegetation itself) — a dozen legible spots so 'gather enough to make camp' is playable today. Positions are world metres, stood on the ground per D09. ALL TUNABLE.",
+  "_comment_amounts": "A camp costs 12 wood / 8 stone / 10 fiber (data/items/buildables.json), so one full walk down the practice path and back covers it with a little over: 4 wood spots x 4, 3 stone x 3, 3 fiber x 4, 2 berry x 3.",
+  "nodes": [
+    { "item": "wood", "amount": 4, "label": "Gather fallen branches", "at": [16.0, -28.0] },
+    { "item": "wood", "amount": 4, "label": "Gather fallen branches", "at": [26.0, -44.0] },
+    { "item": "wood", "amount": 4, "label": "Gather fallen branches", "at": [44.0, -24.0] },
+    { "item": "wood", "amount": 4, "label": "Gather fallen branches", "at": [-8.0, 8.0] },
+    { "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [22.0, -34.0] },
+    { "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [52.0, -30.0] },
+    { "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [-18.0, 6.0] },
+    { "item": "fiber", "amount": 4, "label": "Strip meadow grass", "at": [12.0, -22.0] },
+    { "item": "fiber", "amount": 4, "label": "Strip meadow grass", "at": [34.0, -46.0] },
+    { "item": "fiber", "amount": 4, "label": "Strip meadow grass", "at": [-2.0, -20.0] },
+    { "item": "berries", "amount": 3, "label": "Pick berries", "at": [20.0, -16.0] },
+    { "item": "berries", "amount": 3, "label": "Pick berries", "at": [38.0, -36.0] }
+  ]
+}

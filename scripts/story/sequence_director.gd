@@ -101,6 +101,7 @@ var _beat: String = ""
 
 var _grandpa: Node3D = null
 var _grandpa_prompt: Node3D = null
+var _bed_prompt: Node3D = null
 ## The three bodies, their species ids and their prompts, by the same index.
 ## Parallel arrays rather than a Dictionary keyed by node, because the index IS
 ## the choice and it is what the naming panel comes back with.
@@ -350,6 +351,8 @@ func _refresh_lockout() -> void:
 func _refresh_prompts() -> void:
 	if _grandpa_prompt != null and is_instance_valid(_grandpa_prompt):
 		_grandpa_prompt.call("set_enabled", BEATS.conversation_for(_beat) != "")
+	if _bed_prompt != null and is_instance_valid(_bed_prompt):
+		_bed_prompt.call("set_enabled", _beat == BEATS.WAKE)
 	var offering := _beat == BEATS.CHOOSE
 	for prompt: Node3D in _starter_prompts:
 		if prompt != null and is_instance_valid(prompt):
@@ -402,38 +405,55 @@ func _tick_fade(delta: float) -> void:
 	_fade_layer.queue_free()
 	_fade_layer = null
 	_fade_rect = null
-	# Beat 1 is over when the player can see. Beat 2 is the walk to Grandpa and
-	# has no gate of its own — it is the meadow, and it is meant to be looked at.
-	_advance()
+	# The fade clearing no longer advances the beat: the opening starts in bed,
+	# and `wake` ends when the player chooses to get up — the bed's own
+	# interactable carries that. What the fade's end DOES mean is that the
+	# player can see the room; the beat machine does not need telling.
 
 
 ## --- the cast ---------------------------------------------------------------------
 
-## Grandpa and the three starters, placed from data/config/opening.json.
+## The whole staging: the player into the bed, Grandpa downstairs, the three
+## starters outside the door — all read from the HOUSE's own markers, because
+## the building is the authority on where its bed is. A world without a house
+## (a bare test scene) falls back to opening.json's positions and the old
+## open-meadow staging still works.
 ##
-## Parented to this node's PARENT rather than to this node, matching
+## Cast parented to this node's PARENT rather than to this node, matching
 ## encounter_director: `pal_body` and `npc_body` both find the ground by walking
 ## up the tree looking for `ground_height_at`, and the world root is what offers
 ## it. A creature hung under a plain Node is also outside the 3D transform chain.
 func _spawn_the_cast() -> void:
-	var origin := _player.global_position
+	var house := await _wait_for_the_house()
 	var cfg := BEATS.grandpa()
+
+	if house != null:
+		# Into bed. The world's own _place_player already ran (the house is
+		# only built after it), so nothing later overwrites this.
+		var bed: Vector3 = house.call("marker", "bed")
+		_player.global_position = bed + Vector3(0.6, 0.4, 0.0)
+		_player.velocity = Vector3.ZERO
+		_build_bed_prompt(house)
 
 	_grandpa = NPC.new()
 	_grandpa.name = "Grandpa"
 	get_parent().add_child(_grandpa)
 	_grandpa.call("setup", str(cfg.get("art", "grandpa")), _player)
 
-	var spot := origin + _to_vector3(cfg.get("offset", []))
-	if not await _stand_npc(_grandpa, spot):
-		push_error("no ground under Grandpa's spot; beat 3 has nobody to talk to")
-
-	# He faces the player from the start rather than swinging round on the first
-	# frame they come into his notice range.
-	var towards := origin - _grandpa.global_position
-	towards.y = 0.0
-	if towards.length() > 0.01:
-		_grandpa.rotation.y = atan2(towards.x, towards.z)
+	if house != null:
+		# Indoors: the house floor is a body, not terrain, so `stand_at`'s
+		# ground query would sink him below the slab. The marker knows better.
+		_grandpa.global_position = (house.call("marker", "grandpa") as Vector3) + Vector3(0.0, 0.12, 0.0)
+		# Facing the foot of the stairs, where the player will appear from.
+		_grandpa.rotation.y = deg_to_rad(-80.0)
+	else:
+		var spot := _player.global_position + _to_vector3(cfg.get("offset", []))
+		if not await _stand_npc(_grandpa, spot):
+			push_error("no ground under Grandpa's spot; the house beat has nobody to talk to")
+		var towards := _player.global_position - _grandpa.global_position
+		towards.y = 0.0
+		if towards.length() > 0.01:
+			_grandpa.rotation.y = atan2(towards.x, towards.z)
 
 	_grandpa_prompt = _grandpa.call("add_prompt",
 		str(cfg.get("prompt", "Talk to Grandpa")),
@@ -441,23 +461,61 @@ func _spawn_the_cast() -> void:
 	_grandpa_prompt.call("set_enabled", false)
 	_grandpa_prompt.connect("activated", _on_grandpa_activated)
 
-	await _spawn_starters(origin)
+	await _spawn_starters(house)
 
 
-## Three pals in a row in front of him, on his own facing, so he is behind them
-## and the player approaches all three head-on.
+## The house is built by the world root at the end of ITS _ready, several
+## frames after this director's. Null after the wait means this world has no
+## house, which is a legal world — the smoke tests' bare boots included.
+func _wait_for_the_house() -> Node3D:
+	for i in GROUND_WAIT_FRAMES:
+		var house := get_parent().get_node_or_null(^"GrandpaHouse") as Node3D
+		if house != null:
+			return house
+		# A world that will never build one: no point burning five seconds.
+		if get_parent().get_node_or_null(^"Terrain") == null and i > 10:
+			return null
+		await get_tree().physics_frame
+	return null
+
+
+## "Get up." The wake beat's one gate, on the bed itself.
+func _build_bed_prompt(house: Node3D) -> void:
+	var bed_cfg := BEATS.bed()
+	var prompt: Node3D = INTERACTABLE.new()
+	prompt.name = "BedPrompt"
+	prompt.position = (house.call("marker", "bed") as Vector3) + Vector3.UP * 0.4
+	prompt.call("configure", str(bed_cfg.get("prompt", "Get up")), 2.5, true)
+	prompt.connect("activated", _on_bed_activated)
+	get_parent().add_child(prompt)
+	_bed_prompt = prompt
+
+
+func _on_bed_activated() -> void:
+	if _beat != BEATS.WAKE:
+		return
+	_set_beat(BEATS.HOUSE)
+
+
+## Three creatures in a row outside Grandpa's door, facing it — the first
+## thing the player sees on stepping out.
 ##
 ## They are bodies you walk up to and NOT a menu. docs/OPENING_SEQUENCE.md calls
 ## that decided and load-bearing: it is the first expression of the game's whole
 ## posture toward its creatures, and a list box would undo it.
-func _spawn_starters(origin: Vector3) -> void:
+func _spawn_starters(house: Node3D) -> void:
 	var cfg := BEATS.starters()
 	var species: Array = cfg.get("species", [])
 	if species.is_empty():
-		push_error("opening.json lists no starter species; beat 4 has nothing to choose from")
+		push_error("opening.json lists no starter species; the choice has nothing to choose from")
 		return
 
-	var facing := origin - _grandpa.global_position
+	var door: Vector3 = house.call("marker", "door") if house != null else _grandpa.global_position
+	var row_centre: Vector3 = house.call("marker", "outside") if house != null \
+		else _player.global_position
+	# The row faces the door, centred a little past it, so stepping out of the
+	# house is stepping into the middle of the choice.
+	var facing := door - row_centre
 	var offsets := BEATS.starter_offsets(facing)
 	var radius := float(cfg.get("prompt_radius", 2.6))
 
@@ -474,10 +532,10 @@ func _spawn_starters(origin: Vector3) -> void:
 		body.visible = false
 		get_parent().add_child(body)
 		body.call("setup", id)
-		if not await _stand_on_ground(body, _grandpa.global_position + offsets[i]):
+		if not await _stand_on_ground(body, row_centre + offsets[i]):
 			push_error("no ground under the %s starter; it will be unreachable" % id)
 		body.visible = true
-		body.call("face_towards", origin)
+		body.call("face_towards", door)
 
 		var prompt: Node3D = INTERACTABLE.new()
 		prompt.name = "Interactable"

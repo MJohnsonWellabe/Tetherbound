@@ -130,6 +130,13 @@ static func _consider(
 	var slope: float = field.slope_degrees_at(spot.x, spot.y)
 	if not allowed(layer, height, slope, spot.length(), spot):
 		return
+	# Nothing grows on the road. The paths double as wayfinding, and a path is
+	# only legible if it stays visibly worn — path_stones are the one layer
+	# allowed on it, because stones on a path ARE the path. The threshold is
+	# past the half-width, so verges keep their growth right up to the edge.
+	if not bool(layer.get("grows_on_paths", false)) \
+			and field.has_method("path_factor") and float(field.path_factor(spot.x, spot.y)) > 0.3:
+		return
 
 	# `base_scale` corrects the pack's authoring scale for the whole layer;
 	# scale_min/max then vary around it. Two numbers rather than one so "the

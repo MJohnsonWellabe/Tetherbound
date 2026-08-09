@@ -67,9 +67,116 @@ func _run() -> void:
 	await _check_the_build_tab_says_materials_are_free()
 	await _check_a_piece_can_be_built_out_of_an_empty_satchel()
 	await _check_it_can_be_switched_off_again()
+	await _check_the_first_day_arc(world)
 
 	_cleanup()
 	_report()
+
+
+## The whole reason the camp exists: gather along the path, arm the camp, plant
+## it, rest, wake up on day two healed. Driven through the REAL pieces — the
+## harvest nodes' interactables, GameState's costs, the placer's ghost — with
+## only the menu-driving shortcut of arming `pending_build` directly (the
+## build-tab half of that press is proven above).
+func _check_the_first_day_arc(world: Node) -> void:
+	# The toggle checks above end with the menu OPEN, the tree paused and the
+	# interact arbiter asleep. The first day happens in the world.
+	if bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 20:
+			await physics_frame
+
+	var inventory: RefCounted = _game.get("inventory")
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	var placer := world.get_node_or_null(^"BuildPlacer")
+	if player == null or placer == null:
+		_fail("no player or no build placer in the world; the first day cannot be played")
+		return
+
+	# Gather: activate a real harvest node's interactable at point-blank.
+	var before_wood := int(inventory.call("count", "wood"))
+	var node := _nearest_harvest(world, player.global_position)
+	if node == null:
+		_fail("no harvest nodes in the world; there is nothing to gather")
+		return
+	player.global_position = node.global_position + Vector3(0.5, 0.5, 0.0)
+	player.velocity = Vector3.ZERO
+	for i in 30:
+		await physics_frame
+	var arbiter: Node = get_first_node_in_group("interaction_arbiter")
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
+	for i in 10:
+		await physics_frame
+	var gathered := int(inventory.call("count", "wood")) > before_wood \
+		or int(inventory.call("count", "stone")) > 0 \
+		or int(inventory.call("count", "fiber")) > 0 \
+		or int(inventory.call("count", "berries")) > 0
+	if not gathered:
+		_fail("standing on a harvest node and pressing interact gathered nothing (arbiter offers '%s')"
+			% (str(arbiter.call("prompt")) if arbiter != null else "no arbiter"))
+		return
+	print("gathered from a harvest node")
+
+	# Fund and arm the camp, then plant it through the placer's own press.
+	inventory.call("add", "wood", 12)
+	inventory.call("add", "stone", 8)
+	inventory.call("add", "fiber", 10)
+	_game.set("pending_build", "camp")
+	var wood_before_build := int(inventory.call("count", "wood"))
+	for i in 30:
+		await physics_frame
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
+	for i in 20:
+		await physics_frame
+
+	var camp := world.get_node_or_null(^"Camp")
+	if camp == null:
+		_fail("pressing interact on a legal ghost planted no camp")
+		return
+	if int(inventory.call("count", "wood")) >= wood_before_build:
+		_fail("the camp was planted and cost no wood")
+	if str(_game.get("pending_build")) != "":
+		_fail("planting the camp left the build armed; every press would plant another")
+	print("camp planted, costs spent")
+
+	# Rest. The camp's own prompt, through the arbiter.
+	var day_before := int(_game.get("day"))
+	var vitals: RefCounted = player.get("vitals")
+	vitals.set("health", 40.0)
+	player.global_position = camp.global_position + Vector3(1.6, 0.5, 0.0)
+	for i in 30:
+		await physics_frame
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
+	for i in 140:
+		await physics_frame
+
+	if int(_game.get("day")) != day_before + 1:
+		_fail("resting did not advance the day (still %d)" % int(_game.get("day")))
+	elif float(vitals.get("health")) < float(vitals.get("max_health")):
+		_fail("resting left the trainer at %.0f health" % float(vitals.get("health")))
+	else:
+		print("rested: day %d, trainer healed" % int(_game.get("day")))
+
+
+func _nearest_harvest(world: Node, from: Vector3) -> Node3D:
+	var best: Node3D = null
+	var best_distance := INF
+	for child in world.get_children():
+		if child.get_script() == preload("res://scripts/world/harvest_node.gd"):
+			var d := (child as Node3D).global_position.distance_to(from)
+			if d < best_distance:
+				best_distance = d
+				best = child
+	return best
 
 
 func _report() -> void:

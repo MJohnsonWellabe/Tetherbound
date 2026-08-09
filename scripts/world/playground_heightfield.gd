@@ -60,6 +60,7 @@ func height_at(x: float, z: float) -> float:
 	height -= _valley_depth(x, z)
 	height += _rise_height(x, z)
 	height = _apply_spawn_pad(x, z, height)
+	height = _apply_flats(x, z, height)
 
 	return height
 
@@ -116,6 +117,72 @@ func _apply_spawn_pad(x: float, z: float, height: float) -> float:
 	var strength := float(pad.get("flatten", 0.85)) * (1.0 - smoothstep(0.0, 1.0, distance / radius))
 	var centre_height := _raw_height(float(centre[0]), float(centre[1]))
 	return lerpf(height, centre_height, strength)
+
+
+## Building pads. Unlike the spawn pad's gentle 0.85 pull, these flatten FULLY
+## inside `radius` — a barn on an 0.85-flattened slope still tilts, and a
+## tilted building reads as a mistake where a tilted tree reads as a tree. The
+## `skirt` blends back to natural ground so the pad has no cliff edge.
+func _apply_flats(x: float, z: float, height: float) -> float:
+	var flats: Array = _config.get("flats", [])
+	# The STRONGEST pad wins outright rather than each blending in turn.
+	# Sequential blending let one pad's skirt reach inside a neighbour's radius
+	# and drag its "flat" 3.6m out of true — a tilted house pad found by the
+	# pad-flatness test, not by eye.
+	var best_weight := 0.0
+	var best_target := height
+	for entry: Variant in flats:
+		if not entry is Dictionary:
+			continue
+		var flat: Dictionary = entry
+		var centre: Array = flat.get("centre", [0.0, 0.0])
+		var radius := float(flat.get("radius", 10.0))
+		var skirt := float(flat.get("skirt", 8.0))
+		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
+		if distance >= radius + skirt:
+			continue
+		var weight := 1.0 - smoothstep(radius, radius + skirt, distance)
+		if weight > best_weight:
+			best_weight = weight
+			best_target = float(flat.get("height", _raw_height(float(centre[0]), float(centre[1]))))
+	return lerpf(height, best_target, best_weight)
+
+
+## How much a world point belongs to a dirt path: 1.0 on the centreline,
+## fading to 0.0 across `shoulder` metres past the path's half-width.
+##
+## Paths are authored polylines in the config (`paths.routes`), walked as
+## straight segments — enough points bend a route organically, and a segment
+## distance is testable arithmetic where a spline is not. The bake reads this
+## to tint the colour map, the scatter reads it to keep vegetation off the
+## road, and both agreeing is exactly why it lives here as one function.
+func path_factor(x: float, z: float) -> float:
+	var paths: Dictionary = _config.get("paths", {})
+	var routes: Array = paths.get("routes", [])
+	if routes.is_empty():
+		return 0.0
+	var half := float(paths.get("width", 3.0)) * 0.5
+	var shoulder := float(paths.get("shoulder", 1.5))
+	var spot := Vector2(x, z)
+	var nearest := INF
+	for entry: Variant in routes:
+		if not entry is Dictionary:
+			continue
+		var points: Array = (entry as Dictionary).get("points", [])
+		for i in points.size() - 1:
+			var a := Vector2(float(points[i][0]), float(points[i][1]))
+			var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
+			nearest = minf(nearest, _segment_distance(spot, a, b))
+	return 1.0 - smoothstep(half, half + shoulder, nearest)
+
+
+func _segment_distance(point: Vector2, a: Vector2, b: Vector2) -> float:
+	var along := b - a
+	var length_sq := along.length_squared()
+	if length_sq < 0.0001:
+		return point.distance_to(a)
+	var t := clampf((point - a).dot(along) / length_sq, 0.0, 1.0)
+	return point.distance_to(a + along * t)
 
 
 ## Height before the spawn pad flattening, used as the pad's own target so the

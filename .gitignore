@@ -4,7 +4,7 @@
 .import/
 
 # Export output. Built by `godot --export-*`, never checked in.
-build/
+/build/
 *.exe
 *.pck
 *.zip

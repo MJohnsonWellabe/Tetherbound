@@ -59,6 +59,13 @@ func configure(config: Dictionary) -> void:
 	health = max_health
 
 
+## A night's sleep: everything back to full. Called by the camp's rest.
+func rest() -> void:
+	stamina = max_stamina
+	health = max_health
+	_exhausted = false
+
+
 ## True when the player has enough stamina to start or continue sprinting.
 func can_sprint() -> bool:
 	return not _exhausted and stamina > 0.0
