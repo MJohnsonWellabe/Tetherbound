@@ -101,29 +101,58 @@ added as each model landed, Reedwing's last. The production report's own
 "known gap" note (missing Bramblebun/Mudsnout/Trailpup candidate-selection
 record) is resolved — see `DONE.md`. Nothing left to do here.
 
-### R0.9 — Assemble the opening into the real scene
-`model: sonnet` · `tests: smoke_opening`
+### R0.8.5 — Full blind visual review pass, now that the roster is finished
+`model: sonnet` · `tests: none` · **Owner-requested next step, 2026-08-09.**
 
-`scripts/story/sequence_director.gd` is written and merged and **nothing
-instantiates it**, so the opening still does not run.
+R0.6 finished the whole wild roster (twelve species plus the three
+starters) without a fresh blind gate on most of it — the per-species blind
+critique in R0.4/R0.5 judged *candidate meshes* before texturing/rigging,
+not the final installed, graded, animated result, and only Terrapup ever
+passed a real blind gate outright (`docs/HANDOFF.md` §6). Run the harness
+that already exists for this rather than inventing a new one:
+`.claude/skills/visual-judge` — see `docs/decisions/D06` and the existing
+reports in `docs/reviews/` and `docs/art/*_PRODUCTION_REPORT.md` for the
+established pattern (fresh subagent, shown only renders and concept art,
+told nothing about what changed).
 
-Add to `scenes/world/meadows_playground.tscn`, as children of the world root
-(the node offering `ground_height_at`): a `SequenceDirector` node, a node with
-`scripts/world/interaction_arbiter.gd`, `scenes/ui/dialogue_panel.tscn` and
-`scenes/ui/name_prompt.tscn`. Wire the director's NodePath exports:
-`player_path`, `arbiter_path`, `encounter_path`, `manager_path`,
-`camera_rig_path`, `dialogue_path`, `name_prompt_path`.
+Scope, per the owner's request: **every creature** (all sixteen —
+thirteen wild species/evolution, three starters — plus Grandpa, the
+Warden and the Veridian legendary), **the trainer character**,
+**buildings**, and **the meadow terrain/biome** as a whole.
 
-Do **not** set the arbiter's `player_path` — the director calls `set_player()`.
-Do **not** place Grandpa or the starters in the scene; the director spawns them
-from `opening.json`, and a second Grandpa offers a second prompt. Leave
-`default_starter` alone — the director suspends it.
+Two things worth knowing before starting:
 
-Note `EncounterDirector.WILD_SPAWNS` also spawns an aggressive Tuskroot, which
-can charge the player mid-opening. Decide whether that is acceptable and say so.
+- **Buildings have no art yet.** `assets/buildings/` is empty (just
+  `.gitkeep`) — Phase 2's build pieces (R2.5) haven't been made. Report
+  this as "nothing to review" rather than silently skipping it or
+  inventing placeholder art to review instead.
+- **This container has no `libEGL.so.1`**, so `turntable.py` cannot render
+  a frame — a persistent, repeatedly-confirmed limitation this session
+  (see `DONE.md`'s Mosshell/Burrowback/Paddlenewt entries). Check for a
+  working GL environment before starting; if this firing's container also
+  lacks it, say so plainly in `BLOCKED.md` with what was tried, rather
+  than attempting the review on un-renderable output.
 
-Done when: `tests/smoke_opening.gd` goes green. It is currently red by design and
-names exactly what is missing.
+Known standing defects already on record that a review will likely
+re-confirm, so they are not a surprise if the review finds them again:
+Ripplet/Galewisp's ungraded eyes (`docs/HANDOFF.md` §6), the Veridian
+Stag's failed blind gate (off-style saturation, hue-camouflaged, faceless),
+the Warden's painted-not-modelled face, Brooktail's missing paddle tail,
+and the various per-species "flag for a pass" notes recorded in each
+`DONE.md`/`ASSET_LEDGER.md` entry during R0.6 (claw scale, talon
+sharpness, crest thickness, neck proportion, and so on). The point of this
+pass is a **complete, current-state record** across the whole finished
+roster, not re-discovering defects one at a time.
+
+### R0.9 — Assemble the opening into the real scene — DONE
+
+Shipped. See `DONE.md`. `SequenceDirector`, `InteractionArbiter`,
+`DialoguePanel` and `NamePrompt` are wired into
+`scenes/world/meadows_playground.tscn`; `smoke_opening.gd` passes end to
+end. Five real bugs found and fixed along the way, three in the opening
+flow and two more in shared combat code exposed by it.
+
+**Phase 0 — finish the roster is complete.**
 
 ### R0.10 ▶ Play gate — the first fifteen minutes
 Wake, walk to Grandpa, talk, choose a starter, name it, fight, catch.
@@ -325,12 +354,11 @@ the character target.
   delete the comment. `model: haiku`
 - Opening the menu mid-fight is silently refused with no on-screen explanation.
   `model: haiku`
-- `scripts/world/` has two arbiters: `prompt_arbiter.gd` (used) and
-  `interaction_arbiter.gd` (used by nothing until R0.9). Confirm both are wanted
-  after R0.9 lands, or fold one into the other. `model: sonnet`
-- `scripts/combat/encounter_director.gd:186` does `_ally.display_name = nickname`,
-  clobbering the species name — the same bug already fixed in `party_seam.gd`.
-  `model: haiku`
+- `scripts/world/` has two arbiters: `prompt_arbiter.gd` and
+  `interaction_arbiter.gd`. **Resolved by R0.9** — both are wanted.
+  `interaction_arbiter.gd` now drives the opening's Grandpa/starter
+  offers; `prompt_arbiter.gd` still drives the ordinary world (gathering,
+  wild pals, buildings). Different arbitration lifetimes, not redundant.
 - Backpack has no use/consume/equip/drop/split verb; the only action is moving an
   item. Needed before food buffs (R5.7) mean anything. `model: sonnet`
 - **`tests/smoke_combat.gd` is intermittent, same pattern as `smoke_traversal`.**

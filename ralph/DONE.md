@@ -5,6 +5,82 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.9 — Assembled the opening into the real scene. Phase 0 is done.
+`6b8b572` (wiring + three opening-flow bugs) and `9dd8e38` (two more test
+fixes CI caught after the first push) on `ralph/R0.9`. Both confirmed
+merged by fetching `main` directly — `a414da7..9dd8e38` fast-forwarded.
+
+Added `SequenceDirector`, `InteractionArbiter`, `DialoguePanel` and
+`NamePrompt` to `scenes/world/meadows_playground.tscn` as children of the
+world root, wiring the director's seven NodePath exports. Per the task's
+own instructions: the arbiter's `player_path` was left unset (the
+director calls `set_player()` itself once the tree is up), and neither
+Grandpa nor the starters were placed in the scene (the director spawns
+them from `opening.json`).
+
+Five real bugs surfaced once the scene was genuinely wired and testable
+for the first time — none were new; all were latent, waiting for the
+first end-to-end run:
+
+1. **Starter-vs-player collision blocked the walk to Grandpa.** The
+   middle starter always sits on the dead-straight line from spawn to
+   Grandpa (`starter_offsets()` centres the row on his facing, and that
+   line *is* the approach). Sharing the default collision layer meant the
+   player mounted its capsule and stopped short. Fixed by giving the
+   opening's three temporary display bodies their own collision layer in
+   `sequence_director.gd` — the real follower pal built later by
+   `adopt_starter()` is a different instance with the ordinary setup.
+2. **`smoke_opening.gd`'s own walk stopped on raw distance**, but the
+   three starters' 2.6m radii overlap on purpose (3.5m spread), so a
+   straight walk at an off-centre one could still leave a centred
+   neighbour "winning" arbitration. Now requires proximity AND an actual
+   arbitration win, matching what a real player experiences.
+3. **`encounter_director.gd:186` wrote the chosen nickname to
+   `display_name` instead of `nickname`** — the same bug already fixed
+   once in `party_seam.gd`. `pal_instance.label()` reads `nickname` first,
+   so this permanently lost the species name. This was already recorded
+   in `BACKLOG.md`'s "found along the way" list; removed from there now.
+4. **`smoke_combat.gd` assumed a default sandbox starter** that no longer
+   spawns — `SequenceDirector`'s `_ready()` now unconditionally suspends
+   it, since the opening is always in the scene. Fixed by having the test
+   adopt a starter directly, the same call the opening itself makes.
+5. **`combat_manager.gd`'s `_stand_the_trainer_aside()` teleported the
+   trainer with a raw Y** carried from the arena's own centre instead of
+   asking the world for ground height (violates `D09`). On ground uneven
+   enough for the difference to clear collision, the trainer fell through
+   the terrain forever. Only exposed once fix 4 shifted the engagement
+   geometry. Fixed with a `_ground_height()` helper mirroring
+   `pal_body.gd`'s pattern.
+
+Bug 4's fix broke two more tests that share the same scene and the same
+assumption — `smoke_catching.gd` and `smoke_aggression.gd` — caught by
+real CI on the first push (`6b8b572` went red), not locally beforehand.
+Both got the identical `_ensure_ally()` fix and shipped in the follow-up
+commit (`9dd8e38`). **Lesson for next time a shared-scene change lands:
+check every consumer of that scene, not just the task's own named test**
+— `smoke_menu.gd`, `smoke_settings.gd` and `smoke_free_build.gd` were
+also checked this time and confirmed unaffected.
+
+Verified: `tests/smoke_opening.gd` passes end to end (walk, talk to
+Grandpa, choose and name a starter, the pal reaches the real party).
+`tests/smoke_combat.gd`, `smoke_catching.gd`, `smoke_aggression.gd`,
+`smoke_menu.gd`, `smoke_settings.gd`, `smoke_free_build.gd` and the full
+277-test suite (0 failed) all still pass. Real CI on `9dd8e38` green
+end to end including the Windows export
+(run 31318155566).
+
+`EncounterDirector.WILD_SPAWNS` still spawns an aggressive Tuskroot that
+can charge the player mid-opening, per the task's own note to decide and
+say so: left as-is. `smoke_opening.gd` passing with it present confirms
+it does not block the scripted flow, and an aggressive pal in the meadow
+during the opening is consistent with `GAME_DESIGN.md` §14's own rule
+that aggression is not gated on story state elsewhere in the game.
+
+**Phase 0 — finish the roster is now complete.** R0.6, R0.7, R0.8 and
+R0.9 are all done. The next item, R0.10, is a `▶` play gate: the owner
+plays the first fifteen minutes themselves. The loop stops there, per
+`ralph/PROMPT.md`.
+
 ## R0.6 — finished Reedwing (fourth and last bird species). R0.6 is complete.
 `6c14a65` (shipped as `ralph/R0.6-reedwing-v2`, cherry-picked from the
 original `ralph/R0.6-reedwing`'s `f97824a` after a base-mismatch — see
