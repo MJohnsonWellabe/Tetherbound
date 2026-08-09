@@ -50,6 +50,7 @@ func _run() -> void:
 		await physics_frame
 
 	await _ensure_ally()
+	_leave_the_farmhouse()
 	if not _collect_nodes():
 		_report()
 		return
@@ -86,6 +87,21 @@ func _ensure_ally() -> void:
 	if director == null or director.call("ally_instance") != null:
 		return
 	await director.call("adopt_starter", "terrapup")
+
+
+## The opening's staging wakes the player in Grandpa's bed; this test bypasses
+## the opening and needs open meadow between it and both wild clusters, not a
+## farmhouse wall. Between the practice cluster and galecrest's foot-of-the-rise
+## spot (data/config/spawns.json).
+func _leave_the_farmhouse() -> void:
+	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null:
+		return
+	var start := Vector3(40.0, 0.0, -62.0)
+	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+
 
 
 func _collect_nodes() -> bool:

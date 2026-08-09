@@ -18,7 +18,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT := "res://shots/site"
-const SETTLE_FRAMES := 240
+const SETTLE_FRAMES := 50
 
 ## name -> [camera position, look-at target]
 const SHOTS := {
@@ -63,7 +63,7 @@ func _run() -> void:
 		camera.global_position = spec[0]
 		camera.look_at(spec[1])
 		# Long settle per shot: Terrain3D streams regions toward the camera.
-		for i in 90:
+		for i in 25:
 			await process_frame
 		var image := root.get_texture().get_image()
 		image.save_png("%s/%s.png" % [OUT, name])

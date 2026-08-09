@@ -45,6 +45,17 @@ func _run() -> void:
 		quit(1)
 		return
 
+	# Out of the farmhouse. The opening's staging wakes the player in
+	# Grandpa's bed, and this test is about the TERRAIN — four long walks that
+	# start inside a building end at its walls and prove nothing. Open meadow,
+	# clear of the village, the rises and the pond.
+	var start := Vector3(60.0, 0.0, -60.0)
+	start.y = float(world.call("ground_height_at", start.x, start.z)) + 1.0
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+	for i in 30:
+		await physics_frame
+
 	var failures: Array[String] = []
 
 	# The direct cause, asserted directly. Everything below is the symptom.

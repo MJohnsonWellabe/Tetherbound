@@ -46,6 +46,7 @@ func _run() -> void:
 		await physics_frame
 
 	await _ensure_ally()
+	_leave_the_farmhouse()
 	_seed_orbs()
 	if not _collect_nodes():
 		_report()
@@ -80,6 +81,20 @@ func _ensure_ally() -> void:
 	if director == null or director.call("ally_instance") != null:
 		return
 	await director.call("adopt_starter", "terrapup")
+
+
+## The opening's staging wakes the player in Grandpa's bed; this test bypasses
+## the opening and needs open meadow between it and the wild creatures, not a
+## farmhouse wall. Placed near the practice cluster (data/config/spawns.json).
+func _leave_the_farmhouse() -> void:
+	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null:
+		return
+	var start := Vector3(42.0, 0.0, -52.0)
+	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+
 
 
 ## Orbs are satchel items now — in the real game Grandpa hands them over in
