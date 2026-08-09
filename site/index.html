@@ -4,16 +4,37 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tetherbound</title>
-<meta name="description" content="A third-person survival, crafting and creature-training game. Windows and ROG Ally build.">
+<meta name="description" content="A third-person survival, crafting and creature-training game. Five pals, no storage. Windows and ROG Ally build.">
 <meta property="og:title" content="Tetherbound">
 <meta property="og:description" content="Five pals. No storage. Your pal does the fighting, and you have to be there.">
+<!-- Switch og:image to img/hero-meadow.jpg once that capture exists.
+     og:image cannot fall back gracefully, so it points at a file that is
+     committed today. -->
 <meta property="og:image" content="img/05-spawn-low-sun.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🌿</text></svg>">
 
 <!--
-  Tetherbound's download page.
+  SCREENSHOTS STILL TO CAPTURE (after the world rebuild, via tools/survey.sh):
 
-  Every image on this page is a REAL in-game frame from tools/survey.sh, not
+    img/hero-meadow.jpg           hero — rolling meadows, village in the middle
+                                  distance, room at the bottom for the gradient
+    img/opening-bedroom.jpg       the upstairs bedroom in Grandpa's farmhouse,
+                                  first light through the window
+    img/starters-by-the-door.jpg  the three starters standing by the door,
+                                  trainer approaching one of them
+    img/village-square.jpg        the farmstead village square, dirt paths
+                                  leading out into the meadows
+    img/combat-arena.jpg          piloted combat inside the bounded arena
+    img/aim-arc.jpg               catch aiming, trajectory arc visible
+    img/camp-dusk.jpg             first-day camp under the stars — fire,
+                                  bedroll, pal beside it
+
+  Every slot degrades gracefully: each is a layered CSS background, so a
+  missing file falls through to an existing committed frame where one fits,
+  or to a palette gradient where none does. The page never shows a broken
+  image and never needs all seven to exist.
+
+  Every image on this page is a REAL in-game frame from the survey tools, not
   concept art and not a mock-up. That is deliberate: a download page that
   promises something the build does not do is the fastest way to stop trusting
   your own screenshots. When the game looks better, these get replaced by
@@ -23,8 +44,8 @@
   lighting and UI read. The site and the build cannot drift apart in palette
   without somebody changing that file.
 
-  Everything is inline. No fonts, no analytics, no CDN: the page is one request
-  plus its images, and it works offline once loaded.
+  Everything is inline. No fonts, no analytics, no CDN, no JS: the page is one
+  request plus its images, and it works offline once loaded.
 -->
 
 <style>
@@ -35,6 +56,7 @@
   --flower-gold:#d9b340;
   --trail-wheat:#d1b37e;
   --stone-sand:#c3ad82;
+  --stone-grey:#b4b1a6;
   --slate-cool:#6e818e;
   --timber:#402e2b;
   --day-blue:#3b6f93;
@@ -75,7 +97,13 @@ a{color:var(--flower-gold)}
 }
 .hero-art{
   position:absolute; inset:0; z-index:-2;
-  background:url("img/05-spawn-low-sun.jpg") center 38%/cover no-repeat;
+  /* hero-meadow.jpg is the intended frame; until it is captured the layer
+     falls through to the committed golden-hour frame, and under both sits a
+     palette sky-to-grass gradient. */
+  background:
+    url("img/hero-meadow.jpg") center 38%/cover no-repeat,
+    url("img/05-spawn-low-sun.jpg") center 38%/cover no-repeat,
+    linear-gradient(180deg,var(--day-blue) 0%,var(--slate-cool) 45%,var(--grass-olive) 100%);
   /* Very slight scale so the edges never show a seam while the gradient sits
      over it. */
   transform:scale(1.04);
@@ -98,7 +126,7 @@ a{color:var(--flower-gold)}
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 .tagline{
-  max-width:36ch;
+  max-width:38ch;
   font-size:clamp(1.05rem,2.4vw,1.45rem);
   color:var(--ink);
   text-shadow:0 1px 10px rgba(0,0,0,.8);
@@ -152,7 +180,7 @@ h2{
 
 .rules{
   display:grid; gap:1.1rem;
-  grid-template-columns:repeat(auto-fit,minmax(255px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,255px),1fr));
   list-style:none; margin:0; padding:0;
 }
 .rules li{
@@ -164,20 +192,42 @@ h2{
 }
 .rules b{display:block;color:var(--flower-gold);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
 
+/* ---------- screenshots ---------- */
+
 .shots{
   display:grid; gap:1rem;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));
   margin-top:1rem;
 }
 figure{margin:0;border-radius:12px;overflow:hidden;background:#0d1009;border:1px solid rgba(255,255,255,.08)}
-figure img{display:block;width:100%;height:auto}
 figcaption{padding:.7rem .95rem;color:var(--ink-dim);font-size:.86rem}
+figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem;margin-right:.5em}
 .wide{grid-column:1/-1}
+
+/* Each screenshot slot is a layered background: the intended frame on top,
+   then (where one fits) a committed frame from the current build, then a
+   palette gradient. A missing file simply falls through to the next layer,
+   so no slot ever renders as a broken image. */
+.shot{
+  aspect-ratio:16/9;
+  width:100%;
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+}
+.s-bedroom{background-image:url("img/opening-bedroom.jpg"),linear-gradient(160deg,var(--timber),var(--oxblood))}
+.s-starters{background-image:url("img/starters-by-the-door.jpg"),linear-gradient(160deg,var(--leaf-deep),var(--timber))}
+.s-village{background-image:url("img/village-square.jpg"),url("img/01-spawn-outward.jpg"),linear-gradient(160deg,var(--trail-wheat),var(--grass-olive))}
+.s-camp{background-image:url("img/camp-dusk.jpg"),linear-gradient(160deg,var(--dusk),var(--night-plum))}
+.s-combat{background-image:url("img/combat-arena.jpg"),url("img/02-arena-opens.jpg"),linear-gradient(160deg,var(--slate-cool),var(--timber))}
+.s-aim{background-image:url("img/aim-arc.jpg"),url("img/08-orb-in-flight.jpg"),linear-gradient(160deg,var(--day-blue),var(--dusk))}
+.s-strike{background-image:url("img/06-charged-attack-lands.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
 
 .band{
   background:
     linear-gradient(rgba(18,22,15,.86),rgba(18,22,15,.94)),
     url("img/03-rise-overlook.jpg") center/cover fixed no-repeat;
+  background-color:#12160f;
   border-top:1px solid rgba(255,255,255,.07);
   border-bottom:1px solid rgba(255,255,255,.07);
 }
@@ -195,10 +245,10 @@ footer p{margin:.4rem 0}
 <body>
 
 <header class="hero">
-  <div class="hero-art" role="img" aria-label="The Meadows at golden hour, from an in-game frame"></div>
+  <div class="hero-art" role="img" aria-label="Rolling meadows under a day sky, with the farmstead village in the middle distance"></div>
   <span class="flag">Vertical slice · in progress</span>
   <h1 class="wordmark"><span>Tetherbound</span></h1>
-  <p class="tagline">Five pals. No storage, no second chances at the roster. Your pal does the fighting — and you are in there with it.</p>
+  <p class="tagline">Five pals on your belt. No storage box, no second chances at the roster. Your pal does the fighting — and you are in there with it.</p>
 
   <div class="get">
     <a class="btn" href="https://github.com/MJohnsonWellabe/Tetherbound/releases/download/latest/Tetherbound-windows.zip">
@@ -221,45 +271,68 @@ footer p{margin:.4rem 0}
     <h2>What it is</h2>
     <p class="lede">
       A third-person survival, crafting and creature-training game built in Godot,
-      aimed at a handheld first. This build is the Meadows vertical slice: walk
-      the biome, find a wild pal, and fight it yourself.
+      aimed at a handheld first. This build is the Meadows vertical slice: wake up
+      in a farmhouse, choose a starter, walk out into the biome, and fight and
+      catch wild pals yourself.
     </p>
 
     <ul class="rules">
-      <li><b>Five, and only five</b>Your whole roster is five pals. There is no storage box to park the rest in, so every catch is a decision about what you give up.</li>
-      <li><b>You pilot the fight</b>Combat hands you the controls of your pal inside a bounded arena. There is no dodge button — moving is the dodge, and attacks are aimed and can miss.</li>
-      <li><b>Catching costs you</b>To throw, you take the camera back to your trainer and aim. Your pal is left undefended while you do it, and the opponent does not stop.</li>
+      <li><b>Five, and only five</b>Your whole roster is the five pals on your belt. There is no storage box to park the rest in, so every catch is a decision about what you give up.</li>
+      <li><b>You pilot the fight</b>Combat is real time and hands you the controls of your pal, inside an arena that forms right where you engaged. There is no dodge button — moving is the dodge, and attacks are aimed and can miss.</li>
+      <li><b>The throw is aimed</b>To catch, you take the camera back to your trainer, and a trajectory arc draws where the orb will go. Your pal is left undefended while you line it up, and the opponent does not stop.</li>
       <li><b>The human cannot fight</b>You have no weapon. What you have is a pal, a throw, and where you chose to stand.</li>
     </ul>
   </section>
 
+  <section class="wrap">
+    <h2>How it begins</h2>
+    <p class="lede">
+      Not with a menu. You wake in the upstairs bedroom of Grandpa's farmhouse,
+      and three starters are standing by the door. You choose one by walking up
+      to it. The other two stay with Grandpa. Then the village lets you out —
+      a handful of farmsteads around a square, dirt paths running off into the
+      meadows — and by nightfall you have built your first camp and your first
+      day is over.
+    </p>
+    <div class="shots">
+      <figure>
+        <div class="shot s-bedroom" role="img" aria-label="The upstairs bedroom in Grandpa's farmhouse at first light"></div>
+        <figcaption><b>Wake</b>First light in Grandpa's farmhouse. No title card.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot s-starters" role="img" aria-label="Three starter pals standing by the farmhouse door"></div>
+        <figcaption><b>Choose</b>The starters wait by the door. You pick one by walking to it, not by scrolling a list.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot s-village" role="img" aria-label="The farmstead village square, with dirt paths leading out into rolling meadows"></div>
+        <figcaption><b>Leave</b>The village square. Every dirt path out of it ends in meadow.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot s-camp" role="img" aria-label="A campfire and bedroll under the stars, a pal resting beside them"></div>
+        <figcaption><b>Rest</b>Day one ends where you put it down: a fire, a bedroll, your pal beside you under the stars.</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section class="band">
     <div class="wrap">
-      <h2>The Meadows</h2>
+      <h2>The fight</h2>
       <p class="lede">
         Every image on this page is a real in-game frame, captured by the
         project's own survey tool. No concept art, no touch-ups.
       </p>
       <div class="shots">
+        <figure>
+          <div class="shot s-combat" role="img" aria-label="Two pals fighting inside a bounded arena in the open meadow"></div>
+          <figcaption>The arena forms where you engaged, not in a separate scene. You are driving your pal directly.</figcaption>
+        </figure>
+        <figure>
+          <div class="shot s-aim" role="img" aria-label="Aiming a catch, the trajectory arc drawn from the trainer toward a wild pal"></div>
+          <figcaption>The throw. The arc shows exactly where the orb will land — and the fight keeps going while you aim.</figcaption>
+        </figure>
         <figure class="wide">
-          <img src="img/01-spawn-outward.jpg" alt="Rolling meadow with copses of trees and wildflowers, the trainer standing in the middle distance" loading="lazy" width="1280" height="720">
-          <figcaption>Spawn, looking out across the biome.</figcaption>
-        </figure>
-        <figure>
-          <img src="img/06-charged-attack-lands.jpg" alt="Two creatures fighting, a charged attack landing in a burst of light" loading="lazy" width="1280" height="720">
-          <figcaption>A charged attack landing. You are driving the grey one.</figcaption>
-        </figure>
-        <figure>
-          <img src="img/08-orb-in-flight.jpg" alt="An orb arcing through the air toward a wild creature, trailing light" loading="lazy" width="1280" height="720">
-          <figcaption>The throw. Aimed from the trainer's shoulder, and missable.</figcaption>
-        </figure>
-        <figure>
-          <img src="img/02-arena-opens.jpg" alt="The combat arena opening around two creatures" loading="lazy" width="1280" height="720">
-          <figcaption>The arena forms where you engaged, not in a separate scene.</figcaption>
-        </figure>
-        <figure>
-          <img src="img/05-spawn-low-sun.jpg" alt="The meadow at golden hour, long shadows across the grass" loading="lazy" width="1280" height="720">
-          <figcaption>Golden hour. Sun, sky and fog all move together.</figcaption>
+          <div class="shot s-strike" role="img" aria-label="A charged attack landing in a burst of light"></div>
+          <figcaption>A charged attack landing. Attacks are aimed, chargeable, and missable — for both sides.</figcaption>
         </figure>
       </div>
     </div>
@@ -268,12 +341,15 @@ footer p{margin:.4rem 0}
   <section class="wrap">
     <h2>Honest state of it</h2>
     <p class="lede">
-      This is a prototype, and the parts that are not finished are worth naming
-      rather than cropping out of the screenshots. The creature and character
-      models are sourced stand-ins, kept because they prove the rigging,
-      animation and scaling systems around them — not because they are the art.
-      A blind reviewer looks at every build and says so; those reviews are in the
-      repository alongside the code.
+      This is a prototype of one biome, not a finished game. What is here is the
+      Meadows: the opening morning, the village, wild combat, catching, and the
+      first camp. What is not here is everything past the slice. The creatures
+      and characters — all fifteen species, the trainer, Grandpa, the Warden,
+      the Veridian Stag — are original productions, modelled from the project's
+      own concept art through a Meshy-assisted pipeline. The environments are
+      assembled from CC0 kits, credited below. A blind reviewer looks at every
+      build and says what is wrong with it; those reviews are in the repository
+      alongside the code.
     </p>
     <div class="get">
       <a class="btn" href="https://github.com/MJohnsonWellabe/Tetherbound">
@@ -288,7 +364,8 @@ footer p{margin:.4rem 0}
 
 <footer>
   <p>Built with Godot 4.7. Windows and ROG Ally.</p>
-  <p>Creature, character, environment and terrain assets are CC0 from Quaternius, Kay Lousberg, Kenney and ambientCG — full provenance in <a href="https://github.com/MJohnsonWellabe/Tetherbound/blob/main/docs/ASSET_LEDGER.md">the asset ledger</a>.</p>
+  <p>Creatures and characters — all fifteen species, the trainer, Grandpa, the Warden and the Veridian Stag — are original productions, generated from the project's own concept art.</p>
+  <p>Environment art: Quaternius (Stylized Nature MegaKit, Farm Buildings, furniture and survival packs, CC0) and Kenney (Nature Kit, CC0). Terrain textures: ambientCG (CC0). Skies: Poly Haven (CC0). Full provenance in <a href="https://github.com/MJohnsonWellabe/Tetherbound/blob/main/docs/ASSET_LEDGER.md">the asset ledger</a>.</p>
 </footer>
 
 </body>
