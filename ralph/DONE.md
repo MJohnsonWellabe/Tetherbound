@@ -5,6 +5,34 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.8.5 — Full blind visual review pass, against the overhauled build
+`216ce54` (review + backlog updates) on `ralph/R0.8.5`, on top of `d318a55`
+(incidental missing .uid/.import sidecars from this container's first-ever
+import pass — same class of fix as R0.3.5's). No tests named for this item;
+CI is import + Windows export only.
+
+One complete current-state record: the five fixed meadow viewpoints, five
+staged site frames, and serial Blender turntables (four angles each) for
+the trainer, Grandpa, the Warden and all seventeen pal species, judged by a
+blind sub-agent per `.claude/skills/visual-judge` with no knowledge of what
+changed. Full write-up: `docs/reviews/2026-08-09-r0.8.5-full-blind-review.md`.
+Both bar questions came back no — top separators: no landmark in any
+outdoor frame, the trainer/Warden art-pipeline gap, and flat lighting with
+no time-of-day read.
+
+What the next firing should know, all recorded in `BACKLOG.md`/`BLOCKED.md`
+in more detail:
+- Two real bugs found in the review harness itself (not the game):
+  `survey.gd`'s viewpoints 01/05 render the farmhouse interior instead of
+  the meadow, 03/04 render as if the camera is embedded in the terrain.
+  `preview_creatures.gd` renders zero creatures (bypasses `pal.tscn`). Both
+  are backlog items now, not fixed here.
+- **Tuskroot is not still the songbird placeholder** — R4.5's backlog text
+  was stale; corrected, needs `smoke_art` verification to close properly.
+- Creature/human art-pipeline cohesion (Paddlenewt/Pipwing/Ripplet vs. the
+  rest; trainer/Grandpa vs. the Warden) logged as a design question in
+  `BLOCKED.md` — rework vs. replace is the owner's call, not invented here.
+
 ## R0.9 — Assembled the opening into the real scene. Phase 0 is done.
 `6b8b572` (wiring + three opening-flow bugs) and `9dd8e38` (two more test
 fixes CI caught after the first push) on `ralph/R0.9`. Both confirmed
