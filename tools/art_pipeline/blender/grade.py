@@ -336,6 +336,33 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+
+    # ------------------------------------------------------------------
+    # PADDLENEWT — fourth of the ten. Same first-pass philosophy.
+    # ------------------------------------------------------------------
+    "paddlenewt": {
+        # Five rectangles, same duplicated-across-UV-islands pattern as
+        # Galewisp's six and Tuskroot's three: every one shows the same
+        # amber/gold iris ring around a dark pupil (four of the five also
+        # carry a white catchlight), which is a texel-for-texel-consistent
+        # signature no ordinary skin blemish produces, and a systematic scan
+        # of the whole 2048x2048 atlas (both halves, all four quadrants)
+        # found no sixth. Two other dark patches were checked and rejected:
+        # one had no iris ring at all (just a shadowed crease), the other an
+        # amber smear with no black pupil — neither guarded. Boxes grown
+        # generously beyond each visible pupil/sclera per the Tuskroot
+        # convention.
+        "eye_guard": [
+            ("uv", 1150, 375, 1320, 595),
+            ("uv", 805, 730, 975, 905),
+            ("uv", 890, 875, 1125, 1035),
+            ("uv", 690, 1095, 860, 1235),
+            ("uv", 390, 1270, 625, 1465),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 

@@ -278,6 +278,35 @@
         }
       }
     },
+    "paddlenewt": {
+      "display_name": "Paddlenewt",
+      "type": "water",
+      "_comment": "Quick Swimmer/Skirmisher per the sheet's own subtitle and build notes (Water Sheet, docs/art/reference/wild/03_Meadows_Wild_Water_Sheet.png): agile amphibious body, webbed toes for quick bursts, soft fins for balance and display, moist skin, no armor plating. A skirmisher hits fast and often rather than tanking -- so it carries the roster's lowest defence (soft-bodied, small) with attack in the upper-middle band (Ripplet/Trailpup territory) and HP on the low side for its Small-Medium size class. Non-aggressive: the sheet's own design notes call the whole Water roster 'friendly, expressive... calm spirits', and Paddlenewt's listed actions are WATER DASH and PLAYFUL POUNCE, not a hunting behaviour. Common (small pond creature): catch rate near Bramblebun/Mudsnout, not Tuskroot's rare end. All tunable; nobody has fought one yet.",
+      "base_hp": 90.0,
+      "base_attack": 20.0,
+      "base_defence": 12.0,
+      "catch_rate": 0.5,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#3f8080",
+        "height": 1.5,
+        "radius": 0.5,
+        "_comment_footprint": "Compact agile newt body with a fin/tail silhouette that extends past a plain quadruped footprint but not as far as a winged creature's -- between Trailpup's lean canine body and Ripplet's otter build.",
+        "footprint_allowance": 2.6,
+        "model": "res://assets/pals/tetherbound/paddlenewt/models/pal_paddlenewt_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md; R0.4's report also flags a cosmetic defect (tail is short/abrupt rather than the canon's long taper) that was not sculpt-fixed here, consistent with how Burrowback's claw-scale note and Tuskroot's plate-edge note were handled -- flagged, not fixed, since it is not a hard fail. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        }
+      }
+    },
     "veridian": {
       "display_name": "Veridian Stag",
       "type": "ground",
