@@ -25,6 +25,71 @@ nothing.
 CI green (run 31303384277), fast-forwarded to `main` at `92fc1ae` — verified
 by fetching `origin/main` directly.
 
+## R0.6 — Brooktail finished (sixth of the ten, last of the six wild quadrupeds)
+`20f8412` · Same pipeline as the previous five: clean raw R0.4 winner
+candidate `a` (54,836 → 28,000 tris, manifold) → retexture via Meshy →
+`rig_quadruped.py` → `grade.py` SPECIES entry → `finish.py grade` →
+`finish.py install` → `species.json` entry from the Water Sheet's own
+Resourceful Diver/Helper role and build notes.
+
+**This species carries two real defects, both documented rather than fixed —
+worth reading before touching it again:**
+
+1. **R0.4's report names Brooktail the one HARD FAIL of the ten wild
+   species**, not a clean pick like the other five finished so far — every
+   candidate is missing the canon's broad flat scaled paddle tail, giving a
+   round tapering tail instead. This was **wrongly summarized as "no
+   follow-up flagged" in the previous firing's handoff prompt** (a
+   send_later message written without re-checking the report directly);
+   the actual report entry was caught and corrected by reading
+   `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md` directly rather than
+   trusting the handoff. The report's own instruction is explicit: ship it
+   forward with the defect flagged rather than block or re-roll, since "the
+   tail needs a real sculpting pass before this creature is considered
+   done" — separate future work, not attempted here.
+
+2. **`rig_quadruped.py` left 35 of 14,034 vertices (0.25%) unweighted** —
+   the first species in this batch where that actually happened; the
+   previous five all landed at exactly 0 despite carrying similar residual
+   post-retexture mesh noise (this one: 6,075 non-manifold edges, 81
+   microscopic disconnected components — same category every species
+   carries after Meshy's retexture re-unwrap, see Tuskroot's entry above).
+   Investigated rather than shipped blind: extracted the unweighted
+   vertices' world positions and found them scattered across the entire
+   bounding box, not concentrated near the tail — so this is likely NOT the
+   same root cause as (1), just the same known noise pattern crossing a
+   threshold this one time. `inspect_glb.py` and Blender's own
+   `ARMATURE_AUTO` weighting have no built-in retry/repair for this;
+   fixing it properly would mean a fresh clean/remesh pass (cost: another
+   Meshy texture charge) or waiting for the eventual tail sculpt to
+   naturally redo the mesh. Documented in `species.json`'s `_comment_art`
+   rather than guessed at.
+
+**Six eye-guard rectangles**, same duplicated-across-UV-islands pattern
+every species has shown, found by the same full quadrant-by-quadrant scan.
+One dark almond shape near the snout was checked and rejected — no teal
+iris ring, reads as a nostril shadow.
+
+**Finishes the quadruped half of R0.6.** All that remains is the four bird
+species (Galecrest, Duskhush, Pipwing, Reedwing), and they are blocked:
+`finish.py rig`'s animate step is hardcoded to `animate_quadruped.py`
+regardless of `--kind`, and no `animate_bird.py` exists. Whoever picks up
+R0.6 next needs to write one (or generalise `animate_quadruped.py`) before
+any bird can move past the `rig` step — this is now the actual next blocker
+for R0.6, not a credits or key problem.
+
+**Not in `EncounterDirector.WILD_SPAWNS`**, so `smoke_art`'s shared run
+doesn't spawn it directly (though `_every_species_has_art()` confirms the
+model path resolves, and the run stayed green — the 35 unweighted vertices
+do not block import or the test suite, only animation quality). Height-fit
+verified with the same small standalone script as the previous five:
+**wanted 1.450m, rendered 1.450m, exact match.** Not committed.
+
+CI green (run 31306142495), fast-forwarded to `main` at `20f8412` —
+verified by fetching `origin/main` directly.
+
+Meshy balance after this species' texture pass: **215** (was 225).
+
 ## R0.6 — Mosshell finished (fifth of the ten)
 `e15a204` · Same pipeline as the previous four: clean raw R0.4 winner
 candidate `b` (54,396 → 28,000 tris, manifold) → retexture via Meshy →

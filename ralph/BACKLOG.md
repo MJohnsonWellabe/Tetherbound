@@ -12,18 +12,16 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-**Tuskroot, Meadowhart, Burrowback, Paddlenewt and Mosshell done**
-(`DONE.md`). Remaining, in backlog order: Brooktail (`rig_quadruped.py`),
-then Galecrest, Duskhush, Pipwing, Reedwing (`rig_bird.py` — **see the
-blocker below before starting these four**).
+**All six wild quadrupeds done** (Tuskroot, Meadowhart, Burrowback,
+Paddlenewt, Mosshell, Brooktail — `DONE.md`). **Only the four bird species
+remain, and all four are blocked** — see the blocker below; do not start
+any of Galecrest, Duskhush, Pipwing, Reedwing until it clears.
 
 **If `MESHY_API_KEY` is missing from your environment**, check whether this
 firing is a cron firing or a self-scheduled `send_later` resume before
 concluding the key is actually unavailable — only cron firings have
 consistently carried it this session (`BLOCKED.md`/`DONE.md` have the
-history). If it is genuinely missing, do the Blender-only `clean` step for
-the next species, record the block, and look for other unblocked work
-(R0.8's ledger rows, for instance) rather than idling.
+history).
 
 Per species: `tools/art_pipeline/finish.py clean <species> <winner-letter>`
 → `finish.py texture <species>` (needs `MESHY_API_KEY`, ~10 credits — **do

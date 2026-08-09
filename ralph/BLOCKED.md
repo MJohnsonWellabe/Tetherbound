@@ -47,12 +47,29 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 *(nothing yet)*
 
-Balance at last check: **225**, after Mosshell's texture pass (Tuskroot,
-Meadowhart, Burrowback, Paddlenewt already redone; see `DONE.md`). **Five
-species still need the same redo** (Brooktail, then the four birds once
-`animate_bird.py` unblocks them) before R0.6 can rig them — budget ~10
-credits each, same as R0.5 estimated, not on top of R0.5's spend since R0.5's
-texture charge was wasted, not saved.
+Balance at last check: **215**, after Brooktail's texture pass — the sixth
+and last of the wild quadrupeds now redone (Tuskroot, Meadowhart,
+Burrowback, Paddlenewt, Mosshell, Brooktail; see `DONE.md`). **The four
+birds** (Galecrest, Duskhush, Pipwing, Reedwing) still need the same redo
+once `animate_bird.py` unblocks them — budget ~10 credits each, same as
+R0.5 estimated, not on top of R0.5's spend since R0.5's texture charge was
+wasted, not saved.
+
+---
+
+## Blocked: R0.6's four remaining species need `animate_bird.py`
+
+`finish.py rig`'s animate step is hardcoded to call `animate_quadruped.py`
+regardless of `--kind`, and no `animate_bird.py` exists. All six wild
+quadrupeds are now finished (Tuskroot, Meadowhart, Burrowback, Paddlenewt,
+Mosshell, Brooktail) — this is the actual next blocker for R0.6, not a
+credits or key problem. Whoever reaches Galecrest needs to write
+`animate_bird.py` (or generalise `animate_quadruped.py` to emit believable
+bird-appropriate clips) before `rig_bird.py`'s output can move past the rig
+step.
+
+**Clears when:** `animate_bird.py` exists and produces the roster's six
+standard clips (idle, walk, run, attack, hit, faint) for a bird armature.
 
 ---
 
