@@ -357,16 +357,33 @@ not the character target.
   makes this real) or delete the comment. `model: haiku`
 - Opening the menu mid-fight is silently refused with no on-screen
   explanation. `model: haiku`
-- **`smoke_traversal` and `smoke_combat` are both intermittent.** Traversal:
-  every failure has the player at y = −0.4 m, never falling through — "the
-  ground is not continuous" was a misdiagnosis; done when 20 consecutive
-  headless passes. Combat: a docs-only commit failed on the *last* swing
-  checked ("did no damage 95.0 -> 95.0") after the fight had already resolved
-  normally; confirmed a flake by re-running the identical commit clean.
-  Both read as timing races; both reject healthy work at random under
-  auto-merge, which makes them real defects, not noise. A recorded
-  fight/run log, the way R4.11 prescribes, beats more CI-output reasoning.
-  `model: sonnet`
+- **`smoke_traversal`, `smoke_combat` and now `smoke_aggression` are all
+  intermittent.** Traversal: every failure has the player at y = −0.4 m,
+  never falling through — "the ground is not continuous" was a
+  misdiagnosis; done when 20 consecutive headless passes. Combat: a
+  docs-only commit failed on the *last* swing checked ("did no damage
+  95.0 -> 95.0") after the fight had already resolved normally; confirmed a
+  flake by re-running the identical commit clean. Aggression, new
+  2026-08-09: a docs-and-review-only commit (`ralph/R0.8.5`, run 31342098332,
+  no gameplay code touched) failed `_an_aggressive_pal_starts_the_fight_itself`
+  with "stood 70.9m from Galecrest for 900 frames ... it never attacked" —
+  but that step's own `_walk_towards(wild, 10.0)` is supposed to close to
+  10m *before* the patience timer starts, so the real failure is the walk
+  timing out 60m short, not aggression logic. Worth a specific look, not
+  just "it's the same flake again": Galecrest's cluster sits "at the
+  southern foot of the rocky rise" (the test's own comment), and the same
+  firing's R0.8.5 blind review independently found `survey.gd`'s
+  rise-area viewpoints (03/04) rendering as if the camera were embedded in
+  the terrain — both point at the rise's geometry having drifted since the
+  D18/D19 terrain reshape (village crater walls came down in the same
+  window). Could still be an ordinary timing race; could be a real pathing
+  regression near the rise. All three read as timing races on their
+  surface and all three reject healthy work at random under auto-merge,
+  which makes them real defects, not noise. A recorded fight/run log, the
+  way R4.11 prescribes, beats more CI-output reasoning — and for
+  aggression specifically, checking whether the walk consistently stalls
+  near the rise (vs. anywhere in the meadow) would tell flake from
+  regression. `model: sonnet`
 - **`tools/survey.gd`'s fixed viewpoints have drifted from the world they
   were authored against.** Found by R0.8.5's full blind review
   (`docs/reviews/2026-08-09-r0.8.5-full-blind-review.md`). Viewpoints 01 and
