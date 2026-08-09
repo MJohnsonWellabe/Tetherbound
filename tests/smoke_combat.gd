@@ -98,7 +98,10 @@ func _leave_the_farmhouse() -> void:
 	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
 	if player == null:
 		return
-	var start := Vector3(42.0, 0.0, -52.0)
+	var start := Vector3(48.0, 0.0, -58.0)
+	# Not closer: the practice cluster spawns around (41, -48), and starting
+	# within ~4m of a creature trips the "spawned on top of the player"
+	# tripwire on nothing worse than a terrain rebake moving y a few cm.
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
 	player.global_position = start
 	player.velocity = Vector3.ZERO
@@ -294,32 +297,50 @@ func _the_arena_holds_you_in() -> void:
 		_fail("the pal reached %.1fm from the centre of an %.1fm arena; the boundary leaks" % [furthest, radius])
 
 
-## Aimed attacks have to be missable, or aiming is decoration.
+## Attacks have to be missable, or spacing is decoration.
+##
+## The miss this proves is an OUT-OF-RANGE one. It used to be a facing miss —
+## turn away and swing at nothing — but the design took facing off the skill
+## list: the pal now turns toward its opponent as every swing starts
+## (combat_manager's windup auto-face), because "I was fifteen degrees off"
+## on a 7-inch handheld read as noise, not skill. Range and timing are the
+## skills that remain, so range is what must still be able to say no. This
+## also caught a real flake: with auto-face in place, the old version of this
+## test hit or missed depending on how far the walk-away drifted, and it
+## passed locally while failing on CI.
 func _a_swing_at_empty_air_misses() -> void:
 	var foe: RefCounted = _manager.call("enemy")
 	var hp_before: float = foe.hp
 	var misses_before := _misses
 
-	# Face away from the opponent and swing at nothing.
-	var away := _ally.global_position - _wild.global_position
-	away.y = 0.0
-	_aim_camera_along(away)
-	Input.action_press("move_forward")
-	for i in 30:
+	# Stage the gap directly, the same way the walking tests stage their start
+	# points: put the pal across the arena from the enemy. The input under
+	# test is the attack press, not the walk that would get it there — racing
+	# the enemy's chase across the arena on real inputs is exactly the
+	# nondeterminism that made this test flap.
+	var arena: Node3D = _manager.call("arena") as Node3D
+	var centre: Vector3 = arena.global_position if arena != null else _ally.global_position
+	var radius: float = float(arena.get("radius")) if arena != null else 11.0
+	var out := centre - _wild.global_position
+	out.y = 0.0
+	if out.length() < 0.5:
+		out = Vector3(1, 0, 0)
+	_ally.global_position = centre + out.normalized() * (radius - 1.5)
+	if _ally is CharacterBody3D:
+		(_ally as CharacterBody3D).velocity = Vector3.ZERO
+	for i in 3:
 		await physics_frame
-		_aim_camera_along(away)
-	Input.action_release("move_forward")
 
 	await _press("combat_quick")
 	for i in 30:
 		await physics_frame
 
 	if foe.hp < hp_before:
-		_fail("an attack swung away from the opponent still damaged it")
+		_fail("an attack from across the arena still damaged the enemy; range is not real")
 	if _misses == misses_before:
-		_fail("swinging at empty air was not reported as a miss; the player gets no feedback")
+		_fail("an out-of-range swing was not reported as a miss; the player gets no feedback")
 	else:
-		print("a swing at empty air missed, as it should")
+		print("a swing from out of range missed, as it should")
 
 
 func _a_swing_at_the_enemy_connects() -> void:

@@ -90,7 +90,10 @@ func _leave_the_farmhouse() -> void:
 	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
 	if player == null:
 		return
-	var start := Vector3(42.0, 0.0, -52.0)
+	var start := Vector3(48.0, 0.0, -58.0)
+	# Not closer: the practice cluster spawns around (41, -48), and starting
+	# within ~4m of a creature trips the "spawned on top of the player"
+	# tripwire on nothing worse than a terrain rebake moving y a few cm.
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
 	player.global_position = start
 	player.velocity = Vector3.ZERO

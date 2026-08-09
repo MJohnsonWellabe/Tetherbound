@@ -20,14 +20,33 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT := "res://shots/site"
 const SETTLE_FRAMES := 50
 
-## name -> [camera position, look-at target]
+## name -> [camera position, look-at target]. The meadow shots are absolute
+## world coordinates; the two house shots are DERIVED from the house's own
+## markers in `_shots()`, because the house stands on a terrain pad whose
+## height is data — hardcoded coordinates went stale the first time the pad
+## moved, and the "bedroom" frame was a camera inside the roof.
 const SHOTS := {
 	"hero-meadow": [Vector3(58.0, 14.0, 28.0), Vector3(-10.0, 4.0, -12.0)],
 	"village-square": [Vector3(-6.0, 6.5, 4.0), Vector3(14.0, 3.0, -8.0)],
-	"opening-bedroom": [Vector3(-19.0, 8.6, -13.8), Vector3(-25.0, 7.6, -18.0)],
-	"starters-by-the-door": [Vector3(-20.0, 6.2, -10.0), Vector3(-13.0, 4.6, -15.5)],
 	"camp-dusk": [Vector3(24.0, 6.0, -30.0), Vector3(30.5, 3.4, -36.0)],
 }
+
+
+func _shots(world: Node) -> Dictionary:
+	var shots: Dictionary = SHOTS.duplicate()
+	var house: Node3D = world.get_node_or_null(^"GrandpaHouse") as Node3D
+	if house == null:
+		return shots
+	# Inside the loft, from the stair end toward the bed in the west corner.
+	var bed: Vector3 = house.call("marker", "bed")
+	shots["opening-bedroom"] = [house.to_global(Vector3(0.8, 5.0, 1.7)), bed + Vector3(0.0, 0.2, 0.0)]
+	# The starter row waits at the outside marker facing the door; shoot along
+	# the row from its south side with the doorway on the left of frame.
+	var outside: Vector3 = house.call("marker", "outside")
+	var door: Vector3 = house.call("marker", "door")
+	var mid := outside.lerp(door, 0.35) + Vector3(0.0, 1.1, 0.0)
+	shots["starters-by-the-door"] = [outside + Vector3(-1.0, 1.9, 7.0), mid]
+	return shots
 
 
 func _init() -> void:
@@ -67,14 +86,26 @@ func _run() -> void:
 	if world.get("_terrain") != null and (world.get("_terrain") as Node).has_method("set_camera"):
 		(world.get("_terrain") as Node).call("set_camera", camera)
 
+	# The opening's staging leaves the player standing ON the mattress; for the
+	# bedroom frame, stand them on the loft floor beside the bed instead.
+	var house: Node3D = world.get_node_or_null(^"GrandpaHouse") as Node3D
+	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
+	if house != null and player != null:
+		player.global_position = house.to_global(Vector3(-1.6, 3.3, -0.3))
+		player.look_at(Vector3(house.call("marker", "bed")) * Vector3(1, 0, 1)
+			+ Vector3(0.0, player.global_position.y, 0.0))
+		if player is CharacterBody3D:
+			(player as CharacterBody3D).velocity = Vector3.ZERO
+
+	var shots: Dictionary = _shots(world)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
-	for name: String in SHOTS.keys():
+	for name: String in shots.keys():
 		# Frames are ~4-8s each under llvmpipe, so a full run does not fit one
 		# timeout budget. Skipping what already landed makes the run resumable.
 		if FileAccess.file_exists("%s/%s.png" % [OUT, name]):
 			print("skip -> %s.png (already captured)" % name)
 			continue
-		var spec: Array = SHOTS[name]
+		var spec: Array = shots[name]
 		camera.global_position = spec[0]
 		camera.look_at(spec[1])
 		# Long settle per shot: Terrain3D streams regions toward the camera.
@@ -84,5 +115,5 @@ func _run() -> void:
 		image.save_png("%s/%s.png" % [OUT, name])
 		print("shot -> %s.png" % name)
 
-	print("done: %d frames in %s" % [SHOTS.size(), OUT])
+	print("done: %d frames in %s" % [shots.size(), OUT])
 	quit(0)
