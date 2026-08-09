@@ -189,6 +189,35 @@
         }
       }
     },
+    "meadowhart": {
+      "display_name": "Meadowhart",
+      "type": "ground",
+      "_comment": "Rideable/Pathfinder per the sheet's own ROLE line, STRENGTHS Speed, Stamina, Navigation. Friendly nature and a light frame -- it is a mount and traversal upgrade, not a fighter, so it sits at moderate HP for its Large size class with attack and defence both below the roster's combat specialists (Burrowback, Trailpup). All tunable; nobody has fought one yet.",
+      "base_hp": 115.0,
+      "base_attack": 16.0,
+      "base_defence": 17.0,
+      "catch_rate": 0.45,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#b98d52",
+        "height": 1.95,
+        "radius": 0.7,
+        "_comment_footprint": "Long-legged deer/mount with a saddle silhouette -- more footprint than a compact biped, less than Trailpup's low lean canine body.",
+        "footprint_allowance": 2.8,
+        "model": "res://assets/pals/tetherbound/meadowhart/models/pal_meadowhart_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
+        }
+      }
+    },
     "tuskroot": {
       "display_name": "Tuskroot",
       "type": "ground",

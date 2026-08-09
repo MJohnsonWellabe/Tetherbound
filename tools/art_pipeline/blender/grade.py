@@ -297,6 +297,24 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+
+    # ------------------------------------------------------------------
+    # MEADOWHART — second of the ten. Same first-pass philosophy as Tuskroot:
+    # structural fixes only, no hand-tuned palette until a blind gate names
+    # an actual colour defect.
+    # ------------------------------------------------------------------
+    "meadowhart": {
+        # Two eyes found by visual inspection of the 2048x2048 base_color
+        # atlas, both clearly a pale blue-grey iris with a white catchlight
+        # over a dark pupil, unmistakable against the tan/brown coat.
+        "eye_guard": [
+            ("uv", 1490, 430, 1620, 555),
+            ("uv", 245, 910, 370, 1040),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 
