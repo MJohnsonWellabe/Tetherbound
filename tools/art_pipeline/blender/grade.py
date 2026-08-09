@@ -363,6 +363,31 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+
+    # ------------------------------------------------------------------
+    # MOSSHELL — fifth of the ten. Same first-pass philosophy.
+    # ------------------------------------------------------------------
+    "mosshell": {
+        # Four rectangles found by a full quadrant-by-quadrant scan of the
+        # 2048x2048 atlas, same duplicated-across-UV-islands pattern as the
+        # previous four species. Every guarded region shows a distinct dark
+        # pupil (two black-with-cream-sclera, two amber-ringed). Several
+        # other candidates were checked and rejected: a pair of uniform
+        # amber blobs with no pupil at all (matching the small scale/wart
+        # spots scattered across the rest of the shell texture, not eyes),
+        # a tan almond/slit shape with no pupil (plausibly a closed eyelid
+        # rendered into the stone-shell texture, but not confident enough to
+        # guard), and a dark crevice with an amber edge but no round iris.
+        "eye_guard": [
+            ("uv", 155, 250, 270, 350),
+            ("uv", 825, 310, 935, 400),
+            ("uv", 1310, 930, 1430, 1050),
+            ("uv", 1605, 1245, 1710, 1350),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 

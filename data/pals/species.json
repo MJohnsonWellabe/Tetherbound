@@ -307,6 +307,31 @@
         }
       }
     },
+    "mosshell": {
+      "display_name": "Mosshell",
+      "type": "water",
+      "_comment": "Steady Tank/Shelter per the sheet's own subtitle and build notes (Water Sheet, docs/art/reference/wild/03_Meadows_Wild_Water_Sheet.png): low center of gravity, high defense, broad shell with mossy stone plates, strong limbs for lakebed traction, withdraws for protection. A tank explicitly built for defence rather than offence -- so it carries the roster's highest defence so far (ahead of Burrowback's 23) and high HP for a Medium size class, with the lowest attack on the roster since it withdraws rather than fights. Non-aggressive, matching the sheet's own 'friendly... calm spirits' design note for the whole Water roster and its SHELL RETREAT listed behaviour. Catch rate near Burrowback's (a slow, armoured creature, not a common skittish one). All tunable; nobody has fought one yet.",
+      "base_hp": 130.0,
+      "base_attack": 12.0,
+      "base_defence": 26.0,
+      "catch_rate": 0.4,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#5e7a4a",
+        "height": 1.62,
+        "radius": 0.68,
+        "_comment_footprint": "Broad low shell body, wider relative to its height than a quadruped -- more footprint than Burrowback's already-broad digging stance, similar register to a tortoise rather than a mammal.",
+        "footprint_allowance": 2.4,
+        "model": "res://assets/pals/tetherbound/mosshell/models/pal_mosshell_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate b). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md; R0.4's report also flags a topology check (a thin protrusion near the hindquarters that might read as an errant tail/spike) that could not be visually confirmed or ruled out here -- this container has no libEGL, so no turntable render could be produced, and inspect_glb.py's structural report shows only the usual post-retexture non-manifold/duplicate-vertex noise that rigging (0 unweighted vertices) already tolerated fine. Flagged for whoever next looks at a rendered frame of this creature. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "animations": {
+          "idle": "idle", "walk": "walk", "run": "run",
+          "attack": "attack", "hit": "hit", "faint": "faint"
+        }
+      }
+    },
     "veridian": {
       "display_name": "Veridian Stag",
       "type": "ground",
