@@ -478,6 +478,30 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+    # ----------------------------------------------------------------
+    "reedwing": {
+        # Fourth and last bird species. Different eye style from the other
+        # three birds -- a dark, almost pupil-only mass with a soft white
+        # or pale-green catchlight and no bright iris ring, consistent
+        # with a waterfowl's eye rather than a raptor's or owl's. One
+        # rectangle (the fourth) has a visible teal ring where the others
+        # don't; kept in because it sits in the same duplicated-eye
+        # cluster as the unambiguous instances and shows the same
+        # catchlight. Five rectangles found by a full quadrant-by-quadrant
+        # scan of the 2048x2048 atlas. A dark wedge near the beak tip and
+        # a glossy neck-feather highlight were both checked and rejected —
+        # no pupil shape, reads as beak/feather sheen.
+        "eye_guard": [
+            ("uv", 20, 1820, 220, 1980),
+            ("uv", 990, 10, 1120, 150),
+            ("uv", 1060, 240, 1200, 380),
+            ("uv", 850, 940, 1010, 1080),
+            ("uv", 1200, 530, 1380, 690),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 
