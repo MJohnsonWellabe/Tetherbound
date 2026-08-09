@@ -5,6 +5,26 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.8 — ASSET_LEDGER rows for the four shipped R0.6 creatures (partial)
+`92fc1ae` · Not R0.8 complete — six R0.6 species (Mosshell, Brooktail, and the
+four birds) have no model yet, so no row for them either; they land as each
+model does, the same rule R0.7 already applies to `species.json` entries.
+Rows added for Tuskroot, Meadowhart, Burrowback and Paddlenewt, matching the
+existing table's per-creature style (Bramblebun/Mudsnout/Trailpup).
+
+**Why this instead of R0.6/Mosshell**, which is the actual next item in
+order: this firing's `send_later` self-resume did not carry
+`MESHY_API_KEY` — only a cron-fired session's prompt does, a distinction
+this session had to learn twice (see the R0.6 Paddlenewt entry above for the
+first time, and `BLOCKED.md`'s current top entry for the fuller writeup).
+Mosshell's `clean` step (Blender only, no key needed) was done and is not
+committed — cheap to redo. Doing R0.8's ledger work instead of idling kept
+the firing's context used on real, unblocked project state rather than
+nothing.
+
+CI green (run 31303384277), fast-forwarded to `main` at `92fc1ae` — verified
+by fetching `origin/main` directly.
+
 ## R0.6 — Paddlenewt finished (fourth of the ten)
 `0f51b2a` · Same pipeline as the first three: clean raw R0.4 winner candidate
 `a` (56,476 → 28,000 tris, manifold) → retexture via Meshy → `rig_quadruped.py`
