@@ -332,6 +332,31 @@
         }
       }
     },
+    "brooktail": {
+      "display_name": "Brooktail",
+      "type": "water",
+      "_comment": "Resourceful Diver/Helper per the sheet's own subtitle and build notes (Water Sheet, docs/art/reference/wild/03_Meadows_Wild_Water_Sheet.png): strong swimmer and natural diver, water-repellent fur with dense undercoat, webbed feet for steering and balance, quick/clever/sociable, listed actions DIVING SWIM and GATHER & CARRY -- a support/utility creature, not a fighter. Smallest of the six wild quadrupeds finished so far (1.45m), so HP and defence sit at the low end; attack modest but not the lowest, since 'quick and clever' implies some bite. Non-aggressive, matching the sheet's own 'sociable' framing and its Water-roster-wide 'friendly... calm spirits' design note. All tunable; nobody has fought one yet.",
+      "base_hp": 92.0,
+      "base_attack": 18.0,
+      "base_defence": 13.0,
+      "catch_rate": 0.45,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#6b4a2f",
+        "height": 1.45,
+        "radius": 0.5,
+        "_comment_footprint": "Low lean semi-aquatic mammal body with a tail, similar register to Trailpup's lean canine build rather than a broad tank stance.",
+        "footprint_allowance": 3.0,
+        "model": "res://assets/pals/tetherbound/brooktail/models/pal_brooktail_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. TWO known defects on this creature, both flagged rather than fixed: (1) R0.4 recorded a HARD FAIL shared by every candidate -- the canon's broad flat scaled paddle tail is absent, both candidates give a round tapering tail instead. The report's own instruction is to ship it forward with the defect flagged rather than block or re-roll ('iterating on what exists'), and that a real sculpting pass is separate future work -- not attempted here. (2) rig_quadruped.py's automatic weighting left 35 of 14,034 vertices (0.25%) unweighted, the first species in this batch where residual post-retexture mesh noise (6,075 non-manifold edges, 81 microscopic disconnected components -- the same category every species carries after Meshy's retexture re-unwrap, see Tuskroot's DONE.md entry) actually crossed into un-rigged vertices rather than being silently absorbed. Confirmed scattered across the whole body rather than concentrated at the tail, so not obviously the same root cause as (1); will read as tiny pinned-in-bind-pose specks during animation rather than one visible tear. A proper fix likely needs a fresh clean/remesh pass or the eventual tail sculpt, not attempted here. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "animations": {
+          "idle": "idle", "walk": "walk", "run": "run",
+          "attack": "attack", "hit": "hit", "faint": "faint"
+        }
+      }
+    },
     "veridian": {
       "display_name": "Veridian Stag",
       "type": "ground",

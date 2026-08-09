@@ -388,6 +388,34 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+
+    # ------------------------------------------------------------------
+    # BROOKTAIL — sixth of the ten, and the one R0.4 flagged as a HARD FAIL
+    # on every candidate (no paddle tail; ships forward with the defect
+    # flagged rather than blocked, per the production report's own explicit
+    # instruction — see species.json's _comment_art). Same first-pass grade
+    # philosophy as the rest: structural fixes only.
+    # ------------------------------------------------------------------
+    "brooktail": {
+        # Six rectangles found by a full quadrant-by-quadrant scan of the
+        # 2048x2048 atlas, same duplicated-across-UV-islands pattern as
+        # every species so far. Every guarded region shows a distinct teal
+        # iris ring around a black pupil, several with a white catchlight
+        # or sclera crescent. One dark almond shape near a nostril was
+        # checked and rejected — no teal iris ring, reads as a nostril
+        # shadow on the otter snout rather than an eye.
+        "eye_guard": [
+            ("uv", 0, 75, 115, 200),
+            ("uv", 1720, 195, 1880, 330),
+            ("uv", 230, 810, 390, 915),
+            ("uv", 1250, 1230, 1420, 1380),
+            ("uv", 1735, 1110, 1890, 1245),
+            ("uv", 1960, 1485, 2048, 1625),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 
