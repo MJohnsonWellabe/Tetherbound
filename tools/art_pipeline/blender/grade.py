@@ -416,6 +416,25 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+    # ----------------------------------------------------------------
+    "galecrest": {
+        # First bird species. Full quadrant-by-quadrant scan of the
+        # 2048x2048 atlas found only two distinct eye instances (not the
+        # usual 3-6) -- fewer UV islands duplicate the eye than on the
+        # quadrupeds so far. Both show a dark pupil with a white sclera
+        # crescent; one also shows an amber iris ring, the other doesn't
+        # at this UV angle but is unambiguously the same anatomy. A pair
+        # of glossy black hooked-beak shapes near (820-1050, 20-200) were
+        # checked and rejected -- no pupil, no iris ring, reads as beak
+        # keratin with a specular highlight streak, not an eye.
+        "eye_guard": [
+            ("uv", 75, 1775, 145, 1840),
+            ("uv", 915, 1725, 1000, 1805),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 

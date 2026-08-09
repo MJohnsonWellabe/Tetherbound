@@ -96,9 +96,25 @@ def cmd_rig(args) -> None:
         source = RAW / args.species / "textured" / "model.glb"
     if not source.exists():
         sys.exit(f"no textured model for {args.species}; run `texture` first")
-    blender(RIGS[args.kind], source, "--out", build / "rigged.glb",
+    rigged = build / "rigged.glb"
+    blender(RIGS[args.kind], source, "--out", rigged,
             "--report", build / "rig_report.json")
-    blender("animate_quadruped.py", build / "rigged.glb", "--out", build / "animated.glb")
+    if args.kind == "bird":
+        # rig_bird.py authors all six standard clips itself (author_all(),
+        # proved end-to-end on three winged test meshes per its own
+        # docstring) -- it is not a bare rigging script the way
+        # rig_quadruped.py/rig_glider.py/rig_sitter.py are. Its bone names
+        # deliberately overlap animate_quadruped.py's glider layout so that
+        # script "still produces something sane if it is ever pointed at a
+        # bird" -- but running it here would silently re-detect the rig as
+        # a glider and overwrite rig_bird.py's bird-specific animation with
+        # generic glider animation, including the documented faint-spin bug
+        # (animate_quadruped.py puts yaw on the root bone's local Y, which
+        # is world-up on a vertical root -- the creature spins on the spot
+        # instead of toppling). rigged.glb is already the finished output.
+        rigged.rename(build / "animated.glb")
+    else:
+        blender("animate_quadruped.py", rigged, "--out", build / "animated.glb")
 
 
 def cmd_grade(args) -> None:
