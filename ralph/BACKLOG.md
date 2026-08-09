@@ -12,6 +12,36 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.3.5 — Fix the `smoke_catching` flake. **DO THIS FIRST.**
 `model: sonnet` · `tests: smoke_catching ×10 headless`
 
+> **SOLVED ONCE ALREADY, AND THE ANSWER IS BELOW. The commits were lost** —
+> the firing that did it had read-only GitHub access and could not push. Redo
+> it from this diagnosis rather than from scratch.
+>
+> **My diagnosis further down this entry — the catch/kill race — is WRONG.** It
+> never reproduced under testing. It was inferred from two CI logs and stated
+> with more confidence than it had earned. What was actually found, by running
+> the test rather than reading about it, is three bugs in the test's own
+> throw-aiming code:
+>
+> 1. **A silent 0.9s throw cooldown.** `scripts/combat/throw_aim.gd` sets
+>    `_cooldown = 0.9` after every throw and then ignores the input entirely
+>    while it runs (`if state != State.IDLE or _cooldown > 0.0: return`). The
+>    test presses Throw again ~4 frames later and counts it as an attempt, so
+>    most of the 25 "attempts" never threw anything. **The test must wait for
+>    the cooldown to clear and confirm a throw actually launched.**
+> 2. **A camera/hand parallax error.** `throw_aim.gd` is deliberately correct:
+>    the camera sits ~1.5 m off the throwing hand, so it aims at a *point* along
+>    the camera's centre ray and throws from the hand toward it. The test
+>    computed its pitch from the **hand** position instead of the **camera eye**,
+>    so its arithmetic disagreed with the code it was driving and throws went
+>    wide at range.
+> 3. **No lead compensation.** The test aims at the target's current centre,
+>    waits, then throws — while the wild creature keeps moving. It must lead by
+>    velocity over the aim settle plus the flight time.
+>
+> All three were fixed in `tests/smoke_catching.gd` alone, with **no production
+> combat code touched**, and verified at **10/10 consecutive headless green**.
+> Reproduce that bar before calling it done.
+
 **CI fails about a third of the time and this one test is why.** 11 of the last
 30 runs failed; every failure inspected was `smoke_catching`, on commits that
 passed the same test on another run. Nothing ships while this is true, because
