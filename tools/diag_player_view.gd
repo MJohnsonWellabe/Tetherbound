@@ -24,17 +24,10 @@ func _init() -> void:
 
 
 func _world_size(node: Node3D) -> AABB:
-	var box := AABB()
-	var started := false
-	for mesh in _meshes(node):
-		var m: MeshInstance3D = mesh
-		var world: AABB = m.global_transform * m.get_aabb()
-		if started:
-			box = box.merge(world)
-		else:
-			box = world
-			started = true
-	return box
+	# Render-space: the node-chain AABB is blind to a skin's scale, which is
+	# exactly the bug this diagnostic exists to see. See render_bounds.gd.
+	const RB := preload("res://scripts/characters/render_bounds.gd")
+	return node.global_transform * (RB.measure(node) as AABB)
 
 
 func _meshes(node: Node) -> Array:

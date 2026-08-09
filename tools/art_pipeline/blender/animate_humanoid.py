@@ -297,6 +297,21 @@ def main() -> None:
             print(f"  dropping stray unskinned object: {obj.name}")
             bpy.data.objects.remove(obj, do_unlink=True)
 
+    # Normalise units BEFORE authoring any clip. Meshy's auto-rig arrives as a
+    # centimetre skeleton under a 0.01-scaled Armature, with the mesh's inverse
+    # binds carrying the x100 back out — a pair that cancels in a renderer and
+    # poisons everything that measures the model, which is how the game shipped
+    # a 180-metre trainer twice. The creature path already applies scale at rig
+    # time (rig_quadruped.py, skin_transfer.py); this is the same normalisation
+    # for the humanoid path, so the exported GLB is metres all the way down:
+    # Armature 1.0, bones in metres, inverse binds 1.0. Done before author()
+    # so the clips are written against the normalised rest pose.
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in bpy.data.objects:
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = rig
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
     for name, frames in CLIPS.items():
         author(rig, name, frames)
         print(f"  {name}: {frames} frames")

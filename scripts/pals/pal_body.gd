@@ -20,6 +20,7 @@ extends CharacterBody3D
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/pals/pal_animator.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 ## The grounding ray starts this far above the requested spot and traces this far
 ## down.
@@ -272,51 +273,15 @@ func _fit(art: Node3D, extra_scale: float) -> void:
 
 ## Measure a model as it will actually render.
 ##
-## `mesh.mesh.get_aabb()` is the resource's own bind-pose box and `mesh.transform`
-## is only the step to its immediate parent — for a skinned model under a
-## Skeleton3D under an Armature, that pair is meaningless. It produced a fitted
-## Triceratops 528 metres tall.
-##
-## `MeshInstance3D.get_aabb()` accounts for skinning, and composing global
-## transforms walks the whole chain, so this is the box the renderer draws.
-## A mesh's transform relative to `root`, from LOCAL transforms only.
-##
-## Never `global_transform`. That is only correct once the node is in the tree
-## and the transform has propagated, and this is called immediately after the
-## model is added — so the answer depended on winning a race. Measured on the
-## trainer, which shares this pattern: the same box read 1.8000 one moment and
-## 0.0180 the next, a factor of exactly 100, because rigged models carry an
-## internal 0.01 scale node. A wrong reading here does not fail, it silently
-## scales the creature by that factor. See trainer_model._relative_transform.
-func _relative_transform(from: Node3D, root: Node3D) -> Transform3D:
-	var chain := Transform3D()
-	var node: Node3D = from
-	while node != null and node != root:
-		chain = node.transform * chain
-		node = node.get_parent() as Node3D
-	return chain
-
-
+## Through `render_bounds.gd`, which is the shared answer to the two ways this
+## measurement has been wrong: `global_transform` races add_child (a fitted
+## Triceratops 528 metres tall), and a local node chain never sees a SKIN's
+## scale (a 180-metre trainer that every AABB test swore was 1.80m). The
+## creature models are authored with skin and armature both at 1.0, so for
+## them this is the same number the old chain produced — the guard is against
+## the next asset that is not.
 func _bounds(node: Node3D) -> AABB:
-	var box := AABB()
-	var started := false
-	for mesh in _mesh_instances(node):
-		var local: AABB = _relative_transform(mesh, node) * mesh.get_aabb()
-		if started:
-			box = box.merge(local)
-		else:
-			box = local
-			started = true
-	return box
-
-
-func _mesh_instances(node: Node) -> Array[MeshInstance3D]:
-	var found: Array[MeshInstance3D] = []
-	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
-		found.append(node as MeshInstance3D)
-	for child in node.get_children():
-		found.append_array(_mesh_instances(child))
-	return found
+	return RENDER_BOUNDS.measure(node)
 
 
 ## The original capsule, now only a fallback. A missing model renders as this

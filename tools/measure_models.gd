@@ -53,15 +53,14 @@ func _report(path: String) -> void:
 		scene.queue_free()
 		return
 
-	var box := AABB()
-	var started := false
+	# Render-space: a skinned mesh draws where its SKELETON says, not where its
+	# own node chain says. See render_bounds.gd.
+	const RB := preload("res://scripts/characters/render_bounds.gd")
+	var box: AABB = RB.measure(scene as Node3D) if scene is Node3D else AABB()
 	var tris := 0
 	var textured := 0
 	var materials: Array[String] = []
 	for mesh in meshes:
-		var world: AABB = mesh.global_transform * mesh.get_aabb()
-		box = world if not started else box.merge(world)
-		started = true
 		if mesh.mesh != null:
 			for surface in mesh.mesh.get_surface_count():
 				var material: Material = mesh.mesh.surface_get_material(surface)

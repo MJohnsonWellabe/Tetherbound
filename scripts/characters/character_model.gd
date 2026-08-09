@@ -14,6 +14,7 @@ extends Node3D
 ## from.
 
 const CONFIG_PATH := "res://data/config/art.json"
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 var _art: Node3D = null
 var _anim: AnimationPlayer = null
@@ -149,71 +150,42 @@ func _library() -> AnimationLibrary:
 	return _anim.get_animation_library("")
 
 
-## The mesh's transform relative to `_art`, from LOCAL transforms only.
-##
-## This used to use `mesh.global_transform`, and that is a race. A global
-## transform is only correct once the node is in the tree and the transform has
-## propagated, and `_fit()` is called on the line after `add_child()`. Measured:
-## the trainer's box came back 1.8000 immediately after `add_child` and 0.0180
-## one frame later — a factor of exactly 100, because the rigged models carry an
-## internal 0.01 scale node.
-##
-## Both readings then produce a plausible-looking scale factor and one of them
-## is catastrophic: measure 0.018, compute a fit of 100, and the internal x100
-## is applied on top, rendering a 180-metre trainer. That is the "he is enormous
-## and all you can see are his shoes" the owner hit in the exported build, and
-## it is invisible in a headless test that happens to win the race.
-##
-## Walking the parent chain uses only `transform`, which is valid the instant a
-## node exists, so the answer cannot depend on when it is asked.
-func _relative_transform(from: Node3D) -> Transform3D:
-	var chain := Transform3D()
-	var node: Node3D = from
-	while node != null and node != _art:
-		chain = node.transform * chain
-		node = node.get_parent() as Node3D
-	return chain
-
-
 ## Same measure-and-fit as pal_body: the model is scaled to the size the game
 ## already believes in, never the other way round. A character whose art is a
 ## head taller than the capsule the camera frames on is a character who floats.
+##
+## Measured in RENDER space (`render_bounds.gd`), which is the third and final
+## form of this fix. The first version raced `global_transform`; 1ebd434
+## replaced it with a local-transform chain — which is race-free and, for a
+## SKINNED mesh, measures a chain the renderer does not use. The humans carry
+## their real scale inside the skin (inverse binds ×100, Armature ×0.01), so
+## the chain measurement read 0.018m, "corrected" by ×100, and the skeleton —
+## which the renderer actually follows — was blown up to 180m. Every test
+## measured the same chain and agreed the trainer was 1.80m while the owner's
+## screen was full of his boots. render_bounds pushes the bind AABB through the
+## SKELETON's chain and the collapsed skin transform instead, which is what the
+## GPU does at rest pose, so a correctly-authored human measures ~1.8 and gets
+## fit ≈ 1.0.
 func _fit() -> void:
-	var box := AABB()
-	var started := false
-	for mesh in _mesh_instances(_art):
-		var local: AABB = _relative_transform(mesh) * mesh.get_aabb()
-		if started:
-			box = box.merge(local)
-		else:
-			box = local
-			started = true
-	if not started or box.size.y <= 0.0001:
+	var box: AABB = RENDER_BOUNDS.measure(_art)
+	if box.size.y <= 0.0001:
 		return
 	var fit := _height / box.size.y
-	# A large factor is NOT suspicious here: the rigged models are authored at
-	# about 0.018 units with the compensating scale on the scene root, which
-	# this measurement deliberately excludes and this line replaces. So x100 is
-	# normal and correct. Only a wildly degenerate reading is worth a word.
-	if fit > 1000.0 or fit < 0.001:
-		push_warning(("%s model measured %.5fm tall and needs a x%.1f correction " % [
+	# With render-space measurement the fit really is a small correction: the
+	# humans measure ~1.8 and need ~×1.0, the creatures likewise. A fit near
+	# ×100 means a measurement crossed an armature compensation again — the
+	# exact bug this warning is a tripwire for.
+	if fit > 10.0 or fit < 0.1:
+		push_warning(("%s model measured %.5fm tall and needs a x%.2f correction " % [
 			_config_key, box.size.y, fit
-		]) + "to reach %.2fm. That is almost certainly a bad measurement." % _height)
+		]) + "to reach %.2fm. A rigged model should need ~x1; " % _height +
+			"a factor like x100 means the measurement missed the skin's scale.")
 	_art.scale = Vector3.ONE * fit
 	_art.position = Vector3(
 		-(box.position.x + box.size.x * 0.5) * fit,
 		-box.position.y * fit,
 		-(box.position.z + box.size.z * 0.5) * fit
 	)
-
-
-func _mesh_instances(node: Node) -> Array[MeshInstance3D]:
-	var found: Array[MeshInstance3D] = []
-	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
-		found.append(node as MeshInstance3D)
-	for child in node.get_children():
-		found.append_array(_mesh_instances(child))
-	return found
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:

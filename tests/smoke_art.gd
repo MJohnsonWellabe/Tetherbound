@@ -14,6 +14,8 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 
 const SETTLE_FRAMES := 300
 ## How far a rendered model may sit under the collider that represents it.
@@ -60,6 +62,7 @@ func _run() -> void:
 	_every_species_has_art()
 	_the_creatures_in_the_world_loaded_their_models()
 	_the_trainer_has_a_model_and_animations()
+	_every_human_fits_at_its_declared_height()
 	_the_meadow_was_dressed()
 	_report()
 
@@ -171,31 +174,20 @@ func _the_trainer_has_a_model_and_animations() -> void:
 		if not anim.has_animation(clip):
 			_fail("the trainer's '%s' clip is named '%s', which the model does not have" % [role, clip])
 
-	# And he has to be the SIZE the config asks for.
+	# And he has to be the SIZE the config asks for — measured in RENDER space.
 	#
-	# This check did not exist, and its absence is exactly why the owner played
-	# a build in which the trainer rendered enormous — "all you can see are his
-	# shoes" — while every test passed. Every SPECIES was measured against its
-	# collider; the one human in the game was checked for clip names only.
-	#
-	# The bug was a race in _fit(): it measured with `global_transform` on the
-	# line after `add_child()`, and the rigged models carry an internal x100
-	# scale, so the same box read 1.80m or 0.018m depending on whether the
-	# transform had propagated. Both readings produce a plausible scale factor.
+	# This check has been wrong twice, in opposite directions. It did not exist
+	# when the owner first played a build with an enormous trainer; then it
+	# measured `global_transform × get_aabb()`, which for a SKINNED mesh walks
+	# a node chain the renderer never uses — the humans carry their real scale
+	# inside the skin (inverse binds ×100, Armature ×0.01), so the AABB read
+	# 1.80m while the skeleton the GPU actually follows was 100× that, and the
+	# owner's second playtest was ALSO full of boots while this test passed.
+	# `render_bounds.gd` composes skeleton chain × collapsed skin, which is the
+	# transform the renderer applies at rest pose.
 	var wanted := float(_art_config().get("trainer", {}).get("height", 1.8))
-	var box := AABB()
-	var started := false
-	for mesh in _mesh_instances(model):
-		var piece: MeshInstance3D = mesh
-		if not piece.visible:
-			continue
-		var world: AABB = piece.global_transform * piece.get_aabb()
-		if started:
-			box = box.merge(world)
-		else:
-			box = world
-			started = true
-	if not started:
+	var box: AABB = RENDER_BOUNDS.measure(model)
+	if box.size.y <= 0.0001:
 		_fail("the trainer has no visible mesh; he is not on screen at all")
 	elif absf(box.size.y - wanted) > 0.25:
 		_fail("the trainer renders %.2fm tall but data/config/art.json asks for %.2fm" % [
@@ -203,6 +195,49 @@ func _the_trainer_has_a_model_and_animations() -> void:
 	else:
 		print("  trainer          model %.2fm, configured %.2fm, %d clips" % [
 			box.size.y, wanted, anim.get_animation_list().size()])
+
+
+## Every human in art.json, built standalone and measured as the renderer will
+## draw it — plus the fit-factor tripwire.
+##
+## The playground scene only contains the trainer (Grandpa spawns later, the
+## Warden not at all), so the in-scene check above cannot cover them. Building
+## each config key directly covers all three, and asserting the fit factor
+## stays near ×1 catches the whole class of bug where a measurement crosses an
+## armature compensation and "corrects" a model that was already right: the
+## factor that comes out of that mistake is ×100, never ×1.2.
+func _every_human_fits_at_its_declared_height() -> void:
+	for key in ["trainer", "grandpa", "warden"]:
+		var declared := float(_art_config().get(key, {}).get("height", 0.0))
+		if declared <= 0.0:
+			_fail("art.json's '%s' block declares no height" % key)
+			continue
+		var holder := Node3D.new()
+		holder.set_script(CHARACTER_MODEL)
+		root.add_child(holder)
+		if not bool(holder.call("build", key)):
+			_fail("'%s' failed to build from art.json" % key)
+			holder.queue_free()
+			continue
+		var art: Node3D = null
+		for child in holder.get_children():
+			if child is Node3D and (child as Node3D).visible:
+				art = child
+		if art == null:
+			_fail("'%s' built but has no visible art" % key)
+			holder.queue_free()
+			continue
+		var rendered: float = (RENDER_BOUNDS.measure(art) as AABB).size.y * art.scale.y
+		if absf(rendered - declared) > 0.1:
+			_fail("'%s' renders %.2fm against a declared %.2fm" % [key, rendered, declared])
+		elif art.scale.y > 10.0 or art.scale.y < 0.1:
+			_fail("'%s' needed a x%.1f fit correction; a rigged human should need ~x1. " % [
+				key, art.scale.y
+			] + "A factor like x100 means the measurement crossed the armature scale again.")
+		else:
+			print("  %-16s human %.2fm, declared %.2fm, fit x%.2f" % [
+				key, rendered, declared, art.scale.y])
+		holder.queue_free()
 
 
 func _the_meadow_was_dressed() -> void:
@@ -244,16 +279,11 @@ func _the_meadow_was_dressed() -> void:
 func _rendered_height(node: Node3D) -> float:
 	if node == null:
 		return 0.0
-	var box := AABB()
-	var started := false
-	for mesh in _mesh_instances(node):
-		var world_box: AABB = (node.global_transform.affine_inverse() * mesh.global_transform) * mesh.mesh.get_aabb()
-		if started:
-			box = box.merge(world_box)
-		else:
-			box = world_box
-			started = true
-	return 0.0 if not started else box.size.y
+	# Render-space, same instrument as production's fit. `node` is the model
+	# PIVOT — the fitted art hangs under it, so the chain measure already
+	# carries the fit scale.
+	var box: AABB = RENDER_BOUNDS.measure(node)
+	return box.size.y
 
 
 func _mesh_instances(node: Node) -> Array[MeshInstance3D]:
