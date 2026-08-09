@@ -383,6 +383,32 @@
         }
       }
     },
+    "duskhush": {
+      "display_name": "Duskhush",
+      "type": "air",
+      "_comment": "Silent Watcher/Night Scout per the Air Sheet (docs/art/reference/wild/04_Meadows_Wild_Air_Sheet.png): a small owl built for stealth and observation, not confrontation -- broad silent wings for stealth flight, large eyes for night vision, 'calm watchful' brief (R0.4 production report). Non-aggressive, unlike Galecrest: this is a watcher/scout role, not a striker. Defence and HP sit closer together than Galecrest's spread, reflecting a creature that avoids fights rather than winning them outright; attack is the lowest of the wild roster's air types so far. Catch rate moderate -- a scout is wary, not rare.",
+      "base_hp": 96.0,
+      "base_attack": 15.0,
+      "base_defence": 18.0,
+      "catch_rate": 0.42,
+      "aggressive": false,
+      "placeholder": {
+        "colour": "#5b6b74",
+        "height": 1.55,
+        "radius": 0.55,
+        "_comment_size": "R0.7's height table (BACKLOG.md) fixes Duskhush at 1.55m -- same height as Galewisp the Air starter, consistent with D13's 'small' owl sizing relative to Galecrest and Meadowhart's largest tier.",
+        "_comment_footprint": "Spread wings in the model's base pose, same shape of problem as Galewisp and Galecrest; reused Galewisp's exact footprint_allowance (3.4) since both are similarly-proportioned owl/fox-bird builds at the same height, rather than Galecrest's larger 4.2 (a bigger hawk with a wider wingspan per its own sheet).",
+        "footprint_allowance": 3.4,
+        "model": "res://assets/pals/tetherbound/duskhush/models/pal_duskhush_lod0.glb",
+        "model_scale": 1.0,
+        "model_yaw": 0.0,
+        "_comment_art": "R0.6: second bird species, using the --kind bird path fixed and proved on Galecrest (see that entry). tools/art_pipeline finish.py clean -> texture -> rig --kind bird -> grade -> install, from the R0.4 winner (candidate a, no hard-fail flagged -- only a cosmetic brow-ridge note). rig_report.json: 19 bones, 14006 vertices, 0 unweighted -- cleaner than Galecrest's -- idle motion at 65% of walk (well clear of the 6%-is-frozen threshold). Four eye-guard rectangles in grade.py, the clearest eye signature of any species so far (a gold ring, a blue/teal inner ring, black pupil, white catchlight -- unmistakable against the grey-blue plumage). model_yaw not visually verified -- this container has no libEGL.so.1, so turntable.py cannot render a frame; 0.0 follows the same default every species so far shipped with. The model is measured and fitted to `height` at load by pal_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "animations": {
+          "idle": "idle", "walk": "walk", "run": "run",
+          "attack": "attack", "hit": "hit", "faint": "faint"
+        }
+      }
+    },
     "veridian": {
       "display_name": "Veridian Stag",
       "type": "ground",
@@ -413,5 +439,5 @@
       }
     }
   },
-  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ \u2014 twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. Still to come: reedwing, pipwing, duskhush. Heights follow D13: D12's peer band, keeping the sheets' relative ordering."
+  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ \u2014 twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. Still to come: reedwing, pipwing. Heights follow D13: D12's peer band, keeping the sheets' relative ordering."
 }

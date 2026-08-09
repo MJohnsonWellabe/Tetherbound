@@ -435,6 +435,27 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.20,
     },
+    # ----------------------------------------------------------------
+    "duskhush": {
+        # Second bird species, and the clearest eye signature seen so far:
+        # every instance shows the sheet's own "large gold-ringed eyes" --
+        # a gold outer ring, a blue/teal inner ring, a black pupil and a
+        # white catchlight -- unmistakable against the grey-blue plumage,
+        # unlike the softer signatures on the quadrupeds. Four rectangles
+        # found by a full quadrant-by-quadrant scan of the 2048x2048 atlas.
+        # One dark round blob near a nostril (~200,1150 uv) was checked and
+        # rejected -- no gold or blue ring, no catchlight, reads as a
+        # nostril shadow, not an eye.
+        "eye_guard": [
+            ("uv", 370, 1070, 520, 1210),
+            ("uv", 1560, 1340, 1760, 1500),
+            ("uv", 0, 1520, 180, 1700),
+            ("uv", 1540, 1780, 1740, 1948),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 
