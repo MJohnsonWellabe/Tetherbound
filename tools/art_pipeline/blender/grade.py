@@ -267,6 +267,36 @@ SPECIES: dict[str, dict] = {
         "emissive": "off",
         "specular": 0.25,
     },
+
+    # ------------------------------------------------------------------
+    # TUSKROOT — first of the ten Meadows wild creatures (R0.6). This is a
+    # first-pass grade, not a critique-iterated one like the three above:
+    # no blind gate has reviewed it yet, so only the structural fixes every
+    # creature in this file needs (eye guard, albedo ceiling, roughness
+    # rescale, emissive off) are applied. No hand-tuned hue-shift rules are
+    # added without a review naming what is actually wrong with the colour —
+    # inventing them here would be guessing at a problem nobody has looked at.
+    # ------------------------------------------------------------------
+    "tuskroot": {
+        # Three eyes found in the 2048x2048 base_color atlas by visual
+        # inspection (own reference crop gives no head-only close-up to
+        # threshold against, unlike Terrapup's). Confirmed as eyes, not
+        # shadow, by cropping and zooming each region: all three show a
+        # white catchlight over a dark pupil. Boxes grown generously beyond
+        # the visible pupil/sclera so the surrounding lid is protected too —
+        # over-guarding costs a few ungraded fur texels, under-guarding
+        # destroys the eye. May be the same eye duplicated across UV islands
+        # rather than three distinct eyes; not resolved further since
+        # guarding one eye twice is harmless.
+        "eye_guard": [
+            ("uv", 1170, 210, 1280, 320),
+            ("uv", 1560, 855, 1660, 955),
+            ("uv", 1330, 1130, 1460, 1250),
+        ],
+        "roughness": ROUGHNESS_BAND,
+        "emissive": "off",
+        "specular": 0.20,
+    },
 }
 
 

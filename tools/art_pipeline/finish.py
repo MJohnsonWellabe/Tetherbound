@@ -4,6 +4,7 @@
     tools/art_pipeline/finish.py clean    bramblebun b
     tools/art_pipeline/finish.py texture  bramblebun            # needs MESHY_API_KEY
     tools/art_pipeline/finish.py rig      bramblebun --kind quadruped
+    tools/art_pipeline/finish.py grade    bramblebun             # needs a SPECIES entry in grade.py
     tools/art_pipeline/finish.py install  bramblebun
 
 The steps a species goes through after its winner is picked, with the paths
@@ -100,8 +101,20 @@ def cmd_rig(args) -> None:
     blender("animate_quadruped.py", build / "rigged.glb", "--out", build / "animated.glb")
 
 
+def cmd_grade(args) -> None:
+    build = build_dir(args.species)
+    source = build / "animated.glb"
+    if not source.exists():
+        sys.exit(f"no animated model for {args.species}; run `rig` first")
+    blender("grade.py", "--species", args.species, source,
+            "--out", build / "graded.glb")
+
+
 def cmd_install(args) -> None:
-    source = build_dir(args.species) / "animated.glb"
+    build = build_dir(args.species)
+    source = build / "graded.glb"
+    if not source.exists():
+        source = build / "animated.glb"
     if not source.exists():
         sys.exit(f"nothing to install for {args.species}")
     target = (ROOT / "assets" / "pals" / "tetherbound" / args.species / "models"
@@ -131,6 +144,10 @@ def main() -> None:
     rig.add_argument("species")
     rig.add_argument("--kind", choices=list(RIGS), default="quadruped")
     rig.set_defaults(func=cmd_rig)
+
+    grade = sub.add_parser("grade")
+    grade.add_argument("species")
+    grade.set_defaults(func=cmd_grade)
 
     install = sub.add_parser("install")
     install.add_argument("species")
