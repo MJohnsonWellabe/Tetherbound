@@ -12,10 +12,11 @@ Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
 ### R0.6 — Finish each creature, one task per species
 `model: sonnet` · `tests: smoke_art`
 
-**All six wild quadrupeds done** (Tuskroot, Meadowhart, Burrowback,
-Paddlenewt, Mosshell, Brooktail — `DONE.md`). **Only the four bird species
-remain, and all four are blocked** — see the blocker below; do not start
-any of Galecrest, Duskhush, Pipwing, Reedwing until it clears.
+**All six wild quadrupeds plus Galecrest are done** (Tuskroot, Meadowhart,
+Burrowback, Paddlenewt, Mosshell, Brooktail, Galecrest — `DONE.md`). **Only
+Duskhush, Pipwing, Reedwing remain, and none of them are blocked** — the
+bird-animation blocker below is resolved; the three-command pipeline works
+for birds exactly like it does for quadrupeds now.
 
 **If `MESHY_API_KEY` is missing from your environment**, check whether this
 firing is a cron firing or a self-scheduled `send_later` resume before
@@ -26,33 +27,46 @@ history).
 Per species: `tools/art_pipeline/finish.py clean <species> <winner-letter>`
 → `finish.py texture <species>` (needs `MESHY_API_KEY`, ~10 credits — **do
 this even though R0.5 already retextured every winner once; see the R0.5
-correction note in `DONE.md`, the R0.5 output cannot be used**) → `finish.py
-rig <species> --kind quadruped|bird` → add a `SPECIES` entry to `grade.py`
-(eye guard is mandatory — grading refuses to run without one, deliberately,
-it is how Ripplet's and Galewisp's eyes were destroyed) → `finish.py grade
-<species>` → `finish.py install <species>` → add or update `species.json`'s
-entry for it (Tuskroot already had a placeholder to repoint; the other nine
-have no entry at all yet, so add one — R0.6's own "loads at declared height"
+correction note in `DONE.md`, the R0.5 output cannot be used** — checked
+again for Duskhush/Pipwing/Reedwing specifically while shipping Galecrest,
+still true, see `BLOCKED.md`) → `finish.py rig <species> --kind
+quadruped|bird` → add a `SPECIES` entry to `grade.py` (eye guard is
+mandatory — grading refuses to run without one, deliberately, it is how
+Ripplet's and Galewisp's eyes were destroyed) → `finish.py grade <species>`
+→ `finish.py install <species>` → add or update `species.json`'s entry for
+it (Tuskroot already had a placeholder to repoint; the other nine have no
+entry at all yet, so add one — R0.6's own "loads at declared height"
 criterion needs it to test against, and R0.7's rule "add each entry as its
 model lands, never ahead" already says do this here, not batched later).
 Stats: sheet's own ROLE/SIZE CLASS/STRENGTHS text on
-`docs/art/reference/wild/`, tunable, flagged as such. Height from R0.7's
-list below. **Verify height-fit directly** — the species is not necessarily
-in `EncounterDirector.WILD_SPAWNS`, so the shared `smoke_art` run may not
-exercise it; Meadowhart's entry used a small standalone script instantiating
-`scenes/pals/pal.tscn` with `wild_pal.gd` attached and calling `setup(id)`,
-replicating `smoke_art.gd`'s own `_rendered_height()` exactly (not
-committed, but worth writing fresh each time — it's ~15 lines). R0.7 is then
-just final stat review across all ten, not first authorship.
+`docs/art/reference/wild/`, tunable, flagged as such. **Height MUST come
+from R0.7's fixed list below, exactly** — Galecrest's own entry briefly
+shipped with the wrong number (1.85m, guessed from D13's looser "largest
+tier" language instead of reading R0.7's table) and had to be corrected in
+a follow-up commit before the branch was confirmed merged; read the list
+before writing the number. **Verify height-fit directly** — the species is
+not necessarily in `EncounterDirector.WILD_SPAWNS`, so the shared
+`smoke_art` run may not exercise it; Meadowhart's entry used a small
+standalone script instantiating `scenes/pals/pal.tscn` with `wild_pal.gd`
+attached and calling `setup(id)`, replicating `smoke_art.gd`'s own
+`_rendered_height()` exactly (not committed, but worth writing fresh each
+time — it's ~15 lines). R0.7 is then just final stat review across all ten,
+not first authorship.
 
 Install path is `assets/pals/tetherbound/<species>/models/` (not
 `assets/creatures/...` as an older draft of this line said — that path is
 R1.1's future rename target, not the current one).
 
-**Blocker for the four bird species:** `finish.py rig`'s animate step is
-hardcoded to `animate_quadruped.py` regardless of `--kind`, and no
-`animate_bird.py` exists. Whoever reaches Galecrest needs to write one (or
-generalise `animate_quadruped.py`) before `rig_bird.py`'s output can move.
+**Bird species use `--kind bird`, which is now a first-class path.**
+`finish.py rig`'s animate step used to call `animate_quadruped.py`
+unconditionally after rigging regardless of `--kind`, which for a bird
+would have silently re-detected `rig_bird.py`'s finished output as a
+glider (their bone names deliberately overlap) and overwritten its
+already-authored, already-proven bird animation with generic glider
+animation. Fixed in `finish.py`: it now skips that call for `--kind bird`,
+since `rig_bird.py` authors all six clips itself. Proved on Galecrest —
+see `DONE.md`. Nothing else about the per-species sequence differs between
+`--kind quadruped` and `--kind bird`.
 
 Done when: the model loads at its declared height and `_fit()`'s footprint
 clamp is not tripped (`smoke_art`).
@@ -78,12 +92,13 @@ build otherwise. Add each entry as its model lands, never ahead.
 `model: haiku` · `tests: none`
 
 `docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md` exists (written during R0.4).
-**Six of ten `ASSET_LEDGER.md` rows done** — every finished R0.6 wild
-quadruped (Tuskroot, Meadowhart, Burrowback, Paddlenewt, Mosshell,
-Brooktail) has one, added as each model landed. The remaining four land
-when the bird species do, once `animate_bird.py` unblocks them. The
-production report's own "known gap" note (missing Bramblebun/Mudsnout/
-Trailpup candidate-selection record) is resolved — see `DONE.md`.
+**Seven of ten `ASSET_LEDGER.md` rows done** — every finished R0.6 wild
+species (Tuskroot, Meadowhart, Burrowback, Paddlenewt, Mosshell, Brooktail,
+Galecrest) has one, added as each model landed. The remaining three
+(Duskhush, Pipwing, Reedwing) land when those species do — no longer
+blocked on anything, see R0.6. The production report's own "known gap"
+note (missing Bramblebun/Mudsnout/Trailpup candidate-selection record) is
+resolved — see `DONE.md`.
 
 ### R0.9 — Assemble the opening into the real scene
 `model: sonnet` · `tests: smoke_opening`

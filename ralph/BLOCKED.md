@@ -47,29 +47,54 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 *(nothing yet)*
 
-Balance at last check: **215**, after Brooktail's texture pass — the sixth
-and last of the wild quadrupeds now redone (Tuskroot, Meadowhart,
-Burrowback, Paddlenewt, Mosshell, Brooktail; see `DONE.md`). **The four
-birds** (Galecrest, Duskhush, Pipwing, Reedwing) still need the same redo
-once `animate_bird.py` unblocks them — budget ~10 credits each, same as
-R0.5 estimated, not on top of R0.5's spend since R0.5's texture charge was
-wasted, not saved.
+Balance at last check: **205**, after Galecrest's texture pass.
+**Correction to a draft note that briefly sat here:** an earlier version of
+this entry said Duskhush/Pipwing/Reedwing could skip straight to `rig`
+using their existing committed `textured/model.glb`, reasoning that
+Galecrest's had turned out to be reusable. That reasoning was wrong —
+caught before it was acted on. `DONE.md`'s Tuskroot entry (R0.6, "R0.5 —
+Retextured the ten R0.4 winners" correction) already recorded that **every
+one of the ten R0.5 outputs was textured in the wrong order and is
+structurally unusable**: R0.5 textured the raw candidates directly,
+skipping `clean`, so every committed `textured/model.glb` — Galecrest's
+included — measures 50,000+ triangles against a 30,000 budget with
+thousands of non-manifold edges, un-rigging-safe and un-cleanable without
+losing the texture. Galecrest's fresh `clean → texture` pass this firing
+was necessary, not avoidable; the ten-species fix Tuskroot's entry
+describes was never actually carried out for the other nine, birds
+included. **Duskhush, Pipwing, Reedwing each still need a full `clean`
+(free) then `texture` (~10 credits) pass**, same as every quadruped and
+Galecrest before them — budget ~30 credits total, leaving a projected
+balance around 175.
 
 ---
 
-## Blocked: R0.6's four remaining species need `animate_bird.py`
+## Resolved — the four bird species do not need `animate_bird.py`
 
-`finish.py rig`'s animate step is hardcoded to call `animate_quadruped.py`
-regardless of `--kind`, and no `animate_bird.py` exists. All six wild
-quadrupeds are now finished (Tuskroot, Meadowhart, Burrowback, Paddlenewt,
-Mosshell, Brooktail) — this is the actual next blocker for R0.6, not a
-credits or key problem. Whoever reaches Galecrest needs to write
-`animate_bird.py` (or generalise `animate_quadruped.py` to emit believable
-bird-appropriate clips) before `rig_bird.py`'s output can move past the rig
-step.
+**This entry is retracted.** The premise — "no `animate_bird.py` exists" —
+was true but the conclusion drawn from it was wrong. `rig_bird.py`
+(1546 lines) is not a bare rigging script the way
+`rig_quadruped.py`/`rig_glider.py`/`rig_sitter.py` are: it authors all six
+standard clips itself (`author_all()`), already proved end-to-end on
+three winged test meshes per its own docstring, and its bone names
+deliberately overlap `animate_quadruped.py`'s glider layout "so that
+script still produces something sane if it is ever pointed at a bird."
 
-**Clears when:** `animate_bird.py` exists and produces the roster's six
-standard clips (idle, walk, run, attack, hit, faint) for a bird armature.
+The real bug was in `finish.py`'s `rig` subcommand: it called
+`animate_quadruped.py` unconditionally after rigging, regardless of
+`--kind`. For a bird this didn't just duplicate work — it would silently
+re-detect the already-animated bird rig as a glider and overwrite
+`rig_bird.py`'s bird-specific animation with generic glider animation,
+including `animate_quadruped.py`'s documented faint-spin bug (root bone
+yaw applied where the rig's local Y is world-up, so the creature spins on
+the spot instead of toppling).
+
+Fixed: `finish.py` now skips the `animate_quadruped.py` call when
+`--kind` is `bird`, since `rig_bird.py` already produced the finished,
+animated output. Proved on Galecrest, the first bird species shipped —
+see `DONE.md`. **No further code work is needed for Duskhush, Pipwing, or
+Reedwing** — the same `clean → texture → rig --kind bird → grade →
+install` sequence used for every quadruped now works for birds too.
 
 ---
 

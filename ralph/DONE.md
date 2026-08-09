@@ -5,6 +5,76 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R0.6 — fixed the bird-animation blocker, shipped Galecrest (first bird species)
+`400f749`, `4d078e2` · Investigated the "R0.6's four remaining species need
+`animate_bird.py`" blocker properly before writing anything, by reading
+`animate_quadruped.py` and `rig_bird.py` (1546 lines) in full. Discovery:
+`rig_bird.py` is not a bare rigging script the way `rig_quadruped.py`/
+`rig_glider.py`/`rig_sitter.py` are — it authors all six standard clips
+itself (`author_all()`), already proved end-to-end on three winged test
+meshes per its own docstring, and its bone names deliberately overlap
+`animate_quadruped.py`'s glider layout "so that script still produces
+something sane if it is ever pointed at a bird." The real bug was in
+`finish.py`'s `rig` subcommand: it called `animate_quadruped.py`
+unconditionally after rigging, regardless of `--kind`. For a bird this
+would have silently re-detected the already-animated rig as a glider and
+overwritten `rig_bird.py`'s bird-specific animation with generic glider
+animation, including `animate_quadruped.py`'s documented faint-spin bug
+(root-bone yaw applied where the rig's local Y is world-up, so the
+creature spins on the spot instead of toppling). **No new script was
+needed** — `finish.py` now skips the `animate_quadruped.py` call when
+`--kind` is `bird`.
+
+Proved by running Galecrest, the first bird species, through the fixed
+path for real: `clean → texture (candidate a; needed despite an existing
+committed `textured/model.glb` from R0.5 — see below) → rig --kind bird →
+grade → install`. `rig_report.json`: 19 bones, 14,004 vertices, 6
+unweighted (0.04%, same noise-level pattern as Brooktail's), idle motion
+at 108% of walk (clear of `rig_bird.py`'s own 6%-is-frozen self-check).
+Two eye-guard rectangles added to `grade.py` (a pair of glossy black
+hooked-beak shapes checked and rejected — no iris ring, no pupil).
+
+**Mistake made and caught within the same task, before the branch was
+confirmed merged:** shipped Galecrest's `species.json` height as 1.85m,
+picked from D13's looser "largest tier, alongside Meadowhart and Tuskroot"
+language without re-reading `BACKLOG.md`'s R0.7 section, which fixes
+Galecrest specifically at 2.00m in its height table. Caught on a second
+pass through `BACKLOG.md` while updating it for this entry, fixed in
+`4d078e2`, re-verified in Godot (rendered model matches 2.00m exactly, no
+footprint clamp, all six clips intact). Lesson for future firings:
+**R0.7's height table is the source of truth for a species' height figure,
+read it before writing the number** — D13 only fixes the relative
+ordering and rough tier, not the exact figure.
+
+**Also checked and corrected a wrong assumption made mid-task:** briefly
+believed Duskhush/Pipwing/Reedwing could skip `texture` entirely and reuse
+their existing R0.5-committed `textured/model.glb` files, since Galecrest's
+turned out to share that history. Wrong — `DONE.md`'s own Tuskroot entry
+(below) already recorded that every one of the ten R0.5 outputs is
+structurally unusable (textured before `clean`, so 50,000+ triangles
+against a 30,000 budget, thousands of non-manifold edges). Caught before
+being written into `BACKLOG.md`; that file states the correct instruction
+(`clean` then `texture` fresh, same as every other species).
+
+`species.json`: `aggressive: true` (rare — only Tuskroot has this among
+the wild roster so far), reflecting the Air Sheet's own "fierce focused
+eyes"/"Aerial Striker" language: a genuine predator, matching D13's
+explicit requirement that Galecrest not read like the Air starter
+Galewisp. Highest attack (28) and lowest defence (15) of the roster so
+far, mirroring Galewisp's own thin-armour/high-attack profile pushed
+further. `model_yaw` not visually verified — this container still has no
+`libEGL.so.1`, so `turntable.py` cannot render a frame, the same
+persistent limitation recorded for every species finished this session;
+left at 0.0, the default every quadruped shipped with.
+
+Balance after Galecrest's texture pass: **205** (was 215). Duskhush,
+Pipwing, Reedwing each still need their own `clean`/`texture` pass,
+~10 credits apiece — see `BLOCKED.md`.
+
+CI was still running when this entry was written; verified separately
+once green — see `ralph-status` for the real-time record, and do not
+trust this line alone as proof of a merge.
+
 ## R0.8 — ASSET_LEDGER rows for Mosshell/Brooktail; missing-record gap closed
 `b145f2d` · Extends the previous R0.8 partial entry (below) to all six now-
 finished R0.6 wild quadrupeds — every one of Tuskroot, Meadowhart,
