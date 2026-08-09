@@ -2,8 +2,8 @@
   "_comment": "Third-person movement tuning. ALL of it is TUNABLE and none of it is a mechanic. These are starting values chosen to be playable, not balanced; the owner's job in M1 is to say 'too floaty', 'sprint too slow', 'camera too close', and these are the numbers that answer that. Nothing here should be treated as settled until traversal feels good on the Ally.",
 
   "locomotion": {
-    "walk_speed": 4.2,
-    "sprint_speed": 7.6,
+    "walk_speed": 5.0,
+    "sprint_speed": 8.6,
     "_comment_accel": "Metres per second squared. Ground acceleration high enough that the character does not feel like it is on ice, air acceleration low enough that mid-jump direction changes read as momentum rather than flight.",
     "ground_acceleration": 42.0,
     "ground_friction": 38.0,

@@ -31,9 +31,9 @@
     "resume_distance": 4.2,
     "_comment_resume": "Hysteresis. Equal to stop_distance, the pal oscillates on the boundary and jitters on the spot.",
     "run_distance": 8.0,
-    "walk_speed": 3.0,
-    "run_speed": 5.6,
-    "_comment_speeds": "Walk is under the trainer's 4.2 and run is under the 7.6 sprint on purpose: a pal that can always keep up never has to hurry, and the little burst when it falls behind is most of what makes it read as alive."
+    "walk_speed": 3.8,
+    "run_speed": 7.2,
+    "_comment_speeds": "Walk is under the trainer's 5.0 and run is under the 8.6 sprint on purpose: a pal that can always keep up never has to hurry, and the little burst when it falls behind is most of what makes it read as alive."
   },
 
   "encounter": {

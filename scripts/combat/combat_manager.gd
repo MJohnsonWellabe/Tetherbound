@@ -71,6 +71,13 @@ var _pending_move: Dictionary = {}
 var _quick_cooldown: float = 0.0
 var _charged_cooldown: float = 0.0
 
+## An attack press made during wind-up, recovery or cooldown, kept alive for
+## `flow.input_buffer` seconds and fired the moment the pal is ready. Without
+## this, presses in the ~0.4s dead window were silently discarded and mashing
+## at a natural rhythm read as dropped input. "" / "quick" / "charged".
+var _buffered_attack: String = ""
+var _buffer_left: float = 0.0
+
 var _resolve_timer: float = 0.0
 var _outcome: String = ""
 
@@ -156,6 +163,8 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	_pending_move = {}
 	_quick_cooldown = 0.0
 	_charged_cooldown = 0.0
+	_buffered_attack = ""
+	_buffer_left = 0.0
 	_resolve_timer = 0.0
 	_outcome = ""
 	_input_guard = float(MATH.config().get("flow", {}).get("input_guard", 0.25))
@@ -331,6 +340,9 @@ func _tick_active(delta: float) -> void:
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
 	_input_guard = maxf(0.0, _input_guard - delta)
+	_buffer_left = maxf(0.0, _buffer_left - delta)
+	if _buffer_left <= 0.0:
+		_buffered_attack = ""
 
 	if _catch_shakes_left > 0:
 		_tick_catch_wobble(delta)
@@ -340,6 +352,7 @@ func _tick_active(delta: float) -> void:
 	_drive_player_pal()
 	if _input_guard <= 0.0:
 		_read_player_input()
+	_consume_buffered_attack()
 
 
 ## Wind-up, strike, recovery. The strike resolves at the END of the wind-up, and
@@ -348,6 +361,17 @@ func _tick_active(delta: float) -> void:
 func _tick_action(delta: float) -> void:
 	if _action == Action.READY:
 		return
+
+	# Track the target through the wind-up. The pal is rooted from the press to
+	# the end of recovery, and the connect test runs against the enemy's LIVE
+	# position at the end of the wind-up — so a swing whose facing was frozen at
+	# the press whiffed on any enemy that stepped sideways, and standing still
+	# and pressing attack swung at whatever direction the pal last WALKED in.
+	# Facing is free to give: range and timing stay the real skills, and the
+	# owner's first-playtest verdict was "too hard to hit", not "too easy".
+	if _action == Action.WINDUP and _ally_body != null and _wild != null:
+		_ally_body.call("face_towards", _wild.call("centre"))
+
 	_action_timer -= delta
 	if _action_timer > 0.0:
 		return
@@ -372,9 +396,6 @@ func _resolve_player_strike() -> void:
 	var origin: Vector3 = _ally_body.call("centre")
 	var facing: Vector3 = _ally_body.call("facing")
 	var target: Vector3 = _wild.call("centre")
-
-	_ally_body.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)))
-	_ally_body.call("play_attack")
 
 	if not MATH.move_connects(_pending_move, origin, facing, target):
 		attack_missed.emit(true)
@@ -438,14 +459,43 @@ func _read_player_input() -> void:
 		_begin_resolve("fled")
 		return
 
+	# Attack presses are RECORDED whatever state the pal is in, and fired by
+	# `_consume_buffered_attack()` the moment it is ready. Throws stay
+	# un-buffered: a throw is a deliberate mode change, and one that fires
+	# half a second after the press feels like the game acting on its own.
+	if Input.is_action_just_pressed("combat_charged"):
+		_buffered_attack = "charged"
+		_buffer_left = float(MATH.config().get("flow", {}).get("input_buffer", 0.3))
+	elif Input.is_action_just_pressed("combat_quick"):
+		_buffered_attack = "quick"
+		_buffer_left = float(MATH.config().get("flow", {}).get("input_buffer", 0.3))
+
 	if _action != Action.READY:
 		return
 
 	if Input.is_action_just_pressed("combat_throw"):
 		_try_throw()
+
+
+## Fire a buffered attack press once the pal is ready for it.
+##
+## Split from `_read_player_input` so a press made during recovery fires on the
+## frame recovery ends rather than waiting for the next press. The charged
+## branch consumes the buffer even when energy is short — a refused press
+## should stay refused, not retry itself every frame until it surprises you.
+func _consume_buffered_attack() -> void:
+	if _action != Action.READY or _buffered_attack == "" or _input_guard > 0.0:
+		return
+	if bool(_throw.call("is_busy")):
+		return
+	var pal := active_pal()
+	if pal == null:
 		return
 
-	if Input.is_action_just_pressed("combat_charged") and _charged_cooldown <= 0.0:
+	if _buffered_attack == "charged":
+		if _charged_cooldown > 0.0:
+			return
+		_buffered_attack = ""
 		if pal.spend_charged():
 			var charged: Dictionary = MATH.config().get("player_charged", {}).duplicate()
 			charged["is_quick"] = false
@@ -453,17 +503,31 @@ func _read_player_input() -> void:
 			_charged_cooldown = float(charged.get("cooldown", 1.2))
 		return
 
-	if Input.is_action_just_pressed("combat_quick") and _quick_cooldown <= 0.0:
-		var quick: Dictionary = MATH.config().get("player_quick", {}).duplicate()
-		quick["is_quick"] = true
-		_start_action(quick)
-		_quick_cooldown = float(quick.get("cooldown", 0.45))
+	if _quick_cooldown > 0.0:
+		return
+	_buffered_attack = ""
+	var quick: Dictionary = MATH.config().get("player_quick", {}).duplicate()
+	quick["is_quick"] = true
+	_start_action(quick)
+	_quick_cooldown = float(quick.get("cooldown", 0.45))
 
 
 func _start_action(move: Dictionary) -> void:
 	_pending_move = _with_reach_for_the_bodies(move)
 	_action = Action.WINDUP
 	_action_timer = float(move.get("windup", 0.18))
+	# Face and lunge at the START of the wind-up, not at the strike. The lunge
+	# used to fire on the same frame as the connect test, and an impulse only
+	# changes velocity — position is integrated NEXT physics frame — so the
+	# lunge could never help the swing that fired it; it was pure
+	# follow-through, and the charged attack whiffed structurally against any
+	# repositioning enemy. Applied here, it integrates across the whole
+	# wind-up and genuinely closes the gap the test will be run over. The
+	# animation starts here too, so the body moves when the motion does.
+	if _ally_body != null and _wild != null:
+		_ally_body.call("face_towards", _wild.call("centre"))
+		_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 3.6)))
+		_ally_body.call("play_attack")
 	state_changed.emit()
 
 

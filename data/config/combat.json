@@ -16,7 +16,7 @@
   },
   "pal_movement": {
     "_comment": "How a creature moves while a fight is running. Faster than a walk and slower than the trainer's sprint: the fight should feel busy without turning into a foot race. TUNABLE and expected to change first if combat feels sluggish.",
-    "speed": 5.0,
+    "speed": 5.6,
     "acceleration": 34.0,
     "friction": 30.0,
     "turn_speed": 13.0,
@@ -27,7 +27,7 @@
   "player_quick": {
     "_comment": "The bread-and-butter attack. Short wind-up, short recovery, wide arc: it should be usable under pressure without feeling like a commitment.",
     "power": 9.0,
-    "cooldown": 0.45,
+    "cooldown": 0.4,
     "windup": 0.18,
     "recovery": 0.22,
     "_comment_range": "Metres from the attacker's centre. Placeholder creatures are about a metre across, so this is roughly a body length of reach.",
@@ -56,13 +56,13 @@
     "_comment_preferred": "It stops closing at this distance and attacks from there. Must be under `range` or it stands just outside its own reach and whiffs forever.",
     "preferred_range": 2.1,
     "chase_speed": 4.6,
-    "reposition_speed": 3.8,
+    "reposition_speed": 3.2,
     "telegraph": 0.55,
     "recovery": 0.75,
     "attack_cooldown": 1.1,
     "_comment_reposition": "After recovering it backs off and circles for this long before closing again. Without it the fight is two creatures standing in each other's faces trading hits, which is exactly the static fight this model replaced.",
     "reposition_time": 1.0,
-    "reposition_distance": 5.0,
+    "reposition_distance": 4.0,
     "first_attack_delay": 1.5,
     "_comment_body_clearance": "How far apart two creatures stand, as a multiple of their combined body radii. It FLOORS `preferred_range` rather than replacing it: the config still decides how much breathing room a fight wants, and this only refuses to let it be less than the two bodies occupy. The flat 2.1m below was written when every creature was the same capsule; with real models it is smaller than the pair, so the opponent walked to 2.1m and stopped with its head inside the other creature's flank. The blind critic found that in five of seven combat frames, once with antlers coming out of the other creature's back. Reach and reposition distance are floored to match, or a creature spaces itself to exactly where it can no longer hit anything. Raised from 1.35: `body_radius` is the GAMEPLAY collider, and pal_body fits art to it with a footprint allowance of 2.4, so a model is routinely wider than the capsule that represents it. Spacing by the collider alone still left the meshes overlapping.",
     "body_clearance": 1.8
@@ -86,7 +86,9 @@
     "faint_pause": 1.6,
     "run_delay": 0.5,
     "_comment_guard": "Seconds of player input ignored at the start of a fight. Engage and charged attack are the same physical button (X), and without this the press that opens the fight is also read as the first attack of it.",
-    "input_guard": 0.25
+    "input_guard": 0.25,
+    "_comment_buffer": "Seconds an attack press pressed during wind-up/recovery/cooldown stays alive to fire the moment the pal is ready again. Without it, mashing at natural rhythm drops presses into the ~0.4s dead window and combat reads as unresponsive. Tunable.",
+    "input_buffer": 0.3
   },
   "camera": {
     "_comment": "The fight reuses the exploration orbit camera rather than adding a second one: a piloted pal wants exactly the third-person camera M1 already tuned, re-pointed at a shorter creature. These are the overrides while a fight is running.",
