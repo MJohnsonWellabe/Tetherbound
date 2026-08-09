@@ -1,5 +1,7 @@
 # D12 — Pals stand as peers to the trainer, not as pets at his ankles
 
+> Starter scale amended by D19 (owner decision, 2026-08-09).
+
 **Status:** accepted, by the owner
 **Decided:** after seeing the first three starters standing in the meadow
 

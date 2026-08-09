@@ -1,5 +1,7 @@
 # D13 — The Meadows wild roster is recanonised by the owner's pack
 
+> Starter scale amended by D19 (owner decision, 2026-08-09).
+
 **Status:** accepted, in full. The scale conflict below was put to the owner
 and answered: **D12's peer scale stands.**
 **Decided:** on delivery of `Tetherbound_Meadows_Wild_Canon_Pack.zip`
