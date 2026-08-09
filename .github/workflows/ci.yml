@@ -26,6 +26,13 @@ on:
   pull_request:
   workflow_dispatch:
 
+# A newer push to the same branch supersedes the run in flight — except on
+# main, where every run is kept: Release publishes from main and a cancelled
+# verification there would mean shipping on a run nobody finished.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 env:
   # Pinned deliberately. See docs/decisions/D01-godot-version-and-renderer.md.
   # Export templates must match the editor exactly or the export fails with a
@@ -71,10 +78,13 @@ jobs:
         run: |
           set -uo pipefail
 
-          # Only `.md` counts as documentation, deliberately narrowly. Anything
-          # else -- a .json under data/, a .png under docs/, a workflow file --
-          # can reach the export, so it gets the full build. The point is to
-          # catch the loop's bookkeeping commits, not to be clever.
+          # No-build paths: markdown anywhere, and the four trees the game
+          # binary never loads -- the website (published by Release, not
+          # compiled), docs/ (reference images feed the visual-judge skill,
+          # not the build), ralph/ (the loop's bookkeeping), and .claude/
+          # (skills). A .json under data/ or a workflow file can reach the
+          # export, so those still get the full build. Screenshot refreshes
+          # were costing a nine-minute build per JPEG before site/ was here.
           base=""
           if [ -n "${BASE_SHA:-}" ]; then
             base="$BASE_SHA"
@@ -99,7 +109,7 @@ jobs:
           echo "${changed:-  (nothing)}"
 
           # Fail safe: an empty diff builds rather than silently shipping.
-          if [ -z "$changed" ] || printf '%s\n' "$changed" | grep -qv '\.md$'; then
+          if [ -z "$changed" ] || printf '%s\n' "$changed" | grep -qvE '(\.md$|^site/|^docs/|^ralph/|^\.claude/)'; then
             echo "code=true" >> "$GITHUB_OUTPUT"
           else
             echo "Documentation only; skipping the build."
@@ -145,6 +155,18 @@ jobs:
 
       - name: Add Godot to PATH
         run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        # .godot/ is the imported form of every texture and scene. Without
+        # this the cold import re-processes the whole asset tree (~a minute)
+        # on every run; with it, only assets the push actually changed are
+        # re-imported. The hash key means an exact match on an unchanged
+        # asset tree, and restore-keys means a near match still starts warm.
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
 
       - name: Import project (cold)
         # The FIRST import on a clean checkout exits non-zero. Terrain3D's
@@ -290,6 +312,12 @@ jobs:
         run: godot --headless --path . --script tests/smoke_free_build.gd
 
       - name: Export Windows build
+        # Main (and manual runs) only. The export tail was ~40% of every
+        # branch run, and it duplicates work: Release re-exports main itself
+        # before publishing, so a broken export can never reach the download
+        # link through a branch — it would surface on main's own run, where
+        # fixing red main is the loop's standing first priority.
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p build/windows
           godot --headless --path . --export-debug "Windows Desktop" build/windows/Tetherbound.exe
@@ -297,6 +325,7 @@ jobs:
       - name: Verify the export is a real Windows binary
         # An export can "succeed" and leave a stub behind. Check the file is
         # actually a PE executable and is not implausibly small.
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |
           set -euo pipefail
           file build/windows/Tetherbound.exe
@@ -310,11 +339,13 @@ jobs:
         # project from source, where res:// is a real directory and addons load
         # from the project tree — so none of them can see an export-only fault.
         # A build shipped with no terrain in it and all of them were green.
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |
           sudo apt-get install -y -qq xvfb >/dev/null
           tools/verify_export.sh
 
       - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         with:
           name: Tetherbound-windows-debug
           path: build/windows/
