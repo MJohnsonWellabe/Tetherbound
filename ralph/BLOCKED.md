@@ -104,9 +104,14 @@ art tasks rather than guessing.
 
 ---
 
-## Blocked on a play gate
+## Play gates awaiting the owner — the loop does NOT wait here (D21)
 
-*(nothing yet — the first is R0.10, the opening's fifteen minutes)*
+The owner plays these whenever they can; their feedback comes back as new
+backlog items. The loop keeps building past them.
+
+- **R0.11** — play the NEW first day end to end (wake upstairs → Grandpa's
+  gifts → choose and name a starter → the paths → harvest → a fight and a
+  catch → camp before dark → day 2).
 
 ---
 

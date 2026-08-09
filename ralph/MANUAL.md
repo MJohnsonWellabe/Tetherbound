@@ -55,11 +55,15 @@ stopping.
 
 ## Ongoing
 
-### 5. Play the game at each `▶` gate
-`ralph/BACKLOG.md` marks them. `GAME_DESIGN.md` §33's exit criteria are entirely
-subjective — "is repeated combat enjoyable, not merely functional", "would you
-voluntarily keep playing". No amount of green CI substitutes, and the bible says
-so directly. The loop parks at a gate and will not build past it.
+### 5. Play the game at each `▶` checkpoint — in parallel, whenever you can
+`ralph/BACKLOG.md` marks them and `BLOCKED.md` lists the ones waiting.
+`GAME_DESIGN.md` §33's exit criteria are entirely subjective — "is repeated
+combat enjoyable, not merely functional", "would you voluntarily keep
+playing". No amount of green CI substitutes, and the bible says so directly.
+**Per your 2026-08-09 directive (D21) the loop no longer parks at gates** —
+it keeps building and your playtest feedback lands as new backlog items
+whenever you play. The one place it still stops is R9.5, the exit gate,
+which only you can call.
 
 Each push to `main` publishes a Windows build at
 `/releases/download/latest/Tetherbound-windows.zip` — **by tag**. The

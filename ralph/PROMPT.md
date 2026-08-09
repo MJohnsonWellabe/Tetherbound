@@ -90,11 +90,17 @@ first.**
 
 ## The loop
 
-1. **Pick** the topmost item in `BACKLOG.md` that is not blocked and not a `▶`
-   play gate. If the topmost item IS a `▶` gate, stop — the owner has to play
-   the game before anything below it is worth building. Say so and end. **Set
-   the lease to `play-gate` and push it even then** — a parked loop and a dead
-   loop must not look the same.
+1. **Pick** the topmost item in `BACKLOG.md` that is not blocked. **`▶` play
+   gates do not stop the loop** — owner directive, 2026-08-09 (D21): the owner
+   plays in parallel and their feedback arrives as new backlog items, so when
+   the topmost item is a `▶` gate, leave it in place for the owner, make sure
+   `BLOCKED.md`'s play-gate section lists it, and take the next item below it.
+   For `▶`-marked work items (R9.1–R9.4), do everything automatable inside
+   them and record what genuinely needs hands on the Ally, then continue.
+   The one exception is **R9.5, the exit gate**: only the owner can call
+   `GAME_DESIGN.md` §33, and `CLAUDE.md` forbids Biome 2 work until it
+   passes — when nothing remains but R9.5, the loop is correctly done and
+   parks.
 2. **Branch**: `ralph/<task-id>`, e.g. `ralph/R2.1`.
 3. **Do the work.** Smallest coherent version that delivers the stated outcome.
 4. **Test** exactly what the task's `tests:` field names. Not the full suite —
@@ -118,8 +124,9 @@ then take the next item. Block — do not improvise — when:
   philosophy, mandatory hunger/thirst, stronghold structure. Surfacing it is
   required; inventing it is forbidden.
 - **Meshy credits run out.** Record the exact balance and the species reached.
-- A **play gate** above it has not been cleared.
 - The task needs something only the owner can provide (a licence term, a key).
+  (A `▶` play gate above it is NOT a blocker — D21; the loop continues past
+  gates and the owner plays in parallel.)
 
 A blocked item is a good outcome. A quietly redesigned game is not.
 
@@ -127,9 +134,10 @@ A blocked item is a good outcome. A quietly redesigned game is not.
 
 The cron heartbeat is hourly and exists so the loop survives a session dying
 mid-task. If you finish early, schedule a fresh session a few minutes out with a
-one-shot trigger rather than idling until the hour. If you stopped at a `▶` play
-gate or everything left is blocked, **do not** schedule one — the loop is
-correctly parked, and firing sessions that immediately stop just burns tokens.
+one-shot trigger rather than idling until the hour. If everything left is
+blocked, or only R9.5 (the exit gate) remains, **do not** schedule one — the
+loop is correctly parked, and firing sessions that immediately stop just burns
+tokens.
 
 ## Honesty rules
 

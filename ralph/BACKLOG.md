@@ -2,7 +2,9 @@
 
 Ordered. Work top-down. **This file is the state of the project.**
 
-Legend — `▶` owner play gate, stop the loop. `🔒` needs Meshy credits.
+Legend — `▶` owner play checkpoint. **Gates no longer stop the loop** (owner
+directive 2026-08-09, D21): the loop lists them in `BLOCKED.md`'s play-gate
+section for the owner and keeps building past them. `🔒` needs Meshy credits.
 `model:` the cheapest tier that can do the job. `tests:` exactly what to run.
 
 **Standing task, every visual milestone:** re-shoot the website's screenshots
