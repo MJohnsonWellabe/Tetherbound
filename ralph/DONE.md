@@ -6,7 +6,7 @@ shipped, the commit, and anything the next firing should know.
 ---
 
 ## RB1 — Mouse look does not work
-`809bfca` on `ralph/RB1`. `tests: smoke_menu, smoke_opening` (no `tests:`
+`1eeb4c1` on `ralph/RB1`. `tests: smoke_menu, smoke_opening` (no `tests:`
 field was named on the backlog item; these were the two smoke tests that
 already exercise `Input.mouse_mode` end to end, so they were the closest
 thing to a relevant regression suite).
