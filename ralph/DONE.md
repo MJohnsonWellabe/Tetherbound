@@ -6,7 +6,8 @@ shipped, the commit, and anything the next firing should know.
 ---
 
 ## VP1 — Fix `tools/survey.gd`'s stale viewpoints
-`tests: none` (as named on the backlog item). Verified by actually running
+`153f802` on `ralph/VP1`. `tests: none` (as named on the backlog item).
+Verified by actually running
 `tools/survey.sh` against the live world (Godot 4.7-stable fetched fresh via
 `tools/art_pipeline/setup.sh godot`, `libegl1`/`mesa-vulkan-drivers`
 installed, import cache built) and inspecting all five rendered frames —
