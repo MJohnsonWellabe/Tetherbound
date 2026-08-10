@@ -39,6 +39,12 @@ Nothing else matters if work cannot ship. Every firing, first:
    ships green branches, so an intermittent test rejects healthy work at random.
    Say so in your report and add it to the backlog rather than re-running until
    it passes.
+   **Before you push a whole new CI run to confirm that suspicion, reproduce
+   the ONE named test locally, headless, in your own checkout** —
+   `godot --headless --path . --script tests/<the_test>.gd`, a few seconds to
+   a minute. A full verify run is several minutes for the same yes/no answer.
+   Only escalate to a real CI re-run if the local repro also flakes, or
+   won't reproduce at all and you need CI's exact environment to be sure.
 
 Report pipeline health in every completion message, even when it is fine — the
 owner gets a push notification for each firing, and "CI green, shipped R2.1" is
@@ -61,6 +67,16 @@ heartbeats never move the target under an in-flight task branch.
    minutes** old, **and** `session` is not yours — **STAND DOWN.** Say another
    firing is in flight, schedule no successor, take no task, create no branch,
    and end. This is a correct, successful outcome.
+   **Before reclaiming a lease that IS past 90 minutes, check for corroborating
+   evidence it actually died** — `git fetch origin ralph/<task-id>` for the
+   branch its `task` names. A recently-pushed commit on that branch is
+   evidence the firing is alive and just slow (a long render pass, a deep
+   instrumentation loop), not dead — a real near-collision on `RB3` happened
+   exactly this way: the firing was ~50 test-runs deep into finding a real
+   bug and simply hadn't touched its heartbeat, and the next hour's firing
+   reclaimed the lease and nearly duplicated the fix. If the branch exists
+   and moved recently, treat the lease as live regardless of the timestamp.
+   If no branch exists, or it's as stale as the lease, it's genuinely yours.
 3. Otherwise claim it: write your session id, the task you are about to take,
    `state: started`, and the current UTC time. Commit and push to
    `ralph-status`.
@@ -87,6 +103,18 @@ branch, no commit and no `DONE.md` entry — and nobody could tell whether it wa
 working or dead the entire time. That is what this section exists to prevent.
 **If you are about to spend a long time on something, say so in the `note`
 first.**
+
+**If a single step is going to run past ~20-30 minutes wall-clock** — a render
+pass, a deep instrumentation loop re-running one test dozens of times, a long
+Blender job — **commit a heartbeat update when you start it**, not only when
+it finishes. The lease's 90-minute expiry exists to reclaim genuinely dead
+firings, and it cannot tell "still working, just slow" from "died an hour
+ago" unless you tell it. This is not hypothetical: `RB3`'s investigation ran
+long enough in real time that the heartbeat went stale past 90 minutes while
+the firing was still actively working it, and the next hour's firing
+correctly-by-the-letter reclaimed the lease and started the same task again.
+It resolved cleanly only because the original firing shipped first — that was
+luck, not the protocol working as intended.
 
 ## The loop
 

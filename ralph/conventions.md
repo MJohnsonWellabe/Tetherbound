@@ -125,6 +125,41 @@ reason not to push throwaways at all.
   an editor import pass, then `git checkout project.godot` — that pass strips
   the file's documentation comments.
 
+## Visual-affecting work needs a blind pass, not a look
+
+**Owner directive, 2026-08-10.** A task counts as visual-affecting if it adds
+or changes anything a player can see: a 3D model or its materials, a terrain
+feature (a signpost, a landmark, a scatter density change), lighting, or UI
+art. The signposts and stronghold silhouette that shipped in R7.1 were only
+confirmed by the same firing rendering a frame and looking at it — the owner
+played the result and said plainly it doesn't look good. That is the gap this
+closes.
+
+Before marking a visual-affecting task done:
+
+1. Render representative frames of the actual change (the tools under
+   `tools/` — `survey.gd`, `capture_site_shots.gd`, `preview_creatures.gd` —
+   already exist for this; use the one that fits, or a small purpose-built
+   capture the way `diagnose_frame.gd`'s own header recommends).
+2. Run `.claude/skills/visual-judge` against them — the actual blind critic,
+   not the firing's own read of the frame. It has no knowledge of what
+   changed and no stake in the answer being yes.
+3. If it fails: fix the specific defects named, re-render, re-critique.
+   **Cap this at three rounds.** A visual defect that survives three
+   real attempts is not a quick fix, and burning a whole firing's budget
+   looping on one asset is worse than stopping and saying so.
+4. If it still fails after three rounds, do not mark the task done and do not
+   keep silently iterating. Record it plainly — what was tried, what the
+   critic still says is wrong, and why — either as a `BLOCKED.md` entry (if
+   it needs a decision only the owner can make, e.g. an asset that needs
+   replacing rather than tuning) or as a clearly-labelled remainder item in
+   `BACKLOG.md`, the same pattern R7.1-remainder already uses.
+
+This is slower than shipping on a green CI run — rendering under the headless
+renderer costs real minutes per frame, which is exactly why CI itself was sped
+up to skip the export tail on branches. That cost is the point: it is cheaper
+than shipping something the owner has to notice is ugly and ask for by hand.
+
 ## Writing style
 
 The codebase's comments explain **why**, name the failure they prevent, and are

@@ -70,6 +70,46 @@ same as RB1, but this one no longer needs it to know the bug was real.
 
 **RB3 (smoke_aggression flake) fixed — see `DONE.md`.**
 
+### RB4 — ROG Ally: black screen, "Not Responding" on launch; PC works fine
+Owner: same download, same build. PC opens and plays correctly. On the Ally
+it shows a black window that Windows reports as not responding, and stays
+that way.
+
+Static inspection already ruled out several suspects, so don't re-check them:
+the shipped release build already exports `--export-release`, not debug
+(`release.yml`); the Terrain3D GDExtension is staged correctly at both the
+flat and `res://`-relative paths (`tools/stage_gdextension_libs.sh`, fixed
+after an earlier bug that broke exactly this); the export architecture is
+`x86_64`, matching the Ally's Ryzen Z1; nothing forces exclusive fullscreen
+in `project.godot`.
+
+Leading hypothesis, unconfirmed: a first-launch shader/pipeline-compilation
+stall. Forward+ (`D01`, deliberate for the Ally's RDNA3 iGPU) compiles a
+pipeline per unique mesh/material combination the first time it's drawn, and
+the meadow scatters roughly 16,800 vegetation instances across many distinct
+models — a compile load a discrete PC GPU eats invisibly that could stall an
+integrated GPU for a long time, presenting as exactly this. Do not assume
+this without evidence; it is a hypothesis, not a diagnosis.
+
+Two things this task should actually do, in order:
+1. **Add startup diagnostics**: a small boot log (timestamped lines for
+   terrain build start/end, first frame presented, any other major init
+   phase) written to a real file next to the executable (`user://` or beside
+   the `.exe`), so the *next* report from the Ally carries data instead of
+   requiring live reproduction. This does not need more information from the
+   owner and should ship regardless of what else this task finds.
+2. **Ask the owner**, via `BLOCKED.md` if nothing else is actionable without
+   it: does Task Manager show the process pinned at high CPU/GPU or fully
+   idle during the freeze; does it ever resolve if left for a few minutes;
+   was it launched windowed or fullscreen; any Windows Defender/SmartScreen
+   dialog first. Do not guess-fix the shader-stall hypothesis without this —
+   if it's wrong, the fix would be real engineering effort spent on the
+   wrong problem.
+
+`model: sonnet` · `tests: none` (this needs a real Windows/Ally run, which CI
+cannot provide — same limitation `smoke_menu.gd` already documents for mouse
+capture).
+
 ---
 
 ## Phase -0.5 — Visual pass (owner directive: finish this before R1–R8)
@@ -88,6 +128,17 @@ inventing that call, gate or no gate.
 
 **R7.1's signposts and stronghold silhouette shipped — see `DONE.md`.** Three
 bullets of the original five are still open:
+
+### R7.1-visual — Blind-review the signposts and silhouette themselves
+Owner played the build and said plainly the signposts don't look good. They
+were verified only by the shipping firing rendering a frame and reading it
+itself — never run through the actual blind critic. Per the new rule in
+`conventions.md` ("Visual-affecting work needs a blind pass, not a look"):
+render close-up frames of the signposts and the ridge silhouette, run
+`.claude/skills/visual-judge` against them, and fix what it names — up to
+three rounds. If it still fails after three, record exactly what the critic
+still says is wrong and hand it back rather than shipping "done" a second
+time on the strength of one more unaided look. `model: sonnet` · `tests: none`
 
 ### R7.1-remainder — World ends 40m out, the ground seam, continuous ground cover
 `model: sonnet` · `tests: smoke_traversal`

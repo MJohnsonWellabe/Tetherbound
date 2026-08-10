@@ -10,12 +10,13 @@ last.
 release URLs return 9-byte not-found bodies, 4.7 returns a 75 MB binary. The
 editor reports `4.7.stable.official.5b4e0cb0f`.
 
-**Forward+**, not Mobile or Compatibility. The Ally is an RDNA2 part and runs
-Forward+ comfortably, and the previous prototype's single loudest defect was an
-absence of real shadows. Forward+ is the renderer with proper directional
-shadows, SDFGI and volumetric fog available if wanted. Mobile would trade that
-away for a device class this project explicitly does not target
-(`GAME_DESIGN.md` §4: "Phone is not a first-version requirement").
+**Forward+**, not Mobile or Compatibility. The Ally is an RDNA3 part (Radeon
+780M — corrected 2026-08-10; this entry said RDNA2 from the project's start)
+and runs Forward+ comfortably, and the previous prototype's single loudest
+defect was an absence of real shadows. Forward+ is the renderer with proper
+directional shadows, SDFGI and volumetric fog available if wanted. Mobile
+would trade that away for a device class this project explicitly does not
+target (`GAME_DESIGN.md` §4: "Phone is not a first-version requirement").
 
 **GDScript**, per `docs/TECHNICAL_START.md`. C# would add a build step, a .NET
 dependency on the export machine, and slower iteration, in exchange for typing

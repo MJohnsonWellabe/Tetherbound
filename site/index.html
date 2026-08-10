@@ -191,6 +191,20 @@ h2{
 }
 .rules b{display:block;color:var(--flower-gold);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
 
+/* ---------- patch notes ---------- */
+
+.patch-date{color:var(--ink-dim);font-size:.85rem;margin:0 0 1rem}
+.patch-list{list-style:none;margin:0;padding:0;display:grid;gap:.6rem;max-width:62ch}
+.patch-list li{
+  padding:.7rem .95rem;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-left:3px solid var(--flower-gold);
+  border-radius:8px;
+  font-size:.92rem;
+  color:var(--ink-dim);
+}
+
 /* ---------- screenshots ---------- */
 
 .shots{
@@ -336,6 +350,32 @@ footer p{margin:.4rem 0}
       </div>
     </div>
   </section>
+
+  <section class="wrap" id="patch-notes-section" hidden>
+    <h2>Recent changes</h2>
+    <p class="patch-date" id="patch-notes-date"></p>
+    <ul class="patch-list" id="patch-notes-list"></ul>
+  </section>
+  <script>
+    // Progressive enhancement only: patch-notes.json is written by
+    // release.yml at publish time from ralph/DONE.md's own entries, and this
+    // section stays hidden if the fetch fails or JS is off — nothing else on
+    // the page depends on it.
+    fetch("patch-notes.json").then(function (r) { return r.json(); }).then(function (data) {
+      var list = document.getElementById("patch-notes-list");
+      (data.entries || []).forEach(function (entry) {
+        var li = document.createElement("li");
+        li.textContent = entry;
+        list.appendChild(li);
+      });
+      if (data.generated_at) {
+        document.getElementById("patch-notes-date").textContent = "Last published " + data.generated_at + ".";
+      }
+      if ((data.entries || []).length > 0) {
+        document.getElementById("patch-notes-section").hidden = false;
+      }
+    }).catch(function () { /* section stays hidden */ });
+  </script>
 
   <section class="wrap">
     <h2>Honest state of it</h2>

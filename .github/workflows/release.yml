@@ -160,6 +160,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Generate the site's patch notes
+        # ralph/DONE.md is append-only, newest entry first, one `## <id> —
+        # <title>` heading per shipped item — already written in the right
+        # length and voice for this (see conventions.md's "Writing style").
+        # No separate manual step for the owner: publishing is what generates
+        # this, from the same record the loop already keeps. Deliberately the
+        # most recent N headings rather than a diff since the last release —
+        # diffing would need the previous release's commit SHA recovered from
+        # its own GitHub release body, which is fragile to depend on; an
+        # evergreen "recent changes" list needs nothing but this file.
+        run: |
+          python3 - <<'EOF'
+          import json
+          import re
+          from datetime import datetime, timezone
+
+          with open("ralph/DONE.md", encoding="utf-8") as f:
+              text = f.read()
+
+          headings = re.findall(r"^## (.+)$", text, re.MULTILINE)
+          entries = [h.strip() for h in headings[:10]]
+
+          out = {
+              "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+              "entries": entries,
+          }
+          with open("site/patch-notes.json", "w", encoding="utf-8") as f:
+              json.dump(out, f, indent=2)
+              f.write("\n")
+          print(f"wrote {len(entries)} patch-note entries")
+          EOF
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
