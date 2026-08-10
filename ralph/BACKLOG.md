@@ -140,33 +140,53 @@ three rounds. If it still fails after three, record exactly what the critic
 still says is wrong and hand it back rather than shipping "done" a second
 time on the strength of one more unaided look. `model: sonnet` · `tests: none`
 
-### R7.1-remainder — World ends 40m out, the ground seam, continuous ground cover
+**The olive/lime ground seam is fixed — see `DONE.md`.**
+
+### R7.1-remainder — World ends 40m out, continuous ground cover
 `model: sonnet` · `tests: smoke_traversal`
 
 - **The world ends 40m out.** Nothing stands on any hill or horizon in any
   frame; put trees and the landmark into the middle and far distance bands.
-  Not attempted this pass — `scripts/world/vegetation.gd`'s clump-based
-  scatter is a large, already-carefully-tuned system (see its own
-  extensive comments) and this needs its own focused pass, not a
-  tacked-on tweak.
-- **The olive/lime ground seam.** `DONE.md`'s R7.1 entry has the full
-  account of what was ruled out: the runtime shader's macro-variation/
-  blend-sharpness uniforms genuinely apply but visibly don't touch this
-  seam, and widening the bake-time slope-colour blend (`colour.blend_deg`
-  in `terrain_playground.json`) plus raising the soil/rock thresholds,
-  fully rebaked, produced no visible change on the one viewpoint tested —
-  which turned out to be standing on the rise itself, not an ordinary
-  hillside. Two real levers are now confirmed to work but neither is
-  confirmed to fix this specific complaint; the next attempt should find a
-  viewpoint that clearly shows an ordinary (non-rise) hillside seam before
-  tuning anything, since the rise's own steep ground may be reading
-  correctly as designed rather than as a bug.
+  Re-examined while chasing the ground seam (see `DONE.md`), and it is not
+  quite what it sounds like: `RULES.all_placements()` genuinely spreads
+  every layer out to the world edge (queried directly — `trees` alone
+  places 102 of its 178 instances beyond 200m from origin, none inside
+  40m), and the pale, featureless hills filling the upper half of every
+  distant frame are `world_background = NOISE`, Terrain3D's own procedural
+  continuation PAST the baked 512m region — by construction nothing can
+  stand on that, it is not part of the bake. So the real gap is narrower
+  than "nothing past 40m": specific sightlines toward the true horizon
+  (the last real hilltops before the procedural background takes over)
+  can still land on a gap between the existing clumps and read as bare.
+  `scripts/world/vegetation.gd`'s clump-based scatter is a large,
+  already-carefully-tuned system (see its own extensive comments) and
+  this still needs its own focused pass — most usefully, biasing clumps
+  toward standing ON the ridgelines the camera actually silhouettes
+  against, not a blanket density increase.
 - **Continuous ground cover.** Isolated same-size tufts at even density
   read as confetti; the references stand on continuous grass with
   clustered variety and real clearings. `data/config/vegetation.json`'s
   `grass`/`drygrass` layers already carry two rounds of density tuning
-  with detailed reasoning in their own comments — re-tuning needs a
-  rendered before/after, not a guessed number.
+  with detailed reasoning in their own comments, including a prior attempt
+  at raising instance count that cost too much render time for too little
+  coverage gain — re-tuning needs a rendered before/after, not a guessed
+  number, and probably a lever other than instance count (the same
+  comment suggests bigger tufts at moderate count over more of the near
+  field). Worth re-judging against the fixed ground texture below first:
+  isolated tufts read very differently sitting on real grass than they
+  did sitting on the wrong-hued rock/soil texture the seam bug was
+  putting under most of the map.
+
+### R7.1-found — stronghold silhouette stands inside the survey's own rise-overlook viewpoint
+`model: haiku` · `tests: none`
+Found rendering `tools/survey.gd` while chasing the ground seam, not part
+of the three bullets above. `03-rise-overlook`'s eye (148,-102) sits about
+14m from the ridge silhouette's towers at (140,-90) — the same rise R7.1's
+landmark placement and this survey viewpoint both independently picked —
+so one tower fills most of the frame at point-blank range instead of the
+distant landmark the viewpoint is meant to show. Either move the
+viewpoint's eye or nudge the tower cluster; five-minute fix, just not this
+firing's task.
 
 ### R7.2 — NPC villagers and interior polish (relocated from Phase 7)
 `model: sonnet` · `tests: smoke_opening`
