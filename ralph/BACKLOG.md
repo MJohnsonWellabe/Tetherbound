@@ -86,24 +86,36 @@ inventing that call, gate or no gate.
 
 **R5.1 (day/night cycle) shipped — see `DONE.md`.**
 
-### R7.1 — Wayfinding polish (relocated from Phase 7)
-`model: sonnet` · `tests: smoke_traversal`
-The path network shipped as the wayfinding spine (square → house, pond,
-practice meadow, ridge); finish the language: signposts at the junctions,
-and the **stronghold silhouette on the ridge** — the M7 "distant landmark"
-that makes the far edge of the map a destination instead of a fence.
+**R7.1's signposts and stronghold silhouette shipped — see `DONE.md`.** Three
+bullets of the original five are still open:
 
-Three additions from the site-frames critique, all "the meadow reads" work,
-reconfirmed by the full R0.8.5 pass:
+### R7.1-remainder — World ends 40m out, the ground seam, continuous ground cover
+`model: sonnet` · `tests: smoke_traversal`
+
 - **The world ends 40m out.** Nothing stands on any hill or horizon in any
   frame; put trees and the landmark into the middle and far distance bands.
-- **The olive/lime ground seam.** The detailed ground texture fades to flat
-  pale terrain colour at distance, splitting every frame in two at a hard
-  line; push the fade distance out or blend the far colour toward the near
-  material's tone.
+  Not attempted this pass — `scripts/world/vegetation.gd`'s clump-based
+  scatter is a large, already-carefully-tuned system (see its own
+  extensive comments) and this needs its own focused pass, not a
+  tacked-on tweak.
+- **The olive/lime ground seam.** `DONE.md`'s R7.1 entry has the full
+  account of what was ruled out: the runtime shader's macro-variation/
+  blend-sharpness uniforms genuinely apply but visibly don't touch this
+  seam, and widening the bake-time slope-colour blend (`colour.blend_deg`
+  in `terrain_playground.json`) plus raising the soil/rock thresholds,
+  fully rebaked, produced no visible change on the one viewpoint tested —
+  which turned out to be standing on the rise itself, not an ordinary
+  hillside. Two real levers are now confirmed to work but neither is
+  confirmed to fix this specific complaint; the next attempt should find a
+  viewpoint that clearly shows an ordinary (non-rise) hillside seam before
+  tuning anything, since the rise's own steep ground may be reading
+  correctly as designed rather than as a bug.
 - **Continuous ground cover.** Isolated same-size tufts at even density
   read as confetti; the references stand on continuous grass with
-  clustered variety and real clearings.
+  clustered variety and real clearings. `data/config/vegetation.json`'s
+  `grass`/`drygrass` layers already carry two rounds of density tuning
+  with detailed reasoning in their own comments — re-tuning needs a
+  rendered before/after, not a guessed number.
 
 ### R7.2 — NPC villagers and interior polish (relocated from Phase 7)
 `model: sonnet` · `tests: smoke_opening`

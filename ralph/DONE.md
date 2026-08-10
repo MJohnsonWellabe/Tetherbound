@@ -5,6 +5,60 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R7.1 — Wayfinding polish, PARTIAL: signposts and the ridge silhouette shipped
+`3213f7a` on `ralph/R7.1` (fast-forwarded to `main`, verified via `main`'s own
+commit log: `origin/main` moved `966c1cb..3213f7a`). `tests: smoke_traversal`
+— 3 consecutive clean runs, given the test's own flake history.
+
+Two of R7.1's five bullets, not all five — the rest are still on `BACKLOG.md`
+under a new R7.1-remainder entry rather than silently dropped:
+
+- **Signposts at the village square** (`scripts/world/signpost.gd`): one
+  billboarded-label arm per `data/config/terrain_playground.json`
+  `paths.routes` entry, built from that route data itself (a `label` field
+  added to each route) so a new destination gets a sign arm for free. Post
+  placed a few metres off the well, which already stands at the routes'
+  shared origin `[10,-10]`.
+- **The stronghold silhouette on the ridge** (`scripts/world/landmark.gd`):
+  four dark angular placeholder towers on the rise at `[140,-90]` — the M7
+  "distant landmark" the site-frames critique named directly. Placeholder
+  geometry, matching `CLAUDE.md`'s allowance for that; the real stronghold
+  approach and presentation are R8.2's job once Meadows is further along.
+
+Both verified by rendering close-up frames (a custom throwaway camera
+script, not committed), not just by reading the code — the labels were
+initially unreadable, overlapping head-on due to billboard behaviour, and
+that only showed up in a render.
+
+**Also fixed, found while chasing the ground-seam bullet**: confirmed by
+instantiating a live `Terrain3DMaterial` and reading its own
+`_get_shader_parameters()` that `world_noise_scale/height/region_blend/
+lod_distance/max_octaves/min_octaves` and `auto_slope`/`auto_height_reduction`
+are not real uniform names on this Terrain3D build (removed from
+`terrain_playground.json`, finding recorded in place — same precedent as the
+existing `_comment_dual_scale_removed`). Separately, `macro_variation1/2`,
+`noise1_scale`, `noise2_scale`, `noise1_angle`, `blend_sharpness` and
+`mipmap_bias` **are** real and **do** apply — forcing extreme values visibly
+changed the render — even though `get_shader_param()` reads all of them back
+as `null` after every `set_shader_param()` call. `_apply_ground_shader`'s
+"ignored N settings" warning was trusting that broken readback and had been
+false-flagging those seven as dead for as long as the config carried them.
+Fixed to check `_get_shader_parameters()`'s real key list instead of the
+unreliable readback. `enable_macro_variation` — present in intent via
+`macro_variation1/2` for two rounds of tuning but never actually set `true`
+— is now on.
+
+**What did NOT get fixed: the seam itself.** Widening the bake-time
+slope-colour blend (`colour.blend_deg` 7→18) and raising the soil/rock
+slope thresholds, then doing a full terrain rebake, produced no visible
+change on the one viewpoint tested — and that viewpoint turned out to be
+standing on the rise itself, whose slope was already well past both the
+old and new `rock_slope_deg` either way, so the test never touched an
+ordinary hillside actually misclassifying. Reverted rather than shipped as
+an unverified guess. **Continuous ground cover** (grass still reads as
+isolated tufts) and **populating the mid/far distance bands** more broadly
+are also still open. See `BACKLOG.md`'s R7.1-remainder entry.
+
 ## RB3 — Fix `tests/smoke_aggression.gd`'s intermittent flake
 `0a11b5c` on `ralph/RB3`. `tests: smoke_aggression` — 36 consecutive clean
 runs after the fix, reproduced against a ~40% failure rate before it using
