@@ -5,6 +5,37 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## RB3 — Fix `tests/smoke_aggression.gd`'s intermittent flake
+`0a11b5c` on `ralph/RB3`. `tests: smoke_aggression` — 36 consecutive clean
+runs after the fix, reproduced against a ~40% failure rate before it using
+the same frame-by-frame instrumentation, per `ralph/conventions.md`'s
+instruction not to trust a single green run.
+
+Not an aggression-logic bug, a pathing regression, or the rocky rise's
+geometry — all three were live hypotheses in `BACKLOG.md` and all three were
+wrong. The real cause, found by actually running the test dozens of times
+with position/velocity logging rather than reading the code: the trainer's
+own `AllyPal` (`follower_pal.gd`) stops closing the gap once inside
+`_stop_distance` (3.0m) with no awareness of which side of the trainer it
+ended up on. The test's peaceful half walks toward Bramblebun, then the
+aggressive half immediately reverses toward Galecrest — so the pal trailing
+behind on the first leg is standing squarely in the trainer's path on the
+second, and two solid `CharacterBody3D` capsules aimed straight at each
+other simply stop dead (velocity pinned at exactly `(0,0,0)` for the rest of
+the walk budget, confirmed over multiple repro runs). Nothing about this is
+test-specific: any player who turns around with their pal in tow can hit the
+same wall in real play.
+
+Fix: `follower_pal.gd`'s `set_following()` takes the ally off every physics
+layer while it is following (peaceful exploration), so it can never block
+the trainer, and restores normal collision the instant combat takes over.
+Scoped to the following state specifically, not the body's whole lifetime —
+tried the wider version first (collision off permanently) and it silently
+broke `smoke_catching.gd` ("the pal moved 4.04m on the stick while aiming"),
+because `wild_pal.gd`'s `_spaced_config()` keeps fighters apart by real
+collision, not distance math alone. Re-ran `smoke_combat` and
+`smoke_catching` by hand after narrowing the fix; both green.
+
 ## R5.1 — Day/night cycle
 `e4a0fb5` on `ralph/R5.1` (fast-forwarded to `main`, verified via `main`'s
 commit log and CI: run 31366654851 on `ralph/R5.1` went green, Release +

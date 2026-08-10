@@ -68,31 +68,7 @@ same as RB1, but this one no longer needs it to know the bug was real.
 
 ---
 
-## RB3 — `tests/smoke_aggression.gd` fails intermittently: Galecrest never closes to attack
-
-Discovered while shipping R5.1 (unrelated — day/night lighting touches no
-AI/spawn code), and confirmed **not** a regression from that change: reverting
-the working tree to `main`'s exact tracked content and re-running locally
-reproduced the identical failure (`stood ~67-69m from Galecrest for 900
-frames ... it never attacked`), across two consecutive runs. But `ce6205d`
-(VP2's own CI, full verify job, same aggression/spawn code, ~7 minutes)
-passed clean — so this is a genuine intermittent flake, not a deterministic
-break, and it can reject a healthy branch at random per `ralph/
-conventions.md`'s own warning about exactly this.
-
-`_walk_towards()` in `smoke_aggression.gd` points straight at the target's
-*current* position every physics frame for up to `WALK_FRAMES` (4000) and
-gives up; the failure always lands with the player still tens of metres
-away, which reads like Galecrest (the `spawns.json` `aggressor` role, a
-flying/patrolling species) moving unpredictably enough, some runs, that a
-straight-line walk never converges within the budget — not confirmed, just
-the shape of the evidence. Needs someone to actually watch it happen (record
-positions frame-by-frame, or reduce `PATIENCE_FRAMES`/add logging) rather
-than guessed from the code, the way VP1/VP2 both turned out to have
-different real causes than they looked like from reading alone.
-
-`model: sonnet` · `tests: smoke_aggression` (run it enough times in a row to
-trust a fix — a single green run does not prove a flake is gone).
+**RB3 (smoke_aggression flake) fixed — see `DONE.md`.**
 
 ---
 
@@ -439,33 +415,20 @@ Phase 1 onward rather than at the end.
   makes this real) or delete the comment. `model: haiku`
 - Opening the menu mid-fight is silently refused with no on-screen
   explanation. `model: haiku`
-- **`smoke_traversal`, `smoke_combat` and now `smoke_aggression` are all
-  intermittent.** Traversal: every failure has the player at y = −0.4 m,
-  never falling through — "the ground is not continuous" was a
-  misdiagnosis; done when 20 consecutive headless passes. Combat: a
-  docs-only commit failed on the *last* swing checked ("did no damage
-  95.0 -> 95.0") after the fight had already resolved normally; confirmed a
-  flake by re-running the identical commit clean. Aggression, new
-  2026-08-09: a docs-and-review-only commit (`ralph/R0.8.5`, run 31342098332,
-  no gameplay code touched) failed `_an_aggressive_pal_starts_the_fight_itself`
-  with "stood 70.9m from Galecrest for 900 frames ... it never attacked" —
-  but that step's own `_walk_towards(wild, 10.0)` is supposed to close to
-  10m *before* the patience timer starts, so the real failure is the walk
-  timing out 60m short, not aggression logic. Worth a specific look, not
-  just "it's the same flake again": Galecrest's cluster sits "at the
-  southern foot of the rocky rise" (the test's own comment), and the same
-  firing's R0.8.5 blind review independently found `survey.gd`'s
-  rise-area viewpoints (03/04) rendering as if the camera were embedded in
-  the terrain — both point at the rise's geometry having drifted since the
-  D18/D19 terrain reshape (village crater walls came down in the same
-  window). Could still be an ordinary timing race; could be a real pathing
-  regression near the rise. All three read as timing races on their
-  surface and all three reject healthy work at random under auto-merge,
-  which makes them real defects, not noise. A recorded fight/run log, the
-  way R4.11 prescribes, beats more CI-output reasoning — and for
-  aggression specifically, checking whether the walk consistently stalls
-  near the rise (vs. anywhere in the meadow) would tell flake from
-  regression. `model: sonnet`
+- **`smoke_traversal` and `smoke_combat` are still intermittent** (aggression's
+  own flake is fixed — RB3, see `DONE.md`). Traversal: every failure has the
+  player at y = −0.4 m, never falling through — "the ground is not
+  continuous" was a misdiagnosis; done when 20 consecutive headless passes.
+  Combat: a docs-only commit failed on the *last* swing checked ("did no
+  damage 95.0 -> 95.0") after the fight had already resolved normally;
+  confirmed a flake by re-running the identical commit clean. Both read as
+  timing races on their surface, the same way aggression's did before RB3
+  found the trainer's own follower pal was physically walling them in —
+  worth checking whether either of these has a similarly mundane, non-AI
+  cause hiding under a plausible-sounding guess, rather than assuming they
+  are the same kind of flake as each other. A recorded run log, the way
+  R4.11 prescribes and RB3 confirmed, beats more CI-output reasoning.
+  `model: sonnet`
 - **`tools/survey.gd` and `tools/preview_creatures.gd`, both found broken by
   R0.8.5, relocated to Phase -0.5 as VP1/VP2** — owner directive,
   2026-08-10: visual-pass work runs before Phase 1 onward, and both tools
