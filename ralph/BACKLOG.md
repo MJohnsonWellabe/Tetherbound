@@ -93,16 +93,22 @@ inventing that call, gate or no gate.
 **R7.1's signposts and stronghold silhouette shipped — see `DONE.md`.** Three
 bullets of the original five are still open:
 
-### R7.1-visual — Blind-review the signposts and silhouette themselves
-Owner played the build and said plainly the signposts don't look good. They
-were verified only by the shipping firing rendering a frame and reading it
-itself — never run through the actual blind critic. Per the new rule in
-`conventions.md` ("Visual-affecting work needs a blind pass, not a look"):
-render close-up frames of the signposts and the ridge silhouette, run
-`.claude/skills/visual-judge` against them, and fix what it names — up to
-three rounds. If it still fails after three, record exactly what the critic
-still says is wrong and hand it back rather than shipping "done" a second
-time on the strength of one more unaided look. `model: sonnet` · `tests: none`
+**R7.1-visual (blind-reviewed the signposts and stronghold silhouette, three
+rounds) shipped — see `DONE.md`.** One remainder opened below.
+
+### R7.1-visual-remainder — Give the stronghold silhouette actual architectural mass
+`model: sonnet` · `tests: none`
+R7.1-visual's third and final blind-critic round, verbatim: the three towers
+read as "standing stones" or "obelisks," and "no amount of repositioning,
+recoloring, or distance/fog adjustment on the current three prisms will make
+it read as fortified architecture the way the key art's stone ruin does."
+The colour/value job is done — confirmed dark and solid at all three
+distances tested, holding up under a genuinely blind pass — this item is
+shape language only. Needs new geometry: a connecting wall silhouette
+between the towers, varied massing, a roofline or crenellation — something
+that differentiates it from a cluster of monoliths. Still placeholder-grade
+primitives are fine (`CLAUDE.md`); the ask is a shape that reads as built
+rather than natural, not final art.
 
 **The olive/lime ground seam is fixed — see `DONE.md`.**
 

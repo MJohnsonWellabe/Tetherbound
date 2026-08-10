@@ -5,6 +5,86 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R7.1-visual — blind-reviewed the signposts and stronghold silhouette, three rounds
+`206fd77`, `c03c978`, `d73dd8f`, `5a22f78`, `581b351`, `d27fb49`, `3a22d00` on
+`ralph/R7.1-visual`, all fast-forwarded to `main` (verified via `origin/main`'s
+own log, not by trusting CI). `tests: none` per the backlog item's own field;
+CI's standard import + Windows export ran clean on every push. New
+`tools/capture_wayfinding.gd`: close-up viewpoints for exactly these two
+features, since neither is what the fixed five-viewpoint `tools/survey.gd`
+exists to frame (R7.1-found already caught its `03-rise-overlook` sitting 14m
+from the same towers by coincidence).
+
+R7.1 shipped these two features verified only by the shipping firing
+rendering a frame and reading it itself. This ran them through the actual
+blind critic three times, the cap `conventions.md` sets, fixing what each
+round named:
+
+**Round 1** (signpost: `ARM_SPACING` 0.5→0.75m and `ARM_START_HEIGHT`
+2.2→2.9m — four billboarded labels were stacked close enough to be "fully
+unreadable, reduced to fragments"; added a triangular-prism arrowhead per arm
+and a light `outline_size`/`outline_modulate` on the label text, which had
+none and vanished crossing dark backgrounds. **Silhouette:** the critic's
+frames showed the towers reading correctly dark at ~40m but fading to a pale
+grey nearly matching the horizon haze at ~60m and ~157m — confirmed by
+re-rendering the same viewpoint with `WorldEnvironment.fog_enabled` forced
+false, which restored the dark read. That is the shared fog
+(`art.json`'s `aerial_perspective`, already tuned once against a documented
+"fog eating the world" complaint) — retuning it globally for one landmark
+needs the whole-survey re-verification R9.4 exists for, not a change buried
+in this task. Switched `landmark.gd`'s tower material to an unshaded,
+`fog_disabled` `ShaderMaterial` instead, so the silhouette stays a flat dark
+shape regardless of distance or sun angle (this also removed a bright lit-
+seam highlight the critic named on the near frame), and added a low base
+drum under the four towers.
+
+**Round 2:** the critic's strongest complaint was that a billboarded label
+"floats... overlapping a diagonal wooden plank rather than sitting on it, so
+plank and text disagree about angle and position," with an arrow shape
+visibly overlapping letters in two labels — a real perspective artefact,
+since a billboard always faces the camera regardless of the plank's true 3D
+angle. Fixed the text to the arm's own orientation instead of billboarding;
+it now reads correctly for someone standing at the post looking outward
+along the arm, unreadable from behind, the same as a real signpost arm. A
+first attempt at the needed rotation (`rotation.y = PI`) mirrored every
+letter — caught before the next critic round by rendering and looking,
+fixed by removing the extra flip (`Label3D`'s default non-billboard facing
+was already correct).
+
+**Round 3:** the critic caught two arms visually crossing in an X near the
+post top, swallowing the apostrophe in "Grandpa's House" — every arm's
+origin sat exactly on the post centreline, so from a viewing angle where two
+opposite-ish bearings compress toward the same screen height their planks
+radiate from what looks like one point. Fixed by mounting each arm around
+the post's circumference at the golden angle (137.5°) per index — separate
+mounting points around the pole, the way a real multi-arm signpost is built,
+spreading any arm count evenly without hardcoding the route total. Verified
+by re-rendering and looking directly (not a fourth critic round — the cap is
+three, and this was a specific, well-understood geometry fix, not a fresh
+unknown).
+
+**What round 3 confirmed already fixed:** the silhouette holds a dark, solid
+value at all three distances with "no z-fighting, texture stretching, or
+mirrored-geometry bugs... anywhere on the silhouette" — the fog fix and the
+round-1 material change both verified to hold under a genuinely blind pass.
+
+**What is still open, by design rather than oversight:**
+- **The stronghold towers read as "three standing stones" or "obelisks," not
+  as a fortress** — round 3's own words: "no amount of repositioning,
+  recoloring, or distance/fog adjustment on the current three prisms will
+  make it read as fortified architecture." This needs new geometry (a
+  connecting wall silhouette, varied massing, a roofline) — see the new
+  `R7.1-visual-remainder` backlog entry. Not a config or placement fix, and
+  not invented here.
+- The hill's material inconsistency (green up close, tan/dirt at range) and
+  bald-dune look from far away are the same already-tracked defects as
+  `R7.1-found-2` (path-trench texture stretch) and `R7.1-remainder`
+  (continuous ground cover) — the towers' hill happens to sit near both, not
+  a new bug.
+- One signpost arm is partly hidden behind foreground flowers in the main
+  close-up frame; minor, and scene-dressing placement rather than the
+  signpost itself, left for whoever next touches vegetation near the square.
+
 ## RB4-diagnostics — startup boot log for the Ally black-screen freeze
 `9c08b6c` on `ralph/RB4`. `tests: none` (per the backlog item's own field;
 this is a diagnostics-only change with no automated behaviour to assert).
