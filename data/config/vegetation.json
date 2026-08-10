@@ -20,6 +20,8 @@
       "per_clump": 16,
       "clump_radius": 20.0,
       "strays": 22,
+      "_comment_ridge_bias": "R7.1-remainder: specific sightlines toward the true horizon (the last real hilltops before Terrain3D's own procedural background takes over past the 512m bake) could still land on a gap between clumps, even though far clumps exist elsewhere. ridge_bias makes half this layer's clumps sample several candidate centres and keep the highest, biasing toward hilltops/ridge crests without hand-picked coordinates (scatter_rules.gd). Not a density increase — same clump count, biased placement. Tune by rendering, not by feel.",
+      "ridge_bias": 0.5,
       "_comment_slope": "Trees stop well before the rocky rises. A tree growing out of a cliff face is the cheapest way to destroy the sense that a place was authored.",
       "max_slope_deg": 21.0,
       "_comment_scale": "A 2.5x spread inside one copse. Uniform prop scale is one of the two readable signatures of generator output, and a wood with saplings and old trees in it is the difference between a grove and a stamp.",

@@ -167,3 +167,52 @@ func test_every_model_named_in_the_config_exists() -> void:
 		for entry: Variant in _layer(name).get("models", []):
 			var path := str(entry)
 			assert_true(ResourceLoader.exists(path), "layer '%s' names a missing model: %s" % [name, path])
+
+
+# --- ridge bias (R7.1-remainder: sparse clumping on the true horizon) -----
+
+func test_ridge_bias_of_zero_changes_nothing() -> void:
+	# The default for every layer that does not opt in. Same seed, same
+	# heightfield, ridge_bias 0.0 must reproduce the unbiased placements
+	# exactly -- this is the backward-compatibility guarantee every other
+	# layer's tuning depends on.
+	var trees := _layer("trees").duplicate(true)
+	trees["ridge_bias"] = 0.0
+	var with_zero := RULES.placements_for(trees, field, world_size, 55)
+	var without_the_key := _layer("trees").duplicate(true)
+	without_the_key.erase("ridge_bias")
+	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	assert_eq(with_zero.size(), without.size())
+	for i in with_zero.size():
+		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
+			"ridge_bias 0.0 moved a placement; it must be a no-op")
+
+
+func test_ridge_bias_of_one_prefers_higher_ground() -> void:
+	# Not a claim about any specific ridgeline -- just that biased clumps land
+	# somewhere higher, on average, than unbiased ones drawn from the same
+	# heightfield and seed range. Averaged over many seeds so one unlucky draw
+	# cannot flake the test.
+	var layer := _layer("trees").duplicate(true)
+	layer["clumps"] = 1
+	layer["per_clump"] = 1
+	layer["strays"] = 0
+	layer["clump_radius"] = 0.1
+
+	var biased_sum := 0.0
+	var unbiased_sum := 0.0
+	var samples := 40
+	for seed_value in samples:
+		layer["ridge_bias"] = 1.0
+		var biased := RULES.placements_for(layer, field, world_size, seed_value * 101)
+		layer["ridge_bias"] = 0.0
+		var unbiased := RULES.placements_for(layer, field, world_size, seed_value * 101)
+		if biased.is_empty() or unbiased.is_empty():
+			continue
+		biased_sum += (biased[0]["position"] as Vector3).y
+		unbiased_sum += (unbiased[0]["position"] as Vector3).y
+
+	assert_true(biased_sum > unbiased_sum,
+		"ridge_bias 1.0 averaged %.1f height across %d seeds, no higher than unbiased's %.1f" % [
+			biased_sum / samples, samples, unbiased_sum / samples
+		])

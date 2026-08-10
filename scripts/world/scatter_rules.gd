@@ -20,6 +20,11 @@ extends RefCounted
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const CONFIG_PATH := "res://data/config/vegetation.json"
 
+## How many candidate clump centres a ridge-biased layer samples before
+## keeping the highest. Small enough to stay cheap (at most a few dozen
+## calls per layer build), large enough that the bias is real.
+const RIDGE_CANDIDATES := 6
+
 static var _config: Dictionary = {}
 
 
@@ -99,9 +104,10 @@ static func placements_for(
 	var per_clump := int(layer.get("per_clump", 12))
 	var spread := float(layer.get("clump_radius", 14.0))
 	var strays := int(layer.get("strays", 0))
+	var ridge_bias := clampf(float(layer.get("ridge_bias", 0.0)), 0.0, 1.0)
 
 	for clump in clumps:
-		var centre := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+		var centre := _clump_centre(rng, half, field, ridge_bias)
 		for i in per_clump:
 			# Square root of a uniform sample gives a disc that is denser at the
 			# middle, which is what a copse looks like. Sampling the radius
@@ -116,6 +122,35 @@ static func placements_for(
 		_consider(out, layer, field, models, spot, half, rng)
 
 	return out
+
+
+## Where a clump starts. Plain uniform by default; a `ridge_bias`-weighted
+## fraction of clumps instead sample several candidates and keep the highest.
+##
+## This is deliberately not slope-based ridge DETECTION — there is no map of
+## named ridgelines to check against, and hand-picking coordinates is exactly
+## the kind of thing that breaks the next time the terrain config changes.
+## "The tallest of a handful of independently-uniform tries" concentrates
+## toward hilltops and ridge crests in proportion to how much of the map they
+## occupy, with no knowledge of where they are — which is enough to close
+## specific gaps in the horizon silhouette (R7.1-remainder's finding: sparse
+## clumping on the true horizon ridgelines, not a lack of far clumps overall)
+## without a blanket density increase across the whole layer.
+static func _clump_centre(
+	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float
+) -> Vector2:
+	if ridge_bias <= 0.0 or rng.randf() > ridge_bias:
+		return Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+
+	var best := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+	var best_height: float = field.height_at(best.x, best.y)
+	for i in RIDGE_CANDIDATES - 1:
+		var candidate := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+		var height: float = field.height_at(candidate.x, candidate.y)
+		if not is_nan(height) and (is_nan(best_height) or height > best_height):
+			best = candidate
+			best_height = height
+	return best
 
 
 static func _consider(
