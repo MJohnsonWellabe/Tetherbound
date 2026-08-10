@@ -60,6 +60,7 @@ func _run() -> void:
 	await _check_the_party_screen_holds_five()
 	await _check_closes_and_gives_the_game_back(world)
 	await _check_opens_on_the_menu_button()
+	_check_focus_recapture_respects_open_ui(world)
 
 	print("")
 	if _failures.is_empty():
@@ -275,3 +276,47 @@ func _check_opens_on_the_menu_button() -> void:
 func _focused_control() -> Control:
 	var viewport := root.get_viewport()
 	return viewport.gui_get_focus_owner() if viewport != null else null
+
+
+## Is a window focus regain actually wired to re-capture the mouse, and does
+## the gate that stops it stealing the mouse from an open menu work?
+##
+## Exercises scripts/world/playground_world.gd's `_capture_mouse_if_free()`,
+## connected to `Window.focus_entered` as the RB1 fix: on a real Windows
+## launch, a MOUSE_MODE_CAPTURED request made before the native window has OS
+## focus can be silently dropped — `Input.mouse_mode` still reads back
+## CAPTURED, so nothing downstream can tell, but the cursor was never
+## actually confined and the camera never turns.
+##
+## HEADLESS CANNOT SEE REAL CAPTURE, confirmed by this file's own long-
+## standing note above (`_mouse_before`): the dummy DisplayServer reports
+## `Input.mouse_mode` as VISIBLE no matter what is requested, so reading it
+## back after a `focus_entered.emit()` proves nothing here — a `Input.mode !=
+## CAPTURED` check would fail on this build even with the fix wired
+## correctly. What CAN be proven without touching that getter: the signal is
+## actually connected, and `_mouse_wanted_elsewhere()` — the gate that stops a
+## focus regain from stealing the mouse out from under an open menu — reports
+## true exactly while the menu is open and false once it closes. Real
+## on-device confirmation that focus regain actually re-captures is still
+## required and is not claimed here.
+func _check_focus_recapture_respects_open_ui(world: Node) -> void:
+	if not world.has_method("_mouse_wanted_elsewhere") or not world.has_method("_capture_mouse_if_free"):
+		_fail("playground_world is missing the RB1 mouse-recapture methods")
+		return
+
+	var handler := Callable(world, "_capture_mouse_if_free")
+	if not world.get_window().focus_entered.is_connected(handler):
+		_fail("Window.focus_entered is not wired to re-capture the mouse; a focus regain after a dropped boot-time capture will never retry it")
+
+	if bool(world.call("_mouse_wanted_elsewhere")):
+		_fail("_mouse_wanted_elsewhere is true with nothing open")
+
+	_menu.call("open")
+	if not bool(world.call("_mouse_wanted_elsewhere")):
+		_fail("_mouse_wanted_elsewhere is false while the menu is open; a focus regain would steal the mouse from an open menu")
+	_menu.call("close")
+
+	if bool(world.call("_mouse_wanted_elsewhere")):
+		_fail("_mouse_wanted_elsewhere is true after the menu closed")
+
+	print("focus_entered is wired to recapture, and the gate correctly tracks the menu's open state")

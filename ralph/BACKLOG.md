@@ -48,45 +48,13 @@ still feel roomy.
 
 ## Phase -1 — urgent PC bugs (owner-reported, 2026-08-10)
 
-The owner played the published Windows build. Two bugs, ahead of
-everything else in this file — **do these first, then Phase -0.5, then
+The owner played the published Windows build. One bug left, ahead of
+everything else in this file — **do this first, then Phase -0.5, then
 Phase 1 onward.**
 
-### RB1 — Mouse look does not work
-Owner: "the game on PC doesn't allow you to look around with the mouse.
-Everything else works" (movement, presumably gamepad, are both fine).
-
-Investigation so far, to save the first firing some time — not a diagnosis,
-a starting point:
-- `camera_rig.gd:171-173`'s `_unhandled_input` only turns mouse motion into
-  look at all when `Input.mouse_mode == Input.MOUSE_MODE_CAPTURED`.
-- The only place anything sets `MOUSE_MODE_CAPTURED` is one unconditional
-  line, `playground_world.gd:84`, at the end of the world's `_ready()`. It
-  is never re-asserted afterward, and nothing checks whether it actually
-  took. `game_menu.gd` and `name_prompt.gd` both save/restore
-  `Input.mouse_mode` around their own UI (`MOUSE_MODE_VISIBLE` while open),
-  so a menu or the name-entry screen that restores incorrectly, or a
-  capture call that silently no-ops on native Windows before the window has
-  focus (a known Godot platform gotcha), would both produce exactly
-  "everything else works, mouse look does not."
-- `smoke_menu.gd`'s own comment says outright: **CI cannot see this.** The
-  dummy `DisplayServer` reports whatever mode was last asked for, captured
-  or not, so this class of bug ships silently under a fully green suite —
-  confirmed exactly that happened here.
-- The owner also reported (same session) not being able to interact with
-  Grandpa at the very start, and was unsure if it's the same cause. Check
-  both: if the interact prompt/arbiter genuinely never fired, that is
-  likely unrelated to mouse capture (proximity-based, not look-based) and
-  needs its own root cause — do not assume they're the same bug without
-  checking.
-
-Done when: on an actual exported Windows run (not headless — this needs a
-real capture test the way `tools/verify_export.sh` proves the exported
-binary runs), the mouse turns the camera from the very first frame, through
-menu open/close and the name-entry screen, and stays captured. Add whatever
-regression coverage is possible; note plainly in `DONE.md` what remains
-untestable outside a real Windows session, per the `smoke_menu.gd`
-precedent, rather than claiming full coverage that doesn't exist.
+**RB1 (mouse look) shipped — see `DONE.md`.** Real on-device confirmation
+by the owner is still the open item; see that entry for what is and is not
+provable from CI.
 
 **RB2 (walk/run animation) fixed — see `DONE.md`.** Real bug, found after
 the owner corrected an earlier wrong "already fixed" pass this same firing:

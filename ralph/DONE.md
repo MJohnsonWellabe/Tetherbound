@@ -5,6 +5,66 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## RB1 — Mouse look does not work
+`809bfca` on `ralph/RB1`. `tests: smoke_menu, smoke_opening` (no `tests:`
+field was named on the backlog item; these were the two smoke tests that
+already exercise `Input.mouse_mode` end to end, so they were the closest
+thing to a relevant regression suite).
+
+**Diagnosis, confirmed by reading the code (not by reproducing the bug —
+that needs real Windows, see below):** `playground_world.gd`'s `_ready()`
+set `Input.mouse_mode = MOUSE_MODE_CAPTURED` exactly once, unconditionally,
+at the end of boot, and nothing ever re-asserted it. That is a known Godot/
+Windows gotcha: a capture request made before the native window has
+actually received OS input focus can be silently dropped — `Input.mouse_mode`
+still reads back CAPTURED, so nothing downstream (including a test) can
+tell the difference, but the cursor is never really confined and
+`camera_rig.gd`'s `_unhandled_input` (which only turns mouse motion into
+look when `Input.mouse_mode == MOUSE_MODE_CAPTURED`) never receives real
+deltas. That matches the owner's report exactly: everything else worked,
+mouse look did not, from the first frame.
+
+**Fix:** `playground_world.gd` now connects to `Window.focus_entered` and
+re-asserts capture on every focus gain (boot included), through a new
+`_capture_mouse_if_free()` that backs off via `_mouse_wanted_elsewhere()`
+whenever the pause menu, the dialogue panel or the naming prompt currently
+owns the mouse — so a focus regain while one of those is open cannot yank
+the cursor out from under it. This is additive: the original unconditional
+boot-time call still happens (nothing was open yet), so no existing
+behaviour changed; the new path is the retry on every subsequent focus
+event, which is exactly the moment a dropped boot-time capture needs one.
+
+**The Grandpa-interact report, checked as the item asked:**
+`interaction_arbiter.gd` is purely proximity + button (`interaction_offer`
+by distance, `Input.is_action_just_pressed("interact")`) — nothing in it
+reads `Input.mouse_mode` at all, and `smoke_opening.gd`'s beat 3 (talking to
+Grandpa) passes headless, so the arbiter's own logic is sound when the
+player can reach him. The most likely explanation, not a confirmed one: if
+the owner was playing mouse+keyboard with the camera stuck at its spawn
+yaw, they may simply have been unable to turn toward Grandpa to get in
+range — a symptom of RB1, not a second bug. Left unfixed on purpose: there
+is no independent diagnosis to fix, and inventing one without evidence is
+exactly what this loop is told not to do. Worth the owner specifically
+re-checking after this fix, before anyone spends more time on it.
+
+**What is NOT proven, and cannot be from here:** whether real OS-level
+mouse capture actually happens on an exported Windows build. Per
+`smoke_menu.gd`'s own long-standing note, the dummy `DisplayServer` under
+`--headless` reports `Input.mouse_mode` as VISIBLE no matter what is
+requested — it cannot even confirm the *original* boot-time capture landed,
+let alone this fix's retry path. `smoke_menu.gd` gained a new check
+(`_check_focus_recapture_respects_open_ui`) that proves what headless CAN
+prove: `Window.focus_entered` is genuinely connected to the recapture
+method, and `_mouse_wanted_elsewhere()` correctly tracks the menu's open/
+closed state. Both `smoke_menu` and `smoke_opening` ran clean locally (Godot
+4.7-stable, fresh import cache). **This item is not closed until the owner
+confirms on the actual Windows build** that the mouse turns the camera from
+the first frame, through menu open/close and the name-entry screen, and
+stays captured — recorded here rather than claimed as tested coverage that
+does not exist.
+
+---
+
 ## RB2 — Player has no walk/run animation
 `<pending>` on `ralph/RB2`. `tests: smoke_input` (extended to assert the
 loop mode, not just that position changed).

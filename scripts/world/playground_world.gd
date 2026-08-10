@@ -81,8 +81,59 @@ func _ready() -> void:
 	_place_player()
 	_dress_the_meadow()
 	_build_settlement()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_capture_mouse_if_free()
+	get_window().focus_entered.connect(_capture_mouse_if_free)
 	_report_for_export_check()
+
+
+## Capture the mouse for camera look — unless a menu, dialogue box or the
+## naming panel currently owns it, which would trap an unclickable cursor
+## under whichever of those is open.
+##
+## Called once at boot and again on every window focus_entered. The single
+## boot-time call is what shipped before, and on Windows it can silently
+## no-op: Godot's MOUSE_MODE_CAPTURED request made before the native window
+## has actually received OS input focus is recorded (Input.mouse_mode reads
+## back CAPTURED) but never confines the cursor, so camera_rig.gd's
+## `_unhandled_input` — which only turns mouse motion into look at all when
+## `Input.mouse_mode == MOUSE_MODE_CAPTURED` — sees a mode that claims to be
+## right while no real capture ever happened. That matches the owner's report
+## exactly: everything else worked, mouse look did not, from the first frame.
+## Headless CI cannot reproduce or verify this (smoke_menu.gd's own note): the
+## dummy DisplayServer reports `Input.mouse_mode` back as VISIBLE no matter
+## what is requested, so a boot on CI cannot even prove the boot-time call
+## above landed, let alone that a later focus_entered re-assertion did. This
+## needs a real exported Windows run to confirm — recorded plainly in
+## DONE.md, not claimed as tested coverage that does not exist.
+func _capture_mouse_if_free() -> void:
+	if _mouse_wanted_elsewhere():
+		return
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+## Whether a menu, dialogue box or the naming panel currently wants the mouse
+## visible. Each of those saves the mouse mode on open and restores it on
+## close; re-capturing over one of them on a focus regain would fight that
+## and trap the cursor under a panel the player is trying to read or click.
+##
+## Reached through `/root/Game` rather than the bare `Game` autoload name —
+## see `scripts/story/party_seam.gd`'s header on why: the unit suite runs
+## under `--script`, which starts no autoloads at all, and referencing the
+## bare singleton name from a script that can load in that context is exactly
+## the mistake already paid for once on this project.
+func _mouse_wanted_elsewhere() -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and game.has_method("menu"):
+		var menu: Object = game.call("menu")
+		if menu != null and bool(menu.call("is_open")):
+			return true
+	var dialogue := get_node_or_null(^"DialoguePanel")
+	if dialogue != null and dialogue.has_method("is_open") and bool(dialogue.call("is_open")):
+		return true
+	var naming := get_node_or_null(^"NamePrompt")
+	if naming != null and naming.has_method("is_open") and bool(naming.call("is_open")):
+		return true
+	return false
 
 
 ## A liveness report an EXPORTED build can actually be tested against.
