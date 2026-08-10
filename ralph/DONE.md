@@ -5,6 +5,40 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R5.1 — Day/night cycle
+`e4a0fb5` on `ralph/R5.1` (fast-forwarded to `main`, verified via `main`'s
+commit log and CI: run 31366654851 on `ralph/R5.1` went green, Release +
+Ralph auto-merge both succeeded at `e4a0fb5`). `tests: test_day_cycle` (new).
+
+`world_look.gd` had a full named-preset time-of-day system since the
+overhaul, but nothing ever called `apply_time()` after `_ready()` — noon,
+forever, and `grandpa_road`'s "make camp before dark" line had nothing
+behind it. Both 2026-08-09 blind reviews named this a top-three gap.
+
+`scripts/world/day_cycle.gd` (new, pure-logic `RefCounted`, pinned by
+`tests/test_day_cycle.gd` per D02): elapsed real seconds → hour of day →
+which named `art.json` preset is due, and `is_dark(hour)`. `art.json`: day/
+golden now carry an hour (8/18), plus a new night preset (procedural-
+gradient sky, moonlight-strength sun) and tunable `day_length_seconds`/
+`dark_from_hour`/`dark_to_hour`. `world_look.gd`'s `_process()` advances the
+clock and snaps to whichever preset is due; `apply_time()` now also resyncs
+the internal clock to the hour it just applied, or `tools/survey.gd` picking
+a time by name for a screenshot would be silently undone by the very next
+tick. `camp.gd`: rest also resets the clock to morning.
+
+Verified beyond the named test: full suite (297 tests) green through the
+headless SceneTree runner, and `tests/smoke_free_build.gd` (plants a real
+camp, rests through it) green end to end — "[camp] rested; day 2". One real
+bug caught before shipping, not by a test (nothing here is scene-testable
+per D02): `apply_time()` needed the clock resync described above.
+
+Took two rebases to land: `main` moved twice underneath it (VP2's docs
+commit, then RB3's) before `ralph/R5.1`'s CI finished. Verify the ship by
+looking at `main`, never at a single CI result, when that happens.
+
+Deliberately not done, out of scope: no gameplay effects from darkness
+(nocturnal spawn gating is R5.3's task, per D20).
+
 ## VP2 — Fix `tools/preview_creatures.gd` rendering zero creatures
 `ce6205d` on `ralph/VP2` (fast-forwarded to `main`, verified via `main`'s
 commit log and CI: Release + Ralph auto-merge both green at `ce6205d`).

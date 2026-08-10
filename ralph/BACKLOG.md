@@ -108,13 +108,7 @@ inventing that call, gate or no gate.
 
 **VP2 (preview_creatures.gd rendering zero creatures) fixed — see `DONE.md`.**
 
-### R5.1 — Day/night cycle (relocated from Phase 5)
-`model: sonnet` · `tests: test_day_cycle` (new)
-The day *counter* already advances via camp rest; this makes time visible —
-sun, sky, "before dark" meaning something. `grandpa_road`'s "make camp
-before dark" line is currently a promise the world doesn't keep. Both blind
-reviews named flat, unchanging noon light as a top-three gap against the
-references.
+**R5.1 (day/night cycle) shipped — see `DONE.md`.**
 
 ### R7.1 — Wayfinding polish (relocated from Phase 7)
 `model: sonnet` · `tests: smoke_traversal`
