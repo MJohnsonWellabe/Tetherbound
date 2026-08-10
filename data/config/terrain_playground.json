@@ -100,6 +100,7 @@
     "routes": [
       {
         "_why": "the square to Grandpa's door",
+        "label": "Grandpa's House",
         "points": [
           [
             10.0,
@@ -117,6 +118,7 @@
       },
       {
         "_why": "the square to the practice meadow (the opening's bramblebun)",
+        "label": "Practice Meadow",
         "points": [
           [
             10.0,
@@ -134,6 +136,7 @@
       },
       {
         "_why": "the square to the pond valley (the water creatures)",
+        "label": "The Pond",
         "points": [
           [
             10.0,
@@ -159,6 +162,7 @@
       },
       {
         "_why": "the square toward the rocky rise (galecrest, and one day the stronghold sightline)",
+        "label": "The Rise",
         "points": [
           [
             10.0,
@@ -195,13 +199,7 @@
   "shader": {
     "_comment_background": "2 = NOISE. It was 1 = FLAT, which draws an infinite plane at y=0 past the baked 512m and fogs it to a uniform sheet. That produced a measured 0.146 luminance step across the ENTIRE width of `03-rise-overlook` at row 252 \u2014 the blind critic found it independently and called it the first thing the eye lands on. Noise gives the distance real shape instead, so the world stops having a visible edge.",
     "world_background": 2,
-    "world_noise_scale": 3.2,
-    "world_noise_height": 58.0,
-    "_comment_blend": "How far into the baked regions the noise blends. Too low and the seam comes back as a ring instead of a line.",
-    "world_noise_region_blend": 0.42,
-    "world_noise_lod_distance": 3000.0,
-    "world_noise_max_octaves": 5,
-    "world_noise_min_octaves": 2,
+    "_comment_world_noise_removed": "world_noise_scale/height/region_blend/lod_distance/max_octaves/min_octaves are NOT real uniforms on this Terrain3D build \u2014 confirmed by dumping Terrain3DMaterial's actual _get_shader_parameters() keys directly (R7.1), which do not include any world_noise_* name. world_background=NOISE above is a real property and does apply; the background's shape beyond it is this build's fixed default, not tunable from here. Removed rather than left silently ignored, same reasoning as dual_scale below.",
     "_comment_macro": "Macro variation tints the ground at two large scales, which is the only thing that stops a 2K tile reading as tiling. The critic measured the previous ground as high-frequency mottled noise with 'no blade direction and no scale cue' \u2014 a texture repeating every few metres with nothing varying above that.",
     "_comment_macro_multiply": "These MULTIPLY the albedo \u2014 the shader does `macrov = mix(colour1, white, noise1); macrov *= mix(colour2, white, noise2)`. So they can only ever darken, and two mid-tones compound: the first attempt used #c6d18a and #8fa06a, which multiply out to roughly 0.47 at their overlap and took the near-field ground from luminance 0.124 to 0.054 \u2014 a black foreground in every frame. Keep both near white and let them tint, not shade. Anything below about #b0 here is a brightness change wearing a colour's clothes.",
     "macro_variation1": "#eef0d8",
@@ -210,11 +208,11 @@
     "noise2_scale": 0.055,
     "noise1_angle": 0.7,
     "_comment_dual_scale_removed": "Terrain3D's dual-scaling uniforms (dual_scale_texture/near/far/reduction) are NOT reachable through set_shader_param on this build \u2014 the shader only compiles them in behind a feature this API does not expose, and writing them returns quietly having done nothing. They were configured here for two rounds while the surveys came back byte-identical. `_apply_ground_shader` now reads every uniform back and warns by name, which is how this was finally caught.",
-    "_comment_auto": "Auto shader thresholds: how readily slope switches from grass to the overlay texture.",
-    "auto_slope": 2.4,
-    "auto_height_reduction": 0.16,
+    "_comment_auto_removed": "auto_slope/auto_height_reduction (R7.1): also not real uniform names on this build, same check as world_noise_* above. There is no exposed control over the auto-shader's grass/rock slope threshold or blend softness in this Terrain3D version; `colour.blend_deg` above only softens the BAKED vertex-colour transition, a separate layer from the live auto-shader texture switch.",
+    "_comment_enable_macro": "R7.1: macro_variation1/2 above were configured but never actually applied \u2014 enable_macro_variation defaults false and nothing set it true. blend_sharpness, mipmap_bias, macro_variation1/2 and noise1/2_scale/angle ARE real uniforms on this build (confirmed the same way, and separately confirmed to affect the render: forcing extreme values visibly changes the frame even though get_shader_param() reads them back as null after every set \u2014 the readback is unreliable on this build, not the write). The `ignored N setting(s)` warning below is therefore a false positive for exactly these seven keys; it stays because it is still correct about world_noise_*/auto_slope/auto_height_reduction, which really are dead.",
     "blend_sharpness": 0.62,
-    "mipmap_bias": 0.92
+    "mipmap_bias": 0.92,
+    "enable_macro_variation": true
   },
   "_comment_textures": "Real PBR ground, replacing the `show_colormap` debug view that stood in for it from M1 to the first art pass. Terrain3D's auto shader picks texture 0 on walkable ground and texture 1 on slopes, so the grass/soil/rock intent the bake already encodes is expressed with albedo and normal detail instead of flat vertex colour. `uv_scale` is metres per tile: too large and the ground is mush at distance, too small and it visibly repeats.",
   "_comment_uv_scale": "Metres per tile is 1/uv_scale, so 0.34 tiles every ~3m. It was 0.18 (~5.5m), and at that size the near ground showed the photograph's own brown patches rather than its average \u2014 a green meadow with a brown foreground, reading as two materials. Tighter tiling averages to grass; too tight and it visibly repeats, which is what the macro variation and detiling above are for.",

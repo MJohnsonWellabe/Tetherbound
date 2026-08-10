@@ -20,6 +20,13 @@ const VILLAGE := preload("res://scripts/world/village.gd")
 const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
+const SIGNPOST := preload("res://scripts/world/signpost.gd")
+const LANDMARK := preload("res://scripts/world/landmark.gd")
+
+## A few metres off the well (village.json stands it at the square's exact
+## centre, [10,-10], which is also where every route in `paths.routes`
+## starts) so the signpost has its own footing instead of sharing the well's.
+const SIGNPOST_AT := Vector2(13.5, -7.0)
 
 ## Where Grandpa's house stands: the west building pad in
 ## data/config/terrain_playground.json's `flats`. One source of truth would be
@@ -263,9 +270,8 @@ func _apply_ground_materials() -> void:
 ## `set_shader_param`, and setting one the wrong way fails silently.
 func _apply_ground_shader(material: Object) -> void:
 	# Terrain3DMaterial exposes exactly TWO of these as real properties. The rest
-	# — auto_slope, blend_sharpness, dual_scale_*, mipmap_bias and the macro
-	# variation colours — are shader uniforms, reachable only through
-	# set_shader_param.
+	# — blend_sharpness, dual_scale_*, mipmap_bias and the macro variation
+	# colours — are shader uniforms, reachable only through set_shader_param.
 	#
 	# This list was longer, and `material.set()` on a name that is not a property
 	# returns quietly having done nothing. So five settings were written to the
@@ -283,6 +289,18 @@ func _apply_ground_shader(material: Object) -> void:
 		material.set("world_background", 1)
 		return
 
+	# get_shader_param()'s OWN readback is not trustworthy on this Terrain3D
+	# build — R7.1 found it returns null after a successful set for every
+	# genuinely valid uniform name, not just for dead ones (proved by forcing
+	# extreme values and watching the render actually change while the readback
+	# stayed null throughout). _get_shader_parameters() is the real source of
+	# truth: it enumerates the shader's actual uniform names directly, so a key
+	# missing from it is a genuinely wrong name rather than an unreadable right
+	# one.
+	var known: Dictionary = {}
+	if material.has_method("_get_shader_parameters"):
+		known = material.call("_get_shader_parameters")
+
 	var ignored: Array[String] = []
 	for key: String in cfg.keys():
 		if key.begins_with("_"):
@@ -296,14 +314,12 @@ func _apply_ground_shader(material: Object) -> void:
 		if not material.has_method("set_shader_param"):
 			ignored.append(key)
 			continue
-		material.call("set_shader_param", key, value)
-		# Read back. A uniform that does not exist under this name accepts the
-		# write and returns null, which is indistinguishable from working right
-		# up until a survey comes back unchanged.
-		if material.call("get_shader_param", key) == null:
+		if not known.is_empty() and not known.has(key):
 			ignored.append(key)
+			continue
+		material.call("set_shader_param", key, value)
 	if not ignored.is_empty():
-		push_warning("terrain shader ignored %d setting(s), which will look exactly like tuning them did nothing: %s" % [
+		push_warning("terrain shader config names %d setting(s) this build's shader does not have, which will look exactly like tuning them did nothing: %s" % [
 			ignored.size(), ", ".join(ignored)
 		])
 
@@ -424,6 +440,16 @@ func _build_settlement() -> void:
 	village.name = "Village"
 	add_child(village)
 	village.call("build")
+
+	var signpost: Node3D = SIGNPOST.new()
+	signpost.name = "Signpost"
+	add_child(signpost)
+	signpost.call("build", self, SIGNPOST_AT)
+
+	var landmark: Node3D = LANDMARK.new()
+	landmark.name = "StrongholdSilhouette"
+	add_child(landmark)
+	landmark.call("build", self)
 
 	_place_harvest_nodes()
 
