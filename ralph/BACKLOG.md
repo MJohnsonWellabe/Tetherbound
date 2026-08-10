@@ -78,16 +78,7 @@ creature/human art-pipeline style mismatch is a design decision (rework vs.
 replace assets) parked in `BLOCKED.md` for the owner — `CLAUDE.md` forbids
 inventing that call, gate or no gate.
 
-### VP2 — Fix `tools/preview_creatures.gd` rendering zero creatures
-`model: sonnet` · `tests: none`
-Moved from "Found along the way," unchanged: it builds bodies with
-`BODY.new()` instead of instantiating `scenes/pals/pal.tscn`, so every
-`@onready` child lookup fails silently. A previous attempt got past the
-`$Head` crash but hit a follow-on `is_inside_tree()` failure on
-`global_position` right after `add_child()` — reverted rather than shipped
-unverified. This is the one tool built to catch cross-species scale
-errors; nothing in this phase involving relative creature scale should be
-called done without it working.
+**VP2 (preview_creatures.gd rendering zero creatures) fixed — see `DONE.md`.**
 
 ### R5.1 — Day/night cycle (relocated from Phase 5)
 `model: sonnet` · `tests: test_day_cycle` (new)

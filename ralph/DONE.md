@@ -5,6 +5,35 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## VP2 — Fix `tools/preview_creatures.gd` rendering zero creatures
+`ce6205d` on `ralph/VP2` (fast-forwarded to `main`, verified via `main`'s
+commit log and CI: Release + Ralph auto-merge both green at `ce6205d`).
+`tests: none` (as named on the backlog item).
+
+Three real bugs, all found by actually running the tool under Godot 4.7
+headless, not by reading the code:
+1. `BODY.new()` built a bare `CharacterBody3D` instead of instantiating
+   `scenes/pals/pal.tscn`, so every `@onready` child lookup
+   (`$Collision`/`$Model`/`$Body`/`$Head`) failed silently. Fixed by
+   instantiating `pal.tscn` and attaching the script before `add_child()`,
+   matching `encounter_director.gd`'s own pattern.
+2. Once building succeeded, `setup()`'s `is_inside_tree()` guard was still
+   false through `_init()`'s whole synchronous burst. Fixed with one
+   `await process_frame` before building anything — the same quirk
+   `render_bounds.gd`'s header already names for `global_transform`.
+3. With both fixed, models still didn't render: every body is a
+   `CharacterBody3D` and the preview card has no floor collider, so
+   gravity dropped each one out of frame over the 120-physics-frame wait
+   before the screenshot. Fixed with `set_physics_process(false)` right
+   after `setup()`.
+
+Verified by looking at the actual rendered PNG: all 17 species visible at
+their gameplay heights beside the trainer-height bars, zero engine errors.
+
+This closes out the mechanical half of Phase -0.5's tooling debt — the
+tool built to catch cross-species scale errors now works, ahead of R5.1/
+R7.1/R7.2/R9.4 which need it.
+
 ## VP1 — Fix `tools/survey.gd`'s stale viewpoints
 `153f802` on `ralph/VP1`. `tests: none` (as named on the backlog item).
 Verified by actually running
