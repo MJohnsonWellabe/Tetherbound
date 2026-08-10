@@ -68,6 +68,34 @@ same as RB1, but this one no longer needs it to know the bug was real.
 
 ---
 
+## RB3 — `tests/smoke_aggression.gd` fails intermittently: Galecrest never closes to attack
+
+Discovered while shipping R5.1 (unrelated — day/night lighting touches no
+AI/spawn code), and confirmed **not** a regression from that change: reverting
+the working tree to `main`'s exact tracked content and re-running locally
+reproduced the identical failure (`stood ~67-69m from Galecrest for 900
+frames ... it never attacked`), across two consecutive runs. But `ce6205d`
+(VP2's own CI, full verify job, same aggression/spawn code, ~7 minutes)
+passed clean — so this is a genuine intermittent flake, not a deterministic
+break, and it can reject a healthy branch at random per `ralph/
+conventions.md`'s own warning about exactly this.
+
+`_walk_towards()` in `smoke_aggression.gd` points straight at the target's
+*current* position every physics frame for up to `WALK_FRAMES` (4000) and
+gives up; the failure always lands with the player still tens of metres
+away, which reads like Galecrest (the `spawns.json` `aggressor` role, a
+flying/patrolling species) moving unpredictably enough, some runs, that a
+straight-line walk never converges within the budget — not confirmed, just
+the shape of the evidence. Needs someone to actually watch it happen (record
+positions frame-by-frame, or reduce `PATIENCE_FRAMES`/add logging) rather
+than guessed from the code, the way VP1/VP2 both turned out to have
+different real causes than they looked like from reading alone.
+
+`model: sonnet` · `tests: smoke_aggression` (run it enough times in a row to
+trust a fix — a single green run does not prove a flake is gone).
+
+---
+
 ## Phase -0.5 — Visual pass (owner directive: finish this before R1–R8)
 
 Everything the two 2026-08-09 blind reviews (`docs/reviews/2026-08-09-site-
