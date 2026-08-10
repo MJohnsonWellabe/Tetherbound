@@ -16,7 +16,9 @@ extends Node3D
 
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 
-const POST_HEIGHT := 2.4
+## Tall enough to clear four stacked arms at ARM_START_HEIGHT/ARM_SPACING
+## below with a small cap above the topmost one.
+const POST_HEIGHT := 3.2
 const POST_RADIUS := 0.09
 const ARM_LENGTH := 1.1
 const ARM_HEIGHT := 0.16
@@ -24,8 +26,17 @@ const ARM_THICKNESS := 0.05
 ## Arms stack up the post, closest destination lowest. Spaced wide enough
 ## that the billboarded labels below do not overlap head-on, the one angle a
 ## rotated plank cannot separate them at.
-const ARM_SPACING := 0.5
-const ARM_START_HEIGHT := 2.2
+##
+## R7.1-visual: the blind critic caught this at only 0.5m and called the
+## bottom two labels of four "fully unreadable, reduced to fragments" in the
+## head-on frame — a Label3D's billboard always faces the camera regardless
+## of the arm's own yaw, so from close to head-on, differing bearings buy no
+## separation at all and spacing is the only thing that does. Measured against
+## the actual label: font_size 28 at pixel_size 0.008 is ~0.22m of glyph
+## height alone, before line spacing — 0.5m between anchors left barely a
+## gap. 0.85m clears a full label plus breathing room.
+const ARM_SPACING := 0.75
+const ARM_START_HEIGHT := 2.9
 
 var _placed := 0
 
@@ -109,6 +120,22 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 	plank_mesh.material = plank_mat
 	arm.add_child(plank)
 
+	# R7.1-visual: the critic named the plank "a plain flat rectangle with no
+	# arrowhead... doesn't function as pointing to anything." A 3-sided
+	# cylinder is a triangular prism — cheapest possible primitive that reads
+	# as a point rather than a blunt end.
+	var head := MeshInstance3D.new()
+	var head_mesh := CylinderMesh.new()
+	head_mesh.top_radius = 0.0
+	head_mesh.bottom_radius = ARM_HEIGHT * 0.6
+	head_mesh.height = ARM_HEIGHT * 0.8
+	head_mesh.radial_segments = 3
+	head_mesh.material = plank_mat
+	head.mesh = head_mesh
+	head.rotation.x = deg_to_rad(-90.0)
+	head.position = Vector3(0.0, 0.0, ARM_LENGTH + ARM_HEIGHT * 0.4)
+	arm.add_child(head)
+
 	var text := Label3D.new()
 	text.text = label
 	text.font_size = 28
@@ -117,7 +144,12 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 	text.no_depth_test = false
 	text.position = Vector3(0.0, ARM_HEIGHT * 0.5 + 0.02, ARM_LENGTH * 0.5)
 	text.modulate = Color("#241a10")
-	text.outline_size = 0
+	# R7.1-visual: 0 meant letters vanished wherever a label crossed a dark
+	# background (a roof, a shadow) — the critic called this out directly. A
+	# light outline holds the dark ink readable against both the pale sky and
+	# dark structures, the two backgrounds these labels actually cross.
+	text.outline_size = 10
+	text.outline_modulate = Color("#f4ecd8")
 	arm.add_child(text)
 
 

@@ -43,10 +43,12 @@ const VIEWPOINTS := [
 		# village.json's SmallBarn sits at (18,-2) — the first attempt at
 		# this viewpoint (17.5,-3) put the eye inside its collision box and
 		# rendered the barn's unlit interior. Approaching from the
-		# southwest instead, clear of every village.json structure.
+		# southwest instead, clear of every village.json structure. Pulled
+		# back and raised slightly from a second attempt (7.5,-1.5, h1.6)
+		# whose foreground flower scatter covered the whole arm stack.
 		"name": "signpost-three-quarter",
-		"eye": Vector2(7.5, -1.5), "eye_h": 1.6,
-		"target": Vector2(13.5, -7.0), "target_h": 2.0,
+		"eye": Vector2(4.0, 2.0), "eye_h": 2.4,
+		"target": Vector2(13.5, -7.0), "target_h": 1.8,
 	},
 	{
 		# From the village square, the natural vantage a player has while
