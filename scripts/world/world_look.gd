@@ -14,14 +14,22 @@ extends Node
 ## read it.
 
 const CONFIG_PATH := "res://data/config/art.json"
+const DAY_CYCLE := preload("res://scripts/world/day_cycle.gd")
 
 const DEFAULT_TIME := "day"
+
+## Nodes in this group get their clock snapped back to morning by
+## reset_to_morning() -- how scripts/build/camp.gd's "rest to morning" reaches
+## the sky without camp.gd needing to know world_look.gd exists.
+const GROUP := "day_cycle"
 
 @export var sun_path: NodePath
 @export var environment_path: NodePath
 
 var _config: Dictionary = {}
 var _time: String = DEFAULT_TIME
+var _cycle: RefCounted = null
+var _elapsed_seconds: float = 0.0
 
 
 func _ready() -> void:
@@ -29,7 +37,34 @@ func _ready() -> void:
 	if _config.is_empty():
 		push_warning("art.json missing or unreadable; the scene keeps its authored look")
 		return
+	_cycle = DAY_CYCLE.new(_config)
+	add_to_group(GROUP)
 	apply_time(DEFAULT_TIME)
+
+
+## Real time passing, not gameplay -- there is no pause here on purpose: the
+## build/inventory menus pause the world with the sky still visible behind
+## them, and a clock that stops the moment a menu opens would make every menu
+## a free way to hold off dusk forever.
+func _process(delta: float) -> void:
+	if _cycle == null:
+		return
+	_elapsed_seconds += delta
+	var hour: float = _cycle.hour_at(_elapsed_seconds)
+	var preset: String = _cycle.preset_at(hour)
+	if preset != "" and preset != _time:
+		apply_time(preset)
+
+
+## Camp rest calls this (by group, not by node reference -- see GROUP above)
+## so waking up actually reads as morning instead of the sky staying wherever
+## it was when the player made camp.
+func reset_to_morning() -> void:
+	apply_time(DEFAULT_TIME)
+
+
+func is_dark() -> bool:
+	return _cycle != null and _cycle.is_dark(_cycle.hour_at(_elapsed_seconds))
 
 
 ## Set the hour, and let everything that depends on it move together.
@@ -46,6 +81,11 @@ func _ready() -> void:
 ## derived from it. Anything that wants to change the light asks for a time
 ## rather than reaching for the light directly — which is the only way they
 ## cannot drift apart again.
+##
+## R5.1: this is also the ONE place _elapsed_seconds is written outside
+## _process(), so tools/survey.gd calling this directly (it picks a time by
+## name, per viewpoint) cannot be undone by the very next _process() tick
+## deciding, from stale elapsed time, that some other preset is due.
 func apply_time(name: String) -> void:
 	if _config.is_empty():
 		return
@@ -59,6 +99,9 @@ func apply_time(name: String) -> void:
 	var over: Dictionary = times.get(name, {})
 	_apply_sun(_merged("sun", over))
 	_apply_environment(_merged("environment", over), _merged("sky", over))
+
+	if _cycle != null and over.has("hour"):
+		_elapsed_seconds = _cycle.elapsed_for_hour(float(over["hour"]))
 
 
 func time_of_day() -> String:

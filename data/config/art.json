@@ -61,14 +61,20 @@
     "ambient_sky_contribution": 0.5,
     "aerial_perspective": 0.35
   },
-  "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above.",
+  "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above. `hour` (0-24) is when scripts/world/day_cycle.gd treats this as the active preset -- see R5.1.",
   "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it \u2014 46.8% of the image pixel-for-pixel the same \u2014 because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",
+  "_comment_day_cycle": "TUNABLE (CLAUDE.md 'Tunable Values'): how fast the clock runs and when the world counts as genuinely dark, for scripts/world/day_cycle.gd. No gameplay reads these yet -- R5.1 is presentation only, matching GAME_DESIGN.md 24's 'do not just add levels to every pal at night'; nocturnal spawn rules are a later, separate decision.",
+  "day_length_seconds": 600.0,
+  "dark_from_hour": 20.0,
+  "dark_to_hour": 5.0,
   "times": {
     "day": {
-      "_comment": "Mid-morning, high summer, clear. The default, and what the biome is designed around."
+      "_comment": "Mid-morning, high summer, clear. The default, and what the biome is designed around.",
+      "hour": 8.0
     },
     "golden": {
       "_comment": "Late afternoon. Long shadows, warm key, the sky's blue pushed down and the horizon lifted to amber. This is the mood the key art's own sunset panel is selling, and it is the one hour where the meadow gets its warm end of the palette for free.",
+      "hour": 18.0,
       "sun": {
         "pitch_deg": -13.0,
         "yaw_deg": -66.0,
@@ -93,6 +99,36 @@
         "ambient_colour": "#8f9ec4",
         "ambient_sky_contribution": 0.45,
         "exposure": 1.0
+      }
+    },
+    "night": {
+      "_comment": "No panorama exists for this yet (only day.hdr/golden.hdr were generated), so it falls back to the procedural gradient on purpose -- a missing texture degrading to the old sky beats a black void. The sun stands in for moonlight: low energy, cool, low in the sky rather than below the horizon so there is still one soft shadow direction to read.",
+      "hour": 0.0,
+      "sun": {
+        "pitch_deg": -8.0,
+        "yaw_deg": 25.0,
+        "energy": 0.12,
+        "colour": "#b7c6ea",
+        "shadow_normal_bias": 1.4
+      },
+      "sky": {
+        "top_colour": "#050b1c",
+        "horizon_colour": "#1c2740",
+        "ground_horizon_colour": "#141b2c",
+        "ground_bottom_colour": "#05070c",
+        "sun_angle_max_deg": 6.0,
+        "sun_curve": 0.4,
+        "energy": 0.3,
+        "_comment_panorama": "Explicitly empty. The base `sky` block above names day.hdr; _merged() layers this dict on top of that one, so without this the night preset would silently inherit the DAY panorama instead of falling back to the procedural gradient.",
+        "panorama": ""
+      },
+      "environment": {
+        "fog_colour": "#0d1424",
+        "fog_density": 0.0018,
+        "ambient_energy": 0.35,
+        "ambient_colour": "#1c2740",
+        "ambient_sky_contribution": 0.6,
+        "exposure": 0.85
       }
     }
   },

@@ -135,4 +135,10 @@ func _pass_the_night(game: Node) -> void:
 		var vitals: RefCounted = player.get("vitals")
 		if vitals != null and vitals.has_method("rest"):
 			vitals.call("rest")
+	# "rest to morning" (R5.1) — by group rather than a direct reference, so a
+	# camp in a scene with no day/night setup (a test scene, say) still rests
+	# fine with nothing to reset.
+	for look: Node in get_tree().get_nodes_in_group("day_cycle"):
+		if look.has_method("reset_to_morning"):
+			look.call("reset_to_morning")
 	print("[camp] rested; day %d" % day)
