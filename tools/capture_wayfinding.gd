@@ -39,15 +39,15 @@ const VIEWPOINTS := [
 		"target": Vector2(13.5, -7.0), "target_h": 2.2,
 	},
 	{
-		# Off-axis, so the arms are seen fanned out rather than end-on.
-		# village.json's SmallBarn sits at (18,-2) — the first attempt at
-		# this viewpoint (17.5,-3) put the eye inside its collision box and
-		# rendered the barn's unlit interior. Approaching from the
-		# southwest instead, clear of every village.json structure. Pulled
-		# back and raised slightly from a second attempt (7.5,-1.5, h1.6)
-		# whose foreground flower scatter covered the whole arm stack.
+		# Off-axis, so the arms are seen fanned out rather than end-on. The
+		# village square is tight around the signpost — Well at (10,-10) is
+		# only 4.6m off, SmallBarn at (18,-2) 6.4m, Barn at (2,2) 17.3m —
+		# so two earlier attempts each put the eye inside a structure's
+		# collision box: (17.5,-3) was inside SmallBarn, (4.0,2.0) was
+		# almost exactly on top of Barn. Approaching from due north instead,
+		# far enough out (12m) to clear all three.
 		"name": "signpost-three-quarter",
-		"eye": Vector2(4.0, 2.0), "eye_h": 2.4,
+		"eye": Vector2(9.0, 8.0), "eye_h": 3.0,
 		"target": Vector2(13.5, -7.0), "target_h": 1.8,
 	},
 	{
