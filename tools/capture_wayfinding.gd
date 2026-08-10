@@ -40,8 +40,12 @@ const VIEWPOINTS := [
 	},
 	{
 		# Off-axis, so the arms are seen fanned out rather than end-on.
+		# village.json's SmallBarn sits at (18,-2) — the first attempt at
+		# this viewpoint (17.5,-3) put the eye inside its collision box and
+		# rendered the barn's unlit interior. Approaching from the
+		# southwest instead, clear of every village.json structure.
 		"name": "signpost-three-quarter",
-		"eye": Vector2(17.5, -3.0), "eye_h": 1.6,
+		"eye": Vector2(7.5, -1.5), "eye_h": 1.6,
 		"target": Vector2(13.5, -7.0), "target_h": 2.0,
 	},
 	{
@@ -53,11 +57,14 @@ const VIEWPOINTS := [
 		"target": TOWER_AT, "target_h": 15.0,
 	},
 	{
-		# From "The Rise" path's own endpoint (118, -72), the last authored
-		# waypoint before the climb — roughly the point a player following
-		# the signpost's own arm would be standing.
-		"name": "silhouette-from-path-end",
-		"eye": Vector2(118.0, -72.0), "eye_h": 2.0,
+		# "The Rise" path's own second waypoint (85, -48), ~60m out —
+		# approaching but not yet at the foot of the climb. The path's
+		# actual endpoint (118, -72) is only ~19m from the tower cluster
+		# and repeats R7.1-found's point-blank mistake (confirmed by a
+		# first attempt at exactly that spot: two towers filled the whole
+		# frame, foreshortened and leaning together).
+		"name": "silhouette-from-path",
+		"eye": Vector2(85.0, -48.0), "eye_h": 2.0,
 		"target": TOWER_AT, "target_h": 15.0,
 	},
 	{
