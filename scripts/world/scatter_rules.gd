@@ -124,28 +124,45 @@ static func placements_for(
 	return out
 
 
+## How far a ridge-biased clump is allowed to wander from its own unbiased
+## draw while hunting for higher ground. Wide enough to reach genuinely
+## nearby high ground — a ridge crest, not just the one exact sample —
+## narrow enough that the clump stays roughly where the map's overall spread
+## would have put it anyway. This is the difference between "nudge toward
+## whatever local high ground is nearby" and "race toward the map's tallest
+## peak", which the first version of this function did not distinguish and
+## which rendering, not reasoning, is what caught: half-biasing the trees
+## layer at a global search radius left the actual survey horizons just as
+## bare, because a handful of clumps racing toward the map's two or three
+## named rises does nothing for the compass directions those rises are not
+## in.
+const RIDGE_SEARCH_RADIUS := 140.0
+
 ## Where a clump starts. Plain uniform by default; a `ridge_bias`-weighted
-## fraction of clumps instead sample several candidates and keep the highest.
+## fraction of clumps instead search a local neighbourhood for higher ground
+## and start there instead.
 ##
-## This is deliberately not slope-based ridge DETECTION — there is no map of
-## named ridgelines to check against, and hand-picking coordinates is exactly
-## the kind of thing that breaks the next time the terrain config changes.
-## "The tallest of a handful of independently-uniform tries" concentrates
-## toward hilltops and ridge crests in proportion to how much of the map they
-## occupy, with no knowledge of where they are — which is enough to close
-## specific gaps in the horizon silhouette (R7.1-remainder's finding: sparse
-## clumping on the true horizon ridgelines, not a lack of far clumps overall)
-## without a blanket density increase across the whole layer.
+## Deliberately not slope-based ridge DETECTION — there is no map of named
+## ridgelines to check against, and hand-picking coordinates is exactly the
+## kind of thing that breaks the next time the terrain config changes.
+## "The tallest of a handful of tries near where this clump was already
+## going" concentrates each clump toward whatever local high ground is
+## nearby, with no knowledge of where that is, while leaving the clumps'
+## overall spread across the map unchanged from the unbiased distribution.
 static func _clump_centre(
 	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float
 ) -> Vector2:
+	var base := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
 	if ridge_bias <= 0.0 or rng.randf() > ridge_bias:
-		return Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+		return base
 
-	var best := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
-	var best_height: float = field.height_at(best.x, best.y)
+	var best := base
+	var best_height: float = field.height_at(base.x, base.y)
 	for i in RIDGE_CANDIDATES - 1:
-		var candidate := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+		var offset := Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0))
+		var candidate := base + offset * RIDGE_SEARCH_RADIUS
+		candidate.x = clampf(candidate.x, -half, half)
+		candidate.y = clampf(candidate.y, -half, half)
 		var height: float = field.height_at(candidate.x, candidate.y)
 		if not is_nan(height) and (is_nan(best_height) or height > best_height):
 			best = candidate

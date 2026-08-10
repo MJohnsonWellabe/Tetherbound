@@ -97,9 +97,13 @@ var _tints: Dictionary = {}
 ## green grass in one layer and dry gold straw in another, which is most of the
 ## hue breadth the meadow has. The critic counted 2 hue families against the key
 ## art board's 6, and the ground cannot supply the difference on its own.
-func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}) -> Mesh:
+func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false) -> Mesh:
 	var map: Dictionary = RULES.config().get("retint", {})
-	if map.is_empty() and overrides.is_empty() and swaps.is_empty():
+	# needs_instance_colour still requires a fresh material even with nothing
+	# else to change: per-instance MultiMesh colour only multiplies through
+	# when the material's own vertex_color_use_as_albedo is true, and the
+	# source pack's default for an untouched model cannot be assumed to be.
+	if not needs_instance_colour and map.is_empty() and overrides.is_empty() and swaps.is_empty():
 		return mesh
 
 	var out := ArrayMesh.new()
@@ -108,11 +112,11 @@ func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}) -> Mesh:
 		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 		var source: Material = mesh.surface_get_material(surface)
 		var key := "" if source == null else source.resource_name
-		out.surface_set_material(surface, _tint_for(key, source, overrides, swaps))
+		out.surface_set_material(surface, _tint_for(key, source, overrides, swaps, needs_instance_colour))
 	return out
 
 
-func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dictionary = {}) -> Material:
+func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dictionary = {}, needs_instance_colour: bool = false) -> Material:
 	var map: Dictionary = RULES.config().get("retint", {})
 	var colour := ""
 	if overrides.has(name):
@@ -131,8 +135,10 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 
 	# Keyed by everything that can change the result, so two layers overriding
 	# the same source material get two materials while everything else still
-	# shares one.
-	var cache_key := "%s|%s|%s" % [name, colour, swap]
+	# shares one. needs_instance_colour is part of the key too — a jittered
+	# layer and an unjittered one must not share a material even when their
+	# colour/swap are otherwise identical.
+	var cache_key := "%s|%s|%s|%s" % [name, colour, swap, needs_instance_colour]
 	if _tints.has(cache_key):
 		return _tints[cache_key]
 
@@ -160,8 +166,11 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 			push_warning("layer asks to swap material '%s' to '%s', which does not exist" % [name, swap])
 		material.normal_texture = standard.normal_texture
 		# Foliage packs carry per-vertex tint; dropping it flattens the canopy
-		# variation the pack authored.
-		material.vertex_color_use_as_albedo = standard.vertex_color_use_as_albedo
+		# variation the pack authored. A jittered layer forces it on regardless
+		# of the source's own default — MultiMesh per-instance colour multiplies
+		# through this same channel, and an untouched model cannot be assumed to
+		# already have it enabled.
+		material.vertex_color_use_as_albedo = standard.vertex_color_use_as_albedo or needs_instance_colour
 		material.normal_enabled = standard.normal_enabled
 		material.albedo_color = Color(colour) if colour != "" else Color.WHITE
 		# Foliage is alpha-cut, not blended: leaves are cards with holes in them,
@@ -172,11 +181,15 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 		material.cull_mode = standard.cull_mode
 	elif colour != "":
 		material.albedo_color = Color(colour)
+		material.vertex_color_use_as_albedo = needs_instance_colour
 	elif standard != null:
 		# Unmapped, untextured materials keep their original colour rather than
 		# turning white, so adding a model from the pack degrades to "slightly
 		# off" instead of "glowing".
 		material.albedo_color = standard.albedo_color
+		material.vertex_color_use_as_albedo = needs_instance_colour
+	elif needs_instance_colour:
+		material.vertex_color_use_as_albedo = true
 
 	material.roughness = 0.94
 	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
@@ -193,8 +206,21 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
 	var layer_cfg := _layer_for(model_path)
-	multi.mesh = _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}))
+	var jitter := float(layer_cfg.get("colour_jitter", 0.0))
+	multi.mesh = _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}), jitter > 0.0)
 	multi.instance_count = placements.size()
+
+	# R7.1-remainder: the blind critic's round-1 verdict on ground cover was
+	# specific — not "too sparse", but "a single saturated hue with no value
+	# range... nothing darker to anchor a black point". Bigger tufts (this
+	# layer's other lever) do not touch that; only colour does. MultiMesh
+	# per-instance colour lets every blade get its own light/dark multiplier
+	# at zero extra draw calls or geometry — the cost this file's own
+	# comments already ruled out paying twice.
+	var jitter_rng := RandomNumberGenerator.new()
+	if jitter > 0.0:
+		multi.use_colors = true
+		jitter_rng.seed = hash(model_path)
 
 	for i in placements.size():
 		var placement: Dictionary = placements[i]
@@ -203,6 +229,9 @@ func _build_batch(model_path: String, placements: Array) -> void:
 		)
 		var spot: Vector3 = placement["position"]
 		multi.set_instance_transform(i, Transform3D(basis, spot - Vector3.UP * SINK))
+		if jitter > 0.0:
+			var v := 1.0 + jitter_rng.randf_range(-jitter, jitter)
+			multi.set_instance_color(i, Color(v, v, v, 1.0))
 
 	var node := MultiMeshInstance3D.new()
 	node.name = model_path.get_file().get_basename()
