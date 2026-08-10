@@ -6,7 +6,7 @@ shipped, the commit, and anything the next firing should know.
 ---
 
 ## RB4-diagnostics — startup boot log for the Ally black-screen freeze
-`<pending>` on `ralph/RB4`. `tests: none` (per the backlog item's own field;
+`9c08b6c` on `ralph/RB4`. `tests: none` (per the backlog item's own field;
 this is a diagnostics-only change with no automated behaviour to assert).
 
 **PARTIAL, by design — the backlog item's own two-part instruction.** RB4's
