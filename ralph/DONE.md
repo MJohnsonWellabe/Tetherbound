@@ -5,6 +5,50 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## RB4-diagnostics — startup boot log for the Ally black-screen freeze
+`<pending>` on `ralph/RB4`. `tests: none` (per the backlog item's own field;
+this is a diagnostics-only change with no automated behaviour to assert).
+
+**PARTIAL, by design — the backlog item's own two-part instruction.** RB4's
+own text asks for two things in order: ship startup diagnostics regardless
+of what else is found, then ask the owner for on-device data since nothing
+else is actionable without it. This entry is the first half; the second half
+is now `BLOCKED.md`'s "RB4 — ROG Ally black screen root cause needs
+on-device data" entry.
+
+New `scripts/boot/boot_log.gd`: a plain `RefCounted` with one static
+`line(message)` that appends a timestamped line to `user://boot_log.txt`
+(`%APPDATA%/Godot/app_userdata/Tetherbound/boot_log.txt` on the exported
+Windows build — the same directory `user://settings.json` already writes to,
+`D15`). Appends rather than truncates, with a `=== launch ... ===` marker
+per process start: the freeze this chases leaves the process "Not
+Responding" rather than crashing, so a killed-and-relaunched attempt must
+not erase the stalled run it was trying to capture. Never fatal — a file
+that fails to open just drops the line.
+
+Called from `autoload/game_state.gd`'s `_ready()` (autoload boot, first and
+last lines) and `scripts/world/playground_world.gd`'s `_ready()` at every
+major phase: terrain node created, terrain `data_directory` assigned,
+ground shader applied, player placed, vegetation scattered, settlement
+built, and first frame presented after the closing `await
+get_tree().process_frame`.
+
+Verified by actually running it, not just reading the code: fetched Godot
+4.7 (`tools/art_pipeline/setup.sh godot`), installed `libegl1`/
+`libegl-mesa0`/`mesa-vulkan-drivers`, ran a clean `--headless --import` (no
+errors; `boot_log.gd.uid` auto-generated the same way every other script's
+does), then `tests/smoke_playground.gd` — the smoke test's own assertions
+passed, and the real log file it produced
+(`~/.local/share/godot/app_userdata/Tetherbound/boot_log.txt`, the Linux
+equivalent path) showed one clean timestamped line per phase in the right
+order, confirming the writer works end to end rather than just compiling.
+
+Next step is on the owner: the boot log's last line from an actual frozen
+Ally run, plus Task Manager CPU/GPU state, whether it ever resolves, and
+windowed-vs-fullscreen — see `BLOCKED.md` for the full ask.
+
+---
+
 ## R7.1-remainder — PARTIAL: the olive/lime ground seam fixed; world-ends-40m and continuous ground cover still open
 `505a8f8` + `a049579` (bookkeeping) on `ralph/R7.1-remainder`, fast-forwarded
 to `main` (`origin/main` moved `0f1b491..a049579`) — verified via `main`'s own

@@ -34,6 +34,46 @@ access returned.
 
 ## Blocked on the owner
 
+### RB4 — ROG Ally black screen root cause needs on-device data
+The diagnostics half shipped (`RB4-diagnostics`, see `DONE.md`): a boot log
+at `user://boot_log.txt` — `%APPDATA%/Godot/app_userdata/Tetherbound/
+boot_log.txt` on the exported Windows build — now records a timestamped
+line at every major startup phase (autoload boot, terrain build, terrain
+data assignment, ground shader, player placement, vegetation scatter,
+settlement build, first frame presented). It appends rather than
+truncates, so a killed-and-relaunched attempt does not erase the stalled
+run.
+
+What's still needed before anyone can safely act on the leading hypothesis
+(a first-launch shader/pipeline-compilation stall — Forward+ compiles a
+pipeline per unique mesh/material combination the first time it draws, and
+the meadow scatters ~16,800 vegetation instances, a compile load a discrete
+PC GPU eats invisibly that could stall an integrated GPU for a long time):
+
+1. **The boot log's last line** from an actual frozen run on the Ally —
+   which phase it reached before it stopped writing.
+2. Does Task Manager show the process pinned at high CPU/GPU, or fully idle,
+   during the freeze?
+3. Does it ever resolve if left for a few minutes?
+4. Was it launched windowed or fullscreen?
+5. Any Windows Defender/SmartScreen dialog first?
+
+Static inspection already ruled out several other suspects, so don't
+re-check them: the shipped release build already exports `--export-release`,
+not debug (`release.yml`); the Terrain3D GDExtension is staged correctly at
+both the flat and `res://`-relative paths
+(`tools/stage_gdextension_libs.sh`, fixed after an earlier bug that broke
+exactly this); the export architecture is `x86_64`, matching the Ally's
+Ryzen Z1; nothing forces exclusive fullscreen in `project.godot`.
+
+Do not guess-fix the shader-stall hypothesis without this data — if it's
+wrong, the fix would be real engineering effort spent on the wrong problem.
+This needs a real Windows/Ally run, which CI cannot provide (same
+limitation `smoke_menu.gd` already documents for mouse capture).
+
+**Clears when:** the owner supplies the boot log's last line plus the four
+questions above, or reproduces it with fresh data.
+
 ### `ASSET_LEDGER.md` licence claim is false
 The ledger states "Everything currently in the build is CC0 1.0." It is not: the
 Meshy-generated creatures and the Plumberry Plains pack are not CC0. The correct
