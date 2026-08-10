@@ -88,11 +88,15 @@ regression coverage is possible; note plainly in `DONE.md` what remains
 untestable outside a real Windows session, per the `smoke_menu.gd`
 precedent, rather than claiming full coverage that doesn't exist.
 
-**RB2 (walk/run animation) verified already fixed — see `DONE.md`.** No
-code change shipped; the wiring the original report said was missing was
-already there and measurably working. Real on-device confirmation by the
-owner is still the open item, same as RB1 — the entry says plainly what
-CI can and cannot see here.
+**RB2 (walk/run animation) fixed — see `DONE.md`.** Real bug, found after
+the owner corrected an earlier wrong "already fixed" pass this same firing:
+every baked humanoid clip shipped `Animation.loop_mode = LOOP_NONE`, so
+`character_model.play()` played walk/sprint once and froze for as long as
+the state held — creatures already avoided this (`pal_animator.gd`), humans
+never did. Fixed in `character_model.gd`/`trainer_model.gd`, verified by
+`tests/smoke_input.gd` reading `loop_mode` directly and by real rendered
+screenshots. Real on-device confirmation by the owner is still worth having,
+same as RB1, but this one no longer needs it to know the bug was real.
 
 ---
 

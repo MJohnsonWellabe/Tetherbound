@@ -49,6 +49,13 @@ func _run() -> void:
 	elif not rig.has_method("planar_basis"):
 		failures.append("CameraRig has no planar_basis(): movement direction is always zero")
 
+	var anim: AnimationPlayer = null
+	var model: Node = player.get_node_or_null(^"Model")
+	if model != null and model.has_method("animation_player"):
+		anim = model.call("animation_player")
+	if anim == null:
+		failures.append("trainer has no AnimationPlayer; cannot check locomotion animation")
+
 	# --- forward ------------------------------------------------------------
 	var start: Vector3 = player.global_position
 	Input.action_press("move_forward")
@@ -64,10 +71,31 @@ func _run() -> void:
 		failures.append("holding move_forward moved the player %.2fm; the input path is broken" % distance)
 
 	# --- strafe, to prove the basis is not collapsing to one axis -----------
+	# Also where the walk-loop check lives (not the move_forward block above):
+	# both directions stall against something in the scatter within a second
+	# or so from this spawn point -- a real but separate, already-tracked
+	# issue (DONE.md, RB2) that makes "still walking after N frames" an
+	# unreliable thing to assert here. Checked the moment "walk" starts
+	# playing instead of after a fixed hold: the owner's "no animation" bug
+	# was every baked clip shipping LOOP_NONE (plays once, freezes for the
+	# rest of however long the state holds) -- character_model.gd's play()
+	# sets loop_mode the instant it starts a clip, so this is exercised
+	# whether or not the trainer keeps moving afterwards, and isn't a race
+	# against the environment.
 	start = player.global_position
 	Input.action_press("move_right")
+	var saw_walk := false
 	for i in HOLD_FRAMES:
 		await physics_frame
+		if not saw_walk and anim != null and anim.current_animation == "walk":
+			saw_walk = true
+			var clip: Animation = anim.get_animation("walk")
+			print("walk started at frame %d, loop_mode=%d (want %d LOOP_LINEAR)" % [
+				i, clip.loop_mode, Animation.LOOP_LINEAR])
+			if clip.loop_mode != Animation.LOOP_LINEAR:
+				failures.append("the walk clip is loop_mode %d, not LOOP_LINEAR -- it will play once and freeze for as long as the trainer keeps walking" % clip.loop_mode)
+	if anim != null and not saw_walk:
+		failures.append("move_right never made the trainer's animation report 'walk'")
 	Input.action_release("move_right")
 	var strafed := player.global_position - start
 	var strafe_distance := Vector2(strafed.x, strafed.z).length()

@@ -200,8 +200,21 @@ func _find_animation_player(node: Node) -> AnimationPlayer:
 
 ## Cross-faded rather than cut. A body that snaps between walk and idle reads as
 ## broken even when the states are correct.
-func play(clip: String) -> void:
+##
+## `looping` sets the underlying Animation resource's loop mode before playing
+## it, the same way `pal_animator.gd`'s `_play()` already does for creatures.
+## Every clip `animate_humanoid.py` bakes ships as LOOP_NONE — a bare export
+## default, never set per-clip — so without this, a continuous state like
+## "walk" (1.38s) plays its cycle once and freezes mid-stride for as long as
+## the state holds, which reads as "the character has no animation" even
+## though the clip exists, resolves, and the caller is asking for it every
+## frame. Confirmed directly against the trainer's own .glb: idle, walk,
+## sprint, jump and throw all measured `loop_mode == LOOP_NONE`.
+func play(clip: String, looping: bool = true) -> void:
 	if _anim == null or clip == _current or not _anim.has_animation(clip):
 		return
 	_current = clip
+	var animation := _anim.get_animation(clip)
+	if animation != null:
+		animation.loop_mode = Animation.LOOP_LINEAR if looping else Animation.LOOP_NONE
 	_anim.play(clip, 0.18)

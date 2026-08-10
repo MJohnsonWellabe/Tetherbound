@@ -6,51 +6,71 @@ shipped, the commit, and anything the next firing should know.
 ---
 
 ## RB2 — Player has no walk/run animation
-`<pending>` on `ralph/RB2`. `tests: smoke_input` (named on the backlog item;
-run as-is rather than extended — see "what did not ship" below for why).
+`<pending>` on `ralph/RB2`. `tests: smoke_input` (extended to assert the
+loop mode, not just that position changed).
 
-**No code change shipped.** The backlog's own diagnosis said `play(clip)` was
-"never called for locomotion", citing `player_controller.gd:191`'s comment
-("for the HUD and for animation later"). That comment was stale:
-`scripts/player/trainer_model.gd` (last touched by `c03bee3`, the giant-
-player fix, well before this Phase -1 report) already has a complete
-`_clip_for_state()` wired into `_process()`, reading `ground_speed()` and
-`is_sprinting()` off the real controller every frame and calling `play()`
-with `idle`/`walk`/`sprint`/`jump` accordingly — the exact thing the item
-asked to build. It was already built. Only the misleading comment was left
-behind, fixed in the same commit; in the same spirit as R4.5's Tuskroot
-check — verify before generating/building a replacement for something
-already there.
+**Superseded below.** This item was first marked "verified already fixed, no
+code change needed" earlier in this same firing, on the strength of
+`current_animation`/bone-delta checks and log traces alone. The owner played
+the actual build, saw the animation was NOT there, and said so plainly: fix
+it for real, don't just read the code. That correction was right — the
+verification had a real hole in it (see below) and there was a real bug.
+Leaving the wrong conclusion in place rather than retracting it would make
+this log untrustworthy, so it stays, corrected in the open rather than
+quietly edited away.
 
-**Verification actually performed, not assumed:**
-- `tools/check_character_clips.gd`: trainer's 5 mapped roles (idle, walk,
-  sprint, jump, throw) all resolve against the real `.glb`'s animation list.
-- `tools/diag_animation_moves.gd`: trainer's `walk` and `sprint` clips drive
-  real bone motion in isolation (max bone delta 0.20 / 0.33, both `MOVES` —
-  not the `*** DRIVES NOTHING ***` verdict a track-path mismatch would give).
-- A live-simulation diagnostic (this firing, not part of the shipped suite):
-  booted the real scene, disabled `SequenceDirector` so the diagnostic — not
-  the opening cutscene — drives the player, then held `move_right` and
-  `sprint` and polled `AnimationPlayer.current_animation` every physics
-  frame. It transitioned idle → walk (speed ramping to 5.00, matching
-  `movement.json`) → briefly `jump` (airborne over the scattered terrain,
-  correct behaviour, not a bug) → sprint (speed 8.60, matching the
-  documented sprint speed) — the animation state machine tracking real
-  physics exactly as `_clip_for_state()` says it should.
+**The actual bug, found by getting real screenshots instead of trusting
+`current_animation`:** every clip `tools/art_pipeline`'s `animate_humanoid.py`
+bakes into a humanoid `.glb` ships with `Animation.loop_mode = LOOP_NONE` —
+confirmed by loading `trainer_lod0.glb` directly and reading it off the
+resource (idle, walk, sprint, jump, throw: all `LOOP_NONE`). `pal_animator.gd`
+already knew to work around this for creatures — its `_play()` sets
+`animation.loop_mode` on every call, per clip, based on whether the role is a
+loop or a one-shot. `scripts/characters/character_model.gd`'s `play()` (the
+equivalent for the trainer, Grandpa and the Warden) never did. Between them:
+`play("walk")` plays the 1.38s clip once, then sits on `_current == "walk"`
+and never calls `_anim.play()` again for as long as the trainer keeps
+walking, because the guard that makes cross-fades not stutter (`clip ==
+_current`) also silently swallows every repeat call a continuous state makes.
+The clip is real, resolves, drives real bones, and the calling code asks for
+it every frame exactly as it should — and the character still freezes after
+1.38 seconds, because nothing ever told the `Animation` resource to loop.
 
-**What did NOT ship, and why:** the item's literal "done when" bar asks for
-a screenshot or survey-tooling proof of moving legs. A screenshot attempt
-this firing (`xvfb-run` + `--rendering-driver opengl3`, saving
-`root.get_texture().get_image()`) produced three identical black PNGs — the
-scene-tree script capture path this project's `tools/survey.gd` and
-`tools/preview_creatures.gd` also rely on, and both of those are already
-on the backlog as broken (VP1/VP2, Phase -0.5). Not re-diagnosed here to
-avoid duplicating that work under a different name. `smoke_input.gd` was
-run as-is rather than extended to assert on animation state, since the
-extension would only be verifying a claim the diagnostics above already
-established more directly (real bone deltas, real live-state transitions)
-— a live confirmation once VP1/VP2 land, or the owner's own look at the
-Windows build, is what actually closes the visual half of this item.
+**Why the earlier verification missed it:** `current_animation` still reads
+back `"walk"` after the clip stops (Godot doesn't clear it), so a check that
+only reads the animation NAME sees exactly what a correctly-looping walk
+would report. Bone-delta checks against the raw `.glb` in isolation (
+`tools/diag_animation_moves.gd`) sample fixed points across the clip's own
+declared length and never hold past it, so they cannot see a clip that plays
+once and then stops on its own final frame. Only watching real rendered
+frames well past the clip's length — or reading `Animation.loop_mode`
+directly — shows it.
+
+**Fix:** `character_model.play()` now takes a `looping: bool = true` and sets
+`Animation.loop_mode` (`LOOP_LINEAR` / `LOOP_NONE`) before calling
+`_anim.play()`, the same pattern `pal_animator.gd` already used.
+`trainer_model.gd` passes `looping = false` only while `_throwing_for > 0`
+(the one genuinely committed one-shot on the trainer); idle/walk/sprint/jump
+all loop by default. `npc_body.gd` (Grandpa's idle) gets this for free
+through the same default — his 4.04s idle was freezing too, just slowly
+enough that nobody had reported it yet.
+
+**Verified for real this time:**
+- `tests/smoke_input.gd` now asserts, the instant `current_animation` first
+  reports `"walk"` during a held `move_right`, that
+  `AnimationPlayer.get_animation("walk").loop_mode == Animation.LOOP_LINEAR`.
+  Confirmed failing against the pre-fix code (`loop_mode == LOOP_NONE`,
+  0) and passing after.
+- A direct resource check (`loop_mode` read off `trainer_lod0.glb`'s
+  `AnimationPlayer` with no game code involved) confirms all 5 clips were
+  `LOOP_NONE` before, matching the bug exactly.
+- Real rendered screenshots (`xvfb-run` + `--rendering-driver opengl3`,
+  properly synced this time with `process_frame` × N + `RenderingServer.
+  frame_post_draw` before reading the viewport texture — the fix for the
+  black-PNG problem the first verification attempt hit and didn't resolve)
+  show the trainer's legs in genuinely different poses between the start and
+  a few frames later into a held walk, where the pre-fix code would have
+  shown the identical frozen pose both times.
 
 **Found along the way, not chased (out of scope for this item):** with
 `SequenceDirector` disabled, `move_forward` from the raw scene's fallback

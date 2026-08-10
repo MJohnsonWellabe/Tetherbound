@@ -31,7 +31,10 @@ func _process(delta: float) -> void:
 	if animation_player() == null or _player == null:
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
-	play(_clip_for_state())
+	# Only the throw is a committed one-shot (timed by _throwing_for); idle,
+	# walk, sprint and jump are all states the trainer can hold indefinitely
+	# and must loop — see character_model.gd's play() for why that matters.
+	play(_clip_for_state(), _throwing_for <= 0.0)
 
 
 ## What the trainer's body should be doing, from what the trainer is doing.
