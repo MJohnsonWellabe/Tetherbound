@@ -155,7 +155,6 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 	text.font_size = 28
 	text.pixel_size = 0.008
 	text.billboard = BaseMaterial3D.BILLBOARD_DISABLED
-	text.rotation.y = PI
 	text.no_depth_test = false
 	text.position = Vector3(0.0, ARM_HEIGHT * 0.5 + 0.02, ARM_LENGTH * 0.5)
 	text.modulate = Color("#241a10")
