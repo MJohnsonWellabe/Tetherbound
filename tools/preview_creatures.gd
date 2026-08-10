@@ -18,6 +18,7 @@ extends SceneTree
 
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const BODY := preload("res://scripts/pals/pal_body.gd")
+const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
 const OUT := "res://shots/_creatures.png"
 
 ## Metres of the trainer, drawn as a reference bar beside every creature.
@@ -29,6 +30,16 @@ func _init() -> void:
 
 
 func _run() -> void:
+	# Godot's --script SceneTree entry runs _init() before the tree itself has
+	# started iterating: nodes added here get _ready() called (their $Path
+	# children resolve fine) but is_inside_tree() stays false until the first
+	# yield back to the engine. pal_body.gd's setup() gates _build_placeholder()
+	# on is_inside_tree(), so building creatures before this await silently
+	# built nothing — the actual cause behind the reverted attempt this task's
+	# backlog entry mentions. One frame here is enough; render_bounds.gd's own
+	# header names the same quirk for global_transform specifically.
+	await process_frame
+
 	var world := Node3D.new()
 	root.add_child(world)
 
@@ -57,10 +68,26 @@ func _run() -> void:
 	var spacing := 2.2
 	var x := -spacing * (ids.size() - 1) * 0.5
 	for id: String in ids:
-		var body: Node3D = BODY.new()
-		body.species_id = id
+		# pal.tscn is deliberately scriptless (its $Collision/$Model/$Body/$Head
+		# children are what pal_body.gd's @onready vars resolve against); BODY.new()
+		# alone produces a bare CharacterBody3D with none of them, so every
+		# @onready lookup failed and no creature was ever built. Instantiate the
+		# scene and attach the script, the same order encounter_director.gd uses
+		# for wild and ally pals: script attached before add_child, setup() called
+		# after — setup() is what actually builds the placeholder/model, since
+		# species_id is still empty when _ready() runs.
+		var body: Node3D = PAL_SCENE.instantiate()
+		body.name = "Preview_%s" % id
+		body.set_script(BODY)
 		world.add_child(body)
+		body.call("setup", id)
 		body.global_position = Vector3(x, 0.0, 0.0)
+		# This card has no floor collider, only the decorative plane below — a
+		# CharacterBody3D with nothing to stand on falls under its own gravity
+		# every physics frame. 120 frames of that (the wait below) drops it
+		# metres out of the shot with no error to say why the render came back
+		# empty. Nothing here needs to move; freeze it where it was placed.
+		body.set_physics_process(false)
 
 		var ruler := MeshInstance3D.new()
 		var bar := BoxMesh.new()
