@@ -78,17 +78,6 @@ creature/human art-pipeline style mismatch is a design decision (rework vs.
 replace assets) parked in `BLOCKED.md` for the owner — `CLAUDE.md` forbids
 inventing that call, gate or no gate.
 
-### VP1 — Fix `tools/survey.gd`'s stale viewpoints
-`model: sonnet` · `tests: none`
-Do this first — every later item here is verified by re-running the survey,
-and right now two of its five fixed viewpoints render nonsense (moved from
-"Found along the way," below, unchanged): viewpoints 01/05 render the
-inside of the farmhouse instead of the meadow (the interior sits near world
-origin, independent of `HOUSE_AT`); viewpoints 03/04 render as if the
-camera is embedded in the terrain (stale baked-heightfield sample from
-before the D18/D19 reshape). Re-author the five hardcoded viewpoints
-against current world geometry.
-
 ### VP2 — Fix `tools/preview_creatures.gd` rendering zero creatures
 `model: sonnet` · `tests: none`
 Moved from "Found along the way," unchanged: it builds bodies with

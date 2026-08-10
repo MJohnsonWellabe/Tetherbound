@@ -68,11 +68,19 @@ const DEFAULT_HORIZON := 0.30
 ## day. The sun is no longer the survey's to move.
 const VIEWPOINTS := [
 	{
+		# Eye moved off the exact origin and the target line redirected: the
+		# village overhaul (D18) placed the Barn at world (2, 2), 2.8m from
+		# an eye sitting at (0, 0) and directly on the (150, 120) sightline —
+		# the camera ended up nose-against the barn wall, rendering the
+		# unlit inside of the building instead of the meadow. This keeps the
+		# "standing near spawn, looking outward" framing but clears the
+		# settlement (nearest structure is now 14m+ away) and looks toward
+		# the pond-valley path instead, matching the wayfinding spine.
 		"name": "01-spawn-outward",
-		"eye": Vector2(0.0, 0.0), "eye_h": 2.2,
-		"target": Vector2(150.0, 120.0), "target_h": 6.0,
+		"eye": Vector2(-9.0, -7.0), "eye_h": 2.2,
+		"target": Vector2(-140.0, 145.0), "target_h": 8.0,
 		"time": "day", "horizon": 0.28,
-		"actor": Vector2(9.0, 7.0),
+		"actor": Vector2(-15.0, -1.0),
 	},
 	{
 		"name": "02-valley-floor",
@@ -98,11 +106,13 @@ const VIEWPOINTS := [
 		"time": "day", "horizon": 0.26,
 	},
 	{
+		# Same repositioning as 01, and for the same reason: this shared the
+		# old eye/target with 01-spawn-outward, so it shared the bug too.
 		"name": "05-spawn-low-sun",
-		"eye": Vector2(0.0, 0.0), "eye_h": 2.2,
-		"target": Vector2(150.0, 120.0), "target_h": 6.0,
+		"eye": Vector2(-9.0, -7.0), "eye_h": 2.2,
+		"target": Vector2(-140.0, 145.0), "target_h": 8.0,
 		"time": "golden", "horizon": 0.34,
-		"actor": Vector2(9.0, 7.0),
+		"actor": Vector2(-15.0, -1.0),
 	},
 ]
 
@@ -240,7 +250,20 @@ func _place_actor(player: Node3D, field: RefCounted, camera: Camera3D, view: Dic
 	if not view.has("actor"):
 		# Parked far out of shot rather than hidden: hiding it disables the body,
 		# and a disabled body is a different scene from the one being surveyed.
-		player.global_position = Vector3(9000.0, 200.0, 9000.0)
+		#
+		# This used to be a fixed (9000, 200, 9000), nowhere near the baked
+		# 512m world. That silently broke Terrain3D's own mesh streaming for
+		# the rest of the scene — not just around the player — and was the
+		# real cause of viewpoints 03 and 04 rendering as if the camera sat
+		# below the terrain with nothing but the world-noise backdrop and
+		# floating vegetation in frame: proven by re-running both with the
+		# player left near the camera instead, which rendered correctly with
+		# no other change. Parking straight down from the eye's own XZ keeps
+		# the player inside the region Terrain3D is already streaming for
+		# this shot, and 500m of dirt is more than enough to keep it out of
+		# any authored viewpoint.
+		var eye_xz: Vector2 = view["eye"]
+		player.global_position = Vector3(eye_xz.x, field.height_at(eye_xz.x, eye_xz.y) - 500.0, eye_xz.y)
 		return
 
 	var xz: Vector2 = view["actor"]

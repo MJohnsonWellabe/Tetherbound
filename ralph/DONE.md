@@ -5,6 +5,51 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## VP1 — Fix `tools/survey.gd`'s stale viewpoints
+`tests: none` (as named on the backlog item). Verified by actually running
+`tools/survey.sh` against the live world (Godot 4.7-stable fetched fresh via
+`tools/art_pipeline/setup.sh godot`, `libegl1`/`mesa-vulkan-drivers`
+installed, import cache built) and inspecting all five rendered frames —
+not just asserting the fix.
+
+**Both bugs' real causes turned out to be different from what the backlog
+entry and the 2026-08-09 review guessed, found by instrumenting the actual
+running scene rather than reasoning from the code:**
+
+- **01/05** ("renders the farmhouse interior"): not the farmhouse. The
+  overhaul (D18) placed `village.json`'s Barn at world `(2, 2)` — 2.8m from
+  an eye sitting at `(0, 0)` and lying almost exactly on the old
+  `(150, 120)` target line (perpendicular distance 0.31m). The camera was
+  nose-against the barn wall, rendering its unlit inside. Confirmed by
+  dumping every Node3D within 30m of the eye position and reading off
+  `Barn_Collision` at `(2, 2, 2)`. Fixed by moving the eye to `(-9, -7)`
+  (nearest structure now 14m+ away) and re-aiming at the pond-valley path
+  instead of back through the village.
+- **03/04** ("camera embedded in terrain, stale heightfield"): the
+  heightfield was never stale — `ground_height_at()` (the real baked
+  Terrain3D query) and `playground_heightfield.gd`'s pure recomputation
+  matched exactly (diff 0.00) at every point checked, including both
+  viewpoints' eye and peak coordinates. The real bug: `_place_actor()`'s
+  fallback for viewpoints with no `actor` key parked the player at a fixed
+  `(9000, 200, 9000)`, nowhere near the baked 512m world. That silently
+  broke Terrain3D's own mesh streaming for the whole scene, not just around
+  the player — proven by re-rendering 03 and 04 with their *original*,
+  unchanged eye/target/horizon and only the player left near the camera
+  instead: both rendered correctly, real ground and all. Fixed by parking
+  the player 500m straight down from the eye's own XZ instead — inside the
+  region Terrain3D is already streaming for that shot, and far enough below
+  ground to stay out of every authored frame. No coordinate changes were
+  needed for 03 or 04 themselves.
+
+All five frames now render real geometry (`_flatness` spread 1.41-1.57
+across the board, comfortably above the 0.01 failure floor) and were
+visually confirmed by eye, not just by the spread check. `tools/survey.sh`
+exits clean with no `FAIL:` lines.
+
+Next firing on `R9.4`/anything that re-runs the survey: the fix is in
+`_place_actor()` itself, so any future viewpoint added without an `actor`
+key is safe by default — no per-viewpoint parking logic needed.
+
 ## RB1 — Mouse look does not work
 `1eeb4c1` on `ralph/RB1`. `tests: smoke_menu, smoke_opening` (no `tests:`
 field was named on the backlog item; these were the two smoke tests that
