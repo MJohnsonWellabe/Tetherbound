@@ -24,6 +24,7 @@ const PAL_INSTANCE := preload("res://scripts/pals/pal_instance.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
+const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 
 ## Seeds a sample party and satchel so the screens can be looked at before
 ## gathering and catching exist. Off in a normal run: inventing a starting kit
@@ -60,6 +61,7 @@ var _menu: CanvasLayer = null
 
 
 func _ready() -> void:
+	BOOT_LOG.line("Game autoload: _ready start (first autoload, before any world scene)")
 	items = ITEM_DB.new()
 	inventory = INVENTORY.new(items)
 	party = PARTY.new()
@@ -71,6 +73,7 @@ func _ready() -> void:
 	# After the menu, never before: the menu shell owns the settings file and has
 	# only just read it (docs/decisions/D15).
 	_adopt_preferences()
+	BOOT_LOG.line("Game autoload: _ready done, menu mounted")
 
 
 ## The menu, as a child of the autoload rather than of a world scene.

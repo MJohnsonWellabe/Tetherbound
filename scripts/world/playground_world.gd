@@ -22,6 +22,7 @@ const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
+const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 
 ## A few metres off the well (village.json stands it at the square's exact
 ## centre, [10,-10], which is also where every route in `paths.routes`
@@ -51,9 +52,12 @@ var _vegetation: Node3D = null
 
 
 func _ready() -> void:
+	BOOT_LOG.line("playground: _ready start, building Terrain3D node")
 	_terrain = _build_terrain()
 	if _terrain == null:
+		BOOT_LOG.line("playground: terrain build FAILED (see push_error above); world will not stand up")
 		return
+	BOOT_LOG.line("playground: terrain node created, waiting for Terrain3DData")
 
 	# data_directory MUST be set after the node is in the tree and a frame has
 	# passed. Terrain3D builds its Terrain3DData on first frame, and assigning
@@ -64,6 +68,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	_terrain.set("data_directory", DATA_DIR)
 	await get_tree().process_frame
+	BOOT_LOG.line("playground: terrain data_directory assigned")
 
 	# collision_mode is set HERE, after the data is loaded, and then read back.
 	#
@@ -80,17 +85,24 @@ func _ready() -> void:
 			"The player will fall through the world outside the dynamic collision radius.")
 
 	_apply_ground_materials()
+	BOOT_LOG.line("playground: ground materials/shader applied")
 
 	# Terrain3D needs a camera to decide which regions to keep resident. Without
 	# it the extension logs an error every physics frame and stops processing.
 	if _terrain.has_method("set_camera"):
 		_terrain.call("set_camera", _camera)
 	_place_player()
+	BOOT_LOG.line("playground: player placed on terrain")
 	_dress_the_meadow()
+	BOOT_LOG.line("playground: vegetation scatter built (instance/batch count above)")
 	_build_settlement()
+	BOOT_LOG.line("playground: settlement (house, village, signpost, landmark, harvest nodes) built")
 	_capture_mouse_if_free()
 	get_window().focus_entered.connect(_capture_mouse_if_free)
 	_report_for_export_check()
+	BOOT_LOG.line("playground: _ready complete, waiting for first frame")
+	await get_tree().process_frame
+	BOOT_LOG.line("playground: first frame presented")
 
 
 ## Capture the mouse for camera look — unless a menu, dialogue box or the
