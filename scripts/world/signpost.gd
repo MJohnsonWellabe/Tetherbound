@@ -97,13 +97,30 @@ func placed() -> int:
 	return _placed
 
 
+## R7.1-visual round 3: the critic caught two arms visually crossing in an X
+## near the top of the post in signpost-front, swallowing the apostrophe in
+## "Grandpa's House" at the crossing point. Every arm's own local origin sat
+## exactly on the post's centreline, so from a viewing angle where two
+## opposite-ish bearings compress toward the same screen height, their
+## planks radiate from what looks like a single point and visibly overlap.
+## Mounting each arm at a small offset around the post's own circumference —
+## the golden angle (137.5°) per index, so any arm count spreads evenly
+## without needing the total up front — is how a real multi-arm signpost is
+## built anyway: separate mounting brackets around the pole, not all four
+## arms bolted through the same point.
+const ARM_MOUNT_RADIUS := 0.16
+const GOLDEN_ANGLE := 2.399963229728653  # 137.5 degrees, in radians
+
+
 func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void:
 	var bearing := (next - origin).normalized()
 	var yaw := atan2(bearing.x, bearing.y)
+	var mount_angle := float(index) * GOLDEN_ANGLE
+	var mount := Vector2(cos(mount_angle), sin(mount_angle)) * ARM_MOUNT_RADIUS
 
 	var arm := Node3D.new()
 	arm.name = "Arm_%s" % label.validate_filename()
-	arm.position = Vector3(0.0, ARM_START_HEIGHT - index * ARM_SPACING, 0.0)
+	arm.position = Vector3(mount.x, ARM_START_HEIGHT - index * ARM_SPACING, mount.y)
 	arm.rotation.y = yaw
 	add_child(arm)
 
