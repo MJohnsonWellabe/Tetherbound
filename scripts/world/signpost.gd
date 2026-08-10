@@ -120,34 +120,50 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 	plank_mesh.material = plank_mat
 	arm.add_child(plank)
 
-	# R7.1-visual: the critic named the plank "a plain flat rectangle with no
-	# arrowhead... doesn't function as pointing to anything." A 3-sided
-	# cylinder is a triangular prism — cheapest possible primitive that reads
-	# as a point rather than a blunt end.
+	# R7.1-visual round 1: the critic named the plank "a plain flat rectangle
+	# with no arrowhead... doesn't function as pointing to anything." A
+	# 3-sided cylinder is a triangular prism — cheapest possible primitive
+	# that reads as a point rather than a blunt end. Smaller and closer to
+	# the post than the first attempt (round 2 found it projecting far enough
+	# forward, at ARM_LENGTH + 0.4*height, to visually land on a neighbouring
+	# arm's billboarded text at some viewing angles).
 	var head := MeshInstance3D.new()
 	var head_mesh := CylinderMesh.new()
 	head_mesh.top_radius = 0.0
-	head_mesh.bottom_radius = ARM_HEIGHT * 0.6
-	head_mesh.height = ARM_HEIGHT * 0.8
+	head_mesh.bottom_radius = ARM_HEIGHT * 0.45
+	head_mesh.height = ARM_HEIGHT * 0.6
 	head_mesh.radial_segments = 3
 	head_mesh.material = plank_mat
 	head.mesh = head_mesh
 	head.rotation.x = deg_to_rad(-90.0)
-	head.position = Vector3(0.0, 0.0, ARM_LENGTH + ARM_HEIGHT * 0.4)
+	head.position = Vector3(0.0, 0.0, ARM_LENGTH + ARM_HEIGHT * 0.25)
 	arm.add_child(head)
 
+	# R7.1-visual round 2: the critic's strongest complaint was that a
+	# billboarded label "floats... overlapping a diagonal wooden plank rather
+	# than sitting on it, so plank and text disagree about angle and
+	# position" — a real-perspective artefact, since a billboard always faces
+	# the camera regardless of the plank's true 3D angle, and depending on
+	# viewing direction that mismatch can land the label over a neighbouring
+	# arm's arrowhead. Fixed to the arm instead: text now shares the plank's
+	# own orientation and reads correctly for someone standing at the post
+	# looking outward along the arm, the direction the arm is actually meant
+	# to be read from. The real cost — unreadable from behind — is also true
+	# of a real wooden signpost arm, so it is not a regression.
 	var text := Label3D.new()
 	text.text = label
 	text.font_size = 28
 	text.pixel_size = 0.008
-	text.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	text.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	text.rotation.y = PI
 	text.no_depth_test = false
 	text.position = Vector3(0.0, ARM_HEIGHT * 0.5 + 0.02, ARM_LENGTH * 0.5)
 	text.modulate = Color("#241a10")
-	# R7.1-visual: 0 meant letters vanished wherever a label crossed a dark
-	# background (a roof, a shadow) — the critic called this out directly. A
-	# light outline holds the dark ink readable against both the pale sky and
-	# dark structures, the two backgrounds these labels actually cross.
+	# R7.1-visual round 1: 0 meant letters vanished wherever a label crossed a
+	# dark background (a roof, a shadow) — the critic called this out
+	# directly. A light outline holds the dark ink readable against both the
+	# pale sky and dark structures, the two backgrounds these labels actually
+	# cross.
 	text.outline_size = 10
 	text.outline_modulate = Color("#f4ecd8")
 	arm.add_child(text)
