@@ -96,19 +96,37 @@ bullets of the original five are still open:
 **R7.1-visual (blind-reviewed the signposts and stronghold silhouette, three
 rounds) shipped — see `DONE.md`.** One remainder opened below.
 
-### R7.1-visual-remainder — Give the stronghold silhouette actual architectural mass
+**R7.1-visual-remainder (new wall/roofline/crenellation geometry, blind-
+reviewed over three rounds) shipped — see `DONE.md`.** Close and mid range
+now genuinely read as fortified architecture; a narrower long-range
+remainder is opened below.
+
+### R7.1-visual-remainder-2 — Long-range silhouette still doesn't confidently read as fortified
 `model: sonnet` · `tests: none`
-R7.1-visual's third and final blind-critic round, verbatim: the three towers
-read as "standing stones" or "obelisks," and "no amount of repositioning,
-recoloring, or distance/fog adjustment on the current three prisms will make
-it read as fortified architecture the way the key art's stone ruin does."
-The colour/value job is done — confirmed dark and solid at all three
-distances tested, holding up under a genuinely blind pass — this item is
-shape language only. Needs new geometry: a connecting wall silhouette
-between the towers, varied massing, a roofline or crenellation — something
-that differentiates it from a cluster of monoliths. Still placeholder-grade
-primitives are fine (`CLAUDE.md`); the ask is a shape that reads as built
-rather than natural, not final art.
+R7.1-visual-remainder's third and final blind-critic round, verbatim, on
+`silhouette-from-square.png` (the long-range wayfinding distance the
+landmark exists for): stripped to that scale it is "two uneven dark spikes
+with a shallow notch on top of a mound... reads just as plausibly as twin
+standing stones, dead trees, or a broken obelisk pair... does not clinch
+'fortress' specifically." Close and mid range both pass clearly now — the
+wall/collar/crenellation work genuinely fixed those (see `DONE.md`) — so
+this is narrower than the original ask: the shape needs to hold its
+fortified read specifically at the distance where per-tower detail (merlons,
+roofline) has shrunk below what a silhouette can resolve, which the current
+geometry does not yet do. The round-3 fix (taller connecting wall, height
+16m) measurably improved this over round 2 without fully passing it — likely
+needs either a wider silhouette element that survives to that scale, or
+accepting that a placeholder-primitive fortress cannot clinch this distance
+and revisiting once real art replaces the primitives (`CLAUDE.md`'s
+prototyping rule cuts both ways: placeholder is fine to prove composition,
+but is also allowed to genuinely not be good enough yet). Two smaller,
+addressable findings from the same round, not chased further to stay inside
+the three-round cap: the north tower's stepped-mass cap reads as a chimney/
+smokestack rather than a turret in the mid/long frames (a reshape of the
+existing primitive, not new geometry); and the ridge's hard-edged tan/brown
+mound cap under the structure (clearest in `silhouette-from-square.png`) is
+terrain material, not landmark geometry — the same territory `R7.1-remainder`
+below already tracks, not a new bug from this task.
 
 **The olive/lime ground seam is fixed — see `DONE.md`.**
 

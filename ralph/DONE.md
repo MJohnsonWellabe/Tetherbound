@@ -5,6 +5,91 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R7.1-visual-remainder — the stronghold silhouette gets a wall, roofline and crenellation
+`7e17d40` (new geometry: perimeter wall, peaked roof on the keep, stepped
+mass and crenellation rings on the others — pushed by an earlier firing,
+session -j) + `eed557e` (widened base drum and connecting wall, so the shape
+survives the required blind-critic pass — this firing). Both fast-forwarded
+to `main` (verified via `origin/main`'s own log).
+
+**Process note, since this is unusual:** `7e17d40` shipped clean — CI green
+(run 31427097069), release dispatched and succeeded (run 31427521553) — but
+the firing that pushed it died before running conventions.md's required
+render + blind visual-judge pass for visual-affecting work, and before any
+BACKLOG.md/DONE.md bookkeeping. This firing found that on claiming the lease
+(the `ralph-status` entry was still `started`, but `main`'s own tip and the
+now-deleted task branch corroborated a real ship, not a dead mid-push
+firing — the same class of near-miss the RB3 story in this file already
+documents, resolved the same way: check `main`, not the raw lease
+timestamp). Rather than treat 7e17d40 as someone else's unfinished work to
+redo, this firing finished it: ran the missing verification, found real
+defects, fixed them, and is recording the whole thing as one entry since
+it's genuinely one piece of work split across two firings.
+
+**The three-round blind-critic loop, run for real** (fresh subagent each
+round, zero knowledge of what changed, per conventions.md):
+
+Also found and fixed along the way, not part of the loop itself: my first
+attempt at rendering used `godot --headless ...`, which is *not* what
+`tools/capture_wayfinding.gd`'s own header comment specifies. Headless mode
+apparently never fires the `await RenderingServer.frame_post_draw` the
+script's last step depends on — the render hung for 90+ CPU-minutes with
+zero output before this was caught and killed. Dropping `--headless`
+(matching the documented invocation exactly) fixed it outright; the same
+render then completed in under a minute. Left as a note here since the next
+firing that reaches for this tool could easily make the same mistake.
+
+**Round 1** (base drum 3m tall, bare crenellation boxes): failed. "The
+three towers read as 'standing stones' or 'obelisks'" was R7.1-visual's own
+finding, unchanged — 7e17d40's geometry alone didn't move it. Specific
+findings: long range collapsed the whole structure to two ambiguous prongs
+(the straight wall segments between towers go edge-on and vanish depending
+on camera bearing, so nothing visibly joined the two nearest towers);
+crenellation merlons read as "claws, broken glass, or a jagged rock spur,"
+not a battlement, once they stopped resolving as separate boxes.
+
+**Round 1's fix:** base drum 3m → 9m tall (a cylinder's silhouette width is
+angle-independent, unlike a straight wall, so a tall drum reads as a solid
+plinth from any camera bearing); added a solid collar ring under each
+tower's crenellation merlons so the notched top has a continuous base to
+sit on instead of floating separate boxes.
+
+**Round 2:** close range now "reads clearly and unambiguously as fortress
+architecture" — the fix worked there. Long range still failed: "two dark
+vertical prongs... closer to standing stones/rock spires/chimneys than a
+stronghold." Real diagnosis, not a guess: the widened base drum sits at
+0-9m elevation, and that's exactly the elevation a distant, low, grazing
+camera has occluded behind the ridge's own nearer terrain — the same reason
+a fence looks taller than the house standing behind a hill crest from far
+away. The only part of the structure confirmed visible in every long-range
+frame was the towers' upper portions.
+
+**Round 2's fix:** raised the connecting WALL itself (not just the base
+drum) from 11m to 16m — still under every tower's own height (shortest is
+west at 18m, preserving "towers read as the skyline's tallest shapes") but
+tall enough to bridge the towers' visible upper portions instead of their
+already-occluded feet. Wall thickness 1.6m → 2.8m for more presence.
+
+**Round 3 (the cap):** real, measured improvement, not yet a full pass.
+Close range: "passes, clearly." Mid range: "passes, with a soft spot" (one
+tower's cap reads as a chimney rather than a turret, but its castellated
+neighbour still anchors the read). Long range: "does not confidently pass
+on its own... reads just as plausibly as twin standing stones, dead trees,
+or a broken obelisk pair." Per conventions.md's three-round cap, stopping
+here rather than a fourth round — opened as the narrower
+`R7.1-visual-remainder-2` in `BACKLOG.md`, the same pattern this file's own
+R7.1-remainder entry already uses. Two smaller round-3 findings recorded
+there instead of chased in this task: the north tower's cap shape, and the
+terrain mound's hard material transition (existing `R7.1-remainder`
+territory, not a new bug from this change).
+
+**Confirmed not the same defect as R7.1-visual's own colour/value work**:
+that job holds — the critic never once mentioned washing out or blending
+into the sky/terrain at any of the three rounds' three distances. This
+task was shape-language only, as scoped, and shape-language is what moved.
+
+---
+
 ## R7.1-visual — blind-reviewed the signposts and stronghold silhouette, three rounds
 `206fd77`, `c03c978`, `d73dd8f`, `5a22f78`, `581b351`, `d27fb49`, `3a22d00` on
 `ralph/R7.1-visual`, all fast-forwarded to `main` (verified via `origin/main`'s
