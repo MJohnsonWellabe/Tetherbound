@@ -72,10 +72,12 @@ func _run() -> void:
 			var slope: float = field.slope_degrees_at(world_x, world_z, spacing)
 			var ground := _ground_colour(slope, colour_cfg)
 			# Dirt paths are painted into the colour map — a worn-earth tint over
-			# the same textures, not a separate texture layer. The control-map
-			# version (real soil texture under the path) is queued as polish;
-			# this one is visible today, and the scatter keeping plants off the
-			# same line does at least as much for readability.
+			# the same textures, not a separate texture layer. The control map
+			# painted below (`_paint_control_map`) is still slope-only and does
+			# not special-case the path; a real soil texture under the path
+			# specifically is still queued as polish. This tint is visible
+			# today, and the scatter keeping plants off the same line does at
+			# least as much for readability.
 			var worn: float = field.path_factor(world_x, world_z)
 			if worn > 0.0:
 				ground = ground.lerp(path_tint, worn * 0.85)
@@ -110,6 +112,9 @@ func _run() -> void:
 	images[MAP_CONTROL] = null
 	images[MAP_COLOR] = colour_image
 	data.call("import_images", images, Vector3(origin, 0.0, origin), 0.0, 1.0)
+	await process_frame
+
+	_paint_control_map(data, field, config, colour_cfg, origin, size, spacing)
 
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(DATA_DIR)):
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DATA_DIR))
@@ -117,6 +122,101 @@ func _run() -> void:
 
 	print("baked -> %s" % DATA_DIR)
 	quit(0)
+
+
+## Paint the REAL control map with the same slope thresholds as the baked
+## colour map, instead of leaving every pixel on Terrain3D's built-in
+## per-pixel "auto" texturing.
+##
+## That auto mode looked like the right default — it is what `_apply_ground_
+## materials()` turns on via `auto_shader = true` — but it switches textures
+## at a FIXED slope threshold this build exposes no control over (confirmed by
+## dumping Terrain3DMaterial's and Terrain3DTextureAsset's own property lists:
+## no `auto_slope`, no per-texture slope/height range, anywhere reachable from
+## script). On this terrain's rolling-hills noise that threshold sits low
+## enough that almost the whole map reads as the OVERLAY texture (id 1) and
+## only near-flat ground — the spawn pad, a path shoulder — reads as the BASE
+## texture (id 0), with a hard, un-authored edge between them wherever slope
+## happens to cross it. Rendered close up near spawn (`tools/survey.gd`'s
+## 01/05 viewpoints) that edge is a saturated, zero-blue-channel green stripe
+## against a dark marbled field — the "olive/lime ground seam" this was
+## chasing. R7.1 tested only `03-rise-overlook`, whose eye sits ON the ridge
+## silhouette's own rise, already past the threshold either way — the seam
+## never showed up there because the whole frame was on one side of it.
+##
+## Painting the control map explicitly, per-pixel, with `auto` turned OFF,
+## replaces that opaque 2-texture cutover with the SAME three-tier grass/
+## soil/rock blend already authored for the colour map (`_ground_colour`
+## below) — soil is a real texture in play for the first time, not just an
+## unreachable auto-shader tier.
+func _paint_control_map(
+	data: Object, field: RefCounted, config: Dictionary, colour_cfg: Dictionary,
+	origin: float, size: int, spacing: float
+) -> void:
+	var ids := _texture_ids(config.get("textures", []))
+	if ids.is_empty():
+		push_warning("terrain_playground.json has no grass/soil/rock textures named; " +
+			"leaving the control map on Terrain3D's built-in auto-shader, seam and all")
+		return
+
+	for pixel_z in size:
+		var world_z := origin + pixel_z * spacing
+		for pixel_x in size:
+			var world_x := origin + pixel_x * spacing
+			var slope: float = field.slope_degrees_at(world_x, world_z, spacing)
+			var control := _control_for(slope, colour_cfg, ids)
+			var pos := Vector3(world_x, 0.0, world_z)
+			data.call("set_control_base_id", pos, control["base"])
+			data.call("set_control_overlay_id", pos, control["overlay"])
+			data.call("set_control_blend", pos, control["blend"])
+			data.call("set_control_auto", pos, false)
+
+	print("  control map painted: base/overlay/blend by slope, auto-shader off")
+
+
+## `name -> texture id`, read from the same `textures` list `playground_world.
+## gd`'s `_build_texture_list()` builds the Texture2DArray from — one source of
+## truth for which index is which species of ground. Empty if any of the three
+## this bake needs is missing, so the caller can fall back cleanly.
+func _texture_ids(entries: Array) -> Dictionary:
+	var by_name: Dictionary = {}
+	for i in entries.size():
+		var spec: Dictionary = entries[i]
+		by_name[str(spec.get("name", ""))] = i
+	var needed := ["grass", "soil", "rock"]
+	for name in needed:
+		if not by_name.has(name):
+			return {}
+	return {"grass": by_name["grass"], "soil": by_name["soil"], "rock": by_name["rock"]}
+
+
+## Same three bands as `_ground_colour`, expressed as a base/overlay texture
+## pair plus a blend weight rather than a colour — Terrain3D's control map
+## only ever carries two texture ids and one blend factor per pixel, so a
+## true three-way blend has to be two adjacent two-way blends instead. Because
+## `soil_at + blend <= rock_at` for every value this config has shipped, the
+## bands never need to overlap: grass user, then a grass->soil ramp, then pure
+## soil, then a soil->rock ramp, then rock. Any pixel is always on exactly one
+## of those five, matching `_ground_colour`'s own `smoothstep` windows band for
+## band rather than approximating them.
+func _control_for(slope_degrees: float, cfg: Dictionary, ids: Dictionary) -> Dictionary:
+	var soil_at := float(cfg.get("soil_slope_deg", 24.0))
+	var rock_at := float(cfg.get("rock_slope_deg", 38.0))
+	var blend := maxf(0.001, float(cfg.get("blend_deg", 7.0)))
+
+	var grass: int = ids["grass"]
+	var soil: int = ids["soil"]
+	var rock: int = ids["rock"]
+
+	if slope_degrees <= soil_at:
+		return {"base": grass, "overlay": soil, "blend": 0.0}
+	if slope_degrees < soil_at + blend:
+		return {"base": grass, "overlay": soil, "blend": smoothstep(soil_at, soil_at + blend, slope_degrees)}
+	if slope_degrees <= rock_at:
+		return {"base": soil, "overlay": rock, "blend": 0.0}
+	if slope_degrees < rock_at + blend:
+		return {"base": soil, "overlay": rock, "blend": smoothstep(rock_at, rock_at + blend, slope_degrees)}
+	return {"base": rock, "overlay": rock, "blend": 0.0}
 
 
 ## Slope-driven ground colour. Grass on walkable ground, soil on the shoulders,
