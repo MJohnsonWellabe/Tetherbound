@@ -5,6 +5,20 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R7.1-found — moved the rise-overlook survey eye off the tower cluster
+Commit pending on `main` in the owner-directed interactive session working
+Phase -0.5 through Phase 1 (see `ralph/STATUS.md`'s lease note, not a
+normal Ralph firing). `tools/survey.gd`'s `03-rise-overlook` eye moved from
+`(148, -102)` to `(190, -60)` — still on the same rise (`landmark.gd`'s
+`RISE_CENTRE` radius), but ~60m from the stronghold silhouette's tower
+cluster instead of ~14-24m, so the viewpoint frames the intended wide
+valley shot instead of one tower point-blank. Verified by re-rendering:
+the tower cluster is now a small, correctly-distant shape at frame edge
+instead of filling most of the frame. Moved the eye, not the towers, since
+`R7.1-visual-remainder-2` (still open) may reshape them again.
+
+---
+
 ## R7.1-visual-remainder — the stronghold silhouette gets a wall, roofline and crenellation
 `7e17d40` (new geometry: perimeter wall, peaked roof on the keep, stepped
 mass and crenellation rings on the others — pushed by an earlier firing,

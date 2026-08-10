@@ -94,8 +94,17 @@ const VIEWPOINTS := [
 		# denser copses put a single tree three metres in front of the lens and it
 		# filled two thirds of the frame — the shot is meant to be the one that
 		# shows distance, and it was showing one leaf blob.
+		# R7.1-found: 14m off the peak still left the eye ~14-24m from the
+		# stronghold silhouette's tower cluster (landmark.gd RISE_CENTRE +
+		# OFFSET, world ~134,-82) -- the two landmarks independently picked
+		# the same rise, so this "shows distance" shot instead framed one
+		# tower point-blank. Moved further along the same rise's flank
+		# (still inside landmark.gd's own rise radius, so this is still a
+		# rise-overlook), ~60m from the cluster now instead of ~20m -- safer
+		# to move the eye than the towers, which R7.1-visual-remainder-2 (a
+		# separate, still-open item) may reshape again.
 		"name": "03-rise-overlook",
-		"eye": Vector2(148.0, -102.0), "eye_h": 11.0,
+		"eye": Vector2(190.0, -60.0), "eye_h": 11.0,
 		"target": Vector2(-60.0, 60.0), "target_h": 0.0,
 		"time": "day", "horizon": 0.24,
 	},

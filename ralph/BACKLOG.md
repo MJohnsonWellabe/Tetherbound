@@ -165,16 +165,7 @@ below already tracks, not a new bug from this task.
   did sitting on the wrong-hued rock/soil texture the seam bug was
   putting under most of the map.
 
-### R7.1-found — stronghold silhouette stands inside the survey's own rise-overlook viewpoint
-`model: haiku` · `tests: none`
-Found rendering `tools/survey.gd` while chasing the ground seam, not part
-of the three bullets above. `03-rise-overlook`'s eye (148,-102) sits about
-14m from the ridge silhouette's towers at (140,-90) — the same rise R7.1's
-landmark placement and this survey viewpoint both independently picked —
-so one tower fills most of the frame at point-blank range instead of the
-distant landmark the viewpoint is meant to show. Either move the
-viewpoint's eye or nudge the tower cluster; five-minute fix, just not this
-firing's task.
+**R7.1-found (rise-overlook eye moved off the tower cluster) fixed — see `DONE.md`.**
 
 ### R7.1-found-2 — the path trench's steep banks read as a texture glitch, not a path
 `model: sonnet` · `tests: none`
