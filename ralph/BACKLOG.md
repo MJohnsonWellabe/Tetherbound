@@ -88,27 +88,11 @@ regression coverage is possible; note plainly in `DONE.md` what remains
 untestable outside a real Windows session, per the `smoke_menu.gd`
 precedent, rather than claiming full coverage that doesn't exist.
 
-### RB2 — Player has no walk/run animation
-Owner: "the character when running or walking doesn't have an animation."
-
-Root cause, already found — this is a fix, not an investigation:
-`scripts/characters/character_model.gd` has a complete clip API
-(`play(clip)`, used correctly for combat: `combat_manager.gd:530,580` call
-`play_attack` on both bodies). **Nothing calls it for locomotion.**
-`player_controller.gd:191`'s own comment reads "for the HUD and for
-animation later" next to the speed value that was never wired further.
-Wire `play("walk")` / `play("run")` / `play("idle")` (check
-`data/config/*.json` or the trainer's animation library for the real clip
-names — do not guess) off the same speed/state `player_vitals`/HUD already
-read, the way `combat_manager.gd` already does for attacks. Confirm the
-walk/sprint threshold uses `movement.json`'s real speeds, not new numbers.
-
-Done when: a recorded run (screenshot sequence or the existing survey
-tooling) shows the trainer's legs actually moving while walking and
-sprinting, not a T-pose/bind-pose slide.
-
-`model: sonnet` · `tests: smoke_input` (extend to assert an animation is
-actually playing, not just that position changed)
+**RB2 (walk/run animation) verified already fixed — see `DONE.md`.** No
+code change shipped; the wiring the original report said was missing was
+already there and measurably working. Real on-device confirmation by the
+owner is still the open item, same as RB1 — the entry says plainly what
+CI can and cannot see here.
 
 ---
 

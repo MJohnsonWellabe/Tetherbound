@@ -188,7 +188,8 @@ func _resolve_landing(falling_speed: float) -> void:
 	_fall_speed = falling_speed
 
 
-## Horizontal speed, for the HUD and for animation later.
+## Horizontal speed, read by the HUD and by trainer_model.gd's
+## `_clip_for_state()` to pick idle/walk/sprint.
 func ground_speed() -> float:
 	return Vector3(velocity.x, 0.0, velocity.z).length()
 

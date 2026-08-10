@@ -5,6 +5,66 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## RB2 — Player has no walk/run animation
+`<pending>` on `ralph/RB2`. `tests: smoke_input` (named on the backlog item;
+run as-is rather than extended — see "what did not ship" below for why).
+
+**No code change shipped.** The backlog's own diagnosis said `play(clip)` was
+"never called for locomotion", citing `player_controller.gd:191`'s comment
+("for the HUD and for animation later"). That comment was stale:
+`scripts/player/trainer_model.gd` (last touched by `c03bee3`, the giant-
+player fix, well before this Phase -1 report) already has a complete
+`_clip_for_state()` wired into `_process()`, reading `ground_speed()` and
+`is_sprinting()` off the real controller every frame and calling `play()`
+with `idle`/`walk`/`sprint`/`jump` accordingly — the exact thing the item
+asked to build. It was already built. Only the misleading comment was left
+behind, fixed in the same commit; in the same spirit as R4.5's Tuskroot
+check — verify before generating/building a replacement for something
+already there.
+
+**Verification actually performed, not assumed:**
+- `tools/check_character_clips.gd`: trainer's 5 mapped roles (idle, walk,
+  sprint, jump, throw) all resolve against the real `.glb`'s animation list.
+- `tools/diag_animation_moves.gd`: trainer's `walk` and `sprint` clips drive
+  real bone motion in isolation (max bone delta 0.20 / 0.33, both `MOVES` —
+  not the `*** DRIVES NOTHING ***` verdict a track-path mismatch would give).
+- A live-simulation diagnostic (this firing, not part of the shipped suite):
+  booted the real scene, disabled `SequenceDirector` so the diagnostic — not
+  the opening cutscene — drives the player, then held `move_right` and
+  `sprint` and polled `AnimationPlayer.current_animation` every physics
+  frame. It transitioned idle → walk (speed ramping to 5.00, matching
+  `movement.json`) → briefly `jump` (airborne over the scattered terrain,
+  correct behaviour, not a bug) → sprint (speed 8.60, matching the
+  documented sprint speed) — the animation state machine tracking real
+  physics exactly as `_clip_for_state()` says it should.
+
+**What did NOT ship, and why:** the item's literal "done when" bar asks for
+a screenshot or survey-tooling proof of moving legs. A screenshot attempt
+this firing (`xvfb-run` + `--rendering-driver opengl3`, saving
+`root.get_texture().get_image()`) produced three identical black PNGs — the
+scene-tree script capture path this project's `tools/survey.gd` and
+`tools/preview_creatures.gd` also rely on, and both of those are already
+on the backlog as broken (VP1/VP2, Phase -0.5). Not re-diagnosed here to
+avoid duplicating that work under a different name. `smoke_input.gd` was
+run as-is rather than extended to assert on animation state, since the
+extension would only be verifying a claim the diagnostics above already
+established more directly (real bone deltas, real live-state transitions)
+— a live confirmation once VP1/VP2 land, or the owner's own look at the
+Windows build, is what actually closes the visual half of this item.
+
+**Found along the way, not chased (out of scope for this item):** with
+`SequenceDirector` disabled, `move_forward` from the raw scene's fallback
+spawn point (`playground_world.gd`'s `(0, 2.6, 0)`, used only before the
+opening's own beats reposition the player into the house) stalls after
+~1.2m over a 90-frame hold, while `move_right` from the same point covers
+5.85m in the same window (`tests/smoke_input.gd`'s own numbers, unchanged
+by this firing). Very likely just scatter/vegetation collision sitting
+directly in the +Z direction from world origin, and the real opening never
+uses that raw spawn point for free movement — but worth a look if a future
+firing sees anything move-forward-shaped acting strange near boot.
+
+---
+
 ## R0.8.5 — Full blind visual review pass, against the overhauled build
 `216ce54` (review + backlog updates) on `ralph/R0.8.5`, on top of `d318a55`
 (incidental missing .uid/.import sidecars from this container's first-ever
