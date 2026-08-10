@@ -52,6 +52,20 @@ func configure_following(cfg: Dictionary) -> void:
 func set_following(value: bool) -> void:
 	_following = value
 	_closing = false
+	# Off every physics layer while following, so it can never wall the trainer
+	# in. It only re-closes the gap once past `_stop_distance` and has no idea
+	# whether "close enough" also means "standing in the way" — reversing
+	# direction on foot leaves it briefly ahead rather than behind, and two
+	# solid CharacterBody3D capsules aimed straight at each other simply stop
+	# dead. Confirmed as the real, intermittent cause of RB3's
+	# smoke_aggression.gd failure (a frozen trainer 60-70m short, never a
+	# pathing or aggression-timing bug). Restored once combat takes over,
+	# because `wild_pal.gd`'s `_spaced_config()` keeps the two fighters apart
+	# by real collision, not just by distance math, and dropping that turned
+	# up as a *different* flake in `smoke_catching.gd` ("the pal moved 4.04m
+	# on the stick while aiming") the first time this was tried scoped wider,
+	# to the whole lifetime of the body rather than just the following state.
+	collision_layer = 0 if value else 1
 
 
 func is_following() -> bool:
