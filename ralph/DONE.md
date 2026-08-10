@@ -5,6 +5,76 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R7.1-remainder — PARTIAL: the olive/lime ground seam fixed; world-ends-40m and continuous ground cover still open
+`505a8f8` + `a049579` (bookkeeping) on `ralph/R7.1-remainder`, fast-forwarded
+to `main` (`origin/main` moved `0f1b491..a049579`) — verified via `main`'s own
+commit log and by fetching `origin/main` directly, not by trusting CI.
+`tests: smoke_traversal` — 3 consecutive clean runs locally, and green again
+in CI's `verify-core` job on the actual shipped commit.
+
+**Root cause, found by rendering (not reasoning from the code):**
+`tools/survey.gd`'s `01-spawn-outward` and `05-spawn-low-sun` viewpoints (near
+the flattened spawn pad, an ordinary hillside boundary) showed a saturated,
+zero-blue-channel green stripe against a dark marbled field — R7.1's own
+investigation only ever rendered `03-rise-overlook`, whose eye sits ON the
+ridge silhouette's rise and is already past whatever the bug's threshold is
+either way, so the seam never showed there. Confirmed live, by dumping
+`Terrain3DMaterial`'s and `Terrain3DTextureAsset`'s own property lists:
+`auto_shader` picks the base/overlay texture by slope at a threshold this
+Terrain3D build exposes **no control over anywhere reachable from script** —
+no `auto_slope` property, no per-texture slope/height range. On this
+terrain's rolling-hills noise that threshold sits low enough that almost the
+whole map read as the overlay (rock) texture, with only near-flat ground
+reading as the base (grass) texture.
+
+**Fix:** `build_playground_terrain.gd` now paints the REAL control map at
+bake time (`_paint_control_map`), per pixel, with the same three-tier
+grass/soil/rock slope thresholds already authored for the colour map
+(`_ground_colour`) — `auto` off per pixel instead of left on Terrain3D's
+opaque built-in cutover. Soil is a real texture in play for the first time.
+Verified by rebaking and re-rendering all five survey viewpoints: the seam is
+gone in every one, including `03-rise-overlook`.
+
+**New process followed, owner directive 2026-08-10 (`conventions.md`,
+"Visual-affecting work needs a blind pass"):** ran `.claude/skills/visual-
+judge` blind against the post-fix survey before calling this done. The critic
+was told nothing about what changed. It did **not** flag the olive/lime seam
+at all — corroborating the fix — but named a new, separate defect: the
+authored path trench's steep banks read as "a broken decal" from texture
+stretching on a near-vertical face, present before this fix too (pre-existing
+geometry, not introduced by the control-map change). Logged as
+`R7.1-found-2` rather than chased in this same task, per the new rule's own
+"up to three rounds, then hand back" — this was round one, on a defect
+outside the ground-seam's own scope.
+
+**Also queried directly, not asserted:** `RULES.all_placements()` genuinely
+spreads every vegetation layer to the 512m world edge (`trees`: 102/178
+instances beyond 200m from origin, none inside 40m) — "the world ends 40m
+out" is real but narrower than it sounds; the pale hills filling most distant
+frames are `world_background = NOISE`, Terrain3D's own procedural
+continuation past the baked region, which cannot carry props by construction.
+Rewrote `BACKLOG.md`'s R7.1-remainder entry with this finding rather than
+leaving the original framing standing.
+
+**Not attempted this pass:** world-ends-40m-out's real fix (biasing clumps
+toward ridgelines the camera actually silhouettes against) and continuous
+ground cover (re-tuning grass/drygrass density or scale against the now-fixed
+ground texture) — both left as `BACKLOG.md`'s (slimmer) R7.1-remainder entry.
+
+**Process note for whoever reads `ralph-status` history:** this task's own
+branch got rebased mid-firing when a separate session's `0f1b491` (CI split,
+visual-gating rule, lease-safety fixes) landed on `main` first. The rebase and
+force-push were correct and the resulting CI run genuinely re-verified
+everything (confirmed by reading its actual job list, not just its green
+conclusion) — a `ralph/R7.1-remainder-v2` branch was cut from `main` out of an
+initially-mistaken worry that the force-push's CI diff had skipped
+verification; it hadn't (the rebase pulled in `0f1b491`'s own large diff,
+`.github/workflows/ci.yml` included, which alone is enough to mark the push
+code-bearing). `v2` is now redundant and will show a failed `ralph-merge` run
+once its own CI completes (its commit isn't an ancestor of the `main` that
+already shipped via the original branch) — that failure is expected, not a
+bug; nothing further to do with `ralph/R7.1-remainder-v2`.
+
 ## R7.1 — Wayfinding polish, PARTIAL: signposts and the ridge silhouette shipped
 `3213f7a` on `ralph/R7.1` (fast-forwarded to `main`, verified via `main`'s own
 commit log: `origin/main` moved `966c1cb..3213f7a`). `tests: smoke_traversal`

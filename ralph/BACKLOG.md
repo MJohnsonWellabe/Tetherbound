@@ -188,6 +188,29 @@ distant landmark the viewpoint is meant to show. Either move the
 viewpoint's eye or nudge the tower cluster; five-minute fix, just not this
 firing's task.
 
+### R7.1-found-2 — the path trench's steep banks read as a texture glitch, not a path
+`model: sonnet` · `tests: none`
+Found by running `.claude/skills/visual-judge` (owner directive, 2026-08-10)
+against the post-fix survey, blind, as the new convention requires before
+calling ground-seam-adjacent work done. Unprompted — the critic was not told
+what changed — it did not flag the olive/lime seam at all (gone, corroborating
+the fix), but named a new defect in 2 of 5 frames (01, 05): "a wide,
+radially-blurred brown gouge... reads as a broken decal or an erosion effect
+gone wrong, not an authored dirt path." That gouge is the path's own carved
+trench (`playground_heightfield.gd`'s dirt paths are a real sunken groove,
+independent of this fix) — its near-vertical banks were already visible
+before the seam fix in the same shape, just wearing whichever texture the old
+broken auto-shader cutover happened to assign there. What's actually being
+seen now is the `soil` texture (`Ground003_Color.jpg`, `uv_scale: 0.16`,
+`normal_depth: 0.4`) stretched across a steep, near-vertical face — a UV-
+projection problem terrain shaders without triplanar mapping have on any
+steep slope, not specific to path trenches, and not something the control-map
+fix introduced (the trench geometry and its steepness are unchanged by it).
+Out of scope for the ground-seam bug itself, which this pass confirms is
+fixed; needs its own investigation into whether this Terrain3D build exposes
+triplanar/steep-slope projection, or whether the fix is capping how steep a
+bank the bake lets the path carve.
+
 ### R7.2 — NPC villagers and interior polish (relocated from Phase 7)
 `model: sonnet` · `tests: smoke_opening`
 The village square has barns, a well and a windmill and nobody in it. A few
