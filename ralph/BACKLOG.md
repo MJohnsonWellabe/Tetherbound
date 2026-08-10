@@ -46,6 +46,153 @@ still feel roomy.
 
 ---
 
+## Phase -1 — urgent PC bugs (owner-reported, 2026-08-10)
+
+The owner played the published Windows build. Two bugs, ahead of
+everything else in this file — **do these first, then Phase -0.5, then
+Phase 1 onward.**
+
+### RB1 — Mouse look does not work
+Owner: "the game on PC doesn't allow you to look around with the mouse.
+Everything else works" (movement, presumably gamepad, are both fine).
+
+Investigation so far, to save the first firing some time — not a diagnosis,
+a starting point:
+- `camera_rig.gd:171-173`'s `_unhandled_input` only turns mouse motion into
+  look at all when `Input.mouse_mode == Input.MOUSE_MODE_CAPTURED`.
+- The only place anything sets `MOUSE_MODE_CAPTURED` is one unconditional
+  line, `playground_world.gd:84`, at the end of the world's `_ready()`. It
+  is never re-asserted afterward, and nothing checks whether it actually
+  took. `game_menu.gd` and `name_prompt.gd` both save/restore
+  `Input.mouse_mode` around their own UI (`MOUSE_MODE_VISIBLE` while open),
+  so a menu or the name-entry screen that restores incorrectly, or a
+  capture call that silently no-ops on native Windows before the window has
+  focus (a known Godot platform gotcha), would both produce exactly
+  "everything else works, mouse look does not."
+- `smoke_menu.gd`'s own comment says outright: **CI cannot see this.** The
+  dummy `DisplayServer` reports whatever mode was last asked for, captured
+  or not, so this class of bug ships silently under a fully green suite —
+  confirmed exactly that happened here.
+- The owner also reported (same session) not being able to interact with
+  Grandpa at the very start, and was unsure if it's the same cause. Check
+  both: if the interact prompt/arbiter genuinely never fired, that is
+  likely unrelated to mouse capture (proximity-based, not look-based) and
+  needs its own root cause — do not assume they're the same bug without
+  checking.
+
+Done when: on an actual exported Windows run (not headless — this needs a
+real capture test the way `tools/verify_export.sh` proves the exported
+binary runs), the mouse turns the camera from the very first frame, through
+menu open/close and the name-entry screen, and stays captured. Add whatever
+regression coverage is possible; note plainly in `DONE.md` what remains
+untestable outside a real Windows session, per the `smoke_menu.gd`
+precedent, rather than claiming full coverage that doesn't exist.
+
+### RB2 — Player has no walk/run animation
+Owner: "the character when running or walking doesn't have an animation."
+
+Root cause, already found — this is a fix, not an investigation:
+`scripts/characters/character_model.gd` has a complete clip API
+(`play(clip)`, used correctly for combat: `combat_manager.gd:530,580` call
+`play_attack` on both bodies). **Nothing calls it for locomotion.**
+`player_controller.gd:191`'s own comment reads "for the HUD and for
+animation later" next to the speed value that was never wired further.
+Wire `play("walk")` / `play("run")` / `play("idle")` (check
+`data/config/*.json` or the trainer's animation library for the real clip
+names — do not guess) off the same speed/state `player_vitals`/HUD already
+read, the way `combat_manager.gd` already does for attacks. Confirm the
+walk/sprint threshold uses `movement.json`'s real speeds, not new numbers.
+
+Done when: a recorded run (screenshot sequence or the existing survey
+tooling) shows the trainer's legs actually moving while walking and
+sprinting, not a T-pose/bind-pose slide.
+
+`model: sonnet` · `tests: smoke_input` (extend to assert an animation is
+actually playing, not just that position changed)
+
+---
+
+## Phase -0.5 — Visual pass (owner directive: finish this before R1–R8)
+
+Everything the two 2026-08-09 blind reviews (`docs/reviews/2026-08-09-site-
+frames-blind-critique.md`, `docs/reviews/2026-08-09-r0.8.5-full-blind-
+review.md`) found that is fixable by changing the scene, gathered here and
+worked in this order. The one finding that is NOT here on purpose: the
+creature/human art-pipeline style mismatch is a design decision (rework vs.
+replace assets) parked in `BLOCKED.md` for the owner — `CLAUDE.md` forbids
+inventing that call, gate or no gate.
+
+### VP1 — Fix `tools/survey.gd`'s stale viewpoints
+`model: sonnet` · `tests: none`
+Do this first — every later item here is verified by re-running the survey,
+and right now two of its five fixed viewpoints render nonsense (moved from
+"Found along the way," below, unchanged): viewpoints 01/05 render the
+inside of the farmhouse instead of the meadow (the interior sits near world
+origin, independent of `HOUSE_AT`); viewpoints 03/04 render as if the
+camera is embedded in the terrain (stale baked-heightfield sample from
+before the D18/D19 reshape). Re-author the five hardcoded viewpoints
+against current world geometry.
+
+### VP2 — Fix `tools/preview_creatures.gd` rendering zero creatures
+`model: sonnet` · `tests: none`
+Moved from "Found along the way," unchanged: it builds bodies with
+`BODY.new()` instead of instantiating `scenes/pals/pal.tscn`, so every
+`@onready` child lookup fails silently. A previous attempt got past the
+`$Head` crash but hit a follow-on `is_inside_tree()` failure on
+`global_position` right after `add_child()` — reverted rather than shipped
+unverified. This is the one tool built to catch cross-species scale
+errors; nothing in this phase involving relative creature scale should be
+called done without it working.
+
+### R5.1 — Day/night cycle (relocated from Phase 5)
+`model: sonnet` · `tests: test_day_cycle` (new)
+The day *counter* already advances via camp rest; this makes time visible —
+sun, sky, "before dark" meaning something. `grandpa_road`'s "make camp
+before dark" line is currently a promise the world doesn't keep. Both blind
+reviews named flat, unchanging noon light as a top-three gap against the
+references.
+
+### R7.1 — Wayfinding polish (relocated from Phase 7)
+`model: sonnet` · `tests: smoke_traversal`
+The path network shipped as the wayfinding spine (square → house, pond,
+practice meadow, ridge); finish the language: signposts at the junctions,
+and the **stronghold silhouette on the ridge** — the M7 "distant landmark"
+that makes the far edge of the map a destination instead of a fence.
+
+Three additions from the site-frames critique, all "the meadow reads" work,
+reconfirmed by the full R0.8.5 pass:
+- **The world ends 40m out.** Nothing stands on any hill or horizon in any
+  frame; put trees and the landmark into the middle and far distance bands.
+- **The olive/lime ground seam.** The detailed ground texture fades to flat
+  pale terrain colour at distance, splitting every frame in two at a hard
+  line; push the fade distance out or blend the far colour toward the near
+  material's tone.
+- **Continuous ground cover.** Isolated same-size tufts at even density
+  read as confetti; the references stand on continuous grass with
+  clustered variety and real clearings.
+
+### R7.2 — NPC villagers and interior polish (relocated from Phase 7)
+`model: sonnet` · `tests: smoke_opening`
+The village square has barns, a well and a windmill and nobody in it. A few
+villagers on `npc_body.gd` with a line or two each, and the farmhouse
+interior dressed past the minimum the opening needed — both reviews called
+the interior an undressed grey box. No quest system — that is a design
+decision to flag, not invent.
+
+### R9.4 — Visual cohesion pass, the checkpoint for this phase (relocated from Phase 9)
+`model: sonnet` ▶ · `tests: none`
+Re-run `.claude/skills/visual-judge` against `docs/reference/` (the world
+target) once VP1/VP2/R5.1/R7.1/R7.2 above have landed, on a fresh survey
+and a fresh R0.8.5-style full roster pass. Confirm the top findings from
+both 2026-08-09 reviews actually moved, the way `docs/reviews/2026-08-09-
+site-frames-blind-critique.md`'s own "after judging" section requires —
+re-running and comparing sheets, not just asserting the fix landed. This
+being genuinely green (or a documented remainder handed back to the
+owner as still-open) is what "the visual pass work is done" means before
+moving on to Phase 1.
+
+---
+
 ## Phase 1 — vocabulary, before the codebase grows
 
 ### R1.1 — Rename `pal` → `creature` everywhere
@@ -238,10 +385,8 @@ pass (auto-face, lunge timing) may have changed the report.
 
 ## Phase 5 — the living world
 
-### R5.1 — Day/night cycle · `model: sonnet` · `tests: test_day_cycle` (new)
-The day *counter* already advances via camp rest; this makes time visible —
-sun, sky, "before dark" meaning something. `grandpa_road`'s "make camp before
-dark" line is currently a promise the world doesn't keep.
+**R5.1 (day/night cycle) relocated to Phase -0.5** — owner directive,
+2026-08-10: visual-pass work runs before Phase 1 onward.
 
 ### R5.2 — Rain, fog and cloud variants · `model: sonnet` · `tests: none`
 
@@ -268,32 +413,9 @@ running, and no species-specific saddle clutter.
 
 ## Phase 7 — the village lives, the meadow reads
 
-### R7.1 — Wayfinding polish
-`model: sonnet` · `tests: smoke_traversal`
-The path network shipped as the wayfinding spine (square → house, pond,
-practice meadow, ridge); finish the language: signposts at the junctions, and
-the **stronghold silhouette on the ridge** — the M7 "distant landmark" that
-makes the far edge of the map a destination instead of a fence.
-
-Three additions from the 2026-08-09 blind critique of the site frames
-(`docs/reviews/2026-08-09-site-frames-blind-critique.md`), all "the meadow
-reads" work:
-- **The world ends 40m out.** Nothing stands on any hill or horizon in any
-  frame; put trees and the landmark into the middle and far distance bands.
-- **The olive/lime ground seam.** The detailed ground texture fades to flat
-  pale terrain colour at distance, splitting every frame in two at a hard
-  line; push the fade distance out or blend the far colour toward the near
-  material's tone.
-- **Continuous ground cover.** Isolated same-size tufts at even density read
-  as confetti; the references stand on continuous grass with clustered
-  variety and real clearings.
-
-### R7.2 — NPC villagers and interior polish
-`model: sonnet` · `tests: smoke_opening`
-The village square has barns, a well and a windmill and nobody in it. A few
-villagers on `npc_body.gd` with a line or two each, and the farmhouse
-interior dressed past the minimum the opening needed. No quest system — that
-is a design decision to flag, not invent.
+**R7.1 (wayfinding polish) and R7.2 (villagers and interior polish)
+relocated to Phase -0.5** — owner directive, 2026-08-10: visual-pass work
+runs before Phase 1 onward.
 
 ### R7.3 — Grow the authored space toward the 4–8 hour arc · `model: opus` · `tests: smoke_traversal` · M7, §30
 The village and paths were the seed; §30 is explicit — dense rather than
@@ -334,9 +456,11 @@ judged (HANDOFF §6).
 ### R9.1 — Input feel, combat cadence, catch feel, camera · `model: sonnet` ▶
 ### R9.2 — Controller UI readability on the Ally · `model: sonnet` ▶
 ### R9.3 — Performance on target hardware · `model: sonnet` ▶
-### R9.4 — Visual cohesion pass · `model: sonnet` ▶
-Use the `visual-judge` skill against `docs/reference/` — the world target,
-not the character target.
+
+**R9.4 (visual cohesion pass) relocated to Phase -0.5** — owner directive,
+2026-08-10: it now serves as that phase's own checkpoint, run before
+Phase 1 onward rather than at the end.
+
 ### R9.5 ▶ **The exit gate.** All twelve of `GAME_DESIGN.md` §33. Only the owner can call it.
 
 ---
@@ -384,28 +508,7 @@ not the character target.
   aggression specifically, checking whether the walk consistently stalls
   near the rise (vs. anywhere in the meadow) would tell flake from
   regression. `model: sonnet`
-- **`tools/survey.gd`'s fixed viewpoints have drifted from the world they
-  were authored against.** Found by R0.8.5's full blind review
-  (`docs/reviews/2026-08-09-r0.8.5-full-blind-review.md`). Viewpoints 01 and
-  05 (`eye: Vector2(0,0)`) render the *inside* of the farmhouse — a dark
-  room with four window-frame shapes — instead of the meadow; the interior
-  appears to sit at/near world origin independent of `HOUSE_AT = (-22,
-  -16)`. Viewpoints 03 and 04 render as if the camera is embedded in or
-  under the terrain — props and sky over a flat navy void, no ground, no
-  horizon — consistent with a stale baked-heightfield sample the D18/D19
-  terrain reshape (village crater walls came down) never updated. Needs the
-  five hardcoded viewpoints re-surveyed against current world geometry, not
-  a scene fix. `model: sonnet` · `tests: none`
-- **`tools/preview_creatures.gd` renders zero creatures.** Also found by
-  R0.8.5. It builds each body via `BODY.new()` (`pal_body.gd` attached to a
-  bare `CharacterBody3D`) instead of instantiating `scenes/pals/pal.tscn`,
-  the scriptless base scene carrying the `$Collision`/`$Model`/`$Body`/
-  `$Head` children `pal_body.gd`'s `@onready` vars require and
-  `encounter_director.gd` always provides before attaching a body script.
-  Every creature's `_ready()` fails silently; only the grey scale-ruler bars
-  render. This is the one tool built to catch cross-species scale errors
-  (`docs/reviews/MA-03`) and it currently cannot be used for that. The
-  direct fix (instantiate `pal.tscn`, `set_script()` after) clears the
-  `$Head` crash but hits a follow-on `is_inside_tree()` failure on
-  `global_position` right after `add_child()` — not yet root-caused.
-  `model: sonnet` · `tests: none`
+- **`tools/survey.gd` and `tools/preview_creatures.gd`, both found broken by
+  R0.8.5, relocated to Phase -0.5 as VP1/VP2** — owner directive,
+  2026-08-10: visual-pass work runs before Phase 1 onward, and both tools
+  are needed to verify that phase's own work.
