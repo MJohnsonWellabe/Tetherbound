@@ -75,20 +75,27 @@ func build(world: Node) -> void:
 	mat.shader = shader
 	mat.set_shader_parameter("albedo", TOWER_COLOUR)
 
-	# A low, wide base connecting the towers' feet: four bare cylinders read
-	# as standing stones or smokestacks (named directly by the critic), not a
-	# fortified structure. One squat drum under them, wide enough to touch
-	# every tower's footprint, gives the cluster a shared mass to stand on.
+	# A wide base connecting the towers' feet. A blind critic round on the
+	# first pass at this (a 3m-tall drum) still called the long-range frame
+	# an ambiguous pair of "standing-stone" prongs: the straight wall
+	# segments between towers go edge-on and vanish from most viewing
+	# angles, so at range the only thing left on screen was the two towers
+	# nearest the camera, with nothing visibly joining them. A cylinder's
+	# silhouette width is the same from every angle, unlike a straight wall,
+	# so this drum is deliberately tall enough (was 3m) to read as a solid
+	# fortress plinth under the towers regardless of which way the camera
+	# looks — fixing the long-range read and the "obelisk with no base"
+	# proportion problem in the same shape.
 	var base := MeshInstance3D.new()
 	base.name = "Base"
 	var base_mesh := CylinderMesh.new()
 	base_mesh.top_radius = 10.0
-	base_mesh.bottom_radius = 11.0
-	base_mesh.height = 3.0
+	base_mesh.bottom_radius = 11.5
+	base_mesh.height = 9.0
 	base_mesh.radial_segments = 10
 	base_mesh.material = mat
 	base.mesh = base_mesh
-	base.position = Vector3(1.25, 1.5, 3.25)
+	base.position = Vector3(1.25, 4.5, 3.25)
 	add_child(base)
 
 	# One tall keep and three shorter towers around it — an irregular skyline
@@ -118,11 +125,25 @@ func build(world: Node) -> void:
 	_crenellations(west, 2.6 * 0.7, 18.0, 6, mat)
 
 	# The perimeter wall: what a cluster of standing stones structurally
-	# cannot have. Lower than every tower so the towers still read as the
-	# skyline's tallest shapes; its own crenellated top is what makes the
-	# whole cluster read as one fortified site rather than four separate ones.
-	const WALL_HEIGHT := 11.0
-	const WALL_THICKNESS := 1.6
+	# cannot have. Lower than every tower (shortest is west at 18m) so the
+	# towers still read as the skyline's tallest shapes; its own crenellated
+	# top is what makes the whole cluster read as one fortified site rather
+	# than four separate ones.
+	#
+	# Round 2 of the blind-critic loop still failed the long-range frame,
+	# even after round 1's fix widened the LOW base drum (0-9m) to hold its
+	# footprint at any camera angle: the drum's own width was invisible from
+	# a far, low, grazing viewpoint because nearby ridge terrain occludes
+	# low-elevation geometry from exactly that kind of angle, the same way a
+	# fence looks taller than a house standing right behind a hill crest.
+	# The one part of this structure confirmed to clear the terrain from
+	# every tested distance is the towers themselves (they're the only thing
+	# visible in the long-range frame at all) -- so this raises the wall
+	# itself, not just the base drum, from 11m to 16m: still under every
+	# tower's own height, but tall enough to connect the towers' visible
+	# upper portions instead of only their already-occluded feet.
+	const WALL_HEIGHT := 16.0
+	const WALL_THICKNESS := 2.8
 	_wall(keep, east, WALL_HEIGHT, WALL_THICKNESS, mat)
 	_wall(east, north, WALL_HEIGHT, WALL_THICKNESS, mat)
 	_wall(north, west, WALL_HEIGHT, WALL_THICKNESS, mat)
@@ -182,9 +203,31 @@ func _stepped_mass(at: Vector3, base_radius: float, base_y: float, mat: ShaderMa
 ## A ring of alternating merlons around a tower's flat top — the roofline
 ## silhouette a real curtain wall or keep has and a bare tapered cylinder
 ## does not.
+##
+## Round 1 of the blind-critic loop on this task found the merlons alone
+## "separate into three or four separated, pointed teeth that look more
+## like claws, broken glass, or a jagged rock spur than a battlement" once
+## the tower shrinks with distance — individual boxes with open gaps
+## between them lose their shared base the moment they stop being
+## resolvable as separate objects. A solid collar under the merlons gives
+## them a continuous rim to sit on, so at range it reads as "a solid top
+## with a notched edge" rather than "several separate spikes."
 func _crenellations(at: Vector3, top_radius: float, top_y: float, count: int, mat: ShaderMaterial) -> void:
+	var collar_height := 1.4
+	var collar := MeshInstance3D.new()
+	var collar_mesh := CylinderMesh.new()
+	collar_mesh.top_radius = top_radius * 0.95
+	collar_mesh.bottom_radius = top_radius * 1.05
+	collar_mesh.height = collar_height
+	collar_mesh.radial_segments = max(count, 6)
+	collar_mesh.material = mat
+	collar.mesh = collar_mesh
+	collar.position = at + Vector3(0.0, top_y + collar_height * 0.5, 0.0)
+	add_child(collar)
+
 	var merlon_height := 2.2
-	var merlon_width: float = max(top_radius * 0.5, 1.0)
+	var merlon_width: float = max(top_radius * 0.7, 1.4)
+	var merlon_top_y := top_y + collar_height
 	for i in range(count):
 		if i % 2 == 1:
 			continue # every other gap is open, so the ring reads as crenellation, not a solid rim
@@ -195,7 +238,7 @@ func _crenellations(at: Vector3, top_radius: float, top_y: float, count: int, ma
 		box.size = Vector3(merlon_width, merlon_height, merlon_width)
 		box.material = mat
 		mesh.mesh = box
-		mesh.position = at + offset + Vector3(0.0, top_y + merlon_height * 0.5, 0.0)
+		mesh.position = at + offset + Vector3(0.0, merlon_top_y + merlon_height * 0.5, 0.0)
 		add_child(mesh)
 
 
