@@ -18,25 +18,31 @@ const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 
 ## Tall enough to clear four stacked arms at ARM_START_HEIGHT/ARM_SPACING
 ## below with a small cap above the topmost one.
-const POST_HEIGHT := 3.2
+## R9.4. Was 3.2, with arms from 2.9 down at 0.75 spacing — a blind critic
+## measured the whole assembly against the 1.4m well beside it and called it
+## roughly 1.5x oversized, "dominating" the square. Scaled to a fingerpost a
+## person could have planted: head just above eye line, arms at chest-to-eye
+## height where a sign is actually read.
+const POST_HEIGHT := 2.35
 const POST_RADIUS := 0.09
-const ARM_LENGTH := 1.1
+const ARM_LENGTH := 0.95
 const ARM_HEIGHT := 0.16
 const ARM_THICKNESS := 0.05
-## Arms stack up the post, closest destination lowest. Spaced wide enough
-## that the billboarded labels below do not overlap head-on, the one angle a
-## rotated plank cannot separate them at.
+## Arms stack up the post, closest destination lowest.
 ##
-## R7.1-visual: the blind critic caught this at only 0.5m and called the
-## bottom two labels of four "fully unreadable, reduced to fragments" in the
-## head-on frame — a Label3D's billboard always faces the camera regardless
-## of the arm's own yaw, so from close to head-on, differing bearings buy no
-## separation at all and spacing is the only thing that does. Measured against
-## the actual label: font_size 28 at pixel_size 0.008 is ~0.22m of glyph
-## height alone, before line spacing — 0.5m between anchors left barely a
-## gap. 0.85m clears a full label plus breathing room.
-const ARM_SPACING := 0.75
-const ARM_START_HEIGHT := 2.9
+## R7.1-visual pushed this to 0.75 because the labels were BILLBOARDED and so
+## kept facing the camera no matter which way their plank pointed — from
+## head-on, differing bearings bought no separation at all and only vertical
+## spacing did. That stopped being true when the labels stopped billboarding,
+## and R9.4 moved them onto the plank faces, where a label is physically part
+## of its own arm and cannot drift onto a neighbour's. The constraint that set
+## 0.75 no longer exists, and the old number was making a fingerpost as tall
+## as a doorway. Now it only has to clear the plank itself.
+const ARM_SPACING := 0.44
+const ARM_START_HEIGHT := 2.05
+## R9.4. Point size is fixed; `_label_scale()` fits metres-per-pixel to the
+## plank instead, so a long destination name shrinks rather than overrunning.
+const LABEL_FONT_SIZE := 48
 
 var _placed := 0
 
@@ -156,33 +162,63 @@ func _add_arm(label: String, origin: Vector2, next: Vector2, index: int) -> void
 	head.position = Vector3(0.0, 0.0, ARM_LENGTH + ARM_HEIGHT * 0.25)
 	arm.add_child(head)
 
-	# R7.1-visual round 2: the critic's strongest complaint was that a
-	# billboarded label "floats... overlapping a diagonal wooden plank rather
-	# than sitting on it, so plank and text disagree about angle and
-	# position" — a real-perspective artefact, since a billboard always faces
-	# the camera regardless of the plank's true 3D angle, and depending on
-	# viewing direction that mismatch can land the label over a neighbouring
-	# arm's arrowhead. Fixed to the arm instead: text now shares the plank's
-	# own orientation and reads correctly for someone standing at the post
-	# looking outward along the arm, the direction the arm is actually meant
-	# to be read from. The real cost — unreadable from behind — is also true
-	# of a real wooden signpost arm, so it is not a regression.
-	var text := Label3D.new()
-	text.text = label
-	text.font_size = 28
-	text.pixel_size = 0.008
-	text.billboard = BaseMaterial3D.BILLBOARD_DISABLED
-	text.no_depth_test = false
-	text.position = Vector3(0.0, ARM_HEIGHT * 0.5 + 0.02, ARM_LENGTH * 0.5)
-	text.modulate = Color("#241a10")
-	# R7.1-visual round 1: 0 meant letters vanished wherever a label crossed a
-	# dark background (a roof, a shadow) — the critic called this out
-	# directly. A light outline holds the dark ink readable against both the
-	# pale sky and dark structures, the two backgrounds these labels actually
-	# cross.
-	text.outline_size = 10
-	text.outline_modulate = Color("#f4ecd8")
-	arm.add_child(text)
+	# R9.4: the label is PAINTED ON THE PLANK'S TWO BROAD FACES, once each.
+	#
+	# It used to be a single Label3D sitting on the plank's TOP EDGE
+	# (y = ARM_HEIGHT * 0.5) facing along the arm's own +Z. Three separate
+	# defects came out of that one placement, and a blind critic found all
+	# three: the text "floats above" the plank rather than sitting on it,
+	# because the top edge is 0.05m wide and the text is not; long names
+	# "overrun both ends of the plank" and hang in open air, because nothing
+	# fitted the glyphs to the board; and — the loud one — the text renders
+	# MIRRORED from the side you actually read it from. A Label3D faces its
+	# own local +Z, the arm's +Z points away from the post, so anyone standing
+	# at the junction is looking at the back of the letters.
+	#
+	# A real signpost solves this by being painted on both faces, and each
+	# face reads left-to-right from its own side. That means the word starts
+	# at the tip on one face and at the post on the other, which looks wrong
+	# written down and is exactly right in the world — it is what every
+	# fingerpost on every road does.
+	#
+	# Local +Z maps to world +X at yaw +90°, so a face turned -90° looks along
+	# -X and runs its text post-to-tip; +90° looks along +X and runs tip-to-
+	# post. One of each, a hair proud of the plank so they do not z-fight.
+	var fit := _label_scale(label)
+	for side in [-1.0, 1.0]:
+		var text := Label3D.new()
+		text.text = label
+		text.font_size = LABEL_FONT_SIZE
+		text.pixel_size = fit
+		text.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+		text.no_depth_test = false
+		text.rotation.y = side * PI * 0.5
+		text.position = Vector3(side * (ARM_THICKNESS * 0.5 + 0.006), 0.0, ARM_LENGTH * 0.5)
+		text.modulate = Color("#241a10")
+		# R7.1-visual round 1: 0 meant letters vanished wherever a label
+		# crossed a dark background (a roof, a shadow) — the critic called
+		# this out directly. A light outline holds the dark ink readable
+		# against both the pale sky and dark structures, the two backgrounds
+		# these labels actually cross.
+		text.outline_size = 10
+		text.outline_modulate = Color("#f4ecd8")
+		arm.add_child(text)
+
+
+## Metres per font pixel, chosen so the longest label still fits the plank.
+##
+## The old value was a flat 0.008, which suited "The Road" and sent "Practice
+## Meadow" straight off both ends of the board. Fitting to whichever of height
+## or width binds first means a new destination name can be any length and the
+## sign stays a sign.
+func _label_scale(label: String) -> float:
+	var by_height := (ARM_HEIGHT * 0.62) / float(LABEL_FONT_SIZE)
+	# 0.55 em is a serviceable mean advance for mixed-case Latin text; the
+	# 0.86 keeps a margin of board visible at each end rather than filling it
+	# edge to edge.
+	var glyphs := maxf(1.0, float(label.length()) * 0.55 * float(LABEL_FONT_SIZE))
+	var by_width := (ARM_LENGTH * 0.86) / glyphs
+	return minf(by_height, by_width)
 
 
 func _load_paths_config() -> Dictionary:

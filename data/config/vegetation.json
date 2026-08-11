@@ -1,9 +1,9 @@
 {
-  "_comment": "What grows in the Meadows playground, and where. ALL of it is TUNABLE. The expected feedback is 'too sparse', 'too busy', 'the trees are on the cliffs' \u2014 every one of those has to be answerable here rather than in a scene.",
+  "_comment": "What grows in the Meadows playground, and where. ALL of it is TUNABLE. The expected feedback is 'too sparse', 'too busy', 'the trees are on the cliffs' — every one of those has to be answerable here rather than in a scene.",
   "_comment_authored": "This dresses the M1 MOVEMENT PLAYGROUND, not the real Meadows. M7 authors the actual geography and its placement will be authored rather than scattered. The RULES survive that; the specific clump centres do not.",
-  "_comment_clumping": "Every layer clusters. Evenly-spread props at uniform scale are the readable signature of generator output \u2014 the visual rubric names it \u2014 so each layer places clumps and scatters within them, leaving clearings between. `strays` fills the gaps so the clumps do not read as islands.",
-  "_comment_pack": "Quaternius Stylized Nature MegaKit (CC0), replacing Kenney's Nature Kit. The blind critic's verdict on the Kenney set was that every tree was the same tree \u2014 'one straight tapered trunk, one 6-8 face canopy, two greens, varied only by uniform scale' \u2014 and that the far tree line read as 'a row of identical cards at near-uniform spacing along a contour: a fence of icons'. It measured mid-distance trees at 1.00:1 luminance contrast against the ground behind them, meaning invisible. This pack ships four genuinely different tree species with real bark and leaf TEXTURES and normal maps, which is what that complaint was actually about.",
-  "_comment_scale": "These models are authored in METRES, unlike Kenney's which were about one unit tall and needed a 3.4x per-layer correction. So `base_scale` is near 1.0 here and mostly trims rather than multiplies. Measured with tools/measure_models.gd rather than guessed \u2014 guessing produced a meadow of knee-high trees once already.",
+  "_comment_clumping": "Every layer clusters. Evenly-spread props at uniform scale are the readable signature of generator output — the visual rubric names it — so each layer places clumps and scatters within them, leaving clearings between. `strays` fills the gaps so the clumps do not read as islands.",
+  "_comment_pack": "Quaternius Stylized Nature MegaKit (CC0), replacing Kenney's Nature Kit. The blind critic's verdict on the Kenney set was that every tree was the same tree — 'one straight tapered trunk, one 6-8 face canopy, two greens, varied only by uniform scale' — and that the far tree line read as 'a row of identical cards at near-uniform spacing along a contour: a fence of icons'. It measured mid-distance trees at 1.00:1 luminance contrast against the ground behind them, meaning invisible. This pack ships four genuinely different tree species with real bark and leaf TEXTURES and normal maps, which is what that complaint was actually about.",
+  "_comment_scale": "These models are authored in METRES, unlike Kenney's which were about one unit tall and needed a 3.4x per-layer correction. So `base_scale` is near 1.0 here and mostly trims rather than multiplies. Measured with tools/measure_models.gd rather than guessed — guessing produced a meadow of knee-high trees once already.",
   "seed": 20260803,
   "layers": {
     "trees": {
@@ -31,10 +31,17 @@
       "clear_radius": 14.0,
       "base_scale": 1.0,
       "collides": true,
-      "collision_radius": 0.6
+      "collision_radius": 0.6,
+      "_comment_leaf": "R9.4. Leaves_NormalTree_C.png measures RGB(88,123,0) -- saturation 1.00, the maximum a colour can have, at hue 77, which is the same chartreuse the ground already is. The blind critic measured 91% of every saturated pixel in frames 01 and 04 inside one 30-degree hue bin and called the world monochromatic; the canopy was reinforcing the ground rather than contrasting with it. Leaves.png is the same pack's muted leaf -- RGB(114,131,50), saturation 0.62 -- and the retint warms it one step further off the grass hue. Same mechanism the bushes layer has used since the crimson-bush fix. No new asset. TUNABLE.",
+      "retexture": {
+        "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves.png"
+      },
+      "retint": {
+        "Leaves_NormalTree": "#e8e4c8"
+      }
     },
     "grove": {
-      "_comment": "The ancient twisted oaks, 15-19m and far broader. A genuinely DIFFERENT species, not the same mesh retinted \u2014 which was the previous version of this layer and exactly what the critic caught. These are the landmark trees: at twice the height of a common tree and three times the canopy, a stand of them reads from across the playground.",
+      "_comment": "The ancient twisted oaks, 15-19m and far broader. A genuinely DIFFERENT species, not the same mesh retinted — which was the previous version of this layer and exactly what the critic caught. These are the landmark trees: at twice the height of a common tree and three times the canopy, a stand of them reads from across the playground.",
       "models": [
         "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
         "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
@@ -42,7 +49,7 @@
         "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
         "res://assets/environment/stylized_nature/TwistedTree_5.gltf"
       ],
-      "_comment_count": "Deliberately few. A 10,000-triangle tree is thirty times a Kenney one, and these are the biggest thing in the world \u2014 a stand of six is a landmark, forty is a forest nobody can walk through.",
+      "_comment_count": "Deliberately few. A 10,000-triangle tree is thirty times a Kenney one, and these are the biggest thing in the world — a stand of six is a landmark, forty is a forest nobody can walk through.",
       "clumps": 3,
       "per_clump": 4,
       "clump_radius": 26.0,
@@ -55,8 +62,15 @@
       "collides": true,
       "collision_radius": 1.1,
       "_comment_retexture": "The pack ships `Leaves_TwistedTree_C` as a CRIMSON autumn leaf. Left alone it made the biggest trees in the meadow blood red and they dominated every frame. Warm hue has to come from the flowers, the dry grass and the golden hour, not from painting the whole canopy.",
-      "_comment_colour": "These stay CRIMSON, at the owner's call: 'I actually really like the red trees.'\n\nIt is also the right call against the review. The critic measured the palette as a single yellow-green wedge \u2014 60-90% of pixels in one hue family in every frame \u2014 and said the board's golds and warm ends appear nowhere. A stand of turning oaks is the one thing in the meadow carrying a second hue family at tree height, and it does it with the pack's own authored texture rather than a tint.\n\nKept DELIBERATELY few for that reason: 6 clumps of 5. Warm accent against green reads as autumn; warm everywhere reads as a different biome. The bushes still get retextured green (they share this material) because 800 red bushes is a carpet, not an accent.",
-      "_comment_palette": "The twisted trees' canopy is CRIMSON (the pack's leaf texture, not a tint). The key art's Meadows is green-oak country with red held back as an accent, and the blind critique called the old mix (38 red trees, clumped near the spawn) 'autumn-danger everywhere' - red is also supposed to be reserved for Team Tether. ~16 spread across the map keeps them as the landmark accent they were meant to be. TUNABLE."
+      "_comment_colour": "These stay CRIMSON, at the owner's call: 'I actually really like the red trees.'\n\nIt is also the right call against the review. The critic measured the palette as a single yellow-green wedge — 60-90% of pixels in one hue family in every frame — and said the board's golds and warm ends appear nowhere. A stand of turning oaks is the one thing in the meadow carrying a second hue family at tree height, and it does it with the pack's own authored texture rather than a tint.\n\nKept DELIBERATELY few for that reason: 6 clumps of 5. Warm accent against green reads as autumn; warm everywhere reads as a different biome. The bushes still get retextured green (they share this material) because 800 red bushes is a carpet, not an accent.",
+      "_comment_palette": "The twisted trees' canopy is CRIMSON (the pack's leaf texture, not a tint). The key art's Meadows is green-oak country with red held back as an accent, and the blind critique called the old mix (38 red trees, clumped near the spawn) 'autumn-danger everywhere' - red is also supposed to be reserved for Team Tether. ~16 spread across the map keeps them as the landmark accent they were meant to be. TUNABLE.",
+      "_comment_leaf": "R9.4. THE RED LEAK, found by two independent blind reviews eleven days apart. Leaves_TwistedTree_C.png is RGB(167,23,23) -- hue 0, saturation 0.86, a crimson autumn leaf -- which made the grove the most saturated warm thing in the whole survey, on decorative trees beside the starting village. docs/reference/README.md and the visual-judge rubric both reserve deep red/oxblood for Team Tether danger, and spending it on scenery leaves the faction nothing to claim. The bushes layer hit this exact texture and fixed it by swapping -- see its retexture block and _retint()'s own comment in vegetation.gd -- the grove was simply never given the same treatment. No multiply turns red into green, so it has to be a swap. TUNABLE.",
+      "retexture": {
+        "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves.png"
+      },
+      "retint": {
+        "Leaves_TwistedTree": "#d8dcb4"
+      }
     },
     "deadfall": {
       "_comment": "Dead trees and mushrooms. The dead trees are 9-13m bare silhouettes and do a job no living tree can: they break a green tree line with a grey vertical, which is most of what stops a treeline reading as a hedge.",
@@ -67,16 +81,20 @@
         "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
         "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
       ],
-      "clumps": 14,
-      "per_clump": 3,
+      "clumps": 6,
+      "per_clump": 2,
       "clump_radius": 12.0,
-      "strays": 20,
+      "strays": 6,
       "max_slope_deg": 20.0,
       "scale_min": 0.5,
       "scale_max": 1.0,
-      "clear_radius": 16.0,
+      "clear_radius": 26.0,
       "base_scale": 0.7,
-      "collides": false
+      "collides": false,
+      "_comment_count": "R9.4. Was clumps 14 / per_clump 3 / strays 20 -- 62 bare dead trees in the biome the key art board calls 'peaceful by day'. The blind critic called them 'simultaneously the ugliest and the most out-of-palette objects present' and noted they occupy about a third of frame 04 as its compositional foreground: untextured cool grey-violet tubes in a warm-lit green scene. They earn a place as occasional character, not as the meadow's most prominent vertical element. Cut to 18, held further off the village by clear_radius, and warmed out of violet by the retint so they read as weathered wood rather than ash. TUNABLE.",
+      "retint": {
+        "Bark_DeadTree": "#e0d2bc"
+      }
     },
     "bushes": {
       "_comment": "The middle layer. Without something between grass height and tree height the ground reads as a lawn with poles on it. Ferns and broad plants included, because undergrowth banked at the base of a tree is what makes a copse read as a wood rather than as trees standing on a lawn.",
@@ -99,36 +117,38 @@
       "clear_radius": 9.0,
       "base_scale": 0.9,
       "collides": false,
-      "_comment_retexture": "Bush_Common and Bush_Common_Flowers use the material `Leaves_TwistedTree`, whose texture the pack ships CRIMSON \u2014 it is the autumn variant of the twisted oak. Unswapped, every bush in the meadow came out blood red, and no colour multiply turns red into green. This points them at the pack's own green leaf instead.",
+      "_comment_retexture": "Bush_Common and Bush_Common_Flowers use the material `Leaves_TwistedTree`, whose texture the pack ships CRIMSON — it is the autumn variant of the twisted oak. Unswapped, every bush in the meadow came out blood red, and no colour multiply turns red into green. This points them at the pack's own green leaf instead.",
       "retexture": {
         "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
       }
     },
     "grass": {
-      "_comment": "Tufts, not a ground texture. These are what make the terrain read as a meadow rather than as a painted surface, and they are the layer whose density most separates these frames from the reference \u2014 Palworld's meadows measure 3-9% featureless ground against this build's 56-66%.",
+      "_comment": "Tufts, not a ground texture. These are what make the terrain read as a meadow rather than as a painted surface, and they are the layer whose density most separates these frames from the reference — Palworld's meadows measure 3-9% featureless ground against this build's 56-66%.",
       "models": [
         "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
         "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf"
       ],
       "clumps": 110,
-      "per_clump": 70,
+      "per_clump": 130,
       "clump_radius": 16.0,
       "_comment_strays": "R7.1-remainder round 3: cut from 2000. Round 2's blind critic named the actual problem precisely -- 'near-regular intervals with large uninterrupted gaps... no clustering' -- and 2000 strays spread uniformly across the whole 512m map is a fifth of this layer's instances filling in exactly the gaps between clumps that were supposed to read as clearings. Fewer strays lets the clumps themselves read as denser, clustered patches with real clear ground between them, which is the actual ask (clustering, not raw count).",
-      "strays": 500,
+      "strays": 900,
       "max_slope_deg": 30.0,
       "_comment_scale": "The source tufts are 1.3-1.9m, which is head-high grass. Trimmed to roughly knee height, with a 2.5x spread. R7.1-remainder: raised from 0.26-0.78 (knee height) toward shin-to-hip height, the untried lever the density comment below already named -- bigger tufts at the same count cover more of the near field than more tufts at this size did, without the render-time cost a count increase already proved not worth paying.",
-      "scale_min": 0.34,
-      "scale_max": 1.0,
+      "scale_min": 0.14,
+      "scale_max": 0.42,
       "_comment_colour_jitter": "R7.1-remainder round 1's blind critic: 'a single saturated hue with no value range... nothing darker to anchor a black point'. Bigger tufts don't touch that; only colour does. Per-instance MultiMesh colour multiplier, zero extra draw calls or geometry (vegetation.gd).",
       "colour_jitter": 0.22,
       "clear_radius": 1.5,
       "base_scale": 1.0,
-      "_comment_shadow": "No shadow. Thousands of tufts each casting one overlap into a black carpet on terrain that does receive \u2014 measured at luminance 0.068 in the near field against 0.27-0.60 across the references. A blade's shadow is not information at this scale.",
+      "_comment_shadow": "No shadow. Thousands of tufts each casting one overlap into a black carpet on terrain that does receive — measured at luminance 0.068 in the near field against 0.27-0.60 across the references. A blade's shadow is not information at this scale.",
       "casts_shadow": false,
-      "_comment_clearings": "Walked straight through, so it cannot hide a creature or block a camera \u2014 the arena clearings do not apply. Stripping it left the spawn as forty metres of bare ground in the foreground of every survey frame.",
+      "_comment_clearings": "Walked straight through, so it cannot hide a creature or block a camera — the arena clearings do not apply. Stripping it left the spawn as forty metres of bare ground in the foreground of every survey frame.",
       "cleared_by_clearings": false,
       "collides": false,
-      "_comment_density": "Denser than the sparse tufts the critic saw, and pulled back from a first attempt at 21,300. That version took the whole scatter to 28,949 props and the combat survey stopped finishing inside ten minutes \u2014 which is a software renderer, so not a frame-rate measurement (D06), but 29k instances is a real cost on the handheld this targets and the coverage was not where it needed to be anyway. Spreading four times the tufts over 512m is not a dense FOREGROUND, it is a thin lawn everywhere. Bigger tufts at moderate count cover more of the near field, which is the half of frame the critic actually measured."
+      "_comment_density": "Denser than the sparse tufts the critic saw, and pulled back from a first attempt at 21,300. That version took the whole scatter to 28,949 props and the combat survey stopped finishing inside ten minutes — which is a software renderer, so not a frame-rate measurement (D06), but 29k instances is a real cost on the handheld this targets and the coverage was not where it needed to be anyway. Spreading four times the tufts over 512m is not a dense FOREGROUND, it is a thin lawn everywhere. Bigger tufts at moderate count cover more of the near field, which is the half of frame the critic actually measured.",
+      "_comment_scale_r9_4": "R9.4. Was 0.34-1.0. The critic measured the tufts at about 1.2m -- as tall as the well's stone drum -- and said they 'read as pampas, not meadow grass', roughly 2.5x too tall. Same correction as the flowers, and for the same reason: ground cover has to sit under the eyeline or it stops being ground. TUNABLE.",
+      "_comment_density_r9_4": "R9.4. per_clump 70 -> 130 and strays 500 -> 900. Shrinking every tuft to a third of its height frees the screen space that made the old ones read as scenery, and the standing finding from R7.1-remainder-2 is that the field 'reads underpopulated' against the references. Shrink and thicken together, or the fix for one defect deepens the other. TUNABLE."
     },
     "drygrass": {
       "_comment": "The wispy tufts, warmer and looser, in their own patches. Two grass textures where there was one. The critic counted 2 hue families against the key art board's 6 and said the board's golds appear nowhere below the horizon; this and the flowers are where the warm end comes from.",
@@ -141,19 +161,20 @@
         "Grass": "#e8d89a"
       },
       "clumps": 52,
-      "per_clump": 48,
+      "per_clump": 90,
       "clump_radius": 19.0,
-      "strays": 200,
+      "strays": 380,
       "max_slope_deg": 30.0,
       "_comment_scale": "R7.1-remainder: raised alongside grass's own scale bump (same file, same reasoning) so the two layers stay in proportion to each other.",
-      "scale_min": 0.32,
-      "scale_max": 0.78,
+      "scale_min": 0.13,
+      "scale_max": 0.33,
       "colour_jitter": 0.2,
       "clear_radius": 2.0,
       "base_scale": 1.0,
       "casts_shadow": false,
       "cleared_by_clearings": false,
-      "collides": false
+      "collides": false,
+      "_comment_scale_r9_4": "R9.4. Was 0.32-0.78, cut in proportion with the grass layer above so the two still read as one ground surface rather than two heights of the same plant. TUNABLE."
     },
     "flowers": {
       "_comment": "Colour accents, clustered hard. Wildflowers grow in patches; spread evenly they read as confetti. Clover is in here because a flower patch with nothing between the blooms reads as pins in a board.",
@@ -167,20 +188,21 @@
         "res://assets/environment/stylized_nature/Clover_2.gltf"
       ],
       "clumps": 76,
-      "per_clump": 54,
+      "per_clump": 78,
       "clump_radius": 9.0,
-      "strays": 440,
+      "strays": 620,
       "max_slope_deg": 22.0,
-      "scale_min": 0.35,
-      "scale_max": 0.8,
+      "scale_min": 0.09,
+      "scale_max": 0.22,
       "clear_radius": 2.5,
       "base_scale": 1.0,
       "casts_shadow": false,
       "cleared_by_clearings": false,
-      "collides": false
+      "collides": false,
+      "_comment_scale_r9_4": "R9.4. THE LOUDEST SCALE ERROR IN THE BUILD. Was scale 0.35-0.8 on base_scale 1.0. A blind critic measured the flower heads against the 1.8m NPC standing beside the barn and found them reaching his shoulder, with foreground heads spanning four 0.4m stepping stones -- about 1.8m across on a 2m stem, roughly 4x life size for a meadow wildflower. It is also the second-loudest colour in frame, so the error is maximally visible: the flower layer competes with the buildings instead of reading as ground detail. The key art's flowers are an ankle-height carpet. Cut to a quarter, which puts heads at ankle-to-shin. TUNABLE -- but check any change against a person in frame, not by eye."
     },
     "rocks": {
-      "_comment": "Rocks go where trees will not: they are the layer that makes the steep ground read as stone rather than as grass at an angle. The critic found the previous rocks read as 'dollops of moss' because their lit top face was the same hue as grass \u2014 these carry a real rock texture instead of a tinted flat colour.",
+      "_comment": "Rocks go where trees will not: they are the layer that makes the steep ground read as stone rather than as grass at an angle. The critic found the previous rocks read as 'dollops of moss' because their lit top face was the same hue as grass — these carry a real rock texture instead of a tinted flat colour.",
       "models": [
         "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
         "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
@@ -196,15 +218,20 @@
       "_comment_slope": "The only layer with a MINIMUM slope as well as a maximum, so boulders gather on the shoulders and rises where they belong instead of sitting on flat grass like dropped props.",
       "min_slope_deg": 6.0,
       "max_slope_deg": 44.0,
-      "scale_min": 0.35,
-      "scale_max": 1.3,
+      "scale_min": 0.28,
+      "scale_max": 2.1,
       "clear_radius": 10.0,
       "base_scale": 1.0,
       "collides": true,
-      "collision_radius": 0.9
+      "collision_radius": 0.9,
+      "_comment_tint_r9_4": "R9.4. Same treatment, milder, for the same reason: Rocks_Diffuse's faces measure value 0.46 at saturation 0.09, which is a cool light grey sitting on warm ground. The blind critic also noted the rock field is 'one prop instanced rather than a rock field' -- that part is scale_min/scale_max below, not colour. TUNABLE.",
+      "retint": {
+        "Rocks": "#c5ac9e"
+      },
+      "_comment_scale_r9_4": "R9.4. Was 0.35-1.3, a 3.7x span that still read as one size because most draws land near the middle. Widened to 0.28-2.1 so a clump has boulders AND pebbles in it. TUNABLE."
     },
     "path_stones": {
-      "_comment": "Flat rock plates, scattered thinly on walkable ground. Not a path yet \u2014 M7 authors real paths \u2014 but a warm grey stone note at ground level, which is a hue the meadow has none of. The critic measured one frame at 0.7% desaturated pixels and observed there is 'no stone, no wood, no built thing, no path anywhere in that frame', where every Palworld reference carries 18-30% desaturated grey.",
+      "_comment": "Flat rock plates, scattered thinly on walkable ground. Not a path yet — M7 authors real paths — but a warm grey stone note at ground level, which is a hue the meadow has none of. The critic measured one frame at 0.7% desaturated pixels and observed there is 'no stone, no wood, no built thing, no path anywhere in that frame', where every Palworld reference carries 18-30% desaturated grey.",
       "models": [
         "res://assets/environment/stylized_nature/RockPath_Round_Small_1.gltf",
         "res://assets/environment/stylized_nature/RockPath_Round_Small_2.gltf",
@@ -224,12 +251,16 @@
       "cleared_by_clearings": false,
       "collides": false,
       "grows_on_paths": true,
-      "_comment_paths": "The one layer allowed on the dirt paths: stones on a path ARE the path."
+      "_comment_paths": "The one layer allowed on the dirt paths: stones on a path ARE the path.",
+      "_comment_tint_r9_4": "R9.4. PathRocks_Diffuse.png is an atlas of pale lavender-grey stones on a dark green ground -- the stone faces measure RGB(132,135,130), value 0.53, saturation 0.04, i.e. a neutral light grey. Rendered over a bright meadow under a strong sun they blew out to RGB(229,230,231) and read, in the survey frames, as scattered paper or marble chips rather than as stones trodden into a path. This is not a bug -- the texture is being drawn faithfully -- it is the wrong value for earth. Warmed and darkened to about the value of the soil they sit in. TUNABLE.",
+      "retint": {
+        "PathRocks": "#a89682"
+      }
     }
   },
   "_comment_retint": "Mostly EMPTY now, and that is the point. The Kenney kit shipped a bright teal-green palette that had to be remapped wholesale; this pack ships real textures, and `albedo_color` multiplies them, so an unmapped material passes through as authored. Only the deliberate per-layer modulates above apply. A strong colour here would come out as shadow, not as hue.",
   "retint": {},
-  "_comment_collision": "Layers marked `collides` get real static collision. Two reasons, and the second is the urgent one: a tree you can walk through reads as a hologram, and \u2014 because the camera's SpringArm3D only stops at things with collision \u2014 a bush with none lets the camera end up INSIDE it. Two survey frames came back showing nothing but green because the camera was inside a bush during a fight. Grass and flowers must never collide; you walk through those.",
+  "_comment_collision": "Layers marked `collides` get real static collision. Two reasons, and the second is the urgent one: a tree you can walk through reads as a hologram, and — because the camera's SpringArm3D only stops at things with collision — a bush with none lets the camera end up INSIDE it. Two survey frames came back showing nothing but green because the camera was inside a bush during a fight. Grass and flowers must never collide; you walk through those.",
   "_comment_clearings": "Open ground kept clear of every layer that can BLOCK. These match the wild pal spawn points in scripts/combat/encounter_director.gd, because a fight starts where a creature is standing and the arena is 11m across: without this, the trees are inside the arena and stand between the camera and the fight. The radius is arena radius plus margin.",
   "clearings": [
     {
