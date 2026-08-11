@@ -124,7 +124,11 @@ func _build_detail() -> Control:
 
 	_detail_status = Label.new()
 	_detail_status.add_theme_font_size_override("font_size", 24)
-	_detail_status.add_theme_color_override("font_color", Color(0.851, 0.702, 0.251))
+	# Coloured per message in _describe(), not fixed here. A blind visual pass
+	# on menu_build.png caught this label wearing the same gold whether it
+	# said "Ready to build" or "Not enough to hand" -- gold means progression/
+	# positive state everywhere else in this HUD language, and a blocked
+	# message wearing it undercuts that meaning rather than reinforcing it.
 	panel.add_child(_detail_status)
 
 	return panel
@@ -222,10 +226,13 @@ func _describe(index: int) -> void:
 
 	if free:
 		_detail_status.text = "Ready to build, for free."
+		_detail_status.add_theme_color_override("font_color", COST_FREE)
 	elif _can_afford(entry):
 		_detail_status.text = "Ready to build."
+		_detail_status.add_theme_color_override("font_color", Color(0.851, 0.702, 0.251))
 	else:
 		_detail_status.text = "Not enough to hand."
+		_detail_status.add_theme_color_override("font_color", COST_SHORT)
 
 
 func _on_pick(index: int) -> void:

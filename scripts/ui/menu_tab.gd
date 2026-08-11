@@ -74,6 +74,28 @@ func state() -> Node:
 	return menu.get("game") if menu != null else null
 
 
+## Gives a grid/slot Button its own cell definition, one shade lighter than
+## the panel it sits in with a faint teal edge — a blind visual pass on the
+## backpack grid found that an EMPTY slot was flat-out indistinguishable from
+## the panel background behind it, so nothing read as "a grid" between the
+## filled cells. Only touches the "normal" state: hover/focus/pressed keep
+## whatever the shared menu theme already draws for them (the gold focus
+## ring), so this cannot dull the one state that has to be the loudest.
+func _style_slot(button: Button) -> void:
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color(0.11, 0.14, 0.19, 0.85)
+	box.border_color = Color(PANEL_BORDER.r, PANEL_BORDER.g, PANEL_BORDER.b, 0.3)
+	box.border_width_left = 1
+	box.border_width_right = 1
+	box.border_width_top = 1
+	box.border_width_bottom = 1
+	box.corner_radius_top_left = 6
+	box.corner_radius_top_right = 6
+	box.corner_radius_bottom_left = 6
+	box.corner_radius_bottom_right = 6
+	button.add_theme_stylebox_override("normal", box)
+
+
 ## Wraps `content` in the dark/teal panel (see PANEL_BG/PANEL_BORDER above).
 ## Copies `content`'s size flags onto the wrapper so wrapping never changes
 ## how a row lays out — a caller that expanded before still expands after.

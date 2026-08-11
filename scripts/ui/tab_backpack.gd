@@ -74,6 +74,7 @@ func build() -> void:
 		button.custom_minimum_size = tile
 		button.clip_text = true
 		button.focus_mode = Control.FOCUS_ALL
+		_style_slot(button)
 		var slot := i
 		button.pressed.connect(func() -> void: _on_slot(slot))
 		# Inspect follows focus rather than needing its own button: on a
