@@ -7,10 +7,19 @@
     tools/art_pipeline/finish.py grade    bramblebun             # needs a SPECIES entry in grade.py
     tools/art_pipeline/finish.py install  bramblebun
 
+    tools/art_pipeline/finish.py rig      villager_female --kind humanoid  # needs MESHY_API_KEY
+    tools/art_pipeline/finish.py install  villager_female --kind humanoid
+
 The steps a species goes through after its winner is picked, with the paths
 threaded between them. Same reason as batch.py: this is the same six commands
 thirteen times, and the mistakes that matter are the ones made while retyping
-a path, not while thinking about a rabbit.
+a path, not while thinking about a rabbit. `--kind humanoid` is the odd one
+out: there is no local Blender rigger for a biped, so `rig` calls out to
+Meshy's own auto-rigger instead, and `install` lands the result in
+assets/characters/, not assets/pals/tetherbound/. There is no humanoid
+`grade` step -- grade.py has no SPECIES entries for trainer/grandpa/warden
+either, and `install` already falls back to animated.glb when graded.glb
+does not exist.
 
 Everything lands under assets_raw/<species>/build/ until `install`, which is
 the only step that writes into assets/.
@@ -96,6 +105,33 @@ def cmd_rig(args) -> None:
         source = RAW / args.species / "textured" / "model.glb"
     if not source.exists():
         sys.exit(f"no textured model for {args.species}; run `texture` first")
+
+    if args.kind == "humanoid":
+        # There is no local Blender rigger for a biped the way RIGS holds one
+        # per creature body plan -- meshy.py's own cmd_rig documents this as
+        # the one Meshy endpoint that is humanoid-only, so the auto-rig runs
+        # on Meshy's side instead of Blender's. animate_humanoid.py then
+        # authors the five gameplay clips locally on whatever skeleton comes
+        # back, same reasoning as the trainer/Grandpa/Warden rigs already in
+        # assets/characters/.
+        result = subprocess.run(
+            [sys.executable, HERE / "meshy.py", "rig", str(source),
+             "--height", str(args.height)],
+            capture_output=True, text=True)
+        print(result.stdout, result.stderr)
+        task = next((line.split()[-1] for line in result.stdout.splitlines()
+                     if line.startswith("rig task:")), None)
+        if not task:
+            sys.exit("rigging was not accepted")
+        rig_out = build / "meshy_rig"
+        run([sys.executable, HERE / "meshy.py", "fetch", task, "--stage", "rig",
+             "--out", rig_out])
+        rigged = rig_out / "model.glb"
+        if not rigged.exists():
+            sys.exit(f"rig task {task} produced no model.glb")
+        blender("animate_humanoid.py", rigged, "--out", build / "animated.glb")
+        return
+
     rigged = build / "rigged.glb"
     blender(RIGS[args.kind], source, "--out", rigged,
             "--report", build / "rig_report.json")
@@ -133,8 +169,14 @@ def cmd_install(args) -> None:
         source = build / "animated.glb"
     if not source.exists():
         sys.exit(f"nothing to install for {args.species}")
-    target = (ROOT / "assets" / "pals" / "tetherbound" / args.species / "models"
-              / f"pal_{args.species}_lod0.glb")
+    if args.kind == "humanoid":
+        # Matches the trainer/grandpa/warden layout already in
+        # assets/characters/ -- one folder per character, no "models"
+        # subdirectory and no "pal_" prefix, unlike the creature roster.
+        target = ROOT / "assets" / "characters" / args.species / f"{args.species}_lod0.glb"
+    else:
+        target = (ROOT / "assets" / "pals" / "tetherbound" / args.species / "models"
+                  / f"pal_{args.species}_lod0.glb")
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(source.read_bytes())
     print(f"{target.relative_to(ROOT)}  {target.stat().st_size // 1024} KB")
@@ -158,7 +200,9 @@ def main() -> None:
 
     rig = sub.add_parser("rig")
     rig.add_argument("species")
-    rig.add_argument("--kind", choices=list(RIGS), default="quadruped")
+    rig.add_argument("--kind", choices=list(RIGS) + ["humanoid"], default="quadruped")
+    rig.add_argument("--height", type=float, default=1.7,
+                     help="humanoid kind only: passed to Meshy's auto-rigger")
     rig.set_defaults(func=cmd_rig)
 
     grade = sub.add_parser("grade")
@@ -167,6 +211,7 @@ def main() -> None:
 
     install = sub.add_parser("install")
     install.add_argument("species")
+    install.add_argument("--kind", choices=["creature", "humanoid"], default="creature")
     install.set_defaults(func=cmd_install)
 
     args = parser.parse_args()
