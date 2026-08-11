@@ -16,6 +16,15 @@ name: Ralph auto-merge
 # Deliberately NOT a merge commit: main is fast-forwarded, so a task that cannot
 # fast-forward (because main moved under it) fails here rather than silently
 # resolving a conflict nobody reviewed. The loop rebases and pushes again.
+#
+# THIS FILE IS THE FAST PATH, NOT THE ONLY PATH. Its trigger has a hole: a run
+# that this workflow dispatches itself (the rebase route) completes without
+# raising a `workflow_run` event, because GitHub does not raise workflow events
+# for runs initiated with the default GITHUB_TOKEN. So a rebased branch goes
+# green and nothing here ever wakes up to merge it. `ralph-sweep.yml` is the
+# poll-driven backstop that actually lands those; see its header for the
+# measurement. The shipping logic itself now lives in tools/ci/ship_branch.sh
+# so both callers run the same code.
 
 on:
   workflow_run:
@@ -66,147 +75,15 @@ jobs:
           fetch-depth: 0
           ref: main
 
-      - name: Fast-forward main to the verified commit
-        id: ship
+      - name: Ship the verified commit
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           SHA: ${{ github.event.workflow_run.head_sha }}
-          # `gh` needs this to dispatch CI after an automatic rebase. The
-          # Release step at the bottom sets it too; both are the same token and
-          # the same reason.
+          # Needed to dispatch CI after an automatic rebase, and Release after a
+          # ship. A push made with this token triggers neither on its own.
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          git config user.name  "ralph-bot"
-          git config user.email "ralph-bot@users.noreply.github.com"
-
-          git fetch origin "$BRANCH"
-
-          # Re-fetch main and sit exactly on it before deciding anything. The
-          # checkout above is a snapshot from job start, and with merges now
-          # queued behind a concurrency group a job can wait minutes for its
-          # turn while earlier merges advance main. Every check below reads
-          # origin/main, so a stale ref would mis-classify a fast-forwardable
-          # branch as needing a rebase -- and then "rebase" it onto a base it
-          # was already on.
-          git fetch origin main
-          git reset --hard origin/main
-
-          # Verify the commit CI passed on is the one we are about to ship.
-          # workflow_run fires per run, and a branch can be pushed again while
-          # the run is in flight -- shipping the newer, untested commit would
-          # defeat the whole gate.
-          # Every early return below must leave shipped=false. The delete step
-          # keys off this and NOT off step success, because these paths exit 0
-          # -- and the first version of this file deleted a branch it had just
-          # declined to ship, destroying work that had passed CI. `git push
-          # --delete` on unmerged work is unrecoverable from the remote.
-          echo "shipped=false" >> "$GITHUB_OUTPUT"
-
-          if [ "$(git rev-parse "origin/$BRANCH")" != "$SHA" ]; then
-            echo "::notice::$BRANCH moved since CI ran ($SHA is no longer its tip). Not shipping; the newer commit gets its own run."
-            exit 0
-          fi
-
-          if git merge-base --is-ancestor "$SHA" origin/main; then
-            echo "::notice::$SHA is already on main. Nothing to do."
-            exit 0
-          fi
-
-          # main moved while CI ran. Under one writer this was rare and a
-          # firing rebased by hand. Under ~10 concurrent lanes it is the common
-          # case -- main moves during most 5-minute CI runs -- and leaving it to
-          # a firing turned the ship step into a spin-lock whose retry costs a
-          # whole CI cycle. So rebase it here instead.
-          #
-          # This does NOT weaken the fast-forward guarantee this file is built
-          # on, and the distinction matters:
-          #   - a CLEAN rebase resolves nothing ambiguous; that is what clean
-          #     means. A conflicting one still stops dead, below.
-          #   - the rebased commit is RE-TESTED before it can merge. Nothing
-          #     reaches main without a green run on the exact commit that
-          #     lands, which is the property the original comment defends.
-          if ! git merge-base --is-ancestor origin/main "$SHA"; then
-            echo "::notice::main moved under $BRANCH. Rebasing it and re-running CI."
-
-            git checkout -B "$BRANCH" "$SHA"
-            if ! git rebase origin/main; then
-              git rebase --abort || true
-              echo "::error::$BRANCH conflicts with main and cannot be rebased automatically. A human or a firing has to resolve it. Nothing was pushed."
-              exit 1
-            fi
-
-            # --force-with-lease, not --force: if the branch moved while we
-            # were rebasing, the firing that moved it is still working and its
-            # commit must not be discarded. Losing work here is unrecoverable
-            # from the remote, the same class of mistake as the delete step
-            # below already carries a scar for.
-            if ! git push --force-with-lease origin "$BRANCH"; then
-              echo "::warning::$BRANCH moved while rebasing; leaving it alone. Its own CI run will drive the next attempt."
-              exit 0
-            fi
-
-            # The push above CANNOT trigger CI. GitHub does not raise workflow
-            # events for pushes made with the default GITHUB_TOKEN -- its
-            # recursion guard -- which is the exact bug that left release.yml
-            # silently unfired for twelve hours and twenty-five commits. An
-            # explicit dispatch is the documented exception, and ci.yml already
-            # declares workflow_dispatch for this reason.
-            #
-            # Without this line every rebased branch would sit green-looking
-            # and never ship, which is a WORSE failure than the one being
-            # fixed: it is silent.
-            # There is no retry cap here, and that is a judgement rather than
-            # an oversight. Each rebase costs one CI run, so a branch could in
-            # principle ping-pong if main moved during every single run. Two
-            # things are relied on to converge it: merges are now serialised by
-            # the concurrency group above, and the lane-fork bug that produced
-            # ~10 concurrent sessions from three Routines is fixed. If a branch
-            # is ever seen rebasing more than two or three times, that
-            # assumption is wrong and this needs a cap -- it would show up as
-            # repeated "Rebasing it and re-running CI" notices on one branch.
-            gh workflow run ci.yml --ref "$BRANCH" \
-              && echo "::notice::Rebased $BRANCH onto main and dispatched CI. It ships when that run goes green." \
-              || echo "::error::Rebased $BRANCH but could NOT dispatch CI. It will not ship until someone re-runs CI on it by hand."
-            exit 0
-          fi
-
-          git merge --ff-only "$SHA"
-          git push origin main
-          echo "shipped=true" >> "$GITHUB_OUTPUT"
-          echo "::notice::Shipped $BRANCH ($SHA) to main."
-
-      - name: Delete the shipped branch
-        # Only when main actually moved. Anything else leaves the branch alone
-        # so the work is still there to finish or retry.
-        if: steps.ship.outputs.shipped == 'true'
-        env:
-          BRANCH: ${{ github.event.workflow_run.head_branch }}
-        run: git push origin --delete "$BRANCH" || true
-
-      - name: Publish the build
-        # The push above CANNOT trigger Release on its own, and the loop went
-        # twelve hours and twenty-five commits believing otherwise.
-        #
-        # `release.yml` triggers on `push` to main. But GitHub deliberately does
-        # not create workflow runs from events raised with the default
-        # GITHUB_TOKEN -- that is its recursion guard, and the step above pushes
-        # with exactly that token. So every Ralph ship advanced main and
-        # published nothing, while a human merging a PR (a different actor) did
-        # publish. The download link kept serving whatever the last human merge
-        # had built, looking current the whole time.
-        #
-        # workflow_dispatch and repository_dispatch are the two documented
-        # exceptions to that guard, so an explicit dispatch works where the push
-        # does not. This needs `actions: write` above.
-        #
-        # Not gated on the delete step, and `|| true`: a failure to publish must
-        # not fail a merge that already happened. It shows up as a notice, and
-        # the build is one manual dispatch away.
-        if: steps.ship.outputs.shipped == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh workflow run release.yml --ref main \
-            && echo "::notice::Dispatched Release for the new main." \
-            || echo "::warning::Could not dispatch Release; run it by hand from the Actions tab."
+        # Passing SHA puts the script in event mode: it verifies the branch tip
+        # is still the commit CI went green on before shipping it. Everything
+        # else -- the rebase route, the branch delete, the Release dispatch --
+        # is in the script, shared with ralph-sweep.yml.
+        run: tools/ci/ship_branch.sh "$BRANCH" "$SHA"

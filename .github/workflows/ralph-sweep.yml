@@ -1,0 +1,104 @@
+name: Ralph sweep
+
+# Lands every `ralph/**` branch that is green and unmerged, on a timer.
+#
+# `ralph-merge.yml` is the fast path: CI finishes, an event fires, the branch
+# ships. This is the path that does not depend on an event arriving.
+#
+# It exists because the fast path has a hole that only opens on the rebase
+# route, which is also its COMMON route under multiple lanes. `ralph-merge.yml`
+# rebases a branch that main moved under, force-pushes, and dispatches CI with
+# `gh workflow run`. That dispatch works. But GitHub does not raise workflow
+# events for runs initiated with the default GITHUB_TOKEN, so when the
+# dispatched run finishes, no `workflow_run` event fires and nothing wakes up to
+# merge it. The branch sits green, rebased, tested and unmergeable, forever.
+#
+# Measured on 2026-08-11, across every live branch: each one whose green CI run
+# came from a `push` had merged; each one whose green run came from a
+# `workflow_dispatch` was stranded. Four at once. That is not a flake, it is the
+# rebase path being a dead end by construction.
+#
+# The same recursion guard had already cost this project twelve hours and
+# twenty-five commits of unpublished builds through `release.yml`. Rather than
+# patch a third instance later, this workflow stops depending on the delivery of
+# events: it reads the world and reconciles it. A missed event costs latency,
+# never a lost merge.
+#
+# `ralph-merge.yml` is deliberately KEPT. Immediate merges on the common green
+# path are worth having, and this runs on a timer.
+
+on:
+  schedule:
+    # Every ten minutes. This is the worst-case latency for a branch whose merge
+    # event went missing; the event path still lands the ordinary case in
+    # seconds. GitHub treats cron as best-effort and may run it late under load,
+    # which is fine -- nothing here is time-critical, it is a backstop.
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+# Shares ONE queue with ralph-merge.yml, by name.
+#
+# Both push main. Two of them racing on `git push origin main` is the exact
+# failure that took out twelve of eighteen runs when the loop went from one
+# writer to about ten. Same group means a sweep can never run beside a merge.
+#
+# `cancel-in-progress: false` is load-bearing: cancelling a sweep abandons work
+# that already passed CI and is sitting on a branch waiting to ship.
+concurrency:
+  group: ralph-merge
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  # To dispatch CI after a rebase and Release after a ship. A push made with the
+  # default token triggers neither on its own -- that is the whole reason this
+  # file exists.
+  actions: write
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: a shallow clone cannot fast-forward.
+          fetch-depth: 0
+          ref: main
+
+      - name: Ship every green, unmerged ralph branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+
+          # Ordered oldest-first so a queue of branches lands in the order it
+          # was created, rather than newest-wins by luck of the listing.
+          BRANCHES="$(git ls-remote --heads origin 'refs/heads/ralph/*' \
+                        | sed 's#.*refs/heads/##' | sort)"
+
+          if [ -z "$BRANCHES" ]; then
+            echo "No ralph/** branches. Nothing to sweep."
+            exit 0
+          fi
+
+          echo "Considering:"
+          echo "$BRANCHES" | sed 's/^/  /'
+
+          # Sequential, and each call re-reads origin/main, because every ship
+          # moves main under the branches that have not been considered yet.
+          #
+          # A branch that needs a human (conflict, or over the rebase cap)
+          # returns 1. That must not stop the branches behind it -- the whole
+          # point of a sweep is that one stuck branch does not strand the
+          # others -- so the failure is recorded and reported at the end.
+          STUCK=""
+          while read -r branch; do
+            [ -n "$branch" ] || continue
+            echo "::group::$branch"
+            tools/ci/ship_branch.sh "$branch" || STUCK="$STUCK $branch"
+            echo "::endgroup::"
+          done <<< "$BRANCHES"
+
+          if [ -n "$STUCK" ]; then
+            echo "::warning::Needs a human, and was skipped:$STUCK"
+          fi

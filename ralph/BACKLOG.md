@@ -109,6 +109,21 @@ flight when it flakes, and `ralph-merge.yml` only ships green.
 shipped, the underlying race not directly reproduced. See `DONE.md` for the
 full elimination trail and what would still confirm it.**
 
+**`LP4` (green branches silently never merging) fixed — see `DONE.md` and
+`D26`.** A lane reported `EV4-textures-remainder` green but unmerged. Four
+branches were stranded, and the mechanism was not what the report guessed:
+`ralph-merge.yml` rebases with the default `GITHUB_TOKEN`, and GitHub raises no
+`workflow_run` event when a run initiated by that token completes — so the
+rebase path could never merge anything. Every branch whose green run came from a
+`push` had shipped; every branch whose green run came from a
+`workflow_dispatch` was stuck. Fixed with `ralph-sweep.yml`, a ten-minute
+reconciler that does not depend on an event arriving.
+
+**Standing note for every firing:** if your branch is green and has not merged
+within ~15 minutes, do NOT assume it is lost or start a second attempt. The
+sweep lands it. If it is still there after two sweeps, read the sweep run's log
+— a conflict or the rebase cap will name your branch explicitly.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
