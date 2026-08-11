@@ -57,6 +57,53 @@ single report seems to explain two symptoms.
 relative motion to the process while the cursor is captured. Same device-layer
 split `smoke_input.gd` documents.
 
+## LP1 — Kill the `smoke_traversal` and `smoke_combat` flakes
+`330ba3d` on `ralph/LP1`. `tests: smoke_traversal, smoke_combat`.
+
+**Traversal was already fixed** by the `below`-surface-vs-airborne-slope
+invariant already sitting in `tests/smoke_traversal.gd` — nothing to change
+there. Verified rather than assumed: 19/20 headless passes clean in one
+uncontended batch (the one non-pass was a 90s timeout killed by *my own*
+concurrent combat runs competing for CPU, not a test failure), plus a
+second, fully isolated batch afterward with the same result. Between the
+two, every clean run held; no `sank below the terrain surface` failure
+appeared once.
+
+**Combat had a real bug, found the way `RB3` and `R4.11` both prescribe:
+a recorded run log, not more reasoning about the code.** An instrumented
+copy of `smoke_combat.gd` (per-frame position watchdog across the whole
+fight, never committed) caught the exact moment things go wrong:
+`_a_swing_at_empty_air_misses()` stages the player's pal across the arena
+with `_ally.global_position = centre + out.normalized() * (radius - 1.5)`
+— a raw position write that carries the arena centre's own Y across a
+9.5m horizontal jump. On flat ground this is harmless; on this rolling
+terrain it occasionally lands the pal embedded under Terrain3D's
+one-sided heightfield collider, below the true surface at the new x/z,
+with no floor to catch it. Once that happens the pal free-falls at
+terminal velocity for the rest of the fight — one instrumented run
+logged the ally's Y crossing from -0.17 to below -900 over the following
+~2000 frames — and every downstream assertion this file has ever failed
+on falls straight out of that: the "did no damage 95.0 -> 95.0" miss this
+item was opened for, "the enemy never landed a hit", "the fight never
+resolved after 2500 action frames", "the camera did not return to the
+trainer". Two separate instrumented runs caught it live (~2 failures in
+17 runs of the *unfixed* test, matching the file's own history of rare,
+CI-only flakes).
+
+This is exactly the bug class `combat_manager.gd::_stand_the_trainer_aside`
+already paid for once (its own comment names D09: never carry a Y across
+a horizontal move) — just not applied to this test's own teleport. Fix:
+re-ground via `place_on_ground` (the same helper `combat_manager.gd::_place`
+already uses), falling back to the raw write only if grounding fails,
+matching the established pattern exactly.
+
+Verified: 20/20 consecutive clean headless runs of the fixed
+`smoke_combat.gd`, zero failures, after 17 runs of the pre-fix version
+that had already reproduced the failure twice. Traversal and combat do
+**not** share a cause, as the item's own note warned — traversal's fix
+predates this firing, combat's is a genuine teleport bug local to one
+test helper.
+
 ## D25 — Loop speedups: parallel lanes, batched pushes, local critic iteration
 `6b848b6` and `346e6e0` — owner-directed interactive session, 2026-08-11.
 Full reasoning: `docs/decisions/D25-batch-the-push-not-the-testing.md`.

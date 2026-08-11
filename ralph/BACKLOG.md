@@ -103,30 +103,7 @@ One item, above everything, because it is upstream of everything: a flaky test
 does not fail *its own* task, it fails whatever healthy branch happens to be in
 flight when it flakes, and `ralph-merge.yml` only ships green.
 
-### LP1 — Kill the `smoke_traversal` and `smoke_combat` flakes
-`model: sonnet` · `tests: smoke_traversal, smoke_combat` · `area: loop`
-**Promoted out of the unphased list at the bottom of this file**, where it had
-been sitting as a bullet. With lanes and batched pushes it gets worse rather
-than better: a batched branch carries 1–4 items, so one random red now rejects
-up to four finished items at once and costs a full cycle to re-run.
-
-The evidence, unchanged from where it was recorded:
-
-- **Traversal**: every failure has the player at y = −0.4 m, never falling
-  through. "The ground is not continuous" was a misdiagnosis. Done when 20
-  consecutive headless passes.
-- **Combat**: a docs-only commit failed on the *last* swing checked ("did no
-  damage 95.0 -> 95.0") after the fight had already resolved normally, and
-  re-running the identical commit was clean.
-
-Both read as timing races on the surface, which is exactly what `smoke_aggression`
-read as before `RB3` found the mundane physical cause — the trainer's own
-follower pal walling the combatants in. **Do not assume these two share a cause
-with each other**, and prefer a recorded run log over more reasoning about CI
-output; that is what actually found `RB3` and what `R4.11` prescribes.
-
-Done when: 20 consecutive headless passes of each, and the cause named rather
-than the symptom tuned away.
+**`LP1` (the `smoke_traversal`/`smoke_combat` flakes) fixed — see `DONE.md`.**
 
 ---
 
