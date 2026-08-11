@@ -274,3 +274,62 @@ func test_path_bias_of_one_lands_clumps_on_the_road() -> void:
 		"path_bias 1.0 averaged path_factor %.3f across %d instances, not meaningfully above unbiased's %.3f" % [
 			biased_avg, biased_count, unbiased_avg
 		])
+
+
+# --- path bias jitter (EV3-remainder round 2: break up the collinear "hedge") ---
+
+func test_path_bias_jitter_of_zero_changes_nothing() -> void:
+	# path_stones wants the exact snap and must be completely unaffected by
+	# this key's mere presence at 0.0, the same backward-compatibility
+	# guarantee every other bias parameter carries.
+	var stones := _layer("path_stones").duplicate(true)
+	stones["path_bias"] = 1.0
+	stones["path_bias_jitter"] = 0.0
+	var with_zero := RULES.placements_for(stones, field, world_size, 55)
+	var without_the_key := _layer("path_stones").duplicate(true)
+	without_the_key["path_bias"] = 1.0
+	without_the_key.erase("path_bias_jitter")
+	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	assert_eq(with_zero.size(), without.size())
+	for i in with_zero.size():
+		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
+			"path_bias_jitter 0.0 moved a placement; it must be a no-op")
+
+
+func test_path_bias_jitter_spreads_clumps_off_the_exact_centreline() -> void:
+	# The defect this fixes: every path-biased clump snapping to the EXACT
+	# nearest point puts several clumps strung along one straight route on
+	# the same line, which a blind critic read as a hedge planted with a
+	# ruler. A jittered clump should land close to the road but not ON it as
+	# reliably as an unjittered one.
+	# A minimal, permissive layer rather than a real one duplicated -- this is
+	# testing the geometry of the jitter itself, not any layer's own slope/
+	# clearing rules, and flowers' own max_slope_deg was filtering out enough
+	# jittered draws (onto locally steep ground beside the path) to starve
+	# the sample.
+	# grows_on_paths: true, so the "nothing grows on the road" rule (a
+	# separate, unrelated mechanism) does not confound this test -- it would
+	# reject exactly the draws this test wants to see (a jittered point that
+	# still lands close to the centreline), which is testing the wrong thing.
+	var layer := {
+		"models": _layer("flowers").get("models", []),
+		"clumps": 1, "per_clump": 1, "strays": 0, "clump_radius": 0.01,
+		"path_bias": 1.0, "path_bias_jitter": 4.0, "grows_on_paths": true,
+		"max_slope_deg": 60.0, "clear_radius": 0.5, "cleared_by_clearings": false,
+	}
+
+	var exactly_on_road := 0
+	var attempted := 0
+	var samples := 30
+	for seed_value in samples:
+		var placed := RULES.placements_for(layer, field, world_size, seed_value * 151)
+		if placed.is_empty():
+			continue
+		attempted += 1
+		var spot: Vector3 = placed[0]["position"]
+		if field.path_factor(spot.x, spot.z) > 0.99:
+			exactly_on_road += 1
+
+	assert_true(attempted >= samples / 2, "too few of %d draws placed anything to judge (%d)" % [samples, attempted])
+	assert_true(exactly_on_road < attempted,
+		"path_bias_jitter 4.0 still landed every one of %d placed clumps exactly on the centreline" % attempted)

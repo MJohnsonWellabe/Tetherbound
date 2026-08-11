@@ -124,9 +124,10 @@ static func placements_for(
 	var strays := int(layer.get("strays", 0))
 	var ridge_bias := clampf(float(layer.get("ridge_bias", 0.0)), 0.0, 1.0)
 	var path_bias := clampf(float(layer.get("path_bias", 0.0)), 0.0, 1.0)
+	var path_bias_jitter := maxf(float(layer.get("path_bias_jitter", 0.0)), 0.0)
 
 	for clump in clumps:
-		var centre := _clump_centre(rng, half, field, ridge_bias, path_bias)
+		var centre := _clump_centre(rng, half, field, ridge_bias, path_bias, path_bias_jitter)
 		for i in per_clump:
 			# Square root of a uniform sample gives a disc that is denser at the
 			# middle, which is what a copse looks like. Sampling the radius
@@ -181,14 +182,30 @@ const RIDGE_SEARCH_RADIUS := 140.0
 ## `clump_radius` still spreads instances off the snapped centre, so a
 ## path-biased clump straddles the road rather than lining up on its
 ## centreline.
+##
+## `path_bias_jitter` (EV3-remainder): every exact snap lands ON the
+## centreline, so several clumps strung along the same straight route are
+## themselves collinear — each one's own instance scatter is a symmetric
+## disc around a shared line, which a blind critic read as "a hedge planted
+## with a ruler... same interval, same offset distance from the path edge".
+## `path_stones` wants the exact snap (stones ARE the path, so this defaults
+## to 0.0 and that layer is untouched); a layer that wants clumps to merely
+## favour path-adjacent ground — `flowers`, a garden bed rather than the
+## road's own material — can set this to displace the snapped centre by a
+## random amount, so clump centres land at genuinely different distances
+## from the path instead of all sitting on its exact line.
 static func _clump_centre(
-	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float, path_bias: float = 0.0
+	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float,
+	path_bias: float = 0.0, path_bias_jitter: float = 0.0
 ) -> Vector2:
 	var base := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
 
 	if path_bias > 0.0 and rng.randf() <= path_bias and field.has_method("nearest_point_on_paths"):
 		var on_path: Vector2 = field.nearest_point_on_paths(base.x, base.y)
 		if on_path != Vector2.INF:
+			if path_bias_jitter > 0.0:
+				var nudge := Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0))
+				on_path += nudge * path_bias_jitter
 			base = on_path
 
 	if ridge_bias <= 0.0 or rng.randf() > ridge_bias:
