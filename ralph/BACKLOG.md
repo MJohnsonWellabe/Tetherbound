@@ -247,6 +247,24 @@ opened below from round 5's own honest read of what is still wrong.
 
 **`EV4-textures` (moss-blotch saturation, and the slope-specific edge stepping) shipped — see `DONE.md`.** Three local blind-judge rounds, both original complaints converged: edge-stepping never reproduced past a mild, ambiguous waviness and a third critic called it "largely resolved... no rectangular notches"; moss saturation measurably dropped (0.36 -> 0.09, at/below the texture's own baseline) via a direct, feathered-mask edit to the CC0 source photo rather than fighting it through a tint multiply. **Two new findings from round 3, out of this item's scope, opened below**: the path reads paler than the references even where moss is fully resolved, and an unmotivated hard-edged shadow crosses sunlit path frames.
 
+**Found independently while blind-judging `EV4`'s paths, 2026-08-11:
+`vegetation.json`'s `path_stones` layer floats disconnected from the real
+paths `EV4` just built.** `path_stones` (26 clumps of 12, `clump_radius`
+8.0, scattered anywhere walkable with `max_slope_deg` 14, `grows_on_paths:
+true`) predates `EV4` — its own `_comment` says "Not a path yet — M7
+authors real paths" — so it was never anchored to `paths.routes`, only
+thinly scattered as a general "warm grey stone note", and nothing in either
+lane's `EV4`/`EV4-textures` work touched it. A blind critic given close-
+range path frames, independently of the lane that shipped the material
+above: "a tidy circular stone group with a hard, clean perimeter against
+grass, disconnected from the actual path by several metres of untouched
+lawn... reads as a decorative sticker dropped onto the lawn rather than a
+paved area that got walked into being" (two separate instances, two
+separate frames). Not `EV4`'s to fix — `vegetation.json`'s own scatter
+rule, `area: vegetation`, not `terrain`. Done when: `path_stones` clumps
+bias toward `path_factor()` instead of scattering independently of it, so a
+stone cluster sits ON the dirt it's supposedly part of.
+
 ### EV4-textures-remainder — Moss blobs still read as a "stamped decal," a content limit not a tunable value
 `model: sonnet` · `tests: none (visual)` · `area: terrain`
 `EV4-textures`' third round confirmed real, described saturation improvement
