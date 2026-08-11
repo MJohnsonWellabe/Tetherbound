@@ -397,17 +397,18 @@ competing for four cores. Do not guess — run it alone with a frame counter or 
 timeout per phase, the way `R4.11` and `RB3` both had to. Done when: either it
 produces frames, or its hang is root-caused and named.
 
-### R9.4 — Visual cohesion pass, the checkpoint for this phase (relocated from Phase 9)
-`model: sonnet` ▶ · `tests: none`
-Re-run `.claude/skills/visual-judge` against `docs/reference/` (the world
-target) once VP1/VP2/R5.1/R7.1/R7.2 above have landed, on a fresh survey
-and a fresh R0.8.5-style full roster pass. Confirm the top findings from
-both 2026-08-09 reviews actually moved, the way `docs/reviews/2026-08-09-
-site-frames-blind-critique.md`'s own "after judging" section requires —
-re-running and comparing sheets, not just asserting the fix landed. This
-being genuinely green (or a documented remainder handed back to the
-owner as still-open) is what "the visual pass work is done" means before
-moving on to Phase 1.
+**The original R9.4 brief is NOT repeated here as an open item** — it ran, and
+an identical heading below its own remainders is how a task gets done twice.
+Its standing instruction outlives it and is quoted here because every
+`-remainder` above inherits it: *confirm the findings actually moved, the way
+`docs/reviews/2026-08-09-site-frames-blind-critique.md`'s own "after judging"
+section requires — re-running and comparing sheets, not just asserting the fix
+landed.* The one part of the original brief the 2026-08-11 pass did NOT
+discharge is the **full-roster creature sheet**: `preview_creatures.gd` ran,
+but the sheet was destroyed before any critic saw it, and the roster has not
+been blind-judged since R0.8.5. `SA5` and `SA6` in Phase -0.75 both need that
+sheet as their starting evidence, so whoever takes them should re-run it first
+and can close this gap in passing.
 
 ---
 
