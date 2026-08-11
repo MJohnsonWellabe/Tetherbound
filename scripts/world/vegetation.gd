@@ -106,10 +106,19 @@ func _retint(mesh: Mesh, overrides: Dictionary, swaps: Dictionary = {}, needs_in
 	if not needs_instance_colour and map.is_empty() and overrides.is_empty() and swaps.is_empty():
 		return mesh
 
-	var out := ArrayMesh.new()
+	# `duplicate(false)` copies the mesh's surfaces (geometry, LOD chain and
+	# all) through ArrayMesh's own storage properties rather than us
+	# reconstructing them by hand. The old code rebuilt via
+	# surface_get_arrays()/add_surface_from_arrays(), which only round-trips
+	# the base LOD0 arrays -- the importer's generated LOD levels and shadow
+	# mesh (meshes/generate_lods, meshes/create_shadow_meshes, both true on
+	# every .glb/.gltf import here) have no public getter and were silently
+	# dropped, so every retinted instance drew at LOD0 at every distance.
+	# `false` (no subresource duplication) is deliberate: the shadow mesh
+	# carries no material and is never touched below, so sharing the one
+	# original instance across every retint variant is correct and free.
+	var out: ArrayMesh = mesh.duplicate(false)
 	for surface in mesh.get_surface_count():
-		var arrays: Array = mesh.surface_get_arrays(surface)
-		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 		var source: Material = mesh.surface_get_material(surface)
 		var key := "" if source == null else source.resource_name
 		out.surface_set_material(surface, _tint_for(key, source, overrides, swaps, needs_instance_colour))

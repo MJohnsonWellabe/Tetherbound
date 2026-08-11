@@ -64,6 +64,7 @@ func _run() -> void:
 	_the_trainer_has_a_model_and_animations()
 	_every_human_fits_at_its_declared_height()
 	_the_meadow_was_dressed()
+	_vegetation_kept_its_lod_chain()
 	_report()
 
 
@@ -274,6 +275,90 @@ func _the_meadow_was_dressed() -> void:
 				break
 		if not any:
 			_fail("layer '%s' has no props in the world" % layer)
+
+
+## SA1-lod: vegetation.gd::_retint() used to rebuild every scattered mesh from
+## surface_get_arrays() alone, which only round-trips the base LOD0 geometry
+## and silently dropped the importer's LOD chain and shadow mesh -- invisible
+## in a screenshot, since LOD0 still looks correct up close. Reads the LOD
+## chain back off a RETINTED instance actually standing in the world and
+## compares it to the un-retinted source file, so a future regression that
+## reintroduces the rebuild-from-arrays pattern fails here instead of shipping
+## as a silent bandwidth cliff.
+func _vegetation_kept_its_lod_chain() -> void:
+	var vegetation: Node = _world.get_node_or_null(^"Vegetation")
+	if vegetation == null:
+		return  # already failed in _the_meadow_was_dressed()
+
+	# CommonTree_1 is scattered by data/config/vegetation.json and its source
+	# .gltf carries a real multi-level LOD chain on both surfaces (bark, leaves)
+	# from meshes/generate_lods=true at import -- dense enough that a
+	# regression back to LOD0-only is not a rounding difference.
+	const SOURCE := "res://assets/environment/stylized_nature/CommonTree_1.gltf"
+	var source_mesh := _first_mesh(SOURCE)
+	if source_mesh == null:
+		_fail("SA1-lod check: could not load the source mesh %s directly" % SOURCE)
+		return
+	var source_lods := _lod_level_counts(source_mesh)
+	if source_lods.is_empty() or source_lods.max() <= 0:
+		_fail("SA1-lod check: %s has no LOD levels to begin with; pick a different source model" % SOURCE)
+		return
+
+	var node: MultiMeshInstance3D = null
+	for child in vegetation.get_children():
+		if child is MultiMeshInstance3D and child.name == "CommonTree_1":
+			node = child as MultiMeshInstance3D
+			break
+	if node == null:
+		_fail("SA1-lod check: CommonTree_1 was not scattered into the world; cannot verify its LOD chain")
+		return
+
+	var retinted := node.multimesh.mesh as ArrayMesh
+	if retinted == null:
+		_fail("'%s' scatter mesh is not an ArrayMesh" % node.name)
+		return
+	if retinted.shadow_mesh == null:
+		_fail("'%s' lost its shadow mesh when retinted" % node.name)
+
+	var retinted_lods := _lod_level_counts(retinted)
+	if retinted_lods != source_lods:
+		_fail("'%s' retinted LOD chain is %s, source is %s -- retinting is discarding LOD levels again" % [
+			node.name, retinted_lods, source_lods
+		])
+	else:
+		print("  vegetation LOD   %s survives retint: %s" % [node.name, retinted_lods])
+
+
+## The first mesh found in a freshly loaded, standalone instance of `path` --
+## NOT the one drawn in the world, so it carries the importer's original LOD
+## chain untouched by any layer's retint.
+func _first_mesh(path: String) -> ArrayMesh:
+	var packed := load(path) as PackedScene
+	if packed == null:
+		return null
+	var scene: Node = packed.instantiate()
+	var meshes := _mesh_instances(scene)
+	var result: ArrayMesh = null
+	if not meshes.is_empty():
+		result = meshes[0].mesh as ArrayMesh
+	scene.queue_free()
+	return result
+
+
+## ArrayMesh has no public getter for a surface's LOD dictionary -- only the
+## internal `_surfaces` storage property (Array[Dictionary], one entry per
+## surface, `lods` key present when the importer generated levels), which is
+## exactly what Resource.duplicate() copies through and what vegetation.gd's
+## fix relies on. Reading it back here is how "the LOD data" gets checked
+## mechanically instead of by eye, per this task's own acceptance criteria.
+func _lod_level_counts(mesh: ArrayMesh) -> Array:
+	var counts: Array = []
+	var surfaces: Array = mesh.get("_surfaces")
+	for entry: Variant in surfaces:
+		var d: Dictionary = entry
+		var lods: Variant = d.get("lods", {})
+		counts.append(lods.size() if (lods is Dictionary or lods is Array) else 0)
+	return counts
 
 
 func _rendered_height(node: Node3D) -> float:
