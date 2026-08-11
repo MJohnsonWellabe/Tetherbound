@@ -294,6 +294,17 @@ frames. Inventory grid, crafting panel, one tracked objective, contextual
 prompt. **Tested at physical 7-inch scale, not on a desktop monitor** — §17 is
 explicit. Input glyphs follow the last-used device.
 
+**Scope note added by `SA0-orbs-remainder`, 2026-08-11: this item already
+owns the narrative panels' button hints, even though the summary above never
+named them.** §16 ("Dialogue") asks for "a controller-first continue prompt"
+and §18's own worked examples open with "E / X button for interact" — the
+exact hint `dialogue_panel.gd` draws today as literal bracket text. So
+`dialogue_panel.gd`, `name_prompt.gd` and `scripts/ui/starter_picker.gd` all
+draw a hint line built the same way (`"[X] / [E]   %s"`-style string
+formatting) and all three are `EV9`'s to replace with real Kenney Input
+Prompts glyphs (staged at `assets_raw/vendor/kenney_input-prompts/`, `EV1`)
+when this item is picked up — not a gap to rediscover mid-task.
+
 ### EV10 ▶ — Cohesion pass
 `model: sonnet` · `tests: none` · `area: visual`
 Bible §22 Phase G and §23's metrics. Re-shoot the same viewpoints, blind-judge

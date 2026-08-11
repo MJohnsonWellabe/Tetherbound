@@ -250,6 +250,18 @@ func _build_preview(viewport: SubViewport, id: String) -> Node3D:
 	key.light_energy = 2.0
 	world.add_child(key)
 
+	# Rim/kicker, from behind and cool-tinted against the warm key — the
+	# specific gap the round-4 blind pass named ("no visible rim/kicker
+	# light... compare this to any of the Palworld shots... rim light").
+	# Roughly opposite the key's yaw so it catches the edges facing the
+	# camera at (0, height*0.55, distance) rather than lighting the same
+	# side twice.
+	var rim := DirectionalLight3D.new()
+	rim.rotation = Vector3(deg_to_rad(-20.0), deg_to_rad(200.0), 0.0)
+	rim.light_energy = 1.3
+	rim.light_color = Color(0.78, 0.87, 1.0)
+	world.add_child(rim)
+
 	var body: Node3D = PAL_SCENE.instantiate()
 	body.name = "Preview_%s" % id
 	body.set_script(PAL_BODY)

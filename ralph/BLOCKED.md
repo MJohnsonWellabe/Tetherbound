@@ -75,6 +75,42 @@ session through cleanly) to complete the claim itself.
 
 ---
 
+### Does the creature roster clear a Palworld-level appeal bar, or does it need to?
+Split out of `SA0-orbs-remainder` (2026-08-11): four blind-judge rounds on the
+starter orb picker converged with the critic calling all three previewed
+creatures — Terrapup, Ripplet, Galewisp alike, not one outlier — "an asset
+preview, not a hero character portrait" next to the Palworld reference set.
+This is broader than any single defect a scene tweak can fix, and broader than
+`SA5`/`SA6`'s mandate, which is narrowly pairwise (stop two specific species
+reading as palette swaps of each other, e.g. Burrowback/Terrapup,
+Galecrest/Galewisp) — nothing in `SA5`/`SA6` asks whether the roster's overall
+finish reaches a Palworld-quality bar, only whether look-alikes are told apart.
+
+**Why this stops here instead of becoming a backlog item.** "Improve creature
+appeal" is not an executable task the way `SA5`/`SA6` are — there is no
+concrete done-when a firing could aim at without first deciding *how much*
+rework is worth doing and on what lever. The only lever available at all is
+material/lighting rework: `D23` §20 and `CLAUDE.md` forbid new creature meshes
+or Meshy regeneration for the Meadows at any balance, reaffirmed with 5000
+credits in the account specifically so a healthy balance would not be read as
+license to reopen it. So the real question is a resourcing one — is a
+roster-wide `grade.py`-style material/lighting pass (beyond the specific
+species pairs `SA5`/`SA6` already own) worth a firing's time, given the
+geometry itself is fixed and cannot close the gap on its own — and that is a
+priority call, not a design-decision-in-CLAUDE.md's-flagged-list call, but it
+still is not a firing's to make unilaterally: it commits real time against a
+ceiling (material rework alone) that may or may not be enough to satisfy the
+bar the owner set.
+
+**Clears when:** the owner says whether a roster-wide material/lighting pass
+is worth commissioning — and if so, whether it is scoped as its own backlog
+item or folded into `SA5`/`SA6`'s existing remit — or accepts the geometry-era
+finish as the cost of the no-new-mesh rule, the same trade `BLOCKED.md`'s
+"creature and human art-pipeline cohesion" entry above already accepted for
+the three toy-finish creatures it named.
+
+---
+
 ### `ASSET_LEDGER.md` licence claim is false
 The ledger states "Everything currently in the build is CC0 1.0." It is not: the
 Meshy-generated creatures and the Plumberry Plains pack are not CC0. The correct
