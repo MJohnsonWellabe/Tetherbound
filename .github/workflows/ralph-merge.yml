@@ -86,4 +86,15 @@ jobs:
         # is still the commit CI went green on before shipping it. Everything
         # else -- the rebase route, the branch delete, the Release dispatch --
         # is in the script, shared with ralph-sweep.yml.
-        run: tools/ci/ship_branch.sh "$BRANCH" "$SHA"
+        #
+        # Copied out of the repo first, for the reason ralph-sweep.yml spells
+        # out: the script checks out other commits in the working tree it runs
+        # from, so it can remove itself from disk. A run already in flight
+        # survives that (bash holds the open fd -- verified), so this single
+        # invocation is not the case that breaks. It is copied anyway so both
+        # callers invoke it the same way, and so this file does not quietly
+        # depend on being the one that only ever calls it once.
+        run: |
+          cp tools/ci/ship_branch.sh "$RUNNER_TEMP/ship_branch.sh"
+          chmod +x "$RUNNER_TEMP/ship_branch.sh"
+          "$RUNNER_TEMP/ship_branch.sh" "$BRANCH" "$SHA"
