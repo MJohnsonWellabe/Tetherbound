@@ -113,6 +113,25 @@ notification when its run finishes.
 | **Ralph lane B** | `9 * * * *` | No | `trig_01TkPuw6fMmjQ2FM5LA5xAKN` | Owner or an agent |
 | **Ralph lane C** | `29 * * * *` | No | `trig_01VgHpVNCrsAWB8xNPBZScjw` | Owner or an agent |
 
+### ⚠ Lanes must be created in the UI, with the repository attached
+
+**An agent cannot create a working lane.** The `create_trigger` tool has no
+`sources` parameter, so the sessions it fires start with **no repository
+checked out**. Two lanes were created that way on 2026-08-11, fired on
+schedule, and produced nothing at all — no lease, no branch, no commit —
+because there was nothing on disk to read. They looked healthy in every listing:
+`enabled: true`, correct cron, sensible `next_run_at`.
+
+Create lanes at `claude.ai/code/routines` with the repo set to
+`MJohnsonWellabe/Tetherbound`. `ralph/LANE_PROMPT.md` holds the exact prompt
+text to paste.
+
+**How to tell a lane is really working:** it writes a lease block to
+`ralph/STATUS.md` on `ralph-status` within a few minutes of firing, before doing
+anything else. `PROMPT.md` requires that ordering precisely so a dead lane is
+visible fast. No block and no `ralph/*` branch ten minutes after a firing means
+the session came up empty.
+
 ### ⚠ Only the owner can pause or resume the "Ralph" Routine
 
 **This is the one genuinely manual step in the whole loop, and it was found the
