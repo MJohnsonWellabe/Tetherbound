@@ -50,7 +50,14 @@ static func using_gamepad() -> bool:
 ## The caller's RichTextLabel needs `bbcode_enabled = true`. Falls back to the
 ## id itself in brackets for an unknown key, so a typo shows as broken text
 ## rather than a blank gap that reads as the icon loaded and was empty.
-static func icon(id: String, px: int = 28) -> String:
+##
+## Default 36, not 28: a blind critic still called `cancel`'s keyboard icon
+## ("ESC", 3 letters baked into a 64px source) illegible mush at 28px after
+## round 2 already swapped the two worse offenders (enter's 5-letter text,
+## the combined arrows glyph) for simpler symbols. 28->36 was the smallest
+## step that read clearly in a local crop test; every other glyph here is
+## already simple enough that a larger render only helps it too.
+static func icon(id: String, px: int = 36) -> String:
 	if not GLYPHS.has(id):
 		return "[%s]" % id
 	var device := "gamepad" if using_gamepad() else "keyboard"
