@@ -310,15 +310,28 @@ exist** in `village_npcs.json`, do not add three more bodies — plus the quarry
 foreman and the rescued ranger/researcher. Done when: every named NPC the
 chapter needs exists on a reused rig.
 
-### NP4 — Generate the three bases from the board
+**`NP4` (generate the three bases) shipped — see `DONE.md`.** Two of three
+(villager_female, grunt) passed a two-round blind critique; villager_male's
+trousers render darker/colder than the reference after three texture
+attempts and villager_female has a persistent UV-seam texture blotch on one
+shin — both recorded there as an honest remainder, not chased further after
+two flat attempts each per `conventions.md`'s stopping rule.
+
+### NP4-rig — Rig, animate and install the three NP4 bases
 `model: sonnet` · `tests: smoke_art` · `area: art` · `lane: art`
-~270 credits of 5000, and the reference sheet the no-generation-without-art rule
-demands already exists — this is one of the only generations currently
-authorised. Order follows the board's own usage notes: the two villager bases
-first (they cover villagers, trainers, workers and crafters — the whole civilian
-cast), Grunt third, because `NP2` lets the Warden rig carry Team Tether
-meanwhile. All three at player height, scale 1.0, hair as separate meshes
-sharing head topology, accessories as separate toggleable parts.
+`NP4`'s three textured GLBs (`assets_raw/villager_female|villager_male|grunt/textured/model.glb`)
+have no path into the game yet: `finish.py`'s `rig`/`install` subcommands are
+creature-only (`RIGS` = quadruped/glider/bird/sitter, and `install` targets
+`assets/pals/tetherbound/<species>/models/`, not `assets/characters/`).
+Trainer/Grandpa/Warden were rigged and installed by some manual process
+predating `finish.py`'s current shape — that process needs re-deriving or
+`finish.py` needs a humanoid path added, then `meshy.py rig` (documented
+humanoid-only) + `blender/animate_humanoid.py` + a manual copy to
+`assets/characters/<species>/<species>_lod0.glb`, matching the existing
+three. No credits needed beyond what `NP4` already spent; the blocker is
+pipeline plumbing, not art. Nothing consumes these bases yet (`NP1`/`NP3`
+both reuse the existing trainer/Grandpa/Warden rigs directly), so this has
+no urgency — take it whenever `area: art` is free and nothing above it is.
 
 ---
 

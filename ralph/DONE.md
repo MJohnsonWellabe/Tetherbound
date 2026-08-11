@@ -145,6 +145,73 @@ item's named tests, run anyway as a diligence check given the scope of the
 `sequence_director.gd` changes; not repeated on later commits since nothing
 touched after that point could plausibly affect it.
 
+## NP4 — Generate the three bases from the board
+`fa7636b`/`51c5f28`/`1429832` · `tests: smoke_art` (green, local + import)
+
+`villager_female`, `villager_male` and `grunt` added to `views.json` (5
+turnaround columns per row on `docs/art/reference/12_NPC_Bases_Reusable.png`
+— more than any other sheet in the pack — only 4 of 5 named per row, since
+`meshy.py`'s `VIEWS` has no slot for a second three-quarter angle; see the
+sheet's own `_comment_npc_bases`) and to `meshy.py`'s `SPECIES_PROMPTS`/
+`HUMANS`. Two crop-time defects found and masked out: a decorative title
+flourish bled into `villager_female`'s front crop, and `grunt`'s row has no
+clean gap between its feet and its own FRONT/SIDE/etc. caption row.
+
+Generated 3 preview candidates per base (candidate `a` won all three on
+fidelity to the board), cleaned with `blender/cleanup_mesh.py` (57k-tri
+non-manifold triangle soup → clean 28k-tri manifolds) and retextured.
+
+**Two full rounds of the mandatory blind visual-judge pass** (`conventions.md`),
+each a genuinely blind subagent with no knowledge of what changed:
+
+- **Round 1** found real defects: `villager_female`'s twin ponytails invisible
+  in the FRONT silhouette (reads as a bob), `villager_male`'s vest textured
+  brown against what looked like a blue-gray reference, `grunt`'s face
+  rendered completely bare with no mask/goggle geometry.
+- **Investigated before reacting.** The vest "defect" traced to the reference
+  sheet itself: `12_NPC_Bases_Reusable.png` draws `villager_male`'s vest
+  blue-gray in the FRONT panel only and brown in the other four (3/4-front,
+  side, 3/4-back, back) — confirmed by eye against the source PNG, not a crop
+  bug. The render was correctly following the turnaround's majority signal;
+  told round 2's critic about this so it wouldn't re-flag an inconsistency
+  that isn't the model's fault.
+- Strengthened all three prompts (ponytail-from-front emphasis, dropped the
+  wrong vest colour, added goggles as a named signature feature) and
+  re-generated/re-textured. **Real, verified improvement on `grunt`**: round 2
+  confirmed a mask and defined eyes now render where round 1 found bare skin,
+  and marked `grunt` **ACCEPTABLE as-is**. **No improvement on
+  `villager_female`'s ponytail** after a fresh 2-candidate regeneration —
+  multi-image-to-3D is dominated by the 4 reference images (which themselves
+  only show subtle ponytail wisps from the front) more than by prompt text,
+  and round 2 itself judged the front-view occlusion "minor... a viewing-angle
+  artifact, not a missing asset," which is the honest read of a genuine tier
+  limit, not a regression.
+- Round 2 surfaced two **new**, real defects that round 1's coarser sheet
+  hadn't resolved: `villager_female` has a blotchy, asymmetric UV-seam-style
+  texture smudge on one shin/leg (retried the retexture once more, identical
+  result both times — not retry noise, a base-mesh UV defect) and a missing
+  chest cord/strap; `villager_male`'s trousers render too dark/cold
+  (near-charcoal) against the reference's warm medium chocolate brown (tried
+  a third retexture naming the actual tone explicitly — no movement).
+
+**Stopped here per `conventions.md`'s convergence rule** — two dedicated
+attempts at both `villager_female`'s leg texture and `villager_male`'s
+trousers colour produced no movement, the signature of a tuning wall rather
+than an in-progress fix (same pattern as `R9.4`'s "needs art that is not in
+the build" wall). Shipping `grunt` as fully converged/acceptable and the two
+villager bases with their specific remaining defects named plainly rather
+than iterating further or quietly calling them done. `NP4-rig` in
+`BACKLOG.md` is the follow-on (rig/animate/install have no humanoid path in
+`finish.py` at all — that is separate plumbing work, not blocked on these
+defects).
+
+Committed the winning lineage into `assets_raw/` per the existing wild-roster
+convention (e.g. `brooktail`): each base's 3 generate-stage candidates +
+`manifest.json` + the winning texture pass, not the intermediate
+`build/clean.glb` or the abandoned round-2 regeneration attempt (~600 credits
+spent total across generate + 3 rounds of retexture fixes; balance checked
+before/after every call, never exceeded plan).
+
 ## EV1 (Kenney half) — the four HUD/icon packs, staged and ledgered
 `fb396b8` · `tests: none` (EV1's own field)
 
