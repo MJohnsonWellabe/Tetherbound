@@ -3,6 +3,53 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## LP3 — release.yml's own concurrency setting was starving the download build
+`dd72a2a`, landed by direct fast-forward push to `main` per `tools/ci/ship_branch.sh`'s
+own instruction (see below) — not a bypass of the "never push to main" rule,
+the fix `LP4` shipped is what tells a firing to do exactly this once the cap
+trips.
+
+**The bug:** `release.yml`'s `concurrency: cancel-in-progress: true` killed
+whatever Release run was currently in flight the instant a new push landed to
+`main`. The job's real work (Godot install, import, export, boot-check the
+exported `.exe`, package, publish) takes several minutes — far longer than the
+gap between pushes once multiple Ralph lanes land concurrently by design.
+Found by checking pipeline health first, per the updated `PROMPT.md`: the
+published release's `published_at` was over a week stale (`2026-08-03`)
+despite dozens of real commits landing on `main` since — D23/D24, EV1–EV10,
+NP1–NP4 among them. A sampled cancelled run's job log confirmed it directly:
+killed 14 seconds after starting, still on checkout, every later step skipped.
+Fix: `cancel-in-progress: false`, so runs queue instead of dying — every push
+either finishes or waits its turn.
+
+**Shipping this one-line fix took roughly three and a half hours and became
+its own investigation.** `ralph/LP3` went through 15 rebase cycles chasing
+`main` as it moved under a green-CI branch that could never fast-forward. This
+firing's own repeated manual `ci.yml` redispatches (via the GitHub API, a
+different token identity than the bot's own `gh workflow run` calls) kept
+producing completions that DID trigger `ralph-merge.yml` — while every
+bot-dispatched completion silently did not, a clean, repeated pattern across
+every single rebase cycle. That observation matches `LP4` exactly (see below,
+shipped independently mid-firing by an owner-directed session): the
+`GITHUB_TOKEN` recursion guard blocks `workflow_run` from firing for a
+`workflow_dispatch` run that same token initiated, so `ralph-merge.yml`'s own
+rebase-and-redispatch healing loop could dispatch CI but could never see it
+finish. `LP4`'s fix (`ralph-sweep.yml` + `tools/ci/ship_branch.sh`'s `MAX_REBASES`
+cap) landed on `main` mid-struggle, but `ralph/LP3` had already accumulated
+more rebase attempts than the new cap allows before the fix took effect, so
+`ship_branch.sh` stopped it with an explicit "A human or a firing has to land
+it" rather than burning another CI run. Rebased `ralph/LP3` onto `origin/main`
+locally (clean, single-file diff, no conflicts), verified the diff was
+exactly the intended one-line change, and fast-forward-pushed directly —
+the same action the script itself takes, just run by hand once the automation
+declined to. Dispatched `release.yml` manually afterward for the same reason
+`ship_branch.sh`'s own last step exists: the push that lands on `main` cannot
+trigger it on its own.
+
+**Worth knowing for whoever watches the next Release run:** confirm
+`published_at` actually advances past `2026-08-03` — that's the real proof
+this works, not just the merged diff.
+
 ## LP4 — Green branches were silently never merging; four were stranded
 Owner-directed interactive session, 2026-08-11. See `D26` for the full record.
 

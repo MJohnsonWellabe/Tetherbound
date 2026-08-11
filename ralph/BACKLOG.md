@@ -124,6 +124,13 @@ within ~15 minutes, do NOT assume it is lost or start a second attempt. The
 sweep lands it. If it is still there after two sweeps, read the sweep run's log
 — a conflict or the rebase cap will name your branch explicitly.
 
+**`LP3` (`release.yml`'s `cancel-in-progress` starving the download build)
+fixed — see `DONE.md`.** The concrete case the note above is written for:
+`ralph/LP3` had already burned 15 rebase cycles to the exact bug `LP4` fixed
+before that fix landed, so it arrived at the new cap already over the limit.
+`tools/ci/ship_branch.sh` stopped and named it explicitly, per design, and
+this firing landed it by hand the way the script's own message says to.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
