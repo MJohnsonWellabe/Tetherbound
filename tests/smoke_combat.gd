@@ -325,7 +325,19 @@ func _a_swing_at_empty_air_misses() -> void:
 	out.y = 0.0
 	if out.length() < 0.5:
 		out = Vector3(1, 0, 0)
-	_ally.global_position = centre + out.normalized() * (radius - 1.5)
+	var target := centre + out.normalized() * (radius - 1.5)
+	# Re-grounded rather than trusting the arena centre's own height (D09: ask
+	# the world, never carry a Y across a horizontal move) -- the same bug
+	# `combat_manager.gd::_stand_the_trainer_aside` already paid for once. On
+	# rolling terrain a 9.5m horizontal jump can land well off `centre`'s own
+	# height; carrying it forward embedded the pal under a one-sided heightfield
+	# collider with no floor to catch it, and it fell through the world for the
+	# rest of the fight -- the actual cause behind this file's own flake entry,
+	# found by watching real position/velocity logs across ~20 runs rather than
+	# reasoning about it (`ralph/BACKLOG.md` LP1, `ralph/PROMPT.md`'s R4.11/RB3
+	# precedent).
+	if not bool(_ally.call("place_on_ground", target)):
+		_ally.global_position = target
 	if _ally is CharacterBody3D:
 		(_ally as CharacterBody3D).velocity = Vector3.ZERO
 	for i in 3:
