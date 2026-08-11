@@ -3,6 +3,81 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV8 — Lighting and atmosphere
+
+Two rounds of the blind pass, both entirely local (five renders total, one
+push). Closes `R9.4-remainder-2`.
+
+**Root cause of the pale horizon (`R9.4-remainder-2`) was not fog.** Every
+outdoor frame showed a large pale wavy dune-shaped mass filling 30-50% of the
+upper frame past the 512m bake — not subtle washing, an actively ugly shape,
+because Terrain3D's `world_background = 2` (NOISE) continues the terrain
+procedurally with visible dune-like relief and no colour/texture control.
+`FLAT` (1) was already ruled out (0.146 luminance seam). The untried third
+option, `world_background = 0` (NONE) — draw nothing past the bake, let the
+real sky show through — turned out to be the fix: `frame_stats` sky% dropped
+from ~40-52% to 12-26% across the five exploration frames, inside or near
+Palworld's 2-21% reference range, with no seam regression (max 0.09 across
+all five, well under the FLAT-mode 0.146-0.18 benchmark).
+
+**Root cause of the sky-treatment inconsistency (EV8's other named defect)
+was the photographic HDRI panoramas.** `day.hdr`/`golden.hdr` are static
+equirect photos with their own baked-in sun position, unrelated to
+`art.json`'s `sun.pitch_deg`/`yaw_deg` — so whichever way a viewpoint faced,
+the photographed sky and the real `DirectionalLight3D` could disagree about
+where the light was coming from. Round 1's blind critic caught this exactly:
+`02-valley-floor`'s sky read as dusk while its own ground lit as bright
+midday, same "day" preset as three other frames that looked correctly
+midday. Dropped both panoramas back to the existing procedural-gradient
+fallback (already built for this purpose, previously used only by `night`),
+whose glow is generated from the real sun direction and so cannot disagree
+with the ground in any direction — not just survey's five. Confirmed:
+`02`'s sky matches `01`/`03`/`04` exactly after the fix. Costs the cloud
+detail the panoramas bought; `ProceduralSkyMaterial` cannot render clouds at
+all (documented in `world_look.gd`'s own long-standing comment) — an
+accepted, deliberate trade for the consistency EV8 exists to deliver, not an
+oversight.
+
+**A third, smaller fix**: `fog_colour` didn't match `sky.horizon_colour` for
+any of the three time presets (`day` was `#cdd0c6` vs. a `#b9c8cf` horizon).
+Since `fog_sky_affect` is deliberately 0 (the sky is never fogged), those two
+colours are the only thing that has to agree for distance-fogged terrain to
+meet the sky without a seam — round 1's critic caught this too, as a hard
+pale band sitting well short of the true horizon in `03-rise-overlook`.
+Matched all three presets' fog colour to their own horizon colour.
+
+**Round 2 also caught `05-spawn-low-sun`'s ground crushed near-black**
+against a still-bright sky once the panorama stopped partially masking it.
+Lifted golden's `ambient_energy` 1.15 → 1.5 (measured: near-field luminance
+0.126 → 0.139); the cool ambient tint stays deliberate (real golden-hour sky
+fill reads cool against a warm key).
+
+**Stopped after round 2**, not because nothing moved (round 2 named real
+things round 1 hadn't) but because what was left split cleanly into
+out-of-scope and structural-tradeoff, neither of which EV8 can address:
+frame emptiness/density and creature/character art quality were both
+round 1's and round 2's #1 and #2 ranked gaps, and both are already owned
+elsewhere — `EV3` (scatter/clustering) and `BLOCKED.md`'s standing
+creature-appeal entry, respectively, not new findings this task can act on.
+One genuinely unresolved residual: `03-rise-overlook` still shows a soft
+grey-white horizontal band at the horizon, unmoved by the fog-colour fix
+(`frame_stats` seam stayed 0.009 before and after) — this looks like a
+structural consequence of `world_background = 0` at this viewpoint's
+elevated, grazing-angle look: gaps between distant ridgelines show the sky
+dome's own sky-hemisphere/ground-hemisphere seam through them. Small (well
+under any seam threshold that's flagged a problem elsewhere in this file)
+and not further reachable by fog or ambient tuning; worth knowing about if
+`EV3`/`EV5` end up reshaping the terrain this viewpoint looks across.
+
+Warm sun and cool ambient fill (the bible's other two `EV8` asks) were
+already correctly built via `art.json` + `world_look.gd` before this task —
+verified intact, not reworked.
+
+`80db19f` (config-only: `data/config/art.json`,
+`data/config/terrain_playground.json`) · `tests: none` named; ran
+`tests/smoke_art.gd` anyway since the touched file also carries creature/human
+config (untouched sections) — green.
+
 ## EV9 (first slice) — the exploration HUD, for real this time
 `eea16a9` · `tests: smoke_menu` green, plus `run_tests.gd` (299/299),
 `smoke_mouse_look`, `smoke_playground`, `smoke_opening`, all run locally

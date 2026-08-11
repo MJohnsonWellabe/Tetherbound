@@ -280,12 +280,9 @@ Bible §2 P3: *do not* dump props everywhere. Authored clusters — work area,
 farmhouse yard, bridge repair site, quarry station, trainer camp. Absorbs the
 rest of `R9.4-remainder-5`.
 
-### EV8 — Lighting and atmosphere
-`model: sonnet` · `tests: none` · `area: lighting`
-Bible §14. Warm sun, cool fill, fog that describes depth instead of eating it,
-and one sky/fog treatment shared across every viewpoint — the survey currently
-disagrees frame to frame, which is `R9.4-remainder-2`. Compatibility renderer
-constraint holds: fake it, do not re-enable Forward+ features.
+**`EV8` (lighting and atmosphere) shipped — see `DONE.md`.** Two rounds of the
+blind pass. Warm sun and cool fill were already correct and are unchanged;
+the pale-horizon and sky-inconsistency defects (`R9.4-remainder-2`) are fixed.
 
 ### EV9 — Rebuild the HUD
 `model: opus` · `tests: smoke_menu` · `area: ui`
@@ -682,13 +679,13 @@ scripts/world/build_playground_terrain.gd`), and `frame_stats` puts mean
 saturation inside 0.40–0.50 without the ground going grey. Expect a large
 binary diff on the `.res` files; that is the cost of the fix, not a mistake.
 
-**R9.4-remainder-2 COLLAPSED into `EV8`**, which already names it. The third of
-its three options — *lean into it with a deliberate haze that reads as
-atmosphere rather than as absence* — is exactly `EV8`'s brief, and `EV8` also
-owns the one-sky-treatment-everywhere fix this entry's sibling finding asked
-for. Note the constraint it carries: `world_background = 1` (FLAT) was already
-tried and measured a 0.146 luminance step across the whole frame, so that door
-is closed, not untried. Evidence kept:
+**R9.4-remainder-2 CLOSED by `EV8` — see `DONE.md`.** Neither of the costed
+options fired: not a bigger bake, not authored distant geometry. The actual
+fix was a third Terrain3D setting nobody had tried — `world_background = 0`
+(NONE) draws nothing past the bake instead of NOISE's dune-shaped continuation
+or FLAT's hard seam — paired with dropping the photographic sky panoramas,
+whose baked-in sun position doesn't track this file's own sun angle and was
+the real cause of the sky-treatment inconsistency. Evidence kept:
 
 Original entry — The world past 512m draws pale and colourless:
 
