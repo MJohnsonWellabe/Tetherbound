@@ -19,9 +19,9 @@ func _run() -> void:
 		quit(1)
 		return
 
-	var centre := Vector2(-165.0, -150.0)
-	var bearing := Vector2(165.0, 150.0).normalized()
-	for d in [0.0, 10.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 58.0, 60.0]:
+	var centre := Vector2(140.0, -90.0)
+	var bearing := Vector2(1.0, 0.0)
+	for d in [0.0, 20.0, 30.0, 38.0, 42.0, 45.0, 50.0, 55.0, 58.0, 60.0, 65.0, 70.0]:
 		var p: Vector2 = centre + bearing * d
 		var pos := Vector3(p.x, 0.0, p.y)
 		var base = data.call("get_control_base_id", pos)
