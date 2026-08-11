@@ -292,11 +292,20 @@ func _grandpa_says_his_piece() -> void:
 	# started the conversation is the same press it would read as "next" — and a
 	# test that called the method would never notice that guard going wrong in
 	# either direction.
+	#
+	# `_press_polled`, not `_press` — LP2. `dialogue_panel.gd` reads `interact`
+	# by polling `Input.is_action_just_pressed` in `_physics_process`, exactly
+	# the class of reader `_press_polled`'s own comment already names for
+	# `menu_confirm` ("under a heavy scene the two can land in DIFFERENT
+	# physics frames, which a polling reader counts as two presses"). Beat 3
+	# was the one caller of `_press("interact")` still sending the belt-and-
+	# braces parsed event nothing here needs — `interact` never drives Control
+	# focus, so there is no focus-navigation reason for it, unlike `ui_*`.
 	var lines := 0
 	for i in 40:
 		if not bool(_dialogue.call("is_open")):
 			break
-		await _press("interact")
+		await _press_polled("interact")
 		lines += 1
 	if bool(_dialogue.call("is_open")):
 		_fail("the conversation would not end after %d presses of `interact`; the panel is not advancing" % lines)
@@ -602,7 +611,11 @@ func _walk_to_and_activate(target: Node3D) -> bool:
 			_player.global_position.distance_to(target_at)])
 		return false
 
-	await _press("interact")
+	# `_press_polled`, not `_press` — see the LP2 note in `_grandpa_says_his_piece`.
+	# `interaction_arbiter.gd` reads `interact` the same way `dialogue_panel.gd`
+	# does, by polling `is_action_just_pressed` in `_physics_process`, so this
+	# shares the same double-count risk under a heavy scene.
+	await _press_polled("interact")
 	for i in 20:
 		await physics_frame
 	return true
