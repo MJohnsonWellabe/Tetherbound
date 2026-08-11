@@ -90,6 +90,11 @@ var _beat: String = ""
 var _grandpa: Node3D = null
 var _grandpa_prompt: Node3D = null
 var _bed_prompt: Node3D = null
+## The house, if this world built one — SA2's door gate lives on it (a
+## collision box across the doorway; this director only decides when it is
+## solid). Null in a bare test scene, which is a legal world and simply has
+## no door to gate.
+var _house: Node3D = null
 ## Where the bed is, in world space. Held separately from `_bed_prompt` because
 ## the wake beat's positional fallback has to work even when no prompt was ever
 ## built — which is the second, harder route into the same soft-lock: a world
@@ -256,6 +261,7 @@ func _process(delta: float) -> void:
 	_drain_effects()
 	_refresh_lockout()
 	_refresh_prompts()
+	_refresh_door_gate()
 	_check_left_the_bed()
 	_maybe_open_picker()
 
@@ -361,6 +367,43 @@ func _refresh_prompts() -> void:
 		_bed_prompt.call("set_enabled", _beat == BEATS.WAKE)
 
 
+## SA2 (spec sec1D). "The player cannot leave Grandpa's house until the
+## required Grandpa opening interaction is complete." The physical stop is
+## grandpa_house.gd's own collision box; this decides when it is solid, and
+## opens it for good once the beat that sends the player outdoors is
+## reached — the spec's own "never re-triggers this gate" once earned.
+##
+## The one thing it does beyond blocking: an approach at the door, while the
+## required briefing has not been heard yet, starts it — the same
+## conversation pressing interact on Grandpa would open. Spec sec1D is
+## explicit that a sterile "the door is locked" message is the wrong shape
+## here — the player is meant to walk toward the door, get called back, and
+## end up in the conversation naturally, not read an error about it.
+##
+## Restricted to the `house` beat specifically, not every beat the gate
+## covers. `choose` and `name` are also before `walk_out` (the door stays
+## physically shut through both, correctly), but their own conversations
+## are incidental ("Still deciding?"), not the required one — and the
+## player is standing right where the briefing left them, close enough to
+## the door to be back inside the callout radius the instant a panel closes.
+## Triggering on every gated beat reopens a new conversation the moment the
+## last one's box clears, which starves `_maybe_open_picker()` of the
+## closed-dialogue frame it needs and the starter picker never opens.
+func _refresh_door_gate() -> void:
+	if _house == null or not is_instance_valid(_house):
+		return
+	var door_open := BEATS.at_or_after(_beat, BEATS.WALK_OUT)
+	_house.call("set_door_open", door_open)
+	if door_open or _beat != BEATS.HOUSE:
+		return
+	if bool(_dialogue.call("is_open")) or _adopting:
+		return
+	var door: Vector3 = _house.call("marker", "door")
+	if _player.global_position.distance_to(door) > DOOR_CALLOUT_RADIUS:
+		return
+	_start_conversation(BEATS.conversation_for(_beat))
+
+
 ## The picker cannot open on the same frame the beat reaches `choose` — the
 ## dialogue box carrying that effect is still open on that frame — so this
 ## polls until it closes, the same "recomputed every frame, no pushed state"
@@ -441,6 +484,7 @@ func _tick_fade(delta: float) -> void:
 ## it. A creature hung under a plain Node is also outside the 3D transform chain.
 func _spawn_the_cast() -> void:
 	var house := await _wait_for_the_house()
+	_house = house
 	var cfg := BEATS.grandpa()
 
 	if house != null:
@@ -550,6 +594,15 @@ func _on_bed_activated() -> void:
 ## intended path, and comfortably inside the loft so descending the stairs
 ## cannot outrun it.
 const BED_LEAVE_RADIUS := 3.2
+
+## SA2 (spec sec1D). How close to the exterior doorway counts as "trying to
+## leave" — Grandpa calls out before the player actually collides with the
+## gate, so the redirect reads as noticing them heading for the door rather
+## than as bumping into an invisible wall and only then getting a reaction.
+## Comfortably inside the door's own solid collision (built in
+## grandpa_house.gd, roughly 1.2m short of the "door" marker this measures
+## against).
+const DOOR_CALLOUT_RADIUS := 2.6
 
 func _check_left_the_bed() -> void:
 	if _beat != BEATS.WAKE or _bed_anchor == null:

@@ -98,6 +98,7 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_build_furniture()
 	_build_lights()
 	_build_interior_area()
+	_build_door_gate()
 
 	_markers["bed"] = to_global(Vector3(-INNER_W * 0.5 + 1.3, FLOOR_H + 0.55, -INNER_D * 0.5 + 1.6))
 	_markers["grandpa"] = to_global(Vector3(-2.4, 0.0, 1.2))
@@ -524,3 +525,37 @@ func _on_body_exited(body: Node3D) -> void:
 	if body != _player or _camera_rig == null:
 		return
 	_camera_rig.call("set_target", _player, {})
+
+
+## SA2 (spec sec1D): "the player cannot leave Grandpa's house until the
+## required Grandpa opening interaction is complete." A collision box across
+## the doorway, not a visible closed door — this file's own header already
+## explains why: the door leaf is left open against the wall because a
+## closing animation is out of scope for the slice, so a second, shut door
+## standing in the same opening would look like a modelling error rather
+## than a story beat. The gate's own feedback is Grandpa's conversation
+## starting (sequence_director.gd's job), not a visible barrier.
+var _door_gate_shape: CollisionShape3D = null
+
+func _build_door_gate() -> void:
+	var half_w := INNER_W * 0.5 + WALL_T
+	var door_z := 0.6
+	var body := StaticBody3D.new()
+	body.name = "DoorGate"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(WALL_T, DOOR_H, DOOR_W)
+	shape.shape = box
+	body.add_child(shape)
+	body.position = Vector3(half_w + WALL_T * 0.5, DOOR_H * 0.5, door_z)
+	add_child(body)
+	_door_gate_shape = shape
+
+
+## Polled every frame by sequence_director.gd, the same "recomputed, never
+## pushed" rule it already keeps for the interact lockout and the prompts —
+## a gate set once and never revisited is a gate that is wrong the first
+## time the beat changes under it.
+func set_door_open(open: bool) -> void:
+	if _door_gate_shape != null:
+		_door_gate_shape.disabled = open

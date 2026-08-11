@@ -114,6 +114,7 @@ func _run() -> void:
 
 	await _the_trainer_can_walk()
 	await _the_trainer_gets_up_from_the_bed()
+	await _the_door_is_gated_until_grandpa_is_heard()
 	await _grandpa_says_his_piece()
 	_grandpa_handed_over_the_pack()
 	await _a_starter_can_be_chosen()
@@ -259,6 +260,46 @@ func _grandpa_handed_over_the_pack() -> void:
 	else:
 		print("the pack: %d orbs, %d potions, %d berries in the satchel" % [
 			orbs, potions, int(inventory.call("count", "berries"))])
+
+
+## SA2 (spec sec1D): "the player cannot leave Grandpa's house until the
+## required Grandpa opening interaction is complete." Walks the player
+## straight at the exterior doorway, skipping Grandpa entirely — proving the
+## gate fires from an approach at the door, not only from pressing interact
+## on him, and that the sequence starts the briefing itself rather than
+## printing a sterile "talk to Grandpa first" error (which spec sec1D rules
+## out by name). `_grandpa_says_his_piece()` below already knows how to
+## advance a conversation that is open on arrival, so this leaves the box
+## open for it rather than closing it here.
+func _the_door_is_gated_until_grandpa_is_heard() -> void:
+	var house := _world.get_node_or_null(^"GrandpaHouse")
+	if house == null:
+		# No house in this world: SA2 has nothing to gate. grandpa_house.gd
+		# documents a houseless world as a legal one (the bare smoke boots).
+		return
+
+	await _walk_toward_point(house.call("marker", "stairs_top"), 300)
+	await _walk_toward_point(house.call("marker", "stairs_bottom"), 300)
+	# Via the open floor in front of Grandpa (stops 0.8m short of him, same as
+	# any `_walk_toward_point` target — never close enough to touch his own
+	# collider), not a straight line from the stairs' foot: that line clips
+	# the corner where the stairs and a piece of furniture meet the north
+	# wall, and a homing walk wedged into a corner makes no progress at all,
+	# door gate or not.
+	await _walk_toward_point(house.call("marker", "grandpa"), 300)
+	await _walk_toward_point(house.call("marker", "door"), 400)
+
+	if not bool(_dialogue.call("is_open")):
+		_fail("walking straight at the exterior door opened no conversation with Grandpa still unheard")
+		return
+	print("door gate: heading for the door opened '%s' with no interact press" % str(_dialogue.call("runner").call("conversation_id")))
+
+	var door: Vector3 = house.call("marker", "door")
+	var short_by := _player.global_position.distance_to(door)
+	if short_by < 0.8:
+		_fail("the player reached %.1fm from the exterior door marker while beat is still '%s'; the doorway did not physically stop them" % [short_by, str(_director.call("beat"))])
+		return
+	print("door gate: stopped %.1fm short of the door while beat is '%s'" % [short_by, str(_director.call("beat"))])
 
 
 ## Beat 3. Walk to Grandpa and press the button the prompt is offering.
