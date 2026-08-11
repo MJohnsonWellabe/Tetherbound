@@ -193,9 +193,10 @@
     "rock": "#cfcdc4",
     "soil_slope_deg": 30.0,
     "rock_slope_deg": 44.0,
-    "blend_deg": 7.0,
+    "blend_deg": 14.0,
     "slope_sample_step": 6.0
   },
+  "_comment_blend_deg_r2": "EV4-hillside-seam round 2. Was 7.0. A blind critic given round-1 frames (slope_sample_step alone) still named a hard, unblended seam in a close-range shot -- 7 degrees of slope is a narrow band in world metres on these flanks (roughly 5-10m depending on local steepness), narrow enough to read as a cut rather than a gradient at standing distance. Doubled so the crossfade has more room to actually read as gradual. TUNABLE; if the transition starts looking muddy/smeared, this went too far.",
   "_comment_slope_sample_step": "EV4-hillside-seam. The grass/soil/rock band is picked from slope, and slope was sampled with the SAME 1m central-difference step as the geometry itself -- so every texture decision saw the `detail` noise layer's own ripple (frequency 0.018, ~14m at its highest FBM octave, amplitude enough to swing slope roughly +-14 degrees) on top of the actual macro shape. Against a 7-degree blend_deg that ripple is bigger than the band it is supposed to smooth, so a rise's flank does not read as one coherent ring per material -- it reads as whichever material the local noise happened to push slope past THIS pixel, over and over, which is the 'camouflage' pattern a blind critic named twice (EV4 round 3, EV4-hillside-seam). Sampling slope at a wider step low-passes exactly that ripple while leaving the geometry, collision and vegetation placement (scatter_rules.gd calls slope_degrees_at with its own default step) untouched -- this value is read ONLY by build_playground_terrain.gd's two texture bakes. TUNABLE: too small and the blotching returns, too large and the band stops following the rise's own shape and reads as a smeared ring.",
   "_comment_shader": "Terrain3D shader settings. Every one of these is TUNABLE presentation and none of them touches collision or height — the bake is authored data and this is only how it is drawn.",
   "shader": {
@@ -263,8 +264,9 @@
       "roughness_mod": 0.05,
       "detiling_rotation": 0.22,
       "detiling_shift": 0.3,
-      "tint": "#a4a4a4",
+      "tint": "#c9a874",
       "_comment_tint_r9_4": "R9.4. Rebalanced against the new grass value, not repainted. Soil is now ~1.35x grass in value instead of ~1.9x: the old ratio is what made the slope blends read as blown-out tan stripes rather than as ground (R7.1-found-3, and the blind critic's 'hard axis-aligned staircase' on frame 03). Hue is untouched -- warm dirt is exactly what the critic asked for MORE of. TUNABLE.",
+      "_comment_tint_ev4_hillside_seam": "EV4-hillside-seam round 2. Was neutral grey #a4a4a4 -- a pure brightness scale with no hue shift, so Ground003_Color.jpg's own greenish weedy-lawn photo content stayed greenish, and a blind critic reading the baked hillside said the transition 'fades from black rock texture straight to green grass texture with no third element between them.' This is NOT the same attempt EV4 already tried and reverted -- that one warmed soil specifically to fake a close-range DIRT PATH (a much higher bar, since a path is scrutinised standing on it) and failed because the photo's own grass tufts show through at that distance regardless of tint. Soil is no longer used for paths at all (EV4 round 5 gave paths their own Ground030 texture); its only remaining job is the hillside slope band, judged from further away, where the bar is just 'reads as a third material, not grass and not rock' rather than 'reads as convincing dirt underfoot.' Suppresses blue/green relative to red so the underlying photo multiplies toward tan instead of stone-grey. TUNABLE.",
       "_comment_ev4_reverted": "EV4 tried tinting/de-relief-ing THIS texture warmer for paths across three rounds (rounds 2-3) and hit a wall: Ground003_Color.jpg is a photo of a weedy lawn with real green grass tufts painted into its own albedo, which no tint or normal_depth can repaint. Reverted to the original R9.4 values once EV4-textures' pre-sourced Ground030 (a real dirt/pebble pathway photo) gave paths their own dedicated texture instead -- this texture is back to doing only what it always did, hillside slope transitions, and carries no path-specific risk any more."
     },
     {

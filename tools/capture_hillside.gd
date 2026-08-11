@@ -60,14 +60,6 @@ const VIEWPOINTS := [
 		"target": Vector2(140.0, -90.0), "target_h": 20.0,
 	},
 	{
-		# Standing mid-soil-band (d=50), looking further up into where rock
-		# starts (d=58+) — the soil/rock boundary itself. Close-range and
-		# low, but this one rendered cleanly in testing; kept as-is.
-		"name": "flank-mid",
-		"eye": Vector2(190.0, -90.0), "eye_h": 1.7,
-		"target": Vector2(206.0, -90.0), "target_h": 14.0,
-	},
-	{
 		# The same dome from due north instead of due east — whether the
 		# transition reads as one coherent ring around the whole rise, not
 		# just on the one bearing every other viewpoint here measures.
