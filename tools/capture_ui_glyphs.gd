@@ -45,39 +45,50 @@ func _run() -> void:
 	var written: Array[String] = []
 	var failures: Array[String] = []
 
+	# NOT AN EV9 BUG, found while building this capture: CombatHUD's Prompt
+	# row is never hidden outside a fight (by design -- it has to keep
+	# showing "Engage X" before a fight starts) and encounter_director.prompt()
+	# DELEGATES to the same arbiter interaction_arbiter.gd drives whenever one
+	# is present, so CombatHUD silently mirrors WHATEVER exploration prompt is
+	# showing, not just an engage offer -- confirmed here: both panels read
+	# "Get up" off the bed's real offer, stacked on screen, simultaneously.
+	# Recorded as its own BACKLOG.md item (EV9-double-prompt) rather than
+	# fixed here -- it is a combat/exploration arbitration bug, not a glyph
+	# one, and touching that logic is a different-shaped task. Isolating
+	# each HUD explicitly below so these two shots stay clean regardless.
+	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	var combat: CanvasLayer = world.get_node_or_null(^"CombatHUD") as CanvasLayer
+
 	# 1. Exploration HUD contextual prompt -- the bible sec16 element itself.
 	# The player starts in bed, which registers a real "Get up" offer through
 	# interaction_arbiter.gd -- letting that stand rather than poking the
-	# label directly gets a real, organically-arbitrated prompt instead of a
-	# synthetic one, and sidesteps whatever RichTextLabel does with a rapid
-	# text swap right before a screenshot (a first attempt here showed a
-	# doubled line after overwriting the label's text once by hand).
-	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	# label directly gets a real, organically-arbitrated prompt.
 	if hud != null:
+		if combat != null:
+			combat.visible = false
 		var prompt_label: RichTextLabel = hud.get_node_or_null(^"Root/Prompt") as RichTextLabel
 		if prompt_label != null:
 			for i in 30:
 				await physics_frame
-			print("  prompt label text: %s" % prompt_label.text)
-			print("  prompt label global_rect: %s" % prompt_label.get_global_rect())
-			_dump_richtextlabels(world, "  ")
 			await _shoot("exploration-prompt", written, failures)
 		else:
 			failures.append("exploration-prompt: HUD has no Root/Prompt RichTextLabel")
 	else:
 		failures.append("exploration-prompt: no PlaygroundHUD in the scene")
 
-	# 2. Combat HUD engage prompt -- same string, different HUD. No live fight
-	# is staged (smoke_combat.gd already proves that path); this only needs
-	# the label to hold real formatted text for one stable screenshot.
-	var combat: CanvasLayer = world.get_node_or_null(^"CombatHUD") as CanvasLayer
+	# 2. Combat HUD engage prompt -- same string shape, different HUD. No
+	# live fight is staged (smoke_combat.gd already proves that path); this
+	# only needs the label to hold real formatted text for one screenshot,
+	# with the exploration HUD's own prompt hidden so it cannot bleed in the
+	# same way (see the note above).
 	if combat != null:
 		combat.visible = true
+		if hud != null:
+			hud.get_node_or_null(^"Root/Prompt").visible = false
 		var combat_prompt: RichTextLabel = combat.get_node_or_null(^"Root/Prompt") as RichTextLabel
 		if combat_prompt != null:
 			# combat_hud.gd's own _process polls _director.call("prompt") every
-			# frame (real, empty, since no fight is staged here) and would
-			# silently overwrite this synthetic value before the screenshot.
+			# frame and would overwrite this synthetic value before the shot.
 			combat.set_process(false)
 			combat_prompt.text = PROMPTS.format(PROMPTS.offer("Engage Bramblebun", 3.0))
 			for i in 30:
@@ -86,6 +97,8 @@ func _run() -> void:
 		else:
 			failures.append("combat-prompt: no Root/Prompt RichTextLabel on CombatHUD")
 		combat.visible = false
+		if hud != null:
+			hud.get_node_or_null(^"Root/Prompt").visible = true
 	else:
 		failures.append("combat-prompt: no CombatHUD in the scene (skipping)")
 
@@ -127,17 +140,6 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
-
-
-func _dump_richtextlabels(node: Node, indent: String) -> void:
-	if node is RichTextLabel:
-		var rtl := node as RichTextLabel
-		if not rtl.text.is_empty():
-			print("%s%s text=%s visible_in_tree=%s rect=%s" % [
-				indent, rtl.get_path(), rtl.text, rtl.is_visible_in_tree(), rtl.get_global_rect()
-			])
-	for child in node.get_children():
-		_dump_richtextlabels(child, indent)
 
 
 func _shoot(name: String, written: Array[String], failures: Array[String]) -> void:
