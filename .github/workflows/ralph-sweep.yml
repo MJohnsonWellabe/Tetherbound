@@ -71,18 +71,54 @@ jobs:
         run: |
           set -uo pipefail
 
-          # Ordered oldest-first so a queue of branches lands in the order it
-          # was created, rather than newest-wins by luck of the listing.
-          BRANCHES="$(git ls-remote --heads origin 'refs/heads/ralph/*' \
-                        | sed 's#.*refs/heads/##' | sort)"
+          # Only branches that are still close to main -- measured in COMMITS
+          # BEHIND, not in days.
+          #
+          # A sweep is a RECOVERY mechanism for work that should have merged and
+          # didn't, not a licence to resurrect anything that ever passed CI.
+          # Rebasing an abandoned branch onto today's main and shipping it
+          # because the rebase happened to apply cleanly is how a regression
+          # lands that nobody chose.
+          #
+          # Age in days was tried first and does not work here: this repo can
+          # move fifty commits in two days, so every branch alive and dead was
+          # inside a 48-hour window. Drift separates them cleanly. Measured the
+          # day this was written -- live work sat at 0, 0, 0, 1, 1 and 4 commits
+          # behind; abandoned branches sat at 35 and 50. There is no overlap,
+          # and 20 is the middle of a very wide gap.
+          #
+          # Anything beyond the cap is left exactly as it is -- untouched,
+          # undeleted, and listed below so it is visible rather than silently
+          # ignored. Landing one is a deliberate act by a human or a firing.
+          MAX_BEHIND="${MAX_BEHIND:-20}"
 
-          if [ -z "$BRANCHES" ]; then
-            echo "No ralph/** branches. Nothing to sweep."
+          git fetch --quiet origin '+refs/heads/ralph/*:refs/remotes/origin/ralph/*' || true
+
+          FRESH=""
+          STALE=""
+          while read -r branch; do
+            [ -n "$branch" ] || continue
+            behind="$(git rev-list --count "origin/$branch..origin/main" 2>/dev/null || echo 9999)"
+            if [ "$behind" -le "$MAX_BEHIND" ]; then
+              FRESH="$FRESH$branch"$'\n'
+            else
+              STALE="$STALE  $branch (${behind} commits behind main)"$'\n'
+            fi
+          done <<< "$(git ls-remote --heads origin 'refs/heads/ralph/*' | sed 's#.*refs/heads/##' | sort)"
+
+          if [ -n "$STALE" ]; then
+            echo "Too far behind main to sweep, left alone:"
+            printf '%s' "$STALE"
+          fi
+
+          if [ -z "$FRESH" ]; then
+            echo "No ralph/** branch is close enough to main to sweep."
             exit 0
           fi
 
           echo "Considering:"
-          echo "$BRANCHES" | sed 's/^/  /'
+          printf '%s' "$FRESH" | sed 's/^/  /'
+          BRANCHES="$FRESH"
 
           # Sequential, and each call re-reads origin/main, because every ship
           # moves main under the branches that have not been considered yet.
