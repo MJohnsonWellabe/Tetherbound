@@ -32,31 +32,53 @@ const RISE_CENTRE := Vector2(140.0, -90.0)
 ## rise's own steepest ground for footing.
 const OFFSET := Vector2(-6.0, 8.0)
 
-const TOWER_COLOUR := Color("#2a2630")
+## R9.4. Was #2a2630 — near-black, and paired with `unshaded` below it made the
+## stronghold a flat cutout. A blind critic that knew nothing about why said:
+## "the stronghold spire in frame 02 is a pure black paper cutout — measured
+## near 0 luminance, zero material response, hard-edged against a bright sky.
+## It reads as a hole punched in the image rather than a stone ruin", and
+## contrasted it with palworld-04, where the landmark "is atmospheric-hazed to
+## a mid blue-grey and sits IN the distance rather than on top of it."
+##
+## Mid cool stone, and shaded, so the towers have a lit and a shaded face and
+## the crenellations that were modelled can actually be seen.
+const TOWER_COLOUR := Color("#6b6a72")
 
-## R7.1-visual: the blind critic (docs/decisions — see this task's ralph
-## record) found the towers read correctly dark up close (~40m) but faded to
-## a pale grey nearly matching the horizon haze at ~60m and ~157m — measured
-## by re-rendering the same viewpoint with WorldEnvironment.fog_enabled
-## forced false, which restored the dark silhouette. That is the world's
-## shared fog (`data/config/art.json` `environment.aerial_perspective`),
-## already tuned once against a documented "fog eating the world" complaint
-## — retuning it globally for one landmark risks undoing that fix and needs
-## the kind of whole-survey re-verification R9.4 exists for, not a change
-## buried in this task. A silhouette is supposed to be a flat dark shape
-## against the sky regardless of distance or sun angle, so instead of fighting
-## the shared atmosphere, the towers opt out of it: `fog_disabled` is a real
-## Godot 4 spatial shader render mode, and `unshaded` means the silhouette no
-## longer picks up a lit highlight streak on the sunward face either (the
-## other defect the critic named on the near frame).
+## R7.1-visual found the towers reading correctly dark at ~40m but fading to a
+## pale grey nearly matching the horizon haze at ~60m and ~157m, and fixed it
+## by opting the landmark out of the world's atmosphere entirely: `unshaded` so
+## no sunward highlight, `fog_disabled` so no wash. Its own note said retuning
+## the shared fog instead "needs the kind of whole-survey re-verification R9.4
+## exists for, not a change buried in this task."
+##
+## R9.4 IS THAT PASS, and it changed the premise. The fog that was eating the
+## landmark has since been halved twice — 0.0022 to 0.0011 to 0.00055 — so the
+## wash that justified opting out is a quarter of what was measured. Meanwhile
+## the opt-out had a cost nobody had a frame to see: a fresh blind critic,
+## told nothing, called the result "a hole punched in the image rather than a
+## stone ruin" and pointed at palworld-04, whose landmark is hazed to a mid
+## blue-grey and "sits IN the distance rather than on top of it."
+##
+## So the towers rejoin the world: normal shading, so the wall, roofline and
+## crenellations that R7.1-visual-remainder modelled are actually visible as
+## form rather than flattened into one black mass, and normal fog, so distance
+## reads as distance. `cull_back` is kept — it was never part of the problem.
+##
+## THE RISK IS REAL AND NAMED: this reverses a fix that a previous blind round
+## asked for. If the long-range frames come back washed out again, the answer
+## is NOT to restore `unshaded` — it is that the landmark needs a value that
+## survives this fog at that range, which is a colour choice, not a render
+## mode. `tools/capture_wayfinding.gd` shoots the three ranges that decide it.
 const SHADER_CODE := """
 shader_type spatial;
-render_mode unshaded, fog_disabled, cull_back;
+render_mode cull_back;
 
 uniform vec4 albedo : source_color;
 
 void fragment() {
 	ALBEDO = albedo.rgb;
+	ROUGHNESS = 0.85;
+	SPECULAR = 0.15;
 }
 """
 
