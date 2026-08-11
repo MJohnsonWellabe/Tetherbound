@@ -47,10 +47,17 @@ const VIEWPOINTS := [
 		# the sky — this is the "all over the dome" framing the critic used.
 		# Eye sits east of the peak looking back west, so the visible near
 		# flank is the same east-facing slope every other viewpoint here
-		# samples.
+		# samples. MUST stay inside the baked world (+-256m, world_size 512
+		# in terrain_playground.json): an eye past the edge parks the player
+		# out of bounds too (this file parks at VIEWPOINTS[0]'s own XZ,
+		# survey.gd's own fix for the same problem) and broke Terrain3D's
+		# streaming for the WHOLE run, not just this one frame — the exact
+		# "camera sat below the terrain, world-noise backdrop, floating
+		# vegetation" failure survey.gd's header already documents. x=235
+		# leaves 21m of margin.
 		"name": "dome-overview",
-		"eye": Vector2(345.0, -90.0), "eye_h": 5.0,
-		"target": Vector2(140.0, -90.0), "target_h": 22.0,
+		"eye": Vector2(235.0, -90.0), "eye_h": 6.0,
+		"target": Vector2(140.0, -90.0), "target_h": 20.0,
 	},
 	{
 		# Standing in the grass, just below where soil starts (d=42), looking
