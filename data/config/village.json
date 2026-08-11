@@ -4,7 +4,7 @@
   "structures": [
     { "model": "Well", "at": [10.0, -10.0], "yaw_deg": 0.0, "scale": 0.9, "_why": "the square's centre" },
     { "model": "SmallBarn", "at": [18.0, -2.0], "yaw_deg": 205.0, "scale": 0.8, "_why": "a neighbour's barn, north-east of the square" },
-    { "model": "Barn", "at": [2.0, 2.0], "yaw_deg": 160.0, "scale": 0.75, "_why": "the big barn, north of the square" },
+    { "model": "Barn", "at": [2.0, 2.0], "yaw_deg": 160.0, "scale": 1.1, "_why": "the big barn, north of the square -- R9.4-remainder-8: 0.75 (the blanket 'authored at 2x' correction this file's own header assumes) put its eave at chest height and its door under 1.5m, both confirmed against the 1.80m trainer standing beside it in a tools/capture_buildings.gd render. Raw Barn.obj is 6.01m to the ridge; 1.1 gives a 6.6m ridge and a ~2m door, which is what 'the big barn' actually needs to read as one. The 2x-authored assumption does not hold for every model in this pack -- SmallBarn's own corrected height (0.8 x 4.96m raw = ~4m) already reads fine beside it, so it is untouched." },
     { "model": "ChickenCoop", "at": [21.0, -14.0], "yaw_deg": 260.0, "scale": 0.9, "_why": "east of the square" },
     { "model": "TowerWindmill", "at": [28.0, 4.0], "yaw_deg": 220.0, "scale": 0.8, "_why": "the landmark; visible from most of the meadow" },
     { "model": "Fence", "at": [14.0, -20.0], "yaw_deg": 55.0, "scale": 0.85, "_why": "along the practice-meadow path" },
