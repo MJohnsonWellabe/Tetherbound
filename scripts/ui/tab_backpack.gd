@@ -65,7 +65,7 @@ func build() -> void:
 	_grid.columns = columns
 	_grid.add_theme_constant_override("h_separation", 10)
 	_grid.add_theme_constant_override("v_separation", 10)
-	row.add_child(_grid)
+	row.add_child(_panel(_grid))
 
 	var inventory: RefCounted = _inventory()
 	var slots: int = int(inventory.call("slot_count")) if inventory != null else 0
@@ -84,7 +84,7 @@ func build() -> void:
 		_grid.add_child(button)
 		_buttons.append(button)
 
-	row.add_child(_build_detail())
+	row.add_child(_panel(_build_detail()))
 	poll()
 
 

@@ -56,7 +56,7 @@ func build() -> void:
 	var list := VBoxContainer.new()
 	list.add_theme_constant_override("separation", 8)
 	list.custom_minimum_size = Vector2(480, 0)
-	row.add_child(list)
+	row.add_child(_panel(list))
 
 	var catalogue := _catalogue()
 	if catalogue.is_empty():
@@ -78,7 +78,7 @@ func build() -> void:
 		list.add_child(button)
 		_rows.append(button)
 
-	row.add_child(_build_detail())
+	row.add_child(_panel(_build_detail()))
 	poll()
 
 
