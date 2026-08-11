@@ -215,6 +215,75 @@ trigger it on its own.
 `published_at` actually advances past `2026-08-03` — that's the real proof
 this works, not just the merged diff.
 
+## SA2-flake — `smoke_opening` beat-4 flake: a pattern fix, same shape as LP2
+`tests: smoke_opening`, green locally 31/31 across this firing (19 with the
+fix applied, 12 on the unmodified pre-fix test as a baseline check) — but see
+below for what that number does and does not prove.
+
+**Picked up because it was caught live, not just read off the backlog.**
+Before claiming this, `main`'s latest completed CI run (`31544774295`, on
+`525ffa28`) had failed at "Smoke-test the opening" with exactly the string
+this item's own description names: *"confirming an orb with `menu_confirm`
+did not close the picker; beat 4 does not advance."* Read directly from the
+job log, not inferred from the backlog text — confirmation this is a live,
+currently-red symptom, not a stale description of something that stopped
+happening.
+
+**Root cause, found by reading `starter_picker.gd`, not by guessing.** Its
+`_physics_process` is a single `if`/`elif` chain, all three branches gated on
+`Input.is_action_just_pressed`:
+
+```
+if Input.is_action_just_pressed("ui_right"):
+	_move(1)
+elif Input.is_action_just_pressed("ui_left"):
+	_move(-1)
+elif Input.is_action_just_pressed("menu_confirm"):
+	_confirm()
+```
+
+Nothing here is a real Godot `Control` — no `_gui_input`, no `grab_focus`, no
+focus navigation of any kind. It is a plain poll, same shape for `ui_right`/
+`ui_left` as for `menu_confirm`. But `smoke_opening.gd`'s beat 4 was sending
+`ui_right` via `_press()` — the belt-and-braces helper that sends BOTH
+`Input.action_press()` AND a parsed `InputEventAction`, which
+`_press_polled()`'s own docstring already documents (from `LP2`) as capable of
+registering "just pressed" a physics frame LATER than the action-state path
+under load. `starter_picker.gd` doesn't need the parsed event at all — it
+never reads one — so the second signal is pure redundancy for this reader,
+and if its late registration lands on the SAME physics frame as the very next
+`menu_confirm` press, the `elif` chain checks `ui_right` first and the
+`menu_confirm` branch is never reached — for the one frame `menu_confirm` was
+ever going to read as "just pressed." That is the exact observed symptom:
+`_confirm()` never fires, the picker never closes.
+
+`name_prompt.gd` (beat 5) was checked for the same shape and does NOT have it:
+its direction handling (`_tick_cursor`) reads `Input.is_action_pressed`
+(continuous, not edge-triggered) and runs unconditionally, separate from the
+`menu_confirm`/`menu_cancel` `if`/`elif` — there is no branch for `ui_right`
+in that chain to steal the slot from `menu_confirm`. So this fix is scoped to
+beat 4 only; beat 5's presses are untouched.
+
+**Fix:** `tests/smoke_opening.gd`, beat 4's `await _press("ui_right")` →
+`await _press_polled("ui_right")` — the same fix shape `LP2` already used for
+beat 3's `interact`, applied to the one other place in this file sending a
+real reader's redundant parsed event.
+
+**Honest about what local testing does and does not prove, matching `LP2`'s
+own precedent exactly.** 19 runs with the fix applied all passed. As a
+control, 12 runs of the unmodified pre-fix test *also* all passed locally —
+this race does not reliably reproduce under this environment's conditions
+either way, the same experience `LP2`'s own entry already recorded for a
+different beat of this same test after three separate forced-repro attempts.
+The fix is shipped on the strength of (1) a real, structural bug found by
+reading the code, not guessed at, (2) an exact precedent already proven in
+this file (`LP2`), and (3) the failure reproducing for real on `main`'s CI
+with the exact predicted signature just before this was picked up. If
+`smoke_opening` flakes again on beat 4 with this same message, that is new
+information — either this was not the whole cause, or CI's timing hits a
+window local runs do not — and the next firing to see that recurrence should
+re-open this rather than assume it is solved.
+
 ## LP4 — Green branches were silently never merging; four were stranded
 Owner-directed interactive session, 2026-08-11. See `D26` for the full record.
 

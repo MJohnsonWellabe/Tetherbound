@@ -589,17 +589,11 @@ not as a reopening of RB1.
 `DONE.md`.** One new finding opened below: `SA2-flake`, a pre-existing
 `smoke_opening` beat-4 intermittent failure, unrelated to `SA2` itself.
 
-### SA2-flake — `smoke_opening` beat 4 (starter-picker `menu_confirm`) flakes intermittently
-`model: sonnet` · `tests: smoke_opening` · `area: loop`
-Found while verifying `SA2` locally: `git stash`-ing back to unmodified `main`
-and running `smoke_opening.gd` headless several times in a row reproduces
-"confirming an orb with `menu_confirm` did not close the picker; beat 4 does
-not advance" roughly one run in three, unrelated to any `SA2` change (`SA2`'s
-own door-gate behaviour passed every run). Not narrowed further — same class
-of intermittent-CI-rejects-healthy-work risk `LP1`/`LP2` were opened for, on a
-different beat of the same test. Done when: the flake is root-caused and
-fixed, or pattern-matched and eliminated the way `LP2` was, with the trail
-recorded in `DONE.md`.
+**`SA2-flake` (`smoke_opening` beat 4 intermittent failure) fixed — see
+`DONE.md`.** A pattern fix, same shape as `LP2` — the race itself was not
+directly forced to reproduce locally, but it did reproduce for real on
+`main`'s own CI moments before this was picked up, with the exact documented
+signature.
 
 ### SA3 — A believable physical perimeter, and a failsafe under it
 `model: sonnet` · `tests: smoke_traversal`
