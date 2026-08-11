@@ -40,15 +40,24 @@ func _init(config: Dictionary = {}) -> void:
 	_detail.frequency = float(detail.get("frequency", 0.018))
 	_detail.fractal_octaves = int(detail.get("octaves", 3))
 
-	# Metres-scale wobble for `path_factor`'s edge, not terrain shape — a
-	# frequency high enough to bulge and pinch within one path segment
-	# (~4-5m wavelength) rather than drift slowly the way `_detail` does at
-	# 0.018 (~55m). A third seed so it does not correlate with either.
+	# Metres-scale wobble for `path_factor`'s edge, not terrain shape.
+	#
+	# EV4 round 3: a blind critic reading the baked result at 0.2 frequency /
+	# 2 octaves called the edge "jagged, stair-stepped... a technical
+	# resolution limit" rather than organic. The bake samples this at the
+	# terrain's own 1m vertex spacing (build_playground_terrain.gd), so a
+	# ~5m-wavelength wobble (1/0.2) carries real higher-frequency content from
+	# the second octave that the 1m grid cannot represent smoothly — it
+	# aliases into visible notches instead of a smooth bulge-and-pinch. A
+	# longer ~20m wavelength with one octave still reads as organic width
+	# variation over one path segment but stays well inside what a 1m grid
+	# can resolve cleanly. A third seed so it does not correlate with `_hills`
+	# or `_detail`.
 	_path_edge.seed = seed_value + 2
 	_path_edge.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	_path_edge.fractal_type = FastNoiseLite.FRACTAL_FBM
-	_path_edge.frequency = 0.2
-	_path_edge.fractal_octaves = 2
+	_path_edge.frequency = 0.05
+	_path_edge.fractal_octaves = 1
 
 
 static func load_config() -> Dictionary:
