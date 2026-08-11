@@ -107,11 +107,30 @@ An entry appearing there is the loop working correctly, not failing.
 The owner chose parallel lanes. Each Routine starts a fresh session and pushes a
 notification when its run finishes.
 
-| Routine | Fires | Meshy key |
-|---|---|---|
-| **Ralph** | `49 * * * *` | **Yes** — the only one that can do art |
-| **Ralph lane B** | `9 * * * *` | No |
-| **Ralph lane C** | `29 * * * *` | No |
+| Routine | Fires | Meshy key | Trigger id | Who can change it |
+|---|---|---|---|---|
+| **Ralph** | `49 * * * *` | **Yes** — the only one that can do art | `trig_01HJmwxGFfWZHaKP5UJMV8HV` | **Owner only** |
+| **Ralph lane B** | `9 * * * *` | No | `trig_01TkPuw6fMmjQ2FM5LA5xAKN` | Owner or an agent |
+| **Ralph lane C** | `29 * * * *` | No | `trig_01VgHpVNCrsAWB8xNPBZScjw` | Owner or an agent |
+
+### ⚠ Only the owner can pause or resume the "Ralph" Routine
+
+**This is the one genuinely manual step in the whole loop, and it was found the
+hard way on 2026-08-11.** The original Ralph Routine was created through the
+HTTP API, and an agent can only update Routines it created itself. Attempting
+it returns:
+
+    update_trigger: this routine was created via "http_api", not by an agent.
+
+So when Ralph is paused, **no session can turn it back on** — it has to be
+toggled in the Routines UI. The two lanes were created by an agent and do not
+have this limitation, which means a half-off state is possible and easy to miss:
+lanes B and C running while the keyed Routine sits paused looks like a working
+loop right up until an art task reaches the top of the backlog and no one can
+take it.
+
+If art tasks are silently piling up, **check that "Ralph" itself is enabled**
+before looking for a bug anywhere else.
 
 **The old figure in this file said :43. It was `49 * * * *` the whole time** —
 worth knowing, because a stale schedule here is exactly what makes the loop look
