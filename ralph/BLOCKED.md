@@ -117,7 +117,40 @@ backlog items. The loop keeps building past them.
 
 ## Design questions awaiting the owner
 
-### Creature and human art-pipeline cohesion — rework vs. replace?
+### Creature and human art-pipeline cohesion — the CREATURE half is answered; the HUMAN half is open and now more urgent
+
+**Narrowed by `docs/decisions/D23` (owner spec §20–§22, 2026-08-11).** This
+entry used to ask one question about two things. It is now one question about
+one thing.
+
+- **Creatures — answered, by removing an option.** §20 forbids new creature
+  meshes and Meshy generations for the Meadows outright. Replacement is off the
+  table, so the only remaining answer for Paddlenewt, Pipwing and Ripplet is
+  **rework in place**, through `grade.py`'s repair path (numpy and Pillow, no
+  Blender, no credits). That is effectively the decision; no owner input is
+  needed to proceed on it. `SA5` and `SA6` in `BACKLOG.md` are the same lever
+  applied to Burrowback and the bird roster.
+- **Humans — still open, and §21 raises the stakes.** §20 says *creature*; it
+  does not touch the flat-shaded trainer and Grandpa standing next to the
+  Warden's painted finish, which the blind review called "the loudest single
+  problem in the whole review". §21 makes it worse rather than better by
+  promoting those exact two rigs to base bodies for the entire NPC cast.
+  §22's one-or-two optional generations are a partial lever but do not answer
+  *which* assets get the treatment.
+- **Not part of this question:** `R3.0`, re-running the three humanoid GLBs
+  through the fixed `animate_humanoid.py`, is a pipeline re-run rather than a
+  generation. It costs no credits and is compatible with §20 and §22.
+- **Budget arithmetic the owner should see before deciding.** 175 credits
+  remain at roughly 90 per species. "One or two" generations is realistically
+  *one comfortably, two only if a human costs less than a creature*. Spending
+  it on a Team Tether grunt base leaves nothing for the Warden's face, which is
+  still painted rather than modelled (HANDOFF §6).
+
+**Clears when:** the owner decides what happens to the trainer and Grandpa —
+regrade in place, one §22 generation, or accept the gap for now.
+
+Original entry, kept because its evidence is still the evidence:
+
 Raised by the 2026-08-09 site-frames critique for the three starters alone
 ("three assets from three different store packs"); **R0.8.5's full blind
 review of the whole roster confirms it's bigger than the starters** and adds
@@ -139,8 +172,10 @@ Full record: `docs/reviews/2026-08-09-r0.8.5-full-blind-review.md`. Whether
 to rework the mismatched assets or replace them is an art-direction call
 this evidence is for, not a call to make silently.
 
-**Clears when:** the owner decides rework vs. replace (and for which
-assets — the three creatures, the trainer/Grandpa pair, or both).
+~~**Clears when:** the owner decides rework vs. replace (and for which
+assets — the three creatures, the trainer/Grandpa pair, or both).~~
+Superseded by the narrowed question above: §20 answers "rework" for the
+creatures; only the trainer/Grandpa pair is still a live decision.
 
 Anything on `CLAUDE.md`'s flag list goes here rather than being decided:
 dodge/block, party limit, weapons, type system, storage, story rewrites,

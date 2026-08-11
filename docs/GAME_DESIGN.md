@@ -100,7 +100,20 @@ General stronghold conclusion:
 
 Team Tether should have nuance. Some members are true believers, employees, opportunists, conflicted Wardens, or genuinely cruel leaders. Do not write them as universally cartoonish villains.
 
-The exact endgame motive remains intentionally open.
+**Amended by `docs/decisions/D23` — the motive is no longer open.** The line
+that stood here ("the exact endgame motive remains intentionally open") is
+false as of the owner's 2026-08-11 specification. See
+`docs/MEADOWS_PROGRESSION_SPEC.md` §23–§31: the eight legendaries are living
+conduits for natural forces, and Team Tether binds them into Tether systems to
+hold **Tether Rifts** open — physical separations that keep the eight regions
+from being one landmass. Their power is a monopoly on the movement of
+resources, creatures, people and trade. Their doctrine, which they believe and
+which may be partly true, is that the connected world was unstable and the
+barriers made peace. Freeing a legendary collapses its Rift and physically
+reconnects a region.
+
+The nuance rule above survives intact and matters more now: a Warden can be
+sincere while the system is oppressive.
 
 ---
 
@@ -232,6 +245,11 @@ Exact chart is tunable and should be defined before full Meadows balancing.
 ---
 
 ## 9. Biome Spine — Concepts Only
+
+**Amended by `docs/decisions/D23`.** The eight biomes are severed pieces of one
+landmass, not eight islands. The concepts below are unchanged; the *reason*
+they are apart is now canon (`MEADOWS_PROGRESSION_SPEC.md` §23–§30), and each
+region reconnects to the world as its legendary is freed.
 
 1. **Ground — Meadows/Prairie**
    - rolling grassland, oak groves, streams, ponds
@@ -794,9 +812,24 @@ First unique pal:
 - exceptional speed and/or huge jump
 - exact species/asset to be chosen later
 
+**Extended by `docs/decisions/D23`.** `MEADOWS_PROGRESSION_SPEC.md` §8 gives the
+first stronghold a five-space interior — Outer Works, Courtyard / Hall
+Approach, Tether Chamber Approach, Warden Arena, Legendary Chamber — and a
+30–60 minute first-clear target. Explicitly **not** a giant puzzle dungeon
+unless that is separately decided. §28 of the spec adds the reveal: the
+legendary is the power source for the Meadows Tether Rift, the Warden knows it,
+and freeing it collapses the Rift.
+
 ---
 
 ## 29. Meadows 4–8 Hour Arc
+
+**Superseded in ordering and detail by `docs/decisions/D23`.** Every beat below
+still happens, and the 4–7 hour target in
+`docs/MEADOWS_PROGRESSION_SPEC.md` sits inside this section's own 4–8 hour
+band. But the spec's Bands 0–4 and Acts I–VI are now the authority on their
+sequence, their gates and the preparation between them. Read this list as the
+ingredients and the spec as the recipe.
 
 1. Wake at Grandpa's home.
 2. Learn Team Tether has returned/seized the regional stronghold.
@@ -887,6 +920,14 @@ Do not implement unless they become necessary for the Meadows slice:
 ---
 
 ## 33. Exit Criteria Before Biome 2
+
+**These twelve are deliberately not renumbered by `docs/decisions/D23`** —
+`ralph/BACKLOG.md`'s `R9.5`, `R0.11`, `R2.9`, `R4.12` and `R6.3` all cite them
+by number, and renumbering would silently break every one of those citations.
+`docs/MEADOWS_PROGRESSION_SPEC.md` §39 adds a **second, chapter-level gate**
+alongside these, testing the arc rather than the feel. Both must pass. The
+spec's own owner-facing version of the question is worth keeping in view:
+*"I had a reason to keep playing for several hours before the first Warden."*
 
 **Do not begin Biome 2 until the owner can play Meadows and genuinely say the following are true:**
 

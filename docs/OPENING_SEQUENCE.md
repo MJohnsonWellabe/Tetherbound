@@ -18,6 +18,15 @@ below is either serving it or getting out of its way.
 | 2 | **Downstairs** | 1–2 | Walk down through the house to Grandpa | Interact; this is home |
 | 3 | **The briefing** | 2–5 | He explains Team Tether, gives you his old pack — orbs, potions, berries — and the creature belt | Why there is a journey; the satchel; **the five-pal rule, said in fiction** |
 | 4 | **The choice** | 5–7 | Out the door. Three pals wait outside. Approach each, then choose one | **The five-pal rule's first bite:** the other two stay with him |
+
+**Beat 4 is no longer unconditional — `docs/decisions/D23`, spec §1D.** The
+owner played the published build and walked straight out of the house, skipping
+beat 3 entirely: no belt, no orbs, no potions, no reason for the journey. The
+door is now gated on beat 3 being complete. `SA2` in `ralph/BACKLOG.md` is the
+work, and §1D is specific about the form it takes: crossing is stopped, Grandpa
+calls out — "Hold on. You're not walking out there empty-handed." — and the
+briefing starts itself. **Not** a "Talk to Grandpa first" error toast. Once
+beat 3 is done the gate lifts for good and never re-arms.
 | 5 | **Your pal** | 7–9 | Name it. Walk with it following you | It is yours; it has a name you typed |
 | 6 | **The encounter** | 9–11 | A wild Bramblebun is grazing down the path. Engage | Targeting; wild pals are individuals, not spawns |
 | 7 | **The fight** | 11–13 | Pilot your pal. Quick attack, energy, charged attack | Combat is piloted (D07), not commanded |

@@ -1,5 +1,13 @@
 # TETHERBOUND — MEADOWS VERTICAL SLICE IMPLEMENTATION SPEC
 
+**Scope extended by `docs/MEADOWS_PROGRESSION_SPEC.md` (`docs/decisions/D23`).**
+The owner played the published build and turned the Meadows from a slice into
+the game's first chapter: 4–7 hours, five progression bands, two material
+tiers, physical gates, a dungeon, a mini-stronghold and a rescue. M0–M6 and
+M8–M11 are unchanged and the spec assumes them; **M7, M12, M13, M14 and the
+slice exit gate are amended in place below.** Do not read this document as the
+ceiling any more.
+
 ## Goal
 
 Build the smallest complete version of Tetherbound that proves the actual game is fun.
@@ -137,6 +145,13 @@ Build a dense authored test region:
 
 Use scatter rules for dressing.
 
+**Amended by `docs/decisions/D23`.** The area list grows with the chapter
+(`MEADOWS_PROGRESSION_SPEC.md` §3): an Old Quarry, the Burrow Warrens, a major
+river and the Old Mill Crossing, a Tether Relay Station, the Upper Meadows with
+a wind ridge and ruined watchtower, and seven severed perimeter spokes. The
+512 m playground cannot hold that — `ralph/BACKLOG.md`'s `R7.3` owns the growth
+and the rebake.
+
 ### M8 — Gathering/building
 Minimal materials only.
 Suggested starting set:
@@ -211,12 +226,25 @@ Before final art lock:
 - clear advantage over running
 - no species-specific saddle clutter
 
+**Amended by `docs/decisions/D23`.** Riding is a Band 3 / early Band 4 unlock,
+not a free-standing milestone: Meadowhart is the rideable creature and the
+generic saddle is priced in Rootstone and Ironwood components
+(`MEADOWS_PROGRESSION_SPEC.md` §3). Its value is measured on how much better it
+makes *revisiting* known ground.
+
 ### M13 — Team Tether slice
 - world encounter/trainer
 - trainer team combat
 - cannot catch trainer pals
 - simple authored stronghold route
 - visual language: sacred/natural site industrialized by Tether
+
+**Amended by `docs/decisions/D23`.** One world encounter becomes a chapter's
+worth: three local trainers in Band 1, a Tether Relay Station with two or three
+trainers and a relay captain, three regional captains in Band 4, and two to
+four in the stronghold — roughly 12–17 battles across meaningful locations
+(`MEADOWS_PROGRESSION_SPEC.md` §12). The industrialised-sacred-site language is
+used twice: first at the relay, then at full scale.
 
 ### M14 — Warden + legendary
 - first regional trainer boss
@@ -225,6 +253,14 @@ Before final art lock:
 - legendary offers to join
 - triggers release ceremony when full
 - superior ride ability
+
+**Amended by `docs/decisions/D23`.** The Warden knows what freeing the
+legendary will do and warns rather than gloats; the reveal is that the
+legendary is powering the Meadows Tether Rift
+(`MEADOWS_PROGRESSION_SPEC.md` §28, §33). After the release, the machinery
+fails and the first Rift collapses — the next biome visibly reconnects as a
+**distant, non-enterable view**. `CLAUDE.md`'s Biome 2 rule still governs; D23
+names that carve-out explicitly.
 
 ### M15 — Polish gate
 Focus only on:
@@ -305,3 +341,8 @@ Do not destroy visual quality to chase arbitrary desktop benchmark numbers, but 
 ## Slice Exit Gate
 
 Biome 2 is forbidden until all master design exit criteria are met.
+
+**Amended by `docs/decisions/D23`.** `MEADOWS_PROGRESSION_SPEC.md` §39 adds a
+second, chapter-level gate alongside `GAME_DESIGN.md` §33. §33's twelve
+criteria are deliberately **not** renumbered — several backlog items cite them
+by number.

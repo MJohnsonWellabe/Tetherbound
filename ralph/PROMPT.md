@@ -10,10 +10,18 @@ memory of previous firings. Everything you need is on disk.
 3. `ralph/BACKLOG.md` — the ordered task list. **This is the state of the project.**
 4. `ralph/BLOCKED.md` — what is parked, and why.
 5. `docs/HANDOFF.md` — where the project actually is.
+6. `docs/decisions/D23-the-meadows-is-the-first-game.md` — short, and it changes
+   what several older docs mean.
 
-Read `docs/GAME_DESIGN.md` and `docs/MEADOWS_VERTICAL_SLICE.md` for the sections
-your task touches. Do not read them end to end; they are long and most of them
-will not be about your task.
+Read `docs/GAME_DESIGN.md`, `docs/MEADOWS_VERTICAL_SLICE.md` and
+`docs/MEADOWS_PROGRESSION_SPEC.md` for the sections your task touches. Do not
+read them end to end; they are long and most of them will not be about your
+task.
+
+**The spec wins over the older two where they disagree** (D23) — it is the
+owner's later word, written after playing the published build. D23 names the
+two carve-outs where an older rule still governs, and they are both load-
+bearing: the Biome 2 rule, and `GAME_DESIGN.md` §33's criteria numbering.
 
 ## Before you pick anything: is the pipeline healthy?
 

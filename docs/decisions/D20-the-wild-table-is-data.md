@@ -1,5 +1,9 @@
 # D20 — The wild table is data
 
+> Extended by D23 (owner spec, 2026-08-11): the spec's §13 supplies a
+> wild-species-by-area table, which is the schema extension this decision
+> deliberately deferred. `R5.3` in `ralph/BACKLOG.md` is where it lands.
+
 **Status:** accepted
 **Milestone:** the owner's first-playtest overhaul, 2026-08-09
 

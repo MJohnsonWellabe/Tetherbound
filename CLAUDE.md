@@ -5,9 +5,13 @@ You are implementing **Tetherbound**, a Godot-based Windows-first third-person s
 Before coding, read:
 1. `docs/GAME_DESIGN.md`
 2. `docs/MEADOWS_VERTICAL_SLICE.md`
-3. `docs/TECHNICAL_START.md`
+3. `docs/MEADOWS_PROGRESSION_SPEC.md`
+4. `docs/TECHNICAL_START.md`
 
-These documents are authoritative.
+These documents are authoritative. Where (3) disagrees with (1) or (2), **(3)
+wins** — it is the owner's later word, made canon by
+`docs/decisions/D23-the-meadows-is-the-first-game.md`, which also names the two
+carve-outs where an older rule still governs.
 
 ## Mission
 
@@ -31,7 +35,14 @@ Build the Meadows vertical slice quickly and iteratively. The goal is not maximu
 - Food buffs; no starvation-death meter.
 - Slot/stack inventory; no carry-weight system.
 - Multiple death satchels persist.
-- No Biome 2 work until Meadows passes its exit gate.
+- No Biome 2 work until Meadows passes its exit gate. The spec's reconnection
+  event (§38 step 45) is a distant, non-enterable **view** — never a place.
+- No new creature meshes or Meshy generations for the Meadows. The installed
+  meshes are the meshes; differentiate by material, texture, modest scale,
+  animation, VFX, habitat and behaviour (spec §20, D23).
+- Human NPCs reuse the trainer, Grandpa and Warden rigs through **per-material**
+  variants, never one global tint. At most one or two new human generations,
+  owner-supplied only, and only for reusable archetypes (spec §21–§22, D23).
 - Do not silently invent major design decisions.
 
 ## Working Style
@@ -100,6 +111,13 @@ Examples:
 - changing traversal philosophy
 - adding mandatory hunger/thirst
 - changing stronghold structure
+
+**Implementing an owner directive is not inventing one.** The Team Tether /
+Tether Rift macro-story and the Meadows chapter structure are owner-supplied
+and settled by `docs/decisions/D23`. Building them is ordinary work. Extending
+them past what `docs/MEADOWS_PROGRESSION_SPEC.md` actually says still belongs
+on this list. This paragraph exists because a firing reading "major story
+rewrite" above would otherwise be right to park the whole chapter.
 
 ## First Objective
 

@@ -19,8 +19,20 @@ on this project already.
 - **An evolved creature is always larger than what it evolved from** (`D17`,
   enforced by `tests/test_evolution_links.gd`).
 - **No Biome 2 work** until Meadows passes its exit gate (`GAME_DESIGN.md` §33).
+  The spec's reconnection payoff is a **view of** the next biome across a
+  seam, never a place you can walk into — D23's carve-out, and the one hard
+  rule the Meadows chapter comes closest to breaking.
+- **No new creature meshes or Meshy generations for the Meadows** (spec §20,
+  D23). Separate two creatures that read alike with `grade.py`'s palette path,
+  not a regeneration. This forecloses `R4.5`'s "generate Tuskroot fresh"
+  fallback; that item is now verify-or-graft-or-block.
+- **Human NPCs reuse the trainer, Grandpa and Warden rigs**, differentiated
+  **per material** (spec §21). `art.json`'s `tint` key is a single multiply
+  over every surface, which is the exact failure §21 names — fine for R7.2's
+  three villagers, not enough for a cast of a dozen.
 - `GAME_DESIGN.md` §32 is a list of things deliberately NOT built. It is a
-  boundary, not a backlog.
+  boundary, not a backlog. `MEADOWS_PROGRESSION_SPEC.md` §19 is a second such
+  list, for the chapter.
 
 ## Branch naming — `ralph/**` means "ship this"
 

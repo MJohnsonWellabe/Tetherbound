@@ -1,6 +1,11 @@
 # D13 — The Meadows wild roster is recanonised by the owner's pack
 
 > Starter scale amended by D19 (owner decision, 2026-08-09).
+>
+> Extended by D23 (owner spec, 2026-08-11): a fourth distinction rule —
+> **Burrowback must not read as Terrapup** — and a hard constraint that all
+> such separation is done by material and palette, never by regenerating a
+> mesh.
 
 **Status:** accepted, in full. The scale conflict below was put to the owner
 and answered: **D12's peer scale stands.**

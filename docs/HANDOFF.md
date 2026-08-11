@@ -3,8 +3,17 @@
 Written as a handoff: everything a fresh context needs to pick this up without
 re-deriving it. Read `CLAUDE.md` first for the hard rules, then this.
 
-**Last updated:** end of the 2026-08-10/11 owner-directed interactive
-session that worked Phase -0.5's remainder through the start of Phase 1 —
+**Last updated:** 2026-08-11. The owner delivered
+`docs/MEADOWS_PROGRESSION_SPEC.md` — the Meadows stops being a vertical slice
+and becomes the game's first chapter, 4–7 hours, with the Team Tether macro-
+story settled. Read `docs/decisions/D23-the-meadows-is-the-first-game.md`
+before anything else in this file: it changes what several older documents
+mean, adds two hard production constraints, and names the two carve-outs where
+an older rule still wins. `ralph/BACKLOG.md` grew four sections for it
+(Phase -0.75, Phase 3.5, a restructured Phase 8, Phase 8.5).
+
+Before that, the 2026-08-10/11 owner-directed interactive
+session worked Phase -0.5's remainder through the start of Phase 1 —
 two PC bugs found on the owner's own hardware (a walk/run animation freeze,
 and the ROG Ally black-screen freeze — RB4, root-caused to a Forward+/
 Vulkan render-thread stall and fixed by switching the shipped renderer to
@@ -25,8 +34,17 @@ the **creature belt** Grandpa gives you in the opening (D18) — no storage, no
 boxes. Combat is real-time and **piloted**: you play as your creature while
 your trainer stands behind it. The human never fights.
 
-The current target is the **Meadows vertical slice**. Nothing from Biome 2
-starts until Meadows passes its exit gate.
+The current target is the **Meadows chapter** — the vertical slice as it was,
+plus the 4–7 hour arc the owner specified on 2026-08-11 (D23). Nothing from
+Biome 2 starts until Meadows passes its exit gate.
+
+The story behind it, settled by D23: the eight biomes were one connected
+landmass. Each of the eight legendaries is a living conduit for a natural
+force, and Team Tether binds them to hold **Tether Rifts** open — physical
+separations that keep the regions apart, because a divided world is one you can
+control the movement of trade, resources and people through. Freeing a
+legendary collapses its Rift and physically reconnects a region. The Meadows
+ending demonstrates that for the first time.
 
 ---
 
@@ -57,7 +75,7 @@ itself is still unbuilt (Ralph Phase 4).
 | 5 | **Mudsnout** | Ground | 1.55 m | Rooting piglet runt, small emerging tusks, not armoured. Pre-evolution of Tuskroot — and the only route to one. | DONE |
 | 6 | **Trailpup** | Ground | 1.70 m | Lean prairie canine, coyote-like. **No stone plates** — the mantle is Terrapup's. | DONE |
 | 7 | **Meadowhart** | Ground | 2.10 m | Rideable meadow deer with leaf-and-leather saddle. Must NOT read as the legendary. | DONE |
-| 8 | **Burrowback** | Ground | 1.85 m | Broad low badger, enormous shovel claws, loose rock nodules in clusters — never one continuous shell. | DONE |
+| 8 | **Burrowback** | Ground | 1.85 m | Broad low badger, enormous shovel claws, loose rock nodules in clusters — never one continuous shell. **Must NOT read as Terrapup** — recolour pending (`SA5`). | DONE, recolour pending |
 | 9 | **Paddlenewt** | Water | 1.65 m | Amphibious newt, translucent orange fin frills, huge golden eyes. | DONE |
 | 10 | **Mosshell** | Water | 1.77 m | Pond turtle, mossy stone-plate shell, very low centre of gravity. | DONE |
 | 11 | **Brooktail** | Water | 1.60 m | River otter, broad flat paddle tail (missing on the model — see §6). | DONE |
@@ -78,6 +96,22 @@ itself is still unbuilt (Ralph Phase 4).
 
 **Deliberately NOT built: Sparkit** (Electric fox kit). Meadows has three
 types only — recorded in `docs/art/REFERENCE_CANON.md` as future-biome.
+
+### The four distinction rules — and the one lever left to enforce them
+
+Three were already canon (D13): Trailpup has **no** stone plates, that mantle
+is Terrapup's; Galecrest must not read as Galewisp; Meadowhart must not read as
+the legendary. **D23 adds a fourth: Burrowback must not read as Terrapup**, and
+the owner reported it from real play.
+
+D23 also removes the option everyone reaches for first. **§20 forbids new
+creature meshes and Meshy generations for the Meadows outright** — the
+installed meshes are the meshes. Separation is done with
+`tools/art_pipeline/blender/grade.py`'s repair path (plain numpy and Pillow, no
+Blender, no credits), plus modest scale, animation, VFX, habitat and behaviour.
+`SA5` and `SA6` in the backlog are that work: Burrowback toward charcoal and
+slate, and the four birds pushed apart harder than would normally be necessary
+because the silhouettes overlap more than ideal.
 
 ### Scale rule (D12, amended by D19) — do not "fix" this
 
@@ -194,7 +228,22 @@ error — it is not.
 ## 5. The open work
 
 `ralph/BACKLOG.md` is the ordered plan, read it rather than trusting any
-summary here. The short shape as of 2026-08-11: Phase -0.5's visual pass is
+summary here.
+
+**As of D23 the shape changed and the top of the file moved.** The next item is
+**`SA2`** in the new **Phase -0.75** — the owner's P0 fixes from the published
+Windows build: Grandpa's door gate (`SA2`), a perimeter you cannot fall off
+(`SA3`), seven severed spokes (`SA4`), and the Burrowback and bird recolours
+(`SA5`/`SA6`). They sit above the rest of Phase -0.5 because three of the five
+change what a survey frame contains. Then the file runs Phase -0.5 → Phase 1 →
+Phase 2 → Phase 3 → **Phase 3.5** (the progression framework the whole chapter
+stands on: flags, physical gates, the objective tracker, per-material NPC
+variants) → Phases 4–7 → **Phase 8, now the Meadows chapter itself** in five
+lettered sections, 8a Lower Meadows through 8e the stronghold and the first
+reconnection → **Phase 8.5** for pacing and the chapter's own gate → Phase 9.
+
+The pre-D23 shape, still accurate for everything Phase -0.5 and earlier: Phase
+-0.5's visual pass is
 functionally done (signposts, stronghold silhouette, vegetation clumping/
 ground cover, villagers, interior dressing — several with narrower honest
 remainders recorded, not false "done"s). Next is **R9.4**, a full-game
@@ -223,6 +272,13 @@ space and trips on fit factors outside [0.1, 10]; `animate_humanoid.py` now
 applies scale the way the creature pipeline always did. **The debt:
 regenerating the three humanoid GLBs through the fixed pipeline is queued for
 Ralph** — until then the fix is compensating for malformed source files.
+
+**Tuskroot's options narrowed (D23, spec §20).** Whatever the verification in
+`R4.5` finds, "generate a fresh one from the sheet" is no longer available —
+§20 forbids new creature generations for the Meadows. The remaining paths are
+verify the installed model (which R0.8.5's review suggests will pass), or graft
+off Mudsnout's finished model, which costs nothing either way. If both fail it
+becomes a blocked question for the owner rather than a credit spend.
 
 **Tuskroot is still `ollie-the-songbird.glb`.** The one stand-in left, and
 since D20 it is unreachable in the wild — but the evolution ceremony will put
