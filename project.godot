@@ -16,7 +16,11 @@ config_version=5
 config/name="Tetherbound"
 config/description="Third-person survival creature-training game. Meadows vertical slice."
 run/main_scene="res://scenes/world/meadows_playground.tscn"
-config/features=PackedStringArray("4.7", "Forward Plus")
+; "GL Compatibility", not "Forward Plus". RB4 switched the shipped renderer
+; (see docs/decisions/D01) and left this tag reading the old value, so the file
+; contradicted itself for two days: this line said Forward+ while
+; rendering/rendering_method below said gl_compatibility.
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -50,7 +54,20 @@ renderer/rendering_method="gl_compatibility"
 ; real directional shadows out of the box; these are just the defaults made
 ; explicit so nobody has to guess what they were.
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=2
-anti_aliasing/quality/msaa_3d=2
+; SA1, the Ally memory investigation: neither atlas size had ever been set, so
+; both sat at Godot's 4096 desktop default -- roughly 67 MB each, ~134 MB of
+; render target, on a handheld whose VRAM is the same DDR5 the game is already
+; saturating. 2048 halves each side, so a quarter of the memory, and the sun is
+; the only shadow-caster that matters outdoors. Raise it back if shadow edges
+; visibly stair-step on device; that is the trade being made here.
+lights_and_shadows/directional_shadow/size=2048
+lights_and_shadows/positional_shadow/atlas_size=2048
+; Was 2 (= MSAA 4x): ~66 MB of extra colour and depth at 1920x1080. Dropped to
+; 1 (= 2x) for the same shared-memory reason. NOT zero, deliberately: R9.4
+; enabled alpha-to-coverage on foliage, which needs MSAA to do anything at all,
+; and the foliage mipmap fix in the same commit as this line is the other half
+; of that problem.
+anti_aliasing/quality/msaa_3d=1
 environment/defaults/default_clear_color=Color(0.23, 0.44, 0.58, 1)
 
 [input]

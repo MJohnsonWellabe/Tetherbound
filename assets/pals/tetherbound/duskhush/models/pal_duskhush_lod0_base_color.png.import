@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://p5dmaxntafp5"
-path="res://.godot/imported/pal_duskhush_lod0_base_color.png-4a1f64ed3e25aa40a53714d483515115.ctex"
+path.s3tc="res://.godot/imported/pal_duskhush_lod0_base_color.png-4a1f64ed3e25aa40a53714d483515115.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "0cf7123d96db57fc16c398eefeb3a31c"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/pals/tetherbound/duskhush/models/pal_duskhush_lod0_base_color.png"
-dest_files=["res://.godot/imported/pal_duskhush_lod0_base_color.png-4a1f64ed3e25aa40a53714d483515115.ctex"]
+dest_files=["res://.godot/imported/pal_duskhush_lod0_base_color.png-4a1f64ed3e25aa40a53714d483515115.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

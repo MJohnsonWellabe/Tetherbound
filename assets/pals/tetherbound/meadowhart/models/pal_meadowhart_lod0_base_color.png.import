@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dd2trqhu8gyje"
-path="res://.godot/imported/pal_meadowhart_lod0_base_color.png-007bcda9b0409f8d69a262ff09b4b553.ctex"
+path.s3tc="res://.godot/imported/pal_meadowhart_lod0_base_color.png-007bcda9b0409f8d69a262ff09b4b553.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "7b5a7bb232dc2a1842bb1d5d23965002"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/pals/tetherbound/meadowhart/models/pal_meadowhart_lod0_base_color.png"
-dest_files=["res://.godot/imported/pal_meadowhart_lod0_base_color.png-007bcda9b0409f8d69a262ff09b4b553.ctex"]
+dest_files=["res://.godot/imported/pal_meadowhart_lod0_base_color.png-007bcda9b0409f8d69a262ff09b4b553.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

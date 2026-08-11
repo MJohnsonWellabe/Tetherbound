@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cc7dqkp2knn6v"
-path="res://.godot/imported/pal_brooktail_lod0_base_color.png-ffec0459cdede4a8d364150b06cffbde.ctex"
+path.s3tc="res://.godot/imported/pal_brooktail_lod0_base_color.png-ffec0459cdede4a8d364150b06cffbde.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "7ac8e389826fcd201d682231ec3c39ff"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/pals/tetherbound/brooktail/models/pal_brooktail_lod0_base_color.png"
-dest_files=["res://.godot/imported/pal_brooktail_lod0_base_color.png-ffec0459cdede4a8d364150b06cffbde.ctex"]
+dest_files=["res://.godot/imported/pal_brooktail_lod0_base_color.png-ffec0459cdede4a8d364150b06cffbde.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

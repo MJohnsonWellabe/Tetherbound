@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://fanmr0ohix6o"
-path="res://.godot/imported/pal_burrowback_lod0_metallic_roughness.png-e97d04f0e43101a572c89a8706ea6b6a.ctex"
+path.s3tc="res://.godot/imported/pal_burrowback_lod0_metallic_roughness.png-e97d04f0e43101a572c89a8706ea6b6a.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "5e7f7704555d517e28b7d66744190d54"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/pals/tetherbound/burrowback/models/pal_burrowback_lod0_metallic_roughness.png"
-dest_files=["res://.godot/imported/pal_burrowback_lod0_metallic_roughness.png-e97d04f0e43101a572c89a8706ea6b6a.ctex"]
+dest_files=["res://.godot/imported/pal_burrowback_lod0_metallic_roughness.png-e97d04f0e43101a572c89a8706ea6b6a.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

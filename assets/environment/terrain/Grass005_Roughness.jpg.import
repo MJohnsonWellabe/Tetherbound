@@ -3,19 +3,20 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bh16wtr85p7pk"
-path="res://.godot/imported/Grass005_Roughness.jpg-2cac82b60e738ef7061c32bc6fc011e3.ctex"
+path.s3tc="res://.godot/imported/Grass005_Roughness.jpg-2cac82b60e738ef7061c32bc6fc011e3.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/environment/terrain/Grass005_Roughness.jpg"
-dest_files=["res://.godot/imported/Grass005_Roughness.jpg-2cac82b60e738ef7061c32bc6fc011e3.ctex"]
+dest_files=["res://.godot/imported/Grass005_Roughness.jpg-2cac82b60e738ef7061c32bc6fc011e3.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -37,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
