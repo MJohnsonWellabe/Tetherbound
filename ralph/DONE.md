@@ -3,6 +3,59 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SA0-orbs-remainder — lighting, UI-chrome ownership, creature appeal
+`c5b492c` (scope note + BLOCKED.md split) · `d18899f` (rim light + selected
+label) · `tests: smoke_opening` green locally, both before and after a rebase
+onto current `main`.
+
+Picked up the three open questions `SA0-orbs`'s own remainder left, one at a
+time:
+
+**(a) One more lighting pass, since the remainder said it had "reachable
+value."** Added a cool-tinted rim/kicker light against the warm key + ambient
+— the specific gap round 4's blind critic named by name ("no visible
+rim/kicker light… compare this to any of the Palworld shots"). Ran a fifth
+blind-judge round: the rim light helped the two pale creatures (Ripplet,
+Galewisp) separate from the dark orb background, but did little for the
+darker Terrapup, and the round's other findings were either repeats (creature
+material quality — see below) or apparent misreadings with no basis in the
+code (a claimed "selected creature renders larger/closer" and a "pose swap on
+selection" — neither exists; the only per-frame difference is the picker's
+own intentional idle turntable spin, and more real time had passed in the
+second capture). The one genuinely new, cheap, real finding — the selected
+orb's name label carried no cue of its own, "an easy win being left on the
+table" — got its own fix (gold colour + a couple points larger, matching the
+ring) and a sixth render to confirm it visually. Stopped there: five rounds
+of blind judging is already past `R9.4`'s own four-round precedent, and every
+remaining finding across rounds 4–5 was either this label nit (now fixed) or
+the same "creature art itself is below the bar" verdict every single round
+independently reached — which is exactly the wall `conventions.md`'s
+stopping rule exists to detect, not a premature stop.
+
+**(b) Who owns wiring `EV1`'s Kenney Input Prompts icons into narrative UI.**
+Did not build a device-aware icon system inside the picker — that would have
+duplicated `EV9` and left `dialogue_panel.gd`/`name_prompt.gd` inconsistent
+with it. Instead read `docs/ENVIRONMENT_AND_UI_BIBLE.md` directly: §16
+("Dialogue") asks for "a controller-first continue prompt" and §18's own
+worked example opens with "E / X button for interact" — the literal hint
+`dialogue_panel.gd` draws today as bracket text. `EV9`'s one-paragraph
+`BACKLOG.md` summary just never said its own source material already covered
+narrative panels. Fixed with a scope-note naming `dialogue_panel.gd`,
+`name_prompt.gd` and `scripts/ui/starter_picker.gd` explicitly, so whoever
+picks up `EV9` does not have to rediscover this mid-task.
+
+**(c) Whether the creature-appeal gap needs its own backlog item.** It does
+not — "improve creature appeal" has no concrete done-when a firing could aim
+at without first deciding how much material/lighting rework is worth
+committing against a fixed ceiling (`D23` §20 forbids new creature meshes at
+any balance). That is a resourcing call, not a design decision on
+`CLAUDE.md`'s flagged list, but it still is not a firing's to make
+unilaterally. Opened as a new `BLOCKED.md` entry instead — "Does the creature
+roster clear a Palworld-level appeal bar, or does it need to?" — distinct
+from `SA5`/`SA6`'s narrow pairwise mandate (stopping two specific species
+reading alike), asking the owner whether a roster-wide pass is worth
+commissioning at all.
+
 ## SA0-orbs — the starter choice moves into Grandpa's conversation
 `2036b28` (director+data+tests) · `4912dc1`..`55e708c` (five visual-pass fixes)
 `tests: smoke_opening, smoke_wake_softlock`, both green locally, both replayed

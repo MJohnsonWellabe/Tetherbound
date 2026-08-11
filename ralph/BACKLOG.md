@@ -124,58 +124,15 @@ MSAA 4×→2×. **On-device confirmation is still open** — CI cannot measure V
 same as `RB4`.
 
 **`SA0-orbs` (starter choice moves into Grandpa's conversation) shipped — see
-`DONE.md`.** A visual remainder from its own blind-judge pass is opened below.
+`DONE.md`.**
 
-### SA0-orbs-remainder — Orb picker: lighting depth, UI chrome, creature appeal
-`model: opus` · `tests: none (visual)` · `area: ui`
-`SA0-orbs`'s picker (`scripts/ui/starter_picker.gd`) ran the blind visual-judge
-pass four rounds, uncapped, and converged the way `R9.4` did: real, concrete
-bugs got found and fixed every round through round 3, and round 4 named nothing
-new — restatements of the same three items round 3 already named, which
-`conventions.md` is explicit is not improvement. That is the wall, not a
-premature stop; see `DONE.md` for the round-by-round record.
-
-What shipped, all four rounds fixing real bugs the critic actually found:
-orbs rendering completely empty (`pal_body.gd::setup()` gates its mesh build on
-`is_inside_tree()`, and the shell was off-tree when `setup()` ran — the exact
-trap `preview_creatures.gd`'s own header names), the square `SubViewport` render
-poking past the round border, the panel reading as a capsule rather than a true
-circle, the vignette darkening into a standing creature's own feet, flat/dim
-in-orb lighting, and ~170px of unbalanced dead space in the layout.
-
-What did NOT clear the bar after that, split the way `conventions.md` asks:
-
-- **Lighting depth.** One brightness/warmth pass moved it and the critic still
-  calls it flat next to Palworld's rim-lit hero shots. Further tuning has
-  reachable value here — it is the one item on this list a future pass could
-  plausibly still move with scene-only changes (per-species key light angle,
-  a rim light, camera framing tuned per creature rather than one formula for
-  all three) — but round 4 already spent one such pass and it was not enough
-  alone, so it is recorded rather than chased for a fifth round.
-- **UI chrome and iconography.** No branded font, panel ornament, or button-icon
-  glyphs exist anywhere in the project — confirmed by grep, not assumed — so the
-  picker's plain text and bracket-notation hints are consistent with every other
-  panel in the game (`dialogue_panel.gd`, `name_prompt.gd`), not a regression
-  this task introduced. `EV1` just landed Kenney's Input Prompts pack, so the
-  icon assets the fix would need now exist — but wiring them into narrative UI
-  (dialogue, naming, this picker) is not currently owned: `EV9` scopes itself to
-  "the HUD" (inventory, crafting, the objective tracker, the contextual prompt)
-  and does not name these panels. Flagging the gap rather than silently folding
-  it into `EV9` and hoping it lands there.
-- **Creature appeal against the Palworld bar.** The critic's own words: "reads
-  as an asset preview, not a hero character portrait," true of Terrapup, Ripplet
-  and Galewisp alike, not a defect specific to one. This is governed already —
-  `D23` §20 and `CLAUDE.md` forbid new creature meshes or regeneration for the
-  Meadows at any balance, so the only lever is material/lighting rework, and
-  `SA5`/`SA6` already own that lever for the narrow case of separating
-  look-alike species. Whether the roster clears a Palworld-level appeal bar
-  through rework alone, generally rather than pairwise, is a bigger question
-  than this picker task and is recorded here rather than answered by it.
-
-Done when: whoever picks this up decides (a) whether another lighting pass is
-worth a fifth round, (b) who owns wiring `EV1`'s new icon pack into narrative UI
-panels, and (c) whether the general creature-appeal gap needs its own backlog
-item or stays inside `SA5`/`SA6`'s narrower remit.
+**`SA0-orbs-remainder` (lighting depth, UI chrome ownership, creature appeal)
+shipped/resolved — see `DONE.md`.** All three sub-questions closed: a rim light
+plus a selected-label treatment shipped (round 5 and 6 of the blind-judge pass,
+five rounds total), `EV9`'s own scope note now names the narrative panels
+explicitly, and the roster-wide creature-appeal question moved to `BLOCKED.md`
+for the owner rather than staying stranded in a backlog item nobody could
+execute.
 
 ### SA1-lod — vegetation throws away the importer's LOD chain
 `model: sonnet` · `tests: smoke_art` · `area: vegetation`
