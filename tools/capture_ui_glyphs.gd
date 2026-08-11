@@ -46,27 +46,43 @@ func _run() -> void:
 	var failures: Array[String] = []
 
 	# 1. Exploration HUD contextual prompt -- the bible sec16 element itself.
+	# The player starts in bed, which registers a real "Get up" offer through
+	# interaction_arbiter.gd -- letting that stand rather than poking the
+	# label directly gets a real, organically-arbitrated prompt instead of a
+	# synthetic one, and sidesteps whatever RichTextLabel does with a rapid
+	# text swap right before a screenshot (a first attempt here showed a
+	# doubled line after overwriting the label's text once by hand).
 	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
 	if hud != null:
 		var prompt_label: RichTextLabel = hud.get_node_or_null(^"Root/Prompt") as RichTextLabel
 		if prompt_label != null:
-			prompt_label.text = PROMPTS.format(PROMPTS.offer("Talk to Grandpa", 2.0))
+			for i in 30:
+				await physics_frame
+			print("  prompt label text: %s" % prompt_label.text)
+			print("  prompt label global_rect: %s" % prompt_label.get_global_rect())
+			_dump_richtextlabels(world, "  ")
 			await _shoot("exploration-prompt", written, failures)
-			prompt_label.text = ""
 		else:
 			failures.append("exploration-prompt: HUD has no Root/Prompt RichTextLabel")
 	else:
 		failures.append("exploration-prompt: no PlaygroundHUD in the scene")
 
-	# 2. Combat HUD engage prompt -- same string, different HUD.
+	# 2. Combat HUD engage prompt -- same string, different HUD. No live fight
+	# is staged (smoke_combat.gd already proves that path); this only needs
+	# the label to hold real formatted text for one stable screenshot.
 	var combat: CanvasLayer = world.get_node_or_null(^"CombatHUD") as CanvasLayer
 	if combat != null:
 		combat.visible = true
 		var combat_prompt: RichTextLabel = combat.get_node_or_null(^"Root/Prompt") as RichTextLabel
 		if combat_prompt != null:
+			# combat_hud.gd's own _process polls _director.call("prompt") every
+			# frame (real, empty, since no fight is staged here) and would
+			# silently overwrite this synthetic value before the screenshot.
+			combat.set_process(false)
 			combat_prompt.text = PROMPTS.format(PROMPTS.offer("Engage Bramblebun", 3.0))
+			for i in 30:
+				await physics_frame
 			await _shoot("combat-prompt", written, failures)
-			combat_prompt.text = ""
 		else:
 			failures.append("combat-prompt: no Root/Prompt RichTextLabel on CombatHUD")
 		combat.visible = false
@@ -111,6 +127,17 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
+
+
+func _dump_richtextlabels(node: Node, indent: String) -> void:
+	if node is RichTextLabel:
+		var rtl := node as RichTextLabel
+		if not rtl.text.is_empty():
+			print("%s%s text=%s visible_in_tree=%s rect=%s" % [
+				indent, rtl.get_path(), rtl.text, rtl.is_visible_in_tree(), rtl.get_global_rect()
+			])
+	for child in node.get_children():
+		_dump_richtextlabels(child, indent)
 
 
 func _shoot(name: String, written: Array[String], failures: Array[String]) -> void:
