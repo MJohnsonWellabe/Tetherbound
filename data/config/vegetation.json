@@ -37,12 +37,12 @@
         "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves.png"
       },
       "retint": {
-        "Leaves_NormalTree": "#a8dba0"
+        "Leaves_NormalTree": "#78c86e"
       },
-      "_comment_variant": "EV2: 'controlled material variants -- spring, deep and yellow-green -- not a different colour per tree' (bible sec10). Three fixed steps, one per remaining model, not per-instance jitter. Round 1 of EV2's own blind pass tried this with R9.4's shipped #9dcaff as `spring` plus a straight darken (#7697bf) as `deep` -- both are BLUE-hued multiply colours (hue ~213) that only land in the intended green family on Leaves.png's DARK/average texels; on the texture's bright highlight speckle they multiply through nearly unchanged and read as visible cyan/teal flecks, which the critic named directly ('look like a stray specular/vertex-color artifact'). The three below are green-hued multiplies instead (hue 77-112) so the highlight case lands in the same family as the average case -- checked both algebraically (tools none committed; texture-average and a synthetic near-white highlight both come out hue 75-106) and by re-render. `deep` targets palette.json's meadow.leaf_green_deep (#496c34, hue 98) the way R9.4's comment always intended, this time by making the TINT itself green rather than relying on the texture average to correct a blue one.",
+      "_comment_variant": "EV2: 'controlled material variants -- spring, deep and yellow-green -- not a different colour per tree' (bible sec10). Three fixed steps, one per remaining model, not per-instance jitter. Round 1 of EV2's own blind pass tried R9.4's shipped #9dcaff (`spring`) plus a straight darken (`deep`) -- both BLUE-hued multiplies (hue ~213) that land in the intended green family on Leaves.png's dark/average texels but multiply through nearly unchanged on bright highlight texels, reading as cyan/teal flecks a blind critic named directly. Round 2 fixed the hue (green-hued multiplies, hue 77-112, confirmed fleck-free by an independent second blind pass) but that pass's own close pixel inspection found the three still clustered in a 63-84 degree rendered hue band -- too narrow to read as distinguishable varieties once scene lighting compresses it further, even though the un-lit albedo maths looked separated. These values push both hue (77/96/103 after the same texture-multiply check) AND value (0.20/0.19/0.09) further apart -- `deep` in particular is now a genuinely darker tint, not just a different hue at the same brightness -- while the highlight-case check (a synthetic near-white texel) still stays inside 75-130 degrees, short of the ~150 degree line where the round-1 cyan artifact started.",
       "variant_retint": {
-        "res://assets/environment/stylized_nature/CommonTree_1.gltf": {"Leaves_NormalTree": "#a8dba0"},
-        "res://assets/environment/stylized_nature/CommonTree_2.gltf": {"Leaves_NormalTree": "#6b8f52"},
+        "res://assets/environment/stylized_nature/CommonTree_1.gltf": {"Leaves_NormalTree": "#78c86e"},
+        "res://assets/environment/stylized_nature/CommonTree_2.gltf": {"Leaves_NormalTree": "#325f3c"},
         "res://assets/environment/stylized_nature/CommonTree_3.gltf": {"Leaves_NormalTree": "#c4d696"}
       }
     },
@@ -74,12 +74,12 @@
         "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves.png"
       },
       "retint": {
-        "Leaves_TwistedTree": "#a8dba0"
+        "Leaves_TwistedTree": "#78c86e"
       },
       "_comment_variant": "EV2: the same 3-step spring/deep/yellow-green family as the `trees` layer (bible sec10), so the hero trees read as kin to the standard canopy rather than a fourth palette. One variant per remaining model, not per-instance jitter.",
       "variant_retint": {
-        "res://assets/environment/stylized_nature/TwistedTree_1.gltf": {"Leaves_TwistedTree": "#a8dba0"},
-        "res://assets/environment/stylized_nature/TwistedTree_2.gltf": {"Leaves_TwistedTree": "#6b8f52"},
+        "res://assets/environment/stylized_nature/TwistedTree_1.gltf": {"Leaves_TwistedTree": "#78c86e"},
+        "res://assets/environment/stylized_nature/TwistedTree_2.gltf": {"Leaves_TwistedTree": "#325f3c"},
         "res://assets/environment/stylized_nature/TwistedTree_4.gltf": {"Leaves_TwistedTree": "#c4d696"}
       }
     },
@@ -108,7 +108,7 @@
       },
       "_comment_variant": "The same two non-spring variants as the standard canopy, so the sapling layer reads as the same species at a different age rather than a third palette.",
       "variant_retint": {
-        "res://assets/environment/stylized_nature/CommonTree_4.gltf": {"Leaves_NormalTree": "#6b8f52"},
+        "res://assets/environment/stylized_nature/CommonTree_4.gltf": {"Leaves_NormalTree": "#325f3c"},
         "res://assets/environment/stylized_nature/CommonTree_5.gltf": {"Leaves_NormalTree": "#c4d696"}
       }
     },
