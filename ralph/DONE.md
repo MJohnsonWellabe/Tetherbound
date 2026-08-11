@@ -3,6 +3,57 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## NP3 — The named Meadows cast: identities for Mira/Oskar/Tam, plus the Quarry Foreman and the Rescued Ranger
+`f6c27f6`. `tests: tests/run_tests.gd` (299/299, `test_dialogue_runner`'s 12
+included). Visual-affecting (two new bodies added to the village square): a
+blind `.claude/skills/visual-judge` pass ran, entirely local, against
+purpose-built close-up frames of the two new NPCs (`scratch/np3_capture.gd`,
+not committed — throwaway per `conventions.md`'s scratch/** rule).
+
+**Scoped down from a literal reading of the spec bullets, on purpose.** The
+spec text under §35 that names Mira/Oskar/Tam ("introductory trainer battle,"
+"reward: South Bridge Key," etc.) actually belongs to §12, a different
+section — checked directly. §35 itself, the section this item's own name
+points at, only asks for identity: which reused rig, which palette. Real
+trainer combat needs `R8.1` (a whole substrate: trainer-vs-player battle
+triggers, a trainer roster/AI, item/TM/key-item data that doesn't exist yet)
+plus `SC12`–`SC15`, all separately staged later in the backlog behind
+levelling (`R4.1`) and movesets (`R4.3`). Building that under `NP3` would have
+been a large, wrong-shaped item; this instead gave Mira ("Meadow Keeper"),
+Oskar ("Bridgehand"), and Tam ("Field Scout") one identity/foreshadowing line
+each in `data/dialogue/village.json`, with **no** battle offer, reward, or XP
+— none of that is testable by `test_dialogue_runner` (the test this item
+names, confirmed by reading it: purely a dialogue-data validator) and all of
+it stays tracked under `R8.1`/`SC12`–`SC15`.
+
+**Added two new reused-rig villagers** per §35's own list: Quarry Foreman
+(Grandpa's rig, dark stone/workwear tint, `villager_quarryman` in `art.json`)
+and Rescued Ranger (trainer rig, `villager_ranger`), placed via the existing
+`village_npcs.json`/`village_npcs.gd` pipeline (`NP1`/`R7.2`) — positions and
+`facing_deg` computed with the same atan2-to-well formula reverse-engineered
+from Mira/Oskar/Tam's own existing data (verified to reproduce their values
+to 1 decimal place before trusting it for new ones), each 5m+ clear of every
+structure and every other villager.
+
+**A real defect, caught before push, not asserted.** The Ranger's first tint
+was `#2c7a78`, the teal the spec names as its first option. Rendered, it came
+out a saturated green nearly indistinguishable from Oskar/`villager_keeper`'s
+existing `#4f8a5b` — both readable as "green" despite quite different hue
+math, because `character_model.gd`'s emission-multiply tinting mechanism
+(documented there since `NP2`) multiplies onto a base texture region with a
+strong green bias, and Tam's blue (`#3f5a8c`) survives that same multiply
+fine while teal didn't. Moved to the spec's own named alternative, a pale tan
+(`#c2a878`) — a light, desaturated neutral rather than another saturated hue
+fighting the same bias — and a fresh render confirmed it reads as warm tan,
+clearly distinct. A genuinely blind sub-agent critic (no knowledge of the
+teal attempt or anything else in this session) then verdict on the corrected
+frames: "pass as legible, distinct-enough additions" against the rest of the
+cast. It separately flagged that the Foreman and the Ranger's palettes still
+both sit in a narrow earth-tone band with no role-signalling prop (no
+hard hat, no bow) — real, but explicitly scoped by the critic as a
+roster-wide material/prop-pass question, not specific to these two, and not
+chased further here.
+
 ## EV2-trunk-colour — Bark retint compensates for a cool ambient wash
 `fda64dc`. `tests: full suite` (299/299). Visual-affecting: a mandatory
 blind `.claude/skills/visual-judge` pass ran against the standard

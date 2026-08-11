@@ -478,12 +478,10 @@ lighting gradient, not a rank system"); the real rank marker that shipped
 is a chest badge using `NP1`'s own accessory mechanism, escalating in both
 colour and size, converged after 3 rounds.
 
-### NP3 — The named Meadows cast
-`model: sonnet` · `tests: test_dialogue_runner` · `area: npc`
-Spec §35. Mira, Oskar and Tam get their trainer identities — **they already
-exist** in `village_npcs.json`, do not add three more bodies — plus the quarry
-foreman and the rescued ranger/researcher. Done when: every named NPC the
-chapter needs exists on a reused rig.
+**`NP3` (the named Meadows cast) shipped — see `DONE.md`.** Mira, Oskar and
+Tam got identity lines (Meadow Keeper, Bridgehand, Field Scout); the Quarry
+Foreman and Rescued Ranger were added as two new reused-rig villagers. Real
+trainer battles stay out of scope — that's `R8.1` and `SC12`–`SC15`, not §35.
 
 **`NP4` (generate the three bases) shipped — see `DONE.md`.** Two of three
 (villager_female, grunt) passed a two-round blind critique; villager_male's
