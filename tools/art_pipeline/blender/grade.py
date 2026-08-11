@@ -483,6 +483,53 @@ SPECIES: dict[str, dict] = {
             ("uv", 75, 1775, 145, 1840),
             ("uv", 915, 1725, 1000, 1805),
         ],
+        "palette": [
+            # Spec sec1B: rust/chestnut with charcoal flight feathers and a
+            # pale sand underside -- currently blue-grey with blue wings,
+            # which is close enough to Galewisp's own palette that D13's
+            # "must not resemble Galewisp" rule is being broken today
+            # (R9.4's roster render named this pair the worst-broken one).
+            # Blue-grey plumage -> rust/chestnut, as far from Galewisp's
+            # muted slate-blue as this palette gets. First render (in-engine,
+            # not just the raw texture) still showed the SPREAD WING surface
+            # specifically at 33.6% hue 200-220 -- a whole-texture average
+            # missed it because the wings are a small fraction of the UV
+            # space. Widened the band (160-260, was 170-235) and dropped the
+            # saturation floor (0.06, was 0.10) so paler wing blue is caught
+            # too, and pushed hue_amount to 0.97 for a tight rust convergence
+            # instead of the softer 0.85 that left a visible blue residue.
+            {"op": "shift", "hue": (160.0, 260.0), "saturation": (0.06, 1.01),
+             "value_mul": 0.90, "saturation_mul": 1.55,
+             "hue_toward": 16.0, "hue_amount": 0.97},
+            # Low-saturation pale blue-grey (the washed-out reading a blind
+            # critic gave the wings) doesn't have enough saturation for the
+            # op above to grab confidently -- boost saturation first, then
+            # the hue nudge has something to work with, same idiom Duskhush
+            # uses for its own pale neutral.
+            {"op": "shift", "saturation": (0.0, 0.14), "value": (0.30, 1.01),
+             "saturation_mul": 1.6, "hue_toward": 20.0, "hue_amount": 0.55},
+            # The existing warm gold/tan feather edges deepen toward true
+            # chestnut rather than staying a lighter ochre.
+            {"op": "shift", "hue": (15.0, 55.0), "saturation": (0.16, 1.01),
+             "value_mul": 0.90, "saturation_mul": 1.35,
+             "hue_toward": 16.0, "hue_amount": 0.45},
+            # Dark plumage (flight feather shadow, crest) -> charcoal: a
+            # near-neutral dark. `hue_toward: 220` was self-defeating here --
+            # it pushed the residual saturation this op leaves (0.55 mul is
+            # not a full desaturation) toward BLUE, so the "charcoal" op was
+            # itself repainting exactly the slate-grey-green mottling a
+            # rendered close-up (not just the raw texture average) showed
+            # surviving on the inner flight feathers. Dropped the hue push
+            # and cut saturation harder so what's left reads as neutral dark
+            # rather than a small blue accent.
+            {"op": "shift", "value": (0.12, 0.38), "saturation": (0.0, 0.45),
+             "saturation_mul": 0.25},
+            # Pale chest/underside -> warmed toward sand rather than staying
+            # a cool off-white.
+            {"op": "blend", "value": (0.55, 1.01), "saturation": (0.0, 0.22),
+             "target": (0.86, 0.76, 0.58), "amount": 0.40,
+             "shade": "value", "shade_norm": 0.95},
+        ],
         "roughness": ROUGHNESS_BAND,
         "emissive": "off",
         "specular": 0.20,
@@ -503,6 +550,22 @@ SPECIES: dict[str, dict] = {
             ("uv", 1560, 1340, 1760, 1500),
             ("uv", 0, 1520, 180, 1700),
             ("uv", 1540, 1780, 1740, 1948),
+        ],
+        "palette": [
+            # Spec sec1B: slate/lavender-grey body, muted cream chest, amber
+            # eyes left alone (the eye_guard rects above already do that --
+            # this op only ever sees what is outside them). Currently reads
+            # "pale cream-and-brown" per the backlog's own diagnosis; the
+            # warm brown/gold plumage is 67.5% of the saturated texels.
+            # Warm plumage -> cool slate.
+            {"op": "shift", "hue": (15.0, 60.0), "saturation": (0.15, 1.01),
+             "value_mul": 0.85, "saturation_mul": 0.75,
+             "hue_toward": 222.0, "hue_amount": 0.78},
+            # The low-saturation warm taupe/cream (the dominant 40.8% of
+            # the map) gets a lavender-grey cast instead of staying warm --
+            # "muted", not desaturated to a flat grey.
+            {"op": "shift", "saturation": (0.0, 0.15), "value": (0.20, 1.01),
+             "saturation_mul": 1.4, "hue_toward": 250.0, "hue_amount": 0.35},
         ],
         "roughness": ROUGHNESS_BAND,
         "emissive": "off",
@@ -525,6 +588,38 @@ SPECIES: dict[str, dict] = {
             ("uv", 185, 1545, 350, 1705),
             ("uv", 335, 1900, 512, 2048),
             ("uv", 1600, 1800, 1800, 1980),
+        ],
+        "palette": [
+            # Spec sec1B: ochre/gold with cream and charcoal. Currently a
+            # teal/cyan-and-cream fledgling (50% of the saturated texels sit
+            # in the 160-200 hue band) that reads as an Ice-type, the same
+            # failure class Galewisp itself shipped with.
+            # hue_amount is not circular: a 220deg source pixel moving 88%
+            # toward 42 lands near 63 (yellow-green, not gold) because the
+            # interpolation is linear across the whole 140-220 span rather
+            # than wrapping the short way. A first pass at 0.88 left a real
+            # 60-80deg olive band instead of clearing into gold. 0.97
+            # collapses the whole band close enough to 42 that the residual
+            # spread stays inside the ochre/gold range regardless of where a
+            # given pixel started.
+            # saturation_mul raised from 0.95 -- the game's own closeup rig
+            # (bright ambient + a 1.6-energy key light) washes a moderate
+            # albedo saturation toward pale on this fledgling's small, mostly
+            # convex body, the same way it read Galecrest's wings pale before
+            # that species' own saturation pass was strengthened. Also
+            # widened/lowered the saturation floor so paler cyan is caught.
+            {"op": "shift", "hue": (135.0, 225.0), "saturation": (0.08, 1.01),
+             "value_mul": 0.92, "saturation_mul": 1.45,
+             "hue_toward": 42.0, "hue_amount": 0.97},
+            # Existing tan/gold (beak, feet, wing flecks) enriches toward a
+            # true ochre rather than staying a pale honey tan.
+            {"op": "shift", "hue": (20.0, 55.0), "saturation": (0.16, 1.01),
+             "saturation_mul": 1.35, "hue_toward": 40.0, "hue_amount": 0.35},
+            # Dark plumage accents (crest tips, wing markings) -> charcoal,
+            # the third named colour, which nothing currently supplies.
+            {"op": "shift", "value": (0.10, 0.35), "saturation": (0.0, 0.40),
+             "saturation_mul": 0.5, "hue_toward": 40.0, "hue_amount": 0.15,
+             "value_mul": 0.82},
         ],
         "roughness": ROUGHNESS_BAND,
         "emissive": "off",
@@ -549,6 +644,23 @@ SPECIES: dict[str, dict] = {
             ("uv", 1060, 240, 1200, 380),
             ("uv", 850, 940, 1010, 1080),
             ("uv", 1200, 530, 1380, 690),
+        ],
+        "palette": [
+            # Spec sec1B: deep teal, cream, copper/tan, orange bill and feet.
+            # Unlike the other three birds, Reedwing was never named as
+            # broken -- the hue is already roughly in place (teal ~140-200
+            # is a real presence, not absent). This is an ENRICH pass, not a
+            # rotation: push the existing teal deeper/richer so it reads as
+            # "deep teal" rather than a paler wash, and warm the existing
+            # tan toward true copper so it separates further from the other
+            # four species' own warm bands.
+            {"op": "shift", "hue": (140.0, 205.0), "saturation": (0.10, 1.01),
+             "value_mul": 0.88, "saturation_mul": 1.25,
+             "hue_toward": 182.0, "hue_amount": 0.25},
+            # Warm tan/gold -> copper (bill, feet, wing accents).
+            {"op": "shift", "hue": (15.0, 55.0), "saturation": (0.20, 1.01),
+             "value_mul": 0.95, "saturation_mul": 1.15,
+             "hue_toward": 24.0, "hue_amount": 0.35},
         ],
         "roughness": ROUGHNESS_BAND,
         "emissive": "off",

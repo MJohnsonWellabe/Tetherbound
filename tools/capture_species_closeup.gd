@@ -91,7 +91,10 @@ func _run() -> void:
 
 	for i in 120:
 		await physics_frame
-	camera.global_position = Vector3(0.0, 1.1, spacing * ids.size() * 0.72 + 1.4)
+	# 0.72 (SA5's original two-species framing) crops the outer creatures once
+	# more than two stand in the row -- the row's width grows with ids.size()
+	# but that multiplier didn't. 1.65 keeps the full row in frame up to five.
+	camera.global_position = Vector3(0.0, 1.1, spacing * ids.size() * 1.65 + 1.4)
 	camera.look_at(Vector3(0.0, 0.75, 0.0), Vector3.UP)
 
 	for i in 8:
