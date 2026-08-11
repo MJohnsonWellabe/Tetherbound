@@ -113,6 +113,45 @@ notification when its run finishes.
 | **Ralph lane B** | `9 * * * *` | No | `trig_01TkPuw6fMmjQ2FM5LA5xAKN` | Owner or an agent |
 | **Ralph lane C** | `29 * * * *` | No | `trig_01VgHpVNCrsAWB8xNPBZScjw` | Owner or an agent |
 
+### ⚠ Check the Routine's ALLOWED TOOLS — the keyed one is missing three
+
+The "Ralph" Routine's stored `allowed_tools` is exactly:
+
+    Bash, Read, Write, Edit, Glob, Grep, WebFetch, WebSearch
+
+Eight tools. **No `Task`, no `Skill`, no MCP tools.** For comparison, a Routine
+created through the normal tooling gets `preset:default` plus `Task`, `Skill`,
+`Monitor`, `TodoWrite` and the rest. Two consequences, both load-bearing:
+
+1. **It cannot chain.** Scheduling a successor needs the `send_later` MCP tool,
+   and MCP tools are not in the list. `PROMPT.md` tells every firing to schedule
+   a successor 2–3 minutes out; a firing that cannot will fall back to the
+   hourly cron, quietly, and the ~25% idle that chaining was meant to remove
+   stays.
+2. **It cannot run the blind visual pass.** `.claude/skills/visual-judge` needs
+   `Skill`, and a genuinely blind critic needs `Task` to spawn a sub-agent that
+   was never told what changed. Without both, a firing can only look at its own
+   frames and grade its own work — **which is precisely the failure
+   `conventions.md`'s blind-pass rule exists to prevent**, and it has already
+   happened: R7.2's own record says the builder had "no way to spawn a genuinely
+   blind critic and read back its verdict from its own toolset" and self-graded
+   instead.
+
+That second one is not a minor gap right now. **Nearly every item in Phases
+-0.9 through -0.55 is visual-affecting**, so as configured the keyed Routine
+cannot correctly complete most of the work at the top of the backlog.
+
+**Fix:** edit the Routine in the UI and allow at least `Task` and `Skill`
+alongside the eight above, plus MCP tools if you want chaining. When creating
+the lanes, give them the same — the default tool set new Routines get is
+already correct, so this is a quirk of the keyed one specifically.
+
+**How this was found:** by reading the Routine's stored config, not by watching
+it fail. What is *verified* is the eight-tool list; that scheduling and blind
+critique are impossible without the missing three is inference from what those
+actions require — but it matches the R7.2 report exactly, and it is cheap to
+fix either way.
+
 ### ⚠ Lanes must be created in the UI, with the repository attached
 
 **An agent cannot create a working lane.** The `create_trigger` tool has no
