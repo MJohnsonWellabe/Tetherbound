@@ -170,7 +170,8 @@
       ],
       "clumps": 110,
       "per_clump": 130,
-      "clump_radius": 16.0,
+      "_comment_clump_radius_ev3": "EV3: R7.1-remainder-2's third round named the untried lever directly -- 'a genuine density lever inside the clumps themselves (more per_clump, smaller clump_radius for tighter packing) rather than further redistributing the same instance count'. 16.0 -> 10.0 packs the same 130 instances into 39% of the area (a squared effect), so each clump reads as a dense patch of continuous cover instead of a loose scatter, with no change to the total prop count or render cost. TUNABLE.",
+      "clump_radius": 10.0,
       "_comment_strays": "R7.1-remainder round 3: cut from 2000. Round 2's blind critic named the actual problem precisely -- 'near-regular intervals with large uninterrupted gaps... no clustering' -- and 2000 strays spread uniformly across the whole 512m map is a fifth of this layer's instances filling in exactly the gaps between clumps that were supposed to read as clearings. Fewer strays lets the clumps themselves read as denser, clustered patches with real clear ground between them, which is the actual ask (clustering, not raw count).",
       "strays": 900,
       "max_slope_deg": 30.0,
@@ -202,7 +203,8 @@
       },
       "clumps": 52,
       "per_clump": 90,
-      "clump_radius": 19.0,
+      "_comment_clump_radius_ev3": "EV3: same tighter-packing lever as `grass` above, same reasoning -- 19.0 -> 12.0 keeps the instance count fixed and concentrates it. TUNABLE.",
+      "clump_radius": 12.0,
       "strays": 380,
       "max_slope_deg": 30.0,
       "_comment_scale": "R7.1-remainder: raised alongside grass's own scale bump (same file, same reasoning) so the two layers stay in proportion to each other.",
@@ -292,6 +294,8 @@
       "collides": false,
       "grows_on_paths": true,
       "_comment_paths": "The one layer allowed on the dirt paths: stones on a path ARE the path.",
+      "_comment_path_bias_ev3": "EV3, found while blind-judging EV4's paths: this layer predated the real paths and its clumps were never anchored to them, so a stone cluster could land several metres of untouched lawn away from the nearest route -- 'a tidy circular stone group... disconnected from the actual path' per the blind critic. path_bias 1.0 snaps every clump centre to the nearest point on `paths.routes` (scatter_rules.gd::_clump_centre); the clump's own 8m clump_radius then spreads instances off that point, so a cluster straddles the road and reads as stones trodden into it rather than scattered independently of it. strays (90) are left unbiased on purpose -- they are the loose stones elsewhere in the meadow, not the path's own texture.",
+      "path_bias": 1.0,
       "_comment_tint_r9_4": "R9.4. PathRocks_Diffuse.png is an atlas of pale lavender-grey stones on a dark green ground -- the stone faces measure RGB(132,135,130), value 0.53, saturation 0.04, i.e. a neutral light grey. Rendered over a bright meadow under a strong sun they blew out to RGB(229,230,231) and read, in the survey frames, as scattered paper or marble chips rather than as stones trodden into a path. This is not a bug -- the texture is being drawn faithfully -- it is the wrong value for earth. Warmed and darkened to about the value of the soil they sit in. TUNABLE.",
       "retint": {
         "PathRocks": "#a89682"

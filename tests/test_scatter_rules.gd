@@ -216,3 +216,61 @@ func test_ridge_bias_of_one_prefers_higher_ground() -> void:
 		"ridge_bias 1.0 averaged %.1f height across %d seeds, no higher than unbiased's %.1f" % [
 			biased_sum / samples, samples, unbiased_sum / samples
 		])
+
+
+# --- path bias (EV3: path_stones clumps anchored to the actual road) ------
+
+func test_path_bias_of_zero_changes_nothing() -> void:
+	# Same backward-compatibility guarantee as ridge_bias 0.0: a layer that
+	# does not opt in must place identically whether the key is present at
+	# 0.0 or absent entirely.
+	var stones := _layer("path_stones").duplicate(true)
+	stones["path_bias"] = 0.0
+	var with_zero := RULES.placements_for(stones, field, world_size, 55)
+	var without_the_key := _layer("path_stones").duplicate(true)
+	without_the_key.erase("path_bias")
+	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	assert_eq(with_zero.size(), without.size())
+	for i in with_zero.size():
+		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
+			"path_bias 0.0 moved a placement; it must be a no-op")
+
+
+func test_path_bias_of_one_lands_clumps_on_the_road() -> void:
+	# The defect this fixes: path_stones clumps scattering independently of
+	# path_factor, landing several metres of untouched lawn away from the
+	# nearest route. Uses the real layer's own clumps/per_clump/clump_radius
+	# (unlike ridge_bias's isolated-single-instance test above) because a
+	# clump straddling the road is the actual shape of the fix -- some
+	# instances on the centreline, some in the verge grass beside it -- and
+	# collapsing to one instance at zero radius would only prove the snap
+	# point itself is on the road, not that the fix changes what ships.
+	var layer := _layer("path_stones").duplicate(true)
+
+	layer["path_bias"] = 0.0
+	var unbiased_total := 0.0
+	var unbiased_count := 0
+	layer["path_bias"] = 1.0
+	var biased_total := 0.0
+	var biased_count := 0
+
+	var samples := 5
+	for seed_value in samples:
+		layer["path_bias"] = 0.0
+		for p in RULES.placements_for(layer, field, world_size, seed_value * 97):
+			var spot: Vector3 = p["position"]
+			unbiased_total += field.path_factor(spot.x, spot.z)
+			unbiased_count += 1
+		layer["path_bias"] = 1.0
+		for p in RULES.placements_for(layer, field, world_size, seed_value * 97):
+			var spot: Vector3 = p["position"]
+			biased_total += field.path_factor(spot.x, spot.z)
+			biased_count += 1
+
+	assert_true(unbiased_count > 0 and biased_count > 0, "one of the two runs placed nothing at all")
+	var unbiased_avg := unbiased_total / unbiased_count
+	var biased_avg := biased_total / biased_count
+	assert_true(biased_avg > unbiased_avg * 10.0,
+		"path_bias 1.0 averaged path_factor %.3f across %d instances, not meaningfully above unbiased's %.3f" % [
+			biased_avg, biased_count, unbiased_avg
+		])

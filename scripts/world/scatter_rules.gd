@@ -123,9 +123,10 @@ static func placements_for(
 	var spread := float(layer.get("clump_radius", 14.0))
 	var strays := int(layer.get("strays", 0))
 	var ridge_bias := clampf(float(layer.get("ridge_bias", 0.0)), 0.0, 1.0)
+	var path_bias := clampf(float(layer.get("path_bias", 0.0)), 0.0, 1.0)
 
 	for clump in clumps:
-		var centre := _clump_centre(rng, half, field, ridge_bias)
+		var centre := _clump_centre(rng, half, field, ridge_bias, path_bias)
 		for i in per_clump:
 			# Square root of a uniform sample gives a disc that is denser at the
 			# middle, which is what a copse looks like. Sampling the radius
@@ -158,7 +159,8 @@ const RIDGE_SEARCH_RADIUS := 140.0
 
 ## Where a clump starts. Plain uniform by default; a `ridge_bias`-weighted
 ## fraction of clumps instead search a local neighbourhood for higher ground
-## and start there instead.
+## and start there instead, and independently, a `path_bias`-weighted fraction
+## snap straight onto the nearest authored path.
 ##
 ## Deliberately not slope-based ridge DETECTION — there is no map of named
 ## ridgelines to check against, and hand-picking coordinates is exactly the
@@ -167,10 +169,28 @@ const RIDGE_SEARCH_RADIUS := 140.0
 ## going" concentrates each clump toward whatever local high ground is
 ## nearby, with no knowledge of where that is, while leaving the clumps'
 ## overall spread across the map unchanged from the unbiased distribution.
+##
+## `path_bias` does not need the same candidate-search trick: unlike height,
+## which varies smoothly everywhere, `path_factor` is zero almost everywhere
+## and only nonzero in a band a few metres either side of a route — a handful
+## of random tries would land off the road nearly every time. So a
+## path-biased clump snaps straight to `nearest_point_on_paths`, the same
+## fix `EV3`'s own backlog entry names for `path_stones`: "clumps bias
+## toward path_factor() instead of scattering independently of it, so a
+## stone cluster sits ON the dirt it's supposedly part of." The clump's own
+## `clump_radius` still spreads instances off the snapped centre, so a
+## path-biased clump straddles the road rather than lining up on its
+## centreline.
 static func _clump_centre(
-	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float
+	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float, path_bias: float = 0.0
 ) -> Vector2:
 	var base := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+
+	if path_bias > 0.0 and rng.randf() <= path_bias and field.has_method("nearest_point_on_paths"):
+		var on_path: Vector2 = field.nearest_point_on_paths(base.x, base.y)
+		if on_path != Vector2.INF:
+			base = on_path
+
 	if ridge_bias <= 0.0 or rng.randf() > ridge_bias:
 		return base
 

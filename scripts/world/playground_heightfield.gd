@@ -269,12 +269,45 @@ func path_factor(x: float, z: float) -> float:
 
 
 func _segment_distance(point: Vector2, a: Vector2, b: Vector2) -> float:
+	return point.distance_to(_segment_closest_point(point, a, b))
+
+
+func _segment_closest_point(point: Vector2, a: Vector2, b: Vector2) -> Vector2:
 	var along := b - a
 	var length_sq := along.length_squared()
 	if length_sq < 0.0001:
-		return point.distance_to(a)
+		return a
 	var t := clampf((point - a).dot(along) / length_sq, 0.0, 1.0)
-	return point.distance_to(a + along * t)
+	return a + along * t
+
+
+## The closest point on any authored path route to a world position, for
+## scatter layers that want to ANCHOR a clump to the road rather than merely
+## avoid it (`path_factor` only answers "how close"). `Vector2.INF` when the
+## config has no routes at all, the same sentinel `height_at` already uses for
+## "no answer" — a scatter layer with `path_bias` set but no paths configured
+## falls back to its unbiased placement rather than snapping to a phantom road.
+func nearest_point_on_paths(x: float, z: float) -> Vector2:
+	var paths: Dictionary = _config.get("paths", {})
+	var routes: Array = paths.get("routes", [])
+	if routes.is_empty():
+		return Vector2.INF
+	var spot := Vector2(x, z)
+	var best := Vector2.INF
+	var best_distance := INF
+	for entry: Variant in routes:
+		if not entry is Dictionary:
+			continue
+		var points: Array = (entry as Dictionary).get("points", [])
+		for i in points.size() - 1:
+			var a := Vector2(float(points[i][0]), float(points[i][1]))
+			var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
+			var candidate := _segment_closest_point(spot, a, b)
+			var distance := spot.distance_to(candidate)
+			if distance < best_distance:
+				best_distance = distance
+				best = candidate
+	return best
 
 
 ## Height before the spawn pad flattening, used as the pad's own target so the

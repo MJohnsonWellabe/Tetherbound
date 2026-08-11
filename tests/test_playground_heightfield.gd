@@ -138,3 +138,35 @@ func test_the_paths_reach_where_they_promise() -> void:
 	var far: float = _field.path_factor(float(first[0][0]) + width + shoulder + 5.0,
 		float(first[0][1]) + width + shoulder + 5.0)
 	assert_almost_eq(far, 0.0, 0.01, "well off the road should be untouched meadow")
+
+
+func test_nearest_point_on_paths_lands_on_the_road() -> void:
+	# EV3: path-biased scatter clumps (path_stones) snap here. A point this
+	# returns must itself read as fully on the path, or a "biased" clump would
+	# still land off the road.
+	var paths: Dictionary = _config.get("paths", {})
+	var routes: Array = paths.get("routes", [])
+	var first: Array = (routes[0] as Dictionary).get("points", [])
+	var somewhere_off_the_road := Vector2(float(first[0][0]) + 40.0, float(first[0][1]) - 25.0)
+	var on: Vector2 = _field.nearest_point_on_paths(somewhere_off_the_road.x, somewhere_off_the_road.y)
+	assert_true(on != Vector2.INF, "a config with routes should always find a nearest point")
+	var factor: float = _field.path_factor(on.x, on.y)
+	assert_almost_eq(factor, 1.0, 0.01,
+		"nearest_point_on_paths returned a point that isn't itself on the path (path_factor %.2f)" % factor)
+
+
+func test_nearest_point_on_paths_is_actually_nearest() -> void:
+	# A route waypoint lies on some segment, so the true nearest point on the
+	# whole network can never be farther from a nearby probe than that
+	# waypoint is — catches a version that returns the first route/segment
+	# tried instead of genuinely comparing all of them.
+	var paths: Dictionary = _config.get("paths", {})
+	var routes: Array = paths.get("routes", [])
+	var points: Array = (routes[0] as Dictionary).get("points", [])
+	var waypoint := Vector2(float(points[0][0]), float(points[0][1]))
+	var probe := waypoint + Vector2(1.5, -0.7)
+	var on: Vector2 = _field.nearest_point_on_paths(probe.x, probe.y)
+	assert_true(on.distance_to(probe) <= probe.distance_to(waypoint) + 0.01,
+		"nearest_point_on_paths (%.2fm away) is farther from the probe than the known waypoint (%.2fm)" % [
+			on.distance_to(probe), probe.distance_to(waypoint)
+		])
