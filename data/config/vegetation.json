@@ -287,5 +287,20 @@
       "radius": 16.0,
       "_why": "the practice meadow: the opening's bramblebun and the arena around it"
     }
+  ],
+  "_comment_footprints": "R9.4-remainder-8: unlike clearings above, EVERY layer respects these, including grass/drygrass/flowers -- a footprint is the literal extent of a solid structure, not the wider 'keep the arena/yard readable' radius clearings exist for, so the grass/flowers exemption that avoids a bald ring around the yard has no reason to apply here. Found by real grass tufts standing on Grandpa's own interior floor and rug in a tools/capture_buildings.gd render. Radius is the building's half-diagonal plus a small margin, not a repeat of the wider yard clearing above.",
+  "footprints": [
+    {
+      "x": -22.0,
+      "z": -16.0,
+      "radius": 6.5,
+      "_why": "Grandpa's house, 9x7m inside plus walls -- grass was standing on the floor and the rug"
+    },
+    {
+      "x": 28.0,
+      "z": 4.0,
+      "radius": 5.0,
+      "_why": "the windmill -- at distance sqrt(18^2+14^2)=22.8m from the village-square clearing's own centre, just outside its 22m radius, so the rocks layer (which DOES respect clearings, unlike grass) could still land a boulder against its base. R9.4-remainder-8's survey found one doing exactly that, obscuring village.json's own stated landmark from the meadow view."
+    }
   ]
 }

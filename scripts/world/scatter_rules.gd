@@ -73,6 +73,15 @@ static func allowed(layer: Dictionary, height: float, slope: float, distance_fro
 	# and applied to everything within reach of it.
 	if spot != Vector2.INF and bool(layer.get("cleared_by_clearings", true)) and _inside_a_clearing(spot):
 		return false
+	# Footprints are narrower and unconditional, unlike clearings above:
+	# grass and flowers are deliberately exempt from the wide clearings (see
+	# the comment above) so the meadow does not go bald near the arena, but
+	# that exemption also let them grow straight through a building's own
+	# floor and roof, since a footprint's few metres are not "near a
+	# structure" the way a 16m clearing is -- they ARE the structure.
+	# R9.4-remainder-8 found grass tufts inside Grandpa's house, on the rug.
+	if spot != Vector2.INF and _inside_a_footprint(spot):
+		return false
 	return true
 
 
@@ -81,6 +90,15 @@ static func _inside_a_clearing(spot: Vector2) -> bool:
 		var clearing: Dictionary = entry
 		var centre := Vector2(float(clearing.get("x", 0.0)), float(clearing.get("z", 0.0)))
 		if spot.distance_to(centre) < float(clearing.get("radius", 0.0)):
+			return true
+	return false
+
+
+static func _inside_a_footprint(spot: Vector2) -> bool:
+	for entry: Variant in config().get("footprints", []):
+		var footprint: Dictionary = entry
+		var centre := Vector2(float(footprint.get("x", 0.0)), float(footprint.get("z", 0.0)))
+		if spot.distance_to(centre) < float(footprint.get("radius", 0.0)):
 			return true
 	return false
 
