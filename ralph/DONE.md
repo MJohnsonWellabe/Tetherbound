@@ -3,6 +3,48 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SA1-lod — vegetation stops discarding the importer's LOD chain
+`de8657c` · `tests: smoke_art`, green locally before every push (three of
+them — see below), and in CI (run 31511759144, then 31514823852 attempt 2).
+
+Root cause: `vegetation.gd::_retint()` rebuilt every scattered mesh with a
+fresh `ArrayMesh` via `surface_get_arrays()`/`add_surface_from_arrays()`,
+which only round-trips base LOD0 geometry — there is no public getter for the
+importer's LOD dict, so it and the shadow mesh were silently dropped on every
+retint. Every tree and tuft therefore drew at LOD0 at every distance, 23,452
+instances of it. Fix: `duplicate(false)` the source mesh instead of rebuilding
+it — `ArrayMesh.duplicate()` carries the LOD chain over through its own
+`_surfaces` storage, and `surface_set_material()` on the duplicate retints
+without touching any of that. `false` (no subresource duplication) is
+deliberate: the shadow mesh carries no material and is never touched, so
+sharing the one original instance across every retint variant is correct and
+free. `smoke_art.gd` gained a check that reads the LOD chain and shadow mesh
+back off a retinted `CommonTree_1` standing in the world and compares it to
+the un-retinted source file; verified it fails against the pre-fix code
+([0, 0], no shadow mesh) and passes against the fix ([10, 4], matching the
+source).
+
+**Shipping this took three rebase-and-push cycles, none of them code
+changes.** The fix itself was already correct and CI-green when this firing
+picked it up — a previous firing (`ralph-lane-generalist`) had done the real
+work and left its lease reading `shipped`, but `ralph/SA1-lod` had never
+actually fast-forwarded `main`: three other lanes (`NP1`, `SA0-orbs-
+remainder`, `ralph/tether-hero-boards`) were landing on `main` in the same
+window, and `ralph-merge.yml`'s fast-forward-only gate lost that race
+repeatedly. This firing rebased onto current `main` and re-pushed three times
+(never touched `main` directly, never force-pushed it) until one push's CI
+finished before the next lane's landed. One of those CI runs failed for a
+real but unrelated reason — see `LP2` below, opened from the same evidence.
+
+## LP2 opened — `smoke_opening` beat-3 press-count flake
+Not fixed, recorded in `BACKLOG.md` Phase -0.95. Same commit (`c8ece6a`)
+failed once and passed twice across three runs (one CI, one CI rerun, one
+local) with zero code differences — closing Grandpa's conversation in 7
+presses on the failing run and 14 on both passing ones. Likely the same class
+of frame-timing race `smoke_opening.gd`'s own comments already warn about for
+polled input, not investigated further here; see the `BACKLOG.md` entry for
+the evidence trail.
+
 ## SA0-orbs-remainder — lighting, UI-chrome ownership, creature appeal
 `c5b492c` (scope note + BLOCKED.md split) · `d18899f` (rim light + selected
 label) · `tests: smoke_opening` green locally, both before and after a rebase
