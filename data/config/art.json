@@ -204,6 +204,36 @@
     },
     "animation_libraries": []
   },
+  "villager_quarryman": {
+    "_comment": "NP3. Quarry Foreman, spec sec35 -- Grandpa's rig (older, workworn build) per the spec's own 'Grandpa/generic civilian base' instruction, in a dark stone/workwear tint distinct from every other reused-rig villager on the square.",
+    "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
+    "height": 1.79,
+    "model_yaw": 0.0,
+    "tint": "#54504a",
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "animation_libraries": []
+  },
+  "villager_ranger": {
+    "_comment": "NP3. The rescued Ranger/Researcher, spec sec35 -- trainer rig per the spec's 'main-character base' fallback. A teal (spec's first choice) was tried first and rendered indistinguishable from villager_keeper's green -- the shared emission-tinting mechanism (see character_model.gd's own comment on _shared_variant_material) multiplies onto a base texture with a strong green bias, and confirmed in a real render, so a teal tint cannot clear a green tint here. Moved to the spec's own named alternative, a pale tan/cream, which survives the same multiply as a clearly distinct light neutral instead of fighting the green bias with another saturated hue.",
+    "model": "res://assets/characters/trainer/trainer_lod0.glb",
+    "height": 1.76,
+    "model_yaw": 0.0,
+    "tint": "#c2a878",
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "animation_libraries": []
+  },
   "warden": {
     "_comment": "The Warden of the Meadows, the biome's final boss. Board 06 used directly, per the owner lifting the earlier override (docs/art/REFERENCE_CANON.md). He does not appear in the first fifteen minutes; he is here so the biome's end is not a stand-in.",
     "_comment_face": "His face is a painted mask, not modelled features. That is the art, not a shortcut: board 06 masks him, and asking the generator for a hard visor plays to what it can actually do after nine whole-figure candidates came back with blank ovoids.",

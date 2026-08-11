@@ -1,11 +1,12 @@
 {
   "_comment": "Village banter (R7.2), merged onto data/dialogue/opening.json's table by dialogue_runner.gd. Same shape, same no-branching rule (see opening.json's own `_comment_shape`): a line or two per villager, flavour only. No `give:` or `beat:` effects — these people have nothing to hand over and nothing to gate. `portrait` reuses trainer.png, the only generic human portrait art the project has; a bespoke portrait per villager is not part of this pass.",
+  "_comment_np3": "NP3 (spec sec35) gave Mira, Oskar and Tam their named roles -- Meadow Keeper, Bridgehand, Field Scout -- as an opening identity line each, and added the Quarry Foreman and the Rescued Ranger as two new reused-rig villagers. None of the five offer a real fight: R8.1 (trainer combat) doesn't exist yet, so this is identity and foreshadowing only, same no-give/no-beat rule as the original three.",
   "conversations": {
     "village_mira": {
       "speaker": "Mira",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Morning! Mind the coop side of the square, the hens have opinions about strangers.",
+        "Meadow Keeper's what they call me around here — somebody's got to look after what grows out there, coop side included. The hens have opinions about strangers, mind.",
         "That barn's held every harvest since before I was born. Still smells like it."
       ]
     },
@@ -13,6 +14,7 @@
       "speaker": "Oskar",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
+        "Bridgehand's my trade — I keep the old crossing south of here in one piece, when it lets me. Team Tether's been sniffing round it lately, which helps nobody.",
         "Windmill's been groaning since the spring thaw. Nobody's got round to it.",
         "You're the one staying with old Elias, aren't you? Whole square knows by now."
       ]
@@ -21,8 +23,25 @@
       "speaker": "Tam",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
+        "Field Scout, that's me — I track what's out there before it tracks you. Watch a pal's temper as much as its size; the placid-looking ones surprise you most.",
         "Careful on the yard fence, the post on the end is looser than it looks.",
         "Good road out to the meadow from here. Watch for the bramblebun, it startles easy."
+      ]
+    },
+    "village_quarry_foreman": {
+      "speaker": "Quarry Foreman",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Foreman by trade, though there's no quarry to run yet — Team Tether's been working the old rootstone seams south of here longer than anyone local has.",
+        "Give it time. Stone doesn't go anywhere. Neither do I."
+      ]
+    },
+    "village_rescued_ranger": {
+      "speaker": "Rescued Ranger",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Ranger, before Team Tether had other plans for me. Took some doing to get clear of them — I'm still finding my feet.",
+        "Whatever you're chasing out there, watch the Tether patrols. They don't take kindly to company."
       ]
     }
   }

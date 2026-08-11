@@ -25,6 +25,22 @@
       "facing_deg": 18.4,
       "greeting": "village_tam",
       "_why": "south of the well, by the yard fence toward Grandpa's"
+    },
+    {
+      "name": "Quarry Foreman",
+      "config_key": "villager_quarryman",
+      "position": [0.0, -6.0],
+      "facing_deg": 111.8,
+      "greeting": "village_quarry_foreman",
+      "_why": "west of the big barn, clear of every structure and villager by 8m+ -- NP3, spec sec35. No built quarry to stand him at yet (SD16), so the square is where he waits."
+    },
+    {
+      "name": "Rescued Ranger",
+      "config_key": "villager_ranger",
+      "position": [16.0, -10.0],
+      "facing_deg": -90.0,
+      "greeting": "village_rescued_ranger",
+      "_why": "between the well and the small barn, clear of every structure and villager by 5m+ -- NP3, spec sec35."
     }
   ]
 }
