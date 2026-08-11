@@ -393,16 +393,36 @@ blocked on `NP4` or `EV1-remainder` supplying an actual modular mesh) is the
 follow-on: wire real hair/accessory geometry into an actual NPC and run it
 through the blind-visual-judge pass, which this ship did not need — nothing
 in the live village's own config changed, so nothing a player sees changed.
+**Trap for whoever takes it:** `_attach_part()` sets a placeholder's
+`offset`/mesh size as a *local* child of a `BoneAttachment3D` inside the
+same 0.01-scale Armature chain `docs/HANDOFF.md` §6 documents for the
+giant-player bug — `NP2` measured it directly, a "size 13" primitive
+renders as 0.13m, a factor of 100. `_apply_hair()`'s own `0.08` offset is
+almost certainly landing at ~0.0008m in the live game, effectively at the
+bone origin rather than actually offset. Real geometry from a modular mesh
+may sidestep this by not needing a manual offset at all — but if this item
+still calls `_attach_part()` for anything, budget time to fix the scale
+compensation there rather than rediscovering the same trap `NP2` did.
 
-### NP2 — Team Tether rank palettes
-`model: sonnet` · `tests: smoke_art` · `area: npc`
-Spec §36 on top of `NP1`: grunt (charcoal/forest green/minimal gold), officer
-(deeper green, bronze), captain (dark green, brass, regional accent), Warden
-(richest, cream mantle, strongest gold). Readable at gameplay distance without a
-nameplate. One caution §21 hedges on and this does not: **the main-character rig
-is the player's own body**, so faction NPCs use the Warden or Grunt base, never
-that one. Done when: relay captain, regional captain and Warden in one frame
-rank correctly to a blind critic.
+**Correction, found by `NP2`: the palette mechanism itself was invisible.**
+All three human rigs' materials carry `emission_enabled = true` with
+`emission_texture` set to the same painted albedo texture at a full-white
+multiplier. Emission is additive and independent of lighting, so it swamped
+any `_apply_palette()` tint completely — proven with a diagnostic that
+tinted the Warden pure red and rendered him fully green, unchanged.
+`character_model.gd`'s `_shared_variant_material()` now tints emission the
+same way, so this is fixed for every caller, not just `NP2`'s — but it means
+R7.2's three villagers, believed visibly tinted since `NP1` shipped, have
+never actually looked different from each other in a rendered frame. Worth
+a look next time anyone is near `village_npcs.gd`.
+
+**`NP2` (Team Tether rank palettes) shipped — see `DONE.md`.** Grunt,
+officer, captain and Warden, all on the Warden's rig (the only faction-
+appropriate body installed; `NP4`'s Grunt has no game path yet, see
+`NP4-rig`). A body-tint-only ladder failed blind review outright ("a
+lighting gradient, not a rank system"); the real rank marker that shipped
+is a chest badge using `NP1`'s own accessory mechanism, escalating in both
+colour and size, converged after 3 rounds.
 
 ### NP3 — The named Meadows cast
 `model: sonnet` · `tests: test_dialogue_runner` · `area: npc`

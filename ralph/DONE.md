@@ -3,6 +3,58 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## NP2 — Team Tether rank palettes
+`eb7475f` · `tests: smoke_art` (run locally headless: 299 unit tests,
+`smoke_art`, `smoke_opening` all green before push)
+
+Grunt/officer/captain/Warden, all on the Warden's rig — the only faction-
+appropriate body actually installed (`NP4`'s Grunt textured GLB exists but
+has no rigged/installed path into the game yet, see `NP4-rig`, `lane:art`).
+
+**First attempt failed blind review, and the reason why is the real find
+here.** A body-tint-only ladder (darkest for grunt, the Warden's own full
+brightness at the top) rendered as an almost imperceptible difference —
+tracked down to `character_model.gd`'s three human materials all shipping
+`emission_enabled = true` with `emission_texture` set to the SAME painted
+texture as `albedo_texture`, full-white multiplier. Emission is additive
+and lighting-independent, so it completely swamps any `_apply_palette()`
+tint. Proved with a throwaway diagnostic: tinting the Warden's
+`albedo_color` pure red (`(1,0,0,1)`, confirmed via `body_material()`)
+still rendered him fully, unchanged green. **This means `NP1`'s whole
+palette mechanism — shipped, unit-tested, believed working — has never
+actually been visible on screen.** Its own tests only ever read
+`body_material().albedo_color`, never a rendered pixel. Fixed by tinting
+`emission` in `_shared_variant_material()` the same way `albedo_color`
+already was — one line, and it now benefits every caller, not just this one.
+
+Even with that fixed, a body-brightness-only ladder still wasn't the
+answer: round 1 of blind visual-judge called it "a lighting gradient, not a
+rank system... someone duplicated a mesh four times and nudged an exposure
+value." Real rank marker that shipped: a chest badge using `NP1`'s existing
+accessory mechanism, escalating in colour AND size (grey → orange → deep
+orange → crimson, small → largest). Hit a second bug getting there —
+`_attach_part()`'s placeholder offset/size are set inside the same 0.01-
+scale Armature chain `docs/HANDOFF.md` §6 already documents for the giant-
+player bug, so a "size 0.13" badge was rendering at 0.0013m, invisible.
+Measured the actual scale directly (three offset probes, each landing
+almost exactly 100× short of the requested world-space move) rather than
+guessing, and compensated in `npc_ranks.json`'s own data — not in the
+shared `_attach_part()`, which `NP1`'s hair placeholder also calls and
+which this item had no mandate to touch (that would be an unreviewed
+visual change to already-shipped work). `BACKLOG.md`'s `NP1-geometry`
+entry now carries the same warning for whoever picks it up.
+
+**Three rounds of blind visual-judge**, `tools/capture_npc_ranks.gd`:
+round 1 rejected the brightness-only ladder outright; round 2 passed the
+badge approach in principle but caught a gold-on-gold collision between
+captain and the Warden ("the color plateau between rank 3 and rank 4");
+round 3, after moving the Warden's badge to the reserved `tether_oxblood`
+red family (`data/config/palette.json`'s own "Team Tether banners,
+equipment and uniforms" reservation — he IS that faction's top of it) and
+re-tuning officer/captain into a cool→warm→hot ramp, returned "yes, it
+works." Two round-3 nits (captain/warden still close, grunt reading as
+underlit) fixed inline without a fourth render-and-critique round.
+
 ## EV8 — Lighting and atmosphere
 
 Two rounds of the blind pass, both entirely local (five renders total, one
