@@ -5,6 +5,53 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R7.1-found-2 — the near-vertical bank near spawn was overlapping building pads, not a path or texture bug
+`94d267c` on `main` (owner-directed interactive session working Phase -0.5
+through Phase 1, background sub-agent in isolated worktree
+`agent-acc396239df681ed1`; see `ralph/STATUS.md`'s lease note).
+
+`BACKLOG.md`'s own entry (written when this was found) guessed the cause as
+a steep-slope texture-projection problem on the path trench. Live sampling
+of `height_at()` across the bank's cross-section proved that guess wrong:
+the ground genuinely drops ~1.5m over well under a metre there (an 81°
+wall) — this is a real geometry defect, not a shading/UV artefact, and has
+nothing to do with the dirt path (`path_factor()` only tints colour;
+`height_at()`'s chain has no path-height term at all).
+
+Root cause: `_apply_flats()` in `scripts/world/playground_heightfield.gd`
+flattens the ground under building pads (Grandpa's house, the village
+square), and those two pads sit close enough that only ~0.5m of open ground
+separates their circles. The old rule had the strongest-weighted pad "win
+outright" and blend the whole area toward its target height alone — correct
+for one pad shading into natural ground, but where two pads' skirts
+overlap, the winner flips at one point, and near that flip both weights are
+still ~1 (deep inside the overlap, not out at the fringe), so height
+snapped nearly the full 1.6m gap between the two pads' target heights
+across a couple of centimetres.
+
+Fix, two parts: outside every pad's own radius, `_apply_flats()` now blends
+the target *heights* by relative weight instead of picking one winner
+outright (strictly inside a pad's radius it still returns that pad's height
+alone, unchanged — the part `test_the_building_pads_are_genuinely_flat`
+guards and which must stay exact to avoid the tilted-pad regression the
+winner-take-all rule was originally added to prevent); and the two pads'
+target heights themselves move closer together (2.2m/0.6m → 1.2m/0.9m),
+continuing the same tuning direction this file already used once before.
+Terrain rebaked via `build_playground_terrain.gd`.
+
+Live-verified: worst slope within the old trench footprint is 8.5° now
+(was 81°); worst slope across a wide scan of the whole village area is 25°,
+on ordinary hill terrain unrelated to the pads. 299/299 tests pass,
+including the unchanged `test_the_building_pads_are_genuinely_flat`.
+Confirmed by a fresh blind visual-judge pass on the two originally-flagged
+frames (01, 05): "No near-vertical earthen bank and no dirt-trench gouge in
+either frame... a gentle, continuously-curved rolling hill." The same pass
+found one new, smaller, unrelated defect — see `BACKLOG.md`'s new
+`R7.1-found-3` entry (a texture-splat stripe on the same hillside, not
+touched by this fix, which only changed height/geometry).
+
+---
+
 ## R7.1-remainder — PARTIAL: ridge-bias clumping and ground-cover clustering shipped, neither bullet fully passes the blind critic after 3 rounds
 `af6e2fc`, `77421cf`, `44ec290` on `main` (owner-directed interactive
 session working Phase -0.5 through Phase 1, see `ralph/STATUS.md`'s lease
