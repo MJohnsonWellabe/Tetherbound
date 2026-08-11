@@ -34,9 +34,20 @@ if the task genuinely touches more than one — a vegetation task that re-runs
 `build_playground_terrain.gd` holds `vegetation, terrain`, and saying so up
 front is much cheaper than finding out in a merge.
 
-Delete your block, or set it to `shipped`, when you finish. A block left at
-`working` costs the next firing a branch check at best and a stand-down at
-worst.
+**Delete your block when you finish — don't leave it at `shipped`.** This
+changed 2026-08-11: leaving a `shipped` corpse used to be offered as an
+equally-fine option, and every firing took it, because it's the path of least
+resistance mid-task. The file grew to 53 blocks across ~30 sessions in six
+hours and became unreadable at a glance — the owner asked why ten lanes were
+running when there were three. There weren't ten; there was one un-pruned
+file. `shipped` is a real terminal state and correctly ignored by the
+liveness check, so nothing was ever *unsafe* — but a lease file only a script
+can read isn't doing its other job, which is letting a human tell at a glance
+whether the loop is alive.
+
+A block left at `working` (not deleted, not updated) still costs the next
+firing a branch check at best and a stand-down at worst — that part hasn't
+changed.
 
 ---
 

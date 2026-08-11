@@ -376,9 +376,16 @@ one Routine within an hour. Nothing collided, because the per-area leases held,
 but the token burn multiplies without limit and the owner asked for three lanes,
 not three per lane.
 
-So the order is: finish everything you are going to do, release your lease
-(`state: shipped`), **then** schedule one successor 2–3 minutes out, then end.
-If you are still taking items, you are not ready to schedule.
+So the order is: finish everything you are going to do, release your lease,
+**then** schedule one successor 2–3 minutes out, then end. If you are still
+taking items, you are not ready to schedule.
+
+**Releasing means deleting your block from `ralph/STATUS.md`, not setting it to
+`shipped`.** Corrected 2026-08-11 — `STATUS.md` used to offer `shipped` as an
+equally-valid alternative to deleting, every firing took the easier option, and
+the file grew to 53 undeleted blocks in six hours, unreadable at a glance even
+though nothing was actually colliding. Delete the block; if you want a record
+that the task shipped, that's what `DONE.md` is for.
 
 Release the lease **before** the successor fires, or it reads your area as held
 and stands down.
