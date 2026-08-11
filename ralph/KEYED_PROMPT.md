@@ -3,6 +3,30 @@
 The loop runs on three Routines (`MANUAL.md`). This file holds the prompt for
 the **one that carries the Meshy key**. `LANE_PROMPT.md` holds the other two.
 
+## Can Ralph not just update itself?
+
+No — asked and answered on 2026-08-11, and worth recording because it is the
+obvious idea and it fails for three independent reasons:
+
+1. **A fired session has no MCP tools**, so it cannot call `update_trigger` at
+   all. This is the bootstrap: the tools it is missing are the tools it would
+   need to add them.
+2. **`update_trigger` cannot change `allowed_tools`.** The parameter does not
+   exist — it takes `name`, `prompt`, `cron_expression`, `enabled`, `model`,
+   `run_once_at`, and nothing else. There is no API path to this, for any
+   caller.
+3. **An agent may only update Routines it created**, and this one was created
+   via the HTTP API.
+
+**Only the Routines UI can fix the tools.** That part genuinely needs hands.
+
+**The prompt half does not**, and that is the important half. The Routine
+message tells every firing that `ralph/PROMPT.md` overrides it, so anything you
+would want to change in the prompt can be committed to `PROMPT.md` instead and
+takes effect on the very next firing with no UI at all. The `lane: art`
+preference and the spend rules live there now for exactly that reason. Treat the
+Routine prompt as a bootstrap and disk as the state.
+
 ## Why you would be reading this
 
 The original "Ralph" Routine was created through the HTTP API on 2026-08-10 with

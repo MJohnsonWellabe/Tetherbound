@@ -150,8 +150,11 @@ Routines were deliberately created without it, because the key must never reach
 the repository — GitHub history is permanent and secret scanning would revoke
 it. So:
 
-- **If you have the key** (test with `meshy.py check`) you may take `lane: art`
-  items. You are the only firing that can.
+- **If you have the key** (test with `meshy.py check`) — **prefer `lane: art`
+  items** whenever one is available and its area is free. Not merely "may take":
+  no other firing can take them, so an art item you skip is an art item nobody
+  picks up until the next keyed firing an hour later. Take other work only when
+  no art item is ready.
 - **If you do not**, skip every `lane: art` item as though its area were held,
   and take the next one. Do not report this as blocked — it is not, it is just
   not yours. Do not pivot to ledger busywork either; one firing did exactly that
@@ -159,6 +162,37 @@ it. So:
 
 Note that in-engine survey and screenshot renders need **no** key. Only Meshy
 generation and retexture do.
+
+### Before spending a single credit
+
+The balance is **5000** and is no longer the constraint. **Owner-supplied
+reference art is.** Both rules are in `CLAUDE.md` and `D24`, and both will stop
+a task dead if you learn them late:
+
+- **No generation without a reference board** in `docs/art/reference/`. If a
+  task appears to need a new model and no board exists, that is a `BLOCKED.md`
+  entry, not a spend. The standing list of what the owner still has to draw is
+  already there.
+- **`D23` §20 forbids creature regeneration at any balance.** It was reaffirmed
+  *with* 5000 credits available, which is exactly what proves it was never a
+  budget rule. Creatures and humans are rework-only, permanently.
+
+Older material in this repo tells you to spend down and park when credits run
+out. That was written at a balance of 175 and is now the least likely reason
+you will ever stop.
+
+### This file overrides the Routine message that started you
+
+Said plainly because it is load-bearing and easy to miss: **the prompt in the
+Routine is a bootstrap, not the state.** It is edited by hand, rarely, and goes
+stale between firings — the keyed Routine's own prompt predates the per-area
+leases, batching, local critic iteration and the removed round cap, and still
+describes one global lease.
+
+So when the Routine message and this file disagree, **this file wins**, and the
+same goes for `CLAUDE.md`, `conventions.md` and `BACKLOG.md`. Anything worth
+telling every future firing belongs on disk, where it can be changed by a commit
+rather than by a human editing a Routine.
 
 ## Then keep the heartbeat moving
 

@@ -150,10 +150,20 @@ fire at once.
 
 `ralph/KEYED_PROMPT.md` has the current prompt to paste, with a placeholder
 where the key goes — read the real value off the old Routine before deleting it.
-The prompt stored in the original Routine is **stale**: it predates 2026-08-11,
-so it still describes one global lease and knows nothing about areas, batching,
-local critic iteration or the removed round cap. Recreating fixes the tools and
-the prompt in one move.
+
+**The stale prompt matters less than the tools do**, and it is worth being
+precise about why rather than overstating it. The Routine message tells every
+firing that `ralph/PROMPT.md` **overrides it**, so the lease protocol, batching,
+local critic iteration and the removed round cap all reach a firing from disk
+and are already current. Two things the old prompt genuinely lost — preferring
+`lane: art` items, and the spend rules — have been moved into `PROMPT.md`, so
+they now reach every firing without touching the Routine at all.
+
+**Ralph cannot update its own Routine**, so do not queue that as a backlog item.
+It has no MCP tools; `update_trigger` has no `allowed_tools` parameter for any
+caller; and an agent may only update Routines it created. `KEYED_PROMPT.md`
+records the full reasoning. The tools genuinely need the UI; everything else
+belongs in a commit.
 
 **Confirm it worked** by having a session read the Routine's stored config and
 check that `Task` and `Skill` are actually in `allowed_tools`. That is checkable
