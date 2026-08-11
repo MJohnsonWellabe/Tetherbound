@@ -74,6 +74,13 @@ func build() -> void:
 		button.custom_minimum_size = tile
 		button.clip_text = true
 		button.focus_mode = Control.FOCUS_ALL
+		# The theme's default 26px clips "Small Potion  2" entirely off a
+		# 168px tile with no ellipsis (clip_text hard-cuts, it doesn't
+		# truncate-with-dots) -- a blind visual pass caught the quantity
+		# vanishing outright. Measured: 20px is the largest size that keeps
+		# the longest current item name plus a quantity inside the tile's
+		# content width (168 - the theme's 28px button padding).
+		button.add_theme_font_size_override("font_size", 20)
 		_style_slot(button)
 		var slot := i
 		button.pressed.connect(func() -> void: _on_slot(slot))
@@ -144,7 +151,7 @@ func poll() -> void:
 			button.add_theme_color_override("font_color", Color(0.4, 0.41, 0.39))
 		else:
 			var id := str(stack.get("id", ""))
-			button.text = "%s  %d" % [db.call("item_name", id), int(stack.get("n", 0))]
+			button.text = "%s %d" % [db.call("item_name", id), int(stack.get("n", 0))]
 			button.add_theme_color_override("font_color", db.call("colour", id))
 		# The held slot is shown pressed so the player can see what they picked
 		# up even after moving the cursor several slots away.
