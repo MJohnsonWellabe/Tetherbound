@@ -290,17 +290,14 @@ Its own implementation notes are the technical brief: *material/texture swap for
 colour variants, hide/show accessories via separate mesh parts, hair variants
 sharing head topology, keep colour calls low by using shared materials.*
 
-### NP1 — The modular NPC system
-`model: opus` · `tests: smoke_art` · `area: npc`
-Built against the three rigs that already exist, so it needs no credits and
-blocks on nothing. Base body + swappable hair + show/hide accessory parts +
-per-material palettes, all data. Replaces `art.json`'s `tint`, which is a single
-multiply over every surface (`character_model.gd::_apply_tint`) — the exact
-failure §21 names — while still honouring it so R7.2's three villagers keep
-working. **Do not repeat `vegetation.gd`'s mistake**: `_retint()` mints a
-material per variant, and the board explicitly asks for shared materials. Done
-when: two NPCs on one base differ in hair, outfit colour *and* visible
-accessories independently.
+**`NP1` (the modular NPC variant system: per-material palette, hair,
+accessories, all data) shipped — see `DONE.md`.** The hair/accessory shapes
+are placeholder primitives, not real geometry — none of the three rigs has a
+separable hair or accessory mesh yet. **`NP1-geometry`** (new, `area: npc`,
+blocked on `NP4` or `EV1-remainder` supplying an actual modular mesh) is the
+follow-on: wire real hair/accessory geometry into an actual NPC and run it
+through the blind-visual-judge pass, which this ship did not need — nothing
+in the live village's own config changed, so nothing a player sees changed.
 
 ### NP2 — Team Tether rank palettes
 `model: sonnet` · `tests: smoke_art` · `area: npc`

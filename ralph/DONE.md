@@ -322,6 +322,60 @@ convention (e.g. `brooktail`): each base's 3 generate-stage candidates +
 spent total across generate + 3 rounds of retexture fixes; balance checked
 before/after every call, never exceeded plan).
 
+## NP1 — The modular NPC variant system
+`122f04c` (rebased) on `ralph/NP1` · `tests: smoke_art`
+
+Surveyed first, against the actual .glb source files rather than assuming:
+**none of the three canon rigs (trainer, Grandpa, Warden) has separable hair
+or accessory geometry.** Each is one fused mesh (`char1`), one material
+(`Material_1`), one skeleton, five clips — confirmed by parsing the glTF JSON
+directly. So "swappable hair" and "show/hide accessory parts" cannot mean
+toggling real sub-meshes on today's rigs; that needs `NP4`'s Meshy-generated
+modular bases or `EV1-remainder`'s CC0 packs, neither landed yet.
+
+Built the **data and attachment mechanism** instead, honestly scoped to what
+that survey found achievable now:
+
+- `character_model.gd`'s flat `_apply_tint` (one colour, multiplied over
+  every surface — spec §21's own named failure) is replaced by
+  `_apply_palette`, which reads an optional per-material `palette` dict and
+  falls back to the legacy `tint` field read as `{"*": tint}`. R7.2's three
+  villagers need no data change and render identically — verified: same
+  white-base × tint albedo output before and after, checked directly.
+- `hair` and `accessories` are new optional data: shape, colour, `visible`,
+  attached via `BoneAttachment3D` (so a part follows the rig's clips instead
+  of floating fixed), each independent of the other and of the body's own
+  palette. The shapes are placeholder `PrimitiveMesh`s, not real geometry —
+  `CLAUDE.md`'s Prototyping section is explicit that this proves a mechanism
+  and is not to be judged as a look.
+- A `static` material cache, keyed by `(model, part name, colour)`, shares
+  one `Material` across every NPC asking for the same variant — the "keep
+  colour calls low with shared materials" the NPC board asks for, and the
+  "mints a material per variant" mistake NP1 was told not to repeat
+  (`vegetation.gd::_tint_for` proves the same pattern for foliage; that
+  file's own LOD-discarding bug, `SA1-lod`, is still open and was not
+  touched here).
+- `character_model.gd` gained `build_from_config()`, so a test (or a future
+  picker) can drive a one-off variant without writing fixtures into the
+  shared `art.json`.
+
+**No shipped NPC's live config changed** beyond one comment: trainer,
+Grandpa, Warden and all three villagers still carry only `tint`. The
+playable village renders unchanged. Judgment call, recorded rather than
+silently skipped: `conventions.md`'s blind-visual-judge pass is for
+player-visible change, and there is none in this ship. Wiring real geometry
+into an actual NPC — the next step, opened as `NP1-geometry` in
+`BACKLOG.md`, blocked on `NP4`/`EV1-remainder` — genuinely will need it.
+
+`tests/smoke_art.gd` gained two checks: one rebuilds `villager_farmer`,
+`villager_keeper` and `villager_smith` and confirms they still tint through
+the new `palette` translation (not an untouched default-white material);
+one builds two NPCs off the same base with different `palette`/`hair`/
+`accessories` data and asserts they differ independently — NP1's own "done
+when". Run headless, post-rebase, immediately before pushing: 31 lines
+printed (22 creatures, trainer + 3 human fits, the 3 villager tints, the new
+variant check, vegetation), zero failures — `art: OK`.
+
 ## EV1 (Kenney half) — the four HUD/icon packs, staged and ledgered
 `fb396b8` · `tests: none` (EV1's own field)
 
