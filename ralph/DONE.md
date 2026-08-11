@@ -55,6 +55,69 @@ unchanged — this item was pipeline plumbing only, not a re-texture pass.
 These three bases still aren't consumed by any live NPC; that's `NP1-geometry`
 or a future `NP3`/`NP2`-style item's job, not this one's.
 
+## EV4-textures — moss-blotch saturation and slope-specific edge stepping, three rounds, converged
+`912af7f`..`b4e7954` (round 1: tint search; round 2: texture-level moss
+desaturation + tint revert; round 3: pushed desaturation further; final:
+comment) · `tests: none (visual)`, `smoke_traversal` unaffected (no gameplay
+code touched) · local blind-judge pass, three rounds, all rendered and
+critiqued in this checkout before the single push, per `conventions.md`.
+
+Narrowed from EV4 round 5's own two remainders. **Slope-edge stepping: never
+reproduced as the originally-reported hard staircase.** Instrumented
+`_path_control`'s dominant-texture pick directly (a scratch diagnostic, not
+shipped) before guessing: only 28 pixels in the entire 512m bake sit in the
+genuine overlap zone (path fade band AND natural slope-transition band both
+fractional at once), and a dithered version of the dominant pick — shipped
+anyway, since it is a real theoretical soft-spot even though this bake
+doesn't exercise it (`playground_heightfield.gd`'s new `path_dominant_dither`
+noise field, `build_playground_terrain.gd::_path_control`'s new `dither`
+param) — changed **zero** of them, confirmed by hashing the baked `.res`
+files before/after. Three independent blind-critic rounds on
+`tools/capture_paths.gd` never found a clear rectangular-notch staircase
+either; round 3 called it explicitly "largely resolved." Closed.
+
+**Moss saturation: fixed at the pixel level, not by fighting it through a
+tint.** Round 1's tint-only attempt (blue-lifted near-neutral,
+brute-force-searched against the real JPG for the tint that most reduces
+moss saturation through the `albedo_color` multiply) measured real movement
+but a second critic named a NEW defect it caused: the whole path read "too
+pale... closer to bone/sand/chalk," because desaturating moss through a
+global multiplier also flattened the dirt's own warmth. Rounds 2-3 instead
+locally edited `assets/environment/terrain/Ground030_Color.jpg` itself (CC0,
+`ASSET_LEDGER.md` updated) — a feathered mask (hue 65-175°, saturation
+threshold tightened 0.20→0.15 across the two rounds) blended the moss
+regions toward their own luminance in place, taking the same measured patch
+from saturation 0.36 → 0.13 → 0.09, at/below the photo's own ~0.11 baseline.
+`tint` then reverted to the original warm `#e4dac2` and `normal_depth` came
+back up to 0.22 (from round 5's 0.25) now that the pixels carried the fix
+instead of the multiplier. Round 3's critic confirmed real, described
+improvement ("no longer hard flat circles... softer-edged and less garishly
+saturated").
+
+**Did not fully clear the bar — two remainders opened, one in scope for this
+item, one not:**
+- `EV4-textures-remainder` (`area: terrain`): the moss blobs' own roughly
+  circular, similarly-sized shape and semi-regular scattering — real content
+  in the source photo — still reads as "a repeated stamped-decal layer" at
+  close range. No saturation/tint/normal_depth lever reaches a shape
+  complaint; it needs different or additional moss content, not more tuning.
+- `EV4-textures-lighting` (`area: lighting`, **not this item's scope**): an
+  unmotivated hard-edged shadow and blown-out highlights on sunlit path
+  ground, named independently by all three critic rounds in different words.
+  Likely `SA1`'s shadow-atlas VRAM cut, not a path-texture problem. Left for
+  `EV8` or whoever owns lighting next; not touched here to stay inside the
+  `terrain` area this item claimed.
+
+**Process note for whoever reads the git history on this branch**: mid-task,
+a `git reset --hard` run while still on this task branch (chasing the
+`ralph-status` lease file on a separate branch) accidentally moved the
+branch pointer and discarded uncommitted edits. Recovered via
+`git reflog` (the branch's prior tip was one entry back) and re-applied the
+lost edits from scratch — no work was actually lost, but it is why this
+branch commits in three visible rounds with WIP messages rather than one
+clean commit per round, and why every subsequent step in this task committed
+locally before doing anything else.
+
 ## R9.4-remainder-8 — three of eight findings were real; the rest were checked, not assumed
 `55fa8f1` (grass-through-floor + windmill footprint), `8a3fc0c` (barn scale).
 `tests: full suite` (299/299, both commits). Visual-affecting: rendered

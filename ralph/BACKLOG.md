@@ -245,31 +245,45 @@ by another lane specifically for this, credited in `DONE.md`) as a dedicated
 "real progress... works as a navigational read." Two narrower remainders
 opened below from round 5's own honest read of what is still wrong.
 
-### EV4-textures — Moss-blotch saturation on the path, and a slope-specific edge stepping
+**`EV4-textures` (moss-blotch saturation, and the slope-specific edge stepping) shipped — see `DONE.md`.** Three local blind-judge rounds, both original complaints converged: edge-stepping never reproduced past a mild, ambiguous waviness and a third critic called it "largely resolved... no rectangular notches"; moss saturation measurably dropped (0.36 -> 0.09, at/below the texture's own baseline) via a direct, feathered-mask edit to the CC0 source photo rather than fighting it through a tint multiply. **Two new findings from round 3, out of this item's scope, opened below**: the path reads paler than the references even where moss is fully resolved, and an unmotivated hard-edged shadow crosses sunlit path frames.
+
+### EV4-textures-remainder — Moss blobs still read as a "stamped decal," a content limit not a tunable value
 `model: sonnet` · `tests: none (visual)` · `area: terrain`
-Narrowed from "source a packed-dirt texture" (done — `Ground030` is wired in
-as `terrain_playground.json`'s `path` texture entry) to two remaining tuning
-items round 5's blind critique named on the frames that now use it:
+`EV4-textures`' third round confirmed real, described saturation improvement
+("no longer hard flat circles... softer-edged") but the critic's complaint
+shifted rather than closing: the moss patches' own roughly-circular,
+similarly-sized SHAPE and semi-regular scattering — real content in
+`Ground030_Color.jpg`'s source photo, not a saturation or blend bug — still
+reads as "a repeated stamped-decal layer" at close range. No colour/tint/
+normal_depth lever reaches this; it would need either a different or
+re-worked moss layer (irregular, elongated along wear lines, varying
+density) painted into the texture, or a second, sparser decal-style overlay
+rather than one uniform photo tile. Low priority — genuinely a finish
+question, not a bug, and the underlying saturation defect that made it read
+as broken is gone. Done when: a blind critic stops calling the moss pattern
+a decal/stamp.
 
-- **Moss-blotch saturation.** `Ground030_Color.jpg`'s own sparse moss patches
-  (real detail in the source photo, not a bug) read to the critic as "too
-  saturated and too crisply circular... a texture-blend artifact rather than
-  moss." Likely needs the `path` texture's own tint desaturating those
-  patches specifically, or a lower `normal_depth`/different `roughness_mod`
-  softening their edges — the same class of fix already applied twice
-  elsewhere in this file, just tuned for a texture that is otherwise correct.
-- **Path edges going up a slope read as stepped/aliased.** Distinct from the
-  flat-ground edge-wobble fix already shipped (`_path_edge`'s frequency):
-  the critic specifically called out `the-rise-route.png`'s path climbing the
-  hillside as "a visibly stepped, jagged, staircase-like boundary... small
-  rectangular notches," not the organic wobble the flat sections show. Likely
-  an interaction between `_path_control`'s "collapse the natural blend to one
-  dominant id" approximation and the slope band's own control-map transitions
-  changing underneath the path — worth instrumenting `_path_control`'s output
-  along one uphill route segment before guessing at a fix.
-
-Done when: `tools/capture_paths.gd`, re-rendered, stops drawing either
-complaint from a fresh blind critic.
+### EV4-textures-lighting — An unmotivated shadow band and blown-out highlights on sunlit ground, reproduced across three independent blind critiques
+`model: sonnet` · `tests: none (visual)` · `area: lighting`
+Found while judging `EV4-textures`, and named independently by all three
+critic rounds in some form ("hard-edged, blob-shaped shadow," "hard-edged
+sunbeam/light overlay," "unmotivated shadow band... no caster visible in
+frame") — not a path-texture defect, a lighting one, so it stayed unfixed
+through three rounds of path-only tuning while showing up in every one.
+`square-convergence.png` and `grandpas-house-route.png` both show a large,
+soft-edged but tonally abrupt dark diagonal shape crossing open ground with
+nothing in frame tall enough to cast it, and the LIT two-thirds of the same
+frames blow out to near-white with almost no value modulation — Palworld and
+the key art hold a warm mid-value ochre even in full sun. `SA1` shrank both
+shadow atlases off the 4096 desktop default for VRAM; a low-resolution
+shadow atlas under a single directional light over open, largely flat
+ground is a plausible cause of exactly this symptom (soft-edged but
+tonally-hard shadow blobs) and is the first thing whoever takes this should
+check before assuming it is a `world_look`/time-of-day config problem.
+`EV8` (lighting, in flight elsewhere in this backlog) may already cover
+this — check its outcome before duplicating work. Done when: a blind critic
+given a sunlit ground frame stops naming an unexplained shadow or blown
+highlight.
 
 ### EV4-hillside-seam — Blotchy hillside slope material, confirmed pre-existing
 `model: sonnet` · `tests: none (visual)` · `area: terrain`
