@@ -235,12 +235,23 @@ static func _consider(
 	var base := float(layer.get("base_scale", 1.0))
 	var low := float(layer.get("scale_min", 0.85)) * base
 	var high := float(layer.get("scale_max", 1.25)) * base
-	out.append({
+	var placement := {
 		"model": str(models[rng.randi_range(0, models.size() - 1)]),
 		"position": Vector3(spot.x, height, spot.y),
 		"yaw": rng.randf_range(0.0, TAU),
 		"scale": rng.randf_range(low, high),
-	})
+	}
+	# Rigid props (currently just rocks, the one layer with a MINIMUM slope)
+	# rest flush with the ground they're placed on rather than standing
+	# bolt-upright on it. A single centre-point height sample already handles
+	# a small prop on flat ground, but a wide rock deliberately biased toward
+	# slopes (min_slope_deg above) has a footprint the sample point knows
+	# nothing about — the downhill side hangs in the air with a visible gap
+	# under it. Plants stay world-up on purpose: a tree tilts toward the sun,
+	# not the slope, so this is opt-in per layer rather than automatic.
+	if bool(layer.get("align_to_slope", false)):
+		placement["normal"] = field.normal_at(spot.x, spot.y)
+	out.append(placement)
 
 
 ## Every layer, in one call. The seed is offset per layer so trees and grass do

@@ -273,9 +273,13 @@ func _build_batch(model_path: String, placements: Array) -> void:
 
 	for i in placements.size():
 		var placement: Dictionary = placements[i]
-		var basis := Basis(Vector3.UP, float(placement["yaw"])).scaled(
-			Vector3.ONE * float(placement["scale"])
-		)
+		var basis := Basis(Vector3.UP, float(placement["yaw"]))
+		# scatter_rules.gd only sets "normal" for layers that opted into
+		# align_to_slope (rocks) — everything else stays world-up.
+		if placement.has("normal"):
+			var normal: Vector3 = placement["normal"]
+			basis = Basis(Quaternion(Vector3.UP, normal)) * basis
+		basis = basis.scaled(Vector3.ONE * float(placement["scale"]))
 		var spot: Vector3 = placement["position"]
 		multi.set_instance_transform(i, Transform3D(basis, spot - Vector3.UP * SINK))
 		if jitter > 0.0:

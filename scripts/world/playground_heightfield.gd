@@ -322,13 +322,21 @@ func _raw_height(x: float, z: float) -> float:
 	return height
 
 
-## Surface slope in degrees, sampled by central difference. Used to drive the
-## ground colour and to sanity-check that the playground actually contains
-## slopes worth testing against.
-func slope_degrees_at(x: float, z: float, step: float = 1.0) -> float:
+## Surface normal, sampled by central difference. Shared by slope_degrees_at
+## below and by scatter placement (scatter_rules.gd), which needs the actual
+## direction, not just the angle, to rest a rigid object flush with a slope
+## instead of standing it bolt-upright on one.
+func normal_at(x: float, z: float, step: float = 1.0) -> Vector3:
 	var dx := height_at(x + step, z) - height_at(x - step, z)
 	var dz := height_at(x, z + step) - height_at(x, z - step)
-	var normal := Vector3(-dx, 2.0 * step, -dz).normalized()
+	return Vector3(-dx, 2.0 * step, -dz).normalized()
+
+
+## Surface slope in degrees. Used to drive the ground colour and to
+## sanity-check that the playground actually contains slopes worth testing
+## against.
+func slope_degrees_at(x: float, z: float, step: float = 1.0) -> float:
+	var normal := normal_at(x, z, step)
 	return rad_to_deg(acos(clampf(normal.y, -1.0, 1.0)))
 
 

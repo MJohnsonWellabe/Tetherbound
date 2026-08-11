@@ -260,6 +260,8 @@
       "_comment_slope": "The only layer with a MINIMUM slope as well as a maximum, so boulders gather on the shoulders and rises where they belong instead of sitting on flat grass like dropped props.",
       "min_slope_deg": 6.0,
       "max_slope_deg": 44.0,
+      "_comment_align": "R9.4-remainder-8-followup: a rock deliberately biased toward slopes but placed world-up, sampled at one centre point, hangs over the downhill side of its own footprint with a visible gap under it -- confirmed in a render, a boulder perched on the hillside behind the farmhouse with daylight showing under its downhill edge. Rocks are rigid, so they should rest flush with the slope; unlike grass/bushes/trees, which stay world-up on purpose (a plant grows against gravity, not perpendicular to the ground it's rooted in).",
+      "align_to_slope": true,
       "scale_min": 0.28,
       "scale_max": 2.1,
       "clear_radius": 10.0,
