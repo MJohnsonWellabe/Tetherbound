@@ -229,6 +229,21 @@ not a colour-map tint** — `build_playground_terrain.gd`'s own comment already
 calls the real material "queued as polish", and it is why both critics reported
 no worked ground. Absorbs `R9.4-remainder-4` and `R7.1-found-3`.
 
+**EV4-textures (pre-sourced, not yet wired in).** Two CC0 textures are already
+ledgered — ambientCG `Ground030` (dirt/pebble pathway) and `Ground037` (mossy
+forest floor) in `assets/environment/terrain/`, downloaded and imported at
+1024², matching the rest of the array. Found while building EV4 independently
+of whoever ships the path-conversion fix above: `dry_grass` (bible's hilltop/
+disturbed-ground layer, no new texture needed — the existing grass photo at a
+golden tint, same technique as the grass/rock/soil tints already in
+`terrain_playground.json`) and `deep_grass` (`Ground037`, painted near the
+valley basin as a stand-in for "under groves" until `EV3` gives the bake real
+tree-placement data). Both are a hard swap for plain grass in
+`_control_for()`'s flat-ground band, gated on height / valley-distance
+thresholds — does not touch the slope-band logic already shipped. Whoever
+finishes EV4's control-map path conversion first should layer this in as a
+small follow-on rather than re-sourcing the textures.
+
 ### EV5 — Water
 `model: opus` · `tests: smoke_traversal` · `area: terrain`
 Bible §15. A pond and stream: readable stylised surface, shallow-edge colour
