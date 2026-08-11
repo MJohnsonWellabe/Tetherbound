@@ -497,6 +497,87 @@ force-pushing (`--force-with-lease`, safe since it's a solo-owned feature
 branch with no one else's commits on it) is what actually got it merged —
 worth doing proactively rather than waiting out the bot's retry cycle when
 `main` is this active.
+## EV9 (second slice, built in parallel with `HD1`'s discovery) — real Kenney Input Prompts glyphs
+`2fba96f` (glyph mechanism) · `f74ce06`/`310a79d` (two legibility fixes) ·
+`tests: smoke_menu`, green locally; full 299-test suite also run since the
+change touches `test_prompt_arbiter.gd` directly, all green;
+`smoke_opening`/`smoke_combat` also reverified since both scenes render
+panels this ship touched.
+
+**Landed at the same time as the owner's own report that seeded `HD1`
+(Phase -0.85) — the two were built without knowledge of each other, and
+this entry does not close `HD1`; see that item's own entry for the accurate
+remaining scope (`combat_hud.gd`'s Actions row, and the real last-used-
+device tracker this ship's simpler heuristic stands in for).**
+
+**Real button-glyph icons, not literal bracket text.** Bible
+§18: use Kenney Input Prompts, map by device, and "do not display both
+keyboard and controller prompts simultaneously unless context requires
+it" — five places in this project drew a hint like `"[X] / [E]"` or
+`"[A]"`, always showing both devices at once, which violates that last
+rule directly. `scripts/ui/input_glyph.gd` (new) maps the four glyph ids
+the UI actually needs (`interact`/`confirm`/`cancel`/`horizontal`) to a
+Kenney icon for the connected device, returned as inline `RichTextLabel`
+BBCode. Device is "a joypad is connected," not true last-input-used live
+switching — bible §18 asks for the latter, but that needs a shared
+observer every scene can reach, and `project.godot`'s one autoload
+(`Game`) is explicitly meant to stay the project's only one; recorded as a
+known gap rather than silently simplified. Five call sites wired:
+`dialogue_panel.gd`, `name_prompt.gd`, `starter_picker.gd`,
+`prompt_arbiter.gd`'s `format()` (the real exploration-HUD prompt) and
+`encounter_director.gd`'s matching combat-engage prompt. All five
+Hint/Prompt `Label` nodes became `RichTextLabel` (`bbcode_enabled`), since
+`Label` cannot render inline images; `font_color` became `default_color`,
+`RichTextLabel`'s equivalent theme property.
+
+**Three local blind-judge rounds, all real defects, all fixed before push
+— `tools/capture_ui_glyphs.gd` (new) is the purpose-built capture, five
+panels, none of which the fixed five-viewpoint survey or
+`capture_wayfinding.gd` can frame.**
+
+- **Round 1** found the icon sourcing itself was wrong twice before it was
+  right: cropping the Kenney sprite atlas by its own XML rects picked the
+  wrong sub-regions entirely (confirmed by compositing onto a dark
+  background — a meaningless squiggle, not a button); the pack's own
+  pre-cropped `Default/` folder gave correct icons directly. This round's
+  first render also surfaced a doubled prompt line from two different HUD
+  panels bleeding into one frame -- traced to a real, pre-existing,
+  player-visible bug (`EV9-double-prompt`, opened in `BACKLOG.md`, not
+  something this ship introduced), and worked around in
+  `capture_ui_glyphs.gd` by isolating each HUD's visibility per shot rather
+  than fixed in the game, since it is an arbitration question, not a glyph
+  one.
+- **Round 2** found `keyboard_enter.png` (5 letters of baked-in "ENTER"
+  text) and the combined `keyboard_arrows_horizontal.png`/
+  `xbox_dpad_horizontal.png` icons illegible at the ~28px this renders at
+  — confirmed by simulating the exact render size locally before guessing
+  at a fix. Swapped `confirm`'s keyboard icon to `keyboard_return.png` (a
+  plain return-arrow symbol, no text) and `horizontal` to two
+  single-direction icons shown side by side instead of one combined glyph
+  (`input_glyph.gd`'s `GLYPHS` now allows an Array per device for exactly
+  this case).
+- **Round 3** found `cancel`'s keyboard icon (`keyboard_escape.png`, "ESC")
+  still illegible at 28px even after round 2's swaps addressed the two
+  worse offenders. Confirmed locally that 36px reads clearly where 28px
+  does not; bumped `input_glyph.gd`'s default size across the board, since
+  every other glyph is simple enough that a larger render only helps it.
+- **Round 4 converged without a new confirmed defect.** The critic read
+  `combat-prompt.png`'s and `dialogue-panel.png`'s "E" icons as blank
+  keycaps with no visible letter, inconsistent with `exploration-prompt.png`'s
+  legible "E" despite plausibly being the identical icon. Direct pixel-level
+  crops of all three (`/tmp/crop_*.png` at the time, not committed) show the
+  same "E" glyph legible in all three frames — the finding did not survive
+  verification. Stopped here per `conventions.md`'s convergence rule.
+
+**Not touched, and named rather than silently folded in:** `combat_hud.gd`'s
+`Actions` row (five combat verbs — quick/charged/throw/switch-left/
+switch-right — each needing its own keyboard-and-gamepad glyph pair, `HD1`'s
+own reproduction case) and rebinding-aware glyph lookup (the bracket text
+this replaces had the identical gap; the four glyph ids here still read
+`project.godot`'s default bindings, not whatever `tab_settings.gd` remapped
+them to — also `HD1`'s to fix). `EV9` itself stays open too: inventory grid,
+crafting panel, the tracked-objective line and the compass are all still
+ahead, per the original item's own scope.
 
 ## LP2 — `smoke_opening` beat-3 press flake: a pattern fix, the race not directly reproduced
 `tests: smoke_opening`, green locally 3/3 (always exactly 14 presses, matching

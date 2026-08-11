@@ -341,9 +341,8 @@ tool, not the exploration survey) — see `DONE.md`'s follow-on entry.
 `model: opus` · `tests: smoke_menu` · `area: ui`
 Bible §16–§18. Native `Control` nodes over Kenney UI + Input Prompts. Dark
 translucent panels, teal accent, warm gold for progression, no fantasy scroll
-frames. Inventory grid, crafting panel, one tracked objective, contextual
-prompt. **Tested at physical 7-inch scale, not on a desktop monitor** — §17 is
-explicit. Input glyphs follow the last-used device.
+frames. **Tested at physical 7-inch scale, not on a desktop monitor** — §17 is
+explicit.
 
 **First slice shipped 2026-08-11 (`eea16a9`): the exploration HUD only.**
 `scripts/ui/playground_hud.gd`/`scenes/ui/playground_hud.tscn` rebuilt —
@@ -356,6 +355,24 @@ Blind visual-judge (3 rounds, `tools/capture_exploration_hud.gd`) converged
 on "coherent, intentional HUD"; remaining gaps were named explicitly as
 needing new assets rather than more scene tuning.
 
+**Second slice shipped 2026-08-11: real icon glyphs on five of the prompts
+the paragraph below flags, before `HD1` was found — see `DONE.md`.** Built
+independently and in parallel with the owner's `HD1` report landing on
+`main`; the overlap is real and is reconciled in `HD1`'s own entry below
+rather than here. `dialogue_panel.gd`, `name_prompt.gd`, `starter_picker.gd`,
+`prompt_arbiter.gd` (the actual exploration-HUD prompt `format()`) and
+`encounter_director.gd`'s matching combat-engage prompt all draw a real
+Kenney Input Prompts icon now, through new `scripts/ui/input_glyph.gd`,
+instead of literal bracket text. **Does not close `HD1`**: device selection
+is "a joypad is connected," not the last-input-used tracker `HD1` actually
+asks for (so a mouse-and-keyboard player with a pad merely plugged in would
+still see gamepad glyphs), and `combat_hud.gd`'s Actions row — the owner's
+own reproduction case, the F/RB throw button — was left untouched on
+purpose, a separate five-verb glyph set from the four ids this slice built.
+Four local blind-judge rounds, three real legibility fixes (two Kenney
+source icons' baked-in text turned to mush at the size this renders at;
+swapped for symbol-only alternatives and a larger base size).
+
 **Still open — do NOT re-scope these as a separate item, they are this
 item's remainder:**
 - Inventory grid (`tab_backpack.gd`) and crafting panel (`tab_build.gd`)
@@ -364,14 +381,11 @@ item's remainder:**
   starting (search `ralph/DONE.md` for "EV9" or read this entry's own
   history) for the exact API surface (`Game.inventory`, `Game.items`,
   `revision` polling, `menu_tab.gd` contract) `smoke_menu.gd` depends on.
-- ~~The "[X] / [E]" input-glyph replacement...~~ **Promoted to `HD1`,
-  Phase -0.85, 2026-08-11 — owner hit this directly** (mouse sees gamepad
-  letters; gamepad is told to press "F" for a bind that's actually RB).
-  Scope unchanged, just moved so it's not buried in a remainder list: still
-  needs a last-used-input-device tracker, still touches `dialogue_panel.gd`,
-  `name_prompt.gd`, `starter_picker.gd` and now also `combat_hud.gd` (checked
-  2026-08-11: it hardcodes "A"/"X"/"B" too). Kenney Input Prompts already
-  staged at `assets_raw/vendor/kenney_input-prompts/` via `EV1`.
+- ~~The "[X] / [E]" input-glyph replacement...~~ **Tracked as `HD1`,
+  Phase -0.85 — narrowed, not closed, by this item's second slice above.**
+  Still needs the last-used-input-device tracker (no "joypad merely
+  connected" shortcut) and still needs `combat_hud.gd`'s Actions row wired
+  through it — see `HD1`'s own entry for the current, accurate scope.
 - The "one tracked objective" line has nothing to read yet — `SB9`/`SB11`
   (progression-state system, quest log) are still open. Wire the label once
   that state exists; a label bound to nothing is a permanent blank box, the
@@ -383,6 +397,28 @@ item's remainder:**
   explicitly by the round-3 blind critic as needing new assets, not scene
   tuning. No board exists for a display font; flag to the owner before
   picking one, per `CLAUDE.md`'s asset-generation rule.
+
+### EV9-double-prompt — CombatHUD silently mirrors the exploration prompt outside a fight
+`model: sonnet` · `tests: none (visual)` · `area: ui`
+Found building `EV9`'s glyph capture tool; reproduces with or without that
+ship's changes — checked against the OLD bracket-text prompt too, not just
+the new glyph one, so this is not something the glyph work introduced.
+`combat_hud.gd`'s `_show_fight(false)` hides the Enemy/Ally/Actions/Orbs/
+Reticle rows but deliberately leaves `_prompt` visible, since it has to keep
+showing "Engage X" before a fight starts. `encounter_director.gd`'s own
+`prompt()` getter delegates to whatever scene-wide arbiter is present
+(`if _arbiter != null: return str(_arbiter.call("prompt"))`) rather than
+returning its own engage-specific text — so whenever `CombatHUD`'s
+`CanvasLayer` is visible (nothing in the project ever sets it
+`visible = false`; only `_show_fight()`'s per-row hiding runs), it mirrors
+WHATEVER `PlaygroundHUD` is currently showing, not just an engage offer.
+Reproduced directly: walking up to the bed in the opening shows "Get up" on
+both `PlaygroundHUD` and `CombatHUD` simultaneously, stacked on screen,
+today, on `main`. Likely player-visible in the real opening and never
+reported, because the old bracket-text version of both lines was easy to
+mistake for one at a glance. Done when: `CombatHUD`'s prompt row only shows
+during a fight or when `encounter_director` genuinely has its own engage
+offer, never as a mirror of an unrelated exploration prompt.
 
 ### EV10 ▶ — Cohesion pass
 `model: sonnet` · `tests: none` · `area: visual`
@@ -601,15 +637,35 @@ firing inventing a story beat).
 Reproduces the owner's exact report: `combat_throw` is bound to keyboard **F**
 or gamepad **RB** (button 10), but `combat_hud.gd` always prints "F"
 regardless of device, and always shows Xbox-style "A"/"X"/"B" for the other
-verbs even on mouse and keyboard. `dialogue_panel.gd`, `name_prompt.gd` and
-`starter_picker.gd` all hardcode the same kind of bracket text. No last-used-
-input-device tracker exists anywhere in the codebase — this item builds one
-and wires every prompt above through it. Kenney Input Prompts are already
-staged (`EV1`, `assets_raw/vendor/kenney_input-prompts/`). Absorbs the glyph
-work formerly sitting in `EV9`'s remainder list — see that entry, now a
-pointer here. Done when: every on-screen prompt matches the device that
-produced the last input, mouse included, and nothing shows a gamepad letter
-to a keyboard player or vice versa.
+verbs even on mouse and keyboard.
+
+**Narrowed, not closed, by an `EV9` ship that landed in parallel with this
+item's own discovery — see `DONE.md`.** `dialogue_panel.gd`, `name_prompt.gd`,
+`starter_picker.gd`, and the exploration/combat contextual prompts
+(`prompt_arbiter.gd`, `encounter_director.gd`) now draw a real Kenney icon
+through new `scripts/ui/input_glyph.gd`, instead of hardcoded bracket text —
+built and blind-judged without knowledge of this item, since the two were in
+flight at the same time. Two real gaps remain, and both are this item's job:
+
+- **`combat_hud.gd`'s Actions row is still untouched** — the owner's own
+  reproduction case (`combat_throw` showing "F" to a gamepad player) lives
+  here, not in any of the five sites the `EV9` ship covered. Five verbs
+  (quick/charged/throw/switch-left/switch-right), each needing a
+  keyboard-and-gamepad icon pair.
+- **`input_glyph.gd`'s device choice is "a joypad is connected," not
+  last-used.** A player with a pad plugged in who is actually typing on a
+  keyboard would still see gamepad glyphs — the exact class of bug this item
+  exists to fix, just not yet fixed at the root. Building the real
+  last-used-device tracker and pointing `input_glyph.gd`'s existing
+  `using_gamepad()` at it (rather than `Input.get_connected_joypads()`)
+  should carry all five already-wired call sites forward for free.
+
+Kenney Input Prompts are already staged (`EV1`,
+`assets_raw/vendor/kenney_input-prompts/`); the icon files themselves for the
+four ids `EV9` already covers are ledgered under `assets/ui/input_prompts/`
+and reusable directly for combat's five. Done when: every on-screen prompt
+matches the device that produced the last input, mouse included, and nothing
+shows a gamepad letter to a keyboard player or vice versa — combat included.
 
 ### HD2 — A real quick-access item hotbar
 `model: sonnet` · `tests: none` · `area: ui`
