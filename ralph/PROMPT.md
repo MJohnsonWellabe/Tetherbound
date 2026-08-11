@@ -251,7 +251,9 @@ luck, not the protocol working as intended.
 7. **Record**: move each item from `BACKLOG.md` to `DONE.md` with its commit SHA
    and one line on what shipped. Commit that too — and read the bookkeeping
    warning below first, because these three files are where lanes collide.
-8. **Schedule the successor** before you end (see below).
+8. **Schedule the successor as your very last act** — one, immediately before
+   you end, and **never while you still intend to take another item.** Doing it
+   at ship time forks the lane instead of chaining it; see below.
 
 ### Batch the push, never the testing
 
@@ -349,10 +351,26 @@ heartbeat that guarantees the loop survives a session dying mid-task. It is not
 the pacing mechanism. A firing that finishes at :12 and lets the loop idle until
 :49 wastes 37 minutes, and that is roughly 25% of a typical cycle.
 
-So **schedule your successor the moment you have shipped and recorded** — a
-one-shot trigger 2–3 minutes out, not at the end of a long wind-down. Release
-your lease block (`state: shipped`) before it fires, or your own successor will
-read your area as held and stand down.
+### ⚠ Schedule it as your LAST ACT, not when you ship
+
+**One successor per firing, scheduled immediately before you end. Never while
+you intend to keep working.**
+
+This paragraph is a correction. It first read "schedule your successor the
+moment you have shipped and recorded", and that contradicted the loop's own
+"keep going while unblocked work remains" — together they told a firing to
+spawn a successor *and then carry on*, which is a fork, not a chain. Lane B did
+exactly that twice on 2026-08-11 and was running three concurrent sessions off
+one Routine within an hour. Nothing collided, because the per-area leases held,
+but the token burn multiplies without limit and the owner asked for three lanes,
+not three per lane.
+
+So the order is: finish everything you are going to do, release your lease
+(`state: shipped`), **then** schedule one successor 2–3 minutes out, then end.
+If you are still taking items, you are not ready to schedule.
+
+Release the lease **before** the successor fires, or it reads your area as held
+and stands down.
 
 Do **not** schedule one when:
 

@@ -1322,6 +1322,16 @@ player has personally confronted. R8.2's visual-language brief is used here
 first, at small scale. Done when: it can be entered, fought through, and its
 local tether/control equipment disabled.
 
+**The "local tether/control equipment" now has a board** —
+`docs/art/reference/14_Relay_Apparatus.png`, owner-supplied 2026-08-11 and
+labelled Band 3, so it is drawn for exactly this item. It is one of the three
+hero objects D24 reserves Meshy for, and it is `lane: art`. Its artist note is
+the build spec rather than flavour: *modular construction, core and rings
+serviceable, conductor arms and manifolds replaceable*, with five labelled
+subassemblies (tether core, conductor ring, control console, output manifolds,
+grounding base). The console is the thing the player disables, and the board
+details it down to individual routing levers.
+
 ### SE25 — Relay trainers and the relay captain
 `model: sonnet` · `tests: smoke_trainer_battle`
 Spec §3 Band 3, §12: two or three Team Tether trainers and a relay captain, all
@@ -1371,6 +1381,13 @@ place** — `CLAUDE.md`'s Biome 2 rule stands, and D23 says so explicitly.
 Visual-affecting: blind pass required. Done when: a blind critic looking at the
 seam says the two sides used to be joined.
 
+**The pylons have a board** — `docs/art/reference/13_Tether_Energy_Pylon.png`,
+owner-supplied 2026-08-11, and it is the cheapest of the three hero objects to
+build: a **2K–3K triangle** target and a five-part modular kit (base + core
+module + supports ×4 + top frame + tether crystal) that is meant to be
+repeated along a line. That repetition is what sells "severed road" — one
+pylon is a prop, a receding row of them is infrastructure. `lane: art`.
+
 ### SF34 — Three regional captains, three Sigils
 `model: sonnet` · `tests: smoke_trainer_battle`
 Spec §3 Band 4. Field Captain (Ground team, Field Sigil), Ridge Captain (Air,
@@ -1382,6 +1399,20 @@ progression meaning. Natural team expectation entering this band is roughly
 sealed at 2/3 and open at 3/3, and the count is visible on `SB11`'s tracker.
 
 ### 8e — the stronghold and the first reconnection (spec Phase G)
+
+**The Tether Chamber's centrepiece has a board.**
+`docs/art/reference/15_Legendary_Tether_Machine.png`, owner-supplied
+2026-08-11, headed WARDEN STRONGHOLD — it is drawn for this section. ~15 m
+against its own 0–20 m scale bar, so it is architecture rather than a prop and
+the chamber has to be built around it. It is `lane: art` and one of the three
+hero objects D24 reserves Meshy for.
+
+**Read this before generating it.** The board shows a legendary bound inside
+the containment ring, because that is what the machine does to legendaries —
+it is the D23 macro-story drawn. **The board licenses the machine, not its
+occupant.** `D23` §20 forbids new creature meshes at any credit balance, so
+the bound creature is an existing roster asset or VFX. Generating the whole
+board as one asset breaks a hard rule while appearing to follow one.
 
 ### R8.2 — Authored stronghold route · `model: sonnet` · `tests: smoke_traversal`
 Visual language: a sacred natural site industrialised by Tether. R7.1's ridge
