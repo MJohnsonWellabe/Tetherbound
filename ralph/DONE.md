@@ -76,6 +76,40 @@ second look whenever a genuinely blind pass becomes possible.
 lookups gate on). Full suite (`tests/run_tests.gd`) also run, since dialogue
 plumbing is shared infrastructure: 299 tests, 0 failed.
 
+**Follow-up: the genuinely-blind pass this entry's own gap disclosed now
+actually ran.** The owning interactive session has the `Agent` tool the
+sub-agent's own toolset lacked — spawned a fresh sub-agent with zero
+knowledge of what changed, `.claude/skills/visual-judge/SKILL.md`, and 7
+frames rendered from a confirmed `origin/main` checkout (`c0ca15e`, no
+local uncommitted state, `tests/smoke_opening.gd` re-verified green on that
+exact commit first).
+
+The verdict found real, substantive things — sky/hill horizon fusion,
+uniform-spacing vegetation scatter, and a fidelity gap between the
+character/creature art and the environment art around it — but **none of
+them are new defects R7.2 introduced**, checked one by one:
+- The black spire on the hill in `village-square` — already `BACKLOG.md`'s
+  tracked `R7.1-visual-remainder-2` ("two uneven dark spikes... reads as
+  standing stones or a broken obelisk pair"), not a new finding.
+- Mirrored/backwards signpost text in `village-npcs` — `signpost.gd`'s own
+  documented tradeoff (labels face the arm's orientation, not the camera;
+  "unreadable from behind... also true of a real wooden signpost arm, so it
+  is not a regression" — R7.1-visual round 2's own comment). This
+  particular viewpoint happens to catch it from behind; the geometry is
+  unchanged from before this item.
+- The "unset mirror material" (a flat blue oval) in
+  `house-interior-dressed` — traced to the pre-existing `Mirror` furniture
+  piece, not one of this item's additions (`_build_furniture()`'s diff
+  adds only `BedDouble`, `Bookcase`, `Table2`, `Backpack`, `Axe`, `Knife`,
+  `Door1` and two rugs — no mirror or wardrobe call). A flat-colour "glass"
+  plane is a normal low-poly-pack simplification, not obviously broken.
+
+The broader findings (horizon atmospheric haze, scatter clustering,
+environment-vs-character fidelity) are real and apply across the whole
+game, not to anything R7.2 touched specifically — carried forward into
+`R9.4`'s full-game pass rather than chased here, which is exactly the kind
+of finding that item exists to catch.
+
 ## Vegetation colour jitter — fixed a MultiMesh use_colors ordering bug
 `16138ec` on `main` (owner-directed interactive session working Phase -0.5
 through Phase 1). Found incidentally: a background sub-agent's render log

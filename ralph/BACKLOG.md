@@ -196,12 +196,13 @@ look at whatever paints dirt/soil blends onto slope near the spawn pad in
 `build_playground_terrain.gd`. Not chased here — out of scope for the
 near-vertical-bank defect this pass was confirming.
 
-**R7.2 (NPC villagers and interior polish) shipped — see `DONE.md`.** A
-process note is folded into that entry: the required blind visual-judge pass
-could not be run as specified (no Task/Agent-spawning tool with a result
-channel was available in this session), so the render+critique was done by
-the same session instead of a genuinely blind one, disclosed there rather
-than silently claimed.
+**R7.2 (NPC villagers and interior polish) shipped — see `DONE.md`.** The
+sub-agent that built it disclosed a real process gap (no way to spawn a
+genuinely blind critic and read back its verdict from its own toolset) and
+self-graded instead. The owning interactive session had that capability and
+used it afterward — a real blind critique ran against a confirmed-on-`main`
+render; see `DONE.md` for the verdict and why none of its findings needed
+an R7.2-specific fix.
 
 ### R9.4 — Visual cohesion pass, the checkpoint for this phase (relocated from Phase 9)
 `model: sonnet` ▶ · `tests: none`
