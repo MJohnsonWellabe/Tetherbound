@@ -60,6 +60,30 @@
       },
       "_comment": "EXPLICIT boxes, measured, after the blind critique traced a floating dagger in one candidate and a shredded ghost figure in another back to MY crops: every view carried a sliver of the neighbouring board figure at its left edge, and the generator dutifully modelled it. The staff-holding fourth figure is dropped entirely rather than cropped around, since a staff fused to the arm is exactly what the build prompt forbids. `head` is the board's own portrait at native scale — at full-body 1024 the face is ~150px and the eyes are ~10, which is why all six humanoid candidates came back with no eyes at all."
     },
+    "_comment_npc_bases": "`docs/art/reference/12_NPC_Bases_Reusable.png`, made canon by D24/NP1. THREE rows, one base body per row, each with FIVE turnaround views (FRONT, 3/4 FRONT, SIDE, 3/4 BACK, BACK) at one shared scale per row -- more than any other sheet in the pack. `crop_sheet()` requires `len(centres) == len(views)` and `figure_bounds()` places a divider between every ADJACENT pair of declared centres, so a column cannot simply be dropped from `centres` without also dropping it from `views` -- doing that would put the SIDE/BACK divider in the middle of the skipped 3/4-BACK figure instead of the gap that is actually there, corrupting both neighbours. So all five columns are named and cropped, and the one this pipeline has no use for is given a throwaway name (`_unused_three_quarter_back`) rather than one `meshy.py`'s VIEWS list recognises -- `reference_views()` only looks for front/side/back/three_quarter/head, so the extra file sits in the directory and is never read. `three_quarter` is bound to the 3/4 FRONT column rather than 3/4 BACK because it shows the face.",
+    "villager_female": {
+      "file": "12_NPC_Bases_Reusable.png",
+      "band": [180, 85, 715, 349],
+      "centres": [240, 352, 457, 551, 665],
+      "views": ["front", "three_quarter", "side", "_unused_three_quarter_back", "back"],
+      "mask": [[188, 84, 218, 148]],
+      "_comment": "Row 1, FEMALE VILLAGER BASE. See _comment_npc_bases for why all five columns are named. `mask` paints out a small decorative flourish beside the row's own title ('1. FEMALE VILLAGER BASE'), which sits inside the band just left of the FRONT figure's hair and rode into the first crop as a floating grey sliver until this was added — the same failure the Grandpa and wild-sheet masks exist to prevent."
+    },
+    "villager_male": {
+      "file": "12_NPC_Bases_Reusable.png",
+      "band": [180, 385, 715, 635],
+      "centres": [236, 353, 456, 551, 661],
+      "views": ["front", "three_quarter", "side", "_unused_three_quarter_back", "back"],
+      "_comment": "Row 2, MALE VILLAGER BASE. Same column layout and same reasoning as villager_female, one row down. No stray title flourish on this row's heading, so no mask."
+    },
+    "grunt": {
+      "file": "12_NPC_Bases_Reusable.png",
+      "band": [180, 662, 715, 930],
+      "centres": [235, 345, 448, 549, 664],
+      "views": ["front", "three_quarter", "side", "_unused_three_quarter_back", "back"],
+      "mask": [[180, 898, 715, 924]],
+      "_comment": "Row 3, TEAM TETHER GRUNT BASE. Same column layout and same reasoning as villager_female. Band starts at 662, not 655 like the other two rows would suggest, because the panel rule between rows 2 and 3 sits at y=655-658 here (rows 1 and 2's own dividers sit above their bands and are already excluded). This row's boots also sit close enough to its own FRONT/3-4 FRONT/SIDE/3-4 BACK/BACK caption row that there is no clean gap between feet-shadow and label ink to cut the band on, unlike rows 1 and 2 — `mask` blanks the caption instead so content_rows() finds the true foot-bottom on its own."
+    },
     "_comment_wild": "THE MEADOWS WILD ROSTER, from the owner's canon pack (docs/art/reference/wild/). Their sheets are laid out differently from 01-04: each species gets a hero illustration, a THREE-view turnaround (front/side/back — there is no drawn 3/4 view), a head close-up, action poses, a palette strip and a scale figure, and three or four species share one 1448px sheet. So each entry takes the turnaround as its band — three views at one shared scale, which is the signal multi-view reconstruction needs — and adds the HERO as `three_quarter` through extra_boxes, at its own scale. The hero is worth the scale break: a turnaround figure here is 80-170 source pixels wide against 180-450 on sheets 01-04, and the hero is two to three times that. `mask` paints out the species name and role line, which sit inside the hero's own panel with no rectangle that holds the figure and excludes the words.",
     "_comment_wild_sheet05": "05_Meadows_Wild_Scale_Palette_Implementation_Guide.png IS MISNAMED. It is Ground Sheet B — Meadowhart, Burrowback and Tuskroot — not a scale guide. The file name is the owner's and is left alone; this comment is the correction.",
 

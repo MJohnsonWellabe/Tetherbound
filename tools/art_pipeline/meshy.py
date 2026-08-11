@@ -117,7 +117,7 @@ NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weap
             "sword, staff, gun, cape, robe, extra fingers, fused fingers, "
             "noisy surface detail, wet plastic shading, "
             "text, watermark, multiple people, base, pedestal")
-HUMANS = {"trainer", "grandpa", "warden"}
+HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "grunt"}
 
 ## Meshy's documented ceiling for /openapi/v2/text-to-3d prompts, counted on
 ## the final string including the STYLE suffix. image-to-3d does not enforce it.
@@ -385,6 +385,51 @@ SPECIES_PROMPTS = {
         "sleeves, brown trousers, sturdy leather boots, green neck scarf, "
         "small belt pouches, old field satchel, empty hands, no armor, no "
         "weapon, no staff, six heads tall, gentle grandfather posture"),
+    # NP4. The three reusable NPC bases from docs/art/reference/12_NPC_Bases_Reusable.png
+    # (NP1's board), generated so NP1's hair/outfit/accessory swap system has
+    # bodies to build onto. All three read "same height as the player" on the
+    # board itself, so that clause is stated rather than left implicit the way
+    # trainer/grandpa's "N heads tall" figures were -- there is no separate
+    # scale reference to fall back on here.
+    "villager_female": (
+        "stylised human female villager, TWIN SMALL PONYTAILS gathered high "
+        "near the temples with a SMALL GOLD HAIRPIN on the side-swept fringe "
+        "-- the ponytails must read clearly in a STRAIGHT-ON FRONT VIEW, not "
+        "only from the side or back. FULLY SCULPTED FACIAL FEATURES: defined "
+        "eye sockets, eyebrows, nose and mouth geometry. Slim youthful "
+        "build, six and a quarter heads tall, same height as the player, "
+        "NOT chibi. Five separated fingers on each hand. Olive-green "
+        "short-sleeve hooded jacket over a cream shirt, wide brown belt "
+        "with a hip pouch, olive-brown cargo shorts, brown fingerless "
+        "gloves, tall brown lace-up boots, small satchel strap across the "
+        "chest, warm curious expression"),
+    # Round 2. The blind critique of round 1 found the vest rendered warm
+    # brown/leather -- MY prompt's own fault, it said "brown canvas vest"
+    # against a reference that is clearly slate blue-gray -- and a leather
+    # cord pendant at the throat, drawn in the reference, missing entirely.
+    "villager_male": (
+        "stylised human male villager, SHORT TOUSLED BROWN HAIR, FULLY "
+        "SCULPTED FACIAL FEATURES: defined eye sockets, eyebrows, nose and "
+        "mouth geometry. Average build, six and a quarter heads tall, same "
+        "height as the player, NOT chibi. Five separated fingers on each "
+        "hand. Cream work shirt with rolled sleeves under a sleeveless "
+        "SLATE BLUE-GRAY canvas vest with a thin leather cord and small "
+        "pendant hanging at the open collar, wide brown belt with a hip "
+        "pouch, dark brown trousers, brown lace-up boots, practical steady "
+        "expression"),
+    # Round 2. The blind critique of round 1 found the amber-tinted goggle
+    # band across the eyes -- clearly drawn in the reference, between the cap
+    # brim and the mask -- completely absent, reading as bare skin instead.
+    "grunt": (
+        "stylised human Team Tether operative, AMBER-TINTED GOGGLES with a "
+        "hard raised frame worn across the eyes, DARK CLOTH MASK covering "
+        "nose and mouth below them, FLAT-BRIMMED CAP with a small round "
+        "insignia badge. Average build, six and a quarter heads tall, same "
+        "height as the player, NOT chibi. Five separated fingers on each "
+        "gloved hand. Charcoal-purple uniform jacket, CROSSED BROWN LEATHER "
+        "BANDOLIER STRAPS over the chest, wide utility belt with pouches, "
+        "dark grey trousers, black boots, tactical gloves, stern guarded "
+        "posture"),
 }
 
 
