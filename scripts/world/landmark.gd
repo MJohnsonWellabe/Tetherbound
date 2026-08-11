@@ -42,7 +42,18 @@ const OFFSET := Vector2(-6.0, 8.0)
 ##
 ## Mid cool stone, and shaded, so the towers have a lit and a shaded face and
 ## the crenellations that were modelled can actually be seen.
-const TOWER_COLOUR := Color("#6b6a72")
+##
+## SECOND CUT. #6b6a72 was measured, not guessed, and it was wrong: rendered at
+## the wayfinding range it came out RGB(172,175,167), luma 0.68 rising to 0.90,
+## against distant hills at luma 0.77 — near-identical, so the landmark stopped
+## being a silhouette at all and dissolved into the haze band. That is the exact
+## failure R7.1-visual originally fixed by going flat black, arrived at from the
+## opposite direction, and the note below already said what to do about it:
+## the answer is a VALUE that survives this fog at this range, not a render
+## mode. Dark slate, violet-leaning so it is not a neutral grey smudge: it has
+## to sit well under the pale hills (0.77) while still reading against the blue
+## sky (0.21), which puts the target near luma 0.40.
+const TOWER_COLOUR := Color("#33323f")
 
 ## R7.1-visual found the towers reading correctly dark at ~40m but fading to a
 ## pale grey nearly matching the horizon haze at ~60m and ~157m, and fixed it
