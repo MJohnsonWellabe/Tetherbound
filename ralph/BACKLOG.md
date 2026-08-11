@@ -202,70 +202,62 @@ than uniform noise. Absorbs `SA1-lod` if not already done, and `R7.1-remainder-2
 calling the scatter generator output.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
-tint) shipped — see `DONE.md`.** Two remainders opened below: the material
-still doesn't read as dirt (needs a texture asset this ship doesn't have),
-and a hillside slope-blend artifact the pass's own renders surfaced.
+tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four
+tuned the wrong texture, round 5 wired in `Ground030` (sourced independently
+by another lane specifically for this, credited in `DONE.md`) as a dedicated
+`path` texture and the material genuinely improved — a fresh critic called it
+"real progress... works as a navigational read." Two narrower remainders
+opened below from round 5's own honest read of what is still wrong.
 
-### EV4-textures — Path/soil still reads as tinted grass; needs a real packed-dirt texture
-`model: sonnet` · `tests: none (visual)` · `area: assets`
-`EV4` made paths a genuine control-map material swap (confirmed structurally:
-`build_playground_terrain.gd` paints real soil-texture ids along every route,
-not a colour lerp) and gave the edge an organic noise-driven wobble instead of
-a mathematically exact offset. Three rounds of blind critique on
-`tools/capture_paths.gd`'s frames still called the result "tinted grass, not
-dirt" every time, including up close (`edge-detail.png`): "the entire
-foreground path surface... is covered in the same thin blade/thread-like
-texture as the flanking grass." Root cause, confirmed by opening the texture
-file directly: `assets/environment/terrain/Ground003_Color.jpg` (this
-project's only "soil" texture) is a photo of a weedy lawn with real green
-grass tufts painted into its own colour channel, not a clean packed-earth
-photo. Two tint/relief tuning rounds (warmer hue, then softer hue + cut
-`normal_depth` 0.4→0.15, matching the fix already applied to the grass
-texture for the same class of defect) measurably shifted hue and saturation
-(`tools/frame_stats.py`: the-rise-route's orange-hue-fraction dropped from
-20% to 6%) but could not remove the green pixels baked into the photo itself
-— a tint can shift a texture's average colour, not repaint what is already on
-it. Bible §8 lists "Packed Dirt" (item 4) as a texture distinct from "Rich
-Soil" (item 5, which is what `Ground003` actually serves reasonably well, on
-hillside slope transitions this item does not touch). Done when: a real
-packed-earth PBR texture is sourced and ledgered (`ASSET_LEDGER.md`, same as
-`EV1`), wired as its own `textures[]` entry, and paths paint that id instead
-of reusing `soil`; re-run `tools/capture_paths.gd` and blind-judge again.
-
-### EV4-hillside-seam — A hard zigzag/sawtooth blend edge on steep slopes
+### EV4-textures — Moss-blotch saturation on the path, and a slope-specific edge stepping
 `model: sonnet` · `tests: none (visual)` · `area: terrain`
-Found by `EV4`'s round-3 blind critique, on `the-rise-route.png`'s hillside
-(one of `terrain_playground.json`'s `rises` peaks): where the grass/soil
-slope-transition band meets the peak, the boundary is "a hard, repeating
-sawtooth/zigzag edge... a row of small triangular teeth... a classic low-poly
-vertex-color blending artifact... the transition follows triangle edges
-rather than a smooth painted gradient" — not a lighting or texture choice, a
-geometry/control-map resolution defect. **Not established whether this
-predates `EV4`** — `EV4` only retinted the `soil` texture and never touched
-`_control_for`'s slope thresholds or the bake's 1m vertex spacing, so the
-seam itself is plausibly pre-existing and simply more visible now that soil
-reads as a more distinct colour from grass (low contrast can hide a hard
-blend edge the same way it hid the "tinted grass" problem hid a missing
-material). Whoever takes this should render the SAME viewpoint against a
-neutral-grey soil tint first, to settle attribution, before tuning
-`blend_deg`/`blend_sharpness` or the bake's `vertex_spacing`. Done when: the
-grass/soil/rock slope boundary on a steep rise reads as a gradient rather
-than a tooth pattern.
+Narrowed from "source a packed-dirt texture" (done — `Ground030` is wired in
+as `terrain_playground.json`'s `path` texture entry) to two remaining tuning
+items round 5's blind critique named on the frames that now use it:
 
-**EV4-textures (pre-sourced, not yet wired in).** Two CC0 textures are already
-ledgered — ambientCG `Ground030` (dirt/pebble pathway) and `Ground037` (mossy
-forest floor) in `assets/environment/terrain/`, downloaded and imported at
-1024², matching the rest of the array. Found while building EV4 independently
-of whoever ships the path-conversion fix above: `dry_grass` (bible's hilltop/
-disturbed-ground layer, no new texture needed — the existing grass photo at a
-golden tint, same technique as the grass/rock/soil tints already in
-`terrain_playground.json`) and `deep_grass` (`Ground037`, painted near the
-valley basin as a stand-in for "under groves" until `EV3` gives the bake real
-tree-placement data). Both are a hard swap for plain grass in
-`_control_for()`'s flat-ground band, gated on height / valley-distance
-thresholds — does not touch the slope-band logic already shipped. Whoever
-finishes EV4's control-map path conversion first should layer this in as a
-small follow-on rather than re-sourcing the textures.
+- **Moss-blotch saturation.** `Ground030_Color.jpg`'s own sparse moss patches
+  (real detail in the source photo, not a bug) read to the critic as "too
+  saturated and too crisply circular... a texture-blend artifact rather than
+  moss." Likely needs the `path` texture's own tint desaturating those
+  patches specifically, or a lower `normal_depth`/different `roughness_mod`
+  softening their edges — the same class of fix already applied twice
+  elsewhere in this file, just tuned for a texture that is otherwise correct.
+- **Path edges going up a slope read as stepped/aliased.** Distinct from the
+  flat-ground edge-wobble fix already shipped (`_path_edge`'s frequency):
+  the critic specifically called out `the-rise-route.png`'s path climbing the
+  hillside as "a visibly stepped, jagged, staircase-like boundary... small
+  rectangular notches," not the organic wobble the flat sections show. Likely
+  an interaction between `_path_control`'s "collapse the natural blend to one
+  dominant id" approximation and the slope band's own control-map transitions
+  changing underneath the path — worth instrumenting `_path_control`'s output
+  along one uphill route segment before guessing at a fix.
+
+Done when: `tools/capture_paths.gd`, re-rendered, stops drawing either
+complaint from a fresh blind critic.
+
+### EV4-hillside-seam — Blotchy hillside slope material, confirmed pre-existing
+`model: sonnet` · `tests: none (visual)` · `area: terrain`
+Found by `EV4`'s round-3 blind critique as a hard zigzag; round 5 gives the
+attribution question that entry left open a real answer. `EV4` reverted
+`soil` to its exact original R9.4 values once paths got their own dedicated
+texture (round 5), so the hillside band is now byte-for-byte the same
+configuration that shipped before `EV4` touched anything — and a fresh blind
+critic, seeing only round-5 frames, still called the hillside "mottled...
+blotchy all over the dome... more like camouflage or a poorly blended
+multi-layer texture than a natural grass→dirt→rock transition," plus a hard,
+unblended seam where grey rock cuts in at the hill's base. **This settles it:
+pre-existing, not introduced by `EV4`.** Whoever takes this should treat it
+as an independent slope-material defect — `blend_deg`/`blend_sharpness`
+tuning, or the "collapse to one dominant texture" approximation showing
+through on a genuinely three-way grass/soil/rock band — not as unfinished
+`EV4` work. Done when: the grass/soil/rock slope boundary on a steep rise
+reads as a coherent material transition rather than a patchwork.
+
+**`Ground037` (mossy forest floor, ambientCG, also pre-sourced and ledgered
+alongside `Ground030`) is still unused.** Bible sec8 item 5, Deep Grass/
+Forest Floor, painted near the valley basin or under tree canopy once `EV3`
+gives the bake real tree-placement data to key off. Whoever picks up that
+layer should reach for it directly rather than re-sourcing.
 
 ### EV5 — Water
 `model: opus` · `tests: smoke_traversal` · `area: terrain`
