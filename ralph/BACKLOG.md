@@ -513,20 +513,21 @@ the same mechanism §1C's Escape / menu-restore / Alt-Tab clauses describe. The
 spec's ten-minute acceptance test is on-device work and is tracked as `SH53`,
 not as a reopening of RB1.
 
-### SA2 — Grandpa's door cannot be crossed until the opening beat is done
-`model: sonnet` · `tests: smoke_opening`
-Spec §1D. The owner walked straight out of the farmhouse and skipped the man
-who gives you the belt, the orbs and the potions — the whole of
-`OPENING_SEQUENCE.md` beat 3. Canon rule: **the player cannot leave the house
-until the required Grandpa interaction is complete.** Not a "Talk to Grandpa
-first" toast — §1D asks for the in-world form: crossing is stopped, Grandpa
-calls out ("Hold on. You're not walking out there empty-handed."), attention
-redirects, and the conversation starts itself. The gate reads
-`sequence_director.gd`'s current beat against `opening.json`'s beat order and
-lifts for good once the briefing is done; `grandpa_house.gd` owns the doorway.
-Once lifted it never re-arms. Done when: `smoke_opening` walks the player at
-the exterior doorway *before* talking to Grandpa, is stopped, and the briefing
-conversation is running without the test having pressed interact.
+**`SA2` (Grandpa's door gated until the opening beat is done) shipped — see
+`DONE.md`.** One new finding opened below: `SA2-flake`, a pre-existing
+`smoke_opening` beat-4 intermittent failure, unrelated to `SA2` itself.
+
+### SA2-flake — `smoke_opening` beat 4 (starter-picker `menu_confirm`) flakes intermittently
+`model: sonnet` · `tests: smoke_opening` · `area: loop`
+Found while verifying `SA2` locally: `git stash`-ing back to unmodified `main`
+and running `smoke_opening.gd` headless several times in a row reproduces
+"confirming an orb with `menu_confirm` did not close the picker; beat 4 does
+not advance" roughly one run in three, unrelated to any `SA2` change (`SA2`'s
+own door-gate behaviour passed every run). Not narrowed further — same class
+of intermittent-CI-rejects-healthy-work risk `LP1`/`LP2` were opened for, on a
+different beat of the same test. Done when: the flake is root-caused and
+fixed, or pattern-matched and eliminated the way `LP2` was, with the trail
+recorded in `DONE.md`.
 
 ### SA3 — A believable physical perimeter, and a failsafe under it
 `model: sonnet` · `tests: smoke_traversal`

@@ -366,6 +366,71 @@ existing code comment only discussed `NOISE` vs `FLAT`). No `EV8-horizon`
 backlog item needed; recording the ruled-out fog values here in case anyone
 lands on this file wondering why `diag_horizon_haze.gd` exists.
 
+## SA2 — Grandpa's exterior door gated until the briefing is heard
+
+`1790ed1`. Spec §1D: the player cannot leave the farmhouse until the required Grandpa
+opening interaction is complete. Two pieces:
+
+**The physical stop** — `grandpa_house.gd` now builds an invisible
+`StaticBody3D`/`CollisionShape3D` box across the exterior doorway opening
+(`_build_door_gate()`), toggled by a new `set_door_open(open: bool)` method.
+Invisible rather than a visible closed door on purpose: the file's own header
+already explains the door leaf is left open against the wall because a
+closing animation is out of scope for the slice, so a second, shut door in
+the same opening would read as a modelling error rather than a story beat.
+
+**The gate logic** — `sequence_director.gd`'s new `_refresh_door_gate()`,
+polled every frame the same way `_refresh_lockout`/`_refresh_prompts` already
+are. Closed while `BEATS.at_or_after(_beat, BEATS.WALK_OUT)` is false, opened
+for good the moment it's true (never re-checked backwards, matching the
+existing `_set_beat` refusal to move beats backwards) — so it lifts once and
+only once, exactly when the sequence would send the player outside anyway.
+
+The one behaviour beyond blocking: an approach within `DOOR_CALLOUT_RADIUS`
+(2.6m) of the door marker, while on the `house` beat specifically and no
+dialogue is already open, auto-starts Grandpa's briefing — the same
+conversation pressing interact on him opens. Spec §1D explicitly rules out a
+sterile "talk to Grandpa first" message, so the door itself is the second way
+in to the same required conversation.
+
+**Restricted to the `house` beat, not every beat the gate physically covers,
+and this was found by testing, not reasoned out in advance.** `choose` and
+`name` are also before `walk_out` and the door stays shut through both
+correctly, but their own conversations (`grandpa_waiting`, "Still deciding?")
+are incidental, not the required one. Triggering the auto-conversation on
+every gated beat reopened a fresh conversation the instant the previous one's
+box cleared — the player is still standing where the briefing left them, well
+inside the callout radius — which starved `_maybe_open_picker()` of the
+closed-dialogue frame it needs and the starter picker never opened. Caught by
+running the new test locally before pushing, not by CI.
+
+**`smoke_opening.gd`** gained `_the_door_is_gated_until_grandpa_is_heard()`,
+run between getting up and the existing Grandpa-approach step: walks the
+player down the stairs, via the open floor near Grandpa's own standing spot
+(stops 0.8m short of him, same as any `_walk_toward_point` target — not close
+enough to touch his collider), then straight at the door marker. A first
+version aimed directly from the stairs' foot at the door and made zero
+progress for 400 frames — that line clips the corner where the stairs meet a
+piece of furniture and the north wall, and a yaw-homing walk wedged into a
+real corner is not the same failure as a gate working correctly, so the route
+was changed rather than the assertion. Asserts the dialogue is open (no
+interact press sent) and that the player stopped meaningfully short (≥0.8m)
+of the door marker. `_grandpa_says_his_piece()` immediately below already
+knew how to advance a conversation left open on arrival, so no change was
+needed there.
+
+**Found in passing, not fixed here:** beat 4's starter-picker `menu_confirm`
+flakes intermittently on unmodified `main` — confirmed via `git stash` back
+to pre-`SA2` code and running `smoke_opening.gd` headless several times,
+roughly one run in three fails there and passes on retry, while `SA2`'s own
+door-gate behaviour passed every run. Opened as `SA2-flake` in
+`BACKLOG.md`, same class of finding `LP1`/`LP2` exist for.
+
+tests: `smoke_opening.gd`, run headless, locally, multiple times (both with
+and without the change, via `git stash`, to separate the new gate's own
+reliability from the pre-existing flake). Not full-suite — not an autoload or
+save-format change.
+
 ## EV8 — Lighting and atmosphere
 
 Two rounds of the blind pass, both entirely local (five renders total, one
