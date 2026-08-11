@@ -6,10 +6,29 @@
 script = ExtResource("1_hud")
 player_path = NodePath("../Player")
 
+; mouse_filter = 2 is MOUSE_FILTER_IGNORE, and it is load-bearing rather than
+; cosmetic. A plain Control defaults to MOUSE_FILTER_STOP, and this one is
+; full-rect over the whole viewport during ordinary play — so it consumed every
+; InputEventMouseMotion during GUI input handling, which runs BEFORE
+; _unhandled_input. camera_rig.gd accumulates look in _unhandled_input, so the
+; camera never received a single mouse delta and mouse look was dead from the
+; first frame, silently, with no error anywhere.
+;
+; This is why RB1 did not fix the owner's report: it blamed a dropped
+; focus-time mouse capture and re-asserted capture on focus_entered. Capture was
+; never the problem. Gamepad look kept working throughout because it is POLLED
+; in _process from the look_* actions and never travels through the event path.
+;
+; combat_hud.tscn, dialogue_panel.tscn and name_prompt.tscn all already set
+; this. This scene was the one that missed it. game_menu.tscn sets
+; MOUSE_FILTER_STOP deliberately — a pause menu SHOULD take the mouse.
+;
+; tests/smoke_mouse_look.gd fails if this line is removed.
 [node name="Root" type="Control" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="Bars" type="VBoxContainer" parent="Root"]
 offset_left = 40.0
