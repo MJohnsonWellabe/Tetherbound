@@ -32,12 +32,12 @@
       "base_scale": 1.0,
       "collides": true,
       "collision_radius": 0.6,
-      "_comment_leaf": "R9.4. Leaves_NormalTree_C.png measures RGB(88,123,0) -- saturation 1.00, the maximum a colour can have, at hue 77, which is the same chartreuse the ground already is. The blind critic measured 91% of every saturated pixel in frames 01 and 04 inside one 30-degree hue bin and called the world monochromatic; the canopy was reinforcing the ground rather than contrasting with it. Leaves.png is the same pack's muted leaf -- RGB(114,131,50), saturation 0.62 -- and the retint warms it one step further off the grass hue. Same mechanism the bushes layer has used since the crimson-bush fix. No new asset. TUNABLE.",
+      "_comment_leaf": "R9.4. Leaves_NormalTree_C.png measures RGB(88,123,0) -- saturation 1.00, the maximum a colour can have, at hue 77, which is the same chartreuse the ground already is. The blind critic measured 91% of every saturated pixel in frames 01 and 04 inside one 30-degree hue bin and called the world monochromatic; the canopy was reinforcing the ground rather than contrasting with it. Leaves.png is the same pack's muted leaf -- RGB(114,131,50), saturation 0.62 -- and the retint warms it one step further off the grass hue. Same mechanism the bushes layer has used since the crimson-bush fix. No new asset. TUNABLE. R9.4 round 2: the retint now aims at palette.json's meadow.leaf_green_deep (#496c34, hue 98) rather than at a warm cream. Round 1 swapped the texture and stopped the canopy being the MOST saturated thing in frame, but left it at hue ~70 -- the same family as the ground, so frame_stats still measured 85-89% of chromatic pixels in one hue bin against the references' three to five. A canopy has to be a different green from the grass under it, not a brighter one.",
       "retexture": {
         "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves.png"
       },
       "retint": {
-        "Leaves_NormalTree": "#e8e4c8"
+        "Leaves_NormalTree": "#9dcaff"
       }
     },
     "grove": {
@@ -64,12 +64,12 @@
       "_comment_retexture": "The pack ships `Leaves_TwistedTree_C` as a CRIMSON autumn leaf. Left alone it made the biggest trees in the meadow blood red and they dominated every frame. Warm hue has to come from the flowers, the dry grass and the golden hour, not from painting the whole canopy.",
       "_comment_colour": "These stay CRIMSON, at the owner's call: 'I actually really like the red trees.'\n\nIt is also the right call against the review. The critic measured the palette as a single yellow-green wedge — 60-90% of pixels in one hue family in every frame — and said the board's golds and warm ends appear nowhere. A stand of turning oaks is the one thing in the meadow carrying a second hue family at tree height, and it does it with the pack's own authored texture rather than a tint.\n\nKept DELIBERATELY few for that reason: 6 clumps of 5. Warm accent against green reads as autumn; warm everywhere reads as a different biome. The bushes still get retextured green (they share this material) because 800 red bushes is a carpet, not an accent.",
       "_comment_palette": "The twisted trees' canopy is CRIMSON (the pack's leaf texture, not a tint). The key art's Meadows is green-oak country with red held back as an accent, and the blind critique called the old mix (38 red trees, clumped near the spawn) 'autumn-danger everywhere' - red is also supposed to be reserved for Team Tether. ~16 spread across the map keeps them as the landmark accent they were meant to be. TUNABLE.",
-      "_comment_leaf": "R9.4. THE RED LEAK, found by two independent blind reviews eleven days apart. Leaves_TwistedTree_C.png is RGB(167,23,23) -- hue 0, saturation 0.86, a crimson autumn leaf -- which made the grove the most saturated warm thing in the whole survey, on decorative trees beside the starting village. docs/reference/README.md and the visual-judge rubric both reserve deep red/oxblood for Team Tether danger, and spending it on scenery leaves the faction nothing to claim. The bushes layer hit this exact texture and fixed it by swapping -- see its retexture block and _retint()'s own comment in vegetation.gd -- the grove was simply never given the same treatment. No multiply turns red into green, so it has to be a swap. TUNABLE.",
+      "_comment_leaf": "R9.4. THE RED LEAK, found by two independent blind reviews eleven days apart. Leaves_TwistedTree_C.png is RGB(167,23,23) -- hue 0, saturation 0.86, a crimson autumn leaf -- which made the grove the most saturated warm thing in the whole survey, on decorative trees beside the starting village. docs/reference/README.md and the visual-judge rubric both reserve deep red/oxblood for Team Tether danger, and spending it on scenery leaves the faction nothing to claim. The bushes layer hit this exact texture and fixed it by swapping -- see its retexture block and _retint()'s own comment in vegetation.gd -- the grove was simply never given the same treatment. No multiply turns red into green, so it has to be a swap. TUNABLE. R9.4 round 2: the retint now aims at palette.json's meadow.leaf_green_deep (#496c34, hue 98) rather than at a warm cream. Round 1 swapped the texture and stopped the canopy being the MOST saturated thing in frame, but left it at hue ~70 -- the same family as the ground, so frame_stats still measured 85-89% of chromatic pixels in one hue bin against the references' three to five. A canopy has to be a different green from the grass under it, not a brighter one.",
       "retexture": {
         "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves.png"
       },
       "retint": {
-        "Leaves_TwistedTree": "#d8dcb4"
+        "Leaves_TwistedTree": "#9dcaff"
       }
     },
     "deadfall": {

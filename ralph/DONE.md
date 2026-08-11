@@ -3,6 +3,84 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R9.4 — Full visual pass, two blind critics, three render rounds
+`86c9eb2` (spec landing), `585cb67` (tooling), `6cfe752` (round 1), plus the
+round-2/3 commits above — owner-directed interactive session, 2026-08-11.
+Full record: `docs/reviews/2026-08-11-r9.4-full-visual-pass.md`.
+
+**Shipped as PARTIAL, deliberately.** The pass moved every measured axis and
+fixed a great deal, and it did not reach the bar. Six honestly-named remainders
+are open in `BACKLOG.md` (`R9.4-remainder-1` … `-6`) and one design question
+went to `BLOCKED.md`. Do not read this entry as "the visuals are done".
+
+**The root cause of the green was structural, not taste.** `albedo_color`
+multiplies, and multiplying by a tinted colour can only RAISE saturation — it
+scales down whichever channel is already lowest. The ground carried three
+tinted multipliers stacked: texture tint took `Grass008`'s own 0.675 to 0.796,
+the baked colour map to 0.859, macro variation to 0.873. Each looked like a
+gentle tint on its own. The design intent, in `terrain_playground.json`'s own
+comment, required them to be near-white, and set a floor of `#c0` per channel;
+the colour map's blue is `0x92` = 146 and had been violating that rule since it
+was written. The grass tint is now **solved rather than eyeballed** — it reads
+as lavender in a picker because raising blue relative to green is the only way
+a multiply desaturates a green — and lands the stack on hue 70 / saturation
+0.564, which is `palette.json`'s `meadow.grass_olive` sampled off the board.
+
+**Measured movement**, `tools/frame_stats.py`, round 1 → round 2: saturation on
+frame 01 0.70 → 0.59 (references 0.40–0.46); near-field luminance 0.526 → 0.271
+(references 0.28–0.60); saturated non-green below the horizon 1.0% → 4.0% on
+01, 37% → 61% on 03, 25% → 86% on 05, putting two frames inside the reference
+band where none had been.
+
+**Four defects that no test could have caught**, all found by the critics:
+signpost text rendering MIRRORED (one `Label3D` on the plank's top edge facing
+along the arm, so the side you read it from is the back of the letters, and long
+names ran off both ends because nothing fitted them); a creature embedded in the
+farmhouse roof; a magenta placeholder cube in two frames; and — caught in the
+same pass that introduced it — a stone plinth built as one box across the whole
+footprint, laying a grey lid over the interior floor.
+
+**The red leak had been found before and never fixed.** `Leaves_TwistedTree_C`
+is RGB(167,23,23), crimson, on decorative grove trees beside the starting
+village — the one colour the rubric reserves for Team Tether. The 2026-08-09
+site-frames critique named it; this pass named it again eleven days later. The
+bushes layer had already been fixed for the *same texture* by swapping it. The
+grove was simply never given the treatment. **Turn accepted criticism into a
+backlog item the same day, not into a paragraph in a review.**
+
+**Grandpa's house was rebuilt.** It was a flat-roofed windowless box whose only
+opening the critic read "as a missing texture, not a doorway", and it was named
+the single highest-value piece of missing art in the set because it is the
+player's home and it appears in three of five building frames. It now has a
+pitched gable roof with eaves, fascia, ridge and chimney; six windows with
+frames, mullions and warm emissive panes; a framed doorway with a threshold
+step; a stone plinth ring and corner posts. Still primitives, which `CLAUDE.md`
+permits. `smoke_opening` passes end to end after each change — the doorway and
+the interior navigation are load-bearing for it.
+
+Also fixed: twelve harvest nodes rendering as coloured `BoxMesh` fallbacks
+because none had a `model` (two sat beside the player at spawn, and the critic
+called them "more legible than the player"); flowers at 4× life size measured
+against the 1.8 m NPC, grass at 2.5×, the signpost at 1.5×; path stones blowing
+out to near-white; sixty-two dead trees in a biome the board calls "peaceful by
+day"; and the canopy sitting in the same hue family as the ground it stands on.
+
+**Two new tools, both committed** (`585cb67`): `tools/capture_buildings.gd`,
+because nothing in `tools/` framed a building at the range a player walks past
+it — which is why the owner's named weak point had no evidence behind it — and
+`tools/sheet.py`, a labelled contact sheet for any number of frames, because
+`contact_sheet.gd` reads `shots/*.png` only and has no font rendering, so a
+critic cannot name the frame its finding is in.
+
+**The arena was NOT reviewed.** `survey_combat.sh` ran ~50 minutes and wrote no
+frames while the buildings pass beside it finished seven; it was killed to give
+the box back. Whether that is a defect in the tool or the cost of software
+rendering under contention is **not established** — `R9.4-remainder-6` says so
+plainly rather than guessing.
+
+---
+
+
 ---
 
 ## R7.2 — NPC villagers and interior polish

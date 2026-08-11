@@ -177,6 +177,39 @@ assets — the three creatures, the trainer/Grandpa pair, or both).~~
 Superseded by the narrowed question above: §20 answers "rework" for the
 creatures; only the trainer/Grandpa pair is still a live decision.
 
+### The settlement is two architectural traditions — which one wins?
+
+Raised by R9.4's blind buildings critique (2026-08-11,
+`docs/reviews/2026-08-11-r9.4-full-visual-pass.md`). The critic identified three
+unrelated building families standing in one field and was explicit that this is
+a decision rather than a defect:
+
+- **North American farm vernacular** — the red gambrel barn, the barn-house, the
+  small shed, the chicken coop. Red board-and-batten, white cased trim, X-braced
+  doors. This is the majority and it is internally consistent.
+- **Northern European tower mill** — the windmill. Grey stone drum, timber
+  gallery, mullioned sashes, arched door. "A completely different building
+  tradition, different material palette, different era… the clearest 'asset
+  from a different pack' in the set."
+- **The well** is a third outlier on materials specifically: a terracotta
+  pantile roof, the only tiled roof in the build, over cold blue-grey stone
+  against the barn's warm maroon.
+
+The critic's own instruction: *"keep the mill and shift the whole settlement
+toward a Northern European vernacular, or keep the American farm family and swap
+the mill for a timber post-mill. **Do not split the difference.**"*
+
+This matters beyond the Meadows: `MEADOWS_PROGRESSION_SPEC.md` adds a quarry, a
+relay station, a mill crossing and a stronghold approach, all of which need
+buildings, and whichever family is chosen now is the one every later structure
+has to join. Retinting either way is cheap; choosing is not a firing's call.
+
+**Clears when:** the owner names the vernacular. Note that the key art board's
+own settlement panel leans European — thatch, plaster, timber framing — which
+is an argument, not a decision.
+
+---
+
 Anything on `CLAUDE.md`'s flag list goes here rather than being decided:
 dodge/block, party limit, weapons, type system, storage, story rewrites,
 traversal philosophy, mandatory hunger/thirst, stronghold structure.

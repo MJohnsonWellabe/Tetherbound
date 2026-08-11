@@ -275,11 +275,24 @@ func _build_facade() -> void:
 	var half_d := INNER_D * 0.5 + WALL_T
 	var wall_h := FLOOR_H + LOFT_H
 
-	# Stone plinth. Buildings in the references sit IN the ground; this one
-	# met the grass at a hard line, which the critic listed among the reasons
+	# Stone plinth. Buildings in the references sit IN the ground; this one met
+	# the grass at a hard line, which the critic listed among the reasons
 	# everything "looks like it's hovering".
-	_box(Vector3(INNER_W + WALL_T * 2 + 0.34, 0.6, INNER_D + WALL_T * 2 + 0.34),
-		Vector3(0.0, 0.18, 0.0), COL_STONE, false)
+	#
+	# A RING, not a slab. The first cut of this was one box across the whole
+	# footprint, which put a grey stone lid over the interior floor standing
+	# half a metre proud of it — the room rendered pale and the furniture sat
+	# in a bathtub. Only the perimeter is ever seen, so only the perimeter is
+	# built.
+	var plinth_h := 0.55
+	var out_w := INNER_W + WALL_T * 2 + 0.34
+	var out_d := INNER_D + WALL_T * 2 + 0.34
+	for sz in [-1.0, 1.0]:
+		_box(Vector3(out_w, plinth_h, 0.34),
+			Vector3(0.0, plinth_h * 0.5 - 0.2, sz * (out_d * 0.5 - 0.17)), COL_STONE, false)
+	for sx in [-1.0, 1.0]:
+		_box(Vector3(0.34, plinth_h, out_d - 0.68),
+			Vector3(sx * (out_w * 0.5 - 0.17), plinth_h * 0.5 - 0.2, 0.0), COL_STONE, false)
 
 	# Corner posts, breaking the flat plaster into bays the way a timber-framed
 	# farmhouse is actually built.

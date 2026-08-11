@@ -45,9 +45,9 @@
   "environment": {
     "_comment": "Tonemap and fog. ACES holds highlights on sunlit grass instead of clipping them to white, which was the single worst thing about the previous prototype's look.",
     "tonemap": "aces",
-    "exposure": 1.05,
+    "exposure": 1.22,
     "white": 6.0,
-    "ambient_energy": 0.95,
+    "ambient_energy": 1.02,
     "_comment_fog": "Very light, and warm rather than grey. It exists to separate near hills from far ones; at any strength where you notice it as fog, it is too strong.",
     "_comment_fog_measured": "Halved from 0.0022. At the old density the blind critic measured `03-rise-overlook` at mean saturation 0.235 against 0.51 for a frame in the same biome, and said fog was 'eating the world rather than describing depth' — every object past ~150m a grey stamp. The reference does the same job with comparable haze and keeps a saturated tree band in front of it, so the fix is less fog, not less distance.",
     "fog_enabled": true,
@@ -62,7 +62,8 @@
     "ambient_sky_contribution": 0.5,
     "aerial_perspective": 0.35,
     "_comment_ambient_r9_4": "R9.4. Was 1.25. High ambient is what removed the bottom of the value range: the critic measured the 5th-percentile luminance of frames 01 and 03 at 126 and 117 -- the DARKEST 5% of those images was still a mid-tone -- against 17 for palworld-04, and luminance standard deviation at 28-36 against the references' 52-69. Ambient light with nowhere to fall off is a flat frame by construction. Cut to 0.95, not lower: this file already records one pass that overshot into gloom and made the arena unreadable, and the ground albedo itself now carries most of the value drop (see terrain_playground's grass tint). TUNABLE.",
-    "_comment_fog_r9_4": "R9.4. Halved again, 0.0011 -> 0.00055, and the colour warmed off neutral grey. The critic: 'fog is eating the world, not describing it' -- everything past the mid-ground washing to one pale value with no separation between hills, against palworld-04 which keeps three readable value planes at distance. It also produced the survey's most-reported inconsistency: frames 03 and 04 appear to have a flat cream sky, which is not sky at all but fogged-out terrain filling the upper frame, so two viewpoints of the same place look like different biomes. Less fog, not less distance. TUNABLE."
+    "_comment_fog_r9_4": "R9.4. Halved again, 0.0011 -> 0.00055, and the colour warmed off neutral grey. The critic: 'fog is eating the world, not describing it' -- everything past the mid-ground washing to one pale value with no separation between hills, against palworld-04 which keeps three readable value planes at distance. It also produced the survey's most-reported inconsistency: frames 03 and 04 appear to have a flat cream sky, which is not sky at all but fogged-out terrain filling the upper frame, so two viewpoints of the same place look like different biomes. Less fog, not less distance. TUNABLE.",
+    "_comment_exposure_r9_4": "R9.4 round 2. Was 1.05. Round 1 dropped the ground albedo (grass tint) AND cut ambient 1.25 -> 0.95 at the same time, and the two stacked: near-field luminance went 0.526 -> 0.271 and the open meadow read murky rather than merely un-blown-out. Exposure is the right knob to give it back, because it scales everything uniformly and so costs none of the desaturation the tint bought -- unlike raising ambient again, which would re-flatten the shadows that were the point. TUNABLE."
   },
   "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above. `hour` (0-24) is when scripts/world/day_cycle.gd treats this as the active preset -- see R5.1.",
   "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it — 46.8% of the image pixel-for-pixel the same — because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",

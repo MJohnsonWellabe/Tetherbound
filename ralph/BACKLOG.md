@@ -298,6 +298,105 @@ used it afterward — a real blind critique ran against a confirmed-on-`main`
 render; see `DONE.md` for the verdict and why none of its findings needed
 an R7.2-specific fix.
 
+**R9.4 (full visual pass) ran — see `DONE.md` and
+`docs/reviews/2026-08-11-r9.4-full-visual-pass.md`.** Two blind critics, three
+render rounds, real measured movement on every axis, and a lot fixed —
+including four defects no test could see (mirrored signpost text, a creature
+embedded in a roof, a magenta placeholder cube, and a plinth regression the
+same pass introduced and caught). It did **not** reach the bar, and the
+remainders below are the honest split rather than a pass. The original item is
+kept beneath them because its instruction — re-run and compare sheets, never
+assert the fix landed — is the standing rule.
+
+### R9.4-remainder-1 — Ground saturation still above the bar, and the rest of it is baked
+`model: sonnet` · `tests: none`
+`tools/frame_stats.py` after three rounds: mean saturation 0.59 on frame 01
+against 0.40–0.46 for the Palworld references and 0.39 for the key art. Round 1
+found the cause and it is structural, not taste — `albedo_color` multiplies, so
+every tinted multiplier RAISES saturation, and the ground had three stacked
+(texture tint 0.675→0.796, baked colour map →0.859, macro variation →0.873).
+Two of the three are now solved or neutralised. **The third is the baked colour
+map** (`terrain_playground.json` `colour.grass_low` `#c2d492` / `grass_high`
+`#d8dc9c`), and it cannot be changed at runtime: it is written into
+`data/terrain/playground/*.res` at bake time. That file's own comment sets a
+floor of `#c0` on every channel so the map "modulates rather than paints", and
+`#c2d492`'s blue is `0x92` = 146 — it has been violating its own stated rule
+since it was written. Done when: the map is re-solved toward neutral, the
+terrain rebaked (`godot --headless --path . --script
+scripts/world/build_playground_terrain.gd`), and `frame_stats` puts mean
+saturation inside 0.40–0.50 without the ground going grey. Expect a large
+binary diff on the `.res` files; that is the cost of the fix, not a mistake.
+
+### R9.4-remainder-2 — The world past 512m draws pale and colourless
+`model: opus` · `tests: none`
+The single largest contributor to the compressed value range, and it appears in
+every outdoor frame as a near-white band along the horizon. Past the baked
+512 m, `shader.world_background = 2` (NOISE) continues the terrain
+procedurally — and that continuation has no colour map and no texture control,
+so it draws in a flat pale default. Two critics independently read it as fog
+"eating the world" and as distant hills "washed to 219,226,205, nearly white,
+so the far ground has no form left"; both are describing this. It is the same
+limit `R7.1-remainder` hit from the other side (the continuation cannot hold
+props either), and `world_background = 1` (FLAT) was already tried and produced
+a measured 0.146 luminance step across the whole frame. Options worth costing
+before picking one: grow the bake (which `R7.3` has to do anyway for the
+chapter), fake the far band with authored distant geometry, or lean into it
+with a deliberate haze that reads as atmosphere rather than as absence. Done
+when: a critic given the frames stops naming the horizon as the reason they
+feel empty.
+
+### R9.4-remainder-3 — The pack buildings have no material override path
+`model: sonnet` · `tests: none`
+Every roof in the settlement measures 11–16% luminance in direct midday sun
+against a reference board that keeps its roofs in the warm 35–65% band and
+spends its darks on tree canopy. The windmill's tower reads as a black cutout
+in two frames, taking its own modelled mullions, gallery and arch down with it,
+and the fences are solid black with no rail-vs-post break. `village.gd` places
+Quaternius structures and never touches their materials — there is no `retint`
+hook at all, unlike `vegetation.gd`, which has had one since the crimson-bush
+fix. Done when: `village.json` can lift a structure's roof the way a vegetation
+layer can retint a leaf, and the settlement's roofs sit in the reference band.
+
+### R9.4-remainder-4 — Paths are a colour-map tint, not a material
+`model: sonnet` · `tests: smoke_traversal`
+`build_playground_terrain.gd` paints paths by lerping the COLOUR map toward
+`#c8a874`, and its own comment already calls a real material "queued as
+polish". Because the colour map multiplies the grass albedo, a path is
+grass-coloured grass with a tan cast rather than bare earth — which is why both
+critics reported "no worked ground anywhere in the settlement" and "stepping
+stones scattered in loose clumps that don't form a path". The fix is the
+CONTROL map, not the colour map: paint the soil texture along the route so a
+path is a different material. Round 3 made the existing tint visible for the
+first time (desaturating the grass stopped drowning it), which is worth knowing
+before anyone re-tunes it. Done when: a path reads as trodden earth from
+standing height, and the path stones sit in it rather than on grass.
+
+### R9.4-remainder-5 — The settlement has no trees, no props and no site plan
+`model: opus` · `tests: none`
+Both blind critics ranked this first or second, independently. The key art's
+own STARTING SETTLEMENT panel is organised around oak canopy framing a worn
+dirt square, rail fences leading the eye in, and garden beds against the walls;
+the build has buildings standing on open ground, fence stubs that enclose
+nothing, and **not one tree anywhere in the settlement** (`vegetation.json`'s
+`clearings` hold vegetation off the square by design, and nothing was ever
+authored back in). The critic's list of what would fix it: woodpile, barrels,
+crates, a cart, a hand-pump, hitching rail, garden beds, a washing line.
+Content, not tuning — and it belongs with `R7.3`'s authored-space work rather
+than in a palette pass. Done when: the square reads as a place people use.
+
+### R9.4-remainder-6 — `survey_combat.sh` did not complete, and nobody knows why
+`model: sonnet` · `tests: none`
+It ran ~50 minutes under llvmpipe and wrote zero frames while the seven-frame
+buildings pass beside it finished; it was killed to give the box back. **The
+arena has therefore not been visually reviewed at all this pass**, and that gap
+is real regardless of the cause. What is NOT established: whether this is a
+defect in `survey_combat.gd` (its `_approach()` walks the player to a wild
+creature and could plausibly never arrive) or simply the cost of 240 settle
+frames plus a whole fight under software rendering with another Godot process
+competing for four cores. Do not guess — run it alone with a frame counter or a
+timeout per phase, the way `R4.11` and `RB3` both had to. Done when: either it
+produces frames, or its hang is root-caused and named.
+
 ### R9.4 — Visual cohesion pass, the checkpoint for this phase (relocated from Phase 9)
 `model: sonnet` ▶ · `tests: none`
 Re-run `.claude/skills/visual-judge` against `docs/reference/` (the world
