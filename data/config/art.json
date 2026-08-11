@@ -28,7 +28,8 @@
     "sun_angle_max_deg": 24.0,
     "sun_curve": 0.18,
     "_comment_panorama": "An HDRI panorama, when the time of day names one. The procedural gradient below is the FALLBACK and stays because a missing texture should degrade to the old sky rather than to a black void. The critic measured the procedural sky's horizontal variation at 0.020 against Palworld's 0.140-0.289 and said the build sky 'contributes nothing' — a ProceduralSkyMaterial can make a vertical gradient and a soft sun blob and nothing else, ever. No amount of tuning puts a cloud in it.",
-    "panorama": "res://assets/environment/sky/day.hdr"
+    "_comment_panorama_ev8": "EV8. day.hdr named here was pulled: a static equirect photo has its OWN baked-in sun position, unrelated to this file's sun.pitch_deg/yaw_deg, so whichever way a viewpoint faces, the photographed sky and the actual DirectionalLight3D can disagree about where the light is coming from. That is exactly what a blind pass caught -- one viewpoint's sky read as dusk while its own ground lit as bright midday, in the same frame, both driven by the same 'day' preset. The procedural gradient has no such seam: its glow is generated from the real sun direction, so it agrees with the ground in every direction, not just the survey's five. Costs the cloud detail the panorama bought; buys back the 'one sky/fog treatment shared everywhere' EV8 exists to deliver. TUNABLE -- naming a panorama here is legitimate again once one exists whose baked sun can be kept in sync, or once multiple panoramas are matched to sun position by heading.",
+    "panorama": ""
   },
   "sun": {
     "_comment": "One directional light. `pitch` well above the horizon so shadows are short and readable under a top-down-ish combat camera; long raking shadows look dramatic in a screenshot and hide the opponent in a fight.",
@@ -51,7 +52,8 @@
     "_comment_fog": "Very light, and warm rather than grey. It exists to separate near hills from far ones; at any strength where you notice it as fog, it is too strong.",
     "_comment_fog_measured": "Halved from 0.0022. At the old density the blind critic measured `03-rise-overlook` at mean saturation 0.235 against 0.51 for a frame in the same biome, and said fog was 'eating the world rather than describing depth' — every object past ~150m a grey stamp. The reference does the same job with comparable haze and keeps a saturated tree band in front of it, so the fix is less fog, not less distance.",
     "fog_enabled": true,
-    "fog_colour": "#cdd0c6",
+    "_comment_fog_colour_ev8": "EV8. Was #cdd0c6, which does not match sky.horizon_colour (#b9c8cf) above. fog_sky_affect is 0 on purpose (see below), so the sky is never fogged -- which means the fog colour and the horizon colour are the ONLY two things that have to agree for terrain fading into the distance to meet the sky without a seam. A blind pass caught the mismatch as a hard pale band sitting in the middle of a frame, well short of the true horizon: distant terrain fogs to #cdd0c6 while the sky right above it sits at #b9c8cf, and the two visibly disagree. Matched to horizon_colour exactly.",
+    "fog_colour": "#b9c8cf",
     "fog_density": 0.00055,
     "fog_sky_affect": 0.0,
     "ssao_enabled": true,
@@ -93,13 +95,17 @@
         "ground_bottom_colour": "#4b4436",
         "sun_angle_max_deg": 32.0,
         "sun_curve": 0.09,
+        "_comment_energy_ev8_retired": "EV8 tried scaling golden.hdr's energy down twice (1.0 -> 0.6 -> 0.35) to fix a blown-white horizon, and even 0.35 still blew out roughly two-thirds of the frame. Retired along with the panorama below rather than pushed further -- same root cause as day.hdr: a static photo's own baked sun position does not track sun.pitch_deg/yaw_deg, so nothing here can make its glare agree with wherever this preset's actual low sun is pointed.",
         "energy": 1.0,
-        "panorama": "res://assets/environment/sky/golden.hdr"
+        "_comment_panorama_ev8": "EV8. Dropped golden.hdr, same reasoning as the base sky block above -- a static panorama's own baked sun cannot track this preset's actual sun.pitch_deg/yaw_deg, and here that showed up as blown-white glare rather than a mismatched hue. The procedural gradient's sun glow is generated from the real light direction, so at a low golden-hour angle it puts the glow where the sun actually is and holds highlights the way ACES is tuned to.",
+        "panorama": ""
       },
       "environment": {
-        "fog_colour": "#e2bb92",
+        "_comment_fog_colour_ev8": "EV8. Matched to horizon_colour (#e8b784) above, same reasoning as the day preset -- fog_sky_affect is 0, so fog colour and horizon colour are what has to agree for distant terrain to fade into the sky without a seam.",
+        "fog_colour": "#e8b784",
         "fog_density": 0.0016,
-        "ambient_energy": 1.15,
+        "_comment_ambient_ev8": "EV8. Was 1.15. A blind pass on the low-sun frame called the ground 'crushed almost to black' against a still-saturated sky -- the shadow side was losing terrain form entirely rather than reading as evening mood. TUNABLE -- the cool tint stays deliberately (real golden-hour fill from open sky reads cool against a warm key), only the amount lifted.",
+        "ambient_energy": 1.5,
         "ambient_colour": "#8f9ec4",
         "ambient_sky_contribution": 0.45,
         "exposure": 1.0
@@ -127,7 +133,8 @@
         "panorama": ""
       },
       "environment": {
-        "fog_colour": "#0d1424",
+        "_comment_fog_colour_ev8": "EV8. Matched to horizon_colour (#1c2740) above, same reasoning as the day and golden presets.",
+        "fog_colour": "#1c2740",
         "fog_density": 0.0018,
         "ambient_energy": 0.35,
         "ambient_colour": "#1c2740",
