@@ -154,6 +154,13 @@ the critic the silhouette question specifically. Done when: a blind critic
 given both turntables side by side, told nothing, does not call them the same
 creature.
 
+**The owner's report is confirmed by a render.** R9.4 re-ran
+`preview_creatures.gd` (2026-08-11): Burrowback comes out a warm mid-brown
+badger with a broad **cream face stripe** and a moss-and-stone mantle over its
+back — which is Terrapup's own material language, item for item, at a similar
+value. Nothing about the colour currently separates them; only the body shape
+does, and §1A says that is not enough at gameplay distance.
+
 ### SA6 — Separate the five birds by palette
 `model: sonnet` · `tests: smoke_art`
 Spec §1B and §20. Pipwing, Duskhush, Galecrest, Reedwing and Galewisp must not
@@ -169,6 +176,18 @@ in `conventions.md`: `grade.py`'s eye guard is mandatory, and Ripplet's eyes
 were destroyed once by a hue-band guard on a body of the same hue. Done when: a
 blind critic shown all five as black silhouettes *and* as colour turntables can
 name five distinct creatures.
+
+**Start here, from R9.4's roster render (2026-08-11).** The worst pair is not
+the one §1B leads with. **Galecrest currently reads blue-grey and white with
+blue wings — very close to Galewisp**, the Air starter it is explicitly
+forbidden to resemble (D13 already carries that rule and it is being broken
+today). §1B wants it rust/chestnut with charcoal flight feathers and a pale
+sand underside, which is as far from Galewisp as the palette gets, so this pair
+is both the most broken and the easiest to fix. Duskhush renders pale
+cream-and-brown rather than §1B's slate and lavender-grey. Re-run
+`preview_creatures.gd` before starting — and note it lays all seventeen species
+in one 1280px row, about fifty pixels each, which is too small to judge colour
+by; crop, or give the tool a per-species tile mode first.
 
 ---
 
@@ -197,32 +216,18 @@ reviewed over three rounds) shipped — see `DONE.md`.** Close and mid range
 now genuinely read as fortified architecture; a narrower long-range
 remainder is opened below.
 
-### R7.1-visual-remainder-2 — Long-range silhouette still doesn't confidently read as fortified
-`model: sonnet` · `tests: none`
-R7.1-visual-remainder's third and final blind-critic round, verbatim, on
-`silhouette-from-square.png` (the long-range wayfinding distance the
-landmark exists for): stripped to that scale it is "two uneven dark spikes
-with a shallow notch on top of a mound... reads just as plausibly as twin
-standing stones, dead trees, or a broken obelisk pair... does not clinch
-'fortress' specifically." Close and mid range both pass clearly now — the
-wall/collar/crenellation work genuinely fixed those (see `DONE.md`) — so
-this is narrower than the original ask: the shape needs to hold its
-fortified read specifically at the distance where per-tower detail (merlons,
-roofline) has shrunk below what a silhouette can resolve, which the current
-geometry does not yet do. The round-3 fix (taller connecting wall, height
-16m) measurably improved this over round 2 without fully passing it — likely
-needs either a wider silhouette element that survives to that scale, or
-accepting that a placeholder-primitive fortress cannot clinch this distance
-and revisiting once real art replaces the primitives (`CLAUDE.md`'s
-prototyping rule cuts both ways: placeholder is fine to prove composition,
-but is also allowed to genuinely not be good enough yet). Two smaller,
-addressable findings from the same round, not chased further to stay inside
-the three-round cap: the north tower's stepped-mass cap reads as a chimney/
-smokestack rather than a turret in the mid/long frames (a reshape of the
-existing primitive, not new geometry); and the ridge's hard-edged tan/brown
-mound cap under the structure (clearest in `silhouette-from-square.png`) is
-terrain material, not landmark geometry — the same territory `R7.1-remainder`
-below already tracks, not a new bug from this task.
+**R7.1-visual-remainder-2 (long-range fortress read) CLOSED by R9.4 — see
+`docs/reviews/2026-08-11-r9.4-full-visual-pass.md`.** The shape was never the
+problem. Its own third round had suspected as much ("a placeholder-primitive
+fortress cannot clinch this distance") and it was wrong: R9.4 rendered the same
+geometry at all three ranges with a corrected material and it reads as a
+fortified silhouette at every one, crenellations and varied massing included.
+What was actually wrong was the COLOUR — `unshaded` at `#2a2630` is so dark a
+fresh critic called it "a hole punched in the image rather than a stone ruin".
+Now `unshaded` at a dark slate stone value. The two smaller findings that entry
+carried are still live: the north tower's cap reads as a chimney, and the
+ridge's hard-edged tan mound cap is terrain material, which `R7.1-remainder-2`
+below already owns.
 
 **The olive/lime ground seam is fixed — see `DONE.md`.**
 
@@ -383,6 +388,47 @@ authored back in). The critic's list of what would fix it: woodpile, barrels,
 crates, a cart, a hand-pump, hitching rail, garden beds, a washing line.
 Content, not tuning — and it belongs with `R7.3`'s authored-space work rather
 than in a palette pass. Done when: the square reads as a place people use.
+
+### R9.4-remainder-7 — Foliage aliases into confetti at distance
+`model: sonnet` · `tests: none`
+**Two independent blind critics, on different frame sets, both named this the
+most bug-like thing in the build** — "blue, magenta and cyan speckle… reads as
+compression noise, not foliage" and "blue/green/white confetti speckle".
+Confirmed by crop: a distant tree resolves to a scatter of unrelated pixels.
+Root cause is a hard alpha scissor, which has no partial coverage — every texel
+is fully in or fully out, so a ten-pixel tree is a handful of disconnected leaf
+texels with background between them. R9.4 turned on alpha-to-coverage in
+`vegetation.gd`'s `_retint()` so the project's existing 4× MSAA
+(`project.godot` `anti_aliasing/quality/msaa_3d=2`) can finally act on foliage
+edges — **but that is unverified**: llvmpipe's MSAA is not something these
+survey frames can honestly test, so this needs judging on the Ally. And it is
+only half the problem: a ten-pixel tree carries almost no information whatever
+the sampling, which is an LOD or impostor question this item does not answer.
+Done when: a critic looking at the mid-distance stops calling the trees noise.
+
+### R9.4-remainder-8 — Scale and placement defects the round-4 critics measured
+`model: haiku` · `tests: none`
+Small, individually cheap, all found in the 2026-08-11 frames and all
+measurable against the 1.8 m trainer or against each other. Grouped because
+none of them deserves its own firing:
+- **A miniature copy of the barn**, roughly one-fifth scale, beside the boulder
+  left of the well in `buildings/02`. Same asset as its full-size sibling 30 m
+  away.
+- **The rabbit renders 1.0–1.3 m at the shoulder**, two to three times life
+  size, and is the largest thing in the foreground of `buildings/06`.
+- **The windmill is undersized by about half** — its top sits at the barn's
+  ridge height where a working mill should clear neighbouring roofs by roughly
+  2×. The critic's words: this "is why the settlement has no landmark".
+- **Grass tufts grow through the farmhouse floor**, at least four clumps and
+  one on the rug (`buildings/07`) — terrain scatter is not masked by the
+  building footprint.
+- **Foliage clips the farmhouse roof ridge** in `buildings/04`, `05` and `06`.
+- **Boulders sit fully proud of the ground** with no bedding at 4–6 m across.
+- The farmhouse's own **windows read undersized** against its two-storey
+  massing (roughly 0.7 × 1.0 m in a 2.2 m storey), and the interior table reads
+  as a 3.5 m bench.
+Done when: nothing in a survey frame disagrees with its neighbours about how
+big a metre is.
 
 ### R9.4-remainder-6 — `survey_combat.sh` did not complete, and nobody knows why
 `model: sonnet` · `tests: none`

@@ -179,6 +179,24 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 		material.transparency = standard.transparency
 		material.alpha_scissor_threshold = standard.alpha_scissor_threshold
 		material.cull_mode = standard.cull_mode
+		# R9.4: two independent blind critics, looking at different frame sets
+		# and told nothing, both named foliage as the most bug-like thing in the
+		# build — "blue/green/white confetti speckle", "digital confetti", "reads
+		# as compression noise, not foliage". A hard alpha scissor has no partial
+		# coverage: every texel is fully in or fully out, so a tree that is ten
+		# pixels wide resolves to a scatter of unrelated leaf texels with the
+		# background between them. The project already runs 4x MSAA
+		# (project.godot anti_aliasing/quality/msaa_3d=2) and it was doing
+		# nothing here, because MSAA only cleans alpha edges when the material
+		# opts in to alpha-to-coverage. This is that opt-in.
+		#
+		# NOT VERIFIED IN THIS HARNESS. llvmpipe's MSAA support is not something
+		# these survey frames can honestly test, so the frames may look
+		# unchanged while real hardware improves. Judge this one on the Ally.
+		# What it cannot fix either way is that a ten-pixel tree carries almost
+		# no information — that is an LOD/impostor problem, recorded separately.
+		if standard.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:
+			material.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE
 	elif colour != "":
 		material.albedo_color = Color(colour)
 		material.vertex_color_use_as_albedo = needs_instance_colour

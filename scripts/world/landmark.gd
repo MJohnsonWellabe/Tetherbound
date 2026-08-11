@@ -43,17 +43,30 @@ const OFFSET := Vector2(-6.0, 8.0)
 ## Mid cool stone, and shaded, so the towers have a lit and a shaded face and
 ## the crenellations that were modelled can actually be seen.
 ##
-## SECOND CUT. #6b6a72 was measured, not guessed, and it was wrong: rendered at
-## the wayfinding range it came out RGB(172,175,167), luma 0.68 rising to 0.90,
-## against distant hills at luma 0.77 — near-identical, so the landmark stopped
-## being a silhouette at all and dissolved into the haze band. That is the exact
-## failure R7.1-visual originally fixed by going flat black, arrived at from the
-## opposite direction, and the note below already said what to do about it:
-## the answer is a VALUE that survives this fog at this range, not a render
-## mode. Dark slate, violet-leaning so it is not a neutral grey smudge: it has
-## to sit well under the pale hills (0.77) while still reading against the blue
-## sky (0.21), which puts the target near luma 0.40.
-const TOWER_COLOUR := Color("#33323f")
+## THIRD CUT, and the frames settled an argument between two earlier ones.
+##
+## Shading was tried at #6b6a72 and then at #33323f. Both failed the same way
+## and it took the second render to see why: with normal shading the landmark's
+## value depends on WHICH FACE the camera sees. From `silhouette-close` the
+## camera looks at the shadowed south side and the fortress reads perfectly —
+## crenellations, keep, towers, unmistakably built. From `silhouette-from-
+## square` and `-from-path`, the two viewpoints a player actually uses, the
+## camera looks at the sun-lit west face and the same geometry washes to a pale
+## grey barely separable from the haze band behind it. Not fog: at 0.00055
+## density over ~190m that is a ten per cent effect. Lighting direction.
+##
+## Which is what R7.1-visual was right about. A wayfinding silhouette has to
+## read the same from every approach, and `unshaded` is how you get that. Its
+## mistake was the colour, not the render mode — #2a2630 is so dark that a
+## fresh critic called it "a hole punched in the image rather than a stone
+## ruin", and it was right about that too.
+##
+## So: `unshaded` restored, at a value that reads as stone. Dark slate, a
+## little violet so it is not a neutral smudge, sitting well under the pale
+## hill band (~0.77) and just above the sky (~0.21) so it separates from both
+## from any direction. `fog_disabled` comes back with it for the same reason it
+## was there before — a silhouette that fades with distance is not a landmark.
+const TOWER_COLOUR := Color("#4a4756")
 
 ## R7.1-visual found the towers reading correctly dark at ~40m but fading to a
 ## pale grey nearly matching the horizon haze at ~60m and ~157m, and fixed it
@@ -70,26 +83,24 @@ const TOWER_COLOUR := Color("#33323f")
 ## stone ruin" and pointed at palworld-04, whose landmark is hazed to a mid
 ## blue-grey and "sits IN the distance rather than on top of it."
 ##
-## So the towers rejoin the world: normal shading, so the wall, roofline and
-## crenellations that R7.1-visual-remainder modelled are actually visible as
-## form rather than flattened into one black mass, and normal fog, so distance
-## reads as distance. `cull_back` is kept — it was never part of the problem.
+## R9.4 tested that by taking the opt-out away, and the render mode turned out
+## to be load-bearing after all — see TOWER_COLOUR above for what two rounds of
+## frames actually showed. `unshaded` and `fog_disabled` stay. What R9.4 keeps
+## is the other half of the finding: the COLOUR was wrong, and a silhouette
+## dark enough to read as a hole is not better than one that fades.
 ##
-## THE RISK IS REAL AND NAMED: this reverses a fix that a previous blind round
-## asked for. If the long-range frames come back washed out again, the answer
-## is NOT to restore `unshaded` — it is that the landmark needs a value that
-## survives this fog at that range, which is a colour choice, not a render
-## mode. `tools/capture_wayfinding.gd` shoots the three ranges that decide it.
+## The prediction written here during the shaded experiment — "if the long-range
+## frames come back washed out, the answer is a value, not a render mode" — was
+## half right and worth leaving on the record. The value did need fixing. So did
+## the render mode, in the opposite direction to the one being tried.
 const SHADER_CODE := """
 shader_type spatial;
-render_mode cull_back;
+render_mode unshaded, fog_disabled, cull_back;
 
 uniform vec4 albedo : source_color;
 
 void fragment() {
 	ALBEDO = albedo.rgb;
-	ROUGHNESS = 0.85;
-	SPECULAR = 0.15;
 }
 """
 
