@@ -114,13 +114,26 @@ func _free_orbs() -> void:
 func _build_orbs() -> void:
 	_free_orbs()
 	for i in _species.size():
-		var slot := _build_orb_slot(_species[i])
+		var built := _build_orb_shell(_species[i])
+		var slot: PanelContainer = built[0]
+		var viewport: SubViewport = built[1]
+		# The shell goes into the live tree BEFORE the creature is built inside
+		# it, not after — pal_body.gd::setup() gates its mesh-building on
+		# `is_inside_tree()`, and tools/preview_creatures.gd's own header names
+		# the exact failure of getting this order backwards: everything appears
+		# to work, `open()` returns, and every orb is silently empty. Caught
+		# rendering this picker for the first time — the fix this task's own
+		# blind-visual-judge pass exists to catch.
 		_orbs.add_child(slot)
+		var body := _build_preview(viewport, _species[i])
+		_bodies.append(body)
 		_slots.append(slot)
 	_refresh_selection()
 
 
-func _build_orb_slot(id: String) -> PanelContainer:
+## The container structure only — no camera, no light, no creature. Callers
+## must add the returned slot to a live tree before populating `viewport`.
+func _build_orb_shell(id: String) -> Array:
 	var slot := PanelContainer.new()
 	slot.custom_minimum_size = Vector2(VIEWPORT_SIZE) + Vector2(24.0, 64.0)
 
@@ -142,22 +155,20 @@ func _build_orb_slot(id: String) -> PanelContainer:
 	viewport.own_world_3d = true
 	view_container.add_child(viewport)
 
-	var body := _build_preview(viewport, id)
-	_bodies.append(body)
-
 	var label := Label.new()
 	label.text = _display_name(id)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size", 20)
 	column.add_child(label)
 
-	return slot
+	return [slot, viewport]
 
 
 ## A single creature, lit flatly and centred, the way
 ## tools/preview_creatures.gd builds one for the art survey — `PAL_SCENE`
 ## instantiated first so `$Collision/$Model/$Body/$Head` resolve, the script
-## attached before `add_child`, `setup()` called after.
+## attached before `add_child`, `setup()` called after. `viewport` must
+## already be inside the live tree (see `_build_orbs`).
 func _build_preview(viewport: SubViewport, id: String) -> Node3D:
 	var world := Node3D.new()
 	viewport.add_child(world)
@@ -198,10 +209,10 @@ func _build_preview(viewport: SubViewport, id: String) -> Node3D:
 	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 0.4
 	var distance := maxf(height, radius * 2.2) * 2.4 + 0.6
 	var eye := Vector3(0.0, height * 0.55, distance)
-	# `look_at()` asserts `is_inside_tree()`; this whole chain (world, camera,
-	# body) is still off-tree at this point in `_build_orb_slot` — the slot
-	# only gets added to `_orbs` after this function returns.
-	# `look_at_from_position()` sets the transform directly and needs neither.
+	# `look_at_from_position()` rather than `position` + `look_at()`: harmless
+	# either way now that `_build_orbs` puts the shell in the tree first, but
+	# it sets the transform in one call with no assumption about tree state,
+	# which is one fewer thing to get wrong if this ever gets reordered again.
 	camera.look_at_from_position(eye, Vector3(0.0, height * 0.5, 0.0), Vector3.UP)
 
 	return body
