@@ -84,7 +84,7 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 ---
 
-## Blocked on reference art — the new bottleneck
+## Reference art — the rule stands; the list is EMPTY
 
 **Credits stopped being the constraint on 2026-08-11.** The owner topped the
 Meshy account to **5000**, and in the same message set the rule that replaced
@@ -94,22 +94,41 @@ way `docs/art/reference/12_NPC_Bases_Reusable.png` was supplied. In-engine
 survey and screenshot renders are unaffected — they are how anything gets
 verified at all.
 
-The whole authorised programme is ~540 credits of 5000. Money is not what is
-stopping the list below; a drawing is.
+**That rule is still live. What is no longer live is the list.**
 
-### Waiting on a reference board
+### ✅ Waiting on a reference board — nothing
 
-- **Team Tether energy pylon**
-- **Team Tether relay apparatus**
-- **The legendary tether machine**
+All three arrived on 2026-08-11, the same day they were asked for:
+
+| Board | Object |
+|---|---|
+| `docs/art/reference/13_Tether_Energy_Pylon.png` | Team Tether energy pylon |
+| `docs/art/reference/14_Relay_Apparatus.png` | Team Tether relay apparatus |
+| `docs/art/reference/15_Legendary_Tether_Machine.png` | The legendary tether machine |
 
 These are the three places `docs/ENVIRONMENT_AND_UI_BIBLE.md` §13 endorses
-Meshy at all, and D24 confirms it: hero objects only. They are what make
-modular kit architecture read as faction-specific rather than generic, and
-they are needed from Band 3 onward. No board exists for any of them.
+Meshy at all, and D24 confirms it: hero objects only. **Nothing on the
+authorised programme is blocked on a drawing any more.** They are still gated
+on their bands arriving — the relay is Band 3 (`SE23`), the pylons are `SF33`'s
+severed roads, the machine is the Warden stronghold in Phase 8e — so this is
+"buildable when you get there", not "build it now".
 
-**Clears when:** the owner supplies a board, one per object, in
-`docs/art/reference/`.
+**Read the board before generating; each carries real constraints.** The pylon
+names a **2K–3K triangle** target and a five-part modular build (base + core
+module + supports ×4 + top frame + tether crystal). The relay is
+*"modular construction, core and rings serviceable, conductor arms and
+manifolds replaceable"*. The machine stands ~15 m against its own 0–20 m scale
+bar. Those are production briefs, not mood art.
+
+### ⚠ The machine board contains a creature. Do NOT generate it.
+
+`15_Legendary_Tether_Machine.png` shows a legendary bound inside the
+containment ring, because that is what the machine does. **The board licenses
+the machine, not its occupant.** `D23` §20 forbids new creature meshes for the
+Meadows at any credit balance — reaffirmed *with* 5000 available — so the bound
+legendary must be an existing roster creature or VFX. A firing that generates
+the whole board as one asset breaks a hard rule while believing it is following
+one, which is exactly why this warning is here and not left to inference.
 
 **Explicitly NOT on this list**, by the owner's decision: creatures, the
 trainer, Grandpa and the Warden. D23 §20 forbids creature regeneration at any
