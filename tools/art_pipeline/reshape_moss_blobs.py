@@ -85,6 +85,17 @@ def main():
         narrow = rng.uniform(0.5, 0.72)
         blend_strength = rng.uniform(0.5, 0.85)
         edge_noise_amp = rng.uniform(2.5, 5.0)
+        # A blind critic on an earlier pass, after the clipping fix below,
+        # confirmed the hard-edge "stamped decal" complaint was gone but
+        # named a follow-on: "nearly everything else is a soft round-to-oval
+        # blob... needs 2-3 more distinct silhouette variants." A symmetric
+        # stretch always produces a symmetric oval regardless of angle. This
+        # taper breaks that: it biases the edge threshold along the stretch
+        # axis so one end tapers into a frayed wisp while the other stays
+        # fuller -- a comma/flame silhouette, not just a bigger ellipse.
+        # ~40% of blobs stay untapered (0) for genuine variety, not just a
+        # second uniform style.
+        taper = rng.uniform(-2.2, 2.2) if rng.random() > 0.4 else 0.0
 
         # A first attempt used a flat 45px margin regardless of blob size or
         # elongate -- for the biggest blobs (up to 51px across, elongate up
@@ -116,9 +127,8 @@ def main():
         # OUTPUT pixel's shape membership comes from in the ORIGINAL blob --
         # dividing by elongate/narrow here (not multiplying) is what makes
         # the new mask a STRETCHED version of the old one, not a shrunk one.
-        u, v = rotate((oy, ox), -angle)
-        u /= elongate
-        v /= narrow
+        u_out, v_out = rotate((oy, ox), -angle)
+        u, v = u_out / elongate, v_out / narrow
         iy, ix = rotate((u, v), angle)
         iy = np.round(iy + cy).astype(np.int32)
         ix = np.round(ix + cx).astype(np.int32)
@@ -135,7 +145,12 @@ def main():
         coarse = rng.standard_normal((max(2, ph // 6), max(2, pw // 6))).astype(np.float32)
         coarse_img = Image.fromarray(((coarse - coarse.min()) / (np.ptp(coarse) + 1e-6) * 255).astype(np.uint8))
         coarse_up = np.array(coarse_img.resize((pw, ph), Image.BICUBIC)).astype(np.float32) / 255.0
-        sdf_noisy = sdf + (coarse_up - 0.5) * edge_noise_amp
+        # u_out normalized to roughly [-1, 1] across the blob's own stretched
+        # half-length, so the taper's strength is relative to each blob's own
+        # size rather than a fixed pixel count.
+        half_len = max(1.0, half_extent * elongate)
+        u_norm = np.clip(u_out / half_len, -1.5, 1.5)
+        sdf_noisy = sdf + (coarse_up - 0.5) * edge_noise_amp - taper * u_norm
         ragged_mask = sdf_noisy > 0
 
         # Feather: float alpha, soft edge instead of a hard decal cutout.
