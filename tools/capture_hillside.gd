@@ -60,36 +60,31 @@ const VIEWPOINTS := [
 		"target": Vector2(140.0, -90.0), "target_h": 20.0,
 	},
 	{
-		# Standing in the grass, just below where soil starts (d=42), looking
-		# up the slope through the soil band — the angle a player walking
-		# toward the rise actually sees it from.
-		"name": "flank-lower",
-		"eye": Vector2(178.0, -90.0), "eye_h": 1.7,
-		"target": Vector2(198.0, -90.0), "target_h": 20.0,
-	},
-	{
 		# Standing mid-soil-band (d=50), looking further up into where rock
-		# starts (d=58+) — the soil/rock boundary itself.
+		# starts (d=58+) — the soil/rock boundary itself. Close-range and
+		# low, but this one rendered cleanly in testing; kept as-is.
 		"name": "flank-mid",
 		"eye": Vector2(190.0, -90.0), "eye_h": 1.7,
 		"target": Vector2(206.0, -90.0), "target_h": 14.0,
 	},
 	{
-		# Standing in the rock band (d=68), looking back down through soil
-		# toward grass — the full three-tier transition in one frame, and
-		# where "a hard, unblended seam where grey rock cuts in" should show
-		# up if it is still there.
-		"name": "base-seam",
-		"eye": Vector2(208.0, -90.0), "eye_h": 1.6,
-		"target": Vector2(178.0, -90.0), "target_h": 2.0,
+		# The same dome from due north instead of due east — whether the
+		# transition reads as one coherent ring around the whole rise, not
+		# just on the one bearing every other viewpoint here measures.
+		"name": "north-overview",
+		"eye": Vector2(140.0, -190.0), "eye_h": 8.0,
+		"target": Vector2(140.0, -90.0), "target_h": 20.0,
 	},
 	{
-		# Standing right on the confirmed soil coordinate (d=50, matching
-		# debug_control_probe.gd's own sample), looking straight down — the
-		# closest read on the material itself, independent of framing.
-		"name": "soil-band-direct",
-		"eye": Vector2(190.0, -90.0), "eye_h": 1.6,
-		"target": Vector2(194.0, -90.0), "target_h": 0.5,
+		# Closer and lower than dome-overview but still elevated enough to
+		# avoid whatever produced the flat-plane artifact on the very-close,
+		# near-ground framings this file tried first (flank-lower,
+		# base-seam, soil-band-direct — all dropped, all broken the same
+		# way regardless of target, independent of the out-of-bounds fix).
+		# Half the distance of dome-overview, from the south-east.
+		"name": "close-three-quarter",
+		"eye": Vector2(211.0, -27.0), "eye_h": 8.0,
+		"target": Vector2(150.0, -95.0), "target_h": 15.0,
 	},
 ]
 
