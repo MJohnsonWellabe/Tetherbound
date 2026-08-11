@@ -102,6 +102,11 @@ var _beat: String = ""
 var _grandpa: Node3D = null
 var _grandpa_prompt: Node3D = null
 var _bed_prompt: Node3D = null
+## Where the bed is, in world space. Held separately from `_bed_prompt` because
+## the wake beat's positional fallback has to work even when no prompt was ever
+## built — which is the second, harder route into the same soft-lock: a world
+## with no house builds no bed prompt, and `wake` then has NO exit at all.
+var _bed_anchor: Variant = null
 ## The three bodies, their species ids and their prompts, by the same index.
 ## Parallel arrays rather than a Dictionary keyed by node, because the index IS
 ## the choice and it is what the naming panel comes back with.
@@ -238,15 +243,20 @@ func _set_beat(target: String) -> void:
 	beat_changed.emit(_beat)
 
 
-func _advance() -> void:
-	_set_beat(BEATS.next(_beat))
-
+## `_advance()` used to live here — `_set_beat(BEATS.next(_beat))`, with no
+## callers anywhere in `scripts/`, `tests/` or `tools/`. Deleted by R9.4's
+## soft-lock investigation rather than wired up: a generic "go to the next beat"
+## is the wrong shape for this machine. Every real transition is caused by
+## something specific (a prompt, a dialogue effect, a fight ending), and a
+## caller-less shortcut that skips whatever that thing was is how a beat gets
+## entered without its staging.
 
 func _process(delta: float) -> void:
 	_tick_fade(delta)
 	_drain_effects()
 	_refresh_lockout()
 	_refresh_prompts()
+	_check_left_the_bed()
 
 
 ## Effects are drained in production, here, every frame.
@@ -416,8 +426,7 @@ func _tick_fade(delta: float) -> void:
 ## The whole staging: the player into the bed, Grandpa downstairs, the three
 ## starters outside the door — all read from the HOUSE's own markers, because
 ## the building is the authority on where its bed is. A world without a house
-## (a bare test scene) falls back to opening.json's positions and the old
-## open-meadow staging still works.
+## (a bare test scene) falls back to opening.json's positions.
 ##
 ## Cast parented to this node's PARENT rather than to this node, matching
 ## encounter_director: `pal_body` and `npc_body` both find the ground by walking
@@ -433,7 +442,17 @@ func _spawn_the_cast() -> void:
 		var bed: Vector3 = house.call("marker", "bed")
 		_player.global_position = bed + Vector3(0.6, 0.4, 0.0)
 		_player.velocity = Vector3.ZERO
+		_bed_anchor = bed
 		_build_bed_prompt(house)
+	else:
+		# NO HOUSE. The comment above used to claim "the old open-meadow staging
+		# still works" here. It did not, and could not: without a house there is
+		# no bed prompt, and until R9.4's fix the bed prompt was the ONLY exit
+		# from the wake beat — so a houseless world pinned the beat at `wake`
+		# forever and Grandpa never spoke. Anchoring on the player's own start
+		# position gives the positional fallback something to measure against,
+		# so walking away still opens the beat.
+		_bed_anchor = _player.global_position
 
 	_grandpa = NPC.new()
 	_grandpa.name = "Grandpa"
@@ -493,6 +512,43 @@ func _build_bed_prompt(house: Node3D) -> void:
 
 func _on_bed_activated() -> void:
 	if _beat != BEATS.WAKE:
+		return
+	_set_beat(BEATS.HOUSE)
+
+
+## Getting out of bed ends the wake beat, however you do it.
+##
+## THIS IS THE FIX FOR A SOFT-LOCK THAT MADE THE GAME UNCOMPLETABLE, and it is
+## worth spelling out because the shape of it will recur.
+##
+## `wake` had exactly one exit — pressing interact on the bed — and nothing
+## forced the player through it. `_refresh_lockout()` never gated locomotion on
+## the beat, so once the fade cleared you could simply walk off the bed. Do that
+## and the beat stays `wake` forever. `_refresh_prompts()` then keeps Grandpa's
+## interactable disabled (his `conversation_for("wake")` is ""), which makes
+## `interactable.gd` return an empty offer, which means the arbiter never even
+## sees him: no prompt, and the button does nothing. The starters outside stay
+## disabled too, because they only enable on `choose`. The owner's report —
+## "you still can't interact with grandpa at the beginning, so then you leave
+## the house and never get a starter" — is that state exactly.
+##
+## The lesson generalises: a beat whose only exit is one optional button press
+## is a soft-lock waiting to happen. Any beat gate added later wants a
+## positional fallback like this one, or a lockout that makes the intended
+## action the only available one.
+##
+## Distance from the bed rather than a floor height test: the loft has no
+## collision volume of its own to leave, and a height test would fire while the
+## player is still standing on the mattress. `BED_LEAVE_RADIUS` is comfortably
+## outside the bed prompt's own 2.5 m so pressing the prompt still reads as the
+## intended path, and comfortably inside the loft so descending the stairs
+## cannot outrun it.
+const BED_LEAVE_RADIUS := 3.2
+
+func _check_left_the_bed() -> void:
+	if _beat != BEATS.WAKE or _bed_anchor == null:
+		return
+	if _player.global_position.distance_to(_bed_anchor) < BED_LEAVE_RADIUS:
 		return
 	_set_beat(BEATS.HOUSE)
 
