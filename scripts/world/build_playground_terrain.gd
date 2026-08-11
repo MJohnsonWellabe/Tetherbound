@@ -59,9 +59,6 @@ func _run() -> void:
 	var highest := -INF
 	var steep_samples := 0
 
-	var paths_cfg: Dictionary = config.get("paths", {})
-	var path_tint := Color(str(paths_cfg.get("tint", "#c8a874")))
-
 	for pixel_z in size:
 		var world_z := origin + pixel_z * spacing
 		for pixel_x in size:
@@ -71,16 +68,6 @@ func _run() -> void:
 
 			var slope: float = field.slope_degrees_at(world_x, world_z, spacing)
 			var ground := _ground_colour(slope, colour_cfg)
-			# Dirt paths are painted into the colour map — a worn-earth tint over
-			# the same textures, not a separate texture layer. The control map
-			# painted below (`_paint_control_map`) is still slope-only and does
-			# not special-case the path; a real soil texture under the path
-			# specifically is still queued as polish. This tint is visible
-			# today, and the scatter keeping plants off the same line does at
-			# least as much for readability.
-			var worn: float = field.path_factor(world_x, world_z)
-			if worn > 0.0:
-				ground = ground.lerp(path_tint, worn * 0.85)
 			colour_image.set_pixel(pixel_x, pixel_z, ground)
 
 			lowest = minf(lowest, height)
@@ -159,19 +146,51 @@ func _paint_control_map(
 			"leaving the control map on Terrain3D's built-in auto-shader, seam and all")
 		return
 
+	var painted_path_pixels := 0
 	for pixel_z in size:
 		var world_z := origin + pixel_z * spacing
 		for pixel_x in size:
 			var world_x := origin + pixel_x * spacing
 			var slope: float = field.slope_degrees_at(world_x, world_z, spacing)
 			var control := _control_for(slope, colour_cfg, ids)
+			var path_weight: float = field.path_factor(world_x, world_z)
+			if path_weight > 0.0:
+				control = _path_control(control, path_weight, ids)
+				painted_path_pixels += 1
 			var pos := Vector3(world_x, 0.0, world_z)
 			data.call("set_control_base_id", pos, control["base"])
 			data.call("set_control_overlay_id", pos, control["overlay"])
 			data.call("set_control_blend", pos, control["blend"])
 			data.call("set_control_auto", pos, false)
 
-	print("  control map painted: base/overlay/blend by slope, auto-shader off")
+	print("  control map painted: base/overlay/blend by slope, paths in soil (%d pixels), auto-shader off" %
+		painted_path_pixels)
+
+
+## Blend a pixel's already-computed slope control toward pure soil, weighted
+## by `field.path_factor()`. EV4 (bible sec8): "paths become a control-map
+## material, not a colour-map tint" — the colour map's own `#c8a874` lerp
+## multiplied grass-coloured grass toward tan, which is why R9.4-remainder-4
+## found "no worked ground anywhere," just a tinted variant of whatever
+## texture was already there. This instead swaps in the real soil texture the
+## control map already carries for the slope-driven soil band, so a path
+## reads as trodden earth rather than a colour.
+##
+## Terrain3D's control map holds one base id, one overlay id and one blend
+## weight per pixel — never three textures — so the natural (slope-driven)
+## blend has to collapse to a single "dominant" id before it can be re-blended
+## against soil: whichever side of the natural blend has more than half the
+## weight. That is exact off the path (`path_weight` 0 or 1) and an
+## approximation only inside the fade band, where the path signal already
+## dominates the frame.
+func _path_control(natural: Dictionary, path_weight: float, ids: Dictionary) -> Dictionary:
+	var soil: int = ids["soil"]
+	if path_weight >= 0.999:
+		return {"base": soil, "overlay": soil, "blend": 0.0}
+	var dominant: int = natural["overlay"] if float(natural["blend"]) >= 0.5 else natural["base"]
+	if dominant == soil:
+		return {"base": soil, "overlay": soil, "blend": 0.0}
+	return {"base": soil, "overlay": dominant, "blend": 1.0 - path_weight}
 
 
 ## `name -> texture id`, read from the same `textures` list `playground_world.

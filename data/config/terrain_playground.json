@@ -93,11 +93,10 @@
     }
   ],
   "paths": {
-    "_comment": "Dirt paths, authored polylines in world metres. playground_heightfield.path_factor() is the single reader: the bake tints the colour map along them, the scatter keeps vegetation off them, and they double as wayfinding — every route starts at the village square and ends somewhere the player is meant to go. ALL TUNABLE.",
+    "_comment": "Dirt paths, authored polylines in world metres. playground_heightfield.path_factor() is the single reader: the bake (build_playground_terrain.gd::_path_control) paints real soil texture into the CONTROL map along them, the scatter keeps vegetation off them, and they double as wayfinding — every route starts at the village square and ends somewhere the player is meant to go. ALL TUNABLE.",
+    "_comment_ev4": "EV4: was a `tint` field lerped into the colour map (a worn-earth multiplier over whatever texture was already there, never a real material). Removed -- the control map now swaps in the actual soil texture, which is what R9.4-remainder-4/R7.1-found-3 asked for (\"a path reads as trodden earth, not a colour\"). `width`/`shoulder` below still shape the fade band; path_factor()'s own noise now wobbles that band's position so the edge is not a mathematically exact offset curve.",
     "width": 3.0,
     "shoulder": 1.5,
-    "_comment_tint": "Multiplier over the ground albedo along the path, like every colour in `colour` below: worn earth, not a paint stripe.",
-    "tint": "#c8a874",
     "routes": [
       {
         "_why": "the square to Grandpa's door",

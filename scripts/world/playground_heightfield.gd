@@ -16,6 +16,7 @@ const CONFIG_PATH := "res://data/config/terrain_playground.json"
 var _config: Dictionary = {}
 var _hills := FastNoiseLite.new()
 var _detail := FastNoiseLite.new()
+var _path_edge := FastNoiseLite.new()
 
 
 func _init(config: Dictionary = {}) -> void:
@@ -38,6 +39,16 @@ func _init(config: Dictionary = {}) -> void:
 	_detail.fractal_type = FastNoiseLite.FRACTAL_FBM
 	_detail.frequency = float(detail.get("frequency", 0.018))
 	_detail.fractal_octaves = int(detail.get("octaves", 3))
+
+	# Metres-scale wobble for `path_factor`'s edge, not terrain shape — a
+	# frequency high enough to bulge and pinch within one path segment
+	# (~4-5m wavelength) rather than drift slowly the way `_detail` does at
+	# 0.018 (~55m). A third seed so it does not correlate with either.
+	_path_edge.seed = seed_value + 2
+	_path_edge.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_path_edge.fractal_type = FastNoiseLite.FRACTAL_FBM
+	_path_edge.frequency = 0.2
+	_path_edge.fractal_octaves = 2
 
 
 static func load_config() -> Dictionary:
@@ -196,8 +207,16 @@ func _apply_flats(x: float, z: float, height: float) -> float:
 ## Paths are authored polylines in the config (`paths.routes`), walked as
 ## straight segments — enough points bend a route organically, and a segment
 ## distance is testable arithmetic where a spline is not. The bake reads this
-## to tint the colour map, the scatter reads it to keep vegetation off the
-## road, and both agreeing is exactly why it lives here as one function.
+## to paint the control map (`build_playground_terrain.gd::_paint_control_map`),
+## the scatter reads it to keep vegetation off the road, and both agreeing is
+## exactly why it lives here as one function.
+##
+## The fade band itself is nudged by `_path_edge` noise so the boundary bulges
+## and pinches rather than tracing a perfect parallel offset of the polyline —
+## a mathematically exact curve reads as drawn, not worn. The nudge moves
+## `half`/`half+shoulder` together, so the band KEEPS its width and only its
+## position wobbles; a route waypoint (`nearest == 0`) stays fully on the path
+## regardless (bible sec8: "feathered irregular edges").
 func path_factor(x: float, z: float) -> float:
 	var paths: Dictionary = _config.get("paths", {})
 	var routes: Array = paths.get("routes", [])
@@ -215,7 +234,9 @@ func path_factor(x: float, z: float) -> float:
 			var a := Vector2(float(points[i][0]), float(points[i][1]))
 			var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
 			nearest = minf(nearest, _segment_distance(spot, a, b))
-	return 1.0 - smoothstep(half, half + shoulder, nearest)
+	var wobble := _path_edge.get_noise_2d(x, z) * shoulder * 0.5
+	var edge_start := maxf(0.0, half + wobble)
+	return 1.0 - smoothstep(edge_start, edge_start + shoulder, nearest)
 
 
 func _segment_distance(point: Vector2, a: Vector2, b: Vector2) -> float:
