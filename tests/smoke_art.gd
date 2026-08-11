@@ -63,6 +63,8 @@ func _run() -> void:
 	_the_creatures_in_the_world_loaded_their_models()
 	_the_trainer_has_a_model_and_animations()
 	_every_human_fits_at_its_declared_height()
+	_the_villagers_still_tint_the_way_r7_2_shipped()
+	_the_npc_variant_system_differentiates_independently()
 	_the_meadow_was_dressed()
 	_vegetation_kept_its_lod_chain()
 	_report()
@@ -239,6 +241,111 @@ func _every_human_fits_at_its_declared_height() -> void:
 			print("  %-16s human %.2fm, declared %.2fm, fit x%.2f" % [
 				key, rendered, declared, art.scale.y])
 		holder.queue_free()
+
+
+## NP1 replaced the flat `_apply_tint` multiply with `_apply_palette`, which
+## reads `tint` as a legacy `{"*": tint}` palette entry when no `palette` key
+## is present. R7.2's three villagers still carry only `tint` — this is the
+## regression guard that the translation actually keeps producing a coloured
+## body rather than silently doing nothing now that the field is read
+## differently.
+func _the_villagers_still_tint_the_way_r7_2_shipped() -> void:
+	for key in ["villager_farmer", "villager_keeper", "villager_smith"]:
+		var cfg: Dictionary = _art_config().get(key, {})
+		var tint := str(cfg.get("tint", ""))
+		if tint == "":
+			_fail("'%s' has lost its R7.2 tint entry" % key)
+			continue
+		var holder := Node3D.new()
+		holder.set_script(CHARACTER_MODEL)
+		root.add_child(holder)
+		if not bool(holder.call("build", key)):
+			_fail("'%s' failed to build from art.json" % key)
+			holder.queue_free()
+			continue
+		var material: Material = holder.call("body_material")
+		if material == null or not material is BaseMaterial3D:
+			_fail("'%s' built with no material to check its tint against" % key)
+		else:
+			var albedo: Color = (material as BaseMaterial3D).albedo_color
+			# The exact colour depends on the source texture's own albedo, which
+			# this test cannot know without loading it — but a tint that did
+			# nothing leaves an untouched StandardMaterial3D default (flat white,
+			# 1,1,1), which no villager's rustier/greener/bluer wardrobe should be.
+			if albedo.is_equal_approx(Color(1, 1, 1)):
+				_fail("'%s' rendered with an untinted default material; the palette " % key +
+					"translation of its legacy 'tint' may not have run")
+			else:
+				print("  %-16s tint '%s' -> albedo %s" % [key, tint, albedo])
+		holder.queue_free()
+
+
+## NP1's own "done when": two NPCs built from the SAME base model differ in
+## outfit colour (`palette`), hair and visible accessories independently of
+## one another. The hair/accessory shapes are placeholder primitives — no
+## rig ships separable geometry for either yet (see `_apply_hair`'s own
+## comment) — so this checks the DATA-driven mechanism, not a look.
+func _the_npc_variant_system_differentiates_independently() -> void:
+	var base_model := str(_art_config().get("trainer", {}).get("model", ""))
+	if base_model == "":
+		_fail("no trainer model configured; cannot exercise the NPC variant system")
+		return
+
+	var variant_a := {
+		"model": base_model, "height": 1.8,
+		"palette": {"Material_1": "#c0392b"},
+		"hair": {"visible": true, "color": "#111111"},
+		"accessories": [{"name": "satchel", "visible": true, "color": "#7a5230"}],
+	}
+	var variant_b := {
+		"model": base_model, "height": 1.8,
+		"palette": {"Material_1": "#2e7d32"},
+		"hair": {"visible": false},
+		"accessories": [{"name": "satchel", "visible": false}],
+	}
+
+	var a := _build_from_config(variant_a)
+	var b := _build_from_config(variant_b)
+	if a == null or b == null:
+		_fail("NP1 variant system: one of the two test builds produced no art")
+		if a != null:
+			a.queue_free()
+		if b != null:
+			b.queue_free()
+		return
+
+	var material_a: Variant = a.call("body_material")
+	var material_b: Variant = b.call("body_material")
+	if material_a == null or material_b == null:
+		_fail("NP1 variant system: no body material on one of the two test builds")
+	elif (material_a as BaseMaterial3D).albedo_color.is_equal_approx(
+		(material_b as BaseMaterial3D).albedo_color
+	):
+		_fail("NP1 variant system: two different palette entries produced the same outfit colour")
+
+	if a.call("find_part", "hair") == null:
+		_fail("NP1 variant system: hair.visible=true did not attach a hair part")
+	if b.call("find_part", "hair") != null:
+		_fail("NP1 variant system: hair.visible=false attached a hair part anyway")
+
+	if a.call("find_part", "accessory_satchel") == null:
+		_fail("NP1 variant system: an accessory with visible=true did not attach")
+	if b.call("find_part", "accessory_satchel") != null:
+		_fail("NP1 variant system: an accessory with visible=false attached anyway")
+
+	print("  npc variant      palette, hair and accessories differ independently")
+	a.queue_free()
+	b.queue_free()
+
+
+func _build_from_config(cfg: Dictionary) -> Node3D:
+	var holder := Node3D.new()
+	holder.set_script(CHARACTER_MODEL)
+	root.add_child(holder)
+	if not bool(holder.call("build_from_config", cfg)):
+		holder.queue_free()
+		return null
+	return holder
 
 
 func _the_meadow_was_dressed() -> void:

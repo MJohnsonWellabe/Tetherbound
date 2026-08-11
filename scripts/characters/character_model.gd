@@ -17,6 +17,7 @@ const CONFIG_PATH := "res://data/config/art.json"
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 var _art: Node3D = null
+var _body: MeshInstance3D = null
 var _anim: AnimationPlayer = null
 var _clips: Dictionary = {}
 var _current: String = ""
@@ -24,27 +25,45 @@ var _current: String = ""
 var _height: float = 1.8
 var _model_yaw: float = 0.0
 var _config_key: String = ""
+var _cfg: Dictionary = {}
+
+## Shared across every character built by any instance of this script, so that
+## two NPCs asking for the same base model, surface and colour draw with one
+## Material resource instead of one each — the sharing `vegetation.gd`'s own
+## `_tint_for` cache already proves, keyed here by (model path, surface or
+## part id, colour) instead of (source name, colour, swap). NP1: the board's
+## "keep colour calls low by using shared materials" is a literal requirement,
+## not a nice-to-have.
+static var _variant_materials: Dictionary = {}
 
 
 ## Load the named block and stand the body up. False means nothing loaded and
 ## whatever placeholder the scene carries should stay visible.
 func build(config_key: String) -> bool:
 	_config_key = config_key
-	var cfg := config()
+	return build_from_config(config_for(config_key))
+
+
+## Same as `build()`, but takes the config dict directly instead of reading it
+## from `art.json` by key. Exists so a test (or a future picker UI) can drive
+## a one-off variant — hair colour, an accessory toggled on, a palette entry —
+## without writing it into the shared production config file first.
+func build_from_config(cfg: Dictionary) -> bool:
+	_cfg = cfg
 	_height = float(cfg.get("height", _height))
 	_model_yaw = float(cfg.get("model_yaw", 0.0))
 	_clips = cfg.get("clips", {})
 	if not _build_art(str(cfg.get("model", ""))):
 		return false
 	_hide_placeholders()
-	var tint := str(cfg.get("tint", ""))
-	if tint != "":
-		_apply_tint(Color(tint))
+	_apply_palette(cfg)
+	_apply_hair(cfg)
+	_apply_accessories(cfg)
 	return true
 
 
 func config() -> Dictionary:
-	return config_for(_config_key)
+	return _cfg if not _cfg.is_empty() else config_for(_config_key)
 
 
 static func config_for(key: String) -> Dictionary:
@@ -64,6 +83,32 @@ func has_model() -> bool:
 
 func height() -> float:
 	return _height
+
+
+## The hair or accessory node `_apply_hair`/`_apply_accessories` attached
+## under that exact name, or null if none was (either the config named none,
+## or it was `visible: false`). Public so a test can assert presence/absence
+## without reaching into `_art`'s tree itself.
+func find_part(part_name: String) -> MeshInstance3D:
+	if _art == null:
+		return null
+	return _art.find_child(part_name, true, false) as MeshInstance3D
+
+
+## The material actually drawn on the rig's own mesh (never a hair/accessory
+## placeholder), after `_apply_palette` has run. Null if nothing built.
+func body_material() -> Material:
+	return _body.get_active_material(0) if _body != null and _body.mesh != null else null
+
+
+func _find_mesh_instance(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		return node as MeshInstance3D
+	for child in node.get_children():
+		var found := _find_mesh_instance(child)
+		if found != null:
+			return found
+	return null
 
 
 func clip_for(role: String, fallback: String = "idle") -> String:
@@ -96,6 +141,10 @@ func _build_art(path: String) -> bool:
 	add_child(_art)
 	_fit()
 	_art.rotation.y = deg_to_rad(_model_yaw)
+	# Captured before `_apply_hair`/`_apply_accessories` add their own
+	# MeshInstance3D siblings, so `body_material()` always answers about the
+	# rig's own mesh and never about a placeholder part.
+	_body = _find_mesh_instance(_art)
 	_anim = _find_animation_player(_art)
 	if _anim == null:
 		# KayKit's characters ship with no clips at all, so Godot creates no
@@ -197,29 +246,168 @@ func _fit() -> void:
 ## photoreal-ish proportions, and picking it would silently settle the open
 ## question in `ralph/BLOCKED.md` ("Creature and human art-pipeline cohesion")
 ## that CLAUDE.md says not to invent. This keeps the same mesh, skeleton and
-## clips and only multiplies each surface's albedo, so a texture keeps its
-## detail (cloth weave, skin shading) and only shifts hue/value — a StandardMaterial3D
-## with just `albedo_color` set and no texture would flatten the model to a
-## single flat colour, which is a worse look than the one being avoided.
-func _apply_tint(colour: Color) -> void:
+## clips and only multiplies an existing surface's albedo, so a texture keeps
+## its detail (cloth weave, skin shading) and only shifts hue/value — a
+## StandardMaterial3D with just `albedo_color` set and no texture would
+## flatten the model to a single flat colour, which is a worse look than the
+## one being avoided.
+##
+## `palette` generalises the old single-colour `tint` to one entry per named
+## material (spec §21: "per-material or per-region variation where possible"
+## — a global multiply over every surface is the exact failure it names). A
+## bare `tint` still works, unmodified, by being read as `{"*": tint}`: every
+## one of R7.2's three villagers needs no data change. All three of today's
+## rigs (trainer, Grandpa, Warden) happen to carry exactly one material each
+## (`Material_1`, confirmed against the source .glb) so `palette` and `tint`
+## currently colour the same one surface either way — the difference is real
+## once a rig has more than one, which NP4's modular bases will.
+func _apply_palette(cfg: Dictionary) -> void:
 	if _art == null:
 		return
-	_tint_node(_art, colour)
+	var palette: Dictionary = cfg.get("palette", {})
+	if palette.is_empty():
+		var tint := str(cfg.get("tint", ""))
+		if tint == "":
+			return
+		palette = {"*": tint}
+	_palette_node(_art, palette)
 
 
-func _tint_node(node: Node, colour: Color) -> void:
+func _palette_node(node: Node, palette: Dictionary) -> void:
 	if node is MeshInstance3D:
 		var instance := node as MeshInstance3D
 		var mesh: Mesh = instance.mesh
 		var surfaces := mesh.get_surface_count() if mesh != null else 0
 		for surface in surfaces:
 			var source: Material = instance.get_active_material(surface)
-			var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
-				if source is BaseMaterial3D else StandardMaterial3D.new()
-			material.albedo_color = material.albedo_color * colour
-			instance.set_surface_override_material(surface, material)
+			var name := source.resource_name if source != null and source.resource_name != "" \
+				else "surface_%d" % surface
+			var hex: String = str(palette.get(name, palette.get("*", "")))
+			if hex == "":
+				continue
+			instance.set_surface_override_material(
+				surface, _shared_variant_material(source, name, Color(hex)))
 	for child in node.get_children():
-		_tint_node(child, colour)
+		_palette_node(child, palette)
+
+
+## One Material per (model, material-or-part name, colour) tuple, shared by
+## every character that asks for the same one, instead of `source.duplicate()`
+## per character — the "mints a material per variant" mistake NP1 was told not
+## to repeat. `vegetation.gd::_retint()`'s `_tint_for()` proves the same
+## pattern for foliage (`ralph/BACKLOG.md`'s `SA1-lod`, keyed by everything
+## that can change the output); this is that cache for humans.
+func _shared_variant_material(source: Material, name: String, colour: Color) -> Material:
+	var key := "%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html()]
+	if _variant_materials.has(key):
+		return _variant_materials[key]
+	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
+		if source is BaseMaterial3D else StandardMaterial3D.new()
+	material.albedo_color = material.albedo_color * colour
+	_variant_materials[key] = material
+	return material
+
+
+## A placeholder shape standing in for real hair geometry, not a finished
+## look. Neither trainer, Grandpa nor Warden's .glb has a separable hair
+## mesh today — each is one fused mesh, one material, confirmed against the
+## source files — so "swappable hair" ahead of NP4 (Meshy-generated modular
+## bases, credit-gated) or EV1 (CC0 packs, landing separately) can only mean
+## the DATA and ATTACHMENT mechanism: a part that shows, hides and colours
+## independently of the body's own palette. `CLAUDE.md`'s Prototyping section
+## is explicit that a placeholder proves mechanics and is not to be judged as
+## a look — real hair geometry is follow-on work, not this task's to invent.
+func _apply_hair(cfg: Dictionary) -> void:
+	var hair: Dictionary = cfg.get("hair", {})
+	if hair.is_empty() or not bool(hair.get("visible", true)):
+		return
+	var mesh := _primitive_mesh(str(hair.get("shape", "sphere")), 0.11)
+	var part := _attach_part(mesh, str(hair.get("bone", "Head")), Vector3(0, 0.08, 0), "hair")
+	if part == null:
+		return
+	var hex := str(hair.get("color", hair.get("colour", "#2b1b12")))
+	part.set_surface_override_material(
+		0, _shared_variant_material(StandardMaterial3D.new(), "hair", Color(hex)))
+
+
+## Same placeholder reasoning as `_apply_hair`, for however many entries `cfg`
+## names. Each is independently visible/hidden and coloured — the mechanism
+## spec §21 and the NPC board ask for ("hide/show accessories via separate
+## mesh parts"); the shapes themselves are stand-ins until real geometry
+## exists.
+func _apply_accessories(cfg: Dictionary) -> void:
+	var accessories: Array = cfg.get("accessories", [])
+	for entry: Variant in accessories:
+		if not entry is Dictionary:
+			continue
+		var acc := entry as Dictionary
+		if not bool(acc.get("visible", true)):
+			continue
+		var mesh := _primitive_mesh(str(acc.get("shape", "box")), 0.12)
+		var offset := Vector3.ZERO
+		var raw_offset: Array = acc.get("offset", [])
+		if raw_offset.size() == 3:
+			offset = Vector3(raw_offset[0], raw_offset[1], raw_offset[2])
+		var name := "accessory_%s" % str(acc.get("name", "accessory"))
+		var part := _attach_part(mesh, str(acc.get("bone", "Hips")), offset, name)
+		if part == null:
+			continue
+		var hex := str(acc.get("color", acc.get("colour", "#5a3d21")))
+		part.set_surface_override_material(
+			0, _shared_variant_material(StandardMaterial3D.new(), name, Color(hex)))
+
+
+func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
+	match shape:
+		"box":
+			var box := BoxMesh.new()
+			box.size = Vector3.ONE * size
+			return box
+		"capsule":
+			var capsule := CapsuleMesh.new()
+			capsule.radius = size * 0.5
+			capsule.height = size * 2.0
+			return capsule
+		_:
+			var sphere := SphereMesh.new()
+			sphere.radius = size * 0.5
+			sphere.height = size
+			return sphere
+
+
+## Finds the named bone on whatever Skeleton3D `_art` carries and hangs a new
+## MeshInstance3D off it via BoneAttachment3D, so the part follows the rig
+## through every clip instead of standing fixed relative to the root. Falls
+## back to a plain child of `_art`, offset up by the character's own height,
+## if the bone or the skeleton is not found — a body with no matching bone
+## gets a static part rather than silently no part at all.
+func _attach_part(mesh: Mesh, bone: String, offset: Vector3, part_name: String) -> MeshInstance3D:
+	if _art == null:
+		return null
+	var instance := MeshInstance3D.new()
+	instance.name = part_name
+	instance.mesh = mesh
+	var skeleton := _find_skeleton(_art)
+	if skeleton != null and skeleton.find_bone(bone) >= 0:
+		var attachment := BoneAttachment3D.new()
+		attachment.bone_name = bone
+		skeleton.add_child(attachment)
+		attachment.add_child(instance)
+		instance.position = offset
+	else:
+		_art.add_child(instance)
+		instance.position = offset + Vector3(0, _height, 0)
+	return instance
+
+
+func _find_skeleton(node: Node) -> Skeleton3D:
+	if node is Skeleton3D:
+		return node as Skeleton3D
+	for child in node.get_children():
+		var found := _find_skeleton(child)
+		if found != null:
+			return found
+	return null
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:

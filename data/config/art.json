@@ -153,7 +153,7 @@
     "animation_libraries": []
   },
   "villager_farmer": {
-    "_comment": "R7.2. Grandpa's own rig and clips, tinted rather than regenerated — see character_model.gd's `_apply_tint` comment for why this is the model reused (Ranger is stylistically incompatible, and CLAUDE.md forbids pre-empting the open art-pipeline question in ralph/BLOCKED.md by using it anyway). `tint` multiplies every surface's existing albedo, so the texture detail survives and only the hue/value shifts — a rustier, warmer wardrobe than Grandpa's own.",
+    "_comment": "R7.2. Grandpa's own rig and clips, tinted rather than regenerated — see character_model.gd's `_apply_palette` comment for why this is the model reused (Ranger is stylistically incompatible, and CLAUDE.md forbids pre-empting the open art-pipeline question in ralph/BLOCKED.md by using it anyway). `tint` multiplies every surface's existing albedo, so the texture detail survives and only the hue/value shifts — a rustier, warmer wardrobe than Grandpa's own. NP1 added `palette` (per-material), `hair` and `accessories` alongside `tint` — this block does not need them, since one rig-wide colour is still the design for these three.",
     "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
     "height": 1.75,
     "model_yaw": 0.0,
