@@ -73,6 +73,10 @@ var _ally: RefCounted = null
 var _engage_range: float = 6.0
 var _prompt: String = ""
 
+## `CO1`. The last `Game.party.revision` `_sync_active_pal()` acted on, so a
+## party-screen re-activation is caught exactly once instead of every frame.
+var _party_revision_seen: int = -1
+
 ## Set when the scene has an InteractionArbiter to hand the prompt line to.
 ##
 ## Null in the combat sandbox, where this node is the only thing in the world
@@ -216,8 +220,8 @@ func adopt_starter(species_id: String, nickname: String = "") -> bool:
 		push_error("the player already has a pal; adopt_starter is not a swap")
 		return false
 
-	_ally = SPECIES.spawn(species_id)
-	if _ally == null:
+	var pal: RefCounted = SPECIES.spawn(species_id)
+	if pal == null:
 		push_error("starter species '%s' is missing from species.json" % species_id)
 		return false
 	if nickname != "":
@@ -227,7 +231,18 @@ func adopt_starter(species_id: String, nickname: String = "") -> bool:
 		# species name for good: a Terrapup named "Bud" would show as "Bud"
 		# everywhere, including the places that specifically want to say what
 		# kind of creature it is.
-		_ally.nickname = nickname
+		pal.nickname = nickname
+
+	return await _spawn_ally_body(pal)
+
+
+## Instances a following body for `pal` and stands it up beside the trainer.
+## Shared by `adopt_starter()` (the very first pal, a brand new instance) and
+## `summon_active_pal()` (`CO1` — recalling a pal the party already owns). The
+## RefCounted stats are the caller's; this only ever builds the visible body
+## around them.
+func _spawn_ally_body(pal: RefCounted) -> bool:
+	_ally = pal
 
 	# Instanced hidden and only shown once it is standing on the ground. An
 	# invisible body is switched off entirely (pal_body._on_visibility_changed),
@@ -239,7 +254,7 @@ func adopt_starter(species_id: String, nickname: String = "") -> bool:
 	_ally_body.set_script(FOLLOWER_SCRIPT)
 	_ally_body.visible = false
 	get_parent().add_child(_ally_body)
-	_ally_body.call("setup", species_id)
+	_ally_body.call("setup", pal.species_id)
 	_ally_body.call("configure_following", _follower_config())
 	_ally_body.set("leader", _player)
 
@@ -352,6 +367,110 @@ func ally_instance() -> RefCounted:
 	return _ally
 
 
+## `CO1`. `Game.party`, the same autoload `tab_pals.gd` reads and writes.
+## Reached through `/root/Game` rather than the bare `Game` autoload name —
+## `scripts/story/party_seam.gd`'s header explains why: the unit suite runs
+## scripts under `--script`, which starts no autoloads at all, and this exact
+## mistake has already been paid for once on this project.
+func _party() -> RefCounted:
+	var game := get_node_or_null(^"/root/Game")
+	return game.get("party") if game != null else null
+
+
+## `CO1`: put the current follower away without releasing it from the party.
+## Refuses mid-fight — the combat manager drives this same body while a fight
+## is running, and freeing it out from under one is exactly the failure mode
+## `_set_exploration_active()`'s own comment already warns about.
+func dismiss_active_pal() -> bool:
+	if _ally_body == null or not is_instance_valid(_ally_body):
+		return false
+	if _manager != null and bool(_manager.call("is_fighting")):
+		return false
+	_ally_body.queue_free()
+	_ally_body = null
+	_ally = null
+	return true
+
+
+## `CO1`: bring `Game.party`'s active pal out, if none is out already. Which
+## slot is active is the party screen's own idea — set from "send this one out
+## first", `tab_pals.gd::_read_activate()` — and until this, nothing ever read
+## it back: choosing a different pal there had no effect on who was actually
+## standing beside the trainer.
+func summon_active_pal() -> bool:
+	if _ally_body != null and is_instance_valid(_ally_body):
+		return false
+	if _manager != null and bool(_manager.call("is_fighting")):
+		return false
+	var party := _party()
+	if party == null:
+		return false
+	var pal: RefCounted = party.call("active")
+	if pal == null or bool(pal.get("fainted")):
+		return false
+	return await _spawn_ally_body(pal)
+
+
+## `CO1`: the third of "dismissed, recalled and swapped" — a party-screen
+## re-activation reaching the pal actually on the ground. Polled against
+## `party.revision` rather than a signal, the same choice `autoload/party.gd`
+## and `autoload/inventory.gd` already made and explain in their own headers:
+## a focused menu Button eats events, so the thing that has to notice a change
+## made from inside one polls instead.
+func _sync_active_pal() -> void:
+	var party := _party()
+	if party == null:
+		return
+	var revision: int = int(party.get("revision"))
+	if revision == _party_revision_seen:
+		return
+	_party_revision_seen = revision
+	if _ally_body == null or not is_instance_valid(_ally_body):
+		return  # Nothing out to swap; the new active pal comes out on next recall.
+	if _manager != null and bool(_manager.call("is_fighting")):
+		return  # Never mid-fight — `_start_fight` already snapshotted who is in it.
+	var active_pal: RefCounted = party.call("active")
+	if active_pal == null or active_pal == _ally:
+		return  # The change wasn't to the pal that is actually out.
+	dismiss_active_pal()
+	summon_active_pal()
+
+
+## `CO1`'s bound action, read whenever nothing else owns it. Guarded the same
+## way `_read_engage_input()` is: no reading past a running fight, since the
+## combat manager drives `_ally_body` for the length of one.
+func _read_pal_control_input() -> void:
+	if _manager != null and bool(_manager.call("is_fighting")):
+		return
+	if not Input.is_action_just_pressed("pal_recall"):
+		return
+	if _ally_body != null and is_instance_valid(_ally_body):
+		dismiss_active_pal()
+	else:
+		summon_active_pal()
+
+
+## The non-actionable status line `interaction_offer()` falls back to once
+## nothing nearby is offering anything else — see that function's own comment
+## on why `PROMPTS`'s single line can carry a second button's prompt at all.
+func _pal_control_offer() -> Dictionary:
+	if _ally_body != null and is_instance_valid(_ally_body):
+		if _ally == null:
+			return {}
+		return PROMPTS.offer(
+			"%s%sPut %s away" % [INPUT_GLYPH.icon("pal_recall"), PROMPTS.GAP, _ally.label()],
+			0.0, -1, false
+		)
+	var party := _party()
+	var pal: RefCounted = party.call("active") if party != null else null
+	if pal == null or bool(pal.get("fainted")):
+		return {}
+	return PROMPTS.offer(
+		"%s%sCall out %s" % [INPUT_GLYPH.icon("pal_recall"), PROMPTS.GAP, pal.label()],
+		0.0, -1, false
+	)
+
+
 ## The line the HUD draws. Still asked of this node even when the arbiter is
 ## deciding it, so `combat_hud.gd` keeps one source for the prompt and does not
 ## have to know whether the scene it is in has arbitration.
@@ -384,12 +503,12 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	if _ally != null and _ally.fainted:
 		return PROMPTS.offer("%s is out of the fight." % _ally.display_name, 0.0, 100, false)
 	var candidate := _engageable()
-	if candidate == null:
-		return {}
-	return PROMPTS.offer(
-		"Engage %s" % str(candidate.get("display_name")),
-		from.distance_to(candidate.global_position)
-	)
+	if candidate != null:
+		return PROMPTS.offer(
+			"Engage %s" % str(candidate.get("display_name")),
+			from.distance_to(candidate.global_position)
+		)
+	return _pal_control_offer()
 
 
 func interaction_activate() -> void:
@@ -403,6 +522,7 @@ func interaction_activate() -> void:
 
 func _process(delta: float) -> void:
 	_tick_respawn(delta)
+	_sync_active_pal()
 	_update_prompt()
 
 
@@ -415,6 +535,7 @@ func _process(delta: float) -> void:
 ## that captured four frames of a fight that had never started.
 func _physics_process(_delta: float) -> void:
 	_read_engage_input()
+	_read_pal_control_input()
 
 
 ## Two clocks per knocked-out creature: how long its body lies there, and how
@@ -475,6 +596,8 @@ func _update_prompt() -> void:
 		var candidate := _engageable()
 		if candidate != null:
 			text = "%s   Engage %s" % [INPUT_GLYPH.icon("interact"), str(candidate.get("display_name"))]
+		else:
+			text = str(_pal_control_offer().get("label", ""))
 	if text != _prompt:
 		_prompt = text
 		prompt_changed.emit(text)

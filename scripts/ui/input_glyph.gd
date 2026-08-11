@@ -39,6 +39,7 @@ const GLYPHS := {
 		"keyboard": ["keyboard_arrow_left.png", "keyboard_arrow_right.png"],
 		"gamepad": ["xbox_dpad_left.png", "xbox_dpad_right.png"],
 	},
+	"pal_recall": {"keyboard": "keyboard_r.png", "gamepad": "xbox_dpad_up.png"},
 }
 
 
