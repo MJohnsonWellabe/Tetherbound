@@ -55,6 +55,11 @@ func _run() -> void:
 	var colour_image := Image.create_empty(size, size, false, Image.FORMAT_RGBA8)
 
 	var colour_cfg: Dictionary = config.get("colour", {})
+	# EV4-hillside-seam: texture-band decisions are deliberately sampled at a
+	# WIDER step than the geometry (see terrain_playground.json's own comment)
+	# so the fine `detail` noise layer doesn't flicker the grass/soil/rock pick
+	# pixel to pixel. Height itself still bakes at `spacing`.
+	var texture_step := float(colour_cfg.get("slope_sample_step", spacing))
 	var lowest := INF
 	var highest := -INF
 	var steep_samples := 0
@@ -66,7 +71,7 @@ func _run() -> void:
 			var height: float = field.height_at(world_x, world_z)
 			height_image.set_pixel(pixel_x, pixel_z, Color(height, 0.0, 0.0, 1.0))
 
-			var slope: float = field.slope_degrees_at(world_x, world_z, spacing)
+			var slope: float = field.slope_degrees_at(world_x, world_z, texture_step)
 			var ground := _ground_colour(slope, colour_cfg)
 			colour_image.set_pixel(pixel_x, pixel_z, ground)
 
@@ -101,7 +106,7 @@ func _run() -> void:
 	data.call("import_images", images, Vector3(origin, 0.0, origin), 0.0, 1.0)
 	await process_frame
 
-	_paint_control_map(data, field, config, colour_cfg, origin, size, spacing)
+	_paint_control_map(data, field, config, colour_cfg, origin, size, spacing, texture_step)
 
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(DATA_DIR)):
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DATA_DIR))
@@ -138,7 +143,7 @@ func _run() -> void:
 ## unreachable auto-shader tier.
 func _paint_control_map(
 	data: Object, field: RefCounted, config: Dictionary, colour_cfg: Dictionary,
-	origin: float, size: int, spacing: float
+	origin: float, size: int, spacing: float, texture_step: float
 ) -> void:
 	var ids := _texture_ids(config.get("textures", []))
 	if ids.is_empty():
@@ -151,7 +156,10 @@ func _paint_control_map(
 		var world_z := origin + pixel_z * spacing
 		for pixel_x in size:
 			var world_x := origin + pixel_x * spacing
-			var slope: float = field.slope_degrees_at(world_x, world_z, spacing)
+			# Same smoothed slope as the colour map (EV4-hillside-seam) so the
+			# control map's base/overlay/blend pick matches what got painted
+			# into the colour map, band for band.
+			var slope: float = field.slope_degrees_at(world_x, world_z, texture_step)
 			var control := _control_for(slope, colour_cfg, ids)
 			var path_weight: float = field.path_factor(world_x, world_z)
 			if path_weight > 0.0:
