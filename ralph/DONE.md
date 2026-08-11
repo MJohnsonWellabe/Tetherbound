@@ -3,6 +3,165 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## D25 — Loop speedups: parallel lanes, batched pushes, local critic iteration
+`6b848b6` and `346e6e0` — owner-directed interactive session, 2026-08-11.
+Full reasoning: `docs/decisions/D25-batch-the-push-not-the-testing.md`.
+
+The owner asked for a faster loop and offered a floor (chain firings instead of
+idling to the hour) and a ceiling (do not test or ship until a whole phase is
+done). **The floor is adopted; the ceiling is rejected**, and D25 carries the
+arithmetic so it is not re-proposed.
+
+**Measure before optimising — two numbers the loop had been reasoning from were
+wrong.** A branch CI run is **5.2 minutes**, not the 8–9 `conventions.md` and
+`ci.yml` both claimed; the loop had been optimising against a figure 80% too
+high. And a three-round blind visual pass had cost **8 pushes, ~36 minutes of
+CI**, not one. So CI is not where the time goes — the visual-pass amplification
+is, and about a third of the backlog is visual-affecting.
+
+**The largest change is therefore the cheapest**: render, critique, fix and
+re-critique in the firing's own checkout, push once at the end. The blind pass
+is unchanged and still required; only where its rounds run moved.
+
+Also shipped: per-`area` leases with one block per live firing (a firing stands
+down only when its *own* area is held); expiry 90 → 40 minutes, made safe by
+checking the task branch for recent commits rather than trusting the clock;
+`lane: art` so unkeyed lanes skip Meshy items silently instead of reporting
+blocked; batching 1–4 items per branch, never across areas and never a red item
+with a green one; successors chained 2–3 minutes out.
+
+**`LP1` promoted** to a new Phase -0.95 from a bullet at the bottom of the file.
+Batching makes the `smoke_traversal`/`smoke_combat` flakes worse, not better —
+one random red now rejects up to four finished items.
+
+**Two operational facts found the hard way, both now in `MANUAL.md`.** An agent
+cannot create a working lane: `create_trigger` has no `sources` parameter, so
+the sessions it fires come up with **no repository checked out**. Two lanes were
+created that way, fired on schedule, and produced nothing at all while reading
+`enabled: true` with a correct cron in every listing. And the keyed "Ralph"
+Routine was created via the HTTP API, so **no agent can unpause it** — only the
+Routines UI can. `ralph/LANE_PROMPT.md` holds the exact prompt text and the
+ten-minute test for whether a new lane actually works.
+
+## D24 — The art bible, the NPC board, and one family per category
+`4eeff21` — owner-directed interactive session, 2026-08-11.
+Full reasoning: `docs/decisions/D24-one-nature-family-one-village-family.md`.
+
+The owner's words: *"the visuals is the most important part and we're not
+bailing the palworld look and it's not getting fixed from what I can tell."*
+R9.4's own evidence agrees — **both blind critics ranked "needs art that is not
+in the build" first**, and scene tuning had genuinely run out of road. The audit
+behind the decision: 42 of 116 nature models present, **no** village kit, **no**
+props kit, **no** UI assets beyond two portraits.
+
+Landed verbatim behind provenance headers: `docs/ENVIRONMENT_AND_UI_BIBLE.md`
+and `docs/art/reference/12_NPC_Bases_Reusable.png` (numbered `12_` to follow the
+existing convention). D24 makes them canon: one nature family, one village
+family, one prop family; **Medieval Village MegaKit is the Meadows civilian
+vernacular**; keep Terrain3D; do not return to Forward+; Meshy is reserved for
+Team Tether hero objects; the HUD gets rebuilt on Kenney UI. Free Standard tiers
+only — the Source editions' foliage shaders are **not** available and nothing
+may assume them.
+
+**Two rules changed, and both will stop a task dead if learned late.** No Meshy
+generation without an owner-supplied reference board — the account went to 5000
+credits and reference art, not money, is the constraint now. And **D23 §20
+stands at any balance**: the owner reaffirmed it *with* 5000 available, which
+proves it was never a budget rule. Creatures and humans are rework-only,
+permanently, and the fidelity gap a critic called "the loudest single problem in
+the whole review" is an accepted cost rather than an oversight.
+
+**Both `BLOCKED.md` design questions close.** The settlement's vernacular is
+named by the bible; art cohesion resolves to rework on both halves. What
+replaces them is a standing list of what the owner still has to *draw* — the
+Tether pylon, the relay apparatus, the legendary tether machine.
+
+`BACKLOG.md` gains Phase -0.6 (`EV1`–`EV10`, the look) and Phase -0.55
+(`NP1`–`NP4`, the cast). **Ten items are collapsed into them rather than left
+running in parallel** — `R9.4-remainder-1/-2/-3/-4/-5/-7`, `R7.1-remainder-2`,
+`R7.1-found-3`, `SB7`, `SB8` — each keeping its original evidence, because the
+superseding item inherits it as the bar to clear. Two stay open on purpose:
+`-8` is a metre-is-a-metre problem a new kit inherits rather than cures, and
+`-6` is the `survey_combat` hang, unrelated to art.
+
+## SA1 — Reclaim ~630 MB of VRAM on the ROG Ally
+`28af489` — owner-directed interactive session, 2026-08-11.
+
+Owner report: *"the game on the rog is really choppy. it runs high memory, no
+cpu and only like 25% GPU. so I think it's a memory issue."* They were right,
+and the profile itself was the clue — a GPU at 25% while the frame time is bad
+is memory-bandwidth-bound, not shader-bound.
+
+**~808 MB of creature texture VRAM was resident at world start, ~650 MB of it
+avoidable.** Thirteen of seventeen species imported `compress/mode=0`
+(Lossless → uploads as raw RGBA8) instead of S3TC, because
+`detect_3d/compress_to` **never fires for textures only ever `load()`ed at
+runtime** — `pal_body.gd:179` does exactly that, so the editor's detect-3D hook
+had never run on them. Measured: `brooktail` base colour **21.3 MB** against
+`bramblebun`, correctly compressed, at **2.7 MB**.
+
+**~192 MB of it was 2048² emissive maps that are flat black** — 12 KB on disk,
+21.3 MB in VRAM each. All twelve verified `max channel value == 0` before being
+shrunk to 4×4, so nothing visible was lost.
+
+Also fixed: foliage mipmaps were off on all 14 textures (un-mipmapped 512²
+sampled at ~50:1 minification is aliasing by construction); both shadow atlases
+sat at Godot's **4096 desktop default** — ~67 MB each — because no atlas size
+had ever been set; MSAA 4× → 2×. And `project.godot`'s `config/features` still
+read "Forward Plus" while the renderer below it said `gl_compatibility`, left
+over from RB4.
+
+**Ruled out** rather than guessed at: terrain (~3 MB), `preload()` (all 67 are
+scripts), MultiMesh instance buffers (~1.7 MB), per-frame allocation.
+
+**On-device confirmation is still open — CI cannot measure VRAM**, same as RB4.
+If it is better but not fixed, the next suspect is already written down and
+queued as `SA1-lod`: `vegetation.gd::_retint()` rebuilds an `ArrayMesh` and
+discards the importer's LOD chain, so 23,452 instances draw at LOD0 at every
+distance.
+
+## SA0 — The opening soft-locked, so the game was uncompletable
+`6dffa21` — owner-directed interactive session, 2026-08-11.
+
+Owner report: *"you still can't interact with grandpa at the beginning. so then
+you leave the house and never get a starter."*
+
+**It was not an interaction bug**, which is where the investigation started and
+where it would have stayed without checking. The interaction system is clean —
+pure 3D distance, no facing, no line-of-sight — and no house geometry blocks
+Grandpa; every R9.4 addition passes `solid = false`, and his prompt radius
+reaches most of the ground floor.
+
+**It was a one-way state machine with an unguarded exit.** During the `wake`
+beat, `conversation_for("wake")` is `""`, so the director leaves Grandpa's
+`Interactable` **disabled**, and a disabled node returns an empty offer, so the
+arbiter never sees him. The **only** thing in the game that leaves `wake` is
+pressing interact on the bed — and nothing forced it, because `_refresh_lockout()`
+never gated locomotion on the beat. The fade cleared after ~2.1 s, the player
+walked off the bed, and the beat stayed `wake` forever: Grandpa mute, starters
+inert (they enable at `choose`), door ungated. Exactly the reported symptom.
+
+Fixed with `_check_left_the_bed()` — a `BED_LEAVE_RADIUS` of 3.2 m off a
+recorded bed anchor advances the beat. **A second route to the same deadlock**
+was fixed in the same commit: a world with no house had no bed and therefore no
+exit at all, and the comment claiming a bare-scene fallback worked was false.
+Deleted `_advance()`, which had no callers anywhere.
+
+**Why the existing test was blind to it, corrected.** I first assumed
+`smoke_opening` shortcuts by driving beats directly. **It does not** — it
+genuinely walks, waits for the arbiter, and presses the real `interact` action.
+It cannot see this bug because it **hard-codes the correct order**, always
+pressing the bed first. The new `tests/smoke_wake_softlock.gd` walks off the bed
+*without* pressing it, and **was verified to fail against the unfixed code**
+before the fix landed: *"SOFT-LOCK: walked 4.8m from the bed without pressing it
+and the beat is STILL 'wake'."* A test that has not been seen to fail is not
+evidence.
+
+`SA0-orbs` in Phase -0.9 is the rest of the owner's instruction — the starter
+choice moving into Grandpa's conversation — and is deliberately not in this
+commit; it needs a dialogue-effect vocabulary and an orb-as-container concept
+that do not exist yet.
+
 ## R9.4 — Full visual pass, two blind critics, three render rounds
 `86c9eb2` (spec landing), `585cb67` (tooling), `6cfe752` (round 1), plus the
 round-2/3 commits above — owner-directed interactive session, 2026-08-11.
