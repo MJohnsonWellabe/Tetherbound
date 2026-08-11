@@ -29,6 +29,12 @@ const SHOTS := {
 	"hero-meadow": [Vector3(58.0, 14.0, 28.0), Vector3(-10.0, 4.0, -12.0)],
 	"village-square": [Vector3(-6.0, 6.5, 4.0), Vector3(14.0, 3.0, -8.0)],
 	"camp-dusk": [Vector3(26.8, 4.8, -32.3), Vector3(30.5, 3.0, -36.0)],
+	# R7.2: close enough to actually read a villager as a person rather than a
+	# dot. First cut was an 8m-high overview (Mira and Oskar were both a couple
+	# of pixels tall) — this is a walking-up shot at near eye height, framing
+	# Mira against the well and the barns the way starters-by-the-door frames
+	# a creature against the square.
+	"village-npcs": [Vector3(16.0, 2.3, 3.0), Vector3(11.5, 1.7, -4.0)],
 }
 
 
@@ -51,6 +57,13 @@ func _shots(world: Node) -> Dictionary:
 	shots["starters-by-the-door"] = [
 		house.to_global(Vector3(6.0, 2.6, -2.5)),
 		house.to_global(Vector3(12.6, 0.9, 1.4)),
+	]
+	# R7.2's interior dressing: Grandpa's own bed and the second bookcase in
+	# the south-west corner, the rug under the table/chair/stool cluster, and
+	# the gear table by the door, all in one frame from near the stair foot.
+	shots["house-interior-dressed"] = [
+		house.to_global(Vector3(3.6, 1.7, 3.0)),
+		house.to_global(Vector3(-3.3, 0.7, -1.0)),
 	]
 	return shots
 

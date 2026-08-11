@@ -93,7 +93,7 @@ director_path = NodePath("../EncounterDirector")
 [node name="InteractionArbiter" type="Node" parent="."]
 script = ExtResource("10_arbiter")
 
-[node name="DialoguePanel" parent="." instance=ExtResource("11_dialogue")]
+[node name="DialoguePanel" parent="." instance=ExtResource("11_dialogue") groups=["dialogue_panel"]]
 
 [node name="NamePrompt" parent="." instance=ExtResource("12_name_prompt")]
 

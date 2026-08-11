@@ -31,6 +31,9 @@ extends Node3D
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 ## Quaternius furniture is authored at roughly 2x real scale (a 4.26m bed).
 const FURNITURE_SCALE := 0.5
+## Surface clutter (R7.2): the survival pack's gear, borrowed for a backpack,
+## an axe and a knife rather than a second furniture generation pass.
+const SURVIVAL_DIR := "res://assets/props/quaternius_survival"
 
 ## Interior camera, tunable in spirit but authored here with the building it
 ## belongs to: the room is the constraint, not the player's taste.
@@ -181,8 +184,9 @@ func _build_stairs() -> void:
 			Vector3(x, step_rise * (i + 1) * 0.5, -INNER_D * 0.5 + 0.6), COL_FLOOR)
 
 
-func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FURNITURE_SCALE) -> void:
-	var path := "%s/%s.obj" % [FURNITURE_DIR, model]
+func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FURNITURE_SCALE,
+		dir := FURNITURE_DIR, solid := true) -> void:
+	var path := "%s/%s.obj" % [dir, model]
 	if not ResourceLoader.exists(path):
 		push_warning("house furniture missing: %s" % path)
 		return
@@ -192,6 +196,8 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	mesh.rotation.y = deg_to_rad(yaw_degrees)
 	mesh.scale = Vector3.ONE * scale_factor
 	add_child(mesh)
+	if not solid:
+		return
 	# One simple blocker per piece: walking through a table breaks the room
 	# harder than an approximate box breaks pathing.
 	var aabb := (mesh.mesh as Mesh).get_aabb()
@@ -204,6 +210,14 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	body.position = at + Vector3(0, aabb.size.y * 0.5 * scale_factor, 0)
 	body.rotation.y = deg_to_rad(yaw_degrees)
 	add_child(body)
+
+
+## Clutter, through the same loader with a friendlier name at the call site:
+## `solid` defaults false here rather than true, because the point of surface
+## dressing — a knife, a backpack — is that nobody should ever be stopped by it.
+func _clutter(model: String, at: Vector3, yaw_degrees: float, solid := false,
+		dir := SURVIVAL_DIR, scale_factor := FURNITURE_SCALE) -> void:
+	_furnish(model, at, yaw_degrees, scale_factor, dir, solid)
 
 
 func _build_furniture() -> void:
@@ -223,6 +237,49 @@ func _build_furniture() -> void:
 	# foot, both clear of the lane from the bed to the stair head.
 	_furnish("BedTwin", Vector3(-half_w + 1.3, FLOOR_H + 0.25, -half_d + 1.9), 0.0)
 	_furnish("NightStand", Vector3(-half_w + 0.55, FLOOR_H + 0.25, 0.6), 0.0)
+
+	# Past-minimum dressing (R7.2): both reviews called this room an undressed
+	# grey box. Everything below is either non-solid (a rug or a knife on a
+	# shelf never blocks a CharacterBody3D) or checked with a headless probe
+	# against every walked lane in this house — stairs-foot to Grandpa,
+	# Grandpa to the door, and bed to stairs-head, the three lines
+	# tests/smoke_opening.gd and a real player both actually cross.
+	_build_rugs()
+	# Grandpa's own bed, in the empty south-west corner ground floor never
+	# used — well clear of both lanes (x < -2.4 puts it entirely off the
+	# stairs-to-Grandpa segment) and of the loft bed directly above it.
+	# Nothing in this room previously gave a man who has lived here for
+	# decades anywhere to sleep.
+	_furnish("BedDouble", Vector3(-half_w + 1.2, 0.12, -1.3), 0.0)
+	# The alternate bookcase, doubled up rather than swapped in: one shelf
+	# reads as furniture, two read as a life spent collecting books.
+	_furnish("Bookcase", Vector3(-half_w + 0.45, 0.12, half_d - 2.2), 180.0)
+	# A second table by the door, carrying the pack his own dialogue describes
+	# ("that pack by the door carried me thirty years" — data/dialogue/
+	# opening.json's grandpa_house line), given somewhere to actually sit.
+	_furnish("Table2", Vector3(half_w - 1.0, 0.12, 2.6), 180.0)
+	_clutter("Backpack", Vector3(half_w - 1.3, 0.12, 2.3), 30.0)
+	_clutter("Axe", Vector3(half_w - 0.55, 0.12, 2.9), -20.0)
+	_clutter("Knife", Vector3(half_w - 0.9, 0.12, 2.75), 10.0)
+	# A spare door leaning in the corner. Deliberately clutter, not a second
+	# functional doorway: the shell's own east opening stays open (this file's
+	# header explains why — a closed door needs an opening animation the slice
+	# does not have), so this reads as a door somebody took off its hinges once
+	# and never got round to rehanging.
+	_furnish("Door1", Vector3(-half_w + 0.4, 0.12, -0.3), 90.0, FURNITURE_SCALE, FURNITURE_DIR, false)
+
+
+## `_box()`'s own comment gives the house its rug shorthand: a flat coloured
+## box at floor height. Never solid — see `_clutter`'s reasoning, which
+## applies here too.
+func _build_rugs() -> void:
+	var half_w := INNER_W * 0.5
+	var half_d := INNER_D * 0.5
+	# Under the table/chair/stool cluster, short of both the stair footprint
+	# and the two named lanes' actual walked width.
+	_box(Vector3(3.0, 0.02, 2.0), Vector3(0.5, 0.13, -0.8), Color("#8a4a35"), false)
+	# An entry mat by the new gear table, east side near the door.
+	_box(Vector3(1.8, 0.02, 2.0), Vector3(half_w - 1.1, 0.13, 2.2), Color("#5c4a34"), false)
 
 
 func _build_lights() -> void:

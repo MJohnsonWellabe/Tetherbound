@@ -17,6 +17,7 @@ const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const VILLAGE := preload("res://scripts/world/village.gd")
+const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
@@ -452,6 +453,11 @@ func _build_settlement() -> void:
 	village.name = "Village"
 	add_child(village)
 	village.call("build")
+
+	var village_npcs: Node3D = VILLAGE_NPCS.new()
+	village_npcs.name = "VillageNPCs"
+	add_child(village_npcs)
+	village_npcs.call("build", _player)
 
 	var signpost: Node3D = SIGNPOST.new()
 	signpost.name = "Signpost"

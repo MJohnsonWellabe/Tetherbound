@@ -17,6 +17,13 @@ extends RefCounted
 
 const DIALOGUE_PATH := "res://data/dialogue/opening.json"
 
+## Village banter (R7.2), same `{"conversations": {...}}` shape, merged onto the
+## opening's table rather than folded into opening.json. Kept as a separate file
+## so a villager's line and Grandpa's briefing stay independently editable and
+## `test_dialogue_runner.gd`'s coverage of the opening's own ids is unaffected by
+## how many villagers exist.
+const VILLAGE_DIALOGUE_PATH := "res://data/dialogue/village.json"
+
 signal finished(conversation_id: String)
 
 static var _table: Dictionary = {}
@@ -35,16 +42,31 @@ var _values: Dictionary = {}
 static func table() -> Dictionary:
 	if not _table.is_empty():
 		return _table
-	var file := FileAccess.open(DIALOGUE_PATH, FileAccess.READ)
+	_table = _load_conversations(DIALOGUE_PATH)
+
+	# Additive only: a missing village.json degrades to "no village banter",
+	# never to a broken opening, and an id village.json shares with opening.json
+	# loses rather than silently overwriting Grandpa's own lines.
+	if ResourceLoader.exists(VILLAGE_DIALOGUE_PATH):
+		var village := _load_conversations(VILLAGE_DIALOGUE_PATH)
+		for id: String in village:
+			if _table.has(id):
+				push_warning("%s reuses conversation id '%s'; the opening's own copy wins" % [VILLAGE_DIALOGUE_PATH, id])
+				continue
+			_table[id] = village[id]
+	return _table
+
+
+static func _load_conversations(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
-		push_error("dialogue missing at %s" % DIALOGUE_PATH)
+		push_error("dialogue missing at %s" % path)
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary:
-		_table = (parsed as Dictionary).get("conversations", {})
-	else:
-		push_error("%s is not valid JSON" % DIALOGUE_PATH)
-	return _table
+		return (parsed as Dictionary).get("conversations", {})
+	push_error("%s is not valid JSON" % path)
+	return {}
 
 
 static func has(id: String) -> bool:

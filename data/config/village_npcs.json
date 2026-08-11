@@ -1,0 +1,30 @@
+{
+  "_comment": "R7.2. Villagers standing in the square, placed by scripts/world/village_npcs.gd the same way opening.json places the opening's cast: data describes, code places. `config_key` names a block in data/config/art.json (a tint on Grandpa's or the trainer's rig, never KayKit's Ranger — see art.json's own comment on those keys). `greeting` names a conversation id in data/dialogue/village.json; the prompt label is always \"Greet <name>\", built by the placer rather than stored here, so it can never accidentally contain \"talk\" or \"choose\" — tests/smoke_opening.gd finds Grandpa and the starters by exactly those substrings.",
+  "_comment_positions": "World metres, on the village square flat (data/config/terrain_playground.json's `flats`, centre [10,-10], radius 18). Chosen and checked against the real runtime structure colliders and the square's four dirt paths (data/config/terrain_playground.json's `paths.routes`, all of which start at [10,-10]) with a headless probe — every position clears every building footprint and every path's 3m width + 1.5m shoulder by several metres, and all three sit far short of Grandpa's house/door/outside markers (~-16,-15 to -9.7,-15), well clear of the smoke test's walked lanes there. `facing_deg` points each villager at the well so the square reads as people gathered around it; `npc_body.gd` turns them to face the player on approach regardless.",
+  "villagers": [
+    {
+      "name": "Mira",
+      "config_key": "villager_farmer",
+      "position": [12.0, -3.0],
+      "facing_deg": -164.1,
+      "greeting": "village_mira",
+      "_why": "between the two barns, north of the well"
+    },
+    {
+      "name": "Oskar",
+      "config_key": "villager_keeper",
+      "position": [22.0, -6.0],
+      "facing_deg": -108.4,
+      "greeting": "village_oskar",
+      "_why": "east side, near the small barn and the chicken coop"
+    },
+    {
+      "name": "Tam",
+      "config_key": "villager_smith",
+      "position": [8.0, -16.0],
+      "facing_deg": 18.4,
+      "greeting": "village_tam",
+      "_why": "south of the well, by the yard fence toward Grandpa's"
+    }
+  ]
+}

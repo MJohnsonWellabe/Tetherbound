@@ -37,6 +37,9 @@ func build(config_key: String) -> bool:
 	if not _build_art(str(cfg.get("model", ""))):
 		return false
 	_hide_placeholders()
+	var tint := str(cfg.get("tint", ""))
+	if tint != "":
+		_apply_tint(Color(tint))
 	return true
 
 
@@ -186,6 +189,37 @@ func _fit() -> void:
 		-box.position.y * fit,
 		-(box.position.z + box.size.z * 0.5) * fit
 	)
+
+
+## A palette swap on an existing rig (R7.2's villagers) rather than a second
+## Meshy generation: `docs/ASSET_LEDGER.md`'s only other free humanoid, KayKit's
+## Ranger, is a ~2-heads-tall toon character next to the trainer/Grandpa/Warden's
+## photoreal-ish proportions, and picking it would silently settle the open
+## question in `ralph/BLOCKED.md` ("Creature and human art-pipeline cohesion")
+## that CLAUDE.md says not to invent. This keeps the same mesh, skeleton and
+## clips and only multiplies each surface's albedo, so a texture keeps its
+## detail (cloth weave, skin shading) and only shifts hue/value — a StandardMaterial3D
+## with just `albedo_color` set and no texture would flatten the model to a
+## single flat colour, which is a worse look than the one being avoided.
+func _apply_tint(colour: Color) -> void:
+	if _art == null:
+		return
+	_tint_node(_art, colour)
+
+
+func _tint_node(node: Node, colour: Color) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		var surfaces := mesh.get_surface_count() if mesh != null else 0
+		for surface in surfaces:
+			var source: Material = instance.get_active_material(surface)
+			var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
+				if source is BaseMaterial3D else StandardMaterial3D.new()
+			material.albedo_color = material.albedo_color * colour
+			instance.set_surface_override_material(surface, material)
+	for child in node.get_children():
+		_tint_node(child, colour)
 
 
 func _find_animation_player(node: Node) -> AnimationPlayer:

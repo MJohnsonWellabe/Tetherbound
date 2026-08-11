@@ -148,6 +148,51 @@
     },
     "animation_libraries": []
   },
+  "villager_farmer": {
+    "_comment": "R7.2. Grandpa's own rig and clips, tinted rather than regenerated — see character_model.gd's `_apply_tint` comment for why this is the model reused (Ranger is stylistically incompatible, and CLAUDE.md forbids pre-empting the open art-pipeline question in ralph/BLOCKED.md by using it anyway). `tint` multiplies every surface's existing albedo, so the texture detail survives and only the hue/value shifts — a rustier, warmer wardrobe than Grandpa's own.",
+    "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
+    "height": 1.75,
+    "model_yaw": 0.0,
+    "tint": "#c9793a",
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "animation_libraries": []
+  },
+  "villager_keeper": {
+    "_comment": "R7.2. Same tinting approach as villager_farmer, on the trainer's rig instead of Grandpa's — a second silhouette so the square does not read as three copies of one man. Cooler, greener tint keeps it visually apart from both the trainer (the player's own body) and villager_farmer.",
+    "model": "res://assets/characters/trainer/trainer_lod0.glb",
+    "height": 1.78,
+    "model_yaw": 0.0,
+    "tint": "#4f8a5b",
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "animation_libraries": []
+  },
+  "villager_smith": {
+    "_comment": "R7.2. Trainer rig again, a third tint — the well square gets a farmer, a keeper and a smith without a third model.",
+    "model": "res://assets/characters/trainer/trainer_lod0.glb",
+    "height": 1.82,
+    "model_yaw": 0.0,
+    "tint": "#3f5a8c",
+    "clips": {
+      "idle": "idle",
+      "walk": "walk",
+      "sprint": "sprint",
+      "jump": "jump",
+      "throw": "throw"
+    },
+    "animation_libraries": []
+  },
   "warden": {
     "_comment": "The Warden of the Meadows, the biome's final boss. Board 06 used directly, per the owner lifting the earlier override (docs/art/REFERENCE_CANON.md). He does not appear in the first fifteen minutes; he is here so the biome's end is not a stand-in.",
     "_comment_face": "His face is a painted mask, not modelled features. That is the art, not a shortcut: board 06 masks him, and asking the generator for a hard visor plays to what it can actually do after nine whole-figure candidates came back with blank ovoids.",
