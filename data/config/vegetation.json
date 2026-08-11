@@ -4,16 +4,16 @@
   "_comment_clumping": "Every layer clusters. Evenly-spread props at uniform scale are the readable signature of generator output — the visual rubric names it — so each layer places clumps and scatters within them, leaving clearings between. `strays` fills the gaps so the clumps do not read as islands.",
   "_comment_pack": "Quaternius Stylized Nature MegaKit (CC0), replacing Kenney's Nature Kit. The blind critic's verdict on the Kenney set was that every tree was the same tree — 'one straight tapered trunk, one 6-8 face canopy, two greens, varied only by uniform scale' — and that the far tree line read as 'a row of identical cards at near-uniform spacing along a contour: a fence of icons'. It measured mid-distance trees at 1.00:1 luminance contrast against the ground behind them, meaning invisible. This pack ships four genuinely different tree species with real bark and leaf TEXTURES and normal maps, which is what that complaint was actually about.",
   "_comment_scale": "These models are authored in METRES, unlike Kenney's which were about one unit tall and needed a 3.4x per-layer correction. So `base_scale` is near 1.0 here and mostly trims rather than multiplies. Measured with tools/measure_models.gd rather than guessed — guessing produced a meadow of knee-high trees once already.",
+  "_comment_ev2": "EV2 (bible sec10): an APPROVED SUBSET, not all 116 models in the fuller pack. `trees` (standard canopy) and `grove` (hero trees) are each cut to the bible's counts and given controlled spring/deep/yellow-green variants per model instead of one flat colour; `saplings` is new. Two of the bible's asks are NOT done here and are recorded rather than faked: 'wetland forms near river' has no river to be near yet (EV5, unshipped) and no dedicated wetland mesh either; and the rock family's '2-3 large' tier has no distinct large-format mesh in the imported subset (the fuller Stylized Nature MegaKit is itch.io-blocked, see EV1-remainder in BLOCKED.md) — reusing the existing Rock_Medium meshes in a second layer would silently break their tint/collision via vegetation.gd's known models-shared-across-layers failure mode, so the existing single `rocks` layer's 0.28-2.1 scale span (already producing large-boulder reads from the same 3 medium meshes) stands as the honest ceiling until more geometry is unblocked.",
   "seed": 20260803,
   "layers": {
     "trees": {
       "_comment": "The common broadleaf, 7-9m. The everyday tree of the meadow, in copses.",
+      "_comment_ev2": "EV2 (bible sec10): 'standard canopy' wants 3-4 medium forms, not all 5. Measured with tools/measure_models.gd rather than guessed: kept the 3 forms with the widest canopy footprint (CommonTree_1 19.7sq.m, _2 19.1, _3 17.2 -- the bar this item is judged against is 'reads as one species family at thumbnail size', which is a footprint/silhouette question, not a triangle-count one). CommonTree_4 and _5 (14.4 and 15.5sq.m, the narrowest two) move to the new `saplings` layer below at reduced scale -- same species, a young form -- rather than being dropped outright.",
       "models": [
         "res://assets/environment/stylized_nature/CommonTree_1.gltf",
         "res://assets/environment/stylized_nature/CommonTree_2.gltf",
-        "res://assets/environment/stylized_nature/CommonTree_3.gltf",
-        "res://assets/environment/stylized_nature/CommonTree_4.gltf",
-        "res://assets/environment/stylized_nature/CommonTree_5.gltf"
+        "res://assets/environment/stylized_nature/CommonTree_3.gltf"
       ],
       "_comment_clumping": "Fewer, tighter, larger copses rather than more small ones. 26 clumps of 9 spread over 512m is close enough to even that it reads as a distribution; twelve dense copses with real gaps between them reads as somebody deciding where a wood goes.",
       "clumps": 13,
@@ -38,16 +38,21 @@
       },
       "retint": {
         "Leaves_NormalTree": "#9dcaff"
+      },
+      "_comment_variant": "EV2: 'controlled material variants -- spring, deep and yellow-green -- not a different colour per tree' (bible sec10). Three fixed steps, one per remaining model, not per-instance jitter. `spring` is the value this layer already shipped with (R9.4); `deep` and `yellow-green` are it darkened and warmed respectively, so all three stay in the same hue family R9.4 deliberately moved the canopy into -- away from the ground's own chartreuse -- rather than reopening that colour question.",
+      "variant_retint": {
+        "res://assets/environment/stylized_nature/CommonTree_1.gltf": {"Leaves_NormalTree": "#9dcaff"},
+        "res://assets/environment/stylized_nature/CommonTree_2.gltf": {"Leaves_NormalTree": "#7697bf"},
+        "res://assets/environment/stylized_nature/CommonTree_3.gltf": {"Leaves_NormalTree": "#c4d696"}
       }
     },
     "grove": {
       "_comment": "The ancient twisted oaks, 15-19m and far broader. A genuinely DIFFERENT species, not the same mesh retinted — which was the previous version of this layer and exactly what the critic caught. These are the landmark trees: at twice the height of a common tree and three times the canopy, a stand of them reads from across the playground.",
+      "_comment_ev2": "EV2 (bible sec10): 'hero trees' wants 2-3 large forms -- 'broad oak, asymmetrical old tree, tall landmark tree' -- not all 5. Measured with tools/measure_models.gd: TwistedTree_1 has the widest footprint (13.52x11.55, the 'broad oak'), TwistedTree_2 is the tallest (18.95m, the 'tall landmark tree'), and TwistedTree_4 is the only one of the five where depth exceeds width (10.38x11.29 -- a genuinely lopsided footprint, the 'asymmetrical old tree'). TwistedTree_3 and _5 read as near-symmetric restatements of _1 and _2 by the same measure and are cut.",
       "models": [
         "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
         "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
-        "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
-        "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
-        "res://assets/environment/stylized_nature/TwistedTree_5.gltf"
+        "res://assets/environment/stylized_nature/TwistedTree_4.gltf"
       ],
       "_comment_count": "Deliberately few. A 10,000-triangle tree is thirty times a Kenney one, and these are the biggest thing in the world — a stand of six is a landmark, forty is a forest nobody can walk through.",
       "clumps": 3,
@@ -70,6 +75,41 @@
       },
       "retint": {
         "Leaves_TwistedTree": "#9dcaff"
+      },
+      "_comment_variant": "EV2: the same 3-step spring/deep/yellow-green family as the `trees` layer (bible sec10), so the hero trees read as kin to the standard canopy rather than a fourth palette. One variant per remaining model, not per-instance jitter.",
+      "variant_retint": {
+        "res://assets/environment/stylized_nature/TwistedTree_1.gltf": {"Leaves_TwistedTree": "#9dcaff"},
+        "res://assets/environment/stylized_nature/TwistedTree_2.gltf": {"Leaves_TwistedTree": "#7697bf"},
+        "res://assets/environment/stylized_nature/TwistedTree_4.gltf": {"Leaves_TwistedTree": "#c4d696"}
+      }
+    },
+    "saplings": {
+      "_comment": "EV2 (bible sec10): 'young/small, 2-3 sapling forms'. No dedicated sapling mesh exists in the imported subset, and the fuller Stylized Nature MegaKit is itch.io-blocked (see EV1-remainder in BLOCKED.md) -- so this reuses CommonTree_4 and _5, the two narrowest standard-canopy forms cut from the `trees` layer above, at young-tree scale instead of medium-tree scale. Same species, a different age, not a new model -- exactly what the bible means by controlled variants rather than clutter.",
+      "_comment_no_overlap": "CommonTree_4/_5 belong to THIS layer only, not `trees` too -- vegetation.gd groups placements by model path for drawing, so a model listed in two layers silently loses one layer's tint/collision settings (see _warn_about_shared_models). Keeping the two lists disjoint is what avoids that.",
+      "models": [
+        "res://assets/environment/stylized_nature/CommonTree_4.gltf",
+        "res://assets/environment/stylized_nature/CommonTree_5.gltf"
+      ],
+      "_comment_placement": "Understory at the edge of the standard-canopy copses -- smaller clumps, tighter radius, no ridge bias -- so a wood reads as having an age range rather than every tree planted the same year.",
+      "clumps": 10,
+      "per_clump": 5,
+      "clump_radius": 10.0,
+      "strays": 8,
+      "max_slope_deg": 21.0,
+      "_comment_scale": "A young CommonTree at roughly a third the height of a mature one -- 2.5-3.5m against the standard canopy's 7-9m -- read against a 1.8m trainer, not guessed.",
+      "scale_min": 0.28,
+      "scale_max": 0.45,
+      "clear_radius": 12.0,
+      "base_scale": 1.0,
+      "collides": true,
+      "collision_radius": 0.35,
+      "retexture": {
+        "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves.png"
+      },
+      "_comment_variant": "The same two non-spring variants as the standard canopy, so the sapling layer reads as the same species at a different age rather than a third palette.",
+      "variant_retint": {
+        "res://assets/environment/stylized_nature/CommonTree_4.gltf": {"Leaves_NormalTree": "#7697bf"},
+        "res://assets/environment/stylized_nature/CommonTree_5.gltf": {"Leaves_NormalTree": "#c4d696"}
       }
     },
     "deadfall": {

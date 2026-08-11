@@ -234,7 +234,16 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	multi.transform_format = MultiMesh.TRANSFORM_3D
 	var layer_cfg := _layer_for(model_path)
 	var jitter := float(layer_cfg.get("colour_jitter", 0.0))
-	multi.mesh = _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}), jitter > 0.0)
+	# EV2: a layer may assign one of a few controlled material variants per
+	# MODEL (spring/deep/yellow-green) instead of one flat colour for every
+	# tree in the layer -- keyed by model path since several models share one
+	# material name and the layer-wide `retint` cannot tell them apart. Falls
+	# back to the layer's own retint when a model has no variant entry.
+	var tint_overrides: Dictionary = layer_cfg.get("retint", {})
+	var variants: Dictionary = layer_cfg.get("variant_retint", {})
+	if variants.has(model_path):
+		tint_overrides = variants[model_path]
+	multi.mesh = _retint(mesh, tint_overrides, layer_cfg.get("retexture", {}), jitter > 0.0)
 
 	# R7.1-remainder: the blind critic's round-1 verdict on ground cover was
 	# specific — not "too sparse", but "a single saturated hue with no value
