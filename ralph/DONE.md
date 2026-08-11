@@ -893,6 +893,78 @@ real third-person camera orbits and is not fixed to this spot. Worth a
 glance if `tools/survey.gd`'s viewpoints are ever retuned, not urgent on
 its own.
 
+## EV4-textures-remainder — Moss blobs reshaped from circular stamps to varied streaks (partial)
+`tools/art_pipeline/reshape_moss_blobs.py` (new) · `tests: none named, smoke_traversal
+run anyway as a sanity check on the terrain rebake, green` · two local blind-judge rounds
+
+**Root cause matched the item's own diagnosis exactly.** The moss patches in
+`Ground030_Color.jpg` (already desaturated by `EV4-textures`' shader-level
+fix, untouched by this) are near-circular, similarly-sized, semi-regularly
+spaced photo content — real content, not a tint/blend bug, so no shader lever
+could reach it.
+
+**The fix: reshape the source photo directly, not the shader.**
+`reshape_moss_blobs.py` detects each moss blob (green-dominant colour mask,
+connected components via `scipy.ndimage`), then for each of the 52 blobs
+`>=60px` (the visually real clumps; smaller ones are fine background speckle,
+left alone): stretches it along a random per-blob axis (1.7-3x), narrows it
+perpendicular (reads as an elongated streak, not a bigger circle), roughens
+the boundary with coarse noise, feathers the edge, and blends at a per-blob
+strength for density variety. Deterministic — seeded per blob id, so a re-run
+reproduces the identical output. One real bug caught before landing: a flat
+45px patch margin clipped the stretched tail on the biggest blobs, so the
+most visible ones barely changed in a first pass — fixed by scaling the
+margin to each blob's own half-extent times its own elongation factor.
+
+**Round 1 (stretch + narrow + edge roughening) — closed the original
+complaint.** A blind critic, told nothing about what changed: "no perfect
+geometric circles... edges consistently soft, not stamped... that specific
+complaint [hard-edged decal] is not present anymore." Genuinely fixed, not
+asserted.
+
+**Round 1 also surfaced two follow-ons, one addressed, one deliberately
+not:**
+- **Shape variety still thin** ("nearly everything else is a soft
+  round-to-oval blob... needs 2-3 more distinct silhouette variants").
+  Addressed in round 2: added a per-blob asymmetric taper (biases the edge
+  threshold along the stretch axis so ~60% of blobs fray into a wisp at one
+  end while staying fuller at the other — a comma/flame silhouette instead
+  of a bigger ellipse; ~40% stay untapered for genuine variety rather than
+  one uniform new style).
+- **A second, visually distinct class of grey-green fibrous "tuft" blobs**
+  (texture/luminance-variance driven, not colour) reads as repeating across
+  world locations — inherent to tiling a single 1024² texture, and this
+  fix's colour-based detector structurally can't catch them (confirmed: a
+  stricter local-variance detector found only small, unreliable partial
+  cores, not clean full silhouettes — the fibrous edge fades gradually
+  rather than having a clean colour boundary). **Deliberately not touched**:
+  a global two-class detector risked false positives across the whole
+  photo, and the earlier `EV4-textures` saturation fix already targeted the
+  same green mask this fix does, which is evidence "moss" means the green
+  class specifically, not the tufts.
+
+**Round 2 (taper) — real but only partial movement, and this is where the
+pass stopped.** A second blind critic, also told nothing: the hard-edge
+complaint stayed resolved, but shape variety was still called limited —
+"still reads as one repeated template (a soft round/oval dab)... a viewer
+would register 'the same splotch, resized.'" Exactly one patch out of ~15
+surveyed was called out as genuinely asymmetric/elongated; the rest still
+read as round-to-oval. **Stopped here rather than pushing a third round**:
+this matches what the item's own text predicted going in — "no colour/tint/
+normal_depth lever reaches this; it would need... a re-worked moss layer" —
+and round 2 is direct evidence that even a real, working geometric warp on
+one source photo can only partially deliver genuine silhouette *variety*
+(as opposed to irregularity), because every blob is still fundamentally a
+deformed copy of the same handful of source shapes. Real hand-authored moss
+variants would need actual new texture content, not more procedural tuning
+of this one photo — out of scope for a `low priority... finish question`
+item. No new remainder opened; the honest state is recorded here and in
+`docs/ASSET_LEDGER.md`'s `Ground030` row.
+
+Terrain rebaked (texture-content-only change — confirmed no control-map or
+height diff via `git status`). `smoke_traversal` green both rounds (248m
+furthest, 0 airborne frames, unaffected by a colour-only texture edit).
+
 ## NP4-rig — Rig, animate and install the three NP4 bases
 `tests: smoke_art` (green, local headless + Godot import clean)
 

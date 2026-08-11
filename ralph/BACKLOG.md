@@ -332,21 +332,23 @@ opened below from round 5's own honest read of what is still wrong.
 independently while blind-judging `EV4`'s paths, 2026-08-11) is fixed by
 `EV3` — see `DONE.md`.**
 
-### EV4-textures-remainder — Moss blobs still read as a "stamped decal," a content limit not a tunable value
-`model: sonnet` · `tests: none (visual)` · `area: terrain`
-`EV4-textures`' third round confirmed real, described saturation improvement
-("no longer hard flat circles... softer-edged") but the critic's complaint
-shifted rather than closing: the moss patches' own roughly-circular,
-similarly-sized SHAPE and semi-regular scattering — real content in
-`Ground030_Color.jpg`'s source photo, not a saturation or blend bug — still
-reads as "a repeated stamped-decal layer" at close range. No colour/tint/
-normal_depth lever reaches this; it would need either a different or
-re-worked moss layer (irregular, elongated along wear lines, varying
-density) painted into the texture, or a second, sparser decal-style overlay
-rather than one uniform photo tile. Low priority — genuinely a finish
-question, not a bug, and the underlying saturation defect that made it read
-as broken is gone. Done when: a blind critic stops calling the moss pattern
-a decal/stamp.
+**`EV4-textures-remainder` (moss blobs reshaped from circular stamps to
+varied streaks) shipped, partial — see `DONE.md`.** Two blind-judge rounds.
+Round 1 fixed the hard-edge/circular-outline complaint outright — a fresh
+critic confirmed "no perfect geometric circles... edges consistently soft,
+not stamped," genuinely closing the original "stamped decal" framing. Round
+2 (added a per-blob asymmetric taper) only partially closed the follow-on
+complaint it surfaced — limited shape variety, "one repeated template,
+resized" — and a second, separate, deliberately out-of-scope class of grey
+fibrous "tuft" blobs (texture/luminance-driven, not colour, so not caught by
+this fix) still reads as repeating. Stopped after two rounds of real,
+measured movement rather than pushing a third: the residual gap matches
+what the original item predicted — genuine shape *variety* (not just
+irregularity) needs hand-authored moss silhouette variants, which a
+procedural per-blob warp on one source photo structurally can't produce.
+Accepted as the item's own "low priority... finish question" framing said
+to expect. No further remainder opened; `docs/ASSET_LEDGER.md`'s `Ground030`
+row has the full before/after account if anyone revisits it.
 
 **`EV4-textures-lighting` (blown-highlight/shadow-contrast on sunlit ground)
 shipped — see `DONE.md`.** `SA1`'s shadow-atlas cut, the lead-off hypothesis,
