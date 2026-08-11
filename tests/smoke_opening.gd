@@ -29,9 +29,14 @@ extends SceneTree
 ##     cannot be tested with `Input.action_press` alone. The prompt is the
 ##     project's first text entry and ships to a handheld with no keyboard; a
 ##     poll-only test reports a working grid while the stick moves nothing.
-##   - **the prompt arbitration.** Grandpa, three starters and a wild pal all
-##     want the one interact line. Which one wins is decided by distance, and a
-##     screenshot cannot show that the wrong one won.
+##   - **the prompt arbitration.** Grandpa and a wild pal both want the one
+##     interact line. Which one wins is decided by distance, and a screenshot
+##     cannot show that the wrong one won.
+##   - **the orb picker actually opening on its own.** `SA0-orbs` moved beat 4
+##     off a walk-up interactable and onto a picker the director opens once
+##     Grandpa's briefing closes; the only way to know that link still fires is
+##     to close his conversation for real and watch for the picker, not to call
+##     `open()` directly.
 ##
 ## ## Expected state before agents D1 and D2 land
 ##
@@ -57,6 +62,7 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const DIRECTOR_SCRIPT := "res://scripts/story/sequence_director.gd"
 const INTERACTABLE_SCRIPT := "res://scripts/world/interactable.gd"
 const NAME_PROMPT_SCRIPT := "res://scripts/ui/name_prompt.gd"
+const STARTER_PICKER_SCRIPT := "res://scripts/ui/starter_picker.gd"
 
 const SEAM := preload("res://scripts/story/party_seam.gd")
 const ENTRY := preload("res://scripts/ui/name_entry.gd")
@@ -85,6 +91,7 @@ var _director: Node = null
 var _arbiter: Node = null
 var _dialogue: CanvasLayer = null
 var _name_prompt: CanvasLayer = null
+var _starter_picker: CanvasLayer = null
 
 
 func _init() -> void:
@@ -181,11 +188,14 @@ func _collect_nodes() -> bool:
 
 	_dialogue = _find_by_method(root, "drain_effects") as CanvasLayer
 	_name_prompt = _find_by_method(root, "current_text") as CanvasLayer
+	_starter_picker = _find_by_script(root, STARTER_PICKER_SCRIPT) as CanvasLayer
 	if _dialogue == null:
 		_fail("no dialogue panel in the tree; beat 3 has nothing to draw Grandpa's lines in")
 	if _name_prompt == null:
 		_fail("no naming prompt in the tree; beat 5 is the beat the whole opening is for")
-	return _dialogue != null and _name_prompt != null
+	if _starter_picker == null:
+		_fail("no starter picker in the tree; beat 4 has nothing to preview the orbs in")
+	return _dialogue != null and _name_prompt != null and _starter_picker != null
 
 
 # --- the beats --------------------------------------------------------------
@@ -296,34 +306,37 @@ func _grandpa_says_his_piece() -> void:
 	print("beat 3: closed after %d presses" % lines)
 
 
-## Beat 4. The starter choice is physical, not a menu (OPENING_SEQUENCE.md), so
-## it is made by walking to one — which is also the only way to find out whether
-## the arbiter hands the prompt to the right creature.
+## Beat 4. `SA0-orbs`, owner directive 2026-08-11: the choice is previewed in
+## orbs while still indoors with Grandpa, not made by walking up to a body in
+## the meadow — docs/OPENING_SEQUENCE.md records the reversal from the earlier
+## staging this test used to drive. The director opens the picker on its own,
+## the frame after Grandpa's conversation closes (`_grandpa_says_his_piece`
+## above already drove that close for real), so this only has to prove the
+## picker actually appears and that the real buttons reach it.
 func _a_starter_can_be_chosen() -> void:
-	# Out of the house first — the starters wait by the door, and the straight
-	# line from Grandpa to a flanking starter runs through the east wall.
-	var house := _world.get_node_or_null(^"GrandpaHouse")
-	if house != null:
-		await _walk_toward_point(house.call("marker", "door"), 400)
-		await _walk_toward_point(house.call("marker", "outside"), 400)
-
-	var starter := _find_interactable_matching(["choose"])
-	if starter == null:
-		_fail("no starter offers a 'Choose ...' prompt; beat 4 cannot happen")
-		return
-	print("beat 4: walking to '%s'" % str(starter.get("label")))
-
-	# The other two must still be standing there afterwards. The cost of the
-	# choice remaining visible in the world is a decision the design document
-	# takes deliberately, and a director that despawns them undoes it silently.
-	var starters_before := _count_interactables_matching(["choose"])
-	if starters_before < 3:
-		_fail("only %d starters offer a choice; the opening puts three in front of the player" % starters_before)
-
-	if not await _walk_to_and_activate(starter):
-		return
-	for i in 30:
+	var opened := false
+	for i in 60:
+		if bool(_starter_picker.call("is_open")):
+			opened = true
+			break
 		await physics_frame
+	if not opened:
+		_fail("the starter picker never opened after Grandpa's briefing closed; beat 4 cannot happen")
+		return
+	print("beat 4: the starter picker opened on its own")
+
+	# Move the selection with the real stick/d-pad action before confirming, the
+	# same reason beat 5 below sends `ui_right` before typing: a poll-only test
+	# would report a working picker while the stick moved nothing.
+	await _press("ui_right")
+	await _press_polled("menu_confirm")
+	for i in 20:
+		await physics_frame
+
+	if bool(_starter_picker.call("is_open")):
+		_fail("confirming an orb with `menu_confirm` did not close the picker; beat 4 does not advance")
+		return
+	print("beat 4: chose an orb with the pad, the picker closed")
 
 
 ## Beat 5, and the reason docs/HANDOFF.md §10 has a rule in it.
@@ -633,17 +646,6 @@ func _find_interactable_matching(words: Array) -> Node3D:
 			if label.contains(str(word)):
 				return candidate
 	return null
-
-
-func _count_interactables_matching(words: Array) -> int:
-	var count := 0
-	for candidate in _all_interactables(_world):
-		var label := str(candidate.get("label")).to_lower()
-		for word in words:
-			if label.contains(str(word)):
-				count += 1
-				break
-	return count
 
 
 func _all_interactables(node: Node) -> Array[Node3D]:

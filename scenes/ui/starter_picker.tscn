@@ -1,0 +1,77 @@
+[gd_scene load_steps=2 format=3]
+
+; The starter choice, previewed in orbs while indoors with Grandpa (SA0-orbs).
+; Shell only — the three orb slots are built in scripts/ui/starter_picker.gd
+; from data/config/opening.json's starter species, the same way
+; name_prompt.gd builds its keyboard from name_entry.gd's layout, so the
+; panel on screen and the list of species it was given cannot disagree about
+; how many orbs there are.
+
+[ext_resource type="Script" path="res://scripts/ui/starter_picker.gd" id="1_picker"]
+
+[node name="StarterPicker" type="CanvasLayer"]
+; Above the dialogue panel (5), same layer as the naming prompt (6) — they
+; are never open at once, since choosing an orb closes this before opening
+; the naming grid.
+layer = 6
+script = ExtResource("1_picker")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+; The world is still rendering behind this and the meadow is bright. Same
+; dim name_prompt.tscn uses for the same reason.
+[node name="Backdrop" type="ColorRect" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.02, 0.03, 0.04, 0.72)
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Root"]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_top = 70.0
+offset_right = 320.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+mouse_filter = 2
+
+[node name="Orbs" type="HBoxContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -460.0
+offset_top = -180.0
+offset_right = 460.0
+offset_bottom = 180.0
+theme_override_constants/separation = 40
+alignment = 1
+mouse_filter = 2
+
+[node name="Hint" type="Label" parent="Root"]
+layout_mode = 1
+anchors_preset = 12
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -90.0
+offset_right = 320.0
+offset_bottom = -40.0
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+mouse_filter = 2

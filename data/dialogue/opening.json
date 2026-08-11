@@ -1,6 +1,6 @@
 {
   "_comment": "Everything spoken in the first fifteen minutes. Text lives here and never in a script, so a rewrite of Grandpa's voice is a data edit and a translator never has to read GDScript.",
-  "_comment_shape": "A conversation is a speaker, a portrait, and an ordered list of lines. NO branching: docs/OPENING_SEQUENCE.md is explicit that the only choice in this sequence is which pal, and that one is made by walking up to it. The previous prototype's DialogueRunner supported choices and this port deliberately drops them — the moment a line can branch, the starter choice starts wanting to be a menu.",
+  "_comment_shape": "A conversation is a speaker, a portrait, and an ordered list of lines. NO branching: docs/OPENING_SEQUENCE.md is explicit that the only choice in this sequence is which pal, and that one is made through scripts/ui/starter_picker.gd's orb preview, not a dialogue branch (SA0-orbs, 2026-08-11; before that it was made by walking up to a body in the meadow, which is what this comment used to describe). The previous prototype's DialogueRunner supported choices and this port deliberately drops them — the moment a line can branch, the starter choice starts wanting to be a text menu instead of something you look at first.",
   "_comment_lines": "A line is a string, or an object when it needs to override the speaker/portrait or emit an effect. Effects are opaque strings handed back to whoever started the conversation; this file knows that finishing the briefing emits `beat:starter_choice` and that the pack lines emit `give:orb_basic:15`, and the dialogue system has no idea what a beat or an item is. A `give:` effect sits on the exact line that speaks the gift, so the satchel fills as he says it rather than in a lump after the box closes.",
   "_comment_voice": "He is warm, brief, and not sad about it. GAME_DESIGN.md 3 gives him one job in this scene: he cannot go, and he is sending you instead — packed, belted, and out the door. Every line here is either that or getting out of its way.",
   "conversations": {
@@ -30,19 +30,19 @@
         },
         "Last of all, this. My creature belt. It holds five, no more — a rule older than Team Tether, older than the stones they're squatting on.",
         "Five is enough. Five you know by name are worth more than a hundred you don't.",
-        "Now. Three of them are stood outside that door, and they've been up longer than you have. Ground, water, air. I raised all three from the shell.",
+        "Now. Three orbs, right there on the table. Ground, water, air. I raised all three from the shell, and each one's been waiting to meet you.",
         {
-          "text": "Go on out and walk up to the one you want. Take your time — the other two stay here with me either way.",
+          "text": "Go on, take a look at them. Whichever one catches your eye — that's the one that's yours.",
           "effect": "beat:starter_choice"
         }
       ]
     },
     "grandpa_waiting": {
-      "_comment": "Talking to him again before choosing. Short on purpose: a player who came back to hear the briefing twice is a player the game is wasting.",
+      "_comment": "Talking to him again before choosing. Short on purpose: a player who came back to hear the briefing twice is a player the game is wasting. Practically unreachable since SA0-orbs -- the picker opens the instant this conversation closes and is modal, so there is no real window left to talk to him again mid-choice. Kept rather than deleted: harmless, and cheap insurance if the picker's timing ever changes.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "Still deciding? Go on out. Walk up to whichever one keeps catching your eye."
+        "Still deciding? Take your time — have another look at all three."
       ]
     },
     "grandpa_named": {

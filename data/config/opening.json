@@ -22,15 +22,15 @@
   },
 
   "starters": {
-    "_comment": "GAME_DESIGN.md 3: three unique starters, Ground/Water/Air, and the two you do not take stay with him. They are standing bodies you walk up to, NOT a menu — docs/OPENING_SEQUENCE.md calls that decided and load-bearing, and a list box would undo it.",
-    "_comment_staging": "the three wait outside Grandpa's door; the sequence director positions the row relative to the door, not to Grandpa",
+    "_comment": "GAME_DESIGN.md 3: three unique starters, Ground/Water/Air, and the two you do not take stay with him.",
+    "_comment_reversal": "REVERSED 2026-08-11 (SA0-orbs, owner directive): this used to say the three wait outside Grandpa's door as standing bodies you walk up to, NOT a menu, and called that decided and load-bearing. The owner asked for the opposite: 'the starters should be in orbs and you preview them while talking to Grandpa.' scripts/ui/starter_picker.gd now previews all three, live, indoors, the moment his briefing ends -- see docs/OPENING_SEQUENCE.md's own record of the same reversal. `species` below is the only field the live game still reads; `forward`/`spread`/`prompt_radius` are kept only because scripts/story/opening_beats.gd::starter_offsets() and its unit test still exist as a utility, not because anything places a body with them any more.",
     "species": ["terrapup", "ripplet", "galewisp"],
-    "_comment_placement": "A row in front of Grandpa, on his own facing, so he is behind them and the player approaches all three head-on. Ported from the previous prototype's src/ui/starterPlacement.ts, which had the same job.",
+    "_comment_placement": "Unused by the live opening since the reversal above. Kept for opening_beats.gd::starter_offsets(), still unit-tested.",
     "forward": 4.5,
-    "_comment_spread": "Metres between neighbours. Wide enough that the interaction arbiter's nearest-wins rule reads as YOUR choice rather than as the game guessing: at 3.5m apart, standing in front of one puts you at least 3m from either of the others.",
+    "_comment_spread": "Unused by the live opening since the reversal above; same reason as forward.",
     "spread": 3.5,
     "prompt_radius": 2.6,
-    "_comment_prompt": "Deliberately tighter than Grandpa's. You have to commit to one by standing in front of it."
+    "_comment_prompt": "Unused by the live opening since the reversal above; same reason as forward."
   },
 
   "follower": {

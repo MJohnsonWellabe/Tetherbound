@@ -20,11 +20,16 @@ extends Node
 ## rather than drawing them, asks for a pal rather than spawning one, and reads
 ## the outcome of a fight rather than running one.
 ##
-## It does spawn the opening's cast — Grandpa and the three starters — because
-## nothing else does and their placements are already written down in
-## data/config/opening.json. That is placement, not behaviour: Grandpa turns to
-## look at you because `npc_body.gd` does that, and a starter stands still
-## because nothing tells it to move.
+## It does spawn Grandpa, because nothing else does and his placement is
+## already written down in data/config/opening.json. That is placement, not
+## behaviour: Grandpa turns to look at you because `npc_body.gd` does that.
+##
+## The three starters no longer get bodies of their own in the meadow
+## (`SA0-orbs`, owner directive 2026-08-11 — see docs/OPENING_SEQUENCE.md's
+## own record of the reversal). They are previewed live, in orbs, by
+## `starter_picker.gd`, which this file opens once Grandpa's briefing ends and
+## reads back a choice from — the same "ask a panel, read the outcome" split
+## this file already keeps with `dialogue_panel.gd` and `name_prompt.gd`.
 ##
 ## Beat order and the per-beat conversations are DATA
 ## (`data/config/opening.json`, read through `opening_beats.gd`). This file
@@ -38,11 +43,6 @@ const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
-const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
-## pal.tscn is scriptless and the role picks the script, exactly as
-## encounter_director.gd does it. A starter standing in the meadow is the bare
-## body: it does not roam, it does not follow, it waits to be chosen.
-const PAL_BODY := preload("res://scripts/pals/pal_body.gd")
 
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
@@ -52,20 +52,6 @@ const CAUGHT := "caught"
 ## The dialogue key `$name` is substituted from. data/dialogue/opening.json
 ## writes `$name` and this is the other half of that agreement.
 const NAME_KEY := "name"
-
-## A collision layer of their own, off the default (1) everything else uses.
-##
-## The middle starter always stands on the dead-straight line from the
-## player's spawn to Grandpa — `starter_offsets()` centres the row on his
-## facing, and that line IS the approach to him. Sharing layer 1 with the
-## player let a walk toward Grandpa collide with that starter's capsule
-## instead of sliding past it: the player mounted onto its rounded top and
-## stopped there, dead, well short of Grandpa. Only the mask changes here,
-## not the layer everything else still checks bodies against, and only for
-## these three temporary display bodies — the real follower pal built by
-## `encounter_director.adopt_starter()` after the choice is a different,
-## unrelated instance with the ordinary collision setup.
-const STARTER_COLLISION_LAYER := 2
 
 ## How many physics frames to keep trying to stand something on the ground.
 ##
@@ -88,6 +74,7 @@ signal beat_changed(beat: String)
 @export var camera_rig_path: NodePath
 @export var dialogue_path: NodePath
 @export var name_prompt_path: NodePath
+@export var starter_picker_path: NodePath
 
 var _player: Node3D = null
 var _arbiter: Node = null
@@ -96,6 +83,7 @@ var _manager: Node = null
 var _camera_rig: Node = null
 var _dialogue: CanvasLayer = null
 var _name_prompt: CanvasLayer = null
+var _starter_picker: CanvasLayer = null
 
 var _beat: String = ""
 
@@ -107,13 +95,16 @@ var _bed_prompt: Node3D = null
 ## built — which is the second, harder route into the same soft-lock: a world
 ## with no house builds no bed prompt, and `wake` then has NO exit at all.
 var _bed_anchor: Variant = null
-## The three bodies, their species ids and their prompts, by the same index.
-## Parallel arrays rather than a Dictionary keyed by node, because the index IS
-## the choice and it is what the naming panel comes back with.
-var _starter_bodies: Array[Node3D] = []
+## The three starter species, in the order the orb picker shows them. The
+## index IS the choice and it is what both the picker and the naming panel
+## come back with.
 var _starter_species: Array[String] = []
-var _starter_prompts: Array[Node3D] = []
 var _choice: int = -1
+## Set the instant the beat reaches `choose`, cleared once the picker actually
+## opens. The beat can only change while the dialogue that carries the effect
+## is still open (`_drain_effects` runs before the player has closed it), so
+## the picker cannot open the same frame — it waits for the box to clear.
+var _picker_pending: bool = false
 
 ## True from the moment a name is confirmed until the pal is standing beside the
 ## trainer. `adopt_starter` waits for ground, so there are frames in there where
@@ -146,12 +137,13 @@ func _ready() -> void:
 	_camera_rig = get_node_or_null(camera_rig_path)
 	_dialogue = get_node_or_null(dialogue_path) as CanvasLayer
 	_name_prompt = get_node_or_null(name_prompt_path) as CanvasLayer
+	_starter_picker = get_node_or_null(starter_picker_path) as CanvasLayer
 
 	if _player == null or _arbiter == null or _encounter == null or _manager == null \
-			or _dialogue == null or _name_prompt == null:
-		push_error("the sequence director is missing wiring: player=%s arbiter=%s encounter=%s manager=%s dialogue=%s name_prompt=%s" % [
+			or _dialogue == null or _name_prompt == null or _starter_picker == null:
+		push_error("the sequence director is missing wiring: player=%s arbiter=%s encounter=%s manager=%s dialogue=%s name_prompt=%s starter_picker=%s" % [
 			_player != null, _arbiter != null, _encounter != null, _manager != null,
-			_dialogue != null, _name_prompt != null
+			_dialogue != null, _name_prompt != null, _starter_picker != null
 		])
 		set_process(false)
 		return
@@ -165,9 +157,10 @@ func _ready() -> void:
 	# `_process` throwing "nonexistent function 'is_open'" once a frame forever.
 	# One error at boot naming the node beats sixty a second naming a method.
 	if not _dialogue.has_method("start") or not _dialogue.has_method("drain_effects") \
-			or not _name_prompt.has_method("open") or not _name_prompt.has_signal("confirmed"):
-		push_error("%s and/or %s are in the scene but are not answering their own API; check for a parse error in their scripts" % [
-			_dialogue.name, _name_prompt.name
+			or not _name_prompt.has_method("open") or not _name_prompt.has_signal("confirmed") \
+			or not _starter_picker.has_method("open") or not _starter_picker.has_signal("chosen"):
+		push_error("%s, %s and/or %s are in the scene but are not answering their own API; check for a parse error in their scripts" % [
+			_dialogue.name, _name_prompt.name, _starter_picker.name
 		])
 		set_process(false)
 		return
@@ -187,6 +180,7 @@ func _ready() -> void:
 	_manager.connect("entered", _on_combat_entered)
 	_manager.connect("exited", _on_combat_exited)
 	_name_prompt.connect("confirmed", _on_name_confirmed)
+	_starter_picker.connect("chosen", _on_starter_picker_chosen)
 
 	_build_fade()
 	_set_beat(BEATS.first())
@@ -241,6 +235,12 @@ func _set_beat(target: String) -> void:
 		return
 	_beat = target
 	beat_changed.emit(_beat)
+	if _beat == BEATS.CHOOSE:
+		# Not opened here directly: this fires while `_drain_effects` is still
+		# reading the line that carries `beat:starter_choice`, and the dialogue
+		# box is still on screen over it. `_maybe_open_picker` waits for that
+		# box to close.
+		_picker_pending = true
 
 
 ## `_advance()` used to live here — `_set_beat(BEATS.next(_beat))`, with no
@@ -257,6 +257,7 @@ func _process(delta: float) -> void:
 	_refresh_lockout()
 	_refresh_prompts()
 	_check_left_the_bed()
+	_maybe_open_picker()
 
 
 ## Effects are drained in production, here, every frame.
@@ -331,7 +332,8 @@ func _give_items(parts: Array) -> void:
 ## start near him.
 func _refresh_lockout() -> void:
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
-	var panel: bool = bool(_dialogue.call("is_open")) or bool(_name_prompt.call("is_open"))
+	var panel: bool = bool(_dialogue.call("is_open")) or bool(_name_prompt.call("is_open")) \
+			or bool(_starter_picker.call("is_open"))
 	var modal := panel or is_fading() or _adopting
 
 	_arbiter.call("set_enabled", not modal and not fighting)
@@ -351,22 +353,27 @@ func _refresh_lockout() -> void:
 		_camera_rig.set_process(not panel)
 
 
-## Grandpa offers his prompt on any beat he has something to say on; the starters
-## offer theirs on exactly one.
-##
-## `Interactable.enabled` is the flag its own comment describes: "the starters
-## exist in the world before the choice is unlocked, and a visible 'Choose
-## Terrapup' the button refuses is worse than no prompt". It had no callers
-## either.
+## Grandpa offers his prompt on any beat he has something to say on.
 func _refresh_prompts() -> void:
 	if _grandpa_prompt != null and is_instance_valid(_grandpa_prompt):
 		_grandpa_prompt.call("set_enabled", BEATS.conversation_for(_beat) != "")
 	if _bed_prompt != null and is_instance_valid(_bed_prompt):
 		_bed_prompt.call("set_enabled", _beat == BEATS.WAKE)
-	var offering := _beat == BEATS.CHOOSE
-	for prompt: Node3D in _starter_prompts:
-		if prompt != null and is_instance_valid(prompt):
-			prompt.call("set_enabled", offering)
+
+
+## The picker cannot open on the same frame the beat reaches `choose` — the
+## dialogue box carrying that effect is still open on that frame — so this
+## polls until it closes, the same "recomputed every frame, no pushed state"
+## house rule `_refresh_lockout` and `_refresh_prompts` already follow.
+func _maybe_open_picker() -> void:
+	if not _picker_pending:
+		return
+	if bool(_dialogue.call("is_open")):
+		return
+	_picker_pending = false
+	if _choice >= 0:
+		return
+	_starter_picker.call("open", _starter_species)
 
 
 ## --- beat 1: the fade ------------------------------------------------------------
@@ -423,10 +430,10 @@ func _tick_fade(delta: float) -> void:
 
 ## --- the cast ---------------------------------------------------------------------
 
-## The whole staging: the player into the bed, Grandpa downstairs, the three
-## starters outside the door — all read from the HOUSE's own markers, because
-## the building is the authority on where its bed is. A world without a house
-## (a bare test scene) falls back to opening.json's positions.
+## The whole staging: the player into the bed, Grandpa downstairs — both read
+## from the HOUSE's own markers, because the building is the authority on
+## where its bed is. A world without a house (a bare test scene) falls back to
+## opening.json's positions.
 ##
 ## Cast parented to this node's PARENT rather than to this node, matching
 ## encounter_director: `pal_body` and `npc_body` both find the ground by walking
@@ -480,7 +487,7 @@ func _spawn_the_cast() -> void:
 	_grandpa_prompt.call("set_enabled", false)
 	_grandpa_prompt.connect("activated", _on_grandpa_activated)
 
-	await _spawn_starters(house)
+	_load_starter_species()
 
 
 ## The house is built by the world root at the end of ITS _ready, several
@@ -527,8 +534,7 @@ func _on_bed_activated() -> void:
 ## and the beat stays `wake` forever. `_refresh_prompts()` then keeps Grandpa's
 ## interactable disabled (his `conversation_for("wake")` is ""), which makes
 ## `interactable.gd` return an empty offer, which means the arbiter never even
-## sees him: no prompt, and the button does nothing. The starters outside stay
-## disabled too, because they only enable on `choose`. The owner's report —
+## sees him: no prompt, and the button does nothing. The owner's report —
 ## "you still can't interact with grandpa at the beginning, so then you leave
 ## the house and never get a starter" — is that state exactly.
 ##
@@ -553,60 +559,16 @@ func _check_left_the_bed() -> void:
 	_set_beat(BEATS.HOUSE)
 
 
-## Three creatures in a row outside Grandpa's door, facing it — the first
-## thing the player sees on stepping out.
-##
-## They are bodies you walk up to and NOT a menu. docs/OPENING_SEQUENCE.md calls
-## that decided and load-bearing: it is the first expression of the game's whole
-## posture toward its creatures, and a list box would undo it.
-func _spawn_starters(house: Node3D) -> void:
-	var cfg := BEATS.starters()
-	var species: Array = cfg.get("species", [])
+## Read straight off data/config/opening.json's `starters.species`. No bodies,
+## no placement — the orb picker builds its own live previews from this list
+## when the beat reaches `choose` (`_maybe_open_picker`).
+func _load_starter_species() -> void:
+	var species: Array = BEATS.starters().get("species", [])
 	if species.is_empty():
 		push_error("opening.json lists no starter species; the choice has nothing to choose from")
 		return
-
-	var door: Vector3 = house.call("marker", "door") if house != null else _grandpa.global_position
-	var row_centre: Vector3 = house.call("marker", "outside") if house != null \
-		else _player.global_position
-	# The row faces the door, centred a little past it, so stepping out of the
-	# house is stepping into the middle of the choice.
-	var facing := door - row_centre
-	var offsets := BEATS.starter_offsets(facing)
-	var radius := float(cfg.get("prompt_radius", 2.6))
-
-	for i in species.size():
-		var id := str(species[i])
-		var body: Node3D = PAL_SCENE.instantiate()
-		body.name = "Starter_%s" % id
-		body.set_script(PAL_BODY)
-		body.set("collision_layer", STARTER_COLLISION_LAYER)
-		# Hidden until it is standing on the ground. A visible body at the world
-		# origin is a solid capsule inside the terrain, or inside the trainer —
-		# and two overlapping bodies resolve the overlap by shoving each other
-		# apart, which once launched the player off the playground at 500 m/s.
-		body.visible = false
-		get_parent().add_child(body)
-		body.call("setup", id)
-		if not await _stand_on_ground(body, row_centre + offsets[i]):
-			push_error("no ground under the %s starter; it will be unreachable" % id)
-		body.visible = true
-		body.call("face_towards", door)
-
-		var prompt: Node3D = INTERACTABLE.new()
-		prompt.name = "Interactable"
-		# At the creature's shoulder rather than between its feet, which is where
-		# the player is actually looking.
-		prompt.position = Vector3(0.0, float(body.call("body_height")) * 0.6, 0.0)
-		# Off. The starters stand in the meadow from beat 1 and cannot be taken
-		# until beat 4; `_refresh_prompts` turns them on.
-		prompt.call("configure", "Choose %s" % _display_name(id), radius, false)
-		body.add_child(prompt)
-		prompt.connect("activated", _on_starter_activated.bind(i))
-
-		_starter_bodies.append(body)
-		_starter_species.append(id)
-		_starter_prompts.append(prompt)
+	for id: Variant in species:
+		_starter_species.append(str(id))
 
 
 func _display_name(species_id: String) -> String:
@@ -616,14 +578,6 @@ func _display_name(species_id: String) -> String:
 func _stand_npc(npc: Node3D, spot: Vector3) -> bool:
 	for i in GROUND_WAIT_FRAMES:
 		if bool(npc.call("stand_at", spot.x, spot.z)):
-			return true
-		await get_tree().physics_frame
-	return false
-
-
-func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
-	for i in GROUND_WAIT_FRAMES:
-		if bool(body.call("place_on_ground", spot)):
 			return true
 		await get_tree().physics_frame
 	return false
@@ -655,7 +609,7 @@ func _start_conversation(id: String) -> bool:
 
 ## --- beats 4 and 5: the choice, and the name ------------------------------------------
 
-func _on_starter_activated(index: int) -> void:
+func _on_starter_picker_chosen(index: int) -> void:
 	if _beat != BEATS.CHOOSE or _adopting:
 		return
 	if index < 0 or index >= _starter_species.size():
@@ -678,19 +632,9 @@ func _adopt(index: int, chosen: String) -> void:
 	_adopting = true
 	var species := _starter_species[index]
 
-	# The one they chose stops standing there. `adopt_starter` builds the body
-	# that follows them — a follower, not this one — so leaving this here would
-	# put two of the same creature in the meadow, one of them inert.
-	var body := _starter_bodies[index]
-	if body != null and is_instance_valid(body):
-		body.queue_free()
-	_starter_bodies[index] = null
-	_starter_prompts[index] = null
-
-	# The other two stay standing where they are. That is the five-pal rule's
-	# first bite and the cost of the choice is meant to remain in the world where
-	# the player can see it.
-
+	# The other two never got bodies at all (SA0-orbs) — there is nothing left
+	# in the world to free. `encounter_director.adopt_starter()` builds the one
+	# real follower body below, for the one the player actually chose.
 	var adopted: bool = await _encounter.call("adopt_starter", species, chosen)
 	_adopting = false
 	if not adopted:

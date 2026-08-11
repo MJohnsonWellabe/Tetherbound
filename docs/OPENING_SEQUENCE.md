@@ -17,7 +17,7 @@ below is either serving it or getting out of its way.
 | 1 | **Wake** | 0–1 | Fade in on a bed upstairs. Get up | Move, camera, one prompt |
 | 2 | **Downstairs** | 1–2 | Walk down through the house to Grandpa | Interact; this is home |
 | 3 | **The briefing** | 2–5 | He explains Team Tether, gives you his old pack — orbs, potions, berries — and the creature belt | Why there is a journey; the satchel; **the five-pal rule, said in fiction** |
-| 4 | **The choice** | 5–7 | Out the door. Three pals wait outside. Approach each, then choose one | **The five-pal rule's first bite:** the other two stay with him |
+| 4 | **The choice** | 5–7 | Three orbs on the table, each previewing its creature. Look them over, choose one | **The five-pal rule's first bite:** the other two stay with him |
 
 **Beat 4 is no longer unconditional — `docs/decisions/D23`, spec §1D.** The
 owner played the published build and walked straight out of the house, skipping
@@ -59,12 +59,18 @@ rule older than Team Tether* — which is the only kind of place a rule that har
 should be said. His last line sends the player out the door and emits
 `beat:starter_choice`.
 
-**The choice.** The three starters wait in a row **outside Grandpa's door** —
-the sequence director stages the row relative to the door, not to Grandpa, who
-may still be inside behind you. Approaching one offers "Choose <name>";
-choosing gives it to the party and leaves the other two standing where they
-are. Grandpa, spoken to again before choosing, says one line and sends you back
-out (`grandpa_waiting`).
+**The choice.** **Reversed 2026-08-11 (`SA0-orbs`, owner directive)** — the
+paragraph this replaces had the three starters waiting outside in a row; see
+"Decisions taken here" below for the record of the change. The moment
+Grandpa's briefing ends, `starter_picker.gd` opens over the same room: three
+orbs, each a live view of the creature inside it, still indoors. Look left and
+right between them; choosing one closes the picker and opens the naming
+prompt straight away. The other two are simply never previewed again — there
+are no bodies left standing anywhere for the cost of the choice to be seen in,
+which is the trade this reversal makes (see below). `grandpa_waiting` — his one
+line if spoken to again mid-choice — is left in the dialogue table but is not
+practically reachable any more: the picker is modal and opens automatically,
+with no window a player can act inside before it does.
 
 **Your pal.** Naming is mandatory. The moment the name is confirmed the
 director runs `grandpa_named` with `$name` substituted — the first time in this
@@ -116,10 +122,17 @@ What the restaging adds, and who owns it:
   avoiding no longer has to be paid. The old decision was right when it was
   made and is wrong now; this is the reversal, recorded rather than silently
   edited.
-- **The starter choice is physical, not a menu.** You walk to the one you want.
-  It is the first expression of the game's whole posture toward its creatures,
-  and a list box would undo it. Unchanged by the restaging — the choice simply
-  happens outside the door now.
+- **REVERSED 2026-08-11 (`SA0-orbs`, owner directive) — the starter choice
+  used to be physical, not a menu.** This bullet used to say: "You walk to the
+  one you want. It is the first expression of the game's whole posture toward
+  its creatures, and a list box would undo it." The owner asked for the
+  opposite outright: *"the starters should be in orbs and you preview them
+  while talking to Grandpa."* The old reasoning was right for the staging it
+  was written for and is superseded now, not silently dropped — the choice is
+  still made by looking each one over rather than reading a list of names,
+  which is as much of the original posture as an in-conversation picker can
+  keep. `data/config/opening.json`'s own `starters` block carries the same
+  note.
 - **The gifts are lines, not a cutscene grant.** Each `give:` effect rides the
   line that speaks it. If the pacing of the briefing changes, the gifts move
   with their sentences and never fall out of sync with the prose.

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_panel.tscn" id="11_dialogue"]
 [ext_resource type="PackedScene" path="res://scenes/ui/name_prompt.tscn" id="12_name_prompt"]
 [ext_resource type="Script" path="res://scripts/story/sequence_director.gd" id="13_director"]
+[ext_resource type="PackedScene" path="res://scenes/ui/starter_picker.tscn" id="14_starter_picker"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -97,6 +98,8 @@ script = ExtResource("10_arbiter")
 
 [node name="NamePrompt" parent="." instance=ExtResource("12_name_prompt")]
 
+[node name="StarterPicker" parent="." instance=ExtResource("14_starter_picker")]
+
 [node name="SequenceDirector" type="Node" parent="."]
 script = ExtResource("13_director")
 player_path = NodePath("../Player")
@@ -106,3 +109,4 @@ manager_path = NodePath("../CombatManager")
 camera_rig_path = NodePath("../CameraRig")
 dialogue_path = NodePath("../DialoguePanel")
 name_prompt_path = NodePath("../NamePrompt")
+starter_picker_path = NodePath("../StarterPicker")
