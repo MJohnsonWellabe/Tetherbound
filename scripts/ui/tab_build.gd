@@ -28,9 +28,20 @@ var _free_note: Label = null
 
 var _detail_name: Label = null
 var _detail_blurb: Label = null
-var _detail_cost: Label = null
+var _detail_cost: RichTextLabel = null
 var _detail_contains: Label = null
 var _detail_status: Label = null
+
+## A shortfall line needs its own colour independent of the rest of the cost
+## block — matching an "unaffordable" ingredient to the affordable ones was
+## exactly what a blind visual pass on menu_build.png caught: the same white
+## text on both, and "Not enough to hand" was the only place short of reading
+## every number that said which ingredient was the problem. Warm red, not
+## gold: gold already means "important progression state" (the tab focus
+## ring, the free-build banner), and a shortfall is a warning, not that.
+const COST_SHORT := Color(0.86, 0.42, 0.32)
+const COST_OK := Color(0.87, 0.89, 0.84)
+const COST_FREE := Color(0.6, 0.62, 0.55)
 
 
 func build() -> void:
@@ -102,8 +113,11 @@ func _build_detail() -> Control:
 	_detail_contains.add_theme_font_size_override("font_size", 24)
 	panel.add_child(_detail_contains)
 
-	_detail_cost = Label.new()
-	_detail_cost.add_theme_font_size_override("font_size", 26)
+	_detail_cost = RichTextLabel.new()
+	_detail_cost.bbcode_enabled = true
+	_detail_cost.fit_content = true
+	_detail_cost.scroll_active = false
+	_detail_cost.add_theme_font_size_override("normal_font_size", 26)
 	# BBCode, because affordability is per-LINE: "12 wood, and you have 3" has to
 	# be readable as one shortfall inside a list of three costs you do have.
 	panel.add_child(_detail_cost)
@@ -137,10 +151,18 @@ func poll() -> void:
 		var affordable := _can_afford(catalogue[i])
 		# Dimmed, never hidden. A piece you cannot afford is the thing that tells
 		# you what to go and gather; removing it from the list removes the goal.
-		(_rows[i] as Button).add_theme_color_override(
-			"font_color",
-			Color(0.87, 0.89, 0.84) if affordable else Color(0.5, 0.51, 0.48)
-		)
+		#
+		# Set on every text state Button reads (normal/hover/focus/pressed), not
+		# just "font_color" (normal). A Button falls back to font_focus_color
+		# while it holds focus, so a normal-only override is invisible on
+		# whichever row the cursor is actually sitting on — which, with one
+		# recipe in the catalogue, is every row there is.
+		var colour := Color(0.87, 0.89, 0.84) if affordable else Color(0.5, 0.51, 0.48)
+		var row := _rows[i] as Button
+		row.add_theme_color_override("font_color", colour)
+		row.add_theme_color_override("font_hover_color", colour)
+		row.add_theme_color_override("font_focus_color", colour)
+		row.add_theme_color_override("font_pressed_color", colour)
 	_describe(_focused)
 
 
@@ -177,20 +199,26 @@ func _describe(index: int) -> void:
 		var need := int(requirement.get("n", 0))
 		var have: int = int(inventory.call("count", id)) if inventory != null else 0
 		var name := str(db.call("item_name", id)) if db != null else id
+		var short := not free and have < need
 		# "Wood 12, you have 62" rather than "Wood 62 / 12". A bare pair of
 		# numbers does not say which one is the cost, and the player reading it
 		# is deciding whether to go and gather. While free build is on there is
 		# no shortfall to mark: the numbers are what the piece WOULD cost.
-		lines.append("%s  %d       you have %d%s" % [
-			name, need, have, "" if free or have >= need else "   — short"
-		])
-	_detail_cost.text = "%s\n%s" % [
+		#
+		# Coloured per line, not as one block: a shortfall has to stand out
+		# next to the ingredients you DO have, the same way a "— short" suffix
+		# alone did not (see COST_SHORT's comment above).
+		var line := "%s  %d       you have %d%s" % [
+			name, need, have, "" if free or not short else "   — short"
+		]
+		var line_colour := COST_SHORT if short else (COST_FREE if free else COST_OK)
+		lines.append("[color=#%s]%s[/color]" % [line_colour.to_html(false), line])
+	var header_colour := COST_FREE if free else COST_OK
+	_detail_cost.text = "[color=#%s]%s[/color]\n%s" % [
+		header_colour.to_html(false),
 		"Cost — free build is on, none of it will be spent" if free else "Cost",
 		"\n".join(lines)
 	]
-	_detail_cost.add_theme_color_override(
-		"font_color", Color(0.6, 0.62, 0.55) if free else Color(0.87, 0.89, 0.84)
-	)
 
 	if free:
 		_detail_status.text = "Ready to build, for free."
