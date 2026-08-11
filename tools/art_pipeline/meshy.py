@@ -403,20 +403,27 @@ SPECIES_PROMPTS = {
         "with a hip pouch, olive-brown cargo shorts, brown fingerless "
         "gloves, tall brown lace-up boots, small satchel strap across the "
         "chest, warm curious expression"),
-    # Round 2. The blind critique of round 1 found the vest rendered warm
-    # brown/leather -- MY prompt's own fault, it said "brown canvas vest"
-    # against a reference that is clearly slate blue-gray -- and a leather
-    # cord pendant at the throat, drawn in the reference, missing entirely.
+    # Round 3. Round 2's "SLATE BLUE-GRAY" call was a misread on my part: the
+    # reference sheet itself draws the vest blue-gray in the FRONT panel only
+    # and brown in the other four (3/4-front, side, 3/4-back, back) -- an
+    # inconsistency in the source art, confirmed by eye against the sheet,
+    # not a crop bug. The round-1 brown render was the more faithful read of
+    # the whole turnaround, not a defect, so this reverts to brown rather
+    # than chasing the outlier panel. What round 2 DID find and fix in part:
+    # the throat pendant is still unadded (accessory-level, left for NP1's
+    # separate-mesh-parts system per the board's own implementation notes),
+    # and round 2 also flagged the trousers rendering too dark/cold --
+    # "dark brown" reads as near-black charcoal at this tier; naming the
+    # actual reference tone instead.
     "villager_male": (
         "stylised human male villager, SHORT TOUSLED BROWN HAIR, FULLY "
         "SCULPTED FACIAL FEATURES: defined eye sockets, eyebrows, nose and "
         "mouth geometry. Average build, six and a quarter heads tall, same "
         "height as the player, NOT chibi. Five separated fingers on each "
         "hand. Cream work shirt with rolled sleeves under a sleeveless "
-        "SLATE BLUE-GRAY canvas vest with a thin leather cord and small "
-        "pendant hanging at the open collar, wide brown belt with a hip "
-        "pouch, dark brown trousers, brown lace-up boots, practical steady "
-        "expression"),
+        "brown canvas vest, wide brown belt with a hip pouch, WARM MEDIUM "
+        "CHOCOLATE-BROWN trousers (not dark, not charcoal, not black), "
+        "brown lace-up boots, practical steady expression"),
     # Round 2. The blind critique of round 1 found the amber-tinted goggle
     # band across the eyes -- clearly drawn in the reference, between the cap
     # brim and the mask -- completely absent, reading as bare skin instead.
