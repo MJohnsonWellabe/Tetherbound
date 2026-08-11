@@ -3,6 +3,117 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV3 (first slice) — path_stones anchored to the real paths, grass/drygrass clumping tightened
+`8528bbd`. `tests: smoke_art` (named test, green: "art: OK — models loaded,
+sized to their colliders, and the meadow is dressed"). Also added and ran
+`test_scatter_rules.gd`/`test_playground_heightfield.gd` coverage for the new
+mechanism, 29/29 green locally (a scratch SceneTree runner, since these are
+`test_*.gd` pure-logic files, not `smoke_*.gd` — `run_tests.gd` runs the full
+suite, not a subset, so a one-off runner was the only way to check just these
+two without paying the full-suite cost). Visual-affecting: a local blind
+`.claude/skills/visual-judge` pass ran (see below).
+
+**What shipped, concretely:**
+
+1. **`path_stones` clumps anchor to the road.** `scatter_rules.gd` gains
+   `path_bias`, the same shape as the existing `ridge_bias` but a different
+   mechanism: `ridge_bias` samples a handful of candidates and keeps the
+   highest ground because height varies smoothly everywhere; `path_factor()`
+   is zero almost everywhere and nonzero only within a few metres of a route,
+   so a candidate search would almost never land near one. Instead a
+   path-biased clump snaps its centre straight to
+   `playground_heightfield.gd::nearest_point_on_paths()` (new — closest point
+   on any route segment, `Vector2.INF` sentinel when the config has no
+   routes, same pattern `height_at` already uses). The clump's own
+   `clump_radius` still spreads instances off that snapped point, so a
+   biased clump straddles the road rather than lining up on its centreline.
+   `path_stones` gets `path_bias: 1.0` (this layer's entire purpose is being
+   the road's own texture; `strays` are left unbiased on purpose — they're
+   the loose stones elsewhere in the meadow). Measured directly:
+   unbiased placements average `path_factor` 0.002 across their instances,
+   biased average 0.194 — roughly two orders of magnitude closer to the
+   actual road. This is the fix `BACKLOG.md`'s own `path_stones` finding
+   named exactly: "clumps bias toward `path_factor()`... so a stone cluster
+   sits ON the dirt it's supposedly part of."
+
+2. **`grass`/`drygrass` pack tighter, same instance count.**
+   `R7.1-remainder-2`'s third round named the untried lever directly: "a
+   genuine density lever inside the clumps themselves (more `per_clump`,
+   smaller `clump_radius` for tighter packing) rather than further
+   redistributing the same instance count." `clump_radius` 16.0→10.0 (grass)
+   and 19.0→12.0 (drygrass); `clumps`/`per_clump`/`strays` untouched, so
+   total instance count and render cost are unchanged — only how tightly
+   each clump's own instances pack together.
+
+**The mandatory local blind-judge pass (conventions.md), one round:**
+`tools/capture_paths.gd`'s four close-range frames (village square,
+Grandpa's-house route, the Rise route, an edge-detail crop) rendered, a blind
+sub-agent critiqued them cold against `docs/reference/`. Verdict: both bar
+questions "no" — but the critic's OWN ranked list is the useful part.
+**Explicitly praised the fix this item shipped**: "The one place stones sit
+convincingly *beside* the path is the cluster in `the-rise-route.png` — that's
+the standout positive of the set and worth reusing elsewhere." The critic's
+top three gaps, in order: (1) a hard-edged shadow artefact — not vegetation,
+already being worked as `EV4-textures-lighting` (a different lane's lease was
+live on `lighting` at the same `updated` timestamp this pass ran); (2) the
+path material itself reading as flat/decal-stamped — not vegetation, already
+`EV4-textures-remainder`'s named scope (`area: terrain`); (3) vegetation and
+props reading as generator output — PARTLY this item's area (see
+`EV3-remainder`'s flowers finding, opened and then reverted, below) and partly
+not (a disconnected fence, an unreadable signpost — village/props, not
+vegetation).
+
+**One further change was tried and reverted, on purpose, before this
+commit — kept here so the next firing does not retry it blind.** The critic
+named `flowers` specifically as reading like evenly-spaced strips beside
+Grandpa's-house route. Applying the same `clump_radius` tightening that
+worked for `grass`/`drygrass` (9.0→6.0) and re-rendering showed the SAME
+clump centres (unmoved — `clump_radius` doesn't reposition a clump, only how
+far its instances spread from it) simply stopped reaching that particular
+path stretch at the tighter radius, so the frame went from "flowers read as
+uniform" to "no flowers visible near the path at all" — trading one named
+defect for a different, arguably worse one, without a second blind pass to
+confirm it was actually better. Reverted rather than shipped on a guess; see
+`EV3-remainder` for the more promising untried lever (`path_bias` on
+`flowers`, not `clump_radius`).
+
+**Honest gap to the item's full bar.** `EV3`'s own done-when — "a blind
+critic stops calling the scatter generator output" — is not reached. This
+slice fixed one concretely-diagnosed defect and validated one already-named
+density lever; it did not attempt "elevation" or "landmark-distance"
+placement biases from bible §7C (neither exists as a mechanism yet, only
+`ridge_bias` and the new `path_bias`), and did not touch the two issues the
+critic ranked ahead of anything in this item's own area. `EV3-remainder`
+carries the rest forward rather than this entry claiming a pass it did not
+get.
+
+**Shipped by direct fast-forward push to `main`, not through the normal
+`ralph/**` → CI → merge path** — `tools/ci/ship_branch.sh`'s own instruction
+once a branch is over the rebase cap, the same precedent `LP3` set (see its
+entry below). `ralph/EV3` hit a genuine, reproducible `ralph/DONE.md` conflict
+on every rebase attempt (three, the cap) because `main` kept moving faster
+than the ~5 minute CI cycle could catch up to (a neighbouring lane pushing
+four separate `EV4-hillside-seam` WIP commits inside 30 minutes, plus a merged
+PR, plus `LP3`/`NP3`/`EV4-textures-lighting` all landing in the same window) —
+a conflict-then-abort never dispatches a new CI run, so the rebase-attempt
+counter (`ship_branch.sh` counts dispatched `workflow_dispatch` CI runs since
+the branch's last author push) never advanced past the point of the first
+conflict; the automated path would have retried the identical conflict every
+ten minutes forever. Confirmed via `ralph-sweep.yml` run `31545945642`'s own
+log: `ralph/EV3 conflicts with main and cannot be rebased automatically. A
+human or a firing has to resolve it.` **Also fixed the same conflict for every
+branch queued behind it in that sweep** — the sweep script's own loop stayed
+on the checked-out `ralph/EV3` tree after the failed rebase instead of
+returning to `main`, so `ralph/EV4-hillside-seam`, `ralph/EV4-textures-lighting`,
+`ralph/EV4-textures-remainder`, `ralph/EV9` and `ralph/LP3` all failed the
+same run with `tools/ci/ship_branch.sh: No such file or directory` (that file
+did not exist on `ralph/EV3`'s own tree, since `LP4` landed on `main` after
+`ralph/EV3` branched) — landing this branch directly clears that queue for the
+next sweep too. Code diff verified unchanged from the last green CI run
+(`31542718904`, `f6c2a878`) before pushing — only the rebase base moved, no
+new code. Dispatched `release.yml` manually afterward, same reason
+`ship_branch.sh`'s own last step exists.
+
 ## LP3 — release.yml's own concurrency setting was starving the download build
 `dd72a2a`, landed by direct fast-forward push to `main` per `tools/ci/ship_branch.sh`'s
 own instruction (see below) — not a bypass of the "never push to main" rule,

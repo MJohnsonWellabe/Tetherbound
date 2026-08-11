@@ -233,13 +233,40 @@ Done when: `EV1-remainder`'s itch.io block clears and the fuller pack is
 searched for a broader-canopy hero form, or the owner accepts the current
 ceiling.
 
-### EV3 — Rebuild the scatter around clusters, clearings and layered bands
+**`EV3` (a first, narrower slice) shipped — see `DONE.md`.** Fixed the one
+concrete, already-diagnosed defect (`path_stones` clumps disconnected from the
+real paths) and applied R7.1-remainder-2's own named density lever
+(tighter `clump_radius`, same instance count) to `grass`/`drygrass`. Did
+**not** reach the item's full bar — "seven layered bands... driven by slope,
+elevation, path distance AND landmark distance" is broader than this slice,
+and a fresh blind critic still ranked two other things first (both already
+owned by concurrent lanes: `EV4-textures-lighting`'s shadow artefact,
+`EV4-textures-remainder`'s decal-like path texture). A narrower remainder is
+opened below for what a future pass should try next.
+
+### EV3-remainder — Layered-band placement and the flowers-along-a-path finding
 `model: opus` · `tests: smoke_art` · `area: vegetation`
-Bible §7B/§7C/§9. Seven vegetation bands from ground grass to distant tree mass;
-placement driven by slope, elevation, path distance and landmark distance rather
-than uniform noise. Absorbs `SA1-lod` if not already done, and `R7.1-remainder-2`
-(ground cover reads procedural) outright. Done when: a blind critic stops
-calling the scatter generator output.
+What `EV3`'s first slice did NOT do, so the next pass does not re-diagnose it:
+**elevation and landmark-distance placement biases** (bible §7C names both;
+only `ridge_bias`, pre-existing, and the new `path_bias` exist) are unbuilt —
+there is no "cluster near a landmark" or "cluster near water" lever yet, only
+"cluster near a ridge" and "cluster near a path." `EV5` (water) has to exist
+before "distance to water" means anything. Also open: the same round's blind
+critic named `flowers` specifically — "form two almost perfectly even strips
+flanking the path... reads as a scatter-tool default" in
+`grandpas-house-route.png`. Tried the same `clump_radius` tightening that
+worked for `grass`/`drygrass` (9.0→6.0) and reverted it after re-rendering:
+that lever reads as generator output because at 9.0 a clump's spread happens
+to reach the path from beside it; at 6.0 the SAME clump centres (unchanged —
+`clump_radius` doesn't move them) simply stop reaching the path at all in this
+stretch, trading "uniform strip" for "bald ground beside the path" — arguably
+a worse, differently-named defect from the same critique. **Not shipped**,
+reverted before commit, no trace in the diff. A `path_bias` on `flowers`
+(same mechanism `path_stones` now uses) is the more promising untried lever —
+it would put flower clumps where a path-adjacent garden bed actually forms
+rather than changing how tightly an already-randomly-placed clump packs — but
+needs its own render-and-critique pass, not a guess. Done when: a blind
+critic stops naming path-flanking vegetation as evenly spaced.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
 tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four
@@ -251,23 +278,9 @@ opened below from round 5's own honest read of what is still wrong.
 
 **`EV4-textures` (moss-blotch saturation, and the slope-specific edge stepping) shipped — see `DONE.md`.** Three local blind-judge rounds, both original complaints converged: edge-stepping never reproduced past a mild, ambiguous waviness and a third critic called it "largely resolved... no rectangular notches"; moss saturation measurably dropped (0.36 -> 0.09, at/below the texture's own baseline) via a direct, feathered-mask edit to the CC0 source photo rather than fighting it through a tint multiply. **Two new findings from round 3, out of this item's scope, opened below**: the path reads paler than the references even where moss is fully resolved, and an unmotivated hard-edged shadow crosses sunlit path frames.
 
-**Found independently while blind-judging `EV4`'s paths, 2026-08-11:
-`vegetation.json`'s `path_stones` layer floats disconnected from the real
-paths `EV4` just built.** `path_stones` (26 clumps of 12, `clump_radius`
-8.0, scattered anywhere walkable with `max_slope_deg` 14, `grows_on_paths:
-true`) predates `EV4` — its own `_comment` says "Not a path yet — M7
-authors real paths" — so it was never anchored to `paths.routes`, only
-thinly scattered as a general "warm grey stone note", and nothing in either
-lane's `EV4`/`EV4-textures` work touched it. A blind critic given close-
-range path frames, independently of the lane that shipped the material
-above: "a tidy circular stone group with a hard, clean perimeter against
-grass, disconnected from the actual path by several metres of untouched
-lawn... reads as a decorative sticker dropped onto the lawn rather than a
-paved area that got walked into being" (two separate instances, two
-separate frames). Not `EV4`'s to fix — `vegetation.json`'s own scatter
-rule, `area: vegetation`, not `terrain`. Done when: `path_stones` clumps
-bias toward `path_factor()` instead of scattering independently of it, so a
-stone cluster sits ON the dirt it's supposedly part of.
+**The `path_stones`-disconnected-from-the-real-paths finding (found
+independently while blind-judging `EV4`'s paths, 2026-08-11) is fixed by
+`EV3` — see `DONE.md`.**
 
 ### EV4-textures-remainder — Moss blobs still read as a "stamped decal," a content limit not a tunable value
 `model: sonnet` · `tests: none (visual)` · `area: terrain`
