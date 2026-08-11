@@ -5,6 +5,67 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## Vegetation colour jitter — fixed a MultiMesh use_colors ordering bug
+`16138ec` on `main` (owner-directed interactive session working Phase -0.5
+through Phase 1). Found incidentally: a background sub-agent's render log
+for `R7.2` showed the engine error "Can't set instance color on a
+Multimesh that isn't using colors" **11,317 times** in one render. Root
+cause in `scripts/world/vegetation.gd`'s `_build_batch()` (introduced by
+`R7.1-remainder` round 2, `77421cf`): `multi.use_colors = true` was being
+set AFTER `multi.instance_count = placements.size()`. `MultiMesh`
+allocates its per-instance buffer at the moment `instance_count` is
+assigned, sized from whichever format flags are set then — `use_colors`
+set afterward reads back `true` in GDScript but never actually took effect
+server-side, so every jittered grass/drygrass instance's
+`set_instance_color` call failed silently (a caught engine error, not a
+crash) and kept its default, unjittered colour. Fixed by reordering: set
+`use_colors` before `instance_count`. Verified: 299/299 tests still pass;
+a fresh headless render shows zero occurrences of the error where the
+same render previously showed thousands. This means the round-1/2/3
+`R7.1-remainder` visual-judge critiques were all judging a build where the
+colour-jitter fix was largely non-functional — the ground-cover-still-
+reads-procedural finding in `R7.1-remainder-2` may partly be a
+consequence of this bug rather than the clustering/density tuning alone;
+worth re-checking once a fresh render is in hand.
+
+## RB4 — ROG Ally freeze root-caused and fixed: switched to the Compatibility renderer
+`38189fa` on `main` (owner-directed interactive session; see
+`ralph/STATUS.md`'s lease note). Builds on `RB4-diagnostics` (below) and
+the on-device data the owner supplied 2026-08-10/11 (see `BLOCKED.md`'s
+former RB4 entry, now resolved, for the full evidence trail).
+
+**Summary of the evidence**: two separate launches on the Ally, ~25
+minutes apart, both hung. The boot log shows both completing every
+instrumented phase (terrain, shaders, player, ~16,700-instance vegetation
+scatter, settlement) in ~6 seconds, then stopping at the identical last
+line — `_ready complete, waiting for first frame` — and never writing the
+next one. Task Manager during the hang: the process shows `Not
+Responding`, ~1.4GB memory, but **0% CPU, 0% disk, 0% network**, never
+resolving after 10+ minutes. That combination rules out the original
+"slow shader compile" hypothesis (which would show CPU/GPU load) and
+points at the render thread blocked on a Forward+/Vulkan call — most
+likely a present or pipeline-compile fence — that never returns, specific
+to this GPU/driver.
+
+**Fix**: `project.godot`'s `renderer/rendering_method` changed from
+`forward_plus` to `gl_compatibility` — sidesteps Vulkan entirely.
+`docs/decisions/D01` rewritten with the full reasoning: this reverses
+D01's original Forward+ choice (which bet the Ally's RDNA3 iGPU would run
+it "comfortably" — that bet is what the on-device data disproves), and
+notes the cost paid knowingly (no SDFGI/volumetric fog/Forward+ shadows).
+One favorable side effect: Compatibility/GLES3 is already the exact
+renderer every headless CI render and every `.claude/skills/visual-judge`
+critique this project has used all along (D06) — the shipped build now
+matches what has actually been screenshotted and graded, rather than
+diverging from it.
+
+Owner directive: fix it with the on-device data already in hand rather
+than continue remote troubleshooting (boot log access was awkward on the
+handheld itself). **Real on-device confirmation that the freeze is
+actually gone is still worth having**, same as RB1/RB2's pattern, but
+unlike those two this fix has strong, specific evidence for why it should
+work, not just a plausible theory.
+
 ## R7.1-found-2 — the near-vertical bank near spawn was overlapping building pads, not a path or texture bug
 `94d267c` on `main` (owner-directed interactive session working Phase -0.5
 through Phase 1, background sub-agent in isolated worktree

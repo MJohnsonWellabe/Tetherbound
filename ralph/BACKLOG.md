@@ -70,9 +70,11 @@ same as RB1, but this one no longer needs it to know the bug was real.
 
 **RB3 (smoke_aggression flake) fixed — see `DONE.md`.**
 
-**RB4-diagnostics (startup boot log) shipped — see `DONE.md`.** The
-root-cause half of RB4 — the Ally black-screen freeze itself — is blocked
-on the owner; see `BLOCKED.md`.
+**RB4-diagnostics (startup boot log) shipped — see `DONE.md`.** **RB4
+(Ally freeze root cause + fix: switched to the Compatibility renderer)
+shipped — see `DONE.md`.** Real on-device confirmation that the freeze is
+actually gone on the Ally is still worth having, same as RB1/RB2, but the
+diagnosis and fix no longer need it to know the bug was real.
 
 ---
 

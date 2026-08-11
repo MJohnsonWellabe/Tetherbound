@@ -34,58 +34,6 @@ access returned.
 
 ## Blocked on the owner
 
-### RB4 — ROG Ally freeze: on-device data now in, points at the Vulkan/Forward+ present path, not a slow compile
-On-device data collected 2026-08-10/11 by the owner, directly on the Ally,
-against the shipped release build. This changes the leading hypothesis.
-
-**Boot log** (`user://boot_log.txt`, two separate launches ~25 minutes
-apart, both hung): both runs write the identical phase sequence — autoload
-ready, terrain node built, terrain data assigned, ground shader applied,
-player placed, vegetation scattered (~16,700 props), settlement built —
-ending on the SAME last line both times: `_ready complete, waiting for
-first frame`. Each run took ~6 seconds to reach that line, with no visible
-stall anywhere in the build sequence itself. Neither run ever wrote the
-next line (`first frame presented`), which only fires after `await
-get_tree().process_frame` returns.
-
-**Task Manager, during the freeze**: the process shows as `Tetherbound (Not
-Responding)`, ~1.4GB memory, but **0% CPU, 0% disk, 0% network** — not
-climbing, not busy. Left for well over 10 minutes: **never resolves**.
-
-Together this rules out the original leading hypothesis (a first-launch
-shader/pipeline-compile stall) — a compile taking a long time would show
-CPU or GPU load while it worked, and this shows neither. The evidence now
-points at something in the render thread blocking on a call that never
-returns — most likely a Vulkan/Forward+ present or pipeline-compile call
-deadlocking against this specific integrated GPU's driver, between "the
-scene is fully built" and "the engine presents its first frame."
-
-Static inspection already ruled out several other suspects, so don't
-re-check them: the shipped release build already exports `--export-release`,
-not debug (`release.yml`); the Terrain3D GDExtension is staged correctly at
-both the flat and `res://`-relative paths
-(`tools/stage_gdextension_libs.sh`, fixed after an earlier bug that broke
-exactly this); the export architecture is `x86_64`, matching the Ally's
-Ryzen Z1; nothing forces exclusive fullscreen in `project.godot`.
-
-**Next concrete step, on the owner**: launch with `--rendering-driver
-opengl3` appended to the shortcut/exe target (bypasses Forward+/Vulkan
-entirely, using the same Compatibility renderer `tools/survey.sh` already
-uses for headless CI rendering). If it loads under OpenGL, that confirms a
-Vulkan-driver-specific stall — actionable two ways: ship OpenGL/
-Compatibility as the default renderer for this hardware class, or dig into
-what specifically triggers the Vulkan-side hang. If it *also* hangs under
-OpenGL, the render backend is cleared and the search moves elsewhere in
-the render-thread startup path.
-
-This needs a real Windows/Ally run, which CI cannot provide (same
-limitation `smoke_menu.gd` already documents for mouse capture) — do not
-guess-fix the Vulkan-stall hypothesis without the OpenGL test result
-first.
-
-**Clears when:** the owner reports whether `--rendering-driver opengl3`
-loads successfully or also hangs.
-
 ### `ASSET_LEDGER.md` licence claim is false
 The ledger states "Everything currently in the build is CC0 1.0." It is not: the
 Meshy-generated creatures and the Plumberry Plains pack are not CC0. The correct
