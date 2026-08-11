@@ -248,16 +248,27 @@ error — it is not.
 `ralph/BACKLOG.md` is the ordered plan, read it rather than trusting any
 summary here.
 
-**As of D24 the top of the file moved again.** The order is now:
+**As of the owner's third feedback pass (2026-08-11) the top of the file moved
+again.** The order is now:
 
 ```
+Phase -0.95  LP1, LP2            the loop itself (D25)
 Phase -0.9   SA0-orbs, SA1-lod   the tails of the two shipped P0 fixes
 Phase -0.6   EV1..EV10           the look — acquire the packs, then use them
 Phase -0.55  NP1..NP4            the cast — the modular system, then the bases
 Phase -0.75  SA2..SA6            the spec's own P0 items
+Phase -0.85  HD1, HD2, CO1,      HUD, item access, gate+key, Grandpa's
+             SA7, SA8            urgency beat (owner's third pass)
 Phase -0.5                       whatever EV/NP did not absorb
 Phase 1 onward                   unchanged
 ```
+
+Phase -0.85 sits below -0.75 in the file only because it landed after — read
+order at the top of `BACKLOG.md` is what actually governs pick order, not this
+list. It carries its own note on why: three of its reported gaps (follow-pal,
+orb-throw visuals, potion use) turned out to already be built, checked against
+code before anything was added, so it also corrects two stale claims elsewhere
+in the file (`R2.5`, "Found along the way") rather than just adding new items.
 
 Phase -0.6 sits above the older `SA` items deliberately: `EV1` acquires assets
 that several of them are waiting on, and there is no sense retinting a

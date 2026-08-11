@@ -347,13 +347,14 @@ item's remainder:**
   starting (search `ralph/DONE.md` for "EV9" or read this entry's own
   history) for the exact API surface (`Game.inventory`, `Game.items`,
   `revision` polling, `menu_tab.gd` contract) `smoke_menu.gd` depends on.
-- The "[X] / [E]" input-glyph replacement across `dialogue_panel.gd`,
-  `name_prompt.gd` and `scripts/ui/starter_picker.gd` (still literal bracket
-  text; Kenney Input Prompts staged at `assets_raw/vendor/kenney_input-prompts/`,
-  `EV1`) — needs a last-used-input-device tracker, which does not exist
-  anywhere in the codebase yet (checked: only `tab_settings.gd`/
-  `key_bindings.gd` touch device concepts, and only for rebinding UI, not a
-  live "which device did the player touch last" signal).
+- ~~The "[X] / [E]" input-glyph replacement...~~ **Promoted to `HD1`,
+  Phase -0.85, 2026-08-11 — owner hit this directly** (mouse sees gamepad
+  letters; gamepad is told to press "F" for a bind that's actually RB).
+  Scope unchanged, just moved so it's not buried in a remainder list: still
+  needs a last-used-input-device tracker, still touches `dialogue_panel.gd`,
+  `name_prompt.gd`, `starter_picker.gd` and now also `combat_hud.gd` (checked
+  2026-08-11: it hardcodes "A"/"X"/"B" too). Kenney Input Prompts already
+  staged at `assets_raw/vendor/kenney_input-prompts/` via `EV1`.
 - The "one tracked objective" line has nothing to read yet — `SB9`/`SB11`
   (progression-state system, quest log) are still open. Wire the label once
   that state exists; a label bound to nothing is a permanent blank box, the
@@ -566,6 +567,105 @@ cream-and-brown rather than §1B's slate and lavender-grey. Re-run
 `preview_creatures.gd` before starting — and note it lays all seventeen species
 in one 1280px row, about fifty pixels each, which is too small to judge colour
 by; crop, or give the tool a per-species tile mode first.
+
+---
+
+## Phase -0.85 — HUD and item access (owner's third pass, 2026-08-11)
+
+The owner played again and reported a long list of usability gaps. Checked
+against the actual code before touching the backlog, because several of them
+turned out to already be built:
+
+**Already shipped, not backlog items — verify on-device before anyone rebuilds
+them.** The active pal already follows the player automatically once adopted
+(`follower_pal.gd` + `encounter_director.gd::adopt_starter()`, wired into the
+live `meadows_playground.tscn`). The orb throw already shows a glowing sphere
+with a halo and a trail, plus a trajectory arc while aiming (`orb.gd`,
+`throw_preview.gd`) — the code comments describe this as a deliberate fix from
+an earlier visual pass for this exact symptom. If either is still missing on
+the owner's device, that's a bug report against a specific build, not a gap to
+plan for here — check the build timestamp first.
+
+**Genuinely new work below.** `HD1`/`HD2` are new; `R7.4` (minimap) is
+promoted from Phase 7 by pointer, not duplicated; `CO1` extends the existing
+follow system rather than replacing it; `SA7`/`SA8` are explicit owner
+directives (`CLAUDE.md`'s carve-out applies — implementing these is not a
+firing inventing a story beat).
+
+### HD1 — Device-aware input glyphs
+`model: sonnet` · `tests: none` · `area: ui`
+Reproduces the owner's exact report: `combat_throw` is bound to keyboard **F**
+or gamepad **RB** (button 10), but `combat_hud.gd` always prints "F"
+regardless of device, and always shows Xbox-style "A"/"X"/"B" for the other
+verbs even on mouse and keyboard. `dialogue_panel.gd`, `name_prompt.gd` and
+`starter_picker.gd` all hardcode the same kind of bracket text. No last-used-
+input-device tracker exists anywhere in the codebase — this item builds one
+and wires every prompt above through it. Kenney Input Prompts are already
+staged (`EV1`, `assets_raw/vendor/kenney_input-prompts/`). Absorbs the glyph
+work formerly sitting in `EV9`'s remainder list — see that entry, now a
+pointer here. Done when: every on-screen prompt matches the device that
+produced the last input, mouse included, and nothing shows a gamepad letter
+to a keyboard player or vice versa.
+
+### HD2 — A real quick-access item hotbar
+`model: sonnet` · `tests: none` · `area: ui`
+Five slots, usable directly without opening the full backpack — berries,
+potions, orbs. `hotbar_columns` exists in `menu.json` today but was only ever
+scoped for *tool* cycling (`R2.1`, §19); this is the first item asking for a
+general consumable band. Wires into the use verb that already exists in
+`tab_backpack.gd::_read_use()` rather than building a second one — see the
+correction on `R2.5` and the "Found along the way" entry above for what that
+verb already does. Done when: a potion can be used without opening a menu,
+with the correct `HD1` prompt shown next to the slot.
+
+### CO1 — Manual pal summon, dismiss and swap
+`model: sonnet` · `tests: none` · `area: story`
+The owner wants a Palworld-style button to bring a pal out. The game currently
+has the opposite: `encounter_director.gd::adopt_starter()` calls
+`set_following(true)` unconditionally and there's no path to disable it or
+choose a different one of the five belt pals for the role. This item adds a
+bound action to call the active pal out or send it back, and lets the player
+pick which pal is out — built on top of the existing `follower_pal.gd`
+machinery, not a replacement for it. Done when: the pal can be dismissed,
+recalled and swapped outside combat, with the correct `HD1` prompt for the
+action.
+
+### SA7 — A gated road out of the village, with a key nearby
+`model: sonnet` · `tests: smoke_opening` · `area: story`
+Owner directive, 2026-08-11: *"the castle road should be gated and it should
+tell you to go find the key for something first, so then you understand what
+you're doing."* New and deliberately early — separate from `SC14`'s South
+Bridge, which stays as the first *real* combat-gated crossing, hours in, after
+the player's first trainer battle. This one is near-field and low-stakes: a
+simple physical gate on the road out of the starting village, an easy nearby
+key, no real obstacle. `landmark.gd`'s distant stronghold silhouette already
+gives the player something to look toward; this gives them something to
+*understand* early — that the road leads somewhere gated, and gated things
+have keys. Done when: a new player is stopped once, finds the key without
+real difficulty, and can say in their own words why the gate was there.
+
+### SA8 — Grandpa's opening dialogue: the Team Tether urgency beat
+`model: sonnet` · `tests: smoke_opening` · `area: story`
+Owner directive, 2026-08-11, close to verbatim: *someone has to stop Team
+Tether; I've waited because you were too young, but they're only getting
+stronger.* Write it in the existing `grandpa_house` voice
+(`data/dialogue/opening.json`) as an addition, not a replacement — the
+current dialogue only explains Grandpa's absence physically ("I get winded
+crossing my own meadow. I'm not walking anywhere"), with no stated urgency or
+motivation beyond that. **Leave the belt-limit and camp/gather lines exactly
+as they are** — both already say what the owner separately asked for
+verbatim (`grandpa_house`'s belt line, `grandpa_road`'s "stoop for what the
+verges offer — wood, stone... make camp before dark"), and this item is only
+the missing motivational beat.
+
+**Flag for whoever picks this up:** the "too young," "waited," and "only
+getting stronger" framing is not in `MEADOWS_PROGRESSION_SPEC.md` or `D23` —
+checked, zero hits. It doesn't contradict canon, but it is new backstory
+beyond what's specified, which is ordinarily exactly what `CLAUDE.md` asks a
+firing to flag rather than invent. It's being written here anyway because the
+owner supplied the actual line in this conversation — implementing a
+directive is not inventing one — but this note stays so nobody mistakes it for
+a firing's own addition later.
 
 ---
 
@@ -968,6 +1068,18 @@ reusing `interactable.gd` and the nearest-wins arbitration, respecting the
 path keep-clear. Done when: walking up to any ordinary tree and holding the
 button puts wood in the satchel.
 
+**Owner feedback, 2026-08-11: gathering "seems to randomly pop up."** Checked
+against the code — it isn't random. The ~10 nodes are real placed props with
+real models (`harvest_node.gd`, `data/config/harvest.json`), not invisible
+triggers. The actual cause is that they're visually **identical** to the
+hundreds of decorative trees/rocks scattered by `vegetation.gd` around them —
+nothing distinguishes a gatherable stump from an inert one until the prompt
+appears at close range, which is what reads as arbitrary. **Add to this
+item's done-when**: a harvestable prop must read as harvestable from a
+distance a player would actually approach from — a distinct material, a
+glint, a marker, whatever `EV`'s art pass makes available — not just a prompt
+on arrival.
+
 ### R2.4 — Orb and potion crafting
 `model: sonnet` · `tests: test_recipes` (new)
 Recipes for `orb_basic` and `potion_small` from gathered materials, at the
@@ -983,10 +1095,18 @@ fiber and berries and nothing else — §10 is a short list on purpose.
 an M2 crutch ("no healing system, no camp" said the comment, and both now
 exist). Deliberately sequenced *after* R2.4: taking the crutch away before
 potions are craftable would make the first day punishing for the wrong
-reason. Needs the backpack to grow a **use/consume verb** so `potion_small`
-can actually be drunk (the found-along list has carried this gap since before
-the overhaul). Done when: HP persists after a fight and is restored only by
-potion or camp rest.
+reason.
+
+**Corrected 2026-08-11 — the use verb this item said was missing already
+exists.** `tab_backpack.gd::_read_use()` heals the party from a focused slot
+on interact, and `potion_small` already carries `heal: 35`, so potions are
+already drinkable today. The stale "needs a use/consume verb" line (and the
+matching one under "Found along the way" below) is corrected rather than
+still claiming the gap. What's actually still missing: it's undiscoverable
+without opening the full backpack menu (`HD2`, Phase -0.85, fixes that), and
+berries specifically still can't be used because `berries` carries no `heal`
+value (`R7.5` owns that). Done when: HP persists after a fight and is
+restored only by potion or camp rest.
 
 ### R2.6 — Build pieces: floor, wall, doorway/door, roof, fence
 `model: sonnet` · `tests: test_build_catalogue` (new)
@@ -1008,8 +1128,14 @@ The workbench upgrade is a Rootstone sink (spec §3 Band 2, `SD18`).
 
 ## Phase 3 — art debt and persistence
 
-### R3.0 — Regenerate the three humanoid GLBs through the fixed pipeline
+### R3.0 — Re-process the three humanoid GLBs through the fixed pipeline
 `model: sonnet` · `tests: smoke_art`
+**Renamed from "Regenerate" 2026-08-11 — same item, same scope, wording only.**
+"Regenerate" kept reading as a new Meshy spend; it isn't one. This re-runs
+files that already exist through a bug-fixed *local* script. No generation,
+no credits, and `D23`/`BLOCKED.md` already say so explicitly — this rename
+just stops the question from being asked again by the title alone.
+
 The trainer, Grandpa and the Warden still carry cm-unit skeletons under a
 0.01 Armature with ×100 inverse binds — the malformed source of the giant-
 player bug. The runtime now compensates (render-space fit via
@@ -1296,6 +1422,10 @@ The `map` action is bound, labelled and rebindable, and **read by nobody**.
 Spec §16 adds the rule: the map reveals explored areas and landmarks and never
 reveals everything automatically. The tracked-objective line and the two-list
 quest log are `SB11`, not this item — R7.4 owns the map itself.
+
+**Promoted, 2026-08-11 — see Phase -0.85 for why.** This item's text stays
+here; Phase -0.85 only points at it. The minimap is unblocked and can be
+picked up from either location.
 
 ### R7.5 — Food buffs · `model: sonnet` · `tests: test_food` (new)
 Buffs only. No starvation meter, ever.
@@ -1635,9 +1765,15 @@ Phase 1 onward rather than at the end.
   1.0". False (Meshy creatures, Plumberry pack). **Blocked on the owner** for
   the correct wording. The website's parallel stale claim was fixed in the
   overhaul; the ledger's was not.
-- Backpack has no use/consume/equip/drop/split verb; the only action is
-  moving an item. **Promoted in practice: R2.5 depends on "use" for
-  `potion_small`, and food buffs (R7.5) need it after that.** `model: sonnet`
+- ~~Backpack has no use/consume/equip/drop/split verb; the only action is
+  moving an item.~~ **Corrected 2026-08-11: this was stale.** A use verb
+  already exists (`tab_backpack.gd::_read_use()`) and already heals from
+  `heal`-tagged items — `potion_small` (`heal: 35`) is usable today. The real
+  remaining gaps are narrower: `berries` carries no `heal` value (`R7.5`
+  owns giving it one), the verb has no equip/drop/split siblings (still
+  genuinely missing, small, `model: sonnet` if anyone wants it), and using
+  any of it requires the full backpack menu with no quick path (`HD2`,
+  Phase -0.85, fixes that).
 - `data/config/menu.json` twice cites `tests/test_menu_config.gd`, which does
   not exist. The file is `tests/test_menu_data.gd`. `model: haiku`
 - `menu.json` documents `hotbar_columns`, absent from the backpack block and
