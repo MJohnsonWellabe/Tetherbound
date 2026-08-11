@@ -41,9 +41,21 @@ env:
   GODOT_VERSION: 4.7-stable
 
 concurrency:
-  # A newer push supersedes an older one; there is only ever one "latest".
+  # QUEUE, do not cancel. `cancel-in-progress: true` sounds right for "a
+  # newer push supersedes an older one" but is not what it does: it kills
+  # whatever is currently RUNNING the instant a new push lands, and this
+  # job's own real steps (Godot install, import, export, the exported-.exe
+  # boot check, package, publish) take many minutes -- far longer than the
+  # gap between pushes once several Ralph lanes are landing concurrently by
+  # design. Found 2026-08-11 (`LP3`): the published release's own
+  # `published_at` was over a week stale despite dozens of real commits
+  # landing on `main` in that time, and a sampled cancelled run's job log
+  # showed it killed 14 seconds after starting, still on the checkout step,
+  # every later step skipped. Queuing means a run started, however many
+  # pushes land after it, always finishes -- it costs some CI minutes on
+  # runs that are stale by the time they start, but "delayed" beats "never".
   group: release
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
