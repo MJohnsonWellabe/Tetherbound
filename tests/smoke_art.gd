@@ -16,6 +16,7 @@ const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
+const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 
 const SETTLE_FRAMES := 300
 ## How far a rendered model may sit under the collider that represents it.
@@ -65,6 +66,7 @@ func _run() -> void:
 	_every_human_fits_at_its_declared_height()
 	_the_villagers_still_tint_the_way_r7_2_shipped()
 	_the_npc_variant_system_differentiates_independently()
+	_the_team_tether_ranks_read_as_distinct()
 	_the_meadow_was_dressed()
 	_vegetation_kept_its_lod_chain()
 	_report()
@@ -336,6 +338,66 @@ func _the_npc_variant_system_differentiates_independently() -> void:
 	print("  npc variant      palette, hair and accessories differ independently")
 	a.queue_free()
 	b.queue_free()
+
+
+## `NP2`: grunt/officer/captain/warden each reuse the Warden's rig through
+## `npc_ranks.gd`. A blind visual pass rejected a first version that used only
+## the body's own palette (`character_model.gd`'s single fused material means
+## that can only ever shift brightness) — it read as "a lighting gradient, not
+## a rank system." The badge NP1's accessory mechanism attaches is the real
+## rank marker now, so this checks the badge attaches with a distinct colour
+## per rank, not just the secondary body tint.
+func _the_team_tether_ranks_read_as_distinct() -> void:
+	var ranks: Array = NPC_RANKS.rank_ids()
+	if ranks.is_empty():
+		_fail("no Team Tether ranks configured; data/config/npc_ranks.json is empty or missing")
+		return
+
+	var seen_badges: Dictionary = {}
+	var seen_bodies: Dictionary = {}
+	for rank: String in ranks:
+		var cfg: Dictionary = NPC_RANKS.config_for(rank)
+		if cfg.is_empty():
+			_fail("'%s' produced no config; the Warden base or the rank's own entry is missing" % rank)
+			continue
+
+		var holder := _build_from_config(cfg)
+		if holder == null:
+			_fail("'%s' failed to build from its rank config" % rank)
+			continue
+
+		var badge: Variant = holder.call("find_part", "accessory_badge")
+		if badge == null:
+			_fail("'%s' has no rank badge attached" % rank)
+		else:
+			var badge_material: Material = (badge as MeshInstance3D).get_active_material(0)
+			if badge_material == null or not badge_material is BaseMaterial3D:
+				_fail("'%s' badge has no material to read its colour from" % rank)
+			else:
+				var badge_colour: Color = (badge_material as BaseMaterial3D).albedo_color
+				for other_rank: String in seen_badges:
+					if badge_colour.is_equal_approx(seen_badges[other_rank]):
+						_fail("'%s' and '%s' badges are the same colour; ranks must read apart" % [rank, other_rank])
+				seen_badges[rank] = badge_colour
+				print("  rank %-10s badge -> %s" % [rank, badge_colour])
+
+		# Only grunt/officer/captain declare a body palette; the Warden's own
+		# untinted painted texture is correct by design and asserting "not
+		# default white" against it would be a false failure.
+		if cfg.has("palette"):
+			var material: Variant = holder.call("body_material")
+			if material == null or not material is BaseMaterial3D:
+				_fail("'%s' built with no body material to check its tint against" % rank)
+			else:
+				var albedo: Color = (material as BaseMaterial3D).albedo_color
+				if albedo.is_equal_approx(Color(1, 1, 1)):
+					_fail("'%s' rendered with an untinted default body material; its rank palette did not apply" % rank)
+				for other_rank: String in seen_bodies:
+					if albedo.is_equal_approx(seen_bodies[other_rank]):
+						_fail("'%s' and '%s' bodies are the same colour" % [rank, other_rank])
+				seen_bodies[rank] = albedo
+
+		holder.queue_free()
 
 
 func _build_from_config(cfg: Dictionary) -> Node3D:

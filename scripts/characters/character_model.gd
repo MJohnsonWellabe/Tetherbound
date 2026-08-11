@@ -297,6 +297,21 @@ func _palette_node(node: Node, palette: Dictionary) -> void:
 ## to repeat. `vegetation.gd::_retint()`'s `_tint_for()` proves the same
 ## pattern for foliage (`ralph/BACKLOG.md`'s `SA1-lod`, keyed by everything
 ## that can change the output); this is that cache for humans.
+## Found doing `NP2`: every one of these three rigs' source materials ships
+## with `emission_enabled = true` and an `emission_texture` set to the SAME
+## painted texture as `albedo_texture`, at a full white `emission` multiplier
+## — a self-lit "painted" look, not a shading bug. Emission is additive and
+## reads independently of lighting, so it swamps any `albedo_color` change
+## completely: a still-life diagnostic tinting a Warden body pure red
+## (`albedo_color = (1,0,0,1)`, confirmed via `body_material()`) rendered
+## fully green, unchanged, because the emission pass painted the original
+## texture over it regardless. This means `NP1`'s whole palette mechanism —
+## shipped, unit-tested, believed working — has never actually been visible
+## on screen; the tests only ever read `body_material().albedo_color`, never
+## a rendered pixel. Tinting `emission` the same way `albedo_color` already
+## was closes that gap without touching the "painted, self-lit" look itself:
+## a fully white emission untouched by a "*" wildcard tint of `#ffffff`
+## renders identically to before, and any other tint now visibly lands.
 func _shared_variant_material(source: Material, name: String, colour: Color) -> Material:
 	var key := "%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html()]
 	if _variant_materials.has(key):
@@ -304,6 +319,8 @@ func _shared_variant_material(source: Material, name: String, colour: Color) -> 
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
 		if source is BaseMaterial3D else StandardMaterial3D.new()
 	material.albedo_color = material.albedo_color * colour
+	if material.emission_enabled:
+		material.emission = material.emission * colour
 	_variant_materials[key] = material
 	return material
 
@@ -343,7 +360,7 @@ func _apply_accessories(cfg: Dictionary) -> void:
 		var acc := entry as Dictionary
 		if not bool(acc.get("visible", true)):
 			continue
-		var mesh := _primitive_mesh(str(acc.get("shape", "box")), 0.12)
+		var mesh := _primitive_mesh(str(acc.get("shape", "box")), float(acc.get("size", 0.12)))
 		var offset := Vector3.ZERO
 		var raw_offset: Array = acc.get("offset", [])
 		if raw_offset.size() == 3:
