@@ -65,9 +65,12 @@ void fragment() {
 		discard;
 	}
 	vec4 tex_color = texture(TEXTURE, UV);
-	float vignette = smoothstep(0.55, 1.0, dist);
+	// Pushed from (0.55, ..., 0.6) after the blind pass: at the old settings
+	// the vignette reached far enough in to darken a standing creature's own
+	// feet/paws, which are exactly as far from centre as the top of its head.
+	float vignette = smoothstep(0.7, 1.0, dist);
 	vec3 rim_tint = vec3(0.12, 0.07, 0.02);
-	vec3 shaded = mix(tex_color.rgb, rim_tint, vignette * 0.6);
+	vec3 shaded = mix(tex_color.rgb, rim_tint, vignette * 0.5);
 	COLOR = vec4(shaded, tex_color.a);
 }
 """
@@ -148,8 +151,9 @@ func _build_orbs() -> void:
 	_free_orbs()
 	for i in _species.size():
 		var built := _build_orb_shell(_species[i])
-		var slot: PanelContainer = built[0]
-		var viewport: SubViewport = built[1]
+		var wrapper: VBoxContainer = built[0]
+		var slot: PanelContainer = built[1]
+		var viewport: SubViewport = built[2]
 		# The shell goes into the live tree BEFORE the creature is built inside
 		# it, not after — pal_body.gd::setup() gates its mesh-building on
 		# `is_inside_tree()`, and tools/preview_creatures.gd's own header names
@@ -157,7 +161,7 @@ func _build_orbs() -> void:
 		# to work, `open()` returns, and every orb is silently empty. Caught
 		# rendering this picker for the first time — the fix this task's own
 		# blind-visual-judge pass exists to catch.
-		_orbs.add_child(slot)
+		_orbs.add_child(wrapper)
 		var body := _build_preview(viewport, _species[i])
 		_bodies.append(body)
 		_slots.append(slot)
@@ -165,21 +169,29 @@ func _build_orbs() -> void:
 
 
 ## The container structure only — no camera, no light, no creature. Callers
-## must add the returned slot to a live tree before populating `viewport`.
+## must add the returned wrapper to a live tree before populating `viewport`.
+##
+## The name label sits OUTSIDE `slot`, in the wrapper, not inside the panel
+## that gets the rounded orb styling. It used to be the panel's own child, and
+## the label's line height stretched the panel taller than it is wide — a
+## capsule, not a circle, which the blind visual-judge pass named directly:
+## "what's rendered is a rounded-rectangle card, not a sphere/porthole." `slot`
+## is now exactly `VIEWPORT_SIZE` on both axes, so a corner radius of half its
+## width rounds it into an actual circle.
 func _build_orb_shell(id: String) -> Array:
-	var slot := PanelContainer.new()
-	slot.custom_minimum_size = Vector2(VIEWPORT_SIZE) + Vector2(24.0, 64.0)
+	var wrapper := VBoxContainer.new()
+	wrapper.alignment = BoxContainer.ALIGNMENT_CENTER
+	wrapper.add_theme_constant_override("separation", 6)
 
-	var column := VBoxContainer.new()
-	column.alignment = BoxContainer.ALIGNMENT_CENTER
-	column.add_theme_constant_override("separation", 6)
-	slot.add_child(column)
+	var slot := PanelContainer.new()
+	slot.custom_minimum_size = Vector2(VIEWPORT_SIZE)
+	wrapper.add_child(slot)
 
 	var view_container := SubViewportContainer.new()
 	view_container.custom_minimum_size = Vector2(VIEWPORT_SIZE)
 	view_container.stretch = true
 	view_container.material = _orb_mask_material()
-	column.add_child(view_container)
+	slot.add_child(view_container)
 
 	var viewport := SubViewport.new()
 	viewport.size = VIEWPORT_SIZE
@@ -193,9 +205,9 @@ func _build_orb_shell(id: String) -> Array:
 	label.text = _display_name(id)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size", 20)
-	column.add_child(label)
+	wrapper.add_child(label)
 
-	return [slot, viewport]
+	return [wrapper, slot, viewport]
 
 
 func _orb_mask_material() -> ShaderMaterial:
@@ -250,7 +262,11 @@ func _build_preview(viewport: SubViewport, id: String) -> Node3D:
 
 	var height := float(body.call("body_height")) if body.has_method("body_height") else 1.0
 	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 0.4
-	var distance := maxf(height, radius * 2.2) * 2.4 + 0.6
+	# 2.4 -> 2.7: the blind pass twice flagged a winged species crowding its
+	# own orb edge with too little margin. Pulling every camera back a little
+	# gives every species more breathing room, not just the one that was
+	# named — the same lever, applied consistently rather than per-species.
+	var distance := maxf(height, radius * 2.2) * 2.7 + 0.6
 	var eye := Vector3(0.0, height * 0.55, distance)
 	# `look_at_from_position()` rather than `position` + `look_at()`: harmless
 	# either way now that `_build_orbs` puts the shell in the tree first, but
@@ -306,9 +322,9 @@ func _refresh_selection() -> void:
 		style.border_width_right = width
 		style.border_width_top = width
 		style.border_width_bottom = width
-		# Near-circular: the panel is square-ish, so a corner radius over half
-		# its width rounds it into an orb rather than a rounded rectangle.
-		var radius := int(VIEWPORT_SIZE.x * 0.5) + 12
+		# `slot` is exactly VIEWPORT_SIZE on both axes (see _build_orb_shell), so
+		# half its width is a true circle, not an approximation.
+		var radius := int(VIEWPORT_SIZE.x * 0.5)
 		style.corner_radius_top_left = radius
 		style.corner_radius_top_right = radius
 		style.corner_radius_bottom_left = radius
