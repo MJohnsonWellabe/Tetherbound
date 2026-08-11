@@ -951,38 +951,27 @@ only half the problem: a ten-pixel tree carries almost no information whatever
 the sampling, which is an LOD or impostor question this item does not answer.
 Done when: a critic looking at the mid-distance stops calling the trees noise.
 
-### R9.4-remainder-8 — Scale and placement defects the round-4 critics measured
-`model: haiku` · `tests: none` · `area: village`
-**Stays open, unlike its siblings.** Most of Phase -0.6 replaces the assets
-these defects live on, but this is a metre-is-a-metre problem, and a new kit
-inherits it rather than curing it — `EV6` will place Medieval Village prefabs
-into the same world with the same rabbit and the same unmasked terrain scatter.
-Two bullets do die with the old assets (the miniature barn copy and the
-undersized windmill are Quaternius pieces `EV6` removes); the rest do not.
-**Whoever takes `EV6` should read this first** — it is cheaper to get scale
-right while placing a settlement than to re-measure it afterwards.
+**R9.4-remainder-8 (three of its findings) fixed — see `DONE.md`.** The other
+five did not reproduce, were out of this item's scope, or were not chased —
+see the remainder below.
 
-Small, individually cheap, all found in the 2026-08-11 frames and all
-measurable against the 1.8 m trainer or against each other. Grouped because
-none of them deserves its own firing:
-- **A miniature copy of the barn**, roughly one-fifth scale, beside the boulder
-  left of the well in `buildings/02`. Same asset as its full-size sibling 30 m
-  away.
-- **The rabbit renders 1.0–1.3 m at the shoulder**, two to three times life
-  size, and is the largest thing in the foreground of `buildings/06`.
-- **The windmill is undersized by about half** — its top sits at the barn's
-  ridge height where a working mill should clear neighbouring roofs by roughly
-  2×. The critic's words: this "is why the settlement has no landmark".
-- **Grass tufts grow through the farmhouse floor**, at least four clumps and
-  one on the rug (`buildings/07`) — terrain scatter is not masked by the
-  building footprint.
-- **Foliage clips the farmhouse roof ridge** in `buildings/04`, `05` and `06`.
-- **Boulders sit fully proud of the ground** with no bedding at 4–6 m across.
-- The farmhouse's own **windows read undersized** against its two-storey
-  massing (roughly 0.7 × 1.0 m in a 2.2 m storey), and the interior table reads
-  as a 3.5 m bench.
-Done when: nothing in a survey frame disagrees with its neighbours about how
-big a metre is.
+### R9.4-remainder-8-followup — the two findings nobody has checked yet
+`model: haiku` · `tests: none` · `area: village`
+Genuinely unresolved, unlike the rest of the original list (see `DONE.md` for
+why each of those closed the way it did):
+
+- **Foliage clips the farmhouse roof ridge** in `buildings/04`, `05` and `06`
+  — not investigated this pass. Given `EV6` replaces the whole settlement kit
+  these trees stand near, check whether it still reproduces on the new kit
+  before spending a firing on the old one.
+- **Boulders sit fully proud of the ground** with no bedding at 4–6 m across,
+  generally (not the one windmill-adjacent instance already investigated and
+  closed as a camera-angle artefact — see `DONE.md`). Needs its own look at
+  a genuinely embedded boulder, not the one already ruled out.
+
+Both are low-value to chase before `EV6` lands, since it places new structures
+in the same clearings and may change what is nearby. Whoever takes this should
+re-survey first rather than trust either bullet is still current.
 
 ### R9.4-remainder-6 — `survey_combat.sh` did not complete, and nobody knows why
 `model: sonnet` · `tests: none`

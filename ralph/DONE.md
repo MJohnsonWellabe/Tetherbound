@@ -3,6 +3,105 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R9.4-remainder-8 — three of eight findings were real; the rest were checked, not assumed
+`55fa8f1` (grass-through-floor + windmill footprint), `8a3fc0c` (barn scale).
+`tests: full suite` (299/299, both commits). Visual-affecting: rendered
+`tools/capture_buildings.gd` before and after every change, plus one blind
+`.claude/skills/visual-judge` pass, per `conventions.md`.
+
+**The discipline that mattered here was cross-checking every claim against
+real measurements before acting on it** — pixel measurements against the
+1.80m trainer, raw mesh AABBs read straight off the `.obj` files, and a
+`placements_for()` probe of the actual scatter — rather than trusting either
+the original critic text or the blind-judge re-pass at face value. Half the
+list did not survive that check:
+
+**Fixed:**
+- **Grass grew through Grandpa's own interior floor and rug.** Root cause:
+  grass/drygrass/flowers are deliberately exempt from the wide 16–22m
+  `clearings` (so the meadow doesn't go bald near the arena/village square),
+  and that exemption had no reason to also cover a building's own footprint.
+  Added a second, narrower, unconditional `footprints` list in
+  `vegetation.json` that every layer respects regardless of
+  `cleared_by_clearings` (`scripts/world/scatter_rules.gd::_inside_a_footprint`).
+  Confirmed gone in a re-render, no bald patch introduced around the exterior
+  walls.
+- **The big Barn was undersized** — its own 0.75 scale, applied under this
+  pack's blanket "authored at 2x real size" assumption, put the eave at chest
+  height and the door under 1.5m against the 1.80m trainer standing beside it.
+  Corroborated three ways: my own pixel measurement, the raw `Barn.obj` math
+  (0.75 × 6.01m raw = 4.51m ridge), and the blind-judge sub-agent
+  independently. Bumped to 1.1 (→ ~6.6m ridge). `SmallBarn`'s own separate
+  correction (0.8 × 4.96m raw ≈ 4m) already read fine and was left alone —
+  this pack does not follow one blanket ratio across every model in it.
+- **A boulder could spawn against the windmill's own base** — the windmill
+  sits at ~22.8m from the village-square clearing's own 22m-radius centre,
+  just outside it, so the `rocks` layer (which DOES respect clearings, unlike
+  grass) could still land a boulder there. Added a 5m footprint. Verified
+  with a `placements_for()` probe: zero rocks within 15m of the windmill now.
+
+**Checked and did NOT reproduce, or were out of scope — recorded so nobody
+re-chases them blind:**
+- **"Miniature copy of the barn beside the well"** — it's a `ChickenCoop`
+  (`village.json` has only one `Barn` entry, no duplicate), correctly scaled
+  at 0.9, a different colour from the real barn. Misread as a scaled-down
+  barn at a glance; not a bug.
+- **"The interior table reads as a 3.5m bench"** — raw `Table2.obj` AABB is
+  0.82m tall; at `FURNITURE_SCALE` 0.5 that's a 0.41m table top, genuinely
+  *below* the 0.53m chair back beside it (both measured off the mesh, not the
+  render). The blind-judge pass repeated this finding from a pixel read of
+  the same fixed interior viewpoint, where the table sits ~2.4m from the
+  camera against Grandpa's own ~5.7m — a foreshortening illusion of one fixed
+  camera angle, not a world-space defect. Same conclusion reached twice,
+  independently, by two different methods.
+- **"The rabbit (Bramblebun) renders 1.0–1.3m, 2–3x life size"** — it renders
+  at its own declared `species.json` height (1.5m), which the wild-roster
+  canon (`docs/art/wild/21_MEADOWS_WILD_ROSTER_CANON.md`) explicitly asks
+  for: "these Pals live in the same physical scale as the player... do not
+  let the roster drift into toy-sized creatures", with Bramblebun named as
+  merely the *relatively* smallest, not small in absolute terms. This is the
+  same already-open, owner-blocked design question in `BLOCKED.md` ("Does the
+  creature roster clear a Palworld-level appeal bar") wearing a scale-shaped
+  costume, not an independent bug — resizing a canon creature without an
+  owner call is exactly what `CLAUDE.md`'s ask-before-inventing list exists to
+  stop.
+- **"The windmill is undersized by about half"** — did not reproduce even
+  before the barn fix: raw `TowerWindmill.obj` (11.41m) × 0.8 scale = 9.13m,
+  already ~2x the *original* undersized barn's 4.51m ridge. (After the barn
+  fix above, the ratio is a less dramatic ~1.4x — still taller, which is what
+  "clears neighbouring roofs" requires.)
+- **Farmhouse windows read undersized** — plausible from the render, but the
+  farmhouse is one hand-built `grandpa_house.gd` shell with a single
+  Quaternius-cohesion material look; there is no separate window mesh to
+  rescale independently of the wall. An asset/geometry question for whoever
+  next touches the farmhouse shell, not a `village.json`/`scatter_rules.gd`
+  placement fix.
+
+**Not investigated — genuinely open, split into
+`R9.4-remainder-8-followup`:** foliage clipping the farmhouse roof ridge, and
+boulders sitting proud of the ground generally (distinct from the one
+windmill-adjacent instance above, which WAS investigated and turned out to be
+a camera-angle artefact of one fixed 45m survey viewpoint, not a real
+placement defect — confirmed by comparing the same windmill's base from a
+second angle in `buildings/04`, where it reads clean).
+
+**Shipping mechanics worth recording for the next firing hitting the same
+wall:** `tools/capture_buildings.gd` genuinely hangs (not just slow) if
+`--headless` is added to its invocation — the tool's own header comment never
+asks for it, and dropping it fixed rendering entirely (confirmed with an
+instrumented scratch script: settle+camera setup completes in under 10
+seconds either way; only `--headless` made `await
+RenderingServer.frame_post_draw` spin forever with no image ever produced).
+Separately, the barn-fix commit needed five rebase-and-repush cycles to land
+(955a087 → 7f6881d → ca29fff → a6b2f24 → 8a3fc0c): CI went green on the
+identical diff every time while `main` kept moving under it from other
+concurrent lanes, and the fourth green run (`a6b2f24`) got no
+`ralph-merge.yml` trigger at all — the same `workflow_run`-dispatch
+reliability gap `NP4`'s entry documented earlier the same day, confirmed a
+second time. Re-ran that stuck CI run via the Actions API rather than pushing
+a no-op commit; the fifth push landed cleanly without needing `NP4`'s
+manual-push-to-main fallback.
+
 ## NP2 — Team Tether rank palettes
 `eb7475f` · `tests: smoke_art` (run locally headless: 299 unit tests,
 `smoke_art`, `smoke_opening` all green before push)
