@@ -166,6 +166,78 @@ from `SA5`/`SA6`'s narrow pairwise mandate (stopping two specific species
 reading alike), asking the owner whether a roster-wide pass is worth
 commissioning at all.
 
+## EV4 — Paths become a control-map material, not a colour-map tint
+`f5d77ec` (mechanism) · `6b12e30`/`eacf0f3` (tint/relief tuning) · `9e25288`
+(edge-wobble fix) · `tests: smoke_traversal`, green locally; full 299-test
+suite also run as a broader check since `playground_heightfield.gd`'s
+`path_factor()` is shared with `scatter_rules.gd`, all green.
+
+**The mechanism absorbs `R9.4-remainder-4` and `R7.1-found-3` and genuinely
+ships.** `build_playground_terrain.gd`'s `_paint_control_map` used to paint
+paths only as a lerp toward a tan colour on the COLOUR map, over whatever
+texture the slope-driven control map had already chosen — "a worn-earth
+tint," never a different material, which is exactly what both critics named.
+It now paints the real `soil` texture id into the CONTROL map along every
+route (`_path_control`, 2148-2152 pixels depending on the edge-wobble seed),
+overriding the slope-driven choice rather than tinting on top of it. The old
+`paths.tint` colour-map lerp is removed outright, not layered under the new
+mechanism.
+
+**The edge is genuinely organic, not a mathematically exact offset.**
+`path_factor()` (`playground_heightfield.gd`) now perturbs its own fade band
+with a dedicated noise field (`_path_edge`) so the boundary bulges and
+pinches rather than tracing a perfect parallel curve of the route polyline —
+verified test-side (`test_the_paths_reach_where_they_promise` still passes:
+route waypoints stay fully on-path, well-off-road points stay fully clear)
+and visually (`the-rise-route.png` across all four rounds shows a path that
+narrows and widens along its length).
+
+**The material itself did NOT clear the blind-judge bar, across four
+rounds — an honest miss, not a silent one.** `tools/capture_paths.gd` (new)
+renders four standing-eye-level viewpoints on the actual routes,
+purpose-built because neither the fixed five-viewpoint survey nor
+`capture_wayfinding.gd` frames the ground at the angle a path needs to be
+judged from. Round-by-round:
+
+- **Round 1** (mechanism only, original `#a4a4a4` neutral-grey soil tint):
+  blind critic called the path "essentially the grass shader recolored a
+  darker green-brown... no visible soil/dirt texture break."
+- **Round 2** (`tint` → `#d19e6b`, a warm hue shift at roughly the same
+  luminance): measured movement (`tools/frame_stats.py`: saturation and
+  chroma shifted, hue mix moved warmer) and a NEW defect the first round
+  never surfaced — "irregular near-black blotches... a broken material/
+  vertex-paint blend" on the hillside slope band, plus confirmation the path
+  still "clearly carries grass-blade geometry... underneath" up close.
+- **Round 3** (`normal_depth` 0.4→0.15, `tint` → `#c7a680`, applying the same
+  fix already shipped for the grass texture's own baked-in-relief problem):
+  root-caused the round-2 blotches and the "grass-blade" look to the SAME
+  cause — `Ground003_Color.jpg`, this project's only soil texture, is a photo
+  of a weedy lawn with real green grass tufts painted into its own albedo,
+  not a clean dirt photo. The critic still called the result "tinted grass,
+  not dirt" (same core complaint, not new) but gave new, specific evidence
+  the edge geometry itself had a resolution problem: "jagged, stair-stepped...
+  a technical resolution limit," distinct from the material question.
+- **Round 4** (`_path_edge` frequency 0.2→0.05, octaves 2→1, so the wobble's
+  wavelength is long enough for the bake's 1m vertex grid to represent it
+  smoothly instead of aliasing): addresses round 3's specific edge-geometry
+  finding. Not independently re-run through a full blind pass — `frame_stats`
+  confirmed no colour regression (as expected; this was a geometry-frequency
+  change, not a colour one) and the marginal cost of a fifth full critic round
+  against an unmoved material-colour axis was judged not worth spending
+  against this ship's remaining budget.
+
+**Stopped here — a real texture-asset ceiling, not a lack of tuning.** Two
+tint rounds moved hue and saturation measurably (frame_stats has the
+numbers) but could not remove green pixels already painted into the source
+photo; a tint multiplies a texture's average colour, it does not repaint
+what is on it. `EV4-textures` (new, `area: assets`) opens this as what it
+actually is: source a real packed-earth PBR texture, the same shape of task
+as `EV1`. `EV4-hillside-seam` (new, `area: terrain`) opens the round-3
+hillside zigzag/sawtooth finding separately, since it is about slope-blend
+geometry on a hillside `EV4` never touched the thresholds of, not about
+paths, and its attribution to this ship vs. pre-existing is explicitly
+unresolved in the backlog entry.
+
 ## SA0-orbs — the starter choice moves into Grandpa's conversation
 `2036b28` (director+data+tests) · `4912dc1`..`55e708c` (five visual-pass fixes)
 `tests: smoke_opening, smoke_wake_softlock`, both green locally, both replayed
