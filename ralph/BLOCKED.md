@@ -32,9 +32,31 @@ access returned.
 
 ---
 
-## Blocked on the owner
+## ✅ RESOLVED — the two Quaternius MegaKits are staged
 
-### `EV1-remainder` — the two Quaternius MegaKits need a human click-through
+**This entry is retracted as of 2026-08-11.** The owner downloaded both zips
+by hand and supplied them via Google Drive (the first link required a
+sign-in — sharing was set to restricted rather than "anyone with the link";
+the owner fixed it and the second attempt worked with a plain anonymous
+`curl`, using the confirm-token URL Drive's own "can't scan for viruses"
+interstitial page provides for files this size).
+
+Staged as `assets_raw/vendor/quaternius_medieval-village-megakit/` (176
+models) and `assets_raw/vendor/quaternius_fantasy-props-megakit/` (94
+models) — glTF export only, not the full zips: each pack ships the same
+models three times (`FBX/`, `OBJ/`, `glTF/`) plus a separate `Textures/`
+folder for the non-glTF formats, and only `glTF/` is self-contained
+(`.gltf`+`.bin`+its own textures). Same format `EV2`'s Stylized Nature
+MegaKit already uses. Both packs ledgered in `docs/ASSET_LEDGER.md`.
+
+**This unblocks `EV6`, `EV7`, and `EV2-landmark-ceiling`** (the last of
+which should now also check this Village kit and the fuller Nature MegaKit
+before accepting the hero-tree ceiling). Choosing which specific
+buildings/props to actually use is still `EV6`/`EV7`'s own work — this only
+acquired the raw packs, the same split `EV1` drew for the Kenney packs.
+
+### Original entry, kept for the record — the itch.io click-through problem
+
 `EV6` (settlement, `D24`-settled to Medieval Village MegaKit — no substitute
 kit) and `EV7` (prop clusters) both need packs that live behind itch.io's
 anonymous-claim flow, and that flow could not be automated from this session.
@@ -65,15 +87,19 @@ own "Download Now" popup resolves straight to a `.zip` on their CDN, no claim
 step. This is specifically an itch.io gate, not a general download-access
 problem.
 
-**Clears when:** either the owner downloads
+~~**Clears when:** either the owner downloads
 `Medieval Village MegaKit[Standard].zip` and
 `Fantasy Props MegaKit[Standard].zip` from the itch.io pages linked in
 `docs/ENVIRONMENT_AND_UI_BIBLE.md` and supplies them (a repo upload, a
 reachable URL, anything a firing can `curl`), or a future firing has a working
 itch.io session (a stored API key, or a proxy that can pass a real browser
-session through cleanly) to complete the claim itself.
+session through cleanly) to complete the claim itself.~~ Cleared as above —
+the owner supplied them directly, so the itch.io flow was never actually
+needed.
 
 ---
+
+## Blocked on the owner
 
 ### Does the creature roster clear a Palworld-level appeal bar, or does it need to?
 Split out of `SA0-orbs-remainder` (2026-08-11): four blind-judge rounds on the
