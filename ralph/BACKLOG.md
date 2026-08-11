@@ -508,7 +508,9 @@ sky/fog consistency), and names both original bullets specifically —
   further vegetation tuning.
 
 Two smaller findings from the same round, not chased further to stay
-inside the three-round cap: sky/fog treatment is inconsistent between
+inside the three-round cap **that no longer exists** — it was replaced on
+2026-08-11 by a convergence test, so whoever takes `EV3`/`EV8` should not
+inherit this entry's reason for stopping: sky/fog treatment is inconsistent between
 frames (01/05 show a blue gradient sky, 02 a dark navy sky with hard-edged
 cloud shapes, 03/04 a flat cream band) — likely a lighting/environment
 config difference between survey viewpoints rather than a scatter issue,

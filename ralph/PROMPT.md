@@ -253,10 +253,18 @@ visual pass pushed **eight times — ~36 minutes of CI** — because each critic
 round shipped before the next one ran. About a third of the backlog is
 visual-affecting, and **nearly every item in Phases -0.9 through -0.55 is.**
 
-The blind pass in `conventions.md` is unchanged and still required. What changes
-is where it runs: **render, critique, fix, re-render and re-critique entirely in
-your own checkout, and push only the final state.** The critic does not need
-your work to be on `main` to look at a frame; it needs a PNG.
+The blind pass in `conventions.md` is still required. What changes is where it
+runs: **render, critique, fix, re-render and re-critique entirely in your own
+checkout, and push only the final state.** The critic does not need your work to
+be on `main` to look at a frame; it needs a PNG.
+
+**This matters more now that the round cap is gone.** Owner directive,
+2026-08-11: there is no three-round limit — iterate while the critic names a
+**new** defect or `frame_stats` shows **measured movement**, and stop after two
+consecutive rounds with neither. `conventions.md` has the full rule and is
+strict about what does not count as improvement. A pass that can now run six or
+eight rounds would be six or eight CI runs under the old habit of pushing each
+one; locally it is still a single push.
 
 Push mid-pass only if you are about to run out of context and want the partial
 work preserved.

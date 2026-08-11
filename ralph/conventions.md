@@ -173,15 +173,49 @@ Before marking a visual-affecting task done:
    not the firing's own read of the frame. It has no knowledge of what
    changed and no stake in the answer being yes.
 3. If it fails: fix the specific defects named, re-render, re-critique.
-   **Cap this at three rounds.** A visual defect that survives three
-   real attempts is not a quick fix, and burning a whole firing's budget
-   looping on one asset is worse than stopping and saying so.
-4. If it still fails after three rounds, do not mark the task done and do not
+   **Keep going while it is still improving.** There is no round cap —
+   owner directive, 2026-08-11, replacing the three-round cap this file
+   carried before.
+
+   **The stopping rule is convergence, not a count.** A round counts as
+   improvement if EITHER is true:
+   - the critic names a **new** defect it had not named before, or
+   - `tools/frame_stats.py` shows **measured movement** on an axis the
+     critique is about (saturation, luminance, colour variety).
+
+   **Stop after two consecutive rounds with neither.** Two, not one — a
+   single flat round is often a fix that has not landed yet, and stopping
+   there would have cut R9.4's own round 3 short.
+
+   Reordered defects, differently-worded versions of the same defect, and
+   "still not fixed" are **not** improvement. Neither is movement on an axis
+   nobody complained about. Be strict here; the whole point is to detect a
+   wall rather than to keep finding reasons to run again.
+4. When it converges without passing, do not mark the task done and do not
    keep silently iterating. Record it plainly — what was tried, what the
    critic still says is wrong, and why — either as a `BLOCKED.md` entry (if
    it needs a decision only the owner can make, e.g. an asset that needs
    replacing rather than tuning) or as a clearly-labelled remainder item in
    `BACKLOG.md`, the same pattern R7.1-remainder already uses.
+
+   **State the round count and what the last two rounds failed to move.**
+   "Converged after 5 rounds; rounds 4 and 5 named no new defect and moved
+   saturation 0.004" is a useful record. "Still not right" is not.
+
+**Why the cap went, and what removing it does not buy.** The cap was the wrong
+instrument: it stopped tasks that were still converging and wasted rounds on
+tasks that were not. But do not expect uncapped iteration to make things look
+right on its own — **R9.4 already ran uncapped, four rounds, four blind
+critics**, moved every measurable axis, and both critics still ranked *"needs
+art that is not in the build"* first. It had not stopped early; it had run out
+of things tuning could reach. That is the wall this stopping rule is designed to
+detect quickly, and hitting it is a `BLOCKED.md` entry or an `EV`-item
+dependency, never a reason to render the same frame a tenth time.
+
+**One hard budget guard remains.** If you are running low on context, stop at
+the current round, record the state, and let the next firing continue — a
+half-finished pass that reported honestly is fine; a firing that dies mid-render
+having shipped nothing is not.
 
 **Run every round in your own checkout and push once at the end.** The critic
 needs a PNG, not a merged branch. R9.4's three-round pass pushed eight times and
@@ -190,9 +224,8 @@ about a third of the backlog is visual-affecting, so that multiplier is the
 loop's largest avoidable cost. Push mid-pass only to preserve partial work when
 you are running out of context.
 
-**One task carries an owner override of the three-round cap:** R9.4 was directed
-to iterate until the critic was actually satisfied, with no cap. That was
-specific to that task. The cap is the default everywhere else.
+R9.4's own no-cap override is no longer a special case — it is now how every
+visual-affecting task runs.
 
 This is slower than shipping on a green CI run — rendering under the headless
 renderer costs real minutes per frame, which is exactly why CI itself was sped

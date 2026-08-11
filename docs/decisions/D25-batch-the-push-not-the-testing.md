@@ -91,8 +91,20 @@ game is good.
 
 ## What this does NOT change
 
-- The blind visual pass, its three-round cap, and the rule that a firing's own
-  read of a frame does not count. Only *where* the rounds run changed.
+- The blind visual pass itself, and the rule that a firing's own read of a frame
+  does not count. Only *where* the rounds run changed.
+
+  ~~its three-round cap~~ — **superseded the same day.** The owner asked
+  whether the critics were unbounded "so they will work until the game looks
+  right", and the cap was replaced with a convergence test: keep iterating while
+  the critic names a *new* defect or `frame_stats` shows measured movement, stop
+  after two consecutive rounds with neither. The count was the wrong instrument
+  — it cut off tasks that were still converging and spent rounds on tasks that
+  were not. `conventions.md` has the rule.
+
+  Worth pairing with D24 rather than reading alone: uncapped iteration does not
+  make a scene look right by itself. R9.4 already ran uncapped and hit a wall
+  that was missing assets, not insufficient effort.
 - Never pushing to `main` directly; `ralph/**` → CI → fast-forward stays.
 - Running only the tests a backlog item names.
 - The honesty rules. A batched branch does not get to describe four items as
