@@ -261,8 +261,9 @@
       "roughness_mod": 0.05,
       "detiling_rotation": 0.22,
       "detiling_shift": 0.3,
-      "tint": "#a4a4a4",
-      "_comment_tint_r9_4": "R9.4. Rebalanced against the new grass value, not repainted. Soil is now ~1.35x grass in value instead of ~1.9x: the old ratio is what made the slope blends read as blown-out tan stripes rather than as ground (R7.1-found-3, and the blind critic's 'hard axis-aligned staircase' on frame 03). Hue is untouched -- warm dirt is exactly what the critic asked for MORE of. TUNABLE."
+      "tint": "#d19e6b",
+      "_comment_tint_r9_4": "R9.4. Rebalanced against the new grass value, not repainted. Soil is now ~1.35x grass in value instead of ~1.9x: the old ratio is what made the slope blends read as blown-out tan stripes rather than as ground (R7.1-found-3, and the blind critic's 'hard axis-aligned staircase' on frame 03). Hue is untouched -- warm dirt is exactly what the critic asked for MORE of. TUNABLE.",
+      "_comment_tint_ev4": "EV4, round 2. Ground003's own photo is dirt WITH sparse grass tufts baked in -- close enough to Grass008's own colour that a blind critic judging the new control-map paths called them 'essentially the grass shader recolored a darker green-brown... no visible soil/dirt texture break' (this texture now carries every path, not only hillside slope transitions). R9.4's #a4a4a4 was a neutral grey chosen for VALUE alone (soil ~1.35x grass, to fix the R7.1-found-3 blown-out-stripe regression) and deliberately left hue untouched. This keeps that same ~0.65 weighted luminance (so the hillside slope-blend ratio R7.1-found-3 fixed should not reopen) but shifts hue warm -- suppressing green/blue relative to red, the same directional move as the old removed path_tint (#c8a874) -- so the texture reads as dirt rather than a value-shifted copy of the grass beside it. TUNABLE; re-render tools/capture_paths.gd and the existing slope-transition survey frames together if this is tuned again, so a path fix cannot silently reopen a hillside one."
     }
   ]
 }
