@@ -37,17 +37,50 @@ const SPIN_SPEED := 0.5
 
 const ORB_BG := Color(0.07, 0.08, 0.06, 0.92)
 const ORB_BG_SELECTED := Color(0.30, 0.24, 0.09, 0.95)
-const ORB_BORDER := Color(0.55, 0.60, 0.50, 0.55)
+## Raised from 0.55 alpha after the blind pass flagged the unselected ring as
+## too faint to trust against a busier real backdrop than the flat test
+## background it was judged on.
+const ORB_BORDER := Color(0.62, 0.68, 0.56, 0.85)
 const ORB_BORDER_SELECTED := Color(0.90, 0.75, 0.30, 0.95)
 
 const OUTLINE := Color(0.03, 0.04, 0.05, 0.95)
 const OUTLINE_SIZE := 6
+
+## Masks the SubViewportContainer's square render to the circle the panel's
+## rounded border already implies, and vignettes the rim warm and dark so the
+## orb reads as a container with depth rather than a flat cutout window.
+##
+## Found by the blind visual-judge pass: without this, the square preview
+## visibly pokes past the round border at all four corners — "an unmasked
+## texture, not an orb" was the verdict, ranked the single biggest defect.
+## SubViewportContainer draws its own texture in `_draw()`; a canvas_item
+## `material` on it shades that draw the same way it would any other Control.
+const ORB_MASK_SHADER_CODE := """
+shader_type canvas_item;
+
+void fragment() {
+	vec2 centered = UV - vec2(0.5);
+	float dist = length(centered) / 0.5;
+	if (dist > 1.0) {
+		discard;
+	}
+	vec4 tex_color = texture(TEXTURE, UV);
+	float vignette = smoothstep(0.55, 1.0, dist);
+	vec3 rim_tint = vec3(0.12, 0.07, 0.02);
+	vec3 shaded = mix(tex_color.rgb, rim_tint, vignette * 0.6);
+	COLOR = vec4(shaded, tex_color.a);
+}
+"""
 
 signal chosen(index: int)
 
 var _open: bool = false
 var _guard: int = 0
 var _species: Array[String] = []
+## One shader compiled once and shared by every orb slot, rather than a fresh
+## `Shader`/`ShaderMaterial` pair per orb — three creatures already means
+## three SubViewports; there is no reason to also mean three shader compiles.
+var _mask_material: ShaderMaterial = null
 var _index: int = 0
 ## The live preview bodies, spun every frame while open. Parallel to
 ## `_species` and `_slots`.
@@ -145,6 +178,7 @@ func _build_orb_shell(id: String) -> Array:
 	var view_container := SubViewportContainer.new()
 	view_container.custom_minimum_size = Vector2(VIEWPORT_SIZE)
 	view_container.stretch = true
+	view_container.material = _orb_mask_material()
 	column.add_child(view_container)
 
 	var viewport := SubViewport.new()
@@ -162,6 +196,15 @@ func _build_orb_shell(id: String) -> Array:
 	column.add_child(label)
 
 	return [slot, viewport]
+
+
+func _orb_mask_material() -> ShaderMaterial:
+	if _mask_material == null:
+		var shader := Shader.new()
+		shader.code = ORB_MASK_SHADER_CODE
+		_mask_material = ShaderMaterial.new()
+		_mask_material.shader = shader
+	return _mask_material
 
 
 ## A single creature, lit flatly and centred, the way
