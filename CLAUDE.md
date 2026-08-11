@@ -39,7 +39,17 @@ Build the Meadows vertical slice quickly and iteratively. The goal is not maximu
   event (§38 step 45) is a distant, non-enterable **view** — never a place.
 - No new creature meshes or Meshy generations for the Meadows. The installed
   meshes are the meshes; differentiate by material, texture, modest scale,
-  animation, VFX, habitat and behaviour (spec §20, D23).
+  animation, VFX, habitat and behaviour (spec §20, D23). **Reaffirmed
+  2026-08-11 with 5000 credits available** — this is not a budget rule and
+  having credits does not lift it.
+- **Never spend a Meshy generation on an asset the owner has not supplied
+  reference art for** (owner directive, 2026-08-11). Reference art is now the
+  constraint, not credits. In-engine survey and screenshot renders are not
+  affected — they are how anything gets verified. If a task seems to need a
+  generation and no board exists, stop and ask.
+- One nature family, one village family, one prop family (D24). Meshy is for
+  Team Tether hero objects only — pylons, relay apparatus, the tether machine.
+  Routine trees, rocks, crates, fences and HUD icons come from coherent packs.
 - Human NPCs reuse the trainer, Grandpa and Warden rigs through **per-material**
   variants, never one global tint. At most one or two new human generations,
   owner-supplied only, and only for reusable archetypes (spec §21–§22, D23).

@@ -25,7 +25,17 @@ on this project already.
 - **No new creature meshes or Meshy generations for the Meadows** (spec §20,
   D23). Separate two creatures that read alike with `grade.py`'s palette path,
   not a regeneration. This forecloses `R4.5`'s "generate Tuskroot fresh"
-  fallback; that item is now verify-or-graft-or-block.
+  fallback; that item is now verify-or-graft-or-block. The owner reaffirmed
+  this on 2026-08-11 **with 5000 credits in the account** — it was never a
+  budget rule, so a healthy balance does not lift it.
+- **No generation without an owner-supplied reference sheet.** Credits stopped
+  being the constraint on 2026-08-11; reference art is. If a task appears to
+  need a new model and no board exists in `docs/art/reference/`, that is a
+  `BLOCKED.md` entry, not a spend. `BLOCKED.md` carries the standing list of
+  what the owner still has to draw.
+- **One nature family, one village family, one prop family** (D24). An asset
+  that joins no existing family does not land, however good its store page
+  looks. Meshy is reserved for Team Tether hero objects.
 - **Human NPCs reuse the trainer, Grandpa and Warden rigs**, differentiated
   **per material** (spec §21). `art.json`'s `tint` key is a single multiply
   over every surface, which is the exact failure §21 names — fine for R7.2's

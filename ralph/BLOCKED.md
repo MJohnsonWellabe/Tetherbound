@@ -43,16 +43,41 @@ wording depends on the owner's Meshy plan terms, which no agent can verify.
 
 ---
 
-## Blocked on credits
+## Blocked on reference art — the new bottleneck
 
-*(nothing yet)*
+**Credits stopped being the constraint on 2026-08-11.** The owner topped the
+Meshy account to **5000**, and in the same message set the rule that replaced
+it: *"we should never render without me loading art first."* So a firing may
+not generate anything the owner has not supplied a reference board for, the
+way `docs/art/reference/12_NPC_Bases_Reusable.png` was supplied. In-engine
+survey and screenshot renders are unaffected — they are how anything gets
+verified at all.
 
-Balance at last check: **175**, after Reedwing's texture pass (confirmed
-via `meshy.py check`, was 185 after Pipwing's). R0.6 is complete — no
-more wild-species texture spends are needed. Next art-credit spend, if
-any, depends on whatever R0.9+ actually needs (the opening scene wiring
-is code, not art; nothing currently on the backlog obviously needs a
-fresh Meshy generation).
+The whole authorised programme is ~540 credits of 5000. Money is not what is
+stopping the list below; a drawing is.
+
+### Waiting on a reference board
+
+- **Team Tether energy pylon**
+- **Team Tether relay apparatus**
+- **The legendary tether machine**
+
+These are the three places `docs/ENVIRONMENT_AND_UI_BIBLE.md` §13 endorses
+Meshy at all, and D24 confirms it: hero objects only. They are what make
+modular kit architecture read as faction-specific rather than generic, and
+they are needed from Band 3 onward. No board exists for any of them.
+
+**Clears when:** the owner supplies a board, one per object, in
+`docs/art/reference/`.
+
+**Explicitly NOT on this list**, by the owner's decision: creatures, the
+trainer, Grandpa and the Warden. D23 §20 forbids creature regeneration at any
+balance — reaffirmed with 5000 credits available, so it was never a budget
+rule — and D24 resolves the humans to rework as well. Those are
+material-and-rework problems permanently.
+
+Anything else a firing believes needs generating stops and adds a line here,
+rather than spending.
 
 ---
 
@@ -112,12 +137,52 @@ backlog items. The loop keeps building past them.
 - **R0.11** — play the NEW first day end to end (wake upstairs → Grandpa's
   gifts → choose and name a starter → the paths → harvest → a fight and a
   catch → camp before dark → day 2).
+- **`SA0` / `SA1`** — the two P0 fixes shipped 2026-08-11 (`6dffa21`,
+  `28af489`; Windows build published 13:09 UTC). Two questions only the
+  owner's device can answer:
+  1. **Can you talk to Grandpa now?** Walk off the bed *without* pressing it,
+     then go downstairs. `tests/smoke_wake_softlock.gd` proves this headless
+     and was verified to fail against the unfixed build first, but the report
+     came from the device.
+  2. **Is the choppiness gone?** CI cannot measure VRAM — the device is the
+     instrument, exactly as with RB4. If it is better but not fixed, the next
+     suspect is already written down: `vegetation.gd::_retint()` rebuilds an
+     `ArrayMesh` and discards the importer's LOD chain, so every tree and tuft
+     draws at LOD0 at every distance. That is `SA1-lod`, already queued.
 
 ---
 
 ## Design questions awaiting the owner
 
-### Creature and human art-pipeline cohesion — the CREATURE half is answered; the HUMAN half is open and now more urgent
+**Both entries below are closed as of 2026-08-11.** Nothing in this section is
+waiting on anybody. They are kept rather than deleted because each one records
+*why* the answer is what it is, and both answers are the kind a later firing
+would otherwise be tempted to relitigate. The live list is "Blocked on
+reference art" above.
+
+### ✅ CLOSED — creature and human art-pipeline cohesion: rework, both halves
+
+**Closed by `docs/decisions/D24` (2026-08-11).** The owner reaffirmed D23 §20
+*with 5000 credits in the account*, which settles the one thing this entry was
+still asking. §20 was never a budget rule, so a healthy balance does not lift
+it — and D24 extends the same logic to the humans by reserving Meshy for Team
+Tether hero objects only.
+
+**The answer is rework, on both halves.** Paddlenewt, Pipwing and Ripplet get
+`grade.py`'s palette path (`SA5`, `SA6` apply the same lever elsewhere). The
+trainer and Grandpa get material work and `NP1`'s modular system, not a
+replacement generation. Nothing below is waiting on the owner any more.
+
+The budget arithmetic in the original entry is obsolete — it reasoned from 175
+credits, and the balance is 5000. It is left in place only because the
+*evidence* it cites is still the evidence.
+
+The consequence is worth stating plainly, because it is permanent and someone
+will want to reopen it: the fidelity gap a blind critic called *"the loudest
+single problem in the whole review"* is now a material problem forever. That
+is the accepted trade, not an oversight.
+
+Original narrowing, kept for its reasoning:
 
 **Narrowed by `docs/decisions/D23` (owner spec §20–§22, 2026-08-11).** This
 entry used to ask one question about two things. It is now one question about
@@ -146,8 +211,9 @@ one thing.
   it on a Team Tether grunt base leaves nothing for the Warden's face, which is
   still painted rather than modelled (HANDOFF §6).
 
-**Clears when:** the owner decides what happens to the trainer and Grandpa —
-regrade in place, one §22 generation, or accept the gap for now.
+~~**Clears when:** the owner decides what happens to the trainer and Grandpa —
+regrade in place, one §22 generation, or accept the gap for now.~~
+Answered above: regrade in place, and accept the gap as the cost.
 
 Original entry, kept because its evidence is still the evidence:
 
@@ -177,7 +243,28 @@ assets — the three creatures, the trainer/Grandpa pair, or both).~~
 Superseded by the narrowed question above: §20 answers "rework" for the
 creatures; only the trainer/Grandpa pair is still a live decision.
 
-### The settlement is two architectural traditions — which one wins?
+### ✅ CLOSED — the settlement's vernacular: Medieval Village MegaKit
+
+**Closed by `docs/decisions/D24` (2026-08-11).** The critic asked the owner to
+pick one tradition and not split the difference. The owner supplied
+`docs/ENVIRONMENT_AND_UI_BIBLE.md`, which picks **the Medieval Village
+MegaKit** as the Meadows civilian architecture — the Northern European branch
+of the choice below, and the one the key art board's own thatch-plaster-timber
+settlement panel already leaned toward.
+
+So the answer is the critic's first option: *keep the mill and shift the whole
+settlement toward a Northern European vernacular.* The red gambrel barn, the
+barn-house, the shed and the coop are the assets that move; the windmill was
+never the outlier once the family changed underneath it. `EV6` in
+`BACKLOG.md` is that rebuild, and it is a rebuild on one kit rather than the
+retint this entry assumed would be enough.
+
+One thing the closure does **not** buy: the owner chose free Standard tiers
+only, so the Source editions' Godot wind shaders and optimised collisions are
+not available and `EV3` has to build that work itself.
+
+The original question, kept because every later structure still has to join
+whichever family was named:
 
 Raised by R9.4's blind buildings critique (2026-08-11,
 `docs/reviews/2026-08-11-r9.4-full-visual-pass.md`). The critic identified three
@@ -204,9 +291,9 @@ relay station, a mill crossing and a stronghold approach, all of which need
 buildings, and whichever family is chosen now is the one every later structure
 has to join. Retinting either way is cheap; choosing is not a firing's call.
 
-**Clears when:** the owner names the vernacular. Note that the key art board's
+~~**Clears when:** the owner names the vernacular. Note that the key art board's
 own settlement panel leans European — thatch, plaster, timber framing — which
-is an argument, not a decision.
+is an argument, not a decision.~~ Named: Medieval Village MegaKit, per D24.
 
 ---
 

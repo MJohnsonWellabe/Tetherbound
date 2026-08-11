@@ -3,7 +3,25 @@
 Written as a handoff: everything a fresh context needs to pick this up without
 re-deriving it. Read `CLAUDE.md` first for the hard rules, then this.
 
-**Last updated:** 2026-08-11. The owner delivered
+**Last updated:** 2026-08-11 (second update that day — read both notes).
+
+**The art direction is now settled, and two P0 bugs are fixed.** The owner
+played the published build and reported that the opening soft-locks (you can
+never talk to Grandpa, so you leave the house with no starter) and that the Ally
+is choppy — high memory, ~25% GPU. Both were root-caused and shipped: `6dffa21`
+and `28af489`. In the same message the owner supplied
+`docs/ENVIRONMENT_AND_UI_BIBLE.md` and an NPC concept board, made canon by
+`docs/decisions/D24-one-nature-family-one-village-family.md`: **one nature
+family, one village family, one prop family**, Medieval Village as the Meadows
+vernacular, keep Terrain3D, no return to Forward+, Meshy reserved for Team
+Tether hero objects, and the HUD rebuilt. Two rules changed with it — **no
+generation without an owner-supplied reference sheet**, and **D23 §20 stands
+even at 5000 credits**, so creatures and humans are permanently rework-only.
+`ralph/BACKLOG.md` gained Phase -0.9 (the P0 fixes), Phase -0.6 (`EV1`–`EV10`,
+the look) and Phase -0.55 (`NP1`–`NP4`, the cast); most `R9.4-remainder-*` items
+and `SB7`/`SB8` are collapsed into them rather than running in parallel.
+
+Earlier that day: the owner delivered
 `docs/MEADOWS_PROGRESSION_SPEC.md` — the Meadows stops being a vertical slice
 and becomes the game's first chapter, 4–7 hours, with the Team Tether macro-
 story settled. Read `docs/decisions/D23-the-meadows-is-the-first-game.md`
@@ -230,15 +248,27 @@ error — it is not.
 `ralph/BACKLOG.md` is the ordered plan, read it rather than trusting any
 summary here.
 
-**As of D23 the shape changed and the top of the file moved.** The next item is
-**`SA2`** in the new **Phase -0.75** — the owner's P0 fixes from the published
-Windows build: Grandpa's door gate (`SA2`), a perimeter you cannot fall off
-(`SA3`), seven severed spokes (`SA4`), and the Burrowback and bird recolours
-(`SA5`/`SA6`). They sit above the rest of Phase -0.5 because three of the five
-change what a survey frame contains. Then the file runs Phase -0.5 → Phase 1 →
-Phase 2 → Phase 3 → **Phase 3.5** (the progression framework the whole chapter
-stands on: flags, physical gates, the objective tracker, per-material NPC
-variants) → Phases 4–7 → **Phase 8, now the Meadows chapter itself** in five
+**As of D24 the top of the file moved again.** The order is now:
+
+```
+Phase -0.9   SA0-orbs, SA1-lod   the tails of the two shipped P0 fixes
+Phase -0.6   EV1..EV10           the look — acquire the packs, then use them
+Phase -0.55  NP1..NP4            the cast — the modular system, then the bases
+Phase -0.75  SA2..SA6            the spec's own P0 items
+Phase -0.5                       whatever EV/NP did not absorb
+Phase 1 onward                   unchanged
+```
+
+Phase -0.6 sits above the older `SA` items deliberately: `EV1` acquires assets
+that several of them are waiting on, and there is no sense retinting a
+settlement `EV6` rebuilds. Phase -0.55 sits with it because `NP1` is built
+against rigs that already exist, so it blocks on nothing and improves the three
+villagers standing in the square today.
+
+After those, the file runs Phase -0.75 → Phase -0.5 → Phase 1 → Phase 2 →
+Phase 3 → **Phase 3.5** (the progression framework the whole chapter stands on:
+flags, physical gates, the objective tracker — its two NPC items moved up to
+Phase -0.55) → Phases 4–7 → **Phase 8, now the Meadows chapter itself** in five
 lettered sections, 8a Lower Meadows through 8e the stronghold and the first
 reconnection → **Phase 8.5** for pacing and the chapter's own gate → Phase 9.
 

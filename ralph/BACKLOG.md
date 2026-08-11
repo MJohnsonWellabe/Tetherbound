@@ -78,6 +78,203 @@ diagnosis and fix no longer need it to know the bug was real.
 
 ---
 
+## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
+
+**`SA0` (the opening soft-lock) shipped — see `DONE.md`.** The owner could not
+interact with Grandpa at all and left the house with no starter. Root cause was
+not the interaction system: the beat machine started at `wake`, `wake` had
+exactly one exit (pressing the bed), and nothing forced it — so walking off the
+bed pinned the beat forever, which keeps Grandpa's interactable disabled by
+design. Fixed, plus the second route in (a houseless world had no exit at all),
+plus a falsifying test (`tests/smoke_wake_softlock.gd`).
+
+**`SA1` (Ally VRAM) shipped — see `DONE.md`.** ~630 MB reclaimed: 91 textures
+moved off Lossless RGBA8 to S3TC, twelve 2048² all-black emissive maps shrunk to
+4×4, foliage mipmaps enabled, both shadow atlases off the 4096 desktop default,
+MSAA 4×→2×. **On-device confirmation is still open** — CI cannot measure VRAM,
+same as `RB4`.
+
+### SA0-orbs — the starter choice moves into Grandpa's conversation
+`model: opus` · `tests: smoke_opening, smoke_wake_softlock` · `area: opening`
+Owner directive, 2026-08-11: *"the starters should be in orbs and you preview
+them while talking to Grandpa."* Three orbs presented in the conversation,
+each previewing its creature; choose and name indoors; the chosen one leaves the
+house with you. The three creatures stop standing outside the door.
+
+This also finishes what `SA2` below was for — there is no "outside with no
+starter" state left to gate.
+
+**It reverses a written decision, so amend rather than edit silently.**
+`docs/OPENING_SEQUENCE.md:119` and `data/config/opening.json` both record "the
+starter choice is physical, not a menu… a list box would undo it". The owner has
+changed that; say so in both places.
+
+What does not exist yet and has to be built: **there is no orb-as-container
+concept** — `scripts/combat/orb.gd` is a thrown projectile with its own
+parabola and `struck`/`missed` signals, nothing more. `dialogue_panel.gd` has no
+3D preview surface. And the dialogue effect vocabulary is `beat:` and `give:`
+only (`sequence_director.gd::_drain_effects`), so a "preview species N" effect
+is new. Done when: a player who never leaves the house has a named starter.
+
+### SA1-lod — vegetation throws away the importer's LOD chain
+`model: sonnet` · `tests: smoke_art` · `area: terrain`
+Found by `SA1`'s investigation, not fixed there. `vegetation.gd::_retint()`
+rebuilds an `ArrayMesh` via `surface_get_arrays()`, which silently discards the
+LOD chain **and** the shadow mesh the importer generated (`meshes/generate_lods`
+and `create_shadow_meshes` are true in every `.glb.import`). Every tree and tuft
+therefore draws at LOD0 at every distance — 23,452 instances of it. With the
+mipmaps now enabled this is the remaining half of the bandwidth problem, and it
+is the **first thing to try if the Ally is still choppy**. There is also no
+`visibility_range` or `lod_bias` anywhere in the project. Done when: the LOD
+chain survives retinting, confirmed by reading `mesh.get_surface_count()` and
+the LOD data off a retinted mesh rather than by eye.
+
+---
+
+## Phase -0.6 — the look (owner's art bible, `D24`)
+
+`docs/ENVIRONMENT_AND_UI_BIBLE.md`, made canon by `docs/decisions/D24`. This is
+the answer to *"the visuals is the most important part… and it's not getting
+fixed"* — and R9.4's own evidence agrees: both blind critics ranked **"needs art
+that is not in the build"** first, and scene tuning had genuinely run out of
+road. The repo has 42 of 116 nature models, **no** village kit, **no** props
+kit and **no** UI assets beyond two portraits.
+
+**Free Standard tiers only** — the owner declined the Source editions, so their
+foliage shaders and optimised collisions are not available and nothing may
+assume them. Ledger every pack **before** its commit; the ledger's own rules
+require it.
+
+### EV1 — Acquire and ledger the free packs
+`model: haiku` · `tests: none` · `area: assets`
+Stylized Nature MegaKit, Medieval Village MegaKit, Fantasy Props MegaKit
+(Quaternius, CC0) and Kenney's UI Pack, RPG Expansion, Input Prompts and Game
+Icons. Bible §19 is the procedure: read the ledger first, search the repo for
+existing copies (Stylized Nature is **already partly present** — 42 models —
+do not duplicate it), verify the licence at download time, stage under
+`assets_raw/vendor/`, import only what is selected. Done when: every pack has a
+ledger row and nothing is committed twice.
+
+### EV2 — An approved Meadows nature subset, not all 116 models
+`model: sonnet` · `tests: smoke_art` · `area: vegetation`
+Bible §10: 2–3 hero trees, 3–4 standard canopy, 2–3 saplings, 1–2 wetland, one
+rock family with 3 small / 3 medium / 2–3 large. Replace the weakest current
+forms first. Controlled material variants — spring, deep and yellow-green — not
+a different colour per tree. Done when: the tree line reads as one species
+family at thumbnail size.
+
+### EV3 — Rebuild the scatter around clusters, clearings and layered bands
+`model: opus` · `tests: smoke_art` · `area: vegetation`
+Bible §7B/§7C/§9. Seven vegetation bands from ground grass to distant tree mass;
+placement driven by slope, elevation, path distance and landmark distance rather
+than uniform noise. Absorbs `SA1-lod` if not already done, and `R7.1-remainder-2`
+(ground cover reads procedural) outright. Done when: a blind critic stops
+calling the scatter generator output.
+
+### EV4 — The terrain material set, and paths as a material
+`model: sonnet` · `tests: smoke_traversal` · `area: terrain`
+Bible §8's eight paint layers, feathered irregular path edges, rocks emerging
+from terrain rather than sitting on it. **Paths become a control-map material,
+not a colour-map tint** — `build_playground_terrain.gd`'s own comment already
+calls the real material "queued as polish", and it is why both critics reported
+no worked ground. Absorbs `R9.4-remainder-4` and `R7.1-found-3`.
+
+### EV5 — Water
+`model: opus` · `tests: smoke_traversal` · `area: terrain`
+Bible §15. A pond and stream: readable stylised surface, shallow-edge colour
+shift, reeds at the banks, no expensive simulation. Answers the open question in
+`R7.1-remainder-2` and gives Band 3's river somewhere to start.
+
+### EV6 — Rebuild the settlement on one architectural family
+`model: opus` · `tests: smoke_opening, smoke_traversal` · `area: village`
+Bible §12. Medieval Village MegaKit as the one civilian vocabulary; prefabs
+built once from modules, not assembled from loose pieces at runtime. Every
+building grounded — flattened terrain only where needed, grass transitions,
+footpaths, a foundation. Absorbs `R9.4-remainder-3` (no material override path)
+and half of `-5`. Grandpa's house was rebuilt by R9.4 and may or may not survive
+the kit; judge it against the family rather than preserving it out of sentiment.
+
+### EV7 — Prop clusters that imply a purpose
+`model: sonnet` · `tests: none` · `area: village`
+Bible §2 P3: *do not* dump props everywhere. Authored clusters — work area,
+farmhouse yard, bridge repair site, quarry station, trainer camp. Absorbs the
+rest of `R9.4-remainder-5`.
+
+### EV8 — Lighting and atmosphere
+`model: sonnet` · `tests: none` · `area: lighting`
+Bible §14. Warm sun, cool fill, fog that describes depth instead of eating it,
+and one sky/fog treatment shared across every viewpoint — the survey currently
+disagrees frame to frame, which is `R9.4-remainder-2`. Compatibility renderer
+constraint holds: fake it, do not re-enable Forward+ features.
+
+### EV9 — Rebuild the HUD
+`model: opus` · `tests: smoke_menu` · `area: ui`
+Bible §16–§18. Native `Control` nodes over Kenney UI + Input Prompts. Dark
+translucent panels, teal accent, warm gold for progression, no fantasy scroll
+frames. Inventory grid, crafting panel, one tracked objective, contextual
+prompt. **Tested at physical 7-inch scale, not on a desktop monitor** — §17 is
+explicit. Input glyphs follow the last-used device.
+
+### EV10 ▶ — Cohesion pass
+`model: sonnet` · `tests: none` · `area: visual`
+Bible §22 Phase G and §23's metrics. Re-shoot the same viewpoints, blind-judge
+against both reference sets, fix the three biggest gaps, repeat until further
+improvement is asset-quality-limited rather than composition-limited.
+
+---
+
+## Phase -0.55 — the cast (owner's NPC board)
+
+`docs/art/reference/12_NPC_Bases_Reusable.png`, and spec §21/§22/§35/§36.
+The board specifies **three** base bodies at player height — Female Villager,
+Male Villager, Team Tether Grunt — each with hair/head variants, outfit
+variants, palette rows and accessories, and it **supersedes §22's "one or two"**.
+
+Its own implementation notes are the technical brief: *material/texture swap for
+colour variants, hide/show accessories via separate mesh parts, hair variants
+sharing head topology, keep colour calls low by using shared materials.*
+
+### NP1 — The modular NPC system
+`model: opus` · `tests: smoke_art` · `area: npc`
+Built against the three rigs that already exist, so it needs no credits and
+blocks on nothing. Base body + swappable hair + show/hide accessory parts +
+per-material palettes, all data. Replaces `art.json`'s `tint`, which is a single
+multiply over every surface (`character_model.gd::_apply_tint`) — the exact
+failure §21 names — while still honouring it so R7.2's three villagers keep
+working. **Do not repeat `vegetation.gd`'s mistake**: `_retint()` mints a
+material per variant, and the board explicitly asks for shared materials. Done
+when: two NPCs on one base differ in hair, outfit colour *and* visible
+accessories independently.
+
+### NP2 — Team Tether rank palettes
+`model: sonnet` · `tests: smoke_art` · `area: npc`
+Spec §36 on top of `NP1`: grunt (charcoal/forest green/minimal gold), officer
+(deeper green, bronze), captain (dark green, brass, regional accent), Warden
+(richest, cream mantle, strongest gold). Readable at gameplay distance without a
+nameplate. One caution §21 hedges on and this does not: **the main-character rig
+is the player's own body**, so faction NPCs use the Warden or Grunt base, never
+that one. Done when: relay captain, regional captain and Warden in one frame
+rank correctly to a blind critic.
+
+### NP3 — The named Meadows cast
+`model: sonnet` · `tests: test_dialogue_runner` · `area: npc`
+Spec §35. Mira, Oskar and Tam get their trainer identities — **they already
+exist** in `village_npcs.json`, do not add three more bodies — plus the quarry
+foreman and the rescued ranger/researcher. Done when: every named NPC the
+chapter needs exists on a reused rig.
+
+### NP4 — Generate the three bases from the board
+`model: sonnet` · `tests: smoke_art` · `area: art` · `lane: art`
+~270 credits of 5000, and the reference sheet the no-generation-without-art rule
+demands already exists — this is one of the only generations currently
+authorised. Order follows the board's own usage notes: the two villager bases
+first (they cover villagers, trainers, workers and crafters — the whole civilian
+cast), Grunt third, because `NP2` lets the Warden rig carry Team Tether
+meanwhile. All three at player height, scale 1.0, hair as separate meshes
+sharing head topology, accessories as separate toggleable parts.
+
+---
+
 ## Phase -0.75 — the owner's Meadows spec, P0 (owner directive, 2026-08-11)
 
 `docs/MEADOWS_PROGRESSION_SPEC.md` §1 and §38 Phase A, made canon by
@@ -236,8 +433,17 @@ rounds) shipped — see `DONE.md`.** Genuine, visible improvement over the
 pre-fix state, but neither bullet fully passes the blind critic yet; a
 narrower remainder is opened below.
 
-### R7.1-remainder-2 — Ground cover still reads procedural, horizon mid-ground still sparse
-`model: sonnet` · `tests: none`
+**R7.1-remainder-2 COLLAPSED into `EV3` (ground cover) and `EV5` (the water
+question it raised).** Not closed — superseded. It spent three rounds
+redistributing a fixed instance count and the critic kept saying the same
+thing, which is the signal that the lever was wrong: `EV3` rebuilds placement
+around clusters, clearings and seven layered bands instead of tuning noise, and
+`EV5` answers the "would water do more for depth than more vegetation?"
+question it ended on by just building the pond. Its evidence is kept below
+because `EV3` inherits it as the bar to clear.
+
+Original entry — Ground cover still reads procedural, horizon mid-ground still sparse:
+
 R7.1-remainder's third and final blind-critic round, on the post-fix survey
 (owner-directed interactive session, 2026-08-10/11): the field still "reads
 underpopulated" against both references (its #2 ranked gap, right behind
@@ -282,8 +488,13 @@ retint/LOD edge case on a single tree instance.
 **R7.1-found-2 (near-vertical bank near spawn, root-caused to overlapping
 building-pad flattening, not a path or texture bug) fixed — see `DONE.md`.**
 
-### R7.1-found-3 — a flat texture-splat stripe on the hillside behind the spawn crate
-`model: haiku` · `tests: none`
+**R7.1-found-3 COLLAPSED into `EV4`.** The stripe is a colour/blend-map
+artefact, and `EV4` replaces that whole painting approach with the control map
+and eight authored layers — fixing it under the old scheme would be work thrown
+away. Evidence kept:
+
+Original entry — a flat texture-splat stripe on the hillside behind the spawn crate:
+
 Found running the confirmation visual-judge pass for R7.1-found-2 (frames
 01, 05): a diagonal tan/khaki stripe on the hillside behind the wooden
 crate, "crisp and uniform-width rather than irregular or grass-feathered,"
@@ -313,8 +524,17 @@ remainders below are the honest split rather than a pass. The original item is
 kept beneath them because its instruction — re-run and compare sheets, never
 assert the fix landed — is the standing rule.
 
-### R9.4-remainder-1 — Ground saturation still above the bar, and the rest of it is baked
-`model: sonnet` · `tests: none`
+**R9.4-remainder-1 COLLAPSED into `EV4`.** Same file, same bake, same command.
+`EV4` rewrites `terrain_playground.json`'s material set and re-runs
+`build_playground_terrain.gd`; re-solving `colour.grass_low` / `grass_high`
+toward neutral is one field of that edit, and doing it first would mean baking
+the `.res` files twice for one large binary diff each. **`EV4` inherits the
+acceptance number**: `frame_stats` mean saturation inside 0.40–0.50 on frame 01
+without the ground going grey. The diagnosis below is why, and it is the part
+worth carrying forward:
+
+Original entry — Ground saturation still above the bar, and the rest of it is baked:
+
 `tools/frame_stats.py` after three rounds: mean saturation 0.59 on frame 01
 against 0.40–0.46 for the Palworld references and 0.39 for the key art. Round 1
 found the cause and it is structural, not taste — `albedo_color` multiplies, so
@@ -332,8 +552,16 @@ scripts/world/build_playground_terrain.gd`), and `frame_stats` puts mean
 saturation inside 0.40–0.50 without the ground going grey. Expect a large
 binary diff on the `.res` files; that is the cost of the fix, not a mistake.
 
-### R9.4-remainder-2 — The world past 512m draws pale and colourless
-`model: opus` · `tests: none`
+**R9.4-remainder-2 COLLAPSED into `EV8`**, which already names it. The third of
+its three options — *lean into it with a deliberate haze that reads as
+atmosphere rather than as absence* — is exactly `EV8`'s brief, and `EV8` also
+owns the one-sky-treatment-everywhere fix this entry's sibling finding asked
+for. Note the constraint it carries: `world_background = 1` (FLAT) was already
+tried and measured a 0.146 luminance step across the whole frame, so that door
+is closed, not untried. Evidence kept:
+
+Original entry — The world past 512m draws pale and colourless:
+
 The single largest contributor to the compressed value range, and it appears in
 every outdoor frame as a near-white band along the horizon. Past the baked
 512 m, `shader.world_background = 2` (NOISE) continues the terrain
@@ -350,8 +578,16 @@ with a deliberate haze that reads as atmosphere rather than as absence. Done
 when: a critic given the frames stops naming the horizon as the reason they
 feel empty.
 
-### R9.4-remainder-3 — The pack buildings have no material override path
-`model: sonnet` · `tests: none`
+**R9.4-remainder-3 COLLAPSED into `EV6`**, which already names it. Building a
+`retint` hook for the Quaternius structures that `EV6` then replaces wholesale
+is the definition of wasted work — but the *requirement* survives the swap and
+`EV6` owns it: `village.json` must be able to lift a structure's roof the way a
+vegetation layer retints a leaf, whatever kit is underneath. Acceptance carries
+over too: roofs in the reference's warm 35–65% band, not the 11–16% measured
+here. Evidence kept:
+
+Original entry — The pack buildings have no material override path:
+
 Every roof in the settlement measures 11–16% luminance in direct midday sun
 against a reference board that keeps its roofs in the warm 35–65% band and
 spends its darks on tree canopy. The windmill's tower reads as a black cutout
@@ -362,8 +598,13 @@ hook at all, unlike `vegetation.gd`, which has had one since the crimson-bush
 fix. Done when: `village.json` can lift a structure's roof the way a vegetation
 layer can retint a leaf, and the settlement's roofs sit in the reference band.
 
-### R9.4-remainder-4 — Paths are a colour-map tint, not a material
-`model: sonnet` · `tests: smoke_traversal`
+**R9.4-remainder-4 COLLAPSED into `EV4`**, which already names it and states the
+same fix — the control map, not the colour map. Evidence kept, including the one
+fact worth knowing before anyone re-tunes it: round 3 made the existing tint
+visible for the first time, because desaturating the grass stopped drowning it.
+
+Original entry — Paths are a colour-map tint, not a material:
+
 `build_playground_terrain.gd` paints paths by lerping the COLOUR map toward
 `#c8a874`, and its own comment already calls a real material "queued as
 polish". Because the colour map multiplies the grass albedo, a path is
@@ -376,8 +617,16 @@ first time (desaturating the grass stopped drowning it), which is worth knowing
 before anyone re-tunes it. Done when: a path reads as trodden earth from
 standing height, and the path stones sit in it rather than on grass.
 
-### R9.4-remainder-5 — The settlement has no trees, no props and no site plan
-`model: opus` · `tests: none`
+**R9.4-remainder-5 COLLAPSED, split across `EV6` (the site plan and the trees)
+and `EV7` (the props).** Both already name it. This is the item that most
+justifies the whole of Phase -0.6: it is the one both critics ranked first or
+second independently, and it was never fixable by tuning — the props it asks for
+are in a pack the repo does not have. `EV1` acquires them, `EV7` places them in
+authored clusters rather than scattering them. Evidence kept, especially the
+critic's own shopping list:
+
+Original entry — The settlement has no trees, no props and no site plan:
+
 Both blind critics ranked this first or second, independently. The key art's
 own STARTING SETTLEMENT panel is organised around oak canopy framing a worn
 dirt square, rail fences leading the eye in, and garden beds against the walls;
@@ -389,8 +638,21 @@ crates, a cart, a hand-pump, hitching rail, garden beds, a washing line.
 Content, not tuning — and it belongs with `R7.3`'s authored-space work rather
 than in a palette pass. Done when: the square reads as a place people use.
 
-### R9.4-remainder-7 — Foliage aliases into confetti at distance
-`model: sonnet` · `tests: none`
+**R9.4-remainder-7 COLLAPSED into `SA1-lod` (the mechanism) and `EV3` (the
+judgement).** Read the entry below knowing it names the wrong cause. It blames
+the hard alpha scissor and R9.4 shipped alpha-to-coverage against that theory;
+`SA1` then measured the actual problem, which is that the foliage pack imports
+with `mipmaps/generate=false` on all 14 textures **and** `vegetation.gd`
+rebuilds an `ArrayMesh` that discards the importer's LOD chain. So 28,732
+instances draw at LOD0 at every distance, sampling un-mipmapped 512² textures at
+roughly 50:1 minification — which is aliasing by construction, and also the best
+explanation of the owner's "high memory, 25% GPU" profile. The mipmap half
+shipped in `28af489`; `SA1-lod` is the LOD half. Alpha-to-coverage stays and is
+still unverified on the Ally, but it was never going to be sufficient. Evidence
+kept — the entry's *observation* was right even though its diagnosis was not:
+
+Original entry — Foliage aliases into confetti at distance:
+
 **Two independent blind critics, on different frame sets, both named this the
 most bug-like thing in the build** — "blue, magenta and cyan speckle… reads as
 compression noise, not foliage" and "blue/green/white confetti speckle".
@@ -407,7 +669,16 @@ the sampling, which is an LOD or impostor question this item does not answer.
 Done when: a critic looking at the mid-distance stops calling the trees noise.
 
 ### R9.4-remainder-8 — Scale and placement defects the round-4 critics measured
-`model: haiku` · `tests: none`
+`model: haiku` · `tests: none` · `area: village`
+**Stays open, unlike its siblings.** Most of Phase -0.6 replaces the assets
+these defects live on, but this is a metre-is-a-metre problem, and a new kit
+inherits it rather than curing it — `EV6` will place Medieval Village prefabs
+into the same world with the same rabbit and the same unmasked terrain scatter.
+Two bullets do die with the old assets (the miniature barn copy and the
+undersized windmill are Quaternius pieces `EV6` removes); the rest do not.
+**Whoever takes `EV6` should read this first** — it is cheaper to get scale
+right while placing a settlement than to re-measure it afterwards.
+
 Small, individually cheap, all found in the 2026-08-11 frames and all
 measurable against the 1.8 m trainer or against each other. Grouped because
 none of them deserves its own firing:
@@ -587,15 +858,29 @@ placed buildings are all intact.
 
 ## Phase 3.5 — reusable progression infrastructure (spec Phase B)
 
-`docs/MEADOWS_PROGRESSION_SPEC.md` §15, §16, §21, §35, §36. Everything in the
-Meadows chapter (Phase 8) stands on these four items.
+`docs/MEADOWS_PROGRESSION_SPEC.md` §15, §16, §35. Everything in the Meadows
+chapter (Phase 8) stands on what this phase builds.
+
+**The two NPC items that used to live here moved.** `SB7` and `SB8` are now
+`NP1` and `NP2` in Phase -0.55, because the owner's NPC board arrived and made
+them art-direction work that the whole cast waits on, not progression plumbing.
+Their headings below are collapsed, not open. What is left here is state:
+`SB9`, `SB10`, `SB11`.
 
 Placed *after* Phase 3 on purpose: `R3.1` writes the first save format and it
 is "versioned from the first write". `SB9`'s flags belong in version 1, or
 adding them later costs a format bump for nothing.
 
-### SB7 — Per-material NPC variants, not one global tint
-`model: sonnet` · `tests: smoke_art`
+**SB7 COLLAPSED into `NP1`, which supersedes it and now runs far earlier
+(Phase -0.55).** They are the same work, but the owner's NPC board asks for more
+than this entry did: per-material overrides are necessary and not sufficient,
+because the board specifies **hair variants sharing head topology and
+accessories as separate toggleable mesh parts**. Colours alone cannot express
+that. `NP1` carries this entry's acceptance test forward unchanged and adds
+visible accessories to it. Evidence kept:
+
+Original entry — Per-material NPC variants, not one global tint:
+
 Spec §21. R7.2 already proved the idea — Mira, Oskar and Tam in the square are
 Grandpa's and the trainer's rigs with a `tint` in `art.json` — but `tint` is a
 single multiply over every surface (`character_model.gd::_apply_tint`), and §21
@@ -606,8 +891,15 @@ surface or material name, with the existing single `tint` still honoured so
 nothing already placed breaks. Done when: two NPCs on the same rig differ in
 jacket and hair colour independently, and neither is a flat wash of one hue.
 
-### SB8 — Team Tether rank palettes on the Warden rig
-`model: sonnet` · `tests: smoke_art`
+**SB8 COLLAPSED into `NP2`.** Identical work, moved to Phase -0.55 with `NP1`
+underneath it. One thing changed since this was written and `NP2` records it:
+the board's Team Tether Grunt base means the "keep the main-character base for
+civilians until §22's optional grunt base exists" hedge below now has an end
+date — `NP4` generates that base. Until then this entry's advice stands, and
+`NP2` repeats it. Evidence kept:
+
+Original entry — Team Tether rank palettes on the Warden rig:
+
 Spec §21, §35, §36. The Warden's rig is the faction's base body. Four rank
 tiers as data on top of `SB7`: grunt (charcoal, muted forest green, minimal
 gold), relay/field officer (deeper green, bronze trim), captain (dark green,
