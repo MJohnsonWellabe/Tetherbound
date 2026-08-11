@@ -174,15 +174,33 @@ foliage shaders and optimised collisions are not available and nothing may
 assume them. Ledger every pack **before** its commit; the ledger's own rules
 require it.
 
-### EV1 — Acquire and ledger the free packs
+### EV1-remainder — Acquire the two Quaternius MegaKits itch.io is blocking
 `model: haiku` · `tests: none` · `area: assets`
-Stylized Nature MegaKit, Medieval Village MegaKit, Fantasy Props MegaKit
-(Quaternius, CC0) and Kenney's UI Pack, RPG Expansion, Input Prompts and Game
-Icons. Bible §19 is the procedure: read the ledger first, search the repo for
-existing copies (Stylized Nature is **already partly present** — 42 models —
-do not duplicate it), verify the licence at download time, stage under
-`assets_raw/vendor/`, import only what is selected. Done when: every pack has a
-ledger row and nothing is committed twice.
+**The Kenney half of EV1 shipped — see `DONE.md`.** All four HUD/icon packs
+(UI Pack, RPG Expansion, Input Prompts, Game Icons + Expansion) are ledgered
+and staged under `assets_raw/vendor/`, downloaded straight off `kenney.nl`'s
+own CDN, no gate. What is left is the Medieval Village MegaKit (`EV6`'s
+settlement family, settled by `D24` — no substitute kit) and the Fantasy Props
+MegaKit (`EV7`), plus the fuller Stylized Nature MegaKit if `EV2`/`EV3` end up
+wanting more than the 42 models already present.
+
+**Both are blocked on itch.io's anonymous-claim flow, not on a design
+question.** `quaternius.com`'s own download button is itch.io's embedded
+widget; the itch game page it opens serves the file list (`Medieval Village
+MegaKit[Standard].zip`, confirmed 153 MB, genuinely $0 not just
+pay-what-you-want) only *after* a client-side "Download Now" click completes
+a purchase/claim round-trip — the per-file `upload_id` a direct download URL
+needs is never present in the page's static HTML, before or after that click,
+so `curl` cannot reach it no matter how the request is shaped. Headless
+Chromium was tried next (Playwright, browser already installed in this
+environment) and ruled out for a more basic reason: it cannot open **any**
+HTTPS site through this session's proxy, including unrelated control domains
+(`example.com`, `kenney.nl` itself) — `net::ERR_CONNECTION_RESET` on every
+`page.goto()`, launched with the proxy passed explicitly. `curl` reaches all
+of the same hosts fine, so this is specific to Chromium's proxy handling in
+this sandbox, not a site block. See the `BLOCKED.md` entry for what would
+clear it. Done when: both zips are staged under `assets_raw/vendor/` and
+ledgered, same as the Kenney four.
 
 ### EV2 — An approved Meadows nature subset, not all 116 models
 `model: sonnet` · `tests: smoke_art` · `area: vegetation`

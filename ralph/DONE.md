@@ -3,6 +3,24 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV1 (Kenney half) — the four HUD/icon packs, staged and ledgered
+`fb396b8` · `tests: none` (EV1's own field)
+
+Downloaded and staged all four Kenney packs `EV1` names — UI Pack, UI Pack
+(RPG Expansion), Input Prompts, Game Icons + Expansion — under
+`assets_raw/vendor/`, CC0, ledgered in `docs/ASSET_LEDGER.md`. `kenney.nl`'s
+"Download Now" popup resolves directly to a CDN `.zip` with no login or claim
+step, so this half was a plain `curl`. Covers the whole of
+`ENVIRONMENT_AND_UI_BIBLE.md` section 5 for `EV9`'s HUD rebuild.
+
+**The two Quaternius MegaKits are not in this shipment.** Opened as
+`EV1-remainder` in `BACKLOG.md` and recorded in `BLOCKED.md`: itch.io's
+anonymous-claim flow gates the real file URL behind a client-side purchase
+round-trip that neither `curl` nor headless Chromium (Playwright, tried and
+ruled out — it cannot reach *any* HTTPS host through this session's proxy,
+not just itch.io's) could complete. Needs the owner to supply the two zips,
+or a future firing with a working itch.io session.
+
 ## RB1-actual — Mouse look: the HUD was eating every mouse motion event
 `68e0faf` — owner-directed interactive session, 2026-08-11.
 `tests: smoke_mouse_look` (new), regression-checked against `smoke_menu`,

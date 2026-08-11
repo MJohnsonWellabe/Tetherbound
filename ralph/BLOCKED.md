@@ -34,6 +34,47 @@ access returned.
 
 ## Blocked on the owner
 
+### `EV1-remainder` — the two Quaternius MegaKits need a human click-through
+`EV6` (settlement, `D24`-settled to Medieval Village MegaKit — no substitute
+kit) and `EV7` (prop clusters) both need packs that live behind itch.io's
+anonymous-claim flow, and that flow could not be automated from this session.
+
+What was actually tried, in order:
+
+1. **`curl` on the vendor page and the itch game page.** Both are static HTML;
+   the real per-file download URL needs a numeric `upload_id` that itch only
+   discloses after a client-side "Download Now" click completes a
+   purchase/claim POST round-trip. It is not present in the page source
+   before or after that click, logged-in or not — confirmed on the Medieval
+   Village MegaKit page (`Medieval Village MegaKit[Standard].zip`, 153 MB,
+   `price: "$0.00"` from the embed widget's own JSON, so this is not even a
+   pay-what-you-want gate, just a JS one).
+2. **Headless Chromium via Playwright**, already installed in this
+   environment for exactly this kind of task. Ruled out for a more basic
+   reason than itch.io's flow: it cannot open **any** HTTPS site through this
+   session's proxy — `net::ERR_CONNECTION_RESET` on `page.goto()` against
+   `example.com` and `kenney.nl` (a host `curl` reaches fine, seconds
+   earlier, in the same container), with the proxy passed to `launch()`
+   explicitly. This is a Chromium-vs-this-proxy problem, not an itch.io
+   block, and it would stop any browser-automation approach to this task, not
+   just this one pack.
+
+The four Kenney packs `EV1` also needed (UI Pack, RPG Expansion, Input
+Prompts, Game Icons + Expansion) downloaded and shipped fine — kenney.nl's
+own "Download Now" popup resolves straight to a `.zip` on their CDN, no claim
+step. This is specifically an itch.io gate, not a general download-access
+problem.
+
+**Clears when:** either the owner downloads
+`Medieval Village MegaKit[Standard].zip` and
+`Fantasy Props MegaKit[Standard].zip` from the itch.io pages linked in
+`docs/ENVIRONMENT_AND_UI_BIBLE.md` and supplies them (a repo upload, a
+reachable URL, anything a firing can `curl`), or a future firing has a working
+itch.io session (a stored API key, or a proxy that can pass a real browser
+session through cleanly) to complete the claim itself.
+
+---
+
 ### `ASSET_LEDGER.md` licence claim is false
 The ledger states "Everything currently in the build is CC0 1.0." It is not: the
 Meshy-generated creatures and the Plumberry Plains pack are not CC0. The correct
