@@ -317,7 +317,21 @@ SPECIES: dict[str, dict] = {
     },
 
     # ------------------------------------------------------------------
-    # BURROWBACK — third of the ten. Same first-pass philosophy.
+    # BURROWBACK — third of the ten. Gains a palette for SA5: the owner
+    # could not tell it from Terrapup, and a direct measurement of the
+    # installed 2048x2048 base_color atlas confirms why -- 83% of it sits in
+    # one 30-45 deg warm-brown hue band, the same fur family Terrapup uses,
+    # differing only by body shape. No Meshy spend (geometry frozen, spec
+    # sec20); this partitions that one hue family by VALUE/SATURATION
+    # instead of hue, the way HANDOFF/spec sec1A ask: charcoal/near-black
+    # coat, cool pale-grey face stripe, slate stone nodules, a restrained
+    # rust-brown accent kept distinct from the coat, and the golden/moss
+    # fleck class muted toward minimal presence rather than removed outright.
+    # Ops are ordered darkest-driving-selector first (coat) so each later,
+    # narrower op only ever sees what the previous ones left alone --
+    # verified numerically: the coat op's value_mul/saturation_mul push
+    # every pixel it touches well outside every later op's own value/
+    # saturation floor, so nothing gets processed twice by accident.
     # ------------------------------------------------------------------
     "burrowback": {
         # Only ONE eye found by visual inspection of the 2048x2048
@@ -331,6 +345,44 @@ SPECIES: dict[str, dict] = {
         # graded away, add it then.
         "eye_guard": [
             ("uv", 1060, 1080, 1170, 1180),
+        ],
+        "palette": [
+            # The main coat -- 83% of the atlas by measurement, darker and
+            # more saturated than the highlight/face-stripe pixels below --
+            # crushed toward charcoal/near-black. Kept as a value/saturation
+            # multiply rather than a flat blend so the underlying shading
+            # (and the fur's own texture) survives the darken.
+            {"op": "shift", "hue": (20.0, 55.0), "saturation": (0.28, 1.01),
+             "value": (0.0, 0.55), "value_mul": 0.42, "saturation_mul": 0.28},
+            # A lighter, still-saturated warm band the coat op's value
+            # ceiling leaves alone -- pushed toward a restrained rust-brown
+            # rather than boosted, so it reads as an accent, not a highlight.
+            {"op": "shift", "hue": (12.0, 40.0), "saturation": (0.30, 1.01),
+             "value": (0.35, 0.70), "hue_toward": 18.0, "hue_amount": 0.15,
+             "saturation_mul": 0.85, "value_mul": 0.80},
+            # The golden/moss fleck class (hue 45-70, R9.4's "moss-and-stone
+            # mantle" read) -- muted toward a cool, low-weight grey-green
+            # rather than eliminated, matching "minimal green" rather than
+            # "no green at all".
+            {"op": "shift", "hue": (45.0, 70.0), "saturation": (0.35, 1.01),
+             "hue_toward": 95.0, "hue_amount": 0.15,
+             "saturation_mul": 0.35, "value_mul": 0.55},
+            # Stone nodules: the low-saturation mid-value texels every
+            # earlier op's own thresholds leave alone (the coat op darkens
+            # well past this value floor; the rust and moss ops both leave
+            # their output more saturated than this selects). Blended, not
+            # shifted, toward a fixed slate so the nodules read as one
+            # material rather than a hue-shifted version of the fur.
+            {"op": "blend", "saturation": (0.0, 0.18), "value": (0.30, 0.68),
+             "target": (0.32, 0.34, 0.37), "amount": 0.60,
+             "shade": "value", "shade_norm": 0.85},
+            # Face stripe and other bright, low-saturation highlights --
+            # the brightest band in the atlas (nothing above value 0.8) --
+            # toward a cool pale grey instead of the warm cream that reads
+            # as Terrapup's own face marking.
+            {"op": "blend", "hue": (15.0, 60.0), "saturation": (0.05, 0.35),
+             "value": (0.55, 1.01), "target": (0.70, 0.72, 0.75),
+             "amount": 0.55, "shade": "value", "shade_norm": 0.9},
         ],
         "roughness": ROUGHNESS_BAND,
         "emissive": "off",
