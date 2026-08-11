@@ -208,7 +208,6 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	var layer_cfg := _layer_for(model_path)
 	var jitter := float(layer_cfg.get("colour_jitter", 0.0))
 	multi.mesh = _retint(mesh, layer_cfg.get("retint", {}), layer_cfg.get("retexture", {}), jitter > 0.0)
-	multi.instance_count = placements.size()
 
 	# R7.1-remainder: the blind critic's round-1 verdict on ground cover was
 	# specific — not "too sparse", but "a single saturated hue with no value
@@ -217,10 +216,24 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	# per-instance colour lets every blade get its own light/dark multiplier
 	# at zero extra draw calls or geometry — the cost this file's own
 	# comments already ruled out paying twice.
+	#
+	# R7.2: `use_colors` MUST be set before `instance_count` — MultiMesh
+	# allocates its per-instance buffer when `instance_count` is assigned,
+	# sized from whichever format flags are set at that moment, and setting
+	# `use_colors` afterward does not retroactively resize it. Setting it
+	# after (the original round-2 order) silently left `use_colors` false
+	# server-side even though the GDScript property read back `true`, so
+	# every `set_instance_color` call below failed with "Can't set instance
+	# color on a Multimesh that isn't using colors" — thousands of times
+	# per render, found by a background agent's render log, not by eye,
+	# since the failure is a caught engine error rather than a crash and
+	# the jittered instances just silently kept their default (white, i.e.
+	# unjittered) colour.
 	var jitter_rng := RandomNumberGenerator.new()
 	if jitter > 0.0:
 		multi.use_colors = true
 		jitter_rng.seed = hash(model_path)
+	multi.instance_count = placements.size()
 
 	for i in placements.size():
 		var placement: Dictionary = placements[i]
