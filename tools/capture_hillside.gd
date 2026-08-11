@@ -11,14 +11,26 @@ extends SceneTree
 ## frame a rise's flank close enough or wide enough to judge whether the
 ## grass/soil/rock slope bands read as one coherent transition rather than a
 ## noisy patchwork — same reasoning as capture_paths.gd's own header, applied
-## to the biggest of the three `rises.peaks` in
-## data/config/terrain_playground.json (centre [140,-90], radius 78, the one
-## the blind critic's "blotchy all over the dome" verdict was about).
+## to `rises.peaks[1]` in data/config/terrain_playground.json (centre
+## [-165,-150], radius 58).
+##
+## NOT peaks[0] (centre [140,-90]) — that is where the blind critic's
+## "blotchy all over the dome" verdict came from, but it is also exactly
+## where landmark.gd plants the stronghold silhouette (RISE_CENTRE + OFFSET,
+## a flat-shaded cutout that fills the frame at any distance close enough to
+## judge ground texture) and where paths.routes' "The Rise" ends — a first
+## pass at these viewpoints landed on the silhouette and the path by
+## accident and read neither texture nor material, just other content.
+## peaks[1] has no landmark and no path anywhere near it, so it is the one
+## that actually isolates the slope-driven bands `_control_for`/
+## `_ground_colour` paint, which is what this item's fix touches.
+##
 ## Viewpoints sit along one bearing from the peak's own centre toward the
 ## village, at increasing distance: a wide overview that shows the whole
 ## dome's silhouette, then progressively closer flank shots, ending at the
 ## outer edge where "a hard, unblended seam where grey rock cuts in at the
-## hill's base" was reported.
+## hill's base" was reported (on peaks[0]; the mechanism is shared, so
+## peaks[1] is where this item's fix gets judged instead).
 ##
 ## Same honest limits as tools/survey.gd: Compatibility renderer, software
 ## rendering, placeholder geometry.
@@ -36,30 +48,41 @@ const VIEWPOINTS := [
 		# Distant enough that the whole rise reads as one silhouette against
 		# the sky — this is the "all over the dome" framing the critic used.
 		"name": "dome-overview",
-		"eye": Vector2(20.0, 10.0), "eye_h": 4.0,
-		"target": Vector2(140.0, -90.0), "target_h": 20.0,
+		"eye": Vector2(-54.0, -49.0), "eye_h": 5.0,
+		"target": Vector2(-165.0, -150.0), "target_h": 16.0,
 	},
 	{
 		# Standing near the base of the flank, looking up the slope — the
 		# angle a player walking toward the rise actually sees it from.
 		"name": "flank-lower",
-		"eye": Vector2(95.0, -60.0), "eye_h": 1.7,
-		"target": Vector2(140.0, -90.0), "target_h": 10.0,
+		"eye": Vector2(-124.0, -113.0), "eye_h": 1.7,
+		"target": Vector2(-154.0, -140.0), "target_h": 18.0,
 	},
 	{
 		# Further up the same bearing, closer to the steepest part of the
 		# flank where the rock band should be at its widest.
 		"name": "flank-mid",
-		"eye": Vector2(115.0, -75.0), "eye_h": 1.7,
-		"target": Vector2(155.0, -100.0), "target_h": 20.0,
+		"eye": Vector2(-139.0, -127.0), "eye_h": 1.7,
+		"target": Vector2(-161.0, -147.0), "target_h": 28.0,
 	},
 	{
-		# Right at the peak's own radius (78m from centre) — the outer edge
+		# Right at the peak's own radius (58m from centre) — the outer edge
 		# where the flank is meant to fade back to ordinary ground. This is
 		# where the "hard cut" complaint should show up if it is still there.
 		"name": "base-seam",
-		"eye": Vector2(75.0, -50.0), "eye_h": 1.5,
-		"target": Vector2(100.0, -65.0), "target_h": 3.0,
+		"eye": Vector2(-122.0, -111.0), "eye_h": 1.5,
+		"target": Vector2(-143.0, -130.0), "target_h": 6.0,
+	},
+	{
+		# debug_control_probe.gd confirms the control map paints soil from
+		# d~40 to d~58 along this exact bearing, but neither flank-lower nor
+		# base-seam show any tan at all. Standing right on top of that band
+		# (d=47, closest to the probe's own d=45/blend~0.99 sample) and
+		# looking straight down + slightly ahead, to tell rendering from
+		# framing.
+		"name": "soil-band-direct",
+		"eye": Vector2(-130.3, -118.4), "eye_h": 1.6,
+		"target": Vector2(-134.0, -121.9), "target_h": 0.5,
 	},
 ]
 
