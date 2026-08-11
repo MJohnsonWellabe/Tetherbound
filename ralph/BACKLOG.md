@@ -631,30 +631,7 @@ the seed `R8.6` pays off and the geometry `SF33` later dresses. Done when: all
 seven are reachable on foot from the village, each is visibly and physically
 impassable, and none of them explains itself with UI text.
 
-### SA5 — Recolour Burrowback away from Terrapup
-`model: sonnet` · `tests: smoke_art`
-Spec §1A and §20. The owner cannot tell the Ground starter from the wild
-badger, and they are genuinely close: `HANDOFF.md` §2 has Terrapup as
-"badger/canine cub, warm brown fur, cream face stripe" and Burrowback as a
-"broad low badger". D13 already carries distinction rules for Trailpup and
-Galecrest; this is the fourth and it was missed. **Geometry is frozen (§20) —
-no Meshy spend, no regeneration.** The lever is `grade.py`'s repair path
-(`python3 tools/art_pipeline/blender/grade.py --species burrowback --textures
-assets/pals/tetherbound/burrowback/models` — plain numpy and Pillow, no
-Blender): `SPECIES["burrowback"]` today carries structural fixes and no
-`palette` block. Add one, toward charcoal/near-black coat, cool pale-grey face
-stripe, slate nodules, restrained rust-brown belly, minimal green. Terrapup is
-not touched. Visual-affecting, so `conventions.md`'s blind pass binds — and ask
-the critic the silhouette question specifically. Done when: a blind critic
-given both turntables side by side, told nothing, does not call them the same
-creature.
-
-**The owner's report is confirmed by a render.** R9.4 re-ran
-`preview_creatures.gd` (2026-08-11): Burrowback comes out a warm mid-brown
-badger with a broad **cream face stripe** and a moss-and-stone mantle over its
-back — which is Terrapup's own material language, item for item, at a similar
-value. Nothing about the colour currently separates them; only the body shape
-does, and §1A says that is not enough at gameplay distance.
+**`SA5` (recolour Burrowback away from Terrapup) shipped — see `DONE.md`.**
 
 ### SA6 — Separate the five birds by palette
 `model: sonnet` · `tests: smoke_art`

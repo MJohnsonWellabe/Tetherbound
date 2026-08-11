@@ -435,6 +435,57 @@ stranded until then — `LP3` fast-forwards as-is, the other three need the reba
 route. First sweep after merge is the real test; watch that it ships those four
 and leaves red `CO1` alone.
 
+## SA5 — Recolour Burrowback away from Terrapup
+`tests: smoke_art` (green, local + import). No Meshy spend — the repair path,
+`grade.py`'s `SPECIES["burrowback"]`, gained a `palette` block; geometry and
+Terrapup are both untouched.
+
+Measured the installed 2048×2048 `base_color` atlas directly (numpy, through
+`grade.py`'s own `rgb_to_hsv` so the thresholds match what the grade actually
+sees) before writing anything: 83% of it sits in one 30–45° warm-brown hue
+band — Terrapup's own fur family, confirming the backlog's diagnosis that only
+body shape separated the two. Partitioned that one family by VALUE/SATURATION
+rather than hue, five ops in order: the main coat (hue 20–55°, `sat≥0.28`,
+`value<0.55`, 83% of the measured pixels) crushed toward charcoal via
+`value_mul 0.42`/`saturation_mul 0.28`; a lighter, still-saturated band the
+coat op's own value ceiling leaves untouched pushed toward a restrained
+rust-brown (`hue_toward 18`, `saturation_mul 0.85`, `value_mul 0.80`) rather
+than brightened, so it reads as an accent and not a highlight; the golden/
+moss-fleck class (hue 45–70°, the "moss-and-stone mantle" R9.4's render
+named) muted toward a low-weight cool grey-green instead of removed outright,
+matching the brief's "minimal green" rather than "no green"; the low-
+saturation mid-value stone texels blended toward a fixed slate; the brightest,
+lowest-saturation band (nothing in this atlas sits above albedo value 0.8) —
+the face stripe — blended toward a cool pale grey instead of Terrapup's warm
+cream. Each op's own numbers were checked to confirm its output falls outside
+every later op's selector range before ordering them, so nothing gets
+processed twice by accident.
+
+Ran for real, not a dry run: mean albedo value 0.368 → 0.218, a large
+measured shift; eye guard confirmed 0.00 delta inside its rect (`grade.py`'s
+own check).
+
+**Blind-judge pass, one round, converged outright.** Wrote
+`tools/capture_species_closeup.gd` (two named species side by side, tight
+framing, plus a silhouette pass — reusable for `SA6` next, which has the same
+"the roster row is too small to judge colour by" problem `preview_creatures.gd`
+carries). A genuinely blind sub-agent, shown only the colour and silhouette
+frames with no labels: described the left creature as "grey/black-masked...
+amber eyes... long low badger-like silhouette" and the right as "warm brown...
+teal eyes... compact, tall, big-eared cub-like silhouette," and answered
+directly — "Two clearly different creatures... this isn't a subtle recolour,
+it's a distinct build and face structure." No defect named against either
+model. One out-of-scope observation kept for whoever next touches either
+creature's mesh: the moss-fleck shoulder patch sits in near-identical
+placement/shape on both bodies, "like the same decal/overlay pasted onto two
+different bodies" — a shared-topology/UV artefact from the two models'
+lineage, not something a colour-only grade can reach, and not chased here.
+
+`tools/capture_species_closeup.gd`'s first run wasted ~2 minutes: passed
+`--headless` alongside `xvfb-run`, which disables the real display driver
+rendering needs under this renderer — `preview_creatures.gd`'s own doc
+comment omits `--headless` for exactly this reason; missed it once, corrected.
+
 ## NP3 — The named Meadows cast: identities for Mira/Oskar/Tam, plus the Quarry Foreman and the Rescued Ranger
 `f6c27f6`. `tests: tests/run_tests.gd` (299/299, `test_dialogue_runner`'s 12
 included). Visual-affecting (two new bodies added to the village square): a
