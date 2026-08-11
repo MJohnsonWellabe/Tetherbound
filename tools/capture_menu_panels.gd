@@ -74,6 +74,10 @@ func _run() -> void:
 		await process_frame
 	await _shoot("menu_backpack", written, failures)
 
+	# open() is a no-op while the menu is already open (game_menu.gd's own
+	# guard) -- switching tabs mid-session needs close() first, or the second
+	# shot silently repeats the first tab.
+	menu.call("close")
 	menu.call("open", "build")
 	for i in POSE_FRAMES:
 		await process_frame
