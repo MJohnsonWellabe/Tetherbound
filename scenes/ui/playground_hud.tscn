@@ -5,6 +5,7 @@
 [node name="PlaygroundHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
 player_path = NodePath("../Player")
+arbiter_path = NodePath("../InteractionArbiter")
 
 ; mouse_filter = 2 is MOUSE_FILTER_IGNORE, and it is load-bearing rather than
 ; cosmetic. A plain Control defaults to MOUSE_FILTER_STOP, and this one is
@@ -14,14 +15,9 @@ player_path = NodePath("../Player")
 ; camera never received a single mouse delta and mouse look was dead from the
 ; first frame, silently, with no error anywhere.
 ;
-; This is why RB1 did not fix the owner's report: it blamed a dropped
-; focus-time mouse capture and re-asserted capture on focus_entered. Capture was
-; never the problem. Gamepad look kept working throughout because it is POLLED
-; in _process from the look_* actions and never travels through the event path.
-;
 ; combat_hud.tscn, dialogue_panel.tscn and name_prompt.tscn all already set
-; this. This scene was the one that missed it. game_menu.tscn sets
-; MOUSE_FILTER_STOP deliberately — a pause menu SHOULD take the mouse.
+; this. game_menu.tscn sets MOUSE_FILTER_STOP deliberately — a pause menu
+; SHOULD take the mouse.
 ;
 ; tests/smoke_mouse_look.gd fails if this line is removed.
 [node name="Root" type="Control" parent="."]
@@ -30,27 +26,112 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="Bars" type="VBoxContainer" parent="Root"]
-offset_left = 40.0
+[node name="VitalsPanel" type="PanelContainer" parent="Root"]
+offset_left = 32.0
 offset_top = 32.0
-offset_right = 460.0
-offset_bottom = 110.0
+offset_right = 404.0
+offset_bottom = 112.0
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="Root/VitalsPanel"]
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="Bars" type="VBoxContainer" parent="Root/VitalsPanel/Margin"]
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HealthRow" type="HBoxContainer" parent="Root/VitalsPanel/Margin/Bars"]
+mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="Health" type="ProgressBar" parent="Root/Bars"]
-custom_minimum_size = Vector2(420, 26)
+[node name="HealthLabel" type="Label" parent="Root/VitalsPanel/Margin/Bars/HealthRow"]
+custom_minimum_size = Vector2(54, 22)
+mouse_filter = 2
+theme_override_font_sizes/font_size = 20
+vertical_alignment = 1
+text = "HP"
+
+[node name="Health" type="ProgressBar" parent="Root/VitalsPanel/Margin/Bars/HealthRow"]
+custom_minimum_size = Vector2(254, 22)
+size_flags_horizontal = 3
+mouse_filter = 2
 value = 100.0
 show_percentage = false
 
-[node name="Stamina" type="ProgressBar" parent="Root/Bars"]
-custom_minimum_size = Vector2(420, 26)
+[node name="StaminaRow" type="HBoxContainer" parent="Root/VitalsPanel/Margin/Bars"]
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="StaminaLabel" type="Label" parent="Root/VitalsPanel/Margin/Bars/StaminaRow"]
+custom_minimum_size = Vector2(54, 22)
+mouse_filter = 2
+theme_override_font_sizes/font_size = 20
+vertical_alignment = 1
+text = "STA"
+
+[node name="Stamina" type="ProgressBar" parent="Root/VitalsPanel/Margin/Bars/StaminaRow"]
+custom_minimum_size = Vector2(254, 22)
+size_flags_horizontal = 3
+mouse_filter = 2
 value = 100.0
 show_percentage = false
 
-[node name="Readout" type="Label" parent="Root"]
-offset_left = 40.0
-offset_top = 140.0
+[node name="StatusPanel" type="PanelContainer" parent="Root"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -232.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 96.0
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="Root/StatusPanel"]
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 10
+
+[node name="Rows" type="VBoxContainer" parent="Root/StatusPanel/Margin"]
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Party" type="Label" parent="Root/StatusPanel/Margin/Rows"]
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
+text = "Pals  0 / 5"
+
+[node name="Orbs" type="Label" parent="Root/StatusPanel/Margin/Rows"]
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
+text = "Orbs  0"
+
+[node name="Prompt" type="Label" parent="Root"]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -140.0
+offset_right = 400.0
+offset_bottom = -96.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+text = ""
+
+[node name="DebugReadout" type="Label" parent="Root"]
+visible = false
+offset_left = 32.0
+offset_top = 120.0
 offset_right = 900.0
-offset_bottom = 640.0
-theme_override_font_sizes/font_size = 24
+offset_bottom = 620.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
 text = "waiting for player"
