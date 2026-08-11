@@ -1,0 +1,27 @@
+{
+  "species": "villager_male",
+  "tier": "preview",
+  "prompt": "stylised human male villager, SHORT TOUSLED BROWN HAIR, FULLY SCULPTED FACIAL FEATURES: defined eye sockets, eyebrows, nose and mouth geometry. Average build, six and a quarter heads tall, same height as the player, NOT chibi. Five separated fingers on each hand. Cream work shirt with rolled sleeves under a sleeveless brown canvas vest, wide brown belt with a hip pouch, dark brown trousers, brown lace-up boots, practical steady expression. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic skin, realistic human proportions, armor, weapons, sword, staff, gun, cape, robe, extra fingers, fused fingers, noisy surface detail, wet plastic shading, text, watermark, multiple people, base, pedestal",
+  "views": {
+    "front": "assets/pals/tetherbound/villager_male/reference/front.png",
+    "side": "assets/pals/tetherbound/villager_male/reference/side.png",
+    "back": "assets/pals/tetherbound/villager_male/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/villager_male/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019ff179-0e85-7ea1-90c8-72f56c035e3b"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019ff179-1460-7f42-8a3b-d86a1ff7c4f1"
+    },
+    {
+      "candidate": "c",
+      "task_id": "019ff179-1a14-7c6f-a4bb-021ac27528a0"
+    }
+  ]
+}

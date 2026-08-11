@@ -1,0 +1,27 @@
+{
+  "species": "grunt",
+  "tier": "preview",
+  "prompt": "stylised human Team Tether operative, DARK CLOTH MASK covering nose and mouth, FLAT-BRIMMED CAP with a small round insignia badge. Average build, six and a quarter heads tall, same height as the player, NOT chibi. Five separated fingers on each gloved hand. Charcoal-purple uniform jacket, CROSSED BROWN LEATHER BANDOLIER STRAPS over the chest, wide utility belt with pouches, dark grey trousers, black boots, tactical gloves, stern guarded posture. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic skin, realistic human proportions, armor, weapons, sword, staff, gun, cape, robe, extra fingers, fused fingers, noisy surface detail, wet plastic shading, text, watermark, multiple people, base, pedestal",
+  "views": {
+    "front": "assets/pals/tetherbound/grunt/reference/front.png",
+    "side": "assets/pals/tetherbound/grunt/reference/side.png",
+    "back": "assets/pals/tetherbound/grunt/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/grunt/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019ff179-34ad-7f4d-8317-d4224aa3d13b"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019ff179-39bb-7f05-95ff-2c168878a4ad"
+    },
+    {
+      "candidate": "c",
+      "task_id": "019ff179-3fb9-7c77-bd48-aad89a1671e3"
+    }
+  ]
+}

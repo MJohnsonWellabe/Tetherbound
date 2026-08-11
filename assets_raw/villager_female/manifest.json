@@ -1,0 +1,27 @@
+{
+  "species": "villager_female",
+  "tier": "preview",
+  "prompt": "stylised human female villager, TWIN PONYTAILS of brown hair, FULLY SCULPTED FACIAL FEATURES: defined eye sockets, eyebrows, nose and mouth geometry. Slim youthful build, six and a quarter heads tall, same height as the player, NOT chibi. Five separated fingers on each hand. Olive-green short-sleeve hooded jacket over a cream shirt, wide brown belt with a hip pouch, olive-brown cargo shorts, brown fingerless gloves, tall brown lace-up boots, small satchel strap across the chest, warm curious expression. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic skin, realistic human proportions, armor, weapons, sword, staff, gun, cape, robe, extra fingers, fused fingers, noisy surface detail, wet plastic shading, text, watermark, multiple people, base, pedestal",
+  "views": {
+    "front": "assets/pals/tetherbound/villager_female/reference/front.png",
+    "side": "assets/pals/tetherbound/villager_female/reference/side.png",
+    "back": "assets/pals/tetherbound/villager_female/reference/back.png",
+    "three_quarter": "assets/pals/tetherbound/villager_female/reference/three_quarter.png"
+  },
+  "polycount": 30000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "019ff178-eb83-7f3a-82cc-f610a62ed424"
+    },
+    {
+      "candidate": "b",
+      "task_id": "019ff178-f1c7-7e9a-8d9d-328867f2cf96"
+    },
+    {
+      "candidate": "c",
+      "task_id": "019ff178-f7d1-7c6a-bf94-ef1d49b717e4"
+    }
+  ]
+}

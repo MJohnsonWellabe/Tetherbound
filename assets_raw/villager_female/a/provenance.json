@@ -1,0 +1,11 @@
+{
+  "service": "Meshy",
+  "endpoint": "multi-image-to-3d",
+  "task_id": "019ff178-eb83-7f3a-82cc-f610a62ed424",
+  "created_at": 1786462662076,
+  "finished_at": 1786462734797,
+  "prompt": null,
+  "negative_prompt": "",
+  "art_style": "",
+  "texture_richness": null
+}
