@@ -37,12 +37,12 @@
         "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves.png"
       },
       "retint": {
-        "Leaves_NormalTree": "#9dcaff"
+        "Leaves_NormalTree": "#a8dba0"
       },
-      "_comment_variant": "EV2: 'controlled material variants -- spring, deep and yellow-green -- not a different colour per tree' (bible sec10). Three fixed steps, one per remaining model, not per-instance jitter. `spring` is the value this layer already shipped with (R9.4); `deep` and `yellow-green` are it darkened and warmed respectively, so all three stay in the same hue family R9.4 deliberately moved the canopy into -- away from the ground's own chartreuse -- rather than reopening that colour question.",
+      "_comment_variant": "EV2: 'controlled material variants -- spring, deep and yellow-green -- not a different colour per tree' (bible sec10). Three fixed steps, one per remaining model, not per-instance jitter. Round 1 of EV2's own blind pass tried this with R9.4's shipped #9dcaff as `spring` plus a straight darken (#7697bf) as `deep` -- both are BLUE-hued multiply colours (hue ~213) that only land in the intended green family on Leaves.png's DARK/average texels; on the texture's bright highlight speckle they multiply through nearly unchanged and read as visible cyan/teal flecks, which the critic named directly ('look like a stray specular/vertex-color artifact'). The three below are green-hued multiplies instead (hue 77-112) so the highlight case lands in the same family as the average case -- checked both algebraically (tools none committed; texture-average and a synthetic near-white highlight both come out hue 75-106) and by re-render. `deep` targets palette.json's meadow.leaf_green_deep (#496c34, hue 98) the way R9.4's comment always intended, this time by making the TINT itself green rather than relying on the texture average to correct a blue one.",
       "variant_retint": {
-        "res://assets/environment/stylized_nature/CommonTree_1.gltf": {"Leaves_NormalTree": "#9dcaff"},
-        "res://assets/environment/stylized_nature/CommonTree_2.gltf": {"Leaves_NormalTree": "#7697bf"},
+        "res://assets/environment/stylized_nature/CommonTree_1.gltf": {"Leaves_NormalTree": "#a8dba0"},
+        "res://assets/environment/stylized_nature/CommonTree_2.gltf": {"Leaves_NormalTree": "#6b8f52"},
         "res://assets/environment/stylized_nature/CommonTree_3.gltf": {"Leaves_NormalTree": "#c4d696"}
       }
     },
@@ -74,12 +74,12 @@
         "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves.png"
       },
       "retint": {
-        "Leaves_TwistedTree": "#9dcaff"
+        "Leaves_TwistedTree": "#a8dba0"
       },
       "_comment_variant": "EV2: the same 3-step spring/deep/yellow-green family as the `trees` layer (bible sec10), so the hero trees read as kin to the standard canopy rather than a fourth palette. One variant per remaining model, not per-instance jitter.",
       "variant_retint": {
-        "res://assets/environment/stylized_nature/TwistedTree_1.gltf": {"Leaves_TwistedTree": "#9dcaff"},
-        "res://assets/environment/stylized_nature/TwistedTree_2.gltf": {"Leaves_TwistedTree": "#7697bf"},
+        "res://assets/environment/stylized_nature/TwistedTree_1.gltf": {"Leaves_TwistedTree": "#a8dba0"},
+        "res://assets/environment/stylized_nature/TwistedTree_2.gltf": {"Leaves_TwistedTree": "#6b8f52"},
         "res://assets/environment/stylized_nature/TwistedTree_4.gltf": {"Leaves_TwistedTree": "#c4d696"}
       }
     },
@@ -108,7 +108,7 @@
       },
       "_comment_variant": "The same two non-spring variants as the standard canopy, so the sapling layer reads as the same species at a different age rather than a third palette.",
       "variant_retint": {
-        "res://assets/environment/stylized_nature/CommonTree_4.gltf": {"Leaves_NormalTree": "#7697bf"},
+        "res://assets/environment/stylized_nature/CommonTree_4.gltf": {"Leaves_NormalTree": "#6b8f52"},
         "res://assets/environment/stylized_nature/CommonTree_5.gltf": {"Leaves_NormalTree": "#c4d696"}
       }
     },
