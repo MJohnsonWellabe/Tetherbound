@@ -8,6 +8,7 @@ extends "res://tests/test_case.gd"
 ## wants that line.
 
 const ARBITER := preload("res://scripts/world/prompt_arbiter.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 
 func test_nothing_on_offer_draws_nothing() -> void:
@@ -86,10 +87,12 @@ func test_a_blank_label_is_not_an_offer() -> void:
 
 
 ## The drawn line has to keep the shape the combat HUD already renders, or every
-## existing prompt jumps sideways the day arbitration goes in.
+## existing prompt jumps sideways the day arbitration goes in. Checked against
+## input_glyph.gd's own output rather than a literal BBCode string, so this
+## does not need editing every time the glyph's file or size is retuned.
 func test_an_actionable_offer_carries_the_button_glyph() -> void:
 	var line := ARBITER.format(ARBITER.offer("Engage Bramblebun", 3.0))
-	assert_eq(line, "[X] / [E]   Engage Bramblebun")
+	assert_eq(line, "%s   Engage Bramblebun" % INPUT_GLYPH.icon("interact"))
 
 
 func test_a_statement_carries_no_button_glyph() -> void:

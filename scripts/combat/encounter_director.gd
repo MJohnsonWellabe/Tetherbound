@@ -16,6 +16,7 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
@@ -473,7 +474,7 @@ func _update_prompt() -> void:
 	else:
 		var candidate := _engageable()
 		if candidate != null:
-			text = "[X] / [E]   Engage %s" % str(candidate.get("display_name"))
+			text = "%s   Engage %s" % [INPUT_GLYPH.icon("interact"), str(candidate.get("display_name"))]
 	if text != _prompt:
 		_prompt = text
 		prompt_changed.emit(text)

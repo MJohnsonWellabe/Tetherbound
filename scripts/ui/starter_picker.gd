@@ -21,6 +21,7 @@ extends CanvasLayer
 ## lights do not leak into the meadow's own World3D or each other's.
 
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
 const PAL_BODY := preload("res://scripts/pals/pal_body.gd")
 
@@ -95,7 +96,7 @@ var _restore_mouse: int = Input.MOUSE_MODE_CAPTURED
 @onready var _root: Control = $Root
 @onready var _title: Label = $Root/Title
 @onready var _orbs: HBoxContainer = $Root/Orbs
-@onready var _hint: Label = $Root/Hint
+@onready var _hint: RichTextLabel = $Root/Hint
 
 
 func _ready() -> void:
@@ -104,10 +105,12 @@ func _ready() -> void:
 
 
 func _make_text_legible(node: Node) -> void:
-	if node is Label:
-		var label := node as Label
-		label.add_theme_constant_override("outline_size", OUTLINE_SIZE)
-		label.add_theme_color_override("font_outline_color", OUTLINE)
+	# Both node types share this theme property name, unlike font_color/
+	# default_color -- see dialogue_panel.gd's own note on that split.
+	if node is Label or node is RichTextLabel:
+		var control := node as Control
+		control.add_theme_constant_override("outline_size", OUTLINE_SIZE)
+		control.add_theme_color_override("font_outline_color", OUTLINE)
 	for child in node.get_children():
 		_make_text_legible(child)
 
@@ -125,7 +128,7 @@ func open(species: Array[String]) -> void:
 	_open = true
 	_guard = OPEN_GUARD_FRAMES
 	_title.text = "Three orbs, three companions. Choose one."
-	_hint.text = "[<-] [->] look    [A] choose"
+	_hint.text = "%s look    %s choose" % [INPUT_GLYPH.icon("horizontal"), INPUT_GLYPH.icon("confirm")]
 	_restore_mouse = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_build_orbs()

@@ -1,5 +1,7 @@
 extends RefCounted
 
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+
 ## Which of the things around the player gets the one prompt line.
 ##
 ## Pure, static, no nodes — so the rule can be tested without booting a world.
@@ -21,10 +23,6 @@ extends RefCounted
 ## than proximity, and `actionable` is false for a line that is a statement
 ## rather than an offer ("Your pal is out of the fight") — those draw without a
 ## button glyph and pressing the button does nothing.
-
-## The button glyph, gamepad first. Controller is the primary input
-## (CLAUDE.md), so the pad's button is named before the keyboard's.
-const BUTTON_HINT := "[X] / [E]"
 
 ## Between the glyph and the verb. Three spaces, matching the string this
 ## replaced in encounter_director._update_prompt(), so no existing prompt moves
@@ -72,14 +70,14 @@ static func choose_index(offers: Array) -> int:
 
 
 ## The line to draw for an offer. Empty string for no offer, so the caller can
-## assign it to a Label unconditionally.
+## assign it to a RichTextLabel (`bbcode_enabled = true`) unconditionally.
 static func format(offer: Dictionary) -> String:
 	var label := str(offer.get("label", ""))
 	if label == "":
 		return ""
 	if not bool(offer.get("actionable", true)):
 		return label
-	return "%s%s%s" % [BUTTON_HINT, GAP, label]
+	return "%s%s%s" % [INPUT_GLYPH.icon("interact"), GAP, label]
 
 
 ## Can the player press the button on this offer right now?

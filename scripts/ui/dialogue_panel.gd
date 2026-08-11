@@ -13,6 +13,7 @@ extends CanvasLayer
 ## is the same problem here.
 
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 ## Frames of deafness after opening.
 ##
@@ -42,7 +43,7 @@ var _last_portrait: String = ""
 @onready var _portrait: TextureRect = $Root/Box/Margin/Row/Portrait
 @onready var _speaker: Label = $Root/Box/Margin/Row/Text/Speaker
 @onready var _body: Label = $Root/Box/Margin/Row/Text/Body
-@onready var _hint: Label = $Root/Box/Margin/Row/Text/Hint
+@onready var _hint: RichTextLabel = $Root/Box/Margin/Row/Text/Hint
 
 
 func _ready() -> void:
@@ -67,7 +68,10 @@ func _dress() -> void:
 	box.content_margin_left = 0.0
 	(_box as PanelContainer).add_theme_stylebox_override("panel", box)
 	_speaker.add_theme_color_override("font_color", SPEAKER_COLOUR)
-	_hint.add_theme_color_override("font_color", HINT_COLOUR)
+	# RichTextLabel's equivalent of Label's `font_color` is `default_color` --
+	# a different property name for the same role, easy to miss since both
+	# nodes otherwise share the outline/shadow property names below.
+	_hint.add_theme_color_override("default_color", HINT_COLOUR)
 
 
 ## Outline and shadow every piece of text in the tree, whatever gets added
@@ -147,7 +151,13 @@ func _draw() -> void:
 	_box.visible = true
 	_speaker.text = str(line.get("speaker", ""))
 	_body.text = str(line.get("text", ""))
-	_hint.text = "[X] / [E]   %s" % ("Close" if bool(line.get("is_last", false)) else "Continue")
+	# Real glyph, not "[X] / [E]" bracket text showing both devices at once --
+	# bible sec18: "Do not display both keyboard and controller prompts
+	# simultaneously unless context requires it."
+	_hint.text = "%s   %s" % [
+		INPUT_GLYPH.icon("interact"),
+		"Close" if bool(line.get("is_last", false)) else "Continue",
+	]
 
 	var portrait := str(line.get("portrait", ""))
 	if portrait != _last_portrait:

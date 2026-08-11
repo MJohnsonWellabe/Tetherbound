@@ -111,7 +111,7 @@ grow_vertical = 0
 theme_override_font_sizes/normal_font_size = 30
 text = ""
 
-[node name="Prompt" type="Label" parent="Root"]
+[node name="Prompt" type="RichTextLabel" parent="Root"]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -124,7 +124,11 @@ offset_bottom = -134.0
 grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/normal_font_size = 34
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
 text = ""
 
 [node name="Orbs" type="Label" parent="Root"]

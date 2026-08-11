@@ -69,7 +69,11 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="Hint" type="Label" parent="Root/Box/Margin/Column"]
+[node name="Hint" type="RichTextLabel" parent="Root/Box/Margin/Column"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/normal_font_size = 24
 horizontal_alignment = 1
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false

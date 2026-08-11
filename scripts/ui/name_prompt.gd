@@ -27,6 +27,7 @@ extends CanvasLayer
 ## screen that changes about once a second.
 
 const ENTRY := preload("res://scripts/ui/name_entry.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 ## Frames of deafness after opening, for the reason dialogue_panel.gd gives: the
 ## press that opened this is still in the same frame's input state.
@@ -70,7 +71,7 @@ var _restore_mouse: int = Input.MOUSE_MODE_CAPTURED
 @onready var _title: Label = $Root/Box/Margin/Column/Title
 @onready var _entry_label: Label = $Root/Box/Margin/Column/Entry
 @onready var _keys: VBoxContainer = $Root/Box/Margin/Column/Keys
-@onready var _hint: Label = $Root/Box/Margin/Column/Hint
+@onready var _hint: RichTextLabel = $Root/Box/Margin/Column/Hint
 
 
 func _ready() -> void:
@@ -96,10 +97,12 @@ func _dress() -> void:
 
 
 func _make_text_legible(node: Node) -> void:
-	if node is Label:
-		var label := node as Label
-		label.add_theme_constant_override("outline_size", OUTLINE_SIZE)
-		label.add_theme_color_override("font_outline_color", OUTLINE)
+	# Both node types share this theme property name, unlike font_color/
+	# default_color below -- see dialogue_panel.gd's own note on that split.
+	if node is Label or node is RichTextLabel:
+		var control := node as Control
+		control.add_theme_constant_override("outline_size", OUTLINE_SIZE)
+		control.add_theme_color_override("font_outline_color", OUTLINE)
 	for child in node.get_children():
 		_make_text_legible(child)
 
@@ -284,8 +287,9 @@ func _draw() -> void:
 	var caret := "_" if _entry.text.length() < ENTRY.MAX_LENGTH else ""
 	_entry_label.text = "%s%s" % [_entry.text, caret]
 	var valid: bool = _entry.is_valid()
-	_hint.text = "[A] type    [B] delete    OK to finish" if valid \
-		else "[A] type    [B] delete    every pal gets a name"
+	var glyphs := "%s type    %s delete" % [INPUT_GLYPH.icon("confirm"), INPUT_GLYPH.icon("cancel")]
+	_hint.text = "%s    OK to finish" % glyphs if valid \
+		else "%s    every pal gets a name" % glyphs
 
 	var cursor := Vector2i(int(_entry.column), int(_entry.row))
 	if cursor == _drawn_cursor and valid == _drawn_valid:

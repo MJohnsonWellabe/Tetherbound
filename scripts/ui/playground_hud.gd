@@ -85,7 +85,7 @@ var _max_raw_axis_seen := 0.0
 @onready var _stamina_label: Label = $Root/VitalsPanel/Margin/Bars/StaminaRow/StaminaLabel
 @onready var _party_label: Label = $Root/StatusPanel/Margin/Rows/Party
 @onready var _orbs_label: Label = $Root/StatusPanel/Margin/Rows/Orbs
-@onready var _prompt_label: Label = $Root/Prompt
+@onready var _prompt_label: RichTextLabel = $Root/Prompt
 @onready var _debug_readout: Label = $Root/DebugReadout
 
 var _health_fill: StyleBoxFlat = null
