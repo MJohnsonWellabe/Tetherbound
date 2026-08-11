@@ -295,16 +295,43 @@ frames. Inventory grid, crafting panel, one tracked objective, contextual
 prompt. **Tested at physical 7-inch scale, not on a desktop monitor** — §17 is
 explicit. Input glyphs follow the last-used device.
 
-**Scope note added by `SA0-orbs-remainder`, 2026-08-11: this item already
-owns the narrative panels' button hints, even though the summary above never
-named them.** §16 ("Dialogue") asks for "a controller-first continue prompt"
-and §18's own worked examples open with "E / X button for interact" — the
-exact hint `dialogue_panel.gd` draws today as literal bracket text. So
-`dialogue_panel.gd`, `name_prompt.gd` and `scripts/ui/starter_picker.gd` all
-draw a hint line built the same way (`"[X] / [E]   %s"`-style string
-formatting) and all three are `EV9`'s to replace with real Kenney Input
-Prompts glyphs (staged at `assets_raw/vendor/kenney_input-prompts/`, `EV1`)
-when this item is picked up — not a gap to rediscover mid-task.
+**First slice shipped 2026-08-11 (`eea16a9`): the exploration HUD only.**
+`scripts/ui/playground_hud.gd`/`scenes/ui/playground_hud.tscn` rebuilt —
+styled health/stamina bars (dark translucent panel, teal border, rounded
+corners, labeled "HP"/"STA") that fade to a low-emphasis state when full and
+idle, a party/orb count panel, and the contextual interact prompt read live
+from `InteractionArbiter`. The old always-on debug telemetry dump still
+exists but is now F3-toggled instead of covering a third of the screen.
+Blind visual-judge (3 rounds, `tools/capture_exploration_hud.gd`) converged
+on "coherent, intentional HUD"; remaining gaps were named explicitly as
+needing new assets rather than more scene tuning.
+
+**Still open — do NOT re-scope these as a separate item, they are this
+item's remainder:**
+- Inventory grid (`tab_backpack.gd`) and crafting panel (`tab_build.gd`)
+  re-skin onto the same dark/teal panel language. Both are fully functional
+  today, just unstyled — see the survey any EV9 firing should re-read before
+  starting (search `ralph/DONE.md` for "EV9" or read this entry's own
+  history) for the exact API surface (`Game.inventory`, `Game.items`,
+  `revision` polling, `menu_tab.gd` contract) `smoke_menu.gd` depends on.
+- The "[X] / [E]" input-glyph replacement across `dialogue_panel.gd`,
+  `name_prompt.gd` and `scripts/ui/starter_picker.gd` (still literal bracket
+  text; Kenney Input Prompts staged at `assets_raw/vendor/kenney_input-prompts/`,
+  `EV1`) — needs a last-used-input-device tracker, which does not exist
+  anywhere in the codebase yet (checked: only `tab_settings.gd`/
+  `key_bindings.gd` touch device concepts, and only for rebinding UI, not a
+  live "which device did the player touch last" signal).
+- The "one tracked objective" line has nothing to read yet — `SB9`/`SB11`
+  (progression-state system, quest log) are still open. Wire the label once
+  that state exists; a label bound to nothing is a permanent blank box, the
+  opposite of §16's "hide/fade what's not relevant."
+- Compass — bible says "if it exists"; it doesn't yet, not this item's job to
+  invent one.
+- Icon glyphs for HP/STA/Pals/Orbs, a branded display font matching the
+  "TETHERBOUND" key-art logotype, and gradient/beveled bar fills — all named
+  explicitly by the round-3 blind critic as needing new assets, not scene
+  tuning. No board exists for a display font; flag to the owner before
+  picking one, per `CLAUDE.md`'s asset-generation rule.
 
 ### EV10 ▶ — Cohesion pass
 `model: sonnet` · `tests: none` · `area: visual`

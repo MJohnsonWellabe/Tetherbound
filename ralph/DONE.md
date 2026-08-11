@@ -3,6 +3,63 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV9 (first slice) — the exploration HUD, for real this time
+`eea16a9` · `tests: smoke_menu` green, plus `run_tests.gd` (299/299),
+`smoke_mouse_look`, `smoke_playground`, `smoke_opening`, all run locally
+headless before push.
+
+`playground_hud.gd`/`.tscn` rebuilt from the M1 debug dump into the real
+exploration HUD bible §16 describes: a styled health/stamina panel (dark
+translucent, teal border, rounded corners, "HP"/"STA" labels) that fades to
+a low-emphasis state when full and idle rather than to invisible, a
+party/orb count panel reading `Game.party`/`Game.inventory` live, and the
+contextual interact prompt read from `InteractionArbiter.prompt()`. The old
+always-on movement/input telemetry dump is still there — genuinely still
+needed for M1 tuning — just behind an F3 toggle now instead of covering a
+third of the screen by default.
+
+**Scoped deliberately small.** EV9's full brief (inventory grid + crafting
+panel reskin, input-glyph device tracking, objective line, icons, a display
+font) is bigger than one "smallest coherent version" pass, especially after
+watching visual-judge iteration cost on `SA0-orbs`/`SA0-orbs-remainder`. Full
+remainder list is in `BACKLOG.md`'s EV9 entry — read it before starting the
+next EV9 slice rather than re-deriving the same scope split.
+
+**Visual-judge, 3 rounds** (`tools/capture_exploration_hud.gd`, two frames —
+idle and a forced-hurt state — of the same viewpoint):
+- Round 1 found the vitals bars unlabeled, low-contrast against their own
+  track (fill alpha 0.28 was reading as a rendering glitch, not a calm
+  state), and the two panels looking visually mismatched. Fixed: added
+  "HP"/"STA" labels, raised the idle-fade floor to 0.55.
+- Round 2 found the panels reading as flat engine-default rectangles — the
+  10px corner radius and 30%-alpha border were too subtle to register, and
+  the label padding looked cramped. Fixed: border alpha/width up, corner
+  radius 10→14, labels vertically centered against their bars.
+- Round 3 verdict: **"Coherent, intentional game UI? Yes."** Two small notes
+  (bar-fill corner radius vs. panel radius, stamina teal too close to the
+  border teal) fixed inline without a further round. Everything else the
+  critic named it explicitly split out as "needs new assets" (icon glyphs, a
+  branded display font, gradient bar fills) rather than more scene tuning —
+  that split is what seeded the BACKLOG remainder list above.
+
+**Also swept up in this push:** three `.uid` sidecar files
+(`scripts/ui/starter_picker.gd.uid`, `tests/helpers/unhandled_probe.gd.uid`,
+`tools/capture_starter_picker.gd.uid`) that earlier firings had left
+uncommitted next to already-tracked scripts. Harmless on their own — Godot
+just regenerates them — but a fresh checkout would regenerate a *different*
+random uid than the one already baked into any `.tscn` reference, which is
+the kind of thing that only surfaces as a confusing import error much later.
+Committed them rather than filing a ticket for something this cheap to fix.
+
+**For the next EV9 firing:** the auto-merge bot rebased this branch once on
+its own (`ralph-bot`, run 328) and still hadn't landed it several minutes
+later because two other lanes (`R9.4-remainder-8`, then a run of `EV4`
+commits) kept moving `main` underneath it. Rebasing it myself and
+force-pushing (`--force-with-lease`, safe since it's a solo-owned feature
+branch with no one else's commits on it) is what actually got it merged —
+worth doing proactively rather than waiting out the bot's retry cycle when
+`main` is this active.
+
 ## LP2 — `smoke_opening` beat-3 press flake: a pattern fix, the race not directly reproduced
 `tests: smoke_opening`, green locally 3/3 (always exactly 14 presses, matching
 `grandpa_house`'s real line count) before push.
