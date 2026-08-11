@@ -5,10 +5,68 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R7.1-remainder — PARTIAL: ridge-bias clumping and ground-cover clustering shipped, neither bullet fully passes the blind critic after 3 rounds
+`af6e2fc`, `77421cf`, `44ec290` on `main` (owner-directed interactive
+session working Phase -0.5 through Phase 1, see `ralph/STATUS.md`'s lease
+note, not a normal Ralph firing).
+
+Three rounds, each rendered and judged blind against `docs/reference/` via
+`.claude/skills/visual-judge` per the visual-gating convention.
+
+**Horizon/mid-ground clumping** (`scripts/world/scatter_rules.gd`): a new
+`ridge_bias` layer parameter, and `_clump_centre()` now searches a local
+neighbourhood (`RIDGE_SEARCH_RADIUS` 140m, `RIDGE_CANDIDATES` 6 samples)
+around each clump's own unbiased draw for higher ground, rather than a
+blanket density increase. Round 1's first version searched candidates
+globally across the whole map, which concentrated the bias toward the
+map's 2-3 tallest named peaks and did nothing for the horizon in most
+compass directions — caught by direct inspection of round-1 renders (the
+horizon in frames 01/04 stayed bare despite the "fix") and redesigned to
+the local-search version before round 2's critique ran on it. `trees`
+layer set to `ridge_bias: 0.75` in `data/config/vegetation.json`. New
+tests `test_ridge_bias_of_zero_changes_nothing` and
+`test_ridge_bias_of_one_prefers_higher_ground` in
+`tests/test_scatter_rules.gd`.
+
+**Ground cover clustering** (`scripts/world/vegetation.gd`,
+`data/config/vegetation.json`): raised `grass`/`drygrass` tuft scale
+ranges, added per-instance MultiMesh colour jitter (new `colour_jitter`
+layer key, via `set_instance_color` + `vertex_color_use_as_albedo`) for
+value variation with zero extra draw calls, and cut `strays` across rounds
+2-3 (grass 2000→500, drygrass 700→200) so the remaining tufts read as
+clumps with real gaps rather than even confetti.
+
+**Round-3 (final, per the 3-round cap) blind critique verdict**: genuine,
+visible improvement over the pre-fix state — 03-rise-overlook and
+04-three-quarter both show real clump/clearing structure that wasn't there
+before — but the critic, still blind to what changed, named both original
+bullets as **not yet passing**: ground cover still "appear[s] at roughly
+even spacing and uniform scale... no clearings, no clustering around
+features"; and the horizon/mid-ground still shows "no middle-distance
+layering anywhere in the set," which the critic ranked as the single
+biggest reason the frames feel empty compared to both references. Handed
+back as an honest remainder, not a false done — see `BACKLOG.md`'s new
+`R7.1-remainder-2` entry for the specifics and what a next pass should try
+differently.
+
+**One critique finding investigated and resolved as a non-issue**: the
+critic flagged "a flat grey rectangular box floats just above the grass
+near the player" in frames 01 and 05 as a likely leaked debug marker.
+Traced to `scripts/world/harvest_node.gd`'s deliberate placeholder visual
+(a slot-coloured box; `CLAUDE.md`'s prototyping rule explicitly allows
+placeholder geometry to prove a mechanic) for the wood-gathering node at
+`(-8, 8)` in `data/config/harvest.json`, near both frames' shared eye
+position. Not a bug — a critic with no knowledge of the game's systems has
+no way to tell a deliberate stand-in from a leaked gizmo. No action taken;
+recorded here so the next reader doesn't rediscover the same box and
+wonder.
+
+---
+
 ## R7.1-found — moved the rise-overlook survey eye off the tower cluster
-Commit pending on `main` in the owner-directed interactive session working
-Phase -0.5 through Phase 1 (see `ralph/STATUS.md`'s lease note, not a
-normal Ralph firing). `tools/survey.gd`'s `03-rise-overlook` eye moved from
+`eb880cb` on `main` (owner-directed interactive session working Phase -0.5
+through Phase 1, see `ralph/STATUS.md`'s lease note, not a normal Ralph
+firing). `tools/survey.gd`'s `03-rise-overlook` eye moved from
 `(148, -102)` to `(190, -60)` — still on the same rise (`landmark.gd`'s
 `RISE_CENTRE` radius), but ~60m from the stronghold silhouette's tower
 cluster instead of ~14-24m, so the viewpoint frames the intended wide

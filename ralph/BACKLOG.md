@@ -130,40 +130,51 @@ below already tracks, not a new bug from this task.
 
 **The olive/lime ground seam is fixed — see `DONE.md`.**
 
-### R7.1-remainder — World ends 40m out, continuous ground cover
-`model: sonnet` · `tests: smoke_traversal`
+**R7.1-remainder (ridge-bias clump placement + ground-cover clustering, three
+rounds) shipped — see `DONE.md`.** Genuine, visible improvement over the
+pre-fix state, but neither bullet fully passes the blind critic yet; a
+narrower remainder is opened below.
 
-- **The world ends 40m out.** Nothing stands on any hill or horizon in any
-  frame; put trees and the landmark into the middle and far distance bands.
-  Re-examined while chasing the ground seam (see `DONE.md`), and it is not
-  quite what it sounds like: `RULES.all_placements()` genuinely spreads
-  every layer out to the world edge (queried directly — `trees` alone
-  places 102 of its 178 instances beyond 200m from origin, none inside
-  40m), and the pale, featureless hills filling the upper half of every
-  distant frame are `world_background = NOISE`, Terrain3D's own procedural
-  continuation PAST the baked 512m region — by construction nothing can
-  stand on that, it is not part of the bake. So the real gap is narrower
-  than "nothing past 40m": specific sightlines toward the true horizon
-  (the last real hilltops before the procedural background takes over)
-  can still land on a gap between the existing clumps and read as bare.
-  `scripts/world/vegetation.gd`'s clump-based scatter is a large,
-  already-carefully-tuned system (see its own extensive comments) and
-  this still needs its own focused pass — most usefully, biasing clumps
-  toward standing ON the ridgelines the camera actually silhouettes
-  against, not a blanket density increase.
-- **Continuous ground cover.** Isolated same-size tufts at even density
-  read as confetti; the references stand on continuous grass with
-  clustered variety and real clearings. `data/config/vegetation.json`'s
-  `grass`/`drygrass` layers already carry two rounds of density tuning
-  with detailed reasoning in their own comments, including a prior attempt
-  at raising instance count that cost too much render time for too little
-  coverage gain — re-tuning needs a rendered before/after, not a guessed
-  number, and probably a lever other than instance count (the same
-  comment suggests bigger tufts at moderate count over more of the near
-  field). Worth re-judging against the fixed ground texture below first:
-  isolated tufts read very differently sitting on real grass than they
-  did sitting on the wrong-hued rock/soil texture the seam bug was
-  putting under most of the map.
+### R7.1-remainder-2 — Ground cover still reads procedural, horizon mid-ground still sparse
+`model: sonnet` · `tests: none`
+R7.1-remainder's third and final blind-critic round, on the post-fix survey
+(owner-directed interactive session, 2026-08-10/11): the field still "reads
+underpopulated" against both references (its #2 ranked gap, right behind
+sky/fog consistency), and names both original bullets specifically —
+
+- **Continuous ground cover, still not clearing.** Despite three rounds of
+  tuning (bigger tufts, per-instance colour jitter, cut `strays` grass
+  2000→500 / drygrass 700→200 for tighter clumping — see `DONE.md`), the
+  critic still calls the scatter "roughly even spacing and uniform scale in
+  02, 03, and the open ground of 01 and 05... no clearings, no clustering
+  around features, and no scale variety within a prop type." The clump
+  structure that IS there (visible in 03, 04) isn't enough density to read
+  as continuous cover rather than isolated groups. Next attempt should try
+  a genuine density lever inside the clumps themselves (more `per_clump`,
+  smaller `clump_radius` for tighter packing) rather than further
+  redistributing the same instance count, and re-judge against Palworld's
+  own field shots specifically for how many blades are actually on screen
+  at once.
+- **Horizon/mid-ground, partly the known unfixable limit, partly not.**
+  "No middle-distance layering anywhere in the set (no tree lines,
+  ridgelines, or water)... the single biggest reason these frames feel
+  empty." Some of this is `world_background = NOISE` (Terrain3D's
+  procedural continuation past the 512m bake, genuinely can't hold props —
+  see the original `R7.1-remainder` entry in `DONE.md`), but the finding
+  reads as broader than just the unreachable far band — the near/mid
+  ground inside the bake is also thin. Worth investigating whether a
+  water feature (a pond/stream, named as a biome pillar in `GAME_DESIGN.md`
+  but absent from every survey frame) would do more for depth-reading than
+  further vegetation tuning.
+
+Two smaller findings from the same round, not chased further to stay
+inside the three-round cap: sky/fog treatment is inconsistent between
+frames (01/05 show a blue gradient sky, 02 a dark navy sky with hard-edged
+cloud shapes, 03/04 a flat cream band) — likely a lighting/environment
+config difference between survey viewpoints rather than a scatter issue,
+worth its own investigation; and a small aliased red-maroon shape in 03
+that the critic couldn't resolve into a legible object, possibly a
+retint/LOD edge case on a single tree instance.
 
 **R7.1-found (rise-overlook eye moved off the tower cluster) fixed — see `DONE.md`.**
 
