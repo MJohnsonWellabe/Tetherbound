@@ -3,6 +3,58 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## NP4-rig — Rig, animate and install the three NP4 bases
+`tests: smoke_art` (green, local headless + Godot import clean)
+
+`finish.py`'s `rig`/`install` subcommands were creature-only (`RIGS` covers
+quadruped/glider/bird/sitter; `install` only wrote
+`assets/pals/tetherbound/<species>/models/`). Added a `--kind humanoid` path
+to both instead of re-deriving whatever manual process installed the
+trainer/Grandpa/Warden originally:
+
+- `rig --kind humanoid` calls out to `meshy.py rig` (Meshy's own auto-rigger
+  — the one endpoint that documents itself as humanoid-only) and
+  `meshy.py fetch --stage rig`, then runs the existing
+  `blender/animate_humanoid.py` locally on whatever skeleton comes back —
+  same five procedural clips (idle/walk/sprint/jump/throw) the trainer
+  already ships, no new Blender script needed.
+- `install --kind humanoid` writes to `assets/characters/<species>/<species>_lod0.glb`,
+  matching the trainer/grandpa/warden layout (no `models/` subdir, no
+  `pal_` prefix), instead of the creature path.
+- No humanoid `grade` step: `grade.py` has no `SPECIES` entries for
+  trainer/grandpa/warden either, and `install` already falls back to
+  `animated.glb` when `graded.glb` doesn't exist.
+
+Ran all three of `NP4`'s bases end to end, serially: `villager_female`
+(`--height 1.75`), `villager_male` (`--height 1.78`), `grunt` (`--height
+1.85`, matching the Warden's). Each rigged and animated cleanly on the first
+attempt — 15 credits total (4805 → 4790), confirming the backlog item's own
+note that this was pipeline plumbing, not an art problem. Verified each
+installed GLB directly (parsed the glTF JSON): 1 skin, 26 nodes, and
+`['Armature|clip0|baselayer', 'idle', 'walk', 'sprint', 'jump', 'throw']` —
+byte-for-byte the same animation-track shape as the existing trainer/
+grandpa/warden GLBs, including the same harmless leftover base-layer track
+from Meshy's rig export.
+
+Godot headless `--import` ran clean (no script errors); it auto-extracted a
+`<species>_lod0_texture_0.png` next to each GLB, same as the existing three
+humans — nothing manual needed there, and `project.godot` was not touched so
+no `git checkout` was required. `smoke_art` ran green locally
+(`art: OK — models loaded, sized to their colliders, and the meadow is
+dressed.`) — it doesn't test these three directly since nothing in
+`data/config/art.json` references them yet (unchanged from `NP4`'s own
+scope note: `NP1`/`NP3` still reuse the trainer/Grandpa/Warden rigs
+directly), so this is a clean regression check, not new coverage.
+
+Ledgered all three in `docs/ASSET_LEDGER.md` (the generate/texture stage
+from `NP4` had never been ledgered — added now, alongside the rig stage).
+
+`NP4`'s two honest remainders (villager_female's UV-seam shin blotch and
+occluded ponytail silhouette; villager_male's cold trousers colour) are
+unchanged — this item was pipeline plumbing only, not a re-texture pass.
+These three bases still aren't consumed by any live NPC; that's `NP1-geometry`
+or a future `NP3`/`NP2`-style item's job, not this one's.
+
 ## R9.4-remainder-8 — three of eight findings were real; the rest were checked, not assumed
 `55fa8f1` (grass-through-floor + windmill footprint), `8a3fc0c` (barn scale).
 `tests: full suite` (299/299, both commits). Visual-affecting: rendered
