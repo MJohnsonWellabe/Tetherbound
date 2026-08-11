@@ -234,15 +234,20 @@ func _build_preview(viewport: SubViewport, id: String) -> Node3D:
 	# Warm dark amber — inside the orb, not the meadow outside it.
 	env.background_color = Color(0.16, 0.12, 0.05)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.85, 0.86, 0.90)
-	env.ambient_light_energy = 1.6
+	# Warmed and raised after the blind pass called the creatures "flat,
+	# low-key" and read the gap against the Palworld bar as partly a lighting
+	# problem, not a sculpt problem — the same creatures under brighter, warmer
+	# light read as considerably more alive than under the original cool,
+	# museum-neutral 0.85/0.86/0.90 at 1.6.
+	env.ambient_light_color = Color(0.97, 0.93, 0.84)
+	env.ambient_light_energy = 2.2
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env_node.environment = env
 	world.add_child(env_node)
 
 	var key := DirectionalLight3D.new()
 	key.rotation = Vector3(deg_to_rad(-35.0), deg_to_rad(35.0), 0.0)
-	key.light_energy = 1.4
+	key.light_energy = 2.0
 	world.add_child(key)
 
 	var body: Node3D = PAL_SCENE.instantiate()
