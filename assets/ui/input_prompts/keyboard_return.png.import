@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bowpqbcskgce7"
-path="res://.godot/imported/keyboard_arrows_horizontal.png-c04b6ea55f7f5b2c274bdbfdfdacdab0.ctex"
+uid="uid://dr1bt43u743js"
+path="res://.godot/imported/keyboard_return.png-8688532ebe72daa8b8f75b371dc33f4e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/input_prompts/keyboard_arrows_horizontal.png"
-dest_files=["res://.godot/imported/keyboard_arrows_horizontal.png-c04b6ea55f7f5b2c274bdbfdfdacdab0.ctex"]
+source_file="res://assets/ui/input_prompts/keyboard_return.png"
+dest_files=["res://.godot/imported/keyboard_return.png-8688532ebe72daa8b8f75b371dc33f4e.ctex"]
 
 [params]
 
