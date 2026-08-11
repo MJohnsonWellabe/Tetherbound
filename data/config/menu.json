@@ -69,7 +69,7 @@
         },
         {
           "name": "The world",
-          "actions": ["interact", "inventory", "map", "tool_cycle"]
+          "actions": ["interact", "inventory", "map", "tool_cycle", "pal_recall"]
         },
         {
           "name": "Fighting",
@@ -99,6 +99,7 @@
         "inventory": "Open the backpack",
         "map": "Map",
         "tool_cycle": "Next tool  /  next tab",
+        "pal_recall": "Call out  /  put away your pal",
         "combat_quick": "Quick attack",
         "combat_charged": "Charged attack",
         "combat_throw": "Throw an orb",
