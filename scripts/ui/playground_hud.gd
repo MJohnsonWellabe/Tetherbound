@@ -52,6 +52,24 @@ const FADE_SPEED := 2.2
 
 const READOUT_INTERVAL := 0.1
 
+## F3 cycles OFF -> PERF -> FULL rather than toggling.
+##
+## PERF is the mode you leave up while playing: frame time and the render
+## counters and nothing else. FULL adds the M1 movement block and the input
+## diagnostics, which are ~25 lines of text that push the perf numbers off the
+## bottom of the Label and are irrelevant to a performance session.
+const DEBUG_OFF := 0
+const DEBUG_PERF := 1
+const DEBUG_FULL := 2
+
+## ~2 seconds of frames at 60 Hz. The window has to be long enough that an
+## occasional spike still shows up in `max` a moment later, and short enough
+## that walking from a clear field into the tree line moves the numbers while
+## you are still looking at the tree line.
+const FRAME_WINDOW := 120
+
+const MB := 1048576.0
+
 const PARTY := preload("res://autoload/party.gd")
 const ORB_ITEM_ID := "orb_basic"
 
@@ -67,10 +85,35 @@ const STUCK_AXES_EPSILON := 0.05
 
 var _player: CharacterBody3D = null
 var _arbiter: Node = null
+var _game: Node = null
+## -1 rather than 0 so the first frame always writes both labels; a real count
+## of zero would otherwise leave them showing the scene's placeholder text.
+var _last_pals := -1
+var _last_orbs := -1
 var _since_readout := 0.0
 var _peak_fall := 0.0
 var _last_damage := 0.0
-var _debug_on := false
+var _debug_level := DEBUG_OFF
+
+## Frame times in milliseconds, as a fixed-size ring.
+##
+## Pre-sized and written by index on purpose: an overlay that allocates every
+## frame measures itself. Nothing here scans the ring — that happens inside the
+## 0.1 s throttle, so the min/max pass runs ten times a second, not sixty.
+var _frame_ms := PackedFloat32Array()
+var _frame_head := 0
+var _frame_filled := 0
+
+## Which adapter and driver are ACTUALLY live, resolved once at boot.
+##
+## The single most load-bearing line in the readout. `fallback_to_angle`
+## defaults true and Godot carries a device blocklist that can force ANGLE on,
+## while `fallback_to_native` can quietly put a failed ANGLE start back on
+## native OpenGL. So the driver the project asked for and the driver that is
+## running are two different facts, and until this line existed only one of them
+## was visible. Under ANGLE the adapter name contains "ANGLE (... Direct3D11
+## ...)"; under native WGL it is the bare adapter string.
+var _hardware_line := ""
 
 ## Tracks whether a connected pad has EVER reported a non-trivial axis value.
 ## A single frame's reading cannot tell "not touching the stick right now"
@@ -100,6 +143,8 @@ func _ready() -> void:
 		_player.connect("landed", _on_landed)
 
 	_arbiter = get_node_or_null(arbiter_path)
+	if _arbiter != null and _arbiter.has_signal("prompt_changed"):
+		_arbiter.connect("prompt_changed", _on_prompt_changed)
 
 	_style_panel($Root/VitalsPanel)
 	_style_panel($Root/StatusPanel)
@@ -113,8 +158,20 @@ func _ready() -> void:
 	_make_text_legible(_orbs_label)
 	_make_text_legible(_prompt_label)
 
-	_debug_readout.visible = _debug_on
-	_prompt_label.text = ""
+	_frame_ms.resize(FRAME_WINDOW)
+	_hardware_line = "%s | %s | driver %s" % [
+		RenderingServer.get_video_adapter_name(),
+		str(ProjectSettings.get_setting("rendering/renderer/rendering_method", "?")),
+		"/".join(OS.get_video_adapter_driver_info()),
+	]
+
+	_debug_readout.visible = _debug_level != DEBUG_OFF
+
+	# Seeded from the arbiter rather than blanked, because `prompt_changed`
+	# only fires on a CHANGE: if the arbiter published before this HUD
+	# connected, waiting for the next edge would leave the prompt blank while
+	# the player stands in front of something interactable.
+	_prompt_label.text = str(_arbiter.call("prompt")) if _arbiter != null else ""
 
 
 func _style_panel(panel: PanelContainer) -> void:
@@ -169,12 +226,24 @@ func _on_landed(impact_speed: float, damage: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F3:
-		_debug_on = not _debug_on
-		_debug_readout.visible = _debug_on
+		_debug_level = (_debug_level + 1) % 3
+		_debug_readout.visible = _debug_level != DEBUG_OFF
 
 
+## The readout runs BEFORE the player checks, not after them.
+##
+## It used to sit at the bottom of this function behind two early returns for a
+## null player and null vitals, so a scene with no player — a capture tool, a
+## test harness — could not show a frame-time readout at all. Frame time is a
+## property of the frame, not of the player.
 func _process(delta: float) -> void:
-	_draw_prompt()
+	if _debug_level != DEBUG_OFF:
+		_sample_frame(delta)
+		_since_readout += delta
+		if _since_readout >= READOUT_INTERVAL:
+			_since_readout = 0.0
+			_debug_readout.text = _debug_text()
+
 	_update_status()
 	if _player == null:
 		return
@@ -184,33 +253,135 @@ func _process(delta: float) -> void:
 
 	_update_vitals(vitals, delta)
 
-	if _debug_on:
-		_since_readout += delta
-		if _since_readout >= READOUT_INTERVAL:
-			_since_readout = 0.0
-			_debug_readout.text = _debug_text(vitals)
+
+## One array write and two integers. Everything expensive is in `_perf_lines`,
+## which only runs on the throttle.
+func _sample_frame(delta: float) -> void:
+	_frame_ms[_frame_head] = delta * 1000.0
+	_frame_head = (_frame_head + 1) % FRAME_WINDOW
+	_frame_filled = mini(_frame_filled + 1, FRAME_WINDOW)
 
 
-func _draw_prompt() -> void:
-	if _arbiter == null:
-		return
-	_prompt_label.text = str(_arbiter.call("prompt"))
+## What the frame cost, and what it was spent on.
+##
+## This exists because three performance fixes have shipped on this project
+## without a single frame-time measurement from the device they were for
+## (`SA1`, `SA1-lod`, the shadow-atlas cut — all still "on-device confirmation
+## open"). Software rendering cannot measure frame time honestly (`D06`), so the
+## only instrument that can settle any of it is one the owner can read on the
+## Ally.
+##
+## `min`/`max` are here rather than an average alone because the three shapes a
+## bad frame time comes in need three different fixes and are indistinguishable
+## from the average:
+##
+##   - steady 24 ms          -> throughput. Draw fewer things, or draw them smaller.
+##   - 16 ms with 60 ms spikes -> a hitch. Streaming, a shader compile, an allocation.
+##   - a hard 16.7/33.3 split  -> vsync half-rate. Nothing about the scene matters.
+func _perf_lines() -> Array[String]:
+	var worst := 0.0
+	var best := 0.0
+	var total := 0.0
+	if _frame_filled > 0:
+		best = _frame_ms[0]
+		for i in _frame_filled:
+			var ms: float = _frame_ms[i]
+			total += ms
+			worst = maxf(worst, ms)
+			best = minf(best, ms)
+	var avg: float = total / float(_frame_filled) if _frame_filled > 0 else 0.0
+
+	var vp := get_viewport()
+	var scale: float = vp.scaling_3d_scale if vp != null else 1.0
+	var size: Vector2i = vp.get_visible_rect().size if vp != null else Vector2i.ZERO
+
+	# The vsync mode is READ BACK, not echoed from what was requested. Windows
+	# OpenGL can silently refuse mailbox/adaptive and fall back to plain vsync,
+	# and a knob whose effect cannot be seen is how a fourth blind fix gets
+	# shipped.
+	var vsync := -1
+	if DisplayServer.get_name() != "headless":
+		vsync = int(DisplayServer.window_get_vsync_mode())
+
+	return [
+		"perf (F3 again for movement/input, once more to hide)",
+		"",
+		"fps        %d      frame %.1f ms   min %.1f   max %.1f" % [
+			Engine.get_frames_per_second(), avg, best, worst,
+		],
+		"draw calls %d      primitives %d" % [
+			Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
+			Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),
+		],
+		"video mem  %.0f MB   textures %.0f MB" % [
+			Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / MB,
+			Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / MB,
+		],
+		"static mem %.0f MB   nodes %d" % [
+			Performance.get_monitor(Performance.MEMORY_STATIC) / MB,
+			int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)),
+		],
+		"cpu        process %.2f ms   physics %.2f ms" % [
+			Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,
+			Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0,
+		],
+		"3d scale   %.2f  (%d x %d)   msaa %d" % [
+			scale, int(size.x * scale), int(size.y * scale),
+			int(vp.msaa_3d) if vp != null else 0,
+		],
+		"vsync      %d      max_fps %d" % [vsync, Engine.max_fps],
+		_hardware_line,
+	]
+
+
+## Driven by the arbiter's signal, not polled.
+##
+## This used to run every idle frame: a dynamic `call("prompt")` plus a
+## RichTextLabel text assignment, sixty times a second, for a string that
+## changes a few times a minute. RichTextLabel re-parses and re-lays out on
+## every assignment, which made it the most expensive thing this HUD did.
+##
+## The arbiter has emitted `prompt_changed` only on an actual change since it
+## was written (`interaction_arbiter.gd:157`) — the HUD was simply polling past
+## it.
+func _on_prompt_changed(text: String) -> void:
+	_prompt_label.text = text
 
 
 ## Looked up by path rather than through the `Game` global, matching
 ## sequence_director.gd's convention, so a HUD instanced without the autoload
 ## running (a capture tool, an isolated test scene) just shows nothing here
 ## instead of crashing.
+##
+## The lookup is CACHED, and the two Labels are only written when their number
+## actually changes. Both ran unconditionally every frame before: a scene-tree
+## path resolve, two dynamic `call()`s and two `Label.text` assignments, sixty
+## times a second, for values that change on a pickup. Each label carries a
+## 6 px outline and a shadow, so an assignment is a full text re-shape and an
+## outlined re-render, not a pointer swap.
+##
+## Caching a path lookup is not the same as reaching for the bare autoload name
+## — the null path is still the one that keeps an isolated scene alive, and it
+## is re-resolved if the node ever goes away.
 func _update_status() -> void:
-	var game := get_node_or_null(^"/root/Game")
-	if game == null:
+	if not is_instance_valid(_game):
+		_game = get_node_or_null(^"/root/Game")
+	if _game == null:
 		return
-	var party: RefCounted = game.get("party")
-	var inventory: RefCounted = game.get("inventory")
+	var party: RefCounted = _game.get("party")
+	var inventory: RefCounted = _game.get("inventory")
 	if party == null or inventory == null:
 		return
-	_party_label.text = "Pals  %d / %d" % [int(party.call("size")), PARTY.MAX_PALS]
-	_orbs_label.text = "Orbs  %d" % int(inventory.call("count", ORB_ITEM_ID))
+
+	var pals := int(party.call("size"))
+	if pals != _last_pals:
+		_last_pals = pals
+		_party_label.text = "Pals  %d / %d" % [pals, PARTY.MAX_PALS]
+
+	var orbs := int(inventory.call("count", ORB_ITEM_ID))
+	if orbs != _last_orbs:
+		_last_orbs = orbs
+		_orbs_label.text = "Orbs  %d" % orbs
 
 
 ## Health and stamina bars fade to FADE_ALPHA when full and idle, full opacity
@@ -237,23 +408,36 @@ func _fade_toward(control: Control, target: float, delta: float) -> void:
 	control.modulate.a = next
 
 
-func _debug_text(vitals: RefCounted) -> String:
-	var speed: float = _player.call("ground_speed")
-	var sprinting: bool = _player.call("is_sprinting")
-	var pos: Vector3 = _player.global_position
+## Perf block FIRST, always.
+##
+## The Label is 868x500 at font size 22, which is about nineteen lines, and the
+## movement plus input blocks already overflow that on their own. Whatever is
+## last gets clipped, so the numbers this readout was extended for must not be
+## last.
+func _debug_text() -> String:
+	var lines: Array[String] = _perf_lines()
+	if _debug_level != DEBUG_FULL:
+		return "\n".join(lines)
 
-	var lines: Array[String] = [
-		"M1 debug (F3 to hide)",
-		"",
-		"speed      %.2f m/s%s" % [speed, "   SPRINT" if sprinting else ""],
-		"vertical   %+.2f m/s" % _player.velocity.y,
-		"grounded   %s" % ("yes" if _player.is_on_floor() else "NO"),
-		"position   %.0f, %.0f, %.0f" % [pos.x, pos.y, pos.z],
-		"",
-		"stamina    %.0f / %.0f" % [vitals.stamina, vitals.max_stamina],
-		"health     %.0f / %.0f" % [vitals.health, vitals.max_health],
-		"worst landing  %.1f m/s  (%.0f damage)" % [_peak_fall, _last_damage],
-	]
+	if _player != null:
+		var speed: float = _player.call("ground_speed")
+		var sprinting: bool = _player.call("is_sprinting")
+		var pos: Vector3 = _player.global_position
+		lines.append_array([
+			"",
+			"--- movement ---",
+			"speed      %.2f m/s%s" % [speed, "   SPRINT" if sprinting else ""],
+			"vertical   %+.2f m/s" % _player.velocity.y,
+			"grounded   %s" % ("yes" if _player.is_on_floor() else "NO"),
+			"position   %.0f, %.0f, %.0f" % [pos.x, pos.y, pos.z],
+		])
+		var vitals: RefCounted = _player.get("vitals")
+		if vitals != null:
+			lines.append_array([
+				"stamina    %.0f / %.0f" % [vitals.stamina, vitals.max_stamina],
+				"health     %.0f / %.0f" % [vitals.health, vitals.max_health],
+				"worst landing  %.1f m/s  (%.0f damage)" % [_peak_fall, _last_damage],
+			])
 	lines.append_array(_input_diagnostics())
 	return "\n".join(lines)
 

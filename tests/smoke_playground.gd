@@ -113,6 +113,8 @@ func _run() -> void:
 		elif vitals.health <= 0.0:
 			failures.append("player died on spawn: the drop height is dealing fall damage")
 
+	failures.append_array(await _the_perf_overlay_reports_numbers(world))
+
 	print("")
 	if failures.is_empty():
 		print("smoke: OK")
@@ -121,3 +123,83 @@ func _run() -> void:
 		for line in failures:
 			print("smoke FAIL: %s" % line)
 		quit(1)
+
+
+## The F3 readout has to produce real numbers, not an empty box.
+##
+## This exists because the overlay is the instrument three shipped performance
+## fixes went without (`SA1`, `SA1-lod`, the shadow-atlas cut, all still
+## "on-device confirmation open"). An instrument that silently reports nothing
+## is worse than no instrument: it looks like evidence.
+##
+## The frame times themselves are meaningless here — this is llvmpipe, and
+## `D06` is explicit that software rendering cannot measure frame time honestly.
+## What is checked is the PLUMBING: that F3 cycles, that the counters are wired,
+## and that the render monitors are populated under `gl_compatibility` at all.
+func _the_perf_overlay_reports_numbers(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	if hud == null:
+		return ["no PlaygroundHUD in the scene"] as Array[String]
+
+	var readout: Label = hud.get_node_or_null(^"Root/DebugReadout") as Label
+	if readout == null:
+		return ["the HUD has no DebugReadout label"] as Array[String]
+
+	if readout.visible:
+		found.append("the debug readout starts visible; it is meant to be behind F3")
+
+	# Drive the real handler rather than poking the level directly, so a
+	# rebinding or an early-return in `_input` fails this too.
+	var f3 := InputEventKey.new()
+	f3.keycode = KEY_F3
+	f3.pressed = true
+	hud.call("_input", f3)
+
+	if not readout.visible:
+		found.append("F3 did not show the debug readout")
+
+	# The text is only rebuilt on the 0.1 s throttle, so give it frames.
+	for i in 20:
+		await process_frame
+
+	var text := readout.text
+	print("")
+	print("--- perf overlay ---")
+	print(text)
+
+	for token in ["fps", "draw calls", "video mem", "vsync", "3d scale"]:
+		if not text.contains(token):
+			found.append("the perf readout is missing its '%s' line" % token)
+
+	# The one number that must be non-zero, and the reason this assertion is
+	# here at all: if `RENDER_TOTAL_DRAW_CALLS_IN_FRAME` reads 0 under
+	# Compatibility then every render counter in the overlay is decorative, and
+	# the owner would be reading zeroes off the Ally and drawing conclusions.
+	#
+	# Only asserted when something is actually being rasterised. Under
+	# `--headless` Godot loads the dummy rendering driver, which draws nothing
+	# and reports nothing, so a zero there is correct rather than broken. Run
+	# this under xvfb with `--rendering-driver opengl3` to exercise the check:
+	#
+	#   xvfb-run -a godot --path . --rendering-driver opengl3 \
+	#     --script tests/smoke_playground.gd
+	#
+	# which is the same way tools/survey.sh gets a real GL context (D06).
+	var draws: float = Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
+	var rendering := RenderingServer.get_video_adapter_name() != ""
+	print("draw calls this frame: %d  (rendering: %s)" % [int(draws), rendering])
+	if not rendering:
+		print("headless dummy driver — render counters not asserted")
+	elif draws <= 0.0:
+		found.append("RENDER_TOTAL_DRAW_CALLS_IN_FRAME reads 0 with a live adapter; " +
+			"the render monitors are not populated and the overlay reports nothing")
+
+	# Second press is the FULL level, third returns to hidden.
+	hud.call("_input", f3)
+	hud.call("_input", f3)
+	if readout.visible:
+		found.append("F3 did not cycle back to hidden after three presses")
+
+	return found
+

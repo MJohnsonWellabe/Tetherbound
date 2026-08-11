@@ -3,6 +3,44 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## LP4 — Green branches were silently never merging; four were stranded
+Owner-directed interactive session, 2026-08-11. See `D26` for the full record.
+
+Reported by a lane as *"a dispatch gap in the merge workflow"* on
+`EV4-textures-remainder`. Right that something was broken, wrong about the
+scope and the mechanism.
+
+**`ralph-merge.yml`'s rebase path could never merge anything.** It rebases a
+branch that `main` moved under, force-pushes, and dispatches CI with the default
+`GITHUB_TOKEN`. The dispatch works — `workflow_dispatch` escapes GitHub's
+recursion guard. The *completion* does not: no `workflow_run` event is raised
+for a run initiated by that token, so nothing ever woke up to merge the branch
+it had just rebased and re-tested. Escaping the guard on the way in does not
+escape it on the way out. Same guard that left `release.yml` unfired for twelve
+hours and twenty-five commits.
+
+**The evidence separates the two paths exactly.** Every live branch whose latest
+green CI run came from a `push` had merged (`NP3`, `NP3-bookkeeping`, `SA2`,
+`EV3-path-stones-note`, `lease-file-legibility`). Every one whose green run came
+from a `workflow_dispatch` was stranded (`EV3`, `EV4-textures-remainder`, `EV9`,
+`LP3`). Under ~10 lanes the rebase path is the COMMON path, because `main` moves
+during most 5-minute CI runs.
+
+Shipped: `ralph-sweep.yml`, a ten-minute reconciler that lists `ralph/**` and
+ships any branch whose tip has a completed green run and fast-forwards — no
+event required. Ship logic extracted to `tools/ci/ship_branch.sh`, called by
+both workflows. Rebase cap of 3 (the `ralph-merge.yml` comment had asked for one
+in advance; `LP3` hit six), counted since the branch's last author push so a
+fresh push is a fresh start. And the rebased sha is checked for an existing
+green run before dispatching, which was the `EV3` double-dispatch.
+
+**Not confirmed live yet, and it cannot be from a branch.** Scheduled workflows
+and `workflow_dispatch` only run from the DEFAULT branch, so the sweep does
+nothing until this lands on `main`. The four stranded branches are still
+stranded until then — `LP3` fast-forwards as-is, the other three need the rebase
+route. First sweep after merge is the real test; watch that it ships those four
+and leaves red `CO1` alone.
+
 ## NP3 — The named Meadows cast: identities for Mira/Oskar/Tam, plus the Quarry Foreman and the Rescued Ranger
 `f6c27f6`. `tests: tests/run_tests.gd` (299/299, `test_dialogue_runner`'s 12
 included). Visual-affecting (two new bodies added to the village square): a
