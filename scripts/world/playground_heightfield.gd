@@ -123,14 +123,39 @@ func _apply_spawn_pad(x: float, z: float, height: float) -> float:
 ## inside `radius` — a barn on an 0.85-flattened slope still tilts, and a
 ## tilted building reads as a mistake where a tilted tree reads as a tree. The
 ## `skirt` blends back to natural ground so the pad has no cliff edge.
+##
+## R7.1-found-2: this used to pick a single winning TARGET by raw weight (the
+## strongest pad wins outright, full stop) and blend toward that one alone.
+## That is correct for a single pad shading into natural ground, but where
+## TWO pads' skirts overlap and their target heights differ, the winner flips
+## from one pad to the other at one point, and near that point both weights
+## are still close to 1 (deep inside both pads' overlap, not out at the
+## fringe) — so the height snapped almost the FULL difference between the two
+## targets over centimetres. Grandpa's-house-pad (was 2.2m) and the
+## village-square-pad (was 0.6m) leave barely half a metre of open ground
+## between their two circles, and that combination measured a live 81-degree
+## wall there — the near-vertical earthen bank the survey caught, misread at
+## first as a carved path trench or a texture-projection bug; it is neither,
+## see DONE.md's R7.1-found-2 entry. Two independent changes fix it: pad
+## heights were brought closer together below (2.2/0.6 -> tunable), and
+## STRICTLY outside every pad's own radius this now blends the target
+## HEIGHTS themselves by relative weight, instead of one winning outright, so
+## a point balanced between two different-height pads lands on their
+## weighted average rather than snapping to whichever is marginally closer.
+## Strictly INSIDE a pad's own radius this still returns that pad's height
+## alone, ignoring every other pad completely — the part that has to stay
+## exact, since blending in a neighbour's height there is the tilted-barn
+## regression the original winner-take-all rule existed to prevent (a
+## sequential-blend version of that bug is what `test_the_building_pads_are_
+## genuinely_flat` already guards against).
 func _apply_flats(x: float, z: float, height: float) -> float:
 	var flats: Array = _config.get("flats", [])
-	# The STRONGEST pad wins outright rather than each blending in turn.
-	# Sequential blending let one pad's skirt reach inside a neighbour's radius
-	# and drag its "flat" 3.6m out of true — a tilted house pad found by the
-	# pad-flatness test, not by eye.
-	var best_weight := 0.0
-	var best_target := height
+	var in_core := false
+	var core_fraction := INF
+	var core_height := height
+	var total_weight := 0.0
+	var weighted_target := 0.0
+	var max_weight := 0.0
 	for entry: Variant in flats:
 		if not entry is Dictionary:
 			continue
@@ -138,14 +163,31 @@ func _apply_flats(x: float, z: float, height: float) -> float:
 		var centre: Array = flat.get("centre", [0.0, 0.0])
 		var radius := float(flat.get("radius", 10.0))
 		var skirt := float(flat.get("skirt", 8.0))
+		var target := float(flat.get("height", _raw_height(float(centre[0]), float(centre[1]))))
 		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
+		if distance <= radius:
+			# Two authored pads never overlap cores today (checked by the
+			# pad-flatness test) but if a future one ever did, the nearer
+			# centre wins rather than whichever happened to be listed last.
+			var fraction := distance / maxf(radius, 0.0001)
+			if fraction < core_fraction:
+				core_fraction = fraction
+				core_height = target
+				in_core = true
+			continue
 		if distance >= radius + skirt:
 			continue
 		var weight := 1.0 - smoothstep(radius, radius + skirt, distance)
-		if weight > best_weight:
-			best_weight = weight
-			best_target = float(flat.get("height", _raw_height(float(centre[0]), float(centre[1]))))
-	return lerpf(height, best_target, best_weight)
+		total_weight += weight
+		weighted_target += weight * target
+		max_weight = maxf(max_weight, weight)
+
+	if in_core:
+		return core_height
+	if total_weight <= 0.0:
+		return height
+	var blended_target := weighted_target / total_weight
+	return lerpf(height, blended_target, clampf(max_weight, 0.0, 1.0))
 
 
 ## How much a world point belongs to a dirt path: 1.0 on the centreline,

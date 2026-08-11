@@ -71,6 +71,7 @@
   "flats": [
     {
       "_comment": "Building pads: FULL flatten inside radius (a tilted barn reads as a mistake), smoothstep skirt back to natural ground. The two pads carry Grandpa's house and the village square; village.json places structures on them and the opening spawns the player in the house. Heights are EXPLICIT and near each other: defaulting to the raw height at each centre put the pads 7.3m apart 33m from each other, and the skirts absorbed that step at 79 degrees - a crater wall of smeared grass texture ringing the village in every wide shot. Wide skirts for the same reason: max skirt slope is 1.5 * step / skirt. TUNABLE.",
+      "_comment_r7_1_found_2": "Was 2.2/0.6 (1.6m apart). The two circles leave barely 0.5m of open ground between them (32m of combined radius against 32.56m between centres), and _apply_flats's old winner-take-all rule snapped that whole 1.6m difference across that half-metre wherever the winner flipped - a live-measured 81-degree wall, the near-vertical earthen bank the survey caught and first misread as a carved path trench. Fixed with two changes together: _apply_flats itself now blends target HEIGHTS by weight outside a pad's own radius instead of one winning outright (see its own comment), and these two heights were brought closer, 1.6m apart down to 0.3m. Combined, the live worst slope there measures ~31 degrees - a soil-textured bank, not a cliff. Still EXPLICIT and TUNABLE; the house sits marginally above the square by design (a yard is not a floor).",
       "centre": [
         -22.0,
         -16.0
@@ -78,7 +79,7 @@
       "radius": 14.0,
       "skirt": 20.0,
       "_why": "Grandpa's house and its yard",
-      "height": 2.2
+      "height": 1.2
     },
     {
       "centre": [
@@ -88,7 +89,7 @@
       "radius": 18.0,
       "skirt": 24.0,
       "_why": "the village square",
-      "height": 0.6
+      "height": 0.9
     }
   ],
   "paths": {
