@@ -185,13 +185,49 @@ this sandbox, not a site block. See the `BLOCKED.md` entry for what would
 clear it. Done when: both zips are staged under `assets_raw/vendor/` and
 ledgered, same as the Kenney four.
 
-### EV2 — An approved Meadows nature subset, not all 116 models
-`model: sonnet` · `tests: smoke_art` · `area: vegetation`
-Bible §10: 2–3 hero trees, 3–4 standard canopy, 2–3 saplings, 1–2 wetland, one
-rock family with 3 small / 3 medium / 2–3 large. Replace the weakest current
-forms first. Controlled material variants — spring, deep and yellow-green — not
-a different colour per tree. Done when: the tree line reads as one species
-family at thumbnail size.
+**`EV2` (an approved Meadows nature subset) shipped — see `DONE.md`.** Hero
+trees and standard canopy curated to the bible's counts with controlled
+material variants; wetland forms and a distinct rock large-tier are honest
+remainders, not done. Two new findings opened below: `EV2-trunk-colour` and
+`EV2-landmark-ceiling`.
+
+### EV2-trunk-colour — Tree trunks render pale salmon/pink instead of brown bark
+`model: sonnet` · `tests: none` · `area: vegetation`
+Found by two independent blind critics during `EV2`'s rounds 1 and 2, both
+unprompted and specific: "trunk color reads unnaturally pale pink/salmon,"
+"every tree trunk in every frame is an unusual pale salmon/pink-tan color
+rather than brown bark... more visually odd than anything in the canopies."
+Not a texture bug — `Bark_NormalTree.png` and `Bark_TwistedTree.png` measure
+RGB(140,88,67) and RGB(84,76,72) respectively, both ordinary warm/neutral
+browns, and no layer in `vegetation.json` retints `Bark_NormalTree` or
+`Bark_TwistedTree` at all. The likely cause is thin trunk geometry (a few
+pixels wide at typical survey distance) combined with strong directional sun
+and texture minification washing the brown toward a pale warm tone under the
+Compatibility renderer — but this is a guess, not root-caused. Not chased
+under `EV2` because it isn't a model-selection or retint-config question, the
+tools for it are lighting/material, and `lighting` is a currently-contested
+area. Done when: the mechanism is found (screenshot comparison of the same
+trunk at different distances/angles would confirm or rule out the
+minification theory) and either fixed or shown to be a Compatibility-
+renderer-only artifact that doesn't affect the shipped Forward+ build.
+
+### EV2-landmark-ceiling — Hero trees don't read as landmark specimens even at the best 3-of-5 subset
+`model: sonnet` · `tests: none` · `area: vegetation`
+`EV2` curated `grove` to the 3 TwistedTree forms with the widest footprint,
+tallest height and most asymmetric silhouette (measured, not guessed). A
+blind critic still ranked this the #1 gap against the key art: "nothing in
+these five frames comes close to the key art's oaks, whose canopies are
+wider than they are tall and whose trunks visibly fork and lean... the
+current asset's silhouette ceiling won't get there just by rescaling."
+This is a real asset ceiling, not a placement/curation problem `EV2`'s own
+lever (which models, what tint) can solve — the fuller Stylized Nature
+MegaKit that might carry a genuinely broader-canopy hero form is itch.io-
+blocked (`EV1-remainder`), and `CLAUDE.md`/`D24` forbid a Meshy generation
+for a routine nature asset regardless. Not a `BLOCKED.md` design question —
+there's no decision to make, just an asset gap with a known unblock path.
+Done when: `EV1-remainder`'s itch.io block clears and the fuller pack is
+searched for a broader-canopy hero form, or the owner accepts the current
+ceiling.
 
 ### EV3 — Rebuild the scatter around clusters, clearings and layered bands
 `model: opus` · `tests: smoke_art` · `area: vegetation`

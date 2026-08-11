@@ -203,6 +203,89 @@ firing to see that recurrence should re-open this rather than assume it is
 solved, and the `xvfb-run` reproduction attempt above is the fastest
 remaining path to a forced repro if it comes to that.
 
+## EV2 — An approved Meadows nature subset
+`f4bf576` (curate + variant tints) · `2fe56e7` (round 2: fix cyan-highlight
+artifact) · `1cdd5e2` (round 3: widen hue/value spread) · `tests: smoke_art`
+green locally throughout; full suite (299 tests) also green, confirming no
+regression from trimming layer model lists.
+
+Curated `trees` (standard canopy) from 5 CommonTree forms to the 3 with the
+widest canopy footprint (measured with `measure_models.gd`, not guessed —
+the acceptance bar is a silhouette read at thumbnail size, not a triangle
+count), and `grove` (hero trees) from 5 TwistedTree forms to the 3 with the
+widest footprint, tallest height and most asymmetric silhouette. Added a new
+`saplings` layer reusing the two dropped CommonTree forms at young-tree scale
+instead of discarding them — same species, a different age, no new geometry.
+Gave `vegetation.gd::_build_batch` an optional per-MODEL `variant_retint`
+lookup (falls back to the layer's existing per-material `retint` when a model
+has no entry) so a layer can assign controlled spring/deep/yellow-green
+variants instead of one flat colour, since several models share one material
+name and a layer-wide colour can't tell them apart.
+
+**Three real rounds of the mandatory local blind-judge pass, each one
+finding something genuine — this is the record of what each one caught and
+fixed, not a pass-first-try story:**
+
+- **Round 1** (initial curation + first variant colours, reusing R9.4's
+  shipped `#9dcaff` as `spring`): an independent blind critic found visible
+  cyan/teal flecks in canopy highlights, described unprompted as "a stray
+  specular/vertex-color artifact." Traced algebraically: `#9dcaff` and its
+  darkened sibling are BLUE-hued multiply colours (hue ~213°) that land in
+  the intended green family on `Leaves.png`'s dark/average texels but
+  multiply through nearly unchanged on the texture's bright highlight
+  speckle, reading as cyan on the lit parts of the canopy specifically.
+- **Round 2**: replaced the tint family with green-hued multiplies (hue
+  77–112° instead of 213°). A second, independent blind critic confirmed the
+  flecks were gone (zero cyan/teal pixels found by its own pixel scan) — but
+  its close inspection found the three variants still rendered in a tight
+  63–84° hue band once scene lighting compressed the on-paper 77–112° spread
+  further, reading as one uniform green rather than 2–3 distinguishable
+  varieties.
+- **Round 3**: widened both hue AND value (not hue alone) — `deep` in
+  particular is now genuinely darker, not just a different hue at the same
+  brightness (values 0.09/0.19/0.20 vs round 2's 0.19/0.19/0.20), while a
+  highlight-case check (synthetic near-white texel multiply) confirmed the
+  wider spread still stays short of the ~150° line where the round-1
+  artifact started. A third independent blind critic confirmed no fleck
+  regression and found genuine, sortable colour variety in the farm-cluster
+  frame (pale sage / mid olive / dark saturated green) — one specific
+  treeline in a different frame still read as fairly uniform, but that
+  reads as the stochastic scatter happening to draw similar models in that
+  one local cluster rather than a mechanism failure, since the same
+  mechanism visibly works elsewhere in the same frame set.
+
+**Stopped after round 3**, not because it passed clean, but because both
+objectively-fixable defects the critics named (the cyan artifact, the
+variant separation) show confirmed, independently-verified improvement, and
+what's left is genuinely outside `EV2`'s lever — see below.
+
+**Two honest remainders, not faked:**
+
+- **Wetland forms** (bible's "1–2 forms near river") — not done. No river
+  exists yet (`EV5`, unshipped) and there is nothing to place wetland
+  vegetation near.
+- **Rock family's "2–3 large" tier** — not done. The imported subset has no
+  distinct large-format rock mesh; the fuller Stylized Nature MegaKit that
+  might carry one is itch.io-blocked (`EV1-remainder`). Reusing the existing
+  `Rock_Medium` meshes in a second layer was considered and rejected: it
+  would put the same model in two layers' `models` lists, which
+  `vegetation.gd::_build_batch` groups by model path for drawing —
+  `_warn_about_shared_models`'s own docstring explains why that silently
+  drops one layer's tint/collision settings. The single `rocks` layer's
+  existing 0.28–2.1 scale span already produces large-boulder reads from the
+  same 3 medium meshes and stands as the honest ceiling.
+
+**Two new findings opened in `BACKLOG.md`, not chased here** (both found
+independently by multiple blind critics across the three rounds, neither
+fixable with `EV2`'s own lever): `EV2-trunk-colour` (tree trunks render pale
+salmon/pink instead of brown bark — source bark textures are ordinary warm
+browns, so this looks like a lighting/minification effect on thin geometry
+under the Compatibility renderer, not a texture or retint bug) and
+`EV2-landmark-ceiling` (even the best 3-of-5 hero-tree subset doesn't read
+as a true landmark specimen against the key art — a critic's own verdict was
+that this needs broader-canopy geometry the imported subset doesn't have,
+which is the same itch.io block as the rock tier, not a curation problem).
+
 ## SA1-lod — vegetation stops discarding the importer's LOD chain
 `de8657c` · `tests: smoke_art`, green locally before every push (three of
 them — see below), and in CI (run 31511759144, then 31514823852 attempt 2).
