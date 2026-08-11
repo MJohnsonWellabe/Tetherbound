@@ -154,6 +154,41 @@ re-tuning officer/captain into a cool→warm→hot ramp, returned "yes, it
 works." Two round-3 nits (captain/warden still close, grunt reading as
 underlit) fixed inline without a fourth render-and-critique round.
 
+## EV8 (follow-on) — the website capture tool had the same sky-mismatch bug, in a different file
+`tests: none named`. Visual-affecting; blind-judge pass run locally on
+`shots/site/*.png` (7 real frames) before push. Built in parallel with, and
+blind to, the main `EV8` fix below (different lane, same window) — not a
+duplicate: this is `tools/capture_site_shots.gd`, a separate tool from the
+exploration survey the main fix targeted, so the bug survived independently
+of it.
+
+`tools/capture_site_shots.gd`'s `camp-dusk` shot hand-rotated the
+`DirectionalLight3D` to a warm colour/angle directly, leaving the sky/fog/
+ambient at whatever the `day` preset had last set — the same "sun disagrees
+with sky" defect class the main `EV8` entry root-caused for the survey, just
+in a tool that scene doesn't touch. Routed it through
+`WorldLook.apply_time("golden")` instead, so sun/sky/fog/ambient move
+together as one preset. Blind critic (fresh sub-agent, no knowledge of the
+change) confirmed `camp-dusk` now reads as "coherent within itself" with no
+sun/sky mismatch. It separately named a real but different problem with the
+same frame — shadows read as a flat orange multiply with no cool fill,
+against the bible's "warm sun, cool ambient fill" — worth re-checking against
+the main `EV8` fix's now-higher `golden.ambient_energy` (1.15 → 1.5) and
+panorama removal, both landed after this was written; if a fresh blind pass
+on the exploration survey (which now uses the updated preset) still shows a
+flat-orange golden hour, that is real and not this entry's stale guess.
+
+Went looking for the horizon-band fix independently too (`tools/
+diag_horizon_haze.gd`, kept as a diagnostic) and ruled out every fog control
+`world_look.gd` exposed at the time (`fog_aerial_perspective`: no measurable
+effect under Compatibility; `fog_height`/`fog_height_density`: either no
+effect or re-fogs the tuned midground) — correct as far as it went, but the
+main `EV8` entry found the actual fix is not a fog control at all
+(`world_background = 0`, not a value `diag_horizon_haze.gd` tried because the
+existing code comment only discussed `NOISE` vs `FLAT`). No `EV8-horizon`
+backlog item needed; recording the ruled-out fog values here in case anyone
+lands on this file wondering why `diag_horizon_haze.gd` exists.
+
 ## EV8 — Lighting and atmosphere
 
 Two rounds of the blind pass, both entirely local (five renders total, one

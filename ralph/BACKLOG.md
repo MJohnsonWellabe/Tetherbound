@@ -319,6 +319,9 @@ rest of `R9.4-remainder-5`.
 **`EV8` (lighting and atmosphere) shipped — see `DONE.md`.** Two rounds of the
 blind pass. Warm sun and cool fill were already correct and are unchanged;
 the pale-horizon and sky-inconsistency defects (`R9.4-remainder-2`) are fixed.
+A parallel lane independently fixed a narrower instance of the same
+sky-inconsistency class in `tools/capture_site_shots.gd` (a website capture
+tool, not the exploration survey) — see `DONE.md`'s follow-on entry.
 
 ### EV9 — Rebuild the HUD
 `model: opus` · `tests: smoke_menu` · `area: ui`
