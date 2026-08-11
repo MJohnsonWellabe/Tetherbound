@@ -48,8 +48,15 @@ env:
 jobs:
   # Roughly half of this workflow's runs change nothing but markdown: the loop
   # pushes a `<task-id>-record` branch after every task, carrying edits to
-  # BACKLOG.md, DONE.md and BLOCKED.md and nothing else. Each one spent about
-  # nine minutes exporting a Windows executable to verify a changed bullet.
+  # BACKLOG.md, DONE.md and BLOCKED.md and nothing else. Each one spent a full
+  # build exporting a Windows executable to verify a changed bullet.
+  #
+  # The figure that used to be written here -- "about nine minutes" -- was
+  # never re-measured after the branch runs were sped up, and by 2026-08-11 a
+  # full branch run was 5.2 minutes with no queue time. The skip below is still
+  # worth having; it just saves about half what this comment used to claim.
+  # D25 has the rest of the loop's real costs, several of which were similarly
+  # off.
   #
   # The obvious fix -- `paths-ignore: ['**.md']` on the push trigger -- is a
   # trap, and an expensive one. For push events a non-matching path filter means
@@ -91,7 +98,7 @@ jobs:
           # not the build), ralph/ (the loop's bookkeeping), and .claude/
           # (skills). A .json under data/ or a workflow file can reach the
           # export, so those still get the full build. Screenshot refreshes
-          # were costing a nine-minute build per JPEG before site/ was here.
+          # were costing a full build per JPEG before site/ was here.
           base=""
           if [ -n "${BASE_SHA:-}" ]; then
             base="$BASE_SHA"

@@ -12,7 +12,7 @@ the loop looked dead when it was working fine. Look here instead:
 
 | Question | Where to look |
 |---|---|
-| **What is it doing?** | `ralph/STATUS.md` on the **`ralph-status` branch** — task, state, timestamp. Fastest answer, needs nothing but GitHub. **Not the copy on `main`**, which is a frozen placeholder and always reads `idle`. |
+| **What is it doing?** | `ralph/STATUS.md` on the **`ralph-status` branch** — one block per live firing, each with its task, area, state and timestamp. Fastest answer, needs nothing but GitHub. **Not the copy on `main`**, which is a frozen placeholder and always reads `idle`. |
 | **Is it running right now?** | The Routine page → **Runs** tab → click the run. That opens the live transcript. A spinner there means in flight. |
 | **What has it finished?** | `ralph/DONE.md`, newest first, each entry with a commit SHA. |
 | **Why has it stopped?** | `ralph/BLOCKED.md`. A parked loop is a correct outcome, not a failure. |
@@ -29,6 +29,17 @@ the loop looked dead when it was working fine. Look here instead:
 A firing that dies leaves a **stale timestamp** in `STATUS.md`. The next hourly
 run should pick the work back up; if two hours pass with no change to that file
 and no run in the Runs tab, the Routine itself needs looking at.
+
+**Several blocks at `working` on different areas is the loop running correctly**,
+not a collision. Several on the *same* area is a real collision.
+
+**An interactive session — a person working with Claude directly, not a
+Routine — appears in neither place unless it claims a lease too.** On
+2026-08-11 one worked for two hours shipping three commits while this file read
+`shipped` throughout, and the owner reasonably concluded nothing was happening.
+Interactive sessions now claim a block like any firing. If you are ever
+wondering whether anything is happening, this file is the answer, and if it is
+silent that is a bug in whoever is working, not in you.
 
 ## Done
 
@@ -47,11 +58,19 @@ and no run in the Runs tab, the Routine itself needs looking at.
 
 ## Nothing is blocking the loop
 
-### 4. Top up Meshy credits when `BLOCKED.md` says so
-Balance was **375**. Retexturing the ten winners costs about **300**. Per the
-owner's instruction the loop spends down, parks the art tasks with the exact
-balance and species reached, and carries on with non-art work rather than
-stopping.
+### 4. ~~Top up Meshy credits~~ — done, and it stopped being the constraint
+Balance is **5000** as of 2026-08-11. The authorised programme spends ~540 of
+it, so credits will not block anything for the foreseeable future.
+
+**What blocks art now is reference art.** The owner's rule, same message:
+*"we should never render without me loading art first."* Nothing gets generated
+without a board in `docs/art/reference/` first, and `BLOCKED.md` carries the
+standing list of what is waiting on one — currently the Tether energy pylon,
+the relay apparatus and the legendary tether machine.
+
+Note what this does **not** unlock: `D23` §20 forbids creature regeneration, and
+the owner reaffirmed it *with* the 5000 in the account, which proves it was
+never a budget rule. Creatures and humans are rework-only, permanently.
 
 ## Ongoing
 
@@ -83,10 +102,37 @@ An entry appearing there is the loop working correctly, not failing.
 
 ## Worth knowing
 
-The Routine fires **hourly at :43**, a fresh session each time, and pushes a
-notification when a run finishes. The hourly cron is a floor, not the cadence —
-a session that finishes early schedules its own successor a few minutes out, and
-one that is parked at a play gate deliberately does not.
+### Three Routines, not one (2026-08-11, `D25`)
 
-To pause the loop, disable the Routine. To change its cadence or prompt, edit
-the Routine rather than this file.
+The owner chose parallel lanes. Each Routine starts a fresh session and pushes a
+notification when its run finishes.
+
+| Routine | Fires | Meshy key |
+|---|---|---|
+| **Ralph** | `49 * * * *` | **Yes** — the only one that can do art |
+| **Ralph lane B** | `9 * * * *` | No |
+| **Ralph lane C** | `29 * * * *` | No |
+
+**The old figure in this file said :43. It was `49 * * * *` the whole time** —
+worth knowing, because a stale schedule here is exactly what makes the loop look
+dead when it is fine.
+
+**Only the keyed Routine can run art tasks.** The Meshy key is carried in that
+Routine's own prompt and nowhere else; the repository is the one place it must
+never go, since GitHub history is permanent and secret scanning would likely
+revoke it. Backlog items needing it are marked `lane: art`, and the unkeyed
+lanes skip them. **To rotate the key, edit that Routine's prompt** — not this
+file, not the repo.
+
+Lanes coordinate through per-`area` leases in `ralph/STATUS.md` on the
+`ralph-status` branch: a firing stands down only if its own area is held.
+Realistically this runs two or three at a time, not three always — `terrain` is
+one lane however many items sit in it, because they share a rebake.
+
+The cron is a floor, not the cadence. A session that finishes early now
+schedules its successor 2–3 minutes out rather than idling to the hour, which
+was costing about a quarter of every cycle.
+
+**To pause the whole loop, disable all three Routines** — disabling only
+"Ralph" leaves the two lanes running. To change a cadence or prompt, edit the
+Routine rather than this file.

@@ -11,17 +11,32 @@ The live file does two jobs:
 1. **Heartbeat** — answers "is the loop working?" from GitHub alone. Trigger-
    fired sessions do not appear in the normal Claude sessions list, only under
    the Routine's own **Runs** tab, so without this there is no external signal.
-2. **Lease** — stops two firings working the same backlog. The cron fires hourly
-   whether or not the previous run finished, which is not configurable, so
-   overlap is the default rather than the exception. It has already happened.
+2. **Leases** — stop two firings working the same *area*. Three Routines now
+   fire on staggered schedules and the hourly cron fires whether or not the
+   previous run finished, so **concurrent firings are the design**, not an edge
+   case. What must not happen is two of them on the same files.
 
----
+## One block per live firing
+
+The old format had a single block and a single answer to "is anyone working?".
+That answer is now always yes, and it is not the useful question. Each firing
+appends its own block; the question is **which areas are held**.
 
     firing:    (placeholder — see the ralph-status branch)
     session:   —
     task:      —
+    area:      —
     state:     idle
     updated:   —
+
+`area` is copied from the backlog item's own `area:` field. List more than one
+if the task genuinely touches more than one — a vegetation task that re-runs
+`build_playground_terrain.gd` holds `vegetation, terrain`, and saying so up
+front is much cheaper than finding out in a merge.
+
+Delete your block, or set it to `shipped`, when you finish. A block left at
+`working` costs the next firing a branch check at best and a stand-down at
+worst.
 
 ---
 
@@ -39,12 +54,22 @@ The live file does two jobs:
 ## Reading it
 
 - **Timestamp moving, `state: working`** — healthy, leave it alone.
-- **Timestamp stale, no run in the Routine's Runs tab** — the loop died. The
-  next hourly firing should pick it up; if two pass with no change, something is
-  wrong with the Routine itself.
+- **Timestamp stale, no run in the Routine's Runs tab** — that lane died. The
+  next firing should pick it up; if two pass with no change, something is wrong
+  with that Routine itself.
 - **`state: started` and stale** — a firing died early, most likely before it
   could push anything. Its branch may exist with no commits worth keeping.
 - **`state: blocked` or `play-gate`** — working as designed. Read `BLOCKED.md`.
+- **Several blocks at `working` on different areas** — this is the loop running
+  as intended, not a collision.
+- **Several blocks at `working` on the SAME area** — a real collision. The
+  earliest `updated` wins; the others should have stood down.
+
+**A stale timestamp is not by itself proof of death.** The expiry is 40 minutes
+(down from 90, which cost ~2 hours of stand-down per dead firing), and the
+shorter clock is only safe because the branch check backs it up: if
+`ralph/<task-id>` has a commit in the last 40 minutes, that firing is alive and
+slow, whatever its heartbeat says. `PROMPT.md` has the exact sequence.
 
 A stale heartbeat is a real signal. Silence, which is what existed before this
 file, is not.

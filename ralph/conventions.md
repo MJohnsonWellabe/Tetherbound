@@ -48,8 +48,14 @@ on this project already.
 
 **Anything pushed to a `ralph/**` branch is a shipping request.** `ci.yml`
 triggers on it, which is a full Godot import, test run and Windows export —
-about eight minutes — and `ralph-merge.yml` then fast-forwards `main` if it goes
-green. There is no "just parking this here" on that prefix.
+**~5.2 minutes measured, not the eight or nine this file used to claim** — and
+`ralph-merge.yml` then fast-forwards `main` if it goes green. There is no "just
+parking this here" on that prefix.
+
+The corrected number matters in both directions. Five minutes is cheap enough
+that a push to find out whether something works is reasonable. It is not cheap
+enough to spend eight times on one visual pass, which is what a three-round
+blind critique cost before rounds were required to run locally.
 
 So a throwaway — a capability probe, a scratch experiment, a diff you want to
 look at — must **not** be named `ralph/anything`. Use `scratch/<whatever>`,
@@ -176,6 +182,17 @@ Before marking a visual-affecting task done:
    it needs a decision only the owner can make, e.g. an asset that needs
    replacing rather than tuning) or as a clearly-labelled remainder item in
    `BACKLOG.md`, the same pattern R7.1-remainder already uses.
+
+**Run every round in your own checkout and push once at the end.** The critic
+needs a PNG, not a merged branch. R9.4's three-round pass pushed eight times and
+spent ~36 minutes of CI to reach a state one push would have expressed — and
+about a third of the backlog is visual-affecting, so that multiplier is the
+loop's largest avoidable cost. Push mid-pass only to preserve partial work when
+you are running out of context.
+
+**One task carries an owner override of the three-round cap:** R9.4 was directed
+to iterate until the critic was actually satisfied, with no cap. That was
+specific to that task. The cap is the default everywhere else.
 
 This is slower than shipping on a green CI run — rendering under the headless
 renderer costs real minutes per frame, which is exactly why CI itself was sped

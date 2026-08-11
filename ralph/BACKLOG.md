@@ -78,6 +78,39 @@ diagnosis and fix no longer need it to know the bug was real.
 
 ---
 
+## Phase -0.95 — the loop itself (`D25`)
+
+One item, above everything, because it is upstream of everything: a flaky test
+does not fail *its own* task, it fails whatever healthy branch happens to be in
+flight when it flakes, and `ralph-merge.yml` only ships green.
+
+### LP1 — Kill the `smoke_traversal` and `smoke_combat` flakes
+`model: sonnet` · `tests: smoke_traversal, smoke_combat` · `area: loop`
+**Promoted out of the unphased list at the bottom of this file**, where it had
+been sitting as a bullet. With lanes and batched pushes it gets worse rather
+than better: a batched branch carries 1–4 items, so one random red now rejects
+up to four finished items at once and costs a full cycle to re-run.
+
+The evidence, unchanged from where it was recorded:
+
+- **Traversal**: every failure has the player at y = −0.4 m, never falling
+  through. "The ground is not continuous" was a misdiagnosis. Done when 20
+  consecutive headless passes.
+- **Combat**: a docs-only commit failed on the *last* swing checked ("did no
+  damage 95.0 -> 95.0") after the fight had already resolved normally, and
+  re-running the identical commit was clean.
+
+Both read as timing races on the surface, which is exactly what `smoke_aggression`
+read as before `RB3` found the mundane physical cause — the trainer's own
+follower pal walling the combatants in. **Do not assume these two share a cause
+with each other**, and prefer a recorded run log over more reasoning about CI
+output; that is what actually found `RB3` and what `R4.11` prescribes.
+
+Done when: 20 consecutive headless passes of each, and the cause named rather
+than the symptom tuned away.
+
+---
+
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
 
 **`SA0` (the opening soft-lock) shipped — see `DONE.md`.** The owner could not
@@ -95,7 +128,7 @@ MSAA 4×→2×. **On-device confirmation is still open** — CI cannot measure V
 same as `RB4`.
 
 ### SA0-orbs — the starter choice moves into Grandpa's conversation
-`model: opus` · `tests: smoke_opening, smoke_wake_softlock` · `area: opening`
+`model: opus` · `tests: smoke_opening, smoke_wake_softlock` · `area: story`
 Owner directive, 2026-08-11: *"the starters should be in orbs and you preview
 them while talking to Grandpa."* Three orbs presented in the conversation,
 each previewing its creature; choose and name indoors; the chosen one leaves the
@@ -117,7 +150,7 @@ only (`sequence_director.gd::_drain_effects`), so a "preview species N" effect
 is new. Done when: a player who never leaves the house has a named starter.
 
 ### SA1-lod — vegetation throws away the importer's LOD chain
-`model: sonnet` · `tests: smoke_art` · `area: terrain`
+`model: sonnet` · `tests: smoke_art` · `area: vegetation`
 Found by `SA1`'s investigation, not fixed there. `vegetation.gd::_retint()`
 rebuilds an `ArrayMesh` via `surface_get_arrays()`, which silently discards the
 LOD chain **and** the shadow mesh the importer generated (`meshes/generate_lods`
@@ -1431,20 +1464,9 @@ Phase 1 onward rather than at the end.
   makes this real) or delete the comment. `model: haiku`
 - Opening the menu mid-fight is silently refused with no on-screen
   explanation. `model: haiku`
-- **`smoke_traversal` and `smoke_combat` are still intermittent** (aggression's
-  own flake is fixed — RB3, see `DONE.md`). Traversal: every failure has the
-  player at y = −0.4 m, never falling through — "the ground is not
-  continuous" was a misdiagnosis; done when 20 consecutive headless passes.
-  Combat: a docs-only commit failed on the *last* swing checked ("did no
-  damage 95.0 -> 95.0") after the fight had already resolved normally;
-  confirmed a flake by re-running the identical commit clean. Both read as
-  timing races on their surface, the same way aggression's did before RB3
-  found the trainer's own follower pal was physically walling them in —
-  worth checking whether either of these has a similarly mundane, non-AI
-  cause hiding under a plausible-sounding guess, rather than assuming they
-  are the same kind of flake as each other. A recorded run log, the way
-  R4.11 prescribes and RB3 confirmed, beats more CI-output reasoning.
-  `model: sonnet`
+- **`smoke_traversal` / `smoke_combat` flakes — PROMOTED to `LP1` in
+  Phase -0.95.** Batched pushes make a random red cost up to four finished
+  items instead of one, so this stopped being a small item.
 - **Spec §6 — 6–10 optional activities, not forty shallow quests.** Lost Pal,
   Broken Cart, Night Watch, The Old Champion, Deep Warren, River Nest, Team
   Tether patrols, Meadowhart Herd. Each wants a home in Phase 8's bands rather
