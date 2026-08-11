@@ -46,13 +46,24 @@ Nothing else matters if work cannot ship. Every firing, first:
    merged and its work is sitting unshipped. Finish it on the same branch before
    starting anything new — do not abandon it and open a fresh one, or the
    backlog will quietly fill with orphaned branches.
-   **Green CI is not the same as shipped.** Check the *auto-merge* run too.
-   `ralph-merge.yml` fast-forwards only, so if `main` moved while you worked it
-   refuses and fails red even though your tests passed — and your work sits
-   there looking finished. Two branches were stranded exactly this way. The fix
-   is always the same: **rebase onto the current `main` and push again.** If you
-   cannot force-push, cherry-pick onto a fresh branch cut from `main` instead.
-   Verify the ship by looking at `main`, never by looking at CI.
+   **Green CI is not the same as shipped.** Check the *auto-merge* run too, and
+   verify the ship by looking at `main`, never by looking at CI.
+
+   **A "cannot fast-forward" failure now FIXES ITSELF. Do not race it.**
+   Changed 2026-08-11: `ralph-merge.yml` rebases the branch onto `main` itself,
+   force-pushes it and dispatches a fresh CI run, which ships on green. So when
+   you see that failure, the correct action is usually **to wait one CI cycle
+   and look at `main` again** — roughly five minutes.
+
+   Rebasing by hand at the same moment is a new way to collide: you and the
+   workflow both force-push the same branch, and whichever lands second
+   discards the other's work. Only step in when the run says the rebase
+   **conflicted** — that one still stops dead and genuinely needs you.
+
+   The old advice, which was right before this and is wrong now: *"the fix is
+   always the same, rebase onto current main and push again."* Two branches
+   were stranded before the workflow could do it for you; that is what the
+   change removes.
    **A branch CI run is ~5.2 minutes with essentially no queue time.** Older
    notes in this repo say eight or nine; they are stale, and the loop spent a
    while optimising against a number 80% too high. Five minutes is cheap enough
