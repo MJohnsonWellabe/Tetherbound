@@ -105,29 +105,9 @@ flight when it flakes, and `ralph-merge.yml` only ships green.
 
 **`LP1` (the `smoke_traversal`/`smoke_combat` flakes) fixed — see `DONE.md`.**
 
-### LP2 — `smoke_opening` beat 3 flakes: same commit, different press counts
-`model: sonnet` · `tests: smoke_opening` · `area: loop`
-Found shipping `SA1-lod` (2026-08-11): CI run 31514823852 failed on the exact
-same commit (`c8ece6a`) that a `rerun_failed_jobs` on the identical commit then
-passed minutes later, and a local run of the same commit passed too — three
-runs, zero code differences, two outcomes. The failing run closed Grandpa's
-beat-3 conversation after 7 presses of `interact`; the passing runs closed it
-after 14. `data/dialogue/opening.json`'s `grandpa_house` entry has no
-randomisation (checked), so the dialogue itself is not the variable — the
-likely cause is the same frame-timing race `smoke_opening.gd`'s own comments
-already document for `_press_polled`: *"under a heavy scene the two [input
-paths] can land in DIFFERENT physics frames, which a polling reader counts as
-two presses"* (`tests/smoke_opening.gd` line ~477). `dialogue_panel.gd`'s
-`advance()` has a comparable frame-guard (`_guard`, `OPEN_GUARD_FRAMES`) that
-could plausibly double-consume or skip a press under load, which would also
-explain the failing run's second symptom: after the picker opened, confirming
-an orb with `menu_confirm` did not close it — consistent with an input frame
-landing during a guard window rather than a genuinely broken confirm path.
-Not root-caused or fixed here — `LP1`'s pattern (an ungrounded teleport
-carrying stale Y across a physics-frame gap) was a different bug in a
-different system, so this is not assumed to be the same cause. Done when: the
-race is found and fixed, or proven not to be one, the way `LP1` did it —
-instrumented, reproduced both ways, not guessed from a diff.
+**`LP2` (the `smoke_opening` beat-3 press-count flake) — a pattern-matched fix
+shipped, the underlying race not directly reproduced. See `DONE.md` for the
+full elimination trail and what would still confirm it.**
 
 ---
 

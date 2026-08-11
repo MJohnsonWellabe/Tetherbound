@@ -3,6 +3,74 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## LP2 — `smoke_opening` beat-3 press flake: a pattern fix, the race not directly reproduced
+`tests: smoke_opening`, green locally 3/3 (always exactly 14 presses, matching
+`grandpa_house`'s real line count) before push.
+
+**What was ruled out, in order, each with real evidence rather than a guess:**
+
+- **The dialogue content itself.** `data/dialogue/opening.json`'s
+  `grandpa_house` entry has exactly 14 lines and no conditional branches; the
+  passing runs' "14 presses" is not a coincidence, it is the real count. No
+  `randi`/`randf`/`randomize` anywhere in `dialogue_runner.gd` or
+  `sequence_director.gd`. `dialogue_runner.gd::advance()` is fully
+  deterministic — one `advance()` call, one line, always, until `close()`.
+  So the only way to close in 7 real presses is for `advance()` to fire twice
+  per test-side press, not for the conversation to genuinely be shorter.
+- **The arbiter re-activating Grandpa while his conversation is already
+  open.** `interaction_arbiter.gd` and `dialogue_panel.gd` both read
+  `interact` by polling `Input.is_action_just_pressed` from their own
+  `_physics_process`, so a press could plausibly be seen by both. But
+  `sequence_director.gd::_start_conversation()` guards
+  `if _dialogue.is_open(): return false` — re-firing Grandpa's `activated`
+  signal while his conversation is running is already a safe no-op, so this
+  cannot be adding extra `advance()` calls.
+- **A one-off timing coincidence.** It isn't: 14 lines closing in exactly 7
+  presses is exactly half, and the failing CI run's own log shows this held
+  for the *whole* conversation, not one press out of many — whatever caused
+  it, it was consistent across the run, not a single unlucky frame.
+
+**What is left, and could not be forced to reproduce here despite three
+separate attempts** (a bare `is_action_just_pressed` probe against an idle
+SceneTree, 60 repeats of the same probe against the real, fully-loaded
+meadows playground under its actual 23k-prop background load, and a probe
+that explicitly forced `action_press()` and the parsed `InputEventAction`
+onto different physics frames by hand) — all three came back with exactly one
+`is_action_just_pressed` hit per logical press, never two. A fourth attempt
+under `xvfb-run` + `--rendering-driver opengl3` (the one condition
+`conventions.md` already documents as 25× slower and prone to exactly this
+class of flake under CPU load) was tried specifically to force real
+Godot physics-catch-up — multiple physics ticks running between two
+`_process()` calls when a frame falls behind — but it did not finish inside
+this firing's time budget and was killed rather than let run indefinitely.
+
+**The fix shipped anyway, on the strength of the elimination above plus an
+exact precedent already proven in this same file.** `dialogue_panel.gd` and
+`interaction_arbiter.gd` both poll `Input.is_action_just_pressed` from
+`_physics_process` — exactly the reader class `smoke_opening.gd`'s own
+`_press_polled()` comment already names for `menu_confirm`: *"under a heavy
+scene the two [signals] can land in DIFFERENT physics frames, which a
+polling reader counts as two presses. Typing 'Bud' came out 'Buudd'."* Beat
+3's `interact` presses were the one place still using `_press()` (which
+sends `action_press()` AND a parsed `InputEventAction`, "belt and braces")
+against that same class of reader. `docs/HANDOFF.md` §10's actual rule — the
+reason `_press()` sends both in the first place — is scoped to **UI focus
+navigation**, which `interact` never drives, unlike `ui_*`. Switched both
+call sites (`_grandpa_says_his_piece`'s advance loop and the shared
+`_walk_to_and_activate`) to `_press_polled("interact")`, matching the
+already-established pattern exactly rather than inventing a new one.
+
+**Say this plainly rather than overclaim it: this removes a real, provable
+redundancy (an unnecessary parsed event feeding a purely-polled reader,
+already a demonstrated failure class in this file) but the specific race
+that produced the "7 vs 14" observation was not directly reproduced either
+before or after the fix.** If `smoke_opening` flakes again on beat 3 with a
+press-count anomaly, that is new information — either this was not the whole
+cause, or the timing window this fix closes is not the one CI hit. The next
+firing to see that recurrence should re-open this rather than assume it is
+solved, and the `xvfb-run` reproduction attempt above is the fastest
+remaining path to a forced repro if it comes to that.
+
 ## SA1-lod — vegetation stops discarding the importer's LOD chain
 `de8657c` · `tests: smoke_art`, green locally before every push (three of
 them — see below), and in CI (run 31511759144, then 31514823852 attempt 2).
