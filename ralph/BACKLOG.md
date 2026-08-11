@@ -52,9 +52,28 @@ The owner played the published Windows build. One bug left, ahead of
 everything else in this file — **do this first, then Phase -0.5, then
 Phase 1 onward.**
 
-**RB1 (mouse look) shipped — see `DONE.md`.** Real on-device confirmation
-by the owner is still the open item; see that entry for what is and is not
-provable from CI.
+**RB1 (mouse look) — the first fix was WRONG. The real cause is found and fixed;
+see `RB1-actual` in `DONE.md`.** The owner reported on 2026-08-11 that mouse look
+*still* did not work after RB1 shipped, which is the on-device confirmation that
+entry was waiting for and it came back negative.
+
+RB1 blamed a mouse capture dropped before the window had OS focus and
+re-asserted capture on `focus_entered`. That was diagnosed by reading code and
+never reproduced, and it was the wrong cause. The real one:
+`scenes/ui/playground_hud.tscn`'s `Root` is a **full-rect `Control` with no
+`mouse_filter` line**, so it took Godot's default of `MOUSE_FILTER_STOP` and
+consumed every `InputEventMouseMotion` during GUI handling — which runs *before*
+`_unhandled_input`, where `camera_rig.gd` accumulates look. Every other UI scene
+in the project already sets `mouse_filter = 2`; this one missed it.
+
+**RB1's fix is kept.** Re-asserting capture on focus gain is correct behaviour
+and `SH53` still wants it. It simply was not this bug.
+
+Note also that RB1's entry contains a **disproven guess**: it suggested the
+owner could not reach Grandpa because they could not turn toward him, "a symptom
+of RB1, not a second bug." That was wrong — `SA0` later root-caused the Grandpa
+report to a one-way beat machine. Two separate real bugs, and the guess linking
+them cost time.
 
 **RB2 (walk/run animation) fixed — see `DONE.md`.** Real bug, found after
 the owner corrected an earlier wrong "already fixed" pass this same firing:

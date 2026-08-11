@@ -3,6 +3,60 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## RB1-actual — Mouse look: the HUD was eating every mouse motion event
+`68e0faf` — owner-directed interactive session, 2026-08-11.
+`tests: smoke_mouse_look` (new), regression-checked against `smoke_menu`,
+`smoke_input`, `smoke_opening`.
+
+**The owner reported mouse look still broken after RB1 shipped.** That is the
+on-device confirmation RB1's entry was waiting for, and it came back negative.
+
+**The real cause is one missing line.** `scenes/ui/playground_hud.tscn`'s `Root`
+is a full-rect `Control` with no `mouse_filter` set, so it takes Godot's default
+of `MOUSE_FILTER_STOP`. GUI input handling runs **before** `_unhandled_input`,
+and `camera_rig.gd` accumulates look in `_unhandled_input` — so the HUD consumed
+every `InputEventMouseMotion` and the rig never saw a single delta. No error, no
+warning, from the first frame.
+
+**Why only mouse look broke.** Gamepad look is *polled* in `_process` via
+`Input.get_vector("look_left", …)` and never travels the event path. Movement is
+actions, same story. Mouse look is the one input that goes through
+`_unhandled_input`, which is exactly the input the owner reported.
+
+**Every other UI scene already had this right** — `combat_hud.tscn`,
+`dialogue_panel.tscn` and `name_prompt.tscn` all set `mouse_filter = 2`, and
+`game_menu.tscn` sets `MOUSE_FILTER_STOP` deliberately because a pause menu
+*should* take the mouse. `playground_hud.tscn` was the one that missed it.
+
+**Proven, not argued — which is the whole point.** RB1 was diagnosed by reading
+code and shipped unverified, and it was wrong. This one was reproduced first:
+a probe node's `_unhandled_input` sees the motion **with** the fix and does
+**not** see it with the single `mouse_filter` line removed. Both directions run.
+
+**A test trap worth knowing before writing another input test.** The obvious
+test — push a motion event, assert the camera yaw changed — **cannot work
+headless**. Setting `Input.mouse_mode = MOUSE_MODE_CAPTURED` reads back `0`
+(VISIBLE): the headless DisplayServer refuses capture. `camera_rig.gd` only
+accumulates look while that reads CAPTURED, so a yaw assertion fails identically
+whether the bug is present or fixed. That was the first version of this test and
+it was worthless. `smoke_mouse_look.gd` asserts **delivery** instead, via
+`tests/helpers/unhandled_probe.gd`, plus a structural assertion that no
+full-rect `MOUSE_FILTER_STOP` Control is visible during gameplay so a regression
+names its own cause.
+
+**RB1's fix is kept.** Re-asserting capture on `focus_entered` is correct
+behaviour and `SH53` still wants it; it just was not this bug.
+
+**RB1's entry also contains a disproven guess** — that the owner could not reach
+Grandpa because they could not turn toward him, "a symptom of RB1, not a second
+bug." Wrong. `SA0` root-caused that to a one-way beat machine. Two independent
+real bugs, and the guess linking them cost time. Worth remembering next time a
+single report seems to explain two symptoms.
+
+**Still only answerable on the owner's hardware:** whether Windows delivers
+relative motion to the process while the cursor is captured. Same device-layer
+split `smoke_input.gd` documents.
+
 ## D25 — Loop speedups: parallel lanes, batched pushes, local critic iteration
 `6b848b6` and `346e6e0` — owner-directed interactive session, 2026-08-11.
 Full reasoning: `docs/decisions/D25-batch-the-push-not-the-testing.md`.
