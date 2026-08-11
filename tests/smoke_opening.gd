@@ -378,7 +378,23 @@ func _a_starter_can_be_chosen() -> void:
 	# Move the selection with the real stick/d-pad action before confirming, the
 	# same reason beat 5 below sends `ui_right` before typing: a poll-only test
 	# would report a working picker while the stick moved nothing.
-	await _press("ui_right")
+	#
+	# `_press_polled`, not `_press` — SA2-flake. `starter_picker.gd` reads BOTH
+	# `ui_right`/`ui_left` and `menu_confirm` the same way: a plain
+	# `Input.is_action_just_pressed` poll in one `_physics_process` if/elif
+	# chain, never Control focus (no `_gui_input`, no `grab_focus`). `_press`'s
+	# belt-and-braces parsed event is for readers that need a real Control
+	# event to move focus (docs/HANDOFF.md §10); this reader doesn't have one,
+	# so the parsed event is pure redundancy here — and under load it can
+	# register "just pressed" a physics frame later than the action-state
+	# path (the same two-signals-different-frames race `_press_polled`'s own
+	# docstring names for LP2's `interact` fix). If that late `ui_right`
+	# registration lands on the SAME frame as the very next `menu_confirm`
+	# press, the `elif` chain checks `ui_right` first and swallows
+	# `menu_confirm` for the one frame it was ever going to be "just
+	# pressed" — exactly the observed "confirming an orb did not close the
+	# picker" symptom, present on unmodified `main` before this test existed.
+	await _press_polled("ui_right")
 	await _press_polled("menu_confirm")
 	for i in 20:
 		await physics_frame
