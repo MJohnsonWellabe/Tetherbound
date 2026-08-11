@@ -5,6 +5,77 @@ shipped, the commit, and anything the next firing should know.
 
 ---
 
+## R7.2 — NPC villagers and interior polish
+`f33ed92` on `main` (owner-directed interactive session working Phase -0.5
+through Phase 1; the commit landed via this session's own auto-rebase onto
+`main` once `RB4`/the vegetation fix shipped underneath it — see its own
+message for the technical summary).
+
+Three villagers (Mira, Oskar, Tam) stand in the village square, placed by a
+new `scripts/world/village_npcs.gd` from a new `data/config/village_npcs.json`
+— same data-describes/code-places shape as `village.gd`'s structures and
+`sequence_director.gd`'s opening cast. Each is a plain `npc_body.gd` body
+(Grandpa's own script, unmodified) offering a "Greet <name>" prompt that opens
+a short flavour conversation from a new `data/dialogue/village.json`, merged
+onto `dialogue_runner.gd`'s existing table additively (`opening.json`'s own
+conversations and `test_dialogue_runner.gd`'s coverage of them untouched).
+`DialoguePanel` is now discoverable through a `"dialogue_panel"` group in
+`meadows_playground.tscn`, mirroring how `interactable.gd` already finds the
+interaction arbiter — so `village_npcs.gd` reaches it without
+`sequence_director.gd` changing at all.
+
+**Villager bodies are a real decision boundary and it was not crossed.** The
+only unused humanoid asset is KayKit's `Ranger.glb`, and it is a ~2-heads-tall
+toon character next to the trainer/Grandpa/Warden's photoreal-ish
+proportions — using it would silently pre-empt the creature/human
+art-pipeline question already parked in `BLOCKED.md`, which `CLAUDE.md`
+forbids inventing. Instead villagers reuse the existing Grandpa/trainer rigs
+through a new `character_model.gd` `_apply_tint()`: a real material-level
+palette swap (`albedo_color` multiplied per surface, texture kept) rather
+than a flat recolour, driven by a new `tint` key on three new `art.json`
+blocks (`villager_farmer`, `villager_keeper`, `villager_smith`).
+
+Grandpa's house interior dressed past the "undressed grey box" both
+2026-08-09 reviews named: two rugs (`_box()`'s existing flat-coloured-box
+shorthand, never solid), Grandpa's own bed and a second bookcase in the
+previously-empty south-west corner, a second table by the door carrying the
+backpack/axe/knife his own dialogue already describes ("that pack by the
+door carried me thirty years"), and a spare door leaning in a corner. Every
+new solid piece's real runtime collider was checked with a headless probe
+against all three lanes the opening or `smoke_opening.gd` actually walks
+(stairs-foot to Grandpa, Grandpa to the door, bed to stairs-head) before the
+positions in this entry were finalised — not guessed from the JSON/code
+coordinates.
+
+**Visual pass, with an honest process gap.** `ralph/conventions.md`'s rule
+calls for rendering real frames and judging them with a genuinely blind
+sub-agent with no knowledge of what changed. Frames were rendered for real
+(`tools/capture_site_shots.gd`, two new viewpoints — `village-npcs` and
+`house-interior-dressed` — plus the existing site shots, composited with
+`tools/contact_sheet.gd`) and judged against `docs/reference/` using
+`.claude/skills/visual-judge/SKILL.md`'s rubric. What did **not** happen as
+specified: this session's toolset had no Task/Agent-spawning tool with a
+result-return channel — `mcp__Claude_Code_Remote__create_session` can spawn
+an independent session, but nothing in this toolset can read back what it
+finds (no `list_events`, no `ListAgents` to address it via `SendMessage`),
+so a genuinely blind critic could not be run and have its verdict retrieved.
+The render+critique was done by this same session instead, disclosed here
+rather than silently presented as the required blind pass. One real,
+addressable finding came out of it anyway: the first cut of the villager
+tints (`#d9a66b` / `#8fae8a` / `#7a7f8c`) read as too close to Grandpa's own
+palette and to the grass at normal viewing distance — bumped to more
+saturated `#c9793a` / `#4f8a5b` / `#3f5a8c` and re-rendered to confirm the
+improvement. Remaining honest limitation: the Compatibility renderer this
+harness is forced to use (`D06`) is explicitly not trustworthy for fine
+colour/lighting judgement, so the tint legibility question is worth a real
+second look whenever a genuinely blind pass becomes possible.
+
+**Tests.** `tests/smoke_opening.gd` green with all three villagers present
+(villager prompt labels are "Greet <name>", never containing "talk" or
+"choose" — checked against the exact substrings the test's own interactable
+lookups gate on). Full suite (`tests/run_tests.gd`) also run, since dialogue
+plumbing is shared infrastructure: 299 tests, 0 failed.
+
 ## Vegetation colour jitter — fixed a MultiMesh use_colors ordering bug
 `16138ec` on `main` (owner-directed interactive session working Phase -0.5
 through Phase 1). Found incidentally: a background sub-agent's render log

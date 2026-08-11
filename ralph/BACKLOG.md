@@ -196,13 +196,12 @@ look at whatever paints dirt/soil blends onto slope near the spawn pad in
 `build_playground_terrain.gd`. Not chased here — out of scope for the
 near-vertical-bank defect this pass was confirming.
 
-### R7.2 — NPC villagers and interior polish (relocated from Phase 7)
-`model: sonnet` · `tests: smoke_opening`
-The village square has barns, a well and a windmill and nobody in it. A few
-villagers on `npc_body.gd` with a line or two each, and the farmhouse
-interior dressed past the minimum the opening needed — both reviews called
-the interior an undressed grey box. No quest system — that is a design
-decision to flag, not invent.
+**R7.2 (NPC villagers and interior polish) shipped — see `DONE.md`.** A
+process note is folded into that entry: the required blind visual-judge pass
+could not be run as specified (no Task/Agent-spawning tool with a result
+channel was available in this session), so the render+critique was done by
+the same session instead of a genuinely blind one, disclosed there rather
+than silently claimed.
 
 ### R9.4 — Visual cohesion pass, the checkpoint for this phase (relocated from Phase 9)
 `model: sonnet` ▶ · `tests: none`
