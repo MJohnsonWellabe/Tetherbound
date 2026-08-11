@@ -57,6 +57,11 @@ at the time it was fetched, not as remembered.
 | Grass004 — colour, normal, roughness | ambientCG | [ambientCG Grass004](https://ambientcg.com/view?id=Grass004) | CC0 1.0 | No | `assets/environment/terrain/Grass004_*.jpg` | 2K JPG. Was the base ground layer; kept, unused, as the dry-grass variant for a future second biome pass. |
 | Ground003 — colour, normal, roughness | ambientCG | [ambientCG Ground003](https://ambientcg.com/view?id=Ground003) | CC0 1.0 | No | `assets/environment/terrain/Ground003_*.jpg` | 2K JPG. Soil/dirt layer. |
 | Rock030 — colour, normal, roughness | ambientCG | [ambientCG Rock030](https://ambientcg.com/view?id=Rock030) | CC0 1.0 | No | `assets/environment/terrain/Rock030_*.jpg` | 2K JPG. Slope layer, blended by the auto shader. |
+| UI Pack (RPG Expansion) — 97 files | Kenney | [UI Pack — RPG Expansion](https://kenney.nl/assets/ui-pack-rpg-expansion) | CC0 1.0 | No | `assets_raw/vendor/kenney_ui-pack-rpg-expansion/` | Staged raw per `EV1`, not yet imported into a scene. Panels/buttons/sliders for `EV9`'s HUD rebuild. |
+| UI Pack — 1343 files | Kenney | [UI Pack](https://kenney.nl/assets/ui-pack) | CC0 1.0 | No | `assets_raw/vendor/kenney_ui-pack/` | Staged raw per `EV1`. Broad source of panel corners, tabs, bars, sliders, toggles for `EV9`. |
+| Input Prompts — 4752 files | Kenney | [Input Prompts](https://kenney.nl/assets/input-prompts) | CC0 1.0 | No | `assets_raw/vendor/kenney_input-prompts/` | Staged raw per `EV1`. Xbox/PlayStation/Switch/Steam Deck/keyboard+mouse/touch glyphs, to replace improvised text prompts (`EV9`). |
+| Game Icons — 443 files | Kenney | [Game Icons](https://kenney.nl/assets/game-icons) | CC0 1.0 | No | `assets_raw/vendor/kenney_game-icons/` | Staged raw per `EV1`. Temporary/production icons pending Tetherbound-specific ones for Orb, pal types, bond, Tether Rift, Sigils. |
+| Game Icons Expansion — 832 files | Kenney | [Game Icons Expansion](https://kenney.nl/assets/game-icons-expansion) | CC0 1.0 | No | `assets_raw/vendor/kenney_game-icons-expansion/` | Staged raw per `EV1`, companion to the base Game Icons pack above. |
 
 Everything currently in the build is **CC0 1.0**, so nothing here carries a legal
 attribution obligation. Credits should still name Quaternius, Kay Lousberg,
