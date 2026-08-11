@@ -3,6 +3,95 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SA0-orbs — the starter choice moves into Grandpa's conversation
+`2036b28` (director+data+tests) · `4912dc1`..`55e708c` (five visual-pass fixes)
+`tests: smoke_opening, smoke_wake_softlock`, both green locally, both replayed
+green again after a rebase onto current main.
+
+Owner directive, 2026-08-11: *"the starters should be in orbs and you preview
+them while talking to Grandpa."* The three starters no longer stand outside
+Grandpa's door as physical bodies you walk up to. `scripts/ui/starter_picker.gd`
+(new) opens automatically the instant his briefing conversation closes — still
+indoors — and previews all three live: a real creature body inside its own
+`SubViewport`, the same construction `tools/preview_creatures.gd` uses for the
+art survey, each with `own_world_3d = true` so three creatures and three lights
+never leak into the meadow's own world or each other's. `sequence_director.gd`
+drops the ~50 lines that placed, tracked and freed the three physical starter
+bodies (`_starter_bodies`, `_starter_prompts`, `STARTER_COLLISION_LAYER`, the
+whole of the old `_spawn_starters`) in favour of reading a choice back from the
+picker's `chosen` signal — the same "ask a panel, read the outcome" split this
+file already keeps with `dialogue_panel.gd` and `name_prompt.gd`.
+
+**Reverses a written decision, amended rather than silently edited.**
+`docs/OPENING_SEQUENCE.md` and `data/config/opening.json`'s `starters` block
+both used to say the choice is "physical, not a menu… a list box would undo
+it." Both now record the reversal in place, with the owner's own words as the
+reason. Grandpa's actual spoken lines in `data/dialogue/opening.json` are
+rewritten to match — he no longer sends the player out a door to meet three
+creatures that no longer stand there.
+
+**`tests/smoke_opening.gd` redriven for the new mechanic**, not just patched:
+beat 4 used to walk the player outside and activate a "Choose <name>"
+interactable; it now closes Grandpa's conversation for real and waits for the
+picker to open **on its own** (proving the director's own beat-driven open
+logic, not calling it directly), then drives orb selection and confirmation
+with the real `ui_right`/`menu_confirm` actions — the same "real buttons, not
+method calls" rule the naming grid below it already followed.
+
+**The blind visual-judge pass ran four uncapped rounds** (`conventions.md`),
+and it is the honest reason this shipped later than the code did — this is new
+UI a player can see, so the rule applied. Round-by-round, because the specific
+bugs are worth keeping:
+
+- **Round 1** found the orbs rendering **completely empty** — `pal_body.gd`'s
+  `setup()` gates its mesh build on `is_inside_tree()`, and the orb shell was
+  still off-tree when `setup()` ran, so nothing errored and nothing built. This
+  is the exact trap `tools/preview_creatures.gd`'s own header names, and it was
+  missed here on the first attempt anyway — worth a second read next time
+  something builds a creature off the main scene tree. Also found the square
+  `SubViewport` render visibly poking past the round panel border. Both fixed:
+  the shell now goes into the live `Orbs` tree before the creature is built
+  inside it, and a `canvas_item` shader on the `SubViewportContainer` masks the
+  render to a circle and vignettes the rim.
+- **Round 2** (post-fix) found the panel was actually a vertical capsule, not a
+  circle — the name label lived inside the same `PanelContainer` as the 3D
+  view, and its line height stretched the panel taller than it was wide. Also
+  found the new vignette darkened far enough in to eat into a standing
+  creature's own feet. Both fixed: the label moved to a sibling below the
+  panel (which is now exactly `VIEWPORT_SIZE` on both axes, a true circle), and
+  the vignette falloff eased (0.55→0.7 start, 0.6→0.5 max strength). Cameras
+  also pulled back (2.4→2.7 distance multiplier) after a winged species'
+  wingtips crowded its own orb edge.
+- **Round 3** found flat, low-key lighting inside every orb and ~170px of
+  unbalanced dead space between the labels and the button hint. Both addressed:
+  ambient light raised 1.6→2.2 and warmed, key light 1.4→2.0, and the layout
+  tightened from both sides.
+- **Round 4 named nothing new** — restatements of round 3's still-partially-
+  addressed items (lighting depth, layout balance, tight per-creature framing)
+  plus items already flagged in rounds 2–3 as out of this task's scope (no
+  branded UI font/chrome anywhere in the project; the creature models' general
+  appeal gap against the Palworld bar). `conventions.md` is explicit that
+  reworded repeats are not improvement. This is the same wall `R9.4` hit after
+  its own uncapped pass — real, reachable bugs get found and fixed every round
+  until the remaining gaps are asset-quality-limited rather than
+  composition-limited, and continuing to iterate past that point is exactly
+  what the stopping rule exists to prevent. `SA0-orbs-remainder` in
+  `BACKLOG.md` records the honest split of what is left and why it stopped
+  here rather than running a fifth round.
+
+**`tools/capture_starter_picker.gd`** (new, permanent tool) renders the picker
+in isolation rather than booting the full meadows scene — the first attempt at
+this loaded the full playground (`diagnose_frame.gd`'s own pattern) and the
+whole process died silently under `xvfb`+`opengl3` partway through rendering,
+cause not isolated. The picker needs no terrain or scatter behind it, so
+narrowing to just the picker sidestepped the crash and is the more honest test
+of what actually changed.
+
+**Full local unit suite** (299 tests) run once, unaffected. Not part of this
+item's named tests, run anyway as a diligence check given the scope of the
+`sequence_director.gd` changes; not repeated on later commits since nothing
+touched after that point could plausibly affect it.
+
 ## EV1 (Kenney half) — the four HUD/icon packs, staged and ledgered
 `fb396b8` · `tests: none` (EV1's own field)
 
