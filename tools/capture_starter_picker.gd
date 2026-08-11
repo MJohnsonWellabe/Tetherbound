@@ -48,7 +48,8 @@ func _run() -> void:
 	if hud != null:
 		hud.visible = false
 
-	_picker.call("open", ["terrapup", "ripplet", "galewisp"])
+	var species: Array[String] = ["terrapup", "ripplet", "galewisp"]
+	_picker.call("open", species)
 	# A few seconds of spin so the turntable is doing something in the shot,
 	# not frozen on frame zero.
 	for i in 90:
