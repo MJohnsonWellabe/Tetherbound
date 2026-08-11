@@ -107,10 +107,7 @@ func _run() -> void:
 
 	var house: Node3D = world.get_node_or_null(^"GrandpaHouse") as Node3D
 	var player: Node3D = world.get_node_or_null(^"Player") as Node3D
-	var sun: DirectionalLight3D = world.get_node_or_null(^"Sun") as DirectionalLight3D
-	var day_transform: Transform3D = sun.global_transform if sun != null else Transform3D()
-	var day_colour: Color = sun.light_color if sun != null else Color.WHITE
-	var day_energy: float = sun.light_energy if sun != null else 1.0
+	var look: Node = world.get_node_or_null(^"WorldLook")
 
 	var shots: Dictionary = _shots(world)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
@@ -136,22 +133,16 @@ func _run() -> void:
 					+ Vector3(0.0, player.global_position.y, 0.0))
 			if player is CharacterBody3D:
 				(player as CharacterBody3D).velocity = Vector3.ZERO
-		# The sun: low and warm for the camp frame — its name promises dusk,
-		# and the same noon sky as every other frame does not deliver it —
-		# restored to the authored day for everything else.
-		if sun != null:
-			if name == "camp-dusk":
-				# Golden hour, not sunset: at 10 degrees of elevation the
-				# cosine on flat ground was ~0.17 and the frame came out as
-				# black mud. 18 degrees keeps the warmth and lets the ground
-				# still be a picture.
-				sun.rotation_degrees = Vector3(-18.0, 250.0, 0.0)
-				sun.light_color = Color(1.0, 0.68, 0.42)
-				sun.light_energy = 1.4
-			else:
-				sun.global_transform = day_transform
-				sun.light_color = day_colour
-				sun.light_energy = day_energy
+		# The sun: warm for the camp frame — its name promises dusk, and the
+		# same noon sky as every other frame does not deliver it — restored
+		# to the authored day for everything else. Routed through WorldLook's
+		# own art.json presets (EV8) rather than hand-rotating the
+		# DirectionalLight3D: a sun-only tweak leaves the sky/fog/ambient at
+		# noon values, which is the exact "frame to frame disagreement" the
+		# bible's one-sky-treatment rule exists to close, not just a look
+		# this one frame happened to want.
+		if look != null:
+			look.call("apply_time", "golden" if name == "camp-dusk" else "day")
 
 		var spec: Array = shots[name]
 		camera.global_position = spec[0]

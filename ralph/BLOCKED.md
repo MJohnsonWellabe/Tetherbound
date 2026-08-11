@@ -245,6 +245,13 @@ backlog items. The loop keeps building past them.
      suspect is already written down: `vegetation.gd::_retint()` rebuilds an
      `ArrayMesh` and discards the importer's LOD chain, so every tree and tuft
      draws at LOD0 at every distance. That is `SA1-lod`, already queued.
+- **`EV10`** — bible §22 Phase G's cohesion pass. Marked `▶` because it is a
+  re-shoot-and-judge-against-both-reference-sets checkpoint that only
+  converges once `EV2`–`EV9` (the look, the cast) are actually shipped — doing
+  it earlier just re-measures gaps those items already own. Per D21 the loop
+  does not wait on it; noting it here each time it is the topmost unblocked
+  item and getting skipped (2026-08-11, `EV8` firing) so it does not silently
+  fall off the list.
 
 ---
 
