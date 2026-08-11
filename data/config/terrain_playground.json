@@ -256,15 +256,28 @@
       "albedo": "res://assets/environment/terrain/Ground003_Color.jpg",
       "normal": "res://assets/environment/terrain/Ground003_NormalGL.jpg",
       "uv_scale": 0.16,
-      "normal_depth": 0.15,
+      "normal_depth": 0.4,
       "ao_strength": 0.3,
       "roughness_mod": 0.05,
       "detiling_rotation": 0.22,
       "detiling_shift": 0.3,
-      "tint": "#c7a680",
+      "tint": "#a4a4a4",
       "_comment_tint_r9_4": "R9.4. Rebalanced against the new grass value, not repainted. Soil is now ~1.35x grass in value instead of ~1.9x: the old ratio is what made the slope blends read as blown-out tan stripes rather than as ground (R7.1-found-3, and the blind critic's 'hard axis-aligned staircase' on frame 03). Hue is untouched -- warm dirt is exactly what the critic asked for MORE of. TUNABLE.",
-      "_comment_tint_ev4": "EV4, round 2. Ground003's own photo is dirt WITH sparse grass tufts baked in -- close enough to Grass008's own colour that a blind critic judging the new control-map paths called them 'essentially the grass shader recolored a darker green-brown... no visible soil/dirt texture break' (this texture now carries every path, not only hillside slope transitions). R9.4's #a4a4a4 was a neutral grey chosen for VALUE alone (soil ~1.35x grass, to fix the R7.1-found-3 blown-out-stripe regression) and deliberately left hue untouched. This keeps that same ~0.65 weighted luminance (so the hillside slope-blend ratio R7.1-found-3 fixed should not reopen) but shifts hue warm -- suppressing green/blue relative to red, the same directional move as the old removed path_tint (#c8a874) -- so the texture reads as dirt rather than a value-shifted copy of the grass beside it. TUNABLE; re-render tools/capture_paths.gd and the existing slope-transition survey frames together if this is tuned again, so a path fix cannot silently reopen a hillside one.",
-      "_comment_ev4_round3": "EV4, round 3. Round 2's #d19e6b warmed the average hue but round 2's blind critic then found NEW damage: 'irregular near-black blotches... broken material/vertex-paint blend' on the hillside slope band (square-convergence, the-rise-route), plus 'the path clearly still carries grass-blade geometry... underneath.' Root cause for both, on inspection: normal_depth 0.4 is a photographic normal map of a weedy lawn (visible grass tufts baked into Ground003_Color.jpg itself), and a strong relief at that depth reads as bump-mapped blade detail up close and as raking-light shadow blotches at a distance on a slope -- the exact class of defect the grass texture already had fixed under it (grass's own comment: 'cut from 0.30 to 0.12... the fractured plates with dark fissure lines were RELIEF, not albedo'). Cut soil the same way (0.4 -> 0.15) and eased the tint toward less saturation (#d19e6b -> #c7a680, still warm, still off the grass hue) so easing the relief does not need to fight a harsh tint on top of it. This is the last tuning attempt this ship makes: if the texture's own baked-in vegetation detail still reads through at this normal_depth, the fix is a real packed-dirt PBR texture asset (bible sec8 item 4, distinct from item 5's Rich Soil this file also uses), not a further tint/relief tune -- see the EV4-textures remainder in BACKLOG.md."
+      "_comment_ev4_reverted": "EV4 tried tinting/de-relief-ing THIS texture warmer for paths across three rounds (rounds 2-3) and hit a wall: Ground003_Color.jpg is a photo of a weedy lawn with real green grass tufts painted into its own albedo, which no tint or normal_depth can repaint. Reverted to the original R9.4 values once EV4-textures' pre-sourced Ground030 (a real dirt/pebble pathway photo) gave paths their own dedicated texture instead -- this texture is back to doing only what it always did, hillside slope transitions, and carries no path-specific risk any more."
+    },
+    {
+      "name": "path",
+      "albedo": "res://assets/environment/terrain/Ground030_Color.jpg",
+      "normal": "res://assets/environment/terrain/Ground030_NormalGL.jpg",
+      "uv_scale": 0.16,
+      "normal_depth": 0.25,
+      "ao_strength": 0.3,
+      "roughness_mod": 0.05,
+      "detiling_rotation": 0.24,
+      "detiling_shift": 0.32,
+      "tint": "#e4dac2",
+      "_comment_ev4": "EV4, round 5. ambientCG Ground030, sourced and ledgered independently by another lane while this ship's path-conversion work was in flight (see EV4-textures in DONE.md) -- a genuine dirt/pebble pathway photo, already breaking into grass at its own edges, unlike Ground003 above. Unlike grass/soil/rock, this did not need a hue-correcting tint: the photo's own colour is already the right family (muted warm grey-tan with sparse moss), so the tint here is a light near-white lift only, same philosophy as R9.4's 'let the texture carry the colour' rule for the other textures. normal_depth kept modest (0.25, between grass's 0.12 and rock's 0.6) since the photo's own pebble relief is real detail worth keeping, not baked-in vegetation to suppress.",
+      "_comment_which": "Chosen over Ground037 (also pre-sourced, damp mossy forest floor) because Ground037 is bible sec8's item 5 Deep Grass/Forest Floor, a different layer for under groves -- not the path. Ground037 is still unused; whoever wires up EV2/EV3's forest-floor layer should reach for it directly rather than re-sourcing."
     }
   ]
 }

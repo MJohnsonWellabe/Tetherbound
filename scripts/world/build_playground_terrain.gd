@@ -163,40 +163,52 @@ func _paint_control_map(
 			data.call("set_control_blend", pos, control["blend"])
 			data.call("set_control_auto", pos, false)
 
-	print("  control map painted: base/overlay/blend by slope, paths in soil (%d pixels), auto-shader off" %
-		painted_path_pixels)
+	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), auto-shader off" %
+		["path" if ids.has("path") else "soil", painted_path_pixels])
 
 
-## Blend a pixel's already-computed slope control toward pure soil, weighted
-## by `field.path_factor()`. EV4 (bible sec8): "paths become a control-map
-## material, not a colour-map tint" — the colour map's own `#c8a874` lerp
-## multiplied grass-coloured grass toward tan, which is why R9.4-remainder-4
-## found "no worked ground anywhere," just a tinted variant of whatever
-## texture was already there. This instead swaps in the real soil texture the
-## control map already carries for the slope-driven soil band, so a path
-## reads as trodden earth rather than a colour.
+## Blend a pixel's already-computed slope control toward the path texture,
+## weighted by `field.path_factor()`. EV4 (bible sec8): "paths become a
+## control-map material, not a colour-map tint" — the colour map's own
+## `#c8a874` lerp multiplied grass-coloured grass toward tan, which is why
+## R9.4-remainder-4 found "no worked ground anywhere," just a tinted variant
+## of whatever texture was already there. This instead swaps in a real
+## texture for the pixel, so a path reads as a different material.
+##
+## Round 1 shipped this reusing `soil` (the only dirt-family texture that
+## existed at the time) and three rounds of blind critique never accepted it
+## as reading as dirt rather than tinted grass — round 3 root-caused it to
+## Ground003_Color.jpg's own baked-in green flecks, not a tunable value. EV4
+## round 5 switches to `ids["path"]`, a dedicated texture (ambientCG
+## Ground030, a real dirt/pebble pathway photo) sourced and ledgered for
+## exactly this while this file's own path-conversion work was in flight —
+## see the EV4-textures entry in DONE.md. Falls back to `soil` if `path`
+## is not configured, so an older/pared-down textures list still bakes.
 ##
 ## Terrain3D's control map holds one base id, one overlay id and one blend
 ## weight per pixel — never three textures — so the natural (slope-driven)
 ## blend has to collapse to a single "dominant" id before it can be re-blended
-## against soil: whichever side of the natural blend has more than half the
-## weight. That is exact off the path (`path_weight` 0 or 1) and an
-## approximation only inside the fade band, where the path signal already
-## dominates the frame.
+## against the path texture: whichever side of the natural blend has more
+## than half the weight. That is exact off the path (`path_weight` 0 or 1)
+## and an approximation only inside the fade band, where the path signal
+## already dominates the frame.
 func _path_control(natural: Dictionary, path_weight: float, ids: Dictionary) -> Dictionary:
-	var soil: int = ids["soil"]
+	var path_tex: int = int(ids.get("path", ids["soil"]))
 	if path_weight >= 0.999:
-		return {"base": soil, "overlay": soil, "blend": 0.0}
+		return {"base": path_tex, "overlay": path_tex, "blend": 0.0}
 	var dominant: int = natural["overlay"] if float(natural["blend"]) >= 0.5 else natural["base"]
-	if dominant == soil:
-		return {"base": soil, "overlay": soil, "blend": 0.0}
-	return {"base": soil, "overlay": dominant, "blend": 1.0 - path_weight}
+	if dominant == path_tex:
+		return {"base": path_tex, "overlay": path_tex, "blend": 0.0}
+	return {"base": path_tex, "overlay": dominant, "blend": 1.0 - path_weight}
 
 
 ## `name -> texture id`, read from the same `textures` list `playground_world.
 ## gd`'s `_build_texture_list()` builds the Texture2DArray from — one source of
-## truth for which index is which species of ground. Empty if any of the three
-## this bake needs is missing, so the caller can fall back cleanly.
+## truth for which index is which species of ground. Empty if any of the
+## three `_control_for` needs is missing, so the caller can fall back
+## cleanly. `path` is optional — `_path_control` falls back to `soil` when
+## it is absent, so an older textures list still bakes paths, just without a
+## dedicated dirt texture.
 func _texture_ids(entries: Array) -> Dictionary:
 	var by_name: Dictionary = {}
 	for i in entries.size():
@@ -206,7 +218,10 @@ func _texture_ids(entries: Array) -> Dictionary:
 	for name in needed:
 		if not by_name.has(name):
 			return {}
-	return {"grass": by_name["grass"], "soil": by_name["soil"], "rock": by_name["rock"]}
+	var ids := {"grass": by_name["grass"], "soil": by_name["soil"], "rock": by_name["rock"]}
+	if by_name.has("path"):
+		ids["path"] = by_name["path"]
+	return ids
 
 
 ## Same three bands as `_ground_colour`, expressed as a base/overlay texture
