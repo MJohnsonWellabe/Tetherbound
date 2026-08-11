@@ -285,27 +285,45 @@ question, not a bug, and the underlying saturation defect that made it read
 as broken is gone. Done when: a blind critic stops calling the moss pattern
 a decal/stamp.
 
-### EV4-textures-lighting — An unmotivated shadow band and blown-out highlights on sunlit ground, reproduced across three independent blind critiques
+**`EV4-textures-lighting` (blown-highlight/shadow-contrast on sunlit ground)
+shipped — see `DONE.md`.** `SA1`'s shadow-atlas cut, the lead-off hypothesis,
+is now ruled out (raising the atlas back to 4096 at runtime changed the
+`square-convergence.png` shadow edge not at all). What actually explained the
+"unmotivated shadow" complaint turned out to be two different things:
+`square-convergence.png`'s dark diagonal is a real occlusion shadow from the
+Barn, and `grandpas-house-route.png`'s flanking bands aren't a shadow at all
+— ordinary grass reading dark purely by contrast against a path blown to
+near-white. Fixed the shared cause (day `exposure` 1.22 → 0.6, `ambient_energy`
+1.02 → 1.5). **Did not fully clear the bar — narrower remainder opened below.**
+
+### EV4-textures-lighting-remainder — Two real occlusion shadows (Barn, the Rise's own crest) still read as prominent even with the highlight fixed
 `model: sonnet` · `tests: none (visual)` · `area: lighting`
-Found while judging `EV4-textures`, and named independently by all three
-critic rounds in some form ("hard-edged, blob-shaped shadow," "hard-edged
-sunbeam/light overlay," "unmotivated shadow band... no caster visible in
-frame") — not a path-texture defect, a lighting one, so it stayed unfixed
-through three rounds of path-only tuning while showing up in every one.
-`square-convergence.png` and `grandpas-house-route.png` both show a large,
-soft-edged but tonally abrupt dark diagonal shape crossing open ground with
-nothing in frame tall enough to cast it, and the LIT two-thirds of the same
-frames blow out to near-white with almost no value modulation — Palworld and
-the key art hold a warm mid-value ochre even in full sun. `SA1` shrank both
-shadow atlases off the 4096 desktop default for VRAM; a low-resolution
-shadow atlas under a single directional light over open, largely flat
-ground is a plausible cause of exactly this symptom (soft-edged but
-tonally-hard shadow blobs) and is the first thing whoever takes this should
-check before assuming it is a `world_look`/time-of-day config problem.
-`EV8` (lighting, in flight elsewhere in this backlog) may already cover
-this — check its outcome before duplicating work. Done when: a blind critic
-given a sunlit ground frame stops naming an unexplained shadow or blown
-highlight.
+`EV4-textures-lighting`'s own self-administered rubric pass (see its
+`DONE.md` entry for why this wasn't a true blind sub-agent read — no
+`Agent`/`Task`-equivalent tool was available in that checkout) still named
+the Barn's shadow in `square-convergence.png`, and found a second,
+previously-undiagnosed instance in `the-rise-route.png` — confirmed by the
+same instrumentation to be genuine terrain self-shadowing off the Rise's own
+nearby crest, not an artifact. Both are physically motivated (toggling
+`sun.shadow_enabled` removes them cleanly) and both got less severe once the
+highlight stopped blowing out (less contrast to read the shadow against),
+but neither went away. Two levers were tried and both went flat —
+`shadow_blur` 1→3 plus a further `ambient_energy` bump moved the sampled
+shadow edge by single-digit luma, and `light_angular_distance` 0.6→4.0 on
+top of that changed nothing visible — consistent with the Compatibility
+renderer (`D06`) not implementing the soft-shadow machinery those properties
+drive under Forward+; worth re-testing on real hardware before writing the
+levers off entirely. Reaching further than that needs either a sun-angle
+change (trades against the terrain-form-vs-shadow-length balance `R9.4`
+already negotiated) or a scene-level change (the Barn's placement relative
+to that viewpoint, or the Rise's crest shape) — neither is a `lighting`-scope
+config edit, which is why this is a narrower remainder rather than more work
+on the same item. Whoever takes this should also re-run a genuine blind
+`visual-judge` pass first (a real sub-agent, not a self-review) in case the
+verdict changes with fresh eyes. Done when: a blind critic given
+`square-convergence.png` or `the-rise-route.png` either stops naming the
+shadow, or explicitly agrees it reads as motivated (traces it to the Barn /
+the Rise itself without being told).
 
 ### EV4-hillside-seam — Blotchy hillside slope material, confirmed pre-existing
 `model: sonnet` · `tests: none (visual)` · `area: terrain`

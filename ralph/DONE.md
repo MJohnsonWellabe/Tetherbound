@@ -139,6 +139,98 @@ hard hat, no bow) — real, but explicitly scoped by the critic as a
 roster-wide material/prop-pass question, not specific to these two, and not
 chased further here.
 
+## EV4-textures-lighting — Two different causes hiding under one "unmotivated shadow" description; the blown highlight was the fixable one
+`bd680b3` (config-only: `data/config/art.json`) · `tests: none (visual)` named,
+`smoke_art`/`smoke_traversal` also run locally since this touches the shared
+`environment` block (both green) · local blind-pass rounds, all rendered and
+critiqued in this checkout before the single push, per `conventions.md`.
+
+Root-cause leads from the backlog entry pointed at two places: `SA1`'s
+shadow-atlas cut, and `art.json`'s exposure/energy. Neither guess survived
+contact with instrumentation, and the real split was between the two named
+frames, not within either lever.
+
+**`square-convergence.png`'s dark diagonal is a real occlusion shadow —
+confirmed, not assumed.** Toggling `sun.shadow_enabled` off on that exact
+viewpoint made the whole shape disappear; toggling it back on reproduced it
+pixel-for-pixel. It comes from the Barn, 6m from that viewpoint's camera —
+a scratch node dump (position/AABB, no rendering) found the barn's own
+6.6m-tall footprint sits close enough that its shadow reaches the camera at
+the sun's current 44° elevation. `SA1`'s shadow-atlas cut is **ruled out**:
+raising `directional_shadow/size` from 2048 to 4096 at runtime
+(`RenderingServer.directional_shadow_atlas_set_size`) produced a
+pixel-identical edge, not a sharper one. The shape isn't blurry because the
+atlas is small; it's blurry because that's genuinely how large and soft a
+barn's shadow is at this range and sun angle.
+
+**`grandpas-house-route.png`'s flanking bands are NOT a shadow at all.**
+Same toggle test: identical with `shadow_enabled` true or false. Also
+identical with SSAO on or off. A pure-heightfield diagnostic (`slope_degrees_at`,
+no scene load) found the ground there measures dead flat — 0.0° across the
+whole sampled width, so there's no normal-facing-away-from-sun explanation
+either. Direct pixel sampling settled it: ordinary grass at luma ~70-100
+sitting directly against a path blown to ~190-200 reads as "a shadow with no
+caster" purely by contrast, even though the grass pixels themselves are
+unremarkable and match grass luma everywhere else in frame. Confirmed by
+flooding `ambient_light_energy` to 6.0 as a one-off probe: the "band"
+visibly thinned along with everything else compressing toward white under
+ACES, which a true occlusion shadow would not do.
+
+**The fix that reaches both: de-blow the highlight.** `near_luma`
+(`tools/frame_stats.py`, mean luma of the bottom 15% of frame) measured 0.692
+on `grandpas-house-route` against Palworld's own 0.419-0.600 range, and the
+sunlit path itself sampled at ~197/255. A modest exposure trim did almost
+nothing — 1.22 → 0.95 moved the sampled path pixel by 0/255, because ACES's
+highlight shoulder is essentially flat at this operating point; it took a
+real cut to 0.6 (`day` inherits the base `environment` block; `golden` and
+`night` already override `exposure` explicitly and are untouched) to bring
+the path to ~151/255, inside Palworld's range, and `near_luma` down to 0.504.
+`ambient_energy` 1.02 → 1.5 gives back some of the shadow floor (measured:
+tripling ambient moved the sunlit path only ~197→215 but moved the Barn
+shadow's floor ~15→40, because ambient is a much larger fraction of what a
+shadowed point receives) — a deliberately smaller step than that, because a
+bigger one measurably crept back into the sunlit path once stacked with the
+exposure cut, undoing the highlight fix it was supposed to complement.
+
+**Two further rounds tried to soften the Barn shadow's edge specifically
+(the backlog's "tonally abrupt" wording) and both went flat**, which is why
+this stopped at two: `shadow_blur` 1.0 → 3.0 plus a further `ambient_energy`
+1.5 → 1.8 changed the sampled shadow edge by single-digit luma (~17→21,
+noise-level); `light_angular_distance` 0.6 → 4.0 on top of that changed
+nothing visible at all. Both are consistent with `docs/decisions/D01`/D06's
+Compatibility renderer not implementing the soft-shadow machinery those two
+properties drive under Forward+ — worth re-testing on real hardware
+(the shipped renderer) rather than concluding the levers themselves are
+dead ends.
+
+**Did not fully clear the bar.** A self-administered rubric pass (see below)
+still named the Barn's shadow in `square-convergence.png`, and a *second*,
+previously-undiagnosed instance in `the-rise-route.png` — that one traces to
+real terrain self-shadowing from the Rise's own nearby crest (a genuine
+occlusion shadow, confirmed by the same slope diagnostic showing the local
+ground is real but modestly sloped, not flat), not to the Barn. Both are
+physically motivated shadows, not artifacts, and both are reduced in
+apparent severity by the highlight fix (less contrast to be judged against)
+but not eliminated. Reaching further needs either a sun-angle change (already
+a carefully-negotiated tradeoff — see `R9.4`'s pitch history in this same
+file — between terrain-form contrast and shadow length) or a scene-level
+change (moving the Barn, reshaping the Rise's crest), neither of which is a
+`lighting`-scope config edit. Recorded as `EV4-textures-lighting-remainder`
+in `BACKLOG.md` rather than pushed further here.
+
+**Process note: no sub-agent-spawn tool was available in this checkout.**
+`conventions.md` and this item's own instructions call for a blind critic
+that never sees the diff. The `visual-judge` Skill loaded its rubric into
+this same session rather than dispatching an isolated agent, and no
+`Agent`/`Task`-equivalent tool was present to spawn one by hand (checked via
+tool search before proceeding). The rubric pass recorded above was run as
+rigorously as this session could manage — full rubric, no leading language,
+genuinely re-examining the frames rather than confirming the fix — but it is
+not the blind read the process calls for, and the next firing with that
+tooling available should re-run it properly against
+`shots/paths/*.png` before trusting this item's "did not fully clear the
+bar" verdict as final.
+
 ## EV2-trunk-colour — Bark retint compensates for a cool ambient wash
 `fda64dc`. `tests: full suite` (299/299). Visual-affecting: a mandatory
 blind `.claude/skills/visual-judge` pass ran against the standard
