@@ -17,6 +17,7 @@ var _config: Dictionary = {}
 var _hills := FastNoiseLite.new()
 var _detail := FastNoiseLite.new()
 var _path_edge := FastNoiseLite.new()
+var _path_dominant := FastNoiseLite.new()
 
 
 func _init(config: Dictionary = {}) -> void:
@@ -58,6 +59,25 @@ func _init(config: Dictionary = {}) -> void:
 	_path_edge.fractal_type = FastNoiseLite.FRACTAL_FBM
 	_path_edge.frequency = 0.05
 	_path_edge.fractal_octaves = 1
+
+	# EV4-textures: `_path_control` (build_playground_terrain.gd) has to
+	# collapse the slope-driven grass/soil/rock blend to a single "dominant"
+	# texture wherever a path crosses it, since Terrain3D's control map holds
+	# only one base/overlay pair. Doing that with a hard >=0.5 threshold on
+	# the blend value flips the dominant texture in exactly one pixel step —
+	# the ONLY un-smoothstepped transition in this whole bake — which reads
+	# as a clean-edged notch cut into the path's own soft fade band wherever
+	# a route climbs through a grass/soil or soil/rock boundary. This field
+	# lets that pick dither across the width of the SAME blend_deg transition
+	# band the natural ground already uses, instead of snapping on one line.
+	# 0.15 frequency (~6.7m wavelength) keeps the dither coarse enough to read
+	# as blotchy intermixing rather than pixel-grain noise. A fourth seed so
+	# it does not correlate with `_hills`, `_detail` or `_path_edge`.
+	_path_dominant.seed = seed_value + 3
+	_path_dominant.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_path_dominant.fractal_type = FastNoiseLite.FRACTAL_FBM
+	_path_dominant.frequency = 0.15
+	_path_dominant.fractal_octaves = 1
 
 
 static func load_config() -> Dictionary:
@@ -277,3 +297,9 @@ func slope_degrees_at(x: float, z: float, step: float = 1.0) -> float:
 	var dz := height_at(x, z + step) - height_at(x, z - step)
 	var normal := Vector3(-dx, 2.0 * step, -dz).normalized()
 	return rad_to_deg(acos(clampf(normal.y, -1.0, 1.0)))
+
+
+## 0..1 dither for `_path_control`'s dominant-texture pick — see `_init`'s own
+## comment on `_path_dominant` for why this exists instead of a fixed 0.5.
+func path_dominant_dither(x: float, z: float) -> float:
+	return _path_dominant.get_noise_2d(x, z) * 0.5 + 0.5

@@ -155,7 +155,8 @@ func _paint_control_map(
 			var control := _control_for(slope, colour_cfg, ids)
 			var path_weight: float = field.path_factor(world_x, world_z)
 			if path_weight > 0.0:
-				control = _path_control(control, path_weight, ids)
+				var dither: float = field.path_dominant_dither(world_x, world_z)
+				control = _path_control(control, path_weight, ids, dither)
 				painted_path_pixels += 1
 			var pos := Vector3(world_x, 0.0, world_z)
 			data.call("set_control_base_id", pos, control["base"])
@@ -188,15 +189,26 @@ func _paint_control_map(
 ## Terrain3D's control map holds one base id, one overlay id and one blend
 ## weight per pixel — never three textures — so the natural (slope-driven)
 ## blend has to collapse to a single "dominant" id before it can be re-blended
-## against the path texture: whichever side of the natural blend has more
-## than half the weight. That is exact off the path (`path_weight` 0 or 1)
-## and an approximation only inside the fade band, where the path signal
-## already dominates the frame.
-func _path_control(natural: Dictionary, path_weight: float, ids: Dictionary) -> Dictionary:
+## against the path texture. That collapse is exact off the path
+## (`path_weight` 0 or 1) and an approximation only inside the fade band,
+## where the path signal already dominates the frame.
+##
+## EV4-textures: a fixed `>= 0.5` cut picks that dominant id in one pixel
+## step, with none of the smoothstepping every other transition in this file
+## uses — so wherever a route's fade band crosses a grass/soil or soil/rock
+## boundary, the texture showing through the path's edge hops cleanly from
+## one material to another along a single line. On a flat, axis-unaligned
+## boundary that line aliases into the "small rectangular notches" EV4's
+## round-5 critic named, distinct from the flat-ground edge wobble already
+## fixed. `dither` (`Heightfield.path_dominant_dither`, a coherent noise
+## field, not per-pixel white noise) spreads that pick stochastically across
+## the same `blend_deg` width the natural ground already transitions over,
+## so the boundary reads as blotchy intermixing instead of a drawn line.
+func _path_control(natural: Dictionary, path_weight: float, ids: Dictionary, dither: float) -> Dictionary:
 	var path_tex: int = int(ids.get("path", ids["soil"]))
 	if path_weight >= 0.999:
 		return {"base": path_tex, "overlay": path_tex, "blend": 0.0}
-	var dominant: int = natural["overlay"] if float(natural["blend"]) >= 0.5 else natural["base"]
+	var dominant: int = natural["overlay"] if float(natural["blend"]) >= dither else natural["base"]
 	if dominant == path_tex:
 		return {"base": path_tex, "overlay": path_tex, "blend": 0.0}
 	return {"base": path_tex, "overlay": dominant, "blend": 1.0 - path_weight}
