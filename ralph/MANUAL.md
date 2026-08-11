@@ -141,10 +141,23 @@ That second one is not a minor gap right now. **Nearly every item in Phases
 -0.9 through -0.55 is visual-affecting**, so as configured the keyed Routine
 cannot correctly complete most of the work at the top of the backlog.
 
-**Fix:** edit the Routine in the UI and allow at least `Task` and `Skill`
-alongside the eight above, plus MCP tools if you want chaining. When creating
-the lanes, give them the same — the default tool set new Routines get is
-already correct, so this is a quirk of the keyed one specifically.
+**Fix — recreate it in the UI.** If the Routines UI exposes a tools or
+permissions setting when editing, add `Task` and `Skill` there and stop. If it
+does not, **recreate the Routine**: one made through the UI gets the full
+default tool set automatically, which is why the two lanes came out correct
+without anyone asking. Delete the old one afterward so two keyed Routines never
+fire at once.
+
+`ralph/KEYED_PROMPT.md` has the current prompt to paste, with a placeholder
+where the key goes — read the real value off the old Routine before deleting it.
+The prompt stored in the original Routine is **stale**: it predates 2026-08-11,
+so it still describes one global lease and knows nothing about areas, batching,
+local critic iteration or the removed round cap. Recreating fixes the tools and
+the prompt in one move.
+
+**Confirm it worked** by having a session read the Routine's stored config and
+check that `Task` and `Skill` are actually in `allowed_tools`. That is checkable
+rather than assumed, and it is the whole point of the exercise.
 
 **How this was found:** by reading the Routine's stored config, not by watching
 it fail. What is *verified* is the eight-tool list; that scheduling and blind
