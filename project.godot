@@ -45,7 +45,7 @@ pointing/emulate_touch_from_mouse=false
 
 [rendering]
 
-renderer/rendering_method="forward_plus"
+renderer/rendering_method="gl_compatibility"
 ; Shadows are the single defect that killed the previous prototype. Godot gives
 ; real directional shadows out of the box; these are just the defaults made
 ; explicit so nobody has to guess what they were.
