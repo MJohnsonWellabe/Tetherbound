@@ -34,29 +34,31 @@ access returned.
 
 ## Blocked on the owner
 
-### RB4 — ROG Ally black screen root cause needs on-device data
-The diagnostics half shipped (`RB4-diagnostics`, see `DONE.md`): a boot log
-at `user://boot_log.txt` — `%APPDATA%/Godot/app_userdata/Tetherbound/
-boot_log.txt` on the exported Windows build — now records a timestamped
-line at every major startup phase (autoload boot, terrain build, terrain
-data assignment, ground shader, player placement, vegetation scatter,
-settlement build, first frame presented). It appends rather than
-truncates, so a killed-and-relaunched attempt does not erase the stalled
-run.
+### RB4 — ROG Ally freeze: on-device data now in, points at the Vulkan/Forward+ present path, not a slow compile
+On-device data collected 2026-08-10/11 by the owner, directly on the Ally,
+against the shipped release build. This changes the leading hypothesis.
 
-What's still needed before anyone can safely act on the leading hypothesis
-(a first-launch shader/pipeline-compilation stall — Forward+ compiles a
-pipeline per unique mesh/material combination the first time it draws, and
-the meadow scatters ~16,800 vegetation instances, a compile load a discrete
-PC GPU eats invisibly that could stall an integrated GPU for a long time):
+**Boot log** (`user://boot_log.txt`, two separate launches ~25 minutes
+apart, both hung): both runs write the identical phase sequence — autoload
+ready, terrain node built, terrain data assigned, ground shader applied,
+player placed, vegetation scattered (~16,700 props), settlement built —
+ending on the SAME last line both times: `_ready complete, waiting for
+first frame`. Each run took ~6 seconds to reach that line, with no visible
+stall anywhere in the build sequence itself. Neither run ever wrote the
+next line (`first frame presented`), which only fires after `await
+get_tree().process_frame` returns.
 
-1. **The boot log's last line** from an actual frozen run on the Ally —
-   which phase it reached before it stopped writing.
-2. Does Task Manager show the process pinned at high CPU/GPU, or fully idle,
-   during the freeze?
-3. Does it ever resolve if left for a few minutes?
-4. Was it launched windowed or fullscreen?
-5. Any Windows Defender/SmartScreen dialog first?
+**Task Manager, during the freeze**: the process shows as `Tetherbound (Not
+Responding)`, ~1.4GB memory, but **0% CPU, 0% disk, 0% network** — not
+climbing, not busy. Left for well over 10 minutes: **never resolves**.
+
+Together this rules out the original leading hypothesis (a first-launch
+shader/pipeline-compile stall) — a compile taking a long time would show
+CPU or GPU load while it worked, and this shows neither. The evidence now
+points at something in the render thread blocking on a call that never
+returns — most likely a Vulkan/Forward+ present or pipeline-compile call
+deadlocking against this specific integrated GPU's driver, between "the
+scene is fully built" and "the engine presents its first frame."
 
 Static inspection already ruled out several other suspects, so don't
 re-check them: the shipped release build already exports `--export-release`,
@@ -66,13 +68,23 @@ both the flat and `res://`-relative paths
 exactly this); the export architecture is `x86_64`, matching the Ally's
 Ryzen Z1; nothing forces exclusive fullscreen in `project.godot`.
 
-Do not guess-fix the shader-stall hypothesis without this data — if it's
-wrong, the fix would be real engineering effort spent on the wrong problem.
-This needs a real Windows/Ally run, which CI cannot provide (same
-limitation `smoke_menu.gd` already documents for mouse capture).
+**Next concrete step, on the owner**: launch with `--rendering-driver
+opengl3` appended to the shortcut/exe target (bypasses Forward+/Vulkan
+entirely, using the same Compatibility renderer `tools/survey.sh` already
+uses for headless CI rendering). If it loads under OpenGL, that confirms a
+Vulkan-driver-specific stall — actionable two ways: ship OpenGL/
+Compatibility as the default renderer for this hardware class, or dig into
+what specifically triggers the Vulkan-side hang. If it *also* hangs under
+OpenGL, the render backend is cleared and the search moves elsewhere in
+the render-thread startup path.
 
-**Clears when:** the owner supplies the boot log's last line plus the four
-questions above, or reproduces it with fresh data.
+This needs a real Windows/Ally run, which CI cannot provide (same
+limitation `smoke_menu.gd` already documents for mouse capture) — do not
+guess-fix the Vulkan-stall hypothesis without the OpenGL test result
+first.
+
+**Clears when:** the owner reports whether `--rendering-driver opengl3`
+loads successfully or also hangs.
 
 ### `ASSET_LEDGER.md` licence claim is false
 The ledger states "Everything currently in the build is CC0 1.0." It is not: the
