@@ -29,24 +29,30 @@ later, was that the rocky rises rendered white and read as snow-capped peaks in
 a meadow — the palette's masonry grey is correct for a cliff in shade and far
 too light for a sunlit slope after tonemapping.
 
-## The renderer caveat, which is real
+## The renderer caveat, which used to be real and now mostly is not
 
-The project ships **Forward+**. These frames are captured on **Compatibility**.
+Originally: the project shipped **Forward+**, these frames were captured on
+**Compatibility**, and that gap — no SSAO, no volumetric fog, no SDFGI,
+different shadows — was a real, standing limitation of what a survey frame
+could be trusted to judge.
 
-That was not a preference. Software Vulkan (lavapipe, via
-`mesa-vulkan-drivers`) was installed and does render Forward+ — verified,
-`Vulkan 1.4.318 - Forward+ - llvmpipe`. But **Terrain3D segfaults under
-lavapipe** during region streaming, consistently, before any frame is captured.
-Compatibility renders the same scene without complaint.
+**As of `docs/decisions/D01`'s 2026-08-11 reversal (RB4), the project ships
+Compatibility too.** The Ally freeze root-caused to a Forward+/Vulkan
+render-thread stall, and switching the shipped game's own renderer to
+Compatibility fixed it. This survey harness now matches the shipped game's
+actual renderer rather than diverging from it — a strictly better position:
+composition, terrain shape, silhouette, colour relationships, camera framing
+AND lighting/shadow behaviour are all now judged on the same pipeline that
+ships.
 
-Compatibility is a different pipeline, not a lower-quality Forward+: no SSAO, no
-volumetric fog, no SDFGI, and shadows are implemented differently.
-
-So these frames are trustworthy for **composition, terrain shape, silhouette,
-colour relationships and camera framing**, and NOT trustworthy for fine
-judgements about lighting quality or post-processing. On a machine with a real
-GPU, switch `tools/survey.sh` to `--rendering-driver vulkan` and the caveat
-lifts.
+Kept for the record, since it explains why Compatibility was chosen for the
+survey specifically (not just inherited from the later renderer switch):
+software Vulkan (lavapipe, via `mesa-vulkan-drivers`) was installed and does
+render Forward+ — verified, `Vulkan 1.4.318 - Forward+ - llvmpipe` — but
+**Terrain3D segfaults under lavapipe** during region streaming, consistently,
+before any frame is captured. Compatibility renders the same scene without
+complaint, which is one more reason it was the safer choice even before RB4
+made it the shipped choice too.
 
 ## One rule from the old rubric that is deliberately dropped
 

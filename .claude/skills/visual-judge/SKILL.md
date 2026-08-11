@@ -148,11 +148,16 @@ rubric is wrong, argue that with the human; do not quietly rewrite it.
 
 ## Honest limits of this setup
 
-- **Compatibility renderer, not the Forward+ the game ships.** Terrain3D
-  segfaults under software Vulkan, so the survey runs on OpenGL. Different
-  pipeline: no SSAO, no volumetric fog, different shadows. Trustworthy for
-  composition, terrain shape, colour and framing; not for fine lighting
-  judgements. On a real GPU, switch `tools/survey.sh` to `vulkan`. (D06)
+- **Compatibility renderer — as of 2026-08-11 (RB4, `D01`), this is also
+  what the game ships**, not a stand-in for a different shipped pipeline.
+  The Ally freeze root-caused to a Forward+/Vulkan render-thread stall;
+  switching the shipped renderer to Compatibility fixed it, so this survey
+  now judges the same pipeline players actually see. Still worth knowing
+  it's software rendering here (Terrain3D also segfaults under software
+  Vulkan on this box, which is *why* Compatibility was already the
+  survey's choice before it became the shipped choice too): no SSAO, no
+  volumetric fog, and fine lighting/shadow judgements are still safer made
+  on real hardware than through llvmpipe. (D06)
 - **Software rendering.** Frame times are meaningless. Never quote them.
 - **Creature and character art is judged, not excused.** `CLAUDE.md` says
   creature appeal must not be judged on *placeholders* — that rule exists so

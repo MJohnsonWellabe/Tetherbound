@@ -3,11 +3,17 @@
 Written as a handoff: everything a fresh context needs to pick this up without
 re-deriving it. Read `CLAUDE.md` first for the hard rules, then this.
 
-**Last updated:** end of the session responding to the owner's **first real
-playtest** — the giant-player fix, the indoor opening (D18), boar-sized
-starters (D19), the data-driven wild table (D20), the village and paths, and
-the first-day arc. `ralph/BACKLOG.md` was rewritten the same day and is the
-ordered plan; this file is the state.
+**Last updated:** end of the 2026-08-10/11 owner-directed interactive
+session that worked Phase -0.5's remainder through the start of Phase 1 —
+two PC bugs found on the owner's own hardware (a walk/run animation freeze,
+and the ROG Ally black-screen freeze — RB4, root-caused to a Forward+/
+Vulkan render-thread stall and fixed by switching the shipped renderer to
+Compatibility, `docs/decisions/D01`), the signposts and stronghold
+silhouette, ridge-biased vegetation clumping and ground-cover clustering
+(landed with an honest partial — see `ralph/BACKLOG.md`'s
+`R7.1-remainder-2`), a path-trench terrain bug root-caused to two
+overlapping building pads, and NPC villagers plus interior dressing.
+`ralph/BACKLOG.md` is the ordered plan; this file is the state.
 
 ---
 
@@ -128,7 +134,36 @@ error — it is not.
   remapping persisted to `user://settings.json`, **free-build toggle** (D16),
   the **`Game` autoload** (party of five, satchel, day counter), a follower
   pal.
-- 277 unit tests, smoke tests per feature. CI exports a Windows build and
+- **A landmark stronghold silhouette and wayfinding signposts** (R7.1/
+  R7.1-visual), blind-reviewed and iterated: real wall/roofline/crenellation
+  geometry replaced three bare prisms, signpost arms/labels fixed for
+  overlap and readability. Long-range silhouette legibility is a known,
+  narrower open remainder (`R7.1-visual-remainder-2`) — placeholder-primitive
+  architecture may not be able to fully clinch "fortress" at wayfinding
+  distance; revisit once real art replaces the primitives.
+- **Ridge-biased vegetation clumping and ground-cover clustering**
+  (`R7.1-remainder`), three rounds of blind-critic iteration. Genuine,
+  visible improvement — real clump/clearing structure where there was
+  uniform scatter — but neither the horizon-population nor the
+  continuous-ground-cover bullet fully passed the blind critic in three
+  rounds; see `ralph/BACKLOG.md`'s `R7.1-remainder-2` for specifics and
+  what a next pass should try.
+- **Three NPC villagers** in the village square (`village_npcs.gd`), each
+  with a short flavour greeting, and Grandpa's house interior dressed past
+  "undressed grey box" (rugs, a second bed and bookcase, a gear table,
+  surface clutter). Villager bodies reuse the existing Grandpa/trainer rigs
+  through a real material-level tint rather than a stylistically
+  incompatible free asset — the creature/human art-pipeline question stays
+  parked in `ralph/BLOCKED.md`, not silently resolved.
+- **The renderer is Compatibility (`gl_compatibility`), not Forward+**
+  (`docs/decisions/D01`, reversed 2026-08-11). The owner reproduced a hard
+  freeze on the shipped Windows build twice; on-device data (boot log +
+  Task Manager) pointed at a Forward+/Vulkan render-thread stall specific to
+  the Ally's iGPU driver. Switching sidesteps Vulkan entirely and also
+  matches the renderer every headless CI render has used all along. Cost:
+  no SDFGI/volumetric fog/Forward+ shadows. Real on-device confirmation
+  that the freeze is actually gone is still worth having.
+- 299 unit tests, smoke tests per feature. CI exports a Windows build and
   publishes it on every push to `main`.
 - The website is redesigned around real screenshots; the stale "sourced
   stand-ins" claim is gone. Re-shoot it after each visual milestone.
@@ -158,13 +193,19 @@ error — it is not.
 
 ## 5. The open work
 
-`ralph/BACKLOG.md` is the ordered plan — rewritten this session, read it
-rather than trusting any summary here. The short shape: a fresh blind visual
-review, then a ▶ play gate on the **new** first day; then the pal→creature
-rename; then Phase 2's remainder (tools, durability, real harvesting,
-orb/potion crafting, then killing the auto-heal); then humanoid GLB
-regeneration; persistence; combat/progression including Tuskroot's real model
-and the evolution ceremony.
+`ralph/BACKLOG.md` is the ordered plan, read it rather than trusting any
+summary here. The short shape as of 2026-08-11: Phase -0.5's visual pass is
+functionally done (signposts, stronghold silhouette, vegetation clumping/
+ground cover, villagers, interior dressing — several with narrower honest
+remainders recorded, not false "done"s). Next is **R9.4**, a full-game
+visual pass covering everything already in the game (not just what this
+session touched) — owner directive: no fixed round cap, iterate until the
+blind critic is actually satisfied, buildings and terrain called out as
+the current weak points. Then Phase 1's **pal→creature rename** (R1.1) and
+a vocabulary sweep of this file (R1.2); then Phase 2's remainder (tools,
+durability, real harvesting, orb/potion crafting, then killing the
+auto-heal); then humanoid GLB regeneration; persistence; combat/progression
+including Tuskroot's real model and the evolution ceremony.
 
 ---
 
@@ -211,6 +252,25 @@ like timing races. Recorded, not chased (see the backlog's found-along list).
 **Trainer backpack** undersized vs sheet 04, ragged hood. Deferred: a volume
 edit on a textured mesh costs a retexture — fold into the GLB regeneration if
 cheap, otherwise leave.
+
+**The ROG Ally freeze (RB4) is fixed by diagnosis, not yet by an on-device
+replay.** Root-caused via boot-log + Task Manager data the owner supplied
+directly from the frozen device (0% CPU/disk/network, never resolving —
+ruled out a slow shader compile) to a Forward+/Vulkan render-thread stall.
+Fixed by switching the shipped renderer to Compatibility (§3,
+`docs/decisions/D01`). Real on-device confirmation that this actually
+resolves it is still open, same pattern as RB1/RB2.
+
+**A real MultiMesh bug silently broke vegetation colour jitter for most of
+this session.** `vegetation.gd`'s per-instance colour jitter (added to fix
+"ground cover reads as one flat hue") set `use_colors` *after*
+`instance_count`, which `MultiMesh` requires the other way around — the
+flag never took effect and jittered instances kept their default colour.
+Found via a background agent's render log (11,317 repeated engine errors
+in one render), fixed 2026-08-11. This means the `R7.1-remainder` visual
+critiques that ran before the fix landed were judging a build where the
+jitter fix was largely non-functional — worth keeping in mind if
+`R7.1-remainder-2`'s ground-cover finding gets re-tested.
 
 ---
 
@@ -291,7 +351,7 @@ file**.
 
 ## 10. Testing and shipping
 
-- `godot --headless --path . --script tests/run_tests.gd` — 277 unit tests.
+- `godot --headless --path . --script tests/run_tests.gd` — 299 unit tests.
 - `tests/smoke_*.gd` — one per feature, boots the real scene, injects input.
 - **Address spawn-dependent tests through `spawns.json`'s `roles` block**,
   never a species id (D20).
