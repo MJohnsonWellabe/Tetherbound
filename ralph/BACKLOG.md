@@ -191,25 +191,7 @@ material variants; wetland forms and a distinct rock large-tier are honest
 remainders, not done. Two new findings opened below: `EV2-trunk-colour` and
 `EV2-landmark-ceiling`.
 
-### EV2-trunk-colour — Tree trunks render pale salmon/pink instead of brown bark
-`model: sonnet` · `tests: none` · `area: vegetation`
-Found by two independent blind critics during `EV2`'s rounds 1 and 2, both
-unprompted and specific: "trunk color reads unnaturally pale pink/salmon,"
-"every tree trunk in every frame is an unusual pale salmon/pink-tan color
-rather than brown bark... more visually odd than anything in the canopies."
-Not a texture bug — `Bark_NormalTree.png` and `Bark_TwistedTree.png` measure
-RGB(140,88,67) and RGB(84,76,72) respectively, both ordinary warm/neutral
-browns, and no layer in `vegetation.json` retints `Bark_NormalTree` or
-`Bark_TwistedTree` at all. The likely cause is thin trunk geometry (a few
-pixels wide at typical survey distance) combined with strong directional sun
-and texture minification washing the brown toward a pale warm tone under the
-Compatibility renderer — but this is a guess, not root-caused. Not chased
-under `EV2` because it isn't a model-selection or retint-config question, the
-tools for it are lighting/material, and `lighting` is a currently-contested
-area. Done when: the mechanism is found (screenshot comparison of the same
-trunk at different distances/angles would confirm or rule out the
-minification theory) and either fixed or shown to be a Compatibility-
-renderer-only artifact that doesn't affect the shipped Forward+ build.
+**`EV2-trunk-colour` (pale salmon/pink bark) fixed — see `DONE.md`.**
 
 ### EV2-landmark-ceiling — Hero trees don't read as landmark specimens even at the best 3-of-5 subset
 `model: sonnet` · `tests: none` · `area: vegetation`

@@ -3,6 +3,68 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV2-trunk-colour — Bark retint compensates for a cool ambient wash
+`fda64dc`. `tests: full suite` (299/299). Visual-affecting: a mandatory
+blind `.claude/skills/visual-judge` pass ran against the standard
+`tools/survey.sh` 5-frame set after the fix.
+
+**The item's own guess (minification) was wrong, found by testing it
+directly rather than assuming it.** Rendering the same trunk at point-blank
+range — full texel resolution, nothing to minify — still showed the pale
+salmon/pink colour, which rules distance out immediately. Zeroing
+`art.json`'s `ambient_light_energy` on the identical shot moved the colour
+most of the way back toward true brown, isolating the real mechanism:
+`ambient_colour` (`#a8bccc`, a cool blue-grey deliberately tuned by an
+earlier fix for GROUND shadow legibility) washes warm surfaces toward pale
+and neutral, and thin curved trunk geometry draws a disproportionately
+large share of its total light from that ambient fill compared to a flat
+ground plane, which receives most of its light from the direct sun instead.
+
+Couldn't recolour ambient globally without re-risking the ground fix it
+exists for, so used the same lever the `rocks` layer already carries for
+the identical class of problem (a source measured as warm/neutral, washed
+toward the wrong hue by scene lighting): added `Bark_NormalTree` and
+`Bark_TwistedTree` entries to `vegetation.json`'s global `retint` map.
+Values solved from the measured per-channel gain (rendered ÷ source texture
+colour, sampled directly from a close-up PNG) against a believable-brown
+target, then verified by reading `albedo_color` straight off the actual
+scattered `MultiMesh` material in a running scene — not by trusting a
+render, after an early attempt rendered a manually-`load()`ed tree that
+never went through `vegetation.gd`'s retint pipeline at all and showed no
+change, a wrong turn caught by checking the data instead of the picture a
+second time. `Bark_DeadTree` left alone: it already carries its own
+separate tint and grey dead wood was never the reported bug.
+
+**Blind pass converged in one round**, in the sense that matters for this
+item: a fresh critic, told nothing, did not name trunk/bark colour as a
+defect anywhere in five frames — the thing it was reliably naming
+unprompted in `EV2`'s own rounds 1 and 2 is gone. The same pass surfaced a
+long list of other findings (value/lighting range, scatter density and
+clustering, no groves, no water, a creature-art style mismatch, a handful
+of concrete render artefacts), but essentially all of it duplicates
+already-open backlog territory rather than naming something new:
+value/lighting range and horizon haze is `EV8`'s (shipped) and `EV10`'s
+remit, empty/uniform scatter is `EV3`, no groves is `EV2-landmark-ceiling`,
+water is `EV5`, and the creature-art style mismatch is the same question
+already sitting in `BLOCKED.md` ("Does the creature roster clear a
+Palworld-level appeal bar"). Checked rather than assumed: the "flat unlit
+violet tower" finding is the landmark stronghold silhouette, sampled at
+RGB(81,77,99) — a muted dark slate, not the loud violet the critic's prose
+suggested, and deliberately unshaded by `landmark.gd`'s own design (so
+atmosphere never washes it out) — not a new bug. Not opening a new backlog
+item for any of this; it would just be duplicate bookkeeping for existing
+entries.
+
+One genuinely new, minor observation, not worth its own item: the
+`04-three-quarter` survey viewpoint's fixed camera sits close enough to a
+scattered boulder to show its near-clip face filling the bottom of the
+frame in a way that reads as a translucent dome. This is a fixed-viewpoint
+composition artefact of that one survey camera position under this
+deterministic scatter seed, not a confirmed gameplay-visible bug — the
+real third-person camera orbits and is not fixed to this spot. Worth a
+glance if `tools/survey.gd`'s viewpoints are ever retuned, not urgent on
+its own.
+
 ## NP4-rig — Rig, animate and install the three NP4 bases
 `tests: smoke_art` (green, local headless + Godot import clean)
 
