@@ -1088,23 +1088,25 @@ Done when: a critic looking at the mid-distance stops calling the trees noise.
 five did not reproduce, were out of this item's scope, or were not chased —
 see the remainder below.
 
-### R9.4-remainder-8-followup — the two findings nobody has checked yet
-`model: haiku` · `tests: none` · `area: village`
-Genuinely unresolved, unlike the rest of the original list (see `DONE.md` for
-why each of those closed the way it did):
+**R9.4-remainder-8-followup (both findings checked) closed — see `DONE.md`.**
+One real, one a false alarm on the same pattern as the windmill rock. A
+narrower open item, `R9.4-remainder-8-rocks-repeat`, is below it.
 
-- **Foliage clips the farmhouse roof ridge** in `buildings/04`, `05` and `06`
-  — not investigated this pass. Given `EV6` replaces the whole settlement kit
-  these trees stand near, check whether it still reproduces on the new kit
-  before spending a firing on the old one.
-- **Boulders sit fully proud of the ground** with no bedding at 4–6 m across,
-  generally (not the one windmill-adjacent instance already investigated and
-  closed as a camera-angle artefact — see `DONE.md`). Needs its own look at
-  a genuinely embedded boulder, not the one already ruled out.
-
-Both are low-value to chase before `EV6` lands, since it places new structures
-in the same clearings and may change what is nearby. Whoever takes this should
-re-survey first rather than trust either bullet is still current.
+### R9.4-remainder-8-rocks-repeat — the rocks layer reads as one instance duplicated, not a quarry
+`model: sonnet` · `tests: none (visual)` · `area: vegetation`
+Named by a blind critic judging `R9.4-remainder-8-followup`'s slope-alignment
+fix (given no knowledge of what changed, so this is an independent finding,
+not the thing that item set out to fix): rock clusters in frames `05` and
+`06` "read as one rock instance duplicated, not a quarry of varied stone" —
+same grey blocky low-poly shape, same size, same colour, evenly spaced.
+`rocks`' own `scale_min`/`scale_max` (0.28–2.1) already varies size; the
+complaint is shape and colour uniformity across only 3 boulder meshes +
+3 pebble meshes (`vegetation.json`'s `rocks.models`). The fuller Stylized
+Nature MegaKit that might carry more rock forms is itch.io-blocked
+(`EV1-remainder`) — same ceiling `EV2-landmark-ceiling` already hit for hero
+trees. Low priority; not chased further this pass. Done when: a blind critic
+stops calling the rock field one instance repeated, or the itch.io block
+clears and a wider rock set is available to draw from.
 
 ### R9.4-remainder-6 — `survey_combat.sh` did not complete, and nobody knows why
 `model: sonnet` · `tests: none`

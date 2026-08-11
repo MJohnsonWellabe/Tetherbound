@@ -3,6 +3,60 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R9.4-remainder-8-followup — one real fix (rocks floating on slopes), one false alarm (roof foliage)
+`c6057e4`. `tests: none` named, ran `tests/test_scatter_rules.gd` and
+`tests/test_playground_heightfield.gd` (part of the full suite) as due
+diligence since the fix touches shared scatter code, not just data — full
+suite green, 303/303, before and after rebasing onto a concurrent `EV3` push
+that touched the same two files (`path_bias`; auto-merged clean, verified by
+diff after).
+
+**Boulders sitting proud of the ground — real, fixed.** Root cause found by
+reading code before rendering anything: `vegetation.gd` places every scatter
+instance world-up, sampled at one centre-point height, with a flat 0.06m
+`SINK` — the `rocks` layer is the one layer with a *minimum* slope
+(`min_slope_deg: 6.0`) specifically so boulders gather on rises, so it is
+also the one layer where a flat, untilted placement is most visible: a wide
+rock's downhill edge hangs above the actual ground with daylight showing
+under it. Confirmed with a real render (a boulder on the hillside behind the
+farmhouse, `tools/capture_buildings.gd`'s `05-windmill-from-meadow` viewpoint)
+before writing any fix, per `conventions.md`'s cross-checking rule.
+
+Fix: `playground_heightfield.gd` exposes the ground normal it already computed
+internally for `slope_degrees_at` as a new `normal_at()`. `scatter_rules.gd`
+stores that normal on a placement only when the layer sets a new
+`align_to_slope` flag (`vegetation.json`, `rocks` layer only — grass/bushes/
+trees stay world-up on purpose, since a plant grows against gravity rather
+than perpendicular to the slope it's rooted in). `vegetation.gd` rotates the
+instance basis toward that normal before applying yaw/scale. Collision
+(`_add_collision`'s cylinder shapes) is untouched — it was already a coarse
+camera-blocker independent of visual orientation, not something this fix
+needed to touch.
+
+Verified two ways: re-rendered the exact same boulder and confirmed the gap
+is gone (now flush with the slope), and ran the mandatory blind
+`.claude/skills/visual-judge` pass — a genuinely blind sub-agent (told nothing
+about what changed, asked to judge the frames against the full rubric) named,
+unprompted, that rocks in frames `05`/`06` "sit low... read as grounded rather
+than floating." Same critic independently flagged a real but out-of-scope
+finding — the rocks read as one instance duplicated (shape/colour variety, not
+placement) — split out as `R9.4-remainder-8-rocks-repeat` in `BACKLOG.md`
+rather than folded into this fix.
+
+**Foliage clipping the farmhouse roof ridge — checked, did NOT reproduce.**
+The original finding was from one frame (`buildings/04`, the `04-barn-cluster`
+viewpoint). Rendered four fresh viewpoints close around the house from every
+side (NW, NE, SW, and a raised top-down angle) before touching any code — the
+roofline was clean from all four, no foliage anywhere near it. Also queried
+the actual scatter placements within 14m of the house centre directly (a
+scratch probe script against `scatter_rules.gd`'s own `all_placements`, not a
+guess): zero tree/grove/bush entries that close, only grass/drygrass/flowers.
+Conclusion: the original frame's apparent clip is a camera-angle coincidence —
+a background tree aligning with the roof silhouette from that one specific
+eye position — the same false-positive class `R9.4-remainder-8`'s own
+windmill-rock finding already hit and closed the same way. No code change;
+recorded here rather than left to be re-investigated blind next time.
+
 ## EV3 (first slice) — path_stones anchored to the real paths, grass/drygrass clumping tightened
 `8528bbd`. `tests: smoke_art` (named test, green: "art: OK — models loaded,
 sized to their colliders, and the meadow is dressed"). Also added and ran
