@@ -483,6 +483,93 @@ next sweep too. Code diff verified unchanged from the last green CI run
 new code. Dispatched `release.yml` manually afterward, same reason
 `ship_branch.sh`'s own last step exists.
 
+## SA6 — Separate the five birds by palette
+`9375ab9`. `tests: smoke_art` (green, local + import). No Meshy spend —
+`grade.py`'s repair path, `SPECIES["pipwing"|"duskhush"|"galecrest"|
+"reedwing"]` each gained a `palette` block. Their `eye_guard` rects already
+existed (structural work from an earlier pass, full quadrant-by-quadrant
+scans, 2-5 rects per species) — this item only had to add the colour.
+
+Measured each installed 2048×2048 `base_color` atlas directly (numpy, via
+`grade.py`'s own `rgb_to_hsv`) before writing anything. Pipwing: 50% of
+saturated texels in the 160-200° hue band (teal/cyan) — shifted to ochre/gold
+(hue_toward 42°), existing tan enriched, a charcoal accent added for the
+third named colour. Duskhush: 67.5% in 15-60° (warm brown/gold, "pale
+cream-and-brown" per the backlog's own diagnosis) — shifted to cool
+slate/lavender-grey (hue_toward 222°/250°), amber eyes untouched by
+construction (the op only ever sees texels the guard rects don't cover).
+Galecrest: 35.8% in 180-200° (blue-grey) plus 55.7% warm tan — shifted the
+blue to rust/chestnut (hue_toward 16°), the warm band deepened toward
+chestnut, dark plumage desaturated toward charcoal, pale chest warmed toward
+sand. Reedwing was never named broken (teal already present, ~38% combined
+across 140-200°) — an ENRICH pass, not a rotation: existing teal deepened
+(hue_toward 182°, saturation×1.25), existing tan pushed toward copper
+(hue_toward 24°). Galewisp untouched, per spec. Ran for real on all four,
+not dry runs; eye guard confirmed 0.00 delta inside every rect on every
+species.
+
+**Two real bugs found and fixed mid-pass, both from actually rendering the
+graded models rather than trusting the raw texture average — this is the
+part worth reading before anyone touches `grade.py`'s birds again:**
+
+1. `hue_toward`'s interpolation is linear, not circular. A first pass at
+   `hue_amount` 0.85-0.88 left Pipwing with a real residual 60-80° olive
+   band instead of clearing into gold, because a 220° source pixel moving
+   88% toward 42° lands near 63°, not 42°. Raised to 0.97 across all four
+   species so the residual spread stays inside the target family regardless
+   of where a given pixel started.
+2. Galecrest's first "dark plumage -> charcoal" op pushed `hue_toward 220`
+   (blue) on top of a `saturation_mul` that didn't fully desaturate —
+   which repainted exactly the slate-grey mottling the pass was trying to
+   remove, but only inside the darkest feathers (value 0.12-0.38), because
+   by the time that op ran the main blue-to-rust op had already fixed the
+   *lighter* wing texels and this one was re-darkening a fresh blue onto
+   what it should have been neutralising. A whole-texture hue histogram
+   never caught this — the wings are a small fraction of the UV space — a
+   rendered close-up crop did. Dropped the hue push entirely; the fix is
+   `saturation_mul` alone.
+
+Also found: Godot's glTF importer bakes the extracted texture into the
+imported `.scn` at GLB-import time. Editing the loose PNG under `models/`
+and re-running `--headless --path . --import` is NOT enough to see the
+change rendered — the standalone texture's own `.ctex` cache refreshes, but
+the mesh's material inside the cached `.scn` does not. Deleting the specific
+`.godot/imported/pal_<species>_lod0.glb-*.scn` file (path is in the GLB's
+own `.import`) before reimporting is what actually picks up a texture edit.
+Cost real time to find on this item; every future loose-texture regrade
+should expect it.
+
+**Two local blind-critic rounds**, general-purpose sub-agents shown only
+`tools/capture_species_closeup.gd`'s colour and silhouette renders (all five
+species, no labels, no context) — no working in-repo sub-agent-spawn tool
+was found in this checkout either, matching `EV4-textures-lighting`'s same
+finding, so this is a rigorous blind pass via a spawned agent rather than
+the visual-judge skill's own sub-agent path, recorded honestly rather than
+hidden. Round 1 caught bug 2 above (the critic still named Galecrest and
+Galewisp as colour-confusable) and named a framing crop bug in the capture
+tool (fixed: the two-species framing constant didn't scale to five). Round 2,
+after both fixes: Galecrest now described as "warm brown-tan and rust
+mottled feathers, cream chest, dark wingtips" and NOT grouped with Galewisp
+on colour — the pair the backlog itself called "the most broken and the
+easiest to fix" is fixed and confirmed.
+
+**Remainder, not chased further — a spec tension, not a bug:** Duskhush
+(slate/lavender-grey, per spec) and Galewisp (unchanged, per spec) still sit
+in the same broad cool-toned family and the round-2 critic named them as the
+closer pair now ("under flat lighting or at distance they'd read as
+colour-siblings"), though it did not call them confused outright. Both
+species' target colours are cool by design — closing this further would mean
+pushing one of them off its own named spec palette, not fixing a defect.
+Separately, the same critic noted Galecrest and Galewisp share a spread-wing
+display *pose* at two different scales — a modelling/animation observation,
+out of a palette-only item's scope.
+
+`tools/capture_species_closeup.gd` copied from `SA5`'s own (unmerged as of
+this writing) branch, which built it for exactly this next task and said so
+in its own header comment — not rebuilt from scratch. Framing multiplier
+0.72 → 1.65 (the original was tuned for SA5's own two-species pair and
+cropped the outer creatures once five stood in the row).
+
 ## LP3 — release.yml's own concurrency setting was starving the download build
 `dd72a2a`, landed by direct fast-forward push to `main` per `tools/ci/ship_branch.sh`'s
 own instruction (see below) — not a bypass of the "never push to main" rule,

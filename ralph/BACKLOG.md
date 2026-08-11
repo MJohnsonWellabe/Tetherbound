@@ -687,33 +687,7 @@ impassable, and none of them explains itself with UI text.
 
 **`SA5` (recolour Burrowback away from Terrapup) shipped — see `DONE.md`.**
 
-### SA6 — Separate the five birds by palette
-`model: sonnet` · `tests: smoke_art`
-Spec §1B and §20. Pipwing, Duskhush, Galecrest, Reedwing and Galewisp must not
-read as palette swaps of one another. Same constraint and same mechanism as
-`SA5` — `grade.py` `palette` blocks, no regeneration — with the palettes §20
-names: Pipwing ochre/gold + cream + charcoal; Duskhush slate/lavender-grey +
-muted cream + amber eyes; Galecrest rust/chestnut + charcoal + pale sand;
-Reedwing deep teal + cream + copper/tan + orange bill and feet. **Galewisp
-keeps its established palette and is not touched.** §20 says to push the
-separation harder than would normally be necessary, because the meshes overlap
-more than ideal and colour is the only lever left. Two traps already paid for
-in `conventions.md`: `grade.py`'s eye guard is mandatory, and Ripplet's eyes
-were destroyed once by a hue-band guard on a body of the same hue. Done when: a
-blind critic shown all five as black silhouettes *and* as colour turntables can
-name five distinct creatures.
-
-**Start here, from R9.4's roster render (2026-08-11).** The worst pair is not
-the one §1B leads with. **Galecrest currently reads blue-grey and white with
-blue wings — very close to Galewisp**, the Air starter it is explicitly
-forbidden to resemble (D13 already carries that rule and it is being broken
-today). §1B wants it rust/chestnut with charcoal flight feathers and a pale
-sand underside, which is as far from Galewisp as the palette gets, so this pair
-is both the most broken and the easiest to fix. Duskhush renders pale
-cream-and-brown rather than §1B's slate and lavender-grey. Re-run
-`preview_creatures.gd` before starting — and note it lays all seventeen species
-in one 1280px row, about fifty pixels each, which is too small to judge colour
-by; crop, or give the tool a per-species tile mode first.
+**`SA6` (separate the five birds by palette) shipped — see `DONE.md`.**
 
 ---
 
