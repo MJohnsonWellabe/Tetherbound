@@ -95,9 +95,8 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	lock_body.size = Vector3(0.16, 0.14, 0.06)
 	_lock.mesh = lock_body
 	var lock_material := StandardMaterial3D.new()
-	lock_material.albedo_color = Color(0.72, 0.56, 0.24)
-	lock_material.metallic = 0.15
-	lock_material.roughness = 0.4
+	lock_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	lock_material.albedo_color = Color(1.0, 0.0, 1.0)
 	_lock.material_override = lock_material
 	# Pushed out past the panel's own face (not centred in its thickness,
 	# round 1's placement) so the lock's silhouette breaks the fence's
@@ -105,6 +104,7 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	_lock.position = Vector3(
 		0.0, aabb.position.y + aabb.size.y * 0.55, aabb.size.z * 0.5 + 0.03)
 	_mesh.add_child(_lock)
+	print("DEBUG lock aabb=%s lock_pos=%s" % [aabb, _lock.position])
 
 	var shackle := MeshInstance3D.new()
 	shackle.name = "Shackle"
