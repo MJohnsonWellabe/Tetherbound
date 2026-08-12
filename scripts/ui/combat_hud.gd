@@ -11,6 +11,7 @@ extends CanvasLayer
 ## because it describes a moment rather than a value.
 
 const PALETTE_PATH := "res://data/config/palette.json"
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 ## Health bar colour at full and at empty. The slide between them is the only
 ## warning the player gets that the fight is going badly, since a placeholder
@@ -237,15 +238,18 @@ func _draw_actions() -> void:
 	# looking down a reticle would offer two moves their pal cannot make.
 	if bool(_manager.call("is_aiming")):
 		_actions.text = "[center]%s     %s     [color=#%s]your pal is undefended[/color][/center]" % [
-			_verb("F", "Throw", true), _verb("B", "Cancel", true), VERB_DIMMED
+			_verb("throw", "Throw", true), _verb("cancel", "Cancel", true), VERB_DIMMED
 		]
 		return
 
 	_actions.text = "[center]%s    %s    %s    %s[/center]" % [
-		_verb("A", "Quick", bool(_manager.call("quick_ready"))),
-		_verb("X", "Charged", bool(_manager.call("charged_ready"))),
-		_verb("F", "Throw", orbs > 0) if orbs > 0 else _verb("F", "No orbs", false),
-		_verb("B", "Run", true),
+		_verb("quick", "Quick", bool(_manager.call("quick_ready"))),
+		_verb("charged", "Charged", bool(_manager.call("charged_ready"))),
+		_verb("throw", "Throw", orbs > 0) if orbs > 0 else _verb("throw", "No orbs", false),
+		# `combat_run` binds to the identical physical button as `menu_cancel`
+		# (Escape / gamepad B) -- reaching for the `cancel` glyph id rather
+		# than a near-duplicate `run` entry in input_glyph.gd's GLYPHS dict.
+		_verb("cancel", "Run", true),
 	]
 
 
@@ -256,9 +260,14 @@ func _draw_actions() -> void:
 ## frame and read as a missing icon. Which button does a thing never changes;
 ## only whether you can press it right now does, and that is what the dimming
 ## says.
-func _verb(button: String, label: String, ready: bool) -> String:
-	return "[color=#%s][b][%s][/b] %s[/color]" % [
-		VERB_READY if ready else VERB_DIMMED, button, label
+##
+## `HD1`: a real device-aware Kenney icon (`input_glyph.gd`) replaces the
+## hardcoded Xbox letter this used to print unconditionally -- the owner's
+## own reproduction case, `combat_throw` showing "F" to a gamepad player and
+## vice versa, lived exactly here.
+func _verb(glyph_id: String, label: String, ready: bool) -> String:
+	return "[color=#%s]%s %s[/color]" % [
+		VERB_READY if ready else VERB_DIMMED, INPUT_GLYPH.icon(glyph_id, 30), label
 	]
 
 

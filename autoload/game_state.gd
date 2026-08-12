@@ -59,6 +59,22 @@ const PREF_FREE_BUILD := "free_build"
 
 var _menu: CanvasLayer = null
 
+## Device the LAST real input came from, for `input_glyph.gd`'s icon choice
+## (bible sec18 wants live switching as the player's hands move; `HD1`'s
+## reproduction case was a keyboard/mouse player who still saw gamepad
+## glyphs everywhere because the only signal was "is a pad connected").
+##
+## Starts true if a pad is already connected rather than false, so the
+## common case -- the Ally, pad connected, keyboard never touched -- shows
+## the right glyph on the very first frame instead of a keyboard icon
+## nobody has pressed yet.
+var _last_input_was_gamepad: bool = not Input.get_connected_joypads().is_empty()
+
+## Idle stick drift on the Ally shouldn't flip the glyphs with nobody
+## touching anything -- matches `input_devices/joy_deadzone` in
+## project.godot rather than inventing a second number for the same idea.
+const _MOTION_DEADZONE := 0.5
+
 
 func _ready() -> void:
 	BOOT_LOG.line("Game autoload: _ready start (first autoload, before any world scene)")
@@ -92,6 +108,25 @@ func _mount_menu() -> void:
 
 func menu() -> CanvasLayer:
 	return _menu
+
+
+## Read by `input_glyph.gd`, which has no scene context of its own to poll
+## `Input.get_connected_joypads()` against a live "last used" signal.
+func last_input_was_gamepad() -> bool:
+	return _last_input_was_gamepad
+
+
+## Every real input event passes through here, tree-wide, regardless of
+## whether a Control further down consumed it -- device intent doesn't care
+## who handled the press.
+func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton or event is InputEventKey or event is InputEventMouseButton:
+		_last_input_was_gamepad = event is InputEventJoypadButton
+	elif event is InputEventJoypadMotion:
+		if absf((event as InputEventJoypadMotion).axis_value) >= _MOTION_DEADZONE:
+			_last_input_was_gamepad = true
+	elif event is InputEventMouseMotion:
+		_last_input_was_gamepad = false
 
 
 func advance_day() -> int:

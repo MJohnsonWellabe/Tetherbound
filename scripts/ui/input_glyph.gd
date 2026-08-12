@@ -1,8 +1,9 @@
 extends RefCounted
 
-## Kenney Input Prompts glyphs for the handful of actions the narrative UI
-## prompts for (dialogue, naming, the starter picker) -- EV9's first slice,
-## replacing literal "[X] / [E]" bracket text with a real icon. Bible sec18.
+## Kenney Input Prompts glyphs for the narrative UI (dialogue, naming, the
+## starter picker -- EV9's first slice, replacing literal "[X] / [E]" bracket
+## text with a real icon) and, since `HD1`, combat's own Actions row. Bible
+## sec18.
 ##
 ## KNOWN LIMITATION, inherited from the bracket text this replaces rather than
 ## introduced by it: this maps each action's DEFAULT device binding
@@ -12,14 +13,10 @@ extends RefCounted
 ## InputMap lookup threaded through every call site, which is real work and a
 ## separate ship from "put an icon where a bracket used to be".
 ##
-## Device is CONNECTED JOYPAD PRESENT, not last-input-used the way bible
-## sec18 actually asks for (live switching as the player's hands move between
-## keyboard and pad). That needs a shared observer reachable from every
-## scene, and project.godot's own Game autoload comment is explicit that it
-## means to stay the project's only singleton -- so this does not add a
-## second one for a first slice. Correct for the primary target (the ROG
-## Ally always has a pad connected) and honest about the gap rather than
-## quietly pretending to solve it.
+## `HD1`: device is now the LAST INPUT USED, tracked by the `Game` autoload
+## (the project's one singleton -- this does not add a second one) rather
+## than "is a pad connected", which is what bible sec18 actually asks for:
+## live switching as the player's hands move between keyboard and pad.
 
 const DIR := "res://assets/ui/input_prompts/"
 
@@ -40,10 +37,27 @@ const GLYPHS := {
 		"gamepad": ["xbox_dpad_left.png", "xbox_dpad_right.png"],
 	},
 	"pal_recall": {"keyboard": "keyboard_r.png", "gamepad": "xbox_dpad_up.png"},
+	## Combat's five verbs (`HD1`). `combat_quick`/`combat_charged` bind to
+	## mouse buttons on keyboard-and-mouse, not keys -- the "keyboard" bucket
+	## key is kept for both (matching every other entry's two-way device
+	## split) even though the icon itself is a mouse glyph.
+	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_button_a.png"},
+	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_button_x.png"},
+	"throw": {"keyboard": "keyboard_f.png", "gamepad": "xbox_rb.png"},
+	## `combat_run` binds to Escape/gamepad-B -- physically identical to
+	## `cancel` above, so combat_hud.gd's Run AND Cancel verbs both reach for
+	## the `cancel` id directly rather than this duplicating its two files.
 }
 
 
 static func using_gamepad() -> bool:
+	var tree := Engine.get_main_loop() as SceneTree
+	var game: Node = tree.root.get_node_or_null(^"Game") if tree != null else null
+	if game != null and game.has_method("last_input_was_gamepad"):
+		return bool(game.call("last_input_was_gamepad"))
+	# No Game autoload in this context (an isolated test harness, say) --
+	# fall back to the old "is a pad connected" check rather than assume
+	# keyboard, which was this function's only signal before HD1.
 	return not Input.get_connected_joypads().is_empty()
 
 
