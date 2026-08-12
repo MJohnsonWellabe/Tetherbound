@@ -140,6 +140,78 @@ own contents (`storage_state.gd`'s independent `Inventory`) do not round-trip
 
 Reproduced locally first (`smoke_playground.gd`, unmodified checkout): the SCRIPT ERROR printed every time, exit code still 0. Swapped the order — `if is_instance_valid(template) and template is Node:` — and reran the same command: gone, no error, `smoke: OK` unchanged. Not a genuine double-free needing a lifecycle redesign, just a defensive check written in the wrong order; the underlying `_templates` freeing logic (added by `EV6-crash-remainder` to fix a real exported-build SIGABRT) is otherwise sound and untouched.
 
+## EV5 — Water: the pond, its inflow stream, and reeds at the banks
+`2ed5145` · `tests: smoke_traversal` (green locally, plus full unit suite
+362/362 with 48,527 assertions) · bible §15.
+
+**What shipped.** One flat water level at -22.5m in `terrain_playground.json`'s
+new `water` block — probed first: the pond valley is the only terrain below
+-18m anywhere on the 512m map, so "below the level" and "underwater" are the
+same statement and the shoreline is the terrain's own contour, not an authored
+ellipse. ~2,200m² of pond exactly where the "The Pond" path route always
+pointed (its endpoint sits 1.1m above the waterline). A stream feeds it from
+the north meadow: seven authored waypoints densified through a Catmull-Rom
+pass, probed downhill with zero reversals, carved 0.7m into the heightfield
+(`playground_heightfield.gd::_stream_carve`), painted as a pebbled wet bed by
+the bake (reusing the already-ledgered Ground030 — no new assets anywhere in
+this item; the wave/foam noise is engine-generated `NoiseTexture2D`, nothing
+to ledger). `scripts/world/water.gd` composes the visible layer: a flood-filled
+pond plane, a width-breathing stream ribbon that hands over to the pond at the
+waterline, reed stands (the nature pack's own wispy grass, D24-coherent,
+leaned/tone-jittered, wading shin-deep) marched along the real shoreline
+isoline, and one hand-authored shader (`shaders/water.gdshader`) doing
+per-pixel depth from a build-time heightfield texture — depth-driven
+shallow-edge shift, feathered waterline, noise-broken foam at the contact
+band, fresnel toward the sky family, distance-calmed ripple. No depth-texture
+readback (gl_compatibility), no simulation (bible §15's own line). Water has
+NO collision: the player wades and walks the bed, and the ~3m-deep middle can
+briefly submerge them — there is no swimming system, and blocking the edge
+would have invented a movement rule; if that reads badly on the Ally it is an
+owner question, noted here rather than legislated.
+
+**The blind pass, honestly.** Two self-rounds, then eight genuinely blind
+rounds — no Agent tool exists in this harness, so each round was a fresh
+`claude -p` headless session handed only the rubric, the frames and
+`docs/reference/`, told nothing. Rounds 1–6 each named something new and
+actionable in scope; every named in-scope defect was either fixed and
+re-verified (solid-ring foam → noise-gated laps; R8 height quantisation →
+float; swimming-pool cyan → the board's teal family; chevron stream bends →
+spline; mouth plate and orphaned head quads → ribbon span clamped to its
+channel; perimeter reed ring → a few real stands; submerged-grass "glass
+cards" → ankle-depth gate) or measured and shown to be a misread (the
+"water plane escaping the bank" is the pond's own west arm behind a sand
+spit, checked by crop). The one root-cause worth remembering: rounds 1–3 all
+called the stream "a different water", and no colour tuning moved it because
+the depth texture's fixed ±8m window clamped every texel above it — the upper
+stream computed ~5m of phantom depth and rendered navy. Found by replicating
+the shader's lookup on the CPU (`water.gd`'s height-scan comment). Rounds 7
+and 8 named no new in-scope defect and `tools/frame_stats.py` moved nothing
+(round 8 judged identical frames) — converged per conventions. Foam collected
+five mutually contradictory verdicts across the eight rounds; the broken-lap
+treatment stands.
+
+**Where it converged.** Bar question B ("same kind of game as Palworld?")
+flipped to a qualified YES in rounds 7 and 8, explicitly carried by the water
+frames' composition. Bar question A stayed NO on grounds outside this item:
+sky/clouds/haze, near-field ground-cover density, canopy-scale trees,
+creature/trainer art, the perimeter's placeholder slabs — all pre-existing
+and repeatedly named across every recent visual item. In scope, the critics'
+standing asks that tuning cannot reach are recorded as `EV5-remainder` in
+`BACKLOG.md` (aquatic dressing props, more waterside species, a flowing
+stream variant, a pond outlet for Band 3's river). Real reflections stay the
+recorded ceiling of this tier: §15 forbids the expensive route and the
+shipped renderer has no SSR — fresnel-toward-sky is the honest substitute.
+
+**For whoever consumes this next.** The waterline is data:
+`playground_heightfield.water_level()`, `stream_factor()` and
+`stream_carve_depth()` are the single readers, and the vegetation gates
+(`min_height` per layer) plus the bake's wet bed all key off them — so
+`R7.1-remainder-2`'s "distance to water" placement signal now has something
+to be a distance from. Water pal spawns (`spawns.json`, unchanged) already
+cluster at the pond and stood in its shallows in every capture.
+`tools/capture_water.gd` holds the four framed viewpoints for any future
+water pass.
+
 ## R9.4-remainder-9 — Get real combat frames, budgeting for the now-measured render cost
 `b3e6735` on `main`. `tests: none (visual)` — `tools/survey_combat.gd` only,
 no gameplay code touched.

@@ -544,11 +544,25 @@ Forest Floor, painted near the valley basin or under tree canopy once `EV3`
 gives the bake real tree-placement data to key off. Whoever picks up that
 layer should reach for it directly rather than re-sourcing.
 
-### EV5 — Water
+**`EV5` (the pond, its inflow stream, reeds at the banks) shipped — see
+`DONE.md`.** The waterline is a height (`terrain_playground.json`'s `water`
+block), so anything that later wants "distance to water" as a placement
+signal (`R7.1-remainder-2`'s original ask) can read
+`playground_heightfield.water_level()`/`stream_factor()` directly.
+
+### EV5-remainder — Waterside dressing the pond converged without
 `model: fable` · `tests: smoke_traversal` · `area: terrain`
-Bible §15. A pond and stream: readable stylised surface, shallow-edge colour
-shift, reeds at the banks, no expensive simulation. Answers the open question in
-`R7.1-remainder-2` and gives Band 3's river somewhere to start.
+Eight blind rounds converged with three water asks standing that tuning
+cannot reach, all "needs art/assets not in the build": aquatic dressing
+(lily pads, driftwood, submerged/half-submerged rock meshes, and the key
+art's jetty — bible §15's "support Water Pal ecology" would land far harder
+with a fishing spot the villagers built), a second/third waterside plant
+species beyond the one wispy-grass reed (the itch-blocked fuller MegaKit may
+carry sedge/cattail forms — see `EV1-remainder` in `BLOCKED.md`), and a
+flowing-water variant for the stream (a flow-map scroll along the ribbon's
+own tangent — `water.gd` already computes per-sample tangents, so the
+plumbing exists). Also carried from the critics: the pond has an inlet but
+no OUTLET; Band 3's river should leave the pond, not appear beside it.
 
 **`EV6` (settlement rebuilt on the Medieval Village MegaKit) shipped — see
 `DONE.md`.** Workshop, two cottages, composed well, kit fences, two authored
