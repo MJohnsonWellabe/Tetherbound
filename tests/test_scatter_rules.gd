@@ -276,268 +276,125 @@ func test_path_bias_of_one_lands_clumps_on_the_road() -> void:
 		])
 
 
-# --- path bias jitter (EV3-remainder round 2: break up the collinear "hedge") ---
+# --- path standoff (OF12: the noise-varying verge that replaced every ------
+# --- constant-distance path rule) ------------------------------------------
+#
+# The properties pinned here are exactly the ones the "flanking border" verdict
+# was about: the exclusion distance must VARY along a route (a constant offset
+# is a ruler-drawn border by definition), and the two sides of a path must
+# vary INDEPENDENTLY (matched pairs across the path are what read as planted).
+# Densities and the specific min/max metres stay unpinned -- those are the
+# owner's call on a rendered frame, and a test that froze them would break
+# every time the meadow was made to look better.
 
-func test_path_bias_jitter_of_zero_changes_nothing() -> void:
-	# path_stones wants the exact snap and must be completely unaffected by
-	# this key's mere presence at 0.0, the same backward-compatibility
-	# guarantee every other bias parameter carries.
-	var stones := _layer("path_stones").duplicate(true)
-	stones["path_bias"] = 1.0
-	stones["path_bias_jitter"] = 0.0
-	var with_zero := RULES.placements_for(stones, field, world_size, 55)
-	var without_the_key := _layer("path_stones").duplicate(true)
-	without_the_key["path_bias"] = 1.0
-	without_the_key.erase("path_bias_jitter")
-	var without := RULES.placements_for(without_the_key, field, world_size, 55)
-	assert_eq(with_zero.size(), without.size())
-	for i in with_zero.size():
-		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
-			"path_bias_jitter 0.0 moved a placement; it must be a no-op")
-
-
-func test_path_bias_jitter_spreads_clumps_off_the_exact_centreline() -> void:
-	# The defect this fixes: every path-biased clump snapping to the EXACT
-	# nearest point puts several clumps strung along one straight route on
-	# the same line, which a blind critic read as a hedge planted with a
-	# ruler. A jittered clump should land close to the road but not ON it as
-	# reliably as an unjittered one.
-	# A minimal, permissive layer rather than a real one duplicated -- this is
-	# testing the geometry of the jitter itself, not any layer's own slope/
-	# clearing rules, and flowers' own max_slope_deg was filtering out enough
-	# jittered draws (onto locally steep ground beside the path) to starve
-	# the sample.
-	# grows_on_paths: true, so the "nothing grows on the road" rule (a
-	# separate, unrelated mechanism) does not confound this test -- it would
-	# reject exactly the draws this test wants to see (a jittered point that
-	# still lands close to the centreline), which is testing the wrong thing.
-	var layer := {
-		"models": _layer("flowers").get("models", []),
-		"clumps": 1, "per_clump": 1, "strays": 0, "clump_radius": 0.01,
-		"path_bias": 1.0, "path_bias_jitter": 4.0, "grows_on_paths": true,
-		"max_slope_deg": 60.0, "clear_radius": 0.5, "cleared_by_clearings": false,
-	}
-
-	var exactly_on_road := 0
-	var attempted := 0
-	var samples := 30
-	for seed_value in samples:
-		var placed := RULES.placements_for(layer, field, world_size, seed_value * 151)
-		if placed.is_empty():
-			continue
-		attempted += 1
-		var spot: Vector3 = placed[0]["position"]
-		if field.path_factor(spot.x, spot.z) > 0.99:
-			exactly_on_road += 1
-
-	assert_true(attempted >= samples / 2, "too few of %d draws placed anything to judge (%d)" % [samples, attempted])
-	assert_true(exactly_on_road < attempted,
-		"path_bias_jitter 4.0 still landed every one of %d placed clumps exactly on the centreline" % attempted)
+## Probe points strung along Grandpa's-house route's first leg -- the
+## specific stretch five blind critics kept naming -- each offset a couple of
+## metres onto the verge, where ground cover actually gets judged.
+func _route_probes(side: float) -> Array[Vector2]:
+	var from := Vector2(10.0, -10.0)
+	var to := Vector2(-18.0, -15.0)
+	var tangent := (to - from).normalized()
+	var perpendicular := Vector2(-tangent.y, tangent.x)
+	var probes: Array[Vector2] = []
+	for i in 40:
+		var along := from.lerp(to, (float(i) + 0.5) / 40.0)
+		probes.append(along + perpendicular * side * 2.5)
+	return probes
 
 
-# --- path avoid radius (EV3-remainder-3: stop an unbiased clump's own crescent reading as a hedge) ---
-
-func test_path_avoid_radius_of_zero_changes_nothing() -> void:
-	# Same backward-compatibility guarantee every other bias parameter
-	# carries: a layer that does not opt in must place identically whether
-	# the key is present at 0.0 or absent entirely.
+func test_path_standoff_absent_or_empty_changes_nothing() -> void:
+	# Same backward-compatibility guarantee ridge_bias 0.0 and path_bias 0.0
+	# carry: a layer that does not opt in must place identically whether the
+	# key is an empty dictionary or absent entirely.
 	var grass := _layer("grass").duplicate(true)
-	grass["path_avoid_radius"] = 0.0
-	var with_zero := RULES.placements_for(grass, field, world_size, 55)
+	grass["path_standoff"] = {}
+	var with_empty := RULES.placements_for(grass, field, world_size, 55)
 	var without_the_key := _layer("grass").duplicate(true)
-	without_the_key.erase("path_avoid_radius")
+	without_the_key.erase("path_standoff")
 	var without := RULES.placements_for(without_the_key, field, world_size, 55)
-	assert_eq(with_zero.size(), without.size())
-	for i in with_zero.size():
-		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
-			"path_avoid_radius 0.0 moved a placement; it must be a no-op")
+	assert_eq(with_empty.size(), without.size())
+	for i in with_empty.size():
+		assert_true((with_empty[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
+			"an empty path_standoff moved a placement; it must be a no-op")
 
 
-func test_path_avoid_radius_pushes_unbiased_clumps_away_from_the_path() -> void:
-	# The defect this fixes: an unbiased clump (no path_bias at all) that
-	# happens to land within a few metres of a path by chance still has most
-	# of its own wide disc survive the path exclusion as a crescent -- which,
-	# over the length of a straight route, reads as a hedge planted along it
-	# rather than an accident. A large clump_radius makes any one clump's own
-	# instances span a wide area regardless of where its centre falls, so
-	# this reads clump CENTRES via path_factor sampled at each instance's own
-	# position -- with avoidance on, far fewer instances should come from
-	# clumps that started close to a path than without it.
+func test_path_standoff_never_places_inside_its_minimum() -> void:
+	# `min` is the one constant the mechanism keeps: the standoff drifts
+	# between min and max, so no instance -- clump-sourced or stray -- may
+	# ever stand closer to a path than min. This is the floor that keeps
+	# growth off the worn dirt's immediate shoulder even where the noise
+	# swings low.
 	var layer := {
 		"models": _layer("grass").get("models", []),
-		"clumps": 40, "per_clump": 1, "strays": 0, "clump_radius": 0.01,
+		"clumps": 30, "per_clump": 10, "strays": 300, "clump_radius": 10.0,
 		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
-	}
-
-	layer["path_avoid_radius"] = 0.0
-	var unbiased_near_path := 0
-	var unbiased_total := 0
-	layer["path_avoid_radius"] = 8.0
-	var avoided_near_path := 0
-	var avoided_total := 0
-
-	var samples := 10
-	for seed_value in samples:
-		layer["path_avoid_radius"] = 0.0
-		for p in RULES.placements_for(layer, field, world_size, seed_value * 233):
-			var spot: Vector3 = p["position"]
-			unbiased_total += 1
-			if Vector2(spot.x, spot.z).distance_to(field.nearest_point_on_paths(spot.x, spot.z)) < 8.0:
-				unbiased_near_path += 1
-		layer["path_avoid_radius"] = 8.0
-		for p in RULES.placements_for(layer, field, world_size, seed_value * 233):
-			var spot: Vector3 = p["position"]
-			avoided_total += 1
-			if Vector2(spot.x, spot.z).distance_to(field.nearest_point_on_paths(spot.x, spot.z)) < 8.0:
-				avoided_near_path += 1
-
-	assert_true(unbiased_total > 0 and avoided_total > 0, "one of the two runs placed nothing at all")
-	var unbiased_rate := float(unbiased_near_path) / float(unbiased_total)
-	var avoided_rate := float(avoided_near_path) / float(avoided_total)
-	assert_true(avoided_rate < unbiased_rate,
-		"path_avoid_radius 8.0 landed %.0f%% of clumps within 8m of a path, not meaningfully below unbiased's %.0f%%" % [
-			avoided_rate * 100.0, unbiased_rate * 100.0
-		])
-
-
-func test_path_avoid_radius_also_keeps_strays_off_the_path() -> void:
-	# EV3-remainder-4: path_avoid_radius originally only resampled a CLUMP's
-	# centre (_clump_centre), so strays -- placed independently of any clump
-	# -- still landed near a path whenever chance put one there. A whole-map
-	# placement dump confirmed the clump half was already clean (0 of 3785
-	# drygrass clump-sourced instances within 5m of a path) but strays were
-	# not, so the fix applies the same radius per-instance in _consider()
-	# too. A pure-stray layer (clumps 0) isolates that half: every survivor
-	# must now sit outside the radius, not just fewer of them.
-	var layer := {
-		"models": _layer("drygrass").get("models", []),
-		"clumps": 0, "per_clump": 0, "strays": 400, "clump_radius": 1.0,
-		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
-		"path_avoid_radius": 8.0,
+		"path_standoff": {"min": 2.0, "max": 8.0, "wavelength": 17.0, "salt": 1},
 	}
 	var placements := RULES.placements_for(layer, field, world_size, 909)
-	assert_true(placements.size() > 0, "no strays survived at all; the test proves nothing")
+	assert_true(placements.size() > 0, "nothing survived at all; the test proves nothing")
 	for p in placements:
 		var spot: Vector3 = p["position"]
 		var distance := Vector2(spot.x, spot.z).distance_to(field.nearest_point_on_paths(spot.x, spot.z))
-		assert_true(distance >= 8.0,
-			"a stray landed %.2fm from a path, inside the 8.0m path_avoid_radius" % distance)
+		assert_true(distance >= 2.0,
+			"an instance landed %.2fm from a path, inside the standoff's 2.0m minimum" % distance)
 
 
-func test_path_bias_per_clump_caps_only_a_path_anchored_clump() -> void:
-	# EV3-remainder-4: a path-biased clump kept the layer's FULL per_clump
-	# count even though path_bias already concentrates it near a path -- a
-	# whole-map dump found flowers' own single biased clump alone put 74 of
-	# 140 in-frame instances on the-rise-route.png within 5m of the path,
-	# reading as a hedge. path_bias_per_clump caps a SNAPPED clump's own
-	# count without touching per_clump for the layer's other, unbiased
-	# clumps -- forcing path_bias to 1.0 here isolates the snapped case.
-	var layer := {
-		"models": _layer("flowers").get("models", []),
-		"clumps": 1, "per_clump": 78, "strays": 0, "clump_radius": 9.0,
-		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
-		"path_bias": 1.0, "path_bias_per_clump": 26,
-	}
-	var capped := RULES.placements_for(layer, field, world_size, 12)
-	assert_true(capped.size() <= 26,
-		"path_bias_per_clump 26 did not cap a path-biased clump; got %d instances" % capped.size())
-
-	var uncapped_layer := layer.duplicate(true)
-	uncapped_layer.erase("path_bias_per_clump")
-	var uncapped := RULES.placements_for(uncapped_layer, field, world_size, 12)
-	assert_true(uncapped.size() > capped.size(),
-		"removing path_bias_per_clump should place more than the capped run (up to per_clump 78); got %d vs capped %d" % [
-			uncapped.size(), capped.size()
+func test_path_standoff_varies_along_a_route() -> void:
+	# The property whose absence WAS the flanking border: a constant
+	# exclusion distance gives the meadow a ruler-straight inner edge at one
+	# offset. Probed directly through path_standoff_at (a pure function of
+	# position) along the exact route the critics kept naming: the standoff
+	# must swing through a real fraction of its min..max range, and never
+	# leave it.
+	var config := {"min": 0.5, "max": 7.0, "wavelength": 15.0, "salt": 1}
+	var lowest := 1000.0
+	var highest := -1000.0
+	for probe in _route_probes(1.0):
+		var nearest: Vector2 = field.nearest_point_on_paths(probe.x, probe.y)
+		var standoff: float = RULES.path_standoff_at(probe, nearest, config, field)
+		assert_between(standoff, 0.5, 7.0, "standoff left its own configured range")
+		lowest = minf(lowest, standoff)
+		highest = maxf(highest, standoff)
+	assert_true(highest - lowest > 1.5,
+		"the standoff spanned only %.2fm-%.2fm along a 28m route; a near-constant offset is the flanking border again" % [
+			lowest, highest
 		])
 
 
-func test_path_bias_per_clump_does_not_affect_unbiased_clumps() -> void:
-	# The cap only applies to a clump path_bias actually snapped. A layer
-	# with path_bias 0.0 (never snaps) must place identically whether
-	# path_bias_per_clump is set or not.
-	var layer := {
-		"models": _layer("flowers").get("models", []),
-		"clumps": 1, "per_clump": 78, "strays": 0, "clump_radius": 9.0,
-		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
-		"path_bias": 0.0, "path_bias_per_clump": 5,
-	}
-	var with_cap := RULES.placements_for(layer, field, world_size, 12)
-	var without_cap_layer := layer.duplicate(true)
-	without_cap_layer.erase("path_bias_per_clump")
-	var without_cap := RULES.placements_for(without_cap_layer, field, world_size, 12)
-	assert_eq(with_cap.size(), without_cap.size(),
-		"path_bias_per_clump changed placement count for a clump path_bias never snapped")
-
-
-func test_path_bias_side_offset_of_zero_changes_nothing() -> void:
-	var flowers := _layer("flowers").duplicate(true)
-	flowers["path_bias_side_offset"] = 0.0
-	var with_zero := RULES.placements_for(flowers, field, world_size, 77)
-	var without_the_key := _layer("flowers").duplicate(true)
-	without_the_key.erase("path_bias_side_offset")
-	var without := RULES.placements_for(without_the_key, field, world_size, 77)
-	assert_eq(with_zero.size(), without.size())
-	for i in with_zero.size():
-		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
-			"path_bias_side_offset 0.0 moved a placement; it must be a no-op")
-
-
-func _majority_side_fraction(placements: Array, path_field: RefCounted) -> float:
-	var plus := 0
-	var minus := 0
-	for p: Variant in placements:
-		var spot: Vector3 = (p as Dictionary)["position"]
-		var nearest: Vector2 = path_field.nearest_point_on_paths(spot.x, spot.z)
-		if nearest == Vector2.INF:
-			continue
-		var tangent: Vector2 = path_field.nearest_path_tangent(spot.x, spot.z)
-		if tangent == Vector2.ZERO:
-			continue
-		var side := tangent.x * (spot.z - nearest.y) - tangent.y * (spot.x - nearest.x)
-		if side >= 0.0:
-			plus += 1
-		else:
-			minus += 1
-	var total := plus + minus
-	if total == 0:
-		return 0.5
-	return float(maxi(plus, minus)) / float(total)
-
-
-func test_path_bias_side_offset_favours_one_shoulder_of_the_path() -> void:
-	# EV3-remainder-4: path_bias alone snaps a clump's centre onto the
-	# centreline, so its own symmetric instance disc straddles both edges of
-	# the path in equal measure -- two matched crescents, which a blind
-	# critic named as "a hedge planted along a driveway" even after
-	# path_bias_per_clump thinned the count without changing the shape.
-	# path_bias_side_offset should break that symmetry: the majority-side
-	# fraction of a biased clump's surviving instances should be higher with
-	# the offset than without it, across independent seeds.
-	var layer := {
-		"models": _layer("flowers").get("models", []),
-		"clumps": 1, "per_clump": 200, "strays": 0, "clump_radius": 9.0,
-		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
-		"path_bias": 1.0,
-	}
-
-	var improved_seeds := 0
-	var not_improved_seeds := 0
-	var samples := 8
-	for seed_value in samples:
-		layer["path_bias_side_offset"] = 0.0
-		var unbiased := RULES.placements_for(layer, field, world_size, seed_value * 401 + 1)
-		var unbiased_majority := _majority_side_fraction(unbiased, field)
-
-		layer["path_bias_side_offset"] = 6.0
-		var offset := RULES.placements_for(layer, field, world_size, seed_value * 401 + 1)
-		var offset_majority := _majority_side_fraction(offset, field)
-
-		if offset_majority > unbiased_majority:
-			improved_seeds += 1
-		else:
-			not_improved_seeds += 1
-
-	assert_true(improved_seeds > not_improved_seeds,
-		"path_bias_side_offset 6.0 did not shift instances toward one shoulder across %d seeds (%d improved, %d did not)" % [
-			samples, improved_seeds, not_improved_seeds
+func test_path_standoff_sides_are_independent() -> void:
+	# Matched pairs across the path are what read as planted. The noise is
+	# salted with the SIDE of the path, so the verge distance directly across
+	# from any point is drawn from an independent field -- the two sides must
+	# not track each other.
+	var config := {"min": 0.5, "max": 7.0, "wavelength": 15.0, "salt": 1}
+	var left := _route_probes(1.0)
+	var right := _route_probes(-1.0)
+	var pairs := 0
+	var clearly_different := 0
+	for i in left.size():
+		var nearest_left: Vector2 = field.nearest_point_on_paths(left[i].x, left[i].y)
+		var nearest_right: Vector2 = field.nearest_point_on_paths(right[i].x, right[i].y)
+		var standoff_left: float = RULES.path_standoff_at(left[i], nearest_left, config, field)
+		var standoff_right: float = RULES.path_standoff_at(right[i], nearest_right, config, field)
+		pairs += 1
+		if absf(standoff_left - standoff_right) > 0.5:
+			clearly_different += 1
+	assert_true(pairs > 0, "no probe pairs at all; the test proves nothing")
+	assert_true(clearly_different * 2 >= pairs,
+		"only %d of %d mirrored probe pairs differ by more than 0.5m; the two verges are tracking each other" % [
+			clearly_different, pairs
 		])
+
+
+func test_path_standoff_is_a_stable_property_of_position() -> void:
+	# No RNG state: the same spot must always get the same standoff, or the
+	# meadow's edge would depend on placement order and no survey frame could
+	# be compared with the one before it.
+	var config := {"min": 0.5, "max": 7.0, "wavelength": 15.0, "salt": 3}
+	var probe := Vector2(4.0, -11.5)
+	var nearest: Vector2 = field.nearest_point_on_paths(probe.x, probe.y)
+	var first: float = RULES.path_standoff_at(probe, nearest, config, field)
+	var second: float = RULES.path_standoff_at(probe, nearest, config, field)
+	assert_almost_eq(first, second, 0.000001, "the same spot drew two different standoffs")
+
+

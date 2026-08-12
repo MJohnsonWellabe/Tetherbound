@@ -124,28 +124,10 @@ static func placements_for(
 	var strays := int(layer.get("strays", 0))
 	var ridge_bias := clampf(float(layer.get("ridge_bias", 0.0)), 0.0, 1.0)
 	var path_bias := clampf(float(layer.get("path_bias", 0.0)), 0.0, 1.0)
-	var path_bias_jitter := maxf(float(layer.get("path_bias_jitter", 0.0)), 0.0)
-	var path_avoid_radius := maxf(float(layer.get("path_avoid_radius", 0.0)), 0.0)
-	# EV3-remainder-4: a path-biased clump snaps its centre near a path (see
-	# `_clump_centre`) but still placed the layer's FULL `per_clump` count
-	# there — for `flowers` (78/clump), a whole-map placement dump found this
-	# one clump alone put 74 of 140 in-frame instances within 5m of a path on
-	# `the-rise-route.png`, reading as a hedge even though `path_bias` itself
-	# is intentional (EV3-remainder). 0 (default) means "no override, use
-	# `per_clump`" — every layer that never sets this is unaffected.
-	var path_bias_per_clump := int(layer.get("path_bias_per_clump", 0))
-	var path_bias_side_offset := maxf(float(layer.get("path_bias_side_offset", 0.0)), 0.0)
 
 	for clump in clumps:
-		var drawn := _clump_centre(
-			rng, half, field, ridge_bias, path_bias, path_bias_jitter, path_avoid_radius,
-			path_bias_side_offset
-		)
-		var centre: Vector2 = drawn["position"]
-		var this_clump_count := per_clump
-		if bool(drawn["snapped_to_path"]) and path_bias_per_clump > 0:
-			this_clump_count = path_bias_per_clump
-		for i in this_clump_count:
+		var centre := _clump_centre(rng, half, field, ridge_bias, path_bias)
+		for i in per_clump:
 			# Square root of a uniform sample gives a disc that is denser at the
 			# middle, which is what a copse looks like. Sampling the radius
 			# directly produces a ring.
@@ -200,101 +182,34 @@ const RIDGE_SEARCH_RADIUS := 140.0
 ## path-biased clump straddles the road rather than lining up on its
 ## centreline.
 ##
-## `path_bias_jitter` (EV3-remainder): every exact snap lands ON the
-## centreline, so several clumps strung along the same straight route are
-## themselves collinear — each one's own instance scatter is a symmetric
-## disc around a shared line, which a blind critic read as "a hedge planted
-## with a ruler... same interval, same offset distance from the path edge".
-## `path_stones` wants the exact snap (stones ARE the path, so this defaults
-## to 0.0 and that layer is untouched); a layer that wants clumps to merely
-## favour path-adjacent ground — `flowers`, a garden bed rather than the
-## road's own material — can set this to displace the snapped centre by a
-## random amount, so clump centres land at genuinely different distances
-## from the path instead of all sitting on its exact line.
-##
-## `path_avoid_radius` (EV3-remainder-3): the opposite problem, on layers
-## that never opted into `path_bias` at all. `clump_radius` (10-12m for
-## grass/drygrass) is far wider than the path's own exclusion band
-## (~3-4m), so a purely UNBIASED clump that happens to land within a few
-## metres of a path by chance still has most of its disc survive as a
-## crescent hugging the near edge of what's left — and because the path is
-## straight over a real distance, one ordinary clump's own crescent reads
-## as a hedge/row paralleling the path, not a placement bug at all.
-## Confirmed against real placement data before writing this: the two
-## frames a blind critic named (`grandpas-house-route.png`,
-## `the-rise-route.png`) each had exactly one or two grass/drygrass clump
-## CENTRES sitting 2-4m from the nearest path, nowhere near enough of them
-## to be "several clumps chaining into a band" — one clump is already
-## enough at this radius. Resamples the unbiased draw (never touches a
-## clump `path_bias` already snapped this pass) until it lands outside the
-## radius or the attempt budget runs out, so an incidental near-path clump
-## becomes a rare miss instead of an always-present border. Defaults to
-## 0.0 (no change) — opt in per layer.
-##
-## `path_bias_side_offset` (EV3-remainder-4): `path_bias_jitter` above
-## displaces the snap by a RANDOM amount in a random direction, which still
-## lands on either side of the path with equal odds — so a biased clump's
-## own symmetric instance disc still straddles both edges of the road at
-## once, no matter how far the jitter pushes it. That is two matched
-## crescents, and a blind critic named it exactly that ("a hedge planted
-## along a driveway") on a fix round that only thinned the crescents
-## (`path_bias_per_clump`) without changing their shape. This instead pushes
-## the snapped centre a fixed distance along the path's own PERPENDICULAR
-## (`nearest_path_tangent`, rotated 90 degrees), so the clump favours one
-## shoulder — a garden bed beside the road, the actual thing `path_bias` was
-## meant to read as. Applied before `path_bias_jitter`, so the jitter still
-## varies the final offset rather than cancelling it. Defaults to 0.0 (no
-## change) — opt in per layer.
-const PATH_AVOID_ATTEMPTS := 4
-
-## Returns `{ "position": Vector2, "snapped_to_path": bool }`. The caller
-## (`placements_for`) needs to know whether `path_bias` snapped this clump so
-## it can vary `per_clump` for path-anchored clumps only — see
-## `path_bias_per_clump` below.
+## OF12 removed the rest of the path-proximity toolkit that used to live
+## here — `path_bias_jitter`, `path_bias_side_offset`, `path_bias_per_clump`
+## and `path_avoid_radius`. All four were CONSTANT-DISTANCE rules measured
+## from the path centreline, and five verified tuning rounds
+## (`EV3-remainder` through `-6`, see `DONE.md`) never moved the owner's
+## verdict on `grandpas-house-route.png` past "a landscaped flanking
+## border", because the defect was never any one distance — it was the
+## constancy. A rule that holds every instance exactly N metres off the
+## centreline, or anchors clumps to it, produces edges geometrically
+## parallel to the path at matched offsets on both sides no matter what N
+## is. Ground-cover layers now use `path_standoff` (see `_consider`), whose
+## exclusion distance drifts with position noise and is sampled per SIDE of
+## the path, so a matched pair across the path cannot occur by
+## construction. `path_bias` itself survives for `path_stones` only:
+## stones ARE the path, and the exact centreline snap is correct for them.
 static func _clump_centre(
 	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float,
-	path_bias: float = 0.0, path_bias_jitter: float = 0.0, path_avoid_radius: float = 0.0,
-	path_bias_side_offset: float = 0.0
-) -> Dictionary:
+	path_bias: float = 0.0
+) -> Vector2:
 	var base := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
-	var snapped_to_path := false
 
 	if path_bias > 0.0 and rng.randf() <= path_bias and field.has_method("nearest_point_on_paths"):
 		var on_path: Vector2 = field.nearest_point_on_paths(base.x, base.y)
 		if on_path != Vector2.INF:
-			# EV3-remainder-4: snapping straight onto the centreline (below)
-			# means the clump's own instance disc straddles both edges of the
-			# path at once — two matched crescents, which is what reads as "a
-			# hedge planted along a driveway" regardless of density; reducing
-			# `per_clump` (`path_bias_per_clump`, above) thins both crescents
-			# together and does not touch that shape. Pushing the centre
-			# sideways along the path's own perpendicular, before the
-			# existing jitter, makes one shoulder the clump's real home
-			# instead of straddling — a garden bed beside the road, not a
-			# median strip down its centre. `path_stones` (the road's own
-			# material, wants the exact centreline) and `path_bias_jitter`'s
-			# existing per-instance nudge both leave this at its 0.0 default.
-			if path_bias_side_offset > 0.0 and field.has_method("nearest_path_tangent"):
-				var tangent: Vector2 = field.nearest_path_tangent(on_path.x, on_path.y)
-				if tangent != Vector2.ZERO:
-					var perpendicular := Vector2(-tangent.y, tangent.x)
-					var side := -1.0 if rng.randf() < 0.5 else 1.0
-					on_path += perpendicular * side * path_bias_side_offset
-			if path_bias_jitter > 0.0:
-				var nudge := Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0))
-				on_path += nudge * path_bias_jitter
 			base = on_path
-			snapped_to_path = true
-
-	if not snapped_to_path and path_avoid_radius > 0.0 and field.has_method("nearest_point_on_paths"):
-		for attempt in PATH_AVOID_ATTEMPTS:
-			var nearest: Vector2 = field.nearest_point_on_paths(base.x, base.y)
-			if nearest == Vector2.INF or base.distance_to(nearest) >= path_avoid_radius:
-				break
-			base = Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
 
 	if ridge_bias <= 0.0 or rng.randf() > ridge_bias:
-		return {"position": base, "snapped_to_path": snapped_to_path}
+		return base
 
 	var best := base
 	var best_height: float = field.height_at(base.x, base.y)
@@ -307,7 +222,79 @@ static func _clump_centre(
 		if not is_nan(height) and (is_nan(best_height) or height > best_height):
 			best = candidate
 			best_height = height
-	return {"position": best, "snapped_to_path": snapped_to_path}
+	return best
+
+
+## The exclusion distance a `path_standoff` layer keeps from the path at
+## this exact spot, in metres — `lerp(min, max, noise)`, where the noise is
+## coherent over `wavelength` metres, so the meadow's edge advances to the
+## worn dirt in one stretch and retreats several metres in the next instead
+## of tracing a constant offset. Config keys, all TUNABLE per layer:
+## `min`/`max` (the standoff's range), `wavelength` (how many metres one
+## advance-or-retreat lasts; the Grandpa's-house frame sees ~20m of path,
+## so a wavelength near 15 gives it at least one full swing), `salt`
+## (decorrelates layers from each other, so grass and drygrass do not
+## advance and retreat in lockstep).
+##
+## Two properties are load-bearing, both aimed at the "flanking" read:
+## - The noise is sampled with the SIDE of the path folded into the hash,
+##   so the left verge and the right verge draw from independent fields
+##   even directly across from each other. Symmetric-pair edges — the
+##   matched border five tuning rounds never killed — are impossible by
+##   construction, not just unlikely.
+## - Two octaves: the coarse one moves the edge in ~wavelength stretches,
+##   the fine one (a quarter the wavelength, a third the weight) frays the
+##   edge itself so a locally-flat stretch of the coarse noise cannot
+##   print a straight line.
+##
+## Pure function of position and config — no RNG state — so placement
+## order cannot change it and a test can probe it directly.
+static func path_standoff_at(
+	spot: Vector2, nearest_path_point: Vector2, standoff_config: Dictionary, field: RefCounted
+) -> float:
+	var min_standoff := float(standoff_config.get("min", 0.0))
+	var max_standoff := float(standoff_config.get("max", 0.0))
+	if max_standoff <= min_standoff:
+		return min_standoff
+	var wavelength := maxf(float(standoff_config.get("wavelength", 16.0)), 1.0)
+	var salt := int(standoff_config.get("salt", 0))
+	var side := 0
+	if field != null and field.has_method("nearest_path_tangent"):
+		var tangent: Vector2 = field.nearest_path_tangent(nearest_path_point.x, nearest_path_point.y)
+		if tangent.cross(spot - nearest_path_point) < 0.0:
+			side = 1
+	var coarse := _value_noise(spot / wavelength, salt * 131 + side)
+	var fine := _value_noise(spot / (wavelength * 0.25), salt * 131 + side + 977)
+	return lerpf(min_standoff, max_standoff, clampf(coarse * 0.7 + fine * 0.3, 0.0, 1.0))
+
+
+## Smoothed value noise on an integer lattice, in [0, 1]. Deterministic from
+## position and salt alone — the same spot always gets the same value, which
+## is what lets the standoff above be a stable property of the terrain
+## rather than of the order things were placed in.
+static func _value_noise(point: Vector2, salt: int) -> float:
+	var cell_x := floori(point.x)
+	var cell_y := floori(point.y)
+	var fraction_x := point.x - cell_x
+	var fraction_y := point.y - cell_y
+	# Smoothstep the interpolant, or the lattice prints visible creases.
+	var smooth_x := fraction_x * fraction_x * (3.0 - 2.0 * fraction_x)
+	var smooth_y := fraction_y * fraction_y * (3.0 - 2.0 * fraction_y)
+	var corner_a := _lattice_value(cell_x, cell_y, salt)
+	var corner_b := _lattice_value(cell_x + 1, cell_y, salt)
+	var corner_c := _lattice_value(cell_x, cell_y + 1, salt)
+	var corner_d := _lattice_value(cell_x + 1, cell_y + 1, salt)
+	return lerpf(lerpf(corner_a, corner_b, smooth_x), lerpf(corner_c, corner_d, smooth_x), smooth_y)
+
+
+static func _lattice_value(cell_x: int, cell_y: int, salt: int) -> float:
+	# An explicit integer mix rather than Godot's hash(): the meadow's layout
+	# must not depend on engine hashing internals staying stable across
+	# versions.
+	var mixed := cell_x * 374761393 + cell_y * 668265263 + salt * 2147483647
+	mixed = (mixed ^ (mixed >> 13)) * 1274126177
+	mixed = mixed ^ (mixed >> 16)
+	return float(mixed & 0xffff) / 65535.0
 
 
 static func _consider(
@@ -365,21 +352,28 @@ static func _consider(
 		if float(field.stream_factor(spot.x, spot.y)) > stream_threshold:
 			return
 
-	# `path_avoid_radius` (EV3-remainder-3) only ever resampled a CLUMP'S
-	# CENTRE — it had no effect on `strays`, which are placed independently of
-	# any clump. EV3-remainder-4's own whole-map instrumentation confirmed the
-	# clump half is clean (0 of 3785 drygrass clump-sourced instances landed
-	# within 5m of a path, even counting clumps whose centre barely cleared
-	# the radius) but strays still did (2 of 342, and concentrated wherever a
-	# frame's own camera happens to follow a path corridor). Applying the same
-	# radius here, once, to every instance regardless of source, closes that
-	# gap without a second tunable — reads it from the same key `_clump_centre`
-	# already uses, so grass/drygrass are fixed with no config change at all.
-	var instance_avoid_radius := float(layer.get("path_avoid_radius", 0.0))
-	if instance_avoid_radius > 0.0 and field.has_method("nearest_point_on_paths"):
-		var nearest_path_point: Vector2 = field.nearest_point_on_paths(spot.x, spot.y)
-		if nearest_path_point != Vector2.INF and spot.distance_to(nearest_path_point) < instance_avoid_radius:
-			return
+	# `path_standoff` (OF12): how far off a path this layer keeps, and the
+	# replacement for `path_avoid_radius`'s constant exclusion circle. The
+	# owner's verdict on `grandpas-house-route.png` — a landscaped
+	# "flanking" border — survived five verified rounds of tuning constant
+	# distances (`EV3-remainder` through `-6`), because a constant IS a
+	# border: every instance held exactly N metres off the centreline gives
+	# the meadow a ruler-straight inner edge at the same offset on both
+	# sides of the road. A real footpath's verge does the opposite — growth
+	# crowds the worn edge in one stretch and stands metres back in the
+	# next, and the two sides do it independently. So the exclusion
+	# distance here drifts between `min` and `max` with coherent position
+	# noise (`path_standoff_at`), decorrelated per side of the path, and
+	# raveled at metre scale by a second octave. One mechanism for clump
+	# instances and strays alike.
+	if field.has_method("nearest_point_on_paths"):
+		var standoff_config: Dictionary = layer.get("path_standoff", {})
+		if not standoff_config.is_empty():
+			var nearest_path_point: Vector2 = field.nearest_point_on_paths(spot.x, spot.y)
+			if nearest_path_point != Vector2.INF:
+				var distance := spot.distance_to(nearest_path_point)
+				if distance < path_standoff_at(spot, nearest_path_point, standoff_config, field):
+					return
 
 	# `base_scale` corrects the pack's authoring scale for the whole layer;
 	# scale_min/max then vary around it. Two numbers rather than one so "the
