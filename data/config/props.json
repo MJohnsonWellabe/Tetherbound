@@ -6,10 +6,10 @@
       "name": "work_area",
       "props": [
         { "model": "Anvil_Log", "at": [-5.0, -3.0], "yaw_deg": 30.0, "scale": 1.0, "_why": "the cluster's anchor -- an anvil mounted on its own stump" },
-        { "model": "Workbench", "at": [-6.5, -1.8], "yaw_deg": 110.0, "scale": 1.0, "_why": "faces the anvil across the nook" },
-        { "model": "Whetstone", "at": [-4.0, -1.5], "yaw_deg": 0.0, "scale": 1.0, "_why": "a sharpening stone within reach of the bench" },
-        { "model": "Crate_Wooden", "at": [-6.8, -4.0], "yaw_deg": 200.0, "scale": 1.0, "_why": "stock crate behind the anvil" },
-        { "model": "Pickaxe_Bronze", "at": [-3.5, -3.8], "yaw_deg": -40.0, "scale": 1.0, "_why": "a tool left leaning, mid-repair" }
+        { "model": "Workbench", "at": [-6.0, -2.0], "yaw_deg": 110.0, "scale": 1.0, "_why": "faces the anvil across the nook -- pulled in 0.7m (round 1 blind critic: the anvil/whetstone and crate/workbench read as two separate groups, not one station)" },
+        { "model": "Whetstone", "at": [-4.2, -1.8], "yaw_deg": 0.0, "scale": 1.0, "_why": "a sharpening stone within reach of the bench -- pulled in 0.4m, same reason" },
+        { "model": "Crate_Wooden", "at": [-6.0, -3.6], "yaw_deg": 200.0, "scale": 1.0, "_why": "stock crate behind the anvil -- pulled in 0.9m, same reason" },
+        { "model": "Pickaxe_Bronze", "at": [-3.8, -3.6], "yaw_deg": -40.0, "scale": 1.0, "_why": "a tool left leaning, mid-repair -- pulled in 0.3m, same reason" }
       ]
     },
     {
@@ -17,7 +17,7 @@
       "props": [
         { "model": "Barrel_Apples", "at": [-24.0, -25.0], "yaw_deg": 10.0, "scale": 1.0, "_why": "the cluster's anchor -- overflow from the last harvest" },
         { "model": "FarmCrate_Apple", "at": [-25.5, -24.0], "yaw_deg": -15.0, "scale": 1.0, "_why": "stacked beside the barrel" },
-        { "model": "FarmCrate_Carrot", "at": [-25.0, -26.5], "yaw_deg": 40.0, "scale": 1.0, "_why": "a second crop, a second crate" },
+        { "model": "FarmCrate_Empty", "at": [-25.0, -26.5], "yaw_deg": 40.0, "scale": 1.0, "_why": "a second crate, ready for the next load -- FarmCrate_Carrot swapped out (round 1 blind critic): its vertex-colour-tinted contents render as an unreadable white/grey smear, a model defect not a placement one" },
         { "model": "Bucket_Wooden_1", "at": [-23.0, -24.5], "yaw_deg": 0.0, "scale": 1.0, "_why": "a bucket set down mid-chore" },
         { "model": "Crate_Wooden", "at": [-22.5, -27.0], "yaw_deg": 60.0, "scale": 1.0, "_why": "general storage, closing the cluster" }
       ]

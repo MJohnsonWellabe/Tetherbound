@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b1r4laxgb1g10"
-path="res://.godot/imported/FarmCrate_Carrot.gltf-8522fcf2b6164ec780a0b149bac2d784.scn"
+uid="uid://div6dutsafwma"
+path="res://.godot/imported/FarmCrate_Empty.gltf-e3a9ca98aa3dab08ba5a7afae9b59b12.scn"
 
 [deps]
 
-source_file="res://assets/props/quaternius_fantasy/FarmCrate_Carrot.gltf"
-dest_files=["res://.godot/imported/FarmCrate_Carrot.gltf-8522fcf2b6164ec780a0b149bac2d784.scn"]
+source_file="res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf"
+dest_files=["res://.godot/imported/FarmCrate_Empty.gltf-e3a9ca98aa3dab08ba5a7afae9b59b12.scn"]
 
 [params]
 

@@ -25,7 +25,7 @@ const FOV := 70.0
 ## Kept in sync by hand with data/config/props.json and village.json, the same
 ## way capture_buildings.gd does — a survey tool has no business importing
 ## gameplay scripts' private state.
-const WORK_AREA_CENTRE := Vector2(-5.2, -2.8)
+const WORK_AREA_CENTRE := Vector2(-5.0, -2.8)
 const BARN_AT := Vector2(2.0, 2.0)
 const FARMHOUSE_YARD_CENTRE := Vector2(-24.0, -25.4)
 const HOUSE_AT := Vector2(-22.0, -16.0)
@@ -43,9 +43,12 @@ const VIEWPOINTS := [
 	{
 		# The work area next to the Barn it belongs beside — does it read as
 		# one place's workshop, or a prop drop unrelated to anything nearby?
+		# Round 1's eye at (6,-8) looked at the Barn's unlit far side and the
+		# whole cluster crushed to near-black; this approaches from the same
+		# south-west side as the close shot, which round 1 confirmed is lit.
 		"name": "02-work-area-with-barn",
-		"eye": Vector2(6.0, -8.0), "eye_h": 2.0,
-		"target": Vector2(-1.5, -0.5), "target_h": 1.5,
+		"eye": Vector2(-14.0, -11.0), "eye_h": 2.0,
+		"target": Vector2(-1.6, -0.4), "target_h": 2.5,
 	},
 	{
 		# The farmhouse yard close.
