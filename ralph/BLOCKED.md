@@ -101,184 +101,98 @@ needed.
 
 ## Blocked on the owner
 
-### Does the hillside's rock ever read as stone, or is the procedural slope-blend a ceiling to accept on this landform?
-Five real rounds now, across `EV4-hillside-seam` through `EV4-hillside-seam-remainder-4` (`ralph/DONE.md`), chasing one blind critic's repeated core verdict on `rises.peaks[0]` (`data/config/terrain_playground.json`, centre [140,-90], radius 78): "two materials, not three; rock reads as a stain/watermark/AO artefact, not stone." Three colour/value rounds (`remainder` through `remainder-3`) tried every lever in that layer — rock's own tint and photo brightness, soil's hue pushed both directions, `blend_deg`/`soil_slope_deg`/`rock_slope_deg` retuned four times — with real, measured movement on every axis and zero movement in the critic's verdict across all three. `remainder-4` tried a genuinely different class of lever: real height relief (`playground_heightfield.gd`'s new `_relief` noise, gated to each rise's flank so footprint and summit are untouched), not another tint. Two full attempts, 0.8m then 2.5m amplitude — the first confirmed active by direct height/slope probing but invisible at render distance; the second visibly broke the dome's silhouette in two of three frames. A fresh blind critic on the second attempt still delivered the same core verdict, near word-for-word: "still reads as a smooth green dome with grey patches added... the underlying mesh has no relief anywhere a material changes." The one thing that did move — a "slight ripple" now visible near the crest — sits away from where the actual grass/soil/rock transition happens on the flank, not on top of it.
+### ✅ RESOLVED — hillside rock and Grandpa's house route: not tuning again, redone from scratch
 
-**Why this stops here instead of a third geometry round.** Both classes of lever this landform's own bake can offer — colour/value (three rounds) and height/relief (two rounds, one order of magnitude apart in amplitude) — have now been tried with real, verified, measured movement and zero verdict movement in the critic across all five rounds combined. Retuning `relief_amplitude` a third time, or chasing the crest/flank misalignment the second attempt's own ripple hints at, is a plausible next lever but not a config-tuning task any more — it would mean either hand-placing relief precisely where each rise's own actual rock/soil band falls (a bespoke, per-rise authoring pass, not a procedural parameter) or accepting that a coarse-noise procedural blend on a single perfectly-round dome primitive has a real ceiling this landform's own shape imposes, the same class of ceiling `grandpas-house-route.png` (above) already hit for vegetation placement.
+**Both original entries (hillside rock, Grandpa's house route) are retracted
+as of 2026-08-12.** The owner looked at
+both and confirmed the reads still don't work — the hillside rock still
+doesn't read as stone, and the house route is still bothered by the
+matched-border "flanking" look, even once "flanking" was explained plainly
+(plants on either side of the path pairing into a symmetric, deliberately-
+landscaped-looking border). Neither round of blind-tuning evidence changed
+that verdict, so the owner's direction is to stop tuning and **redo both
+from scratch** rather than keep layering rounds onto the same approach.
 
-**Clears when:** the owner looks at `shots/hillside/dome-overview.png` (or a fresh render via `tools/capture_hillside.gd`) and either accepts the current read as-is, or says in their own words what's actually wrong with it — which, same caveat as `grandpas-house-route.png`, may not be "no third material" at all once someone who isn't comparing against reference photos frame-by-frame looks at it in the context of the rest of the meadow.
+Two fresh backlog items carry this forward: `OF11` (hillside rock material/
+relief, dispatched at `model: fable`, explicitly told not to start from the
+five prior tuning rounds) and `OF12` (Grandpa's house route vegetation
+placement, same treatment). See `BACKLOG.md`'s `Phase -1.1`. The evidence
+in `DONE.md` for the prior attempts (`EV4-hillside-seam` through
+`-remainder-4`, `EV3-remainder` through `-remainder-6`) stays as a record of
+what was tried and ruled out — it should inform the redo's judgment, not
+constrain its starting point.
 
-### Is grandpas-house-route.png's "flanking" read worth further iteration, or is it a placement-density limit to accept?
-Five real, evidence-first rounds (`EV3-remainder` through `EV3-remainder-6`,
-`BACKLOG.md`/`DONE.md`) chasing one blind critic's repeated complaint on one
-specific frame — a hedge/flanking pattern near Grandpa's house's approach
-route. Each round found and fixed a genuine mechanism: `flowers`' clump
-straddling the path centreline, grass/drygrass strays landing near a path
-by chance, `path_stones`' clump radius spreading stones twice the path's
-own width. Two rounds tried the more direct lever of just adding ground-
-cover density and made the SAME frame measurably worse, not better —
-`EV3-remainder-2` bumping `path_bias` and `EV3-remainder-6` adding an
-authored off-path clump both recreated the exact flanking read they were
-meant to fix, for a now-understood reason: any concentrated addition near
-this route, whichever side it lands on, pairs with whatever is already on
-the far side and reads as a matched pair. The layers that could plausibly
-be responsible (`flowers`, `bushes`, `grass`, `drygrass`, `trees`, `grove`,
-`saplings`, `rocks`, `path_stones`) have all been dumped against this
-frame's real placement data and are individually either fine or already
-fixed.
+### ✅ RESOLVED — the `square-convergence`/`the-rise-route` "unmotivated dark patch" is accepted as ordinary material contrast
 
-**Why this stops here instead of another config tweak.** There is no
-further `path_bias`/`path_avoid_radius`/`clump_radius`/`extra_clumps` lever
-left untried for this specific frame that the diagnosis chain hasn't
-already tried and either confirmed harmless or confirmed harmful. What's
-left is either a genuinely different placement mechanism for this one route
-specifically (a real scope question — how much bespoke authoring one
-frame's approach earns, when the rest of the meadow is procedural by
-design) or accepting the current state as the honest ceiling of a
-procedural scatter system tuned this many times against one photograph.
-Neither is a `vegetation`-scope config edit a firing should keep guessing
-at.
+**Closed 2026-08-12.** `EV4-textures-lighting-remainder` (`DONE.md`) tested
+ten mechanisms across its full history and ruled all of them out one by
+one — shadow toggle, SSAO, normal-map depth/AO, ambient energy, baked
+vertex colour, photo albedo content, PSSM cascade splits, shadow bias.
+What finally explained it was direct pixel measurement under the dark-
+patch's own mask: pure-path control-map pixels average luma 130, pure-
+grass-dominant pixels average luma 67 — a real, ordinary material
+contrast, not a rendering defect. The "patch" is
+`build_playground_terrain.gd::_path_control()`'s own documented design
+working as intended: the outer half of every path's feathered shoulder
+deliberately blends toward the natural (grass/soil) texture, and ordinary
+grass sitting next to a brighter path reads as "a shadow with no caster"
+purely by contrast.
 
-**Clears when:** the owner looks at `grandpas-house-route.png` (`shots/
-paths/`, or a fresh render via `tools/capture_paths.gd`) and either says
-it's fine as-is, or says what's actually wrong with it in their own words —
-which may not be "flanking" at all once a human who isn't a blind critic
-comparing against reference photos looks at it in context with the rest of
-the meadow.
+The owner looked at `shots/_diag/square-convergence-normal.png` and
+**accepted the current read** — no fix needed, the feathered-edge path
+design stays as-is. Nothing left waiting here.
 
-### The `square-convergence`/`the-rise-route` "unmotivated dark patch" is identified — grass/path luma contrast at the feathered path edge — but not fixed, and the fix is the same open question as `grandpas-house-route.png` below
-`EV4-textures-lighting-remainder` (`DONE.md`) tested ten mechanisms across
-its full history and ruled all of them out one by one — shadow toggle,
-SSAO, normal-map depth/AO, ambient energy, baked vertex colour, photo
-albedo content, PSSM cascade splits, shadow bias. What finally explained it
-was direct pixel measurement under the dark-patch's own mask: pure-path
-control-map pixels average luma 130, pure-grass-dominant pixels average
-luma 67 — a real, ordinary material contrast, not a rendering defect. The
-"patch" is `build_playground_terrain.gd::_path_control()`'s own documented
-design working as intended: the outer half of every path's feathered
-shoulder deliberately blends toward the natural (grass/soil) texture, and
-ordinary grass sitting next to a brighter path reads as "a shadow with no
-caster" purely by contrast.
+### ✅ RESOLVED — the appeal gap is the starter orb-picker screen, not the roster
 
-**This is very likely the same root phenomenon as `grandpas-house-route.png`
-below** (both are grass reading dark against a brighter path and both trace
-to the same historical luma figures in `data/config/art.json`'s own EV4
-comment), but the two complaints were chased through different mechanisms
-— that entry's five rounds tried vegetation-layer placement/clumping
-(`flowers`, `path_stones`, etc.), never the base terrain grass/path texture
-contrast this entry identifies. Recorded as a distinct entry rather than
-silently merged, since nobody has yet confirmed the *same* fix (raising
-grass luma, or narrowing the path's own feathered shoulder, or something
-else in `terrain_playground.json`'s `paths` block) would close both frames
-at once — that is real work for whoever picks this up, not an assumption
-to bake into the bookkeeping.
+**Closed and narrowed 2026-08-12.** Split out of `SA0-orbs-remainder`
+(2026-08-11): four blind-judge rounds on the starter orb picker converged
+with the critic calling all three previewed creatures — Terrapup, Ripplet,
+Galewisp alike, not one outlier — "an asset preview, not a hero character
+portrait" next to the Palworld reference set.
 
-**Why this stops here instead of a fix attempt.** Both the mechanism (path-
-edge grass/path contrast) and its exact numeric signature (luma 67 vs. 130)
-are now known with real evidence, but fixing it is a colour/exposure
-tradeoff exactly like `grandpas-house-route.png`'s own five exhausted
-rounds — brightening grass risks the same "blown path" problem the 1.22→0.6
-exposure cut was made to fix, and narrowing the shoulder trades against the
-"feathered irregular edges" the path design explicitly wants (bible sec8).
-Neither is a `lighting`-scope config edit a firing should keep guessing at
-without owner input on which tradeoff is acceptable.
-
-**Clears when:** the owner looks at `shots/_diag/square-convergence-normal.png`
-(or a fresh render via `tools/capture_paths.gd`) and either accepts the
-current read, or says what's actually wrong with it in their own words —
-same caveat as `grandpas-house-route.png`: it may not be "grass too dark"
-at all once someone who isn't measuring luma against reference photos looks
-at it in context with the rest of the meadow. If the owner says it needs
-fixing, the concrete next step is testing whether the fix that works here
-also closes `grandpas-house-route.png`, before treating them as two
-separate colour tunings.
-
-### Does the creature roster clear a Palworld-level appeal bar, or does it need to?
-Split out of `SA0-orbs-remainder` (2026-08-11): four blind-judge rounds on the
-starter orb picker converged with the critic calling all three previewed
-creatures — Terrapup, Ripplet, Galewisp alike, not one outlier — "an asset
-preview, not a hero character portrait" next to the Palworld reference set.
-This is broader than any single defect a scene tweak can fix, and broader than
-`SA5`/`SA6`'s mandate, which is narrowly pairwise (stop two specific species
-reading as palette swaps of each other, e.g. Burrowback/Terrapup,
-Galecrest/Galewisp) — nothing in `SA5`/`SA6` asks whether the roster's overall
-finish reaches a Palworld-quality bar, only whether look-alikes are told apart.
-
-**Why this stops here instead of becoming a backlog item.** "Improve creature
-appeal" is not an executable task the way `SA5`/`SA6` are — there is no
-concrete done-when a firing could aim at without first deciding *how much*
-rework is worth doing and on what lever. The only lever available at all is
-material/lighting rework: `D23` §20 and `CLAUDE.md` forbid new creature meshes
-or Meshy regeneration for the Meadows at any balance, reaffirmed with 5000
-credits in the account specifically so a healthy balance would not be read as
-license to reopen it. So the real question is a resourcing one — is a
-roster-wide `grade.py`-style material/lighting pass (beyond the specific
-species pairs `SA5`/`SA6` already own) worth a firing's time, given the
-geometry itself is fixed and cannot close the gap on its own — and that is a
-priority call, not a design-decision-in-CLAUDE.md's-flagged-list call, but it
-still is not a firing's to make unilaterally: it commits real time against a
-ceiling (material rework alone) that may or may not be enough to satisfy the
-bar the owner set.
-
-**Clears when:** the owner says whether a roster-wide material/lighting pass
-is worth commissioning — and if so, whether it is scoped as its own backlog
-item or folded into `SA5`/`SA6`'s existing remit — or accepts the geometry-era
-finish as the cost of the no-new-mesh rule, the same trade `BLOCKED.md`'s
-"creature and human art-pipeline cohesion" entry above already accepted for
-the three toy-finish creatures it named.
+The owner confirmed the scope directly: the in-game creatures already look
+great; this was always about the **orb-picker/starter-selection screen's
+own staging** — lighting, material presentation, framing — not the
+roster's in-game presentation, and not a `SA5`/`SA6`-style pairwise
+look-alike fix either. Approved: make the orb-picker's presentation
+better. A new backlog item carries this forward, scoped narrowly to that
+screen — see `BACKLOG.md`.
 
 ---
 
-### `NP1-geometry` — no real hair/accessory geometry exists anywhere, and generating one is foreclosed
-`NP1-geometry` (`BACKLOG.md`, Phase -0.55) read as "blocked on `NP4` or
-`EV1-remainder` supplying an actual modular mesh," and both of those shipped
-since it was written — so this firing (2026-08-12) checked whether it had
-genuinely unblocked, rather than trusting the premise.
+### ✅ RESOLVED — NP1-geometry: owner approved a new Meshy generation, gated on a reference board
 
-**It hadn't.** Parsed `assets/characters/{villager_female,villager_male,
-grunt}/*_lod0.glb`'s glTF JSON directly, the same way `NP1`'s own entry did
-for the original three human rigs: each is **one fused mesh (`char1`), one
-material (`Material_1`), no separate hair or accessory node** — byte-for-byte
-the same limitation trainer/Grandpa/Warden already had. `NP4`'s pipeline is
-Meshy image-to-3D from a turnaround sheet (`NP4`'s own `DONE.md` entry:
-"57k-tri non-manifold triangle soup → clean 28k-tri manifolds" — one mesh,
-cleaned once); it was never going to produce the NPC board's own brief —
-quoted in `D24` — of "hide/show accessories via separate mesh parts, hair
-variants sharing head topology." Checked `EV1-remainder`'s two Quaternius
-kits too (`assets_raw/vendor/quaternius_medieval-village-megakit`,
-`assets_raw/vendor/quaternius_fantasy-props-megakit`) rather than assume:
-village architecture and props, nothing character-shaped, confirmed by a
-`find -iname "*hair*" -o -iname "*accessor*"` turning up nothing but a false
-positive on "Chair".
+**Closed 2026-08-12.** `NP1-geometry` read as "blocked on `NP4` or
+`EV1-remainder` supplying an actual modular mesh," and both of those
+shipped — checking confirmed it hadn't genuinely unblocked:
+`assets/characters/{villager_female,villager_male,grunt}/*_lod0.glb` are
+each still one fused mesh, one material, no separable hair/accessory node,
+same limitation trainer/Grandpa/Warden already had.
 
-**Why this doesn't become a normal backlog remainder.** The only way to
-supply real separable hair/accessory geometry now is another Meshy
-generation, and that's foreclosed twice over: `D23` §20 forbids new creature
-meshes at any balance, and `D24`'s own "What it does NOT change" section
-extends the same rule to humans — "the three off-style creatures and the
-trainer/Grandpa fidelity gap are permanently material-and-rework problems,"
-reaffirmed with 5000 credits available specifically so a healthy balance
-would not read as license to reopen it. So this is not "not built yet," it's
-"the pipeline that would build it is the one thing the owner has closed off,"
-and reopening that is exactly the kind of call `CLAUDE.md` reserves for the
-owner, not a firing.
+This entry previously foreclosed the fix as permanently material-and-
+rework-only, reading `D24`'s "what it does NOT change" section as covering
+this case. **The owner's answer clarifies it doesn't**: `CLAUDE.md`'s own
+rule already carves out "at most one or two new human generations, owner-
+supplied only, and only for reusable archetypes" — and the villager bases
+are exactly that, reused across the whole NPC cast. The owner approved a
+new Meshy generation to make them modular, and will supply reference art
+(or existing NPC art can be reused as reference).
 
-**Clears when:** the owner either accepts `NP1`'s placeholder-primitive
-mechanism as the permanent look for hair/accessories (closing `NP1-geometry`
-outright — the data/attachment system it built is real and already shipped,
-only the geometry stays placeholder), or names a non-Meshy source for
-modular human hair/accessory parts (a CC0 pack, same as `EV1-remainder`
-supplied for the settlement) for a future firing to wire in through the
-mechanism `NP1` already built.
+**This does not lift the reference-art gate** — `CLAUDE.md`/`D24` still
+forbid generating without a board in `docs/art/reference/` first, unchanged
+by this approval. A new backlog item (`NP7`, `BACKLOG.md`) carries this
+forward, blocked on that board landing before any credit is spent.
 
 ---
 
-### `ASSET_LEDGER.md` licence claim is false
-The ledger states "Everything currently in the build is CC0 1.0." It is not: the
-Meshy-generated creatures and the Plumberry Plains pack are not CC0. The correct
-wording depends on the owner's Meshy plan terms, which no agent can verify.
+### ✅ RESOLVED — `ASSET_LEDGER.md` licence claim
 
-**Clears when:** the owner supplies the licence wording.
+**Closed 2026-08-12.** The ledger stated "Everything currently in the build
+is CC0 1.0." It was not: the Meshy-generated creatures and the Plumberry
+Plains pack are not CC0. The owner supplied the correct wording: **All
+Rights Reserved / proprietary**, owner-licensed. `docs/ASSET_LEDGER.md`
+updated to mark those two sources accordingly; everything else keeps its
+real, already-correct licence.
 
 ---
 

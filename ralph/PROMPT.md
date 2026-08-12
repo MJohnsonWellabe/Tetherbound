@@ -113,14 +113,13 @@ python3 tools/ralph_status.py claim --file ralph/STATUS.md \
   live firing on this lane. Proceed to the area-lease section, and refresh
   this same heartbeat on the same cadence as any other lease you hold.
 - **Claim fails** — `lane-<you>` is live: **stand down immediately.** Do not
-  read the backlog, do not claim a work area, do not schedule a successor —
-  the live firing already covers that. Say so and end. This is a correct,
-  successful outcome, not a failure.
+  read the backlog, do not claim a work area — the live firing already
+  covers that. Say so and end. This is a correct, successful outcome, not a
+  failure.
 
-Release this lease exactly like any other — before you schedule a successor,
-never when you ship (see "Scheduling the successor" below); a successor's
-first act is re-claiming it. `lane-<b|c|keyed>` is a reserved name, never a
-real work area — do not put backlog items under it.
+Release this lease exactly like any other, as your very last act before you
+end — see "Releasing your leases" below. `lane-<b|c|keyed>` is a reserved
+name, never a real work area — do not put backlog items under it.
 
 ## Claim a lease FIRST — before reading the backlog, before anything else
 
@@ -192,9 +191,9 @@ block per **live** firing.
      a rejection alone**: their claim may be on a different area, in which case
      yours is still free and you should re-claim it.
 5. **Stand down only when every non-blocked item's area is held.** That is a
-   correct, successful outcome — say so and end without scheduling a successor.
-   Standing down because *some other firing exists* is the old behaviour and is
-   now wrong; it is what parallel lanes exist to stop.
+   correct, successful outcome — say so and end. Standing down because *some
+   other firing exists* is the old behaviour and is now wrong; it is what
+   parallel lanes exist to stop.
 
 ### Areas, and which of them actually conflict
 
@@ -358,42 +357,60 @@ luck, not the protocol working as intended.
    that is deliberate, the owner asked for it, and running everything on every
    task wastes hours over a backlog this size. **Run them locally and headless
    before you push.** CI is the gate, not the test runner.
-5. **Take the next item too, if it shares your area and you have context left.**
-   Commit each one separately. See "Batch the push, never the testing" below.
-6. **Ship**: push the branch once, with 1–4 finished items on it. CI runs the
-   import check, your named tests and the Windows export. **Auto-merge on
-   green.** Never merge red.
-7. **Record**: move each item from `BACKLOG.md` to `DONE.md` with its commit SHA
+5. **Ship exactly one item.** Push the branch with that single item's commit
+   (plus its bookkeeping commit, last). CI runs the import check, your named
+   tests and the Windows export. **Auto-merge on green.** Never merge red.
+6. **Confirm it actually landed on `main` before doing anything else.**
+   Watch `main`, not CI — green CI is not the same as shipped. Wait for
+   `ralph-merge.yml`'s auto-merge to fast-forward `main`; if it hits a
+   genuine conflict, resolve it yourself (the bookkeeping rule below) rather
+   than ending on an unconfirmed push. See "One item, confirmed landed, no
+   successor" below for why this step exists.
+7. **Record**: move the item from `BACKLOG.md` to `DONE.md` with its commit SHA
    and one line on what shipped. Commit that too — and read the bookkeeping
    warning below first, because these three files are where lanes collide.
-8. **Schedule the successor as your very last act** — one, immediately before
-   you end, and **never while you still intend to take another item.** Doing it
-   at ship time forks the lane instead of chaining it; see below.
+8. **Release your leases and end.** Release your area lease and lane
+   heartbeat (see "One live firing per lane" above), say what you shipped
+   and that it's confirmed on `main`, and stop. **Do not schedule a
+   successor.** The next unit of work happens on the next Routine fire —
+   see "One item, confirmed landed, no successor" below.
 
-### Batch the push, never the testing
+### One item, confirmed landed, no successor
 
-Owner directive, 2026-08-11. **Ship 1–4 items per branch instead of one.** A
-branch CI run is ~5 minutes, so four items on one branch saves ~15 minutes of
-the ~20 they would have cost separately.
+**Owner directive, 2026-08-12, reversing the 2026-08-11 batching and
+chaining directives below.** Pausing all three Routines was found not to
+actually stop work: a firing kept producing fresh sessions for **4.5+
+hours** after every Routine was disabled, because batching ("take the next
+item too... ship 1–4 per branch") and self-scheduled successors
+(`send_later`, 2–3 minutes out) together let one firing turn into an
+indefinite chain that has no relationship to whether its parent Routine is
+even enabled. A `send_later` self-resume is not a Routine fire, so pausing
+the Routine literally cannot reach it. That is the failure this section
+exists to close.
 
-The owner also asked whether to go further — build a whole phase, test nothing
-until the end. **No, and this is the one place to be firm about it.** Recorded
-in `docs/decisions/D25` with the arithmetic. Short version: CI is not where the
-time goes, a phase-sized red run tells you nothing about which of ten changes
-broke it, and every un-shipped item is an item the owner cannot play. Batching
-the *push* captures nearly all the saving; batching the *testing* trades a
-5-minute saving for hours of bisecting.
+**One item. One branch. One push. Confirmed on `main`. Then stop —
+no successor, ever, regardless of what else is unblocked.**
 
-So: test every item as you finish it, locally and headless. Push when you have
-run out of items in your area, run low on context, or hit four.
+- Do not take a second item in the same firing, even if it shares your area
+  and you have context left. The old "keep going while unblocked work
+  remains" instruction is gone; it is what turned pauses into no-ops.
+- Do not schedule anything with `send_later` or equivalent. Release your
+  area lease and lane heartbeat, report what shipped, and end.
+- The next item on your lane happens at the next Routine fire — the keyed
+  cron at `:49`, Lane B at `:05`, Lane C at `:13` — not sooner. With three
+  lanes staggered ~20 minutes apart, aggregate idle time between *some*
+  lane doing something is small even though any single lane waits up to an
+  hour for its own next turn.
 
-Two hard limits on batching:
+**This is a deliberate throughput trade, made with full knowledge of the
+cost**: less work happens per hour than batching/chaining produced. In
+exchange, disabling a Routine now actually means nothing more happens —
+there is no other mechanism left that can start new work. That guarantee is
+worth more than the throughput, after tonight.
 
-- **Never batch across areas.** A four-item branch spanning `terrain` and `npc`
-  is a merge conflict with another lane waiting to happen.
-- **Never batch a red item with a green one.** If item 3 of 4 fails, push the
-  first two and leave 3 and 4 in the backlog. Do not hold two finished items
-  hostage to a broken third.
+**"One live firing per lane" (above) stays in effect unchanged** — it is a
+correct safety net independent of chaining, e.g. if a firing runs long and
+the next cron tick arrives while it is still working.
 
 ### Iterate the visual critic LOCALLY, then push once
 
@@ -459,60 +476,21 @@ then take the next item. Block — do not improvise — when:
 
 A blocked item is a good outcome. A quietly redesigned game is not.
 
-## Scheduling the successor
+## Releasing your leases
 
-**Owner directive, 2026-08-11: chain, do not wait for the hour.** The cron is a
-heartbeat that guarantees the loop survives a session dying mid-task. It is not
-the pacing mechanism. A firing that finishes at :12 and lets the loop idle until
-:49 wastes 37 minutes, and that is roughly 25% of a typical cycle.
-
-### ⚠ Schedule it as your LAST ACT, not when you ship
-
-**One successor per firing, scheduled immediately before you end. Never while
-you intend to keep working.**
-
-This paragraph is a correction. It first read "schedule your successor the
-moment you have shipped and recorded", and that contradicted the loop's own
-"keep going while unblocked work remains" — together they told a firing to
-spawn a successor *and then carry on*, which is a fork, not a chain. Lane B did
-exactly that twice on 2026-08-11 and was running three concurrent sessions off
-one Routine within an hour. Nothing collided, because the per-area leases held,
-but the token burn multiplies without limit and the owner asked for three lanes,
-not three per lane.
-
-So the order is: finish everything you are going to do, release your area
-lease **and** your lane heartbeat (see "One live firing per lane" above —
-your successor re-claims the lane heartbeat as its own first act, same as you
-did), **then** schedule one successor 2–3 minutes out, then end. If you are
-still taking items, you are not ready to schedule.
-
-This is now backstopped structurally, not just by getting the ordering right:
-even if a firing forks again the way Lane B did below, the next firing on
-that lane — whether a self-scheduled successor or the next hourly cron —
-finds `lane-<you>` still live and stands down instead of running alongside
-it.
-
-**Releasing means deleting your block from `ralph/STATUS.md`, not setting it to
-`shipped`.** Corrected 2026-08-11 — `STATUS.md` used to offer `shipped` as an
-equally-valid alternative to deleting, every firing took the easier option, and
-the file grew to 53 undeleted blocks in six hours, unreadable at a glance even
-though nothing was actually colliding. Delete the block with `python3
+**Releasing means deleting your block from `ralph/STATUS.md`, not setting it
+to `shipped`.** `STATUS.md` used to offer `shipped` as an equally-valid
+alternative to deleting, every firing took the easier option, and the file
+grew to 53 undeleted blocks in six hours, unreadable at a glance even though
+nothing was actually colliding. Delete the block with `python3
 tools/ralph_status.py release --file ralph/STATUS.md --firing <your-firing-id>
---task <TASK-ID>`; if you want a record that the task shipped, that's what
-`DONE.md` is for.
+--task <TASK-ID>` for both your area lease and your lane heartbeat; if you
+want a record that the task shipped, that's what `DONE.md` is for.
 
-Release both **before** the successor fires, or it reads its own lane (and
-possibly your area too) as held and stands down.
-
-Do **not** schedule one when:
-
-- Everything left is blocked, or only R9.5 (the exit gate) remains. The loop is
-  correctly parked and firing sessions that immediately stop just burn tokens.
-- Every unblocked item's area is held by another live lane. Same reasoning.
-
-**The successor does not inherit the Meshy key** — a `send_later` self-resume is
-not the cron Routine, and this has been found twice. If your remaining work is
-`lane: art`, do not chain; let the keyed cron Routine pick it up.
+Do this whether you shipped, are blocking the item, or are standing down
+because every unblocked item's area is already held — release before you
+end, always. See "One item, confirmed landed, no successor" above: nothing
+gets scheduled after this, ever.
 
 ## Honesty rules
 

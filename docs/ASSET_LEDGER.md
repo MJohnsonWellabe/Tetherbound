@@ -76,9 +76,20 @@ at the time it was fetched, not as remembered.
 | Fantasy Props MegaKit — 10 of 94 models, in use | Quaternius | [Fantasy Props MegaKit](https://quaternius.itch.io/fantasy-props-megakit) | CC0 1.0 | No | `assets/props/quaternius_fantasy/*.gltf` | `EV7`'s first slice: `Anvil_Log`, `Workbench`, `Whetstone`, `Crate_Wooden`, `Pickaxe_Bronze` (the `work_area` cluster) and `Barrel_Apples`, `FarmCrate_Apple`, `FarmCrate_Carrot`, `Bucket_Wooden_1` (the `farmhouse_yard` cluster), plus the pack's 13 shared trim textures. Placed by `scripts/world/props.gd` from `data/config/props.json`. `bridge repair site`/`quarry station`/`trainer camp` (bible sec2 P3's other three named clusters) need geography that doesn't exist yet (a bridge, a quarry site) and are left for `EV7-remainder`. `R2.8` adds `Bed_Twin1` (the build catalogue's `pal_bed` entry) — its own trim textures (`T_Trim_Furniture_*`, `T_Trim_Metal_*`, `T_Trim_Cloth_*`) were already staged for `Workbench`, so only the model's own `.gltf`+`.bin` were new. Deliberately a different specific mesh from `assets/props/quaternius_furniture/BedTwin.obj` (a separate Quaternius pack already used for the player's own bedroll and Grandpa's bed), so a placed creature bed doesn't read as a duplicate of furniture the player already has. |
 | Medieval Village MegaKit — 5 of 176 models, in use | Quaternius | [Medieval Village MegaKit](https://quaternius.itch.io/medieval-village-megakit) | CC0 1.0 | No | `assets/buildings/quaternius_medieval/*.gltf` | `R2.6`'s first build-piece catalogue entries: `Wall_Plaster_Straight`, `Floor_UnevenBrick`, `Door_1_Flat`, `Roof_RoundTile_2x1`, `Prop_WoodenFence_Single`, plus their 12 shared trim/plaster/brick/tile textures. Same Plaster/UnevenBrick/RoundTile family `EV6` is independently curating for the settlement itself (`ralph/EV6`, in flight) — chosen to match rather than introduce a second building vocabulary under D24's one-family rule. `data/items/buildables.json` references these by path; `scripts/build/build_piece.gd` places them. |
 
-Everything currently in the build is **CC0 1.0**, so nothing here carries a legal
-attribution obligation. Credits should still name Quaternius, Kay Lousberg,
-Kenney and ambientCG — it costs a line and it is how these packs keep existing.
+**Most of the build is CC0 1.0 — but not all of it, and this ledger previously
+claimed otherwise.** Corrected 2026-08-12: the Meshy-generated creatures and
+characters (Ripplet, Galewisp, Grandpa Elias, and the rest of the roster
+generated the same way — see their own rows above) are **not** CC0; they
+carry Meshy's ToS at generation date, derived from the owner's own concept
+art, and are treated as **All Rights Reserved / proprietary, owner-licensed**
+for this project. The **Plumberry Plains Vol. 2** pack (also above) is not
+CC0 either — its own row already states its real terms (free for personal and
+commercial use, no resale/redistribution/repackaging, no AI training), also
+treated as proprietary/owner-licensed rather than open. Everything else in
+this table genuinely is CC0 1.0, and for that portion nothing here carries a
+legal attribution obligation — though credits should still name Quaternius,
+Kay Lousberg, Kenney and ambientCG; it costs a line and it is how these packs
+keep existing.
 
 The creature models remain stand-ins for bespoke art (`docs/decisions/D10`), and
 the blind critic has said so in two consecutive reviews (`docs/reviews/MA-01`,

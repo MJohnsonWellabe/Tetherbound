@@ -25,6 +25,126 @@ after the roster was real). `model: haiku` when it is just screenshots.
 
 ---
 
+## Phase -1.1 — the owner played again (owner-reported, 2026-08-12)
+
+Fresh playtest feedback, folded in the same way `Phase 0` absorbed the first
+round: spliced ahead of everything else because it's the owner's direct,
+current read on the build. Two items (`OF11`, `OF12`) replace `BLOCKED.md`
+entries that stopped clearing after repeated tuning rounds — see
+`BLOCKED.md` for why those are redos, not continuations.
+
+### OF1 — Catching still doesn't feel good; redo it, don't tune it again
+`model: fable` (dispatch, per `PROMPT.md`'s Fable-tagged rule — this is a
+feel/design authorship call, not a bug fix). The owner's own words: "Catching
+is still bad." No existing spec pins down what "good" catching feels like
+here, so the dispatched subagent owns defining that as well as building it —
+throw, orb-in-flight, capture resolution, and the feedback around each step.
+Done when a fresh playtest no longer reads as "still bad."
+
+### OF2 — Party and item-target controls: can't reorder the party, can't choose who a berry/potion applies to
+`area: ui` · `model: sonnet` · `tests: test_build_catalogue` (extended) + a
+new interaction test for target-picking. Two real gaps in the menus: no
+party-reorder control, and no target-picker step when using a consumable —
+using a berry or potion currently doesn't let the player choose which pal it
+applies to. Start by reading `tab_backpack.gd::_read_use()`'s current target
+logic before building the picker, since the actual current behavior isn't
+documented anywhere.
+
+### OF3 — Grandpa's opening scene: buttons only advance the dialogue about half the time, and naming a pal via the on-screen keyboard is a bad experience
+`area: ui` · `model: sonnet` · `tests: test_dialogue_runner` (extended) +
+manual controller verification, since input feel doesn't fully show up
+headless. Two likely-separate bugs: (1) dialogue-advance input reliability —
+investigate whether it's an input buffering/debounce issue in the dialogue
+runner; (2) the on-screen keyboard for text entry needs a real usability
+pass (layout, controller navigation, backspace/confirm affordances). This is
+the tutorial's front door — both bugs are first-impression breaking.
+
+### OF4 — The stronghold's silhouette reads as a toy
+`model: fable` (dispatch) — visual-direction judgment call. Done when a
+fresh blind critic pass no longer names "toy-like" or an equivalent
+complaint against the silhouette, following the same evidence-based
+iterate/stop rule other visual items use.
+
+### OF5 — Running and walking look unnatural
+`model: fable` (dispatch) — a "does this look right" call, distinct from the
+`RB2` loop-mode bug already fixed (that was clips freezing after one
+playthrough, not a quality complaint about the motion itself). Needs a blind
+pass judging the walk/sprint cycles specifically — likely gait timing or
+foot-sliding, not looping.
+
+### OF6 — World boundary: tighten the hard collision stop to match the visible perimeter
+`area: terrain` · `model: sonnet`. `SA3` already built a physical perimeter
+and a fail-safe (`DONE.md`); the actual stop-collision sits well beyond the
+visible wall/fence line, leaving a dead, empty gap between where the world
+visually seems to end and where it actually stops you. Reposition the
+boundary to sit just past the authored perimeter. Keep the existing
+fall/respawn failsafe as backup for anyone who gets past it.
+
+### OF7 — Rebuild the perimeter fence/wall — it looks bad and isn't continuous
+`area: terrain` (or `village`, whichever owns the placement) · `model: fable`
+— a visual-quality call on an already-built system (`SA3`), not a new
+mechanic. The owner's words: "it looks awful and isn't continuous." Done
+when a blind pass no longer calls the perimeter discontinuous or low-quality.
+
+### OF8 — Player can't lie down in bed
+`area: ui` · `model: sonnet` · `tests:` new, covering the lie-down animation
+state and the wake-up transition. Needed both for testing and for the
+opening wake-up scene, where the player currently starts standing on the
+bed instead of lying in it. Check which system owns player-bed interaction
+— likely near the opening scene and `R3.3`'s respawn work.
+
+### OF9 — Flag only, no silent fix: should the stronghold be visible from the start?
+Per `CLAUDE.md`'s explicit list, "changing stronghold structure" is a core
+design decision to surface, not invent. Is the stronghold's early visibility
+an intentional distant-landmark hook (common open-world pacing), or does it
+read as spoiling something meant to be discovered gradually? Needs the
+owner's call before anyone touches placement, LOD, or vista treatment.
+
+### OF10 — The road up to the stronghold is unwalkable, and the hill/slope doesn't look good
+`area: terrain` · `model: fable` (likely — the existing hillside-quality
+work is already Fable-adjacent visual-direction territory, see `OF11`).
+Two possibly-separate problems: a walkability bug (check for a collision
+gap or a bad nav-mesh) and a look-quality pass. May have different owners;
+don't assume one fix closes both.
+
+### OF11 — Redo the hillside rock material/relief from scratch
+`model: fable` (dispatch). Replaces the `BLOCKED.md` "hillside rock" entry —
+see there for the full five-round history. That history is evidence tuning
+plateaued, not a starting point for the next attempt: the dispatched agent
+gets the done-when ("reads as stone, not a smooth procedural blend") and the
+plateau evidence, but not the prior specific mechanisms to adjust. It judges
+and rebuilds the material/relief approach itself, clearing out the current
+implementation rather than layering another round on top of it.
+
+### OF12 — Redo the vegetation placement on Grandpa's house route from scratch
+`model: fable` (dispatch). Replaces the `BLOCKED.md` "grandpas-house-route.png
+flanking" entry — see there for the full five-round history. Same reasoning
+as `OF11`: five rounds fixing real placement mechanisms still produced a
+matched, hedge-like "flanking" border reading as landscaped rather than
+natural, and two rounds that added density made it measurably worse. The
+dispatched agent is told plainly what "flanking" means (plants on either
+side of the path pairing into a symmetric border) and told to avoid a
+matched-pair read across the path, then owns rebuilding the placement
+approach itself — not handed the prior five rounds' mechanisms to tune
+further.
+
+### NP7 — Modular hair/accessory geometry for human NPC bases (owner-approved Meshy regeneration)
+`area: assets` · `lane: art` (needs the Meshy key). Replaces the
+`BLOCKED.md` "NP1-geometry" entry — the owner approved a new Meshy
+generation to make `villager_female`/`villager_male`/`grunt` modular
+(separable hair/accessory nodes), inside `CLAUDE.md`'s existing "one or two
+new human generations, owner-supplied only, for reusable archetypes"
+exception. **Blocked on a reference board landing in `docs/art/reference/`
+first** — no generation without it, per `CLAUDE.md`/`D24`, unchanged by this
+approval; the owner will supply one or confirm existing NPC art can be
+reused as reference. Once the board exists: regenerate the three villager
+bases with separable hair/accessory nodes, reusing existing NPC material
+language per `D24`'s one-family rule, and confirm whether
+trainer/Grandpa/Warden get the same treatment (`NP1-geometry` named all six
+as sharing the fused-mesh limitation).
+
+---
+
 **`R6-village-notification-freed-instance` (the freed-instance SCRIPT ERROR in `building_prefabs.gd`'s teardown handler) fixed — see `DONE.md`.** A boolean-order bug (`is Node` ran before `is_instance_valid`, and Godot's `is` throws rather than returning false on an already-freed reference), not the genuine double-free the symptom suggested.
 
 ## Phase 0 — the owner played. This is the response.

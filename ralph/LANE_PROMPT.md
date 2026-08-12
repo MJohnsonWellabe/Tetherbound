@@ -48,21 +48,21 @@ YOU DO NOT HAVE THE MESHY API KEY, and this is deliberate rather than a fault. S
 
 Take the topmost unblocked item whose area is free. `▶` play gates do NOT stop the loop (D21): make sure `BLOCKED.md`'s play-gate section lists it for the owner and take the next item below. The one exception is R9.5, the exit gate, where the loop correctly parks.
 
-Branch `ralph/<task-id>`, build the smallest coherent version, and run ONLY the tests that item names — locally and headless, before you push. Batch 1–4 finished items onto one branch, never across areas and never a red item with a green one. Pushing the branch IS the ship action; no pull request, no self-merge. Then move each item to `ralph/DONE.md` with its real commit SHA, in its own commit, last.
+ONE ITEM ONLY. Branch `ralph/<task-id>`, build the smallest coherent version, and run ONLY the tests that item names — locally and headless, before you push. Push that single item's commit (plus its bookkeeping commit, last). Pushing the branch IS the ship action; no pull request, no self-merge.
+
+VERIFY IT LANDED ON `main` BEFORE DOING ANYTHING ELSE. Watch `main`, not CI — green CI is not the same as shipped. `ralph-merge.yml` is fast-forward only: if `main` moved while you worked it refuses and goes red even though your tests passed. Rebase onto current `main` and push again if that happens; that is a genuine conflict, not a race to avoid. For `BACKLOG.md`/`DONE.md`/`BLOCKED.md` conflicts, KEEP BOTH SIDES — the file is a log, not code, and another lane's entry belongs there as much as yours. Only once you've confirmed the item is actually on `main` do you move it to `ralph/DONE.md` with its real commit SHA.
 
 If your work is visual-affecting, run the blind `visual-judge` pass — but iterate render/critique/fix ENTIRELY IN YOUR OWN CHECKOUT and push once at the end. R9.4 pushed eight times for one three-round pass, ~36 minutes of CI, and that is the loop's largest avoidable cost.
 
-Verify the ship by looking at `main`, not at CI. `ralph-merge.yml` is fast-forward only: if `main` moved while you worked it refuses and goes red even though your tests passed. Rebase onto current `main` and push again. For `BACKLOG.md`/`DONE.md`/`BLOCKED.md` conflicts, KEEP BOTH SIDES — the file is a log, not code, and another lane's entry belongs there as much as yours.
-
 Throwaways go on `scratch/**`, never `ralph/**`. You cannot delete a remote branch from a session, so anything you push is permanent unless it ships.
 
-Schedule your successor 2–3 minutes out once you have shipped and recorded, and release your lease block first so your own successor does not read your area as held. Do not chain if your remaining work is `lane: art` — a self-resume does not inherit the key.
+RELEASE YOUR LEASE BLOCK (both your area and your lane heartbeat) AND END. Owner directive, 2026-08-12: do NOT schedule a successor, ever, under any circumstance — no `send_later`, no self-resume. Pausing the Routines was found not to stop work, because a chained firing ignores the pause; this is the fix. The next item on this lane happens at the next scheduled fire, not sooner. Do not take a second item in this same firing either, even if it shares your area and you have context left — one item per firing, full stop.
 
 Do not run Blender jobs in parallel; serial at `--size 512`.
 
 Stop and report rather than improvising when a core design decision is needed — `CLAUDE.md` requires surfacing those, not deciding them. A blocked item is a correct outcome; a quietly redesigned game is not. Two constants: FIVE creatures ever with no storage beyond five, and `docs/GAME_DESIGN.md` §32 is a list of things deliberately NOT built.
 
-Keep going while unblocked work remains in your area and you have context. Always stop at a task boundary, never mid-task.
+Always stop at a task boundary, never mid-task — and never take a second item, see above.
 
 ---
 
