@@ -30,6 +30,10 @@ var _model_yaw: float = 0.0
 var _config_key: String = ""
 var _cfg: Dictionary = {}
 
+## True while the body is posed lying flat rather than standing (OF8's wake
+## beat). See `set_lying()` for what this actually does to `_art`.
+var _lying: bool = false
+
 ## Shared across every character built by any instance of this script, so that
 ## two NPCs asking for the same base model, surface and colour draw with one
 ## Material resource instead of one each — the sharing `vegetation.gd`'s own
@@ -242,6 +246,53 @@ func _fit() -> void:
 		-box.position.y * fit,
 		-(box.position.z + box.size.z * 0.5) * fit
 	)
+
+
+## OF8: the wake beat's bed pose. Neither human rig has a lie-down clip —
+## `tools/art_pipeline/blender/animate_humanoid.py`'s `CLIPS` dict bakes
+## exactly idle/walk/sprint/jump/throw, and there is no reference art to
+## generate a sixth against (CLAUDE.md: no Meshy generation without an
+## owner-supplied board) — so this fakes the pose by tipping `_art` onto its
+## back rather than switching to a clip that does not exist. `play()` keeps
+## driving `idle` underneath it for the small breathing motion; only the
+## rig's overall orientation changes here.
+##
+## `_fit()` (above) already puts `_art`'s local origin at the character's own
+## feet, centred over the standing footprint, so rotating `_art` in place
+## pivots the body around its feet rather than sliding the whole rig
+## sideways — the pivot itself does not need to move for this to read as
+## "lying down starting from where they were standing".
+##
+## The angles are not hand-derived; Node3D's Euler composition was checked
+## with a throwaway script (`transform.basis * Vector3(...)` on a few
+## candidate rotations, off-tree, no scene needed) rather than assumed, after
+## an early hand calculation of the same numbers turned out wrong. Of the two
+## natural 90-degree tips, `(x=90, z=180)` is the one where the head end (the
+## art's own local +Y, "up") lands on world -Z — toward the headboard/pillow
+## end, the same end `BedPrompt` already sits over — while the face (`-Z`,
+## "forward") ends up pointing world +Y, up at the ceiling, rather than down
+## into the mattress. `model_yaw` is folded in for whichever way this
+## particular rig's front actually faces; today both human configs (trainer,
+## grandpa) declare `model_yaw: 0`, so it has no visible effect yet.
+func set_lying(lying: bool) -> void:
+	if _art == null or _lying == lying:
+		return
+	_lying = lying
+	if lying:
+		_art.rotation = Vector3(deg_to_rad(90.0), deg_to_rad(_model_yaw), deg_to_rad(180.0))
+	else:
+		_art.rotation = Vector3(0.0, deg_to_rad(_model_yaw), 0.0)
+
+
+func is_lying() -> bool:
+	return _lying
+
+
+## The art root's own local transform. Exists for the same reason
+## `body_material()` does — a test asserting the lying pose landed should not
+## have to reach into `_art` by hand to do it.
+func art_transform() -> Transform3D:
+	return _art.transform if _art != null else Transform3D()
 
 
 ## A palette swap on an existing rig (R7.2's villagers) rather than a second
@@ -461,6 +512,7 @@ func play(clip: String, looping: bool = true) -> void:
 	if animation != null:
 		animation.loop_mode = Animation.LOOP_LINEAR if looping else Animation.LOOP_NONE
 	_anim.play(clip, 0.18)
+
 
 ## OF5: keep foot cadence honest against the ground. A gait clip is authored
 ## for one body speed (art.json `gait_reference_speeds`, matching what

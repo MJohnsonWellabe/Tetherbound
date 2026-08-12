@@ -307,6 +307,35 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	add_child(body)
 
 
+## OF8. `_furnish`'s own "one simple blocker per piece" collider boxes the
+## model's FULL AABB, headboard included — measured directly against
+## `BedTwin.obj`'s vertices: local Y spans 0..1.56, so ~1.03m tall once
+## `FURNITURE_SCALE` is applied. A CharacterBody3D placed to rest ON that box
+## (the sequence director's own "into bed" staging did exactly this) therefore
+## settles at HEADBOARD height, not mattress height — confirmed with a
+## headless probe: the trainer's resting Y measured 0.465m above the "bed"
+## marker, matching this box's own top-minus-marker math (1.03 - 0.55 =
+## 0.48m) to within a few centimetres. That is the entire "the player starts
+## standing on the bed" bug (OF8): they are standing on the tallest point of
+## its bounding box, not lying in it.
+##
+## Capped here at 0.3m — the same gap the "bed" marker already sits above
+## this piece's own base (FLOOR_H + 0.55 vs FLOOR_H + 0.25, both already
+## written into `bed_at` above), so a body resting on THIS collider lands
+## at the same height the marker, `BedPrompt`, and the lying pose
+## (`sequence_director.gd`, `character_model.gd::set_lying`) already assume.
+## Full X/Z footprint kept, so the bed still blocks a straight walk-through
+## from the sides; only the height changed.
+func _bed_mattress_collider(at: Vector3) -> void:
+	var mesh: Mesh = load("%s/BedTwin.obj" % FURNITURE_DIR)
+	if mesh == null:
+		return
+	var aabb := mesh.get_aabb()
+	var mattress_h := 0.3
+	var size := Vector3(aabb.size.x * FURNITURE_SCALE, mattress_h, aabb.size.z * FURNITURE_SCALE)
+	_collider(size, at + Vector3(0, mattress_h * 0.5, 0))
+
+
 ## Clutter, through the same loader with a friendlier name at the call site:
 ## `solid` defaults false here rather than true, because the point of surface
 ## dressing — a knife, a backpack — is that nobody should ever be stopped by it.
@@ -335,7 +364,12 @@ func _build_furniture() -> void:
 	_furnish("ShortCloset", Vector3(half_w - 0.6, 0.12, 1.2), -90.0)
 	# The loft: the player's bed under the west eave, the nightstand at its
 	# foot, both clear of the lane from the bed to the stair head.
-	_furnish("BedTwin", Vector3(-half_w + 1.3, FLOOR_H + 0.25, -half_d + 1.9), 0.0)
+	#
+	# BedTwin gets its own collider rather than `_furnish`'s default
+	# full-AABB one (OF8 — see `_bed_mattress_collider`'s own comment for why).
+	var bed_at := Vector3(-half_w + 1.3, FLOOR_H + 0.25, -half_d + 1.9)
+	_furnish("BedTwin", bed_at, 0.0, FURNITURE_SCALE, FURNITURE_DIR, false)
+	_bed_mattress_collider(bed_at)
 	_furnish("NightStand", Vector3(-half_w + 0.55, FLOOR_H + 0.25, 0.6), 0.0)
 
 	# Past-minimum dressing (R7.2): both reviews called this room an undressed

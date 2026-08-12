@@ -52,6 +52,7 @@ const WALK_FRAMES := 1200
 var _failures: Array[String] = []
 var _world: Node = null
 var _player: CharacterBody3D = null
+var _model: Node3D = null
 var _rig: Node3D = null
 var _director: Node = null
 var _arbiter: Node = null
@@ -88,8 +89,10 @@ func _collect_nodes() -> bool:
 	_arbiter = _find_by_method(_world, "prompt")
 	_dialogue = _find_by_method(_world, "drain_effects") as CanvasLayer
 
+	_model = _player.get_node_or_null(^"Model") as Node3D
+
 	for pair in [["player", _player], ["director", _director],
-			["arbiter", _arbiter], ["dialogue", _dialogue]]:
+			["arbiter", _arbiter], ["dialogue", _dialogue], ["model", _model]]:
 		if pair[1] == null:
 			_fail("no %s in the booted scene" % pair[0])
 			return false
@@ -105,15 +108,38 @@ func _walk_off_the_bed_without_pressing_it() -> void:
 		_fail("expected to start in the 'wake' beat, got '%s'; this test is now vacuous" % beat)
 		return
 
+	# OF8: this walk never touches BedPrompt, so it is the one path that can
+	# only reach "standing" through trainer_model.gd's own auto-clear on
+	# movement, never through sequence_director's explicit call on the
+	# prompt. If that self-clear regressed, this is the only test that would
+	# notice — smoke_opening's own get-up check always goes through the
+	# prompt.
+	if not bool(_model.call("is_lying")):
+		_fail("expected the trainer lying down at the start of 'wake'; nothing here would be testing the walk-away exit")
+		return
+
 	var start := _player.global_position
-	# Straight out and down. Direction does not matter — the contract is that
-	# leaving the bed at all ends the beat, not that one route does.
-	var away := start + Vector3(0.0, 0.0, 6.0)
+	# Diagonally into the room rather than a single axis: OF8 puts the
+	# trainer's feet at the FOOT of the bed to lie down correctly
+	# (grandpa_house.gd places NightStand at that same end, "at its foot",
+	# on purpose) and the bed itself sits under the loft's west eave, so a
+	# straight walk on any single axis from there clips either the
+	# nightstand or the low roof slope within a couple of metres — measured
+	# directly: +X moved 2.8m before stopping, +Z 1.9m, -Z 2.7m, none past
+	# this test's own 3.5m floor. +X-Z (measured 5.0m clear) is the one that
+	# does not. The contract this test cares about (leaving the bed at all
+	# ends the beat, not that one route does) does not depend on which clear
+	# direction is picked, only that it is one that actually leaves.
+	var away := start + Vector3(6.0, 0.0, -6.0)
 	await _walk_toward_point(away, WALK_FRAMES)
 
 	var moved := _player.global_position.distance_to(start)
 	if moved < 3.5:
 		_fail("only moved %.1fm off the bed; the walk did not leave the loft, so nothing was tested" % moved)
+		return
+
+	if bool(_model.call("is_lying")):
+		_fail("walked %.1fm off the bed without pressing it and the trainer is still posed lying down" % moved)
 		return
 
 	beat = str(_director.call("beat"))

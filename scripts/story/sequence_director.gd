@@ -61,6 +61,17 @@ const NAME_KEY := "name"
 ## encounter_director.GROUND_WAIT_FRAMES.
 const GROUND_WAIT_FRAMES := 300
 
+## OF8. How far, along the bed's own length, the player's feet land from the
+## "bed" marker — which sits near the headboard/pillow end (confirmed against
+## `BedTwin.obj`'s vertices: the marker falls just past the taller, more
+## decorative end of the two). Feet-out rather than head-out because
+## `character_model.gd::set_lying()`'s rotation pivots the body around its
+## feet and swings the head end toward -Z from there; 1.5m lands the feet at
+## the OTHER (shorter, footboard) end of the same mesh, which is the mattress
+## actually being roughly the trainer's own height (~1.8m) long inside its
+## frame. TUNABLE — a different bed model changes both numbers.
+const BED_LIE_REACH := 1.5
+
 ## Above the dialogue panel (5) and the naming panel (6), below the pause menu
 ## (20). A fade-in that the HUD draws over is not a fade-in.
 const FADE_LAYER := 15
@@ -488,13 +499,25 @@ func _spawn_the_cast() -> void:
 	var cfg := BEATS.grandpa()
 
 	if house != null:
-		# Into bed. The world's own _place_player already ran (the house is
-		# only built after it), so nothing later overwrites this.
+		# Into bed, lying down (OF8) rather than standing on top of it. The
+		# world's own _place_player already ran (the house is only built after
+		# it), so nothing later overwrites this.
+		#
+		# X centred on the mattress rather than the old +0.6m offset (which
+		# put a standing capsule near the mattress edge and relied on being
+		# shoved elsewhere by grandpa_house.gd's now-fixed collider); Z
+		# shifted BED_LIE_REACH toward the foot of the bed, so set_lying()'s
+		# rotation swings the head back to roughly where the marker — and
+		# BedPrompt — already are. Y just above the marker's own height: the
+		# mattress collider grandpa_house.gd builds now tops out AT that
+		# height, so gravity and floor-snap settle the capsule there in the
+		# next physics tick rather than fighting a taller box.
 		var bed: Vector3 = house.call("marker", "bed")
-		_player.global_position = bed + Vector3(0.6, 0.4, 0.0)
+		_player.global_position = Vector3(bed.x, bed.y + 0.05, bed.z + BED_LIE_REACH)
 		_player.velocity = Vector3.ZERO
 		_bed_anchor = bed
 		_build_bed_prompt(house)
+		_set_player_lying(true)
 	else:
 		# NO HOUSE. The comment above used to claim "the old open-meadow staging
 		# still works" here. It did not, and could not: without a house there is
@@ -564,7 +587,21 @@ func _build_bed_prompt(house: Node3D) -> void:
 func _on_bed_activated() -> void:
 	if _beat != BEATS.WAKE:
 		return
+	_set_player_lying(false)
 	_set_beat(BEATS.HOUSE)
+
+
+## OF8. `trainer_model.gd::_process()` also clears this on its own the
+## instant the trainer starts moving — belt and suspenders with the explicit
+## calls here, not a replacement for them: that self-clear covers the walk-
+## off-the-mattress fallback frame by frame, while this is the definitive
+## "the wake beat is over" moment either exit routes through.
+func _set_player_lying(lying: bool) -> void:
+	if _player == null:
+		return
+	var model := _player.get_node_or_null(^"Model")
+	if model != null and model.has_method("set_lying"):
+		model.call("set_lying", lying)
 
 
 ## Getting out of bed ends the wake beat, however you do it.
@@ -609,6 +646,7 @@ func _check_left_the_bed() -> void:
 		return
 	if _player.global_position.distance_to(_bed_anchor) < BED_LEAVE_RADIUS:
 		return
+	_set_player_lying(false)
 	_set_beat(BEATS.HOUSE)
 
 

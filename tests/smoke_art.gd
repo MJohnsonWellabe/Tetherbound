@@ -170,6 +170,19 @@ func _the_trainer_has_a_model_and_animations() -> void:
 		_fail("the trainer has no AnimationPlayer; it will stand rigid in every frame")
 		return
 
+	# OF8: this scene boots straight into the wake beat, which starts the
+	# trainer POSED LYING DOWN in bed (`character_model.gd::set_lying`) and
+	# nothing here drives the opening far enough to stand them back up. A
+	# height check below measured against that pose would be measuring the
+	# body's flat-on-its-back thickness, not its height, and fail loudly for
+	# a reason that has nothing to do with whether the rig loaded at the
+	# right size — confirmed directly: 0.62m instead of 1.80m the first time
+	# this ran after OF8 landed. Standing them up first makes this test
+	# measure the same thing regardless of which beat the scene happens to
+	# be in; `smoke_opening.gd` is what actually exercises the lying pose.
+	if model.has_method("set_lying"):
+		model.call("set_lying", false)
+
 	# Every clip the config asks for has to exist under the name it asks for.
 	# A mistyped clip name is a trainer frozen in a T-pose, which no test that
 	# reads state can see.

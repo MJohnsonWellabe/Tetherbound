@@ -86,6 +86,7 @@ var _failures: Array[String] = []
 var _world: Node = null
 var _game: Node = null
 var _player: CharacterBody3D = null
+var _model: Node3D = null
 var _rig: Node3D = null
 var _director: Node = null
 var _arbiter: Node = null
@@ -112,6 +113,7 @@ func _run() -> void:
 		_report()
 		return
 
+	_the_trainer_starts_lying_in_bed()
 	await _the_trainer_can_walk()
 	await _the_trainer_gets_up_from_the_bed()
 	await _the_door_is_gated_until_grandpa_is_heard()
@@ -168,6 +170,10 @@ func _collect_nodes() -> bool:
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	if _player == null or _rig == null:
 		_fail("the scene has no Player or no CameraRig; this is not the meadows playground")
+		return false
+	_model = _player.get_node_or_null(^"Model") as Node3D
+	if _model == null or not _model.has_method("is_lying"):
+		_fail("the player's Model node is missing or does not answer is_lying(); OF8's lying pose is not wired")
 		return false
 
 	# By script rather than by node path. The director is placed by agent D2 and
@@ -228,6 +234,17 @@ func _the_trainer_can_walk() -> void:
 	_fail("the trainer never got control; six seconds of holding forward moved them %.2fm" % moved)
 
 
+## OF8. The opening used to place the trainer standing on TOP of the bed —
+## visible the instant the fade cleared, before any prompt is ever pressed —
+## so this is checked as early as possible, right after boot and before
+## `_the_trainer_can_walk()` gets a chance to move (and clear) it.
+func _the_trainer_starts_lying_in_bed() -> void:
+	if not bool(_model.call("is_lying")):
+		_fail("the trainer is not lying down at the start of the wake beat; OF8's bed pose never applied")
+		return
+	print("wake: the trainer starts lying in bed")
+
+
 ## The wake beat: the opening starts in the loft bedroom of Grandpa's
 ## farmhouse, and the first gate is the bed's own "Get up" prompt. If the
 ## prompt is not offered, either the house never built or the bed prompt was
@@ -244,7 +261,12 @@ func _the_trainer_gets_up_from_the_bed() -> void:
 	if str(_director.call("beat")) == "wake":
 		_fail("getting up did not advance the wake beat")
 		return
-	print("wake: got up from the bed, beat is now '%s'" % str(_director.call("beat")))
+	# OF8: the whole point of the button — lying flips back to standing
+	# through this exact interaction, not just eventually via movement.
+	if bool(_model.call("is_lying")):
+		_fail("beat advanced past 'wake' but the trainer is still posed lying down")
+		return
+	print("wake: got up from the bed, beat is now '%s', standing again" % str(_director.call("beat")))
 
 
 ## The gifts. Grandpa's conversation carries give: effects on the lines that

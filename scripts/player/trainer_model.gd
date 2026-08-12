@@ -31,6 +31,17 @@ func _process(delta: float) -> void:
 	if animation_player() == null or _player == null:
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
+	# OF8's other exit from the bed: `sequence_director.gd` clears lying on
+	# the "Get up" prompt, but its own soft-lock fallback (`smoke_wake_
+	# softlock.gd`) lets the player just walk off the mattress instead, and
+	# that beat change only fires once they cross a 3.2m radius. Without this,
+	# the body would keep sliding across the floor in the flat bed pose for
+	# every metre of that radius. Speed alone, not `is_on_floor()`: the
+	# trainer isn't reliably grounded the instant it starts moving off a
+	# raised mattress, and the thing that actually means "getting up now" is
+	# the player asking to move, not where physics has settled them yet.
+	if is_lying() and float(_player.call("ground_speed")) > 0.4:
+		set_lying(false)
 	# Only the throw is a committed one-shot (timed by _throwing_for); idle,
 	# walk, sprint and jump are all states the trainer can hold indefinitely
 	# and must loop — see character_model.gd's play() for why that matters.
