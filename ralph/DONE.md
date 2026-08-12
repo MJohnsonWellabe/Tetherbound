@@ -65,6 +65,66 @@ verified green (`9b1b60c`) — the four files this item owns
 had moved — and fast-forward-pushed straight to `main`, the same sanctioned
 exception `SA6` used earlier.
 
+## EV6-export-crash — Cached prefab templates leaked at engine shutdown, corrupting the heap and crashing the exported build
+`153f2eb` · `tests: smoke_opening, smoke_traversal, smoke_art` all green
+headless, plus `tools/verify_export.sh` (the actual gate this was caught
+by) green after the fix, run three times across three checkouts to isolate
+the cause first.
+
+**Found by accident and worth naming as a process gap, not just a bug.**
+`ci.yml`'s `export` job — the only check that actually runs the exported
+Linux/Windows binary and confirms it reaches a clean exit — only runs on a
+push to `main` or a `workflow_dispatch`, never on a routine `ralph/**`
+branch push. `ship_branch.sh`'s rebase-retry path dispatches CI via
+`workflow_dispatch` when main moves under a branch, which incidentally
+enables the export job as a side effect. `main` moved three times under
+this session's `ralph/EV6` in short order (other lanes shipping), so the
+rebase path fired three times and the third dispatch happened to be the
+first time this branch's export job ever ran. It failed for real: exit
+code 134, and a local repro with `xvfb-run` + `gdb -batch` caught the
+actual crash — `free(): invalid next size (normal)`, `SIGABRT`, right
+after hundreds of `Buffer with GL ID of NNNN: leaked N bytes` warnings
+from `RenderingServer`'s own shutdown teardown.
+
+**Root cause, isolated with three side-by-side local exports (`main`,
+EV6 before the farmhouse-shell follow-up, EV6 with it) rather than
+guessed:** `main` — 0 leaked buffers, clean exit. Both EV6 states —
+crash, confirming the bug is in EV6's original settlement rebuild itself,
+not anything built on top of it. `building_prefabs.gd::_build_template()`
+builds a real `Node3D` tree (with `MeshInstance3D` children, real meshes
+and materials) and caches it in `_templates` forever — correct and
+intentional, every placement `duplicate()`s it — but never parents it
+into the `SceneTree` and never frees it. A `Node` is not ref-counted the
+way a `Resource` is: an orphan `Node` holding a live `RenderingServer` RID
+is only cleaned up through the tree's own cascading free on shutdown, and
+a template that was never parented anywhere skips that path entirely. Its
+GPU-side resources are still alive when `RenderingServer` tears down its
+own bookkeeping — which is exactly what the "leaked" warnings report —
+and with enough orphans (`village.gd`'s five-plus building types, plus
+`grandpa_house.gd`'s `farmhouse_shell` and `road_gate.gd`'s
+`road_gate_leaf`, each building its own separate `BuildingPrefabs`
+instance with its own private cache) the allocator corrupts on the way
+out.
+
+**Fix**: `building_prefabs.gd` gained `set_template_holder(holder:
+Node3D)` — every cached template now gets parented (hidden, `visible =
+false`) under a holder the caller already has in the tree, instead of
+being left an orphan. Wired into all three callers (`village.gd`,
+`grandpa_house.gd`, `road_gate.gd`), each of which already had a live
+`self` to hang a hidden holder child off. Verified with a real
+before/after on the identical branch state: 499 leaked buffers and a
+crash without the fix, 0 leaked buffers and a clean exit with it.
+
+**Worth flagging for whoever next touches CI**: this class of bug is
+invisible to every other check in the pipeline (unit tests, the four smoke
+scenarios, the plain "is it a PE32+/ELF binary over 10MB" check) because
+none of them run the actual exported binary to a real exit. It was only
+caught this time because of an unrelated scheduling accident. Whether
+`export`'s clean-exit check should run on every `ralph/**` push (cost:
+every branch CI run gets slower by however long an export + xvfb run
+takes) or stay opportunistic is a real tradeoff, not a bug — flagging
+rather than deciding it here.
+
 ## EV3-remainder-6 — Tried the item's own "denser ground cover" lever, real result, no ship: it recreated the flanking pattern instead of curing under-clustering
 `tests: run_tests.gd` (344/344 with the attempt's new tests, reverted with the
 attempt). No code shipped this item — the finding is the deliverable, same
