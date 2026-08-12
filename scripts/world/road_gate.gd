@@ -26,6 +26,7 @@ const UNLOCKED_CONVERSATION := "road_gate_unlocked"
 var _mesh: MeshInstance3D = null
 var _shape: CollisionShape3D = null
 var _prompt: Node3D = null
+var _lock: MeshInstance3D = null
 var _open := false
 
 
@@ -51,6 +52,26 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	add_child(_mesh)
 
 	var aabb: AABB = (_mesh.mesh as Mesh).get_aabb()
+
+	# A dark latch box at the panel's own centre. `Fence2` is decorative
+	# fencing everywhere else it's placed (village.json) — with no leaf,
+	# hinge or hardware of its own, one more length of it read as ordinary
+	# property fencing rather than as something deliberately shut, per the
+	# blind pass's own finding. A child of `_mesh` so it swings open with
+	# the panel rather than needing its own re-pose.
+	_lock = MeshInstance3D.new()
+	_lock.name = "Lock"
+	var lock_box := BoxMesh.new()
+	lock_box.size = Vector3(0.16, 0.16, 0.24)
+	_lock.mesh = lock_box
+	var lock_material := StandardMaterial3D.new()
+	lock_material.albedo_color = Color(0.1, 0.09, 0.08)
+	lock_material.metallic = 0.7
+	lock_material.roughness = 0.35
+	_lock.material_override = lock_material
+	_lock.position = Vector3(0.0, aabb.position.y + aabb.size.y * 0.55, 0.0)
+	_mesh.add_child(_lock)
+
 	var body := StaticBody3D.new()
 	body.name = "GateCollision"
 	_shape = CollisionShape3D.new()
@@ -97,6 +118,7 @@ func _on_tried() -> void:
 func _unlock() -> void:
 	_open = true
 	_shape.disabled = true
+	_lock.visible = false
 	# Swing the same panel parallel to the road it was blocking — an instant
 	# re-pose rather than an animation, this file's own header explains why.
 	_mesh.rotation.y += deg_to_rad(90.0)
