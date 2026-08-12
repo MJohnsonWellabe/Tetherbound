@@ -192,6 +192,85 @@ still_tint_the_way_r7_2_shipped`) only asserts a tint is applied at all
 value changes and stayed green throughout. Confirmed with a real headless
 run (exit 0) after the final tint landed, not assumed.
 
+## EV4-textures-lighting-remainder-2 — The two remaining untested levers, tested: one ruled out cleanly, one narrowed to a specific real mechanism. No code shipped — the findings are the deliverable, same pattern as this item's own prior round.
+`tests: none (visual)` item's own field; 362/362 full suite green (unaffected
+— no code shipped, every experiment reverted, working tree byte-identical
+to before this pass on every file that matters — see below on the terrain
+`.res` files specifically). `9c4320b` (new diagnostic tool, the only real
+commit this round).
+
+`EV4-textures-lighting-remainder`'s own investigation named two untested
+levers and stopped there: the auto-shader blend zone, and the albedo
+photos' actual content at the real in-game UV/detiling transform (both
+JPGs were only eyeballed at full-tile scale before). This item tested both
+directly.
+
+**Lever 1 (photo content) — ruled out cleanly.** Direct histogram analysis
+of both source JPGs (`Grass008_Color.jpg`, `Ground030_Color.jpg`, the
+`grass` and `path` textures per `terrain_playground.json`): neither has a
+single pixel below 40% of its own mean luminance (grass min 0.274 vs mean
+0.465; path min 0.279 vs mean 0.610). No UV/detiling transform of either
+photo can produce a near-black patch, because neither photo contains
+anything dark enough anywhere. A structural ruling-out, not a UV-position-
+specific one — stronger evidence, not weaker, since it holds regardless of
+exactly where on the photo the real in-game sampling lands.
+
+**Lever 2 (auto-shader/control-map blend zone) — real signal found, one
+specific sub-mechanism ruled out, the actual cause narrowed but not yet
+found.** Wrote `tools/diag_control_texture.gd` (new, committed), which
+toggles Terrain3D's `show_control_texture` debug view — pure per-cell
+texture-ID/blend-weight data, zero PBR shading — the same diagnostic class
+`show_colormap` already used successfully to rule out the baked vertex-
+colour layer. Re-rendered both of the item's own named viewpoints
+(`square-convergence`, `the-rise-route`) in this debug view:
+
+- **The patch survives, and correlates with real control-map data.** Both
+  frames show clusters of discrete oval "holes" of `grass` (texture id 0,
+  rendered red in this debug palette) punched into what should be solid
+  `path` (rendered magenta) — spatially matching where the dark patch
+  appears in the normally-shaded renders. This rules IN the control-map
+  layer as a real contributor (`show_colormap`'s earlier all-clear was
+  about the vertex-COLOUR map specifically, a different layer) and rules
+  OUT every one of the five previously-tested shading mechanisms as the
+  *sole* cause — none of them change which texture ID a cell holds, only
+  how an already-assigned texture is lit.
+- **Direct experiment ruled out the specific mechanism first suspected.**
+  `build_playground_terrain.gd::_path_control()`'s dominant/dither tie-
+  break (`playground_heightfield.gd::path_dominant_dither`) was the
+  obvious first suspect — its own doc comment describes spreading a
+  texture pick stochastically near path/slope-band boundaries. Raised its
+  early-exit threshold from `path_weight >= 0.999` to `>= 0.5` (a scratch
+  edit, reverted before commit — see below) and rebaked: the oval pattern
+  in both frames was **pixel-for-pixel identical** to the unmodified bake.
+  If the dither/dominant logic were the cause, forcing solid path
+  everywhere path_weight is even weakly on-path should have removed ovals
+  sitting well inside that threshold. It removed none. This mechanism is
+  ruled out.
+- **What's left, narrowed.** Since raising the "how close to on-path
+  counts as solid path" threshold changed nothing, the ovals most likely
+  are not a *blend-weight* artifact at all — they are more likely genuine
+  gaps in `playground_heightfield.gd::path_factor()`'s own coverage: real
+  positions where nearest-distance-to-route-segment is NOT small even
+  though the position reads visually as "the middle of the path" (both
+  named frames are near junctions/convergence points — `square-
+  convergence` literally where three routes meet, `the-rise-route` at an
+  open first leg — where several thin route segments may not tile into
+  full coverage of what looks like one continuous path). Whoever picks
+  this up next should instrument `path_factor` directly (dump real values
+  across a grid against the actual `routes` waypoint data for these two
+  locations) rather than re-testing blend/dither logic, which this round
+  already closed.
+
+**Experiment hygiene.** The `_path_control` threshold edit and the
+terrain rebake it required were both reverted before committing — the
+`.gd` source is back to its exact prior content, and the regenerated
+`data/terrain/playground/*.res` files were discarded (`git checkout --`)
+rather than committed: a clean re-bake of unchanged config produced
+byte-different-but-semantically-identical `.res` output (Terrain3D's own
+serialization isn't perfectly deterministic run to run), so the honest
+move was discarding the diff rather than shipping unexplained binary
+churn on files nothing in this round actually needed to change.
+
 ## EV4-textures-lighting-remainder — Five mechanisms ruled out with direct evidence; the dark near-camera patch survives all of them. No code shipped — the findings are the deliverable, same pattern as EV3-remainder-6.
 `tests: none (visual)` — no code changed; every experiment below was reverted.
 `data/config/terrain_playground.json` and `data/config/art.json` are both

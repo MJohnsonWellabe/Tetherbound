@@ -490,14 +490,21 @@ toggling `shadow_enabled`), but the Barn is gone now and disabling
 `shadow_enabled` today changes nothing — a different, still-unidentified
 mechanism produces the same-looking defect on the geometry that replaced it.
 No code shipped this round (every experiment reverted, config files
-byte-identical to before). Two real levers remain genuinely untested by
-direct render rather than by inspection: the auto-shader's blend zone at the
-grass/path texture boundary, and the albedo photos' actual content at the
-specific UV/detiling position these world coordinates land on (both source
-JPGs were only eyeballed at full-tile scale, not sampled at the real
-in-game tiling transform). Done when: a blind critic given any of the four
-`tools/capture_paths.gd` frames stops naming an unmotivated dark patch, or
-explicitly traces it to a visible object.
+byte-identical to before). Two real levers remained genuinely untested by
+direct render rather than by inspection at the time — see
+`EV4-textures-lighting-remainder-2` below for both.
+
+**`EV4-textures-lighting-remainder-2` (both remaining levers tested: photo
+content ruled out, blend-zone narrowed to a specific mechanism) shipped, no
+code — see `DONE.md`.** Photo content is cleanly ruled out (neither source
+JPG has a pixel dark enough anywhere). The control map genuinely does show
+grass "holes" punched into the path where the patch appears (real signal,
+confirmed via `tools/diag_control_texture.gd`'s new `show_control_texture`
+debug view), but a direct experiment ruled out the dominant/dither blend
+logic as the specific cause. Narrowed to `path_factor`'s own route-geometry
+coverage as the next thing to instrument directly. Done when: a blind
+critic given any of the four `tools/capture_paths.gd` frames stops naming
+an unmotivated dark patch, or explicitly traces it to a visible object.
 
 **`EV4-hillside-seam` (blotchy hillside slope material) rounds 1-4 shipped —
 see `DONE.md`.** Rock went from mathematically unreachable (round 2's wider
