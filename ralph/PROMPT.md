@@ -174,6 +174,48 @@ it. So:
 Note that in-engine survey and screenshot renders need **no** key. Only Meshy
 generation and retexture do.
 
+### `model: fable` items — dispatch, don't author
+
+Owner directive, 2026-08-12. Unlike every other `model:` value, `fable` is not
+advisory ("the cheapest tier that can do the job") — it names a real ceiling.
+These items are ceiling-setting narrative or aesthetic authorship: world-
+building, story beats, dialogue, or a "does this actually look right" visual-
+direction judgment call. A weaker first pass on this class of work becomes the
+ceiling nothing later can rescue — this is not theoretical, it already
+happened once in this exact backlog: `R9.4` ran an uncapped, multi-round blind-
+critique loop against an already-built scene, converged, and both critics
+still ranked "needs art that is not in the build" first. The entry's own
+conclusion was that it had "run out of things tuning could reach." Tuning a
+weak first draft cannot substitute for authoring the right one.
+
+**Any lane that reaches the topmost unblocked `model: fable` item does not do
+that item's creative work in its own session.** Instead:
+
+1. Claim the lease as you normally would (same area rules as any other item).
+2. Spawn a single subagent at `model: fable` (the Agent tool's `model`
+   parameter) and hand it the item's full context: the `### ID` entry itself,
+   the relevant section(s) of `docs/GAME_DESIGN.md` /
+   `docs/MEADOWS_PROGRESSION_SPEC.md` / the art bible it cites, and this
+   file's usual "smallest coherent version" instruction. That subagent owns
+   the actual authorship — the world text, the dialogue, the aesthetic
+   judgment calls.
+3. **The Fable subagent should itself delegate purely mechanical sub-steps —
+   wiring the data/dialogue into the existing systems, writing or running
+   tests, git bookkeeping, asset staging — to `model: opus` subagents of its
+   own**, rather than spending its own context on work that doesn't need
+   taste. It stays the author and the judge; it is not the one running
+   `godot --headless --import`.
+4. Ship exactly as any other item: test, push to `ralph/<task-id>`, record in
+   `DONE.md`.
+
+**If Agent-tool subagent spawning isn't available in your checkout** (this has
+happened before — see the `R7.2` blind-pass entry in `DONE.md`), say so
+honestly in your bookkeeping the same way that entry did, rather than quietly
+doing the work yourself at the wrong tier. A `model: fable` item done at a
+lower tier and reported as done is worse than one left open with an honest
+note, because it consumes the one shot this class of work gets before the
+ceiling is baked in.
+
 ### Before spending a single credit
 
 The balance is **5000** and is no longer the constraint. **Owner-supplied

@@ -7,6 +7,17 @@ directive 2026-08-09, D21): the loop lists them in `BLOCKED.md`'s play-gate
 section for the owner and keeps building past them. `🔒` needs Meshy credits.
 `model:` the cheapest tier that can do the job. `tests:` exactly what to run.
 
+**`model: fable` (owner directive, 2026-08-12) is not "the cheapest tier that
+can do the job" — it is a hard floor.** These items are ceiling-setting
+narrative or aesthetic authorship (world-building, story beats, dialogue, or
+"does this actually look right" visual-direction judgment calls) where a
+weaker first pass becomes the ceiling a later pass can't rescue — `R9.4`'s own
+history is the proof: an uncapped multi-round critique loop against an
+already-built scene still hit a wall neither critic could tune past. **Any
+firing that reaches a `model: fable` item must not do the creative work in its
+own session, regardless of which lane it is** — see `ralph/PROMPT.md`'s
+"Fable-tagged items" section for the dispatch rule.
+
 **Standing task, every visual milestone:** re-shoot the website's screenshots
 after any milestone that changes how the game looks (this rewrite, D18/D19's
 overhaul, is the precedent — the site had claimed "sourced stand-ins" months
@@ -441,13 +452,13 @@ gives the bake real tree-placement data to key off. Whoever picks up that
 layer should reach for it directly rather than re-sourcing.
 
 ### EV5 — Water
-`model: opus` · `tests: smoke_traversal` · `area: terrain`
+`model: fable` · `tests: smoke_traversal` · `area: terrain`
 Bible §15. A pond and stream: readable stylised surface, shallow-edge colour
 shift, reeds at the banks, no expensive simulation. Answers the open question in
 `R7.1-remainder-2` and gives Band 3's river somewhere to start.
 
 ### EV6 — Rebuild the settlement on one architectural family
-`model: opus` · `tests: smoke_opening, smoke_traversal` · `area: village`
+`model: fable` · `tests: smoke_opening, smoke_traversal` · `area: village`
 Bible §12. Medieval Village MegaKit as the one civilian vocabulary; prefabs
 built once from modules, not assembled from loose pieces at runtime. Every
 building grounded — flattened terrain only where needed, grass transitions,
@@ -456,7 +467,7 @@ and half of `-5`. Grandpa's house was rebuilt by R9.4 and may or may not survive
 the kit; judge it against the family rather than preserving it out of sentiment.
 
 ### EV7 — Prop clusters that imply a purpose
-`model: sonnet` · `tests: none` · `area: village`
+`model: fable` · `tests: none` · `area: village`
 Bible §2 P3: *do not* dump props everywhere. Authored clusters — work area,
 farmhouse yard, bridge repair site, quarry station, trainer camp. Absorbs the
 rest of `R9.4-remainder-5`.
@@ -558,7 +569,7 @@ during a fight or when `encounter_director` genuinely has its own engage
 offer, never as a mirror of an unrelated exploration prompt.
 
 ### EV10 ▶ — Cohesion pass
-`model: sonnet` · `tests: none` · `area: visual`
+`model: fable` · `tests: none` · `area: visual`
 Bible §22 Phase G and §23's metrics. Re-shoot the same viewpoints, blind-judge
 against both reference sets, fix the three biggest gaps, repeat until further
 improvement is asset-quality-limited rather than composition-limited.
@@ -672,7 +683,7 @@ player can see at every bearing, and a teleport below the terrain returns the
 player to safety instead of falling forever.
 
 ### SA4 — Seven outward spokes, each believably severed
-`model: sonnet` · `tests: smoke_traversal`
+`model: fable` · `tests: smoke_traversal`
 Spec §1E and §29. Seven routes leave the perimeter — river gorge (Water), old
 storm road (Electric), mountain trail (Fire), high pass (Ice), cliff road
 (Air), ancient stone gate (Psychic), sealed blighted road (Dark) — each blocked
@@ -1425,7 +1436,7 @@ sensitivity, fine-aim exponent, piecewise snap assist, cancel during windup.
 Whether it now *feels* satisfying (§33 criterion 3) is R0.11's and R4.12's
 question, not a build task.
 
-### R4.10 — The release ceremony · `model: opus` · `tests: test_party, smoke_release` (new)
+### R4.10 — The release ceremony · `model: fable` · `tests: test_party, smoke_release` (new)
 `party.add()` refuses a sixth creature and there is no ritual. The slice
 warns it must not be "a generic delete dialog" — it is the emotional payload
 of the five-creature rule, and since D18 the five-cap has a physical body in
@@ -1563,7 +1574,7 @@ rather than one long trainer tunnel. It is the substrate for everything in 8a
 through 8e, not a single encounter.
 
 ### SC12 — Mira, Oskar and Tam become the three Band 1 trainers
-`model: sonnet` · `tests: test_dialogue_runner`
+`model: fable` · `tests: test_dialogue_runner`
 Spec §3 Band 1 and §35. **These three already exist** —
 `data/config/village_npcs.json` places Mira, Oskar and Tam around the well with
 greetings in `data/dialogue/village.json`, and the spec names the same three
@@ -1609,7 +1620,7 @@ nobody here knows about the legendary. Done when: the quarry is reachable past
 the South Bridge and yields Rootstone.
 
 ### SD17 — Burrow Warrens, the required dungeon
-`model: opus` · `tests: smoke_traversal, smoke_combat`
+`model: fable` · `tests: smoke_traversal, smoke_combat`
 Spec §3 Band 2. A compact cave: aggressive Ground creatures, Rootstone
 deposits, chamber navigation, a guardian fight, one rare side branch. **The
 guardian is a strong normal species — the spec says outright not to invent
@@ -1630,7 +1641,7 @@ something the player already owns.
 ### 8c — the river and the relay (spec Phase E)
 
 ### SE21 — A real river divides the deeper Meadows
-`model: opus` · `tests: smoke_traversal`
+`model: fable` · `tests: smoke_traversal`
 Spec §3 Band 3. Also closes a question the visual pass left open:
 `R7.1-remainder-2`'s second bullet found "no middle-distance layering anywhere
 in the set (no tree lines, ridgelines, or water)" and asked outright whether a
@@ -1647,7 +1658,7 @@ knows the mechanism. Freeing them (`SE27`) yields the Mill Bridge Gear
 impassable before the rescue and passable after, with no menu in between.
 
 ### SE23 — The Tether Relay Station
-`model: opus` · `tests: smoke_traversal`
+`model: fable` · `tests: smoke_traversal`
 Spec §3 Band 3. The first mini-stronghold: a natural site partly
 industrialised, a compact traversal and environment challenge, and the moment
 Team Tether stops being something Grandpa described and becomes a threat the
@@ -1682,7 +1693,7 @@ made rather than natural. They return to the settlement afterward (`SG46`,
 changed.
 
 ### SE30 — The reveal ladder, laid in
-`model: sonnet` · `tests: test_dialogue_runner`
+`model: fable` · `tests: test_dialogue_runner`
 Spec §32. Villagers know travel is controlled and trade restricted, and no
 more. The quarry shows conduits. The relay shows energy routing and a captured
 investigator. The captive knows the separation is artificial but **not** that a
@@ -1705,7 +1716,7 @@ iron. Keep the economy small and readable. Done when: nothing needed for the
 stronghold requires a third new material.
 
 ### SF33 — Standing at a Rift and seeing the next region
-`model: sonnet` · `tests: none`
+`model: fable` · `tests: none`
 Spec §29, §34 Act V. `SA4` built the seven spokes; this makes the Upper Meadows
 ones legible as **severed roads**: major conduits and pylons, roadbed
 continuing on the far side of an unnatural seam, land visible across it, old
@@ -1722,7 +1733,7 @@ repeated along a line. That repetition is what sells "severed road" — one
 pylon is a prop, a receding row of them is infrastructure. `lane: art`.
 
 ### SF34 — Three regional captains, three Sigils
-`model: sonnet` · `tests: smoke_trainer_battle`
+`model: fable` · `tests: smoke_trainer_battle`
 Spec §3 Band 4. Field Captain (Ground team, Field Sigil), Ridge Captain (Air,
 Ridge Sigil), Riverwatch Captain (Water/balanced, River Sigil), all on `SB8`'s
 captain palette with one regional accent each. The three physical Sigils open
@@ -1763,7 +1774,7 @@ before the Tether Chamber, and a recovery opportunity before the Warden. Two to
 four battles across the five named spaces. Done when: a prepared team clears it
 inside an hour and an unprepared one does not.
 
-### R8.3 — The Warden boss fight · `model: sonnet` · `tests: smoke_boss` (new) · M14
+### R8.3 — The Warden boss fight · `model: fable` · `tests: smoke_boss` (new) · M14
 His face is still painted, not modelled — needs a real sheet before this is
 judged (HANDOFF §6). Note §20 covers *creatures*; a Warden face pass is still
 legal under §22's budget. Spec §33 gives the character: he sincerely believes
@@ -1772,19 +1783,19 @@ Not a moustache-twirler. His line is closer to "You don't understand what these
 barriers are holding apart" than "You cannot stop me."
 
 ### SG40 — The reveal: the legendary is the power source
-`model: sonnet` · `tests: test_dialogue_runner`
+`model: fable` · `tests: test_dialogue_runner`
 Spec §28, §32, §33. Inside the stronghold and nowhere earlier — `SE30` holds
 the rest of the ladder. The Warden warns rather than gloats, and genuinely
 believes freeing it is reckless. Done when: the reveal happens in the
 stronghold and the player makes the choice knowing what it costs.
 
-### R8.4 — Free the legendary; it offers to join; triggers the release ceremony if full · `model: sonnet` · `tests: smoke_boss`
+### R8.4 — Free the legendary; it offers to join; triggers the release ceremony if full · `model: fable` · `tests: smoke_boss`
 Spec §28's order, which is not optional: reach the chamber → the legendary is
 freed → it **voluntarily** offers to join → the five-creature decision if the
 roster is full (R4.10) → the tether machinery fails → `SG44`'s world event.
 
 ### SG44 — The first Tether Rift collapses and the world gets bigger
-`model: opus` · `tests: smoke_boss`
+`model: fable` · `tests: smoke_boss`
 Spec §27, §28, §30. The machinery fails, the exterior event runs, and one
 severed spoke visibly reconnects — a distant landmass moving closer, a ravine
 contracting, roots bridging a gap, a storm wall dissipating. **The carve-out is
@@ -1798,7 +1809,7 @@ believable barrier. If that reads as an unsatisfying payoff, it is a
 horizons — and the player still cannot walk into the next region.
 
 ### SG46 — The Meadows answers
-`model: sonnet` · `tests: test_progression_state`
+`model: fable` · `tests: test_progression_state`
 Spec §9. Barriers deactivate, patrol density drops, the rescued NPC is back in
 the settlement, villagers acknowledge the victory, stronghold effects change,
 the legendary is no longer tethered, and at least one outward spoke gains new
@@ -1808,7 +1819,7 @@ identical to how it was before the Warden.
 ### R8.5 — The legendary's superior ride ability · `model: sonnet` · `tests: smoke_riding`
 The tier above Meadowhart's (R6.2), not a parallel system.
 
-### R8.6 — The larger mystery and future-biome hook · `model: sonnet` · `tests: test_dialogue_runner`
+### R8.6 — The larger mystery and future-biome hook · `model: fable` · `tests: test_dialogue_runner`
 No longer open-ended: the mystery is spec §23–§31, and `SA4`'s seven spokes are
 its physical hook. `GAME_DESIGN.md` §3's "the exact endgame motive remains
 intentionally open" is false as of D23 and is amended there.
