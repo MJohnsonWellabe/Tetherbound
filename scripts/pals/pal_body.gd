@@ -417,6 +417,94 @@ func revive_animation() -> void:
 		_animator.call("revive")
 
 
+## --- catching, the creature's half ------------------------------------------
+##
+## Being caught happens TO the body, so the body owns the two animations: being
+## drawn into the orb, and bursting back out of it. Both animate the VISUAL
+## children only (`Model`, and the capsule fallback's `Body`/`Head`) — the
+## gameplay node, its collider and its transform stay untouched, because a
+## scaled CharacterBody3D is a physics problem and the fight still owns this
+## node's position. Physics-clock tweens, for the same reason impact_flash.gd
+## runs on the physics clock: presentation that only advances on render frames
+## is invisible to the survey harness and unreviewable.
+
+var _catch_tween: Tween = null
+var _visual_rest: Dictionary = {}
+
+
+func _visual_children() -> Array[Node3D]:
+	var visuals: Array[Node3D] = []
+	for node in [_model, _body, _head]:
+		if node != null and node.visible:
+			visuals.append(node)
+	return visuals
+
+
+## Drawn into the orb: shrink toward the strike point, then hide. Replaces the
+## old presentation, which was `visible = false` on the strike frame — the
+## creature POPPED out of existence, and the one moment the whole mechanic
+## builds to had no body. Ends by hiding the node (which also disables physics
+## and the collider, via `_on_visibility_changed`) and restoring the visual
+## children, so nothing downstream ever sees a shrunken creature.
+func play_absorb(world_point: Vector3, seconds: float) -> void:
+	# The creature is already spoken for; it must not wander, attack or slide
+	# while it is being converted into light.
+	set_physics_process(false)
+	velocity = Vector3.ZERO
+
+	_kill_catch_tween()
+	_visual_rest.clear()
+	var visuals := _visual_children()
+	for node in visuals:
+		_visual_rest[node] = node.transform
+
+	var local_point := to_local(world_point)
+	_catch_tween = create_tween().set_parallel(true)
+	_catch_tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	for node in visuals:
+		_catch_tween.tween_property(node, "scale", Vector3.ONE * 0.02, seconds) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		_catch_tween.tween_property(node, "position", local_point, seconds) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_catch_tween.chain().tween_callback(_finish_absorb)
+
+
+func _finish_absorb() -> void:
+	visible = false
+	_restore_visuals()
+
+
+## Burst back out of a failed catch: reappear small and pop up to full size
+## with an overshoot, so the breakout reads as an event rather than a toggle.
+func play_breakout(seconds: float) -> void:
+	_kill_catch_tween()
+	_visual_rest.clear()
+	# Restore visibility FIRST (re-enables physics and the collider), then
+	# animate the visuals up from nothing.
+	visible = true
+	_catch_tween = create_tween().set_parallel(true)
+	_catch_tween.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	for node in _visual_children():
+		var rest_scale: Vector3 = node.scale
+		_visual_rest[node] = node.transform
+		node.scale = Vector3.ONE * 0.05
+		_catch_tween.tween_property(node, "scale", rest_scale, seconds) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+func _restore_visuals() -> void:
+	for node in _visual_rest:
+		if is_instance_valid(node):
+			(node as Node3D).transform = _visual_rest[node]
+	_visual_rest.clear()
+
+
+func _kill_catch_tween() -> void:
+	if _catch_tween != null and _catch_tween.is_valid():
+		_catch_tween.kill()
+	_catch_tween = null
+
+
 ## Turn to face a world point, immediately. Used when a fight is arranged and by
 ## the peaceful idle; combat turning goes through `_turn_towards`.
 func face_towards(point: Vector3) -> void:

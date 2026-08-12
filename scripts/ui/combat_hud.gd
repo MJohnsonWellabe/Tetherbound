@@ -12,6 +12,20 @@ extends CanvasLayer
 
 const PALETTE_PATH := "res://data/config/palette.json"
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const CATCH := preload("res://scripts/combat/catch_math.gd")
+
+## The aim-mode odds readout, worded and coloured by tier rather than shown as
+## a percentage — "38%" is a spreadsheet, "fair odds" is a read on the animal.
+## Thresholds are on the same 0..1 chance `catch_math.catch_chance` returns for
+## a dead-centre hit; presentation only, so they live here rather than in the
+## gameplay config.
+const ODDS_TIERS: Array = [
+	[0.55, "great odds", "7ed87e"],
+	[0.35, "good odds", "a8d87e"],
+	[0.18, "fair odds", "e8d07a"],
+	[0.08, "slim odds", "e8a25a"],
+	[0.0, "barely catchable — wear it down", "e87a5a"],
+]
 
 ## Health bar colour at full and at empty. The slide between them is the only
 ## warning the player gets that the fight is going badly, since a placeholder
@@ -230,6 +244,14 @@ func _draw_actions() -> void:
 	var orbs: int = int(_manager.call("orbs_left"))
 	_orbs.text = "Orbs  %d" % orbs
 
+	# While the orb decides, the verb row belongs to the orb: every verb is
+	# ignored by the frozen fight anyway, and a row of bright "ready" buttons
+	# under a wobbling orb promises actions the game will not take. The shake
+	# dots (set by `_on_orb_shook`) are the only thing worth saying.
+	if bool(_manager.call("is_resolving_catch")):
+		_actions.text = "[center]%s[/center]" % (_miss_text if _miss_left > 0.0 else "")
+		return
+
 	if _miss_left > 0.0:
 		_actions.text = "[center]%s[/center]" % _miss_text
 		return
@@ -237,8 +259,9 @@ func _draw_actions() -> void:
 	# Aiming has its own verb list. Showing Quick and Charged while the player is
 	# looking down a reticle would offer two moves their pal cannot make.
 	if bool(_manager.call("is_aiming")):
-		_actions.text = "[center]%s     %s     [color=#%s]your pal is undefended[/color][/center]" % [
-			_verb("throw", "Throw", true), _verb("cancel", "Cancel", true), VERB_DIMMED
+		_actions.text = "[center]%s     %s     %s     [color=#%s]your pal is undefended[/color][/center]" % [
+			_verb("throw", "Throw", true), _verb("cancel", "Cancel", true),
+			_odds_readout(), VERB_DIMMED
 		]
 		return
 
@@ -281,6 +304,19 @@ func _verb(glyph_id: String, label: String, ready: bool) -> String:
 	]
 
 
+## What a clean hit would be worth right now, from the same arithmetic the
+## throw will use. Answers the front half of "I never know if I was close" —
+## the player sees the odds move as they damage the target, which is also the
+## only place the hp_curve's whole design ("wear it down first") is ever
+## taught.
+func _odds_readout() -> String:
+	var chance := float(_manager.call("catch_chance_now"))
+	for tier in ODDS_TIERS:
+		if chance >= float(tier[0]):
+			return "[color=#%s]%s[/color]" % [str(tier[2]), str(tier[1])]
+	return ""
+
+
 ## A miss has to be legible or it reads as the game dropping the input.
 ##
 ## This is the single most likely complaint about aimed attacks — "I pressed it
@@ -303,10 +339,12 @@ func _on_catch_refused(reason: String) -> void:
 
 ## Count the wobbles out loud. The shakes come from a decision already made
 ## (`catch_math.resolve`), so this is showing the player something true — a near
-## miss really does shake longer than a hopeless throw.
+## miss really does shake longer than a hopeless throw. Held long enough to
+## bridge to the next shake (`resolve.shake_interval` plus slack) — at a fixed
+## 0.7s the dots blinked out between shakes once the interval grew past it.
 func _on_orb_shook(index: int) -> void:
 	_miss_text = "%s" % "•".repeat(index)
-	_miss_left = 0.7
+	_miss_left = float(CATCH.config().get("resolve", {}).get("shake_interval", 0.85)) + 1.0
 
 
 func _on_catch_resolved(success: bool, shakes: int) -> void:
@@ -315,8 +353,17 @@ func _on_catch_resolved(success: bool, shakes: int) -> void:
 		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
 		_outcome_left = 2.4
 		return
-	_miss_text = "it broke out" if shakes >= 2 else "not even close"
-	_miss_left = 1.6
+	# Graded by the shake count, which is honest information: a full-count
+	# breakout really was nearly a catch (`catch_math.shakes_for`), and telling
+	# the player so is the back half of "I never know if I was close".
+	var most := int(CATCH.config().get("resolve", {}).get("max_shakes_on_failure", 3))
+	if shakes >= most:
+		_miss_text = "so close — it almost stayed in"
+	elif shakes >= 2:
+		_miss_text = "it broke out"
+	else:
+		_miss_text = "not even close — weaken it first"
+	_miss_left = 1.8
 
 
 func _on_exited(outcome: String) -> void:

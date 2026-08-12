@@ -66,14 +66,38 @@
   },
 
   "resolve": {
-    "_comment": "The wobble. The outcome is DECIDED ONCE when the orb lands and the shakes are derived from it — they never re-roll. Tension built on a lie is what makes catch animations feel cheap, and a wobble that can contradict the result already computed is exactly that lie.",
+    "_comment": "The wobble. The outcome is DECIDED ONCE when the orb lands and the shakes are derived from it — they never re-roll. Tension built on a lie is what makes catch animations feel cheap, and a wobble that can contradict the result already computed is exactly that lie. ALL timing here is TUNABLE; the sequence is: strike flash -> absorb -> the orb drops and settles -> first_shake_delay of stillness -> shakes at shake_interval -> settle_pause of held breath -> verdict.",
     "shakes_on_success": 3,
     "_comment_failure": "A near miss shakes more times before breaking out than a hopeless one, so the wobble count is honest information about how close the throw was.",
     "max_shakes_on_failure": 3,
     "near_miss_threshold": 0.75,
-    "shake_interval": 0.55,
-    "settle_pause": 0.6,
+    "_comment_absorb": "Seconds the creature takes to be drawn into the orb after the strike. The orb hangs at the strike point for exactly this long before dropping, so the creature always shrinks toward a stationary orb.",
+    "absorb_seconds": 0.45,
+    "_comment_first_shake": "Seconds of dead stillness between the orb coming to rest and the first shake. This is the dread beat — cutting it to zero makes the wobble start before the eye has settled on the orb.",
+    "first_shake_delay": 0.9,
+    "_comment_interval": "Seconds from the start of one shake to the start of the next. Was 0.55, which read as a metronome; the orb's own rock animation is ~0.45s, so anything under ~0.7 leaves no stillness between shakes and stillness is where the tension lives.",
+    "shake_interval": 0.85,
+    "_comment_settle": "Seconds of held breath between the last shake and the verdict. (This key existed before and was silently ignored — the verdict landed on the same frame as the final shake, which is exactly the beat a catch sequence cannot skip.)",
+    "settle_pause": 0.8,
+    "_comment_breakout": "Seconds the creature takes to pop back out of a failed catch, scaling up with an overshoot.",
+    "breakout_pop_seconds": 0.35,
     "success_banner": 2.4
+  },
+
+  "resolve_camera": {
+    "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the pal on a breakout and to the trainer when a catch ends the fight.",
+    "distance": 3.2,
+    "height": 1.1,
+    "fov": 50.0,
+    "retarget_lag": 5.0,
+    "pitch_start_deg": -16.0
+  },
+
+  "vfx": {
+    "_comment": "The three flashes of a catch, all impact_flash.gd bursts (primitives, both renderers, physics clock). Strike says 'you hit it'; caught is the warm gold seal; breakout is a sharper, whiter burst so failure never reads as the success flash with different text.",
+    "strike": { "colour": "#ffd27a", "radius": 1.1, "duration": 0.3, "strength": 1.0 },
+    "caught": { "colour": "#ffe9a8", "radius": 1.5, "duration": 0.55, "strength": 1.4 },
+    "breakout": { "colour": "#fff3e0", "radius": 1.7, "duration": 0.4, "strength": 1.3 }
   },
 
   "faint": {

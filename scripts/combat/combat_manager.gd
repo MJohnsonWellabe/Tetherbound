@@ -93,9 +93,17 @@ var _input_guard: float = 0.0
 
 ## Catching. The aim and the projectile live in throw_aim.gd; what lives here is
 ## deciding whether a throw is allowed and what its result means to the fight.
+##
+## The resolution is a staged sequence, not a bare timer: the creature is drawn
+## in while the orb hangs (ABSORB), the orb drops and the camera glides into a
+## close-up, a beat of stillness (WAIT), the shakes (SHAKING), a held breath
+## (VERDICT), then the outcome. The outcome itself was decided the moment the
+## orb landed; the phases only perform it.
+enum CatchPhase { NONE, ABSORB, WAIT, SHAKING, VERDICT }
 var _throw: Node = null
-var _catch_shakes_left: int = 0
-var _catch_shake_timer: float = 0.0
+var _catch_phase: CatchPhase = CatchPhase.NONE
+var _catch_timer: float = 0.0
+var _catch_shakes_total: int = 0
 var _catch_succeeded: bool = false
 var _catch_index: int = 0
 
@@ -117,6 +125,12 @@ func _ready() -> void:
 	_throw.connect("orb_struck", _on_orb_struck)
 	_throw.connect("orb_missed", _on_orb_missed)
 	_throw.connect("throw_refused", func(reason: String) -> void: catch_refused.emit(reason))
+	# The camera comes BACK when the aim ends. This signal had no listener at
+	# all: cancelling an aim, and every throw, left the whole rest of the fight
+	# framed through the over-the-shoulder aim profile parked on the trainer.
+	# After a release the aim camera is kept deliberately — watching your own
+	# throw arc away is the shot — and the strike or miss decides what's next.
+	_throw.connect("aim_exited", _on_aim_exited)
 
 
 func throw_aim() -> Node:
@@ -176,8 +190,9 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	_outcome = ""
 	_input_guard = float(MATH.config().get("flow", {}).get("input_guard", 0.25))
 
-	_catch_shakes_left = 0
-	_catch_shake_timer = 0.0
+	_catch_phase = CatchPhase.NONE
+	_catch_timer = 0.0
+	_catch_shakes_total = 0
 
 	_open_arena()
 	_place_fighters()
@@ -355,8 +370,8 @@ func _tick_active(delta: float) -> void:
 	if _buffer_left <= 0.0:
 		_buffered_attack = ""
 
-	if _catch_shakes_left > 0:
-		_tick_catch_wobble(delta)
+	if _catch_phase != CatchPhase.NONE:
+		_tick_catch_resolution(delta)
 		return
 
 	_tick_action(delta)
@@ -684,6 +699,7 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 	if not CATCH.can_be_caught(_enemy.fainted, false):
 		catch_refused.emit("%s fainted before the orb landed" % _enemy.display_name)
 		_throw.call("clear_orb")
+		_take_camera()
 		state_changed.emit()
 		return
 
@@ -701,15 +717,30 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 		_rng.randf()
 	)
 	_catch_succeeded = bool(decision["caught"])
-	_catch_shakes_left = int(decision["shakes"])
+	_catch_shakes_total = int(decision["shakes"])
 	_catch_index = 0
-	_catch_shake_timer = 0.0
 
-	# The creature goes into the orb for the duration either way. Watching it
-	# stand there unbothered while the orb wobbles beside it would tell the
-	# player the throw had already failed.
-	if _wild != null:
+	# The performance: a flash says the throw landed, the creature is drawn in
+	# toward the hanging orb, and the camera starts its glide into the close-up
+	# the rest of the sequence plays through. The old presentation was
+	# `_wild.visible = false` — one frame, no event, and a HUD label counting
+	# dots. Everything else about "catching is still bad" starts there.
+	var cfg: Dictionary = CATCH.config().get("resolve", {})
+	var absorb := float(cfg.get("absorb_seconds", 0.45))
+	var orb: Node3D = _throw.call("resting_orb")
+	var strike_point: Vector3 = orb.global_position if orb != null \
+		else (_wild.call("centre") if _wild != null else Vector3.ZERO)
+	_catch_flash("strike", strike_point)
+	if _wild != null and _wild.has_method("play_absorb"):
+		_wild.call("play_absorb", strike_point, absorb)
+	elif _wild != null:
 		_wild.visible = false
+	_watch_the_orb(orb)
+
+	_catch_phase = CatchPhase.ABSORB
+	# The orb hangs for `absorb` and then has to fall; the timeout is a backstop
+	# for a strike over ground the drop raycast never finds, not the schedule.
+	_catch_timer = absorb + 2.5
 	state_changed.emit()
 
 
@@ -720,39 +751,125 @@ func _on_orb_missed() -> void:
 	# gets its own message, because "you missed" and "it broke out" are different
 	# things to have just done.
 	catch_refused.emit("the orb went wide")
+	_take_camera()
 	state_changed.emit()
 
 
-func _tick_catch_wobble(delta: float) -> void:
+## A cancelled aim hands the camera straight back to the pal. A released throw
+## keeps the aim camera — watching your own orb arc away is the shot — and
+## `_on_orb_struck` / `_on_orb_missed` decide where it goes next.
+func _on_aim_exited() -> void:
+	if state != State.ACTIVE:
+		return
+	if bool(_throw.call("is_busy")):
+		return
+	_take_camera()
+
+
+func _tick_catch_resolution(delta: float) -> void:
 	var cfg: Dictionary = CATCH.config().get("resolve", {})
-	_catch_shake_timer -= delta
-	if _catch_shake_timer > 0.0:
-		return
+	_catch_timer -= delta
 
-	if _catch_index < _catch_shakes_left:
-		_catch_index += 1
-		orb_shook.emit(_catch_index)
-		_catch_shake_timer = float(cfg.get("shake_interval", 0.55))
-		return
+	match _catch_phase:
+		CatchPhase.ABSORB:
+			# Wait for the orb to actually be on the ground; the first shake of
+			# an orb still falling would read as the animation firing early.
+			var orb: Node3D = _throw.call("resting_orb")
+			var rested: bool = orb != null and bool(orb.call("is_resting"))
+			if rested or _catch_timer <= 0.0:
+				_catch_phase = CatchPhase.WAIT
+				_catch_timer = float(cfg.get("first_shake_delay", 0.9))
+		CatchPhase.WAIT:
+			if _catch_timer <= 0.0:
+				_catch_phase = CatchPhase.SHAKING
+				_catch_timer = 0.0
+		CatchPhase.SHAKING:
+			if _catch_timer > 0.0:
+				return
+			if _catch_index < _catch_shakes_total:
+				_catch_index += 1
+				var orb: Node3D = _throw.call("resting_orb")
+				if orb != null and orb.has_method("shake"):
+					orb.call("shake", _catch_index)
+				orb_shook.emit(_catch_index)
+				_catch_timer = float(cfg.get("shake_interval", 0.85))
+				return
+			# All shakes performed. The held breath before the verdict — this
+			# pause existed in config from the start and was silently ignored:
+			# the verdict used to land on the same frame as the final shake.
+			_catch_phase = CatchPhase.VERDICT
+			_catch_timer = float(cfg.get("settle_pause", 0.8))
+		CatchPhase.VERDICT:
+			if _catch_timer <= 0.0:
+				_finish_catch()
 
-	_catch_shakes_left = 0
-	_finish_catch(float(cfg.get("settle_pause", 0.6)))
 
-
-func _finish_catch(_settle: float) -> void:
-	_throw.call("clear_orb")
-	catch_resolved.emit(_catch_succeeded, _catch_index)
+func _finish_catch() -> void:
+	_catch_phase = CatchPhase.NONE
+	var cfg: Dictionary = CATCH.config().get("resolve", {})
+	var orb: Node3D = _throw.call("resting_orb")
 
 	if _catch_succeeded:
+		# The seal: the orb blooms warm and stays glowing, the camera stays on
+		# it through the fight's resolve pause, and the orb is only freed with
+		# the rest of the fight in `_finish()`.
+		if orb != null:
+			if orb.has_method("seal"):
+				orb.call("seal")
+			_catch_flash("caught", orb.global_position)
+		catch_resolved.emit(true, _catch_index)
 		_begin_resolve(OUTCOME_CAUGHT)
 		return
 
-	# It broke out. Back on its feet, back in the fight, no free damage either
-	# way — the cost of a failed catch is the orb and the seconds you spent
-	# standing still, which is quite enough.
+	# It broke out: a sharper, whiter burst covers the orb vanishing, and the
+	# creature pops back to full size with a shove — an event, not a toggle.
+	# No free damage either way: the cost of a failed catch is the orb and the
+	# seconds you spent standing still, which is quite enough.
+	if orb != null:
+		_catch_flash("breakout", orb.global_position)
+	_throw.call("clear_orb")
 	if _wild != null:
-		_wild.visible = true
+		if _wild.has_method("play_breakout"):
+			_wild.call("play_breakout", float(cfg.get("breakout_pop_seconds", 0.35)))
+		else:
+			_wild.visible = true
+		if _ally_body != null:
+			var away: Vector3 = _wild.global_position - _ally_body.global_position
+			_wild.call("add_impulse", away, 2.5)
+		# Re-engage from scratch: the creature takes the same "read the
+		# situation" beat it takes when a fight opens (`first_attack_delay`)
+		# instead of swinging on the frame it reappears.
+		_wild.call("set_engaged", true, _ally_body)
+	_take_camera()
+	catch_resolved.emit(false, _catch_index)
 	state_changed.emit()
+
+
+## Point the camera at the resting orb for the resolution close-up. The rig
+## glides rather than cuts (`resolve_camera.retarget_lag`), so the shot arrives
+## while the orb is still dropping and settles with it.
+func _watch_the_orb(orb: Node3D) -> void:
+	if orb == null or _camera_rig == null or not _camera_rig.has_method("set_target"):
+		return
+	_camera_rig.call("set_target", orb, CATCH.config().get("resolve_camera", {}))
+
+
+## One of the catch's three flashes (catching.json `vfx`): strike, caught,
+## breakout. Same impact_flash.gd primitive the attacks use, so it reads on
+## both renderers and advances on the physics clock.
+func _catch_flash(key: String, at: Vector3) -> void:
+	var spec: Dictionary = CATCH.config().get("vfx", {}).get(key, {})
+	if spec.is_empty():
+		return
+	var host: Node = _arena if _arena != null else _player.get_parent()
+	FLASH.burst(
+		host,
+		at,
+		Color(str(spec.get("colour", "#ffd27a"))),
+		float(spec.get("radius", 1.2)),
+		float(spec.get("duration", 0.35)),
+		float(spec.get("strength", 1.0))
+	)
 
 
 ## The instance the player just caught, for the director to keep. Valid only
@@ -842,11 +959,27 @@ func orbs_left() -> int:
 	return int(_throw.call("stock")) if _throw != null else 0
 
 
-## True while an orb is wobbling. The fight is paused around it: neither fighter
-## acts, because a creature landing a hit on an orb that is deciding whether it
-## caught something is nonsense.
+## True from the orb striking to the verdict. The fight is paused around it:
+## neither fighter acts, because a creature landing a hit on an orb that is
+## deciding whether it caught something is nonsense. (The wild pal's own physics
+## is off for the duration — it is inside the orb.)
 func is_resolving_catch() -> bool:
-	return _catch_shakes_left > 0
+	return _catch_phase != CatchPhase.NONE
+
+
+## The odds a clean, dead-centre hit would resolve at RIGHT NOW, for the aim
+## HUD. Purely a readout of the same arithmetic the throw will use — telling
+## the player their odds before they spend an orb is the answer to "I never
+## know if I was close", front half. (The shake count is the back half.)
+func catch_chance_now() -> float:
+	if _enemy == null:
+		return 0.0
+	var radius := 0.5
+	if _wild != null and _wild.has_method("body_radius"):
+		radius = float(_wild.call("body_radius"))
+	return CATCH.catch_chance(
+		SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), "basic", 0.0, radius
+	)
 
 
 ## Where the two fighters are, for anything that needs to frame them.

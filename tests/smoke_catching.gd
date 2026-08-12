@@ -278,7 +278,10 @@ func _a_weakened_pal_can_be_caught() -> void:
 		var resolutions_before := _resolutions.size()
 		if not await _throw_at_the_target():
 			continue
-		for i in 400:
+		# The resolution is a staged performance now (absorb, drop, stillness,
+		# shakes, held breath — catching.json `resolve`), about 5.5s end to end
+		# on a success; 400 frames only barely covered it and flaked.
+		for i in 700:
 			await physics_frame
 			if _resolutions.size() > resolutions_before:
 				break

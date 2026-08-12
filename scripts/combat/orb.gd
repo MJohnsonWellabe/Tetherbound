@@ -1,6 +1,6 @@
 extends Node3D
 
-## A thrown orb, in flight.
+## A thrown orb: the flight, and then the performance.
 ##
 ## A real projectile on a real arc. GAME_DESIGN.md §15 forbids throwing without
 ## player aim, and a hitscan gives nothing to aim: the arc is what turns "press
@@ -11,6 +11,17 @@ extends Node3D
 ## a parabola and a handful of sphere checks, the tuning has to be readable in
 ## data/config/catching.json, and a physics body would put the arc at the mercy
 ## of engine defaults nobody has a reason to trust.
+##
+## After the strike the orb is the only actor on stage, and it used to do
+## NOTHING: `_spent` froze physics with the flight trail hanging in the sky and
+## the orb parked in mid-air for the whole wobble, while a HUD label printed
+## dots. The catch resolution — the climax of the game's signature mechanic —
+## had no body. So the strike now runs a sequence: hang at the strike point
+## while the creature is drawn in, drop to the ground with a bounce, rest with
+## a small idle glow, rock physically on each `shake()`, and either `seal()`
+## warm on a catch or vanish under the breakout burst. All of it advances on
+## the PHYSICS clock (impact_flash.gd's lesson): presentation that only moves
+## on render frames is invisible to the survey harness and unreviewable.
 
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 
@@ -20,29 +31,55 @@ signal struck(target: Node3D, offset: float)
 ## Hit the ground, or ran out of flight time, without touching anything.
 signal missed()
 
+enum Phase { FLYING, HANGING, DROPPING, RESTING, SEALED, DONE }
+
+var _phase: Phase = Phase.FLYING
 var _velocity: Vector3 = Vector3.ZERO
 var _gravity: float = 14.0
 var _radius: float = 0.42
 var _life: float = 0.0
 var _max_life: float = 4.0
 var _target: Node3D = null
-var _spent: bool = false
+
+## The post-strike clocks.
+var _hang_total: float = 0.45
+var _hang_left: float = 0.45
+var _rest_time: float = 0.0
+var _shake_left: float = 0.0
+var _trail_fade: float = 1.0
+var _bounces: int = 0
+var _seal_time: float = -1.0
 
 ## How many times the orb's own radius the readable halo is drawn at, and how
 ## wide the trail gets at its head. Presentation only — the collision radius the
 ## catch maths reads is untouched by both.
 const HALO_SCALE := 5.5
+## The halo while the orb is at rest. The flight halo exists so a fast 42cm
+## object reads at twelve metres; the resolution plays through a close-up
+## (catching.json `resolve_camera`) where 5.5x is a wall of glow.
+const REST_HALO_SCALE := 2.2
 const TRAIL_WIDTH := 1.1
 ## Flight positions kept for the trail. About a third of a second at 60Hz.
 const TRAIL_POINTS := 20
 
 const HALO_SEGMENTS := 18
 
+## One shake's rock animation. Kept under `resolve.shake_interval` so every
+## shake is followed by stillness — the stillness is where the tension lives.
+const SHAKE_SECONDS := 0.45
+## How far the orb tips to each side during a shake, radians (~28 degrees).
+const SHAKE_TILT := 0.5
+## The little hop that goes with the rock, metres.
+const SHAKE_HOP := 0.09
+## Energy kept after the drop's bounce.
+const BOUNCE_RESTITUTION := 0.35
+
 var _halo: MeshInstance3D = null
 var _halo_mesh: ImmediateMesh = null
 var _trail: MeshInstance3D = null
 var _trail_mesh: ImmediateMesh = null
 var _path: PackedVector3Array = PackedVector3Array()
+var _orb_material: StandardMaterial3D = null
 
 @onready var _mesh: MeshInstance3D = $Mesh
 
@@ -52,6 +89,8 @@ func _ready() -> void:
 	_gravity = float(cfg.get("gravity", _gravity))
 	_radius = float(cfg.get("radius", _radius))
 	_max_life = float(cfg.get("max_flight_time", _max_life))
+	_hang_total = float(CATCH.config().get("resolve", {}).get("absorb_seconds", 0.45))
+	_hang_left = _hang_total
 	_build_placeholder()
 
 
@@ -83,6 +122,7 @@ func _build_placeholder() -> void:
 	material.emission_energy_multiplier = 2.2
 	_mesh.mesh = sphere
 	_mesh.material_override = material
+	_orb_material = material
 
 	# A disc with alpha falling to nothing at its rim, rebuilt each frame facing
 	# the camera. It was a QuadMesh with a flat colour, which is exactly what it
@@ -121,21 +161,22 @@ func _glow(colour: Color) -> StandardMaterial3D:
 	return material
 
 
-## A camera-facing disc, bright at the centre and gone at the rim.
-func _draw_halo() -> void:
+## A camera-facing disc, bright at the centre and gone at the rim. `scale_value`
+## is in multiples of the orb's radius; `alpha` scales the centre's opacity.
+func _draw_halo(scale_value: float, alpha: float) -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return
 	var basis := camera.global_transform.basis
-	var right: Vector3 = basis.x * _radius * HALO_SCALE * 0.5
-	var up: Vector3 = basis.y * _radius * HALO_SCALE * 0.5
+	var right: Vector3 = basis.x * _radius * scale_value * 0.5
+	var up: Vector3 = basis.y * _radius * scale_value * 0.5
 
 	_halo_mesh.clear_surfaces()
 	_halo_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i in HALO_SEGMENTS:
 		var a: float = TAU * float(i) / float(HALO_SEGMENTS)
 		var b: float = TAU * float(i + 1) / float(HALO_SEGMENTS)
-		_halo_mesh.surface_set_color(Color(1.0, 0.92, 0.66, 0.85))
+		_halo_mesh.surface_set_color(Color(1.0, 0.92, 0.66, 0.85 * alpha))
 		_halo_mesh.surface_add_vertex(Vector3.ZERO)
 		_halo_mesh.surface_set_color(Color(1.0, 0.78, 0.32, 0.0))
 		_halo_mesh.surface_add_vertex(right * cos(a) + up * sin(a))
@@ -148,7 +189,7 @@ func _draw_halo() -> void:
 ## oldest end so it reads as motion rather than as a wire.
 func _draw_trail() -> void:
 	_trail_mesh.clear_surfaces()
-	if _path.size() < 2:
+	if _path.size() < 2 or _trail_fade <= 0.01:
 		return
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
@@ -164,12 +205,24 @@ func _draw_trail() -> void:
 		if along.length() < 0.0001:
 			along = _velocity
 		var side: Vector3 = along.cross(to_camera).normalized() * _radius * TRAIL_WIDTH * t
-		var alpha: float = t * t * 0.85
+		var alpha: float = t * t * 0.85 * _trail_fade
 		_trail_mesh.surface_set_color(Color(1.0, 0.82, 0.40, alpha))
 		_trail_mesh.surface_add_vertex(point + side)
 		_trail_mesh.surface_set_color(Color(1.0, 0.82, 0.40, alpha))
 		_trail_mesh.surface_add_vertex(point - side)
 	_trail_mesh.surface_end()
+
+
+## Bleed the flight trail away after the strike. The trail is where the orb HAS
+## BEEN; once the orb stops, a frozen gold streak hanging across the sky for the
+## whole wobble reads as a rendering fault, which is exactly what it was.
+func _fade_trail() -> void:
+	_trail_fade = maxf(0.0, _trail_fade - 0.12)
+	if _path.size() > 1:
+		_path.remove_at(0)
+	if _trail_fade <= 0.01 or _path.size() < 2:
+		_path = PackedVector3Array()
+	_draw_trail()
 
 
 ## Launch. `target` is the creature this throw is aimed at; the orb only tests
@@ -179,14 +232,27 @@ func launch(from: Vector3, direction: Vector3, speed: float, target: Node3D) -> 
 	_velocity = direction.normalized() * speed
 	_target = target
 	_life = 0.0
-	_spent = false
+	_phase = Phase.FLYING
+	_trail_fade = 1.0
+	_bounces = 0
 	_path = PackedVector3Array([from])
 
 
 func _physics_process(delta: float) -> void:
-	if _spent:
-		return
+	match _phase:
+		Phase.FLYING:
+			_tick_flight(delta)
+		Phase.HANGING:
+			_tick_hang(delta)
+		Phase.DROPPING:
+			_tick_drop(delta)
+		Phase.RESTING, Phase.SEALED:
+			_tick_rest(delta)
+		Phase.DONE:
+			pass
 
+
+func _tick_flight(delta: float) -> void:
 	_life += delta
 	_velocity.y -= _gravity * delta
 	global_position += _velocity * delta
@@ -194,7 +260,7 @@ func _physics_process(delta: float) -> void:
 	# than a decal sliding through the air.
 	_mesh.rotate_x(12.0 * delta)
 
-	_draw_halo()
+	_draw_halo(HALO_SCALE, 1.0)
 	_path.append(global_position)
 	while _path.size() > TRAIL_POINTS:
 		_path.remove_at(0)
@@ -204,6 +270,102 @@ func _physics_process(delta: float) -> void:
 		return
 	if _life >= _max_life or _hit_ground():
 		_finish_with_miss()
+
+
+## The beat after the strike: the orb hangs at the strike point while the
+## creature is drawn in (`resolve.absorb_seconds` — the same clock the absorb
+## animation runs on, so the creature always shrinks toward a stationary orb),
+## then drops.
+func _tick_hang(delta: float) -> void:
+	_hang_left -= delta
+	_fade_trail()
+	# The halo eases from its flight size down toward its resting size while the
+	# camera glides in — the big glow was for reading a fast object at distance.
+	var t: float = clampf(1.0 - _hang_left / maxf(_hang_total, 0.01), 0.0, 1.0)
+	_draw_halo(lerpf(HALO_SCALE, REST_HALO_SCALE, t), 1.0)
+	if _hang_left <= 0.0:
+		_phase = Phase.DROPPING
+		_velocity = Vector3.ZERO
+
+
+## Fall to the ground like the object it is, with one small bounce.
+func _tick_drop(delta: float) -> void:
+	_fade_trail()
+	_velocity.y -= _gravity * delta
+	var step := _velocity * delta
+	var landed := _ground_below(global_position, global_position + step)
+	global_position += step
+	_draw_halo(REST_HALO_SCALE, 1.0)
+
+	if not is_nan(landed):
+		global_position.y = landed + _radius * 0.5
+		if _bounces < 1 and absf(_velocity.y) > 1.2:
+			_bounces += 1
+			_velocity.y = absf(_velocity.y) * BOUNCE_RESTITUTION
+			return
+		_velocity = Vector3.ZERO
+		_phase = Phase.RESTING
+		_rest_time = 0.0
+		_mesh.rotation = Vector3.ZERO
+	elif _velocity.y < -30.0:
+		# Falling with no ground found (struck over a hole, a prop, a seam):
+		# rest where it is rather than falling forever under the camera.
+		_velocity = Vector3.ZERO
+		_phase = Phase.RESTING
+		_rest_time = 0.0
+
+
+## At rest: a small idle pulse so the orb reads as alive while the player waits,
+## the rock-and-hop of each `shake()`, and the warm bloom after `seal()`.
+func _tick_rest(delta: float) -> void:
+	_rest_time += delta
+	var halo_scale: float = REST_HALO_SCALE
+	var halo_alpha: float = 0.85 + 0.15 * sin(_rest_time * 2.4)
+
+	if _shake_left > 0.0:
+		_shake_left = maxf(0.0, _shake_left - delta)
+		var t: float = 1.0 - _shake_left / SHAKE_SECONDS
+		# Rise-and-settle envelope so the rock starts and ends at zero tilt —
+		# a shake that ends mid-lean reads as the animation being cut off.
+		var envelope: float = sin(t * PI)
+		_mesh.rotation.z = sin(t * TAU * 1.5) * SHAKE_TILT * envelope
+		_mesh.position.y = envelope * SHAKE_HOP
+		halo_scale += envelope * 1.1
+		halo_alpha = 1.0
+		if _shake_left <= 0.0:
+			_mesh.rotation.z = 0.0
+			_mesh.position.y = 0.0
+
+	if _phase == Phase.SEALED:
+		_seal_time += delta
+		# Bloom fast, then settle into a calm, brighter-than-before glow: the
+		# orb has decided, and it should look pleased about it.
+		var bloom: float = exp(-_seal_time * 3.0)
+		halo_scale = REST_HALO_SCALE + 0.8 + bloom * 2.2
+		halo_alpha = 1.0
+		if _orb_material != null:
+			_orb_material.emission_energy_multiplier = 3.2 + bloom * 2.0
+
+	_draw_halo(halo_scale, halo_alpha)
+
+
+## One wobble, called by the combat manager per `orb_shook`. The count and the
+## outcome were decided when the orb landed; this is the performance of it.
+func shake(_index: int) -> void:
+	_shake_left = SHAKE_SECONDS
+
+
+## The catch succeeded: hold a warm, settled glow until the fight cleans up.
+func seal() -> void:
+	_phase = Phase.SEALED
+	_seal_time = 0.0
+	_shake_left = 0.0
+	_mesh.rotation = Vector3.ZERO
+	_mesh.position = Vector3.ZERO
+
+
+func is_resting() -> bool:
+	return _phase == Phase.RESTING or _phase == Phase.SEALED
 
 
 func _check_target() -> bool:
@@ -219,7 +381,8 @@ func _check_target() -> bool:
 	if offset > body_radius + _radius:
 		return false
 
-	_spent = true
+	_phase = Phase.HANGING
+	_velocity = Vector3.ZERO
 	# Reported as distance from the centre, clamped at the body's own radius, so
 	# the accuracy bonus is scored against the creature rather than against the
 	# orb's generous collision sphere. Widening `radius` to forgive the input
@@ -247,15 +410,21 @@ func _hit_ground() -> bool:
 	return true
 
 
+## Ground height along the drop step, or NAN. Same ray-along-the-step approach
+## as `_hit_ground`, but returning the height so the resting orb can sit ON the
+## ground rather than at whatever depth the frame's step ended.
+func _ground_below(from: Vector3, to: Vector3) -> float:
+	var world := get_world_3d()
+	if world == null:
+		return NAN
+	var query := PhysicsRayQueryParameters3D.create(from, to + Vector3.DOWN * _radius)
+	query.collide_with_areas = false
+	if _target != null and is_instance_valid(_target) and _target is CollisionObject3D:
+		query.exclude = [(_target as CollisionObject3D).get_rid()]
+	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
+	return NAN if hit.is_empty() else float((hit["position"] as Vector3).y)
+
+
 func _finish_with_miss() -> void:
-	_spent = true
+	_phase = Phase.DONE
 	missed.emit()
-
-
-func stop() -> void:
-	_spent = true
-	_velocity = Vector3.ZERO
-	if _trail_mesh != null:
-		_trail_mesh.clear_surfaces()
-	if _halo_mesh != null:
-		_halo_mesh.clear_surfaces()

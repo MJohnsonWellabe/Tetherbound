@@ -174,7 +174,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
-	if _target == null:
+	# The freed check matters now that the rig can follow a thrown orb through
+	# the catch resolution: the orb is freed with the fight, and a rig holding
+	# the stale reference would crash on the next frame's follow.
+	if _target == null or not is_instance_valid(_target):
+		_target = null
 		return
 	_apply_look(delta)
 	_follow(delta)
