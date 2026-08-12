@@ -829,19 +829,37 @@ with the correct `HD1` prompt shown next to the slot.
 
 **`CO1` (manual pal summon, dismiss and swap) shipped — see `DONE.md`.**
 
-### SA7 — A gated road out of the village, with a key nearby
-`model: sonnet` · `tests: smoke_opening` · `area: story`
-Owner directive, 2026-08-11: *"the castle road should be gated and it should
-tell you to go find the key for something first, so then you understand what
-you're doing."* New and deliberately early — separate from `SC14`'s South
-Bridge, which stays as the first *real* combat-gated crossing, hours in, after
-the player's first trainer battle. This one is near-field and low-stakes: a
-simple physical gate on the road out of the starting village, an easy nearby
-key, no real obstacle. `landmark.gd`'s distant stronghold silhouette already
-gives the player something to look toward; this gives them something to
-*understand* early — that the road leads somewhere gated, and gated things
-have keys. Done when: a new player is stopped once, finds the key without
-real difficulty, and can say in their own words why the gate was there.
+**`SA7` (a gated road out of the village, with a key nearby) shipped — see
+`DONE.md`.** One narrower remainder opened below.
+
+### SA7-remainder — The gate doesn't visually read as locked, and the key doesn't visually read as a key
+`model: sonnet` · `tests: none (visual)` · `area: story`
+Two local blind-judge rounds on `SA7` itself: round 1 named the gate as
+"plain ordinary fencing... nothing suggesting it's locked" and the key
+(then a 0.28m slot-colour box, harvest_node.gd's own resource-pile
+convention) as "grossly oversized," reading as a crate rather than an
+item. Round 2, after adding a small dark latch primitive to the gate's
+centre and rebuilding the key as a thin shaft-and-ring at real key scale:
+the key's SCALE is now confirmed right ("plausible for a small handheld
+item... does not look like a shrunk-down crate"), but neither shape reads
+as its own silhouette — the latch blends into the fence's own dark
+pickets, and the ring/shaft is too small to resolve as "a loop" under
+software rendering at normal viewing distance, reading as "an anonymous
+yellow dot." Stopped after two rounds, not because nothing moved (the
+scale fix genuinely landed) but because what's left is a shape-resolution
+ceiling no further primitive-geometry tuning reaches — the same class of
+wall `EV4-textures-remainder`'s moss-blob shape hit. A real lock/hardware
+model or a real key model would fix this outright; `CLAUDE.md`/`D24`
+forbid a Meshy generation for either without an owner-supplied reference
+board, so this stays a placeholder-geometry limit, not a bug to keep
+chasing. Not blocking `SA7`'s own done-when, which is a gameplay/narrative
+bar the shipped mechanic already clears (the player is physically stopped,
+finds the key without real difficulty per `smoke_opening.gd`'s new beat,
+and Grandpa's own line explains the gate and the key in as many words) —
+this is a finish-quality remainder, the same pattern `NP4`'s two texture
+gaps and `R7.1`'s bullets used. Done when: a blind critic looking at the
+gate or the key stops calling either unidentifiable, or the owner supplies
+reference art for one.
 
 **`SA8` (Grandpa's opening dialogue: the Team Tether urgency beat) shipped — see `DONE.md`.**
 

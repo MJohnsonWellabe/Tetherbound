@@ -3,6 +3,56 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SA7 — A gated road out of the village, with a key nearby
+`2819faf` (gate/key/dialogue), `5fde42a` (visual-judge round 2 fixes).
+`tests: smoke_opening` (green, new beat added), full `run_tests.gd`
+(313/313, run locally headless).
+
+Owner directive, 2026-08-11, near-field and low-stakes — separate from
+`SC14`'s real combat-gated crossing hours in. `scripts/world/road_gate.gd`
+is a `StaticBody3D` fence panel blocking `paths.routes`' "toward the rocky
+rise" leg (the same road `landmark.gd`'s stronghold silhouette sits
+beyond), reusing `village.gd`'s own fence model and collider-from-AABB
+pattern rather than a new prop family (D24). `scripts/world/key_pickup.gd`
+is a one-time physical pickup (`castle_gate_key` in `items.json`) a short,
+easy detour off the road. Trying the gate without the key opens a
+Grandpa-voiced hint (`village.json`'s `road_gate_locked`); trying it with
+the key consumes the key, swings the panel open (an instant re-pose, no
+animation rig, same precedent `grandpa_house.gd`'s own door gate set), and
+disables its own interactable.
+
+`tests/smoke_opening.gd` gained a beat driving the whole loop for real:
+walk out, get physically stopped, read the locked message, find the key,
+unlock. Getting the walk right took real diagnosis, not a guess — a
+straight line from wherever beat 5 leaves the player clips either the
+yard fence (`village.json` `[3,-18]`, yaw 100°; its actual collision
+footprint measured directly: a 5m wall whose long axis runs roughly
+north-south, spanning z -15.5 to -20.5 at x~3, not a point obstacle) or
+the ChickenCoop (`[21,-14]`, small ~1.5m-radius footprint but sitting
+almost on the route itself), depending on heading — so the beat routes
+around both with explicit waypoints, and the gate/key were placed with
+enough separation from each other and from the pre-existing berries
+harvest node at `[20,-16]` that their interaction radii don't contest one
+prompt. Also closed a real pre-existing gap the new beat surfaced:
+Grandpa's post-naming reply conversation was left open by every prior
+beat (nothing needed the interaction arbiter again to notice it was still
+holding the modal lock).
+
+Two local blind-judge rounds (visual-affecting: new geometry in the
+world). Round 1 found the gate reads as ordinary fencing (no lock/latch)
+and the key — then harvest_node.gd's own 0.28m slot-colour box convention
+— read as "grossly oversized," a crate rather than an item. Round 2, after
+adding a small dark latch primitive and rebuilding the key at real-key
+scale (a thin shaft plus a ring, no new assets): the key's scale is now
+confirmed right, but neither shape resolves as its own silhouette at
+normal render distance under software rendering — a placeholder-geometry
+ceiling, not something more tuning reaches. `SA7-remainder` opened above
+for that, since `CLAUDE.md`/`D24` forbid a Meshy generation for either
+without an owner-supplied reference board. Not blocking this item's own
+done-when, which the shipped mechanic already clears: the player is
+physically stopped, finds the key without real difficulty, and Grandpa's
+own line explains the gate and the key in so many words.
+
 ## LP6 — Script-based claim/heartbeat/release so `STATUS.md` leases can't drift past `## END LEASES` again
 `1a619bb`, `06b7274` · `tests: none`
 
