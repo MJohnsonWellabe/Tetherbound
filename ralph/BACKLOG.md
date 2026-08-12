@@ -41,14 +41,7 @@ here, so the dispatched subagent owns defining that as well as building it —
 throw, orb-in-flight, capture resolution, and the feedback around each step.
 Done when a fresh playtest no longer reads as "still bad."
 
-### OF2 — Party and item-target controls: can't reorder the party, can't choose who a berry/potion applies to
-`area: ui` · `model: sonnet` · `tests: test_build_catalogue` (extended) + a
-new interaction test for target-picking. Two real gaps in the menus: no
-party-reorder control, and no target-picker step when using a consumable —
-using a berry or potion currently doesn't let the player choose which pal it
-applies to. Start by reading `tab_backpack.gd::_read_use()`'s current target
-logic before building the picker, since the actual current behavior isn't
-documented anywhere.
+**`OF2` (item-target picker for consumables; party reorder found already built) shipped — see `DONE.md`.**
 
 ### OF3 — Grandpa's opening scene: buttons only advance the dialogue about half the time, and naming a pal via the on-screen keyboard is a bad experience
 `area: ui` · `model: sonnet` · `tests: test_dialogue_runner` (extended) +

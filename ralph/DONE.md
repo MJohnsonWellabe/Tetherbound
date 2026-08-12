@@ -3,6 +3,52 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF2 — Item-target picker for consumables; party reorder found already built
+`b6655da` (+ `1bc2f7f` .uid sidecar fix, `41498a6` footer fix) on `ralph/OF2`.
+
+Two gaps named, one real, one already closed. **Party reorder was already
+fully built and wired** (`autoload/party.gd::move()` + `tab_pals.gd::_on_row()`,
+pick-up-then-place matching the backpack's own stack move) — checked directly
+rather than assumed, since the backlog item's own premise ("can't reorder")
+didn't hold against the code. Only the model layer had a test before
+(`tests/test_party.gd`); added a UI-wiring check to `tests/smoke_menu.gd`
+proving a controller-focused row press actually reaches `party.move()`.
+
+**The real gap: `tab_backpack.gd::_read_use()` always applied a heal item to
+whichever pal was most hurt, with no way for the player to choose.** Built a
+target picker: five rows, same shape as the pals tab, opened on Use instead
+of applying immediately, confirmed with the same button the grid's own
+pick-up-then-place uses (`ui_accept` via `Button.pressed`, not `interact` —
+so choosing a target can never re-trigger Use on the same press), cancelled
+with `menu_cancel` via `menu.hold_input` (the exact mechanism
+`tab_settings.gd` already uses for its own key-capture sub-mode). New
+`GameMenu.override_footer()` lets a tab that has borrowed a button's meaning
+say so in the static footer too — added after a genuinely blind visual-judge
+pass on the rendered frame caught the picker's own hint disagreeing with the
+still-showing "B Close" footer (B cancels the picker, not the whole menu,
+while the shell is held deaf). Two rounds: round 1 found and fixed that one
+real defect; round 2 confirmed no new defect and the one open question
+(can the cursor land on an empty row?) was already handled safely in code
+(`_on_target_row` refuses with a message, same pattern as the rest of the
+menu) — converged.
+
+`tests:` note — the backlog item named `test_build_catalogue` (extended),
+which is the crafting-catalogue unit test and has nothing to do with this
+change; ran it unmodified as part of the full suite (390 tests, 69995
+assertions, 0 failed) rather than silently editing an unrelated file to
+match what reads as a copy-paste mistake from a different item. `smoke_menu.gd`
+(the real interaction test for this area) is what actually covers the new
+behavior, extended with three checks: picker opens on Use without spending
+or healing, cancels via `menu_cancel` without spending, confirms on a chosen
+target (not just "the worst one") and spends the item.
+
+Found and fixed along the way: `tools/capture_pal_bed.gd` was committed by
+`R2.8` without the `.uid` sidecar Godot's importer generates for it —
+another instance of the `.uid`-sidecar gap other lanes have been fixing.
+
+`tools/capture_menu_panels.gd` extended with a third frame
+(`menu_target_picker`) for this and future passes on the same panel.
+
 ## EV4-textures-lighting-remainder-3 — The dark patch is not a bug at all: it's the known grass/path contrast illusion, now identified at these two viewpoints too. No code shipped — closed to `BLOCKED.md`, merged with an existing entry.
 `tests: none (visual)` — no code changed; all three new diagnostic tools are
 kept (reusable), everything else reverted or was a runtime override.
