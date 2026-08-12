@@ -259,13 +259,27 @@ that item's creative work in its own session.** Instead:
    file's usual "smallest coherent version" instruction. That subagent owns
    the actual authorship — the world text, the dialogue, the aesthetic
    judgment calls.
-3. **The Fable subagent should itself delegate purely mechanical sub-steps —
+3. **While it runs, heartbeat every 20-30 minutes — this dispatch has no
+   other liveness signal.** A `fable` pass iterates entirely locally (the
+   local-critic-iteration rule further down), so there is no branch and no
+   commit to fall back on while it's in flight; your heartbeat is the *only*
+   thing telling the next firing "still working" instead of "dead." This is
+   not the general long-step reminder below repeated for emphasis — it is a
+   real incident, not a near miss: on 2026-08-12 a keyed firing dispatched a
+   `fable` subagent for `OF1`, wrote one heartbeat at dispatch, and never
+   updated it again. The subagent ran for roughly two hours, genuinely
+   working — but at 40 minutes stale with no branch to check, a different
+   lane correctly-by-the-letter judged the lease dead, reclaimed `OF1`, and
+   duplicated the work, overrunning two hours of real effort. A stale
+   heartbeat cannot tell "no branch yet because still working" from "died at
+   dispatch." Only a fresh one, written by you while you wait, can.
+4. **The Fable subagent should itself delegate purely mechanical sub-steps —
    wiring the data/dialogue into the existing systems, writing or running
    tests, git bookkeeping, asset staging — to `model: opus` subagents of its
    own**, rather than spending its own context on work that doesn't need
    taste. It stays the author and the judge; it is not the one running
    `godot --headless --import`.
-4. Ship exactly as any other item: test, push to `ralph/<task-id>`, record in
+5. Ship exactly as any other item: test, push to `ralph/<task-id>`, record in
    `DONE.md`.
 
 **If Agent-tool subagent spawning isn't available in your checkout** (this has
