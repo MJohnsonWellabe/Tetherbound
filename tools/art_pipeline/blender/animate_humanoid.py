@@ -49,10 +49,20 @@ FPS = 24
 
 ## name -> frames. The names are the ROLES the game asks for, so
 ## data/config/art.json maps role to clip one-to-one with no translation.
+##
+## Gait cycle lengths are DERIVED from movement.json's speeds, not styled (OF5).
+## The clip plays while the controller translates the body at walk_speed /
+## sprint_speed, and a planted foot must sweep backward under the body at that
+## same speed or the feet visibly skate over the ground. Peak backward foot
+## speed of a sinusoidal swing is amplitude(rad) x (2*pi/cycle) x leg length
+## (~0.9m on a 1.8m human). The old walk (32 frames, +-24 deg) peaked at
+## ~1.7 m/s under a 5.0 m/s body -- a >3 m/s skate, and the single loudest
+## thing the owner read as "unnatural". 15 frames at +-32 deg peaks at
+## ~5.1 m/s; 12 frames at +-45 deg peaks at ~8.9 m/s against sprint's 8.6.
 CLIPS = {
     "idle": 96,
-    "walk": 32,
-    "sprint": 20,
+    "walk": 15,
+    "sprint": 12,
     "jump": 28,
     "throw": 24,
 }
@@ -140,34 +150,70 @@ def author_idle(rig, frames: int) -> None:
             key(rig, f"forearm.{side}", frame, euler=(2.0 + 1.2 * breath, 0, 0))
 
 
-def author_gait(rig, frames: int, swing: float, bob: float, lean: float,
-                arm: float) -> None:
-    """A walk or a run, depending on amplitude.
+def author_gait(rig, frames: int, swing: float, knee: float, arm: float,
+                elbow: float, lean: float, bob: float, sway: float,
+                plantar: float) -> None:
+    """A jog or a run — never a stroll, because the controller never strolls.
 
-    Legs counter-phase, arms counter-phase against the legs — the diagonal
-    pattern that makes a biped read as walking rather than as marching.
+    Rewritten for OF5 ("running and walking look unnatural"). What the first
+    version got wrong, visible in a Muybridge strip over striped ground:
+
+    - The recovery leg swung through dead straight; the knee only bent while
+      the leg was planted BEHIND the body. Real gait folds the knee while the
+      leg swings forward (ground clearance) and lands it near-straight. Here
+      the fold is gated on the leg's forward VELOCITY (cos), not its position.
+    - Both legs passed through a bolt-upright feet-together rest pose twice a
+      cycle. The knee fold above removes it: the passing pose now has a bent
+      recovery leg, which is the pose that makes a gait read as a gait.
+    - Arms hung straight and nearly still — the "zombie" read. Elbows now
+      carry a real standing bend that deepens as the arm swings forward, and
+      the shoulder amplitude is worth seeing.
+    - Torso was vertical at 5-8.6 m/s. A forward lean scaled to the gait, with
+      the head holding level, reads as effort.
+    - Feet were plantar-flat throughout. Heel-strike dorsiflexion at front
+      contact and a toe-off push at the back give the stride its ends.
+
+    Everything keys on sines of one phase so the cycle still loops seamlessly.
     """
-    for frame in range(0, frames + 1, STEP):
+    # 15/12-frame cycles need denser keys than idle's 96: STEP=4 would sample
+    # a sine three times per cycle and export a triangle wave.
+    for frame in range(0, frames + 1):
         phase = 2 * math.pi * frame / frames
         left = math.sin(phase)
         right = math.sin(phase + math.pi)
 
+        # Twice-per-cycle vertical bob, dipping just after each foot loads.
+        # Hips location Y is along the bone (toward the spine) — vertical on
+        # this rig — and the units are metres after the normalisation below.
+        dip = (0.5 * math.cos(2.0 * phase - 0.6) - 0.5) * bob
         key(rig, "hips", frame,
-            euler=(lean * 0.4, 0, 0), location=(0, 0, bob * 0.01 * abs(math.cos(phase))))
-        key(rig, "spine", frame, euler=(lean * 0.6, 0, -3.0 * left))
-        key(rig, "chest", frame, euler=(lean * 0.4, 0, 2.0 * left))
-        key(rig, "head", frame, euler=(-lean * 0.5, 0, 0))
+            euler=(lean * 0.5, 0, sway * left), location=(0, dip, 0))
+        key(rig, "spine", frame, euler=(lean * 0.35, 0, -3.0 * left))
+        key(rig, "chest", frame, euler=(lean * 0.3, 0, 2.0 * left))
+        # Head counter-pitches so the character watches where it is going
+        # rather than the ground its torso is leaning toward.
+        key(rig, "head", frame, euler=(-lean * 0.75, 0, 0))
 
-        for side, value in (("l", left), ("r", right)):
+        for side, value, vel in (("l", left, math.cos(phase)),
+                                 ("r", right, -math.cos(phase))):
+            # fold: 1 while the leg swings forward (recovery), 0 in stance.
+            fold = max(0.0, vel)
             key(rig, f"upleg.{side}", frame, euler=(swing * value, 0, 0))
-            # The knee only ever bends one way, so the swing is rectified.
-            key(rig, f"leg.{side}", frame, euler=(-swing * 0.9 * max(0.0, -value) - 4.0, 0, 0))
-            key(rig, f"foot.{side}", frame, euler=(swing * 0.25 * value, 0, 0))
+            key(rig, f"leg.{side}", frame,
+                euler=(-(knee * fold ** 1.5 + 6.0), 0, 0))
+            # Heel strike (toes up) at front contact, toe-off push (toes
+            # down) at the back, mild dorsiflexion for clearance mid-swing.
+            foot = (12.0 * max(0.0, value) ** 2 + 8.0 * fold
+                    - plantar * max(0.0, -value) ** 2)
+            key(rig, f"foot.{side}", frame, euler=(foot, 0, 0))
 
         for side, value, sign in (("l", right, 1.0), ("r", left, -1.0)):
-            key(rig, f"arm.{side}", frame, euler=(arm * value, 0, sign * 4.0))
+            # Carried slightly forward of the hang (-12): a runner's arms work
+            # in front of the body's line, and the bias also keeps the swing
+            # visible instead of buried against the backpack.
+            key(rig, f"arm.{side}", frame, euler=(arm * value - 12.0, 0, sign * 5.0))
             key(rig, f"forearm.{side}", frame,
-                euler=(6.0 + arm * 0.35 * abs(value), 0, 0))
+                euler=(elbow + 18.0 * max(0.0, value), 0, 0))
 
 
 def author_jump(rig, frames: int) -> None:
@@ -263,9 +309,12 @@ def author(rig, name: str, frames: int) -> None:
     if name == "idle":
         author_idle(rig, frames)
     elif name == "walk":
-        author_gait(rig, frames, swing=24.0, bob=1.4, lean=2.0, arm=18.0)
+        # The controller's "walk" is 5.0 m/s — a jog, and authored as one.
+        author_gait(rig, frames, swing=32.0, knee=55.0, arm=34.0, elbow=50.0,
+                    lean=6.0, bob=0.035, sway=2.0, plantar=25.0)
     elif name == "sprint":
-        author_gait(rig, frames, swing=42.0, bob=3.2, lean=9.0, arm=38.0)
+        author_gait(rig, frames, swing=45.0, knee=95.0, arm=48.0, elbow=85.0,
+                    lean=14.0, bob=0.06, sway=0.0, plantar=40.0)
     elif name == "jump":
         author_jump(rig, frames)
     elif name == "throw":

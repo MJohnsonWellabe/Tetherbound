@@ -21,6 +21,9 @@ var _body: MeshInstance3D = null
 var _anim: AnimationPlayer = null
 var _clips: Dictionary = {}
 var _current: String = ""
+## role -> m/s the clip was AUTHORED for (art.json `gait_reference_speeds`).
+## Empty for characters whose config declares none; they play at 1x.
+var _gait_speeds: Dictionary = {}
 
 var _height: float = 1.8
 var _model_yaw: float = 0.0
@@ -53,6 +56,7 @@ func build_from_config(cfg: Dictionary) -> bool:
 	_height = float(cfg.get("height", _height))
 	_model_yaw = float(cfg.get("model_yaw", 0.0))
 	_clips = cfg.get("clips", {})
+	_gait_speeds = cfg.get("gait_reference_speeds", {})
 	if not _build_art(str(cfg.get("model", ""))):
 		return false
 	_hide_placeholders()
@@ -457,3 +461,27 @@ func play(clip: String, looping: bool = true) -> void:
 	if animation != null:
 		animation.loop_mode = Animation.LOOP_LINEAR if looping else Animation.LOOP_NONE
 	_anim.play(clip, 0.18)
+
+## OF5: keep foot cadence honest against the ground. A gait clip is authored
+## for one body speed (art.json `gait_reference_speeds`, matching what
+## `animate_humanoid.py` derived from movement.json); played at 1x while the
+## controller moves at any OTHER speed, the feet skate — the single loudest
+## thing the owner read as "running and walking look unnatural". Scaling
+## playback by actual speed / authored speed keeps the feet planted through
+## acceleration, slopes, collisions, and any future movement.json retune,
+## with no re-bake.
+##
+## Called every frame by whoever owns the body's state (trainer_model.gd),
+## with the CURRENT role so a non-gait role resets the player to 1x — the
+## scale is on the whole AnimationPlayer, and a jump or throw slowed to the
+## trainer's take-off speed would be its own new bug. Clamped: below 0.5x a
+## gait reads as slow-motion rather than as slowing down (the idle
+## cross-fade already covers speeds that low), and above 1.4x as frantic.
+func match_gait_rate(role: String, ground_speed: float) -> void:
+	if _anim == null:
+		return
+	var reference := float(_gait_speeds.get(role, 0.0))
+	if reference <= 0.0:
+		_anim.speed_scale = 1.0
+		return
+	_anim.speed_scale = clampf(ground_speed / reference, 0.5, 1.4)

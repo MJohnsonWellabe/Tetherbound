@@ -85,6 +85,8 @@ func _run() -> void:
 	start = player.global_position
 	Input.action_press("move_right")
 	var saw_walk := false
+	var saw_gait_rate_match := false
+	var gait_rate_wrong_streak := 0
 	for i in HOLD_FRAMES:
 		await physics_frame
 		if not saw_walk and anim != null and anim.current_animation == "walk":
@@ -94,6 +96,28 @@ func _run() -> void:
 				i, clip.loop_mode, Animation.LOOP_LINEAR])
 			if clip.loop_mode != Animation.LOOP_LINEAR:
 				failures.append("the walk clip is loop_mode %d, not LOOP_LINEAR -- it will play once and freeze for as long as the trainer keeps walking" % clip.loop_mode)
+		# OF5: while walking, playback rate must track ground speed (cadence
+		# matching, trainer_model.gd -> character_model.match_gait_rate()).
+		# The scale is written in _process from a speed physics wrote earlier,
+		# so during hard acceleration (42 m/s^2 covers 0.4 -> 5.0 m/s in six
+		# physics frames) any single sample can legitimately be one frame
+		# stale. A broken mechanism is wrong EVERY frame; assert on a streak,
+		# not an instant.
+		if saw_walk and anim != null and anim.current_animation == "walk":
+			var speed: float = player.call("ground_speed")
+			if speed > 2.0:
+				var want: float = clampf(speed / 5.0, 0.5, 1.4)
+				if absf(anim.speed_scale - want) > 0.3:
+					gait_rate_wrong_streak += 1
+					if gait_rate_wrong_streak == 3:
+						failures.append(
+							"walking at %.2f m/s but speed_scale sits at %.2f (want ~%.2f) for 3 straight frames: gait cadence is not tracking ground speed" % [
+							speed, anim.speed_scale, want])
+				else:
+					gait_rate_wrong_streak = 0
+					saw_gait_rate_match = true
+	if saw_walk and not saw_gait_rate_match:
+		failures.append("the walk never once played at a speed-matched rate (character_model.match_gait_rate)")
 	if anim != null and not saw_walk:
 		failures.append("move_right never made the trainer's animation report 'walk'")
 	Input.action_release("move_right")

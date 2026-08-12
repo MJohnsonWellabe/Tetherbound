@@ -34,22 +34,37 @@ func _process(delta: float) -> void:
 	# Only the throw is a committed one-shot (timed by _throwing_for); idle,
 	# walk, sprint and jump are all states the trainer can hold indefinitely
 	# and must loop — see character_model.gd's play() for why that matters.
-	play(_clip_for_state(), _throwing_for <= 0.0)
+	var role := _role_for_state()
+	play(_clip_for_role(role), _throwing_for <= 0.0)
+	# OF5: gait cadence tracks how fast the body is actually covering ground,
+	# not the one speed the clip was baked at. No-op (resets to 1x) for every
+	# non-gait role — see character_model.gd's match_gait_rate().
+	match_gait_rate(role, _player.call("ground_speed"))
 
 
 ## What the trainer's body should be doing, from what the trainer is doing.
-func _clip_for_state() -> String:
+func _role_for_state() -> String:
 	if _throwing_for > 0.0:
-		return clip_for("throw", "pick-up")
+		return "throw"
 	if not _player.is_on_floor():
-		return clip_for("jump")
+		return "jump"
 
 	var speed: float = _player.call("ground_speed")
 	if speed < 0.4:
-		return clip_for("idle")
-	if bool(_player.call("is_sprinting")):
-		return clip_for("sprint", "sprint")
-	return clip_for("walk", "walk")
+		return "idle"
+	return "sprint" if bool(_player.call("is_sprinting")) else "walk"
+
+
+func _clip_for_role(role: String) -> String:
+	# The throw's fallback predates the authored clip set; every other role
+	# falls back to a clip of its own name, jump to idle.
+	match role:
+		"throw":
+			return clip_for("throw", "pick-up")
+		"jump":
+			return clip_for("jump")
+		_:
+			return clip_for(role, role)
 
 
 ## Called when a throw is released, so the body commits to the animation for its

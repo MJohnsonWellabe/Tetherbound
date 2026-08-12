@@ -15,6 +15,11 @@
       "jump": "jump",
       "throw": "throw"
     },
+    "_comment_gait_speeds": "OF5, TUNABLE. Metres per second each gait clip was AUTHORED for — animate_humanoid.py derives the cycle length and stride from these so a planted foot sweeps back under the body at the same speed the controller drives it. trainer_model.gd scales playback by actual ground speed / this value (clamped 0.5-1.4x in character_model.gd), so cadence stays honest through acceleration, slopes and any movement.json retune. If locomotion speeds are retuned by more than the clamp covers, re-bake the clips against the new numbers rather than widening the clamp: past ~1.4x a gait reads as frantic, not fast.",
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
     "_comment_libraries": "Empty now, and kept as a key because the merge path still works. KayKit's Ranger needed it: that character ships a rig with zero clips and the motion in shared libraries. This model carries its own clips. Its skeleton is also NOT KayKit's — KayKit's character is about two heads tall and sheet 04's trainer is 6.25, so neither the weights nor the clips transfer between them.",
     "animation_libraries": [],
     "_comment_model": "Sheet 04's trainer, produced through tools/art_pipeline. The body and the head were generated separately and grafted: nine whole-figure candidates across three rounds all came back with a blank ovoid for a face, because at a 30k budget spread over a standing figure an eye socket is smaller than the triangles available to describe it."
