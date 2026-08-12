@@ -18,6 +18,7 @@ var _hills := FastNoiseLite.new()
 var _detail := FastNoiseLite.new()
 var _path_edge := FastNoiseLite.new()
 var _path_dominant := FastNoiseLite.new()
+var _outcrop := FastNoiseLite.new()
 
 
 func _init(config: Dictionary = {}) -> void:
@@ -78,6 +79,26 @@ func _init(config: Dictionary = {}) -> void:
 	_path_dominant.fractal_type = FastNoiseLite.FRACTAL_FBM
 	_path_dominant.frequency = 0.15
 	_path_dominant.fractal_octaves = 1
+
+	# EV4-hillside-seam-remainder: `_control_for`/`_ground_colour`
+	# (build_playground_terrain.gd) pick grass/soil/rock purely from slope, so
+	# every rise with a roughly circular cross-section bakes a perfectly
+	# circular ring of each material — a "collar," not an authored outcrop, per
+	# the round-4 blind critic. A coarse noise field sampled at world XZ and
+	# added to the slope BEFORE the band lookup pushes the effective threshold
+	# in or out per-region: where it is positive, rock/soil appear at a
+	# genuinely lower slope than elsewhere and the band bulges outward into a
+	# lobe; where negative, the band recedes and grass or soil holds on
+	# longer. ~35m wavelength (frequency 0.03) is bigger than the meandering
+	# grain a single outcrop should have but small enough that a 78m-radius
+	# rise still shows several distinct lobes around its ring rather than one
+	# smooth ellipse. A fifth seed so it does not correlate with any other
+	# layer.
+	_outcrop.seed = seed_value + 4
+	_outcrop.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_outcrop.fractal_type = FastNoiseLite.FRACTAL_FBM
+	_outcrop.frequency = float(_config.get("colour", {}).get("outcrop_jitter_frequency", 0.03))
+	_outcrop.fractal_octaves = 2
 
 
 static func load_config() -> Dictionary:
@@ -380,3 +401,15 @@ func slope_degrees_at(x: float, z: float, step: float = 1.0) -> float:
 ## comment on `_path_dominant` for why this exists instead of a fixed 0.5.
 func path_dominant_dither(x: float, z: float) -> float:
 	return _path_dominant.get_noise_2d(x, z) * 0.5 + 0.5
+
+
+## Degrees to add to a sampled slope before picking a grass/soil/rock band —
+## see `_init`'s own comment on `_outcrop` for why. `amplitude` is read from
+## config at call time (not cached in `_init`), matching `height_at`'s own
+## pattern for `hills`/`detail` amplitude, so a config edit doesn't require
+## rebuilding the field. Symmetric around 0 so it neither inflates nor
+## shrinks the total rock/soil area on average, only redistributes where it
+## falls.
+func outcrop_jitter_deg(x: float, z: float) -> float:
+	var amplitude := float(_config.get("colour", {}).get("outcrop_jitter_deg", 0.0))
+	return _outcrop.get_noise_2d(x, z) * amplitude

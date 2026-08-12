@@ -72,7 +72,8 @@ func _run() -> void:
 			height_image.set_pixel(pixel_x, pixel_z, Color(height, 0.0, 0.0, 1.0))
 
 			var slope: float = field.slope_degrees_at(world_x, world_z, texture_step)
-			var ground := _ground_colour(slope, colour_cfg)
+			var band_slope: float = slope + field.outcrop_jitter_deg(world_x, world_z)
+			var ground := _ground_colour(band_slope, colour_cfg)
 			colour_image.set_pixel(pixel_x, pixel_z, ground)
 
 			lowest = minf(lowest, height)
@@ -156,11 +157,15 @@ func _paint_control_map(
 		var world_z := origin + pixel_z * spacing
 		for pixel_x in size:
 			var world_x := origin + pixel_x * spacing
-			# Same smoothed slope as the colour map (EV4-hillside-seam) so the
-			# control map's base/overlay/blend pick matches what got painted
-			# into the colour map, band for band.
+			# Same smoothed, outcrop-jittered slope as the colour map
+			# (EV4-hillside-seam, EV4-hillside-seam-remainder) so the control
+			# map's base/overlay/blend pick matches what got painted into the
+			# colour map, band for band — `outcrop_jitter_deg` is a pure
+			# function of world XZ, so sampling it again here in this separate
+			# loop still lands on the identical value the colour-map pass used.
 			var slope: float = field.slope_degrees_at(world_x, world_z, texture_step)
-			var control := _control_for(slope, colour_cfg, ids)
+			var band_slope: float = slope + field.outcrop_jitter_deg(world_x, world_z)
+			var control := _control_for(band_slope, colour_cfg, ids)
 			var path_weight: float = field.path_factor(world_x, world_z)
 			if path_weight > 0.0:
 				var dither: float = field.path_dominant_dither(world_x, world_z)

@@ -191,12 +191,15 @@
     "grass_high": "#d8dc9c",
     "soil": "#e0cea4",
     "rock": "#cfcdc4",
-    "soil_slope_deg": 30.0,
+    "soil_slope_deg": 24.0,
     "rock_slope_deg": 44.0,
     "blend_deg": 6.0,
-    "slope_sample_step": 6.0
+    "slope_sample_step": 6.0,
+    "outcrop_jitter_deg": 6.0,
+    "outcrop_jitter_frequency": 0.03
   },
   "_comment_blend_deg_r2": "EV4-hillside-seam round 2 (was 7.0, tried 14.0), round 3 (blend 8.0, rock_slope_deg 44.0 -> 40.0), round 4 (blend 6.0, rock_slope_deg back to 44.0). Round 2 doubled blend_deg to fix a round-1 critic's 'hard, unblended seam' complaint, but pushed pure rock's threshold (rock_slope_deg + blend_deg) to 58 degrees, outside this landform's own reachable slope -- probed directly with tools/debug_slope_probe.gd against `rises.peaks[0]` (centre [140,-90], radius 78, the exact landform capture_hillside.gd frames), this rise's slope peaks at ~52.5 degrees around 72m out along the east bearing and then RECEDES toward its base skirt. Round 3 fixed that by lowering rock_slope_deg to 40, which worked -- rock became visible -- but overcorrected the other way: a fresh blind critic reported rock now DOMINATES two of three frames (60-75% of the visible hill) and there is still no distinct soil band, because blend=8 left only a 2-degree pure-soil plateau (38-40), too thin to read as a third material at these camera distances. Round 4 keeps blend NARROWER (6.0, between round 2's failed 14.0 and the original 7.0) and restores rock_slope_deg to its original pre-EV4-hillside-seam value (44.0) rather than lowering it again, which together open an 8-degree pure-soil plateau (36-44, versus round 3's 2) while pushing pure rock back to 50 degrees -- the probe shows that band occurs only from roughly 68m to 74m out, a narrow accent ring near the base rather than a dominant face. TUNABLE; if soil still doesn't read as distinct, the plateau needs to be wider still (soil_slope_deg itself is the next lever, not touched by any of these four rounds); if rock has become too rare again, rock_slope_deg is the lever, not blend_deg -- round 3 already showed widening blend without checking landform-max-slope is how this regresses.",
+  "_comment_ev4_hillside_seam_remainder": "EV4-hillside-seam-remainder. `soil_slope_deg` 30 -> 24 widens the pure-soil plateau from round 4's 8 degrees (36-44) to 14 (30-44) without moving `rock_slope_deg`, so rock's own share of the hill (round 4 already tuned to a narrow accent ring, not the round-3 dominant face) is untouched -- this is the 'plateau needs to be wider still' half of round 4's own next-step note. `outcrop_jitter_deg`/`outcrop_jitter_frequency` are new: every band pick used to be a pure function of slope, so a roughly circular rise baked a perfectly circular ring of soil and rock -- a 'collar,' per the round-4 critic, not an authored outcrop. `playground_heightfield.gd::outcrop_jitter_deg()` adds a coarse, seeded noise value (see its own comment) to the sampled slope before the band lookup, so the ring bulges into lobes in some directions and recedes in others instead of tracing one smooth circle. Symmetric around 0 (does not change the AVERAGE amount of rock or soil, only where each band's edge falls), so it is additive to the plateau widening above rather than a competing lever. TUNABLE: raise `outcrop_jitter_deg` for chunkier, more separated outcrops; lower `outcrop_jitter_frequency` for fewer, larger lobes.",
   "_comment_slope_sample_step": "EV4-hillside-seam. The grass/soil/rock band is picked from slope, and slope was sampled with the SAME 1m central-difference step as the geometry itself -- so every texture decision saw the `detail` noise layer's own ripple (frequency 0.018, ~14m at its highest FBM octave, amplitude enough to swing slope roughly +-14 degrees) on top of the actual macro shape. Against a 7-degree blend_deg that ripple is bigger than the band it is supposed to smooth, so a rise's flank does not read as one coherent ring per material -- it reads as whichever material the local noise happened to push slope past THIS pixel, over and over, which is the 'camouflage' pattern a blind critic named twice (EV4 round 3, EV4-hillside-seam). Sampling slope at a wider step low-passes exactly that ripple while leaving the geometry, collision and vegetation placement (scatter_rules.gd calls slope_degrees_at with its own default step) untouched -- this value is read ONLY by build_playground_terrain.gd's two texture bakes. TUNABLE: too small and the blotching returns, too large and the band stops following the rise's own shape and reads as a smeared ring.",
   "_comment_shader": "Terrain3D shader settings. Every one of these is TUNABLE presentation and none of them touches collision or height — the bake is authored data and this is only how it is drawn.",
   "shader": {
@@ -246,13 +249,14 @@
       "uv_scale": 0.12,
       "_comment_uv_scale": "Metres per tile is 1/uv_scale, so 0.34 tiles every ~3m. It was 0.18 (~5.5m), and at that size the near ground showed the photograph's own brown patches rather than its average — a green meadow with a brown foreground, reading as two materials. Tighter tiling averages to grass; too tight and it visibly repeats, which is what the macro variation and detiling above are for.",
       "_comment_normal_depth": "Rock keeps more relief than grass. A cliff face with no normal detail reads as painted, and it is not the surface the player stands on at close range.",
-      "normal_depth": 0.6,
-      "ao_strength": 0.4,
+      "normal_depth": 0.3,
+      "ao_strength": 0.15,
       "roughness_mod": 0.0,
       "detiling_rotation": 0.2,
       "detiling_shift": 0.3,
       "tint": "#fafafa",
-      "_comment_tint_r9_4": "R9.4. Held at ~1.15x grass value for the same reason as soil. TUNABLE."
+      "_comment_tint_r9_4": "R9.4. Held at ~1.15x grass value for the same reason as soil. TUNABLE.",
+      "_comment_ev4_hillside_seam_remainder": "EV4-hillside-seam-remainder. Was normal_depth 0.6 / ao_strength 0.4 -- the highest relief and the highest AO strength of any texture in this list, on a photo (Rock030_Color.jpg) that is already dark. At a grazing sun angle on a rise's curved flank, a normal map this strong throws much of the surface into self-shadow, and ao_strength this high darkens every crevice on top of that; together a blind critic read the result as 'a cast shadow wrapping the hill... could be mistaken for an ambient-occlusion artifact rather than a material,' not stone. Both cut well below grass's own 0.12/0.25 (rock keeps a little more relief than grass, 0.3 vs 0.12, but no longer the most aggressive AO in the set at 0.15 vs grass's 0.25) -- `tint` was already near-white and had no further room to brighten the read. TUNABLE; these were flagged untested by round 4 and are the first attempt at them."
     },
     {
       "name": "soil",
