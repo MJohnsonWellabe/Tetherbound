@@ -3,6 +3,58 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF13 — Stronghold relocated ~105m out and genuinely occluded, not just nudged
+`scripts/world/landmark.gd`, `tools/capture_wayfinding.gd` on `ralph/OF13`.
+`model: sonnet` (mechanical placement/occlusion — `OF9`'s design question
+was already answered by the owner, nothing left to judge aesthetically).
+
+Owner's direct answer to `OF9`: the stronghold must not be visible from the
+start, and must sit farther from the village. `unshaded, fog_disabled`
+(R7.1/R9.4, reaffirmed by `OF4`) stays settled — a wayfinding silhouette
+that fades or vanishes with distance was already tried and rejected twice —
+so "hidden" here means real geometric occlusion by terrain, not a shader
+trick.
+
+**Computed, not guessed.** Wrote a scratch ray-march probe against
+`playground_heightfield.gd::height_at`, from the same two vantage points
+`capture_wayfinding.gd` already uses for this landmark (the village-square
+eye and the-rise-route's second waypoint). The old site (`RISE_CENTRE +
+(-6,8)`) has clear line-of-sight from both, 2.6m minimum clearance to the
+apex. Scanned candidates along the village→`RISE_CENTRE` bearing: staying
+on the rise's own dome (up to its 78m radius) only starts occluding past
+~65m out, and even then with under 1m worst-case clearance — a razor's
+edge, on a back slope measured at ~30-37m of height variation across the
+complex's ~36m core footprint, enough to float or bury the unmodified OF4
+geometry. Past the dome's radius the surrounding rolling-hills terrain
+flattens back out: at 105m out (offset magnitude), clearance is -17.0m
+(village) / -23.2m (path) — comfortably occluded — and the local footprint
+spread drops to ~4.5m, flatter than the original site's own ~19m.
+
+**What shipped:** `landmark.gd`'s `OFFSET` moved from `(-6,8)` to
+`(89.8,-54.4)` (same `RISE_CENTRE`, now just a reference point rather than
+where the complex actually sits) — net distance from the village-square eye
+up from 156.8m to 271m (+73%). `capture_wayfinding.gd`'s `TOWER_AT` and the
+`silhouette-close`/`silhouette-approach` eyes shifted by the same delta so
+the tool still frames the structure; their exact close-up framing was tuned
+against the OLD site and hasn't been re-verified (the `-approach` frame
+came back clipped into a wall at the new site) — left for whoever picks up
+`OF10` (the road/approach to the relocated site), noted in the code.
+
+**Verified by rendering, not just the math**: `silhouette-from-square` and
+`silhouette-from-path` (`shots/wayfinding/`) both show the rise itself in
+frame, with no stronghold visible anywhere in either — the actual "done
+when" this item was scoped to. `silhouette-close` at the new site shows the
+complex sitting on grass with no obvious floating/burying. `godot --headless
+--path . --import` clean, no script errors. `tests: none (visual)` — no
+automated suite governs landmark placement; this is the same verification
+class other placement/visual items in this backlog use.
+
+**Downstream note, recorded in `BACKLOG.md`:** `OF4-remainder-mound`'s
+premise ("the fortress on top reads as a garden ornament... castle on a
+golf bunker") no longer applies as written — there's no fortress in either
+of its two named vantage frames anymore. Flagged there rather than silently
+closed, since the bare-dome critique might still stand on its own merits.
+
 ## OF1 — Catching redone as a staged performance, not a tuning pass
 `a23ca93` + `15e4164` on `ralph/OF1`.
 

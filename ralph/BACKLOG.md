@@ -73,6 +73,20 @@ as the dominant wrong-scale shape. Note the pre-existing lone rock prop on
 the west slope was independently flagged by two critics as "a stray blob /
 floating chunk" — reposition or cluster it as part of this work.
 
+**Premise changed by `OF13` (shipped `ralph/OF13`):** the fortress no
+longer sits on this rise's summit — `OF9`'s owner answer moved it ~105m
+out onto the rise's far shoulder, past the dome's own radius, specifically
+so it is NOT visible from the village square or the Rise path. The
+"castle on a golf bunker"/"fortress on top reads as a garden ornament"
+framing above can no longer happen from those two vantages, since there is
+no fortress in either frame anymore (rendered and confirmed — see `DONE.md`'s
+`OF13` entry). The underlying critique of the bare dome itself (no rock
+outcrop, strata or scale reference, plus the stray floating rock prop) may
+still be worth fixing on its own terrain-quality merits — whoever picks
+this up should re-render both vantages fresh and judge the mound alone,
+not assume the original six-round history still applies to what's now a
+different frame.
+
 **`OF5` (running/walking looked unnatural — gait cadence didn't match travel speed, feet ice-skated) shipped — see `DONE.md`.**
 
 ### OF6 — World boundary: tighten the hard collision stop to match the visible perimeter
@@ -93,18 +107,7 @@ when a blind pass no longer calls the perimeter discontinuous or low-quality.
 
 **`OF9` (should the stronghold be visible from the start) flagged, not silently fixed — see `BLOCKED.md`'s "Design questions awaiting the owner" for the evidence and what would close it.**
 
-### OF13 — Hide the stronghold and move it farther from the village (`OF9`'s answer)
-`area: terrain` · `model: sonnet` (mechanical — the judgment call is already
-made; this is placement and occlusion, not a look-and-feel decision). Owner's
-direct answer to `OF9`: the stronghold should not be visible from the start.
-Relocate the landmark farther from the village and the early routes, and
-occlude/hide it (distance, terrain massing, or fog — whichever actually
-blocks the sightline) rather than just nudging its position. **Land after
-`OF4`'s silhouette rework (`ralph/OF4`, PR #14) merges** — both touch
-`landmark.gd`, and duplicating that conflict wastes a rebase. Verify with
-`tools/capture_wayfinding.gd` (or the equivalent survey script) from the
-village/opening-route vantage points: done when the stronghold is not visible
-from any of them.
+**`OF13` (hide the stronghold, move it farther from the village) shipped — see `DONE.md`.**
 
 ### OF10 — The road up to the stronghold is unwalkable, and the hill/slope doesn't look good
 `area: terrain` · `model: fable` (likely — the existing hillside-quality
