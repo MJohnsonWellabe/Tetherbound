@@ -339,50 +339,49 @@ meaningful quantity — ruling out further `path_bias`/`path_avoid_radius`
 tuning as the lever for that specific frame. Narrower remainder opened
 below.
 
-### EV3-remainder-5 — grandpas-house-route.png still reads as "hedge" to a blind critic, but real data rules out every layer/mechanism this backlog line can tune
+**`EV3-remainder-5` round 1 (the `path_stones` clump_radius fix) shipped, partial — see `DONE.md`.** Found and fixed a real, verified mechanism the
+prior round's diagnosis chain hadn't reached yet: `path_stones`' own
+`clump_radius` (8.0, unchanged since before real paths existed) was more
+than twice the path's actual visible width, spreading stones out to 7-8m
+off centreline in a near-perfectly symmetric 7-left/7-right pattern near
+Grandpa's house — exactly the "matched clusters... flanking both sides"
+shape two critics had already named. Cut to 3.5m, verified before/after
+with real placement data (18→6 in-region instances, worst-case offset
+8m→2.8m). **Did not close the item** — a fresh critic on the re-rendered
+frame still named the same frame for a flanking pattern, but attributed it
+to flowers/grass rather than stones, which a frustum-projection check
+(exact camera, not a guessed region) doesn't support: real near-field
+flowers there are heavily left-skewed, not symmetric. Narrower remainder
+opened below.
+
+### EV3-remainder-6 — grandpas-house-route.png still reads as flanked to a blind critic after the one real mechanism this line's diagnosis chain found (path_stones) is fixed and verified
 `model: opus` · `tests: none (visual)` · `area: vegetation`
-`EV3-remainder-4`'s own whole-map dumps (real seed, real camera region, not
-a guessed bounding box) are conclusive on what is NOT happening in
-`grandpas-house-route.png`'s visible foreground (roughly `x∈[-24,-4]`
-around Grandpa's house at `[-22,-16]`, `data/config/village.json`):
-`flowers` has zero clumps — biased or unbiased — within 15m of any path
-there, and `bushes` has exactly one instance within 20m of the house. Both
-`grass` and `drygrass` are already verified structurally clean (0% of
-clump-sourced instances and, after this item's fix, 0% of stray-sourced
-instances within 5m of a path anywhere on the map). Every lever this
-backlog line's own diagnosis chain has produced — `path_edge_jitter`,
-`path_bias_jitter`, `path_avoid_radius`, `path_bias_per_clump`,
-`path_bias_side_offset` — has now been tried, verified against real
-placement data to do exactly what it claims, and none of them touch
-whatever a blind critic is actually responding to in this specific frame.
-
-Two honest readings, not mutually exclusive:
-
-1. **This may be critic pattern-matching on genuinely sparse content.**
-   Round 2's critic described "matched clusters... at roughly the same
-   distance... flanking both sides" — a description that fits a human
-   noticing rough bilateral symmetry in what real data shows is a handful
-   of scattered, mostly-unrelated instances from different layers. Two
-   independent critics across two rounds naming the same thing is real
-   signal, but it may be signal about overall sparsity/legibility near this
-   route rather than a specific placement bug — `grandpas-house-route`'s
-   under-clustering was flagged as UNRESOLVED as far back as `EV3-remainder`
-   round 1 and has never actually been fixed, only routed around.
-2. **A layer not yet dumped for this exact region could still be
-   responsible** — `trees`, `grove`, `saplings`, `deadfall`, `rocks` and
-   `path_stones` were not checked against this specific frame's region the
-   way `flowers`/`bushes`/`grass`/`drygrass` were. Any of them landing
-   symmetrically by chance in this one seed would produce exactly this
-   read without touching any `path_*` mechanism at all.
-
-Done when: either a real placement dump against the remaining layers finds
-an actual mechanism (and fixes it the same evidence-first way this backlog
-line has for grass/drygrass/flowers), or a blind critic given
-`grandpas-house-route.png` alongside its own real placement counts agrees
-the pattern is not systematic and the frame is accepted, or the owner is
-asked directly whether `grandpas-house-route`'s under-clustering (a
-different, older, still-open complaint) is the actual thing worth fixing
-here instead of continuing to chase "hedge" as if it were one bug.
+`EV3-remainder-5`'s own frustum-projection check (the exact camera
+`tools/capture_paths.gd` uses for this viewpoint, not a guessed world-space
+region) found real near-field `flowers` in this frame are heavily
+LEFT-skewed (18 of ~21 instances under 19m sit on the screen's left half),
+which does not match a "matched flanking bands" read. Combined with
+`EV3-remainder-4`'s already-verified finding that `flowers`/`bushes` are
+barely present in Grandpa's house's own region at all, there is no longer
+an untested layer left in this backlog line's diagnosis chain — `trees`,
+`grove`, `saplings`, `rocks` were also dumped this round and found absent
+or negligible near this specific frame's foreground. What's left is the
+item's own first honest reading, now with nothing else to rule out first:
+`grandpas-house-route`'s own **under-clustering** (flagged UNRESOLVED as
+far back as `EV3-remainder` round 1, never actually fixed, only routed
+around every round since) may be what a critic is actually responding to —
+a path cut through visibly sparse ground cover reads as "flanked by two
+things" simply because the two things nearest the path on either side are
+whatever happens to be nearest, not because of a placement bug in any one
+layer. No further `path_bias`/`path_avoid_radius`/`clump_radius` tuning is
+indicated without new evidence — the mechanism side of this investigation
+is exhausted for now. Done when: either `grandpas-house-route`'s
+under-clustering complaint is picked up directly (denser ground cover near
+this specific route, a placement-authoring change rather than a path-proximity
+one) and a fresh critic's read changes, or the owner is asked directly
+whether this frame is worth further iteration versus accepting it — the
+third honest closing condition this backlog line has named since
+`EV3-remainder-5` and not yet exercised.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
 tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four

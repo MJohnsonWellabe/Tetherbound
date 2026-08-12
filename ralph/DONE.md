@@ -3,6 +3,64 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV3-remainder-5 (round 1) — path_stones' own clump_radius was more than twice the path's visible width, spreading stones into a symmetric flanking pattern near Grandpa's house
+`tests: run_tests.gd` (341/341), `smoke_art` green. Real blind visual-judge
+pass (`.claude/skills/visual-judge`, genuine sub-agent, no memory of what
+changed), against real rendered frames from `tools/capture_paths.gd`.
+
+**A real, verified mechanism, found the same evidence-first way this
+backlog line has used since `EV3-remainder-3`.** `EV3-remainder-4`'s own
+whole-map dump had already ruled out `flowers`/`bushes`/`grass`/`drygrass`
+for `grandpas-house-route.png`'s region (Grandpa's house at `[-22,-16]`,
+`data/config/village.json`) but left six layers unchecked: `trees`,
+`grove`, `saplings`, `deadfall`, `rocks`, `path_stones`. A fresh dump of all
+six found five completely absent from the region and one very much present:
+`path_stones`, 18 in-frame instances, split almost perfectly symmetric (7
+left / 7 right / 4 on-path of the path centreline), individual stones up to
+7-8m off it. `terrain_playground.json`'s own path is 3.0m wide with a 1.5m
+shoulder — stones scattered out to 8m are sitting on open lawn well past
+where the path has any visual influence, which is exactly the "matched
+clusters... flanking both sides" shape two critics had already described.
+`path_stones`' own `clump_radius` (8.0, unchanged since the layer was
+authored, long before real paths existed) was simply never re-examined
+against the path's own real width once `path_bias` started snapping clump
+centres onto it (`EV3`). Cut to 3.5m — inside the path-plus-shoulder-plus-a-
+verge band. Verified before/after with the same real-seed dump: in-region
+instances 18→6, worst-case perpendicular offset 8m→2.8m, left/right split
+no longer near-perfectly even.
+
+**Did not close the item.** A fresh blind critic on the re-rendered frame
+still named `grandpas-house-route.png` for a flanking/planted-border
+pattern — but described it as "flowers and grass tufts", not stones, which
+does not match what the placement data says is actually there. Rather than
+guess whether the critic mis-identified small grey path-stone props as
+foliage at this render quality, or whether the region estimate itself was
+still off, built a second diagnostic that projects every layer's real
+instances through the EXACT camera `tools/capture_paths.gd` uses for this
+viewpoint (`Camera3D.unproject_position`/`is_position_behind`, not a
+guessed world-space box) and filtered to near field (<30m, roughly what a
+critic would actually resolve in a screenshot rather than hazy background).
+Result: real near-field `flowers` in this frame are heavily LEFT-skewed
+(18 of ~21 instances under 19m sit on the screen's left half), not the
+even two-sided split a "matched flanking bands" read implies. That is
+inconsistent with a specific placement bug and more consistent with the
+item's own first honest reading — a critic pattern-matching general
+"vegetation flanks a clear travel corridor" on a frame where the path itself
+(by design — nothing but `path_stones` and `grows_on_paths` layers are
+permitted on it) is a visible gap in dense ground cover either side of it.
+That gap-vs-meadow contrast may just be what a path through vegetation
+looks like, not a bug any further `path_bias`/`path_avoid_radius` tuning
+can remove.
+
+**Not chased a third round this pass** (`conventions.md`'s own stopping
+guidance, and the `path_stones` fix is real, verified progress rather than
+a flat result). Left as an open remainder rather than closed — see
+`BACKLOG.md`'s `EV3-remainder-6` for the frustum-check finding and the
+un-eliminated possibility (`grandpas-house-route`'s own long-standing
+under-clustering complaint, flagged as unresolved since `EV3-remainder`
+round 1) that whoever picks this up next should weigh before reaching for
+another mechanism tweak.
+
 ## EV9-panel-reskin — Inventory grid + crafting panel re-skin, plus a real blind pass and one genuine fix
 `tests: smoke_menu` green (336/336 full suite also run locally, headless)
 
