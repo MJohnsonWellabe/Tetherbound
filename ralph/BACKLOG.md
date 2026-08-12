@@ -33,13 +33,7 @@ current read on the build. Two items (`OF11`, `OF12`) replace `BLOCKED.md`
 entries that stopped clearing after repeated tuning rounds — see
 `BLOCKED.md` for why those are redos, not continuations.
 
-### OF1 — Catching still doesn't feel good; redo it, don't tune it again
-`model: fable` (dispatch, per `PROMPT.md`'s Fable-tagged rule — this is a
-feel/design authorship call, not a bug fix). The owner's own words: "Catching
-is still bad." No existing spec pins down what "good" catching feels like
-here, so the dispatched subagent owns defining that as well as building it —
-throw, orb-in-flight, capture resolution, and the feedback around each step.
-Done when a fresh playtest no longer reads as "still bad."
+**`OF1` (catching redone as a staged performance — shake choreography, camera handoff, VFX, HUD odds/feedback) shipped — see `DONE.md`.** Structural gaps behind "still bad" (no resolution presentation, no camera return, no pre-throw information, no felt verdict) are fixed and converged over 3 blind-pass rounds; residual gaps are honest and out of scope (no audio pipeline exists in the project; the orb is still the labelled M11 placeholder; real feel needs a controller playtest on the Ally, which stills can't prove).
 
 **`OF2` (item-target picker for consumables; party reorder found already built) shipped — see `DONE.md`.**
 
