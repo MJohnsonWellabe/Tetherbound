@@ -3,6 +3,50 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## LP6 — Script-based claim/heartbeat/release so `STATUS.md` leases can't drift past `## END LEASES` again
+`1a619bb`, `06b7274` · `tests: none`
+
+Two prior prunes (2026-08-11 21:09Z, 2026-08-12 02:46Z) both diagnosed the
+same cause and neither held: a firing edits the live lease file by eye,
+misjudges where "the end" is once the file is long, and appends a new
+block after `## END LEASES` instead of before it. A human doing the
+insertion by eye can make that mistake indefinitely; a script computing the
+insertion point from the marker line cannot.
+
+`tools/ralph_status.py` (lives on `main`, operates on whatever file path
+you point it at) adds four subcommands:
+- `claim` — appends a new lease block immediately before `## END LEASES`,
+  found programmatically, never assumed to be end-of-file.
+- `heartbeat` — updates an existing block's `state`/`updated`, and appends
+  a `note`/`note-2`/`note-3`... line, auto-picking the next unused note key
+  to match the file's own convention (verified against a real multi-note
+  block from the live file).
+- `release` — deletes a firing's block cleanly; round-tripped
+  claim→heartbeat×2→release against a real copy of the live `ralph-status`
+  file and diffed byte-identical to the original.
+- `check` — exits 1 and names any lease-shaped line (`    firing:    ...`)
+  found after the marker, so a firing (or a human) can confirm no drift in
+  one command instead of reading the whole file. Verified against both a
+  clean copy (exit 0) and a synthetic drifted copy matching the actual bug
+  pattern (exit 1, named the stray block).
+
+`ralph/PROMPT.md`'s claim/heartbeat/release instructions now point at the
+script instead of describing manual edits, and the live leases file's own
+inline HTML-comment instructions (on `ralph-status`, pushed directly since
+that branch never merges — commit `fe1a027`) do the same. Documented the
+one real operational wrinkle: the script lives on `main`, the file it edits
+lives on `ralph-status`, and that branch never merges from `main` — so a
+firing sitting on a `ralph-status` checkout needs `git show origin/main:
+tools/ralph_status.py > /tmp/ralph_status.py` to get the script's content
+before it can run it there. This is not itself a Godot change, so no
+`smoke_*`/`test_*` suite applies — `tests: none` on the backlog item was
+correct; verification here is the round-trip and drift-detection tests
+above, run locally against a real copy of the live file, not asserted.
+
+Does not touch anything else on `ralph-status`; the live lease blocks
+currently on that branch are unmodified except for the one comment line
+these commits update directly.
+
 ## R2.1 — Tools: axe, pickaxe, hammer, knife, fishing rod; gathering gated on the held tool
 `49a05d4` · `tests: test_inventory` — full suite run locally, headless, 313/313 green (43,625 assertions),
 which includes `test_inventory.gd`'s new cases individually confirmed passing.

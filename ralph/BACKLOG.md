@@ -153,21 +153,8 @@ an isolated scratch-repo reproduction. One correction to this entry's own
 `git checkout -B "$BRANCH" "$SHA"` ever runs, so HEAD never leaves `__ship` —
 that path was already safe and needed no change.
 
-### LP6 — `ralph-status`'s `STATUS.md` has grown past `## END LEASES` again
-`model: haiku` · `tests: none` · `area: loop`
-The 2026-08-11 21:09Z prune fixed this once (see that entry, and its own
-"a large, growing file" note under "Reading it, as the owner"). Found again at
-01:38Z the same night: 700+ lines of lease blocks appended below the marker.
-Same underlying cause the prune already diagnosed — a firing hits `deleted
-block? two options?` friction, or just doesn't scroll far enough to find the
-literal marker line once the file is long, and appends to end-of-file instead.
-This is a live-data branch (`ralph-status`), so it drifts continuously and
-will keep doing this between prunes; a one-time fix does not hold. Done when:
-either the file is pruned again with a mechanism that actually prevents
-re-drift (a script a firing runs rather than a human doing it by eye, or
-restructuring the file so "append below this line" cannot silently become
-"append anywhere"), or someone concludes the periodic-manual-prune status quo
-is acceptable and closes this with that reasoning recorded.
+**`LP6` (a script-based mechanism so `STATUS.md` leases can't drift past
+`## END LEASES` again) shipped — see `DONE.md`.**
 
 ---
 
