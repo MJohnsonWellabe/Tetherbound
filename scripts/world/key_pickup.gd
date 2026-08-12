@@ -67,32 +67,41 @@ func _build_visual() -> void:
 	material.metallic = 0.1
 	material.roughness = 0.45
 
+	# A genuine blind pass on the orientation fix above (round 3) still
+	# called this "a curled/hooked yellow squiggle... does not read as a
+	# key even in close-up" — at ~20px on screen even a correctly-lit,
+	# correctly-oriented, correctly-shaped object can lose its silhouette
+	# to software-rendering blur. `items.json`'s own flavour text calls
+	# this "heavy and old," which gives room to size it as a big
+	# castle-style key rather than a small modern one without re-triggering
+	# the original "0.28m box read as a crate" complaint — that was 3x
+	# this size and had no shape at all, just a slot-coloured mound.
 	var shaft := MeshInstance3D.new()
 	var shaft_box := BoxMesh.new()
-	shaft_box.size = Vector3(0.09, 0.015, 0.025)
+	shaft_box.size = Vector3(0.13, 0.02, 0.035)
 	shaft.mesh = shaft_box
 	shaft.material_override = material
-	shaft.position = Vector3.UP * 0.02
+	shaft.position = Vector3.UP * 0.03
 	_visual = shaft
 	add_child(_visual)
 
 	for i in 2:
 		var tooth := MeshInstance3D.new()
 		var tooth_box := BoxMesh.new()
-		tooth_box.size = Vector3(0.013, 0.013, 0.025)
+		tooth_box.size = Vector3(0.018, 0.018, 0.035)
 		tooth.mesh = tooth_box
 		tooth.material_override = material
-		tooth.position = Vector3(0.024 + i * 0.017, -0.014, 0.0)
+		tooth.position = Vector3(0.034 + i * 0.024, -0.019, 0.0)
 		shaft.add_child(tooth)
 
 	var ring := MeshInstance3D.new()
 	var torus := TorusMesh.new()
-	torus.inner_radius = 0.02
-	torus.outer_radius = 0.045
+	torus.inner_radius = 0.028
+	torus.outer_radius = 0.06
 	ring.mesh = torus
 	ring.material_override = material
 	ring.rotation.x = deg_to_rad(90.0)
-	ring.position = Vector3(-0.09, 0.0, 0.0)
+	ring.position = Vector3(-0.125, 0.0, 0.0)
 	_visual.add_child(ring)
 
 
