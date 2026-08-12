@@ -233,7 +233,14 @@ error — it is not.
   **auto-heals the ally fully after every fight** (`_ally.heal_fully()`),
   which now actively undercuts potions and camp rest. Removing it is on the
   backlog, deliberately *after* crafting exists.
-- **Save/load. Still not one write to `user://` outside settings.**
+- ~~**Save/load. Still not one write to `user://` outside settings.**~~
+  **Built (R3.1, `docs/decisions/D27`).** Five slots (`user://saves/`),
+  autosave on rest, a "Save" pause-menu tab, versioned JSON in the same
+  never-fatal-on-load shape D15 set for settings. Party, satchel (slot
+  positions included) and the day counter all round-trip; placed buildings
+  are now tracked as data (`GameState.placed_buildings`) for the first time
+  and respawn on load. Known gap: a placed storage chest's own contents do
+  not yet round-trip, only the chest itself.
 - **The release ceremony** (M5), **evolution** (Mudsnout → Tuskroot is data
   plus D20's intent, no mechanic), **riding**, **day/night visuals and
   weather** (the day *counter* advances via camp rest; nothing else changes),

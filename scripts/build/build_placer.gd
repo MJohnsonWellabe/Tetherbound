@@ -25,6 +25,12 @@ const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 ## answered in exactly one place instead of every branch below re-deriving it.
 const STATEFUL_IDS := ["camp", "storage"]
 
+## R3.1. Every node this script has planted for real, ghost excluded — how
+## `restore_from_game` finds and clears the old set before rebuilding from a
+## loaded save, and how `GameState.load_game` finds this node at all.
+const PLACED_GROUP := "placed_building"
+const BUILD_PLACER_GROUP := "build_placer"
+
 ## Metres ahead of the player the ghost sits.
 const PLACE_AHEAD := 3.0
 ## A camp needs ground this flat. Steeper reads as a tent on a cliff.
@@ -43,6 +49,8 @@ var _ghost_id := ""
 func _ready() -> void:
 	_player = get_node_or_null(player_path) as Node3D
 	_camera_rig = get_node_or_null(camera_rig_path)
+	add_to_group(BUILD_PLACER_GROUP)
+	restore_from_game(_game())
 
 
 func _game() -> Node:
@@ -125,6 +133,31 @@ func _can_afford(game: Node, armed: String) -> bool:
 	return game != null and bool(game.call("can_afford", armed))
 
 
+## The plain node-creation half of placement, shared with `restore_from_game`
+## below — spends nothing and does not touch position, so a save restore can
+## reuse it without re-charging the satchel for a piece it already paid for.
+func _spawn_building(game: Node, id: String) -> Node3D:
+	var placed: Node3D = null
+	if id == "camp":
+		placed = CAMP.new()
+		placed.name = "Camp"
+		get_parent().add_child(placed)
+		placed.call("build_real")
+	elif id == "storage":
+		placed = STORAGE_CONTAINER.new()
+		placed.name = "Storage"
+		get_parent().add_child(placed)
+		placed.call("build_real")
+	else:
+		var mesh_path := _piece_mesh(game, id)
+		placed = BUILD_PIECE.new()
+		placed.name = "Piece_%s" % id
+		get_parent().add_child(placed)
+		placed.call("build_real", mesh_path)
+	placed.add_to_group(PLACED_GROUP)
+	return placed
+
+
 func _place(game: Node, armed: String) -> void:
 	# Spend first, all-or-nothing; the inventory refuses partial removals.
 	var inventory: RefCounted = game.get("inventory")
@@ -134,26 +167,36 @@ func _place(game: Node, armed: String) -> void:
 			push_error("could not spend the cost for '%s' after can_afford said yes" % armed)
 			return
 
-	var placed: Node3D = null
-	if armed == "camp":
-		placed = CAMP.new()
-		placed.name = "Camp"
-		get_parent().add_child(placed)
-		placed.call("build_real")
-	elif armed == "storage":
-		placed = STORAGE_CONTAINER.new()
-		placed.name = "Storage"
-		get_parent().add_child(placed)
-		placed.call("build_real")
-	else:
-		var mesh_path := _piece_mesh(game, armed)
-		placed = BUILD_PIECE.new()
-		placed.name = "Piece_%s" % armed
-		get_parent().add_child(placed)
-		placed.call("build_real", mesh_path)
+	var placed := _spawn_building(game, armed)
 	placed.global_position = _ghost.global_position
+	# R3.1. The registry, not this node, is what a save actually persists —
+	# see GameState.placed_buildings.
+	game.call("register_building", armed, placed.global_position)
 	game.set("pending_build", "")
 	_drop_ghost()
+
+
+## R3.1. Rebuild everything `GameState.placed_buildings` remembers: called
+## once at boot (a no-op the first time a save is ever written, since the
+## list starts empty) and again by `GameState.load_game` whenever the player
+## loads a slot mid-session. Existing placed pieces are cleared first so a
+## mid-session load cannot leave two copies of the same building standing on
+## top of each other.
+func restore_from_game(game: Node) -> void:
+	if game == null:
+		return
+	for node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		node.queue_free()
+	for entry: Variant in (game.get("placed_buildings") as Array):
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var record := entry as Dictionary
+		var id := str(record.get("id", ""))
+		var position: Array = record.get("position", [])
+		if id.is_empty() or position.size() != 3:
+			continue
+		var placed := _spawn_building(game, id)
+		placed.global_position = Vector3(float(position[0]), float(position[1]), float(position[2]))
 
 
 func _drop_ghost() -> void:

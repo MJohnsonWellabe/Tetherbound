@@ -28,6 +28,11 @@
       "script": "res://scripts/ui/tab_build.gd"
     },
     {
+      "id": "save",
+      "label": "Save",
+      "script": "res://scripts/ui/tab_save.gd"
+    },
+    {
       "id": "settings",
       "label": "Settings",
       "script": "res://scripts/ui/tab_settings.gd"

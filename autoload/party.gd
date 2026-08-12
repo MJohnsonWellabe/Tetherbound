@@ -118,6 +118,15 @@ func set_active(index: int) -> bool:
 	return true
 
 
+## Empty the party. Used only by save/load (R3.1) to rehydrate from a slot
+## without leaving whichever pals were already in it mixed in with the loaded
+## ones.
+func clear() -> void:
+	_pals.clear()
+	_active = 0
+	revision += 1
+
+
 ## Every pal down means there is no fight to be had.
 func all_fainted() -> bool:
 	if _pals.is_empty():

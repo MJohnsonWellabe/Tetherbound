@@ -25,6 +25,7 @@ const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
 ## Seeds a sample party and satchel so the screens can be looked at before
 ## gathering and catching exist. Off in a normal run: inventing a starting kit
@@ -43,6 +44,17 @@ var day: int = 1
 ## What the build menu last armed, or an empty string. The building system reads
 ## this when there is one; until then it is the honest end of the build screen.
 var pending_build: String = ""
+
+## R3.1. Every build piece the player has planted, as data — `{id, position:
+## [x,y,z]}` — independent of whatever scene node currently renders it. This is
+## the thing save/load actually persists; `build_placer.gd` reads it back to
+## respawn the world on load and appends to it on every real placement.
+var placed_buildings: Array = []
+
+## R3.1. Save/load logic — `scripts/save/save_game.gd`. A plain RefCounted,
+## same split as `party`/`inventory` above, so it is testable without a scene
+## tree. See that file's header for the format and versioning rule.
+var save_system: RefCounted = null
 
 ## DEVELOPMENT CONVENIENCE, AND IT IS MEANT TO BE DELETED.
 ##
@@ -81,6 +93,7 @@ func _ready() -> void:
 	items = ITEM_DB.new()
 	inventory = INVENTORY.new(items)
 	party = PARTY.new()
+	save_system = SAVE_GAME.new()
 
 	if OS.get_cmdline_args().has(DEMO_FLAG):
 		_seed_demo()
@@ -132,6 +145,51 @@ func _input(event: InputEvent) -> void:
 func advance_day() -> int:
 	day += 1
 	return day
+
+
+# --- save / load (R3.1) ------------------------------------------------------
+
+
+## Record a real placement. `build_placer.gd` calls this once, right after the
+## piece is spent and planted — the registry, not the scene node, is what a
+## save actually persists.
+func register_building(id: String, position: Vector3) -> void:
+	placed_buildings.append({"id": id, "position": [position.x, position.y, position.z]})
+
+
+## Write `slot`. Returns whether it succeeded.
+func save_game(slot: int) -> bool:
+	return bool(save_system.call("save", self, slot))
+
+
+## Load `slot` onto this live state and tell the world to rebuild whatever it
+## placed. Returns whether a save was actually applied.
+##
+## Reached "by group" the same way `camp.gd::_pass_the_night` resets the
+## day/night cycle — `Game` has no direct handle on the world scene, and a
+## scene with no build-placer (a test scene, say) should load its party and
+## satchel fine with nothing to rebuild.
+func load_game(slot: int) -> bool:
+	if not bool(save_system.call("load_slot", self, slot)):
+		return false
+	for node in get_tree().get_nodes_in_group("build_placer"):
+		if node.has_method("restore_from_game"):
+			node.call("restore_from_game", self)
+	return true
+
+
+## The slot `camp.gd` writes to on every rest. Exposed here rather than left
+## as a magic `0` at the one call site that needs it.
+func autosave_slot() -> int:
+	return int(SAVE_GAME.AUTOSAVE_SLOT)
+
+
+func has_save(slot: int) -> bool:
+	return bool(save_system.call("has_slot", slot))
+
+
+func save_slot_info(slot: int) -> Dictionary:
+	return save_system.call("slot_info", slot)
 
 
 # --- building costs ---------------------------------------------------------

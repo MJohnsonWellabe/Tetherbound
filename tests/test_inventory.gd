@@ -225,6 +225,32 @@ func test_the_revision_counter_moves_only_on_real_changes() -> void:
 	assert_true(bag.revision > before)
 
 
+func test_set_slot_writes_a_slot_directly_at_the_given_position() -> void:
+	# R3.1: save/load rehydrates the satchel through set_slot() so slot
+	# POSITION survives a reload, not just slot contents — this is the one
+	# thing that makes set_slot() different from add().
+	bag.set_slot(10, {"id": "wood", "n": 7})
+	assert_eq(bag.stack_at(10), {"id": "wood", "n": 7})
+	assert_eq(bag.count("wood"), 7)
+	assert_true(bag.is_slot_empty(0))
+
+
+func test_set_slot_to_null_empties_the_slot() -> void:
+	bag.add("wood", 5)
+	var occupied: int = bag.find_slot("wood")
+	bag.set_slot(occupied, null)
+	assert_true(bag.is_slot_empty(occupied))
+	assert_eq(bag.count("wood"), 0)
+
+
+func test_set_slot_out_of_range_is_a_no_op() -> void:
+	var before: int = bag.revision
+	bag.set_slot(-1, {"id": "wood", "n": 1})
+	bag.set_slot(INVENTORY.SLOT_COUNT, {"id": "wood", "n": 1})
+	assert_eq(bag.revision, before)
+	assert_eq(bag.count("wood"), 0)
+
+
 func test_there_is_no_carry_weight_anywhere() -> void:
 	# CLAUDE.md hard rule: slot/stack inventory, no carry-weight system. A
 	# `weight` or `mass` key appearing in items.json is how that rule would get

@@ -167,4 +167,8 @@ func _pass_the_night(game: Node) -> void:
 	for look: Node in get_tree().get_nodes_in_group("day_cycle"):
 		if look.has_method("reset_to_morning"):
 			look.call("reset_to_morning")
+	# R3.1. "Frequent autosave" — resting is the natural checkpoint this game
+	# already asks the player to return to, the same precedent survival games
+	# with a sleep beat use for it.
+	game.call("save_game", int(game.call("autosave_slot")))
 	print("[camp] rested; day %d" % day)

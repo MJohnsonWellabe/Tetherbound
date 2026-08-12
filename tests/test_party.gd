@@ -172,3 +172,16 @@ func test_the_revision_counter_moves_when_the_party_does() -> void:
 	assert_eq(party.revision, before, "a refused add must not make the menu rebuild")
 	party.add(_pal("Biscuit"))
 	assert_true(party.revision > before)
+
+
+func test_clear_empties_the_party_and_resets_active() -> void:
+	# R3.1: save/load rehydrates the party through clear() + add(), so a stale
+	# member left behind by clear() would silently survive every load.
+	_fill(3)
+	party.set_active(2)
+	var before: int = party.revision
+	party.clear()
+	assert_eq(party.size(), 0)
+	assert_eq(party.active_index(), 0)
+	assert_eq(party.active(), null)
+	assert_true(party.revision > before)

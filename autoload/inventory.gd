@@ -263,6 +263,18 @@ func repair_tool(index: int) -> void:
 	revision += 1
 
 
+## Write a slot directly, bypassing add()/remove()'s stacking and merge rules.
+## Used only by save/load (R3.1) to rehydrate a satchel exactly as it was,
+## position and all — the class comment above is explicit that slot POSITION
+## is player-visible state, and routing a restore through `add()` would
+## repack everything into whatever slots happen to be free first.
+func set_slot(index: int, stack: Variant) -> void:
+	if index < 0 or index >= SLOT_COUNT:
+		return
+	_slots[index] = (stack as Dictionary).duplicate() if typeof(stack) == TYPE_DICTIONARY else null
+	revision += 1
+
+
 ## Empty the satchel and hand back everything that was in it.
 ##
 ## This is what a death satchel is made from. CLAUDE.md: multiple death satchels
