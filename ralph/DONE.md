@@ -59,6 +59,68 @@ first sound cues when audio work starts. Orb art is still the labelled
 placeholder (M11); the band/emission work makes it read as an object,
 not as final art.
 
+## OF4 (round 1) — Stronghold silhouette: masonry/weathering surface pass, self-reviewed
+`scripts/world/landmark.gd`, `tools/capture_wayfinding.gd` on `ralph/OF4`.
+
+Owner playtest feedback (2026-08-12, Phase -1.1): "the stronghold's
+silhouette reads as a toy." A prior lane-c firing (`ralph-lane-c-1916`)
+claimed this and dispatched a `model: fable` subagent but died mid-task
+with no branch pushed and no result recorded — this firing found that lease
+dead (58min stale, no `ralph/OF4` branch, no `DONE.md` entry) and retried
+from scratch.
+
+**Diagnosis, not guessed:** the silhouette's massing (`R7.1-visual-remainder`)
+and long-range colour/value (`R9.4`) were both already blind-critic-verified
+and deliberately left untouched. What neither round tested was the surface —
+one perfectly flat `unshaded` colour over mathematically clean primitives
+(identical crisp merlon cubes, 5-/6-sided facet-prism towers, sitting
+cleanly on the ground with zero weathering) is exactly how an injection-
+moulded playset reads at the range a player actually walks past it, as
+distinct from the staged wayfinding distances prior rounds tested from.
+
+**What shipped:** the shader keeps `unshaded, fog_disabled` (load-bearing
+per `R9.4` — a wayfinding silhouette must read the same from every
+approach) but breaks the flat fill with world-position-keyed masonry
+courses, per-block value jitter, mortar seams, mottling and weather
+streaks, plus a darkened footing where stone meets ground — all keyed to
+world position/normal, never camera or sun, so the R9.4 long-range value is
+preserved (near-zero-mean at distance) while close range resolves into
+coursed stone. Merlons on both the tower rings and the connecting wall now
+vary in height/width/yaw and ~1-in-5 is simply missing (fixed-seed RNG,
+reproducible), the keep's roof is a darker slate so the site isn't one
+moulded colour, tower radial segments went 5/6 → 10-12 (silhouette-edge
+facets only — massing/heights/positions untouched), and 14 collapsed rubble
+blocks are half-sunk in the grass around the perimeter. One new render
+viewpoint, `silhouette-approach` (eye 1.7m, ~26m out), added to
+`capture_wayfinding.gd` since the complaint came from actual play, not the
+staged distances.
+
+**Owner-directed scope cut, mid-task:** the original dispatch (this firing's
+own, see the lease history) was given the project's normal uncapped
+iterate/blind-critic-pass rule. The owner interrupted live to cap token
+spend: one best-judgment fix, a few render frames, self-review instead of a
+blind sub-agent dispatch, at most one further fix-and-rerender pass, then
+stop. The subagent's self-review after pass 1 found the block scale itself
+was a toy cue (1.3m courses made the keep face only ~5 blocks wide —
+oversized bricks read as a miniature); pass 2 (the one capped iteration)
+cut to 0.8m courses, reviewed again, stopped.
+
+**Verification is real but not to this project's usual bar for
+visual-affecting work.** The shipping firing (not a blind sub-agent) looked
+directly at the rendered frames and the diff: the approach/close frames now
+read as weathered coursed stone with real value variation, not a flat
+single-colour moulded shape; the long-range frames are visually unchanged
+from the already-verified `R9.4` read. `godot --headless --path . --import`
+ran clean, no script errors. **No genuinely blind critic reviewed this** —
+an explicit, owner-directed exception to `conventions.md`'s "visual-affecting
+work needs a blind pass, not a look" rule, made to cap this round's cost,
+not a decision made silently. `tests: none` named by the backlog item itself;
+this doesn't touch creature/save data so `smoke_art`/full-suite don't apply.
+
+Recorded as **partial**, not done: `OF4-remainder` (`BACKLOG.md`) carries
+the actual blind-verification step forward, unbudgeted, under the project's
+normal no-cap rule.
+
 ## OF2 — Item-target picker for consumables; party reorder found already built
 `b6655da` (+ `1bc2f7f` .uid sidecar fix, `41498a6` footer fix) on `ralph/OF2`.
 

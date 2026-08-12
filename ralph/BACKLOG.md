@@ -46,11 +46,31 @@ runner; (2) the on-screen keyboard for text entry needs a real usability
 pass (layout, controller navigation, backspace/confirm affordances). This is
 the tutorial's front door — both bugs are first-impression breaking.
 
-### OF4 — The stronghold's silhouette reads as a toy
-`model: fable` (dispatch) — visual-direction judgment call. Done when a
-fresh blind critic pass no longer names "toy-like" or an equivalent
-complaint against the silhouette, following the same evidence-based
-iterate/stop rule other visual items use.
+**`OF4` round 1 (masonry/weathering surface treatment on the stronghold
+silhouette) shipped, partial — see `DONE.md`.** Real, verified improvement;
+did not clear the item's own done-when because no genuine blind critic ran
+this round — see `OF4-remainder` below for why and what's left.
+
+### OF4-remainder — Blind-verify the stronghold silhouette's surface pass, iterate if needed
+`model: fable` (dispatch) · `area: terrain`
+`OF4` round 1 replaced the silhouette's flat, mathematically-uniform surface
+(one colour, identical merlons, low-facet towers — the actual source of the
+owner's "toy" read, since the massing and long-range colour were already
+blind-verified by `R7.1-visual-remainder`/`R9.4`) with world-position-keyed
+masonry courses, weathering, irregular battlements and rubble at the base.
+Rendered via `tools/capture_wayfinding.gd` (now with a new human-scale
+`silhouette-approach` viewpoint) and reviewed directly by the shipping
+firing, not by a blind sub-agent — an explicit, owner-directed scope cut to
+cap token spend on this round, not an oversight. The direct review reads it
+as a real improvement (coursed stone with value variation and weathering,
+not a flat moulded-plastic read) but conventions.md's blind-pass rule for
+visual-affecting work is still open. Done when: a genuinely blind critic
+(fresh sub-agent, `.claude/skills/visual-judge` or the same targeted
+question `R7.1-visual`'s rounds used) is shown the current
+`shots/wayfinding/silhouette-*.png` frames and confirms the toy-like read is
+gone — or, if it still finds a toy-like defect, iterate per the normal
+no-cap/two-flat-rounds-stop rule (no further token-budget cut applies to
+this remainder).
 
 ### OF5 — Running and walking look unnatural
 `model: fable` (dispatch) — a "does this look right" call, distinct from the
