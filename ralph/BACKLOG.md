@@ -908,40 +908,33 @@ follow system rather than replacing it; `SA7`/`SA8` are explicit owner
 directives (`CLAUDE.md`'s carve-out applies — implementing these is not a
 firing inventing a story beat).
 
-### HD1 — Device-aware input glyphs
-`model: sonnet` · `tests: none` · `area: ui`
-Reproduces the owner's exact report: `combat_throw` is bound to keyboard **F**
-or gamepad **RB** (button 10), but `combat_hud.gd` always prints "F"
-regardless of device, and always shows Xbox-style "A"/"X"/"B" for the other
-verbs even on mouse and keyboard.
+**`HD1` (device-aware input glyphs) shipped — see `DONE.md`.** Both real gaps
+closed: `combat_hud.gd`'s Actions row now draws real device-aware icons
+instead of hardcoded Xbox letters, and `input_glyph.gd` reads a real
+last-used-input-device tracker (new, on the `Game` autoload) instead of "is a
+pad connected." Two blind-judge rounds found and fixed a size regression and
+a dimming bug; one narrower remainder opened below. Deliberately did **not**
+build UI for `combat_switch_left`/`combat_switch_right` — traced them and
+confirmed no code anywhere reads those bindings (mid-combat pal switching
+isn't an implemented mechanic; `CO1`'s swap is exploration-only), so building
+icons for them would be inventing combat UI for a feature that doesn't exist
+rather than wiring up a real one.
 
-**Narrowed, not closed, by an `EV9` ship that landed in parallel with this
-item's own discovery — see `DONE.md`.** `dialogue_panel.gd`, `name_prompt.gd`,
-`starter_picker.gd`, and the exploration/combat contextual prompts
-(`prompt_arbiter.gd`, `encounter_director.gd`) now draw a real Kenney icon
-through new `scripts/ui/input_glyph.gd`, instead of hardcoded bracket text —
-built and blind-judged without knowledge of this item, since the two were in
-flight at the same time. Two real gaps remain, and both are this item's job:
-
-- **`combat_hud.gd`'s Actions row is still untouched** — the owner's own
-  reproduction case (`combat_throw` showing "F" to a gamepad player) lives
-  here, not in any of the five sites the `EV9` ship covered. Five verbs
-  (quick/charged/throw/switch-left/switch-right), each needing a
-  keyboard-and-gamepad icon pair.
-- **`input_glyph.gd`'s device choice is "a joypad is connected," not
-  last-used.** A player with a pad plugged in who is actually typing on a
-  keyboard would still see gamepad glyphs — the exact class of bug this item
-  exists to fix, just not yet fixed at the root. Building the real
-  last-used-device tracker and pointing `input_glyph.gd`'s existing
-  `using_gamepad()` at it (rather than `Input.get_connected_joypads()`)
-  should carry all five already-wired call sites forward for free.
-
-Kenney Input Prompts are already staged (`EV1`,
-`assets_raw/vendor/kenney_input-prompts/`); the icon files themselves for the
-four ids `EV9` already covers are ledgered under `assets/ui/input_prompts/`
-and reusable directly for combat's five. Done when: every on-screen prompt
-matches the device that produced the last input, mouse included, and nothing
-shows a gamepad letter to a keyboard player or vice versa — combat included.
+### HD1-remainder — Quick and Charged render the same mouse-button icon, mirrored
+`model: sonnet` · `tests: none (visual)` · `area: ui`
+A second blind-judge round on `HD1`'s combat Actions row confirmed the
+dimming and sizing fixes but named one persisting defect both rounds agreed
+on: `mouse_left.png`/`mouse_right.png` (Kenney Input Prompts) are the same
+mouse-body silhouette with only the highlighted button-half mirrored, and at
+~36px on-screen that reads as "one icon, two colours" rather than two
+distinct buttons — the label text is what actually disambiguates them, not
+the icon. Checked the staged pack (`assets_raw/vendor/kenney_input-prompts/
+Keyboard & Mouse/Default/`) for a better-differentiated pair (an "LMB"/"RMB"
+text variant, say) and none exists; this is a real asset-ceiling, not an
+unexplored lever. Low severity — the adjacent label always disambiguates in
+practice — so left open rather than blocked. Done when: either a
+better-differentiated CC0 mouse-button glyph pair is sourced, or the owner
+accepts the current ceiling.
 
 ### HD2 — A real quick-access item hotbar
 `model: sonnet` · `tests: none` · `area: ui`

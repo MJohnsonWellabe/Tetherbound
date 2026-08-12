@@ -496,6 +496,80 @@ chased here: a plain `ShortCloset` box reads as a featureless flat slab
 (a geometry/detail limit of the source mesh, not a colour bug — its `Kd`
 is confirmed correct), and the porch chair's seat geometry looks sparse
 from one angle. Neither is the black-silhouette defect this item owned.
+## HD1 — Device-aware input glyphs, for real this time
+`tests: none` (item's own field). `9ec0475` (tracker + Actions row wiring),
+`bdc6447` (fixup: default icon size, not an undersized override), `7fd0db0`
+(fixup: dimmed verbs dim their icon too, not just the label; exact SHA
+depends on `ralph-merge.yml`'s rebase). 348/348 full suite green (7 new
+unit tests for the tracker), `smoke_combat`/`smoke_menu` green locally
+headless, plus `tools/capture_combat_actions.gd`.
+
+**The real last-used-input-device tracker.** `autoload/game_state.gd` now
+has an `_input(event)` that watches every real input event tree-wide —
+joypad button press or motion past a deadzone flips it to gamepad; key
+press, mouse button or mouse motion flips it to keyboard — and exposes
+`last_input_was_gamepad()`. Starts `true` only if a pad is already
+connected at boot, so the common Ally case (pad connected, keyboard never
+touched) shows the right glyph on frame one instead of a wrong default.
+`input_glyph.gd`'s `using_gamepad()` reads it now, falling back to the old
+"is a pad connected" check only when no `Game` autoload exists (an
+isolated harness) — the exact bug the owner reported (a mouse/keyboard
+player with a pad merely plugged in still seeing gamepad glyphs) is fixed
+at the root, which carries every already-wired `EV9` call site forward for
+free, not just combat.
+
+**`combat_hud.gd`'s Actions row**, the owner's own reproduction case
+(`combat_throw` always showing "F"), now draws real device-aware Kenney
+icons through `input_glyph.gd` for all five verb slots (Quick, Charged,
+Throw/No-orbs, Run, and aiming's Cancel — Run and Cancel share one glyph
+id since they're physically the same button, Escape/gamepad-B). Four new
+CC0 Kenney PNGs staged, already covered by the existing Input Prompts
+ledger row: `xbox_rb`, `mouse_left`, `mouse_right`, `keyboard_f`.
+
+**Deliberately did not build a mid-combat pal-switching feature.**
+`BACKLOG.md`'s `HD1` entry named `combat_switch_left`/`combat_switch_right`
+as needing icons too. Traced them first: both are real, deliberately-bound
+input-map actions (Left/Right arrow, D-pad left/right) that literally no
+script reads anywhere — `CO1`'s pal swap is exploration-only, gated by
+`pal_recall`. Building icon glyphs for a UI row that doesn't exist would
+mean inventing a new combat mechanic (switching the active pal mid-fight)
+to hang them on, which no design doc describes as built or planned —
+flagged in `BACKLOG.md`'s `HD1-remainder` rather than invented.
+
+**Two real blind-judge rounds, two real fixes, one honest remainder.**
+Real `Agent`-tool blind sub-agents (not self-review), against
+`tools/capture_combat_actions.gd`'s real fight frames:
+- Round 1 found the row's icons rendered at 30px, undersized against
+  `input_glyph.gd`'s own 36px default — the exact "ESC reads as illegible
+  mush" problem `EV9`'s own history already found and fixed once. Fixed by
+  dropping the override.
+- Round 1 also found dimmed verbs (Charged, No-orbs) greyed their text but
+  not their icon — a real BBCode gap: `[color=...]` recolours text, never
+  an embedded `[img]` tag. `input_glyph.gd::icon()` gained an optional
+  `tint` param that emits `[img=...color=#rrggbb]`, and `combat_hud.gd`
+  passes the verb's own colour through. Round 2 confirmed both fixes with
+  measured pixel sampling (enabled/disabled icon+text brightness now
+  matches, dimmed and undimmed pairs both move together).
+- Both rounds independently named the same persisting defect:
+  `mouse_left.png`/`mouse_right.png` are one silhouette mirrored, hard to
+  tell apart as icons alone at this size. Checked the staged Kenney pack
+  for a better-differentiated pair (an "LMB"/"RMB" text variant) — none
+  exists. A real, low-severity asset ceiling (the adjacent label always
+  disambiguates), not an unexplored tuning lever — opened as
+  `HD1-remainder` rather than silently accepted or endlessly re-rendered.
+
+**`tools/survey_combat.gd` is stale and does not currently produce a real
+fight frame.** Confirmed directly this session: its walk-from-spawn
+approach never leaves Grandpa's farmhouse (two identical frames of the
+trainer's back against an indoor wall) — a real regression from D18's
+indoor opening that `tests/smoke_combat.gd` already works around
+(`_leave_the_farmhouse()`, teleporting to the practice cluster) but this
+older capture tool never picked up. Real, pre-existing, and already
+tracked by the open `R9.4-remainder-9` — not this item's job to fix. Wrote
+`tools/capture_combat_actions.gd` instead: a narrower, faster capture that
+reuses `smoke_combat.gd`'s working teleport-and-walk and skips waiting for
+a landed hit or a full charged meter, since `HD1` only needed the row on
+screen, not an impact.
 
 ## Found-along-the-way: menu.json's two stray `test_menu_config.gd` references, and the phantom `hotbar_columns` comment
 `tests: full suite` (348/348, unchanged behaviour -- comment-only edit).
