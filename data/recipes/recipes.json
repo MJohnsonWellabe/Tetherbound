@@ -1,0 +1,26 @@
+{
+  "_comment": "R2.4. Base-tier crafting: orb_basic and potion_small from gathered materials, at the campfire. CLAUDE.md: data that varies per recipe lives here, never in gameplay code.",
+  "_comment_scope": "GAME_DESIGN.md 15 / MEADOWS_PROGRESSION_SPEC.md 10: baseline materials are wood, stone, fiber and berries and nothing else -- SD18 adds the Rootstone tier above these, later, in its own file rather than growing this one.",
+  "_comment_cost": "`cost` is a list of {id, n} against autoload/inventory.gd, the same shape data/items/buildables.json already uses for build costs -- one format for 'what does this take'.",
+  "_comment_output": "`output` is {id, n}: what one craft produces. Always one craft at a time; there is no bulk-craft multiplier here.",
+  "recipes": {
+    "orb_basic": {
+      "name": "Orb",
+      "output": { "id": "orb_basic", "n": 1 },
+      "cost": [
+        { "id": "wood", "n": 3 },
+        { "id": "fiber", "n": 2 }
+      ],
+      "blurb": "A plain frame and a woven mesh. Grandpa's aren't the only ones anymore."
+    },
+    "potion_small": {
+      "name": "Small Potion",
+      "output": { "id": "potion_small", "n": 1 },
+      "cost": [
+        { "id": "berries", "n": 4 },
+        { "id": "fiber", "n": 1 }
+      ],
+      "blurb": "Crushed and bound. Patches a pal's scrapes."
+    }
+  }
+}

@@ -12,12 +12,18 @@ extends Node3D
 ## and rest with starter."
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const BONFIRE := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
 const BEDROLL := "res://assets/props/quaternius_furniture/BedTwin.obj"
 
 const FADE_SECONDS := 1.2
 
 var _ghost_meshes: Array[MeshInstance3D] = []
+## R2.4. Instantiated once, on the first "Craft" activation — most camps are
+## visited for rest and never opened for crafting, so building the panel's
+## whole node tree up front would be work most players never see the result
+## of.
+var _craft_panel: CanvasLayer = null
 
 
 ## The see-through preview the placer drags around. No collision, no prompt.
@@ -43,6 +49,17 @@ func build_real() -> void:
 	prompt.call("configure", "Rest until morning", 2.6, true)
 	prompt.connect("activated", _on_rest)
 	add_child(prompt)
+
+	# R2.4. A second offer at the same fire, its own priority-1 position so
+	# both prompts arbitrate cleanly rather than landing on top of one
+	# another at distance zero — interactable.gd's own `priority` export
+	# exists exactly for two real offers this close together.
+	var craft_prompt: Node3D = INTERACTABLE.new()
+	craft_prompt.name = "CraftInteractable"
+	craft_prompt.position = Vector3(-1.6, 0.5, 0.0)
+	craft_prompt.call("configure", "Craft", 2.6, true)
+	craft_prompt.connect("activated", _on_craft)
+	add_child(craft_prompt)
 
 
 func _spawn_meshes(solid: bool) -> void:
@@ -120,6 +137,15 @@ func _on_rest() -> void:
 	tween.tween_interval(0.4)
 	tween.tween_property(rect, "color:a", 0.0, FADE_SECONDS * 0.5)
 	tween.tween_callback(layer.queue_free)
+
+
+## R2.4. Open the craft screen — data/recipes/recipes.json's base tier,
+## orb_basic and potion_small, spent and granted through GameState.craft().
+func _on_craft() -> void:
+	if _craft_panel == null:
+		_craft_panel = CRAFT_PANEL.new()
+		get_tree().root.add_child(_craft_panel)
+	_craft_panel.call("open")
 
 
 func _pass_the_night(game: Node) -> void:

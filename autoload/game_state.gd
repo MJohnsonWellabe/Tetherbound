@@ -139,6 +139,57 @@ func can_afford(id: String) -> bool:
 	return true
 
 
+# --- crafting ----------------------------------------------------------------
+
+
+## R2.4. What a recipe costs, from data/recipes/recipes.json -- [{id, n}, ...],
+## empty for an unknown recipe. Unlike `build_cost_for`, free build does NOT
+## waive this: free build is documented and scoped to building material costs
+## (docs/decisions/D16), and silently extending it to crafting would be
+## growing a development toggle into a second cheat nobody asked for.
+func recipe_cost_for(id: String) -> Array:
+	if items == null:
+		return []
+	var raw: Variant = items.recipe(id).get("cost", [])
+	return raw as Array if typeof(raw) == TYPE_ARRAY else []
+
+
+## Is there enough in the satchel to craft this right now?
+func can_craft(id: String) -> bool:
+	if items == null or inventory == null:
+		return false
+	if items.recipe(id).is_empty():
+		return false
+	for requirement in recipe_cost_for(id):
+		if typeof(requirement) != TYPE_DICTIONARY:
+			continue
+		var entry := requirement as Dictionary
+		if int(inventory.count(str(entry.get("id", "")))) < int(entry.get("n", 0)):
+			return false
+	return true
+
+
+## Spend the cost and grant the output, or change nothing at all.
+##
+## All-or-nothing on both ends: `can_craft` is checked again here (not just
+## trusted from an earlier frame, in case the satchel changed in between), and
+## `inventory.remove` is itself all-or-nothing per ingredient -- see its own
+## comment on why a craft must never eat half its cost and then fail.
+func craft(id: String) -> bool:
+	if not can_craft(id):
+		return false
+	for requirement in recipe_cost_for(id):
+		var entry := requirement as Dictionary
+		if not bool(inventory.remove(str(entry.get("id", "")), int(entry.get("n", 0)))):
+			push_error("craft '%s': afford check passed but remove failed on '%s'" % [
+				id, str(entry.get("id", ""))
+			])
+			return false
+	var output: Dictionary = items.recipe(id).get("output", {})
+	inventory.add(str(output.get("id", "")), int(output.get("n", 0)))
+	return true
+
+
 ## Turn free build on or off and write it down.
 ##
 ## Returns whether the choice reached the settings file. False means it holds for

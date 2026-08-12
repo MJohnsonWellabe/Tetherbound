@@ -13,6 +13,7 @@ extends RefCounted
 
 const ITEMS_PATH := "res://data/items/items.json"
 const BUILDABLES_PATH := "res://data/items/buildables.json"
+const RECIPES_PATH := "res://data/recipes/recipes.json"
 
 ## Fallback stack size for an id with no definition. One, so an unknown item
 ## cannot merge with anything and quietly lose itself.
@@ -20,11 +21,17 @@ const UNKNOWN_STACK := 1
 
 var _items: Dictionary = {}
 var _buildables: Array = []
+var _recipes: Dictionary = {}
 
 
-func _init(items_path: String = ITEMS_PATH, buildables_path: String = BUILDABLES_PATH) -> void:
+func _init(
+	items_path: String = ITEMS_PATH,
+	buildables_path: String = BUILDABLES_PATH,
+	recipes_path: String = RECIPES_PATH
+) -> void:
 	_items = _read(items_path).get("items", {})
 	_buildables = _read(buildables_path).get("buildables", [])
+	_recipes = _read(recipes_path).get("recipes", {})
 
 
 func _read(path: String) -> Dictionary:
@@ -121,3 +128,15 @@ func buildable(id: String) -> Dictionary:
 		if typeof(entry) == TYPE_DICTIONARY and str((entry as Dictionary).get("id", "")) == id:
 			return entry as Dictionary
 	return {}
+
+
+## R2.4. Every craftable recipe, keyed by id -- {name, output: {id, n}, cost:
+## [{id, n}, ...], blurb}. An id with no entry crafts nothing; callers check
+## `recipe(id).is_empty()` the same way `buildable()` callers already do.
+func recipe_ids() -> Array:
+	return _recipes.keys()
+
+
+func recipe(id: String) -> Dictionary:
+	var value: Variant = _recipes.get(id, {})
+	return value as Dictionary if typeof(value) == TYPE_DICTIONARY else {}
