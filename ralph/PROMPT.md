@@ -122,9 +122,27 @@ block per **live** firing.
    real time: two dead firings in one five-hour window burned **~2 hours** of
    stand-down apiece waiting out a corpse. The branch check above is what makes
    the shorter clock safe — it, not the timestamp, is the real liveness test.
-4. **Claim your area**: append (or overwrite the dead) block with your session
-   id, the task, its `area`, `state: started`, and the current UTC time. Commit
-   and push to `ralph-status`.
+4. **Claim your area** with `tools/ralph_status.py`, not by hand-editing the
+   file. `LP6` found `STATUS.md` repeatedly growing past its own
+   `## END LEASES` marker because a firing edited by eye, misjudged where the
+   end was, and appended there — a mistake the script cannot make, because it
+   always computes the insertion point from the marker line itself, never from
+   "the bottom of the file":
+   ```
+   python3 tools/ralph_status.py claim --file ralph/STATUS.md \
+     --firing <your-firing-id> --session <your-session-id> --task <TASK-ID> \
+     --area <area> [--area <area2> ...] --state started
+   ```
+   If you are overwriting a block you have confirmed dead (the liveness test
+   above), release it first — `python3 tools/ralph_status.py release --file
+   ralph/STATUS.md --firing <dead-firing> --task <dead-task>` — then claim.
+   Use `heartbeat` for `state: working` updates and their `note`, and
+   `release` (never leaving a `shipped` corpse) when you finish — see below.
+   Run `python3 tools/ralph_status.py check --file ralph/STATUS.md` before
+   every push to `ralph-status`; a non-zero exit means something (a script
+   bug, a manual edit, a merge) put lease content past the marker again, and
+   that is worth fixing before you push it forward. Commit and push to
+   `ralph-status`.
    - **If the push is rejected**, someone claimed in the same instant — a plain
      `git push` is the lock, because it only succeeds if your parent is still
      the branch tip. Re-fetch, re-read, and pick again. **Do not stand down for
@@ -250,7 +268,8 @@ rather than by a human editing a Routine.
 ## Then keep the heartbeat moving
 
 The owner cannot see you: a firing that thinks quietly for twenty minutes looks
-exactly like one that died on boot. So update the lease block as you go —
+exactly like one that died on boot. So update the lease block as you go with
+`tools/ralph_status.py heartbeat` —
 `state: working` with a `note` saying what you are **actually doing right now**
 — and finish with `shipped`, `blocked` or `play-gate`. Push each update to
 `ralph-status`.
@@ -426,8 +445,10 @@ taking items, you are not ready to schedule.
 `shipped`.** Corrected 2026-08-11 — `STATUS.md` used to offer `shipped` as an
 equally-valid alternative to deleting, every firing took the easier option, and
 the file grew to 53 undeleted blocks in six hours, unreadable at a glance even
-though nothing was actually colliding. Delete the block; if you want a record
-that the task shipped, that's what `DONE.md` is for.
+though nothing was actually colliding. Delete the block with `python3
+tools/ralph_status.py release --file ralph/STATUS.md --firing <your-firing-id>
+--task <TASK-ID>`; if you want a record that the task shipped, that's what
+`DONE.md` is for.
 
 Release the lease **before** the successor fires, or it reads your area as held
 and stands down.
