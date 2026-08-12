@@ -146,6 +146,53 @@ which may not be "flanking" at all once a human who isn't a blind critic
 comparing against reference photos looks at it in context with the rest of
 the meadow.
 
+### The `square-convergence`/`the-rise-route` "unmotivated dark patch" is identified — grass/path luma contrast at the feathered path edge — but not fixed, and the fix is the same open question as `grandpas-house-route.png` below
+`EV4-textures-lighting-remainder` (`DONE.md`) tested ten mechanisms across
+its full history and ruled all of them out one by one — shadow toggle,
+SSAO, normal-map depth/AO, ambient energy, baked vertex colour, photo
+albedo content, PSSM cascade splits, shadow bias. What finally explained it
+was direct pixel measurement under the dark-patch's own mask: pure-path
+control-map pixels average luma 130, pure-grass-dominant pixels average
+luma 67 — a real, ordinary material contrast, not a rendering defect. The
+"patch" is `build_playground_terrain.gd::_path_control()`'s own documented
+design working as intended: the outer half of every path's feathered
+shoulder deliberately blends toward the natural (grass/soil) texture, and
+ordinary grass sitting next to a brighter path reads as "a shadow with no
+caster" purely by contrast.
+
+**This is very likely the same root phenomenon as `grandpas-house-route.png`
+below** (both are grass reading dark against a brighter path and both trace
+to the same historical luma figures in `data/config/art.json`'s own EV4
+comment), but the two complaints were chased through different mechanisms
+— that entry's five rounds tried vegetation-layer placement/clumping
+(`flowers`, `path_stones`, etc.), never the base terrain grass/path texture
+contrast this entry identifies. Recorded as a distinct entry rather than
+silently merged, since nobody has yet confirmed the *same* fix (raising
+grass luma, or narrowing the path's own feathered shoulder, or something
+else in `terrain_playground.json`'s `paths` block) would close both frames
+at once — that is real work for whoever picks this up, not an assumption
+to bake into the bookkeeping.
+
+**Why this stops here instead of a fix attempt.** Both the mechanism (path-
+edge grass/path contrast) and its exact numeric signature (luma 67 vs. 130)
+are now known with real evidence, but fixing it is a colour/exposure
+tradeoff exactly like `grandpas-house-route.png`'s own five exhausted
+rounds — brightening grass risks the same "blown path" problem the 1.22→0.6
+exposure cut was made to fix, and narrowing the shoulder trades against the
+"feathered irregular edges" the path design explicitly wants (bible sec8).
+Neither is a `lighting`-scope config edit a firing should keep guessing at
+without owner input on which tradeoff is acceptable.
+
+**Clears when:** the owner looks at `shots/_diag/square-convergence-normal.png`
+(or a fresh render via `tools/capture_paths.gd`) and either accepts the
+current read, or says what's actually wrong with it in their own words —
+same caveat as `grandpas-house-route.png`: it may not be "grass too dark"
+at all once someone who isn't measuring luma against reference photos looks
+at it in context with the rest of the meadow. If the owner says it needs
+fixing, the concrete next step is testing whether the fix that works here
+also closes `grandpas-house-route.png`, before treating them as two
+separate colour tunings.
+
 ### Does the creature roster clear a Palworld-level appeal bar, or does it need to?
 Split out of `SA0-orbs-remainder` (2026-08-11): four blind-judge rounds on the
 starter orb picker converged with the critic calling all three previewed

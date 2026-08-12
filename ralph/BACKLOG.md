@@ -400,8 +400,21 @@ Barn, and `grandpas-house-route.png`'s flanking bands aren't a shadow at all
 near-white. Fixed the shared cause (day `exposure` 1.22 → 0.6, `ambient_energy`
 1.02 → 1.5). **Did not fully clear the bar — narrower remainder opened below.**
 
-### EV4-textures-lighting-remainder — Two real occlusion shadows (Barn, the Rise's own crest) still read as prominent even with the highlight fixed
-`model: sonnet` · `tests: none (visual)` · `area: lighting`
+**`EV4-textures-lighting-remainder` (the unmotivated dark near-camera patch
+at `square-convergence`/`the-rise-route`) closed 2026-08-12 — identified, not
+just ruled out — see `DONE.md`'s `EV4-textures-lighting-remainder-3` entry.**
+Ten mechanisms tested and ruled out across this item's full history (shadow
+toggle, SSAO, normal-map depth/AO, ambient energy, vertex colour, photo
+content, PSSM cascade splits, shadow bias); the actual cause is ordinary
+grass/path luma contrast at the deliberately-feathered path edge
+(`build_playground_terrain.gd::_path_control()`'s own documented design),
+the exact same phenomenon `BLOCKED.md`'s open `grandpas-house-route.png`
+"flanking" question already names and has spent five rounds on without a
+fix. Folded into that existing `BLOCKED.md` entry rather than opened as a
+duplicate. `tools/diag_control_texture.gd`, `tools/diag_shadow_cascade.gd`,
+`tools/diag_shadow_bias.gd` and `tools/diag_path_factor_grid.gd` are kept as
+reusable diagnostics. History below kept for the record.
+
 `EV4-textures-lighting`'s own self-administered rubric pass (see its
 `DONE.md` entry for why this wasn't a true blind sub-agent read — no
 `Agent`/`Task`-equivalent tool was available in that checkout) still named

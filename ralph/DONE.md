@@ -3,6 +3,87 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV4-textures-lighting-remainder-3 — The dark patch is not a bug at all: it's the known grass/path contrast illusion, now identified at these two viewpoints too. No code shipped — closed to `BLOCKED.md`, merged with an existing entry.
+`tests: none (visual)` — no code changed; all three new diagnostic tools are
+kept (reusable), everything else reverted or was a runtime override.
+
+**Picked up a stale, unfinished investigation.** `ralph/EV4-textures-lighting-
+remainder-2` sat over an hour unmerged with a dead lease (no live branch
+commit, no `STATUS.md` heartbeat past 09:10) — one commit, a
+`diag_control_texture.gd` tool written but never run. Released the dead
+lease, reclaimed `lighting`, and finished the render it never got to run.
+
+**A real collision, and a correction worth recording plainly.** While this
+was in flight, the ORIGINAL firing turned out not to be dead — it had kept
+working past its stale heartbeat (the exact `RB3`/`PROMPT.md`-documented
+failure mode) and landed its own `EV4-textures-lighting-remainder-2` entry
+on `main` (`4463c54`) with the SAME `diag_control_texture.gd` renders, but
+the OPPOSITE reading of them: they said the patch correlates with real
+grass-texture-ID cells in the control map ("rules IN the control-map layer
+as a real contributor"); an earlier draft of this entry, written from a
+first eyeball pass of the same two PNGs, said the opposite ("no matching
+region... rules out the control map"). **The eyeball read was wrong.**
+Rather than ship a contradiction into the record, re-checked both by direct
+pixel measurement (`numpy`, masking the dark-patch region in the lit render
+and sampling the control-texture image under that exact mask): pixels under
+the dark-patch mask are 75% grass-texture-ID in the control view vs. 14%
+under the surrounding lit ground — a real, large, unambiguous correlation.
+The other firing's finding was correct; this entry's own first draft was not,
+and is corrected here rather than silently dropped.
+
+**Two genuinely new hypotheses, both tested directly and both ruled out —
+verified by pixel diff, not by eye, after the correction above.**
+1. **PSSM cascade-split boundary** (`tools/diag_shadow_cascade.gd`, new).
+   `world_look.gd` sets `SHADOW_PARALLEL_4_SPLITS` unconditionally; split
+   seams are a real source of depth-anchored shadow artifacts and would
+   explain the blind critic's own note that the patch "recurs in roughly
+   the same screen-space position regardless of camera direction." Rendered
+   the same viewpoint at 4-split/220m, 4-split/60m and `SHADOW_ORTHOGONAL`
+   (no splits at all): mean pixel diff 0.09–0.14/255, under 0.4% of pixels
+   differing by more than a rounding error, across all three. Ruled out.
+2. **Shadow bias** (`tools/diag_shadow_bias.gd`, new). `world_look.gd`'s own
+   comment on `shadow_normal_bias` — "fights the acne a heightmap terrain
+   produces at grazing angles" — self-documents a terrain prone to shadow
+   acne, and a bias raised to fight acne is a known cause of the opposite
+   failure (false self-shadow blobs). Nobody had isolated bias from blur.
+   Near-zero bias (1.4/0.06 → 0.05/0.01) genuinely surfaces a real, separate
+   defect — visible terracing/moiré ripple across the whole ground, proving
+   this terrain does need real bias — but sampled under the SAME dark-patch
+   mask as above, near-zero-bias luma is 30 (dark) vs. 116 (lit), essentially
+   identical contrast to the current-bias values (46 vs. 145). The patch's
+   location and relative darkness survive bias going to zero. Ruled out.
+
+**What actually explains it, found by the same pixel-mask technique.**
+Sampled ground luma directly under pure-path control-map pixels (mean 130,
+n=255550) versus pure-grass-dominant control-map pixels (mean 67, n=155110)
+in the lit render. These numbers are not new or surprising — they match
+`EV4-textures-lighting`'s own historical figures almost exactly ("grass at
+luma ~70-100... path blown to ~190-200," later brought down toward ~151 by
+the 1.22→0.6 exposure cut). **The "dark patch" is the feathered path edge
+itself** (`build_playground_terrain.gd::_path_control()`'s own documented
+design: `blend = 1.0 - path_weight`, so the outer half of every path's
+1.5m-default shoulder deliberately renders grass-dominant, not path) —
+ordinary grass sitting next to a brighter path reads as "a shadow with no
+caster" purely by contrast, no shading or data mechanism involved. This is
+the **exact same phenomenon** `BLOCKED.md`'s open `grandpas-house-route.png`
+"flanking" question already names and already spent five real rounds on
+without a fix — it was just never connected to `square-convergence`/
+`the-rise-route` because those two were first (correctly, at the time)
+attributed to the Barn's real shadow, and nobody revisited the *contrast*
+explanation once `EV6` removed the Barn and the patch outlived it.
+
+**Net effect: ten mechanisms now tested and ruled out** across this item's
+full history (shadow toggle, SSAO, normal-map depth/AO on grass and path,
+ambient energy to 4x, baked vertex colour, photo albedo content, PSSM
+cascade splits, shadow bias) **plus the actual mechanism identified** (path-
+edge grass/path luma contrast) rather than ruled out — this is a positive
+finding, not another dead end. **Closed here rather than opened as new
+`lighting` work**: fixing grass/path contrast is not a new problem, it is
+`grandpas-house-route.png`'s already-`BLOCKED.md`'d problem, already five
+rounds deep with no fix found (every direct density/placement lever tried
+there recreated the same read). Folded into that existing entry rather than
+opening a duplicate one — see `BLOCKED.md`.
+
 ## R9.4-remainder-9 — Get real combat frames, budgeting for the now-measured render cost
 `b3e6735` on `main`. `tests: none (visual)` — `tools/survey_combat.gd` only,
 no gameplay code touched.
