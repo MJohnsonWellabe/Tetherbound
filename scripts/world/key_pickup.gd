@@ -18,6 +18,17 @@ var _prompt: Node3D = null
 func setup(item_id: String, label: String) -> void:
 	_item_id = item_id
 	_label = label
+	# The shaft lies along local +X with no yaw ever applied at the call
+	# site (`playground_world.gd` sets `position` only) — so on the road
+	# gate's own key, the player's actual approach looked almost straight
+	# down the shaft's long axis, presenting its narrowest cross-section
+	# rather than its length. A blind pass on round 2's shape/material
+	# fixes still called it "an anonymous... speck" for exactly this
+	# reason: no silhouette change or material fix helps an object that is
+	# being viewed edge-on. A fixed off-axis yaw — a plausible "dropped,
+	# not placed" angle — keeps the shaft and ring broadside to a
+	# road-aligned approach instead of end-on to it.
+	rotation.y = deg_to_rad(50.0)
 	_build_visual()
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
