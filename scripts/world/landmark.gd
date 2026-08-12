@@ -59,10 +59,38 @@ extends Node3D
 ## standing stones. The wall-and-roofline pass that answered it is kept in
 ## spirit here: walls are still the one shape standing stones cannot have.
 
+## OF13 (owner's direct answer to `OF9`): the stronghold must not be visible
+## from the start, and must sit farther from the village. `unshaded,
+## fog_disabled` below is settled (R7.1/R9.4) and stays — a wayfinding
+## silhouette that fades or flat-out disappears with distance was already
+## tried and rejected twice, so "hidden" here means real geometric occlusion,
+## not a render trick. `RISE_CENTRE` still names the true peak of
+## `terrain_playground.json`'s `rises.peaks[0]` (140,-90) — kept as a
+## reference point since `capture_hillside.gd`/`OF11` anchor to the same
+## rise — but `OFFSET` no longer sits near that peak. It now carries the
+## complex ~121m out onto the rise's FAR (east) shoulder, past the dome's own
+## radius (78) and onto the surrounding rolling hills, so the rise's own
+## bulk sits between the village and the site.
+##
+## Computed, not guessed, with a scratch ray-march probe against
+## `playground_heightfield.gd::height_at` from the two vantage points
+## `capture_wayfinding.gd` already uses for this landmark
+## (`silhouette-from-square`'s eye and the-rise-route's second waypoint,
+## `silhouette-from-path`'s eye): the OLD site (RISE_CENTRE + (-6,8)) is
+## clear line-of-sight from both (2.6m/2.6m minimum clearance to the apex).
+## Scanning candidates along the village->RISE_CENTRE bearing, occlusion
+## only starts past ~65m out (worst-case clearance still under 1m — a
+## razor's edge, and the near side of that range sits on the dome's own
+## steep back slope, a measured ~30-37m of height variation across the
+## complex's ~36m core footprint, enough to float or bury the unmodified
+## OF4 geometry). Past the dome's radius the ground flattens back out
+## (rolling-hills terrain, not the rise's own steep falloff): at 121m out,
+## clearance is -17.0m (village) / -23.2m (path) — comfortably occluded,
+## not marginal — and the local footprint spread drops to ~4.5m, flatter
+## than the original site's own ~19m. Net distance from the village square
+## eye: 271m, up from 156.8m (+73%).
 const RISE_CENTRE := Vector2(140.0, -90.0)
-## A few metres off the true peak so the towers do not have to fight the
-## rise's own steepest ground for footing.
-const OFFSET := Vector2(-6.0, 8.0)
+const OFFSET := Vector2(89.8, -54.4)
 
 ## R9.4. Was #2a2630 — near-black, and paired with `unshaded` below it made the
 ## stronghold a flat cutout. A blind critic that knew nothing about why said:

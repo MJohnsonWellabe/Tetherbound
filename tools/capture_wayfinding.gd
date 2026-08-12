@@ -29,7 +29,14 @@ const FOV := 70.0
 ## signpost.gd, landmark.gd) — kept in sync by hand since a survey tool has
 ## no business importing gameplay scripts' private constants.
 const SIGNPOST_AT := Vector2(13.5, -7.0)
-const TOWER_AT := Vector2(134.0, -82.0)
+## OF13: moved with landmark.gd's own RISE_CENTRE+OFFSET (delta (+95.8,-62.4)
+## — see that file for why). `silhouette-close`/`silhouette-approach` below
+## are shifted by the same delta so they still frame the structure rather
+## than empty air, but their exact eye placement was tuned against the OLD
+## site's local terrain and hasn't been re-verified against the new one's —
+## whoever picks up OF10 (the road/approach to the relocated site) should
+## re-check these two framings once the approach route itself is re-routed.
+const TOWER_AT := Vector2(229.8, -144.4)
 
 const VIEWPOINTS := [
 	{
@@ -78,7 +85,7 @@ const VIEWPOINTS := [
 		# same point-blank failure this comment already warns about, at a
 		# larger footprint.
 		"name": "silhouette-close",
-		"eye": Vector2(134.0, -152.0), "eye_h": 7.0,
+		"eye": Vector2(229.8, -214.4), "eye_h": 7.0,
 		"target": TOWER_AT, "target_h": 14.0,
 	},
 	{
@@ -89,7 +96,7 @@ const VIEWPOINTS := [
 		# from the staged distances above, and surface/material quality is
 		# only judgeable this close.
 		"name": "silhouette-approach",
-		"eye": Vector2(134.0, -108.0), "eye_h": 1.7,
+		"eye": Vector2(229.8, -170.4), "eye_h": 1.7,
 		"target": TOWER_AT, "target_h": 11.0,
 	},
 ]
