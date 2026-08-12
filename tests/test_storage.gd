@@ -25,7 +25,7 @@ func before_each() -> void:
 
 func test_deposit_moves_items_from_player_to_chest() -> void:
 	player.add("wood", 10)
-	var leftover := chest.deposit(player, "wood", 6)
+	var leftover: int = chest.deposit(player, "wood", 6)
 	assert_eq(leftover, 0)
 	assert_eq(player.count("wood"), 4)
 	assert_eq(chest.inventory.count("wood"), 6)
@@ -34,7 +34,7 @@ func test_deposit_moves_items_from_player_to_chest() -> void:
 func test_withdraw_moves_items_from_chest_to_player() -> void:
 	player.add("wood", 10)
 	chest.deposit(player, "wood", 10)
-	var leftover := chest.withdraw(player, "wood", 7)
+	var leftover: int = chest.withdraw(player, "wood", 7)
 	assert_eq(leftover, 0)
 	assert_eq(chest.inventory.count("wood"), 3)
 	assert_eq(player.count("wood"), 7)
@@ -42,7 +42,7 @@ func test_withdraw_moves_items_from_chest_to_player() -> void:
 
 func test_deposit_refuses_when_the_player_does_not_have_enough() -> void:
 	player.add("wood", 3)
-	var leftover := chest.deposit(player, "wood", 10)
+	var leftover: int = chest.deposit(player, "wood", 10)
 	# All-or-nothing on the source side: nothing moves rather than a partial
 	# 3-of-10 deposit the player never asked for.
 	assert_eq(leftover, 10)
@@ -53,7 +53,7 @@ func test_deposit_refuses_when_the_player_does_not_have_enough() -> void:
 func test_withdraw_refuses_when_the_chest_does_not_have_enough() -> void:
 	player.add("wood", 5)
 	chest.deposit(player, "wood", 5)
-	var leftover := chest.withdraw(player, "wood", 20)
+	var leftover: int = chest.withdraw(player, "wood", 20)
 	assert_eq(leftover, 20)
 	assert_eq(chest.inventory.count("wood"), 5)
 	assert_eq(player.count("wood"), 0)
@@ -87,7 +87,7 @@ func test_a_partial_fit_on_deposit_leaves_the_remainder_with_the_player() -> voi
 	assert_true(chest.inventory.is_full())
 
 	player.add("wood", 10)
-	var leftover := chest.deposit(player, "wood", 10)
+	var leftover: int = chest.deposit(player, "wood", 10)
 	assert_eq(leftover, 10, "a full chest must accept nothing, not partially swallow the stack")
 	assert_eq(player.count("wood"), 10, "refused wood must stay in the player's satchel")
 
