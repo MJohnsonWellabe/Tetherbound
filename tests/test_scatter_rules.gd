@@ -333,3 +333,68 @@ func test_path_bias_jitter_spreads_clumps_off_the_exact_centreline() -> void:
 	assert_true(attempted >= samples / 2, "too few of %d draws placed anything to judge (%d)" % [samples, attempted])
 	assert_true(exactly_on_road < attempted,
 		"path_bias_jitter 4.0 still landed every one of %d placed clumps exactly on the centreline" % attempted)
+
+
+# --- path avoid radius (EV3-remainder-3: stop an unbiased clump's own crescent reading as a hedge) ---
+
+func test_path_avoid_radius_of_zero_changes_nothing() -> void:
+	# Same backward-compatibility guarantee every other bias parameter
+	# carries: a layer that does not opt in must place identically whether
+	# the key is present at 0.0 or absent entirely.
+	var grass := _layer("grass").duplicate(true)
+	grass["path_avoid_radius"] = 0.0
+	var with_zero := RULES.placements_for(grass, field, world_size, 55)
+	var without_the_key := _layer("grass").duplicate(true)
+	without_the_key.erase("path_avoid_radius")
+	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	assert_eq(with_zero.size(), without.size())
+	for i in with_zero.size():
+		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
+			"path_avoid_radius 0.0 moved a placement; it must be a no-op")
+
+
+func test_path_avoid_radius_pushes_unbiased_clumps_away_from_the_path() -> void:
+	# The defect this fixes: an unbiased clump (no path_bias at all) that
+	# happens to land within a few metres of a path by chance still has most
+	# of its own wide disc survive the path exclusion as a crescent -- which,
+	# over the length of a straight route, reads as a hedge planted along it
+	# rather than an accident. A large clump_radius makes any one clump's own
+	# instances span a wide area regardless of where its centre falls, so
+	# this reads clump CENTRES via path_factor sampled at each instance's own
+	# position -- with avoidance on, far fewer instances should come from
+	# clumps that started close to a path than without it.
+	var layer := {
+		"models": _layer("grass").get("models", []),
+		"clumps": 40, "per_clump": 1, "strays": 0, "clump_radius": 0.01,
+		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+	}
+
+	layer["path_avoid_radius"] = 0.0
+	var unbiased_near_path := 0
+	var unbiased_total := 0
+	layer["path_avoid_radius"] = 8.0
+	var avoided_near_path := 0
+	var avoided_total := 0
+
+	var samples := 10
+	for seed_value in samples:
+		layer["path_avoid_radius"] = 0.0
+		for p in RULES.placements_for(layer, field, world_size, seed_value * 233):
+			var spot: Vector3 = p["position"]
+			unbiased_total += 1
+			if Vector2(spot.x, spot.z).distance_to(field.nearest_point_on_paths(spot.x, spot.z)) < 8.0:
+				unbiased_near_path += 1
+		layer["path_avoid_radius"] = 8.0
+		for p in RULES.placements_for(layer, field, world_size, seed_value * 233):
+			var spot: Vector3 = p["position"]
+			avoided_total += 1
+			if Vector2(spot.x, spot.z).distance_to(field.nearest_point_on_paths(spot.x, spot.z)) < 8.0:
+				avoided_near_path += 1
+
+	assert_true(unbiased_total > 0 and avoided_total > 0, "one of the two runs placed nothing at all")
+	var unbiased_rate := float(unbiased_near_path) / float(unbiased_total)
+	var avoided_rate := float(avoided_near_path) / float(avoided_total)
+	assert_true(avoided_rate < unbiased_rate,
+		"path_avoid_radius 8.0 landed %.0f%% of clumps within 8m of a path, not meaningfully below unbiased's %.0f%%" % [
+			avoided_rate * 100.0, unbiased_rate * 100.0
+		])

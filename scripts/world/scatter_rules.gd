@@ -125,9 +125,12 @@ static func placements_for(
 	var ridge_bias := clampf(float(layer.get("ridge_bias", 0.0)), 0.0, 1.0)
 	var path_bias := clampf(float(layer.get("path_bias", 0.0)), 0.0, 1.0)
 	var path_bias_jitter := maxf(float(layer.get("path_bias_jitter", 0.0)), 0.0)
+	var path_avoid_radius := maxf(float(layer.get("path_avoid_radius", 0.0)), 0.0)
 
 	for clump in clumps:
-		var centre := _clump_centre(rng, half, field, ridge_bias, path_bias, path_bias_jitter)
+		var centre := _clump_centre(
+			rng, half, field, ridge_bias, path_bias, path_bias_jitter, path_avoid_radius
+		)
 		for i in per_clump:
 			# Square root of a uniform sample gives a disc that is denser at the
 			# middle, which is what a copse looks like. Sampling the radius
@@ -194,11 +197,33 @@ const RIDGE_SEARCH_RADIUS := 140.0
 ## road's own material — can set this to displace the snapped centre by a
 ## random amount, so clump centres land at genuinely different distances
 ## from the path instead of all sitting on its exact line.
+##
+## `path_avoid_radius` (EV3-remainder-3): the opposite problem, on layers
+## that never opted into `path_bias` at all. `clump_radius` (10-12m for
+## grass/drygrass) is far wider than the path's own exclusion band
+## (~3-4m), so a purely UNBIASED clump that happens to land within a few
+## metres of a path by chance still has most of its disc survive as a
+## crescent hugging the near edge of what's left — and because the path is
+## straight over a real distance, one ordinary clump's own crescent reads
+## as a hedge/row paralleling the path, not a placement bug at all.
+## Confirmed against real placement data before writing this: the two
+## frames a blind critic named (`grandpas-house-route.png`,
+## `the-rise-route.png`) each had exactly one or two grass/drygrass clump
+## CENTRES sitting 2-4m from the nearest path, nowhere near enough of them
+## to be "several clumps chaining into a band" — one clump is already
+## enough at this radius. Resamples the unbiased draw (never touches a
+## clump `path_bias` already snapped this pass) until it lands outside the
+## radius or the attempt budget runs out, so an incidental near-path clump
+## becomes a rare miss instead of an always-present border. Defaults to
+## 0.0 (no change) — opt in per layer.
+const PATH_AVOID_ATTEMPTS := 4
+
 static func _clump_centre(
 	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float,
-	path_bias: float = 0.0, path_bias_jitter: float = 0.0
+	path_bias: float = 0.0, path_bias_jitter: float = 0.0, path_avoid_radius: float = 0.0
 ) -> Vector2:
 	var base := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
+	var snapped_to_path := false
 
 	if path_bias > 0.0 and rng.randf() <= path_bias and field.has_method("nearest_point_on_paths"):
 		var on_path: Vector2 = field.nearest_point_on_paths(base.x, base.y)
@@ -207,6 +232,14 @@ static func _clump_centre(
 				var nudge := Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0))
 				on_path += nudge * path_bias_jitter
 			base = on_path
+			snapped_to_path = true
+
+	if not snapped_to_path and path_avoid_radius > 0.0 and field.has_method("nearest_point_on_paths"):
+		for attempt in PATH_AVOID_ATTEMPTS:
+			var nearest: Vector2 = field.nearest_point_on_paths(base.x, base.y)
+			if nearest == Vector2.INF or base.distance_to(nearest) >= path_avoid_radius:
+				break
+			base = Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
 
 	if ridge_bias <= 0.0 or rng.randf() > ridge_bias:
 		return base
