@@ -72,10 +72,14 @@ const VIEWPOINTS := [
 	{
 		# Close enough to judge the tower shapes themselves, far enough not
 		# to repeat R7.1-found's point-blank mistake (14m put one tower
-		# edge-to-edge across the frame).
+		# edge-to-edge across the frame). Pushed from 40m out to 70m by OF4:
+		# the rebuilt complex spans ~50m, and at 40m the old eye sat 15m
+		# from the terrace rim with one wall face filling the frame — the
+		# same point-blank failure this comment already warns about, at a
+		# larger footprint.
 		"name": "silhouette-close",
-		"eye": Vector2(134.0, -122.0), "eye_h": 6.0,
-		"target": TOWER_AT, "target_h": 12.0,
+		"eye": Vector2(134.0, -152.0), "eye_h": 7.0,
+		"target": TOWER_AT, "target_h": 14.0,
 	},
 	{
 		# OF4: a genuinely human-scale approach — eye at standing height,

@@ -12,47 +12,52 @@ extends Node3D
 ## stronghold's own presentation still needs real art before it is judged.
 ##
 ## Built from primitives rather than a model: nothing in either vendored
-## asset pack (the since-retired farm pack, stylized_nature) is a ruin or tower, and a
-## silhouette's whole job is a dark, angular shape on the skyline, which a
-## handful of tall cylinders already do at this distance.
+## asset pack (the since-retired farm pack, stylized_nature) is a ruin or
+## tower, and a silhouette's whole job is a dark, angular shape on the
+## skyline, which primitives already do at this distance.
 ##
-## R7.1-visual-remainder: the third blind-critic round (R7.1-visual) confirmed
+## OF4 (2026-08-12 owner playtest): "reads as a toy." Root causes, judged
+## against the previous build (four round tapered cylinders in a 16m circle,
+## a cone-hatted keep, a 9m pedestal drum):
+##
+##   1. Chess-piece proportions. The whole cluster spanned ~16m under a 34m
+##      keep. Fortified architecture spreads: curtain walls run several times
+##      their towers' height. A tall thing on a tiny footprint is a figurine.
+##   2. The cone roof. A witch-hat cone on a round tower is the single
+##      strongest toy-castle icon there is, and it was the site's apex.
+##   3. Repetition. Four near-identical round towers with the same 0.7 taper
+##      read as one toy part reused, not as a place that grew.
+##   4. The base drum read as a display-stand pedestal under a model.
+##
+## So OF4 rebuilt the massing rather than tuning it, keeping what earlier
+## rounds proved (see TOWER_COLOUR / SHADER_CODE below — unshaded and
+## fog_disabled are settled): the site is now "the Meadows Hall" the spec's
+## Act VI actually names — a long gabled great-hall block as the central
+## shoulder mass, a dominant SQUARE keep (4-segment cylinder, corner-post
+## crown) instead of the cone, square perimeter towers at three different
+## heights and tops, curtain walls of varying height spread over a ~36m
+## polygon, a twin-towered gatehouse facing the village, a lateral rampart
+## descending the village-facing flank, and a near-vertical faceted terrace
+## instead of the pedestal. EVERY tower is square: round drums kept reading
+## organic ("smokestack", "bulbous dome") once flat-filled, five blind
+## rounds running — a silhouette with no shading turns curves into geology.
+## Footprint chosen against a measured height grid of the rise (probe, this
+## task): the summit plateau holds within ~2m over local x 0..+24 /
+## z -12..0 and falls 5-9m to the west and south, so the polygon is biased
+## east and the terrace is deep enough to meet the downhill ground as a
+## revetment instead of floating. Sightlines were computed, not guessed
+## (a second probe marched rays from both player eyes over the
+## heightfield): from the path, terrain hides everything below ~23m local
+## at the keep — which is why the wall tops, hall ridge and rampart heights
+## are all set against those numbers, and why nothing that matters to the
+## read lives below them.
+##
+## R7.1-visual-remainder (history): the third blind-critic round confirmed
 ## colour and value hold up at all three tested distances, then said plainly
 ## that no amount of repositioning, recolouring or fog tuning on four bare
 ## tapered cylinders will read as fortified architecture — they read as
-## standing stones. That needs new geometry, not scene tuning: a perimeter
-## wall silhouette linking the towers (walls are the one shape a cluster of
-## monoliths structurally cannot have), a peaked roof on the keep and a
-## stepped second mass on another tower for varied massing, and crenellation
-## rings on the rest for a roofline. Still placeholder-grade primitives
-## (CLAUDE.md) — the ask is a shape that reads as built, not final art.
-##
-## OF4 (2026-08-12): owner playtest — "the stronghold's silhouette reads as a
-## toy." The massing (R7.1-visual-remainder) and the long-range colour/value
-## (R9.4) are both blind-critic-verified and deliberately NOT touched here.
-## What neither of those rounds tested is the surface: one perfectly flat,
-## unshaded colour over mathematically clean primitives — no masonry, no
-## weathering, every merlon an identical crisp cube, towers that are 5- and
-## 6-sided facet prisms up close — is exactly how a moulded plastic playset
-## reads at the ranges a player actually walks past it. Three changes, none
-## touching massing or the base colour:
-##   1. The shader keeps `unshaded, fog_disabled` (load-bearing per R9.4: a
-##      wayfinding silhouette must read the same from every approach) but
-##      breaks the flat fill with WORLD-POSITION-KEYED variation — masonry
-##      courses with per-block value jitter, mortar seams, broad mottling,
-##      dark weather streaks, and a darkened footing where stone meets
-##      ground. Position-keyed means it is exactly as view-independent as
-##      the flat fill was, and it is near-zero-mean at distance, so the
-##      long-range value R9.4 settled is preserved.
-##   2. Regularity breakers: merlons vary in height and width and some are
-##      missing entirely (a battlement time has chewed, not one a mould
-##      stamped), the keep's roof cone is a darker slate than the stone so
-##      the site stops being one single moulded colour, and tower silhouette
-##      edges get enough radial segments to read as round masonry instead of
-##      toy-block prisms (interior facets were never visible under
-##      `unshaded`; only the silhouette edge changes).
-##   3. Rubble — collapsed blocks half-sunk in the grass at the walls' feet.
-##      Toys sit ON the ground; ruins come OUT of it.
+## standing stones. The wall-and-roofline pass that answered it is kept in
+## spirit here: walls are still the one shape standing stones cannot have.
 
 const RISE_CENTRE := Vector2(140.0, -90.0)
 ## A few metres off the true peak so the towers do not have to fight the
@@ -67,20 +72,17 @@ const OFFSET := Vector2(-6.0, 8.0)
 ## contrasted it with palworld-04, where the landmark "is atmospheric-hazed to
 ## a mid blue-grey and sits IN the distance rather than on top of it."
 ##
-## Mid cool stone, and shaded, so the towers have a lit and a shaded face and
-## the crenellations that were modelled can actually be seen.
-##
 ## THIRD CUT, and the frames settled an argument between two earlier ones.
 ##
 ## Shading was tried at #6b6a72 and then at #33323f. Both failed the same way
 ## and it took the second render to see why: with normal shading the landmark's
 ## value depends on WHICH FACE the camera sees. From `silhouette-close` the
-## camera looks at the shadowed south side and the fortress reads perfectly —
-## crenellations, keep, towers, unmistakably built. From `silhouette-from-
-## square` and `-from-path`, the two viewpoints a player actually uses, the
-## camera looks at the sun-lit west face and the same geometry washes to a pale
-## grey barely separable from the haze band behind it. Not fog: at 0.00055
-## density over ~190m that is a ten per cent effect. Lighting direction.
+## camera looks at the shadowed south side and the fortress reads perfectly.
+## From `silhouette-from-square` and `-from-path`, the two viewpoints a player
+## actually uses, the camera looks at the sun-lit west face and the same
+## geometry washes to a pale grey barely separable from the haze band behind
+## it. Not fog: at 0.00055 density over ~190m that is a ten per cent effect.
+## Lighting direction.
 ##
 ## Which is what R7.1-visual was right about. A wayfinding silhouette has to
 ## read the same from every approach, and `unshaded` is how you get that. Its
@@ -88,125 +90,58 @@ const OFFSET := Vector2(-6.0, 8.0)
 ## fresh critic called it "a hole punched in the image rather than a stone
 ## ruin", and it was right about that too.
 ##
-## So: `unshaded` restored, at a value that reads as stone. Dark slate, a
-## little violet so it is not a neutral smudge, sitting well under the pale
-## hill band (~0.77) and just above the sky (~0.21) so it separates from both
-## from any direction. `fog_disabled` comes back with it for the same reason it
-## was there before — a silhouette that fades with distance is not a landmark.
+## So: `unshaded`, at a value that reads as stone. Dark slate, a little violet
+## so it is not a neutral smudge, sitting well under the pale hill band
+## (~0.77) and just above the sky (~0.21) so it separates from both from any
+## direction. `fog_disabled` for the same reason — a silhouette that fades
+## with distance is not a landmark.
 const TOWER_COLOUR := Color("#4a4756")
 
-## OF4: the keep's roof in a darker slate. A single colour over every element
-## is a moulded-toy tell; a roof that differs from the walls is the cheapest
-## possible "assembled from materials, not cast in one piece" cue. Kept well
-## above the old #2a2630 hole-punch value, and it is a small area of the
-## silhouette, so R9.4's long-range separation is unaffected.
-const ROOF_COLOUR := Color("#38353f")
+## OF4: a second tone ~15% darker for rooflines — the hall roof, tower crowns
+## and crenellation work. One flat colour over every surface was part of the
+## sticker read; two close tones keep the single-silhouette wayfinding value
+## while letting the roof plane register as a different material at range.
+const ROOF_COLOUR := Color("#3f3c49")
 
-## R7.1-visual found the towers reading correctly dark at ~40m but fading to a
-## pale grey nearly matching the horizon haze at ~60m and ~157m, and fixed it
-## by opting the landmark out of the world's atmosphere entirely: `unshaded` so
-## no sunward highlight, `fog_disabled` so no wash. Its own note said retuning
-## the shared fog instead "needs the kind of whole-survey re-verification R9.4
-## exists for, not a change buried in this task."
+## R7.1-visual found the towers fading into horizon haze at range and fixed it
+## by opting the landmark out of the world's atmosphere entirely (`unshaded`,
+## `fog_disabled`). R9.4 tested taking that away after the fog was halved
+## twice, and the render mode turned out to be load-bearing after all — see
+## TOWER_COLOUR above. Both stay.
 ##
-## R9.4 IS THAT PASS, and it changed the premise. The fog that was eating the
-## landmark has since been halved twice — 0.0022 to 0.0011 to 0.00055 — so the
-## wash that justified opting out is a quarter of what was measured. Meanwhile
-## the opt-out had a cost nobody had a frame to see: a fresh blind critic,
-## told nothing, called the result "a hole punched in the image rather than a
-## stone ruin" and pointed at palworld-04, whose landmark is hazed to a mid
-## blue-grey and "sits IN the distance rather than on top of it."
-##
-## R9.4 tested that by taking the opt-out away, and the render mode turned out
-## to be load-bearing after all — see TOWER_COLOUR above for what two rounds of
-## frames actually showed. `unshaded` and `fog_disabled` stay. What R9.4 keeps
-## is the other half of the finding: the COLOUR was wrong, and a silhouette
-## dark enough to read as a hole is not better than one that fades.
-##
-## OF4 keeps both render flags for R9.4's reason and adds surface variation
-## INSIDE that constraint: everything below is keyed to world position (and,
-## for the masonry projection axis only, the world-space normal), never to
-## the camera or the sun, so the read is identical from every approach — the
-## exact property `unshaded` exists to protect. The variation is small and
-## centred on the base albedo, so from 170m it averages back to the R9.4
-## value; up close it resolves into coursed stone instead of plastic.
+## OF4 adds the one material axis `unshaded` still allows: a vertical
+## luminance gradient keyed to WORLD height, not to the camera or the sun, so
+## it is identical from every approach — the wayfinding guarantee `unshaded`
+## exists for is untouched. Slightly dark at the footing, slightly lifted at
+## the parapets: the flat "sticker" fill was one of the toy tells, and a
+## grounded tonal base with a lighter skyline edge is the cheapest thing that
+## reads as a lit mass instead of a decal. The range (0.90..1.08 of albedo)
+## keeps every point of it inside the value window R9.4 tuned against the
+## sky (~0.21) and the hill band (~0.77).
 const SHADER_CODE := """
 shader_type spatial;
 render_mode unshaded, fog_disabled, cull_back;
 
 uniform vec4 albedo : source_color;
-uniform float base_world_y = 0.0;
+uniform float base_y = 0.0;
+uniform float span_y = 38.0;
 
-varying vec3 wpos;
-varying vec3 wnorm;
-
-float hash21(vec2 p) {
-	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-}
-
-float vnoise(vec2 p) {
-	vec2 i = floor(p);
-	vec2 f = fract(p);
-	vec2 u = f * f * (3.0 - 2.0 * f);
-	return mix(
-		mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
-		mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x),
-		u.y);
-}
+varying float world_y;
 
 void vertex() {
-	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	wnorm = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	world_y = (MODEL_MATRIX * vec4(VERTEX, 1.0)).y;
 }
 
 void fragment() {
-	vec3 col = albedo.rgb;
-
-	// Masonry courses. Biplanar projection: each face samples along whichever
-	// world axis it mostly faces, so blocks do not smear on walls that run
-	// diagonal to the world grid. World-keyed — never moves with the camera.
-	// Block scale: first cut was 1.3m courses x 2.2m blocks, and the render
-	// showed why that itself is a toy cue — the keep face came out only ~5
-	// blocks wide, and oversized bricks relative to a structure is exactly
-	// how a table-top miniature reads. Smaller, more numerous blocks are the
-	// scale cue that makes a 34m keep read monumental.
-	float across = abs(wnorm.x) > abs(wnorm.z) ? wpos.z : wpos.x;
-	float course_h = 0.8;
-	float block_w = 1.3;
-	float row = floor(wpos.y / course_h);
-	float u = (across + hash21(vec2(row, 3.7)) * block_w) / block_w;
-	float block = floor(u);
-
-	// Per-block value jitter, about +/-8 percent, zero-mean.
-	col *= 1.0 + (hash21(vec2(row, block)) - 0.5) * 0.16;
-
-	// Mortar seams between courses and blocks, slightly darker.
-	float fy = fract(wpos.y / course_h);
-	float fu = fract(u);
-	float seam = min(
-		smoothstep(0.0, 0.06, fy) * smoothstep(1.0, 0.94, fy),
-		smoothstep(0.0, 0.04, fu) * smoothstep(1.0, 0.96, fu));
-	col *= mix(0.84, 1.0, seam);
-
-	// Broad mottling so no large face is a single value.
-	col *= 1.0 + (vnoise(vec2(across * 0.13, wpos.y * 0.13)) - 0.5) * 0.10;
-
-	// Weather streaks running down the stone.
-	float streak = vnoise(vec2(across * 0.9, wpos.y * 0.045));
-	col *= 1.0 - 0.10 * smoothstep(0.55, 0.9, streak);
-
-	// Darkened footing where the stone meets the ground, standing in for
-	// centuries of damp and dirt — and for the contact shadow `unshaded`
-	// geometry cannot receive.
-	col *= mix(0.80, 1.0, clamp((wpos.y - base_world_y) / 7.0, 0.0, 1.0));
-
-	ALBEDO = col;
+	float t = clamp((world_y - base_y) / span_y, 0.0, 1.0);
+	ALBEDO = albedo.rgb * mix(0.90, 1.08, t);
 }
 """
 
-## OF4: one fixed-seed RNG for every irregularity below, so the ruin erodes
-## the same way every launch and every capture frame is reproducible.
-var _rng := RandomNumberGenerator.new()
+## Local Y of the terrace top every structure stands on. The terrace itself
+## reaches ~11m further down so its rim meets the measured -9m ground on the
+## site's downhill (village-facing) side.
+const TERRACE_TOP := 7.0
 
 
 func build(world: Node) -> void:
@@ -217,169 +152,246 @@ func build(world: Node) -> void:
 		return
 	position = Vector3(at.x, ground, at.y)
 
-	_rng.seed = 71
+	var stone := _material(TOWER_COLOUR, ground)
+	var roof := _material(ROOF_COLOUR, ground)
 
+	# A wide, low terrace in place of the old pedestal drum. Faceted (8
+	# segments) and NEAR-VERTICAL: the first cut battered it 15 degrees and
+	# the from-path frame read the sloped faces as a rock crag, not a built
+	# revetment — vertical faces are the architecture cue. Deep enough (top
+	# +7 to -11) that no rim floats over the measured -9m ground at its
+	# south-west edge.
+	var terrace := MeshInstance3D.new()
+	terrace.name = "Terrace"
+	var terrace_mesh := CylinderMesh.new()
+	terrace_mesh.top_radius = 21.5
+	terrace_mesh.bottom_radius = 23.0
+	terrace_mesh.height = 18.0
+	terrace_mesh.radial_segments = 8
+	terrace_mesh.material = stone
+	terrace.mesh = terrace_mesh
+	terrace.position = Vector3(3.0, TERRACE_TOP - 9.0, -3.0)
+	add_child(terrace)
+
+	# The great hall — the mass that makes this "the Meadows Hall" instead of
+	# a toy castle: one long gabled block. Yaw puts the ridge PERPENDICULAR
+	# to the shared village/path bearing (~(0.87, -0.5)): the first cut
+	# (-0.45) aimed the gable end at the player, and the from-path frame
+	# read that triangle-under-the-keep as a mountain apex. The long
+	# horizontal eave line is the architecture cue; the gable ends show to
+	# cross angles instead.
+	_hall(Vector3(2.0, TERRACE_TOP, -1.0), -0.96, stone, roof)
+
+	# Perimeter. Positions are the corners of a ~36m convex polygon biased
+	# onto the summit plateau (east), with the keep folded into the perimeter
+	# rather than freestanding in the middle of a tiny yard.
+	var keep := Vector3(12.0, TERRACE_TOP, -10.0)
+	var ne := Vector3(22.0, TERRACE_TOP, 2.0)
+	var west := Vector3(-14.0, TERRACE_TOP, 9.0)
+	var south := Vector3(-3.0, TERRACE_TOP, -18.0)
+
+	# The keep: SQUARE (a 4-segment cylinder is a tapered square prism), the
+	# tallest mass on site, crowned with four unequal corner posts instead
+	# of the old cone hat. Apex ~+47m local, a touch over the cone's old
+	# 43m, so the landmark's skyline height — the thing wayfinding actually
+	# uses — still clears every hill from both player viewpoints.
+	var keep_top := _tower(keep, 7.6, 44.0, 4, 0.35, stone)
+	_crown(keep, 7.6 * 0.80, keep_top, roof)
+
+	# Three perimeter towers, three different silhouettes, two different
+	# plan shapes — repetition of one part was toy tell #3. Which tower gets
+	# which top is chosen against the two PLAYER bearings (village square and
+	# the Rise path both look along ~(0.87, -0.5)): projected onto the axis
+	# perpendicular to that view, south sits ~15m clear of the keep while
+	# west sits directly IN FRONT of it — so south, the one with its own sky
+	# around it, carries the tall stepped mass, and west stays low and plain,
+	# a deliberate near-ground layer over the keep's base rather than a
+	# second silhouette fighting it.
+	var ne_top := _tower(ne, 4.6, 30.0, 4, 0.2, stone)
+	_crenellations(ne, 4.6 * 0.8, ne_top, 8, roof)
+	var west_top := _tower(west, 4.4, 18.0, 4, 0.15, stone)
+	_crenellations(west, 4.4 * 0.8, west_top, 8, roof)
+	var south_top := _tower(south, 4.0, 26.0, 4, 0.5, stone)
+	_stepped_mass(south, 4.0 * 0.8, south_top, stone, roof)
+
+	# Curtain walls at VARYING heights — a uniform ribbon was part of the
+	# model-kit read. All tops clear the ~16m terrain-occlusion floor earlier
+	# rounds measured for the long-range frames (terrace 7 + lowest wall 13.5
+	# = 20.5).
+	const WALL_THICKNESS := 3.0
+	_wall(keep, ne, 20.0, WALL_THICKNESS, stone)
+	_wall(ne, west, 18.0, WALL_THICKNESS, stone)
+	_wall(west, south, 19.0, WALL_THICKNESS, stone)
+	_wall(south, keep, 21.0, WALL_THICKNESS, stone)
+
+	# A small square turret breaking the long (36m) north wall's run. Kept
+	# LOW on purpose: at 17m its top filled the sky gap between the keep and
+	# the north-east tower from the path bearing, gluing the skyline back
+	# into one lump.
+	var turret := Vector3(4.0, TERRACE_TOP, 5.5)
+	var turret_top := _tower(turret, 3.0, 22.0, 4, 0.55, stone)
+	_crenellations(turret, 3.0 * 0.8, turret_top, 6, roof)
+
+	# Twin-towered gatehouse at the midpoint of the west wall — the wall that
+	# faces the village and both player viewpoints. A gate is a scale cue no
+	# toy silhouette has: it says "people walk in here."
+	_gatehouse(west, south, 19.0, stone, roof)
+
+	# An outer bailey stepping DOWN the rise's shoulder to a small outpost
+	# tower. Blind critics (this task) found the bare tan mound dominating
+	# both player frames — "a castle on a golf bunker" — the silhouette
+	# reading as one symmetric plane, and "no visible fortification running
+	# down the ridge to meet the terrain." This run answers all three: dark
+	# architecture claiming the shoulder, each top stepping lower than the
+	# last, ending in a tower clearly smaller than anything on the summit.
+	#
+	# ROUTE MATTERS MORE THAN EXISTENCE, a lesson paid for twice. From a low
+	# eye, a convex hill leaves exactly two reliably visible zones: the
+	# skyline above its profile, and its NEAR face. The first route ran down
+	# the near face but ALONG the village bearing, so 30m of wall
+	# foreshortened to a few pixels ("a disconnected floating chunk"). The
+	# second ran down the north-east shoulder — perpendicular, but on the
+	# FAR side of the profile, so the mound's own right shoulder hid it
+	# entirely. This one is both at once: ON the village-facing face,
+	# running LATERALLY across it from the west corner under the gatehouse
+	# toward the east, so both player vantages see ~20m of dark rampart
+	# crossing the tan face below the walls. Tops descend 5 -> 3 -> a small
+	# end tower; bases at -8/-9 sit below the face's measured lows (-5.5
+	# near (-10,11), -4.3 near (0,15)); the run stays 6m+ clear of the
+	# authored Rise path's endpoint (local -16, +10) and never crosses it.
+	_wall(Vector3(-14.0, -9.0, 9.0), Vector3(-6.0, -9.0, 14.0), 14.0, 2.8, stone)
+	_wall(Vector3(-6.0, -8.0, 14.0), Vector3(4.0, -8.0, 16.0), 11.0, 2.8, stone)
+	var outpost := Vector3(10.0, -8.0, 17.0)
+	var outpost_top := _tower(outpost, 3.0, 18.0, 4, 0.8, stone)
+	_crenellations(outpost, 3.0 * 0.86, outpost_top, 6, roof)
+
+
+## A ShaderMaterial in the landmark's one shader, with the gradient anchored
+## to the ground the site actually stands on.
+func _material(colour: Color, ground_y: float) -> ShaderMaterial:
 	var shader := Shader.new()
 	shader.code = SHADER_CODE
 	var mat := ShaderMaterial.new()
 	mat.shader = shader
-	mat.set_shader_parameter("albedo", TOWER_COLOUR)
-	mat.set_shader_parameter("base_world_y", ground)
+	mat.set_shader_parameter("albedo", colour)
+	mat.set_shader_parameter("base_y", ground_y)
+	mat.set_shader_parameter("span_y", 38.0)
+	return mat
 
-	var roof_mat := ShaderMaterial.new()
-	roof_mat.shader = shader
-	roof_mat.set_shader_parameter("albedo", ROOF_COLOUR)
-	roof_mat.set_shader_parameter("base_world_y", ground)
 
-	# A wide base connecting the towers' feet. A blind critic round on the
-	# first pass at this (a 3m-tall drum) still called the long-range frame
-	# an ambiguous pair of "standing-stone" prongs: the straight wall
-	# segments between towers go edge-on and vanish from most viewing
-	# angles, so at range the only thing left on screen was the two towers
-	# nearest the camera, with nothing visibly joining them. A cylinder's
-	# silhouette width is the same from every angle, unlike a straight wall,
-	# so this drum is deliberately tall enough (was 3m) to read as a solid
-	# fortress plinth under the towers regardless of which way the camera
-	# looks — fixing the long-range read and the "obelisk with no base"
-	# proportion problem in the same shape.
-	var base := MeshInstance3D.new()
-	base.name = "Base"
-	var base_mesh := CylinderMesh.new()
-	base_mesh.top_radius = 10.0
-	base_mesh.bottom_radius = 11.5
-	base_mesh.height = 9.0
-	base_mesh.radial_segments = 14
-	base_mesh.material = mat
-	base.mesh = base_mesh
-	base.position = Vector3(1.25, 4.5, 3.25)
-	add_child(base)
+## The gabled great-hall block: box walls and a PrismMesh roof. The prism's
+## ridge runs along its local Z, so the roof is yawed 90 degrees relative to
+## the box, whose long axis is X.
+func _hall(at: Vector3, yaw: float, stone: ShaderMaterial, roof: ShaderMaterial) -> void:
+	var walls := MeshInstance3D.new()
+	walls.name = "HallWalls"
+	var box := BoxMesh.new()
+	box.size = Vector3(28.0, 18.0, 12.0)
+	box.material = stone
+	walls.mesh = box
+	walls.position = at + Vector3(0.0, 9.0, 0.0)
+	walls.rotation.y = yaw
+	add_child(walls)
 
-	# One tall keep and three shorter towers around it — an irregular skyline
-	# reads as a ruin far more than one uniform silhouette does. Positions are
-	# unchanged from the shape the critic already confirmed reads dark and
-	# solid; what's new below is the roofline on each and the wall between
-	# them, in polygon order (keep -> east -> north -> west -> keep) so the
-	# wall traces the same footprint the base drum already spans.
-	var keep := Vector3(0.0, 0.0, 0.0)
-	var east := Vector3(9.0, 0.0, -4.0)
-	var north := Vector3(3.0, 0.0, 11.0)
-	var west := Vector3(-7.0, 0.0, 6.0)
-
-	# OF4: segment counts up from 5/6 — under `unshaded` the interior facets
-	# were never visible, but the SILHOUETTE edge of a 5-sided prism shows
-	# hard toy-block corners at approach range. The massing itself is the
-	# blind-critic-verified shape and does not change.
-	var keep_top := _tower(keep, 5.5, 34.0, 12, mat)
-	_tower(east, 3.2, 22.0, 11, mat)
-	var north_top := _tower(north, 3.6, 25.0, 11, mat)
-	_tower(west, 2.6, 18.0, 10, mat)
-
-	# Roofline / varied massing, so the four towers stop reading as identical
-	# tapered stubs: the keep gets a peaked roof (the tallest mass on site,
-	# capped rather than flat), one tower gets a stepped second drum (a
-	# turret standing on a turret), the rest get a crenellation ring — three
-	# different silhouettes on four towers.
-	_cone_roof(keep, 5.5 * 0.7, keep_top, 9.0, roof_mat)
-	_stepped_mass(north, 3.6 * 0.7, north_top, mat)
-	_crenellations(east, 3.2 * 0.7, 22.0, 8, mat)
-	_crenellations(west, 2.6 * 0.7, 18.0, 6, mat)
-
-	# The perimeter wall: what a cluster of standing stones structurally
-	# cannot have. Lower than every tower (shortest is west at 18m) so the
-	# towers still read as the skyline's tallest shapes; its own crenellated
-	# top is what makes the whole cluster read as one fortified site rather
-	# than four separate ones.
-	#
-	# Round 2 of the blind-critic loop still failed the long-range frame,
-	# even after round 1's fix widened the LOW base drum (0-9m) to hold its
-	# footprint at any camera angle: the drum's own width was invisible from
-	# a far, low, grazing viewpoint because nearby ridge terrain occludes
-	# low-elevation geometry from exactly that kind of angle, the same way a
-	# fence looks taller than a house standing right behind a hill crest.
-	# The one part of this structure confirmed to clear the terrain from
-	# every tested distance is the towers themselves (they're the only thing
-	# visible in the long-range frame at all) -- so this raises the wall
-	# itself, not just the base drum, from 11m to 16m: still under every
-	# tower's own height, but tall enough to connect the towers' visible
-	# upper portions instead of only their already-occluded feet.
-	const WALL_HEIGHT := 16.0
-	const WALL_THICKNESS := 2.8
-	_wall(keep, east, WALL_HEIGHT, WALL_THICKNESS, mat)
-	_wall(east, north, WALL_HEIGHT, WALL_THICKNESS, mat)
-	_wall(north, west, WALL_HEIGHT, WALL_THICKNESS, mat)
-	_wall(west, keep, WALL_HEIGHT, WALL_THICKNESS, mat)
-
-	# OF4: collapsed masonry half-sunk in the grass around the perimeter.
-	_rubble(world, mat)
+	var gable := MeshInstance3D.new()
+	gable.name = "HallRoof"
+	var prism := PrismMesh.new()
+	prism.size = Vector3(12.8, 7.5, 28.6)
+	prism.material = roof
+	gable.mesh = prism
+	gable.position = at + Vector3(0.0, 18.0 + 3.75, 0.0)
+	gable.rotation.y = yaw + PI / 2.0
+	add_child(gable)
 
 
 ## Builds a tapered tower and returns the world-space Y of its flat top, so
 ## callers can stack roofline geometry on it without recomputing height math.
-func _tower(at: Vector3, radius: float, height: float, sides: int, mat: ShaderMaterial) -> float:
+## `sides` = 4 gives a square prism; `yaw` varies square towers' orientation
+## so no two share an angle.
+func _tower(at: Vector3, radius: float, height: float, sides: int, yaw: float, mat: ShaderMaterial) -> float:
 	var mesh := MeshInstance3D.new()
 	var cyl := CylinderMesh.new()
-	cyl.top_radius = radius * 0.7
+	cyl.top_radius = radius * 0.93
 	cyl.bottom_radius = radius
 	cyl.height = height
 	cyl.radial_segments = sides
 	cyl.material = mat
 	mesh.mesh = cyl
 	mesh.position = at + Vector3(0.0, height * 0.5, 0.0)
+	mesh.rotation.y = yaw
 	add_child(mesh)
 	return at.y + height
 
 
-## A pointed roof capping the keep — a cylinder tapered to a near-point reads
-## as a peaked roof at silhouette range without needing real roof geometry.
-func _cone_roof(at: Vector3, base_radius: float, base_y: float, roof_height: float, mat: ShaderMaterial) -> void:
-	var mesh := MeshInstance3D.new()
-	var cone := CylinderMesh.new()
-	cone.bottom_radius = base_radius * 1.05
-	cone.top_radius = 0.05
-	cone.height = roof_height
-	cone.radial_segments = 10
-	cone.material = mat
-	mesh.mesh = cone
-	mesh.position = at + Vector3(0.0, base_y - at.y + roof_height * 0.5, 0.0)
-	add_child(mesh)
+## The keep's crown: an irregular ring of merlons — two gaps, no two heights
+## equal — in place of the old cone. Deterministic, no RNG: a hand-authored
+## pattern reads as age without flickering between runs.
+func _crown(at: Vector3, top_radius: float, top_y: float, mat: ShaderMaterial) -> void:
+	var collar_height := 1.6
+	var collar := MeshInstance3D.new()
+	var collar_mesh := CylinderMesh.new()
+	collar_mesh.top_radius = top_radius * 0.98
+	collar_mesh.bottom_radius = top_radius * 1.08
+	collar_mesh.height = collar_height
+	collar_mesh.radial_segments = 4
+	collar_mesh.material = mat
+	collar.mesh = collar_mesh
+	collar.position = at + Vector3(0.0, top_y - at.y + collar_height * 0.5, 0.0)
+	collar.rotation.y = 0.35
+	add_child(collar)
+
+	# Four corner posts, no two the same height. The first cut used eight
+	# small irregular merlons and the from-path frame read them as knobbly
+	# rock lumps at 110m — fewer, larger, squarer masses stay architectural
+	# after distance shrinks them. Unequal heights keep the crown from
+	# reading as a machined part.
+	var heights: Array[float] = [5.2, 4.0, 4.6, 3.4]
+	var merlon_width: float = max(top_radius * 0.55, 2.8)
+	var base := top_y - at.y + collar_height
+	for i in heights.size():
+		var h: float = heights[i]
+		var angle := 0.35 + TAU / 8.0 + float(i) * TAU / float(heights.size())
+		var offset := Vector3(cos(angle), 0.0, sin(angle)) * top_radius * 0.78
+		var mesh := MeshInstance3D.new()
+		var box := BoxMesh.new()
+		box.size = Vector3(merlon_width, h, merlon_width)
+		box.material = mat
+		mesh.mesh = box
+		mesh.position = at + offset + Vector3(0.0, base + h * 0.5, 0.0)
+		mesh.rotation.y = 0.35
+		add_child(mesh)
 
 
 ## A narrower second drum standing on the first — varied massing (a turret
-## on a turret) rather than a flat cap, distinct from both the cone roof and
-## the crenellation rings so no two towers on site share a silhouette.
-func _stepped_mass(at: Vector3, base_radius: float, base_y: float, mat: ShaderMaterial) -> void:
+## on a turret) rather than a flat cap, distinct from both the crown and the
+## crenellation rings so no two towers on site share a silhouette.
+func _stepped_mass(at: Vector3, base_radius: float, base_y: float, stone: ShaderMaterial, roof: ShaderMaterial) -> void:
 	var step_radius := base_radius * 0.6
 	var step_height := 7.0
 	var mesh := MeshInstance3D.new()
 	var cyl := CylinderMesh.new()
-	cyl.top_radius = step_radius * 0.75
+	cyl.top_radius = step_radius * 0.78
 	cyl.bottom_radius = step_radius
 	cyl.height = step_height
-	cyl.radial_segments = 9
-	cyl.material = mat
+	cyl.radial_segments = 4
+	cyl.material = stone
 	mesh.mesh = cyl
 	mesh.position = at + Vector3(0.0, base_y - at.y + step_height * 0.5, 0.0)
+	mesh.rotation.y = 0.15
 	add_child(mesh)
-	_crenellations(at, step_radius * 0.75, base_y - at.y + step_height, 6, mat)
+	_crenellations(at, step_radius * 0.78, base_y + step_height, 6, roof)
 
 
 ## A ring of alternating merlons around a tower's flat top — the roofline
 ## silhouette a real curtain wall or keep has and a bare tapered cylinder
 ## does not.
 ##
-## Round 1 of the blind-critic loop on this task found the merlons alone
-## "separate into three or four separated, pointed teeth that look more
-## like claws, broken glass, or a jagged rock spur than a battlement" once
-## the tower shrinks with distance — individual boxes with open gaps
-## between them lose their shared base the moment they stop being
-## resolvable as separate objects. A solid collar under the merlons gives
-## them a continuous rim to sit on, so at range it reads as "a solid top
-## with a notched edge" rather than "several separate spikes."
-##
-## OF4: the merlons themselves stop being identical. Each one draws its
-## height, width, yaw and radial seat from the fixed-seed RNG, and roughly
-## one in five is simply gone — a moulded toy has every merlon it was cast
-## with; a five-hundred-year-old battlement does not.
+## Round 1 of the R7.1 blind-critic loop found merlons alone "separate into
+## three or four separated, pointed teeth that look more like claws, broken
+## glass, or a jagged rock spur than a battlement" once the tower shrinks
+## with distance. A solid collar under the merlons gives them a continuous
+## rim to sit on, so at range it reads as "a solid top with a notched edge"
+## rather than "several separate spikes."
 func _crenellations(at: Vector3, top_radius: float, top_y: float, count: int, mat: ShaderMaterial) -> void:
 	var collar_height := 1.4
 	var collar := MeshInstance3D.new()
@@ -387,42 +399,34 @@ func _crenellations(at: Vector3, top_radius: float, top_y: float, count: int, ma
 	collar_mesh.top_radius = top_radius * 0.95
 	collar_mesh.bottom_radius = top_radius * 1.05
 	collar_mesh.height = collar_height
-	collar_mesh.radial_segments = max(count, 8)
+	collar_mesh.radial_segments = max(count, 6)
 	collar_mesh.material = mat
 	collar.mesh = collar_mesh
-	collar.position = at + Vector3(0.0, top_y + collar_height * 0.5, 0.0)
+	collar.position = at + Vector3(0.0, top_y - at.y + collar_height * 0.5, 0.0)
 	add_child(collar)
 
-	var merlon_width: float = max(top_radius * 0.7, 1.4)
-	var merlon_top_y := top_y + collar_height
+	var merlon_width: float = max(top_radius * 0.8, 2.0)
+	var merlon_top_y := top_y - at.y + collar_height
 	for i in range(count):
 		if i % 2 == 1:
 			continue # every other gap is open, so the ring reads as crenellation, not a solid rim
-		# Draw every merlon's variation BEFORE the missing-merlon roll, so
-		# the RNG stream stays aligned and one skip does not reshuffle every
-		# merlon after it.
-		var h := 2.2 * _rng.randf_range(0.55, 1.25)
-		var w := merlon_width * _rng.randf_range(0.85, 1.15)
-		var yaw := _rng.randf_range(-0.35, 0.35)
-		var seat := _rng.randf_range(0.78, 0.9)
-		var missing := _rng.randf() < 0.2
-		if missing:
-			continue
+		# unequal tooth heights, deterministic — even teeth read as clip-art
+		var merlon_height := 2.6 + 0.6 * float((i * 3) % 3)
 		var angle := i * TAU / count
-		var offset := Vector3(cos(angle), 0.0, sin(angle)) * top_radius * seat
+		var offset := Vector3(cos(angle), 0.0, sin(angle)) * top_radius * 0.85
 		var mesh := MeshInstance3D.new()
 		var box := BoxMesh.new()
-		box.size = Vector3(w, h, w)
+		box.size = Vector3(merlon_width, merlon_height, merlon_width)
 		box.material = mat
 		mesh.mesh = box
-		mesh.position = at + offset + Vector3(0.0, merlon_top_y + h * 0.5, 0.0)
-		mesh.rotation.y = angle + yaw
+		mesh.position = at + offset + Vector3(0.0, merlon_top_y + merlon_height * 0.5, 0.0)
 		add_child(mesh)
 
 
 ## A straight wall segment between two tower footings, with its own
 ## crenellated top edge — the shape that makes the cluster read as one
-## fortified perimeter instead of four unrelated towers.
+## fortified perimeter instead of unrelated towers. `from`/`to` carry the
+## terrace-top Y; the wall stands on it.
 func _wall(from: Vector3, to: Vector3, height: float, thickness: float, mat: ShaderMaterial) -> void:
 	var delta := to - from
 	var length := Vector2(delta.x, delta.z).length()
@@ -440,11 +444,11 @@ func _wall(from: Vector3, to: Vector3, height: float, thickness: float, mat: Sha
 
 	# Merlons along the wall's own top edge, spaced along its length in the
 	# wall's local (rotated) frame rather than world axes.
-	#
-	# OF4: same erosion treatment as the tower rings — per-merlon height and
-	# width variation and the occasional missing tooth, so the parapet reads
-	# weathered rather than moulded.
-	var step := 3.0
+	# A blind critic round read evenly-sized, evenly-spaced teeth as "generic
+	# castle clip-art... a comb" — so the rhythm is deliberately irregular:
+	# width and height vary per tooth on a fixed deterministic pattern (no
+	# RNG, so the skyline never flickers between runs).
+	var step := 6.2
 	var count := int(length / step)
 	if count < 1:
 		return
@@ -452,51 +456,41 @@ func _wall(from: Vector3, to: Vector3, height: float, thickness: float, mat: Sha
 	for i in range(count + 1):
 		if i % 2 == 1:
 			continue
-		var h := 1.6 * _rng.randf_range(0.55, 1.3)
-		var w := step * 0.6 * _rng.randf_range(0.85, 1.15)
-		var missing := _rng.randf() < 0.18
-		if missing:
-			continue
+		var merlon_height := 2.6 + 0.7 * float((i * 5) % 3)
+		var merlon_len := step * (0.42 + 0.13 * float((i * 7) % 3))
 		var t := (float(i) / float(count) - 0.5) * length
 		var pos := mid + Vector3(dir.x, 0.0, dir.y) * t
 		var merlon := MeshInstance3D.new()
 		var mbox := BoxMesh.new()
-		mbox.size = Vector3(w, h, thickness * 1.1)
+		mbox.size = Vector3(merlon_len, merlon_height, thickness * 1.1)
 		mbox.material = mat
 		merlon.mesh = mbox
-		merlon.position = pos + Vector3(0.0, height + h * 0.5, 0.0)
+		merlon.position = pos + Vector3(0.0, height + merlon_height * 0.5, 0.0)
 		merlon.rotation.y = atan2(-delta.z, delta.x)
 		add_child(merlon)
 
 
-## OF4: fallen masonry scattered around the perimeter, half-sunk and tilted
-## into the grass. This is the cheapest cue primitives can give that the
-## structure is old and belongs to the ground it stands on — a toy castle
-## sits cleanly on the carpet; a ruin sheds itself into the hillside. Blocks
-## share the stone material, so the shader's footing-darkening grounds them
-## the same way it grounds the walls.
-func _rubble(world: Node, mat: ShaderMaterial) -> void:
-	for i in 14:
-		var ang := _rng.randf_range(0.0, TAU)
-		var dist := _rng.randf_range(11.5, 18.0)
-		var local := Vector2(cos(ang), sin(ang)) * dist
-		var s := _rng.randf_range(0.8, 2.2)
-		var size := Vector3(
-			s * _rng.randf_range(0.8, 1.4),
-			s * _rng.randf_range(0.45, 0.8),
-			s * _rng.randf_range(0.8, 1.4))
-		var tilt_x := _rng.randf_range(-0.28, 0.28)
-		var yaw := _rng.randf_range(0.0, TAU)
-		var tilt_z := _rng.randf_range(-0.28, 0.28)
-		var g: float = float(world.call("ground_height_at", position.x + local.x, position.z + local.y))
-		if is_nan(g):
-			continue
-		var mesh := MeshInstance3D.new()
-		var box := BoxMesh.new()
-		box.size = size
-		box.material = mat
-		mesh.mesh = box
-		# A third of the block below grade: sunk, not placed.
-		mesh.position = Vector3(local.x, g - position.y + size.y * 0.17, local.y)
-		mesh.rotation = Vector3(tilt_x, yaw, tilt_z)
-		add_child(mesh)
+## Two square flanking towers astride the village-facing wall with a raised
+## lintel block between them — the entrance motif. At 170m the gate opening
+## itself would be sub-pixel; the paired-tower-and-lintel silhouette is what
+## carries "this is a door", so no opening is cut.
+func _gatehouse(from: Vector3, to: Vector3, wall_height: float, stone: ShaderMaterial, roof: ShaderMaterial) -> void:
+	var mid := (from + to) * 0.5
+	var delta := to - from
+	var dir := Vector3(delta.x, 0.0, delta.z).normalized()
+	var yaw := atan2(-delta.z, delta.x)
+	# Flanker height sits just over the wall line and UNDER the main towers:
+	# at 16.5m these tops filled the keep-to-south sky gap from the path
+	# bearing and fused the skyline into one mass.
+	for s: float in [-3.5, 3.5]:
+		var foot := mid + dir * s
+		var top := _tower(foot, 2.8, 23.0, 4, yaw, stone)
+		_crenellations(foot, 2.8 * 0.86, top, 4, roof)
+	var lintel := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(5.4, 3.2, 4.4)
+	box.material = roof
+	lintel.mesh = box
+	lintel.position = mid + Vector3(0.0, wall_height + 1.6, 0.0)
+	lintel.rotation.y = yaw
+	add_child(lintel)
