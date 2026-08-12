@@ -107,7 +107,15 @@ func _run() -> void:
 
 	# A quick attack landing. Catching the impact rather than the lull is the
 	# point: the frame has to show whether a hit reads as a hit.
-	await _drive_pal_towards_enemy(120, 2.8)
+	#
+	# `stop_at` has to sit inside `player_quick.range` (2.6, `combat.json`) or
+	# every attempt whiffs by construction — found the hard way: a first full
+	# run at `stop_at=2.8` recorded zero landed quick attacks across the whole
+	# encounter, which cascaded into the charged attack never charging and the
+	# aim phase never opening (the enemy's own AI eventually won the fight
+	# instead). 2.2 leaves real margin under 2.6 for the drive loop's own
+	# release-on-approach drift.
+	await _drive_pal_towards_enemy(120, 2.2)
 	await _press("combat_quick")
 	await _capture_the_impact("05-quick-attack-lands")
 
@@ -122,7 +130,7 @@ func _run() -> void:
 	# fill the meter, and each iteration is one attempt.
 	var charge_waited := 0
 	while not bool(_manager.call("charged_ready")) and bool(_manager.call("is_fighting")) and charge_waited < 24:
-		await _drive_pal_towards_enemy(30, 2.8)
+		await _drive_pal_towards_enemy(30, 2.2)
 		await _press("combat_quick")
 		for j in 24:
 			await physics_frame
