@@ -10,13 +10,20 @@ extends Node
 ## `can_afford`, which is the one gate the free-build toggle is allowed to
 ## bend (docs/decisions/D16).
 ##
-## `camp` keeps its own hand-authored geometry (`camp.gd`) because it carries
-## the rest/craft prompts. Every other `buildables.json` entry (R2.6: floor,
-## wall, door, roof, fence) is plain geometry, placed generically through
+## `camp` and `storage` keep their own hand-authored geometry (`camp.gd`,
+## `storage_container.gd`) because each carries state and an interaction, not
+## just a mesh. Every other `buildables.json` entry (R2.6: floor, wall, door,
+## roof, fence; R2.7: workbench) is plain geometry, placed generically through
 ## `build_piece.gd` from the catalogue's own `mesh` path.
 
 const CAMP := preload("res://scripts/build/camp.gd")
+const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
+
+## Ids placed by their own hand-authored script rather than build_piece.gd's
+## generic path — kept as one list so the "is this a special id" question is
+## answered in exactly one place instead of every branch below re-deriving it.
+const STATEFUL_IDS := ["camp", "storage"]
 
 ## Metres ahead of the player the ghost sits.
 const PLACE_AHEAD := 3.0
@@ -56,10 +63,10 @@ func _physics_process(_delta: float) -> void:
 		_place(game, armed)
 
 
-## The mesh path a non-`camp` catalogue entry places, or "" if it has none
-## (an id the catalogue doesn't know, or `camp` itself).
+## The mesh path a plain catalogue entry places, or "" if it has none (an id
+## the catalogue doesn't know, or one of the stateful ids above).
 func _piece_mesh(game: Node, id: String) -> String:
-	if id == "camp":
+	if STATEFUL_IDS.has(id):
 		return ""
 	var items: RefCounted = game.get("items")
 	if items == null:
@@ -80,6 +87,10 @@ func _show_ghost(game: Node, armed: String) -> void:
 		if armed == "camp":
 			_ghost = CAMP.new()
 			_ghost.name = "CampGhost"
+			_ghost.call("build_ghost")
+		elif armed == "storage":
+			_ghost = STORAGE_CONTAINER.new()
+			_ghost.name = "StorageGhost"
 			_ghost.call("build_ghost")
 		else:
 			var mesh_path := _piece_mesh(game, armed)
@@ -127,6 +138,11 @@ func _place(game: Node, armed: String) -> void:
 	if armed == "camp":
 		placed = CAMP.new()
 		placed.name = "Camp"
+		get_parent().add_child(placed)
+		placed.call("build_real")
+	elif armed == "storage":
+		placed = STORAGE_CONTAINER.new()
+		placed.name = "Storage"
 		get_parent().add_child(placed)
 		placed.call("build_real")
 	else:

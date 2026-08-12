@@ -85,14 +85,15 @@ func test_every_cost_amount_is_positive() -> void:
 # --- geometry resolves --------------------------------------------------------
 
 func test_every_non_camp_entry_has_a_mesh_that_exists() -> void:
-	# R2.6. `camp` places through camp.gd's own hardcoded meshes and carries no
-	# `mesh` field of its own; every other entry is generic geometry placed by
+	# R2.6/R2.7. `camp` and `storage` place through their own hand-authored
+	# scripts (camp.gd, storage_container.gd) and carry no `mesh` field of
+	# their own; every other entry is generic geometry placed by
 	# build_piece.gd from this path, so a missing one is a piece that arms in
 	# the menu and puts nothing in the world when placed.
 	for entry: Variant in _buildables():
 		var piece: Dictionary = entry
 		var id := str(piece.get("id", ""))
-		if id == "camp":
+		if id == "camp" or id == "storage":
 			continue
 		var mesh_path := str(piece.get("mesh", ""))
 		assert_ne(mesh_path, "", "'%s' has no 'mesh' field" % id)

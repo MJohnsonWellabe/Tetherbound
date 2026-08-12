@@ -5,6 +5,7 @@
   "_comment_cost": "TUNABLE. Costs are set so the camp is roughly one gathering trip and are not balanced against anything, because nothing yet produces these at a known rate.",
   "_comment_placement": "Nothing here places geometry. Confirming a buildable sets GameState.pending_build, which is the seam the building system reads when M8 gives it one. A build menu that silently did nothing would read as a bug; one that arms a selection is honest about where the work stops.",
   "_comment_pieces": "R2.6. `camp` stays its own hand-authored geometry (scripts/build/camp.gd) because it carries the rest/craft interaction, not just a mesh. The five pieces below are plain placeable geometry — no `contains`, no interaction — so `mesh` names the model directly and `scripts/build/build_piece.gd` places any of them generically rather than each needing its own script. Assets are the Medieval Village MegaKit subset docs/ASSET_LEDGER.md records for this item, matching the Plaster/UnevenBrick/RoundTile family EV6 is curating for the settlement itself (D24's one-family rule).",
+  "_comment_r2.7": "R2.7. `workbench` is plain geometry, placed generically like the pieces above — GAME_DESIGN.md 19's 'at appropriate station' gating is a Rootstone-sink upgrade (spec 3 Band 2, SD18) that does not exist yet, so for now it is a physical marker, not a gate on crafting. `storage` is the second thing after `camp` that carries real state (its own inventory) and an interaction, so it gets its own hand-authored script the same way camp.gd does — see scripts/build/storage_container.gd. Both reuse assets EV7 already staged and ledgered (assets/props/quaternius_fantasy/), not new sourcing.",
 
   "buildables": [
     {
@@ -69,6 +70,28 @@
       "mesh": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf",
       "cost": [
         { "id": "wood", "n": 3 }
+      ]
+    },
+    {
+      "id": "workbench",
+      "name": "Workbench",
+      "category": "utility",
+      "blurb": "A sturdy bench for heavier work, once there is heavier work to do.",
+      "mesh": "res://assets/props/quaternius_fantasy/Workbench.gltf",
+      "cost": [
+        { "id": "wood", "n": 10 },
+        { "id": "stone", "n": 4 }
+      ]
+    },
+    {
+      "id": "storage",
+      "name": "Storage Chest",
+      "category": "utility",
+      "blurb": "A crate with its own room — leave things here without carrying them.",
+      "contains": ["Item storage"],
+      "cost": [
+        { "id": "wood", "n": 8 },
+        { "id": "fiber", "n": 4 }
       ]
     }
   ]
