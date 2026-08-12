@@ -110,8 +110,17 @@ notification when its run finishes.
 | Routine | Fires | Meshy key | Trigger id | Who can change it |
 |---|---|---|---|---|
 | **Ralph** | `49 * * * *` | **Yes** — the only one that can do art | `trig_01HJmwxGFfWZHaKP5UJMV8HV` | **Owner only** |
-| **Ralph lane B** | `9 * * * *` | No | `trig_01TkPuw6fMmjQ2FM5LA5xAKN` | Owner or an agent |
-| **Ralph lane C** | `29 * * * *` | No | `trig_01VgHpVNCrsAWB8xNPBZScjw` | Owner or an agent |
+| **Ralph lane B** | `5 * * * *` | No | `trig_01CJSdQ5nckhZRqbzXRX3S65` | **Owner only** |
+| **Ralph lane C** | `13 * * * *` | No | `trig_01DTcT9pWmGQMcDMxpvskAhC` | **Owner only** |
+
+**Corrected 2026-08-12** — the cron figures, trigger ids and "who can change
+it" column above were all stale. The lanes were evidently recreated at some
+point after this table was written (the old ids no longer resolve), and the
+recreated versions are `created_via: http_api` like the keyed Routine, not
+agent-created. Verified directly: an agent session attempting `update_trigger`
+on lane B got the identical rejection the keyed Routine has always given. The
+old claim below that lanes B/C were exempt from the owner-only edit
+restriction was wrong — see the corrected section further down.
 
 ### ⚠ Check the Routine's ALLOWED TOOLS — the keyed one is missing three
 
@@ -153,11 +162,23 @@ where the key goes — read the real value off the old Routine before deleting i
 
 **The stale prompt matters less than the tools do**, and it is worth being
 precise about why rather than overstating it. The Routine message tells every
-firing that `ralph/PROMPT.md` **overrides it**, so the lease protocol, batching,
-local critic iteration and the removed round cap all reach a firing from disk
-and are already current. Two things the old prompt genuinely lost — preferring
-`lane: art` items, and the spend rules — have been moved into `PROMPT.md`, so
-they now reach every firing without touching the Routine at all.
+firing that `ralph/PROMPT.md` **overrides it**, so the lease protocol and local
+critic iteration reach a firing from disk and are already current. Two things
+the old prompt genuinely lost — preferring `lane: art` items, and the spend
+rules — have been moved into `PROMPT.md`, so they now reach every firing
+without touching the Routine at all.
+
+That said, the override is not a substitute for keeping the Routine text
+itself honest — **it has already failed once.** Lanes B and C's stored
+prompts still said "batch 1–4 items per branch" and "schedule your successor
+2–3 minutes out" later on 2026-08-12, after `PROMPT.md` had already reversed
+both that same day (see
+"One item, confirmed landed, no successor" in that file) — the very
+self-chaining behaviour the reversal exists to stop was sitting right there in
+the bootstrap text every firing reads first. Both Routine prompts were
+rewritten 2026-08-12 to stop restating operational details that go stale and
+just point at `PROMPT.md` for anything that changes, the same fix this section
+recommends for the keyed one's tool gap.
 
 **Ralph cannot update its own Routine**, so do not queue that as a backlog item.
 It has no MCP tools; `update_trigger` has no `allowed_tools` parameter for any
@@ -194,24 +215,29 @@ anything else. `PROMPT.md` requires that ordering precisely so a dead lane is
 visible fast. No block and no `ralph/*` branch ten minutes after a firing means
 the session came up empty.
 
-### ⚠ Only the owner can pause or resume the "Ralph" Routine
+### ⚠ Only the owner can pause, resume, or edit ANY of the three Routines
 
 **This is the one genuinely manual step in the whole loop, and it was found the
-hard way on 2026-08-11.** The original Ralph Routine was created through the
-HTTP API, and an agent can only update Routines it created itself. Attempting
-it returns:
+hard way on 2026-08-11 — then found to be broader than first thought on
+2026-08-12.** All three Routines are created through the HTTP API, and an
+agent can only update Routines it created itself. Attempting it on any of them
+returns:
 
     update_trigger: this routine was created via "http_api", not by an agent.
 
-So when Ralph is paused, **no session can turn it back on** — it has to be
-toggled in the Routines UI. The two lanes were created by an agent and do not
-have this limitation, which means a half-off state is possible and easy to miss:
-lanes B and C running while the keyed Routine sits paused looks like a working
-loop right up until an art task reaches the top of the backlog and no one can
-take it.
+**Corrected 2026-08-12**: this file used to say lanes B and C were agent-
+created and exempt from this. They are not — confirmed directly, not
+inferred, by trying `update_trigger` on lane B and getting the same rejection.
+So when any of the three is paused, **no session can turn it back on**, and no
+session can fix a stale prompt on any of them either — it all has to happen in
+the Routines UI. A half-off state is possible and easy to miss: any one
+Routine can sit paused or stale while the other two keep running, and it looks
+like a working loop right up until that Routine's own kind of work (art, if
+it's the keyed one) reaches the top of the backlog and nothing picks it up.
 
-If art tasks are silently piling up, **check that "Ralph" itself is enabled**
-before looking for a bug anywhere else.
+If a particular kind of work is silently piling up, **check that all three
+Routines are actually enabled and current** before looking for a bug anywhere
+else.
 
 **The old figure in this file said :43. It was `49 * * * *` the whole time** —
 worth knowing, because a stale schedule here is exactly what makes the loop look
@@ -229,9 +255,15 @@ Lanes coordinate through per-`area` leases in `ralph/STATUS.md` on the
 Realistically this runs two or three at a time, not three always — `terrain` is
 one lane however many items sit in it, because they share a rebake.
 
-The cron is a floor, not the cadence. A session that finishes early now
-schedules its successor 2–3 minutes out rather than idling to the hour, which
-was costing about a quarter of every cycle.
+The cron is now the actual cadence, not a floor. Self-chained successors
+(a session scheduling its own resume 2–3 minutes out) were removed by owner
+directive on 2026-08-12: pausing all three Routines was found not to stop
+work, because a self-chained firing kept producing fresh sessions for 4.5+
+hours after every Routine was disabled — `send_later` self-resumes are not
+Routine fires, so disabling the Routine literally cannot reach them. Each
+firing now ships at most one item and stops; the next unit of work on a lane
+happens at that lane's next cron tick, not sooner. See "One item, confirmed
+landed, no successor" in `ralph/PROMPT.md` for the full account.
 
 **To pause the whole loop, disable all three Routines** — disabling only
 "Ralph" leaves the two lanes running. To change a cadence or prompt, edit the
