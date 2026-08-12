@@ -398,13 +398,23 @@ func _capture(name: String) -> void:
 ## So wait for `hit_landed`, then give the burst a few frames to open. A timing
 ## guess has no place in a harness whose whole job is to show what a moment
 ## looks like.
+##
+## Filtered to `on_enemy == true` — the PLAYER's own attack connecting, which
+## is what both call sites below are named for and captioned as. Unfiltered,
+## this caught whichever side hit first: the wild pal keeps attacking on its
+## own cooldown throughout the whole fight, and an earlier run of this survey
+## captured "05-quick-attack-lands" on the instant the ENEMY's swing landed on
+## the ally instead — a real gold impact burst, on the wrong creature, telling
+## exactly the wrong story about which attack it was showing.
 const IMPACT_FRAMES := 5
 const IMPACT_TIMEOUT := 240
 
 
 func _capture_the_impact(name: String) -> void:
 	var landed := [false]
-	var handler := func(_on_enemy: bool, _amount: float) -> void: landed[0] = true
+	var handler := func(on_enemy: bool, _amount: float) -> void:
+		if on_enemy:
+			landed[0] = true
 	_manager.connect("hit_landed", handler)
 
 	var waited := 0
