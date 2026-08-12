@@ -49,7 +49,7 @@ from PIL import Image
 
 SRC = "assets/environment/terrain/Rock030_Color.jpg"
 
-LIFT_AMOUNT = 0.24  # screen-blend amount; see module docstring for how this was chosen
+LIFT_AMOUNT = 0.18  # screen-blend amount; see module docstring for how this was chosen
 
 
 def rgb_to_hsv(arr):
