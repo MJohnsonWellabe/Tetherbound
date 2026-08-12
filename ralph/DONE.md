@@ -137,6 +137,23 @@ chased here: a plain `ShortCloset` box reads as a featureless flat slab
 is confirmed correct), and the porch chair's seat geometry looks sparse
 from one angle. Neither is the black-silhouette defect this item owned.
 
+## Found-along-the-way: menu.json's two stray `test_menu_config.gd` references, and the phantom `hotbar_columns` comment
+`tests: full suite` (348/348, unchanged behaviour -- comment-only edit).
+
+Two of the small unscheduled items under "Found along the way": `menu.json`'s
+`_comment_tabs` and `_comment_backpack` both cited `tests/test_menu_config.gd`,
+which has never existed under that name -- the real file is
+`tests/test_menu_data.gd`. Fixed both references. `_comment_backpack` also
+claimed a `hotbar_columns` key existed in the `backpack` block "where the
+quick-select band ends"; it never has (`backpack` only ever held `columns`,
+`tile_width`, `tile_height`) -- confirmed by reading the JSON directly rather
+than trusting the comment. Per the item's own instruction ("either build the
+hotbar... or delete the comment"), left the real hotbar to `HD2` (Phase -0.85,
+`area: ui`, not yet built, and `ui` was a held area at the time this was
+picked up) and corrected the comment to say plainly that the key doesn't
+exist yet and point at `HD2` for the real work, rather than inventing the
+feature here.
+
 ## R9.4-remainder-8-rocks-repeat — the rocks layer reads as varied stone, not one instance duplicated
 `cc4fe0e`/`1816524`/`604d15e` on `main`. `tests: none (visual)`, plus the full
 348/348 unit suite (unaffected — data-only change, no code touched). Visual-

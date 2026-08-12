@@ -928,9 +928,12 @@ shows a gamepad letter to a keyboard player or vice versa — combat included.
 ### HD2 — A real quick-access item hotbar
 `model: sonnet` · `tests: none` · `area: ui`
 Five slots, usable directly without opening the full backpack — berries,
-potions, orbs. `hotbar_columns` exists in `menu.json` today but was only ever
-scoped for *tool* cycling (`R2.1`, §19); this is the first item asking for a
-general consumable band. Wires into the use verb that already exists in
+potions, orbs. `menu.json`'s own `_comment_backpack` used to claim a
+`hotbar_columns` key already existed for this; it never has (checked directly
+— see the "Found along the way" fix below), so this item builds the key as
+well as the feature, not just repurposes one. `R2.1`, §19 scoped tool cycling
+separately; this is the first item asking for a general consumable band.
+Wires into the use verb that already exists in
 `tab_backpack.gd::_read_use()` rather than building a second one — see the
 correction on `R2.5` and the "Found along the way" entry above for what that
 verb already does. Done when: a potion can be used without opening a menu,
@@ -2049,11 +2052,8 @@ Phase 1 onward rather than at the end.
   genuinely missing, small, `model: sonnet` if anyone wants it), and using
   any of it requires the full backpack menu with no quick path (`HD2`,
   Phase -0.85, fixes that).
-- `data/config/menu.json` twice cites `tests/test_menu_config.gd`, which does
-  not exist. The file is `tests/test_menu_data.gd`. `model: haiku`
-- `menu.json` documents `hotbar_columns`, absent from the backpack block and
-  read by nobody. Either build the hotbar (§19 wants quick tool select — R2.1
-  makes this real) or delete the comment. `model: haiku`
+- **`menu.json`'s stray `test_menu_config.gd` references and phantom
+  `hotbar_columns` comment fixed — see `DONE.md`.**
 - Opening the menu mid-fight is silently refused with no on-screen
   explanation. `model: haiku`
 - **`smoke_traversal` / `smoke_combat` flakes — PROMOTED to `LP1` in
