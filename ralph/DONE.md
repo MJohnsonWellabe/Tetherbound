@@ -398,6 +398,73 @@ green, not perfect, to keep chasing this that hard.
 1 additional spot-check after adopting it), `smoke_combat` and
 `smoke_catching` (both share `wild_pal.gd`, both green).
 
+## SA7-remainder — The gate's lock and the key both now read clearly to a blind critic; the previous "shape-resolution ceiling" was two real bugs, not a placeholder limit
+`ralph/SA7-remainder` · `tests: smoke_opening.gd` (313-line log, clean, both
+before and after a rebase onto `main` that landed `SA3` mid-task)
+
+The item's own prior two rounds (pre-dating this firing) concluded shape
+tuning had hit a real ceiling — "no further primitive-geometry tuning
+reaches" — and that only a real modelled lock/key asset could close the
+gap. That conclusion does not survive this round.
+
+**Round 1 (shape).** Rebuilt the lock as a body-plus-shackle silhouette
+(a box with a torus ring sunk half into it, so only the top loop shows)
+instead of the one dark box round 1 (pre-firing) tried, and widened the
+key's ring hole plus added two tip teeth so its silhouette reads as
+asymmetric (a key) rather than a symmetric rod-with-a-loop.
+
+**Round 2 (material, wrong root cause).** A fresh blind pass on round 1's
+shapes still called both unidentifiable. Diagnosed (wrongly, as it turned
+out) as `metallic` too high for the Compatibility renderer's flat ambient
+to show — true in general, but not what was actually wrong here.
+
+**Round 3 (the real bugs, found by a debug render).** Zooming into the
+actual rendered frame instead of trusting the diff: the lock's own +local-Z
+placement put it on the FAR side of the fence panel for this gate's own
+71° yaw — a magenta/unshaded diagnostic material only showed up as a
+sliver through one picket gap. Flipped to -Z. Separately, the key's shaft
+sat exactly along world +X with no yaw ever applied
+(`playground_world.gd` sets only `position`), and the road gate's key
+viewpoint approaches from almost due west — straight down the shaft's
+long axis. No shape or material fix can read through being viewed
+end-on. Gave it a fixed 50° yaw.
+
+**Round 4 (size).** With the key now actually visible face-on, a fresh
+blind pass still called it "a curled/hooked yellow squiggle" at native
+~20px resolution. Enlarged ~1.4x (`items.json`'s own "heavy and old"
+flavour text supports reading this as a big old castle key), still well
+under the 0.28m size that read as a crate originally.
+
+**Round 5 (emissive glow).** Another fresh pass still named a specific
+missing lever: "no rim light, outline shader, or contrast pass... relies
+entirely on colour difference." `orb.gd` already establishes glow as this
+project's own visual language for a found/thrown item worth noticing;
+matched it with a modest `emission_enabled` boost on the key's existing
+material.
+
+**Final independent blind pass confirms both:** the lock "reads clearly
+and correctly... a player would identify it as a padlock without
+difficulty," and the key "reads as a key... the classic key silhouette,
+and it's readable as such," with contrast "strong" against the grass.
+Both clear the item's own original done-when.
+
+Five commits on the branch (one intentionally labelled WIP debug, kept
+rather than squashed, because the magenta/unshaded diagnostic and its
+debug print are what actually found the real bug — the history is the
+evidence). All local render/critique rounds run in-checkout per
+`conventions.md`'s "iterate locally, push once" rule; only one CI run
+spent on this item.
+
+Not chased further: a genuine blind pass on these same three frames also
+named several defects entirely out of `SA7-remainder`'s own scope — an
+unlit flat-black landmark tower silhouette, no creature/trainer in any
+survey frame, thin ground density/value range, oxblood reuse on a
+non-danger prop, and an unexplained hard shadow blob in one frame. None of
+these are this item's own gate/key remit; noted here only so a future
+firing doesn't re-discover them from scratch. The unlit tower in
+particular reads as a real shading/material bug, not a style choice, and
+is worth its own backlog line if nobody already owns it.
+
 ## SA3 — A believable physical perimeter, and a failsafe under it
 `0d921e0` on `main`. `tests: smoke_traversal` (extended with 8-bearing
 perimeter walks + a kill-volume check, green).

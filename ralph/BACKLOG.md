@@ -941,34 +941,12 @@ with the correct `HD1` prompt shown next to the slot.
 **`SA7` (a gated road out of the village, with a key nearby) shipped — see
 `DONE.md`.** One narrower remainder opened below.
 
-### SA7-remainder — The gate doesn't visually read as locked, and the key doesn't visually read as a key
-`model: sonnet` · `tests: none (visual)` · `area: story`
-Two local blind-judge rounds on `SA7` itself: round 1 named the gate as
-"plain ordinary fencing... nothing suggesting it's locked" and the key
-(then a 0.28m slot-colour box, harvest_node.gd's own resource-pile
-convention) as "grossly oversized," reading as a crate rather than an
-item. Round 2, after adding a small dark latch primitive to the gate's
-centre and rebuilding the key as a thin shaft-and-ring at real key scale:
-the key's SCALE is now confirmed right ("plausible for a small handheld
-item... does not look like a shrunk-down crate"), but neither shape reads
-as its own silhouette — the latch blends into the fence's own dark
-pickets, and the ring/shaft is too small to resolve as "a loop" under
-software rendering at normal viewing distance, reading as "an anonymous
-yellow dot." Stopped after two rounds, not because nothing moved (the
-scale fix genuinely landed) but because what's left is a shape-resolution
-ceiling no further primitive-geometry tuning reaches — the same class of
-wall `EV4-textures-remainder`'s moss-blob shape hit. A real lock/hardware
-model or a real key model would fix this outright; `CLAUDE.md`/`D24`
-forbid a Meshy generation for either without an owner-supplied reference
-board, so this stays a placeholder-geometry limit, not a bug to keep
-chasing. Not blocking `SA7`'s own done-when, which is a gameplay/narrative
-bar the shipped mechanic already clears (the player is physically stopped,
-finds the key without real difficulty per `smoke_opening.gd`'s new beat,
-and Grandpa's own line explains the gate and the key in as many words) —
-this is a finish-quality remainder, the same pattern `NP4`'s two texture
-gaps and `R7.1`'s bullets used. Done when: a blind critic looking at the
-gate or the key stops calling either unidentifiable, or the owner supplies
-reference art for one.
+**`SA7-remainder` (the gate's lock and the key both read clearly to a blind
+critic now) shipped — see `DONE.md`.** The "shape-resolution ceiling" this
+item's own prior rounds diagnosed was not real; a debug render caught two
+actual bugs (a facing-direction sign error, and a metallic material with no
+environment reflection to show under this renderer) that had kept both
+objects effectively invisible or dark regardless of shape/colour tuning.
 
 **`SA8` (Grandpa's opening dialogue: the Team Tether urgency beat) shipped — see `DONE.md`.**
 
