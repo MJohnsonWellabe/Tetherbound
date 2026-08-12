@@ -123,8 +123,24 @@ func _tick_peaceful(delta: float) -> void:
 ## standing your ground. Those are a behaviour system; this is a flag and a
 ## chase, and it is enough to find out whether being ambushed is fun before
 ## building the rest.
+
+## Consecutive physics frames the chase has requested movement without the
+## body actually making progress — a static prop's collider (a scattered
+## tree, a rock) pins the body in place with the request still aimed straight
+## through it. `LP7`: found by instrumenting a real failing run — the pal's
+## own position and velocity stayed exactly fixed for 900 straight frames
+## while it kept requesting movement toward the player, with a
+## `CommonTree_4_Collision` StaticBody3D confirmed overlapping it every
+## frame. Not a design obstacle (the meadow is meant to be open ground), so
+## routing around it rather than tuning collision layers is the scoped fix.
+var _stuck_frames: int = 0
+var _stuck_check_pos: Vector3 = Vector3.ZERO
+const UNSTICK_AFTER_FRAMES := 20  # ~0.33s at 60Hz — long enough not to trigger on normal accel ramp-up
+const UNSTICK_STEER_RAD := 1.3  # ~75 degrees off the direct line, enough to clear most single-prop snags
+
 func _tick_aggression(delta: float) -> bool:
 	if _player == null or not is_alive():
+		_stuck_frames = 0
 		return false
 
 	var notice := float(_aggro_cfg.get("notice_range", 14.0))
@@ -153,11 +169,34 @@ func _tick_aggression(delta: float) -> bool:
 	# a threat.
 	if _grace_left > 0.0 or to_player.length() > notice:
 		_has_announced = false
+		_stuck_frames = 0
 		return false
 
 	face_towards(_player.global_position)
 	if to_player.length() > engage:
-		request_move(to_player.normalized(), float(_aggro_cfg.get("chase_speed", 3.4)))
+		var chase_dir := to_player.normalized()
+
+		if global_position.distance_to(_stuck_check_pos) < 0.05:
+			_stuck_frames += 1
+		else:
+			_stuck_frames = 0
+		_stuck_check_pos = global_position
+
+		if _stuck_frames > UNSTICK_AFTER_FRAMES:
+			# Pinned against something the direct line runs straight through.
+			# Steer off it rather than keep requesting the same blocked
+			# direction forever. A single fixed angle was not enough on its
+			# own — verified over 15 local runs, it cut the failure rate but
+			# did not close it, because the first escape angle can itself run
+			# into more of the same obstacle (a tree's collision shape is not
+			# a point). Alternating sides every half second gives it more than
+			# one candidate gap to find rather than committing to a direction
+			# that might be blocked too.
+			var phase := int((_stuck_frames - UNSTICK_AFTER_FRAMES) / 30.0) % 2
+			var side := _side_sign if phase == 0 else -_side_sign
+			chase_dir = chase_dir.rotated(Vector3.UP, side * UNSTICK_STEER_RAD)
+
+		request_move(chase_dir, float(_aggro_cfg.get("chase_speed", 3.4)))
 		return true
 
 	# Close enough. Announced once, not every frame — the director may refuse
