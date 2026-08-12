@@ -4,6 +4,7 @@
   "_comment_camp": "GAME_DESIGN.md 20's mandatory tutorial is shelter, bed, campfire, rest. The camp is the smallest thing that lets that sequence exist — a fire and somewhere to sleep, as one buy rather than three, so the first build cannot leave the player with a bed and no light.",
   "_comment_cost": "TUNABLE. Costs are set so the camp is roughly one gathering trip and are not balanced against anything, because nothing yet produces these at a known rate.",
   "_comment_placement": "Nothing here places geometry. Confirming a buildable sets GameState.pending_build, which is the seam the building system reads when M8 gives it one. A build menu that silently did nothing would read as a bug; one that arms a selection is honest about where the work stops.",
+  "_comment_pieces": "R2.6. `camp` stays its own hand-authored geometry (scripts/build/camp.gd) because it carries the rest/craft interaction, not just a mesh. The five pieces below are plain placeable geometry — no `contains`, no interaction — so `mesh` names the model directly and `scripts/build/build_piece.gd` places any of them generically rather than each needing its own script. Assets are the Medieval Village MegaKit subset docs/ASSET_LEDGER.md records for this item, matching the Plaster/UnevenBrick/RoundTile family EV6 is curating for the settlement itself (D24's one-family rule).",
 
   "buildables": [
     {
@@ -16,6 +17,58 @@
         { "id": "wood", "n": 12 },
         { "id": "stone", "n": 8 },
         { "id": "fiber", "n": 10 }
+      ]
+    },
+    {
+      "id": "floor",
+      "name": "Floor",
+      "category": "structure",
+      "blurb": "A brick floor panel to build a room on.",
+      "mesh": "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf",
+      "cost": [
+        { "id": "stone", "n": 4 }
+      ]
+    },
+    {
+      "id": "wall",
+      "name": "Wall",
+      "category": "structure",
+      "blurb": "A plastered timber-framed wall section.",
+      "mesh": "res://assets/buildings/quaternius_medieval/Wall_Plaster_Straight.gltf",
+      "cost": [
+        { "id": "wood", "n": 6 },
+        { "id": "stone", "n": 2 }
+      ]
+    },
+    {
+      "id": "door",
+      "name": "Doorway",
+      "category": "structure",
+      "blurb": "A plain wooden door, ready to hang in a wall gap.",
+      "mesh": "res://assets/buildings/quaternius_medieval/Door_1_Flat.gltf",
+      "cost": [
+        { "id": "wood", "n": 5 }
+      ]
+    },
+    {
+      "id": "roof",
+      "name": "Roof",
+      "category": "structure",
+      "blurb": "A round-tile roof panel to close a room in.",
+      "mesh": "res://assets/buildings/quaternius_medieval/Roof_RoundTile_2x1.gltf",
+      "cost": [
+        { "id": "wood", "n": 4 },
+        { "id": "stone", "n": 3 }
+      ]
+    },
+    {
+      "id": "fence",
+      "name": "Fence",
+      "category": "structure",
+      "blurb": "A single wooden fence rail, for marking a boundary.",
+      "mesh": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf",
+      "cost": [
+        { "id": "wood", "n": 3 }
       ]
     }
   ]

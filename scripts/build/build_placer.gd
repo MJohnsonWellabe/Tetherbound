@@ -4,17 +4,19 @@ extends Node
 ##
 ## `GameState.pending_build` has been the honest end of the build screen since
 ## the menu shipped — the tab arms an id and nothing read it. This reads it:
-## while a build is armed, a ghost of the camp hovers on the ground ahead of
+## while a build is armed, a ghost of the piece hovers on the ground ahead of
 ## the player, green where it can stand and red where it cannot, and the
 ## interact button plants it. Costs go through `GameState.build_cost_for` /
 ## `can_afford`, which is the one gate the free-build toggle is allowed to
 ## bend (docs/decisions/D16).
 ##
-## Only `camp` exists today, and this file knows that: the ghost and the
-## planted result are both the campfire-and-bedroll pair. When M8 brings real
-## pieces, the ghost becomes per-piece and this comment dies happily.
+## `camp` keeps its own hand-authored geometry (`camp.gd`) because it carries
+## the rest/craft prompts. Every other `buildables.json` entry (R2.6: floor,
+## wall, door, roof, fence) is plain geometry, placed generically through
+## `build_piece.gd` from the catalogue's own `mesh` path.
 
 const CAMP := preload("res://scripts/build/camp.gd")
+const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 
 ## Metres ahead of the player the ghost sits.
 const PLACE_AHEAD := 3.0
@@ -28,6 +30,7 @@ var _player: Node3D = null
 var _camera_rig: Node = null
 var _ghost: Node3D = null
 var _ghost_ok := false
+var _ghost_id := ""
 
 
 func _ready() -> void:
@@ -48,17 +51,41 @@ func _physics_process(_delta: float) -> void:
 		_drop_ghost()
 		return
 
-	_show_ghost()
+	_show_ghost(game, armed)
 	if _ghost_ok and Input.is_action_just_pressed("interact"):
-		_place(armed)
+		_place(game, armed)
 
 
-## The ghost: the camp's own silhouette at half alpha, coloured by legality.
-func _show_ghost() -> void:
+## The mesh path a non-`camp` catalogue entry places, or "" if it has none
+## (an id the catalogue doesn't know, or `camp` itself).
+func _piece_mesh(game: Node, id: String) -> String:
+	if id == "camp":
+		return ""
+	var items: RefCounted = game.get("items")
+	if items == null:
+		return ""
+	var entry: Dictionary = items.call("buildable", id)
+	return str(entry.get("mesh", ""))
+
+
+## The ghost: the armed piece's own silhouette at half alpha, coloured by
+## legality. Rebuilt whenever the armed id changes, so switching pieces in
+## the Build tab swaps the ghost rather than leaving the old one behind.
+func _show_ghost(game: Node, armed: String) -> void:
+	if _ghost != null and is_instance_valid(_ghost) and _ghost_id != armed:
+		_drop_ghost()
+
 	if _ghost == null or not is_instance_valid(_ghost):
-		_ghost = CAMP.new()
-		_ghost.name = "CampGhost"
-		_ghost.call("build_ghost")
+		_ghost_id = armed
+		if armed == "camp":
+			_ghost = CAMP.new()
+			_ghost.name = "CampGhost"
+			_ghost.call("build_ghost")
+		else:
+			var mesh_path := _piece_mesh(game, armed)
+			_ghost = BUILD_PIECE.new()
+			_ghost.name = "PieceGhost"
+			_ghost.call("build_ghost", mesh_path)
 		get_parent().add_child(_ghost)
 
 	var forward := -_player.global_transform.basis.z
@@ -77,19 +104,17 @@ func _show_ghost() -> void:
 		var h := _ground_height(spot + corner)
 		if not is_nan(h):
 			rise = maxf(rise, absf(h - ground))
-	_ghost_ok = rise <= MAX_SLOPE_RISE and _can_afford()
+	_ghost_ok = rise <= MAX_SLOPE_RISE and _can_afford(game, armed)
 	_ghost.visible = true
 	_ghost.global_position = Vector3(spot.x, ground, spot.z)
 	_ghost.call("tint_ghost", _ghost_ok)
 
 
-func _can_afford() -> bool:
-	var game := _game()
-	return game != null and bool(game.call("can_afford", "camp"))
+func _can_afford(game: Node, armed: String) -> bool:
+	return game != null and bool(game.call("can_afford", armed))
 
 
-func _place(armed: String) -> void:
-	var game := _game()
+func _place(game: Node, armed: String) -> void:
 	# Spend first, all-or-nothing; the inventory refuses partial removals.
 	var inventory: RefCounted = game.get("inventory")
 	for requirement: Variant in (game.call("build_cost_for", armed) as Array):
@@ -98,11 +123,19 @@ func _place(armed: String) -> void:
 			push_error("could not spend the cost for '%s' after can_afford said yes" % armed)
 			return
 
-	var camp: Node3D = CAMP.new()
-	camp.name = "Camp"
-	get_parent().add_child(camp)
-	camp.call("build_real")
-	camp.global_position = _ghost.global_position
+	var placed: Node3D = null
+	if armed == "camp":
+		placed = CAMP.new()
+		placed.name = "Camp"
+		get_parent().add_child(placed)
+		placed.call("build_real")
+	else:
+		var mesh_path := _piece_mesh(game, armed)
+		placed = BUILD_PIECE.new()
+		placed.name = "Piece_%s" % armed
+		get_parent().add_child(placed)
+		placed.call("build_real", mesh_path)
+	placed.global_position = _ghost.global_position
 	game.set("pending_build", "")
 	_drop_ghost()
 
@@ -112,6 +145,7 @@ func _drop_ghost() -> void:
 		_ghost.queue_free()
 	_ghost = null
 	_ghost_ok = false
+	_ghost_id = ""
 
 
 func _ground_height(at: Vector3) -> float:
