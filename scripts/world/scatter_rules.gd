@@ -349,6 +349,22 @@ static func _consider(
 		if float(field.path_factor(spot.x, spot.y)) > threshold:
 			return
 
+	# Nothing grows IN the stream channel either (EV5) — a grass tuft standing
+	# mid-current reads as a bug the way a tree on a path does. Same shape as
+	# the path gate above, same per-instance edge jitter so the channel's clear
+	# band ravels instead of tracing an exact offset curve. The pond is handled
+	# differently: it is a height, not a band, so layers keep out of it with
+	# their own `min_height` (vegetation.json) — reeds and marsh grass WANT to
+	# stand in the shallows, and a per-layer height gate lets each layer say
+	# how far in it wades.
+	if not bool(layer.get("grows_in_stream", false)) and field.has_method("stream_factor"):
+		var stream_jitter := float(layer.get("path_edge_jitter", 0.0))
+		var stream_threshold := 0.35
+		if stream_jitter > 0.0:
+			stream_threshold += rng.randf_range(-stream_jitter, stream_jitter)
+		if float(field.stream_factor(spot.x, spot.y)) > stream_threshold:
+			return
+
 	# `path_avoid_radius` (EV3-remainder-3) only ever resampled a CLUMP'S
 	# CENTRE — it had no effect on `strays`, which are placed independently of
 	# any clump. EV3-remainder-4's own whole-map instrumentation confirmed the

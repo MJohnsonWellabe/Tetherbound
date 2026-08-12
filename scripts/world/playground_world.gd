@@ -16,6 +16,7 @@ extends Node3D
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const WATER := preload("res://scripts/world/water.gd")
 const VILLAGE := preload("res://scripts/world/village.gd")
 const PROPS := preload("res://scripts/world/props.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
@@ -122,6 +123,8 @@ func _ready() -> void:
 	BOOT_LOG.line("playground: player placed on terrain")
 	_dress_the_meadow()
 	BOOT_LOG.line("playground: vegetation scatter built (instance/batch count above)")
+	_build_water()
+	BOOT_LOG.line("playground: water built (pond, stream, reeds — counts above)")
 	_build_settlement()
 	BOOT_LOG.line("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
 	_capture_mouse_if_free()
@@ -460,6 +463,17 @@ func _dress_the_meadow() -> void:
 	print("[playground] scattered %d props in %d batches (%d harvestable)" % [
 		stats["instances"], stats["batches"], stats.get("harvest_points", 0)
 	])
+
+
+## EV5: the pond at the valley floor, its inflow stream, and the reeds at
+## their banks. After the vegetation so a water regression cannot take the
+## whole meadow's dressing down with it; the two systems only meet through
+## the heightfield's water_level/stream_factor, which both read.
+func _build_water() -> void:
+	var water: Node3D = WATER.new()
+	water.name = "Water"
+	add_child(water)
+	water.call("build")
 
 
 ## Grandpa's house and the village, stood on the building pads the terrain

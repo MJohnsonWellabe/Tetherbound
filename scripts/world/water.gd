@@ -1,0 +1,626 @@
+extends Node3D
+
+## EV5 — the Meadows water layer (bible §15): the pond, its inflow stream,
+## and the reeds standing at their banks.
+##
+## Composed at runtime from config, like every other layer of the playground.
+## Geometry truth lives in data/config/terrain_playground.json's `water`
+## block — the heightfield carves the stream channel from it and the bake
+## paints the wet bed from it — while this file reads the same block to put
+## the visible surface exactly where the ground already expects water to be.
+## Presentation (colours, foam, waves, reeds) is data/config/water.json.
+##
+## The surface is deliberately cheap: a trimmed flat grid for the pond, a
+## ribbon for the stream, one shared ShaderMaterial (shaders/water.gdshader)
+## whose per-pixel depth comes from a heightfield texture baked right here at
+## build time. No simulation, no reflection probe, no depth-texture readback
+## — see the shader's own header for why that last one is off the table on
+## this project's gl_compatibility renderer.
+##
+## No collision, on purpose. The pond is a basin in solid terrain: the player
+## wades in and walks on the bed, exactly as the traversal smoke test walks
+## everywhere else. Blocking the water's edge would invent a movement rule,
+## and there is no swimming system to hand deep water to — the deepest point
+## is ~3m, which submerges the trainer briefly if they insist. If that reads
+## badly in play it is a design question for the owner, not something this
+## composer should quietly legislate with an invisible wall.
+
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const CONFIG_PATH := "res://data/config/water.json"
+const SHADER := preload("res://shaders/water.gdshader")
+
+## Resolution of the baked terrain-height texture the shader reads depth
+## from. 512 over a ~150m region is ~0.3m per texel — finer than the mesh
+## grid, coarse enough to bake in well under a second.
+const HEIGHT_MAP_SIZE := 512
+
+## Reeds sink deeper than vegetation.gd's 0.06: a tuft mesh has a visible
+## flat base, and on a bank slope at the waterline that base showed as a
+## floating plate (blind round 1). Shin-deep burial hides it at every angle
+## this shore's slopes produce.
+const REED_SINK := 0.14
+
+var _field: RefCounted = null
+var _water_cfg: Dictionary = {}
+var _level: float = NAN
+var _stats := {"pond_quads": 0, "stream_points": 0, "reeds": 0}
+
+
+func build() -> void:
+	_field = HEIGHTFIELD.new()
+	_water_cfg = _load_config()
+	_level = float(_field.call("water_level"))
+	if is_nan(_level):
+		push_warning("terrain_playground.json has no water block; the meadow stays dry")
+		return
+
+	var terrain_cfg: Dictionary = HEIGHTFIELD.load_config()
+	var stream: Dictionary = terrain_cfg.get("water", {}).get("stream", {})
+	var pond_centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
+
+	var material := _build_material(stream)
+	_build_pond(material)
+	# The stream carries the same shader with more opaque water: at 0.35m
+	# deep, a see-through surface is mostly its own carved, wet-darkened,
+	# partly self-shadowed bed, which rendered as a dark strip against the
+	# pond's bright shallows — blind rounds 1 and 2 both read them as two
+	# different waters. Measured after round 3's shared-alpha attempt: same
+	# hue family (192 vs 184) but half the value. A stylised stream is
+	# nearly opaque, its colour carried by the surface, not the bed.
+	var stream_material: ShaderMaterial = material.duplicate()
+	var surface_cfg: Dictionary = _water_cfg.get("stream", {})
+	stream_material.set_shader_parameter("alpha_shallow", float(surface_cfg.get("alpha_shallow", 0.78)))
+	stream_material.set_shader_parameter("alpha_deep", 0.95)
+	_build_stream(stream_material, stream)
+	_build_reeds(Vector2(float(pond_centre[0]), float(pond_centre[1])))
+	print("[water] pond quads %d, stream points %d, reeds %d, level %.1f" % [
+		_stats["pond_quads"], _stats["stream_points"], _stats["reeds"], _level
+	])
+
+
+func stats() -> Dictionary:
+	return _stats
+
+
+## The world-rect the height texture and the pond grid both cover: the pond's
+## own below-water extent plus the whole stream course, padded. Derived from
+## the data rather than configured, so retuning the level or the course can
+## never silently crop the map that the shader reads depth from.
+func _region() -> Rect2:
+	var lo := Vector2(INF, INF)
+	var hi := Vector2(-INF, -INF)
+	var terrain_cfg: Dictionary = HEIGHTFIELD.load_config()
+	var water: Dictionary = terrain_cfg.get("water", {})
+	var centre: Array = water.get("pond_centre", [0.0, 0.0])
+	var c := Vector2(float(centre[0]), float(centre[1]))
+	# Coarse scan around the pond centre for terrain below the waterline.
+	for z in range(int(c.y) - 90, int(c.y) + 91, 4):
+		for x in range(int(c.x) - 90, int(c.x) + 91, 4):
+			if float(_field.call("height_at", float(x), float(z))) < _level:
+				lo = Vector2(minf(lo.x, x), minf(lo.y, z))
+				hi = Vector2(maxf(hi.x, x), maxf(hi.y, z))
+	for entry: Variant in water.get("stream", {}).get("points", []):
+		var p := Vector2(float(entry[0]), float(entry[1]))
+		lo = Vector2(minf(lo.x, p.x), minf(lo.y, p.y))
+		hi = Vector2(maxf(hi.x, p.x), maxf(hi.y, p.y))
+	if lo.x > hi.x:
+		# No submerged terrain found at all — fall back to a small rect at the
+		# configured centre so the composer degrades visibly, not by crashing.
+		push_warning("no terrain below water level %.1f near pond centre; is the level above the basin floor?" % _level)
+		lo = c - Vector2(20, 20)
+		hi = c + Vector2(20, 20)
+	var margin := float(_water_cfg.get("pond", {}).get("margin", 6.0))
+	lo -= Vector2(margin, margin)
+	hi += Vector2(margin, margin)
+	return Rect2(lo, hi - lo)
+
+
+func _build_material(_stream: Dictionary) -> ShaderMaterial:
+	var surface: Dictionary = _water_cfg.get("surface", {})
+	var region := _region()
+
+	var material := ShaderMaterial.new()
+	material.shader = SHADER
+	material.set_shader_parameter("region", Vector4(region.position.x, region.position.y, region.size.x, region.size.y))
+
+	# Normalised over the REGION'S OWN height range, never a fixed window
+	# around the water level. The first version used level ±8m, and the
+	# stream's course climbs ~20m above the pond — every texel above the
+	# window clamped to its ceiling, the shader decoded ground 5m under the
+	# actual bed, and the upper stream rendered as deep navy water over a
+	# phantom chasm. Found by replicating the shader's lookup on the CPU
+	# after two blind critics called the stream "a different water" and no
+	# amount of colour tuning moved it: the tuning was fine, the depth was
+	# lying. Scan first, window second.
+	var height_min := INF
+	var height_max := -INF
+	for z in range(int(region.position.y), int(region.end.y) + 1, 4):
+		for x in range(int(region.position.x), int(region.end.x) + 1, 4):
+			var h := float(_field.call("height_at", float(x), float(z)))
+			height_min = minf(height_min, h)
+			height_max = maxf(height_max, h)
+	height_min -= 1.0
+	height_max += 1.0
+	material.set_shader_parameter("terrain_height", _bake_height_texture(region, height_min, height_max))
+	material.set_shader_parameter("height_min", height_min)
+	material.set_shader_parameter("height_max", height_max)
+
+	material.set_shader_parameter("deep_colour", Color(str(surface.get("deep_colour", "#1d5261"))))
+	material.set_shader_parameter("shallow_colour", Color(str(surface.get("shallow_colour", "#7ab08e"))))
+	material.set_shader_parameter("depth_falloff", float(surface.get("depth_falloff", 1.6)))
+	material.set_shader_parameter("alpha_deep", float(surface.get("alpha_deep", 0.88)))
+	material.set_shader_parameter("alpha_shallow", float(surface.get("alpha_shallow", 0.42)))
+	material.set_shader_parameter("edge_feather", float(surface.get("edge_feather", 0.1)))
+	material.set_shader_parameter("foam_colour", Color(str(surface.get("foam_colour", "#ebf1ec"))))
+	material.set_shader_parameter("foam_depth", float(surface.get("foam_depth", 0.3)))
+	material.set_shader_parameter("foam_scale", float(surface.get("foam_scale", 0.14)))
+	material.set_shader_parameter("foam_speed", float(surface.get("foam_speed", 0.03)))
+	material.set_shader_parameter("wave_uv_scale", float(surface.get("wave_uv_scale", 0.09)))
+	material.set_shader_parameter("wave_speed", float(surface.get("wave_speed", 0.016)))
+	material.set_shader_parameter("wave_strength", float(surface.get("wave_strength", 0.35)))
+	material.set_shader_parameter("fresnel_colour", Color(str(surface.get("fresnel_colour", "#b9c8cf"))))
+	material.set_shader_parameter("fresnel_power", float(surface.get("fresnel_power", 4.0)))
+	material.set_shader_parameter("fresnel_strength", float(surface.get("fresnel_strength", 0.65)))
+	material.set_shader_parameter("roughness_value", float(surface.get("roughness", 0.12)))
+
+	material.set_shader_parameter("wave_normal_a", _noise_normal(11, 0.05))
+	material.set_shader_parameter("wave_normal_b", _noise_normal(12, 0.09))
+	material.set_shader_parameter("foam_noise", _noise_plain(13, 0.11))
+	return material
+
+
+## The shader's depth source: the baked heightfield sampled over `region`,
+## normalised. Generated here rather than shipped as an asset because it is
+## a pure function of data already in the repo — committing it would just
+## be a cache that silently rots when the terrain config changes.
+##
+## FORMAT_RF, not R8: the first render used R8, whose 16 metres over 256
+## steps is 6.3cm height quanta — and on a bank sloping a few degrees one
+## quantum spans over a metre of ground, so the foam band's depth threshold
+## crossed in metre-wide contour steps and the whole shoreline rendered as
+## a hard white staircase. Float costs 1MB once and removes the artefact at
+## its source. (This build targets desktop GL, where linear filtering of
+## float textures is universal.)
+func _bake_height_texture(region: Rect2, height_min: float, height_max: float) -> ImageTexture:
+	var image := Image.create_empty(HEIGHT_MAP_SIZE, HEIGHT_MAP_SIZE, false, Image.FORMAT_RF)
+	var span := maxf(height_max - height_min, 0.001)
+	for py in HEIGHT_MAP_SIZE:
+		var wz := region.position.y + (float(py) + 0.5) / HEIGHT_MAP_SIZE * region.size.y
+		for px in HEIGHT_MAP_SIZE:
+			var wx := region.position.x + (float(px) + 0.5) / HEIGHT_MAP_SIZE * region.size.x
+			var h := float(_field.call("height_at", wx, wz))
+			image.set_pixel(px, py, Color(clampf((h - height_min) / span, 0.0, 1.0), 0.0, 0.0))
+	return ImageTexture.create_from_image(image)
+
+
+## Procedural scrolling-wave normal map. FastNoiseLite via NoiseTexture2D,
+## seamless so the scroll never shows a tile seam — no sourced asset, nothing
+## to ledger, and the same texture is reproducible from this code alone.
+func _noise_normal(noise_seed: int, frequency: float) -> NoiseTexture2D:
+	var texture := _noise_plain(noise_seed, frequency)
+	texture.as_normal_map = true
+	texture.bump_strength = 6.0
+	return texture
+
+
+func _noise_plain(noise_seed: int, frequency: float) -> NoiseTexture2D:
+	var noise := FastNoiseLite.new()
+	noise.seed = noise_seed
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.fractal_type = FastNoiseLite.FRACTAL_FBM
+	noise.fractal_octaves = 3
+	noise.frequency = frequency
+	var texture := NoiseTexture2D.new()
+	texture.noise = noise
+	texture.seamless = true
+	texture.width = 256
+	texture.height = 256
+	return texture
+
+
+## The pond: a flat grid at the water level, keeping only quads that touch
+## water. The mesh edge is never the shoreline — the shader feathers alpha to
+## zero exactly where depth reaches zero — so the grid just has to reach past
+## the shore everywhere, which "any corner within half a metre of waterline
+## height" comfortably guarantees at 2m cells.
+func _build_pond(material: ShaderMaterial) -> void:
+	var region := _region()
+	var step := maxf(float(_water_cfg.get("pond", {}).get("grid_step", 2.0)), 0.5)
+	var cols := int(ceil(region.size.x / step))
+	var rows := int(ceil(region.size.y / step))
+
+	# Candidate cells: any corner near or below the waterline (0.5m margin
+	# keeps the shader's feathered shoreline inside kept geometry). Then a
+	# flood fill from the pond centre keeps only the basin's own connected
+	# component: without it, every dip under `level + 0.5` anywhere in the
+	# region grew a plate — the carved stream channel collected a chain of
+	# them, and blind round 4 found their exposed edges as "orphaned quads"
+	# and an angular sliver poking over a bank.
+	var wet_cells: Dictionary = {}
+	for row in rows:
+		var z0 := region.position.y + row * step
+		for col in cols:
+			var x0 := region.position.x + col * step
+			for corner: Vector2 in [
+				Vector2(x0, z0), Vector2(x0 + step, z0),
+				Vector2(x0, z0 + step), Vector2(x0 + step, z0 + step)
+			]:
+				if float(_field.call("height_at", corner.x, corner.y)) < _level + 0.5:
+					wet_cells[Vector2i(col, row)] = true
+					break
+
+	var terrain_cfg: Dictionary = HEIGHTFIELD.load_config()
+	var centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
+	var seed_cell := Vector2i(
+		int((float(centre[0]) - region.position.x) / step),
+		int((float(centre[1]) - region.position.y) / step)
+	)
+	var kept: Dictionary = {}
+	if wet_cells.has(seed_cell):
+		var frontier: Array[Vector2i] = [seed_cell]
+		kept[seed_cell] = true
+		while not frontier.is_empty():
+			var cell: Vector2i = frontier.pop_back()
+			for offset: Vector2i in [
+				Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1),
+				Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)
+			]:
+				var next := cell + offset
+				if wet_cells.has(next) and not kept.has(next):
+					kept[next] = true
+					frontier.append(next)
+	else:
+		push_warning("pond centre cell is not below the waterline; keeping every wet cell unfiltered")
+		kept = wet_cells
+
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var quads := 0
+	for cell: Vector2i in kept.keys():
+		var x0 := region.position.x + cell.x * step
+		var z0 := region.position.y + cell.y * step
+		_add_quad(tool,
+			Vector3(x0, _level, z0), Vector3(x0 + step, _level, z0),
+			Vector3(x0 + step, _level, z0 + step), Vector3(x0, _level, z0 + step))
+		quads += 1
+	if quads == 0:
+		push_warning("pond mesh has no quads; water level %.1f never dips below terrain" % _level)
+		return
+	tool.generate_tangents()
+	var node := MeshInstance3D.new()
+	node.name = "PondSurface"
+	node.mesh = tool.commit()
+	node.material_override = material
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(node)
+	_stats["pond_quads"] = quads
+
+
+## The stream: a ribbon of surface water following the carved bed downhill.
+## Vertex heights are clamped monotone non-increasing — the course was probed
+## downhill with no reversals, but "water never flows uphill" should be a
+## property of the builder, not a hope about the noise — and the ribbon ends
+## by meeting the pond's own level at the mouth.
+func _build_stream(material: ShaderMaterial, stream: Dictionary) -> void:
+	var points: Array = stream.get("points", [])
+	if points.size() < 2:
+		return
+	var width := float(stream.get("width", 2.4))
+	var surface_depth := float(_water_cfg.get("stream", {}).get("surface_depth", 0.45))
+	var step := maxf(float(_water_cfg.get("stream", {}).get("sample_step", 3.0)), 0.5)
+
+	# Resample the polyline at an even step so ribbon quads stay similar sizes.
+	var line: Array[Vector2] = []
+	for entry: Variant in points:
+		line.append(Vector2(float(entry[0]), float(entry[1])))
+	var samples: Array[Vector2] = [line[0]]
+	for i in line.size() - 1:
+		var a := line[i]
+		var b := line[i + 1]
+		var count := maxi(1, int(a.distance_to(b) / step))
+		for s in range(1, count + 1):
+			samples.append(a.lerp(b, float(s) / count))
+
+	# Surface heights: carved bed plus water depth, monotone, floored at the
+	# pond level. The ribbon does NOT stop at the first sample that reaches
+	# pond level — the shore band's own carve dips the bed under the level a
+	# few metres early, and ending there left a dry-looking gap between the
+	# stream's terminus and the pond plane (blind round 1: "the blue simply
+	# begins partway down the channel... no inlet anywhere"). Instead the
+	# surface rides AT the pond level (a hair above, so the coplanar overlap
+	# cannot z-fight) across the mouth and only ends once the bed is well
+	# inside the basin, where the pond plane has unambiguously taken over.
+	# The ribbon spans only where its water genuinely sits inside the ground:
+	# it begins once the carve is deep enough to hold `surface_depth` of
+	# water (the head ramp's shallow start would put water proud of the
+	# meadow — round 4's "orphaned quads in the dry channel"), and it ends
+	# the moment the bed passes under the pond's level, where the pond plane
+	# is the water from then on (running further produced a more-opaque
+	# ribbon tongue floating 2cm over the pond — round 4's plate at the
+	# mouth).
+	var start_index := 0
+	while start_index < samples.size():
+		var head := samples[start_index]
+		if float(_field.call("stream_carve_depth", head.x, head.y)) >= surface_depth + 0.1:
+			break
+		start_index += 1
+	samples = samples.slice(start_index)
+	if samples.size() < 2:
+		push_warning("stream carve never reaches surface_depth; no ribbon built")
+		return
+
+	# ...and it ends BEFORE the bed crosses under the pond's level, without an
+	# overlap row: both this ribbon and the pond plane feather their alpha to
+	# zero as their own depth reaches zero, so each fades out on the same
+	# waterline and the junction closes itself. An overlapping row was tried
+	# first and rendered as a darker wedge over the pond — the stream's more
+	# opaque alpha sitting 2cm proud of it (blind round 4's mouth plate). The
+	# fine sample_step keeps the un-meshed sliver between the two feather
+	# lines under a metre.
+	var heights: Array[float] = []
+	var last := INF
+	var end_index := samples.size()
+	for i in samples.size():
+		var p := samples[i]
+		var bed := float(_field.call("height_at", p.x, p.y))
+		if bed <= _level:
+			end_index = i
+			break
+		var y := maxf(minf(bed + surface_depth, last), _level + 0.02)
+		heights.append(y)
+		last = y
+	if end_index < 2:
+		return
+
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var half := width * 0.5
+	for i in range(0, end_index - 1):
+		var a := samples[i]
+		var b := samples[i + 1]
+		var t_a := _tangent_at(samples, i)
+		var t_b := _tangent_at(samples, i + 1)
+		# Width breathes along the run (±25% over two incommensurate waves):
+		# a constant-width ribbon was blind round 1's "extruded ribbon...
+		# nothing about it says a river cut this". Deterministic in the
+		# sample index, so the mesh is identical every build.
+		var side_a := Vector2(-t_a.y, t_a.x) * half * _width_swell(i)
+		var side_b := Vector2(-t_b.y, t_b.x) * half * _width_swell(i + 1)
+		_add_quad(tool,
+			Vector3(a.x - side_a.x, heights[i], a.y - side_a.y),
+			Vector3(a.x + side_a.x, heights[i], a.y + side_a.y),
+			Vector3(b.x + side_b.x, heights[i + 1], b.y + side_b.y),
+			Vector3(b.x - side_b.x, heights[i + 1], b.y - side_b.y))
+	tool.generate_tangents()
+	var node := MeshInstance3D.new()
+	node.name = "StreamSurface"
+	node.mesh = tool.commit()
+	node.material_override = material
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(node)
+	_stats["stream_points"] = end_index
+
+
+## 0.75..1.25 width multiplier along the stream, two sine waves at
+## incommensurate frequencies so the swell never visibly repeats over the
+## course's length. The carve stays constant-width — banks a little wider
+## than the water in places read as low-water margins, which is free realism.
+func _width_swell(i: int) -> float:
+	return 1.0 + 0.15 * sin(i * 0.83 + 1.7) + 0.1 * sin(i * 0.31 + 0.4)
+
+
+func _tangent_at(samples: Array[Vector2], i: int) -> Vector2:
+	var before := samples[maxi(i - 1, 0)]
+	var after := samples[mini(i + 1, samples.size() - 1)]
+	var along := after - before
+	return along.normalized() if along.length_squared() > 0.0001 else Vector2(0, 1)
+
+
+func _add_quad(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, d: Vector3) -> void:
+	# UVs are world-XZ so generate_tangents has something consistent to chew
+	# on; the shader does its own world-space UVs and never reads these.
+	for v: Vector3 in [a, b, c, a, c, d]:
+		tool.set_normal(Vector3.UP)
+		tool.set_uv(Vector2(v.x, v.z) * 0.05)
+		tool.add_vertex(v)
+
+
+## Reeds at the banks (bible §15). Marches the actual shoreline — for a fan
+## of bearings out of the pond centre, bisect where the ground crosses the
+## waterline — and stands clumps of the nature pack's wispy grass in a band
+## straddling it. Anchored to the real isoline rather than scattered with a
+## height gate, so the stands always hug the shore however the level is tuned.
+func _build_reeds(pond_centre: Vector2) -> void:
+	var reeds: Dictionary = _water_cfg.get("reeds", {})
+	var models: Array = reeds.get("models", [])
+	if models.is_empty():
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(reeds.get("seed", 1))
+
+	var shore: Array[Vector2] = []
+	var bearings := 72
+	for i in bearings:
+		var angle := float(i) / bearings * TAU
+		var point := _shore_point(pond_centre, Vector2(cos(angle), sin(angle)))
+		if point != Vector2.INF:
+			shore.append(point)
+	if shore.is_empty():
+		push_warning("no shoreline found around pond centre %s; reeds skipped" % pond_centre)
+		return
+
+	var clumps := int(reeds.get("clumps", 34))
+	var per_clump := int(reeds.get("per_clump", 8))
+	var radius := float(reeds.get("clump_radius", 2.6))
+	var band_below := float(reeds.get("band_below", 0.35))
+	var band_above := float(reeds.get("band_above", 0.45))
+	var max_slope := float(reeds.get("max_bank_slope_deg", 33.0))
+	var scale_min := float(reeds.get("scale_min", 0.55))
+	var scale_max := float(reeds.get("scale_max", 1.0))
+
+	var placements: Dictionary = {}
+	for model: Variant in models:
+		placements[str(model)] = []
+	var total := 0
+	for c in clumps:
+		var anchor := shore[rng.randi_range(0, shore.size() - 1)]
+		if float(_field.call("slope_degrees_at", anchor.x, anchor.y)) > max_slope:
+			continue
+		# Clump size and spread both vary (blind round 1: "one scale, one
+		# tint, evenly spaced") — some stands are three stalks, some a real
+		# brake, and their footprints differ enough to break the interval.
+		var clump_radius := radius * rng.randf_range(0.7, 1.4)
+		var clump_count := maxi(2, int(per_clump * rng.randf_range(0.5, 1.4)))
+		for i in clump_count:
+			var angle := rng.randf_range(0.0, TAU)
+			var spot := anchor + Vector2(sin(angle), cos(angle)) * sqrt(rng.randf()) * clump_radius
+			var ground := float(_field.call("height_at", spot.x, spot.y))
+			# Keep the stand in the waterline band: shin-deep in the shallows
+			# to just up the bank. Elevation, not distance — the same rule
+			# whether the bank is a beach or a slope.
+			if ground < _level - band_below or ground > _level + band_above:
+				continue
+			var model := str(models[rng.randi_range(0, models.size() - 1)])
+			(placements[model] as Array).append({
+				"position": Vector3(spot.x, ground - REED_SINK, spot.y),
+				"yaw": rng.randf_range(0.0, TAU),
+				"scale": rng.randf_range(scale_min, scale_max),
+				# A few degrees of lean, biased nowhere in particular. Bolt-
+				# upright rows are what read as planted; real reeds splay.
+				"lean": rng.randf_range(0.0, deg_to_rad(8.0)),
+				"lean_yaw": rng.randf_range(0.0, TAU),
+				# Per-instance value jitter, the same lever the grass layer
+				# uses (R7.1-remainder), with a slight independent green push
+				# so neighbouring stalks differ in tone, not just brightness.
+				"tone": Color(
+					1.0 + rng.randf_range(-0.16, 0.16),
+					1.0 + rng.randf_range(-0.08, 0.2),
+					1.0 + rng.randf_range(-0.16, 0.1)
+				),
+			})
+			total += 1
+
+	var tint := str(reeds.get("tint", "#86a05c"))
+	for model: String in placements.keys():
+		var list: Array = placements[model]
+		if list.is_empty():
+			continue
+		_add_reed_batch(model, list, tint)
+	_stats["reeds"] = total
+
+
+## Where the ground crosses the waterline along one bearing out of the pond:
+## first crossing by 1.5m march, refined by bisection. Vector2.INF when the
+## bearing never surfaces within 90m (an inlet the fan skips harmlessly).
+func _shore_point(centre: Vector2, direction: Vector2) -> Vector2:
+	var last_r := 0.0
+	var r := 1.5
+	while r <= 90.0:
+		var p := centre + direction * r
+		if float(_field.call("height_at", p.x, p.y)) >= _level:
+			var wet_r := last_r
+			var dry_r := r
+			for i in 8:
+				var mid := (wet_r + dry_r) * 0.5
+				var m := centre + direction * mid
+				if float(_field.call("height_at", m.x, m.y)) >= _level:
+					dry_r = mid
+				else:
+					wet_r = mid
+			return centre + direction * ((wet_r + dry_r) * 0.5)
+		last_r = r
+		r += 1.5
+	return Vector2.INF
+
+
+## One MultiMesh per reed model, mirroring vegetation.gd's batching. The
+## retint is local because these two meshes already belong to the drygrass
+## layer, and vegetation.gd's batches are grouped by model — the documented
+## reason a mesh must not appear in two of ITS layers. A separate composer
+## with its own MultiMesh instances sidesteps that entirely.
+func _add_reed_batch(model_path: String, placements: Array, tint: String) -> void:
+	var mesh := _mesh_for(model_path)
+	if mesh == null:
+		push_error("reed model %s could not be loaded" % model_path)
+		return
+	var tinted: ArrayMesh = mesh.duplicate(false)
+	for surface in mesh.get_surface_count():
+		tinted.surface_set_material(surface, _reed_material(mesh.surface_get_material(surface), tint))
+
+	var multi := MultiMesh.new()
+	multi.transform_format = MultiMesh.TRANSFORM_3D
+	multi.mesh = tinted
+	# use_colors BEFORE instance_count — the buffer is sized when the count
+	# is assigned and never resized after (the exact silent failure
+	# vegetation.gd's own R7.2 comment documents).
+	multi.use_colors = true
+	multi.instance_count = placements.size()
+	for i in placements.size():
+		var placement: Dictionary = placements[i]
+		var basis := Basis(Vector3.UP, float(placement["yaw"]))
+		var lean := float(placement.get("lean", 0.0))
+		if lean > 0.0:
+			var lean_axis := Vector3(cos(float(placement["lean_yaw"])), 0.0, sin(float(placement["lean_yaw"])))
+			basis = Basis(lean_axis, lean) * basis
+		basis = basis.scaled(Vector3.ONE * float(placement["scale"]))
+		multi.set_instance_transform(i, Transform3D(basis, placement["position"]))
+		multi.set_instance_color(i, placement.get("tone", Color.WHITE))
+
+	var node := MultiMeshInstance3D.new()
+	node.name = "Reeds_%s" % model_path.get_file().get_basename()
+	node.multimesh = multi
+	# Same rule as the grass layers: a tuft's shadow is not information.
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(node)
+
+
+## A marsh-green modulate over the pack's own grass texture — the same
+## multiply-over-texture treatment vegetation.gd's _tint_for applies, kept
+## local for the reason _add_reed_batch's comment gives.
+func _reed_material(source: Material, tint: String) -> Material:
+	var material := StandardMaterial3D.new()
+	var standard := source as StandardMaterial3D
+	material.albedo_color = Color(tint)
+	# Forced on: MultiMesh per-instance tone multiplies through this channel
+	# (vegetation.gd's own colour_jitter mechanism, same reason).
+	material.vertex_color_use_as_albedo = true
+	if standard != null:
+		if standard.albedo_texture != null:
+			material.albedo_texture = standard.albedo_texture
+		material.transparency = standard.transparency
+		material.alpha_scissor_threshold = standard.alpha_scissor_threshold
+		material.cull_mode = standard.cull_mode
+		if standard.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:
+			material.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE
+	material.roughness = 0.94
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	return material
+
+
+## Same flatten-to-one-mesh read vegetation.gd uses for the pack's models.
+func _mesh_for(path: String) -> Mesh:
+	if not ResourceLoader.exists(path):
+		return null
+	var packed: PackedScene = load(path) as PackedScene
+	if packed == null:
+		return null
+	var scene: Node = packed.instantiate()
+	var found: Mesh = null
+	var stack: Array[Node] = [scene]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if found == null and node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+			found = (node as MeshInstance3D).mesh
+		for child in node.get_children():
+			stack.append(child)
+	scene.queue_free()
+	return found
+
+
+func _load_config() -> Dictionary:
+	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("water.json missing; water renders with shader defaults")
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}

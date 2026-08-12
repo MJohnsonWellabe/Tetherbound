@@ -144,6 +144,8 @@ func height_at(x: float, z: float) -> float:
 	height += _rise_height(x, z)
 	height = _apply_spawn_pad(x, z, height)
 	height = _apply_flats(x, z, height)
+	height -= _stream_carve(x, z)
+	height -= _shore_step(height)
 
 	return height
 
@@ -283,6 +285,104 @@ func _apply_flats(x: float, z: float, height: float) -> float:
 		return height
 	var blended_target := weighted_target / total_weight
 	return lerpf(height, blended_target, clampf(max_weight, 0.0, 1.0))
+
+
+## The still-water surface height in metres, or NAN when the config has no
+## water block. EV5: one flat level rather than an authored pond outline —
+## the pond valley is the only terrain below -18m anywhere on the map (probed
+## for EV5, see terrain_playground.json's own `_comment_water`), so "below
+## this height" and "underwater" are the same statement. The bake, the
+## scatter and the water composer all ask this one function so they cannot
+## disagree about where the shoreline is.
+func water_level() -> float:
+	var water: Dictionary = _config.get("water", {})
+	if not water.has("level"):
+		return NAN
+	return float(water.get("level"))
+
+
+## How deep the stream channel is cut into the ground at a world XZ. Zero
+## almost everywhere; up to `carve_depth` on the stream's centreline.
+##
+## EV5: the stream's course was probed downhill with no reversals, so the
+## carve is not what makes the water run downhill — it is what makes the
+## water sit IN the meadow rather than lie on top of it. A water ribbon laid
+## over unbroken ground reads as painted; a channel with banks reads as worn.
+## The cross profile is a smoothstep in both directions (no crease at the
+## centre or the rim), and `head_ramp` fades the whole carve in over the
+## first metres so the spring emerges rather than starting as a trench edge.
+##
+## Subtracted AFTER the flats on purpose: no authored route crosses a
+## building pad, and applying the carve last means a future stream segment
+## near a pad would still cut a visible channel instead of being ironed flat.
+func _stream_carve(x: float, z: float) -> float:
+	var stream: Dictionary = _config.get("water", {}).get("stream", {})
+	var points: Array = stream.get("points", [])
+	if points.size() < 2:
+		return 0.0
+	var depth := float(stream.get("carve_depth", 0.7))
+	var half := float(stream.get("carve_width", 5.0)) * 0.5
+	if depth <= 0.0 or half <= 0.0:
+		return 0.0
+	var spot := Vector2(x, z)
+	var nearest := INF
+	for i in points.size() - 1:
+		var a := Vector2(float(points[i][0]), float(points[i][1]))
+		var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
+		nearest = minf(nearest, _segment_distance(spot, a, b))
+	if nearest >= half:
+		return 0.0
+	var head := Vector2(float(points[0][0]), float(points[0][1]))
+	var ramp: float = smoothstep(0.0, maxf(float(stream.get("head_ramp", 14.0)), 0.001), spot.distance_to(head))
+	return depth * (1.0 - smoothstep(0.0, half, nearest)) * ramp
+
+
+## An extra half-metre drop for everything already under the waterline, faded
+## in across the waterline itself — a pure function of the height a point was
+## already going to have. EV5 blind round 1: the basin's banks meet the water
+## at the valley's own gentle grade, so from across the pond nothing marks
+## where land stops ("no bank drop, no lip... a hole cut in a texture"). The
+## step steepens only the last stretch of bank and deepens the shallows'
+## colour ramp; ground at or above the waterline is untouched.
+func _shore_step(height: float) -> float:
+	var water: Dictionary = _config.get("water", {})
+	var step := float(water.get("shore_step", 0.0))
+	if step <= 0.0 or not water.has("level"):
+		return 0.0
+	var level := float(water.get("level"))
+	return step * (1.0 - smoothstep(level - 0.4, level + 0.3, height))
+
+
+## Public read of the carve for the water composer: the stream's surface
+## ribbon must not begin until the channel is actually deep enough to hold
+## its water — where the head ramp keeps the carve shallow, water at bed +
+## surface_depth would sit proud of the meadow, which is exactly the
+## "orphaned quads in the dry channel" a blind round caught.
+func stream_carve_depth(x: float, z: float) -> float:
+	return _stream_carve(x, z)
+
+
+## How much a world point belongs to the stream channel: 1.0 on the
+## centreline within the water's own width, fading to 0.0 across `shoulder`
+## metres. Same contract as `path_factor` below and for the same reason —
+## the bake paints the wet bed from it and the scatter keeps vegetation out
+## of the channel with it, and both agreeing is why it lives here.
+func stream_factor(x: float, z: float) -> float:
+	var stream: Dictionary = _config.get("water", {}).get("stream", {})
+	var points: Array = stream.get("points", [])
+	if points.size() < 2:
+		return 0.0
+	var half := float(stream.get("width", 2.4)) * 0.5
+	var shoulder := float(stream.get("shoulder", 1.2))
+	var spot := Vector2(x, z)
+	var nearest := INF
+	for i in points.size() - 1:
+		var a := Vector2(float(points[i][0]), float(points[i][1]))
+		var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
+		nearest = minf(nearest, _segment_distance(spot, a, b))
+	var head := Vector2(float(points[0][0]), float(points[0][1]))
+	var ramp: float = smoothstep(0.0, maxf(float(stream.get("head_ramp", 14.0)), 0.001), spot.distance_to(head))
+	return (1.0 - smoothstep(half, half + shoulder, nearest)) * ramp
 
 
 ## How much a world point belongs to a dirt path: 1.0 on the centreline,

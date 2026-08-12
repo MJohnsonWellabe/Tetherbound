@@ -1,0 +1,58 @@
+{
+  "_comment": "EV5 — how the Meadows water LOOKS (bible §15). Geometry — the water level, the pond centre, the stream course and its carve — lives in data/config/terrain_playground.json's `water` block, because the heightfield, the terrain bake and the vegetation scatter all read it and must agree with the visual layer about where the shoreline is. Everything in THIS file is presentation and ALL of it is TUNABLE.",
+  "_comment_colours": "Deep water leans on palette.json sky.day_blue's family pulled toward teal (open water reflects sky); shallow pulls toward the meadow greens so the shore shift reads as the same world, not a swimming-pool liner. fresnel_colour started as art.json's fog colour (#b9c8cf) so grazing water would meet the same sky language as the fogged hills — wrong call, own-render round 2: at any distance the viewing angle is grazing, so the WHOLE far pond takes the fresnel colour, and a near-white fresnel made distant water read as milk. It now sits between sky.day_blue and the fog colour, so far water reads as sky-blue water and only the last stretch before the horizon would fog out like everything else.",
+  "surface": {
+    "deep_colour": "#17494a",
+    "shallow_colour": "#6fa384",
+    "depth_falloff": 2.2,
+    "alpha_deep": 0.93,
+    "alpha_shallow": 0.48,
+    "edge_feather": 0.1,
+    "foam_colour": "#ebf1ec",
+    "foam_depth": 0.18,
+    "foam_scale": 0.1,
+    "foam_speed": 0.03,
+    "wave_uv_scale": 0.12,
+    "wave_speed": 0.016,
+    "wave_strength": 0.4,
+    "fresnel_colour": "#6e97a0",
+    "fresnel_power": 5.0,
+    "fresnel_strength": 0.34,
+    "roughness": 0.1
+  },
+  "_comment_pond": "The pond surface is a flat grid at the water level, trimmed to quads that touch water; the shader's per-pixel depth does the actual shoreline. `grid_step` only bounds how coarsely the trim follows the shore, not the visual waterline.",
+  "pond": {
+    "grid_step": 2.0,
+    "margin": 6.0
+  },
+  "_comment_stream": "The stream surface is a ribbon following the carved bed at `surface_depth` above it, clamped so it only ever descends, ending at the pond's own level. Width comes from the terrain config's stream block (the same width the carve and the scatter exclusion use).",
+  "stream": {
+    "surface_depth": 0.35,
+    "sample_step": 1.5,
+    "alpha_shallow": 0.78,
+    "_comment_alpha": "Stream-only override over surface.alpha_shallow — see water.gd's build() for the measurement that split them. TUNABLE."
+  },
+  "_comment_reeds": "Bible §15: 'vegetation/reeds at banks'. Placed by the water composer itself — it marches the actual shoreline (the height isoline the level defines) and stands clumps in a band straddling the waterline, so the reeds always hug the real shore no matter how the level is tuned. Meshes are the SAME Quaternius wispy grass the drygrass layer uses (one nature family, D24) at taller scale and a deep marsh-green tint — a different plant read from material and context, not a new asset. NOT routed through vegetation.json because those two models already belong to the drygrass layer, and vegetation.gd groups batches by model — listing them in a second layer there silently loses one layer's tint (its own documented failure mode).",
+  "reeds": {
+    "models": [
+      "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf",
+      "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf"
+    ],
+    "tint": "#7a9460",
+    "clumps": 16,
+    "per_clump": 20,
+    "clump_radius": 4.2,
+    "band_below": 0.55,
+    "band_above": 0.28,
+    "scale_min": 0.5,
+    "scale_max": 1.25,
+    "max_bank_slope_deg": 33.0,
+    "seed": 20260812,
+    "_comment_stands": "EV5 blind rounds 4-5, the one repeated in-scope ask not yet acted on: 34 small clumps spaced around a ~300m shoreline read as 'a perimeter ring', not vegetation. A dozen anchors at 20 stalks each makes a few REAL brakes with long open banks between them -- open water access, the thing both rounds asked for. Tint lifted a step (#6c8850 -> #7a9460): the stands rendered near-black against bright water. TUNABLE."
+  },
+  "_comment_round1": "EV5 authoring round 1 (own read of the first render, before any blind round): the pond rendered as pale milk with a solid white shoreline ring. Foam rebalanced in the shader (noise now required, contact alone cannot clear the threshold) and the height texture went R8 -> RF (see water.gd's _bake_height_texture for the staircase this removed). Here: deep colour darker and reached sooner (depth_falloff 1.6->1.2), alpha_deep 0.88->0.93 so the bright sandy bed stops lifting the deep water, fresnel wash cut (0.65->0.4, power 4->5), wave normals calmed (0.35->0.22), roughness up a step so the sun sheen stops frosting the whole surface. ALL still TUNABLE.",
+  "_comment_round2": "EV5 blind round 1 (first genuinely blind critique, fresh headless session, no context): verbatim defects and the levers moved — 'swimming-pool cyan against olive land' -> deep/shallow/fresnel all pulled toward the keyart's warm teal-green family; 'shallow-to-deep gradient is a constant-width ring, not depth' -> depth_falloff 1.2->2.2 so the ramp spreads wide on shallow banks and stays narrow on steep ones; 'no sun glint... unfinished' -> roughness back to 0.10, shader SPECULAR restored to 0.5, wave normals up 0.22->0.4 and finer (uv_scale 0.09->0.12); 'foam is a bead chain' -> foam_scale down plus a second decorrelating noise scale in the shader; 'one reed asset, one scale... on the sand, not in the water' -> band reaches 0.55m BELOW the waterline, scale span widened, per-instance lean/tone jitter in water.gd. Reflections are the one named defect deliberately NOT chased: bible sec15 forbids the expensive tier, gl_compatibility has no SSR, and a planar reflection probe is exactly the simulation the spec rules out — fresnel-toward-sky is this tier's honest ceiling, recorded in DONE.md rather than faked. ALL TUNABLE.",
+  "_comment_round3": "EV5 blind round 2: the two water-scope defects still actionable at this tier were the depth ramp's mach banding (dithered in the shader now) and the stream reading as a different, darker water than the pond -- the stream's read is its dark pebble bed showing through shallow water at grazing angle, so alpha_shallow comes up 0.42->0.52 (the surface's own colour carries more of both waters) and the stream rides 0.35 above its bed instead of 0.45, which shifts its depth colour toward the pond's shallow family. Round 2 also asked for CONTINUOUS rim foam -- the exact 'drawn ring' round 1 condemned; the two critics disagree and the broken-lap read stays, recorded here so a future pass doesn't ping-pong. 'No reflections' repeats from round 1 and stays the recorded ceiling of this tier: bible sec15 rules out the expensive route and gl_compatibility has no SSR; fresnel-toward-sky is the honest substitute. A pond OUTLET (round 2, real hydrology note) is Band 3's river's natural starting point -- see DONE.md's EV5 entry. ALL TUNABLE.",
+  "_comment_round4": "EV5 blind round 3: two NEW water-scope defects and one root cause found by CPU-replicating the shader. The 'stream is a different water' complaint from rounds 1-3 was never colour tuning -- the depth texture's fixed level±8m window clamped every texel more than 8m above the pond, so the upper stream computed ~5m of phantom depth and rendered the deep colour (see water.gd's height_min/max scan comment). With that fixed, round-3 asks land as: ripple normals now attenuate with camera distance in the shader (far sheen scattered into a 'flat cyan fill' read), shallow colour pulled a step deeper/greener toward the board and its alpha trimmed so the sunlit sand bed stops lifting the whole pond toward tropical cyan, and the reed band above the waterline tightened 0.45->0.28m so stands stop straying onto dry lawn. Round 3 also asked for foam 'continuous or removed' -- the third different foam verdict in three rounds; the broken-lap middle stays. ALL TUNABLE.",
+  "_comment_rounds5_8": "EV5 blind rounds 5-8 (each a fresh, context-free session). Round 5: no new in-scope defect. Round 6: 'glass cards' = submerged grass tufts read as artifacts -> grass min_height pulled to ankle depth (vegetation.json); reed perimeter-ring note acted on (see _comment_stands). Round 7: repeats and two verified misreads ('water plane escaping the bank' is the pond's own west arm behind a low sand spit, checked by crop; 'butt-joint' is the drone angle). Round 8: judged identical frames, no new in-scope defect -> two consecutive flat rounds, CONVERGED per ralph/conventions.md's stopping rule. Bar question B (same kind of game as the references) flipped to a qualified YES in rounds 7 and 8, carried by the water frames. What the critics still name, recorded as the wall rather than chased: real reflections/refraction/caustics (bible sec15's own 'no physically expensive simulation' line, and gl_compatibility has no SSR -- fresnel-toward-sky is this tier's ceiling); aquatic dressing that needs assets not in the build (lily pads, driftwood, jetty, submerged-rock meshes); and world-level gaps outside EV5 entirely (sky/clouds/haze, near-field ground-cover density, canopy-scale trees, creature/trainer art, the perimeter's placeholder slabs). Foam received five contradictory verdicts across eight rounds (broken/continuous/remove/depth-driven[it is]/fixed-offset[it isn't]); the broken-lap treatment stands."
+}

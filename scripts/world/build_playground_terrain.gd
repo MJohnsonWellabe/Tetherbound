@@ -63,6 +63,7 @@ func _run() -> void:
 	var lowest := INF
 	var highest := -INF
 	var steep_samples := 0
+	var water_level: float = field.water_level()
 
 	for pixel_z in size:
 		var world_z := origin + pixel_z * spacing
@@ -74,6 +75,14 @@ func _run() -> void:
 			var slope: float = field.slope_degrees_at(world_x, world_z, texture_step)
 			var band_slope: float = slope + field.outcrop_jitter_deg(world_x, world_z)
 			var ground := _ground_colour(band_slope, colour_cfg)
+			# EV5: darken the bed and the damp shore ring toward wet sand. Half
+			# of the shallow-edge colour shift — the water shader's own depth
+			# gradient is the other half — and it survives even where the water
+			# surface is transparent enough to see straight through.
+			var wet := _wet_weight(field, height, world_x, world_z, water_level)
+			if wet > 0.0:
+				var wet_tint := Color(str(colour_cfg.get("wet_tint", "#c2b49a")))
+				ground = ground.lerp(wet_tint, wet * float(colour_cfg.get("wet_strength", 0.5)))
 			colour_image.set_pixel(pixel_x, pixel_z, ground)
 
 			lowest = minf(lowest, height)
@@ -153,6 +162,8 @@ func _paint_control_map(
 		return
 
 	var painted_path_pixels := 0
+	var painted_wet_pixels := 0
+	var water_level: float = field.water_level()
 	for pixel_z in size:
 		var world_z := origin + pixel_z * spacing
 		for pixel_x in size:
@@ -167,18 +178,48 @@ func _paint_control_map(
 			var band_slope: float = slope + field.outcrop_jitter_deg(world_x, world_z)
 			var control := _control_for(band_slope, colour_cfg, ids)
 			var path_weight: float = field.path_factor(world_x, world_z)
-			if path_weight > 0.0:
+			# EV5: the pond bed, the damp shore ring and the stream channel
+			# swap to the same dedicated Ground030 dirt/pebble texture the
+			# paths use — a pebbled bed under the water, not grass seen
+			# through a blue filter. Reuses `_path_control` verbatim: "blend
+			# this pixel toward the worn-ground texture by this weight" is
+			# the identical operation whether a boot or a stream wore it.
+			var wet := _wet_weight(field, field.height_at(world_x, world_z), world_x, world_z, water_level)
+			if wet > 0.0:
+				painted_wet_pixels += 1
+			var worn := maxf(path_weight, wet)
+			if worn > 0.0:
 				var dither: float = field.path_dominant_dither(world_x, world_z)
-				control = _path_control(control, path_weight, ids, dither)
-				painted_path_pixels += 1
+				control = _path_control(control, worn, ids, dither)
+				if path_weight > 0.0:
+					painted_path_pixels += 1
 			var pos := Vector3(world_x, 0.0, world_z)
 			data.call("set_control_base_id", pos, control["base"])
 			data.call("set_control_overlay_id", pos, control["overlay"])
 			data.call("set_control_blend", pos, control["blend"])
 			data.call("set_control_auto", pos, false)
 
-	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), auto-shader off" %
-		["path" if ids.has("path") else "soil", painted_path_pixels])
+	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), auto-shader off" %
+		["path" if ids.has("path") else "soil", painted_path_pixels, painted_wet_pixels])
+
+
+## How "wet" a point of ground is, 0..1: fully wet under the pond's waterline
+## and inside the stream channel, fading out across a damp ring ~0.7m of
+## elevation above the waterline. EV5. Keyed off HEIGHT for the pond (below
+## the flat water level IS underwater, see playground_heightfield.water_level)
+## and off `stream_factor` for the channel, whose own water surface follows
+## the carved bed downhill rather than sitting at one level.
+func _wet_weight(field: RefCounted, height: float, x: float, z: float, water_level: float) -> float:
+	var wet := 0.0
+	if not is_nan(water_level):
+		# +0.35, not +0.7: at the basin's gentle bank slopes an 0.7m damp ring
+		# fanned out to ~8m of sand apron, which the first render showed as a
+		# beach halo dominating the pond's own footprint. Half the elevation
+		# keeps a readable damp edge at half the width.
+		wet = 1.0 - smoothstep(water_level - 0.1, water_level + 0.35, height)
+	if field.has_method("stream_factor"):
+		wet = maxf(wet, float(field.stream_factor(x, z)))
+	return wet
 
 
 ## Blend a pixel's already-computed slope control toward the path texture,

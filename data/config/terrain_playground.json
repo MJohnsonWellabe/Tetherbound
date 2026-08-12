@@ -184,6 +184,125 @@
       }
     ]
   },
+  "_comment_water": "EV5 (bible sec15). One flat water level, not a water body outline: the probe run for this item confirmed the pond valley is the ONLY terrain below -18m anywhere on the 512m map, so everything below `level` is one pond (~2,200 sq.m at -22.5, bbox x[-178,-112] z[116,164]) whose shoreline follows the terrain's own contours instead of tracing an authored ellipse. The 'The Pond' route above already ends at [-105,115], which sits 1.1m above this waterline -- the path genuinely arrives at the bank. `stream` is the pond's inflow: probed at 2m steps from head to mouth with zero uphill reversals, so the water only ever runs downhill. `carve_depth`/`carve_width` cut a real channel into the heightfield (playground_heightfield.gd::_stream_carve) so the ribbon of water sits IN the ground rather than painted on it; `head_ramp` fades the carve in over the first metres so the spring emerges from the meadow instead of starting as an abrupt trench. Geometry lives HERE because the heightfield, the bake and the scatter all read it; how the water LOOKS lives in data/config/water.json. ALL TUNABLE. Stream points were densified through a Catmull-Rom pass over the seven authored waypoints (blind round 1: 'bends are angular chevrons rather than curves') — re-derive through a spline rather than hand-editing 25 points if the course ever moves.",
+  "water": {
+    "level": -22.5,
+    "_comment_shore_step": "EV5 blind round 1: 'the pond is not in the terrain... no bank drop, no lip.' The basin is real but its banks meet the water at the valley's own gentle grade, so nothing marks the transition. This drops everything below the waterline a further half-metre (playground_heightfield.gd::_shore_step, faded in across the waterline itself), which steepens the last metre of bank into a readable lip and deepens the shallows' colour ramp without touching any dry ground. TUNABLE.",
+    "shore_step": 0.5,
+    "pond_centre": [
+      -145.0,
+      138.0
+    ],
+    "stream": {
+      "width": 2.4,
+      "shoulder": 1.2,
+      "carve_depth": 0.7,
+      "carve_width": 5.0,
+      "head_ramp": 14.0,
+      "points": [
+        [
+          -148.0,
+          38.0
+        ],
+        [
+          -146.5,
+          40.5
+        ],
+        [
+          -144.2,
+          44.0
+        ],
+        [
+          -142.1,
+          48.0
+        ],
+        [
+          -141.0,
+          52.0
+        ],
+        [
+          -141.7,
+          55.9
+        ],
+        [
+          -143.6,
+          59.9
+        ],
+        [
+          -145.4,
+          64.0
+        ],
+        [
+          -146.0,
+          68.0
+        ],
+        [
+          -144.6,
+          72.0
+        ],
+        [
+          -142.0,
+          76.1
+        ],
+        [
+          -139.4,
+          80.1
+        ],
+        [
+          -138.0,
+          84.0
+        ],
+        [
+          -138.6,
+          87.7
+        ],
+        [
+          -140.4,
+          91.2
+        ],
+        [
+          -142.3,
+          94.7
+        ],
+        [
+          -143.0,
+          98.0
+        ],
+        [
+          -141.8,
+          101.1
+        ],
+        [
+          -139.6,
+          104.1
+        ],
+        [
+          -137.3,
+          107.0
+        ],
+        [
+          -136.0,
+          110.0
+        ],
+        [
+          -136.3,
+          113.3
+        ],
+        [
+          -137.6,
+          116.8
+        ],
+        [
+          -139.0,
+          119.8
+        ],
+        [
+          -140.0,
+          122.0
+        ]
+      ]
+    }
+  },
   "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. It MULTIPLIES the PBR albedo — it does not replace it. These were authored when the colour map was the entire ground treatment and there were no textures at all; they stayed after the textures arrived, and grass albedo at luminance 0.40 times a #496c34 map at 0.36 is a surface of 0.14 before any light reaches it. That is the whole reason the near field measured 0.096 against 0.27-0.60 across the references, and why no amount of sun, shadow, ambient or normal tuning moved it: nothing was wrong with the lighting.",
   "_comment_colour_now": "Near-white, so this modulates rather than paints. The textures carry the colour; this carries the slope-driven variation and the macro break-up that stops a 2K tile reading as wallpaper. Keep everything here above roughly #c0 — below that it is a brightness change wearing a colour's clothes, which is the mistake this comment exists to stop being repeated.",
   "_comment_soil_ev4_hillside_seam_remainder_2": "EV4-hillside-seam-remainder-2. Was #e0cea4 (min channel a4=164, actually BELOW this comment's own #c0 floor) -- a real, if modest, colour it was carrying rather than modulating, and it compounded multiplicatively with the soil texture's own `tint` below on top of an already-oversaturated source photo, landing rendered soil saturation at 0.65-0.76 even after the photo itself was fixed. Pulled to #f3ebdb (min channel db=219, now honestly above #c0) so this layer goes back to doing what the comment above says it should: modulate, not paint. See the soil texture's own comment for the paired tint change and the measurement that found this.",
@@ -199,8 +318,11 @@
     "outcrop_jitter_deg": 6.0,
     "outcrop_jitter_frequency": 0.03,
     "relief_amplitude": 2.5,
-    "relief_frequency": 0.07
+    "relief_frequency": 0.07,
+    "wet_tint": "#c2b49a",
+    "wet_strength": 0.5
   },
+  "_comment_wet_ev5": "EV5. `wet_tint`/`wet_strength` darken the colour map toward damp sand wherever the ground is under or beside water (below `water.level` plus a fading ring ~0.7m above it, and inside the stream channel). This DELIBERATELY dips below the '#c0 floor' rule above -- that rule exists to stop accidental brightness-as-colour, and a wet bed being darker than dry ground is the intended read, not an accident: it is half of the shallow-edge colour shift the water shader's own depth gradient carries the other half of. At 0.5 strength the multiply bottoms out around #dfd0b8 over the near-white greens, a modest dip. TUNABLE.",
   "_comment_ev4_hillside_seam_remainder_4": "EV4-hillside-seam-remainder-4. `relief_amplitude`/`relief_frequency` are new and different in kind from every lever above: those all repaint the SAME smooth dome differently (tint, band thresholds, which band a slope reading picks); this perturbs the dome's own HEIGHT, gated to each rise's flank only (playground_heightfield.gd::_rise_height's own `flank` smoothstep window -- zero at the summit, zero at the rim, so the rise's footprint and peak height are unchanged). Three colour-only rounds moved the paint without moving a blind critic's verdict ('two materials, not three; rock reads as a stain, not stone') because a slope reading from a perfectly smooth surface can only ever fake a material change, never show one. relief_frequency 0.07 (~14m wavelength) is close-grained relief within one rise, not another lobe-scale undulation like outcrop_jitter_frequency's ~35m. First attempt: relief_amplitude 0.8m, chosen conservatively so test_there_is_somewhere_steep_enough_to_matter's slope-fraction bounds and the landform's own probed max slope (~52 degrees, see blend_deg_r2's comment) stayed comfortably inside range. Direct probing (sampling height_at/slope_degrees_at along the flank) confirmed the noise was genuinely active, not a no-op -- real non-monotonic slope wobble in the gated zone -- but a fresh blind critic still called the silhouette 'a single smooth, continuous, unbroken curve' in all three frames: 0.8m of relief on a landform with 72m of total height range and a 78m-radius rise is proportionally too small to read from viewing distance, even though it is real. Raised to 2.5m -- still well inside the slope-fraction bounds (probed) -- as this lever's second and, per this item's own done-when, likely final attempt before a geometry lever this size is judged exhausted too. TUNABLE.",
   "_comment_blend_deg_r2": "EV4-hillside-seam round 2 (was 7.0, tried 14.0), round 3 (blend 8.0, rock_slope_deg 44.0 -> 40.0), round 4 (blend 6.0, rock_slope_deg back to 44.0). Round 2 doubled blend_deg to fix a round-1 critic's 'hard, unblended seam' complaint, but pushed pure rock's threshold (rock_slope_deg + blend_deg) to 58 degrees, outside this landform's own reachable slope -- probed directly with tools/debug_slope_probe.gd against `rises.peaks[0]` (centre [140,-90], radius 78, the exact landform capture_hillside.gd frames), this rise's slope peaks at ~52.5 degrees around 72m out along the east bearing and then RECEDES toward its base skirt. Round 3 fixed that by lowering rock_slope_deg to 40, which worked -- rock became visible -- but overcorrected the other way: a fresh blind critic reported rock now DOMINATES two of three frames (60-75% of the visible hill) and there is still no distinct soil band, because blend=8 left only a 2-degree pure-soil plateau (38-40), too thin to read as a third material at these camera distances. Round 4 keeps blend NARROWER (6.0, between round 2's failed 14.0 and the original 7.0) and restores rock_slope_deg to its original pre-EV4-hillside-seam value (44.0) rather than lowering it again, which together open an 8-degree pure-soil plateau (36-44, versus round 3's 2) while pushing pure rock back to 50 degrees -- the probe shows that band occurs only from roughly 68m to 74m out, a narrow accent ring near the base rather than a dominant face. TUNABLE; if soil still doesn't read as distinct, the plateau needs to be wider still (soil_slope_deg itself is the next lever, not touched by any of these four rounds); if rock has become too rare again, rock_slope_deg is the lever, not blend_deg -- round 3 already showed widening blend without checking landform-max-slope is how this regresses.",
   "_comment_ev4_hillside_seam_remainder": "EV4-hillside-seam-remainder. `soil_slope_deg` 30 -> 24 widens the pure-soil plateau from round 4's 8 degrees (36-44) to 14 (30-44) without moving `rock_slope_deg`, so rock's own share of the hill (round 4 already tuned to a narrow accent ring, not the round-3 dominant face) is untouched -- this is the 'plateau needs to be wider still' half of round 4's own next-step note. `outcrop_jitter_deg`/`outcrop_jitter_frequency` are new: every band pick used to be a pure function of slope, so a roughly circular rise baked a perfectly circular ring of soil and rock -- a 'collar,' per the round-4 critic, not an authored outcrop. `playground_heightfield.gd::outcrop_jitter_deg()` adds a coarse, seeded noise value (see its own comment) to the sampled slope before the band lookup, so the ring bulges into lobes in some directions and recedes in others instead of tracing one smooth circle. Symmetric around 0 (does not change the AVERAGE amount of rock or soil, only where each band's edge falls), so it is additive to the plateau widening above rather than a competing lever. TUNABLE: raise `outcrop_jitter_deg` for chunkier, more separated outcrops; lower `outcrop_jitter_frequency` for fewer, larger lobes.",
