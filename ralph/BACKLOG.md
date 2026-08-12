@@ -409,6 +409,56 @@ shared runners at the same time), or two more clean branches ship through
 "resolved, no fix needed" rather than staying open indefinitely on a single
 unreproduced report.
 
+**CLOSED 2026-08-12, ~22:15-22:50Z — real root cause found, fixed, and
+verified with actual Godot, not a local-sandbox repro.** The "revised done
+when" above got its answer within the hour: `ralph/OF3`'s rebase-and-retry
+failed the exact same way on **two independent live CI runs** of the same
+commit (one push-triggered, one PR-triggered — different runners), ruling
+out both "flake" and "runner-contention race" as the explanation. That
+sent this back to the actual code, this time testing `OF3`'s own diff
+directly instead of a bare `main` checkout with `godot --headless`
+downloaded and run for real (not reasoned about from the source).
+Reproduced 100% of the time on the first try.
+
+**Both the "pre-existing regression on main" framing above and the
+"probably a flake" retraction were wrong, in the same direction: nobody
+had tested `OF3`'s own commits until now.** The actual cause is
+`OF3`'s own `f8a42a92` (`dialogue_panel.gd`'s advance-guard buffering
+change), not `main`, not a race, not `EV5`, not `R2.3` — both of those
+leads were red herrings from the start. `f8a42a92` reordered
+`_physics_process` to check `Input.is_action_just_pressed("interact")`
+**before** checking whether the open-guard is still active. The guard's
+own original comment says why that ordering is unsafe: whether this
+node's `_physics_process` runs before or after the interaction arbiter's,
+within the same physics tick, is undefined, and `is_action_just_pressed`
+stays true for the whole tick a button was pressed. So whenever this
+node processes after the arbiter in the tick the arbiter calls `start()`,
+the press that just opened the conversation is still `just_pressed`,
+reads as a genuine second press, gets buffered, and replays as
+`advance()` the instant the guard clears two frames later. A long
+conversation (Grandpa's) just silently loses its first line — invisible,
+nothing regressed visibly. The gate's short, single-line lock message
+opens and self-closes within two physics frames, before
+`smoke_opening.gd`'s `is_open()` check ever runs — which is the entire
+symptom this entry chased for hours.
+
+Fixed in `dialogue_panel.gd` by suppressing the input check for exactly
+one physics tick after `start()` (not the whole guard window), restoring
+the original "deaf to the opening press" guarantee while keeping OF3's
+actual intended fix — a real second press landing on a LATER tick within
+the guard is still buffered and replayed. Verified for real: full suite
+392/392 green, `smoke_opening.gd` green twice in a row locally with a
+real Godot 4.7-stable binary (previously failed 100% of the time, same
+build CI uses), then confirmed green again on live CI. Shipped on
+`ralph/OF3` alongside the item it was found in; see `DONE.md`'s `OF3`
+entry, corrected in place, for the full account.
+
+**Process lesson, worth keeping:** "confirmed unrelated to that branch"
+based on a clean checkout of `main` only proves the failure exists
+without the branch's diff — it does not prove the branch's diff isn't
+the cause, if nobody actually tests *with* the diff applied. Both
+investigation rounds on this item checked the wrong tree.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
