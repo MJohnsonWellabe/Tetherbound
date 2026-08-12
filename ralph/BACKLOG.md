@@ -131,26 +131,16 @@ before that fix landed, so it arrived at the new cap already over the limit.
 `tools/ci/ship_branch.sh` stopped and named it explicitly, per design, and
 this firing landed it by hand the way the script's own message says to.
 
-### LP5 — `ralph-sweep.yml`'s loop doesn't return to a clean ref after a stuck branch
-`model: sonnet` · `tests: none (CI infra)` · `area: loop`
-Found landing `EV3` by hand (see its `DONE.md` entry): sweep run `31545945642`
-processed `ralph/EV3` first, hit its genuine `ralph/DONE.md` rebase conflict,
-and `ship_branch.sh` correctly aborted and returned exit 1 — but the abort
-leaves the working tree checked out on the branch it just gave up on
-(`git checkout -B "$BRANCH" "$SHA"` runs before the rebase, and the conflict
-path never checks back out to `main`/`__ship`). Every branch queued behind it
-in that same sweep run (`EV4-hillside-seam`, `EV4-textures-lighting`,
-`EV4-textures-remainder`, `EV9`, `LP3`) then failed with
-`tools/ci/ship_branch.sh: No such file or directory`, because the loop's next
-`tools/ci/ship_branch.sh "$branch"` call ran from whatever tree
-`ralph/EV3` happened to be — which predates `LP4` and has no such file at all.
-One conflicted branch anywhere in the queue currently strands every branch
-behind it for that sweep cycle (they get picked up again next cycle only
-because the sweep re-lists from scratch each time, not because this bug is
-harmless). Done when: `ship_branch.sh`'s conflict-and-cap failure paths leave
-the working tree on a known-clean ref (`git checkout --quiet -B __ship
-origin/main`, the same pattern the top of the function already uses) before
-returning, so a stuck branch costs the branches behind it nothing.
+**`LP5` (`ralph-sweep.yml`'s loop didn't return to a clean ref after a stuck
+branch) fixed — see `DONE.md`.** Found and filed here after landing `EV3` by
+hand; independently re-found and fixed the same hour by a different firing
+sitting on `SA2-flake`, which was itself one of the branches stranded by this
+exact bug — its own `DONE.md` entry (`LP5`) has the full root-cause trail and
+an isolated scratch-repo reproduction. One correction to this entry's own
+"done when": only the CONFLICT path actually needed the fix.
+`ship_branch.sh`'s rebase-cap path fails and exits before its own
+`git checkout -B "$BRANCH" "$SHA"` ever runs, so HEAD never leaves `__ship` —
+that path was already safe and needed no change.
 
 ---
 
