@@ -173,6 +173,19 @@ either it is reproduced under CI-like conditions and root-caused, or enough
 further CI runs pass clean that this reads as a one-off rather than a
 pattern.
 
+**Third occurrence, 2026-08-12 — `ralph/R2.5`'s CI** (`verify-scenarios`,
+job `94003042551`). Same shape exactly: `smoke_combat` green immediately
+before it, `smoke_aggression` failed on Galecrest (9.1m, then 9.6m on the
+built-in retry, both "never attacked" after 900 frames), `smoke_combat.gd`
+never touches aggression/AI-initiate logic so `R2.5`'s own change (removing
+`encounter_director.gd`'s post-fight heal) is not a plausible cause.
+Reproduced clean locally immediately after, same as both times before. This
+is now three CI failures against zero local repros — reads as a pattern,
+not a one-off, and the "enough clean CI runs" half of this item's done-when
+is no longer realistic. Worth root-causing directly next time an `area:
+combat` or `area: perf` lane has room for it, rather than waiting for
+attempt four.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
