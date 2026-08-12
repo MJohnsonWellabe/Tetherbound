@@ -43,6 +43,7 @@ var _ally: Node3D = null
 
 var _written: Array[String] = []
 var _failures: Array[String] = []
+var _start_ms: int = 0
 
 
 func _init() -> void:
@@ -50,6 +51,7 @@ func _init() -> void:
 
 
 func _run() -> void:
+	_start_ms = Time.get_ticks_msec()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 
 	var packed: PackedScene = load(SCENE)
@@ -61,6 +63,7 @@ func _run() -> void:
 	root.add_child(_world)
 	for i in SETTLE_FRAMES:
 		await physics_frame
+	_log_phase("settle")
 
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
 	_manager = _world.get_node_or_null(^"CombatManager")
@@ -110,11 +113,24 @@ func _run() -> void:
 
 	# The charged attack. It costs a full meter and roots you for half a second,
 	# so it has to look heavier than a quick attack or there was no decision.
-	while not bool(_manager.call("charged_ready")) and bool(_manager.call("is_fighting")):
+	#
+	# This loop used to have no bound at all — every other wait in this file caps
+	# its iteration count and records a failure on timeout; this one didn't, so a
+	# charged meter that never filled (a quick attack that keeps missing, say)
+	# would spin forever rather than fail loudly. 24 iterations is generous: at
+	# `energy_per_quick` 26 and `charged_cost` 100, four LANDED quick attacks
+	# fill the meter, and each iteration is one attempt.
+	var charge_waited := 0
+	while not bool(_manager.call("charged_ready")) and bool(_manager.call("is_fighting")) and charge_waited < 24:
 		await _drive_pal_towards_enemy(30, 2.8)
 		await _press("combat_quick")
 		for j in 24:
 			await physics_frame
+		charge_waited += 1
+		if charge_waited % 4 == 0:
+			_log_phase("charging (%d/24 attempts)" % charge_waited)
+	if not bool(_manager.call("charged_ready")):
+		_failures.append("06-charged-attack-lands: energy never reached charged_cost after %d quick-attack attempts" % charge_waited)
 	await _drive_pal_towards_enemy(60, 2.8)
 	await _press("combat_charged")
 	await _capture_the_impact("06-charged-attack-lands")
@@ -248,6 +264,16 @@ func _press(action: String) -> void:
 	await physics_frame
 
 
+## `R9.4-remainder-6` found this survey burn ~50 minutes and write zero frames
+## running concurrently with another Godot process, with no way to tell
+## afterward whether that was a real hang or just the cost of software
+## rendering under contention. This is the fix for "do not guess": every phase
+## boundary logs how long it took, so a future stall shows exactly which wait
+## it died in instead of a bare timeout.
+func _log_phase(label: String) -> void:
+	print("  [phase] %-18s +%.1fs" % [label, (Time.get_ticks_msec() - _start_ms) / 1000.0])
+
+
 func _capture(name: String) -> void:
 	for i in POSE_FRAMES:
 		await process_frame
@@ -262,7 +288,7 @@ func _capture(name: String) -> void:
 		_failures.append("%s: save_png failed" % name)
 		return
 	_written.append(path)
-	print("  %-22s -> %s" % [name, path])
+	print("  %-22s -> %s  (+%.1fs)" % [name, path, (Time.get_ticks_msec() - _start_ms) / 1000.0])
 
 
 ## Shoot the frame the blow actually lands on, not a guess at it.
