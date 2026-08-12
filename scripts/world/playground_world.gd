@@ -24,7 +24,30 @@ const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
+const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
+const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
+
+## SA7: on `paths.routes`' "toward the rocky rise" leg (`[10,-10] -> [45,-22]`,
+## the same road `landmark.gd`'s stronghold silhouette sits beyond), a stone's
+## throw past the square so the player meets it early. `GATE_YAW_DEG` is not
+## derived from the route's heading — the one existing "along the path" fence
+## yaw in `village.json` was tuned by eye against a render, not computed, so
+## this was too; verified square across the road via `tools/survey.gd`.
+## `harvest.json` places a berries node at `[20,-16]`, 2.8m from the first
+## candidate point on this leg — well inside both interactables' radii, so
+## the arbiter kept offering "Pick berries" instead of the gate. Moved
+## further out along the same leg for clearance rather than moving the
+## harvest node, which R2.1's tutorial route already depends on.
+const GATE_AT := Vector2(27.5, -16.0)
+const GATE_YAW_DEG := 71.0
+
+## A short detour off the road toward the square — "easy," per SA7's own
+## done-when, not a real obstacle. Far enough from `GATE_AT` that the two
+## interactables' radii (4.0m gate, 2.4m key) do not overlap; the first
+## placement (3.6m away) put both prompts in contest right where a player
+## would naturally stand to try the gate, and the closer one always won.
+const GATE_KEY_AT := Vector2(24.0, -10.0)
 
 ## A few metres off the well (village.json stands it at the square's exact
 ## centre, [10,-10], which is also where every route in `paths.routes`
@@ -475,6 +498,7 @@ func _build_settlement() -> void:
 	add_child(landmark)
 	landmark.call("build", self)
 
+	_build_road_gate()
 	_place_harvest_nodes()
 
 	var placer := BUILD_PLACER.new()
@@ -482,6 +506,25 @@ func _build_settlement() -> void:
 	placer.player_path = NodePath("../Player")
 	placer.camera_rig_path = NodePath("../CameraRig")
 	add_child(placer)
+
+
+## SA7: the road out toward the stronghold is gated, and its key sits a few
+## metres off to the side rather than behind any real obstacle.
+func _build_road_gate() -> void:
+	var gate: Node3D = ROAD_GATE.new()
+	gate.name = "RoadGate"
+	add_child(gate)
+	gate.call("build", self, GATE_AT, GATE_YAW_DEG)
+
+	var ground := ground_height_at(GATE_KEY_AT.x, GATE_KEY_AT.y)
+	if is_nan(ground):
+		push_error("no ground under the gate key at %.0f, %.0f" % [GATE_KEY_AT.x, GATE_KEY_AT.y])
+		return
+	var key: Node3D = KEY_PICKUP.new()
+	key.name = "GateKey"
+	key.position = Vector3(GATE_KEY_AT.x, ground, GATE_KEY_AT.y)
+	add_child(key)
+	key.call("setup", "castle_gate_key", "Take the old key")
 
 
 ## The first day's gathering spots, from data/config/harvest.json.

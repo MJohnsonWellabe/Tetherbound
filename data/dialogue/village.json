@@ -43,6 +43,20 @@
         "Ranger, before Team Tether had other plans for me. Took some doing to get clear of them — I'm still finding my feet.",
         "Whatever you're chasing out there, watch the Tether patrols. They don't take kindly to company."
       ]
+    },
+    "road_gate_locked": {
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "That gate's locked — has been for a while. The key won't be far from it, if you look."
+      ]
+    },
+    "road_gate_unlocked": {
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "There you go. The old key still turns."
+      ]
     }
   }
 }

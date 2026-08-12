@@ -121,6 +121,7 @@ func _run() -> void:
 	await _the_pal_is_named_on_the_grid()
 	_the_named_pal_is_in_the_real_party()
 	_the_party_still_holds_at_most_five()
+	await _the_road_gate_stops_until_the_key_is_found()
 	_report()
 
 
@@ -509,6 +510,106 @@ func _the_party_still_holds_at_most_five() -> void:
 		_fail("the opening left %d pals in the party; the cap is %d" % [int(party.size()), PARTY.MAX_PALS])
 	if bool(party.is_full()):
 		_fail("the opening filled the party; the player is supposed to leave it with room")
+
+
+## SA7: the road toward the stronghold is gated, and the gate does not explain
+## itself with UI text (spec §19) — the player has to try it, be told a key is
+## nearby, find it, and come back. Exercises the whole loop for real: walk,
+## press, read, walk again, press again, same as beat 3 exercises Grandpa's
+## conversation for real rather than calling `start()` directly.
+func _the_road_gate_stops_until_the_key_is_found() -> void:
+	# Beat 5 leaves Grandpa's own reply ("$name. Good.") open — its last line
+	# carries the `beat:first_encounter` effect that moves the director off
+	# `NAMED` and hands locomotion/the arbiter back (`_refresh_lockout`), and
+	# nothing before this beat ever needed the arbiter again to notice it was
+	# still sitting there. Advance it for real, same button as beat 3.
+	if bool(_dialogue.call("is_open")):
+		var closed := 0
+		for i in 40:
+			if not bool(_dialogue.call("is_open")):
+				break
+			await _press_polled("interact")
+			closed += 1
+		if bool(_dialogue.call("is_open")):
+			_fail("Grandpa's reply after naming would not close after %d presses; the opening never hands back control" % closed)
+			return
+
+	var gate := _world.get_node_or_null(^"RoadGate") as Node3D
+	if gate == null:
+		_fail("no RoadGate in the world; SA7's gate was never built")
+		return
+
+	# A straight line from wherever beat 5 leaves the player clips either the
+	# yard fence (`village.json`, `[3,-18]`, yaw 100° — measured directly: a
+	# 5m wall whose long axis runs roughly north-south, spanning z -15.5 to
+	# -20.5 at x~3, not just a point) or the ChickenCoop (`[21,-14]`, a small
+	# ~1.5m-radius footprint but sitting almost on `paths.routes`' own
+	# "toward the rocky rise" leg). A real player rounds a fence and a coop
+	# without thinking about it; this homing walk does not, so it goes north
+	# of both — over the fence's tip, well clear of the coop — before
+	# dropping back down to the gate.
+	await _walk_toward_point(Vector3(14.0, 0.0, -13.0), 900)
+	await _walk_toward_point(Vector3(18.0, 0.0, -10.0), 900)
+	await _walk_toward_point(Vector3(26.0, 0.0, -10.0), 900)
+
+	# Physically stopped, not just told: from here, walk straight at a point
+	# well past the gate before ever pressing anything, and confirm the
+	# collider — not this test — is what ends the approach.
+	var to_gate: Vector3 = gate.global_position - _player.global_position
+	to_gate.y = 0.0
+	if to_gate.length() < 1.0:
+		_fail("the player is standing on the gate's own position; no approach direction to test")
+		return
+	var beyond: Vector3 = gate.global_position + to_gate.normalized() * 15.0
+	await _walk_toward_point(beyond, 1800)
+	var short_by := _player.global_position.distance_to(beyond)
+	if short_by < 8.0:
+		_fail("walked to within %.1fm of a point 15m past the gate; the road is not physically blocked" % short_by)
+		return
+	print("gate: physically blocked, stopped %.1fm short of a point beyond it" % short_by)
+
+	var gate_prompt := _find_interactable_matching(["gate"])
+	if gate_prompt == null:
+		_fail("nothing offers a prompt about the gate; the road out is not actually gated")
+		return
+	if not await _walk_to_and_activate(gate_prompt):
+		return
+
+	if not bool(_dialogue.call("is_open")):
+		_fail("trying the locked gate opened no dialogue; the player is stopped with no explanation")
+		return
+	print("gate: locked, conversation '%s' opened" % str(_dialogue.call("runner").call("conversation_id")))
+	var lines := 0
+	for i in 10:
+		if not bool(_dialogue.call("is_open")):
+			break
+		await _press_polled("interact")
+		lines += 1
+	if bool(_dialogue.call("is_open")):
+		_fail("the locked-gate message would not close after %d presses" % lines)
+		return
+	if bool(gate.call("is_open")):
+		_fail("the gate reports open before the player ever held the key")
+		return
+
+	var key := _find_interactable_matching(["key"])
+	if key == null:
+		_fail("no key offered anywhere; the gate is locked with no way through")
+		return
+	if not await _walk_to_and_activate(key):
+		return
+	var inventory: RefCounted = _game.get("inventory")
+	if int(inventory.call("count", "castle_gate_key")) < 1:
+		_fail("activating the key prompt did not put a key in the satchel")
+		return
+	print("gate: key found, satchel now holds %d" % int(inventory.call("count", "castle_gate_key")))
+
+	if not await _walk_to_and_activate(gate_prompt):
+		return
+	if not bool(gate.call("is_open")):
+		_fail("trying the gate with the key in hand did not open it")
+		return
+	print("gate: unlocked with the key, beat complete")
 
 
 # --- driving ----------------------------------------------------------------

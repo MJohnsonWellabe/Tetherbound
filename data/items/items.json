@@ -87,6 +87,13 @@
       "stack": 1,
       "colour": "#3d6b52",
       "blurb": "For water that doesn't exist yet."
+    },
+    "castle_gate_key": {
+      "name": "Old Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#c9a227",
+      "blurb": "Heavy and old. Something nearby is still locked."
     }
   }
 }
