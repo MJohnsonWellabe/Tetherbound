@@ -88,6 +88,19 @@ bed instead of lying in it. Check which system owns player-bed interaction
 
 **`OF9` (should the stronghold be visible from the start) flagged, not silently fixed — see `BLOCKED.md`'s "Design questions awaiting the owner" for the evidence and what would close it.**
 
+### OF13 — Hide the stronghold and move it farther from the village (`OF9`'s answer)
+`area: terrain` · `model: sonnet` (mechanical — the judgment call is already
+made; this is placement and occlusion, not a look-and-feel decision). Owner's
+direct answer to `OF9`: the stronghold should not be visible from the start.
+Relocate the landmark farther from the village and the early routes, and
+occlude/hide it (distance, terrain massing, or fog — whichever actually
+blocks the sightline) rather than just nudging its position. **Land after
+`OF4`'s silhouette rework (`ralph/OF4`, PR #14) merges** — both touch
+`landmark.gd`, and duplicating that conflict wastes a rebase. Verify with
+`tools/capture_wayfinding.gd` (or the equivalent survey script) from the
+village/opening-route vantage points: done when the stronghold is not visible
+from any of them.
+
 ### OF10 — The road up to the stronghold is unwalkable, and the hill/slope doesn't look good
 `area: terrain` · `model: fable` (likely — the existing hillside-quality
 work is already Fable-adjacent visual-direction territory, see `OF11`).
