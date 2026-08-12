@@ -239,6 +239,60 @@ done-when, which the shipped mechanic already clears: the player is
 physically stopped, finds the key without real difficulty, and Grandpa's
 own line explains the gate and the key in so many words.
 
+## R2.4 — Orb and potion crafting
+`d23695c` · `tests: test_recipes` (new, 12 tests)
+
+Base tier only: `data/recipes/recipes.json` carries `orb_basic` (3 wood, 2
+fiber) and `potion_small` (4 berries, 1 fiber) — baseline materials per
+GAME_DESIGN.md 15 / MEADOWS_PROGRESSION_SPEC.md 10, nothing else. `SD18`'s
+Rootstone tier is still open, in its own file, per the recipe file's own
+comment.
+
+`item_db.gd` loads recipes the same way it already loads buildables
+(`recipe_ids()`/`recipe(id)`). `game_state.gd` gets `recipe_cost_for`/
+`can_craft`/`craft`, mirroring `build_cost_for`/`can_afford` but actually
+spending and granting on call — crafting is immediate, not a placement
+armed for later. `craft()` is all-or-nothing per `inventory.remove`'s own
+guarantee; `test_recipes.gd` proves a one-ingredient-short craft leaves the
+satchel untouched rather than eating what it did have. `free_build` does
+**not** waive crafting costs — D16 scopes that toggle to building materials
+only, and quietly extending it would be a second, undocumented cheat.
+
+UI is a standalone `CanvasLayer` (`scripts/ui/craft_panel.gd`), not a
+pause-menu tab — the item's own scope is "at the campfire or workbench",
+and a menu-tab implementation would make it craftable from anywhere. A
+second `Interactable` on `camp.gd`'s campfire ("Craft") opens it, built
+entirely in code the way `tab_build.gd` builds its own list, using the same
+open/close pause-tree-and-release-mouse pattern `game_menu.gd` already
+uses. Godot's default `ui_up`/`ui_down`/`ui_accept` drive real `Button`
+focus navigation — no hand-rolled cursor, matching `game_menu.gd`'s own
+reliance on the same default chain.
+
+**Workbench crafting is not built.** `R2.7` (Workbench and storage
+container) hasn't placed a physical workbench in the world yet — only the
+campfire exists as a real `Interactable` today. Wiring the same panel to a
+workbench prompt once `R2.7` ships is a small follow-on, not a redesign.
+
+**No UI blind-judge pass.** `conventions.md`'s visual-affecting rule was
+checked against this item deliberately: `craft_panel.gd` draws no new 3D
+model, texture or terrain feature — plain `Button`/`Label` nodes in the
+same dark-panel language `menu_tab.gd`'s tabs already use, reusing the same
+colour constants (`PANEL_BG`/`PANEL_BORDER`/cost-affordability colours)
+rather than inventing a new look. `EV9`'s own remainder (re-skinning
+`tab_backpack.gd`/`tab_build.gd`) is the item that owns a from-scratch
+visual pass on this HUD language; this panel matches what already shipped
+rather than adding to what needs judging. Also deliberately **not** run:
+`smoke_art`/any scene-backed test, since every one of them loads the full
+23,762-prop `meadows_playground.tscn` that `RENDER-PERF-DIAG` (area: loop,
+concurrent this session) was actively diagnosing as a 100+ minute stall in
+this container — `test_recipes.gd` is a pure-logic unit test precisely so
+this item does not depend on that render path at all.
+
+`smoke_opening`/`smoke_menu`/`smoke_traversal` (the scene-backed suites
+that would exercise this in-world) were not run locally for the reason
+above; CI runs them on push and will catch a real regression if this
+diagnosis is wrong.
+
 ## LP6 — Script-based claim/heartbeat/release so `STATUS.md` leases can't drift past `## END LEASES` again
 `1a619bb`, `06b7274` · `tests: none`
 

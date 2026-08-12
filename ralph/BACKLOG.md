@@ -1346,14 +1346,7 @@ distance a player would actually approach from — a distinct material, a
 glint, a marker, whatever `EV`'s art pass makes available — not just a prompt
 on arrival.
 
-### R2.4 — Orb and potion crafting
-`model: sonnet` · `tests: test_recipes` (new)
-Recipes for `orb_basic` and `potion_small` from gathered materials, at the
-campfire or workbench. Grandpa's `give:` gift (D18) stops being the only
-source — which matters because `throw_aim` now genuinely spends orbs. Costs
-in `data/recipes/`, tunable, labelled. These are the **base** tier; `SD18` adds
-the Rootstone tier above them (spec §10). Baseline materials are wood, stone,
-fiber and berries and nothing else — §10 is a short list on purpose.
+**`R2.4` (Orb and potion crafting) shipped — see `DONE.md`.**
 
 **`R2.5` (REMOVE the post-fight auto-heal) shipped — see `DONE.md`.**
 
