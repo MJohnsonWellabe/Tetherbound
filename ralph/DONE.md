@@ -419,6 +419,67 @@ serialization isn't perfectly deterministic run to run), so the honest
 move was discarding the diff rather than shipping unexplained binary
 churn on files nothing in this round actually needed to change.
 
+## R3.0 — Trainer, Grandpa and the Warden re-processed through the fixed `animate_humanoid.py`; the giant-player scale bug is now fixed at the source, not just compensated for at runtime
+`tests: smoke_art`
+
+**The literal instruction ("re-run each through the fixed pipeline") turned
+out not to be directly possible, and it is worth recording why rather than
+quietly working around it.** `assets_raw/` is gitignored — only committed,
+licence-logged *output* survives between sessions — and this is a fresh
+container: `assets_raw/trainer`, `.../grandpa` and `.../warden` do not exist
+at all (checked directly; only some creature species plus
+`villager_female`/`villager_male`/`grunt` are present). The pre-animation
+Meshy rig output (`build/meshy_rig/model.glb`) these three would need as
+`animate_humanoid.py`'s input was never committed and is gone. Re-fetching it
+means calling Meshy's rig endpoint again, which needs `MESHY_API_KEY` — this
+lane does not have it, by design (`ralph/PROMPT.md`'s `lane: art` rule),
+even though this item was never tagged `lane: art` by whoever scoped it.
+
+**Worked around with no Meshy call at all.** The only available substitute
+source is the currently-installed `*_lod0.glb` — already animated, by the
+OLD unfixed script. Feeding it straight into `animate_humanoid.py` would
+export the old idle/walk/sprint/jump/throw NLA tracks alongside the newly
+authored ones under identical names (a real defect this pass found, not a
+guess — verified by parsing the exported GLB's JSON chunk before fixing it).
+Fixed at the source: `animate_humanoid.py` now strips any pre-existing NLA
+tracks/actions off the rig right after import, before scale-normalising and
+authoring. On a real bare Meshy rig (the normal case) this is a no-op — no
+animation exists yet. Verified the fix works on all three humans: each
+re-exported GLB carries exactly 5 named animations (`idle`, `walk`, `sprint`,
+`jump`, `throw`), confirmed by parsing the binary GLB's JSON chunk directly,
+not by trusting Blender's console output.
+
+**Confirmed the actual bug is fixed at the source, not just re-verified
+through the same runtime compensation.** Parsed both the before and after
+GLBs' JSON chunks directly: the installed `trainer_lod0.glb`'s `Armature`
+node carries `scale: [0.01, 0.01, 0.01]` (the malformed centimetre-skeleton
+factor `docs/HANDOFF.md` §6 describes); the re-processed one carries no
+scale override at all (identity), because `transform_apply(scale=True)`
+bakes it out of the rest pose before any clip is authored. Same result for
+grandpa and warden.
+
+**`smoke_art` passes clean on all three**, both before and after this
+change — `character_model._fit()`'s render-space measurement
+(`render_bounds.gd`, already fixed by the original giant-player fix)
+correctly compensates for the malformed source either way, which is exactly
+why this was debt rather than a live bug: `art.scale.y` prints `x1.00` for
+trainer/grandpa/warden on both the old and new GLBs, because the runtime was
+already correcting for it. The point of this item, per `docs/HANDOFF.md` §6
+in its own words, was "compensating for broken files is a debt, not a fix" —
+the source files themselves are now correct (metres all the way down,
+`Armature` scale 1.0, inverse binds 1.0), so nothing downstream needs to
+cross the skinned-mesh measurement path to get the right answer. Also
+reproduced the pre-existing, unrelated `building_prefabs.gd:86` freed-instance
+SCRIPT ERROR at the end of the `smoke_art` run — same one `R2.3`'s branch
+already found and flagged; not this item's bug, not fixed here, exit code is
+still 0 either way.
+
+**Not attempted, on purpose:** the trainer's undersized backpack
+(`docs/HANDOFF.md` §6) is a mesh-volume edit, not something
+`animate_humanoid.py` touches (it works on the rig/animation layer only) —
+the item's own text says to take it only if cheap and not let it grow the
+task. Still open, same as before.
+
 ## EV4-textures-lighting-remainder — Five mechanisms ruled out with direct evidence; the dark near-camera patch survives all of them. No code shipped — the findings are the deliverable, same pattern as EV3-remainder-6.
 `tests: none (visual)` — no code changed; every experiment below was reverted.
 `data/config/terrain_playground.json` and `data/config/art.json` are both

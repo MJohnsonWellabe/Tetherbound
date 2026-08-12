@@ -1425,23 +1425,15 @@ The workbench upgrade is a Rootstone sink (spec §3 Band 2, `SD18`).
 
 ## Phase 3 — art debt and persistence
 
-### R3.0 — Re-process the three humanoid GLBs through the fixed pipeline
-`model: sonnet` · `tests: smoke_art`
-**Renamed from "Regenerate" 2026-08-11 — same item, same scope, wording only.**
-"Regenerate" kept reading as a new Meshy spend; it isn't one. This re-runs
-files that already exist through a bug-fixed *local* script. No generation,
-no credits, and `D23`/`BLOCKED.md` already say so explicitly — this rename
-just stops the question from being asked again by the title alone.
-
-The trainer, Grandpa and the Warden still carry cm-unit skeletons under a
-0.01 Armature with ×100 inverse binds — the malformed source of the giant-
-player bug. The runtime now compensates (render-space fit via
-`render_bounds.gd`), but compensating for broken files is a debt, not a fix.
-Re-run each through the fixed `animate_humanoid.py` (it now applies scale the
-way the creature pipeline always did) and **verify with `smoke_art`'s
-render-space check** — all three humans measured in render space, fit factors
-inside [0.1, 10]. If the trainer's undersized backpack (HANDOFF §6) is cheap
-to fix in the same pass, take it; do not let it grow the task.
+**`R3.0` (re-process the three humanoid GLBs through the fixed pipeline)
+shipped — see `DONE.md`.** The literal Meshy-refetch path was unavailable
+(the pre-animation rig output was never committed and this ran in a fresh
+container with no Meshy key); fixed `animate_humanoid.py` to work from the
+currently-installed GLBs instead, by stripping any pre-existing animation
+before authoring fresh clips. Verified structurally (the `Armature` node's
+malformed `0.01` scale is gone from the exported file) as well as by
+`smoke_art`. The trainer's undersized backpack (HANDOFF §6) is unchanged,
+same as before — a mesh-volume edit outside this item's scope.
 
 **`R3.1` (save and load) shipped — see `DONE.md`.** `SB9` did not exist yet
 to carry (Phase 3.5 is still ahead of this in the file), so version 1 has no
