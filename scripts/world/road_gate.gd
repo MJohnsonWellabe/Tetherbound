@@ -5,28 +5,19 @@ extends Node3D
 ## player understands early that gated things have keys, well before `SC14`'s
 ## real combat-gated crossing hours in.
 ##
-## Reuses the exact fence model and collider-from-AABB approach village.gd
-## already established for every other structure in the settlement, so this
-## reads as the same rustic fencing the player has already seen rather than a
-## new prop family (D24). Locked/open are two static poses of the one mesh —
-## a closed panel across the road vs. the same panel swung parallel to it —
-## since no animation rig exists for it and grandpa_house.gd already sets the
-## precedent of a gate with no animation, its feedback carried by something
-## else (there, the conversation; here, the panel's own re-pose plus a line
-## of dialogue).
-##
-## EV6 moved the settlement's whole fence family from the farm pack's loose
-## `.obj` meshes to the Medieval Village MegaKit's `.gltf` modules (see
-## `building_prefabs.json`'s `fence_run`, which replaced the same
-## `Fence`/`Fence2` models this file used to load) but missed this file,
-## leaving it pointing at a model EV6 deleted. `Prop_WoodenFence_Single` is
-## the same segment `fence_run`'s own middle panel uses. A `.gltf` module is a
-## scene, not a bare mesh, so this now instantiates and measures its AABB the
-## way `props.gd::_place` does for every other kit-sourced scene, rather than
-## assigning a `Mesh` resource straight onto a `MeshInstance3D`.
+## The leaf is the `road_gate_leaf` prefab — the Medieval kit's own fence
+## segments, two wide and two courses tall, through the same composer every
+## building in the settlement uses (EV6 retired the farm pack this gate's
+## Fence2 came from, and D24 wants one family anyway; the same rustic
+## fencing the player has already walked past as `fence_run`). Locked/open
+## are two static poses of the one leaf — a closed panel across the road vs.
+## the same panel swung parallel to it — since no animation rig exists for
+## it and grandpa_house.gd already sets the precedent of a gate with no
+## animation, its feedback carried by something else (there, the
+## conversation; here, the panel's own re-pose plus a line of dialogue).
 
-const BUILDINGS_DIR := "res://assets/buildings/quaternius_medieval"
-const MODEL := "Prop_WoodenFence_Single"
+const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const LEAF_PREFAB := "road_gate_leaf"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 
 const KEY_ITEM_ID := "castle_gate_key"
@@ -44,9 +35,13 @@ var _open := false
 ## village.gd's own `_ground_height` uses, so this does not need a direct
 ## reference to playground_world.gd.
 func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
-	var path := "%s/%s.gltf" % [BUILDINGS_DIR, MODEL]
-	if not ResourceLoader.exists(path):
-		push_error("road gate model missing: %s" % path)
+	var prefabs: RefCounted = PREFABS.new()
+	if not prefabs.call("load_recipes"):
+		push_error("no building recipes; the road gate cannot build its leaf")
+		return
+	var leaf: Node3D = prefabs.call("instantiate", LEAF_PREFAB)
+	if leaf == null:
+		push_error("road gate leaf prefab missing: %s" % LEAF_PREFAB)
 		return
 	var ground: float = float(world.call("ground_height_at", at.x, at.y))
 	if is_nan(ground):
@@ -56,31 +51,18 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	position = Vector3(at.x, ground - 0.05, at.y)
 	rotation.y = deg_to_rad(yaw_deg)
 
-	var packed: PackedScene = load(path) as PackedScene
-	_mesh = packed.instantiate()
+	_mesh = leaf
 	_mesh.name = "GateMesh"
 	add_child(_mesh)
 
-	var meshes: Array[MeshInstance3D] = []
-	_collect_meshes(_mesh, meshes)
-	if meshes.is_empty():
-		push_error("road gate model has no mesh: %s" % path)
-		return
-	# Same root-local AABB derivation as props.gd::_place — the module may sit
-	# under an importer-added transform node, so this reads each mesh's
-	# GLOBAL transform (valid now that `_mesh` is parented into the tree) and
-	# un-does `_mesh`'s own transform, leaving bounds in `_mesh`'s local space.
-	var to_root_local: Transform3D = _mesh.global_transform.affine_inverse()
-	var aabb: AABB = to_root_local * (meshes[0].global_transform * meshes[0].get_aabb())
-	for i in range(1, meshes.size()):
-		aabb = aabb.merge(to_root_local * (meshes[i].global_transform * meshes[i].get_aabb()))
+	var aabb: AABB = prefabs.call("combined_aabb", _mesh)
 
-	# A dark latch box at the panel's own centre. `Prop_WoodenFence_Single` is
-	# decorative fencing everywhere else it's placed (`fence_run`) — with no
-	# leaf, hinge or hardware of its own, one more length of it read as
-	# ordinary property fencing rather than as something deliberately shut,
-	# per the blind pass's own finding. A child of `_mesh` so it swings open
-	# with the panel rather than needing its own re-pose.
+	# A dark latch box at the panel's own centre. `Fence2` is decorative
+	# fencing everywhere else it's placed (village.json) — with no leaf,
+	# hinge or hardware of its own, one more length of it read as ordinary
+	# property fencing rather than as something deliberately shut, per the
+	# blind pass's own finding. A child of `_mesh` so it swings open with
+	# the panel rather than needing its own re-pose.
 	_lock = MeshInstance3D.new()
 	_lock.name = "Lock"
 	var lock_box := BoxMesh.new()
@@ -145,13 +127,6 @@ func _unlock() -> void:
 	# re-pose rather than an animation, this file's own header explains why.
 	_mesh.rotation.y += deg_to_rad(90.0)
 	_prompt.call("set_enabled", false)
-
-
-func _collect_meshes(node: Node, into: Array[MeshInstance3D]) -> void:
-	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
-		into.append(node as MeshInstance3D)
-	for child in node.get_children():
-		_collect_meshes(child, into)
 
 
 ## Same lookup village_npcs.gd's `_on_greeted` uses: the "dialogue_panel"
