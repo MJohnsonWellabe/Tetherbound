@@ -39,16 +39,22 @@ func _build_visual() -> void:
 	# Round 1 shrank this to real key scale and a second blind round
 	# confirmed the SCALE was right but called the shape unresolved —
 	# "an anonymous yellow dot," the ring's hole too small to read as a
-	# hole under software rendering. This round does not re-inflate the
-	# object (that would recreate the crate complaint); it widens the
-	# ring's own hole relative to its wall so the loop actually punches
-	# through at this size, and adds a pair of teeth at the blade's tip so
-	# the silhouette is asymmetric (a key) rather than a symmetric rod
-	# with a loop on it (a whistle, a screwdriver, anything).
+	# hole under software rendering. This round's own first attempt (widen
+	# the ring, add teeth, but leave `metallic` at 0.75) rendered as a dark
+	# muddy "comma-shaped blob with one specular highlight" per a fresh
+	# blind pass — a high-metallic `StandardMaterial3D` gets nearly all its
+	# visible colour from specular environment reflection, which the
+	# Compatibility renderer's flat ambient here can't supply, so it goes
+	# dark almost everywhere except the one facet catching the sun directly.
+	# Low metallic instead, so `castle_gate_key`'s own bright gold
+	# `colour` (`items.json`, `#c9a227`) actually reads as its diffuse
+	# albedo rather than being swallowed. The shape change (wider ring
+	# hole, asymmetric tip teeth) stays — it was never tested against a
+	# material that could show it.
 	var material := StandardMaterial3D.new()
 	material.albedo_color = _item_colour()
-	material.metallic = 0.75
-	material.roughness = 0.2
+	material.metallic = 0.1
+	material.roughness = 0.45
 
 	var shaft := MeshInstance3D.new()
 	var shaft_box := BoxMesh.new()

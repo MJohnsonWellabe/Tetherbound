@@ -75,21 +75,29 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	# pass's own finding. Round 1 tried a single near-black box and a
 	# second blind round called it out for blending straight into the
 	# fence's own dark pickets — same hue, same value, same flat panel
-	# plane. This round changes both levers that finding named: a lighter,
-	# warmer, shinier material that reads as metal against the fence's
-	# flat wood, and a body-plus-shackle silhouette (a box with a ring
-	# sunk halfway into it, so only the top loop shows) instead of one
-	# more rectangle among the panel's own pickets. A child of `_mesh` so
-	# it swings open with the panel rather than needing its own re-pose.
+	# plane. Round 2 (this round's own first attempt, caught by rendering
+	# and zooming into the actual frame rather than trusting the change)
+	# tried a lighter albedo at `metallic = 0.85` and it rendered dark and
+	# flat anyway — a highly metallic `StandardMaterial3D` gets almost all
+	# its visible colour from specular environment reflection, which the
+	# Compatibility renderer's flat ambient here can't supply, so it reads
+	# as a near-black silhouette regardless of `albedo_color`. Both lock
+	# attempts and the key's own dark read (see `key_pickup.gd`) share this
+	# one root cause. Low metallic instead, so the albedo's own diffuse
+	# colour is what actually shows, plus a body-plus-shackle silhouette
+	# (a box with a ring sunk halfway into it, so only the top loop shows)
+	# instead of one more rectangle among the panel's own pickets. A child
+	# of `_mesh` so it swings open with the panel rather than needing its
+	# own re-pose.
 	_lock = MeshInstance3D.new()
 	_lock.name = "Lock"
 	var lock_body := BoxMesh.new()
 	lock_body.size = Vector3(0.16, 0.14, 0.06)
 	_lock.mesh = lock_body
 	var lock_material := StandardMaterial3D.new()
-	lock_material.albedo_color = Color(0.58, 0.45, 0.22)
-	lock_material.metallic = 0.85
-	lock_material.roughness = 0.2
+	lock_material.albedo_color = Color(0.72, 0.56, 0.24)
+	lock_material.metallic = 0.15
+	lock_material.roughness = 0.4
 	_lock.material_override = lock_material
 	# Pushed out past the panel's own face (not centred in its thickness,
 	# round 1's placement) so the lock's silhouette breaks the fence's
