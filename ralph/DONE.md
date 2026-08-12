@@ -506,6 +506,69 @@ smoke_art` — all three run locally, headless, green on the final state (the
 two named by the item plus `smoke_art` per conventions' world-model-data
 rule).
 
+**CRASH FIX (2026-08-12) — `tools/verify_export.sh` was red on the exported
+binary itself, not on anything an editor-run test could see.** CI's export
+gate exported a real release build, ran the actual `.exe`/`.x86_64` (not
+`--main-pack` under the editor), and it SIGABRT'd (exit 134) shortly after
+its own `EXPORT-CHECK` line — world setup (terrain, player, 22766 vegetation
+props) completed cleanly every time; the process aborted on its way to the
+scheduled `get_tree().quit()`. Reproduced locally byte-for-byte (same
+`EXPORT-CHECK` numbers, same exit code) with a real Godot 4.7-stable export +
+`xvfb-run`, then again under `gdb`: the raw crash is glibc's `double free or
+corruption (!prev)` → `Aborted`, always immediately after a large wave of
+`ERROR: ... leaked N bytes` / `Pages in use exist at exit` lines from the
+RenderingServer's own shutdown cleanup — a signature `verify_export.sh`'s own
+`grep` patterns don't match, so it only ever showed up as "did not reach a
+clean exit."
+
+**Root cause, confirmed by empirical bisection (git-history bisection wasn't
+possible — the crash reproduces all the way back to `a46587c`, the very
+first commit of this rebuild, so there was no earlier-green commit on this
+branch's actual lineage to bisect against; `9ec0475`, the pre-EV6 commit,
+does export and quit clean).** Selectively disabling `grandpa_house.gd`'s
+house build, `village.gd`'s structure placement, and `road_gate.gd`'s gate
+build one at a time (each independently sufficient to crash on its own,
+and disabling all three together fully cleared it) pointed at the one thing
+they all share: `scripts/world/building_prefabs.gd`'s composer. Its
+`instantiate()` builds each prefab's module tree into a real `Node3D`
+**template**, caches it in a `Dictionary` for reuse (so three `fence_run`
+placements only assemble the glTF modules once), and every placement is a
+`.duplicate()` of that template — but the template itself is never added to
+the SceneTree and never freed. `village.gd` keeps its composer alive for the
+whole session (so its templates leak until process exit); `grandpa_house.gd`
+and `road_gate.gd` each build a throwaway LOCAL composer whose template
+leaks the instant `build()` returns. An un-parented Node is invisible to
+Godot's normal tree-teardown cleanup, so at real process exit these orphans
+are still registered with the RenderingServer holding live mesh/material
+RIDs when the RenderingServer's own exit-time pass force-frees everything it
+still has on the books (the "leaked" wave); a separate leftover-Object sweep
+then frees the same still-alive orphan nodes and, with them, the same RIDs a
+second time — the double free. Editor-run tests never see this because none
+of them push a real GL context through a real process exit the way an
+exported binary does.
+
+**Fix:** `building_prefabs.gd` now frees every cached template the instant
+its own composer object is about to be freed
+(`_notification(NOTIFICATION_PREDELETE)`), which runs via ordinary GDScript
+refcounting well before the engine's own end-of-process sweep — for
+`village.gd`'s persistent composer that's during normal SceneTree teardown,
+for `grandpa_house.gd`/`road_gate.gd`'s local composers it's immediately
+after `build()` returns. Freeing a template Node does not touch the
+independently-refcounted Mesh/Material resources a placed duplicate still
+references, so nothing already standing in the world is affected — confirmed
+by re-running the export: the "leaked" wave is gone entirely (not just the
+crash), `[village] placed 10 structures` and the rest of `_ready()` complete
+normally, and the process now reaches its own `get_tree().quit(0)` and exits
+0. Re-verified: `tests/run_tests.gd` 348/348, and `smoke_opening`,
+`smoke_traversal`, `smoke_art` all green headless. (One remaining local-only
+oddity, NOT part of this fix and NOT what CI reported failing on:
+`verify_export.sh`'s own `strings -a "$pck" | grep -qF "$path"` checks can
+misreport FAILED in this sandbox because `set -o pipefail` sees `strings`'
+SIGPIPE, from `grep -q` exiting early on a match, as the pipeline's exit
+code — the paths are actually present in the `.pck` every time, confirmed
+directly and with `pipefail` off; reproduces identically on the pre-EV6
+baseline commit, so it predates and is unrelated to this branch.)
+
 **FOLLOW-UP (2026-08-12, `86e107a`) — the item's core criterion had still
 been failing, and this closes it.** A genuinely blind critic (external
 session with a real Agent tool, shown the 8 final frames plus both

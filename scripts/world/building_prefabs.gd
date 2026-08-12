@@ -50,6 +50,44 @@ func set_template_holder(holder: Node3D) -> void:
 	_holder = holder
 
 
+## EV6-crash-remainder: `_templates` are real Node3D trees, built once and
+## kept only so `instantiate()` can `duplicate()` them again for a repeated
+## prefab (three `fence_run` placements share one template) — but they are
+## NEVER added to the SceneTree. Godot's own node-vs-Resource contract only
+## auto-frees Nodes that are IN the tree; an unparented Node3D is a leak by
+## definition, and every caller here is one: village.gd keeps its composer
+## alive as a member for the session (so its templates leak until process
+## exit), and grandpa_house.gd/road_gate.gd each build a LOCAL composer that
+## goes out of scope — and leaks its template — the instant `build()` returns.
+##
+## That leak was invisible until a real exported binary's own shutdown proved
+## it dangerous: the RenderingServer's exit-time cleanup force-frees every
+## mesh/material RID it still has on the books (the "leaked ... bytes" wave
+## in an export's run.log), and Godot's separate leftover-Object sweep THEN
+## frees these still-alive, still-registered orphan template nodes and their
+## MeshInstance3D children — releasing the very same RIDs a second time.
+## `double free or corruption (!prev)` / SIGABRT is that second free landing
+## on memory the RenderingServer already returned. The editor and every
+## in-editor smoke test never reach this: they don't run a real GL driver
+## through a real process exit the way `tools/verify_export.sh`'s exported
+## binary does, so the race between the two cleanup passes never fires.
+##
+## The fix frees every cached template the moment THIS composer object is
+## about to be freed — ordinary GDScript refcounting, well before the engine
+## ever reaches its own end-of-process sweep. Freeing a template Node does
+## NOT touch the meshes/materials still referenced by the DUPLICATES already
+## placed in the world: those are independently-refcounted Resources, not
+## owned exclusively by the template, so they stay alive exactly as long as
+## a placed building still points at them.
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE:
+		return
+	for template: Variant in _templates.values():
+		if template is Node and is_instance_valid(template):
+			(template as Node).free()
+	_templates.clear()
+
+
 func load_recipes() -> bool:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
 	if file == null:
