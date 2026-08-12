@@ -386,6 +386,46 @@ func test_path_standoff_sides_are_independent() -> void:
 		])
 
 
+func test_verge_absent_or_empty_changes_nothing() -> void:
+	# The fringe is opt-in, like every other path mechanism here.
+	var grass := _layer("grass").duplicate(true)
+	grass["verge"] = {}
+	var with_empty := RULES.placements_for(grass, field, world_size, 55)
+	var without_the_key := _layer("grass").duplicate(true)
+	without_the_key.erase("verge")
+	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	assert_eq(with_empty.size(), without.size())
+	for i in with_empty.size():
+		assert_true((with_empty[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
+			"an empty verge moved a placement; it must be a no-op")
+
+
+func test_verge_appends_near_path_instances_without_moving_the_rest() -> void:
+	# Two properties in one draw: the fringe never perturbs the layer's own
+	# clump/stray placements (it runs last, so the shared prefix must be
+	# bit-identical), and every instance it adds sits within inner + band of
+	# a route — the fringe is the path's own margin, not scatter leaking
+	# across the map.
+	var base := {
+		"models": _layer("grass").get("models", []),
+		"clumps": 10, "per_clump": 5, "strays": 50, "clump_radius": 8.0,
+		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+	}
+	var with_verge: Dictionary = base.duplicate(true)
+	with_verge["verge"] = {"count": 300, "inner": 1.5, "band": 4.0}
+	var plain := RULES.placements_for(base, field, world_size, 321)
+	var fringed := RULES.placements_for(with_verge, field, world_size, 321)
+	assert_true(fringed.size() > plain.size(), "a 300-draw verge placed nothing at all")
+	for i in plain.size():
+		assert_true((fringed[i]["position"] as Vector3).is_equal_approx(plain[i]["position"]),
+			"adding a verge moved a clump/stray placement; the fringe must only append")
+	for i in range(plain.size(), fringed.size()):
+		var spot: Vector3 = fringed[i]["position"]
+		var distance := Vector2(spot.x, spot.z).distance_to(field.nearest_point_on_paths(spot.x, spot.z))
+		assert_true(distance <= 1.5 + 4.0 + 0.1,
+			"a verge instance landed %.2fm from the nearest path, outside its own inner+band reach" % distance)
+
+
 func test_path_standoff_is_a_stable_property_of_position() -> void:
 	# No RNG state: the same spot must always get the same standoff, or the
 	# meadow's edge would depend on placement order and no survey frame could

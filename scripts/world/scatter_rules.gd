@@ -140,7 +140,79 @@ static func placements_for(
 		var spot := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
 		_consider(out, layer, field, models, spot, half, rng)
 
+	# Verge fringe last, so a layer gaining one keeps its clump and stray
+	# draws bit-identical — the fringe only ever appends.
+	var verge: Dictionary = layer.get("verge", {})
+	if not verge.is_empty() and field.has_method("path_polylines"):
+		_place_verge(out, layer, field, models, verge, half, rng)
+
 	return out
+
+
+## The verge fringe (OF12): extra instances strung along the authored routes
+## by arc length, densest just off the worn edge and thinning outward
+## (`inner + band * r^2`). A blind critic's round-1 verdict on the standoff
+## rework named the gap this fills: with the old constant-radius exclusions
+## gone, nothing GREW near the paths at all — "the verge immediately beside
+## each path is the baldest ground in the frame, when it should be the
+## densest", and the dirt/grass boundary was a clean cut with no
+## interpenetration.
+##
+## What stops this from recreating the planted border those exclusions were
+## removed for: every fringe draw still passes through `_consider`, so the
+## per-side noise standoff culls it wherever the meadow's edge is locally
+## standing back. One noise field drives both WHERE the edge sits and HOW
+## MUCH fringe survives near it — stretches where the noise swings low get
+## growth crowding the raveled dirt line, stretches where it swings high
+## stay open — so density varies along the route and per side by
+## construction, instead of tracing a constant-width strip. The path_factor
+## gate (with `path_edge_jitter`) still trims draws that land too deep in
+## the worn zone, irregularly, which is what lets an occasional tuft lean
+## into the dirt line instead of the two materials meeting in a clean cut.
+static func _place_verge(
+	out: Array[Dictionary], layer: Dictionary, field: RefCounted,
+	models: Array, verge: Dictionary, half: float, rng: RandomNumberGenerator
+) -> void:
+	var polylines: Array = field.path_polylines()
+	if polylines.is_empty():
+		return
+	var segment_a: Array[Vector2] = []
+	var segment_b: Array[Vector2] = []
+	var segment_length: Array[float] = []
+	var total := 0.0
+	for entry: Variant in polylines:
+		var line: PackedVector2Array = entry
+		for i in line.size() - 1:
+			var length := line[i].distance_to(line[i + 1])
+			if length <= 0.001:
+				continue
+			segment_a.append(line[i])
+			segment_b.append(line[i + 1])
+			segment_length.append(length)
+			total += length
+	if total <= 0.0:
+		return
+	var count := int(verge.get("count", 0))
+	# `inner` starts the fringe at the dirt's own half-width, not the
+	# centreline, so the densest draws land right where mowing-by-traffic
+	# stops; `band` is how far the fringe reaches before ordinary meadow
+	# density takes over. Both TUNABLE per layer in vegetation.json.
+	var inner := float(verge.get("inner", 1.5))
+	var band := maxf(float(verge.get("band", 4.0)), 0.0)
+	for i in count:
+		var u := rng.randf() * total
+		var segment := segment_length.size() - 1
+		for s in segment_length.size():
+			if u <= segment_length[s]:
+				segment = s
+				break
+			u -= segment_length[s]
+		var tangent := (segment_b[segment] - segment_a[segment]).normalized()
+		var along := segment_a[segment] + tangent * u
+		var side := -1.0 if rng.randf() < 0.5 else 1.0
+		var reach := rng.randf()
+		var spot := along + Vector2(-tangent.y, tangent.x) * side * (inner + band * reach * reach)
+		_consider(out, layer, field, models, spot, half, rng)
 
 
 ## How far a ridge-biased clump is allowed to wander from its own unbiased
