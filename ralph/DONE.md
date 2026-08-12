@@ -292,6 +292,78 @@ responsible for it. Opened as `EV3-remainder-3`, scoped correctly this
 time, with the screen-projection technique that worked here handed forward
 as the way to confirm before guessing again.
 
+## EV7 — Two of the bible's five named prop clusters: work_area and farmhouse_yard
+Bible sec2 P3: authored clusters that imply a purpose, not props dumped
+everywhere. First unblocked once `EV1-remainder` (above) landed: the Fantasy
+Props MegaKit was sitting staged and unused. New `scripts/world/props.gd`
+(same shape as `village.gd` — data describes, code places, nothing saved into
+a scene) reads `data/config/props.json` and places named glTF props, each
+stood on the ground via `ground_height_at` (D09) and given a box collider
+built from its combined mesh AABB in local space (root's global transform
+inverted, since a glTF's meshes can sit under intermediate importer-added
+transform nodes — unlike `village.gd`'s OBJ meshes, which are bare `Mesh`
+resources with no such nesting). 9 of 94 models curated into
+`assets/props/quaternius_fantasy/` plus the pack's 13 shared trim textures;
+ledgered.
+
+Two clusters: `work_area` (anvil, workbench, whetstone, crate, pickaxe) beside
+the village square's Barn, and `farmhouse_yard` (barrel, two crates, a bucket)
+south of Grandpa's house. `bridge repair site`, `quarry station` and
+`trainer camp` — the bible's other three named clusters — need geography that
+doesn't exist yet; opened as `EV7-remainder`.
+
+**Three real bugs found and fixed before the first render, all by the render
+itself, not by inspection:**
+- The first `work_area` close-up eye position landed *inside* the Barn's own
+  geometry (measured after the fact: `Barn.obj` is 7.7×8.2m raw, 1.1 scale —
+  an eye 2.5m from its origin was well inside that footprint). Total black
+  frame, not a lighting bug.
+- `farmhouse_yard`'s first placement put two of five props inside Grandpa's
+  house's own wall. The house's *terrain pad* is a 14m-radius flat
+  (`village_npcs.json`'s own comment), but the house's actual wall footprint
+  is much smaller (`grandpa_house.gd`: `INNER_W` 9.0/`INNER_D` 7.0/`WALL_T`
+  0.3 → half_w 4.8, half_d 3.8) — conflating the two put props inside a wall.
+  Moved the whole cluster 4m+ clear of the real footprint.
+- `FarmCrate_Carrot`'s material (`MI_Trim_Props_Vertex`, `COLOR_0` on every
+  primitive) renders its produce as an unreadable white/grey smear rather
+  than carrot-orange — a genuine asset defect, not a placement one. Swapped
+  for `FarmCrate_Empty`, which carries no vertex-colour-dependent material.
+
+**Three local blind-judge rounds** (`tools/capture_prop_clusters.gd`, new —
+four viewpoints: each cluster close, each cluster in context with its
+landmark):
+- Round 1 (after the three fixes above, still landed by the render):
+  confirmed the placement/texture bugs, plus real composition/authorship
+  findings — `work_area`'s five props read as two separate groups rather
+  than one station, and frame 02's eye looked at the Barn's unlit far side,
+  crushing the whole cluster to near-black.
+- Round 2 (props pulled tighter, frame 02 re-shot from the lit side): both
+  fixes confirmed working. New finding, the most important one: `work_area`
+  reads as an authored station, but `farmhouse_yard`'s loose arc of props
+  still read as "placed near a wall," not implying a task — the same
+  distinction the whole item exists to draw.
+- Round 3 (`farmhouse_yard` regrouped into one touching pile — crate, barrel
+  leaning against it, bucket at its foot, a second crate close by — instead
+  of five independently-placed objects): a focused re-check confirmed this
+  resolved, with no regression on `work_area`. "The crate/barrel/bucket/
+  basket group now has visible internal relationships (leaning contact,
+  graduated size, shared shadow, tight clustering distance) that imply a
+  single carried-and-set-down load."
+
+**What the critic named that this item did NOT chase, on purpose**: no
+sky/cloud atmosphere (flat gradient in every frame — already `R5.2`, a
+scene-wide environment item, not a props-cluster fix), no distance
+desaturation on the hills, general ground/foliage density, and `Crate_Wooden`'s
+wicker-looking material reading as a mismatch against its hard-crate
+silhouette (an asset-fidelity note, filed by the critic itself under "needs
+new art" rather than a scene fix). All scene-wide or asset-level, none of them
+this item's job.
+
+`tests/smoke_traversal.gd` and `tests/smoke_opening.gd` green after every
+round (the new colliders sit near the settlement and the opening's walked
+lanes). Also fixes a real bookkeeping gap found while scoping this: see the
+`EV1-remainder` entry above.
+
 ## EV3-remainder (round 1 of 2) — flowers gain path_bias and a jitter to break up the collinear "hedge"
 `334fafc`. `tests: smoke_art` (green). Also extended `test_scatter_rules.gd` for the new
 `path_bias_jitter` mechanism (backward-compat no-op test, plus a test that

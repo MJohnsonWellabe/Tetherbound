@@ -484,11 +484,22 @@ footpaths, a foundation. Absorbs `R9.4-remainder-3` (no material override path)
 and half of `-5`. Grandpa's house was rebuilt by R9.4 and may or may not survive
 the kit; judge it against the family rather than preserving it out of sentiment.
 
-### EV7 — Prop clusters that imply a purpose
-`model: fable` · `tests: none` · `area: village`
-Bible §2 P3: *do not* dump props everywhere. Authored clusters — work area,
-farmhouse yard, bridge repair site, quarry station, trainer camp. Absorbs the
-rest of `R9.4-remainder-5`.
+**`EV7` (a first slice: work area and farmhouse yard) shipped — see `DONE.md`.**
+Two of the bible's five named clusters. `bridge repair site`, `quarry station`
+and `trainer camp` need geography that doesn't exist yet (no bridge, no built
+quarry — `SA4`/`EV5` territory) and are carried forward below.
+
+### EV7-remainder — The three prop clusters that need geography built first
+`model: sonnet` · `tests: none` · `area: village`
+Bible §2 P3, absorbing the rest of `R9.4-remainder-5`. `bridge repair site`
+needs a bridge (none exists — `SA4`'s river-gorge spoke or `EV5`'s water
+feature); `quarry station` needs a built quarry (`village_npcs.json`'s own
+comment: the Quarry Foreman stands in the square today because "No built
+quarry to stand him at yet"); `trainer camp` could go along an existing route
+(the practice meadow, `R7.1`'s waypoints) without waiting on new geography, so
+it is the one of the three that is realistically startable now. Done when: a
+blind critic given close and in-context frames of each site names it as
+implying a purpose, the same bar `EV7`'s first two clusters cleared.
 
 **`EV8` (lighting and atmosphere) shipped — see `DONE.md`.** Two rounds of the
 blind pass. Warm sun and cool fill were already correct and are unchanged;
