@@ -66,6 +66,19 @@ func _build_visual() -> void:
 	material.albedo_color = _item_colour()
 	material.metallic = 0.1
 	material.roughness = 0.45
+	# A fresh blind pass on the enlarged, correctly-oriented key still
+	# called it a "small curled yellow smear" at native resolution and
+	# named the specific missing lever: "no rim light, outline shader, or
+	# contrast pass... relies entirely on colour difference." `orb.gd`
+	# already establishes glow as this project's own visual language for
+	# a found/thrown item worth noticing (SA7's backlog entry cites its
+	# halo and trail); a modest emissive boost on the key is the same
+	# lever, not a new one, and does not depend on the Compatibility
+	# renderer's weak ambient the way the metallic fix above had to work
+	# around.
+	material.emission_enabled = true
+	material.emission = _item_colour()
+	material.emission_energy_multiplier = 0.8
 
 	# A genuine blind pass on the orientation fix above (round 3) still
 	# called this "a curled/hooked yellow squiggle... does not read as a
