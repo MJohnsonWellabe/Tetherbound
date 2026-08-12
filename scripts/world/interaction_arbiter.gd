@@ -94,6 +94,15 @@ func winner() -> Dictionary:
 	return _winner
 
 
+## Which registered provider's offer is currently drawn, or null if nothing
+## is. `EV9-double-prompt`: a provider that only wants to know "is the line
+## on screen mine right now" (`combat_hud.gd`, deciding whether to mirror
+## `encounter_director`'s prompt outside a fight) needs this rather than the
+## formatted text, which carries no identity.
+func winning_provider() -> Object:
+	return _winning_provider
+
+
 func _process(_delta: float) -> void:
 	_recompute()
 

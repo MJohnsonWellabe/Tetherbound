@@ -162,8 +162,18 @@ func _show_fight(visible_now: bool) -> void:
 	_reticle.visible = visible_now and _manager != null and bool(_manager.call("is_aiming"))
 
 
+## `EV9-double-prompt`: this row exists to keep showing "Engage X" before a
+## fight starts, not to repeat whatever unrelated line `PlaygroundHUD` is
+## currently showing (Grandpa, a starter, a harvest node) just because this
+## `CanvasLayer` never toggles fully invisible outside a fight. Once fighting,
+## the arbiter is disabled scene-wide and `prompt()` already reads "" from it,
+## so the fighting branch does not need its own ownership check.
 func _draw_prompt() -> void:
 	if _director == null:
+		return
+	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
+	if not fighting and not bool(_director.call("owns_active_prompt")):
+		_prompt.text = ""
 		return
 	_prompt.text = str(_director.call("prompt"))
 

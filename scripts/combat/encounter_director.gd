@@ -480,6 +480,21 @@ func prompt() -> String:
 	return _prompt
 
 
+## `EV9-double-prompt`: is `prompt()` right now genuinely this node's own
+## offer (engage, the fainted statement, the pal-control fallback), or is it
+## mirroring whatever unrelated provider is winning the shared arbiter
+## (Grandpa, a starter, a harvest node)? `combat_hud.gd` needs this to know
+## whether its prompt row should draw at all outside a fight — the row exists
+## to keep showing "Engage X" before a fight starts, never to repeat a line
+## `PlaygroundHUD` is already showing for something else entirely.
+## No arbiter (the combat sandbox) means this node is the only source of a
+## prompt there is, so it always owns whatever it is showing.
+func owns_active_prompt() -> bool:
+	if _arbiter == null or not is_instance_valid(_arbiter):
+		return true
+	return _arbiter.call("winning_provider") == self
+
+
 ## Hand the prompt line, and the interact button, to a scene-wide arbiter.
 func set_arbiter(node: Node) -> void:
 	if _arbiter != null and is_instance_valid(_arbiter):
