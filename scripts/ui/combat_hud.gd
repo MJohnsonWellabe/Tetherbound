@@ -266,8 +266,11 @@ func _draw_actions() -> void:
 ## own reproduction case, `combat_throw` showing "F" to a gamepad player and
 ## vice versa, lived exactly here.
 func _verb(glyph_id: String, label: String, ready: bool) -> String:
+	# Default size (36), not smaller: EV9's own history already found 28px
+	# read as illegible mush on this exact `cancel`/Escape glyph's baked-in
+	# "ESC" text, and `run`/`cancel` here are that same icon.
 	return "[color=#%s]%s %s[/color]" % [
-		VERB_READY if ready else VERB_DIMMED, INPUT_GLYPH.icon(glyph_id, 30), label
+		VERB_READY if ready else VERB_DIMMED, INPUT_GLYPH.icon(glyph_id), label
 	]
 
 
