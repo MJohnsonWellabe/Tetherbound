@@ -126,12 +126,24 @@ static func placements_for(
 	var path_bias := clampf(float(layer.get("path_bias", 0.0)), 0.0, 1.0)
 	var path_bias_jitter := maxf(float(layer.get("path_bias_jitter", 0.0)), 0.0)
 	var path_avoid_radius := maxf(float(layer.get("path_avoid_radius", 0.0)), 0.0)
+	# EV3-remainder-4: a path-biased clump snaps its centre near a path (see
+	# `_clump_centre`) but still placed the layer's FULL `per_clump` count
+	# there — for `flowers` (78/clump), a whole-map placement dump found this
+	# one clump alone put 74 of 140 in-frame instances within 5m of a path on
+	# `the-rise-route.png`, reading as a hedge even though `path_bias` itself
+	# is intentional (EV3-remainder). 0 (default) means "no override, use
+	# `per_clump`" — every layer that never sets this is unaffected.
+	var path_bias_per_clump := int(layer.get("path_bias_per_clump", 0))
 
 	for clump in clumps:
-		var centre := _clump_centre(
+		var drawn := _clump_centre(
 			rng, half, field, ridge_bias, path_bias, path_bias_jitter, path_avoid_radius
 		)
-		for i in per_clump:
+		var centre: Vector2 = drawn["position"]
+		var this_clump_count := per_clump
+		if bool(drawn["snapped_to_path"]) and path_bias_per_clump > 0:
+			this_clump_count = path_bias_per_clump
+		for i in this_clump_count:
 			# Square root of a uniform sample gives a disc that is denser at the
 			# middle, which is what a copse looks like. Sampling the radius
 			# directly produces a ring.
@@ -218,10 +230,14 @@ const RIDGE_SEARCH_RADIUS := 140.0
 ## 0.0 (no change) — opt in per layer.
 const PATH_AVOID_ATTEMPTS := 4
 
+## Returns `{ "position": Vector2, "snapped_to_path": bool }`. The caller
+## (`placements_for`) needs to know whether `path_bias` snapped this clump so
+## it can vary `per_clump` for path-anchored clumps only — see
+## `path_bias_per_clump` below.
 static func _clump_centre(
 	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float,
 	path_bias: float = 0.0, path_bias_jitter: float = 0.0, path_avoid_radius: float = 0.0
-) -> Vector2:
+) -> Dictionary:
 	var base := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
 	var snapped_to_path := false
 
@@ -242,7 +258,7 @@ static func _clump_centre(
 			base = Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
 
 	if ridge_bias <= 0.0 or rng.randf() > ridge_bias:
-		return base
+		return {"position": base, "snapped_to_path": snapped_to_path}
 
 	var best := base
 	var best_height: float = field.height_at(base.x, base.y)
@@ -255,7 +271,7 @@ static func _clump_centre(
 		if not is_nan(height) and (is_nan(best_height) or height > best_height):
 			best = candidate
 			best_height = height
-	return best
+	return {"position": best, "snapped_to_path": snapped_to_path}
 
 
 static func _consider(
@@ -295,6 +311,22 @@ static func _consider(
 		if edge_jitter > 0.0:
 			threshold += rng.randf_range(-edge_jitter, edge_jitter)
 		if float(field.path_factor(spot.x, spot.y)) > threshold:
+			return
+
+	# `path_avoid_radius` (EV3-remainder-3) only ever resampled a CLUMP'S
+	# CENTRE — it had no effect on `strays`, which are placed independently of
+	# any clump. EV3-remainder-4's own whole-map instrumentation confirmed the
+	# clump half is clean (0 of 3785 drygrass clump-sourced instances landed
+	# within 5m of a path, even counting clumps whose centre barely cleared
+	# the radius) but strays still did (2 of 342, and concentrated wherever a
+	# frame's own camera happens to follow a path corridor). Applying the same
+	# radius here, once, to every instance regardless of source, closes that
+	# gap without a second tunable — reads it from the same key `_clump_centre`
+	# already uses, so grass/drygrass are fixed with no config change at all.
+	var instance_avoid_radius := float(layer.get("path_avoid_radius", 0.0))
+	if instance_avoid_radius > 0.0 and field.has_method("nearest_point_on_paths"):
+		var nearest_path_point: Vector2 = field.nearest_point_on_paths(spot.x, spot.y)
+		if nearest_path_point != Vector2.INF and spot.distance_to(nearest_path_point) < instance_avoid_radius:
 			return
 
 	# `base_scale` corrects the pack's authoring scale for the whole layer;

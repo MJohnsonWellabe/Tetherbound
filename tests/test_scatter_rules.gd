@@ -398,3 +398,72 @@ func test_path_avoid_radius_pushes_unbiased_clumps_away_from_the_path() -> void:
 		"path_avoid_radius 8.0 landed %.0f%% of clumps within 8m of a path, not meaningfully below unbiased's %.0f%%" % [
 			avoided_rate * 100.0, unbiased_rate * 100.0
 		])
+
+
+func test_path_avoid_radius_also_keeps_strays_off_the_path() -> void:
+	# EV3-remainder-4: path_avoid_radius originally only resampled a CLUMP's
+	# centre (_clump_centre), so strays -- placed independently of any clump
+	# -- still landed near a path whenever chance put one there. A whole-map
+	# placement dump confirmed the clump half was already clean (0 of 3785
+	# drygrass clump-sourced instances within 5m of a path) but strays were
+	# not, so the fix applies the same radius per-instance in _consider()
+	# too. A pure-stray layer (clumps 0) isolates that half: every survivor
+	# must now sit outside the radius, not just fewer of them.
+	var layer := {
+		"models": _layer("drygrass").get("models", []),
+		"clumps": 0, "per_clump": 0, "strays": 400, "clump_radius": 1.0,
+		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+		"path_avoid_radius": 8.0,
+	}
+	var placements := RULES.placements_for(layer, field, world_size, 909)
+	assert_true(placements.size() > 0, "no strays survived at all; the test proves nothing")
+	for p in placements:
+		var spot: Vector3 = p["position"]
+		var distance := Vector2(spot.x, spot.z).distance_to(field.nearest_point_on_paths(spot.x, spot.z))
+		assert_true(distance >= 8.0,
+			"a stray landed %.2fm from a path, inside the 8.0m path_avoid_radius" % distance)
+
+
+func test_path_bias_per_clump_caps_only_a_path_anchored_clump() -> void:
+	# EV3-remainder-4: a path-biased clump kept the layer's FULL per_clump
+	# count even though path_bias already concentrates it near a path -- a
+	# whole-map dump found flowers' own single biased clump alone put 74 of
+	# 140 in-frame instances on the-rise-route.png within 5m of the path,
+	# reading as a hedge. path_bias_per_clump caps a SNAPPED clump's own
+	# count without touching per_clump for the layer's other, unbiased
+	# clumps -- forcing path_bias to 1.0 here isolates the snapped case.
+	var layer := {
+		"models": _layer("flowers").get("models", []),
+		"clumps": 1, "per_clump": 78, "strays": 0, "clump_radius": 9.0,
+		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+		"path_bias": 1.0, "path_bias_per_clump": 26,
+	}
+	var capped := RULES.placements_for(layer, field, world_size, 12)
+	assert_true(capped.size() <= 26,
+		"path_bias_per_clump 26 did not cap a path-biased clump; got %d instances" % capped.size())
+
+	var uncapped_layer := layer.duplicate(true)
+	uncapped_layer.erase("path_bias_per_clump")
+	var uncapped := RULES.placements_for(uncapped_layer, field, world_size, 12)
+	assert_true(uncapped.size() > capped.size(),
+		"removing path_bias_per_clump should place more than the capped run (up to per_clump 78); got %d vs capped %d" % [
+			uncapped.size(), capped.size()
+		])
+
+
+func test_path_bias_per_clump_does_not_affect_unbiased_clumps() -> void:
+	# The cap only applies to a clump path_bias actually snapped. A layer
+	# with path_bias 0.0 (never snaps) must place identically whether
+	# path_bias_per_clump is set or not.
+	var layer := {
+		"models": _layer("flowers").get("models", []),
+		"clumps": 1, "per_clump": 78, "strays": 0, "clump_radius": 9.0,
+		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+		"path_bias": 0.0, "path_bias_per_clump": 5,
+	}
+	var with_cap := RULES.placements_for(layer, field, world_size, 12)
+	var without_cap_layer := layer.duplicate(true)
+	without_cap_layer.erase("path_bias_per_clump")
+	var without_cap := RULES.placements_for(without_cap_layer, field, world_size, 12)
+	assert_eq(with_cap.size(), without_cap.size(),
+		"path_bias_per_clump changed placement count for a clump path_bias never snapped")

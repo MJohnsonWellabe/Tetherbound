@@ -257,16 +257,28 @@ these five frames comes close to the key art's oaks, whose canopies are
 wider than they are tall and whose trunks visibly fork and lean... the
 current asset's silhouette ceiling won't get there just by rescaling."
 This is a real asset ceiling, not a placement/curation problem `EV2`'s own
-lever (which models, what tint) can solve, and `CLAUDE.md`/`D24` forbid a
-Meshy generation for a routine nature asset regardless. **`EV1-remainder`
-shipped** (see `DONE.md`) so the itch.io block is no longer why this is
-open — what is still needed is someone actually searching the fuller
-Stylized Nature MegaKit (staged, `assets_raw/vendor/`) for a
-broader-canopy hero form; that search hasn't happened yet. Not a
-`BLOCKED.md` design question — there's no decision to make, just
-unstarted work. Done when: the fuller pack is searched for a
-broader-canopy hero form and it either replaces `grove`'s current subset
-or the owner accepts the current ceiling.
+lever (which models, what tint) can solve — the fuller Stylized Nature
+MegaKit that might carry a genuinely broader-canopy hero form is itch.io-
+blocked (`EV1-remainder`), and `CLAUDE.md`/`D24` forbid a Meshy generation
+for a routine nature asset regardless. Not a `BLOCKED.md` design question —
+there's no decision to make, just an asset gap with a known unblock path.
+Done when: the Stylized Nature MegaKit's itch.io block clears and the fuller
+pack is searched for a broader-canopy hero form, or the owner accepts the
+current ceiling.
+
+**Checked twice, 2026-08-12 — still blocked, unchanged, and worth stating
+plainly since two different firings have now independently gotten this
+wrong.** `EV1-remainder`'s own note that it "unblocks... `EV2-landmark-
+ceiling`" is incorrect: the two zips the owner supplied and `EV1-remainder`
+staged are the Quaternius **Village** and **Fantasy Props** MegaKits (176 +
+94 `.gltf` files, verified by listing every one: zero tree or foliage
+assets, purely architecture and props). **The Stylized Nature MegaKit this
+item actually needs is NOT staged anywhere in `assets_raw/vendor/`** — a
+second, separate firing's edit to this same paragraph assumed otherwise
+("staged, `assets_raw/vendor/`... someone actually searching") without
+checking, which would have sent the next firing searching for a pack that
+was never downloaded. It remains itch.io-blocked exactly as `EV1` originally
+found it.
 
 **`EV3` (a first, narrower slice) shipped — see `DONE.md`.** Fixed the one
 concrete, already-diagnosed defect (`path_stones` clumps disconnected from the
