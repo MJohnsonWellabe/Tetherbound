@@ -480,6 +480,59 @@ still 0 either way.
 the item's own text says to take it only if cheap and not let it grow the
 task. Still open, same as before.
 
+## R2.8 — Creature bed
+`tests: test_build_catalogue` — 362/362 green, headless, before and after.
+A `pal_bed` entry in `data/items/buildables.json`, placed generically by the
+existing `build_piece.gd` the same way `floor`/`wall`/`door`/`roof`/`fence`
+already are — no new code, matching the item's own scope (`model: sonnet`,
+one test named, no interaction/state). Uses the Fantasy Props MegaKit's
+`Bed_Twin1.gltf`, staged into `assets/props/quaternius_fantasy/` for this
+item (its three trim texture sets were already present from `Workbench`, so
+only the model's own `.gltf`+`.bin` were new — see `docs/ASSET_LEDGER.md`).
+Deliberately a different specific mesh from `assets/props/quaternius_
+furniture/BedTwin.obj`, which is already the player's own bedroll/Grandpa's
+bed, so a placed pal bed doesn't read as a duplicate of furniture already in
+the game.
+
+**Deferred on purpose, matching `R2.7`'s workbench precedent**: `GAME_DESIGN.
+md`'s full brief (revives a fainted pal, one bed per owned pal, pals visibly
+resting) needs the fainting/recovery system (`R4.8`, unbuilt) and is not this
+item's job — today this is a physical marker a player can place, same as
+`R2.7`'s workbench before its Rootstone gate exists.
+
+Visual-affecting (a new 3D model): rendered two frames with a new purpose-
+built capture (`tools/capture_pal_bed.gd`, the same standalone-stage pattern
+`capture_build_pieces.gd` used for `R2.6`) and ran a genuine blind
+`Agent`-tool sub-agent against `docs/reference/`, no hint of what changed.
+One round, converged clean: **A (belongs in the keyart world) — yes. B
+(reads as the same kind of game as the Palworld bar) — yes.** Two named
+defects, both inherent to the sourced mesh rather than a scene/config lever
+this item's own scope (a JSON catalogue entry, no code) can reach: the
+blanket's flat teal material reads as an unfinished shader rather than dyed
+cloth, and the footboard's scalloped cutout is visibly lower-poly/faceted
+than the rest of the piece. Not chased further — same class of accepted
+asset-level ceiling as `R2.6`'s own residual gaps, and the pass already
+cleared both bar questions.
+
+## R2.7 — Workbench and storage container (bookkeeping only — the code already shipped, this entry was missing)
+`commits: 188853c (R2.7: workbench and storage container), 483b4a8 (R2.7 fixup: test_storage.gd -- explicit int type instead of := on a call through a RefCounted-typed variable)`
+Both already on `main` before this firing started; a prior firing shipped the
+code but never moved this item out of `BACKLOG.md` or recorded it here — found
+while scanning for free-area work (`economy`'s lease was 47 minutes stale and
+its named branch, `ralph/R2.7`, no longer exists, which is consistent with a
+ship-then-delete rather than an in-flight task). Verified rather than trusted:
+ran the full local unit suite headless on current `main` before writing this
+entry — 362/362 green, including all 8 `test_storage.gd` cases (deposit/
+withdraw, partial-fit-leaves-remainder, chest independence from the player
+satchel, no-op on zero/negative amounts, and the explicit "never a creature
+id" assertion). Two new `data/items/buildables.json` entries (workbench,
+storage), `scripts/world/storage_state.gd` (pure-logic `RefCounted` wrapping
+a second `Inventory` instance), `scripts/build/storage_container.gd`
+(camp.gd-style placement + interaction) and `scripts/ui/storage_panel.gd`
+(two-column transfer screen). Repair stays free/backpack-only per `R2.2`'s
+own note; the workbench itself is a placed object with no gated upgrade yet
+(`SD18`/Rootstone is the future gate).
+
 ## EV4-textures-lighting-remainder — Five mechanisms ruled out with direct evidence; the dark near-camera patch survives all of them. No code shipped — the findings are the deliverable, same pattern as EV3-remainder-6.
 `tests: none (visual)` — no code changed; every experiment below was reverted.
 `data/config/terrain_playground.json` and `data/config/art.json` are both

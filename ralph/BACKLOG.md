@@ -1410,13 +1410,11 @@ gaps (door not in a cut wall opening, wall/roof palette mismatch) are
 the concrete next lever (`Wall_Plaster_Door_Flat`) for whoever picks this
 back up.
 
-### R2.7 — Workbench and storage container
-`model: sonnet` · `tests: test_storage` (new)
-Storage holds **items**. It is never creature storage. Five, ever.
-The workbench upgrade is a Rootstone sink (spec §3 Band 2, `SD18`).
+**`R2.7` (Workbench and storage container) shipped — see `DONE.md`.** Bookkeeping
+gap: the code landed on `main` (`188853c`, `483b4a8`) before this entry was
+ever moved here; recorded after verifying 362/362 tests green on current `main`.
 
-### R2.8 — Creature bed
-`model: sonnet` · `tests: test_build_catalogue`
+**`R2.8` (Creature bed) shipped — see `DONE.md`.**
 
 ### R2.9 ▶ Play gate — does building a small home feel useful and enjoyable?
 §33 criteria 6 and 7.
