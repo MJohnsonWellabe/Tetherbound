@@ -120,6 +120,73 @@ this doesn't touch creature/save data so `smoke_art`/full-suite don't apply.
 Recorded as **partial**, not done: `OF4-remainder` (`BACKLOG.md`) carries
 the actual blind-verification step forward, unbudgeted, under the project's
 normal no-cap rule.
+## OF4 (final) — Stronghold silhouette rebuilt from toy-castle to fortified complex; converged at 6 blind rounds without fully clearing "toy," remainder split out
+On `ralph/OF4`, rebased onto the concurrent round-1 surface pass (entry
+below) after both landed on the same branch within the hour: the two OF4
+sessions ran in parallel without knowing of each other. This pass's
+`landmark.gd` massing rebuild REPLACES round 1's surface treatment (which
+was authored against the old four-cylinder geometry and self-reviewed
+only, under an owner-directed cap its own entry records); round 1's
+human-scale `silhouette-approach` viewpoint in `capture_wayfinding.gd` is
+kept and merged alongside this pass's `silhouette-close` refit. Round 1's
+`OF4-remainder` (run the real blind pass, iterate to the stop rule) is
+exactly what this pass did, so it closes with this entry. Round 1's
+world-position masonry-course shader idea is genuinely good and is worth
+re-authoring against the NEW massing whenever a future pass wants a
+surface-detail axis — it was not blindly ported here because blending an
+unverified surface pass into a six-round-verified silhouette result would
+have unverified the result. `tests: none (visual)`; clean headless import
+verified. `model: fable` dispatch — this session was the Fable agent. The
+Agent tool does not exist in this environment (same gap as the `R7.2`
+blind-pass entry), so each blind critic was a fresh `claude -p` process
+given only the three rendered frames, the two references and the rubric —
+no knowledge of what changed, new process every round.
+
+**What shipped** (`scripts/world/landmark.gd`, full massing rebuild; the
+prior build was four round tapered cylinders in a 16m circle with a cone
+hat and a pedestal drum): gabled great-hall shoulder mass, dominant square
+keep with corner-post crown replacing the cone, all-square towers at three
+heights (round drums kept reading "smokestack"/"bulbous dome" once
+flat-filled — a silhouette with no shading turns curves into geology),
+varied-height crenellated curtain walls over a ~36m polygon, twin-towered
+gatehouse, lateral rampart descending the village-facing flank,
+near-vertical faceted terrace, coarse irregular battlements, and a
+view-independent world-Y luminance gradient (0.90..1.08) in the settled
+`unshaded`/`fog_disabled` shader. Footprint and every height were set
+against a measured terrain grid and ray-marched sightlines from both
+player eyes (from the path, terrain hides everything below ~23m local at
+the keep — walls, hall ridge and rampart are all placed against those
+numbers). `tools/capture_wayfinding.gd`'s `silhouette-close` eye pushed
+40m -> 70m because the rebuilt complex spans ~50m and the old eye repeated
+the point-blank failure its own comment warns about.
+
+**Round count: 6 blind rounds** (plus render-only self-passes between).
+Movement was real: round 1 first impressions "witch's hat / chess rooks /
+standing stones"; round 6 close frame "twin castle towers — fortress is
+the immediate read," and the round-5 complaint (battlement teeth too fine
+at 60m) measurably moved (teeth 1.7-2.8m -> 2.6-4.0m, step 4.6 -> 6.2) and
+was not re-named. **Stopped per the convergence rule**: rounds 5 and 6
+named no new addressable defect — remaining complaints were (a) the bare
+dune-like rise dominating the from-square frame (terrain scope, 4 of 6
+critics' single biggest fix — now `OF4-remainder-mound` in `BACKLOG.md`),
+(b) direct reversals of earlier rounds' accepted fixes (round 2 "thicken
+the towers, close the notch" vs round 6 "elongate the towers, open a sky
+gap" — oscillation at a taste boundary), and (c) the flat-fill fusion
+from the path's low eye, which is structural — with unshaded fill and
+crest occlusion you cannot have both visible connecting walls and sky
+gaps from every bearing (the standing-stones-vs-walls tradeoff R7.1
+already adjudicated). So the item's literal bar ("no longer names
+toy-like or equivalent") is NOT fully cleared — round 6 still said
+"sandcastle" for the 170m frame — and this entry says so plainly rather
+than claiming a pass. The ceiling evidence is recorded in `BLOCKED.md`
+("OF4 silhouette ceiling"); the terrain half became
+`OF4-remainder-mound`.
+
+Two pre-existing, non-landmark things critics kept flagging, for whoever
+owns them: the lone rock prop on the rise's west slope reads as "a stray
+blob / disconnected floating chunk" from the square (two independent
+critics), and the `day` sun disc sits directly beside the tower in the
+`silhouette-close` frame, muddying the one shape-legibility view.
 
 ## OF2 — Item-target picker for consumables; party reorder found already built
 `b6655da` (+ `1bc2f7f` .uid sidecar fix, `41498a6` footer fix) on `ralph/OF2`.

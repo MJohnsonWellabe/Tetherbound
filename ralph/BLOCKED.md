@@ -6,6 +6,45 @@ design decision rather than inventing one.
 
 ---
 
+## OF4 silhouette ceiling — primitives + unshaded have a measured limit on "gravitas," and the last step needs the Phase 8e asset or an owner call
+
+`OF4` (2026-08-12, six blind rounds, shipped on `ralph/OF4`) moved the ridge
+silhouette from "witch's hat / chess rooks / standing stones" to a shape
+every critic now parses in fortress vocabulary — but the 170m from-square
+frame still drew "sandcastle," and rounds 5-6 converged with nothing
+addressable left in `landmark.gd`'s toolkit. Three walls, with evidence:
+
+1. **The rise, not the landmark** — 4 of 6 critics' single biggest
+   from-square fix was the bare dune-like mound. That half is actionable
+   now and became `BACKLOG.md`'s `OF4-remainder-mound` (terrain scope).
+2. **Flat-fill fusion** — from the path's low eye, terrain hides
+   everything below ~23m local (ray-marched, not guessed), and an
+   `unshaded` silhouette fuses whatever overlaps. Critics alternately
+   asked for sky gaps between towers (reads "standing stones" — R7.1's
+   settled finding) and for connected wall bulk (reads "one fused crag").
+   Both cannot hold from every bearing with a flat fill; rounds 2 and 6
+   literally prescribed opposite fixes for the close frame.
+3. **Silhouette language vs the key art** — one critic observed the
+   keyart's Meadows Hall is wide/low/sprawling while a wayfinding
+   landmark on this crest must be tall to survive the crest cut, so the
+   170m promise and the direction-board destination don't share a
+   language. That is a real design question, and it lands exactly where
+   the standing gate already is: the "iconic Stronghold centerpiece" is a
+   Phase 8e Meshy hero asset (`15_Legendary_Tether_Machine.png` board,
+   gated in this file), and `landmark.gd`'s own header has always said
+   the stronghold's real presentation is judged on real art, not this
+   placeholder.
+
+**What would clear it:** `OF4-remainder-mound` landing (cheap, now), and
+either the owner accepting the current placeholder read until Phase 8e
+replaces it with the real asset, or an owner call to trade wayfinding
+consistency for atmosphere (the settled `unshaded`/`fog_disabled` opt-out
+is the other lever critics keep reaching for — "hazed into the distance"
+— and reversing it was already tried and reverted twice; see
+`landmark.gd`'s TOWER_COLOUR history).
+
+---
+
 ## ✅ RESOLVED — the loop can push again
 
 **This entry is retracted as of the R0.3.5 fix.** The two earlier firings that

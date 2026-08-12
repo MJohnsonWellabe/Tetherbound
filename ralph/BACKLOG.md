@@ -46,31 +46,32 @@ runner; (2) the on-screen keyboard for text entry needs a real usability
 pass (layout, controller navigation, backspace/confirm affordances). This is
 the tutorial's front door — both bugs are first-impression breaking.
 
-**`OF4` round 1 (masonry/weathering surface treatment on the stronghold
-silhouette) shipped, partial — see `DONE.md`.** Real, verified improvement;
-did not clear the item's own done-when because no genuine blind critic ran
-this round — see `OF4-remainder` below for why and what's left.
+**`OF4` shipped in two concurrent rounds — see `DONE.md` for both.** Round 1
+(masonry/weathering surface pass, self-reviewed under an owner-directed
+token cap) opened an `OF4-remainder` requiring the real blind-verified
+pass; the full `model: fable` dispatch then ran that pass — six blind
+rounds, full massing rebuild — which satisfies that remainder's done-when
+(critic ran, iterated to the two-flat-rounds stop), so it is closed rather
+than re-listed. What the six rounds could NOT clear splits into
+`OF4-remainder-mound` below (terrain, actionable now) and `BLOCKED.md`'s
+"OF4 silhouette ceiling" entry (design/asset question, lands with Phase
+8e).
 
-### OF4-remainder — Blind-verify the stronghold silhouette's surface pass, iterate if needed
-`model: fable` (dispatch) · `area: terrain`
-`OF4` round 1 replaced the silhouette's flat, mathematically-uniform surface
-(one colour, identical merlons, low-facet towers — the actual source of the
-owner's "toy" read, since the massing and long-range colour were already
-blind-verified by `R7.1-visual-remainder`/`R9.4`) with world-position-keyed
-masonry courses, weathering, irregular battlements and rubble at the base.
-Rendered via `tools/capture_wayfinding.gd` (now with a new human-scale
-`silhouette-approach` viewpoint) and reviewed directly by the shipping
-firing, not by a blind sub-agent — an explicit, owner-directed scope cut to
-cap token spend on this round, not an oversight. The direct review reads it
-as a real improvement (coursed stone with value variation and weathering,
-not a flat moulded-plastic read) but conventions.md's blind-pass rule for
-visual-affecting work is still open. Done when: a genuinely blind critic
-(fresh sub-agent, `.claude/skills/visual-judge` or the same targeted
-question `R7.1-visual`'s rounds used) is shown the current
-`shots/wayfinding/silhouette-*.png` frames and confirms the toy-like read is
-gone — or, if it still finds a toy-like defect, iterate per the normal
-no-cap/two-flat-rounds-stop rule (no further token-budget cut applies to
-this remainder).
+### OF4-remainder-mound — The rise under the stronghold reads as a bare dune and shrinks the landmark
+`area: terrain` · replaces `OF4` (shipped on `ralph/OF4` — see `DONE.md`
+for the six-round history and `BLOCKED.md`'s "OF4 silhouette ceiling"
+entry for what geometry alone could not clear). Four of six blind critics
+named the SAME single biggest from-square fix, and it is not the landmark:
+the rise is "a smooth, round, bald grass/tan mound... a spoil heap or
+beach dune," with no rock outcrop, strata, vegetation break or any scale
+reference on its slopes, so the fortress on top reads as a garden ornament
+however it is shaped ("a castle on a golf bunker"). Done when the rise's
+visible faces from the village square and the Rise path carry real
+scale-givers (outcrops/boulders/tree line — the existing rock family, not
+new assets) and a blind pass at those two vantages stops naming the mound
+as the dominant wrong-scale shape. Note the pre-existing lone rock prop on
+the west slope was independently flagged by two critics as "a stray blob /
+floating chunk" — reposition or cluster it as part of this work.
 
 ### OF5 — Running and walking look unnatural
 `model: fable` (dispatch) — a "does this look right" call, distinct from the
