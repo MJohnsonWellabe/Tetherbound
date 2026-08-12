@@ -26,6 +26,7 @@ const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
+const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 
 ## SA7: on `paths.routes`' "toward the rocky rise" leg (`[10,-10] -> [45,-22]`,
@@ -74,6 +75,7 @@ const SPAWN_CLEARANCE := 2.0
 
 var _terrain: Node3D = null
 var _vegetation: Node3D = null
+var _spawn_position: Vector3 = Vector3.ZERO
 
 
 func _ready() -> void:
@@ -121,7 +123,7 @@ func _ready() -> void:
 	_dress_the_meadow()
 	BOOT_LOG.line("playground: vegetation scatter built (instance/batch count above)")
 	_build_settlement()
-	BOOT_LOG.line("playground: settlement (house, village, signpost, landmark, harvest nodes) built")
+	BOOT_LOG.line("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
 	_capture_mouse_if_free()
 	get_window().focus_entered.connect(_capture_mouse_if_free)
 	_report_for_export_check()
@@ -499,6 +501,12 @@ func _build_settlement() -> void:
 	landmark.call("build", self)
 
 	_build_road_gate()
+
+	var perimeter: Node3D = WORLD_PERIMETER.new()
+	perimeter.name = "WorldPerimeter"
+	add_child(perimeter)
+	perimeter.call("build", self, _player, _spawn_position)
+
 	_place_harvest_nodes()
 
 	var placer := BUILD_PLACER.new()
@@ -602,6 +610,7 @@ func _place_player() -> void:
 		return
 
 	_player.global_position = Vector3(spawn.x, ground + SPAWN_CLEARANCE, spawn.z)
+	_spawn_position = _player.global_position
 	if _camera_rig != null and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", _player)
 	print("[playground] spawned at %.1f, %.1f, %.1f" % [

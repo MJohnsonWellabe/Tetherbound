@@ -179,11 +179,106 @@ func _run() -> void:
 		print("        but never below the terrain surface — a steep slope or a fall down")
 		print("        one, not missing collision. Deepest below surface: %.2fm." % below)
 
+	await _check_perimeter(world, player, failures)
+	await _check_kill_volume(world, player, failures)
+
 	print("")
 	if failures.is_empty():
-		print("traversal: OK — the ground is solid across the playground.")
+		print("traversal: OK — the ground is solid across the playground, the perimeter holds, and the kill volume returns a fallen player to spawn.")
 		quit(0)
 	else:
 		for line in failures:
 			print("traversal FAIL: %s" % line)
 		quit(1)
+
+
+## SA3: eight compass bearings, each walked from just inside the ring toward
+## it, each expected to be stopped by something the player can see — not
+## walked from the true centre, which would also have to clear the village
+## and the rises this test's own header already avoids for the same reason.
+const PERIMETER_RADIUS := 235.0
+const PERIMETER_START_RADIUS := 200.0
+const PERIMETER_BEARINGS := 8
+## ~35m of gap between the start radius and the ring at this playground's
+## walk speed (5.0 m/s, data/config/movement.json) is ~7s / 420 frames;
+## this leaves comfortable room to actually reach and settle against
+## whatever stops the player without paying for 900+ unused frames eight
+## times over.
+const PERIMETER_WALK_FRAMES := 600
+## Wall/fence/hedge/rock thickness plus the player capsule's own radius plus
+## a little settle slack — comfortably outside this and the ring leaked.
+const PERIMETER_LEAK_MARGIN := 25.0
+
+
+func _check_perimeter(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	var camera_rig: Node3D = world.get_node_or_null(^"CameraRig") as Node3D
+	if camera_rig == null:
+		failures.append("no CameraRig in the scene; cannot aim the walk to test the perimeter")
+		return
+
+	for i in PERIMETER_BEARINGS:
+		var angle := i * TAU / PERIMETER_BEARINGS
+		var outward := Vector3(cos(angle), 0.0, sin(angle))
+		var start_xz := outward * PERIMETER_START_RADIUS
+		var ground: float = float(world.call("ground_height_at", start_xz.x, start_xz.z))
+		if is_nan(ground):
+			failures.append("bearing %d (%.0f°): no ground at the test start point %.0f, %.0f" % [
+				i, rad_to_deg(angle), start_xz.x, start_xz.z
+			])
+			continue
+
+		player.global_position = Vector3(start_xz.x, ground + 1.0, start_xz.z)
+		player.velocity = Vector3.ZERO
+		# Vector3(0,0,-1) is player_controller.gd's own "forward" input
+		# direction before the camera's planar_basis rotates it — see
+		# `_apply_movement()`. Deriving the yaw from the engine's own
+		# `signed_angle_to` rather than hand-deriving the rotation's sign
+		# convention is what makes this match the real game exactly.
+		camera_rig.set("yaw", Vector3(0.0, 0.0, -1.0).signed_angle_to(outward, Vector3.UP))
+		for i2 in 10:
+			await physics_frame
+
+		Input.action_press("move_forward")
+		for i2 in PERIMETER_WALK_FRAMES:
+			await physics_frame
+		Input.action_release("move_forward")
+		for i2 in 20:
+			await physics_frame
+
+		var final_pos := player.global_position
+		var distance := Vector2(final_pos.x, final_pos.z).length()
+		print("  bearing %3.0f°: walked to %6.1f, %6.1f  (%.0fm from centre)" % [
+			rad_to_deg(angle), final_pos.x, final_pos.z, distance
+		])
+		if distance > PERIMETER_RADIUS + PERIMETER_LEAK_MARGIN:
+			failures.append("bearing %.0f°: reached %.0fm from centre, past the %.0fm ring with margin — the perimeter leaked" % [
+				rad_to_deg(angle), distance, PERIMETER_RADIUS
+			])
+		if final_pos.y < THROUGH_THE_FLOOR:
+			failures.append("bearing %.0f°: fell through the world while testing the perimeter (y=%.0f)" % [
+				rad_to_deg(angle), final_pos.y
+			])
+
+
+## SA3's failsafe: a player placed inside the below-world kill band should be
+## returned to spawn, not left to fall forever.
+const KILL_SETTLE_FRAMES := 30
+
+
+func _check_kill_volume(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	var kill_volume: Node = world.get_node_or_null(^"WorldPerimeter/KillVolume")
+	if kill_volume == null:
+		failures.append("no WorldPerimeter/KillVolume in the scene; the below-world failsafe is missing")
+		return
+
+	player.velocity = Vector3.ZERO
+	player.global_position = Vector3(0.0, -120.0, 0.0) # inside the kill band, see world_perimeter.gd
+	for i in KILL_SETTLE_FRAMES:
+		await physics_frame
+
+	var after := player.global_position
+	print("  kill volume: player now at %.1f, %.1f, %.1f" % [after.x, after.y, after.z])
+	if after.y < THROUGH_THE_FLOOR:
+		failures.append("kill volume did not return the player to spawn (still at y=%.0f after %d frames)" % [
+			after.y, KILL_SETTLE_FRAMES
+		])
