@@ -606,16 +606,20 @@ swapped for symbol-only alternatives and a larger base size).
 `DONE.md`.** A round-3 blind-judge finding (item quantity vanishing off
 longer item names, e.g. "Small Potion" showing no held-count at all) found
 stranded on an abandoned, never-merged branch and finished/shipped by a
-later firing. Does not touch the re-skin itself — still open below.
+later firing. Does not touch the re-skin itself — see `EV9-panel-reskin`
+below.
+
+**`EV9-panel-reskin` (inventory grid + crafting panel re-skin, plus the
+crafting screen's missing primary-action button) shipped — see `DONE.md`.**
+This entry's own "still open" bullet below was stale: `tab_backpack.gd` and
+`tab_build.gd` were already wrapped in `menu_tab.gd`'s shared dark/teal
+`_panel()`/`_style_slot()` language by the time this was picked up — the
+reskin itself had shipped without ever being recorded here or getting the
+required blind-judge pass. Ran that pass for real; it confirmed the panel
+language and found one genuine gap the fix above closes.
 
 **Still open — do NOT re-scope these as a separate item, they are this
 item's remainder:**
-- Inventory grid (`tab_backpack.gd`) and crafting panel (`tab_build.gd`)
-  re-skin onto the same dark/teal panel language. Both are fully functional
-  today, just unstyled — see the survey any EV9 firing should re-read before
-  starting (search `ralph/DONE.md` for "EV9" or read this entry's own
-  history) for the exact API surface (`Game.inventory`, `Game.items`,
-  `revision` polling, `menu_tab.gd` contract) `smoke_menu.gd` depends on.
 - ~~The "[X] / [E]" input-glyph replacement...~~ **Tracked as `HD1`,
   Phase -0.85 — narrowed, not closed, by this item's second slice above.**
   Still needs the last-used-input-device tracker (no "joypad merely

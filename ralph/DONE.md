@@ -3,6 +3,76 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV9-panel-reskin — Inventory grid + crafting panel re-skin, plus a real blind pass and one genuine fix
+`tests: smoke_menu` green (336/336 full suite also run locally, headless)
+
+**The reskin itself was already shipped before this firing started.**
+`tab_backpack.gd` and `tab_build.gd` were both already wrapping their
+content in `menu_tab.gd`'s shared dark blue-gray/teal `_panel()`/
+`_style_slot()` helpers — the same language `playground_hud.gd` established
+for the exploration HUD — and `tools/capture_menu_panels.gd` already existed
+with a header describing this exact reskin in the past tense. None of that
+was ever recorded in `BACKLOG.md`/`DONE.md`, and the required blind-judge
+pass (`conventions.md`'s "visual-affecting work needs a blind pass, not a
+look") had never actually been run — the loop had a real gap between "code
+shipped" and "verified and recorded," not a missing feature.
+
+Closed that gap for real this pass:
+
+1. Rendered both screens fresh (`xvfb-run` + `--rendering-driver opengl3`,
+   no `--headless`, per `RENDER-PERF-DIAG`'s fix) and dispatched a genuine
+   blind sub-agent against them and the bible's §16 Inventory/Crafting
+   target lists (no reference photo exists for UI, same as prior EV9
+   rounds — judged against the written bible criteria instead).
+2. The critic confirmed `menu_backpack.png` "reads as a coherent,
+   intentional game UI" outright. It named `menu_build.png` as falling
+   short on the one bullet unique to the bible's Crafting target list
+   (not Inventory's): "clear primary action button" — nothing on screen
+   read as a discrete, stateful control; only plain status text.
+3. Fixed that specific gap: `_detail_status` is now wrapped in a rounded,
+   bordered pill (`scripts/ui/tab_build.gd`) that recolours green/teal
+   when the selected recipe is affordable and red when it's short, so it
+   reads as a real button with visible state. Deliberately **not** a
+   second focusable `Control` — pressing the already-focused recipe row
+   is still the build verb, unchanged, matching every other tab in this
+   menu, so this cannot regress controller focus navigation (confirmed:
+   `smoke_menu.gd` still passes clean, focus-neighbour behaviour
+   untouched).
+4. Re-rendered both the short and the affordable state (temporarily
+   bumping the capture tool's staged stone count, reverted before
+   committing) to confirm both pill colours actually render as intended
+   before calling it done, not just reasoning about the code.
+
+**Two other findings from the same critic round, deliberately NOT
+actioned, both out of scope for a "reskin the tab content" item:**
+- The pause menu's own outer shell (`scenes/ui/menu_theme.tres`, driving
+  `game_menu.gd`'s frame/tabs/buttons) uses a darkened Meadows-palette/gold
+  colour scheme predating the blue-teal HUD language `playground_hud.gd`
+  later established for the exploration HUD and tab content panels — a
+  real, confirmed inconsistency between the modal's outer chrome and its
+  inner panels, but a menu-wide theme change with high blast radius (every
+  tab, every button) that deserves its own scoped item rather than a
+  scope-creep fix mid-task.
+- `menu_backpack.png`: `Small Potion` and `Fiber` render in the same green
+  — a per-item `colour` collision in `data/items/items.json`, a data/content
+  question, not a panel-styling one, and pre-existing (unrelated to this
+  reskin).
+
+Neither blocks anything; recorded here so the next firing that touches
+either doesn't have to re-discover them.
+
+`10bdc8e` (`scripts/ui/tab_build.gd` only; `ralph/EV9-panel-reskin`).
+
+**Unrelated pipeline maintenance done in the same firing, before this item
+was picked up:** `ralph/R2.4` had hit `ship_branch.sh`'s 3-rebase cap
+("needs a human") after two rounds of heavy multi-lane contention — did the
+one clean manual rebase (`git rebase origin/main`, no conflict this time),
+re-ran the full suite (336/336) and `test_recipes.gd` locally, and
+force-with-lease pushed; it landed clean on the next CI run. Also swept up
+one stray untracked `.uid` sidecar (`tests/test_durability.gd.uid`, left by
+`R2.2`'s import pass) via a small dedicated branch, same pattern
+`LP-uid-hygiene` established.
+
 ## EV4-textures-lighting-remainder — Ran the genuine blind pass this item was missing; verdict unchanged, remainder rescoped off `lighting`
 `tests: none (visual)` (item's own field; no code changed)
 
