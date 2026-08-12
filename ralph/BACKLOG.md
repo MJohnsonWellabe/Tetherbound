@@ -584,30 +584,36 @@ house ×2, the well as the square's marker) and stopped. Still open:
 - **Ranger station** — compact functional building; no site for it exists in
   the slice's geography yet, and inventing one mid-rebuild would have been a
   site-plan decision made for silhouette's sake.
-- **Grandpa's house as modules.** `EV6` judged it against the family as its
-  brief required: geometry stays (the opening's markers, stairs, camera
-  profile and door gate live in its dimensions — see `grandpa_house.gd`'s
-  headers), materials were reskinned onto the kit's own texture sheets, which
-  closed the palette gap in every exterior frame. What a reskin cannot fix:
-  box massing beside genuinely modelled kit neighbours, and the wood-trim
-  ATLAS reading as patchwork on wide flat bands close up (`01-farmhouse` at
-  yard range). The real fix is rebuilding the shell from kit modules while
-  keeping every marker contract — a careful, opening-coupled job that was
-  wrong to rush at the end of a rebuild pass.
+- ~~**Grandpa's house as modules.**~~ **Shipped by the EV6 follow-up pass**
+  (see `DONE.md` §EV6): the exterior is now the `farmhouse_shell` prefab —
+  brick ground course, timber-grid upper course, kit windows, `6x10`
+  round-tile roof — through the same composer as every other building, with
+  every marker contract kept (the kit's 4m/6m roof spans fixed the footprint
+  at 10×6, so the interior went from 9×7 to ~9.4×5.4; `smoke_opening` walks
+  the new lanes green).
 - **Judge-harness note for whoever runs the next visual pass on this area:**
-  this pass's three rounds were the skill's rubric applied strictly by the
-  implementing firing — the environment had no sub-agent tool, so a
-  genuinely BLIND critic was structurally unavailable (recorded in
-  `DONE.md`). If your firing has the Agent tool, re-run the pass blind
-  before extending the settlement; treat any new finding as round 1 of your
-  own pass, not round 4 of this one.
+  a genuinely blind critique of the settlement (external, no Agent tool in
+  either EV6 firing's environment) confirmed the pre-follow-up farmhouse as
+  a family split and has NOT yet re-judged the rebuilt one — the follow-up
+  pass's own strict-rubric read is recorded in `DONE.md`, but treat the next
+  real blind pass's findings as round 1.
 - Small named leftovers, cheap once someone is in the area: the well's
   RockTrim dressing still reads cool in shadow after a warm multiply (a
   texture-level fix, or leave until lighting work); `cottage_b`'s downhill
   border skirt still shows a shelf-shadow on the flat's smoothstep skirt (a
-  small terrain flat at [21,-14] would end it); the furniture pack renders
-  near-black indoors (pre-existing, visible in `07-farmhouse-interior`,
-  never `EV6` scope).
+  small terrain flat at [21,-14] would end it); every building's border
+  skirt meets the grass as a hard grey edge rather than a soil transition
+  (the blind pass named it settlement-wide; needs a ground-blend treatment,
+  not a per-building fix); the furniture pack renders near-black indoors
+  (pre-existing, visible in `07-farmhouse-interior`, never `EV6` scope —
+  **root cause found by the follow-up pass**: the pack's `.mtl` files carry
+  Blender's LINEAR-space `Kd` values, e.g. Table's DarkWood `Kd 0.106
+  0.065 0.031` ≈ `#5e4732` intended but ≈ `#1b1008` as rendered, so every
+  piece reads as an unlit silhouette; the fix belongs at import for the
+  whole pack, not per-room). The blind pass also flagged village NPCs
+  reading flat-black in exterior frames — partly the same class (dark
+  palette tints under `NP2`'s emission-tint pipeline); `lane: npc`, not
+  village work.
 
 **`EV7` (a first slice: work area and farmhouse yard) shipped — see `DONE.md`.**
 Two of the bible's five named clusters. `bridge repair site`, `quarry station`
