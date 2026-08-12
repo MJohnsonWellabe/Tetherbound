@@ -191,9 +191,9 @@
       },
       "_comment_verge_of12": "OF12 round 2: a few real shrubs in the fringe give it height variety -- a verge of only ankle tufts still reads mown. Deliberately few. TUNABLE.",
       "verge": {
-        "count": 45,
+        "count": 55,
         "inner": 2.0,
-        "band": 5.0
+        "band": 12.0
       },
       "max_slope_deg": 27.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). Bushes reach nearer the waterline than trees but stay dry. TUNABLE.",
@@ -221,7 +221,7 @@
       "_comment_strays": "R7.1-remainder round 3: cut from 2000. Round 2's blind critic named the actual problem precisely -- 'near-regular intervals with large uninterrupted gaps... no clustering' -- and 2000 strays spread uniformly across the whole 512m map is a fifth of this layer's instances filling in exactly the gaps between clumps that were supposed to read as clearings. Fewer strays lets the clumps themselves read as denser, clustered patches with real clear ground between them, which is the actual ask (clustering, not raw count).",
       "strays": 900,
       "_comment_path_edge_jitter_ev3_remainder_2": "EV3-remainder-2: see scatter_rules.gd's own comment and bushes' matching entry above -- the village well is where four routes converge, and every ground-cover layer's exclusion edge fans out from it together. TUNABLE.",
-      "path_edge_jitter": 0.35,
+      "path_edge_jitter": 0.5,
       "_comment_path_standoff_of12": "OF12: replaces path_avoid_radius 6.0, the constant exclusion circle. Holding every tuft exactly 6m off the centreline gave the meadow a ruler-straight inner edge at the same offset on BOTH sides of every path -- which is the 'two nearly straight bands flanking the path' read itself, not a cure for it; five tuning rounds of constant distances (EV3-remainder..-6) never moved that verdict. The standoff now drifts 0.3-7m with ~17m-wavelength position noise, per side of the path independently (scatter_rules.gd::path_standoff_at), so grass crowds the worn edge in one stretch and stands back in the next. min stays near zero on purpose: the path_factor gate already keeps the worn dirt itself clear. TUNABLE.",
       "path_standoff": {
         "min": 0.3,
@@ -231,9 +231,9 @@
       },
       "_comment_verge_of12": "OF12 round 2: a blind critic on the standoff-only build named the verge beside every path 'the baldest ground in the frame, when it should be the densest' -- with the constant exclusions gone, nothing GREW near the routes either (this stretch of map has almost no grass clumps by seed). The fringe strings extra tufts along the routes by arc length, densest just off the dirt edge, and the standoff noise above culls it stretch by stretch -- see scatter_rules.gd::_place_verge for why that cannot become the planted border again. TUNABLE.",
       "verge": {
-        "count": 1500,
+        "count": 2400,
         "inner": 1.5,
-        "band": 4.5
+        "band": 18.0
       },
       "max_slope_deg": 30.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). Grass wades ankle-deep (0.2m) into the shallows -- was 0.5m, and a blind round read the deeper submerged tufts through the water as 'glass cards', an artifact not a marsh. TUNABLE.",
@@ -280,9 +280,9 @@
       },
       "_comment_verge_of12": "OF12 round 2: see grass's matching entry. Dry straw is the scruffy half of a real verge; slightly wider band than grass so the warm tone feathers further out. TUNABLE.",
       "verge": {
-        "count": 450,
+        "count": 700,
         "inner": 1.5,
-        "band": 5.5
+        "band": 20.0
       },
       "max_slope_deg": 30.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). Dry straw and standing water contradict each other; stays on the bank. TUNABLE.",
@@ -322,17 +322,17 @@
       },
       "_comment_verge_of12": "OF12 round 2: verge wildflowers, the classic path-margin plant. NOT the removed path_bias returning under a new name: path_bias anchored whole 78-instance clump discs to the centreline (a bed), while these are individual draws strung along the arc, thinned by the standoff noise per side, mixed in among the grass fringe. TUNABLE.",
       "verge": {
-        "count": 320,
+        "count": 340,
         "inner": 1.5,
-        "band": 3.5
+        "band": 14.0
       },
       "_comment_path_edge_jitter_ev3_remainder_2": "EV3-remainder-2: see scatter_rules.gd's own comment. Distinct from path_bias_jitter above -- that one displaces where a BIASED CLUMP'S CENTRE lands; this one ravels the exclusion edge every instance in every layer is tested against, biased or not. The village well is where all four routes converge, and flowers' own path_bias means more of this layer's instances sit right at that edge than most others.",
       "path_edge_jitter": 0.35,
       "max_slope_deg": 22.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). Flowers reach the waterline and stop. TUNABLE.",
       "min_height": -22.0,
-      "scale_min": 0.09,
-      "scale_max": 0.22,
+      "scale_min": 0.07,
+      "scale_max": 0.26,
       "clear_radius": 2.5,
       "base_scale": 1.0,
       "casts_shadow": false,

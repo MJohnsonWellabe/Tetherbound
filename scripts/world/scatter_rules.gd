@@ -194,9 +194,16 @@ static func _place_verge(
 		return
 	var count := int(verge.get("count", 0))
 	# `inner` starts the fringe at the dirt's own half-width, not the
-	# centreline, so the densest draws land right where mowing-by-traffic
-	# stops; `band` is how far the fringe reaches before ordinary meadow
-	# density takes over. Both TUNABLE per layer in vegetation.json.
+	# centreline; `band` is how far it reaches before ordinary meadow density
+	# takes over. The lateral draw is UNIFORM over [inner, inner + band] on
+	# purpose: the first cut weighted it toward the edge (`inner + band*r^2`)
+	# and a blind critic read the result exactly right — most survivors
+	# landed at one modal offset (wherever the standoff cull happened to sit
+	# in that stretch), printing "a run of tufts... same offset from the
+	# dirt, same rough spacing, in lockstep with the path". A uniform draw
+	# has no modal distance, so the fringe's density gradient comes only
+	# from the standoff noise, which varies. Both keys TUNABLE per layer in
+	# vegetation.json.
 	var inner := float(verge.get("inner", 1.5))
 	var band := maxf(float(verge.get("band", 4.0)), 0.0)
 	for i in count:
@@ -210,8 +217,7 @@ static func _place_verge(
 		var tangent := (segment_b[segment] - segment_a[segment]).normalized()
 		var along := segment_a[segment] + tangent * u
 		var side := -1.0 if rng.randf() < 0.5 else 1.0
-		var reach := rng.randf()
-		var spot := along + Vector2(-tangent.y, tangent.x) * side * (inner + band * reach * reach)
+		var spot := along + Vector2(-tangent.y, tangent.x) * side * (inner + band * rng.randf())
 		_consider(out, layer, field, models, spot, half, rng)
 
 
@@ -404,7 +410,13 @@ static func _consider(
 		var edge_jitter := float(layer.get("path_edge_jitter", 0.0))
 		var threshold := 0.3
 		if edge_jitter > 0.0:
-			threshold += rng.randf_range(-edge_jitter, edge_jitter)
+			# Floor at a small positive value: `path_factor` is exactly 0.0
+			# everywhere except the few metres around a route, so a jitter
+			# draw that pushes the threshold below zero rejects instances
+			# ACROSS THE WHOLE MAP, not just at the path edge — a silent
+			# global density cut that grew with the jitter. Found in OF12's
+			# round-2 blind pass chasing "the meadow is close to empty".
+			threshold = maxf(threshold + rng.randf_range(-edge_jitter, edge_jitter), 0.02)
 		if float(field.path_factor(spot.x, spot.y)) > threshold:
 			return
 
@@ -420,7 +432,8 @@ static func _consider(
 		var stream_jitter := float(layer.get("path_edge_jitter", 0.0))
 		var stream_threshold := 0.35
 		if stream_jitter > 0.0:
-			stream_threshold += rng.randf_range(-stream_jitter, stream_jitter)
+			# Same positive floor as the path gate above, same global-cull bug.
+			stream_threshold = maxf(stream_threshold + rng.randf_range(-stream_jitter, stream_jitter), 0.02)
 		if float(field.stream_factor(spot.x, spot.y)) > stream_threshold:
 			return
 
