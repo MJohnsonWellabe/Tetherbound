@@ -127,6 +127,67 @@ fails here, not just a check that one specific line is gone.
 Not visual-affecting (no model, texture, terrain or UI change — a single
 removed function call and a numeric assertion), so no blind-judge pass.
 
+## NP5 — Swap village NPCs onto the NP4 bases instead of recolored hero rigs
+`tests: smoke_opening, smoke_traversal, smoke_art` (all green, local headless) ·
+`1999d0c` (rebased forward as main moved; final SHA depends on
+`ralph-merge.yml`'s rebase).
+
+Pure data wiring, no code changes. `data/config/art.json`'s
+`villager_farmer`/`villager_keeper`/`villager_smith`/`villager_quarryman`/
+`villager_ranger` blocks each pointed `model:` at `NP4-rig`'s
+`villager_female_lod0.glb` or `villager_male_lod0.glb` instead of
+`grandpa_lod0.glb`/`trainer_lod0.glb`, keeping each villager's own existing
+`tint` unchanged so the square still reads as five distinct people. Heights
+nudged toward each base's own authored height (female 1.75, male 1.78,
+matching the exact values `NP4-rig` rigged them at) with the same small
+per-character variety the old heights carried. `character_model.gd`'s
+`model_yaw`/palette/fit mechanism needed no changes — confirmed by a
+standalone diagnostic render before touching `art.json` that the new bases
+face the camera correctly at `model_yaw: 0.0`, same convention as the
+trainer.
+
+Visual-affecting (new bodies in the village), so it got the required blind
+pass — but built `tools/capture_village_npcs.gd` (same standalone-stage
+pattern as `capture_npc_ranks.gd`, no `meadows_playground.tscn` dependency)
+rather than the survey tools, specifically to avoid the render-perf wall
+`EV4-textures-lighting-remainder`'s 2026-08-12 attempt hit and
+`RENDER-PERF-DIAG` was concurrently diagnosing on the full scene (this
+firing's lease note deferred both `EV4-textures-lighting-remainder` and
+`EV9`'s UI remainder for the same reason rather than duplicate that
+diagnosis — see `R9.4-remainder-6`'s entry above, which independently
+root-caused the wall as genuine per-frame cost under llvmpipe, ~1.16s/frame
+against the full 24,314-prop bake, not a hang). The standalone capture
+rendered in ~3-4s.
+
+Blind-judged with a genuine sub-agent (`Agent` tool, `general-purpose`),
+shown an unlabelled 7-body lineup — Grandpa, the trainer, and all five
+villagers side by side, no context about what changed or what was expected.
+It grouped bodies purely from what it saw and reported Grandpa and the
+trainer as each visibly distinct from every villager — neither grouped with
+any of the five as a shared body/rig. It also flagged, unprompted, that the
+existing single-tint mechanism collapses skin/hair/clothing to one flat hue
+on three of the five bases, which is a real legibility issue but is the same
+mechanism R7.2/NP3's villagers already used before this item and not
+something NP5 introduced or was scoped to fix.
+
+**One judgment call, flagged rather than silently made:** nothing in
+`village_npcs.json`, `art.json` or `data/dialogue/village.json` names a
+canonical gender for any of Mira/Oskar/Tam/Quarry Foreman/Rescued Ranger.
+Assigned by name convention where suggestive (Mira -> female) and by roster
+balance otherwise: Mira, Tam and Rescued Ranger on `villager_female`; Oskar
+and Quarry Foreman on `villager_male`. `Grunt` is deliberately unused here —
+`NP2`'s Team Tether ranks own that body, and this item's own text says to
+leave village assignments to Female/Male. Re-splitting is a one-line model
+swap per villager if the owner wants a different assignment, not a redesign.
+
+Did not separately re-verify R7.2/NP3's placement (structure/path
+clearance) math: the new bases' authored heights (1.75/1.78) are within
+0.07m of every height they replaced (1.75-1.82), `npc_body.gd`'s collision
+capsule radius is a fixed 0.36m independent of height, and `smoke_traversal`
+ran clean post-change — the clearance margins NP3's own comments recorded
+(several metres on every structure/path) have far more headroom than a
+7cm height delta could close.
+
 ## R9.4-remainder-6 — Root-caused why `survey_combat.sh` never completed
 `tests: none` (item's own field). `b81f2da` (rebased forward as main moved;
 final SHA depends on `ralph-merge.yml`'s rebase).

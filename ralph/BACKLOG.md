@@ -719,39 +719,11 @@ two flat attempts each per `conventions.md`'s stopping rule.
 **`NP4-rig` (rig, animate and install the three NP4 bases) shipped — see
 `DONE.md`.**
 
-### NP5 — Swap village NPCs onto the NP4 bases instead of recolored hero rigs
-`model: sonnet` · `tests: smoke_opening, smoke_traversal` · `area: npc`
-Owner directive, 2026-08-12: the game should stop the village reading as
-clones of the trainer and Grandpa. All five current villagers
-(`data/config/village_npcs.json`: Mira, Oskar, Tam, Quarry Foreman, Rescued
-Ranger) resolve their `config_key` to a block in `data/config/art.json`
-whose `model:` field points straight at `grandpa_lod0.glb` or
-`trainer_lod0.glb`, tinted — `villager_farmer`/`villager_quarryman` on
-Grandpa's rig, `villager_keeper`/`villager_smith`/`villager_ranger` on the
-trainer's. This was never a design choice so much as the only option: NP3's
-own comments cite "the spec's own 'Grandpa/generic civilian base'
-instruction" and "the spec's 'main-character base' fallback," both written
-before `NP4` gave the project any other human body to reuse.
-
-`NP4`/`NP4-rig` shipped exactly the fix — three separate, fully rigged and
-animated bodies (`assets/characters/villager_female/villager_female_lod0.glb`,
-`assets/characters/villager_male/villager_male_lod0.glb`,
-`assets/characters/grunt/grunt_lod0.glb`) — and per `docs/ASSET_LEDGER.md`'s
-own note, **nothing in the live game consumes them yet**. This item is only
-the wiring: re-point each villager's `art.json` block at the matching new
-base by gender (Grunt is `NP2`'s Team Tether ranks, not a village NPC — leave
-village assignments to Female/Male), keep each villager's own `tint`/palette
-so the square still reads as five distinct people, and re-run the R7.2-era
-placement checks (structure/path clearances) since the new bodies' heights
-and proportions differ from Grandpa's/the trainer's. Does **not** touch the
-trainer or Grandpa's own appearance — those stay exactly as they are; this
-is about who a background NPC is standing in for, not the hero rigs
-themselves. `NP1-geometry` (`BLOCKED.md`) is a separate, still-blocked
-question — real hair/accessory geometry for these same bases — and is not a
-dependency here; ship this with the bases' existing placeholder-primitive
-hair as-is. Done when: no village NPC's `model:` path resolves to
-`grandpa_lod0.glb` or `trainer_lod0.glb`, and a blind critic no longer
-describes any villager as looking like Grandpa or the trainer.
+**`NP5` (swap village NPCs onto the NP4 bases instead of recolored hero
+rigs) shipped — see `DONE.md`.** One judgment call flagged there rather than
+made silently: no source in the repo names a canonical gender for any of
+the five villagers, so the female/male base split went by name convention
+and roster balance.
 
 ---
 
