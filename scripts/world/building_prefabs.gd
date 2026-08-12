@@ -82,8 +82,17 @@ func set_template_holder(holder: Node3D) -> void:
 func _notification(what: int) -> void:
 	if what != NOTIFICATION_PREDELETE:
 		return
+	# `is_instance_valid()` must run BEFORE `is Node`, not after: `and` short-
+	# circuits left-to-right, so the old `template is Node and is_instance_
+	# valid(template)` order ran `is Node` on every template regardless of
+	# validity. Godot's `is` operator needs the object's live class info to
+	# answer that, which a freed instance no longer has — querying it throws
+	# "Left operand of 'is' is a previously freed instance" instead of the
+	# false a stale reference should quietly produce. `is_instance_valid()`
+	# is the one call in this pair documented safe to run on a freed
+	# reference, so it has to gate everything else.
 	for template: Variant in _templates.values():
-		if template is Node and is_instance_valid(template):
+		if is_instance_valid(template) and template is Node:
 			(template as Node).free()
 	_templates.clear()
 

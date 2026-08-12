@@ -25,24 +25,7 @@ after the roster was real). `model: haiku` when it is just screenshots.
 
 ---
 
-### R6-village-notification-freed-instance — SceneTree teardown throws a real freed-instance error in building_prefabs.gd
-`model: sonnet` · `tests: none` · `area: village`
-Found while blind-testing an unrelated change, reproduced on a clean, fresh
-`origin/main` checkout (commit `caf17a1`) via `tests/smoke_playground.gd`
-before assuming it wasn't a false positive. Every headless run that loads
-`meadows_playground.tscn` and then exits — every smoke test, every capture
-tool — prints `SCRIPT ERROR: Left operand of 'is' a previously freed
-instance` at `scripts/world/building_prefabs.gd:86`, inside the
-`_notification(NOTIFICATION_PREDELETE)` handler `EV6-crash-remainder` added
-this evening to fix a real exported-build SIGABRT (the same file's cached-
-template leak). Exit code stays 0 and every test still passes — it fires
-during `SceneTree` teardown, after the harness's own assertions already
-completed — so this is not blocking anything today, but it is a genuine
-freed-instance race (something in `_templates` gets freed twice, or read
-after being freed, during shutdown) in a file that has already caused one
-real crash this session. Worth a look before trusting that file's shutdown
-path is fully closed. Done when: a headless run of any smoke test or capture
-tool against the settlement no longer prints this SCRIPT ERROR.
+**`R6-village-notification-freed-instance` (the freed-instance SCRIPT ERROR in `building_prefabs.gd`'s teardown handler) fixed — see `DONE.md`.** A boolean-order bug (`is Node` ran before `is_instance_valid`, and Godot's `is` throws rather than returning false on an already-freed reference), not the genuine double-free the symptom suggested.
 
 ## Phase 0 — the owner played. This is the response.
 

@@ -133,6 +133,13 @@ does not disturb the opening flow.
 own contents (`storage_state.gd`'s independent `Inventory`) do not round-trip
 — only the chest itself does. `R3.1-remainder` in `BACKLOG.md`.
 
+## R6-village-notification-freed-instance — Fixed a real freed-instance error in building_prefabs.gd's teardown handler; a boolean-order bug, not a genuine double-free
+`tests: none` (item's own field) — verified with `tests/smoke_playground.gd` (the exact repro named in the item), `tests/smoke_opening.gd`, and the full suite (362/362, 49727 assertions).
+
+`_notification(NOTIFICATION_PREDELETE)`'s cleanup loop read `if template is Node and is_instance_valid(template):` — GDScript's `and` short-circuits left-to-right, so `template is Node` always ran first, on every entry in `_templates`, valid or not. Godot's `is` operator needs an object's live class info to answer, and querying that on an already-freed reference is exactly what throws `"Left operand of 'is' is a previously freed instance"` rather than quietly returning `false`. `is_instance_valid()` is the one call in this pair actually documented safe to run on a stale reference; it simply had to gate the other one, not follow it.
+
+Reproduced locally first (`smoke_playground.gd`, unmodified checkout): the SCRIPT ERROR printed every time, exit code still 0. Swapped the order — `if is_instance_valid(template) and template is Node:` — and reran the same command: gone, no error, `smoke: OK` unchanged. Not a genuine double-free needing a lifecycle redesign, just a defensive check written in the wrong order; the underlying `_templates` freeing logic (added by `EV6-crash-remainder` to fix a real exported-build SIGABRT) is otherwise sound and untouched.
+
 ## R9.4-remainder-9 — Get real combat frames, budgeting for the now-measured render cost
 `b3e6735` on `main`. `tests: none (visual)` — `tools/survey_combat.gd` only,
 no gameplay code touched.
