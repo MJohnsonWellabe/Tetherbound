@@ -14,16 +14,26 @@ extends Node3D
 ## precedent of a gate with no animation, its feedback carried by something
 ## else (there, the conversation; here, the panel's own re-pose plus a line
 ## of dialogue).
+##
+## EV6 moved the settlement's whole fence family from the farm pack's loose
+## `.obj` meshes to the Medieval Village MegaKit's `.gltf` modules (see
+## `building_prefabs.json`'s `fence_run`, which replaced the same
+## `Fence`/`Fence2` models this file used to load) but missed this file,
+## leaving it pointing at a model EV6 deleted. `Prop_WoodenFence_Single` is
+## the same segment `fence_run`'s own middle panel uses. A `.gltf` module is a
+## scene, not a bare mesh, so this now instantiates and measures its AABB the
+## way `props.gd::_place` does for every other kit-sourced scene, rather than
+## assigning a `Mesh` resource straight onto a `MeshInstance3D`.
 
-const BUILDINGS_DIR := "res://assets/buildings/quaternius_farm"
-const MODEL := "Fence2"
+const BUILDINGS_DIR := "res://assets/buildings/quaternius_medieval"
+const MODEL := "Prop_WoodenFence_Single"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 
 const KEY_ITEM_ID := "castle_gate_key"
 const LOCKED_CONVERSATION := "road_gate_locked"
 const UNLOCKED_CONVERSATION := "road_gate_unlocked"
 
-var _mesh: MeshInstance3D = null
+var _mesh: Node3D = null
 var _shape: CollisionShape3D = null
 var _prompt: Node3D = null
 var _lock: MeshInstance3D = null
@@ -34,7 +44,7 @@ var _open := false
 ## village.gd's own `_ground_height` uses, so this does not need a direct
 ## reference to playground_world.gd.
 func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
-	var path := "%s/%s.obj" % [BUILDINGS_DIR, MODEL]
+	var path := "%s/%s.gltf" % [BUILDINGS_DIR, MODEL]
 	if not ResourceLoader.exists(path):
 		push_error("road gate model missing: %s" % path)
 		return
@@ -46,19 +56,31 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	position = Vector3(at.x, ground - 0.05, at.y)
 	rotation.y = deg_to_rad(yaw_deg)
 
-	_mesh = MeshInstance3D.new()
+	var packed: PackedScene = load(path) as PackedScene
+	_mesh = packed.instantiate()
 	_mesh.name = "GateMesh"
-	_mesh.mesh = load(path)
 	add_child(_mesh)
 
-	var aabb: AABB = (_mesh.mesh as Mesh).get_aabb()
+	var meshes: Array[MeshInstance3D] = []
+	_collect_meshes(_mesh, meshes)
+	if meshes.is_empty():
+		push_error("road gate model has no mesh: %s" % path)
+		return
+	# Same root-local AABB derivation as props.gd::_place — the module may sit
+	# under an importer-added transform node, so this reads each mesh's
+	# GLOBAL transform (valid now that `_mesh` is parented into the tree) and
+	# un-does `_mesh`'s own transform, leaving bounds in `_mesh`'s local space.
+	var to_root_local: Transform3D = _mesh.global_transform.affine_inverse()
+	var aabb: AABB = to_root_local * (meshes[0].global_transform * meshes[0].get_aabb())
+	for i in range(1, meshes.size()):
+		aabb = aabb.merge(to_root_local * (meshes[i].global_transform * meshes[i].get_aabb()))
 
-	# A dark latch box at the panel's own centre. `Fence2` is decorative
-	# fencing everywhere else it's placed (village.json) — with no leaf,
-	# hinge or hardware of its own, one more length of it read as ordinary
-	# property fencing rather than as something deliberately shut, per the
-	# blind pass's own finding. A child of `_mesh` so it swings open with
-	# the panel rather than needing its own re-pose.
+	# A dark latch box at the panel's own centre. `Prop_WoodenFence_Single` is
+	# decorative fencing everywhere else it's placed (`fence_run`) — with no
+	# leaf, hinge or hardware of its own, one more length of it read as
+	# ordinary property fencing rather than as something deliberately shut,
+	# per the blind pass's own finding. A child of `_mesh` so it swings open
+	# with the panel rather than needing its own re-pose.
 	_lock = MeshInstance3D.new()
 	_lock.name = "Lock"
 	var lock_box := BoxMesh.new()
@@ -123,6 +145,13 @@ func _unlock() -> void:
 	# re-pose rather than an animation, this file's own header explains why.
 	_mesh.rotation.y += deg_to_rad(90.0)
 	_prompt.call("set_enabled", false)
+
+
+func _collect_meshes(node: Node, into: Array[MeshInstance3D]) -> void:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		into.append(node as MeshInstance3D)
+	for child in node.get_children():
+		_collect_meshes(child, into)
 
 
 ## Same lookup village_npcs.gd's `_on_greeted` uses: the "dialogue_panel"
