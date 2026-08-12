@@ -19,6 +19,7 @@ var _detail := FastNoiseLite.new()
 var _path_edge := FastNoiseLite.new()
 var _path_dominant := FastNoiseLite.new()
 var _outcrop := FastNoiseLite.new()
+var _relief := FastNoiseLite.new()
 
 
 func _init(config: Dictionary = {}) -> void:
@@ -100,6 +101,27 @@ func _init(config: Dictionary = {}) -> void:
 	_outcrop.frequency = float(_config.get("colour", {}).get("outcrop_jitter_frequency", 0.03))
 	_outcrop.fractal_octaves = 2
 
+	# EV4-hillside-seam-remainder-4: three colour/tint rounds all moved the
+	# paint without moving a blind critic's verdict — "two materials, not
+	# three; rock reads as a stain, not stone" — because `outcrop_jitter_deg`
+	# above only perturbs which COLOUR BAND a slope reading picks, never the
+	# slope itself. A rise's actual surface (`_rise_height`) stays a
+	# perfectly smooth, continuous dome underneath every one of those bands,
+	# and a human reads "two materials" from a visible seam or a change in
+	# surface FORM, not from a hue shift painted onto identical geometry.
+	# This is a genuinely different layer: real height relief, added to the
+	# terrain itself (not the slope sample used for band lookup), so
+	# `slope_degrees_at`'s own central-difference sampling picks up real
+	# bumps and ledges. Higher frequency than `_outcrop`'s ~35m lobes —
+	# ~14m wavelength is close-grained relief within one lobe, not another
+	# lobe-scale undulation — and a sixth seed so it doesn't correlate with
+	# any other layer, `_outcrop` included.
+	_relief.seed = seed_value + 5
+	_relief.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_relief.fractal_type = FastNoiseLite.FRACTAL_FBM
+	_relief.frequency = float(_config.get("colour", {}).get("relief_frequency", 0.07))
+	_relief.fractal_octaves = 2
+
 
 static func load_config() -> Dictionary:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
@@ -146,6 +168,7 @@ func _rise_height(x: float, z: float) -> float:
 	var rises: Dictionary = _config.get("rises", {})
 	var peaks: Array = rises.get("peaks", [])
 	var sharpness := float(rises.get("sharpness", 2.1))
+	var relief_amp := float(_config.get("colour", {}).get("relief_amplitude", 0.0))
 	var total := 0.0
 	for entry: Variant in peaks:
 		var peak: Dictionary = entry
@@ -160,6 +183,17 @@ func _rise_height(x: float, z: float) -> float:
 		# pow above 1 steepens the flanks while keeping the summit rounded,
 		# which is what makes these testable slopes rather than smooth domes.
 		total += pow(smoothstep(0.0, 1.0, t), 1.0 / sharpness) * float(peak.get("height", 40.0))
+
+		# EV4-hillside-seam-remainder-4: real relief, gated to the FLANK band
+		# (roughly where a rise's own slope actually sits in the rock/soil
+		# range) rather than the whole rise -- zero right at the summit
+		# (t near 1, `_apply_flats`-adjacent ground should stay predictable)
+		# and zero again out at the rim (t near 0, so this rise's edge still
+		# blends into its neighbours exactly as before). Both smoothstep
+		# edges are gates, not the rise shape itself, so this cannot change
+		# the rise's own footprint or summit height.
+		var flank := smoothstep(0.05, 0.3, t) * (1.0 - smoothstep(0.65, 0.9, t))
+		total += _relief.get_noise_2d(x, z) * relief_amp * flank
 	return total
 
 
