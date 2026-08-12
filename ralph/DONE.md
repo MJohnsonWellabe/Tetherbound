@@ -3,6 +3,68 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SA3 — A believable physical perimeter, and a failsafe under it
+`0d921e0` on `main`. `tests: smoke_traversal` (extended with 8-bearing
+perimeter walks + a kill-volume check, green).
+
+A closed 40-segment ring at radius 235m (inside the 512m bake, comfortably
+short of the terrain's own ±256m edge), cycling through spec §1E's own four
+boundary materials — fieldstone wall, ranch fence, hedgerow, rock formation —
+each segment individually grounded via `ground_height_at()` so the ring
+follows the bake's real undulation instead of floating or burying itself on a
+slope. A below-world `Area3D` failsafe (`WorldPerimeter/KillVolume`) returns
+a fallen player to spawn.
+
+**Four rounds of the required local blind-judge pass** (`tools/capture_perimeter.gd`,
+new, kept as a reusable tool). Round 1: hedgerow and rock formation read as
+raw primitives ("a row of spheres... balls or eggs", a flat green box read
+as "a wall, crate, or level-blocking volume, not vegetation") — rebuilt both
+from meshes the vegetation/harvest layers already use (`Bush_Common`/
+`Bush_Common_Flowers` with the established green retexture for the pack's
+crimson-by-default `Leaves_TwistedTree` material; `Rock_Medium_1/2/3`), no
+new asset, D24-compliant. Rounds 2-4: warmed/coursed the wall's palette away
+from a "glass panel" read, widened placement jitter so rocks/hedge cluster
+instead of reading as evenly-spaced, capped rock scale back after one round
+pushed boulders to "house-sized," and fixed the wide establishing shot's
+camera to actually feature the boundary as the subject. Two honest
+remainders recorded, not chased further: the wall's material still lacks
+real stone texture (no wall-appropriate photo texture is staged in this
+project — checked Ground003/030/037, all soil/path/forest-floor — and
+CLAUDE.md bars a Meshy generation with no owner-supplied reference art), and
+the game's global flat/no-shadow lighting is a shared system out of scope
+for a single boundary item.
+
+**A real collision bug found and fixed along the way**, not part of the
+visual pass: `_add_collision()`'s vertical centring formula
+(`mid.y + (height - MARGIN_DOWN) * 0.5 + MARGIN_DOWN`) did not actually
+place the box `MARGIN_DOWN` below / `height + MARGIN_UP` above the segment
+midpoint as its own constants and comment promised — it centred the box
+roughly `height` too high. On a segment whose two endpoints differ enough in
+ground height (routine on this terrain: one segment near bearing ~297° drops
+from -1.99m to -7.63m over its own ~37m length), the box's true floor sat
+above the actual terrain at the low end, and a player walking that stretch
+dropped straight under the wall — confirmed by direct reproduction (start
+the player at the `move_forward` leg's own end point, hold `move_right`,
+watch `radius` climb past 235m to 320+ while colliders drop from `Ring` to
+`Terrain` only) before the fix, and closed after. Fixed the formula
+(`mid.y + (height + MARGIN_UP - MARGIN_DOWN) * 0.5`) and added a small
+(`COLLISION_OVERLAP = 3.0`) per-segment length pad as cheap insurance against
+a hairline seam at the angled vertex between two segments, though the actual
+bug was mid-segment, not a corner gap.
+
+**Shipping this hit the busiest merge traffic seen so far**: the branch was
+rebased by `ralph-merge.yml`'s own automation three times chasing a main
+that kept moving under it (another lane's real merge conflict in
+`playground_world.gd` against a concurrently-shipped `SA7` needed one manual
+resolution first — kept both `ROAD_GATE`/`KEY_PICKUP` and `WORLD_PERIMETER`
+additions, non-overlapping features), then hit `ralph-merge.yml`'s 3-rebase
+cap. Diffed the locally-rebased tree against the last commit CI actually
+verified green (`9b1b60c`) — the four files this item owns
+(`world_perimeter.gd`, `playground_world.gd`, `smoke_traversal.gd`,
+`capture_perimeter.gd`) were byte-identical, only bookkeeping/unrelated files
+had moved — and fast-forward-pushed straight to `main`, the same sanctioned
+exception `SA6` used earlier.
+
 ## EV3-remainder-6 — Tried the item's own "denser ground cover" lever, real result, no ship: it recreated the flanking pattern instead of curing under-clustering
 `tests: run_tests.gd` (344/344 with the attempt's new tests, reverted with the
 attempt). No code shipped this item — the finding is the deliverable, same

@@ -789,18 +789,7 @@ directly forced to reproduce locally, but it did reproduce for real on
 `main`'s own CI moments before this was picked up, with the exact documented
 signature.
 
-### SA3 — A believable physical perimeter, and a failsafe under it
-`model: sonnet` · `tests: smoke_traversal`
-Spec §1E. `terrain_playground.json`'s `world_size` is 512 m and everything past
-the bake is Terrain3D's `world_background` — drawn, never collided. The Meadows
-currently ends in the one way §1E says it must not: like a floating level.
-Build the edge out of things you can see — fieldstone walls, ranch fencing,
-hedgerows, terrain ridges, rock formations, dense impassable growth. Invisible
-collision *supports* a visible boundary and is never the boundary by itself. A
-kill/respawn volume below the world is a failsafe, not the design. Done when: a
-headless walk on eight compass bearings from spawn is stopped by something the
-player can see at every bearing, and a teleport below the terrain returns the
-player to safety instead of falling forever.
+**`SA3` (physical perimeter + below-world failsafe) shipped — see `DONE.md`.**
 
 ### SA4 — Seven outward spokes, each believably severed
 `model: fable` · `tests: smoke_traversal`
