@@ -455,6 +455,31 @@ up the Barn half: wait for `EV6` to land first, then re-render and re-judge
 against the new settlement geometry before touching anything — the caster
 this entry diagnosed may not exist in its current form afterward.
 
+**`EV6` landed 2026-08-12 (see `DONE.md`) — the Barn is gone, the patch is
+not.** Re-rendered fresh and re-ran a genuine blind pass exactly as instructed
+above: the same defect is still named, independently, in **all four**
+viewpoints now (not just the two named in this item's original done-when).
+Five mechanisms were tested directly with real before/after renders —
+`sun.shadow_enabled`, `env.ssao_enabled`, `normal_depth`/`ao_strength` on
+both the `grass` and `path` textures, `ambient_energy` (up to 4x), and
+Terrain3D's `show_colormap` debug override (rules out the baked vertex
+colour map entirely — with textures off, no patch anywhere) — see
+`DONE.md`'s full entry for the numbers. **None of them meaningfully move
+it.** This also retroactively corrects this entry's own `square-convergence`
+diagnosis: that shadow WAS real and WAS the Barn (confirmed at the time by
+toggling `shadow_enabled`), but the Barn is gone now and disabling
+`shadow_enabled` today changes nothing — a different, still-unidentified
+mechanism produces the same-looking defect on the geometry that replaced it.
+No code shipped this round (every experiment reverted, config files
+byte-identical to before). Two real levers remain genuinely untested by
+direct render rather than by inspection: the auto-shader's blend zone at the
+grass/path texture boundary, and the albedo photos' actual content at the
+specific UV/detiling position these world coordinates land on (both source
+JPGs were only eyeballed at full-tile scale, not sampled at the real
+in-game tiling transform). Done when: a blind critic given any of the four
+`tools/capture_paths.gd` frames stops naming an unmotivated dark patch, or
+explicitly traces it to a visible object.
+
 **`EV4-hillside-seam` (blotchy hillside slope material) rounds 1-4 shipped —
 see `DONE.md`.** Rock went from mathematically unreachable (round 2's wider
 blend pushed its threshold past this landform's own max slope) to a

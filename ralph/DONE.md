@@ -3,6 +3,89 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV4-textures-lighting-remainder — Five mechanisms ruled out with direct evidence; the dark near-camera patch survives all of them. No code shipped — the findings are the deliverable, same pattern as EV3-remainder-6.
+`tests: none (visual)` — no code changed; every experiment below was reverted.
+`data/config/terrain_playground.json` and `data/config/art.json` are both
+byte-identical to before this pass started.
+
+**Why this was picked up now.** This item was explicitly parked pending EV6
+("wait for EV6 to land first, then re-render and re-judge against the new
+settlement geometry"). EV6 shipped this hour (this lane's own prior work).
+Re-rendered `tools/capture_paths.gd`'s four viewpoints fresh and dispatched a
+genuine blind `Agent`-tool sub-agent, zero context, against them and
+`docs/reference/`.
+
+**The blind critic independently named the same defect, unprompted, in ALL
+FOUR frames** (not just `square-convergence`/`the-rise-route` as the item's
+old done-when named) — "a large, soft-scalloped-edge patch of ground... with
+no plausible caster... always in roughly the same screen-space position/shape
+regardless of what the camera is pointed at." That last observation was the
+lead for everything below: a shape that recurs in screen-space across four
+different world-facing directions (SE, W, ESE, N) is a strong signal against
+a world-space light/shadow explanation.
+
+**Five mechanisms tested directly, each with a real before/after render or
+readback, not reasoning from code alone:**
+1. **Dynamic sun shadow** (`sun.shadow_enabled`). Disabled at runtime, after
+   `apply_time("day")` ran (confirmed via printed readback). The patch
+   persisted at essentially the same darkness. This directly contradicts
+   `EV4-textures-lighting`'s own historical note that toggling
+   `shadow_enabled` "removed it cleanly" for `square-convergence` — which
+   makes sense in hindsight: that finding was about a real shadow cast by
+   **the Barn**, 6m from that viewpoint's camera. EV6 removed the Barn
+   entirely (replaced by a workshop building elsewhere in the square). The
+   old finding was correct for a caster that no longer exists; the patch
+   visible today is something else wearing the same shape.
+2. **SSAO** (`env.ssao_enabled`). Disabled at runtime. No meaningful change.
+3. **Normal-map self-shadowing / AO** (`normal_depth`/`ao_strength` on the
+   `grass` AND `path` textures — `path` specifically, since the camera
+   stands ON the path in every one of these four viewpoints, and its
+   `normal_depth` (0.22) was actually higher than grass's own already-reduced
+   0.12). Cut both roughly in half in `terrain_playground.json`, re-rendered:
+   **pixel-identical** to the unmodified baseline at three sampled points.
+   Confirmed this wasn't a no-op by using `tools/diagnose_frame.gd`'s own
+   existing runtime-override test (prints a readback, then forces
+   `normal_depth = 0.0` directly on the live `Terrain3DTextureAsset`) — even
+   a full-zero override moved near-field luminance by only 0.521 → 0.509, a
+   rounding-error-sized change. Reverted both texture-config edits since they
+   demonstrably don't touch the defect.
+4. **Ambient light** (`environment.ambient_energy`, tested at 2.2 and 6.0,
+   against the original 1.5). Real but small movement at 2.2 (dark-patch luma
+   35 → 40); more at 6.0 (35 → 64) but the sunlit path also crept back up
+   (140 → 185, most of the way back toward the blown-highlight problem
+   `EV4-textures-lighting` deliberately fixed by cutting exposure), and the
+   patch was still clearly visible by eye at 4x ambient — matches that same
+   entry's own conclusion almost exactly: "lifting ambient is the one lever
+   that reaches it... left the shadow darker than ideal rather than fight
+   that tradeoff further." Reverted.
+5. **Baked vertex colour** (Terrain3D's `show_colormap` debug override —
+   pure baked colour, zero textures, zero normal maps, zero live shading).
+   The entire ground rendered as a near-uniform pale cream with **no dark
+   patch anywhere** — which rules OUT the baked colour map (`_ground_colour`'s
+   slope-driven `grass_low`/`grass_high` blend) as the source, since removing
+   it removes nothing. It also proves the patch genuinely lives in the
+   texture/shading layer somewhere, which is what made (3) worth testing
+   directly rather than trusting the code comment's plausible-sounding
+   mechanism.
+
+**What's left, unidentified.** The auto-shader's texture blend at the
+grass/path boundary, macro variation (tested only by inspection of its
+already-tuned near-white values, not by direct render — the one remaining
+lever not empirically excluded), or the raw albedo photo content
+(`Grass008_Color.jpg`/`Ground030_Color.jpg`, both visually inspected directly
+and neither shows an obviously large dark region at typical tiling scale, but
+not ruled out at the ACTUAL sampled UV/detiling position for these specific
+world coordinates). Whoever picks this up next should start there rather than
+re-testing shadow/SSAO/normal-depth/ambient — all four are now closed
+questions with real data behind them, not guesses.
+
+**One correction worth flagging in `EV4-textures-lighting`'s own DONE.md
+history**: its `square-convergence` shadow-source diagnosis (the Barn) was
+correct for the state of the world at the time, but is now stale — the
+caster it named no longer exists post-EV6, yet the same-looking defect is
+still present today from a different, unidentified cause. A "confirmed by
+toggling X" finding is only as durable as the scene it was measured against.
+
 ## R9.4-remainder-8-rocks-repeat — the rocks layer reads as varied stone, not one instance duplicated
 `cc4fe0e`/`1816524`/`604d15e` on `main`. `tests: none (visual)`, plus the full
 348/348 unit suite (unaffected — data-only change, no code touched). Visual-
