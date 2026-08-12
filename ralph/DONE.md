@@ -3,6 +3,105 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R9.4-remainder-9 — Get real combat frames, budgeting for the now-measured render cost
+`8a579df` on `main`. `tests: none (visual)` — `tools/survey_combat.gd` only,
+no gameplay code touched.
+
+Reached the item's own done-when for the first time — `shots/combat/*.png`
+has all eight frames and a genuinely blind sub-agent reviewed the arena —
+but only after finding and fixing **three separate, real bugs in the survey
+harness itself**, all three consequences of the same root cause: the D18/SA0
+indoor-opening redesign moved `meadows_playground.tscn`'s default player
+spawn into Grandpa's farmhouse, upstairs near the bed, and `survey_combat.gd`
+(written for the old outdoor spawn) never accounted for it.
+
+**Five real runs, each ~10-40 real minutes under `xvfb-run` + `opengl3` +
+llvmpipe software rendering, each with a genuine finding:**
+
+1. **Run 1** (unmodified harness): 6/8 frames, all four remaining phases
+   failed (`no hit landed`, `energy never reached charged_cost`, `could not
+   open the aim`). Diagnosed — wrongly, at first — as the quick-attack
+   approach distance (`stop_at=2.8`) sitting just outside `player_quick.range`
+   (2.6, `data/config/combat.json`).
+2. **Run 2** (stop_at fixed to 2.2): byte-for-byte identical failures and
+   near-identical timing to run 1, disproving the range theory —
+   `combat_manager.gd::_with_reach_for_the_bodies` floors real reach by both
+   bodies' radii and `body_clearance` (1.8), so 2.6 was very likely never the
+   binding constraint in either run. Kept the 2.2 value anyway (still
+   correct, just not causal) and stopped guessing.
+3. **A genuine blind critic** (a real sub-agent, not self-review) was run on
+   the run-2 frames anyway, to be sure, and independently reported something
+   far more basic than a range bug: all six frames showed the same static
+   interior room — a staircase, an unlit black box, plain walls — not any
+   outdoor arena. Verified directly by reading the PNGs.
+4. **A cheap ~5-minute single-frame diagnostic** (settle-only, no approach
+   loop, not committed — deleted immediately after use, same convention
+   `LP7` used) found the actual cause: player position at settle was
+   `(-24.6, 5.4, -17.9)`, with an `Interior` `Area3D` 3.4m away and a
+   `BedPrompt` node 0.6m away. The scene's own default spawn is now inside
+   the farmhouse, not outdoors — `_approach()`'s 1200-frame walk-toward-the-
+   wild-pal loop was running its full timeout stuck against house geometry
+   every single run.
+5. **Fix 1 — `_place_player_outdoors()`**: drops the player 20m from the
+   wild pal on real outdoor ground, via `playground_heightfield.gd`'s
+   `height_at()` — the same technique `survey.gd`/`capture_paths.gd` already
+   use for their own actors, applied here for the first time. **Run 3**
+   confirmed it: a real outdoor meadow frame, trainer next to Bramblebun,
+   ~9.6 minutes total (vs ~40 stuck indoors). But all six frames were still
+   the plain exploration camera — the arena never opened.
+6. **Fix 2 — adopt a starter.** Placing the player outdoors skips the whole
+   Grandpa/starter-choice sequence, so `encounter_director.gd`'s `_ally`
+   stayed null and `_engageable()` refuses to start any fight without one.
+   Added `await _director.call("adopt_starter", "terrapup", "")`. **Run 4**:
+   the real breakthrough — quick and charged attacks both landed clean for
+   the first time across four runs, full HUD, telegraph text, arena
+   boundary, all real. Only `could not open the aim` remained, and both
+   frames plainly showed `Orbs 0`.
+7. **Fix 3 — grant starting orbs.** The same skipped opening also skips
+   Grandpa's `give:orb_basic:15` dialogue effect
+   (`sequence_director.gd::_give_items`), and `throw_aim.gd::try_begin_aim`
+   refuses to open aim mode with none. Granted 15 `orb_basic` directly
+   through `Game.inventory.add()`, the same autoload `_give_items` itself
+   uses. **Run 5**: all eight frames, zero `FAIL` lines, ~19.5 minutes total.
+
+**The required blind visual-judge pass ran on the real 8-frame set** (a
+genuine sub-agent, given the frames plus the Palworld boss-fight reference
+and the project's own key art, no hint of what changed). Verdict: **no** —
+the composition does not yet read as a legible fight, for reasons that are
+real defects in the game's combat presentation, not in this survey tool:
+
+- No visual impact cue on the quick attack (05) at all — only the health bar
+  moving says anything happened. The charged attack (06) has one impact
+  effect but it reads as a flat decal pasted onto the grass rather than
+  something emanating from the hit.
+- The wind-up telegraph (04) carries no visual cue independent of the
+  `! incoming — move` banner text — cover the text and the frame is
+  indistinguishable from ordinary standing.
+- The arena's boundary glow is visible in frames 02–05 and absent in 06–08,
+  where the backdrop has also changed (a house appears, no boundary
+  anywhere) — reads as two different fights spliced together rather than one
+  continuous bounded encounter. May be working as designed (the glow could
+  be edge-proximity-only, per the boundary's own "slides you along it"
+  behaviour) rather than a bug — not confirmed either way.
+- The thrown orb (08) reads as a stray lens-flare crossing the sun, not a
+  projectile arcing at a target five metres away.
+- Two visually identical rabbits (the wild pal and an ambient decorative
+  bramblebun from the same 3-count spawn cluster, `data/config/spawns.json`)
+  are on screen together with no marker distinguishing which one is actually
+  being fought.
+- What genuinely works: HUD element placement and hierarchy (enemy bar top-
+  centre, own pal bars bottom-left, orb count bottom-right, action prompts
+  bottom-centre) closely matches the Palworld reference's own layout and is
+  legible on its own; the boundary glow, where present, reads clearly as a
+  line; relative scale (trainer > Terrapup > Bramblebun) is correct with no
+  violation.
+
+**Not fixed this pass** — genuinely out of this item's scope (it was about
+getting the survey tool working, not about combat VFX), and opened as
+`R9.4-remainder-9-combat` below for whoever picks up the presentation work.
+`survey_combat.gd` itself is left in a state any future combat-visual pass
+can just run directly; the three fixes above are permanent, not one-off.
+
 ## EV6-remainder-well-rocktrim — Found and fixed a settlement-wide invisible-buildings regression; the well's own RockTrim leftover got a partial second round
 `tests: run_tests.gd` (full suite, 354/354, 47944 assertions) — `building_prefabs.gd` is shared by `village.gd`, `grandpa_house.gd` and `road_gate.gd`, so the narrow item's own `tests: none` wasn't enough coverage for the fix this became.
 

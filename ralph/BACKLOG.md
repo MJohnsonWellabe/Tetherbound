@@ -1312,26 +1312,51 @@ in the file). **The arena still has not been visually reviewed** — a
 narrower remainder for that is opened below with the timing evidence a
 future attempt needs.
 
-### R9.4-remainder-9 — Get real combat frames, budgeting for the now-measured render cost
-`model: sonnet` · `tests: none (visual)` · `area: perf`
-`R9.4-remainder-6` proved the arena survey was never actually hanging, just
-running under a per-physics-frame cost this box's software rasterizer
-imposes on `meadows_playground.tscn`'s full prop count — measured at
-~1.16s/frame for `SETTLE_FRAMES` alone, running with no other Godot
-process competing for cores. The full survey's worst-case physics-frame
-count across every phase (settle, approach, windup wait, two attack
-impacts, the now-bounded charged-energy loop, aim mode) is in the
-low thousands; at the measured rate that is comfortably over an hour in
-the worst case, not the 25-40 minutes past firings assumed. Whoever takes
-this should: run `tools/survey_combat.sh` alone (never concurrently with
-another Godot process — that was the original report's likely second
-multiplier on top of the render cost itself), under a timeout of at least
-90 minutes, and use the phase-timing output `R9.4-remainder-6` added to
-find out which phase actually dominates in practice rather than assuming
-the worst case. If real hardware (not llvmpipe) is available for this
-specific survey, that is very likely to be the actual fix rather than
-further tuning frame counts. Done when: `shots/combat/*.png` has all
-eight frames and a blind critic reviews the arena for the first time.
+**`R9.4-remainder-9` (get real combat frames) shipped — see `DONE.md`.** All
+eight frames, for the first time — but getting there needed three separate,
+real bug fixes in the survey harness itself, not just render-time patience:
+the D18/SA0 indoor-opening redesign moved the scene's default player spawn
+into Grandpa's farmhouse, which cascaded into the player never reaching the
+wild pal, never having an ally pal to fight with, and never having orbs to
+throw. All three fixed. The required blind pass on the real frames then found
+genuine combat-presentation defects — narrower remainder opened below.
+
+### R9.4-remainder-9-combat — The fight itself doesn't read as an event yet
+`model: sonnet` · `tests: none (visual)` · `area: combat`
+A genuine blind critic reviewing `R9.4-remainder-9`'s real, working combat
+frames (not placeholder-scene artefacts this time) named several concrete
+presentation gaps, none of them about creature model appeal:
+
+- **No visual impact cue on the quick attack.** Only the health bar moving
+  says a hit landed; the frame itself shows nothing.
+- **The charged attack's impact effect reads as a flat decal** pasted onto
+  the grass rather than something that emanates from the point of contact.
+- **The wind-up telegraph has no visual cue independent of its own banner
+  text** (`! incoming — move`) — cover the text and the frame is
+  indistinguishable from ordinary standing.
+- **The thrown orb in flight reads as a stray lens-flare crossing the sun**,
+  not a projectile arcing at a target a few metres away.
+- **Two visually identical rabbits on screen at once** (the wild pal being
+  fought and an ambient decorative Bramblebun from the same 3-count spawn
+  cluster, `data/config/spawns.json`) with no marker distinguishing which one
+  is actually the opponent.
+- **The arena boundary glow is visible in some frames and absent in others**,
+  with the backdrop also changing between them — reads as two fights spliced
+  together. Not confirmed as a bug: the boundary may be edge-proximity-only
+  by design (matches its own "slides you along it" description), in which
+  case this is a false alarm from frames taken at different points relative
+  to the edge. Check before treating it as a defect.
+
+What already works and should not be re-litigated: HUD element placement and
+hierarchy (enemy bar top-centre, own pal bars bottom-left, orb count
+bottom-right, action prompts bottom-centre) closely matches the Palworld
+reference's own layout; the boundary glow, where present, reads clearly as a
+line; relative scale (trainer > Terrapup > Bramblebun) is correct. Re-render
+with `tools/survey_combat.sh` (now fixed and working, no changes needed to
+reach the arena) and re-run the required blind pass after any fix. Done when:
+a fresh blind critic given the eight frames no longer names impact
+readability, the telegraph, the orb-in-flight or the lookalike-target
+confusion as defects.
 
 **The original R9.4 brief is NOT repeated here as an open item** — it ran, and
 an identical heading below its own remainders is how a task gets done twice.
