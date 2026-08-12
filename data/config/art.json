@@ -162,8 +162,8 @@
     "animation_libraries": []
   },
   "villager_farmer": {
-    "_comment": "R7.2. Grandpa's own rig and clips, tinted rather than regenerated — see character_model.gd's `_apply_palette` comment for why this is the model reused (Ranger is stylistically incompatible, and CLAUDE.md forbids pre-empting the open art-pipeline question in ralph/BLOCKED.md by using it anyway). `tint` multiplies every surface's existing albedo, so the texture detail survives and only the hue/value shifts — a rustier, warmer wardrobe than Grandpa's own. NP1 added `palette` (per-material), `hair` and `accessories` alongside `tint` — this block does not need them, since one rig-wide colour is still the design for these three.",
-    "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
+    "_comment": "R7.2, moved off Grandpa's rig by NP5 (owner directive 2026-08-12: the village should stop reading as clones of Grandpa and the trainer). Now NP4-rig's villager_female base -- a real second body, not a tint of the hero rig. `tint` still multiplies every surface's existing albedo the same way it did on Grandpa's rig, so Mira keeps her own rustier, warmer wardrobe colour distinct from the other four.",
+    "model": "res://assets/characters/villager_female/villager_female_lod0.glb",
     "height": 1.75,
     "model_yaw": 0.0,
     "tint": "#c9793a",
@@ -177,8 +177,8 @@
     "animation_libraries": []
   },
   "villager_keeper": {
-    "_comment": "R7.2. Same tinting approach as villager_farmer, on the trainer's rig instead of Grandpa's — a second silhouette so the square does not read as three copies of one man. Cooler, greener tint keeps it visually apart from both the trainer (the player's own body) and villager_farmer.",
-    "model": "res://assets/characters/trainer/trainer_lod0.glb",
+    "_comment": "R7.2, moved off the trainer's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_male base, not the same body the player controls. Cooler, greener tint keeps Oskar visually apart from villager_farmer's warmer one, same as before.",
+    "model": "res://assets/characters/villager_male/villager_male_lod0.glb",
     "height": 1.78,
     "model_yaw": 0.0,
     "tint": "#4f8a5b",
@@ -192,9 +192,9 @@
     "animation_libraries": []
   },
   "villager_smith": {
-    "_comment": "R7.2. Trainer rig again, a third tint — the well square gets a farmer, a keeper and a smith without a third model.",
-    "model": "res://assets/characters/trainer/trainer_lod0.glb",
-    "height": 1.82,
+    "_comment": "R7.2, moved off the trainer's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_female base, same as villager_farmer's -- the two share a body but keep their own distinct tints, the way villager_keeper and villager_ranger already shared the trainer's rig before this item.",
+    "model": "res://assets/characters/villager_female/villager_female_lod0.glb",
+    "height": 1.73,
     "model_yaw": 0.0,
     "tint": "#3f5a8c",
     "clips": {
@@ -207,9 +207,9 @@
     "animation_libraries": []
   },
   "villager_quarryman": {
-    "_comment": "NP3. Quarry Foreman, spec sec35 -- Grandpa's rig (older, workworn build) per the spec's own 'Grandpa/generic civilian base' instruction, in a dark stone/workwear tint distinct from every other reused-rig villager on the square.",
-    "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
-    "height": 1.79,
+    "_comment": "NP3, moved off Grandpa's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_male base, sharing a body with villager_keeper but keeping its own dark stone/workwear tint distinct from every other villager on the square.",
+    "model": "res://assets/characters/villager_male/villager_male_lod0.glb",
+    "height": 1.80,
     "model_yaw": 0.0,
     "tint": "#54504a",
     "clips": {
@@ -222,9 +222,9 @@
     "animation_libraries": []
   },
   "villager_ranger": {
-    "_comment": "NP3. The rescued Ranger/Researcher, spec sec35 -- trainer rig per the spec's 'main-character base' fallback. A teal (spec's first choice) was tried first and rendered indistinguishable from villager_keeper's green -- the shared emission-tinting mechanism (see character_model.gd's own comment on _shared_variant_material) multiplies onto a base texture with a strong green bias, and confirmed in a real render, so a teal tint cannot clear a green tint here. Moved to the spec's own named alternative, a pale tan/cream, which survives the same multiply as a clearly distinct light neutral instead of fighting the green bias with another saturated hue.",
-    "model": "res://assets/characters/trainer/trainer_lod0.glb",
-    "height": 1.76,
+    "_comment": "NP3, moved off the trainer's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_female base rather than the player's own body. Keeps the same pale tan/cream tint chosen against the shared emission-tinting mechanism's green bias (see character_model.gd's `_shared_variant_material` comment) -- that finding was about the tint colour, not the rig, and still applies unchanged on the new base.",
+    "model": "res://assets/characters/villager_female/villager_female_lod0.glb",
+    "height": 1.77,
     "model_yaw": 0.0,
     "tint": "#c2a878",
     "clips": {
