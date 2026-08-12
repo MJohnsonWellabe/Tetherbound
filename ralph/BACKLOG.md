@@ -86,12 +86,7 @@ opening wake-up scene, where the player currently starts standing on the
 bed instead of lying in it. Check which system owns player-bed interaction
 — likely near the opening scene and `R3.3`'s respawn work.
 
-### OF9 — Flag only, no silent fix: should the stronghold be visible from the start?
-Per `CLAUDE.md`'s explicit list, "changing stronghold structure" is a core
-design decision to surface, not invent. Is the stronghold's early visibility
-an intentional distant-landmark hook (common open-world pacing), or does it
-read as spoiling something meant to be discovered gradually? Needs the
-owner's call before anyone touches placement, LOD, or vista treatment.
+**`OF9` (should the stronghold be visible from the start) flagged, not silently fixed — see `BLOCKED.md`'s "Design questions awaiting the owner" for the evidence and what would close it.**
 
 ### OF10 — The road up to the stronghold is unwalkable, and the hill/slope doesn't look good
 `area: terrain` · `model: fable` (likely — the existing hillside-quality

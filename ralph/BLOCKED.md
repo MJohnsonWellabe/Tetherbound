@@ -333,11 +333,56 @@ backlog items. The loop keeps building past them.
 
 ## Design questions awaiting the owner
 
-**Both entries below are closed as of 2026-08-11.** Nothing in this section is
-waiting on anybody. They are kept rather than deleted because each one records
-*why* the answer is what it is, and both answers are the kind a later firing
-would otherwise be tempted to relitigate. The live list is "Blocked on
-reference art" above.
+**One entry below is open.** The other two are closed as of 2026-08-11 and
+kept rather than deleted because each one records *why* the answer is what it
+is, and both answers are the kind a later firing would otherwise be tempted to
+relitigate.
+
+### OPEN — should the stronghold be visible from the start? (`OF9`)
+
+Raised by the owner's Phase -1.1 playtest pass. Per `CLAUDE.md`'s explicit
+flag list ("changing stronghold structure"), this is an owner call, not a
+firing's to make — flagging it rather than touching placement, LOD, or vista
+treatment on the strength of a guess.
+
+**The evidence leans toward "intentional landmark," but nobody has written
+that down as a decision:**
+
+- The distant stronghold was in the plan from the start, not added later:
+  `docs/MEADOWS_VERTICAL_SLICE.md` M7 lists a "distant stronghold landmark"
+  as one of the authored test region's original features, alongside
+  Grandpa's home, the settlement, hills and the oak grove.
+- `docs/MEADOWS_PROGRESSION_SPEC.md`'s own status line already counts "a
+  visible stronghold" among the first-day build's finished ingredients, not
+  something still pending.
+- Three separate work items have already treated it as a permanent, tuned
+  visual element rather than something to hide: `R7.1`/`R9.4`'s render
+  passes measured and adjusted its silhouette against real frames, and `OF4`
+  (this same Phase -1.1 batch, `ralph/OF4`, area `terrain`) just re-passed
+  its masonry/weathering specifically because the owner wants it to read
+  better at a distance — work that would be wasted if the intent is to hide
+  it until later.
+- `landmark.gd` deliberately leaves the stronghold unshaded at range by
+  design (`DONE.md`'s `R9.4-remainder-8` notes), which reads as a choice to
+  keep it visible and legible from far away, not an oversight.
+
+**What isn't settled:** none of the design docs say *why* it's visible —
+whether it's meant as a "there's your eventual goal" open-world hook (common
+enough that it wouldn't need calling out) or whether showing it this early
+undercuts a reveal the owner intended to land later, the way `CLAUDE.md`'s
+Biome 2 rule and `D23`'s reconnection-event view protect other longer-range
+payoffs from being spoiled early. The stronghold is a different thing from
+that reconnection-event view — it's the Meadows' own endgame structure, not
+the cross-biome one — but the *reason to ask* is the same shape of concern:
+is early visibility a feature or a spoiler here.
+
+**Clears when:** the owner confirms the stronghold is meant to be visible
+from the start (in which case current placement stands, `OF4`'s and any
+future silhouette work keeps going, and this closes with no code change) or
+says it should be hidden/obscured until some later point (in which case that
+becomes its own scoped item — likely occlusion, fog-of-war-style unlock, or
+moving the reveal to a scripted moment — rather than something to guess at
+now).
 
 ### ✅ CLOSED — creature and human art-pipeline cohesion: rework, both halves
 
