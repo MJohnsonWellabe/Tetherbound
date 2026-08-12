@@ -3,6 +3,68 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R9.4-remainder-6 — Root-caused why `survey_combat.sh` never completed
+`tests: none` (item's own field). `b81f2da` (rebased forward as main moved;
+final SHA depends on `ralph-merge.yml`'s rebase).
+
+**Not a hang.** Instrumented `tools/survey_combat.gd` with real per-phase
+elapsed-time logging (`Time.get_ticks_msec()` at every capture and a new
+`_log_phase()` helper) and ran it twice, alone — never concurrently with
+another Godot process, unlike the original report.
+
+The first alone-run (25 minutes, piped through `grep` with no line
+buffering, matching `survey_combat.sh`'s own pattern) finished with the log
+file at literally 0 bytes — `stat` showed its Modify timestamp identical to
+its birth timestamp. That is itself a finding: stdout through a pipe to a
+non-tty is fully block-buffered, GNU `timeout`'s default behaviour kills the
+whole process group with `SIGTERM` when the deadline hits, and a killed
+process never gets to flush an unflushed buffer. So "ran a long time, wrote
+zero frames, zero log output" is *also* exactly what a perfectly healthy run
+looks like if it is killed before its next natural flush point — this may be
+part of what made the original report look like a hang with no evidence
+either way. `survey_combat.sh` itself uses the same unbuffered
+`godot | grep ... ` pattern and would lose output the same way under a
+`timeout` kill.
+
+The second run (`stdbuf -oL -eL`, no `grep` filter, direct redirect) fixed
+that and produced real signal: `SETTLE_FRAMES` (240 physics frames, the very
+first wait in the script, before anything is captured) took **277.7
+seconds** — ~1.16s per physics frame — against `meadows_playground.tscn`'s
+full bake (24,314 scattered props) under this box's llvmpipe software
+rasterizer, running completely alone with no contention. At that rate,
+`_approach()`'s own 1200-frame cap (the very next wait) could cost another
+~23 minutes on top before the script even reaches its first capture — which
+on its own is enough to exceed a 25-minute budget, and plausibly the
+original ~50-minute one too once a second concurrent Godot process is
+competing for the same four cores. The 25-minute rerun ran out of budget
+inside `_approach()` without producing a single frame, consistent with this
+being the actual bottleneck rather than a stuck loop.
+
+**One real bug found and fixed along the way, unrelated to the "hang or
+not" question but a real latent defect:** the charged-attack energy wait
+(`while not charged_ready() and is_fighting()`) had no iteration cap at
+all, unlike every other wait in the file (`_approach` caps at 1200,
+the enemy-windup wait at 900). A charge meter that never filled — a quick
+attack that kept missing, say — would have spun forever instead of failing
+loudly like every other timeout in the file. Bounded at 24 attempts (four
+landed quick attacks fill the meter at `energy_per_quick` 26 /
+`charged_cost` 100; 24 is generous headroom), with a recorded failure on
+timeout matching the file's existing pattern.
+
+**Did not reach "produces frames."** The arena still has not been visually
+reviewed — `R9.4-remainder-9` opens that as a narrower follow-on with the
+concrete timing evidence a future attempt needs (run alone, budget 90+
+minutes, use the new phase logging to see which phase actually dominates
+rather than assuming the worst case, and real hardware would very likely
+just fix this outright).
+
+**Also found: `smoke_aggression` failed once on this branch's CI**
+(`verify-scenarios` job), on a change (`tools/survey_combat.gd` only) that
+cannot plausibly touch it. Reproduced locally headless immediately after —
+clean pass. Filed as `LP7` rather than re-running the same CI job blind,
+per `PROMPT.md`'s flake guidance; shipped on the next commit's fresh run
+instead.
+
 ## SA7 — A gated road out of the village, with a key nearby
 `2819faf` (gate/key/dialogue), `5fde42a` (visual-judge round 2 fixes).
 `tests: smoke_opening` (green, new beat added), full `run_tests.gd`

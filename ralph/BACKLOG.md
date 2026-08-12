@@ -156,6 +156,23 @@ that path was already safe and needed no change.
 **`LP6` (a script-based mechanism so `STATUS.md` leases can't drift past
 `## END LEASES` again) shipped — see `DONE.md`.**
 
+### LP7 — `smoke_aggression` failed once on CI after `RB3` claimed it fixed with 36 clean runs
+`model: sonnet` · `tests: smoke_aggression`
+`ralph/R9.4-remainder-6`'s CI run (job `verify-scenarios`, 2026-08-12) failed
+on `smoke_aggression` — a test file this survey's own change never touches
+(`tools/survey_combat.gd` only). Reproduced locally, headless, immediately
+after the failure: clean pass, "aggression: OK — the dangerous one initiates,
+the peaceful one never does." Not chased further this pass — the branch
+shipped on the following commit's fresh CI run instead of re-running the
+same one, per `PROMPT.md`'s "a flake is a real defect, don't just re-run
+until green" guidance, and this note is that recording. `RB3` already
+believed it had killed this flake with 36 consecutive clean runs; either
+that fix has a residual rare case, or CI's shared-runner environment
+differs from whatever `RB3` tested on in a way that reopens it. Done when:
+either it is reproduced under CI-like conditions and root-caused, or enough
+further CI runs pass clean that this reads as a one-off rather than a
+pattern.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
@@ -1171,18 +1188,37 @@ trees. Low priority; not chased further this pass. Done when: a blind critic
 stops calling the rock field one instance repeated, or the itch.io block
 clears and a wider rock set is available to draw from.
 
-### R9.4-remainder-6 — `survey_combat.sh` did not complete, and nobody knows why
-`model: sonnet` · `tests: none`
-It ran ~50 minutes under llvmpipe and wrote zero frames while the seven-frame
-buildings pass beside it finished; it was killed to give the box back. **The
-arena has therefore not been visually reviewed at all this pass**, and that gap
-is real regardless of the cause. What is NOT established: whether this is a
-defect in `survey_combat.gd` (its `_approach()` walks the player to a wild
-creature and could plausibly never arrive) or simply the cost of 240 settle
-frames plus a whole fight under software rendering with another Godot process
-competing for four cores. Do not guess — run it alone with a frame counter or a
-timeout per phase, the way `R4.11` and `RB3` both had to. Done when: either it
-produces frames, or its hang is root-caused and named.
+**`R9.4-remainder-6` (root-caused why `survey_combat.sh` never completed) shipped — see `DONE.md`.** Not a hang: real per-phase timing (added to the
+script itself) shows `SETTLE_FRAMES` alone costs ~278s running completely
+alone on this box's software renderer, ~1.16s per physics frame against a
+scene with 24,314 scattered props — at that rate `_approach()`'s own
+1200-frame cap could cost another ~23 minutes on top, before any combat
+logic runs at all. One real bug found and fixed along the way (the
+charged-attack energy wait had no iteration cap, unlike every other wait
+in the file). **The arena still has not been visually reviewed** — a
+narrower remainder for that is opened below with the timing evidence a
+future attempt needs.
+
+### R9.4-remainder-9 — Get real combat frames, budgeting for the now-measured render cost
+`model: sonnet` · `tests: none (visual)` · `area: perf`
+`R9.4-remainder-6` proved the arena survey was never actually hanging, just
+running under a per-physics-frame cost this box's software rasterizer
+imposes on `meadows_playground.tscn`'s full prop count — measured at
+~1.16s/frame for `SETTLE_FRAMES` alone, running with no other Godot
+process competing for cores. The full survey's worst-case physics-frame
+count across every phase (settle, approach, windup wait, two attack
+impacts, the now-bounded charged-energy loop, aim mode) is in the
+low thousands; at the measured rate that is comfortably over an hour in
+the worst case, not the 25-40 minutes past firings assumed. Whoever takes
+this should: run `tools/survey_combat.sh` alone (never concurrently with
+another Godot process — that was the original report's likely second
+multiplier on top of the render cost itself), under a timeout of at least
+90 minutes, and use the phase-timing output `R9.4-remainder-6` added to
+find out which phase actually dominates in practice rather than assuming
+the worst case. If real hardware (not llvmpipe) is available for this
+specific survey, that is very likely to be the actual fix rather than
+further tuning frame counts. Done when: `shots/combat/*.png` has all
+eight frames and a blind critic reviews the arena for the first time.
 
 **The original R9.4 brief is NOT repeated here as an open item** — it ran, and
 an identical heading below its own remainders is how a task gets done twice.
