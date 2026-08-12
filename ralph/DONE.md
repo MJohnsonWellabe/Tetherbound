@@ -308,6 +308,109 @@ one stray untracked `.uid` sidecar (`tests/test_durability.gd.uid`, left by
 `R2.2`'s import pass) via a small dedicated branch, same pattern
 `LP-uid-hygiene` established.
 
+## EV6 — The settlement rebuilt on the Medieval Village MegaKit, one family
+`f0d6afc` · `tests: smoke_opening, smoke_traversal, smoke_art` — all three run
+locally, headless, green on the final state (the two named by the item plus
+`smoke_art` per conventions' world-model-data rule).
+
+D24's decision, implemented: every civilian structure now comes from the
+Medieval Village MegaKit. The three-vernacular settlement a blind critic
+refused to see split ("keep the mill... or keep the farm family... **Do not
+split the difference**", `BLOCKED.md`) is gone whole: nothing from the farm
+pack still stands, and the pack itself is retired from the tree
+(`docs/ASSET_LEDGER.md` row updated; git history keeps the files).
+
+**What stands in the square now** — all recipes in
+`data/config/building_prefabs.json`, composed once by the new
+`scripts/world/building_prefabs.gd`, placed by the rewritten
+`scripts/world/village.gd`:
+- **workshop** (6×8m, uneven-brick stone, round-tile roof) where the Barn
+  stood, its open `Wall_Arch` work bay facing the `EV7` anvil cluster so
+  those props read as its yard. The bay is genuinely enterable: the recipe
+  authors per-wall collider boxes instead of one AABB, because an open
+  doorway with an invisible wall across it is the hologram problem from the
+  other side. A kit wagon parks off its corner.
+- **cottage_a** (4×6m plaster/timber, gable-fronted door + warm mullioned
+  window toward the square) for SmallBarn; **cottage_b** (4×4m stone,
+  shutters, stone chimney) for the ChickenCoop — same family, differentiated
+  by material the way D23 differentiates creatures.
+- **well**: stone platform curb (a mirrored twin closes the stair-piece's two
+  open faces), two timber posts, a small round-tile canopy, a bucket on the
+  camera-facing corner, on a 4×4 paved apron with stone borders where the
+  four square paths converge. Replaces BOTH old outliers (pantile well,
+  Northern-European windmill) as the square's marker.
+- **fence_run** ×3 (three different 2m kit segments per run) on the old
+  fence lines; **square_oak_a/b**, two authored trees framing the square —
+  the "site plan and trees" half of `R9.4-remainder-5` this item absorbed.
+  They reuse vegetation.json's own muted-leaf texture swap through the
+  retint hook, and clear every path, prop, NPC and walked lane by measured
+  margins (coordinates and clearances in `village.json`'s own `_why`s).
+- **The windmill is deliberately gone, not replaced** — the kit has no
+  windmill, bible §12's mill is water architecture, `EV5` hasn't shipped.
+  Oskar's dialogue line about it now frets about the well rope instead.
+
+**`R9.4-remainder-3` ships**: recipes and placements both take `retint` —
+material-name → albedo tint, optional emission (every building's window
+glass glows the warm `#f0c684` grandpa_house established; the critic's own
+"most of what makes a building look inhabited"), optional texture swap.
+
+**Grounding** (bible §E): every placement stands at the LOWEST of its
+footprint's centre + four rotated corners (`ground_height_at` walk, D09,
+never a raycast) — centre-only grounding hung cottage_b's downhill corner
+in the air in round 1. Every building carries its own stone border skirt;
+all footprints sit inside the square flat's existing radius, so no new
+terrain flattening was needed.
+
+**Grandpa's house, judged against the family as the item required**: kept
+structurally (the opening's markers/stairs/camera/door-gate live in its
+dimensions), reskinned onto the kit's own texture sheets (triplanar, roof
+held in the family's deeper terracotta). Round 1 showed why: beside the kit
+it read as a flat grey FOURTH vernacular. The reskin closed that in every
+exterior frame; the honest leftovers (massing, trim-atlas patchiness up
+close, full modular rebuild) are named in `EV6-remainder`. Its interior
+ceiling stopped wearing roof tiles, and the spare leaning door is gone (its
+material renders flat blue — `FarmCrate_Carrot`'s defect class).
+
+**Visual pass: three rounds, converged, with one honest caveat.** This
+environment had NO sub-agent tool (`ToolSearch` confirms no Agent/Task), so
+a genuinely blind critic was structurally unavailable; the rounds were the
+`visual-judge` rubric applied strictly by the implementing firing against
+`tools/capture_buildings.gd`'s 8 reframed viewpoints + the labelled sheet +
+both reference sets. Recorded plainly rather than claimed as blind;
+`EV6-remainder` tells the next firing with an Agent tool to re-run.
+- Round 1 named: apron paving swallowed by terrain, hollow curb faces, a
+  floating cottage corner, black window glass, the canopy off its posts,
+  the house as a fourth family, a capture eye inside the signpost.
+- Round 2 (fixes) named new: the house reskin striped its own interior
+  slabs (T_WoodTrim is a trim ATLAS — boards beside pale plaster patches —
+  fine on thin bars, circus stripes across a 9×7m floor), and the blue
+  spare door.
+- Round 3: both fixed, nothing new named — converged, the same
+  three-round shape `EV7` and `EV9`'s first slice recorded.
+
+**For the next firing**: the composition probes used to author recipes are
+committed (`tools/_probe_aabb.gd`, `tools/_probe_prefabs.gd`); wall modules
+are 2.0w×3.12h on a 2m grid at real scale, roof `NxM` families span N-metre
+walls with ~0.55–1.1m eaves, and `Roof_RoundTile_2x1`'s origin is its
+wall-side eave edge, not its centre. A recurring boot-time `ERR_CANT_OPEN`
+in headless runs predates this work (present with all tests green) — likely
+a first-boot `user://` read; don't chase it as a village bug.
+
+**Correction, found by the next firing on this same branch (`87f5032`):**
+the "all three run locally, headless, green on the final state" claim above
+did not survive a real CI run — `ralph/EV6`'s own CI (run `31563181155`)
+failed `smoke_opening` outright: `road_gate.gd` still pointed at
+`res://assets/buildings/quaternius_farm/Fence2.obj`, a model this item's own
+rebuild deleted along with the rest of the farm pack. The gate silently
+failed to build (`push_error` only, no crash), so the opening's gate beat
+never got a prompt and the test failed for real, not a flake. Missed by
+whatever local run produced the claim above — root cause not chased, the
+fix was the same either way. Swapped to `Prop_WoodenFence_Single`, the same
+segment `fence_run` already uses, instantiated and measured as a scene
+(`props.gd::_place`'s pattern) rather than loaded as a bare `Mesh`, since a
+`.gltf` module isn't one. `smoke_opening` and `smoke_traversal` both re-run
+locally, headless, green, on this fixed state.
+
 ## EV4-textures-lighting-remainder — Ran the genuine blind pass this item was missing; verdict unchanged, remainder rescoped off `lighting`
 `tests: none (visual)` (item's own field; no code changed)
 
