@@ -31,6 +31,7 @@ var _detail_blurb: Label = null
 var _detail_cost: RichTextLabel = null
 var _detail_contains: Label = null
 var _detail_status: Label = null
+var _detail_status_pill: PanelContainer = null
 
 ## A shortfall line needs its own colour independent of the rest of the cost
 ## block — matching an "unaffordable" ingredient to the affordable ones was
@@ -42,6 +43,20 @@ var _detail_status: Label = null
 const COST_SHORT := Color(0.86, 0.42, 0.32)
 const COST_OK := Color(0.87, 0.89, 0.84)
 const COST_FREE := Color(0.6, 0.62, 0.55)
+
+## The bible's Crafting target (§16) names a bullet inventory's own target list
+## does not: "clear primary action button." A blind visual-judge pass on this
+## tab's real reskin (`tools/capture_menu_panels.gd`) confirmed the ingredient
+## rows and hero panel land, but named this gap specifically -- nothing on
+## screen reads as a discrete, stateful button, only the plain status line.
+## Pressing the already-focused recipe row still IS the build verb (unchanged,
+## same as every other tab in this menu); this pill is a non-focusable visual
+## treatment of `_detail_status`, not a second focusable Control, so it cannot
+## regress controller focus navigation the way a real second Button could.
+const CTA_READY_BG := Color(0.13, 0.22, 0.16, 0.9)
+const CTA_READY_BORDER := Color(0.38, 0.64, 0.30, 0.9)
+const CTA_BLOCKED_BG := Color(0.22, 0.13, 0.12, 0.9)
+const CTA_BLOCKED_BORDER := Color(0.86, 0.42, 0.32, 0.55)
 
 
 func build() -> void:
@@ -124,12 +139,29 @@ func _build_detail() -> Control:
 
 	_detail_status = Label.new()
 	_detail_status.add_theme_font_size_override("font_size", 24)
+	_detail_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	# Coloured per message in _describe(), not fixed here. A blind visual pass
 	# on menu_build.png caught this label wearing the same gold whether it
 	# said "Ready to build" or "Not enough to hand" -- gold means progression/
 	# positive state everywhere else in this HUD language, and a blocked
 	# message wearing it undercuts that meaning rather than reinforcing it.
-	panel.add_child(_detail_status)
+	_detail_status_pill = PanelContainer.new()
+	var pill_box := StyleBoxFlat.new()
+	pill_box.corner_radius_top_left = 10
+	pill_box.corner_radius_top_right = 10
+	pill_box.corner_radius_bottom_left = 10
+	pill_box.corner_radius_bottom_right = 10
+	pill_box.border_width_left = 2
+	pill_box.border_width_right = 2
+	pill_box.border_width_top = 2
+	pill_box.border_width_bottom = 2
+	pill_box.content_margin_left = 16.0
+	pill_box.content_margin_right = 16.0
+	pill_box.content_margin_top = 10.0
+	pill_box.content_margin_bottom = 10.0
+	_detail_status_pill.add_theme_stylebox_override("panel", pill_box)
+	_detail_status_pill.add_child(_detail_status)
+	panel.add_child(_detail_status_pill)
 
 	return panel
 
@@ -180,7 +212,11 @@ func _describe(index: int) -> void:
 		_detail_cost.text = ""
 		_detail_contains.text = ""
 		_detail_status.text = ""
+		if _detail_status_pill != null:
+			_detail_status_pill.visible = false
 		return
+	if _detail_status_pill != null:
+		_detail_status_pill.visible = true
 
 	var entry: Dictionary = catalogue[index]
 	_detail_name.text = str(entry.get("name", entry.get("id", "?")))
@@ -225,14 +261,42 @@ func _describe(index: int) -> void:
 	]
 
 	if free:
-		_detail_status.text = "Ready to build, for free."
+		_detail_status.text = "Build — free build is on"
 		_detail_status.add_theme_color_override("font_color", COST_FREE)
+		_pill_style(CTA_READY_BG, CTA_READY_BORDER)
 	elif _can_afford(entry):
-		_detail_status.text = "Ready to build."
+		_detail_status.text = "Build"
 		_detail_status.add_theme_color_override("font_color", Color(0.851, 0.702, 0.251))
+		_pill_style(CTA_READY_BG, CTA_READY_BORDER)
 	else:
-		_detail_status.text = "Not enough to hand."
+		_detail_status.text = "Not enough materials"
 		_detail_status.add_theme_color_override("font_color", COST_SHORT)
+		_pill_style(CTA_BLOCKED_BG, CTA_BLOCKED_BORDER)
+
+
+## The pill's own background/border, matched to the same ready/blocked split
+## `_detail_status`'s text colour already carries -- two signals (colour AND
+## shape) agreeing is what makes this read as a stateful button rather than
+## a coloured label.
+func _pill_style(bg: Color, border: Color) -> void:
+	if _detail_status_pill == null:
+		return
+	var box := StyleBoxFlat.new()
+	box.bg_color = bg
+	box.border_color = border
+	box.border_width_left = 2
+	box.border_width_right = 2
+	box.border_width_top = 2
+	box.border_width_bottom = 2
+	box.corner_radius_top_left = 10
+	box.corner_radius_top_right = 10
+	box.corner_radius_bottom_left = 10
+	box.corner_radius_bottom_right = 10
+	box.content_margin_left = 16.0
+	box.content_margin_right = 16.0
+	box.content_margin_top = 10.0
+	box.content_margin_bottom = 10.0
+	_detail_status_pill.add_theme_stylebox_override("panel", box)
 
 
 func _on_pick(index: int) -> void:
