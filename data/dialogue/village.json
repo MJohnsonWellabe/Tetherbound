@@ -6,8 +6,8 @@
       "speaker": "Mira",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
-        "Meadow Keeper's what they call me around here — somebody's got to look after what grows out there, coop side included. The hens have opinions about strangers, mind.",
-        "That barn's held every harvest since before I was born. Still smells like it."
+        "Meadow Keeper's what they call me around here — somebody's got to look after what grows out there, garden rows included. The meadow has opinions about strangers, mind.",
+        "That workshop's mended every tool this village ever broke. Still smells of iron and oak shavings."
       ]
     },
     "village_oskar": {
@@ -15,7 +15,7 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Bridgehand's my trade — I keep the old crossing south of here in one piece, when it lets me. Team Tether's been sniffing round it lately, which helps nobody.",
-        "Windmill's been groaning since the spring thaw. Nobody's got round to it.",
+        "Well rope's been fraying since the spring thaw. Nobody's got round to it.",
         "You're the one staying with old Elias, aren't you? Whole square knows by now."
       ]
     },

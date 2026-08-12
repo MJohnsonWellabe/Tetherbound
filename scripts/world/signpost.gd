@@ -10,9 +10,11 @@ extends Node3D
 ## arm for free instead of needing a second place to describe it.
 ##
 ## Placeholder geometry (CLAUDE.md: placeholder is fine to prove a mechanic).
-## The post is a primitive, not a Quaternius model — there is no signpost mesh
-## in either vendored pack (checked: quaternius_farm has Well/Fence/barns/
-## windmill only, stylized_nature has no sign/post/board model).
+## The post is a primitive, not a Quaternius model — there was no signpost
+## mesh in the packs vendored when it was built (the farm pack EV6 retired had
+## Well/Fence/barns/windmill only; stylized_nature has no sign/post/board
+## model). The Medieval Village kit may yield a better post; that is dressing
+## work, not this file's mechanic.
 
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 

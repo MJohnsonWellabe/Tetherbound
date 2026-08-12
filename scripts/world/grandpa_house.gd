@@ -58,6 +58,27 @@ const DOOR_H := 2.6
 ## stair has headroom and the ground floor gets height over the door.
 const LOFT_W := 4.6
 
+## EV6. The settlement around this house was rebuilt on the Medieval Village
+## MegaKit (D24), and the first render showed what that does to a flat-colour
+## primitive shell: beside textured plaster, stone and terracotta it reads as
+## a grey cardboard model — a FOURTH vernacular, in the settlement whose whole
+## rebuild exists to get down to one. The item's own instruction was to judge
+## the house against the family rather than preserve it out of sentiment.
+##
+## Judgement: the geometry survives (its dimensions are the opening's whole
+## choreography — markers, stairs, camera profile, door gate), the flat
+## materials do not. Each COL_* below now names a kit texture as well as a
+## colour: the same T_Plaster/T_WoodTrim/T_RoundTiles/T_RockTrim sheets every
+## other building in the square wears, applied triplanar so the box shell
+## needs no UV work. The colour becomes a mild multiplier over the texture
+## instead of the whole material. A full modular rebuild of the shell is
+## EV6-remainder work; this closes the family gap without touching a marker.
+const KIT_TEX_DIR := "res://assets/buildings/quaternius_medieval"
+## World-space texture repeat: kit walls tile their sheets roughly every two
+## metres, and matching that density is what makes the shell read as the same
+## hand rather than a photo of it.
+const KIT_TEX_SCALE := 0.5
+
 const COL_TIMBER := Color("#5a4030")
 ## R9.4. Was #e6ddc8, a near-white cream. Under a 1.35-energy sun that rendered
 ## at ~154,165,169 flat, and the blind critic's word for the result was "an
@@ -112,10 +133,52 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_markers["stairs_bottom"] = to_global(Vector3(4.0, 0.12, -INNER_D * 0.5 + 0.6))
 
 
+## Which kit sheet each of the house's roles wears. Keys are the COL_*
+## constants; a colour not listed here (rugs, glass) stays a flat material.
+## The multiplier lightens the old tuned colour so texture and tint do not
+## stack into the crushed-dark roofs R9.4-remainder-3 measured.
+## `lift` is how far the old tuned colour is pushed toward white before it
+## multiplies the sheet: 1.0 would be the raw texture, 0.0 the old flat tint
+## stacked on top of it (the crushed-dark failure R9.4-remainder-3 measured).
+## The roof keeps more of its own warm brown than the rest — at 0.75 the
+## first EV6 render read a half-step brighter and stripier than the kit
+## roofs beside it (frame 06).
+const KIT_TEXTURES := {
+	COL_PLASTER: { "tex": "T_Plaster_BaseColor", "lift": 0.75 },
+	COL_TIMBER: { "tex": "T_WoodTrim_BaseColor", "lift": 0.75 },
+	COL_ROOF: { "tex": "T_RoundTiles_BaseColor", "lift": 0.45 },
+	COL_RIDGE: { "tex": "T_RoundTiles_BaseColor", "lift": 0.45 },
+	COL_STONE: { "tex": "T_RockTrim_BaseColor", "lift": 0.75 },
+}
+## COL_FLOOR deliberately absent: T_WoodTrim is a trim ATLAS — boards beside
+## pale plaster patches — which reads as wood on a thin exterior bar but as
+## broad circus stripes across a 9x7m floor slab; the round-2 interior frame
+## showed exactly that. Floors and stairs stay flat colour.
+
+var _materials: Dictionary = {}
+
+
 func _material(colour: Color) -> StandardMaterial3D:
+	if _materials.has(colour):
+		return _materials[colour]
 	var m := StandardMaterial3D.new()
-	m.albedo_color = colour
 	m.roughness = 0.9
+	if KIT_TEXTURES.has(colour):
+		var entry: Dictionary = KIT_TEXTURES[colour]
+		var tex: Texture2D = load("%s/%s.png" % [KIT_TEX_DIR, str(entry["tex"])])
+		if tex != null:
+			m.albedo_texture = tex
+			# Triplanar: object-space projection, so forty boxes of thirty
+			# sizes all tile at the same density with no UV authoring. The
+			# sheets carry the tone; the old colour becomes a cast over them.
+			m.uv1_triplanar = true
+			m.uv1_scale = Vector3.ONE * KIT_TEX_SCALE
+			m.albedo_color = colour.lerp(Color.WHITE, float(entry["lift"]))
+		else:
+			m.albedo_color = colour
+	else:
+		m.albedo_color = colour
+	_materials[colour] = m
 	return m
 
 
@@ -183,9 +246,12 @@ func _build_shell() -> void:
 
 	# Flat ceiling slab. It is no longer the roof — it is what the loft sees
 	# when it looks up, and what the gable sits on. Kept solid so the player
-	# cannot walk off the top of the world.
+	# cannot walk off the top of the world. COL_FLOOR, not COL_ROOF: since the
+	# EV6 reskin the roof colour carries the round-tile sheet, and a bedroom
+	# ceiling wearing terracotta tiles was the first thing the round-1
+	# interior frame showed.
 	_box(Vector3(INNER_W + WALL_T * 2, 0.3, INNER_D + WALL_T * 2),
-		Vector3(0, FLOOR_H + LOFT_H + 0.15, 0), COL_ROOF)
+		Vector3(0, FLOOR_H + LOFT_H + 0.15, 0), COL_FLOOR)
 
 	_build_gable_roof()
 	_build_facade()
@@ -465,12 +531,12 @@ func _build_furniture() -> void:
 	_clutter("Backpack", Vector3(half_w - 1.3, 0.12, 2.3), 30.0)
 	_clutter("Axe", Vector3(half_w - 0.55, 0.12, 2.9), -20.0)
 	_clutter("Knife", Vector3(half_w - 0.9, 0.12, 2.75), 10.0)
-	# A spare door leaning in the corner. Deliberately clutter, not a second
-	# functional doorway: the shell's own east opening stays open (this file's
-	# header explains why — a closed door needs an opening animation the slice
-	# does not have), so this reads as a door somebody took off its hinges once
-	# and never got round to rehanging.
-	_furnish("Door1", Vector3(-half_w + 0.4, 0.12, -0.3), 90.0, FURNITURE_SCALE, FURNITURE_DIR, false)
+	# The spare door that used to lean in this corner is gone (EV6): its
+	# panel material renders as a flat BLUE rectangle — the same
+	# vertex-colour defect class EV7 caught on FarmCrate_Carrot — and both
+	# EV6 interior frames showed it as the loudest wrong thing in the room.
+	# A model that cannot render its own wood is not clutter, it is a bug
+	# on display.
 
 
 ## `_box()`'s own comment gives the house its rug shorthand: a flat coloured

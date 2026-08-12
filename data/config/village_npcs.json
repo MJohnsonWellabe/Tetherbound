@@ -8,7 +8,7 @@
       "position": [12.0, -3.0],
       "facing_deg": -164.1,
       "greeting": "village_mira",
-      "_why": "between the two barns, north of the well"
+      "_why": "between the workshop and cottage_a, north of the well (EV6 rebuilt the settlement; positions unchanged)"
     },
     {
       "name": "Oskar",
@@ -16,7 +16,7 @@
       "position": [22.0, -6.0],
       "facing_deg": -108.4,
       "greeting": "village_oskar",
-      "_why": "east side, near the small barn and the chicken coop"
+      "_why": "east side, near the two cottages (EV6: the small-barn-and-coop pair became cottage_a and cottage_b)"
     },
     {
       "name": "Tam",
@@ -32,7 +32,7 @@
       "position": [0.0, -6.0],
       "facing_deg": 111.8,
       "greeting": "village_quarry_foreman",
-      "_why": "west of the big barn, clear of every structure and villager by 8m+ -- NP3, spec sec35. No built quarry to stand him at yet (SD16), so the square is where he waits."
+      "_why": "west of the workshop (EV6; was the big barn), clear of every structure and villager by 8m+ -- NP3, spec sec35. No built quarry to stand him at yet (SD16), so the square is where he waits."
     },
     {
       "name": "Rescued Ranger",
@@ -40,7 +40,7 @@
       "position": [16.0, -10.0],
       "facing_deg": -90.0,
       "greeting": "village_rescued_ranger",
-      "_why": "between the well and the small barn, clear of every structure and villager by 5m+ -- NP3, spec sec35."
+      "_why": "between the well and cottage_a (EV6; was the small barn), clear of every structure and villager by 5m+ -- NP3, spec sec35."
     }
   ]
 }

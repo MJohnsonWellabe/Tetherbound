@@ -1,0 +1,1504 @@
+{
+  "_comment": "EV6: every civilian building, composed from the Medieval Village MegaKit (D24 -- the one architectural family). Each prefab is a recipe: modules in LOCAL metres (origin = footprint centre at ground level, front = +z), assembled once by scripts/world/building_prefabs.gd and duplicated per placement. The kit is authored at real scale on a 2m wall grid (walls 2.0w x 3.12h, measured); no scale corrections anywhere. ALL TUNABLE.",
+  "_comment_vocabulary": "Bible sec12's material grade: pale plaster + warm timber for homes, uneven stone for working buildings, ONE roof family (round terracotta tiles) across the whole settlement -- the old three-family mess (BLOCKED.md, resolved by D24) is exactly what a second roof material would reinvite. Gable fronts face the viewer's approach; chimneys break the ridge line; every building sits on a low RockTrim border skirt so it meets the grass in stone, not in a hard plaster line (bible secE).",
+  "_comment_colliders": "A prefab with no `colliders` gets one combined-AABB box from the placer, same as the old farm pack. The workshop authors its own so the open arch bay is genuinely enterable -- an open doorway with an invisible wall across it is the hologram village.gd's own header warns about, from the other side.",
+  "prefabs": {
+    "workshop": {
+      "_why": "The settlement's big working building, standing where the red gambrel Barn stood. Stone walls (UnevenBrick), an open Wall_Arch work bay for bible sec12's 'broader doors', and the biggest roof in the family. The EV7 work_area cluster (anvil, workbench) sits off its front-left corner and becomes this building's yard.",
+      "modules": [
+        {
+          "module": "Wall_Arch",
+          "at": [
+            0.0,
+            0.0,
+            4.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "the open work bay, front centre"
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -2.0,
+            0.0,
+            4.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            2.0,
+            0.0,
+            4.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -2.0,
+            0.0,
+            -4.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            0.0,
+            0.0,
+            -4.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            2.0,
+            0.0,
+            -4.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -3.0,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Window_Wide_Flat",
+          "at": [
+            -3.0,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Window_Wide_Flat1",
+          "at": [
+            -3.0,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -3.0,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -3.0,
+            0.0,
+            -3.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            3.0,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Window_Wide_Flat",
+          "at": [
+            3.0,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Window_Wide_Flat1",
+          "at": [
+            3.0,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            3.0,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            3.0,
+            0.0,
+            -3.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Corner_Exterior_Brick",
+          "at": [
+            -3.0,
+            0.0,
+            4.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Brick",
+          "at": [
+            3.0,
+            0.0,
+            4.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Brick",
+          "at": [
+            -3.0,
+            0.0,
+            -4.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Brick",
+          "at": [
+            3.0,
+            0.0,
+            -4.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Roof_Front_Brick6",
+          "at": [
+            0.0,
+            3.0,
+            4.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Roof_Front_Brick6",
+          "at": [
+            0.0,
+            3.0,
+            -4.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Roof_RoundTiles_6x8",
+          "at": [
+            0.0,
+            3.05,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -2.0,
+            0.1,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            0.0,
+            0.1,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            2.0,
+            0.1,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -2.0,
+            0.1,
+            1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            0.0,
+            0.1,
+            1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            2.0,
+            0.1,
+            1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -2.0,
+            0.1,
+            -1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            0.0,
+            0.1,
+            -1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            2.0,
+            0.1,
+            -1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -2.0,
+            0.1,
+            -3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            0.0,
+            0.1,
+            -3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            2.0,
+            0.1,
+            -3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            0.0,
+            0.0,
+            4.15
+          ],
+          "yaw_deg": 0.0,
+          "_why": "threshold pavement out of the arch bay"
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -2.0,
+            0.0,
+            4.15
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            2.0,
+            0.0,
+            4.15
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -3.15,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -3.15,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -3.15,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -3.15,
+            0.0,
+            -3.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            3.15,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            3.15,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            3.15,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            3.15,
+            0.0,
+            -3.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_Vine1",
+          "at": [
+            3.12,
+            2.6,
+            2.2
+          ],
+          "yaw_deg": 90.0,
+          "_why": "bible sec12 moss/green accent, on the side wall"
+        }
+      ],
+      "colliders": [
+        {
+          "at": [
+            -3.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            8.4
+          ],
+          "_why": "left wall"
+        },
+        {
+          "at": [
+            3.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            8.4
+          ],
+          "_why": "right wall"
+        },
+        {
+          "at": [
+            0.0,
+            1.56,
+            -4.0
+          ],
+          "size": [
+            6.4,
+            3.12,
+            0.45
+          ],
+          "_why": "back wall"
+        },
+        {
+          "at": [
+            -2.0,
+            1.56,
+            4.0
+          ],
+          "size": [
+            2.0,
+            3.12,
+            0.45
+          ],
+          "_why": "front, left of the arch"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            4.0
+          ],
+          "size": [
+            2.0,
+            3.12,
+            0.45
+          ],
+          "_why": "front, right of the arch"
+        },
+        {
+          "at": [
+            0.0,
+            3.35,
+            4.0
+          ],
+          "size": [
+            2.0,
+            0.7,
+            0.45
+          ],
+          "_why": "arch lintel"
+        },
+        {
+          "at": [
+            0.0,
+            5.6,
+            0.0
+          ],
+          "size": [
+            8.3,
+            5.2,
+            9.7
+          ],
+          "_why": "roof and gables -- keeps the camera arm and any jump out of the roof shell; its bottom (y 3.0) is the bay's ceiling"
+        }
+      ],
+      "retint": {
+        "MI_WindowGlass": {
+          "color": "#f0c684",
+          "emission": "#f0c684",
+          "energy": 0.85
+        }
+      },
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+    },
+    "cottage_a": {
+      "_why": "Village house, plaster and timber, gable front with door and window facing the approach. Stands where SmallBarn stood.",
+      "modules": [
+        {
+          "module": "Wall_Plaster_Door_Flat",
+          "at": [
+            1.0,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "DoorFrame_Flat_WoodDark",
+          "at": [
+            1.0,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Door_1_Flat",
+          "at": [
+            0.45,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "closed leaf; hinge is the module's own origin, so the leaf spans the doorway centred on x=1"
+        },
+        {
+          "module": "Wall_Plaster_Window_Wide_Flat",
+          "at": [
+            -1.0,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Window_Wide_Flat1",
+          "at": [
+            -1.0,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Wall_Plaster_Straight",
+          "at": [
+            -1.0,
+            0.0,
+            -3.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Wall_Plaster_WoodGrid",
+          "at": [
+            1.0,
+            0.0,
+            -3.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Wall_Plaster_WoodGrid",
+          "at": [
+            -2.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_Plaster_Straight",
+          "at": [
+            -2.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_Plaster_Straight",
+          "at": [
+            -2.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_Plaster_WoodGrid",
+          "at": [
+            2.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Wall_Plaster_Window_Wide_Flat",
+          "at": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Window_Wide_Flat1",
+          "at": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Wall_Plaster_Straight",
+          "at": [
+            2.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Corner_Exterior_Wood",
+          "at": [
+            -2.0,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Wood",
+          "at": [
+            2.0,
+            0.0,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Wood",
+          "at": [
+            -2.0,
+            0.0,
+            -3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Wood",
+          "at": [
+            2.0,
+            0.0,
+            -3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Roof_Front_Brick4",
+          "at": [
+            0.0,
+            3.0,
+            3.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Roof_Front_Brick4",
+          "at": [
+            0.0,
+            3.0,
+            -3.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Roof_RoundTiles_4x6",
+          "at": [
+            0.0,
+            3.05,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_Chimney2",
+          "at": [
+            0.6,
+            4.2,
+            -1.8
+          ],
+          "yaw_deg": 0.0,
+          "_why": "breaks the ridge on the rear slope; top clears the ridge line"
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -1.0,
+            0.0,
+            3.15
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            1.0,
+            0.0,
+            3.15
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -1.0,
+            0.0,
+            -3.15
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            1.0,
+            0.0,
+            -3.15
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -2.15,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -2.15,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -2.15,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            2.15,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            2.15,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            2.15,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_Vine2",
+          "at": [
+            -2.12,
+            2.6,
+            -1.0
+          ],
+          "yaw_deg": -90.0
+        }
+      ],
+      "retint": {
+        "MI_WindowGlass": {
+          "color": "#f0c684",
+          "emission": "#f0c684",
+          "energy": 0.85
+        }
+      },
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+    },
+    "cottage_b": {
+      "_why": "The smaller stone cottage, shuttered window and stone chimney. Stands where the ChickenCoop stood -- differentiated from cottage_a by material (UnevenBrick vs plaster) inside the same family, the way D23 differentiates creatures.",
+      "modules": [
+        {
+          "module": "Wall_UnevenBrick_Door_Flat",
+          "at": [
+            1.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "DoorFrame_Flat_WoodDark",
+          "at": [
+            1.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Door_1_Flat",
+          "at": [
+            0.45,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Window_Wide_Flat",
+          "at": [
+            -1.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Window_Wide_Flat1",
+          "at": [
+            -1.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "WindowShutters_Wide_Flat_Open",
+          "at": [
+            -1.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -1.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            1.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -2.0,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Window_Wide_Flat",
+          "at": [
+            -2.0,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Window_Wide_Flat1",
+          "at": [
+            -2.0,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            2.0,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            2.0,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Corner_Exterior_Brick",
+          "at": [
+            -2.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Brick",
+          "at": [
+            2.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Brick",
+          "at": [
+            -2.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Corner_Exterior_Brick",
+          "at": [
+            2.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Roof_Front_Brick4",
+          "at": [
+            0.0,
+            3.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Roof_Front_Brick4",
+          "at": [
+            0.0,
+            3.0,
+            -2.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Roof_RoundTiles_4x4",
+          "at": [
+            0.0,
+            3.05,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_Chimney",
+          "at": [
+            -0.6,
+            4.0,
+            1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -1.0,
+            0.0,
+            2.15
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            1.0,
+            0.0,
+            2.15
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -1.0,
+            0.0,
+            -2.15
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            1.0,
+            0.0,
+            -2.15
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -2.15,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -2.15,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            2.15,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            2.15,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": 90.0
+        }
+      ],
+      "retint": {
+        "MI_WindowGlass": {
+          "color": "#f0c684",
+          "emission": "#f0c684",
+          "energy": 0.85
+        }
+      },
+      "_why_retint": "warm pane instead of a black hole -- the R9.4 critic's own 'most of what makes a building look inhabited', same colour grandpa_house.gd uses"
+    },
+    "well": {
+      "_why": "The square's centre marker, rebuilt in-family: a stone platform curb, two timber posts, a small round-tile canopy and a wooden bucket, standing on a paved apron where the four dirt paths meet. Replaces the third-outlier pantile well the blind critic flagged (BLOCKED.md).",
+      "modules": [
+        {
+          "module": "Stairs_Exterior_Platform",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "the well curb -- a metre-high stone block reads as the shaft head at standing height"
+        },
+        {
+          "module": "Stairs_Exterior_Platform",
+          "at": [
+            0.0,
+            -0.02,
+            0.0
+          ],
+          "yaw_deg": 180.0,
+          "_why": "mirrored twin, 2cm lower: the platform is a stair-top piece, solid on two faces only, and the twin closes the open pair without z-fighting the slab"
+        },
+        {
+          "module": "Corner_ExteriorWide_Wood",
+          "at": [
+            -0.85,
+            1.0,
+            0.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "canopy post, standing on the curb"
+        },
+        {
+          "module": "Corner_ExteriorWide_Wood",
+          "at": [
+            0.85,
+            1.0,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Roof_RoundTile_2x1",
+          "at": [
+            0.0,
+            2.9,
+            -0.5
+          ],
+          "yaw_deg": 0.0,
+          "_why": "canopy in the settlement's one roof family; shifted z-0.5 because the module's origin is its wall-side eave edge, not its centre"
+        },
+        {
+          "module": "Bucket_Wooden_1",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "at": [
+            0.55,
+            1.0,
+            -0.5
+          ],
+          "yaw_deg": 195.0,
+          "_why": "the tell that this is a well and not a shrine -- on the curb's south-east corner, the side the square's own approaches actually see"
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -1.0,
+            0.1,
+            -1.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "paved apron -- worked ground at the point all four square paths converge"
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            1.0,
+            0.1,
+            -1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -1.0,
+            0.1,
+            1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            1.0,
+            0.1,
+            1.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -1.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            1.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -1.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            1.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -2.0,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            -2.0,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            2.0,
+            0.0,
+            1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            2.0,
+            0.0,
+            -1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Corner",
+          "at": [
+            2.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 90.0,
+          "_why": "closes the apron frame's corner gap"
+        },
+        {
+          "module": "Prop_ExteriorBorder_Corner",
+          "at": [
+            2.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 180.0,
+          "_why": "closes the apron frame's corner gap"
+        },
+        {
+          "module": "Prop_ExteriorBorder_Corner",
+          "at": [
+            -2.0,
+            0.0,
+            -2.0
+          ],
+          "yaw_deg": 270.0,
+          "_why": "closes the apron frame's corner gap"
+        },
+        {
+          "module": "Prop_ExteriorBorder_Corner",
+          "at": [
+            -2.0,
+            0.0,
+            2.0
+          ],
+          "yaw_deg": 0.0,
+          "_why": "closes the apron frame's corner gap"
+        }
+      ],
+      "colliders": [
+        {
+          "at": [
+            0.0,
+            0.5,
+            0.0
+          ],
+          "size": [
+            2.0,
+            1.0,
+            2.0
+          ],
+          "_why": "the curb"
+        },
+        {
+          "at": [
+            0.0,
+            3.5,
+            0.0
+          ],
+          "size": [
+            3.3,
+            1.8,
+            2.0
+          ],
+          "_why": "the canopy, for the camera arm"
+        }
+      ],
+      "retint": {
+        "MI_RockTrim": "#e2d3bd"
+      },
+      "_why_retint": "round 1: the RockTrim borders and curb read cold blue-grey against the warm square; a gentle warm multiply keeps the texture and moves the cast (R9.4-remainder-3's hook, doing its job)"
+    },
+    "fence_run": {
+      "_why": "A 6m field fence in the kit's own timber, replacing the farm pack's Fence/Fence2. Three different 2m segments so the run does not read as one plank repeated.",
+      "modules": [
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -2.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_WoodenFence_Extension1",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_WoodenFence_Extension2",
+          "at": [
+            2.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        }
+      ],
+      "colliders": [
+        {
+          "at": [
+            0.0,
+            0.42,
+            0.0
+          ],
+          "size": [
+            6.15,
+            0.84,
+            0.16
+          ]
+        }
+      ]
+    },
+    "wagon": {
+      "_why": "Bible secE names carts among what embeds a building; parked by the workshop it implies deliveries, not decoration.",
+      "modules": [
+        {
+          "module": "Prop_Wagon",
+          "at": [
+            0.0,
+            0.0,
+            1.1
+          ],
+          "yaw_deg": 0.0,
+          "_why": "recentred -- the module's own origin sits at its front axle"
+        }
+      ]
+    },
+    "square_oak_a": {
+      "_why": "an authored settlement tree -- the half of R9.4-remainder-5 EV6 absorbed ('the site plan and the trees'): the key art frames its square with canopy and the build had not one tree in the settlement. Same leaf treatment vegetation.json ships (texture swap to the muted sheet, then the layer's own tint), through the recipe retint hook.",
+      "modules": [
+        {
+          "module": "CommonTree_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        }
+      ],
+      "retint": {
+        "Leaves_NormalTree": {
+          "color": "#78c86e",
+          "texture": "res://assets/environment/stylized_nature/Leaves.png"
+        }
+      },
+      "colliders": [
+        {
+          "at": [
+            0.0,
+            1.5,
+            0.0
+          ],
+          "size": [
+            0.6,
+            3.0,
+            0.6
+          ],
+          "_why": "trunk only -- the player walks under the canopy, not into an invisible cylinder of it"
+        }
+      ]
+    },
+    "square_oak_b": {
+      "_why": "an authored settlement tree -- the half of R9.4-remainder-5 EV6 absorbed ('the site plan and the trees'): the key art frames its square with canopy and the build had not one tree in the settlement. Same leaf treatment vegetation.json ships (texture swap to the muted sheet, then the layer's own tint), through the recipe retint hook.",
+      "modules": [
+        {
+          "module": "CommonTree_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        }
+      ],
+      "retint": {
+        "Leaves_NormalTree": {
+          "color": "#325f3c",
+          "texture": "res://assets/environment/stylized_nature/Leaves.png"
+        }
+      },
+      "colliders": [
+        {
+          "at": [
+            0.0,
+            1.5,
+            0.0
+          ],
+          "size": [
+            0.6,
+            3.0,
+            0.6
+          ],
+          "_why": "trunk only -- the player walks under the canopy, not into an invisible cylinder of it"
+        }
+      ]
+    }
+  }
+}

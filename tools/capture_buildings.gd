@@ -1,7 +1,8 @@
 extends SceneTree
 
-## Frames of the built structures — the farmhouse, the barn cluster, the
-## windmill, the square — for R9.4's visual pass.
+## Frames of the built structures — the farmhouse, the workshop, the
+## cottages, the well, the square — for the settlement's visual passes
+## (R9.4 originally; reframed for EV6's Medieval Village rebuild).
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" \
 ##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \
@@ -43,15 +44,17 @@ const FOV := 70.0
 ## survey tool has no business importing gameplay scripts' private state.
 const HOUSE_AT := Vector2(-22.0, -16.0)
 const WELL_AT := Vector2(10.0, -10.0)
-const BARN_AT := Vector2(2.0, 2.0)
-const SMALL_BARN_AT := Vector2(18.0, -2.0)
-const WINDMILL_AT := Vector2(28.0, 4.0)
+const WORKSHOP_AT := Vector2(2.0, 2.0)
+const COTTAGE_A_AT := Vector2(18.0, -2.0)
+const COTTAGE_B_AT := Vector2(21.0, -14.0)
 
 const VIEWPOINTS := [
 	{
 		# The farmhouse from the yard, off-axis so the roof pitch and the
 		# doorway wall are both in frame. This is the first building any
-		# player sees and the one they see most.
+		# player sees and the one they see most. After EV6 it is also the
+		# family test: does the procedural house still belong beside the
+		# Medieval Village kit, or does it read as a fourth vernacular?
 		"name": "01-farmhouse-from-yard",
 		"eye": Vector2(-8.0, -24.0), "eye_h": 1.7,
 		"target": HOUSE_AT, "target_h": 3.0,
@@ -65,26 +68,41 @@ const VIEWPOINTS := [
 		"target": WELL_AT, "target_h": 2.0,
 	},
 	{
-		# Standing at the well, looking at the big barn. Eye height, the
-		# distance you stand at when an NPC is talking to you.
+		# Standing at the well, looking at the workshop. Eye height, the
+		# distance you stand at when an NPC is talking to you. The open arch
+		# bay and the EV7 work_area cluster should read as one working yard.
 		"name": "03-square-at-the-well",
 		"eye": Vector2(12.0, -14.0), "eye_h": 1.7,
-		"target": BARN_AT, "target_h": 3.5,
+		"target": WORKSHOP_AT, "target_h": 3.5,
 	},
 	{
-		# The barn cluster read as a group — big barn, small barn and the
-		# coop in one frame. Clustering vs. scatter is rubric criterion 3 and
-		# it cannot be judged one building at a time.
-		"name": "04-barn-cluster",
+		# The settlement's east side read as a group — both cottages and the
+		# workshop in one frame. Clustering vs. scatter is rubric criterion 3
+		# and it cannot be judged one building at a time.
+		"name": "04-cottage-cluster",
 		"eye": Vector2(24.0, -22.0), "eye_h": 2.2,
 		"target": Vector2(9.0, -3.0), "target_h": 3.0,
 	},
 	{
-		# The windmill is village.json's own stated landmark ("visible from
-		# most of the meadow"). Judged from the meadow, not from beside it.
-		"name": "05-windmill-from-meadow",
-		"eye": Vector2(52.0, -34.0), "eye_h": 1.7,
-		"target": WINDMILL_AT, "target_h": 7.0,
+		# The composed well at conversation distance. It replaced the old
+		# third-outlier pantile well AND the windmill as the square's marker;
+		# a curb, two posts and a tile canopy have to read as "well", not
+		# "shrine", from exactly this range.
+		"name": "05-well-close",
+		"eye": Vector2(14.5, -14.0), "eye_h": 1.6,
+		"target": WELL_AT, "target_h": 1.8,
+	},
+	{
+		# cottage_a's gable front — door, window, corner timbers, border
+		# skirt — at the range a player walks past it.
+		# Eye moved off (13,-7.5): that spot is the signpost's own footing
+		# (SIGNPOST_AT is 13.5,-7) and the first render was a close-up of its
+		# post with the cottage behind it.
+		# Second move: (11.8,-9.5) still put the signpost dead on the eye-to-
+		# cottage line; from further east the post falls out of the lane.
+		"name": "08-cottage-front",
+		"eye": Vector2(16.5, -8.5), "eye_h": 1.7,
+		"target": COTTAGE_A_AT, "target_h": 2.5,
 	},
 	{
 		# The whole settlement at the range you first see it from, walking in

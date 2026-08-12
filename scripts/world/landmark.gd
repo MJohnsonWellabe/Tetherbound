@@ -12,7 +12,7 @@ extends Node3D
 ## stronghold's own presentation still needs real art before it is judged.
 ##
 ## Built from primitives rather than a model: nothing in either vendored
-## asset pack (quaternius_farm, stylized_nature) is a ruin or tower, and a
+## asset pack (the since-retired farm pack, stylized_nature) is a ruin or tower, and a
 ## silhouette's whole job is a dark, angular shape on the skyline, which a
 ## handful of tall cylinders already do at this distance.
 ##
