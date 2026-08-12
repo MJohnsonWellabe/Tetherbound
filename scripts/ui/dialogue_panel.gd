@@ -45,6 +45,17 @@ signal finished(conversation_id: String)
 var _runner: RefCounted = RUNNER.new()
 var _guard: int = 0
 var _buffered_during_guard: bool = false
+## True only for the first `_physics_process` tick after `start()`. That tick
+## can be the SAME tick the opening press landed in (if this node's
+## `_physics_process` runs after the arbiter's own), and `is_action_just_pressed`
+## is still true for the whole tick — so without this, the press that opened
+## the conversation reads as a genuine repeat and gets buffered, then replayed
+## as `advance()` the instant the guard clears. A short, single-line
+## conversation (the road gate's lock message) can open and self-close before
+## anything ever observes it open. Only the one tick needs skipping: by the
+## NEXT `_physics_process` call the opening press's just-pressed window has
+## already closed, so a real second press is still caught, same as OF3 intended.
+var _skip_input_this_tick: bool = false
 var _last_portrait: String = ""
 
 @onready var _box: Control = $Root/Box
@@ -112,6 +123,7 @@ func start(conversation_id: String) -> bool:
 		return false
 	_guard = OPEN_GUARD_FRAMES
 	_buffered_during_guard = false
+	_skip_input_this_tick = true
 	_draw()
 	return true
 
@@ -144,7 +156,9 @@ func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	if not _runner.is_active():
 		return
-	if Input.is_action_just_pressed("interact"):
+	var skip_input := _skip_input_this_tick
+	_skip_input_this_tick = false
+	if not skip_input and Input.is_action_just_pressed("interact"):
 		if _guard > 0:
 			_buffered_during_guard = true
 		else:
