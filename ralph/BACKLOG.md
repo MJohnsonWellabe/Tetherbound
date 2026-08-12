@@ -1407,42 +1407,64 @@ wild pal, never having an ally pal to fight with, and never having orbs to
 throw. All three fixed. The required blind pass on the real frames then found
 genuine combat-presentation defects — narrower remainder opened below.
 
-### R9.4-remainder-9-combat — The fight itself doesn't read as an event yet
+**`R9.4-remainder-9-combat` (impact flash, telegraph glow and a real-opponent
+marker, all newly working — verified by direct pixel inspection, not
+asserted) shipped, partial — see `DONE.md`.** Two genuine blind passes and
+four real `tools/survey_combat.sh` captures. The charged-vs-quick size
+differentiation is confirmed working by a fresh blind critic; the orb now
+sits correctly on its drawn arc. What didn't close: this specific encounter's
+camera kept putting the two fighters in a line from the camera, which
+occluded exactly the ground-level telegraph ring and the quick-attack target
+being judged — not proof the mechanisms don't work, but not proof they read
+in the case that matters either. A narrower remainder is opened below for
+what a future capture should check first.
+
+### R9.4-remainder-9-combat-2 — Confirm the fixed mechanisms actually read once the camera isn't lined up against them
 `model: sonnet` · `tests: none (visual)` · `area: combat`
-A genuine blind critic reviewing `R9.4-remainder-9`'s real, working combat
-frames (not placeholder-scene artefacts this time) named several concrete
-presentation gaps, none of them about creature model appeal:
+`R9.4-remainder-9-combat` fixed three real, verified bugs — `impact_flash.gd`
+was rendering nothing at all in the real scene (depth-tested against the very
+creature it was drawn at; fixed with `no_depth_test`), the telegraph glow and
+the thrown orb were both being captured before they had anything to show
+(survey timing bugs, fixed) — and built a working target marker. All four are
+demonstrably real now: `impact_flash`'s ring/streaks/core render correctly in
+an isolated diagnostic AND in `06-charged-attack-lands`, and a fresh blind
+critic independently called the charged-vs-quick weight difference "the
+single clearest impact signal in this whole sequence."
 
-- **No visual impact cue on the quick attack.** Only the health bar moving
-  says a hit landed; the frame itself shows nothing.
-- **The charged attack's impact effect reads as a flat decal** pasted onto
-  the grass rather than something that emanates from the point of contact.
-- **The wind-up telegraph has no visual cue independent of its own banner
-  text** (`! incoming — move`) — cover the text and the frame is
-  indistinguishable from ordinary standing.
-- **The thrown orb in flight reads as a stray lens-flare crossing the sun**,
-  not a projectile arcing at a target a few metres away.
-- **Two visually identical rabbits on screen at once** (the wild pal being
-  fought and an ambient decorative Bramblebun from the same 3-count spawn
-  cluster, `data/config/spawns.json`) with no marker distinguishing which one
-  is actually the opponent.
-- **The arena boundary glow is visible in some frames and absent in others**,
-  with the backdrop also changing between them — reads as two fights spliced
-  together. Not confirmed as a bug: the boundary may be edge-proximity-only
-  by design (matches its own "slides you along it" description), in which
-  case this is a false alarm from frames taken at different points relative
-  to the edge. Check before treating it as a defect.
+What's still open is narrower than the original six bullets:
 
-What already works and should not be re-litigated: HUD element placement and
-hierarchy (enemy bar top-centre, own pal bars bottom-left, orb count
-bottom-right, action prompts bottom-centre) closely matches the Palworld
-reference's own layout; the boundary glow, where present, reads clearly as a
-line; relative scale (trainer > Terrapup > Bramblebun) is correct. Re-render
-with `tools/survey_combat.sh` (now fixed and working, no changes needed to
-reach the arena) and re-run the required blind pass after any fix. Done when:
-a fresh blind critic given the eight frames no longer names impact
-readability, the telegraph, the orb-in-flight or the lookalike-target
-confusion as defects.
+- **Frames `04` and `05` of the last capture happened to line the wild pal up
+  almost directly behind the player's own creature from the combat camera's
+  angle**, hiding the target itself (not just its VFX) enough that a blind
+  critic couldn't judge either the telegraph ring or the quick attack's impact
+  on the actual creature. This may just be bad luck of one random encounter's
+  positions — re-running `tools/survey_combat.sh` a fifth time was not done
+  this round to keep the render budget honest. If it recurs, the ground-level
+  telegraph ring specifically may need a taller or camera-facing component so
+  a same-line occlusion doesn't erase it the way a flat decal does.
+- **The target marker was confirmed correctly tracking the real opponent
+  across three frames including a 90°+ camera swing in round 1**, then called
+  unreliable by a second blind critic in round 2 on a different capture.
+  `target_marker.gd` itself did not change between the two rounds. Most
+  likely explanation, not confirmed: visual confusion from multiple similar
+  decorative rabbits near the real target in that specific frame, not a
+  positioning bug — worth a direct check (dump the marker's actual world
+  position vs. the wild pal's, the way `EV3`'s placement-dump diagnostics
+  did) rather than reasoning from a render alone a third time.
+- **The orb still reads as a blown-out light bloom rather than a solid
+  object**, even now that it's positioned correctly on its arc. `orb.gd`'s own
+  `HALO_SCALE`/colour are the levers named in its file if picked up again.
+- **New, not investigated**: the arena's backdrop changed almost completely
+  between several consecutive frames of the same capture (open field → a
+  village → a different open field → a house and pond) while the boundary
+  ring itself stayed visible throughout. Might be genuine repositioning over
+  the encounter's real duration, might be a real drift bug — `DONE.md`'s
+  entry has the specifics.
+
+Done when: a fresh blind critic, given a capture where the two fighters are
+NOT lined up behind one another, confirms the telegraph and the quick attack
+read the same way the charged attack already does — or names a real defect in
+the mechanism itself rather than the camera angle.
 
 **The original R9.4 brief is NOT repeated here as an open item** — it ran, and
 an identical heading below its own remainders is how a task gets done twice.
