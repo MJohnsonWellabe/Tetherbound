@@ -86,12 +86,49 @@ Report pipeline health in every completion message, even when it is fine — the
 owner gets a push notification for each firing, and "CI green, shipped R2.1" is
 the one line that tells them the loop is alive and working.
 
-## Claim a lease FIRST — before reading the backlog, before anything
+## One live firing per lane — claim that before anything else
 
-**Multiple firings running at once is now the intended design, not a hazard to
-avoid.** Three Routines fire on staggered schedules, and the hourly cron fires
-whether or not the previous firing finished. So the lease no longer asks "is
-anyone working?" — it asks **"is anyone working on MY AREA?"**
+Owner directive, 2026-08-12, reversing part of the "multiple firings is the
+design" call below. In practice, more than three concurrent firings kept
+happening anyway — self-chained successors and the hourly cron backstop both
+fire independently, with nothing stopping them from being alive at once, and
+this repo's own "Realistically this supports two or three concurrent lanes,
+not five" line (further down) was already naming the exact failure mode that
+then happened. Every extra concurrent writer multiplies `BACKLOG.md`/
+`DONE.md` conflicts directly — that is most of what has been slow.
+
+**Zero live firings for the same lane at once, full stop.** This is checked
+*before* the area-lease section below, using the identical mechanism —
+`tools/ralph_status.py`, the same liveness rule, your lane name as a reserved
+pseudo-`area`:
+
+```
+python3 tools/ralph_status.py claim --file ralph/STATUS.md \
+  --firing <your-firing-id> --session <your-session-id> --task lane-heartbeat \
+  --area lane-<b|c|keyed> --state started
+```
+
+- **Claim succeeds** (pushed, or the existing `lane-<you>` block was dead by
+  the same 40-minute/branch-check test used for real areas): you're the only
+  live firing on this lane. Proceed to the area-lease section, and refresh
+  this same heartbeat on the same cadence as any other lease you hold.
+- **Claim fails** — `lane-<you>` is live: **stand down immediately.** Do not
+  read the backlog, do not claim a work area, do not schedule a successor —
+  the live firing already covers that. Say so and end. This is a correct,
+  successful outcome, not a failure.
+
+Release this lease exactly like any other — before you schedule a successor,
+never when you ship (see "Scheduling the successor" below); a successor's
+first act is re-claiming it. `lane-<b|c|keyed>` is a reserved name, never a
+real work area — do not put backlog items under it.
+
+## Claim a lease FIRST — before reading the backlog, before anything else
+
+**Multiple firings running at once, across DIFFERENT lanes, is still the
+design** — that part is not reversed. Three Routines fire on staggered
+schedules, and the hourly cron fires whether or not the previous firing
+finished. So the lease no longer asks "is anyone working?" — it asks **"is
+anyone working on MY AREA?"**
 
 Every backlog item carries an `area:` field. Two firings on different areas do
 not collide and should both run. Two firings on the same area do collide, badly:
@@ -443,9 +480,17 @@ one Routine within an hour. Nothing collided, because the per-area leases held,
 but the token burn multiplies without limit and the owner asked for three lanes,
 not three per lane.
 
-So the order is: finish everything you are going to do, release your lease,
-**then** schedule one successor 2–3 minutes out, then end. If you are still
-taking items, you are not ready to schedule.
+So the order is: finish everything you are going to do, release your area
+lease **and** your lane heartbeat (see "One live firing per lane" above —
+your successor re-claims the lane heartbeat as its own first act, same as you
+did), **then** schedule one successor 2–3 minutes out, then end. If you are
+still taking items, you are not ready to schedule.
+
+This is now backstopped structurally, not just by getting the ordering right:
+even if a firing forks again the way Lane B did below, the next firing on
+that lane — whether a self-scheduled successor or the next hourly cron —
+finds `lane-<you>` still live and stands down instead of running alongside
+it.
 
 **Releasing means deleting your block from `ralph/STATUS.md`, not setting it to
 `shipped`.** Corrected 2026-08-11 — `STATUS.md` used to offer `shipped` as an
@@ -456,8 +501,8 @@ tools/ralph_status.py release --file ralph/STATUS.md --firing <your-firing-id>
 --task <TASK-ID>`; if you want a record that the task shipped, that's what
 `DONE.md` is for.
 
-Release the lease **before** the successor fires, or it reads your area as held
-and stands down.
+Release both **before** the successor fires, or it reads its own lane (and
+possibly your area too) as held and stands down.
 
 Do **not** schedule one when:
 
