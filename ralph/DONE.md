@@ -644,6 +644,42 @@ coarse procedural noise blend, not an untried lever — see the new
 `BLOCKED.md` entry for the full account and what would clear it (the
 owner's own read of the current frames).
 
+## menu-mid-fight-refusal-hint — opening the menu mid-fight now says why, instead of doing nothing
+`tests: smoke_menu` (extended), plus the full 348/348 unit suite (unaffected —
+no gameplay-data or autoload change). Not visual-affecting in the
+conventions.md sense (no new model, material, terrain feature or icon): a
+plain text label using the project's existing font/theme, same category as
+`say()`'s own status line, so no blind-judge pass was run.
+
+`Found along the way` (`BACKLOG.md`) item: `menu_cancel`/shortcuts already
+correctly refused to open the pause menu mid-fight (`game_menu.gd::open()`,
+because it shares a binding with `combat_run` — see `docs/decisions/D14`),
+but the refusal was silent: the button just did nothing, which reads as
+broken rather than rules-respecting.
+
+Added a small `Label` ("RefusalHint"), built in code as a sibling of the
+menu's own `Root` rather than a child of it, so it can be shown while the
+menu itself stays closed and paused. It draws on the menu's own `CanvasLayer`
+(layer 20, above the combat HUD's layer 1), so it reaches the player exactly
+when they are mid-fight. `_read_actions()` now flashes it for `STATUS_SECONDS`
+whenever `open()` refuses.
+
+**Found and fixed a real gap in the test harness itself while proving this**:
+`smoke_menu.gd` builds its world with `root.add_child(world)` but never sets
+`current_scene`, so `game_menu.gd::_fight_in_progress()` — which walks
+`get_tree().get_current_scene()` — silently found nothing in this test,
+regardless of the real combat state. The pre-existing
+`_check_the_fight_guard_can_see_the_fight` check had already documented this
+as a known limit ("this checks the lookup still lands, which is the half that
+can rot" — i.e. it never actually proved `open()` refuses). Added
+`current_scene = world` to the harness's own setup, which is what let the new
+check (`_check_refusal_shows_an_on_screen_reason`) genuinely exercise the real
+refusal path: it forces `CombatManager.state` to `ACTIVE` (the same thing
+`begin()` sets, without a full encounter), presses `inventory` the way a
+player would, and checks BOTH that the menu stayed shut AND that the hint
+became visible with real text — a test that only checked the first half would
+have kept shipping the silent refusal this item exists to fix.
+
 ## R9.4-remainder-8-rocks-repeat — the rocks layer reads as varied stone, not one instance duplicated
 `cc4fe0e`/`1816524`/`604d15e` on `main`. `tests: none (visual)`, plus the full
 348/348 unit suite (unaffected — data-only change, no code touched). Visual-

@@ -39,6 +39,12 @@ func _init() -> void:
 func _run() -> void:
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
+	# Real boot reaches this scene through the engine's own main-scene load, which
+	# sets `current_scene` as a side effect. This harness adds the scene by hand
+	# instead, so without this line `current_scene` stays null and anything that
+	# walks it — `game_menu.gd::_fight_in_progress()` included — silently finds
+	# nothing, whatever the real state of the game is.
+	current_scene = world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -54,6 +60,7 @@ func _run() -> void:
 		return
 
 	_check_the_fight_guard_can_see_the_fight(world)
+	await _check_refusal_shows_an_on_screen_reason(world)
 	await _check_opens_on_the_inventory_button(world)
 	await _check_focus_can_be_driven()
 	await _check_tabs_can_be_cycled()
@@ -120,6 +127,43 @@ func _check_the_fight_guard_can_see_the_fight(world: Node) -> void:
 	if bool(found.call("is_fighting")):
 		_fail("a fight is somehow already running before the test starts")
 	print("fight guard sees: %s" % found.name)
+
+
+## `open()` refusing mid-fight used to be silent — the button just did nothing,
+## which reads as broken rather than rules-respecting. Forces the real combat
+## manager's `state` to ACTIVE (the same thing `begin()` sets, without needing
+## a full encounter) so `is_fighting()` is genuinely true, presses the same
+## button a player would, and checks BOTH that the menu stayed shut AND that a
+## visible reason appeared — a passing test that only checked the first half
+## would keep shipping the silent refusal this exists to catch.
+func _check_refusal_shows_an_on_screen_reason(world: Node) -> void:
+	var combat: Node = _menu.call("_find_combat", world)
+	if combat == null:
+		_fail("cannot force a fight for the refusal check; combat was not found")
+		return
+
+	combat.set("state", 1)  # State.ACTIVE
+	if not bool(combat.call("is_fighting")):
+		_fail("setting combat state to ACTIVE did not make is_fighting() true")
+		combat.set("state", 0)
+		return
+
+	await _press("inventory")
+
+	if bool(_menu.call("is_open")):
+		_fail("the menu opened mid-fight; `menu_cancel` would open a menu instead of fleeing")
+
+	var hint: Label = _menu.get_node_or_null(^"RefusalHint") as Label
+	if hint == null:
+		_fail("no on-screen reason appeared when the menu refused to open mid-fight")
+	elif not hint.visible or hint.text.is_empty():
+		_fail("the refusal hint exists but is not showing a message")
+	else:
+		print("refusal hint shown: \"%s\"" % hint.text)
+
+	combat.set("state", 0)  # State.INACTIVE, so later checks see a clean fight
+	if bool(combat.call("is_fighting")):
+		_fail("could not reset combat state after the refusal check")
 
 
 ## What the mouse was doing before the menu opened, so closing can be checked

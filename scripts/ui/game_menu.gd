@@ -31,6 +31,13 @@ const STATUS_SECONDS := 3.0
 ## default. Long enough that it cannot happen by accident during a fight.
 const PANIC_SECONDS := 1.5
 
+## Matches combat_hud.gd's own outline/shadow treatment so the refusal hint
+## reads the same as the HUD text it appears next to, without importing that
+## file's scene layout or constants.
+const REFUSAL_OUTLINE := Color(0.03, 0.04, 0.05, 0.95)
+const REFUSAL_OUTLINE_SIZE := 7
+const REFUSAL_SHADOW := Color(0.0, 0.0, 0.0, 0.55)
+
 var game: Node = null
 
 ## The player's controls. Owned here rather than by the autoload because this
@@ -53,6 +60,12 @@ var _paused_before: bool = false
 
 var _status_left: float = 0.0
 var _last_revision: int = -1
+
+## Independent of `_status`/`_status_left`: those live inside `_root`, which is
+## invisible while the menu is closed, and this hint is shown precisely when
+## the menu refuses to become visible at all.
+var _refusal_left: float = 0.0
+var _refusal_label: Label = null
 
 ## Set while the settings tab is capturing a button. The shell polls actions,
 ## and the button being rebound is very often one the shell itself reads.
@@ -84,6 +97,30 @@ func _ready() -> void:
 	_footer.text = str(_config.get("footer", ""))
 	_build_tabs()
 	_root.visible = false
+	_build_refusal_label()
+
+
+## A sibling of `_root`, not a child of it, so it can be shown while the menu
+## itself stays closed. This layer draws above the combat HUD (layer 20 vs 1,
+## see game_menu.tscn), so the hint reaches the player mid-fight, which is the
+## one moment it exists to explain.
+func _build_refusal_label() -> void:
+	_refusal_label = Label.new()
+	_refusal_label.name = "RefusalHint"
+	_refusal_label.visible = false
+	_refusal_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_refusal_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_refusal_label.anchor_top = 0.12
+	_refusal_label.anchor_bottom = 0.12
+	_refusal_label.offset_left = -400
+	_refusal_label.offset_right = 400
+	_refusal_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_refusal_label.add_theme_font_size_override("font_size", 28)
+	_refusal_label.add_theme_constant_override("outline_size", REFUSAL_OUTLINE_SIZE)
+	_refusal_label.add_theme_color_override("font_outline_color", REFUSAL_OUTLINE)
+	_refusal_label.add_theme_color_override("font_shadow_color", REFUSAL_SHADOW)
+	_refusal_label.add_theme_constant_override("shadow_offset_y", 3)
+	add_child(_refusal_label)
 
 
 ## Snapshot the input map as project.godot left it, then lay the player's
@@ -247,12 +284,27 @@ func say(message: String) -> void:
 	_status_left = STATUS_SECONDS if not message.is_empty() else 0.0
 
 
+## The on-screen explanation `open()` refusing mid-fight never had: without
+## this, the menu button just does nothing and looks broken rather than rules-
+## respecting. See `open()`'s own comment on why the menu yields here at all.
+func _flash_refusal() -> void:
+	_refusal_label.text = "Can't open the menu during a fight"
+	_refusal_label.visible = true
+	_refusal_left = STATUS_SECONDS
+
+
 # --- the frame loop ---------------------------------------------------------
 
 
 func _process(delta: float) -> void:
 	_read_panic(delta)
 	_read_actions()
+
+	if _refusal_left > 0.0:
+		_refusal_left -= delta
+		if _refusal_left <= 0.0:
+			_refusal_label.visible = false
+
 	if not _open:
 		return
 
@@ -343,11 +395,13 @@ func _read_actions() -> void:
 
 	if not _open:
 		if Input.is_action_just_pressed(str(_config.get("open_action", "menu_cancel"))):
-			open()
+			if not open() and _fight_in_progress():
+				_flash_refusal()
 			return
 		for action in _shortcuts().keys():
 			if Input.is_action_just_pressed(str(action)):
-				open(str(_shortcuts()[action]))
+				if not open(str(_shortcuts()[action])) and _fight_in_progress():
+					_flash_refusal()
 				return
 		return
 

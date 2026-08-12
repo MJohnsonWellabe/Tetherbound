@@ -2090,8 +2090,9 @@ Phase 1 onward rather than at the end.
   Phase -0.85, fixes that).
 - **`menu.json`'s stray `test_menu_config.gd` references and phantom
   `hotbar_columns` comment fixed — see `DONE.md`.**
-- Opening the menu mid-fight is silently refused with no on-screen
-  explanation. `model: haiku`
+- ~~Opening the menu mid-fight is silently refused with no on-screen
+  explanation.~~ **Fixed 2026-08-12 — see `DONE.md` (`menu-mid-fight-refusal-
+  hint`).**
 - **`smoke_traversal` / `smoke_combat` flakes — PROMOTED to `LP1` in
   Phase -0.95.** Batched pushes make a random red cost up to four finished
   items instead of one, so this stopped being a small item.
