@@ -397,6 +397,26 @@ verdict changes with fresh eyes. Done when: a blind critic given
 shadow, or explicitly agrees it reads as motivated (traces it to the Barn /
 the Rise itself without being told).
 
+**Attempted 2026-08-12, no progress to report — an environment finding, not
+a design one.** `tools/capture_paths.gd` against the live `meadows_playground`
+scene (23,762 scattered props) did not complete a single one of its four
+viewpoints inside 100+ minutes in this session's container, confirmed
+actively computing the whole time (CPU pinned near 100%, no swap, no stalled
+syscall) rather than hung. A scratch, deliberately cheaper variant (2
+viewpoints instead of 4, `SETTLE_FRAMES` 240→30, `POSE_FRAMES` 4→2, never
+committed) fared no better — 12+ minutes with zero frames and climbing at the
+same rate, which says the per-frame software-rasterization cost dominates,
+not the settle-frame count. `top -H` on the running process showed one
+thread pinned near 100% and the four `WorkerThread`s idle, so this isn't
+using the box's other cores either. Two background attempts were also killed
+outright by this session's worker process restarting mid-render, independent
+of the slowness itself. Whoever picks this up next: check whether this
+container's render performance for the full playground scene is typical
+before budgeting time against the documented "20-30min" precedent (that
+number came from a different capture tool/session) — if it reproduces, that
+is worth its own `area: loop` backlog entry, since it blocks every
+visual-affecting task in Phase -0.6 onward, not just this one.
+
 **`EV4-hillside-seam` (blotchy hillside slope material) rounds 1-4 shipped —
 see `DONE.md`.** Rock went from mathematically unreachable (round 2's wider
 blend pushed its threshold past this landform's own max slope) to a
