@@ -1,0 +1,6 @@
+[
+  { "tag": "cleared", "text": "Both Quaternius MegaKits (village + fantasy props) are staged — the owner downloaded and supplied them directly. Unblocks EV6, EV7, EV2-landmark-ceiling." },
+  { "tag": "cleared", "text": "Push access is fully restored (verified via a merged PR through the normal CI path)." },
+  { "tag": "art", "text": "Reference-art rule stands (“never render without me loading art first”) — but the waiting list is currently empty. All three hero-object boards (pylon, relay, tether machine) arrived 2026-08-11." },
+  { "tag": "pg", "text": "Play gates the loop does NOT wait on (D21): R0.11 (full first-day playthrough), the two P0 device checks from SA0/SA1, and EV10 (cohesion pass, parked until EV2–EV9 ship)." }
+]

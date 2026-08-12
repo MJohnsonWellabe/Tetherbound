@@ -1,0 +1,513 @@
+<title>Ralph Ledger</title>
+<style>
+  :root {
+    --bg: #eff1ea;
+    --surface: #fbfbf7;
+    --surface-2: #e6e8dc;
+    --surface-3: #dcdfcf;
+    --border: #d2d5c4;
+    --border-soft: #dfe1d3;
+    --text: #23281f;
+    --text-muted: #5b6152;
+    --text-faint: #868c76;
+    --accent: #9c611c;
+    --accent-strong: #7d4c15;
+    --accent-bg: #f2e4ce;
+    --ok: #2f6e3c;
+    --ok-bg: #e2ede3;
+    --warn: #a83824;
+    --warn-bg: #f3e2dc;
+    --info: #3f52a0;
+    --info-bg: #e3e5f4;
+    --muted-pill: #767c67;
+    --muted-pill-bg: #e6e8dc;
+    --shadow: 0 1px 2px rgba(30, 34, 24, 0.05), 0 6px 20px rgba(30, 34, 24, 0.05);
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14170f;
+      --surface: #1b1f15;
+      --surface-2: #23271b;
+      --surface-3: #2c311f;
+      --border: #363c29;
+      --border-soft: #2b3021;
+      --text: #eceee2;
+      --text-muted: #a7ac97;
+      --text-faint: #767c67;
+      --accent: #e0a24c;
+      --accent-strong: #f0b562;
+      --accent-bg: #3a2d13;
+      --ok: #6bbd7c;
+      --ok-bg: #1e3124;
+      --warn: #e37c60;
+      --warn-bg: #3a251f;
+      --info: #8d9cec;
+      --info-bg: #232a4a;
+      --muted-pill: #9aa088;
+      --muted-pill-bg: #23271b;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.35);
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #14170f;
+    --surface: #1b1f15;
+    --surface-2: #23271b;
+    --surface-3: #2c311f;
+    --border: #363c29;
+    --border-soft: #2b3021;
+    --text: #eceee2;
+    --text-muted: #a7ac97;
+    --text-faint: #767c67;
+    --accent: #e0a24c;
+    --accent-strong: #f0b562;
+    --accent-bg: #3a2d13;
+    --ok: #6bbd7c;
+    --ok-bg: #1e3124;
+    --warn: #e37c60;
+    --warn-bg: #3a251f;
+    --info: #8d9cec;
+    --info-bg: #232a4a;
+    --muted-pill: #9aa088;
+    --muted-pill-bg: #23271b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent-strong); }
+
+  .page { max-width: 1000px; margin: 0 auto; padding: 0 24px 120px; }
+
+  h1, h2, h3, .display {
+    font-family: Iowan Old Style, "Palatino Linotype", Palatino, Georgia, serif;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  code, .mono, .id, .pill, .stat-value, time {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- header ---------- */
+
+  header.top {
+    padding: 44px 0 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .eyebrow {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  h1 { font-size: 34px; font-weight: 600; letter-spacing: -0.01em; }
+  .subtitle {
+    margin-top: 10px;
+    max-width: 62ch;
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+  .subtitle code { font-size: 13px; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+
+  .stat-strip {
+    margin-top: 26px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+  }
+  .stat-value { font-size: 24px; font-weight: 600; color: var(--text); }
+  .stat-value.accent { color: var(--accent-strong); }
+  .stat-value.warn { color: var(--warn); }
+  .stat-label {
+    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-faint); margin-top: 3px;
+  }
+
+  @media (max-width: 700px) {
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---------- framing note ---------- */
+
+  .framing {
+    margin: 28px 0 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 22px;
+    box-shadow: var(--shadow);
+  }
+  .framing h2 { font-size: 15px; margin-bottom: 8px; }
+  .framing p { margin: 8px 0; font-size: 14px; color: var(--text-muted); }
+  .framing p:first-of-type { margin-top: 0; }
+  .framing strong { color: var(--text); }
+
+  /* ---------- section shell ---------- */
+
+  section.block { margin-top: 46px; }
+  .block-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; margin-bottom: 4px;
+  }
+  .block-head h2 { font-size: 20px; }
+  .block-sub { color: var(--text-faint); font-size: 13px; margin: 4px 0 18px; }
+
+  /* ---------- live status ---------- */
+
+  .lease-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+  }
+  .lease-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+  }
+  .lease-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .lease-task { font-size: 14px; font-weight: 600; }
+  .lease-firing { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+  .chip {
+    font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 20px; white-space: nowrap; font-weight: 600;
+  }
+  .chip.working { background: var(--ok-bg); color: var(--ok); }
+  .chip.started { background: var(--info-bg); color: var(--info); }
+  .lease-meta { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .lease-note {
+    margin-top: 10px; font-size: 12.5px; color: var(--text-muted);
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .lease-updated { margin-top: 10px; font-size: 11px; color: var(--text-faint); }
+
+  /* ---------- pills ---------- */
+
+  .pill {
+    display: inline-block; font-size: 11px; padding: 2px 7px;
+    border-radius: 5px; background: var(--muted-pill-bg); color: var(--muted-pill);
+    border: 1px solid var(--border-soft);
+  }
+  .pill.area { color: var(--accent-strong); background: var(--accent-bg); border-color: transparent; }
+
+  /* ---------- blocked ---------- */
+
+  .blocked-list { display: flex; flex-direction: column; gap: 10px; }
+  .blocked-item {
+    background: var(--surface); border: 1px solid var(--border-soft);
+    border-left: 3px solid var(--warn); border-radius: 0 10px 10px 0;
+    padding: 14px 18px; box-shadow: var(--shadow);
+  }
+  .blocked-item h3 { font-size: 14.5px; font-family: inherit; font-weight: 600; }
+  .blocked-item p { font-size: 13px; color: var(--text-muted); margin: 6px 0 0; }
+  .blocked-item .clears { font-size: 12px; color: var(--text-faint); margin-top: 8px; }
+  .blocked-item .clears strong { color: var(--text-muted); }
+
+  .info-strip {
+    display: flex; flex-direction: column; gap: 8px; margin-top: 16px;
+    font-size: 13px; color: var(--text-muted);
+  }
+  .info-strip .row { display: flex; gap: 8px; align-items: baseline; }
+  .info-strip .tag {
+    flex-shrink: 0; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--ok); background: var(--ok-bg); padding: 2px 7px; border-radius: 5px; font-weight: 600;
+  }
+  .info-strip .tag.pg { color: var(--info); background: var(--info-bg); }
+
+  /* ---------- phases ---------- */
+
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .phase-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px; cursor: pointer; user-select: none;
+    list-style: none;
+  }
+  .phase-head::-webkit-details-marker { display: none; }
+  .phase-head .chev {
+    font-size: 11px; color: var(--text-faint); transition: transform 0.15s ease;
+    width: 12px; text-align: center; flex-shrink: 0;
+  }
+  details[open] > .phase-head .chev { transform: rotate(90deg); }
+  .phase-num {
+    font-family: ui-monospace, monospace; font-size: 13px; color: var(--accent-strong);
+    background: var(--accent-bg); padding: 3px 8px; border-radius: 6px; flex-shrink: 0;
+  }
+  .phase-title { font-family: Iowan Old Style, Georgia, serif; font-size: 16.5px; flex: 1; }
+  .phase-counts { display: flex; gap: 6px; flex-shrink: 0; }
+  .count-open {
+    font-size: 11.5px; font-weight: 700; background: var(--warn-bg); color: var(--warn);
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .count-closed {
+    font-size: 11.5px; background: var(--muted-pill-bg); color: var(--muted-pill);
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .phase-body { padding: 4px 18px 18px; border-top: 1px solid var(--border-soft); }
+
+  .item {
+    padding: 14px 0; border-bottom: 1px solid var(--border-soft);
+  }
+  .item:last-of-type { border-bottom: none; }
+  .item-head { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
+  .item-id {
+    font-size: 13px; font-weight: 700; color: var(--accent-strong);
+  }
+  .item-title { font-size: 14.5px; font-weight: 500; }
+  .item-meta { margin-top: 5px; font-size: 12px; color: var(--text-faint); }
+  .item-done { margin-top: 6px; font-size: 13px; color: var(--text-muted); max-width: 74ch; }
+  .item-done::before { content: "Done when — "; color: var(--text-faint); font-style: italic; }
+
+  .closed-line {
+    margin-top: 10px; font-size: 12.5px; color: var(--text-faint);
+    padding-top: 10px; border-top: 1px dashed var(--border-soft);
+  }
+
+  details.lb {
+    margin-top: 8px; font-size: 12.5px;
+  }
+  details.lb summary {
+    cursor: pointer; color: var(--info); list-style: none;
+  }
+  details.lb summary::-webkit-details-marker { display: none; }
+  details.lb summary::before { content: "▸ "; }
+  details.lb[open] summary::before { content: "▾ "; }
+  .lb-item { margin: 8px 0 0 14px; padding: 8px 12px; background: var(--surface-2); border-radius: 6px; }
+  .lb-item .lb-id { font-weight: 700; color: var(--text-muted); }
+  .lb-item p { margin: 4px 0 0; color: var(--text-muted); }
+
+  .no-open { font-size: 13px; color: var(--text-faint); font-style: italic; padding: 10px 0; }
+
+  footer {
+    margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-faint);
+  }
+</style>
+<body>
+<div class="page">
+
+  <header class="top">
+    <div class="eyebrow">Tetherbound &middot; Ralph loop</div>
+    <h1>Ralph Ledger</h1>
+    <p class="subtitle">
+      A digest of <code>ralph/BACKLOG.md</code>, <code>ralph/BLOCKED.md</code>
+      and the live leases on <code>ralph-status</code>, regenerated on a schedule.
+      This page is a read-only view — the loop itself only ever reads the source files.
+    </p>
+    <div class="stat-strip">
+      <div class="stat"><div class="stat-value warn" id="statOpen">&mdash;</div><div class="stat-label">Open items</div></div>
+      <div class="stat"><div class="stat-value" id="statClosed">&mdash;</div><div class="stat-label">Shipped</div></div>
+      <div class="stat"><div class="stat-value accent" id="statLive">&mdash;</div><div class="stat-label">Live lanes right now</div></div>
+      <div class="stat"><div class="stat-value" id="statBlocked">&mdash;</div><div class="stat-label">Waiting on the owner</div></div>
+    </div>
+  </header>
+
+  <div class="framing">
+    <h2>Why this reads top-to-bottom, and not by lane</h2>
+    <p><strong>Order is priority, and it's load-bearing.</strong> <code>BACKLOG.md</code>'s own preamble says
+      "ordered, work top-down" &mdash; every firing's first move is to take the topmost unblocked item. The
+      negative-numbered phases below (<code>-1</code> through <code>-0.5</code>) exist so owner-driven urgent
+      work can be spliced ahead of the plan without renumbering anything, so this page keeps that exact order
+      rather than sorting by date or topic.</p>
+    <p><strong>"Lane" isn't a subject &mdash; it's a rotation slot.</strong> There are three lanes (a keyed cron
+      Routine, Lane B, Lane C); B and C run the same prompt with one word changed, and each just claims whatever
+      unclaimed item is topmost. Grouping this ledger by lane would cluster unrelated work and split related
+      work, essentially at random &mdash; so it isn't offered as a view here.</p>
+    <p>Closed items are collapsed to a single count per phase. A few carry real context an open
+      <code>-remainder</code> item still depends on to make sense &mdash; those are kept, under a
+      <strong>load-bearing</strong> expander, right where they're needed.</p>
+  </div>
+
+  <section class="block" id="liveSection">
+    <div class="block-head"><h2>Live right now</h2></div>
+    <p class="block-sub">Current leases on <code>ralph-status</code> &mdash; which areas are held, by which firing, doing what.</p>
+    <div class="lease-grid" id="leaseGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2>Waiting on the owner</h2></div>
+    <p class="block-sub">Real stops, each with what would clear it &mdash; from <code>BLOCKED.md</code>.</p>
+    <div class="blocked-list" id="blockedList"></div>
+    <div class="info-strip" id="infoStrip"></div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2>The plan, phase by phase</h2></div>
+    <p class="block-sub">Every open item, grouped exactly as <code>BACKLOG.md</code> orders them. Collapsed phases show counts only.</p>
+    <div id="phaseList"></div>
+  </section>
+
+  <footer>
+    Built from <code>main@__META_MAIN_SHA__</code> and <code>ralph-status@__META_STATUS_SHA__</code>, __META_DATE__.
+    Regenerated on a schedule from <code>ralph/ledger/</code> &mdash; see <code>REGENERATE.md</code>.
+  </footer>
+
+</div>
+
+<script>
+const PHASES = __PHASES_JSON__;
+const LEASES = __LEASES_JSON__;
+const BLOCKED_ON_OWNER = __BLOCKED_JSON__;
+const INFO_STRIP = __INFO_STRIP_JSON__;
+
+function esc(s) {
+  return (s || "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+}
+
+function renderStats() {
+  let open = 0, closed = 0;
+  PHASES.forEach(p => { open += p.open_items.length; closed += p.closed_count; });
+  document.getElementById("statOpen").textContent = open;
+  document.getElementById("statClosed").textContent = closed;
+  document.getElementById("statLive").textContent = new Set(LEASES.filter(l => l.area.indexOf("lane-") !== 0).map(l => l.area)).size;
+  document.getElementById("statBlocked").textContent = BLOCKED_ON_OWNER.length;
+}
+
+function renderLeases() {
+  const grid = document.getElementById("leaseGrid");
+  LEASES.filter(l => l.task !== "lane-heartbeat").forEach(l => {
+    const card = document.createElement("div");
+    card.className = "lease-card";
+    card.innerHTML = `
+      <div class="lease-top">
+        <div>
+          <div class="lease-task mono">${esc(l.task)}</div>
+          <div class="lease-firing">${esc(l.firing)}</div>
+        </div>
+        <span class="chip ${esc(l.state)}">${esc(l.state)}</span>
+      </div>
+      <div class="lease-meta"><span class="pill area">${esc(l.area)}</span></div>
+      <div class="lease-note">${esc(l.note)}</div>
+      <div class="lease-updated">updated ${esc(l.updated)}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderBlocked() {
+  const list = document.getElementById("blockedList");
+  BLOCKED_ON_OWNER.forEach(b => {
+    const div = document.createElement("div");
+    div.className = "blocked-item";
+    div.innerHTML = `
+      <h3>${esc(b.title)}</h3>
+      <p>${esc(b.body)}</p>
+      <p class="clears"><strong>Clears when:</strong> ${esc(b.clears)}</p>
+    `;
+    list.appendChild(div);
+  });
+
+  const strip = document.getElementById("infoStrip");
+  INFO_STRIP.forEach(i => {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML = `<span class="tag ${i.tag === 'pg' ? 'pg' : ''}">${esc(i.tag)}</span><span>${esc(i.text)}</span>`;
+    strip.appendChild(row);
+  });
+}
+
+function renderPhases() {
+  const root = document.getElementById("phaseList");
+  PHASES.forEach((p, idx) => {
+    const details = document.createElement("details");
+    details.className = "phase";
+    if (p.open_items.length > 0 && (String(p.phase_number).charAt(0) === "-" || idx < 2)) details.open = true;
+
+    const summary = document.createElement("summary");
+    summary.className = "phase-head";
+    summary.innerHTML = `
+      <span class="chev">&#9656;</span>
+      <span class="phase-num">Ph. ${esc(p.phase_number)}</span>
+      <span class="phase-title">${esc(p.title)}</span>
+      <span class="phase-counts">
+        ${p.open_items.length ? `<span class="count-open">${p.open_items.length} open</span>` : ""}
+        ${p.closed_count ? `<span class="count-closed">${p.closed_count} shipped</span>` : ""}
+      </span>
+    `;
+    details.appendChild(summary);
+
+    const body = document.createElement("div");
+    body.className = "phase-body";
+
+    if (p.open_items.length === 0) {
+      body.innerHTML = `<div class="no-open">Nothing open in this phase — ${p.closed_count} item${p.closed_count === 1 ? "" : "s"} shipped. See DONE.md.</div>`;
+    } else {
+      p.open_items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div class="item-head">
+            <span class="item-id mono">${esc(item.id)}</span>
+            <span class="item-title">${esc(item.title)}</span>
+          </div>
+          ${item.meta ? `<div class="item-meta mono">${esc(item.meta)}</div>` : ""}
+          ${item.done_when ? `<div class="item-done">${esc(item.done_when)}</div>` : ""}
+        `;
+        body.appendChild(div);
+      });
+      if (p.closed_count) {
+        const line = document.createElement("div");
+        line.className = "closed-line";
+        line.textContent = `${p.closed_count} more item${p.closed_count === 1 ? "" : "s"} shipped this phase — see DONE.md.`;
+        body.appendChild(line);
+      }
+    }
+
+    if (p.load_bearing_closed && p.load_bearing_closed.length) {
+      const lb = document.createElement("details");
+      lb.className = "lb";
+      const lbSummary = document.createElement("summary");
+      lbSummary.textContent = `${p.load_bearing_closed.length} closed item${p.load_bearing_closed.length === 1 ? "" : "s"} the open items above still depend on`;
+      lb.appendChild(lbSummary);
+      p.load_bearing_closed.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "lb-item";
+        div.innerHTML = `<span class="lb-id mono">${esc(c.id)}</span> — ${esc(c.title)}<p>${esc(c.why_load_bearing)}</p>`;
+        lb.appendChild(div);
+      });
+      body.appendChild(lb);
+    }
+
+    details.appendChild(body);
+    root.appendChild(details);
+  });
+}
+
+renderStats();
+renderLeases();
+renderBlocked();
+renderPhases();
+</script>
+</body>

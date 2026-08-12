@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Does the hillside's rock ever read as stone, or is the procedural slope-blend a ceiling to accept?",
+    "body": "Five real rounds — three on colour/value, two on height/relief, one full order of magnitude apart in amplitude — with real measured movement on every lever and zero movement in a blind critic's verdict across all five.",
+    "clears": "The owner looks at shots/hillside/dome-overview.png and either accepts the read, or says in their own words what's actually wrong."
+  },
+  {
+    "title": "Is grandpas-house-route.png's “flanking” read worth further iteration, or a placement-density limit to accept?",
+    "body": "Five rounds fixed genuine mechanisms (clump straddling, stray placement, oversized clump radius); two rounds that added density made the same frame measurably worse, for a now-understood reason.",
+    "clears": "The owner looks at grandpas-house-route.png and says it's fine, or what's actually wrong, in their own words."
+  },
+  {
+    "title": "The square-convergence “unmotivated dark patch” is identified but not fixed — same open question as the route above",
+    "body": "Direct pixel measurement found the real cause: pure-path pixels average luma 130, pure-grass pixels average luma 67 — ordinary material contrast, not a rendering defect. Fixing it trades against the path's own feathered-edge design.",
+    "clears": "The owner accepts the current read or names the tradeoff they want; the fix may also close the route entry above."
+  },
+  {
+    "title": "Does the creature roster clear a Palworld-level appeal bar, or does it need to?",
+    "body": "Four blind-judge rounds called all three previewed starters “an asset preview, not a hero character portrait.” The only lever is a roster-wide material/lighting pass — no new meshes are permitted at any credit balance.",
+    "clears": "The owner says whether a roster-wide pass is worth commissioning, and if so, whose scope it joins."
+  },
+  {
+    "title": "NP1-geometry — no real hair/accessory geometry exists, and generating one is foreclosed",
+    "body": "Checked directly: villager_female/male/grunt are each one fused mesh, no separable hair/accessory node — same limitation as trainer/Grandpa/Warden. The only fix is another Meshy generation, which D23/D24 forbid for this purpose.",
+    "clears": "The owner accepts the placeholder-primitive look as permanent, or names a non-Meshy source (a CC0 pack) for modular hair/accessory parts."
+  },
+  {
+    "title": "ASSET_LEDGER.md's licence claim is false",
+    "body": "The ledger states everything in the build is CC0 1.0. It isn't — the Meshy-generated creatures and the Plumberry Plains pack are not CC0.",
+    "clears": "The owner supplies the correct licence wording."
+  }
+]
