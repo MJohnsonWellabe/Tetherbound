@@ -72,13 +72,21 @@ static func using_gamepad() -> bool:
 ## the combined arrows glyph) for simpler symbols. 28->36 was the smallest
 ## step that read clearly in a local crop test; every other glyph here is
 ## already simple enough that a larger render only helps it too.
-static func icon(id: String, px: int = 36) -> String:
+## `tint`, if given, recolours the glyph itself via BBCode `[img]`'s own
+## `color=` attribute -- added because a caller wrapping the whole verb
+## (icon and label together) in an outer `[color=...]` tag does NOT reach
+## the image, only the text: a real defect a blind visual-judge pass on
+## `HD1` caught directly (combat's dimmed verbs showed a greyed-out label
+## next to a still-fully-saturated icon, reading as broken rather than
+## disabled).
+static func icon(id: String, px: int = 36, tint: Color = Color.WHITE) -> String:
 	if not GLYPHS.has(id):
 		return "[%s]" % id
 	var device := "gamepad" if using_gamepad() else "keyboard"
 	var entry: Variant = GLYPHS[id][device]
 	var files: Array = entry if entry is Array else [entry]
+	var colour_attr := "" if tint == Color.WHITE else " color=#%s" % tint.to_html(true)
 	var tags: Array[String] = []
 	for file: String in files:
-		tags.append("[img=%dx%d]%s%s[/img]" % [px, px, DIR, file])
+		tags.append("[img=%dx%d%s]%s%s[/img]" % [px, px, colour_attr, DIR, file])
 	return "".join(tags)

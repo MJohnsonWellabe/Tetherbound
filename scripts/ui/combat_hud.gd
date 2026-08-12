@@ -266,11 +266,18 @@ func _draw_actions() -> void:
 ## own reproduction case, `combat_throw` showing "F" to a gamepad player and
 ## vice versa, lived exactly here.
 func _verb(glyph_id: String, label: String, ready: bool) -> String:
+	var colour := Color.html(VERB_READY if ready else VERB_DIMMED)
 	# Default size (36), not smaller: EV9's own history already found 28px
 	# read as illegible mush on this exact `cancel`/Escape glyph's baked-in
 	# "ESC" text, and `run`/`cancel` here are that same icon.
+	#
+	# The tint is passed to the icon explicitly, not left to the outer
+	# `[color]` tag below -- BBCode `[color]` only recolours text, never an
+	# embedded `[img]`, which a blind visual-judge pass on this exact row
+	# caught directly (a dimmed label sitting next to a still fully-bright
+	# icon, reading as broken rather than disabled).
 	return "[color=#%s]%s %s[/color]" % [
-		VERB_READY if ready else VERB_DIMMED, INPUT_GLYPH.icon(glyph_id), label
+		VERB_READY if ready else VERB_DIMMED, INPUT_GLYPH.icon(glyph_id, 36, colour), label
 	]
 
 
