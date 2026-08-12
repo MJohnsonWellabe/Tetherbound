@@ -283,6 +283,59 @@ Does not touch anything else on `ralph-status`; the live lease blocks
 currently on that branch are unmodified except for the one comment line
 these commits update directly.
 
+## R2.2 — Tool durability and free repair
+`tests: test_durability` (new, 12 cases) plus the full suite, both green
+locally headless (324/324, 43,652 assertions). Not visual-affecting (no
+scene/material/UI-art change, only numbers and labels in existing panels),
+matching `R2.1`'s own precedent — no blind-judge pass applies.
+
+Each tool (`axe`/`pickaxe`/`hammer`/`knife`/`fishing_rod`) gained a
+`durability` field in `data/items/items.json` (40, tunable, same for all
+five — only `hammer`/`fishing_rod` carry it with nothing damaging them yet,
+same "exists but gates nothing" scope `R2.1` used for those two).
+`item_db.gd::max_durability()` reads it; 0 for anything that isn't a tool.
+
+The current value lives in the SAME per-slot dictionary `inventory.gd`
+already stores stacks in (`{"id":..., "n":..., "durability":...}`) rather
+than a parallel structure — a slot with no `durability` key reads as fully
+repaired, so `add()` needed no changes at all; the key is only ever written
+once something actually damages or repairs it. New `inventory.gd` surface:
+`find_slot(id)` (first slot holding an id, tools are `stack:1` so normally
+at most one), `durability_at`/`max_durability_at`, `damage_tool` (floors at
+0 — GAME_DESIGN.md 19 says repair, never replace, so a broken tool is never
+destroyed or removed), `repair_tool` (free, full, a no-op if already at max
+so it doesn't spuriously bump `revision`).
+
+`harvest_node.gd::_on_gathered()` now checks durability, not just
+ownership, for both halves of `item_db.gd::harvest_yield()`'s gating: the
+required-tool check (a broken axe no longer pays wood's full amount) AND
+the owns-any-tool check (**a real bug caught before shipping**: the first
+pass left the owns-any-tool loop reading `Inventory.count()` only, so a
+broken required tool still counted as "a tool, just the wrong one" and paid
+0 instead of falling back to the bare-handed rate — confirmed with a
+throwaway script before touching the fix, then confirmed again after).
+Fixed by making that loop durability-aware too, and confirmed the
+still-correct case alongside it: a working but genuinely wrong tool (a
+pickaxe on a wood node) still pays 0, exactly as `R2.1` shipped it. A
+successful full-yield gather (right tool, working) wears that tool down by
+one; a bare-handed or wrong-tool gather touches no tool, since none was
+actually used.
+
+Repair itself: `tab_backpack.gd`'s existing `_read_use()` (the same verb
+that already heals from a focused potion) now also repairs a focused tool
+that isn't at full durability, free, with a status line either way. **Scope
+note, matching `R2.1`'s own pattern of naming what a task does not do**:
+GAME_DESIGN.md 19 says repair happens "at appropriate station," but `R2.7`
+(Workbench and storage container) — the item that will actually place a
+workbench object in the world — hasn't shipped, so there is no station to
+gate against yet. Repair is free from the backpack menu itself for now;
+whoever ships `R2.7` should decide whether to move this behind proximity to
+the new object or leave it as is. The backpack UI also now shows a tool's
+`durability/max` instead of its always-`1` count, in both the slot grid
+(`poll()`) and the detail panel (`_describe()`), so a player can actually
+see a tool wearing down rather than discovering it only when a gather
+suddenly pays half.
+
 ## R2.1 — Tools: axe, pickaxe, hammer, knife, fishing rod; gathering gated on the held tool
 `49a05d4` · `tests: test_inventory` — full suite run locally, headless, 313/313 green (43,625 assertions),
 which includes `test_inventory.gd`'s new cases individually confirmed passing.

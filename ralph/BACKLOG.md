@@ -1321,10 +1321,10 @@ sense — both are simply not safe to start with this many concurrent
 lanes live; a future firing with the areas quiet is the right one to
 take them.
 
-### R2.2 — Tool durability and free repair
-`model: sonnet` · `tests: test_durability` (new)
-`GAME_DESIGN.md` §19. Repair is free at the workbench — no repair-material
-economy.
+**`R2.2` (Tool durability and free repair) shipped — see `DONE.md`.** Repair
+is free, from the backpack menu rather than a physical workbench — `R2.7`
+(Workbench and storage container, below) hasn't built a placed station yet
+for GAME_DESIGN.md §19's "at appropriate station" to gate against.
 
 ### R2.3 — Real tree/rock harvesting on the vegetation
 `model: sonnet` · `tests: test_harvest`
