@@ -270,33 +270,53 @@ own budget guard applies here too). A narrower remainder is opened below.
 round either** — still open, still needs new mechanisms bible §7C names, and
 `EV5` (water) still has to exist before "distance to water" means anything.
 
-### EV3-remainder-2 — square-convergence's row-planted flowers, and grandpas-house-route's under-clustering
-`model: opus` · `tests: smoke_art` · `area: vegetation`
-What round 1 of `EV3-remainder` did NOT fix, so the next pass does not
-re-diagnose it. Two distinct, frame-specific findings from the round-2 blind
-critique, not the same defect twice:
-- **`square-convergence.png`**: the flower patch left of the well sits in
-  "visible parallel diagonal rows... reads as a planted crop field," the
-  single clearest "generator, not clustering" tell across both rounds.
-  `path_bias_jitter` did not touch this — that patch is likely a `strays`-
-  or unbiased-clump-heavy area near a clearing boundary, not one of the
-  path-biased clumps at all, so whatever produces the row pattern here is a
-  different mechanism than the one `path_bias`/`path_bias_jitter` address.
-  Worth checking directly (render just this clump in isolation) before
-  guessing at a fix.
-- **`grandpas-house-route.png`**: still reads as "thin uniform scatter," not
-  clusters — single plants or pairs at fairly regular intervals, no size
-  variation, no patch pushing close to the path next to one further back.
-  `the-rise-route.png` (same layer, same config, different local terrain)
-  reads as "a real step toward it" in the same round of critique, so the
-  lever likely already works when clumps land somewhere with more open
-  ground to work with; this frame's stretch of path may simply have drawn
-  fewer/smaller path-biased clumps by chance of the seed, or its local
-  footprint/clearing exclusions are cutting more of what would otherwise
-  cluster there.
+**`EV3-remainder-2`'s `square-convergence.png` half (row-planted flowers at
+the well) fixed — see `DONE.md`.** Root cause was not clump placement at
+all: `terrain_playground.json`'s four routes all share one endpoint at the
+well, so every ground-cover layer's path-exclusion isoline forms a straight
+four-way wedge there, not a per-layer artefact. Confirmed by two independent
+blind critics; the second called it "the exception... doesn't show the hedge
+pattern."
 
-Done when: a blind critic stops naming either frame specifically for
-row-planted or under-clustered path vegetation.
+### EV3-remainder-3 — grass/drygrass tuft banding along path edges, a deeper cause than `grandpas-house-route`'s original diagnosis
+`model: opus` · `tests: smoke_art` · `area: vegetation`
+`EV3-remainder-2` set out to fix `grandpas-house-route.png`'s flowers, which
+an earlier round read as "thin uniform scatter... no patch pushing close to
+the path." Raising flowers' `path_bias` (0.35 → 0.5) was tried and reverted —
+a fresh blind critic called the result "a hedge planted along a driveway,"
+and a new instance appeared on `the-rise-route.png` that round 1 had already
+resolved. More clumps anchoring the same corridor raised the *repetition*,
+not just the density — the wrong lever, so it was reverted rather than
+shipped.
+
+**A second, independent blind critic on the reverted state still named the
+same hedge pattern on both frames** — with flowers' `path_bias` back at its
+original 0.35, unchanged from before this item started. That rules out
+`path_bias` as the cause entirely: the critic was explicit that the tufts
+causing the banding are grass/drygrass, not flowers ("the flower patch on
+the left is looser and reads better — it's the tuft placement specifically
+that's the problem"), and neither `grass` nor `drygrass` has ever used
+`path_bias` or `path_bias_jitter`. So this is a pre-existing property of
+unbiased clump placement near a path, not something either `EV3-remainder`
+or `EV3-remainder-2` introduced or can fix with the levers they used.
+
+**Working theory, not yet confirmed against placement data the way
+`EV3-remainder-2`'s own fix was:** a clump whose centre lands within roughly
+its own `clump_radius` of a path has a large fraction of its disc rejected
+by the path exclusion (`scatter_rules.gd::_consider`, `path_factor() > 0.3`,
+now jittered by `path_edge_jitter` but still centred on the same isoline) —
+the survivors are a crescent hugging the near edge of what's left. Where
+several such clumps happen to string along one straight stretch, their
+crescents chain into a visible band. `path_edge_jitter` (this item's own
+sibling fix) ravels the boundary's SHAPE but does nothing about clump
+CENTRES clustering near a path by chance — a different mechanism than the
+one it addresses. Whoever takes this should confirm with the same
+screen-projection technique `EV3-remainder-2` used (project real placement
+data into `capture_paths.gd`'s own camera) before picking a fix, rather than
+re-guess from the rendered PNG alone.
+
+Done when: a blind critic stops naming `grandpas-house-route.png` or
+`the-rise-route.png` for a hedge/row/banded tuft pattern along the path.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
 tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four

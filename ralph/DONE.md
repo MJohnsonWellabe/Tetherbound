@@ -153,6 +153,58 @@ because `PROMPT.md` asks for it, not because it's a pattern to repeat: the
 push-once-at-the-end discipline is still correct when nothing is forcing an
 earlier push.
 
+## EV3-remainder-2 (square-convergence half) — a per-instance jitter on the path-exclusion cutoff, not a clump-placement fix
+`tests: smoke_art`, green locally throughout. Two full local blind-judge
+rounds (`.claude/skills/visual-judge`, genuinely blind sub-agents, no
+knowledge of what changed), plus a scratch (never committed) screen-
+projection tool that painted real placement data into `capture_paths.gd`'s
+own camera to confirm the diagnosis against pixels, not guesses.
+
+**Root cause, confirmed empirically before writing any fix:**
+`terrain_playground.json`'s four routes all share one endpoint, the village
+well — so `scatter_rules.gd::_consider`'s path-exclusion test
+(`path_factor() > 0.3`, one fixed isoline every ground-cover layer shares)
+draws four straight wedges meeting at that single point. A debug overlay
+that projected every `grass`/`drygrass`/`flowers`/`bushes` placement into
+the survey camera showed all four layers tracing the *same* straight fan —
+not a flowers-only clump artefact, which is what the original finding's own
+name ("row-planted flowers") assumed.
+
+**Fix:** a new per-layer `path_edge_jitter` (`scatter_rules.gd`) that
+jitters the 0.3 cutoff by up to this many units, per placement instance,
+before testing it — deliberately NOT touching `path_factor()` itself, which
+`build_playground_terrain.gd`'s own dirt-texture blend also reads and which
+took five `EV4` rounds to tune. Set to 0.15 on `bushes`/`grass`/`drygrass`/
+`flowers` in `vegetation.json`. Round 1's fresh blind critic called
+`square-convergence.png` "the mildest version" of the row pattern, down
+from "visible parallel diagonal rows... a planted crop field"; round 2's
+independent critic went further, calling it "the exception... doesn't show
+the hedge pattern" outright.
+
+**A second lever was tried and reverted, honestly, not silently dropped.**
+Bumping flowers' `path_bias` 0.35 → 0.5 (theory: `grandpas-house-route.png`
+just drew too few path-anchored clumps by seed luck) made a DIFFERENT
+complaint worse: round 1's critic called the result "a hedge planted along
+a driveway" on that same frame, plus a *new* "diagonal row" on
+`the-rise-route.png` that `EV3-remainder`'s own round 1 had already fixed.
+More clumps anchoring one corridor raised the repetition, not just the
+density — the wrong lever for this symptom. Reverted to 0.35 before
+shipping.
+
+**`grandpas-house-route.png` is NOT closed by this item.** A second blind
+critic, run against the reverted state (flowers' `path_bias` back at its
+untouched original value), still named the same hedge pattern on both
+`grandpas-house-route.png` and `the-rise-route.png` — and was explicit that
+the tufts producing it are `grass`/`drygrass`, not flowers ("the flower
+patch on the left is looser and reads better — it's the tuft placement
+specifically that's the problem"). Neither `grass` nor `drygrass` has ever
+used `path_bias`, which rules it out as the cause and means the original
+diagnosis ("flowers read as thin, uniform scatter") was the wrong half of
+the picture — the real defect survived a change to the layer that was never
+responsible for it. Opened as `EV3-remainder-3`, scoped correctly this
+time, with the screen-projection technique that worked here handed forward
+as the way to confirm before guessing again.
+
 ## EV3-remainder (round 1 of 2) — flowers gain path_bias and a jitter to break up the collinear "hedge"
 `334fafc`. `tests: smoke_art` (green). Also extended `test_scatter_rules.gd` for the new
 `path_bias_jitter` mechanism (backward-compat no-op test, plus a test that
