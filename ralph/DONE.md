@@ -3,6 +3,38 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R2.1 — Tools: axe, pickaxe, hammer, knife, fishing rod; gathering gated on the held tool
+`49a05d4` · `tests: test_inventory` — full suite run locally, headless, 313/313 green (43,625 assertions),
+which includes `test_inventory.gd`'s new cases individually confirmed passing.
+
+Added the five tools spec §10 names to `data/items/items.json`
+(`kind: "tool"`, `stack: 1` — owned, not consumed). `wood`/`stone`/`fiber`
+each gained a `gathered_with` field naming the tool that harvests them at
+full amount (`axe`/`pickaxe`/`knife`); `berries` has none, so it is never
+tool-gated, matching the item's own "the wrong tool gets nothing" only
+making sense where a right tool exists.
+
+The gating rule itself lives in `item_db.gd::harvest_yield()`, a pure
+function (no Inventory dependency, easy to unit-test): the right tool (or
+an ungated resource) pays the node's full amount, no tool at all pays a
+reduced bare-handed amount (`BAREHANDED_FRACTION = 0.5`, tunable, floored
+at 1 so bare hands never round down to nothing), and owning some other
+tool but not the right one for that resource pays nothing.
+`harvest_node.gd::_on_gathered()` looks ownership up via
+`Inventory.count()` and `ItemDB.tool_ids()` and calls it. A zero-yield
+gather does not consume the node — it stays standing for a return trip
+with the right tool, rather than punishing a wrong-tool attempt by
+deleting the spot.
+
+**Scope note, matching the item's own brief:** `hammer` and `fishing_rod`
+exist as real inventory items now but gate nothing yet — no repair loop
+(`R2.2`) or fishing (`R7.6`) reads them. That is not a partial ship of
+this item; the brief only asked for the five items to exist and for
+gathering to be tool-gated, and both are true.
+
+Not visual-affecting (no scene/material/UI change), so no blind-judge pass
+applies here per `conventions.md`.
+
 ## EV1-remainder — Bookkeeping only: the two Quaternius MegaKits were already staged and ledgered
 `tests: none` (EV1-remainder's own field)
 

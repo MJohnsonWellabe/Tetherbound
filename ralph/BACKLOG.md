@@ -1233,13 +1233,18 @@ The session shipped harvest nodes, camp placement, campfire/bedroll and rest
 (see Phase 0's note). What is left is the part that makes them an *economy*
 rather than a scripted route.
 
-### R2.1 — Tools
-`model: sonnet` · `tests: test_inventory`
-Axe, pickaxe, hammer, knife, fishing rod as items in `data/items.json`.
-Gathering gated on the right tool: bare hands get less, the wrong tool gets
-nothing. Done when: the same harvest node yields differently by held tool.
-Spec §10: a Rootstone-tier tool (`SD18`) is the ladder's second rung — build
-the rung here, not a second tool system there.
+**`R2.1` (Tools) shipped — see `DONE.md`.**
+
+**Bookkeeping note, 2026-08-12: `R1.1`'s codebase-wide `pal`→`creature`
+rename is nominally topmost/unheld but was skipped as unsafe to start while
+7 lanes hold `story`/`terrain`/`vegetation`/`village`/`ui`/`lighting`/`perf`
+— it touches ~446 occurrences across every `.gd`/`.tscn`/`.tres` file, which
+collides with every one of those in-flight branches at once rather than
+zero of them. `R1.2` depends on `R1.1` having happened, so it is not
+independently takeable either. Neither is blocked in the `BLOCKED.md`
+sense — both are simply not safe to start with this many concurrent
+lanes live; a future firing with the areas quiet is the right one to
+take them.
 
 ### R2.2 — Tool durability and free repair
 `model: sonnet` · `tests: test_durability` (new)
