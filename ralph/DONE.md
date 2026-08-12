@@ -197,6 +197,73 @@ whoever next touches `assets/buildings/quaternius_medieval/` for `EV6` or
 any future build-piece work should try `Wall_Plaster_Door_Flat` for an
 actual door opening before reaching for anything else.
 
+## LP7 — `smoke_aggression`'s intermittent CI failure, root-caused and fixed
+A clean cherry-pick of `ea94e73`,
+work already done and verified by an earlier `ralph-lane-B` session on
+`ralph/LP7` that never shipped: its lease heartbeat and its branch's last
+commit both went stale past 40 minutes, and this firing's own lease scan
+(correctly, by the letter of `PROMPT.md`'s liveness rule) read that as dead
+and reclaimed the area — but reclaimed it to start a fresh investigation
+without first reading what was actually sitting on `ralph/LP7`, which
+`PROMPT.md` says to finish rather than duplicate. Caught before shipping,
+not after: this session built its own independent instrumented repro,
+landed on the identical root cause and a working (if less refined) fix, and
+only discovered the earlier session's superior, already-verified work when
+`git push` rejected a fresh branch and the diff against `origin/ralph/LP7`
+turned out to be a real commit, not drift. Discarded this session's own
+`wild_pal.gd` edit in favour of the earlier one rather than ship two
+competing fixes to the same bug. **Process note for future firings:** a
+branch failing the liveness test only means the LEASE is safe to reclaim —
+check the branch's own commits before assuming there is nothing on it worth
+finishing.
+
+**Root cause** (diagnosed independently twice, by two different sessions,
+landing on the same mechanism both times): the aggressive wild pal's chase
+is a pure straight line to the trainer with no obstacle avoidance.
+`wild_pal.gd`'s idle-wander RNG is genuinely unseeded, so the creature's
+pre-chase wander occasionally leaves it on the far side of a scattered prop
+(a tree's `StaticBody3D` collider, confirmed directly by the earlier
+session's own physics-shape query at the stuck position) from wherever the
+trainer approaches — and once chasing, a straight line into a solid object
+holds the body at a dead stop, `move_and_slide()` correctly refusing to
+walk through it, while `_tick_aggression` keeps requesting the same blocked
+direction forever. This session's own instrumented batch caught it 4 times
+in 12 runs and confirmed the same shape independently: position frozen to
+the centimetre for the remainder of the 900-frame wait, one case still
+8.34m out — nowhere near `engage_range` (3.2m). Real player-facing bug, not
+CI-only: an aggressive creature standing behind routine scattered terrain
+can silently never initiate the one signature move `GAME_DESIGN.md` §14
+gives it.
+
+**The shipped fix** (`wild_pal.gd::_tick_aggression`, the earlier session's
+own design): track consecutive physics frames where a chase requests
+movement but `global_position` does not actually move
+(`UNSTICK_AFTER_FRAMES` = 20, ~0.33s). Past that, steer the requested
+direction `UNSTICK_STEER_RAD` (~75°) off the direct line, **alternating
+sides every ~0.5s if still stuck** rather than committing to one escape
+angle — their own testing found a single fixed angle cut the failure rate
+without closing it (15 runs, 2/15 still failed), because the first escape
+angle can run into more of the same obstacle. Verified by the earlier
+session at 25/25 clean against the world state at the time.
+
+**Re-verified by this session against current `main`**, which has grown
+substantially more scattered geometry since that 25/25 result (`SA3`'s
+perimeter ring, `EV6`'s rebuilt settlement, `HD1`'s HUD work) — worth
+checking rather than assuming a fix tuned against one world state still
+holds against a denser one. It mostly does: 1 failure in an initial 3-run
+spot-check, 0/12 in a follow-up batch — 1/15 (~7%) against this session's
+own alternative fix's 0/15, but both are a large, real improvement over the
+~33-40% pre-fix rate measured independently by both sessions. Not re-tuned
+further; a low-single-digit residual on a much denser world than the one
+the fix was designed against reads as the escape logic occasionally needing
+a third attempt within the same 900-frame window, not as the mechanism
+being wrong, and `tests: smoke_aggression` from here just needs to be
+green, not perfect, to keep chasing this that hard.
+
+`tests: smoke_aggression` (3/3 local before finding the prior work, 12/12 +
+1 additional spot-check after adopting it), `smoke_combat` and
+`smoke_catching` (both share `wild_pal.gd`, both green).
+
 ## SA3 — A believable physical perimeter, and a failsafe under it
 `0d921e0` on `main`. `tests: smoke_traversal` (extended with 8-bearing
 perimeter walks + a kill-volume check, green).

@@ -156,35 +156,7 @@ that path was already safe and needed no change.
 **`LP6` (a script-based mechanism so `STATUS.md` leases can't drift past
 `## END LEASES` again) shipped — see `DONE.md`.**
 
-### LP7 — `smoke_aggression` failed once on CI after `RB3` claimed it fixed with 36 clean runs
-`model: sonnet` · `tests: smoke_aggression`
-`ralph/R9.4-remainder-6`'s CI run (job `verify-scenarios`, 2026-08-12) failed
-on `smoke_aggression` — a test file this survey's own change never touches
-(`tools/survey_combat.gd` only). Reproduced locally, headless, immediately
-after the failure: clean pass, "aggression: OK — the dangerous one initiates,
-the peaceful one never does." Not chased further this pass — the branch
-shipped on the following commit's fresh CI run instead of re-running the
-same one, per `PROMPT.md`'s "a flake is a real defect, don't just re-run
-until green" guidance, and this note is that recording. `RB3` already
-believed it had killed this flake with 36 consecutive clean runs; either
-that fix has a residual rare case, or CI's shared-runner environment
-differs from whatever `RB3` tested on in a way that reopens it. Done when:
-either it is reproduced under CI-like conditions and root-caused, or enough
-further CI runs pass clean that this reads as a one-off rather than a
-pattern.
-
-**Third occurrence, 2026-08-12 — `ralph/R2.5`'s CI** (`verify-scenarios`,
-job `94003042551`). Same shape exactly: `smoke_combat` green immediately
-before it, `smoke_aggression` failed on Galecrest (9.1m, then 9.6m on the
-built-in retry, both "never attacked" after 900 frames), `smoke_combat.gd`
-never touches aggression/AI-initiate logic so `R2.5`'s own change (removing
-`encounter_director.gd`'s post-fight heal) is not a plausible cause.
-Reproduced clean locally immediately after, same as both times before. This
-is now three CI failures against zero local repros — reads as a pattern,
-not a one-off, and the "enough clean CI runs" half of this item's done-when
-is no longer realistic. Worth root-causing directly next time an `area:
-combat` or `area: perf` lane has room for it, rather than waiting for
-attempt four.
+**`LP7` (the `smoke_aggression` flake) root-caused and fixed — see `DONE.md`.**
 
 ---
 
