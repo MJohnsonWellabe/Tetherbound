@@ -1317,24 +1317,7 @@ in `data/recipes/`, tunable, labelled. These are the **base** tier; `SD18` adds
 the Rootstone tier above them (spec §10). Baseline materials are wood, stone,
 fiber and berries and nothing else — §10 is a short list on purpose.
 
-### R2.5 — REMOVE the post-fight auto-heal
-`model: sonnet` · `tests: smoke_combat, smoke_catching`
-`encounter_director.gd` still calls `_ally.heal_fully()` after every fight —
-an M2 crutch ("no healing system, no camp" said the comment, and both now
-exist). Deliberately sequenced *after* R2.4: taking the crutch away before
-potions are craftable would make the first day punishing for the wrong
-reason.
-
-**Corrected 2026-08-11 — the use verb this item said was missing already
-exists.** `tab_backpack.gd::_read_use()` heals the party from a focused slot
-on interact, and `potion_small` already carries `heal: 35`, so potions are
-already drinkable today. The stale "needs a use/consume verb" line (and the
-matching one under "Found along the way" below) is corrected rather than
-still claiming the gap. What's actually still missing: it's undiscoverable
-without opening the full backpack menu (`HD2`, Phase -0.85, fixes that), and
-berries specifically still can't be used because `berries` carries no `heal`
-value (`R7.5` owns that). Done when: HP persists after a fight and is
-restored only by potion or camp rest.
+**`R2.5` (REMOVE the post-fight auto-heal) shipped — see `DONE.md`.**
 
 ### R2.6 — Build pieces: floor, wall, doorway/door, roof, fence
 `model: sonnet` · `tests: test_build_catalogue` (new)

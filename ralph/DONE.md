@@ -66,6 +66,27 @@ rediscovered a third time. Corrected `EV4-textures-lighting-remainder`'s own
 entry in `BACKLOG.md` with this finding; that item's actual blind-judge work
 is still open, only the render-performance blocker is cleared.
 
+## R2.5 — REMOVE the post-fight auto-heal
+`d73b532` · `tests: smoke_combat, smoke_catching` (both green, local
+headless), full unit suite 313/313.
+
+Sequenced after `R2.4` on purpose (that item's own note): taking the crutch
+away before potions are craftable would have made the first day punishing
+for the wrong reason. `R2.4`'s crafting, the campfire's existing rest, and
+`tab_backpack.gd`'s existing use verb between them mean HP is no longer an
+M2-era free reset — `encounter_director.gd::_on_combat_exited()` no longer
+calls `_ally.heal_fully()` after a win.
+
+`smoke_combat.gd` gained a real regression check on the actual post-fight
+signal chain rather than the removed call directly: captures the ally's HP
+at the instant of victory, settles 60 frames (the same window
+`_exploration_is_restored()` already waits through), and asserts it is
+unchanged — a future regression that re-adds healing anywhere in that path
+fails here, not just a check that one specific line is gone.
+
+Not visual-affecting (no model, texture, terrain or UI change — a single
+removed function call and a numeric assertion), so no blind-judge pass.
+
 ## R9.4-remainder-6 — Root-caused why `survey_combat.sh` never completed
 `tests: none` (item's own field). `b81f2da` (rebased forward as main moved;
 final SHA depends on `ralph-merge.yml`'s rebase).
