@@ -101,6 +101,20 @@ func _run() -> void:
 	# `starter_picker.gd` makes.
 	await _director.call("adopt_starter", "terrapup", "")
 
+	# A third consequence of the same skipped opening: Grandpa's parting
+	# `give:orb_basic:15` dialogue effect (sequence_director.gd) never runs
+	# either, so the player has zero orbs — confirmed directly, "Orbs 0" is
+	# visible in the HUD of a run that otherwise worked. `throw_aim.gd`'s
+	# `try_begin_aim` refuses to open aim mode with none, which is why frames
+	# 07/08 still failed even after quick and charged attacks both started
+	# landing for real. Grant the same starting stock through the same
+	# autoload `_give_items` uses, rather than the dialogue path.
+	var game := root.get_node_or_null(^"/root/Game")
+	if game != null:
+		var inventory: RefCounted = game.get("inventory")
+		if inventory != null:
+			inventory.call("add", "orb_basic", 15)
+
 	# The M1 debug readout covers a third of the frame and is not part of what a
 	# critic should be looking at. The combat HUD stays: whether the fight is
 	# readable is exactly the question.
