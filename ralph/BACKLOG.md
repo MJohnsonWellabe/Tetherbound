@@ -368,23 +368,49 @@ verdict changes with fresh eyes. Done when: a blind critic given
 shadow, or explicitly agrees it reads as motivated (traces it to the Barn /
 the Rise itself without being told).
 
-### EV4-hillside-seam — Blotchy hillside slope material, confirmed pre-existing
+**`EV4-hillside-seam` (blotchy hillside slope material) rounds 1-4 shipped —
+see `DONE.md`.** Rock went from mathematically unreachable (round 2's wider
+blend pushed its threshold past this landform's own max slope) to a
+proportionate accent, verified by three independent blind-critic rounds.
+**Did not fully clear the bar — narrower remainder opened below.**
+
+### EV4-hillside-seam-remainder — Rock reads as near-black/shadow-like, no soil band is visible, and rock placement forms a uniform ring rather than authored outcrops
 `model: sonnet` · `tests: none (visual)` · `area: terrain`
-Found by `EV4`'s round-3 blind critique as a hard zigzag; round 5 gives the
-attribution question that entry left open a real answer. `EV4` reverted
-`soil` to its exact original R9.4 values once paths got their own dedicated
-texture (round 5), so the hillside band is now byte-for-byte the same
-configuration that shipped before `EV4` touched anything — and a fresh blind
-critic, seeing only round-5 frames, still called the hillside "mottled...
-blotchy all over the dome... more like camouflage or a poorly blended
-multi-layer texture than a natural grass→dirt→rock transition," plus a hard,
-unblended seam where grey rock cuts in at the hill's base. **This settles it:
-pre-existing, not introduced by `EV4`.** Whoever takes this should treat it
-as an independent slope-material defect — `blend_deg`/`blend_sharpness`
-tuning, or the "collapse to one dominant texture" approximation showing
-through on a genuinely three-way grass/soil/rock band — not as unfinished
-`EV4` work. Done when: the grass/soil/rock slope boundary on a steep rise
-reads as a coherent material transition rather than a patchwork.
+Three real defects a fresh round-4 blind critic named that none of rounds
+1-4's slope-threshold tuning reaches, because they aren't threshold
+problems:
+
+- **The `rock` texture (`Rock030_Color.jpg`) reads as near-black**, dark
+  enough on `dome-overview.png` that the critic's first read was "a cast
+  shadow wrapping the hill... could be mistaken for an ambient-occlusion
+  artifact rather than a material," not stone. `rock`'s own `tint` is
+  already near-white (`#fafafa`, essentially untouched) and its
+  `ao_strength` (0.4) and `normal_depth` (0.6) both sit noticeably higher
+  than `soil`'s (0.3 / 0.4) — worth testing whether pulling those two down
+  lightens the in-render read before touching the texture asset itself.
+  Untested this round; flagging the two levers rather than guessing further.
+- **No soil band is visible in any frame despite an 8-degree pure-soil
+  plateau** (`soil_slope_deg` 30 to `rock_slope_deg` 44, round 4's own fix).
+  The plateau exists in slope-space but apparently not in a way that reads
+  as a third material at these camera distances — either the plateau needs
+  to be wider still, or `soil`'s own tint (`#c9a874`, warmed in round 2) is
+  too close to `grass`'s tone to read as distinct once blended with the
+  near-white colour-map multiplier.
+- **Rock placement forms a uniform, ring-like "collar"** around the dome in
+  `dome-overview.png` but is reduced to a single disconnected blotch in
+  `north-overview.png` of what reads as the same landform — a slope-angle
+  threshold applied uniformly, not an authored outcrop layout. Fixing this
+  needs placement variation (noise-driven exposure, not just a slope
+  number) — a genuinely different mechanism from anything rounds 1-4 touched,
+  closer to `EV3`'s own clump/placement work than to a colour-config tune.
+
+Also named, explicitly out of scope for this item (pre-existing, unrelated
+to the hillside band specifically): the sun/moon disc reading as a flat
+blurred sprite, and the overall grass desaturation versus the key art's
+vibrant green — both are shader/lighting-pass concerns, not slope-material
+ones. Done when: a fresh blind critic given hillside frames says the rock
+reads as stone (not shadow), names a visible third soil tone, and does not
+call the rock placement a "collar" or "ring."
 
 **`Ground037` (mossy forest floor, ambientCG, also pre-sourced and ledgered
 alongside `Ground030`) is still unused.** Bible sec8 item 5, Deep Grass/

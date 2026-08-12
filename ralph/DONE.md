@@ -3,6 +3,62 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV4-hillside-seam rounds 3-4 — rock went from mathematically unreachable to a proportionate accent
+`25c6606` (round 3), `68541a9` (round 4). `tests: smoke_traversal` (green,
+both rounds). Visual-affecting: three local blind `.claude/skills/visual-judge`
+rounds ran in this checkout, one push per round (round 2's own WIP push had
+already landed via the merge workflow before this firing could critique it
+locally — see the honesty note below).
+
+**What shipped:**
+
+1. **Round 3 fixed rock being unreachable.** Round 2 (already on `main`
+   before this firing started) doubled `blend_deg` 7→14 to fix a round-1
+   critic's "hard, unblended seam" complaint. A fresh round-3 blind critic
+   given the rebaked frames instead reported **no rock or distinct soil band
+   anywhere, on any of three viewpoints** — not a seam problem, an absence
+   problem. Root-caused with `tools/debug_slope_probe.gd` against
+   `rises.peaks[0]` (centre `[140,-90]`, radius 78, the exact landform
+   `capture_hillside.gd` frames): pure rock only starts at
+   `rock_slope_deg + blend_deg`, and round 2's 44+14=58 degrees sat outside
+   this landform's own reachable slope — probed directly, this gentle, wide
+   dome (height 46 over radius 78) peaks at ~52.5 degrees around 72m out
+   along the east bearing and then *recedes* toward its base skirt, so 58
+   degrees never occurs anywhere on it. Fixed by lowering `rock_slope_deg`
+   44→40 (a pre-existing, untouched-by-this-item value that simply never fit
+   this specific landform's shape) rather than narrowing the blend back down,
+   which would have reintroduced round 1's seam complaint.
+2. **Round 4 fixed rock then dominating.** The round-3 fix worked — rock
+   became visible — but overcorrected: a fresh critic found rock covering
+   60-75% of two of three frames, and still no visible soil band, because
+   `blend_deg=8` with `rock_slope_deg=40` left only a 2-degree pure-soil
+   plateau. Fixed with `blend_deg` 8→6 and `rock_slope_deg` 40→44 (its
+   *original*, pre-`EV4-hillside-seam` value), opening an 8-degree pure-soil
+   plateau (36-44) while pushing pure rock back to 50 degrees — the same
+   probe confirms that band still occurs, narrowly, from ~68m to ~74m out.
+   A third blind critic confirmed the proportion fix in two of three frames
+   (rock reduced to a minor accent) but named three further, different-in-kind
+   defects — see `EV4-hillside-seam-remainder` in `BACKLOG.md`, opened rather
+   than continuing to tune blind: the remaining issues are texture/placement
+   quality (a near-black rock texture, no visible soil tone, ring-like
+   placement uniformity), not slope-threshold numbers.
+
+**Honesty note on how round 2 shipped.** This firing picked up
+`ralph/EV4-hillside-seam` as abandoned WIP (last commit ~55min stale, no
+live lease) and pushed it once (round 2 + a missing `.uid` sidecar fix,
+`dfc9a67`) *before* running the local blind-judge pass — a deliberate
+deviation from `conventions.md`'s "push once at the end," made because a
+repo stop-hook required no uncommitted/unpushed state at every turn boundary
+in this session and there was no way to hold the work locally indefinitely.
+`ralph-merge.yml` fast-forwarded it to `main` before the critique ran, so
+round 2's rock-unreachable bug was briefly live. Rounds 3 and 4 fixed it
+promptly in the same session; each of those two rounds *was* committed and
+pushed only after a local `smoke_traversal` check, and round 4 after a full
+local blind-judge round on round 3's own render. Recording this plainly
+because `PROMPT.md` asks for it, not because it's a pattern to repeat: the
+push-once-at-the-end discipline is still correct when nothing is forcing an
+earlier push.
+
 ## EV3-remainder (round 1 of 2) — flowers gain path_bias and a jitter to break up the collinear "hedge"
 `334fafc`. `tests: smoke_art` (green). Also extended `test_scatter_rules.gd` for the new
 `path_bias_jitter` mechanism (backward-compat no-op test, plus a test that
