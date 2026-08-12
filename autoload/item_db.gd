@@ -66,6 +66,35 @@ func kind(id: String) -> String:
 	return str(definition(id).get("kind", "unknown"))
 
 
+## The tool id that gathers `id` at full amount, or "" if `id` is never
+## tool-gated (berries, and anything else with no `gathered_with` entry).
+func gathered_with(id: String) -> String:
+	return str(definition(id).get("gathered_with", ""))
+
+
+func tool_ids() -> Array:
+	return ids().filter(func(id: Variant) -> bool: return kind(str(id)) == "tool")
+
+
+## R2.1: bare hands still gather SOMETHING, just less than the right tool.
+## Tunable — do not let this become a hidden difficulty knob nobody can find.
+const BAREHANDED_FRACTION := 0.5
+
+
+## What a harvest node actually pays out, given what the player owns.
+## The right tool (or an ungated resource) pays the node's full `base_amount`.
+## No tool at all pays a reduced, bare-handed amount. Owning tools but not
+## the right one for THIS resource pays nothing — the wrong tool, not no
+## tool. Pure function: the caller looks ownership up in Inventory and hands
+## the two booleans in, so this stays testable with no live satchel.
+func harvest_yield(id: String, base_amount: int, owns_required_tool: bool, owns_any_tool: bool) -> int:
+	if gathered_with(id).is_empty() or owns_required_tool:
+		return base_amount
+	if owns_any_tool:
+		return 0
+	return maxi(1, int(base_amount * BAREHANDED_FRACTION))
+
+
 func blurb(id: String) -> String:
 	return str(definition(id).get("blurb", ""))
 

@@ -76,11 +76,29 @@ func _on_gathered() -> void:
 		push_error("no Game autoload; gathered %s into nothing" % _item_id)
 		return
 	var inventory: RefCounted = game.get("inventory")
-	if not bool(inventory.call("has_room_for", _item_id, _amount)):
+	var items: RefCounted = game.get("items")
+	var actual_amount := _amount
+	if items != null and inventory != null:
+		var required: String = str(items.call("gathered_with", _item_id))
+		if not required.is_empty():
+			var owns_required: bool = int(inventory.call("count", required)) > 0
+			var owns_any_tool := false
+			if not owns_required:
+				for tool_id in items.call("tool_ids"):
+					if int(inventory.call("count", str(tool_id))) > 0:
+						owns_any_tool = true
+						break
+			actual_amount = int(items.call("harvest_yield", _item_id, _amount, owns_required, owns_any_tool))
+
+	if actual_amount <= 0:
+		# The wrong tool for this resource: refused, and the node stays put for
+		# whenever the player comes back with the right one.
+		return
+	if not bool(inventory.call("has_room_for", _item_id, actual_amount)):
 		# Refused, visibly: the node stays and the prompt keeps offering, which
 		# is the honest version of "your satchel is full".
 		return
-	inventory.call("add", _item_id, _amount)
+	inventory.call("add", _item_id, actual_amount)
 	_visual.visible = false
 	_prompt.call("set_enabled", false)
 	_respawn_left = RESPAWN_SECONDS

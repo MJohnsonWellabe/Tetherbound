@@ -30,6 +30,41 @@ func test_the_four_starting_items_are_all_defined() -> void:
 		assert_true(db.stack_size(id) > 1, "%s must stack" % id)
 
 
+func test_the_five_tools_are_defined() -> void:
+	# R2.1. Axe, pickaxe, hammer, knife, fishing rod — owned, not consumed.
+	for id in ["axe", "pickaxe", "hammer", "knife", "fishing_rod"]:
+		assert_true(db.has(id), "items.json is missing %s" % id)
+		assert_eq(db.kind(id), "tool")
+
+
+func test_gathered_with_names_the_right_tool_for_each_tutorial_resource() -> void:
+	assert_eq(db.gathered_with("wood"), "axe")
+	assert_eq(db.gathered_with("stone"), "pickaxe")
+	assert_eq(db.gathered_with("fiber"), "knife")
+	assert_eq(db.gathered_with("berries"), "", "berries must never be tool-gated")
+
+
+func test_harvest_yield_rewards_the_right_tool() -> void:
+	assert_eq(db.harvest_yield("wood", 4, true, true), 4)
+	assert_eq(db.harvest_yield("wood", 4, true, false), 4,
+		"owning nothing else shouldn't matter once the right tool is owned")
+
+
+func test_harvest_yield_reduces_bare_hands_but_never_to_zero() -> void:
+	assert_eq(db.harvest_yield("wood", 4, false, false), 2)
+	assert_eq(db.harvest_yield("wood", 1, false, false), 1,
+		"a bare-handed gather must never round down to nothing")
+
+
+func test_harvest_yield_refuses_the_wrong_tool() -> void:
+	assert_eq(db.harvest_yield("wood", 4, false, true), 0)
+
+
+func test_harvest_yield_never_gates_an_ungated_resource() -> void:
+	assert_eq(db.harvest_yield("berries", 3, false, false), 3)
+	assert_eq(db.harvest_yield("berries", 3, false, true), 3)
+
+
 func test_a_fresh_satchel_is_empty_and_not_full() -> void:
 	assert_eq(bag.used_slots(), 0)
 	assert_false(bag.is_full())

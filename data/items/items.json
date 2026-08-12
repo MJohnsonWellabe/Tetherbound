@@ -5,12 +5,14 @@
   "_comment_stack": "`stack` is the slot cap. GAME_DESIGN.md 19: slot + stack, NO weight limit \u2014 there is no `weight` key here and there must never be one.",
   "_comment_fiber": "Spelled `fiber`, matching MEADOWS_VERTICAL_SLICE.md section M8 AND the harvest data the gathering work will port from the pre-Godot prototype (git show c45dee5^:src/data/harvest.json), which drops wood, stone, fiber, berries and flint under exactly these ids. The id is what harvesting keys off, so it had to match one of them; it now matches both.",
   "_comment_colour": "`colour` is the slot tile's tint. Placeholder standing in for an icon, and sampled so four resources are told apart at a glance on a 7-inch screen rather than by reading four short words.",
+  "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (R7.6) are what will read them.",
   "items": {
     "wood": {
       "name": "Wood",
       "kind": "resource",
       "stack": 50,
       "colour": "#7a5a35",
+      "gathered_with": "axe",
       "blurb": "Cut from the oaks. Everything early is made of it."
     },
     "stone": {
@@ -18,6 +20,7 @@
       "kind": "resource",
       "stack": 50,
       "colour": "#8e8d86",
+      "gathered_with": "pickaxe",
       "blurb": "Prised out of an outcrop."
     },
     "fiber": {
@@ -25,6 +28,7 @@
       "kind": "resource",
       "stack": 50,
       "colour": "#9aa64a",
+      "gathered_with": "knife",
       "blurb": "Stripped from meadow grass. Binds and stuffs."
     },
     "berries": {
@@ -48,6 +52,41 @@
       "colour": "#5aa356",
       "heal": 35,
       "blurb": "Patches a pal's scrapes. For your pal, mind — you get soup."
+    },
+    "axe": {
+      "name": "Axe",
+      "kind": "tool",
+      "stack": 1,
+      "colour": "#5c6b73",
+      "blurb": "Bites into oak cleanly. Bare hands barely dent it."
+    },
+    "pickaxe": {
+      "name": "Pickaxe",
+      "kind": "tool",
+      "stack": 1,
+      "colour": "#4a4a4a",
+      "blurb": "Cracks stone loose whole. Bare hands just bruise."
+    },
+    "hammer": {
+      "name": "Hammer",
+      "kind": "tool",
+      "stack": 1,
+      "colour": "#c47a3d",
+      "blurb": "For the workbench, not the woods. Free repairs start here."
+    },
+    "knife": {
+      "name": "Knife",
+      "kind": "tool",
+      "stack": 1,
+      "colour": "#b0b8bf",
+      "blurb": "Strips fiber in one clean pull."
+    },
+    "fishing_rod": {
+      "name": "Fishing Rod",
+      "kind": "tool",
+      "stack": 1,
+      "colour": "#3d6b52",
+      "blurb": "For water that doesn't exist yet."
     }
   }
 }
