@@ -855,21 +855,10 @@ made silently: no source in the repo names a canonical gender for any of
 the five villagers, so the female/male base split went by name convention
 and roster balance.
 
-### NP6 — Village NPCs read flat-black in exterior frames
-`model: sonnet` · `tests: smoke_art` · `area: npc`
-Flagged by `EV6-remainder`'s own leftover list and its follow-up pass
-(`DONE.md`): "village NPCs reading flat-black in exterior frames — partly
-the same class (dark palette tints under `NP2`'s emission-tint pipeline)…
-`lane: npc`, not village work." `NP2` fixed emission swamping tint (both
-`albedo_color` and `emission` are now multiplied by a villager's `tint`),
-which means a genuinely dark tint now darkens BOTH channels together
-instead of being invisibly overridden — real, but it exposes that two of
-`art.json`'s five villager tints are dark enough to read as unlit in
-outdoor ambient-only light: `villager_smith` (`#3f5a8c`, relative luminance
-~0.35) and `villager_quarryman` (`#54504a`, ~0.31), against `villager_farmer`
-/`villager_keeper`/`villager_ranger`'s 0.48–0.67. Done when: a blind critic
-given `tools/capture_site_shots.gd`'s `village-npcs` frame stops calling any
-villager unlit/flat-black/silhouetted.
+**`NP6` (village NPCs reading flat-black in exterior frames) fixed — see
+`DONE.md`.** Three real local blind-judge rounds; the darkest two villager
+tints were brightened until a genuinely blind critic stopped calling any of
+them unlit/silhouetted.
 
 ---
 

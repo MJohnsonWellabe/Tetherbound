@@ -16,6 +16,83 @@ Picked up as `EV6-remainder`'s own scoped leftover ("the well's RockTrim dressin
 
 **The well's own RockTrim leftover — partial, not closed.** With the settlement visible again, rendered the curb from four bearings (`tools/capture_well.gd`) and could finally judge it: the shadowed face of the curb read distinctly cold/blue-charcoal next to the sunlit face's warm cream, confirming the original complaint. Round 2 pushed the retint warmer and brighter (`#e2d3bd` → `#f0e2c4` on `MI_RockTrim`, `data/config/building_prefabs.json`) — real, measured pixel movement (mean RGB shift +1.6/+1.9/+1.1 in a shadow-region sample, max frame diff 115–152), confirmed by a genuine blind `Agent`-tool sub-agent given no context. **Did not close it**: the same critic found a sharper version of the original defect — the curb goes cold in shadow while the *adjacent paving stone*, sitting in the identical shadow, stays warm. That rules out a simple "not warm enough" reading: retinting `albedo_color` harder would only push both faces warmer together without addressing why the same shadow treats two materials differently. The likely lever is the curb's own AO/shadow response (`ao_light_affect` or similar on `MI_RockTrim`'s imported material), which `_apply_retint` has no hook for today and which is a material-property change, not a colour one — the same class of wall `EV4-hillside-seam-remainder-4` already named for a different material this session. Kept the round-2 value (genuine improvement, no regression) rather than reverting. Narrower remainder in `BACKLOG.md`.
 
+## NP6 — Village NPCs read flat-black in exterior frames
+`tests: smoke_art` (green, 348+/348+ suite unaffected — only `art.json` values changed)
+
+Flagged by `EV6-remainder`'s own leftover list: "village NPCs reading
+flat-black in exterior frames — partly the same class (dark palette tints
+under `NP2`'s emission-tint pipeline)… `lane: npc`, not village work." Never
+had its own ticket; formalized as `NP6` and picked up this firing since
+`npc` was the only genuinely actionable free area with 9 other lanes live.
+
+**Confirmed with a real render before touching any code.** `tools/
+capture_site_shots.gd`'s `village-npcs` viewpoint (the actual outdoor scene,
+real sun — the isolated `capture_village_npcs.gd` showcase uses its own
+bright studio lighting and can't reproduce this) showed two of three visible
+NPCs as solid black silhouettes standing in direct sun next to a third,
+correctly-lit NPC. A genuinely blind `Agent`-tool critic, given the frame
+and no context, independently confirmed it unprompted, NPC by NPC.
+
+**Root cause: `art.json`'s two darkest villager tints, compounded by `NP2`'s
+own fix.** `villager_smith` (`#3f5a8c`, luminance 0.35) and
+`villager_quarryman` (`#54504a`, luminance 0.31) were always the darkest two
+of the five villager tints, but read fine before `NP2` because emission
+swamped the tint entirely. `NP2` made emission correctly reflect `tint`
+(`character_model.gd`'s `_shared_variant_material`) — genuinely correct,
+but it means a dark tint now darkens BOTH the lit albedo pass AND the
+self-lit emission pass together, and multiplying an already-mid/dark source
+texture region by a luminance-0.3 tint crushes it to near-black.
+
+**Three real local rounds (render → blind-judge → fix → repeat, entirely in
+this checkout, one push at the end per `conventions.md`):**
+1. Brightened both tints, same hue/saturation, to luminance ~0.45–0.65.
+   Fully fixed `villager_quarryman` (`#54504a` → `#ada495`), confirmed by a
+   direct crop comparison. `villager_smith` (`#3f5a8c` → `#5376b8`) still
+   read dark in the re-render — a fresh blind critic still called it a flat
+   silhouette. Root cause of round 1's partial miss: blue is the
+   lowest-weighted channel in perceptual luminance (Rec709 ~7%), so a
+   saturated blue needs much more raw value than an equal-luminance warm
+   tint before it stops reading dark, and this scene's warm sun contributes
+   little light back onto a blue-heavy albedo.
+2. Desaturated `villager_smith` further and pushed value higher
+   (`#5376b8` → `#92ade0`, luminance 0.35 → 0.67). A second blind critic
+   confirmed real movement — explicitly stopped calling it black/silhouetted
+   — but flagged it as still the visibly weakest of the cast, tracing the
+   remaining weakness to the FACE specifically: "pale grey-white… closer to
+   unlit clay than skin."
+3. That finding pointed at a second, more fundamental cause: these rigs are
+   one fused mesh with one material (same limitation `NP1-geometry` already
+   documents), so `tint` multiplies the face too — and a still-saturated
+   blue (S 0.35) fights a warm skin albedo in a way `villager_farmer`'s
+   orange or `villager_ranger`'s tan never do, because a cool hue shares
+   almost nothing with skin's high-red/low-blue channel balance. Desaturated
+   further (`#92ade0` → `#bccbe6`, S 0.35 → 0.18, same high value). A third
+   blind critic, given the re-rendered frame with no hint of what changed,
+   read all three visible NPCs as lit, colour-differentiated characters and
+   explicitly said so: "all three visible NPCs pass the primary test — none
+   are black/flat/unlit shapes. That baseline is fine." Item's own done-when
+   met.
+
+**What this does NOT fix, named by the same three critics but out of
+scope:** every human/NPC face reads as a flat, feature-less pale oval (the
+`NP1-geometry` limitation — no separable geometry to add real facial
+shading, `BLOCKED.md`'d); the square itself reads empty/under-dressed and
+the sky/hillside read flat with no atmospheric depth (`EV6-remainder`/`EV8`
+territory); every human shares chibi proportions against the reference
+sets' realistic-anime cast (the creature/human art-pipeline question,
+already `BLOCKED.md`'d, D24). None of these are `NP6`'s tint-darkness bug
+and none were introduced by this fix — recorded here only so nobody reopens
+`NP6` chasing them.
+
+One villager (`villager_farmer`, `villager_keeper`) untouched — already
+read fine in every round's render and were never named by any critic.
+
+`tests/smoke_art.gd`'s villager-tint regression guard (`_the_villagers_
+still_tint_the_way_r7_2_shipped`) only asserts a tint is applied at all
+(non-default albedo), not a specific colour, so it's unaffected by these
+value changes and stayed green throughout. Confirmed with a real headless
+run (exit 0) after the final tint landed, not assumed.
+
 ## EV4-textures-lighting-remainder — Five mechanisms ruled out with direct evidence; the dark near-camera patch survives all of them. No code shipped — the findings are the deliverable, same pattern as EV3-remainder-6.
 `tests: none (visual)` — no code changed; every experiment below was reverted.
 `data/config/terrain_playground.json` and `data/config/art.json` are both
