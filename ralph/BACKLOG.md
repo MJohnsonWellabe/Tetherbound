@@ -273,6 +273,63 @@ that path was already safe and needed no change.
 
 **`LP7` (the `smoke_aggression` flake) root-caused and fixed — see `DONE.md`.**
 
+### LP8 — `smoke_opening.gd`'s road-gate check now fails reliably against current `main`, unrelated to any in-flight branch
+`area: loop` (or `village`/`terrain` if the fix turns out to be in the world
+rather than the test) · `model: sonnet` · `tests: smoke_opening`
+
+Found while shipping `OF3` (a `ui`-area item touching only
+`dialogue_panel.gd`/`name_entry.gd`): `ralph/OF3`'s CI failed 4 times in a
+row, always in `verify-scenarios`, always on
+`smoke_opening.gd::_the_road_gate_stops_until_the_key_is_found`, never on
+anything OF3 actually touched. **Confirmed unrelated to that branch, not a
+guess**: a completely independent, freshly-cloned checkout of `main`'s own
+tip (`c8363f1c`, no `OF3` diff at all) reproduces the same test failure
+locally. This is a real, currently-broken state of `main`, not a branch
+problem.
+
+**What the failure actually is.** The gate's physical block works —
+`gate: physically blocked, stopped 17.4m short of a point beyond it` prints
+as the test's own success line for that half. The real failure is the next
+step: the test finds the gate's interactable, walks to it, activates it
+(`_walk_to_and_activate` returns `true`), and then
+`trying the locked gate opened no dialogue; the player is stopped with no
+explanation` — `road_gate.gd`'s `LOCKED_CONVERSATION` never opens even
+though activation apparently succeeded. That is a narrower, more specific
+symptom than "the walk gets stuck somewhere," and whoever picks this up
+should start there rather than at the physical-block half, which is fine.
+
+**Two real leads, not yet confirmed as the cause — check these first,
+they're the last two things that touched anything near this path since the
+test's own last known-good run (`LP7`'s CI run, `799423a1`, 08:11–08:16Z,
+green including this exact test):**
+- `EV5` (`2ed5145`) edited `data/config/terrain_playground.json` and the
+  actual `terrain3d-01_00.res` heightfield for the pond/inflow stream — a
+  real geometry change, landed after `LP7`'s last green run of this test.
+- `R2.3` (`22c96d5`) added real harvestable tree/rock nodes with their own
+  colliders (`harvest_node.gd`, `data/config/vegetation.json`) — also
+  landed after `LP7`'s last green run. Worth checking specifically whether
+  a new harvest node's interactable text now also matches
+  `_find_interactable_matching(["gate"])`'s fuzzy match ahead of the real
+  gate, or whether inventory state from a nearby harvest interaction is
+  making `road_gate.gd` think the key is already held.
+- Confirmed NOT the cause: `NP6` (the only other file-touching commit in
+  that window) only edited four tint values in `art.json` — no geometry, no
+  inventory, no interactables.
+
+**Why this matters beyond one test:** `verify-scenarios` bundles
+`smoke_opening` with `smoke_combat`/`smoke_aggression`/`smoke_menu`/
+`smoke_settings` in one job, so ANY branch whose diff is not docs-only and
+happens to actually execute this job (rather than being skipped by the
+`changes` job's docs-only check) will hit this same wall regardless of what
+that branch touches. `ralph/OF3` is currently blocked on it for exactly
+that reason — its own diff is unrelated and fully tested, see `DONE.md`.
+
+Done when: a blind `smoke_opening` run against `main`'s tip passes
+`_the_road_gate_stops_until_the_key_is_found` cleanly, ideally with the
+actual root cause named (not just a workaround like widening the test's own
+waypoints, which would hide a real interactable-matching or inventory bug
+if that turns out to be the cause).
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
