@@ -137,6 +137,50 @@ the three toy-finish creatures it named.
 
 ---
 
+### `NP1-geometry` — no real hair/accessory geometry exists anywhere, and generating one is foreclosed
+`NP1-geometry` (`BACKLOG.md`, Phase -0.55) read as "blocked on `NP4` or
+`EV1-remainder` supplying an actual modular mesh," and both of those shipped
+since it was written — so this firing (2026-08-12) checked whether it had
+genuinely unblocked, rather than trusting the premise.
+
+**It hadn't.** Parsed `assets/characters/{villager_female,villager_male,
+grunt}/*_lod0.glb`'s glTF JSON directly, the same way `NP1`'s own entry did
+for the original three human rigs: each is **one fused mesh (`char1`), one
+material (`Material_1`), no separate hair or accessory node** — byte-for-byte
+the same limitation trainer/Grandpa/Warden already had. `NP4`'s pipeline is
+Meshy image-to-3D from a turnaround sheet (`NP4`'s own `DONE.md` entry:
+"57k-tri non-manifold triangle soup → clean 28k-tri manifolds" — one mesh,
+cleaned once); it was never going to produce the NPC board's own brief —
+quoted in `D24` — of "hide/show accessories via separate mesh parts, hair
+variants sharing head topology." Checked `EV1-remainder`'s two Quaternius
+kits too (`assets_raw/vendor/quaternius_medieval-village-megakit`,
+`assets_raw/vendor/quaternius_fantasy-props-megakit`) rather than assume:
+village architecture and props, nothing character-shaped, confirmed by a
+`find -iname "*hair*" -o -iname "*accessor*"` turning up nothing but a false
+positive on "Chair".
+
+**Why this doesn't become a normal backlog remainder.** The only way to
+supply real separable hair/accessory geometry now is another Meshy
+generation, and that's foreclosed twice over: `D23` §20 forbids new creature
+meshes at any balance, and `D24`'s own "What it does NOT change" section
+extends the same rule to humans — "the three off-style creatures and the
+trainer/Grandpa fidelity gap are permanently material-and-rework problems,"
+reaffirmed with 5000 credits available specifically so a healthy balance
+would not read as license to reopen it. So this is not "not built yet," it's
+"the pipeline that would build it is the one thing the owner has closed off,"
+and reopening that is exactly the kind of call `CLAUDE.md` reserves for the
+owner, not a firing.
+
+**Clears when:** the owner either accepts `NP1`'s placeholder-primitive
+mechanism as the permanent look for hair/accessories (closing `NP1-geometry`
+outright — the data/attachment system it built is real and already shipped,
+only the geometry stays placeholder), or names a non-Meshy source for
+modular human hair/accessory parts (a CC0 pack, same as `EV1-remainder`
+supplied for the settlement) for a future firing to wire in through the
+mechanism `NP1` already built.
+
+---
+
 ### `ASSET_LEDGER.md` licence claim is false
 The ledger states "Everything currently in the build is CC0 1.0." It is not: the
 Meshy-generated creatures and the Plumberry Plains pack are not CC0. The correct

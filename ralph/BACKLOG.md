@@ -568,15 +568,26 @@ sharing head topology, keep colour calls low by using shared materials.*
 **`NP1` (the modular NPC variant system: per-material palette, hair,
 accessories, all data) shipped — see `DONE.md`.** The hair/accessory shapes
 are placeholder primitives, not real geometry — none of the three rigs has a
-separable hair or accessory mesh yet. **`NP1-geometry`** (new, `area: npc`,
-blocked on `NP4` or `EV1-remainder` supplying an actual modular mesh) is the
-follow-on: wire real hair/accessory geometry into an actual NPC and run it
-through the blind-visual-judge pass, which this ship did not need — nothing
-in the live village's own config changed, so nothing a player sees changed.
-**Trap for whoever takes it:** `_attach_part()` sets a placeholder's
-`offset`/mesh size as a *local* child of a `BoneAttachment3D` inside the
-same 0.01-scale Armature chain `docs/HANDOFF.md` §6 documents for the
-giant-player bug — `NP2` measured it directly, a "size 13" primitive
+separable hair or accessory mesh yet.
+
+**`NP1-geometry` checked and moved to `BLOCKED.md` (2026-08-12) — its own
+premise didn't hold.** It read as blocked-then-unblocked once `NP4`/`NP4-rig`
+shipped three new humanoid bases; checked directly (parsed each `.glb`'s glTF
+JSON the same way `NP1` did for the original three rigs) rather than trusting
+the premise, and `villager_female`/`villager_male`/`grunt` are each **one
+fused mesh, one material, no separate hair or accessory node** — identical to
+trainer/Grandpa/Warden's own limitation. `NP4`'s Meshy image-to-3D pipeline
+never was going to produce the board's own "hide/show accessories via
+separate mesh parts, hair variants sharing head topology" brief; it generates
+one manifold body. `EV1-remainder`'s two Quaternius kits (checked directly,
+`assets_raw/vendor/`) are village architecture and props, nothing
+character-shaped. So there is still no real modular hair/accessory geometry
+anywhere in the project, and `D23`/`D24` foreclose generating one — humans are
+rework-only, permanently, at any credit balance. See `BLOCKED.md` for the
+full entry. **Trap for whoever eventually takes it:** `_attach_part()` sets a
+placeholder's `offset`/mesh size as a *local* child of a `BoneAttachment3D`
+inside the same 0.01-scale Armature chain `docs/HANDOFF.md` §6 documents for
+the giant-player bug — `NP2` measured it directly, a "size 13" primitive
 renders as 0.13m, a factor of 100. `_apply_hair()`'s own `0.08` offset is
 almost certainly landing at ~0.0008m in the live game, effectively at the
 bone origin rather than actually offset. Real geometry from a modular mesh
