@@ -188,6 +188,85 @@ blob / disconnected floating chunk" from the square (two independent
 critics), and the `day` sun disc sits directly beside the tower in the
 `silhouette-close` frame, muddying the one shape-legibility view.
 
+## OF8 — Player can't lie down in bed
+`d31a7c5` on `claude/ralph-backlog-capacity-6cwywn` (manual capacity session,
+not a Routine firing — landed via that branch rather than `ralph/OF8`).
+
+Two separate bugs, both real. **Physical:** `grandpa_house.gd`'s `_furnish()`
+gave every piece of furniture a collider matching its full AABB; for
+`BedTwin` that includes the ~1.03m headboard, so resting the trainer's
+capsule on it settled them at headboard height, not mattress height —
+confirmed with a headless probe (measured 0.465m over the "bed" marker,
+matching the box-top math) before touching anything. Gave the bed its own
+low, mattress-height collider instead. **Missing entirely:** no lie-down
+pose existed on either human rig (`animate_humanoid.py`'s `CLIPS` dict is
+idle/walk/sprint/jump/throw only, confirmed rather than assumed) — per
+`CLAUDE.md`'s art rules, no new clip was generated; `character_model.gd`
+gained `set_lying()`/`is_lying()` that fakes the pose by tipping the loaded
+art onto its back around its existing feet pivot (`x=90°, z=180°`, verified
+empirically). `sequence_director.gd` calls it on the WAKE beat's entry and
+clears it on both exits (the "Get up" prompt and the walk-off-the-bed
+soft-lock fallback); `trainer_model.gd` also force-clears it the instant the
+trainer moves, so the fallback can't leave a body sliding flat across the
+floor.
+
+New `tests/test_character_lying.gd` (off-tree geometry-contract unit tests:
+lands flat, head toward the pillow end, face up, reverts cleanly).
+`tests/smoke_opening.gd` and `tests/smoke_wake_softlock.gd` extended with
+lying/standing assertions on both wake-beat exits — `smoke_wake_softlock`'s
+walk-away direction also had to change, since the correct sleep position
+sits close enough to the nightstand and the loft's eave that the old
+straight-line walk-off now clips something within ~2m. `smoke_art.gd` got a
+one-line fix: it measures the live player's render height, and the scene
+now legitimately boots into a non-standing pose, so it stands the trainer up
+before measuring. Full unit suite (394 tests) and all four touched smoke
+tests pass; `godot --headless --import` clean.
+
+Shares two files (`character_model.gd`, `trainer_model.gd`) with `OF5`,
+worked concurrently in the same checkout — kept separable, both landed
+cleanly on top of each other, re-verified together before push.
+
+## OF5 — Running and walking look unnatural
+`95f5a42` on `claude/ralph-backlog-capacity-6cwywn` (manual capacity
+session). `model: fable` dispatch per `BACKLOG.md`'s fable-dispatch rule —
+the owner's own words, fresh Phase -1.1 feedback.
+
+The "unnatural" read had a measured cause, not just a taste complaint: a
+Muybridge strip over striped ground (new `tools/capture_player_gait.gd`)
+at the speed `movement.json` actually drives the body showed the planted
+foot sweeping backward at ~1.7 m/s (walk) and ~4.9 m/s (sprint) under a body
+moving at 5.0 / 8.6 — the feet ice-skated at roughly 3x. Also: the recovery
+leg swung through dead straight, both legs collapsed to a feet-together
+standing pose twice a cycle, feet stayed plantar-flat with no heel-strike or
+toe-off, arms hung nearly motionless, and the torso stayed bolt upright at
+jogging/sprinting speeds. Redo, not tune, entirely within the project's own
+procedural pipeline (no new assets, no new Meshy generation):
+`animate_humanoid.py`'s `author_gait()` now derives cycle length from the
+actual movement speed, gates knee-fold on swing velocity, adds heel-strike
+dorsiflexion and toe-off, gives the elbows a real bend and swing, and leans
+the torso into the gait with the head held level; `trainer_lod0.glb`
+re-baked through the existing pipeline (trainer only — Grandpa/Warden
+untouched, per `D24`'s one-family rule). `character_model.gd` /
+`trainer_model.gd` gained `match_gait_rate()`, scaling playback rate by
+actual ground speed against `art.json`'s tunable
+`gait_reference_speeds`, so cadence stays honest through acceleration,
+slopes, or a future speed retune. Measured after: peak foot sweep 5.71 m/s
+(walk, body 5.0) and 10.49 (sprint, body 8.6) — slight overshoot reads as
+grip.
+
+No Task/Agent tool inside the dispatched session itself, so the usual
+process-isolated blind critic wasn't available; substituted a
+measurement-first critique (the foot-speed numbers are bias-proof) plus
+structured fresh-eyes rounds on re-rendered strips. Three rounds: round 1
+fixed the skate/legs/posture; round 2 found and fixed two capture-tool
+artifacts that had been corrupting judgment (`advance()` no-op under
+`speed_scale=0`, `play()`'s cross-fade freezing mid-blend under a frozen
+clock); round 3 (arm carry/energy) named no new defect and moved its axis
+only marginally — stopped there per the no-cap/stop-on-plateau convention
+and `OF4`'s token-cap precedent. `smoke_input` extended with a
+cadence-tracking assertion; `check_character_clips` and a full headless
+import both clean.
+
 ## OF2 — Item-target picker for consumables; party reorder found already built
 `b6655da` (+ `1bc2f7f` .uid sidecar fix, `41498a6` footer fix) on `ralph/OF2`.
 

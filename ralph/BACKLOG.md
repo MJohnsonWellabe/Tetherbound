@@ -73,12 +73,7 @@ as the dominant wrong-scale shape. Note the pre-existing lone rock prop on
 the west slope was independently flagged by two critics as "a stray blob /
 floating chunk" — reposition or cluster it as part of this work.
 
-### OF5 — Running and walking look unnatural
-`model: fable` (dispatch) — a "does this look right" call, distinct from the
-`RB2` loop-mode bug already fixed (that was clips freezing after one
-playthrough, not a quality complaint about the motion itself). Needs a blind
-pass judging the walk/sprint cycles specifically — likely gait timing or
-foot-sliding, not looping.
+**`OF5` (running/walking looked unnatural — gait cadence didn't match travel speed, feet ice-skated) shipped — see `DONE.md`.**
 
 ### OF6 — World boundary: tighten the hard collision stop to match the visible perimeter
 `area: terrain` · `model: sonnet`. `SA3` already built a physical perimeter
@@ -94,12 +89,7 @@ fall/respawn failsafe as backup for anyone who gets past it.
 mechanic. The owner's words: "it looks awful and isn't continuous." Done
 when a blind pass no longer calls the perimeter discontinuous or low-quality.
 
-### OF8 — Player can't lie down in bed
-`area: ui` · `model: sonnet` · `tests:` new, covering the lie-down animation
-state and the wake-up transition. Needed both for testing and for the
-opening wake-up scene, where the player currently starts standing on the
-bed instead of lying in it. Check which system owns player-bed interaction
-— likely near the opening scene and `R3.3`'s respawn work.
+**`OF8` (player standing on the bed instead of lying in it — a bad furniture collider plus a missing lie-down pose) shipped — see `DONE.md`.**
 
 **`OF9` (should the stronghold be visible from the start) flagged, not silently fixed — see `BLOCKED.md`'s "Design questions awaiting the owner" for the evidence and what would close it.**
 
