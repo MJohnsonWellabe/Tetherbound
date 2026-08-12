@@ -310,6 +310,42 @@ func nearest_point_on_paths(x: float, z: float) -> Vector2:
 	return best
 
 
+## The direction of travel along the nearest authored path route to a world
+## position -- the matching segment's own (b - a), normalised. `Vector2.ZERO`
+## when no routes are configured, the same "no answer" contract
+## `nearest_point_on_paths` uses.
+##
+## A clump that snaps ONTO the path (`path_bias`) sits exactly on the
+## centreline, so its own symmetric instance disc straddles both edges at
+## once -- two matched crescents, which is what a blind critic reads as "a
+## hedge planted along a driveway" regardless of instance count. Rotating
+## this tangent 90 degrees gives the one thing `nearest_point_on_paths` alone
+## cannot: which way is SIDEWAYS, so a biased clump can be pushed to favour
+## one shoulder instead of straddling both.
+func nearest_path_tangent(x: float, z: float) -> Vector2:
+	var paths: Dictionary = _config.get("paths", {})
+	var routes: Array = paths.get("routes", [])
+	if routes.is_empty():
+		return Vector2.ZERO
+	var spot := Vector2(x, z)
+	var best_tangent := Vector2.ZERO
+	var best_distance := INF
+	for entry: Variant in routes:
+		if not entry is Dictionary:
+			continue
+		var points: Array = (entry as Dictionary).get("points", [])
+		for i in points.size() - 1:
+			var a := Vector2(float(points[i][0]), float(points[i][1]))
+			var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
+			var candidate := _segment_closest_point(spot, a, b)
+			var distance := spot.distance_to(candidate)
+			if distance < best_distance:
+				best_distance = distance
+				var along := b - a
+				best_tangent = along.normalized() if along.length_squared() > 0.0001 else Vector2.ZERO
+	return best_tangent
+
+
 ## Height before the spawn pad flattening, used as the pad's own target so the
 ## pad does not recurse into itself.
 func _raw_height(x: float, z: float) -> float:

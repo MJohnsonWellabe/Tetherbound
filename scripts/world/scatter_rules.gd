@@ -134,10 +134,12 @@ static func placements_for(
 	# is intentional (EV3-remainder). 0 (default) means "no override, use
 	# `per_clump`" — every layer that never sets this is unaffected.
 	var path_bias_per_clump := int(layer.get("path_bias_per_clump", 0))
+	var path_bias_side_offset := maxf(float(layer.get("path_bias_side_offset", 0.0)), 0.0)
 
 	for clump in clumps:
 		var drawn := _clump_centre(
-			rng, half, field, ridge_bias, path_bias, path_bias_jitter, path_avoid_radius
+			rng, half, field, ridge_bias, path_bias, path_bias_jitter, path_avoid_radius,
+			path_bias_side_offset
 		)
 		var centre: Vector2 = drawn["position"]
 		var this_clump_count := per_clump
@@ -228,6 +230,21 @@ const RIDGE_SEARCH_RADIUS := 140.0
 ## radius or the attempt budget runs out, so an incidental near-path clump
 ## becomes a rare miss instead of an always-present border. Defaults to
 ## 0.0 (no change) — opt in per layer.
+##
+## `path_bias_side_offset` (EV3-remainder-4): `path_bias_jitter` above
+## displaces the snap by a RANDOM amount in a random direction, which still
+## lands on either side of the path with equal odds — so a biased clump's
+## own symmetric instance disc still straddles both edges of the road at
+## once, no matter how far the jitter pushes it. That is two matched
+## crescents, and a blind critic named it exactly that ("a hedge planted
+## along a driveway") on a fix round that only thinned the crescents
+## (`path_bias_per_clump`) without changing their shape. This instead pushes
+## the snapped centre a fixed distance along the path's own PERPENDICULAR
+## (`nearest_path_tangent`, rotated 90 degrees), so the clump favours one
+## shoulder — a garden bed beside the road, the actual thing `path_bias` was
+## meant to read as. Applied before `path_bias_jitter`, so the jitter still
+## varies the final offset rather than cancelling it. Defaults to 0.0 (no
+## change) — opt in per layer.
 const PATH_AVOID_ATTEMPTS := 4
 
 ## Returns `{ "position": Vector2, "snapped_to_path": bool }`. The caller
@@ -236,7 +253,8 @@ const PATH_AVOID_ATTEMPTS := 4
 ## `path_bias_per_clump` below.
 static func _clump_centre(
 	rng: RandomNumberGenerator, half: float, field: RefCounted, ridge_bias: float,
-	path_bias: float = 0.0, path_bias_jitter: float = 0.0, path_avoid_radius: float = 0.0
+	path_bias: float = 0.0, path_bias_jitter: float = 0.0, path_avoid_radius: float = 0.0,
+	path_bias_side_offset: float = 0.0
 ) -> Dictionary:
 	var base := Vector2(rng.randf_range(-half, half), rng.randf_range(-half, half))
 	var snapped_to_path := false
@@ -244,6 +262,24 @@ static func _clump_centre(
 	if path_bias > 0.0 and rng.randf() <= path_bias and field.has_method("nearest_point_on_paths"):
 		var on_path: Vector2 = field.nearest_point_on_paths(base.x, base.y)
 		if on_path != Vector2.INF:
+			# EV3-remainder-4: snapping straight onto the centreline (below)
+			# means the clump's own instance disc straddles both edges of the
+			# path at once — two matched crescents, which is what reads as "a
+			# hedge planted along a driveway" regardless of density; reducing
+			# `per_clump` (`path_bias_per_clump`, above) thins both crescents
+			# together and does not touch that shape. Pushing the centre
+			# sideways along the path's own perpendicular, before the
+			# existing jitter, makes one shoulder the clump's real home
+			# instead of straddling — a garden bed beside the road, not a
+			# median strip down its centre. `path_stones` (the road's own
+			# material, wants the exact centreline) and `path_bias_jitter`'s
+			# existing per-instance nudge both leave this at its 0.0 default.
+			if path_bias_side_offset > 0.0 and field.has_method("nearest_path_tangent"):
+				var tangent: Vector2 = field.nearest_path_tangent(on_path.x, on_path.y)
+				if tangent != Vector2.ZERO:
+					var perpendicular := Vector2(-tangent.y, tangent.x)
+					var side := -1.0 if rng.randf() < 0.5 else 1.0
+					on_path += perpendicular * side * path_bias_side_offset
 			if path_bias_jitter > 0.0:
 				var nudge := Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0))
 				on_path += nudge * path_bias_jitter

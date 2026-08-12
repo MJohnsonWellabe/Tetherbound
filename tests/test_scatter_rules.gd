@@ -467,3 +467,77 @@ func test_path_bias_per_clump_does_not_affect_unbiased_clumps() -> void:
 	var without_cap := RULES.placements_for(without_cap_layer, field, world_size, 12)
 	assert_eq(with_cap.size(), without_cap.size(),
 		"path_bias_per_clump changed placement count for a clump path_bias never snapped")
+
+
+func test_path_bias_side_offset_of_zero_changes_nothing() -> void:
+	var flowers := _layer("flowers").duplicate(true)
+	flowers["path_bias_side_offset"] = 0.0
+	var with_zero := RULES.placements_for(flowers, field, world_size, 77)
+	var without_the_key := _layer("flowers").duplicate(true)
+	without_the_key.erase("path_bias_side_offset")
+	var without := RULES.placements_for(without_the_key, field, world_size, 77)
+	assert_eq(with_zero.size(), without.size())
+	for i in with_zero.size():
+		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
+			"path_bias_side_offset 0.0 moved a placement; it must be a no-op")
+
+
+func _majority_side_fraction(placements: Array, path_field: RefCounted) -> float:
+	var plus := 0
+	var minus := 0
+	for p: Variant in placements:
+		var spot: Vector3 = (p as Dictionary)["position"]
+		var nearest: Vector2 = path_field.nearest_point_on_paths(spot.x, spot.z)
+		if nearest == Vector2.INF:
+			continue
+		var tangent: Vector2 = path_field.nearest_path_tangent(spot.x, spot.z)
+		if tangent == Vector2.ZERO:
+			continue
+		var side := tangent.x * (spot.z - nearest.y) - tangent.y * (spot.x - nearest.x)
+		if side >= 0.0:
+			plus += 1
+		else:
+			minus += 1
+	var total := plus + minus
+	if total == 0:
+		return 0.5
+	return float(maxi(plus, minus)) / float(total)
+
+
+func test_path_bias_side_offset_favours_one_shoulder_of_the_path() -> void:
+	# EV3-remainder-4: path_bias alone snaps a clump's centre onto the
+	# centreline, so its own symmetric instance disc straddles both edges of
+	# the path in equal measure -- two matched crescents, which a blind
+	# critic named as "a hedge planted along a driveway" even after
+	# path_bias_per_clump thinned the count without changing the shape.
+	# path_bias_side_offset should break that symmetry: the majority-side
+	# fraction of a biased clump's surviving instances should be higher with
+	# the offset than without it, across independent seeds.
+	var layer := {
+		"models": _layer("flowers").get("models", []),
+		"clumps": 1, "per_clump": 200, "strays": 0, "clump_radius": 9.0,
+		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+		"path_bias": 1.0,
+	}
+
+	var improved_seeds := 0
+	var not_improved_seeds := 0
+	var samples := 8
+	for seed_value in samples:
+		layer["path_bias_side_offset"] = 0.0
+		var unbiased := RULES.placements_for(layer, field, world_size, seed_value * 401 + 1)
+		var unbiased_majority := _majority_side_fraction(unbiased, field)
+
+		layer["path_bias_side_offset"] = 6.0
+		var offset := RULES.placements_for(layer, field, world_size, seed_value * 401 + 1)
+		var offset_majority := _majority_side_fraction(offset, field)
+
+		if offset_majority > unbiased_majority:
+			improved_seeds += 1
+		else:
+			not_improved_seeds += 1
+
+	assert_true(improved_seeds > not_improved_seeds,
+		"path_bias_side_offset 6.0 did not shift instances toward one shoulder across %d seeds (%d improved, %d did not)" % [
+			samples, improved_seeds, not_improved_seeds
+		])
