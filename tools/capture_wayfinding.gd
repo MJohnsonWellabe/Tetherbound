@@ -77,6 +77,17 @@ const VIEWPOINTS := [
 		"eye": Vector2(134.0, -122.0), "eye_h": 6.0,
 		"target": TOWER_AT, "target_h": 12.0,
 	},
+	{
+		# OF4: a genuinely human-scale approach — eye at standing height,
+		# ~26m out, looking up at the wall and towers the way a player
+		# walking the last stretch of the Rise path actually sees them.
+		# The owner's "reads as a toy" complaint came from playing, not
+		# from the staged distances above, and surface/material quality is
+		# only judgeable this close.
+		"name": "silhouette-approach",
+		"eye": Vector2(134.0, -108.0), "eye_h": 1.7,
+		"target": TOWER_AT, "target_h": 11.0,
+	},
 ]
 
 
