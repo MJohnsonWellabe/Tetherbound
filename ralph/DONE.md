@@ -3,6 +3,83 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SA8 — Grandpa's opening dialogue: the Team Tether urgency beat
+`031f571`. `tests: smoke_opening` (green, run locally headless).
+
+Two new lines in `grandpa_house` (`data/dialogue/opening.json`), owner
+directive close to verbatim: someone has to stop Team Tether, he waited
+because the player was too young, and they are only getting stronger.
+Slotted between the existing physical excuse ("I get winded crossing my
+own meadow") and the existing "So you go" — the briefing already
+established that Team Tether exists and that Grandpa can't walk; this adds
+why it has to be the player, and why now. Everything else in the
+conversation, including the belt-limit and camp/gather lines the item
+explicitly said to leave alone, is untouched. `smoke_opening.gd` still
+passes; beat 3 now closes after 16 presses instead of 14, which the test
+counts dynamically rather than asserting a fixed number.
+
+## CO1 — Manual pal summon, dismiss and swap
+`f6d21c4` (code), `565feca` (settings-screen fixup, see below).
+`tests: smoke_opening, smoke_catching, smoke_aggression, smoke_combat,
+smoke_pal_control` (all green, run locally headless) plus the full
+`tests/run_tests.gd` suite (305/305).
+
+Two real gaps closed, not one. There was no way to put the following pal
+away or call it back. And `tab_pals.gd`'s "send this one out first" already
+called `Game.party.set_active()` — but nothing ever read that back, so
+choosing a different active pal in the party menu had no effect on who was
+actually standing beside the trainer.
+
+`encounter_director.gd`: `adopt_starter()`'s spawn logic split into a
+shared `_spawn_ally_body(pal)`, reused by the new `summon_active_pal()`
+(brings `Game.party`'s active pal out) and `dismiss_active_pal()` (puts the
+current one away; refuses mid-fight, same guard `_set_exploration_active()`
+already has). `_sync_active_pal()` polls `party.revision` — the same idiom
+`autoload/party.gd`/`autoload/inventory.gd` already use — and swaps the
+live body when the party screen's active slot changes underneath it.
+
+New `pal_recall` input action (keyboard R, gamepad D-Pad Up, both
+previously unbound) toggles dismiss/summon, read the same way
+`_read_engage_input()` already is. Its prompt reuses `PROMPTS`' existing
+single-line contract (`prompt_arbiter.gd`) as a non-actionable, low-priority
+fallback in `interaction_offer()`, so it never competes with "Engage X" —
+with a real `HD1`-style device-aware glyph (`input_glyph.gd`'s `GLYPHS`
+gains a `pal_recall` entry; two Kenney PNGs staged from the
+already-ledgered Input Prompts pack, no new ledger line needed).
+
+**The fixup commit** (`565feca`, folded in during shipping): CI caught a
+gap the smoke tests didn't — `test_controls.gd`'s
+`test_every_rebindable_action_is_on_the_screen` fails for any input-map
+action missing from `menu.json`'s `settings.controls`. `pal_recall` now
+sits in "The world" group next to `interact`/`tool_cycle`, with a label.
+
+New `tests/smoke_pal_control.gd` (not in CO1's own `tests: none`, but
+`adopt_starter()` was refactored and nothing else exercised any of this):
+dismiss, recall, a live swap via `party.set_active()`, and the mid-fight
+refusal.
+
+**Shipping this took far longer than the work itself** — worth recording
+since it happened live and taught real things about the pipeline, not
+because CO1 itself was unusual. `ralph/CO1` was rebased and re-pushed
+roughly a dozen times across ~3 hours before landing, entirely because of
+infrastructure, not code: every automatic rebase dispatches CI via
+`gh workflow run` (a `workflow_dispatch` run), and GitHub's default-token
+recursion guard means `workflow_dispatch` runs never raise a `workflow_run`
+event — so `ralph-merge.yml`'s event-triggered merge could structurally
+never fire for a rebased branch's own green CI, not intermittently, every
+time. `ralph-sweep.yml` (a 10-minute cron reconciler, landed mid-firing by
+another lane) is the real fix and is what finally shipped this — but it
+also has its own real 3-rebase cap per sweep pass (`ship_branch.sh`), which
+this branch hit twice in one of tonight's unusually high-churn windows
+(many lanes landing within minutes of each other). Both times the fix was
+the same: rebase and push by hand, which resets the count, then let the
+sweep pick it back up. `ralph-sweep.yml` also accepts a manual
+`workflow_dispatch` — used directly a few times here rather than waiting
+out an apparently-delayed cron tick, which is a legitimate, documented way
+to nudge it. None of this needed a code fix; it's recorded here as
+evidence for whoever next looks at the sweep's dropped-cron-tick behavior
+or its rebase cap under heavy concurrent load.
+
 ## EV9 (third slice) — tab_backpack.gd quantity-clipping fix, finished on an abandoned branch
 `b6628ba` (code, an earlier firing's), `05b8948`/rebased tips (ship, this
 firing). `tests: smoke_menu` (green, run locally headless).

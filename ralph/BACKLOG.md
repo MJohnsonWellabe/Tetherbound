@@ -763,17 +763,7 @@ correction on `R2.5` and the "Found along the way" entry above for what that
 verb already does. Done when: a potion can be used without opening a menu,
 with the correct `HD1` prompt shown next to the slot.
 
-### CO1 — Manual pal summon, dismiss and swap
-`model: sonnet` · `tests: none` · `area: story`
-The owner wants a Palworld-style button to bring a pal out. The game currently
-has the opposite: `encounter_director.gd::adopt_starter()` calls
-`set_following(true)` unconditionally and there's no path to disable it or
-choose a different one of the five belt pals for the role. This item adds a
-bound action to call the active pal out or send it back, and lets the player
-pick which pal is out — built on top of the existing `follower_pal.gd`
-machinery, not a replacement for it. Done when: the pal can be dismissed,
-recalled and swapped outside combat, with the correct `HD1` prompt for the
-action.
+**`CO1` (manual pal summon, dismiss and swap) shipped — see `DONE.md`.**
 
 ### SA7 — A gated road out of the village, with a key nearby
 `model: sonnet` · `tests: smoke_opening` · `area: story`
@@ -789,28 +779,7 @@ gives the player something to look toward; this gives them something to
 have keys. Done when: a new player is stopped once, finds the key without
 real difficulty, and can say in their own words why the gate was there.
 
-### SA8 — Grandpa's opening dialogue: the Team Tether urgency beat
-`model: sonnet` · `tests: smoke_opening` · `area: story`
-Owner directive, 2026-08-11, close to verbatim: *someone has to stop Team
-Tether; I've waited because you were too young, but they're only getting
-stronger.* Write it in the existing `grandpa_house` voice
-(`data/dialogue/opening.json`) as an addition, not a replacement — the
-current dialogue only explains Grandpa's absence physically ("I get winded
-crossing my own meadow. I'm not walking anywhere"), with no stated urgency or
-motivation beyond that. **Leave the belt-limit and camp/gather lines exactly
-as they are** — both already say what the owner separately asked for
-verbatim (`grandpa_house`'s belt line, `grandpa_road`'s "stoop for what the
-verges offer — wood, stone... make camp before dark"), and this item is only
-the missing motivational beat.
-
-**Flag for whoever picks this up:** the "too young," "waited," and "only
-getting stronger" framing is not in `MEADOWS_PROGRESSION_SPEC.md` or `D23` —
-checked, zero hits. It doesn't contradict canon, but it is new backstory
-beyond what's specified, which is ordinarily exactly what `CLAUDE.md` asks a
-firing to flag rather than invent. It's being written here anyway because the
-owner supplied the actual line in this conversation — implementing a
-directive is not inventing one — but this note stays so nobody mistakes it for
-a firing's own addition later.
+**`SA8` (Grandpa's opening dialogue: the Team Tether urgency beat) shipped — see `DONE.md`.**
 
 ---
 
