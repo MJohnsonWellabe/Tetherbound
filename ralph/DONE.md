@@ -65,6 +65,77 @@ viewpoints — consistent with `R9.4-remainder-6`'s own measured per-frame
 cost, and cheap enough that iterating value/hue choices by rendering and
 judging, rather than guessing once, was the right call here.
 
+## EV4-hillside-seam-remainder-3 — Both named colour levers tried; shipped, partial. Opens `EV4-hillside-seam-remainder-4`
+`tests: none (visual)`. Three real, evidence-first rounds against
+`tools/capture_hillside.gd`'s three viewpoints, each with its own genuinely
+blind `Agent`-tool critic (no shared context, no hint of what changed).
+
+**Round 1 — rock's floor brightness.** `remainder-2` left rock's own tint
+(`#fafafa`) with no headroom to brighten further, so the lever moved to the
+photo itself: `tools/art_pipeline/brighten_rock_texture.py` (new, same
+in-place-photo-edit pattern as `desaturate_soil_texture.py`) applies a
+screen-blend brightness lift to `Rock030_Color.jpg`, chosen by simulating the
+full render multiply chain rather than eyeballed — LIFT_AMOUNT 0.18 takes
+rock's own mean value 0.312 → 0.436 with hue held exactly (a uniform
+per-channel transform does not rotate hue) and saturation falling as a side
+effect (0.126 → 0.073). Paired with a further `normal_depth`/`ao_strength`
+cut (0.3/0.15 → 0.18/0.08) for the grazing-sun self-shadow the photo fix
+alone doesn't touch. **Real, critic-confirmed movement**: a fresh critic on
+this render described the rock in one viewpoint as having "more internal
+texture, light streaky veining," where the pre-round critic (given the
+unmodified frames for a true A/B baseline) saw "no visible rock texture...
+a rendering artifact." Still called it "marble/cloud texture or ambient-
+occlusion darkening" rather than stone in the other two viewpoints, and
+still reported no visible third material.
+
+**Round 2 — soil's hue pushed away from rock's, and a regression found.**
+Pushed soil's texture tint hue UP (`#fafafa` → `#f0f0c8` then `#ecec9c`,
+yellow-olive, a direction never tried before — the failed prior attempt on
+this texture pushed hue DOWN into "burnt orange/rust") and rock's brightness
+lift further (0.18 → 0.24). Both moved the *offline* photo×tint×colour-map
+chain in the intended direction (soil hue 51→54°, rock saturation down
+further) but a fresh critic reported no soil band still, AND a genuinely new
+complaint: rock now read as "quite cool/blue-slate" rather than warm stone —
+a real regression from pushing desaturation past what this scene's blue
+ambient/sky light can leave a near-neutral material to resist. Reverted rock
+to round 1's 0.18; the shading cut stayed.
+
+**Round 3 — the real root cause, found by sampling the actual render instead
+of the offline chain.** Direct pixel sampling of round 2's rendered frame
+(sky masked out via `tools/frame_stats.py`'s own `sky_mask`, not eyeballed)
+found why rounds 1-2's hue-up strategy wasn't working: under this scene's
+real lighting, warm ground colours converge toward one hue band (50-60°)
+regardless of their offline-computed hue — ~87% of `close-three-quarter.png`'s
+own ground pixels (sky-masked) landed in that one narrow band, far more than
+the soil plateau's real geographic footprint could explain on its own. Every
+"push hue up, away from rock" attempt was landing on top of grass's own real
+rendered hue, not separating from it — a critic seeing extra-saturated
+grass-hued ground correctly reported "no soil, just very green grass." The
+direction was backwards: an earlier `EV4-hillside-seam` round tried pushing
+hue DOWN toward true tan/dirt and reverted it as "burnt orange/rust," but
+that was on the OLD, oversaturated soil photo (mean saturation 0.45);
+`remainder-2` fixed that photo (0.45 → 0.17) and nobody had re-tried the down
+direction on the fixed photo since. Retried, moderately: `#f0d5a8` (full
+chain: hue 39.6°, saturation 0.473). **Real, measured movement**: the
+ground's dominant hue mass shifted from centred at 50-60° (before, and
+rounds 1-2) to centred at 30-50° (round 3), confirmed by direct pixel
+histogram, no rust regression. The blind critic's core verdict still did not
+change — no third material, rock still read as a stain/watermark/AO artefact
+rather than stone.
+
+**Did not close the item.** Colour/value levers on this specific soil/rock
+pair now read as genuinely exhausted, not merely "close": both of
+`remainder-3`'s own named levers were tried, plus a data-driven reversal of
+the hue direction, across three rounds with real measured movement on every
+axis attempted and zero regression relative to the pre-round state — and the
+critic's verdict never moved. `EV4-hillside-seam-remainder-4` (`BACKLOG.md`)
+carries this forward with a genuinely different class of lever (heightfield
+geometry noise, not another tint) rather than a fourth colour round.
+
+`docs/ASSET_LEDGER.md`'s `Rock030` row now has the brightness-lift
+before/after account, matching `Ground003`'s own existing entry for
+`remainder-2`'s fix.
+
 ## SA3 — A believable physical perimeter, and a failsafe under it
 `0d921e0` on `main`. `tests: smoke_traversal` (extended with 8-bearing
 perimeter walks + a kill-volume check, green).

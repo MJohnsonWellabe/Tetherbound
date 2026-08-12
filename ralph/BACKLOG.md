@@ -507,51 +507,59 @@ why, and for the root cause both attempts ran into).
 
 **`EV4-hillside-seam-remainder-2` (the two lever-2 fixes: photo saturation, then the tint/colour-map compounding it hid) shipped, partial — see `DONE.md`.** Two more rounds after the two documented above (widened plateau, reverted stronger tint). Round 3 finally executed lever 2 from this item's own list — a feathered pixel-level correction on `Ground003_Color.jpg` itself — and found why both prior tint-only rounds failed: the raw photo's own saturation (mean 0.45) measured ~4.5x every sibling ground texture already in the project (Ground030 0.099, Rock030 0.126), oversaturated across nearly its whole area rather than a narrow green patch, so no tint multiply could ever fully tame it without either undershooting or overshooting. Fixed the photo directly (`tools/art_pipeline/desaturate_soil_texture.py`, same local-luminance-blend technique as `Ground030`'s own moss fix); real, measured, verified movement (0.45 → 0.17). A fresh blind critic on the re-render still found no visible third material, but round 4 found a *second* real bug the first render exposed: `colour.soil` (`#e0cea4`) — a separate multiply layer meant to be "near white, modulates rather than paints" per this file's own top comment — was itself saturated (0.27) and compounding with the texture's own `tint`, landing rendered soil saturation at 0.65–0.76 even after the photo fix, the same multiplicative-saturation bug `R9.4` already diagnosed and fixed for grass elsewhere in this exact file. Fixed both together (`tint` → `#fafafa`, matching rock's own near-white convention now that the photo carries the real colour; `colour.soil` → `#f3ebdb`, now honestly above this file's own `#c0` floor) and reverified by direct pixel sampling of the actual rendered frame, not just the offline texture: transition-zone saturation dropped from 0.65–0.76 to 0.18–0.43, with a real, visible brighter warm band now present above the darker rock in the re-rendered frames. **Did not close the item**: a third blind critic still reported no clearly legible third material — not because the colour is wrong now, but because soil and rock differ mainly in *value* (bright vs. dark) rather than hue, so rock's own low native brightness (`Rock030_Color.jpg` mean value 0.31, further darkened by its `normal_depth`/`ao_strength` under a grazing sun) reads as "a shadow hole" rather than a second material, which eats the contrast budget that would otherwise sell the soil band as distinct. Two real, root-caused, verified bugs fixed this round with no regression (no critic named a new worse defect the way the round-2 tint push once did) — genuine progress, just not enough to clear the bar on its own. Narrower remainder opened below for the value/contrast half specifically, since colour-only levers on `soil` are now close to exhausted.
 
-### EV4-hillside-seam-remainder-3 — Soil and rock differ mainly in value, not hue; rock's own darkness reads as a shadow hole and swallows the third-material read
+**`EV4-hillside-seam-remainder-3` (both named levers tried: rock's floor brightness, soil's hue pushed away from rock) shipped, partial — see `DONE.md`.** Three real rounds. Round 1 (rock photo brightness lift + a further AO/relief cut) got the first critic-confirmed positive on rock specifically: a fresh critic described real internal texture/veining where the previous round's critic saw none. Rounds 2-3 chased the soil half and found the round-2 diagnosis above was reasoning from the wrong data — the *offline* photo×tint×colour-map chain, not the actual lit render. Direct pixel sampling of the real rendered frame (sky masked out) found ~87% of all visible ground pixels landing in one narrow hue band (50–60°) regardless of what the offline chain predicted for soil — pushing soil's hue further from rock's (round 2) was landing on top of grass's own real rendered hue, not separating from it. Round 3 pushed the opposite direction instead — true tan/dirt (hue ~30–40°), which an earlier round had tried and reverted as "burnt orange" but on the OLD, oversaturated soil photo; retried on `remainder-2`'s already-fixed photo, it moved measurably (ground hue mass shifted from centred at 50–60° to centred at 30–50°, confirmed by direct pixel histogram) with no rust regression. **Did not close the item**: the blind critic's core verdict did not move across any of the three rounds — no third material, rock still read as a stain/AO artefact rather than stone, in all three. Colour/value levers on this specific soil/rock pair now read as genuinely exhausted rather than merely "close" — both of this item's own named levers were tried, plus the hue-direction reversal a fresh diagnosis motivated, and none produced a critic-visible third material despite real, verified, measured movement on every axis tried. Narrower remainder opened below, aimed at a different kind of lever entirely.
+
+### EV4-hillside-seam-remainder-4 — Colour/value tuning is exhausted; the soil band needs a structural or geometric lever, not another tint
 `model: sonnet` · `tests: none (visual)` · `area: terrain`
-`EV4-hillside-seam-remainder-2` fixed two real, verified bugs in the soil
-band's own colour (an oversaturated source photo, then a compounding
-tint/colour-map multiply) and confirmed the fix landed in the actual
-rendered frame, not just the offline texture — but a third blind critic
-still reported no third material, this time describing rock as reading
-like "near-black... shadow holes" rather than stone, with grass going
-straight to a hard dark edge. Direct pixel sampling of the re-rendered
-`close-three-quarter.png` explains why: soil-band pixels landed around
-hue 44–58, value 0.4–0.65; the darker patches (rock) sit at a similar hue
-range (44–84, heavily overlapping) but value 0.19–0.35. The two bands
-share hue almost entirely and differ mainly in brightness, which a viewer
-reads as one material in light versus shadow, not two different
-materials — colour-only tuning on `soil` has limited further headroom to
-fix this alone, since the photo's own natural hue (post-fix, mean ~52°)
-resists pulling much past ~41° even under a fairly strong tint (measured
-directly: simulated the full multiply chain against 3000 sampled photo
-pixels across several tint strengths before writing this). Two real levers
-not yet tried, both on `rock` rather than `soil`, since rock's own low
-native brightness (`Rock030_Color.jpg` mean value 0.31) is what is eating
-the contrast budget:
-1. **Raise rock's floor brightness** (a stronger `tint` than the current
-   near-white `#fafafa`, or a further `ao_strength`/`normal_depth` cut past
-   `EV4-hillside-seam-remainder`'s already-reduced 0.15/0.3) so it stops
-   reading as a near-black hole under this scene's grazing sun angle.
-2. **Push soil's hue further from rock's own hue range** rather than
-   further from grass's — the two bands overlap at 44–84°; narrowing that
-   overlap (a stronger warm-shift on `soil`'s tint, now that the photo
-   itself is under control and has real headroom before it risks the
-   round-2 rust/burnt-orange regression again) may separate them where
-   brightness alone hasn't.
-Done when: a fresh blind critic given hillside frames names a visible
-third soil/tan tone distinct from both grass and rock, without describing
-rock as reading like a shadow artefact rather than stone.
+Three real rounds tried both of `remainder-3`'s named levers (rock's floor
+brightness, soil's hue pushed away from rock in both directions) and one
+data-driven pivot (soil pushed toward true tan/dirt instead of yellow-olive,
+once direct pixel sampling showed the yellow-olive direction was converging
+with grass's own real rendered hue, not separating from it). Every round
+produced real, measured movement — rock genuinely reads with more internal
+texture now, and soil's rendered hue mass moved a full 15–20 degrees toward
+the tan family — but the blind critic's core verdict never changed across
+any of the three: two materials, not three; the "rock" reads as a stain,
+watermark or AO artefact rather than stone, regardless of its exact hue or
+saturation. This is the wall `conventions.md`'s stopping rule exists to
+detect: colour is not the remaining variable.
+
+`remainder-3`'s own out-of-scope note already named the likely real cause:
+the hill's geometry is a perfectly smooth dome with no bump, ledge or
+protrusion under the rock texture, and `blend_deg` produces a smooth,
+continuous colour gradient with no textural or geometric discontinuity at
+the material boundary. A human reads "two materials" from a visible seam or
+a change in surface form, not from a hue/value shift alone painted onto an
+otherwise-identical smooth surface — which is consistent with every round
+here moving the paint without moving the verdict.
+
+The next lever is `playground_heightfield.gd`'s own domain, not
+`terrain_playground.json`'s colour block: `outcrop_jitter_deg` already adds
+noise to the SLOPE SAMPLE used for band selection (where the bands fall);
+what has not been tried is noise added to the HEIGHT itself in the rock/soil
+slope range, so the surface gets real bumps and ledges under the texture
+rather than staying a mathematically smooth dome. This is a heightfield
+noise parameter, not a new mesh or texture asset, so it does not trigger
+`CLAUDE.md`/`D24`'s reference-art gate — but it is a genuinely different
+class of change from anything tried in `EV4-hillside-seam` through
+`remainder-3` (all of which stayed in the colour/shader-parameter layer),
+and touches the terrain bake rather than the material config, so scope it
+as its own attempt rather than a fourth colour round.
+Done when: a fresh blind critic given hillside frames names a visible third
+soil/tan tone distinct from both grass and rock, without describing rock as
+reading like a stain, watermark or AO artefact rather than stone — or, if a
+real geometry attempt also fails to move the verdict, this becomes a
+`BLOCKED.md` entry for the owner (accept the procedural-blend ceiling on
+this landform, the same trade already accepted for `grandpas-house-route.png`
+in `BLOCKED.md`).
 
 Also named by this item's rounds, explicitly out of scope (pre-existing,
 unrelated to the slope-material bands specifically): the sun/moon disc
 reading as a flat blurred sprite; the tower/spire on the hilltop rendering
-as a flat unlit silhouette with no surface shading; the hill's own
-geometry being a perfectly smooth dome with no bump/ledge/protrusion under
-the rock texture, so even well-textured rock "reads as paint on a ball"
-rather than a true outcrop — real geometry variation, not a config edit,
-and CLAUDE.md's no-new-terrain-generation-without-reference-art rule would
-gate any asset-level fix for it the same way it gates creature/human work.
+as a flat unlit silhouette with no surface shading; a white, faceted,
+crystalline-looking shape (very likely the known stronghold landmark
+silhouette, `landmark.gd`) partially visible at the edge of two frames from
+these specific camera angles.
 
 **`Ground037` (mossy forest floor, ambientCG, also pre-sourced and ledgered
 alongside `Ground030`) is still unused.** Bible sec8 item 5, Deep Grass/
