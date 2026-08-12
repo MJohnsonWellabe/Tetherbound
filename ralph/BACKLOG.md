@@ -482,6 +482,12 @@ Four local blind-judge rounds, three real legibility fixes (two Kenney
 source icons' baked-in text turned to mush at the size this renders at;
 swapped for symbol-only alternatives and a larger base size).
 
+**Third slice landed: `tab_backpack.gd` quantity-clipping bugfix — see
+`DONE.md`.** A round-3 blind-judge finding (item quantity vanishing off
+longer item names, e.g. "Small Potion" showing no held-count at all) found
+stranded on an abandoned, never-merged branch and finished/shipped by a
+later firing. Does not touch the re-skin itself — still open below.
+
 **Still open — do NOT re-scope these as a separate item, they are this
 item's remainder:**
 - Inventory grid (`tab_backpack.gd`) and crafting panel (`tab_build.gd`)

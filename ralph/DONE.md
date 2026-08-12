@@ -3,6 +3,23 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV9 (third slice) — tab_backpack.gd quantity-clipping fix, finished on an abandoned branch
+`b6628ba` (code, an earlier firing's), `05b8948`/rebased tips (ship, this
+firing). `tests: smoke_menu` (green, run locally headless).
+
+**What happened.** `ralph/EV9` had one commit sitting green on CI since
+2026-08-11 22:43, never merged — its own lease long dead, the branch itself
+stale by both the timestamp and branch-liveness tests in `PROMPT.md`. Rather
+than pick a fresh backlog item, this firing rebased it cleanly onto current
+`main`, reran the item's own named test locally, and pushed. No new
+diagnosis needed; the abandoned commit's own message already has the full
+story: the theme's default 26px button font clips a long item name plus
+quantity entirely off a 168px tile with no ellipsis (`clip_text` hard-cuts),
+caught by `EV9`'s own round-3 blind-judge pass. Fixed with a measured 20px
+override (the largest size that keeps the longest current item name plus a
+quantity inside the tile's content width) and a doubled-space-to-single fix
+in the format string.
+
 ## EV4-hillside-seam rounds 3-4 — rock went from mathematically unreachable to a proportionate accent
 `25c6606` (round 3), `68541a9` (round 4). `tests: smoke_traversal` (green,
 both rounds). Visual-affecting: three local blind `.claude/skills/visual-judge`
