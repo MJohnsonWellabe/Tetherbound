@@ -1,513 +1,545 @@
-<title>Ralph Ledger</title>
+<title>Ralph's Field Log</title>
 <style>
   :root {
-    --bg: #eff1ea;
-    --surface: #fbfbf7;
-    --surface-2: #e6e8dc;
-    --surface-3: #dcdfcf;
-    --border: #d2d5c4;
-    --border-soft: #dfe1d3;
-    --text: #23281f;
-    --text-muted: #5b6152;
-    --text-faint: #868c76;
-    --accent: #9c611c;
-    --accent-strong: #7d4c15;
-    --accent-bg: #f2e4ce;
-    --ok: #2f6e3c;
-    --ok-bg: #e2ede3;
-    --warn: #a83824;
-    --warn-bg: #f3e2dc;
-    --info: #3f52a0;
-    --info-bg: #e3e5f4;
-    --muted-pill: #767c67;
-    --muted-pill-bg: #e6e8dc;
-    --shadow: 0 1px 2px rgba(30, 34, 24, 0.05), 0 6px 20px rgba(30, 34, 24, 0.05);
-    color-scheme: light;
+    --bg: #F1F4EC;
+    --surface: #FFFFFF;
+    --surface-2: #E7ECDF;
+    --ink: #1B241D;
+    --ink-soft: #52604F;
+    --ink-faint: #7C8877;
+    --line: rgba(27, 36, 29, 0.13);
+    --line-strong: rgba(27, 36, 29, 0.24);
+    --accent: #3F6B4E;
+    --accent-strong: #2B4E38;
+    --accent-soft: #DCE7DA;
+    --state-open: #6B7280;
+    --state-open-soft: #E7E9EB;
+    --state-live: #A8690F;
+    --state-live-soft: #F5E3C6;
+    --state-blocked: #A5432E;
+    --state-blocked-soft: #F3DDD6;
+    --state-shipped: #3F7A55;
+    --state-shipped-soft: #DCEBE0;
+    --state-gate: #6A4C93;
+    --state-gate-soft: #E7E0F1;
+    --state-fable: #9A5B12;
+    --state-fable-soft: #F2E1C6;
+    --shadow: 0 1px 2px rgba(20, 28, 18, 0.06), 0 8px 24px -12px rgba(20, 28, 18, 0.18);
+    --radius: 10px;
+    --serif: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", "Courier New", monospace;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #14170f;
-      --surface: #1b1f15;
-      --surface-2: #23271b;
-      --surface-3: #2c311f;
-      --border: #363c29;
-      --border-soft: #2b3021;
-      --text: #eceee2;
-      --text-muted: #a7ac97;
-      --text-faint: #767c67;
-      --accent: #e0a24c;
-      --accent-strong: #f0b562;
-      --accent-bg: #3a2d13;
-      --ok: #6bbd7c;
-      --ok-bg: #1e3124;
-      --warn: #e37c60;
-      --warn-bg: #3a251f;
-      --info: #8d9cec;
-      --info-bg: #232a4a;
-      --muted-pill: #9aa088;
-      --muted-pill-bg: #23271b;
-      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.35);
-      color-scheme: dark;
+      --bg: #12160E;
+      --surface: #1A2015;
+      --surface-2: #212A1A;
+      --ink: #E7ECE1;
+      --ink-soft: #AEBBA6;
+      --ink-faint: #7C8877;
+      --line: rgba(231, 236, 225, 0.13);
+      --line-strong: rgba(231, 236, 225, 0.24);
+      --accent: #7FBF97;
+      --accent-strong: #9ED4B0;
+      --accent-soft: #223226;
+      --state-open: #9AA3AC;
+      --state-open-soft: #262B30;
+      --state-live: #E0A63E;
+      --state-live-soft: #332A16;
+      --state-blocked: #E38A70;
+      --state-blocked-soft: #382220;
+      --state-shipped: #79C596;
+      --state-shipped-soft: #1D2E22;
+      --state-gate: #B79EE0;
+      --state-gate-soft: #2A2436;
+      --state-fable: #E0A855;
+      --state-fable-soft: #332615;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
     }
   }
 
   :root[data-theme="dark"] {
-    --bg: #14170f;
-    --surface: #1b1f15;
-    --surface-2: #23271b;
-    --surface-3: #2c311f;
-    --border: #363c29;
-    --border-soft: #2b3021;
-    --text: #eceee2;
-    --text-muted: #a7ac97;
-    --text-faint: #767c67;
-    --accent: #e0a24c;
-    --accent-strong: #f0b562;
-    --accent-bg: #3a2d13;
-    --ok: #6bbd7c;
-    --ok-bg: #1e3124;
-    --warn: #e37c60;
-    --warn-bg: #3a251f;
-    --info: #8d9cec;
-    --info-bg: #232a4a;
-    --muted-pill: #9aa088;
-    --muted-pill-bg: #23271b;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.35);
-    color-scheme: dark;
+    --bg: #12160E;
+    --surface: #1A2015;
+    --surface-2: #212A1A;
+    --ink: #E7ECE1;
+    --ink-soft: #AEBBA6;
+    --ink-faint: #7C8877;
+    --line: rgba(231, 236, 225, 0.13);
+    --line-strong: rgba(231, 236, 225, 0.24);
+    --accent: #7FBF97;
+    --accent-strong: #9ED4B0;
+    --accent-soft: #223226;
+    --state-open: #9AA3AC;
+    --state-open-soft: #262B30;
+    --state-live: #E0A63E;
+    --state-live-soft: #332A16;
+    --state-blocked: #E38A70;
+    --state-blocked-soft: #382220;
+    --state-shipped: #79C596;
+    --state-shipped-soft: #1D2E22;
+    --state-gate: #B79EE0;
+    --state-gate-soft: #2A2436;
+    --state-fable: #E0A855;
+    --state-fable-soft: #332615;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
   }
 
   * { box-sizing: border-box; }
-
+  html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
     background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.55;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
   }
 
   a { color: var(--accent-strong); }
 
-  .page { max-width: 1000px; margin: 0 auto; padding: 0 24px 120px; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
 
-  h1, h2, h3, .display {
-    font-family: Iowan Old Style, "Palatino Linotype", Palatino, Georgia, serif;
-    text-wrap: balance;
-    margin: 0;
-  }
-
-  code, .mono, .id, .pill, .stat-value, time {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* ---------- header ---------- */
-
+  /* ---- header ---- */
   header.top {
-    padding: 44px 0 28px;
-    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
   }
-  .eyebrow {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
+  .top-inner {
+    max-width: 900px; margin: 0 auto; padding: 14px 20px 0;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
   }
-  h1 { font-size: 34px; font-weight: 600; letter-spacing: -0.01em; }
-  .subtitle {
-    margin-top: 10px;
-    max-width: 62ch;
-    color: var(--text-muted);
-    font-size: 15px;
+  .top-title {
+    font-family: var(--serif); font-size: 19px; font-weight: 600;
+    letter-spacing: 0.01em; margin: 0; display: flex; align-items: center; gap: 9px;
   }
-  .subtitle code { font-size: 13px; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+  .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--state-live);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--state-live) 60%, transparent);
+    animation: pulse 2.2s ease-out infinite;
+    flex: none;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--state-live) 45%, transparent); }
+    70%  { box-shadow: 0 0 0 8px color-mix(in srgb, var(--state-live) 0%, transparent); }
+    100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--state-live) 0%, transparent); }
+  }
+  .top-meta { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); text-align: right; white-space: nowrap; }
 
-  .stat-strip {
-    margin-top: 26px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+  .tabs { max-width: 900px; margin: 0 auto; padding: 12px 20px 0; display: flex; gap: 4px; }
+  .tab-btn {
+    font: inherit; font-family: var(--sans); font-size: 13.5px; font-weight: 600;
+    color: var(--ink-soft); background: none; border: none; cursor: pointer;
+    padding: 8px 4px 10px; border-bottom: 2px solid transparent; border-radius: 0;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active { color: var(--accent-strong); border-bottom-color: var(--accent); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ---- hero / intro ---- */
+  .intro { padding: 32px 0 8px; }
+  .intro h1 {
+    font-family: var(--serif); font-weight: 600; font-size: 28px; line-height: 1.18;
+    margin: 0 0 10px; text-wrap: balance; letter-spacing: -0.01em;
+  }
+  .intro p { margin: 0; color: var(--ink-soft); max-width: 62ch; font-size: 15.5px; }
+
+  /* ---- stat strip ---- */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin: 28px 0;
   }
   .stat {
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    padding: 14px 16px;
-    box-shadow: var(--shadow);
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px 16px; box-shadow: var(--shadow);
   }
-  .stat-value { font-size: 24px; font-weight: 600; color: var(--text); }
-  .stat-value.accent { color: var(--accent-strong); }
-  .stat-value.warn { color: var(--warn); }
-  .stat-label {
-    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
-    color: var(--text-faint); margin-top: 3px;
+  .stat .n {
+    font-family: var(--serif); font-size: 30px; font-weight: 600; line-height: 1;
+    font-variant-numeric: tabular-nums; color: var(--accent-strong);
+  }
+  .stat .l { font-size: 12px; color: var(--ink-faint); margin-top: 6px; letter-spacing: 0.01em; }
+  @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---- callout ---- */
+  .callout {
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: var(--radius); padding: 20px 22px; margin: 8px 0 32px; box-shadow: var(--shadow);
+  }
+  .callout h2 { font-family: var(--serif); font-size: 16px; margin: 0 0 12px; font-weight: 600; }
+  .callout .item { margin-bottom: 14px; }
+  .callout .item:last-child { margin-bottom: 0; }
+  .callout .item b { color: var(--ink); }
+  .callout p { margin: 4px 0 0; color: var(--ink-soft); font-size: 13.6px; line-height: 1.55; }
+  .callout code { font-family: var(--mono); font-size: 0.92em; background: var(--surface-2); padding: 0.08em 0.35em; border-radius: 4px; }
+
+  /* ---- section heading ---- */
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 40px 0 12px; }
+  .section-head h2 {
+    font-family: var(--serif); font-size: 15px; font-weight: 600; margin: 0;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft);
+  }
+  .section-head .count { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); }
+  .section-sub { margin: -6px 0 14px; color: var(--ink-faint); font-size: 13px; max-width: 62ch; }
+
+  /* ---- live lease strip ---- */
+  .leases { display: flex; flex-direction: column; gap: 1px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--line); box-shadow: var(--shadow); }
+  .lease-row { background: var(--surface); padding: 11px 16px; display: grid; grid-template-columns: 108px 1fr auto; gap: 12px; align-items: center; }
+  .lease-row .area { font-family: var(--mono); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-soft); }
+  .lease-row .task { font-size: 13.6px; }
+  .lease-row .task code { font-family: var(--mono); font-size: 0.93em; color: var(--accent-strong); }
+  .lease-row .when { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); white-space: nowrap; }
+  .lease-row.free .area { color: var(--ink-faint); }
+  .lease-row.free .task { color: var(--ink-faint); font-style: italic; }
+  @media (max-width: 640px) { .lease-row { grid-template-columns: 1fr; gap: 3px; } }
+
+  /* ---- blocked / gates ---- */
+  .blocked-list, .gates-list { display: flex; flex-direction: column; gap: 10px; }
+  .blocked-card {
+    background: var(--state-blocked-soft); border: 1px solid color-mix(in srgb, var(--state-blocked) 30%, transparent);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .blocked-card .t { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 4px; }
+  .blocked-card .d { font-size: 13.2px; color: var(--ink-soft); line-height: 1.5; }
+  .gate-card {
+    background: var(--state-gate-soft); border: 1px solid color-mix(in srgb, var(--state-gate) 30%, transparent);
+    border-radius: var(--radius); padding: 12px 16px;
+  }
+  .gate-card .t { font-weight: 600; font-size: 13.6px; color: var(--ink); margin-bottom: 3px; font-family: var(--mono); }
+  .gate-card .d { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* ---- phase / feature cards (shared shell) ---- */
+  .stack { display: flex; flex-direction: column; gap: 8px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .card-head {
+    display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; user-select: none;
+  }
+  .card-head:hover { background: var(--surface-2); }
+  .card-badge {
+    font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent-strong);
+    background: var(--accent-soft); border-radius: 5px; padding: 3px 7px; flex: none;
+    min-width: 40px; text-align: center;
+  }
+  .card-name { font-weight: 600; font-size: 14.5px; flex: 1; }
+  .card-tally { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; flex: none; }
+  .pill { border-radius: 999px; padding: 2px 9px; font-size: 11.5px; font-weight: 600; }
+  .pill.open { background: var(--state-open-soft); color: var(--state-open); }
+  .pill.shipped { background: var(--state-shipped-soft); color: var(--state-shipped); }
+  .chevron { color: var(--ink-faint); font-size: 11px; transition: transform 0.15s ease; flex: none; }
+  .card.expanded .chevron { transform: rotate(90deg); }
+  .card-body { display: none; border-top: 1px solid var(--line); }
+  .card.expanded .card-body { display: block; }
+  .card-empty { padding: 14px 16px; font-size: 13px; color: var(--ink-faint); font-style: italic; }
+
+  .item-row {
+    display: grid; grid-template-columns: 168px 1fr auto; gap: 14px; align-items: start;
+    padding: 11px 16px; border-top: 1px solid var(--line);
+  }
+  .item-row:first-child { border-top: none; }
+  .item-id { font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--accent-strong); padding-top: 1px; word-break: break-word; }
+  .item-title { font-size: 13.6px; color: var(--ink); line-height: 1.48; }
+  .item-tags { display: flex; gap: 6px; flex: none; align-items: flex-start; flex-wrap: wrap; justify-content: flex-end; max-width: 200px; }
+  .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.02em; padding: 2px 7px; border-radius: 5px; white-space: nowrap; }
+  .tag.area { background: var(--surface-2); color: var(--ink-soft); }
+  .tag.gate { background: var(--state-gate-soft); color: var(--state-gate); }
+  .tag.fable { background: var(--state-fable-soft); color: var(--state-fable); }
+  @media (max-width: 640px) {
+    .item-row { grid-template-columns: 1fr; gap: 4px; }
+    .item-tags { justify-content: flex-start; max-width: none; }
   }
 
-  @media (max-width: 700px) {
-    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+  /* ---- feature card extras: progress + blurb ---- */
+  .card-progress-wrap { padding: 0 16px 14px; }
+  .card-blurb { font-size: 13px; color: var(--ink-faint); margin: 0 0 10px; max-width: 60ch; }
+  .progress-track {
+    height: 7px; border-radius: 999px; background: var(--surface-2); overflow: hidden; position: relative;
   }
-
-  /* ---------- framing note ---------- */
-
-  .framing {
-    margin: 28px 0 8px;
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 10px 10px 0;
-    padding: 18px 22px;
-    box-shadow: var(--shadow);
-  }
-  .framing h2 { font-size: 15px; margin-bottom: 8px; }
-  .framing p { margin: 8px 0; font-size: 14px; color: var(--text-muted); }
-  .framing p:first-of-type { margin-top: 0; }
-  .framing strong { color: var(--text); }
-
-  /* ---------- section shell ---------- */
-
-  section.block { margin-top: 46px; }
-  .block-head {
-    display: flex; align-items: baseline; justify-content: space-between;
-    gap: 12px; margin-bottom: 4px;
-  }
-  .block-head h2 { font-size: 20px; }
-  .block-sub { color: var(--text-faint); font-size: 13px; margin: 4px 0 18px; }
-
-  /* ---------- live status ---------- */
-
-  .lease-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 12px;
-  }
-  .lease-card {
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    padding: 14px 16px;
-    box-shadow: var(--shadow);
-  }
-  .lease-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .lease-task { font-size: 14px; font-weight: 600; }
-  .lease-firing { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
-  .chip {
-    font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase;
-    padding: 3px 8px; border-radius: 20px; white-space: nowrap; font-weight: 600;
-  }
-  .chip.working { background: var(--ok-bg); color: var(--ok); }
-  .chip.started { background: var(--info-bg); color: var(--info); }
-  .lease-meta { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
-  .lease-note {
-    margin-top: 10px; font-size: 12.5px; color: var(--text-muted);
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .lease-updated { margin-top: 10px; font-size: 11px; color: var(--text-faint); }
-
-  /* ---------- pills ---------- */
-
-  .pill {
-    display: inline-block; font-size: 11px; padding: 2px 7px;
-    border-radius: 5px; background: var(--muted-pill-bg); color: var(--muted-pill);
-    border: 1px solid var(--border-soft);
-  }
-  .pill.area { color: var(--accent-strong); background: var(--accent-bg); border-color: transparent; }
-
-  /* ---------- blocked ---------- */
-
-  .blocked-list { display: flex; flex-direction: column; gap: 10px; }
-  .blocked-item {
-    background: var(--surface); border: 1px solid var(--border-soft);
-    border-left: 3px solid var(--warn); border-radius: 0 10px 10px 0;
-    padding: 14px 18px; box-shadow: var(--shadow);
-  }
-  .blocked-item h3 { font-size: 14.5px; font-family: inherit; font-weight: 600; }
-  .blocked-item p { font-size: 13px; color: var(--text-muted); margin: 6px 0 0; }
-  .blocked-item .clears { font-size: 12px; color: var(--text-faint); margin-top: 8px; }
-  .blocked-item .clears strong { color: var(--text-muted); }
-
-  .info-strip {
-    display: flex; flex-direction: column; gap: 8px; margin-top: 16px;
-    font-size: 13px; color: var(--text-muted);
-  }
-  .info-strip .row { display: flex; gap: 8px; align-items: baseline; }
-  .info-strip .tag {
-    flex-shrink: 0; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em;
-    color: var(--ok); background: var(--ok-bg); padding: 2px 7px; border-radius: 5px; font-weight: 600;
-  }
-  .info-strip .tag.pg { color: var(--info); background: var(--info-bg); }
-
-  /* ---------- phases ---------- */
-
-  .phase {
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-  .phase-head {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 18px; cursor: pointer; user-select: none;
-    list-style: none;
-  }
-  .phase-head::-webkit-details-marker { display: none; }
-  .phase-head .chev {
-    font-size: 11px; color: var(--text-faint); transition: transform 0.15s ease;
-    width: 12px; text-align: center; flex-shrink: 0;
-  }
-  details[open] > .phase-head .chev { transform: rotate(90deg); }
-  .phase-num {
-    font-family: ui-monospace, monospace; font-size: 13px; color: var(--accent-strong);
-    background: var(--accent-bg); padding: 3px 8px; border-radius: 6px; flex-shrink: 0;
-  }
-  .phase-title { font-family: Iowan Old Style, Georgia, serif; font-size: 16.5px; flex: 1; }
-  .phase-counts { display: flex; gap: 6px; flex-shrink: 0; }
-  .count-open {
-    font-size: 11.5px; font-weight: 700; background: var(--warn-bg); color: var(--warn);
-    padding: 2px 8px; border-radius: 20px;
-  }
-  .count-closed {
-    font-size: 11.5px; background: var(--muted-pill-bg); color: var(--muted-pill);
-    padding: 2px 8px; border-radius: 20px;
-  }
-  .phase-body { padding: 4px 18px 18px; border-top: 1px solid var(--border-soft); }
-
-  .item {
-    padding: 14px 0; border-bottom: 1px solid var(--border-soft);
-  }
-  .item:last-of-type { border-bottom: none; }
-  .item-head { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
-  .item-id {
-    font-size: 13px; font-weight: 700; color: var(--accent-strong);
-  }
-  .item-title { font-size: 14.5px; font-weight: 500; }
-  .item-meta { margin-top: 5px; font-size: 12px; color: var(--text-faint); }
-  .item-done { margin-top: 6px; font-size: 13px; color: var(--text-muted); max-width: 74ch; }
-  .item-done::before { content: "Done when — "; color: var(--text-faint); font-style: italic; }
-
-  .closed-line {
-    margin-top: 10px; font-size: 12.5px; color: var(--text-faint);
-    padding-top: 10px; border-top: 1px dashed var(--border-soft);
-  }
-
-  details.lb {
-    margin-top: 8px; font-size: 12.5px;
-  }
-  details.lb summary {
-    cursor: pointer; color: var(--info); list-style: none;
-  }
-  details.lb summary::-webkit-details-marker { display: none; }
-  details.lb summary::before { content: "▸ "; }
-  details.lb[open] summary::before { content: "▾ "; }
-  .lb-item { margin: 8px 0 0 14px; padding: 8px 12px; background: var(--surface-2); border-radius: 6px; }
-  .lb-item .lb-id { font-weight: 700; color: var(--text-muted); }
-  .lb-item p { margin: 4px 0 0; color: var(--text-muted); }
-
-  .no-open { font-size: 13px; color: var(--text-faint); font-style: italic; padding: 10px 0; }
+  .progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.3s ease; }
+  .progress-meta { display: flex; justify-content: space-between; margin-top: 6px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); }
+  .progress-meta .pct { color: var(--accent-strong); font-weight: 600; }
+  .card.meta .card-badge { background: var(--surface-2); color: var(--ink-faint); }
+  .card.meta { opacity: 0.82; }
 
   footer {
-    margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border);
-    font-size: 12px; color: var(--text-faint);
+    margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--ink-faint); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   }
+  footer code { font-family: var(--mono); }
 </style>
-<body>
-<div class="page">
 
-  <header class="top">
-    <div class="eyebrow">Tetherbound &middot; Ralph loop</div>
-    <h1>Ralph Ledger</h1>
-    <p class="subtitle">
-      A digest of <code>ralph/BACKLOG.md</code>, <code>ralph/BLOCKED.md</code>
-      and the live leases on <code>ralph-status</code>, regenerated on a schedule.
-      This page is a read-only view — the loop itself only ever reads the source files.
-    </p>
-    <div class="stat-strip">
-      <div class="stat"><div class="stat-value warn" id="statOpen">&mdash;</div><div class="stat-label">Open items</div></div>
-      <div class="stat"><div class="stat-value" id="statClosed">&mdash;</div><div class="stat-label">Shipped</div></div>
-      <div class="stat"><div class="stat-value accent" id="statLive">&mdash;</div><div class="stat-label">Live lanes right now</div></div>
-      <div class="stat"><div class="stat-value" id="statBlocked">&mdash;</div><div class="stat-label">Waiting on the owner</div></div>
-    </div>
-  </header>
-
-  <div class="framing">
-    <h2>Why this reads top-to-bottom, and not by lane</h2>
-    <p><strong>Order is priority, and it's load-bearing.</strong> <code>BACKLOG.md</code>'s own preamble says
-      "ordered, work top-down" &mdash; every firing's first move is to take the topmost unblocked item. The
-      negative-numbered phases below (<code>-1</code> through <code>-0.5</code>) exist so owner-driven urgent
-      work can be spliced ahead of the plan without renumbering anything, so this page keeps that exact order
-      rather than sorting by date or topic.</p>
-    <p><strong>"Lane" isn't a subject &mdash; it's a rotation slot.</strong> There are three lanes (a keyed cron
-      Routine, Lane B, Lane C); B and C run the same prompt with one word changed, and each just claims whatever
-      unclaimed item is topmost. Grouping this ledger by lane would cluster unrelated work and split related
-      work, essentially at random &mdash; so it isn't offered as a view here.</p>
-    <p>Closed items are collapsed to a single count per phase. A few carry real context an open
-      <code>-remainder</code> item still depends on to make sense &mdash; those are kept, under a
-      <strong>load-bearing</strong> expander, right where they're needed.</p>
+<header class="top">
+  <div class="top-inner">
+    <p class="top-title"><span class="pulse" aria-hidden="true"></span> Ralph's Field Log</p>
+    <div class="top-meta" id="snapshot-time">snapshot · 2026-08-12 10:57 UTC</div>
   </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-page="overview">Overview</button>
+    <button class="tab-btn" data-page="features">By Feature</button>
+  </div>
+</header>
 
-  <section class="block" id="liveSection">
-    <div class="block-head"><h2>Live right now</h2></div>
-    <p class="block-sub">Current leases on <code>ralph-status</code> &mdash; which areas are held, by which firing, doing what.</p>
-    <div class="lease-grid" id="leaseGrid"></div>
+<div class="wrap">
+
+  <!-- ================= PAGE 1: OVERVIEW ================= -->
+  <section class="page active" id="page-overview">
+
+    <div class="intro">
+      <h1>Where Tetherbound actually stands right now</h1>
+      <p>A read-only digest of <code>ralph/BACKLOG.md</code>, <code>BLOCKED.md</code> and the live lease log — regenerated on demand, changes nothing in the repo.</p>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="callout">
+      <h2>Why the backlog looks the way it does</h2>
+      <div class="item">
+        <p><b>It's ordered by priority, not by date or lane — and that's load-bearing.</b> The file's own first line is "Work top-down. This file is the state of the project," and every firing's actual instruction is to take the topmost unblocked item. Sort it by date instead and the loop loses the exact signal it reads to decide what to do next.</p>
+      </div>
+      <div class="item">
+        <p><b>"Lane" isn't a category anything belongs to.</b> Three lanes rotate through whatever's topmost and unclaimed — they aren't tied to subject matter, so grouping by lane would scatter related work at random. (The <a href="#" data-goto="features">By Feature</a> tab groups by subject instead.)</p>
+      </div>
+      <div class="item">
+        <p><b>Closed items stay inline in the real file, but this view collapses them</b> to a count per phase so the open work is what you see first.</p>
+      </div>
+    </div>
+
+    <div class="section-head"><h2>Right now</h2><span class="count" id="lease-count"></span></div>
+    <div class="leases" id="leases"></div>
+
+    <div class="section-head"><h2>Blocked on you</h2><span class="count" id="blocked-count"></span></div>
+    <div class="blocked-list" id="blocked"></div>
+
+    <div class="section-head"><h2>Worth playing when you can</h2><span class="count">loop doesn't wait on these</span></div>
+    <div class="gates-list" id="gates"></div>
+
+    <div class="section-head"><h2>The backlog, by phase</h2><span class="count" id="phase-count"></span></div>
+    <div class="stack" id="phases"></div>
+
   </section>
 
-  <section class="block">
-    <div class="block-head"><h2>Waiting on the owner</h2></div>
-    <p class="block-sub">Real stops, each with what would clear it &mdash; from <code>BLOCKED.md</code>.</p>
-    <div class="blocked-list" id="blockedList"></div>
-    <div class="info-strip" id="infoStrip"></div>
-  </section>
+  <!-- ================= PAGE 2: BY FEATURE ================= -->
+  <section class="page" id="page-features">
 
-  <section class="block">
-    <div class="block-head"><h2>The plan, phase by phase</h2></div>
-    <p class="block-sub">Every open item, grouped exactly as <code>BACKLOG.md</code> orders them. Collapsed phases show counts only.</p>
-    <div id="phaseList"></div>
+    <div class="intro">
+      <h1>How close is each part of the game?</h1>
+      <p>The same backlog, regrouped by what a player would actually recognize as a system — not by phase or execution order. Percent complete is shipped ÷ (shipped + open) items in that bucket; it's a rough proxy for scope covered, not for how good it looks yet.</p>
+    </div>
+
+    <div class="stats" id="feat-stats"></div>
+
+    <div class="section-head"><h2>By feature</h2><span class="count" id="feat-count"></span></div>
+    <p class="section-sub">Sorted least-complete first. <code>Pipeline &amp; Tooling</code> is kept separate at the bottom — it's the loop's own infrastructure, not a player-facing system.</p>
+    <div class="stack" id="features"></div>
+
   </section>
 
   <footer>
-    Built from <code>main@395b514e</code> and <code>ralph-status@2acd20de</code>, 2026-08-12.
-    Regenerated on a schedule from <code>ralph/ledger/</code> &mdash; see <code>REGENERATE.md</code>.
+    <span>Source: <code>ralph/BACKLOG.md</code> + <code>DONE.md</code> @ <code id="foot-sha">395b514e</code></span>
+    <span>Regenerate any time you want a fresh read.</span>
   </footer>
 
 </div>
 
 <script>
-const PHASES = [{"phase_number": "unlabeled", "title": "(top-of-file urgent item, no Phase header \u2014 precedes Phase 0)", "line_start": 28, "open_items": [{"id": "R6-village-notification-freed-instance", "title": "SceneTree teardown throws a real freed-instance error in building_prefabs.gd", "line": 28, "meta": "model: sonnet \u00b7 tests: none \u00b7 area: village", "done_when": "A headless run of any smoke test or capture tool against the settlement no longer prints the 'Left operand of is a previously freed instance' SCRIPT ERROR from building_prefabs.gd's NOTIFICATION_PREDELETE handler."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "0", "title": "the owner played. This is the response.", "line_start": 47, "open_items": [{"id": "R0.11", "title": "Play gate \u2014 the owner plays the NEW first day, end to end", "line": 68, "meta": "\u25b6 play gate", "done_when": "Full first-day loop (wake, Grandpa, starters, village, harvest, fight+catch, camp, rest to morning) judged against GAME_DESIGN.md \u00a733 criteria 1, 3, 6, 11, plus whether the combat camera crowds and the arena still feels roomy at the new D19 sizes."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "-1", "title": "urgent PC bugs (owner-reported, 2026-08-10)", "line_start": 79, "open_items": [], "closed_count": 5, "load_bearing_closed": []}, {"phase_number": "-0.95", "title": "the loop itself (D25)", "line_start": 130, "open_items": [], "closed_count": 7, "load_bearing_closed": []}, {"phase_number": "-0.9", "title": "the two blockers from the published build (owner, 2026-08-11)", "line_start": 182, "open_items": [], "closed_count": 5, "load_bearing_closed": []}, {"phase_number": "-0.6", "title": "the look (owner's art bible, D24)", "line_start": 214, "open_items": [{"id": "EV2-landmark-ceiling", "title": "Hero trees don't read as landmark specimens even at the best 3-of-5 subset", "line": 242, "meta": "model: sonnet \u00b7 tests: none \u00b7 area: vegetation", "done_when": "The itch.io-blocked Stylized Nature MegaKit clears and is searched for a broader-canopy hero tree form, or the owner accepts the current ceiling. Checked twice as of 2026-08-12: still blocked, not staged anywhere in assets_raw/vendor/."}, {"id": "EV5", "title": "Water", "line": 564, "meta": "model: fable \u00b7 tests: smoke_traversal \u00b7 area: terrain", "done_when": "A pond and stream exist: readable stylised surface, shallow-edge colour shift, bank reeds, no expensive simulation \u2014 answers R7.1-remainder-2's water question and gives Band 3's river a starting point."}, {"id": "EV6-remainder", "title": "The building types the kit rebuild deliberately left", "line": 576, "meta": "model: fable \u00b7 tests: smoke_opening, smoke_traversal \u00b7 area: village", "done_when": "Mill/crossing and bridges built once EV5 gives them water; ranger station sited once its geography exists; plus leftover polish (settlement-wide building-to-grass skirt transition, the flat ShortCloset furniture piece)."}, {"id": "EV7-remainder", "title": "The three prop clusters that need geography built first", "line": 652, "meta": "model: sonnet \u00b7 tests: none \u00b7 area: village", "done_when": "A blind critic given close and in-context frames of bridge repair site, quarry station and trainer camp names each as implying a purpose, the same bar EV7's first two clusters cleared. Trainer camp is startable now; the other two wait on a bridge/built quarry."}, {"id": "EV9", "title": "Rebuild the HUD", "line": 671, "meta": "model: opus \u00b7 tests: smoke_menu \u00b7 area: ui", "done_when": "Remaining named gaps closed: SB11's tracked-objective label once quest state exists, a compass if the bible calls for one, and icon glyphs/branded display font/gradient bar fills once the owner supplies reference art (no board exists yet)."}, {"id": "EV10", "title": "Cohesion pass", "line": 744, "meta": "\u25b6 model: fable \u00b7 tests: none \u00b7 area: visual", "done_when": "Re-shoot the same viewpoints, blind-judge against both reference sets, fix the three biggest gaps, repeat until further improvement is asset-quality-limited rather than composition-limited."}], "closed_count": 28, "load_bearing_closed": [{"id": "EV2", "title": "an approved Meadows nature subset", "line": 234, "why_load_bearing": "EV2-landmark-ceiling's '3-of-5 subset' critique only makes sense against EV2's own curated hero-tree selection (the specific 3 TwistedTree forms picked by footprint/height/asymmetry)."}, {"id": "EV6", "title": "settlement rebuilt on the Medieval Village MegaKit", "line": 570, "why_load_bearing": "EV6-remainder's 'still open' list (mill/bridges, ranger station, leftover polish) is exactly the set of building types EV6's kit rebuild deliberately left out."}, {"id": "EV7", "title": "a first slice: work area and farmhouse yard", "line": 647, "why_load_bearing": "EV7-remainder is explicitly 'the three prop clusters EV7 left' \u2014 understanding which two clusters shipped, and the bar they cleared, is needed to read the remainder's scope and acceptance bar."}]}, {"phase_number": "-0.55", "title": "the cast (owner's NPC board)", "line_start": 752, "open_items": [], "closed_count": 8, "load_bearing_closed": []}, {"phase_number": "-0.75", "title": "the owner's Meadows spec, P0 (owner directive, 2026-08-11)", "line_start": 841, "open_items": [{"id": "SA4", "title": "Seven outward spokes, each believably severed", "line": 869, "meta": "model: fable \u00b7 tests: smoke_traversal", "done_when": "All seven spokes (river gorge, storm road, mountain trail, high pass, cliff road, stone gate, blighted road) are reachable on foot from the village, each visibly and physically impassable, and none explains itself with UI text ('Biome Locked' messaging is forbidden)."}], "closed_count": 5, "load_bearing_closed": []}, {"phase_number": "-0.85", "title": "HUD and item access (owner's third pass, 2026-08-11)", "line_start": 889, "open_items": [{"id": "HD1", "title": "Device-aware input glyphs", "line": 911, "meta": "model: sonnet \u00b7 tests: none \u00b7 area: ui", "done_when": "combat_hud.gd's five Actions-row verbs (quick/charged/throw/switch-left/switch-right) get keyboard+gamepad icon pairs, and input_glyph.gd switches on a real last-used-input-device tracker instead of 'a joypad is merely connected.'"}, {"id": "HD2", "title": "A real quick-access item hotbar", "line": 946, "meta": "model: sonnet \u00b7 tests: none \u00b7 area: ui", "done_when": "A potion can be used from a five-slot quick-access hotbar (berries/potions/orbs) without opening the full backpack, with the correct HD1 prompt shown next to the slot; wires into the existing tab_backpack.gd::_read_use() verb."}], "closed_count": 4, "load_bearing_closed": []}, {"phase_number": "-0.5", "title": "Visual pass (owner directive: finish this before R1\u2013R8)", "line_start": 976, "open_items": [{"id": "R9.4-remainder-9-combat", "title": "The fight itself doesn't read as an event yet", "line": 1300, "meta": "model: sonnet \u00b7 tests: none (visual) \u00b7 area: combat", "done_when": "A fresh blind critic given the eight survey_combat.sh frames no longer names impact readability, the wind-up telegraph, the orb-in-flight read, or the lookalike-target confusion (fought pal vs. an ambient decorative pal) as defects."}], "closed_count": 25, "load_bearing_closed": [{"id": "R9.4-remainder-9", "title": "get real combat frames", "line": 1291, "why_load_bearing": "R9.4-remainder-9-combat's blind critique only became possible once this item fixed the three harvest-scene bugs (player spawn moved indoors by D18/SA0, no ally pal, no orbs) that had prevented real combat frames from ever being captured."}, {"id": "R9.4-remainder-6", "title": "root-caused why survey_combat.sh never completed", "line": 1280, "why_load_bearing": "Explains that survey_combat.sh's apparent hang was really slow per-phase cost on the software renderer (not a bug) plus one real capped-loop fix \u2014 the prerequisite for R9.4-remainder-9's frames, and thus R9.4-remainder-9-combat, existing at all."}]}, {"phase_number": "1", "title": "vocabulary, before the codebase grows", "line_start": 1352, "open_items": [{"id": "R1.1", "title": "Rename `pal` \u2192 `creature` everywhere", "line": 1354, "meta": "model: haiku \u00b7 tests: FULL SUITE", "done_when": "No \\bpals?\\b outside docs/decisions/, full suite green, Windows export succeeds. Noted 2026-08-12 as unsafe to start while 7 lanes hold overlapping areas \u2014 deferred, not blocked."}, {"id": "R1.2", "title": "Vocabulary sweep of the handoff and decision index", "line": 1376, "meta": "model: haiku \u00b7 tests: none", "done_when": "Handoff doc and decision index swept to match R1.1's rename; depends on R1.1 landing first, so not independently takeable."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "2", "title": "the first day, remainder", "line_start": 1381, "open_items": [{"id": "R2.3", "title": "Real tree/rock harvesting on the vegetation", "line": 1405, "meta": "model: sonnet \u00b7 tests: test_harvest", "done_when": "Walking up to any ordinary (non-authored) tree/rock and holding the button puts wood/stone in the satchel, AND the prop reads as harvestable from an approach distance (distinct material/glint/marker), not just via a close-range prompt."}, {"id": "R2.7", "title": "Workbench and storage container", "line": 1437, "meta": "model: sonnet \u00b7 tests: test_storage (new)", "done_when": "A placed workbench and item-only storage container exist (five item slots, never creature storage); workbench upgrade is a Rootstone sink (SD18)."}, {"id": "R2.8", "title": "Creature bed", "line": 1442, "meta": "model: sonnet \u00b7 tests: test_build_catalogue", "done_when": "A placeable creature bed exists in the build catalogue."}, {"id": "R2.9", "title": "Play gate \u2014 does building a small home feel useful and enjoyable?", "line": 1445, "meta": "\u25b6 play gate, \u00a733 criteria 6-7", "done_when": "Owner judgment call after playing."}], "closed_count": 5, "load_bearing_closed": [{"id": "R2.2", "title": "Tool durability and free repair", "line": 1400, "why_load_bearing": "R2.2's own text names R2.7 directly: free backpack-repair exists only because R2.7 hasn't yet built the placed 'appropriate station' that GAME_DESIGN.md \u00a719 gates repair against."}]}, {"phase_number": "3", "title": "art debt and persistence", "line_start": 1450, "open_items": [{"id": "R3.0", "title": "Re-process the three humanoid GLBs through the fixed pipeline", "line": 1452, "meta": "model: sonnet \u00b7 tests: smoke_art", "done_when": "Trainer, Grandpa and Warden GLBs re-run through the fixed animate_humanoid.py; smoke_art's render-space check shows all three humans with fit factors inside [0.1, 10]."}, {"id": "R3.1", "title": "Save and load", "line": 1470, "meta": "model: opus \u00b7 tests: test_save_format (new), FULL SUITE", "done_when": "Quit mid-Meadows, reload, and party, satchel, day counter and placed buildings are all intact; 3-5 slots, frequent autosave, versioned from the first write, carrying SB9's progression flags in version 1."}, {"id": "R3.2", "title": "Death satchels persist across save/load", "line": 1481, "meta": "model: sonnet \u00b7 tests: test_satchel (new)", "done_when": "Death satchels survive save/load."}, {"id": "R3.3", "title": "Player death and respawn", "line": 1483, "meta": "model: sonnet \u00b7 tests: test_player_death (new) \u00b7 \u00a722", "done_when": "Player death and respawn implemented per \u00a722."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "3.5", "title": "reusable progression infrastructure (spec Phase B)", "line_start": 1489, "open_items": [{"id": "SB9", "title": "The smallest progression-state system that survives the chapter", "line": 1546, "meta": "model: opus \u00b7 tests: test_progression_state (new), FULL SUITE", "done_when": "A flag set in one scene is readable in another, survives save/load (R3.1), and no gameplay script hardcodes a story boolean; must stay a flag store + has/set/completed API, never a generic quest engine."}, {"id": "SB10", "title": "Physical keys, gears and Sigils that open real things", "line": 1561, "meta": "model: sonnet \u00b7 tests: test_progression_state", "done_when": "Holding the right item (South Bridge Key, Mill Bridge Gear, Sigils) opens the matching gate in the world; not holding it produces an in-world response, never a UI lock."}, {"id": "SB11", "title": "One tracked objective, and a two-list quest log", "line": 1570, "meta": "model: sonnet \u00b7 tests: smoke_menu", "done_when": "Completing an objective changes the HUD's one-line tracker without a scene reload; log has exactly two lists, Main Story and Local Requests."}], "closed_count": 2, "load_bearing_closed": []}, {"phase_number": "4", "title": "combat, progression, the team", "line_start": 1580, "open_items": [{"id": "R4.1", "title": "Levels and XP", "line": 1582, "meta": "model: sonnet \u00b7 tests: test_progression (new) \u00b7 \u00a711", "done_when": "Levels and XP implemented."}, {"id": "R4.2", "title": "Core stats and per-instance individuality", "line": 1583, "meta": "model: sonnet \u00b7 tests: test_progression \u00b7 \u00a711", "done_when": "Core stats and per-instance individuality implemented."}, {"id": "R4.3", "title": "Moves", "line": 1584, "meta": "model: sonnet \u00b7 tests: test_moves (new) \u00b7 \u00a713", "done_when": "Moves implemented; data/moves/ is currently empty."}, {"id": "R4.4", "title": "TMs and teaching moves", "line": 1585, "meta": "model: sonnet \u00b7 tests: test_moves \u00b7 \u00a713", "done_when": "TMs and teaching moves implemented."}, {"id": "R4.5", "title": "Tuskroot's REAL model \u2014 likely already done, needs verification", "line": 1587, "meta": "model: sonnet \u00b7 tests: smoke_art (\ud83d\udd12 marker is stale per the item's own note)", "done_when": "Run smoke_art and confirm the installed Tuskroot model is properly rigged/animated (not just present); if it passes, close as done instead of doing generation work. No new Meshy creature generation is legal here (spec \u00a720/D23)."}, {"id": "R4.6", "title": "Evolution mechanic and ceremony", "line": 1621, "meta": "model: opus \u00b7 tests: test_evolution_links, smoke_evolution (new)", "done_when": "Mudsnout \u2192 Tuskroot evolution built with level (~15, tunable) + bond + Heartstone-type item requirement; evolved form strictly larger per D17/D19. Blocked on R4.5."}, {"id": "R4.7", "title": "Bond and best creature", "line": 1636, "meta": "model: sonnet \u00b7 tests: test_bond (new) \u00b7 \u00a712", "done_when": "Bond and best-creature mechanic implemented."}, {"id": "R4.8", "title": "Fainting and home recovery", "line": 1637, "meta": "model: sonnet \u00b7 tests: test_fainting (new) \u00b7 M6", "done_when": "Fainting and home recovery implemented."}, {"id": "R4.9", "title": "Orb economy and tiers", "line": 1639, "meta": "model: sonnet \u00b7 tests: test_catch_math \u00b7 \u00a715", "done_when": "Orb tier ladder built; improved tier is the first Rootstone (SD18) purchase."}, {"id": "R4.10", "title": "The release ceremony", "line": 1648, "meta": "model: fable \u00b7 tests: test_party, smoke_release (new)", "done_when": "A real release ceremony (not a generic delete dialog) exists for the sixth-creature/five-cap moment, tied to the belt's five holders; precondition (enough creatures worth keeping) is Phase 8 content, not this item's job."}, {"id": "R4.11", "title": "Combat animation bug", "line": 1661, "meta": "model: sonnet \u00b7 tests: smoke_combat", "done_when": "A recorded fight logging the clip playing against body speed pinpoints why creatures read 'static posed and sliding'; re-check against R0.11 impressions first since the feel pass may already have changed it."}, {"id": "R4.12", "title": "Play gate \u2014 is repeated combat enjoyable, not merely functional?", "line": 1671, "meta": "\u25b6 play gate, \u00a733 criterion 2", "done_when": "Owner judgment call."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "5", "title": "the living world", "line_start": 1675, "open_items": [{"id": "R5.2", "title": "Rain, fog and cloud variants", "line": 1680, "meta": "model: sonnet \u00b7 tests: none", "done_when": "Rain, fog and cloud variants implemented."}, {"id": "R5.3", "title": "Spawn conditions", "line": 1682, "meta": "model: sonnet \u00b7 tests: test_spawns", "done_when": "At least one nocturnal (Duskhush) and one weather-gated spawn condition per M10; spawns.json schema extended per D20; spec \u00a713's area table implemented; tests address species via the roles block, never ids."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "6", "title": "riding", "line_start": 1697, "open_items": [{"id": "R6.1", "title": "Riding", "line": 1705, "meta": "model: opus \u00b7 tests: smoke_riding (new) \u00b7 M12", "done_when": "Mount/dismount, generic saddle, riding stamina, and a clear advantage over running, with no species-specific saddle clutter. Worked inside Phase 8's 8d per spec \u00a73 Band 4."}, {"id": "R6.2", "title": "Meadowhart as the rideable creature; craftable generic saddle", "line": 1709, "meta": "model: sonnet \u00b7 tests: test_build_catalogue", "done_when": "Meadowhart is the rideable Meadows creature; saddle priced in Rootstone/Ironwood; riding sold on improving revisits of known areas, not raw speed."}, {"id": "R6.3", "title": "Play gate \u2014 does riding make exploring better?", "line": 1716, "meta": "\u25b6 play gate", "done_when": "Owner judgment call."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "7", "title": "the village lives, the meadow reads", "line_start": 1720, "open_items": [{"id": "R7.3", "title": "Grow the authored space toward the 4\u20138 hour arc", "line": 1726, "meta": "model: opus \u00b7 tests: smoke_traversal \u00b7 M7, \u00a730", "done_when": "Authored space grown to hold spec \u00a73's five bands, quarry, dungeon, river, mini-stronghold, upper region and seven spokes; sized only after movement/riding are confirmed fun (R0.11, R6.3), per \u00a730."}, {"id": "R7.4", "title": "Map and minimap", "line": 1741, "meta": "model: sonnet \u00b7 tests: smoke_menu \u00b7 \u00a723", "done_when": "Map/minimap action is bound, labelled, rebindable and actually read; reveals only explored areas/landmarks, never everything automatically."}, {"id": "R7.5", "title": "Food buffs", "line": 1751, "meta": "model: sonnet \u00b7 tests: test_food (new)", "done_when": "Food buffs implemented \u2014 buffs only, no starvation meter, ever."}, {"id": "R7.6", "title": "Berry plot and simple fishing", "line": 1754, "meta": "model: sonnet \u00b7 tests: test_farming (new)", "done_when": "Berry plot and simple fishing implemented, deliberately shallow per \u00a732."}, {"id": "R7.7", "title": "Player HP and armour slot architecture", "line": 1757, "meta": "model: sonnet \u00b7 tests: test_player_hp (new)", "done_when": "Player HP and armour slot architecture implemented."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "8", "title": "the Meadows chapter (spec Phases C\u2013G)", "line_start": 1761, "open_items": [{"id": "R8.1", "title": "World trainer encounter and team combat", "line": 1779, "meta": "model: sonnet \u00b7 tests: smoke_trainer_battle (new)", "done_when": "Trainer combat system built (trainer-owned creatures cannot be caught); substrate for 12-17 battles across 8a-8e."}, {"id": "SC12", "title": "Mira, Oskar and Tam become the three Band 1 trainers", "line": 1785, "meta": "model: fable \u00b7 tests: test_dialogue_runner", "done_when": "The three existing village NPCs are repaletted, get extended dialogue and a battle offer; no new bodies added to the square."}, {"id": "SC13", "title": "The three Band 1 trainer battles, each with a distinct lesson", "line": 1797, "meta": "model: sonnet \u00b7 tests: smoke_trainer_battle", "done_when": "Each of the three battles can be beaten once, sets its flag, and cannot be re-fought for XP."}, {"id": "SC14", "title": "The South Bridge, and the key that opens it", "line": 1806, "meta": "model: sonnet \u00b7 tests: smoke_traversal", "done_when": "Bridge visible from the village, blocked without the key (from beating Oskar), open with it, no explanatory UI text."}, {"id": "SC15", "title": "Trainer battles pay out", "line": 1814, "meta": "model: sonnet \u00b7 tests: test_progression_state", "done_when": "Beating a trainer twice pays its XP+reward only once."}, {"id": "SD16", "title": "The Old Quarry", "line": 1822, "meta": "model: sonnet \u00b7 tests: smoke_traversal", "done_when": "Quarry reachable past the South Bridge, yields Rootstone, shows physical evidence of Team Tether activity."}, {"id": "SD17", "title": "Burrow Warrens, the required dungeon", "line": 1831, "meta": "model: fable \u00b7 tests: smoke_traversal, smoke_combat", "done_when": "Can be entered, cleared, and cleared only once for its story reward; guardian is a strong normal species, not a legendary."}, {"id": "SD18", "title": "Rootstone, the first progression tier material", "line": 1840, "meta": "model: sonnet \u00b7 tests: test_recipes", "done_when": "Every recipe consuming Rootstone improves something the player already owns \u2014 no new crafting tree."}, {"id": "SE21", "title": "A real river divides the deeper Meadows", "line": 1852, "meta": "model: fable \u00b7 tests: smoke_traversal", "done_when": "River reads as a landmark from the ridge, crossable only at authored points."}, {"id": "SE22", "title": "Old Mill Crossing, seized and then restored", "line": 1862, "meta": "model: sonnet \u00b7 tests: smoke_traversal", "done_when": "Crossing impassable before the captive's rescue (SE27), passable after, no menu in between."}, {"id": "SE23", "title": "The Tether Relay Station", "line": 1869, "meta": "model: fable \u00b7 tests: smoke_traversal", "done_when": "First mini-stronghold can be entered, fought through, its local control equipment disabled; uses the owner-supplied Relay Apparatus board."}, {"id": "SE25", "title": "Relay trainers and the relay captain", "line": 1888, "meta": "model: sonnet \u00b7 tests: smoke_trainer_battle", "done_when": "Two-three relay trainers plus a captain on SB8's rank palettes; captain's defeat sets the flag SE27 waits on."}, {"id": "SE27", "title": "Free the captive", "line": 1895, "meta": "model: sonnet \u00b7 tests: test_dialogue_runner", "done_when": "Captive rescued on an existing civilian/main-character base (no new model), returns to the village, dialogue updated."}, {"id": "SE30", "title": "The reveal ladder, laid in", "line": 1904, "meta": "model: fable \u00b7 tests: test_dialogue_runner", "done_when": "Reveal ladder (quarry conduits, relay energy routing, captive's testimony) laid in; no line before the stronghold names the legendary as the power source."}, {"id": "SF31", "title": "Ironwood, the second preparation tier", "line": 1920, "meta": "model: sonnet \u00b7 tests: test_recipes", "done_when": "Ironwood added; nothing needed for the final stronghold requires a third new material."}, {"id": "SF33", "title": "Standing at a Rift and seeing the next region", "line": 1927, "meta": "model: fable \u00b7 tests: none", "done_when": "A blind critic looking at an Upper-Meadows severed-spoke seam (owner-supplied Tether Energy Pylon board) says the two sides used to be joined; far side stays a view, never enterable."}, {"id": "SF34", "title": "Three regional captains, three Sigils", "line": 1944, "meta": "model: fable \u00b7 tests: smoke_trainer_battle", "done_when": "Three captains and Sigils built; approach sealed at 2/3 Sigils, open at 3/3, count visible on SB11's tracker."}, {"id": "R8.2", "title": "Authored stronghold route", "line": 1970, "meta": "model: sonnet \u00b7 tests: smoke_traversal", "done_when": "Route built per spec \u00a78's five spaces, first clear 30-60 min, not a giant puzzle dungeon."}, {"id": "SG38", "title": "The stronghold trainer gauntlet", "line": 1979, "meta": "model: sonnet \u00b7 tests: smoke_trainer_battle", "done_when": "2-4 battles across the five named spaces; a prepared team clears it inside an hour, an unprepared one does not."}, {"id": "R8.3", "title": "The Warden boss fight", "line": 1986, "meta": "model: fable \u00b7 tests: smoke_boss (new) \u00b7 M14", "done_when": "Boss fight built; needs a real face sheet first (still painted, not modelled); dialogue reflects sincere belief, not a moustache-twirler line."}, {"id": "SG40", "title": "The reveal: the legendary is the power source", "line": 1994, "meta": "model: fable \u00b7 tests: test_dialogue_runner", "done_when": "Reveal happens inside the stronghold and nowhere earlier; Warden warns rather than gloats."}, {"id": "R8.4", "title": "Free the legendary; it offers to join; triggers the release ceremony if full", "line": 2001, "meta": "model: fable \u00b7 tests: smoke_boss", "done_when": "Spec \u00a728's exact order (freed \u2192 voluntarily joins \u2192 five-creature decision if full \u2192 machinery fails) implemented."}, {"id": "SG44", "title": "The first Tether Rift collapses and the world gets bigger", "line": 2006, "meta": "model: fable \u00b7 tests: smoke_boss", "done_when": "SF33's seam shows two visibly different horizons before/after the Warden, as a distant non-enterable view only; no second biome's terrain/spawns/species."}, {"id": "SG46", "title": "The Meadows answers", "line": 2020, "meta": "model: fable \u00b7 tests: test_progression_state", "done_when": "No part of the region is visually or conversationally identical to before the Warden."}, {"id": "R8.5", "title": "The legendary's superior ride ability", "line": 2028, "meta": "model: sonnet \u00b7 tests: smoke_riding", "done_when": "Built as the tier above Meadowhart's, not a parallel system."}, {"id": "R8.6", "title": "The larger mystery and future-biome hook", "line": 2031, "meta": "model: fable \u00b7 tests: test_dialogue_runner", "done_when": "Hook laid in per spec \u00a723-31 using SA4's seven spokes as its physical anchor."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "8.5", "title": "pacing and the chapter's own gate (spec Phase H)", "line_start": 2038, "open_items": [{"id": "SH47", "title": "Tune the chapter to 4\u20137 hours", "line": 2040, "meta": "model: sonnet \u00b7 tests: none", "done_when": "A full run timed end-to-end lands inside 4-7 hours; XP curve, trainer levels, costs, travel time, spawn density tuned; dead walking removed. Can only be judged once 8a-8e exist."}, {"id": "SH53", "title": "Play gate \u2014 the P0 fixes are actually gone on real hardware", "line": 2051, "meta": "\u25b6 play gate \u00b7 model: haiku", "done_when": "Ten minutes of fresh Windows launch, mouse+keyboard, no cursor-capture friction through menus/name-entry/Alt-Tab; door blocked before Grandpa; no fall-off-world from spawn. On-device confirmation still owed by RB1/RB2/RB4."}, {"id": "SH54", "title": "Audit: nothing in the chapter assumed new creature credits", "line": 2060, "meta": "model: haiku \u00b7 tests: none", "done_when": "Every item shipped for the chapter is confirmed to not have installed, requested or planned a new creature mesh, per spec \u00a720."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "9", "title": "polish gate (M15)", "line_start": 2069, "open_items": [{"id": "R9.1", "title": "Input feel, combat cadence, catch feel, camera", "line": 2071, "meta": "\u25b6 model: sonnet", "done_when": "Polished and judged playable."}, {"id": "R9.2", "title": "Controller UI readability on the Ally", "line": 2072, "meta": "\u25b6 model: sonnet", "done_when": "Confirmed readable on hardware."}, {"id": "R9.3", "title": "Performance on target hardware", "line": 2073, "meta": "\u25b6 model: sonnet", "done_when": "Confirmed performant on hardware."}, {"id": "R9.5", "title": "The exit gate", "line": 2079, "meta": "\u25b6 only the owner can call it", "done_when": "All twelve of GAME_DESIGN.md \u00a733 criteria met."}], "closed_count": 0, "load_bearing_closed": []}, {"phase_number": "found-along-the-way", "title": "Found along the way \u2014 small, unscheduled", "line_start": 2083, "open_items": [{"id": "asset-ledger-cc0-claim", "title": "ASSET_LEDGER.md falsely claims everything in the build is CC0 1.0", "line": 2085, "done_when": "Corrected wording; blocked on the owner to supply it."}, {"id": "backpack-equip-drop-split-verbs", "title": "Backpack use verb has no equip/drop/split siblings", "line": 2089, "meta": "model: sonnet", "done_when": "Equip/drop/split verbs added alongside the existing, already-working use/heal verb (tab_backpack.gd::_read_use())."}, {"id": "menu-midfight-silent-refusal", "title": "Opening the menu mid-fight is silently refused with no explanation", "line": 2100, "meta": "model: haiku", "done_when": "An on-screen explanation is shown instead of a silent refusal."}, {"id": "vp1-survey-gd", "title": "tools/survey.gd (relocated to Phase -0.5 as VP1)", "line": 2115, "done_when": "Status uncertain \u2014 flagged rather than assumed done. Relocated to Phase -0.5 alongside VP2, but no closure for VP1 specifically was found anywhere in the file; only VP2 (preview_creatures.gd) was confirmed fixed there."}, {"id": "spec-sec6-optional-activities", "title": "Spec \u00a76 \u2014 6-10 optional activities, not forty shallow quests", "line": 2105, "meta": "model: sonnet", "done_when": "Each of the eight named activities (Lost Pal, Broken Cart, Night Watch, The Old Champion, Deep Warren, River Nest, Team Tether patrols, Meadowhart Herd) gets a home in Phase 8's bands, promoted individually as each band is built."}, {"id": "spec-sec14-home-stays-relevant", "title": "Spec \u00a714 \u2014 home must stay relevant", "line": 2110, "meta": "model: sonnet", "done_when": "Grandpa's dialogue evolves per band; creature beds/recovery, storage/crafting, villager knowledge updates, the rescued NPC returning, and story check-ins all keep the farmhouse relevant past the opening twenty minutes."}], "closed_count": 3, "load_bearing_closed": []}];
-const LEASES = [{"firing": "ralph-cron-lp7ship", "task": "HD1-ship", "area": "ui", "state": "working", "updated": "08:32Z", "note": "Verified HD1's export job finished green (94046960025). Rebased ralph/HD1 onto current main after it hit the rebase cap (3 attempts), resolved a real DONE.md conflict by hand, force-pushed (e9904b9), watching fresh CI."}, {"firing": "ralph-lane-b-r28", "task": "R2.8", "area": "economy", "state": "working", "updated": "09:54Z", "note": "Recovered R2.7's missing DONE.md bookkeeping (it had already shipped, 188853c/483b4a8), then built R2.8 (creature bed). 362/362 green. Two DONE.md rebase conflicts resolved keep-both-sides under heavy concurrent-CI churn; force-with-lease pushed (18c768b), watching third CI run."}, {"firing": "ralph-lane-c-r30", "task": "R3.0", "area": "assets", "state": "working", "updated": "10:39Z", "note": "Re-processed trainer/Grandpa/Warden GLBs through the fixed animate_humanoid.py (Armature scale 0.01 -> identity, confirmed). Branch went green 3 separate times but main kept moving under it; hit the sweep's rebase cap once, resolved by hand, force-with-lease pushed 7028267, watching CI 31588329150."}, {"firing": "ralph-cron-r31save", "task": "R3.1", "area": "save", "state": "working", "updated": "10:40Z", "note": "Built save/load (5 slots, versioned JSON, autosave on rest, placed-building registry). 381/381 green plus live-scene verification. Sustained churn tonight rebased it twice more by the sweep (attempts 1/3, 2/3); not racing it by hand, watching latest CI run f507875."}, {"firing": "ralph-lane-c-3", "task": "menu-mid-fight-refusal-hint-ship", "area": "menu", "state": "working", "updated": "10:57Z", "note": "Finishing a dead lane's stuck-but-complete work (green CI 4 times, never landed). Rebased and force-pushed 3 times under heavy concurrent-CI load. Also found the new 'one live firing per lane' rule mid-session and is standing down after this ship rather than picking new work."}, {"firing": "ralph-lane-b-ev5", "task": "EV5", "area": "terrain", "state": "working", "updated": "10:19Z", "note": "Dispatched a model:fable subagent to author and ship EV5 (pond/stream, bible S15) with full context on branch ralph/EV5; waiting on its completion before bookkeeping and ship verification."}, {"firing": "ralph-lane-c-r94combat", "task": "R9.4-remainder-9-combat", "area": "combat", "state": "working", "updated": "10:33Z", "note": "Built telegraph_glow.gd and target_marker.gd (the two genuinely missing combat-readability pieces); smoke_combat green. Running survey_combat.sh now for real frames before a blind judge pass."}, {"firing": "ralph-lane-b-hd1r23-2", "task": "HD1", "area": "ui", "state": "working", "updated": "10:43Z", "note": "CI went green with no rebase needed this cycle (main was quiet). Watching for landing."}, {"firing": "ralph-lane-b-hd1r23-2", "task": "R2.3", "area": "vegetation", "state": "working", "updated": "10:54Z", "note": "First CI failure was the known LP7 flake (~7% residual rate), confirmed unrelated to R2.3's own changes. Rebased and re-pushed; re-run went clean. Watching for landing."}, {"firing": "ralph-lane-b-freedinst", "task": "R6-village-notification-freed-instance", "area": "village", "state": "working", "updated": "10:56Z", "note": "Root-caused a boolean-order bug in _notification (is_instance_valid checked after, not before, the freed reference was touched). 362/362 green, pushed as ralph/R6-village-notification-freed-instance, watching CI."}, {"firing": "ralph-cron-r31save", "task": "lane-heartbeat", "area": "lane-keyed", "state": "started", "updated": "10:51Z", "note": "Retroactively claiming the keyed lane per the new one-live-firing-per-lane policy; finishing R3.1's in-flight landing before following the new release-before-successor ordering."}, {"firing": "ralph-lane-b-freedinst", "task": "lane-heartbeat", "area": "lane-b", "state": "working", "updated": "10:56Z", "note": "Lane-b heartbeat, refreshed alongside village work."}];
-const BLOCKED_ON_OWNER = [{"title": "Does the hillside's rock ever read as stone, or is the procedural slope-blend a ceiling to accept?", "body": "Five real rounds \u2014 three on colour/value, two on height/relief, one full order of magnitude apart in amplitude \u2014 with real measured movement on every lever and zero movement in a blind critic's verdict across all five.", "clears": "The owner looks at shots/hillside/dome-overview.png and either accepts the read, or says in their own words what's actually wrong."}, {"title": "Is grandpas-house-route.png's \u201cflanking\u201d read worth further iteration, or a placement-density limit to accept?", "body": "Five rounds fixed genuine mechanisms (clump straddling, stray placement, oversized clump radius); two rounds that added density made the same frame measurably worse, for a now-understood reason.", "clears": "The owner looks at grandpas-house-route.png and says it's fine, or what's actually wrong, in their own words."}, {"title": "The square-convergence \u201cunmotivated dark patch\u201d is identified but not fixed \u2014 same open question as the route above", "body": "Direct pixel measurement found the real cause: pure-path pixels average luma 130, pure-grass pixels average luma 67 \u2014 ordinary material contrast, not a rendering defect. Fixing it trades against the path's own feathered-edge design.", "clears": "The owner accepts the current read or names the tradeoff they want; the fix may also close the route entry above."}, {"title": "Does the creature roster clear a Palworld-level appeal bar, or does it need to?", "body": "Four blind-judge rounds called all three previewed starters \u201can asset preview, not a hero character portrait.\u201d The only lever is a roster-wide material/lighting pass \u2014 no new meshes are permitted at any credit balance.", "clears": "The owner says whether a roster-wide pass is worth commissioning, and if so, whose scope it joins."}, {"title": "NP1-geometry \u2014 no real hair/accessory geometry exists, and generating one is foreclosed", "body": "Checked directly: villager_female/male/grunt are each one fused mesh, no separable hair/accessory node \u2014 same limitation as trainer/Grandpa/Warden. The only fix is another Meshy generation, which D23/D24 forbid for this purpose.", "clears": "The owner accepts the placeholder-primitive look as permanent, or names a non-Meshy source (a CC0 pack) for modular hair/accessory parts."}, {"title": "ASSET_LEDGER.md's licence claim is false", "body": "The ledger states everything in the build is CC0 1.0. It isn't \u2014 the Meshy-generated creatures and the Plumberry Plains pack are not CC0.", "clears": "The owner supplies the correct licence wording."}];
-const INFO_STRIP = [{"tag": "cleared", "text": "Both Quaternius MegaKits (village + fantasy props) are staged \u2014 the owner downloaded and supplied them directly. Unblocks EV6, EV7, EV2-landmark-ceiling."}, {"tag": "cleared", "text": "Push access is fully restored (verified via a merged PR through the normal CI path)."}, {"tag": "art", "text": "Reference-art rule stands (\u201cnever render without me loading art first\u201d) \u2014 but the waiting list is currently empty. All three hero-object boards (pylon, relay, tether machine) arrived 2026-08-11."}, {"tag": "pg", "text": "Play gates the loop does NOT wait on (D21): R0.11 (full first-day playthrough), the two P0 device checks from SA0/SA1, and EV10 (cohesion pass, parked until EV2\u2013EV9 ship)."}];
+const PHASES = [{"num": "unlabeled", "name": "(top-of-file urgent item, no Phase header \u2014 precedes Phase 0)", "items": [{"id": "R6-village-notification-freed-instance", "title": "SceneTree teardown throws a real freed-instance error in building_prefabs.gd", "gate": false, "model": "sonnet", "area": "village"}], "closed": 0}, {"num": "0", "name": "the owner played. This is the response.", "items": [{"id": "R0.11", "title": "Play gate \u2014 the owner plays the NEW first day, end to end", "gate": true, "model": null, "area": null}], "closed": 0}, {"num": "-1", "name": "urgent PC bugs (owner-reported, 2026-08-10)", "items": [], "closed": 5}, {"num": "-0.95", "name": "the loop itself (D25)", "items": [], "closed": 7}, {"num": "-0.9", "name": "the two blockers from the published build (owner, 2026-08-11)", "items": [], "closed": 5}, {"num": "-0.6", "name": "the look (owner's art bible, D24)", "items": [{"id": "EV2-landmark-ceiling", "title": "Hero trees don't read as landmark specimens even at the best 3-of-5 subset", "gate": false, "model": "sonnet", "area": "vegetation"}, {"id": "EV5", "title": "Water", "gate": false, "model": "fable", "area": "terrain"}, {"id": "EV6-remainder", "title": "The building types the kit rebuild deliberately left", "gate": false, "model": "fable", "area": "village"}, {"id": "EV7-remainder", "title": "The three prop clusters that need geography built first", "gate": false, "model": "sonnet", "area": "village"}, {"id": "EV9", "title": "Rebuild the HUD", "gate": false, "model": "opus", "area": "ui"}, {"id": "EV10", "title": "Cohesion pass", "gate": true, "model": "fable", "area": "visual"}], "closed": 28}, {"num": "-0.55", "name": "the cast (owner's NPC board)", "items": [], "closed": 8}, {"num": "-0.75", "name": "the owner's Meadows spec, P0 (owner directive, 2026-08-11)", "items": [{"id": "SA4", "title": "Seven outward spokes, each believably severed", "gate": false, "model": "fable", "area": null}], "closed": 5}, {"num": "-0.85", "name": "HUD and item access (owner's third pass, 2026-08-11)", "items": [{"id": "HD1", "title": "Device-aware input glyphs", "gate": false, "model": "sonnet", "area": "ui"}, {"id": "HD2", "title": "A real quick-access item hotbar", "gate": false, "model": "sonnet", "area": "ui"}], "closed": 4}, {"num": "-0.5", "name": "Visual pass (owner directive: finish this before R1\u2013R8)", "items": [{"id": "R9.4-remainder-9-combat", "title": "The fight itself doesn't read as an event yet", "gate": false, "model": "sonnet", "area": "combat"}], "closed": 25}, {"num": "1", "name": "vocabulary, before the codebase grows", "items": [{"id": "R1.1", "title": "Rename `pal` \u2192 `creature` everywhere", "gate": false, "model": "haiku", "area": null}, {"id": "R1.2", "title": "Vocabulary sweep of the handoff and decision index", "gate": false, "model": "haiku", "area": null}], "closed": 0}, {"num": "2", "name": "the first day, remainder", "items": [{"id": "R2.3", "title": "Real tree/rock harvesting on the vegetation", "gate": false, "model": "sonnet", "area": null}, {"id": "R2.7", "title": "Workbench and storage container", "gate": false, "model": "sonnet", "area": null}, {"id": "R2.8", "title": "Creature bed", "gate": false, "model": "sonnet", "area": null}, {"id": "R2.9", "title": "Play gate \u2014 does building a small home feel useful and enjoyable?", "gate": true, "model": null, "area": null}], "closed": 5}, {"num": "3", "name": "art debt and persistence", "items": [{"id": "R3.0", "title": "Re-process the three humanoid GLBs through the fixed pipeline", "gate": false, "model": "sonnet", "area": null}, {"id": "R3.1", "title": "Save and load", "gate": false, "model": "opus", "area": null}, {"id": "R3.2", "title": "Death satchels persist across save/load", "gate": false, "model": "sonnet", "area": null}, {"id": "R3.3", "title": "Player death and respawn", "gate": false, "model": "sonnet", "area": null}], "closed": 0}, {"num": "3.5", "name": "reusable progression infrastructure (spec Phase B)", "items": [{"id": "SB9", "title": "The smallest progression-state system that survives the chapter", "gate": false, "model": "opus", "area": null}, {"id": "SB10", "title": "Physical keys, gears and Sigils that open real things", "gate": false, "model": "sonnet", "area": null}, {"id": "SB11", "title": "One tracked objective, and a two-list quest log", "gate": false, "model": "sonnet", "area": null}], "closed": 2}, {"num": "4", "name": "combat, progression, the team", "items": [{"id": "R4.1", "title": "Levels and XP", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.2", "title": "Core stats and per-instance individuality", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.3", "title": "Moves", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.4", "title": "TMs and teaching moves", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.5", "title": "Tuskroot's REAL model \u2014 likely already done, needs verification", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.6", "title": "Evolution mechanic and ceremony", "gate": false, "model": "opus", "area": null}, {"id": "R4.7", "title": "Bond and best creature", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.8", "title": "Fainting and home recovery", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.9", "title": "Orb economy and tiers", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.10", "title": "The release ceremony", "gate": false, "model": "fable", "area": null}, {"id": "R4.11", "title": "Combat animation bug", "gate": false, "model": "sonnet", "area": null}, {"id": "R4.12", "title": "Play gate \u2014 is repeated combat enjoyable, not merely functional?", "gate": true, "model": null, "area": null}], "closed": 0}, {"num": "5", "name": "the living world", "items": [{"id": "R5.2", "title": "Rain, fog and cloud variants", "gate": false, "model": "sonnet", "area": null}, {"id": "R5.3", "title": "Spawn conditions", "gate": false, "model": "sonnet", "area": null}], "closed": 0}, {"num": "6", "name": "riding", "items": [{"id": "R6.1", "title": "Riding", "gate": false, "model": "opus", "area": null}, {"id": "R6.2", "title": "Meadowhart as the rideable creature; craftable generic saddle", "gate": false, "model": "sonnet", "area": null}, {"id": "R6.3", "title": "Play gate \u2014 does riding make exploring better?", "gate": true, "model": null, "area": null}], "closed": 0}, {"num": "7", "name": "the village lives, the meadow reads", "items": [{"id": "R7.3", "title": "Grow the authored space toward the 4\u20138 hour arc", "gate": false, "model": "opus", "area": null}, {"id": "R7.4", "title": "Map and minimap", "gate": false, "model": "sonnet", "area": null}, {"id": "R7.5", "title": "Food buffs", "gate": false, "model": "sonnet", "area": null}, {"id": "R7.6", "title": "Berry plot and simple fishing", "gate": false, "model": "sonnet", "area": null}, {"id": "R7.7", "title": "Player HP and armour slot architecture", "gate": false, "model": "sonnet", "area": null}], "closed": 0}, {"num": "8", "name": "the Meadows chapter (spec Phases C\u2013G)", "items": [{"id": "R8.1", "title": "World trainer encounter and team combat", "gate": false, "model": "sonnet", "area": null}, {"id": "SC12", "title": "Mira, Oskar and Tam become the three Band 1 trainers", "gate": false, "model": "fable", "area": null}, {"id": "SC13", "title": "The three Band 1 trainer battles, each with a distinct lesson", "gate": false, "model": "sonnet", "area": null}, {"id": "SC14", "title": "The South Bridge, and the key that opens it", "gate": false, "model": "sonnet", "area": null}, {"id": "SC15", "title": "Trainer battles pay out", "gate": false, "model": "sonnet", "area": null}, {"id": "SD16", "title": "The Old Quarry", "gate": false, "model": "sonnet", "area": null}, {"id": "SD17", "title": "Burrow Warrens, the required dungeon", "gate": false, "model": "fable", "area": null}, {"id": "SD18", "title": "Rootstone, the first progression tier material", "gate": false, "model": "sonnet", "area": null}, {"id": "SE21", "title": "A real river divides the deeper Meadows", "gate": false, "model": "fable", "area": null}, {"id": "SE22", "title": "Old Mill Crossing, seized and then restored", "gate": false, "model": "sonnet", "area": null}, {"id": "SE23", "title": "The Tether Relay Station", "gate": false, "model": "fable", "area": null}, {"id": "SE25", "title": "Relay trainers and the relay captain", "gate": false, "model": "sonnet", "area": null}, {"id": "SE27", "title": "Free the captive", "gate": false, "model": "sonnet", "area": null}, {"id": "SE30", "title": "The reveal ladder, laid in", "gate": false, "model": "fable", "area": null}, {"id": "SF31", "title": "Ironwood, the second preparation tier", "gate": false, "model": "sonnet", "area": null}, {"id": "SF33", "title": "Standing at a Rift and seeing the next region", "gate": false, "model": "fable", "area": null}, {"id": "SF34", "title": "Three regional captains, three Sigils", "gate": false, "model": "fable", "area": null}, {"id": "R8.2", "title": "Authored stronghold route", "gate": false, "model": "sonnet", "area": null}, {"id": "SG38", "title": "The stronghold trainer gauntlet", "gate": false, "model": "sonnet", "area": null}, {"id": "R8.3", "title": "The Warden boss fight", "gate": false, "model": "fable", "area": null}, {"id": "SG40", "title": "The reveal: the legendary is the power source", "gate": false, "model": "fable", "area": null}, {"id": "R8.4", "title": "Free the legendary; it offers to join; triggers the release ceremony if full", "gate": false, "model": "fable", "area": null}, {"id": "SG44", "title": "The first Tether Rift collapses and the world gets bigger", "gate": false, "model": "fable", "area": null}, {"id": "SG46", "title": "The Meadows answers", "gate": false, "model": "fable", "area": null}, {"id": "R8.5", "title": "The legendary's superior ride ability", "gate": false, "model": "sonnet", "area": null}, {"id": "R8.6", "title": "The larger mystery and future-biome hook", "gate": false, "model": "fable", "area": null}], "closed": 0}, {"num": "8.5", "name": "pacing and the chapter's own gate (spec Phase H)", "items": [{"id": "SH47", "title": "Tune the chapter to 4\u20137 hours", "gate": false, "model": "sonnet", "area": null}, {"id": "SH53", "title": "Play gate \u2014 the P0 fixes are actually gone on real hardware", "gate": true, "model": "haiku", "area": null}, {"id": "SH54", "title": "Audit: nothing in the chapter assumed new creature credits", "gate": false, "model": "haiku", "area": null}], "closed": 0}, {"num": "9", "name": "polish gate (M15)", "items": [{"id": "R9.1", "title": "Input feel, combat cadence, catch feel, camera", "gate": true, "model": "sonnet", "area": null}, {"id": "R9.2", "title": "Controller UI readability on the Ally", "gate": true, "model": "sonnet", "area": null}, {"id": "R9.3", "title": "Performance on target hardware", "gate": true, "model": "sonnet", "area": null}, {"id": "R9.5", "title": "The exit gate", "gate": true, "model": null, "area": null}], "closed": 0}, {"num": "found-along-the-way", "name": "Found along the way \u2014 small, unscheduled", "items": [{"id": "asset-ledger-cc0-claim", "title": "ASSET_LEDGER.md falsely claims everything in the build is CC0 1.0", "gate": false, "model": null, "area": null}, {"id": "backpack-equip-drop-split-verbs", "title": "Backpack use verb has no equip/drop/split siblings", "gate": false, "model": "sonnet", "area": null}, {"id": "menu-midfight-silent-refusal", "title": "Opening the menu mid-fight is silently refused with no explanation", "gate": false, "model": "haiku", "area": null}, {"id": "vp1-survey-gd", "title": "tools/survey.gd (relocated to Phase -0.5 as VP1)", "gate": false, "model": null, "area": null}, {"id": "spec-sec6-optional-activities", "title": "Spec \u00a76 \u2014 6-10 optional activities, not forty shallow quests", "gate": false, "model": "sonnet", "area": null}, {"id": "spec-sec14-home-stays-relevant", "title": "Spec \u00a714 \u2014 home must stay relevant", "gate": false, "model": "sonnet", "area": null}], "closed": 3}];
+const CATEGORIES = [{"cat": "Story & The Meadows Chapter", "blurb": "The Meadows chapter spine: named trainers, the river and relay, the stronghold, every authored story beat.", "openCount": 32, "shippedCount": 12, "pct": 27, "items": [{"id": "R0.11", "title": "Play gate \u2014 the owner plays the NEW first day, end to end", "model": null, "area": null, "gate": true}, {"id": "R8.1", "title": "World trainer encounter and team combat", "model": "sonnet", "area": null, "gate": false}, {"id": "SC12", "title": "Mira, Oskar and Tam become the three Band 1 trainers", "model": "fable", "area": null, "gate": false}, {"id": "SC13", "title": "The three Band 1 trainer battles, each with a distinct lesson", "model": "sonnet", "area": null, "gate": false}, {"id": "SC14", "title": "The South Bridge, and the key that opens it", "model": "sonnet", "area": null, "gate": false}, {"id": "SC15", "title": "Trainer battles pay out", "model": "sonnet", "area": null, "gate": false}, {"id": "SD16", "title": "The Old Quarry", "model": "sonnet", "area": null, "gate": false}, {"id": "SD17", "title": "Burrow Warrens, the required dungeon", "model": "fable", "area": null, "gate": false}, {"id": "SD18", "title": "Rootstone, the first progression tier material", "model": "sonnet", "area": null, "gate": false}, {"id": "SE21", "title": "A real river divides the deeper Meadows", "model": "fable", "area": null, "gate": false}, {"id": "SE22", "title": "Old Mill Crossing, seized and then restored", "model": "sonnet", "area": null, "gate": false}, {"id": "SE23", "title": "The Tether Relay Station", "model": "fable", "area": null, "gate": false}, {"id": "SE25", "title": "Relay trainers and the relay captain", "model": "sonnet", "area": null, "gate": false}, {"id": "SE27", "title": "Free the captive", "model": "sonnet", "area": null, "gate": false}, {"id": "SE30", "title": "The reveal ladder, laid in", "model": "fable", "area": null, "gate": false}, {"id": "SF31", "title": "Ironwood, the second preparation tier", "model": "sonnet", "area": null, "gate": false}, {"id": "SF33", "title": "Standing at a Rift and seeing the next region", "model": "fable", "area": null, "gate": false}, {"id": "SF34", "title": "Three regional captains, three Sigils", "model": "fable", "area": null, "gate": false}, {"id": "R8.2", "title": "Authored stronghold route", "model": "sonnet", "area": null, "gate": false}, {"id": "SG38", "title": "The stronghold trainer gauntlet", "model": "sonnet", "area": null, "gate": false}, {"id": "R8.3", "title": "The Warden boss fight", "model": "fable", "area": null, "gate": false}, {"id": "SG40", "title": "The reveal: the legendary is the power source", "model": "fable", "area": null, "gate": false}, {"id": "R8.4", "title": "Free the legendary; it offers to join; triggers the release ceremony if full", "model": "fable", "area": null, "gate": false}, {"id": "SG44", "title": "The first Tether Rift collapses and the world gets bigger", "model": "fable", "area": null, "gate": false}, {"id": "SG46", "title": "The Meadows answers", "model": "fable", "area": null, "gate": false}, {"id": "R8.5", "title": "The legendary's superior ride ability", "model": "sonnet", "area": null, "gate": false}, {"id": "R8.6", "title": "The larger mystery and future-biome hook", "model": "fable", "area": null, "gate": false}, {"id": "SH47", "title": "Tune the chapter to 4\u20137 hours", "model": "sonnet", "area": null, "gate": false}, {"id": "SH53", "title": "Play gate \u2014 the P0 fixes are actually gone on real hardware", "model": "haiku", "area": null, "gate": true}, {"id": "SH54", "title": "Audit: nothing in the chapter assumed new creature credits", "model": "haiku", "area": null, "gate": false}, {"id": "spec-sec6-optional-activities", "title": "Spec \u00a76 \u2014 6-10 optional activities, not forty shallow quests", "model": "sonnet", "area": null, "gate": false}, {"id": "spec-sec14-home-stays-relevant", "title": "Spec \u00a714 \u2014 home must stay relevant", "model": "sonnet", "area": null, "gate": false}]}, {"cat": "Terrain & World", "blurb": "The land itself: vegetation, paths, water, lighting, the world's physical edge.", "openCount": 6, "shippedCount": 26, "pct": 81, "items": [{"id": "EV2-landmark-ceiling", "title": "Hero trees don't read as landmark specimens even at the best 3-of-5 subset", "model": "sonnet", "area": "vegetation", "gate": false}, {"id": "EV5", "title": "Water", "model": "fable", "area": "terrain", "gate": false}, {"id": "EV10", "title": "Cohesion pass", "model": "fable", "area": "visual", "gate": true}, {"id": "SA4", "title": "Seven outward spokes, each believably severed", "model": "fable", "area": null, "gate": false}, {"id": "R5.2", "title": "Rain, fog and cloud variants", "model": "sonnet", "area": null, "gate": false}, {"id": "R5.3", "title": "Spawn conditions", "model": "sonnet", "area": null, "gate": false}]}, {"cat": "Village & Settlement", "blurb": "The starting settlement as a place: buildings, props, the site plan.", "openCount": 4, "shippedCount": 1, "pct": 20, "items": [{"id": "R6-village-notification-freed-instance", "title": "SceneTree teardown throws a real freed-instance error in building_prefabs.gd", "model": "sonnet", "area": "village", "gate": false}, {"id": "EV6-remainder", "title": "The building types the kit rebuild deliberately left", "model": "fable", "area": "village", "gate": false}, {"id": "EV7-remainder", "title": "The three prop clusters that need geography built first", "model": "sonnet", "area": "village", "gate": false}, {"id": "R7.3", "title": "Grow the authored space toward the 4\u20138 hour arc", "model": "opus", "area": null, "gate": false}]}, {"cat": "Characters & Cast", "blurb": "The trainer, Grandpa, the Warden, and every named NPC's identity.", "openCount": 0, "shippedCount": 6, "pct": 100, "items": []}, {"cat": "Creatures & Roster", "blurb": "The seventeen wild pals and starters: models, palettes, production.", "openCount": 1, "shippedCount": 20, "pct": 95, "items": [{"id": "R3.0", "title": "Re-process the three humanoid GLBs through the fixed pipeline", "model": "sonnet", "area": null, "gate": false}]}, {"cat": "Combat & Progression", "blurb": "Levels, moves, bond, evolution, the team itself.", "openCount": 13, "shippedCount": 0, "pct": 0, "items": [{"id": "SB9", "title": "The smallest progression-state system that survives the chapter", "model": "opus", "area": null, "gate": false}, {"id": "R4.1", "title": "Levels and XP", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.2", "title": "Core stats and per-instance individuality", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.3", "title": "Moves", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.4", "title": "TMs and teaching moves", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.5", "title": "Tuskroot's REAL model \u2014 likely already done, needs verification", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.6", "title": "Evolution mechanic and ceremony", "model": "opus", "area": null, "gate": false}, {"id": "R4.7", "title": "Bond and best creature", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.8", "title": "Fainting and home recovery", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.9", "title": "Orb economy and tiers", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.10", "title": "The release ceremony", "model": "fable", "area": null, "gate": false}, {"id": "R4.11", "title": "Combat animation bug", "model": "sonnet", "area": null, "gate": false}, {"id": "R4.12", "title": "Play gate \u2014 is repeated combat enjoyable, not merely functional?", "model": null, "area": null, "gate": true}]}, {"cat": "Building & Crafting", "blurb": "Tools, structures, orbs and potions \u2014 what the player makes.", "openCount": 7, "shippedCount": 5, "pct": 42, "items": [{"id": "R2.3", "title": "Real tree/rock harvesting on the vegetation", "model": "sonnet", "area": null, "gate": false}, {"id": "R2.7", "title": "Workbench and storage container", "model": "sonnet", "area": null, "gate": false}, {"id": "R2.8", "title": "Creature bed", "model": "sonnet", "area": null, "gate": false}, {"id": "R2.9", "title": "Play gate \u2014 does building a small home feel useful and enjoyable?", "model": null, "area": null, "gate": true}, {"id": "R3.2", "title": "Death satchels persist across save/load", "model": "sonnet", "area": null, "gate": false}, {"id": "R7.5", "title": "Food buffs", "model": "sonnet", "area": null, "gate": false}, {"id": "R7.6", "title": "Berry plot and simple fishing", "model": "sonnet", "area": null, "gate": false}]}, {"cat": "UI & HUD", "blurb": "The HUD, menus, glyphs, the backpack and build panels.", "openCount": 6, "shippedCount": 4, "pct": 40, "items": [{"id": "EV9", "title": "Rebuild the HUD", "model": "opus", "area": "ui", "gate": false}, {"id": "HD1", "title": "Device-aware input glyphs", "model": "sonnet", "area": "ui", "gate": false}, {"id": "HD2", "title": "A real quick-access item hotbar", "model": "sonnet", "area": "ui", "gate": false}, {"id": "R7.4", "title": "Map and minimap", "model": "sonnet", "area": null, "gate": false}, {"id": "backpack-equip-drop-split-verbs", "title": "Backpack use verb has no equip/drop/split siblings", "model": "sonnet", "area": null, "gate": false}, {"id": "menu-midfight-silent-refusal", "title": "Opening the menu mid-fight is silently refused with no explanation", "model": "haiku", "area": null, "gate": false}]}, {"cat": "Traversal & Riding", "blurb": "Movement across the world, and riding once it exists.", "openCount": 3, "shippedCount": 0, "pct": 0, "items": [{"id": "R6.1", "title": "Riding", "model": "opus", "area": null, "gate": false}, {"id": "R6.2", "title": "Meadowhart as the rideable creature; craftable generic saddle", "model": "sonnet", "area": null, "gate": false}, {"id": "R6.3", "title": "Play gate \u2014 does riding make exploring better?", "model": null, "area": null, "gate": true}]}, {"cat": "Systems & Persistence", "blurb": "Save/load, quest tracking, the state that survives a session.", "openCount": 5, "shippedCount": 0, "pct": 0, "items": [{"id": "R3.1", "title": "Save and load", "model": "opus", "area": null, "gate": false}, {"id": "R3.3", "title": "Player death and respawn", "model": "sonnet", "area": null, "gate": false}, {"id": "SB10", "title": "Physical keys, gears and Sigils that open real things", "model": "sonnet", "area": null, "gate": false}, {"id": "SB11", "title": "One tracked objective, and a two-list quest log", "model": "sonnet", "area": null, "gate": false}, {"id": "R7.7", "title": "Player HP and armour slot architecture", "model": "sonnet", "area": null, "gate": false}]}, {"cat": "Polish & Performance", "blurb": "Feel, framerate, controller readability \u2014 the whole-build passes.", "openCount": 5, "shippedCount": 7, "pct": 58, "items": [{"id": "R9.4-remainder-9-combat", "title": "The fight itself doesn't read as an event yet", "model": "sonnet", "area": "combat", "gate": false}, {"id": "R9.1", "title": "Input feel, combat cadence, catch feel, camera", "model": "sonnet", "area": null, "gate": true}, {"id": "R9.2", "title": "Controller UI readability on the Ally", "model": "sonnet", "area": null, "gate": true}, {"id": "R9.3", "title": "Performance on target hardware", "model": "sonnet", "area": null, "gate": true}, {"id": "R9.5", "title": "The exit gate", "model": null, "area": null, "gate": true}]}, {"cat": "Pipeline & Tooling", "blurb": "Not a player-facing feature \u2014 the loop's own infrastructure and bugfixes.", "openCount": 4, "shippedCount": 16, "pct": 80, "items": [{"id": "R1.1", "title": "Rename `pal` \u2192 `creature` everywhere", "model": "haiku", "area": null, "gate": false}, {"id": "R1.2", "title": "Vocabulary sweep of the handoff and decision index", "model": "haiku", "area": null, "gate": false}, {"id": "asset-ledger-cc0-claim", "title": "ASSET_LEDGER.md falsely claims everything in the build is CC0 1.0", "model": null, "area": null, "gate": false}, {"id": "vp1-survey-gd", "title": "tools/survey.gd (relocated to Phase -0.5 as VP1)", "model": null, "area": null, "gate": false}]}];
 
+const LEASES = [{"area": "village", "task": "R6-village-notification-freed-instance", "state": "working", "when": "10:56", "free": false}, {"area": "vegetation", "task": "R2.3", "state": "working", "when": "10:54", "free": false}, {"area": "assets", "task": "R3.0", "state": "working", "when": "10:39", "free": false}, {"area": "lighting", "task": "free", "state": "", "when": "", "free": true}, {"area": "loop", "task": "free", "state": "", "when": "", "free": true}, {"area": "story", "task": "free", "state": "", "when": "", "free": true}, {"area": "terrain", "task": "EV5", "state": "working", "when": "10:19", "free": false}, {"area": "npc", "task": "free", "state": "", "when": "", "free": true}, {"area": "ui", "task": "HD1", "state": "working", "when": "10:43", "free": false}, {"area": "economy", "task": "R2.8", "state": "working", "when": "09:54", "free": false}, {"area": "save", "task": "R3.1", "state": "working", "when": "10:40", "free": false}, {"area": "menu", "task": "menu-mid-fight-refusal-hint-ship", "state": "working", "when": "10:57", "free": false}, {"area": "combat", "task": "R9.4-remainder-9-combat", "state": "working", "when": "10:33", "free": false}];
+
+const BLOCKED = [{"t": "Does the hillside's rock ever read as stone, or is the procedural slope-blend a ceiling to accept?", "d": "Five real rounds \u2014 three on colour/value, two on height/relief, one full order of magnitude apart in amplitude \u2014 with real measured movement on every lever and zero movement in a blind critic's verdict across all five. Clears when you look at shots/hillside/dome-overview.png and either accept the read or say in your own words what's actually wrong."}, {"t": "Is grandpas-house-route.png's \u201cflanking\u201d read worth further iteration, or a placement-density limit to accept?", "d": "Five rounds fixed genuine mechanisms (clump straddling, stray placement, oversized clump radius); two rounds that added density made the same frame measurably worse, for a now-understood reason. Clears when you look at grandpas-house-route.png and say it's fine, or what's actually wrong, in your own words."}, {"t": "The square-convergence \u201cunmotivated dark patch\u201d is identified but not fixed \u2014 same open question as the route above", "d": "Direct pixel measurement found the real cause: pure-path pixels average luma 130, pure-grass pixels average luma 67 \u2014 ordinary material contrast, not a rendering defect. Fixing it trades against the path's own feathered-edge design. Clears when you accept the current read or name the tradeoff you want."}, {"t": "Does the creature roster clear a Palworld-level appeal bar, or does it need to?", "d": "Four blind-judge rounds called all three previewed starters \u201can asset preview, not a hero character portrait.\u201d The only lever is a roster-wide material/lighting pass \u2014 no new meshes are permitted at any credit balance. Clears when you say whether a roster-wide pass is worth commissioning, and if so, whose scope it joins."}, {"t": "NP1-geometry \u2014 no real hair/accessory geometry exists, and generating one is foreclosed", "d": "Checked directly: villager_female/male/grunt are each one fused mesh, no separable hair/accessory node \u2014 same limitation as trainer/Grandpa/Warden. The only fix is another Meshy generation, which D23/D24 forbid for this purpose. Clears when you accept the placeholder-primitive look as permanent, or name a non-Meshy source (a CC0 pack) for modular hair/accessory parts."}, {"t": "ASSET_LEDGER.md's licence claim is false", "d": "The ledger states everything in the build is CC0 1.0. It isn't \u2014 the Meshy-generated creatures and the Plumberry Plains pack are not CC0. Clears when you supply the correct licence wording."}];
+
+const GATES = [{"id": "R0.11", "d": "Play the new first day end to end \u2014 wake upstairs, Grandpa's gifts, choose and name a starter, the paths, harvest, a fight and a catch, camp before dark, day 2."}, {"id": "SA0 / SA1", "d": "Two questions only your device can answer: can you talk to Grandpa now? And is the choppiness actually gone?"}, {"id": "EV10", "d": "The cohesion pass \u2014 waits on EV2 through EV9 actually shipping before re-judging makes sense."}];
+
+function el(tag, cls, html) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html !== undefined) e.innerHTML = html;
+  return e;
+}
 function esc(s) {
-  return (s || "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function itemRow(it) {
+  const row = el("div", "item-row");
+  row.appendChild(el("div", "item-id", esc(it.id)));
+  row.appendChild(el("div", "item-title", esc(it.title)));
+  const tags = el("div", "item-tags");
+  if (it.gate) tags.appendChild(el("span", "tag gate", "play gate"));
+  if (it.model === "fable") tags.appendChild(el("span", "tag fable", "fable"));
+  if (it.area) tags.appendChild(el("span", "tag area", esc(it.area)));
+  row.appendChild(tags);
+  return row;
 }
 
-function renderStats() {
-  let open = 0, closed = 0;
-  PHASES.forEach(p => { open += p.open_items.length; closed += p.closed_count; });
-  document.getElementById("statOpen").textContent = open;
-  document.getElementById("statClosed").textContent = closed;
-  document.getElementById("statLive").textContent = new Set(LEASES.filter(l => l.area.indexOf("lane-") !== 0).map(l => l.area)).size;
-  document.getElementById("statBlocked").textContent = BLOCKED_ON_OWNER.length;
-}
-
-function renderLeases() {
-  const grid = document.getElementById("leaseGrid");
-  LEASES.filter(l => l.task !== "lane-heartbeat").forEach(l => {
-    const card = document.createElement("div");
-    card.className = "lease-card";
-    card.innerHTML = `
-      <div class="lease-top">
-        <div>
-          <div class="lease-task mono">${esc(l.task)}</div>
-          <div class="lease-firing">${esc(l.firing)}</div>
-        </div>
-        <span class="chip ${esc(l.state)}">${esc(l.state)}</span>
-      </div>
-      <div class="lease-meta"><span class="pill area">${esc(l.area)}</span></div>
-      <div class="lease-note">${esc(l.note)}</div>
-      <div class="lease-updated">updated ${esc(l.updated)}</div>
-    `;
-    grid.appendChild(card);
+/* ---------------- PAGE 1 ---------------- */
+(function renderOverview() {
+  const preP1 = ["0", "-1", "-0.95", "-0.9", "-0.6", "-0.55", "-0.75", "-0.85", "-0.5"];
+  let actionable = 0, totalOpen = 0, totalShipped = 0, fableCount = 0;
+  PHASES.forEach(p => {
+    totalOpen += p.items.length;
+    totalShipped += p.closed;
+    p.items.forEach(it => { if (it.model === "fable") fableCount++; });
+    if (preP1.includes(p.num)) p.items.forEach(it => { if (!it.gate) actionable++; });
   });
-}
+  const statBox = document.getElementById("stats");
+  [[actionable, "actionable before Phase 1"], [totalOpen, "open items, all phases"],
+   [totalShipped, "shipped markers on record"], [fableCount, "tagged model: fable"]]
+    .forEach(([n, l]) => {
+      const s = el("div", "stat");
+      s.appendChild(el("div", "n", n));
+      s.appendChild(el("div", "l", esc(l)));
+      statBox.appendChild(s);
+    });
 
-function renderBlocked() {
-  const list = document.getElementById("blockedList");
-  BLOCKED_ON_OWNER.forEach(b => {
-    const div = document.createElement("div");
-    div.className = "blocked-item";
-    div.innerHTML = `
-      <h3>${esc(b.title)}</h3>
-      <p>${esc(b.body)}</p>
-      <p class="clears"><strong>Clears when:</strong> ${esc(b.clears)}</p>
-    `;
-    list.appendChild(div);
-  });
-
-  const strip = document.getElementById("infoStrip");
-  INFO_STRIP.forEach(i => {
-    const row = document.createElement("div");
-    row.className = "row";
-    row.innerHTML = `<span class="tag ${i.tag === 'pg' ? 'pg' : ''}">${esc(i.tag)}</span><span>${esc(i.text)}</span>`;
-    strip.appendChild(row);
-  });
-}
-
-function renderPhases() {
-  const root = document.getElementById("phaseList");
-  PHASES.forEach((p, idx) => {
-    const details = document.createElement("details");
-    details.className = "phase";
-    if (p.open_items.length > 0 && (String(p.phase_number).charAt(0) === "-" || idx < 2)) details.open = true;
-
-    const summary = document.createElement("summary");
-    summary.className = "phase-head";
-    summary.innerHTML = `
-      <span class="chev">&#9656;</span>
-      <span class="phase-num">Ph. ${esc(p.phase_number)}</span>
-      <span class="phase-title">${esc(p.title)}</span>
-      <span class="phase-counts">
-        ${p.open_items.length ? `<span class="count-open">${p.open_items.length} open</span>` : ""}
-        ${p.closed_count ? `<span class="count-closed">${p.closed_count} shipped</span>` : ""}
-      </span>
-    `;
-    details.appendChild(summary);
-
-    const body = document.createElement("div");
-    body.className = "phase-body";
-
-    if (p.open_items.length === 0) {
-      body.innerHTML = `<div class="no-open">Nothing open in this phase — ${p.closed_count} item${p.closed_count === 1 ? "" : "s"} shipped. See DONE.md.</div>`;
+  const leaseBox = document.getElementById("leases");
+  let held = 0;
+  LEASES.forEach(l => {
+    if (!l.free) held++;
+    const row = el("div", "lease-row" + (l.free ? " free" : ""));
+    row.appendChild(el("div", "area", esc(l.area)));
+    if (l.free) {
+      row.appendChild(el("div", "task", "unclaimed"));
+      row.appendChild(el("div", "when", ""));
     } else {
-      p.open_items.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = `
-          <div class="item-head">
-            <span class="item-id mono">${esc(item.id)}</span>
-            <span class="item-title">${esc(item.title)}</span>
-          </div>
-          ${item.meta ? `<div class="item-meta mono">${esc(item.meta)}</div>` : ""}
-          ${item.done_when ? `<div class="item-done">${esc(item.done_when)}</div>` : ""}
-        `;
-        body.appendChild(div);
-      });
-      if (p.closed_count) {
-        const line = document.createElement("div");
-        line.className = "closed-line";
-        line.textContent = `${p.closed_count} more item${p.closed_count === 1 ? "" : "s"} shipped this phase — see DONE.md.`;
-        body.appendChild(line);
-      }
+      row.appendChild(el("div", "task", `<code>${esc(l.task)}</code> — ${esc(l.state)}`));
+      row.appendChild(el("div", "when", esc(l.when)));
     }
-
-    if (p.load_bearing_closed && p.load_bearing_closed.length) {
-      const lb = document.createElement("details");
-      lb.className = "lb";
-      const lbSummary = document.createElement("summary");
-      lbSummary.textContent = `${p.load_bearing_closed.length} closed item${p.load_bearing_closed.length === 1 ? "" : "s"} the open items above still depend on`;
-      lb.appendChild(lbSummary);
-      p.load_bearing_closed.forEach(c => {
-        const div = document.createElement("div");
-        div.className = "lb-item";
-        div.innerHTML = `<span class="lb-id mono">${esc(c.id)}</span> — ${esc(c.title)}<p>${esc(c.why_load_bearing)}</p>`;
-        lb.appendChild(div);
-      });
-      body.appendChild(lb);
-    }
-
-    details.appendChild(body);
-    root.appendChild(details);
+    leaseBox.appendChild(row);
   });
-}
+  document.getElementById("lease-count").textContent = `${held} areas held · ${LEASES.length - held} free`;
 
-renderStats();
-renderLeases();
-renderBlocked();
-renderPhases();
+  const blockedBox = document.getElementById("blocked");
+  BLOCKED.forEach(b => {
+    const card = el("div", "blocked-card");
+    card.appendChild(el("div", "t", esc(b.t)));
+    card.appendChild(el("div", "d", esc(b.d)));
+    blockedBox.appendChild(card);
+  });
+  document.getElementById("blocked-count").textContent = BLOCKED.length + " open";
+
+  const gateBox = document.getElementById("gates");
+  GATES.forEach(g => {
+    const card = el("div", "gate-card");
+    card.appendChild(el("div", "t", esc(g.id)));
+    card.appendChild(el("div", "d", esc(g.d)));
+    gateBox.appendChild(card);
+  });
+
+  const phaseBox = document.getElementById("phases");
+  document.getElementById("phase-count").textContent = PHASES.length + " phases";
+  const openByDefault = new Set(preP1);
+  PHASES.forEach(p => {
+    const card = el("div", "card" + (openByDefault.has(p.num) ? " expanded" : ""));
+    const head = el("div", "card-head");
+    head.appendChild(el("div", "card-badge", esc(p.num)));
+    head.appendChild(el("div", "card-name", esc(p.name)));
+    const tally = el("div", "card-tally");
+    if (p.items.length) tally.appendChild(el("span", "pill open", p.items.length + " open"));
+    if (p.closed) tally.appendChild(el("span", "pill shipped", p.closed + " shipped"));
+    head.appendChild(tally);
+    head.appendChild(el("div", "chevron", "▸"));
+    head.addEventListener("click", () => card.classList.toggle("expanded"));
+    card.appendChild(head);
+    const body = el("div", "card-body");
+    if (!p.items.length) {
+      body.appendChild(el("div", "card-empty", p.closed ? `All ${p.closed} shipped — see DONE.md.` : "Nothing here yet."));
+    } else {
+      p.items.forEach(it => body.appendChild(itemRow(it)));
+    }
+    card.appendChild(body);
+    phaseBox.appendChild(card);
+  });
+})();
+
+/* ---------------- PAGE 2 ---------------- */
+(function renderFeatures() {
+  const gameplayCats = CATEGORIES.filter(c => c.cat !== "Pipeline & Tooling");
+  const metaCats = CATEGORIES.filter(c => c.cat === "Pipeline & Tooling");
+  const sorted = gameplayCats.slice().sort((a, b) => a.pct - b.pct).concat(metaCats);
+
+  const totalOpen = CATEGORIES.reduce((s, c) => s + c.openCount, 0);
+  const totalShipped = CATEGORIES.reduce((s, c) => s + c.shippedCount, 0);
+  const gpOpen = gameplayCats.reduce((s, c) => s + c.openCount, 0);
+  const gpShipped = gameplayCats.reduce((s, c) => s + c.shippedCount, 0);
+  const overallPct = Math.round(100 * gpShipped / (gpOpen + gpShipped));
+
+  const statBox = document.getElementById("feat-stats");
+  [[overallPct + "%", "overall, gameplay features"], [gameplayCats.length, "feature systems tracked"],
+   [gpOpen, "open items across features"], [gpShipped, "shipped across features"]]
+    .forEach(([n, l]) => {
+      const s = el("div", "stat");
+      s.appendChild(el("div", "n", n));
+      s.appendChild(el("div", "l", esc(l)));
+      statBox.appendChild(s);
+    });
+
+  document.getElementById("feat-count").textContent = sorted.length + " systems";
+
+  const box = document.getElementById("features");
+  sorted.forEach(c => {
+    const isMeta = c.cat === "Pipeline & Tooling";
+    const card = el("div", "card" + (isMeta ? " meta" : ""));
+    const head = el("div", "card-head");
+    head.appendChild(el("div", "card-badge", c.pct + "%"));
+    head.appendChild(el("div", "card-name", esc(c.cat)));
+    const tally = el("div", "card-tally");
+    if (c.openCount) tally.appendChild(el("span", "pill open", c.openCount + " open"));
+    if (c.shippedCount) tally.appendChild(el("span", "pill shipped", c.shippedCount + " shipped"));
+    head.appendChild(tally);
+    head.appendChild(el("div", "chevron", "▸"));
+    head.addEventListener("click", () => card.classList.toggle("expanded"));
+    card.appendChild(head);
+
+    const progWrap = el("div", "card-progress-wrap");
+    progWrap.appendChild(el("div", "card-blurb", esc(c.blurb)));
+    const track = el("div", "progress-track");
+    const fill = el("div", "progress-fill");
+    fill.style.width = c.pct + "%";
+    track.appendChild(fill);
+    progWrap.appendChild(track);
+    const meta = el("div", "progress-meta");
+    meta.appendChild(el("span", "", `${c.shippedCount} shipped / ${c.openCount + c.shippedCount} total`));
+    meta.appendChild(el("span", "pct", c.pct + "%"));
+    progWrap.appendChild(meta);
+    card.appendChild(progWrap);
+
+    const body = el("div", "card-body");
+    if (!c.items.length) {
+      body.appendChild(el("div", "card-empty", "Nothing open — fully shipped, or nothing started."));
+    } else {
+      c.items.forEach(it => body.appendChild(itemRow(it)));
+    }
+    card.appendChild(body);
+    box.appendChild(card);
+  });
+})();
+
+/* ---------------- tabs ---------------- */
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const target = btn.dataset.page;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b === btn));
+    document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === "page-" + target));
+    window.scrollTo({ top: 0, behavior: "instant" });
+  });
+});
+document.querySelectorAll('[data-goto]').forEach(a => {
+  a.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelector(`.tab-btn[data-page="${a.dataset.goto}"]`).click();
+  });
+});
 </script>
-</body>

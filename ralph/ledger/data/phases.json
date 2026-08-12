@@ -1,835 +1,754 @@
 [
   {
-    "phase_number": "unlabeled",
-    "title": "(top-of-file urgent item, no Phase header \u2014 precedes Phase 0)",
-    "line_start": 28,
-    "open_items": [
+    "num": "unlabeled",
+    "name": "(top-of-file urgent item, no Phase header \u2014 precedes Phase 0)",
+    "items": [
       {
         "id": "R6-village-notification-freed-instance",
         "title": "SceneTree teardown throws a real freed-instance error in building_prefabs.gd",
-        "line": 28,
-        "meta": "model: sonnet \u00b7 tests: none \u00b7 area: village",
-        "done_when": "A headless run of any smoke test or capture tool against the settlement no longer prints the 'Left operand of is a previously freed instance' SCRIPT ERROR from building_prefabs.gd's NOTIFICATION_PREDELETE handler."
+        "gate": false,
+        "model": "sonnet",
+        "area": "village"
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "0",
-    "title": "the owner played. This is the response.",
-    "line_start": 47,
-    "open_items": [
+    "num": "0",
+    "name": "the owner played. This is the response.",
+    "items": [
       {
         "id": "R0.11",
         "title": "Play gate \u2014 the owner plays the NEW first day, end to end",
-        "line": 68,
-        "meta": "\u25b6 play gate",
-        "done_when": "Full first-day loop (wake, Grandpa, starters, village, harvest, fight+catch, camp, rest to morning) judged against GAME_DESIGN.md \u00a733 criteria 1, 3, 6, 11, plus whether the combat camera crowds and the arena still feels roomy at the new D19 sizes."
+        "gate": true,
+        "model": null,
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "-1",
-    "title": "urgent PC bugs (owner-reported, 2026-08-10)",
-    "line_start": 79,
-    "open_items": [],
-    "closed_count": 5,
-    "load_bearing_closed": []
+    "num": "-1",
+    "name": "urgent PC bugs (owner-reported, 2026-08-10)",
+    "items": [],
+    "closed": 5
   },
   {
-    "phase_number": "-0.95",
-    "title": "the loop itself (D25)",
-    "line_start": 130,
-    "open_items": [],
-    "closed_count": 7,
-    "load_bearing_closed": []
+    "num": "-0.95",
+    "name": "the loop itself (D25)",
+    "items": [],
+    "closed": 7
   },
   {
-    "phase_number": "-0.9",
-    "title": "the two blockers from the published build (owner, 2026-08-11)",
-    "line_start": 182,
-    "open_items": [],
-    "closed_count": 5,
-    "load_bearing_closed": []
+    "num": "-0.9",
+    "name": "the two blockers from the published build (owner, 2026-08-11)",
+    "items": [],
+    "closed": 5
   },
   {
-    "phase_number": "-0.6",
-    "title": "the look (owner's art bible, D24)",
-    "line_start": 214,
-    "open_items": [
+    "num": "-0.6",
+    "name": "the look (owner's art bible, D24)",
+    "items": [
       {
         "id": "EV2-landmark-ceiling",
         "title": "Hero trees don't read as landmark specimens even at the best 3-of-5 subset",
-        "line": 242,
-        "meta": "model: sonnet \u00b7 tests: none \u00b7 area: vegetation",
-        "done_when": "The itch.io-blocked Stylized Nature MegaKit clears and is searched for a broader-canopy hero tree form, or the owner accepts the current ceiling. Checked twice as of 2026-08-12: still blocked, not staged anywhere in assets_raw/vendor/."
+        "gate": false,
+        "model": "sonnet",
+        "area": "vegetation"
       },
       {
         "id": "EV5",
         "title": "Water",
-        "line": 564,
-        "meta": "model: fable \u00b7 tests: smoke_traversal \u00b7 area: terrain",
-        "done_when": "A pond and stream exist: readable stylised surface, shallow-edge colour shift, bank reeds, no expensive simulation \u2014 answers R7.1-remainder-2's water question and gives Band 3's river a starting point."
+        "gate": false,
+        "model": "fable",
+        "area": "terrain"
       },
       {
         "id": "EV6-remainder",
         "title": "The building types the kit rebuild deliberately left",
-        "line": 576,
-        "meta": "model: fable \u00b7 tests: smoke_opening, smoke_traversal \u00b7 area: village",
-        "done_when": "Mill/crossing and bridges built once EV5 gives them water; ranger station sited once its geography exists; plus leftover polish (settlement-wide building-to-grass skirt transition, the flat ShortCloset furniture piece)."
+        "gate": false,
+        "model": "fable",
+        "area": "village"
       },
       {
         "id": "EV7-remainder",
         "title": "The three prop clusters that need geography built first",
-        "line": 652,
-        "meta": "model: sonnet \u00b7 tests: none \u00b7 area: village",
-        "done_when": "A blind critic given close and in-context frames of bridge repair site, quarry station and trainer camp names each as implying a purpose, the same bar EV7's first two clusters cleared. Trainer camp is startable now; the other two wait on a bridge/built quarry."
+        "gate": false,
+        "model": "sonnet",
+        "area": "village"
       },
       {
         "id": "EV9",
         "title": "Rebuild the HUD",
-        "line": 671,
-        "meta": "model: opus \u00b7 tests: smoke_menu \u00b7 area: ui",
-        "done_when": "Remaining named gaps closed: SB11's tracked-objective label once quest state exists, a compass if the bible calls for one, and icon glyphs/branded display font/gradient bar fills once the owner supplies reference art (no board exists yet)."
+        "gate": false,
+        "model": "opus",
+        "area": "ui"
       },
       {
         "id": "EV10",
         "title": "Cohesion pass",
-        "line": 744,
-        "meta": "\u25b6 model: fable \u00b7 tests: none \u00b7 area: visual",
-        "done_when": "Re-shoot the same viewpoints, blind-judge against both reference sets, fix the three biggest gaps, repeat until further improvement is asset-quality-limited rather than composition-limited."
+        "gate": true,
+        "model": "fable",
+        "area": "visual"
       }
     ],
-    "closed_count": 28,
-    "load_bearing_closed": [
-      {
-        "id": "EV2",
-        "title": "an approved Meadows nature subset",
-        "line": 234,
-        "why_load_bearing": "EV2-landmark-ceiling's '3-of-5 subset' critique only makes sense against EV2's own curated hero-tree selection (the specific 3 TwistedTree forms picked by footprint/height/asymmetry)."
-      },
-      {
-        "id": "EV6",
-        "title": "settlement rebuilt on the Medieval Village MegaKit",
-        "line": 570,
-        "why_load_bearing": "EV6-remainder's 'still open' list (mill/bridges, ranger station, leftover polish) is exactly the set of building types EV6's kit rebuild deliberately left out."
-      },
-      {
-        "id": "EV7",
-        "title": "a first slice: work area and farmhouse yard",
-        "line": 647,
-        "why_load_bearing": "EV7-remainder is explicitly 'the three prop clusters EV7 left' \u2014 understanding which two clusters shipped, and the bar they cleared, is needed to read the remainder's scope and acceptance bar."
-      }
-    ]
+    "closed": 28
   },
   {
-    "phase_number": "-0.55",
-    "title": "the cast (owner's NPC board)",
-    "line_start": 752,
-    "open_items": [],
-    "closed_count": 8,
-    "load_bearing_closed": []
+    "num": "-0.55",
+    "name": "the cast (owner's NPC board)",
+    "items": [],
+    "closed": 8
   },
   {
-    "phase_number": "-0.75",
-    "title": "the owner's Meadows spec, P0 (owner directive, 2026-08-11)",
-    "line_start": 841,
-    "open_items": [
+    "num": "-0.75",
+    "name": "the owner's Meadows spec, P0 (owner directive, 2026-08-11)",
+    "items": [
       {
         "id": "SA4",
         "title": "Seven outward spokes, each believably severed",
-        "line": 869,
-        "meta": "model: fable \u00b7 tests: smoke_traversal",
-        "done_when": "All seven spokes (river gorge, storm road, mountain trail, high pass, cliff road, stone gate, blighted road) are reachable on foot from the village, each visibly and physically impassable, and none explains itself with UI text ('Biome Locked' messaging is forbidden)."
+        "gate": false,
+        "model": "fable",
+        "area": null
       }
     ],
-    "closed_count": 5,
-    "load_bearing_closed": []
+    "closed": 5
   },
   {
-    "phase_number": "-0.85",
-    "title": "HUD and item access (owner's third pass, 2026-08-11)",
-    "line_start": 889,
-    "open_items": [
+    "num": "-0.85",
+    "name": "HUD and item access (owner's third pass, 2026-08-11)",
+    "items": [
       {
         "id": "HD1",
         "title": "Device-aware input glyphs",
-        "line": 911,
-        "meta": "model: sonnet \u00b7 tests: none \u00b7 area: ui",
-        "done_when": "combat_hud.gd's five Actions-row verbs (quick/charged/throw/switch-left/switch-right) get keyboard+gamepad icon pairs, and input_glyph.gd switches on a real last-used-input-device tracker instead of 'a joypad is merely connected.'"
+        "gate": false,
+        "model": "sonnet",
+        "area": "ui"
       },
       {
         "id": "HD2",
         "title": "A real quick-access item hotbar",
-        "line": 946,
-        "meta": "model: sonnet \u00b7 tests: none \u00b7 area: ui",
-        "done_when": "A potion can be used from a five-slot quick-access hotbar (berries/potions/orbs) without opening the full backpack, with the correct HD1 prompt shown next to the slot; wires into the existing tab_backpack.gd::_read_use() verb."
+        "gate": false,
+        "model": "sonnet",
+        "area": "ui"
       }
     ],
-    "closed_count": 4,
-    "load_bearing_closed": []
+    "closed": 4
   },
   {
-    "phase_number": "-0.5",
-    "title": "Visual pass (owner directive: finish this before R1\u2013R8)",
-    "line_start": 976,
-    "open_items": [
+    "num": "-0.5",
+    "name": "Visual pass (owner directive: finish this before R1\u2013R8)",
+    "items": [
       {
         "id": "R9.4-remainder-9-combat",
         "title": "The fight itself doesn't read as an event yet",
-        "line": 1300,
-        "meta": "model: sonnet \u00b7 tests: none (visual) \u00b7 area: combat",
-        "done_when": "A fresh blind critic given the eight survey_combat.sh frames no longer names impact readability, the wind-up telegraph, the orb-in-flight read, or the lookalike-target confusion (fought pal vs. an ambient decorative pal) as defects."
+        "gate": false,
+        "model": "sonnet",
+        "area": "combat"
       }
     ],
-    "closed_count": 25,
-    "load_bearing_closed": [
-      {
-        "id": "R9.4-remainder-9",
-        "title": "get real combat frames",
-        "line": 1291,
-        "why_load_bearing": "R9.4-remainder-9-combat's blind critique only became possible once this item fixed the three harvest-scene bugs (player spawn moved indoors by D18/SA0, no ally pal, no orbs) that had prevented real combat frames from ever being captured."
-      },
-      {
-        "id": "R9.4-remainder-6",
-        "title": "root-caused why survey_combat.sh never completed",
-        "line": 1280,
-        "why_load_bearing": "Explains that survey_combat.sh's apparent hang was really slow per-phase cost on the software renderer (not a bug) plus one real capped-loop fix \u2014 the prerequisite for R9.4-remainder-9's frames, and thus R9.4-remainder-9-combat, existing at all."
-      }
-    ]
+    "closed": 25
   },
   {
-    "phase_number": "1",
-    "title": "vocabulary, before the codebase grows",
-    "line_start": 1352,
-    "open_items": [
+    "num": "1",
+    "name": "vocabulary, before the codebase grows",
+    "items": [
       {
         "id": "R1.1",
         "title": "Rename `pal` \u2192 `creature` everywhere",
-        "line": 1354,
-        "meta": "model: haiku \u00b7 tests: FULL SUITE",
-        "done_when": "No \\bpals?\\b outside docs/decisions/, full suite green, Windows export succeeds. Noted 2026-08-12 as unsafe to start while 7 lanes hold overlapping areas \u2014 deferred, not blocked."
+        "gate": false,
+        "model": "haiku",
+        "area": null
       },
       {
         "id": "R1.2",
         "title": "Vocabulary sweep of the handoff and decision index",
-        "line": 1376,
-        "meta": "model: haiku \u00b7 tests: none",
-        "done_when": "Handoff doc and decision index swept to match R1.1's rename; depends on R1.1 landing first, so not independently takeable."
+        "gate": false,
+        "model": "haiku",
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "2",
-    "title": "the first day, remainder",
-    "line_start": 1381,
-    "open_items": [
+    "num": "2",
+    "name": "the first day, remainder",
+    "items": [
       {
         "id": "R2.3",
         "title": "Real tree/rock harvesting on the vegetation",
-        "line": 1405,
-        "meta": "model: sonnet \u00b7 tests: test_harvest",
-        "done_when": "Walking up to any ordinary (non-authored) tree/rock and holding the button puts wood/stone in the satchel, AND the prop reads as harvestable from an approach distance (distinct material/glint/marker), not just via a close-range prompt."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R2.7",
         "title": "Workbench and storage container",
-        "line": 1437,
-        "meta": "model: sonnet \u00b7 tests: test_storage (new)",
-        "done_when": "A placed workbench and item-only storage container exist (five item slots, never creature storage); workbench upgrade is a Rootstone sink (SD18)."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R2.8",
         "title": "Creature bed",
-        "line": 1442,
-        "meta": "model: sonnet \u00b7 tests: test_build_catalogue",
-        "done_when": "A placeable creature bed exists in the build catalogue."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R2.9",
         "title": "Play gate \u2014 does building a small home feel useful and enjoyable?",
-        "line": 1445,
-        "meta": "\u25b6 play gate, \u00a733 criteria 6-7",
-        "done_when": "Owner judgment call after playing."
+        "gate": true,
+        "model": null,
+        "area": null
       }
     ],
-    "closed_count": 5,
-    "load_bearing_closed": [
-      {
-        "id": "R2.2",
-        "title": "Tool durability and free repair",
-        "line": 1400,
-        "why_load_bearing": "R2.2's own text names R2.7 directly: free backpack-repair exists only because R2.7 hasn't yet built the placed 'appropriate station' that GAME_DESIGN.md \u00a719 gates repair against."
-      }
-    ]
+    "closed": 5
   },
   {
-    "phase_number": "3",
-    "title": "art debt and persistence",
-    "line_start": 1450,
-    "open_items": [
+    "num": "3",
+    "name": "art debt and persistence",
+    "items": [
       {
         "id": "R3.0",
         "title": "Re-process the three humanoid GLBs through the fixed pipeline",
-        "line": 1452,
-        "meta": "model: sonnet \u00b7 tests: smoke_art",
-        "done_when": "Trainer, Grandpa and Warden GLBs re-run through the fixed animate_humanoid.py; smoke_art's render-space check shows all three humans with fit factors inside [0.1, 10]."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R3.1",
         "title": "Save and load",
-        "line": 1470,
-        "meta": "model: opus \u00b7 tests: test_save_format (new), FULL SUITE",
-        "done_when": "Quit mid-Meadows, reload, and party, satchel, day counter and placed buildings are all intact; 3-5 slots, frequent autosave, versioned from the first write, carrying SB9's progression flags in version 1."
+        "gate": false,
+        "model": "opus",
+        "area": null
       },
       {
         "id": "R3.2",
         "title": "Death satchels persist across save/load",
-        "line": 1481,
-        "meta": "model: sonnet \u00b7 tests: test_satchel (new)",
-        "done_when": "Death satchels survive save/load."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R3.3",
         "title": "Player death and respawn",
-        "line": 1483,
-        "meta": "model: sonnet \u00b7 tests: test_player_death (new) \u00b7 \u00a722",
-        "done_when": "Player death and respawn implemented per \u00a722."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "3.5",
-    "title": "reusable progression infrastructure (spec Phase B)",
-    "line_start": 1489,
-    "open_items": [
+    "num": "3.5",
+    "name": "reusable progression infrastructure (spec Phase B)",
+    "items": [
       {
         "id": "SB9",
         "title": "The smallest progression-state system that survives the chapter",
-        "line": 1546,
-        "meta": "model: opus \u00b7 tests: test_progression_state (new), FULL SUITE",
-        "done_when": "A flag set in one scene is readable in another, survives save/load (R3.1), and no gameplay script hardcodes a story boolean; must stay a flag store + has/set/completed API, never a generic quest engine."
+        "gate": false,
+        "model": "opus",
+        "area": null
       },
       {
         "id": "SB10",
         "title": "Physical keys, gears and Sigils that open real things",
-        "line": 1561,
-        "meta": "model: sonnet \u00b7 tests: test_progression_state",
-        "done_when": "Holding the right item (South Bridge Key, Mill Bridge Gear, Sigils) opens the matching gate in the world; not holding it produces an in-world response, never a UI lock."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SB11",
         "title": "One tracked objective, and a two-list quest log",
-        "line": 1570,
-        "meta": "model: sonnet \u00b7 tests: smoke_menu",
-        "done_when": "Completing an objective changes the HUD's one-line tracker without a scene reload; log has exactly two lists, Main Story and Local Requests."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       }
     ],
-    "closed_count": 2,
-    "load_bearing_closed": []
+    "closed": 2
   },
   {
-    "phase_number": "4",
-    "title": "combat, progression, the team",
-    "line_start": 1580,
-    "open_items": [
+    "num": "4",
+    "name": "combat, progression, the team",
+    "items": [
       {
         "id": "R4.1",
         "title": "Levels and XP",
-        "line": 1582,
-        "meta": "model: sonnet \u00b7 tests: test_progression (new) \u00b7 \u00a711",
-        "done_when": "Levels and XP implemented."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.2",
         "title": "Core stats and per-instance individuality",
-        "line": 1583,
-        "meta": "model: sonnet \u00b7 tests: test_progression \u00b7 \u00a711",
-        "done_when": "Core stats and per-instance individuality implemented."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.3",
         "title": "Moves",
-        "line": 1584,
-        "meta": "model: sonnet \u00b7 tests: test_moves (new) \u00b7 \u00a713",
-        "done_when": "Moves implemented; data/moves/ is currently empty."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.4",
         "title": "TMs and teaching moves",
-        "line": 1585,
-        "meta": "model: sonnet \u00b7 tests: test_moves \u00b7 \u00a713",
-        "done_when": "TMs and teaching moves implemented."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.5",
         "title": "Tuskroot's REAL model \u2014 likely already done, needs verification",
-        "line": 1587,
-        "meta": "model: sonnet \u00b7 tests: smoke_art (\ud83d\udd12 marker is stale per the item's own note)",
-        "done_when": "Run smoke_art and confirm the installed Tuskroot model is properly rigged/animated (not just present); if it passes, close as done instead of doing generation work. No new Meshy creature generation is legal here (spec \u00a720/D23)."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.6",
         "title": "Evolution mechanic and ceremony",
-        "line": 1621,
-        "meta": "model: opus \u00b7 tests: test_evolution_links, smoke_evolution (new)",
-        "done_when": "Mudsnout \u2192 Tuskroot evolution built with level (~15, tunable) + bond + Heartstone-type item requirement; evolved form strictly larger per D17/D19. Blocked on R4.5."
+        "gate": false,
+        "model": "opus",
+        "area": null
       },
       {
         "id": "R4.7",
         "title": "Bond and best creature",
-        "line": 1636,
-        "meta": "model: sonnet \u00b7 tests: test_bond (new) \u00b7 \u00a712",
-        "done_when": "Bond and best-creature mechanic implemented."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.8",
         "title": "Fainting and home recovery",
-        "line": 1637,
-        "meta": "model: sonnet \u00b7 tests: test_fainting (new) \u00b7 M6",
-        "done_when": "Fainting and home recovery implemented."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.9",
         "title": "Orb economy and tiers",
-        "line": 1639,
-        "meta": "model: sonnet \u00b7 tests: test_catch_math \u00b7 \u00a715",
-        "done_when": "Orb tier ladder built; improved tier is the first Rootstone (SD18) purchase."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.10",
         "title": "The release ceremony",
-        "line": 1648,
-        "meta": "model: fable \u00b7 tests: test_party, smoke_release (new)",
-        "done_when": "A real release ceremony (not a generic delete dialog) exists for the sixth-creature/five-cap moment, tied to the belt's five holders; precondition (enough creatures worth keeping) is Phase 8 content, not this item's job."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "R4.11",
         "title": "Combat animation bug",
-        "line": 1661,
-        "meta": "model: sonnet \u00b7 tests: smoke_combat",
-        "done_when": "A recorded fight logging the clip playing against body speed pinpoints why creatures read 'static posed and sliding'; re-check against R0.11 impressions first since the feel pass may already have changed it."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R4.12",
         "title": "Play gate \u2014 is repeated combat enjoyable, not merely functional?",
-        "line": 1671,
-        "meta": "\u25b6 play gate, \u00a733 criterion 2",
-        "done_when": "Owner judgment call."
+        "gate": true,
+        "model": null,
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "5",
-    "title": "the living world",
-    "line_start": 1675,
-    "open_items": [
+    "num": "5",
+    "name": "the living world",
+    "items": [
       {
         "id": "R5.2",
         "title": "Rain, fog and cloud variants",
-        "line": 1680,
-        "meta": "model: sonnet \u00b7 tests: none",
-        "done_when": "Rain, fog and cloud variants implemented."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R5.3",
         "title": "Spawn conditions",
-        "line": 1682,
-        "meta": "model: sonnet \u00b7 tests: test_spawns",
-        "done_when": "At least one nocturnal (Duskhush) and one weather-gated spawn condition per M10; spawns.json schema extended per D20; spec \u00a713's area table implemented; tests address species via the roles block, never ids."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "6",
-    "title": "riding",
-    "line_start": 1697,
-    "open_items": [
+    "num": "6",
+    "name": "riding",
+    "items": [
       {
         "id": "R6.1",
         "title": "Riding",
-        "line": 1705,
-        "meta": "model: opus \u00b7 tests: smoke_riding (new) \u00b7 M12",
-        "done_when": "Mount/dismount, generic saddle, riding stamina, and a clear advantage over running, with no species-specific saddle clutter. Worked inside Phase 8's 8d per spec \u00a73 Band 4."
+        "gate": false,
+        "model": "opus",
+        "area": null
       },
       {
         "id": "R6.2",
         "title": "Meadowhart as the rideable creature; craftable generic saddle",
-        "line": 1709,
-        "meta": "model: sonnet \u00b7 tests: test_build_catalogue",
-        "done_when": "Meadowhart is the rideable Meadows creature; saddle priced in Rootstone/Ironwood; riding sold on improving revisits of known areas, not raw speed."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R6.3",
         "title": "Play gate \u2014 does riding make exploring better?",
-        "line": 1716,
-        "meta": "\u25b6 play gate",
-        "done_when": "Owner judgment call."
+        "gate": true,
+        "model": null,
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "7",
-    "title": "the village lives, the meadow reads",
-    "line_start": 1720,
-    "open_items": [
+    "num": "7",
+    "name": "the village lives, the meadow reads",
+    "items": [
       {
         "id": "R7.3",
         "title": "Grow the authored space toward the 4\u20138 hour arc",
-        "line": 1726,
-        "meta": "model: opus \u00b7 tests: smoke_traversal \u00b7 M7, \u00a730",
-        "done_when": "Authored space grown to hold spec \u00a73's five bands, quarry, dungeon, river, mini-stronghold, upper region and seven spokes; sized only after movement/riding are confirmed fun (R0.11, R6.3), per \u00a730."
+        "gate": false,
+        "model": "opus",
+        "area": null
       },
       {
         "id": "R7.4",
         "title": "Map and minimap",
-        "line": 1741,
-        "meta": "model: sonnet \u00b7 tests: smoke_menu \u00b7 \u00a723",
-        "done_when": "Map/minimap action is bound, labelled, rebindable and actually read; reveals only explored areas/landmarks, never everything automatically."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R7.5",
         "title": "Food buffs",
-        "line": 1751,
-        "meta": "model: sonnet \u00b7 tests: test_food (new)",
-        "done_when": "Food buffs implemented \u2014 buffs only, no starvation meter, ever."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R7.6",
         "title": "Berry plot and simple fishing",
-        "line": 1754,
-        "meta": "model: sonnet \u00b7 tests: test_farming (new)",
-        "done_when": "Berry plot and simple fishing implemented, deliberately shallow per \u00a732."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R7.7",
         "title": "Player HP and armour slot architecture",
-        "line": 1757,
-        "meta": "model: sonnet \u00b7 tests: test_player_hp (new)",
-        "done_when": "Player HP and armour slot architecture implemented."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "8",
-    "title": "the Meadows chapter (spec Phases C\u2013G)",
-    "line_start": 1761,
-    "open_items": [
+    "num": "8",
+    "name": "the Meadows chapter (spec Phases C\u2013G)",
+    "items": [
       {
         "id": "R8.1",
         "title": "World trainer encounter and team combat",
-        "line": 1779,
-        "meta": "model: sonnet \u00b7 tests: smoke_trainer_battle (new)",
-        "done_when": "Trainer combat system built (trainer-owned creatures cannot be caught); substrate for 12-17 battles across 8a-8e."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SC12",
         "title": "Mira, Oskar and Tam become the three Band 1 trainers",
-        "line": 1785,
-        "meta": "model: fable \u00b7 tests: test_dialogue_runner",
-        "done_when": "The three existing village NPCs are repaletted, get extended dialogue and a battle offer; no new bodies added to the square."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SC13",
         "title": "The three Band 1 trainer battles, each with a distinct lesson",
-        "line": 1797,
-        "meta": "model: sonnet \u00b7 tests: smoke_trainer_battle",
-        "done_when": "Each of the three battles can be beaten once, sets its flag, and cannot be re-fought for XP."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SC14",
         "title": "The South Bridge, and the key that opens it",
-        "line": 1806,
-        "meta": "model: sonnet \u00b7 tests: smoke_traversal",
-        "done_when": "Bridge visible from the village, blocked without the key (from beating Oskar), open with it, no explanatory UI text."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SC15",
         "title": "Trainer battles pay out",
-        "line": 1814,
-        "meta": "model: sonnet \u00b7 tests: test_progression_state",
-        "done_when": "Beating a trainer twice pays its XP+reward only once."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SD16",
         "title": "The Old Quarry",
-        "line": 1822,
-        "meta": "model: sonnet \u00b7 tests: smoke_traversal",
-        "done_when": "Quarry reachable past the South Bridge, yields Rootstone, shows physical evidence of Team Tether activity."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SD17",
         "title": "Burrow Warrens, the required dungeon",
-        "line": 1831,
-        "meta": "model: fable \u00b7 tests: smoke_traversal, smoke_combat",
-        "done_when": "Can be entered, cleared, and cleared only once for its story reward; guardian is a strong normal species, not a legendary."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SD18",
         "title": "Rootstone, the first progression tier material",
-        "line": 1840,
-        "meta": "model: sonnet \u00b7 tests: test_recipes",
-        "done_when": "Every recipe consuming Rootstone improves something the player already owns \u2014 no new crafting tree."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SE21",
         "title": "A real river divides the deeper Meadows",
-        "line": 1852,
-        "meta": "model: fable \u00b7 tests: smoke_traversal",
-        "done_when": "River reads as a landmark from the ridge, crossable only at authored points."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SE22",
         "title": "Old Mill Crossing, seized and then restored",
-        "line": 1862,
-        "meta": "model: sonnet \u00b7 tests: smoke_traversal",
-        "done_when": "Crossing impassable before the captive's rescue (SE27), passable after, no menu in between."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SE23",
         "title": "The Tether Relay Station",
-        "line": 1869,
-        "meta": "model: fable \u00b7 tests: smoke_traversal",
-        "done_when": "First mini-stronghold can be entered, fought through, its local control equipment disabled; uses the owner-supplied Relay Apparatus board."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SE25",
         "title": "Relay trainers and the relay captain",
-        "line": 1888,
-        "meta": "model: sonnet \u00b7 tests: smoke_trainer_battle",
-        "done_when": "Two-three relay trainers plus a captain on SB8's rank palettes; captain's defeat sets the flag SE27 waits on."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SE27",
         "title": "Free the captive",
-        "line": 1895,
-        "meta": "model: sonnet \u00b7 tests: test_dialogue_runner",
-        "done_when": "Captive rescued on an existing civilian/main-character base (no new model), returns to the village, dialogue updated."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SE30",
         "title": "The reveal ladder, laid in",
-        "line": 1904,
-        "meta": "model: fable \u00b7 tests: test_dialogue_runner",
-        "done_when": "Reveal ladder (quarry conduits, relay energy routing, captive's testimony) laid in; no line before the stronghold names the legendary as the power source."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SF31",
         "title": "Ironwood, the second preparation tier",
-        "line": 1920,
-        "meta": "model: sonnet \u00b7 tests: test_recipes",
-        "done_when": "Ironwood added; nothing needed for the final stronghold requires a third new material."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SF33",
         "title": "Standing at a Rift and seeing the next region",
-        "line": 1927,
-        "meta": "model: fable \u00b7 tests: none",
-        "done_when": "A blind critic looking at an Upper-Meadows severed-spoke seam (owner-supplied Tether Energy Pylon board) says the two sides used to be joined; far side stays a view, never enterable."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SF34",
         "title": "Three regional captains, three Sigils",
-        "line": 1944,
-        "meta": "model: fable \u00b7 tests: smoke_trainer_battle",
-        "done_when": "Three captains and Sigils built; approach sealed at 2/3 Sigils, open at 3/3, count visible on SB11's tracker."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "R8.2",
         "title": "Authored stronghold route",
-        "line": 1970,
-        "meta": "model: sonnet \u00b7 tests: smoke_traversal",
-        "done_when": "Route built per spec \u00a78's five spaces, first clear 30-60 min, not a giant puzzle dungeon."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SG38",
         "title": "The stronghold trainer gauntlet",
-        "line": 1979,
-        "meta": "model: sonnet \u00b7 tests: smoke_trainer_battle",
-        "done_when": "2-4 battles across the five named spaces; a prepared team clears it inside an hour, an unprepared one does not."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R8.3",
         "title": "The Warden boss fight",
-        "line": 1986,
-        "meta": "model: fable \u00b7 tests: smoke_boss (new) \u00b7 M14",
-        "done_when": "Boss fight built; needs a real face sheet first (still painted, not modelled); dialogue reflects sincere belief, not a moustache-twirler line."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SG40",
         "title": "The reveal: the legendary is the power source",
-        "line": 1994,
-        "meta": "model: fable \u00b7 tests: test_dialogue_runner",
-        "done_when": "Reveal happens inside the stronghold and nowhere earlier; Warden warns rather than gloats."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "R8.4",
         "title": "Free the legendary; it offers to join; triggers the release ceremony if full",
-        "line": 2001,
-        "meta": "model: fable \u00b7 tests: smoke_boss",
-        "done_when": "Spec \u00a728's exact order (freed \u2192 voluntarily joins \u2192 five-creature decision if full \u2192 machinery fails) implemented."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SG44",
         "title": "The first Tether Rift collapses and the world gets bigger",
-        "line": 2006,
-        "meta": "model: fable \u00b7 tests: smoke_boss",
-        "done_when": "SF33's seam shows two visibly different horizons before/after the Warden, as a distant non-enterable view only; no second biome's terrain/spawns/species."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "SG46",
         "title": "The Meadows answers",
-        "line": 2020,
-        "meta": "model: fable \u00b7 tests: test_progression_state",
-        "done_when": "No part of the region is visually or conversationally identical to before the Warden."
+        "gate": false,
+        "model": "fable",
+        "area": null
       },
       {
         "id": "R8.5",
         "title": "The legendary's superior ride ability",
-        "line": 2028,
-        "meta": "model: sonnet \u00b7 tests: smoke_riding",
-        "done_when": "Built as the tier above Meadowhart's, not a parallel system."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R8.6",
         "title": "The larger mystery and future-biome hook",
-        "line": 2031,
-        "meta": "model: fable \u00b7 tests: test_dialogue_runner",
-        "done_when": "Hook laid in per spec \u00a723-31 using SA4's seven spokes as its physical anchor."
+        "gate": false,
+        "model": "fable",
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "8.5",
-    "title": "pacing and the chapter's own gate (spec Phase H)",
-    "line_start": 2038,
-    "open_items": [
+    "num": "8.5",
+    "name": "pacing and the chapter's own gate (spec Phase H)",
+    "items": [
       {
         "id": "SH47",
         "title": "Tune the chapter to 4\u20137 hours",
-        "line": 2040,
-        "meta": "model: sonnet \u00b7 tests: none",
-        "done_when": "A full run timed end-to-end lands inside 4-7 hours; XP curve, trainer levels, costs, travel time, spawn density tuned; dead walking removed. Can only be judged once 8a-8e exist."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "SH53",
         "title": "Play gate \u2014 the P0 fixes are actually gone on real hardware",
-        "line": 2051,
-        "meta": "\u25b6 play gate \u00b7 model: haiku",
-        "done_when": "Ten minutes of fresh Windows launch, mouse+keyboard, no cursor-capture friction through menus/name-entry/Alt-Tab; door blocked before Grandpa; no fall-off-world from spawn. On-device confirmation still owed by RB1/RB2/RB4."
+        "gate": true,
+        "model": "haiku",
+        "area": null
       },
       {
         "id": "SH54",
         "title": "Audit: nothing in the chapter assumed new creature credits",
-        "line": 2060,
-        "meta": "model: haiku \u00b7 tests: none",
-        "done_when": "Every item shipped for the chapter is confirmed to not have installed, requested or planned a new creature mesh, per spec \u00a720."
+        "gate": false,
+        "model": "haiku",
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "9",
-    "title": "polish gate (M15)",
-    "line_start": 2069,
-    "open_items": [
+    "num": "9",
+    "name": "polish gate (M15)",
+    "items": [
       {
         "id": "R9.1",
         "title": "Input feel, combat cadence, catch feel, camera",
-        "line": 2071,
-        "meta": "\u25b6 model: sonnet",
-        "done_when": "Polished and judged playable."
+        "gate": true,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R9.2",
         "title": "Controller UI readability on the Ally",
-        "line": 2072,
-        "meta": "\u25b6 model: sonnet",
-        "done_when": "Confirmed readable on hardware."
+        "gate": true,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R9.3",
         "title": "Performance on target hardware",
-        "line": 2073,
-        "meta": "\u25b6 model: sonnet",
-        "done_when": "Confirmed performant on hardware."
+        "gate": true,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "R9.5",
         "title": "The exit gate",
-        "line": 2079,
-        "meta": "\u25b6 only the owner can call it",
-        "done_when": "All twelve of GAME_DESIGN.md \u00a733 criteria met."
+        "gate": true,
+        "model": null,
+        "area": null
       }
     ],
-    "closed_count": 0,
-    "load_bearing_closed": []
+    "closed": 0
   },
   {
-    "phase_number": "found-along-the-way",
-    "title": "Found along the way \u2014 small, unscheduled",
-    "line_start": 2083,
-    "open_items": [
+    "num": "found-along-the-way",
+    "name": "Found along the way \u2014 small, unscheduled",
+    "items": [
       {
         "id": "asset-ledger-cc0-claim",
         "title": "ASSET_LEDGER.md falsely claims everything in the build is CC0 1.0",
-        "line": 2085,
-        "done_when": "Corrected wording; blocked on the owner to supply it."
+        "gate": false,
+        "model": null,
+        "area": null
       },
       {
         "id": "backpack-equip-drop-split-verbs",
         "title": "Backpack use verb has no equip/drop/split siblings",
-        "line": 2089,
-        "meta": "model: sonnet",
-        "done_when": "Equip/drop/split verbs added alongside the existing, already-working use/heal verb (tab_backpack.gd::_read_use())."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "menu-midfight-silent-refusal",
         "title": "Opening the menu mid-fight is silently refused with no explanation",
-        "line": 2100,
-        "meta": "model: haiku",
-        "done_when": "An on-screen explanation is shown instead of a silent refusal."
+        "gate": false,
+        "model": "haiku",
+        "area": null
       },
       {
         "id": "vp1-survey-gd",
         "title": "tools/survey.gd (relocated to Phase -0.5 as VP1)",
-        "line": 2115,
-        "done_when": "Status uncertain \u2014 flagged rather than assumed done. Relocated to Phase -0.5 alongside VP2, but no closure for VP1 specifically was found anywhere in the file; only VP2 (preview_creatures.gd) was confirmed fixed there."
+        "gate": false,
+        "model": null,
+        "area": null
       },
       {
         "id": "spec-sec6-optional-activities",
         "title": "Spec \u00a76 \u2014 6-10 optional activities, not forty shallow quests",
-        "line": 2105,
-        "meta": "model: sonnet",
-        "done_when": "Each of the eight named activities (Lost Pal, Broken Cart, Night Watch, The Old Champion, Deep Warren, River Nest, Team Tether patrols, Meadowhart Herd) gets a home in Phase 8's bands, promoted individually as each band is built."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       },
       {
         "id": "spec-sec14-home-stays-relevant",
         "title": "Spec \u00a714 \u2014 home must stay relevant",
-        "line": 2110,
-        "meta": "model: sonnet",
-        "done_when": "Grandpa's dialogue evolves per band; creature beds/recovery, storage/crafting, villager knowledge updates, the rescued NPC returning, and story check-ins all keep the farmhouse relevant past the opening twenty minutes."
+        "gate": false,
+        "model": "sonnet",
+        "area": null
       }
     ],
-    "closed_count": 3,
-    "load_bearing_closed": []
+    "closed": 3
   }
 ]

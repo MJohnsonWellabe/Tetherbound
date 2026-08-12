@@ -1,0 +1,711 @@
+[
+  {
+    "cat": "Story & The Meadows Chapter",
+    "blurb": "The Meadows chapter spine: named trainers, the river and relay, the stronghold, every authored story beat.",
+    "openCount": 32,
+    "shippedCount": 12,
+    "pct": 27,
+    "items": [
+      {
+        "id": "R0.11",
+        "title": "Play gate \u2014 the owner plays the NEW first day, end to end",
+        "model": null,
+        "area": null,
+        "gate": true
+      },
+      {
+        "id": "R8.1",
+        "title": "World trainer encounter and team combat",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SC12",
+        "title": "Mira, Oskar and Tam become the three Band 1 trainers",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SC13",
+        "title": "The three Band 1 trainer battles, each with a distinct lesson",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SC14",
+        "title": "The South Bridge, and the key that opens it",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SC15",
+        "title": "Trainer battles pay out",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SD16",
+        "title": "The Old Quarry",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SD17",
+        "title": "Burrow Warrens, the required dungeon",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SD18",
+        "title": "Rootstone, the first progression tier material",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SE21",
+        "title": "A real river divides the deeper Meadows",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SE22",
+        "title": "Old Mill Crossing, seized and then restored",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SE23",
+        "title": "The Tether Relay Station",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SE25",
+        "title": "Relay trainers and the relay captain",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SE27",
+        "title": "Free the captive",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SE30",
+        "title": "The reveal ladder, laid in",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SF31",
+        "title": "Ironwood, the second preparation tier",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SF33",
+        "title": "Standing at a Rift and seeing the next region",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SF34",
+        "title": "Three regional captains, three Sigils",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R8.2",
+        "title": "Authored stronghold route",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SG38",
+        "title": "The stronghold trainer gauntlet",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R8.3",
+        "title": "The Warden boss fight",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SG40",
+        "title": "The reveal: the legendary is the power source",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R8.4",
+        "title": "Free the legendary; it offers to join; triggers the release ceremony if full",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SG44",
+        "title": "The first Tether Rift collapses and the world gets bigger",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SG46",
+        "title": "The Meadows answers",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R8.5",
+        "title": "The legendary's superior ride ability",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R8.6",
+        "title": "The larger mystery and future-biome hook",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SH47",
+        "title": "Tune the chapter to 4\u20137 hours",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SH53",
+        "title": "Play gate \u2014 the P0 fixes are actually gone on real hardware",
+        "model": "haiku",
+        "area": null,
+        "gate": true
+      },
+      {
+        "id": "SH54",
+        "title": "Audit: nothing in the chapter assumed new creature credits",
+        "model": "haiku",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "spec-sec6-optional-activities",
+        "title": "Spec \u00a76 \u2014 6-10 optional activities, not forty shallow quests",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "spec-sec14-home-stays-relevant",
+        "title": "Spec \u00a714 \u2014 home must stay relevant",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      }
+    ]
+  },
+  {
+    "cat": "Terrain & World",
+    "blurb": "The land itself: vegetation, paths, water, lighting, the world's physical edge.",
+    "openCount": 6,
+    "shippedCount": 26,
+    "pct": 81,
+    "items": [
+      {
+        "id": "EV2-landmark-ceiling",
+        "title": "Hero trees don't read as landmark specimens even at the best 3-of-5 subset",
+        "model": "sonnet",
+        "area": "vegetation",
+        "gate": false
+      },
+      {
+        "id": "EV5",
+        "title": "Water",
+        "model": "fable",
+        "area": "terrain",
+        "gate": false
+      },
+      {
+        "id": "EV10",
+        "title": "Cohesion pass",
+        "model": "fable",
+        "area": "visual",
+        "gate": true
+      },
+      {
+        "id": "SA4",
+        "title": "Seven outward spokes, each believably severed",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R5.2",
+        "title": "Rain, fog and cloud variants",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R5.3",
+        "title": "Spawn conditions",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      }
+    ]
+  },
+  {
+    "cat": "Village & Settlement",
+    "blurb": "The starting settlement as a place: buildings, props, the site plan.",
+    "openCount": 4,
+    "shippedCount": 1,
+    "pct": 20,
+    "items": [
+      {
+        "id": "R6-village-notification-freed-instance",
+        "title": "SceneTree teardown throws a real freed-instance error in building_prefabs.gd",
+        "model": "sonnet",
+        "area": "village",
+        "gate": false
+      },
+      {
+        "id": "EV6-remainder",
+        "title": "The building types the kit rebuild deliberately left",
+        "model": "fable",
+        "area": "village",
+        "gate": false
+      },
+      {
+        "id": "EV7-remainder",
+        "title": "The three prop clusters that need geography built first",
+        "model": "sonnet",
+        "area": "village",
+        "gate": false
+      },
+      {
+        "id": "R7.3",
+        "title": "Grow the authored space toward the 4\u20138 hour arc",
+        "model": "opus",
+        "area": null,
+        "gate": false
+      }
+    ]
+  },
+  {
+    "cat": "Characters & Cast",
+    "blurb": "The trainer, Grandpa, the Warden, and every named NPC's identity.",
+    "openCount": 0,
+    "shippedCount": 6,
+    "pct": 100,
+    "items": []
+  },
+  {
+    "cat": "Creatures & Roster",
+    "blurb": "The seventeen wild pals and starters: models, palettes, production.",
+    "openCount": 1,
+    "shippedCount": 20,
+    "pct": 95,
+    "items": [
+      {
+        "id": "R3.0",
+        "title": "Re-process the three humanoid GLBs through the fixed pipeline",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      }
+    ]
+  },
+  {
+    "cat": "Combat & Progression",
+    "blurb": "Levels, moves, bond, evolution, the team itself.",
+    "openCount": 13,
+    "shippedCount": 0,
+    "pct": 0,
+    "items": [
+      {
+        "id": "SB9",
+        "title": "The smallest progression-state system that survives the chapter",
+        "model": "opus",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.1",
+        "title": "Levels and XP",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.2",
+        "title": "Core stats and per-instance individuality",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.3",
+        "title": "Moves",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.4",
+        "title": "TMs and teaching moves",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.5",
+        "title": "Tuskroot's REAL model \u2014 likely already done, needs verification",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.6",
+        "title": "Evolution mechanic and ceremony",
+        "model": "opus",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.7",
+        "title": "Bond and best creature",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.8",
+        "title": "Fainting and home recovery",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.9",
+        "title": "Orb economy and tiers",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.10",
+        "title": "The release ceremony",
+        "model": "fable",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.11",
+        "title": "Combat animation bug",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R4.12",
+        "title": "Play gate \u2014 is repeated combat enjoyable, not merely functional?",
+        "model": null,
+        "area": null,
+        "gate": true
+      }
+    ]
+  },
+  {
+    "cat": "Building & Crafting",
+    "blurb": "Tools, structures, orbs and potions \u2014 what the player makes.",
+    "openCount": 7,
+    "shippedCount": 5,
+    "pct": 42,
+    "items": [
+      {
+        "id": "R2.3",
+        "title": "Real tree/rock harvesting on the vegetation",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R2.7",
+        "title": "Workbench and storage container",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R2.8",
+        "title": "Creature bed",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R2.9",
+        "title": "Play gate \u2014 does building a small home feel useful and enjoyable?",
+        "model": null,
+        "area": null,
+        "gate": true
+      },
+      {
+        "id": "R3.2",
+        "title": "Death satchels persist across save/load",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R7.5",
+        "title": "Food buffs",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R7.6",
+        "title": "Berry plot and simple fishing",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      }
+    ]
+  },
+  {
+    "cat": "UI & HUD",
+    "blurb": "The HUD, menus, glyphs, the backpack and build panels.",
+    "openCount": 6,
+    "shippedCount": 4,
+    "pct": 40,
+    "items": [
+      {
+        "id": "EV9",
+        "title": "Rebuild the HUD",
+        "model": "opus",
+        "area": "ui",
+        "gate": false
+      },
+      {
+        "id": "HD1",
+        "title": "Device-aware input glyphs",
+        "model": "sonnet",
+        "area": "ui",
+        "gate": false
+      },
+      {
+        "id": "HD2",
+        "title": "A real quick-access item hotbar",
+        "model": "sonnet",
+        "area": "ui",
+        "gate": false
+      },
+      {
+        "id": "R7.4",
+        "title": "Map and minimap",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "backpack-equip-drop-split-verbs",
+        "title": "Backpack use verb has no equip/drop/split siblings",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "menu-midfight-silent-refusal",
+        "title": "Opening the menu mid-fight is silently refused with no explanation",
+        "model": "haiku",
+        "area": null,
+        "gate": false
+      }
+    ]
+  },
+  {
+    "cat": "Traversal & Riding",
+    "blurb": "Movement across the world, and riding once it exists.",
+    "openCount": 3,
+    "shippedCount": 0,
+    "pct": 0,
+    "items": [
+      {
+        "id": "R6.1",
+        "title": "Riding",
+        "model": "opus",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R6.2",
+        "title": "Meadowhart as the rideable creature; craftable generic saddle",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R6.3",
+        "title": "Play gate \u2014 does riding make exploring better?",
+        "model": null,
+        "area": null,
+        "gate": true
+      }
+    ]
+  },
+  {
+    "cat": "Systems & Persistence",
+    "blurb": "Save/load, quest tracking, the state that survives a session.",
+    "openCount": 5,
+    "shippedCount": 0,
+    "pct": 0,
+    "items": [
+      {
+        "id": "R3.1",
+        "title": "Save and load",
+        "model": "opus",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R3.3",
+        "title": "Player death and respawn",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SB10",
+        "title": "Physical keys, gears and Sigils that open real things",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "SB11",
+        "title": "One tracked objective, and a two-list quest log",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R7.7",
+        "title": "Player HP and armour slot architecture",
+        "model": "sonnet",
+        "area": null,
+        "gate": false
+      }
+    ]
+  },
+  {
+    "cat": "Polish & Performance",
+    "blurb": "Feel, framerate, controller readability \u2014 the whole-build passes.",
+    "openCount": 5,
+    "shippedCount": 7,
+    "pct": 58,
+    "items": [
+      {
+        "id": "R9.4-remainder-9-combat",
+        "title": "The fight itself doesn't read as an event yet",
+        "model": "sonnet",
+        "area": "combat",
+        "gate": false
+      },
+      {
+        "id": "R9.1",
+        "title": "Input feel, combat cadence, catch feel, camera",
+        "model": "sonnet",
+        "area": null,
+        "gate": true
+      },
+      {
+        "id": "R9.2",
+        "title": "Controller UI readability on the Ally",
+        "model": "sonnet",
+        "area": null,
+        "gate": true
+      },
+      {
+        "id": "R9.3",
+        "title": "Performance on target hardware",
+        "model": "sonnet",
+        "area": null,
+        "gate": true
+      },
+      {
+        "id": "R9.5",
+        "title": "The exit gate",
+        "model": null,
+        "area": null,
+        "gate": true
+      }
+    ]
+  },
+  {
+    "cat": "Pipeline & Tooling",
+    "blurb": "Not a player-facing feature \u2014 the loop's own infrastructure and bugfixes.",
+    "openCount": 4,
+    "shippedCount": 16,
+    "pct": 80,
+    "items": [
+      {
+        "id": "R1.1",
+        "title": "Rename `pal` \u2192 `creature` everywhere",
+        "model": "haiku",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "R1.2",
+        "title": "Vocabulary sweep of the handoff and decision index",
+        "model": "haiku",
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "asset-ledger-cc0-claim",
+        "title": "ASSET_LEDGER.md falsely claims everything in the build is CC0 1.0",
+        "model": null,
+        "area": null,
+        "gate": false
+      },
+      {
+        "id": "vp1-survey-gd",
+        "title": "tools/survey.gd (relocated to Phase -0.5 as VP1)",
+        "model": null,
+        "area": null,
+        "gate": false
+      }
+    ]
+  }
+]
