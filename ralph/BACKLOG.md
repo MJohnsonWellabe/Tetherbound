@@ -267,45 +267,63 @@ four-way wedge there, not a per-layer artefact. Confirmed by two independent
 blind critics; the second called it "the exception... doesn't show the hedge
 pattern."
 
-### EV3-remainder-3 — grass/drygrass tuft banding along path edges, a deeper cause than `grandpas-house-route`'s original diagnosis
+**`EV3-remainder-3`'s grass/drygrass mechanism fix shipped — see `DONE.md`.**
+Confirmed against real placement data both before AND after the fix (not
+just a rendered PNG): grandpas-house-route and the-rise-route's remaining
+grass/drygrass clump centres near a path dropped from 2.35-4.26m (three
+offending clumps found) to 9.46-11.16m (nearest survivor) after `EV3-
+remainder-3`'s own `path_avoid_radius` shipped — the grass/drygrass half of
+the mechanism genuinely works and is verified, not asserted. **Did not
+close the item**: a third blind critic on the fixed state still named the
+same hedge pattern on both frames. Root cause turned out to be different
+from what either this entry or `EV3-remainder-2` diagnosed — see
+`EV3-remainder-4` below for what a fourth diagnostic pass actually found
+once grass/drygrass stopped being the dominant signal.
+
+### EV3-remainder-4 — the remaining path-edge hedge is flowers' OWN path_bias, not grass/drygrass
 `model: opus` · `tests: smoke_art` · `area: vegetation`
-`EV3-remainder-2` set out to fix `grandpas-house-route.png`'s flowers, which
-an earlier round read as "thin uniform scatter... no patch pushing close to
-the path." Raising flowers' `path_bias` (0.35 → 0.5) was tried and reverted —
-a fresh blind critic called the result "a hedge planted along a driveway,"
-and a new instance appeared on `the-rise-route.png` that round 1 had already
-resolved. More clumps anchoring the same corridor raised the *repetition*,
-not just the density — the wrong lever, so it was reverted rather than
-shipped.
+`EV3-remainder-3` fixed grass/drygrass clumps landing too close to a path by
+chance (verified against real placement data) and a third blind critic
+still named the same hedge pattern on the same two frames anyway. Before
+guessing again, dumped every layer's real placement count within 5m of a
+path in each frame's actual camera region (not a guessed bounding box —
+the exact eye/target midpoint `tools/capture_paths.gd` uses):
 
-**A second, independent blind critic on the reverted state still named the
-same hedge pattern on both frames** — with flowers' `path_bias` back at its
-original 0.35, unchanged from before this item started. That rules out
-`path_bias` as the cause entirely: the critic was explicit that the tufts
-causing the banding are grass/drygrass, not flowers ("the flower patch on
-the left is looser and reads better — it's the tuft placement specifically
-that's the problem"), and neither `grass` nor `drygrass` has ever used
-`path_bias` or `path_bias_jitter`. So this is a pre-existing property of
-unbiased clump placement near a path, not something either `EV3-remainder`
-or `EV3-remainder-2` introduced or can fix with the levers they used.
+- **`the-rise-route.png`**: `flowers` has **74 of 140** instances in-frame
+  within 5m of a path — by far the largest concentration of any layer
+  (`grass` 17/180, `drygrass` 16/62). This is `flowers`' own `path_bias`
+  (0.35, from `EV3-remainder` round 1) doing exactly what it was built to
+  do: one biased clump snaps near the path and contributes all ~78 of its
+  own instances at once. It was never the cause of the ORIGINAL "row-
+  planted"/"hedge" complaints (those were genuinely grass/drygrass, now
+  fixed), but with grass/drygrass calmed down, `flowers`' own intentional
+  path-adjacency is now the dominant thing a critic sees near the path on
+  this frame — and reads the same way an unwanted hedge would, because at
+  78 instances per clump it is just as regular.
+- **`grandpas-house-route.png`**: `flowers` is NOT the cause here (1 of 36
+  instances near a path) — `drygrass` still has 10 of 73 within 5m even
+  after `path_avoid_radius`, likely from clumps landing just past the
+  7.0m avoidance radius but still visually close given `clump_radius` 12.0,
+  or from `strays` (independent of clump placement, `path_avoid_radius`
+  does not and should not touch them). Not confirmed which.
 
-**Working theory, not yet confirmed against placement data the way
-`EV3-remainder-2`'s own fix was:** a clump whose centre lands within roughly
-its own `clump_radius` of a path has a large fraction of its disc rejected
-by the path exclusion (`scatter_rules.gd::_consider`, `path_factor() > 0.3`,
-now jittered by `path_edge_jitter` but still centred on the same isoline) —
-the survivors are a crescent hugging the near edge of what's left. Where
-several such clumps happen to string along one straight stretch, their
-crescents chain into a visible band. `path_edge_jitter` (this item's own
-sibling fix) ravels the boundary's SHAPE but does nothing about clump
-CENTRES clustering near a path by chance — a different mechanism than the
-one it addresses. Whoever takes this should confirm with the same
-screen-projection technique `EV3-remainder-2` used (project real placement
-data into `capture_paths.gd`'s own camera) before picking a fix, rather than
-re-guess from the rendered PNG alone.
+This is now two different, precisely identified sub-problems rather than
+one vague "tuft banding" — treat separately rather than reaching for one
+lever again:
+
+1. Whether `flowers`' `path_bias` (an intentional, working mechanism) is
+   too visually strong at 78 instances per biased clump — a `per_clump`
+   reduction specifically for path-biased draws, or accepting this as
+   flowers doing its job and the actual bar being wrong, is an owner-
+   facing question worth asking rather than another silent scatter tweak:
+   `path_bias` was owner-adjacent design intent (EV3-remainder), not a bug.
+2. `grandpas-house-route`'s residual drygrass needs the strays-vs-clump
+   question answered directly (instrument `_consider`'s stray loop the same
+   way `EV3-remainder-3` instrumented `_clump_centre`, rather than guessing
+   whether `path_avoid_radius`'s 7.0m is simply too small).
 
 Done when: a blind critic stops naming `grandpas-house-route.png` or
-`the-rise-route.png` for a hedge/row/banded tuft pattern along the path.
+`the-rise-route.png` for a hedge/row/banded pattern along the path.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
 tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four

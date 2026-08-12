@@ -30,6 +30,66 @@ This unblocks `EV6` (settlement rebuild) and `EV7` (prop clusters), both
 `EV2-landmark-ceiling`, whose own "done when" names the fuller Stylized
 Nature MegaKit search this now makes possible.
 
+## EV3-remainder-3 — grass/drygrass clumps stop landing close enough to a path for their own crescent to read as a hedge
+`tests: smoke_art`, green locally. Two new unit tests in
+`test_scatter_rules.gd` (`path_avoid_radius` zero-is-noop, and a
+statistical check that avoidance measurably lowers the near-path landing
+rate across 10 seeds), 21/21 green in a local scratch runner. One full
+local blind-judge round (`.claude/skills/visual-judge`, a genuinely blind
+sub-agent).
+
+**Root cause, confirmed against real placement data both before AND after
+the fix — not asserted from a rendered PNG either time.** Two diagnostics
+were tried:
+
+1. Replaying `scatter_rules.gd`'s RNG stream externally to reconstruct
+   clump centres, to avoid touching the real function. Abandoned: `
+   _consider()`'s per-instance rejection consumes a variable number of RNG
+   draws depending on whether each candidate survives, so an external
+   replay drifts off the real sequence after the very first clump.
+2. What actually worked: temporarily instrumented `placements_for()`
+   itself (one added, env-var-gated print line, reverted before this
+   commit — never shipped) to log exact clump centres as the real code
+   computes them. Zero guessing. Result: `grandpas-house-route.png` and
+   `the-rise-route.png`'s grass/drygrass each had exactly ONE OR TWO clump
+   centres sitting 2.35-4.26m from a path, not several clumps chaining
+   together the way `EV3-remainder-2`'s own closing note theorised. With
+   `clump_radius` at 10-12m — far wider than the ~3-4m path exclusion band
+   — a SINGLE such clump already has enough surviving crescent to read as
+   a hedge over real distance. The mechanism was simpler than the theory,
+   and the theory's proposed cause (`path_edge_jitter`, already shipped)
+   was never going to fix it, because it ravels the exclusion boundary's
+   SHAPE and does nothing about clump CENTRES landing close by chance.
+
+**Fix:** new `path_avoid_radius` (`scatter_rules.gd::_clump_centre`,
+opt-in, defaults to 0.0 so every other layer is unaffected). Resamples an
+UNBIASED clump draw, up to 4 attempts, if it lands within the radius of a
+path — never touches a `path_bias`-snapped clump, a separate, intentional
+mechanism `flowers` uses on purpose. Set `grass` to 6.0 and `drygrass` to
+7.0 in `vegetation.json`, clearing the three offending distances found
+with margin while staying under each layer's own `clump_radius`.
+Re-instrumented the same way post-fix to confirm directly, not just hope:
+the nearest surviving grass/drygrass clump centre in either frame's region
+moved from 2.35-4.26m to 9.46-11.16m.
+
+**Did not close the item.** A third blind critic on the fixed render still
+named the same hedge pattern on both frames. This is not the fix failing —
+a follow-up placement-count dump (by layer, within 5m of a path, in each
+frame's exact camera region) found the grass/drygrass mechanism genuinely
+fixed (their near-path share dropped as expected) but surfaced a real,
+previously-unseen cause: on `the-rise-route.png`, `flowers`' own `path_bias`
+(0.35, `EV3-remainder` round 1, an intentional mechanism) puts 74 of 140
+in-frame flower instances within 5m of the path — by far the largest
+concentration of any layer, at ~78 instances per biased clump. It was
+never the cause of the original complaints; it only became the dominant
+visible signal once grass/drygrass calmed down. `grandpas-house-route.png`
+still has 10 of 73 drygrass instances within 5m even after avoidance,
+likely `strays` (untouched by this fix, which only affects clump centres)
+or clumps landing just past the 7.0m radius. Opened `EV3-remainder-4` with
+both findings precisely separated, so the next pass debugs two specific,
+already-narrowed sub-problems instead of re-diagnosing "tuft banding"
+from scratch a third time.
+
 ## SA8 — Grandpa's opening dialogue: the Team Tether urgency beat
 `031f571`. `tests: smoke_opening` (green, run locally headless).
 
