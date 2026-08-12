@@ -3,6 +3,69 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## RENDER-PERF-DIAG — Root-caused the "100+ minute" capture-tool wall: `--headless` silently breaks off-screen rendering
+`tests: none` (tooling/diagnostic, no gameplay code touched)
+
+Two independent firings had each burned significant time against a visual
+capture tool with zero frames produced and no clear explanation:
+`EV4-textures-lighting-remainder` (`tools/capture_paths.gd`, "100+ minutes,
+CPU pinned near 100%, not hung") and, in parallel this same session,
+`R9.4-remainder-6` (`tools/survey_combat.gd`). This entry is the first
+finding — see `R9.4-remainder-6`'s own `DONE.md` entry above for the second,
+independent, complementary one.
+
+**Root cause: `--headless` silently swaps in Godot's no-op "Dummy" rendering
+driver, regardless of a `--rendering-driver` flag also being passed.**
+Built `tools/diag_scene_perf.gd` to time each phase of the capture path
+separately (scene load, instantiate, add_child, settle physics frames,
+camera setup, pose frames, `frame_post_draw`, `get_texture()`/`get_image()`,
+`save_png()`) rather than waiting open-ended again. First run, with
+`--headless` added (a natural mistake — it matches the invocation used to
+build the Godot import cache, which every capture tool's own header
+explicitly does NOT use): load/instantiate/260 physics frames completed in
+9.3s, but `await RenderingServer.frame_post_draw` never resolved — killed at
+a 280s hard timeout with zero further output, reproducing the exact
+documented symptom. Skipping that await instead of waiting on it confirmed
+why: `get_texture().get_image()` failed immediately with `Parameter "t" is
+null` from `servers/rendering/dummy/storage/texture_storage.h` — the
+renderer genuinely never rendered anything. `frame_post_draw` is tied to a
+real render pass completing, which cannot happen under Dummy, so the await
+hangs forever; the main loop spinning through frame after frame while stuck
+there is consistent with "CPU pinned near 100%, not hung" being the correct
+observation, just the wrong renderer underneath it.
+
+**The fix is simply following the invocation every capture tool's own
+header already documents — no `--headless`.** `xvfb-run` supplies a virtual
+X display so `--rendering-driver opengl3` gets a real (if slow,
+llvmpipe-software) context. Re-ran the same diagnostic without `--headless`:
+real OpenGL/llvmpipe context confirmed in the log, real ~800ms-1.2s-per-frame
+software rasterization cost measured directly (matching
+`R9.4-remainder-6`'s independent ~1.16s/frame finding for a different
+capture tool against the same scene) — genuine but nowhere near "100+
+minutes" for a tool with `capture_paths.gd`'s frame budget. Confirmed
+end-to-end: `tools/capture_paths.gd`, run correctly, produced all four real
+PNGs (`square-convergence.png`, `grandpas-house-route.png`,
+`the-rise-route.png`, `edge-detail.png`) in **4m34s**.
+
+**Relationship to `R9.4-remainder-6`/`R9.4-remainder-9`/`LP7`:** complementary
+findings, not competing ones. `R9.4-remainder-6` correctly found genuine
+per-frame render cost is real and significant (~1.16s/frame) and that
+`survey_combat.gd`'s much larger frame budget (an unbounded `_approach()`
+phase, multiple wait loops) can plausibly reach "comfortably over an hour"
+on that cost alone — no `--headless` mistake needed to explain that one.
+This entry's finding is specific to tools with `capture_paths.gd`'s much
+smaller, bounded frame budget, where genuine per-frame cost alone cannot
+explain a 100+ minute failure (the real run took 4m34s) — for those, the
+`--headless` mechanism is the dominant explanation. Both are real; a future
+capture attempt should budget for genuine llvmpipe slowness AND avoid
+`--headless`.
+
+**`tools/diag_scene_perf.gd` kept as a reusable diagnostic**, not deleted
+after use — its own header documents the trap plainly so this doesn't get
+rediscovered a third time. Corrected `EV4-textures-lighting-remainder`'s own
+entry in `BACKLOG.md` with this finding; that item's actual blind-judge work
+is still open, only the render-performance blocker is cleared.
+
 ## R9.4-remainder-6 — Root-caused why `survey_combat.sh` never completed
 `tests: none` (item's own field). `b81f2da` (rebased forward as main moved;
 final SHA depends on `ralph-merge.yml`'s rebase).

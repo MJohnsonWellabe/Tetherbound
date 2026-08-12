@@ -419,25 +419,25 @@ verdict changes with fresh eyes. Done when: a blind critic given
 shadow, or explicitly agrees it reads as motivated (traces it to the Barn /
 the Rise itself without being told).
 
-**Attempted 2026-08-12, no progress to report — an environment finding, not
-a design one.** `tools/capture_paths.gd` against the live `meadows_playground`
-scene (23,762 scattered props) did not complete a single one of its four
-viewpoints inside 100+ minutes in this session's container, confirmed
-actively computing the whole time (CPU pinned near 100%, no swap, no stalled
-syscall) rather than hung. A scratch, deliberately cheaper variant (2
-viewpoints instead of 4, `SETTLE_FRAMES` 240→30, `POSE_FRAMES` 4→2, never
-committed) fared no better — 12+ minutes with zero frames and climbing at the
-same rate, which says the per-frame software-rasterization cost dominates,
-not the settle-frame count. `top -H` on the running process showed one
-thread pinned near 100% and the four `WorkerThread`s idle, so this isn't
-using the box's other cores either. Two background attempts were also killed
-outright by this session's worker process restarting mid-render, independent
-of the slowness itself. Whoever picks this up next: check whether this
-container's render performance for the full playground scene is typical
-before budgeting time against the documented "20-30min" precedent (that
-number came from a different capture tool/session) — if it reproduces, that
-is worth its own `area: loop` backlog entry, since it blocks every
-visual-affecting task in Phase -0.6 onward, not just this one.
+**Root-caused 2026-08-12 by `RENDER-PERF-DIAG` (see `DONE.md`) — the earlier
+"100+ minutes, no progress" attempt above was not measuring a real render
+wall.** `tools/capture_paths.gd`, run with its own documented invocation
+(no `--headless`), produced all four real PNGs in **4m34s**. The prior
+attempt's mistake was adding `--headless`, which silently swaps in Godot's
+no-op "Dummy" rendering driver regardless of `--rendering-driver` and makes
+`await RenderingServer.frame_post_draw` hang forever on a signal that
+structurally cannot fire — the main loop spins at high frequency the whole
+time it's stuck there, which is consistent with the "CPU pinned near 100%,
+not hung" symptom this entry originally recorded. `tools/diag_scene_perf.gd`
+now exists specifically to re-diagnose this class of problem in minutes
+instead of another open-ended wait; its own header has the full mechanism.
+Real frames now sit ready for the actual blind-judge pass this item still
+needs (`square-convergence.png`, `the-rise-route.png`) — that pass has not
+happened yet, only the render-performance blocker is cleared. Whoever picks
+this up next: run `xvfb-run -a -s "-screen 0 1280x720x24" godot --path .
+--rendering-driver opengl3 --resolution 1280x720 --script
+tools/capture_paths.gd` (no `--headless`), then the real `visual-judge`
+blind pass this entry's own "done when" asks for.
 
 **`EV4-hillside-seam` (blotchy hillside slope material) rounds 1-4 shipped —
 see `DONE.md`.** Rock went from mathematically unreachable (round 2's wider
