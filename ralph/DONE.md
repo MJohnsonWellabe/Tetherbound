@@ -3,6 +3,33 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV1-remainder — Bookkeeping only: the two Quaternius MegaKits were already staged and ledgered
+`tests: none` (EV1-remainder's own field)
+
+**No code or asset work this ship — the item's own "done when" was already
+met and nobody had recorded it.** `BLOCKED.md`'s "RESOLVED — the two
+Quaternius MegaKits are staged" entry says the owner supplied both zips
+directly on 2026-08-11 via Google Drive, clearing the itch.io claim-flow
+block this item was originally opened for (see `EV1`'s own `DONE.md` entry
+above for that block's full diagnosis). Verified directly rather than just
+trusting the note: `assets_raw/vendor/quaternius_medieval-village-megakit/`
+and `assets_raw/vendor/quaternius_fantasy-props-megakit/` both exist on
+disk, and `docs/ASSET_LEDGER.md` already carries both rows (glTF export
+only, CC0 1.0, "Staged raw, clearing `EV1-remainder`'s itch.io block").
+
+**What was actually stale: `BACKLOG.md`'s own `EV1-remainder` entry**, which
+still read as itch.io-blocked with the full unblock-path writeup, six hours
+after the block cleared. A prior lane (`ralph-lane-C`, claiming `EV7`) had
+already spotted this same gap and said it would fix it as part of that
+ship, but the fix never actually landed in `BACKLOG.md` — this closes it
+out properly, folded into a single-line shipped note pointing here instead
+of the stale multi-paragraph itch.io writeup.
+
+This unblocks `EV6` (settlement rebuild) and `EV7` (prop clusters), both
+`area: village` and already in progress on other lanes as of this ship, and
+`EV2-landmark-ceiling`, whose own "done when" names the fuller Stylized
+Nature MegaKit search this now makes possible.
+
 ## SA8 — Grandpa's opening dialogue: the Team Tether urgency beat
 `031f571`. `tests: smoke_opening` (green, run locally headless).
 
