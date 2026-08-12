@@ -255,29 +255,48 @@ owned by concurrent lanes: `EV4-textures-lighting`'s shadow artefact,
 `EV4-textures-remainder`'s decal-like path texture). A narrower remainder is
 opened below for what a future pass should try next.
 
-### EV3-remainder — Layered-band placement and the flowers-along-a-path finding
+**`EV3-remainder` (round 1 of 2, the flowers-along-a-path half) shipped a real
+but partial improvement — see `DONE.md`.** `path_bias` (0.35) plus a new
+`path_bias_jitter` (4.0, so biased clump centres stop landing exactly
+collinear on the centreline) genuinely improved one of three judged frames
+(`the-rise-route.png`, called "a real step toward it" by a second blind
+critic) with no regression on the other two. Did not reach the done-when —
+`square-convergence.png` still shows a visibly row-planted flower patch and
+`grandpas-house-route.png` is still under-clustered. Stopped after two rounds
+rather than continuing indefinitely (owner checked in mid-session on the
+combination of a long infra-blocked wait and slow iteration; conventions.md's
+own budget guard applies here too). A narrower remainder is opened below.
+**The elevation/landmark-distance placement-bias half was not attempted this
+round either** — still open, still needs new mechanisms bible §7C names, and
+`EV5` (water) still has to exist before "distance to water" means anything.
+
+### EV3-remainder-2 — square-convergence's row-planted flowers, and grandpas-house-route's under-clustering
 `model: opus` · `tests: smoke_art` · `area: vegetation`
-What `EV3`'s first slice did NOT do, so the next pass does not re-diagnose it:
-**elevation and landmark-distance placement biases** (bible §7C names both;
-only `ridge_bias`, pre-existing, and the new `path_bias` exist) are unbuilt —
-there is no "cluster near a landmark" or "cluster near water" lever yet, only
-"cluster near a ridge" and "cluster near a path." `EV5` (water) has to exist
-before "distance to water" means anything. Also open: the same round's blind
-critic named `flowers` specifically — "form two almost perfectly even strips
-flanking the path... reads as a scatter-tool default" in
-`grandpas-house-route.png`. Tried the same `clump_radius` tightening that
-worked for `grass`/`drygrass` (9.0→6.0) and reverted it after re-rendering:
-that lever reads as generator output because at 9.0 a clump's spread happens
-to reach the path from beside it; at 6.0 the SAME clump centres (unchanged —
-`clump_radius` doesn't move them) simply stop reaching the path at all in this
-stretch, trading "uniform strip" for "bald ground beside the path" — arguably
-a worse, differently-named defect from the same critique. **Not shipped**,
-reverted before commit, no trace in the diff. A `path_bias` on `flowers`
-(same mechanism `path_stones` now uses) is the more promising untried lever —
-it would put flower clumps where a path-adjacent garden bed actually forms
-rather than changing how tightly an already-randomly-placed clump packs — but
-needs its own render-and-critique pass, not a guess. Done when: a blind
-critic stops naming path-flanking vegetation as evenly spaced.
+What round 1 of `EV3-remainder` did NOT fix, so the next pass does not
+re-diagnose it. Two distinct, frame-specific findings from the round-2 blind
+critique, not the same defect twice:
+- **`square-convergence.png`**: the flower patch left of the well sits in
+  "visible parallel diagonal rows... reads as a planted crop field," the
+  single clearest "generator, not clustering" tell across both rounds.
+  `path_bias_jitter` did not touch this — that patch is likely a `strays`-
+  or unbiased-clump-heavy area near a clearing boundary, not one of the
+  path-biased clumps at all, so whatever produces the row pattern here is a
+  different mechanism than the one `path_bias`/`path_bias_jitter` address.
+  Worth checking directly (render just this clump in isolation) before
+  guessing at a fix.
+- **`grandpas-house-route.png`**: still reads as "thin uniform scatter," not
+  clusters — single plants or pairs at fairly regular intervals, no size
+  variation, no patch pushing close to the path next to one further back.
+  `the-rise-route.png` (same layer, same config, different local terrain)
+  reads as "a real step toward it" in the same round of critique, so the
+  lever likely already works when clumps land somewhere with more open
+  ground to work with; this frame's stretch of path may simply have drawn
+  fewer/smaller path-biased clumps by chance of the seed, or its local
+  footprint/clearing exclusions are cutting more of what would otherwise
+  cluster there.
+
+Done when: a blind critic stops naming either frame specifically for
+row-planted or under-clustered path vegetation.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
 tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four

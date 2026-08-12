@@ -3,6 +3,74 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV3-remainder (round 1 of 2) — flowers gain path_bias and a jitter to break up the collinear "hedge"
+`334fafc`. `tests: smoke_art` (green). Also extended `test_scatter_rules.gd` for the new
+`path_bias_jitter` mechanism (backward-compat no-op test, plus a test that
+jitter actually moves clumps off the exact centreline), 31/31 green locally.
+Visual-affecting: two local blind `.claude/skills/visual-judge` rounds ran
+(see below) — no push happened between them, per conventions.md.
+
+**What shipped:**
+
+1. **`flowers` gets `path_bias: 0.35`.** Round 1 of this item's own predecessor
+   (`EV3`) tried tightening `flowers`' `clump_radius` the same way that worked
+   for `grass`/`drygrass` and made things worse (reverted, documented in that
+   entry) — the right lever is WHERE a clump lands, not how tightly it packs.
+   `path_bias` snaps roughly a third of flower clumps toward the road, same
+   mechanism `path_stones` already validated; the other two-thirds stay
+   unbiased, so flowers still read as a general meadow accent, not the road's
+   own material.
+
+2. **New `path_bias_jitter` (`scatter_rules.gd`), set to `4.0` for `flowers`.**
+   A first render with `path_bias` alone showed real improvement in one
+   respect (flowers now visibly gather near paths, e.g. a garden-bed-like
+   cluster at Grandpa's-house door) but a fresh blind critic named a new,
+   more specific problem: path-biased clumps all snap to the EXACT nearest
+   point on the route, so several strung along one straight stretch are
+   themselves collinear — "a hedge planted with a ruler... same interval,
+   same offset distance from the path edge." `path_bias_jitter` displaces the
+   snapped centre by up to N metres in a random direction before the clump's
+   own `clump_radius` scatters instances around it, so clump centres land at
+   genuinely different distances from the path. `path_stones` is untouched —
+   it wants the exact snap (stones ARE the path) and the key defaults to
+   `0.0`.
+
+**Two local blind-judge rounds, `tools/capture_paths.gd`'s three wide path
+frames, entirely local, one push:**
+
+- Round 1 (path_bias only): critic said the flower clustering "still reads as
+  generator output... same species, same clump size, same interval, same
+  offset distance from the path edge" — worst in `the-rise-route.png`.
+  Flagged as the priority finding, judged a real, specific, actionable defect
+  (not a re-statement of `EV3`'s own earlier "even strips" finding, which was
+  about `grandpas-house-route.png` specifically and had actually improved).
+- Round 2 (path_bias + jitter): a **second, independent** blind critic found
+  genuine, measurable movement — `the-rise-route.png` now has "real
+  variety... fern clumps of different sizes, flower patches of different
+  sizes, a bit of bare grass between clusters" and was called "a real step
+  toward it... should be the reference for the other two [frames]." No
+  regression on the other two frames (neither was called out as worse than
+  round 1). Two things did NOT resolve: `square-convergence.png`'s flower
+  patch still reads as row-planted, and `grandpas-house-route.png` is still
+  under-clustered rather than over-uniform — both carried forward as
+  `EV3-remainder-2`, since the second critique's own diagnosis makes clear
+  they are not obviously the same mechanism as the jitter fix (see that
+  entry for the detail worth reading before guessing at round 3).
+
+**Stopped after two rounds, not because the stopping rule's own convergence
+test was met — it wasn't; round 2 showed real movement — but because the
+owner checked in mid-session** on the combination of a long infra-blocked
+wait (`EV3` itself; see its own entry) and this item's slower, iterative
+render-critique-render pace, and asked directly whether progress was being
+made. Conventions.md's own budget guard ("if you are running low on context
+or time, stop at the current round, record the state") applies to a live
+"is this worth continuing" check the same way it applies to a context limit.
+Shipping the genuine, tested, net-positive improvement now rather than
+opening a third render round un-asked-for is the honest reading of that
+signal. `EV3-remainder-2` carries the rest forward with enough diagnostic
+detail that a future pass does not have to re-render blind to find out where
+the two remaining problems are.
+
 ## LP5 — A conflicting rebase in `ralph-sweep.yml`'s loop stranded every branch behind it, not just itself
 Found live, not from the backlog: while waiting for `SA2-flake` to ship, its
 green branch sat un-merged through a full 10-minute sweep cycle. Read the
