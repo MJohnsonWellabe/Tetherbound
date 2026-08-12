@@ -120,6 +120,24 @@ jobs:
           printf '%s' "$FRESH" | sed 's/^/  /'
           BRANCHES="$FRESH"
 
+          # Run the ship script from OUTSIDE the repository.
+          #
+          # It checks out other commits in this same working tree -- origin/main
+          # to ship from, and the branch itself to rebase. Any commit older than
+          # tools/ci/ therefore removes the script from disk, and while the run
+          # already in flight survives that (bash holds the open fd), the NEXT
+          # iteration of this loop cannot find it to start it.
+          #
+          # Not hypothetical: it is what the first real sweep did. EV3 hit a
+          # genuine conflict -- correctly refused, nothing pushed -- but its
+          # rebase left the tree on EV3's tip, which predates tools/ci/. The
+          # four branches behind it in the queue were then skipped with
+          # "No such file or directory" rather than being considered at all,
+          # and the sweep still reported success.
+          SHIP="$RUNNER_TEMP/ship_branch.sh"
+          cp tools/ci/ship_branch.sh "$SHIP"
+          chmod +x "$SHIP"
+
           # Sequential, and each call re-reads origin/main, because every ship
           # moves main under the branches that have not been considered yet.
           #
@@ -128,13 +146,35 @@ jobs:
           # point of a sweep is that one stuck branch does not strand the
           # others -- so the failure is recorded and reported at the end.
           STUCK=""
+          BROKEN=""
           while read -r branch; do
             [ -n "$branch" ] || continue
             echo "::group::$branch"
-            tools/ci/ship_branch.sh "$branch" || STUCK="$STUCK $branch"
+            rc=0
+            "$SHIP" "$branch" || rc=$?
             echo "::endgroup::"
+            case "$rc" in
+              0) ;;
+              1) STUCK="$STUCK $branch" ;;
+              # Anything else is the script failing to RUN, not deciding not to
+              # ship -- a missing interpreter, a syntax error, exit 127 for a
+              # file that is not there. Those must not read as "considered and
+              # declined".
+              *) BROKEN="$BROKEN $branch(rc=$rc)" ;;
+            esac
           done <<< "$BRANCHES"
 
           if [ -n "$STUCK" ]; then
             echo "::warning::Needs a human, and was skipped:$STUCK"
+          fi
+
+          # A sweep that could not run is not a sweep that found nothing.
+          #
+          # The first real sweep skipped four branches with "No such file or
+          # directory" and still reported success, which is the worst possible
+          # outcome for a backstop: it looks like it checked. Silence is not
+          # success, so an unexpected exit code fails the job.
+          if [ -n "$BROKEN" ]; then
+            echo "::error::The ship script failed to run for:$BROKEN"
+            exit 1
           fi
