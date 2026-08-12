@@ -241,9 +241,28 @@ static func _consider(
 	# only legible if it stays visibly worn — path_stones are the one layer
 	# allowed on it, because stones on a path ARE the path. The threshold is
 	# past the half-width, so verges keep their growth right up to the edge.
-	if not bool(layer.get("grows_on_paths", false)) \
-			and field.has_method("path_factor") and float(field.path_factor(spot.x, spot.y)) > 0.3:
-		return
+	#
+	# `path_edge_jitter` (EV3-remainder-2): a fixed 0.3 cutoff draws the exact
+	# same isoline everywhere `path_factor` is evaluated, which is fine beside
+	# one winding path but not where several straight routes meet at one
+	# point — `terrain_playground.json`'s four routes all share a single
+	# endpoint at the village well, so the vegetation-clear wedge each one
+	# cuts reads as a geometric fan converging on it, across every ground-
+	# cover layer at once, not a placement bug in any one of them. A blind
+	# critic read the result as "a planted crop field." Jittering the cutoff
+	# PER INSTANCE (not touching `path_factor` itself, which the terrain's
+	# own dirt-texture blend also reads — see build_playground_terrain.gd —
+	# so it stays exactly as tuned) ravels the edge into an irregular fringe
+	# instead of a single straight isoline, the same fix shape as a coastline
+	# needing noise, not more coastline. TUNABLE, defaults to 0.0 (no change)
+	# so layers that never sit near a multi-path junction are unaffected.
+	if not bool(layer.get("grows_on_paths", false)) and field.has_method("path_factor"):
+		var edge_jitter := float(layer.get("path_edge_jitter", 0.0))
+		var threshold := 0.3
+		if edge_jitter > 0.0:
+			threshold += rng.randf_range(-edge_jitter, edge_jitter)
+		if float(field.path_factor(spot.x, spot.y)) > threshold:
+			return
 
 	# `base_scale` corrects the pack's authoring scale for the whole layer;
 	# scale_min/max then vary around it. Two numbers rather than one so "the
