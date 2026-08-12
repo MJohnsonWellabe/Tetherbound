@@ -1,0 +1,26 @@
+{
+  "_comment": "Authored, purpose-implying prop clusters (bible sec2 P3: do not dump props everywhere). Structures from the Quaternius Fantasy Props MegaKit (docs/ASSET_LEDGER.md), placed by scripts/world/props.gd: each entry is stood on the ground by asking the world (D09), given a box collider from its combined mesh AABB, and scaled by its own `scale` -- the pack is authored close to real-world size so most entries sit near 1.0. ALL TUNABLE.",
+  "_comment_layout": "work_area sits south-west of the village square's Barn [2,2] -- a smithing/repair nook implying someone maintains the settlement's tools, far enough from the Barn's own footprint and the Quarry Foreman NPC [0,-6] to read as its own spot rather than clutter. farmhouse_yard sits south of Grandpa's house [-22,-16] -- storage and harvest overflow for a farm that feeds itself, kept off the house's east-facing door lane (tested by smoke_opening, x -16..-9.7 at z~-15) by staying south-west instead.",
+  "clusters": [
+    {
+      "name": "work_area",
+      "props": [
+        { "model": "Anvil_Log", "at": [-5.0, -3.0], "yaw_deg": 30.0, "scale": 1.0, "_why": "the cluster's anchor -- an anvil mounted on its own stump" },
+        { "model": "Workbench", "at": [-6.5, -1.8], "yaw_deg": 110.0, "scale": 1.0, "_why": "faces the anvil across the nook" },
+        { "model": "Whetstone", "at": [-4.0, -1.5], "yaw_deg": 0.0, "scale": 1.0, "_why": "a sharpening stone within reach of the bench" },
+        { "model": "Crate_Wooden", "at": [-6.8, -4.0], "yaw_deg": 200.0, "scale": 1.0, "_why": "stock crate behind the anvil" },
+        { "model": "Pickaxe_Bronze", "at": [-3.5, -3.8], "yaw_deg": -40.0, "scale": 1.0, "_why": "a tool left leaning, mid-repair" }
+      ]
+    },
+    {
+      "name": "farmhouse_yard",
+      "props": [
+        { "model": "Barrel_Apples", "at": [-25.0, -20.0], "yaw_deg": 10.0, "scale": 1.0, "_why": "the cluster's anchor -- overflow from the last harvest" },
+        { "model": "FarmCrate_Apple", "at": [-26.5, -19.0], "yaw_deg": -15.0, "scale": 1.0, "_why": "stacked beside the barrel" },
+        { "model": "FarmCrate_Carrot", "at": [-26.0, -21.0], "yaw_deg": 40.0, "scale": 1.0, "_why": "a second crop, a second crate" },
+        { "model": "Bucket_Wooden_1", "at": [-24.0, -19.5], "yaw_deg": 0.0, "scale": 1.0, "_why": "a bucket set down mid-chore" },
+        { "model": "Crate_Wooden", "at": [-23.5, -21.5], "yaw_deg": 60.0, "scale": 1.0, "_why": "general storage, closing the cluster" }
+      ]
+    }
+  ]
+}
