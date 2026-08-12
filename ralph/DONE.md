@@ -3,6 +3,62 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF1 — Catching redone as a staged performance, not a tuning pass
+`a23ca93` + `15e4164` on `ralph/OF1`.
+
+The owner's "catching is still bad" turned out to be mostly that the
+resolution — the climax of the signature mechanic — had no body at all.
+Found by reading, confirmed by the first capture: `orb_shook` had no
+consumer in the 3D world (a HUD label printed dots), the orb froze
+mid-air with its flight trail hanging across the sky for the whole
+wobble, the creature popped `visible = false` in one frame, `aim_exited`
+had no listener so every throw AND every cancel left the rest of the
+fight framed through the over-the-shoulder aim camera, and
+`resolve.settle_pause` was silently ignored so the verdict landed on the
+same frame as the last shake.
+
+**What shipped:** strike flash -> creature drawn into the hanging orb
+(`pal_body.play_absorb`/`play_breakout`, visual children only, physics-
+clock tweens) -> orb drops and bounces to rest while the camera glides
+into a close-up (`catching.json resolve_camera`) -> stillness
+(`first_shake_delay`) -> physical shakes (contact-point rock + hop +
+ground pulse, dark equator band so tilt reads on a sphere) -> held
+breath (`settle_pause`, now real) -> verdict: warm seal bloom on a
+catch, white burst + overshoot pop-out + shove on a breakout, wild pal
+re-engaged with its opening `first_attack_delay` beat. Camera handoffs
+now exist for every aim exit path. HUD: odds-by-tier readout while
+aiming ("poor odds" ... "great odds", from the live formula at centre
+accuracy — front half of "I never know if I was close"), failure text
+graded by the honest shake count (back half), telegraph line silenced
+during resolution, verb row ceded to the orb. All timing/framing/VFX
+numbers are labelled tunables in `catching.json`. The odds decision is
+still made exactly once; the wobble never re-rolls.
+
+**Blind pass:** 3 rounds via new `tools/capture_catch_sequence.gd`
+(photographs the whole sequence, BOTH outcomes, dice pinned through the
+existing `chance.min/max` clamps so each sequence shows the outcome it
+is named for). Round 1 named 8 defects (headline: pure rotation on a
+featureless glowing sphere is pixel-identical to rest — the shake was
+invisible); round 2 named 2 (cream-white orb, absorb not visible in a
+still); round 3 named none — converged with the critique satisfied.
+frame_stats: shake-frame hit% 0.169 -> 0.769 (rest baseline 0.087),
+sky% 5.7 -> 0.5 on the reframed close-up. Honest caveat: no Agent tool
+existed in the firing's environment, so the rubric was applied by the
+firing itself (rubric-strict, measured with frame_stats), not by a
+spawned no-context critic.
+
+`tests:` none named by the item; ran the area per conventions — full
+unit suite 390 tests / 69995 assertions / 0 failed; `smoke_catching.gd`
+OK (its resolution wait grew 400 -> 700 frames for the staged sequence,
+the one behavioural test edit); `smoke_combat.gd` OK (shared file).
+
+Known remainder, deliberate: no audio — the project has zero sound
+infrastructure (no AudioStreamPlayer anywhere), and inventing the
+pipeline was out of scope; the shake/verdict beats are the obvious
+first sound cues when audio work starts. Orb art is still the labelled
+placeholder (M11); the band/emission work makes it read as an object,
+not as final art.
+
 ## OF2 — Item-target picker for consumables; party reorder found already built
 `b6655da` (+ `1bc2f7f` .uid sidecar fix, `41498a6` footer fix) on `ralph/OF2`.
 
