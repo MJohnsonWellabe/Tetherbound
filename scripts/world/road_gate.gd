@@ -39,6 +39,17 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	if not prefabs.call("load_recipes"):
 		push_error("no building recipes; the road gate cannot build its leaf")
 		return
+	# building_prefabs.gd caches an un-parented Node3D template tree per
+	# prefab name; without a real SceneTree parent it leaks RenderingServer
+	# resources at engine shutdown (see building_prefabs.gd's own header on
+	# `_holder` — reproduced as a real crash: hundreds of "leaked" GL buffers
+	# followed by a heap-corrupting SIGABRT in the exported build, absent
+	# once every `BuildingPrefabs` caller parks its templates).
+	var template_holder := Node3D.new()
+	template_holder.name = "PrefabTemplates"
+	template_holder.visible = false
+	add_child(template_holder)
+	prefabs.call("set_template_holder", template_holder)
 	var leaf: Node3D = prefabs.call("instantiate", LEAF_PREFAB)
 	if leaf == null:
 		push_error("road gate leaf prefab missing: %s" % LEAF_PREFAB)

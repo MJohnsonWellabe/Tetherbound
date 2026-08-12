@@ -28,6 +28,26 @@ var _templates: Dictionary = {}
 ## that asks, so a retint costs one material per colour rather than one per
 ## mesh surface.
 var _tinted: Dictionary = {}
+## Where cached templates get parked, set by `set_template_holder`. Nothing
+## renders through it (it stays hidden) -- it exists only so the template
+## trees `_build_template` builds are real SceneTree members instead of
+## orphan Nodes. An un-parented Node3D with mesh children still creates
+## RenderingServer-side GPU buffers the moment a Mesh resource is touched,
+## but nothing ever calls its destructor at engine shutdown if it was never
+## added to the tree and never explicitly freed -- `_templates` intentionally
+## keeps every template alive for the whole session, so "explicitly free it"
+## was never the right fix. Confirmed by a real crash: the exported build's
+## own RenderingServer teardown found hundreds of un-freed buffers or
+## textures ("Buffer with GL ID of NNNN: leaked N bytes") from exactly this
+## many orphan template trees, immediately followed by a heap-corrupting
+## double free and a SIGABRT -- reproduced locally, absent on pre-EV6 main
+## (0 leaked buffers there) and present with or without the farmhouse-shell
+## follow-up (so this is EV6's own settlement rebuild, not a later addition).
+var _holder: Node3D = null
+
+
+func set_template_holder(holder: Node3D) -> void:
+	_holder = holder
 
 
 func load_recipes() -> bool:
@@ -91,6 +111,9 @@ func _build_template(prefab_name: String) -> Node3D:
 		node.scale = Vector3.ONE * s
 		root.add_child(node)
 	_apply_retint(root, recipe.get("retint", {}))
+	if _holder != null:
+		root.visible = false
+		_holder.add_child(root)
 	return root
 
 

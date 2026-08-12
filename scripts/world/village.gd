@@ -36,6 +36,16 @@ func build() -> void:
 	if not _prefabs.call("load_recipes"):
 		return
 
+	# Cached prefab templates need a real SceneTree parent or they leak
+	# RenderingServer resources at engine shutdown (see building_prefabs.gd's
+	# own header on `_holder`) -- a hidden child of this node, never a raycast
+	# target, never rendered.
+	var template_holder := Node3D.new()
+	template_holder.name = "PrefabTemplates"
+	template_holder.visible = false
+	add_child(template_holder)
+	_prefabs.call("set_template_holder", template_holder)
+
 	for entry: Variant in (parsed as Dictionary).get("structures", []):
 		if not entry is Dictionary:
 			continue
