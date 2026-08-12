@@ -114,6 +114,60 @@ landform rather than as a second, unrelated terrain task.
 Updated `BACKLOG.md`'s own entry in place with this finding and the handoff
 note (wait for `EV6` before re-diagnosing the Barn caster). Item stays open;
 not closed by this pass.
+
+## EV4-hillside-seam-remainder — Rock relief/AO fixed, ring broken into outcrops; soil band still not visible (opens `EV4-hillside-seam-remainder-2`)
+`tests: none (visual)` — two real blind-judge rounds, both run locally
+(`tools/capture_hillside.gd`, no `--headless`) before a single push, per
+`conventions.md`. Commits: `0098306` (round 1: soil plateau widen, rock
+relief/AO cut, new outcrop-jitter noise), `6f04fa6` (round 2: a stronger
+soil tint push, since reverted), `7eb7a41` (revert of round 2 — see below).
+
+Round 4's own three named defects, taken one at a time:
+
+- **Rock near-black, read as a cast shadow — FIXED.** `rock`'s
+  `ao_strength`/`normal_depth` (0.4/0.6, the highest AO and among the
+  highest relief of any texture in the set, on an already-dark photo) cut
+  to 0.15/0.3. A fresh blind critic on the re-rendered frames called the
+  close-range patch "granite... visible directional streaking/veining,"
+  though overview frames in low/backlit conditions still read it as
+  ambiguous — a separate, lighting-scene concern, not this item's own
+  material fix.
+- **Rock placement formed a uniform ring/collar — FIXED.** New
+  `outcrop_jitter_deg` noise field (`playground_heightfield.gd`, seed+4,
+  0.03 frequency / ~35m wavelength) adds a coarse, seeded offset to the
+  sampled slope before both the colour-map and control-map band lookups
+  (`build_playground_terrain.gd`), so a circular rise no longer paints a
+  perfectly circular band — it bulges into lobes in some directions and
+  recedes in others. Two independent blind critics on the re-rendered
+  frames confirmed placement no longer reads as one continuous collar:
+  "not one continuous collar... feels more like a slope-angle-triggered
+  shader threshold than deliberately authored" (fair — that is exactly the
+  mechanism — but explicitly not the uniform-ring complaint any more).
+- **No soil band visible — NOT FIXED, two rounds tried.** Round 1 widened
+  the pure-soil plateau (`soil_slope_deg` 30 → 24, doubling round 4's 8
+  degrees to 14); a fresh critic still found no soil band and direct pixel
+  sampling of the transition zone measured hue 60-110 (green), not tan.
+  Round 2 pushed `soil`'s own tint/relief harder to fight
+  `Ground003_Color.jpg`'s baked-in green photo content (the same content
+  `EV4` already fought and gave up on for paths) — this made things worse,
+  not better: a fresh critic reported the whole hillside now reads as
+  "burnt orange/rust... closer to a dead-autumn field," the single biggest
+  reference-board gap, while the soil band was *still* invisible. Reverted
+  in `7eb7a41`. `soil_slope_deg`'s widening is kept (no regression on its
+  own); `soil`'s texture-level tint/relief are back at their pre-item
+  values. `EV4-hillside-seam-remainder-2` (`BACKLOG.md`) carries the two
+  untried levers: a dedicated soil texture (the same move that fixed paths)
+  or a feathered pixel-level correction on `Ground003_Color.jpg` itself
+  (the technique that fixed the path texture's own moss).
+
+313/313 tests green locally headless both rounds (`tests/run_tests.gd`) —
+the change touches shared bake code (`playground_heightfield.gd`,
+`build_playground_terrain.gd`) but is purely additive (new noise field,
+new function) and doesn't alter `slope_degrees_at`'s own behaviour, which
+`test_there_is_somewhere_steep_enough_to_matter` and
+`test_scatter_rules.gd` both depend on directly.
+
+## RENDER-PERF-DIAG — Root-caused the "100+ minute" capture-tool wall: `--headless` silently breaks off-screen rendering
 `tests: none` (tooling/diagnostic, no gameplay code touched)
 
 Two independent firings had each burned significant time against a visual

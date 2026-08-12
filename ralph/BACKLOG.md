@@ -507,43 +507,73 @@ blend pushed its threshold past this landform's own max slope) to a
 proportionate accent, verified by three independent blind-critic rounds.
 **Did not fully clear the bar — narrower remainder opened below.**
 
-### EV4-hillside-seam-remainder — Rock reads as near-black/shadow-like, no soil band is visible, and rock placement forms a uniform ring rather than authored outcrops
+**`EV4-hillside-seam-remainder` (rock near-black, ring-like placement) fixed;
+soil band still not visible — see `DONE.md`.** Two of round 4's three named
+defects are genuinely resolved, each confirmed by an independent blind
+critic on the re-rendered frames: rock's `ao_strength`/`normal_depth` cut
+(0.4/0.6 → 0.15/0.3) stopped it reading as a cast shadow — a fresh critic
+called the close-range patch "granite... visible directional streaking/
+veining" — and a new coarse noise field (`outcrop_jitter_deg`,
+`playground_heightfield.gd`) added to the slope sample before the band
+lookup broke the uniform ring into separated blobs at different positions,
+confirmed by two independent critics ("not one continuous collar," "blob-
+shaped rather than a continuous ring"). **The third defect — no visible
+soil band — was NOT fixed after two real attempts** (widening the pure-soil
+plateau; then pushing `soil`'s tint/relief further) and the second attempt
+was reverted as a regression (see `EV4-hillside-seam-remainder-2` below for
+why, and for the root cause both attempts ran into).
+
+### EV4-hillside-seam-remainder-2 — No soil band reads as visible; `soil`'s own texture resists every tint-level fix tried so far
 `model: sonnet` · `tests: none (visual)` · `area: terrain`
-Three real defects a fresh round-4 blind critic named that none of rounds
-1-4's slope-threshold tuning reaches, because they aren't threshold
-problems:
+Two rounds against the same problem, both converged on the same wall.
+Round 1 widened the pure-soil slope plateau (`soil_slope_deg` 30 → 24,
+doubling it from round 4's 8 degrees to 14) — a fresh blind critic on the
+re-rendered frames still reported grass going straight to rock with
+nothing between, and direct pixel sampling of the transition zone
+(`close-three-quarter.png`) measured hue 60-110 (yellow-green), saturation
+0.1-0.3 — desaturated and green-leaning, not the warm tan `soil`'s tint
+should produce. Round 2 pushed harder against it — the same relief/AO cut
+rock's own fix used, plus a stronger green/blue-suppressing tint
+(`#c9a874` → `#db9854`) — and made it WORSE: a fresh critic reported the
+whole hillside now reads as "burnt orange/rust/sienna... closer to a
+dead-autumn field than a grassy meadow slope," the single biggest gap from
+both reference boards, while the soil band was *still* not visible. That
+round was reverted.
 
-- **The `rock` texture (`Rock030_Color.jpg`) reads as near-black**, dark
-  enough on `dome-overview.png` that the critic's first read was "a cast
-  shadow wrapping the hill... could be mistaken for an ambient-occlusion
-  artifact rather than a material," not stone. `rock`'s own `tint` is
-  already near-white (`#fafafa`, essentially untouched) and its
-  `ao_strength` (0.4) and `normal_depth` (0.6) both sit noticeably higher
-  than `soil`'s (0.3 / 0.4) — worth testing whether pulling those two down
-  lightens the in-render read before touching the texture asset itself.
-  Untested this round; flagging the two levers rather than guessing further.
-- **No soil band is visible in any frame despite an 8-degree pure-soil
-  plateau** (`soil_slope_deg` 30 to `rock_slope_deg` 44, round 4's own fix).
-  The plateau exists in slope-space but apparently not in a way that reads
-  as a third material at these camera distances — either the plateau needs
-  to be wider still, or `soil`'s own tint (`#c9a874`, warmed in round 2) is
-  too close to `grass`'s tone to read as distinct once blended with the
-  near-white colour-map multiplier.
-- **Rock placement forms a uniform, ring-like "collar"** around the dome in
-  `dome-overview.png` but is reduced to a single disconnected blotch in
-  `north-overview.png` of what reads as the same landform — a slope-angle
-  threshold applied uniformly, not an authored outcrop layout. Fixing this
-  needs placement variation (noise-driven exposure, not just a slope
-  number) — a genuinely different mechanism from anything rounds 1-4 touched,
-  closer to `EV3`'s own clump/placement work than to a colour-config tune.
+**This is very likely the same wall `EV4`'s own path-texture work already
+hit and could not fully clear**: `Ground003_Color.jpg` is a photo of a
+weedy lawn with real green grass tufts baked into its own albedo, which no
+tint multiply or normal-depth change can repaint away — `EV4` solved the
+equivalent problem for *paths* by giving them a dedicated different photo
+(`Ground030_Color.jpg`) instead of continuing to fight `Ground003`. The
+hillside band still uses `Ground003` because at the time nothing else
+existed for it and the bar (`reads as a third material from a distance`)
+seemed low enough not to need a swap. Two rounds of evidence now say it
+does. Two real levers to try next, neither attempted yet:
+1. **Give the hillside soil band its own dedicated texture**, the same
+   move `EV4` made for paths — either `Ground030` (already in the project,
+   though currently characterised as a path/pebble photo, not a slope
+   material) or a fresh CC0 source, ledgered before use.
+2. **A feathered pixel-level correction on `Ground003_Color.jpg` itself**,
+   the same technique `EV4-textures` used to fix the path texture's own
+   moss saturation (hue-masked blend toward local luminance) — proven to
+   work on baked-in green content that a global tint can't reach, on this
+   exact photo, for this exact reason.
+`soil_slope_deg`'s widening to 24 is kept (round 1 caused no regression on
+its own); `soil`'s texture-level tint/relief are back at their pre-item
+values. Done when: a fresh blind critic given hillside frames names a
+visible third soil/tan tone distinct from both grass and rock, without
+also naming a new colour-cast defect on the hillside as a whole.
 
-Also named, explicitly out of scope for this item (pre-existing, unrelated
-to the hillside band specifically): the sun/moon disc reading as a flat
-blurred sprite, and the overall grass desaturation versus the key art's
-vibrant green — both are shader/lighting-pass concerns, not slope-material
-ones. Done when: a fresh blind critic given hillside frames says the rock
-reads as stone (not shadow), names a visible third soil tone, and does not
-call the rock placement a "collar" or "ring."
+Also named by this item's rounds, explicitly out of scope (pre-existing,
+unrelated to the slope-material bands specifically): the sun/moon disc
+reading as a flat blurred sprite; the tower/spire on the hilltop rendering
+as a flat unlit silhouette with no surface shading; the hill's own
+geometry being a perfectly smooth dome with no bump/ledge/protrusion under
+the rock texture, so even well-textured rock "reads as paint on a ball"
+rather than a true outcrop — real geometry variation, not a config edit,
+and CLAUDE.md's no-new-terrain-generation-without-reference-art rule would
+gate any asset-level fix for it the same way it gates creature/human work.
 
 **`Ground037` (mossy forest floor, ambientCG, also pre-sourced and ledgered
 alongside `Ground030`) is still unused.** Bible sec8 item 5, Deep Grass/
