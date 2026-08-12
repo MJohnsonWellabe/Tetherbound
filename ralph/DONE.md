@@ -4,7 +4,7 @@ Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
 ## R9.4-remainder-9 — Get real combat frames, budgeting for the now-measured render cost
-`8a579df` on `main`. `tests: none (visual)` — `tools/survey_combat.gd` only,
+`b3e6735` on `main`. `tests: none (visual)` — `tools/survey_combat.gd` only,
 no gameplay code touched.
 
 Reached the item's own done-when for the first time — `shots/combat/*.png`
