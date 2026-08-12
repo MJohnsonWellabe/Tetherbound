@@ -8,9 +8,11 @@ extends SceneTree
 ##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_menu_panels.gd
 ##
-## Two frames:
-##   menu_backpack - the backpack tab, grid + detail panel
-##   menu_build    - the build tab, catalogue list + detail panel
+## Three frames:
+##   menu_backpack      - the backpack tab, grid + detail panel
+##   menu_build         - the build tab, catalogue list + detail panel
+##   menu_target_picker - OF2's new item-target picker, mid-flow (backpack tab
+##                        with the picker open over an injured party member)
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/_diag"
@@ -82,6 +84,35 @@ func _run() -> void:
 	for i in POSE_FRAMES:
 		await process_frame
 	await _shoot("menu_build", written, failures)
+
+	menu.call("close")
+	menu.call("open", "backpack")
+	for i in POSE_FRAMES:
+		await process_frame
+	# Injure whoever is in slot 1 so the picker's HP readout has something to
+	# show besides a flat full bar, then drive the real Use path -- inject
+	# the actual `interact` action rather than calling a private method, so
+	# this frame shows what a player's press really produces.
+	var backpack: Node = menu.get("_bodies")[0]
+	var target: RefCounted = party.call("at", 1) if party != null and int(party.call("size")) > 1 else null
+	if target != null:
+		target.set("hp", float(target.get("max_hp")) * 0.4)
+	var slot: int = int(inventory.call("find_slot", "potion_small")) if inventory != null else -1
+	if slot >= 0:
+		(backpack.get("_buttons")[slot] as Button).grab_focus()
+		var event := InputEventAction.new()
+		event.action = "interact"
+		event.pressed = true
+		Input.parse_input_event(event)
+		Input.action_press("interact")
+		await process_frame
+		await process_frame
+		Input.action_release("interact")
+		event.pressed = false
+		Input.parse_input_event(event)
+	for i in POSE_FRAMES:
+		await process_frame
+	await _shoot("menu_target_picker", written, failures)
 
 	print("")
 	print("%d frames -> %s" % [written.size(), OUT_DIR])

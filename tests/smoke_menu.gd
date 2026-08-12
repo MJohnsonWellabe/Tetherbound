@@ -65,6 +65,8 @@ func _run() -> void:
 	await _check_focus_can_be_driven()
 	await _check_tabs_can_be_cycled()
 	await _check_the_party_screen_holds_five()
+	await _check_party_reorder_button()
+	await _check_backpack_target_picker()
 	await _check_closes_and_gives_the_game_back(world)
 	await _check_opens_on_the_menu_button()
 	_check_focus_recapture_respects_open_ui(world)
@@ -275,6 +277,123 @@ func _check_the_party_screen_holds_five() -> void:
 	if rows != 5:
 		_fail("the party screen draws %d rows, not 5" % rows)
 	print("party screen holds five, refuses a sixth")
+
+
+## OF2: reordering was believed missing but turned out to already be built
+## (`autoload/party.gd::move()` and `tab_pals.gd::_on_row()`, pick-up-then-
+## place like the backpack's own stack move) — this proves the WIRING, not
+## just the model layer `tests/test_party.gd` already covers: that pressing
+## the row button on a controller-focused row actually reaches `party.move()`,
+## not just that `move()` itself is correct in isolation.
+func _check_party_reorder_button() -> void:
+	_menu.call("select", 1)  # Pals
+	for i in 4:
+		await process_frame
+
+	var party: RefCounted = _game.get("party")
+	var body: Node = _menu.get("_bodies")[1]
+	var rows: Array = body.get("_rows")
+	if rows.size() < 2:
+		_fail("reorder check needs at least two party rows; only %d drawn" % rows.size())
+		return
+
+	var first: RefCounted = party.call("at", 0)
+	var second: RefCounted = party.call("at", 1)
+	if first == null or second == null:
+		_fail("reorder check needs slots 0 and 1 both filled; the five-pal check should have done that")
+		return
+
+	(rows[0] as Button).grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	if int(body.get("_held")) != 0:
+		_fail("pressing the focused row's confirm button did not pick up slot 0 (_held=%d)" % int(body.get("_held")))
+		return
+
+	await _press("ui_down")
+	if _focused_control() != rows[1]:
+		_fail("ui_down did not move focus from row 0 to row 1 while a pal was held")
+	await _press("ui_accept")
+
+	if int(body.get("_held")) != -1:
+		_fail("placing on row 1 did not release the held slot")
+	if not (party.call("at", 0) == second and party.call("at", 1) == first):
+		_fail("swapping rows 0 and 1 through the UI did not reach party.move() -- the two pals were not exchanged")
+	else:
+		print("party reorder: pressing row 0 then row 1 swapped them via party.move()")
+
+
+## OF2: using a heal item used to apply itself to whichever pal was most hurt
+## with no way to choose. Drives the real input path end to end -- open the
+## picker, cancel it (nothing spent), reopen it, confirm a specific target
+## with the SAME button the grid's pick-up-then-place uses, and check the
+## item was spent and the CHOSEN pal (not just "the worst one") was healed.
+func _check_backpack_target_picker() -> void:
+	_menu.call("select", 0)  # Backpack
+	for i in 4:
+		await process_frame
+
+	var party: RefCounted = _game.get("party")
+	var inventory: RefCounted = _game.get("inventory")
+	var body: Node = _menu.get("_bodies")[0]
+
+	var target: RefCounted = party.call("at", 1)
+	if target == null:
+		_fail("target-picker check needs slot 1 filled; the five-pal check should have done that")
+		return
+	target.set("hp", 1.0)
+	if float(target.call("hp_fraction")) >= 1.0:
+		_fail("could not injure the slot-1 pal to set up the target-picker check")
+		return
+
+	inventory.call("add", "potion_small", 3)
+	var slot: int = int(inventory.call("find_slot", "potion_small"))
+	if slot < 0:
+		_fail("could not find the potion slot after adding one")
+		return
+	var count_before: int = int(inventory.call("count", "potion_small"))
+	var hp_before: float = float(target.get("hp"))
+
+	(body.get("_buttons")[slot] as Button).grab_focus()
+	await process_frame
+	await _press("interact")
+
+	if int(body.get("_targeting")) != slot:
+		_fail("pressing Use on a heal item did not open the target picker")
+		return
+	if int(inventory.call("count", "potion_small")) != count_before:
+		_fail("opening the target picker already spent the item, before any target was chosen")
+	if float(target.get("hp")) != hp_before:
+		_fail("opening the target picker already healed a pal, before any target was chosen")
+	print("target picker opens on Use instead of applying immediately")
+
+	await _press("menu_cancel")
+	if int(body.get("_targeting")) != -1:
+		_fail("`menu_cancel` did not back out of the target picker")
+	if int(inventory.call("count", "potion_small")) != count_before:
+		_fail("cancelling the target picker spent the item anyway")
+	print("target picker cancels on `menu_cancel` without spending the item")
+
+	(body.get("_buttons")[slot] as Button).grab_focus()
+	await process_frame
+	await _press("interact")
+	if int(body.get("_targeting")) != slot:
+		_fail("could not reopen the target picker for the confirm half of the check")
+		return
+
+	var target_rows: Array = body.get("_target_rows")
+	(target_rows[1] as Button).grab_focus()
+	await process_frame
+	await _press("ui_accept")
+
+	if int(body.get("_targeting")) != -1:
+		_fail("confirming a target did not close the picker")
+	if int(inventory.call("count", "potion_small")) != count_before - 1:
+		_fail("confirming a target did not spend the item")
+	if float(target.get("hp")) <= hp_before:
+		_fail("confirming slot 1 as the target did not heal the pal in slot 1")
+	else:
+		print("target picker heals the CHOSEN pal (slot 1) and spends the item on confirm")
 
 
 # --- closing ----------------------------------------------------------------

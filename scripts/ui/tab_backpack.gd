@@ -14,8 +14,20 @@ extends "res://scripts/ui/menu_tab.gd"
 ## Moving a stack is pick-up-then-place rather than drag. A drag needs a pointer
 ## and this ships on a handheld; two presses of the same button do the same job
 ## with a stick and read the same way with a mouse.
+##
+## OF2: using a heal item used to always apply to whichever pal was most hurt,
+## with no way for the player to choose. Pressing Use on one now opens a
+## target picker instead of applying immediately — a second panel of five
+## rows, same shape as the pals tab, confirmed with the SAME button the grid's
+## own pick-up-then-place uses (ui_accept, not `interact`, so choosing a
+## target can never re-trigger Use on the same press). While it is open the
+## shell is held deaf (`menu.hold_input`, tab_settings.gd's own mechanism for
+## exactly this — a sub-mode that needs `menu_cancel` for itself instead of
+## letting the shell close the whole menu on it) and this tab reads
+## `menu_cancel` itself to back out without spending the item.
 
 const CONFIG_PATH := "res://data/config/menu.json"
+const PARTY := preload("res://autoload/party.gd")
 
 ## Same button as the pals tab's "set active": use the focused item.
 const USE_ACTION := "interact"
@@ -36,12 +48,24 @@ var _held: int = -1
 ## detail panel does.
 var _focused: int = 0
 
+## Slot of the item being targeted, or -1 when no picker is open. The item
+## stays in its slot and unspent until a target is actually confirmed — this
+## is not a second "held" state, nothing moves.
+var _targeting: int = -1
+
+var _content_row: Control = null
+var _target_panel: VBoxContainer = null
+var _target_header: Label = null
+var _target_rows: Array = []
+
 
 func build() -> void:
 	for child in get_children():
 		child.queue_free()
 	_buttons.clear()
+	_target_rows.clear()
 	_held = -1
+	_targeting = -1
 
 	var config := _config()
 	var backpack: Dictionary = config.get("backpack", {}) as Dictionary
@@ -60,6 +84,7 @@ func build() -> void:
 	row.add_theme_constant_override("separation", 28)
 	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(row)
+	_content_row = row
 
 	_grid = GridContainer.new()
 	_grid.columns = columns
@@ -93,7 +118,43 @@ func build() -> void:
 		_buttons.append(button)
 
 	row.add_child(_panel(_build_detail()))
+
+	_target_panel = _build_target_panel()
+	_target_panel.visible = false
+	add_child(_target_panel)
+
 	poll()
+
+
+## Five rows, same shape as the pals tab's own list — built once, up front,
+## and only rewritten, for the same focus-survival reason every other list in
+## this menu does that.
+func _build_target_panel() -> VBoxContainer:
+	var panel := VBoxContainer.new()
+	panel.add_theme_constant_override("separation", 8)
+
+	_target_header = Label.new()
+	_target_header.add_theme_font_size_override("font_size", 24)
+	panel.add_child(_target_header)
+
+	for i in PARTY.MAX_PALS:
+		var button := Button.new()
+		button.custom_minimum_size = Vector2(620, 64)
+		button.clip_text = true
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.focus_mode = Control.FOCUS_ALL
+		var slot := i
+		button.pressed.connect(func() -> void: _on_target_row(slot))
+		panel.add_child(button)
+		_target_rows.append(button)
+
+	var hint := Label.new()
+	hint.add_theme_font_size_override("font_size", 20)
+	hint.add_theme_color_override("font_color", Color(0.55, 0.57, 0.52))
+	hint.text = "B  put it away without using it"
+	panel.add_child(hint)
+
+	return panel
 
 
 func _build_detail() -> Control:
@@ -135,6 +196,9 @@ func poll() -> void:
 	if inventory == null or _summary == null:
 		return
 	_read_use()
+	_read_targeting_cancel()
+	if _targeting >= 0:
+		_refresh_target_panel()
 
 	var slots: int = int(inventory.call("slot_count"))
 	var used: int = int(inventory.call("used_slots"))
@@ -190,16 +254,18 @@ func _on_slot(index: int) -> void:
 
 
 ## Use the focused item, if it is usable. Today that is the healing
-## consumables (one press heals the most-hurt creature on the belt by the
-## item's `heal` value and spends one from the stack) and, R2.2, a damaged
-## tool (one press repairs it fully, free — GAME_DESIGN.md 19 says "at
-## appropriate station"; there is no placed workbench yet (R2.7), so this is
-## the whole of R2.2's "free repair" loop until that station exists to gate
-## it). Polled rather than event-driven for the same reason the pals tab's
-## activate verb is: a focused Button eats events, and there is always a
-## focused button here.
+## consumables (opens the target picker below rather than applying
+## immediately — see the header comment for why) and, R2.2, a damaged tool
+## (one press repairs it fully, free — GAME_DESIGN.md 19 says "at appropriate
+## station"; there is no placed workbench yet (R2.7), so this is the whole of
+## R2.2's "free repair" loop until that station exists to gate it). A tool has
+## no target to pick, so it still applies on this same press. Polled rather
+## than event-driven for the same reason the pals tab's activate verb is: a
+## focused Button eats events, and there is always a focused button here.
 func _read_use() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _targeting >= 0:
 		return
 	if not Input.is_action_just_pressed(USE_ACTION):
 		return
@@ -227,30 +293,108 @@ func _read_use() -> void:
 		say("%s is not something you can use here." % str(db.call("item_name", id)))
 		return
 
-	var game := state()
-	var party: RefCounted = game.get("party") if game != null else null
-	if party == null:
-		return
-	var patient: RefCounted = null
-	var worst := 1.0
-	for member: Variant in (party.call("members") as Array):
-		var pal: RefCounted = member
-		var fraction := float(pal.call("hp_fraction"))
-		if fraction < worst:
-			worst = fraction
-			patient = pal
-	if patient == null:
-		say("Nobody on the belt is hurt.")
+	var party: RefCounted = _party()
+	if party == null or int(party.call("size")) == 0:
+		say("Nobody on the belt yet.")
 		return
 
-	var restored := float(patient.call("heal", heal))
+	_targeting = _focused
+	menu.call("hold_input", true)
+	_content_row.visible = false
+	_target_panel.visible = true
+	_refresh_target_panel()
+	var first := _first_target_row()
+	if first != null:
+		first.grab_focus()
+
+
+## The first row that actually holds a pal, so opening the picker focuses
+## something useful instead of an empty slot the player would have to walk
+## past first.
+func _first_target_row() -> Control:
+	var party: RefCounted = _party()
+	if party == null:
+		return null
+	for i in _target_rows.size():
+		if party.call("at", i) != null:
+			return _target_rows[i]
+	return null
+
+
+func _refresh_target_panel() -> void:
+	var party: RefCounted = _party()
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	if party == null or inventory == null or db == null:
+		return
+
+	var stack: Dictionary = inventory.call("stack_at", _targeting)
+	var id := str(stack.get("id", ""))
+	_target_header.text = (
+		"Use %s on who?" % str(db.call("item_name", id)) if not id.is_empty() else "Use on who?"
+	)
+
+	for i in _target_rows.size():
+		var button: Button = _target_rows[i]
+		var pal: RefCounted = party.call("at", i)
+		if pal == null:
+			button.text = "  %d.  empty" % (i + 1)
+			button.add_theme_color_override("font_color", Color(0.38, 0.39, 0.37))
+		else:
+			button.text = "%d.  %-16s HP %d / %d" % [
+				i + 1, str(pal.call("label")),
+				int(round(float(pal.get("hp")))), int(round(float(pal.get("max_hp"))))
+			]
+			button.add_theme_color_override("font_color", Color(0.87, 0.89, 0.84))
+
+
+## Confirm a target. Same button the grid's own pick-up-then-place uses
+## (ui_accept via Button.pressed), not `interact` — see the header comment.
+func _on_target_row(index: int) -> void:
+	if _targeting < 0:
+		return
+	var party: RefCounted = _party()
+	var pal: RefCounted = party.call("at", index) if party != null else null
+	if pal == null:
+		say("Nothing in that slot.")
+		return
+
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	var stack: Dictionary = inventory.call("stack_at", _targeting)
+	if stack.is_empty():
+		# The stack emptied out from under the picker (shouldn't happen with
+		# nothing else able to touch it while the shell is held deaf, but
+		# refusing outright beats spending an item that is no longer there).
+		_end_targeting()
+		return
+	var id := str(stack.get("id", ""))
+	var heal := float((db.call("definition", id) as Dictionary).get("heal", 0.0))
+
+	var restored := float(pal.call("heal", heal))
 	if restored <= 0.0:
-		say("%s is already at full health." % str(patient.call("label")))
+		say("%s is already at full health." % str(pal.call("label")))
 		return
 	inventory.call("remove", id, 1)
-	say("%s recovers %d." % [str(patient.call("label")), int(restored)])
-	# No poll() here — this runs FROM poll(), whose remaining work redraws the
-	# slots with the spent stack. Calling back in would recurse.
+	say("%s recovers %d." % [str(pal.call("label")), int(restored)])
+	_end_targeting()
+
+
+func _read_targeting_cancel() -> void:
+	if _targeting < 0:
+		return
+	if Input.is_action_just_pressed("menu_cancel"):
+		say("")
+		_end_targeting()
+
+
+func _end_targeting() -> void:
+	_targeting = -1
+	menu.call("hold_input", false)
+	_target_panel.visible = false
+	_content_row.visible = true
+	if _focused >= 0 and _focused < _buttons.size():
+		_buttons[_focused].grab_focus()
 
 
 func _describe(index: int) -> void:
@@ -289,6 +433,11 @@ func _inventory() -> RefCounted:
 func _items() -> RefCounted:
 	var game := state()
 	return game.get("items") if game != null else null
+
+
+func _party() -> RefCounted:
+	var game := state()
+	return game.get("party") if game != null else null
 
 
 func _config() -> Dictionary:
