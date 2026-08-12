@@ -1394,10 +1394,13 @@ on arrival.
 
 **`R2.5` (REMOVE the post-fight auto-heal) shipped — see `DONE.md`.**
 
-### R2.6 — Build pieces: floor, wall, doorway/door, roof, fence
-`model: sonnet` · `tests: test_build_catalogue` (new)
-Placement itself shipped with the camp (ghost → snap → confirm → spend
-through `GameState.build_cost_for`, D16 intact); this is catalogue content.
+**`R2.6` (floor/wall/door/roof/fence as a real, generalized build-piece
+catalogue) shipped — see `DONE.md`.** Two real rounds of the required blind
+pass, real movement both times; did not fully clear the bar. The residual
+gaps (door not in a cut wall opening, wall/roof palette mismatch) are
+`EV6`-shared, not R2.6-specific — see `DONE.md` for the full account and
+the concrete next lever (`Wall_Plaster_Door_Flat`) for whoever picks this
+back up.
 
 ### R2.7 — Workbench and storage container
 `model: sonnet` · `tests: test_storage` (new)

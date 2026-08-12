@@ -136,6 +136,67 @@ geometry noise, not another tint) rather than a fourth colour round.
 before/after account, matching `Ground003`'s own existing entry for
 `remainder-2`'s fix.
 
+## R2.6 — Build pieces: floor, wall, door, roof, fence, as a real catalogue
+`tests: test_build_catalogue` (6 cases, new) + full suite 342/342 green
+headless + `smoke_art` green (new models).
+
+`build_placer.gd`/`camp.gd` only ever handled the single `camp` buildable —
+`_place()` always instantiated `CAMP.new()` regardless of the armed id, a
+gap the backlog's own "this is catalogue content" framing undersold. Fixed
+by generalizing: `camp` keeps its own hand-authored script (it carries the
+rest/craft prompts), and every other `data/items/buildables.json` entry is
+placed by a new `scripts/build/build_piece.gd` — one glTF module, one
+AABB-derived box collider, no interaction — looked up by the armed id's own
+`mesh` field. `build_placer.gd` rebuilds the ghost when the armed id
+changes, so switching pieces in the Build tab swaps the ghost cleanly.
+
+Geometry is five modules from the Medieval Village MegaKit
+(`Wall_Plaster_Straight`, `Floor_UnevenBrick`, `Door_1_Flat`,
+`Roof_RoundTile_2x1`, `Prop_WoodenFence_Single`), staged into
+`assets/buildings/quaternius_medieval/` and ledgered. Chosen to match —
+checked directly against `ralph/EV6`'s own `building_prefabs.json` before
+picking — the exact Plaster/UnevenBrick/RoundTile family `EV6` (live,
+`area: village`) is independently curating for the settlement itself, so
+this doesn't introduce a second building vocabulary under D24's one-family
+rule.
+
+**Visual-affecting; two real rounds of the required blind-judge pass, real
+movement both times, did not fully clear the bar.** Round 1 (flat
+character-portrait-style lighting, guessed piece offsets) found the wall
+reading texture-less/near-white, the door floating disconnected from the
+wall, the roof unaligned over anything, the floor foreshortened to an
+unreadable sliver in the lineup shot, and a small stray green mark near the
+roof's eave. Round 2 (a real directional key light with shadows enabled,
+piece offsets rebuilt from each module's own measured AABB rather than
+guessed, floor camera raised, corner arrangement simplified from a
+two-wall corner to one wall-and-doorway run after the two-wall version
+still floated): the floor is now legible, the roof visibly spans and
+shades the wall+door run, real cast shadows and value range now exist on
+every piece, and the green mark did not reappear (a small ridge-cap seam
+in the same spot may be the same underlying gap in a different guise, not
+confirmed). **Two things did not clear**: the door still reads as leaned
+beside a solid wall panel rather than standing in a cut opening — the
+`Wall_Plaster_Straight` module has no door-shaped gap, and the megakit's
+own `Wall_Plaster_Door_Flat` variant (which does) was not tried; and the
+wall's pale plaster / the roof's saturated terracotta both sit outside the
+wood-and-stone value range the door/fence/trim share, which the second
+critic called a material-family mismatch, not a lighting or placement
+problem.
+
+**Stopped after two rounds of real, measured movement rather than pushing a
+third**, matching this backlog's own established pattern
+(`EV4-textures-remainder`, `SA7-remainder`): the residual gaps are shared
+with `EV6`, not specific to this item — `EV6` is using the exact same
+Plaster/RoundTile family for the whole settlement right now, so whether
+that family's palette clears the bar is a question one larger, in-flight
+pass will answer more usefully than a second isolated capture here. The
+underlying shipped mechanism (the catalogue, the generic placer, the
+ghost/ownership dispatch) is not in question — only the demo capture's own
+arrangement and the asset family's finish are. No new remainder opened;
+whoever next touches `assets/buildings/quaternius_medieval/` for `EV6` or
+any future build-piece work should try `Wall_Plaster_Door_Flat` for an
+actual door opening before reaching for anything else.
+
 ## SA3 — A believable physical perimeter, and a failsafe under it
 `0d921e0` on `main`. `tests: smoke_traversal` (extended with 8-bearing
 perimeter walks + a kill-volume check, green).
