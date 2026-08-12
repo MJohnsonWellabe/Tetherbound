@@ -37,14 +37,7 @@ entries that stopped clearing after repeated tuning rounds — see
 
 **`OF2` (item-target picker for consumables; party reorder found already built) shipped — see `DONE.md`.**
 
-### OF3 — Grandpa's opening scene: buttons only advance the dialogue about half the time, and naming a pal via the on-screen keyboard is a bad experience
-`area: ui` · `model: sonnet` · `tests: test_dialogue_runner` (extended) +
-manual controller verification, since input feel doesn't fully show up
-headless. Two likely-separate bugs: (1) dialogue-advance input reliability —
-investigate whether it's an input buffering/debounce issue in the dialogue
-runner; (2) the on-screen keyboard for text entry needs a real usability
-pass (layout, controller navigation, backspace/confirm affordances). This is
-the tutorial's front door — both bugs are first-impression breaking.
+**`OF3` (dialogue-advance guard buffer + naming-grid column fix) shipped — see `DONE.md`.** Manual controller verification still open; DONE.md says what to check if it reopens.
 
 **`OF4` shipped in two concurrent rounds — see `DONE.md` for both.** Round 1
 (masonry/weathering surface pass, self-reviewed under an owner-directed

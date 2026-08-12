@@ -319,6 +319,63 @@ and `OF4`'s token-cap precedent. `smoke_input` extended with a
 cadence-tracking assertion; `check_character_clips` and a full headless
 import both clean.
 
+## OF3 — Grandpa's opening scene: dialogue-advance reliability + naming-grid navigation
+`4b1cdee` on `ralph/OF3`.
+
+Two separate bugs, per the item's own framing.
+
+**(1) Dialogue-advance reliability — investigated, one real gap found and
+fixed, root cause of the reported symptom not confirmed.** Built headless
+probes at the engine level (isolated presses, rapid repeated presses, and a
+full `dialogue_panel.gd` integration test driving real
+`InputEventJoypadButton` events at human cadence — ~200ms per tap — all at
+Ally-like tick ratios, physics 60Hz against a 30-40fps render cap). Godot's
+`is_action_just_pressed` did not drop a single press in any of these
+conditions, whether read from `_physics_process` or `_process`, which rules
+out a physics/idle polling race as the cause — and argues against the
+instinctive fix (move the read to `_process`), which one early probe
+suggested would actually be WORSE, not better, for rapid presses. What IS
+real and fixed: `dialogue_panel.gd`'s `OPEN_GUARD_FRAMES` window (2 physics
+frames, ~33ms, guards the opening press from double-reading as an advance)
+silently DROPPED any press landing inside it rather than counting it — a
+player tapping interact again quickly right after opening a conversation
+could lose that tap outright. It now buffers one press through the guard
+and applies it the instant the guard clears. Say this plainly: this is a
+real, tested improvement, not a confirmed fix for the "half the time"
+symptom — on-device confirmation is still open, same as RB1/RB4/SA1's
+pattern in this backlog.
+
+**(2) On-screen keyboard navigation — a real bug, fixed.**
+`name_entry.gd::move()` permanently clamped `column` when the cursor
+stepped onto the ragged bottom row (7 cells vs. 10 everywhere else), so
+moving back up off it left the cursor at the clamped column instead of
+back where the player actually was — reads as the cursor randomly
+drifting left every time you brush the bottom row. `column` is now a
+property that also tracks the player's actual desired column separately,
+restored whenever the current row is wide enough for it.
+
+**tests:** `tests/run_tests.gd` — 392 tests, 69998 assertions, 0 failed
+(includes two new `test_name_entry.gd` cases for the column-restore
+behaviour). `tests/smoke_opening.gd` run for regression coverage of the
+`dialogue_panel.gd` change specifically (not named by the item, run anyway
+since it's the one thing that exercises the guard path end to end):
+"beat 3: closed after 16 presses" — unchanged before and after. Its one
+failure ("the road is not physically blocked" past the gate) was believed
+at the time to reproduce on a clean `origin/main` checkout and so be
+pre-existing and unrelated — **that was wrong**, corrected below once a
+session with real Godot access actually tested this branch's own diff
+rather than plain `main`: the guard reorder in part (1) above caused it
+directly. See the fix entry immediately following this one.
+
+**Manual controller verification (named by the item's own `tests:` field)
+was not possible from this environment** — no physical Ally/controller
+access. Whoever plays the build next should specifically check: does
+tapping interact rapidly through a conversation still occasionally seem to
+eat a press? If yes, the guard-buffer fix above did not reach the real
+cause and this needs reopening with a description of exactly when it
+happens (opening a fresh conversation vs. mid-conversation, cadence, etc.)
+— that detail is what every headless probe here could not supply.
+
 ## OF2 — Item-target picker for consumables; party reorder found already built
 `b6655da` (+ `1bc2f7f` .uid sidecar fix, `41498a6` footer fix) on `ralph/OF2`.
 
