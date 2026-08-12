@@ -293,6 +293,14 @@
       "retint": {
         "Rocks": "#c5ac9e"
       },
+      "_comment_variant_r9_4_remainder_8": "R9.4-remainder-8-rocks-repeat: a blind critic named the rock clusters 'one rock instance duplicated, not a quarry of varied stone' -- same shape, same size, SAME COLOUR, evenly spaced. scale_min/scale_max already vary size (0.28-2.1) and the layer only has 3 boulder meshes to draw from (the fuller Stylized Nature MegaKit that might carry more rock forms is itch.io-blocked, EV1-remainder), so the one remaining honest lever is colour, the same one EV2 used to split one tree mesh into spring/deep/yellow-green variants. Three real outcrop colours instead of one flat tan-grey -- the original R9.4 tone kept as the anchor, a cooler neutral granite and a warmer sandstone/ochre added either side of it -- so a clump of the SAME three meshes reads as mixed stone rather than one rock stamped three times. TUNABLE.",
+      "variant_retint": {
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf": {"Rocks": "#c5ac9e"},
+        "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": {"Rocks": "#a39a94"},
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": {"Rocks": "#b8a06e"}
+      },
+      "_comment_colour_jitter_r9_4_remainder_8": "Same mechanism R7.1-remainder used for grass -- per-instance MultiMesh colour multiplier, zero extra draw calls or geometry (vegetation.gd). Milder than grass's 0.2-0.22: rock faces are large and flat, so a wide swing reads as lighting error rather than mineral variation. Applies to the pebble meshes too (material PathRocks, untouched by variant_retint above), which is a second, cheaper source of per-instance variety across the same clump.",
+      "colour_jitter": 0.14,
       "_comment_scale_r9_4": "R9.4. Was 0.35-1.3, a 3.7x span that still read as one size because most draws land near the middle. Widened to 0.28-2.1 so a clump has boulders AND pebbles in it. TUNABLE."
     },
     "path_stones": {
