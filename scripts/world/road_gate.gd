@@ -68,24 +68,46 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 
 	var aabb: AABB = prefabs.call("combined_aabb", _mesh)
 
-	# A dark latch box at the panel's own centre. `Fence2` is decorative
-	# fencing everywhere else it's placed (village.json) — with no leaf,
-	# hinge or hardware of its own, one more length of it read as ordinary
-	# property fencing rather than as something deliberately shut, per the
-	# blind pass's own finding. A child of `_mesh` so it swings open with
-	# the panel rather than needing its own re-pose.
+	# A padlock at the panel's own centre. `Fence2` is decorative fencing
+	# everywhere else it's placed (village.json) — with no leaf, hinge or
+	# hardware of its own, one more length of it read as ordinary property
+	# fencing rather than as something deliberately shut, per the blind
+	# pass's own finding. Round 1 tried a single near-black box and a
+	# second blind round called it out for blending straight into the
+	# fence's own dark pickets — same hue, same value, same flat panel
+	# plane. This round changes both levers that finding named: a lighter,
+	# warmer, shinier material that reads as metal against the fence's
+	# flat wood, and a body-plus-shackle silhouette (a box with a ring
+	# sunk halfway into it, so only the top loop shows) instead of one
+	# more rectangle among the panel's own pickets. A child of `_mesh` so
+	# it swings open with the panel rather than needing its own re-pose.
 	_lock = MeshInstance3D.new()
 	_lock.name = "Lock"
-	var lock_box := BoxMesh.new()
-	lock_box.size = Vector3(0.16, 0.16, 0.24)
-	_lock.mesh = lock_box
+	var lock_body := BoxMesh.new()
+	lock_body.size = Vector3(0.16, 0.14, 0.06)
+	_lock.mesh = lock_body
 	var lock_material := StandardMaterial3D.new()
-	lock_material.albedo_color = Color(0.1, 0.09, 0.08)
-	lock_material.metallic = 0.7
-	lock_material.roughness = 0.35
+	lock_material.albedo_color = Color(0.58, 0.45, 0.22)
+	lock_material.metallic = 0.85
+	lock_material.roughness = 0.2
 	_lock.material_override = lock_material
-	_lock.position = Vector3(0.0, aabb.position.y + aabb.size.y * 0.55, 0.0)
+	# Pushed out past the panel's own face (not centred in its thickness,
+	# round 1's placement) so the lock's silhouette breaks the fence's
+	# outline instead of sitting flush inside it.
+	_lock.position = Vector3(
+		0.0, aabb.position.y + aabb.size.y * 0.55, aabb.size.z * 0.5 + 0.03)
 	_mesh.add_child(_lock)
+
+	var shackle := MeshInstance3D.new()
+	shackle.name = "Shackle"
+	var shackle_ring := TorusMesh.new()
+	shackle_ring.inner_radius = 0.035
+	shackle_ring.outer_radius = 0.06
+	shackle.mesh = shackle_ring
+	shackle.material_override = lock_material
+	shackle.rotation.x = deg_to_rad(90.0)
+	shackle.position = Vector3(0.0, lock_body.size.y * 0.5, 0.0)
+	_lock.add_child(shackle)
 
 	var body := StaticBody3D.new()
 	body.name = "GateCollision"

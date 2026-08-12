@@ -35,10 +35,20 @@ func _build_visual() -> void:
 	# as a crate rather than anything meant to be picked up specifically.
 	# Still built from primitives, still tinted from the item's own
 	# `colour`, so this stays an honest placeholder rather than new art.
+	#
+	# Round 1 shrank this to real key scale and a second blind round
+	# confirmed the SCALE was right but called the shape unresolved —
+	# "an anonymous yellow dot," the ring's hole too small to read as a
+	# hole under software rendering. This round does not re-inflate the
+	# object (that would recreate the crate complaint); it widens the
+	# ring's own hole relative to its wall so the loop actually punches
+	# through at this size, and adds a pair of teeth at the blade's tip so
+	# the silhouette is asymmetric (a key) rather than a symmetric rod
+	# with a loop on it (a whistle, a screwdriver, anything).
 	var material := StandardMaterial3D.new()
 	material.albedo_color = _item_colour()
-	material.metallic = 0.6
-	material.roughness = 0.3
+	material.metallic = 0.75
+	material.roughness = 0.2
 
 	var shaft := MeshInstance3D.new()
 	var shaft_box := BoxMesh.new()
@@ -49,14 +59,23 @@ func _build_visual() -> void:
 	_visual = shaft
 	add_child(_visual)
 
+	for i in 2:
+		var tooth := MeshInstance3D.new()
+		var tooth_box := BoxMesh.new()
+		tooth_box.size = Vector3(0.013, 0.013, 0.025)
+		tooth.mesh = tooth_box
+		tooth.material_override = material
+		tooth.position = Vector3(0.024 + i * 0.017, -0.014, 0.0)
+		shaft.add_child(tooth)
+
 	var ring := MeshInstance3D.new()
 	var torus := TorusMesh.new()
-	torus.inner_radius = 0.012
-	torus.outer_radius = 0.024
+	torus.inner_radius = 0.02
+	torus.outer_radius = 0.045
 	ring.mesh = torus
 	ring.material_override = material
 	ring.rotation.x = deg_to_rad(90.0)
-	ring.position = Vector3(-0.06, 0.0, 0.0)
+	ring.position = Vector3(-0.09, 0.0, 0.0)
 	_visual.add_child(ring)
 
 
