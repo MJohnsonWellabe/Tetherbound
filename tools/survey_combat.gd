@@ -108,13 +108,17 @@ func _run() -> void:
 	# A quick attack landing. Catching the impact rather than the lull is the
 	# point: the frame has to show whether a hit reads as a hit.
 	#
-	# `stop_at` has to sit inside `player_quick.range` (2.6, `combat.json`) or
-	# every attempt whiffs by construction — found the hard way: a first full
-	# run at `stop_at=2.8` recorded zero landed quick attacks across the whole
-	# encounter, which cascaded into the charged attack never charging and the
-	# aim phase never opening (the enemy's own AI eventually won the fight
-	# instead). 2.2 leaves real margin under 2.6 for the drive loop's own
-	# release-on-approach drift.
+	# `stop_at` at 2.2 (was 2.8) is still correct to keep — safely inside
+	# `player_quick.range` (2.6, `combat.json`) rather than sitting just
+	# outside it — but it did NOT fix a real observed failure: two full runs,
+	# one at each stop_at, both recorded zero landed quick attacks and
+	# identical downstream failures (charged never charges, aim never opens).
+	# `combat_manager.gd::_with_reach_for_the_bodies` floors the real reach by
+	# both bodies' radii anyway, so 2.6 was very likely never the binding
+	# constraint. See `R9.4-remainder-9-combat` in BACKLOG.md for the actual
+	# suspected cause (this survey may be steering toward a DIFFERENT wild pal
+	# than the one combat actually engages) and what a future attempt should
+	# instrument before running this again.
 	await _drive_pal_towards_enemy(120, 2.2)
 	await _press("combat_quick")
 	await _capture_the_impact("05-quick-attack-lands")
