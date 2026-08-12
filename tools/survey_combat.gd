@@ -22,7 +22,21 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const OUT_DIR := "res://shots/combat"
+
+## Metres from the wild pal to drop the player, before `_approach()` walks the
+## remaining distance in shot. Found empirically (R9.4-remainder-9): the
+## scene's own default spawn is now INSIDE Grandpa's farmhouse, upstairs near
+## the bed (D18/SA0's indoor opening) rather than outdoors in the meadow, which
+## this survey predates. Two full ~40-minute runs against the unmodified spawn
+## produced six frames of the bedroom/stairwell interior and zero real combat
+## — `_approach()`'s 1200-frame walk-toward-the-wild-pal loop never gets the
+## player out of the house. `survey.gd` and `capture_paths.gd` already solve
+## the same problem for their own actors by placing them directly via
+## `playground_heightfield.gd`'s `height_at()`, rather than trusting the
+## scene's own spawn point; this does the same for the player.
+const PLAYER_DROP_DISTANCE := 20.0
 
 const SETTLE_FRAMES := 240
 ## Rendered frames between posing and the shutter.
@@ -73,6 +87,7 @@ func _run() -> void:
 		quit(1)
 		return
 	_wild = _director.call("wild_pal") as Node3D
+	_place_player_outdoors()
 
 	# The M1 debug readout covers a third of the frame and is not part of what a
 	# critic should be looking at. The combat HUD stays: whether the fight is
@@ -206,6 +221,23 @@ func _open_the_aim() -> bool:
 		await process_frame
 		_aim_at_the_enemy()
 	return true
+
+
+## Drop the player onto real outdoor ground near the practice pal, PLAYER_DROP_DISTANCE
+## away, instead of trusting the scene's own default spawn (see that constant's
+## comment for why). Placed along the horizontal direction from the origin
+## towards the pal, which `data/config/spawns.json`'s own comment says is
+## already clear meadow the opening is meant to walk a new player through.
+func _place_player_outdoors() -> void:
+	if _player == null or _wild == null:
+		return
+	var field := HEIGHTFIELD.new()
+	var to_wild := Vector3(_wild.global_position.x, 0.0, _wild.global_position.z)
+	var direction := to_wild.normalized() if to_wild.length() > 0.01 else Vector3.FORWARD
+	var xz := Vector2(_wild.global_position.x, _wild.global_position.z) - Vector2(direction.x, direction.z) * PLAYER_DROP_DISTANCE
+	var ground: float = field.height_at(xz.x, xz.y)
+	_player.global_position = Vector3(xz.x, ground + 2.0, xz.y)
+	_player.velocity = Vector3.ZERO
 
 
 func _approach() -> void:
