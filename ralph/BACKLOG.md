@@ -153,6 +153,22 @@ an isolated scratch-repo reproduction. One correction to this entry's own
 `git checkout -B "$BRANCH" "$SHA"` ever runs, so HEAD never leaves `__ship` —
 that path was already safe and needed no change.
 
+### LP6 — `ralph-status`'s `STATUS.md` has grown past `## END LEASES` again
+`model: haiku` · `tests: none` · `area: loop`
+The 2026-08-11 21:09Z prune fixed this once (see that entry, and its own
+"a large, growing file" note under "Reading it, as the owner"). Found again at
+01:38Z the same night: 700+ lines of lease blocks appended below the marker.
+Same underlying cause the prune already diagnosed — a firing hits `deleted
+block? two options?` friction, or just doesn't scroll far enough to find the
+literal marker line once the file is long, and appends to end-of-file instead.
+This is a live-data branch (`ralph-status`), so it drifts continuously and
+will keep doing this between prunes; a one-time fix does not hold. Done when:
+either the file is pruned again with a mechanism that actually prevents
+re-drift (a script a firing runs rather than a human doing it by eye, or
+restructuring the file so "append below this line" cannot silently become
+"append anywhere"), or someone concludes the periodic-manual-prune status quo
+is acceptable and closes this with that reasoning recorded.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
@@ -575,27 +591,7 @@ item's remainder:**
   tuning. No board exists for a display font; flag to the owner before
   picking one, per `CLAUDE.md`'s asset-generation rule.
 
-### EV9-double-prompt — CombatHUD silently mirrors the exploration prompt outside a fight
-`model: sonnet` · `tests: none (visual)` · `area: ui`
-Found building `EV9`'s glyph capture tool; reproduces with or without that
-ship's changes — checked against the OLD bracket-text prompt too, not just
-the new glyph one, so this is not something the glyph work introduced.
-`combat_hud.gd`'s `_show_fight(false)` hides the Enemy/Ally/Actions/Orbs/
-Reticle rows but deliberately leaves `_prompt` visible, since it has to keep
-showing "Engage X" before a fight starts. `encounter_director.gd`'s own
-`prompt()` getter delegates to whatever scene-wide arbiter is present
-(`if _arbiter != null: return str(_arbiter.call("prompt"))`) rather than
-returning its own engage-specific text — so whenever `CombatHUD`'s
-`CanvasLayer` is visible (nothing in the project ever sets it
-`visible = false`; only `_show_fight()`'s per-row hiding runs), it mirrors
-WHATEVER `PlaygroundHUD` is currently showing, not just an engage offer.
-Reproduced directly: walking up to the bed in the opening shows "Get up" on
-both `PlaygroundHUD` and `CombatHUD` simultaneously, stacked on screen,
-today, on `main`. Likely player-visible in the real opening and never
-reported, because the old bracket-text version of both lines was easy to
-mistake for one at a glance. Done when: `CombatHUD`'s prompt row only shows
-during a fight or when `encounter_director` genuinely has its own engage
-offer, never as a mirror of an unrelated exploration prompt.
+**`EV9-double-prompt` (CombatHUD silently mirrored the exploration prompt outside a fight) fixed — see `DONE.md`.**
 
 ### EV10 ▶ — Cohesion pass
 `model: fable` · `tests: none` · `area: visual`

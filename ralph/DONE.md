@@ -122,6 +122,42 @@ both findings precisely separated, so the next pass debugs two specific,
 already-narrowed sub-problems instead of re-diagnosing "tuft banding"
 from scratch a third time.
 
+## EV9-double-prompt — CombatHUD silently mirrored the exploration prompt outside a fight
+`916c0a6`. `tests: none (visual)` named in the backlog item, but this shipped
+with a real mechanical test instead of only a render — `smoke_no_double_prompt`
+— plus the full `tests/run_tests.gd` (305/305), `smoke_combat` and
+`smoke_opening` (both touch the same shared prompt/combat code), all green
+locally headless.
+
+`combat_hud.gd`'s prompt row drew whatever `encounter_director.prompt()`
+returned every frame, and that delegates entirely to the scene-wide arbiter
+once one is present — so whenever a wild pal wasn't the winning offer, the
+row instead mirrored Grandpa, a starter, a harvest node, anything, because
+its `CanvasLayer` is never fully hidden outside a fight (only individual
+rows toggle). Reproduced directly, same as the backlog item's own repro:
+standing at the bed in the opening showed "Get up" on both `PlaygroundHUD`
+and `CombatHUD` at once.
+
+`interaction_arbiter.gd` gains `winning_provider()`, exposing which
+registered provider's offer is currently drawn (previously only readable via
+the private `_winning_provider` var, which a couple of existing smoke tests
+already reached into by name). `encounter_director.gd` gains
+`owns_active_prompt()`, true when there's no arbiter (the combat sandbox,
+where this node is the only source of a prompt there is) or when this node
+itself is the arbiter's current winner. `combat_hud.gd`'s `_draw_prompt()`
+now blanks the row outside a fight unless `owns_active_prompt()` is true —
+during a fight the arbiter is already disabled scene-wide and `prompt()`
+already returns `""`, so that path is unchanged.
+
+Chose a direct node-level test over the backlog item's own `(visual)`
+suggestion: the defect is exactly "two labels agree," which a screenshot
+proves happened without proving the fix generalises, and reading
+`_prompt.text` off both HUD nodes directly is strictly more precise. The
+test also checks the row still shows "Engage X" before a fight starts —
+the row's whole reason to exist, per `combat_hud.gd`'s own `_show_fight`
+comment — so a fix that blanked everything outside combat rather than just
+other providers' offers would have failed it too.
+
 ## SA8 — Grandpa's opening dialogue: the Team Tether urgency beat
 `031f571`. `tests: smoke_opening` (green, run locally headless).
 
