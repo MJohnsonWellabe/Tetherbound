@@ -84,6 +84,55 @@ rounds deep with no fix found (every direct density/placement lever tried
 there recreated the same read). Folded into that existing entry rather than
 opening a duplicate one — see `BLOCKED.md`.
 
+## R3.1 — Save and load
+`dedf93a` on `ralph/R3.1`. `tests: test_save_format` (new, 17 cases) + FULL
+SUITE, 381 tests / 48087 assertions, 0 failed, headless.
+
+Versioned JSON save/load (`scripts/save/save_game.gd`), same never-fatal-on-
+load shape `docs/decisions/D15` set for `user://settings.json` — missing,
+corrupt or newer-than-this-build slots are left alone rather than guessed at.
+Five slots (`SLOT_COUNT`); slot 0 autosaves on every rest (`camp.gd`), slots
+1-4 are manual through a new "Save" pause-menu tab
+(`scripts/ui/tab_save.gd`, `data/config/menu.json`).
+
+What round-trips: the day counter, the full party (species, nickname, HP,
+stats, energy, fainted — reconstructed by setting fields directly rather
+than through `PalInstance.from_species`, so a load never depends on
+`species.json` still defining that species), and the satchel **including
+slot position**, via a new `Inventory.set_slot()` that bypasses `add()`'s
+stacking rules for exactly this reason (slot position is already documented
+player-visible state).
+
+**Placed buildings are new state, not just a save concern.**
+`GameState.placed_buildings` is now the canonical `{id, position}` record of
+everything the player has built — before this, `build_placer.gd` only ever
+wrote scene nodes, and nothing tracked them as data at all, so a build
+already vanished on any scene reload with or without a save system.
+`build_placer.gd::restore_from_game()` rebuilds the world from the registry,
+reached "by group" (`get_tree().get_nodes_in_group("build_placer")`) the same
+way `camp.gd` already reaches the day/night cycle without a direct reference.
+
+Deliberately not built: auto-load on boot (considered and rejected — this
+project's smoke tests share one `user://` directory within a CI job, and an
+auto-loaded save landing in an unrelated test scene is exactly the kind of
+cross-test contamination a "pure logic" test suite has to stay clear of;
+loading is opt-in through the Save tab every time). `SB9` (Phase 3.5) does
+not exist yet, so there is no progression-flag section in version 1 despite
+this item's own brief anticipating one — whoever ships `SB9` owns that
+version bump, same as any other schema change. Full design rationale:
+`docs/decisions/D27`.
+
+Verified beyond the unit suite: `tests/smoke_free_build.gd` run live
+(headless, real scene) planted a camp and rested, and the autosave file it
+wrote on disk had the correct day, satchel contents and placed-building
+position — not just asserted by a fake-object test. `tests/smoke_opening.gd`
+confirms the `Game` autoload change (`save_system` instantiated in `_ready`)
+does not disturb the opening flow.
+
+**Known gap, named rather than silently skipped**: a placed storage chest's
+own contents (`storage_state.gd`'s independent `Inventory`) do not round-trip
+— only the chest itself does. `R3.1-remainder` in `BACKLOG.md`.
+
 ## R9.4-remainder-9 — Get real combat frames, budgeting for the now-measured render cost
 `b3e6735` on `main`. `tests: none (visual)` — `tools/survey_combat.gd` only,
 no gameplay code touched.
