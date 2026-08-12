@@ -457,7 +457,9 @@ func _dress_the_meadow() -> void:
 	add_child(_vegetation)
 	_vegetation.call("build", float(config.get("world_size", 512)))
 	var stats: Dictionary = _vegetation.call("stats")
-	print("[playground] scattered %d props in %d batches" % [stats["instances"], stats["batches"]])
+	print("[playground] scattered %d props in %d batches (%d harvestable)" % [
+		stats["instances"], stats["batches"], stats.get("harvest_points", 0)
+	])
 
 
 ## Grandpa's house and the village, stood on the building pads the terrain

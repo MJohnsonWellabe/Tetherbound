@@ -1378,25 +1378,52 @@ is free, from the backpack menu rather than a physical workbench — `R2.7`
 (Workbench and storage container, below) hasn't built a placed station yet
 for GAME_DESIGN.md §19's "at appropriate station" to gate against.
 
-### R2.3 — Real tree/rock harvesting on the vegetation
-`model: sonnet` · `tests: test_harvest`
-The ~10 authored nodes were the tutorial route; this makes the *world*
-harvestable — the scattered Terrain3D trees and rock outcrops themselves,
-reusing `interactable.gd` and the nearest-wins arbitration, respecting the
-path keep-clear. Done when: walking up to any ordinary tree and holding the
-button puts wood in the satchel.
+**`R2.3` (real tree/rock harvesting on the vegetation) shipped, partial — see
+`DONE.md`.** The core mechanism is real and tested: a deterministic slice of
+the world's own scattered trees/rocks (not a second set of authored nodes)
+is now genuinely harvestable, tool-gated the same way as `harvest_node.gd`'s
+tutorial spots, sharing the durability/tool logic through a new
+`harvest_logic.gd` rather than a second copy of it. **Did not fully clear
+the owner's own added bar** — narrower remainder opened below.
 
-**Owner feedback, 2026-08-11: gathering "seems to randomly pop up."** Checked
-against the code — it isn't random. The ~10 nodes are real placed props with
-real models (`harvest_node.gd`, `data/config/harvest.json`), not invisible
-triggers. The actual cause is that they're visually **identical** to the
-hundreds of decorative trees/rocks scattered by `vegetation.gd` around them —
-nothing distinguishes a gatherable stump from an inert one until the prompt
-appears at close range, which is what reads as arbitrary. **Add to this
-item's done-when**: a harvestable prop must read as harvestable from a
-distance a player would actually approach from — a distinct material, a
-glint, a marker, whatever `EV`'s art pass makes available — not just a prompt
-on arrival.
+### R2.3-remainder — The distance marker works but reads as a debug placeholder, not a designed "gather me" convention
+`model: opus` · `tests: none (visual)` · `area: vegetation`
+`R2.3`'s own done-when (owner feedback, 2026-08-11) added a real requirement:
+a harvestable prop has to read as harvestable from an approach distance, not
+just once the prompt appears. Two mechanisms were tried, in order, each with
+a real blind-judge verdict:
+
+1. **A per-instance MultiMesh colour tint** (the same mechanism
+   `R7.1-remainder` uses for grass jitter), applied to the whole tree/rock
+   instance. Round 1 was too weak to register at all — confirmed by
+   rendering and sampling actual pixel values, not by eye. Round 2 (strong,
+   red-dominant) was clearly visible but two independent blind critics
+   called the canopy "hard-edged red/yellow patchwork... reads as scorching
+   or disease, not a marker." Round 3 (a more balanced gold, less red) got
+   the same verdict from a fresh critic. This is a structural wall, not a
+   colour-tuning miss: the Quaternius leaf mesh carries its own baked
+   per-vertex shading variation, and any per-instance multiply exaggerates
+   it into blotches rather than a clean colour shift. Reverted.
+2. **A small standalone glint** — an unshaded emissive gold sphere positioned
+   beside (not inside) the trunk/rock, toggled off during the respawn
+   cooldown. This sidesteps the leaf-blotch problem entirely (it doesn't
+   touch the tree/rock material at all) and a blind critic confirmed it is
+   genuinely visible and correctly positioned at both distances tested. **It
+   shipped, but the same critic called it "a flat, unshaded, arbitrarily-
+   positioned sticker" that "reads as a debug/placeholder... not a designed
+   interact-here affordance"** — real, specific, and not yet addressed:
+   no gradient, no glow falloff, no relation to the trunk's own geometry
+   (bark grooves, a notch, a branch).
+
+Both are real, verified rounds — this is not "still not right," it is two
+different levers tried and two different specific verdicts recorded. Not
+chased a third round this pass (`conventions.md`'s own stopping guidance,
+and the underlying mechanism — harvesting itself — is solid and shipped).
+Whoever continues: a soft glow/particle treatment (add real light falloff or
+a `GPUParticles3D` sparkle rather than a flat unshaded mesh) is the next
+untried lever, distinct from both attempts above. Done when: a fresh blind
+critic looking at the marker calls it an intentional resource convention
+rather than a debug sprite.
 
 **`R2.4` (Orb and potion crafting) shipped — see `DONE.md`.**
 

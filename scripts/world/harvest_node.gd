@@ -11,6 +11,7 @@ extends Node3D
 ## seed spots or disappear — either is fine, nothing else depends on them.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 
 const RESPAWN_SECONDS := 60.0
 
@@ -80,29 +81,9 @@ func _on_gathered() -> void:
 	var actual_amount := _amount
 	var required_slot := -1
 	if items != null and inventory != null:
-		var required: String = str(items.call("gathered_with", _item_id))
-		if not required.is_empty():
-			# R2.2: a broken tool (0 durability) does not count as owned here --
-			# the player has to repair it before it gates a full-yield gather
-			# again, the same way not owning it at all would.
-			var slot: int = int(inventory.call("find_slot", required))
-			var owns_required: bool = slot >= 0 and int(inventory.call("durability_at", slot)) > 0
-			if owns_required:
-				required_slot = slot
-			# A broken tool doesn't count toward "owns a tool, just the wrong
-			# one" either -- otherwise a broken axe pays 0 for wood instead of
-			# falling back to the bare-handed rate, which reads as the same
-			# silent refusal a genuinely wrong tool gets, for a reason the
-			# player has no way to see (a broken tool looks identical to a
-			# working one in the satchel grid until they open its detail).
-			var owns_any_tool := false
-			if not owns_required:
-				for tool_id in items.call("tool_ids"):
-					var owned_slot: int = int(inventory.call("find_slot", str(tool_id)))
-					if owned_slot >= 0 and int(inventory.call("durability_at", owned_slot)) > 0:
-						owns_any_tool = true
-						break
-			actual_amount = int(items.call("harvest_yield", _item_id, _amount, owns_required, owns_any_tool))
+		var gathered: Dictionary = HARVEST_LOGIC.gather(_item_id, _amount, inventory, items)
+		actual_amount = int(gathered["amount"])
+		required_slot = int(gathered["required_slot"])
 
 	if actual_amount <= 0:
 		# The wrong tool for this resource: refused, and the node stays put for

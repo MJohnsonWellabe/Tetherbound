@@ -32,6 +32,11 @@
       "base_scale": 1.0,
       "collides": true,
       "collision_radius": 0.6,
+      "_comment_harvest_r2_3": "R2.3: the world's own scattered trees, not a second set of authored nodes on top of them -- makes the biggest single ground-cover layer double as the wood supply once harvest_node.gd's ~10 tutorial spots stop being enough. 1-in-12 (0.083) of ~230 trees is ~19 real gather points, spread evenly through the layer's own draw order (scatter_rules.gd) rather than clustered by chance. TUNABLE.",
+      "harvest_item": "wood",
+      "harvest_fraction": 0.083,
+      "harvest_amount": 3,
+      "harvest_respawn_seconds": 120.0,
       "_comment_leaf": "R9.4. Leaves_NormalTree_C.png measures RGB(88,123,0) -- saturation 1.00, the maximum a colour can have, at hue 77, which is the same chartreuse the ground already is. The blind critic measured 91% of every saturated pixel in frames 01 and 04 inside one 30-degree hue bin and called the world monochromatic; the canopy was reinforcing the ground rather than contrasting with it. Leaves.png is the same pack's muted leaf -- RGB(114,131,50), saturation 0.62 -- and the retint warms it one step further off the grass hue. Same mechanism the bushes layer has used since the crimson-bush fix. No new asset. TUNABLE. R9.4 round 2: the retint now aims at palette.json's meadow.leaf_green_deep (#496c34, hue 98) rather than at a warm cream. Round 1 swapped the texture and stopped the canopy being the MOST saturated thing in frame, but left it at hue ~70 -- the same family as the ground, so frame_stats still measured 85-89% of chromatic pixels in one hue bin against the references' three to five. A canopy has to be a different green from the grass under it, not a brighter one.",
       "retexture": {
         "Leaves_NormalTree": "res://assets/environment/stylized_nature/Leaves.png"
@@ -289,6 +294,11 @@
       "base_scale": 1.0,
       "collides": true,
       "collision_radius": 0.9,
+      "_comment_harvest_r2_3": "R2.3: the world's own scattered rocks, the stone-gathering half of the same fix trees got above. 1-in-14 (0.071) of ~290 rocks is ~21 real gather points.",
+      "harvest_item": "stone",
+      "harvest_fraction": 0.071,
+      "harvest_amount": 2,
+      "harvest_respawn_seconds": 120.0,
       "_comment_tint_r9_4": "R9.4. Same treatment, milder, for the same reason: Rocks_Diffuse's faces measure value 0.46 at saturation 0.09, which is a cool light grey sitting on warm ground. The blind critic also noted the rock field is 'one prop instanced rather than a rock field' -- that part is scale_min/scale_max below, not colour. TUNABLE.",
       "retint": {
         "Rocks": "#c5ac9e"

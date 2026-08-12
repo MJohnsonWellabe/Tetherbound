@@ -850,6 +850,67 @@ player would, and checks BOTH that the menu stayed shut AND that the hint
 became visible with real text — a test that only checked the first half would
 have kept shipping the silent refusal this item exists to fix.
 
+## R2.3 — Real tree/rock harvesting on the world's own scattered vegetation, shipped partial
+`tests: test_harvest` (9 new cases, all green), `run_tests.gd` 350/350,
+`smoke_art`/`smoke_traversal`/`smoke_opening` all green locally headless.
+
+**The mechanism (the item's original done-when) is real and shipped clean.**
+`scripts/world/vegetation.gd`'s own `_mark_harvestable()` takes a
+deterministic stride through a layer's own placement array (no independent
+per-instance coin flip, so coverage is even rather than seed-luck-clustered)
+and marks a fraction of `trees`/`rocks` instances with a new
+`harvest_item`/`harvest_amount`/`harvest_fraction`/`harvest_respawn_seconds`
+config (`vegetation.json`, `~230` trees at 8.3% and `~290` rocks at 7.1% —
+roughly 30-40 real gather points across the map). Each marked instance spawns
+a `vegetation_harvest_point.gd` (new) at its exact transform: no model of its
+own, since the MultiMesh instance already rendered by `vegetation.gd` IS the
+tree/rock. Respawn is a prompt-only cooldown, not a hide/show — a living tree
+doesn't disappear because you took a few logs off it, unlike
+`harvest_node.gd`'s resource piles.
+
+**Factored the tool/durability gating into `scripts/world/harvest_logic.gd`**
+(new, pure/static) rather than copying `harvest_node.gd`'s own `_on_gathered`
+logic a second time — both now call the same `gather(item_id, base_amount,
+inventory, items)`, tested directly (5 cases: right tool, bare-handed
+fallback, wrong tool refuses, broken tool falls back rather than refusing,
+untool-gated resource always pays full). `harvest_node.gd` itself shrank by
+~20 lines with no behaviour change (same tests it always had still pass).
+
+**Did not fully clear the owner's own added bar** (2026-08-11: "a harvestable
+prop must read as harvestable from a distance... a distinct material, a
+glint, a marker"). Two real, verified visual rounds, recorded honestly rather
+than shipped as done — see `R2.3-remainder` in `BACKLOG.md` for the full
+account and what the next lever should be. Short version: a MultiMesh
+per-instance colour tint (round 1-3) hit a structural wall (the leaf mesh's
+own baked per-vertex shading turns any multiply into "diseased" blotches per
+two independent blind critics) and was reverted; a small standalone unshaded
+glint sphere (final, shipped) sidesteps that and IS genuinely visible and
+correctly placed, but reads as "a debug/placeholder sticker" rather than a
+designed convention per the same blind-judge process. The interaction/tool
+mechanism is not blocked on this — a player who walks up to a marked tree
+today gets the full, correct, tested gather experience; only the
+at-a-distance legibility is still short of the bar.
+
+**Tools added**: `tools/capture_harvest_points.gd` (renders the two nearest
+`wood`-item gather points; filters to `wood` specifically because
+`Pebble_Round` — one of `rocks`' six models — is small enough that a
+"nearest by distance" pick can land on one and frame nothing legible).
+Reusable for whoever picks up `R2.3-remainder`.
+
+**One real diagnostic trap worth recording**: `MultiMesh.get_instance_color()`
+does not reliably read back what `set_instance_color()` wrote in this
+headless/software-rendering environment — even the long-shipped, working
+grass colour-jitter (`R7.1-remainder`) reads back as pure black via that
+call. Verifying a MultiMesh tint change requires an actual render (`xvfb` +
+`--rendering-driver opengl3`, never `--headless`, per `RENDER-PERF-DIAG`) and
+either a blind critic or direct pixel sampling — not a getter call. This
+cost real time this round before the render-based check caught a genuine
+first-attempt bug (the tint changed the MultiMesh's own data but never
+reached a pixel, because `vertex_color_use_as_albedo` was never being
+flipped on for the harvest-only case) that the unreliable getter had
+initially masked as "still not working" when the real fix had already
+landed.
+
 ## R9.4-remainder-8-rocks-repeat — the rocks layer reads as varied stone, not one instance duplicated
 `cc4fe0e`/`1816524`/`604d15e` on `main`. `tests: none (visual)`, plus the full
 348/348 unit suite (unaffected — data-only change, no code touched). Visual-

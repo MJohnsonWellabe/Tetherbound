@@ -17,6 +17,7 @@ extends Node3D
 
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd")
 
 ## Props are sunk very slightly so their bases never float over a slope. The
 ## terrain under a prop is sampled at a single point, but the prop has width.
@@ -25,6 +26,7 @@ const SINK := 0.06
 var _placed: int = 0
 var _draw_calls: int = 0
 var _solid: int = 0
+var _harvest_points: int = 0
 
 
 ## Build the whole scatter. `world_size` should match the terrain's.
@@ -34,6 +36,7 @@ func build(world_size: float) -> void:
 	_placed = 0
 	_draw_calls = 0
 	_solid = 0
+	_harvest_points = 0
 	_tints.clear()
 
 	var cfg: Dictionary = RULES.config()
@@ -41,6 +44,7 @@ func build(world_size: float) -> void:
 		return
 	var field: RefCounted = HEIGHTFIELD.new()
 	var by_layer: Dictionary = RULES.all_placements(field, world_size, int(cfg.get("seed", 1)))
+	_mark_harvestable(by_layer)
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should
 	# share one MultiMesh, or the draw-call saving is thrown away by the
@@ -57,6 +61,42 @@ func build(world_size: float) -> void:
 	for model: String in by_model.keys():
 		_build_batch(model, by_model[model])
 	_warn_about_shared_models(by_layer)
+
+
+## R2.3: makes a deterministic slice of a layer's OWN placements into real
+## gather points, instead of scattering a second, separate set of authored
+## nodes on top of the vegetation -- "walking up to any ordinary tree" only
+## means something if the tree IS the gather point. Marks the placement
+## Dictionary in place (a Dictionary is a reference type in GDScript, so this
+## is still visible to `_build_batch` after the by-model regroup above,
+## without threading a second data structure through it) rather than
+## building a separate list, because `_build_batch` needs to know per
+## INSTANCE, at the exact index it assigns in its own MultiMesh -- that index
+## is what both the collider placement and the interact point have to agree
+## on.
+func _mark_harvestable(by_layer: Dictionary) -> void:
+	for layer_name: String in by_layer.keys():
+		var layer: Dictionary = RULES.config().get("layers", {}).get(layer_name, {})
+		var item_id := str(layer.get("harvest_item", ""))
+		if item_id == "":
+			continue
+		var fraction := clampf(float(layer.get("harvest_fraction", 0.0)), 0.0, 1.0)
+		if fraction <= 0.0:
+			continue
+		var amount := int(layer.get("harvest_amount", 2))
+		var respawn := float(layer.get("harvest_respawn_seconds", 90.0))
+		var placements: Array = by_layer[layer_name]
+		# A stride through the layer's own draw order, not an independent
+		# per-instance coin flip -- spreads harvest points evenly across the
+		# whole layer instead of letting chance cluster (or skip) them.
+		var stride := maxi(1, roundi(1.0 / fraction))
+		for i in placements.size():
+			if i % stride != 0:
+				continue
+			var placement: Dictionary = placements[i]
+			placement["harvest_item"] = item_id
+			placement["harvest_amount"] = amount
+			placement["harvest_respawn_seconds"] = respawn
 
 
 ## A model used by two layers cannot carry two different tints.
@@ -285,6 +325,8 @@ func _build_batch(model_path: String, placements: Array) -> void:
 		if jitter > 0.0:
 			var v := 1.0 + jitter_rng.randf_range(-jitter, jitter)
 			multi.set_instance_color(i, Color(v, v, v, 1.0))
+		if placement.has("harvest_item"):
+			_spawn_harvest_point(placement)
 
 	var node := MultiMeshInstance3D.new()
 	node.name = model_path.get_file().get_basename()
@@ -312,6 +354,30 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	_placed += placements.size()
 	_draw_calls += 1
 	_add_collision(model_path, placements)
+
+
+## One real gather point on the world's own scattered vegetation (R2.3) --
+## see `_mark_harvestable` for how a placement earns the `harvest_item` key
+## this reads. The tree/rock itself is the MultiMesh instance built alongside
+## it in `_build_batch`; `vegetation_harvest_point.gd` adds its own small
+## glint marker rather than this file tinting the MultiMesh instance -- an
+## earlier attempt at a per-instance colour multiply (the same mechanism
+## R7.1-remainder uses for grass jitter) read as diseased/scorched foliage to
+## two independent blind critics once applied to a tree canopy, because the
+## leaf mesh's own baked per-vertex shading survives the multiply. A small
+## separate marker sidesteps that entirely.
+func _spawn_harvest_point(placement: Dictionary) -> void:
+	var point := HARVEST_POINT.new()
+	point.position = placement["position"]
+	add_child(point)
+	point.call("setup", {
+		"item": placement["harvest_item"],
+		"amount": placement["harvest_amount"],
+		"respawn_seconds": placement["harvest_respawn_seconds"],
+		"prompt_height": 1.0 + float(placement["scale"]),
+		"label": "Gather",
+	})
+	_harvest_points += 1
 
 
 ## Give the solid layers real collision.
@@ -395,4 +461,4 @@ func _collect(node: Node, into: Array[MeshInstance3D]) -> void:
 ## rendering cannot measure frame time honestly (D06) — but "how much did we
 ## just put in the world" is worth being able to say out loud.
 func stats() -> Dictionary:
-	return {"instances": _placed, "batches": _draw_calls, "solid": _solid}
+	return {"instances": _placed, "batches": _draw_calls, "solid": _solid, "harvest_points": _harvest_points}
