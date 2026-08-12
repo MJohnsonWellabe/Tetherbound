@@ -73,6 +73,7 @@ func _run() -> void:
 	await _a_swing_at_the_enemy_connects()
 	await _the_enemy_closes_and_hits_back()
 	await _fight_to_a_finish()
+	await _hp_is_not_auto_healed_after_the_fight()
 	await _exploration_is_restored()
 	_report()
 
@@ -474,6 +475,34 @@ func _fight_to_a_finish() -> void:
 	print("tally: %d hits on the enemy, %d on the ally, %d misses" % [
 		_hits_on_enemy, _hits_on_ally, _misses
 	])
+
+
+## R2.5: `encounter_director.gd` used to call `_ally.heal_fully()` on the way
+## out of every fight, an M2 placeholder for a healing system, camp rest and
+## potions that did not exist yet. All three exist now, so a win must leave
+## the party's HP exactly where the fight left it — not full again — and this
+## checks the real post-fight signal chain (`_on_combat_exited`), not the
+## removed call directly, so a regression that re-adds healing anywhere in
+## that path fails here.
+func _hp_is_not_auto_healed_after_the_fight() -> void:
+	var pal: RefCounted = _director.call("ally_instance")
+	if pal == null:
+		_fail("no ally instance to check post-fight HP against")
+		return
+	var hp_at_win: float = pal.hp
+	if hp_at_win >= float(pal.max_hp):
+		_fail("the ally is at full HP already at the moment of victory; " +
+			"the earlier damage-taken check should have prevented this")
+		return
+	for i in 60:
+		await physics_frame
+	var hp_after: float = pal.hp
+	if hp_after != hp_at_win:
+		_fail("the ally's HP changed from %.1f to %.1f after the fight ended with no potion or rest — something is still auto-healing" % [
+			hp_at_win, hp_after
+		])
+	else:
+		print("post-fight HP held at %.1f, no auto-heal" % hp_after)
 
 
 func _exploration_is_restored() -> void:

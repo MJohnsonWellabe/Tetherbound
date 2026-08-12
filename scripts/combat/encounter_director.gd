@@ -687,13 +687,11 @@ func _on_combat_exited(outcome: String) -> void:
 				# testing throws. M4 owns it properly and this goes away.
 				_respawn_timers[wild] = _respawn_delay()
 
-	# M2 has no healing system, no camp and no bond, so the player's pal is
-	# restored between fights. That is a placeholder for M5's stronghold rest and
-	# is deliberately generous: this milestone is measuring whether throwing is
-	# satisfying, and a recovery chore in front of the second throw measures
-	# something else.
-	if _ally != null:
-		_ally.heal_fully()
+	# R2.5: the M2 auto-heal above this comment used to run here. It was a
+	# placeholder for a healing system, camp rest and potions that did not
+	# exist yet. All three exist now (R2.4's crafting, the campfire's rest,
+	# tab_backpack.gd's use verb), so HP persists after a fight and is
+	# restored only by those — not by walking away from a win.
 
 
 ## Hand control back and forth between exploration and combat. One place, so a
