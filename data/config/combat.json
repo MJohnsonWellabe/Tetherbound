@@ -130,5 +130,17 @@
       "strength": 1.3
     },
     "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
+  },
+  "telegraph": {
+    "_comment": "R9.4-remainder-9-combat: the wind-up's own visual event. A blind critic covering the HUD's '! incoming' text found the frame indistinguishable from ordinary standing \u2014 this is a pulsing warning ring at the opponent's feet for the exact length of its wind-up beat, so the read survives with the text covered. ALL tunable presentation; nothing here touches the AI's actual telegraph duration (enemy.telegraph).",
+    "enabled": true,
+    "colour": "#ff5a3c",
+    "radius": 1.1
+  },
+  "target_marker": {
+    "_comment": "R9.4-remainder-9-combat: a chevron over the real opponent's head, so it cannot be confused with an ambient decorative pal from the same spawns.json cluster. A pale, near-white colour on purpose \u2014 it must not compete with the impact flash's warm gold or the telegraph's warning red.",
+    "colour": "#f4f7ff",
+    "height": 1.6,
+    "size": 0.42
   }
 }

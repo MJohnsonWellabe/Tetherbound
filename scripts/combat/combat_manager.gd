@@ -26,6 +26,8 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
+const TARGET_MARKER := preload("res://scripts/combat/target_marker.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -96,6 +98,11 @@ var _catch_shakes_left: int = 0
 var _catch_shake_timer: float = 0.0
 var _catch_succeeded: bool = false
 var _catch_index: int = 0
+
+## `R9.4-remainder-9-combat`: floats over the real opponent for the length of
+## the fight, so it cannot be confused with an ambient decorative pal from the
+## same spawn cluster.
+var _target_marker: Node3D = null
 
 var _rng := RandomNumberGenerator.new()
 
@@ -178,9 +185,13 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 
 	if not _wild.is_connected("strike_ready", _on_enemy_strike):
 		_wild.connect("strike_ready", _on_enemy_strike)
+	if not _wild.is_connected("telegraph_started", _on_enemy_telegraph):
+		_wild.connect("telegraph_started", _on_enemy_telegraph)
 	_wild.call("set_engaged", true, _ally_body)
 	_wild.set("arena", _arena)
 	_ally_body.set("arena", _arena)
+
+	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
 
 	_take_camera()
 
@@ -557,6 +568,25 @@ func _with_reach_for_the_bodies(move: Dictionary) -> Dictionary:
 	return adjusted
 
 
+## The wind-up's own visual event, independent of the "! incoming" banner
+## text `combat_hud.gd` draws from `enemy_is_winding_up()`. `seconds` is the
+## exact beat duration `wild_pal.gd` just entered, so the glow disappears on
+## the same physics tick the strike actually lands rather than an approximate
+## guess at it.
+func _on_enemy_telegraph(seconds: float) -> void:
+	var cfg: Dictionary = MATH.config().get("telegraph", {})
+	if not bool(cfg.get("enabled", true)) or _wild == null:
+		return
+	var host: Node = _arena if _arena != null else _player.get_parent()
+	TELEGRAPH_GLOW.begin(
+		host,
+		_wild.global_position,
+		Color(str(cfg.get("colour", "#ff5a3c"))),
+		float(cfg.get("radius", 1.1)),
+		seconds
+	)
+
+
 ## The opponent announces its swing when its wind-up completes; whether it
 ## connects is decided here, by the same arithmetic the player's attacks use.
 func _on_enemy_strike() -> void:
@@ -754,6 +784,9 @@ func _finish() -> void:
 	if _ally_body != null:
 		_ally_body.visible = false
 		_ally_body.set("arena", null)
+	# Freed with the arena it was parented to; only the stale reference needs
+	# clearing here.
+	_target_marker = null
 	if _arena != null:
 		_arena.queue_free()
 		_arena = null
