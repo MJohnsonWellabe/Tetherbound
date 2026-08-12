@@ -525,49 +525,7 @@ why, and for the root cause both attempts ran into).
 
 **`EV4-hillside-seam-remainder-3` (both named levers tried: rock's floor brightness, soil's hue pushed away from rock) shipped, partial — see `DONE.md`.** Three real rounds. Round 1 (rock photo brightness lift + a further AO/relief cut) got the first critic-confirmed positive on rock specifically: a fresh critic described real internal texture/veining where the previous round's critic saw none. Rounds 2-3 chased the soil half and found the round-2 diagnosis above was reasoning from the wrong data — the *offline* photo×tint×colour-map chain, not the actual lit render. Direct pixel sampling of the real rendered frame (sky masked out) found ~87% of all visible ground pixels landing in one narrow hue band (50–60°) regardless of what the offline chain predicted for soil — pushing soil's hue further from rock's (round 2) was landing on top of grass's own real rendered hue, not separating from it. Round 3 pushed the opposite direction instead — true tan/dirt (hue ~30–40°), which an earlier round had tried and reverted as "burnt orange" but on the OLD, oversaturated soil photo; retried on `remainder-2`'s already-fixed photo, it moved measurably (ground hue mass shifted from centred at 50–60° to centred at 30–50°, confirmed by direct pixel histogram) with no rust regression. **Did not close the item**: the blind critic's core verdict did not move across any of the three rounds — no third material, rock still read as a stain/AO artefact rather than stone, in all three. Colour/value levers on this specific soil/rock pair now read as genuinely exhausted rather than merely "close" — both of this item's own named levers were tried, plus the hue-direction reversal a fresh diagnosis motivated, and none produced a critic-visible third material despite real, verified, measured movement on every axis tried. Narrower remainder opened below, aimed at a different kind of lever entirely.
 
-### EV4-hillside-seam-remainder-4 — Colour/value tuning is exhausted; the soil band needs a structural or geometric lever, not another tint
-`model: sonnet` · `tests: none (visual)` · `area: terrain`
-Three real rounds tried both of `remainder-3`'s named levers (rock's floor
-brightness, soil's hue pushed away from rock in both directions) and one
-data-driven pivot (soil pushed toward true tan/dirt instead of yellow-olive,
-once direct pixel sampling showed the yellow-olive direction was converging
-with grass's own real rendered hue, not separating from it). Every round
-produced real, measured movement — rock genuinely reads with more internal
-texture now, and soil's rendered hue mass moved a full 15–20 degrees toward
-the tan family — but the blind critic's core verdict never changed across
-any of the three: two materials, not three; the "rock" reads as a stain,
-watermark or AO artefact rather than stone, regardless of its exact hue or
-saturation. This is the wall `conventions.md`'s stopping rule exists to
-detect: colour is not the remaining variable.
-
-`remainder-3`'s own out-of-scope note already named the likely real cause:
-the hill's geometry is a perfectly smooth dome with no bump, ledge or
-protrusion under the rock texture, and `blend_deg` produces a smooth,
-continuous colour gradient with no textural or geometric discontinuity at
-the material boundary. A human reads "two materials" from a visible seam or
-a change in surface form, not from a hue/value shift alone painted onto an
-otherwise-identical smooth surface — which is consistent with every round
-here moving the paint without moving the verdict.
-
-The next lever is `playground_heightfield.gd`'s own domain, not
-`terrain_playground.json`'s colour block: `outcrop_jitter_deg` already adds
-noise to the SLOPE SAMPLE used for band selection (where the bands fall);
-what has not been tried is noise added to the HEIGHT itself in the rock/soil
-slope range, so the surface gets real bumps and ledges under the texture
-rather than staying a mathematically smooth dome. This is a heightfield
-noise parameter, not a new mesh or texture asset, so it does not trigger
-`CLAUDE.md`/`D24`'s reference-art gate — but it is a genuinely different
-class of change from anything tried in `EV4-hillside-seam` through
-`remainder-3` (all of which stayed in the colour/shader-parameter layer),
-and touches the terrain bake rather than the material config, so scope it
-as its own attempt rather than a fourth colour round.
-Done when: a fresh blind critic given hillside frames names a visible third
-soil/tan tone distinct from both grass and rock, without describing rock as
-reading like a stain, watermark or AO artefact rather than stone — or, if a
-real geometry attempt also fails to move the verdict, this becomes a
-`BLOCKED.md` entry for the owner (accept the procedural-blend ceiling on
-this landform, the same trade already accepted for `grandpas-house-route.png`
-in `BLOCKED.md`).
+**`EV4-hillside-seam-remainder-4` (real height relief, gated to each rise's flank, tried at two amplitudes) shipped, did not clear the bar — see `DONE.md`.** A genuinely different lever from every colour round above; still didn't move the critic's core verdict even at 2.5m amplitude. Moved to `BLOCKED.md` per this item's own pre-authorized fallback — the hillside's rock/soil read is now an owner-facing question, not an open backlog item.
 
 Also named by this item's rounds, explicitly out of scope (pre-existing,
 unrelated to the slope-material bands specifically): the sun/moon disc

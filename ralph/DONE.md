@@ -343,6 +343,62 @@ picked up) and corrected the comment to say plainly that the key doesn't
 exist yet and point at `HD2` for the real work, rather than inventing the
 feature here.
 
+## EV4-hillside-seam-remainder-4 — Real height relief tried at two amplitudes; verdict didn't move, moved to `BLOCKED.md`
+`tests: none (visual)` item's own field; 354/354 full suite green (unaffected —
+config/heightfield-only change, ran anyway per the file's own touch).
+`cdbc3f9`→rebased (code), `e4a7393`→rebased (amplitude bump). Two real
+`Agent`-tool blind sub-agent rounds against `tools/capture_hillside.gd`.
+
+**A genuinely different lever from every colour round before it.**
+`remainder` through `remainder-3` (three rounds) all repainted the SAME
+perfectly smooth dome — tint, photo brightness, hue direction, band
+thresholds — and a blind critic's core verdict never moved: "two
+materials, not three; rock reads as a stain/watermark/AO artefact, not
+stone." `remainder-3`'s own out-of-scope note diagnosed why: a slope
+reading from an unbroken, mathematically smooth surface can only ever
+fake a material change, never show one. This item tried the structural
+fix instead: `playground_heightfield.gd` gained a new `_relief` FastNoiseLite
+field (sixth noise layer, distinctly seeded, ~14m wavelength — finer-
+grained than `_outcrop`'s existing ~35m slope-band-jitter lobes), added
+as real height inside `_rise_height()`'s per-peak loop, gated to a
+flank-only smoothstep window (zero at the summit, zero at the rim) so
+each rise's footprint and peak height are provably unchanged.
+
+**Round 1 (`relief_amplitude` 0.8m).** Chosen conservatively so
+`test_there_is_somewhere_steep_enough_to_matter`'s slope-fraction bounds
+and this landform's own probed max slope (~52°) held comfortably. Before
+trusting a render, direct-probed `height_at`/`slope_degrees_at` along the
+flank (a small scratch script, not committed) to rule out a silent no-op
+— confirmed real, non-monotonic slope wobble inside the gated zone, not a
+bug. A fresh blind critic on the render still called the silhouette "a
+single smooth, continuous, unbroken curve" in all three frames and found
+the underlying geometry "identical" wherever the grey material appeared.
+0.8m against a landform with 72m of total relief and a 78m rise radius is
+real but proportionally tiny at viewing distance.
+
+**Round 2 (`relief_amplitude` 2.5m, ~3x).** Visibly broke the dome's
+silhouette in two of three frames this time — real, visible undulation
+along the crest line, not present in round 1's renders. A second fresh
+blind critic confirmed the change is real ("a slight ripple... near the
+crest") but delivered the same core verdict as every round before it,
+near word for word: "still reads as a smooth green dome with grey
+patches added... the underlying mesh has no relief anywhere a material
+changes." The one thing that moved sits away from where the actual
+grass/soil/rock transition happens on the flank, not on top of it — a
+real spatial misalignment between the gated relief zone and the visual
+silhouette a given camera angle actually traces, not a fix.
+
+**Did not close the item; moved to `BLOCKED.md` per this item's own
+pre-written fallback.** Two full rounds of a genuinely different class of
+lever (real geometry, not colour), an order of magnitude apart in
+amplitude, both with real verified movement and zero verdict movement —
+combined with the three colour rounds before it, five rounds total across
+two entirely different mechanisms with the same result. This reads as a
+real ceiling this landform's single smooth-dome primitive imposes on a
+coarse procedural noise blend, not an untried lever — see the new
+`BLOCKED.md` entry for the full account and what would clear it (the
+owner's own read of the current frames).
+
 ## R9.4-remainder-8-rocks-repeat — the rocks layer reads as varied stone, not one instance duplicated
 `cc4fe0e`/`1816524`/`604d15e` on `main`. `tests: none (visual)`, plus the full
 348/348 unit suite (unaffected — data-only change, no code touched). Visual-
