@@ -89,6 +89,18 @@ func _run() -> void:
 	_wild = _director.call("wild_pal") as Node3D
 	_place_player_outdoors()
 
+	# A second, independent consequence of the same D18/SA0 opening redesign:
+	# placing the player outdoors skips the whole Grandpa/starter-choice
+	# sequence, so `adopt_starter()` never runs and `_director`'s internal
+	# `_ally` stays null. `_engageable()` refuses to start a fight at all
+	# without one (encounter_director.gd:583), which is why a THIRD full run,
+	# genuinely in the meadow next to the real wild pal this time, still wrote
+	# six identical exploration-camera frames and the same four failures —
+	# the arena never opened because there was nothing to fight with. Adopt
+	# one of the three starters directly, the same call the opening's own
+	# `starter_picker.gd` makes.
+	await _director.call("adopt_starter", "terrapup", "")
+
 	# The M1 debug readout covers a third of the frame and is not part of what a
 	# critic should be looking at. The combat HUD stays: whether the fight is
 	# readable is exactly the question.
