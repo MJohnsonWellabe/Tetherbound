@@ -19,12 +19,15 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 ## Thresholds are on the same 0..1 chance `catch_math.catch_chance` returns for
 ## a dead-centre hit; presentation only, so they live here rather than in the
 ## gameplay config.
+## Kept terse: the first capture showed the long bottom-tier label wrapping
+## the whole aim verb row onto a second line. The "wear it down" teaching
+## lives in the breakout's failure text instead.
 const ODDS_TIERS: Array = [
 	[0.55, "great odds", "7ed87e"],
 	[0.35, "good odds", "a8d87e"],
 	[0.18, "fair odds", "e8d07a"],
 	[0.08, "slim odds", "e8a25a"],
-	[0.0, "barely catchable — wear it down", "e87a5a"],
+	[0.0, "poor odds", "e87a5a"],
 ]
 
 ## Health bar colour at full and at empty. The slide between them is the only
@@ -209,7 +212,15 @@ func _draw_enemy() -> void:
 	# The recovery line matters as much as the warning: it is the window the
 	# player is meant to punish, and a fight where the opening is invisible
 	# teaches people to mash rather than to watch.
-	if bool(_manager.call("enemy_is_winding_up")):
+	#
+	# Silenced through the catch resolution and the fight's ending. The wild
+	# pal freezes mid-beat when it goes into the orb, so whatever it was doing
+	# ("! incoming — move", "it's open — hit it") otherwise stays on screen
+	# shouting stale advice over the wobble — the first capture showed
+	# "incoming" over an empty arena and "hit it" over a caught banner.
+	if bool(_manager.call("is_resolving_catch")) or str(_manager.call("outcome")) != "":
+		_telegraph.text = ""
+	elif bool(_manager.call("enemy_is_winding_up")):
 		_telegraph.text = "!  incoming — move"
 	elif bool(_manager.call("enemy_is_rooted")):
 		# Was the bare word `open`, which is the name of a state in the AI and not
@@ -343,7 +354,9 @@ func _on_catch_refused(reason: String) -> void:
 ## bridge to the next shake (`resolve.shake_interval` plus slack) — at a fixed
 ## 0.7s the dots blinked out between shakes once the interval grew past it.
 func _on_orb_shook(index: int) -> void:
-	_miss_text = "%s" % "•".repeat(index)
+	# Sized up: at the row's default size the count was a few near-invisible
+	# pixels at the bottom of the frame, which is no way to count a drumroll.
+	_miss_text = "[font_size=34]%s[/font_size]" % " •".repeat(index).strip_edges()
 	_miss_left = float(CATCH.config().get("resolve", {}).get("shake_interval", 0.85)) + 1.0
 
 

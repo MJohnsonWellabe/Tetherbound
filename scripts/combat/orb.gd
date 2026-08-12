@@ -24,6 +24,7 @@ extends Node3D
 ## on render frames is invisible to the survey harness and unreviewable.
 
 const CATCH := preload("res://scripts/combat/catch_math.gd")
+const FLASH := preload("res://scripts/combat/impact_flash.gd")
 
 ## Struck the target. `offset` is metres from its centre of mass, which is what
 ## the accuracy half of the catch formula reads.
@@ -67,12 +68,20 @@ const HALO_SEGMENTS := 18
 ## One shake's rock animation. Kept under `resolve.shake_interval` so every
 ## shake is followed by stillness — the stillness is where the tension lives.
 const SHAKE_SECONDS := 0.45
-## How far the orb tips to each side during a shake, radians (~28 degrees).
-const SHAKE_TILT := 0.5
+## How far the orb tips to each side during a shake, radians (~34 degrees).
+const SHAKE_TILT := 0.6
 ## The little hop that goes with the rock, metres.
-const SHAKE_HOP := 0.09
+const SHAKE_HOP := 0.14
 ## Energy kept after the drop's bounce.
 const BOUNCE_RESTITUTION := 0.35
+
+## The orb glows hard in flight so four pixels of gold read against sunlit
+## grass; the resolution plays at arm's length, where the same emission blew
+## the sphere out to a featureless white blob — the first captured close-up
+## showed no gold at all. Resting drops low enough that the albedo gold is
+## what you see; the halo supplies the glow.
+const FLIGHT_EMISSION := 2.2
+const REST_EMISSION := 0.45
 
 var _halo: MeshInstance3D = null
 var _halo_mesh: ImmediateMesh = null
@@ -119,10 +128,26 @@ func _build_placeholder() -> void:
 	material.albedo_color = Color("#d9b340")
 	material.emission_enabled = true
 	material.emission = Color("#ffe9a8")
-	material.emission_energy_multiplier = 2.2
+	material.emission_energy_multiplier = FLIGHT_EMISSION
 	_mesh.mesh = sphere
 	_mesh.material_override = material
 	_orb_material = material
+
+	# A dark equator band, child of the sphere so it tilts with it. A uniform
+	# glowing sphere shows NO rotation: the first captured shake frame was
+	# pixel-identical to the resting frame because there was nothing on the
+	# ball for the tilt to move. The band is the feature the rock reads by.
+	var band := TorusMesh.new()
+	band.inner_radius = _radius * 0.48
+	band.outer_radius = _radius * 0.56
+	var band_material := StandardMaterial3D.new()
+	band_material.albedo_color = Color("#5f4514")
+	band_material.roughness = 0.6
+	var band_mesh := MeshInstance3D.new()
+	band_mesh.mesh = band
+	band_mesh.material_override = band_material
+	band_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_mesh.add_child(band_mesh)
 
 	# A disc with alpha falling to nothing at its rim, rebuilt each frame facing
 	# the camera. It was a QuadMesh with a flat colour, which is exactly what it
@@ -328,13 +353,21 @@ func _tick_rest(delta: float) -> void:
 		# Rise-and-settle envelope so the rock starts and ends at zero tilt —
 		# a shake that ends mid-lean reads as the animation being cut off.
 		var envelope: float = sin(t * PI)
-		_mesh.rotation.z = sin(t * TAU * 1.5) * SHAKE_TILT * envelope
-		_mesh.position.y = envelope * SHAKE_HOP
+		var rock: float = sin(t * TAU * 1.5) * envelope
+		_mesh.rotation.z = rock * SHAKE_TILT
+		# The rock pivots at the GROUND CONTACT, not the sphere's centre: a ball
+		# tipping on the spot displaces sideways by its own radius's worth of
+		# lean, and that lateral travel is what a still frame (and a player's
+		# eye) actually registers — the first capture proved pure rotation on a
+		# ball is invisible. Displaced across the camera's view so the travel
+		# is never along the look axis.
+		var lateral: Vector3 = _across_the_view() * sin(rock * SHAKE_TILT) * _radius * 1.6
+		_mesh.position = lateral + Vector3.UP * envelope * SHAKE_HOP
 		halo_scale += envelope * 1.1
 		halo_alpha = 1.0
 		if _shake_left <= 0.0:
 			_mesh.rotation.z = 0.0
-			_mesh.position.y = 0.0
+			_mesh.position = Vector3.ZERO
 
 	if _phase == Phase.SEALED:
 		_seal_time += delta
@@ -344,15 +377,31 @@ func _tick_rest(delta: float) -> void:
 		halo_scale = REST_HALO_SCALE + 0.8 + bloom * 2.2
 		halo_alpha = 1.0
 		if _orb_material != null:
-			_orb_material.emission_energy_multiplier = 3.2 + bloom * 2.0
+			# Warm, not white: past ~2.5 the sphere clips to a featureless blob
+			# and the seal stops reading as the gold orb it is.
+			_orb_material.emission_energy_multiplier = 1.1 + bloom * 0.9
 
 	_draw_halo(halo_scale, halo_alpha)
 
 
 ## One wobble, called by the combat manager per `orb_shook`. The count and the
 ## outcome were decided when the orb landed; this is the performance of it.
+## The small ground pulse guarantees each shake reads as a beat even at a
+## distance where the rock itself is a few pixels.
 func shake(_index: int) -> void:
 	_shake_left = SHAKE_SECONDS
+	FLASH.burst(get_parent(), global_position, Color("#ffd27a"), 0.55, 0.28, 0.8)
+
+
+## The horizontal direction across the current camera's view, for shake travel
+## the camera can actually see.
+func _across_the_view() -> Vector3:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return Vector3.RIGHT
+	var right: Vector3 = camera.global_transform.basis.x
+	right.y = 0.0
+	return Vector3.RIGHT if right.length() < 0.01 else right.normalized()
 
 
 ## The catch succeeded: hold a warm, settled glow until the fight cleans up.
@@ -383,6 +432,8 @@ func _check_target() -> bool:
 
 	_phase = Phase.HANGING
 	_velocity = Vector3.ZERO
+	if _orb_material != null:
+		_orb_material.emission_energy_multiplier = REST_EMISSION
 	# Reported as distance from the centre, clamped at the body's own radius, so
 	# the accuracy bonus is scored against the creature rather than against the
 	# orb's generous collision sphere. Widening `radius` to forgive the input

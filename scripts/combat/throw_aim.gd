@@ -257,6 +257,11 @@ func _release() -> void:
 		_leave_aim()
 		return
 	state = State.THROWN
+	# The preview is a promise about a throw that has now been made. Left
+	# undrawn-but-visible, its last frame — the arc line and the landing disc —
+	# hung frozen in the world through the flight and the whole catch
+	# resolution, which a captured frame showed plainly.
+	_hide_preview()
 
 	var camera := _aim_camera()
 	var origin := _player.global_position + Vector3.UP * _spawn_height

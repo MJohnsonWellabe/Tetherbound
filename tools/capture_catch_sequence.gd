@@ -117,7 +117,7 @@ func _run() -> void:
 		foe.hp = foe.max_hp
 		var first := attempt == 0
 		var outcome := await _one_throw("01-aiming-full-health" if first else "",
-			"02-orb-in-flight" if first else "", "03-strike-absorb" if first else "",
+			"02-orb-in-flight" if first else "", "03-strike" if first else "",
 			"04-orb-resting" if first else "", "05-orb-shakes" if first else "",
 			"06-breakout")
 		if outcome == "failure":
@@ -194,10 +194,17 @@ func _one_throw(aim_frame: String, flight_frame: String,
 		for i in 60:
 			await physics_frame
 		return ""
+	# Two beats, photographed separately, because they cannot share a still:
+	# the flash peaks in the first tenth of a second and the shrink only READS
+	# once the creature is well under size — round 2 captured "strike-absorb"
+	# at 0.18s and showed a full-size creature next to a spent flash.
 	if strike_frame != "":
-		for i in BEAT_FRAMES + 6:
+		for i in BEAT_FRAMES:
 			await physics_frame
 		await _capture_paused(strike_frame)
+		for i in 14:
+			await physics_frame
+		await _capture_paused(strike_frame.replace("-strike", "-absorbing"))
 
 	# The orb at rest under the resolve camera, before the first shake.
 	if rest_frame != "":

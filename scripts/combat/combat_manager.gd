@@ -735,6 +735,10 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 		_wild.call("play_absorb", strike_point, absorb)
 	elif _wild != null:
 		_wild.visible = false
+	# The "this is your opponent" marker has no opponent to mark while the
+	# creature is in the orb; left on, it floats over empty grass all wobble.
+	if _target_marker != null and is_instance_valid(_target_marker):
+		_target_marker.visible = false
 	_watch_the_orb(orb)
 
 	_catch_phase = CatchPhase.ABSORB
@@ -840,6 +844,8 @@ func _finish_catch() -> void:
 		# situation" beat it takes when a fight opens (`first_attack_delay`)
 		# instead of swinging on the frame it reappears.
 		_wild.call("set_engaged", true, _ally_body)
+	if _target_marker != null and is_instance_valid(_target_marker):
+		_target_marker.visible = true
 	_take_camera()
 	catch_resolved.emit(false, _catch_index)
 	state_changed.emit()
