@@ -444,13 +444,38 @@ time it's stuck there, which is consistent with the "CPU pinned near 100%,
 not hung" symptom this entry originally recorded. `tools/diag_scene_perf.gd`
 now exists specifically to re-diagnose this class of problem in minutes
 instead of another open-ended wait; its own header has the full mechanism.
-Real frames now sit ready for the actual blind-judge pass this item still
-needs (`square-convergence.png`, `the-rise-route.png`) — that pass has not
-happened yet, only the render-performance blocker is cleared. Whoever picks
-this up next: run `xvfb-run -a -s "-screen 0 1280x720x24" godot --path .
---rendering-driver opengl3 --resolution 1280x720 --script
-tools/capture_paths.gd` (no `--headless`), then the real `visual-judge`
-blind pass this entry's own "done when" asks for.
+
+**The real blind pass ran 2026-08-12 (this entry's own missing step) — verdict
+unchanged.** Re-rendered `square-convergence.png`/`the-rise-route.png` with
+the documented invocation, then dispatched a genuine `Agent`-tool sub-agent
+(not a self-review) against `docs/reference/` with no hint of what to look
+for. It independently named both blobs unprompted — "the two large soft-edged
+shadow blobs… Neither has a silhouette that matches any object visible in
+frame… nothing in either shot gives the eye a caster to anchor them to, so
+they read as unmotivated dark patches" — the exact opposite of this entry's
+done-when (stop naming it, or trace it to the Barn/Rise unprompted). So the
+earlier self-administered read was not the false positive a fresh look might
+have overturned; a genuinely blind critic reaches the same place.
+
+**Not chased further this pass, and not a `lighting`-scope task.** This
+entry's own prior analysis already named the only two remaining levers as
+outside `lighting`: a sun-angle change (risks the terrain-form-vs-shadow
+balance `R9.4` negotiated across many other frames) or a scene-level change
+(the Barn's placement — `data/config/village.json`, `area: village` — or the
+Rise's crest shape — terrain heightfield, `area: terrain`). Checked both
+before writing this off as someone else's problem rather than assuming it:
+`EV6` (rebuild the settlement on the Medieval Village MegaKit) is live on
+`area: village` right now and is explicitly repositioning/replacing the farm
+buildings the current Barn shadow is cast by, so diagnosing or fixing that
+caster's exact placement today would very likely be thrown away the moment
+`EV6` lands. The Rise's crest half has no such conflict but is squarely
+`EV4-hillside-seam-remainder`'s own territory (terrain-area slope/placement
+work on the same landform), not a second unrelated terrain task. Given
+neither remaining lever fits `area: lighting` and one actively collides with
+a live lane, this stops here rather than reaching across areas. Whoever picks
+up the Barn half: wait for `EV6` to land first, then re-render and re-judge
+against the new settlement geometry before touching anything — the caster
+this entry diagnosed may not exist in its current form afterward.
 
 **`EV4-hillside-seam` (blotchy hillside slope material) rounds 1-4 shipped —
 see `DONE.md`.** Rock went from mathematically unreachable (round 2's wider

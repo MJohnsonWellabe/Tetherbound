@@ -3,7 +3,47 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
-## RENDER-PERF-DIAG — Root-caused the "100+ minute" capture-tool wall: `--headless` silently breaks off-screen rendering
+## EV4-textures-lighting-remainder — Ran the genuine blind pass this item was missing; verdict unchanged, remainder rescoped off `lighting`
+`tests: none (visual)` (item's own field; no code changed)
+
+The item's own "done when" needed a real blind sub-agent verdict, which
+had never actually happened — the prior pass was self-administered (no
+`Agent`-equivalent tool available in that checkout, per its own `DONE.md`
+entry) and the render itself was blocked by the `--headless` capture-tool
+trap `RENDER-PERF-DIAG` (above) diagnosed in the same session. With that
+blocker cleared, ran the real thing: `tools/capture_paths.gd` (documented
+invocation, no `--headless`) produced fresh `square-convergence.png` and
+`the-rise-route.png`, then a genuinely blind `Agent`-tool sub-agent judged
+them against `docs/reference/` with no hint of what to look for or what had
+changed.
+
+**The verdict did not change.** Unprompted, it named both blobs as the
+biggest lighting defect in the set: "the two large soft-edged shadow
+blobs… Neither has a silhouette that matches any object visible in
+frame… nothing in either shot gives the eye a caster to anchor them to."
+That is the opposite of the done-when (stop naming it, or trace it to the
+Barn/Rise without being told) — so this was a genuine re-test of the
+hypothesis that a fresh blind read might reverse the self-administered
+one, and it did not reverse it.
+
+**Did not attempt a fix.** The item's own prior analysis already narrowed
+the remaining levers to two, both outside `area: lighting`: a sun-angle
+change (risks the terrain-form-vs-shadow balance `R9.4` negotiated across
+many other frames, a cross-cutting change this narrow item shouldn't make
+unilaterally) or a scene-level change to the actual casters (`Barn`
+placement in `data/config/village.json`, `area: village`; the Rise's crest
+shape, `area: terrain`). Checked before deferring rather than assuming:
+`EV6` (rebuild the settlement on the Medieval Village MegaKit) is live on
+`area: village` right now and is explicitly repositioning the farm
+buildings that cast the `square-convergence.png` shadow, so touching Barn
+placement today would likely be thrown away by that landing. The Rise's
+crest half has no such live conflict but belongs with
+`EV4-hillside-seam-remainder`'s own terrain-placement work on the same
+landform rather than as a second, unrelated terrain task.
+
+Updated `BACKLOG.md`'s own entry in place with this finding and the handoff
+note (wait for `EV6` before re-diagnosing the Barn caster). Item stays open;
+not closed by this pass.
 `tests: none` (tooling/diagnostic, no gameplay code touched)
 
 Two independent firings had each burned significant time against a visual
