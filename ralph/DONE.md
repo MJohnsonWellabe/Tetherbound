@@ -3,6 +3,68 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R9.4-remainder-8-rocks-repeat — the rocks layer reads as varied stone, not one instance duplicated
+`cc4fe0e`/`1816524`/`604d15e` on `main`. `tests: none (visual)`, plus the full
+348/348 unit suite (unaffected — data-only change, no code touched). Visual-
+affecting: three rounds of `tools/capture_buildings.gd` + a genuine blind
+`.claude/skills/visual-judge` sub-agent pass each round, per `conventions.md`.
+
+A blind critic named the `rocks` layer's boulder clusters "one rock instance
+duplicated, not a quarry of varied stone" — same grey blocky low-poly shape,
+same size, same colour, evenly spaced. `scale_min`/`scale_max` already vary
+size (0.28-2.1) and the layer only has 3 boulder meshes to draw from (the
+fuller Stylized Nature MegaKit that might carry more rock forms is itch.io-
+blocked, `EV1-remainder`), so the only remaining honest lever was colour —
+the same one `EV2` used to split one tree mesh into spring/deep/yellow-green
+material variants. `vegetation.gd` already supports both mechanisms used
+here (`variant_retint`, `colour_jitter`); no code change, only
+`data/config/vegetation.json`.
+
+**Took three real rounds to land, and the middle round is the useful part of
+this record.** Round 1 (hue-only variants in one narrow value band) was
+crushed flat by scene lighting — a real render sampled the rocks at their own
+on-screen shaded position (RGB 50-70,60-75,30-45, dark and low-saturation
+regardless of source albedo) and a fresh blind critic still saw "no
+colour/tone variation," the same lighting-compression trap this project
+already hit on bark and soil retints. Round 2 pushed the SAME hue apart on
+VALUE instead (a near-black variant, a near-white one) — real, measured pixel
+movement, but a fresh critic's own diagnosis was sharper than a flat repeat:
+"the tonal difference... is lit-face vs shadow-face on the SAME mesh, not a
+material variant — rotate the camera and the different rock would go dark
+too... no true colour/material variety, only lighting-driven contrast." A
+same-hue value swing is genuinely ambiguous with the directional-light
+shading a faceted low-poly mesh already produces on its own. Round 3 switched
+axis to HUE instead of value — three genuinely different mineral families
+(warm tan anchor, cool blue-grey slate, rust-brown ironstone) — because a
+single white directional light changes a Lambertian surface's value with
+face angle but not its hue, so hue can't be fake-produced by shading the way
+value can. A third fresh blind critic confirmed it directly: "I can see at
+least four genuinely different hues... the rust-brown ones read rust-brown
+even on their lit top faces, not merely a darkened version of the grey
+stone... That's real material variety, not a repeated instance... colour/
+material variety — fixed."
+
+**What the same critic said is still NOT fixed, correctly out of this item's
+scope**: every rock is still the same faceted low-poly silhouette at
+nearly the same scale, in a loose evenly-spaced row rather than a jumbled
+quarry pile with real shape/size variety. That is exactly the ceiling this
+item's own text named going in — the layer only has 3 boulder meshes, a
+placement/scale problem colour cannot solve, and the fuller Stylized Nature
+MegaKit that might supply real shape variety remains itch.io-blocked
+(`EV1-remainder`). Also named, explicitly pre-existing and out of scope: no
+background mountain/ridge closing the horizon, the settlement's buildings
+strung along one even contour line, thin foliage cover near the buildings, a
+daylight interior light left on, a flat texture-patch artefact on the
+mound's face, and a stamped-looking path-stone layout — none of these are
+the rocks layer, and none are chased here.
+
+**One process note for the next visual-affecting pass on this box**: three
+render rounds cost roughly 5 minutes each under this container's software
+(Compatibility/llvmpipe) renderer for `tools/capture_buildings.gd`'s 7
+viewpoints — consistent with `R9.4-remainder-6`'s own measured per-frame
+cost, and cheap enough that iterating value/hue choices by rendering and
+judging, rather than guessing once, was the right call here.
+
 ## SA3 — A believable physical perimeter, and a failsafe under it
 `0d921e0` on `main`. `tests: smoke_traversal` (extended with 8-bearing
 perimeter walks + a kill-volume check, green).

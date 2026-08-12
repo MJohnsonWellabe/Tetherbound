@@ -1248,21 +1248,19 @@ see the remainder below.
 One real, one a false alarm on the same pattern as the windmill rock. A
 narrower open item, `R9.4-remainder-8-rocks-repeat`, is below it.
 
-### R9.4-remainder-8-rocks-repeat — the rocks layer reads as one instance duplicated, not a quarry
-`model: sonnet` · `tests: none (visual)` · `area: vegetation`
-Named by a blind critic judging `R9.4-remainder-8-followup`'s slope-alignment
-fix (given no knowledge of what changed, so this is an independent finding,
-not the thing that item set out to fix): rock clusters in frames `05` and
-`06` "read as one rock instance duplicated, not a quarry of varied stone" —
-same grey blocky low-poly shape, same size, same colour, evenly spaced.
-`rocks`' own `scale_min`/`scale_max` (0.28–2.1) already varies size; the
-complaint is shape and colour uniformity across only 3 boulder meshes +
-3 pebble meshes (`vegetation.json`'s `rocks.models`). The fuller Stylized
-Nature MegaKit that might carry more rock forms is itch.io-blocked
-(`EV1-remainder`) — same ceiling `EV2-landmark-ceiling` already hit for hero
-trees. Low priority; not chased further this pass. Done when: a blind critic
-stops calling the rock field one instance repeated, or the itch.io block
-clears and a wider rock set is available to draw from.
+**`R9.4-remainder-8-rocks-repeat` (the colour half — the rocks layer now reads as varied stone) shipped — see `DONE.md`.** Three rounds: hue-only in one
+value band was crushed flat by scene lighting; value-only (same hue, spread
+dark/light) got real pixel movement but a fresh blind critic correctly called
+it out as indistinguishable from lit-face-vs-shadow-face on one mesh; three
+genuinely different HUE families (warm tan, cool blue-grey slate, rust-brown
+ironstone) survive that confound because a single directional light changes
+value with face angle but not hue, and a third blind critic confirmed it
+directly — "real material variety, not a repeated instance." **What is NOT
+fixed, and is not this item's scope**: every rock is still the same faceted
+low-poly silhouette at the same rough scale in a loose evenly-spaced row, not
+a jumbled quarry pile — real shape/size variety needs the itch.io-blocked
+fuller Stylized Nature MegaKit (`EV1-remainder`), same ceiling
+`EV2-landmark-ceiling` already hit for hero trees.
 
 **`R9.4-remainder-6` (root-caused why `survey_combat.sh` never completed) shipped — see `DONE.md`.** Not a hang: real per-phase timing (added to the
 script itself) shows `SETTLE_FRAMES` alone costs ~278s running completely
