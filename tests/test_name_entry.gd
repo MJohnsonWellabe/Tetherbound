@@ -110,6 +110,31 @@ func test_moving_onto_a_shorter_row_clamps_the_column() -> void:
 	assert_ne(_entry.selected(), "", "a clamped cursor still has to name a cell")
 
 
+## OF3: moving onto the ragged bottom row used to clamp `column` permanently
+## — bouncing back up left the cursor stuck at the clamped column instead of
+## back where the player actually was.
+func test_moving_off_a_shorter_row_restores_the_original_column() -> void:
+	var last: int = ENTRY.ROWS.size() - 1
+	_entry.row = last - 1
+	_entry.column = (ENTRY.ROWS[last - 1] as Array).size() - 1
+	var started_at: int = _entry.column
+	_entry.move(0, 1)  # onto the shorter bottom row: clamps
+	assert_true(_entry.column < started_at, "sanity: the clamp should have moved it")
+	_entry.move(0, -1)  # back onto the original row: should be un-clamped
+	assert_eq(_entry.column, started_at, "the cursor should return to where it actually was")
+
+
+func test_a_deliberate_horizontal_move_becomes_the_new_desired_column() -> void:
+	var last: int = ENTRY.ROWS.size() - 1
+	_entry.row = last - 1
+	_entry.column = (ENTRY.ROWS[last - 1] as Array).size() - 1
+	_entry.move(0, 1)  # clamp onto the short row
+	_entry.move(-1, 0)  # a deliberate left press while clamped
+	var after_left: int = _entry.column
+	_entry.move(0, -1)  # back onto a full-width row
+	assert_eq(_entry.column, after_left, "a deliberate move on the short row should be the new target, not the pre-clamp column")
+
+
 func test_every_cell_on_the_keyboard_is_reachable_and_does_something() -> void:
 	for r in ENTRY.ROWS.size():
 		var row: Array = ENTRY.ROWS[r]

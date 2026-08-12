@@ -22,6 +22,13 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## _physics_process runs before or after the arbiter's. Two frames is deaf to
 ## the opening press whichever way round the tree is walked, and is far below
 ## what a human can press twice inside.
+##
+## OF3: the guard used to simply DROP any press that landed during it rather
+## than count it. That is a narrow window (33ms), but it is not zero, and a
+## player who taps interact again quickly right after opening a conversation
+## (reasonable muscle memory — "one press per line") could lose that tap
+## outright rather than have it advance the first line the instant the guard
+## clears. `_buffered_during_guard` remembers it instead.
 const OPEN_GUARD_FRAMES := 2
 
 const PANEL_BG := Color(0.05, 0.06, 0.07, 0.93)
@@ -37,6 +44,7 @@ signal finished(conversation_id: String)
 
 var _runner: RefCounted = RUNNER.new()
 var _guard: int = 0
+var _buffered_during_guard: bool = false
 var _last_portrait: String = ""
 
 @onready var _box: Control = $Root/Box
@@ -103,6 +111,7 @@ func start(conversation_id: String) -> bool:
 	if not _runner.start(conversation_id):
 		return false
 	_guard = OPEN_GUARD_FRAMES
+	_buffered_during_guard = false
 	_draw()
 	return true
 
@@ -135,11 +144,16 @@ func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	if not _runner.is_active():
 		return
+	if Input.is_action_just_pressed("interact"):
+		if _guard > 0:
+			_buffered_during_guard = true
+		else:
+			advance()
 	if _guard > 0:
 		_guard -= 1
-		return
-	if Input.is_action_just_pressed("interact"):
-		advance()
+		if _guard == 0 and _buffered_during_guard:
+			_buffered_during_guard = false
+			advance()
 
 
 func _draw() -> void:

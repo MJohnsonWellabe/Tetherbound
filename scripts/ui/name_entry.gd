@@ -42,7 +42,28 @@ const ROWS := [
 
 var text: String = ""
 var row: int = 0
-var column: int = 0
+var _column: int = 0
+## The column a deliberate LEFT/RIGHT press (or a direct assignment, e.g. a
+## test teleporting the cursor) last asked for, independent of the clamped
+## `column` below. Rows are ragged (the bottom row is 7 cells, every other
+## row is 10), so moving down onto a shorter row clamps `column` to stay in
+## bounds — but without this, moving back up afterwards left the cursor
+## stuck at the clamped position instead of back where the player actually
+## was, which reads as the cursor randomly drifting left every time you
+## brush the bottom row. OF3: named as part of the naming screen's
+## "controller navigation" complaint.
+var _desired_column: int = 0
+
+## Kept as a property, not a plain field, so every write — `move()`'s own
+## horizontal step or a caller teleporting the cursor directly, as the tests
+## do — updates `_desired_column` in the same place, rather than every call
+## site having to remember to.
+var column: int:
+	get:
+		return _column
+	set(value):
+		_column = value
+		_desired_column = value
 
 
 func reset() -> void:
@@ -63,7 +84,11 @@ func rows() -> Array:
 func move(dx: int, dy: int) -> void:
 	if dy != 0:
 		row = wrapi(row + dy, 0, ROWS.size())
-		column = mini(column, _row_length() - 1)
+		# Restore the column the player actually asked for, clamped only far
+		# enough to stay on this (possibly shorter) row — not through the
+		# `column` property, which would overwrite `_desired_column` with the
+		# clamped value and forget it the moment the clamp is needed.
+		_column = mini(_desired_column, _row_length() - 1)
 	if dx != 0:
 		column = wrapi(column + dx, 0, _row_length())
 
