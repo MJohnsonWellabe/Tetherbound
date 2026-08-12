@@ -156,6 +156,21 @@ if ! git merge-base --is-ancestor origin/main "$SHA"; then
   git checkout --quiet -B "$BRANCH" "$SHA"
   if ! git rebase origin/main; then
     git rebase --abort || true
+    # `git rebase --abort` leaves HEAD (and the whole working tree) sitting on
+    # $BRANCH's OLD, pre-rebase tip -- whatever that branch looked like when it
+    # was last synced with main. If it predates this very script being added to
+    # the repo, THIS FILE disappears from the checkout along with everything
+    # else main has gained since. `ralph-sweep.yml` calls this script in a loop
+    # against one shared checkout, so that is not cosmetic: every branch after
+    # this one in the same sweep then fails with "ship_branch.sh: No such file
+    # or directory" and is silently never shipped -- caught for real on
+    # 2026-08-11, where one conflicting branch (`EV3`) stranded six other
+    # already-green branches (`SA2-flake` among them) behind it, sweep after
+    # sweep, until this line existed. Land back on a scratch branch pinned to
+    # `origin/main` -- guaranteed to contain every file main has, including
+    # this one -- so a failure here costs only this branch, never the rest of
+    # the loop.
+    git checkout --quiet -B __ship origin/main
     fail "$BRANCH conflicts with main and cannot be rebased automatically. A human or a firing has to resolve it. Nothing was pushed."
     exit 1
   fi

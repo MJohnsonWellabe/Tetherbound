@@ -3,6 +3,51 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## LP5 — A conflicting rebase in `ralph-sweep.yml`'s loop stranded every branch behind it, not just itself
+Found live, not from the backlog: while waiting for `SA2-flake` to ship, its
+green branch sat un-merged through a full 10-minute sweep cycle. Read the
+sweep run's own log (`31548370180`) rather than guessing, per `PROMPT.md`'s
+own standing note — and the log named the mechanism directly: after
+`ralph/EV3` failed to rebase (a real `DONE.md` conflict, correctly reported),
+every branch considered AFTER it in the same sweep — `EV4-hillside-seam`,
+`EV4-textures-remainder`, `EV9`, `LP3`, `SA2-flake`, `SA5` — failed with
+`tools/ci/ship_branch.sh: No such file or directory`. Six already-green
+branches silently skipped, sweep after sweep, because of one unrelated
+conflict.
+
+**Root cause.** `ship_branch.sh`'s conflict path does
+`git checkout -B "$BRANCH" "$SHA"` (landing HEAD on the branch's OLD,
+pre-rebase tip), attempts `git rebase origin/main`, and on failure calls
+`git rebase --abort`. `--abort` restores HEAD to exactly where the rebase
+started — the branch's own stale tree, not a fresh copy of `main`. If that
+branch predates `ship_branch.sh` itself being added to the repo (true for
+`EV3`, an older branch), the script's own file vanishes from the checkout
+along with everything else `main` has gained since. `ralph-sweep.yml` calls
+`tools/ci/ship_branch.sh` by relative path, in a loop, against ONE shared
+checkout — so the very next branch in the loop finds no such file, and the
+one after that, and so on to the end of the list. `ralph-merge.yml` never hits
+this because it only ever ships one branch per invocation; `ralph-sweep.yml`'s
+loop is what exposes it.
+
+**Reproduced in isolation before believing it**, not just read off the log: a
+scratch repo with a `feature` branch that predates a tracked `ship_branch.sh`
+file on `main`, forced into a real content conflict, rebased and aborted the
+same way the real script does. Confirmed empirically — `ship_branch.sh`
+present after abort: **NO** on the unpatched sequence, **YES** once the fix's
+extra `git checkout -B __ship origin/main` runs first.
+
+**Fix:** one line added right after `git rebase --abort || true` in the
+conflict path — `git checkout --quiet -B __ship origin/main` — landing the
+working tree back on a scratch ref pinned to `origin/main`, which by
+definition contains every file `main` has, including this script itself. A
+branch that cannot rebase still correctly stops and reports itself stuck; it
+just no longer takes the rest of the sweep down with it.
+
+Same `area: loop` as `SA2-flake`, found and fixed while waiting for that
+branch's own ship — batched onto `ralph/SA2-flake` as a third commit rather
+than opening a second branch, per `conventions.md`'s batching rule (same
+area, still under the 4-item cap).
+
 ## R9.4-remainder-8-followup — one real fix (rocks floating on slopes), one false alarm (roof foliage)
 `c6057e4`. `tests: none` named, ran `tests/test_scatter_rules.gd` and
 `tests/test_playground_heightfield.gd` (part of the full suite) as due
