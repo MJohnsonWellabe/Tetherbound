@@ -376,6 +376,57 @@ cause and this needs reopening with a description of exactly when it
 happens (opening a fresh conversation vs. mid-conversation, cadence, etc.)
 — that detail is what every headless probe here could not supply.
 
+## OF12 — Grandpa's-house-route vegetation redone from scratch: constant-distance path rules replaced by a noise-varying standoff + route-neighbourhood in-fill
+`9fb68c1` + `854c4e0` + `6a2bed4` on `ralph/OF12`. `tests: none (visual)`
+per the item; full suite still run every round — 388/388 green on the
+shipping state (nine tests pinning the removed knobs replaced by seven
+pinning the new mechanisms). `model: fable` dispatch.
+
+**The mechanism change, not a sixth tuning round.** Every prior mechanism on
+this route was a CONSTANT-DISTANCE rule measured from the path centreline —
+`path_avoid_radius` held all grass/drygrass exactly 6-7m off the path (a
+ruler-straight inner edge at matched offsets on both sides), and flowers'
+`path_bias`/`side_offset`/`jitter`/`per_clump` stack deliberately anchored a
+garden-accent layer to the road (a placement dump confirmed the owner's
+verdict was pointing at something real: 21 of 23 near-path flowers strung
+along ONE side of the leg). All four knobs are REMOVED, not retuned;
+`path_bias` survives for `path_stones` only (stones ARE the path).
+Replacement: `path_standoff` — exclusion distance drifts between min and max
+with coherent position noise, salted per SIDE of the path so the two verges
+draw from independent fields (a matched pair across the path is impossible
+by construction), two octaves so the edge frays at metre scale — plus
+`verge`, arc-length draws along the routes (`path_polylines` on the
+heightfield) culled by that same standoff noise. One real bug found and
+fixed en route: the jittered path/stream exclusion threshold could draw
+negative, and `path_factor` (exactly 0.0 away from routes) > negative is
+true EVERYWHERE — a silent map-wide density cut on every jittered layer,
+now floored at 0.02.
+
+**Blind pass: 3 genuinely blind rounds run, honest gap on the 4th.** No
+Agent-tool in this session's toolset (the R7.2 gap), so each round spawned a
+fresh CCR sibling session as the critic, handed only the rendered frames on
+`scratch/OF12-critic` (cut from main — the diff shows PNGs, never the code
+change) with verdicts pushed back to that branch; VERDICT-round[1-3].md live
+there. Round 1: **the flanking/matched-border read the owner's five prior
+rounds never moved is GONE from grandpas-house-route.png** — new defects
+named instead: bald verge, hard clean-cut dirt line. Round 2 (fringe added):
+fringe itself read as a paced border — the `inner+band*r^2` edge-weighting
+printed a modal offset. Round 3 (uniform band): same border/bald verdict
+rearticulated, no new subject-axis defect — one flat round; both critics'
+fix lists converged on the same instruction the references show: cover the
+whole ground plane and let the path interrupt it. Round 4 built exactly
+that (bands widened 4.5-8m → 12-20m in-fill; near-path density now equals
+field density; 25946 props, inside RB4's ~29k ceiling) and measured right
+(ground cover near the leg 1 → ~160 instances, nearest-offset varying
+2.4-8.1m per 4m bin, L/R uneven per layer), but the wrap-up deadline hit
+before its blind round ran — **converged-with-remainder: the final state is
+measured and self-judged, not blind-confirmed.** `OF12-remainder` in
+`BACKLOG.md` carries that one confirmation round plus the out-of-scope
+defects all three critics named (rise-route mirrored tree stand — trees
+layer seed luck, pre-existing; ground-cover species variety — grass has 2
+tuft models; the no-caster shadow wedge — likely the owner-accepted
+material-contrast read, but two fresh critics tripped on it).
+
 ## OF2 — Item-target picker for consumables; party reorder found already built
 `b6655da` (+ `1bc2f7f` .uid sidecar fix, `41498a6` footer fix) on `ralph/OF2`.
 
