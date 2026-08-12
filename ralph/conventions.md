@@ -103,6 +103,23 @@ reason not to push throwaways at all.
   `ralph-merge.yml` now dispatches `release.yml` explicitly after a successful
   fast-forward. **Check the release asset's timestamp, not the merge, when you
   want to know what the owner can actually play.**
+- **`ralph/DONE.md`'s single insertion point is a real collision under
+  concurrency, not a hypothetical.** Every branch's bookkeeping commit inserts
+  its new entry right after the file's 4-line header, so two branches shipping
+  in the same window collide there on rebase — a genuine, unresolvable-by-bot
+  merge conflict, not the usual clean auto-rebase. Confirmed 2026-08-12: one
+  `ralph-sweep.yml` run hit this identical conflict on three separate branches
+  at once (`R2.3`, `SA7-remainder`, `menu-json-stray-refs`), each stopped dead
+  with "a human or a firing has to resolve it." The fix is easy once you know
+  to look for it — `git rebase origin/main`, keep both `##` entries in the
+  conflicted block (yours after the one already there), `git add`, `git
+  rebase --continue` — but a firing that doesn't check job logs when a branch
+  stops landing can burn 30–60 minutes re-dispatching the sweep and rebasing
+  by hand before finding it, because the sweep's own summary line just says
+  "conflicts with main," not what the conflict is or that it's this one,
+  extremely common shape. `mcp__github__get_job_logs` (or the run's own
+  `::group::<branch>` log) shows the real reason; don't assume a stuck branch
+  is bad code without checking.
 
 ## Testing traps already paid for
 
