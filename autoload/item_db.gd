@@ -76,6 +76,12 @@ func tool_ids() -> Array:
 	return ids().filter(func(id: Variant) -> bool: return kind(str(id)) == "tool")
 
 
+## R2.2. The number of full-yield gathers `id` survives before it breaks, or 0
+## for anything with no `durability` field (everything but the five tools).
+func max_durability(id: String) -> int:
+	return maxi(0, int(definition(id).get("durability", 0)))
+
+
 ## R2.1: bare hands still gather SOMETHING, just less than the right tool.
 ## Tunable — do not let this become a hidden difficulty knob nobody can find.
 const BAREHANDED_FRACTION := 0.5

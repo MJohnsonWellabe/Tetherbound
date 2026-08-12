@@ -151,7 +151,14 @@ func poll() -> void:
 			button.add_theme_color_override("font_color", Color(0.4, 0.41, 0.39))
 		else:
 			var id := str(stack.get("id", ""))
-			button.text = "%s %d" % [db.call("item_name", id), int(stack.get("n", 0))]
+			var tool_max: int = int(inventory.call("max_durability_at", i))
+			if tool_max > 0:
+				# R2.2: a tool's count is always 1 (owned, not consumed) --
+				# showing it here would say nothing; durability does.
+				button.text = "%s %d/%d" % [
+					db.call("item_name", id), int(inventory.call("durability_at", i)), tool_max]
+			else:
+				button.text = "%s %d" % [db.call("item_name", id), int(stack.get("n", 0))]
 			button.add_theme_color_override("font_color", db.call("colour", id))
 		# The held slot is shown pressed so the player can see what they picked
 		# up even after moving the cursor several slots away.
@@ -182,11 +189,15 @@ func _on_slot(index: int) -> void:
 	poll()
 
 
-## Use the focused item, if it is usable. Today that is exactly the healing
-## consumables: one press heals the most-hurt creature on the belt by the
-## item's `heal` value and spends one from the stack. Polled rather than
-## event-driven for the same reason the pals tab's activate verb is: a focused
-## Button eats events, and there is always a focused button here.
+## Use the focused item, if it is usable. Today that is the healing
+## consumables (one press heals the most-hurt creature on the belt by the
+## item's `heal` value and spends one from the stack) and, R2.2, a damaged
+## tool (one press repairs it fully, free — GAME_DESIGN.md 19 says "at
+## appropriate station"; there is no placed workbench yet (R2.7), so this is
+## the whole of R2.2's "free repair" loop until that station exists to gate
+## it). Polled rather than event-driven for the same reason the pals tab's
+## activate verb is: a focused Button eats events, and there is always a
+## focused button here.
 func _read_use() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
@@ -199,6 +210,18 @@ func _read_use() -> void:
 	if stack.is_empty():
 		return
 	var id := str(stack.get("id", ""))
+
+	if str(db.call("kind", id)) == "tool":
+		var maximum := int(inventory.call("max_durability_at", _focused))
+		if maximum > 0:
+			var current := int(inventory.call("durability_at", _focused))
+			if current >= maximum:
+				say("%s is already in good repair." % str(db.call("item_name", id)))
+			else:
+				inventory.call("repair_tool", _focused)
+				say("%s repaired, free." % str(db.call("item_name", id)))
+			return
+
 	var heal := float((db.call("definition", id) as Dictionary).get("heal", 0.0))
 	if heal <= 0.0:
 		say("%s is not something you can use here." % str(db.call("item_name", id)))
@@ -245,9 +268,16 @@ func _describe(index: int) -> void:
 
 	var id := str(stack.get("id", ""))
 	_detail_name.text = str(db.call("item_name", id))
-	_detail_count.text = "%d held  (stacks to %d)" % [
-		int(inventory.call("count", id)), int(db.call("stack_size", id))
-	]
+	var tool_max: int = int(inventory.call("max_durability_at", index))
+	if tool_max > 0:
+		# R2.2: durability, not a held count that would always read "1".
+		_detail_count.text = "%d/%d durability" % [
+			int(inventory.call("durability_at", index)), tool_max
+		]
+	else:
+		_detail_count.text = "%d held  (stacks to %d)" % [
+			int(inventory.call("count", id)), int(db.call("stack_size", id))
+		]
 	_detail_blurb.text = str(db.call("blurb", id))
 
 

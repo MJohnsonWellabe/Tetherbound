@@ -78,14 +78,28 @@ func _on_gathered() -> void:
 	var inventory: RefCounted = game.get("inventory")
 	var items: RefCounted = game.get("items")
 	var actual_amount := _amount
+	var required_slot := -1
 	if items != null and inventory != null:
 		var required: String = str(items.call("gathered_with", _item_id))
 		if not required.is_empty():
-			var owns_required: bool = int(inventory.call("count", required)) > 0
+			# R2.2: a broken tool (0 durability) does not count as owned here --
+			# the player has to repair it before it gates a full-yield gather
+			# again, the same way not owning it at all would.
+			var slot: int = int(inventory.call("find_slot", required))
+			var owns_required: bool = slot >= 0 and int(inventory.call("durability_at", slot)) > 0
+			if owns_required:
+				required_slot = slot
+			# A broken tool doesn't count toward "owns a tool, just the wrong
+			# one" either -- otherwise a broken axe pays 0 for wood instead of
+			# falling back to the bare-handed rate, which reads as the same
+			# silent refusal a genuinely wrong tool gets, for a reason the
+			# player has no way to see (a broken tool looks identical to a
+			# working one in the satchel grid until they open its detail).
 			var owns_any_tool := false
 			if not owns_required:
 				for tool_id in items.call("tool_ids"):
-					if int(inventory.call("count", str(tool_id))) > 0:
+					var owned_slot: int = int(inventory.call("find_slot", str(tool_id)))
+					if owned_slot >= 0 and int(inventory.call("durability_at", owned_slot)) > 0:
 						owns_any_tool = true
 						break
 			actual_amount = int(items.call("harvest_yield", _item_id, _amount, owns_required, owns_any_tool))
@@ -99,6 +113,10 @@ func _on_gathered() -> void:
 		# is the honest version of "your satchel is full".
 		return
 	inventory.call("add", _item_id, actual_amount)
+	# R2.2: only a full-yield gather with the right tool wears it down --
+	# a bare-handed or wrong-tool gather has no tool in play to damage.
+	if required_slot >= 0:
+		inventory.call("damage_tool", required_slot)
 	_visual.visible = false
 	_prompt.call("set_enabled", false)
 	_respawn_left = RESPAWN_SECONDS

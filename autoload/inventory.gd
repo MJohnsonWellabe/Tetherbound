@@ -203,6 +203,66 @@ func move_slot(from: int, to: int) -> void:
 	revision += 1
 
 
+## R2.2. The first slot holding `id`, or -1. Tools are `stack: 1` so there is
+## normally at most one; if a future acquisition path ever grants a second,
+## only the first found is read or damaged -- the same "no way to choose
+## among duplicates" gap `count()`'s callers already live with.
+func find_slot(id: String) -> int:
+	for i in SLOT_COUNT:
+		var stack: Variant = _slots[i]
+		if stack != null and str((stack as Dictionary).get("id", "")) == id:
+			return i
+	return -1
+
+
+## Current durability of the stack in `index`, or 0 if the slot is empty or
+## holds something with no `durability` field. A slot with no `durability` key
+## of its own reads as fully repaired -- `add()` never has to know this field
+## exists, it only gets written once something actually damages or repairs it.
+func durability_at(index: int) -> int:
+	var stack := stack_at(index)
+	if stack.is_empty():
+		return 0
+	var id := str(stack.get("id", ""))
+	var maximum: int = _db.call("max_durability", id)
+	if maximum <= 0:
+		return 0
+	return clampi(int(stack.get("durability", maximum)), 0, maximum)
+
+
+func max_durability_at(index: int) -> int:
+	var stack := stack_at(index)
+	if stack.is_empty():
+		return 0
+	return int(_db.call("max_durability", str(stack.get("id", ""))))
+
+
+## Wear the tool in `index` down by `amount`, floored at 0 (broken, not
+## destroyed -- GAME_DESIGN.md 19 says repair, never replace). No-op on a
+## slot with no durability to lose, so calling this on a resource stack by
+## mistake can't corrupt it into carrying a stray field.
+func damage_tool(index: int, amount: int = 1) -> void:
+	var maximum := max_durability_at(index)
+	if maximum <= 0:
+		return
+	var current := durability_at(index)
+	var stack := _slots[index] as Dictionary
+	stack["durability"] = maxi(0, current - amount)
+	revision += 1
+
+
+## Free, full repair -- GAME_DESIGN.md 19. No materials, no partial repair.
+func repair_tool(index: int) -> void:
+	var maximum := max_durability_at(index)
+	if maximum <= 0:
+		return
+	var stack := _slots[index] as Dictionary
+	if int(stack.get("durability", maximum)) == maximum:
+		return
+	stack["durability"] = maximum
+	revision += 1
+
+
 ## Empty the satchel and hand back everything that was in it.
 ##
 ## This is what a death satchel is made from. CLAUDE.md: multiple death satchels
