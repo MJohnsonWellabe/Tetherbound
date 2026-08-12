@@ -101,6 +101,44 @@ needed.
 
 ## Blocked on the owner
 
+### Is grandpas-house-route.png's "flanking" read worth further iteration, or is it a placement-density limit to accept?
+Five real, evidence-first rounds (`EV3-remainder` through `EV3-remainder-6`,
+`BACKLOG.md`/`DONE.md`) chasing one blind critic's repeated complaint on one
+specific frame — a hedge/flanking pattern near Grandpa's house's approach
+route. Each round found and fixed a genuine mechanism: `flowers`' clump
+straddling the path centreline, grass/drygrass strays landing near a path
+by chance, `path_stones`' clump radius spreading stones twice the path's
+own width. Two rounds tried the more direct lever of just adding ground-
+cover density and made the SAME frame measurably worse, not better —
+`EV3-remainder-2` bumping `path_bias` and `EV3-remainder-6` adding an
+authored off-path clump both recreated the exact flanking read they were
+meant to fix, for a now-understood reason: any concentrated addition near
+this route, whichever side it lands on, pairs with whatever is already on
+the far side and reads as a matched pair. The layers that could plausibly
+be responsible (`flowers`, `bushes`, `grass`, `drygrass`, `trees`, `grove`,
+`saplings`, `rocks`, `path_stones`) have all been dumped against this
+frame's real placement data and are individually either fine or already
+fixed.
+
+**Why this stops here instead of another config tweak.** There is no
+further `path_bias`/`path_avoid_radius`/`clump_radius`/`extra_clumps` lever
+left untried for this specific frame that the diagnosis chain hasn't
+already tried and either confirmed harmless or confirmed harmful. What's
+left is either a genuinely different placement mechanism for this one route
+specifically (a real scope question — how much bespoke authoring one
+frame's approach earns, when the rest of the meadow is procedural by
+design) or accepting the current state as the honest ceiling of a
+procedural scatter system tuned this many times against one photograph.
+Neither is a `vegetation`-scope config edit a firing should keep guessing
+at.
+
+**Clears when:** the owner looks at `grandpas-house-route.png` (`shots/
+paths/`, or a fresh render via `tools/capture_paths.gd`) and either says
+it's fine as-is, or says what's actually wrong with it in their own words —
+which may not be "flanking" at all once a human who isn't a blind critic
+comparing against reference photos looks at it in context with the rest of
+the meadow.
+
 ### Does the creature roster clear a Palworld-level appeal bar, or does it need to?
 Split out of `SA0-orbs-remainder` (2026-08-11): four blind-judge rounds on the
 starter orb picker converged with the critic calling all three previewed

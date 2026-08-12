@@ -354,34 +354,17 @@ to flowers/grass rather than stones, which a frustum-projection check
 flowers there are heavily left-skewed, not symmetric. Narrower remainder
 opened below.
 
-### EV3-remainder-6 — grandpas-house-route.png still reads as flanked to a blind critic after the one real mechanism this line's diagnosis chain found (path_stones) is fixed and verified
-`model: opus` · `tests: none (visual)` · `area: vegetation`
-`EV3-remainder-5`'s own frustum-projection check (the exact camera
-`tools/capture_paths.gd` uses for this viewpoint, not a guessed world-space
-region) found real near-field `flowers` in this frame are heavily
-LEFT-skewed (18 of ~21 instances under 19m sit on the screen's left half),
-which does not match a "matched flanking bands" read. Combined with
-`EV3-remainder-4`'s already-verified finding that `flowers`/`bushes` are
-barely present in Grandpa's house's own region at all, there is no longer
-an untested layer left in this backlog line's diagnosis chain — `trees`,
-`grove`, `saplings`, `rocks` were also dumped this round and found absent
-or negligible near this specific frame's foreground. What's left is the
-item's own first honest reading, now with nothing else to rule out first:
-`grandpas-house-route`'s own **under-clustering** (flagged UNRESOLVED as
-far back as `EV3-remainder` round 1, never actually fixed, only routed
-around every round since) may be what a critic is actually responding to —
-a path cut through visibly sparse ground cover reads as "flanked by two
-things" simply because the two things nearest the path on either side are
-whatever happens to be nearest, not because of a placement bug in any one
-layer. No further `path_bias`/`path_avoid_radius`/`clump_radius` tuning is
-indicated without new evidence — the mechanism side of this investigation
-is exhausted for now. Done when: either `grandpas-house-route`'s
-under-clustering complaint is picked up directly (denser ground cover near
-this specific route, a placement-authoring change rather than a path-proximity
-one) and a fresh critic's read changes, or the owner is asked directly
-whether this frame is worth further iteration versus accepting it — the
-third honest closing condition this backlog line has named since
-`EV3-remainder-5` and not yet exercised.
+**`EV3-remainder-6` tried the item's own named lever (denser ground cover,
+an `extra_clumps` placement-authoring mechanism, not a path-proximity
+tweak) and got a real result: worse, not better — see `DONE.md`.** The new
+off-path clump paired with the pre-existing left-side flower concentration
+`EV3-remainder-5` found and produced exactly the mirrored flanking read
+this whole line exists to eliminate. Reverted cleanly. Five real,
+evidence-first rounds (`EV3-remainder` through `-6`) have each found and
+fixed a genuine mechanism, and the mechanism side of this investigation now
+reads as exhausted — moved to `BLOCKED.md` for the owner rather than
+leaving it in `BACKLOG.md` for a future firing to guess a sixth coordinate
+blind.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
 tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four

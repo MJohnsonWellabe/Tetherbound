@@ -3,6 +3,59 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV3-remainder-6 — Tried the item's own "denser ground cover" lever, real result, no ship: it recreated the flanking pattern instead of curing under-clustering
+`tests: run_tests.gd` (344/344 with the attempt's new tests, reverted with the
+attempt). No code shipped this item — the finding is the deliverable, same
+as `EV3-remainder-2`'s own tried-and-reverted precedent.
+
+**What was tried.** `EV3-remainder-6` itself named the one lever nothing in
+this backlog line had tried yet: `grandpas-house-route`'s own under-
+clustering (unresolved since `EV3-remainder` round 1), fixed by adding
+density rather than tuning path proximity. Built a small, tested,
+genuinely additive mechanism — `extra_clumps` in `scatter_rules.gd`, an
+explicit authored `[x,z]` centre that always draws its own clump on top of
+whatever a layer's random draws already placed, distinct from `path_bias`
+(which anchors to the path centreline and is what `EV3-remainder-2`
+already proved makes this exact frame worse). Added one `bushes` clump 4.7m
+off the path, on the side of the frame OPPOSITE the flowers layer's own
+already-known left-skew (`EV3-remainder-5`'s frustum-projection finding),
+reasoning that balancing the frame would read better than leaving one side
+empty. 344/344 tests green (4 new: no-op-when-absent, places-at-the-named-
+centre, additive-not-replacing), `smoke_art` green.
+
+**Real blind visual-judge pass, genuine result: worse, not better.** A
+fresh critic, unprompted, named `grandpas-house-route.png` for "a dense
+flower/shrub cluster on the left mid-ground and a matching dense cluster on
+the right near the house, roughly mirrored at the same depth, framing the
+doorway like planted foundation hedges" — my own new clump paired with the
+PRE-EXISTING left-side flower concentration `EV3-remainder-5` had already
+found and produced exactly the symmetric flanking read this whole line has
+been trying to eliminate. The same critic pass also separately found `the-
+rise-route.png` (untouched by this change) had its own pre-existing sharp-
+edged rectangular grass patch, unrelated to this item.
+
+**Reverted cleanly** (`extra_clumps` mechanism, the `bushes` config entry,
+and the four new tests all removed — `git status` clean against `origin/
+main`) rather than shipping a change proven to make the named defect worse.
+**Real, useful finding kept for whoever continues:** adding density to the
+side of a frame OPPOSITE an existing concentration does not balance it —
+it completes a pair and reads as authored flanking, which is the exact
+failure mode this diagnosis chain exists to catch. Any future attempt at
+this lever should add density on the SAME side as the existing
+concentration (thickening what's there) rather than the opposite one, if
+it is tried again at all.
+
+**Recommending the item's own third closing condition instead of a further
+guess.** Five real, verified, evidence-first rounds (`EV3-remainder`
+through `-6`) have each found and fixed a genuine mechanism, and each in
+turn either partially helped or, twice now (`EV3-remainder-2`'s path_bias
+bump, this round's extra_clumps), made the specific frame measurably worse.
+The mechanism side of this investigation reads as exhausted: what's left is
+either a much larger placement-density rewrite for this one route (a
+scope question, not a config tweak) or accepting the frame — both of which
+are the owner's call, not a firing's. See `BACKLOG.md`'s carried-forward
+note for the concrete question to ask.
+
 ## EV3-remainder-5 (round 1) — path_stones' own clump_radius was more than twice the path's visible width, spreading stones into a symmetric flanking pattern near Grandpa's house
 `tests: run_tests.gd` (341/341), `smoke_art` green. Real blind visual-judge
 pass (`.claude/skills/visual-judge`, genuine sub-agent, no memory of what
