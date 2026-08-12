@@ -127,7 +127,13 @@ block per **live** firing.
    `## END LEASES` marker because a firing edited by eye, misjudged where the
    end was, and appended there — a mistake the script cannot make, because it
    always computes the insertion point from the marker line itself, never from
-   "the bottom of the file":
+   "the bottom of the file". The script itself lives on `main`, but the file
+   it edits lives on `ralph-status`, which never merges from `main` — so once
+   you are sitting on a `ralph-status` checkout, pull the script's *content*
+   across rather than expecting it in the tree: `git show origin/main:tools/
+   ralph_status.py > /tmp/ralph_status.py`, then run `python3
+   /tmp/ralph_status.py ...` against `ralph/STATUS.md` as it exists on
+   `ralph-status`.
    ```
    python3 tools/ralph_status.py claim --file ralph/STATUS.md \
      --firing <your-firing-id> --session <your-session-id> --task <TASK-ID> \
