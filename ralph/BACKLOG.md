@@ -602,6 +602,19 @@ house ×2, the well as the square's marker) and stopped. Still open:
   a family split and has NOT yet re-judged the rebuilt one — the follow-up
   pass's own strict-rubric read is recorded in `DONE.md`, but treat the next
   real blind pass's findings as round 1.
+- ~~**The furniture pack renders near-black indoors.**~~ **Fixed** — see
+  `DONE.md` §EV6-remainder-furniture. `assets/props/quaternius_furniture/*.mtl`
+  carried Blender's LINEAR-space `Kd` values, and Godot's OBJ importer takes
+  `Kd` as literal sRGB albedo with no gamma handling of its own; every piece
+  read as an unlit silhouette. Gamma-corrected all 48 `Kd` triplets across
+  the pack's 13 `.mtl` files. Confirmed by two independent genuinely blind
+  critiques (before/after) that the black-silhouette defect is gone; a
+  separate, real local caching trap is also documented there — Godot's
+  `.import` dependency tracker does not watch an OBJ's referenced `.mtl`
+  sidecar, so a local dev checkout needs its cached `.godot/imported/`
+  entries force-regenerated to see a `.mtl`-only edit (CI is unaffected,
+  since it always imports from a clean checkout with no stale cache to
+  reuse).
 - Small named leftovers, cheap once someone is in the area: the well's
   RockTrim dressing still reads cool in shadow after a warm multiply (a
   texture-level fix, or leave until lighting work); `cottage_b`'s downhill
@@ -609,15 +622,13 @@ house ×2, the well as the square's marker) and stopped. Still open:
   small terrain flat at [21,-14] would end it); every building's border
   skirt meets the grass as a hard grey edge rather than a soil transition
   (the blind pass named it settlement-wide; needs a ground-blend treatment,
-  not a per-building fix); the furniture pack renders near-black indoors
-  (pre-existing, visible in `07-farmhouse-interior`, never `EV6` scope —
-  **root cause found by the follow-up pass**: the pack's `.mtl` files carry
-  Blender's LINEAR-space `Kd` values, e.g. Table's DarkWood `Kd 0.106
-  0.065 0.031` ≈ `#5e4732` intended but ≈ `#1b1008` as rendered, so every
-  piece reads as an unlit silhouette; the fix belongs at import for the
-  whole pack, not per-room). The blind pass also flagged village NPCs
-  reading flat-black in exterior frames — partly the same class (dark
-  palette tints under `NP2`'s emission-tint pipeline); `lane: npc`, not
+  not a per-building fix); a plain `ShortCloset` piece (and possibly other
+  simple box-shaped furniture) reads as a featureless flat slab even with
+  the colour now correct — a geometry/detail limit of the source mesh, not
+  a colour bug, named by the furniture fix's own confirming blind pass. The
+  blind pass also flagged village NPCs reading flat-black in exterior
+  frames — partly the same class (dark palette tints under `NP2`'s
+  emission-tint pipeline); `lane: npc`, not
   village work.
 
 **`EV7` (a first slice: work area and farmhouse yard) shipped — see `DONE.md`.**

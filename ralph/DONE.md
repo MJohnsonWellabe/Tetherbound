@@ -86,6 +86,57 @@ caster it named no longer exists post-EV6, yet the same-looking defect is
 still present today from a different, unidentified cause. A "confirmed by
 toggling X" finding is only as durable as the scene it was measured against.
 
+## EV6-remainder-furniture — Gamma-correct the furniture pack's linear-space Kd values
+`293a308` (pushed as `7a3e8d3`; landed on `main` under this SHA via
+`ralph-merge.yml`'s own rebase) · `tests: smoke_opening, smoke_traversal` — both green locally,
+headless. Also ran `smoke_art` (touches world models) and the full suite
+(348/348) as extra insurance. Not the item's named test, but cheap and
+directly relevant.
+
+Root cause was already found by the `EV6` follow-up pass and recorded in
+`BACKLOG.md`'s `EV6-remainder`: `assets/props/quaternius_furniture/*.mtl`
+carries Blender's LINEAR-space `Kd` diffuse values (e.g. `Table`'s
+`DarkWood`, `Kd 0.106289 0.064506 0.031178`), and Godot's `wavefront_obj`
+importer takes `Kd` as a literal albedo colour with no gamma correction of
+its own — so every piece of furniture in Grandpa's house interior rendered
+as a flat, unlit black silhouette.
+
+Applied the standard linear→sRGB transfer function
+(`x <= 0.0031308 ? 12.92x : 1.055·x^(1/2.4) − 0.055`) to all 48 `Kd`
+triplets across the pack's 13 `.mtl` files. `Table`'s `DarkWood` now reads
+`0.359594 0.281707 0.193708`, matching the previously-identified intended
+value (`~#5e4732` ≈ `0.368 0.278 0.196`) closely.
+
+**A real local-dev trap found and worked around, not shipped:** Godot's
+`.import` dependency tracker only watches the primary source file (the
+`.obj`), never the external `.mtl` sidecar an OBJ's `mtllib` directive
+points at. Editing only the `.mtl` files left every affected mesh's cached
+material silently stale in this session's own `.godot/imported/` — a
+direct material probe (`load()` each `.obj`, print `surface_get_material()
+.albedo_color`) showed the OLD linear values still baked in even after
+running `godot --headless --import` twice. Force-regenerating (deleting
+the affected `.obj.import` sidecars and their cached `.mesh` artifacts,
+then re-running `--import`) fixed it locally. **This does not affect what
+ships**: CI always imports from a clean checkout with no pre-existing
+`.godot/` cache to go stale (it's gitignored), so it bakes correctly from
+current `.mtl` content regardless. The regenerated `.import` sidecars
+were reverted before commit (they only differ by a random reassigned
+`uid://`, which nothing in the project reads — every caller loads these
+props by `res://` string path, not by UID) to avoid unrelated churn.
+
+Confirmed by TWO independent, genuinely blind sub-agent critiques (fresh
+agents, zero context, shown only the rendered frame) — one before the
+local cache was force-regenerated (correctly caught that `Table`/`Desk`
+looked fine but `Bed`/`Chair`/`Stool`/support pillars still read
+unlit-black, which is what surfaced the caching bug above rather than a
+second real defect) and one after (confirmed: no piece reads as an unlit
+black silhouette any more). The second pass named two smaller, genuinely
+different findings, recorded in `BACKLOG.md`'s `EV6-remainder` rather than
+chased here: a plain `ShortCloset` box reads as a featureless flat slab
+(a geometry/detail limit of the source mesh, not a colour bug — its `Kd`
+is confirmed correct), and the porch chair's seat geometry looks sparse
+from one angle. Neither is the black-silhouette defect this item owned.
+
 ## R9.4-remainder-8-rocks-repeat — the rocks layer reads as varied stone, not one instance duplicated
 `cc4fe0e`/`1816524`/`604d15e` on `main`. `tests: none (visual)`, plus the full
 348/348 unit suite (unaffected — data-only change, no code touched). Visual-
