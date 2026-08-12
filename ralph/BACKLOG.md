@@ -2062,6 +2062,20 @@ Phase 1 onward rather than at the end.
 
 ## Found along the way — small, unscheduled
 
+- **`smoke_aggression` still flakes in CI after `LP7`'s fix.** Found on
+  `ralph/R3.0`'s own CI run (unrelated change — a humanoid GLB pipeline fix
+  touching only `assets/characters/*`), twice in a row on the same run's
+  retry: `aggression FAIL: stood 44.1m from Galecrest for 900 frames without
+  pressing anything and it never attacked`, then `38.0m` on the automatic
+  retry. Both failures report the player far from the 2–3m the test expects
+  to be standing at when it checks, which is the same "reads player position
+  before the fixture has actually settled there" shape `LP7`'s own
+  `DONE.md` entry describes — so `LP7`'s fix likely narrowed the window
+  rather than closed it. Reproduced locally, headless, in the same checkout
+  immediately after: passed clean on the first try (`Galecrest started the
+  fight on its own, from 9.6m`). Not chased further here — out of scope for
+  `R3.0`, and a genuine flake this test-shaped needs the same kind of
+  instrumented reproduction `LP7`/`LP2`/`SA2-flake` used, not a guess.
 - `docs/ASSET_LEDGER.md` claims "everything currently in the build is CC0
   1.0". False (Meshy creatures, Plumberry pack). **Blocked on the owner** for
   the correct wording. The website's parallel stale claim was fixed in the
