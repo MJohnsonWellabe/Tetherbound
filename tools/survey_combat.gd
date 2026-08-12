@@ -144,6 +144,18 @@ func _run() -> void:
 	while not bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("is_fighting")) and waited < 900:
 		await _drive_pal_towards_enemy(1, 2.4)
 		waited += 1
+	# Same lesson `_capture_the_impact()` below already paid for: a node added
+	# mid-frame (telegraph_glow.gd, spawned off the `telegraph_started` signal
+	# the instant `enemy_is_winding_up()` flips true) does not run its own first
+	# `_physics_process` until the NEXT physics tick, and an `ImmediateMesh` has
+	# no surfaces to draw until then. A blind critic caught the actual bug this
+	# produced: frame 04 showed no glow at all, and an orange ring from a LATER
+	# wind-up (the enemy keeps attacking on its own cooldown for the rest of the
+	# fight) turned up misattributed to frame 06 instead. A few physics frames
+	# here — cheap, and the beat is 0.55s long — is enough for this one's own
+	# telegraph glow to actually have drawn something before the shutter opens.
+	for i in 4:
+		await physics_frame
 	await _capture("04-enemy-winds-up")
 
 	# A quick attack landing. Catching the impact rather than the lull is the
@@ -198,8 +210,21 @@ func _run() -> void:
 		# The orb in flight. It is a placeholder sphere, so this checks that a
 		# small fast object stays readable against sunlit grass — the background
 		# of every throw in the Meadows — and nothing about how the orb looks.
+		#
+		# 7 frames used to be the whole wait, and a genuinely blind critic caught
+		# the bug it hid: `throw_aim.gd`'s own `release_windup` (catching.json,
+		# 0.18s ≈ 11 physics ticks) delays the actual `launch()` well past the
+		# throw press, and `_press()` above only spends 3 ticks of its own. At 7
+		# more, the orb had barely launched or had not yet — the critic reported
+		# "I could not identify any distinct spherical object anywhere along the
+		# drawn arc," and what it flagged instead as the projectile was the sun,
+		# visible in the same screen position in frame 07, before the throw even
+		# happened. 16 clears the windup with room to spare AND gives the orb's
+		# own halo/trail (`orb.gd`, ImmediateMesh-based like `impact_flash.gd`)
+		# a few physics ticks to have actually drawn something, the same lesson
+		# `_capture_the_impact()` below already encodes for a landed hit.
 		await _press("combat_throw")
-		for i in 7:
+		for i in 16:
 			await physics_frame
 		await _capture("08-orb-in-flight")
 	else:
@@ -379,7 +404,9 @@ const IMPACT_TIMEOUT := 240
 
 func _capture_the_impact(name: String) -> void:
 	var landed := [false]
-	var handler := func(_on_enemy: bool, _amount: float) -> void: landed[0] = true
+	var handler := func(on_enemy: bool, amount: float) -> void:
+		landed[0] = true
+		print("  [diag] hit_landed on_enemy=%s amount=%.1f for %s" % [on_enemy, amount, name])
 	_manager.connect("hit_landed", handler)
 
 	var waited := 0

@@ -649,6 +649,7 @@ func _flash_at(where: Vector3, charged: bool) -> void:
 	# them. The arena is a Node3D that already exists for exactly the length of
 	# the fight, so it also cleans these up on its way out.
 	var host: Node = _arena if _arena != null else _player.get_parent()
+	print("  [diag] _flash_at charged=%s where=%s host=%s arena_null=%s" % [charged, where, host, _arena == null])
 	FLASH.burst(
 		host,
 		where,
