@@ -27,14 +27,17 @@ const FOV := 70.0
 ## gameplay scripts' private state.
 const WORK_AREA_CENTRE := Vector2(-5.2, -2.8)
 const BARN_AT := Vector2(2.0, 2.0)
-const FARMHOUSE_YARD_CENTRE := Vector2(-25.0, -20.2)
+const FARMHOUSE_YARD_CENTRE := Vector2(-24.0, -25.4)
 const HOUSE_AT := Vector2(-22.0, -16.0)
 
 const VIEWPOINTS := [
 	{
 		# The work area close, at the distance you'd stop to look at it.
+		# South-west of the cluster and clear of the Barn's own ~4-5m
+		# footprint radius (measured: Barn.obj is 7.7x8.2m raw, 1.1 scale --
+		# an earlier eye at (-0.5, 3.0) landed inside its walls).
 		"name": "01-work-area-close",
-		"eye": Vector2(-0.5, 3.0), "eye_h": 1.7,
+		"eye": Vector2(-9.0, -6.0), "eye_h": 1.7,
 		"target": WORK_AREA_CENTRE, "target_h": 1.0,
 	},
 	{
@@ -47,14 +50,14 @@ const VIEWPOINTS := [
 	{
 		# The farmhouse yard close.
 		"name": "03-farmhouse-yard-close",
-		"eye": Vector2(-20.5, -24.0), "eye_h": 1.7,
+		"eye": Vector2(-24.0, -30.0), "eye_h": 1.7,
 		"target": FARMHOUSE_YARD_CENTRE, "target_h": 0.8,
 	},
 	{
 		# The farmhouse yard with the house itself in frame.
 		"name": "04-farmhouse-yard-with-house",
-		"eye": Vector2(-16.0, -26.0), "eye_h": 2.0,
-		"target": Vector2(-23.5, -19.0), "target_h": 2.0,
+		"eye": Vector2(-14.0, -30.0), "eye_h": 2.2,
+		"target": Vector2(-22.0, -21.0), "target_h": 2.0,
 	},
 ]
 
