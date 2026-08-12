@@ -338,6 +338,62 @@ actual root cause named (not just a workaround like widening the test's own
 waypoints, which would hide a real interactable-matching or inventory bug
 if that turns out to be the cause).
 
+**Checked 2026-08-12, ~21:25-21:50Z — could not reproduce after real effort,
+and the framing above needs correcting on two points.** `smoke_opening.gd`
+run **9 times locally, headless**, against `main`'s current tip (rebased
+past this entry's own landing plus `OF9`) — including one run against a
+fully deleted-and-rebuilt `.godot` import cache, specifically to rule out
+the stale-incremental-import trap `conventions.md` documents elsewhere in
+this project. **All 9 passed clean, exit 0**, including the exact line this
+entry named as the failure point: `gate: locked, conversation
+'road_gate_locked' opened`. No variance beyond sub-metre walk-approach
+noise (2.2m vs 2.3m).
+
+- **The `R2.3` harvest-node fuzzy-match lead is ruled out by the test's own
+  design, not just unconfirmed.** `_walk_to_and_activate` explicitly checks
+  `_arbiter.get("_winning_provider") == target` and reports a DIFFERENT,
+  more specific failure — `"walked to '%s' but the prompt on screen is
+  '%s'; the arbiter picked something else"` — if some other interactable
+  (a harvest node, say) wins instead of the gate. That is not the failure
+  message this entry recorded. Separately: `harvest_node.gd`'s default
+  label is `"Gather"`, which does not contain the substring `"gate"`
+  (`g-a-t-h-e-r` breaks the match at the 4th character), and no `"label"`
+  key anywhere in `vegetation.json` contains it either — checked directly,
+  not assumed. This specific lead does not hold up.
+- **`OF1`'s CI failure is NOT this bug.** This entry's own "why this
+  matters" section implied any code branch would hit this wall; `OF1`'s
+  `ralph/OF1` run 757 was checked directly by the firing that shipped it
+  (`ralph-keyed-1951`, `ralph/STATUS.md` on `ralph-status`) and failed on
+  `smoke_aggression`, not `smoke_opening` — the separate, already-documented
+  `LP7` flake (~7% rate), confirmed by local repro passing first try. Citing
+  `OF1` as corroborating evidence for this entry would have been wrong.
+- **`OF3` itself has since shipped** (`ralph/OF3`, `1cb8a53`→`1f14549`,
+  `DONE.md`) with no code change to `road_gate.gd`, `dialogue_panel.gd`'s
+  panel-state guard, or the test itself — only a rebase onto a newer `main`
+  tip before a clean CI run. A rebase alone clearing a "reliable" failure is
+  the signature of an intermittent flake or a runner-contention artifact
+  (CI's shared runners under several concurrent Ralph lanes, which was
+  genuinely happening in this exact window per `ralph/STATUS.md`'s several
+  simultaneous blocks), not a deterministic regression in tracked code.
+
+**Not closing this** — 9 clean local runs cannot rule out a low-probability
+race that only shows up under GitHub Actions' own runner timing/contention,
+which this session's headless sandbox does not reproduce exactly (`EV5`'s
+terrain edit is still an unconfirmed, untested lead: a heightfield change
+near the gate's approach path could plausibly shift physics-frame timing
+under some contention conditions in a way a fixed local environment
+wouldn't hit reliably). But the "confirmed... not a guess" and "ahead of
+everything in the backlog" framing above overstated the evidence at hand,
+and both named leads should not be relied on by whoever picks this up next
+without re-checking them.
+
+**Revised done when:** either the failure recurs on a live CI run (capture
+the actual job log, not a local repro, and check what else was running on
+shared runners at the same time), or two more clean branches ship through
+`verify-scenarios` without hitting it, at which point this converts to
+"resolved, no fix needed" rather than staying open indefinitely on a single
+unreproduced report.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
