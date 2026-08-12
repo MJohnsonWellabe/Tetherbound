@@ -108,13 +108,26 @@ func _additive(colour: Color) -> StandardMaterial3D:
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.disable_receive_shadows = true
 	material.albedo_color = colour
-	# No vertex colours, and no `no_depth_test`.
-	#
-	# Both were in here and both were suspects; with vertex-colour alpha the
+	# No vertex colours: that one stays ruled out. With vertex-colour alpha the
 	# burst rendered as a barely-visible smudge under additive blending and as
 	# NOTHING under alpha blending, which is the signature of the alpha arriving
-	# at the shader near zero. Opacity is now one value on the material, set
-	# once per frame, so there is exactly one place it can be wrong.
+	# at the shader near zero. Opacity is one value on the material, set once
+	# per frame, so there is exactly one place it can be wrong.
+	#
+	# `no_depth_test` IS set now, reversing the earlier call. A real captured
+	# combat frame (`R9.4-remainder-9-combat`, a genuinely blind critic) showed
+	# nothing at all at the moment of contact, on the real Terrain3D scene,
+	# despite the exact same mesh/material rendering correctly in an isolated
+	# test scene with a plain ground plane. The burst originates at the
+	# creature's COLLISION centre (pal_body.gd's `centre()`), and pal_body's own
+	# header already documents that the visual mesh is fitted to the collider
+	# with slack ("a footprint allowance") — so on a creature whose model reads
+	# larger than its collider, a depth-tested burst can end up entirely behind
+	# the creature's own near-facing surface, occluded by the very thing it is
+	# supposed to be a reaction to. A hit flash has one job; being hidden by the
+	# hit target defeats it, and unlike the arena boundary or the orb (which sit
+	# apart from any mesh that could occlude them) this effect is drawn AT one.
+	material.no_depth_test = true
 	return material
 
 

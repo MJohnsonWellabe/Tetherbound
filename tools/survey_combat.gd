@@ -404,9 +404,7 @@ const IMPACT_TIMEOUT := 240
 
 func _capture_the_impact(name: String) -> void:
 	var landed := [false]
-	var handler := func(on_enemy: bool, amount: float) -> void:
-		landed[0] = true
-		print("  [diag] hit_landed on_enemy=%s amount=%.1f for %s" % [on_enemy, amount, name])
+	var handler := func(_on_enemy: bool, _amount: float) -> void: landed[0] = true
 	_manager.connect("hit_landed", handler)
 
 	var waited := 0
