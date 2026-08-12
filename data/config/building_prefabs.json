@@ -1363,9 +1363,9 @@
         }
       ],
       "retint": {
-        "MI_RockTrim": "#f0e2c4"
+        "MI_RockTrim": { "color": "#f0e2c4", "metallic": 0.0 }
       },
-      "_why_retint": "round 2 (EV6-remainder's own leftover): round 1's #e2d3bd still read cold blue-grey on the curb's shadowed face -- a multiply darkens as well as tints (every channel below 255, blue hardest hit at 0.74x), so the one face lit mostly by sky ambient rather than direct sun had the least light left to carry the warmth. Brighter and warmer (bumped all channels, widened the red/blue gap) so the shaded face still reads as warm stone rather than cold stone in shadow, not just the sunlit face."
+      "_why_retint": "round 3 (EV6-remainder-well-rocktrim-shadow): rounds 1-2 kept pushing the colour multiply warmer and it kept not closing the gap, because colour was never the real defect -- MI_RockTrim imports with metallic=1.0 (confirmed via tools/_probe_rocktrim_material.gd), a bare-metal value no stone surface wants, versus the adjacent paving's MI_UnevenBrick at a correct metallic=0.0. Under the Compatibility renderer's realtime-only lighting (no reflection probes), a full-metal surface has almost no diffuse ambient response, so it goes flat and cold in shadow while a dielectric neighbour in the identical shadow reads normally warm -- exactly the asymmetry the round-2 critic named. Fixed at the actual layer: metallic forced to 0.0 through a new optional key on the retint schema (building_prefabs.gd::_apply_retint), keeping round 2's warm colour rather than reverting it."
     },
     "fence_run": {
       "_why": "A 6m field fence in the kit's own timber, replacing the farm pack's Fence/Fence2. Three different 2m segments so the run does not read as one plank repeated.",

@@ -192,6 +192,7 @@ func _apply_retint(node: Node3D, retint: Dictionary) -> void:
 			var emission := Color.BLACK
 			var energy := 0.0
 			var texture := ""
+			var metallic := -1.0 ## -1 means "leave the imported value alone"
 			if spec is Dictionary:
 				var d := spec as Dictionary
 				colour = Color(str(d.get("color", "#ffffff")))
@@ -204,9 +205,19 @@ func _apply_retint(node: Node3D, retint: Dictionary) -> void:
 				# vegetation.json swaps it for the pack's muted Leaves.png
 				# and then tints, so the recipe does the same.
 				texture = str(d.get("texture", ""))
+				# A PBR property override, for the one case a colour multiply
+				# cannot reach: MI_RockTrim imports with metallic=1.0 (a bare-
+				# metal setting a stone surface never wants), which starves it
+				# of diffuse ambient response — under the Compatibility
+				# renderer's real-time-only lighting (no reflection probes),
+				# a full-metal surface has nothing to reflect in shadow and
+				# reads flat and cold next to a dielectric neighbour lit by
+				# the same ambient. `EV6-remainder-well-rocktrim-shadow`.
+				if d.has("metallic"):
+					metallic = float(d["metallic"])
 			else:
 				colour = Color(str(spec))
-			var key := "%s|%s|%s|%.2f|%s" % [mat_name, colour.to_html(), emission.to_html(), energy, texture]
+			var key := "%s|%s|%s|%.2f|%s|%.2f" % [mat_name, colour.to_html(), emission.to_html(), energy, texture, metallic]
 			if not _tinted.has(key):
 				var dup := (mat as StandardMaterial3D).duplicate() as StandardMaterial3D
 				dup.albedo_color = colour
@@ -216,6 +227,8 @@ func _apply_retint(node: Node3D, retint: Dictionary) -> void:
 					dup.emission_energy_multiplier = energy
 				if texture != "" and ResourceLoader.exists(texture):
 					dup.albedo_texture = load(texture)
+				if metallic >= 0.0:
+					dup.metallic = metallic
 				_tinted[key] = dup
 			mi.set_surface_override_material(surface, _tinted[key])
 

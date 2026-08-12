@@ -613,7 +613,8 @@ Still open:
   reuse).
 - Small named leftovers, cheap once someone is in the area: ~~the well's
   RockTrim dressing still reads cool in shadow after a warm multiply~~
-  **partial — see `EV6-remainder-well-rocktrim-shadow` below**;
+  **real fix shipped (a wrong `metallic` value), accepted as the honest
+  ceiling — see `EV6-remainder-well-rocktrim-shadow` in `DONE.md`**;
   `cottage_b`'s downhill
   border skirt still shows a shelf-shadow on the flat's smoothstep skirt (a
   small terrain flat at [21,-14] would end it); every building's border
@@ -628,29 +629,7 @@ Still open:
   emission-tint pipeline); `lane: npc`, not
   village work.
 
-### EV6-remainder-well-rocktrim-shadow — The curb's shadowed face reads cold next to the identically-shadowed paving beside it; colour levers are the wrong tool
-`model: sonnet` · `tests: none (visual)` · `area: village`
-Round 1 (`EV6`) and round 2 (this item) both pushed `MI_RockTrim`'s retint
-warmer — `#e2d3bd` then `#f0e2c4` — with round 2 producing real, measured
-pixel movement confirmed by a genuine blind critic. **Did not close it**: the
-same critic's round-2 read found the sharper version of the complaint —
-the curb's shadowed vertical face goes cold blue-charcoal while the paving
-stone sitting in the exact same shadow, one metre away, stays warm. Two
-materials in identical light disagreeing on colour temperature is not
-something a stronger `albedo_color` multiply can fix (it would warm both
-faces of the SAME material together, not explain why one material responds
-to shadow differently from its neighbour) — this is the material's own
-shadow/AO response, not its base colour. `_apply_retint`
-(`scripts/world/building_prefabs.gd`) has no hook today for anything but
-`color`/`emission`/`texture`; the next lever is almost certainly
-`ao_light_affect` (or `ao_texture`/`ao_enabled`) on `MI_RockTrim`'s imported
-material, the same class of fix `EV4-hillside-seam-remainder-2` and `-3`
-already used successfully elsewhere this session for a material reading as
-"a shadow" rather than as itself. Extending the retint schema to carry an
-optional `ao_light_affect` override is the smallest coherent version.
-Done when: a blind critic given the curb from a shadow-crossing bearing
-stops describing the shadowed stone as a different, colder material than
-its own sunlit face or the paving beside it.
+**`EV6-remainder-well-rocktrim-shadow` (root cause found: `MI_RockTrim` imported with `metallic=1.0`, fixed) shipped, real improvement, not fully closed — see `DONE.md`.** The `ao_light_affect` lever this item originally named turned out to be moot (`ao_enabled=false` on the material — checked with a new probe tool before implementing it blind) — the real defect was a wrong PBR value, not a missing hook. A genuine blind critic on the fixed render still names a colour-temperature mismatch, but a visibly softer and more specific one than before, most likely the Compatibility renderer's own lack of ambient bounce/GI (`D06`) rather than a further material property — `roughness` is already maxed and `ao_light_affect` is confirmed inert. Accepted as the honest ceiling; no further remainder opened.
 
 **`EV7` (a first slice: work area and farmhouse yard) shipped — see `DONE.md`.**
 Two of the bible's five named clusters. `bridge repair site`, `quarry station`
