@@ -579,7 +579,19 @@ carried forward below.
 ### EV6-remainder — The building types the kit rebuild deliberately left
 `model: fable` · `tests: smoke_opening, smoke_traversal` · `area: village`
 Bible §12's list is six types; `EV6` shipped the square (workshop, village
-house ×2, the well as the square's marker) and stopped. Still open:
+house ×2, the well as the square's marker) and stopped.
+
+**`EV6-remainder-well-rocktrim` fixed a settlement-wide invisible-buildings
+regression, found while chasing the RockTrim leftover below — see `DONE.md`.**
+`fdbfc1d6`'s template-leak fix (~06:36Z this session) accidentally made every
+placed structure (`village.gd`'s all ten, plus `grandpa_house.gd`'s
+`farmhouse_shell` exterior and `road_gate.gd`'s gate leaf) invisible while
+keeping full collision — a player would walk into solid, unseen walls.
+Fixed at the source in `building_prefabs.gd::instantiate()`. **If any visual
+judgement of the settlement happened between `fdbfc1d6` and this fix landing,
+treat it as invalid** — it was judging an empty field with real walls in it.
+
+Still open:
 - **Mill / crossing, and the bridges** — both are water/bridge architecture
   and there is no water (`EV5`, unshipped). The windmill's removal also cost
   the settlement its tall landmark; the mill at a real crossing is the
@@ -615,9 +627,10 @@ house ×2, the well as the square's marker) and stopped. Still open:
   entries force-regenerated to see a `.mtl`-only edit (CI is unaffected,
   since it always imports from a clean checkout with no stale cache to
   reuse).
-- Small named leftovers, cheap once someone is in the area: the well's
-  RockTrim dressing still reads cool in shadow after a warm multiply (a
-  texture-level fix, or leave until lighting work); `cottage_b`'s downhill
+- Small named leftovers, cheap once someone is in the area: ~~the well's
+  RockTrim dressing still reads cool in shadow after a warm multiply~~
+  **partial — see `EV6-remainder-well-rocktrim-shadow` below**;
+  `cottage_b`'s downhill
   border skirt still shows a shelf-shadow on the flat's smoothstep skirt (a
   small terrain flat at [21,-14] would end it); every building's border
   skirt meets the grass as a hard grey edge rather than a soil transition
@@ -630,6 +643,30 @@ house ×2, the well as the square's marker) and stopped. Still open:
   frames — partly the same class (dark palette tints under `NP2`'s
   emission-tint pipeline); `lane: npc`, not
   village work.
+
+### EV6-remainder-well-rocktrim-shadow — The curb's shadowed face reads cold next to the identically-shadowed paving beside it; colour levers are the wrong tool
+`model: sonnet` · `tests: none (visual)` · `area: village`
+Round 1 (`EV6`) and round 2 (this item) both pushed `MI_RockTrim`'s retint
+warmer — `#e2d3bd` then `#f0e2c4` — with round 2 producing real, measured
+pixel movement confirmed by a genuine blind critic. **Did not close it**: the
+same critic's round-2 read found the sharper version of the complaint —
+the curb's shadowed vertical face goes cold blue-charcoal while the paving
+stone sitting in the exact same shadow, one metre away, stays warm. Two
+materials in identical light disagreeing on colour temperature is not
+something a stronger `albedo_color` multiply can fix (it would warm both
+faces of the SAME material together, not explain why one material responds
+to shadow differently from its neighbour) — this is the material's own
+shadow/AO response, not its base colour. `_apply_retint`
+(`scripts/world/building_prefabs.gd`) has no hook today for anything but
+`color`/`emission`/`texture`; the next lever is almost certainly
+`ao_light_affect` (or `ao_texture`/`ao_enabled`) on `MI_RockTrim`'s imported
+material, the same class of fix `EV4-hillside-seam-remainder-2` and `-3`
+already used successfully elsewhere this session for a material reading as
+"a shadow" rather than as itself. Extending the retint schema to carry an
+optional `ao_light_affect` override is the smallest coherent version.
+Done when: a blind critic given the curb from a shadow-crossing bearing
+stops describing the shadowed stone as a different, colder material than
+its own sunlit face or the paving beside it.
 
 **`EV7` (a first slice: work area and farmhouse yard) shipped — see `DONE.md`.**
 Two of the bible's five named clusters. `bridge repair site`, `quarry station`

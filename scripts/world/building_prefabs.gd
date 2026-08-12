@@ -120,7 +120,16 @@ func instantiate(prefab_name: String) -> Node3D:
 		if template == null:
 			return null
 		_templates[prefab_name] = template
-	return (_templates[prefab_name] as Node3D).duplicate()
+	# `duplicate()` copies EVERY property of the template, `visible` included
+	# — and `_build_template` deliberately hides the template so it never
+	# renders at the origin while parked in `_holder`. Without this line every
+	# placed copy inherits that hidden flag too: the whole settlement built,
+	# collided and stood on the ground with a straight face, never drawing a
+	# single pixel. Every caller wants a visible duplicate; nothing here ever
+	# wants a hidden one back.
+	var copy := (_templates[prefab_name] as Node3D).duplicate()
+	copy.visible = true
+	return copy
 
 
 func _build_template(prefab_name: String) -> Node3D:

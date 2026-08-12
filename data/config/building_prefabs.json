@@ -1363,9 +1363,9 @@
         }
       ],
       "retint": {
-        "MI_RockTrim": "#e2d3bd"
+        "MI_RockTrim": "#f0e2c4"
       },
-      "_why_retint": "round 1: the RockTrim borders and curb read cold blue-grey against the warm square; a gentle warm multiply keeps the texture and moves the cast (R9.4-remainder-3's hook, doing its job)"
+      "_why_retint": "round 2 (EV6-remainder's own leftover): round 1's #e2d3bd still read cold blue-grey on the curb's shadowed face -- a multiply darkens as well as tints (every channel below 255, blue hardest hit at 0.74x), so the one face lit mostly by sky ambient rather than direct sun had the least light left to carry the warmth. Brighter and warmer (bumped all channels, widened the red/blue gap) so the shaded face still reads as warm stone rather than cold stone in shadow, not just the sunlit face."
     },
     "fence_run": {
       "_why": "A 6m field fence in the kit's own timber, replacing the farm pack's Fence/Fence2. Three different 2m segments so the run does not read as one plank repeated.",
