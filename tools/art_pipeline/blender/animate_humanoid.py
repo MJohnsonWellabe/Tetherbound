@@ -290,6 +290,22 @@ def main() -> None:
     rig = load(model)
     bpy.context.scene.render.fps = FPS
 
+    # Drop any animation already on the rig. The normal input is a bare Meshy
+    # rig with no clips, so this is a no-op there -- but `assets_raw/` is
+    # gitignored and nothing keeps the pre-animation Meshy output past one
+    # pipeline run, so re-running this script on an already-shipped
+    # *_lod0.glb (R3.0's "re-process through the fixed pipeline", the only
+    # source actually available for trainer/grandpa/warden) would otherwise
+    # export the old idle/walk/sprint/jump/throw NLA tracks alongside the
+    # freshly authored ones under the same names.
+    if rig.animation_data:
+        for track in list(rig.animation_data.nla_tracks):
+            rig.animation_data.nla_tracks.remove(track)
+        rig.animation_data.action = None
+    for action in list(bpy.data.actions):
+        action.use_fake_user = False
+    bpy.data.orphans_purge(do_local_ids=True)
+
     # A stray unskinned object rides along in Meshy output and would be
     # exported as part of the character. Same Icosphere as skin_transfer drops.
     for obj in list(bpy.data.objects):
