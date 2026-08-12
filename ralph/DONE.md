@@ -56,6 +56,68 @@ scope question, not a config tweak) or accepting the frame — both of which
 are the owner's call, not a firing's. See `BACKLOG.md`'s carried-forward
 note for the concrete question to ask.
 
+## EV4-hillside-seam-remainder-2 — Two real, root-caused, verified bugs in the soil band's colour fixed; the "no visible third material" bar still not cleared
+`tests: none (visual)`. Two local blind-judge rounds (genuine `Agent`-tool
+sub-agents, no knowledge of what changed), against real rendered frames
+from `tools/capture_hillside.gd` (Compatibility renderer, `xvfb-run` +
+`opengl3`, no `--headless` — that flag silently swaps in the Dummy
+rendering driver and hangs the capture forever, per `RENDER-PERF-DIAG`'s
+own finding; confirmed working at ~5 min for 3 frames).
+
+**Bug 1: `Ground003_Color.jpg`'s own raw saturation (mean 0.45) measured
+~4.5x every sibling ground texture already shipped in this project**
+(`Ground030` path texture 0.099, `Rock030` 0.126) — computed directly by
+converting all three to HSV and averaging, not guessed. The photo is
+oversaturated across nearly its whole area (a weedy-lawn photo with real
+green grass tufts), not confined to a narrow patch the way `Ground030`'s
+moss was — which is exactly why two prior rounds (`EV4-hillside-seam-
+remainder`) fighting it through `tint` alone either undershot or overshot
+into "burnt orange/rust." Fixed the photo itself:
+`tools/art_pipeline/desaturate_soil_texture.py`, the same feathered-
+blend-toward-local-luminance technique `EV4-textures` used on `Ground030`'s
+moss, scaled to this photo's broader defect (a stronger pull in the
+green/grass-tuft hue range, a milder pull everywhere else, gaussian-
+feathered mask edges). Measured: mean saturation 0.451 → 0.171. Ledgered
+in `docs/ASSET_LEDGER.md`.
+
+**Bug 2, found only after re-rendering and re-measuring the ACTUAL
+rendered pixels (not just the offline-corrected texture): `colour.soil`
+(`#e0cea4`) was itself saturated (0.27) and compounding multiplicatively
+with the texture's own `tint` (`#c9a874`, 0.42) on top of the now-fixed
+photo** — the exact same multiplicative-saturation bug `R9.4` already
+diagnosed and fixed for grass elsewhere in this file, just not caught here
+until the photo fix exposed it. Rendered transition-zone saturation was
+still 0.65–0.76 after Bug 1's fix alone, verified by direct pixel sampling
+of `close-three-quarter.png` at the actual rock/soil boundary — nowhere
+near the fixed photo's own 0.17 mean, which is what prompted digging for a
+second cause instead of assuming the photo fix simply hadn't been enough.
+Simulated the real multiply chain (3000 sampled photo pixels × candidate
+`tint`/`colour.soil` pairs) before touching the config, to pick values
+rather than guess-and-render. Fixed: `tint` → `#fafafa` (matching rock's
+own near-white-only-brightness convention, since the photo now carries the
+real colour and no longer needs fighting), `colour.soil` → `#f3ebdb` (now
+honestly above this file's own documented "`#c0` floor" for this layer).
+Reverified against the actual re-rendered frame: transition-zone
+saturation 0.65–0.76 → 0.18–0.43, with a real, visible brighter warm band
+now present above the darker rock patches in all three frames.
+
+**Did not close the item.** A third blind critic, given the re-rendered
+frames with no knowledge of any of the above, still reported no clearly
+legible third material — but for a different, more specific reason than
+either prior round: not a wrong colour any more, but rock's own low native
+brightness (`Rock030_Color.jpg` mean value 0.31, further darkened by its
+`normal_depth`/`ao_strength` under this scene's grazing sun) reads as "a
+shadow hole," and soil/rock's pixel-sampled hue ranges turned out to
+overlap heavily (44–58° vs 44–84°) — the two bands differ mainly in
+*value*, which a viewer reads as lighting variation on one material, not a
+second material. No new WORSE defect was introduced this round (unlike the
+earlier reverted round-2 attempt) — this is real, verified, net progress,
+just not enough on its own. Narrower remainder (`EV4-hillside-seam-
+remainder-3`) opened in `BACKLOG.md` for the value/contrast half, since
+`soil`-only colour levers are now close to exhausted and the next real
+lever is on `rock`, or on `soil`'s hue specifically rather than its
+saturation.
+
 ## EV3-remainder-5 (round 1) — path_stones' own clump_radius was more than twice the path's visible width, spreading stones into a symmetric flanking pattern near Grandpa's house
 `tests: run_tests.gd` (341/341), `smoke_art` green. Real blind visual-judge
 pass (`.claude/skills/visual-judge`, genuine sub-agent, no memory of what
