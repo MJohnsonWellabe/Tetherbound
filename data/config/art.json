@@ -192,11 +192,11 @@
     "animation_libraries": []
   },
   "villager_smith": {
-    "_comment": "R7.2, moved off the trainer's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_female base, same as villager_farmer's -- the two share a body but keep their own distinct tints, the way villager_keeper and villager_ranger already shared the trainer's rig before this item.",
+    "_comment": "R7.2, moved off the trainer's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_female base, same as villager_farmer's -- the two share a body but keep their own distinct tints, the way villager_keeper and villager_ranger already shared the trainer's rig before this item. NP6: the original #3f5a8c (value 0.55, luminance 0.35) read as a flat black silhouette in outdoor sun once NP2's fix made emission correctly reflect the tint -- both albedo AND the self-lit emission pass darken together now, and a source texture with mid/dark regions multiplied by this tint crushed to near-black. Brightened to the same hue/saturation at value 0.72 (luminance 0.45, matching villager_keeper's range) so the blue workwear identity survives without going unlit.",
     "model": "res://assets/characters/villager_female/villager_female_lod0.glb",
     "height": 1.73,
     "model_yaw": 0.0,
-    "tint": "#3f5a8c",
+    "tint": "#5376b8",
     "clips": {
       "idle": "idle",
       "walk": "walk",
@@ -207,11 +207,11 @@
     "animation_libraries": []
   },
   "villager_quarryman": {
-    "_comment": "NP3, moved off Grandpa's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_male base, sharing a body with villager_keeper but keeping its own dark stone/workwear tint distinct from every other villager on the square.",
+    "_comment": "NP3, moved off Grandpa's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_male base, sharing a body with villager_keeper but keeping its own dark stone/workwear tint distinct from every other villager on the square. NP6: the original #54504a (value 0.33, luminance 0.31) was the darkest tint on the square and read as a flat black silhouette in outdoor sun for the same reason villager_smith did -- NP2's emission fix means a dark multiply darkens the self-lit pass too, not just albedo. Brightened to the same near-neutral stone hue at value 0.68 (luminance 0.65) so it reads as pale stone/workwear rather than unlit.",
     "model": "res://assets/characters/villager_male/villager_male_lod0.glb",
     "height": 1.80,
     "model_yaw": 0.0,
-    "tint": "#54504a",
+    "tint": "#ada495",
     "clips": {
       "idle": "idle",
       "walk": "walk",
