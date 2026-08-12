@@ -350,6 +350,15 @@ func hold_input(held: bool) -> void:
 	_deaf = held
 
 
+## A tab that borrows a button's meaning while `hold_input` is engaged (the
+## backpack's target picker reads `menu_cancel` itself instead of it closing
+## the menu) has to say so here too, or this static footer keeps advertising
+## the shell's own binding for a button that means something else right now.
+## Empty restores the configured default.
+func override_footer(text: String) -> void:
+	_footer.text = text if not text.is_empty() else str(_config.get("footer", ""))
+
+
 ## The way back from a layout the player has broken.
 ##
 ## READ OFF THE DEVICE, NOT THE INPUT MAP, and that is the entire point. Every

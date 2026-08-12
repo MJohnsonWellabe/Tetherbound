@@ -148,12 +148,6 @@ func _build_target_panel() -> VBoxContainer:
 		panel.add_child(button)
 		_target_rows.append(button)
 
-	var hint := Label.new()
-	hint.add_theme_font_size_override("font_size", 20)
-	hint.add_theme_color_override("font_color", Color(0.55, 0.57, 0.52))
-	hint.text = "B  put it away without using it"
-	panel.add_child(hint)
-
 	return panel
 
 
@@ -300,6 +294,11 @@ func _read_use() -> void:
 
 	_targeting = _focused
 	menu.call("hold_input", true)
+	# hold_input stops the shell reading `menu_cancel` as Close, and this tab
+	# reads it as Cancel instead (see _read_targeting_cancel) -- the static
+	# footer has to say so too, or it keeps advertising a binding B no longer
+	# has for as long as the picker is open.
+	menu.call("override_footer", "A  Use on this pal        B  Cancel")
 	_content_row.visible = false
 	_target_panel.visible = true
 	_refresh_target_panel()
@@ -391,6 +390,7 @@ func _read_targeting_cancel() -> void:
 func _end_targeting() -> void:
 	_targeting = -1
 	menu.call("hold_input", false)
+	menu.call("override_footer", "")
 	_target_panel.visible = false
 	_content_row.visible = true
 	if _focused >= 0 and _focused < _buttons.size():
