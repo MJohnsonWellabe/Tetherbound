@@ -327,50 +327,62 @@ from what either this entry or `EV3-remainder-2` diagnosed — see
 `EV3-remainder-4` below for what a fourth diagnostic pass actually found
 once grass/drygrass stopped being the dominant signal.
 
-### EV3-remainder-4 — the remaining path-edge hedge is flowers' OWN path_bias, not grass/drygrass
-`model: opus` · `tests: smoke_art` · `area: vegetation`
-`EV3-remainder-3` fixed grass/drygrass clumps landing too close to a path by
-chance (verified against real placement data) and a third blind critic
-still named the same hedge pattern on the same two frames anyway. Before
-guessing again, dumped every layer's real placement count within 5m of a
-path in each frame's actual camera region (not a guessed bounding box —
-the exact eye/target midpoint `tools/capture_paths.gd` uses):
+**`EV3-remainder-4` (grass/drygrass strays fixed structurally; flowers'
+path-biased clumps stop straddling the road) shipped, partial — see
+`DONE.md`.** Two real, verified mechanism fixes across two rounds. Did not
+close the item — a fresh blind critic on the round-2 render still named
+`grandpas-house-route.png` for the same pattern, but a whole-map placement
+dump of the *real* seed (not a guess) found neither `flowers` (0 clumps,
+biased or unbiased, within 15m of any path in that frame's actual region)
+nor `bushes` (1 instance within 20m of the house) present there in any
+meaningful quantity — ruling out further `path_bias`/`path_avoid_radius`
+tuning as the lever for that specific frame. Narrower remainder opened
+below.
 
-- **`the-rise-route.png`**: `flowers` has **74 of 140** instances in-frame
-  within 5m of a path — by far the largest concentration of any layer
-  (`grass` 17/180, `drygrass` 16/62). This is `flowers`' own `path_bias`
-  (0.35, from `EV3-remainder` round 1) doing exactly what it was built to
-  do: one biased clump snaps near the path and contributes all ~78 of its
-  own instances at once. It was never the cause of the ORIGINAL "row-
-  planted"/"hedge" complaints (those were genuinely grass/drygrass, now
-  fixed), but with grass/drygrass calmed down, `flowers`' own intentional
-  path-adjacency is now the dominant thing a critic sees near the path on
-  this frame — and reads the same way an unwanted hedge would, because at
-  78 instances per clump it is just as regular.
-- **`grandpas-house-route.png`**: `flowers` is NOT the cause here (1 of 36
-  instances near a path) — `drygrass` still has 10 of 73 within 5m even
-  after `path_avoid_radius`, likely from clumps landing just past the
-  7.0m avoidance radius but still visually close given `clump_radius` 12.0,
-  or from `strays` (independent of clump placement, `path_avoid_radius`
-  does not and should not touch them). Not confirmed which.
+### EV3-remainder-5 — grandpas-house-route.png still reads as "hedge" to a blind critic, but real data rules out every layer/mechanism this backlog line can tune
+`model: opus` · `tests: none (visual)` · `area: vegetation`
+`EV3-remainder-4`'s own whole-map dumps (real seed, real camera region, not
+a guessed bounding box) are conclusive on what is NOT happening in
+`grandpas-house-route.png`'s visible foreground (roughly `x∈[-24,-4]`
+around Grandpa's house at `[-22,-16]`, `data/config/village.json`):
+`flowers` has zero clumps — biased or unbiased — within 15m of any path
+there, and `bushes` has exactly one instance within 20m of the house. Both
+`grass` and `drygrass` are already verified structurally clean (0% of
+clump-sourced instances and, after this item's fix, 0% of stray-sourced
+instances within 5m of a path anywhere on the map). Every lever this
+backlog line's own diagnosis chain has produced — `path_edge_jitter`,
+`path_bias_jitter`, `path_avoid_radius`, `path_bias_per_clump`,
+`path_bias_side_offset` — has now been tried, verified against real
+placement data to do exactly what it claims, and none of them touch
+whatever a blind critic is actually responding to in this specific frame.
 
-This is now two different, precisely identified sub-problems rather than
-one vague "tuft banding" — treat separately rather than reaching for one
-lever again:
+Two honest readings, not mutually exclusive:
 
-1. Whether `flowers`' `path_bias` (an intentional, working mechanism) is
-   too visually strong at 78 instances per biased clump — a `per_clump`
-   reduction specifically for path-biased draws, or accepting this as
-   flowers doing its job and the actual bar being wrong, is an owner-
-   facing question worth asking rather than another silent scatter tweak:
-   `path_bias` was owner-adjacent design intent (EV3-remainder), not a bug.
-2. `grandpas-house-route`'s residual drygrass needs the strays-vs-clump
-   question answered directly (instrument `_consider`'s stray loop the same
-   way `EV3-remainder-3` instrumented `_clump_centre`, rather than guessing
-   whether `path_avoid_radius`'s 7.0m is simply too small).
+1. **This may be critic pattern-matching on genuinely sparse content.**
+   Round 2's critic described "matched clusters... at roughly the same
+   distance... flanking both sides" — a description that fits a human
+   noticing rough bilateral symmetry in what real data shows is a handful
+   of scattered, mostly-unrelated instances from different layers. Two
+   independent critics across two rounds naming the same thing is real
+   signal, but it may be signal about overall sparsity/legibility near this
+   route rather than a specific placement bug — `grandpas-house-route`'s
+   under-clustering was flagged as UNRESOLVED as far back as `EV3-remainder`
+   round 1 and has never actually been fixed, only routed around.
+2. **A layer not yet dumped for this exact region could still be
+   responsible** — `trees`, `grove`, `saplings`, `deadfall`, `rocks` and
+   `path_stones` were not checked against this specific frame's region the
+   way `flowers`/`bushes`/`grass`/`drygrass` were. Any of them landing
+   symmetrically by chance in this one seed would produce exactly this
+   read without touching any `path_*` mechanism at all.
 
-Done when: a blind critic stops naming `grandpas-house-route.png` or
-`the-rise-route.png` for a hedge/row/banded pattern along the path.
+Done when: either a real placement dump against the remaining layers finds
+an actual mechanism (and fixes it the same evidence-first way this backlog
+line has for grass/drygrass/flowers), or a blind critic given
+`grandpas-house-route.png` alongside its own real placement counts agrees
+the pattern is not systematic and the frame is accepted, or the owner is
+asked directly whether `grandpas-house-route`'s under-clustering (a
+different, older, still-open complaint) is the actual thing worth fixing
+here instead of continuing to chase "hedge" as if it were one bug.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
 tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four

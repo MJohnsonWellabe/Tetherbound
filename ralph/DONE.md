@@ -553,6 +553,65 @@ gathering to be tool-gated, and both are true.
 Not visual-affecting (no scene/material/UI change), so no blind-judge pass
 applies here per `conventions.md`.
 
+## EV3-remainder-4 — grass/drygrass strays fixed structurally; flowers' path-biased clumps stop straddling the road
+`6ae65bd` (round 1), `d81a320` (round 2). `tests: smoke_art`, green locally
+both rounds. 26/26 unit tests green in `test_scatter_rules.gd` (6 new this
+item). Two local blind-judge rounds (`.claude/skills/visual-judge`,
+genuinely blind sub-agents each time, no memory of the prior round).
+
+**Two real, verified mechanism fixes, neither guessed:**
+
+1. **`path_avoid_radius` (`EV3-remainder-3`) only ever resampled a clump's
+   CENTRE, so `strays` — placed independently of any clump — still landed
+   near a path by chance.** A whole-map placement dump confirmed the clump
+   half was already clean (0 of 3785 drygrass clump-sourced instances
+   within 5m of a path, even from clumps whose centre barely cleared the
+   radius) but strays were not. Applied the same radius per-instance in
+   `_consider()` too — reads the existing key, so `grass`/`drygrass` are
+   fixed with no config change at all. A new test proves every surviving
+   stray sits outside the radius, not just fewer of them.
+2. **`flowers`' own `path_bias` snaps a clump's centre exactly onto the
+   path centreline, so its symmetric instance disc structurally straddles
+   both edges at once — two matched crescents, which is what a blind
+   critic named "a hedge planted along a driveway."** Round 1 tried
+   thinning the count (`path_bias_per_clump`, 78→26) and a fresh critic
+   still named the same pattern — density was never the actual shape
+   problem. Round 2: new `nearest_path_tangent()` (`playground_heightfield
+   .gd`) gives the one thing `nearest_point_on_paths` can't — which way is
+   sideways — and a new `path_bias_side_offset` (`scatter_rules.gd`,
+   6.0 for flowers) pushes a biased clump's centre along that perpendicular
+   before `path_bias_jitter`'s existing nudge, so the clump favours one
+   shoulder instead of straddling. A new statistical test (8 seeds) proves
+   the offset measurably shifts instances toward one side.
+
+**Did not close the item.** A fresh blind critic on round 2 still named
+`grandpas-house-route.png` for the same "hedge" pattern. Before trying a
+third lever on the same mechanism, dumped the REAL seed's placement data
+for that frame's actual region (Grandpa's house sits at `[-22,-16]`,
+`data/config/village.json` — not the frame's camera midpoint, which was
+`EV3-remainder-4`'s own first, wrong guess at "the region" before finding
+the real coordinates) rather than guessing a third fix: **zero flowers
+clumps, biased or unbiased, land within 15m of any path in that region for
+this seed, and bushes has exactly one instance within 20m of the house.**
+Neither layer is meaningfully present where the critic is looking. Every
+lever this backlog item's diagnosis chain has produced has now been tried
+and verified to do exactly what it claims — the residual complaint on this
+one frame is not something more `path_bias`/`path_avoid_radius` tuning can
+reach, because the layers those levers touch aren't the ones populating
+that part of the frame. Opened `EV3-remainder-5` with the real coordinates
+and the two honest readings of what might actually be left (critic
+pattern-matching on sparse content vs. an untested layer landing
+symmetrically by chance this one seed) rather than guessing a third time.
+
+`EV2-landmark-ceiling` bookkeeping correction (same firing, folded into
+this branch's push rather than its own item): `EV1-remainder`'s note that
+staging the two Quaternius kits "unblocks... `EV2-landmark-ceiling`" named
+the wrong pack — the two zips staged are the Village and Fantasy Props
+MegaKits (176 + 94 `.gltf` files, verified by listing all of them: zero
+tree/foliage assets), not the Stylized Nature MegaKit that item actually
+needs. Corrected in `BACKLOG.md`; the item is still genuinely blocked,
+unchanged.
+
 ## EV1-remainder — Bookkeeping only: the two Quaternius MegaKits were already staged and ledgered
 `tests: none` (EV1-remainder's own field)
 
