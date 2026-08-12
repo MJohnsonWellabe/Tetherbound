@@ -27,7 +27,7 @@ const FOV := 70.0
 ## gameplay scripts' private state.
 const WORK_AREA_CENTRE := Vector2(-5.0, -2.8)
 const BARN_AT := Vector2(2.0, 2.0)
-const FARMHOUSE_YARD_CENTRE := Vector2(-24.0, -25.4)
+const FARMHOUSE_YARD_CENTRE := Vector2(-23.9, -25.3)
 const HOUSE_AT := Vector2(-22.0, -16.0)
 
 const VIEWPOINTS := [

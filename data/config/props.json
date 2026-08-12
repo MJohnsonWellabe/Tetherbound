@@ -16,10 +16,10 @@
       "name": "farmhouse_yard",
       "props": [
         { "model": "Barrel_Apples", "at": [-24.0, -25.0], "yaw_deg": 10.0, "scale": 1.0, "_why": "the cluster's anchor -- overflow from the last harvest" },
-        { "model": "FarmCrate_Apple", "at": [-25.5, -24.0], "yaw_deg": -15.0, "scale": 1.0, "_why": "stacked beside the barrel" },
-        { "model": "FarmCrate_Empty", "at": [-25.0, -26.5], "yaw_deg": 40.0, "scale": 1.0, "_why": "a second crate, ready for the next load -- FarmCrate_Carrot swapped out (round 1 blind critic): its vertex-colour-tinted contents render as an unreadable white/grey smear, a model defect not a placement one" },
-        { "model": "Bucket_Wooden_1", "at": [-23.0, -24.5], "yaw_deg": 0.0, "scale": 1.0, "_why": "a bucket set down mid-chore" },
-        { "model": "Crate_Wooden", "at": [-22.5, -27.0], "yaw_deg": 60.0, "scale": 1.0, "_why": "general storage, closing the cluster" }
+        { "model": "FarmCrate_Apple", "at": [-24.9, -24.6], "yaw_deg": -20.0, "scale": 1.0, "_why": "set right against the barrel's side, not just nearby -- round 2 blind critic: a loose arc of props near a wall reads as dumped, not a task. This is meant to read as one pile: a load just carried out and set down together." },
+        { "model": "FarmCrate_Empty", "at": [-23.3, -24.7], "yaw_deg": 50.0, "scale": 1.0, "_why": "touching the barrel's other side, tipped at an angle rather than square -- just set down, not arranged. FarmCrate_Carrot swapped out earlier (round 1 blind critic): its vertex-colour-tinted contents render as an unreadable white/grey smear, a model defect not a placement one." },
+        { "model": "Bucket_Wooden_1", "at": [-24.3, -26.0], "yaw_deg": 190.0, "scale": 1.0, "_why": "in front of the pile, facing back toward it -- the tool that did the carrying, set down after" },
+        { "model": "Crate_Wooden", "at": [-23.2, -26.1], "yaw_deg": -30.0, "scale": 1.0, "_why": "the big piece of the same load, closing the pile from the front" }
       ]
     }
   ]
