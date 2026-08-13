@@ -199,6 +199,18 @@ func _run() -> void:
 const PERIMETER_RADIUS := 235.0
 const PERIMETER_START_RADIUS := 200.0
 const PERIMETER_BEARINGS := 8
+## OF6: the eight evenly-spaced bearings above never land on a rise, and a
+## real leak reproduced specifically where one does — `world_perimeter.gd`'s
+## `COLLISION_MARGIN_UP` header has the full measurement. Three of
+## `terrain_playground.json`'s `rises.peaks` reach far enough out to overlap
+## this ring's own 235m radius; two of these bearings sit inside the worst
+## overlap (peak centred -165,-150, up to 46m past the ring — 227° is the
+## bearing that leaked furthest, to 278m) and the third inside the next-
+## largest overlap (peak centred 140,-90, up to 9m past the ring, at 327°).
+## Evenly-spaced sampling alone missed this for as long as `OF6` sat open in
+## `BACKLOG.md`; these are added explicitly rather than trusted to come up
+## by chance.
+const EXTRA_RISE_BEARINGS_DEG: PackedFloat32Array = [215.0, 227.0, 327.3]
 ## ~35m of gap between the start radius and the ring at this playground's
 ## walk speed (5.0 m/s, data/config/movement.json) is ~7s / 420 frames;
 ## this leaves comfortable room to actually reach and settle against
@@ -216,14 +228,19 @@ func _check_perimeter(world: Node, player: CharacterBody3D, failures: Array[Stri
 		failures.append("no CameraRig in the scene; cannot aim the walk to test the perimeter")
 		return
 
+	var bearings_deg: PackedFloat32Array = []
 	for i in PERIMETER_BEARINGS:
-		var angle := i * TAU / PERIMETER_BEARINGS
+		bearings_deg.append(rad_to_deg(i * TAU / PERIMETER_BEARINGS))
+	bearings_deg.append_array(EXTRA_RISE_BEARINGS_DEG)
+
+	for bearing_deg in bearings_deg:
+		var angle := deg_to_rad(bearing_deg)
 		var outward := Vector3(cos(angle), 0.0, sin(angle))
 		var start_xz := outward * PERIMETER_START_RADIUS
 		var ground: float = float(world.call("ground_height_at", start_xz.x, start_xz.z))
 		if is_nan(ground):
-			failures.append("bearing %d (%.0f°): no ground at the test start point %.0f, %.0f" % [
-				i, rad_to_deg(angle), start_xz.x, start_xz.z
+			failures.append("bearing %.0f°: no ground at the test start point %.0f, %.0f" % [
+				bearing_deg, start_xz.x, start_xz.z
 			])
 			continue
 
