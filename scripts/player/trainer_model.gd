@@ -27,7 +27,14 @@ func _ready() -> void:
 		push_error("no trainer model; falling back to the placeholder capsule")
 
 
-func _process(delta: float) -> void:
+# Physics tick, not _process: every input here — ground_speed, is_on_floor,
+# is_sprinting — is produced by the player's _physics_process, and the gait
+# scale must never lag it by more than one physics frame. On a loaded machine
+# render frames stall while physics keeps its fixed step, and a gait update
+# living in _process holds a stale speed (and the 0.5x clamp floor) for as
+# many physics frames as the renderer skips — long enough to read as
+# slow-motion in play and to trip smoke_input's cadence streak in CI.
+func _physics_process(delta: float) -> void:
 	if animation_player() == null or _player == null:
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
