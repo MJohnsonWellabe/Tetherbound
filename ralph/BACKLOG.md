@@ -176,23 +176,7 @@ Medieval Village MegaKit. `OF4-rebuild` still needs to curate specific
 pieces into an assembled structure — that selection work is unstarted and
 out of scope here.
 
-### OF4-rebuild — Construct the stronghold as an actual assembled castle, not a shader silhouette
-`area: terrain` · depends on `BG1` + `BG2` · owner directive, 2026-08-13
-(see `docs/decisions/D28-of4-real-castle-and-build-grid.md`). Supersedes
-`BLOCKED.md`'s "OF4 silhouette ceiling" entry: rather than accept
-`landmark.gd`'s primitive-toolkit ceiling or trade wayfinding consistency
-for atmosphere, retire the procedural silhouette once `BG1` and `BG2` both
-land, and compose OF4 from real fortress modules (curtain walls, keep,
-gatehouse, towers with battlements) at the existing site (`RISE_CENTRE +
-OFFSET`). Note `OF13` (shipped) already moved the fortress ~105m onto the
-rise's far shoulder specifically so it is NOT visible from the village
-square or the Rise path — re-render and judge from wherever it's actually
-visible now, not the original 170m from-square frame the six-round history
-was scored against. Carries forward `OF4-remainder-mound`'s bare-dune fix
-as an independent, cheap prerequisite. Done when: OF4 renders as an
-assembled structure built from real modules (not a shader silhouette) and
-a fresh blind critic calls it a castle/fortress at whatever distance it's
-actually seen from.
+**`OF4-rebuild` (construct the stronghold as an actual assembled castle, not a shader silhouette) shipped — see `DONE.md`.** Real curtain walls, a gate, and four differently-sized/shaped towers (2.02m-6.20m) assembled from `BG2`'s Quaternius castle kit, replacing `landmark.gd`'s procedural primitives. Critique pass (self-administered, see `DONE.md` for why and the honest limitation that names) converged after 4 rounds with one still-open remainder: the gate's two stacked arch modules don't share a matched cut profile and read as a jagged opening rather than a clean archway — a round-4 attempt to solve it by dropping to a single-course opening regressed (no visible gate at all) and was reverted. `OF4-remainder-mound`'s bare-dune fix (below) is unaffected by this and still open on its own terms.
 
 ### NP7 — Modular hair/accessory geometry, split from the existing NP4 art (no new generation)
 `area: assets` · `lane: art` · owner directive, 2026-08-13 — rescoped from

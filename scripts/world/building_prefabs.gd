@@ -154,12 +154,26 @@ func _build_template(prefab_name: String) -> Node3D:
 		var spec := entry as Dictionary
 		var module := str(spec.get("module", ""))
 		var dir := str(spec.get("dir", MODULES_DIR))
-		var path := "%s/%s.gltf" % [dir, module]
-		if not ResourceLoader.exists(path):
-			push_error("prefab %s: module missing: %s" % [prefab_name, path])
+		# OF4-rebuild: the castle kit (BG2) ships OBJ+MTL, not glTF -- the same
+		# format the Furniture/Survival props already use directly as a bare
+		# `Mesh` (grandpa_house.gd::_furnish). glTF stays the default lookup
+		# since every other kit composed here is glTF; OBJ is a fallback, not
+		# a replacement, so an existing recipe's behaviour is unchanged.
+		var node: Node3D = null
+		var gltf_path := "%s/%s.gltf" % [dir, module]
+		var obj_path := "%s/%s.obj" % [dir, module]
+		if ResourceLoader.exists(gltf_path):
+			var scene: PackedScene = load(gltf_path)
+			node = scene.instantiate() as Node3D
+		elif ResourceLoader.exists(obj_path):
+			var mesh: Mesh = load(obj_path)
+			var mi := MeshInstance3D.new()
+			mi.name = module
+			mi.mesh = mesh
+			node = mi
+		else:
+			push_error("prefab %s: module missing: %s (.gltf or .obj)" % [prefab_name, module])
 			continue
-		var scene: PackedScene = load(path)
-		var node := scene.instantiate() as Node3D
 		var at: Array = spec.get("at", [0.0, 0.0, 0.0])
 		node.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
 		# Euler YXZ (Godot's default rotation order): yaw applies first, then
