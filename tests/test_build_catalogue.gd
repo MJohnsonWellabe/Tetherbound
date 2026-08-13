@@ -84,6 +84,38 @@ func test_every_cost_amount_is_positive() -> void:
 
 # --- geometry resolves --------------------------------------------------------
 
+# --- D34 menu categories -----------------------------------------------------
+
+## build_menu.gd (D34/spec 12.2) only knows how to draw these four tabs, in
+## this order -- an entry with any other value is invisible to the menu, the
+## same silent-drop failure mode `test_the_table_exists_and_is_not_empty`
+## already guards the whole catalogue against.
+const MENU_CATEGORIES := ["survival", "crafting", "structures", "furniture"]
+
+func test_every_category_is_a_menu_tab() -> void:
+	for entry: Variant in _buildables():
+		var piece: Dictionary = entry
+		var id := str(piece.get("id", ""))
+		var category := str(piece.get("category", ""))
+		assert_true(MENU_CATEGORIES.has(category),
+			"'%s' has category '%s', which build_menu.gd draws no tab for" % [id, category])
+
+
+func test_every_entry_has_a_thumbnail() -> void:
+	# build_menu.gd's grid cells show ONLY the thumbnail, no text (spec 12.3) --
+	# an entry with no thumbnail (or one pointing nowhere) is a broken texture
+	# in the middle of the grid rather than a missing label a player could at
+	# least read past.
+	for entry: Variant in _buildables():
+		var piece: Dictionary = entry
+		var id := str(piece.get("id", ""))
+		var thumbnail := str(piece.get("thumbnail", ""))
+		assert_ne(thumbnail, "", "'%s' has no 'thumbnail' field" % id)
+		if thumbnail != "":
+			assert_true(ResourceLoader.exists(thumbnail),
+				"'%s' names thumbnail '%s', which does not exist" % [id, thumbnail])
+
+
 func test_every_non_camp_entry_has_a_mesh_that_exists() -> void:
 	# R2.6/R2.7. `camp` and `storage` place through their own hand-authored
 	# scripts (camp.gd, storage_container.gd) and carry no `mesh` field of

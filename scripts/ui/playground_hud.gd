@@ -913,10 +913,26 @@ func _update_hotbar(inventory: RefCounted) -> void:
 func _read_hotbar_input() -> void:
 	if _game == null:
 		return
+	# HD2: the hotbar is deaf during a fight. hotbar_2/3 share the physical
+	# d-pad with combat_switch_left/right (D32), and Input's action reads are
+	# global -- without this gate a mid-fight pal switch also quietly ate a
+	# potion. The combat HUD owns the d-pad while a fight runs.
+	if _combat_is_running():
+		return
 	for i in HOTBAR_SLOTS:
 		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
 			_use_hotbar_slot(i)
 			return
+
+
+## The same defensive CombatManager lookup the minimap dim uses; false when
+## no world or no manager is reachable, so menus and tests are unaffected.
+func _combat_is_running() -> bool:
+	var world := get_tree().get_current_scene()
+	if world == null:
+		return false
+	var combat := world.get_node_or_null(^"CombatManager")
+	return combat != null and combat.has_method("is_fighting") and bool(combat.call("is_fighting"))
 
 
 func _use_hotbar_slot(index: int) -> void:

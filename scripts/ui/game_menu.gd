@@ -44,6 +44,11 @@ var _config: Dictionary = {}
 var _tabs: Array = []
 var _bodies: Array = []
 var _tab_buttons: Array = []
+## The bare label text for each tab, kept apart from the Button's own `text`
+## because the selected tab's text gets a leading accent glyph spliced onto
+## it (spec §16) and splicing onto the button's own text a second time would
+## accumulate glyphs rather than replace one.
+var _tab_labels: Array = []
 var _index: int = 0
 
 var _open: bool = false
@@ -170,10 +175,16 @@ func _build_tabs() -> void:
 		body.visible = false
 		_content.add_child(body)
 
+		var label := str(tab.get("label", tab.get("id", "?")))
 		var button := Button.new()
-		button.text = str(tab.get("label", tab.get("id", "?")))
+		button.text = label
 		button.toggle_mode = true
 		button.focus_mode = Control.FOCUS_ALL
+		button.add_theme_font_size_override("font_size", UITokens.FONT_BUTTON)
+		# Full-width rail (spec §16): each tab claims an equal share of the
+		# row instead of sizing to its own label, so the row reads as one
+		# continuous rail rather than a cluster of buttons at the left.
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		# Bound by index rather than by id: two tabs sharing an id is a data bug
 		# that should show as a duplicate label, not as a tab that opens another.
 		var slot := _tabs.size()
@@ -183,6 +194,42 @@ func _build_tabs() -> void:
 		_tabs.append(tab)
 		_bodies.append(body)
 		_tab_buttons.append(button)
+		_tab_labels.append(label)
+		_style_tab_button(button, label, false)
+
+
+## The rail treatment for one tab button (spec §16): a 3px teal underline
+## and a small ◆ accent beside the label mark the SELECTED tab; every other
+## tab is flat with muted text. Applied by index in `select()` rather than
+## left to the theme's own toggle/pressed styling, because the theme's
+## pressed look is shared with every other toggle button in the menu (the
+## settings screen's own toggles included) and this rail wants a look that
+## says "tab", not "toggle".
+func _style_tab_button(button: Button, label: String, selected: bool) -> void:
+	button.text = "◆  %s" % label if selected else label
+	var box := StyleBoxFlat.new()
+	box.bg_color = UITokens.BG_PANEL_ALT if selected else Color(0, 0, 0, 0)
+	box.border_width_bottom = 3 if selected else 0
+	box.border_color = UITokens.TEAL
+	box.content_margin_left = 12
+	box.content_margin_right = 12
+	box.content_margin_top = 10
+	box.content_margin_bottom = 10
+	# "normal" and "pressed" only -- NOT "focus" or "hover". The theme's own
+	# teal focus ring (D28, `tetherbound_theme.tres`) has to keep drawing on
+	# whichever tab the controller cursor is actually on, selected or not;
+	# overriding "focus" here too would silence that ring on every tab except
+	# the selected one, which is the one state menu_tab.gd's own header
+	# comment says must stay the loudest on screen.
+	for state in ["normal", "pressed"]:
+		button.add_theme_stylebox_override(state, box)
+	button.add_theme_color_override(
+		"font_color", UITokens.TEXT_PRIMARY if selected else UITokens.TEXT_SECONDARY
+	)
+	button.add_theme_color_override(
+		"font_hover_color", UITokens.TEXT_PRIMARY if selected else UITokens.TEXT_SECONDARY
+	)
+	button.add_theme_color_override("font_pressed_color", UITokens.TEXT_PRIMARY)
 
 
 # --- opening and closing ----------------------------------------------------
@@ -257,6 +304,7 @@ func select(index: int) -> void:
 	for i in _bodies.size():
 		_bodies[i].visible = i == _index
 		_tab_buttons[i].button_pressed = i == _index
+		_style_tab_button(_tab_buttons[i], str(_tab_labels[i]), i == _index)
 	_title.text = str((_tabs[_index] as Dictionary).get("label", "Paused"))
 	_last_revision = -1
 	_refresh()

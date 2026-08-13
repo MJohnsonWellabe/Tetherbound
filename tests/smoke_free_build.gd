@@ -134,16 +134,18 @@ func _check_the_first_day_arc(world: Node) -> void:
 	var wood_before_build := int(inventory.call("count", "wood"))
 	for i in 30:
 		await physics_frame
-	Input.action_press("interact")
+	# D34 retired build_placer.gd's read of `interact` in favour of its own
+	# `build_place` action — see docs/decisions/D34's "double-read" section.
+	Input.action_press("build_place")
 	await physics_frame
 	await physics_frame
-	Input.action_release("interact")
+	Input.action_release("build_place")
 	for i in 20:
 		await physics_frame
 
 	var camp := world.get_node_or_null(^"Camp")
 	if camp == null:
-		_fail("pressing interact on a legal ghost planted no camp")
+		_fail("pressing build_place on a legal ghost planted no camp")
 		return
 	if int(inventory.call("count", "wood")) >= wood_before_build:
 		_fail("the camp was planted and cost no wood")
@@ -208,10 +210,10 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 	for i in 10:
 		await physics_frame
 
-	Input.action_press("interact")
+	Input.action_press("build_place")
 	await physics_frame
 	await physics_frame
-	Input.action_release("interact")
+	Input.action_release("build_place")
 	for i in 20:
 		await physics_frame
 
@@ -242,10 +244,10 @@ func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
 	_game.set("pending_build", "wall")
 	for i in 15:
 		await physics_frame
-	Input.action_press("interact")
+	Input.action_press("build_place")
 	await physics_frame
 	await physics_frame
-	Input.action_release("interact")
+	Input.action_release("build_place")
 	for i in 20:
 		await physics_frame
 

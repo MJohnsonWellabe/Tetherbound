@@ -23,15 +23,18 @@ mouse_filter = 0
 ; The world stays visible behind the menu, dimmed. A full-screen opaque panel
 ; would make the pause menu feel like leaving the game rather than stopping it.
 ;
-; 0.92 rather than something gentler because the HUDs sit behind this. At 0.62
-; the M1 debug readout was fully legible down the left margin, outside the
-; panel, and read as text belonging to the menu. Outlined HUD text survives a
-; lot of dimming.
+; Spec §16: a 55-65% dark wash, not the near-opaque 0.92 this used to carry --
+; the panel itself (UITokens.BG_PANEL) is what needs to read clearly, and the
+; outlined HUD text behind it (scripts/ui/ui_tokens.gd::make_text_legible)
+; survives a lot less dimming than the old 0.92 assumed it needed. Color is
+; UITokens.BG_DEEP's RGB (#10191E) -- .tscn cannot reference the GDScript
+; constant directly, so the hex is carried over by hand; scripts/ui/ui_tokens.gd
+; stays the source of truth if it ever moves.
 [node name="Dim" type="ColorRect" parent="Root"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.02, 0.03, 0.02, 0.92)
+color = Color(0.0627, 0.098, 0.1176, 0.6)
 
 ; Margins are generous because the Ally's screen is 7 inches and its bezel eats
 ; the edges when it is held.

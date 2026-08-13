@@ -10,6 +10,14 @@ extends CanvasLayer
 ## Built entirely in code and opened/closed the same pause-and-release-mouse
 ## way `craft_panel.gd` is, for the same reason: this is not a pause-menu
 ## tab, it only exists while standing at a placed chest.
+##
+## Styling: the same `UITokens` cool palette `craft_panel.gd` carries for
+## spec §15 (not the warm build theme) — rows keep their two-column transfer
+## layout and all mechanics untouched, just drawn with slot boxes, item icons
+## and the shared font/colour tokens instead of bare `Label`/`Button` defaults.
+
+const UITokens := preload("res://scripts/ui/ui_tokens.gd")
+const ROW_ICON_PX := 24
 
 var game: Node = null
 
@@ -112,7 +120,8 @@ func _build_shell() -> void:
 
 	var title := Label.new()
 	title.text = "Storage"
-	title.add_theme_font_size_override("font_size", 32)
+	title.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
+	title.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	outer.add_child(title)
 
 	var columns := HBoxContainer.new()
@@ -125,7 +134,8 @@ func _build_shell() -> void:
 	columns.add_child(deposit_side)
 	var deposit_label := Label.new()
 	deposit_label.text = "Satchel — press to store"
-	deposit_label.add_theme_font_size_override("font_size", 20)
+	deposit_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	deposit_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	deposit_side.add_child(deposit_label)
 	_deposit_column = VBoxContainer.new()
 	_deposit_column.add_theme_constant_override("separation", 6)
@@ -137,7 +147,8 @@ func _build_shell() -> void:
 	columns.add_child(withdraw_side)
 	var withdraw_label := Label.new()
 	withdraw_label.text = "Chest — press to take"
-	withdraw_label.add_theme_font_size_override("font_size", 20)
+	withdraw_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	withdraw_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	withdraw_side.add_child(withdraw_label)
 	_withdraw_column = VBoxContainer.new()
 	_withdraw_column.add_theme_constant_override("separation", 6)
@@ -145,8 +156,8 @@ func _build_shell() -> void:
 
 	var hint := Label.new()
 	hint.text = "Leave: B / Esc"
-	hint.add_theme_font_size_override("font_size", 20)
-	hint.add_theme_color_override("font_color", Color(0.6, 0.62, 0.55))
+	hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	outer.add_child(hint)
 
 
@@ -164,6 +175,8 @@ func _refresh() -> void:
 		state.call("deposit", player_inventory, id, n))
 	_rebuild_side(_withdraw_column, _withdraw_rows, db, chest_inventory, func(id: String, n: int) -> void:
 		state.call("withdraw", player_inventory, id, n))
+
+	UITokens.make_text_legible(_root)
 
 
 ## Shared by both columns: one row per item id the SOURCE inventory
@@ -192,9 +205,40 @@ func _rebuild_side(
 			continue
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(290, 52)
-		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.focus_mode = Control.FOCUS_ALL
-		button.text = "  %s x%d" % [str(db.call("item_name", item_id)), have]
+		button.text = ""
+		button.add_theme_stylebox_override("normal", UITokens.slot_box(false))
+		button.add_theme_stylebox_override("hover", UITokens.slot_box(false))
+		button.add_theme_stylebox_override("pressed", UITokens.slot_box(true))
+		button.add_theme_stylebox_override("focus", UITokens.slot_box(true))
+		button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+
+		var pad := MarginContainer.new()
+		pad.set_anchors_preset(Control.PRESET_FULL_RECT)
+		pad.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		pad.add_theme_constant_override("margin_left", 10)
+		pad.add_theme_constant_override("margin_right", 10)
+		button.add_child(pad)
+
+		var row := HBoxContainer.new()
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_theme_constant_override("separation", 8)
+		pad.add_child(row)
+
+		var icon := TextureRect.new()
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.custom_minimum_size = Vector2(ROW_ICON_PX, ROW_ICON_PX)
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.texture = _icon_texture(db, item_id)
+		row.add_child(icon)
+
+		var label := Label.new()
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.text = "%s x%d" % [str(db.call("item_name", item_id)), have]
+		label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+		label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		row.add_child(label)
+
 		button.pressed.connect(func() -> void:
 			on_press.call(item_id, have)
 			_refresh())
@@ -204,5 +248,18 @@ func _rebuild_side(
 	if rows.is_empty():
 		var empty := Label.new()
 		empty.text = "  (empty)"
-		empty.add_theme_color_override("font_color", Color(0.6, 0.62, 0.55))
+		empty.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+		empty.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 		column.add_child(empty)
+
+
+## `id`'s 64px silhouette from `data/items/items.json`'s own `icon` field, or
+## null for an unknown item — mirrors `craft_panel.gd::_icon_texture`'s own
+## "degrade, never crash" handling of an id with no icon on record.
+func _icon_texture(db: RefCounted, id: String) -> Texture2D:
+	if db == null or id.is_empty():
+		return null
+	var path := str(db.call("definition", id).get("icon", ""))
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return null
+	return load(path) as Texture2D

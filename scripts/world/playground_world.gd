@@ -182,6 +182,23 @@ func _mouse_wanted_elsewhere() -> bool:
 	var naming := get_node_or_null(^"NamePrompt")
 	if naming != null and naming.has_method("is_open") and bool(naming.call("is_open")):
 		return true
+	var starter := get_node_or_null(^"StarterPicker")
+	if starter != null and starter.has_method("is_open") and bool(starter.call("is_open")):
+		return true
+	# D34's build menu (`scripts/ui/build_menu.gd`) and R2.4/R2.7's craft and
+	# storage panels (`craft_panel.gd`/`storage_panel.gd`) are none of them
+	# fixed children of this scene the way `DialoguePanel`/`NamePrompt`/
+	# `StarterPicker` above are — each is lazily instantiated (by
+	# `tab_build.gd`, `camp.gd`, `storage_container.gd` respectively) and
+	# added straight under the scene tree's own root, so there is no fixed
+	# NodePath to look one up by. Ducktyped instead: anything sitting under
+	# root with an `is_open()` that says yes wants the mouse, whichever of
+	# the three (or a future fourth) it turns out to be. This was the
+	# documented gap this task asked to close — see `_mouse_wanted_elsewhere`'s
+	# header on why the fixed-path checks above existed but these did not.
+	for node: Node in get_tree().root.get_children():
+		if node.has_method("is_open") and bool(node.call("is_open")):
+			return true
 	return false
 
 

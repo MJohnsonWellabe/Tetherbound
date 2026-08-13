@@ -31,6 +31,12 @@ const ROTATION_STEP_DEG := 90.0
 ## at a neighbour's near edge — not pixel-perfect — still catches it.
 const SNAP_RADIUS := 2.6
 
+## D34/spec 13.4's `build_snap_cycle`: the rotation step size a rotate press
+## turns the ghost by, cycled coarse-to-fine rather than fine-to-coarse so
+## the default (first press away from 90) still gets you to a flush 45 for
+## diagonal work before the player has to hunt for the fussier 15.
+const SNAP_STEP_DEGS: Array[float] = [90.0, 45.0, 15.0]
+
 
 ## Rounds `raw`'s X/Z onto the world grid, in absolute world space (grid lines
 ## run through the origin) so any two grid-snapped pieces are automatically
@@ -82,6 +88,34 @@ static func resolve_position(raw: Vector3, ground_y: float, neighbour_positions:
 		"position": Vector3(neighbour.x + dx, neighbour.y, neighbour.z + dz),
 		"snapped_to_neighbour": true,
 	}
+
+
+## D34/spec 13.4: the next step size in `SNAP_STEP_DEGS`, wrapping back to the
+## coarsest after the finest. `build_placer.gd` calls this once per
+## `build_snap_cycle` press; unlike `next_rotation_steps` this is a size a
+## rotate press turns BY, not a count of turns already taken.
+static func next_snap_step_deg(current_deg: float) -> float:
+	var index := SNAP_STEP_DEGS.find(current_deg)
+	return SNAP_STEP_DEGS[(index + 1) % SNAP_STEP_DEGS.size()] if index != -1 else SNAP_STEP_DEGS[0]
+
+
+## D34/spec 13.2: every position in `candidates` within `SNAP_RADIUS` of `raw`
+## on the X/Z plane, nearest first — the dots `build_placer.gd` draws at each
+## candidate snap point, brightest on the one `resolve_position` above would
+## actually choose (always `result[0]` when the array is non-empty, since
+## `resolve_position` picks the same "closest" `_nearest` does). Capped at 4:
+## the spec's own "1-4 dots," and a same-id neighbour set is never so dense
+## that a 5th candidate this close would mean anything different.
+static func neighbours_in_range(raw: Vector3, candidates: Array) -> Array:
+	var out: Array = []
+	for candidate: Variant in candidates:
+		var pos: Vector3 = candidate
+		if Vector2(raw.x - pos.x, raw.z - pos.z).length() <= SNAP_RADIUS:
+			out.append(pos)
+	out.sort_custom(func(a: Vector3, b: Vector3) -> bool:
+		return Vector2(raw.x - a.x, raw.z - a.z).length_squared() \
+			< Vector2(raw.x - b.x, raw.z - b.z).length_squared())
+	return out.slice(0, mini(4, out.size()))
 
 
 ## The closest position in `candidates` to `raw` on the X/Z plane, or null if
