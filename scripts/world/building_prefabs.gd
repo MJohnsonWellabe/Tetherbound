@@ -162,7 +162,17 @@ func _build_template(prefab_name: String) -> Node3D:
 		var node := scene.instantiate() as Node3D
 		var at: Array = spec.get("at", [0.0, 0.0, 0.0])
 		node.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
-		node.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		# Euler YXZ (Godot's default rotation order): yaw applies first, then
+		# pitch, then roll — so a module can be yawed into a vertical plane and
+		# rolled around the world axis it now faces. EV6-remainder added
+		# pitch/roll for the mill's water wheel: rim pieces are fence sections
+		# yawed 90 into the y-z plane, then rolled to their rim angle. Plain
+		# buildings keep using yaw_deg alone.
+		node.rotation = Vector3(
+			deg_to_rad(float(spec.get("pitch_deg", 0.0))),
+			deg_to_rad(float(spec.get("yaw_deg", 0.0))),
+			deg_to_rad(float(spec.get("roll_deg", 0.0)))
+		)
 		var s := float(spec.get("scale", 1.0))
 		node.scale = Vector3.ONE * s
 		root.add_child(node)

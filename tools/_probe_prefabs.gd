@@ -12,7 +12,7 @@ func _init() -> void:
 	if not lib.call("load_recipes"):
 		quit(1)
 		return
-	for name in ["workshop", "cottage_a", "cottage_b", "well", "fence_run", "wagon"]:
+	for name in ["workshop", "cottage_a", "cottage_b", "well", "fence_run", "wagon", "mill", "footbridge", "ranger_station"]:
 		var node: Node3D = lib.call("instantiate", str(name))
 		if node == null:
 			print("%s: FAILED to build" % name)
