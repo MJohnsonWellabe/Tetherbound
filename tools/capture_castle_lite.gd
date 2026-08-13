@@ -54,6 +54,19 @@ const VIEWPOINTS := [
 		"eye": Vector2(229.8, -170.4), "eye_h": 1.7,
 		"target": TOWER_AT, "target_h": 11.0,
 	},
+	# OF4-gate-arch: a third, gate-height vantage. The two viewpoints above are
+	# the wayfinding silhouette shots -- 70m and 26m out, both aimed high at
+	# the skyline -- and at that range the gate itself is a few dozen pixels,
+	# too small to judge as architecture. This one stands ~10m off the south
+	# wall with the eye level with the arch's own centre (terrain -3.74 + 2.5 =
+	# -1.24; the plinth top is -1.95 and the arch centre sits ~0.85m above it),
+	# aimed straight down the gate's axis. Same scratch-tool caveat as the rest
+	# of this file: delete with it.
+	{
+		"name": "gate-close",
+		"eye": Vector2(229.8, -162.8), "eye_h": 2.5,
+		"target": TOWER_AT, "target_h": 2.65,
+	},
 ]
 
 

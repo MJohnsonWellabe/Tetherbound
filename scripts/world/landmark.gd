@@ -143,6 +143,8 @@ func build(world: Node) -> void:
 	castle.position = Vector3(0.0, PLINTH_TOP, 0.0)
 	add_child(castle)
 
+	_build_gate_shadow()
+
 
 ## A simple vertical-faced stone podium the whole castle stands on --
 ## see PLINTH_TOP's own comment for why the height and footprint are what
@@ -161,6 +163,58 @@ func _build_plinth() -> void:
 	plinth.mesh = box
 	plinth.position = Vector3(0.0, (PLINTH_TOP + PLINTH_BOTTOM) * 0.5, 0.0)
 	add_child(plinth)
+
+
+## The far end of the gate passage: a plain dark slab standing across the
+## tunnel just inside the castle, so the archway reads as a shadowed way in
+## rather than a hole with a lit courtyard behind it.
+##
+## OF4-gate-arch (2026-08-13). The gate is two rings of the kit's entrance
+## module deep (see `building_prefabs.json`'s `castle` recipe), and that
+## reveal alone was not enough: the courtyard floor and the far curtain's
+## inner face both sit in the opening and both render within a few values of
+## the shaded wall around it, so a blind critic reading the frames called the
+## gate "bricked up ... a shallow niche or a walled-up arch, not a gate you
+## could enter". The missing cue was contrast, not geometry -- a real gate
+## mouth is the darkest thing on a castle's face. Nothing in the kit can
+## supply it: `building_prefabs.json`'s `retint` keys off material NAMES, and
+## every wall piece in the castle shares the same handful of material names,
+## so any module dark enough to serve here would darken the whole fortress.
+## Hence a slab built directly, the same way the plinth is and for the same
+## reason (no kit part does this job).
+##
+## Deliberately NOT pure black -- an absolute void reads as a hole in the
+## render, not a shadow. GATE_SHADOW_COLOUR sits below PLINTH_COLOUR, which
+## is itself below the wall's darkest retint, so the value ladder stays
+## foundation-dark, walls lighter, gate mouth darkest of all.
+const GATE_SHADOW_COLOUR := Color("#16130f")
+## Sized and sited from the gate's own numbers: the arch opening is 1.53m
+## wide and 1.69m tall (the kit module's authored arch at the recipe's 1.72
+## scale), so 3.0 x 3.0 covers it several times over from every angle these
+## frames use, while staying under the 3.76m curtain so it never shows above
+## the parapet. Z: the inner ring's own inner face is at -7.514, so a 0.4m
+## slab centred at -7.35 closes the tunnel right where it ends, with a small
+## overlap into it rather than a gap.
+const GATE_SHADOW_SIZE := Vector3(3.0, 3.0, 0.4)
+const GATE_SHADOW_AT := Vector3(0.0, 0.0, -7.35)
+
+
+func _build_gate_shadow() -> void:
+	var slab := MeshInstance3D.new()
+	slab.name = "GatePassageShadow"
+	var box := BoxMesh.new()
+	box.size = GATE_SHADOW_SIZE
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = GATE_SHADOW_COLOUR
+	mat.roughness = 1.0
+	box.material = mat
+	slab.mesh = box
+	slab.position = Vector3(
+		GATE_SHADOW_AT.x,
+		PLINTH_TOP + GATE_SHADOW_SIZE.y * 0.5,
+		GATE_SHADOW_AT.z
+	)
+	add_child(slab)
 
 
 ## ---------------------------------------------------------------------

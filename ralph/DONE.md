@@ -3,6 +3,124 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF4-gate-arch — the stronghold's gate is a clean archway; the kit's OBJs were being mis-triangulated
+
+`assets/buildings/quaternius_castle/*.obj` (all 21 staged models),
+`tools/retriangulate_obj.py` (new), `data/config/building_prefabs.json`,
+`scripts/world/landmark.gd`, `tools/capture_castle_lite.gd`,
+`docs/ASSET_LEDGER.md`. `model: opus`. Closes the one open remainder
+`OF4-rebuild` shipped with (the gate reading as a jagged opening rather than
+a clean archway). `tests: none tagged`; full suite run anyway since
+`landmark.gd` changed — **542 tests, 89642 assertions, 0 failed**, before and
+after, matching the branch point exactly.
+
+**The remainder's stated cause was wrong, and finding that out was the
+work.** `OF4-rebuild` round 3 measured `WallEntranceBricks`' and
+`TallWallEntrance`' vertex BOUNDING BOXES, found their z ranges differ
+(-0.396..0.163 vs -0.184..0.240) and concluded the kit never authored them as
+a matched stacking pair — "fixable only by sourcing a different entrance
+module, not something further recomposition can close". Measuring the actual
+polygons instead of the boxes says otherwise: both modules carry the SAME
+arch, an identical 15-gon outer plate with the opening at x=+-0.445,
+springing at y=0.21 and an apex at y=0.98. The differing boxes are only
+because `WallEntranceBricks`' whole mesh is authored 0.153m off-origin in z.
+
+Two real defects were hiding behind that measurement:
+
+1. **Godot's OBJ importer fan-triangulates concave n-gons.** This pack
+   authors each wall face as one large n-gon; on the entrance modules that
+   n-gon is a concave 15/16-sided loop wrapping the doorway. A triangle fan
+   from the polygon's first vertex is only correct for a CONVEX polygon, so
+   the importer filled a lopsided wedge of the archway back in with solid
+   geometry. That wedge — not any placement or profile mismatch — is what
+   "jagged opening" was: rendered, the gate was a leaning shark-fin hole with
+   one curved edge and one straight diagonal. Reproduced exactly by
+   simulating a first-vertex fan in Python against the same OBJ, then
+   confirmed in-engine. **304 concave faces across the 21 staged models were
+   being mis-fanned** — tower windows and crenellations too, not just the
+   gate. Fixed at the asset: `tools/retriangulate_obj.py` ear-clips every
+   polygon face in place, rewriting only `f` lines and re-emitting the same
+   `v/vt/vn` index triples, so vertex/UV/normal data and MTL material names
+   (which `retint` keys off) are untouched. Ledger updated; re-run it after
+   any re-stage.
+2. **The two entrance modules are ALTERNATIVES, not a stacking pair.** Each
+   carries its own complete ~0.98m arch at its own base, so stacking them cut
+   two separate doorways into the wall 1.549m apart with a solid band
+   between. The gate bay is now ONE module: a single `TallWallEntrance`
+   uniformly scaled 1.72, standing 4.04m against the curtain either side, one
+   authored arch 1.53m wide x 1.69m tall, rising just proud of the parapet
+   the way a gatehouse should. Uniform, not stretched — this module is the
+   kit's plain (non-`Bricks`) variant with no brick relief to distort — and
+   1.72 rather than the 1.662 that would exactly match curtain height,
+   specifically so the gate's top face is not coplanar with the neighbours'
+   merlon tops. **Round 4's dead end is not repeated**: that dropped to a
+   single course SHORTER than the wall and lost the gate entirely; this is a
+   single course TALLER than it. The twin `SmallSquareTower` flankers moved
+   in from x=+-3.072 to +-1.85 so they actually frame the arch.
+
+**Two more things the frames showed that had to go with it.** The upper wall
+course sat at y=1.549, which is `WallBricks`' full height INCLUDING its
+crenellations — and every wall variant in this kit is crenellated, so the
+whole curtain carried a continuous row of daylight slots punched through it
+at mid-height, visible as a dotted bright line the full length of the wall
+and again on the far wall seen through the gate. All 51 upper-course modules
+now seat at y=1.408 (the top of the solid parapet, below the crenels),
+costing 0.14m of height (3.90m -> 3.76m) and turning the lower parapet into a
+proud string course. And the gate needed depth and darkness, not just a
+correct outline: a second scaled entrance ring 0.618m behind the first gives
+a 1.25m self-shadowed reveal, and `landmark.gd::_build_gate_shadow` closes
+the far end with a plain dark slab (`#16130f`, below `PLINTH_COLOUR`, which
+is below the wall's darkest retint — the value ladder stays foundation-dark,
+walls lighter, gate mouth darkest). Built directly rather than from a kit
+part for the same reason the plinth is: `retint` keys off material NAMES and
+every wall piece shares them, so no module can be darkened without darkening
+the whole fortress.
+
+**Blind critique — genuinely blind this time, which `OF4-rebuild` could not
+manage.** Two fresh sessions, each given only the three frames and
+`docs/reference/`, told nothing about what changed and explicitly told not to
+read `DONE.md`/`BACKLOG.md`/the git log. Frames from
+`tools/capture_castle_lite.gd`, which gained a third `gate-close` vantage
+(~10m off the south wall, eye level with the arch centre) because the two
+existing wayfinding shots are 70m and 26m out and aimed at the skyline, where
+the gate is a few dozen pixels and not judgeable as architecture.
+
+- **Round 1** (single ring, no shadow slab): FAILED on the gate. "It reads as
+  a shallow niche or a walled-up arch, not a gate you could enter... along the
+  left inner rim of the arch there is a thin, jagged, sky-bright crescent...
+  this opening does not read as a clean, deliberate gate; it reads as
+  half-formed." Measured cause: the courtyard floor and the far curtain's
+  inner face both sit in the opening at values 29 vs the wall's 25 — a 4/255
+  separation, so the arch had no contrast to read as a hole at all. Fix: the
+  second ring plus the shadow slab.
+- **Round 2**: PASSED on the gate, asked the question first and directly.
+  "Its outline is a clean, deliberate pointed archway: a faceted, slightly
+  lighter stone trim runs around the arch in straight low-poly segments,
+  meeting in a small peak at the apex. The edges are smooth and continuous —
+  nothing about the outline is jagged, broken, half-formed, or bricked up,
+  and nothing reads as a rendering bug. The geometry is intact and
+  intentional." That is this item's done-when, met by a critic who did not
+  know what it was.
+
+**Honest residue — none of it the gate's outline, all of it named by the
+blind rounds and left open on purpose.** Round 2's own qualifier: the arch
+interior is now "one hundred percent featureless black", and the arch's foot
+lands on the plinth band with no ramp, steps or path connecting it to the
+meadow — a deliberate over-correction from round 1's washed-out opening that
+could stand one notch of lift, and an approach-content question that belongs
+with `OF10-remainder`'s "something visibly BUILT at the road's end", not
+here. Both blind rounds led with the same defect ahead of anything about the
+gate, and it is out of this item's scope: **the whole south facade renders
+near-black in all three frames** because the sun sits north of the site and
+there is little ambient fill, so the approach face of the landmark is one
+crushed value. Round 2 also named irregular merlon rhythm where wall segments
+meet, gate turrets whose crenellation scale disagrees with the curtain's,
+untextured wall surfaces against textured towers, a 1:8 shed-like massing at
+distance, the plinth reading as a floating podium (`OF4-remainder-mound`'s
+open item), and an empty meadow with a fog/terrain-edge streak in
+`silhouette-close`. Those are the stronghold's presentation as a whole, not
+this remainder; recorded here so the next firing has the list rather than
+having to re-earn it.
 ## NP4-uv-split — villager_male's trousers and villager_female's shin cut into their own materials, and both defects fixed
 
 `model: opus` — asset/mesh work, no dispatch. `tests: tests/smoke_art.gd`
