@@ -3,6 +3,93 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## BG2 — Genuine CC0 castle/fortress kit found and staged: Quaternius's Modular Medieval Building Pack
+`docs/ASSET_LEDGER.md`, `ralph/BACKLOG.md` on `claude/ralph-phase-1-backlog-22u3pz`
+(isolated worktree session). `tests: none` (asset acquisition, no code
+touched). Raw asset staging only — no curation into `OF4` itself, that
+stays `OF4-rebuild`'s job.
+
+**Found it on quaternius.com itself, not itch.io — same publisher as the
+two already-staged kits, deliberately checked first per the task's own
+instructions because a same-publisher pack was the strongest coherence bet.**
+`quaternius.com/packs/modularmedievalbuildings.html` ("Modular Medieval
+Building Pack") is a genuine fortification kit — its own preview render
+(`.../assets/images/fullres/medievalbuildings.jpg`) shows crenellated
+curtain walls (plain and with an archway), multiple corner/watch towers
+with conical and pyramidal roofs, a full battlemented wall run, an arched
+bridge/tunnel piece, a well, watchtower stands, doors and windows. CC0 1.0
+(same licence badge/link as every other Quaternius pack already in the
+ledger).
+
+**Downloadable without itch.io's click-through gate.** `EV1-remainder`'s
+block (recorded in `BLOCKED.md`) was specifically itch.io's JS-only claim
+flow — the per-file download URL only appears after a client-side
+"Download Now" POST round-trip that could not be automated. This pack
+never goes through itch.io at all: quaternius.com's own "Just give me the
+Download" button on the pack page links straight to a public Google Drive
+folder
+(`https://drive.google.com/drive/folders/1WCmnrS1fYQLYfRwztVErgAOyWXdJiVIo`).
+Drive's normal folder view is also JS-rendered and not directly
+`curl`-able, but its older `embeddedfolderview?id=...` endpoint returns a
+static file listing with real Drive file IDs with no login needed, and
+`drive.google.com/uc?export=download&id=<id>` served every one of those
+files as a clean binary with a 200 and no virus-scan interstitial (all
+files here are small enough to skip that gate). Confirmed by fetching all
+60 files (30 models × `.obj`+`.mtl`) — zero failures.
+
+**Staged at `assets_raw/vendor/quaternius_modular-medieval-buildings/`**,
+OBJ+MTL export (flat per-material colours, no texture maps — same
+convention already used for the staged Furniture/Survival Quaternius
+packs, and the simpler of the pack's three available exports; FBX and
+Blend copies of the same 30 models exist in the source Drive folder and
+were left unstaged as redundant duplicates, same call `EV1-remainder` made
+for the Village kit's unused FBX/OBJ/Textures copies). `docs/ASSET_LEDGER.md`
+carries the full row: publisher, licence, URL, format rationale, and a
+bounding-box spot check (`Tower.obj` 1.13×4.21×1.13, `Wall.obj`
+1.54×1.55×0.56, units presumed metres) suggesting real-world scale already,
+unlike the Furniture/Survival packs' documented 2x quirk — flagged for a
+quick in-engine confirmation, not verified further here.
+
+**Manifest for `OF4-rebuild` — every model filename staged**, grouped by
+role:
+
+- **Towers (13):** `Tower`, `LargeTower`, `LargeSimpleTower`,
+  `LargeSquareTower`, `LargeSquareTowerBricks`, `PointyTower`,
+  `SimpleTowerBricks`, `Simpletower`, `SmallSquareTower`,
+  `SmallSquareTowerBricks`, `SmallTower`, `Watchtower`, `WatchTowerWRoof`
+- **Walls / gate pieces (7):** `Wall`, `WallBricks`, `WallEntrance`,
+  `WallEntranceBricks`, `TallWall`, `TallWallBricks`, `TallWallEntrance`
+  (the two `*Entrance*` pairs are the gate/gatehouse-adjacent modules —
+  no separate `Gate`/`Portcullis`-named piece exists in the pack, the
+  wall-with-an-arch-cut-in-it is the gate)
+- **Connective / misc structure (4):** `Bridge`, `Tunnel` (archway),
+  `Well`, `Door`
+- **Detail / dressing (6):** `Banner`, `Dummy`, `Target`,
+  `TargetWithArrows`, `WindowGothic`, `WindowSquare`
+
+**One honest gap against the task's ideal list:** no module is individually
+named `Battlement`/`Crenel*`/`Keep`/`Portcullis`/`Rampart`/`Arrow*` — but
+every wall and tower model's own geometry has crenellations baked into its
+top edge (visible directly in the pack's preview render), which is how
+this publisher's other kits work too (the geometry carries the feature,
+the filename doesn't always spell it out). `OF4-rebuild` should confirm
+this in-engine before relying on it, but the preview render and the OBJ
+vertex data both show the same stepped parapet silhouette on essentially
+every tower/wall piece, so this reads as the genuine article, not a
+naming-convention false positive.
+
+**D24 tension flagged, not resolved here:** this is architecture, and the
+task asked whether it creates cohesion tension with D24's "one village
+family" rule. Judgment call: it's the *same* publisher and the *same*
+low-poly flat-material art language as the already-staged Medieval Village
+MegaKit (`EV6`'s settlement) — same faceted geometry style, same kind of
+flat per-material colouring, no texture maps on either. Treated here as a
+fortification *extension* of the one village family rather than a second
+family, on the strength of that shared art language — but this is a
+judgment call for whoever picks up `OF4-rebuild` to confirm once pieces
+from both packs are actually rendered side by side in-engine, not
+something this staging-only pass can settle by inspecting source files.
+
 ## Backpack equip/drop/split verbs — Drop and Split shipped; Equip found to have no referent
 `autoload/inventory.gd`, `scripts/ui/tab_backpack.gd`, `project.godot`,
 `data/config/menu.json`, `tests/test_inventory.gd` on

@@ -153,16 +153,16 @@ assembled at runtime with rotation and snapping, and it survives save/load
 through `GameState.placed_buildings`/`register_building`.
 
 ### BG2 — Source a CC0 castle/fortress asset kit
-`area: assets` — owner action, tracked here and in `BLOCKED.md` the same
-way `EV2-landmark-ceiling` tracks the Stylized Nature MegaKit. The two
-staged Quaternius kits (Medieval Village, Fantasy Props) are confirmed —
-full filename manifest checked — entirely civilian: plaster/brick walls,
-roofs, doors, stairs, one round tower-roof cap, with no battlements,
-gatehouse, curtain-wall, keep or arrow-slit modules anywhere in either
-176/94-model kit. `OF4-rebuild` cannot read as a real fortress without
-genuine fortification pieces. Blocked on the owner sourcing/downloading a
-castle-appropriate CC0 kit (itch.io or otherwise) the same way the
-Village/Fantasy Props/Nature kits were supplied.
+Shipped, staged raw — see `DONE.md`'s `BG2` entry. Quaternius's own
+"Modular Medieval Building Pack" (30 models — 13 tower variants, 7 wall
+variants including 2 gate/entrance pieces, plus bridge/tunnel/well/windows)
+sourced directly from quaternius.com's public Google Drive link (no
+itch.io claim-flow block this time) and staged at
+`assets_raw/vendor/quaternius_modular-medieval-buildings/`, ledgered in
+`docs/ASSET_LEDGER.md`. Same publisher/art language as the already-staged
+Medieval Village MegaKit. `OF4-rebuild` still needs to curate specific
+pieces into an assembled structure — that selection work is unstarted and
+out of scope here.
 
 ### OF4-rebuild — Construct the stronghold as an actual assembled castle, not a shader silhouette
 `area: terrain` · depends on `BG1` + `BG2` · owner directive, 2026-08-13
