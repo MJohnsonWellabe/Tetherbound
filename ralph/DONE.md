@@ -3,6 +3,44 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF6 — World boundary: the hard collision stop now matches the visible perimeter
+`67cb050` on `claude/ralph-backlog-of6-7-10-11-dbiydq` (manual session
+shipping `OF6`/`OF7`/`OF10`/`OF11` together, owner request). `model: sonnet`
+— mechanical, no dispatch.
+
+The ring looked closed on paper: 40 segments, a 3m along-ring overlap, and
+`SA3`'s original vertical-centring bug already fixed (re-derived the box's
+top/bottom bounds from the live formula and confirmed correct). But
+`smoke_traversal.gd`'s 8 evenly-spaced bearings never happen to land on a
+rise, and three of `terrain_playground.json`'s `rises.peaks` reach far
+enough out to overlap the ring's own 235m radius — up to 46m, on the peak
+centred `-165,-150`. A direct reproduction there found a real leak:
+bearings 210°/215°/227° walked clean through to 232-278m from centre,
+well past the visible wall. Root cause, measured directly with
+`ground_height_at()`: a segment's collision box was sized from the
+straight-line average of its two 9°-apart endpoint heights, and real
+ground on that slope climbs ~22m across one 37m segment (1.7m at bearing
+207° to 24.0m at 216°) — the ground simply rose up and over the box
+mid-segment.
+
+Fix: `world_perimeter.gd` now samples 16 interior ground heights along
+each segment's own path (`COLLISION_SEGMENT_SUBSAMPLES`) and sizes the
+collision box's vertical span to clear the sampled min/max, not the
+two-endpoint average; `COLLISION_MARGIN_UP` raised 2.0 → 3.0 as a modest
+cushion on top of that fix, not a substitute for it. A flat segment gets
+exactly the old box; only a genuinely undulating one grows. Re-verified
+after the fix: all three previously-leaking bearings land at 232-234m,
+matching the ring's other bearings.
+
+`smoke_traversal.gd` gains three explicit bearings (215°, 227°, 327.3°)
+targeting where the rises cross the ring — evenly-spaced sampling alone
+missed this for as long as `OF6` sat open in `BACKLOG.md`, and a future
+regression deserves better odds of getting caught.
+
+Tested: `godot --headless --path . --script tests/smoke_traversal.gd`,
+clean pass (exit 0), all 11 bearings within 1-3m of the 235m ring, kill
+volume failsafe unaffected.
+
 ## OF13 — Stronghold relocated ~105m out and genuinely occluded, not just nudged
 `scripts/world/landmark.gd`, `tools/capture_wayfinding.gd` on `ralph/OF13`.
 `model: sonnet` (mechanical placement/occlusion — `OF9`'s design question

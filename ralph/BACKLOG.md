@@ -82,13 +82,7 @@ different frame.
 
 **`OF5` (running/walking looked unnatural — gait cadence didn't match travel speed, feet ice-skated) shipped — see `DONE.md`.**
 
-### OF6 — World boundary: tighten the hard collision stop to match the visible perimeter
-`area: terrain` · `model: sonnet`. `SA3` already built a physical perimeter
-and a fail-safe (`DONE.md`); the actual stop-collision sits well beyond the
-visible wall/fence line, leaving a dead, empty gap between where the world
-visually seems to end and where it actually stops you. Reposition the
-boundary to sit just past the authored perimeter. Keep the existing
-fall/respawn failsafe as backup for anyone who gets past it.
+**`OF6` (world boundary collision tightened to the visible perimeter) shipped — see `DONE.md`.**
 
 ### OF7 — Rebuild the perimeter fence/wall — it looks bad and isn't continuous
 `area: terrain` (or `village`, whichever owns the placement) · `model: fable`
