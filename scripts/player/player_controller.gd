@@ -157,7 +157,7 @@ func _apply_movement(delta: float) -> void:
 	_sprinting = Input.is_action_pressed("sprint") and vitals.can_sprint() and input != Vector2.ZERO
 	# D29: critical hunger softens ground speed a little; never below that,
 	# and never enough on its own to strand the player.
-	var target_speed := (_sprint_speed if _sprinting else _walk_speed) * vitals.move_speed_scale()
+	var target_speed: float = (_sprint_speed if _sprinting else _walk_speed) * vitals.move_speed_scale()
 
 	var horizontal := Vector3(velocity.x, 0.0, velocity.z)
 	var accel := _ground_accel if is_on_floor() else _air_accel
