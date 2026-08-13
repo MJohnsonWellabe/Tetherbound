@@ -87,6 +87,29 @@ func _run() -> void:
 				% world.get_path_to(control)
 			)
 
+	# --- every Control the exploration HUD owns must be MOUSE_FILTER_IGNORE ---
+	# Not just the full-rect ones above: the Palworld-layout rebuild
+	# (`playground_hud.gd`) builds dozens of small Controls in code -- the pal
+	# block, the vitals cluster, the mounted party_strip/stamina_arc/minimap
+	# widgets, the objective block -- and any ONE of them left at the
+	# Control default (MOUSE_FILTER_STOP) would sit in GUI input's path the
+	# same way the old bug did, even at a few dozen pixels across. A
+	# recursive walk is the only check that stays true as that HUD keeps
+	# growing.
+	var hud: Node = world.get_node_or_null(^"PlaygroundHUD")
+	if hud == null:
+		failures.append("no PlaygroundHUD in the scene — cannot verify its mouse_filter subtree")
+	else:
+		for node in _walk(hud):
+			var c := node as Control
+			if c == null:
+				continue
+			if c.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+				failures.append(
+					"'%s' under PlaygroundHUD is mouse_filter %d, not MOUSE_FILTER_IGNORE (2) — every Control this HUD builds must ignore the mouse or it can end up back in GUI input's path, exactly like the bug this test exists to catch."
+					% [hud.get_path_to(c), c.mouse_filter]
+				)
+
 	if failures.is_empty():
 		print("PASS: mouse motion reaches _unhandled_input, and no gameplay Control swallows it")
 		quit(0)

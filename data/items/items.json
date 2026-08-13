@@ -8,6 +8,7 @@
   "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (R7.6) are what will read them.",
   "_comment_durability": "R2.2. `durability` is the number of full-yield gathers a tool survives before it breaks (GAME_DESIGN.md 19: 'have durability', 'repair for free at appropriate station'). Tunable, same for all five for now. A broken tool (0 durability) stops counting as owned for item_db.gd's harvest_yield() gating until repaired -- inventory.gd tracks the current value per-slot, defaulting to this max when a slot carries no durability key of its own (so a freshly-added tool needs no special-cased add-time write). Only `axe`/`pickaxe`/`knife` actually lose durability today, from harvest_node.gd's gather loop; `hammer` and `fishing_rod` carry the field for GAME_DESIGN.md consistency but nothing damages them yet, matching R2.1's own precedent for those two.",
   "_comment_satiety": "D29. `satiety` is how much of player_vitals.gd's satiety meter one use restores (see data/config/vitals.json); `buff` is that same use's optional temporary buff, passed straight through to player_vitals.gd's eat() as-is: { id, stat, amount, duration_s }. Only berries carry it so far. Nothing calls eat() from an eating action yet -- that wiring lands with the HUD pass, per this task's brief.",
+  "_comment_icons": "M-G groundwork. `icon` is a res:// path to a 64px Kenney Game Icons silhouette (see docs/ASSET_LEDGER.md's 'Item + shared UI icons' row for the per-item source mapping and its honest mismatches -- this pack has no literal axe/wood/flask glyphs, so several are the closest available stand-in, same convention as the map icons row). `description` is the fuller inventory-detail text; `blurb` stays as the shorter existing field, both kept side by side rather than one replacing the other. Joined with the UI icon-set vendoring pass in the same commit-to-be.",
   "items": {
     "wood": {
       "name": "Wood",
@@ -15,7 +16,9 @@
       "stack": 50,
       "colour": "#7a5a35",
       "gathered_with": "axe",
-      "blurb": "Cut from the oaks. Everything early is made of it."
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "blurb": "Cut from the oaks. Everything early is made of it.",
+      "description": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing — walls, tools and campfires all start here."
     },
     "stone": {
       "name": "Stone",
@@ -23,7 +26,9 @@
       "stack": 50,
       "colour": "#8e8d86",
       "gathered_with": "pickaxe",
-      "blurb": "Prised out of an outcrop."
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Prised out of an outcrop.",
+      "description": "Hard grey chunks worked loose from an outcrop, heavier in the hand than the wood pile. Foundations and hearths want it, and a pickaxe pulls it free whole."
     },
     "fiber": {
       "name": "Fiber",
@@ -31,7 +36,9 @@
       "stack": 50,
       "colour": "#9aa64a",
       "gathered_with": "knife",
-      "blurb": "Stripped from meadow grass. Binds and stuffs."
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "blurb": "Stripped from meadow grass. Binds and stuffs.",
+      "description": "Long green strands stripped clean from meadow grass. Not much to look at alone, but bindings, stuffing and cord all lean on it."
     },
     "berries": {
       "name": "Berries",
@@ -40,14 +47,18 @@
       "colour": "#a33a55",
       "satiety": 18,
       "buff": { "id": "berry_verve", "stat": "stamina_regen_scale", "amount": 1.15, "duration_s": 120 },
-      "blurb": "A handful off a bush. Food buffs, never starvation."
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "A handful off a bush. Food buffs, never starvation.",
+      "description": "A cupped handful picked straight off a meadow bush, still warm from the sun. A quick bite tops up satiety and leaves a little spring in your step for a couple of minutes after."
     },
     "orb_basic": {
       "name": "Orb",
       "kind": "gear",
       "stack": 20,
       "colour": "#4a7fa3",
-      "blurb": "Plain make, from Grandpa's pack. A good throw matters more than a good orb."
+      "icon": "res://assets/ui/icons/items/orb_basic.png",
+      "blurb": "Plain make, from Grandpa's pack. A good throw matters more than a good orb.",
+      "description": "A plain, unmarked sphere from Grandpa's old pack — no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb."
     },
     "potion_small": {
       "name": "Small Potion",
@@ -55,7 +66,9 @@
       "stack": 10,
       "colour": "#5aa356",
       "heal": 35,
-      "blurb": "Patches a pal's scrapes. For your pal, mind — you get soup."
+      "icon": "res://assets/ui/icons/items/potion_small.png",
+      "blurb": "Patches a pal's scrapes. For your pal, mind — you get soup.",
+      "description": "A small dose that closes cuts and eases bruising on a pal fast. It only works on a pal — for you, it's soup and rest, same as always."
     },
     "axe": {
       "name": "Axe",
@@ -63,7 +76,9 @@
       "stack": 1,
       "durability": 40,
       "colour": "#5c6b73",
-      "blurb": "Bites into oak cleanly. Bare hands barely dent it."
+      "icon": "res://assets/ui/icons/items/axe.png",
+      "blurb": "Bites into oak cleanly. Bare hands barely dent it.",
+      "description": "A proper woodcutter's edge. It takes a full swing off an oak in the time bare hands would still be scraping bark, and it wears down a little with every tree."
     },
     "pickaxe": {
       "name": "Pickaxe",
@@ -71,7 +86,9 @@
       "stack": 1,
       "durability": 40,
       "colour": "#4a4a4a",
-      "blurb": "Cracks stone loose whole. Bare hands just bruise."
+      "icon": "res://assets/ui/icons/items/pickaxe.png",
+      "blurb": "Cracks stone loose whole. Bare hands just bruise.",
+      "description": "Heavy-headed and built for outcrops. It cracks a full block of stone loose in one go where bare hands would only bruise a knuckle against it."
     },
     "hammer": {
       "name": "Hammer",
@@ -79,7 +96,9 @@
       "stack": 1,
       "durability": 40,
       "colour": "#c47a3d",
-      "blurb": "For the workbench, not the woods. Free repairs start here."
+      "icon": "res://assets/ui/icons/items/hammer.png",
+      "blurb": "For the workbench, not the woods. Free repairs start here.",
+      "description": "A workbench tool, not a woodcutting one. Bring a worn-out tool to the bench with this in hand and the repair costs nothing but time."
     },
     "knife": {
       "name": "Knife",
@@ -87,7 +106,9 @@
       "stack": 1,
       "durability": 40,
       "colour": "#b0b8bf",
-      "blurb": "Strips fiber in one clean pull."
+      "icon": "res://assets/ui/icons/items/knife.png",
+      "blurb": "Strips fiber in one clean pull.",
+      "description": "Short, sharp, and built for stripping — one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly."
     },
     "fishing_rod": {
       "name": "Fishing Rod",
@@ -95,14 +116,18 @@
       "stack": 1,
       "durability": 40,
       "colour": "#3d6b52",
-      "blurb": "For water that doesn't exist yet."
+      "icon": "res://assets/ui/icons/items/fishing_rod.png",
+      "blurb": "For water that doesn't exist yet.",
+      "description": "A proper rod and line, ready the moment there's water worth casting into. For now it just rides in the satchel, waiting."
     },
     "castle_gate_key": {
       "name": "Old Key",
       "kind": "key",
       "stack": 1,
       "colour": "#c9a227",
-      "blurb": "Heavy and old. Something nearby is still locked."
+      "icon": "res://assets/ui/icons/items/castle_gate_key.png",
+      "blurb": "Heavy and old. Something nearby is still locked.",
+      "description": "Iron gone dark with age, too heavy for the small lock it probably once fit. Something nearby is still shut tight, and this is the only thing you own that might open it."
     }
   }
 }

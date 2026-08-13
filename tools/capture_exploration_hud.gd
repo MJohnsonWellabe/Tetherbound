@@ -1,19 +1,30 @@
 extends SceneTree
 
-## Capture the real exploration HUD (EV9) over live gameplay, for the visual
-## critic loop. Loads the full meadows scene the way tools/survey.gd does
-## (proven reliable under xvfb+opengl3 — the trap that once made a bespoke
-## loader die silently was in the loader, not in loading this scene), but
-## keeps PlaygroundHUD visible instead of hiding it, since the HUD is exactly
-## what this is judging.
+## Capture the real exploration HUD (the owner's Palworld-inspired layout,
+## spec §6/§6.6) over live gameplay, for the visual critic loop. Loads the
+## full meadows scene the way tools/survey.gd does (proven reliable under
+## xvfb+opengl3 — the trap that once made a bespoke loader die silently was in
+## the loader, not in loading this scene), but keeps PlaygroundHUD visible
+## instead of hiding it, since the HUD is exactly what this is judging.
 ##
-##   xvfb-run -a -s "-screen 0 1280x720x24" \
-##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \
+##   xvfb-run -a -s "-screen 0 1920x1080x24" \
+##     godot --path . --rendering-driver opengl3 \
 ##     --script tools/capture_exploration_hud.gd
 ##
-## Two frames:
-##   hud_idle - just spawned, full health/stamina, vitals bars faded out
-##   hud_hurt - health and stamina forced down, bars pulled to full opacity
+## Five frames, per spec §6.6.6:
+##   hud_full    - full HP/satiety, stamina arc hidden (idle, full)
+##   hud_sprint  - stamina forced to 60% so the contextual arc shows
+##   hud_lowstam - stamina forced to 8% (danger tier on the arc)
+##   hud_hungry  - satiety forced to 20% -> "HUNGRY"
+##   hud_lowhp   - health forced to 25% -> the HP bar's danger lerp + pulse
+##
+## Every frame seeds a small party and satchel directly through `Game`'s own
+## public API (`make_pal`/`party.add`, the same calls `game_state.gd::
+## _seed_demo` makes internally) rather than relying on the `--menu-demo`
+## command-line flag this tool's own invocation does not pass — an
+## unpopulated party would show nothing but "No pal out" and an all-vacant
+## party strip, which is a real state but not the one worth judging the new
+## layout against. No change to `autoload/game_state.gd` was needed for this.
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -21,7 +32,7 @@ const OUT_DIR := "res://shots/_diag"
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 6
-const FADE_SETTLE_FRAMES := 30
+const VITALS_SETTLE_FRAMES := 30
 
 
 func _init() -> void:
@@ -71,18 +82,47 @@ func _run() -> void:
 	for i in 20:
 		await physics_frame
 
-	await _shoot(camera, "hud_idle", written, failures)
+	var vitals: RefCounted = player.get("vitals") if player != null else null
+	if vitals == null:
+		failures.append("no player.vitals reachable -- cannot drive the vitals frames")
+	else:
+		# Movement/vitals ticking is driven from _physics_process, and with no
+		# real input held it would fight every forced value back toward
+		# whatever the controller thinks is correct within a physics step.
+		# Freezing it is what makes a forced 60%/8%/20%/25% actually hold
+		# still long enough to screenshot.
+		player.set_physics_process(false)
 
-	# Force the vitals bars into their "relevant" state, so the fill colours
-	# and the fade-in are both visible in a still.
-	var vitals: RefCounted = player.get("vitals")
+	_seed_demo_state(world)
+
 	if vitals != null:
-		vitals.health = 34.0
-		vitals.stamina = 22.0
-	for i in FADE_SETTLE_FRAMES:
-		await process_frame
+		_reset_vitals(vitals)
+		await _settle(VITALS_SETTLE_FRAMES)
+		await _shoot(camera, "hud_full", written, failures)
 
-	await _shoot(camera, "hud_hurt", written, failures)
+		_reset_vitals(vitals)
+		vitals.stamina = vitals.max_stamina * 0.6
+		player.set("_sprinting", true) # best-effort; the arc shows regardless, stamina < 85%
+		await _settle(VITALS_SETTLE_FRAMES)
+		await _shoot(camera, "hud_sprint", written, failures)
+
+		_reset_vitals(vitals)
+		vitals.stamina = vitals.max_stamina * 0.08
+		player.set("_sprinting", false)
+		await _settle(VITALS_SETTLE_FRAMES)
+		await _shoot(camera, "hud_lowstam", written, failures)
+
+		_reset_vitals(vitals)
+		vitals.satiety = vitals.max_satiety * 0.20
+		await _settle(VITALS_SETTLE_FRAMES)
+		await _shoot(camera, "hud_hungry", written, failures)
+
+		_reset_vitals(vitals)
+		vitals.health = vitals.max_health * 0.25
+		await _settle(VITALS_SETTLE_FRAMES)
+		await _shoot(camera, "hud_lowhp", written, failures)
+	else:
+		await _shoot(camera, "hud_full", written, failures)
 
 	print("")
 	print("%d frames -> %s" % [written.size(), OUT_DIR])
@@ -95,6 +135,60 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
+
+
+func _settle(frames: int) -> void:
+	for i in frames:
+		await process_frame
+
+
+## Back to a known-full baseline (health/stamina/satiety full, no buffs) plus
+## one demo buff so every frame also exercises the vitals cluster's buff-chip
+## row -- the one piece of vitals state none of the five named frames force on
+## its own.
+func _reset_vitals(vitals: RefCounted) -> void:
+	vitals.health = vitals.max_health
+	vitals.stamina = vitals.max_stamina
+	vitals.satiety = vitals.max_satiety
+	vitals.active_buffs.clear()
+	vitals.active_buffs.append({
+		"id": "berry_buff", "stat": "stamina_regen_scale", "amount": 1.1, "remaining_s": 999.0,
+	})
+
+
+## A party (one out, two more on the strip, one of them fainted) and a
+## handful of satchel items, so the pal block, the party strip and the
+## hotbar all have something real to draw. Every call here is public API
+## `Game` already exposes -- no changes to `autoload/game_state.gd`.
+func _seed_demo_state(world: Node) -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		push_warning("Game autoload not found -- pal block/party strip/hotbar will show their empty states")
+		return
+
+	var inventory: RefCounted = game.get("inventory")
+	if inventory != null:
+		inventory.call("add", "wood", 40)
+		inventory.call("add", "berries", 12)
+
+	var party: RefCounted = game.get("party")
+	if party == null or int(party.call("size")) > 0:
+		return # already seeded (should not happen for a fresh boot, but idempotent)
+
+	var seeds := [["terrapup", "Biscuit"], ["ripplet", ""], ["galewisp", "Kite"]]
+	for entry in seeds:
+		var pal: RefCounted = game.call("make_pal", str(entry[0]), str(entry[1]))
+		if pal != null:
+			party.call("add", pal)
+
+	var active: RefCounted = party.call("at", 0)
+	if active != null:
+		active.take_damage(float(active.get("max_hp")) * 0.35)
+		active.energy = 40.0
+
+	var second: RefCounted = party.call("at", 1)
+	if second != null:
+		second.take_damage(float(second.get("max_hp"))) # fainted, for the strip's dim/danger state
 
 
 func _shoot(camera: Camera3D, name: String, written: Array[String], failures: Array[String]) -> void:

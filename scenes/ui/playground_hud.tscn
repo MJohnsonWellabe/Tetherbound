@@ -19,105 +19,25 @@ arbiter_path = NodePath("../InteractionArbiter")
 ; this. game_menu.tscn sets MOUSE_FILTER_STOP deliberately — a pause menu
 ; SHOULD take the mouse.
 ;
-; tests/smoke_mouse_look.gd fails if this line is removed.
+; tests/smoke_mouse_look.gd fails if this line is removed. Everything the
+; Palworld-layout rebuild adds under Root is built in code by
+; playground_hud.gd's _ready(), not authored here — see that file's header —
+; specifically so every new Control inherits MOUSE_FILTER_IGNORE from the one
+; place that sets it, rather than needing this comment repeated at each node.
 [node name="Root" type="Control" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="VitalsPanel" type="PanelContainer" parent="Root"]
-offset_left = 32.0
-offset_top = 32.0
-offset_right = 404.0
-offset_bottom = 112.0
-mouse_filter = 2
-
-[node name="Margin" type="MarginContainer" parent="Root/VitalsPanel"]
-mouse_filter = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 12
-
-[node name="Bars" type="VBoxContainer" parent="Root/VitalsPanel/Margin"]
-mouse_filter = 2
-theme_override_constants/separation = 8
-
-[node name="HealthRow" type="HBoxContainer" parent="Root/VitalsPanel/Margin/Bars"]
-mouse_filter = 2
-theme_override_constants/separation = 10
-
-[node name="HealthLabel" type="Label" parent="Root/VitalsPanel/Margin/Bars/HealthRow"]
-custom_minimum_size = Vector2(54, 22)
-mouse_filter = 2
-theme_override_font_sizes/font_size = 20
-vertical_alignment = 1
-text = "HP"
-
-[node name="Health" type="ProgressBar" parent="Root/VitalsPanel/Margin/Bars/HealthRow"]
-custom_minimum_size = Vector2(254, 22)
-size_flags_horizontal = 3
-mouse_filter = 2
-value = 100.0
-show_percentage = false
-
-[node name="StaminaRow" type="HBoxContainer" parent="Root/VitalsPanel/Margin/Bars"]
-mouse_filter = 2
-theme_override_constants/separation = 10
-
-[node name="StaminaLabel" type="Label" parent="Root/VitalsPanel/Margin/Bars/StaminaRow"]
-custom_minimum_size = Vector2(54, 22)
-mouse_filter = 2
-theme_override_font_sizes/font_size = 20
-vertical_alignment = 1
-text = "STA"
-
-[node name="Stamina" type="ProgressBar" parent="Root/VitalsPanel/Margin/Bars/StaminaRow"]
-custom_minimum_size = Vector2(254, 22)
-size_flags_horizontal = 3
-mouse_filter = 2
-value = 100.0
-show_percentage = false
-
-[node name="StatusPanel" type="PanelContainer" parent="Root"]
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -232.0
-offset_top = 32.0
-offset_right = -32.0
-offset_bottom = 96.0
-mouse_filter = 2
-
-[node name="Margin" type="MarginContainer" parent="Root/StatusPanel"]
-mouse_filter = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 10
-
-[node name="Rows" type="VBoxContainer" parent="Root/StatusPanel/Margin"]
-mouse_filter = 2
-theme_override_constants/separation = 4
-
-[node name="Party" type="Label" parent="Root/StatusPanel/Margin/Rows"]
-mouse_filter = 2
-theme_override_font_sizes/font_size = 22
-text = "Pals  0 / 5"
-
-[node name="Orbs" type="Label" parent="Root/StatusPanel/Margin/Rows"]
-mouse_filter = 2
-theme_override_font_sizes/font_size = 22
-text = "Orbs  0"
-
 [node name="HotbarPanel" type="PanelContainer" parent="Root"]
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = -430.0
-offset_top = -220.0
-offset_right = 430.0
+offset_left = -257.0
+offset_top = -254.0
+offset_right = 257.0
 offset_bottom = -144.0
 grow_horizontal = 2
 mouse_filter = 2
@@ -135,63 +55,78 @@ theme_override_constants/separation = 4
 
 [node name="Slots" type="HBoxContainer" parent="Root/HotbarPanel/Margin/Layout"]
 mouse_filter = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 alignment = 1
 
-[node name="Slot1" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(150, 46)
+[node name="Slot1" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 20
+
+[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot1"]
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-fit_content = true
+fit_content = false
 scroll_active = false
 shortcut_keys_enabled = false
 horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Slot2" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(150, 46)
+[node name="Slot2" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 20
+
+[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot2"]
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-fit_content = true
+fit_content = false
 scroll_active = false
 shortcut_keys_enabled = false
 horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Slot3" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(150, 46)
+[node name="Slot3" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 20
+
+[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot3"]
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-fit_content = true
+fit_content = false
 scroll_active = false
 shortcut_keys_enabled = false
 horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Slot4" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(150, 46)
+[node name="Slot4" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 20
+
+[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot4"]
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-fit_content = true
+fit_content = false
 scroll_active = false
 shortcut_keys_enabled = false
 horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Slot5" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots"]
-custom_minimum_size = Vector2(150, 46)
+[node name="Slot5" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 20
+
+[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot5"]
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
-fit_content = true
+fit_content = false
 scroll_active = false
 shortcut_keys_enabled = false
 horizontal_alignment = 1

@@ -48,6 +48,15 @@ const GLYPHS := {
 	## `cancel` above, so combat_hud.gd's Run AND Cancel verbs both reach for
 	## the `cancel` id directly rather than this duplicating its two files.
 
+	## D32's `combat_switch_left`/`combat_switch_right` (mid-combat pal
+	## switching -- the move grid's Switch cell and, tap-vs-hold, the party
+	## selector). Shares files with `horizontal`'s own left/right pair rather
+	## than vendoring anything new: same left/right keyboard arrows, same
+	## gamepad d-pad icons `hotbar_2`/`hotbar_3` above already borrow for the
+	## identical physical buttons.
+	"switch_left": {"keyboard": "keyboard_arrow_left.png", "gamepad": "xbox_dpad_left.png"},
+	"switch_right": {"keyboard": "keyboard_arrow_right.png", "gamepad": "xbox_dpad_right.png"},
+
 	## HD2's quick-access hotbar. Five slots, each its own single direct
 	## press on both devices (no select-then-confirm step) -- true parity is
 	## what CLAUDE.md's "controller first" asks for, not keyboard getting a

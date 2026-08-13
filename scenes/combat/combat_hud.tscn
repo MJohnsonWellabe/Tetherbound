@@ -2,17 +2,24 @@
 
 [ext_resource type="Script" path="res://scripts/ui/combat_hud.gd" id="1_hud"]
 
-; Combat HUD. Not the real interface — GAME_DESIGN.md's UI work is much later —
-; but the fight is unreadable without health, energy and the verb list, and an
-; unreadable fight cannot be judged.
+; Combat HUD, rebuilt to the owner's Palworld-inspired spec (`docs/*` §9) plus
+; D32's mid-combat switching UI. Static shape lives here (panels, bars, cell
+; scaffolding); every colour that has to change with the fight — health
+; fraction, type tag, cell ready/dimmed state, the switch selector's rows —
+; is applied in `combat_hud.gd`, same split the pre-rebuild file already used
+; for its two health bars.
 ;
-; Layout follows the fighters: the enemy reads at the top, your pal at the
-; bottom left with the energy meter directly under its health, so "am I close to
-; a charged attack" is one glance and not a hunt. Bar colours are applied in
-; code so a health bar that changes colour as it drains stays one place.
+; Three fixed regions, none of which overlap at 1920x1080: the enemy plate
+; top-center, the controlled-pal block + party strip lower-left, and the
+; 2x2 move grid + orb count lower-right. The centre strip along the bottom
+; (between the pal block and the grid) is deliberately empty screen — that is
+; where Prompt, the aim row and the catch-resolution row live, one at a time,
+; never more than one of the three visible together.
 ;
-; Anchored, never positioned in absolute pixels: the project authors at 1920x1080
-; and stretches canvas_items, so this has to survive a desktop window too.
+; PanelContainers carry no stylebox here — `UITokens.panel_box()` /
+; `slot_box()` / a local quiet-panel box are applied in code so a single
+; token change updates every panel at once, the same reasoning
+; `ui_tokens.gd`'s own header gives for existing as a module at all.
 
 [node name="CombatHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -23,131 +30,409 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="Enemy" type="VBoxContainer" parent="Root"]
-anchors_preset = 5
+; --- Enemy plate: top-center -------------------------------------------------
+
+[node name="EnemyPanel" type="PanelContainer" parent="Root"]
+mouse_filter = 2
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -300.0
-offset_top = 48.0
-offset_right = 300.0
-offset_bottom = 140.0
+offset_left = -280.0
+offset_right = 280.0
+offset_top = 32.0
+offset_bottom = 224.0
 grow_horizontal = 2
-theme_override_constants/separation = 6
 
-[node name="Name" type="Label" parent="Root/Enemy"]
+[node name="EnemyVBox" type="VBoxContainer" parent="Root/EnemyPanel"]
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Eyebrow" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color("#B8C5C4")
+text = "LEVEL —"
+
+[node name="Name" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color("#F2F5F2")
 text = "—"
 
-[node name="Health" type="ProgressBar" parent="Root/Enemy"]
-custom_minimum_size = Vector2(0, 26)
-max_value = 100.0
-value = 100.0
-show_percentage = false
-
-[node name="Telegraph" type="Label" parent="Root/Enemy"]
+[node name="TypeTag" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 19
 text = ""
 
-[node name="Ally" type="VBoxContainer" parent="Root"]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 64.0
-offset_top = -230.0
-offset_right = 664.0
-offset_bottom = -110.0
-grow_vertical = 0
-theme_override_constants/separation = 6
+[node name="HealthGap" type="Control" parent="Root/EnemyPanel/EnemyVBox"]
+custom_minimum_size = Vector2(0, 4)
 
-[node name="Name" type="Label" parent="Root/Ally"]
-theme_override_font_sizes/font_size = 34
-text = "—"
-
-[node name="Health" type="ProgressBar" parent="Root/Ally"]
-custom_minimum_size = Vector2(0, 26)
+[node name="Health" type="ProgressBar" parent="Root/EnemyPanel/EnemyVBox"]
+custom_minimum_size = Vector2(520, 16)
+size_flags_horizontal = 4
 max_value = 100.0
 value = 100.0
 show_percentage = false
 
-; The energy bar carries its own caption. Two stacked bars under a single name
-; was unreadable — the critic could not guess what the second one measured, and
-; neither could a player.
-[node name="EnergyRow" type="HBoxContainer" parent="Root/Ally"]
+[node name="Telegraph" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 26
+text = ""
+
+; --- Controlled-pal block: lower-left ----------------------------------------
+
+[node name="AllyPanel" type="PanelContainer" parent="Root"]
+mouse_filter = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 56.0
+offset_top = -206.0
+offset_right = 436.0
+offset_bottom = -56.0
+grow_vertical = 0
+
+[node name="AllyVBox" type="VBoxContainer" parent="Root/AllyPanel"]
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="TopRow" type="HBoxContainer" parent="Root/AllyPanel/AllyVBox"]
+mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="Caption" type="Label" parent="Root/Ally/EnergyRow"]
-custom_minimum_size = Vector2(104, 0)
+[node name="Chip" type="ColorRect" parent="Root/AllyPanel/AllyVBox/TopRow"]
+custom_minimum_size = Vector2(40, 40)
+size_flags_vertical = 4
+color = Color("#7F9394")
+
+[node name="Info" type="VBoxContainer" parent="Root/AllyPanel/AllyVBox/TopRow"]
+mouse_filter = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+
+[node name="Name" type="Label" parent="Root/AllyPanel/AllyVBox/TopRow/Info"]
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color("#F2F5F2")
+text = "—"
+
+[node name="Level" type="Label" parent="Root/AllyPanel/AllyVBox/TopRow/Info"]
+theme_override_font_sizes/font_size = 19
+theme_override_colors/font_color = Color("#B8C5C4")
+text = "Lv —"
+
+[node name="Health" type="ProgressBar" parent="Root/AllyPanel/AllyVBox"]
+custom_minimum_size = Vector2(300, 16)
+size_flags_horizontal = 4
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="EnergyRow" type="HBoxContainer" parent="Root/AllyPanel/AllyVBox"]
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="Caption" type="Label" parent="Root/AllyPanel/AllyVBox/EnergyRow"]
+custom_minimum_size = Vector2(70, 0)
 vertical_alignment = 1
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 19
+theme_override_colors/font_color = Color("#B8C5C4")
 text = "Energy"
 
-[node name="Energy" type="ProgressBar" parent="Root/Ally/EnergyRow"]
-custom_minimum_size = Vector2(0, 18)
-size_flags_horizontal = 3
+; Overlay host for the once-off "energy full" pulse — a bare Control sized to
+; the bar so `combat_hud.gd` can lay a ColorRect flash directly over it
+; without fighting the ProgressBar's own drawing.
+[node name="EnergyHost" type="Control" parent="Root/AllyPanel/AllyVBox/EnergyRow"]
+mouse_filter = 2
+custom_minimum_size = Vector2(300, 8)
+size_flags_vertical = 4
+
+[node name="Energy" type="ProgressBar" parent="Root/AllyPanel/AllyVBox/EnergyRow/EnergyHost"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 max_value = 100.0
 value = 0.0
 show_percentage = false
 
-; RichTextLabel, not Label: the prompt row dims verbs that are unavailable, and
-; a Label cannot colour part of its own text. It used to swap the button glyph
-; for `[ ]` instead, which put an empty pair of brackets in every combat frame.
-[node name="Actions" type="RichTextLabel" parent="Root"]
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
+[node name="Pulse" type="ColorRect" parent="Root/AllyPanel/AllyVBox/EnergyRow/EnergyHost"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -520.0
-offset_top = -96.0
-offset_right = 520.0
-offset_bottom = -40.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_font_sizes/normal_font_size = 30
+color = Color(0.42, 0.9, 0.85, 0.0)
+
+[node name="Status" type="Label" parent="Root/AllyPanel/AllyVBox"]
+theme_override_font_sizes/font_size = 19
+theme_override_colors/font_color = Color("#B8C5C4")
 text = ""
 
+; "GO, <label>!" — a brief line near the pal block on a switch, not a fixed
+; slot in AllyVBox: it has to disappear again without leaving a gap where the
+; status row already reserves its own empty line.
+[node name="GoText" type="Label" parent="Root"]
+mouse_filter = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 56.0
+offset_top = -234.0
+offset_right = 436.0
+offset_bottom = -206.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color("#73E6DD")
+text = ""
+
+; --- Move grid: lower-right ---------------------------------------------------
+
+[node name="OrbsLabel" type="Label" parent="Root"]
+mouse_filter = 2
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -502.0
+offset_top = -294.0
+offset_right = -56.0
+offset_bottom = -258.0
+grow_horizontal = 0
+grow_vertical = 0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 23
+text = ""
+
+[node name="GridPanel" type="PanelContainer" parent="Root"]
+mouse_filter = 2
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -502.0
+offset_top = -250.0
+offset_right = -56.0
+offset_bottom = -56.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Grid" type="GridContainer" parent="Root/GridPanel"]
+mouse_filter = 2
+columns = 2
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+
+[node name="CellQuick" type="PanelContainer" parent="Root/GridPanel/Grid"]
+mouse_filter = 2
+custom_minimum_size = Vector2(200, 74)
+
+[node name="Layout" type="Control" parent="Root/GridPanel/Grid/CellQuick"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Row" type="HBoxContainer" parent="Root/GridPanel/Grid/CellQuick/Layout"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 8
+
+[node name="Hairline" type="ColorRect" parent="Root/GridPanel/Grid/CellQuick/Layout/Row"]
+mouse_filter = 2
+custom_minimum_size = Vector2(2, 0)
+size_flags_vertical = 3
+color = Color("#B99050")
+
+[node name="Content" type="RichTextLabel" parent="Root/GridPanel/Grid/CellQuick/Layout/Row"]
+mouse_filter = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = false
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 23
+text = ""
+
+[node name="Pulse" type="ColorRect" parent="Root/GridPanel/Grid/CellQuick/Layout"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.21, 0.84, 0.8, 0.0)
+
+[node name="CellCharged" type="PanelContainer" parent="Root/GridPanel/Grid"]
+mouse_filter = 2
+custom_minimum_size = Vector2(200, 74)
+
+[node name="Layout" type="Control" parent="Root/GridPanel/Grid/CellCharged"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Row" type="HBoxContainer" parent="Root/GridPanel/Grid/CellCharged/Layout"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 8
+
+[node name="Hairline" type="ColorRect" parent="Root/GridPanel/Grid/CellCharged/Layout/Row"]
+mouse_filter = 2
+custom_minimum_size = Vector2(2, 0)
+size_flags_vertical = 3
+color = Color("#B99050")
+
+[node name="Content" type="RichTextLabel" parent="Root/GridPanel/Grid/CellCharged/Layout/Row"]
+mouse_filter = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = false
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 23
+text = ""
+
+[node name="Pulse" type="ColorRect" parent="Root/GridPanel/Grid/CellCharged/Layout"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.21, 0.84, 0.8, 0.0)
+
+[node name="CellThrow" type="PanelContainer" parent="Root/GridPanel/Grid"]
+mouse_filter = 2
+custom_minimum_size = Vector2(200, 74)
+
+[node name="Layout" type="Control" parent="Root/GridPanel/Grid/CellThrow"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Row" type="HBoxContainer" parent="Root/GridPanel/Grid/CellThrow/Layout"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 8
+
+[node name="Hairline" type="ColorRect" parent="Root/GridPanel/Grid/CellThrow/Layout/Row"]
+mouse_filter = 2
+custom_minimum_size = Vector2(2, 0)
+size_flags_vertical = 3
+color = Color("#73E6DD")
+
+[node name="Content" type="RichTextLabel" parent="Root/GridPanel/Grid/CellThrow/Layout/Row"]
+mouse_filter = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = false
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 23
+text = ""
+
+[node name="Pulse" type="ColorRect" parent="Root/GridPanel/Grid/CellThrow/Layout"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.21, 0.84, 0.8, 0.0)
+
+[node name="CellSwitch" type="PanelContainer" parent="Root/GridPanel/Grid"]
+mouse_filter = 2
+custom_minimum_size = Vector2(200, 74)
+
+[node name="Layout" type="Control" parent="Root/GridPanel/Grid/CellSwitch"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Row" type="HBoxContainer" parent="Root/GridPanel/Grid/CellSwitch/Layout"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 8
+
+[node name="Hairline" type="ColorRect" parent="Root/GridPanel/Grid/CellSwitch/Layout/Row"]
+mouse_filter = 2
+custom_minimum_size = Vector2(2, 0)
+size_flags_vertical = 3
+color = Color("#B8C5C4")
+
+[node name="Content" type="RichTextLabel" parent="Root/GridPanel/Grid/CellSwitch/Layout/Row"]
+mouse_filter = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = false
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 23
+text = ""
+
+[node name="Pulse" type="ColorRect" parent="Root/GridPanel/Grid/CellSwitch/Layout"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.21, 0.84, 0.8, 0.0)
+
+; --- Centre-bottom strip: prompt / aim / catch-resolution (one at a time) ----
+
 [node name="Prompt" type="RichTextLabel" parent="Root"]
-anchors_preset = 7
+mouse_filter = 2
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -520.0
-offset_top = -190.0
-offset_right = 520.0
-offset_bottom = -134.0
+offset_left = -450.0
+offset_top = -260.0
+offset_right = 450.0
+offset_bottom = -204.0
 grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
-theme_override_font_sizes/normal_font_size = 34
+theme_override_font_sizes/normal_font_size = 30
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 shortcut_keys_enabled = false
 text = ""
 
-[node name="Orbs" type="Label" parent="Root"]
-anchors_preset = 3
-anchor_left = 1.0
+[node name="AimRow" type="RichTextLabel" parent="Root"]
+mouse_filter = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -364.0
-offset_top = -230.0
-offset_right = -64.0
-offset_bottom = -180.0
-grow_horizontal = 0
+offset_left = -450.0
+offset_top = -160.0
+offset_right = 450.0
+offset_bottom = -104.0
+grow_horizontal = 2
 grow_vertical = 0
-horizontal_alignment = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/normal_font_size = 28
+text = ""
+
+[node name="CatchRow" type="RichTextLabel" parent="Root"]
+mouse_filter = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -450.0
+offset_top = -160.0
+offset_right = 450.0
+offset_bottom = -104.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/normal_font_size = 28
 text = ""
 
 [node name="Reticle" type="Label" parent="Root"]
+mouse_filter = 2
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -165,17 +450,36 @@ theme_override_font_sizes/font_size = 44
 text = "+"
 
 [node name="Outcome" type="Label" parent="Root"]
+mouse_filter = 2
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -520.0
-offset_top = -40.0
+offset_top = -60.0
 offset_right = 520.0
-offset_bottom = 40.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 56
+theme_override_font_sizes/font_size = 42
+text = ""
+
+[node name="XPLine" type="Label" parent="Root"]
+mouse_filter = 2
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 24.0
+offset_right = 300.0
+offset_bottom = 66.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color("#4BD28B")
 text = ""

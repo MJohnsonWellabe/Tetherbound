@@ -1,32 +1,35 @@
 extends CanvasLayer
 
-## The real exploration HUD (`ENVIRONMENT_AND_UI_BIBLE.md` §16-18, EV9).
+## The real exploration HUD — the owner's Palworld-inspired layout
+## (`ENVIRONMENT_AND_UI_BIBLE.md` §6/§6.6). This is the M-C integration pass:
+## it mounts `party_strip.gd` and `stamina_arc.gd` (built and unit-tested
+## standalone, `tests/test_hud_widgets.gd`) and `minimap.gd`/`map_baker.gd`
+## (owned by a concurrent pass; mounted defensively, never edited here), and
+## builds the rest of the layout — the active-pal block, the player vitals
+## cluster, and the objective line — directly in code with `UITokens`
+## factories.
 ##
-## Draws only what the bible keeps on screen while exploring: health and
-## stamina (faded out when neither is doing anything interesting), the party
-## and orb counts, `HD2`'s quick-access item hotbar, and the one contextual
-## interact prompt. Everything else —
-## the raw movement/input telemetry this HUD used to dump permanently — is
-## still here, because M1 tuning still needs it, but it now lives behind an
-## F3 toggle instead of covering a third of the screen by default.
+## STRUCTURE VS DATA. The .tscn keeps only what genuinely wants to be
+## hand-authored scene state: `Root` (and its load-bearing mouse_filter,
+## see the .tscn's own comment), `HotbarPanel`, `Prompt` and `DebugReadout`.
+## Everything the Palworld layout adds — the pal block, the vitals cluster,
+## the mounted widgets, the objective block — is built once in `_ready()` and
+## polled every frame in `_process()`, the same "structure once, poll every
+## frame" split `menu_tab.gd` and `party_strip.gd` already use. Every Control
+## created here sets `mouse_filter = MOUSE_FILTER_IGNORE` itself, for the same
+## reason the .tscn's Root does (see its comment, and `tests/smoke_mouse_look.gd`,
+## extended in this pass to walk the whole subtree and enforce it).
 ##
 ## Sized for the Ally: the project authors at 1920x1080 and stretches
-## canvas_items, so text set here is at real handheld pixel density.
+## canvas_items, so the pixel positions below are real handheld screen space,
+## not anchors that reflow at other resolutions. That is a deliberate scope
+## limit shared with the rest of this HUD, not an oversight.
 ##
-## No objective line yet: the bible asks for "concise current objective," but
-## there is no objective/quest state to read (`SB9`/`SB11`, both still open).
-## Wiring a label to nothing would just be a permanent blank box, which is the
-## opposite of what §16 asks for ("hide/fade what is not relevant"). A
-## follow-on EV9 slice adds the line once that state exists. Same reasoning
-## for the compass: §16 says "if it exists," and it does not yet.
+## F3 debug overlay is untouched by this pass — still OFF -> PERF -> FULL,
+## still drawn into `DebugReadout`, which the .tscn keeps as before.
 
-## Dark blue-gray translucent panel, thin pale border, teal accent — the
-## visual language §16 asks for. Palette now lives on `scripts/ui/ui_tokens.gd`
-## (`UITokens`, D28) — this file reads `UITokens.BG_PANEL`, `UITokens.BORDER`
-## etc. rather than keeping its own copy.
-
-## A bar at rest fades to this rather than to zero: gone-and-back-again on
-## every full heal reads as a layout pop, faint-but-present does not. Blind
+## A bar/cluster at rest fades to this rather than to zero: gone-and-back-again
+## on every full heal reads as a layout pop, faint-but-present does not. Blind
 ## visual review flagged the first value tried (0.28) as unreadable — the fill
 ## and track blended into each other and the low-alpha edges read as a
 ## rendering artefact rather than a calm bar.
@@ -36,41 +39,27 @@ const FADE_SPEED := 2.2
 const READOUT_INTERVAL := 0.1
 
 ## F3 cycles OFF -> PERF -> FULL rather than toggling.
-##
-## PERF is the mode you leave up while playing: frame time and the render
-## counters and nothing else. FULL adds the M1 movement block and the input
-## diagnostics, which are ~25 lines of text that push the perf numbers off the
-## bottom of the Label and are irrelevant to a performance session.
 const DEBUG_OFF := 0
 const DEBUG_PERF := 1
 const DEBUG_FULL := 2
 
-## ~2 seconds of frames at 60 Hz. The window has to be long enough that an
-## occasional spike still shows up in `max` a moment later, and short enough
-## that walking from a clear field into the tree line moves the numbers while
-## you are still looking at the tree line.
+## ~2 seconds of frames at 60 Hz.
 const FRAME_WINDOW := 120
 
 const MB := 1048576.0
 
-const PARTY := preload("res://autoload/party.gd")
-const ORB_ITEM_ID := "orb_basic"
+const PAL_SPECIES := preload("res://scripts/pals/pal_species.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
-## HD2: a real quick-access item hotbar. GAME_DESIGN.md 19's "quick tool
-## selection" is scoped separately (`tool_cycle`, R2.1/EV9's own history) --
-## this is the first general CONSUMABLE band the spec asks for, so it gets
-## its own five input actions (`hotbar_1`..`hotbar_5`) rather than reusing
-## that one.
-##
-## Deliberately does NOT read `autoload/inventory.gd`'s satchel through a
-## second entry point: the five slots shown here ARE satchel slots 0-4, the
-## same "first row doubles as the quick-select band" slots that file's own
-## header comment already reserved for exactly this ("nothing reads it yet
-## ... so the grid and the future hotbar cannot disagree about which slots
-## they mean"). Moving a stack onto/off of slot 0-4 in the backpack tab
-## moves it in or out of the hotbar for free, with no separate "assign to
-## hotbar" step to build or explain.
+const PARTY_STRIP_SCRIPT := "res://scripts/ui/party_strip.gd"
+const STAMINA_ARC_SCRIPT := "res://scripts/ui/stamina_arc.gd"
+## Owned by a concurrent agent this pass (see CLAUDE.md task header) — never
+## edited here, only loaded and called defensively. If either file is missing
+## or fails to produce a usable node, the minimap simply does not mount; every
+## other block on this HUD is independent of it.
+const MINIMAP_SCRIPT := "res://scripts/ui/minimap.gd"
+const MAP_BAKER_SCRIPT := "res://scripts/world/map_baker.gd"
+
 const HOTBAR_SLOTS := 5
 ## Action name IS the glyph id (input_glyph.gd's GLYPHS dict uses the same
 ## keys), so one list serves both jobs.
@@ -78,82 +67,128 @@ const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar
 
 const HOTBAR_MESSAGE_SECONDS := 2.2
 
+## --- layout (spec §6/§6.6, numbers inlined per the task) --------------------
+## All positions are in the HUD's own 1920x1080 authoring space (top-left
+## origin), matching the rest of this file's "sized for the Ally" convention.
+
+const PAL_BLOCK_POS := Vector2(56.0, 830.0)
+const PAL_BLOCK_SIZE := Vector2(374.0, 110.0) ## x 56-430, y 830-940
+
+const VITALS_POS := Vector2(56.0, 946.0) ## buff row starts here; satiety row ends ~1010
+const VITALS_WIDTH := 300.0
+
+const STAMINA_ARC_POS := Vector2(960.0 + 48.0, 540.0 - 160.0 * 0.5) ## centred-right of screen centre
+
+const MINIMAP_SIZE := Vector2(240.0, 240.0)
+
+const OBJECTIVE_MAX_WIDTH := 420.0
+const OBJECTIVE_BLOCK_HEIGHT := 90.0
+
+const MAX_BUFF_CHIPS := 3
+const BUFF_CHIP_SIZE := 28.0
+
+const HP_DANGER_BELOW := 0.30
+const HP_PULSE_SPEED := 3.0
+const HP_PULSE_DEPTH := 0.15
+
 @export var player_path: NodePath
 @export var arbiter_path: NodePath
 
-## Seconds a pad must be connected with every raw axis pinned near zero before
-## the debug view suggests the Ally-specific cause. Long enough that a player
-## who is simply reading the screen before touching the stick does not get an
-## irrelevant warning; short enough to answer "why won't it move" quickly.
 const STUCK_AXES_HINT_AFTER := 3.0
 const STUCK_AXES_EPSILON := 0.05
 
 var _player: CharacterBody3D = null
 var _arbiter: Node = null
 var _game: Node = null
-## -1 rather than 0 so the first frame always writes both labels; a real count
-## of zero would otherwise leave them showing the scene's placeholder text.
-var _last_pals := -1
-var _last_orbs := -1
+var _party: RefCounted = null
+
 var _since_readout := 0.0
 var _peak_fall := 0.0
 var _last_damage := 0.0
 var _debug_level := DEBUG_OFF
 
-## Frame times in milliseconds, as a fixed-size ring.
-##
-## Pre-sized and written by index on purpose: an overlay that allocates every
-## frame measures itself. Nothing here scans the ring — that happens inside the
-## 0.1 s throttle, so the min/max pass runs ten times a second, not sixty.
 var _frame_ms := PackedFloat32Array()
 var _frame_head := 0
 var _frame_filled := 0
 
-## Which adapter and driver are ACTUALLY live, resolved once at boot.
-##
-## The single most load-bearing line in the readout. `fallback_to_angle`
-## defaults true and Godot carries a device blocklist that can force ANGLE on,
-## while `fallback_to_native` can quietly put a failed ANGLE start back on
-## native OpenGL. So the driver the project asked for and the driver that is
-## running are two different facts, and until this line existed only one of them
-## was visible. Under ANGLE the adapter name contains "ANGLE (... Direct3D11
-## ...)"; under native WGL it is the bare adapter string.
 var _hardware_line := ""
 
-## Tracks whether a connected pad has EVER reported a non-trivial axis value.
-## A single frame's reading cannot tell "not touching the stick right now"
-## apart from "the stick physically cannot reach Godot" — this can, given a
-## few seconds.
 var _pad_connected_for := 0.0
 var _max_raw_axis_seen := 0.0
 
-@onready var _health_bar: ProgressBar = $Root/VitalsPanel/Margin/Bars/HealthRow/Health
-@onready var _stamina_bar: ProgressBar = $Root/VitalsPanel/Margin/Bars/StaminaRow/Stamina
-@onready var _health_label: Label = $Root/VitalsPanel/Margin/Bars/HealthRow/HealthLabel
-@onready var _stamina_label: Label = $Root/VitalsPanel/Margin/Bars/StaminaRow/StaminaLabel
-@onready var _party_label: Label = $Root/StatusPanel/Margin/Rows/Party
-@onready var _orbs_label: Label = $Root/StatusPanel/Margin/Rows/Orbs
+@onready var _root: Control = $Root
 @onready var _prompt_label: RichTextLabel = $Root/Prompt
 @onready var _debug_readout: Label = $Root/DebugReadout
-@onready var _hotbar_slots: Array[RichTextLabel] = [
+@onready var _hotbar_chips: Array[PanelContainer] = [
 	$Root/HotbarPanel/Margin/Layout/Slots/Slot1,
 	$Root/HotbarPanel/Margin/Layout/Slots/Slot2,
 	$Root/HotbarPanel/Margin/Layout/Slots/Slot3,
 	$Root/HotbarPanel/Margin/Layout/Slots/Slot4,
 	$Root/HotbarPanel/Margin/Layout/Slots/Slot5,
 ]
+@onready var _hotbar_slots: Array[RichTextLabel] = [
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot1/Label,
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot2/Label,
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot3/Label,
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot4/Label,
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot5/Label,
+]
 @onready var _hotbar_message: Label = $Root/HotbarPanel/Margin/Layout/Message
 
-## What each slot last rendered, so `_update_hotbar` only writes a Label when
-## its text actually changed -- the same discipline `_update_status` already
-## uses, for the same reason (an outlined RichTextLabel re-shapes on every
-## assignment; this polls every frame while `_update_status` only changes on
-## a pickup).
 var _hotbar_last_text: Array[String] = ["", "", "", "", ""]
 var _hotbar_message_until := 0.0
 
-var _health_fill: StyleBoxFlat = null
-var _stamina_fill: StyleBoxFlat = null
+## --- active-pal block --------------------------------------------------------
+
+var _pal_block: Control = null
+var _pal_content: Control = null
+var _pal_chip: ColorRect = null
+var _pal_name_label: Label = null
+var _pal_level_label: Label = null
+var _pal_type_label: Label = null
+var _pal_hp_bar: ProgressBar = null
+var _pal_hp_fill: StyleBoxFlat = null
+var _pal_energy_bar: ProgressBar = null
+var _pal_energy_fill: StyleBoxFlat = null
+var _pal_no_pal_label: Label = null
+var _pal_block_has_pal_last := true ## forces the first _update_pal_block to write
+
+## --- party strip --------------------------------------------------------------
+
+var _party_strip: Control = null
+var _party_strip_last_index := -999
+var _party_strip_last_revision := -999
+
+## --- player vitals cluster ----------------------------------------------------
+
+var _vitals_cluster: Control = null
+var _buff_chips: Array[Panel] = []
+var _buff_chip_labels: Array[Label] = []
+var _buff_overflow_label: Label = null
+var _hp_bar: ProgressBar = null
+var _hp_fill: StyleBoxFlat = null
+var _hp_value_label: Label = null
+var _satiety_bar: ProgressBar = null
+var _satiety_state_label: Label = null
+
+var _last_health_value := -1.0
+var _health_flash_timer := 0.0
+var _hp_pulse_time := 0.0
+
+## --- stamina arc ---------------------------------------------------------------
+
+var _stamina_arc: Control = null
+var _last_stamina_fraction := -1.0
+
+## --- minimap (owned by a concurrent pass; mounted defensively) ----------------
+
+var _minimap: Control = null
+var _minimap_baked := false
+
+## --- objective block ------------------------------------------------------------
+
+var _objective_text_label: Label = null
+var _objective_last_text := ""
 
 
 func _ready() -> void:
@@ -167,21 +202,18 @@ func _ready() -> void:
 	if _arbiter != null and _arbiter.has_signal("prompt_changed"):
 		_arbiter.connect("prompt_changed", _on_prompt_changed)
 
-	_style_panel($Root/VitalsPanel)
-	_style_panel($Root/StatusPanel)
-	_style_panel($Root/HotbarPanel)
-	_health_fill = _fill_style(UITokens.HP_GREEN)
-	_stamina_fill = _fill_style(UITokens.TEAL)
-	_dress_bar(_health_bar, _health_fill)
-	_dress_bar(_stamina_bar, _stamina_fill)
-	UITokens.make_text_legible(_health_label)
-	UITokens.make_text_legible(_stamina_label)
-	UITokens.make_text_legible(_party_label)
-	UITokens.make_text_legible(_orbs_label)
+	_build_pal_block()
+	_mount_party_strip()
+	_build_vitals_cluster()
+	_mount_stamina_arc()
+	_mount_minimap()
+	_build_objective_block()
+	_style_hotbar()
+
 	UITokens.make_text_legible(_prompt_label)
+	UITokens.make_text_legible(_hotbar_message)
 	for slot in _hotbar_slots:
 		UITokens.make_text_legible(slot)
-	UITokens.make_text_legible(_hotbar_message)
 
 	_frame_ms.resize(FRAME_WINDOW)
 	_hardware_line = "%s | %s | driver %s" % [
@@ -198,36 +230,527 @@ func _ready() -> void:
 	# the player stands in front of something interactable.
 	_prompt_label.text = str(_arbiter.call("prompt")) if _arbiter != null else ""
 
-
-func _style_panel(panel: PanelContainer) -> void:
-	var box := StyleBoxFlat.new()
-	box.bg_color = UITokens.BG_PANEL
-	box.border_color = UITokens.BORDER
-	box.border_width_left = 2
-	box.border_width_right = 2
-	box.border_width_top = 2
-	box.border_width_bottom = 2
-	box.corner_radius_top_left = 14
-	box.corner_radius_top_right = 14
-	box.corner_radius_bottom_left = 14
-	box.corner_radius_bottom_right = 14
-	panel.add_theme_stylebox_override("panel", box)
+	# Structure is finished: outline/shadow every Label and RichTextLabel this
+	# file just built, in one pass, rather than one make_text_legible call per
+	# widget scattered through the builders above.
+	UITokens.make_text_legible(_root)
 
 
-func _fill_style(colour: Color) -> StyleBoxFlat:
-	var box := StyleBoxFlat.new()
-	box.bg_color = colour
-	box.corner_radius_top_left = 8
-	box.corner_radius_top_right = 8
-	box.corner_radius_bottom_left = 8
-	box.corner_radius_bottom_right = 8
-	return box
+func _style_hotbar() -> void:
+	$Root/HotbarPanel.add_theme_stylebox_override("panel", UITokens.panel_box())
+	for chip in _hotbar_chips:
+		chip.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 
 
-func _dress_bar(bar: ProgressBar, fill: StyleBoxFlat) -> void:
-	var track := _fill_style(UITokens.TRACK)
-	bar.add_theme_stylebox_override("background", track)
-	bar.add_theme_stylebox_override("fill", fill)
+# --- active-pal block ----------------------------------------------------------
+
+
+## Portrait chip, label()/level, HP bar, an energy strip shown only while
+## there IS energy to show, and a type tag — or, with no active pal, a dim
+## "No pal out" chip. Species tint comes from `PalSpecies.placeholder()`, the
+## same lookup `party_strip.gd`'s caller (this file, below) uses, so the two
+## widgets can never tint the same pal two different colours.
+func _build_pal_block() -> void:
+	_pal_block = Control.new()
+	_pal_block.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_block.position = PAL_BLOCK_POS
+	_pal_block.size = PAL_BLOCK_SIZE
+	_root.add_child(_pal_block)
+
+	_pal_content = Control.new()
+	_pal_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_content.size = PAL_BLOCK_SIZE
+	_pal_block.add_child(_pal_content)
+
+	_pal_chip = ColorRect.new()
+	_pal_chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_chip.position = Vector2(0.0, 4.0)
+	_pal_chip.size = Vector2(40.0, 40.0)
+	_pal_content.add_child(_pal_chip)
+
+	_pal_name_label = Label.new()
+	_pal_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_name_label.position = Vector2(52.0, -2.0)
+	_pal_name_label.size = Vector2(280.0, 32.0)
+	_pal_name_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	_pal_content.add_child(_pal_name_label)
+
+	_pal_level_label = Label.new()
+	_pal_level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_level_label.position = Vector2(52.0, 30.0)
+	_pal_level_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_pal_level_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	_pal_content.add_child(_pal_level_label)
+
+	_pal_type_label = Label.new()
+	_pal_type_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_type_label.position = Vector2(170.0, 30.0)
+	_pal_type_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_pal_content.add_child(_pal_type_label)
+
+	_pal_hp_bar = ProgressBar.new()
+	_pal_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_hp_bar.position = Vector2(0.0, 54.0)
+	_pal_hp_bar.size = Vector2(240.0, 14.0)
+	_pal_hp_bar.show_percentage = false
+	_pal_hp_bar.min_value = 0.0
+	_pal_hp_bar.max_value = 1.0
+	_pal_hp_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
+	_pal_hp_fill = UITokens.fill_box(UITokens.HP_GREEN)
+	_pal_hp_bar.add_theme_stylebox_override("fill", _pal_hp_fill)
+	_pal_content.add_child(_pal_hp_bar)
+
+	_pal_energy_bar = ProgressBar.new()
+	_pal_energy_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_energy_bar.position = Vector2(0.0, 72.0)
+	_pal_energy_bar.size = Vector2(240.0, 6.0)
+	_pal_energy_bar.show_percentage = false
+	_pal_energy_bar.min_value = 0.0
+	_pal_energy_bar.max_value = 1.0
+	_pal_energy_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
+	_pal_energy_fill = UITokens.fill_box(UITokens.TEAL)
+	_pal_energy_bar.add_theme_stylebox_override("fill", _pal_energy_fill)
+	_pal_content.add_child(_pal_energy_bar)
+
+	_pal_no_pal_label = Label.new()
+	_pal_no_pal_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_no_pal_label.position = Vector2(0.0, 40.0)
+	_pal_no_pal_label.text = "No pal out"
+	_pal_no_pal_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_pal_no_pal_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_pal_no_pal_label.visible = false
+	_pal_block.add_child(_pal_no_pal_label)
+
+
+func _update_pal_block() -> void:
+	var pal: RefCounted = null
+	if _party != null and int(_party.call("size")) > 0:
+		pal = _party.call("active")
+	var has_pal := pal != null
+
+	if has_pal != _pal_block_has_pal_last:
+		_pal_content.visible = has_pal
+		_pal_no_pal_label.visible = not has_pal
+		_pal_block_has_pal_last = has_pal
+
+	if not has_pal:
+		return
+
+	var species_id := str(pal.get("species_id"))
+	_pal_chip.color = _species_tint(species_id)
+	_pal_name_label.text = str(pal.call("label"))
+	_pal_level_label.text = "Lv %d" % int(pal.get("level"))
+
+	var pal_type := str(pal.get("pal_type"))
+	_pal_type_label.text = pal_type.to_upper()
+	_pal_type_label.add_theme_color_override("font_color", _type_colour(pal_type))
+
+	_pal_hp_bar.value = clampf(float(pal.call("hp_fraction")), 0.0, 1.0)
+
+	var energy := float(pal.get("energy"))
+	_pal_energy_bar.visible = energy > 0.0
+	if _pal_energy_bar.visible:
+		_pal_energy_bar.value = clampf(float(pal.call("energy_fraction")), 0.0, 1.0)
+
+
+func _species_tint(species_id: String) -> Color:
+	if species_id.is_empty():
+		return UITokens.TEXT_MUTED
+	var placeholder: Dictionary = PAL_SPECIES.placeholder(species_id)
+	return Color(str(placeholder.get("colour", "#cccccc")))
+
+
+func _type_colour(pal_type: String) -> Color:
+	match pal_type:
+		"ground":
+			return UITokens.GROUND_OCHRE
+		"water":
+			return UITokens.WATER_BLUE
+		"air":
+			return UITokens.AIR_SKY
+		_:
+			return UITokens.TEXT_SECONDARY
+
+
+# --- party strip -----------------------------------------------------------------
+
+
+## `party_strip.gd` never reaches `Game` itself (see its own header) — this is
+## the one place that reads `Game.party` and hands it entries as plain data.
+func _mount_party_strip() -> void:
+	var script: Script = load(PARTY_STRIP_SCRIPT)
+	if script == null:
+		push_warning("HUD: party_strip.gd failed to load")
+		return
+	var inst: Variant = script.new()
+	if not (inst is Control):
+		push_warning("HUD: party_strip.gd did not produce a Control")
+		return
+	_party_strip = inst
+	_party_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	# Positioned to slide in ABOVE the active-pal block, sharing its left
+	# edge -- SLOTS/ROW_SIZE/ROW_SEPARATION are the widget's own consts, read
+	# rather than duplicated, so this position can never drift out of step
+	# with what party_strip.gd actually draws.
+	var height: float = (
+		float(script.SLOTS) * script.ROW_SIZE.y
+		+ float(script.SLOTS - 1) * script.ROW_SEPARATION
+	)
+	_party_strip.position = Vector2(PAL_BLOCK_POS.x, PAL_BLOCK_POS.y - height - UITokens.GAP)
+	_root.add_child(_party_strip)
+
+
+## Wired to `Game.party.active_index()` + `.revision`: rebuild entries and
+## reveal the strip only when either actually changed, per the task spec --
+## polling every frame but writing only on a real change, the same discipline
+## the widget's own per-row cache already uses internally.
+func _update_party_strip() -> void:
+	if _party_strip == null or _party == null:
+		return
+	var index := int(_party.call("active_index"))
+	var revision := int(_party.get("revision"))
+	if index == _party_strip_last_index and revision == _party_strip_last_revision:
+		return
+	_party_strip_last_index = index
+	_party_strip_last_revision = revision
+
+	var entries: Array = []
+	for pal: RefCounted in _party.call("members"):
+		entries.append({
+			"label": str(pal.call("label")),
+			"level": int(pal.get("level")),
+			"hp_fraction": float(pal.call("hp_fraction")),
+			"tint": _species_tint(str(pal.get("species_id"))),
+			"fainted": bool(pal.get("fainted")),
+		})
+	_party_strip.call("update_from_party", entries, index)
+	_party_strip.call("show_strip")
+
+
+# --- player vitals cluster --------------------------------------------------------
+
+
+## Buff icons row, HP row (bar + right-aligned value text), satiety row (bar
+## + hunger-state text). One Control holds all three so the idle-fade rule
+## can fade the whole cluster with a single modulate write, matching the old
+## per-bar fade this replaces.
+func _build_vitals_cluster() -> void:
+	_vitals_cluster = Control.new()
+	_vitals_cluster.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_vitals_cluster.position = VITALS_POS
+	_vitals_cluster.size = Vector2(VITALS_WIDTH, 64.0)
+	_root.add_child(_vitals_cluster)
+
+	_build_buff_row(_vitals_cluster)
+
+	_hp_bar = ProgressBar.new()
+	_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hp_bar.position = Vector2(0.0, 32.0)
+	_hp_bar.size = Vector2(VITALS_WIDTH, 18.0)
+	_hp_bar.show_percentage = false
+	_hp_bar.min_value = 0.0
+	_hp_bar.max_value = 1.0
+	_hp_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
+	_hp_fill = UITokens.fill_box(UITokens.HP_GREEN)
+	_hp_bar.add_theme_stylebox_override("fill", _hp_fill)
+	_vitals_cluster.add_child(_hp_bar)
+
+	_hp_value_label = Label.new()
+	_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hp_value_label.position = Vector2(0.0, 32.0)
+	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, 18.0)
+	_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_hp_value_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_vitals_cluster.add_child(_hp_value_label)
+
+	_satiety_bar = ProgressBar.new()
+	_satiety_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_satiety_bar.position = Vector2(0.0, 54.0)
+	_satiety_bar.size = Vector2(VITALS_WIDTH, 10.0)
+	_satiety_bar.show_percentage = false
+	_satiety_bar.min_value = 0.0
+	_satiety_bar.max_value = 1.0
+	_satiety_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
+	_satiety_bar.add_theme_stylebox_override("fill", UITokens.fill_box(UITokens.WARNING))
+	_vitals_cluster.add_child(_satiety_bar)
+
+	_satiety_state_label = Label.new()
+	_satiety_state_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_satiety_state_label.position = Vector2(VITALS_WIDTH + 10.0, 51.0)
+	_satiety_state_label.size = Vector2(120.0, 16.0)
+	_satiety_state_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_satiety_state_label.visible = false
+	_vitals_cluster.add_child(_satiety_state_label)
+
+
+func _build_buff_row(parent: Control) -> void:
+	var x := 0.0
+	for i in MAX_BUFF_CHIPS:
+		var chip := Panel.new()
+		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		chip.position = Vector2(x, 0.0)
+		chip.size = Vector2(BUFF_CHIP_SIZE, BUFF_CHIP_SIZE)
+		var box := StyleBoxFlat.new()
+		box.bg_color = UITokens.SUCCESS
+		box.corner_radius_top_left = UITokens.RADIUS_SLOT
+		box.corner_radius_top_right = UITokens.RADIUS_SLOT
+		box.corner_radius_bottom_left = UITokens.RADIUS_SLOT
+		box.corner_radius_bottom_right = UITokens.RADIUS_SLOT
+		chip.add_theme_stylebox_override("panel", box)
+		chip.visible = false
+		parent.add_child(chip)
+		_buff_chips.append(chip)
+
+		var label := Label.new()
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.size = Vector2(BUFF_CHIP_SIZE, BUFF_CHIP_SIZE)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+		chip.add_child(label)
+		_buff_chip_labels.append(label)
+
+		x += BUFF_CHIP_SIZE + UITokens.GAP
+
+	_buff_overflow_label = Label.new()
+	_buff_overflow_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_buff_overflow_label.position = Vector2(x, 6.0)
+	_buff_overflow_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_buff_overflow_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	_buff_overflow_label.visible = false
+	parent.add_child(_buff_overflow_label)
+
+
+func _update_buff_row(vitals: RefCounted) -> void:
+	var buffs: Array = vitals.active_buffs
+	var count := buffs.size()
+	for i in MAX_BUFF_CHIPS:
+		var show := i < count
+		_buff_chips[i].visible = show
+		if show:
+			var buff: Dictionary = buffs[i]
+			var id := str(buff.get("id", ""))
+			_buff_chip_labels[i].text = id.substr(0, 1).to_upper() if id.length() > 0 else "?"
+	var overflow := count - MAX_BUFF_CHIPS
+	_buff_overflow_label.visible = overflow > 0
+	if overflow > 0:
+		_buff_overflow_label.text = "+%d" % overflow
+
+
+## HP: bar + "284 / 320" value text, a brief white-ish flash on any decrease
+## (`T_DAMAGE_FLASH`), and below `HP_DANGER_BELOW` a lerp toward `DANGER` plus
+## a gentle alpha pulse on the bar itself (not the whole cluster -- the pulse
+## should read as "this bar is alarmed", not affect the buff row above it).
+## Satiety: bar + hunger-state text ("HUNGRY" / "STARVING"). Then the whole
+## cluster's idle-fade, unchanged in spirit from the old per-bar version.
+func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
+	var health_fraction: float = vitals.health_fraction()
+	var health_value: float = vitals.health
+	var max_health: float = vitals.max_health
+
+	if _last_health_value >= 0.0 and health_value < _last_health_value - 0.001:
+		_health_flash_timer = UITokens.T_DAMAGE_FLASH
+	_last_health_value = health_value
+
+	_hp_bar.value = health_fraction
+	var normal_colour := UITokens.HP_GREEN.lerp(UITokens.DANGER, 1.0 - health_fraction)
+	if _health_flash_timer > 0.0:
+		_health_flash_timer = maxf(0.0, _health_flash_timer - delta)
+		var t: float = _health_flash_timer / UITokens.T_DAMAGE_FLASH
+		_hp_fill.bg_color = Color(1.0, 1.0, 1.0).lerp(normal_colour, 1.0 - t)
+	else:
+		_hp_fill.bg_color = normal_colour
+
+	if health_fraction < HP_DANGER_BELOW:
+		_hp_pulse_time += delta
+		_hp_bar.modulate.a = 1.0 - HP_PULSE_DEPTH * absf(sin(_hp_pulse_time * HP_PULSE_SPEED))
+	else:
+		_hp_pulse_time = 0.0
+		_hp_bar.modulate.a = 1.0
+
+	_hp_value_label.text = "%d / %d" % [int(round(health_value)), int(round(max_health))]
+
+	_satiety_bar.value = vitals.satiety_fraction()
+	var hunger := str(vitals.call("hunger_state"))
+	match hunger:
+		"hungry":
+			_satiety_state_label.text = "HUNGRY"
+			_satiety_state_label.add_theme_color_override("font_color", UITokens.WARNING)
+			_satiety_state_label.visible = true
+		"critical":
+			_satiety_state_label.text = "STARVING"
+			_satiety_state_label.add_theme_color_override("font_color", UITokens.DANGER)
+			_satiety_state_label.visible = true
+		_:
+			_satiety_state_label.visible = false
+
+	_update_buff_row(vitals)
+
+	var sprinting: bool = bool(_player.call("is_sprinting")) if _player.has_method("is_sprinting") else false
+	var relevant := health_fraction < 0.999 or hunger != "ok" or sprinting
+	_fade_toward(_vitals_cluster, 1.0 if relevant else FADE_ALPHA, delta)
+
+
+# --- stamina arc -------------------------------------------------------------------
+
+
+func _mount_stamina_arc() -> void:
+	var script: Script = load(STAMINA_ARC_SCRIPT)
+	if script == null:
+		push_warning("HUD: stamina_arc.gd failed to load")
+		return
+	var inst: Variant = script.new()
+	if not (inst is Control):
+		push_warning("HUD: stamina_arc.gd did not produce a Control")
+		return
+	_stamina_arc = inst
+	_stamina_arc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stamina_arc.position = STAMINA_ARC_POS
+	_root.add_child(_stamina_arc)
+
+
+func _update_stamina_arc(vitals: RefCounted, delta: float) -> void:
+	if _stamina_arc == null:
+		return
+	var fraction: float = vitals.stamina_fraction()
+	var sprinting: bool = bool(_player.call("is_sprinting")) if _player.has_method("is_sprinting") else false
+	var draining := sprinting or (_last_stamina_fraction >= 0.0 and fraction < _last_stamina_fraction - 0.0001)
+	_stamina_arc.call("update_stamina", fraction, draining, delta)
+	_last_stamina_fraction = fraction
+
+
+# --- minimap (mounted defensively; owned by a concurrent pass) ---------------------
+
+
+func _mount_minimap() -> void:
+	if not ResourceLoader.exists(MINIMAP_SCRIPT):
+		push_warning("HUD: minimap.gd not found; minimap disabled for this pass")
+		return
+	var script: Script = load(MINIMAP_SCRIPT)
+	if script == null:
+		push_warning("HUD: minimap.gd failed to load; minimap disabled")
+		return
+	var inst: Variant = script.new()
+	if not (inst is Control):
+		push_warning("HUD: minimap.gd did not produce a Control; minimap disabled")
+		return
+	_minimap = inst
+	_minimap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_minimap.position = Vector2(
+		1920.0 - UITokens.HUD_INSET - MINIMAP_SIZE.x, UITokens.HUD_INSET
+	)
+	_root.add_child(_minimap)
+
+
+## Baked lazily and once: `map_baker.gd::bake_cached` is a real terrain bake
+## the first time it runs (cheap after, via its own disk cache), so this waits
+## for a world with `ground_height_at` to exist rather than baking in
+## `_ready()` before the world scene is necessarily up -- headless-safe, same
+## reasoning `tools/capture_minimap.gd` already relies on.
+func _ensure_minimap_baked() -> void:
+	if _minimap == null or _minimap_baked:
+		return
+	var world := get_tree().get_current_scene()
+	if world == null or not world.has_method("ground_height_at"):
+		return
+	if not ResourceLoader.exists(MAP_BAKER_SCRIPT):
+		return
+	var baker: Script = load(MAP_BAKER_SCRIPT)
+	if baker == null:
+		return
+	if _game == null:
+		return
+	var game_map: RefCounted = _game.get("map")
+	if game_map == null:
+		return
+	var terrain: Texture2D = baker.call("bake_cached", world)
+	_minimap.call("configure", game_map, terrain, 90.0)
+	_minimap_baked = true
+
+
+## `player.global_position` and a yaw DERIVED from `CameraRig.planar_basis()`
+## rather than read off a private field -- see the task brief's own reasoning,
+## which mirrors `minimap.gd`'s own header derivation
+## (`forward(yaw) = (sin(yaw), 0, cos(yaw))`). `pal_pos` is the follower pal's
+## position when `encounter_director.gd` has spawned one (named "AllyPal" in
+## the world, per that file), else null.
+func _update_minimap() -> void:
+	if _minimap == null or not _minimap_baked or _player == null:
+		return
+	var world := get_tree().get_current_scene()
+	var yaw := 0.0
+	if world != null:
+		var rig := world.get_node_or_null(^"CameraRig")
+		if rig != null and rig.has_method("planar_basis"):
+			var basis: Basis = rig.call("planar_basis")
+			yaw = atan2(basis.z.x, basis.z.z)
+
+	var pal_pos: Variant = null
+	if world != null:
+		var follower := world.get_node_or_null(^"AllyPal")
+		if follower != null and is_instance_valid(follower) and follower is Node3D:
+			pal_pos = (follower as Node3D).global_position
+
+	_minimap.call("update_view", _player.global_position, yaw, pal_pos)
+
+	var dim := 1.0
+	if world != null:
+		var combat := world.get_node_or_null(^"CombatManager")
+		if combat != null and combat.has_method("is_fighting") and bool(combat.call("is_fighting")):
+			dim = 0.55
+	_minimap.call("set_dim", dim)
+
+
+# --- objective block ---------------------------------------------------------------
+
+
+## Below the minimap, right-aligned to the same inset. Naked text with a
+## legibility outline rather than a panel -- the spec's own call ("no giant
+## quest window"), and `UITokens.make_text_legible` already gives every Label
+## here the same outline the rest of the HUD relies on for contrast over open
+## sky and grass.
+func _build_objective_block() -> void:
+	var right := 1920.0 - UITokens.HUD_INSET
+	var top := UITokens.HUD_INSET + MINIMAP_SIZE.y + UITokens.GAP
+	var block := Control.new()
+	block.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	block.position = Vector2(right - OBJECTIVE_MAX_WIDTH, top)
+	block.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT)
+	_root.add_child(block)
+
+	var eyebrow := Label.new()
+	eyebrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	eyebrow.text = "M A I N   S T O R Y" # letter-spaced feel; no theme letter-spacing support
+	eyebrow.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	eyebrow.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH, 22.0)
+	block.add_child(eyebrow)
+
+	_objective_text_label = Label.new()
+	_objective_text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_objective_text_label.position = Vector2(0.0, 24.0)
+	_objective_text_label.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT - 24.0)
+	_objective_text_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_objective_text_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	_objective_text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_objective_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	block.add_child(_objective_text_label)
+
+
+func _update_objective() -> void:
+	if _game == null:
+		return
+	var text := str(_game.get("objective_text"))
+	if text == _objective_last_text:
+		return
+	_objective_last_text = text
+	_objective_text_label.text = text
+
+
+# --- frame / lifecycle ---------------------------------------------------------------
 
 
 func _on_landed(impact_speed: float, damage: float) -> void:
@@ -241,12 +764,13 @@ func _input(event: InputEvent) -> void:
 		_debug_readout.visible = _debug_level != DEBUG_OFF
 
 
-## The readout runs BEFORE the player checks, not after them.
-##
-## It used to sit at the bottom of this function behind two early returns for a
-## null player and null vitals, so a scene with no player — a capture tool, a
-## test harness — could not show a frame-time readout at all. Frame time is a
-## property of the frame, not of the player.
+## Perf readout first, always (see `_debug_text`'s header). Everything else
+## polls in a fixed order: `_game` refreshed once, hotbar (functionally
+## unchanged), the pal block/party strip/objective (all `Game`-sourced), the
+## minimap (bake-once then update), then player-sourced vitals/stamina last,
+## behind the same null-player / null-vitals guards the old HUD used --
+## a capture tool or a headless smoke boot with no player still gets every
+## `Game`-sourced block drawn correctly.
 func _process(delta: float) -> void:
 	if _debug_level != DEBUG_OFF:
 		_sample_frame(delta)
@@ -255,41 +779,30 @@ func _process(delta: float) -> void:
 			_since_readout = 0.0
 			_debug_readout.text = _debug_text()
 
-	_update_status()
+	_refresh_game_ref()
+	_update_hotbar_and_message()
 	_read_hotbar_input()
+	_update_pal_block()
+	_update_party_strip()
+	_update_objective()
+	_ensure_minimap_baked()
+	_update_minimap()
+
 	if _player == null:
 		return
 	var vitals: RefCounted = _player.get("vitals")
 	if vitals == null:
 		return
+	_update_vitals_cluster(vitals, delta)
+	_update_stamina_arc(vitals, delta)
 
-	_update_vitals(vitals, delta)
 
-
-## One array write and two integers. Everything expensive is in `_perf_lines`,
-## which only runs on the throttle.
 func _sample_frame(delta: float) -> void:
 	_frame_ms[_frame_head] = delta * 1000.0
 	_frame_head = (_frame_head + 1) % FRAME_WINDOW
 	_frame_filled = mini(_frame_filled + 1, FRAME_WINDOW)
 
 
-## What the frame cost, and what it was spent on.
-##
-## This exists because three performance fixes have shipped on this project
-## without a single frame-time measurement from the device they were for
-## (`SA1`, `SA1-lod`, the shadow-atlas cut — all still "on-device confirmation
-## open"). Software rendering cannot measure frame time honestly (`D06`), so the
-## only instrument that can settle any of it is one the owner can read on the
-## Ally.
-##
-## `min`/`max` are here rather than an average alone because the three shapes a
-## bad frame time comes in need three different fixes and are indistinguishable
-## from the average:
-##
-##   - steady 24 ms          -> throughput. Draw fewer things, or draw them smaller.
-##   - 16 ms with 60 ms spikes -> a hitch. Streaming, a shader compile, an allocation.
-##   - a hard 16.7/33.3 split  -> vsync half-rate. Nothing about the scene matters.
 func _perf_lines() -> Array[String]:
 	var worst := 0.0
 	var best := 0.0
@@ -307,10 +820,6 @@ func _perf_lines() -> Array[String]:
 	var scale: float = vp.scaling_3d_scale if vp != null else 1.0
 	var size: Vector2i = vp.get_visible_rect().size if vp != null else Vector2i.ZERO
 
-	# The vsync mode is READ BACK, not echoed from what was requested. Windows
-	# OpenGL can silently refuse mailbox/adaptive and fall back to plain vsync,
-	# and a knob whose effect cannot be seen is how a fourth blind fix gets
-	# shipped.
 	var vsync := -1
 	if DisplayServer.get_name() != "headless":
 		vsync = int(DisplayServer.window_get_vsync_mode())
@@ -346,65 +855,35 @@ func _perf_lines() -> Array[String]:
 	]
 
 
-## Driven by the arbiter's signal, not polled.
-##
-## This used to run every idle frame: a dynamic `call("prompt")` plus a
-## RichTextLabel text assignment, sixty times a second, for a string that
-## changes a few times a minute. RichTextLabel re-parses and re-lays out on
-## every assignment, which made it the most expensive thing this HUD did.
-##
-## The arbiter has emitted `prompt_changed` only on an actual change since it
-## was written (`interaction_arbiter.gd:157`) — the HUD was simply polling past
-## it.
 func _on_prompt_changed(text: String) -> void:
 	_prompt_label.text = text
 
 
-## Looked up by path rather than through the `Game` global, matching
-## sequence_director.gd's convention, so a HUD instanced without the autoload
-## running (a capture tool, an isolated test scene) just shows nothing here
-## instead of crashing.
-##
-## The lookup is CACHED, and the two Labels are only written when their number
-## actually changes. Both ran unconditionally every frame before: a scene-tree
-## path resolve, two dynamic `call()`s and two `Label.text` assignments, sixty
-## times a second, for values that change on a pickup. Each label carries a
-## 6 px outline and a shadow, so an assignment is a full text re-shape and an
-## outlined re-render, not a pointer swap.
-##
-## Caching a path lookup is not the same as reaching for the bare autoload name
-## — the null path is still the one that keeps an isolated scene alive, and it
-## is re-resolved if the node ever goes away.
-func _update_status() -> void:
+## Caches the `Game` autoload lookup and the `party` RefCounted it exposes.
+## Looked up by path rather than the bare autoload name so a HUD instanced
+## without `Game` running (a capture tool, an isolated test scene) just shows
+## nothing here instead of crashing -- same convention `sequence_director.gd`
+## uses.
+func _refresh_game_ref() -> void:
 	if not is_instance_valid(_game):
 		_game = get_node_or_null(^"/root/Game")
+	if _game != null:
+		_party = _game.get("party") as RefCounted
+
+
+func _update_hotbar_and_message() -> void:
 	if _game == null:
 		return
-	var party: RefCounted = _game.get("party")
 	var inventory: RefCounted = _game.get("inventory")
-	if party == null or inventory == null:
+	if inventory == null:
 		return
-
-	var pals := int(party.call("size"))
-	if pals != _last_pals:
-		_last_pals = pals
-		_party_label.text = "Pals  %d / %d" % [pals, PARTY.MAX_PALS]
-
-	var orbs := int(inventory.call("count", ORB_ITEM_ID))
-	if orbs != _last_orbs:
-		_last_orbs = orbs
-		_orbs_label.text = "Orbs  %d" % orbs
-
 	_update_hotbar(inventory)
 	if _hotbar_message_until > 0.0 and Time.get_ticks_msec() / 1000.0 >= _hotbar_message_until:
 		_hotbar_message_until = 0.0
 		_hotbar_message.visible = false
 
 
-## HD2. The hotbar mirrors satchel slots 0-4 directly -- see the header
-## comment on HOTBAR_SLOTS. `db` is looked up fresh each call the same way
-## `_inventory`/`_party` do it below; this file has no cached RefCounted
-## pattern of its own to match yet.
+## HD2. The hotbar mirrors satchel slots 0-4 directly.
 func _update_hotbar(inventory: RefCounted) -> void:
 	var db: RefCounted = _game.get("items")
 	if db == null:
@@ -431,29 +910,6 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			_hotbar_slots[i].text = text
 
 
-## HD2's "usable directly without opening the full backpack." Mirrors
-## `tab_backpack.gd::_read_use()`'s two real cases (free tool repair, a heal
-## consumable) rather than sharing code with it -- that tab's use verb opens
-## a modal target picker and holds the whole pause-menu shell deaf while it
-## is up (`menu.hold_input`), neither of which exists or makes sense for a
-## HUD drawn live over real-time exploration. A picker mid-run would BE the
-## extra menu this item exists to skip.
-##
-## The design call this makes instead: a heal item applies to whichever
-## living pal is hurt worst, same as this project's use verb did before
-## `OF2` added the picker for the deliberate, considered backpack case.
-## Recorded here and in DONE.md rather than silently reverting OF2 --
-## `OF2`'s own picker is untouched and still the only way to choose a
-## specific pal when more than one is hurt.
-##
-## KNOWN GAP: not gated off during combat. `playground_hud.gd` keeps
-## processing while a fight is live (`combat_hud.gd` draws on top of it, it
-## does not replace it) and there is no scene-global "a fight is on" flag
-## this file can reach without new cross-system plumbing (`CombatManager` is
-## wired to `encounter_director.gd` by a scene-local NodePath, not the `Game`
-## autoload). A player could free-heal from the hotbar mid-fight today.
-## Flagged rather than silently shipped or silently blocked on; the real fix
-## is a `Game`-visible "in combat" flag, which is bigger than this item.
 func _read_hotbar_input() -> void:
 	if _game == null:
 		return
@@ -489,15 +945,14 @@ func _use_hotbar_slot(index: int) -> void:
 		_show_hotbar_message("%s is not something you can use here." % str(db.call("item_name", id)))
 		return
 
-	var party: RefCounted = _game.get("party")
-	if party == null or int(party.call("size")) == 0:
+	if _party == null or int(_party.call("size")) == 0:
 		_show_hotbar_message("Nobody on the belt yet.")
 		return
 
 	var target: RefCounted = null
 	var worst_deficit := 0.0
-	for i in int(party.call("size")):
-		var pal: RefCounted = party.call("at", i)
+	for i in int(_party.call("size")):
+		var pal: RefCounted = _party.call("at", i)
 		if pal == null:
 			continue
 		var deficit: float = float(pal.get("max_hp")) - float(pal.get("hp"))
@@ -520,36 +975,12 @@ func _show_hotbar_message(text: String) -> void:
 	_hotbar_message_until = Time.get_ticks_msec() / 1000.0 + HOTBAR_MESSAGE_SECONDS
 
 
-## Health and stamina bars fade to FADE_ALPHA when full and idle, full opacity
-## the moment either one is doing anything worth looking at.
-func _update_vitals(vitals: RefCounted, delta: float) -> void:
-	var health_fraction: float = vitals.health_fraction()
-	var stamina_fraction: float = vitals.stamina_fraction()
-
-	_health_bar.value = health_fraction * 100.0
-	_stamina_bar.value = stamina_fraction * 100.0
-	_health_fill.bg_color = UITokens.HP_GREEN.lerp(UITokens.DANGER, 1.0 - health_fraction)
-
-	var sprinting: bool = bool(_player.call("is_sprinting")) if _player.has_method("is_sprinting") else false
-	var health_relevant := health_fraction < 0.999
-	var stamina_relevant := stamina_fraction < 0.999 or sprinting
-
-	_fade_toward(_health_bar, 1.0 if health_relevant else FADE_ALPHA, delta)
-	_fade_toward(_stamina_bar, 1.0 if stamina_relevant else FADE_ALPHA, delta)
-
-
 func _fade_toward(control: Control, target: float, delta: float) -> void:
 	var current: float = control.modulate.a
 	var next: float = move_toward(current, target, FADE_SPEED * delta)
 	control.modulate.a = next
 
 
-## Perf block FIRST, always.
-##
-## The Label is 868x500 at font size 22, which is about nineteen lines, and the
-## movement plus input blocks already overflow that on their own. Whatever is
-## last gets clipped, so the numbers this readout was extended for must not be
-## last.
 func _debug_text() -> String:
 	var lines: Array[String] = _perf_lines()
 	if _debug_level != DEBUG_FULL:
@@ -578,18 +1009,6 @@ func _debug_text() -> String:
 	return "\n".join(lines)
 
 
-## Live input diagnostics.
-##
-## On screen rather than in a log, because "the controller does nothing" is
-## otherwise indistinguishable from four different causes: the handheld sitting
-## in desktop/mouse mode so the sticks emit no joypad events at all, the pad
-## enumerating without an SDL mapping, a wrong axis or button in the input map,
-## or the window simply not having focus. Each of those looks identical from the
-## outside and each shows up differently here.
-##
-## Keyboard values are shown alongside the pad on purpose: if WASD moves the
-## capsule and the sticks do not, the game is fine and the problem is upstream
-## of Godot.
 func _input_diagnostics() -> Array[String]:
 	var lines: Array[String] = ["", "--- input ---"]
 
@@ -610,8 +1029,6 @@ func _input_diagnostics() -> Array[String]:
 	var look := Input.get_vector("look_left", "look_right", "look_up", "look_down")
 	lines.append("move  %+.2f %+.2f     look  %+.2f %+.2f" % [move.x, move.y, look.x, look.y])
 
-	# Raw axes, bypassing the input map. If these move while `move` above stays
-	# zero, the pad is fine and the input map bindings are wrong.
 	if not pads.is_empty():
 		var device: int = pads[0]
 		var lx: float = Input.get_joy_axis(device, JOY_AXIS_LEFT_X)
@@ -622,16 +1039,8 @@ func _input_diagnostics() -> Array[String]:
 
 		_max_raw_axis_seen = maxf(_max_raw_axis_seen, maxf(
 			maxf(absf(lx), absf(ly)), maxf(absf(rx), absf(ry))))
-		# On a handheld the readout is throttled to READOUT_INTERVAL, not every
-		# frame, so this advances in those same steps.
 		_pad_connected_for += READOUT_INTERVAL
 
-		# A pad Godot can name and still never hears from is exactly what the
-		# ROG Ally's own "Desktop Mode" produces: the sticks drive the mouse
-		# cursor instead of sending joypad axis events, so the device enumerates
-		# fine and every axis reads a permanent 0.00. Command Center's own
-		# Gamepad Mode is the fix, and it is not a Tetherbound setting — the
-		# game has no way to flip it for the player.
 		if _pad_connected_for >= STUCK_AXES_HINT_AFTER and _max_raw_axis_seen < STUCK_AXES_EPSILON:
 			lines.append("  raw axes have not moved at all since the pad was seen.")
 			lines.append("  On ROG Ally: Command Center -> Gamepad Mode (not Desktop")

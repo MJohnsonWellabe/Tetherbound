@@ -140,7 +140,11 @@ func _draw() -> void:
 	if _terrain_texture != null:
 		_draw_map_layer(centre, scale_px_per_m, rotation)
 
-	var visible_radius := box.x * 0.5 - RING_WIDTH - 4.0
+	# Left with real headroom (not just enough for the diamond) so the
+	# objective's distance label — anchored past the diamond, toward the rim
+	# — has somewhere to sit without needing `_draw_upright_text`'s own
+	# last-resort clamp to do all the work.
+	var visible_radius := box.x * 0.5 - RING_WIDTH - 14.0
 	_draw_landmarks(centre, scale_px_per_m)
 	_draw_pal_marker(centre, scale_px_per_m)
 	_draw_objective(centre, scale_px_per_m, visible_radius)
@@ -383,9 +387,22 @@ func _draw_dot(centre: Vector2, r: float, colour: Color) -> void:
 ## identity by the time it is called (`_draw()` resets it right after the
 ## rotated map-layer blit) — spec's own rule, "all text upright": positions
 ## are computed under the map's rotation, glyphs never are.
+##
+## The requested `centre` is a WISH, not a guarantee: a rim-clamped label
+## near a corner can still ask for a spot whose own text half-width would
+## carry it past the widget's edge (a capture caught exactly this — the
+## objective's distance label reading as a clipped "7 m" with its leading
+## digits gone, `clip_contents` silently eating whatever crossed the
+## boundary). So the final baseline is clamped inside the widget's own
+## `size` after the text's real dimensions are known, rather than trusting
+## the caller's radial math to have left enough room in every direction.
 func _draw_upright_text(centre: Vector2, text: String, font_size: int, colour: Color) -> void:
 	if _font == null:
 		return
+	const MARGIN := 3.0
 	var text_size := _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
-	var baseline := centre - text_size * 0.5 + Vector2(0.0, text_size.y * 0.5 - _font.get_descent(font_size))
+	var top_left := centre - text_size * 0.5
+	top_left.x = clampf(top_left.x, MARGIN, maxf(MARGIN, size.x - text_size.x - MARGIN))
+	top_left.y = clampf(top_left.y, MARGIN, maxf(MARGIN, size.y - text_size.y - MARGIN))
+	var baseline := top_left + Vector2(0.0, text_size.y - _font.get_descent(font_size))
 	draw_string(_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, colour)
