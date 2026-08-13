@@ -1,40 +1,62 @@
 extends SceneTree
 
-## `HD1`'s own blind-judge frames: combat_hud.gd's Actions row with real
-## device-aware icons instead of hardcoded Xbox letters.
+## Combat HUD rebuild's own blind-judge frames (owner spec §9, D32's mid-combat
+## switching UI).
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" \
 ##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_combat_actions.gd
 ##
-## NOT `tools/survey_combat.gd`, on purpose. That tool still walks from the
-## raw scene spawn, which `meadows_playground.tscn` has put inside Grandpa's
-## farmhouse since D18's indoor opening -- confirmed by testing it directly
-## this session, two frames in a row of the trainer's back against an indoor
-## wall next to a piece of furniture, never reaching the outdoor world. That
-## staleness is real and pre-existing (`R9.4-remainder-9` already tracks
-## getting survey_combat.gd producing real frames again, with its own
-## "budget" concerns), not something this item caused or is scoped to fix.
-## `tests/smoke_combat.gd` already carries the fix for it
-## (`_leave_the_farmhouse()`, teleporting to the practice cluster) and this
-## reuses that exact approach rather than re-diagnosing it.
+## Three shots, each isolating one thing the rebuild has to get right:
 ##
-## Also deliberately does not wait for a hit to land or the charged meter to
-## fill -- HD1 only needs the Actions row's icons to be on screen and
-## legible, not a real impact, so this captures far fewer frames than a full
-## fight and runs in a fraction of survey_combat.gd's time.
+##   combat_normal        mid-fight, ordinary state: enemy plate, pal block,
+##                         full 2x2 move grid with the charged cell primed.
+##   combat_lowhp_charged  the same fight with the active pal worn down to
+##                         ~20% HP, so the health-bar colour lerp and the grid's
+##                         ready/dimmed treatment can both be checked at once.
+##   combat_selector       D32's held-switch party selector, open. Driven
+##                         programmatically (a headless script cannot literally
+##                         hold a gamepad button) by pressing
+##                         `combat_switch_right` and holding it past the HUD's
+##                         own hold threshold, the same `Input.action_press`
+##                         idiom `_open_the_aim()` already used for the aim row
+##                         before this rewrite.
+##
+## NOT `tools/survey_combat.gd`. Same reason the pre-rebuild version of this
+## file gave: that tool still walks from the raw scene spawn, which starts
+## inside Grandpa's farmhouse (D18) and never reaches the outdoor world.
+##
+## `_ensure_ally()` only ever populates `EncounterDirector`'s own `_ally` /
+## `_ally_body` — nothing in the normal game flow adds a bench beyond that
+## (party membership is wired by `sequence_director.gd`'s starter ceremony,
+## a separate flow this tool does not run). The selector needs more than one
+## non-fainted party member to have anything to select, so `_stock_the_bench()`
+## builds a few extra `pal_instance`s directly and writes them onto
+## `CombatManager`'s own `_party` array by reflection (`.set("_party", ...)`)
+## once the fight is open — the same reflection `combat_hud.gd` itself now
+## reads that array with (see its `_party_entries()` header), needed here
+## because `EncounterDirector._start_fight()` only ever hands the manager a
+## one-pal party (`[_ally]`) today; see this task's report for that gap.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const OUT_DIR := "res://shots/_diag"
 
 const SETTLE_FRAMES := 240
+
+## Extra bench pals, spawned only for the `combat_selector` shot so the
+## selector has non-active, non-fainted party members to offer. Not the
+## roster's exact make-up on purpose — variety in silhouette/colour is what
+## the shot needs to be legible, not narrative correctness.
+const BENCH_SPECIES := ["ripplet", "galewisp", "mudsnout"]
 
 var _world: Node = null
 var _player: CharacterBody3D = null
 var _rig: Node3D = null
 var _manager: Node = null
 var _director: Node = null
+var _hud: Node = null
 var _wild: Node3D = null
 var _ally: Node3D = null
 
@@ -69,24 +91,38 @@ func _run() -> void:
 	if debug_hud != null:
 		debug_hud.visible = false
 
+	print("walking to the wild pal...")
 	await _walk_to_the_wild_pal()
+	print("engaging...")
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
 		_failures.append("could not enter combat; no frames to show")
 		_finish()
 		return
+	print("fighting.")
 	_ally = _director.call("ally_body") as Node3D
 
-	# The ordinary state: Quick/Charged/Throw/Run, whatever their current
-	# ready/dimmed mix happens to be the moment the fight opens.
-	await _capture("combat-actions-open")
+	# 1. Ordinary state: whatever the fight's real ready/dimmed mix happens to
+	# be moments after opening, with energy topped up so the charged cell
+	# (and its one-shot ready pulse) both render primed rather than dimmed.
+	_prime_energy(1.0)
+	await _settle_hud(6)
+	await _capture("combat_normal")
 
-	# Aiming swaps the row to Throw/Cancel -- a genuinely different pair of
-	# icons, not just a relabel, so it needs its own frame.
-	if await _open_the_aim():
-		await _capture("combat-actions-aiming")
+	# 2. The same fight, active pal worn down to ~20% HP, charged still ready.
+	_prime_hp_fraction(0.2)
+	_prime_energy(1.0)
+	await _settle_hud(6)
+	await _capture("combat_lowhp_charged")
+
+	# 3. D32's held-switch selector, open. Needs a real bench first.
+	_stock_the_bench()
+	print("opening the selector...")
+	if await _open_the_selector():
+		await _capture("combat_selector")
 	else:
-		_failures.append("could not open the aim; no aiming-state frame captured")
+		_failures.append("could not open the switch selector; no frame captured")
+	_release_switch()
 
 	_finish()
 
@@ -114,8 +150,9 @@ func _collect_nodes() -> bool:
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	_manager = _world.get_node_or_null(^"CombatManager")
 	_director = _world.get_node_or_null(^"EncounterDirector")
-	if _player == null or _manager == null or _director == null or _rig == null:
-		_failures.append("scene is missing the player, camera rig, combat manager or director")
+	_hud = _world.get_node_or_null(^"CombatHUD")
+	if _player == null or _manager == null or _director == null or _rig == null or _hud == null:
+		_failures.append("scene is missing the player, camera rig, combat manager, director or HUD")
 		return false
 	_wild = _director.call("wild_pal") as Node3D
 	if _wild == null:
@@ -148,22 +185,78 @@ func _engage() -> void:
 		await physics_frame
 
 
-func _open_the_aim() -> bool:
-	for i in 240:
-		if not bool(_manager.call("is_fighting")):
-			return false
-		if not bool(_manager.call("player_is_committed")):
-			break
-		await physics_frame
-	Input.action_press("combat_throw")
-	await physics_frame
-	await physics_frame
-	Input.action_release("combat_throw")
-	for i in 240:
-		if bool(_manager.call("is_aiming")):
-			break
-		await physics_frame
-	return bool(_manager.call("is_aiming"))
+## Let a handful of idle-process frames run so the HUD's own `_process` (which
+## the fight's physics frames do not drive) catches up to a state change made
+## between captures -- `_prime_energy`/`_prime_hp_fraction` write straight onto
+## the pal instance, which the HUD only notices on its next `_process`.
+func _settle_hud(frames: int) -> void:
+	for i in frames:
+		await process_frame
+
+
+## Force the active pal's energy, for a grid shot that needs the charged cell
+## primed (or, in principle, dimmed) without fighting for it hit by hit.
+## `pal_instance.energy` is a plain public var -- this is a direct write, not
+## reflection into anything underscore-prefixed.
+func _prime_energy(fraction: float) -> void:
+	var pal: RefCounted = _manager.call("active_pal")
+	if pal == null:
+		return
+	pal.energy = MATH.max_energy() * clampf(fraction, 0.0, 1.0)
+
+
+## Force the active pal's HP fraction, for the low-HP shot. Never all the way
+## to zero -- a fainted active pal ends the fight, which is not this shot.
+func _prime_hp_fraction(fraction: float) -> void:
+	var pal: RefCounted = _manager.call("active_pal")
+	if pal == null:
+		return
+	pal.hp = pal.max_hp * clampf(fraction, 0.01, 1.0)
+	pal.fainted = false
+
+
+## Build a few bench pals and hand them to `CombatManager` directly. See this
+## file's header for why: `EncounterDirector._start_fight()` only ever passes
+## a one-pal party in today's build, and the selector needs more than one
+## non-fainted member to have anything to show.
+func _stock_the_bench() -> void:
+	var active: RefCounted = _manager.call("active_pal")
+	if active == null:
+		return
+	var party: Array[RefCounted] = [active]
+	for species_id in BENCH_SPECIES:
+		var bench_pal: RefCounted = SPECIES.spawn(species_id)
+		if bench_pal != null:
+			party.append(bench_pal)
+	_manager.set("_party", party)
+	_manager.set("_active_index", 0)
+
+
+## Press-and-hold `combat_switch_right` past the HUD's own hold threshold,
+## the same `Input.action_press` idiom the pre-rebuild `_open_the_aim()` used
+## for `combat_throw`. Left held (not released) on return so the capture below
+## shows the selector actually open rather than the single frame right after
+## it closes.
+func _open_the_selector() -> bool:
+	Input.action_press("combat_switch_right")
+	# 0.28s hold threshold (combat_hud.gd) plus slack for idle-process framerate
+	# variance under headless/software rendering.
+	var deadline := Time.get_ticks_msec() + 900
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if bool(_hud.get("_selector_open")):
+			# A couple more frames so the selector's own rows finish their
+			# first `_refresh_selector()` pass before the capture reads them.
+			for i in 4:
+				await process_frame
+			return true
+	return false
+
+
+func _release_switch() -> void:
+	Input.action_release("combat_switch_right")
+	for i in 4:
+		await process_frame
 
 
 func _capture(name: String) -> void:

@@ -49,13 +49,13 @@ theme_override_constants/separation = 4
 [node name="Eyebrow" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 23
-theme_override_colors/font_color = Color("#B8C5C4")
+theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = "LEVEL —"
 
 [node name="Name" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 42
-theme_override_colors/font_color = Color("#F2F5F2")
+theme_override_colors/font_color = Color(0.949, 0.961, 0.949, 1)
 text = "—"
 
 [node name="TypeTag" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
@@ -101,7 +101,7 @@ theme_override_constants/separation = 10
 [node name="Chip" type="ColorRect" parent="Root/AllyPanel/AllyVBox/TopRow"]
 custom_minimum_size = Vector2(40, 40)
 size_flags_vertical = 4
-color = Color("#7F9394")
+color = Color(0.498, 0.576, 0.580, 1)
 
 [node name="Info" type="VBoxContainer" parent="Root/AllyPanel/AllyVBox/TopRow"]
 mouse_filter = 2
@@ -110,12 +110,12 @@ theme_override_constants/separation = 2
 
 [node name="Name" type="Label" parent="Root/AllyPanel/AllyVBox/TopRow/Info"]
 theme_override_font_sizes/font_size = 26
-theme_override_colors/font_color = Color("#F2F5F2")
+theme_override_colors/font_color = Color(0.949, 0.961, 0.949, 1)
 text = "—"
 
 [node name="Level" type="Label" parent="Root/AllyPanel/AllyVBox/TopRow/Info"]
 theme_override_font_sizes/font_size = 19
-theme_override_colors/font_color = Color("#B8C5C4")
+theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = "Lv —"
 
 [node name="Health" type="ProgressBar" parent="Root/AllyPanel/AllyVBox"]
@@ -133,7 +133,7 @@ theme_override_constants/separation = 10
 custom_minimum_size = Vector2(70, 0)
 vertical_alignment = 1
 theme_override_font_sizes/font_size = 19
-theme_override_colors/font_color = Color("#B8C5C4")
+theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = "Energy"
 
 ; Overlay host for the once-off "energy full" pulse — a bare Control sized to
@@ -161,7 +161,7 @@ color = Color(0.42, 0.9, 0.85, 0.0)
 
 [node name="Status" type="Label" parent="Root/AllyPanel/AllyVBox"]
 theme_override_font_sizes/font_size = 19
-theme_override_colors/font_color = Color("#B8C5C4")
+theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = ""
 
 ; "GO, <label>!" — a brief line near the pal block on a switch, not a fixed
@@ -177,7 +177,7 @@ offset_right = 436.0
 offset_bottom = -206.0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 26
-theme_override_colors/font_color = Color("#73E6DD")
+theme_override_colors/font_color = Color(0.451, 0.902, 0.867, 1)
 text = ""
 
 ; --- Move grid: lower-right ---------------------------------------------------
@@ -238,7 +238,7 @@ theme_override_constants/separation = 8
 mouse_filter = 2
 custom_minimum_size = Vector2(2, 0)
 size_flags_vertical = 3
-color = Color("#B99050")
+color = Color(0.725, 0.565, 0.314, 1)
 
 [node name="Content" type="RichTextLabel" parent="Root/GridPanel/Grid/CellQuick/Layout/Row"]
 mouse_filter = 2
@@ -277,7 +277,7 @@ theme_override_constants/separation = 8
 mouse_filter = 2
 custom_minimum_size = Vector2(2, 0)
 size_flags_vertical = 3
-color = Color("#B99050")
+color = Color(0.725, 0.565, 0.314, 1)
 
 [node name="Content" type="RichTextLabel" parent="Root/GridPanel/Grid/CellCharged/Layout/Row"]
 mouse_filter = 2
@@ -316,7 +316,7 @@ theme_override_constants/separation = 8
 mouse_filter = 2
 custom_minimum_size = Vector2(2, 0)
 size_flags_vertical = 3
-color = Color("#73E6DD")
+color = Color(0.451, 0.902, 0.867, 1)
 
 [node name="Content" type="RichTextLabel" parent="Root/GridPanel/Grid/CellThrow/Layout/Row"]
 mouse_filter = 2
@@ -355,7 +355,7 @@ theme_override_constants/separation = 8
 mouse_filter = 2
 custom_minimum_size = Vector2(2, 0)
 size_flags_vertical = 3
-color = Color("#B8C5C4")
+color = Color(0.722, 0.773, 0.769, 1)
 
 [node name="Content" type="RichTextLabel" parent="Root/GridPanel/Grid/CellSwitch/Layout/Row"]
 mouse_filter = 2
@@ -481,5 +481,5 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 23
-theme_override_colors/font_color = Color("#4BD28B")
+theme_override_colors/font_color = Color(0.294, 0.824, 0.545, 1)
 text = ""
