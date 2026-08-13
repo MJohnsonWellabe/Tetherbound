@@ -208,9 +208,18 @@ func _find_player() -> Node3D:
 	if tree == null:
 		return null
 	var scene := tree.get_current_scene()
-	if scene == null:
-		return null
-	return scene.get_node_or_null(^"Player") as Node3D
+	if scene != null:
+		return scene.get_node_or_null(^"Player") as Node3D
+	# Capture tools and smoke tests instance the world manually, so
+	# `current_scene` stays null there — which silently starved fog-of-war
+	# discovery in every full-scene capture (the minimap looked far more
+	# fogged in-scene than the isolated harness predicted). Fall back to
+	# scanning the root's children for a world that carries a Player.
+	for child in tree.root.get_children():
+		var found := child.get_node_or_null(^"Player") as Node3D
+		if found != null:
+			return found
+	return null
 
 
 ## The live `PlayerVitals` (`scripts/player/player_vitals.gd`) hanging off
