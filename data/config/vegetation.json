@@ -634,6 +634,28 @@
           "scale_min": 0.25,
           "scale_max": 1.0,
           "sink": 0.2
+        },
+        {
+          "_why": "OF10-remainder: a cairn at the Rise road's own end (74,-41) -- approach-distance mass for the levelled apron that's there already (`flats._comment_of10_r3`) but reads as too subtle to see from a distance. This layer's own `min_slope_deg` (6.0) exists to keep the meadow scatter off flat grass, which is exactly the ground the apron levels for -- overridden to 0 for these draws only so a deliberately built pile can stand on deliberately flat ground. Offset ~2.5m off the road's own centreline, the opposite shoulder from the trailhead signpost (see paths.trailheads in terrain_playground.json), so the two flank the endpoint rather than sitting on top of each other. The block: two or three stones large enough to read as stacked, not scattered.",
+          "at": [72.6, -43.1],
+          "radius": 1.1,
+          "count": 3,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 46.0,
+          "scale_min": 1.15,
+          "scale_max": 1.7,
+          "sink": 0.4
+        },
+        {
+          "_why": "OF10-remainder: the cairn's skirt of smaller stones, same centre, wider radius",
+          "at": [72.6, -43.1],
+          "radius": 2.3,
+          "count": 6,
+          "min_slope_deg": 0.0,
+          "max_slope_deg": 46.0,
+          "scale_min": 0.45,
+          "scale_max": 0.85,
+          "sink": 0.2
         }
       ]
     },

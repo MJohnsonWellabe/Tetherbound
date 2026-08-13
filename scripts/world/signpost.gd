@@ -1,6 +1,6 @@
 extends Node3D
 
-## A signpost at the village square, one arm per dirt path leaving it.
+## A signpost, one arm per dirt path leaving its junction.
 ##
 ## R7.1: the path network (data/config/terrain_playground.json `paths.routes`)
 ## already IS the wayfinding spine, but nothing at the junction tells a player
@@ -8,6 +8,18 @@ extends Node3D
 ## from — a route's own points give both its label and the bearing its arm
 ## points along, so a new destination added to the paths config gets a sign
 ## arm for free instead of needing a second place to describe it.
+##
+## OF10-remainder: the village square's is still the only JUNCTION sign (every
+## route starts there, so `build()`'s default of "one arm per route in the
+## config" is exactly right), but a second use showed up at a route's other
+## end — a lone TRAILHEAD marker where a road stops, with one arm continuing
+## that route's own label and bearing rather than every route in the file.
+## `build()`'s new `routes_override` parameter reuses every line below this
+## point (post, arms, mirrored labels) for that case: pass an explicit
+## `[{label, points}]` instead of `null` and the config load is skipped
+## entirely. `data/config/terrain_playground.json`'s `paths.trailheads` is
+## where those are authored; `playground_world.gd` turns each entry into one
+## more `Signpost.new()` the same way it does the junction one.
 ##
 ## Placeholder geometry (CLAUDE.md: placeholder is fine to prove a mechanic).
 ## The post is a primitive, not a Quaternius model — there was no signpost
@@ -51,9 +63,13 @@ var _placed := 0
 
 ## `world` is asked for ground height the same way village.gd is (D09: never
 ## a raycast). `at` is the junction in world metres.
-func build(world: Node, at: Vector2) -> void:
-	var cfg := _load_paths_config()
-	var routes: Array = cfg.get("routes", [])
+##
+## `routes_override`: `null` (the default) loads every route in
+## `paths.routes`, the junction behaviour above. Pass an explicit
+## `[{label, points}]` array instead to draw only those arms — a trailhead
+## marker with one arm, not every destination in the game.
+func build(world: Node, at: Vector2, routes_override: Variant = null) -> void:
+	var routes: Array = routes_override if routes_override != null else _load_paths_config().get("routes", [])
 	if routes.is_empty():
 		return
 

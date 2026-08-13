@@ -244,6 +244,19 @@
           ]
         ]
       }
+    ],
+    "_comment_trailheads_of10_remainder": "OF10-remainder. Two independent blind reviews named the same defect: 'The Rise' road above just stops in open grass at its own truncated end (74,-41) -- OF10a's `flats._comment_of10_r3` apron levels the ground there but reads as too subtle at approach distance to register as an arrival. `signpost.gd`'s junction fingerpost already exists to say 'this way to X'; a trailhead is the same object with one arm instead of every route in the file, so `routes_override` was added there rather than inventing a second prop. `at` sits off the road's own centreline (village.json/SIGNPOST_AT does the same thing beside the well) so the sign has its own footing and does not stand where a player is walking. Label matches the route's own name -- 'yes, the Rise is this way' is the honest thing to say at the point the maintained road itself stops (OF10a's cliff comment: the collar is 4-6m further on, past what the 45-degree floor limit allows). TUNABLE positions.",
+    "_comment_trailhead_bearing_of10_remainder_r2": "Round 2, caught by direct inspection of tools/capture_rise_approach.gd's own `road-approach` frame (eye (26,-14), looking straight at (74,-41) -- exactly the frame this item exists to fix): `points` originally reused the road's own last two waypoints verbatim, [(45,-22),(74,-41)], so the arm's bearing was nearly collinear with a player walking the road toward it. signpost.gd paints the label on the plank's two BROAD faces, perpendicular to the arm's own axis -- a viewer standing almost exactly on that axis sees the plank edge-on, and the render confirmed it: a bare thin post, no visible plank, from the one viewpoint that matters most. Rotating the arm's own destination point ~25 degrees off the road's exact line (toward the rise's foot generally, not away from it -- the new aim point sits along the flank rather than back down at the village) keeps the sign honestly 'pointing toward the Rise' while breaking the edge-on alignment for a head-on approach. A real trailhead fingerpost is hand-set at a readable angle, not laser-aligned with the trail it stands beside; this is that, not a new mechanic.",
+    "trailheads": [
+      {
+        "_why": "the Rise road's own end -- a fingerpost off the road's shoulder, angled ~25deg off the road's own bearing so its plank reads face-on to a player walking up the road toward it",
+        "at": [75.4, -38.9],
+        "label": "The Rise",
+        "points": [
+          [74.0, -41.0],
+          [103.7, -45.3]
+        ]
+      }
     ]
   },
   "_comment_water": "EV5 (bible sec15). One flat water level, not a water body outline: the probe run for this item confirmed the pond valley is the ONLY terrain below -18m anywhere on the 512m map, so everything below `level` is one pond (~2,200 sq.m at -22.5, bbox x[-178,-112] z[116,164]) whose shoreline follows the terrain's own contours instead of tracing an authored ellipse. The 'The Pond' route above already ends at [-105,115], which sits 1.1m above this waterline -- the path genuinely arrives at the bank. `stream` is the pond's inflow: probed at 2m steps from head to mouth with zero uphill reversals, so the water only ever runs downhill. `carve_depth`/`carve_width` cut a real channel into the heightfield (playground_heightfield.gd::_stream_carve) so the ribbon of water sits IN the ground rather than painted on it; `head_ramp` fades the carve in over the first metres so the spring emerges from the meadow instead of starting as an abrupt trench. Geometry lives HERE because the heightfield, the bake and the scatter all read it; how the water LOOKS lives in data/config/water.json. ALL TUNABLE. Stream points were densified through a Catmull-Rom pass over the seven authored waypoints (blind round 1: 'bends are angular chevrons rather than curves') \u2014 re-derive through a spline rather than hand-editing 25 points if the course ever moves.",

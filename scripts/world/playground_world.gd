@@ -528,6 +528,8 @@ func _build_settlement() -> void:
 	add_child(signpost)
 	signpost.call("build", self, SIGNPOST_AT)
 
+	_build_trailhead_signposts()
+
 	var landmark: Node3D = LANDMARK.new()
 	landmark.name = "StrongholdSilhouette"
 	add_child(landmark)
@@ -547,6 +549,30 @@ func _build_settlement() -> void:
 	placer.player_path = NodePath("../Player")
 	placer.camera_rig_path = NodePath("../CameraRig")
 	add_child(placer)
+
+
+## OF10-remainder: one small fingerpost per entry in `paths.trailheads`,
+## reusing signpost.gd's `routes_override` so each is a single arm continuing
+## its own route's label and bearing rather than the full junction sign.
+## Data-driven (like `paths.routes` itself) because a second trailhead is a
+## config entry, not a new script.
+func _build_trailhead_signposts() -> void:
+	var cfg: Dictionary = _load_terrain_config().get("paths", {})
+	var trailheads: Array = cfg.get("trailheads", [])
+	var i := 0
+	for entry: Variant in trailheads:
+		var trailhead: Dictionary = entry as Dictionary
+		var at: Array = trailhead.get("at", [])
+		var label := str(trailhead.get("label", ""))
+		var points: Array = trailhead.get("points", [])
+		if at.size() < 2 or label.is_empty() or points.size() < 2:
+			push_warning("skipped a malformed paths.trailheads entry")
+			continue
+		var post: Node3D = SIGNPOST.new()
+		post.name = "TrailheadSignpost_%d" % i
+		add_child(post)
+		post.call("build", self, Vector2(float(at[0]), float(at[1])), [{"label": label, "points": points}])
+		i += 1
 
 
 ## SA7: the road out toward the stronghold is gated, and its key sits a few

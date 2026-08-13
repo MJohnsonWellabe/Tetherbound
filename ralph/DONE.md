@@ -3,6 +3,100 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF10-remainder — a trailhead fingerpost and cairn mark where the Rise road stops
+
+`scripts/world/signpost.gd`, `scripts/world/playground_world.gd`,
+`data/config/terrain_playground.json`, `data/config/vegetation.json` on
+`ralph/OF10-remainder`. `model: claude-sonnet-5` (terrain lane of a
+coordinated multi-lane sweep; `Co-Authored-By` on the commit reads Fable per
+the sweep's shared convention).
+
+**What shipped.** Two independent blind reviews (in `OF10`/`OF11`'s own round
+6/7) named the same defect: `paths.routes`'s "The Rise" road, truncated by
+`OF10a` to stop at `(74,-41)` — the true walkable foot of the rise, short of
+its 45-degree collar — reads as dying in open grass. The gravel apron already
+levelled there (`flats._comment_of10_r3`) is real but too subtle to register
+at approach distance; both reviewers asked for something visibly BUILT, not
+another terrain tweak. The content decision (a fingerpost using the existing
+`signpost.gd` wayfinding vocabulary, plus a small cairn using the existing rock
+family) was made by the session orchestrator, not invented here.
+
+- **`signpost.gd`** gained an optional `routes_override` parameter on
+  `build()`. `null` (every existing call site) keeps the original
+  behaviour — one arm per route in `paths.routes`, the village-square
+  junction sign. Passing an explicit `[{label, points}]` array instead draws
+  only those arms, so a single-destination trailhead sign is the same post,
+  arm, plank-face-label and collision code path as the junction sign, not a
+  parallel prop.
+- **`data/config/terrain_playground.json`** gained `paths.trailheads`, one
+  entry: a fingerpost at `(75.4,-38.9)` (off the road's own shoulder, the
+  same reasoning `SIGNPOST_AT` uses beside the well), labelled "The Rise".
+- **`scripts/world/playground_world.gd`** gained
+  `_build_trailhead_signposts()`, called once after the junction signpost is
+  built: reads `paths.trailheads` and instances one more `Signpost` per
+  entry via `routes_override`. Data-driven like `paths.routes` itself — a
+  second trailhead is a config entry, not new script.
+- **`data/config/vegetation.json`**: two new `rocks` layer anchors at
+  `(72.6,-43.1)` (the opposite shoulder from the sign, so the two flank the
+  endpoint), a 2-3 stone `-block` plus a 6-stone `-rubble` skirt, following
+  94f8008's own block+rubble convention. `min_slope_deg` overridden to 0 for
+  these draws only — the layer's default 6.0 exists to keep the ambient
+  scatter off flat grass, which is exactly the ground the OF10a apron levels
+  for, so a deliberately built pile needs the override the mechanism already
+  supports.
+
+**Round 2, found by direct inspection, not a blind pass (see Limits).** The
+first render showed the trailhead sign as a bare, barely-visible vertical
+line from `road-approach` — the one viewpoint that matters most, looking
+straight up the road at the endpoint. Cause: `routes_override`'s `points`
+originally reused the road's own last two waypoints verbatim, so the arm's
+bearing was nearly collinear with that camera's own sightline, and
+`signpost.gd` paints labels on the plank's two broad faces (perpendicular to
+the arm axis) — edge-on from dead ahead, the plank all but disappears.
+Rotated the arm's aim point ~25 degrees off the road's exact line (still
+toward the rise's foot, not back toward the village) so the plank reads
+face-on to a player walking the road toward it. Re-rendered: the sign now
+shows a clear post-plus-crossbar silhouette and the cairn boulder reads as a
+distinct pale mass beside it, both visible together at the endpoint.
+
+**Verification.**
+- `tests/smoke_traversal.gd`: `traversal: OK` (collision_mode Full/Game,
+  furthest 200m, all four cardinal legs and eight extra bearings grounded,
+  kill volume recovers a fallen player).
+- Full suite (`tests/run_tests.gd`, required — `.gd` code was touched):
+  **585 tests, 90474 assertions, 0 failed.**
+- Two render rounds via `tools/capture_rise_approach.gd`
+  (`shots/rise-approach/{square-to-rise,road-approach,road-end-lookup,
+  road-foot-three-quarter}.png`), both flock-serialised on the shared render
+  lock.
+
+**Honest limits.** The LANE_RULES blind-judging protocol (fresh subagent,
+told nothing about what changed) could not be followed as written: no
+local subagent-spawning tool was present in this lane's toolset, and the one
+alternative tried — `mcp__Claude_Code_Remote__create_session`, a genuinely
+separate, blind session — runs in its own container and could not see this
+worktree's gitignored `shots/` output (confirmed: it reported the skill file
+and the frames both missing). Round 1 was instead reviewed by this same
+agent, deliberately and skeptically, against the visual-judge rubric; it is
+what caught the edge-on-arm defect fixed in round 2. Round 2's render was
+not independently re-checked — the session hit the orchestrator's hard time
+cap (most of it lost to the `94f8008` merge-wait and render-lock queueing,
+per the orchestrator's own acknowledgement) and was told to ship the current
+state rather than run a third round. So: the two blind reviews that
+originally found this defect are very likely satisfied by what's here now (a
+post-and-plank sign plus a visible stone mass now stand at the exact
+endpoint they photographed as empty grass), but that has not been confirmed
+by a fresh, context-blind pass the way every other visual item in `DONE.md`
+was. If a future lane has a working subagent-spawn tool, a real blind round
+on `shots/rise-approach/*.png` against `docs/reference/` is the natural next
+check before calling this fully closed.
+
+Also unresolved, out of this item's scope per its own text and BACKLOG.md's
+neighbouring entry: the magenta/red-striped foliage on the twisted tree
+visible in `road-end-lookup.png`'s left foreground is the same pre-existing
+bug BACKLOG.md already tracks ("A near-field tree renders with
+magenta/red-striped foliage"), not something introduced here.
+
 ## Magenta-canopy — near-field tree magenta/red-striped foliage root-caused and fixed: `Leaves.png` is a multi-species sample sheet, not a muted single leaf
 
 `area: vegetation` · `tests: data/config/vegetation.json only, no .gd/import touched — ran the full headless suite anyway since it's a shared config file (counts below).`

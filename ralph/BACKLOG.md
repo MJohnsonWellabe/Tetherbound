@@ -68,20 +68,7 @@ than re-listed. What the six rounds could NOT clear splits into
 
 **`OF10`/`OF11` (hillside rebuilt from scratch — real landform via ridged/terraced geometry, root-caused and fixed the rock texture's tiling, rise-gated boundary blend) real progress shipped, both items' own done-when NOT fully cleared — see `DONE.md`'s `OF10`/`OF11` entry for the six-round history and `BLOCKED.md` for what's still open on each.** `OF10a`'s walkability fix already shipped separately.
 
-### OF10-remainder — the road's arrival at the rise still doesn't resolve
-`area: terrain`. Two independent blind reviews (round 6 and round 7 of the
-`OF10`/`OF11` session) both named this, in near-identical words: the road
-"dies in open grass before reaching" the rise, with "no gate, cairn,
-marker, or surface change" at its endpoint (`[74,-41]`, from `OF10a`). A
-levelled gravel apron already exists there (`rises.flats`'s
-`_comment_of10_r3` entry) but reads as too subtle to see at approach
-distance. Both reviewers independently prescribed the same kind of fix:
-something visibly BUILT at the road's end, not another terrain tweak. This
-is a content decision (what marks this spot — a cairn, a signpost like
-`signpost.gd` already uses elsewhere for wayfinding, a Team Tether
-marker?) more than a bug, and no new asset generation is needed — reuse
-whatever the settlement/route vocabulary already stages. Flagging rather
-than inventing the answer.
+**`OF10-remainder` (a trailhead fingerpost + cairn at the road's end, `[74,-41]`) shipped — see `DONE.md`.** Residue: shipped on the orchestrator's hard time cap after two render rounds (one self-critique pass, not the usual fresh-blind-subagent pass — no local subagent-spawning tool was available in this lane's toolset and a separate remote session could not see the worktree's render output); a third round was planned but not run. Round 2 fixed a real defect round 1's own inspection caught (the sign's single arm was nearly collinear with the approach camera and read as a bare post) but was not re-checked by a second independent pass.
 
 **`OF11-remainder` (hillside rock ceiling) CLOSED 2026-08-13 by owner
 decision — the current read is accepted.** Asked directly in an interactive
