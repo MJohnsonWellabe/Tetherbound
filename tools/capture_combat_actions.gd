@@ -237,17 +237,22 @@ func _stock_the_bench() -> void:
 ## for `combat_throw`. Left held (not released) on return so the capture below
 ## shows the selector actually open rather than the single frame right after
 ## it closes.
+##
+## Frame-counted, NOT wall-clock timed -- `_handle_switch_input` accumulates
+## real `delta` seconds regardless of how many frames that takes, so a frame
+## count large enough to cover the 0.28s hold threshold at even a crawling
+## frame rate is the correct budget under this sandbox's heavy, variable CPU
+## contention. An earlier wall-clock deadline (900ms) starved itself the same
+## way: one slow `await process_frame` under load could itself take longer
+## than the whole deadline, leaving the loop no second attempt.
 func _open_the_selector() -> bool:
 	Input.action_press("combat_switch_right")
-	# 0.28s hold threshold (combat_hud.gd) plus slack for idle-process framerate
-	# variance under headless/software rendering.
-	var deadline := Time.get_ticks_msec() + 900
-	while Time.get_ticks_msec() < deadline:
+	for i in 240:
 		await process_frame
 		if bool(_hud.get("_selector_open")):
 			# A couple more frames so the selector's own rows finish their
 			# first `_refresh_selector()` pass before the capture reads them.
-			for i in 4:
+			for j in 4:
 				await process_frame
 			return true
 	return false

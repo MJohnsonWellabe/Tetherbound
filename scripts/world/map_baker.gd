@@ -112,6 +112,27 @@ static func bake(world: Object, resolution: int = 512) -> ImageTexture:
 ## constant someone has to remember to bump) makes a stale cache impossible
 ## without an explicit "I changed the terrain and forgot" bug in this file
 ## itself.
+##
+## WRITES ATOMICALLY, AND THIS IS NOT A HYPOTHETICAL. `cache_path` defaults
+## to the same fixed path every caller uses (`minimap.gd`'s own callers,
+## `tab_map.gd`'s full-map screen, `tools/capture_minimap.gd`) precisely so
+## they share one bake — but this project's dev environment routinely runs
+## several of those callers as SEPARATE, CONCURRENT Godot processes against
+## the same `user://` directory (parallel capture/test tooling), and this
+## item's own required visual check caught the consequence live: two of four
+## real capture runs rendered a near-black minimap, byte-for-byte identical
+## cache CONTENT notwithstanding (verified by hand — the saved PNG's own
+## pixels were fine). The cause was a torn read, not a colour bug: a `save_png`
+## direct to `cache_path` is not atomic, so a reader whose `Image.load()`
+## lands mid-write decodes whatever partial bytes happen to be on disk at
+## that instant, which for a PNG is typically most of the image reading back
+## as black. Writing to a uniquely-named temp file first and renaming it
+## into place closes that window — POSIX rename is atomic, so a concurrent
+## reader always sees either the complete old file or the complete new one,
+## never a partial one. A single-player game session was never at risk (one
+## process, no concurrent writer) but the fix costs nothing and this is the
+## honest way to make a shared on-disk cache safe rather than "safe until a
+## second process touches it."
 static func bake_cached(world: Object, cache_path: String = "user://cache/map_meadows.png") -> ImageTexture:
 	var config_bytes := FileAccess.get_file_as_bytes(TERRAIN_CONFIG_PATH)
 	var key := str(hash(config_bytes))
@@ -122,7 +143,7 @@ static func bake_cached(world: Object, cache_path: String = "user://cache/map_me
 		var cached_key := key_file.get_as_text().strip_edges() if key_file != null else ""
 		if cached_key == key:
 			var image := Image.new()
-			if image.load(cache_path) == OK:
+			if image.load(cache_path) == OK and image.get_width() > 0 and image.get_height() > 0:
 				last_bake_was_cache_hit = true
 				return ImageTexture.create_from_image(image)
 			# Corrupt/unreadable cache file: fall through and rebake honestly
@@ -131,8 +152,21 @@ static func bake_cached(world: Object, cache_path: String = "user://cache/map_me
 	var texture := bake(world)
 	last_bake_was_cache_hit = false
 
-	DirAccess.make_dir_recursive_absolute(cache_path.get_base_dir())
-	texture.get_image().save_png(cache_path)
+	var dir_path := cache_path.get_base_dir()
+	DirAccess.make_dir_recursive_absolute(dir_path)
+
+	var tmp_path := "%s.tmp-%d" % [cache_path, Time.get_ticks_usec()]
+	texture.get_image().save_png(tmp_path)
+	var dir := DirAccess.open(dir_path)
+	if dir != null and dir.rename(tmp_path.get_file(), cache_path.get_file()) == OK:
+		pass # atomic swap into place; no reader can ever see a partial file
+	else:
+		# Same-filesystem rename should always succeed once the directory
+		# opened; a direct save is the honest fallback if it somehow did not,
+		# rather than leaving the bake result on disk only as a stray .tmp
+		# file no cache-hit path will ever find.
+		texture.get_image().save_png(cache_path)
+
 	var key_file := FileAccess.open(key_path, FileAccess.WRITE)
 	if key_file != null:
 		key_file.store_string(key)
