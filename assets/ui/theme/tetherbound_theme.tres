@@ -1,6 +1,4 @@
-[gd_resource type="Theme" load_steps=11 format=3]
-
-[ext_resource type="FontFile" path="res://assets/ui/fonts/kenney_future.ttf" id="1_font"]
+[gd_resource type="Theme" load_steps=10 format=3]
 
 ; The teal/dark HUD-and-menu theme built on `scripts/ui/ui_tokens.gd`
 ; (`docs/decisions/D28`).
@@ -135,7 +133,13 @@ corner_radius_bottom_left = 8
 bg_color = Color(0, 0, 0, 0)
 
 [resource]
-default_font = ExtResource("1_font")
+; default_font intentionally omitted: Kenney Future's capital X renders as a
+; two-bar glyph that reads as H at body sizes ("AXE" -> "AHE", "NEXT" ->
+; "NEHT"), all-caps or not — blind visual review flagged it as hostile body
+; text. Falling through to Godot's built-in default font keeps every SIZE
+; below unchanged and only swaps the glyph shapes for legible ones. Kenney
+; Future stays available (`UITokens.FONT_PATH`) for the handful of purely
+; decorative/numeric spots that explicitly opt into it.
 default_font_size = 26
 Button/colors/font_color = Color(0.94902, 0.960784, 0.94902, 1)
 Button/colors/font_disabled_color = Color(0.498039, 0.576471, 0.580392, 1)

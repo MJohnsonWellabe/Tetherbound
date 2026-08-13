@@ -103,7 +103,7 @@ func _run() -> void:
 
 	# --- (a) fogged: player-local reveal only, objective far off-screen ---
 	map_state.mark_visited(player.global_position)
-	game.call("set_objective", "Test", Vector3(200.0, 0.0, -140.0))
+	game.call("set_objective", "Restore the Old Mill Crossing", Vector3(200.0, 0.0, -140.0))
 	_update_and_redraw(minimap, player)
 	await _shoot("minimap_fogged", written, failures)
 

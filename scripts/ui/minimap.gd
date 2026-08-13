@@ -54,6 +54,7 @@ const PAL_SHOW_DISTANCE := 15.0
 const CORNER_RADIUS := 28.0
 const RING_WIDTH := 8.0
 const CORNER_STEPS := 10
+const OBJECTIVE_LABEL_PUSH := 10.0 ## px the distance label sits past the clamped diamond, toward the rim.
 
 const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 0.95)
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
@@ -144,7 +145,31 @@ func _draw() -> void:
 	# objective's distance label — anchored past the diamond, toward the rim
 	# — has somewhere to sit without needing `_draw_upright_text`'s own
 	# last-resort clamp to do all the work.
-	var visible_radius := box.x * 0.5 - RING_WIDTH - 14.0
+	#
+	# Also capped by `corner_safe_radius`: the corner masks (`_draw_corner_
+	# masks`) are painted AFTER markers/text, specifically so anything that
+	# strays into a rounded corner gets covered — but they are only ~90%
+	# opaque (`UITokens.BG_DEEP`'s own alpha), so a label caught under one
+	# **BUG WAS HERE** (real root cause, not a rotated/mirrored draw): the
+	# label sits `OBJECTIVE_LABEL_PUSH` px further out than the diamond's own
+	# clamp radius, and the old `box.x*0.5 - RING_WIDTH - 14.0` (98px on a
+	# 240px widget) plus that push (108px) exceeded the wedge's own closest-
+	# approach distance (~102px) whenever the objective sat near a diagonal —
+	# the label landed *inside* the wedge and was mostly erased, leaving a
+	# faint fragment-soup of remaining glyph edges. That is what a reviewer
+	# eyeballing a shrunk contact-sheet thumbnail read as "garbled sideways
+	# text" ("esn m r2e"): every glyph WAS drawn upright at identity
+	# transform (confirmed — `_draw_upright_text` is only ever called after
+	# `_draw_map_layer` resets the transform to identity), it was just ~90%
+	# painted over by the corner mask right after. Capping the radius here
+	# keeps the diamond *and* its label's full push clear of every corner's
+	# wedge, for any objective angle, not just the diagonal this capture
+	# happened to hit.
+	var corner_safe_radius := sqrt(2.0) * (box.x * 0.5 - CORNER_RADIUS) - CORNER_RADIUS
+	var visible_radius := minf(
+		box.x * 0.5 - RING_WIDTH - 14.0,
+		corner_safe_radius - OBJECTIVE_LABEL_PUSH - 20.0 # 20px: label's own half-extent
+	)
 	_draw_landmarks(centre, scale_px_per_m)
 	_draw_pal_marker(centre, scale_px_per_m)
 	_draw_objective(centre, scale_px_per_m, visible_radius)
@@ -279,7 +304,7 @@ func _draw_objective(centre: Vector2, scale_px_per_m: float, visible_radius: flo
 	if clamped:
 		var world_dist := Vector2(_player_pos.x, _player_pos.z).distance_to(pos2)
 		var label := "◇ %d m" % int(round(world_dist))
-		_draw_upright_text(local + offset.normalized() * 10.0, label, UITokens.FONT_TINY, UITokens.TEXT_PRIMARY)
+		_draw_upright_text(local + offset.normalized() * OBJECTIVE_LABEL_PUSH, label, UITokens.FONT_TINY, UITokens.TEXT_PRIMARY)
 
 
 # --- frame -----------------------------------------------------------------

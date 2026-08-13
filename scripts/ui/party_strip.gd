@@ -64,9 +64,11 @@ var _rest_position := Vector2.ZERO
 
 var _rows: Array[PanelContainer] = []
 var _rails: Array[ColorRect] = []
-var _chips: Array[ColorRect] = []
+var _chips: Array[Panel] = []
+var _chip_boxes: Array[StyleBoxFlat] = []
 var _name_labels: Array[Label] = []
 var _level_labels: Array[Label] = []
+var _ko_labels: Array[Label] = []
 var _hp_bars: Array[ProgressBar] = []
 var _hp_fills: Array[StyleBoxFlat] = []
 
@@ -135,10 +137,24 @@ func _build_row() -> PanelContainer:
 	_rails.append(rail)
 	hbox.add_child(rail)
 
-	var chip := ColorRect.new()
+	# A Panel with a 1px BORDER outline, not a bare ColorRect — blind visual
+	# review read the old flat-fill chip as an accidental blank square, not a
+	# deliberate portrait placeholder. Real portraits are future art (see this
+	# file's header); the outline is what makes the colour chip read as an
+	# intentional stand-in for one in the meantime.
+	var chip := Panel.new()
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chip.custom_minimum_size = CHIP_SIZE
 	chip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var chip_box := StyleBoxFlat.new()
+	chip_box.bg_color = UI_TOKENS.TEXT_MUTED
+	chip_box.border_width_left = 1
+	chip_box.border_width_top = 1
+	chip_box.border_width_right = 1
+	chip_box.border_width_bottom = 1
+	chip_box.border_color = UI_TOKENS.BORDER
+	chip.add_theme_stylebox_override("panel", chip_box)
+	_chip_boxes.append(chip_box)
 	_chips.append(chip)
 	hbox.add_child(chip)
 
@@ -155,12 +171,29 @@ func _build_row() -> PanelContainer:
 	_name_labels.append(name_label)
 	info.add_child(name_label)
 
+	var level_row := HBoxContainer.new()
+	level_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	level_row.add_theme_constant_override("separation", 6)
+	info.add_child(level_row)
+
 	var level_label := Label.new()
 	level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	level_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
 	level_label.add_theme_color_override("font_color", UI_TOKENS.TEXT_SECONDARY)
 	_level_labels.append(level_label)
-	info.add_child(level_label)
+	level_row.add_child(level_label)
+
+	# Small "KO" tag next to the level, shown only for a fainted entry — blind
+	# visual review: a fainted pal in the strip had no marker at all, reading
+	# identically to a healthy one at a glance.
+	var ko_label := Label.new()
+	ko_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ko_label.text = "KO"
+	ko_label.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TINY)
+	ko_label.add_theme_color_override("font_color", UI_TOKENS.DANGER)
+	ko_label.visible = false
+	_ko_labels.append(ko_label)
+	level_row.add_child(ko_label)
 
 	var hp_bar := ProgressBar.new()
 	hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -227,16 +260,25 @@ func _update_row(i: int, entry: Dictionary, has_pal: bool, selected: bool) -> vo
 		_last_selected[i] = selected
 
 	if vacant:
-		_chips[i].color = Color(UI_TOKENS.TEXT_MUTED, 0.35)
+		_chip_boxes[i].bg_color = Color(UI_TOKENS.TEXT_MUTED, 0.35)
 		_rows[i].modulate.a = VACANT_MODULATE
 		_set_label(_name_labels[i], i, "")
 		_set_level(_level_labels[i], i, -1, "")
+		# Chip outline only — a vacant row's HP bar (an empty track over
+		# nothing) and level label are what blind visual review saw as "a
+		# stray bar" between real entries. Hidden entirely, not just emptied.
+		_level_labels[i].visible = false
+		_ko_labels[i].visible = false
+		_hp_bars[i].visible = false
 		_hp_bars[i].value = 0.0
 		_hp_fills[i].bg_color = UI_TOKENS.HP_GREEN
 		return
 
+	_level_labels[i].visible = true
+	_hp_bars[i].visible = true
+
 	var tint: Color = entry.get("tint", UI_TOKENS.TEXT_MUTED)
-	_chips[i].color = tint
+	_chip_boxes[i].bg_color = tint
 	_rows[i].modulate.a = (
 		FAINTED_MODULATE if fainted
 		else (SELECTED_MODULATE if selected else UNSELECTED_MODULATE)
@@ -245,6 +287,7 @@ func _update_row(i: int, entry: Dictionary, has_pal: bool, selected: bool) -> vo
 	_set_label(_name_labels[i], i, str(entry.get("label", "")))
 	var level := int(entry.get("level", 1))
 	_set_level(_level_labels[i], i, level, "Lv %d" % level)
+	_ko_labels[i].visible = fainted
 
 	_hp_bars[i].value = clampf(float(entry.get("hp_fraction", 0.0)), 0.0, 1.0)
 	_hp_fills[i].bg_color = UI_TOKENS.DANGER if fainted else UI_TOKENS.HP_GREEN

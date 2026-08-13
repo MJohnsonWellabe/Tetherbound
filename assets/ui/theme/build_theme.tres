@@ -1,6 +1,4 @@
-[gd_resource type="Theme" load_steps=11 format=3]
-
-[ext_resource type="FontFile" path="res://assets/ui/fonts/kenney_future.ttf" id="1_font"]
+[gd_resource type="Theme" load_steps=10 format=3]
 
 ; The warm/brass build-and-craft theme built on `scripts/ui/ui_tokens.gd`
 ; (`docs/decisions/D28`).
@@ -136,7 +134,10 @@ corner_radius_bottom_left = 8
 bg_color = Color(0, 0, 0, 0)
 
 [resource]
-default_font = ExtResource("1_font")
+; default_font intentionally omitted: Kenney Future's capital X reads as H at
+; body sizes (see tetherbound_theme.tres's identical note) — blind visual
+; review flagged it as hostile body text. Godot's built-in default font takes
+; over here; every SIZE below is unchanged.
 default_font_size = 26
 Button/colors/font_color = Color(0.937255, 0.905882, 0.839216, 1)
 Button/colors/font_disabled_color = Color(0.552941, 0.517647, 0.454902, 1)

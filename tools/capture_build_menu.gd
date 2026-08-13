@@ -51,6 +51,19 @@ func _run() -> void:
 		quit(1)
 		return
 
+	# Re-staged outdoors (owner review: the old frames were shot indoors at
+	# the bed — no ghost/grid visible, world blown-out amber). Open ground
+	# south of the village reads as ordinary daylight gameplay and gives the
+	# ghost/grid plenty of flat, unobstructed terrain to draw over.
+	var player_for_teleport := world.get_node_or_null(^"Player") as CharacterBody3D
+	if player_for_teleport != null:
+		var outdoor_xz := Vector2(10.0, -25.0)
+		var outdoor_height: float = world.call("ground_height_at", outdoor_xz.x, outdoor_xz.y)
+		player_for_teleport.global_position = Vector3(outdoor_xz.x, outdoor_height + 1.0, outdoor_xz.y)
+		player_for_teleport.velocity = Vector3.ZERO
+		for i in 40:
+			await physics_frame
+
 	var inventory: RefCounted = game.get("inventory")
 	if inventory != null:
 		inventory.call("add", "wood", 200)

@@ -222,10 +222,14 @@ func _build_orb_cluster() -> void:
 	_orb_cluster.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	_orb_cluster.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	_orb_cluster.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	_orb_cluster.offset_left = -300.0
-	_orb_cluster.offset_top = -294.0
-	_orb_cluster.offset_right = -56.0
-	_orb_cluster.offset_bottom = -56.0
+	# Inset to UITokens.MARGIN_SAFE (48px), not the wider HUD_INSET (56px) the
+	# rest of this HUD uses — blind visual review flagged this cluster as
+	# flush against the screen edge; box size (244x238) is unchanged, only
+	# shifted to hang off the safe-margin edge instead.
+	_orb_cluster.offset_left = -300.0 + (UITokens.HUD_INSET - UITokens.MARGIN_SAFE)
+	_orb_cluster.offset_top = -294.0 + (UITokens.HUD_INSET - UITokens.MARGIN_SAFE)
+	_orb_cluster.offset_right = -float(UITokens.MARGIN_SAFE)
+	_orb_cluster.offset_bottom = -float(UITokens.MARGIN_SAFE)
 	_orb_cluster.visible = false
 	$Root.add_child(_orb_cluster)
 
@@ -493,12 +497,13 @@ func _draw_grid() -> void:
 	var aiming: bool = bool(_manager.call("is_aiming"))
 	var has_message: bool = _miss_left > 0.0
 
-	# The orb cluster and the enemy/grid dim (spec §10.1/§10.4) only ever
+	# The orb cluster and the enemy plate/grid dim (spec §10.1/§10.4) only ever
 	# apply to the AIMING branch below; every other branch clears them, same
 	# discipline `_show_fight` already uses for the fully-not-fighting case.
 	if not aiming:
 		if _orb_cluster != null:
 			_orb_cluster.visible = false
+		_enemy_panel.visible = true
 		_enemy_panel.modulate.a = 1.0
 		_grid_panel.modulate.a = 1.0
 
@@ -517,14 +522,21 @@ func _draw_grid() -> void:
 
 	if aiming:
 		_grid_panel.visible = false
-		_aim_row.visible = true
-		# Just the two verbs now — the percentage itself lives on the capture
-		# reticle floating over the enemy (D31), not worded out a second time
-		# down here.
-		_aim_row.text = "[center]%s     %s[/center]" % [_verb("throw", "Throw"), _verb("cancel", "Cancel")]
+		# Odds-free and empty: Throw/Cancel used to be worded out here AND in
+		# the lower-right orb cluster at the same time (blind visual review's
+		# "duplicate Throw/Cancel while aiming") — the orb cluster
+		# (`_draw_orb_cluster`) is the one home for those verbs now (spec
+		# §10.4); the percentage itself already lives on the capture reticle
+		# (D31). Nothing left for this row to say while aiming.
+		_aim_row.visible = false
+		_aim_row.text = ""
 		_orbs.visible = false
 		_draw_orb_cluster(orbs)
-		_enemy_panel.modulate.a = 0.35
+		# Hidden, not dimmed (blind visual review: a 35%-alpha plate over open
+		# sky read as "a broken grey ghost", not "temporarily de-emphasised").
+		# The move grid stays a plain alpha dim — it is still a legible panel
+		# at 35%, just quieter; the enemy plate at that alpha was not.
+		_enemy_panel.visible = false
 		_grid_panel.modulate.a = 0.35
 		return
 
@@ -630,16 +642,6 @@ func _pulse(rect: ColorRect) -> void:
 	_pulse_tweens[key] = tw
 	tw.tween_property(rect, "color:a", 0.55, UITokens.T_CAPTURE_PULSE)
 	tw.tween_property(rect, "color:a", 0.0, UITokens.T_CAPTURE_PULSE)
-
-
-## One verb in the aim row: the button, then what it does. Only used by
-## `AimRow` now — the four grid verbs build their own BBCode directly in
-## `_draw_*_cell` since each needs its own hairline/energy-number/pulse logic
-## the aim row does not.
-func _verb(glyph_id: String, label: String) -> String:
-	return "[color=#%s]%s %s[/color]" % [
-		VERB_READY.to_html(false), INPUT_GLYPH.icon(glyph_id, 32, VERB_READY), label
-	]
 
 
 ## Icon, item name, count and the throw/cancel glyphs, replacing the plain

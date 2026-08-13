@@ -895,6 +895,14 @@ func _update_hotbar_and_message() -> void:
 
 
 ## HD2. The hotbar mirrors satchel slots 0-4 directly.
+##
+## Blind visual review: the old chip drew glyph + "Name xN" text at 13px,
+## illegible at handheld distance. The backpack already owns telling the
+## player an item's NAME (`tab_backpack.gd`); this chip's only job is "what
+## is it, how many" at a glance, so it now draws the input glyph, the item's
+## own icon art (`items.json`'s `icon` field) at 28px, and the count at 16px
+## — no name text at all. Durability-bearing tools keep their `n/max` reading
+## in place of a plain count, unchanged from before.
 func _update_hotbar(inventory: RefCounted) -> void:
 	var db: RefCounted = _game.get("items")
 	if db == null:
@@ -907,7 +915,7 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			text = "%s\n[color=#666a63]-[/color]" % glyph
 		else:
 			var id := str(stack.get("id", ""))
-			var name := str(db.call("item_name", id))
+			var icon_path := str(db.call("definition", id).get("icon", ""))
 			var colour: Color = db.call("colour", id)
 			var tool_max: int = int(inventory.call("max_durability_at", i))
 			var count_text: String
@@ -915,7 +923,10 @@ func _update_hotbar(inventory: RefCounted) -> void:
 				count_text = "%d/%d" % [int(inventory.call("durability_at", i)), tool_max]
 			else:
 				count_text = "x%d" % int(stack.get("n", 0))
-			text = "%s\n[color=#%s]%s %s[/color]" % [glyph, colour.to_html(false), name, count_text]
+			var icon_bbcode := "[img=28x28]%s[/img]" % icon_path if not icon_path.is_empty() else ""
+			text = "%s\n%s [font_size=16][color=#%s]%s[/color][/font_size]" % [
+				glyph, icon_bbcode, colour.to_html(false), count_text
+			]
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text
 			_hotbar_slots[i].text = text
