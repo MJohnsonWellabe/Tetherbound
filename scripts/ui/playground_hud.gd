@@ -238,7 +238,8 @@ func _ready() -> void:
 	# only fires on a CHANGE: if the arbiter published before this HUD
 	# connected, waiting for the next edge would leave the prompt blank while
 	# the player stands in front of something interactable.
-	_prompt_label.text = str(_arbiter.call("prompt")) if _arbiter != null else ""
+	_prompt_label.text = "" if _prompt_belongs_to_combat() \
+			else (str(_arbiter.call("prompt")) if _arbiter != null else "")
 
 	# Structure is finished: outline/shadow every Label and RichTextLabel this
 	# file just built, in one pass, rather than one make_text_legible call per
@@ -867,7 +868,20 @@ func _perf_lines() -> Array[String]:
 
 
 func _on_prompt_changed(text: String) -> void:
-	_prompt_label.text = text
+	_prompt_label.text = "" if _prompt_belongs_to_combat() else text
+
+
+## True when the arbiter's winning offer came from the encounter director —
+## whose lines ("Engage X", "Call out Biscuit") CombatHUD renders in its own
+## combat-styled row. Rendering them here too put the same sentence on
+## screen twice, which a blind visual review read as a bug the moment the
+## two rows stopped sitting at the same pixel. Duck-typed on
+## `owns_active_prompt`, a method only the director carries.
+func _prompt_belongs_to_combat() -> bool:
+	if _arbiter == null or not is_instance_valid(_arbiter):
+		return false
+	var winner: Object = _arbiter.call("winning_provider")
+	return winner != null and winner.has_method("owns_active_prompt")
 
 
 ## Caches the `Game` autoload lookup and the `party` RefCounted it exposes.

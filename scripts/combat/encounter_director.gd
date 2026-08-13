@@ -521,13 +521,16 @@ func prompt() -> String:
 ## No arbiter (the combat sandbox) means this node is the only source of a
 ## prompt there is, so it always owns whatever it is showing.
 func owns_active_prompt() -> bool:
-	# With a live arbiter, PlaygroundHUD renders whatever offer wins —
-	# including this node's own "Engage X" and pal-recall lines. Returning
-	# true here as well made CombatHUD mirror the same text a second time
-	# (the rebuild moved the two prompt rows apart, which is what finally
-	# made the duplicate visible). The sandbox — no arbiter, no
-	# PlaygroundHUD — is the only place this node must render its own line.
-	return _arbiter == null or not is_instance_valid(_arbiter)
+	# True when this node's own offer is the winning line (or there is no
+	# arbiter at all — the combat sandbox). CombatHUD renders director-owned
+	# lines; PlaygroundHUD skips them for exactly that reason (see its
+	# `_prompt_belongs_to_combat()`) — that split, not a blanket blank, is
+	# what keeps one prompt on screen. `tests/smoke_no_double_prompt.gd`
+	# pins both halves: a bed offer must not echo on CombatHUD, and an
+	# engage offer must still show there before a fight.
+	if _arbiter == null or not is_instance_valid(_arbiter):
+		return true
+	return _arbiter.call("winning_provider") == self
 
 
 ## Hand the prompt line, and the interact button, to a scene-wide arbiter.
