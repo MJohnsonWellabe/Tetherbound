@@ -218,3 +218,14 @@ item_split={
 , Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
 ]
 }
+; build_rotate shares D-pad down (12) with item_drop deliberately, the same
+; way jump/combat_quick/menu_confirm already share A: build_placer.gd only
+; ever runs while the tree is unpaused (menu closed) and item_drop only ever
+; reads while the backpack tab is open (menu open, tree paused, per
+; game_menu.gd's get_tree().paused toggle) -- the two states cannot overlap.
+build_rotate={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":84,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+]
+}
