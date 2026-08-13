@@ -1,5 +1,6 @@
 {
   "_comment": "Species definitions. Base stats and presentation only; a live creature's current HP and energy belong to a pal_instance, never here (TECHNICAL_START.md, Pal Data vs Pal Instance). M11 replaces `model` and the colours with real rigged creatures without touching combat code.",
+  "_comment_moves": "Each species carries a `moves` field (D30, pal progression): {\"quick\": id, \"charged\": id}, both ids into data/moves/moves.json. Chosen for flavour fit, not balance -- every move ships at power 1.0 so this is balance-neutral. Related species (an evolution line, a shared archetype) may reuse the same move id on purpose; see data/moves/moves.json for the full pool.",
   "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance \u2014 clearly different silhouettes and clearly different colours \u2014 and nothing else.",
   "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
   "_comment_names": "Ids and display names for the wild roster are canon from `docs/art/wild/` — the owner's Meadows Wild Canon Pack, which supersedes `docs/art/ROSTER_MANIFEST.md` for these creatures (`docs/decisions/D13`). The meshes under them do not all match yet: Tuskroot is still a songbird from the Plumberry pack (`docs/decisions/D10`) and is the last stand-in in the table. Bramblebun WAS a duck and is not any more — it was produced properly from its own sheet.",
@@ -19,6 +20,7 @@
       "base_defence": 20.0,
       "catch_rate": 0.3,
       "aggressive": false,
+      "moves": { "quick": "pebble_toss", "charged": "stone_rush" },
       "placeholder": {
         "colour": "#9c5224",
         "height": 2.0,
@@ -52,6 +54,7 @@
       "base_defence": 17.0,
       "catch_rate": 0.3,
       "aggressive": false,
+      "moves": { "quick": "ripple_jab", "charged": "undertow" },
       "placeholder": {
         "colour": "#4fb8c9",
         "height": 1.95,
@@ -81,6 +84,7 @@
       "base_defence": 14.0,
       "catch_rate": 0.3,
       "aggressive": false,
+      "moves": { "quick": "gale_peck", "charged": "sky_rend" },
       "placeholder": {
         "colour": "#cfe3ea",
         "height": 1.9,
@@ -110,6 +114,7 @@
       "_comment": "The practice creature. Peaceful, common, and generous to catch: it is the one the owner will throw at twenty times while deciding whether throwing is fun, and a rare target would make that a test of patience instead.",
       "catch_rate": 0.55,
       "aggressive": false,
+      "moves": { "quick": "bramble_whip", "charged": "warren_charge" },
       "placeholder": {
         "colour": "#f2c14f",
         "height": 1.5,
@@ -140,6 +145,7 @@
       "aggressive": false,
       "evolves_into": "tuskroot",
       "_comment_evolution": "Recorded so the link survives in data. There is still no evolution SYSTEM in the project; this and tuskroot's `evolves_from` are the two ends of a rope nothing pulls on yet.",
+      "moves": { "quick": "root_nibble", "charged": "rootquake" },
       "placeholder": {
         "colour": "#8a6a44",
         "height": 1.55,
@@ -169,6 +175,7 @@
       "base_defence": 15.0,
       "catch_rate": 0.38,
       "aggressive": false,
+      "moves": { "quick": "pack_bite", "charged": "trailblaze_pounce" },
       "placeholder": {
         "colour": "#c2a173",
         "height": 1.7,
@@ -198,6 +205,7 @@
       "base_defence": 23.0,
       "catch_rate": 0.4,
       "aggressive": false,
+      "moves": { "quick": "burrow_strike", "charged": "tremor_roll" },
       "placeholder": {
         "colour": "#5c4a3a",
         "height": 1.85,
@@ -227,6 +235,7 @@
       "base_defence": 17.0,
       "catch_rate": 0.45,
       "aggressive": false,
+      "moves": { "quick": "hoofbeat", "charged": "verdant_burst" },
       "placeholder": {
         "colour": "#b98d52",
         "height": 2.05,
@@ -258,6 +267,7 @@
       "aggressive": true,
       "evolves_from": "mudsnout",
       "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild \u2014 the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). Recorded here so the link is not lost. `mudsnout` now exists in this table, so both ends of the link are real; there is still no evolution SYSTEM in the project. The pair's heights (Mudsnout 1.55m -> Tuskroot 2.15m after D19's size pass) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
+      "moves": { "quick": "root_nibble", "charged": "rootquake" },
       "placeholder": {
         "_comment_colour": "Drawn from Tuskroot's own COLOR PALETTE row on docs/art/reference/wild/05_Meadows_Wild_Scale_Palette_Implementation_Guide.png (which despite its filename is Ground Sheet B) \u2014 the secondary fur/hide brown, which is what most of the body reads as in the turnarounds. Retained only for the fallback capsule, which is now genuinely a fallback: R0.6 installed a real rigged, animated, graded model.",
         "colour": "#5d4831",
@@ -287,6 +297,7 @@
       "base_defence": 12.0,
       "catch_rate": 0.5,
       "aggressive": false,
+      "moves": { "quick": "splash_snap", "charged": "riptide_rush" },
       "placeholder": {
         "colour": "#3f8080",
         "height": 1.65,
@@ -316,6 +327,7 @@
       "base_defence": 26.0,
       "catch_rate": 0.4,
       "aggressive": false,
+      "moves": { "quick": "shell_bash", "charged": "tremor_roll" },
       "placeholder": {
         "colour": "#5e7a4a",
         "height": 1.75,
@@ -341,6 +353,7 @@
       "base_defence": 13.0,
       "catch_rate": 0.45,
       "aggressive": false,
+      "moves": { "quick": "tail_splash", "charged": "riptide_rush" },
       "placeholder": {
         "colour": "#6b4a2f",
         "height": 1.6,
@@ -366,6 +379,7 @@
       "base_defence": 15.0,
       "catch_rate": 0.28,
       "aggressive": true,
+      "moves": { "quick": "talon_dive", "charged": "storm_strike" },
       "placeholder": {
         "colour": "#4a6478",
         "height": 2.1,
@@ -392,6 +406,7 @@
       "base_defence": 18.0,
       "catch_rate": 0.42,
       "aggressive": false,
+      "moves": { "quick": "quick_flit", "charged": "night_swoop" },
       "placeholder": {
         "colour": "#5b6b74",
         "height": 1.7,
@@ -418,6 +433,7 @@
       "base_defence": 10.0,
       "catch_rate": 0.5,
       "aggressive": false,
+      "moves": { "quick": "quick_flit", "charged": "gust_burst" },
       "placeholder": {
         "colour": "#7a97a8",
         "height": 1.35,
@@ -445,6 +461,7 @@
       "base_defence": 14.0,
       "catch_rate": 0.48,
       "aggressive": false,
+      "moves": { "quick": "tail_splash", "charged": "sky_rend" },
       "placeholder": {
         "colour": "#4a8a8a",
         "height": 1.8,
@@ -472,6 +489,7 @@
       "catch_rate": 0.02,
       "_comment_catch": "The lowest in the game by a wide margin. A legendary you catch on the second orb is not a legendary. TUNABLE.",
       "aggressive": true,
+      "moves": { "quick": "hoofbeat", "charged": "antler_slam" },
       "placeholder": {
         "colour": "#4f7a3a",
         "height": 2.6,

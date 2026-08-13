@@ -539,6 +539,11 @@ Valheim-like buff philosophy:
 - No starvation death.
 - Eating improves health/stamina/regeneration or other preparation stats.
 
+[Amended by `docs/decisions/D29`, 2026-08-13: satiety is now a real stat
+that drains slowly and gives soft debuffs when low (slower stamina
+regen, reduced move speed when critical). "No starvation death" still
+holds exactly as written above — only "no meter at all" changed.]
+
 ### Environmental danger
 Later biomes require gear:
 - cold resistance
@@ -669,6 +674,14 @@ Minimap:
 Do not reveal every wild pal automatically.
 
 No free map fast travel before teleport progression.
+
+[Amended by `docs/decisions/D33`, 2026-08-13: minimap and full map now
+share one data layer (`MapState` / `Game.map`), sourced from
+`data/config/map_landmarks.json` and a baked top-down terrain texture
+rather than a second live camera — never a wild-pal radar. Combat UI
+around it also changed this session: capture odds display as an explicit
+percentage (`D31`), pal switching is a real mid-combat action (`D32`), and
+pals now carry level/XP/moves/bond (`D30`).]
 
 ---
 

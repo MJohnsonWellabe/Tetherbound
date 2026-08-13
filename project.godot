@@ -224,6 +224,36 @@ combat_switch_right={
 , Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
 ]
 }
+build_place={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+]
+}
+build_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+]
+}
+build_rotate_left={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":4,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
+]
+}
+build_rotate_right={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":5,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":5,"axis_value":1.0,"script":null)
+]
+}
+build_snap_cycle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194325,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+]
+}
 backpack_drop={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":71,"pressed":false,"script":null)

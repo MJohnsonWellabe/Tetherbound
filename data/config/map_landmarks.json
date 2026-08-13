@@ -1,0 +1,11 @@
+{
+  "_comment": "The map database of D33: reveal tuning and every landmark the map may ever show. Data-driven so Band 1-4 landmarks (quarry, warrens, river, mill, relay) join by editing this file, not code. Tunable.",
+  "reveal_radius": 45.0,
+  "minimap_span_m": 90.0,
+  "landmarks": [
+    { "id": "grandpa_house", "display_name": "Grandpa's House", "icon": "home",      "position": [-22.0, -16.0],  "discover_radius": 30.0, "category": "major" },
+    { "id": "village",       "display_name": "The Village",     "icon": "village",   "position": [10.0, -10.0],   "discover_radius": 35.0, "category": "major" },
+    { "id": "road_gate",     "display_name": "Road Gate",       "icon": "gate",      "position": [27.5, -16.0],   "discover_radius": 25.0, "category": "minor" },
+    { "id": "stronghold",    "display_name": "Meadows Hall",    "icon": "stronghold","position": [229.8, -144.4], "discover_radius": 60.0, "category": "major", "silhouette": true }
+  ]
+}

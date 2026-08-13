@@ -1,0 +1,189 @@
+{
+  "_comment": "Named moves (D30, pal progression). Every species in data/pals/species.json points at exactly one quick and one charged id here through its own `moves` field. `type` is flavour/vocabulary (ground|water|air) and is not cross-checked against the wielding species' own type -- Reedwing borrows an air-flavoured charged move on purpose, because the wild canon calls it a Water/Air waterfowl.",
+  "_comment_balance": "All `power` is 1.0 and every quick/charged carries the same energy_gain/energy_cost combat.json already used before D30 (26 / 100). That makes this a pure naming and data-wiring pass: combat_math.gd's new `power` multiplier at 1.0 reproduces today's damage exactly, so nothing about how a fight feels changes the day this ships. Retuning individual moves away from 1.0 is a later, deliberate balance pass, not this one.",
+  "_comment_slots": "`slot` is \"quick\" (fast, low-commitment, builds energy) or \"charged\" (the energy-spend finisher). Quick moves carry `energy_gain`; charged moves carry `energy_cost`, mirroring combat.json's energy.gain_per_quick / energy.charged_cost so a designer tuning one move at a time does not have to touch two files to keep them honest.",
+  "moves": {
+    "pebble_toss": {
+      "display_name": "Pebble Toss",
+      "type": "ground",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "stone_rush": {
+      "display_name": "Stone Rush",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "bramble_whip": {
+      "display_name": "Bramble Whip",
+      "type": "ground",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "warren_charge": {
+      "display_name": "Warren Charge",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "root_nibble": {
+      "display_name": "Root Nibble",
+      "type": "ground",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "rootquake": {
+      "display_name": "Rootquake",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "pack_bite": {
+      "display_name": "Pack Bite",
+      "type": "ground",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "trailblaze_pounce": {
+      "display_name": "Trailblaze Pounce",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "burrow_strike": {
+      "display_name": "Burrow Strike",
+      "type": "ground",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "tremor_roll": {
+      "display_name": "Tremor Roll",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "hoofbeat": {
+      "display_name": "Hoofbeat",
+      "type": "ground",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "verdant_burst": {
+      "display_name": "Verdant Burst",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "antler_slam": {
+      "display_name": "Antler Slam",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "ripple_jab": {
+      "display_name": "Ripple Jab",
+      "type": "water",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "undertow": {
+      "display_name": "Undertow",
+      "type": "water",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "splash_snap": {
+      "display_name": "Splash Snap",
+      "type": "water",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "riptide_rush": {
+      "display_name": "Riptide Rush",
+      "type": "water",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "shell_bash": {
+      "display_name": "Shell Bash",
+      "type": "water",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "tail_splash": {
+      "display_name": "Tail Splash",
+      "type": "water",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "gale_peck": {
+      "display_name": "Gale Peck",
+      "type": "air",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "sky_rend": {
+      "display_name": "Sky Rend",
+      "type": "air",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "talon_dive": {
+      "display_name": "Talon Dive",
+      "type": "air",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "storm_strike": {
+      "display_name": "Storm Strike",
+      "type": "air",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "quick_flit": {
+      "display_name": "Quick Flit",
+      "type": "air",
+      "slot": "quick",
+      "power": 1.0,
+      "energy_gain": 26
+    },
+    "night_swoop": {
+      "display_name": "Night Swoop",
+      "type": "air",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    },
+    "gust_burst": {
+      "display_name": "Gust Burst",
+      "type": "air",
+      "slot": "charged",
+      "power": 1.0,
+      "energy_cost": 100
+    }
+  }
+}

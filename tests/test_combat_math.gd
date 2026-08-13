@@ -62,6 +62,42 @@ func test_variance_is_small_enough_not_to_decide_a_fight() -> void:
 	assert_true(high < low * 1.5, "spread %f..%f is wide enough to decide fights" % [low, high])
 
 
+# --- move power multiplier (D30) --------------------------------------------
+#
+# data/moves/moves.json's `power` field. Every shipped move is 1.0, so these
+# pin that the default is a true no-op and that the multiplier, when it does
+# change, scales damage the obvious linear way.
+
+func test_move_power_defaults_to_a_no_op() -> void:
+	# Pinned against test_equal_stats_deal_exactly_the_move_power's own case:
+	# omitting move_power must reproduce the pre-D30 value exactly.
+	assert_almost_eq(MATH.base_damage(20.0, 25.0, 25.0), 20.0, 0.001)
+	assert_almost_eq(MATH.base_damage(20.0, 25.0, 25.0, 1.0), 20.0, 0.001)
+
+
+func test_move_power_scales_damage_linearly() -> void:
+	var base := MATH.base_damage(10.0, 25.0, 25.0, 1.0)
+	var doubled := MATH.base_damage(10.0, 25.0, 25.0, 2.0)
+	assert_almost_eq(doubled, base * 2.0, 0.001)
+
+
+func test_move_power_below_one_hits_softer() -> void:
+	var full := MATH.base_damage(10.0, 25.0, 25.0, 1.0)
+	var half := MATH.base_damage(10.0, 25.0, 25.0, 0.5)
+	assert_true(half < full, "a move_power under 1.0 should hit for less")
+
+
+func test_rolled_damage_move_power_default_matches_the_pre_d30_value() -> void:
+	assert_almost_eq(MATH.rolled_damage(20.0, 25.0, 25.0, 0.5), 20.0, 0.001)
+	assert_almost_eq(MATH.rolled_damage(20.0, 25.0, 25.0, 0.5, 1.0), 20.0, 0.001)
+
+
+func test_rolled_damage_move_power_scales_the_rolled_result_too() -> void:
+	var base := MATH.rolled_damage(20.0, 25.0, 25.0, 0.5, 1.0)
+	var doubled := MATH.rolled_damage(20.0, 25.0, 25.0, 0.5, 2.0)
+	assert_almost_eq(doubled, base * 2.0, 0.001)
+
+
 # --- aiming ---------------------------------------------------------------
 #
 # Attacks are aimed and can miss (docs/decisions/D07). These pin the properties

@@ -29,7 +29,7 @@ static func config() -> Dictionary:
 
 ## Damage for one hit, before variance.
 ##
-## `power * scale * attack / (attack + defence)`.
+## `power * scale * attack / (attack + defence) * move_power`.
 ##
 ## Bounded deliberately. A raw attack/defence ratio explodes as defence
 ## approaches zero and produces one-shot kills that read as a bug rather than as
@@ -37,26 +37,39 @@ static func config() -> Dictionary:
 ## with the default scale of 2 an attacker deals exactly the move's power
 ## against an equal defender — which makes move power a number a designer can
 ## reason about instead of an arbitrary coefficient.
-static func base_damage(power: float, attack: float, defence: float) -> float:
+##
+## `move_power` is D30's named-move multiplier (data/moves/moves.json's own
+## `power` field), layered on top of `power` rather than replacing it — `power`
+## stays whatever combat.json's `player_quick`/`enemy` blocks say a plain hit is
+## worth, and `move_power` is what a specific named move does to that. It could
+## not be called `power` too: GDScript will not accept two parameters with the
+## same name, and the existing one is documented and called positionally
+## throughout combat_manager.gd, so it keeps its name and the new multiplier
+## takes this one instead. Every move ships at 1.0 (D30), so
+## `move_power * power == power` for every call site that does not pass it.
+static func base_damage(power: float, attack: float, defence: float, move_power: float = 1.0) -> float:
 	var cfg: Dictionary = config().get("damage", {})
 	var scale := float(cfg.get("scale", 2.0))
 	var minimum := float(cfg.get("minimum", 1.0))
 
 	var total := attack + defence
 	if total <= 0.0:
-		return maxf(minimum, power * scale * 0.5)
-	return maxf(minimum, power * scale * attack / total)
+		return maxf(minimum, power * move_power * scale * 0.5)
+	return maxf(minimum, power * move_power * scale * attack / total)
 
 
 ## Damage with the random spread applied. `roll` is 0..1, supplied by the
-## caller so tests can pin it and the result stays reproducible.
-static func rolled_damage(power: float, attack: float, defence: float, roll: float) -> float:
+## caller so tests can pin it and the result stays reproducible. `move_power`
+## is the same D30 multiplier `base_damage` takes; see its comment.
+static func rolled_damage(
+	power: float, attack: float, defence: float, roll: float, move_power: float = 1.0
+) -> float:
 	var cfg: Dictionary = config().get("damage", {})
 	var variance := float(cfg.get("variance", 0.1))
 	var minimum := float(cfg.get("minimum", 1.0))
 	# roll 0 -> lowest, 0.5 -> exact, 1 -> highest.
 	var multiplier := 1.0 + (clampf(roll, 0.0, 1.0) * 2.0 - 1.0) * variance
-	return maxf(minimum, base_damage(power, attack, defence) * multiplier)
+	return maxf(minimum, base_damage(power, attack, defence, move_power) * multiplier)
 
 
 ## --- aiming ---------------------------------------------------------------

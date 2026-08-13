@@ -89,6 +89,11 @@
           ]
         },
         {
+          "name": "Building",
+          "note": "Placing a structure. These only act while a build ghost is out, so their default buttons can double up with exploration controls without ever meaning two things at once.",
+          "actions": ["build_place", "build_cancel", "build_rotate_left", "build_rotate_right", "build_snap_cycle"]
+        },
+        {
           "name": "Menus",
           "actions": ["menu_confirm", "menu_cancel"]
         },
@@ -129,7 +134,12 @@
         "menu_confirm": "Confirm",
         "menu_cancel": "Back  /  close the menu",
         "backpack_drop": "Backpack: drop the focused item",
-        "backpack_split": "Backpack: split the focused stack"
+        "backpack_split": "Backpack: split the focused stack",
+        "build_place": "Build: place the piece",
+        "build_cancel": "Build: put the piece away",
+        "build_rotate_left": "Build: rotate left",
+        "build_rotate_right": "Build: rotate right",
+        "build_snap_cycle": "Build: change snap step"
       },
 
       "glyphs": {

@@ -37,10 +37,45 @@ ring per spec §17 — focus is now a teal border, not gold) and
 surfaces). Both point at the vendored Kenney Future / Kenney Future Narrow
 fonts (`assets/ui/fonts/`) rather than the engine default.
 
+## The CanvasLayer plan
+
+The token module also ends order-of-addition layer stacking. Every HUD
+script (`combat_hud.gd`, `craft_panel.gd`, `storage_panel.gd`,
+`dialogue_panel.gd`, `starter_picker.gd`, `game_menu.gd`, `name_prompt.gd`,
+`playground_hud.gd`) `extends CanvasLayer` with no `layer` set at all, so
+draw order is whichever order the scene happened to add nodes in — correct
+today by accident, and one new panel away from a dialogue box drawing under
+the pause menu. `ui_tokens.gd` fixes the order as data:
+
+```
+LAYER_HUD = 1            LAYER_DIALOGUE = 5
+LAYER_COMBAT = 2         LAYER_PROMPTS = 6
+LAYER_WORLD_PANELS = 3   LAYER_MENU = 20
+```
+
+Each HUD script sets its own `layer` to the matching constant on `_ready()`
+as part of the migration pass named above — declaring the plan and wiring
+every screen to it are still two separate steps, for the same
+one-commit-at-a-time reason the palette migration is.
+
+## Resolving the spec's own minimap conflict
+
+The owner's UI spec ships two minimap placement sections that disagree:
+§6A.1 says the minimap goes **top-right**, with the objective block sliding
+beneath it when the objective panel would otherwise run too tall; the
+shorter, earlier-drafted §6.5 says **top-left**. §6A.1 wins — §6A is the
+fuller section (fourteen numbered sub-sections against §6.5's one pass), and
+§6.3's own objective placement independently agrees with top-right, which a
+top-left minimap under §6.5 would sit directly against. Minimap: top-right.
+Objective: beneath it, per §6A.1's own fallback rule. See `D33` for the map
+data layer the minimap and full map both read.
+
 ## What was deliberately not built
 
 - **Migrating `playground_hud.gd`, `menu_tab.gd`, `combat_hud.gd` onto the new
-  module.** A separate item's job; this one only adds the source of truth.
+  module** — including setting each `CanvasLayer`'s `layer` to its
+  `ui_tokens.gd` constant. A separate item's job; this one only adds the
+  source of truth and the plan both migrations read from.
 - **Swapping `scenes/ui/menu_theme.tres` for `tetherbound_theme.tres` in any
   live scene.** Same reason — the new Theme exists and loads, and nothing
   points at it yet.

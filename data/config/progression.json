@@ -1,0 +1,15 @@
+{
+  "_comment": "Pal progression (D30). All tunable. Move power multiplies existing combat_math damage, so 1.0 preserves today's balance exactly.",
+  "level": {
+    "cap": 30, "wild_band": [2, 6], "starter_level": 3,
+    "xp_to_next_base": 40, "xp_to_next_exponent": 1.6,
+    "growth_per_level": { "hp": 0.06, "attack": 0.05, "defence": 0.05 }
+  },
+  "xp_award": { "base": 18, "per_enemy_level": 6, "party_share": 0.35 },
+  "bond": {
+    "max": 100, "thresholds": [10, 30, 55, 80, 100],
+    "battle_won": 4, "successful_catch_start": 10, "per_day_in_party": 2,
+    "effects_per_node": { "attack_scale": 0.01, "defence_scale": 0.01 }
+  },
+  "migration": { "v1_pal_level": 3 }
+}

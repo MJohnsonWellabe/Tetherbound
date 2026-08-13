@@ -60,6 +60,29 @@ const GLYPHS := {
 	"hotbar_3": {"keyboard": "keyboard_3.png", "gamepad": "xbox_dpad_right.png"},
 	"hotbar_4": {"keyboard": "keyboard_4.png", "gamepad": "xbox_dpad_down.png"},
 	"hotbar_5": {"keyboard": "keyboard_5.png", "gamepad": "xbox_lb.png"},
+
+	## Build-system v2's five verbs (D34). Nothing calls `icon()` with these ids
+	## yet -- build_placer.gd is a later milestone -- so these are wired ahead
+	## of a caller, the same order combat's row was added in for HD1.
+	"build_place": {"keyboard": "mouse_left.png", "gamepad": "xbox_button_x.png"},
+	"build_cancel": {"keyboard": "mouse_right.png", "gamepad": "xbox_button_b.png"},
+	## Defaults are mouse wheel up/down and gamepad LT/RT (project.godot). The
+	## vendored set in assets/ui/input_prompts/ has no wheel or trigger PNGs
+	## (only mouse_left/right, and xbox_lb/rb, ever got extracted from the
+	## Kenney pack) -- CLAUDE.md forbids vendoring new art mid-task, so these
+	## stand in with the closest shape already on disk rather than block on an
+	## asset pass: keyboard-side borrows the arrow-key icons, gamepad-side
+	## borrows LB/RB. Swap both for real wheel/LT/RT glyphs once Kenney's
+	## trigger and scroll icons are pulled into the vendored set.
+	"build_rotate_left": {"keyboard": "keyboard_arrow_left.png", "gamepad": "xbox_lb.png"},
+	"build_rotate_right": {"keyboard": "keyboard_arrow_right.png", "gamepad": "xbox_rb.png"},
+	## Keyboard default is Shift, which has no vendored keycap PNG at all (the
+	## Kenney sheet in assets/ui/input_prompts/ never had one extracted). Rather
+	## than point it at an unrelated icon, this id is left gamepad-only; a
+	## caller wanting the keyboard glyph should show the word "Shift" directly
+	## until a real Shift PNG is vendored, the same way combat_hud.gd reaches
+	## for the `cancel` id instead of a `combat_run` entry that was never added.
+	"build_snap_cycle": {"gamepad": "xbox_dpad_down.png"},
 }
 
 

@@ -32,7 +32,7 @@ Build the Meadows vertical slice quickly and iteratively. The goal is not maximu
 - Catching is available during wild combat.
 - Trainer-owned pals cannot be caught.
 - No hunting/butchering.
-- Food buffs; no starvation-death meter.
+- Light satiety: slow drain, food restores and buffs, soft debuffs when low; NO starvation death (D29).
 - Slot/stack inventory; no carry-weight system.
 - Multiple death satchels persist.
 - No Biome 2 work until Meadows passes its exit gate. The spec's reconnection
@@ -119,7 +119,10 @@ Examples:
 - adding storage
 - major story rewrite
 - changing traversal philosophy
-- adding mandatory hunger/thirst
+- adding mandatory hunger/thirst — the owner settled a *light* version of this
+  via `docs/decisions/D29` (satiety, soft debuffs, no starvation death); that
+  much is built and is canon. Anything harsher (starvation death, thirst)
+  still needs asking.
 - changing stronghold structure
 
 **Implementing an owner directive is not inventing one.** The Team Tether /
