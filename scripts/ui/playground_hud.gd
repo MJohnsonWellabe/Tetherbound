@@ -21,27 +21,9 @@ extends CanvasLayer
 ## for the compass: §16 says "if it exists," and it does not yet.
 
 ## Dark blue-gray translucent panel, thin pale border, teal accent — the
-## visual language §16 asks for. No prior HUD panel establishes this; this is
-## the first one, so later screens (inventory, crafting) match against it
-## rather than the other way round.
-const PANEL_BG := Color(0.07, 0.09, 0.13, 0.78)
-const PANEL_BORDER := Color(0.55, 0.85, 0.86, 0.65)
-## Deliberately more saturated and bluer than PANEL_BORDER — the two read as
-## the same colour at a glance otherwise, and the stamina fill needs to stand
-## out from its own panel's border, not match it.
-const ACCENT_TEAL := Color(0.16, 0.58, 0.76)
-const HEALTH_FULL := Color(0.38, 0.64, 0.30)
-const HEALTH_LOW := Color(0.74, 0.24, 0.20)
-const TRACK := Color(0.05, 0.05, 0.06, 0.85)
-
-## Same treatment combat_hud.gd uses for anything floating over the world with
-## no panel behind it — measured contrast on unplated white text there was
-## below the large-text minimum, and the party/orb/prompt labels here sit over
-## the same kind of unpredictable backdrop.
-const OUTLINE := Color(0.03, 0.04, 0.05, 0.95)
-const OUTLINE_SIZE := 6
-const SHADOW := Color(0.0, 0.0, 0.0, 0.55)
-const SHADOW_OFFSET := Vector2(0.0, 2.0)
+## visual language §16 asks for. Palette now lives on `scripts/ui/ui_tokens.gd`
+## (`UITokens`, D28) — this file reads `UITokens.BG_PANEL`, `UITokens.BORDER`
+## etc. rather than keeping its own copy.
 
 ## A bar at rest fades to this rather than to zero: gone-and-back-again on
 ## every full heal reads as a layout pop, faint-but-present does not. Blind
@@ -188,18 +170,18 @@ func _ready() -> void:
 	_style_panel($Root/VitalsPanel)
 	_style_panel($Root/StatusPanel)
 	_style_panel($Root/HotbarPanel)
-	_health_fill = _fill_style(HEALTH_FULL)
-	_stamina_fill = _fill_style(ACCENT_TEAL)
+	_health_fill = _fill_style(UITokens.HP_GREEN)
+	_stamina_fill = _fill_style(UITokens.TEAL)
 	_dress_bar(_health_bar, _health_fill)
 	_dress_bar(_stamina_bar, _stamina_fill)
-	_make_text_legible(_health_label)
-	_make_text_legible(_stamina_label)
-	_make_text_legible(_party_label)
-	_make_text_legible(_orbs_label)
-	_make_text_legible(_prompt_label)
+	UITokens.make_text_legible(_health_label)
+	UITokens.make_text_legible(_stamina_label)
+	UITokens.make_text_legible(_party_label)
+	UITokens.make_text_legible(_orbs_label)
+	UITokens.make_text_legible(_prompt_label)
 	for slot in _hotbar_slots:
-		_make_text_legible(slot)
-	_make_text_legible(_hotbar_message)
+		UITokens.make_text_legible(slot)
+	UITokens.make_text_legible(_hotbar_message)
 
 	_frame_ms.resize(FRAME_WINDOW)
 	_hardware_line = "%s | %s | driver %s" % [
@@ -219,8 +201,8 @@ func _ready() -> void:
 
 func _style_panel(panel: PanelContainer) -> void:
 	var box := StyleBoxFlat.new()
-	box.bg_color = PANEL_BG
-	box.border_color = PANEL_BORDER
+	box.bg_color = UITokens.BG_PANEL
+	box.border_color = UITokens.BORDER
 	box.border_width_left = 2
 	box.border_width_right = 2
 	box.border_width_top = 2
@@ -243,23 +225,9 @@ func _fill_style(colour: Color) -> StyleBoxFlat:
 
 
 func _dress_bar(bar: ProgressBar, fill: StyleBoxFlat) -> void:
-	var track := _fill_style(TRACK)
+	var track := _fill_style(UITokens.TRACK)
 	bar.add_theme_stylebox_override("background", track)
 	bar.add_theme_stylebox_override("fill", fill)
-
-
-## Same walk combat_hud.gd uses: outline and shadow every label under `node`,
-## whatever gets added later.
-func _make_text_legible(node: Node) -> void:
-	if node is Label or node is RichTextLabel:
-		var control := node as Control
-		control.add_theme_constant_override("outline_size", OUTLINE_SIZE)
-		control.add_theme_color_override("font_outline_color", OUTLINE)
-		control.add_theme_color_override("font_shadow_color", SHADOW)
-		control.add_theme_constant_override("shadow_offset_x", int(SHADOW_OFFSET.x))
-		control.add_theme_constant_override("shadow_offset_y", int(SHADOW_OFFSET.y))
-	for child in node.get_children():
-		_make_text_legible(child)
 
 
 func _on_landed(impact_speed: float, damage: float) -> void:
@@ -560,7 +528,7 @@ func _update_vitals(vitals: RefCounted, delta: float) -> void:
 
 	_health_bar.value = health_fraction * 100.0
 	_stamina_bar.value = stamina_fraction * 100.0
-	_health_fill.bg_color = HEALTH_FULL.lerp(HEALTH_LOW, 1.0 - health_fraction)
+	_health_fill.bg_color = UITokens.HP_GREEN.lerp(UITokens.DANGER, 1.0 - health_fraction)
 
 	var sprinting: bool = bool(_player.call("is_sprinting")) if _player.has_method("is_sprinting") else false
 	var health_relevant := health_fraction < 0.999

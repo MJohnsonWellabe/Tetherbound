@@ -20,11 +20,10 @@ extends VBoxContainer
 ## time the two disagree it costs an afternoon.
 
 ## The dark blue-gray/teal panel language `playground_hud.gd` established for
-## the exploration HUD (bible §16). Tabs that want a panel reach for `_panel()`
-## below rather than inventing their own colours, so a grid here and a bar
-## there read as one HUD rather than two agents' guesses at "dark and teal."
-const PANEL_BG := Color(0.07, 0.09, 0.13, 0.78)
-const PANEL_BORDER := Color(0.55, 0.85, 0.86, 0.65)
+## the exploration HUD (bible §16), now on `scripts/ui/ui_tokens.gd`
+## (`UITokens`, D28). Tabs that want a panel reach for `_panel()` below rather
+## than inventing their own colours, so a grid here and a bar there read as
+## one HUD rather than two agents' guesses at "dark and teal."
 
 ## Set by the menu shell before build(). The tab uses it for `say()` and for
 ## reaching the item database.
@@ -84,7 +83,7 @@ func state() -> Node:
 func _style_slot(button: Button) -> void:
 	var box := StyleBoxFlat.new()
 	box.bg_color = Color(0.11, 0.14, 0.19, 0.85)
-	box.border_color = Color(PANEL_BORDER.r, PANEL_BORDER.g, PANEL_BORDER.b, 0.3)
+	box.border_color = Color(UITokens.BORDER.r, UITokens.BORDER.g, UITokens.BORDER.b, 0.3)
 	box.border_width_left = 1
 	box.border_width_right = 1
 	box.border_width_top = 1
