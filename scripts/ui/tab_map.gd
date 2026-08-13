@@ -95,6 +95,23 @@ var _terrain_attempted: bool = false
 var _terrain_tex: Texture2D = null
 var _icon_cache: Dictionary = {}
 
+## Frames left to force a redraw regardless of `revision`/movement, counted
+## down from `SETTLE_FRAMES` by every `poll()` right after `build()`. A freshly
+## baked `ImageTexture` is created synchronously inside `_draw_map()` (the
+## first draw this tab ever does); the rendering server is not guaranteed to
+## have finished uploading it to the GPU before that SAME frame's draw
+## commands sample it, which measured as a real one-frame "terrain renders
+## solid white" glitch under software (llvmpipe) rendering — confirmed by
+## reading the texture's own pixels straight out of `_terrain_texture()`
+## (correct meadow-green) while the on-screen frame showed white. Because
+## `poll()` otherwise only redraws on a state change, a player who opens the
+## map and holds perfectly still would keep seeing that first bad frame
+## forever. A few forced redraws right after open ride out the upload
+## regardless of the true cause, cost nothing on a menu screen, and self-
+## expire — no permanent per-frame redraw is added.
+var _settle_frames_left: int = 0
+const SETTLE_FRAMES := 6
+
 
 func build() -> void:
 	for child in get_children():
@@ -104,6 +121,7 @@ func build() -> void:
 	_icon_cache.clear()
 	_last_map_revision = -1
 	_has_last_player_pos = false
+	_settle_frames_left = SETTLE_FRAMES
 
 	var header := HBoxContainer.new()
 	header.add_theme_constant_override("separation", 16)
@@ -168,7 +186,11 @@ func poll() -> void:
 		_last_player_pos = pos
 		_has_last_player_pos = true
 
-	if revision_changed or moved:
+	var settling := _settle_frames_left > 0
+	if settling:
+		_settle_frames_left -= 1
+
+	if revision_changed or moved or settling:
 		_canvas.queue_redraw()
 	if revision_changed:
 		_last_map_revision = current_revision
