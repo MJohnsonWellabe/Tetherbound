@@ -96,7 +96,7 @@ when a blind pass no longer calls the perimeter discontinuous or low-quality.
 
 **`OF13` (hide the stronghold, move it farther from the village) shipped — see `DONE.md`.**
 
-**`BG1` (real grid/rotate/snap building placement, `D28`'s first `OF4-rebuild` prerequisite) shipped — see `DONE.md`.** Serves both the player's own base (M8) and the coming `OF4-rebuild`; `BG2` (real castle-parts assets) is still open, tracked separately, someone else's lane.
+**`BG1` (real grid/rotate/snap building placement, `D28`'s first `OF4-rebuild` prerequisite) shipped — see `DONE.md`.** Serves both the player's own base (M8) and the coming `OF4-rebuild`. `BG2` (real castle-parts assets, `OF4-rebuild`'s other prerequisite) has since shipped too — see below — so `OF4-rebuild` is unblocked.
 
 ### OF10 — The road up to the stronghold is unwalkable, and the hill/slope doesn't look good
 `area: terrain` · `model: fable` (likely — the existing hillside-quality
@@ -137,23 +137,6 @@ owner-accepted material-contrast read `BLOCKED.md` closed on 2026-08-12,
 but two fresh critics tripping on it independently is worth one look
 before re-accepting.
 
-### BG1 — Real grid/rotate/snap placement system (M8, done for real)
-`area: build` · `model: sonnet` (systems code)
-`build_placer.gd` currently ghost-places exactly one unrotated piece 3m
-ahead of the player with no snapping — `tab_build.gd`'s own header comment
-already says as much ("Placement, snapping and the hammer belong to the
-building system (M8), which does not exist"). This item writes that system
-for real: multi-piece grid alignment (reuse the 2m module grid
-`building_prefabs.json`'s own comments already describe for the settlement
-kit), piece rotation (90°, finer steps only if the kit needs them),
-snap-to-neighbour for walls/floors/roofs, and the existing ghost-preview
-legality tint per piece. Serves both the player's own base (`data/items/
-buildables.json`, D16's `build_cost_for` accessor — unchanged, still the
-only thing that decides affordability) and `OF4-rebuild` below, which needs
-it to assemble the stronghold. Done when: a multi-piece structure can be
-assembled at runtime with rotation and snapping, and it survives save/load
-through `GameState.placed_buildings`/`register_building`.
-
 ### BG2 — Source a CC0 castle/fortress asset kit
 Shipped, staged raw — see `DONE.md`'s `BG2` entry. Quaternius's own
 "Modular Medieval Building Pack" (30 models — 13 tower variants, 7 wall
@@ -186,44 +169,46 @@ actually seen from.
 
 ### NP7 — Modular hair/accessory geometry, split from the existing NP4 art (no new generation)
 `area: assets` · `lane: art` · owner directive, 2026-08-13 — rescoped from
-"owner-approved Meshy regeneration" (history preserved below): the source
-is the *existing* NP4 art, not a new generation, so `CLAUDE.md`/`D24`'s
-reference-art-board gate does not apply here — the input is the shipped
-mesh, not new concept art.
+"owner-approved Meshy regeneration" (history preserved in `BLOCKED.md`'s
+`NP1-geometry` entry): the source is the *existing* NP4 art, not a new
+generation, so `CLAUDE.md`/`D24`'s reference-art-board gate does not apply
+here — the input is the shipped mesh, not new concept art.
 
-Direct glTF parsing of all three shipped bases (`villager_female_lod0.glb`,
-`villager_male_lod0.glb`, `grunt_lod0.glb`) confirms each is a single mesh,
-single material, single primitive manifold — hair is sculpted into the same
-continuous surface as the scalp/skin, with no seam to just "detach." This
-is real Blender modeling/rigging work, not an export-settings change:
-isolate the hair region (villager_female's documented "occluded
-twin-ponytail" is the obvious first target), cut it into its own
-mesh/material, patch the resulting hole in the head mesh, and re-skin both
-resulting pieces to the existing 23-bone `Armature` (the mesh is currently
-skinned as one piece — splitting it does not preserve correct per-vertex
-bone weights on both new pieces for free). Repeat for `villager_male` and
-`grunt` as scoped. No tool in `tools/art_pipeline/blender/` does any part
-of this today (checked `cleanup_mesh.py`, `skin_transfer.py`,
-`strip_strays.py`, `graft_head.py` — none separates a manifold into named
-sub-meshes); new pipeline tooling may be needed alongside the actual split.
+**Shipped for `villager_female` — see `DONE.md`.** Direct Blender
+inspection (not assumption) found the twin-ponytail genuinely separable: a
+distinct hanging-tail protrusion behind/below the skull cap, distinguishable
+from the fused bangs/scalp by a visible tie-groove in a rendered close-up,
+not just a documented "occluded" silhouette. Cut into its own
+`hair_ponytail` mesh object, the scalp hole patched (true-rim detection +
+loop-walk fan-fill, size-filtered against spike artifacts a naive/unfiltered
+fill produced on the first three attempts — this mesh's hair region carries
+far denser pre-existing UV-seam fragmentation than a single clean boundary
+loop, a real property of the shipped Meshy retexture), and the hair piece
+re-skinned 100% to the `Head` bone. Wired into
+`character_model.gd::_apply_hair()`'s existing hide/show/recolour
+mechanism (extended to find and toggle a real baked-in mesh when the base
+model ships one, falling back to the placeholder primitive for
+trainer/Grandpa/Warden exactly as before). `_attach_part()`'s flagged
+0.01-scale offset bug did not reproduce against either rig when measured
+directly (`Armature`/`Skeleton3D` both scale 1.0 today, an offset landing
+at its full authored magnitude) — most likely already closed as a side
+effect of the giant-player fix (`render_bounds.gd`) — but hardened
+defensively anyway per this item's own "fix while you're in this function."
+One honest remainder: a small residual seam survives at the scalp in
+extreme macro close-ups from specific angles, confirmed invisible in both
+`tools/capture_village_npcs.gd`'s production frame and a matching in-game
+close-up at normal camera distance.
 
-Wire the result into the attachment plumbing that already exists and
-already works: `character_model.gd::_apply_hair()`/`_apply_accessories()`
-already create a `BoneAttachment3D` per named bone and parent a mesh to it
-from `art.json` config — it has just never been exercised with real
-geometry (only placeholder primitives so far). While touching this file,
-also fix the known 0.01-scale offset bug in `_attach_part()` (the same
-0.01-scale Armature chain documented in `docs/HANDOFF.md` §6 for the
-giant-player bug lands manual offsets like `_apply_hair`'s `Vector3(0,
-0.08, 0)` at roughly 1/100th scale in-game) — flagged but not fixed by the
-prior `NP1-geometry` history.
-
-**History, preserved:** this item previously read "owner-approved Meshy
-regeneration," replacing `BLOCKED.md`'s "NP1-geometry" entry after the
-owner approved a new generation gated on a reference board. That path is
-superseded by the 2026-08-13 directive above; `BLOCKED.md`'s NP1-geometry
-entry should be read as historical context for *why* modular geometry was
-needed, not as the current plan for *how* to get it.
+**`villager_male`/`grunt` deliberately not attempted this pass.** Landing
+one clean, fully-verified split (Blender technique, hole-patching, re-skin,
+mechanism wiring, tests, full suite green, in-engine visual confirmation)
+used substantial real effort across several failed patch attempts before
+converging; repeating that for two more bases without knowing yet whether
+they even have a comparably separable feature would risk three rushed,
+uncertain results instead of one solid one. A quick render check found
+both `villager_male` and `grunt` have short/cropped hairstyles with no
+comparable hanging protrusion — worth a real look before assuming either
+is separable the same way, not scoped into this pass.
 
 ---
 

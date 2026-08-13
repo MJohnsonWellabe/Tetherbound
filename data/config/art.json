@@ -168,10 +168,14 @@
   },
   "villager_farmer": {
     "_comment": "R7.2, moved off Grandpa's rig by NP5 (owner directive 2026-08-12: the village should stop reading as clones of Grandpa and the trainer). Now NP4-rig's villager_female base -- a real second body, not a tint of the hero rig. `tint` still multiplies every surface's existing albedo the same way it did on Grandpa's rig, so Mira keeps her own rustier, warmer wardrobe colour distinct from the other four.",
+    "_comment_hair": "NP7: villager_female_lod0.glb now ships a real separated `hair_ponytail` mesh (cut from the fused source, patched, re-skinned to Head in Blender) instead of the old single fused surface. `visible: true` here is the default look, unchanged from before this split -- but it now runs through character_model.gd's real find/toggle path (_apply_hair), not just a baked-in mesh nobody can hide. Present on all three villager_female-based configs (farmer, smith, ranger) so the base's default appearance is unaffected by the split.",
     "model": "res://assets/characters/villager_female/villager_female_lod0.glb",
     "height": 1.75,
     "model_yaw": 0.0,
     "tint": "#c9793a",
+    "hair": {
+      "visible": true
+    },
     "clips": {
       "idle": "idle",
       "walk": "walk",
@@ -202,6 +206,9 @@
     "height": 1.73,
     "model_yaw": 0.0,
     "tint": "#bccbe6",
+    "hair": {
+      "visible": true
+    },
     "clips": {
       "idle": "idle",
       "walk": "walk",
@@ -232,6 +239,9 @@
     "height": 1.77,
     "model_yaw": 0.0,
     "tint": "#c2a878",
+    "hair": {
+      "visible": true
+    },
     "clips": {
       "idle": "idle",
       "walk": "walk",

@@ -3,6 +3,129 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## NP7 — villager_female's twin-ponytail split into a real, re-skinned, toggleable mesh
+`model: sonnet` — mechanical/asset work, no dispatch. `tests: full suite`
+(398/398, 4 new cases in `tests/test_character_hair_split.gd`), plus a real
+in-engine visual pass (see below).
+
+**What shipped.** `assets/characters/villager_female/villager_female_lod0.glb`
+went from one fused mesh/one material to two: the original body (scalp hole
+patched) and a new `hair_ponytail` mesh, both still skinned to the same
+23-bone Armature, all 6 original clips untouched. No Meshy generation, no
+credits spent — the source was the shipped mesh itself, per the owner's
+2026-08-13 redirect (`BLOCKED.md`'s `NP1-geometry`, `BACKLOG.md`'s `NP7`).
+
+**Investigation before touching anything.** Rendered the head from five
+angles in Blender/Cycles first (headless, no display needed —
+`--background`) rather than assuming the "occluded twin-ponytail" ledger
+note meant a trivial seam. It didn't: the ponytail is genuinely a separate
+hanging protrusion (visible tie/groove in a right-profile render, an actual
+modelled hair-tie colour band even), not hair merely painted onto a bald
+scalp. Confirmed the target region geometrically before cutting anything by
+sampling the base-colour texture per vertex (hair-dark vs skin vs green
+clothing) combined with dominant vertex-group weight (Head/neck) and a Z/Y
+window — not a guessed bounding box.
+
+**The cut.** `bpy.ops.mesh.separate(type='SELECTED')` on the classified
+face set (1115 of 27998 faces), in a script under
+`tools/art_pipeline/blender/` conventions (headless, `--background`).
+Straightforward.
+
+**The patch was the hard part, and is where most of this session's time
+went.** The source mesh is NOT the "single continuous manifold" the
+pre-existing `NP1-geometry` note assumed — direct measurement found 8978
+boundary edges on the fully untouched source mesh (18851 verts), from
+dense pre-existing UV-island seams (position-duplicated vertices, common in
+a Meshy retexture pass) that happen to sit throughout the hair region
+specifically. This meant:
+- `bmesh.ops.holes_fill()` on the cut's own boundary edges alone produced
+  **zero** faces — the true perimeter is fragmented into ~23 disconnected
+  pieces by those pre-existing seams crossing it, not one clean loop.
+- Widening the fill to every boundary edge in the removed region's bounding
+  box (scoped that way specifically so the many OTHER pre-existing seams
+  elsewhere on the body, arms/legs/torso, are never touched) pulled in the
+  UV-seam noise too and still produced almost nothing.
+- Isolating the TRUE rim by position-uniqueness (a boundary vertex is part
+  of the real cut only if nothing else on the body sits at its exact
+  position — a pre-existing seam's "other side" is still present, a true
+  gap's is not) and fan-filling every closed loop found in that true rim,
+  unfiltered, DID close most of the hole but produced a visible spike
+  triangle in a rendered check — confirmed by isolating just the separated
+  hair mesh on its own (clean, no spike) versus the patched head (spike
+  present), proving the defect was in the fill, not the cut.
+- The fix that actually shipped: only fan-fill loops of 10+ points (smaller
+  "loops" found by the adjacency walk turned out to be near-degenerate
+  artifacts of the noisy seam-crossed boundary, not real rings), plus a
+  per-triangle guard against any spoke edge more than 2.5x the loop's own
+  average radius. Rendered clean at every angle checked afterward except
+  one extreme macro close-up, which still shows a thin residual seam line —
+  disclosed below, not hidden.
+
+**Re-skinning.** The separated hair mesh inherited the original fused
+mesh's per-vertex weights (blended Head/neck near the boundary, correct for
+when it was still part of one piece but not for an independently-toggleable
+part). Cleared every vertex group except `Head` and set it to weight 1.0 on
+all 883 hair vertices, per the backlog item's own instruction. The
+remaining body mesh keeps its original weights untouched — only vertices
+were removed, nothing about the survivors' skinning changed.
+
+**`character_model.gd::_apply_hair()`** now finds a real `hair_ponytail`
+mesh inside the loaded model (when the base ships one) and toggles/recolours
+it directly, instead of always building a placeholder primitive — the
+existing mechanism, extended, not replaced. Falls back to the placeholder
+path unchanged for trainer/Grandpa/Warden, which still have no separable
+hair. `data/config/art.json` gained a `"hair": {"visible": true}` block on
+`villager_farmer`/`villager_smith`/`villager_ranger` (the three
+villager_female-based NPCs) so the mechanism is actually exercised in the
+shipped config, not just available — the default look is unchanged (hair
+was already visible before this item), but it now runs through a real
+find/toggle path.
+
+**The `_attach_part()` scale-offset bug** the backlog item asked to be
+fixed while in this function: checked directly rather than assumed fixed or
+assumed present. Built a scratch probe (off-tree, no rendering, matching
+`tests/test_case.gd`'s scope) that placed a placeholder hair part on the
+trainer and read `attachment.global_transform`, the `Head` bone's
+`global_rest`/`global_pose`, and the whole node chain's `scale` up to the
+Armature. Every scale in the chain measured `(1,1,1)` on both the trainer
+and villager_female's rigs today, and a `Vector3(0, 0.08, 0)` offset landed
+at its full 0.08m magnitude, correctly rotated with the bone — **not
+reproducible against either shipped rig.** Most likely explanation: the
+giant-player fix (`render_bounds.gd`, already shipped, described in its own
+header comment) closed this as a side effect — a residual 0.01 Armature
+scale is exactly the other half of what a naive local-space offset would
+need to land at 1/100, and that fix's whole point was making `_art`'s own
+fit scale stop needing a ~100x correction. Hardened `_attach_part()` anyway
+per the item's instruction: it now reads the attachment's actual chain
+scale and divides both the authored offset and the instance's own scale by
+it, so a future rig that DOES carry a residual scale is protected at zero
+behavioural cost today (confirmed: the full suite and a rendered check both
+came back identical before and after this specific change).
+
+**Verification, in full:**
+- `godot --headless --path . --import` — clean, no script errors.
+- `godot --headless --path . --script tests/run_tests.gd` — 398/398, 0
+  failed (394 before this item; 4 new cases added in
+  `tests/test_character_hair_split.gd` covering the real-geometry
+  find/toggle/recolour path and the "no hair config -> nothing attached"
+  guard for bases with no split mesh).
+- Visual: rendered `tools/capture_village_npcs.gd`'s real production frame
+  (all 5 village NPCs, 3 of them on the split base with 3 different
+  tints) — all three read with an intact, correctly-shaped ponytail, no
+  visible seam or artifact at normal camera framing. A deliberate
+  in-engine close-up hunting for the known residual (same angle the
+  Blender macro render found it at) shows a thin seam line at the nape —
+  small, real, and disclosed rather than hidden; not visible in the
+  production frame or at any normal gameplay distance. Godot's own
+  Compatibility renderer used for this check, not just the Blender/Cycles
+  renders used during investigation.
+- Full `visual-judge` skill machinery (survey.sh + blind sub-agent against
+  the key-art/Palworld references) was not run — that pipeline judges the
+  whole environment's art direction, not a single character mesh change,
+  and this session had no tool available to spawn a genuinely separate
+  blind reviewer for a narrower check. Substituted a direct, honest look at
+  the rendered frames instead, described plainly above rather than scored.
+
 ## BG1 — A real grid/rotate/snap building placement system, replacing the one-piece-no-rotation ghost
 
 `scripts/build/build_grid.gd` (new), `scripts/build/build_placer.gd`,
