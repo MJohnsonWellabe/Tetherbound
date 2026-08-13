@@ -174,7 +174,14 @@ in `DONE.md` for the prior attempts (`EV4-hillside-seam` through
 what was tried and ruled out — it should inform the redo's judgment, not
 constrain its starting point.
 
-### Hillside rock ceiling, round 2 — owner decision needed: accept the current read, or commission real rock geometry
+### ✅ RESOLVED — hillside rock ceiling, round 2: the owner accepted the current read (2026-08-13)
+
+**Closed 2026-08-13.** Asked directly in an interactive session; the owner
+chose path 1 below — accept the current state. "Good enough for a hillside
+the player climbs past, not stares at" is now the recorded call. No round 8
+ran, no reference board is needed, and `BACKLOG.md`'s `OF11-remainder` is
+closed on this decision. The analysis below stays as the record of why the
+question was asked.
 `OF11`'s from-scratch redo (see `DONE.md`) ran 6 real rounds and fixed the
 literal root cause behind every prior round's "smooth grey wash" complaint
 (the rock photo was tiled at 8.3m per tile — one 1024px image blown up to
