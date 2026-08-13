@@ -1190,6 +1190,18 @@ mesh/single-material UV layout with no per-garment boundary a height-band
 heuristic can isolate — the trousers mask also caught the satchel, boots
 and face fringe. No safe targeted fix without real per-garment UV
 islands (Blender-assisted manual selection), so no code changed.
+**`NP4-uv-split` (2026-08-13) took that route and closed both defects —
+see `DONE.md`.** The ceiling was never the mask, it was the shared atlas:
+each garment is now cut into its own mesh object with its own material and
+its own copy of the texture
+(`tools/art_pipeline/blender/split_garment.py`, `NP7`'s classify-by-
+measurement method), so an edit to those pixels can only reach the faces
+that were cut. villager_male's trousers are graded warm and lighter
+(mean sRGB 117,104,89 → 129,107,82) and villager_female's shin stain is
+repainted out of her other shin's skin. Both bases still animate on the
+same 23-bone rig with the same 6 clips, and per-garment `palette` entries
+are now possible for the first time (spec §21). One macro-only residual on
+each is disclosed in the `DONE.md` entry, the same bar `NP7` accepted.
 
 **`NP4-rig` (rig, animate and install the three NP4 bases) shipped — see
 `DONE.md`.**

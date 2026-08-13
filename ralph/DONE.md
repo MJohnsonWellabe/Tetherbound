@@ -3,6 +3,103 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## NP4-uv-split — villager_male's trousers and villager_female's shin cut into their own materials, and both defects fixed
+
+`model: opus` — asset/mesh work, no dispatch. `tests: tests/smoke_art.gd`
+green, plus the full suite (mesh + texture change = wide diff): **542 tests,
+89642 assertions, 0 failed.**
+
+**What shipped.** Both villager bases stopped being one mesh / one material /
+one atlas. `villager_male_lod0.glb` now carries a second mesh object
+`trousers` (5667 of 27998 faces) on its own `Trousers` material, and
+`villager_female_lod0.glb` a second mesh object `shins` (1683 of 26898
+faces) on its own `Shins` material. Each new material points at its own
+copy of the atlas rather than the shared one, which is the whole mechanism:
+an edit to those texels can only ever reach the faces that were cut, so the
+correction that used to hit the satchel, the boots and the face fringe now
+cannot. With that in place both remaining `NP4` defects are fixed:
+
+- **villager_male's trousers**, dark and cold against
+  `docs/art/reference/12_NPC_Bases_Reusable.png`, are graded warm and up in
+  value — mean sRGB 117.5,104.2,88.8 → 128.6,107.2,81.9, a per-channel
+  linear-light gain of (1.219, 1.065, 0.848) chosen so the channel ratios
+  land on the reference board's own trouser brown (1 : 0.81 : 0.58, sampled
+  from the front and 3/4 figures) instead of the shipped 1 : 0.89 : 0.77.
+  It is a multiply, so the weave, the seams and the painted shading all
+  survive; only hue and value move.
+- **villager_female's shin blotch** is gone. It was not a subtle stain: a
+  rendered close-up shows most of one shin painted in the shorts' olive.
+  Measured, the bad side's texels sat at median sRGB 186,173,145 and 5th-
+  percentile luma 0.194 against the good side's 219,196,180 and 0.497. The
+  bad side is repainted out of the good side's own skin.
+
+**Method — `NP7`'s, deliberately.** Faces were classified by measurement,
+never by an eyeballed box: dominant vertex group, world height, and the
+colour the atlas actually paints each face (leather reads warmth R/B 4-6 on
+these bases, cloth trousers 1.8 — measured across all 27998 faces before
+anything was cut), then majority-filtered over face adjacency so the cut
+edge is not speckled. Every stage was verified by RENDERING, not by
+assuming: the cut set was rendered in flat magenta before any pixel was
+touched, which is how three separate errors were caught and fixed rather
+than shipped — a first cut stopped at the belt and left an ungraded grey
+waistband under it; the pale wrapped cuff above the boots passed the warmth
+test and took orange drips; and keying the female's sides off bone names
+left the top third of the stain (knee faces, owned by the thigh bone)
+outside the repaint. Unlike `NP7` there was no hole to patch — the cut
+piece stays exactly where it was — and both halves keep their original
+per-vertex weights, so the legs still deform with the knees. Same 23-bone
+Armature, same 6 clips, both files round-tripped through the same Blender
+glTF exporter `NP7` used, with the Meshy material's emissive/specular
+wiring intact on both materials (these materials drive Base Color AND
+Emission from the same image, so a garment copy has to move both or the
+correction renders under an unchanged self-lit pass and nothing happens).
+
+**A side effect worth knowing.** `character_model.gd::_apply_palette`
+already keys tints by material name and has since `NP1`, with a comment
+saying the distinction "is real once a rig has more than one, which NP4's
+modular bases will". They now do: `"palette": {"Trousers": "#..."}` on a
+villager_male-based NPC will recolour only the trousers. Nothing in
+`data/config/art.json` uses it yet — every villager still runs the same
+`"*"` tint it ran yesterday, so no NPC's look changed except by the two
+fixes above — but the spec §21 "per-region variation" path is now real
+rather than theoretical.
+
+**Cost.** +1.45MB on villager_male's glb, +0.38MB on villager_female's. The
+garment textures are full-resolution only inside the garment's own UV
+footprint (dilated 12 texels so mip and bilinear filtering never reach the
+edge) and flood-filled with the garment's mean colour everywhere else,
+which is why a second 2048² atlas costs a fraction of the 7MB the first one
+does. Godot extracts them on import as
+`villager_{male,female}_lod0_{trousers,shins}_tex.png`.
+
+**Honest limits.**
+- The female repaint is, in practice, a flat fill. The script tries to
+  resample the good shin's actual painted texels (eight axis-aligned
+  orientations, best coverage wins) but the two islands do not correspond:
+  the best orientation put 1.7% of samples inside the good island, so 98%
+  of the shin takes the good island's median colour. That reads correctly —
+  the surviving shading comes from the mesh normals, and the good shin's
+  own texel spread is only a few values wide — but it is a repaint, not a
+  transfer, and the report JSON says so (`source_hit_rate: 0.017`).
+- Macro-only residuals survive on both, the bar `NP7` set and disclosed the
+  same way: a few faint warm specks on one of villager_male's cuffs, and a
+  ~5px dark fleck plus a slightly ragged edge under villager_female's
+  shorts hem. Both invisible at normal camera distance in the same
+  close-ups that show the fixes.
+- **No blind visual judge ran.** This lane has no tool for spawning a fresh
+  subagent, so `LANE_RULES`' blind check could not be performed from here;
+  verification is the author's own before/after close-ups (four angles each,
+  rendered under the render lock) plus the reference board. The frames are
+  in the session scratchpad under `shots/before_male`, `shots/before_female`,
+  `shots/male_fix`, `shots/female_fix3`. A blind pass on those frames is the
+  one piece of this item's verification still owed.
+**In-engine confirmation.** `tools/capture_village_npcs.gd`'s production
+frame (`shots/_diag/village_npcs.png`, rendered under the render lock after
+a full reimport) shows all five village NPCs on the two rebuilt bases: no
+seam at either garment boundary, no tint discontinuity where the new
+material meets the body, the male-based villagers' trousers reading warm
+brown, and the female-based villagers' shins clean. The two-object bases
+load, skin and pose exactly as the one-object ones did.
 ## EV7-remainder-critique — the blind pass owed by trainer_camp and bridge_repair_site, run and cleared
 `model: sonnet` · `tests: none` (no `.gd` touched — placement/composition-
 verification only). `tools/capture_ev7r_props.gd` (already existed,
