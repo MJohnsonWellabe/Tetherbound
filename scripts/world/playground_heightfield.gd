@@ -199,6 +199,7 @@ func height_at(x: float, z: float) -> float:
 	height = _apply_flats(x, z, height)
 	height -= _stream_carve(x, z)
 	height -= _spoke_carve(x, z)
+	height += _outlet_shape(x, z)
 	height -= _shore_step(height)
 
 	return height
@@ -236,6 +237,48 @@ func _spoke_carve(x: float, z: float) -> float:
 			continue
 		deepest = maxf(deepest, _carve_depth(spot, carve))
 	return deepest
+
+
+## EV5-remainder-2. The pond's outlet: a signed shape, positive where the bar
+## between the basin and the river gorge is lifted back above the waterline,
+## negative where the outflow is cut back through it.
+##
+## The gorge SA4 carved already shares a water sheet with the pond — the flood
+## fill joins them with no orphaned cells — but it joined them across a 19-25m
+## shelf, which is why the frame read as one reservoir rather than a river
+## leaving a lake. Water does not need help to get out of this basin; the
+## outlet needs a RIM to leave through. So: `sill` raises the shelf (a bar laid
+## across the corridor, its ends on dry ground so nothing can route around it)
+## and `channel` cuts a narrow slot back through the bar's middle along the
+## flow bearing. What survives is a stream-width neck with banks either side.
+##
+## Both halves are `_carve_depth` — the same straight-bar profile the spokes'
+## trenches use, smoothstep across and along — so there is exactly one falloff
+## evaluator on this map and a rim behaves identically wherever it appears.
+## Sign is the only difference, which is also why this is one function: the two
+## must be read together or the bar is a dam.
+##
+## Applied after `_spoke_carve` and before `_shore_step`. The first ordering is
+## free (both are pure functions of XZ, so a raise and a subtraction commute);
+## the second is not — the shore step must see the finished bed so the neck
+## gets the same half-metre lip as the rest of the shoreline.
+func _outlet_shape(x: float, z: float) -> float:
+	var outlet: Dictionary = _config.get("water", {}).get("outlet", {})
+	if outlet.is_empty():
+		return 0.0
+	var spot := Vector2(x, z)
+	var sill: Dictionary = outlet.get("sill", {})
+	var raise_by := _carve_depth(spot, sill)
+	if raise_by <= 0.0:
+		# Outside the bar there is nothing to cut through, and cutting anyway
+		# would gouge a slot across the pond floor and on down the gorge.
+		return 0.0
+	# The cut is scaled by how much bar there is to cut: the channel inherits
+	# the sill's own falloff, so the two reach zero on the same contour. Left
+	# independent, the channel would still be metres deep exactly where the
+	# sill had faded to nothing and the neck would end in a submerged cliff.
+	var full := maxf(float(sill.get("depth", 0.0)), 0.001)
+	return raise_by - _carve_depth(spot, outlet.get("channel", {})) * (raise_by / full)
 
 
 func _carve_depth(spot: Vector2, carve: Dictionary) -> float:

@@ -3,6 +3,45 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV5-remainder-2 (outlet) — the pond gets a real rim and a stream-width neck into SA4's river_gorge
+
+`model: opus (owner-directed, token budget)` · `tests: smoke_traversal`,
+full suite 586/586, 0 failed.
+
+**What shipped:** `EV5-remainder-2`'s outlet was blocked on the pond having
+no downhill destination — that premise changed when `SA4`'s `river_gorge`
+spoke carved a real trench nearby. An analytic probe
+(`tools/_probe_outlet.gd`) confirmed the two water bodies were already
+flood-fill connected (one sheet, 0 orphaned cells) through the spoke's own
+rim fade, but the join was a diffuse 19-25m shelf where the pond's
+north-east lobe happened to touch the gorge's north-west rim — a merge, not
+a directed outflow, and read that way ("one reservoir") by SA4's own blind
+critic.
+
+`data/config/terrain_playground.json`'s `water.outlet` block and
+`playground_heightfield.gd::_outlet_shape()` make the connection deliberate:
+a `sill` (a bar laid across the corridor, ends on dry ground, lifted back
+above the waterline) restores the pond's own rim, and a `channel` cuts a
+narrow slot back through the sill's middle along the flow bearing. Both use
+the existing `_carve_depth` straight-bar falloff the spoke trenches already
+use — one profile evaluator for every rim on the map — and the channel's
+depth is scaled by the sill's own fade so the neck doesn't end in a
+submerged cliff where the sill has already tapered to nothing.
+
+**Verified by a purpose-built probe, not a render.** `tools/_probe_outlet_neck.gd`
+walks the pond→gorge bearing (37.1°) and measures wet cross-section width
+every metre: 58.5m at the pond's own edge, narrowing to a genuine **6.0m
+neck at d=23m**, then widening back to 28.5m into the gorge — a real
+stream-width outlet between two much larger bodies, not a cosmetic tweak.
+Re-baked (`scripts/world/build_playground_terrain.gd`); control-map wet-bed
+pixels dropped from SA4's 4,538 to 4,100 (the sill reclaiming shelf back
+above the waterline), consistent with the fix rather than asserted.
+
+**Honest limits:** this was never rendered or blind-judged — only measured
+analytically and by the deterministic bake's own log. Whoever next touches
+this area should render the pond/gorge junction and confirm it reads right
+to the eye, not just to the probe. The third-plant half of
+`EV5-remainder-2` is untouched — see `BACKLOG.md`'s remaining entry.
 ## OF12-remainder (a) — the mirrored tree-stand on the-rise-route broken by a per-layer seed re-roll
 
 `model: sonnet` · `tests: none tagged (visual); full suite 586/586, headless

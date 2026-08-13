@@ -869,21 +869,19 @@ jetty, a second marginal plant, the flowing-stream variant) shipped — see
 of it: everything except sedge/cattail was already staged and ledgered in
 the packs. What genuinely remains is below.
 
-### EV5-remainder-2 — The pond outlet, and the third waterside species
-`model: fable` · `tests: smoke_traversal` · `area: terrain`
-Two leftovers `EV5-remainder` could not reach:
-- **The OUTLET** (blind rounds 2+: "Band 3's river should leave the pond,
-  not appear beside it"). Not dressing — terrain re-authoring. The pond
-  basin is the 512m map's global minimum (`EV5`'s probe: the only terrain
-  below -18m anywhere, level -22.5), so an outlet river has nowhere downhill
-  to go; it needs Band 3's own downstream terrain authored (or the south rim
-  re-carved below the pond level for the whole run). Natural first step of
-  the Band 3 river work, wrong to fake before it.
-- **A third waterside plant silhouette (sedge/cattail).** Owner-blocked:
-  those forms need the fuller nature MegaKit the owner has not supplied —
-  do not source a substitute pack (D24, one nature family). The second
-  species shipped in-pack (`Plant_1_Big` marginals, `water.json`), so this
-  is polish, not a gap.
+**`EV5-remainder-2`'s OUTLET half shipped — see `DONE.md`.** The premise
+above (no downhill destination) was overtaken by `SA4`'s `river_gorge`
+spoke, which gave the pond a real basin to drain into; the outlet fix is a
+deliberate sill+channel neck through what had been a diffuse merge shelf,
+not the Band-3 downstream-terrain project this entry originally called for.
+
+### EV5-remainder-2 — the third waterside species
+`model: fable` · `tests: none` · `area: vegetation`
+The one leftover this item still owes: **a third waterside plant silhouette
+(sedge/cattail).** No longer owner-blocked in principle — the Stylized
+Nature MegaKit landed on `main` 2026-08-13 (`d64df71`) — but not yet curated
+into `water.json`'s marginals. The second species already shipped in-pack
+(`Plant_1_Big` marginals), so this is polish, not a gap.
 
 **`EV6` (settlement rebuilt on the Medieval Village MegaKit) shipped — see
 `DONE.md`.** Workshop, two cottages, composed well, kit fences, two authored

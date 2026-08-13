@@ -830,6 +830,33 @@
     "level": -22.5,
     "_comment_shore_step": "EV5 blind round 1: 'the pond is not in the terrain... no bank drop, no lip.' The basin is real but its banks meet the water at the valley's own gentle grade, so nothing marks the transition. This drops everything below the waterline a further half-metre (playground_heightfield.gd::_shore_step, faded in across the waterline itself), which steepens the last metre of bank into a readable lip and deepens the shallows' colour ramp without touching any dry ground. TUNABLE.",
     "shore_step": 0.5,
+    "_comment_outlet": "EV5-remainder-2, the OUTLET. SA4's river_gorge already left the pond wet-connected -- the probe found ONE flood-filled sheet, 0 orphaned cells -- but the join was a 19-25m-wide diffuse shelf where the pond's own north-east lobe happened to touch the gorge's north-west rim fade. That is a merge, not an outflow: from the shore it is one sheet of water with no rim and no direction. This block makes the connection deliberate. `sill` is a low bar laid ACROSS the corridor (its long axis perpendicular to the pond->gorge bearing, both ends landing on dry ground) that lifts the shelf back above the waterline, so the pond gets a south-east rim again; `channel` is a narrow cut back through the middle of that bar along the flow bearing, so the only water leaving the basin leaves through a stream-width neck. Both use playground_heightfield._carve_depth -- the same straight-bar falloff the spoke gorges are cut with -- so there is one profile evaluator on the map and rims behave the same way everywhere. Deliberately shallower than either water body it joins: the surface shader colours by depth, so a ~1.4m neck reads as a light, foamed ribbon between the pond's 3.8m and the gorge's 11m+, and the outflow direction is legible without a flow map. ALL TUNABLE.",
+    "outlet": {
+      "sill": {
+        "centre": [
+          -125.8,
+          152.5
+        ],
+        "axis_deg": 127.1,
+        "half_length": 20.0,
+        "end_fade": 14.0,
+        "half_width": 6.0,
+        "rim": 9.0,
+        "depth": 2.5
+      },
+      "channel": {
+        "centre": [
+          -125.8,
+          152.5
+        ],
+        "axis_deg": 37.1,
+        "half_length": 8.0,
+        "end_fade": 9.0,
+        "half_width": 2.0,
+        "rim": 3.0,
+        "depth": 4.2
+      }
+    },
     "pond_centre": [
       -145.0,
       138.0
