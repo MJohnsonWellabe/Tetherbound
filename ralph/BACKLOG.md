@@ -91,18 +91,7 @@ player climbs past, not stares at. No round 8 was run, per this entry's own
 stopping rule. The 11-round history stays in `DONE.md`; the resolved
 decision is recorded in `BLOCKED.md`'s entry, now marked resolved.
 
-### A near-field tree renders with magenta/red-striped foliage
-`area: vegetation`. Found incidentally during `OF10`/`OF11`'s blind review
-(`shots/hillside/dome-overview.png`, the tree at bottom-left) — a blind
-critic called it "the single most damaging surface fault in the set."
-Present identically in renders from before that session's own changes, so
-not caused by `OF10`/`OF11`; unfixed, not investigated further (out of
-that item's scope). Likely a DIFFERENT bug from the already-tracked
-`SA1`/`R9.4-remainder-7` magenta-foliage issue — that one is attributed to
-un-mipmapped textures aliasing at distance, and this is a single tree
-filling the near foreground, not a distance effect. Possibly one bad
-`vegetation.gd::_retint()` result or one broken tree instance/material.
-Worth a dedicated look, not a re-diagnosis of the distance issue.
+**Magenta-canopy (near-field tree magenta/red-striped foliage) root-caused and fixed** — see `DONE.md`. `Leaves.png`, the texture `trees`/`grove`/`saplings` retextured their canopy material onto, turned out to be a multi-species sample sheet (green/blue/orange/**magenta**, confirmed by direct pixel read) rather than the single muted leaf R9.4 believed it was; CommonTree/TwistedTree's leaf-card billboards sample almost the entire canvas per card (measured: median per-triangle UV box 0.80x1.00), so every card rendered the atlas's magenta and blue swatches alongside the green ones. Fixed by pointing all three `retexture` blocks back at `Leaves_NormalTree_C.png` (the pack's own single-hue leaf, already proven safe as the `bushes` layer's crimson-bush fix). Proven with an isolated before/after repro (single tree, no terrain, exact shipped material transform): magenta/pink-hue pixel count went from thousands to zero. **Not blind-verified past this point** — the actual named viewpoints (`road-end-lookup.png`, `dome-overview.png`) were not re-rendered/critiqued in-session (render-lock contention plus the 90-minute cap); next pass should re-render those two and run one `visual-judge` round before treating this as fully closed.
 
 ### OF12-remainder — Blind-confirm the in-fill state; carry the out-of-scope defects the OF12 critics named
 `area: vegetation` · `tests: none (visual)`. `OF12` shipped (see `DONE.md`)
