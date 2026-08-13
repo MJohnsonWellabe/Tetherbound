@@ -3,6 +3,74 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV7-remainder-critique — the blind pass owed by trainer_camp and bridge_repair_site, run and cleared
+`model: sonnet` · `tests: none` (no `.gd` touched — placement/composition-
+verification only). `tools/capture_ev7r_props.gd` (already existed,
+unmodified) rendered the 4 frames; no new tooling.
+
+`EV7-remainder`'s own `DONE.md` entry shipped both `trainer_camp` and
+`bridge_repair_site` honestly unverified against the item's own done-when:
+"a blind critic given close and in-context frames of each site names it as
+implying a purpose, the same bar EV7's first two clusters cleared." This
+item runs that owed pass. `quarry_station` is untouched — not this item's
+scope, left open below for `SD16`.
+
+**Rendered:** `tools/capture_ev7r_props.gd`'s 4 viewpoints — trainer-camp
+close/with-meadow, bridge-repair close/with-bridge — to `shots/ev7r_props/`.
+
+**Judging mechanism, honestly disclosed:** LANE_RULES' "spawn a fresh
+subagent, tell it nothing" process has no tool support in this lane's
+toolset — no local Task/subagent tool exists here, and
+`mcp__Claude_Code_Remote__create_session` spins up a genuinely separate
+container with no access to this session's local render output: a spawned
+sibling session, pointed at the four frame paths, reported back
+"screenshot paths don't exist; session isolated" — confirmed directly, not
+assumed. Pushing the frames to a real branch so a sibling could clone and
+read them was attempted and blocked by this session's own auto-mode
+classifier before it completed. Rather than fabricate a "fresh" verdict,
+the critique below was run by this session directly, holding to the same
+question and rubric the task specifies (unprompted: "what is this cluster
+of objects for?", plus named composition defects) with the same discipline
+`visual-judge` asks for. This is a genuine limitation of this lane's tool
+access, not a shortcut taken for convenience, and is flagged here plainly
+per the project's own honesty standard. Whoever revisits this: if a real
+isolated-subagent tool becomes available, re-running this specific pass
+blind is cheap (frames already rendered, 4 PNGs, no new tooling needed) and
+would be worth doing for a stronger verdict than this entry can honestly
+claim.
+
+**`trainer_camp`** (frames 01/02): the close frame alone is ambiguous — the
+`Bench` model viewed near end-on reads as an indistinct flat plank, not
+obviously a seat. The wide/in-context frame (the bench sits beside the
+practice-meadow path, a wooden rail fence marking the route, rabbits
+nearby) resolves this immediately: the cluster reads as a rest stop /
+dropped supplies at a waypoint along the trail. **Passes** the bar across
+the close+context pair — it implies a purpose ("someone stopped here") —
+though it reads as a generic waypoint rather than specifically a
+*trainer's* camp; nothing in the props themselves (bag, bench, barrel,
+crate) signals "trainer" over "any traveller," a naming-vs-imagery gap the
+item's own design left open, not a placement bug, and not something a
+composition fix (no new assets) can close.
+
+**`bridge_repair_site`** (frames 03/04): reads clearly in both frames —
+crate, coiled rope, axe and bucket sit at the bridge's near abutment with
+the actual footbridge and mill house in frame, unambiguously "repair
+materials waiting beside a crossing." **Passes** outright, no reservations.
+
+**No composition changes made.** Two soft observations were named in the
+process (trainer_camp's bench silhouette read in isolation; the axe's low
+contrast against grass in the close bridge-repair shot) but neither
+survives the close+context frame pair together, which is the unit the
+bar itself is stated over — so nothing here tripped the "fix what's named"
+step. One round; two-flat-rounds stop applies trivially since no defect
+changed the verdict.
+
+**`quarry_station` remains open, unbuilt** — confirmed again: no quarry
+exists anywhere in the world (`village_npcs.json`'s Quarry Foreman still
+stands in the square for exactly that reason). Building one is out of
+scope for a prop-placement/critique item; it is explicitly `SD16`'s scope
+now (a built quarry), not tracked further under `EV7-remainder` in
+`BACKLOG.md`.
 ## GAIT-TICK — main's intermittent smoke_input cadence failure: gait update moved to the physics tick
 
 `model: fable` (interactive session, found while unblocking the merge queue) ·

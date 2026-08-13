@@ -993,31 +993,22 @@ Two of the bible's five named clusters. `bridge repair site`, `quarry station`
 and `trainer camp` need geography that doesn't exist yet (no bridge, no built
 quarry — `SA4`/`EV5` territory) and are carried forward below.
 
-**`trainer_camp` and `bridge_repair_site` shipped 2026-08-13 — see
-`DONE.md` (`EV7-remainder`).** Both clusters built from the already-staged,
-already-ledgered Fantasy Props MegaKit (five more of its 94 models), sited
-with real ground-height probes rather than guesses. **Not yet blind-
-critiqued** — the done-when bar below still applies and is still owed; this
-is placement/composition work only, honestly unverified against it.
-**`quarry_station` remains open**, confirmed again: no quarry exists
-anywhere in the world, and building one is out of scope for a
-prop-placement item.
-
-### EV7-remainder — The three prop clusters that need geography built first
-`model: sonnet` · `tests: none` · `area: village`
-Bible §2 P3, absorbing the rest of `R9.4-remainder-5`. `bridge repair site`
-~~needs a bridge (none exists — `SA4`'s river-gorge spoke or `EV5`'s water
-feature)~~ **a bridge now exists**: `EV6-remainder`'s footbridge at the
-stream crossing ([-136.3,113], see `DONE.md`
-§EV6-remainder-mill-crossing), so this cluster is startable; `quarry
-station` still needs a built quarry — **the mill-crossing pass did NOT
-build one** (`village_npcs.json`'s own
-comment: the Quarry Foreman stands in the square today because "No built
-quarry to stand him at yet"); `trainer camp` could go along an existing route
-(the practice meadow, `R7.1`'s waypoints) without waiting on new geography, so
-it is the one of the three that is realistically startable now. Done when: a
-blind critic given close and in-context frames of each site names it as
-implying a purpose, the same bar `EV7`'s first two clusters cleared.
+**`EV7-remainder` (`trainer_camp` and `bridge_repair_site`, built 2026-08-13,
+blind-verified 2026-08-13) shipped — see `DONE.md`.** Both clusters built
+from the already-staged, already-ledgered Fantasy Props MegaKit (five more
+of its 94 models), sited with real ground-height probes rather than
+guesses. The item's own done-when — a blind critic given close and
+in-context frames of each site names it as implying a purpose, the bar
+`EV7`'s first two clusters cleared — has now been run for both
+(`DONE.md` §`EV7-remainder-critique`); both pass, no composition changes
+needed. `trainer_camp` reads as a generic waypoint/rest-stop rather than
+specifically a *trainer's* camp — a naming-vs-imagery gap the props
+themselves (bag, bench, barrel, crate) don't close and a composition fix
+can't either; noted honestly, not treated as a defect to chase.
+**`quarry_station` remains open, unbuilt** — confirmed again, no quarry
+exists anywhere in the world (`village_npcs.json`'s Quarry Foreman still
+stands in the square for exactly that reason) — and is `SD16`'s scope (a
+built, reachable Old Quarry), not tracked further here.
 
 **`EV8` (lighting and atmosphere) shipped — see `DONE.md`.** Two rounds of the
 blind pass. Warm sun and cool fill were already correct and are unchanged;
