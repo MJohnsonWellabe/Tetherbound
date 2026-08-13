@@ -2436,6 +2436,38 @@ Phase 1 onward rather than at the end.
   may have regressed past what `LP7` closed, not just "still has a small
   residual," and whoever picks this up next should start from that, not
   from the 7% figure.
+  **Chased further (2026-08-13), still open — hypotheses ruled out, root
+  cause not found.** Reproduced on clean `main`: ~2/3 runs failed with the
+  same `~40-45m, never attacked` shape. Instrumented the walk helper to log
+  the player's position/velocity every 50 frames and confirmed the failure
+  is a genuine freeze, not a slow approach: velocity sits at *exactly*
+  `(0, 0, 0)` for hundreds of consecutive physics frames mid-walk, at a
+  position that varies run to run (not one fixed spot). Ruled out, with
+  direct evidence: the follower pal (`collision_layer=0` the whole time,
+  confirmed in the log — `follower_pal.gd`'s `set_following(true)` is
+  working as intended, this is not `RB3` again); the road gate (built at
+  `[27.5, -16]`, nowhere near the failure positions around `[42-48, -80
+  to -110]`); village NPCs (all placed inside `[0-25, 2 to -25]`, same
+  reason). A fuller instrumentation pass logging `locomotion_enabled()`,
+  dialogue/name-prompt `is_open()` and `is_fighting()` never caught a
+  failing run with that logging attached — every run with the added
+  print() overhead passed (9/9 across two instrumented variants), while
+  bare runs failed ~2/3 of the time. That asymmetry is itself the useful
+  finding: this looks like a genuine wall-clock/frame-pacing sensitivity
+  (something that resolves differently depending on real elapsed time
+  between physics ticks — a plausible candidate is Terrain3D's collision
+  baking not being fully settled by `SETTLE_FRAMES`, or physics-step
+  catch-up under load) rather than a pure game-logic bug reachable by
+  reading state. One fix was attempted and **reverted, not shipped**: a
+  wider escalating-angle version of `wild_pal.gd`'s `LP7` unstick logic
+  (widen the steer angle after each failed alternating cycle instead of
+  oscillating between two fixed angles forever). It didn't measurably
+  affect the reproducing failure in this session's runs and was not
+  proven safe, so per this project's own honesty rule it was not kept.
+  Whoever picks this up next: the instrumentation-changes-the-outcome
+  clue is the lead worth following, probably via a fixed-timestep/
+  deterministic headless run (`--fixed-fps`) to remove wall-clock jitter
+  as a variable, rather than more print-statement instrumentation.
 - `docs/ASSET_LEDGER.md` claims "everything currently in the build is CC0
   1.0". False (Meshy creatures, Plumberry pack). **Blocked on the owner** for
   the correct wording. The website's parallel stale claim was fixed in the
