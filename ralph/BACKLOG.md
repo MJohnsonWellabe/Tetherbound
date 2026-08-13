@@ -936,6 +936,16 @@ Two of the bible's five named clusters. `bridge repair site`, `quarry station`
 and `trainer camp` need geography that doesn't exist yet (no bridge, no built
 quarry — `SA4`/`EV5` territory) and are carried forward below.
 
+**`trainer_camp` and `bridge_repair_site` shipped 2026-08-13 — see
+`DONE.md` (`EV7-remainder`).** Both clusters built from the already-staged,
+already-ledgered Fantasy Props MegaKit (five more of its 94 models), sited
+with real ground-height probes rather than guesses. **Not yet blind-
+critiqued** — the done-when bar below still applies and is still owed; this
+is placement/composition work only, honestly unverified against it.
+**`quarry_station` remains open**, confirmed again: no quarry exists
+anywhere in the world, and building one is out of scope for a
+prop-placement item.
+
 ### EV7-remainder — The three prop clusters that need geography built first
 `model: sonnet` · `tests: none` · `area: village`
 Bible §2 P3, absorbing the rest of `R9.4-remainder-5`. `bridge repair site`

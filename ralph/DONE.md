@@ -3,6 +3,54 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV7-remainder — trainer camp and bridge repair site: the two of three named clusters with real geography to sit on
+`data/config/props.json`, `docs/ASSET_LEDGER.md`,
+`assets/props/quaternius_fantasy/{Axe_Bronze,Bag,Barrel,Bench,Rope_1}.gltf`
+(+`.bin`), `tools/_probe_ev7r.gd`. `model: sonnet`.
+
+Bible §2 P3 named three clusters `EV7`'s first slice left for later:
+`bridge_repair_site` (needed a bridge — none existed), `quarry_station`
+(needs a quarry — none exists), `trainer_camp` (needed nothing new, just
+never got picked up). `EV6-remainder` gave the world a real footbridge,
+which unblocked the first.
+
+**`trainer_camp`** ([26,-28], probed ground heights via a new
+`tools/_probe_ev7r.gd`, same pattern as `EV6-remainder`'s
+`_probe_ground.gd`): a travelling trainer's dropped pack (`Bag`), a rough
+bench, a supply barrel and crate — sited off route 2's own path, inside the
+practice-meadow clearing but short of the arena, so it reads as a waypoint
+on the way in rather than part of the fight itself.
+
+**`bridge_repair_site`** ([-142.5,115.5], on the footbridge's west bank,
+`EV6-remainder`'s crossing at [-136.3,113]): a materials crate, coiled
+rope, an axe left mid-repair, a water bucket — off the deck's abutment and
+clear of the rail line, so it reads as work happening beside the crossing,
+not blocking it.
+
+Both reuse `Crate_Wooden`/`Bucket_Wooden_1` already curated for `EV7`'s
+first slice; five more models (`Bag`, `Bench`, `Barrel`, `Rope_1`,
+`Axe_Bronze`) newly staged from the same already-ledgered Fantasy Props
+MegaKit — no new pack, no new texture (all reuse the pack's existing shared
+trim textures). `docs/ASSET_LEDGER.md` updated with the new row.
+
+**`quarry_station` NOT built** — no quarry exists anywhere in the world
+(`village_npcs.json`'s Quarry Foreman still stands in the square for
+exactly that reason), and building one is out of scope for a
+prop-placement item. Left open in `BACKLOG.md`, same as `EV6-remainder`
+left it.
+
+**Honesty about the visual bar: NOT cleared, not judged.** This is
+visual-affecting placement work and the item's own done-when is a blind
+critic naming each site as implying a purpose — that pass was not run.
+`data/config/props.json` and `docs/ASSET_LEDGER.md` both import clean
+(verified: `godot --headless --path . --import` after adding the new
+assets); no render/capture was completed inside this session's time
+budget. Whoever runs the blind pass next: both clusters follow the same
+"anchor prop + 2-3 supporting pieces, touching-cluster shape" pattern
+`work_area`/`farmhouse_yard` already converged on, so the composition
+mechanism is proven — the open question is purely whether these two new
+sites read the same way.
+
 ## backpack-drop-split — Drop and split verbs added to the satchel; equip scoped out, not invented
 `autoload/inventory.gd`, `scripts/ui/tab_backpack.gd`, `project.godot`,
 `data/config/menu.json`, `tests/test_inventory.gd`, `tests/smoke_menu.gd`.
