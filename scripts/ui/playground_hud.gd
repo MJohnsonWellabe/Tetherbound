@@ -4,7 +4,8 @@ extends CanvasLayer
 ##
 ## Draws only what the bible keeps on screen while exploring: health and
 ## stamina (faded out when neither is doing anything interesting), the party
-## and orb counts, and the one contextual interact prompt. Everything else —
+## and orb counts, `HD2`'s quick-access item hotbar, and the one contextual
+## interact prompt. Everything else —
 ## the raw movement/input telemetry this HUD used to dump permanently — is
 ## still here, because M1 tuning still needs it, but it now lives behind an
 ## F3 toggle instead of covering a third of the screen by default.
@@ -72,6 +73,28 @@ const MB := 1048576.0
 
 const PARTY := preload("res://autoload/party.gd")
 const ORB_ITEM_ID := "orb_basic"
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+
+## HD2: a real quick-access item hotbar. GAME_DESIGN.md 19's "quick tool
+## selection" is scoped separately (`tool_cycle`, R2.1/EV9's own history) --
+## this is the first general CONSUMABLE band the spec asks for, so it gets
+## its own five input actions (`hotbar_1`..`hotbar_5`) rather than reusing
+## that one.
+##
+## Deliberately does NOT read `autoload/inventory.gd`'s satchel through a
+## second entry point: the five slots shown here ARE satchel slots 0-4, the
+## same "first row doubles as the quick-select band" slots that file's own
+## header comment already reserved for exactly this ("nothing reads it yet
+## ... so the grid and the future hotbar cannot disagree about which slots
+## they mean"). Moving a stack onto/off of slot 0-4 in the backpack tab
+## moves it in or out of the hotbar for free, with no separate "assign to
+## hotbar" step to build or explain.
+const HOTBAR_SLOTS := 5
+## Action name IS the glyph id (input_glyph.gd's GLYPHS dict uses the same
+## keys), so one list serves both jobs.
+const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
+
+const HOTBAR_MESSAGE_SECONDS := 2.2
 
 @export var player_path: NodePath
 @export var arbiter_path: NodePath
@@ -130,6 +153,22 @@ var _max_raw_axis_seen := 0.0
 @onready var _orbs_label: Label = $Root/StatusPanel/Margin/Rows/Orbs
 @onready var _prompt_label: RichTextLabel = $Root/Prompt
 @onready var _debug_readout: Label = $Root/DebugReadout
+@onready var _hotbar_slots: Array[RichTextLabel] = [
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot1,
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot2,
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot3,
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot4,
+	$Root/HotbarPanel/Margin/Layout/Slots/Slot5,
+]
+@onready var _hotbar_message: Label = $Root/HotbarPanel/Margin/Layout/Message
+
+## What each slot last rendered, so `_update_hotbar` only writes a Label when
+## its text actually changed -- the same discipline `_update_status` already
+## uses, for the same reason (an outlined RichTextLabel re-shapes on every
+## assignment; this polls every frame while `_update_status` only changes on
+## a pickup).
+var _hotbar_last_text: Array[String] = ["", "", "", "", ""]
+var _hotbar_message_until := 0.0
 
 var _health_fill: StyleBoxFlat = null
 var _stamina_fill: StyleBoxFlat = null
@@ -148,6 +187,7 @@ func _ready() -> void:
 
 	_style_panel($Root/VitalsPanel)
 	_style_panel($Root/StatusPanel)
+	_style_panel($Root/HotbarPanel)
 	_health_fill = _fill_style(HEALTH_FULL)
 	_stamina_fill = _fill_style(ACCENT_TEAL)
 	_dress_bar(_health_bar, _health_fill)
@@ -157,6 +197,9 @@ func _ready() -> void:
 	_make_text_legible(_party_label)
 	_make_text_legible(_orbs_label)
 	_make_text_legible(_prompt_label)
+	for slot in _hotbar_slots:
+		_make_text_legible(slot)
+	_make_text_legible(_hotbar_message)
 
 	_frame_ms.resize(FRAME_WINDOW)
 	_hardware_line = "%s | %s | driver %s" % [
@@ -245,6 +288,7 @@ func _process(delta: float) -> void:
 			_debug_readout.text = _debug_text()
 
 	_update_status()
+	_read_hotbar_input()
 	if _player == null:
 		return
 	var vitals: RefCounted = _player.get("vitals")
@@ -382,6 +426,130 @@ func _update_status() -> void:
 	if orbs != _last_orbs:
 		_last_orbs = orbs
 		_orbs_label.text = "Orbs  %d" % orbs
+
+	_update_hotbar(inventory)
+	if _hotbar_message_until > 0.0 and Time.get_ticks_msec() / 1000.0 >= _hotbar_message_until:
+		_hotbar_message_until = 0.0
+		_hotbar_message.visible = false
+
+
+## HD2. The hotbar mirrors satchel slots 0-4 directly -- see the header
+## comment on HOTBAR_SLOTS. `db` is looked up fresh each call the same way
+## `_inventory`/`_party` do it below; this file has no cached RefCounted
+## pattern of its own to match yet.
+func _update_hotbar(inventory: RefCounted) -> void:
+	var db: RefCounted = _game.get("items")
+	if db == null:
+		return
+	for i in HOTBAR_SLOTS:
+		var stack: Dictionary = inventory.call("stack_at", i)
+		var glyph := INPUT_GLYPH.icon(HOTBAR_ACTIONS[i], 28)
+		var text: String
+		if stack.is_empty():
+			text = "%s\n[color=#666a63]-[/color]" % glyph
+		else:
+			var id := str(stack.get("id", ""))
+			var name := str(db.call("item_name", id))
+			var colour: Color = db.call("colour", id)
+			var tool_max: int = int(inventory.call("max_durability_at", i))
+			var count_text: String
+			if tool_max > 0:
+				count_text = "%d/%d" % [int(inventory.call("durability_at", i)), tool_max]
+			else:
+				count_text = "x%d" % int(stack.get("n", 0))
+			text = "%s\n[color=#%s]%s %s[/color]" % [glyph, colour.to_html(false), name, count_text]
+		if text != _hotbar_last_text[i]:
+			_hotbar_last_text[i] = text
+			_hotbar_slots[i].text = text
+
+
+## HD2's "usable directly without opening the full backpack." Mirrors
+## `tab_backpack.gd::_read_use()`'s two real cases (free tool repair, a heal
+## consumable) rather than sharing code with it -- that tab's use verb opens
+## a modal target picker and holds the whole pause-menu shell deaf while it
+## is up (`menu.hold_input`), neither of which exists or makes sense for a
+## HUD drawn live over real-time exploration. A picker mid-run would BE the
+## extra menu this item exists to skip.
+##
+## The design call this makes instead: a heal item applies to whichever
+## living pal is hurt worst, same as this project's use verb did before
+## `OF2` added the picker for the deliberate, considered backpack case.
+## Recorded here and in DONE.md rather than silently reverting OF2 --
+## `OF2`'s own picker is untouched and still the only way to choose a
+## specific pal when more than one is hurt.
+##
+## KNOWN GAP: not gated off during combat. `playground_hud.gd` keeps
+## processing while a fight is live (`combat_hud.gd` draws on top of it, it
+## does not replace it) and there is no scene-global "a fight is on" flag
+## this file can reach without new cross-system plumbing (`CombatManager` is
+## wired to `encounter_director.gd` by a scene-local NodePath, not the `Game`
+## autoload). A player could free-heal from the hotbar mid-fight today.
+## Flagged rather than silently shipped or silently blocked on; the real fix
+## is a `Game`-visible "in combat" flag, which is bigger than this item.
+func _read_hotbar_input() -> void:
+	if _game == null:
+		return
+	for i in HOTBAR_SLOTS:
+		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
+			_use_hotbar_slot(i)
+			return
+
+
+func _use_hotbar_slot(index: int) -> void:
+	var inventory: RefCounted = _game.get("inventory")
+	var db: RefCounted = _game.get("items")
+	if inventory == null or db == null:
+		return
+	var stack: Dictionary = inventory.call("stack_at", index)
+	if stack.is_empty():
+		return
+	var id := str(stack.get("id", ""))
+
+	if str(db.call("kind", id)) == "tool":
+		var maximum := int(inventory.call("max_durability_at", index))
+		if maximum > 0:
+			var current := int(inventory.call("durability_at", index))
+			if current >= maximum:
+				_show_hotbar_message("%s is already in good repair." % str(db.call("item_name", id)))
+			else:
+				inventory.call("repair_tool", index)
+				_show_hotbar_message("%s repaired, free." % str(db.call("item_name", id)))
+			return
+
+	var heal := float((db.call("definition", id) as Dictionary).get("heal", 0.0))
+	if heal <= 0.0:
+		_show_hotbar_message("%s is not something you can use here." % str(db.call("item_name", id)))
+		return
+
+	var party: RefCounted = _game.get("party")
+	if party == null or int(party.call("size")) == 0:
+		_show_hotbar_message("Nobody on the belt yet.")
+		return
+
+	var target: RefCounted = null
+	var worst_deficit := 0.0
+	for i in int(party.call("size")):
+		var pal: RefCounted = party.call("at", i)
+		if pal == null:
+			continue
+		var deficit: float = float(pal.get("max_hp")) - float(pal.get("hp"))
+		if deficit > worst_deficit:
+			worst_deficit = deficit
+			target = pal
+
+	if target == null:
+		_show_hotbar_message("Everybody's already at full health.")
+		return
+
+	var restored := float(target.call("heal", heal))
+	inventory.call("remove", id, 1)
+	_show_hotbar_message("%s recovers %d." % [str(target.call("label")), int(restored)])
+
+
+func _show_hotbar_message(text: String) -> void:
+	_hotbar_message.text = text
+	_hotbar_message.visible = true
+	_hotbar_message_until = Time.get_ticks_msec() / 1000.0 + HOTBAR_MESSAGE_SECONDS
 
 
 ## Health and stamina bars fade to FADE_ALPHA when full and idle, full opacity

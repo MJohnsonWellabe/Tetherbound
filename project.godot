@@ -158,6 +158,36 @@ pal_recall={
 , Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
 ]
 }
+hotbar_1={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":49,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
+]
+}
+hotbar_2={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":50,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":13,"pressed":false,"script":null)
+]
+}
+hotbar_3={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":51,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
+]
+}
+hotbar_4={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":52,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+]
+}
+hotbar_5={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":53,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
+]
+}
 combat_quick={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"script":null)
