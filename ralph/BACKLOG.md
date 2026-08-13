@@ -2468,10 +2468,10 @@ Phase 1 onward rather than at the end.
   clue is the lead worth following, probably via a fixed-timestep/
   deterministic headless run (`--fixed-fps`) to remove wall-clock jitter
   as a variable, rather than more print-statement instrumentation.
-- `docs/ASSET_LEDGER.md` claims "everything currently in the build is CC0
-  1.0". False (Meshy creatures, Plumberry pack). **Blocked on the owner** for
-  the correct wording. The website's parallel stale claim was fixed in the
-  overhaul; the ledger's was not.
+- ~~`docs/ASSET_LEDGER.md` claims "everything currently in the build is CC0
+  1.0". False (Meshy creatures, Plumberry pack).~~ **Corrected 2026-08-12:**
+  ledger now reads "Most of the build is CC0 1.0 — but not all of it" and marks
+  Meshy assets and Plumberry Plains as proprietary/owner-licensed.
 - ~~Backpack has no use/consume/equip/drop/split verb; the only action is
   moving an item.~~ **Corrected 2026-08-11: this was stale.** A use verb
   already exists (`tab_backpack.gd::_read_use()`) and already heals from
