@@ -1056,6 +1056,17 @@ Bible §22 Phase G and §23's metrics. Re-shoot the same viewpoints, blind-judge
 against both reference sets, fix the three biggest gaps, repeat until further
 improvement is asset-quality-limited rather than composition-limited.
 
+**Deliberately not started 2026-08-13.** Its own premise is that it only
+converges once `EV2`–`EV9` are actually shipped — `EV5-remainder`,
+`EV6-remainder` and `EV7-remainder` landed this session but none has had
+its own blind pass run yet (all three say so explicitly above), so a
+cohesion pass now would be judging unverified, possibly-still-rough work.
+Run this after those blind passes land, not before. It will also still
+hit a real ceiling even then: `EV9`'s objective-tracker label
+(Phase 3.5-blocked), icon glyphs/font and compass are all out of reach for
+documented reasons above — record that plainly when this runs rather than
+treating it as a failure to converge.
+
 ---
 
 ## Phase -0.55 — the cast (owner's NPC board)
@@ -1130,6 +1141,15 @@ trousers render darker/colder than the reference after three texture
 attempts and villager_female has a persistent UV-seam texture blotch on one
 shin — both recorded there as an honest remainder, not chased further after
 two flat attempts each per `conventions.md`'s stopping rule.
+**Re-checked 2026-08-13: ceiling confirmed, still no fix.** Tried a
+genuinely new mechanism (direct glTF-geometry-informed pixel masking on
+the texture atlas, same family as `desaturate_soil_texture.py`'s
+precedent) rather than repeating the same retexture/prompt levers. It
+surfaced why the ceiling holds: the character atlas is a single fused-
+mesh/single-material UV layout with no per-garment boundary a height-band
+heuristic can isolate — the trousers mask also caught the satchel, boots
+and face fringe. No safe targeted fix without real per-garment UV
+islands (Blender-assisted manual selection), so no code changed.
 
 **`NP4-rig` (rig, animate and install the three NP4 bases) shipped — see
 `DONE.md`.**
@@ -1189,6 +1209,15 @@ the seed `R8.6` pays off and the geometry `SF33` later dresses. Done when: all
 seven are reachable on foot from the village, each is visibly and physically
 impassable, and none of them explains itself with UI text.
 
+**Deliberately not started 2026-08-13, not overlooked.** A separate
+concurrent session was live-shipping `OF6`/`OF7`/`OF10`/`OF11` against
+`area: terrain` at the time (`ralph/STATUS.md` on `ralph-status`), and
+`OF7` specifically is a perimeter fence/wall rebuild — real risk of
+touching the same files (`world_perimeter.gd`, the perimeter's terrain
+rebake) as this item's own "collapsed bridge"/gate spokes. Held rather
+than raced. Check `ralph/STATUS.md` for that lease before picking this up;
+if it's clear, this is otherwise unblocked and ready to go.
+
 **`SA5` (recolour Burrowback away from Terrapup) shipped — see `DONE.md`.**
 
 **`SA6` (separate the five birds by palette) shipped — see `DONE.md`.**
@@ -1244,6 +1273,15 @@ unexplored lever. Low severity — the adjacent label always disambiguates in
 practice — so left open rather than blocked. Done when: either a
 better-differentiated CC0 mouse-button glyph pair is sourced, or the owner
 accepts the current ceiling.
+**Re-checked 2026-08-13: ceiling confirmed again.** The staged Kenney
+Game Icons Expansion pack has a real, differently-drawn `mouseLeft.png`/
+`mouseRight.png` pair (a genuine shape difference, not just a recolor --
+verified by alpha-channel diff), but at actual on-screen size it's barely
+more legible than the current pair, and it's drawn in a flat-silhouette
+icon language while every other glyph in the row uses Input Prompts'
+keycap style -- adopting it would swap one legibility complaint for a
+visible style-cohesion regression (CLAUDE.md). No other staged pack has a
+mouse-button asset at all. Still left open for the owner, not blocked.
 
 **`HD2` (a real quick-access item hotbar) shipped — see `DONE.md`.** The five
 slots are satchel slots 0-4 directly (the "quick-select band"
@@ -1623,6 +1661,20 @@ what a future capture should check first.
 
 ### R9.4-remainder-9-combat-2 — Confirm the fixed mechanisms actually read once the camera isn't lined up against them
 `model: sonnet` · `tests: none (visual)` · `area: combat`
+
+**Instrumented 2026-08-13 (`survey_combat.gd`), not yet visually judged.**
+Root cause confirmed for the on-axis complaint above: `_drive_pal_towards_enemy()`
+sets the camera's yaw to point straight at the target every physics frame
+(needed for movement steering), so every capture through this remainder
+has been dead-on-axis by construction, not bad luck. Added
+`_swing_camera_offaxis()` (post-movement yaw nudge, unsmoothed per
+`camera_rig.gd::_apply_look()`) and wired real off-axis offsets into
+frames 04-06 (+60, -70, +45 degrees). **The render to actually look at
+the result was not completed** -- this environment's shared CPU made a
+full capture run take 20+ minutes and it was abandoned once other work
+was clearly done; the code change is real and committed, but nobody has
+looked at an off-axis combat frame yet. Whoever runs `tools/survey_combat.sh`
+next should treat that as the actual first check for this item.
 `R9.4-remainder-9-combat` fixed three real, verified bugs — `impact_flash.gd`
 was rendering nothing at all in the real scene (depth-tested against the very
 creature it was drawn at; fixed with `no_depth_test`), the telegraph glow and
