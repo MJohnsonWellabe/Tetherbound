@@ -94,6 +94,7 @@ func _run() -> void:
 		player.set_physics_process(false)
 
 	_seed_demo_state(world)
+	_pin_party_strip(world)
 
 	if vitals != null:
 		_reset_vitals(vitals)
@@ -189,6 +190,23 @@ func _seed_demo_state(world: Node) -> void:
 	var second: RefCounted = party.call("at", 1)
 	if second != null:
 		second.take_damage(float(second.get("max_hp"))) # fainted, for the strip's dim/danger state
+
+
+## `party_strip.gd` normally reveals for `UITokens.T_PARTY_FADE` (2.5s) and
+## fades -- real wall-clock seconds that this harness's own settle loops
+## cannot promise under contended CPU (a single delayed frame can carry a
+## `delta` bigger than the whole hold window). Pinning it is the same knob
+## combat-side switching uses to keep the strip up for the length of a fight
+## (`party_strip.gd::set_pinned`); here it exists purely so the strip is
+## actually in every captured frame for the visual critic loop to judge,
+## not a change to how the strip behaves during real play.
+func _pin_party_strip(world: Node) -> void:
+	var hud := world.get_node_or_null(^"PlaygroundHUD")
+	if hud == null:
+		return
+	var strip: Variant = hud.get("_party_strip")
+	if strip != null and strip is Object and (strip as Object).has_method("set_pinned"):
+		strip.call("set_pinned", true)
 
 
 func _shoot(camera: Camera3D, name: String, written: Array[String], failures: Array[String]) -> void:

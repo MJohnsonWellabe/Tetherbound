@@ -64,7 +64,7 @@ mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot1"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -79,7 +79,7 @@ mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot2"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -94,7 +94,7 @@ mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot3"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -109,7 +109,7 @@ mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot4"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
@@ -124,7 +124,7 @@ mouse_filter = 2
 
 [node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot5"]
 mouse_filter = 2
-theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
 fit_content = false
 scroll_active = false

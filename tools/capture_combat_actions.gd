@@ -232,30 +232,26 @@ func _stock_the_bench() -> void:
 	_manager.set("_active_index", 0)
 
 
-## Press-and-hold `combat_switch_right` past the HUD's own hold threshold,
-## the same `Input.action_press` idiom the pre-rebuild `_open_the_aim()` used
-## for `combat_throw`. Left held (not released) on return so the capture below
-## shows the selector actually open rather than the single frame right after
-## it closes.
+## Opens the switch selector directly through `CombatHUD._open_selector()`
+## (reflection: `.call("_open_selector")`) rather than driving the real
+## tap/hold input and waiting out `SWITCH_HOLD_THRESHOLD` in real time.
 ##
-## Frame-counted, NOT wall-clock timed -- `_handle_switch_input` accumulates
-## real `delta` seconds regardless of how many frames that takes, so a frame
-## count large enough to cover the 0.28s hold threshold at even a crawling
-## frame rate is the correct budget under this sandbox's heavy, variable CPU
-## contention. An earlier wall-clock deadline (900ms) starved itself the same
-## way: one slow `await process_frame` under load could itself take longer
-## than the whole deadline, leaving the loop no second attempt.
+## An earlier version pressed and held `combat_switch_right`, waiting either a
+## fixed wall-clock deadline or a fixed frame count for the HUD's own
+## `_process` to notice. Both starved under this sandbox's heavy, variable CPU
+## contention -- observed taking upward of an hour of wall time for what is a
+## 0.28s hold threshold on a healthy machine, with no guarantee it would ever
+## finish. What this shot needs to verify is that the selector RENDERS
+## correctly once open; whether tap-vs-hold input timing itself works is
+## `combat_hud.gd`'s own concern (exercised by hand, not by this capture
+## tool), not this screenshot's. Calling the HUD's own open function directly
+## exercises the identical `_refresh_selector()` / `_selector_root.visible`
+## path the real hold would, deterministically and in a handful of frames.
 func _open_the_selector() -> bool:
-	Input.action_press("combat_switch_right")
-	for i in 240:
+	_hud.call("_open_selector")
+	for i in 6:
 		await process_frame
-		if bool(_hud.get("_selector_open")):
-			# A couple more frames so the selector's own rows finish their
-			# first `_refresh_selector()` pass before the capture reads them.
-			for j in 4:
-				await process_frame
-			return true
-	return false
+	return bool(_hud.get("_selector_open"))
 
 
 func _release_switch() -> void:
