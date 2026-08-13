@@ -579,6 +579,14 @@ static func _consider(
 
 ## Every layer, in one call. The seed is offset per layer so trees and grass do
 ## not land in identical patterns.
+##
+## OF12-remainder: a layer may also carry its own `seed_offset` (int,
+## TUNABLE, default 0) added on top of the per-layer 7919 stride. That is
+## for re-rolling ONE layer's own RNG stream in place -- the `trees` layer
+## used it to break a mirrored pair of copses the-rise-route's viewpoint
+## framed like a gateway (three blind critics named it, all seed luck, no
+## authored anchor involved) without perturbing every other layer's
+## already-tuned placement the way changing the top-level `seed` would.
 static func all_placements(field: RefCounted, world_size: float, base_seed: int) -> Dictionary:
 	var layers: Dictionary = config().get("layers", {})
 	var built: Dictionary = {}
@@ -587,6 +595,7 @@ static func all_placements(field: RefCounted, world_size: float, base_seed: int)
 		if name.begins_with("_"):
 			continue
 		var layer: Dictionary = layers[name]
-		built[name] = placements_for(layer, field, world_size, base_seed + offset * 7919)
+		var seed_value := base_seed + offset * 7919 + int(layer.get("seed_offset", 0))
+		built[name] = placements_for(layer, field, world_size, seed_value)
 		offset += 1
 	return built

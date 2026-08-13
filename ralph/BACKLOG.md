@@ -80,28 +80,31 @@ decision is recorded in `BLOCKED.md`'s entry, now marked resolved.
 
 **Magenta-canopy (near-field tree magenta/red-striped foliage) root-caused and fixed** — see `DONE.md`. `Leaves.png`, the texture `trees`/`grove`/`saplings` retextured their canopy material onto, turned out to be a multi-species sample sheet (green/blue/orange/**magenta**, confirmed by direct pixel read) rather than the single muted leaf R9.4 believed it was; CommonTree/TwistedTree's leaf-card billboards sample almost the entire canvas per card (measured: median per-triangle UV box 0.80x1.00), so every card rendered the atlas's magenta and blue swatches alongside the green ones. Fixed by pointing all three `retexture` blocks back at `Leaves_NormalTree_C.png` (the pack's own single-hue leaf, already proven safe as the `bushes` layer's crimson-bush fix). Proven with an isolated before/after repro (single tree, no terrain, exact shipped material transform): magenta/pink-hue pixel count went from thousands to zero. **Not blind-verified past this point** — the actual named viewpoints (`road-end-lookup.png`, `dome-overview.png`) were not re-rendered/critiqued in-session (render-lock contention plus the 90-minute cap); next pass should re-render those two and run one `visual-judge` round before treating this as fully closed.
 
-### OF12-remainder — Blind-confirm the in-fill state; carry the out-of-scope defects the OF12 critics named
+**`OF12-remainder`'s defect (a) — the-rise-route's mirrored tree stand — fixed, see `DONE.md`.** A new per-layer `seed_offset` mechanism on `scatter_rules.gd` broke the LEFT/LEFT/LEFT-then-RIGHT segregation a probe confirmed at the old seed; not re-rendered/blind-checked, only probe-verified — see the DONE entry for exactly what that does and doesn't confirm.
+
+### OF12-remainder — Blind-confirm the in-fill state; carry the two still-open out-of-scope defects
 `area: vegetation` · `tests: none (visual)`. `OF12` shipped (see `DONE.md`)
 after 3 genuinely blind critic rounds plus a 4th, un-critiqued scene state:
 the final build widened the verge into route-neighbourhood in-fill (the fix
 both independent critics' own fix-lists named), and the shipping firing's
 own read plus placement dumps say it lands — but its wrap-up deadline hit
 before a 4th blind round could confirm it, so "the border/bald read is
-cleared" is measured and self-judged, not blind-verified. First half of
-this item: run one blind round on the shipped state
-(`tools/capture_paths.gd` frames, `.claude/skills/visual-judge`) and either
-close this or name what's still wrong. Second half — defects the OF12
-critics named that were OUT of that item's scope, none of them regressions
-from it: (a) `the-rise-route.png`'s mirrored tree stand framing the path
-like a gateway (3 left / 4 right, matched heights — the `trees` layer's
-seed luck, named by all three critics); (b) the ground-cover
-species-variety gap ("same one or two prefabs" — grass has exactly 2 tuft
-models; a real fix needs more authored ground-cover forms, EV1-remainder
-territory); (c) the hard-edged no-visible-caster shadow wedge on
-`grandpas-house-route.png` / `square-convergence.png` — likely the same
-owner-accepted material-contrast read `BLOCKED.md` closed on 2026-08-12,
-but two fresh critics tripping on it independently is worth one look
-before re-accepting.
+cleared" is measured and self-judged, not blind-verified. **Still owed,
+after a second firing on this item was also cut short (see `DONE.md`'s
+`OF12-remainder (a)` entry for why):** run one blind round on the shipped
+state (`tools/capture_paths.gd` frames, `.claude/skills/visual-judge`) —
+that round should also look at whether the tree-stand fix above actually
+reads right, since it was never rendered. Two remaining out-of-scope
+defects the OF12 critics named, neither a regression from it: (b) the
+ground-cover species-variety gap ("same one or two prefabs" — grass has
+exactly 2 tuft models; a real fix needs more authored ground-cover forms —
+the Stylized Nature MegaKit landed on `main` 2026-08-13, `d64df71`, so this
+is now unblocked in principle, just not curated yet); (c) the hard-edged
+no-visible-caster shadow wedge on `grandpas-house-route.png` /
+`square-convergence.png` — likely the same owner-accepted material-contrast
+read `BLOCKED.md` closed on 2026-08-12, but two fresh critics tripping on it
+independently was worth one look before re-accepting, and that look still
+hasn't happened.
 
 ### BG2 — Source a CC0 castle/fortress asset kit
 Shipped, staged raw — see `DONE.md`'s `BG2` entry. Quaternius's own

@@ -3,6 +3,54 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF12-remainder (a) — the mirrored tree-stand on the-rise-route broken by a per-layer seed re-roll
+
+`model: sonnet` · `tests: none tagged (visual); full suite 586/586, headless
+probe`. Ships only defect (a) of `OF12-remainder`'s three carried items — see
+below for what's still open.
+
+**What shipped:** `scatter_rules.gd::all_placements()` gained an optional
+per-layer `seed_offset` (int, TUNABLE, default 0), added on top of the
+existing per-layer `+ offset * 7919` stride. This re-rolls exactly one
+layer's own RNG stream in place, without perturbing every other layer's
+already-tuned placement the way bumping the top-level `seed` would have.
+`vegetation.json`'s `trees` layer sets `seed_offset: 1` — the smallest value
+that broke the near-side symmetry, found by sweeping small offsets with a
+new throwaway probe (`tools/_probe_rise_trees.gd`), not by guessing.
+
+**Verified by data, not by a fresh render.** The probe dumps every `trees`
+instance in the-rise-route's near-field frustum with along/side-of-road
+coordinates. At `seed_offset: 0` (the shipped-but-flagged baseline) the
+near-field reads as a hard mirror: every tree within ~95m of the route start
+sits on the LEFT (`left=20 right=5` across the full dumped range, and the
+first RIGHT tree doesn't appear until along=101m) — exactly the "matched
+stand flanking the path" shape three independent blind critics named. At
+`seed_offset: 1`, RIGHT-side trees now appear as early as along=51m,
+interleaved with LEFT trees rather than segregated into two blocks
+(`left=10 right=5`) — a genuine break in the symmetric-flanking pattern, not
+a small nudge.
+
+**Honestly not done this pass — the firing that owned this item died
+mid-task** (killed by an unrelated session-level model switch, before it
+could push or report) and only this one config/code change survived
+uncommitted in its worktree. Two of the entry's three parts are untouched:
+
+1. The owed **blind-confirm round** on OF12's shipped in-fill state
+   (`tools/capture_paths.gd` frames + a genuine fresh critic) — still not
+   run. `OF12-remainder`'s "border/bald read is cleared" claim remains
+   self-judged, not blind-verified.
+2. The **shadow-wedge re-look** (c) on `grandpas-house-route.png` /
+   `square-convergence.png` — still not looked at again this pass.
+3. **The seed-nudge fix above was itself never blind-rendered** — it is
+   probe-verified (the placement data genuinely changed the right way) but
+   nobody has looked at the actual re-rendered frame to confirm it reads
+   right to the eye, only that the numbers moved the way three critics'
+   complaint implies they should.
+
+(b) the ground-cover species-variety gap is unaffected by any of this — see
+`OF12-remainder`'s own remaining text, now unblocked in principle (the
+Stylized Nature MegaKit landed on `main`, commit `d64df71`) but not curated
+into ground-cover variants by this pass either.
 ## R9.4-remainder-9-combat-2 — Off-axis combat frames finally rendered; target marker confirmed exact by position dump; a real telegraph_glow.gd depth-test bug found but NOT fixed by the obvious precedent, verified by re-render rather than asserted
 
 `model: sonnet` · `tests: full suite, twice (baseline and after the telegraph_glow.gd

@@ -15,6 +15,8 @@
         "res://assets/environment/stylized_nature/CommonTree_2.gltf",
         "res://assets/environment/stylized_nature/CommonTree_3.gltf"
       ],
+      "_comment_seed_offset_of12r": "OF12-remainder: this layer's own RNG stream re-rolled in place (scatter_rules.gd::all_placements). The unbiased scatter happened to put a 3-tree stand and a 4-tree stand at nearly matched heights/along-path distance on opposite sides of The Rise route's first leg -- named by all three of OF12's blind critics as reading like an authored gateway framing the path, which no anchor or design intent put there. `1` was the smallest offset tried that breaks the near-side count match (probed headlessly with tools/_probe_rise_trees.gd before rendering) without reshuffling the rest of the map's already-tuned trees (a top-level `seed` bump would have). TUNABLE.",
+      "seed_offset": 1,
       "_comment_clumping": "Fewer, tighter, larger copses rather than more small ones. 26 clumps of 9 spread over 512m is close enough to even that it reads as a distribution; twelve dense copses with real gaps between them reads as somebody deciding where a wood goes.",
       "clumps": 13,
       "per_clump": 16,
