@@ -91,6 +91,11 @@
         {
           "name": "Menus",
           "actions": ["menu_confirm", "menu_cancel"]
+        },
+        {
+          "name": "Backpack",
+          "note": "RB doubles as 'throw an orb' in a fight, and the right stick click does nothing there -- the pause menu can't open mid-fight (see menu_cancel's note), so neither button ever means two things at once.",
+          "actions": ["backpack_drop", "backpack_split"]
         }
       ],
 
@@ -122,7 +127,9 @@
         "combat_switch_left": "Send out the previous pal",
         "combat_switch_right": "Send out the next pal",
         "menu_confirm": "Confirm",
-        "menu_cancel": "Back  /  close the menu"
+        "menu_cancel": "Back  /  close the menu",
+        "backpack_drop": "Backpack: drop the focused item",
+        "backpack_split": "Backpack: split the focused stack"
       },
 
       "glyphs": {

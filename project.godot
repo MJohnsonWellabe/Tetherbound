@@ -224,6 +224,18 @@ combat_switch_right={
 , Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
 ]
 }
+backpack_drop={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":71,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
+]
+}
+backpack_split={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":72,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
+]
+}
 menu_confirm={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":4194309,"pressed":false,"script":null)

@@ -32,6 +32,13 @@ const PARTY := preload("res://autoload/party.gd")
 ## Same button as the pals tab's "set active": use the focused item.
 const USE_ACTION := "interact"
 
+## Discard the focused stack, after a confirm -- destructive, so it gets one.
+const DROP_ACTION := "backpack_drop"
+## Halve the focused stack into the first empty slot. Non-destructive (both
+## halves stay in the satchel), so unlike Use and Drop this applies on the
+## same press with no picker or confirm.
+const SPLIT_ACTION := "backpack_split"
+
 var _grid: GridContainer = null
 var _summary: Label = null
 var _detail_name: Label = null
@@ -53,10 +60,18 @@ var _focused: int = 0
 ## is not a second "held" state, nothing moves.
 var _targeting: int = -1
 
+## Slot pending a drop confirmation, or -1. Same shape as `_targeting`: the
+## item stays in its slot, unspent, until the player actually confirms.
+var _confirming: int = -1
+
 var _content_row: Control = null
 var _target_panel: VBoxContainer = null
 var _target_header: Label = null
 var _target_rows: Array = []
+
+var _confirm_panel: VBoxContainer = null
+var _confirm_header: Label = null
+var _confirm_rows: Array = []
 
 
 func build() -> void:
@@ -64,8 +79,10 @@ func build() -> void:
 		child.queue_free()
 	_buttons.clear()
 	_target_rows.clear()
+	_confirm_rows.clear()
 	_held = -1
 	_targeting = -1
+	_confirming = -1
 
 	var config := _config()
 	var backpack: Dictionary = config.get("backpack", {}) as Dictionary
@@ -123,6 +140,10 @@ func build() -> void:
 	_target_panel.visible = false
 	add_child(_target_panel)
 
+	_confirm_panel = _build_confirm_panel()
+	_confirm_panel.visible = false
+	add_child(_confirm_panel)
+
 	poll()
 
 
@@ -147,6 +168,33 @@ func _build_target_panel() -> VBoxContainer:
 		button.pressed.connect(func() -> void: _on_target_row(slot))
 		panel.add_child(button)
 		_target_rows.append(button)
+
+	return panel
+
+
+## Two rows, built once for the same focus-survival reason as the target
+## panel above: "Drop it" and "Cancel". Fixed shape, unlike the target panel's
+## five pal rows, because a drop confirmation has nothing to list.
+func _build_confirm_panel() -> VBoxContainer:
+	var panel := VBoxContainer.new()
+	panel.add_theme_constant_override("separation", 8)
+
+	_confirm_header = Label.new()
+	_confirm_header.add_theme_font_size_override("font_size", 24)
+	_confirm_header.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_confirm_header.custom_minimum_size = Vector2(500, 0)
+	panel.add_child(_confirm_header)
+
+	for i in 2:
+		var button := Button.new()
+		button.custom_minimum_size = Vector2(300, 64)
+		button.clip_text = true
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.focus_mode = Control.FOCUS_ALL
+		var row := i
+		button.pressed.connect(func() -> void: _on_confirm_row(row))
+		panel.add_child(button)
+		_confirm_rows.append(button)
 
 	return panel
 
@@ -190,9 +238,14 @@ func poll() -> void:
 	if inventory == null or _summary == null:
 		return
 	_read_use()
+	_read_drop()
+	_read_split()
 	_read_targeting_cancel()
+	_read_confirm_cancel()
 	if _targeting >= 0:
 		_refresh_target_panel()
+	if _confirming >= 0:
+		_refresh_confirm_panel()
 
 	var slots: int = int(inventory.call("slot_count"))
 	var used: int = int(inventory.call("used_slots"))
@@ -259,7 +312,7 @@ func _on_slot(index: int) -> void:
 func _read_use() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
-	if _targeting >= 0:
+	if _targeting >= 0 or _confirming >= 0:
 		return
 	if not Input.is_action_just_pressed(USE_ACTION):
 		return
@@ -305,6 +358,157 @@ func _read_use() -> void:
 	var first := _first_target_row()
 	if first != null:
 		first.grab_focus()
+
+
+## Drop the focused stack, after a confirm -- it deletes the stack for good
+## (see autoload/inventory.gd::drop_slot()'s own comment: there is no
+## ground-item entity for it to become, so this is genuinely a delete).
+## Confirmed the same way Use's target picker is: `menu.hold_input` so the
+## shell stops treating `menu_cancel` as Close, this tab reads it as Cancel
+## instead, and the footer says so while the panel is open.
+func _read_drop() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _targeting >= 0 or _confirming >= 0 or _held >= 0:
+		return
+	if not Input.is_action_just_pressed(DROP_ACTION):
+		return
+
+	var inventory: RefCounted = _inventory()
+	var stack: Dictionary = inventory.call("stack_at", _focused)
+	if stack.is_empty():
+		say("Nothing there to drop.")
+		return
+
+	_confirming = _focused
+	menu.call("hold_input", true)
+	menu.call("override_footer", "A  Drop it        B  Cancel")
+	_content_row.visible = false
+	_confirm_panel.visible = true
+	_refresh_confirm_panel()
+	if not _confirm_rows.is_empty():
+		_confirm_rows[0].grab_focus()
+
+
+func _refresh_confirm_panel() -> void:
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	if inventory == null or db == null or _confirm_header == null:
+		return
+
+	var stack: Dictionary = inventory.call("stack_at", _confirming)
+	if stack.is_empty():
+		_confirm_header.text = "That slot is empty now."
+	else:
+		var id := str(stack.get("id", ""))
+		var tool_max: int = int(inventory.call("max_durability_at", _confirming))
+		var what := (
+			str(db.call("item_name", id)) if tool_max > 0
+			else "%d %s" % [int(stack.get("n", 0)), str(db.call("item_name", id))]
+		)
+		_confirm_header.text = "Drop %s? This cannot be undone." % what
+
+	if _confirm_rows.size() >= 2:
+		_confirm_rows[0].text = "Drop it"
+		_confirm_rows[1].text = "Cancel"
+
+
+## Row 0 is "Drop it", row 1 is "Cancel" -- see _build_confirm_panel().
+func _on_confirm_row(index: int) -> void:
+	if _confirming < 0:
+		return
+	if index != 0:
+		say("")
+		_end_confirm()
+		return
+
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	var stack: Dictionary = inventory.call("stack_at", _confirming)
+	if stack.is_empty():
+		# Nothing left to drop (shouldn't happen while the shell is held deaf,
+		# but refusing beats reporting a drop that didn't happen).
+		_end_confirm()
+		return
+
+	var id := str(stack.get("id", ""))
+	var n := int(stack.get("n", 0))
+	inventory.call("drop_slot", _confirming)
+	if n > 1:
+		say("Dropped %d %s." % [n, str(db.call("item_name", id))])
+	else:
+		say("Dropped %s." % str(db.call("item_name", id)))
+	_end_confirm()
+
+
+func _read_confirm_cancel() -> void:
+	if _confirming < 0:
+		return
+	if Input.is_action_just_pressed("menu_cancel"):
+		say("")
+		_end_confirm()
+
+
+func _end_confirm() -> void:
+	_confirming = -1
+	menu.call("hold_input", false)
+	menu.call("override_footer", "")
+	_confirm_panel.visible = false
+	_content_row.visible = true
+	if _focused >= 0 and _focused < _buttons.size():
+		_buttons[_focused].grab_focus()
+
+
+## Halve the focused stack into the first empty slot. Non-destructive (both
+## halves stay in the satchel) and needs no destination choice the way Drop's
+## confirm or Use's target does, so it applies on the same press.
+func _read_split() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _targeting >= 0 or _confirming >= 0 or _held >= 0:
+		return
+	if not Input.is_action_just_pressed(SPLIT_ACTION):
+		return
+
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	var stack: Dictionary = inventory.call("stack_at", _focused)
+	if stack.is_empty():
+		say("Nothing there to split.")
+		return
+
+	var id := str(stack.get("id", ""))
+	var n := int(stack.get("n", 0))
+	var cap := int(db.call("stack_size", id))
+	if cap <= 1:
+		say("%s can't be split." % str(db.call("item_name", id)))
+		return
+	if n < 2:
+		say("Not enough %s to split." % str(db.call("item_name", id)))
+		return
+
+	var target := _first_empty_slot(_focused)
+	if target < 0:
+		say("No empty slot to split into.")
+		return
+
+	var amount := n / 2
+	if not bool(inventory.call("split_slot", _focused, target, amount)):
+		say("Can't split that.")
+		return
+	say("Split %d %s into slot %d." % [amount, str(db.call("item_name", id)), target + 1])
+
+
+## First empty slot other than `exclude`, or -1 when the satchel is full.
+func _first_empty_slot(exclude: int) -> int:
+	var inventory: RefCounted = _inventory()
+	if inventory == null:
+		return -1
+	var slots: int = int(inventory.call("slot_count"))
+	for i in slots:
+		if i != exclude and bool(inventory.call("is_slot_empty", i)):
+			return i
+	return -1
 
 
 ## The first row that actually holds a pal, so opening the picker focuses
