@@ -1,6 +1,7 @@
 {
   "_comment": "Authored, purpose-implying prop clusters (bible sec2 P3: do not dump props everywhere). Structures from the Quaternius Fantasy Props MegaKit (docs/ASSET_LEDGER.md), placed by scripts/world/props.gd: each entry is stood on the ground by asking the world (D09), given a box collider from its combined mesh AABB, and scaled by its own `scale` -- the pack is authored close to real-world size so most entries sit near 1.0. ALL TUNABLE.",
   "_comment_layout": "work_area sits south-west of the village square's workshop [2,2] (EV6: the Medieval Village workshop stands where the old farm-pack Barn stood, its open arch bay facing this cluster so the nook reads as the workshop's own yard) -- a smithing/repair nook implying someone maintains the settlement's tools, far enough from the workshop's footprint and the Quarry Foreman NPC [0,-6] to read as its own spot rather than clutter. farmhouse_yard sits south of Grandpa's house [-22,-16] -- storage and harvest overflow for a farm that feeds itself. Grandpa's house is a real footprint, not just its terrain pad (grandpa_house.gd: INNER_W 9.0/INNER_D 7.0/WALL_T 0.3 -> half_w 4.8, half_d 3.8, so the house's own south wall sits at z=-19.8) -- an earlier placement here landed props inside that wall; kept 4m+ clear of it now, and still off the house's east-facing door lane (tested by smoke_opening, x -16..-9.7 at z~-15).",
+  "_comment_layout_ev7r": "EV7-remainder: the two of the bible's remaining three named clusters that had real geography to sit on. trainer_camp sits inside the practice-meadow clearing (vegetation.json, [30,-40] r16) but off route 2's path (terrain_playground.json, [18,-24]->[30,-40]) at [26,-28] -- a waypoint on the way to the arena, not inside it. bridge_repair_site sits on the footbridge's own west bank (village.json's footbridge, EV6-remainder, [-136.3,113] yaw -5) at [-142.5,115.5], off the deck's abutment and clear of the rail line. quarry_station is NOT built here -- no quarry exists anywhere in the world (village_npcs.json's Quarry Foreman still stands in the square for exactly that reason) and building one is out of scope for a prop-placement item; left open, same as EV6-remainder left it.",
   "clusters": [
     {
       "name": "work_area",
@@ -20,6 +21,24 @@
         { "model": "FarmCrate_Empty", "at": [-23.3, -24.7], "yaw_deg": 50.0, "scale": 1.0, "_why": "touching the barrel's other side, tipped at an angle rather than square -- just set down, not arranged. FarmCrate_Carrot swapped out earlier (round 1 blind critic): its vertex-colour-tinted contents render as an unreadable white/grey smear, a model defect not a placement one." },
         { "model": "Bucket_Wooden_1", "at": [-24.3, -26.0], "yaw_deg": 190.0, "scale": 1.0, "_why": "in front of the pile, facing back toward it -- the tool that did the carrying, set down after" },
         { "model": "Crate_Wooden", "at": [-23.2, -26.1], "yaw_deg": -30.0, "scale": 1.0, "_why": "the big piece of the same load, closing the pile from the front" }
+      ]
+    },
+    {
+      "name": "trainer_camp",
+      "props": [
+        { "model": "Bag", "at": [26.0, -28.0], "yaw_deg": 15.0, "scale": 1.0, "_why": "EV7-remainder: the cluster's anchor -- a travelling trainer's pack, dropped beside the practice-meadow path. Sited off route 2 ([18,-24]->[30,-40], terrain_playground.json), inside the practice-meadow clearing (vegetation.json, centre [30,-40] r16) but well short of the arena itself, so the camp reads as a waypoint on the way in, not part of the bramblebun's ground." },
+        { "model": "Bench", "at": [25.3, -27.3], "yaw_deg": -60.0, "scale": 1.0, "_why": "a rough seat facing back toward the path, close enough to the pack to read as the same stop" },
+        { "model": "Barrel", "at": [26.7, -27.4], "yaw_deg": 100.0, "scale": 1.0, "_why": "plain supply barrel, not the farmhouse's apple-branded one -- a different specific model so this pile doesn't read as a duplicate of farmhouse_yard" },
+        { "model": "Crate_Wooden", "at": [26.4, -28.9], "yaw_deg": -25.0, "scale": 1.0, "_why": "second supply crate closing the pile from the path side -- same touching-cluster shape work_area and farmhouse_yard converged on, not a scatter" }
+      ]
+    },
+    {
+      "name": "bridge_repair_site",
+      "props": [
+        { "model": "Crate_Wooden", "at": [-142.5, 115.5], "yaw_deg": -5.0, "scale": 1.0, "_why": "EV7-remainder: the cluster's anchor -- a materials crate. Sited on the footbridge's own west bank (village.json's footbridge, [-136.3,113] yaw -5), off to the side of the deck's abutment (local x beyond -4.9) and clear of the rail line (local z +/-0.95), so it reads as work happening beside the crossing, not blocking it." },
+        { "model": "Rope_1", "at": [-142.0, 116.1], "yaw_deg": 40.0, "scale": 1.0, "_why": "coiled rope against the crate -- repair stock, not a passerby's drop" },
+        { "model": "Axe_Bronze", "at": [-143.2, 115.9], "yaw_deg": -110.0, "scale": 1.0, "_why": "a tool left leaning against the pile, mid-repair -- same 'tool set down' language as work_area's pickaxe" },
+        { "model": "Bucket_Wooden_1", "at": [-141.9, 114.6], "yaw_deg": 160.0, "scale": 1.0, "_why": "water bucket at the pile's foot, for mixing or soaking timber" }
       ]
     }
   ]
