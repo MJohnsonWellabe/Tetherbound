@@ -201,12 +201,31 @@ func test_a_clash_names_the_action_it_clashes_with() -> void:
 
 func test_the_shipped_defaults_already_share_buttons() -> void:
 	# This is why a clash is reported rather than refused. Out of the box, A is
-	# jump AND quick attack AND menu confirm, because the world, a fight and a
-	# menu are different contexts. Refusing duplicates would make the game's own
-	# defaults unreachable from the settings screen.
+	# jump AND menu confirm, because the world and a menu are different
+	# contexts. Refusing duplicates would make the game's own defaults
+	# unreachable from the settings screen.
 	var on_a: Array = bindings.conflicts("jump", "gamepad", _pad(0))
-	assert_true(on_a.has("combat_quick"))
 	assert_true(on_a.has("menu_confirm"))
+
+
+func test_the_shipped_defaults_share_triggers_between_combat_and_build() -> void:
+	# D35 (Palworld parity): `combat_quick`/`combat_charged` moved onto the
+	# triggers, the same ones `build_rotate_right`/`build_rotate_left` already
+	# used -- a fight and an armed build ghost are mutually exclusive game
+	# states (build_placer.gd only reads its actions while `pending_build` is
+	# set; combat_manager.gd only reads these while State.ACTIVE), so this is
+	# a deliberate dual-use, not an oversight.
+	var rt := InputEventJoypadMotion.new()
+	rt.axis = JOY_AXIS_TRIGGER_RIGHT
+	rt.axis_value = 1.0
+	var on_rt: Array = bindings.conflicts("combat_quick", "gamepad", rt)
+	assert_true(on_rt.has("build_rotate_right"))
+
+	var lt := InputEventJoypadMotion.new()
+	lt.axis = JOY_AXIS_TRIGGER_LEFT
+	lt.axis_value = 1.0
+	var on_lt: Array = bindings.conflicts("combat_charged", "gamepad", lt)
+	assert_true(on_lt.has("build_rotate_left"))
 
 
 func test_a_clash_is_allowed_and_then_visible_from_both_sides() -> void:
@@ -217,13 +236,13 @@ func test_a_clash_is_allowed_and_then_visible_from_both_sides() -> void:
 
 func test_the_defaults_clash_with_themselves_and_that_is_not_a_warning() -> void:
 	# A row is marked on clashes the PLAYER made. If the shipped defaults counted,
-	# four rows would be amber on a fresh install and the colour would stop
-	# meaning anything.
-	assert_true(bindings.current_conflicts("jump").has("combat_quick"))
+	# rows would be amber on a fresh install and the colour would stop meaning
+	# anything.
+	assert_true(bindings.current_conflicts("jump").has("menu_confirm"))
 	assert_eq(bindings.new_conflicts("jump").size(), 0, "a fresh install is already warning")
 	bindings.set_binding("jump", "keyboard", _key(KEY_I))
 	assert_true(bindings.new_conflicts("jump").has("inventory"))
-	assert_false(bindings.new_conflicts("jump").has("combat_quick"), "a shipped clash was reported as new")
+	assert_false(bindings.new_conflicts("jump").has("menu_confirm"), "a shipped clash was reported as new")
 
 
 func test_an_unbound_slot_is_not_a_clash() -> void:

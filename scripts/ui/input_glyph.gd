@@ -41,8 +41,23 @@ const GLYPHS := {
 	## mouse buttons on keyboard-and-mouse, not keys -- the "keyboard" bucket
 	## key is kept for both (matching every other entry's two-way device
 	## split) even though the icon itself is a mouse glyph.
-	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_button_a.png"},
-	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_button_x.png"},
+	##
+	## D35 (Palworld parity): gamepad defaults moved to the triggers --
+	## `quick`=RT, `charged`=LT -- to match Palworld's RT-attack/LT-aim. The
+	## vendored set has no trigger PNGs (same gap `build_rotate_left`/
+	## `build_rotate_right` already document below), so these borrow LB/RB as
+	## the closest shape on disk rather than block on an asset pass. Swap for
+	## real LT/RT glyphs once Kenney's trigger icons are pulled in.
+	##
+	## KNOWN GLYPH COLLISION until that asset pass: `quick`'s stand-in
+	## (xbox_rb.png, standing in for RT) is visually identical to `throw`'s
+	## icon (xbox_rb.png, `throw`'s REAL button), and combat_hud.gd's Actions
+	## row draws both cells at once -- so the row shows two matching RB icons
+	## for two different physical buttons. Real trigger art is the only fix;
+	## do not "fix" this by pointing `quick` at an unrelated button glyph,
+	## which would be actively wrong instead of merely imprecise.
+	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_rb.png"},
+	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_lb.png"},
 	"throw": {"keyboard": "keyboard_f.png", "gamepad": "xbox_rb.png"},
 	## `combat_run` binds to Escape/gamepad-B -- physically identical to
 	## `cancel` above, so combat_hud.gd's Run AND Cancel verbs both reach for

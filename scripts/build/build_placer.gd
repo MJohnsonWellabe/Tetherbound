@@ -74,8 +74,12 @@ const CANCEL_ACTION := "build_cancel"
 const GRID_RADIUS := 8.0
 const GRID_MINOR_STEP := 0.5
 const GRID_MAJOR_STEP := 1.0
-const GRID_MINOR_ALPHA := 0.10
-const GRID_MAJOR_ALPHA := 0.20
+## Top of the spec's 8-12% / 18-25% bands rather than the middle: the first
+## capture round showed the grid all but vanishing into sunlit grass at
+## 10%/20% (tunable — but stay inside the spec band, the grid must assist,
+## not carpet the meadow).
+const GRID_MINOR_ALPHA := 0.12
+const GRID_MAJOR_ALPHA := 0.25
 
 ## D34/spec 13.2: on-screen size of a snap-candidate dot, and how much
 ## brighter the one `build_grid.resolve_position` would actually choose

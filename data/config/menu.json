@@ -92,6 +92,7 @@
         },
         {
           "name": "Fighting",
+          "note": "D35 (Palworld parity). `combat_quick`/`combat_charged` sit on RT/LT, the same triggers `build_rotate_right`/`build_rotate_left` use -- a build ghost is never out mid-fight (build_placer.gd only reads its actions while `pending_build` is set, combat_manager.gd only reads these while a fight is State.ACTIVE), so the triggers never mean two things at once.",
           "actions": [
             "combat_quick", "combat_charged", "combat_throw", "combat_run",
             "combat_switch_left", "combat_switch_right"
@@ -99,7 +100,7 @@
         },
         {
           "name": "Building",
-          "note": "Placing a structure. These only act while a build ghost is out, so their default buttons can double up with exploration controls without ever meaning two things at once.",
+          "note": "Placing a structure. These only act while a build ghost is out, so their default buttons can double up with exploration controls -- and, on `build_rotate_left`/`build_rotate_right`, with the Fighting group's triggers -- without ever meaning two things at once.",
           "actions": ["build_place", "build_cancel", "build_rotate_left", "build_rotate_right", "build_snap_cycle"]
         },
         {

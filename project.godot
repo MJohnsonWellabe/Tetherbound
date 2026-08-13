@@ -191,13 +191,13 @@ hotbar_5={
 combat_quick={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":0,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":5,"axis_value":1.0,"script":null)
 ]
 }
 combat_charged={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"device":-1,"button_index":2,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
 ]
 }
 combat_throw={
