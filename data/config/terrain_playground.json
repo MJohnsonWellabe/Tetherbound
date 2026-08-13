@@ -56,8 +56,25 @@
         ],
         "radius": 44.0,
         "height": 25.0
+      },
+      {
+        "centre": [
+          78.4,
+          -184.2
+        ],
+        "radius": 24.0,
+        "height": 21.0
+      },
+      {
+        "centre": [
+          24.4,
+          -198.8
+        ],
+        "radius": 24.0,
+        "height": 19.0
       }
-    ]
+    ],
+    "_comment_high_pass": "SA4 stage 2: peaks[3] and peaks[4] are the High Pass's two shoulders, not scenery. The ice spoke's road ends at [49.7,-185.4] and spec 1E calls that a PASS, which needs a saddle to be one. They sit +-28m either side of the blocker along its own axis (15 degrees) with radius 24, so the 22m saddle between them stays open ground the road climbs through, and the scree pile is what closes it. Kept small and kept inside 225m from the origin so world_perimeter.gd's 235m ring never has to climb them. TUNABLE."
   },
   "_comment_rock_form": "OF11. The rises' rock FORM, and a replacement for -- not an extension of -- `colour.relief_amplitude`/`relief_frequency`, which were removed. Those added one smooth FBM bump to a smooth analytic cone; a blind critic on the result still read 'a single smooth, continuous, unbroken curve,' and five rounds before that only ever repainted the same dome. Smooth noise cannot produce stone at any amplitude: FBM's extrema are rounded, so its surfaces are swells, and a swell painted grey is a stain. This block builds the two things a rock hillside actually has and a swell does not, both of them DISCONTINUITIES: creased ribs and gullies (a RIDGED fractal, domain-warped so the ribs meander and pinch out rather than tiling) and bedding planes (`terrace_*`, which quantises the rise's own height into near-level ledges separated by steep risers -- the plateau in docs/reference/palworld-04 and the crags in the key art are made of exactly this). See playground_heightfield.gd::_rise_relief. Everything here is faded out at the rim (`rim_in`/`rim_out`) so `rises` alone still decides each landform's footprint and the roads at its foot are untouched. ALL TUNABLE.",
   "rock_form": {
@@ -250,11 +267,20 @@
     "trailheads": [
       {
         "_why": "the Rise road's own end -- a fingerpost off the road's shoulder, angled ~25deg off the road's own bearing so its plank reads face-on to a player walking up the road toward it",
-        "at": [75.4, -38.9],
+        "at": [
+          75.4,
+          -38.9
+        ],
         "label": "The Rise",
         "points": [
-          [74.0, -41.0],
-          [103.7, -45.3]
+          [
+            74.0,
+            -41.0
+          ],
+          [
+            103.7,
+            -45.3
+          ]
         ]
       }
     ]
@@ -273,28 +299,64 @@
         "bearing_deg": 118.0,
         "built": true,
         "road": [
-          [10.0, -10.0],
-          [-10.0, 25.0],
-          [-35.0, 70.0],
-          [-60.0, 115.0],
-          [-78.0, 145.0],
-          [-90.1, 169.5]
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            -10.0,
+            25.0
+          ],
+          [
+            -35.0,
+            70.0
+          ],
+          [
+            -60.0,
+            115.0
+          ],
+          [
+            -78.0,
+            145.0
+          ],
+          [
+            -90.1,
+            169.5
+          ]
         ],
         "sign": {
-          "at": [-84.5, 166.0],
+          "at": [
+            -84.5,
+            166.0
+          ],
           "label": "River Road",
-          "points": [[-90.1, 169.5], [-105.0, 205.0]]
+          "points": [
+            [
+              -90.1,
+              169.5
+            ],
+            [
+              -105.0,
+              205.0
+            ]
+          ]
         },
         "blocker": {
           "kind": "gorge",
           "carve": {
-            "centre": [-93.9, 176.6],
+            "centre": [
+              -93.9,
+              176.6
+            ],
             "axis_deg": 26.3,
-            "half_length": 70.0,
-            "end_fade": 22.0,
+            "half_length": 26.0,
+            "end_fade": 14.0,
             "half_width": 9.0,
             "rim": 7.0,
-            "depth": 16.0
+            "depth": 16.0,
+            "_comment_length": "SA4 stage 2. half_length was 70 / end_fade 22 (92m reach each way). The pond centre [-145,138] sits at carve-local u=-62.9, v=-12.0 -- INSIDE both the full-depth run and the rim -- so the trench gouged 16m straight through the middle of the existing pond basin. water.gd's flood fill then joined the two into one sheet: 1346 surface cells of which 907 (67%) were the new trench, and its far end was held in only by _region()'s arbitrary +-90m scan window around the pond centre, not by terrain. 26/14 gives a 40m reach: the road still crosses at u=0.3 at full 16m depth and 66-degree walls, and the zero-depth end lands at [-129.8,158.9], 33m out from the pond centre on its own rim. TUNABLE, but do not lengthen this without re-measuring the pond.",
+            "failsafe": true,
+            "_comment_failsafe": "SA4 stage 2: the probe walked a body at this trench and it did not cross -- it fell in and came to rest on the floor inside walls past the slope limit, i.e. stuck. severed_spokes._add_carve_failsafe hangs spec 1E's own 'backup kill/respawn volume ... only as a failsafe' inside the trench and returns the player to this spoke's road end. Not set on cliff_road's notch: that one is cut into a hillside flank with honest walkable ground at the same altitude beside it, and the probe shows the flank stops the player 14.5m short of the notch anyway."
           },
           "_comment_kerb": "Broken roadbed at the near lip: a short run of the same fieldstone the boundary kerb is built from, tipped and scattered where the road's edge went over. The FAR lip gets the same treatment so the road visibly resumes across the gap -- that is 29's 'distant land' at close range.",
           "lip_stones": 9,
@@ -309,27 +371,59 @@
         "bearing_deg": 15.0,
         "built": true,
         "road": [
-          [10.0, -10.0],
-          [55.0, 4.0],
-          [105.0, 22.0],
-          [150.0, 38.0],
-          [185.5, 49.7]
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            55.0,
+            4.0
+          ],
+          [
+            105.0,
+            22.0
+          ],
+          [
+            150.0,
+            38.0
+          ],
+          [
+            185.5,
+            49.7
+          ]
         ],
         "sign": {
-          "at": [182.0, 54.8],
+          "at": [
+            182.0,
+            54.8
+          ],
           "label": "Storm Country",
-          "points": [[185.5, 49.7], [220.0, 60.0]]
+          "points": [
+            [
+              185.5,
+              49.7
+            ],
+            [
+              220.0,
+              60.0
+            ]
+          ]
         },
         "blocker": {
           "kind": "collapsed_bridge",
           "carve": {
-            "centre": [193.2, 51.8],
+            "centre": [
+              193.2,
+              51.8
+            ],
             "axis_deg": 108.2,
             "half_length": 55.0,
             "end_fade": 18.0,
             "half_width": 6.0,
             "rim": 5.0,
-            "depth": 11.0
+            "depth": 11.0,
+            "failsafe": true,
+            "_comment_failsafe": "SA4 stage 2: the probe walked a body at this trench and it did not cross -- it fell in and came to rest on the floor inside walls past the slope limit, i.e. stuck. severed_spokes._add_carve_failsafe hangs spec 1E's own 'backup kill/respawn volume ... only as a failsafe' inside the trench and returns the player to this spoke's road end. Not set on cliff_road's notch: that one is cut into a hillside flank with honest walkable ground at the same altitude beside it, and the probe shows the flank stops the player 14.5m short of the notch anyway."
           },
           "_comment_abutments": "Two masonry abutments facing each other across the channel, drawn from the same T_UnevenBrick sheet the boundary wall and every village building use (D24, one village family). The deck is gone: one fallen beam leans off the near abutment into the ravine. Nothing spans the gap.",
           "abutment": {
@@ -349,20 +443,50 @@
         "bearing_deg": 222.0,
         "built": true,
         "road": [
-          [10.0, -10.0],
-          [-20.0, -35.0],
-          [-52.0, -58.0],
-          [-86.0, -83.0],
-          [-118.9, -107.0]
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            -20.0,
+            -35.0
+          ],
+          [
+            -52.0,
+            -58.0
+          ],
+          [
+            -86.0,
+            -83.0
+          ],
+          [
+            -118.9,
+            -107.0
+          ]
         ],
         "sign": {
-          "at": [-113.8, -110.8],
+          "at": [
+            -113.8,
+            -110.8
+          ],
           "label": "Mountain Road",
-          "points": [[-118.9, -107.0], [-150.0, -135.0]]
+          "points": [
+            [
+              -118.9,
+              -107.0
+            ],
+            [
+              -150.0,
+              -135.0
+            ]
+          ]
         },
         "blocker": {
           "kind": "rockslide",
-          "centre": [-123.3, -111.1],
+          "centre": [
+            -123.3,
+            -111.1
+          ],
           "axis_deg": -53.9,
           "span": 24.0,
           "height": 5.6,
@@ -382,23 +506,62 @@
         "type": "psychic",
         "_why": "Due west, level open ground -- an ancient gate wants to be seen head-on from a distance, which needs a straight approach and no landform behind it. Spec 1E: 'Psychic: ancient stone gate/road'. NOT YET BUILT: needs a gate-arch composition out of the medieval kit that does not exist yet as a prefab.",
         "bearing_deg": 180.0,
-        "built": false,
+        "built": true,
         "road": [
-          [10.0, -10.0],
-          [-30.0, -8.0],
-          [-80.0, -4.0],
-          [-140.0, -2.0],
-          [-192.0, 0.0]
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            -30.0,
+            -8.0
+          ],
+          [
+            -80.0,
+            -4.0
+          ],
+          [
+            -140.0,
+            -2.0
+          ],
+          [
+            -192.0,
+            0.0
+          ]
         ],
         "sign": {
-          "at": [-187.0, 4.4],
+          "at": [
+            -187.0,
+            4.4
+          ],
           "label": "Gate Road",
-          "points": [[-192.0, 0.0], [-228.0, 2.0]]
+          "points": [
+            [
+              -192.0,
+              0.0
+            ],
+            [
+              -228.0,
+              2.0
+            ]
+          ]
         },
         "blocker": {
           "kind": "sealed_gate",
-          "centre": [-198.0, 0.0],
-          "axis_deg": 90.0
+          "centre": [
+            -198.0,
+            0.0
+          ],
+          "axis_deg": 90.0,
+          "_comment_gate": "SA4 stage 2. A gate, not a wall: the road runs THROUGH the arch and the leaf does not open. Two piers on world_perimeter.gd's own PIER_* proportions carry a lintel; the opening between them is filled by a pair of closed leaves. Flanking wall stubs run out to `span` either side so the arch is a gate in something rather than a free-standing frame you walk around at three paces. All T_UnevenBrick, no new asset.",
+          "opening": 6.4,
+          "pier_width": 2.2,
+          "pier_depth": 2.6,
+          "pier_height": 7.2,
+          "lintel_height": 1.5,
+          "wall_height": 4.2,
+          "wall_thickness": 1.7,
+          "span": 19.0
         }
       },
       {
@@ -406,25 +569,64 @@
         "type": "ice",
         "_why": "North, the last long clear bearing. Spec 1E: 'Ice: high pass'. NOT YET BUILT, and this one needs terrain work before props: a pass needs a saddle to be a pass, and there is no relief on this bearing today -- see the handoff.",
         "bearing_deg": 285.0,
-        "built": false,
+        "built": true,
         "road": [
-          [10.0, -10.0],
-          [22.0, -55.0],
-          [34.0, -105.0],
-          [43.0, -150.0],
-          [49.7, -185.4]
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            22.0,
+            -55.0
+          ],
+          [
+            34.0,
+            -105.0
+          ],
+          [
+            43.0,
+            -150.0
+          ],
+          [
+            49.7,
+            -185.4
+          ]
         ],
         "sign": {
-          "at": [45.0, -181.0],
+          "at": [
+            45.0,
+            -181.0
+          ],
           "label": "The High Pass",
-          "points": [[49.7, -185.4], [58.0, -225.0]]
+          "points": [
+            [
+              49.7,
+              -185.4
+            ],
+            [
+              58.0,
+              -225.0
+            ]
+          ]
         },
         "blocker": {
           "kind": "rockslide",
-          "centre": [51.4, -191.5],
+          "centre": [
+            51.4,
+            -191.5
+          ],
           "axis_deg": 15.0,
+          "_comment_pass": "SA4 stage 2. A pass needs a saddle, and this bearing had no relief at all, so `rises.peaks` gained two small shoulders either side of the road end (see their own _comment) and the road now climbs between them. The blocker itself is the same collapsed scree the mountain trail uses -- the pass has fallen in. It reuses `rockslide` deliberately: one mechanism, two sites, and the two read differently because one lies at a mountain's foot and this one fills a gap between two shoulders. Snow dressing is NOT here; the ice reading currently rests on altitude and bare rock alone. Honest limit.",
           "span": 22.0,
-          "height": 5.0
+          "height": 5.0,
+          "blocks": 12,
+          "block_scale_min": 1.7,
+          "block_scale_max": 3.2,
+          "rubble": 16,
+          "rubble_scale_min": 0.3,
+          "rubble_scale_max": 0.85,
+          "barrier_height": 4.2,
+          "barrier_thickness": 3.4
         }
       },
       {
@@ -432,22 +634,71 @@
         "type": "air",
         "_why": "Onto `rises.peaks[0]`'s north-west flank -- the only real relief in the game and therefore the only place a cliff road can honestly be. Short by design: the flank's 46-degree collar (see paths.routes 'The Rise') is where the roadbed has fallen away. Spec 1E: 'Air: cliff/highland road'. NOT YET BUILT. Note it ends ~25m from the Rise road's own trailhead; two old roads meeting at a hill's foot is plausible but the pair need to be looked at together in one frame before this is dressed.",
         "bearing_deg": 340.0,
-        "built": false,
+        "built": true,
         "road": [
-          [10.0, -10.0],
-          [45.0, -18.0],
-          [75.0, -27.0],
-          [98.7, -35.9]
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            45.0,
+            -18.0
+          ],
+          [
+            75.0,
+            -27.0
+          ],
+          [
+            98.7,
+            -35.9
+          ]
         ],
         "sign": {
-          "at": [95.0, -31.0],
+          "at": [
+            95.0,
+            -31.0
+          ],
           "label": "Cliff Road",
-          "points": [[98.7, -35.9], [135.0, -48.0]]
+          "points": [
+            [
+              98.7,
+              -35.9
+            ],
+            [
+              135.0,
+              -48.0
+            ]
+          ]
         },
         "blocker": {
           "kind": "fallen_roadbed",
-          "centre": [102.0, -37.2],
-          "axis_deg": 70.0
+          "centre": [
+            102.0,
+            -37.2
+          ],
+          "axis_deg": 70.0,
+          "_comment_fallen": "SA4 stage 2. The road was a shelf cut into rises.peaks[0]'s north-west flank and the shelf is gone. The blocker is a carve like the gorge's, but short and narrow -- a 9m notch with 66-degree walls where the roadbed used to be -- because a fallen roadbed is a GAP, not a pile, and three piles out of seven would be one mechanism wearing three hats. Dressing: the uphill retaining wall runs up to the break and stops with a broken end, its kerbstones tipped over the edge, and its own masonry lies as scree below the notch. Checked clear of the Rise road's trailhead at [75.4,-38.9] (carve-local v=24.4m, well outside half_width+rim=9m).",
+          "carve": {
+            "centre": [
+              102.0,
+              -37.2
+            ],
+            "axis_deg": 70.0,
+            "half_length": 22.0,
+            "end_fade": 12.0,
+            "half_width": 5.0,
+            "rim": 4.0,
+            "depth": 9.0
+          },
+          "revetment_length": 14.0,
+          "revetment_height": 1.6,
+          "revetment_thickness": 1.1,
+          "scree": 14,
+          "scree_scale_min": 0.35,
+          "scree_scale_max": 1.1,
+          "lip_stones": 7,
+          "lip_span": 9.0,
+          "far_lip": true
         }
       },
       {
@@ -455,23 +706,60 @@
         "type": "dark",
         "_why": "South-south-east, skirting `rises.peaks[2]`. Spec 1E: 'Dark: sealed blighted road'. NOT YET BUILT -- the seal is the one blocker with no existing vocabulary at all (it is Team Tether's own work, not weather or rock), so it wants a decision about what a Team Tether seal looks like before anything is placed.",
         "bearing_deg": 65.0,
-        "built": false,
+        "built": true,
         "road": [
-          [10.0, -10.0],
-          [30.0, 22.0],
-          [50.0, 76.0],
-          [67.0, 128.0],
-          [81.2, 174.0]
+          [
+            10.0,
+            -10.0
+          ],
+          [
+            30.0,
+            22.0
+          ],
+          [
+            50.0,
+            76.0
+          ],
+          [
+            67.0,
+            128.0
+          ],
+          [
+            81.2,
+            174.0
+          ]
         ],
         "sign": {
-          "at": [76.5, 176.5],
+          "at": [
+            76.5,
+            176.5
+          ],
           "label": "Blighted Road",
-          "points": [[81.2, 174.0], [95.0, 215.0]]
+          "points": [
+            [
+              81.2,
+              174.0
+            ],
+            [
+              95.0,
+              215.0
+            ]
+          ]
         },
         "blocker": {
           "kind": "sealed_road",
-          "centre": [83.7, 180.0],
-          "axis_deg": -25.0
+          "centre": [
+            83.7,
+            180.0
+          ],
+          "axis_deg": -25.0,
+          "_comment_seal": "SA4 stage 2. The one blocker that is Team Tether's own work rather than weather or rock, so it is the one that may not be stone or slide. It is built from the vocabulary the boundary already owns -- T_UnevenBrick pier stubs, exactly world_perimeter's _build_stonework -- with the road walled shut between them and every upright capped in palette.json's `tether_oxblood` (#332228), the reserved faction colour that appears on nothing friendly or neutral. No new asset family (D24), no new texture, no generation. The seal says WHO without a single word.",
+          "span": 21.0,
+          "wall_height": 3.4,
+          "wall_thickness": 1.5,
+          "piers": 5,
+          "pier_height": 4.6,
+          "marker_height": 1.5
         }
       }
     ]
@@ -604,15 +892,15 @@
     "soil": "#f3ebdb",
     "rock": "#cfcdc4",
     "soil_slope_deg": 34.0,
-    "_comment_soil_slope_of11": "OF11: back to 30 from EV4-hillside-seam-remainder's 24. That round widened the pure-soil plateau because soil had to be visible as a third BAND on an otherwise smooth flank. It is not a band any more — with `rock_form`'s bedding planes the flank is ledge/riser/ledge, and soil's job is the transition where turf on a ledge gives out at the foot of the next riser. Held at 24 the rebuilt rise came out 46% soil and only 15% grass across peaks[0]'s footprint (tools/_probe_rise_form.gd), i.e. a dirt mound; both reference boards draw a green hill with rock breaking out of it. TUNABLE.",
+    "_comment_soil_slope_of11": "OF11: back to 30 from EV4-hillside-seam-remainder's 24. That round widened the pure-soil plateau because soil had to be visible as a third BAND on an otherwise smooth flank. It is not a band any more \u2014 with `rock_form`'s bedding planes the flank is ledge/riser/ledge, and soil's job is the transition where turf on a ledge gives out at the foot of the next riser. Held at 24 the rebuilt rise came out 46% soil and only 15% grass across peaks[0]'s footprint (tools/_probe_rise_form.gd), i.e. a dirt mound; both reference boards draw a green hill with rock breaking out of it. TUNABLE.",
     "rock_slope_deg": 42.0,
     "_comment_rock_slope_of11_r2": "OF11 round 2 tried 44 -> 48 and round 3 reversed past it to 42 -- 48 made the visible flank 46% SOIL, and a blind critic read the whole landform as \"a plain khaki dome\" and \"scorched late-summer scrub\": warm tan Ground003 over most of the face is the opposite of reading as stone. At 42 against `soil_slope_deg` 34, a flank sitting at 40-55 degrees is mostly ROCK, soil is the thin band where a ledge's turf gives out, and grass holds the ledges themselves -- green ledges, stone risers, which is what the key art's hilltop crag actually looks like. Original round-2 note follows. Round 2: 44 -> 48. With `rock_form`'s bedding planes the lower flank alternates ledge and riser, and at 44 the risers AND most of the un-terraced flank between them crossed into rock -- the round-1 render came out 39% rock across peaks[0]'s footprint, a bare hill. Both reference boards draw a GREEN hill with rock breaking out of it and a rock crag on the crown, so the flank should hold turf between its outcrops and the continuous stone should be the cap (`rock_crown_deg` below), not a mid-slope wash. TUNABLE.",
     "blend_deg": 6.0,
     "blend_deg_rock": 8.0,
-    "_comment_blend_deg_rock": "OF11 round 6. The band-ramp width ON THE RISES, interpolated against `blend_deg` above by build_playground_terrain.gd::_band_blend — the same rise/meadow split `slope_sample_step_rock` already uses, and for the same underlying reason. `blend_deg` is a width in DEGREES, but what a viewer sees is a width in METRES, and round 4 deliberately made slope change very fast on the rises by sampling it at 2m instead of 6m. Out on the meadow 6 degrees of ramp is several metres of gradual transition; across a `rock_form` riser the same 6 degrees is crossed inside a pixel or two, so the ramp collapses and the boundary bakes as a hard edge — which is what the round-5 blind critic reported: the moss/dirt patches 'meet bare stone in hard stencil-edged shapes with no organic blend... a stencil laid over the rock, not moss actually growing in a crevice.' That is a side effect of round 4's win, not a regression in it, so the fix widens the ramp only where the slope field is steep and leaves both the meadow and the fine sampling alone. 8.0 is the CEILING, not a preference: `_control_for` needs `soil_slope_deg + blend <= rock_slope_deg` to keep its five bands from overlapping, and that gap is 42-34 = 8. Raising this further does nothing until those two move apart; the function clamps rather than letting the bands collapse. TUNABLE.",
+    "_comment_blend_deg_rock": "OF11 round 6. The band-ramp width ON THE RISES, interpolated against `blend_deg` above by build_playground_terrain.gd::_band_blend \u2014 the same rise/meadow split `slope_sample_step_rock` already uses, and for the same underlying reason. `blend_deg` is a width in DEGREES, but what a viewer sees is a width in METRES, and round 4 deliberately made slope change very fast on the rises by sampling it at 2m instead of 6m. Out on the meadow 6 degrees of ramp is several metres of gradual transition; across a `rock_form` riser the same 6 degrees is crossed inside a pixel or two, so the ramp collapses and the boundary bakes as a hard edge \u2014 which is what the round-5 blind critic reported: the moss/dirt patches 'meet bare stone in hard stencil-edged shapes with no organic blend... a stencil laid over the rock, not moss actually growing in a crevice.' That is a side effect of round 4's win, not a regression in it, so the fix widens the ramp only where the slope field is steep and leaves both the meadow and the fine sampling alone. 8.0 is the CEILING, not a preference: `_control_for` needs `soil_slope_deg + blend <= rock_slope_deg` to keep its five bands from overlapping, and that gap is 42-34 = 8. Raising this further does nothing until those two move apart; the function clamps rather than letting the bands collapse. TUNABLE.",
     "outcrop_detail_deg": 4.0,
     "outcrop_detail_frequency": 0.28,
-    "_comment_outcrop_detail": "OF11 round 6, and the other half of the stencil-edge fix — the half that does the real work, since `blend_deg_rock` only had 2 degrees of headroom to give. `outcrop_jitter_*` above runs at ~35m and decides where the rock band bulges into a LOBE; it cannot do anything about the EDGE of that lobe, which at 35m is a smooth vector curve however many lobes it makes. A turf/stone boundary is ragged at the scale of the turf, so this second field runs at ~3.6m (frequency 0.28) with 3 octaves and breaks the boundary into interlocking fingers of moss and stone instead of a cut line. Gated to the rises by `rise_form_factor` inside playground_heightfield.gd::rock_bias_deg, deliberately NOT folded into `outcrop_jitter_deg`: at this wavelength an ungated 4 degrees would ride the open meadow's own grass/soil threshold and speckle soil across flat ground, which is the blotching `slope_sample_step` exists to suppress. TUNABLE: amplitude is the raggedness, frequency is the finger size; lower the frequency if the edge starts reading as noise rather than as growth.",
+    "_comment_outcrop_detail": "OF11 round 6, and the other half of the stencil-edge fix \u2014 the half that does the real work, since `blend_deg_rock` only had 2 degrees of headroom to give. `outcrop_jitter_*` above runs at ~35m and decides where the rock band bulges into a LOBE; it cannot do anything about the EDGE of that lobe, which at 35m is a smooth vector curve however many lobes it makes. A turf/stone boundary is ragged at the scale of the turf, so this second field runs at ~3.6m (frequency 0.28) with 3 octaves and breaks the boundary into interlocking fingers of moss and stone instead of a cut line. Gated to the rises by `rise_form_factor` inside playground_heightfield.gd::rock_bias_deg, deliberately NOT folded into `outcrop_jitter_deg`: at this wavelength an ungated 4 degrees would ride the open meadow's own grass/soil threshold and speckle soil across flat ground, which is the blotching `slope_sample_step` exists to suppress. TUNABLE: amplitude is the raggedness, frequency is the finger size; lower the frequency if the edge starts reading as noise rather than as growth.",
     "slope_sample_step": 6.0,
     "slope_sample_step_rock": 2.0,
     "_comment_slope_sample_step_rock": "OF11 round 4. The band pick's slope sample step ON THE RISES, interpolated against `slope_sample_step` above by playground_heightfield.gd::rise_form_factor. One global step cannot serve both places any more: 6m exists to low-pass the `detail` noise layer out on the open meadow (see `_comment_slope_sample_step`), and on a rise it low-passes away the ledges, riser lips and metre-scale creases `rock_form` builds -- so the material landed in soft blobs that ignored the crevices under them, which is exactly what the round-3 blind critic reported ('the dark olive patches have hard, rounded, blobby edges that don't track the crevice geometry underneath them... the bumps and the tint aren't talking to each other'). They were not talking because the pick was deaf at the scale the geometry speaks at. 2m resolves a terrace riser and a rib crest; the meadow keeps 6m and its blotching stays fixed. TUNABLE: lower for a tighter fit to the rock form, raise if the rise starts speckling.",
@@ -680,7 +968,7 @@
       "albedo": "res://assets/environment/terrain/Rock030_Color.jpg",
       "normal": "res://assets/environment/terrain/Rock030_NormalGL.jpg",
       "uv_scale": 0.46,
-      "_comment_uv_scale_of11": "OF11, and the single largest reason this material never read as stone. Metres per tile is 1/uv_scale: 0.12 is one tile every 8.3 METRES — the whole 1024px photograph, veining and all, blown up to the size of a house. Across peaks[0]'s visible face that is about ten tiles, so at the capture distances every grain of stone detail in the source lands below a pixel and the material resolves to its own flat average: a smooth grey wash with soft edges, which is exactly what five rounds of blind critics kept describing and no tint, AO, normal-depth or photo-brightness change could ever have fixed. Nobody had looked at this number — the comment it replaced was copy-pasted verbatim from the grass entry (it even quotes grass's own 0.34/0.18 history, values this entry has never held). 0.46 is one tile every ~2.2m, close to grass's own ~1.8m, so the two materials agree about how big a metre is and the photo's veining is visible as veining. Detiling and macro variation below are what stop that many repeats reading as wallpaper. TUNABLE.",
+      "_comment_uv_scale_of11": "OF11, and the single largest reason this material never read as stone. Metres per tile is 1/uv_scale: 0.12 is one tile every 8.3 METRES \u2014 the whole 1024px photograph, veining and all, blown up to the size of a house. Across peaks[0]'s visible face that is about ten tiles, so at the capture distances every grain of stone detail in the source lands below a pixel and the material resolves to its own flat average: a smooth grey wash with soft edges, which is exactly what five rounds of blind critics kept describing and no tint, AO, normal-depth or photo-brightness change could ever have fixed. Nobody had looked at this number \u2014 the comment it replaced was copy-pasted verbatim from the grass entry (it even quotes grass's own 0.34/0.18 history, values this entry has never held). 0.46 is one tile every ~2.2m, close to grass's own ~1.8m, so the two materials agree about how big a metre is and the photo's veining is visible as veining. Detiling and macro variation below are what stop that many repeats reading as wallpaper. TUNABLE.",
       "_comment_normal_depth": "Rock keeps more relief than grass. A cliff face with no normal detail reads as painted, and it is not the surface the player stands on at close range.",
       "normal_depth": 0.6,
       "ao_strength": 0.2,
@@ -688,7 +976,8 @@
       "detiling_rotation": 0.2,
       "detiling_shift": 0.3,
       "tint": "#fff2e0",
-      "_comment_of11_r5": "OF11 round 5. `normal_depth` 0.45 -> 0.6, paired with tools/art_pipeline/contrast_rock_texture.py restoring this photo's own local contrast (value std 0.058 -> 0.135, mean and hue held). Rounds 3 and 4 both accepted the LANDFORM as sculpted and both named the MATERIAL at close range instead -- 'a fine, even, low-contrast speckle with no strata, no cracks, no distinct rock chunks or slabs.' That is measurable and was measurably true: every lever this material has ever been given moves toward flatter (brightening raises the floor, cutting normal_depth and ao_strength removes shading, desaturating removes range), and in five pre-OF11 rounds plus OF11's own first four nobody had ever pushed the other way on the photograph itself. See that script's header. TUNABLE; if the rock starts crushing to black again this pair is the cause, and the contrast pass is the half to back off.", "_comment_of11_shading": "OF11. `normal_depth` 0.18 -> 0.45 and `ao_strength` 0.08 -> 0.2, both cut to those floors by EV4-hillside-seam-remainder-3 because a strong normal map was throwing the flank into self-shadow at a grazing sun. That was a real effect AT 8.3m PER TILE, where every normal feature was metres wide and shaded whole regions of hillside; at 2.2m per tile the same relief is fine-grained enough to average out with distance instead, so the fix and the defect are no longer the same trade. `tint` #fafafa -> #fff2e0 for the other half of that round's finding: a near-neutral grey under this scene's sky picks up the sky's own blue and a critic read the result as 'quite cool/blue-slate.' A near-white tint that suppresses blue slightly, rather than desaturating the photo further, is the correct answer to that and leaves the photo's own value range intact.",
+      "_comment_of11_r5": "OF11 round 5. `normal_depth` 0.45 -> 0.6, paired with tools/art_pipeline/contrast_rock_texture.py restoring this photo's own local contrast (value std 0.058 -> 0.135, mean and hue held). Rounds 3 and 4 both accepted the LANDFORM as sculpted and both named the MATERIAL at close range instead -- 'a fine, even, low-contrast speckle with no strata, no cracks, no distinct rock chunks or slabs.' That is measurable and was measurably true: every lever this material has ever been given moves toward flatter (brightening raises the floor, cutting normal_depth and ao_strength removes shading, desaturating removes range), and in five pre-OF11 rounds plus OF11's own first four nobody had ever pushed the other way on the photograph itself. See that script's header. TUNABLE; if the rock starts crushing to black again this pair is the cause, and the contrast pass is the half to back off.",
+      "_comment_of11_shading": "OF11. `normal_depth` 0.18 -> 0.45 and `ao_strength` 0.08 -> 0.2, both cut to those floors by EV4-hillside-seam-remainder-3 because a strong normal map was throwing the flank into self-shadow at a grazing sun. That was a real effect AT 8.3m PER TILE, where every normal feature was metres wide and shaded whole regions of hillside; at 2.2m per tile the same relief is fine-grained enough to average out with distance instead, so the fix and the defect are no longer the same trade. `tint` #fafafa -> #fff2e0 for the other half of that round's finding: a near-neutral grey under this scene's sky picks up the sky's own blue and a critic read the result as 'quite cool/blue-slate.' A near-white tint that suppresses blue slightly, rather than desaturating the photo further, is the correct answer to that and leaves the photo's own value range intact.",
       "_comment_tint_r9_4": "R9.4. Held at ~1.15x grass value for the same reason as soil. TUNABLE.",
       "_comment_ev4_hillside_seam_remainder": "EV4-hillside-seam-remainder. Was normal_depth 0.6 / ao_strength 0.4 -- the highest relief and the highest AO strength of any texture in this list, on a photo (Rock030_Color.jpg) that is already dark. At a grazing sun angle on a rise's curved flank, a normal map this strong throws much of the surface into self-shadow, and ao_strength this high darkens every crevice on top of that; together a blind critic read the result as 'a cast shadow wrapping the hill... could be mistaken for an ambient-occlusion artifact rather than a material,' not stone. Both cut well below grass's own 0.12/0.25 (rock keeps a little more relief than grass, 0.3 vs 0.12, but no longer the most aggressive AO in the set at 0.15 vs grass's 0.25) -- `tint` was already near-white and had no further room to brighten the read. TUNABLE; these were flagged untested by round 4 and are the first attempt at them.",
       "_comment_ev4_hillside_seam_remainder_3": "EV4-hillside-seam-remainder-3. `tint` had no headroom left (#fafafa is ~2% off pure white), so the further brightness lever this round needed is on the PHOTO itself: tools/art_pipeline/brighten_rock_texture.py applies a screen-blend lift to Rock030_Color.jpg in place; hue holds exactly (a uniform per-channel transform does not rotate hue) and saturation falls as a side effect. `normal_depth`/`ao_strength` cut again on top (0.3/0.15 -> 0.18/0.08) for the grazing-sun self-shadow the photo fix alone doesn't touch. Round 1 (LIFT_AMOUNT 0.18) shipped a real blind-critic-confirmed improvement -- a fresh critic on the round-1 render described the rock in one viewpoint as having 'more internal texture, light streaky veining' where round 0's critic saw 'no visible rock texture... a rendering artifact.' Round 2 pushed LIFT_AMOUNT to 0.24 and a critic then read the same material as 'quite cool/blue-slate' -- more desaturation than this scene's ambient lighting can carry before a neutral-grey material starts picking up the sky's own blue tint rather than reading as stone. Reverted to round 1's 0.18; the shading cut stays, the extra desaturation does not. Round 3 leaves rock alone and re-diagnoses soil instead -- see soil's own comment for what changed and why."

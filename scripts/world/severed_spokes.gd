@@ -43,6 +43,7 @@ extends Node3D
 ## generation.
 
 const SPOKE_CONFIG := "res://data/config/terrain_playground.json"
+const PALETTE_CONFIG := "res://data/config/palette.json"
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 
 const ROCK_MESHES := [
@@ -60,12 +61,23 @@ const STONE_NORMAL := preload("res://assets/buildings/quaternius_medieval/T_Unev
 const STONE_ROUGHNESS := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png")
 const STONE_TILE := 3.2
 
+## How far below the lower of a carve's two lips its failsafe volume stops. Big
+## enough that a player standing ON the lip is never inside it, small enough
+## that a player who has gone over is always inside it. TUNABLE.
+const LIP_CLEARANCE := 3.0
+
+## How far back from a carve's outer rim the player is put when the failsafe
+## catches them. Far enough that they are standing on flat road, not on the
+## rim's own slope. TUNABLE.
+const RECOVERY_CLEARANCE := 6.0
+
 ## A tumbled kerbstone off the broken roadbed. Small, and small on purpose:
 ## these are the edge of a road, not boulders.
 const KERB_SIZE := Vector3(0.9, 0.42, 0.62)
 
 var _built: Array[String] = []
 var _stone_material_cache: StandardMaterial3D = null
+var _tether_material_cache: StandardMaterial3D = null
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -113,8 +125,22 @@ func _build_blocker(world: Node3D, holder: Node3D, spoke: Dictionary, seed_value
 			_build_collapsed_bridge(world, holder, blocker, rng)
 		"rockslide":
 			_build_rockslide(world, holder, blocker, rng)
+		"sealed_road":
+			_build_sealed_road(world, holder, blocker, rng)
+		"sealed_gate":
+			_build_sealed_gate(world, holder, blocker)
+		"fallen_roadbed":
+			_build_fallen_roadbed(world, holder, blocker, rng)
 		_:
 			push_warning("spoke blocker kind '%s' is authored but has no builder yet" % kind)
+
+	# Any blocker whose blocker IS a trench can drop the player into it, so the
+	# failsafe is hung off the carve rather than off the kind — see
+	# `_add_carve_failsafe`. It recovers to the spoke's own road end.
+	var carve: Dictionary = blocker.get("carve", {})
+	var road: Array = spoke.get("road", [])
+	if not carve.is_empty() and road.size() >= 2:
+		_add_carve_failsafe(world, holder, carve, road)
 
 
 ## The carve is the blocker; this is the broken roadbed at its edge. Stones
@@ -165,7 +191,11 @@ func _build_collapsed_bridge(world: Node3D, holder: Node3D, blocker: Dictionary,
 	var height := float(size.get("height", 3.1))
 	var stand: float = float(carve.get("half_width", 6.0)) + float(carve.get("rim", 5.0)) * 0.55
 
-	var yaw := atan2(axis.x, axis.y)
+	# +PI/2 so the abutment's `width` runs along the lip and its `depth` along the
+	# road, and so the fallen beam (long in local Z) points ACROSS the gap and
+	# tips into it about local X. Without it both are rotated ninety degrees:
+	# stage 1 wrote this line before the scene had ever been booted.
+	var yaw := atan2(axis.x, axis.y) + PI * 0.5
 	for side: float in [1.0, -1.0]:
 		var at := centre + across * (stand * side)
 		var ground := float(world.call("ground_height_at", at.x, at.y))
@@ -263,6 +293,315 @@ func _build_rockslide(world: Node3D, holder: Node3D, blocker: Dictionary, rng: R
 		_add_box_collider(holder, mid, Vector3(length, barrier_height, thickness), yaw)
 
 
+## A trench that stops the player by swallowing them is not a blocker, it is a
+## soft-lock. The stage-2 probe caught exactly that: walked at the river gorge,
+## the player did not cross it — they went over the lip, fell 12m, and came to
+## rest on the floor at y=-30.7 inside 66-degree walls with no way out. The
+## storm ravine did the same at y=-9.5. `world_perimeter.gd`'s own failsafe
+## cannot help: its plane is at KILL_PLANE_Y, far below both floors, and the
+## map's legitimate low ground now reaches -37m, so no single global plane can
+## tell a gorge floor from a valley.
+##
+## So each carve that a player can fall into gets the SAME mechanism scoped to
+## itself — spec §1E's "backup kill/respawn volume ... only as a failsafe",
+## applied to a hole the design deliberately dug. It returns the player to the
+## end of that spoke's own road rather than to the village: they slipped at the
+## edge and scrambled back from it, which is a smaller lie than waking up in
+## the square. Opt-in per carve (`"failsafe": true`) rather than automatic,
+## because a notch cut into a hillside flank has natural ground at the same
+## altitude beside it and a blanket volume there would catch honest walking.
+func _add_carve_failsafe(world: Node3D, holder: Node3D, carve: Dictionary, road: Array) -> void:
+	if not bool(carve.get("failsafe", false)):
+		return
+	var centre := _vec2(carve.get("centre", []))
+	if centre == Vector2.INF:
+		return
+	var floor_y := float(world.call("ground_height_at", centre.x, centre.y))
+	if is_nan(floor_y):
+		push_warning("carve failsafe at %s has no ground to measure; skipped" % centre)
+		return
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+	var recover_to := _recovery_point(carve, centre, axis, road)
+	var recover_y := float(world.call("ground_height_at", recover_to.x, recover_to.y))
+	if is_nan(recover_y):
+		push_warning("carve failsafe at %s has nowhere to put the player back; skipped" % centre)
+		return
+	var half_length := float(carve.get("half_length", 40.0)) + float(carve.get("end_fade", 16.0))
+	# Narrower than the full rim on purpose: the volume must sit between the
+	# walls, never under the lip a player is legitimately standing on.
+	var half_width := float(carve.get("half_width", 6.0)) + float(carve.get("rim", 5.0)) * 0.4
+	# The ceiling is measured DOWN FROM THE LIP, not up from the floor sample.
+	# First attempt put it at floor + 3m and the gorge failsafe never fired:
+	# its floor rises along its own axis, so a body that slid a few metres
+	# downstream came to rest at exactly the box's top edge. The lip is the
+	# thing that must stay clear, so let the lip define the clearance and let
+	# the box swallow everything below it.
+	var across := Vector2(-axis.y, axis.x)
+	var reach: float = float(carve.get("half_width", 6.0)) + float(carve.get("rim", 5.0))
+	var lip_y := INF
+	for side: float in [1.0, -1.0]:
+		var at := centre + across * (reach * side)
+		var sample := float(world.call("ground_height_at", at.x, at.y))
+		if not is_nan(sample):
+			lip_y = minf(lip_y, sample)
+	if is_inf(lip_y):
+		lip_y = floor_y + float(carve.get("depth", 12.0))
+	var top := lip_y - LIP_CLEARANCE
+	var bottom: float = floor_y - float(carve.get("depth", 12.0))
+	var height: float = maxf(top - bottom, 2.0)
+	var mid_y := bottom + height * 0.5
+
+	var area := Area3D.new()
+	area.name = "CarveFailsafe"
+	area.position = Vector3(centre.x, mid_y, centre.y)
+	area.rotation.y = atan2(axis.x, axis.y) + PI * 0.5
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(half_length * 2.0, height, half_width * 2.0)
+	shape.shape = box
+	area.add_child(shape)
+	area.set_meta("recover_to", Vector3(recover_to.x, recover_y + 1.0, recover_to.y))
+	area.body_entered.connect(_on_carve_failsafe_entered.bind(area))
+	holder.add_child(area)
+
+
+## Where a player who went over the edge is put back. NOT the road's last node:
+## both trenches are centred a few metres BEYOND their road's end, so that node
+## is itself inside the carve — the first version recovered to it, dropped the
+## player straight back into the gorge, and because they never left the volume
+## `body_entered` never fired again. So walk back up the road's own last leg
+## until the point is clear of the far rim with room to spare, and put them
+## there: on their own road, facing the thing that stopped them.
+func _recovery_point(carve: Dictionary, centre: Vector2, axis: Vector2, road: Array) -> Vector2:
+	var last := _vec2(road[road.size() - 1])
+	var prev := _vec2(road[road.size() - 2])
+	if last == Vector2.INF or prev == Vector2.INF or last.is_equal_approx(prev):
+		return last
+	var back := (prev - last).normalized()
+	var across := Vector2(-axis.y, axis.x)
+	var clear: float = float(carve.get("half_width", 6.0)) + float(carve.get("rim", 5.0)) + RECOVERY_CLEARANCE
+	var at := last
+	for step in 40:
+		if absf((at - centre).dot(across)) >= clear:
+			return at
+		at += back
+	return at
+
+
+func _on_carve_failsafe_entered(body: Node3D, area: Area3D) -> void:
+	if not body is CharacterBody3D or body.name != "Player":
+		return
+	var to: Vector3 = area.get_meta("recover_to", Vector3.ZERO)
+	print("[severed_spokes] player went over the edge at %.0f, %.0f, %.0f -- back to the road" % [
+		body.global_position.x, body.global_position.y, body.global_position.z
+	])
+	body.global_position = to
+	(body as CharacterBody3D).velocity = Vector3.ZERO
+
+
+## Team Tether's own seal, and the only blocker on the map that is somebody's
+## WORK rather than weather or rock — so it is the only one that may not be
+## stone tumbled by accident. It is still built entirely out of vocabulary the
+## boundary already owns (D24): a fieldstone wall run shut across the road on
+## `world_perimeter._build_stonework`'s proportions, with uprights standing
+## proud of it in `palette.json`'s `tether_oxblood`. That colour is reserved —
+## "Team Tether banners, equipment and uniforms, never on friendly or neutral
+## elements" — which is exactly what lets this say WHO sealed the road without
+## a word of text on it.
+func _build_sealed_road(world: Node3D, holder: Node3D, blocker: Dictionary, _rng: RandomNumberGenerator) -> void:
+	var centre := _vec2(blocker.get("centre", []))
+	if centre == Vector2.INF:
+		return
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(blocker.get("axis_deg", 0.0))))
+	var span := float(blocker.get("span", 21.0))
+	var height := float(blocker.get("wall_height", 3.4))
+	var thickness := float(blocker.get("wall_thickness", 1.5))
+	_ground_wall(world, holder, "Seal", centre, axis, span, height, thickness, 7, _stone_material())
+
+	# The uprights. They carry the faction colour and they are the reason this
+	# reads as a seal and not as a field wall someone left across a lane.
+	var piers := int(blocker.get("piers", 5))
+	var pier_height := float(blocker.get("pier_height", 4.6))
+	var marker := float(blocker.get("marker_height", 1.5))
+	var yaw := atan2(axis.x, axis.y) + PI * 0.5
+	for i in piers:
+		var t := (float(i) + 0.5) / float(piers)
+		var at := centre + axis * lerpf(-span * 0.5, span * 0.5, t)
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground):
+			continue
+		var shaft := _stone_box(Vector3(0.82, pier_height, 0.82))
+		shaft.name = "SealPier_%d" % i
+		shaft.position = Vector3(at.x, ground - 0.5 + pier_height * 0.5, at.y)
+		shaft.rotation.y = yaw
+		holder.add_child(shaft)
+		var cap := MeshInstance3D.new()
+		var cap_mesh := BoxMesh.new()
+		cap_mesh.size = Vector3(1.02, marker, 1.02)
+		cap_mesh.material = _tether_material()
+		cap.mesh = cap_mesh
+		cap.name = "SealMarker_%d" % i
+		cap.position = Vector3(at.x, ground - 0.5 + pier_height + marker * 0.5, at.y)
+		cap.rotation.y = yaw
+		holder.add_child(cap)
+		_add_box_collider(holder, shaft.position, Vector3(0.82, pier_height, 0.82), yaw)
+
+
+## A gate, not a wall. The road runs THROUGH the arch — that is the whole point
+## of §1E's "ancient stone gate/road" — and the leaf does not open. Piers on
+## `world_perimeter.gd`'s own PIER_* proportions, a lintel across them, a pair
+## of closed leaves filling the opening, and wall stubs running out either side
+## so the arch is a gate in something rather than a frame standing in grass.
+func _build_sealed_gate(world: Node3D, holder: Node3D, blocker: Dictionary) -> void:
+	var centre := _vec2(blocker.get("centre", []))
+	if centre == Vector2.INF:
+		return
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(blocker.get("axis_deg", 0.0))))
+	var opening := float(blocker.get("opening", 6.4))
+	var pier_w := float(blocker.get("pier_width", 2.2))
+	var pier_d := float(blocker.get("pier_depth", 2.6))
+	var pier_h := float(blocker.get("pier_height", 7.2))
+	var lintel_h := float(blocker.get("lintel_height", 1.5))
+	# +PI/2 so the box's local +X runs ALONG the axis: rotation.y maps local X to
+	# (cos y, -sin y), which atan2(x, y) alone sends perpendicular. The lintel and
+	# the leaves both span the opening, so getting this backwards turns the gate
+	# ninety degrees and the road walks straight past it.
+	var yaw := atan2(axis.x, axis.y) + PI * 0.5
+
+	var base := float(world.call("ground_height_at", centre.x, centre.y))
+	if is_nan(base):
+		return
+	var offset := (opening + pier_w) * 0.5
+	for side: float in [1.0, -1.0]:
+		var at := centre + axis * (offset * side)
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground):
+			ground = base
+		var pier := _stone_box(Vector3(pier_w, pier_h, pier_d))
+		pier.name = "GatePier_%s" % ("a" if side > 0.0 else "b")
+		pier.position = Vector3(at.x, ground - 0.8 + pier_h * 0.5, at.y)
+		pier.rotation.y = yaw
+		holder.add_child(pier)
+		_add_box_collider(holder, pier.position, Vector3(pier_w, pier_h, pier_d), yaw)
+
+	# The lintel rides on top of both piers, so it is sampled from the pier
+	# tops rather than from the ground under the middle of the opening.
+	var lintel := _stone_box(Vector3(opening + pier_w * 2.0, lintel_h, pier_d))
+	lintel.name = "GateLintel"
+	lintel.position = Vector3(centre.x, base - 0.8 + pier_h + lintel_h * 0.5, centre.y)
+	lintel.rotation.y = yaw
+	holder.add_child(lintel)
+
+	# The leaves. Shut, and shut is the whole message: the road is intact, the
+	# gate is intact, and it does not open.
+	var leaf_h := pier_h * 0.78
+	for side: float in [1.0, -1.0]:
+		var at := centre + axis * (opening * 0.25 * side)
+		var leaf := MeshInstance3D.new()
+		var mesh := BoxMesh.new()
+		mesh.size = Vector3(opening * 0.5 - 0.12, leaf_h, 0.55)
+		mesh.material = _tether_material()
+		leaf.mesh = mesh
+		leaf.name = "GateLeaf_%s" % ("a" if side > 0.0 else "b")
+		leaf.position = Vector3(at.x, base - 0.5 + leaf_h * 0.5, at.y)
+		leaf.rotation.y = yaw
+		holder.add_child(leaf)
+	_add_box_collider(holder, Vector3(centre.x, base - 0.5 + leaf_h * 0.5, centre.y),
+		Vector3(opening, leaf_h, 0.9), yaw)
+
+	# Wall stubs out to `span`, one either side, starting where the piers end.
+	var span := float(blocker.get("span", 19.0))
+	var wall_h := float(blocker.get("wall_height", 4.2))
+	var wall_t := float(blocker.get("wall_thickness", 1.7))
+	var inner := offset + pier_w * 0.5
+	var run := maxf(span * 0.5 - inner, 2.0)
+	for side: float in [1.0, -1.0]:
+		var stub_centre := centre + axis * ((inner + run * 0.5) * side)
+		_ground_wall(world, holder, "GateWall_%s" % ("a" if side > 0.0 else "b"),
+			stub_centre, axis, run, wall_h, wall_t, 3, _stone_material())
+
+
+## The roadbed has fallen away. The blocker is the notch in the flank (a carve,
+## like the gorge's, but short and narrow); this only dresses the break. A
+## fallen roadbed is a GAP, not a pile — the two rockslides on this map are
+## already the pile, and a third would be one mechanism in three hats.
+func _build_fallen_roadbed(world: Node3D, holder: Node3D, blocker: Dictionary, rng: RandomNumberGenerator) -> void:
+	var carve: Dictionary = blocker.get("carve", {})
+	var centre := _vec2(carve.get("centre", []))
+	if centre == Vector2.INF:
+		return
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+	var across := Vector2(-axis.y, axis.x)
+	var lip: float = float(carve.get("half_width", 5.0)) + float(carve.get("rim", 4.0)) * 0.85
+
+	# Which way is uphill: the shelf was cut into a slope, so the retaining
+	# wall belongs on the high side. Sampled from the ground, not configured,
+	# so moving the spoke cannot silently put the revetment in mid-air.
+	var probe := 6.0
+	var up := float(world.call("ground_height_at", (centre + axis * probe).x, (centre + axis * probe).y))
+	var down := float(world.call("ground_height_at", (centre - axis * probe).x, (centre - axis * probe).y))
+	var uphill: float = 1.0 if (not is_nan(up) and not is_nan(down) and up >= down) else -1.0
+
+	# The revetment runs back along the road from the break and stops with a
+	# broken end. Its own kerb goes over the edge with the roadbed.
+	var length := float(blocker.get("revetment_length", 14.0))
+	var height := float(blocker.get("revetment_height", 1.6))
+	var thickness := float(blocker.get("revetment_thickness", 1.1))
+	var start := centre + across * lip + axis * (uphill * 3.4)
+	var wall_centre := start + across * (length * 0.5)
+	_ground_wall(world, holder, "Revetment", wall_centre, across, length, height, thickness, 5,
+		_stone_material())
+
+	# The masonry that went with the roadbed, lying below the notch.
+	var scree := int(blocker.get("scree", 14))
+	var scree_min := float(blocker.get("scree_scale_min", 0.35))
+	var scree_max := float(blocker.get("scree_scale_max", 1.1))
+	for i in scree:
+		var at := centre + across * rng.randf_range(-lip * 0.6, lip * 0.6) \
+			+ axis * (-uphill * rng.randf_range(lip * 0.4, lip * 1.9))
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground):
+			continue
+		var scale := rng.randf_range(scree_min, scree_max)
+		var stone := MeshInstance3D.new()
+		stone.name = "Scree_%d" % i
+		stone.mesh = _rock_mesh(rng.randi() % ROCK_MESHES.size())
+		stone.scale = Vector3.ONE * scale
+		stone.rotation.y = rng.randf_range(0.0, TAU)
+		stone.position = Vector3(at.x, ground - ROCK_MODEL_HEIGHT * scale * 0.25, at.y)
+		holder.add_child(stone)
+
+	_build_gorge_lip(world, holder, blocker, rng)
+
+
+## A wall run that follows the ground it stands on instead of hanging over the
+## dips at its ends — the failure OF7 fixed once already in the boundary ring.
+## Visible masonry and its collider are the same box, so nothing here is an
+## invisible wall.
+func _ground_wall(world: Node3D, holder: Node3D, node_name: String, centre: Vector2,
+		axis: Vector2, span: float, height: float, thickness: float, segments: int,
+		material: StandardMaterial3D) -> void:
+	var yaw := atan2(axis.x, axis.y) + PI * 0.5
+	var length := span / float(segments) + 0.4
+	for i in segments:
+		var t := (float(i) + 0.5) / float(segments)
+		var at := centre + axis * lerpf(-span * 0.5, span * 0.5, t)
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground):
+			continue
+		var mid := Vector3(at.x, ground - 0.7 + height * 0.5, at.y)
+		var block := MeshInstance3D.new()
+		var mesh := BoxMesh.new()
+		mesh.size = Vector3(length, height, thickness)
+		mesh.material = material
+		block.mesh = mesh
+		block.name = "%s_%d" % [node_name, i]
+		block.position = mid
+		block.rotation.y = yaw
+		holder.add_child(block)
+		_add_box_collider(holder, mid, Vector3(length, height, thickness), yaw)
+
+
 ## Old signage, §29's own word for it. One arm, one destination, through
 ## `signpost.gd`'s `routes_override` — the same object `paths.trailheads`
 ## already plants at the Rise road's end. It names where the road WENT. It
@@ -354,6 +693,34 @@ func _stone_material() -> StandardMaterial3D:
 	material.uv1_scale = Vector3(STONE_TILE, STONE_TILE, STONE_TILE)
 	material.uv1_triplanar = true
 	_stone_material_cache = material
+	return material
+
+
+## `palette.json`'s `tether_oxblood`, read from the palette rather than typed in
+## here so the faction colour cannot drift between the seal, the banners and the
+## Warden's badge. It is the reserved danger accent — "Team Tether banners,
+## equipment and uniforms, never on friendly or neutral elements" — so it is the
+## whole of the story on the two blockers Team Tether built themselves. Rough,
+## unlit-ish paint on stone: high roughness, no metal.
+func _tether_material() -> StandardMaterial3D:
+	if _tether_material_cache != null:
+		return _tether_material_cache
+	var colour := Color(0.2, 0.133, 0.157)
+	var file := FileAccess.open(PALETTE_CONFIG, FileAccess.READ)
+	if file != null:
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		if parsed is Dictionary:
+			for section: Variant in (parsed as Dictionary).values():
+				if section is Dictionary and (section as Dictionary).has("tether_oxblood"):
+					colour = Color(str((section as Dictionary)["tether_oxblood"]))
+					break
+	else:
+		push_warning("cannot read %s; the seal falls back to a hard-coded oxblood" % PALETTE_CONFIG)
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = 0.86
+	material.metallic = 0.0
+	_tether_material_cache = material
 	return material
 
 
