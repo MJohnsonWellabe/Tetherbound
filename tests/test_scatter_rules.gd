@@ -426,6 +426,72 @@ func test_verge_appends_near_path_instances_without_moving_the_rest() -> void:
 			"a verge instance landed %.2fm from the nearest path, outside its own inner+band reach" % distance)
 
 
+func test_anchors_absent_or_empty_change_nothing() -> void:
+	# Authored anchors are opt-in, like the verge and every path mechanism.
+	var rocks := _layer("rocks").duplicate(true)
+	rocks["anchors"] = []
+	var with_empty := RULES.placements_for(rocks, field, world_size, 77)
+	var without_the_key := _layer("rocks").duplicate(true)
+	without_the_key.erase("anchors")
+	var without := RULES.placements_for(without_the_key, field, world_size, 77)
+	assert_eq(with_empty.size(), without.size())
+	for i in with_empty.size():
+		assert_true((with_empty[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
+			"an empty anchor list moved a placement; it must be a no-op")
+
+
+func test_an_anchor_appends_its_own_count_where_it_was_asked_for() -> void:
+	# OF4-remainder-mound. Three properties in one draw: an anchor never
+	# perturbs the layer's own clump/stray draws (it runs last, so the shared
+	# prefix must be bit-identical), it places exactly the count it asked for
+	# rather than "count attempts", and every instance lands inside its own
+	# radius — an anchor is a hand-placed group, so "roughly over there" is
+	# not good enough.
+	var base := {
+		"models": _layer("rocks").get("models", []),
+		"clumps": 6, "per_clump": 4, "strays": 20, "clump_radius": 8.0,
+		"max_slope_deg": 30.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+	}
+	var at := Vector2(104.0, -78.0)
+	var anchored: Dictionary = base.duplicate(true)
+	anchored["anchors"] = [{"at": [at.x, at.y], "radius": 8.0, "count": 7, "max_slope_deg": 52.0}]
+	var plain := RULES.placements_for(base, field, world_size, 909)
+	var with_anchor := RULES.placements_for(anchored, field, world_size, 909)
+	assert_eq(with_anchor.size(), plain.size() + 7,
+		"an anchor asking for 7 placed %d" % (with_anchor.size() - plain.size()))
+	for i in plain.size():
+		assert_true((with_anchor[i]["position"] as Vector3).is_equal_approx(plain[i]["position"]),
+			"adding an anchor moved a clump/stray placement; anchors must only append")
+	for i in range(plain.size(), with_anchor.size()):
+		var spot: Vector3 = with_anchor[i]["position"]
+		assert_true(Vector2(spot.x, spot.z).distance_to(at) <= 8.0 + 0.01,
+			"an anchor instance landed outside its own radius")
+
+
+func test_an_anchor_override_does_not_leak_into_the_rest_of_the_layer() -> void:
+	# The whole point of the per-anchor override is that it is LOCAL: an
+	# outcrop standing on a 50-degree collar must not licence the meadow
+	# scatter to put boulders on cliffs everywhere else.
+	var base := {
+		"models": _layer("rocks").get("models", []),
+		"clumps": 40, "per_clump": 8, "strays": 200, "clump_radius": 10.0,
+		"max_slope_deg": 24.0, "clear_radius": 0.0, "cleared_by_clearings": false,
+	}
+	var anchored: Dictionary = base.duplicate(true)
+	anchored["anchors"] = [{"at": [104.0, -78.0], "radius": 8.0, "count": 5, "max_slope_deg": 52.0}]
+	var placements := RULES.placements_for(anchored, field, world_size, 4242)
+	var steep_away_from_the_anchor := 0
+	for placement: Dictionary in placements:
+		var spot: Vector3 = placement["position"]
+		if Vector2(spot.x, spot.z).distance_to(Vector2(104.0, -78.0)) <= 8.0:
+			continue
+		if field.slope_degrees_at(spot.x, spot.z) > 24.0:
+			steep_away_from_the_anchor += 1
+	assert_eq(steep_away_from_the_anchor, 0,
+		"%d instances outside the anchor stood on ground its own layer forbids" %
+			steep_away_from_the_anchor)
+
+
 func test_path_standoff_is_a_stable_property_of_position() -> void:
 	# No RNG state: the same spot must always get the same standoff, or the
 	# meadow's edge would depend on placement order and no survey frame could

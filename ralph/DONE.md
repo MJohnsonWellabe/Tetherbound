@@ -3,6 +3,142 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF4-remainder-mound — scale-givers on the rise: authored scatter anchors, outcrops, talus and a broken tree line
+
+`scripts/world/scatter_rules.gd`, `data/config/vegetation.json`,
+`tests/test_scatter_rules.gd`, `tools/capture_rise_approach.gd`,
+`tools/_probe_mound.gd` on `ralph/OF4-remainder-mound`. `model: fable`
+(visual-direction judgement). `tests:` the item tags none — it is a visual
+item — but the diff touches scatter config and code, so the full suite ran:
+**545 tests, 90250 assertions, 0 failed**, plus `tests/smoke_traversal.gd`
+green ("the ground is solid across the playground, the perimeter holds").
+
+**The premise really had changed, and the item was still real.** `OF13` moved
+the fortress ~105m onto the rise's far shoulder, so the entry's own
+"castle on a golf bunker" framing cannot happen from either judged vantage
+any more; the entry told whoever picked it up to re-render fresh and judge
+the mound alone. That is step one and it was done before a line was changed:
+`tools/capture_rise_approach.gd` re-rendered, a fresh blind critic given
+nothing but the frames, `docs/reference/` and the `visual-judge` rubric.
+The bare-dune read had NOT gone away — it had changed words. Its ranked #1
+finding was "the landform is an enlarged pebble, and there is nothing on it,
+in it, or at the top of it… no cliff face, no bench, no gully, no scree
+apron, no outcrop", and its named worst scale offender was the rise itself:
+"strip the six crest trees out of `road-end-lookup` and nothing left in the
+image tells you whether you are looking at forty metres or four hundred."
+`OF10`/`OF11` had already given the landform real ridged/terraced rock FORM;
+what it had was no OBJECTS of known size anywhere on it.
+
+**Measured, not guessed.** `tools/_probe_mound.gd` computes the two vantage
+eyes' tangent lines to `rises.peaks[0]` (footprint arc from the north-west
+limb round to the south-west), dumps every placement inside it, and
+ray-marches the heightfield to check each one is actually visible from both
+eyes. The dump found the cause: **four rock instances in that entire wedge,
+none of them on the landform, and no trees at all.** `rocks` has a
+44-degree ceiling and `trees` a 21-degree one, and a 46m rise with a 40-60
+degree collar is mostly outside both — so the layer whose own config comment
+says it exists "to make the steep ground read as stone" was locked out of
+the steepest ground in the game.
+
+**What shipped.**
+
+- `scatter_rules.gd` gains **authored anchors**: a layer may list `anchors`,
+  each an `at`/`radius`/`count` group that is placed after the clumps,
+  strays and verge (same append-only contract as the verge, so a layer
+  gaining one keeps its existing draws bit-identical). An anchor may
+  override **any** of its layer's keys **for its own draws only** — chiefly
+  `max_slope_deg`, so an outcrop can stand on a collar the meadow scatter
+  still must not touch. `count` is instances actually placed, not attempts,
+  capped at `ANCHOR_ATTEMPTS_PER_INSTANCE` tries each. Anchors rather than a
+  new `outcrops` layer because two layers sharing `Rock_Medium_*` silently
+  drop one layer's retint (`vegetation.gd::_warn_about_shared_models`).
+- `sink`: metres buried at scale 1.0, times the instance's own scale, so a
+  block sits deeper than a cobble. Opt-in, default 0, applied to nothing
+  that grows.
+- `vegetation.json`: 14 rock anchors on the visible arc — four outcrop
+  sites, each a `-block` pair plus a `-rubble` group at the same centre, and
+  three talus aprons at the foot where the slope meets the meadow; three
+  `trees` anchors (a dense copse, a loose stand, a pair — deliberately not a
+  ring); two `grove` anchors of hero oaks at either end of the arc. Rocks in
+  the village-visible wedge go 18 → 111, of which 84 are visible from the
+  square eye and 76 from the road eye by the probe's own ray-march.
+- **The stray boulder** two critics called "a stray blob / floating chunk"
+  (`Rock_Medium_2` at `(80.3,-63.9)`) is not moved: the `west-spur` anchor
+  pair puts a block and nine cobbles around it, which is what the item asked
+  for as the alternative to repositioning.
+- Three new tests: anchors absent/empty are a no-op, an anchor appends
+  exactly its `count` inside its own radius without moving a single
+  clump/stray draw, and an anchor's slope override does not leak into the
+  rest of its layer.
+- `capture_rise_approach.gd` gains a fourth viewpoint, `square-to-rise` —
+  the item is judged at TWO vantages and this file only ever carried the
+  road ones.
+
+**Blind rounds (fresh `visual-judge` critic each time, told nothing, given
+only the four frames + `docs/reference/` + the rubric).**
+
+- **Round 1 (baseline, before any change).** Ranked #1: "the landform is an
+  enlarged pebble, and there is nothing on it, in it, or at the top of it";
+  worst scale offender named first: the rise's own material/mass. The item's
+  premise survived `OF13` after all.
+- **Round 2 (outcrops + talus + tree line, first cut).** The mound dropped to
+  ranked #3, and the worst scale offender became **the fix itself**: "roughly
+  twenty-five to thirty of them on one hillside… they shrink the hill — a
+  landform you can count off in five or six boulder-widths from foot to crest
+  is not a landmark… they are all the same size. No cobbles, no gravel, no
+  single house-sized monolith", plus "a ring following the hill's foot contour
+  at near-even spacing" for the trees. Both were true. Round 3 restructured
+  every rock site into block+rubble pairs (large stones 40 → 11 at that
+  point, 15 at ship), weighted the big stones toward the foot, added `sink`,
+  and broke the tree ring into a copse, a stand and a pair.
+- **Round 3 (shipped state).** **The mound is not in the ranked three and is
+  not the worst scale offender.** The three named gaps are (1) nothing built
+  or inhabited anywhere in frame, (2) no clouds and one flat green value
+  band, (3) a broken canopy material plus creature/character art. Scale's
+  worst offender is now the two cloned rabbits; the rise appears only as
+  "dressed as a mountain and sized as a mound" — the rock-material read
+  `OF11-remainder` already closed on the owner's own decision. The landform
+  also picked up the set's only positive: "the hill-with-trees-climbing-the-
+  flank silhouette in `road-foot-three-quarter` is the closest any frame gets
+  to the board's 'rolling hills and oak groves'." `tools/frame_stats.py`
+  measured the movement too: `road-end-lookup`'s value spread 0.40 → 0.64 and
+  its sky share 62.5% → 55.3% across the three rounds.
+
+Stopped there: the item's own done-when is met and the budget cap was
+reached. Not a convergence stop — rounds 2 and 3 each named new things, and
+they are listed below as honest residue rather than pretended away.
+
+**Honest limits and residue.**
+
+- Round 3 still says the flank boulders are "within roughly 20% of every
+  other". The dump says otherwise (15 instances at scale ≥ 1.9, 78 below
+  0.9), so what it is really reporting is that at 100-160m the cobbles are
+  under a pixel and only the blocks survive. Closing that needs a rock mesh
+  with real bedding, not more placement — the same wall `OF11-remainder`
+  hit and the owner accepted.
+- Everything else round 3 ranked is outside this item and already owned
+  elsewhere: nothing built at the road's end or on the hill is
+  `OF10-remainder` plus `BLOCKED.md`'s "OF4 silhouette ceiling" (and the
+  hill is deliberately empty — `OF9`'s owner answer, shipped as `OF13`);
+  clouds and value range are sky/lighting, not terrain; oversized rabbits,
+  the six-metre wellhouse and chest-high grass tufts are pre-existing scale
+  bugs in other layers.
+- **A real bug found and not fixed here:** at close range in
+  `road-end-lookup.png` the `CommonTree_*` canopies render with crimson and
+  magenta shards, on the same asset that renders clean green in
+  `square-to-rise.png`. Two rounds named it independently. It is a material
+  or alpha-channel fault in the foliage asset, not a placement one, so it
+  was out of scope for a scatter item — but it is now much more visible
+  because these anchors put trees close to a camera that used to see none.
+- `OF7`'s known `rocks` boundary-ring bug was **not** folded in. The ring
+  sits at radius 235m and these anchors are 60-100m from the rise centre,
+  nowhere near it, and the fix needs a perimeter-aware gate inside a module
+  that deliberately knows nothing about `world_perimeter.gd` — not the small
+  verifiable change the item said to fold in opportunistically.
+- Software-rendered Compatibility frames, as every survey here is. Whether
+  the hill now reads at the right size while walking toward it is a
+  controller test on the Ally.
+
 ## OF11-remainder — hillside rock ceiling closed by owner decision: current read accepted
 
 `model: fable` (interactive owner session) · `tests: none` — no code

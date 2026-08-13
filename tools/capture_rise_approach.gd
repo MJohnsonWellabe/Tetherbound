@@ -32,6 +32,19 @@ const FOV := 70.0
 
 const VIEWPOINTS := [
 	{
+		# OF4-remainder-mound. The village-square vantage, added because that
+		# item is judged at TWO named viewpoints (the square and the Rise
+		# path) and this file only ever carried the road ones. Same eye as
+		# capture_wayfinding.gd's `silhouette-from-square` (standing near
+		# Grandpa's door) but aimed at the rise itself rather than at the
+		# stronghold 271m beyond it — OF13 moved the structure onto the far
+		# shoulder, so from here the rise is the whole subject and nothing
+		# is built on it.
+		"name": "square-to-rise",
+		"eye": Vector2(-2.0, -4.0), "eye_h": 2.0,
+		"target": Vector2(140.0, -90.0), "target_h": 8.0,
+	},
+	{
 		# Halfway along the route, third-person camera height, looking down
 		# the road at the rise it is aimed at. This is the framing the
 		# complaint is about: what the hill looks like while walking toward
