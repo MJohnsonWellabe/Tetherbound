@@ -1227,28 +1227,7 @@ signature.
 
 **`SA3` (physical perimeter + below-world failsafe) shipped — see `DONE.md`.**
 
-### SA4 — Seven outward spokes, each believably severed
-`model: fable` · `tests: smoke_traversal`
-Spec §1E and §29. Seven routes leave the perimeter — river gorge (Water), old
-storm road (Electric), mountain trail (Fire), high pass (Ice), cliff road
-(Air), ancient stone gate (Psychic), sealed blighted road (Dark) — each blocked
-by something physical: collapsed bridge, rockslide, flood, damaged lift, Tether
-blockade, sealed gate. **No "Biome Locked" messaging, ever** (spec §19, and
-`GAME_DESIGN.md`'s traversal pillar). §29 is what gives them meaning: these are
-severed old roads, not seven dead ends someone built — broken roadbed, old
-signage, abandoned trade infrastructure, land visible on the far side. This is
-the seed `R8.6` pays off and the geometry `SF33` later dresses. Done when: all
-seven are reachable on foot from the village, each is visibly and physically
-impassable, and none of them explains itself with UI text.
-
-**Deliberately not started 2026-08-13, not overlooked.** A separate
-concurrent session was live-shipping `OF6`/`OF7`/`OF10`/`OF11` against
-`area: terrain` at the time (`ralph/STATUS.md` on `ralph-status`), and
-`OF7` specifically is a perimeter fence/wall rebuild — real risk of
-touching the same files (`world_perimeter.gd`, the perimeter's terrain
-rebake) as this item's own "collapsed bridge"/gate spokes. Held rather
-than raced. Check `ralph/STATUS.md` for that lease before picking this up;
-if it's clear, this is otherwise unblocked and ready to go.
+**`SA4` (seven outward spokes, each believably severed) shipped — see `DONE.md`.** All seven stand and all seven physically hold: `tools/_probe_sa4.gd` walks the real player controller at each blocker and every one HELD, and no spoke explains itself with UI text. Honest residue lives in the `DONE.md` entry rather than in a new item: `high_pass` has no ice/snow reading yet (altitude and bare rock only), `mountain_trail`'s pile and `stone_gate`'s wall sever the road but stop short of the meadow either side so they read as props rather than terrain, and `river_gorge` currently reads as a flat reservoir rather than a gorge — its floor sits ~11m below the waterline and no depth that still blocks keeps it dry, so moving the spoke is the only route to a dry gorge. The `cliff_road`/Rise-trailhead duplication risk stage 1 flagged is **closed**: a blind critic shown both in one frame did not read them as duplicates.
 
 **`SA5` (recolour Burrowback away from Terrapup) shipped — see `DONE.md`.**
 

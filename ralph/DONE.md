@@ -3,6 +3,177 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SA4 — Seven outward spokes, each believably severed
+
+`data/config/terrain_playground.json`, `scripts/world/severed_spokes.gd` (new),
+`scripts/world/playground_world.gd`, `tools/capture_severed_spokes.gd` (new),
+plus a terrain re-bake, on `ralph/SA4`.
+`model: opus (owner-directed, token budget)` ·
+`tests: run_tests 586 tests / 83925 assertions / 0 failed; smoke_traversal OK;
+tools/_probe_sa4.gd all 7 HELD`.
+
+**What shipped.** All seven spokes of spec §1E leave the village on their own
+road, and all seven stop at something physical. `severed_spokes.gd` reads
+`spokes.routes` out of `terrain_playground.json` and builds, per entry, the
+road, an old fingerpost naming where the road went, and one of four blocker
+mechanisms:
+
+- **carve** — a straight trench subtracted from the heightfield, full `depth`
+  within `half_width` of the axis and fading over `rim`, so the wall angle
+  (66° on both users) is well past the player's 45° `floor_max_angle`.
+  `river_gorge` (Water, the valley's own outflow leaving the pond basin) and
+  `cliff_road` (Air, a 9m notch where a shelf road's roadbed fell off
+  `rises.peaks[0]`'s flank).
+- **pile** — boulders from the one nature family (D24) scaled far past the
+  scatter's ceiling, each with its own collider, over a buried continuous
+  barrier whose top sits below the pile's silhouette (spec §1E allows
+  invisible collision "as support for visible boundaries, not as the only
+  boundary"). `mountain_trail` (Fire) and `high_pass` (Ice).
+- **build** — `stone_gate` (Psychic): two piers on `world_perimeter.gd`'s own
+  PIER_* proportions, a lintel, a pair of **closed leaves** filling the
+  opening, and wall stubs out to `span` either side. The road runs *through*
+  the arch. `blighted_road` (Dark): Team Tether's seal, the one blocker that
+  is somebody's work — `_build_stonework`'s fieldstone run shut across the
+  road, five uprights capped in `palette.json`'s reserved `tether_oxblood`,
+  read from the palette rather than typed in.
+- **collapsed bridge** — `storm_road` (Electric): a carve with two masonry
+  abutments facing each other across it and one fallen beam leaning off the
+  near one into the ravine. Nothing spans the gap.
+
+No new asset family, no generation, no new texture: everything is
+`T_UnevenBrick` (the village family) or `Rock_Medium_*` (the nature family).
+No UI text anywhere near any of them — the item's "no Biome Locked messaging"
+clause is satisfied by construction, because nothing prints.
+
+**Verification.** `tools/_probe_sa4.gd` walks the *real* player controller at
+the real walk speed at each blocker, using `smoke_traversal.gd`'s own harness,
+and reports high-water progress along the road relative to the blocker centre
+(limit +8.0m):
+
+```
+  river_gorge      HELD  furthest  -12.1m      stone_gate     HELD   -0.8m
+  storm_road       HELD  furthest   -5.9m      high_pass      HELD   -2.1m
+  mountain_trail   HELD  furthest   -2.2m      cliff_road     HELD  -14.5m
+  blighted_road    HELD  furthest   -1.2m
+```
+
+That is the load-bearing evidence for the item's central claim and it should
+be re-run after any geometry change. Re-bake after this work: height range
+`-37.0 .. 51.3`, 13.6% of the surface steeper than 30°, path pixels 8730 (was
+4992 — all seven roads now painted), wet bed 4538.
+
+**Stage-by-stage, including what only execution could find.**
+
+*Stage 1* authored all seven as data and built three. Its flood was a **bug,
+not a river**: `river_gorge`'s carve was 92m long each way, and the pond
+centre `[-145,138]` sat at carve-local `u=-62.9, v=-12.0` — inside both the
+full-depth run and the rim — so the trench gouged 16m straight through the
+existing pond basin. `water.gd::_build_pond` flood-fills from the pond centre,
+so the two merged into one sheet: 1346 surface cells of which 907 (67%) were
+the new trench, and its far end was held in only by `_region()`'s arbitrary
+±90m scan window, not by terrain. `half_length` 70→26 and `end_fade` 22→14
+gives a 40m reach: the road still crosses at full depth, the zero-depth end
+lands 33m out from the pond centre on its own rim, and the gorge now reads as
+the valley's outflow because the ground between it and the pond is genuinely
+below −22.5 on its own.
+
+*Stage 2* built the remaining four and hit two things no amount of reading
+would have caught:
+
+1. **The trenches swallowed the player.** Walked at, the gorge and the ravine
+   did not stop the body — it went over the lip, fell ~12m, and came to rest
+   on the floor inside 66° walls with no way out. `world_perimeter`'s global
+   failsafe plane cannot help, because legitimate ground now reaches −37m, so
+   no single plane distinguishes a gorge floor from a valley.
+   `_add_carve_failsafe` hangs spec §1E's own "backup kill/respawn volume ...
+   only as a failsafe" *inside each trench that opts in* (`"failsafe": true`,
+   set on `river_gorge` and `storm_road`), recovering to that spoke's own road
+   rather than to the village. **Sub-trap:** the first version recovered to
+   `road[-1]`, which is itself inside the carve on both spokes, so it dropped
+   the player back in the hole — and because they never left the volume,
+   `body_entered` never fired again. `_recovery_point()` now walks back up the
+   road's last leg until clear of the rim; do not "simplify" that away. The
+   volume's ceiling is also measured DOWN FROM THE LIP, not up from the floor
+   sample, because a floor that rises along its own axis let the body rest
+   exactly on a floor-relative box's top edge.
+2. **Three builders had the box yaw backwards.** `atan2(axis.x, axis.y)` sends
+   a box's local +X *perpendicular* to the axis; `+ PI * 0.5` is what puts it
+   along the axis, as the rockslide barrier already did. Stage 1 wrote
+   `_build_collapsed_bridge` without it and the gate would have inherited it —
+   which would have turned the sealed gate ninety degrees and let the road
+   walk straight past it.
+
+`high_pass` also needed terrain before props: a pass needs a saddle, and that
+bearing had no relief, so `rises.peaks` gained two shoulders at `[78.4,-184.2]`
+and `[24.4,-198.8]` (radius 24, both inside 225m so `world_perimeter`'s 235m
+ring never climbs them) and the road now climbs between them.
+
+*Stage 3* rendered the work for the first time — `tools/capture_severed_spokes.gd`,
+five vantages from the severed roads at player eye height, covering one of each
+mechanism (`river_gorge` carve, `mountain_trail` pile, `stone_gate` build,
+`high_pass` saddle) plus `cliff_road` and the Rise trailhead together — and put
+them in front of a blind critic that was told nothing. It named one defect that
+is cheap and structural, and it was right:
+
+> "A thin brown vertical pole appears in four of the five frames and is
+> unreadable in every one ... signposts whose boards are edge-on to camera, so
+> they present as bare sticks. Four frames, four sticks."
+
+`signpost.gd` paints its labels on the plank's two **broad faces**, whose
+normal is perpendicular to the arm's bearing — so an arm aimed down the road it
+names is edge-on to anyone walking that road. Every spoke sign names where its
+severed road *went*, so all seven were authored along the continuation and all
+seven inherited OF10 round 2's "a bare post, edge-on". `paths.trailheads`
+already answers this by aiming the Rise fingerpost ~25° off its own road;
+`_aimed_points()` now applies the same turn in the builder, so the config keeps
+telling the truth about the destination while the plank turns the minimum
+needed to be read. Signs already clear of the approach line are untouched.
+Re-rendered after the fix; the planks now present a face.
+
+**Honest limits — read these before extending this.**
+
+- **`high_pass` has no ice or snow reading at all.** It is bare rock between
+  two rocky shoulders and the Ice association rests on altitude alone. It is
+  also, per the blind critic, the *best* of the five as a composition ("the
+  only one where the blockage is earned by the terrain rather than asserted by
+  a prop") — so the gap is dressing, not siting. The cheap route is a pale
+  material variant, not a new asset (D24) and certainly not a generation.
+- **Two blockers stop the road but not the meadow.** The critic walked around
+  `mountain_trail`'s pile and `stone_gate`'s wall in its head — "open, gently
+  sloped, walkable green grass to the left of it and to the right of it",
+  "the wall is chest-height, it ends after a few metres". The probe is right
+  that neither can be *crossed on the road*, and `world_perimeter`'s 235m ring
+  is still the thing that actually bounds the world, so nothing is escapable —
+  but as composition, a blockage that terminates in mid-meadow reads as a prop.
+  Widening the debris field and running the gate's wall into terrain is the
+  fix, and it is a re-bake.
+- **`river_gorge` reads as a reservoir, not a gorge.** Verbatim: "a dirt road
+  runs down to a flat pool of turquoise water ... nothing tells me whether that
+  water is 30cm or 30m deep." The gorge floor is ~11m below the waterline, so
+  the water in it is deep and flat. Depth is the lever, but the ground there is
+  naturally ~−17.7m, so no depth that still blocks keeps the floor dry —
+  **moving the spoke is the only route to a dry gorge.**
+- **`cliff_road` vs the Rise trailhead: checked, and left alone.** Stage 1
+  flagged that the two sit ~25m apart pointing into each other's space, and
+  stage 2 refused to move it without a frame. The frame exists now and the
+  critic, looking at both at once with no prompting, did **not** read them as
+  duplicates of one another — it read the frame as having no subject at all
+  ("I cannot find the trailhead"). So the duplication risk is closed and the
+  re-bake was not spent; the legibility of that vantage is a separate,
+  unaddressed complaint.
+- The critic's remaining findings are pre-existing world-wide issues, not this
+  item's: cloudless sky, inconsistent fog band, four disagreeing rock palettes,
+  a road surface brighter than every subject on it, near-black tree canopies on
+  one slope, and thin even scatter where the references cluster. Recorded here
+  because they were measured on these frames, not opened as new work.
+- Spokes are deliberately **not** extra `paths.routes` entries: `signpost.gd`'s
+  village junction sign draws one arm per route, and seven more would turn the
+  four-arm fingerpost into an eleven-arm mast.
+- The bake is ~5.5 minutes and everything geometric depends on it. Re-bake only
+  after changing a `carve`, a `road`, a `built` flag or `rises.peaks`;
+  `height_at` is analytic and reads the JSON live, so a candidate can be
+  *measured* with a probe without baking.
+
 ## OF10-remainder — a trailhead fingerpost and cairn mark where the Rise road stops
 
 `scripts/world/signpost.gd`, `scripts/world/playground_world.gd`,
