@@ -59,6 +59,24 @@ const SELECTOR_ROW_SIZE := Vector2(280.0, 56.0)
 const SELECTOR_CHIP_SIZE := Vector2(36.0, 36.0)
 const SELECTOR_HP_SIZE := Vector2(84.0, 8.0)
 
+## Shared screen slot for `PartyStrip` and the selector panel. Both sit
+## directly above the pal block (`AllyPanel`, whose top edge is 206px off the
+## bottom of a 1080-tall canvas — see `combat_hud.tscn`'s own offsets) with
+## generous headroom: `PARTY_STRIP.ROW_SIZE`'s 56px is a MINIMUM, not the
+## real rendered height — a row's two-line name/level stack plus its
+## `MarginContainer` padding measured taller than that in a real capture, and
+## the first version of this file placed the strip only 10px above the pal
+## block, which overlapped it outright. 430px of clearance covers five rows
+## at up to ~80px each plus separation with room to spare.
+##
+## The two widgets never actually occupy this slot at the same time — see
+## `_open_selector()` — so sharing one position is a deliberate simplification
+## of spec §9.4's "party_strip mounted ABOVE this block... pinned visible
+## while a switch is available/being chosen": showing the identical four rows
+## twice, side by side, read as a duplication bug in the first capture of
+## this shot, not as two different pieces of information.
+const SWITCH_PANEL_POS := Vector2(56.0, 380.0)
+
 @export var manager_path: NodePath
 @export var director_path: NodePath
 
@@ -169,7 +187,7 @@ func _ready() -> void:
 	_build_selector()
 
 	_party_strip = PARTY_STRIP.new()
-	_party_strip.position = Vector2(56.0, 560.0)
+	_party_strip.position = SWITCH_PANEL_POS
 	$Root.add_child(_party_strip)
 
 	UITokens.make_text_legible($Root)
@@ -223,7 +241,7 @@ func _build_selector() -> void:
 	_selector_root = PanelContainer.new()
 	_selector_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_selector_root.add_theme_stylebox_override("panel", UITokens.panel_box())
-	_selector_root.position = Vector2(376.0, 560.0)
+	_selector_root.position = SWITCH_PANEL_POS
 	_selector_root.visible = false
 	$Root.add_child(_selector_root)
 
@@ -687,6 +705,15 @@ func _open_selector() -> void:
 	_selector_open = true
 	if _selector_root != null:
 		_selector_root.visible = true
+	# Hand the shared screen slot off from the ambient strip to the selector
+	# immediately, rather than leaving both visible together (see
+	# `SWITCH_PANEL_POS`'s header). `_hide_strip` is `PartyStrip`'s own
+	# private fade-out — reflection, the same idiom this file already uses
+	# for `_party_entries()` and `_active_index`, because starting that fade
+	# is not part of `PartyStrip`'s public API and this task does not touch
+	# `party_strip.gd`.
+	if _party_strip != null:
+		_party_strip.call("_hide_strip")
 	_refresh_selector()
 
 
@@ -758,9 +785,13 @@ func _update_party_strip() -> void:
 	var active_index: int = int(_manager.get("_active_index")) if _manager != null else 0
 	_party_strip.call("update_from_party", entries, active_index)
 
+	# Pinned while a switch is available, EXCEPT while the selector has taken
+	# over the shared screen slot (`_open_selector` already started its fade
+	# out) -- pinning here too would re-reveal it every frame, right under
+	# the selector it just handed the slot to.
 	var switchable: Array = _manager.call("switchable_indices")
 	var available: bool = bool(_manager.call("can_switch")) and not switchable.is_empty()
-	_party_strip.call("set_pinned", available or _selector_open)
+	_party_strip.call("set_pinned", available and not _selector_open)
 
 	if _selector_open:
 		_refresh_selector()
