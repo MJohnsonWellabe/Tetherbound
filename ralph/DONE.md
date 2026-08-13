@@ -3,6 +3,70 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## HD2 — A real quick-access item hotbar
+`model: sonnet` · `tests: none` (item's own field); ran the full suite anyway
+per `conventions.md` — 396/396 except one pre-existing, unrelated failure
+(`test_character_lying.gd`, a body-pose bug this item never touched).
+`smoke_playground`, `smoke_menu`, `smoke_settings` all green locally headless.
+`f77584f`, committed in-worktree only — this firing did not push or open a
+`ralph/**` branch; see its own report for the worktree path.
+
+**Five satchel slots, one press each, no menu.** The hotbar shown on
+`playground_hud.gd` (the real exploration HUD, `EV9`) is satchel slots 0-4
+directly — the exact "first row doubles as the quick-select band" slots
+`autoload/inventory.gd`'s own header comment already reserved for this
+("nothing reads it yet ... so the grid and the future hotbar cannot disagree
+about which slots they mean"). Moving a stack into or out of slot 0-4 in the
+backpack tab moves it into or out of the hotbar for free; there is no second
+"assign to hotbar" step to build, explain, or get out of sync.
+
+**Five new input actions, chosen for real controller-first parity.**
+`hotbar_1`..`hotbar_5` bind to keyboard 1-5 and, on gamepad, Y / D-pad left /
+D-pad right / D-pad down / LB — five buttons confirmed unread anywhere else
+during exploration (A/B/X are jump/cancel/interact, D-pad up is `pal_recall`,
+RB and both mouse buttons are combat-only). Each slot is a single direct
+press on both devices, matching `USE_ACTION`'s per-press semantics in
+`tab_backpack.gd` — no select-then-confirm step that would make the pad a
+second-class citizen next to keyboard's five number keys. `input_glyph.gd`
+gained matching `HD1`-style glyph entries, so each slot shows the correct
+live device prompt exactly like combat's Actions row does. Six new Kenney PNGs
+(`keyboard_1..5`, `xbox_button_y`, `xbox_dpad_down`, `xbox_lb`) copied from
+the already-staged, already-ledgered CC0 Input Prompts pack — `xbox_dpad_left`/
+`xbox_dpad_right` already existed from `HD1`'s `horizontal` glyph.
+
+**A real design fork from `tab_backpack.gd`'s use verb, not a shared call.**
+HD2's own text said to wire into the use verb that already exists in
+`_read_use()`. Read what that verb actually does before reusing it: on a heal
+item it opens `OF2`'s target picker, a modal side panel that holds the whole
+pause-menu shell deaf (`menu.hold_input`) while it's up. That has no sane
+equivalent drawn live over real-time exploration — a picker mid-run would BE
+the extra menu this item exists to let the player skip. So `playground_hud.gd`
+implements its own small parallel path (tool repair identical to the backpack's;
+a heal item applies to whichever party pal is hurt worst) rather than
+literally calling into `tab_backpack.gd` — which also means zero changes to
+that file, kept clean for the `equip`/`drop`/`split` work landing on it next.
+Anything the current use verb does not support (berries — `kind: food`, no
+`heal` key; orbs — `kind: gear`) reads the same "not something you can use
+here" message the backpack already gives them; no new food-buff or
+gear-use mechanic was invented to make the backlog's illustrative "berries,
+potions, orbs" list literally all usable.
+
+**`menu.json` gained a "Quick items" rebind group.** `test_controls.gd`'s
+`test_every_rebindable_action_is_on_the_screen` failed the moment the five new
+actions existed in `project.godot` — every action in the input map must be
+listed under `settings.controls.groups` or a player has no way to move it.
+Fixed by adding the group and its five labels; caught by running the full
+suite, not the item's own `tests: none`, which is exactly why `conventions.md`
+asks for the full run regardless of what an item's own field says.
+
+**One real, documented gap: no combat gate.** `playground_hud.gd` keeps
+processing during a fight (`combat_hud.gd` draws over it, does not replace
+it), and there is no `Game`-visible "in combat" flag to read without new
+cross-system plumbing (`CombatManager` is a scene-local `NodePath` on
+`encounter_director.gd`, not reachable from the HUD today). A player can
+free-heal from the hotbar mid-fight right now. Opened as `HD2-remainder`
+rather than silently shipped or silently blocked on.
+
 ## OF13 — Stronghold relocated ~105m out and genuinely occluded, not just nudged
 `scripts/world/landmark.gd`, `tools/capture_wayfinding.gd` on `ralph/OF13`.
 `model: sonnet` (mechanical placement/occlusion — `OF9`'s design question

@@ -1218,19 +1218,29 @@ practice — so left open rather than blocked. Done when: either a
 better-differentiated CC0 mouse-button glyph pair is sourced, or the owner
 accepts the current ceiling.
 
-### HD2 — A real quick-access item hotbar
+**`HD2` (a real quick-access item hotbar) shipped — see `DONE.md`.** The five
+slots are satchel slots 0-4 directly (the "quick-select band"
+`autoload/inventory.gd` already reserved for this), drawn live on
+`playground_hud.gd` with a real `HD1`-style device-aware prompt per slot and
+usable with one press each on both devices. Deliberately did NOT share code
+with `tab_backpack.gd::_read_use()` — its `OF2` target picker pauses the
+whole menu shell, which has no place over live exploration — so a heal item
+pressed from the hotbar applies to whichever pal is hurt worst instead of
+opening a picker; recorded as a real, considered fork, not a silent revert of
+`OF2`. One real gap opened below rather than silently shipped.
+
+### HD2-remainder — Hotbar has no combat gate
 `model: sonnet` · `tests: none` · `area: ui`
-Five slots, usable directly without opening the full backpack — berries,
-potions, orbs. `menu.json`'s own `_comment_backpack` used to claim a
-`hotbar_columns` key already existed for this; it never has (checked directly
-— see the "Found along the way" fix below), so this item builds the key as
-well as the feature, not just repurposes one. `R2.1`, §19 scoped tool cycling
-separately; this is the first item asking for a general consumable band.
-Wires into the use verb that already exists in
-`tab_backpack.gd::_read_use()` rather than building a second one — see the
-correction on `R2.5` and the "Found along the way" entry above for what that
-verb already does. Done when: a potion can be used without opening a menu,
-with the correct `HD1` prompt shown next to the slot.
+`playground_hud.gd` keeps processing (and its hotbar keeps reading input)
+while a fight is running — `combat_hud.gd` draws on top of it, it does not
+replace it — so a player can free-heal from the hotbar mid-fight today.
+Traced why this wasn't fixed in `HD2` itself: `CombatManager` is wired to
+`encounter_director.gd` by a scene-local `NodePath`, and there is no
+`Game`-visible "a fight is on" flag `playground_hud.gd` can reach without
+adding new cross-system plumbing — bigger than a hotbar item should be.
+Done when: either a real `Game.is_in_combat()`-style flag exists and the
+hotbar reads it, or the owner decides free mid-fight healing from the
+hotbar is acceptable and this is closed as intentional.
 
 **`CO1` (manual pal summon, dismiss and swap) shipped — see `DONE.md`.**
 
@@ -2479,8 +2489,8 @@ Phase 1 onward rather than at the end.
   remaining gaps are narrower: `berries` carries no `heal` value (`R7.5`
   owns giving it one), the verb has no equip/drop/split siblings (still
   genuinely missing, small, `model: sonnet` if anyone wants it), and using
-  any of it requires the full backpack menu with no quick path (`HD2`,
-  Phase -0.85, fixes that).
+  any of it required the full backpack menu with no quick path — **fixed by
+  `HD2`, see `DONE.md`.**
 - **`menu.json`'s stray `test_menu_config.gd` references and phantom
   `hotbar_columns` comment fixed — see `DONE.md`.**
 - ~~Opening the menu mid-fight is silently refused with no on-screen
