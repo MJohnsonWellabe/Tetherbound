@@ -74,6 +74,11 @@ func _place(spec: Dictionary) -> void:
 	# skirt floating over its own shadow. Sinking to the lowest corner buries
 	# the high side a little instead, which is what an embedded building does
 	# (bible §E).
+	# `ground: "highest"` is for structures that deliberately overhang a drop —
+	# the footbridge spans the stream carve and the mill hangs its wheel over
+	# the channel, so their lowest AABB corner is the streambed and sinking to
+	# it would drown the deck. Everything else keeps the lowest-corner rule.
+	var take_highest := str(spec.get("ground", "lowest")) == "highest"
 	var aabb: AABB = _prefabs.call("combined_aabb", building)
 	var ground := _ground_height(x, z)
 	for corner: Vector2 in [
@@ -85,7 +90,12 @@ func _place(spec: Dictionary) -> void:
 		var world := Vector2(x, z) + corner.rotated(-yaw)
 		var h := _ground_height(world.x, world.y)
 		if not is_nan(h):
-			ground = h if is_nan(ground) else minf(ground, h)
+			if is_nan(ground):
+				ground = h
+			elif take_highest:
+				ground = maxf(ground, h)
+			else:
+				ground = minf(ground, h)
 	if is_nan(ground):
 		push_error("no ground under village structure '%s' at %.0f, %.0f" % [prefab_name, x, z])
 		building.free()

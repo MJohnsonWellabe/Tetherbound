@@ -174,6 +174,46 @@ in `DONE.md` for the prior attempts (`EV4-hillside-seam` through
 what was tried and ruled out — it should inform the redo's judgment, not
 constrain its starting point.
 
+### Hillside rock ceiling, round 2 — owner decision needed: accept the current read, or commission real rock geometry
+`OF11`'s from-scratch redo (see `DONE.md`) ran 6 real rounds and fixed the
+literal root cause behind every prior round's "smooth grey wash" complaint
+(the rock photo was tiled at 8.3m per tile — one 1024px image blown up to
+house-sized — retiled to 2.2m plus a contrast-restoration pass), replaced
+the geometry mechanism entirely (ridged/domain-warped fractal with tilted
+terrace bedding, not the old smooth-noise bump), and fixed a resulting
+hard-edge material-boundary defect. Round 6's blind critic confirmed the
+old defect is gone: rock "reads reasonably as rock up close... real
+bump/crag detail," the landform gives "a real geological silhouette."
+
+**Round 7, one more independent blind pass after the boundary-edge fix,
+came back split rather than confirming:** rock is "one grey noise texture
+at one UV scale... reads as poured concrete at distance and stretched
+sandpaper up close," and names the ceiling explicitly: "a tiled grey noise
+texture on a heightmap won't reach Palworld's rock read at any lighting
+setting." That is a *different* kind of gap than the one 11 total rounds
+(5 pre-`OF11`, 6 within it) have been closing — not a tuning defect this
+project's own procedural pipeline can reach, per round 7's own critic, but
+a texture-resolution/geometry-detail ceiling that a single 2K tiled photo
+on a heightmap may not clear regardless of how it's tuned.
+
+**This needs the owner's read, not another round.** Two independent
+critics disagreeing on the same acceptance question at round 6-7 is the
+signal this rubric's own stopping rule exists for. Two paths forward,
+neither of which this session should pick alone:
+1. **Accept the current state** — genuinely, measurably better than
+   every prior attempt (see `DONE.md`'s round-by-round history), and
+   round 6's independent critic did call it working. A "good enough for
+   a hillside the player climbs past, not stares at" call is legitimate.
+2. **Commission real rock geometry** — hand-modelled rock formations
+   (not a tiled photo) for this landform, which is new-asset territory:
+   needs an owner-supplied reference board first, same as any other
+   Meshy generation under `CLAUDE.md`/`D24`. No board exists yet.
+
+Renders for the owner to judge: `shots/hillside/*.png`,
+`shots/rise-approach/*.png` (both gitignored — re-render with
+`tools/capture_hillside.gd`/`tools/capture_rise_approach.gd` if they've
+aged out).
+
 ### ✅ RESOLVED — the `square-convergence`/`the-rise-route` "unmotivated dark patch" is accepted as ordinary material contrast
 
 **Closed 2026-08-12.** `EV4-textures-lighting-remainder` (`DONE.md`) tested

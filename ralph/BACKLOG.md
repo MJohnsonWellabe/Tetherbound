@@ -84,11 +84,7 @@ different frame.
 
 **`OF6` (world boundary collision tightened to the visible perimeter) shipped — see `DONE.md`.**
 
-### OF7 — Rebuild the perimeter fence/wall — it looks bad and isn't continuous
-`area: terrain` (or `village`, whichever owns the placement) · `model: fable`
-— a visual-quality call on an already-built system (`SA3`), not a new
-mechanic. The owner's words: "it looks awful and isn't continuous." Done
-when a blind pass no longer calls the perimeter discontinuous or low-quality.
+**`OF7` (perimeter fence/wall rebuilt — continuous joins, real jitter, real coursing) shipped — see `DONE.md`.** Found a real, unfixed bug while shipping it: `vegetation.json`'s `rocks` layer places boulders through the boundary ring in segment 1 — needs a `clear_radius` around the ring, not yet done.
 
 **`OF8` (player standing on the bed instead of lying in it — a bad furniture collider plus a missing lie-down pose) shipped — see `DONE.md`.**
 
@@ -98,21 +94,52 @@ when a blind pass no longer calls the perimeter discontinuous or low-quality.
 
 **`BG1` (real grid/rotate/snap building placement, `D28`'s first `OF4-rebuild` prerequisite) shipped — see `DONE.md`.** Serves both the player's own base (M8) and the coming `OF4-rebuild`. `BG2` (real castle-parts assets, `OF4-rebuild`'s other prerequisite) has since shipped too — see below — so `OF4-rebuild` is unblocked.
 
-### OF10 — The road up to the stronghold is unwalkable, and the hill/slope doesn't look good
-`area: terrain` · `model: fable` (likely — the existing hillside-quality
-work is already Fable-adjacent visual-direction territory, see `OF11`).
-Two possibly-separate problems: a walkability bug (check for a collision
-gap or a bad nav-mesh) and a look-quality pass. May have different owners;
-don't assume one fix closes both.
+**`OF10`/`OF11` (hillside rebuilt from scratch — real landform via ridged/terraced geometry, root-caused and fixed the rock texture's tiling, rise-gated boundary blend) real progress shipped, both items' own done-when NOT fully cleared — see `DONE.md`'s `OF10`/`OF11` entry for the six-round history and `BLOCKED.md` for what's still open on each.** `OF10a`'s walkability fix already shipped separately.
 
-### OF11 — Redo the hillside rock material/relief from scratch
-`model: fable` (dispatch). Replaces the `BLOCKED.md` "hillside rock" entry —
-see there for the full five-round history. That history is evidence tuning
-plateaued, not a starting point for the next attempt: the dispatched agent
-gets the done-when ("reads as stone, not a smooth procedural blend") and the
-plateau evidence, but not the prior specific mechanisms to adjust. It judges
-and rebuilds the material/relief approach itself, clearing out the current
-implementation rather than layering another round on top of it.
+### OF10-remainder — the road's arrival at the rise still doesn't resolve
+`area: terrain`. Two independent blind reviews (round 6 and round 7 of the
+`OF10`/`OF11` session) both named this, in near-identical words: the road
+"dies in open grass before reaching" the rise, with "no gate, cairn,
+marker, or surface change" at its endpoint (`[74,-41]`, from `OF10a`). A
+levelled gravel apron already exists there (`rises.flats`'s
+`_comment_of10_r3` entry) but reads as too subtle to see at approach
+distance. Both reviewers independently prescribed the same kind of fix:
+something visibly BUILT at the road's end, not another terrain tweak. This
+is a content decision (what marks this spot — a cairn, a signpost like
+`signpost.gd` already uses elsewhere for wayfinding, a Team Tether
+marker?) more than a bug, and no new asset generation is needed — reuse
+whatever the settlement/route vocabulary already stages. Flagging rather
+than inventing the answer.
+
+### OF11-remainder — hillside rock: real ceiling, or one more round?
+`area: terrain`. `data/config/terrain_playground.json`'s `rock_form`/
+`colour`/`textures.rock` blocks were rebuilt from scratch across 6 real
+rounds (see `DONE.md`), fixing the actual root cause five OLD rounds never
+found (the rock photo was tiled at 8.3m/tile, erasing all detail at
+viewing distance — retiled to 2.2m plus a contrast-restoration pass) and
+replacing the old smooth-noise relief with a genuinely different
+mechanism (ridged/domain-warped fractal + tilted terrace bedding). Round
+6's blind critic confirmed the old "smooth grey wash" verdict is gone
+("reads reasonably as rock up close"). Round 7, after one more fix, came
+back split: "one grey noise texture... reads as poured concrete at
+distance." Two consecutive independent critics disagreeing on the same
+question, at round 6-7 of an 11-round total history on this landform, is
+the signal to stop tuning and ask rather than run round 8 — see
+`BLOCKED.md`'s "hillside rock ceiling, round 2" for the actual decision
+needed.
+
+### A near-field tree renders with magenta/red-striped foliage
+`area: vegetation`. Found incidentally during `OF10`/`OF11`'s blind review
+(`shots/hillside/dome-overview.png`, the tree at bottom-left) — a blind
+critic called it "the single most damaging surface fault in the set."
+Present identically in renders from before that session's own changes, so
+not caused by `OF10`/`OF11`; unfixed, not investigated further (out of
+that item's scope). Likely a DIFFERENT bug from the already-tracked
+`SA1`/`R9.4-remainder-7` magenta-foliage issue — that one is attributed to
+un-mipmapped textures aliasing at distance, and this is a single tree
+filling the near foreground, not a distance effect. Possibly one bad
+`vegetation.gd::_retint()` result or one broken tree instance/material.
+Worth a dedicated look, not a re-diagnosis of the distance issue.
 
 ### OF12-remainder — Blind-confirm the in-fill state; carry the out-of-scope defects the OF12 critics named
 `area: vegetation` · `tests: none (visual)`. `OF12` shipped (see `DONE.md`)
@@ -900,19 +927,27 @@ block), so anything that later wants "distance to water" as a placement
 signal (`R7.1-remainder-2`'s original ask) can read
 `playground_heightfield.water_level()`/`stream_factor()` directly.
 
-### EV5-remainder — Waterside dressing the pond converged without
+**`EV5-remainder` (waterside dressing: rocks, driftwood, lily pads, the
+jetty, a second marginal plant, the flowing-stream variant) shipped — see
+`DONE.md`.** The "needs assets not in the build" framing was wrong for most
+of it: everything except sedge/cattail was already staged and ledgered in
+the packs. What genuinely remains is below.
+
+### EV5-remainder-2 — The pond outlet, and the third waterside species
 `model: fable` · `tests: smoke_traversal` · `area: terrain`
-Eight blind rounds converged with three water asks standing that tuning
-cannot reach, all "needs art/assets not in the build": aquatic dressing
-(lily pads, driftwood, submerged/half-submerged rock meshes, and the key
-art's jetty — bible §15's "support Water Pal ecology" would land far harder
-with a fishing spot the villagers built), a second/third waterside plant
-species beyond the one wispy-grass reed (the itch-blocked fuller MegaKit may
-carry sedge/cattail forms — see `EV1-remainder` in `BLOCKED.md`), and a
-flowing-water variant for the stream (a flow-map scroll along the ribbon's
-own tangent — `water.gd` already computes per-sample tangents, so the
-plumbing exists). Also carried from the critics: the pond has an inlet but
-no OUTLET; Band 3's river should leave the pond, not appear beside it.
+Two leftovers `EV5-remainder` could not reach:
+- **The OUTLET** (blind rounds 2+: "Band 3's river should leave the pond,
+  not appear beside it"). Not dressing — terrain re-authoring. The pond
+  basin is the 512m map's global minimum (`EV5`'s probe: the only terrain
+  below -18m anywhere, level -22.5), so an outlet river has nowhere downhill
+  to go; it needs Band 3's own downstream terrain authored (or the south rim
+  re-carved below the pond level for the whole run). Natural first step of
+  the Band 3 river work, wrong to fake before it.
+- **A third waterside plant silhouette (sedge/cattail).** Owner-blocked:
+  those forms need the fuller nature MegaKit the owner has not supplied —
+  do not source a substitute pack (D24, one nature family). The second
+  species shipped in-pack (`Plant_1_Big` marginals, `water.json`), so this
+  is polish, not a gap.
 
 **`EV6` (settlement rebuilt on the Medieval Village MegaKit) shipped — see
 `DONE.md`.** Workshop, two cottages, composed well, kit fences, two authored
@@ -936,15 +971,20 @@ judgement of the settlement happened between `fdbfc1d6` and this fix landing,
 treat it as invalid** — it was judging an empty field with real walls in it.
 
 Still open:
-- **Mill / crossing, and the bridges** — both are water/bridge architecture
-  and there is no water (`EV5`, unshipped). The windmill's removal also cost
-  the settlement its tall landmark; the mill at a real crossing is the
-  in-family replacement, built when `EV5` gives it a stream to stand on.
-  `data/dialogue/village.json`'s Oskar is a Bridgehand with no bridge for the
-  same reason.
-- **Ranger station** — compact functional building; no site for it exists in
-  the slice's geography yet, and inventing one mid-rebuild would have been a
-  site-plan decision made for silhouette's sake.
+- ~~**Mill / crossing, and the bridges**~~ **Shipped** (see `DONE.md`
+  §EV6-remainder-mill-crossing) — the "no water" premise was stale, `EV5`'s
+  stream is real geometry. Mill (three courses, composed wheel), footbridge
+  (timber deck, stone abutments) and ranger station all placed at the
+  stream's approach to the pond, all from the one kit family. **NOT yet
+  judged by a blind visual pass** — the firing's own render run did not
+  complete inside its budget; treat the next blind pass on this site as
+  round 1, using `tools/capture_mill_crossing.gd`'s five viewpoints. Oskar
+  is still standing in the square; standing him at his bridge (and the
+  Rescued Ranger at the station) is a cheap `lane: npc` follow-up.
+- ~~**Ranger station**~~ **Shipped in the same pass** — sited on the pond
+  route at [-100,100] (the geography it was waiting for was `EV5`'s pond
+  valley), cottage_a's footprint in working stone. Same not-yet-blind-judged
+  caveat as above.
 - ~~**Grandpa's house as modules.**~~ **Shipped by the EV6 follow-up pass**
   (see `DONE.md` §EV6): the exterior is now the `farmhouse_shell` prefab —
   brick ground course, timber-grid upper course, kit windows, `6x10`
@@ -996,11 +1036,25 @@ Two of the bible's five named clusters. `bridge repair site`, `quarry station`
 and `trainer camp` need geography that doesn't exist yet (no bridge, no built
 quarry — `SA4`/`EV5` territory) and are carried forward below.
 
+**`trainer_camp` and `bridge_repair_site` shipped 2026-08-13 — see
+`DONE.md` (`EV7-remainder`).** Both clusters built from the already-staged,
+already-ledgered Fantasy Props MegaKit (five more of its 94 models), sited
+with real ground-height probes rather than guesses. **Not yet blind-
+critiqued** — the done-when bar below still applies and is still owed; this
+is placement/composition work only, honestly unverified against it.
+**`quarry_station` remains open**, confirmed again: no quarry exists
+anywhere in the world, and building one is out of scope for a
+prop-placement item.
+
 ### EV7-remainder — The three prop clusters that need geography built first
 `model: sonnet` · `tests: none` · `area: village`
 Bible §2 P3, absorbing the rest of `R9.4-remainder-5`. `bridge repair site`
-needs a bridge (none exists — `SA4`'s river-gorge spoke or `EV5`'s water
-feature); `quarry station` needs a built quarry (`village_npcs.json`'s own
+~~needs a bridge (none exists — `SA4`'s river-gorge spoke or `EV5`'s water
+feature)~~ **a bridge now exists**: `EV6-remainder`'s footbridge at the
+stream crossing ([-136.3,113], see `DONE.md`
+§EV6-remainder-mill-crossing), so this cluster is startable; `quarry
+station` still needs a built quarry — **the mill-crossing pass did NOT
+build one** (`village_npcs.json`'s own
 comment: the Quarry Foreman stands in the square today because "No built
 quarry to stand him at yet"); `trainer camp` could go along an existing route
 (the practice meadow, `R7.1`'s waypoints) without waiting on new geography, so
@@ -1094,6 +1148,17 @@ Bible §22 Phase G and §23's metrics. Re-shoot the same viewpoints, blind-judge
 against both reference sets, fix the three biggest gaps, repeat until further
 improvement is asset-quality-limited rather than composition-limited.
 
+**Deliberately not started 2026-08-13.** Its own premise is that it only
+converges once `EV2`–`EV9` are actually shipped — `EV5-remainder`,
+`EV6-remainder` and `EV7-remainder` landed this session but none has had
+its own blind pass run yet (all three say so explicitly above), so a
+cohesion pass now would be judging unverified, possibly-still-rough work.
+Run this after those blind passes land, not before. It will also still
+hit a real ceiling even then: `EV9`'s objective-tracker label
+(Phase 3.5-blocked), icon glyphs/font and compass are all out of reach for
+documented reasons above — record that plainly when this runs rather than
+treating it as a failure to converge.
+
 ---
 
 ## Phase -0.55 — the cast (owner's NPC board)
@@ -1168,6 +1233,15 @@ trousers render darker/colder than the reference after three texture
 attempts and villager_female has a persistent UV-seam texture blotch on one
 shin — both recorded there as an honest remainder, not chased further after
 two flat attempts each per `conventions.md`'s stopping rule.
+**Re-checked 2026-08-13: ceiling confirmed, still no fix.** Tried a
+genuinely new mechanism (direct glTF-geometry-informed pixel masking on
+the texture atlas, same family as `desaturate_soil_texture.py`'s
+precedent) rather than repeating the same retexture/prompt levers. It
+surfaced why the ceiling holds: the character atlas is a single fused-
+mesh/single-material UV layout with no per-garment boundary a height-band
+heuristic can isolate — the trousers mask also caught the satchel, boots
+and face fringe. No safe targeted fix without real per-garment UV
+islands (Blender-assisted manual selection), so no code changed.
 
 **`NP4-rig` (rig, animate and install the three NP4 bases) shipped — see
 `DONE.md`.**
@@ -1227,6 +1301,15 @@ the seed `R8.6` pays off and the geometry `SF33` later dresses. Done when: all
 seven are reachable on foot from the village, each is visibly and physically
 impassable, and none of them explains itself with UI text.
 
+**Deliberately not started 2026-08-13, not overlooked.** A separate
+concurrent session was live-shipping `OF6`/`OF7`/`OF10`/`OF11` against
+`area: terrain` at the time (`ralph/STATUS.md` on `ralph-status`), and
+`OF7` specifically is a perimeter fence/wall rebuild — real risk of
+touching the same files (`world_perimeter.gd`, the perimeter's terrain
+rebake) as this item's own "collapsed bridge"/gate spokes. Held rather
+than raced. Check `ralph/STATUS.md` for that lease before picking this up;
+if it's clear, this is otherwise unblocked and ready to go.
+
 **`SA5` (recolour Burrowback away from Terrapup) shipped — see `DONE.md`.**
 
 **`SA6` (separate the five birds by palette) shipped — see `DONE.md`.**
@@ -1280,19 +1363,41 @@ Keyboard & Mouse/Default/`) for a better-differentiated pair and none
 exists — a real asset-ceiling, not an unexplored lever. Owner accepted
 this rather than sourcing a replacement pack.
 
-### HD2 — A real quick-access item hotbar
+**Corroborating evidence from an independent re-check, 2026-08-13** (before
+the owner's acceptance above landed): the staged Kenney Game Icons
+Expansion pack has a real, differently-drawn `mouseLeft.png`/
+`mouseRight.png` pair (a genuine shape difference, not just a recolor —
+verified by alpha-channel diff), but at actual on-screen size it's barely
+more legible than the current pair, and it's drawn in a flat-silhouette
+icon language while every other glyph in the row uses Input Prompts'
+keycap style — adopting it would swap one legibility complaint for a
+visible style-cohesion regression (CLAUDE.md). No other staged pack has a
+mouse-button asset at all. Reinforces the owner's call rather than
+reopening it.
+
+**`HD2` (a real quick-access item hotbar) shipped — see `DONE.md`.** The five
+slots are satchel slots 0-4 directly (the "quick-select band"
+`autoload/inventory.gd` already reserved for this), drawn live on
+`playground_hud.gd` with a real `HD1`-style device-aware prompt per slot and
+usable with one press each on both devices. Deliberately did NOT share code
+with `tab_backpack.gd::_read_use()` — its `OF2` target picker pauses the
+whole menu shell, which has no place over live exploration — so a heal item
+pressed from the hotbar applies to whichever pal is hurt worst instead of
+opening a picker; recorded as a real, considered fork, not a silent revert of
+`OF2`. One real gap opened below rather than silently shipped.
+
+### HD2-remainder — Hotbar has no combat gate
 `model: sonnet` · `tests: none` · `area: ui`
-Five slots, usable directly without opening the full backpack — berries,
-potions, orbs. `menu.json`'s own `_comment_backpack` used to claim a
-`hotbar_columns` key already existed for this; it never has (checked directly
-— see the "Found along the way" fix below), so this item builds the key as
-well as the feature, not just repurposes one. `R2.1`, §19 scoped tool cycling
-separately; this is the first item asking for a general consumable band.
-Wires into the use verb that already exists in
-`tab_backpack.gd::_read_use()` rather than building a second one — see the
-correction on `R2.5` and the "Found along the way" entry above for what that
-verb already does. Done when: a potion can be used without opening a menu,
-with the correct `HD1` prompt shown next to the slot.
+`playground_hud.gd` keeps processing (and its hotbar keeps reading input)
+while a fight is running — `combat_hud.gd` draws on top of it, it does not
+replace it — so a player can free-heal from the hotbar mid-fight today.
+Traced why this wasn't fixed in `HD2` itself: `CombatManager` is wired to
+`encounter_director.gd` by a scene-local `NodePath`, and there is no
+`Game`-visible "a fight is on" flag `playground_hud.gd` can reach without
+adding new cross-system plumbing — bigger than a hotbar item should be.
+Done when: either a real `Game.is_in_combat()`-style flag exists and the
+hotbar reads it, or the owner decides free mid-fight healing from the
+hotbar is acceptable and this is closed as intentional.
 
 **`CO1` (manual pal summon, dismiss and swap) shipped — see `DONE.md`.**
 
@@ -1648,6 +1753,20 @@ what a future capture should check first.
 
 ### R9.4-remainder-9-combat-2 — Confirm the fixed mechanisms actually read once the camera isn't lined up against them
 `model: sonnet` · `tests: none (visual)` · `area: combat`
+
+**Instrumented 2026-08-13 (`survey_combat.gd`), not yet visually judged.**
+Root cause confirmed for the on-axis complaint above: `_drive_pal_towards_enemy()`
+sets the camera's yaw to point straight at the target every physics frame
+(needed for movement steering), so every capture through this remainder
+has been dead-on-axis by construction, not bad luck. Added
+`_swing_camera_offaxis()` (post-movement yaw nudge, unsmoothed per
+`camera_rig.gd::_apply_look()`) and wired real off-axis offsets into
+frames 04-06 (+60, -70, +45 degrees). **The render to actually look at
+the result was not completed** -- this environment's shared CPU made a
+full capture run take 20+ minutes and it was abandoned once other work
+was clearly done; the code change is real and committed, but nobody has
+looked at an off-axis combat frame yet. Whoever runs `tools/survey_combat.sh`
+next should treat that as the actual first check for this item.
 `R9.4-remainder-9-combat` fixed three real, verified bugs — `impact_flash.gd`
 was rendering nothing at all in the real scene (depth-tested against the very
 creature it was drawn at; fixed with `no_depth_test`), the telegraph glow and
@@ -2470,27 +2589,54 @@ Phase 1 onward rather than at the end.
 
 ## Found along the way — small, unscheduled
 
-**`smoke_aggression`'s post-`LP7` flake (the test harness's own player walk
-getting wedged against ordinary terrain, not a scattered prop) root-caused
-and fixed — see `DONE.md`.**
+**`smoke_aggression`'s post-`LP7` flake root-caused and fixed — see
+`DONE.md`.** Two independent investigations ran on this in parallel and
+found different pieces of the same picture. One (`LP7-remainder`, this
+branch) caught the freeze directly via a physics-shape query at the
+frozen position: `CharacterBody3D.move_and_slide()` reporting a false
+`is_on_wall()` against ordinary Terrain3D ground (5-11° grade, nowhere
+near `floor_max_angle`), not a scattered-prop collision — fixed by giving
+the test's own `_walk_towards()` the same unstick/steer escape
+`wild_pal.gd::_tick_aggression` already uses for the aggressor's chase,
+verified 20/20 clean afterward (2/20 hit a different, already-tracked
+`LP7` residual, unrelated). The other investigation (concurrent session,
+`main`) found a related clue worth keeping on record even though its own
+fix attempt didn't pan out: heavier instrumentation (logging
+`locomotion_enabled()`, dialogue state, `is_fighting()`) made the failure
+stop reproducing entirely (9/9 clean) while bare runs still failed ~2/3 of
+the time — a timing-sensitivity signature consistent with (though not
+identical to) the false-wall-collision finding above. That session also
+ruled out the follower pal, the road gate, and village NPC proximity as
+causes, and tried and correctly reverted a wider-escalating-angle unstick
+variant that didn't measurably help. Recorded here so the two
+investigations' evidence stays together rather than only the shipped fix
+surviving.
 
 - ~~`docs/ASSET_LEDGER.md` claims "everything currently in the build is
   CC0 1.0". False (Meshy creatures, Plumberry pack). Blocked on the owner
-  for the correct wording.~~ **Resolved 2026-08-12 — see `BLOCKED.md`'s
-  "✅ RESOLVED — `ASSET_LEDGER.md` licence claim" entry.** The owner
-  supplied the correct wording (All Rights Reserved / proprietary,
-  owner-licensed) and `docs/ASSET_LEDGER.md` was updated accordingly. This
-  bullet was itself stale — caught 2026-08-13 while auditing the backlog
-  ahead of the Phase 1 vocabulary change.
+  for the correct wording.~~ **Resolved 2026-08-12** — the owner supplied
+  the correct wording (All Rights Reserved / proprietary, owner-licensed)
+  and `docs/ASSET_LEDGER.md` was updated accordingly (also independently
+  re-confirmed and closed by a concurrent session — see `BLOCKED.md`'s
+  "✅ RESOLVED — `ASSET_LEDGER.md` licence claim" entry).
 
-**Backpack equip/drop/split verbs shipped — see `DONE.md`.** Drop and
-Split are real (`Inventory.drop_slot`/`split_slot`, two new rebindable
-input actions, a two-step confirm on Drop reusing `_read_use()`'s own
-picker mechanism). Equip was checked, not built: nothing in the codebase
-has an equipped-item state to attach it to (tools apply by ownership,
-`harvest_logic.gd::find_slot()`), so building one would be inventing a
-mechanic nothing needs — out of scope unless a real wearable item type
-shows up and makes it a real question.
+- ~~Backpack has no use/consume/equip/drop/split verb; the only action is
+  moving an item.~~ **Corrected 2026-08-11: this was stale.** A use verb
+  already exists (`tab_backpack.gd::_read_use()`) and already heals from
+  `heal`-tagged items — `potion_small` (`heal: 35`) is usable today. The real
+  remaining gaps are narrower: `berries` carries no `heal` value (`R7.5`
+  owns giving it one), and using any of it required the full backpack menu
+  with no quick path — **fixed by `HD2`, see `DONE.md`.**
+  **Drop and split shipped 2026-08-13** — see `DONE.md`
+  (`backpack-drop-split`). **Equip did not**, and is not simply undone work:
+  no item in `items.json` is tagged equippable, and GAME_DESIGN.md's two
+  "Equip" concepts are both unbuilt systems of their own — §13's move
+  loadout (2 Quick/2 Charged known, 1/1 equipped, per-pal) and §18's trainer
+  armor slots (Helmet/Upper body/Lower body/Boots/Backpack). Wiring a
+  backpack verb to either means inventing which one first and then adding
+  real equipment slots to hang it on — CLAUDE.md's "changing type system" /
+  "adding storage" flag, not a verb-on-existing-stack-data task like drop and
+  split were. Left for the owner to pick a direction rather than invented.
 - **`menu.json`'s stray `test_menu_config.gd` references and phantom
   `hotbar_columns` comment fixed — see `DONE.md`.**
 - ~~Opening the menu mid-fight is silently refused with no on-screen

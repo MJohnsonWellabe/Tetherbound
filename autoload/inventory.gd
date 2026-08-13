@@ -263,54 +263,6 @@ func repair_tool(index: int) -> void:
 	revision += 1
 
 
-## Discard everything in a slot. Different from remove(id, n): drop targets
-## the SPECIFIC slot the player is looking at, never whichever stack of a
-## matching id happens to be smallest elsewhere in the satchel (which is what
-## remove() would touch). Returns what was discarded, empty on a slot that
-## already was.
-func drop_slot(index: int) -> Dictionary:
-	if index < 0 or index >= SLOT_COUNT:
-		return {}
-	var stack: Variant = _slots[index]
-	if stack == null:
-		return {}
-	_slots[index] = null
-	revision += 1
-	return (stack as Dictionary).duplicate()
-
-
-## Split a stack roughly in half into the first empty slot, the larger half
-## staying put. Refuses (returns false, changes nothing) on an empty slot, a
-## stack of 1 -- a tool or a single item, nothing to divide -- or a full
-## satchel with nowhere to put the other half.
-func split_slot(index: int) -> bool:
-	if index < 0 or index >= SLOT_COUNT:
-		return false
-	var stack: Variant = _slots[index]
-	if stack == null:
-		return false
-	var dict := stack as Dictionary
-	var n: int = int(dict.get("n", 0))
-	if n <= 1:
-		return false
-
-	var target := -1
-	for i in SLOT_COUNT:
-		if _slots[i] == null:
-			target = i
-			break
-	if target == -1:
-		return false
-
-	var half := n / 2
-	dict["n"] = n - half
-	var moved := dict.duplicate()
-	moved["n"] = half
-	_slots[target] = moved
-	revision += 1
-	return true
-
-
 ## Write a slot directly, bypassing add()/remove()'s stacking and merge rules.
 ## Used only by save/load (R3.1) to rehydrate a satchel exactly as it was,
 ## position and all — the class comment above is explicit that slot POSITION
@@ -321,6 +273,62 @@ func set_slot(index: int, stack: Variant) -> void:
 		return
 	_slots[index] = (stack as Dictionary).duplicate() if typeof(stack) == TYPE_DICTIONARY else null
 	revision += 1
+
+
+## Split part of a stack into another slot. Moves `amount` off `from` into
+## `to`: an empty `to` gets a new stack, a `to` holding the same item tops up
+## same as move_slot()'s merge does. Refuses (no-op, returns false) when `to`
+## holds something else -- a partial move has nothing sensible to swap, unlike
+## move_slot()'s whole-stack case. Also refuses when `amount` is not strictly
+## between 0 and what `from` holds (splitting everything is just move_slot;
+## splitting nothing is not a split) or when the item does not stack at all
+## (a tool's `n` is always 1 -- there is no half of one axe).
+func split_slot(from: int, to: int, amount: int) -> bool:
+	if from == to or from < 0 or to < 0 or from >= SLOT_COUNT or to >= SLOT_COUNT:
+		return false
+	var source: Variant = _slots[from]
+	if source == null:
+		return false
+	var a := source as Dictionary
+	var have := int(a.get("n", 0))
+	if amount <= 0 or amount >= have:
+		return false
+	var id := str(a.get("id", ""))
+	var cap: int = _db.call("stack_size", id)
+	if cap <= 1:
+		return false
+
+	var target: Variant = _slots[to]
+	if target != null:
+		var b := target as Dictionary
+		if str(b.get("id", "")) != id:
+			return false
+		var room: int = cap - int(b.get("n", 0))
+		if room < amount:
+			return false
+		b["n"] = int(b.get("n", 0)) + amount
+	else:
+		_slots[to] = {"id": id, "n": amount}
+
+	a["n"] = have - amount
+	revision += 1
+	return true
+
+
+## Discard everything in one slot -- the "drop" verb. Returns the removed
+## stack (or an empty dictionary if the slot was already empty) rather than
+## nothing, in case a future world-pickup entity wants to spawn from it; none
+## exists yet, so today this just deletes the stack. That gap is real and is
+## the honest scope of this verb until a ground-item system exists.
+func drop_slot(index: int) -> Dictionary:
+	if index < 0 or index >= SLOT_COUNT:
+		return {}
+	var stack: Variant = _slots[index]
+	if stack == null:
+		return {}
+	_slots[index] = null
+	revision += 1
+	return (stack as Dictionary).duplicate()
 
 
 ## Empty the satchel and hand back everything that was in it.

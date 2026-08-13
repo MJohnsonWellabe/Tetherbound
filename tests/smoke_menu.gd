@@ -67,6 +67,7 @@ func _run() -> void:
 	await _check_the_party_screen_holds_five()
 	await _check_party_reorder_button()
 	await _check_backpack_target_picker()
+	await _check_backpack_drop_and_split()
 	await _check_closes_and_gives_the_game_back(world)
 	await _check_opens_on_the_menu_button()
 	_check_focus_recapture_respects_open_ui(world)
@@ -394,6 +395,94 @@ func _check_backpack_target_picker() -> void:
 		_fail("confirming slot 1 as the target did not heal the pal in slot 1")
 	else:
 		print("target picker heals the CHOSEN pal (slot 1) and spends the item on confirm")
+
+
+## Drop discards a stack after a confirm; split halves a stack into an empty
+## slot on the same press. Both are new backpack verbs on dedicated buttons
+## (`backpack_drop`, `backpack_split`), so this drives the real input path the
+## way the Use target-picker check above does, rather than only proving
+## inventory.gd's own split_slot()/drop_slot() are correct in isolation --
+## tests/test_inventory.gd already covers that layer.
+func _check_backpack_drop_and_split() -> void:
+	_menu.call("select", 0)  # Backpack
+	for i in 4:
+		await process_frame
+
+	var inventory: RefCounted = _game.get("inventory")
+	var body: Node = _menu.get("_bodies")[0]
+
+	# --- split: one press, no confirm, both halves stay in the satchel -----
+	inventory.call("add", "wood", 10)
+	var wood_slot: int = int(inventory.call("find_slot", "wood"))
+	if wood_slot < 0:
+		_fail("could not find the wood slot after adding some")
+		return
+	var wood_before: int = int(inventory.call("count", "wood"))
+
+	(body.get("_buttons")[wood_slot] as Button).grab_focus()
+	await process_frame
+	await _press("backpack_split")
+
+	if int(inventory.call("count", "wood")) != wood_before:
+		_fail("splitting changed the total amount of wood held")
+	var half_slot: int = -1
+	for i in int(inventory.call("slot_count")):
+		if i == wood_slot:
+			continue
+		if str((inventory.call("stack_at", i) as Dictionary).get("id", "")) == "wood":
+			half_slot = i
+			break
+	if half_slot < 0:
+		_fail("`backpack_split` did not open a second wood stack in an empty slot")
+	else:
+		print("backpack_split halves a stack (%d at the source, %d split into slot %d)" % [
+			int((inventory.call("stack_at", wood_slot) as Dictionary).get("n", 0)),
+			int((inventory.call("stack_at", half_slot) as Dictionary).get("n", 0)), half_slot
+		])
+
+	# --- drop: confirm-gated, cancels clean, confirm deletes for good ------
+	inventory.call("add", "berries", 5)
+	var berry_slot: int = int(inventory.call("find_slot", "berries"))
+	if berry_slot < 0:
+		_fail("could not find the berries slot after adding some")
+		return
+	var berries_before: int = int(inventory.call("count", "berries"))
+
+	(body.get("_buttons")[berry_slot] as Button).grab_focus()
+	await process_frame
+	await _press("backpack_drop")
+
+	if int(body.get("_confirming")) != berry_slot:
+		_fail("pressing Drop on a stack did not open the drop confirmation")
+		return
+	if int(inventory.call("count", "berries")) != berries_before:
+		_fail("opening the drop confirmation already removed the item, before any confirm")
+
+	await _press("menu_cancel")
+	if int(body.get("_confirming")) != -1:
+		_fail("`menu_cancel` did not back out of the drop confirmation")
+	if int(inventory.call("count", "berries")) != berries_before:
+		_fail("cancelling the drop confirmation removed the item anyway")
+	print("drop confirmation cancels on `menu_cancel` without removing the item")
+
+	(body.get("_buttons")[berry_slot] as Button).grab_focus()
+	await process_frame
+	await _press("backpack_drop")
+	if int(body.get("_confirming")) != berry_slot:
+		_fail("could not reopen the drop confirmation for the confirm half of the check")
+		return
+
+	var confirm_rows: Array = body.get("_confirm_rows")
+	(confirm_rows[0] as Button).grab_focus()
+	await process_frame
+	await _press("ui_accept")
+
+	if int(body.get("_confirming")) != -1:
+		_fail("confirming a drop did not close the confirmation panel")
+	if int(inventory.call("count", "berries")) != 0:
+		_fail("confirming Drop did not remove the item from the satchel")
+	else:
+		print("backpack_drop removes the stack for good once confirmed")
 
 
 # --- closing ----------------------------------------------------------------

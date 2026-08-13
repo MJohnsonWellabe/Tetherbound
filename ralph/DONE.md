@@ -225,8 +225,7 @@ that format is author-time JSON, not a runtime player system.
   origin, so any two independently grid-snapped pieces are automatically
   flush with no neighbour bookkeeping needed.
 - **Rotation**: a new `build_rotate` input action (keyboard `T`, gamepad
-  D-pad down — shared with `item_drop` deliberately, see the note below)
-  steps the armed ghost through 4 orientations, 90 degrees each.
+  D-pad down) steps the armed ghost through 4 orientations, 90 degrees each.
   Listed in a new "Building" controls group so it is rebindable and shows up
   in `tests/test_controls.gd`'s "every rebindable action is on screen"
   sweep for free. Rotation resets to 0 whenever a new ghost is created
@@ -260,16 +259,20 @@ that format is author-time JSON, not a runtime player system.
   the "carry on, do not brick the player" rule `D15` set for the settings
   file, now proven for saves too (`test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry`).
 
-**Merge-time correction:** the worktree this shipped from picked gamepad
-D-pad down for `build_rotate` without knowing `item_drop` (see the
-`Backpack equip/drop/split verbs` entry below) had independently claimed
-the same button in a concurrent session — both audited the same "free"
-button because neither could see the other's in-flight work. Confirmed
-safe rather than reassigned: `build_placer.gd` only runs while the game
-tree is unpaused, and `item_drop` only reads while the backpack tab has
-paused it open (`game_menu.gd`'s `get_tree().paused` toggle), so the two
-actions can never fire from the same physical press — the same reasoning
-that already justifies `jump`/`combat_quick`/`menu_confirm` sharing `A`.
+**Merge-time history, corrected:** the worktree this shipped from picked
+gamepad D-pad down for `build_rotate` without knowing a concurrent session
+had independently claimed the same button for its own `item_drop` action
+(see the `Backpack equip/drop/split verbs` entry below) — both audited the
+same "free" button because neither could see the other's in-flight work.
+At the time, this was confirmed safe rather than reassigned (`build_placer.
+gd` only runs while the game tree is unpaused, and `item_drop` only read
+while the backpack tab had paused it open, so the two could never fire
+from the same physical press). That reasoning is now moot: a third,
+independent session shipped its own backpack drop/split implementation
+(`backpack_drop`/`backpack_split`, different buttons entirely) to `main`
+first, and the owner kept that one when reconciling all three branches —
+`item_drop` no longer exists, so `build_rotate` has D-pad down entirely to
+itself.
 Noted in `project.godot` next to both action blocks.
 
 **Design calls made, and why they didn't need to go to `BLOCKED.md`:** which
@@ -397,6 +400,16 @@ from both packs are actually rendered side by side in-engine, not
 something this staging-only pass can settle by inspecting source files.
 
 ## Backpack equip/drop/split verbs — Drop and Split shipped; Equip found to have no referent
+**Superseded 2026-08-13 — see `backpack-drop-split` below.** A concurrent
+session independently shipped the same feature to `main` first, with a
+more flexible `split_slot(from, to, amount)` signature and better test
+coverage (12 cases plus a `smoke_menu.gd` integration check vs. this
+entry's 9 unit-only cases). On merging the two branches, the owner chose
+to keep `main`'s implementation; everything below this point (the
+`item_drop`/`item_split` actions, `Inventory.drop_slot(index)`/
+`split_slot(index)`) was removed from the codebase. Kept here as a record
+of the parallel design, not as a description of what actually shipped.
+
 `autoload/inventory.gd`, `scripts/ui/tab_backpack.gd`, `project.godot`,
 `data/config/menu.json`, `tests/test_inventory.gd` on
 `claude/ralph-phase-1-backlog-22u3pz` (manual session). `model: sonnet` —
@@ -439,6 +452,428 @@ Drop and Split are real, both new:
   `menu_confirm` into `_on_slot`, `menu.hold_input`/`override_footer` for
   the same reason). Split needs no confirmation: nothing is lost, only
   redistributed.
+
+## OF10 / OF11 — Hillside rebuilt from scratch: real progress shipped, ceiling reached — see `BLOCKED.md`
+Diff spread across `363af28`/`20a6850` (WIP/final checkpoints on
+`claude/ralph-backlog-of6-7-10-11-dbiydq`) and the reapplied commit that
+lands it on `main` (manual session shipping `OF6`/`OF7`/`OF10`/`OF11`
+together, owner request). `model: fable`, fulfilled as `opus` author +
+independent blind-review rounds for this session (owner direction, same
+substitution as `OF7`). **Neither item's own done-when is fully cleared —
+see `BLOCKED.md`'s "Hillside rock ceiling, round 2" and `BACKLOG.md`'s
+`OF10-remainder`/`OF11-remainder` for what's still open.** Recorded here
+because the work that DID land is real, measured, and shipped, not because
+either item is finished.
+
+**Six real rounds**, replacing — not tuning — the five pre-`OF11` rounds
+`BLOCKED.md`'s retired "hillside rock" entry records:
+- **Round 1**: `rock_form` replaces the old smooth-FBM `relief_amplitude`/
+  `relief_frequency` bump entirely — a ridged, domain-warped fractal for
+  creased ribs/gullies plus `terrace_*` tilted bedding-plane quantisation.
+  A genuinely different mechanism, not new numbers on the old one.
+- **Rounds 2-4**: fixed the grass/soil/rock BAND assignment to read the
+  relief field's own shape (`rock_exposure_deg`/`rock_curvature_deg`/
+  `rock_crown_deg`) instead of slope-plus-noise, and fixed the slope
+  sample step on rises (6m → 2m) so the material tracks the fine geometry
+  instead of blurring across it.
+- **Round 5, the actual root cause**: `textures["rock"].uv_scale` was
+  tiling one 1024px photo across 8.3m — a house-sized single tile, so
+  every grain of surface detail fell below a pixel at viewing distance no
+  matter what tint/AO/normal-depth got tuned. Retiled to 2.2m
+  (`uv_scale` 0.12 → 0.46), paired with a new
+  `tools/art_pipeline/contrast_rock_texture.py` restoring the source
+  photo's own local contrast (value std 0.058 → 0.135) that five OLD
+  rounds' flattening edits had removed. This is the single change that
+  finally cleared "smooth grey wash" — confirmed by round 6's blind
+  critic, the first in this landform's whole 11-round history to say so.
+- **Round 6**: fixed a resulting hard material-boundary edge (round 4's
+  fine slope sampling made `blend_deg`'s fixed-degree ramp collapse to
+  sub-pixel width on the rises) with a rise-gated `blend_deg_rock` plus a
+  second, finer `outcrop_detail_deg`/`outcrop_detail_frequency` jitter
+  octave that interlocks the boundary into fingers instead of a stencil
+  cut. Band coverage held (grass 28%/soil 21-22%/rock 50%,
+  `tools/_probe_rise_form.gd`) — an edge fix, not a coverage change.
+
+**`OF10`'s own contribution**: a small levelled apron
+(`rises.flats`, centred on `OF10a`'s `[74,-41]` route endpoint) so the
+`path_stones` scatter has ground to anchor to at the road's stop, added in
+response to round 2's blind critic naming the road as "arrow-straight,
+terminates flush against the base of the hill with nothing marking the
+meeting point." Both round 6 and round 7's critics still called this
+insufficient at approach distance — see `OF10-remainder`.
+
+**The split verdict, stated plainly**: round 6's independent blind critic
+confirmed the core "smooth grey wash"/"procedural blend" defect is gone.
+Round 7, one more independent pass after the boundary-edge fix, came back
+naming the material a "tiled grey noise texture" that "won't reach
+Palworld's rock read at any lighting setting" — a texture-resolution
+ceiling, not the same defect as before. Two consecutive independent
+critics disagreeing on the same acceptance question is this session's own
+stopping signal (`ralph/conventions.md`), not a reason to run round 8 —
+see `BLOCKED.md` for the actual decision this surfaces to the owner.
+
+Also surfaced, unrelated to this work, not fixed here: the near-field tree
+in `shots/hillside/dome-overview.png` renders with magenta/red-striped
+foliage — present identically before this session's changes, so
+pre-existing, not caused by `OF10`/`OF11`. Likely a distinct bug from the
+`SA1`/`R9.4-remainder-7` magenta-foliage-at-distance issue already tracked
+(this is a NEAR-field single tree, not a distance-aliasing pattern) — see
+new `BACKLOG.md` entry.
+
+Tested: `godot --headless --path . --script tests/smoke_traversal.gd`,
+clean pass, all bearings inside the 235m ring; full suite
+(`tests/run_tests.gd`), 404 tests / 0 failed. Both re-verified
+independently by the orchestrating session in the actual merged `main`
+context, not just trusted from either dispatch's own report.
+
+## OF7 — Perimeter fence/wall rebuilt: continuous, real jitter, real coursing
+Diff spread across `6379ca9`/`644bebf`/`593d9ad` (WIP checkpoints holding
+the initial rebuild, committed by the orchestrating session while the
+dispatch was still live — see those commits' own messages) and `7cdb0f2`
+(the final fix round, clean) on `claude/ralph-backlog-of6-7-10-11-dbiydq`
+(manual session shipping `OF6`/`OF7`/`OF10`/`OF11` together, owner
+request). **`model: fable` in `BACKLOG.md`, fulfilled as an `opus` author +
+independent blind-review loop for this session instead** (owner
+direction) — honest substitution, not a silent downgrade.
+
+**Root cause, measured not guessed.** Every segment in the old ring was
+rigid geometry at a single averaged Y (`mid.y`) across its own ~37m span.
+A throwaway probe (`tools/_probe_perimeter.gd`) against the pure
+heightfield found up to **22.9m of real ground movement within one
+segment**, meaning a rigid run could be off by up to 11.45m — exactly
+matching the owner's "isn't continuous" complaint (the baseline frame
+shows a fence rail floating in mid-air with no posts, and a wall 3/4
+buried). Independently confirmed by `OF6`'s own investigation on a
+different segment of this same file.
+
+**Rebuild:** one shared ground-sampled polyline (720 points, ~2m spacing)
+that all four styles (stone wall, ranch fence, hedgerow, rock formation)
+generate along, so neighbouring styles share vertices at joins — a step at
+a join is no longer geometrically possible. Real masonry
+(`T_UnevenBrick_*`, already staged in the Quaternius medieval kit) and the
+kit's own `Prop_WoodenFence_Extension1/2` replace hand-cut primitives — no
+new Meshy generation, D24's one-family rule held. Merged meshes +
+MultiMesh dropped ~640 individual `MeshInstance3D`s to ~9 draw calls.
+Measured: prop-to-ground deviation 11.45m → 0.90m (the intended kerb
+offset); all 40 joins structurally continuous.
+
+**A genuinely independent blind review (round 1, run from the
+orchestrating session since the first dispatch had no `Agent`-tool access
+and said so honestly) found the self-assessed "done" premature** — real
+verdict was "no" on both of `visual-judge`'s bar questions, naming: a wavy
+capstone artifact, fence/hedge/rock spacing reading as a mechanical
+spline-array (jitter lost in the polyline rebuild), and stray objects in
+the hedge shot. A second dispatch fixed exactly those three (see `7cdb0f2`
+for the mechanism of each fix) and discovered mid-work that `claude -p`
+(the CLI binary, on `PATH` in this container) can spawn a genuinely
+separate blind-reviewer process — three real rounds followed
+(round 1: 5 named → fixed; round 2: 2 new → fixed; round 3: 1 remaining,
+the same boulder-kit-needs-different-art ceiling three independent
+assessments now agree on, deliberately not chased further).
+
+**Confirmed NOT this item's bugs, investigated not assumed:** the harvest
+glint marker (`vegetation_harvest_point.gd`, intentional), background
+flower/grass scatter, and a rust-brown boulder clipping the fence in
+segment 1 — colour/scale/placement all point to `vegetation.json`'s own
+`rocks` layer, not `world_perimeter.gd`. That last one is a real,
+unfixed bug: **`vegetation.json` needs a `clear_radius` around the
+boundary ring** so its own rock scatter stops placing through the
+perimeter — flagged here for whoever next owns vegetation placement.
+
+Tested: `godot --headless --path . --script tests/smoke_traversal.gd`,
+clean pass (re-verified independently by the orchestrating session, not
+just trusted from the dispatch's own report), all 11 bearings inside the
+235m ring, `OF6`'s collision fix intact throughout every round.
+
+## OF10a — The road up to the stronghold: walkability half of OF10
+Diff landed in `6379ca9` on `claude/ralph-backlog-of6-7-10-11-dbiydq`
+(manual session shipping `OF6`/`OF7`/`OF10`/`OF11` together, owner
+request). **Process note:** this commit is a shared checkpoint that also
+carries the concurrently-running `OF7` dispatch's in-flight work on
+`world_perimeter.gd`/`capture_perimeter.gd` — both agents worked in the
+same tree at once and `OF10a`'s own diff is exactly the
+`data/config/terrain_playground.json` hunk in that commit (verified via
+`git diff bc244f8 -- data/config/terrain_playground.json`); nothing else
+in that commit belongs to this item. `model: sonnet`-tier (mechanical
+investigation and fix) via a dispatched agent, not `fable` — this half was
+never `fable`-tagged.
+
+Not a collision bug. Fine slope sampling with `slope_degrees_at()` along
+the old route's last leg (`[45,-22]`→`[85,-48]`→`[118,-72]`) found ≤6.6°
+for 38m, then a jump to 46.4° within 1.2m at `(78.1,-43.5)`, sustained
+35-52° through most of the remaining approach — past the player's own 45°
+`floor_max_angle`. Confirmed directly in-engine: holding forward pins the
+player at the base of that exact jump, `is_on_floor()` never leaves true.
+This is `rises.peaks[0]`'s own designed collar (the config's own comment:
+"these are the only places the 45-degree slope limit should actually
+bite"), not a defect — a grid pathfind at up to 2m resolution found no
+walkable line through it anywhere near this bearing.
+
+Fix: `paths.routes["The Rise"].points` truncated to
+`[10,-10]→[45,-22]→[74,-41]` — the last point on the original bearing that
+stays walkable (worst slope on the new leg: 13.3°). `paths.routes` only
+feeds the baked dirt-texture control map and live vegetation exclusion, not
+terrain height/collision, so this edit stops the road's own polyline
+honestly rather than creating new walkable ground — vegetation exclusion
+updates live; the baked path texture still shows the old, longer line
+until a terrain rebake, deliberately left to the look-quality pass
+(`OF10b`) rather than done here. `rises`, `colour.relief_*` and all
+texture entries untouched.
+
+Also found, not fixed (out of this item's scope, recorded in `BACKLOG.md`):
+`village.json`'s `cottage_b` sits astride the road's first leg. Doesn't
+block a real walk (confirmed sidesteppable) but is placed sloppily.
+
+Tested: `godot --headless --path . --script tests/smoke_traversal.gd`,
+clean pass, re-verified independently (not just trusting the dispatched
+agent's own report) after the fix landed.
+
+## EV7-remainder — trainer camp and bridge repair site: the two of three named clusters with real geography to sit on
+`data/config/props.json`, `docs/ASSET_LEDGER.md`,
+`assets/props/quaternius_fantasy/{Axe_Bronze,Bag,Barrel,Bench,Rope_1}.gltf`
+(+`.bin`), `tools/_probe_ev7r.gd`. `model: sonnet`.
+
+Bible §2 P3 named three clusters `EV7`'s first slice left for later:
+`bridge_repair_site` (needed a bridge — none existed), `quarry_station`
+(needs a quarry — none exists), `trainer_camp` (needed nothing new, just
+never got picked up). `EV6-remainder` gave the world a real footbridge,
+which unblocked the first.
+
+**`trainer_camp`** ([26,-28], probed ground heights via a new
+`tools/_probe_ev7r.gd`, same pattern as `EV6-remainder`'s
+`_probe_ground.gd`): a travelling trainer's dropped pack (`Bag`), a rough
+bench, a supply barrel and crate — sited off route 2's own path, inside the
+practice-meadow clearing but short of the arena, so it reads as a waypoint
+on the way in rather than part of the fight itself.
+
+**`bridge_repair_site`** ([-142.5,115.5], on the footbridge's west bank,
+`EV6-remainder`'s crossing at [-136.3,113]): a materials crate, coiled
+rope, an axe left mid-repair, a water bucket — off the deck's abutment and
+clear of the rail line, so it reads as work happening beside the crossing,
+not blocking it.
+
+Both reuse `Crate_Wooden`/`Bucket_Wooden_1` already curated for `EV7`'s
+first slice; five more models (`Bag`, `Bench`, `Barrel`, `Rope_1`,
+`Axe_Bronze`) newly staged from the same already-ledgered Fantasy Props
+MegaKit — no new pack, no new texture (all reuse the pack's existing shared
+trim textures). `docs/ASSET_LEDGER.md` updated with the new row.
+
+**`quarry_station` NOT built** — no quarry exists anywhere in the world
+(`village_npcs.json`'s Quarry Foreman still stands in the square for
+exactly that reason), and building one is out of scope for a
+prop-placement item. Left open in `BACKLOG.md`, same as `EV6-remainder`
+left it.
+
+**Honesty about the visual bar: NOT cleared, not judged.** This is
+visual-affecting placement work and the item's own done-when is a blind
+critic naming each site as implying a purpose — that pass was not run.
+`data/config/props.json` and `docs/ASSET_LEDGER.md` both import clean
+(verified: `godot --headless --path . --import` after adding the new
+assets); no render/capture was completed inside this session's time
+budget. Whoever runs the blind pass next: both clusters follow the same
+"anchor prop + 2-3 supporting pieces, touching-cluster shape" pattern
+`work_area`/`farmhouse_yard` already converged on, so the composition
+mechanism is proven — the open question is purely whether these two new
+sites read the same way.
+
+## backpack-drop-split — Drop and split verbs added to the satchel; equip scoped out, not invented
+`autoload/inventory.gd`, `scripts/ui/tab_backpack.gd`, `project.godot`,
+`data/config/menu.json`, `tests/test_inventory.gd`, `tests/smoke_menu.gd`.
+`model: sonnet`.
+
+`Found along the way` (`BACKLOG.md`): the backpack's use verb
+(`tab_backpack.gd::_read_use()`) was already real (a stale prior entry had
+already been corrected on this); the genuinely missing pieces were
+equip/drop/split.
+
+**Drop** (new `backpack_drop` action — G / RB) opens a confirm panel — same
+`menu.hold_input`/`override_footer` pattern Use's target picker already
+uses, its own two fixed rows ("Drop it"/"Cancel") built once the way the
+five pal rows are — and on confirm calls the new
+`inventory.gd::drop_slot()`, which deletes the stack for good.
+`drop_slot()`'s own comment says why that is a real delete and not a stash:
+there is no ground-item entity in the game for a dropped stack to become
+yet. That is the honest scope of the verb until one exists, not a masked
+gap.
+
+**Split** (new `backpack_split` action — H / right-stick click) halves the
+focused stack (`n / 2`, floored) into the first empty slot, via the new
+`inventory.gd::split_slot(from, to, amount)` (merges into a same-item
+target, refuses a different-item target, refuses splitting the whole stack
+or nothing, refuses on an unstackable item). Non-destructive — both halves
+stay in the satchel — and needs no destination choice, so unlike Use/Drop
+it applies on the same press with no picker.
+
+Both new input actions needed real entries in `project.godot` (keyboard AND
+gamepad — `test_controls.gd::test_every_action_has_both_a_keyboard_and_a_
+gamepad_binding` requires both) and a new "Backpack" group in `menu.json`'s
+controls screen, or `test_every_rebindable_action_is_on_the_screen` fails on
+any action the input map has that the settings screen doesn't list — adding
+an action there is not free. RB and the right-stick click were genuinely
+free: RB physically doubles as `combat_throw`, but D14 already makes the
+pause menu and a fight mutually exclusive, so the two meanings never
+actually compete (same shape as A already being jump/`combat_quick`/
+`menu_confirm` at once, which `test_controls.gd` treats as expected, not a
+bug).
+
+**Equip did not ship**, and this is not leftover work — it needed a design
+decision this task doesn't own. No item in `items.json` is tagged
+equippable, and GAME_DESIGN.md names two different, both-unbuilt "Equip"
+concepts: §13's per-pal move loadout (2 Quick/2 Charged known, 1/1
+equipped) and §18's trainer armor slots (Helmet/Upper body/Lower
+body/Boots/Backpack). Either is a real equipment-slot system to invent
+before a backpack verb has anywhere to attach to — CLAUDE.md's "changing
+type system"/"adding storage" flag, not the scope of a verb on the
+EXISTING stack model. Left open in `BACKLOG.md` for the owner to pick a
+direction, rather than guessed at.
+
+**Tests**: `tests/test_inventory.gd` — 12 new cases for `split_slot()`/
+`drop_slot()` (merge-into-matching-stack, refuse-different-item,
+refuse-whole-stack-or-nothing, refuse-unstackable, refuse-no-room,
+out-of-range/same-slot no-ops, empty-slot no-ops).
+`tests/smoke_menu.gd::_check_backpack_drop_and_split()` drives the real
+input path — focuses a slot, presses the real `backpack_drop`/
+`backpack_split` actions, reads the tab's own `_confirming`/`_confirm_rows`
+state — the same way the existing Use target-picker check proves the
+wiring and not just the model layer. Full suite (autoload change, so the
+full suite per conventions.md, not just the named tests):
+`406 tests, 70061 assertions, 0 failed`. `smoke_menu.gd` passed headless,
+including the new checks ("backpack_split halves a stack...", "backpack_drop
+removes the stack for good once confirmed").
+
+## HD2 — A real quick-access item hotbar
+`model: sonnet` · `tests: none` (item's own field); ran the full suite anyway
+per `conventions.md` — 396/396 except one pre-existing, unrelated failure
+(`test_character_lying.gd`, a body-pose bug this item never touched).
+`smoke_playground`, `smoke_menu`, `smoke_settings` all green locally headless.
+`f77584f`, committed in-worktree only — this firing did not push or open a
+`ralph/**` branch; see its own report for the worktree path.
+
+**Five satchel slots, one press each, no menu.** The hotbar shown on
+`playground_hud.gd` (the real exploration HUD, `EV9`) is satchel slots 0-4
+directly — the exact "first row doubles as the quick-select band" slots
+`autoload/inventory.gd`'s own header comment already reserved for this
+("nothing reads it yet ... so the grid and the future hotbar cannot disagree
+about which slots they mean"). Moving a stack into or out of slot 0-4 in the
+backpack tab moves it into or out of the hotbar for free; there is no second
+"assign to hotbar" step to build, explain, or get out of sync.
+
+**Five new input actions, chosen for real controller-first parity.**
+`hotbar_1`..`hotbar_5` bind to keyboard 1-5 and, on gamepad, Y / D-pad left /
+D-pad right / D-pad down / LB — five buttons confirmed unread anywhere else
+during exploration (A/B/X are jump/cancel/interact, D-pad up is `pal_recall`,
+RB and both mouse buttons are combat-only). Each slot is a single direct
+press on both devices, matching `USE_ACTION`'s per-press semantics in
+`tab_backpack.gd` — no select-then-confirm step that would make the pad a
+second-class citizen next to keyboard's five number keys. `input_glyph.gd`
+gained matching `HD1`-style glyph entries, so each slot shows the correct
+live device prompt exactly like combat's Actions row does. Six new Kenney PNGs
+(`keyboard_1..5`, `xbox_button_y`, `xbox_dpad_down`, `xbox_lb`) copied from
+the already-staged, already-ledgered CC0 Input Prompts pack — `xbox_dpad_left`/
+`xbox_dpad_right` already existed from `HD1`'s `horizontal` glyph.
+
+**A real design fork from `tab_backpack.gd`'s use verb, not a shared call.**
+HD2's own text said to wire into the use verb that already exists in
+`_read_use()`. Read what that verb actually does before reusing it: on a heal
+item it opens `OF2`'s target picker, a modal side panel that holds the whole
+pause-menu shell deaf (`menu.hold_input`) while it's up. That has no sane
+equivalent drawn live over real-time exploration — a picker mid-run would BE
+the extra menu this item exists to let the player skip. So `playground_hud.gd`
+implements its own small parallel path (tool repair identical to the backpack's;
+a heal item applies to whichever party pal is hurt worst) rather than
+literally calling into `tab_backpack.gd` — which also means zero changes to
+that file, kept clean for the `equip`/`drop`/`split` work landing on it next.
+Anything the current use verb does not support (berries — `kind: food`, no
+`heal` key; orbs — `kind: gear`) reads the same "not something you can use
+here" message the backpack already gives them; no new food-buff or
+gear-use mechanic was invented to make the backlog's illustrative "berries,
+potions, orbs" list literally all usable.
+
+**`menu.json` gained a "Quick items" rebind group.** `test_controls.gd`'s
+`test_every_rebindable_action_is_on_the_screen` failed the moment the five new
+actions existed in `project.godot` — every action in the input map must be
+listed under `settings.controls.groups` or a player has no way to move it.
+Fixed by adding the group and its five labels; caught by running the full
+suite, not the item's own `tests: none`, which is exactly why `conventions.md`
+asks for the full run regardless of what an item's own field says.
+
+**One real, documented gap: no combat gate.** `playground_hud.gd` keeps
+processing during a fight (`combat_hud.gd` draws over it, does not replace
+it), and there is no `Game`-visible "in combat" flag to read without new
+cross-system plumbing (`CombatManager` is a scene-local `NodePath` on
+`encounter_director.gd`, not reachable from the HUD today). A player can
+free-heal from the hotbar mid-fight right now. Opened as `HD2-remainder`
+rather than silently shipped or silently blocked on.
+
+## EV6-remainder-mill-crossing — Mill, footbridge and ranger station: the bible §12 types the rebuild left, buildable once EV5's stream turned out to be real
+`tests: smoke_opening, smoke_traversal` (the item's own two) — both green
+headless against the first terrain bake; the final bake differs only by the
+crossing flat's centre/radius (a placement-arithmetic fix, below), not
+re-run inside this firing's budget.
+
+**The premise of the block was stale.** The backlog said mill/crossing and
+bridges wait on water that doesn't exist; `EV5` shipped the pond and its
+inflow stream. Probed the actual stream course and bank heights with a new
+scratch probe (`tools/_probe_ground.gd`, committed like the other `_probe_*`
+tools) rather than guessing, and sited all three where the stream approaches
+the pond — the one place in the slice water actually runs.
+
+**What shipped, all from the one Medieval Village MegaKit family (D24 — no
+new packs, no generations):**
+- **`mill`** (`building_prefabs.json`): 6×6, three courses — working stone
+  ground, two half-timber courses — under the family's round-tile roof;
+  ridge ~14m, the tall in-family silhouette the settlement lost when the
+  mismatched TowerWindmill was retired. The **water wheel is composed from
+  eight kit fence sections** (yawed 90° into the y-z plane, rolled to their
+  rim angles, pickets as outward paddles, a horizontal timber post as axle);
+  `building_prefabs.gd` grew optional per-module `pitch_deg`/`roll_deg`
+  (Euler YXZ, so plain `yaw_deg` recipes are untouched) for exactly this.
+  Placed at [-132,107] with the wheel hanging over the carve, bottom paddles
+  at the stream surface by arithmetic.
+- **`footbridge`**: timber deck (four kit floor slabs), kit fence rails,
+  stone abutment landings — bible §12's "timber + stone abutment" — spanning
+  the 5m carve bank to bank at [-136.3,113], just downstream of the mill.
+  Authored colliders: walkable deck box top exactly at deck surface, rail
+  boxes both sides.
+- **`ranger_station`**: cottage_a's 4×6 footprint in working `UnevenBrick`
+  stone with open shutters — a lookout, not a third cottage — on the pond
+  route's shoulder at [-100,100], door yawed to the path.
+- **`village.gd` grew `ground: "highest"`** for structures that deliberately
+  overhang a drop: the bridge (and the mill's wheel) put an AABB corner on
+  the carved streambed, and the lowest-corner rule would sink the deck into
+  the channel.
+- **Terrain**: a mill-crossing flat at [-134.5,110] r10.5 h-20.7 (the carve
+  subtracts AFTER flats by design, so the channel still cuts through the pad
+  and leaves level banks — what a bridge needs; stream surface stays above
+  the pond and still descends) and a ranger pad at [-100,100] h-18.2. Both
+  heights from the probe. Clearings + footprints added in `vegetation.json`;
+  terrain rebaked. The pad's north rim moves the pond's south-arm shoreline
+  ~5m north; reeds and the water surface derive from the heightfield and
+  follow automatically.
+
+**Caught by arithmetic, not by a render:** the first crossing flat (r9 at
+[-133,109]) left the footbridge's west landing hovering ~1.3m above the
+skirt — found by checking the deck's corner positions against the flat's
+coverage, fixed by widening/recentering before any frame was shot.
+
+**Honesty about the visual bar: NOT cleared, not judged.** This is
+visual-affecting work and conventions require a blind pass. The capture tool
+exists (`tools/capture_mill_crossing.gd`, five viewpoints: cluster, wheel
+over water, deck, station, landmark-from-route) and a run was in flight at
+wrap-up, but no frame completed inside the firing's budget (llvmpipe boots
+this 23k-prop world in ~10+ minutes per run, and the first run was killed to
+fix the floating-landing bug above). The world boots clean with all 13
+structures placed (`[village] placed 13 structures`, capture log). Whoever
+runs next: shoot with that tool and treat the blind critique as round 1 —
+the wheel's read (fence-pickets-as-paddles) and the crossing flat's south
+bank are the two things most likely to need a second pass.
+
+**Left deliberately for follow-ups:** Oskar the Bridgehand still stands in
+the square — standing him at his bridge (and the Rescued Ranger at the
+station) is `lane: npc`, one `village_npcs.json` edit each, not done here to
+keep the smoke-tested NPC lanes untouched. `EV7-remainder`'s bridge-repair
+cluster now has its bridge; its quarry station still has **no quarry — this
+pass did not build one**.
 
 ## OF6 — World boundary: the hard collision stop now matches the visible perimeter
 `67cb050` on `claude/ralph-backlog-of6-7-10-11-dbiydq` (manual session

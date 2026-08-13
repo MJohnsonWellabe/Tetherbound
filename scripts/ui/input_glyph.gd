@@ -47,6 +47,19 @@ const GLYPHS := {
 	## `combat_run` binds to Escape/gamepad-B -- physically identical to
 	## `cancel` above, so combat_hud.gd's Run AND Cancel verbs both reach for
 	## the `cancel` id directly rather than this duplicating its two files.
+
+	## HD2's quick-access hotbar. Five slots, each its own single direct
+	## press on both devices (no select-then-confirm step) -- true parity is
+	## what CLAUDE.md's "controller first" asks for, not keyboard getting a
+	## one-press hotbar while a pad gets a slower cycle-and-confirm one.
+	## Chosen from buttons nothing else in exploration reads: Y, LB and
+	## D-pad left/right/down are all free (D-pad up is `pal_recall`; A/B/X
+	## are jump/cancel/interact; RB and mouse-left/right are combat-only).
+	"hotbar_1": {"keyboard": "keyboard_1.png", "gamepad": "xbox_button_y.png"},
+	"hotbar_2": {"keyboard": "keyboard_2.png", "gamepad": "xbox_dpad_left.png"},
+	"hotbar_3": {"keyboard": "keyboard_3.png", "gamepad": "xbox_dpad_right.png"},
+	"hotbar_4": {"keyboard": "keyboard_4.png", "gamepad": "xbox_dpad_down.png"},
+	"hotbar_5": {"keyboard": "keyboard_5.png", "gamepad": "xbox_lb.png"},
 }
 
 

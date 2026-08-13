@@ -43,7 +43,11 @@ const REED_SINK := 0.14
 var _field: RefCounted = null
 var _water_cfg: Dictionary = {}
 var _level: float = NAN
-var _stats := {"pond_quads": 0, "stream_points": 0, "reeds": 0}
+var _stats := {
+	"pond_quads": 0, "stream_points": 0, "reeds": 0,
+	# EV5-remainder — the waterside dressing the blind rounds asked for.
+	"marginals": 0, "rocks": 0, "driftwood": 0, "lilypads": 0, "jetty_pieces": 0,
+}
 
 
 func build() -> void:
@@ -71,10 +75,25 @@ func build() -> void:
 	var surface_cfg: Dictionary = _water_cfg.get("stream", {})
 	stream_material.set_shader_parameter("alpha_shallow", float(surface_cfg.get("alpha_shallow", 0.78)))
 	stream_material.set_shader_parameter("alpha_deep", 0.95)
+	# EV5-remainder: the stream ribbon carries its own course parameterisation
+	# in UV2, and only ITS material turns the shader's flow scroll on — the
+	# pond plane never sets UV2 and keeps the default still-water drift.
+	stream_material.set_shader_parameter("flow_enabled", true)
+	stream_material.set_shader_parameter("flow_speed", float(surface_cfg.get("flow_speed", 1.1)))
+	stream_material.set_shader_parameter("flow_stretch", float(surface_cfg.get("flow_stretch", 0.6)))
 	_build_stream(stream_material, stream)
-	_build_reeds(Vector2(float(pond_centre[0]), float(pond_centre[1])))
-	print("[water] pond quads %d, stream points %d, reeds %d, level %.1f" % [
-		_stats["pond_quads"], _stats["stream_points"], _stats["reeds"], _level
+
+	var centre := Vector2(float(pond_centre[0]), float(pond_centre[1]))
+	# The shoreline fan is shared by every shore-anchored layer below —
+	# computed once so they all agree about where the waterline is.
+	var shore := _shoreline(centre)
+	_build_shore_flora(shore)
+	_build_dressing(shore, centre)
+	_build_jetty(centre)
+	print("[water] pond quads %d, stream points %d, reeds %d, marginals %d, rocks %d, driftwood %d, lilypads %d, jetty %d, level %.1f" % [
+		_stats["pond_quads"], _stats["stream_points"], _stats["reeds"],
+		_stats["marginals"], _stats["rocks"], _stats["driftwood"],
+		_stats["lilypads"], _stats["jetty_pieces"], _level
 	])
 
 
@@ -372,6 +391,15 @@ func _build_stream(material: ShaderMaterial, stream: Dictionary) -> void:
 	if end_index < 2:
 		return
 
+	# EV5-remainder: cumulative distance along the course, written into UV2.x
+	# per vertex (UV2.y is signed metres across). The shader scrolls its wave
+	# normals along this axis when flow_enabled — the flow direction IS the
+	# ribbon's own tangent, so the water visibly runs downstream with no flow
+	# map asset: the parameterisation is the flow map.
+	var alongs: Array[float] = [0.0]
+	for i in range(1, samples.size()):
+		alongs.append(alongs[i - 1] + samples[i - 1].distance_to(samples[i]))
+
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var half := width * 0.5
@@ -384,13 +412,19 @@ func _build_stream(material: ShaderMaterial, stream: Dictionary) -> void:
 		# a constant-width ribbon was blind round 1's "extruded ribbon...
 		# nothing about it says a river cut this". Deterministic in the
 		# sample index, so the mesh is identical every build.
-		var side_a := Vector2(-t_a.y, t_a.x) * half * _width_swell(i)
-		var side_b := Vector2(-t_b.y, t_b.x) * half * _width_swell(i + 1)
+		var w_a := half * _width_swell(i)
+		var w_b := half * _width_swell(i + 1)
+		var side_a := Vector2(-t_a.y, t_a.x) * w_a
+		var side_b := Vector2(-t_b.y, t_b.x) * w_b
 		_add_quad(tool,
 			Vector3(a.x - side_a.x, heights[i], a.y - side_a.y),
 			Vector3(a.x + side_a.x, heights[i], a.y + side_a.y),
 			Vector3(b.x + side_b.x, heights[i + 1], b.y + side_b.y),
-			Vector3(b.x - side_b.x, heights[i + 1], b.y - side_b.y))
+			Vector3(b.x - side_b.x, heights[i + 1], b.y - side_b.y),
+			[
+				Vector2(alongs[i], -w_a), Vector2(alongs[i], w_a),
+				Vector2(alongs[i + 1], w_b), Vector2(alongs[i + 1], -w_b)
+			])
 	tool.generate_tangents()
 	var node := MeshInstance3D.new()
 	node.name = "StreamSurface"
@@ -416,28 +450,27 @@ func _tangent_at(samples: Array[Vector2], i: int) -> Vector2:
 	return along.normalized() if along.length_squared() > 0.0001 else Vector2(0, 1)
 
 
-func _add_quad(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, d: Vector3) -> void:
+func _add_quad(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, d: Vector3, uv2s: Array = []) -> void:
 	# UVs are world-XZ so generate_tangents has something consistent to chew
 	# on; the shader does its own world-space UVs and never reads these.
+	# UV2, when given (one Vector2 per corner a..d), carries the stream's
+	# course parameterisation for the shader's flow scroll.
+	var corner_uv2 := [0, 1, 2, 0, 2, 3]
+	var index := 0
 	for v: Vector3 in [a, b, c, a, c, d]:
 		tool.set_normal(Vector3.UP)
 		tool.set_uv(Vector2(v.x, v.z) * 0.05)
+		if uv2s.size() == 4:
+			tool.set_uv2(uv2s[corner_uv2[index]])
 		tool.add_vertex(v)
+		index += 1
 
 
-## Reeds at the banks (bible §15). Marches the actual shoreline — for a fan
-## of bearings out of the pond centre, bisect where the ground crosses the
-## waterline — and stands clumps of the nature pack's wispy grass in a band
-## straddling it. Anchored to the real isoline rather than scattered with a
-## height gate, so the stands always hug the shore however the level is tuned.
-func _build_reeds(pond_centre: Vector2) -> void:
-	var reeds: Dictionary = _water_cfg.get("reeds", {})
-	var models: Array = reeds.get("models", [])
-	if models.is_empty():
-		return
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(reeds.get("seed", 1))
-
+## The shoreline as a fan of bearings out of the pond centre, each bisected
+## to where the ground crosses the waterline. Every shore-anchored layer
+## (reeds, marginals, rocks, driftwood, lily pads) samples this one fan, so
+## they all hug the same real isoline however the level is tuned.
+func _shoreline(pond_centre: Vector2) -> Array[Vector2]:
 	var shore: Array[Vector2] = []
 	var bearings := 72
 	for i in bearings:
@@ -446,17 +479,39 @@ func _build_reeds(pond_centre: Vector2) -> void:
 		if point != Vector2.INF:
 			shore.append(point)
 	if shore.is_empty():
-		push_warning("no shoreline found around pond centre %s; reeds skipped" % pond_centre)
-		return
+		push_warning("no shoreline found around pond centre %s; shore layers skipped" % pond_centre)
+	return shore
 
-	var clumps := int(reeds.get("clumps", 34))
-	var per_clump := int(reeds.get("per_clump", 8))
-	var radius := float(reeds.get("clump_radius", 2.6))
-	var band_below := float(reeds.get("band_below", 0.35))
-	var band_above := float(reeds.get("band_above", 0.45))
-	var max_slope := float(reeds.get("max_bank_slope_deg", 33.0))
-	var scale_min := float(reeds.get("scale_min", 0.55))
-	var scale_max := float(reeds.get("scale_max", 1.0))
+
+## Reeds at the banks (bible §15) plus, EV5-remainder, a second marginal
+## species — the broadleaf Plant_1_Big at the waterline, in-family per D24,
+## a different silhouette from the wispy-grass reed. (True sedge/cattail
+## forms stay owner-blocked: the fuller nature MegaKit has not been
+## supplied — see BACKLOG.md's EV5-remainder note.)
+func _build_shore_flora(shore: Array[Vector2]) -> void:
+	if shore.is_empty():
+		return
+	_stats["reeds"] = _build_plant_band(_water_cfg.get("reeds", {}), shore)
+	_stats["marginals"] = _build_plant_band(_water_cfg.get("marginals", {}), shore)
+
+
+## One config-driven band of plants straddling the waterline. The reed keys
+## documented in water.json apply to any band; returns how many were placed.
+func _build_plant_band(band_cfg: Dictionary, shore: Array[Vector2]) -> int:
+	var models: Array = band_cfg.get("models", [])
+	if models.is_empty():
+		return 0
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(band_cfg.get("seed", 1))
+
+	var clumps := int(band_cfg.get("clumps", 34))
+	var per_clump := int(band_cfg.get("per_clump", 8))
+	var radius := float(band_cfg.get("clump_radius", 2.6))
+	var band_below := float(band_cfg.get("band_below", 0.35))
+	var band_above := float(band_cfg.get("band_above", 0.45))
+	var max_slope := float(band_cfg.get("max_bank_slope_deg", 33.0))
+	var scale_min := float(band_cfg.get("scale_min", 0.55))
+	var scale_max := float(band_cfg.get("scale_max", 1.0))
 
 	var placements: Dictionary = {}
 	for model: Variant in models:
@@ -500,13 +555,13 @@ func _build_reeds(pond_centre: Vector2) -> void:
 			})
 			total += 1
 
-	var tint := str(reeds.get("tint", "#86a05c"))
+	var tint := str(band_cfg.get("tint", "#86a05c"))
 	for model: String in placements.keys():
 		var list: Array = placements[model]
 		if list.is_empty():
 			continue
 		_add_reed_batch(model, list, tint)
-	_stats["reeds"] = total
+	return total
 
 
 ## Where the ground crosses the waterline along one bearing out of the pond:
@@ -538,7 +593,11 @@ func _shore_point(centre: Vector2, direction: Vector2) -> Vector2:
 ## layer, and vegetation.gd's batches are grouped by model — the documented
 ## reason a mesh must not appear in two of ITS layers. A separate composer
 ## with its own MultiMesh instances sidesteps that entirely.
-func _add_reed_batch(model_path: String, placements: Array, tint: String) -> void:
+##
+## EV5-remainder reuses this for the dressing layers: rocks and driftwood
+## pass cast_shadows=true — a boulder's shadow IS information, unlike a
+## tuft's — and every layer keeps the same placement-dict contract.
+func _add_reed_batch(model_path: String, placements: Array, tint: String, cast_shadows := false) -> void:
 	var mesh := _mesh_for(model_path)
 	if mesh == null:
 		push_error("reed model %s could not be loaded" % model_path)
@@ -567,10 +626,12 @@ func _add_reed_batch(model_path: String, placements: Array, tint: String) -> voi
 		multi.set_instance_color(i, placement.get("tone", Color.WHITE))
 
 	var node := MultiMeshInstance3D.new()
-	node.name = "Reeds_%s" % model_path.get_file().get_basename()
+	node.name = "Shore_%s" % model_path.get_file().get_basename()
 	node.multimesh = multi
-	# Same rule as the grass layers: a tuft's shadow is not information.
-	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# Same rule as the grass layers for flora: a tuft's shadow is not
+	# information. Solid dressing (rocks, driftwood) opts back in.
+	if not cast_shadows:
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
 
 
@@ -615,6 +676,400 @@ func _mesh_for(path: String) -> Mesh:
 			stack.append(child)
 	scene.queue_free()
 	return found
+
+
+## ---------------------------------------------------------------------------
+## EV5-remainder — waterside dressing. Everything below reads water.json's
+## `dressing` and `jetty` blocks; all counts, bands and scales are TUNABLE
+## there. Assets are strictly the families already in the build (D24): the
+## Stylized Nature MegaKit's rocks/pebbles/plants, the Kenney logs the ledger
+## retained "for the log shapes", the Medieval Village MegaKit's deck/fence
+## modules and the Fantasy Props kit pieces already curated for EV7.
+## ---------------------------------------------------------------------------
+
+
+func _build_dressing(shore: Array[Vector2], pond_centre: Vector2) -> void:
+	var dressing: Dictionary = _water_cfg.get("dressing", {})
+	if dressing.is_empty() or shore.is_empty():
+		return
+	_jetty_keepout(pond_centre)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(dressing.get("seed", 20260813))
+	_stats["rocks"] = _scatter_rocks(dressing.get("boulders", {}), shore, pond_centre, rng)
+	_stats["rocks"] += _scatter_rocks(dressing.get("stones", {}), shore, pond_centre, rng)
+	_stats["driftwood"] = _scatter_driftwood(dressing.get("driftwood", {}), shore, pond_centre, rng)
+	_stats["lilypads"] = _scatter_lilypads(dressing.get("lilypads", {}), shore, pond_centre, rng)
+
+
+## Rocks and driftwood must not land on the jetty: the first render put a
+## boulder against the deck and drove the railing straight through it. The
+## keep-out is the deck's own segment plus a margin, derived from the same
+## jetty config the builder reads, so retuning the jetty moves it too.
+var _keepout_a := Vector2.INF
+var _keepout_b := Vector2.INF
+var _keepout_r := 0.0
+
+
+func _jetty_keepout(pond_centre: Vector2) -> void:
+	var cfg: Dictionary = _water_cfg.get("jetty", {})
+	if cfg.is_empty():
+		return
+	var bearing := deg_to_rad(float(cfg.get("bearing_deg", -30.0)))
+	var out_dir := Vector2(cos(bearing), sin(bearing))
+	var anchor := _shore_point(pond_centre, out_dir)
+	if anchor == Vector2.INF:
+		return
+	var into := -out_dir
+	var run := 2.0 * float(cfg.get("modules", 4))
+	var land_overlap := float(cfg.get("land_overlap", 1.4))
+	_keepout_a = anchor - into * land_overlap
+	_keepout_b = anchor + into * (run - land_overlap)
+	_keepout_r = float(cfg.get("width_scale", 0.8)) + 2.2
+
+
+func _in_keepout(p: Vector2) -> bool:
+	if _keepout_a == Vector2.INF:
+		return false
+	var ab := _keepout_b - _keepout_a
+	var t := clampf((p - _keepout_a).dot(ab) / maxf(ab.length_squared(), 0.001), 0.0, 1.0)
+	return p.distance_to(_keepout_a + ab * t) < _keepout_r
+
+
+## Rocks in and at the water: anchored on the shoreline fan, pushed a random
+## distance into the water (or a step up the bank), sunk so no pivot-plane
+## edge can show, tilted a few degrees so no two sit identically. Two config
+## groups route through here — `boulders` (the metre-plus Rock_Medium set)
+## and `stones` (Pebble_Round scaled up into smooth half-submerged slabs) —
+## because one scale range cannot serve meshes two orders apart in volume.
+func _scatter_rocks(cfg: Dictionary, shore: Array[Vector2], pond_centre: Vector2, rng: RandomNumberGenerator) -> int:
+	var models: Array = cfg.get("models", [])
+	if models.is_empty():
+		return 0
+	var count := int(cfg.get("count", 12))
+	var into_water := float(cfg.get("into_water_max", 5.0))
+	var up_bank := float(cfg.get("up_bank_max", 1.0))
+	var max_depth := float(cfg.get("max_depth", 1.6))
+	var scale_min := float(cfg.get("scale_min", 0.4))
+	var scale_max := float(cfg.get("scale_max", 1.0))
+	var sink_min := float(cfg.get("sink_min", 0.15))
+	var sink_max := float(cfg.get("sink_max", 0.5))
+
+	var placements: Dictionary = {}
+	for model: Variant in models:
+		placements[str(model)] = []
+	var total := 0
+	for i in count:
+		var anchor := shore[rng.randi_range(0, shore.size() - 1)]
+		var out_dir := (anchor - pond_centre).normalized()
+		var spot := anchor + out_dir * rng.randf_range(-into_water, up_bank)
+		var ground := float(_field.call("height_at", spot.x, spot.y))
+		# Depth gate, not distance: the same rock rule whether the bank
+		# shelves gently or drops. Too deep and the crown vanishes for
+		# nothing; too high and it is just a meadow rock (EV3's job).
+		if ground < _level - max_depth or ground > _level + 0.4:
+			continue
+		if _in_keepout(spot):
+			continue
+		var scale := rng.randf_range(scale_min, scale_max)
+		var model := str(models[rng.randi_range(0, models.size() - 1)])
+		(placements[model] as Array).append({
+			"position": Vector3(spot.x, ground - rng.randf_range(sink_min, sink_max) * scale, spot.y),
+			"yaw": rng.randf_range(0.0, TAU),
+			"scale": scale,
+			"lean": rng.randf_range(0.0, deg_to_rad(12.0)),
+			"lean_yaw": rng.randf_range(0.0, TAU),
+			# Near-neutral value jitter only — a tinted rock reads painted.
+			"tone": Color.WHITE * (1.0 + rng.randf_range(-0.1, 0.08)),
+		})
+		total += 1
+
+	for model: String in placements.keys():
+		var list: Array = placements[model]
+		if list.is_empty():
+			continue
+		_add_reed_batch(model, list, str(cfg.get("tint", "#ffffff")), true)
+	_add_rock_collision(cfg, placements)
+	return total
+
+
+## A boulder the trainer walks through reads as a hologram, and the camera's
+## SpringArm3D only stops at colliders (vegetation.gd's own lesson). One
+## body, many shapes, same as vegetation.gd::_add_collision; only groups
+## whose config opts in collide — the scaled pebbles are shin-height and
+## wading over them is fine.
+func _add_rock_collision(cfg: Dictionary, placements: Dictionary) -> void:
+	if not bool(cfg.get("collides", false)):
+		return
+	var radius := float(cfg.get("collision_radius", 1.1))
+	var body := StaticBody3D.new()
+	body.name = "RockCollision"
+	add_child(body)
+	for model: String in placements.keys():
+		for entry: Variant in (placements[model] as Array):
+			var placement: Dictionary = entry
+			var shape := SphereShape3D.new()
+			shape.radius = radius * float(placement["scale"])
+			var node := CollisionShape3D.new()
+			node.shape = shape
+			node.position = placement["position"] as Vector3
+			body.add_child(node)
+
+
+## Driftwood: the Kenney logs beached at the waterline, lying along the
+## shore with a few degrees of pitch so one end dips into the water. Laid
+## parallel-ish to the shoreline (perpendicular to the outward bearing) the
+## way real drift settles, never radially like spokes.
+func _scatter_driftwood(cfg: Dictionary, shore: Array[Vector2], pond_centre: Vector2, rng: RandomNumberGenerator) -> int:
+	var models: Array = cfg.get("models", [])
+	if models.is_empty():
+		return 0
+	var count := int(cfg.get("count", 5))
+	var band_below := float(cfg.get("band_below", 0.3))
+	var band_above := float(cfg.get("band_above", 0.45))
+	var scale_min := float(cfg.get("scale_min", 1.6))
+	var scale_max := float(cfg.get("scale_max", 2.8))
+	var max_pitch := deg_to_rad(float(cfg.get("max_pitch_deg", 9.0)))
+
+	var placements: Dictionary = {}
+	for model: Variant in models:
+		placements[str(model)] = []
+	var total := 0
+	for i in count:
+		var anchor := shore[rng.randi_range(0, shore.size() - 1)]
+		var out_dir := (anchor - pond_centre).normalized()
+		var spot := anchor + out_dir * rng.randf_range(-0.8, 0.8)
+		var ground := float(_field.call("height_at", spot.x, spot.y))
+		if ground < _level - band_below or ground > _level + band_above:
+			continue
+		if _in_keepout(spot):
+			continue
+		# Yaw: the shore tangent plus jitter. The Kenney logs lie along
+		# their own Z, and Basis(UP, yaw) turns +Z toward the tangent when
+		# yaw is the tangent's bearing.
+		var tangent := Vector2(-out_dir.y, out_dir.x)
+		var yaw := atan2(tangent.x, tangent.y) + rng.randf_range(-0.5, 0.5)
+		# Pitch around the log's own lie: lean the placement toward the
+		# water so the waterward end settles in.
+		var model := str(models[rng.randi_range(0, models.size() - 1)])
+		(placements[model] as Array).append({
+			"position": Vector3(spot.x, ground - 0.06, spot.y),
+			"yaw": yaw,
+			"scale": rng.randf_range(scale_min, scale_max),
+			"lean": rng.randf_range(deg_to_rad(2.0), max_pitch),
+			"lean_yaw": atan2(-out_dir.x, -out_dir.y),
+			# Weathered wood: value jitter around the tint, no green push.
+			"tone": Color.WHITE * (1.0 + rng.randf_range(-0.12, 0.08)),
+		})
+		total += 1
+
+	for model: String in placements.keys():
+		var list: Array = placements[model]
+		if list.is_empty():
+			continue
+		_add_reed_batch(model, list, str(cfg.get("tint", "#9a8974")), true)
+	return total
+
+
+## Lily pads: the nature pack's flat broadleaf rosette (Plant_7) floating at
+## the surface in clusters over calm shallow water. Placed by depth, not by
+## shore distance — pads want 0.3–1.3m of water under them, which keeps them
+## off the banks and out of the deep middle where they would read as flotsam.
+func _scatter_lilypads(cfg: Dictionary, shore: Array[Vector2], pond_centre: Vector2, rng: RandomNumberGenerator) -> int:
+	var models: Array = cfg.get("models", [])
+	if models.is_empty():
+		return 0
+	var clusters := int(cfg.get("clusters", 6))
+	var per_cluster := int(cfg.get("per_cluster", 7))
+	var radius := float(cfg.get("cluster_radius", 3.0))
+	var depth_min := float(cfg.get("depth_min", 0.3))
+	var depth_max := float(cfg.get("depth_max", 1.3))
+	var scale_min := float(cfg.get("scale_min", 0.7))
+	var scale_max := float(cfg.get("scale_max", 1.4))
+
+	var placements: Dictionary = {}
+	for model: Variant in models:
+		placements[str(model)] = []
+	var total := 0
+	for c in clusters:
+		# Walk in from a shore anchor until the water is pad-deep; give up
+		# on bearings that shelve too slowly to reach it within 12m.
+		var anchor := shore[rng.randi_range(0, shore.size() - 1)]
+		var in_dir := (pond_centre - anchor).normalized()
+		var seed_spot := Vector2.INF
+		var walk := 1.0
+		while walk <= 12.0:
+			var probe := anchor + in_dir * walk
+			var depth := _level - float(_field.call("height_at", probe.x, probe.y))
+			if depth >= depth_min + 0.1 and depth <= depth_max:
+				seed_spot = probe
+				break
+			walk += 1.0
+		if seed_spot == Vector2.INF:
+			continue
+		for i in per_cluster:
+			var angle := rng.randf_range(0.0, TAU)
+			var spot := seed_spot + Vector2(sin(angle), cos(angle)) * sqrt(rng.randf()) * radius
+			var depth := _level - float(_field.call("height_at", spot.x, spot.y))
+			if depth < depth_min or depth > depth_max:
+				continue
+			var model := str(models[rng.randi_range(0, models.size() - 1)])
+			(placements[model] as Array).append({
+				# A whisker above the surface so the pad never z-fights the
+				# water plane; the pad is opaque and draws before it.
+				"position": Vector3(spot.x, _level + 0.02, spot.y),
+				"yaw": rng.randf_range(0.0, TAU),
+				"scale": rng.randf_range(scale_min, scale_max),
+				"tone": Color(
+					1.0 + rng.randf_range(-0.12, 0.1),
+					1.0 + rng.randf_range(-0.06, 0.16),
+					1.0 + rng.randf_range(-0.12, 0.06)
+				),
+			})
+			total += 1
+
+	for model: String in placements.keys():
+		var list: Array = placements[model]
+		if list.is_empty():
+			continue
+		_add_reed_batch(model, list, str(cfg.get("tint", "#4f7d44")))
+	return total
+
+
+## The jetty (bible §15's "support Water Pal ecology", the blind rounds'
+## "the key art's jetty"): a short plank deck the villagers built, walking
+## out from the shore where the pond path delivers the player. Composed from
+## the Medieval Village kit's own modules (D24's one village family) —
+## Floor_WoodDark planks, WoodenFence railing — on rough log pilings, with
+## two of EV7's already-curated props at the end so it reads as a used
+## fishing spot rather than an ornament. Walkable: one box collider over the
+## deck, same one-body pattern as every other placed structure.
+func _build_jetty(pond_centre: Vector2) -> void:
+	var cfg: Dictionary = _water_cfg.get("jetty", {})
+	if cfg.is_empty():
+		return
+	var bearing := deg_to_rad(float(cfg.get("bearing_deg", -30.0)))
+	var out_dir := Vector2(cos(bearing), sin(bearing))
+	var anchor := _shore_point(pond_centre, out_dir)
+	if anchor == Vector2.INF:
+		push_warning("jetty bearing %.0f° never crosses the waterline; jetty skipped" % rad_to_deg(bearing))
+		return
+
+	var module_len := 2.0  # Floor_WoodDark is a 2×2m slab, measured.
+	var modules := int(cfg.get("modules", 4))
+	var width_scale := float(cfg.get("width_scale", 0.8))
+	var width := 2.0 * width_scale
+	var deck_h := _level + float(cfg.get("deck_above_water", 0.5))
+	var land_overlap := float(cfg.get("land_overlap", 1.4))
+	var into := -out_dir
+	var perp := Vector2(-into.y, into.x)
+	# Basis(UP, yaw) maps +X to (cos yaw, 0, -sin yaw); yaw chosen so the
+	# deck's long axis runs along `into`.
+	var yaw := atan2(-into.y, into.x)
+
+	var root := Node3D.new()
+	root.name = "Jetty"
+	add_child(root)
+	var pieces := 0
+
+	var deck_scene: PackedScene = load("res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf")
+	var fence_scene: PackedScene = load("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf")
+	if deck_scene == null:
+		push_error("jetty deck module missing; jetty skipped")
+		root.queue_free()
+		return
+
+	for i in modules:
+		var s := module_len * (float(i) + 0.5) - land_overlap
+		var centre := anchor + into * s
+		var deck := deck_scene.instantiate() as Node3D
+		# Rotation FIRST, then a local-axis scale (Basis.scaled() alone is a
+		# global-space scale and would squash the rotated deck diagonally).
+		deck.transform = Transform3D(
+			Basis(Vector3.UP, yaw) * Basis.from_scale(Vector3(1.0, 1.0, width_scale)),
+			Vector3(centre.x, deck_h, centre.y)
+		)
+		root.add_child(deck)
+		pieces += 1
+		# Railing down one side only — a working jetty, not a balcony.
+		if bool(cfg.get("railing", true)) and fence_scene != null and i < modules - 1:
+			var rail := fence_scene.instantiate() as Node3D
+			var rail_pos := centre + perp * (width * 0.5 - 0.06)
+			rail.transform = Transform3D(
+				Basis(Vector3.UP, yaw) * Basis.from_scale(Vector3(module_len / 2.06, 1.0, 1.0)),
+				Vector3(rail_pos.x, deck_h, rail_pos.y)
+			)
+			root.add_child(rail)
+			pieces += 1
+
+	# Pilings: the Kenney log stood on end at each module joint, stretched
+	# from the bed to the deck underside. Rougher than a kit post and that
+	# is the point — the villagers drove logs, they did not turn columns.
+	var log_mesh := _mesh_for(str(cfg.get("piling_model", "res://assets/environment/nature/log.glb")))
+	if log_mesh != null:
+		# Not _reed_material: that one turns vertex_color_use_as_albedo on
+		# for MultiMesh instance tones, and the Kenney log's own cream cut-
+		# wood vertex colours multiplied through it — the pilings rendered
+		# as pale concrete posts (own-render pass). A plain opaque wood
+		# material shows the tint as authored.
+		var piling_material := StandardMaterial3D.new()
+		piling_material.albedo_color = Color(str(cfg.get("piling_tint", "#6b5843")))
+		piling_material.roughness = 0.95
+		piling_material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+		for j in modules + 1:
+			var s := module_len * float(j) - land_overlap
+			for side: float in [-1.0, 1.0]:
+				var pos2 := anchor + into * s + perp * side * (width * 0.5 - 0.12)
+				var ground := float(_field.call("height_at", pos2.x, pos2.y))
+				if ground > deck_h:
+					continue
+				var span := deck_h - ground + 0.35
+				var piling := MeshInstance3D.new()
+				piling.mesh = log_mesh
+				piling.material_override = piling_material
+				# The log lies along its own Z (0.71m); rotate Z up, then
+				# scale local Z to span bed→deck and XY into a post's girth.
+				piling.transform = Transform3D(
+					Basis(Vector3.RIGHT, -PI * 0.5).scaled(Vector3(1.4, span / 0.71, 1.4)),
+					Vector3(pos2.x, ground - 0.2 + span * 0.5, pos2.y)
+				)
+				root.add_child(piling)
+				pieces += 1
+
+	# The end of the deck earns its keep: a crate and a bucket from EV7's
+	# curated prop family, the difference between "geometry" and "someone
+	# fishes here".
+	var end2 := anchor + into * (module_len * modules - land_overlap - 0.75)
+	for extra: Array in [
+		["res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", perp * (width * 0.22), 0.6],
+		["res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf", perp * (-width * 0.24), 2.4],
+	]:
+		var scene: PackedScene = load(str(extra[0]))
+		if scene == null:
+			continue
+		var prop := scene.instantiate() as Node3D
+		var offset: Vector2 = extra[1]
+		prop.transform = Transform3D(
+			Basis(Vector3.UP, yaw + float(extra[2])),
+			Vector3(end2.x + offset.x, deck_h + 0.01, end2.y + offset.y)
+		)
+		root.add_child(prop)
+		pieces += 1
+
+	# One box over the whole deck: walkable, and the camera arm stops at it.
+	var body := StaticBody3D.new()
+	body.name = "DeckCollision"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(module_len * modules, 0.3, width)
+	shape.shape = box
+	var mid := anchor + into * (module_len * modules * 0.5 - land_overlap)
+	shape.transform = Transform3D(
+		Basis(Vector3.UP, yaw),
+		Vector3(mid.x, deck_h - 0.14, mid.y)
+	)
+	body.add_child(shape)
+	root.add_child(body)
+	_stats["jetty_pieces"] = pieces
 
 
 func _load_config() -> Dictionary:

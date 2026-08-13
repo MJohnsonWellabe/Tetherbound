@@ -60,6 +60,11 @@ func _run() -> void:
 	# so the fine `detail` noise layer doesn't flicker the grass/soil/rock pick
 	# pixel to pixel. Height itself still bakes at `spacing`.
 	var texture_step := float(colour_cfg.get("slope_sample_step", spacing))
+	# Round 4 (OF11): on the rises, sample it FINE instead. See
+	# playground_heightfield.gd::rise_form_factor for the whole argument — in
+	# short, the coarse step exists to low-pass the `detail` noise out on the
+	# meadow, and on a rise it low-passes away the rock form itself.
+	var rock_step := float(colour_cfg.get("slope_sample_step_rock", texture_step))
 	var lowest := INF
 	var highest := -INF
 	var steep_samples := 0
@@ -72,9 +77,15 @@ func _run() -> void:
 			var height: float = field.height_at(world_x, world_z)
 			height_image.set_pixel(pixel_x, pixel_z, Color(height, 0.0, 0.0, 1.0))
 
-			var slope: float = field.slope_degrees_at(world_x, world_z, texture_step)
-			var band_slope: float = slope + field.outcrop_jitter_deg(world_x, world_z)
-			var ground := _ground_colour(band_slope, colour_cfg)
+			var slope: float = field.slope_degrees_at(
+				world_x, world_z, _band_step(field, world_x, world_z, texture_step, rock_step))
+			# OF11: the band pick is no longer slope-plus-noise. `rock_bias_deg`
+			# reads the rise's own relief field — rib/gully sign, local
+			# convexity, and height up the rise — so rock lands on the
+			# geometry that actually is rock. See its own comment.
+			var band_slope: float = slope + field.rock_bias_deg(world_x, world_z)
+			var ground := _ground_colour(
+				band_slope, colour_cfg, _band_blend(field, world_x, world_z, colour_cfg))
 			# EV5: darken the bed and the damp shore ring toward wet sand. Half
 			# of the shallow-edge colour shift — the water shader's own depth
 			# gradient is the other half — and it survives even where the water
@@ -116,7 +127,7 @@ func _run() -> void:
 	data.call("import_images", images, Vector3(origin, 0.0, origin), 0.0, 1.0)
 	await process_frame
 
-	_paint_control_map(data, field, config, colour_cfg, origin, size, spacing, texture_step)
+	_paint_control_map(data, field, config, colour_cfg, origin, size, spacing, texture_step, rock_step)
 
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(DATA_DIR)):
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DATA_DIR))
@@ -153,7 +164,7 @@ func _run() -> void:
 ## unreachable auto-shader tier.
 func _paint_control_map(
 	data: Object, field: RefCounted, config: Dictionary, colour_cfg: Dictionary,
-	origin: float, size: int, spacing: float, texture_step: float
+	origin: float, size: int, spacing: float, texture_step: float, rock_step: float
 ) -> void:
 	var ids := _texture_ids(config.get("textures", []))
 	if ids.is_empty():
@@ -168,15 +179,17 @@ func _paint_control_map(
 		var world_z := origin + pixel_z * spacing
 		for pixel_x in size:
 			var world_x := origin + pixel_x * spacing
-			# Same smoothed, outcrop-jittered slope as the colour map
-			# (EV4-hillside-seam, EV4-hillside-seam-remainder) so the control
-			# map's base/overlay/blend pick matches what got painted into the
-			# colour map, band for band — `outcrop_jitter_deg` is a pure
-			# function of world XZ, so sampling it again here in this separate
-			# loop still lands on the identical value the colour-map pass used.
-			var slope: float = field.slope_degrees_at(world_x, world_z, texture_step)
-			var band_slope: float = slope + field.outcrop_jitter_deg(world_x, world_z)
-			var control := _control_for(band_slope, colour_cfg, ids)
+			# Same smoothed, rock-biased slope as the colour map
+			# (EV4-hillside-seam, OF11) so the control map's base/overlay/blend
+			# pick matches what got painted into the colour map, band for band
+			# — `rock_bias_deg` is a pure function of world XZ, so sampling it
+			# again here in this separate loop still lands on the identical
+			# value the colour-map pass used.
+			var slope: float = field.slope_degrees_at(
+				world_x, world_z, _band_step(field, world_x, world_z, texture_step, rock_step))
+			var band_slope: float = slope + field.rock_bias_deg(world_x, world_z)
+			var control := _control_for(
+				band_slope, colour_cfg, ids, _band_blend(field, world_x, world_z, colour_cfg))
 			var path_weight: float = field.path_factor(world_x, world_z)
 			# EV5: the pond bed, the damp shore ring and the stream channel
 			# swap to the same dedicated Ground030 dirt/pebble texture the
@@ -201,6 +214,56 @@ func _paint_control_map(
 
 	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), auto-shader off" %
 		["path" if ids.has("path") else "soil", painted_path_pixels, painted_wet_pixels])
+
+
+## The step at which slope is sampled for the material band pick, in metres:
+## `coarse` out on the open meadow, `fine` on a rise. Round 4 (OF11) — one
+## global step cannot serve both, because the two places have their real
+## surface detail at different scales. Sampling the meadow finely brings back
+## the `detail`-noise blotching EV4-hillside-seam introduced this setting to
+## kill; sampling a rise coarsely blurs away the ledges and riser lips
+## `rock_form` builds, so the material lands in soft blobs that ignore the
+## crevices under them. Interpolated rather than switched, so there is no line
+## in the bake where the sampling scale changes.
+func _band_step(field: RefCounted, x: float, z: float, coarse: float, fine: float) -> float:
+	if is_equal_approx(coarse, fine):
+		return coarse
+	return lerpf(coarse, fine, clampf(field.rise_form_factor(x, z), 0.0, 1.0))
+
+
+## The width of the grass->soil and soil->rock ramps in DEGREES of slope, at
+## this pixel: `colour.blend_deg` out on the meadow, `colour.blend_deg_rock` on
+## a rise, interpolated by the same `rise_form_factor` `_band_step` uses.
+##
+## OF11 round 6. `blend_deg` is a width in slope, but what a viewer sees is a
+## width in METRES, and the conversion between them is the local rate of change
+## of slope — which round 4 deliberately made very steep on the rises by
+## sampling their slope at 2m instead of 6m. On the open meadow 6 degrees of
+## ramp is metres of gradual transition; across a `rock_form` riser the same 6
+## degrees is crossed inside a pixel or two, so the ramp collapses and the band
+## boundary bakes as a hard edge. That is what the round-5 blind critic saw --
+## "a hard vector edge with zero blend... a stencil laid over the rock" -- and
+## it is a direct and predictable side effect of round 4's win, not a
+## regression in it. Widening the ramp only where the slope field is steep
+## restores a visible transition without touching the meadow, and without
+## coarsening the sampling that made the material track the crevices.
+func _band_blend(field: RefCounted, x: float, z: float, cfg: Dictionary) -> float:
+	var coarse := maxf(0.001, float(cfg.get("blend_deg", 7.0)))
+	var fine := maxf(0.001, float(cfg.get("blend_deg_rock", coarse)))
+	# `_control_for` splits the range into five non-overlapping bands and relies
+	# on `soil_at + blend <= rock_at` to do it. Past that gap the grass->soil
+	# ramp would swallow the whole soil band and the soil->rock ramp with it, so
+	# rock would not start until `soil_at + blend` -- widening the transition
+	# would silently RAISE the rock threshold and bare less of the rise, the
+	# opposite of the intent. Clamped here rather than left as a comment,
+	# because this is now a tunable a future round will reach for first.
+	var gap := float(cfg.get("rock_slope_deg", 38.0)) - float(cfg.get("soil_slope_deg", 24.0))
+	if gap > 0.0:
+		coarse = minf(coarse, gap)
+		fine = minf(fine, gap)
+	if is_equal_approx(coarse, fine):
+		return coarse
+	return lerpf(coarse, fine, clampf(field.rise_form_factor(x, z), 0.0, 1.0))
 
 
 ## How "wet" a point of ground is, 0..1: fully wet under the pond's waterline
@@ -299,10 +362,10 @@ func _texture_ids(entries: Array) -> Dictionary:
 ## soil, then a soil->rock ramp, then rock. Any pixel is always on exactly one
 ## of those five, matching `_ground_colour`'s own `smoothstep` windows band for
 ## band rather than approximating them.
-func _control_for(slope_degrees: float, cfg: Dictionary, ids: Dictionary) -> Dictionary:
+func _control_for(slope_degrees: float, cfg: Dictionary, ids: Dictionary, blend_deg: float) -> Dictionary:
 	var soil_at := float(cfg.get("soil_slope_deg", 24.0))
 	var rock_at := float(cfg.get("rock_slope_deg", 38.0))
-	var blend := maxf(0.001, float(cfg.get("blend_deg", 7.0)))
+	var blend := maxf(0.001, blend_deg)
 
 	var grass: int = ids["grass"]
 	var soil: int = ids["soil"]
@@ -334,14 +397,14 @@ func _control_for(slope_degrees: float, cfg: Dictionary, ids: Dictionary) -> Dic
 ## So these are near-white now. The textures carry the colour; this carries the
 ## slope-driven VARIATION, which is the job it is actually good at. Anything
 ## much below #c0 here is a brightness change pretending to be a colour.
-func _ground_colour(slope_degrees: float, cfg: Dictionary) -> Color:
+func _ground_colour(slope_degrees: float, cfg: Dictionary, blend_deg: float) -> Color:
 	var grass_low := Color(str(cfg.get("grass_low", "#496c34")))
 	var grass_high := Color(str(cfg.get("grass_high", "#7f8c3d")))
 	var soil := Color(str(cfg.get("soil", "#d1b37e")))
 	var rock := Color(str(cfg.get("rock", "#b4b1a6")))
 	var soil_at := float(cfg.get("soil_slope_deg", 24.0))
 	var rock_at := float(cfg.get("rock_slope_deg", 38.0))
-	var blend := maxf(0.001, float(cfg.get("blend_deg", 7.0)))
+	var blend := maxf(0.001, blend_deg)
 
 	# Flat ground varies between the two greens by slope alone, so a hillside
 	# reads lighter than a hollow without needing a second noise field.

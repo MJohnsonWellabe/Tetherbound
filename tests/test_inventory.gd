@@ -251,6 +251,84 @@ func test_set_slot_out_of_range_is_a_no_op() -> void:
 	assert_eq(bag.count("wood"), 0)
 
 
+func test_split_moves_half_into_an_empty_slot() -> void:
+	bag.add("wood", 10)
+	assert_true(bag.split_slot(0, 5, 4))
+	assert_eq(int(bag.stack_at(0).get("n", 0)), 6)
+	assert_eq(int(bag.stack_at(5).get("n", 0)), 4)
+	assert_eq(bag.count("wood"), 10, "a split must not create or destroy anything")
+
+
+func test_split_tops_up_a_matching_stack() -> void:
+	bag.add("wood", 10)
+	# set_slot writes a second real stack directly, bypassing add()'s own
+	# consolidation, so there is something distinct at slot 6 to top up.
+	bag.set_slot(6, {"id": "wood", "n": 3})
+	assert_true(bag.split_slot(0, 6, 4))
+	assert_eq(int(bag.stack_at(0).get("n", 0)), 6)
+	assert_eq(int(bag.stack_at(6).get("n", 0)), 7)
+
+
+func test_split_refuses_a_different_item_in_the_target() -> void:
+	bag.add("wood", 10)
+	bag.add("stone", 3)
+	var target: int = bag.find_slot("stone")
+	assert_false(bag.split_slot(bag.find_slot("wood"), target, 4))
+	assert_eq(bag.count("wood"), 10, "a refused split must change nothing")
+	assert_eq(bag.count("stone"), 3)
+
+
+func test_split_refuses_the_whole_stack_or_nothing() -> void:
+	bag.add("wood", 10)
+	assert_false(bag.split_slot(0, 1, 10), "moving everything is move_slot's job, not split's")
+	assert_false(bag.split_slot(0, 1, 0))
+	assert_false(bag.split_slot(0, 1, -3))
+	assert_eq(bag.count("wood"), 10)
+
+
+func test_split_refuses_an_item_that_does_not_stack() -> void:
+	bag.add("axe", 1)
+	assert_false(bag.split_slot(bag.find_slot("axe"), 5, 1), "a tool has no half")
+
+
+func test_split_refuses_when_the_target_has_no_room() -> void:
+	var cap: int = db.stack_size("wood")
+	bag.add("wood", cap)
+	bag.set_slot(6, {"id": "wood", "n": cap - 1})
+	assert_false(bag.split_slot(0, 6, 4), "only 1 room but asked to move 4")
+	assert_eq(int(bag.stack_at(0).get("n", 0)), cap)
+	assert_eq(int(bag.stack_at(6).get("n", 0)), cap - 1)
+
+
+func test_split_out_of_range_or_same_slot_is_a_no_op() -> void:
+	bag.add("wood", 10)
+	assert_false(bag.split_slot(0, 0, 4))
+	assert_false(bag.split_slot(0, 99, 4))
+	assert_false(bag.split_slot(-1, 5, 4))
+	assert_eq(bag.count("wood"), 10)
+
+
+func test_drop_slot_empties_the_slot_and_hands_back_the_stack() -> void:
+	bag.add("berries", 6)
+	var slot: int = bag.find_slot("berries")
+	var dropped: Dictionary = bag.drop_slot(slot)
+	assert_eq(str(dropped.get("id", "")), "berries")
+	assert_eq(int(dropped.get("n", 0)), 6)
+	assert_true(bag.is_slot_empty(slot))
+	assert_eq(bag.count("berries"), 0, "a dropped stack is gone, not merely moved")
+
+
+func test_drop_slot_on_an_empty_slot_is_a_no_op() -> void:
+	var before: int = bag.revision
+	assert_eq(bag.drop_slot(3), {})
+	assert_eq(bag.revision, before)
+
+
+func test_drop_slot_out_of_range_is_a_no_op() -> void:
+	assert_eq(bag.drop_slot(-1), {})
+	assert_eq(bag.drop_slot(INVENTORY.SLOT_COUNT), {})
+
+
 func test_there_is_no_carry_weight_anywhere() -> void:
 	# CLAUDE.md hard rule: slot/stack inventory, no carry-weight system. A
 	# `weight` or `mass` key appearing in items.json is how that rule would get
@@ -259,79 +337,3 @@ func test_there_is_no_carry_weight_anywhere() -> void:
 		var definition: Dictionary = db.definition(str(id))
 		assert_false(definition.has("weight"), "%s declares a weight" % id)
 		assert_false(definition.has("mass"), "%s declares a mass" % id)
-
-
-func test_drop_slot_empties_the_slot_and_returns_what_was_there() -> void:
-	bag.add("wood", 6)
-	var occupied: int = bag.find_slot("wood")
-	var dropped: Dictionary = bag.drop_slot(occupied)
-	assert_eq(dropped, {"id": "wood", "n": 6})
-	assert_true(bag.is_slot_empty(occupied))
-	assert_eq(bag.count("wood"), 0)
-
-
-func test_drop_slot_on_an_empty_slot_changes_nothing() -> void:
-	var before: int = bag.revision
-	var dropped: Dictionary = bag.drop_slot(0)
-	assert_true(dropped.is_empty())
-	assert_eq(bag.revision, before)
-
-
-func test_drop_slot_out_of_range_is_a_no_op() -> void:
-	assert_true(bag.drop_slot(-1).is_empty())
-	assert_true(bag.drop_slot(INVENTORY.SLOT_COUNT).is_empty())
-
-
-func test_drop_slot_only_touches_the_named_slot_not_other_stacks_of_the_same_id() -> void:
-	# The reason drop is its own method rather than remove(id, n): remove()
-	# drains whichever stack is smallest, which is never what "discard the
-	# thing I'm looking at" means when the same item is split across slots.
-	bag.set_slot(0, {"id": "wood", "n": 3})
-	bag.set_slot(5, {"id": "wood", "n": 9})
-	bag.drop_slot(5)
-	assert_eq(bag.stack_at(0), {"id": "wood", "n": 3})
-	assert_true(bag.is_slot_empty(5))
-	assert_eq(bag.count("wood"), 3)
-
-
-func test_split_slot_divides_a_stack_into_the_first_empty_slot() -> void:
-	bag.add("wood", 10)
-	var occupied: int = bag.find_slot("wood")
-	assert_true(bag.split_slot(occupied))
-	assert_eq(int(bag.stack_at(occupied).get("n", 0)), 5)
-	# find_slot only ever returns the first match, so read every slot instead
-	# of relying on it to find the second stack.
-	var second := -1
-	for i in INVENTORY.SLOT_COUNT:
-		if i != occupied and not bag.is_slot_empty(i):
-			second = i
-			break
-	assert_true(second >= 0, "the other half must have landed somewhere")
-	assert_eq(int(bag.stack_at(second).get("n", 0)), 5)
-
-
-func test_split_slot_with_an_odd_count_leaves_the_larger_half_in_place() -> void:
-	bag.add("wood", 7)
-	var occupied: int = bag.find_slot("wood")
-	bag.split_slot(occupied)
-	assert_eq(int(bag.stack_at(occupied).get("n", 0)), 4)
-
-
-func test_split_slot_refuses_a_stack_of_one() -> void:
-	bag.add("axe", 1)
-	var occupied: int = bag.find_slot("axe")
-	var before: int = bag.revision
-	assert_false(bag.split_slot(occupied))
-	assert_eq(bag.revision, before)
-
-
-func test_split_slot_refuses_an_empty_slot() -> void:
-	assert_false(bag.split_slot(0))
-
-
-func test_split_slot_refuses_when_the_satchel_is_full() -> void:
-	for i in INVENTORY.SLOT_COUNT:
-		bag.set_slot(i, {"id": "stone", "n": 1})
-	var before: int = bag.revision
-	assert_false(bag.split_slot(0), "there is no empty slot for the other half to go to")
-	assert_eq(bag.revision, before)

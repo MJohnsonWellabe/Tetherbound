@@ -156,7 +156,18 @@ func _run() -> void:
 	# telegraph glow to actually have drawn something before the shutter opens.
 	for i in 4:
 		await physics_frame
-	await _capture("04-enemy-winds-up")
+	# R9.4-remainder-9-combat-2: every capture up to this point aims the camera
+	# straight down the ally-to-wild line (`_drive_pal_towards_enemy` sets
+	# `rig.yaw` to point AT the target every frame, because that is also how the
+	# ally is steered). That is the "favorable" framing the previous remainder's
+	# blind critic never got to see past — frames 04/05 of that capture put the
+	# wild pal almost directly behind the player's own creature. Swinging the
+	# camera off that line for the shutter only (yaw is applied instantly in
+	# `camera_rig.gd::_apply_look`, no smoothing, so a couple of `_process`
+	# frames are enough) answers the actual open question instead of asking a
+	# fifth on-axis capture to answer it again.
+	_swing_camera_offaxis(60.0)
+	await _capture("04-enemy-winds-up-offaxis")
 
 	# A quick attack landing. Catching the impact rather than the lull is the
 	# point: the frame has to show whether a hit reads as a hit.
@@ -174,7 +185,7 @@ func _run() -> void:
 	# instrument before running this again.
 	await _drive_pal_towards_enemy(120, 2.2)
 	await _press("combat_quick")
-	await _capture_the_impact("05-quick-attack-lands")
+	await _capture_the_impact("05-quick-attack-lands-offaxis", -70.0)
 
 	# The charged attack. It costs a full meter and roots you for half a second,
 	# so it has to look heavier than a quick attack or there was no decision.
@@ -198,7 +209,7 @@ func _run() -> void:
 		_failures.append("06-charged-attack-lands: energy never reached charged_cost after %d quick-attack attempts" % charge_waited)
 	await _drive_pal_towards_enemy(60, 2.8)
 	await _press("combat_charged")
-	await _capture_the_impact("06-charged-attack-lands")
+	await _capture_the_impact("06-charged-attack-lands-offaxis", 45.0)
 
 	# Aim mode. The camera leaves the pal and goes over the trainer's shoulder,
 	# and this frame answers whether that reads as aiming at all — a reticle over
@@ -351,6 +362,20 @@ func _aim_at_the_enemy() -> void:
 	rig.set("pitch", atan2(to.y + 0.5 * gravity * flight * flight, maxf(flat, 0.01)))
 
 
+## Rotate the combat camera off whatever line `_drive_pal_towards_enemy` last
+## aimed it down, around the ally it is orbiting (`camera_rig.gd::_follow`
+## chases the target's position, not a point along its facing, so a yaw change
+## alone swings the shot rather than dollying the camera through anything).
+## Only sets the property — the caller still has to let a `_process()` frame
+## run (unpaused) before the new yaw reaches `rotation` and anything visibly
+## moves.
+func _swing_camera_offaxis(offset_deg: float) -> void:
+	var rig := _world.get_node_or_null(^"CameraRig")
+	if rig == null:
+		return
+	rig.set("yaw", float(rig.get("yaw")) + deg_to_rad(offset_deg))
+
+
 func _press(action: String) -> void:
 	Input.action_press(action)
 	await physics_frame
@@ -410,7 +435,14 @@ const IMPACT_FRAMES := 5
 const IMPACT_TIMEOUT := 240
 
 
-func _capture_the_impact(name: String) -> void:
+## `yaw_offset_deg`: rotate the camera off the direct ally-to-wild line before
+## the shutter (R9.4-remainder-9-combat-2). Applied AFTER the impact-frames
+## settle but BEFORE `paused = true` — `camera_rig.gd`'s yaw only reaches
+## `rotation` inside its own `_process()`, which does not run while the tree is
+## paused, so the swing has to land while the game is still ticking or the
+## camera silently stays on-axis with the property changed and nothing drawn
+## differently. Left at 0.0 keeps the original on-axis behaviour.
+func _capture_the_impact(name: String, yaw_offset_deg: float = 0.0) -> void:
 	var landed := [false]
 	var handler := func(on_enemy: bool, _amount: float) -> void:
 		if on_enemy:
@@ -443,6 +475,9 @@ func _capture_the_impact(name: String) -> void:
 	# blend mode — were all wrong. Nothing was ever wrong with the effect. The
 	# camera was slower than the thing it was photographing.
 	for i in IMPACT_FRAMES:
+		await physics_frame
+	if not is_zero_approx(yaw_offset_deg):
+		_swing_camera_offaxis(yaw_offset_deg)
 		await physics_frame
 	paused = true
 	await _capture(name)

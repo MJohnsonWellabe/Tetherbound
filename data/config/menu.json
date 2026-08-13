@@ -81,6 +81,11 @@
           "actions": ["build_rotate"]
         },
         {
+          "name": "Quick items",
+          "note": "HD2. The five satchel slots at the top-left of the backpack grid, usable straight from the field.",
+          "actions": ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
+        },
+        {
           "name": "Fighting",
           "actions": [
             "combat_quick", "combat_charged", "combat_throw", "combat_run",
@@ -93,7 +98,8 @@
         },
         {
           "name": "Backpack",
-          "actions": ["item_drop", "item_split"]
+          "note": "RB doubles as 'throw an orb' in a fight, and the right stick click does nothing there -- the pause menu can't open mid-fight (see menu_cancel's note), so neither button ever means two things at once.",
+          "actions": ["backpack_drop", "backpack_split"]
         }
       ],
 
@@ -114,6 +120,11 @@
         "tool_cycle": "Next tool  /  next tab",
         "pal_recall": "Call out  /  put away your pal",
         "build_rotate": "Rotate the build ghost",
+        "hotbar_1": "Use quick-item slot 1",
+        "hotbar_2": "Use quick-item slot 2",
+        "hotbar_3": "Use quick-item slot 3",
+        "hotbar_4": "Use quick-item slot 4",
+        "hotbar_5": "Use quick-item slot 5",
         "combat_quick": "Quick attack",
         "combat_charged": "Charged attack",
         "combat_throw": "Throw an orb",
@@ -122,8 +133,8 @@
         "combat_switch_right": "Send out the next pal",
         "menu_confirm": "Confirm",
         "menu_cancel": "Back  /  close the menu",
-        "item_drop": "Discard the focused item",
-        "item_split": "Split the focused stack"
+        "backpack_drop": "Backpack: drop the focused item",
+        "backpack_split": "Backpack: split the focused stack"
       },
 
       "glyphs": {

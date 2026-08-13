@@ -30,7 +30,10 @@
     "surface_depth": 0.35,
     "sample_step": 1.5,
     "alpha_shallow": 0.78,
-    "_comment_alpha": "Stream-only override over surface.alpha_shallow — see water.gd's build() for the measurement that split them. TUNABLE."
+    "_comment_alpha": "Stream-only override over surface.alpha_shallow — see water.gd's build() for the measurement that split them. TUNABLE.",
+    "flow_speed": 1.1,
+    "flow_stretch": 0.6,
+    "_comment_flow": "EV5-remainder: the flowing-water variant. The ribbon writes its course into UV2 and the shader scrolls the wave normals downstream along it (the parameterisation IS the flow map — water.gd already computed per-sample tangents, exactly the plumbing the backlog item named). flow_speed is metres of course per second; flow_stretch < 1 elongates ripples along the flow. Both TUNABLE."
   },
   "_comment_reeds": "Bible §15: 'vegetation/reeds at banks'. Placed by the water composer itself — it marches the actual shoreline (the height isoline the level defines) and stands clumps in a band straddling the waterline, so the reeds always hug the real shore no matter how the level is tuned. Meshes are the SAME Quaternius wispy grass the drygrass layer uses (one nature family, D24) at taller scale and a deep marsh-green tint — a different plant read from material and context, not a new asset. NOT routed through vegetation.json because those two models already belong to the drygrass layer, and vegetation.gd groups batches by model — listing them in a second layer there silently loses one layer's tint (its own documented failure mode).",
   "reeds": {
@@ -49,6 +52,101 @@
     "max_bank_slope_deg": 33.0,
     "seed": 20260812,
     "_comment_stands": "EV5 blind rounds 4-5, the one repeated in-scope ask not yet acted on: 34 small clumps spaced around a ~300m shoreline read as 'a perimeter ring', not vegetation. A dozen anchors at 20 stalks each makes a few REAL brakes with long open banks between them -- open water access, the thing both rounds asked for. Tint lifted a step (#6c8850 -> #7a9460): the stands rendered near-black against bright water. TUNABLE."
+  },
+  "_comment_marginals": "EV5-remainder: a SECOND waterside plant silhouette beyond the wispy-grass reed — the nature pack's own broadleaf Plant_1_Big, arching over the waterline at reduced scale, in-family per D24. Same band keys as `reeds` (water.gd routes both through one builder). A true sedge/cattail form stays owner-blocked: it needs the fuller nature MegaKit the owner has not supplied — do not try to source it, see BACKLOG.md. ALL TUNABLE.",
+  "marginals": {
+    "models": [
+      "res://assets/environment/stylized_nature/Plant_1_Big.gltf"
+    ],
+    "tint": "#5f8a52",
+    "clumps": 8,
+    "per_clump": 3,
+    "clump_radius": 3.2,
+    "band_below": 0.25,
+    "band_above": 0.5,
+    "scale_min": 0.28,
+    "scale_max": 0.5,
+    "max_bank_slope_deg": 30.0,
+    "seed": 20260813
+  },
+  "_comment_dressing": "EV5-remainder: the aquatic dressing eight blind rounds converged asking for — all from packs already staged and ledgered (searched before treating anything as blocked): Rock_Medium boulders half-submerged, Pebble_Round scaled up into smooth shore stones, the Kenney logs (ledger: 'retained for the log shapes') beached as driftwood, Plant_7's flat rosette floating as lily pads. Counts, depth bands, scales, sinks ALL TUNABLE. Boulders collide (vegetation.gd's hologram/camera lesson); stones are shin-height and do not.",
+  "dressing": {
+    "seed": 20260813,
+    "boulders": {
+      "models": [
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+      ],
+      "tint": "#8f8d84",
+      "_comment_tint": "Own-render pass: untinted, the pack's bluish rock texture rendered as pale baby-blue crowns against the water — a warm grey multiply lands them in the same family as the hillside scatter's retinted rocks. TUNABLE.",
+      "count": 14,
+      "into_water_max": 5.0,
+      "up_bank_max": 1.2,
+      "max_depth": 1.6,
+      "scale_min": 0.3,
+      "scale_max": 0.65,
+      "sink_min": 0.15,
+      "sink_max": 0.45,
+      "collides": true,
+      "collision_radius": 1.1
+    },
+    "stones": {
+      "models": [
+        "res://assets/environment/stylized_nature/Pebble_Round_1.gltf",
+        "res://assets/environment/stylized_nature/Pebble_Round_3.gltf"
+      ],
+      "tint": "#9c988c",
+      "count": 16,
+      "into_water_max": 3.5,
+      "up_bank_max": 1.5,
+      "max_depth": 0.9,
+      "scale_min": 2.2,
+      "scale_max": 4.2,
+      "sink_min": 0.02,
+      "sink_max": 0.06,
+      "collides": false
+    },
+    "driftwood": {
+      "models": [
+        "res://assets/environment/nature/log_large.glb",
+        "res://assets/environment/nature/log.glb"
+      ],
+      "tint": "#7d6a55",
+      "_comment_tint": "Own-render pass: the Kenney log's cream vertex colours multiply through the batch tint, so it is authored darker than the target weathered grey-brown. TUNABLE.",
+      "count": 6,
+      "band_below": 0.3,
+      "band_above": 0.45,
+      "scale_min": 1.6,
+      "scale_max": 2.9,
+      "max_pitch_deg": 9.0
+    },
+    "lilypads": {
+      "models": [
+        "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+        "res://assets/environment/stylized_nature/Plant_7.gltf"
+      ],
+      "tint": "#6f9a55",
+      "_comment_tint": "Own-render pass: at #4f7d44 the pad clusters read as near-black clumps on the bright water; lifted a step. TUNABLE.",
+      "clusters": 6,
+      "per_cluster": 8,
+      "cluster_radius": 3.2,
+      "depth_min": 0.3,
+      "depth_max": 1.3,
+      "scale_min": 0.7,
+      "scale_max": 1.4
+    }
+  },
+  "_comment_jetty": "EV5-remainder, the key art's jetty: a short working deck where the pond path meets the water (bearing_deg is the bearing OUT of the pond centre toward the path's arrival side; water.gd finds the actual shoreline crossing itself, so retuning the water level moves the jetty with the shore). Village-kit modules only (D24): Floor_WoodDark deck, WoodenFence railing, Kenney-log pilings, EV7's crate and bucket at the end. deck_above_water and land_overlap in metres. ALL TUNABLE.",
+  "jetty": {
+    "bearing_deg": -30.0,
+    "modules": 4,
+    "width_scale": 0.8,
+    "deck_above_water": 0.5,
+    "land_overlap": 1.4,
+    "railing": true,
+    "piling_model": "res://assets/environment/nature/log.glb",
+    "piling_tint": "#6b5843"
   },
   "_comment_round1": "EV5 authoring round 1 (own read of the first render, before any blind round): the pond rendered as pale milk with a solid white shoreline ring. Foam rebalanced in the shader (noise now required, contact alone cannot clear the threshold) and the height texture went R8 -> RF (see water.gd's _bake_height_texture for the staircase this removed). Here: deep colour darker and reached sooner (depth_falloff 1.6->1.2), alpha_deep 0.88->0.93 so the bright sandy bed stops lifting the deep water, fresnel wash cut (0.65->0.4, power 4->5), wave normals calmed (0.35->0.22), roughness up a step so the sun sheen stops frosting the whole surface. ALL still TUNABLE.",
   "_comment_round2": "EV5 blind round 1 (first genuinely blind critique, fresh headless session, no context): verbatim defects and the levers moved — 'swimming-pool cyan against olive land' -> deep/shallow/fresnel all pulled toward the keyart's warm teal-green family; 'shallow-to-deep gradient is a constant-width ring, not depth' -> depth_falloff 1.2->2.2 so the ramp spreads wide on shallow banks and stays narrow on steep ones; 'no sun glint... unfinished' -> roughness back to 0.10, shader SPECULAR restored to 0.5, wave normals up 0.22->0.4 and finer (uv_scale 0.09->0.12); 'foam is a bead chain' -> foam_scale down plus a second decorrelating noise scale in the shader; 'one reed asset, one scale... on the sand, not in the water' -> band reaches 0.55m BELOW the waterline, scale span widened, per-instance lean/tone jitter in water.gd. Reflections are the one named defect deliberately NOT chased: bible sec15 forbids the expensive tier, gl_compatibility has no SSR, and a planar reflection probe is exactly the simulation the spec rules out — fresnel-toward-sky is this tier's honest ceiling, recorded in DONE.md rather than faked. ALL TUNABLE.",
