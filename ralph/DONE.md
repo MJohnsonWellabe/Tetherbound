@@ -3,6 +3,104 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV6-remainder-polish — the three named leftovers, the survival pack's colour bug, and the owed blind rounds
+
+`tests: smoke_opening, smoke_traversal` — both green locally, headless
+(smoke_opening re-run green after the final edit). Full suite 585 tests,
+90460 assertions, 0 failed.
+
+What shipped, per defect:
+
+1. **cottage_b's shelf-shadow — fixed, blind-confirmed (round 1).** The
+   entry's own named fix: a small terrain flat at [21,-14], radius 7, skirt
+   14, height 0.9 EXPLICIT (same as the square's — the default would read
+   raw unflattened ground and step the pads). Its value is its skirt, which
+   extends the 0.9 plateau past the cottage's downhill border skirt. Terrain
+   re-baked (`build_playground_terrain.gd`, all four region .res files).
+
+2. **Settlement-wide hard grey skirt/grass edge — fixed, blind-confirmed
+   (round 1).** New `building_aprons` block in `terrain_playground.json` +
+   `playground_heightfield.building_apron_factor()` (rotated-rect footprints
+   mirroring village.json/HOUSE_AT, margin 0.55m + feather 2.4m, edge
+   wobbled by the same noise the path edges use) — the bake blends the
+   ground CONTROL map toward the soil texture (`_blend_control_toward`, the
+   generalised `_path_control` rule; paths/wet win where stronger) and the
+   colour map toward the soil tone. 1182 apron pixels baked. If a building
+   moves, move its footprint entry and re-bake — the bake is offline and
+   cannot ask the live scene.
+
+3. **ShortCloset featureless slab — fixed, blind-confirmed (round 1).**
+   Swapped for the Fantasy Props MegaKit's `Cabinet` (panelled doors, metal
+   handles, trim-textured; curated gltf+bin, ledgered), through a new glTF
+   branch in `grandpa_house.gd::_furnish` (same two-format fallback as
+   `building_prefabs.gd`). New `09-interior-east-wall` viewpoint in
+   `capture_buildings.gd` — frame 07 faces away from this wall, so the
+   closet corner had never been in a judged frame except by accident.
+
+4. **Found en route: the Survival pack still carried linear-space `Kd`** —
+   the exact bug `EV6-remainder-furniture` fixed for the Furniture pack,
+   unfixed in `assets/props/quaternius_survival/` (Backpack/Axe/Knife/
+   Bonfire read as black masses in any interior frame). Same linear→sRGB
+   transform applied to all 16 `Kd` triplets across its 5 `.mtl` files.
+   Blind round 1 confirmed no black-silhouette furniture remains. The same
+   round then read the now-visible olive Backpack as "a modern military/
+   camping asset in a medieval interior", so Grandpa's story-anchored pack
+   by the door is now the fantasy kit's `Bag` (leather rucksack, already
+   in-use/ledgered at trainer_camp) — **this last swap is NOT
+   blind-re-judged** (hard stop landed first); smoke_opening re-run green
+   after it.
+
+**Blind history (fresh `claude -p` critic, zero context, frames +
+`docs/reference/` + the rubric only):** settlement round 1 on the 9
+`capture_buildings.gd` frames named NONE of this item's three defects — no
+floating/shelf-shadowed skirt, no hard grey building/grass edge, no
+featureless-slab furniture, no black furniture — where the pre-fix baseline
+visibly shows all of them (archived frames + `frame_stats` movement:
+04-cottage-cluster chrom% 34.6→43.1, nearL 0.180→0.225). The round's other
+findings are real and out of this item's scope, recorded in the BACKLOG
+entry residue below. **The two-flat-rounds stop was NOT reached** — the
+hard stop landed after round 1; a follow-up should run round 2 to confirm
+stability.
+
+**The owed mill-crossing round-1 verdict, recorded** (the critic returned
+at the hard stop's edge; all five `capture_mill_crossing.gd` viewpoints,
+post-fix). Its headline finding is real and NOT fixed here: **the mill's
+water wheel does not read as a wheel** — in `mill-wheel-over-stream.png`,
+the one shot whose job is to sell "watermill", the critic saw only "a flat
+grey diagonal cross-hatched patch stuck to the base of the wall... no
+rotation axle, spokes, or paddles", and called the site "three generic
+half-timber cottages" without it. The fence-section wheel composition
+(`building_prefabs.json` `mill`) needs real recomposition or a dedicated
+wheel silhouette — follow-up work, not started. Also named, cheap for the
+next firing: a stray flat grey plank on the hillside mid-left of
+`mill-and-crossing.png`; the ranger station carrying no identifying
+element (no signage/gear silhouette) vs the mill; roof-tile seam at the
+mill's hip/ridge. Out-of-scope-of-village (recorded for owners): hard
+black shadows, no atmosphere/haze, flat cyan stream water, even-interval
+rock/reed scatter, heron-vs-world style mismatch, both bar questions "no"
+for this site.
+
+**Out-of-scope residue the settlement round named** (for whoever owns these
+areas): flat cloudless sky + no atmospheric haze anywhere; hard black
+shadows (D06 territory); the low-poly grey rock family clashing with the
+kit buildings in 6 of 9 frames; the flat ivy decal on chimney walls; the
+cel-toon square oaks vs photo-textured buildings; the blocky untextured
+interior staircase (07/09); blotchy interior wall texture; the coral rug
+saturation spike; ridge treeline reading as a planted row; both bar
+questions still "no" (buildings on-model, world around them not).
+
+**A worktree trap re-confirmed:** a `.godot` cache copied from the main
+checkout carries the Furniture pack's pre-gamma-fix cached meshes (the
+`.mtl` sidecar isn't watched by the import tracker) — the first interior
+render showed stale black furniture until the cached artifacts were
+deleted and re-imported. CI is unaffected (clean imports).
+
+Render-lock note: an orphaned Xvfb (PPID 1, cwd in a deleted worktree)
+held the render lock ~25 min and starved three lanes' queues; verified no
+render was attached, killed it, queues drained. Lock contention otherwise
+cost this item roughly 40 minutes across two waits.
+
+
 ## SA4 — Seven outward spokes, each believably severed
 
 `data/config/terrain_playground.json`, `scripts/world/severed_spokes.gd` (new),

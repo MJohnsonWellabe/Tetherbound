@@ -90,6 +90,16 @@ func _run() -> void:
 			# of the shallow-edge colour shift — the water shader's own depth
 			# gradient is the other half — and it survives even where the water
 			# surface is transparent enough to see straight through.
+			# EV6-remainder-polish: nudge the colour multiplier toward the soil
+			# tone across each building's worked-soil apron, so the far-LOD
+			# colour agrees with the soil texture the control map swaps in
+			# below — the same both-halves treatment the wet shore gets. Before
+			# the wet lerp on purpose: a stream bank stays wet, not dug.
+			var apron: float = field.building_apron_factor(world_x, world_z)
+			if apron > 0.0:
+				var soil_tint := Color(str(colour_cfg.get("soil", "#d1b37e")))
+				ground = ground.lerp(soil_tint,
+					apron * float(config.get("building_aprons", {}).get("colour_strength", 0.6)))
 			var wet := _wet_weight(field, height, world_x, world_z, water_level)
 			if wet > 0.0:
 				var wet_tint := Color(str(colour_cfg.get("wet_tint", "#c2b49a")))
@@ -174,6 +184,7 @@ func _paint_control_map(
 
 	var painted_path_pixels := 0
 	var painted_wet_pixels := 0
+	var painted_apron_pixels := 0
 	var water_level: float = field.water_level()
 	for pixel_z in size:
 		var world_z := origin + pixel_z * spacing
@@ -200,7 +211,18 @@ func _paint_control_map(
 			var wet := _wet_weight(field, field.height_at(world_x, world_z), world_x, world_z, water_level)
 			if wet > 0.0:
 				painted_wet_pixels += 1
+			# EV6-remainder-polish: the worked-soil ring around each building
+			# footprint (playground_heightfield.building_apron_factor), applied
+			# FIRST so a path or a wet stream bank crossing the ring wins where
+			# its own weight is stronger — trodden pebbles and wet sand both
+			# out-rank dug soil.
+			var apron: float = field.building_apron_factor(world_x, world_z)
 			var worn := maxf(path_weight, wet)
+			if apron > 0.0:
+				painted_apron_pixels += 1
+				if apron > worn:
+					var apron_dither: float = field.path_dominant_dither(world_x, world_z)
+					control = _blend_control_toward(control, apron, int(ids["soil"]), apron_dither)
 			if worn > 0.0:
 				var dither: float = field.path_dominant_dither(world_x, world_z)
 				control = _path_control(control, worn, ids, dither)
@@ -212,8 +234,8 @@ func _paint_control_map(
 			data.call("set_control_blend", pos, control["blend"])
 			data.call("set_control_auto", pos, false)
 
-	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), auto-shader off" %
-		["path" if ids.has("path") else "soil", painted_path_pixels, painted_wet_pixels])
+	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), building aprons in soil (%d pixels), auto-shader off" %
+		["path" if ids.has("path") else "soil", painted_path_pixels, painted_wet_pixels, painted_apron_pixels])
 
 
 ## The step at which slope is sampled for the material band pick, in metres:
@@ -322,13 +344,20 @@ func _wet_weight(field: RefCounted, height: float, x: float, z: float, water_lev
 ## the same `blend_deg` width the natural ground already transitions over,
 ## so the boundary reads as blotchy intermixing instead of a drawn line.
 func _path_control(natural: Dictionary, path_weight: float, ids: Dictionary, dither: float) -> Dictionary:
-	var path_tex: int = int(ids.get("path", ids["soil"]))
-	if path_weight >= 0.999:
-		return {"base": path_tex, "overlay": path_tex, "blend": 0.0}
+	return _blend_control_toward(natural, path_weight, int(ids.get("path", ids["soil"])), dither)
+
+
+## The shared collapse-and-reblend rule `_path_control` describes above,
+## parameterised by the texture being blended toward — EV6-remainder-polish
+## reuses it verbatim for the worked-soil apron around each building
+## footprint, which blends toward `soil` where a path blends toward `path`.
+func _blend_control_toward(natural: Dictionary, weight: float, tex: int, dither: float) -> Dictionary:
+	if weight >= 0.999:
+		return {"base": tex, "overlay": tex, "blend": 0.0}
 	var dominant: int = natural["overlay"] if float(natural["blend"]) >= dither else natural["base"]
-	if dominant == path_tex:
-		return {"base": path_tex, "overlay": path_tex, "blend": 0.0}
-	return {"base": path_tex, "overlay": dominant, "blend": 1.0 - path_weight}
+	if dominant == tex:
+		return {"base": tex, "overlay": tex, "blend": 0.0}
+	return {"base": tex, "overlay": dominant, "blend": 1.0 - weight}
 
 
 ## `name -> texture id`, read from the same `textures` list `playground_world.

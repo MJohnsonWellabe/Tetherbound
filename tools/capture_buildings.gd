@@ -124,6 +124,17 @@ const VIEWPOINTS := [
 		"target": Vector2.ZERO, "target_h": 0.0,
 		"from_markers": ["door", "grandpa"],
 	},
+	{
+		# The same room looking the OTHER way — the east (door) wall and the
+		# furniture against it (the wardrobe corner, the gear table). Frame 07
+		# stands near the door looking at Grandpa, so everything on this wall
+		# was behind the camera in every interior pass; the furniture fix's
+		# blind critic saw this corner only by accident. EV6-remainder-polish.
+		"name": "09-interior-east-wall",
+		"eye": Vector2.ZERO, "eye_h": 0.0,
+		"target": Vector2.ZERO, "target_h": 0.0,
+		"from_markers": ["grandpa", "door"],
+	},
 ]
 
 

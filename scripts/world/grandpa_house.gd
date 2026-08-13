@@ -46,6 +46,9 @@ const FURNITURE_SCALE := 0.5
 ## Surface clutter (R7.2): the survival pack's gear, borrowed for a backpack,
 ## an axe and a knife rather than a second furniture generation pass.
 const SURVIVAL_DIR := "res://assets/props/quaternius_survival"
+## The Fantasy Props MegaKit (glTF, real-metre scale, trim-textured — the
+## same family the workshop yard and pal bed already draw from).
+const FANTASY_DIR := "res://assets/props/quaternius_fantasy"
 
 ## Interior camera, tunable in spirit but authored here with the building it
 ## belongs to: the room is the constraint, not the player's taste. Distance
@@ -281,21 +284,34 @@ func _build_stairs() -> void:
 
 func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FURNITURE_SCALE,
 		dir := FURNITURE_DIR, solid := true) -> void:
-	var path := "%s/%s.obj" % [dir, model]
-	if not ResourceLoader.exists(path):
-		push_warning("house furniture missing: %s" % path)
+	# OBJ pieces load as a bare Mesh (the Furniture/Survival packs); glTF
+	# pieces load as a scene (the Fantasy Props MegaKit, real-metre scale and
+	# trim-textured — EV6-remainder-polish swaps the featureless ShortCloset
+	# box for the kit's panelled Cabinet through exactly this branch). Same
+	# two-format fallback building_prefabs.gd::_build_template already uses.
+	var obj_path := "%s/%s.obj" % [dir, model]
+	var gltf_path := "%s/%s.gltf" % [dir, model]
+	var node: Node3D
+	var aabb: AABB
+	if ResourceLoader.exists(obj_path):
+		var mesh := MeshInstance3D.new()
+		mesh.mesh = load(obj_path)
+		aabb = (mesh.mesh as Mesh).get_aabb()
+		node = mesh
+	elif ResourceLoader.exists(gltf_path):
+		node = (load(gltf_path) as PackedScene).instantiate() as Node3D
+		aabb = (PREFABS.new() as RefCounted).call("combined_aabb", node)
+	else:
+		push_warning("house furniture missing: %s" % obj_path)
 		return
-	var mesh := MeshInstance3D.new()
-	mesh.mesh = load(path)
-	mesh.position = at
-	mesh.rotation.y = deg_to_rad(yaw_degrees)
-	mesh.scale = Vector3.ONE * scale_factor
-	add_child(mesh)
+	node.position = at
+	node.rotation.y = deg_to_rad(yaw_degrees)
+	node.scale = Vector3.ONE * scale_factor
+	add_child(node)
 	if not solid:
 		return
 	# One simple blocker per piece: walking through a table breaks the room
 	# harder than an approximate box breaks pathing.
-	var aabb := (mesh.mesh as Mesh).get_aabb()
 	var body := StaticBody3D.new()
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
@@ -360,8 +376,14 @@ func _build_furniture() -> void:
 	# The wardrobe moved off the north-east corner: the narrower room put its
 	# old spot inside the stair landing (stairs_bottom stands there now).
 	# South of the door against the east wall, clear of the grandpa-to-door
-	# lane by a measured 0.7m.
-	_furnish("ShortCloset", Vector3(half_w - 0.6, 0.12, 1.2), -90.0)
+	# lane (DOOR_W/2 = 0.8; the cabinet's near edge sits at z 0.82).
+	# EV6-remainder-polish: was the furniture pack's `ShortCloset`, which the
+	# furniture fix's own confirming blind pass named "a featureless flat
+	# slab" — a geometry/detail limit of that mesh, not a colour bug. Swapped
+	# for the Fantasy Props MegaKit's `Cabinet` (panelled doors, metal
+	# handles, trim-textured), real-metre kit so scale 1.0, back against the
+	# east wall (half-depth 0.18 + 0.06 gap).
+	_furnish("Cabinet", Vector3(half_w - 0.24, 0.12, 1.5), -90.0, 1.0, FANTASY_DIR)
 	# The loft: the player's bed under the west eave, the nightstand at its
 	# foot, both clear of the lane from the bed to the stair head.
 	#
@@ -390,7 +412,13 @@ func _build_furniture() -> void:
 	# ("that pack by the door carried me thirty years" — data/dialogue/
 	# opening.json's grandpa_house line), given somewhere to actually sit.
 	_furnish("Table2", Vector3(half_w - 1.0, 0.12, 2.15), 180.0)
-	_clutter("Backpack", Vector3(half_w - 1.3, 0.12, 1.85), 30.0)
+	# EV6-remainder-polish: was the Survival pack's `Backpack`, which the
+	# round-1 blind critic read as "a modern military/camping asset dropped
+	# into a medieval timber-frame interior". The Fantasy Props MegaKit's
+	# `Bag` (a buckled leather rucksack, already in use at the trainer_camp
+	# cluster) is the same story beat in the period's own material language.
+	# Real-metre kit, so scale 1.0.
+	_clutter("Bag", Vector3(half_w - 1.3, 0.12, 1.85), 30.0, false, FANTASY_DIR, 1.0)
 	_clutter("Axe", Vector3(half_w - 0.55, 0.12, 2.4), -20.0)
 	_clutter("Knife", Vector3(half_w - 0.9, 0.12, 2.3), 10.0)
 

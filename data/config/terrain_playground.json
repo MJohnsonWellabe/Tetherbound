@@ -144,6 +144,17 @@
       "height": 0.9
     },
     {
+      "_comment": "EV6-remainder-polish: cottage_b's own small pad, the fix EV6-remainder's entry named. The cottage stands at [21,-14], distance ~11.7m from the square pad's centre -- its FOOTPRINT is inside the square's 18m core, but the ground immediately east of it (its downhill side) is where the square's smoothstep skirt begins to fall away, and the cottage's stone border skirt sat right on that falloff's first shelf, holding a hard shadow line. Same authored height as the square (0.9, EXPLICIT -- omitting it would read RAW unflattened ground at the centre and step the two pads against each other), so inside the overlapping cores nothing changes; the value of this pad is its own skirt, which extends the 0.9 plateau ~7m past the cottage and spreads the descent across a blend of two wide skirts instead of starting it at the cottage's east wall. TUNABLE.",
+      "centre": [
+        21.0,
+        -14.0
+      ],
+      "radius": 7.0,
+      "skirt": 14.0,
+      "_why": "cottage_b's yard -- keeps the downhill border skirt off the square skirt's falloff",
+      "height": 0.9
+    },
+    {
       "_comment_of10_r3": "OF10 round 3. The blind critic on round 2's approach frames: the road 'runs arrow-straight and terminates flush against the base of the hill with nothing marking the meeting point... the grass simply continues on both sides right up to the impact point, so the road doesn't resolve, it just stops.' That is the look half of OF10 stated exactly. The walkable half (OF10a) already established WHERE it has to stop -- (74,-41), the last point before this rise's own 46-degree collar -- and moving those route points again would undo verified work, so this fixes the other end of the problem: it gives the stopping point somewhere to BE. A small levelled apron at the road's end reads as the flat scrape of ground a track ends at when it reaches a hillside, and it is what the `path_stones` scatter layer (path_bias 1.0, anchored to the routes) needs in order to lay stone at the terminus instead of down a slope. No explicit `height`: it takes the natural ground height at its own centre, so it levels the last few metres without introducing a step. Deliberately small -- 5m of full flatten against the other two pads' 14 and 18 -- because this is a wide place in a road, not a building site. TUNABLE.",
       "centre": [
         74.0,
@@ -174,6 +185,56 @@
       "skirt": 8.0
     }
   ],
+  "building_aprons": {
+    "_comment": "EV6-remainder-polish: a feathered ring of worked soil in the ground CONTROL map around each placed building's footprint, so the kit's stone border skirts (Prop_ExteriorBorder_*) meet dug ground instead of ending in a hard grey line against lawn -- the settlement-wide defect the furniture fix's blind pass named. Same mechanism as the paths and the wet pond bed (build_playground_terrain.gd blends the pixel's slope-driven control toward another texture id), soil rather than the pebbled path texture: this is ground disturbed by a building standing on it, not ground worn by feet -- the paths themselves still cross these rings and win where they are stronger. Footprints are rotated rectangles MIRRORING data/config/village.json's `structures` (and playground_world.gd's HOUSE_AT for the farmhouse) -- the bake is offline and cannot ask the live scene, so if a building moves, move its entry here and re-bake (scripts/world/build_playground_terrain.gd). half_extents are the prefab's probed XZ half-AABB (tools/_probe_prefabs.gd) plus ~0.2m for the border skirt's own overhang. `margin` metres of full soil past the footprint, fading over `feather` metres; playground_heightfield.building_apron_factor wobbles the ring's edge with the same noise the path edges use, so it is not a drawn offset rectangle. ALL TUNABLE.",
+    "margin": 0.55,
+    "feather": 2.4,
+    "colour_strength": 0.6,
+    "footprints": [
+      {
+        "centre": [-22.0, -16.0],
+        "half_extents": [5.3, 3.3],
+        "yaw_deg": 0.0,
+        "_why": "Grandpa's farmhouse (farmhouse_shell; playground_world.gd HOUSE_AT)"
+      },
+      {
+        "centre": [2.0, 2.0],
+        "half_extents": [4.3, 5.0],
+        "yaw_deg": -125.0,
+        "_why": "the workshop"
+      },
+      {
+        "centre": [18.0, -2.0],
+        "half_extents": [3.05, 4.05],
+        "yaw_deg": -135.0,
+        "_why": "cottage_a"
+      },
+      {
+        "centre": [21.0, -14.0],
+        "half_extents": [3.05, 3.05],
+        "yaw_deg": -70.0,
+        "_why": "cottage_b"
+      },
+      {
+        "centre": [10.0, -10.0],
+        "half_extents": [2.9, 2.9],
+        "yaw_deg": 15.0,
+        "_why": "the well and its paved apron"
+      },
+      {
+        "centre": [-132.0, 107.0],
+        "half_extents": [4.5, 4.2],
+        "yaw_deg": 0.0,
+        "_why": "the mill -- the stream carve and its wet bed cut through this ring and stay wet (worn weight wins where stronger)"
+      },
+      {
+        "centre": [-100.0, 100.0],
+        "half_extents": [3.05, 4.05],
+        "yaw_deg": 75.0,
+        "_why": "the ranger station"
+      }
+    ]
+  },
   "paths": {
     "_comment": "Dirt paths, authored polylines in world metres. playground_heightfield.path_factor() is the single reader: the bake (build_playground_terrain.gd::_path_control) paints real soil texture into the CONTROL map along them, the scatter keeps vegetation off them, and they double as wayfinding \u2014 every route starts at the village square and ends somewhere the player is meant to go. ALL TUNABLE.",
     "_comment_ev4": "EV4: was a `tint` field lerped into the colour map (a worn-earth multiplier over whatever texture was already there, never a real material). Removed -- the control map now swaps in the actual soil texture, which is what R9.4-remainder-4/R7.1-found-3 asked for (\"a path reads as trodden earth, not a colour\"). `width`/`shoulder` below still shape the fade band; path_factor()'s own noise now wobbles that band's position so the edge is not a mathematically exact offset curve.",

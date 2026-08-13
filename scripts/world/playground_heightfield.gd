@@ -687,6 +687,54 @@ func path_factor(x: float, z: float) -> float:
 	return 1.0 - smoothstep(edge_start, edge_start + shoulder, nearest)
 
 
+## How much a world point belongs to a building's worked-soil apron: 1.0
+## inside a placed structure's footprint (and `margin` metres beyond it),
+## fading to 0.0 across `feather` metres. EV6-remainder-polish — the bake
+## blends the ground control map toward the soil texture by this weight, so
+## the kit buildings' stone border skirts meet dug ground instead of a hard
+## grey line against lawn (the settlement-wide edge the blind pass named).
+##
+## Footprints are rotated rectangles authored in `building_aprons.footprints`
+## (terrain_playground.json), mirroring village.json's placements the same
+## way the capture tools mirror them — the bake is offline and cannot ask the
+## live scene. Same contract shape as `path_factor`/`stream_factor` so the
+## bake composes all three with one rule (strongest wins per pixel), and the
+## ring's outer edge is nudged by the same `_path_edge` noise the paths use,
+## for the same reason: a mathematically exact offset rectangle reads as
+## drawn, not dug.
+func building_apron_factor(x: float, z: float) -> float:
+	var apron: Dictionary = _config.get("building_aprons", {})
+	var footprints: Array = apron.get("footprints", [])
+	if footprints.is_empty():
+		return 0.0
+	var margin := float(apron.get("margin", 0.55))
+	var feather := maxf(float(apron.get("feather", 2.4)), 0.001)
+	var spot := Vector2(x, z)
+	var best := 0.0
+	for entry: Variant in footprints:
+		if not entry is Dictionary:
+			continue
+		var footprint: Dictionary = entry
+		var centre_spec: Array = footprint.get("centre", [0.0, 0.0])
+		var centre := Vector2(float(centre_spec[0]), float(centre_spec[1]))
+		# Cheap reject: no footprint half-extent here exceeds ~7m, and the
+		# wobble below moves the edge by well under a metre.
+		if spot.distance_to(centre) > 12.0 + margin + feather:
+			continue
+		var half_spec: Array = footprint.get("half_extents", [3.0, 3.0])
+		# Rotate the world offset into the footprint's own frame. The recipe's
+		# yaw is the node's Y rotation (counter-clockwise seen from above, i.e.
+		# +X toward -Z), so the world offset comes back by the same angle.
+		var local := (spot - centre).rotated(deg_to_rad(float(footprint.get("yaw_deg", 0.0))))
+		var outside := Vector2(
+			maxf(absf(local.x) - float(half_spec[0]), 0.0),
+			maxf(absf(local.y) - float(half_spec[1]), 0.0)).length()
+		var wobble := _path_edge.get_noise_2d(x, z) * feather * 0.4
+		var edge_start := maxf(0.0, margin + wobble)
+		best = maxf(best, 1.0 - smoothstep(edge_start, edge_start + feather, outside))
+	return best
+
+
 func _segment_distance(point: Vector2, a: Vector2, b: Vector2) -> float:
 	return point.distance_to(_segment_closest_point(point, a, b))
 
