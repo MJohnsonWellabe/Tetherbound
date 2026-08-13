@@ -28,6 +28,10 @@ const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
 const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
 const TARGET_MARKER := preload("res://scripts/combat/target_marker.gd")
+## D30: XP/bond arithmetic and named-move power, both pure data readers with
+## no scene-tree dependency — see their own file headers.
+const PROGRESSION := preload("res://scripts/pals/progression.gd")
+const MOVE_DB := preload("res://scripts/pals/move_db.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -39,6 +43,10 @@ signal attack_missed(by_player: bool)
 signal catch_resolved(success: bool, shakes: int)
 signal catch_refused(reason: String)
 signal orb_shook(index: int)
+## D32: a voluntary mid-combat switch just completed. `index` is the new
+## `_active_index`. Distinct from `state_changed` (still emitted alongside it)
+## so the HUD can react to "who is out" without diffing the whole state.
+signal pal_switched(index: int)
 
 enum State { INACTIVE, ACTIVE, RESOLVING }
 
@@ -60,6 +68,20 @@ var state: State = State.INACTIVE
 var _party: Array[RefCounted] = []
 var _active_index: int = 0
 var _enemy: RefCounted = null
+
+## D32. Seconds left before another voluntary switch is allowed. Set by
+## `request_switch`, ticked down in `_tick_active`. Does not gate a faint —
+## there is no auto-switch-on-faint (D32's own "what was deliberately not
+## built") — only the player's own next `request_switch`/`cycle_active` call.
+var _switch_lockout: float = 0.0
+
+## D30. What the active pal and its bench earned from the fight that just
+## ended, keyed by `pal_instance.label()`: `{"xp": int, "levels": int}`. Reset
+## at the start of every fight and overwritten by the next victory. The HUD
+## reads this; nothing here draws it. Two un-nicknamed party members of the
+## same species collide on this key — a later milestone that keys the HUD's
+## own readout by party index rather than label can retire this note.
+var last_xp_award: Dictionary = {}
 
 var _player: Node3D = null
 var _wild: Node3D = null
@@ -114,9 +136,15 @@ var _target_marker: Node3D = null
 
 var _rng := RandomNumberGenerator.new()
 
+## D30 named-move lookup, loaded once. Read-only after construction, so one
+## instance shared for the life of the manager is fine — the same choice
+## `_rng` above already makes.
+var _moves: RefCounted = null
+
 
 func _ready() -> void:
 	_rng.randomize()
+	_moves = MOVE_DB.new()
 	set_physics_process(false)
 
 	_throw = THROW_AIM.new()
@@ -193,6 +221,9 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	_catch_phase = CatchPhase.NONE
 	_catch_timer = 0.0
 	_catch_shakes_total = 0
+
+	_switch_lockout = 0.0
+	last_xp_award.clear()
 
 	_open_arena()
 	_place_fighters()
@@ -367,6 +398,7 @@ func _tick_active(delta: float) -> void:
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
 	_input_guard = maxf(0.0, _input_guard - delta)
 	_buffer_left = maxf(0.0, _buffer_left - delta)
+	_switch_lockout = maxf(0.0, _switch_lockout - delta)
 	if _buffer_left <= 0.0:
 		_buffered_attack = ""
 
@@ -428,23 +460,66 @@ func _resolve_player_strike() -> void:
 		state_changed.emit()
 		return
 
+	var is_quick: bool = bool(_pending_move.get("is_quick", false))
+	var move_id: String = pal.move_quick if is_quick else pal.move_charged
 	var damage: float = MATH.rolled_damage(
-		float(_pending_move.get("power", 9.0)), pal.attack, _enemy.defence, _rng.randf()
+		float(_pending_move.get("power", 9.0)), pal.attack, _enemy.defence, _rng.randf(),
+		_moves.power(move_id)
 	)
 	var killed: bool = _enemy.take_damage(damage)
 	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
 	_wild.call("play_faint" if killed else "play_hit")
-	_flash_at(_wild.call("centre"), not bool(_pending_move.get("is_quick", false)))
+	_flash_at(_wild.call("centre"), not is_quick)
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
-	if bool(_pending_move.get("is_quick", false)):
+	if is_quick:
 		pal.gain_energy_from_quick()
 
 	hit_landed.emit(true, damage)
 	state_changed.emit()
 	if killed:
+		_award_victory()
 		_begin_resolve("won")
+
+
+## --- progression (D30) ------------------------------------------------------
+
+## The fight has just been WON — `_enemy` is still valid (called before
+## `_begin_resolve` starts tearing anything down). The pal that landed the
+## killing blow gets the full award and a bond tick for the win; every other
+## non-fainted party member gets `party_share` of the same award, matching
+## the rest of the party having been "in the fight" without taking the risk.
+## A fainted party member gets nothing — it did not fight.
+func _award_victory() -> void:
+	if _enemy == null:
+		return
+	var cfg: Dictionary = PROGRESSION.config()
+	var award: int = PROGRESSION.xp_award_for(_enemy.level, cfg)
+	var share: int = PROGRESSION.party_share(award, cfg)
+
+	last_xp_award.clear()
+	for i in _party.size():
+		var member: RefCounted = _party[i]
+		if member == null or member.fainted:
+			continue
+		var amount: int = award if i == _active_index else share
+		var levels_gained: int = member.gain_xp(amount, cfg)
+		last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
+
+	var winner := active_pal()
+	if winner != null:
+		winner.gain_bond(int(cfg.get("bond", {}).get("battle_won", 0)), cfg)
+
+
+## D30's bond a freshly caught pal starts with. Split out of `_finish_catch`'s
+## success branch so this exact rule is reachable on its own, without the rest
+## of catch resolution's staged VFX/camera machinery.
+func _apply_catch_bond(caught: RefCounted) -> void:
+	if caught == null:
+		return
+	var cfg: Dictionary = PROGRESSION.config()
+	caught.gain_bond(int(cfg.get("bond", {}).get("successful_catch_start", 0)), cfg)
 
 
 ## Movement is the dodge. The pal is driven straight from the stick, in camera
@@ -629,8 +704,12 @@ func _on_enemy_strike() -> void:
 		state_changed.emit()
 		return
 
+	# The wild AI has one attack, not a quick/charged pair (scripts/combat/
+	# combat_ai.gd's Intent enum never branches on a move slot), so its own
+	# `move_quick` id stands in for "whatever this creature just swung with".
 	var damage: float = MATH.rolled_damage(
-		float(cfg.get("power", 8.0)), _enemy.attack, pal.defence, _rng.randf()
+		float(cfg.get("power", 8.0)), _enemy.attack, pal.defence, _rng.randf(),
+		_moves.power(_enemy.move_quick)
 	)
 	var killed: bool = pal.take_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
@@ -814,6 +893,12 @@ func _finish_catch() -> void:
 	var orb: Node3D = _throw.call("resting_orb")
 
 	if _catch_succeeded:
+		# D30: a caught pal starts with a bond head start rather than at zero,
+		# same as GAME_DESIGN.md's read that catching is itself an act of
+		# trust. `_enemy` IS what `caught_instance()` will hand the director in
+		# a moment, so setting it here is setting it on the instance that
+		# actually joins the party.
+		_apply_catch_bond(_enemy)
 		# The seal: the orb blooms warm and stays glowing, the camera stays on
 		# it through the fight's resolve pause, and the orb is only freed with
 		# the rest of the fight in `_finish()`.
@@ -917,6 +1002,113 @@ func _finish() -> void:
 
 	exited.emit(_outcome)
 	state_changed.emit()
+
+
+## --- switching (D32) --------------------------------------------------------
+##
+## Voluntary mid-combat switching. LOGIC ONLY here — the header comment has
+## named `_active_index` into `_party` as this seam since M2, and this is that
+## later milestone. No input is read here and no selector is drawn: a future
+## HUD milestone binds `combat_switch_left`/`combat_switch_right` (tap cycles,
+## hold opens the party strip, D32) to the functions below.
+##
+## There is no auto-switch-on-faint (D32's own "what was deliberately not
+## built") — a faint of the active pal still ends the fight exactly as it
+## always has. This only ever fires from the player's own choice.
+
+## Party indices, in `_party` order, that are alive and not the one currently
+## piloted — what a switch selector has to offer.
+func switchable_indices() -> Array[int]:
+	var out: Array[int] = []
+	for i in _party.size():
+		if i == _active_index:
+			continue
+		var member: RefCounted = _party[i]
+		if member != null and not member.fainted:
+			out.append(i)
+	return out
+
+
+## Is a voluntary switch allowed RIGHT NOW? Mirrors the guards the fight
+## already applies elsewhere: aiming owns the controls (`_drive_player_pal`'s
+## own comment), a resolving catch pauses the whole fight
+## (`is_resolving_catch`'s own comment), and `player_is_committed()` refuses
+## it mid-swing — switching out from under a wind-up would refund the very
+## commitment a charged attack is supposed to cost. The lockout stops a tap
+## being spammed into a stutter of pals.
+func can_switch() -> bool:
+	return is_fighting() \
+		and not is_aiming() \
+		and not is_resolving_catch() \
+		and not player_is_committed() \
+		and _switch_lockout <= 0.0
+
+
+## The next (`direction > 0`) or previous (`direction < 0`) switchable party
+## member from the active one, wrapping around the whole party order and
+## skipping fainted members. Delegates to `request_switch` so cycling and any
+## future direct-pick selector share one path in and one set of guards.
+func cycle_active(direction: int) -> bool:
+	var size := _party.size()
+	if size < 2:
+		return false
+	var step: int = 1 if direction >= 0 else -1
+	var i := _active_index
+	for _n in size - 1:
+		i = ((i + step) % size + size) % size
+		var member: RefCounted = _party[i]
+		if member != null and not member.fainted:
+			return request_switch(i)
+	return false
+
+
+## Switch the piloted pal to party index `index`. Guarded rather than
+## clamped: an illegal request is refused outright (returns false), never
+## partially applied.
+func request_switch(index: int) -> bool:
+	if not can_switch():
+		return false
+	if index < 0 or index >= _party.size() or index == _active_index:
+		return false
+	var member: RefCounted = _party[index]
+	if member == null or member.fainted:
+		return false
+
+	_activate_party_member(index)
+	_switch_lockout = float(MATH.config().get("switch", {}).get("lockout_seconds", 1.5))
+	pal_switched.emit(index)
+	state_changed.emit()
+	return true
+
+
+## The body-swap core. Re-points `_active_index` at `index` and, if the
+## incoming pal is a different species from whatever `_ally_body` is
+## currently wearing, re-skins that SAME body through `setup()` — the
+## identical call `encounter_director._spawn_ally_body()` makes for a brand
+## new pal. There is deliberately only one piloted body in a fight (M2's "one
+## of yours" scope never grew a second one), so a switch re-casts it rather
+## than instancing another; the incoming pal takes over at the exact position
+## and facing the old body already had, because that body never moved.
+##
+## The switched-OUT pal keeps its hp/energy exactly as the fight left them —
+## no reset, no heal; only the piloted identity changes. Action/cooldown state
+## resets to READY because it belongs to whichever pal is being piloted, and
+## it is safe to zero here: `can_switch()`'s `player_is_committed()` guard
+## already refused this call unless the fight was between actions.
+func _activate_party_member(index: int) -> void:
+	var incoming: RefCounted = _party[index]
+	_active_index = index
+
+	if _ally_body != null and str(_ally_body.get("species_id")) != incoming.species_id:
+		_ally_body.call("setup", incoming.species_id)
+
+	_action = Action.READY
+	_action_timer = 0.0
+	_pending_move = {}
+	_quick_cooldown = 0.0
+	_charged_cooldown = 0.0
+	_buffered_attack = ""
+	_buffer_left = 0.0
 
 
 ## --- readouts for the HUD -------------------------------------------------

@@ -15,6 +15,9 @@ extends Node
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/pals/pal_species.gd")
+## D30: wild pals spawn inside a level band rather than at one fixed level.
+const PROGRESSION := preload("res://scripts/pals/progression.gd")
+const PAL_INSTANCE := preload("res://scripts/pals/pal_instance.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
@@ -171,6 +174,7 @@ func _spawn_creatures() -> void:
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
 			wild.call("populate", species, _player)
+			_roll_wild_level(wild, species, rng)
 			wild.call("configure", MATH.config().get("wild", {}))
 			wild.set("home", wild.global_position)
 			# An aggressive pal asks; this node decides. Keeping the decision
@@ -184,6 +188,30 @@ func _spawn_creatures() -> void:
 		# Awaited: `adopt_starter` waits for ground under the spawn point, so
 		# calling it bare would hand back a coroutine and leave the pal unplaced.
 		await adopt_starter(default_starter)
+
+
+## Give a freshly `populate()`d wild pal a rolled level (D30), replacing the
+## flat level-1 instance `populate()` just built with one rolled against
+## `progression.json`'s `level.wild_band`.
+##
+## Rolled through THIS entry's own `rng` — the same generator the position
+## scatter just above already used and never `randomize()`s — rather than a
+## fresh unseeded roll. That is what keeps a creature met at a given spot the
+## same rough strength across boots, matching the determinism promise
+## `_spawn_creatures`'s own comment makes for position: a creature the owner
+## met yesterday reads as having wandered if it moves, but reads as broken if
+## its LEVEL is a different number every launch a smoke test happens to run.
+##
+## `wild_band` is a single global band in `progression.json`, not per-species
+## or per-spawns.json-entry: nothing in D30 or the follow-up session that
+## produced it asked for a rarer species to skew stronger, and adding that
+## split here would be inventing a rule nobody asked for. spawns.json stays
+## untouched by this change.
+func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator) -> void:
+	var cfg: Dictionary = PROGRESSION.config()
+	var definition: Dictionary = SPECIES.definition(species)
+	var leveled: RefCounted = PAL_INSTANCE.from_species(species, definition, rng.randf(), cfg)
+	wild.set("instance", leveled)
 
 
 ## Positions in spawns.json are absolute world metres — [x, y, z] with y always

@@ -78,8 +78,8 @@ func state() -> Node:
 ## backpack grid found that an EMPTY slot was flat-out indistinguishable from
 ## the panel background behind it, so nothing read as "a grid" between the
 ## filled cells. Only touches the "normal" state: hover/focus/pressed keep
-## whatever the shared menu theme already draws for them (the gold focus
-## ring), so this cannot dull the one state that has to be the loudest.
+## whatever the shared menu theme already draws for them (the teal focus
+## ring, D28), so this cannot dull the one state that has to be the loudest.
 func _style_slot(button: Button) -> void:
 	var box := StyleBoxFlat.new()
 	box.bg_color = Color(0.11, 0.14, 0.19, 0.85)
@@ -95,17 +95,15 @@ func _style_slot(button: Button) -> void:
 	button.add_theme_stylebox_override("normal", box)
 
 
-## Wraps `content` in the dark/teal panel (see PANEL_BG/PANEL_BORDER above).
+## Wraps `content` in the dark/teal panel (see `UITokens.BG_PANEL`/`UITokens.BORDER`).
 ## Copies `content`'s size flags onto the wrapper so wrapping never changes
 ## how a row lays out — a caller that expanded before still expands after.
 func _panel(content: Control, margin: int = 18) -> PanelContainer:
-	var box := StyleBoxFlat.new()
-	box.bg_color = PANEL_BG
-	box.border_color = PANEL_BORDER
-	box.border_width_left = 2
-	box.border_width_right = 2
-	box.border_width_top = 2
-	box.border_width_bottom = 2
+	# Built from UITokens.panel_box() and then overridden back onto this tab's
+	# own geometry (14px corners, a caller-chosen margin) rather than taken
+	# drop-in: the factory's RADIUS (10) and fixed 16px margin do not match
+	# what this screen already lays out, and this migration is constants-only.
+	var box := UITokens.panel_box(UITokens.BG_PANEL, UITokens.BORDER)
 	box.corner_radius_top_left = 14
 	box.corner_radius_top_right = 14
 	box.corner_radius_bottom_left = 14

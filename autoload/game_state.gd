@@ -19,11 +19,13 @@ extends Node
 
 const MENU_SCENE := "res://scenes/ui/game_menu.tscn"
 const SPECIES_PATH := "res://data/pals/species.json"
+const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 const PAL_INSTANCE := preload("res://scripts/pals/pal_instance.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
+const MAP_STATE := preload("res://autoload/map_state.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
@@ -36,6 +38,18 @@ var items: RefCounted = null
 var inventory: RefCounted = null
 var party: RefCounted = null
 
+## D33's one map database — fog-of-war, landmark discovery, dynamic markers.
+## See `autoload/map_state.gd`'s own header for why there is exactly one of
+## these. Configured from `data/config/map_landmarks.json` in `_ready()`, the
+## same "load+parse a data file" pattern `_species()` below already uses.
+var map: RefCounted = null
+
+## What the HUD's objective pointer shows right now. A plain field, not a
+## quest system — SB11's real one will replace it. `set_objective()` is the
+## only writer, so a marker on `map` and this text can never disagree about
+## what is currently tracked.
+var objective_text: String = "Follow the road to the village"
+
 ## In-game day, counted from 1. The release ledger and "time with you" on the
 ## ceremony screen both need a clock that is not wall time, and this is it.
 ## Nothing advances it yet; M10's day/night cycle will.
@@ -46,15 +60,26 @@ var day: int = 1
 var pending_build: String = ""
 
 ## R3.1. Every build piece the player has planted, as data — `{id, position:
-## [x,y,z]}` — independent of whatever scene node currently renders it. This is
-## the thing save/load actually persists; `build_placer.gd` reads it back to
-## respawn the world on load and appends to it on every real placement.
+## [x,y,z], yaw_deg}` — independent of whatever scene node currently renders
+## it. This is the thing save/load actually persists; `build_placer.gd` reads
+## it back to respawn the world on load and appends to it on every real
+## placement. `yaw_deg` joined in the save format's VERSION 2 (see
+## `scripts/save/save_game.gd`); every building placed before that defaults
+## to facing 0.
 var placed_buildings: Array = []
 
 ## R3.1. Save/load logic — `scripts/save/save_game.gd`. A plain RefCounted,
 ## same split as `party`/`inventory` above, so it is testable without a scene
 ## tree. See that file's header for the format and versioning rule.
 var save_system: RefCounted = null
+
+## Fallback satiety, read/written by `save_game.gd` ONLY when no live
+## `PlayerVitals` is reachable through `player_vitals()` below — a running
+## game always has one, since the project's single main scene always carries
+## a `Player`, so in practice this is exercised by headless callers (tests,
+## a save/load invoked before the world scene exists) rather than by real
+## play. See `save_game.gd`'s header for the full seam this backs.
+var satiety: float = 100.0
 
 ## DEVELOPMENT CONVENIENCE, AND IT IS MEANT TO BE DELETED.
 ##
@@ -70,6 +95,12 @@ var free_build: bool = false
 const PREF_FREE_BUILD := "free_build"
 
 var _menu: CanvasLayer = null
+
+## Throttle for fog-of-war discovery — see `_process()`. 0.5s is often enough
+## that walking never outruns its own fog trail, and rare enough that this
+## autoload is not doing a `get_node_or_null` tree walk every single frame.
+const _DISCOVERY_INTERVAL_S := 0.5
+var _discovery_elapsed: float = 0.0
 
 ## Device the LAST real input came from, for `input_glyph.gd`'s icon choice
 ## (bible sec18 wants live switching as the player's hands move; `HD1`'s
@@ -93,6 +124,8 @@ func _ready() -> void:
 	items = ITEM_DB.new()
 	inventory = INVENTORY.new(items)
 	party = PARTY.new()
+	map = MAP_STATE.new()
+	map.configure(_map_landmarks_config())
 	save_system = SAVE_GAME.new()
 
 	if OS.get_cmdline_args().has(DEMO_FLAG):
@@ -147,14 +180,80 @@ func advance_day() -> int:
 	return day
 
 
+## Fog-of-war discovery, throttled to `_DISCOVERY_INTERVAL_S`. Silently does
+## nothing when no player can be found — a test scene, the menu-only boot
+## screen, or a smoke test that instances the world without going through
+## `SceneTree.change_scene_to` (and so never becomes `current_scene`) all hit
+## this path, and none of them should ever see an error for it.
+func _process(delta: float) -> void:
+	_discovery_elapsed += delta
+	if _discovery_elapsed < _DISCOVERY_INTERVAL_S:
+		return
+	_discovery_elapsed = 0.0
+	var player := _find_player()
+	if player == null:
+		return
+	map.mark_visited(player.global_position)
+
+
+## The one Player in the running world, or null. Every existing test/tool in
+## this codebase reaches the player as `world.get_node_or_null(^"Player")`
+## (see e.g. `tests/smoke_playground.gd`); this is that same lookup rooted at
+## `current_scene` instead of a hand-held `world` reference, since `Game` has
+## none. There is no "player" group to join instead — this autoload is the
+## first thing to need one, and adding a group for a single lookup site would
+## be more machinery than the lookup itself.
+func _find_player() -> Node3D:
+	var tree := get_tree()
+	if tree == null:
+		return null
+	var scene := tree.get_current_scene()
+	if scene == null:
+		return null
+	return scene.get_node_or_null(^"Player") as Node3D
+
+
+## The live `PlayerVitals` (`scripts/player/player_vitals.gd`) hanging off
+## the current Player, or null when there is none to find. `player_vitals.gd`
+## is deliberately a plain `RefCounted` on the player node, not something
+## this autoload owns, so this is a lookup rather than a copy — the caller
+## reads or writes it directly and never gets a stale snapshot. Read by
+## `scripts/save/save_game.gd`, whose header explains why satiety is
+## persisted through this seam rather than a copy kept here.
+func player_vitals() -> RefCounted:
+	var player := _find_player()
+	if player == null:
+		return null
+	var vitals: Variant = player.get("vitals")
+	return vitals as RefCounted if vitals is RefCounted else null
+
+
+## Set (or clear) what the HUD's objective pointer shows. `world_pos` is
+## optional: pass a `Vector3` to also drop a "objective" dynamic marker on
+## `map` at that spot, or leave it null (the default) to track text only, or
+## to clear a marker a previous objective left behind.
+func set_objective(text: String, world_pos: Variant = null) -> void:
+	objective_text = text
+	if world_pos is Vector3:
+		map.add_dynamic_marker("objective", "objective", world_pos as Vector3)
+	else:
+		map.remove_dynamic_marker("objective")
+
+
 # --- save / load (R3.1) ------------------------------------------------------
 
 
 ## Record a real placement. `build_placer.gd` calls this once, right after the
 ## piece is spent and planted — the registry, not the scene node, is what a
-## save actually persists.
-func register_building(id: String, position: Vector3) -> void:
-	placed_buildings.append({"id": id, "position": [position.x, position.y, position.z]})
+## save actually persists. `yaw_deg` defaults to facing 0 — nothing arms a
+## rotation yet; the parameter exists so a future placement-rotation control
+## has somewhere to write without another format change.
+func register_building(id: String, position: Vector3, yaw_deg: float = 0.0) -> void:
+	placed_buildings.append({
+		"id": id,
+		"position": [position.x, position.y, position.z],
+		"yaw_deg": yaw_deg,
+	})
 
 
 ## Write `slot`. Returns whether it succeeded.
@@ -323,6 +422,18 @@ func make_pal(species_id: String, nickname: String = "") -> RefCounted:
 	var pal: RefCounted = PAL_INSTANCE.from_species(species_id, definition)
 	pal.nickname = nickname
 	return pal
+
+
+## The parsed contents of `data/config/map_landmarks.json`, or `{}` if it is
+## missing or malformed — `MapState.configure()` already treats an empty
+## config as "no landmarks, default tuning", so there is nothing extra to
+## guard here.
+func _map_landmarks_config() -> Dictionary:
+	var file := FileAccess.open(MAP_LANDMARKS_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
 
 
 func _species(species_id: String) -> Dictionary:

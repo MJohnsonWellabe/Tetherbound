@@ -197,6 +197,8 @@ func restore_from_game(game: Node) -> void:
 			continue
 		var placed := _spawn_building(game, id)
 		placed.global_position = Vector3(float(position[0]), float(position[1]), float(position[2]))
+		# R3.1 VERSION 2: buildings placed before yaw was tracked default to 0.
+		placed.rotation.y = deg_to_rad(float(record.get("yaw_deg", 0.0)))
 
 
 func _drop_ghost() -> void:

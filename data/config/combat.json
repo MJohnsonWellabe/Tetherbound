@@ -137,6 +137,10 @@
     "colour": "#ff5a3c",
     "radius": 1.1
   },
+  "switch": {
+    "_comment": "D32: voluntary mid-combat pal switching. lockout_seconds is how long after ANY switch before another is allowed, so a tap of combat_switch_left/right cannot be spammed into a stutter of pals. No auto-switch-on-faint: this only ever fires from the player's own choice. TUNABLE.",
+    "lockout_seconds": 1.5
+  },
   "target_marker": {
     "_comment": "R9.4-remainder-9-combat: a chevron over the real opponent's head, so it cannot be confused with an ambient decorative pal from the same spawns.json cluster. A pale, near-white colour on purpose \u2014 it must not compete with the impact flash's warm gold or the telegraph's warning red.",
     "colour": "#f4f7ff",

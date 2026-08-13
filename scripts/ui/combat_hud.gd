@@ -30,17 +30,11 @@ const ODDS_TIERS: Array = [
 	[0.0, "poor odds", "e87a5a"],
 ]
 
-## Health bar colour at full and at empty. The slide between them is the only
-## warning the player gets that the fight is going badly, since a placeholder
-## capsule cannot look hurt.
-const HEALTH_FULL := Color(0.35, 0.62, 0.28)
-const HEALTH_LOW := Color(0.72, 0.22, 0.18)
+## Health bar colour at full and at empty — `UITokens.HP_GREEN`/`UITokens.DANGER`
+## (D28). The slide between them is the only warning the player gets that the
+## fight is going badly, since a placeholder capsule cannot look hurt.
 const ENERGY_READY := Color(0.85, 0.70, 0.25)
 const ENERGY_FILLING := Color(0.55, 0.48, 0.30)
-## Nearly opaque. At 0.72 the enemy's health bar showed tree trunks and canopy
-## through its interior, which the blind critic read as a rendering fault rather
-## than as a style.
-const TRACK := Color(0.05, 0.05, 0.06, 0.94)
 
 ## Every label is outlined and shadowed rather than plated.
 ##
@@ -52,11 +46,8 @@ const TRACK := Color(0.05, 0.05, 0.06, 0.94)
 ##
 ## Outline rather than plate because the HUD has to work over a meadow, a cliff
 ## and a sunset without a designer choosing a plate colour for each; an outline
-## is the same decision everywhere and costs no layout.
-const OUTLINE := Color(0.03, 0.04, 0.05, 0.95)
-const OUTLINE_SIZE := 7
-const SHADOW := Color(0.0, 0.0, 0.0, 0.55)
-const SHADOW_OFFSET := Vector2(0.0, 3.0)
+## is the same decision everywhere and costs no layout. Values now come from
+## `UITokens` (D28) rather than a local copy.
 
 ## Unavailable verbs are dimmed, not blanked.
 ##
@@ -98,8 +89,8 @@ func _ready() -> void:
 	_manager = get_node_or_null(manager_path)
 	_director = get_node_or_null(director_path)
 
-	_ally_health_fill = _style(HEALTH_FULL)
-	_enemy_health_fill = _style(HEALTH_FULL)
+	_ally_health_fill = _style(UITokens.HP_GREEN)
+	_enemy_health_fill = _style(UITokens.HP_GREEN)
 	_energy_fill = _style(ENERGY_FILLING)
 	_dress(_ally_health, _ally_health_fill)
 	_dress(_enemy_health, _enemy_health_fill)
@@ -121,14 +112,20 @@ func _ready() -> void:
 ## Walked rather than set per node on purpose: the failure being fixed is a label
 ## somebody adds next month with no override on it, and a list of node paths here
 ## would not catch that.
+##
+## Kept as a local walker rather than routed through `UITokens.make_text_legible`
+## because of the last line: `shadow_outline_size` is a combat_hud-only addition
+## with no equivalent in the shared helper, and dropping it would be a behaviour
+## change, not a constants migration. The colour/size values themselves come
+## from `UITokens` (D28).
 func _make_text_legible(node: Node) -> void:
 	if node is Label or node is RichTextLabel:
 		var control := node as Control
-		control.add_theme_constant_override("outline_size", OUTLINE_SIZE)
-		control.add_theme_color_override("font_outline_color", OUTLINE)
-		control.add_theme_color_override("font_shadow_color", SHADOW)
-		control.add_theme_constant_override("shadow_offset_x", int(SHADOW_OFFSET.x))
-		control.add_theme_constant_override("shadow_offset_y", int(SHADOW_OFFSET.y))
+		control.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
+		control.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
+		control.add_theme_color_override("font_shadow_color", Color(UITokens.OUTLINE, 0.6))
+		control.add_theme_constant_override("shadow_offset_x", int(UITokens.SHADOW_OFFSET.x))
+		control.add_theme_constant_override("shadow_offset_y", int(UITokens.SHADOW_OFFSET.y))
 		control.add_theme_constant_override("shadow_outline_size", 2)
 	for child in node.get_children():
 		_make_text_legible(child)
@@ -145,7 +142,7 @@ func _style(colour: Color) -> StyleBoxFlat:
 
 
 func _dress(bar: ProgressBar, fill: StyleBoxFlat) -> void:
-	var track := _style(TRACK)
+	var track := _style(UITokens.TRACK)
 	track.border_width_left = 2
 	track.border_width_right = 2
 	track.border_width_top = 2
@@ -203,7 +200,7 @@ func _draw_enemy() -> void:
 	_enemy_name.text = str(foe.display_name)
 	var fraction: float = foe.hp_fraction()
 	_enemy_health.value = fraction * 100.0
-	_enemy_health_fill.bg_color = HEALTH_LOW.lerp(HEALTH_FULL, fraction)
+	_enemy_health_fill.bg_color = UITokens.DANGER.lerp(UITokens.HP_GREEN, fraction)
 
 	# The enemy's wind-up and its recovery, in words, because a placeholder
 	# capsule has no animation to show either with. Scaffolding for real
@@ -239,7 +236,7 @@ func _draw_ally() -> void:
 	_ally_name.text = str(pal.display_name)
 	var fraction: float = pal.hp_fraction()
 	_ally_health.value = fraction * 100.0
-	_ally_health_fill.bg_color = HEALTH_LOW.lerp(HEALTH_FULL, fraction)
+	_ally_health_fill.bg_color = UITokens.DANGER.lerp(UITokens.HP_GREEN, fraction)
 
 	var energy: float = pal.energy_fraction()
 	_ally_energy.value = energy * 100.0

@@ -20,7 +20,9 @@ extends CanvasLayer
 ## default) drive the cursor. Nothing here reads a device.
 
 const CONFIG_PATH := "res://data/config/menu.json"
-const THEME_PATH := "res://scenes/ui/menu_theme.tres"
+## D28: the teal focus ring theme replaces the old gold one. The prior
+## resource (`scenes/ui/menu_theme.tres`) is left in place, unreferenced.
+const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 
 ## How long a status line stays up. Long enough to read on a handheld held at
@@ -30,13 +32,6 @@ const STATUS_SECONDS := 3.0
 ## How long the panic chord has to be held before every control goes back to its
 ## default. Long enough that it cannot happen by accident during a fight.
 const PANIC_SECONDS := 1.5
-
-## Matches combat_hud.gd's own outline/shadow treatment so the refusal hint
-## reads the same as the HUD text it appears next to, without importing that
-## file's scene layout or constants.
-const REFUSAL_OUTLINE := Color(0.03, 0.04, 0.05, 0.95)
-const REFUSAL_OUTLINE_SIZE := 7
-const REFUSAL_SHADOW := Color(0.0, 0.0, 0.0, 0.55)
 
 var game: Node = null
 
@@ -116,9 +111,9 @@ func _build_refusal_label() -> void:
 	_refusal_label.offset_right = 400
 	_refusal_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	_refusal_label.add_theme_font_size_override("font_size", 28)
-	_refusal_label.add_theme_constant_override("outline_size", REFUSAL_OUTLINE_SIZE)
-	_refusal_label.add_theme_color_override("font_outline_color", REFUSAL_OUTLINE)
-	_refusal_label.add_theme_color_override("font_shadow_color", REFUSAL_SHADOW)
+	_refusal_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
+	_refusal_label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
+	_refusal_label.add_theme_color_override("font_shadow_color", Color(UITokens.OUTLINE, 0.6))
 	_refusal_label.add_theme_constant_override("shadow_offset_y", 3)
 	add_child(_refusal_label)
 

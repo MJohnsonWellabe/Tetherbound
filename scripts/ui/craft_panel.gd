@@ -16,8 +16,6 @@ extends CanvasLayer
 ## hand-rolled cursor here — see `game_menu.gd`'s own reliance on the same
 ## default chain.
 
-const PANEL_BG := Color(0.07, 0.09, 0.13, 0.90)
-const PANEL_BORDER := Color(0.55, 0.85, 0.86, 0.65)
 const COST_SHORT := Color(0.86, 0.42, 0.32)
 const COST_OK := Color(0.87, 0.89, 0.84)
 const STATUS_SECONDS := 2.4
@@ -86,13 +84,7 @@ func _build() -> void:
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(center)
 
-	var box := StyleBoxFlat.new()
-	box.bg_color = PANEL_BG
-	box.border_color = PANEL_BORDER
-	box.border_width_left = 2
-	box.border_width_right = 2
-	box.border_width_top = 2
-	box.border_width_bottom = 2
+	var box := UITokens.panel_box(UITokens.BG_PANEL, UITokens.BORDER)
 	box.corner_radius_top_left = 14
 	box.corner_radius_top_right = 14
 	box.corner_radius_bottom_left = 14

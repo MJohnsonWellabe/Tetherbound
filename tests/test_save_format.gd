@@ -1,13 +1,14 @@
 extends "res://tests/test_case.gd"
 
-## R3.1. Save/load round-trips — `scripts/save/save_game.gd`.
+## R3.1 / VERSION 2. Save/load round-trips — `scripts/save/save_game.gd`.
 ##
 ## Every failure here is one a player would meet as lost progress: a party
 ## that comes back with the wrong HP, a satchel that reshuffles slots on
 ## reload, a version bump that bricks an old save instead of leaving it
 ## alone. `FakeGame` below stands in for the `Game` autoload — it needs no
 ## scene tree, no menu, nothing `save_game.gd` does not actually read or
-## write (`day`, `party`, `inventory`, `placed_buildings`).
+## write (`day`, `party`, `inventory`, `placed_buildings`, `map`, `satiety`,
+## and — only when a test opts in — a live `player_vitals()`).
 ##
 ## Writes to a dedicated `user://test_saves_format/` directory rather than the
 ## real `user://saves/`, wiped before every test, so this file cannot leave
@@ -19,8 +20,18 @@ const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const PAL := preload("res://scripts/pals/pal_instance.gd")
+const MAP_STATE := preload("res://autoload/map_state.gd")
 
 const TEST_DIR := "user://test_saves_format/"
+
+## Stands in for `scripts/player/player_vitals.gd` — save_game.gd only ever
+## reads/writes a `satiety`/`max_satiety` pair on whatever `player_vitals()`
+## returns, so this bare-bones double is enough to exercise the "live vitals
+## reachable" half of the satiety seam without a scene tree.
+class FakeVitals:
+	extends RefCounted
+	var satiety: float = 100.0
+	var max_satiety: float = 100.0
 
 class FakeGame:
 	extends RefCounted
@@ -28,6 +39,16 @@ class FakeGame:
 	var party: RefCounted = null
 	var inventory: RefCounted = null
 	var placed_buildings: Array = []
+	var map: RefCounted = null
+	## Fallback satiety — round-tripped directly when `_vitals` below is null,
+	## mirroring the real `Game.satiety` field's job.
+	var satiety: float = 100.0
+	## Set by a test to exercise the "live vitals reachable" branch of the
+	## satiety seam; left null to exercise the fallback branch instead.
+	var _vitals: RefCounted = null
+
+	func player_vitals() -> RefCounted:
+		return _vitals
 
 var db: RefCounted = null
 var saver: RefCounted = null
@@ -220,3 +241,138 @@ func test_slots_are_independent_of_each_other() -> void:
 
 	assert_eq(saver.slot_info(0).get("day"), 1)
 	assert_eq(saver.slot_info(1).get("day"), 42)
+
+
+# --- VERSION 2: pal progression, satiety, map, building yaw -----------------
+
+
+func test_save_then_load_round_trips_pal_progression_and_moves() -> void:
+	var written := _game()
+	var pal: RefCounted = written.party.at(0)
+	pal.level = 7
+	pal.xp = 23
+	pal.bond = 44
+	pal.move_quick = "tackle"
+	pal.move_charged = "slam"
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var loaded: RefCounted = read.party.at(0)
+	assert_eq(int(loaded.get("level")), 7)
+	assert_eq(int(loaded.get("xp")), 23)
+	assert_eq(int(loaded.get("bond")), 44)
+	assert_eq(str(loaded.get("move_quick")), "tackle")
+	assert_eq(str(loaded.get("move_charged")), "slam")
+
+
+func test_save_then_load_round_trips_satiety_through_live_vitals() -> void:
+	var written := _game()
+	written._vitals = FakeVitals.new()
+	written._vitals.satiety = 37.0
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	read._vitals = FakeVitals.new()
+	assert_true(saver.load_slot(read, 1))
+	assert_almost_eq(float(read._vitals.satiety), 37.0)
+
+
+func test_save_then_load_round_trips_satiety_through_the_fallback_field() -> void:
+	# No live vitals reachable on either side -- the headless-caller path.
+	var written := _game()
+	written.satiety = 42.0
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_almost_eq(read.satiety, 42.0)
+
+
+func test_save_then_load_round_trips_map_discovery() -> void:
+	var written := _game()
+	written.map = MAP_STATE.new()
+	written.map.configure({})
+	written.map.mark_visited(Vector3(10.0, 0.0, 10.0))
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	read.map = MAP_STATE.new()
+	read.map.configure({})
+	assert_true(saver.load_slot(read, 1))
+	assert_true(read.map.is_discovered(Vector3(10.0, 0.0, 10.0)))
+	assert_false(read.map.is_discovered(Vector3(-100.0, 0.0, -100.0)))
+
+
+func test_save_then_load_round_trips_building_yaw() -> void:
+	var written := _game()
+	written.placed_buildings = [
+		{"id": "camp", "position": [1.0, 0.0, -2.5], "yaw_deg": 90.0},
+	]
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var entry := read.placed_buildings[0] as Dictionary
+	assert_almost_eq(float(entry.get("yaw_deg")), 90.0)
+
+
+func test_v1_save_migrates_pals_satiety_map_and_building_yaw_on_load() -> void:
+	var v1_data := {
+		"version": 1,
+		"day": 5,
+		"party": [{
+			"species_id": "terrapup",
+			"display_name": "Terrapup",
+			"pal_type": "ground",
+			"nickname": "Old Save Pal",
+			"max_hp": 120.0,
+			"attack": 22.0,
+			"defence": 20.0,
+			"hp": 90.0,
+			"energy": 0.0,
+			"fainted": false,
+		}],
+		"inventory": [null, {"id": "wood", "n": 5}],
+		"placed_buildings": [{"id": "camp", "position": [1.0, 0.0, 2.0]}],
+	}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(v1_data))
+	file = null
+
+	var read := _game(false)
+	read.map = MAP_STATE.new()
+	read.map.configure({})
+	assert_true(saver.load_slot(read, 1))
+
+	assert_eq(read.day, 5)
+
+	var pal: RefCounted = read.party.at(0)
+	assert_eq(str(pal.get("nickname")), "Old Save Pal")
+	assert_eq(int(pal.get("level")), 3, "migration.v1_pal_level from progression.json")
+	assert_eq(int(pal.get("xp")), 0)
+	assert_eq(int(pal.get("bond")), 0)
+	assert_eq(str(pal.get("move_quick")), "pebble_toss", "terrapup's own species.json moves")
+	assert_eq(str(pal.get("move_charged")), "stone_rush")
+
+	assert_eq(read.inventory.stack_at(1), {"id": "wood", "n": 5})
+
+	assert_eq(read.placed_buildings.size(), 1)
+	var building := read.placed_buildings[0] as Dictionary
+	assert_almost_eq(float(building.get("yaw_deg", -1.0)), 0.0)
+
+	assert_almost_eq(read.satiety, 100.0, 0.0001, "a v1 save has no satiety on record; migrate to full")
+	assert_almost_eq(read.map.discovered_fraction(), 0.0, 0.0001, "a v1 save predates the map; fog stays fresh")
+
+
+func test_version_3_payload_is_refused() -> void:
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify({"version": 3, "day": 55}))
+	file = null
+
+	var game := _game()
+	game.day = 1
+	assert_false(saver.load_slot(game, 1), "version 3 is newer than this build's VERSION 2 -- refuse it")
+	assert_eq(game.day, 1)
