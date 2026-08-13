@@ -1199,7 +1199,7 @@ measurement method), so an edit to those pixels can only reach the faces
 that were cut. villager_male's trousers are graded warm and lighter
 (mean sRGB 117,104,89 → 129,107,82) and villager_female's shin stain is
 repainted out of her other shin's skin. Both bases still animate on the
-same 23-bone rig with the same 6 clips, and per-garment `palette` entries
+same rig with the same 6 clips, and per-garment `palette` entries
 are now possible for the first time (spec §21). One macro-only residual on
 each is disclosed in the `DONE.md` entry, the same bar `NP7` accepted.
 

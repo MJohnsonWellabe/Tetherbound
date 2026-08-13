@@ -47,8 +47,10 @@ test and took orange drips; and keying the female's sides off bone names
 left the top third of the stain (knee faces, owned by the thigh bone)
 outside the repaint. Unlike `NP7` there was no hole to patch — the cut
 piece stays exactly where it was — and both halves keep their original
-per-vertex weights, so the legs still deform with the knees. Same 23-bone
-Armature, same 6 clips, both files round-tripped through the same Blender
+per-vertex weights, so the legs still deform with the knees. Same Armature and skin
+(verified in the shipped files: 24 joints on villager_male, 25 on
+villager_female, `NP7`'s `hair_ponytail` mesh still present), same 6 clips
+(`clip0/baselayer`, idle, jump, sprint, throw, walk), both files round-tripped through the same Blender
 glTF exporter `NP7` used, with the Meshy material's emissive/specular
 wiring intact on both materials (these materials drive Base Color AND
 Emission from the same image, so a garment copy has to move both or the
