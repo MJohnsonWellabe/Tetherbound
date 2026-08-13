@@ -54,10 +54,26 @@ uniform float fresnel_power = 4.0;
 uniform float fresnel_strength = 0.65;
 uniform float roughness_value = 0.12;
 
+// EV5-remainder — the flowing-water variant. The stream ribbon writes its
+// own course parameterisation into UV2 (x = metres ALONG the course, y =
+// signed metres across it), so the flow direction at every fragment is the
+// ribbon's own tangent — the parameterisation is the flow map, no texture
+// asset needed. With flow_enabled the wave normals scroll downstream in
+// that space instead of drifting in world space; ripples are stretched
+// along the flow axis by flow_stretch (< 1 elongates), which is most of
+// what visually separates running water from a breeze-rippled pond.
+// The pond plane never sets UV2 and never enables this.
+uniform bool flow_enabled = false;
+// Metres of course per second the ripple pattern travels. TUNABLE (water.json).
+uniform float flow_speed = 1.1;
+uniform float flow_stretch = 0.6;
+
 varying vec3 world_pos;
+varying vec2 course_uv;
 
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	course_uv = UV2;
 }
 
 void fragment() {
@@ -67,10 +83,22 @@ void fragment() {
 	float depth = max(world_pos.y - ground, 0.0);
 
 	// Two noise-normal layers scrolling in different directions; their sum
-	// stops either one's drift reading as a conveyor belt.
-	vec2 wuv = uv * wave_uv_scale;
-	vec3 n_a = texture(wave_normal_a, wuv + vec2(TIME, TIME * 0.6) * wave_speed).rgb;
-	vec3 n_b = texture(wave_normal_b, wuv * 1.7 - vec2(TIME * 0.8, TIME * -0.5) * wave_speed).rgb;
+	// stops either one's drift reading as a conveyor belt. In flow mode both
+	// layers instead run DOWNSTREAM in the ribbon's own course space, at
+	// incommensurate rates so they decorrelate without ever disagreeing
+	// about the direction of travel.
+	vec3 n_a;
+	vec3 n_b;
+	if (flow_enabled) {
+		vec2 fa = vec2(course_uv.y, (course_uv.x - TIME * flow_speed) * flow_stretch) * wave_uv_scale;
+		vec2 fb = vec2(course_uv.y * 1.7, (course_uv.x - TIME * flow_speed * 1.35) * flow_stretch * 1.7) * wave_uv_scale;
+		n_a = texture(wave_normal_a, fa).rgb;
+		n_b = texture(wave_normal_b, fb).rgb;
+	} else {
+		vec2 wuv = uv * wave_uv_scale;
+		n_a = texture(wave_normal_a, wuv + vec2(TIME, TIME * 0.6) * wave_speed).rgb;
+		n_b = texture(wave_normal_b, wuv * 1.7 - vec2(TIME * 0.8, TIME * -0.5) * wave_speed).rgb;
+	}
 	vec3 wave = normalize((n_a + n_b) - vec3(1.0));
 
 	// The wave noise dithers the depth ramp a whisker: an analytically clean
