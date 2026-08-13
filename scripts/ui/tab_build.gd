@@ -7,12 +7,13 @@ extends "res://scripts/ui/menu_tab.gd"
 ## lists a dozen buildable categories and the eleventh one after the camp should
 ## cost a JSON block and nothing else.
 ##
-## Confirming a piece does NOT place geometry. Placement, snapping and the
-## hammer belong to the building system (M8), which does not exist and is not
-## this agent's to write. Confirming arms `GameState.pending_build` and says so.
-## A build button that silently did nothing would read as a bug; one that arms a
-## selection is honest about where the work stops, and the seam is already the
-## right shape for the system that will read it.
+## Confirming a piece does NOT place geometry. Placement, grid-snapping,
+## neighbour-snapping and rotation belong to the building system (M8 /
+## `BG1`), which lives in `scripts/build/build_placer.gd` and
+## `scripts/build/build_grid.gd` — this tab only arms `GameState.pending_build`
+## and says so. A build button that silently did nothing would read as a bug;
+## one that arms a selection is honest about where the work stops, and the
+## seam is already the right shape for the system that reads it.
 ##
 ## NOTHING HERE DECIDES WHAT A PIECE COSTS. Affordability is `GameState`'s
 ## `can_afford`, the cost list is `GameState.build_cost_for`, and this file only

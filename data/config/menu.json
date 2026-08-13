@@ -77,6 +77,10 @@
           "actions": ["interact", "inventory", "map", "tool_cycle", "pal_recall"]
         },
         {
+          "name": "Building",
+          "actions": ["build_rotate"]
+        },
+        {
           "name": "Quick items",
           "note": "HD2. The five satchel slots at the top-left of the backpack grid, usable straight from the field.",
           "actions": ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
@@ -120,6 +124,7 @@
         "map": "Map",
         "tool_cycle": "Next tool  /  next tab",
         "pal_recall": "Call out  /  put away your pal",
+        "build_rotate": "Rotate the build ghost",
         "hotbar_1": "Use quick-item slot 1",
         "hotbar_2": "Use quick-item slot 2",
         "hotbar_3": "Use quick-item slot 3",

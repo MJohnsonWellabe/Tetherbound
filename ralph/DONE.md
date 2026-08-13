@@ -3,6 +3,613 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## LP7-remainder — `smoke_aggression`'s post-`LP7` flake, actually root-caused this time: the test harness's own player walk, not a scattered prop
+
+`tests: smoke_aggression` (also ran `run_tests` — 394 tests, 0 failed —
+`smoke_playground`, `smoke_traversal`). Re-opened from `BACKLOG.md`'s "Found
+along the way" item, itself re-opened past `LP7`'s documented ~7% residual
+because two independent CI runs (`R3.0`, `OF4`) and a clean local `main`
+checkout all reproduced the `closed_from` 44.1m/38.0m/44.2m/45.1m signature
+at rates well above 7%.
+
+**The incoming hypothesis was wrong, and the evidence says so directly.** The
+working theory going in was that the player's own straight-line walk in
+`smoke_aggression.gd::_walk_towards()` was snagging on the same kind of
+scattered prop (a tree's `StaticBody3D` collider) that `LP7` already fixed
+for the aggressor's chase. An instrumented scratch repro (position/velocity
+logged every physics frame, `UNSTICK_AFTER_FRAMES`-shaped stuck detection —
+20 consecutive frames with no movement while `move_forward` stayed held)
+caught the walk going dead on the 3rd attempt: `velocity` pinned to exactly
+`(0,0,0)` for 700+ consecutive frames, `closed_from` stuck around 40m,
+matching the reported CI signature almost exactly. A direct physics-shape
+query at the frozen position (`PhysicsShapeQueryParameters3D.intersect_shape`
+against the player's own collider, the same technique `LP7`'s own session
+used) found exactly **one** overlap: the `Terrain3D` node itself
+(`/root/MeadowsPlayground/Terrain`) — no `CommonTree_*_Collision` or any
+other prop anywhere near it. `ground_height_at()` sampled in a grid around
+the frozen position read an ordinary 5-11 degree grade, nowhere near the 45
+degree `floor_max_angle` on `Player`'s own `CharacterBody3D` — by every
+measure this test (or a level designer) can take, that patch of meadow is
+plain walkable ground. Yet `CharacterBody3D.is_on_wall()` reported `true`
+there every frame, with `get_slide_collision()` reporting the SAME ~10.5
+degree terrain normal classified as a wall collision, and the trainer's
+horizontal velocity locked to exactly zero for the rest of the walk budget.
+This is a real, if narrow, Terrain3D/`move_and_slide` interaction on
+ordinary ground — not (as the hypothesis assumed) an obstacle-avoidance gap
+against a discrete prop.
+
+**Why the test still needed a fix even though the terrain finding is
+narrow.** A real player would feel this in under a second and nudge the
+stick sideways without thinking about it — nothing here is a serious
+traversal complaint. But `_walk_towards()` drives the player with
+`Input.action_press("move_forward")` held perfectly straight for up to 4000
+frames with zero adaptation, which is a far more rigid input than any real
+player produces, and that rigidity is what turns a trivial terrain snag into
+a hard test failure. `wild_pal.gd::_tick_aggression` already solves the
+identically-shaped problem (progress stalls → steer off the direct line,
+alternating sides every ~0.5s) for the aggressor's own chase, so
+`_walk_towards()` now carries the same escape, with the same
+`UNSTICK_AFTER_FRAMES`/`UNSTICK_STEER_RAD` numbers, rather than continuing to
+have none.
+
+**Verification.** 20 runs of `smoke_aggression.gd` after the fix, headless,
+one at a time (the box was under real contention from other concurrent
+sessions during this pass — a couple of runs were killed by resource
+starvation rather than failing, and are not counted): **zero** recurrences of
+the targeted `closed_from`-stuck-far-away signature. Two of the 20 hit a
+DIFFERENT, already-known, already-accepted failure —
+`"stood 9.6m/9.7m from Galecrest for 900 frames ... never attacked"` — which
+is `LP7`'s own documented residual (its `DONE.md` entry cites an identical
+example, "one case still 8.34m out"): the aggressor's OWN chase occasionally
+still doesn't finish closing within the 900-frame patience window, unrelated
+to the player's walk this entry fixes. Reported honestly rather than rounded
+away: this pass closed the walk-getting-stuck failure mode at 20/20, and
+left `LP7`'s separate ~1-in-10 residual exactly where it was, not chased
+further here since it is out of this item's scope and already tracked.
+
+Full suite re-run after the fix: 394 tests, 0 failed (matches the pre-fix
+baseline exactly — this only touches `tests/smoke_aggression.gd`).
+`smoke_playground` and `smoke_traversal` both green (`smoke_traversal` is
+just a genuinely slow test — ~4 legs of 2700 frames plus an 11-bearing
+perimeter walk — not related to this fix; it does not exercise
+`smoke_aggression.gd`'s code at all).
+
+## NP7 — villager_female's twin-ponytail split into a real, re-skinned, toggleable mesh
+`model: sonnet` — mechanical/asset work, no dispatch. `tests: full suite`
+(398/398, 4 new cases in `tests/test_character_hair_split.gd`), plus a real
+in-engine visual pass (see below).
+
+**What shipped.** `assets/characters/villager_female/villager_female_lod0.glb`
+went from one fused mesh/one material to two: the original body (scalp hole
+patched) and a new `hair_ponytail` mesh, both still skinned to the same
+23-bone Armature, all 6 original clips untouched. No Meshy generation, no
+credits spent — the source was the shipped mesh itself, per the owner's
+2026-08-13 redirect (`BLOCKED.md`'s `NP1-geometry`, `BACKLOG.md`'s `NP7`).
+
+**Investigation before touching anything.** Rendered the head from five
+angles in Blender/Cycles first (headless, no display needed —
+`--background`) rather than assuming the "occluded twin-ponytail" ledger
+note meant a trivial seam. It didn't: the ponytail is genuinely a separate
+hanging protrusion (visible tie/groove in a right-profile render, an actual
+modelled hair-tie colour band even), not hair merely painted onto a bald
+scalp. Confirmed the target region geometrically before cutting anything by
+sampling the base-colour texture per vertex (hair-dark vs skin vs green
+clothing) combined with dominant vertex-group weight (Head/neck) and a Z/Y
+window — not a guessed bounding box.
+
+**The cut.** `bpy.ops.mesh.separate(type='SELECTED')` on the classified
+face set (1115 of 27998 faces), in a script under
+`tools/art_pipeline/blender/` conventions (headless, `--background`).
+Straightforward.
+
+**The patch was the hard part, and is where most of this session's time
+went.** The source mesh is NOT the "single continuous manifold" the
+pre-existing `NP1-geometry` note assumed — direct measurement found 8978
+boundary edges on the fully untouched source mesh (18851 verts), from
+dense pre-existing UV-island seams (position-duplicated vertices, common in
+a Meshy retexture pass) that happen to sit throughout the hair region
+specifically. This meant:
+- `bmesh.ops.holes_fill()` on the cut's own boundary edges alone produced
+  **zero** faces — the true perimeter is fragmented into ~23 disconnected
+  pieces by those pre-existing seams crossing it, not one clean loop.
+- Widening the fill to every boundary edge in the removed region's bounding
+  box (scoped that way specifically so the many OTHER pre-existing seams
+  elsewhere on the body, arms/legs/torso, are never touched) pulled in the
+  UV-seam noise too and still produced almost nothing.
+- Isolating the TRUE rim by position-uniqueness (a boundary vertex is part
+  of the real cut only if nothing else on the body sits at its exact
+  position — a pre-existing seam's "other side" is still present, a true
+  gap's is not) and fan-filling every closed loop found in that true rim,
+  unfiltered, DID close most of the hole but produced a visible spike
+  triangle in a rendered check — confirmed by isolating just the separated
+  hair mesh on its own (clean, no spike) versus the patched head (spike
+  present), proving the defect was in the fill, not the cut.
+- The fix that actually shipped: only fan-fill loops of 10+ points (smaller
+  "loops" found by the adjacency walk turned out to be near-degenerate
+  artifacts of the noisy seam-crossed boundary, not real rings), plus a
+  per-triangle guard against any spoke edge more than 2.5x the loop's own
+  average radius. Rendered clean at every angle checked afterward except
+  one extreme macro close-up, which still shows a thin residual seam line —
+  disclosed below, not hidden.
+
+**Re-skinning.** The separated hair mesh inherited the original fused
+mesh's per-vertex weights (blended Head/neck near the boundary, correct for
+when it was still part of one piece but not for an independently-toggleable
+part). Cleared every vertex group except `Head` and set it to weight 1.0 on
+all 883 hair vertices, per the backlog item's own instruction. The
+remaining body mesh keeps its original weights untouched — only vertices
+were removed, nothing about the survivors' skinning changed.
+
+**`character_model.gd::_apply_hair()`** now finds a real `hair_ponytail`
+mesh inside the loaded model (when the base ships one) and toggles/recolours
+it directly, instead of always building a placeholder primitive — the
+existing mechanism, extended, not replaced. Falls back to the placeholder
+path unchanged for trainer/Grandpa/Warden, which still have no separable
+hair. `data/config/art.json` gained a `"hair": {"visible": true}` block on
+`villager_farmer`/`villager_smith`/`villager_ranger` (the three
+villager_female-based NPCs) so the mechanism is actually exercised in the
+shipped config, not just available — the default look is unchanged (hair
+was already visible before this item), but it now runs through a real
+find/toggle path.
+
+**The `_attach_part()` scale-offset bug** the backlog item asked to be
+fixed while in this function: checked directly rather than assumed fixed or
+assumed present. Built a scratch probe (off-tree, no rendering, matching
+`tests/test_case.gd`'s scope) that placed a placeholder hair part on the
+trainer and read `attachment.global_transform`, the `Head` bone's
+`global_rest`/`global_pose`, and the whole node chain's `scale` up to the
+Armature. Every scale in the chain measured `(1,1,1)` on both the trainer
+and villager_female's rigs today, and a `Vector3(0, 0.08, 0)` offset landed
+at its full 0.08m magnitude, correctly rotated with the bone — **not
+reproducible against either shipped rig.** Most likely explanation: the
+giant-player fix (`render_bounds.gd`, already shipped, described in its own
+header comment) closed this as a side effect — a residual 0.01 Armature
+scale is exactly the other half of what a naive local-space offset would
+need to land at 1/100, and that fix's whole point was making `_art`'s own
+fit scale stop needing a ~100x correction. Hardened `_attach_part()` anyway
+per the item's instruction: it now reads the attachment's actual chain
+scale and divides both the authored offset and the instance's own scale by
+it, so a future rig that DOES carry a residual scale is protected at zero
+behavioural cost today (confirmed: the full suite and a rendered check both
+came back identical before and after this specific change).
+
+**Verification, in full:**
+- `godot --headless --path . --import` — clean, no script errors.
+- `godot --headless --path . --script tests/run_tests.gd` — 398/398, 0
+  failed (394 before this item; 4 new cases added in
+  `tests/test_character_hair_split.gd` covering the real-geometry
+  find/toggle/recolour path and the "no hair config -> nothing attached"
+  guard for bases with no split mesh).
+- Visual: rendered `tools/capture_village_npcs.gd`'s real production frame
+  (all 5 village NPCs, 3 of them on the split base with 3 different
+  tints) — all three read with an intact, correctly-shaped ponytail, no
+  visible seam or artifact at normal camera framing. A deliberate
+  in-engine close-up hunting for the known residual (same angle the
+  Blender macro render found it at) shows a thin seam line at the nape —
+  small, real, and disclosed rather than hidden; not visible in the
+  production frame or at any normal gameplay distance. Godot's own
+  Compatibility renderer used for this check, not just the Blender/Cycles
+  renders used during investigation.
+- Full `visual-judge` skill machinery (survey.sh + blind sub-agent against
+  the key-art/Palworld references) was not run — that pipeline judges the
+  whole environment's art direction, not a single character mesh change,
+  and this session had no tool available to spawn a genuinely separate
+  blind reviewer for a narrower check. Substituted a direct, honest look at
+  the rendered frames instead, described plainly above rather than scored.
+
+## OF4-rebuild — The stronghold is now a real assembled castle, not a shader silhouette
+`data/config/building_prefabs.json`, `scripts/world/building_prefabs.gd`,
+`scripts/world/landmark.gd`, `assets/buildings/quaternius_castle/*.obj`
+(21 curated modules from `BG2`'s staged kit), `docs/ASSET_LEDGER.md`.
+`tools/capture_castle_lite.gd` added as scratch verification tooling, not a
+permanent addition (see its own header — delete when no longer needed).
+`model: sonnet`. Implements `docs/decisions/D28`.
+
+**Approach taken: Option A** (a `building_prefabs.json` recipe, the same
+author-time `{module, at, yaw_deg}` pattern `EV6`'s whole settlement already
+uses), not Option B (driving `BG1`'s live interactive placer). Reasoning:
+the deliverable is static, always-loaded scenery that must never be
+player-movable — Option B would have meant building at runtime through the
+interactive placer and then somehow freezing/exporting the result, extra
+mechanism for no benefit over just writing the recipe directly, which is
+also the exact pattern every other structure in the game (the whole
+settlement, `road_gate_leaf`) already uses. `building_prefabs.gd` needed one
+real extension to serve this: `BG2`'s kit ships OBJ+MTL, not glTF (unlike
+the Medieval Village kit already composed here), so `_build_template` now
+tries `.gltf` first and falls back to loading a module as a bare `Mesh`
+(exactly the pattern `grandpa_house.gd::_furnish` already uses for the
+Furniture/Survival OBJ props) — additive, every existing glTF-based recipe
+is untouched.
+
+**What shipped.** A `castle` prefab: 113 modules — two-course curtain walls
+(`Wall(Bricks)` + `TallWall(Bricks)`, ~3.9m total) around a ~23x17m
+enclosure, a gate (`WallEntranceBricks`+`TallWallEntrance`, the arch cut
+into the wall itself, no separate gate model exists in the kit), four
+corner towers of four different pieces at four different heights so the
+skyline is not one part repeated (a stacked `LargeSquareTowerBricks`+
+`SmallSquareTowerBricks` "keep" at 6.20m, a standalone `PointyTower` spire
+at 5.39m, `LargeTower` at 4.50m, `LargeSimpleTower` at 3.69m), twin
+`SmallSquareTower` gatehouse flankers (2.02m), a `SimpleTowerBricks`
+mid-wall turret, and a `Banner`. `landmark.gd` places this at the unchanged
+site (`RISE_CENTRE + OFFSET`, per `OF9`/`OF13` — moving the site was
+explicitly out of this task's authority per `D28` and CLAUDE.md's
+ask-before-inventing list) on a new stone plinth (a plain `BoxMesh`, vertical
+faces — `OF4`'s own history already found a battered/sloped terrace face
+read as a rock crag once flat-filled, so this keeps that lesson even though
+the plinth is normally shaded now) sized and positioned from a live probe
+against the site's own heightfield (~2.3m of real relief measured across
+the footprint) so no corner floats or is buried. Real per-material colours
+via `building_prefabs.json`'s existing `retint` mechanism, because every
+material in the kit's own MTLs (`LightRock`/`DarkRock`/`Black`/`Celing`/
+`LightWood`/`Banner`) exports at an identical placeholder grey — confirmed
+directly against the OBJ/MTL text and a headless material dump, a real gap
+in this pack's Blender export, not a rendering bug. `landmark.gd`'s old
+`unshaded`/primitive-shader material is gone; the castle renders shaded
+under normal lighting, which is the whole point of using a real kit instead
+of a silhouette (the wayfinding argument for `unshaded` no longer applies:
+`OF13` already moved the site out of every long-range frame a player
+actually sees, so there is no longer a from-any-angle constraint to hold).
+
+**Verification tooling had to be built before verification could happen.**
+`tools/capture_wayfinding.gd` (the tool the task pointed at) loads the
+entire `meadows_playground.tscn` scene — full vegetation scatter (25,946
+instances), water, village, NPCs — and under this container's software
+(xvfb + opengl3/llvmpipe) renderer that build cost is documented elsewhere
+in this file at 10-40+ real minutes, and in practice this session it ran
+past 50 real minutes without completing even once, including across a
+container restart that killed an in-flight run outright. `tools/
+capture_castle_lite.gd` (new, scratch) builds ONLY what the castle's own
+render depends on — the real terrain bake, the real ground materials, the
+real `world_look.gd` day lighting/environment/fog, and `landmark.gd` itself
+— by calling `playground_world.gd`'s own terrain-building methods directly
+on a detached instance of that script (never added to the SceneTree, so its
+`_ready()` — the thing that triggers the full vegetation/settlement build —
+never fires) and reparenting only the resulting Terrain3D node into a real
+stage. This is not a permanent tool; delete it once nobody needs this
+verification again. Runs in under 3 minutes per pass instead of 10-40+.
+Two real bugs surfaced and were fixed getting this working, worth recording
+since they'll bite the next person who writes a capture tool: (1) the
+canonical capture invocation (`tools/survey.sh`) never passes `--headless`
+— adding it (as this session did, repeatedly, before catching it) makes
+`RenderingServer.frame_post_draw` hang forever under xvfb+opengl3, silently,
+with no error; (2) Terrain3D's `_grab_camera()` permanently disables its own
+`_physics_process` if no camera exists the instant it enters the tree, so
+the camera has to exist and be current, and `terrain.set_camera()` has to be
+called explicitly, before the terrain node is added.
+
+**Blind-critique pass — self-administered, not a genuinely separate critic,
+and that limitation is real, not a technicality.** `ralph/conventions.md`'s
+own process assumes a separate sub-agent with no knowledge of what changed;
+no tool available in this session's toolset could spawn one (no general
+task/subagent tool, and the cross-session remote-session tool was judged too
+risky given this same task had already lost significant progress once to a
+container restart). What ran instead: the rubric applied rigorously against
+`docs/reference/` by the same session that built the castle, which is
+weaker evidence than a real blind pass and is reported as such rather than
+dressed up as one.
+
+- **Round 1** (`shots/wayfinding/silhouette-close.png`/`silhouette-approach.
+  png`, first `capture_castle_lite.gd` render): real defects named — the
+  wall read as one flat near-white value with the intended `LightRock`/
+  `DarkRock`/`Black` material distinction essentially invisible; the gate
+  opening read as a jagged, triangular pale gap rather than a doorway; at
+  distance the castle read as a weak pale smear against the hill/sky,
+  failing the rubric's "readable at small size" criterion; the plinth read
+  as a stark flat-topped slab. Fix applied: darkened and increased contrast
+  in `building_prefabs.json`'s `castle` retint (`LightRock` #9c9284→#786d5e,
+  `DarkRock` #655c52→#463f37, `Black` #211d1a→#18140f, `Celing`
+  #4a3a2e→#3a2c22, `LightWood` #8a6742→#7a5c39).
+- **Round 2**: real, visible movement on the round-1 complaint — the castle
+  went from a barely-visible pale smear to a clearly legible dark silhouette
+  against the grass/hill at the distant vantage, and the close vantage reads
+  as believable stone rather than pale plaster. New defect named: the fix
+  darkened the wall past the plinth's original colour, inverting the value
+  relationship (foundation now lighter than the walls above it, reading as
+  structurally backward). Fix applied: darkened `landmark.gd`'s
+  `PLINTH_COLOUR` from #544c44 to #332e28, below the wall's own darkest
+  retint, restoring "foundation reads darkest" ordering.
+- **Round 3**: confirmed fix landed — foundation/wall value hierarchy reads
+  correctly, no regression on round 2's distance-legibility win. Investigated
+  the still-open gate-seam defect: measured `WallEntranceBricks` and
+  `TallWallEntrance`'s own OBJ vertex bounds directly and found their arch
+  cuts sit in different Z-planes (z=(-0.396,0.163) vs z=(-0.184,0.240)) —
+  not a matched pair, which is the mechanical cause of the jagged opening.
+  Fix attempted: swap the upper course to a solid `TallWallBricks` (no cut),
+  keeping only the lower course's single archway, reasoning that the
+  landmark is non-enterable so a single-course-height opening costs nothing
+  functionally.
+- **Round 4**: the fix regressed. Rendered, the "solid upper course" swap
+  removed the visible gate opening ENTIRELY rather than cleaning it up —
+  worse than the jagged-but-present arch it replaced, and the task's own
+  done-when requires at least one visible gate/entrance. Reverted to round
+  3's two-course jagged arch. Stopped here on an explicit instruction to
+  wrap up mid-pass rather than continue iterating; the mismatched-arch-plane
+  seam is recorded as a genuinely open, unresolved defect below, not
+  silently accepted.
+
+**Honest remainder, not closed clean.** The gate reads as a doorway-shaped
+gap in the wall from a distance and up close, but the opening's own edge is
+jagged/broken rather than a clean arch, because the kit's two entrance
+modules (`WallEntranceBricks`, `TallWallEntrance`) were not authored as a
+matched stacking pair — a genuine kit-geometry limitation, not a placement
+mistake, confirmed by direct vertex measurement. Fixable only by sourcing a
+different/matching entrance module (none exists in the currently staged 21)
+or accepting the seam; not something further recomposition can close. Two
+consecutive un-run rounds are NOT claimed here — this stopped after round 4
+on explicit instruction, with round 4 itself having just named a regression
+and been reverted, so `ralph/conventions.md`'s "two flat rounds" convergence
+signal was never reached. Whoever picks this back up should treat rounds
+1-3 as real, kept progress and the gate seam as the next thing to try (a
+genuinely independent blind critic first, since this pass's self-administered
+nature is real evidence but weaker than the process calls for).
+
+**Tests.** `godot --headless --path . --import` clean. Full suite
+(`tests/run_tests.gd`): **421 tests, 89419 assertions, 0 failed** (matches
+the pre-existing baseline exactly — this task touched no test-covered
+system). `tests/smoke_playground.gd` and `tests/smoke_free_build.gd` both
+pass with the castle code active (`smoke_free_build.gd` also confirms `BG1`'s
+grid/rotate/snap placement is unaffected). `tests/smoke_traversal.gd`
+confirmed clean too (`traversal: OK — the ground is solid across the
+playground, the perimeter holds, and the kill volume returns a fallen
+player to spawn.`, exit 0) — expected, since `world_perimeter.gd` does not
+reference `landmark.gd` at all.
+
+## BG1 — A real grid/rotate/snap building placement system, replacing the one-piece-no-rotation ghost
+
+`scripts/build/build_grid.gd` (new), `scripts/build/build_placer.gd`,
+`autoload/game_state.gd`, `project.godot`, `data/config/menu.json`,
+`scripts/ui/tab_build.gd`. `model: sonnet` — mechanical systems/UI work, no
+new models or materials, so `ralph/conventions.md`'s blind-critique rule
+does not apply.
+
+`docs/decisions/D28` named this the first of two prerequisites for
+rebuilding `OF4` as a real assembled castle (`BG2`, sourcing real
+castle-parts assets, is the other — see the entry directly below, landed in
+parallel on a separate isolated worktree).
+Before this, `build_placer.gd` ghost-placed exactly one piece 3m ahead of
+the player with no rotation and no snapping (`tab_build.gd`'s own header
+comment said so); `building_prefabs.json`'s `{module, at, yaw_deg}` recipes
+were the only precedent for "modular pieces on a grid" in the codebase, and
+that format is author-time JSON, not a runtime player system.
+
+**What shipped:**
+
+- **Grid**: `build_grid.gd::snap_to_grid` rounds a raw placement onto a 2m
+  world-space X/Z grid — the same module size `building_prefabs.json`'s own
+  header already establishes for the Medieval Village kit ("walls 2.0w x
+  3.12h, measured"), so a player-placed piece and an author-placed
+  settlement piece land on the same lines. Grid lines run through the world
+  origin, so any two independently grid-snapped pieces are automatically
+  flush with no neighbour bookkeeping needed.
+- **Rotation**: a new `build_rotate` input action (keyboard `T`, gamepad
+  D-pad down) steps the armed ghost through 4 orientations, 90 degrees each.
+  Listed in a new "Building" controls group so it is rebindable and shows up
+  in `tests/test_controls.gd`'s "every rebindable action is on screen"
+  sweep for free. Rotation resets to 0 whenever a new ghost is created
+  (switching pieces in the Build tab, or re-arming after a placement) —
+  deliberately simple and predictable over persisting rotation across
+  separate arm/place cycles.
+- **Neighbour snap**: `build_grid.gd::resolve_position` — when an
+  already-placed piece of the SAME catalogue id (`wall`-to-`wall`,
+  `floor`-to-`floor`, tracked via `set_meta("building_id", id)` on each
+  placed node) sits within 2.6m, the new piece locks flush against it: a
+  whole number of grid cells from the neighbour's own position, AND the
+  neighbour's own ground-clamped height, so a wall run stays flush over
+  undulating terrain instead of stair-stepping to whatever raw terrain
+  happens to sit under each new piece. Landing exactly on the neighbour's
+  own cell (aiming almost dead-on) is pushed out one cell along whichever
+  axis was actually approached, rather than returning full overlap.
+- **Legality**: the existing green/red ghost tint now also fails on an
+  exact-same-cell occupancy check (same id, same grid cell) — the slope
+  check is skipped when snapped to a neighbour, since the neighbour's own
+  ground-clamped height already answers the "is this flat enough" question
+  and re-checking raw terrain under it would reject the very thing snapping
+  exists for.
+- **One piece at a time**, arm-place-rearm, same as before — no multi-select
+  drag rectangle. The smallest version that satisfies real castle
+  construction: place, rotate if needed, plant, repeat.
+- **Save/load**: `GameState.register_building(id, position, yaw_deg = 0.0)`
+  — an added optional parameter, not a version bump. `save_game.gd` treats
+  `placed_buildings` entries opaquely (a `Dictionary` it round-trips
+  as-is), so an old save with no `yaw_deg` key loads exactly as before
+  (`build_placer.gd::restore_from_game` defaults a missing key to `0.0`) —
+  the "carry on, do not brick the player" rule `D15` set for the settings
+  file, now proven for saves too (`test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry`).
+
+**Merge-time history, corrected:** the worktree this shipped from picked
+gamepad D-pad down for `build_rotate` without knowing a concurrent session
+had independently claimed the same button for its own `item_drop` action
+(see the `Backpack equip/drop/split verbs` entry below) — both audited the
+same "free" button because neither could see the other's in-flight work.
+At the time, this was confirmed safe rather than reassigned (`build_placer.
+gd` only runs while the game tree is unpaused, and `item_drop` only read
+while the backpack tab had paused it open, so the two could never fire
+from the same physical press). That reasoning is now moot: a third,
+independent session shipped its own backpack drop/split implementation
+(`backpack_drop`/`backpack_split`, different buttons entirely) to `main`
+first, and the owner kept that one when reconciling all three branches —
+`item_drop` no longer exists, so `build_rotate` has D-pad down entirely to
+itself.
+Noted in `project.godot` next to both action blocks.
+
+**Design calls made, and why they didn't need to go to `BLOCKED.md`:** which
+axis (position) snap radius, grid size, and rotation step to use were all
+CLAUDE.md "Tunable Values" — chosen, documented as tunable in
+`build_grid.gd`'s own header, and derived from an existing number
+(`building_prefabs.json`'s 2m grid) rather than invented from nothing.
+Nothing here touches CLAUDE.md's "ask/flag instead of inventing" list —
+this is `D28`'s prerequisite system, already authorized, not a new design
+decision (dodge/block, party limit, storage, etc. are untouched).
+
+**Tests:** `tests/test_build_grid.gd` (new, 12 tests) — pure logic for
+grid snap, rotation stepping, and neighbour snap, including the
+land-on-a-neighbour's-own-cell edge case. `tests/test_register_building.gd`
+(new, 4 tests) — the `yaw_deg` accessor contract in isolation.
+`tests/test_save_format.gd` — 2 new tests, rotation round-trip and the
+older-save-with-no-yaw-deg compatibility case. `tests/smoke_free_build.gd`
+extended with `_check_bg1_grid_rotation_and_snap`: rotates a real ghost 180
+degrees through two `build_rotate` presses, plants it, computes a second
+placement's aim point directly from the first piece's own reported
+position (not a hand-guessed world coordinate) so it lands within snap
+range but off-grid, and confirms the second piece snaps exactly one grid
+cell away at the same height, spends real inventory, and both rotations
+land correctly in `GameState.placed_buildings`.
+
+Verified: `godot --headless --path . --import` clean (no script errors).
+Full suite (`tests/run_tests.gd`, required — this touches an autoload and
+the save format): **412 tests, 89376 assertions, 0 failed** (up from the
+pre-change baseline of 394/0 failed; the 403 this repo's setup notes
+expected was already stale before this task started — confirmed by
+running the identical suite against `HEAD` with this branch's changes
+stashed, also 394/0 failed). `tests/smoke_free_build.gd`: exit 0, full log
+including the new BG1 checks —
+"wall #1 planted rotated 180 degrees, as pressed",
+"wall #2 snapped flush against wall #1, 2.0m away, same height",
+"GameState.placed_buildings recorded both walls' rotation: [180.0, 0.0]".
+No other `smoke_*.gd` file matches `grep -rl "build" tests/smoke_*.gd`
+besides this one.
+
+## BG2 — Genuine CC0 castle/fortress kit found and staged: Quaternius's Modular Medieval Building Pack
+`docs/ASSET_LEDGER.md`, `ralph/BACKLOG.md` on `claude/ralph-phase-1-backlog-22u3pz`
+(isolated worktree session). `tests: none` (asset acquisition, no code
+touched). Raw asset staging only — no curation into `OF4` itself, that
+stays `OF4-rebuild`'s job.
+
+**Found it on quaternius.com itself, not itch.io — same publisher as the
+two already-staged kits, deliberately checked first per the task's own
+instructions because a same-publisher pack was the strongest coherence bet.**
+`quaternius.com/packs/modularmedievalbuildings.html` ("Modular Medieval
+Building Pack") is a genuine fortification kit — its own preview render
+(`.../assets/images/fullres/medievalbuildings.jpg`) shows crenellated
+curtain walls (plain and with an archway), multiple corner/watch towers
+with conical and pyramidal roofs, a full battlemented wall run, an arched
+bridge/tunnel piece, a well, watchtower stands, doors and windows. CC0 1.0
+(same licence badge/link as every other Quaternius pack already in the
+ledger).
+
+**Downloadable without itch.io's click-through gate.** `EV1-remainder`'s
+block (recorded in `BLOCKED.md`) was specifically itch.io's JS-only claim
+flow — the per-file download URL only appears after a client-side
+"Download Now" POST round-trip that could not be automated. This pack
+never goes through itch.io at all: quaternius.com's own "Just give me the
+Download" button on the pack page links straight to a public Google Drive
+folder
+(`https://drive.google.com/drive/folders/1WCmnrS1fYQLYfRwztVErgAOyWXdJiVIo`).
+Drive's normal folder view is also JS-rendered and not directly
+`curl`-able, but its older `embeddedfolderview?id=...` endpoint returns a
+static file listing with real Drive file IDs with no login needed, and
+`drive.google.com/uc?export=download&id=<id>` served every one of those
+files as a clean binary with a 200 and no virus-scan interstitial (all
+files here are small enough to skip that gate). Confirmed by fetching all
+60 files (30 models × `.obj`+`.mtl`) — zero failures.
+
+**Staged at `assets_raw/vendor/quaternius_modular-medieval-buildings/`**,
+OBJ+MTL export (flat per-material colours, no texture maps — same
+convention already used for the staged Furniture/Survival Quaternius
+packs, and the simpler of the pack's three available exports; FBX and
+Blend copies of the same 30 models exist in the source Drive folder and
+were left unstaged as redundant duplicates, same call `EV1-remainder` made
+for the Village kit's unused FBX/OBJ/Textures copies). `docs/ASSET_LEDGER.md`
+carries the full row: publisher, licence, URL, format rationale, and a
+bounding-box spot check (`Tower.obj` 1.13×4.21×1.13, `Wall.obj`
+1.54×1.55×0.56, units presumed metres) suggesting real-world scale already,
+unlike the Furniture/Survival packs' documented 2x quirk — flagged for a
+quick in-engine confirmation, not verified further here.
+
+**Manifest for `OF4-rebuild` — every model filename staged**, grouped by
+role:
+
+- **Towers (13):** `Tower`, `LargeTower`, `LargeSimpleTower`,
+  `LargeSquareTower`, `LargeSquareTowerBricks`, `PointyTower`,
+  `SimpleTowerBricks`, `Simpletower`, `SmallSquareTower`,
+  `SmallSquareTowerBricks`, `SmallTower`, `Watchtower`, `WatchTowerWRoof`
+- **Walls / gate pieces (7):** `Wall`, `WallBricks`, `WallEntrance`,
+  `WallEntranceBricks`, `TallWall`, `TallWallBricks`, `TallWallEntrance`
+  (the two `*Entrance*` pairs are the gate/gatehouse-adjacent modules —
+  no separate `Gate`/`Portcullis`-named piece exists in the pack, the
+  wall-with-an-arch-cut-in-it is the gate)
+- **Connective / misc structure (4):** `Bridge`, `Tunnel` (archway),
+  `Well`, `Door`
+- **Detail / dressing (6):** `Banner`, `Dummy`, `Target`,
+  `TargetWithArrows`, `WindowGothic`, `WindowSquare`
+
+**One honest gap against the task's ideal list:** no module is individually
+named `Battlement`/`Crenel*`/`Keep`/`Portcullis`/`Rampart`/`Arrow*` — but
+every wall and tower model's own geometry has crenellations baked into its
+top edge (visible directly in the pack's preview render), which is how
+this publisher's other kits work too (the geometry carries the feature,
+the filename doesn't always spell it out). `OF4-rebuild` should confirm
+this in-engine before relying on it, but the preview render and the OBJ
+vertex data both show the same stepped parapet silhouette on essentially
+every tower/wall piece, so this reads as the genuine article, not a
+naming-convention false positive.
+
+**D24 tension flagged, not resolved here:** this is architecture, and the
+task asked whether it creates cohesion tension with D24's "one village
+family" rule. Judgment call: it's the *same* publisher and the *same*
+low-poly flat-material art language as the already-staged Medieval Village
+MegaKit (`EV6`'s settlement) — same faceted geometry style, same kind of
+flat per-material colouring, no texture maps on either. Treated here as a
+fortification *extension* of the one village family rather than a second
+family, on the strength of that shared art language — but this is a
+judgment call for whoever picks up `OF4-rebuild` to confirm once pieces
+from both packs are actually rendered side by side in-engine, not
+something this staging-only pass can settle by inspecting source files.
+
+## Backpack equip/drop/split verbs — Drop and Split shipped; Equip found to have no referent
+**Superseded 2026-08-13 — see `backpack-drop-split` below.** A concurrent
+session independently shipped the same feature to `main` first, with a
+more flexible `split_slot(from, to, amount)` signature and better test
+coverage (12 cases plus a `smoke_menu.gd` integration check vs. this
+entry's 9 unit-only cases). On merging the two branches, the owner chose
+to keep `main`'s implementation; everything below this point (the
+`item_drop`/`item_split` actions, `Inventory.drop_slot(index)`/
+`split_slot(index)`) was removed from the codebase. Kept here as a record
+of the parallel design, not as a description of what actually shipped.
+
+`autoload/inventory.gd`, `scripts/ui/tab_backpack.gd`, `project.godot`,
+`data/config/menu.json`, `tests/test_inventory.gd` on
+`claude/ralph-phase-1-backlog-22u3pz` (manual session). `model: sonnet` —
+mechanical, no dispatch. `tests: test_inventory.gd` (9 new cases), full
+suite green (403 tests, 89366 assertions, 0 failed), `smoke_settings.gd`/
+`smoke_menu.gd`/`smoke_playground.gd` all pass.
+
+Checked what "equip" could mean before building anything: `harvest_logic.gd`
+finds any owned tool by `find_slot()` and uses it directly — there is no
+equipped-tool state anywhere in the codebase, and CLAUDE.md/`conventions.md`
+both say not to invent a mechanic nothing else needs. Equip is out of scope
+until something (a wearable item type, say) actually requires it; that
+would be its own flagged decision, not folded into this item.
+
+Drop and Split are real, both new:
+- `Inventory.drop_slot(index)` — discards a SPECIFIC slot's whole stack.
+  Deliberately not routed through `remove(id, n)`, which drains whichever
+  stack of that id is smallest wherever it happens to be — not what
+  "discard the thing I'm looking at" means once an item is split across
+  slots. No world-pickup exists yet (that's `R3.2`'s death-satchel
+  territory) so dropped means gone, not spawned in the world.
+- `Inventory.split_slot(index)` — divides a stack roughly in half (floor)
+  into the first empty slot, the larger half staying put. Refuses on an
+  empty slot, a stack of 1 (which is every tool, since tools are `stack: 1`
+  — no separate tool-guard needed), or a full satchel.
+- Two new input actions, `item_drop`/`item_split`, added to `project.godot`
+  and to `menu.json`'s Controls screen (new "Backpack" group) — both
+  fully rebindable through the existing D15 settings pipeline for free,
+  since `key_bindings.gd` reads `InputMap.get_actions()` directly rather
+  than a hardcoded list. Bound to G/X on keyboard, D-pad down / right-stick
+  click on gamepad — both genuinely free buttons at the time this shipped
+  (checked the full `project.godot` `[input]` block and `menu.json`'s
+  existing `pad_N` glyph table before picking them; no new glyph entries
+  were needed). D-pad down was independently claimed by `build_rotate` in
+  a concurrent session shortly after — see the `BG1` entry above for why
+  that turned out to be safe rather than a real conflict.
+- Drop asks for confirmation before it actually empties the slot — same
+  two-step shape `_read_use()`'s heal-target picker already uses
+  (`_content_row.visible = false` so no focused grid Button can double-fire
+  `menu_confirm` into `_on_slot`, `menu.hold_input`/`override_footer` for
+  the same reason). Split needs no confirmation: nothing is lost, only
+  redistributed.
+
 ## OF10 / OF11 — Hillside rebuilt from scratch: real progress shipped, ceiling reached — see `BLOCKED.md`
 Diff spread across `363af28`/`20a6850` (WIP/final checkpoints on
 `claude/ralph-backlog-of6-7-10-11-dbiydq`) and the reapplied commit that

@@ -92,6 +92,8 @@ different frame.
 
 **`OF13` (hide the stronghold, move it farther from the village) shipped — see `DONE.md`.**
 
+**`BG1` (real grid/rotate/snap building placement, `D28`'s first `OF4-rebuild` prerequisite) shipped — see `DONE.md`.** Serves both the player's own base (M8) and the coming `OF4-rebuild`. `BG2` (real castle-parts assets, `OF4-rebuild`'s other prerequisite) has since shipped too — see below — so `OF4-rebuild` is unblocked.
+
 **`OF10`/`OF11` (hillside rebuilt from scratch — real landform via ridged/terraced geometry, root-caused and fixed the rock texture's tiling, rise-gated boundary blend) real progress shipped, both items' own done-when NOT fully cleared — see `DONE.md`'s `OF10`/`OF11` entry for the six-round history and `BLOCKED.md` for what's still open on each.** `OF10a`'s walkability fix already shipped separately.
 
 ### OF10-remainder — the road's arrival at the rise still doesn't resolve
@@ -162,20 +164,62 @@ owner-accepted material-contrast read `BLOCKED.md` closed on 2026-08-12,
 but two fresh critics tripping on it independently is worth one look
 before re-accepting.
 
-### NP7 — Modular hair/accessory geometry for human NPC bases (owner-approved Meshy regeneration)
-`area: assets` · `lane: art` (needs the Meshy key). Replaces the
-`BLOCKED.md` "NP1-geometry" entry — the owner approved a new Meshy
-generation to make `villager_female`/`villager_male`/`grunt` modular
-(separable hair/accessory nodes), inside `CLAUDE.md`'s existing "one or two
-new human generations, owner-supplied only, for reusable archetypes"
-exception. **Blocked on a reference board landing in `docs/art/reference/`
-first** — no generation without it, per `CLAUDE.md`/`D24`, unchanged by this
-approval; the owner will supply one or confirm existing NPC art can be
-reused as reference. Once the board exists: regenerate the three villager
-bases with separable hair/accessory nodes, reusing existing NPC material
-language per `D24`'s one-family rule, and confirm whether
-trainer/Grandpa/Warden get the same treatment (`NP1-geometry` named all six
-as sharing the fused-mesh limitation).
+### BG2 — Source a CC0 castle/fortress asset kit
+Shipped, staged raw — see `DONE.md`'s `BG2` entry. Quaternius's own
+"Modular Medieval Building Pack" (30 models — 13 tower variants, 7 wall
+variants including 2 gate/entrance pieces, plus bridge/tunnel/well/windows)
+sourced directly from quaternius.com's public Google Drive link (no
+itch.io claim-flow block this time) and staged at
+`assets_raw/vendor/quaternius_modular-medieval-buildings/`, ledgered in
+`docs/ASSET_LEDGER.md`. Same publisher/art language as the already-staged
+Medieval Village MegaKit. `OF4-rebuild` still needs to curate specific
+pieces into an assembled structure — that selection work is unstarted and
+out of scope here.
+
+**`OF4-rebuild` (construct the stronghold as an actual assembled castle, not a shader silhouette) shipped — see `DONE.md`.** Real curtain walls, a gate, and four differently-sized/shaped towers (2.02m-6.20m) assembled from `BG2`'s Quaternius castle kit, replacing `landmark.gd`'s procedural primitives. Critique pass (self-administered, see `DONE.md` for why and the honest limitation that names) converged after 4 rounds with one still-open remainder: the gate's two stacked arch modules don't share a matched cut profile and read as a jagged opening rather than a clean archway — a round-4 attempt to solve it by dropping to a single-course opening regressed (no visible gate at all) and was reverted. `OF4-remainder-mound`'s bare-dune fix (below) is unaffected by this and still open on its own terms.
+
+### NP7 — Modular hair/accessory geometry, split from the existing NP4 art (no new generation)
+`area: assets` · `lane: art` · owner directive, 2026-08-13 — rescoped from
+"owner-approved Meshy regeneration" (history preserved in `BLOCKED.md`'s
+`NP1-geometry` entry): the source is the *existing* NP4 art, not a new
+generation, so `CLAUDE.md`/`D24`'s reference-art-board gate does not apply
+here — the input is the shipped mesh, not new concept art.
+
+**Shipped for `villager_female` — see `DONE.md`.** Direct Blender
+inspection (not assumption) found the twin-ponytail genuinely separable: a
+distinct hanging-tail protrusion behind/below the skull cap, distinguishable
+from the fused bangs/scalp by a visible tie-groove in a rendered close-up,
+not just a documented "occluded" silhouette. Cut into its own
+`hair_ponytail` mesh object, the scalp hole patched (true-rim detection +
+loop-walk fan-fill, size-filtered against spike artifacts a naive/unfiltered
+fill produced on the first three attempts — this mesh's hair region carries
+far denser pre-existing UV-seam fragmentation than a single clean boundary
+loop, a real property of the shipped Meshy retexture), and the hair piece
+re-skinned 100% to the `Head` bone. Wired into
+`character_model.gd::_apply_hair()`'s existing hide/show/recolour
+mechanism (extended to find and toggle a real baked-in mesh when the base
+model ships one, falling back to the placeholder primitive for
+trainer/Grandpa/Warden exactly as before). `_attach_part()`'s flagged
+0.01-scale offset bug did not reproduce against either rig when measured
+directly (`Armature`/`Skeleton3D` both scale 1.0 today, an offset landing
+at its full authored magnitude) — most likely already closed as a side
+effect of the giant-player fix (`render_bounds.gd`) — but hardened
+defensively anyway per this item's own "fix while you're in this function."
+One honest remainder: a small residual seam survives at the scalp in
+extreme macro close-ups from specific angles, confirmed invisible in both
+`tools/capture_village_npcs.gd`'s production frame and a matching in-game
+close-up at normal camera distance.
+
+**`villager_male`/`grunt` deliberately not attempted this pass.** Landing
+one clean, fully-verified split (Blender technique, hole-patching, re-skin,
+mechanism wiring, tests, full suite green, in-engine visual confirmation)
+used substantial real effort across several failed patch attempts before
+converging; repeating that for two more bases without knowing yet whether
+they even have a comparably separable feature would risk three rushed,
+uncertain results instead of one solid one. A quick render check found
+both `villager_male` and `grunt` have short/cropped hairstyles with no
+comparable hanging protrusion — worth a real look before assuming either
+is separable the same way, not scoped into this pass.
 
 ---
 
@@ -1290,30 +1334,30 @@ isn't an implemented mechanic; `CO1`'s swap is exploration-only), so building
 icons for them would be inventing combat UI for a feature that doesn't exist
 rather than wiring up a real one.
 
-### HD1-remainder — Quick and Charged render the same mouse-button icon, mirrored
-`model: sonnet` · `tests: none (visual)` · `area: ui`
-A second blind-judge round on `HD1`'s combat Actions row confirmed the
-dimming and sizing fixes but named one persisting defect both rounds agreed
-on: `mouse_left.png`/`mouse_right.png` (Kenney Input Prompts) are the same
-mouse-body silhouette with only the highlighted button-half mirrored, and at
-~36px on-screen that reads as "one icon, two colours" rather than two
+**`HD1-remainder` (Quick and Charged render the same mouse-button icon,
+mirrored) closed 2026-08-13 — owner accepts the current icon pair as
+final.** A second blind-judge round on `HD1`'s combat Actions row confirmed
+the dimming and sizing fixes but named one persisting defect:
+`mouse_left.png`/`mouse_right.png` (Kenney Input Prompts) are the same
+mouse-body silhouette with only the highlighted button-half mirrored, and
+at ~36px on-screen that reads as "one icon, two colours" rather than two
 distinct buttons — the label text is what actually disambiguates them, not
 the icon. Checked the staged pack (`assets_raw/vendor/kenney_input-prompts/
-Keyboard & Mouse/Default/`) for a better-differentiated pair (an "LMB"/"RMB"
-text variant, say) and none exists; this is a real asset-ceiling, not an
-unexplored lever. Low severity — the adjacent label always disambiguates in
-practice — so left open rather than blocked. Done when: either a
-better-differentiated CC0 mouse-button glyph pair is sourced, or the owner
-accepts the current ceiling.
-**Re-checked 2026-08-13: ceiling confirmed again.** The staged Kenney
-Game Icons Expansion pack has a real, differently-drawn `mouseLeft.png`/
-`mouseRight.png` pair (a genuine shape difference, not just a recolor --
+Keyboard & Mouse/Default/`) for a better-differentiated pair and none
+exists — a real asset-ceiling, not an unexplored lever. Owner accepted
+this rather than sourcing a replacement pack.
+
+**Corroborating evidence from an independent re-check, 2026-08-13** (before
+the owner's acceptance above landed): the staged Kenney Game Icons
+Expansion pack has a real, differently-drawn `mouseLeft.png`/
+`mouseRight.png` pair (a genuine shape difference, not just a recolor —
 verified by alpha-channel diff), but at actual on-screen size it's barely
 more legible than the current pair, and it's drawn in a flat-silhouette
 icon language while every other glyph in the row uses Input Prompts'
-keycap style -- adopting it would swap one legibility complaint for a
+keycap style — adopting it would swap one legibility complaint for a
 visible style-cohesion regression (CLAUDE.md). No other staged pack has a
-mouse-button asset at all. Still left open for the owner, not blocked.
+mouse-button asset at all. Reinforces the owner's call rather than
+reopening it.
 
 **`HD2` (a real quick-access item hotbar) shipped — see `DONE.md`.** The five
 slots are satchel slots 0-4 directly (the "quick-select band"
@@ -2529,70 +2573,37 @@ Phase 1 onward rather than at the end.
 
 ## Found along the way — small, unscheduled
 
-- **`smoke_aggression` still flakes in CI after `LP7`'s fix.** Found on
-  `ralph/R3.0`'s own CI run (unrelated change — a humanoid GLB pipeline fix
-  touching only `assets/characters/*`), twice in a row on the same run's
-  retry: `aggression FAIL: stood 44.1m from Galecrest for 900 frames without
-  pressing anything and it never attacked`, then `38.0m` on the automatic
-  retry. Both failures report the player far from the 2–3m the test expects
-  to be standing at when it checks, which is the same "reads player position
-  before the fixture has actually settled there" shape `LP7`'s own
-  `DONE.md` entry describes — so `LP7`'s fix likely narrowed the window
-  rather than closed it. Reproduced locally, headless, in the same checkout
-  immediately after: passed clean on the first try (`Galecrest started the
-  fight on its own, from 9.6m`). Not chased further here — out of scope for
-  `R3.0`, and a genuine flake this test-shaped needs the same kind of
-  instrumented reproduction `LP7`/`LP2`/`SA2-flake` used, not a guess.
-  **Confirmed again on `OF4`'s CI run (2026-08-12, unrelated change —
-  `scripts/world/landmark.gd`/`tools/capture_wayfinding.gd` only), same
-  signature twice on the automatic retry.** This time checked directly
-  rather than assumed: reproduced locally 2/5 on `ralph/OF4` (identical
-  message shape, `44.0m`/`45.1m`), then reproduced on a clean `origin/main`
-  checkout with zero unrelated changes — 1/2 runs failed (`44.2m`, same
-  wording) before the comparison timed out. **This is the first direct
-  confirmation the flake reproduces on unmodified `main` itself, at a rate
-  well above `LP7`'s documented ~7% residual** (2/5 and 1/2 are small
-  samples, but both far exceed 7%). Still not chased further — out of scope
-  for whichever item is running when it's hit — but the rate looks like it
-  may have regressed past what `LP7` closed, not just "still has a small
-  residual," and whoever picks this up next should start from that, not
-  from the 7% figure.
-  **Chased further (2026-08-13), still open — hypotheses ruled out, root
-  cause not found.** Reproduced on clean `main`: ~2/3 runs failed with the
-  same `~40-45m, never attacked` shape. Instrumented the walk helper to log
-  the player's position/velocity every 50 frames and confirmed the failure
-  is a genuine freeze, not a slow approach: velocity sits at *exactly*
-  `(0, 0, 0)` for hundreds of consecutive physics frames mid-walk, at a
-  position that varies run to run (not one fixed spot). Ruled out, with
-  direct evidence: the follower pal (`collision_layer=0` the whole time,
-  confirmed in the log — `follower_pal.gd`'s `set_following(true)` is
-  working as intended, this is not `RB3` again); the road gate (built at
-  `[27.5, -16]`, nowhere near the failure positions around `[42-48, -80
-  to -110]`); village NPCs (all placed inside `[0-25, 2 to -25]`, same
-  reason). A fuller instrumentation pass logging `locomotion_enabled()`,
-  dialogue/name-prompt `is_open()` and `is_fighting()` never caught a
-  failing run with that logging attached — every run with the added
-  print() overhead passed (9/9 across two instrumented variants), while
-  bare runs failed ~2/3 of the time. That asymmetry is itself the useful
-  finding: this looks like a genuine wall-clock/frame-pacing sensitivity
-  (something that resolves differently depending on real elapsed time
-  between physics ticks — a plausible candidate is Terrain3D's collision
-  baking not being fully settled by `SETTLE_FRAMES`, or physics-step
-  catch-up under load) rather than a pure game-logic bug reachable by
-  reading state. One fix was attempted and **reverted, not shipped**: a
-  wider escalating-angle version of `wild_pal.gd`'s `LP7` unstick logic
-  (widen the steer angle after each failed alternating cycle instead of
-  oscillating between two fixed angles forever). It didn't measurably
-  affect the reproducing failure in this session's runs and was not
-  proven safe, so per this project's own honesty rule it was not kept.
-  Whoever picks this up next: the instrumentation-changes-the-outcome
-  clue is the lead worth following, probably via a fixed-timestep/
-  deterministic headless run (`--fixed-fps`) to remove wall-clock jitter
-  as a variable, rather than more print-statement instrumentation.
-- ~~`docs/ASSET_LEDGER.md` claims "everything currently in the build is CC0
-  1.0". False (Meshy creatures, Plumberry pack).~~ **Corrected 2026-08-12:**
-  ledger now reads "Most of the build is CC0 1.0 — but not all of it" and marks
-  Meshy assets and Plumberry Plains as proprietary/owner-licensed.
+**`smoke_aggression`'s post-`LP7` flake root-caused and fixed — see
+`DONE.md`.** Two independent investigations ran on this in parallel and
+found different pieces of the same picture. One (`LP7-remainder`, this
+branch) caught the freeze directly via a physics-shape query at the
+frozen position: `CharacterBody3D.move_and_slide()` reporting a false
+`is_on_wall()` against ordinary Terrain3D ground (5-11° grade, nowhere
+near `floor_max_angle`), not a scattered-prop collision — fixed by giving
+the test's own `_walk_towards()` the same unstick/steer escape
+`wild_pal.gd::_tick_aggression` already uses for the aggressor's chase,
+verified 20/20 clean afterward (2/20 hit a different, already-tracked
+`LP7` residual, unrelated). The other investigation (concurrent session,
+`main`) found a related clue worth keeping on record even though its own
+fix attempt didn't pan out: heavier instrumentation (logging
+`locomotion_enabled()`, dialogue state, `is_fighting()`) made the failure
+stop reproducing entirely (9/9 clean) while bare runs still failed ~2/3 of
+the time — a timing-sensitivity signature consistent with (though not
+identical to) the false-wall-collision finding above. That session also
+ruled out the follower pal, the road gate, and village NPC proximity as
+causes, and tried and correctly reverted a wider-escalating-angle unstick
+variant that didn't measurably help. Recorded here so the two
+investigations' evidence stays together rather than only the shipped fix
+surviving.
+
+- ~~`docs/ASSET_LEDGER.md` claims "everything currently in the build is
+  CC0 1.0". False (Meshy creatures, Plumberry pack). Blocked on the owner
+  for the correct wording.~~ **Resolved 2026-08-12** — the owner supplied
+  the correct wording (All Rights Reserved / proprietary, owner-licensed)
+  and `docs/ASSET_LEDGER.md` was updated accordingly (also independently
+  re-confirmed and closed by a concurrent session — see `BLOCKED.md`'s
+  "✅ RESOLVED — `ASSET_LEDGER.md` licence claim" entry).
+
 - ~~Backpack has no use/consume/equip/drop/split verb; the only action is
   moving an item.~~ **Corrected 2026-08-11: this was stale.** A use verb
   already exists (`tab_backpack.gd::_read_use()`) and already heals from

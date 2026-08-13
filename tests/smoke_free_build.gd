@@ -23,6 +23,11 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
+## BG1: read directly rather than duplicated as a literal, so this test cannot
+## quietly drift from the placer's own constants the way a hand-copied "3.0"
+## or "placed_building" string could.
+const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
+const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
 const SETTLE_FRAMES := 240
 
 ## How far up from where the settings screen starts the toggle may be. Three
@@ -68,6 +73,7 @@ func _run() -> void:
 	await _check_a_piece_can_be_built_out_of_an_empty_satchel()
 	await _check_it_can_be_switched_off_again()
 	await _check_the_first_day_arc(world)
+	await _check_bg1_grid_rotation_and_snap(world)
 
 	_cleanup()
 	_report()
@@ -165,6 +171,148 @@ func _check_the_first_day_arc(world: Node) -> void:
 		_fail("resting left the trainer at %.0f health" % float(vitals.get("health")))
 	else:
 		print("rested: day %d, trainer healed" % int(_game.get("day")))
+
+
+## BG1: rotate a ghost, place it, and prove a second piece of the same type
+## placed nearby snaps flush against the first rather than needing pixel-
+## perfect aim. Runs after the camp/rest arc above, in the same world, with
+## free build already back off — so this also proves rotated/snapped pieces
+## are paid for through the real `GameState.build_cost_for`, not a shortcut.
+func _check_bg1_grid_rotation_and_snap(world: Node) -> void:
+	var inventory: RefCounted = _game.get("inventory")
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null or inventory == null:
+		_fail("no player to place from")
+		return
+	# Comfortably more than two walls cost (buildables.json: wood 6, stone 2
+	# each) — this arc is about placement, not affordability, which the free
+	# build checks above already cover.
+	inventory.call("add", "wood", 100)
+	inventory.call("add", "stone", 100)
+	var wood_before := int(inventory.call("count", "wood"))
+
+	# --- piece one: rotate it before planting -------------------------------
+	_game.set("pending_build", "wall")
+	for i in 10:
+		await physics_frame
+	Input.action_press("build_rotate")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_rotate")
+	for i in 5:
+		await physics_frame
+	Input.action_press("build_rotate")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_rotate")
+	for i in 10:
+		await physics_frame
+
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
+	for i in 20:
+		await physics_frame
+
+	var walls := _wall_nodes(world)
+	if walls.size() != 1:
+		_fail("rotating and planting a wall left %d walls standing, expected 1" % walls.size())
+		return
+	var wall1 := walls[0] as Node3D
+	var expected_yaw := deg_to_rad(BUILD_GRID.yaw_for_steps(2))  # two presses = 180 degrees
+	if not is_equal_approx(wrapf(wall1.rotation.y, -PI, PI), wrapf(expected_yaw, -PI, PI)):
+		_fail("two rotate presses should read 180 degrees, wall sits at %.1f degrees"
+			% rad_to_deg(wall1.rotation.y))
+	else:
+		print("wall #1 planted rotated 180 degrees, as pressed")
+
+	# --- piece two: aim close to piece one and let it snap flush -----------
+	# Solve for a player position whose ghost lands within build_grid.gd's
+	# SNAP_RADIUS of wall #1 but NOT already grid-aligned to it — proving this
+	# is the neighbour-snap path, not a coincidental plain grid snap.
+	var offset := Vector3(1.3, 0.0, 0.3)
+	var target_raw_spot := wall1.global_position + offset
+	var forward := _forward(world, player)
+	player.global_position = target_raw_spot - forward * BUILD_PLACER.PLACE_AHEAD
+	player.velocity = Vector3.ZERO
+	for i in 20:
+		await physics_frame
+
+	_game.set("pending_build", "wall")
+	for i in 15:
+		await physics_frame
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
+	for i in 20:
+		await physics_frame
+
+	walls = _wall_nodes(world)
+	if walls.size() != 2:
+		_fail("placing a second wall near the first left %d walls standing, expected 2" % walls.size())
+		return
+	var wall2: Node3D = walls[0] if walls[0] != wall1 else walls[1]
+
+	if not is_equal_approx(wall2.rotation.y, 0.0):
+		_fail("a freshly armed ghost should start unrotated, wall #2 sits at %.1f degrees"
+			% rad_to_deg(wall2.rotation.y))
+
+	var moved := Vector3(
+		wall2.global_position.x - wall1.global_position.x,
+		0.0,
+		wall2.global_position.z - wall1.global_position.z
+	)
+	if not is_equal_approx(moved.length(), BUILD_GRID.GRID_SIZE):
+		_fail("wall #2 should sit exactly one grid cell from wall #1 (neighbour snap), moved %.2fm"
+			% moved.length())
+	elif not is_equal_approx(wall2.global_position.y, wall1.global_position.y):
+		_fail("neighbour-snapped wall #2 should share wall #1's height, %.2f vs %.2f"
+			% [wall2.global_position.y, wall1.global_position.y])
+	else:
+		print("wall #2 snapped flush against wall #1, %.1fm away, same height" % moved.length())
+
+	# --- the registry agrees with what is standing --------------------------
+	var recorded: Array = []
+	for entry: Variant in (_game.get("placed_buildings") as Array):
+		var record := entry as Dictionary
+		if str(record.get("id", "")) == "wall":
+			recorded.append(record)
+	if recorded.size() < 2:
+		_fail("GameState.placed_buildings only recorded %d walls" % recorded.size())
+	else:
+		var last_two := recorded.slice(recorded.size() - 2, recorded.size())
+		var yaws: Array = []
+		for record: Dictionary in last_two:
+			yaws.append(float(record.get("yaw_deg", -1.0)))
+		if not (yaws.has(180.0) and yaws.has(0.0)):
+			_fail("placed_buildings did not record both walls' yaw (got %s)" % [yaws])
+		else:
+			print("GameState.placed_buildings recorded both walls' rotation: %s" % [yaws])
+
+	if int(inventory.call("count", "wood")) >= wood_before:
+		_fail("two walls were planted and spent no wood")
+
+	_game.set("pending_build", "")
+
+
+## The same forward-direction math `build_placer.gd::_show_ghost` uses, so
+## this test can aim a placement at an exact world-space point rather than
+## depending on wherever the camera happens to be facing.
+func _forward(world: Node, player: Node3D) -> Vector3:
+	var camera_rig := world.get_node_or_null(^"CameraRig")
+	if camera_rig != null and camera_rig.has_method("planar_basis"):
+		return -(camera_rig.call("planar_basis") as Basis).z
+	return -player.global_transform.basis.z
+
+
+func _wall_nodes(world: Node) -> Array:
+	var out: Array = []
+	for node: Node in world.get_tree().get_nodes_in_group(BUILD_PLACER.PLACED_GROUP):
+		if str(node.get_meta(BUILD_PLACER.BUILDING_ID_META, "")) == "wall":
+			out.append(node)
+	return out
 
 
 func _nearest_harvest(world: Node, from: Vector3) -> Node3D:

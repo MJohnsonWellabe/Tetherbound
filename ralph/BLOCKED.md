@@ -6,7 +6,20 @@ design decision rather than inventing one.
 
 ---
 
-## OF4 silhouette ceiling — primitives + unshaded have a measured limit on "gravitas," and the last step needs the Phase 8e asset or an owner call
+## ✅ SUPERSEDED, 2026-08-13 — OF4 silhouette ceiling: owner chose a real rebuild over accepting the primitive ceiling
+
+**The owner's call, when asked:** build a real interactive grid/rotate/snap
+placement system and construct OF4 as an actual assembled castle with it —
+"then don't worry about it being a silhouette. just make it render the
+actual built castle." Recorded in
+`docs/decisions/D28-of4-real-castle-and-build-grid.md`, which also notes
+`OF13` (shipped after this entry was written) already moved the fortress
+off the 170m from-square frame this history was scored against. Carried
+forward as `ralph/BACKLOG.md`'s `BG1` (the placement system, which does not
+exist yet), `BG2` (a real castle/fortress CC0 kit — neither staged
+Quaternius kit has any fortification module), and `OF4-rebuild` (retiring
+`landmark.gd`'s primitives once both land). The history below is preserved
+as the evidence that led to asking, not as the current plan.
 
 `OF4` (2026-08-12, six blind rounds, shipped on `ralph/OF4`) moved the ridge
 silhouette from "witch's hat / chess rooks / standing stones" to a shape
@@ -261,6 +274,23 @@ new Meshy generation to make them modular, and will supply reference art
 forbid generating without a board in `docs/art/reference/` first, unchanged
 by this approval. A new backlog item (`NP7`, `BACKLOG.md`) carries this
 forward, blocked on that board landing before any credit is spent.
+
+**Superseded 2026-08-13**: the owner redirected `NP7` away from a new
+Meshy generation entirely — "use the already existing art for NPCs but
+make them modular this time." The reference-art gate above no longer
+applies to `NP7` (the input is the shipped NP4 mesh, not new concept art);
+see `ralph/BACKLOG.md`'s current `NP7` entry for the Blender split/re-skin
+scope this became instead. This entry stays as the record of why modular
+geometry was worth pursuing at all.
+
+**`NP7` shipped 2026-08-13 — see `DONE.md`.** villager_female's twin
+ponytail is now a real separated, re-skinned mesh, cut in Blender from the
+existing shipped .glb with no new generation, wired into
+`character_model.gd`'s existing hide/show/recolour mechanism. One real,
+honest remainder (a small residual scalp seam, invisible at normal camera
+distance) — see `DONE.md`'s entry for the full technical account.
+`villager_male`/`grunt` deliberately not attempted this pass; `NP7`'s
+`BACKLOG.md` entry carries the reasoning forward.
 
 ---
 

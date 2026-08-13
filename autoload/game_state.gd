@@ -245,9 +245,14 @@ func set_objective(text: String, world_pos: Variant = null) -> void:
 
 ## Record a real placement. `build_placer.gd` calls this once, right after the
 ## piece is spent and planted — the registry, not the scene node, is what a
-## save actually persists. `yaw_deg` defaults to facing 0 — nothing arms a
-## rotation yet; the parameter exists so a future placement-rotation control
-## has somewhere to write without another format change.
+## save actually persists.
+##
+## `yaw_deg` defaults to 0 rather than being required: BG1 is the first
+## caller that ever has a non-zero orientation to record, and a save written
+## before it simply has no `yaw_deg` key on its old entries. The field is
+## carried by the save format's VERSION 2 (`scripts/save/save_game.gd`),
+## whose v1 migration writes the same safe 0.0 default onto old entries —
+## the read side (`build_placer.gd::restore_from_game`) tolerates both.
 func register_building(id: String, position: Vector3, yaw_deg: float = 0.0) -> void:
 	placed_buildings.append({
 		"id": id,

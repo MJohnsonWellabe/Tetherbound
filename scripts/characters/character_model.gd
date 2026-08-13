@@ -380,18 +380,48 @@ func _shared_variant_material(source: Material, name: String, colour: Color) -> 
 	return material
 
 
-## A placeholder shape standing in for real hair geometry, not a finished
-## look. Neither trainer, Grandpa nor Warden's .glb has a separable hair
-## mesh today — each is one fused mesh, one material, confirmed against the
-## source files — so "swappable hair" ahead of NP4 (Meshy-generated modular
-## bases, credit-gated) or EV1 (CC0 packs, landing separately) can only mean
-## the DATA and ATTACHMENT mechanism: a part that shows, hides and colours
-## independently of the body's own palette. `CLAUDE.md`'s Prototyping section
-## is explicit that a placeholder proves mechanics and is not to be judged as
-## a look — real hair geometry is follow-on work, not this task's to invent.
+## A placeholder shape standing in for real hair geometry — trainer, Grandpa
+## and the Warden still have no separable hair mesh, each one fused mesh,
+## one material, confirmed against the source files, so their "swappable
+## hair" can only mean the DATA and ATTACHMENT mechanism prototyped here.
+## `CLAUDE.md`'s Prototyping section is explicit that a placeholder proves
+## mechanics and is not to be judged as a look.
+##
+## `NP7` gave villager_female's base .glb a REAL separable piece: the
+## twin-ponytail cut from the fused source mesh in Blender, patched at the
+## scalp, re-skinned to the Head bone, and exported back in as a second
+## mesh (`hair_ponytail`) already sitting inside the same file `_build_art`
+## loaded — sibling to the body mesh, under the same Skeleton3D, already
+## correctly posed by its own skin the same way the body is. So for a
+## config whose base model ships that mesh, this function's job shrinks to
+## exactly what the spec asks for — hide/show, and recolour if asked — and
+## the manual `BoneAttachment3D` + offset path below is never reached: a
+## skinned mesh needs no offset in the first place, which is the real fix
+## for the class of bug `_attach_part`'s offset carries (see its own
+## comment) rather than a workaround for it.
 func _apply_hair(cfg: Dictionary) -> void:
 	var hair: Dictionary = cfg.get("hair", {})
-	if hair.is_empty() or not bool(hair.get("visible", true)):
+	if hair.is_empty():
+		return
+	var visible := bool(hair.get("visible", true))
+	var real_part_name := str(hair.get("model_part", "hair_ponytail"))
+	var real_part: MeshInstance3D = null
+	if _art != null:
+		real_part = _art.find_child(real_part_name, true, false) as MeshInstance3D
+	if real_part != null:
+		real_part.visible = visible
+		if not visible:
+			# Left named `real_part_name`, not `hair` -- `find_part("hair")`
+			# correctly reports null, the same contract a placeholder's
+			# absence gives, per this function's own doc below.
+			return
+		real_part.name = "hair"
+		var hex_real := str(hair.get("color", hair.get("colour", "")))
+		if hex_real != "":
+			real_part.set_surface_override_material(0, _shared_variant_material(
+				real_part.get_active_material(0), "hair", Color(hex_real)))
+		return
+	if not visible:
 		return
 	var mesh := _primitive_mesh(str(hair.get("shape", "sphere")), 0.11)
 	var part := _attach_part(mesh, str(hair.get("bone", "Head")), Vector3(0, 0.08, 0), "hair")
@@ -453,6 +483,27 @@ func _primitive_mesh(shape: String, size: float) -> PrimitiveMesh:
 ## back to a plain child of `_art`, offset up by the character's own height,
 ## if the bone or the skeleton is not found — a body with no matching bone
 ## gets a static part rather than silently no part at all.
+##
+## `NP7`/`NP1-geometry`'s history flagged a bug here: a manual `offset` like
+## `_apply_hair`'s old placeholder `Vector3(0, 0.08, 0)` was said to land at
+## roughly 1/100th scale in-game, blamed on the same Armature-chain
+## compensation `render_bounds.gd`'s own comment documents for the
+## giant-player bug (inverse-bind matrices ×100 into a skin, offset by a
+## 0.01-scale `Armature` node). Checked directly against today's shipped
+## rigs before touching this function — a scratch probe reading
+## `attachment.global_transform` and `Head` bone `global_rest`/`global_pose`
+## on both the trainer and villager_female found `Armature` and `Skeleton3D`
+## both at scale (1,1,1), and a placeholder offset of `Vector3(0, 0.08, 0)`
+## landing exactly 0.08m from the bone origin, correctly rotated with it —
+## not reproducible on the rigs this project ships today. The giant-player
+## fix (`render_bounds.gd`, `_fit()` above) most likely already closed this
+## as a side effect: it stopped `_art.scale` itself from ever being blown up
+## to ~100, which is the other half a residual node-scale would need to
+## produce a 1/100 offset in the first place. Hardened anyway, per the
+## backlog item's own "fix while you're in this function" — dividing the
+## authored offset (and the instance's own scale) by whatever scale the
+## attachment chain actually carries keeps `offset` in real-world metres
+## regardless, at zero cost while that scale is 1.0 as it is today.
 func _attach_part(mesh: Mesh, bone: String, offset: Vector3, part_name: String) -> MeshInstance3D:
 	if _art == null:
 		return null
@@ -465,7 +516,15 @@ func _attach_part(mesh: Mesh, bone: String, offset: Vector3, part_name: String) 
 		attachment.bone_name = bone
 		skeleton.add_child(attachment)
 		attachment.add_child(instance)
-		instance.position = offset
+		var chain_scale: Vector3 = attachment.global_transform.basis.get_scale()
+		var safe_scale := Vector3(
+			chain_scale.x if absf(chain_scale.x) > 0.0001 else 1.0,
+			chain_scale.y if absf(chain_scale.y) > 0.0001 else 1.0,
+			chain_scale.z if absf(chain_scale.z) > 0.0001 else 1.0)
+		instance.position = Vector3(
+			offset.x / safe_scale.x, offset.y / safe_scale.y, offset.z / safe_scale.z)
+		if not safe_scale.is_equal_approx(Vector3.ONE):
+			instance.scale = Vector3.ONE / safe_scale
 	else:
 		_art.add_child(instance)
 		instance.position = offset + Vector3(0, _height, 0)

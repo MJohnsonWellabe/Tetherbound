@@ -176,6 +176,41 @@ func test_save_then_load_round_trips_placed_buildings() -> void:
 	assert_eq((read.placed_buildings[1] as Dictionary).get("position"), [4.25, 0.0, 6.0])
 
 
+func test_save_then_load_round_trips_a_placed_buildings_rotation() -> void:
+	# BG1: `GameState.register_building` now takes a `yaw_deg`, stored as a
+	# plain extra key on the same dictionary — save_game.gd itself does not
+	# know or care about `yaw_deg` specifically, it round-trips whatever the
+	# dictionary holds, so this proves the whole entry survives unharmed
+	# rather than re-testing register_building's own shape.
+	var written := _game()
+	written.placed_buildings = [
+		{"id": "wall", "position": [2.0, 0.0, 0.0], "yaw_deg": 90.0},
+	]
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.placed_buildings.size(), 1)
+	assert_almost_eq(float((read.placed_buildings[0] as Dictionary).get("yaw_deg", -1.0)), 90.0)
+
+
+func test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry() -> void:
+	# A save written before BG1 shipped rotation has plain {id, position}
+	# entries and no `yaw_deg` key at all. `save_game.gd` treats
+	# `placed_buildings` opaquely, so this is really proving BG1 did not
+	# quietly require a version bump `docs/decisions/D15`'s "carry on, do not
+	# brick the player" rule would otherwise be broken by.
+	var written := _game()
+	written.placed_buildings = [{"id": "camp", "position": [0.0, 0.0, 0.0]}]
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.placed_buildings.size(), 1)
+	assert_eq(str((read.placed_buildings[0] as Dictionary).get("id")), "camp")
+	assert_false((read.placed_buildings[0] as Dictionary).has("yaw_deg"))
+
+
 func test_load_on_a_missing_slot_returns_false_and_leaves_the_game_untouched() -> void:
 	var game := _game()
 	game.day = 4
