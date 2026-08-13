@@ -18,8 +18,14 @@ extends "res://scripts/ui/menu_tab.gd"
 
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
 
+## D16's free-build banner survives the launcher rewrite: the rule is that
+## free build says so out loud on the Build tab the whole time it is on, and
+## `tests/smoke_free_build.gd` reads this exact member to hold us to it.
+const FREE_NOTE_COLOUR := Color(0.851, 0.702, 0.251)
+
 var _open_button: Button = null
 var _build_menu: CanvasLayer = null
+var _free_note: Label = null
 
 
 func build() -> void:
@@ -35,6 +41,15 @@ func build() -> void:
 	title.text = "Build"
 	title.add_theme_font_size_override("font_size", 36)
 	panel.add_child(title)
+
+	_free_note = Label.new()
+	_free_note.text = "Free build is on — pieces cost nothing until it is switched off in Settings."
+	_free_note.add_theme_font_size_override("font_size", 24)
+	_free_note.add_theme_color_override("font_color", FREE_NOTE_COLOUR)
+	_free_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_free_note.custom_minimum_size = Vector2(520, 0)
+	_free_note.visible = false
+	panel.add_child(_free_note)
 
 	var blurb := Label.new()
 	blurb.text = "Pick what to place from the full build menu — categories, a piece grid, and what it costs, all in one screen you can see the world through."
@@ -73,7 +88,10 @@ func revision() -> int:
 
 
 func poll() -> void:
-	pass
+	if _free_note == null:
+		return
+	var game := state()
+	_free_note.visible = game != null and bool(game.get("free_build"))
 
 
 func _on_open_pressed() -> void:
