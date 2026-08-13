@@ -50,35 +50,7 @@ than re-listed. What the six rounds could NOT clear splits into
 "OF4 silhouette ceiling" entry (design/asset question, lands with Phase
 8e).
 
-### OF4-remainder-mound — The rise under the stronghold reads as a bare dune and shrinks the landmark
-`area: terrain` · replaces `OF4` (shipped on `ralph/OF4` — see `DONE.md`
-for the six-round history and `BLOCKED.md`'s "OF4 silhouette ceiling"
-entry for what geometry alone could not clear). Four of six blind critics
-named the SAME single biggest from-square fix, and it is not the landmark:
-the rise is "a smooth, round, bald grass/tan mound... a spoil heap or
-beach dune," with no rock outcrop, strata, vegetation break or any scale
-reference on its slopes, so the fortress on top reads as a garden ornament
-however it is shaped ("a castle on a golf bunker"). Done when the rise's
-visible faces from the village square and the Rise path carry real
-scale-givers (outcrops/boulders/tree line — the existing rock family, not
-new assets) and a blind pass at those two vantages stops naming the mound
-as the dominant wrong-scale shape. Note the pre-existing lone rock prop on
-the west slope was independently flagged by two critics as "a stray blob /
-floating chunk" — reposition or cluster it as part of this work.
-
-**Premise changed by `OF13` (shipped `ralph/OF13`):** the fortress no
-longer sits on this rise's summit — `OF9`'s owner answer moved it ~105m
-out onto the rise's far shoulder, past the dome's own radius, specifically
-so it is NOT visible from the village square or the Rise path. The
-"castle on a golf bunker"/"fortress on top reads as a garden ornament"
-framing above can no longer happen from those two vantages, since there is
-no fortress in either frame anymore (rendered and confirmed — see `DONE.md`'s
-`OF13` entry). The underlying critique of the bare dome itself (no rock
-outcrop, strata or scale reference, plus the stray floating rock prop) may
-still be worth fixing on its own terrain-quality merits — whoever picks
-this up should re-render both vantages fresh and judge the mound alone,
-not assume the original six-round history still applies to what's now a
-different frame.
+**`OF4-remainder-mound` (real scale-givers on the rise — authored scatter anchors, outcrops, a talus apron and a broken tree line on the two judged vantages) shipped — see `DONE.md`.** `OF13`'s premise change was checked first, exactly as this entry asked: both vantages were re-rendered fresh and judged by a blind critic before any code changed, and the bare-dune read had NOT gone away with the fortress — it had become "the landform is an enlarged pebble, and there is nothing on it, in it, or at the top of it". A placement dump found why (four rock instances in the whole village-visible wedge, none on the landform, no trees at all: the `rocks` layer's 44-degree ceiling excludes most of a 46m rise). Three blind rounds later the mound is no longer in the critic's ranked three and no longer its worst scale offender, which is this item's own done-when. The stray west-slope boulder was clustered rather than moved. Residue is in the `DONE.md` entry, including a real foliage-material bug (`CommonTree_*` canopies render crimson/magenta at close range) that these anchors made visible but did not cause, and why `OF7`'s boundary-ring rock bug was left alone.
 
 **`OF5` (running/walking looked unnatural — gait cadence didn't match travel speed, feet ice-skated) shipped — see `DONE.md`.**
 

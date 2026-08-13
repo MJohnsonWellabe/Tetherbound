@@ -57,7 +57,40 @@
         "res://assets/environment/stylized_nature/CommonTree_3.gltf": {
           "Leaves_NormalTree": "#c4d696"
         }
-      }
+      },
+      "_comment_anchors_of4_mound": "OF4-remainder-mound. A BROKEN tree line along the rise's village-facing foot, and a few trees standing on the lower flank. A 7-9m tree is the cheapest ruler a landform can carry -- with nothing of known size anywhere on it the rise read as 'an enlarged pebble' to a blind critic, which is a scale failure, not a texture one. Slope is relaxed to 25 degrees for these draws only (this layer's own 21-degree ceiling stays as tuned everywhere else) so the line climbs a little way onto the flank instead of stopping dead at the break. Round 2: the three groups were the same size at the same radius and read as 'a ring following the hill's foot contour at near-even spacing' -- now one dense copse, one loose stand and one pair, at three different radii, which is the difference between a wood and a hedge. ALL TUNABLE.",
+      "anchors": [
+        {
+          "_why": "north-west foot: the dense copse",
+          "at": [
+            100.0,
+            -26.0
+          ],
+          "radius": 11.0,
+          "count": 9,
+          "max_slope_deg": 25.0
+        },
+        {
+          "_why": "west foot, north of the road terminus: a loose stand",
+          "at": [
+            74.0,
+            -58.0
+          ],
+          "radius": 16.0,
+          "count": 5,
+          "max_slope_deg": 25.0
+        },
+        {
+          "_why": "south-west foot: just a pair, so the line is not continuous",
+          "at": [
+            70.0,
+            -128.0
+          ],
+          "radius": 9.0,
+          "count": 2,
+          "max_slope_deg": 25.0
+        }
+      ]
     },
     "grove": {
       "_comment": "The ancient twisted oaks, 15-19m and far broader. A genuinely DIFFERENT species, not the same mesh retinted \u2014 which was the previous version of this layer and exactly what the critic caught. These are the landmark trees: at twice the height of a common tree and three times the canopy, a stand of them reads from across the playground.",
@@ -102,7 +135,30 @@
         "res://assets/environment/stylized_nature/TwistedTree_4.gltf": {
           "Leaves_TwistedTree": "#c4d696"
         }
-      }
+      },
+      "_comment_anchors_of4_mound": "OF4-remainder-mound. Two stands of the hero oaks at the rise's foot, at either end of the village-facing arc. These are the tallest things in the game (8-14m placed) and they do what the common canopy cannot: give the base of a 46m landform something with a known height standing against it, so the eye can size the hill from the village square. Kept to two stands -- this layer's whole comment above is about why a landmark tree stops being one when there are forty. ALL TUNABLE.",
+      "anchors": [
+        {
+          "_why": "north-west foot stand",
+          "at": [
+            92.0,
+            -22.0
+          ],
+          "radius": 14.0,
+          "count": 4,
+          "max_slope_deg": 22.0
+        },
+        {
+          "_why": "south-west foot stand",
+          "at": [
+            66.0,
+            -116.0
+          ],
+          "radius": 14.0,
+          "count": 4,
+          "max_slope_deg": 22.0
+        }
+      ]
     },
     "saplings": {
       "_comment": "EV2 (bible sec10): 'young/small, 2-3 sapling forms'. No dedicated sapling mesh exists in the imported subset, and the fuller Stylized Nature MegaKit is itch.io-blocked (see EV1-remainder in BLOCKED.md) -- so this reuses CommonTree_4 and _5, the two narrowest standard-canopy forms cut from the `trees` layer above, at young-tree scale instead of medium-tree scale. Same species, a different age, not a new model -- exactly what the bible means by controlled variants rather than clutter.",
@@ -390,7 +446,193 @@
       },
       "_comment_colour_jitter_r9_4_remainder_8": "Same mechanism R7.1-remainder used for grass -- per-instance MultiMesh colour multiplier, zero extra draw calls or geometry (vegetation.gd). Pulled back from round 2's 0.22: a wide VALUE-only jitter reinforces exactly the lighting-looking-like-variety confound round 2's critic named, so this now does modest per-instance value spread on top of the three real hue families above rather than trying to carry the whole effect itself. Applies to the pebble meshes too (material PathRocks, untouched by variant_retint above), a second, cheaper source of per-instance variety in the same clump.",
       "colour_jitter": 0.16,
-      "_comment_scale_r9_4": "R9.4. Was 0.35-1.3, a 3.7x span that still read as one size because most draws land near the middle. Widened to 0.28-2.1 so a clump has boulders AND pebbles in it. TUNABLE."
+      "_comment_scale_r9_4": "R9.4. Was 0.35-1.3, a 3.7x span that still read as one size because most draws land near the middle. Widened to 0.28-2.1 so a clump has boulders AND pebbles in it. TUNABLE.",
+      "_comment_anchors_of4_mound": "OF4-remainder-mound. Authored outcrops and a talus apron on the ONLY faces of `rises.peaks[0]` the village square and the Rise road can see (the arc from the north-west limb round to the south-west, computed from the two vantage eyes with `tools/_probe_mound.gd`, not guessed). A whole-map placement dump found FOUR rock instances in that entire wedge and none of them on the landform: this layer's own 44-degree ceiling excludes most of a 46m rise's flank, so the layer whose stated job is to make steep ground read as stone was locked out of the steepest ground in the game, and a blind critic read the hill as 'an enlarged pebble' with 'nothing on it, in it, or at the top of it'. Each anchor raises `max_slope_deg` FOR ITS OWN DRAWS ONLY (scatter_rules.gd::_place_anchor) -- the meadow scatter's ceiling is unchanged, so this cannot put boulders on cliffs anywhere else. The `west-spur` pair also absorbs the lone boulder at (80.3,-63.9) that two blind critics independently called 'a stray blob / floating chunk': it is still there, now with company. ALL TUNABLE.",
+      "_comment_anchors_of4_mound_r2": "Round 2 restructure, and the reason the anchors come in PAIRS. Round 1 gave each site 7-9 boulders in one 1.4-3.2 scale band, and the blind critic's worst-scale-offender finding was the fix itself: 'roughly twenty-five to thirty of them on one hillside... they shrink the hill -- a landform you can count off in five or six boulder-widths from foot to crest is not a landmark... and they are all the same size. No cobbles, no gravel, no single house-sized monolith.' A rock that is a scale REFERENCE has to be either much bigger or much smaller than the thing beside it; a field of same-sized blocks is a ruler with one mark on it. So every site is now a `-block` anchor (one or two large stones) plus a `-rubble` anchor at the same centre and a wider radius (ten-odd cobbles), the big stones weighted toward the FOOT where gravity actually leaves them rather than spread evenly up the face, and `sink` buries a fraction of each so they sit in the ground instead of resting tangent on it. Large stones (scale >= 1.9) went from ~40 to 11.",
+      "anchors": [
+        {
+          "_why": "north-west shoulder, the first stone the square sees -- the block",
+          "at": [
+            118.0,
+            -46.0
+          ],
+          "radius": 7.0,
+          "count": 2,
+          "max_slope_deg": 50.0,
+          "scale_min": 2.0,
+          "scale_max": 2.8,
+          "sink": 0.55
+        },
+        {
+          "_why": "north-west shoulder -- its rubble",
+          "at": [
+            118.0,
+            -46.0
+          ],
+          "radius": 13.0,
+          "count": 10,
+          "max_slope_deg": 50.0,
+          "scale_min": 0.3,
+          "scale_max": 0.8,
+          "sink": 0.25
+        },
+        {
+          "_why": "west face bench, roughly half height -- the block",
+          "at": [
+            104.0,
+            -78.0
+          ],
+          "radius": 7.0,
+          "count": 2,
+          "max_slope_deg": 52.0,
+          "scale_min": 2.0,
+          "scale_max": 2.9,
+          "sink": 0.55
+        },
+        {
+          "_why": "west face bench -- its rubble",
+          "at": [
+            104.0,
+            -78.0
+          ],
+          "radius": 13.0,
+          "count": 10,
+          "max_slope_deg": 52.0,
+          "scale_min": 0.3,
+          "scale_max": 0.8,
+          "sink": 0.25
+        },
+        {
+          "_why": "south-west face -- the block",
+          "at": [
+            108.0,
+            -118.0
+          ],
+          "radius": 7.0,
+          "count": 2,
+          "max_slope_deg": 52.0,
+          "scale_min": 1.9,
+          "scale_max": 2.7,
+          "sink": 0.55
+        },
+        {
+          "_why": "south-west face -- its rubble",
+          "at": [
+            108.0,
+            -118.0
+          ],
+          "radius": 13.0,
+          "count": 10,
+          "max_slope_deg": 52.0,
+          "scale_min": 0.3,
+          "scale_max": 0.8,
+          "sink": 0.25
+        },
+        {
+          "_why": "the low western spur, and the stray boulder's new company -- the block",
+          "at": [
+            80.0,
+            -64.0
+          ],
+          "radius": 8.0,
+          "count": 2,
+          "max_slope_deg": 48.0,
+          "scale_min": 2.2,
+          "scale_max": 3.2,
+          "sink": 0.6
+        },
+        {
+          "_why": "the low western spur -- its rubble",
+          "at": [
+            80.0,
+            -64.0
+          ],
+          "radius": 12.0,
+          "count": 9,
+          "max_slope_deg": 48.0,
+          "scale_min": 0.35,
+          "scale_max": 0.95,
+          "sink": 0.25
+        },
+        {
+          "_why": "talus, north-west foot -- the one big stone the tree line stands beside",
+          "at": [
+            98.0,
+            -30.0
+          ],
+          "radius": 10.0,
+          "count": 2,
+          "max_slope_deg": 46.0,
+          "scale_min": 2.8,
+          "scale_max": 3.6,
+          "sink": 0.7
+        },
+        {
+          "_why": "talus, north-west foot -- graded rubble where slope meets meadow",
+          "at": [
+            98.0,
+            -30.0
+          ],
+          "radius": 16.0,
+          "count": 14,
+          "max_slope_deg": 46.0,
+          "scale_min": 0.25,
+          "scale_max": 1.0,
+          "sink": 0.2
+        },
+        {
+          "_why": "talus, west foot -- the big stone",
+          "at": [
+            80.0,
+            -86.0
+          ],
+          "radius": 10.0,
+          "count": 2,
+          "max_slope_deg": 48.0,
+          "scale_min": 2.8,
+          "scale_max": 3.6,
+          "sink": 0.7
+        },
+        {
+          "_why": "talus, west foot -- graded rubble",
+          "at": [
+            80.0,
+            -86.0
+          ],
+          "radius": 16.0,
+          "count": 14,
+          "max_slope_deg": 48.0,
+          "scale_min": 0.25,
+          "scale_max": 1.0,
+          "sink": 0.2
+        },
+        {
+          "_why": "talus, south-west foot -- the big stone",
+          "at": [
+            86.0,
+            -124.0
+          ],
+          "radius": 10.0,
+          "count": 1,
+          "max_slope_deg": 48.0,
+          "scale_min": 2.6,
+          "scale_max": 3.4,
+          "sink": 0.7
+        },
+        {
+          "_why": "talus, south-west foot -- graded rubble",
+          "at": [
+            86.0,
+            -124.0
+          ],
+          "radius": 16.0,
+          "count": 13,
+          "max_slope_deg": 48.0,
+          "scale_min": 0.25,
+          "scale_max": 1.0,
+          "sink": 0.2
+        }
+      ]
     },
     "path_stones": {
       "_comment": "Flat rock plates, scattered thinly on walkable ground. Not a path yet \u2014 M7 authors real paths \u2014 but a warm grey stone note at ground level, which is a hue the meadow has none of. The critic measured one frame at 0.7% desaturated pixels and observed there is 'no stone, no wood, no built thing, no path anywhere in that frame', where every Palworld reference carries 18-30% desaturated grey.",

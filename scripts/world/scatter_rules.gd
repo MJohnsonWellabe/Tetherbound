@@ -25,6 +25,13 @@ const CONFIG_PATH := "res://data/config/vegetation.json"
 ## calls per layer build), large enough that the bias is real.
 const RIDGE_CANDIDATES := 6
 
+## How many samples an authored anchor may draw per instance it wants before
+## giving up. Anchors sit on ground their own layer mostly refuses (a rock
+## outcrop on a hillside collar), so a healthy anchor rejects most of its
+## draws; 12 is enough for a spot passing roughly one sample in eight and
+## cheap enough that a badly-placed anchor costs nothing.
+const ANCHOR_ATTEMPTS_PER_INSTANCE := 12
+
 static var _config: Dictionary = {}
 
 
@@ -146,7 +153,80 @@ static func placements_for(
 	if not verge.is_empty() and field.has_method("path_polylines"):
 		_place_verge(out, layer, field, models, verge, half, rng)
 
+	# Authored anchors after everything else, same append-only contract as the
+	# verge and for the same reason.
+	for entry: Variant in layer.get("anchors", []):
+		if entry is Dictionary:
+			_place_anchor(out, layer, field, models, entry as Dictionary, half, rng)
+
 	return out
+
+
+## An AUTHORED clump: this layer, this many instances, at this spot on the map.
+##
+## OF4-remainder-mound. Everything above chooses its own centres — randomly,
+## or biased toward high ground or toward a road. That is right for a meadow
+## and wrong for the one thing a scatter cannot do: put a specific rock on a
+## specific hillside because a frame needs it there. The rise east of the
+## village had, measurably, four boulders and no trees anywhere on the whole
+## face the village square looks at (`tools/_probe_mound.gd`), because
+## `rocks`' 44-degree ceiling and `trees`' 21-degree one exclude most of a
+## 46m landform's flank — so the layer that exists to "make steep ground read
+## as stone" was locked out of the steepest ground in the game.
+##
+## An anchor may override ANY of its layer's own keys for its own draws
+## (`max_slope_deg` to let an outcrop stand on a collar the meadow scatter
+## must not, `scale_min`/`scale_max` for an outcrop rather than a field
+## boulder), so a hand-placed group stays part of its layer — same models,
+## same retint, same collision, same harvest rules — instead of becoming a
+## parallel layer with its own copy of all of that. Sharing a model across two
+## LAYERS silently drops one layer's tint (see vegetation.gd's
+## `_warn_about_shared_models`), which is exactly what a separate `outcrops`
+## layer reusing `Rock_Medium_*` would have done.
+##
+## `count` is instances actually PLACED, not draws attempted: an anchor on a
+## flank rejects most samples on slope, and "6" meaning "6 unless the ground
+## disagrees" makes authoring unpredictable. Attempts are capped
+## (`ANCHOR_ATTEMPTS_PER_INSTANCE`) so an impossible anchor fails cheaply
+## rather than spinning.
+static func _place_anchor(
+	out: Array[Dictionary], layer: Dictionary, field: RefCounted, models: Array,
+	anchor: Dictionary, half: float, rng: RandomNumberGenerator
+) -> void:
+	var at: Array = anchor.get("at", [])
+	if at.size() < 2:
+		push_warning("a scatter anchor has no `at` — ignored")
+		return
+	var centre := Vector2(float(at[0]), float(at[1]))
+	var radius := maxf(float(anchor.get("radius", 8.0)), 0.0)
+	var wanted := int(anchor.get("count", 6))
+	if wanted <= 0:
+		return
+
+	# The anchor's own keys win over the layer's for these draws only.
+	var local: Dictionary = layer.duplicate(true)
+	local.erase("anchors")
+	for key: Variant in anchor.keys():
+		var name := str(key)
+		if name in ["at", "radius", "count"] or name.begins_with("_"):
+			continue
+		local[name] = anchor[key]
+
+	var placed := 0
+	var attempts := 0
+	var budget := wanted * ANCHOR_ATTEMPTS_PER_INSTANCE
+	while placed < wanted and attempts < budget:
+		attempts += 1
+		var angle := rng.randf_range(0.0, TAU)
+		var distance := sqrt(rng.randf()) * radius
+		var spot := centre + Vector2(sin(angle), cos(angle)) * distance
+		var before := out.size()
+		_consider(out, local, field, models, spot, half, rng)
+		if out.size() > before:
+			placed += 1
+	if placed < wanted:
+		push_warning("scatter anchor at %s placed %d of %d in %d attempts" % [
+			centre, placed, wanted, attempts])
 
 
 ## The verge fringe (OF12): extra instances strung along the authored routes
@@ -467,11 +547,22 @@ static func _consider(
 	var base := float(layer.get("base_scale", 1.0))
 	var low := float(layer.get("scale_min", 0.85)) * base
 	var high := float(layer.get("scale_max", 1.25)) * base
+	var instance_scale := rng.randf_range(low, high)
+	# `sink`: metres of the prop buried at scale 1.0, times its own scale, so a
+	# big block sits deeper than a cobble. A blind critic on the first round of
+	# OF4-remainder-mound's outcrops: "boulders of that mass do not rest tangent
+	# on a smooth slope... they sit part-buried in a scar they made. Every one
+	# of these sits on the surface." Placement cannot make a scar, but it can
+	# stop a rock balancing on the ground plane — and burying the foot also
+	# hides the gap `align_to_slope` still leaves on broken ground. Opt-in per
+	# layer or per anchor, defaults to 0, and never applied to anything that
+	# grows: a half-buried tree is a bug.
+	var sink := float(layer.get("sink", 0.0)) * instance_scale
 	var placement := {
 		"model": str(models[rng.randi_range(0, models.size() - 1)]),
-		"position": Vector3(spot.x, height, spot.y),
+		"position": Vector3(spot.x, height - sink, spot.y),
 		"yaw": rng.randf_range(0.0, TAU),
-		"scale": rng.randf_range(low, high),
+		"scale": instance_scale,
 	}
 	# Rigid props (currently just rocks, the one layer with a MINIMUM slope)
 	# rest flush with the ground they're placed on rather than standing
