@@ -132,6 +132,76 @@ cross-system plumbing (`CombatManager` is a scene-local `NodePath` on
 free-heal from the hotbar mid-fight right now. Opened as `HD2-remainder`
 rather than silently shipped or silently blocked on.
 
+## EV6-remainder-mill-crossing — Mill, footbridge and ranger station: the bible §12 types the rebuild left, buildable once EV5's stream turned out to be real
+`tests: smoke_opening, smoke_traversal` (the item's own two) — both green
+headless against the first terrain bake; the final bake differs only by the
+crossing flat's centre/radius (a placement-arithmetic fix, below), not
+re-run inside this firing's budget.
+
+**The premise of the block was stale.** The backlog said mill/crossing and
+bridges wait on water that doesn't exist; `EV5` shipped the pond and its
+inflow stream. Probed the actual stream course and bank heights with a new
+scratch probe (`tools/_probe_ground.gd`, committed like the other `_probe_*`
+tools) rather than guessing, and sited all three where the stream approaches
+the pond — the one place in the slice water actually runs.
+
+**What shipped, all from the one Medieval Village MegaKit family (D24 — no
+new packs, no generations):**
+- **`mill`** (`building_prefabs.json`): 6×6, three courses — working stone
+  ground, two half-timber courses — under the family's round-tile roof;
+  ridge ~14m, the tall in-family silhouette the settlement lost when the
+  mismatched TowerWindmill was retired. The **water wheel is composed from
+  eight kit fence sections** (yawed 90° into the y-z plane, rolled to their
+  rim angles, pickets as outward paddles, a horizontal timber post as axle);
+  `building_prefabs.gd` grew optional per-module `pitch_deg`/`roll_deg`
+  (Euler YXZ, so plain `yaw_deg` recipes are untouched) for exactly this.
+  Placed at [-132,107] with the wheel hanging over the carve, bottom paddles
+  at the stream surface by arithmetic.
+- **`footbridge`**: timber deck (four kit floor slabs), kit fence rails,
+  stone abutment landings — bible §12's "timber + stone abutment" — spanning
+  the 5m carve bank to bank at [-136.3,113], just downstream of the mill.
+  Authored colliders: walkable deck box top exactly at deck surface, rail
+  boxes both sides.
+- **`ranger_station`**: cottage_a's 4×6 footprint in working `UnevenBrick`
+  stone with open shutters — a lookout, not a third cottage — on the pond
+  route's shoulder at [-100,100], door yawed to the path.
+- **`village.gd` grew `ground: "highest"`** for structures that deliberately
+  overhang a drop: the bridge (and the mill's wheel) put an AABB corner on
+  the carved streambed, and the lowest-corner rule would sink the deck into
+  the channel.
+- **Terrain**: a mill-crossing flat at [-134.5,110] r10.5 h-20.7 (the carve
+  subtracts AFTER flats by design, so the channel still cuts through the pad
+  and leaves level banks — what a bridge needs; stream surface stays above
+  the pond and still descends) and a ranger pad at [-100,100] h-18.2. Both
+  heights from the probe. Clearings + footprints added in `vegetation.json`;
+  terrain rebaked. The pad's north rim moves the pond's south-arm shoreline
+  ~5m north; reeds and the water surface derive from the heightfield and
+  follow automatically.
+
+**Caught by arithmetic, not by a render:** the first crossing flat (r9 at
+[-133,109]) left the footbridge's west landing hovering ~1.3m above the
+skirt — found by checking the deck's corner positions against the flat's
+coverage, fixed by widening/recentering before any frame was shot.
+
+**Honesty about the visual bar: NOT cleared, not judged.** This is
+visual-affecting work and conventions require a blind pass. The capture tool
+exists (`tools/capture_mill_crossing.gd`, five viewpoints: cluster, wheel
+over water, deck, station, landmark-from-route) and a run was in flight at
+wrap-up, but no frame completed inside the firing's budget (llvmpipe boots
+this 23k-prop world in ~10+ minutes per run, and the first run was killed to
+fix the floating-landing bug above). The world boots clean with all 13
+structures placed (`[village] placed 13 structures`, capture log). Whoever
+runs next: shoot with that tool and treat the blind critique as round 1 —
+the wheel's read (fence-pickets-as-paddles) and the crossing flat's south
+bank are the two things most likely to need a second pass.
+
+**Left deliberately for follow-ups:** Oskar the Bridgehand still stands in
+the square — standing him at his bridge (and the Rescued Ranger at the
+station) is `lane: npc`, one `village_npcs.json` edit each, not done here to
+keep the smoke-tested NPC lanes untouched. `EV7-remainder`'s bridge-repair
+cluster now has its bridge; its quarry station still has **no quarry — this
+pass did not build one**.
+
 ## OF13 — Stronghold relocated ~105m out and genuinely occluded, not just nudged
 `scripts/world/landmark.gd`, `tools/capture_wayfinding.gd` on `ralph/OF13`.
 `model: sonnet` (mechanical placement/occlusion — `OF9`'s design question

@@ -871,15 +871,20 @@ judgement of the settlement happened between `fdbfc1d6` and this fix landing,
 treat it as invalid** — it was judging an empty field with real walls in it.
 
 Still open:
-- **Mill / crossing, and the bridges** — both are water/bridge architecture
-  and there is no water (`EV5`, unshipped). The windmill's removal also cost
-  the settlement its tall landmark; the mill at a real crossing is the
-  in-family replacement, built when `EV5` gives it a stream to stand on.
-  `data/dialogue/village.json`'s Oskar is a Bridgehand with no bridge for the
-  same reason.
-- **Ranger station** — compact functional building; no site for it exists in
-  the slice's geography yet, and inventing one mid-rebuild would have been a
-  site-plan decision made for silhouette's sake.
+- ~~**Mill / crossing, and the bridges**~~ **Shipped** (see `DONE.md`
+  §EV6-remainder-mill-crossing) — the "no water" premise was stale, `EV5`'s
+  stream is real geometry. Mill (three courses, composed wheel), footbridge
+  (timber deck, stone abutments) and ranger station all placed at the
+  stream's approach to the pond, all from the one kit family. **NOT yet
+  judged by a blind visual pass** — the firing's own render run did not
+  complete inside its budget; treat the next blind pass on this site as
+  round 1, using `tools/capture_mill_crossing.gd`'s five viewpoints. Oskar
+  is still standing in the square; standing him at his bridge (and the
+  Rescued Ranger at the station) is a cheap `lane: npc` follow-up.
+- ~~**Ranger station**~~ **Shipped in the same pass** — sited on the pond
+  route at [-100,100] (the geography it was waiting for was `EV5`'s pond
+  valley), cottage_a's footprint in working stone. Same not-yet-blind-judged
+  caveat as above.
 - ~~**Grandpa's house as modules.**~~ **Shipped by the EV6 follow-up pass**
   (see `DONE.md` §EV6): the exterior is now the `farmhouse_shell` prefab —
   brick ground course, timber-grid upper course, kit windows, `6x10`
@@ -934,8 +939,12 @@ quarry — `SA4`/`EV5` territory) and are carried forward below.
 ### EV7-remainder — The three prop clusters that need geography built first
 `model: sonnet` · `tests: none` · `area: village`
 Bible §2 P3, absorbing the rest of `R9.4-remainder-5`. `bridge repair site`
-needs a bridge (none exists — `SA4`'s river-gorge spoke or `EV5`'s water
-feature); `quarry station` needs a built quarry (`village_npcs.json`'s own
+~~needs a bridge (none exists — `SA4`'s river-gorge spoke or `EV5`'s water
+feature)~~ **a bridge now exists**: `EV6-remainder`'s footbridge at the
+stream crossing ([-136.3,113], see `DONE.md`
+§EV6-remainder-mill-crossing), so this cluster is startable; `quarry
+station` still needs a built quarry — **the mill-crossing pass did NOT
+build one** (`village_npcs.json`'s own
 comment: the Quarry Foreman stands in the square today because "No built
 quarry to stand him at yet"); `trainer camp` could go along an existing route
 (the practice meadow, `R7.1`'s waypoints) without waiting on new geography, so
