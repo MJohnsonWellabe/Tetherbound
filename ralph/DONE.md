@@ -21,17 +21,43 @@ cannot. With that in place both remaining `NP4` defects are fixed:
 
 - **villager_male's trousers**, dark and cold against
   `docs/art/reference/12_NPC_Bases_Reusable.png`, are graded warm and up in
-  value — mean sRGB 117.5,104.2,88.8 → 128.6,107.2,81.9, a per-channel
-  linear-light gain of (1.219, 1.065, 0.848) chosen so the channel ratios
+  value — mean sRGB 117.5,104.2,88.8 → 144.3,121.3,93.0, a per-channel
+  linear-light gain of (1.585, 1.385, 1.102) chosen so the channel ratios
   land on the reference board's own trouser brown (1 : 0.81 : 0.58, sampled
   from the front and 3/4 figures) instead of the shipped 1 : 0.89 : 0.77.
   It is a multiply, so the weave, the seams and the painted shading all
-  survive; only hue and value move.
+  survive; only hue and value move. The value half of that gain came from a
+  second pass: the first shipped grade fixed the hue (a blind critic
+  measured it at hue 31° against the board's 30°) but left the value 6 L\*
+  points crushed, with "the pockets disappeared entirely" at 150px. Measured
+  over the same trouser region across the three renders, mean L\* went 20.6
+  (original) → 22.7 (first grade) → 28.3 (shipped), the +6 the critique
+  asked for, landed by measurement rather than by eye.
 - **villager_female's shin blotch** is gone. It was not a subtle stain: a
   rendered close-up shows most of one shin painted in the shorts' olive.
   Measured, the bad side's texels sat at median sRGB 186,173,145 and 5th-
   percentile luma 0.194 against the good side's 219,196,180 and 0.497. The
-  bad side is repainted out of the good side's own skin.
+  bad side is repainted out of the good side's own skin. **A second defect
+  hid inside the first**, and only a blind critic looking at the finished
+  frame found it: a vector-sharp black wedge and a tan triangle just below
+  the knee on the repainted leg, which survives a 300px downscale and reads
+  at conversation range "as an insect on her leg". Three hypotheses were
+  measured and killed before the real cause turned up — it was not
+  unrepainted geometry (`char1` owns zero faces in that window; the piece
+  owns all 374), not a sub-texel face the rasteriser had missed (a
+  conservative bounding-box fallback, kept anyway, changed nothing), and not
+  a mesh defect (face areas and normals near the artifact are byte-identical
+  between the original and the cut file — no degenerate, no flipped face).
+  It was the repaint's own source: **this atlas overlaps islands**, so some
+  of the clean shin's UV triangles sit on top of another part's texels, and
+  four faces' worth of "clean" samples were a dark fragment of something
+  else. Sampling now rejects any sample that is not within ±12% of the clean
+  median on every channel — a luma-only window killed the black wedge but
+  left a tan triangle, because a tan fragment can be exactly as bright as
+  skin. Measured on the same faces, the darkest texel they can sample went
+  from luma 0.059 to 0.483 — skin. Verified the way the critique asked, by
+  actually downscaling the frame rather than judging at macro: gone at 300px
+  and at 150px, and at 4x macro all that is left is soft shading.
 
 **Method — `NP7`'s, deliberately.** Faces were classified by measurement,
 never by an eyeballed box: dominant vertex group, world height, and the
@@ -75,26 +101,42 @@ does. Godot extracts them on import as
 `villager_{male,female}_lod0_{trousers,shins}_tex.png`.
 
 **Honest limits.**
-- The female repaint is, in practice, a flat fill. The script tries to
-  resample the good shin's actual painted texels (eight axis-aligned
-  orientations, best coverage wins) but the two islands do not correspond:
-  the best orientation put 1.7% of samples inside the good island, so 98%
-  of the shin takes the good island's median colour. That reads correctly —
-  the surviving shading comes from the mesh normals, and the good shin's
-  own texel spread is only a few values wide — but it is a repaint, not a
-  transfer, and the report JSON says so (`source_hit_rate: 0.017`).
+- The female repaint is, in practice, a flat fill, and after round two it is
+  one by design. The script tries to resample the good shin's actual painted
+  texels (eight axis-aligned orientations, best coverage wins) but the two
+  islands do not correspond — the best orientation put 1.7% of samples
+  inside the good island — and every one of those surviving samples turned
+  out to be a liability rather than a gain, because this atlas overlaps
+  islands. With the ±12% acceptance window essentially all of them are
+  rejected and the shin takes the good island's median colour. That reads
+  correctly (the surviving shading comes from the mesh normals, and the good
+  shin's own texel spread is only a few values wide) but it is a repaint,
+  not a transfer, and the report JSON says so (`source_hit_rate: 0.017`,
+  and 182040 sample rejections logged — effectively every destination texel).
 - Macro-only residuals survive on both, the bar `NP7` set and disclosed the
-  same way: a few faint warm specks on one of villager_male's cuffs, and a
-  ~5px dark fleck plus a slightly ragged edge under villager_female's
-  shorts hem. Both invisible at normal camera distance in the same
-  close-ups that show the fixes.
-- **No blind visual judge ran.** This lane has no tool for spawning a fresh
-  subagent, so `LANE_RULES`' blind check could not be performed from here;
-  verification is the author's own before/after close-ups (four angles each,
-  rendered under the render lock) plus the reference board. The frames are
-  in the session scratchpad under `shots/before_male`, `shots/before_female`,
-  `shots/male_fix`, `shots/female_fix3`. A blind pass on those frames is the
-  one piece of this item's verification still owed.
+  same way: faint amber streaks on one of villager_male's boot cuffs (the
+  grade reaching a few texels of the pale wrap — believed fixed after round
+  one, and the blind critic found them still faintly there), and a slightly
+  ragged edge under villager_female's shorts hem. Both invisible at normal
+  camera distance in the same close-ups that show the fixes.
+- **The diamond/argyle lattice on villager_male's left hip is pre-existing,
+  not something this split stamped there.** The blind critic flagged it as
+  possible texture-island bleed from the flood fill, which was the right
+  suspicion to raise; checked against the untouched original's own render
+  (`before_male_three_quarter`) it is already present, in the source atlas,
+  before a single texel was touched. Left alone. Honest caveat: brightening
+  the trousers raises that pattern's contrast slightly along with everything
+  else in the fabric.
+**The blind visual pass ran, and this entry is the second round.** This lane
+cannot spawn a subagent itself; the coordinator ran a fresh opus critic
+against the round-one frames and the reference board and relayed the
+findings. Three landed inside `NP4`'s own two defects and all three are
+addressed above (trouser value, the shin wedge, the hip lattice's
+provenance). The critic's other findings are recorded here and deliberately
+not chased, because they are pre-existing `NP`-series ceilings rather than
+anything this item changed: the cast's hue collapse at macro framing, the
+flat/undershaded skin on all the villager bases, and the hand geometry. No
+new backlog entries, per the owner's directive; they live here.
 **In-engine confirmation.** `tools/capture_village_npcs.gd`'s production
 frame (`shots/_diag/village_npcs.png`, rendered under the render lock after
 a full reimport) shows all five village NPCs on the two rebuilt bases: no

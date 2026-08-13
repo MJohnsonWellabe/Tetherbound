@@ -266,7 +266,16 @@ def uv_mask(part, shape) -> np.ndarray:
             b = ((ys[2] - ys[0]) * (gx - xs[2]) + (xs[0] - xs[2]) * (gy - ys[2])) / d
             c = 1.0 - a - b
             inside = (a >= -0.002) & (b >= -0.002) & (c >= -0.002)
-            mask[y0:y1, x0:x1] |= inside
+            ## A UV triangle smaller than a texel contains no pixel centre, so
+            ## a pixel-centre rasteriser marks nothing for it — while the
+            ## renderer still samples the texture there, bilinearly, off
+            ## whatever the neighbours hold. On this atlas that left seven
+            ## sub-texel faces on villager_female's shin sampling foreign dark
+            ## texels: the "vector-sharp black wedge and tan patch below the
+            ## knee" a blind critic read as an insect on her leg. Fall back to
+            ## a conservative bounding-box fill so no face can ever sample a
+            ## texel this mask does not own.
+            mask[y0:y1, x0:x1] |= inside if inside.any() else True
     return mask
 
 
@@ -303,7 +312,8 @@ def grade(px, mask, gain, report) -> np.ndarray:
     than replacing a texture.
     """
     before = px[mask][:, :3].mean(axis=0)
-    px[..., :3] = np.where(mask[..., None], px[..., :3] * gain, px[..., :3])
+    px[..., :3] = np.where(mask[..., None],
+                           np.clip(px[..., :3] * gain, 0.0, 1.0), px[..., :3])
     after = px[mask][:, :3].mean(axis=0)
     report["grade"] = {
         "gain": [float(x) for x in gain],
@@ -393,6 +403,22 @@ def destain(px, masks, cores, report) -> np.ndarray:
 
     sampled = px[my, mx, :3].copy()
     outside = ~src[my, mx]
+    ## Being inside the clean island is not enough to trust a sample. This
+    ## atlas overlaps islands: some of the clean shin's own UV triangles sit
+    ## on top of another part's texels, so a "clean" sample can be a dark
+    ## fragment of something else entirely. Four faces' worth of exactly that
+    ## rendered as a vector-sharp black wedge below the knee, which a blind
+    ## critic read as an insect on her leg. Anything whose luma is not within
+    ## a quarter of the clean median is not skin, whatever mask it sits in.
+    ## Per channel, not just luma: a tan fragment can carry the same
+    ## brightness as skin and still read as a blemish. A ±12% window on every
+    ## channel is deliberately tight — on this asset it rejects nearly every
+    ## sample and the repaint collapses to the clean median, which is the
+    ## right trade. A fragment of the wrong thing costs a visible artifact; a
+    ## texel of real grain buys almost nothing back on skin whose own spread
+    ## is a few values wide.
+    lo, hi = median * 0.88, median * 1.12
+    outside |= np.any((sampled < lo) | (sampled > hi), axis=1)
     sampled[outside] = median
     px[dy, dx, :3] = sampled
     ## One light smoothing pass inside the repainted island only, so the
@@ -544,7 +570,9 @@ def side_mask(part, face_sel, shape) -> np.ndarray:
             a = ((ys[1] - ys[2]) * (gx - xs[2]) + (xs[2] - xs[1]) * (gy - ys[2])) / d
             b = ((ys[2] - ys[0]) * (gx - xs[2]) + (xs[0] - xs[2]) * (gy - ys[2])) / d
             c = 1.0 - a - b
-            mask[y0:y1, x0:x1] |= (a >= -0.002) & (b >= -0.002) & (c >= -0.002)
+            inside = (a >= -0.002) & (b >= -0.002) & (c >= -0.002)
+            ## Sub-texel triangles: see uv_mask's note.
+            mask[y0:y1, x0:x1] |= inside if inside.any() else True
     return mask
 
 

@@ -1197,8 +1197,12 @@ its own copy of the texture
 (`tools/art_pipeline/blender/split_garment.py`, `NP7`'s classify-by-
 measurement method), so an edit to those pixels can only reach the faces
 that were cut. villager_male's trousers are graded warm and lighter
-(mean sRGB 117,104,89 → 129,107,82) and villager_female's shin stain is
-repainted out of her other shin's skin. Both bases still animate on the
+(mean sRGB 117,104,89 → 144,121,93; rendered L* 20.6 → 28.8) and
+villager_female's shin stain is repainted out of her other shin's skin.
+A blind critic's pass on the first round found the hue fixed but the value
+still crushed, and a second defect the stain had been hiding — both closed
+in round two, the second traced to overlapping UV islands in the source
+atlas rather than to anything the split did. Both bases still animate on the
 same rig with the same 6 clips, and per-garment `palette` entries
 are now possible for the first time (spec §21). One macro-only residual on
 each is disclosed in the `DONE.md` entry, the same bar `NP7` accepted.
