@@ -84,11 +84,7 @@ different frame.
 
 **`OF6` (world boundary collision tightened to the visible perimeter) shipped — see `DONE.md`.**
 
-### OF7 — Rebuild the perimeter fence/wall — it looks bad and isn't continuous
-`area: terrain` (or `village`, whichever owns the placement) · `model: fable`
-— a visual-quality call on an already-built system (`SA3`), not a new
-mechanic. The owner's words: "it looks awful and isn't continuous." Done
-when a blind pass no longer calls the perimeter discontinuous or low-quality.
+**`OF7` (perimeter fence/wall rebuilt — continuous joins, real jitter, real coursing) shipped — see `DONE.md`.** Found a real, unfixed bug while shipping it: `vegetation.json`'s `rocks` layer places boulders through the boundary ring in segment 1 — needs a `clear_radius` around the ring, not yet done.
 
 **`OF8` (player standing on the bed instead of lying in it — a bad furniture collider plus a missing lie-down pose) shipped — see `DONE.md`.**
 
@@ -96,12 +92,21 @@ when a blind pass no longer calls the perimeter discontinuous or low-quality.
 
 **`OF13` (hide the stronghold, move it farther from the village) shipped — see `DONE.md`.**
 
-### OF10 — The road up to the stronghold is unwalkable, and the hill/slope doesn't look good
-`area: terrain` · `model: fable` (likely — the existing hillside-quality
-work is already Fable-adjacent visual-direction territory, see `OF11`).
-Two possibly-separate problems: a walkability bug (check for a collision
-gap or a bad nav-mesh) and a look-quality pass. May have different owners;
-don't assume one fix closes both.
+### OF10 — the hill/slope the road climbs doesn't look good
+`area: terrain` · `model: fable` (opus author + independent blind review
+for this session, owner request — see `OF7`'s entry in `DONE.md` for
+the same substitution). **Walkability half shipped — see `DONE.md`'s
+`OF10a` entry.** Remaining scope is look-quality only: the rise's slope
+the road climbs toward, and the road's own read as it approaches the
+rise's foot. Do not touch `paths.routes["The Rise"]`'s point list — `OF10a`
+already fixed its walkability by ending it at the true edge of walkable
+ground.
+
+Also on record from `OF10a`'s investigation, not yet fixed, low priority:
+`village.json`'s `cottage_b` (`[21,-14]`) sits astride the road's first
+leg — a real player can sidestep it easily and it doesn't block the route,
+but it reads as sloppy placement. Whoever next touches village prop
+placement should nudge it clear.
 
 ### OF11 — Redo the hillside rock material/relief from scratch
 `model: fable` (dispatch). Replaces the `BLOCKED.md` "hillside rock" entry —

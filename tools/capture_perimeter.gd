@@ -5,7 +5,21 @@ extends SceneTree
 ## ring curve into the distance, per conventions.md's "visual-affecting
 ## work needs a blind pass, not a look."
 ##
-##   godot --headless --path . --script tools/capture_perimeter.gd
+##   xvfb-run -a -s "-screen 0 1280x720x24" \
+##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \
+##     --script tools/capture_perimeter.gd
+##
+## OF7: this header used to say `godot --headless ... --script ...`, and that
+## command DOES NOT WORK — it hangs forever, silently, with no output and no
+## error. `--headless` selects the dummy rendering driver, which never emits
+## `RenderingServer.frame_post_draw`, so `_shoot()`'s own `await` on that
+## signal below never resumes. The scene builds, the settle loop completes,
+## and the process then spins the main loop at 100% CPU indefinitely without
+## writing a single frame. Verified directly (a two-object scene reproduces
+## it in isolation; the same scene under the command above writes a PNG in
+## seconds). This is the same xvfb + `opengl3` invocation `tools/survey.sh`
+## and `tools/capture_wayfinding.gd` already document, and it carries the
+## same Compatibility-renderer caveat those do (D06).
 ##
 ## Throwaway: writes shots/_perimeter/*.png for the blind critic to read,
 ## not part of the survey and not committed.

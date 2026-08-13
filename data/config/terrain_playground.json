@@ -183,6 +183,7 @@
       {
         "_why": "the square toward the rocky rise (galecrest, and one day the stronghold sightline)",
         "label": "The Rise",
+        "_comment_of10a": "OF10a (walkability half of OF10). The old last two points (85,-48) and (118,-72) drove this road in a straight line up and OVER `rises.peaks[0]`'s own rim -- fine for the first ~38m of that line (slope <=6 deg the whole way, `tools/`-style probe with slope_degrees_at at 0.5m steps) and then a genuine cliff: 4.8deg at (76.9,-42.7) to 46.4deg just 1.2m later at (78.1,-43.5), and 40-52deg for most of the rest of the climb toward both old points -- well past the player's own 45deg floor_max_angle (player.tscn), so the character simply cannot walk it, in any direction, not just straight ahead (confirmed with a headless playthrough: holding forward pins the player exactly at the base of this same jump, is_on_floor never leaves true, velocity pins at zero). This is the rise's own DESIGNED collar (terrain_playground.json's own `rises` comment: 'these are the only places the 45-degree slope limit should actually bite'; EV4-hillside-seam-remainder-4's `relief_amplitude`/`relief_frequency`, gated to this exact flank band and owned by the separate look-quality item, add further sub-2m irregularity on top of it) -- not a collision defect like OF6's undersized boundary box, and not something this item's own scope may touch (rises.peaks / relief are geometry the look pass already tuned against). A grid pathfind at up to 2m resolution could not thread a >=44deg-safe line through that collar anywhere near this bearing; the two are genuinely entangled, per this item's own escape valve. The walkable fix is where the road ITSELF stops: truncated to end at (74,-41), the last point on the ORIGINAL bearing/line before the cliff (worst slope on the new leg is 13.3deg, with the cliff still 4-6m further on) -- 82.2m from the rise's own centre, i.e. just past the dome's 78m-radius footprint, so the road now reads as reaching the genuine foot of the rise and stopping there, not dead-ending mid-slope. Nothing in `rises`, `colour.relief_*`, or any texture/material entry was touched.",
         "points": [
           [
             10.0,
@@ -193,12 +194,8 @@
             -22.0
           ],
           [
-            85.0,
-            -48.0
-          ],
-          [
-            118.0,
-            -72.0
+            74.0,
+            -41.0
           ]
         ]
       }

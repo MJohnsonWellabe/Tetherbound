@@ -3,6 +3,108 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF7 — Perimeter fence/wall rebuilt: continuous, real jitter, real coursing
+Diff spread across `6379ca9`/`644bebf`/`593d9ad` (WIP checkpoints holding
+the initial rebuild, committed by the orchestrating session while the
+dispatch was still live — see those commits' own messages) and `7cdb0f2`
+(the final fix round, clean) on `claude/ralph-backlog-of6-7-10-11-dbiydq`
+(manual session shipping `OF6`/`OF7`/`OF10`/`OF11` together, owner
+request). **`model: fable` in `BACKLOG.md`, fulfilled as an `opus` author +
+independent blind-review loop for this session instead** (owner
+direction) — honest substitution, not a silent downgrade.
+
+**Root cause, measured not guessed.** Every segment in the old ring was
+rigid geometry at a single averaged Y (`mid.y`) across its own ~37m span.
+A throwaway probe (`tools/_probe_perimeter.gd`) against the pure
+heightfield found up to **22.9m of real ground movement within one
+segment**, meaning a rigid run could be off by up to 11.45m — exactly
+matching the owner's "isn't continuous" complaint (the baseline frame
+shows a fence rail floating in mid-air with no posts, and a wall 3/4
+buried). Independently confirmed by `OF6`'s own investigation on a
+different segment of this same file.
+
+**Rebuild:** one shared ground-sampled polyline (720 points, ~2m spacing)
+that all four styles (stone wall, ranch fence, hedgerow, rock formation)
+generate along, so neighbouring styles share vertices at joins — a step at
+a join is no longer geometrically possible. Real masonry
+(`T_UnevenBrick_*`, already staged in the Quaternius medieval kit) and the
+kit's own `Prop_WoodenFence_Extension1/2` replace hand-cut primitives — no
+new Meshy generation, D24's one-family rule held. Merged meshes +
+MultiMesh dropped ~640 individual `MeshInstance3D`s to ~9 draw calls.
+Measured: prop-to-ground deviation 11.45m → 0.90m (the intended kerb
+offset); all 40 joins structurally continuous.
+
+**A genuinely independent blind review (round 1, run from the
+orchestrating session since the first dispatch had no `Agent`-tool access
+and said so honestly) found the self-assessed "done" premature** — real
+verdict was "no" on both of `visual-judge`'s bar questions, naming: a wavy
+capstone artifact, fence/hedge/rock spacing reading as a mechanical
+spline-array (jitter lost in the polyline rebuild), and stray objects in
+the hedge shot. A second dispatch fixed exactly those three (see `7cdb0f2`
+for the mechanism of each fix) and discovered mid-work that `claude -p`
+(the CLI binary, on `PATH` in this container) can spawn a genuinely
+separate blind-reviewer process — three real rounds followed
+(round 1: 5 named → fixed; round 2: 2 new → fixed; round 3: 1 remaining,
+the same boulder-kit-needs-different-art ceiling three independent
+assessments now agree on, deliberately not chased further).
+
+**Confirmed NOT this item's bugs, investigated not assumed:** the harvest
+glint marker (`vegetation_harvest_point.gd`, intentional), background
+flower/grass scatter, and a rust-brown boulder clipping the fence in
+segment 1 — colour/scale/placement all point to `vegetation.json`'s own
+`rocks` layer, not `world_perimeter.gd`. That last one is a real,
+unfixed bug: **`vegetation.json` needs a `clear_radius` around the
+boundary ring** so its own rock scatter stops placing through the
+perimeter — flagged here for whoever next owns vegetation placement.
+
+Tested: `godot --headless --path . --script tests/smoke_traversal.gd`,
+clean pass (re-verified independently by the orchestrating session, not
+just trusted from the dispatch's own report), all 11 bearings inside the
+235m ring, `OF6`'s collision fix intact throughout every round.
+
+## OF10a — The road up to the stronghold: walkability half of OF10
+Diff landed in `6379ca9` on `claude/ralph-backlog-of6-7-10-11-dbiydq`
+(manual session shipping `OF6`/`OF7`/`OF10`/`OF11` together, owner
+request). **Process note:** this commit is a shared checkpoint that also
+carries the concurrently-running `OF7` dispatch's in-flight work on
+`world_perimeter.gd`/`capture_perimeter.gd` — both agents worked in the
+same tree at once and `OF10a`'s own diff is exactly the
+`data/config/terrain_playground.json` hunk in that commit (verified via
+`git diff bc244f8 -- data/config/terrain_playground.json`); nothing else
+in that commit belongs to this item. `model: sonnet`-tier (mechanical
+investigation and fix) via a dispatched agent, not `fable` — this half was
+never `fable`-tagged.
+
+Not a collision bug. Fine slope sampling with `slope_degrees_at()` along
+the old route's last leg (`[45,-22]`→`[85,-48]`→`[118,-72]`) found ≤6.6°
+for 38m, then a jump to 46.4° within 1.2m at `(78.1,-43.5)`, sustained
+35-52° through most of the remaining approach — past the player's own 45°
+`floor_max_angle`. Confirmed directly in-engine: holding forward pins the
+player at the base of that exact jump, `is_on_floor()` never leaves true.
+This is `rises.peaks[0]`'s own designed collar (the config's own comment:
+"these are the only places the 45-degree slope limit should actually
+bite"), not a defect — a grid pathfind at up to 2m resolution found no
+walkable line through it anywhere near this bearing.
+
+Fix: `paths.routes["The Rise"].points` truncated to
+`[10,-10]→[45,-22]→[74,-41]` — the last point on the original bearing that
+stays walkable (worst slope on the new leg: 13.3°). `paths.routes` only
+feeds the baked dirt-texture control map and live vegetation exclusion, not
+terrain height/collision, so this edit stops the road's own polyline
+honestly rather than creating new walkable ground — vegetation exclusion
+updates live; the baked path texture still shows the old, longer line
+until a terrain rebake, deliberately left to the look-quality pass
+(`OF10b`) rather than done here. `rises`, `colour.relief_*` and all
+texture entries untouched.
+
+Also found, not fixed (out of this item's scope, recorded in `BACKLOG.md`):
+`village.json`'s `cottage_b` sits astride the road's first leg. Doesn't
+block a real walk (confirmed sidesteppable) but is placed sloppily.
+
+Tested: `godot --headless --path . --script tests/smoke_traversal.gd`,
+clean pass, re-verified independently (not just trusting the dispatched
+agent's own report) after the fix landed.
+
 ## EV7-remainder — trainer camp and bridge repair site: the two of three named clusters with real geography to sit on
 `data/config/props.json`, `docs/ASSET_LEDGER.md`,
 `assets/props/quaternius_fantasy/{Axe_Bronze,Bag,Barrel,Bench,Rope_1}.gltf`
