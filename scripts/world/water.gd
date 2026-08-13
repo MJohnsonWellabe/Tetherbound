@@ -1006,7 +1006,15 @@ func _build_jetty(pond_centre: Vector2) -> void:
 	# is the point — the villagers drove logs, they did not turn columns.
 	var log_mesh := _mesh_for(str(cfg.get("piling_model", "res://assets/environment/nature/log.glb")))
 	if log_mesh != null:
-		var piling_material := _reed_material(log_mesh.surface_get_material(0), str(cfg.get("piling_tint", "#8d7a63")))
+		# Not _reed_material: that one turns vertex_color_use_as_albedo on
+		# for MultiMesh instance tones, and the Kenney log's own cream cut-
+		# wood vertex colours multiplied through it — the pilings rendered
+		# as pale concrete posts (own-render pass). A plain opaque wood
+		# material shows the tint as authored.
+		var piling_material := StandardMaterial3D.new()
+		piling_material.albedo_color = Color(str(cfg.get("piling_tint", "#6b5843")))
+		piling_material.roughness = 0.95
+		piling_material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
 		for j in modules + 1:
 			var s := module_len * float(j) - land_overlap
 			for side: float in [-1.0, 1.0]:

@@ -112,7 +112,8 @@
         "res://assets/environment/nature/log_large.glb",
         "res://assets/environment/nature/log.glb"
       ],
-      "tint": "#9a8974",
+      "tint": "#7d6a55",
+      "_comment_tint": "Own-render pass: the Kenney log's cream vertex colours multiply through the batch tint, so it is authored darker than the target weathered grey-brown. TUNABLE.",
       "count": 6,
       "band_below": 0.3,
       "band_above": 0.45,
@@ -125,7 +126,8 @@
         "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
         "res://assets/environment/stylized_nature/Plant_7.gltf"
       ],
-      "tint": "#4f7d44",
+      "tint": "#6f9a55",
+      "_comment_tint": "Own-render pass: at #4f7d44 the pad clusters read as near-black clumps on the bright water; lifted a step. TUNABLE.",
       "clusters": 6,
       "per_cluster": 8,
       "cluster_radius": 3.2,
@@ -144,7 +146,7 @@
     "land_overlap": 1.4,
     "railing": true,
     "piling_model": "res://assets/environment/nature/log.glb",
-    "piling_tint": "#8d7a63"
+    "piling_tint": "#6b5843"
   },
   "_comment_round1": "EV5 authoring round 1 (own read of the first render, before any blind round): the pond rendered as pale milk with a solid white shoreline ring. Foam rebalanced in the shader (noise now required, contact alone cannot clear the threshold) and the height texture went R8 -> RF (see water.gd's _bake_height_texture for the staircase this removed). Here: deep colour darker and reached sooner (depth_falloff 1.6->1.2), alpha_deep 0.88->0.93 so the bright sandy bed stops lifting the deep water, fresnel wash cut (0.65->0.4, power 4->5), wave normals calmed (0.35->0.22), roughness up a step so the sun sheen stops frosting the whole surface. ALL still TUNABLE.",
   "_comment_round2": "EV5 blind round 1 (first genuinely blind critique, fresh headless session, no context): verbatim defects and the levers moved — 'swimming-pool cyan against olive land' -> deep/shallow/fresnel all pulled toward the keyart's warm teal-green family; 'shallow-to-deep gradient is a constant-width ring, not depth' -> depth_falloff 1.2->2.2 so the ramp spreads wide on shallow banks and stays narrow on steep ones; 'no sun glint... unfinished' -> roughness back to 0.10, shader SPECULAR restored to 0.5, wave normals up 0.22->0.4 and finer (uv_scale 0.09->0.12); 'foam is a bead chain' -> foam_scale down plus a second decorrelating noise scale in the shader; 'one reed asset, one scale... on the sand, not in the water' -> band reaches 0.55m BELOW the waterline, scale span widened, per-instance lean/tone jitter in water.gd. Reflections are the one named defect deliberately NOT chased: bible sec15 forbids the expensive tier, gl_compatibility has no SSR, and a planar reflection probe is exactly the simulation the spec rules out — fresnel-toward-sky is this tier's honest ceiling, recorded in DONE.md rather than faked. ALL TUNABLE.",
