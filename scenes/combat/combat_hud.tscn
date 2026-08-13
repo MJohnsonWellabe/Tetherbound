@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/combat_hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://scripts/ui/capture_reticle.gd" id="2_reticle"]
 
 ; Combat HUD, rebuilt to the owner's Palworld-inspired spec (`docs/*` §9) plus
 ; D32's mid-combat switching UI. Static shape lives here (panels, bars, cell
@@ -431,7 +432,12 @@ grow_vertical = 0
 theme_override_font_sizes/normal_font_size = 28
 text = ""
 
+; Retired: the old fixed-centre "+" crosshair (spec §10, D31). CaptureReticle
+; below replaces it with a ring drawn at the ENEMY's screen position and an
+; explicit percentage; this node is kept (not deleted) only so nothing else
+; that still refers to `$Root/Reticle` breaks, and stays permanently hidden.
 [node name="Reticle" type="Label" parent="Root"]
+visible = false
 mouse_filter = 2
 anchors_preset = 8
 anchor_left = 0.5
@@ -448,6 +454,16 @@ horizontal_alignment = 1
 vertical_alignment = 1
 theme_override_font_sizes/font_size = 44
 text = "+"
+
+; The real capture reticle (spec §10.2, D31): full-rect so it can draw the
+; ring anywhere the enemy happens to be on screen, mouse-transparent, driven
+; entirely by combat_hud.gd's update_target()/play_*() calls.
+[node name="CaptureReticle" type="Control" parent="Root"]
+script = ExtResource("2_reticle")
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 
 [node name="Outcome" type="Label" parent="Root"]
 mouse_filter = 2

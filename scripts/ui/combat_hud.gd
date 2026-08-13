@@ -26,17 +26,12 @@ const SPECIES := preload("res://scripts/pals/pal_species.gd")
 const MOVE_DB := preload("res://scripts/pals/move_db.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 
-## The aim-mode odds readout, worded and coloured by tier rather than shown as
-## a percentage — "38%" is a spreadsheet, "fair odds" is a read on the animal.
-## Unchanged from the pre-rebuild HUD: §10's real odds readout is a later
-## milestone (task brief) and this stays exactly as it read before.
-const ODDS_TIERS: Array = [
-	[0.55, "great odds", "7ed87e"],
-	[0.35, "good odds", "a8d87e"],
-	[0.18, "fair odds", "e8d07a"],
-	[0.08, "slim odds", "e8a25a"],
-	[0.0, "poor odds", "e87a5a"],
-]
+## The orb cluster's icon (spec §10.4) and the item id it's counting —
+## `data/items/items.json`'s own display name is read at runtime through
+## `Game.items`, same lookup `playground_hud.gd`'s hotbar already uses, so a
+## renamed item cannot drift out of step with what this cluster prints.
+const ORB_ICON_PATH := "res://assets/ui/icons/items/orb_basic.png"
+const ORB_ITEM_ID := "orb_basic"
 
 ## Verb glyph colour when a grid cell IS/IS NOT usable right now. Kept as
 ## plain hex (not `UITokens.TEXT_PRIMARY`/`TEXT_MUTED`) because `input_glyph.icon`
@@ -100,6 +95,11 @@ var _prev_ready: Dictionary = {"quick": false, "charged": false, "throw": false,
 var _energy_was_full: bool = false
 var _pulse_tweens: Dictionary = {}
 
+## --- capture reticle / orb cluster (spec §10, D31) --------------------------
+var _orb_cluster: RichTextLabel = null
+var _was_resolving_catch: bool = false
+var _last_reticle_screen_pos: Vector2 = Vector2.ZERO
+
 ## --- switching (D32) --------------------------------------------------------
 var _switch_hold_dir: int = 0
 var _switch_hold_time: float = 0.0
@@ -159,7 +159,7 @@ var _selector_hp_fills: Array[StyleBoxFlat] = []
 @onready var _prompt: RichTextLabel = $Root/Prompt
 @onready var _aim_row: RichTextLabel = $Root/AimRow
 @onready var _catch_row: RichTextLabel = $Root/CatchRow
-@onready var _reticle: Label = $Root/Reticle
+@onready var _capture_reticle: Control = $Root/CaptureReticle
 @onready var _outcome: Label = $Root/Outcome
 @onready var _xp_line: Label = $Root/XPLine
 
@@ -190,6 +190,8 @@ func _ready() -> void:
 	_party_strip.position = SWITCH_PANEL_POS
 	$Root.add_child(_party_strip)
 
+	_build_orb_cluster()
+
 	UITokens.make_text_legible($Root)
 
 	if _manager != null:
@@ -198,7 +200,34 @@ func _ready() -> void:
 		_manager.connect("catch_refused", _on_catch_refused)
 		_manager.connect("catch_resolved", _on_catch_resolved)
 		_manager.connect("pal_switched", _on_pal_switched)
+		_manager.connect("orb_shook", _on_orb_shook)
 	_show_fight(false)
+
+
+## The lower-right orb cluster (spec §10.4): icon, item name, count, and the
+## throw/cancel glyphs, all as one BBCode block rather than a fistful of
+## separate Controls — `RichTextLabel`'s `[img]` tag already draws the icon
+## inline, and this cluster only ever needs to change together (one
+## `_update_orb_cluster` call, one string). Built here rather than in the
+## .tscn per the task brief's own scope line for that file ("mount only");
+## `_selector_root`/`_party_strip` above are already built the same way.
+func _build_orb_cluster() -> void:
+	_orb_cluster = RichTextLabel.new()
+	_orb_cluster.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_orb_cluster.bbcode_enabled = true
+	_orb_cluster.fit_content = false
+	_orb_cluster.scroll_active = false
+	_orb_cluster.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_orb_cluster.add_theme_font_size_override("normal_font_size", UITokens.FONT_LABEL)
+	_orb_cluster.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_orb_cluster.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_orb_cluster.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_orb_cluster.offset_left = -300.0
+	_orb_cluster.offset_top = -294.0
+	_orb_cluster.offset_right = -56.0
+	_orb_cluster.offset_bottom = -56.0
+	_orb_cluster.visible = false
+	$Root.add_child(_orb_cluster)
 
 
 ## The health-bar track/fill treatment, shared by both bars. Split out of the
@@ -336,6 +365,7 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
+	_update_capture_reticle()
 	_handle_switch_input(delta)
 	_update_party_strip()
 
@@ -351,9 +381,12 @@ func _show_fight(visible_now: bool) -> void:
 		_catch_row.visible = false
 		if _party_strip != null:
 			_party_strip.call("set_pinned", false)
-	# The reticle only exists while aiming. A crosshair sitting on screen during
-	# normal combat would promise an aim the game is not taking.
-	_reticle.visible = visible_now and _manager != null and bool(_manager.call("is_aiming"))
+		if _orb_cluster != null:
+			_orb_cluster.visible = false
+		if _capture_reticle != null:
+			_capture_reticle.call("update_target", Vector2.ZERO, 0.0, false)
+		_enemy_panel.modulate.a = 1.0
+		_grid_panel.modulate.a = 1.0
 	if _selector_root != null:
 		_selector_root.visible = visible_now and _selector_open
 
