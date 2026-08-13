@@ -92,30 +92,52 @@ different frame.
 
 **`OF13` (hide the stronghold, move it farther from the village) shipped — see `DONE.md`.**
 
-### OF10 — the hill/slope the road climbs doesn't look good
-`area: terrain` · `model: fable` (opus author + independent blind review
-for this session, owner request — see `OF7`'s entry in `DONE.md` for
-the same substitution). **Walkability half shipped — see `DONE.md`'s
-`OF10a` entry.** Remaining scope is look-quality only: the rise's slope
-the road climbs toward, and the road's own read as it approaches the
-rise's foot. Do not touch `paths.routes["The Rise"]`'s point list — `OF10a`
-already fixed its walkability by ending it at the true edge of walkable
-ground.
+**`OF10`/`OF11` (hillside rebuilt from scratch — real landform via ridged/terraced geometry, root-caused and fixed the rock texture's tiling, rise-gated boundary blend) real progress shipped, both items' own done-when NOT fully cleared — see `DONE.md`'s `OF10`/`OF11` entry for the six-round history and `BLOCKED.md` for what's still open on each.** `OF10a`'s walkability fix already shipped separately.
 
-Also on record from `OF10a`'s investigation, not yet fixed, low priority:
-`village.json`'s `cottage_b` (`[21,-14]`) sits astride the road's first
-leg — a real player can sidestep it easily and it doesn't block the route,
-but it reads as sloppy placement. Whoever next touches village prop
-placement should nudge it clear.
+### OF10-remainder — the road's arrival at the rise still doesn't resolve
+`area: terrain`. Two independent blind reviews (round 6 and round 7 of the
+`OF10`/`OF11` session) both named this, in near-identical words: the road
+"dies in open grass before reaching" the rise, with "no gate, cairn,
+marker, or surface change" at its endpoint (`[74,-41]`, from `OF10a`). A
+levelled gravel apron already exists there (`rises.flats`'s
+`_comment_of10_r3` entry) but reads as too subtle to see at approach
+distance. Both reviewers independently prescribed the same kind of fix:
+something visibly BUILT at the road's end, not another terrain tweak. This
+is a content decision (what marks this spot — a cairn, a signpost like
+`signpost.gd` already uses elsewhere for wayfinding, a Team Tether
+marker?) more than a bug, and no new asset generation is needed — reuse
+whatever the settlement/route vocabulary already stages. Flagging rather
+than inventing the answer.
 
-### OF11 — Redo the hillside rock material/relief from scratch
-`model: fable` (dispatch). Replaces the `BLOCKED.md` "hillside rock" entry —
-see there for the full five-round history. That history is evidence tuning
-plateaued, not a starting point for the next attempt: the dispatched agent
-gets the done-when ("reads as stone, not a smooth procedural blend") and the
-plateau evidence, but not the prior specific mechanisms to adjust. It judges
-and rebuilds the material/relief approach itself, clearing out the current
-implementation rather than layering another round on top of it.
+### OF11-remainder — hillside rock: real ceiling, or one more round?
+`area: terrain`. `data/config/terrain_playground.json`'s `rock_form`/
+`colour`/`textures.rock` blocks were rebuilt from scratch across 6 real
+rounds (see `DONE.md`), fixing the actual root cause five OLD rounds never
+found (the rock photo was tiled at 8.3m/tile, erasing all detail at
+viewing distance — retiled to 2.2m plus a contrast-restoration pass) and
+replacing the old smooth-noise relief with a genuinely different
+mechanism (ridged/domain-warped fractal + tilted terrace bedding). Round
+6's blind critic confirmed the old "smooth grey wash" verdict is gone
+("reads reasonably as rock up close"). Round 7, after one more fix, came
+back split: "one grey noise texture... reads as poured concrete at
+distance." Two consecutive independent critics disagreeing on the same
+question, at round 6-7 of an 11-round total history on this landform, is
+the signal to stop tuning and ask rather than run round 8 — see
+`BLOCKED.md`'s "hillside rock ceiling, round 2" for the actual decision
+needed.
+
+### A near-field tree renders with magenta/red-striped foliage
+`area: vegetation`. Found incidentally during `OF10`/`OF11`'s blind review
+(`shots/hillside/dome-overview.png`, the tree at bottom-left) — a blind
+critic called it "the single most damaging surface fault in the set."
+Present identically in renders from before that session's own changes, so
+not caused by `OF10`/`OF11`; unfixed, not investigated further (out of
+that item's scope). Likely a DIFFERENT bug from the already-tracked
+`SA1`/`R9.4-remainder-7` magenta-foliage issue — that one is attributed to
+un-mipmapped textures aliasing at distance, and this is a single tree
+filling the near foreground, not a distance effect. Possibly one bad
+`vegetation.gd::_retint()` result or one broken tree instance/material.
+Worth a dedicated look, not a re-diagnosis of the distance issue.
 
 ### OF12-remainder — Blind-confirm the in-fill state; carry the out-of-scope defects the OF12 critics named
 `area: vegetation` · `tests: none (visual)`. `OF12` shipped (see `DONE.md`)

@@ -3,6 +3,79 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF10 / OF11 — Hillside rebuilt from scratch: real progress shipped, ceiling reached — see `BLOCKED.md`
+Diff spread across `363af28`/`20a6850` (WIP/final checkpoints on
+`claude/ralph-backlog-of6-7-10-11-dbiydq`) and the reapplied commit that
+lands it on `main` (manual session shipping `OF6`/`OF7`/`OF10`/`OF11`
+together, owner request). `model: fable`, fulfilled as `opus` author +
+independent blind-review rounds for this session (owner direction, same
+substitution as `OF7`). **Neither item's own done-when is fully cleared —
+see `BLOCKED.md`'s "Hillside rock ceiling, round 2" and `BACKLOG.md`'s
+`OF10-remainder`/`OF11-remainder` for what's still open.** Recorded here
+because the work that DID land is real, measured, and shipped, not because
+either item is finished.
+
+**Six real rounds**, replacing — not tuning — the five pre-`OF11` rounds
+`BLOCKED.md`'s retired "hillside rock" entry records:
+- **Round 1**: `rock_form` replaces the old smooth-FBM `relief_amplitude`/
+  `relief_frequency` bump entirely — a ridged, domain-warped fractal for
+  creased ribs/gullies plus `terrace_*` tilted bedding-plane quantisation.
+  A genuinely different mechanism, not new numbers on the old one.
+- **Rounds 2-4**: fixed the grass/soil/rock BAND assignment to read the
+  relief field's own shape (`rock_exposure_deg`/`rock_curvature_deg`/
+  `rock_crown_deg`) instead of slope-plus-noise, and fixed the slope
+  sample step on rises (6m → 2m) so the material tracks the fine geometry
+  instead of blurring across it.
+- **Round 5, the actual root cause**: `textures["rock"].uv_scale` was
+  tiling one 1024px photo across 8.3m — a house-sized single tile, so
+  every grain of surface detail fell below a pixel at viewing distance no
+  matter what tint/AO/normal-depth got tuned. Retiled to 2.2m
+  (`uv_scale` 0.12 → 0.46), paired with a new
+  `tools/art_pipeline/contrast_rock_texture.py` restoring the source
+  photo's own local contrast (value std 0.058 → 0.135) that five OLD
+  rounds' flattening edits had removed. This is the single change that
+  finally cleared "smooth grey wash" — confirmed by round 6's blind
+  critic, the first in this landform's whole 11-round history to say so.
+- **Round 6**: fixed a resulting hard material-boundary edge (round 4's
+  fine slope sampling made `blend_deg`'s fixed-degree ramp collapse to
+  sub-pixel width on the rises) with a rise-gated `blend_deg_rock` plus a
+  second, finer `outcrop_detail_deg`/`outcrop_detail_frequency` jitter
+  octave that interlocks the boundary into fingers instead of a stencil
+  cut. Band coverage held (grass 28%/soil 21-22%/rock 50%,
+  `tools/_probe_rise_form.gd`) — an edge fix, not a coverage change.
+
+**`OF10`'s own contribution**: a small levelled apron
+(`rises.flats`, centred on `OF10a`'s `[74,-41]` route endpoint) so the
+`path_stones` scatter has ground to anchor to at the road's stop, added in
+response to round 2's blind critic naming the road as "arrow-straight,
+terminates flush against the base of the hill with nothing marking the
+meeting point." Both round 6 and round 7's critics still called this
+insufficient at approach distance — see `OF10-remainder`.
+
+**The split verdict, stated plainly**: round 6's independent blind critic
+confirmed the core "smooth grey wash"/"procedural blend" defect is gone.
+Round 7, one more independent pass after the boundary-edge fix, came back
+naming the material a "tiled grey noise texture" that "won't reach
+Palworld's rock read at any lighting setting" — a texture-resolution
+ceiling, not the same defect as before. Two consecutive independent
+critics disagreeing on the same acceptance question is this session's own
+stopping signal (`ralph/conventions.md`), not a reason to run round 8 —
+see `BLOCKED.md` for the actual decision this surfaces to the owner.
+
+Also surfaced, unrelated to this work, not fixed here: the near-field tree
+in `shots/hillside/dome-overview.png` renders with magenta/red-striped
+foliage — present identically before this session's changes, so
+pre-existing, not caused by `OF10`/`OF11`. Likely a distinct bug from the
+`SA1`/`R9.4-remainder-7` magenta-foliage-at-distance issue already tracked
+(this is a NEAR-field single tree, not a distance-aliasing pattern) — see
+new `BACKLOG.md` entry.
+
+Tested: `godot --headless --path . --script tests/smoke_traversal.gd`,
+clean pass, all bearings inside the 235m ring; full suite
+(`tests/run_tests.gd`), 404 tests / 0 failed. Both re-verified
+independently by the orchestrating session in the actual merged `main`
+context, not just trusted from either dispatch's own report.
+
 ## OF7 — Perimeter fence/wall rebuilt: continuous, real jitter, real coursing
 Diff spread across `6379ca9`/`644bebf`/`593d9ad` (WIP checkpoints holding
 the initial rebuild, committed by the orchestrating session while the

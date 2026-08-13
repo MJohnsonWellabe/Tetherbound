@@ -13,13 +13,22 @@ extends RefCounted
 
 const CONFIG_PATH := "res://data/config/terrain_playground.json"
 
+## How many bedding planes one thickness cycle spans (`bed_thickness_jitter`).
+## Deliberately not a whole number, so the sequence of thick and thin beds
+## never lines up with itself and the stack does not repeat.
+const BED_CYCLE := 3.7
+
 var _config: Dictionary = {}
 var _hills := FastNoiseLite.new()
 var _detail := FastNoiseLite.new()
 var _path_edge := FastNoiseLite.new()
 var _path_dominant := FastNoiseLite.new()
 var _outcrop := FastNoiseLite.new()
-var _relief := FastNoiseLite.new()
+var _outcrop_detail := FastNoiseLite.new()
+var _ridge := FastNoiseLite.new()
+var _warp_x := FastNoiseLite.new()
+var _warp_z := FastNoiseLite.new()
+var _fracture := FastNoiseLite.new()
 
 
 func _init(config: Dictionary = {}) -> void:
@@ -101,26 +110,70 @@ func _init(config: Dictionary = {}) -> void:
 	_outcrop.frequency = float(_config.get("colour", {}).get("outcrop_jitter_frequency", 0.03))
 	_outcrop.fractal_octaves = 2
 
-	# EV4-hillside-seam-remainder-4: three colour/tint rounds all moved the
-	# paint without moving a blind critic's verdict — "two materials, not
-	# three; rock reads as a stain, not stone" — because `outcrop_jitter_deg`
-	# above only perturbs which COLOUR BAND a slope reading picks, never the
-	# slope itself. A rise's actual surface (`_rise_height`) stays a
-	# perfectly smooth, continuous dome underneath every one of those bands,
-	# and a human reads "two materials" from a visible seam or a change in
-	# surface FORM, not from a hue shift painted onto identical geometry.
-	# This is a genuinely different layer: real height relief, added to the
-	# terrain itself (not the slope sample used for band lookup), so
-	# `slope_degrees_at`'s own central-difference sampling picks up real
-	# bumps and ledges. Higher frequency than `_outcrop`'s ~35m lobes —
-	# ~14m wavelength is close-grained relief within one lobe, not another
-	# lobe-scale undulation — and a sixth seed so it doesn't correlate with
-	# any other layer, `_outcrop` included.
-	_relief.seed = seed_value + 5
-	_relief.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	_relief.fractal_type = FastNoiseLite.FRACTAL_FBM
-	_relief.frequency = float(_config.get("colour", {}).get("relief_frequency", 0.07))
-	_relief.fractal_octaves = 2
+	# OF11 round 6. A SECOND, much finer jitter on the same band boundary. The
+	# 35m field above decides where the rock band bulges into a lobe; it cannot
+	# do anything about the EDGE of that lobe, which at 35m is a smooth vector
+	# curve however many lobes it makes. The round-5 blind critic named exactly
+	# that: the moss/dirt patches "meet bare stone in hard stencil-edged shapes
+	# with no organic blend... it looks like a stencil laid over the rock, not
+	# moss actually growing in a crevice." An edge is ragged at the scale of the
+	# thing growing along it, so this runs at metres, not tens of metres, and
+	# breaks the boundary into interlocking fingers of turf and stone. A sixth
+	# seed, uncorrelated with the lobe field it perturbs.
+	_outcrop_detail.seed = seed_value + 5
+	_outcrop_detail.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_outcrop_detail.fractal_type = FastNoiseLite.FRACTAL_FBM
+	_outcrop_detail.frequency = float(_config.get("colour", {}).get("outcrop_detail_frequency", 0.28))
+	_outcrop_detail.fractal_octaves = 3
+
+	# OF11: the rises' rock FORM. See `_rise_relief` for the whole argument;
+	# in short, five earlier rounds all perturbed a smooth analytic dome and
+	# then painted it, and a smoothly-perturbed dome cannot read as stone
+	# however it is painted. Three fields cooperate here:
+	#
+	# `_ridge` is a RIDGED fractal, not FBM. That is the whole point: FBM is
+	# C-continuous blobs — every surface it makes is a soft swell, which is
+	# exactly the "smooth procedural blend" verdict — while a ridged fractal
+	# folds the noise about zero, so its extrema are CREASES. Ribs with sharp
+	# crests and gullies with sharp floors are what a rock hillside has and a
+	# noise bump does not.
+	#
+	# `_warp_x`/`_warp_z` domain-warp the coordinates the ridge field is
+	# sampled at. Unwarped ridged noise is recognisably isotropic and evenly
+	# spaced; warping it by a lower-frequency field makes the ribs meander,
+	# converge and pinch out the way real drainage does.
+	#
+	# Seeds 5, 6, 7 — the sixth, seventh and eighth distinct field in this
+	# file — so none of this correlates with `_hills`, `_detail` or `_outcrop`.
+	var form: Dictionary = _config.get("rock_form", {})
+	_ridge.seed = seed_value + 5
+	_ridge.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_ridge.fractal_type = FastNoiseLite.FRACTAL_RIDGED
+	_ridge.frequency = float(form.get("frequency", 0.028))
+	_ridge.fractal_octaves = int(form.get("octaves", 4))
+	_ridge.fractal_lacunarity = float(form.get("lacunarity", 2.1))
+	_ridge.fractal_gain = float(form.get("gain", 0.5))
+
+	_warp_x.seed = seed_value + 6
+	_warp_x.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_warp_x.fractal_type = FastNoiseLite.FRACTAL_FBM
+	_warp_x.frequency = float(form.get("warp_frequency", 0.012))
+	_warp_x.fractal_octaves = 2
+
+	_warp_z.seed = seed_value + 7
+	_warp_z.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_warp_z.fractal_type = FastNoiseLite.FRACTAL_FBM
+	_warp_z.frequency = float(form.get("warp_frequency", 0.012))
+	_warp_z.fractal_octaves = 2
+
+	# Round 3. The finer of the two scales that break up a bedding plane's
+	# outcrop edge — `_outcrop` (~35m) is the coarse one. One scale of
+	# raggedness still has a recognisable tooth size; two do not.
+	_fracture.seed = seed_value + 8
+	_fracture.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	_fracture.fractal_type = FastNoiseLite.FRACTAL_FBM
+	_fracture.frequency = float(form.get("bed_fracture_frequency", 0.085))
+	_fracture.fractal_octaves = 3
 
 
 static func load_config() -> Dictionary:
@@ -167,17 +220,23 @@ func _valley_depth(x: float, z: float) -> float:
 
 
 func _rise_height(x: float, z: float) -> float:
+	return _rise_cone(x, z) + _rise_relief(x, z)
+
+
+## The rises' underlying analytic shape: one smoothstepped cone per peak. This
+## is the ONLY part of a rise that sets its footprint and summit height, and it
+## is unchanged from the original M1 recipe — everything OF11 added lives in
+## `_rise_relief`, which is exactly zero at each rise's rim.
+func _rise_cone(x: float, z: float) -> float:
 	var rises: Dictionary = _config.get("rises", {})
-	var peaks: Array = rises.get("peaks", [])
 	var sharpness := float(rises.get("sharpness", 2.1))
-	var relief_amp := float(_config.get("colour", {}).get("relief_amplitude", 0.0))
 	var total := 0.0
-	for entry: Variant in peaks:
+	for entry: Variant in rises.get("peaks", []):
 		var peak: Dictionary = entry
-		var centre: Array = peak.get("centre", [0.0, 0.0])
 		var radius := float(peak.get("radius", 60.0))
 		if radius <= 0.0:
 			continue
+		var centre: Array = peak.get("centre", [0.0, 0.0])
 		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
 		if distance >= radius:
 			continue
@@ -185,18 +244,168 @@ func _rise_height(x: float, z: float) -> float:
 		# pow above 1 steepens the flanks while keeping the summit rounded,
 		# which is what makes these testable slopes rather than smooth domes.
 		total += pow(smoothstep(0.0, 1.0, t), 1.0 / sharpness) * float(peak.get("height", 40.0))
-
-		# EV4-hillside-seam-remainder-4: real relief, gated to the FLANK band
-		# (roughly where a rise's own slope actually sits in the rock/soil
-		# range) rather than the whole rise -- zero right at the summit
-		# (t near 1, `_apply_flats`-adjacent ground should stay predictable)
-		# and zero again out at the rim (t near 0, so this rise's edge still
-		# blends into its neighbours exactly as before). Both smoothstep
-		# edges are gates, not the rise shape itself, so this cannot change
-		# the rise's own footprint or summit height.
-		var flank := smoothstep(0.05, 0.3, t) * (1.0 - smoothstep(0.65, 0.9, t))
-		total += _relief.get_noise_2d(x, z) * relief_amp * flank
 	return total
+
+
+## OF11: everything that makes a rise read as a rock landform rather than a
+## dome, as a signed height offset in metres. Zero everywhere outside a rise's
+## own radius, and faded to zero at the rim, so the landform's footprint and
+## the ground the roads run over are untouched.
+##
+## WHY THIS IS NOT THE PREVIOUS RELIEF LAYER AGAIN. `EV4-hillside-seam` through
+## `-remainder-4` (five rounds, all recorded in terrain_playground.json's own
+## `_comment_ev4_*` fields) worked the same two levers over and over: which
+## texture band a slope reading picks, and — in the last round — a single
+## smooth FBM bump added to the dome. A blind critic still called the result
+## "a single smooth, continuous, unbroken curve." That is not a tuning
+## failure, it is what smooth noise makes: FBM's extrema are rounded, so a
+## flank built from it is a swell, and a swell painted grey is a stain. Rock
+## reads as rock because of DISCONTINUITY — creased ridgelines, and bedding
+## planes that break a slope into ledge/riser/ledge. Neither exists anywhere
+## in a smoothstepped cone plus FBM, at any amplitude.
+##
+## So this builds the two features directly:
+##
+## 1. WARPED RIDGED RELIEF. A ridged fractal (`_ridge`, see `_init`) sampled
+##    through a domain warp (`_warp_x`/`_warp_z`). Its crests are creases, not
+##    swells, and the warp makes the ribs meander and pinch out instead of
+##    tiling evenly. `bias` subtracts a constant so gullies cut deeper than
+##    ribs stand proud, which is what erosion actually does and what keeps
+##    the layer from inflating the rise.
+##
+## 2. BEDDING PLANES. `_terrace` quantises the peak's own height contribution
+##    into steps, with a soft riser between each pair of near-level ledges. A
+##    stratified flank is the single clearest "this is stone" cue there is —
+##    it is what the plateau in docs/reference/palworld-04 and the crags in
+##    the key art's own panels are made of — and it is a shape, so no amount
+##    of looking at it from further away turns it back into a blend.
+##
+## Both are multiplied by the same rim gate, so `_rise_cone` alone decides
+## where a rise begins and ends. Unlike the previous relief layer this one is
+## NOT gated off at the summit: the references put bare rock on the CROWN of a
+## hill (key art panel 1's hilltop crag, palworld-04's plateau cap), and the
+## old summit gate is part of why the rise read as a grass dome with a grey
+## bruise on its side.
+func _rise_relief(x: float, z: float) -> float:
+	var form: Dictionary = _config.get("rock_form", {})
+	var amplitude := float(form.get("amplitude", 0.0))
+	var terrace_step := float(form.get("terrace_height", 0.0))
+	var terrace_strength := float(form.get("terrace_strength", 0.0))
+	if amplitude <= 0.0 and (terrace_step <= 0.0 or terrace_strength <= 0.0):
+		return 0.0
+
+	var rises: Dictionary = _config.get("rises", {})
+	var sharpness := float(rises.get("sharpness", 2.1))
+	var rim_in := float(form.get("rim_in", 0.03))
+	var rim_out := float(form.get("rim_out", 0.18))
+	var bias := float(form.get("bias", 0.25))
+	var riser := clampf(float(form.get("terrace_riser", 0.38)), 0.02, 1.0)
+	var bed_dip: Array = form.get("bed_dip", [0.0, 0.0])
+	var dip_x := float(bed_dip[0]) if bed_dip.size() > 0 else 0.0
+	var dip_z := float(bed_dip[1]) if bed_dip.size() > 1 else 0.0
+	var bed_wobble := float(form.get("bed_wobble", 0.0))
+	var bed_fracture := float(form.get("bed_fracture", 0.0))
+	var bed_thickness := float(form.get("bed_thickness_jitter", 0.0))
+	var rubble := float(form.get("rubble_amplitude", 0.0))
+
+	var warp_amp := float(form.get("warp_amplitude", 14.0))
+	var warped_x := x + _warp_x.get_noise_2d(x, z) * warp_amp
+	var warped_z := z + _warp_z.get_noise_2d(x, z) * warp_amp
+	var ridge := _ridge.get_noise_2d(warped_x, warped_z) - bias
+	# Round 3: close-range crumble. A critic standing at the foot of the rise
+	# reported "zero surface micro-detail — no grain, no crumble... a smooth
+	# surface with a repeating displacement." The rib field alone has one
+	# scale, and everything between its ribs is the bare cone. Sampling the
+	# SAME ridged field at 3.4x the coordinate rate (offset so it does not
+	# correlate with itself) gives metre-scale creases for free, without a
+	# seventh noise object: creases, again, not bumps, so the extra detail
+	# reads as fractured rock rather than as a lumpier dome.
+	var crumble := _ridge.get_noise_2d(x * 3.4 + 917.0, z * 3.4 - 431.0) - bias
+
+	var total := 0.0
+	for entry: Variant in rises.get("peaks", []):
+		var peak: Dictionary = entry
+		var radius := float(peak.get("radius", 60.0))
+		if radius <= 0.0:
+			continue
+		var centre: Array = peak.get("centre", [0.0, 0.0])
+		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
+		if distance >= radius:
+			continue
+		var t := 1.0 - (distance / radius)
+		var gate := smoothstep(rim_in, rim_out, t)
+		if gate <= 0.0:
+			continue
+
+		var cone := pow(smoothstep(0.0, 1.0, t), 1.0 / sharpness) * float(peak.get("height", 40.0))
+		var carve := (ridge * amplitude + crumble * rubble) * gate
+		var relief := carve
+		if terrace_step > 0.0 and terrace_strength > 0.0:
+			# Terrace the cone PLUS the carve, so the bedding planes cut
+			# across the ribs the way real strata do, rather than the two
+			# layers reading as independent decorations of the same dome.
+			#
+			# Round 2: terracing the cone alone quantises a pure function of
+			# RADIUS, so every bed outcrops as a concentric circle at the same
+			# elevation all the way round — a wedding cake, and the blind
+			# critic on round 1 read the result as "corduroy, not erosion...
+			# the same scalloped sawtooth at identical frequency and amplitude
+			# across the entire dome." Two terms break that, and neither is an
+			# amplitude:
+			#
+			#   `dip` tilts the bedding planes off horizontal, which is what
+			#   real strata do. Terracing `height + dip` and subtracting the
+			#   same `dip` back off snaps the surface onto planes that lean
+			#   across the hill instead of lying level in it, so a bed
+			#   outcrops high on one side and low on the other and the rings
+			#   become the long diagonal bands a real stratified hill shows.
+			#
+			#   `_outcrop` warps the bed boundaries so they are not flat
+			#   planes either — thick beds in some places, thin in others,
+			#   which is the difference between sedimentary rock and a stack
+			#   of coins.
+			var dip := (x - float(centre[0])) * dip_x + (z - float(centre[1])) * dip_z
+			var wobble := _outcrop.get_noise_2d(x, z) * terrace_step * bed_wobble
+			# Round 3, and the fix for the defect two independent blind
+			# critics named in a row: "identical sawtooth grooves at identical
+			# spacing and identical depth, wrapped uniformly around the whole
+			# dome... every groove is the same tooth." The teeth are a
+			# resonance — a bed boundary is a near-vertical band, the carve
+			# field has one dominant wavelength, and where the two cross they
+			# produce a row of same-sized triangles on every bed. Three terms
+			# detune it, and none of them is an amplitude:
+			#
+			#   `fracture` is a SECOND, much finer wobble on the bed boundary
+			#   (~12m against `_outcrop`'s ~35m), so an outcrop edge is
+			#   ragged at two scales instead of one and there is no single
+			#   tooth size to recognise.
+			#
+			#   `thickness` makes beds thicker in some parts of the sequence
+			#   and thinner in others — a slow, deliberately non-integer
+			#   cycle through the bed stack, so no two adjacent beds are the
+			#   same height and the stack never repeats exactly. Real strata
+			#   are not a stack of identical coins.
+			var fracture := _fracture.get_noise_2d(x, z) * terrace_step * bed_fracture
+			var raw := cone + carve + dip + wobble + fracture
+			var thickness := 0.0
+			if bed_thickness > 0.0:
+				thickness = sin(TAU * raw / (terrace_step * BED_CYCLE)) * terrace_step * bed_thickness
+			var combined := raw + thickness
+			relief += (_terrace(combined, terrace_step, riser) - combined) * terrace_strength * gate
+		total += relief
+	return total
+
+
+## Snap a height onto bedding planes: near-level ledges separated by a riser
+## occupying `riser` of each step. `riser` 1.0 degenerates back to the input
+## (a pure ramp, no strata); small values make the risers steeper and the
+## ledges flatter. The mapping is monotonic and preserves the mean, so a
+## terraced slope still climbs to the same place the un-terraced one did.
+func _terrace(height: float, step: float, riser: float) -> float:
+	var q := height / step
+	var index := floorf(q)
+	var fraction := q - index
+	return (index + smoothstep(0.5 - riser * 0.5, 0.5 + riser * 0.5, fraction)) * step
 
 
 func _apply_spawn_pad(x: float, z: float, height: float) -> float:
@@ -570,3 +779,134 @@ func path_dominant_dither(x: float, z: float) -> float:
 func outcrop_jitter_deg(x: float, z: float) -> float:
 	var amplitude := float(_config.get("colour", {}).get("outcrop_jitter_deg", 0.0))
 	return _outcrop.get_noise_2d(x, z) * amplitude
+
+
+## OF11. Degrees to add to a sampled slope before the grass/soil/rock band
+## lookup — the whole rule for WHERE rock shows, and the second half of this
+## item's rebuild.
+##
+## The five earlier rounds all picked the band from slope alone (plus
+## `outcrop_jitter_deg`, an unrelated noise field). On a smooth dome slope is a
+## pure function of radius, so rock could only ever be a ring; jittering it
+## made a lobed ring. Either way the material and the surface underneath it
+## are describing different objects, which is precisely what "reads as a
+## stain, not stone" means.
+##
+## Every term here is read off the rise's OWN relief field instead, so the
+## material can only ever land where the geometry actually has the feature:
+##
+## * `rock_exposure_deg` follows `_rise_relief`'s sign — a rib that stands
+##   proud of the cone is exposed bedrock, a gully that cuts into it collects
+##   soil and grass. Ribs get rock, hollows do not.
+## * `rock_curvature_deg` follows its local convexity, measured on the relief
+##   field alone at a fine step. Crests and the lips of terrace risers are
+##   convex and go to rock; the inside corner where a riser meets the next
+##   ledge is concave and holds soil, the way scree and turf really do gather
+##   at the foot of a ledge.
+## * `rock_crown_deg` bares the summit. Both reference boards put rock on the
+##   CROWN of a hill (key art panel 1, palworld-04's plateau cap) and this
+##   terrain put grass there and rock in a mid-flank band, which is the wrong
+##   way round before any question of material quality.
+##
+## Measuring convexity on `_rise_relief` rather than on `height_at` matters:
+## `height_at` carries the `detail` noise layer, whose curvature is everywhere
+## on the map, so a curvature rule read off it would sprinkle rock across the
+## whole meadow. `_rise_relief` is identically zero off the rises, so this
+## returns nothing but the residual jitter anywhere else.
+func rock_bias_deg(x: float, z: float) -> float:
+	var cfg: Dictionary = _config.get("colour", {})
+	var bias := outcrop_jitter_deg(x, z)
+
+	# OF11 round 6. The fine boundary octave, gated to the rises by the same
+	# `rise_form_factor` `slope_sample_step_rock` uses. It is deliberately NOT
+	# in `outcrop_jitter_deg` itself: at this wavelength an ungated few degrees
+	# would ride the open meadow's own grass/soil threshold and speckle soil
+	# across flat ground, which is the blotching `slope_sample_step` exists to
+	# suppress. On a rise there is real rock form for it to ragged the edge of;
+	# out on the meadow there is nothing it could improve.
+	var detail_gain := float(cfg.get("outcrop_detail_deg", 0.0))
+	if detail_gain != 0.0:
+		bias += detail_gain * _outcrop_detail.get_noise_2d(x, z) * clampf(rise_form_factor(x, z), 0.0, 1.0)
+
+	var form: Dictionary = _config.get("rock_form", {})
+	var relief_ref := maxf(float(form.get("amplitude", 1.0)), 0.001)
+	var relief := _rise_relief(x, z)
+
+	bias += float(cfg.get("rock_exposure_deg", 0.0)) * clampf(relief / relief_ref, -1.0, 1.0)
+
+	var curvature_gain := float(cfg.get("rock_curvature_deg", 0.0))
+	if curvature_gain != 0.0:
+		var step := maxf(float(form.get("curvature_step", 2.5)), 0.1)
+		var neighbours := (
+			_rise_relief(x + step, z) + _rise_relief(x - step, z)
+			+ _rise_relief(x, z + step) + _rise_relief(x, z - step)
+		)
+		# How far the centre stands above the mean of its four neighbours, in
+		# metres. Positive on a crest or a riser lip, negative in a hollow.
+		var convexity := relief - neighbours * 0.25
+		var curvature_ref := maxf(float(form.get("curvature_ref", 1.0)), 0.001)
+		bias += curvature_gain * clampf(convexity / curvature_ref, -1.0, 1.0)
+
+	var crown_gain := float(cfg.get("rock_crown_deg", 0.0))
+	if crown_gain != 0.0:
+		bias += crown_gain * rise_crown_factor(x, z)
+	return bias
+
+
+## How strongly a world point is inside a rise's rock-form gate, 0..1 — the
+## same `rim_in`/`rim_out` ramp `_rise_relief` uses, exposed so the bake can
+## ask "does this pixel have metre-scale rock form on it, or is it open
+## meadow?" without recomputing the relief itself.
+##
+## Round 4. The two bakes sample slope at `colour.slope_sample_step` (6m) to
+## low-pass the `detail` noise layer, whose curvature would otherwise flicker
+## the material pick pixel to pixel across the whole map. That was right when
+## a rise was a smooth cone and everything above 6m was unwanted noise. It is
+## wrong now: `rock_form` puts real ledges, riser lips and metre-scale creases
+## on the rises, and a 6m slope sample cannot see any of them — which is
+## precisely what the round-3 blind critic described as "the dark olive
+## patches have hard, rounded, blobby edges that don't track the crevice
+## geometry underneath them... the bumps and the tint aren't talking to each
+## other." They were not talking because the material pick was deaf at the
+## scale the geometry speaks at. The bake now interpolates its slope step
+## between the coarse value out on the meadow and a fine one on the rises,
+## using this factor — sample at the scale of the features that are actually
+## there, rather than one global compromise.
+func rise_form_factor(x: float, z: float) -> float:
+	var form: Dictionary = _config.get("rock_form", {})
+	var rim_in := float(form.get("rim_in", 0.03))
+	var rim_out := float(form.get("rim_out", 0.18))
+	var best := 0.0
+	for entry: Variant in _config.get("rises", {}).get("peaks", []):
+		var peak: Dictionary = entry
+		var radius := float(peak.get("radius", 60.0))
+		if radius <= 0.0:
+			continue
+		var centre: Array = peak.get("centre", [0.0, 0.0])
+		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
+		if distance >= radius:
+			continue
+		best = maxf(best, smoothstep(rim_in, rim_out, 1.0 - (distance / radius)))
+	return best
+
+
+## How far up a rise a point sits, 0..1, taken over whichever peak claims it
+## most strongly — 0 anywhere off the rises, 1 at a summit. `rock_crown_range`
+## sets where the ramp begins and ends as a fraction of the rise's radius from
+## its rim.
+func rise_crown_factor(x: float, z: float) -> float:
+	var range_cfg: Array = _config.get("colour", {}).get("rock_crown_range", [0.55, 0.9])
+	var from := float(range_cfg[0]) if range_cfg.size() > 0 else 0.55
+	var to := float(range_cfg[1]) if range_cfg.size() > 1 else 0.9
+	var best := 0.0
+	for entry: Variant in _config.get("rises", {}).get("peaks", []):
+		var peak: Dictionary = entry
+		var radius := float(peak.get("radius", 60.0))
+		if radius <= 0.0:
+			continue
+		var centre: Array = peak.get("centre", [0.0, 0.0])
+		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
+		if distance >= radius:
+			continue
+		best = maxf(best, smoothstep(from, to, 1.0 - (distance / radius)))
+	return best
