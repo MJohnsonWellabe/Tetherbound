@@ -111,22 +111,13 @@ marker?) more than a bug, and no new asset generation is needed — reuse
 whatever the settlement/route vocabulary already stages. Flagging rather
 than inventing the answer.
 
-### OF11-remainder — hillside rock: real ceiling, or one more round?
-`area: terrain`. `data/config/terrain_playground.json`'s `rock_form`/
-`colour`/`textures.rock` blocks were rebuilt from scratch across 6 real
-rounds (see `DONE.md`), fixing the actual root cause five OLD rounds never
-found (the rock photo was tiled at 8.3m/tile, erasing all detail at
-viewing distance — retiled to 2.2m plus a contrast-restoration pass) and
-replacing the old smooth-noise relief with a genuinely different
-mechanism (ridged/domain-warped fractal + tilted terrace bedding). Round
-6's blind critic confirmed the old "smooth grey wash" verdict is gone
-("reads reasonably as rock up close"). Round 7, after one more fix, came
-back split: "one grey noise texture... reads as poured concrete at
-distance." Two consecutive independent critics disagreeing on the same
-question, at round 6-7 of an 11-round total history on this landform, is
-the signal to stop tuning and ask rather than run round 8 — see
-`BLOCKED.md`'s "hillside rock ceiling, round 2" for the actual decision
-needed.
+**`OF11-remainder` (hillside rock ceiling) CLOSED 2026-08-13 by owner
+decision — the current read is accepted.** Asked directly in an interactive
+session; the owner chose option 1 of `BLOCKED.md`'s "hillside rock ceiling,
+round 2" entry: accept the current state as good enough for a hillside the
+player climbs past, not stares at. No round 8 was run, per this entry's own
+stopping rule. The 11-round history stays in `DONE.md`; the resolved
+decision is recorded in `BLOCKED.md`'s entry, now marked resolved.
 
 ### A near-field tree renders with magenta/red-striped foliage
 `area: vegetation`. Found incidentally during `OF10`/`OF11`'s blind review
@@ -614,6 +605,16 @@ second, separate firing's edit to this same paragraph assumed otherwise
 checking, which would have sent the next firing searching for a pack that
 was never downloaded. It remains itch.io-blocked exactly as `EV1` originally
 found it.
+
+**Owner answered 2026-08-13 (asked directly in an interactive session): the
+owner will supply the Stylized Nature MegaKit zip themselves**, the same way
+the Village and Fantasy Props kits arrived — explicitly chosen over
+accepting the current ceiling. Until the zip is actually staged in
+`assets_raw/vendor/` and ledgered, this item stays parked exactly as-is
+(do NOT search for a pack that is not there yet — see the paragraph above
+for how twice-burned that assumption already is). When it lands, the same
+delivery also unblocks `EV5-remainder-2`'s third waterside plant and
+`OF12-remainder`'s ground-cover species-variety half.
 
 **`EV3` (a first, narrower slice) shipped — see `DONE.md`.** Fixed the one
 concrete, already-diagnosed defect (`path_stones` clumps disconnected from the
@@ -1372,6 +1373,16 @@ opening a picker; recorded as a real, considered fork, not a silent revert of
 
 ### HD2-remainder — Hotbar has no combat gate
 `model: sonnet` · `tests: none` · `area: ui`
+
+**Owner-directed handoff, 2026-08-13: this item rides the live HUD-overhaul
+session (`claude/game-upgrades-46qpsy`), which is mid-rewrite on
+`playground_hud.gd` (+950 lines) — do NOT work it from any other session;
+an edit from outside that branch guarantees a merge conflict with work the
+owner has already sanctioned.** Asked directly; the owner chose handing it
+to that session over closing it as intentional or building it in parallel.
+Whoever finishes that HUD branch should absorb the fix below into it (or
+land it immediately after), then mark this item done.
+
 `playground_hud.gd` keeps processing (and its hotbar keeps reading input)
 while a fight is running — `combat_hud.gd` draws on top of it, it does not
 replace it — so a player can free-heal from the hotbar mid-fight today.
@@ -1379,9 +1390,9 @@ Traced why this wasn't fixed in `HD2` itself: `CombatManager` is wired to
 `encounter_director.gd` by a scene-local `NodePath`, and there is no
 `Game`-visible "a fight is on" flag `playground_hud.gd` can reach without
 adding new cross-system plumbing — bigger than a hotbar item should be.
-Done when: either a real `Game.is_in_combat()`-style flag exists and the
-hotbar reads it, or the owner decides free mid-fight healing from the
-hotbar is acceptable and this is closed as intentional.
+Done when: a real `Game.is_in_combat()`-style flag exists and the hotbar
+reads it (the owner declined the close-as-intentional option — free
+mid-fight healing is NOT accepted as permanent design).
 
 **`CO1` (manual pal summon, dismiss and swap) shipped — see `DONE.md`.**
 

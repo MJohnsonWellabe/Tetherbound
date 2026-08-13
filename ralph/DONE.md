@@ -3,6 +3,31 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF11-remainder — hillside rock ceiling closed by owner decision: current read accepted
+
+`model: fable` (interactive owner session) · `tests: none` — no code
+changed; this is a decision recording, which is exactly what the item's own
+done-when asked for.
+
+**What shipped:** the owner was asked `BLOCKED.md`'s "hillside rock
+ceiling, round 2" question directly, with the full 11-round history and
+both paths in front of them, and chose **path 1: accept the current
+state** — "good enough for a hillside the player climbs past, not stares
+at." No round 8 ran, honouring the entry's own stopping rule (two
+consecutive independent critics splitting on the same acceptance question).
+`BACKLOG.md`'s entry is replaced with the closure note; `BLOCKED.md`'s
+entry is marked resolved with the decision and date. The round-by-round
+technical history (root-caused 8.3m→2.2m retile, ridged/terraced relief
+mechanism) stays in this file's `OF11` entries for anyone who revisits the
+landform later — if the owner ever changes this call, the path back is a
+reference board for hand-modelled rock geometry, not more tuning rounds.
+
+The same owner session also settled two other parked questions without
+code: `HD2-remainder` is handed to the live HUD-overhaul session (its
+entry now says so — the combat gate is wanted, free mid-fight healing was
+NOT accepted as design), and the Stylized Nature MegaKit will be
+owner-supplied (recorded on `EV2-landmark-ceiling`'s entry).
+
 ## LP7-remainder — `smoke_aggression`'s post-`LP7` flake, actually root-caused this time: the test harness's own player walk, not a scattered prop
 
 `tests: smoke_aggression` (also ran `run_tests` — 394 tests, 0 failed —
