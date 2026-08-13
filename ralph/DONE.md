@@ -3,6 +3,163 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF4-rebuild — The stronghold is now a real assembled castle, not a shader silhouette
+`data/config/building_prefabs.json`, `scripts/world/building_prefabs.gd`,
+`scripts/world/landmark.gd`, `assets/buildings/quaternius_castle/*.obj`
+(21 curated modules from `BG2`'s staged kit), `docs/ASSET_LEDGER.md`.
+`tools/capture_castle_lite.gd` added as scratch verification tooling, not a
+permanent addition (see its own header — delete when no longer needed).
+`model: sonnet`. Implements `docs/decisions/D28`.
+
+**Approach taken: Option A** (a `building_prefabs.json` recipe, the same
+author-time `{module, at, yaw_deg}` pattern `EV6`'s whole settlement already
+uses), not Option B (driving `BG1`'s live interactive placer). Reasoning:
+the deliverable is static, always-loaded scenery that must never be
+player-movable — Option B would have meant building at runtime through the
+interactive placer and then somehow freezing/exporting the result, extra
+mechanism for no benefit over just writing the recipe directly, which is
+also the exact pattern every other structure in the game (the whole
+settlement, `road_gate_leaf`) already uses. `building_prefabs.gd` needed one
+real extension to serve this: `BG2`'s kit ships OBJ+MTL, not glTF (unlike
+the Medieval Village kit already composed here), so `_build_template` now
+tries `.gltf` first and falls back to loading a module as a bare `Mesh`
+(exactly the pattern `grandpa_house.gd::_furnish` already uses for the
+Furniture/Survival OBJ props) — additive, every existing glTF-based recipe
+is untouched.
+
+**What shipped.** A `castle` prefab: 113 modules — two-course curtain walls
+(`Wall(Bricks)` + `TallWall(Bricks)`, ~3.9m total) around a ~23x17m
+enclosure, a gate (`WallEntranceBricks`+`TallWallEntrance`, the arch cut
+into the wall itself, no separate gate model exists in the kit), four
+corner towers of four different pieces at four different heights so the
+skyline is not one part repeated (a stacked `LargeSquareTowerBricks`+
+`SmallSquareTowerBricks` "keep" at 6.20m, a standalone `PointyTower` spire
+at 5.39m, `LargeTower` at 4.50m, `LargeSimpleTower` at 3.69m), twin
+`SmallSquareTower` gatehouse flankers (2.02m), a `SimpleTowerBricks`
+mid-wall turret, and a `Banner`. `landmark.gd` places this at the unchanged
+site (`RISE_CENTRE + OFFSET`, per `OF9`/`OF13` — moving the site was
+explicitly out of this task's authority per `D28` and CLAUDE.md's
+ask-before-inventing list) on a new stone plinth (a plain `BoxMesh`, vertical
+faces — `OF4`'s own history already found a battered/sloped terrace face
+read as a rock crag once flat-filled, so this keeps that lesson even though
+the plinth is normally shaded now) sized and positioned from a live probe
+against the site's own heightfield (~2.3m of real relief measured across
+the footprint) so no corner floats or is buried. Real per-material colours
+via `building_prefabs.json`'s existing `retint` mechanism, because every
+material in the kit's own MTLs (`LightRock`/`DarkRock`/`Black`/`Celing`/
+`LightWood`/`Banner`) exports at an identical placeholder grey — confirmed
+directly against the OBJ/MTL text and a headless material dump, a real gap
+in this pack's Blender export, not a rendering bug. `landmark.gd`'s old
+`unshaded`/primitive-shader material is gone; the castle renders shaded
+under normal lighting, which is the whole point of using a real kit instead
+of a silhouette (the wayfinding argument for `unshaded` no longer applies:
+`OF13` already moved the site out of every long-range frame a player
+actually sees, so there is no longer a from-any-angle constraint to hold).
+
+**Verification tooling had to be built before verification could happen.**
+`tools/capture_wayfinding.gd` (the tool the task pointed at) loads the
+entire `meadows_playground.tscn` scene — full vegetation scatter (25,946
+instances), water, village, NPCs — and under this container's software
+(xvfb + opengl3/llvmpipe) renderer that build cost is documented elsewhere
+in this file at 10-40+ real minutes, and in practice this session it ran
+past 50 real minutes without completing even once, including across a
+container restart that killed an in-flight run outright. `tools/
+capture_castle_lite.gd` (new, scratch) builds ONLY what the castle's own
+render depends on — the real terrain bake, the real ground materials, the
+real `world_look.gd` day lighting/environment/fog, and `landmark.gd` itself
+— by calling `playground_world.gd`'s own terrain-building methods directly
+on a detached instance of that script (never added to the SceneTree, so its
+`_ready()` — the thing that triggers the full vegetation/settlement build —
+never fires) and reparenting only the resulting Terrain3D node into a real
+stage. This is not a permanent tool; delete it once nobody needs this
+verification again. Runs in under 3 minutes per pass instead of 10-40+.
+Two real bugs surfaced and were fixed getting this working, worth recording
+since they'll bite the next person who writes a capture tool: (1) the
+canonical capture invocation (`tools/survey.sh`) never passes `--headless`
+— adding it (as this session did, repeatedly, before catching it) makes
+`RenderingServer.frame_post_draw` hang forever under xvfb+opengl3, silently,
+with no error; (2) Terrain3D's `_grab_camera()` permanently disables its own
+`_physics_process` if no camera exists the instant it enters the tree, so
+the camera has to exist and be current, and `terrain.set_camera()` has to be
+called explicitly, before the terrain node is added.
+
+**Blind-critique pass — self-administered, not a genuinely separate critic,
+and that limitation is real, not a technicality.** `ralph/conventions.md`'s
+own process assumes a separate sub-agent with no knowledge of what changed;
+no tool available in this session's toolset could spawn one (no general
+task/subagent tool, and the cross-session remote-session tool was judged too
+risky given this same task had already lost significant progress once to a
+container restart). What ran instead: the rubric applied rigorously against
+`docs/reference/` by the same session that built the castle, which is
+weaker evidence than a real blind pass and is reported as such rather than
+dressed up as one.
+
+- **Round 1** (`shots/wayfinding/silhouette-close.png`/`silhouette-approach.
+  png`, first `capture_castle_lite.gd` render): real defects named — the
+  wall read as one flat near-white value with the intended `LightRock`/
+  `DarkRock`/`Black` material distinction essentially invisible; the gate
+  opening read as a jagged, triangular pale gap rather than a doorway; at
+  distance the castle read as a weak pale smear against the hill/sky,
+  failing the rubric's "readable at small size" criterion; the plinth read
+  as a stark flat-topped slab. Fix applied: darkened and increased contrast
+  in `building_prefabs.json`'s `castle` retint (`LightRock` #9c9284→#786d5e,
+  `DarkRock` #655c52→#463f37, `Black` #211d1a→#18140f, `Celing`
+  #4a3a2e→#3a2c22, `LightWood` #8a6742→#7a5c39).
+- **Round 2**: real, visible movement on the round-1 complaint — the castle
+  went from a barely-visible pale smear to a clearly legible dark silhouette
+  against the grass/hill at the distant vantage, and the close vantage reads
+  as believable stone rather than pale plaster. New defect named: the fix
+  darkened the wall past the plinth's original colour, inverting the value
+  relationship (foundation now lighter than the walls above it, reading as
+  structurally backward). Fix applied: darkened `landmark.gd`'s
+  `PLINTH_COLOUR` from #544c44 to #332e28, below the wall's own darkest
+  retint, restoring "foundation reads darkest" ordering.
+- **Round 3**: confirmed fix landed — foundation/wall value hierarchy reads
+  correctly, no regression on round 2's distance-legibility win. Investigated
+  the still-open gate-seam defect: measured `WallEntranceBricks` and
+  `TallWallEntrance`'s own OBJ vertex bounds directly and found their arch
+  cuts sit in different Z-planes (z=(-0.396,0.163) vs z=(-0.184,0.240)) —
+  not a matched pair, which is the mechanical cause of the jagged opening.
+  Fix attempted: swap the upper course to a solid `TallWallBricks` (no cut),
+  keeping only the lower course's single archway, reasoning that the
+  landmark is non-enterable so a single-course-height opening costs nothing
+  functionally.
+- **Round 4**: the fix regressed. Rendered, the "solid upper course" swap
+  removed the visible gate opening ENTIRELY rather than cleaning it up —
+  worse than the jagged-but-present arch it replaced, and the task's own
+  done-when requires at least one visible gate/entrance. Reverted to round
+  3's two-course jagged arch. Stopped here on an explicit instruction to
+  wrap up mid-pass rather than continue iterating; the mismatched-arch-plane
+  seam is recorded as a genuinely open, unresolved defect below, not
+  silently accepted.
+
+**Honest remainder, not closed clean.** The gate reads as a doorway-shaped
+gap in the wall from a distance and up close, but the opening's own edge is
+jagged/broken rather than a clean arch, because the kit's two entrance
+modules (`WallEntranceBricks`, `TallWallEntrance`) were not authored as a
+matched stacking pair — a genuine kit-geometry limitation, not a placement
+mistake, confirmed by direct vertex measurement. Fixable only by sourcing a
+different/matching entrance module (none exists in the currently staged 21)
+or accepting the seam; not something further recomposition can close. Two
+consecutive un-run rounds are NOT claimed here — this stopped after round 4
+on explicit instruction, with round 4 itself having just named a regression
+and been reverted, so `ralph/conventions.md`'s "two flat rounds" convergence
+signal was never reached. Whoever picks this back up should treat rounds
+1-3 as real, kept progress and the gate seam as the next thing to try (a
+genuinely independent blind critic first, since this pass's self-administered
+nature is real evidence but weaker than the process calls for).
+
+**Tests.** `godot --headless --path . --import` clean. Full suite
+(`tests/run_tests.gd`): **421 tests, 89419 assertions, 0 failed** (matches
+the pre-existing baseline exactly — this task touched no test-covered
+system). `tests/smoke_playground.gd` and `tests/smoke_free_build.gd` both
+pass with the castle code active (`smoke_free_build.gd` also confirms `BG1`'s
+grid/rotate/snap placement is unaffected). `tests/smoke_traversal.gd` was
+confirmed passing earlier in this same session on the same code, though the
+final wrap-up run did not complete before time ran out — `world_perimeter.gd`
+does not reference `landmark.gd` at all, so there is no plausible regression
+path from this task's changes into traversal.
+
 ## BG1 — A real grid/rotate/snap building placement system, replacing the one-piece-no-rotation ghost
 
 `scripts/build/build_grid.gd` (new), `scripts/build/build_placer.gd`,
