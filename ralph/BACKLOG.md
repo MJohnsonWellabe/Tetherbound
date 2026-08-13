@@ -135,20 +135,48 @@ owner-accepted material-contrast read `BLOCKED.md` closed on 2026-08-12,
 but two fresh critics tripping on it independently is worth one look
 before re-accepting.
 
-### NP7 — Modular hair/accessory geometry for human NPC bases (owner-approved Meshy regeneration)
-`area: assets` · `lane: art` (needs the Meshy key). Replaces the
-`BLOCKED.md` "NP1-geometry" entry — the owner approved a new Meshy
-generation to make `villager_female`/`villager_male`/`grunt` modular
-(separable hair/accessory nodes), inside `CLAUDE.md`'s existing "one or two
-new human generations, owner-supplied only, for reusable archetypes"
-exception. **Blocked on a reference board landing in `docs/art/reference/`
-first** — no generation without it, per `CLAUDE.md`/`D24`, unchanged by this
-approval; the owner will supply one or confirm existing NPC art can be
-reused as reference. Once the board exists: regenerate the three villager
-bases with separable hair/accessory nodes, reusing existing NPC material
-language per `D24`'s one-family rule, and confirm whether
-trainer/Grandpa/Warden get the same treatment (`NP1-geometry` named all six
-as sharing the fused-mesh limitation).
+### NP7 — Modular hair/accessory geometry, split from the existing NP4 art (no new generation)
+`area: assets` · `lane: art` · owner directive, 2026-08-13 — rescoped from
+"owner-approved Meshy regeneration" (history preserved in `BLOCKED.md`'s
+`NP1-geometry` entry): the source is the *existing* NP4 art, not a new
+generation, so `CLAUDE.md`/`D24`'s reference-art-board gate does not apply
+here — the input is the shipped mesh, not new concept art.
+
+**Shipped for `villager_female` — see `DONE.md`.** Direct Blender
+inspection (not assumption) found the twin-ponytail genuinely separable: a
+distinct hanging-tail protrusion behind/below the skull cap, distinguishable
+from the fused bangs/scalp by a visible tie-groove in a rendered close-up,
+not just a documented "occluded" silhouette. Cut into its own
+`hair_ponytail` mesh object, the scalp hole patched (true-rim detection +
+loop-walk fan-fill, size-filtered against spike artifacts a naive/unfiltered
+fill produced on the first three attempts — this mesh's hair region carries
+far denser pre-existing UV-seam fragmentation than a single clean boundary
+loop, a real property of the shipped Meshy retexture), and the hair piece
+re-skinned 100% to the `Head` bone. Wired into
+`character_model.gd::_apply_hair()`'s existing hide/show/recolour
+mechanism (extended to find and toggle a real baked-in mesh when the base
+model ships one, falling back to the placeholder primitive for
+trainer/Grandpa/Warden exactly as before). `_attach_part()`'s flagged
+0.01-scale offset bug did not reproduce against either rig when measured
+directly (`Armature`/`Skeleton3D` both scale 1.0 today, an offset landing
+at its full authored magnitude) — most likely already closed as a side
+effect of the giant-player fix (`render_bounds.gd`) — but hardened
+defensively anyway per this item's own "fix while you're in this function."
+One honest remainder: a small residual seam survives at the scalp in
+extreme macro close-ups from specific angles, confirmed invisible in both
+`tools/capture_village_npcs.gd`'s production frame and a matching in-game
+close-up at normal camera distance.
+
+**`villager_male`/`grunt` deliberately not attempted this pass.** Landing
+one clean, fully-verified split (Blender technique, hole-patching, re-skin,
+mechanism wiring, tests, full suite green, in-engine visual confirmation)
+used substantial real effort across several failed patch attempts before
+converging; repeating that for two more bases without knowing yet whether
+they even have a comparably separable feature would risk three rushed,
+uncertain results instead of one solid one. A quick render check found
+both `villager_male` and `grunt` have short/cropped hairstyles with no
+comparable hanging protrusion — worth a real look before assuming either
+is separable the same way, not scoped into this pass.
 
 ---
 

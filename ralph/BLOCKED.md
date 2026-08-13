@@ -222,6 +222,23 @@ forbid generating without a board in `docs/art/reference/` first, unchanged
 by this approval. A new backlog item (`NP7`, `BACKLOG.md`) carries this
 forward, blocked on that board landing before any credit is spent.
 
+**Superseded 2026-08-13**: the owner redirected `NP7` away from a new
+Meshy generation entirely — "use the already existing art for NPCs but
+make them modular this time." The reference-art gate above no longer
+applies to `NP7` (the input is the shipped NP4 mesh, not new concept art);
+see `ralph/BACKLOG.md`'s current `NP7` entry for the Blender split/re-skin
+scope this became instead. This entry stays as the record of why modular
+geometry was worth pursuing at all.
+
+**`NP7` shipped 2026-08-13 — see `DONE.md`.** villager_female's twin
+ponytail is now a real separated, re-skinned mesh, cut in Blender from the
+existing shipped .glb with no new generation, wired into
+`character_model.gd`'s existing hide/show/recolour mechanism. One real,
+honest remainder (a small residual scalp seam, invisible at normal camera
+distance) — see `DONE.md`'s entry for the full technical account.
+`villager_male`/`grunt` deliberately not attempted this pass; `NP7`'s
+`BACKLOG.md` entry carries the reasoning forward.
+
 ---
 
 ### ✅ RESOLVED — `ASSET_LEDGER.md` licence claim
