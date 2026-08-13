@@ -135,6 +135,7 @@ func _run() -> void:
 	# whether the arena boundary reads, whether the camera at a creature's height
 	# is legible, and whether you can tell which capsule you are driving.
 	await _drive_pal_towards_enemy(90, 2.6)
+	_dump_marker("03-closing-in")
 	await _capture("03-closing-in")
 
 	# The enemy's wind-up: the fight's only warning, and now something the player
@@ -144,6 +145,8 @@ func _run() -> void:
 	while not bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("is_fighting")) and waited < 900:
 		await _drive_pal_towards_enemy(1, 2.4)
 		waited += 1
+		if waited % 15 == 0:
+			_dump_marker("telegraph-wait(frame %d)" % waited)
 	# Same lesson `_capture_the_impact()` below already paid for: a node added
 	# mid-frame (telegraph_glow.gd, spawned off the `telegraph_started` signal
 	# the instant `enemy_is_winding_up()` flips true) does not run its own first
@@ -167,6 +170,7 @@ func _run() -> void:
 	# frames are enough) answers the actual open question instead of asking a
 	# fifth on-axis capture to answer it again.
 	_swing_camera_offaxis(60.0)
+	_dump_marker("04-enemy-winds-up-offaxis")
 	await _capture("04-enemy-winds-up-offaxis")
 
 	# A quick attack landing. Catching the impact rather than the lull is the
@@ -394,6 +398,34 @@ func _log_phase(label: String) -> void:
 	print("  [phase] %-18s +%.1fs" % [label, (Time.get_ticks_msec() - _start_ms) / 1000.0])
 
 
+## R9.4-remainder-9-combat-2, sub-finding (b): a second blind critic called
+## the target marker "unreliable" on a capture where `target_marker.gd` itself
+## had not changed since a first critic confirmed it tracking correctly across
+## a 90 degree camera swing. The likely explanation was visual confusion from
+## decorative rabbits near the real wild pal, not a positioning bug — but that
+## is a guess unless checked directly. Same technique the whole-map placement
+## dumps elsewhere in this codebase use: print the real numbers instead of
+## reasoning from a render a third time.
+##
+## `_target_marker` is a private var on `combat_manager.gd`, but GDScript's
+## `_` prefix is convention only, not enforced — `get()` still reaches it
+## without changing that file.
+func _dump_marker(label: String) -> void:
+	if _manager == null or _wild == null:
+		return
+	var marker: Node3D = _manager.get("_target_marker") as Node3D
+	if marker == null or not is_instance_valid(marker):
+		print("  [marker] %-28s no target marker instance" % label)
+		return
+	var wild_pos: Vector3 = _wild.call("centre") if _wild.has_method("centre") \
+		else _wild.global_position
+	var marker_pos: Vector3 = marker.global_position
+	var flat_offset := Vector2(marker_pos.x - wild_pos.x, marker_pos.z - wild_pos.z).length()
+	print("  [marker] %-28s marker=%s  wild=%s  flat_offset=%.3f  visible=%s" % [
+		label, marker_pos, wild_pos, flat_offset, marker.visible
+	])
+
+
 func _capture(name: String) -> void:
 	for i in POSE_FRAMES:
 		await process_frame
@@ -479,6 +511,7 @@ func _capture_the_impact(name: String, yaw_offset_deg: float = 0.0) -> void:
 	if not is_zero_approx(yaw_offset_deg):
 		_swing_camera_offaxis(yaw_offset_deg)
 		await physics_frame
+	_dump_marker(name)
 	paused = true
 	await _capture(name)
 	paused = false

@@ -3,6 +3,122 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R9.4-remainder-9-combat-2 — Off-axis combat frames finally rendered; target marker confirmed exact by position dump; a real telegraph_glow.gd depth-test bug found but NOT fixed by the obvious precedent, verified by re-render rather than asserted
+
+`model: sonnet` · `tests: full suite, twice (baseline and after the telegraph_glow.gd
+edit)` — **586 tests, 90457 assertions, 0 failed** both times · `area: combat`
+
+**The render that never ran, ran — twice.** `tools/survey_combat.sh` had never
+completed since `_swing_camera_offaxis()` was wired into frames 04-06
+(+60/-70/+45°). It completed clean, no failures, both times this round (run 1
+~24 min of engine time, run 2 similar), each writing all 8 frames. Real
+creature/trainer art is now installed (Terrapup the ally, "Bramblebun" the
+wild rabbit, a human trainer) — `survey_combat.gd`'s own header comment
+("the creatures are coloured capsules") is now stale and should be corrected
+by whoever next touches that file; not done here to stay in scope.
+
+**Sub-finding (b), target marker "unreliable" — closed, not a bug.** Added
+`_dump_marker()` to `tools/survey_combat.gd`: every physics frame it's
+called (9 samples across both runs — frame 03, four telegraph-wait samples,
+and frames 04/05/06) printed the marker's `global_position` against the wild
+pal's `centre()`. **`flat_offset` was exactly `0.000` every single time** —
+the marker's XZ is bit-identical to the real target's XZ in all 9 samples;
+only Y differs, by the configured height+bob offset, as designed. Confirmed
+visually too: frames 02/03 of run 1 show the real wild pal (Bramblebun)
+standing directly behind the ally from the camera's angle, its body fully
+hidden, with only the marker chevron poking out above the ally's back — and
+a second, similarly-coloured decorative rabbit standing in full view near
+the player, unmarked. That is the exact "visual confusion from a decorative
+lookalike" sub-finding (b) suspected, now confirmed with both the position
+dump and a direct render rather than reasoning from a single frame a third
+time. `target_marker.gd` needs no changes.
+
+**Sub-finding (a), same-line occlusion — recurs, confirmed structural rather
+than one capture's bad luck.** Frame 05 (quick attack, -70° swing) showed
+the wild pal hidden directly behind the ally in BOTH run 1 and run 2 — same
+capture point, same swing, two independent encounters, same result. Frame 06
+(charged attack, +45° swing) was clean and clearly readable in run 1 (a
+large amber sunburst impact, both fighters fully visible, health bar
+visibly damaged — matches the prior on-axis finding that this is "the
+single clearest impact signal") but occluded the same way as frame 05 in
+run 2. Same offset, same capture point, opposite outcomes between two
+independent fights — this is about where the fighters happen to be standing
+relative to the camera at each specific unique encounter (the wild pal
+moves during the fight), not the swing angle being wrong on principle. Not
+fixed this round per the item's own instruction (don't build the taller/
+camera-facing ring without a critic naming it) — recorded as still real and
+still recurring.
+
+**Real mechanism defect found — attempted the obvious fix, RE-RENDERED to
+check, and it did NOT resolve it.** Frame 04 (telegraph wind-up) is NOT
+occluded in either run — the wild pal is fully visible, HUD's "! incoming"
+text is up — but the ground telegraph ring (`telegraph_glow.gd`, orange
+`#ff5a3c`, radius 1.1) is invisible in both runs regardless. Zoomed crops of
+both runs' frame 04 confirm: no ring at all at the creature's feet.
+`impact_flash.gd`'s own comment already documents the same-shaped bug — an
+effect mesh drawn at/near a creature's own collider footprint losing the
+depth test to the creature's own mesh — fixed there with
+`no_depth_test = true`. `telegraph_glow.gd`'s material had never received
+that fix (`no_depth_test = false`, unlike `impact_flash.gd`, and unlike the
+arena boundary ring and target marker chevron, which both sit far enough
+from any creature mesh to never hit this). Applied the same fix, full suite
+re-ran green (586/90457/0), then re-ran the WHOLE survey a second time
+specifically to check rather than assert it — **the ring is still invisible
+in run 2's frame 04, unchanged.** The fix is left in (`no_depth_test = true`
+is still the objectively correct value by the same reasoning that fixed
+`impact_flash.gd`, and reverting it cannot make the ring appear either way)
+but `telegraph_glow.gd` now says plainly in its own comment that this was
+tried and re-verified NOT to be the actual cause. Next real lever, named in
+that same comment: confirm `telegraph_started` is actually reaching
+`_on_enemy_telegraph()` for this creature/attack before touching the
+drawing code again — that path was never instrumented this round.
+
+**Sub-finding (d), arena backdrop changing between frames — very likely
+explained, not fixed.** `combat_arena.gd`'s boundary has a small fixed
+11m radius around a static point; the offaxis swings point the camera at
+genuinely different absolute compass headings between captures, because
+each capture's own "on-axis" base direction differs (the ally has moved a
+little between calls to `_drive_pal_towards_enemy`). The playground log
+records a 13-structure village placed in the world; frame 04's +60° swing
+(run 1) showed open hillside, frames 05/06's -70°/+45° swings showed the
+village — consistent with the village sitting in one compass direction and
+not others, not with the arena or the fighters actually relocating. Not
+100% proven (yaw values weren't dumped) but well-supported by the pattern
+and the arena's own small fixed radius; recorded as resolved rather than a
+drift bug, not chased further given the time budget.
+
+**Sub-finding (c), orb reads as blown-out bloom — recurs, untouched.**
+Confirmed present again in both runs' frame 08 (a bright halo, no
+identifiable solid sphere). Per the item's own instruction, `orb.gd`'s
+`HALO_SCALE`/colour were not touched because no genuinely blind critic named
+it this round (see below).
+
+**Critic verdict — self-judged, NOT blind, said plainly.** No local
+subagent-spawning tool was available in this session's toolset (checked;
+only `mcp__Claude_Code_Remote__create_session` exists, which provisions an
+entirely separate remote session/container and would need a mid-task push
+to share the frames, against both the render-loop's "push once" convention
+and this round's tightened time cap). Self-judged instead, against the
+`visual-judge` skill's rubric, as its own fallback clause permits — this is
+NOT a substitute for the real blind pass the item asks for, and the
+orchestrator should still run one. Self-judged read: the charged attack's
+impact mechanism reads clearly and heavily whenever it isn't occluded (run
+1 frame 06); the telegraph text reads but its ground-ring visual event does
+not, in every off-axis frame sampled; the quick-attack frame's occlusion is
+real and repeats. The item's own done-when ("confirms the telegraph and the
+quick attack read the same way the charged attack already does") is **not
+cleanly met** — not because of camera angle (both offending frames were
+genuinely off-axis, by design and confirmed by the marker dump), but because
+of a real, now-diagnosed-but-unresolved ring-visibility bug and a real,
+reproduced-twice occlusion pattern at the quick-attack capture point.
+
+**Untouched this round, by the owner's tightened time cap:** the full-roster
+creature sheet (`tools/preview_creatures.gd`) — not started, since it was
+not already rendered when the cap landed; still open for `SA5`/`SA6`.
+`orb.gd`'s bloom. `survey_combat.gd`'s stale "coloured capsules" header
+comment. Confirming whether `telegraph_started` actually fires for this
+creature/attack (the named next lever on the ring bug).
+
 ## EV7-clusters-fix — trainer_camp and bridge_repair_site: a placement-only fix round after a genuine blind critic overturned the self-graded pass
 `data/config/props.json`, `scripts/world/props.gd`, `tools/capture_ev7r_props.gd`,
 `tools/_probe_ev7fix.gd`, `docs/ASSET_LEDGER.md`. `model: sonnet`.

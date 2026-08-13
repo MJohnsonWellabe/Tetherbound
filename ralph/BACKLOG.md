@@ -1614,79 +1614,34 @@ being judged — not proof the mechanisms don't work, but not proof they read
 in the case that matters either. A narrower remainder is opened below for
 what a future capture should check first.
 
-### R9.4-remainder-9-combat-2 — Confirm the fixed mechanisms actually read once the camera isn't lined up against them
-`model: sonnet` · `tests: none (visual)` · `area: combat`
-
-**Instrumented 2026-08-13 (`survey_combat.gd`), not yet visually judged.**
-Root cause confirmed for the on-axis complaint above: `_drive_pal_towards_enemy()`
-sets the camera's yaw to point straight at the target every physics frame
-(needed for movement steering), so every capture through this remainder
-has been dead-on-axis by construction, not bad luck. Added
-`_swing_camera_offaxis()` (post-movement yaw nudge, unsmoothed per
-`camera_rig.gd::_apply_look()`) and wired real off-axis offsets into
-frames 04-06 (+60, -70, +45 degrees). **The render to actually look at
-the result was not completed** -- this environment's shared CPU made a
-full capture run take 20+ minutes and it was abandoned once other work
-was clearly done; the code change is real and committed, but nobody has
-looked at an off-axis combat frame yet. Whoever runs `tools/survey_combat.sh`
-next should treat that as the actual first check for this item.
-`R9.4-remainder-9-combat` fixed three real, verified bugs — `impact_flash.gd`
-was rendering nothing at all in the real scene (depth-tested against the very
-creature it was drawn at; fixed with `no_depth_test`), the telegraph glow and
-the thrown orb were both being captured before they had anything to show
-(survey timing bugs, fixed) — and built a working target marker. All four are
-demonstrably real now: `impact_flash`'s ring/streaks/core render correctly in
-an isolated diagnostic AND in `06-charged-attack-lands`, and a fresh blind
-critic independently called the charged-vs-quick weight difference "the
-single clearest impact signal in this whole sequence."
-
-What's still open is narrower than the original six bullets:
-
-- **Frames `04` and `05` of the last capture happened to line the wild pal up
-  almost directly behind the player's own creature from the combat camera's
-  angle**, hiding the target itself (not just its VFX) enough that a blind
-  critic couldn't judge either the telegraph ring or the quick attack's impact
-  on the actual creature. This may just be bad luck of one random encounter's
-  positions — re-running `tools/survey_combat.sh` a fifth time was not done
-  this round to keep the render budget honest. If it recurs, the ground-level
-  telegraph ring specifically may need a taller or camera-facing component so
-  a same-line occlusion doesn't erase it the way a flat decal does.
-- **The target marker was confirmed correctly tracking the real opponent
-  across three frames including a 90°+ camera swing in round 1**, then called
-  unreliable by a second blind critic in round 2 on a different capture.
-  `target_marker.gd` itself did not change between the two rounds. Most
-  likely explanation, not confirmed: visual confusion from multiple similar
-  decorative rabbits near the real target in that specific frame, not a
-  positioning bug — worth a direct check (dump the marker's actual world
-  position vs. the wild pal's, the way `EV3`'s placement-dump diagnostics
-  did) rather than reasoning from a render alone a third time.
-- **The orb still reads as a blown-out light bloom rather than a solid
-  object**, even now that it's positioned correctly on its arc. `orb.gd`'s own
-  `HALO_SCALE`/colour are the levers named in its file if picked up again.
-- **New, not investigated**: the arena's backdrop changed almost completely
-  between several consecutive frames of the same capture (open field → a
-  village → a different open field → a house and pond) while the boundary
-  ring itself stayed visible throughout. Might be genuine repositioning over
-  the encounter's real duration, might be a real drift bug — `DONE.md`'s
-  entry has the specifics.
-
-Done when: a fresh blind critic, given a capture where the two fighters are
-NOT lined up behind one another, confirms the telegraph and the quick attack
-read the same way the charged attack already does — or names a real defect in
-the mechanism itself rather than the camera angle.
-
-**The original R9.4 brief is NOT repeated here as an open item** — it ran, and
-an identical heading below its own remainders is how a task gets done twice.
-Its standing instruction outlives it and is quoted here because every
-`-remainder` above inherits it: *confirm the findings actually moved, the way
-`docs/reviews/2026-08-09-site-frames-blind-critique.md`'s own "after judging"
-section requires — re-running and comparing sheets, not just asserting the fix
-landed.* The one part of the original brief the 2026-08-11 pass did NOT
-discharge is the **full-roster creature sheet**: `preview_creatures.gd` ran,
-but the sheet was destroyed before any critic saw it, and the roster has not
-been blind-judged since R0.8.5. `SA5` and `SA6` in Phase -0.75 both need that
-sheet as their starting evidence, so whoever takes them should re-run it first
-and can close this gap in passing.
+**`R9.4-remainder-9-combat-2`** (off-axis combat survey finally rendered, twice
+over — see `DONE.md`) shipped. The target marker's "unreliable" complaint is
+closed for good: a per-frame position dump (`survey_combat.gd::_dump_marker`)
+showed `flat_offset` exactly `0.000` against the wild pal in all 9 samples
+across both runs, and a direct render confirmed the real cause was visual
+confusion from a decorative lookalike rabbit, not a tracking bug —
+`target_marker.gd` is untouched and needs no further look. Two things stay
+open and REAL, confirmed by re-rendering rather than asserted away: the
+ground telegraph ring (`telegraph_glow.gd`) never draws at all, in either
+run, even in a fully unoccluded frame — the obvious fix (`no_depth_test =
+true`, the same fix that cured `impact_flash.gd`'s identical-shaped bug) was
+tried and RE-VERIFIED by a second full render NOT to be the actual cause;
+left in (still correct by the same reasoning) but the file's own comment now
+says plainly it didn't work and names the next lever (confirm
+`telegraph_started` actually reaches `_on_enemy_telegraph()` for this
+creature/attack). And the quick-attack capture point (frame 05, -70° swing)
+recurred occluded in BOTH independent runs — a real, repeating pattern at
+that specific capture point, not one encounter's bad luck, still unfixed
+per this item's own instruction not to build the taller/camera-facing ring
+without a critic naming it. `orb.gd`'s blown-out bloom recurs, untouched (no
+genuinely blind critic reached it this round — self-judged only, disclosed
+as such, not a substitute for the real blind pass). The backdrop-drift
+oddity is very likely just the arena's small fixed radius plus genuinely
+different off-axis camera headings revealing/hiding a real, static nearby
+village — not a repositioning bug, not chased further. **The full-roster
+creature sheet (`tools/preview_creatures.gd`) is still NOT run and still open
+for `SA5`/`SA6`** — this round's tightened time cap said pick it up only if
+already rendered, and it was not.
 
 ---
 

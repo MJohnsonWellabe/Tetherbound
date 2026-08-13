@@ -63,7 +63,27 @@ func _material() -> StandardMaterial3D:
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.disable_receive_shadows = true
 	material.vertex_color_use_as_albedo = true
-	material.no_depth_test = false
+	# R9.4-remainder-9-combat-2: tried the same fix `impact_flash.gd`'s own
+	# `no_depth_test` comment documents (this ring spawns "at the creature's
+	# feet", overlapping its mesh footprint the same way the impact burst
+	# does, while the arena boundary and target marker -- the codebase's
+	# other `no_depth_test = false` ground/near effects -- both sit apart
+	# from any creature mesh and never hit this). A first off-axis capture
+	# (`04-enemy-winds-up-offaxis.png`, run 1) showed a fully visible,
+	# unoccluded wild pal with NO ring at its feet at all, at a moment the
+	# HUD's own "! incoming" text confirms the wind-up was active -- looked
+	# like the same depth-loses-to-the-creature symptom.
+	#
+	# It was NOT. Set to true and RE-RENDERED to check (not asserted): a
+	# second full survey, same unoccluded framing, still shows no ring at
+	# all. Left true anyway -- it is still the correct value by the same
+	# reasoning that fixed `impact_flash.gd`, and reverting it would not make
+	# the ring appear or disappear either way -- but the real cause of "no
+	# ring ever draws" is still open. Worth checking next: whether
+	# `telegraph_started` is actually reaching `_on_enemy_telegraph`
+	# (combat_manager.gd) at all for this creature/attack, before touching
+	# this file's own drawing code again.
+	material.no_depth_test = true
 	return material
 
 
