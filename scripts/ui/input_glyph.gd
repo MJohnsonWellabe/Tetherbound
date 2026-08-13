@@ -139,16 +139,33 @@ static func using_gamepad() -> bool:
 ## `HD1` caught directly (combat's dimmed verbs showed a greyed-out label
 ## next to a still-fully-saturated icon, reading as broken rather than
 ## disabled).
+## The current keyboard binding's display name for an action, for glyphless
+## fallbacks: "Shift" for build_snap_cycle. Falls back to the action id when
+## the action has no key event at all (then the caller's brackets at least
+## name the verb).
+static func _key_name_for_action(action: String) -> String:
+	if not InputMap.has_action(action):
+		return action
+	for event in InputMap.action_get_events(action):
+		var key := event as InputEventKey
+		if key != null:
+			var text := key.as_text().trim_suffix(" (Physical)")
+			if not text.is_empty():
+				return text
+	return action
+
+
 static func icon(id: String, px: int = 36, tint: Color = Color.WHITE) -> String:
 	if not GLYPHS.has(id):
 		return "[%s]" % id
 	var device := "gamepad" if using_gamepad() else "keyboard"
 	# A glyph entry may cover only one device — build_snap_cycle has a pad
 	# icon but no Shift keycap PNG exists to give it a keyboard one. Degrade
-	# to the same bracketed-text fallback an unknown id gets, instead of the
-	# hard indexing error smoke_free_build caught in keyboard mode.
+	# to the action's real bound key name ("[Shift]") rather than the raw
+	# action id ("[BUILD_SNAP_CYCLE]"), which leaked into the build footer,
+	# and instead of the hard indexing error smoke_free_build caught.
 	if not (GLYPHS[id] as Dictionary).has(device):
-		return "[%s]" % id
+		return "[%s]" % _key_name_for_action(id)
 	var entry: Variant = GLYPHS[id][device]
 	var files: Array = entry if entry is Array else [entry]
 	var colour_attr := "" if tint == Color.WHITE else " color=#%s" % tint.to_html(true)
