@@ -3,6 +3,36 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## GAIT-TICK — main's intermittent smoke_input cadence failure: gait update moved to the physics tick
+
+`model: fable` (interactive session, found while unblocking the merge queue) ·
+`tests: smoke_input` x3 green, full suite 582 tests / 89848 assertions / 0
+failed.
+
+**What shipped:** `trainer_model.gd`'s `_process` renamed to
+`_physics_process`, with a comment stating the constraint. Every input the
+function reads — `ground_speed`, `is_on_floor`, `is_sprinting` — is produced
+by the player's physics tick, but the gait scale was written on the render
+tick. On a loaded machine (CI's shared runners, now booting the full HUD
+overhaul) render frames stall while physics keeps its fixed step, so
+`match_gait_rate` held a stale near-zero speed — and the 0.5x clamp floor —
+for as many physics frames as the renderer skipped. `smoke_input`'s cadence
+check samples physics frames and correctly allows a 3-frame streak
+(its own comment anticipated one frame of staleness); a stalled renderer
+exceeds it. Main failed twice in a row on exactly this (runs 853, 855,
+2026-08-13 ~13:07-13:29Z) while a local run at the same sha passed —
+the signature of load sensitivity, not logic.
+
+**Why this is a real fix and not a test workaround:** the lag is visible in
+play, not just in CI — a renderer hiccup during hard acceleration held the
+body at half-cadence slow-motion for the hiccup's whole length. Driving the
+update at the fixed physics step bounds staleness at one physics frame under
+any load. `pal_animator.gd` (creatures) is already externally driven from
+physics; this brings the trainer in line with it. No behaviour change on an
+unloaded machine.
+
+Found and fixed outside the backlog (no item existed); recorded here per the
+no-new-backlog-entries directive.
 ## OF4-remainder-mound — scale-givers on the rise: authored scatter anchors, outcrops, talus and a broken tree line
 
 `scripts/world/scatter_rules.gd`, `data/config/vegetation.json`,
