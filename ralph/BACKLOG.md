@@ -835,19 +835,27 @@ block), so anything that later wants "distance to water" as a placement
 signal (`R7.1-remainder-2`'s original ask) can read
 `playground_heightfield.water_level()`/`stream_factor()` directly.
 
-### EV5-remainder — Waterside dressing the pond converged without
+**`EV5-remainder` (waterside dressing: rocks, driftwood, lily pads, the
+jetty, a second marginal plant, the flowing-stream variant) shipped — see
+`DONE.md`.** The "needs assets not in the build" framing was wrong for most
+of it: everything except sedge/cattail was already staged and ledgered in
+the packs. What genuinely remains is below.
+
+### EV5-remainder-2 — The pond outlet, and the third waterside species
 `model: fable` · `tests: smoke_traversal` · `area: terrain`
-Eight blind rounds converged with three water asks standing that tuning
-cannot reach, all "needs art/assets not in the build": aquatic dressing
-(lily pads, driftwood, submerged/half-submerged rock meshes, and the key
-art's jetty — bible §15's "support Water Pal ecology" would land far harder
-with a fishing spot the villagers built), a second/third waterside plant
-species beyond the one wispy-grass reed (the itch-blocked fuller MegaKit may
-carry sedge/cattail forms — see `EV1-remainder` in `BLOCKED.md`), and a
-flowing-water variant for the stream (a flow-map scroll along the ribbon's
-own tangent — `water.gd` already computes per-sample tangents, so the
-plumbing exists). Also carried from the critics: the pond has an inlet but
-no OUTLET; Band 3's river should leave the pond, not appear beside it.
+Two leftovers `EV5-remainder` could not reach:
+- **The OUTLET** (blind rounds 2+: "Band 3's river should leave the pond,
+  not appear beside it"). Not dressing — terrain re-authoring. The pond
+  basin is the 512m map's global minimum (`EV5`'s probe: the only terrain
+  below -18m anywhere, level -22.5), so an outlet river has nowhere downhill
+  to go; it needs Band 3's own downstream terrain authored (or the south rim
+  re-carved below the pond level for the whole run). Natural first step of
+  the Band 3 river work, wrong to fake before it.
+- **A third waterside plant silhouette (sedge/cattail).** Owner-blocked:
+  those forms need the fuller nature MegaKit the owner has not supplied —
+  do not source a substitute pack (D24, one nature family). The second
+  species shipped in-pack (`Plant_1_Big` marginals, `water.json`), so this
+  is polish, not a gap.
 
 **`EV6` (settlement rebuilt on the Medieval Village MegaKit) shipped — see
 `DONE.md`.** Workshop, two cottages, composed well, kit fences, two authored
