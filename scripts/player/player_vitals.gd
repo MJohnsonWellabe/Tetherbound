@@ -1,6 +1,7 @@
 extends RefCounted
 
-## Stamina, health and fall damage, with no dependency on the scene tree.
+## Stamina, health, satiety and fall damage, with no dependency on the scene
+## tree.
 ##
 ## Kept free of Node so it can be tested headlessly. Everything here is pure
 ## arithmetic over its own state: give it the same inputs and it produces the
@@ -8,15 +9,28 @@ extends RefCounted
 ## the whole of what docs/decisions/D02-test-harness.md says tests cover, and
 ## the reason this file exists separately from player_controller.gd.
 ##
-## GAME_DESIGN.md §18: stamina is spent by movement and world actions. There is
-## no starvation meter and food is a buff system, so nothing here drains on its
-## own over time.
+## GAME_DESIGN.md §18: stamina is spent by movement and world actions, and
+## health only moves on a landing. D29 adds satiety, the light hunger meter:
+## it drains slowly and on its own, over real time, and food restores it plus
+## grants a temporary buff. Low satiety softens the player with mild debuffs —
+## slower stamina regen, then slightly slower movement once critical — and
+## never kills. There is no starvation death here and there must never be one
+## added under a "tuning" pretext; that is a design decision, not a number.
+## Stamina and health remain exactly as before: they do not decay on their own.
 
 var max_stamina: float = 100.0
 var max_health: float = 100.0
+var max_satiety: float = 100.0
 
 var stamina: float = 100.0
 var health: float = 100.0
+var satiety: float = 100.0
+
+## Active food buffs. Each entry is `{ "id": String, "stat": String,
+## "amount": float, "remaining_s": float }`. `stat` names what the buff
+## multiplies (currently "stamina_regen_scale" or "move_speed_scale"); a
+## second eat of the same `id` refreshes `remaining_s` rather than stacking.
+var active_buffs: Array[Dictionary] = []
 
 var _sprint_drain: float = 12.0
 var _jump_cost: float = 8.0
@@ -35,6 +49,13 @@ var _regen_cooldown: float = 0.0
 ## Without it, a player can tap sprint at zero stamina and keep the sprint speed
 ## while the meter flickers.
 var _exhausted: bool = false
+
+var _satiety_drain_per_minute: float = 0.8
+var _hungry_below: float = 0.35
+var _critical_below: float = 0.15
+var _hungry_stamina_regen_scale: float = 0.6
+var _critical_stamina_regen_scale: float = 0.35
+var _critical_move_speed_scale: float = 0.92
 
 
 func configure(config: Dictionary) -> void:
@@ -59,10 +80,32 @@ func configure(config: Dictionary) -> void:
 	health = max_health
 
 
+## D29. Kept separate from configure() so movement.json stays the sole owner
+## of stamina/health/fall/jump tuning and data/config/vitals.json owns
+## satiety on its own; pass it the whole parsed vitals.json.
+func configure_satiety(config: Dictionary) -> void:
+	var satiety_cfg: Dictionary = config.get("satiety", {})
+	max_satiety = float(satiety_cfg.get("max", 100.0))
+	_satiety_drain_per_minute = float(satiety_cfg.get("drain_per_minute", 0.8))
+	_hungry_below = float(satiety_cfg.get("hungry_below", 0.35))
+	_critical_below = float(satiety_cfg.get("critical_below", 0.15))
+
+	var debuffs: Dictionary = satiety_cfg.get("debuffs", {})
+	var hungry_cfg: Dictionary = debuffs.get("hungry", {})
+	_hungry_stamina_regen_scale = float(hungry_cfg.get("stamina_regen_scale", 0.6))
+	var critical_cfg: Dictionary = debuffs.get("critical", {})
+	_critical_stamina_regen_scale = float(critical_cfg.get("stamina_regen_scale", 0.35))
+	_critical_move_speed_scale = float(critical_cfg.get("move_speed_scale", 0.92))
+
+	satiety = max_satiety
+	active_buffs.clear()
+
+
 ## A night's sleep: everything back to full. Called by the camp's rest.
 func rest() -> void:
 	stamina = max_stamina
 	health = max_health
+	satiety = max_satiety
 	_exhausted = false
 
 
@@ -79,7 +122,9 @@ func tick(delta: float, sprinting: bool) -> void:
 	elif _regen_cooldown > 0.0:
 		_regen_cooldown = maxf(0.0, _regen_cooldown - delta)
 	else:
-		stamina = minf(max_stamina, stamina + _regen * delta)
+		# D29: hunger and food buffs scale how fast stamina comes back, never
+		# whether it does.
+		stamina = minf(max_stamina, stamina + _regen * stamina_regen_scale() * delta)
 
 	if _exhausted and stamina >= _exhausted_below:
 		_exhausted = false
@@ -135,3 +180,88 @@ func stamina_fraction() -> float:
 
 func health_fraction() -> float:
 	return 0.0 if max_health <= 0.0 else clampf(health / max_health, 0.0, 1.0)
+
+
+func satiety_fraction() -> float:
+	return 0.0 if max_satiety <= 0.0 else clampf(satiety / max_satiety, 0.0, 1.0)
+
+
+## "ok" / "hungry" / "critical", by the thresholds in vitals.json. Never
+## anything else, and never a reason to die.
+func hunger_state() -> String:
+	var frac := satiety_fraction()
+	if frac < _critical_below:
+		return "critical"
+	if frac < _hungry_below:
+		return "hungry"
+	return "ok"
+
+
+## Restore satiety (clamped to max) and, if `buff` is non-empty, add or
+## refresh a food buff. `buff` is the item data's own `{ "id", "stat",
+## "amount", "duration_s" }` dictionary — eating the same food again refreshes
+## the timer instead of stacking a second copy.
+func eat(satiety_amount: float, buff: Dictionary = {}) -> void:
+	satiety = clampf(satiety + satiety_amount, 0.0, max_satiety)
+	if not buff.is_empty():
+		_apply_buff(buff)
+
+
+func _apply_buff(buff: Dictionary) -> void:
+	var id: String = String(buff.get("id", ""))
+	var entry := {
+		"id": id,
+		"stat": String(buff.get("stat", "")),
+		"amount": float(buff.get("amount", 1.0)),
+		"remaining_s": float(buff.get("duration_s", 0.0)),
+	}
+	for existing: Dictionary in active_buffs:
+		if existing["id"] == id:
+			existing["stat"] = entry["stat"]
+			existing["amount"] = entry["amount"]
+			existing["remaining_s"] = entry["remaining_s"]
+			return
+	active_buffs.append(entry)
+
+
+## Drain satiety by real time and age out expired buffs. Called every physics
+## frame alongside tick(); split out because satiety has nothing to do with
+## sprinting or jumping, the things tick() is actually about.
+func tick_satiety(delta: float) -> void:
+	var drain := (_satiety_drain_per_minute / 60.0) * delta
+	satiety = maxf(0.0, satiety - drain)
+
+	var i := active_buffs.size() - 1
+	while i >= 0:
+		var buff: Dictionary = active_buffs[i]
+		buff["remaining_s"] = float(buff["remaining_s"]) - delta
+		if float(buff["remaining_s"]) <= 0.0:
+			active_buffs.remove_at(i)
+		i -= 1
+
+
+## Multiplier on stamina regeneration: the hungry/critical debuff tier, then
+## any active buff naming "stamina_regen_scale". 1.0 when fed and unbuffed.
+func stamina_regen_scale() -> float:
+	var scale := 1.0
+	match hunger_state():
+		"hungry":
+			scale *= _hungry_stamina_regen_scale
+		"critical":
+			scale *= _critical_stamina_regen_scale
+	for buff: Dictionary in active_buffs:
+		if buff["stat"] == "stamina_regen_scale":
+			scale *= float(buff["amount"])
+	return scale
+
+
+## Multiplier on ground move speed: only critical hunger slows the player
+## down (hungry alone does not), then any active "move_speed_scale" buff.
+func move_speed_scale() -> float:
+	var scale := 1.0
+	if hunger_state() == "critical":
+		scale *= _critical_move_speed_scale
+	for buff: Dictionary in active_buffs:
+		if buff["stat"] == "move_speed_scale":
+			scale *= float(buff["amount"])
+	return scale

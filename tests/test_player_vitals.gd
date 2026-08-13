@@ -27,6 +27,18 @@ func before_each() -> void:
 			"max_damage": 100.0,
 		},
 	})
+	_vitals.configure_satiety({
+		"satiety": {
+			"max": 100.0,
+			"drain_per_minute": 0.8,
+			"hungry_below": 0.35,
+			"critical_below": 0.15,
+			"debuffs": {
+				"hungry": {"stamina_regen_scale": 0.6},
+				"critical": {"stamina_regen_scale": 0.35, "move_speed_scale": 0.92},
+			},
+		},
+	})
 
 
 func test_starts_full() -> void:
@@ -128,3 +140,88 @@ func test_fractions_stay_in_range() -> void:
 	assert_eq(_vitals.stamina_fraction(), 0.0)
 	_vitals.apply_landing(500.0)
 	assert_eq(_vitals.health_fraction(), 0.0)
+
+
+## D29 satiety: light hunger, no death.
+
+func test_satiety_drains_at_configured_rate() -> void:
+	_vitals.tick_satiety(60.0)   # one minute at 0.8/minute
+	assert_almost_eq(_vitals.satiety, 99.2, 0.001)
+
+
+func test_satiety_floors_at_zero_without_touching_health() -> void:
+	_vitals.tick_satiety(1_000_000.0)
+	assert_eq(_vitals.satiety, 0.0)
+	assert_eq(_vitals.health, 100.0, "hunger must never cost health")
+	assert_false(_vitals.is_dead(), "D29: there is no starvation death")
+
+
+func test_hunger_state_boundaries() -> void:
+	_vitals.satiety = 36.0
+	assert_eq(_vitals.hunger_state(), "ok")
+	_vitals.satiety = 34.0
+	assert_eq(_vitals.hunger_state(), "hungry")
+	_vitals.satiety = 14.0
+	assert_eq(_vitals.hunger_state(), "critical")
+
+
+func test_eat_clamps_satiety_at_max() -> void:
+	_vitals.satiety = 90.0
+	_vitals.eat(50.0)
+	assert_eq(_vitals.satiety, 100.0)
+
+
+func test_eat_applies_buff() -> void:
+	_vitals.eat(0.0, {"id": "berry_verve", "stat": "stamina_regen_scale", "amount": 1.15, "duration_s": 120.0})
+	assert_eq(_vitals.active_buffs.size(), 1)
+	assert_eq(_vitals.active_buffs[0]["id"], "berry_verve")
+
+
+func test_eating_same_buff_again_refreshes_not_stacks() -> void:
+	var buff := {"id": "berry_verve", "stat": "stamina_regen_scale", "amount": 1.15, "duration_s": 120.0}
+	_vitals.eat(0.0, buff)
+	_vitals.tick_satiety(100.0)   # burn most of the timer
+	_vitals.eat(0.0, buff)        # eating again should refresh, not add a second entry
+	assert_eq(_vitals.active_buffs.size(), 1, "same-id buff must refresh in place")
+	assert_almost_eq(float(_vitals.active_buffs[0]["remaining_s"]), 120.0, 0.001)
+
+
+func test_buff_expires_after_duration() -> void:
+	_vitals.eat(0.0, {"id": "berry_verve", "stat": "stamina_regen_scale", "amount": 1.15, "duration_s": 10.0})
+	_vitals.tick_satiety(9.9)
+	assert_eq(_vitals.active_buffs.size(), 1, "buff should still be active just before expiry")
+	_vitals.tick_satiety(0.2)
+	assert_eq(_vitals.active_buffs.size(), 0, "buff should be gone once its timer runs out")
+
+
+func test_stamina_regen_scale_fed_is_full() -> void:
+	assert_almost_eq(_vitals.stamina_regen_scale(), 1.0, 0.001)
+
+
+func test_stamina_regen_scale_hungry() -> void:
+	_vitals.satiety = 30.0   # fraction 0.30: below hungry_below, above critical_below
+	assert_almost_eq(_vitals.stamina_regen_scale(), 0.6, 0.001)
+
+
+func test_stamina_regen_scale_critical() -> void:
+	_vitals.satiety = 10.0   # fraction 0.10: below critical_below
+	assert_almost_eq(_vitals.stamina_regen_scale(), 0.35, 0.001)
+
+
+func test_stamina_regen_scale_buff_multiplies_fed_baseline() -> void:
+	_vitals.eat(0.0, {"id": "berry_verve", "stat": "stamina_regen_scale", "amount": 1.15, "duration_s": 120.0})
+	assert_almost_eq(_vitals.stamina_regen_scale(), 1.15, 0.001)
+
+
+func test_move_speed_scale_only_softens_when_critical() -> void:
+	assert_almost_eq(_vitals.move_speed_scale(), 1.0, 0.001, "fed should be full speed")
+	_vitals.satiety = 30.0
+	assert_almost_eq(_vitals.move_speed_scale(), 1.0, 0.001, "hungry alone should not slow movement")
+	_vitals.satiety = 10.0
+	assert_almost_eq(_vitals.move_speed_scale(), 0.92, 0.001, "critical hunger should soften movement")
+
+
+func test_rest_refills_satiety() -> void:
+	_vitals.satiety = 10.0
+	_vitals.rest()
+	assert_eq(_vitals.satiety, 100.0)

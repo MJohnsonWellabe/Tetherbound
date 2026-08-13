@@ -12,6 +12,7 @@ extends CharacterBody3D
 ## answerable by editing data, not code.
 
 const CONFIG_PATH := "res://data/config/movement.json"
+const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const VITALS := preload("res://scripts/player/player_vitals.gd")
 
 signal landed(impact_speed: float, damage: float)
@@ -89,6 +90,21 @@ func _load_config() -> void:
 	_jump_velocity = sqrt(2.0 * _gravity * float(jump.get("height", 1.35)))
 
 	vitals.configure(config)
+	_load_vitals_config()
+
+
+## D29 satiety. Separate file from movement.json so hunger tuning does not
+## get mixed into the locomotion sheet it has nothing to do with.
+func _load_vitals_config() -> void:
+	var file := FileAccess.open(VITALS_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_error("vitals.json missing at %s" % VITALS_CONFIG_PATH)
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		push_error("vitals.json is not valid JSON")
+		return
+	vitals.configure_satiety(parsed as Dictionary)
 
 
 func _physics_process(delta: float) -> void:
@@ -102,6 +118,7 @@ func _physics_process(delta: float) -> void:
 	_resolve_landing(falling_speed)
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
+	vitals.tick_satiety(delta)
 
 
 func _track_airborne(delta: float) -> void:
@@ -138,7 +155,9 @@ func _apply_movement(delta: float) -> void:
 		direction = (basis_value * Vector3(input.x, 0.0, input.y)).normalized()
 
 	_sprinting = Input.is_action_pressed("sprint") and vitals.can_sprint() and input != Vector2.ZERO
-	var target_speed := _sprint_speed if _sprinting else _walk_speed
+	# D29: critical hunger softens ground speed a little; never below that,
+	# and never enough on its own to strand the player.
+	var target_speed := (_sprint_speed if _sprinting else _walk_speed) * vitals.move_speed_scale()
 
 	var horizontal := Vector3(velocity.x, 0.0, velocity.z)
 	var accel := _ground_accel if is_on_floor() else _air_accel

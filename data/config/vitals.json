@@ -1,0 +1,14 @@
+{
+  "_comment": "Satiety: the light hunger of D29. Tunable. Drains slowly, food restores, low satiety softens the player without ever killing them. There is NO starvation death and adding one is an owner decision, not a tuning change.",
+  "satiety": {
+    "max": 100.0,
+    "drain_per_minute": 0.8,
+    "hungry_below": 0.35,
+    "critical_below": 0.15,
+    "debuffs": {
+      "hungry":   { "stamina_regen_scale": 0.6 },
+      "critical": { "stamina_regen_scale": 0.35, "move_speed_scale": 0.92 }
+    }
+  },
+  "buffs": { "max_visible_icons": 3 }
+}

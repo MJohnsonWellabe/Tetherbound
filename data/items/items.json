@@ -7,6 +7,7 @@
   "_comment_colour": "`colour` is the slot tile's tint. Placeholder standing in for an icon, and sampled so four resources are told apart at a glance on a 7-inch screen rather than by reading four short words.",
   "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (R7.6) are what will read them.",
   "_comment_durability": "R2.2. `durability` is the number of full-yield gathers a tool survives before it breaks (GAME_DESIGN.md 19: 'have durability', 'repair for free at appropriate station'). Tunable, same for all five for now. A broken tool (0 durability) stops counting as owned for item_db.gd's harvest_yield() gating until repaired -- inventory.gd tracks the current value per-slot, defaulting to this max when a slot carries no durability key of its own (so a freshly-added tool needs no special-cased add-time write). Only `axe`/`pickaxe`/`knife` actually lose durability today, from harvest_node.gd's gather loop; `hammer` and `fishing_rod` carry the field for GAME_DESIGN.md consistency but nothing damages them yet, matching R2.1's own precedent for those two.",
+  "_comment_satiety": "D29. `satiety` is how much of player_vitals.gd's satiety meter one use restores (see data/config/vitals.json); `buff` is that same use's optional temporary buff, passed straight through to player_vitals.gd's eat() as-is: { id, stat, amount, duration_s }. Only berries carry it so far. Nothing calls eat() from an eating action yet -- that wiring lands with the HUD pass, per this task's brief.",
   "items": {
     "wood": {
       "name": "Wood",
@@ -37,6 +38,8 @@
       "kind": "food",
       "stack": 30,
       "colour": "#a33a55",
+      "satiety": 18,
+      "buff": { "id": "berry_verve", "stat": "stamina_regen_scale", "amount": 1.15, "duration_s": 120 },
       "blurb": "A handful off a bush. Food buffs, never starvation."
     },
     "orb_basic": {

@@ -1,0 +1,156 @@
+[gd_resource type="Theme" load_steps=11 format=3]
+
+[ext_resource type="FontFile" path="res://assets/ui/fonts/kenney_future.ttf" id="1_font"]
+
+; The warm/brass build-and-craft theme built on `scripts/ui/ui_tokens.gd`
+; (`docs/decisions/D28`).
+;
+; Same structure as `tetherbound_theme.tres` — same sub-resource and Theme
+; entry names — swapped to the token module's `BUILD_*` palette: brass
+; (`BUILD_ACCENT`, `#D9C08A`) instead of teal, so a build/craft surface reads
+; as a distinct place from the exploration HUD and pause menu rather than
+; those screens borrowed wholesale. Focus here is a 2px brass border plus a
+; brighter fill, the same "focus is the loudest state" rule the teal theme
+; and the original `scenes/ui/menu_theme.tres` both already follow, just in
+; this theme's own accent.
+;
+; Nothing in the live game points at this file yet (`D28`) — it exists and
+; loads, for whichever build/craft screen a follow-on item wires it into.
+
+[sub_resource type="StyleBoxFlat" id="panel"]
+bg_color = Color(0.164706, 0.129412, 0.101961, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85098, 0.752941, 0.541176, 0.6)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="btn_normal"]
+bg_color = Color(0.203922, 0.164706, 0.12549, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.203922, 0.164706, 0.12549, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="btn_hover"]
+bg_color = Color(0.266667, 0.219608, 0.168627, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85098, 0.752941, 0.541176, 0.5)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="btn_pressed"]
+bg_color = Color(0.14902, 0.121569, 0.090196, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85098, 0.752941, 0.541176, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="btn_focus"]
+bg_color = Color(0.238, 0.196, 0.153, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85098, 0.752941, 0.541176, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="btn_disabled"]
+bg_color = Color(0.12549, 0.101961, 0.078431, 0.7)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12549, 0.101961, 0.078431, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="progress_bg"]
+bg_color = Color(0.05, 0.05, 0.06, 0.85)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.02, 0.02, 0.02, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="progress_fill"]
+bg_color = Color(0.85098, 0.752941, 0.541176, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="scroll_bg"]
+bg_color = Color(0, 0, 0, 0)
+
+[resource]
+default_font = ExtResource("1_font")
+default_font_size = 26
+Button/colors/font_color = Color(0.937255, 0.905882, 0.839216, 1)
+Button/colors/font_disabled_color = Color(0.552941, 0.517647, 0.454902, 1)
+Button/colors/font_focus_color = Color(0.937255, 0.905882, 0.839216, 1)
+Button/colors/font_hover_color = Color(0.937255, 0.905882, 0.839216, 1)
+Button/colors/font_pressed_color = Color(0.937255, 0.905882, 0.839216, 1)
+Button/styles/disabled = SubResource("btn_disabled")
+Button/styles/focus = SubResource("btn_focus")
+Button/styles/hover = SubResource("btn_hover")
+Button/styles/normal = SubResource("btn_normal")
+Button/styles/pressed = SubResource("btn_pressed")
+Label/colors/font_color = Color(0.937255, 0.905882, 0.839216, 1)
+Panel/styles/panel = SubResource("panel")
+PanelContainer/styles/panel = SubResource("panel")
+ProgressBar/styles/background = SubResource("progress_bg")
+ProgressBar/styles/fill = SubResource("progress_fill")
+ScrollContainer/styles/panel = SubResource("scroll_bg")
