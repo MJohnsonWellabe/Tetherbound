@@ -90,7 +90,30 @@ const BUSH_GREEN_TEXTURE := preload("res://assets/environment/stylized_nature/Le
 ## the visible mesh is the boundary; this is the invisible support spec §1E
 ## asks for, not a substitute for it.
 const COLLISION_MARGIN_DOWN := 6.0
-const COLLISION_MARGIN_UP := 2.0
+## OF6: raised from 2.0. The old value assumed a segment's real terrain never
+## strays far from the straight line between its two 9°-apart endpoints —
+## true almost everywhere, false on the steepest of the three `rises`
+## (`terrain_playground.json`, peak centred -165,-150, radius 58, which
+## overlaps this ring's own radius by up to 46m). Measured directly: real
+## ground climbs ~22m across one 37m segment there (bearing 207° at 1.7m to
+## bearing 216° at 24.0m, both sampled with the game's own
+## `ground_height_at()`), so the old two-endpoint average plus a 2m margin
+## left the collision box's top roughly 8m below the real slope mid-segment
+## — the ground simply rose up and over it. A player walking outward at
+## bearings 210°/215°/227° reproducibly walked clean through, landing
+## 244-278m from centre, well past the visible 235m ring (`RADIUS` above)
+## with no wall in sight. `COLLISION_SEGMENT_SUBSAMPLES` below is the real
+## fix (the box now tracks the segment's actual sampled terrain, not a
+## straight line between its ends); this margin is a modest, measured
+## cushion on top of that, not a substitute for it.
+const COLLISION_MARGIN_UP := 3.0
+## Interior height samples per segment, in addition to its two endpoints,
+## used to size the collision box's vertical span. At `SEGMENTS` = 40 each
+## segment spans ~37m; 16 interior samples put real ground checks every
+## ~2.2m, tight enough that the ~3.6m/degree worst-case climb measured on
+## the steep rise above can no longer hide a spike between check points the
+## way two endpoints 37m apart did.
+const COLLISION_SEGMENT_SUBSAMPLES := 16
 
 ## Below `tests/smoke_traversal.gd`'s own `THROUGH_THE_FLOOR` (-80.0, "the
 ## whole playground's lowest point is about -26m") but well above the old
@@ -142,15 +165,33 @@ func _build_ring(world: Node, parent: Node3D) -> void:
 	for i in SEGMENTS:
 		var from := points[i]
 		var to := points[(i + 1) % SEGMENTS]
+		var heights := _segment_ground_heights(world, from, to)
 		match i % 4:
 			0:
-				_stone_wall(parent, from, to)
+				_stone_wall(parent, from, to, heights)
 			1:
-				_ranch_fence(parent, from, to)
+				_ranch_fence(parent, from, to, heights)
 			2:
-				_hedgerow(parent, from, to)
+				_hedgerow(parent, from, to, heights)
 			_:
-				_rock_formation(parent, from, to)
+				_rock_formation(parent, from, to, heights)
+
+
+## OF6: real ground sampled along the segment's actual path, not just its two
+## endpoints — see `COLLISION_SEGMENT_SUBSAMPLES`'s header for why. A NaN
+## sample (the bake edge case `_build_ring`'s own header already documents)
+## is skipped rather than faked to 0.0: the endpoints already anchor the
+## range, and a fabricated interior height could just as easily hide a real
+## spike as report a fake one.
+func _segment_ground_heights(world: Node, from: Vector3, to: Vector3) -> PackedFloat32Array:
+	var heights: PackedFloat32Array = [from.y, to.y]
+	for s in COLLISION_SEGMENT_SUBSAMPLES:
+		var t := (float(s) + 1.0) / (float(COLLISION_SEGMENT_SUBSAMPLES) + 1.0)
+		var pos := from.lerp(to, t)
+		var ground: float = float(world.call("ground_height_at", pos.x, pos.z))
+		if not is_nan(ground):
+			heights.append(ground)
+	return heights
 
 
 func _segment_basis(from: Vector3, to: Vector3) -> Dictionary:
@@ -177,13 +218,27 @@ const COLLISION_OVERLAP := 3.0
 ## walking that stretch dropped straight under it. The box has to span
 ## exactly `[mid.y - MARGIN_DOWN, mid.y + height + MARGIN_UP]` — solving for
 ## the centre that makes that true:
-func _add_collision(parent: Node3D, mid: Vector3, yaw: float, length: float, height: float, thickness: float) -> void:
+## OF6: the box's vertical span now comes from the segment's actual sampled
+## ground (`heights`, `_segment_ground_heights()`), not the straight line
+## between the segment's two endpoints — a real 22m mid-segment climb on the
+## steepest `rises` peak defeated the old two-point average (see
+## `COLLISION_MARGIN_UP`'s header for the measured numbers). `bottom` clears
+## the lowest sample, `top` clears both the highest sample AND the style's
+## own nominal wall height, so a flat segment still gets exactly the old
+## box and only a genuinely undulating one grows.
+func _add_collision(parent: Node3D, mid: Vector3, yaw: float, length: float, height: float, thickness: float, heights: PackedFloat32Array) -> void:
+	var bottom := mid.y - COLLISION_MARGIN_DOWN
+	var top := mid.y + height + COLLISION_MARGIN_UP
+	for h in heights:
+		bottom = minf(bottom, h - COLLISION_MARGIN_DOWN)
+		top = maxf(top, h + COLLISION_MARGIN_UP)
+
 	var body := StaticBody3D.new()
-	body.position = mid + Vector3(0.0, (height + COLLISION_MARGIN_UP - COLLISION_MARGIN_DOWN) * 0.5, 0.0)
+	body.position = Vector3(mid.x, (bottom + top) * 0.5, mid.z)
 	body.rotation.y = yaw
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = Vector3(length + COLLISION_OVERLAP, height + COLLISION_MARGIN_DOWN + COLLISION_MARGIN_UP, thickness)
+	box.size = Vector3(length + COLLISION_OVERLAP, top - bottom, thickness)
 	shape.shape = box
 	body.add_child(shape)
 	parent.add_child(body)
@@ -201,7 +256,7 @@ func _material(colour: Color, roughness: float = 0.85) -> StandardMaterial3D:
 ## stronghold's roofline is its own signature, and a boundary wall the player
 ## walks past constantly should read as plain field masonry, not a second
 ## fortress.
-func _stone_wall(parent: Node3D, from: Vector3, to: Vector3) -> void:
+func _stone_wall(parent: Node3D, from: Vector3, to: Vector3, heights: PackedFloat32Array) -> void:
 	var basis := _segment_basis(from, to)
 	var length: float = basis["length"]
 	var mid: Vector3 = basis["mid"]
@@ -268,7 +323,7 @@ func _stone_wall(parent: Node3D, from: Vector3, to: Vector3) -> void:
 	cap.rotation.y = yaw
 	parent.add_child(cap)
 
-	_add_collision(parent, mid, yaw, length, STONE_HEIGHT, STONE_THICKNESS)
+	_add_collision(parent, mid, yaw, length, STONE_HEIGHT, STONE_THICKNESS, heights)
 
 
 ## Ranch fencing: two horizontal rails on posts, the shape the spec names
@@ -277,7 +332,7 @@ func _stone_wall(parent: Node3D, from: Vector3, to: Vector3) -> void:
 ## player CAN see, not one they can see over cleanly, and a stock rail fence
 ## reads as a barrier from a walking approach even though it looks open in
 ## a screenshot.
-func _ranch_fence(parent: Node3D, from: Vector3, to: Vector3) -> void:
+func _ranch_fence(parent: Node3D, from: Vector3, to: Vector3, heights: PackedFloat32Array) -> void:
 	var basis := _segment_basis(from, to)
 	var length: float = basis["length"]
 	var mid: Vector3 = basis["mid"]
@@ -308,14 +363,14 @@ func _ranch_fence(parent: Node3D, from: Vector3, to: Vector3) -> void:
 		rail.rotation.y = yaw
 		parent.add_child(rail)
 
-	_add_collision(parent, mid, yaw, length, FENCE_HEIGHT, 0.4)
+	_add_collision(parent, mid, yaw, length, FENCE_HEIGHT, 0.4, heights)
 
 
 ## Hedgerow: real bush geometry packed dense enough to read as one mass, not
 ## individual shrubs — a row spaced tighter than each bush's own footprint so
 ## the canopies overlap into a continuous line, with a second staggered row
 ## for thickness and to hide any gap the front row's rotation jitter opens up.
-func _hedgerow(parent: Node3D, from: Vector3, to: Vector3) -> void:
+func _hedgerow(parent: Node3D, from: Vector3, to: Vector3, heights: PackedFloat32Array) -> void:
 	var basis := _segment_basis(from, to)
 	var length: float = basis["length"]
 	var mid: Vector3 = basis["mid"]
@@ -343,7 +398,7 @@ func _hedgerow(parent: Node3D, from: Vector3, to: Vector3) -> void:
 		bush.scale = Vector3.ONE * scale
 		parent.add_child(bush)
 
-	_add_collision(parent, mid, yaw, length, HEDGE_HEIGHT, HEDGE_THICKNESS)
+	_add_collision(parent, mid, yaw, length, HEDGE_HEIGHT, HEDGE_THICKNESS, heights)
 
 
 ## The pack ships `Bush_Common`/`Bush_Common_Flowers` with a crimson autumn
@@ -381,7 +436,7 @@ func _find_mesh_instances(node: Node) -> Array[MeshInstance3D]:
 ## invisible collision only as support for visible boundaries, not as the
 ## only boundary" — the boulders ARE the boundary; this just closes the gaps
 ## between them).
-func _rock_formation(parent: Node3D, from: Vector3, to: Vector3) -> void:
+func _rock_formation(parent: Node3D, from: Vector3, to: Vector3, heights: PackedFloat32Array) -> void:
 	var basis := _segment_basis(from, to)
 	var length: float = basis["length"]
 	var mid: Vector3 = basis["mid"]
@@ -418,7 +473,7 @@ func _rock_formation(parent: Node3D, from: Vector3, to: Vector3) -> void:
 	# cover the across-segment jitter and largest (2x) boulder scale added
 	# above — invisible either way, but has to actually sit under the rocks
 	# it is backing.
-	_add_collision(parent, mid, yaw, length, ROCK_HEIGHT, 3.2)
+	_add_collision(parent, mid, yaw, length, ROCK_HEIGHT, 3.2, heights)
 
 
 ## Spec §1E: "add a backup kill/respawn volume below the world only as a

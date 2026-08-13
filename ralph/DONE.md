@@ -250,6 +250,44 @@ keep the smoke-tested NPC lanes untouched. `EV7-remainder`'s bridge-repair
 cluster now has its bridge; its quarry station still has **no quarry — this
 pass did not build one**.
 
+## OF6 — World boundary: the hard collision stop now matches the visible perimeter
+`67cb050` on `claude/ralph-backlog-of6-7-10-11-dbiydq` (manual session
+shipping `OF6`/`OF7`/`OF10`/`OF11` together, owner request). `model: sonnet`
+— mechanical, no dispatch.
+
+The ring looked closed on paper: 40 segments, a 3m along-ring overlap, and
+`SA3`'s original vertical-centring bug already fixed (re-derived the box's
+top/bottom bounds from the live formula and confirmed correct). But
+`smoke_traversal.gd`'s 8 evenly-spaced bearings never happen to land on a
+rise, and three of `terrain_playground.json`'s `rises.peaks` reach far
+enough out to overlap the ring's own 235m radius — up to 46m, on the peak
+centred `-165,-150`. A direct reproduction there found a real leak:
+bearings 210°/215°/227° walked clean through to 232-278m from centre,
+well past the visible wall. Root cause, measured directly with
+`ground_height_at()`: a segment's collision box was sized from the
+straight-line average of its two 9°-apart endpoint heights, and real
+ground on that slope climbs ~22m across one 37m segment (1.7m at bearing
+207° to 24.0m at 216°) — the ground simply rose up and over the box
+mid-segment.
+
+Fix: `world_perimeter.gd` now samples 16 interior ground heights along
+each segment's own path (`COLLISION_SEGMENT_SUBSAMPLES`) and sizes the
+collision box's vertical span to clear the sampled min/max, not the
+two-endpoint average; `COLLISION_MARGIN_UP` raised 2.0 → 3.0 as a modest
+cushion on top of that fix, not a substitute for it. A flat segment gets
+exactly the old box; only a genuinely undulating one grows. Re-verified
+after the fix: all three previously-leaking bearings land at 232-234m,
+matching the ring's other bearings.
+
+`smoke_traversal.gd` gains three explicit bearings (215°, 227°, 327.3°)
+targeting where the rises cross the ring — evenly-spaced sampling alone
+missed this for as long as `OF6` sat open in `BACKLOG.md`, and a future
+regression deserves better odds of getting caught.
+
+Tested: `godot --headless --path . --script tests/smoke_traversal.gd`,
+clean pass (exit 0), all 11 bearings within 1-3m of the 235m ring, kill
+volume failsafe unaffected.
+
 ## OF13 — Stronghold relocated ~105m out and genuinely occluded, not just nudged
 `scripts/world/landmark.gd`, `tools/capture_wayfinding.gd` on `ralph/OF13`.
 `model: sonnet` (mechanical placement/occlusion — `OF9`'s design question
@@ -622,6 +660,57 @@ eat a press? If yes, the guard-buffer fix above did not reach the real
 cause and this needs reopening with a description of exactly when it
 happens (opening a fresh conversation vs. mid-conversation, cadence, etc.)
 — that detail is what every headless probe here could not supply.
+
+## OF12 — Grandpa's-house-route vegetation redone from scratch: constant-distance path rules replaced by a noise-varying standoff + route-neighbourhood in-fill
+`9fb68c1` + `854c4e0` + `6a2bed4` on `ralph/OF12`. `tests: none (visual)`
+per the item; full suite still run every round — 388/388 green on the
+shipping state (nine tests pinning the removed knobs replaced by seven
+pinning the new mechanisms). `model: fable` dispatch.
+
+**The mechanism change, not a sixth tuning round.** Every prior mechanism on
+this route was a CONSTANT-DISTANCE rule measured from the path centreline —
+`path_avoid_radius` held all grass/drygrass exactly 6-7m off the path (a
+ruler-straight inner edge at matched offsets on both sides), and flowers'
+`path_bias`/`side_offset`/`jitter`/`per_clump` stack deliberately anchored a
+garden-accent layer to the road (a placement dump confirmed the owner's
+verdict was pointing at something real: 21 of 23 near-path flowers strung
+along ONE side of the leg). All four knobs are REMOVED, not retuned;
+`path_bias` survives for `path_stones` only (stones ARE the path).
+Replacement: `path_standoff` — exclusion distance drifts between min and max
+with coherent position noise, salted per SIDE of the path so the two verges
+draw from independent fields (a matched pair across the path is impossible
+by construction), two octaves so the edge frays at metre scale — plus
+`verge`, arc-length draws along the routes (`path_polylines` on the
+heightfield) culled by that same standoff noise. One real bug found and
+fixed en route: the jittered path/stream exclusion threshold could draw
+negative, and `path_factor` (exactly 0.0 away from routes) > negative is
+true EVERYWHERE — a silent map-wide density cut on every jittered layer,
+now floored at 0.02.
+
+**Blind pass: 3 genuinely blind rounds run, honest gap on the 4th.** No
+Agent-tool in this session's toolset (the R7.2 gap), so each round spawned a
+fresh CCR sibling session as the critic, handed only the rendered frames on
+`scratch/OF12-critic` (cut from main — the diff shows PNGs, never the code
+change) with verdicts pushed back to that branch; VERDICT-round[1-3].md live
+there. Round 1: **the flanking/matched-border read the owner's five prior
+rounds never moved is GONE from grandpas-house-route.png** — new defects
+named instead: bald verge, hard clean-cut dirt line. Round 2 (fringe added):
+fringe itself read as a paced border — the `inner+band*r^2` edge-weighting
+printed a modal offset. Round 3 (uniform band): same border/bald verdict
+rearticulated, no new subject-axis defect — one flat round; both critics'
+fix lists converged on the same instruction the references show: cover the
+whole ground plane and let the path interrupt it. Round 4 built exactly
+that (bands widened 4.5-8m → 12-20m in-fill; near-path density now equals
+field density; 25946 props, inside RB4's ~29k ceiling) and measured right
+(ground cover near the leg 1 → ~160 instances, nearest-offset varying
+2.4-8.1m per 4m bin, L/R uneven per layer), but the wrap-up deadline hit
+before its blind round ran — **converged-with-remainder: the final state is
+measured and self-judged, not blind-confirmed.** `OF12-remainder` in
+`BACKLOG.md` carries that one confirmation round plus the out-of-scope
+defects all three critics named (rise-route mirrored tree stand — trees
+layer seed luck, pre-existing; ground-cover species variety — grass has 2
+tuft models; the no-caster shadow wedge — likely the owner-accepted
+material-contrast read, but two fresh critics tripped on it).
 
 ## OF2 — Item-target picker for consumables; party reorder found already built
 `b6655da` (+ `1bc2f7f` .uid sidecar fix, `41498a6` footer fix) on `ralph/OF2`.

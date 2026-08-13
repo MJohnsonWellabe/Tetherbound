@@ -501,6 +501,29 @@ func nearest_path_tangent(x: float, z: float) -> Vector2:
 	return best_tangent
 
 
+## The authored route polylines as PackedVector2Arrays, for scatter layers
+## that place a verge fringe ALONG the paths by arc length (OF12,
+## scatter_rules.gd::_place_verge) rather than merely reacting to the nearest
+## one the way `nearest_point_on_paths` allows. Empty when no routes are
+## configured — the caller places no fringe, the same graceful fallback the
+## other path queries use.
+func path_polylines() -> Array:
+	var paths: Dictionary = _config.get("paths", {})
+	var routes: Array = paths.get("routes", [])
+	var out: Array = []
+	for entry: Variant in routes:
+		if not entry is Dictionary:
+			continue
+		var points: Array = (entry as Dictionary).get("points", [])
+		if points.size() < 2:
+			continue
+		var line := PackedVector2Array()
+		for p: Variant in points:
+			line.append(Vector2(float((p as Array)[0]), float((p as Array)[1])))
+		out.append(line)
+	return out
+
+
 ## Height before the spawn pad flattening, used as the pad's own target so the
 ## pad does not recurse into itself.
 func _raw_height(x: float, z: float) -> float:

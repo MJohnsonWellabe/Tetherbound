@@ -82,13 +82,7 @@ different frame.
 
 **`OF5` (running/walking looked unnatural — gait cadence didn't match travel speed, feet ice-skated) shipped — see `DONE.md`.**
 
-### OF6 — World boundary: tighten the hard collision stop to match the visible perimeter
-`area: terrain` · `model: sonnet`. `SA3` already built a physical perimeter
-and a fail-safe (`DONE.md`); the actual stop-collision sits well beyond the
-visible wall/fence line, leaving a dead, empty gap between where the world
-visually seems to end and where it actually stops you. Reposition the
-boundary to sit just past the authored perimeter. Keep the existing
-fall/respawn failsafe as backup for anyone who gets past it.
+**`OF6` (world boundary collision tightened to the visible perimeter) shipped — see `DONE.md`.**
 
 ### OF7 — Rebuild the perimeter fence/wall — it looks bad and isn't continuous
 `area: terrain` (or `village`, whichever owns the placement) · `model: fable`
@@ -118,17 +112,28 @@ plateau evidence, but not the prior specific mechanisms to adjust. It judges
 and rebuilds the material/relief approach itself, clearing out the current
 implementation rather than layering another round on top of it.
 
-### OF12 — Redo the vegetation placement on Grandpa's house route from scratch
-`model: fable` (dispatch). Replaces the `BLOCKED.md` "grandpas-house-route.png
-flanking" entry — see there for the full five-round history. Same reasoning
-as `OF11`: five rounds fixing real placement mechanisms still produced a
-matched, hedge-like "flanking" border reading as landscaped rather than
-natural, and two rounds that added density made it measurably worse. The
-dispatched agent is told plainly what "flanking" means (plants on either
-side of the path pairing into a symmetric border) and told to avoid a
-matched-pair read across the path, then owns rebuilding the placement
-approach itself — not handed the prior five rounds' mechanisms to tune
-further.
+### OF12-remainder — Blind-confirm the in-fill state; carry the out-of-scope defects the OF12 critics named
+`area: vegetation` · `tests: none (visual)`. `OF12` shipped (see `DONE.md`)
+after 3 genuinely blind critic rounds plus a 4th, un-critiqued scene state:
+the final build widened the verge into route-neighbourhood in-fill (the fix
+both independent critics' own fix-lists named), and the shipping firing's
+own read plus placement dumps say it lands — but its wrap-up deadline hit
+before a 4th blind round could confirm it, so "the border/bald read is
+cleared" is measured and self-judged, not blind-verified. First half of
+this item: run one blind round on the shipped state
+(`tools/capture_paths.gd` frames, `.claude/skills/visual-judge`) and either
+close this or name what's still wrong. Second half — defects the OF12
+critics named that were OUT of that item's scope, none of them regressions
+from it: (a) `the-rise-route.png`'s mirrored tree stand framing the path
+like a gateway (3 left / 4 right, matched heights — the `trees` layer's
+seed luck, named by all three critics); (b) the ground-cover
+species-variety gap ("same one or two prefabs" — grass has exactly 2 tuft
+models; a real fix needs more authored ground-cover forms, EV1-remainder
+territory); (c) the hard-edged no-visible-caster shadow wedge on
+`grandpas-house-route.png` / `square-convergence.png` — likely the same
+owner-accepted material-contrast read `BLOCKED.md` closed on 2026-08-12,
+but two fresh critics tripping on it independently is worth one look
+before re-accepting.
 
 ### NP7 — Modular hair/accessory geometry for human NPC bases (owner-approved Meshy regeneration)
 `area: assets` · `lane: art` (needs the Meshy key). Replaces the
