@@ -516,7 +516,12 @@ func _describe(index: int, cfg: Dictionary) -> void:
 
 	var xp: int = int(pal.get("xp"))
 	var xp_needed: int = int(pal.call("xp_to_next", cfg))
-	_detail_xp.text = "XP  %d / %d" % [xp, xp_needed]
+	# "EXP", not "XP": kenney_future's capital X is a two-bar glyph almost
+	# indistinguishable from H at FONT_TINY, and this row sits directly under
+	# the real "HP" row — the blind-capture pass genuinely misread "XP 15 /
+	# 121" as a second HP line. Spelling it out removes the collision without
+	# touching the shared font.
+	_detail_xp.text = "EXP  %d / %d" % [xp, xp_needed]
 	_detail_xp_bar.value = 0.0 if xp_needed <= 0 else clampf(float(xp) / float(xp_needed), 0.0, 1.0) * 100.0
 
 	_fill_move_row(

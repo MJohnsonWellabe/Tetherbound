@@ -29,6 +29,7 @@ const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
 ## Ids placed by their own hand-authored script rather than build_piece.gd's
 ## generic path — kept as one list so the "is this a special id" question is
@@ -98,6 +99,10 @@ var _camera_rig: Node = null
 var _ghost: Node3D = null
 var _ghost_ok := false
 var _ghost_id := ""
+## Previous frame's `snapped_to_neighbour`, per `AudioCues` wiring below --
+## `build_snap` plays on the false->true edge only, not every frame the ghost
+## happens to already be sitting snapped.
+var _was_snapped := false
 ## Continuous yaw in degrees, replacing BG1's `_ghost_rotation_steps: int`.
 ## `ROTATE_ACTION` still turns this by a fixed 90 regardless of
 ## `_rotation_step_deg`; `ROTATE_LEFT_ACTION`/`ROTATE_RIGHT_ACTION` turn it by
@@ -160,8 +165,11 @@ func _physics_process(_delta: float) -> void:
 		_rotation_step_deg = BUILD_GRID.next_snap_step_deg(_rotation_step_deg)
 
 	_show_ghost(game, armed)
-	if _ghost_ok and Input.is_action_just_pressed(PLACE_ACTION):
-		_place(game, armed)
+	if Input.is_action_just_pressed(PLACE_ACTION):
+		if _ghost_ok:
+			_place(game, armed)
+		else:
+			AUDIO_CUES.play(&"ui_error")
 
 
 ## The mesh path a plain catalogue entry places, or "" if it has none (an id
@@ -215,6 +223,9 @@ func _show_ghost(game: Node, armed: String) -> void:
 	var resolved := BUILD_GRID.resolve_position(raw_spot, ground, _neighbour_positions(armed))
 	var spot: Vector3 = resolved.position
 	var snapped_to_neighbour: bool = resolved.snapped_to_neighbour
+	if snapped_to_neighbour and not _was_snapped:
+		AUDIO_CUES.play(&"build_snap")
+	_was_snapped = snapped_to_neighbour
 
 	# Slope check by sampling the corners the bedroll would cover. Skipped
 	# when snapped to a neighbour: `spot.y` is already that neighbour's own
@@ -329,6 +340,7 @@ func _place(game: Node, armed: String) -> void:
 	# see GameState.placed_buildings.
 	game.call("register_building", armed, placed.global_position, yaw_deg)
 	game.set("pending_build", "")
+	AUDIO_CUES.play(&"build_place")
 	_drop_ghost()
 
 
@@ -367,6 +379,7 @@ func _drop_ghost() -> void:
 	_ghost = null
 	_ghost_ok = false
 	_ghost_id = ""
+	_was_snapped = false
 	_yaw_deg = 0.0
 	_snap_candidates = []
 	_set_overlay_visible(false)

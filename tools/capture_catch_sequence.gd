@@ -95,6 +95,13 @@ func _run() -> void:
 	_ally = _director.call("ally_body") as Node3D
 	_log("fighting")
 
+	# The capture-reticle pass (spec §10.2, D31): two aim-state stills at a
+	# low and a high chance, taken BEFORE sequence A below starts stacking
+	# `chance.min`/`chance.max` for the dice — these two only need real,
+	# unclamped odds on screen, and by the far end of sequence B the fight
+	# has usually already resolved and ended.
+	await _capture_chance_frames()
+
 	# The dice are stacked per sequence THROUGH THE CLAMPS the formula already
 	# has (`chance.min`/`chance.max`), because a frame named "breakout" showing
 	# a seal would make the whole critique a lie: a full-health throw can still
@@ -249,6 +256,40 @@ func _one_throw(aim_frame: String, flight_frame: String,
 	for i in 70:
 		await physics_frame
 	return "success" if bool(_resolved[-1]) else "failure"
+
+
+## Two aim-state stills (spec §10.2, D31): the capture reticle's ring +
+## explicit percentage at a low chance (full-health target) and a high one
+## (a sliver of health), so the reticle work has real numbers on real frames
+## rather than a theoretical curve. Neither throw is ever released — both
+## stills only need the AIM state, and releasing one would spend an orb and
+## drag the fight into a resolution neither still is named for.
+func _capture_chance_frames() -> void:
+	await _capture_chance_frame(1.0, "catch_low")
+	await _capture_chance_frame(0.05, "catch_high")
+
+
+func _capture_chance_frame(hp_fraction: float, frame_name: String) -> void:
+	if not bool(_manager.call("is_fighting")):
+		_failures.append("%s: fight already over" % frame_name)
+		return
+	_top_up()
+	var foe: RefCounted = _manager.call("enemy")
+	foe.hp = clampf(foe.max_hp * hp_fraction, 1.0, foe.max_hp)
+	if not await _open_aim():
+		_failures.append("%s: could not open aim" % frame_name)
+		return
+	# Let the aim camera glide in and the reticle catch up before shooting.
+	for i in 15:
+		await physics_frame
+	_aim_at_the_target()
+	for i in 6:
+		await physics_frame
+	await _capture(frame_name)
+	# Cancel rather than release: this throw was never meant to fly.
+	await _press("combat_run")
+	for i in 20:
+		await physics_frame
 
 
 ## --- plumbing, same shapes as capture_combat_actions.gd ---------------------

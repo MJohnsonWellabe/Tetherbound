@@ -26,6 +26,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## most of all) picks up its brass focus ring and button states for free,
 ## on top of the `UITokens.BUILD_*` colours this file reaches for directly.
 const BUILD_THEME := preload("res://assets/ui/theme/build_theme.tres")
+const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
 ## Order the tab row draws in when present — `docs/decisions/D34`. A category
 ## with zero buildables in it (SURVIVAL/FARMING/TETHER stay unbuilt per that
@@ -71,6 +72,8 @@ var _catalogue_by_category: Dictionary = {}
 var _selected_index := 0
 var _open := false
 var _mouse_before: int = Input.MOUSE_MODE_VISIBLE
+## Same focus-owner watch `game_menu.gd` uses for its own `ui_focus` tick.
+var _last_focus_owner: Control = null
 
 
 func _ready() -> void:
@@ -105,9 +108,15 @@ func open() -> void:
 		_describe(-1)
 
 
-func close() -> void:
+## `play_cue` is false only from `_pick`'s own close-after-select: that
+## moment already played `ui_accept`/`ui_error` for the pick itself, and
+## stacking `ui_cancel` on top would read as "picking a piece also cancelled
+## something" rather than the single confirm it actually is.
+func close(play_cue: bool = true) -> void:
 	if not _open:
 		return
+	if play_cue:
+		AUDIO_CUES.play(&"ui_cancel")
 	_open = false
 	visible = false
 	Input.mouse_mode = _mouse_before
@@ -129,6 +138,16 @@ func _process(_delta: float) -> void:
 		_select_category(_category_index + 1)
 	elif Input.is_action_just_pressed("build_rotate_left"):
 		_select_category(_category_index - 1)
+
+	# Focus tick (spec 20): same "only on a real change" watch as
+	# `game_menu.gd`, covering both stick-driven grid focus and category
+	# switches without a second wiring path.
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if focus_owner != _last_focus_owner:
+		_last_focus_owner = focus_owner
+		if focus_owner != null:
+			AUDIO_CUES.play(&"ui_focus")
+
 	# Cheap (at most a handful of cost rows) and keeps owned/required numbers
 	# live if the player gathers or crafts while the menu sits open over a
 	# still-running world.
@@ -296,7 +315,13 @@ func _build_tabs() -> void:
 func _select_category(index: int) -> void:
 	if _categories.is_empty():
 		return
-	_category_index = posmod(index, _categories.size())
+	var wanted := posmod(index, _categories.size())
+	# Only a real switch counts (spec 20's "on category switch") -- `open()`
+	# calls this with the already-current index to redraw the remembered
+	# category, and that redraw is not a player-driven switch.
+	if wanted != _category_index:
+		AUDIO_CUES.play(&"ui_tab")
+	_category_index = wanted
 	for i in _tab_buttons.size():
 		_tab_buttons[i].button_pressed = i == _category_index
 		_tab_underlines[i].visible = i == _category_index
@@ -434,9 +459,19 @@ func _pick(index: int) -> void:
 		return
 	var piece: Dictionary = pieces[index]
 	var id := str(piece.get("id", ""))
+	var game := _game()
+
+	# ui_error on an unaffordable pick (spec 20) -- same free-build exemption
+	# `_describe` already reads, and NOT a block: `build_placer.gd`'s own
+	# `_can_afford` gate is what actually refuses placement, unchanged here.
+	var free := game != null and bool(game.get("free_build"))
+	if not free and game != null and not bool(game.call("can_afford", id)):
+		AUDIO_CUES.play(&"ui_error")
+	else:
+		AUDIO_CUES.play(&"ui_accept")
+
 	if not _categories.is_empty():
 		_last_piece_per_category[_categories[_category_index]] = id
-	var game := _game()
 	if game != null:
 		game.set("pending_build", id)
-	close()
+	close(false)

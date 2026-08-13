@@ -24,6 +24,7 @@ const CONFIG_PATH := "res://data/config/menu.json"
 ## resource (`scenes/ui/menu_theme.tres`) is left in place, unreferenced.
 const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
+const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
 ## How long a status line stays up. Long enough to read on a handheld held at
 ## arm's length, short enough that it is gone before the next one arrives.
@@ -75,6 +76,11 @@ var _panic_left: float = PANIC_SECONDS
 ## The fight, found by capability rather than by path so this file holds no
 ## knowledge of another agent's scene layout. Re-found when it goes away.
 var _combat: Node = null
+
+## Last focus owner seen while the menu was open, per `AudioCues` wiring
+## below -- lets `_process` play `ui_focus` only on a real change, never once
+## per frame while the stick sits still on one button.
+var _last_focus_owner: Control = null
 
 @onready var _root: Control = $Root
 @onready var _tab_row: HBoxContainer = $Root/Frame/Panel/Body/Tabs
@@ -263,6 +269,8 @@ func open(tab_id: String = "") -> bool:
 	# Force a rebuild: state may have moved while the menu was shut.
 	_last_revision = -1
 
+	AUDIO_CUES.play(&"ui_accept")
+
 	var target := _index
 	if not tab_id.is_empty():
 		for i in _tabs.size():
@@ -276,6 +284,7 @@ func open(tab_id: String = "") -> bool:
 func close() -> void:
 	if not _open:
 		return
+	AUDIO_CUES.play(&"ui_cancel")
 	_open = false
 	_root.visible = false
 	# A tab holding the shell deaf cannot un-hold it once it stops being polled.
@@ -314,9 +323,14 @@ func select(index: int) -> void:
 		focus_target.grab_focus()
 	else:
 		_tab_buttons[_index].grab_focus()
+	# Land here quietly: `_process`'s focus watch below compares against this
+	# so a tab switch's own focus jump doesn't ALSO fire a redundant ui_focus
+	# tick on top of the ui_tab cue `next_tab`/the shortcut jump already play.
+	_last_focus_owner = get_viewport().gui_get_focus_owner()
 
 
 func next_tab() -> void:
+	AUDIO_CUES.play(&"ui_tab")
 	select(_index + 1)
 
 
@@ -331,6 +345,7 @@ func say(message: String) -> void:
 ## this, the menu button just does nothing and looks broken rather than rules-
 ## respecting. See `open()`'s own comment on why the menu yields here at all.
 func _flash_refusal() -> void:
+	AUDIO_CUES.play(&"ui_error")
 	_refusal_label.text = "Can't open the menu during a fight"
 	_refusal_label.visible = true
 	_refusal_left = STATUS_SECONDS
@@ -355,6 +370,16 @@ func _process(delta: float) -> void:
 		_status_left -= delta
 		if _status_left <= 0.0:
 			_status.text = ""
+
+	# Focus tick (spec 20): a stick nudge across the grid plays a sound only
+	# when the FOCUSED CONTROL actually changed, read off the viewport rather
+	# than any signal of ours -- one watch here covers every tab body without
+	# each one wiring its own `focus_entered` wave.
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if focus_owner != _last_focus_owner:
+		_last_focus_owner = focus_owner
+		if focus_owner != null:
+			AUDIO_CUES.play(&"ui_focus")
 
 	_day.text = "Day %d" % int(game.get("day")) if game != null else ""
 	_refresh()
@@ -472,6 +497,7 @@ func _read_actions() -> void:
 			var wanted := str(_shortcuts()[action])
 			for i in _tabs.size():
 				if str((_tabs[i] as Dictionary).get("id", "")) == wanted:
+					AUDIO_CUES.play(&"ui_tab")
 					select(i)
 					break
 			return

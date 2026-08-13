@@ -36,6 +36,16 @@ extends CanvasLayer
 const FADE_ALPHA := 0.55
 const FADE_SPEED := 2.2
 
+## The exploration HUD's own fade while a combat throw is being aimed (spec
+## §10.1) — the reticle over the wild pal is the thing to look at, and this
+## HUD's own bars/hotbar/minimap are not part of that decision. Distinct
+## from `FADE_ALPHA` above (that one is the per-widget idle fade for a
+## calm-but-present bar); this one dims the whole `Root` at once, the same
+## way `combat_hud.gd` dims its own enemy plate and move grid for the same
+## reason.
+const AIM_FADE_ALPHA := 0.35
+const AIM_FADE_SPEED := 4.0
+
 const READOUT_INTERVAL := 0.1
 
 ## F3 cycles OFF -> PERF -> FULL rather than toggling.
@@ -787,6 +797,7 @@ func _process(delta: float) -> void:
 	_update_objective()
 	_ensure_minimap_baked()
 	_update_minimap()
+	_update_aim_fade(delta)
 
 	if _player == null:
 		return
@@ -935,6 +946,19 @@ func _combat_is_running() -> bool:
 	return combat != null and combat.has_method("is_fighting") and bool(combat.call("is_fighting"))
 
 
+## Same defensive lookup, one method further: is that fight currently AIMING
+## a throw. Split from `_combat_is_running()` rather than folded into it —
+## the aim fade (spec §10.1) only wants the narrower condition, and every
+## other `_combat_is_running()` call site (the hotbar gate) has no reason to
+## also ask about aiming.
+func _combat_is_aiming() -> bool:
+	var world := get_tree().get_current_scene()
+	if world == null:
+		return false
+	var combat := world.get_node_or_null(^"CombatManager")
+	return combat != null and combat.has_method("is_aiming") and bool(combat.call("is_aiming"))
+
+
 func _use_hotbar_slot(index: int) -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var db: RefCounted = _game.get("items")
@@ -995,6 +1019,15 @@ func _fade_toward(control: Control, target: float, delta: float) -> void:
 	var current: float = control.modulate.a
 	var next: float = move_toward(current, target, FADE_SPEED * delta)
 	control.modulate.a = next
+
+
+## Fades this whole HUD toward `AIM_FADE_ALPHA` while a throw is being
+## aimed, and back to fully opaque the moment it is not — `_root`, not any
+## one block, so the pal block/vitals/hotbar/minimap dim together rather
+## than each needing their own aim check layered onto their own idle-fade.
+func _update_aim_fade(delta: float) -> void:
+	var target := AIM_FADE_ALPHA if _combat_is_aiming() else 1.0
+	_root.modulate.a = move_toward(_root.modulate.a, target, AIM_FADE_SPEED * delta)
 
 
 func _debug_text() -> String:

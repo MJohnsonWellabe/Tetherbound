@@ -493,6 +493,15 @@ func _draw_grid() -> void:
 	var aiming: bool = bool(_manager.call("is_aiming"))
 	var has_message: bool = _miss_left > 0.0
 
+	# The orb cluster and the enemy/grid dim (spec §10.1/§10.4) only ever
+	# apply to the AIMING branch below; every other branch clears them, same
+	# discipline `_show_fight` already uses for the fully-not-fighting case.
+	if not aiming:
+		if _orb_cluster != null:
+			_orb_cluster.visible = false
+		_enemy_panel.modulate.a = 1.0
+		_grid_panel.modulate.a = 1.0
+
 	_catch_row.visible = resolving
 	if resolving:
 		_grid_panel.visible = false
@@ -509,9 +518,14 @@ func _draw_grid() -> void:
 	if aiming:
 		_grid_panel.visible = false
 		_aim_row.visible = true
-		_aim_row.text = "[center]%s     %s     %s[/center]" % [
-			_verb("throw", "Throw"), _verb("cancel", "Cancel"), _odds_readout()
-		]
+		# Just the two verbs now — the percentage itself lives on the capture
+		# reticle floating over the enemy (D31), not worded out a second time
+		# down here.
+		_aim_row.text = "[center]%s     %s[/center]" % [_verb("throw", "Throw"), _verb("cancel", "Cancel")]
+		_orbs.visible = false
+		_draw_orb_cluster(orbs)
+		_enemy_panel.modulate.a = 0.35
+		_grid_panel.modulate.a = 0.35
 		return
 
 	_aim_row.visible = false
@@ -628,15 +642,66 @@ func _verb(glyph_id: String, label: String) -> String:
 	]
 
 
-## What a clean hit would be worth right now, from the same arithmetic the
-## throw will use. Unchanged from the pre-rebuild HUD (task brief: keep this
-## function, a later milestone replaces the odds readout itself).
-func _odds_readout() -> String:
+## Icon, item name, count and the throw/cancel glyphs, replacing the plain
+## "Orbs N" label for the length of the aim (spec §10.4). The item's display
+## name is read off `Game.items` rather than hard-coded, so a renamed item
+## cannot leave this cluster calling it something else than the satchel does.
+func _draw_orb_cluster(orbs: int) -> void:
+	if _orb_cluster == null:
+		return
+	_orb_cluster.visible = true
+	var item_name := "Tether Orb"
+	var game := get_node_or_null(^"/root/Game")
+	if game != null:
+		var db: RefCounted = game.get("items")
+		if db != null:
+			item_name = str(db.call("item_name", ORB_ITEM_ID))
+	_orb_cluster.text = "[right][img=24x24]%s[/img]  %s  x%d\n%s %s     %s %s[/right]" % [
+		ORB_ICON_PATH, item_name, orbs,
+		INPUT_GLYPH.icon("throw", 26, VERB_READY), "Throw",
+		INPUT_GLYPH.icon("cancel", 26, VERB_READY), "Cancel",
+	]
+
+
+## What the reticle needs this frame: the enemy's screen position and the
+## chance a clean hit would resolve at right now. The enemy BODY is reached
+## by reflection (`_manager.get("_wild")`) rather than a new accessor —
+## `combat_manager.gd` is out of scope for this task, and `_party_entries()`
+## above already reads a different underscore-prefixed field the identical
+## way, for the identical reason. `target_marker.gd`'s own `centre()`/
+## `body_radius()` calls on this same node are the precedent for treating it
+## as the enemy's world anchor.
+func _update_capture_reticle() -> void:
+	if _capture_reticle == null or _manager == null:
+		return
+
+	var resolving_now: bool = bool(_manager.call("is_resolving_catch"))
+	if resolving_now and not _was_resolving_catch:
+		_capture_reticle.call("play_contract", _last_reticle_screen_pos)
+	_was_resolving_catch = resolving_now
+
+	if not bool(_manager.call("is_aiming")):
+		_capture_reticle.call("update_target", Vector2.ZERO, 0.0, false)
+		return
+
 	var chance := float(_manager.call("catch_chance_now"))
-	for tier in ODDS_TIERS:
-		if chance >= float(tier[0]):
-			return "[color=#%s]%s[/color]" % [str(tier[2]), str(tier[1])]
-	return ""
+	var wild: Variant = _manager.get("_wild")
+	var camera: Camera3D = get_viewport().get_camera_3d()
+	if not (wild is Node3D) or not is_instance_valid(wild) or camera == null \
+			or not (wild as Node3D).has_method("centre"):
+		_capture_reticle.call("update_target", Vector2.ZERO, chance, false)
+		return
+
+	var world_pos: Vector3 = (wild as Node3D).call("centre")
+	var to_target: Vector3 = world_pos - camera.global_position
+	if to_target.dot(-camera.global_transform.basis.z) <= 0.0:
+		# Behind the camera — unproject_position() would return nonsense.
+		_capture_reticle.call("update_target", Vector2.ZERO, chance, false)
+		return
+
+	var screen_pos: Vector2 = camera.unproject_position(world_pos)
+	_last_reticle_screen_pos = screen_pos
+	_capture_reticle.call("update_target", screen_pos, chance, true)
 
 
 ## --- switching input (D32, spec §9.4) ---------------------------------------
@@ -901,7 +966,16 @@ func _on_catch_refused(reason: String) -> void:
 	_miss_left = 1.6
 
 
+## The pulse half of a shake — the number itself is unreadable text at this
+## distance, but a ring expanding at the exact moment the orb rocks is not.
+func _on_orb_shook(_index: int) -> void:
+	if _capture_reticle != null:
+		_capture_reticle.call("play_pulse")
+
+
 func _on_catch_resolved(success: bool, shakes: int) -> void:
+	if _capture_reticle != null:
+		_capture_reticle.call("play_success" if success else "play_break")
 	if success:
 		var foe: RefCounted = _manager.call("enemy")
 		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
