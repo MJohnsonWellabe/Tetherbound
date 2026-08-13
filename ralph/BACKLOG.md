@@ -96,6 +96,8 @@ when a blind pass no longer calls the perimeter discontinuous or low-quality.
 
 **`OF13` (hide the stronghold, move it farther from the village) shipped — see `DONE.md`.**
 
+**`BG1` (real grid/rotate/snap building placement, `D28`'s first `OF4-rebuild` prerequisite) shipped — see `DONE.md`.** Serves both the player's own base (M8) and the coming `OF4-rebuild`; `BG2` (real castle-parts assets) is still open, tracked separately, someone else's lane.
+
 ### OF10 — The road up to the stronghold is unwalkable, and the hill/slope doesn't look good
 `area: terrain` · `model: fable` (likely — the existing hillside-quality
 work is already Fable-adjacent visual-direction territory, see `OF11`).

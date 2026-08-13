@@ -206,3 +206,9 @@ menu_cancel={
 , Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
 ]
 }
+build_rotate={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":84,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+]
+}

@@ -3,6 +3,106 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## BG1 — A real grid/rotate/snap building placement system, replacing the one-piece-no-rotation ghost
+
+`scripts/build/build_grid.gd` (new), `scripts/build/build_placer.gd`,
+`autoload/game_state.gd`, `project.godot`, `data/config/menu.json`,
+`scripts/ui/tab_build.gd`. `model: sonnet` — mechanical systems/UI work, no
+new models or materials, so `ralph/conventions.md`'s blind-critique rule
+does not apply.
+
+`docs/decisions/D28` named this the first of two prerequisites for
+rebuilding `OF4` as a real assembled castle (`BG2`, sourcing real
+castle-parts assets, is the other — separate lane, not touched here).
+Before this, `build_placer.gd` ghost-placed exactly one piece 3m ahead of
+the player with no rotation and no snapping (`tab_build.gd`'s own header
+comment said so); `building_prefabs.json`'s `{module, at, yaw_deg}` recipes
+were the only precedent for "modular pieces on a grid" in the codebase, and
+that format is author-time JSON, not a runtime player system.
+
+**What shipped:**
+
+- **Grid**: `build_grid.gd::snap_to_grid` rounds a raw placement onto a 2m
+  world-space X/Z grid — the same module size `building_prefabs.json`'s own
+  header already establishes for the Medieval Village kit ("walls 2.0w x
+  3.12h, measured"), so a player-placed piece and an author-placed
+  settlement piece land on the same lines. Grid lines run through the world
+  origin, so any two independently grid-snapped pieces are automatically
+  flush with no neighbour bookkeeping needed.
+- **Rotation**: a new `build_rotate` input action (keyboard `T`, gamepad
+  D-pad down — both previously unbound; audited every existing
+  `project.godot` binding and `data/config/menu.json` glyph before picking
+  them) steps the armed ghost through 4 orientations, 90 degrees each.
+  Listed in a new "Building" controls group so it is rebindable and shows up
+  in `tests/test_controls.gd`'s "every rebindable action is on screen"
+  sweep for free. Rotation resets to 0 whenever a new ghost is created
+  (switching pieces in the Build tab, or re-arming after a placement) —
+  deliberately simple and predictable over persisting rotation across
+  separate arm/place cycles.
+- **Neighbour snap**: `build_grid.gd::resolve_position` — when an
+  already-placed piece of the SAME catalogue id (`wall`-to-`wall`,
+  `floor`-to-`floor`, tracked via `set_meta("building_id", id)` on each
+  placed node) sits within 2.6m, the new piece locks flush against it: a
+  whole number of grid cells from the neighbour's own position, AND the
+  neighbour's own ground-clamped height, so a wall run stays flush over
+  undulating terrain instead of stair-stepping to whatever raw terrain
+  happens to sit under each new piece. Landing exactly on the neighbour's
+  own cell (aiming almost dead-on) is pushed out one cell along whichever
+  axis was actually approached, rather than returning full overlap.
+- **Legality**: the existing green/red ghost tint now also fails on an
+  exact-same-cell occupancy check (same id, same grid cell) — the slope
+  check is skipped when snapped to a neighbour, since the neighbour's own
+  ground-clamped height already answers the "is this flat enough" question
+  and re-checking raw terrain under it would reject the very thing snapping
+  exists for.
+- **One piece at a time**, arm-place-rearm, same as before — no multi-select
+  drag rectangle. The smallest version that satisfies real castle
+  construction: place, rotate if needed, plant, repeat.
+- **Save/load**: `GameState.register_building(id, position, yaw_deg = 0.0)`
+  — an added optional parameter, not a version bump. `save_game.gd` treats
+  `placed_buildings` entries opaquely (a `Dictionary` it round-trips
+  as-is), so an old save with no `yaw_deg` key loads exactly as before
+  (`build_placer.gd::restore_from_game` defaults a missing key to `0.0`) —
+  the "carry on, do not brick the player" rule `D15` set for the settings
+  file, now proven for saves too (`test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry`).
+
+**Design calls made, and why they didn't need to go to `BLOCKED.md`:** which
+axis (position) snap radius, grid size, and rotation step to use were all
+CLAUDE.md "Tunable Values" — chosen, documented as tunable in
+`build_grid.gd`'s own header, and derived from an existing number
+(`building_prefabs.json`'s 2m grid) rather than invented from nothing.
+Nothing here touches CLAUDE.md's "ask/flag instead of inventing" list —
+this is `D28`'s prerequisite system, already authorized, not a new design
+decision (dodge/block, party limit, storage, etc. are untouched).
+
+**Tests:** `tests/test_build_grid.gd` (new, 12 tests) — pure logic for
+grid snap, rotation stepping, and neighbour snap, including the
+land-on-a-neighbour's-own-cell edge case. `tests/test_register_building.gd`
+(new, 4 tests) — the `yaw_deg` accessor contract in isolation.
+`tests/test_save_format.gd` — 2 new tests, rotation round-trip and the
+older-save-with-no-yaw-deg compatibility case. `tests/smoke_free_build.gd`
+extended with `_check_bg1_grid_rotation_and_snap`: rotates a real ghost 180
+degrees through two `build_rotate` presses, plants it, computes a second
+placement's aim point directly from the first piece's own reported
+position (not a hand-guessed world coordinate) so it lands within snap
+range but off-grid, and confirms the second piece snaps exactly one grid
+cell away at the same height, spends real inventory, and both rotations
+land correctly in `GameState.placed_buildings`.
+
+Verified: `godot --headless --path . --import` clean (no script errors).
+Full suite (`tests/run_tests.gd`, required — this touches an autoload and
+the save format): **412 tests, 89376 assertions, 0 failed** (up from the
+pre-change baseline of 394/0 failed; the 403 this repo's setup notes
+expected was already stale before this task started — confirmed by
+running the identical suite against `HEAD` with this branch's changes
+stashed, also 394/0 failed). `tests/smoke_free_build.gd`: exit 0, full log
+including the new BG1 checks —
+"wall #1 planted rotated 180 degrees, as pressed",
+"wall #2 snapped flush against wall #1, 2.0m away, same height",
+"GameState.placed_buildings recorded both walls' rotation: [180.0, 0.0]".
+No other `smoke_*.gd` file matches `grep -rl "build" tests/smoke_*.gd`
+besides this one.
+
 ## OF6 — World boundary: the hard collision stop now matches the visible perimeter
 `67cb050` on `claude/ralph-backlog-of6-7-10-11-dbiydq` (manual session
 shipping `OF6`/`OF7`/`OF10`/`OF11` together, owner request). `model: sonnet`

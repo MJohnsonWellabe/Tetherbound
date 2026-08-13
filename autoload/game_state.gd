@@ -153,8 +153,20 @@ func advance_day() -> int:
 ## Record a real placement. `build_placer.gd` calls this once, right after the
 ## piece is spent and planted — the registry, not the scene node, is what a
 ## save actually persists.
-func register_building(id: String, position: Vector3) -> void:
-	placed_buildings.append({"id": id, "position": [position.x, position.y, position.z]})
+##
+## `yaw_deg` defaults to 0 rather than being required: BG1 is the first
+## caller that ever has a non-zero orientation to record, and a save written
+## before BG1 shipped simply has no `yaw_deg` key on its old entries — see
+## `save_game.gd`'s own "carry on, do not brick the player" rule. No version
+## bump: this is a purely additive field with a safe default on the read
+## side (`build_placer.gd::restore_from_game`), not a change to what any
+## existing field means.
+func register_building(id: String, position: Vector3, yaw_deg: float = 0.0) -> void:
+	placed_buildings.append({
+		"id": id,
+		"position": [position.x, position.y, position.z],
+		"yaw_deg": yaw_deg,
+	})
 
 
 ## Write `slot`. Returns whether it succeeded.

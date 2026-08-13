@@ -77,6 +77,10 @@
           "actions": ["interact", "inventory", "map", "tool_cycle", "pal_recall"]
         },
         {
+          "name": "Building",
+          "actions": ["build_rotate"]
+        },
+        {
           "name": "Fighting",
           "actions": [
             "combat_quick", "combat_charged", "combat_throw", "combat_run",
@@ -105,6 +109,7 @@
         "map": "Map",
         "tool_cycle": "Next tool  /  next tab",
         "pal_recall": "Call out  /  put away your pal",
+        "build_rotate": "Rotate the build ghost",
         "combat_quick": "Quick attack",
         "combat_charged": "Charged attack",
         "combat_throw": "Throw an orb",
