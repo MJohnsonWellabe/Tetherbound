@@ -78,7 +78,7 @@ func test_every_move_has_a_display_name() -> void:
 
 func test_every_move_has_a_valid_slot() -> void:
 	for id: Variant in moves.move_ids():
-		var slot := moves.slot(str(id))
+		var slot: String = moves.slot(str(id))
 		assert_true(slot == "quick" or slot == "charged",
 			"move '%s' has an unrecognised slot '%s'" % [id, slot])
 
@@ -97,7 +97,7 @@ func test_every_move_type_is_from_the_known_vocabulary() -> void:
 
 func test_quick_moves_declare_energy_gain() -> void:
 	for id: Variant in moves.move_ids():
-		var definition := moves.move(str(id))
+		var definition: Dictionary = moves.move(str(id))
 		if str(definition.get("slot", "")) == "quick":
 			assert_true(definition.has("energy_gain"),
 				"quick move '%s' has no energy_gain" % id)
@@ -105,7 +105,7 @@ func test_quick_moves_declare_energy_gain() -> void:
 
 func test_charged_moves_declare_energy_cost() -> void:
 	for id: Variant in moves.move_ids():
-		var definition := moves.move(str(id))
+		var definition: Dictionary = moves.move(str(id))
 		if str(definition.get("slot", "")) == "charged":
 			assert_true(definition.has("energy_cost"),
 				"charged move '%s' has no energy_cost" % id)

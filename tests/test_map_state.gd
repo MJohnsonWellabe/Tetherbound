@@ -53,8 +53,8 @@ func test_fresh_state_has_nothing_discovered() -> void:
 func test_mark_visited_reveals_a_plausible_area_and_returns_true() -> void:
 	# A point far from every landmark, so this test is only about the fog.
 	var point := Vector3(100.0, 0.0, 100.0)
-	var before := map.revision
-	var changed := map.mark_visited(point)
+	var before: int = map.revision
+	var changed: bool = map.mark_visited(point)
 
 	assert_true(changed, "the first visit to fresh ground must report a change")
 	assert_true(map.revision > before, "a real reveal must bump revision")
@@ -70,9 +70,9 @@ func test_mark_visited_reveals_a_plausible_area_and_returns_true() -> void:
 func test_repeating_mark_visited_at_the_same_spot_changes_nothing() -> void:
 	var point := Vector3(100.0, 0.0, 100.0)
 	map.mark_visited(point)
-	var after_first := map.revision
+	var after_first: int = map.revision
 
-	var changed_again := map.mark_visited(point)
+	var changed_again: bool = map.mark_visited(point)
 	assert_false(changed_again, "revisiting already-fogged-clear ground must report no change")
 	assert_eq(map.revision, after_first, "a no-op visit must not bump revision")
 
@@ -97,15 +97,15 @@ func test_is_discovered_is_safe_out_of_bounds() -> void:
 # --- revision ------------------------------------------------------------
 
 func test_revision_bumps_exactly_on_real_change_and_not_on_repeats() -> void:
-	var r0 := map.revision
+	var r0: int = map.revision
 	map.mark_visited(Vector3(100.0, 0.0, 100.0))
-	var r1 := map.revision
+	var r1: int = map.revision
 	map.mark_visited(Vector3(100.0, 0.0, 100.0))
-	var r2 := map.revision
+	var r2: int = map.revision
 	map.discover_landmark("village")
-	var r3 := map.revision
+	var r3: int = map.revision
 	map.discover_landmark("village")
-	var r4 := map.revision
+	var r4: int = map.revision
 
 	assert_true(r1 > r0, "a real fog reveal must bump revision")
 	assert_eq(r2, r1, "a repeated identical visit must not bump revision")
@@ -151,7 +151,7 @@ func test_dynamic_markers_add_replace_and_remove() -> void:
 	assert_eq(map.objective_marker(), {})
 
 	map.add_dynamic_marker("objective", "flag", Vector3(5.0, 0.0, 6.0))
-	var obj := map.objective_marker()
+	var obj: Dictionary = map.objective_marker()
 	assert_eq(str(obj.get("id")), "objective")
 	assert_eq(obj.get("icon"), "flag")
 	assert_eq(obj.get("position"), Vector2(5.0, 6.0))
@@ -159,7 +159,7 @@ func test_dynamic_markers_add_replace_and_remove() -> void:
 
 	# Same id replaces rather than stacking a second marker.
 	map.add_dynamic_marker("objective", "flag2", Vector3(9.0, 0.0, -3.0))
-	var replaced := map.objective_marker()
+	var replaced: Dictionary = map.objective_marker()
 	assert_eq(replaced.get("icon"), "flag2")
 	assert_eq(replaced.get("position"), Vector2(9.0, -3.0))
 
@@ -174,7 +174,7 @@ func test_dynamic_markers_add_replace_and_remove() -> void:
 
 
 func test_removing_a_marker_that_does_not_exist_is_a_safe_no_op() -> void:
-	var before := map.revision
+	var before: int = map.revision
 	map.remove_dynamic_marker("nothing_here")
 	assert_eq(map.revision, before)
 
@@ -187,7 +187,7 @@ func test_save_and_load_round_trips_fog_landmarks_and_markers() -> void:
 	map.add_dynamic_marker("objective", "flag", Vector3(5.0, 0.0, 6.0))
 	map.add_dynamic_marker("camp_1", "camp", Vector3(-40.0, 0.0, 12.0))
 
-	var data := map.save_data()
+	var data: Dictionary = map.save_data()
 
 	var loaded: RefCounted = MAP_STATE.new()
 	loaded.configure(_config())
@@ -198,9 +198,10 @@ func test_save_and_load_round_trips_fog_landmarks_and_markers() -> void:
 	assert_true(loaded.is_landmark_discovered("village"))
 	assert_false(loaded.is_landmark_discovered("stronghold"))
 
-	var obj := loaded.objective_marker()
+	var obj: Dictionary = loaded.objective_marker()
 	assert_eq(obj.get("position"), Vector2(5.0, 6.0))
-	var camp := loaded.landmarks().filter(func(e: Dictionary) -> bool: return str(e.get("id")) == "camp_1")
+	var all_landmarks: Array = loaded.landmarks()
+	var camp := all_landmarks.filter(func(e: Dictionary) -> bool: return str(e.get("id")) == "camp_1")
 	assert_eq(camp.size(), 1)
 
 
@@ -220,13 +221,13 @@ func test_load_data_with_an_empty_dictionary_is_a_working_fresh_state() -> void:
 
 func test_a_corrupted_visited_grid_is_discarded_without_crashing() -> void:
 	map.mark_visited(Vector3(100.0, 0.0, 100.0))
-	var data := map.save_data()
+	var data: Dictionary = map.save_data()
 	# Wrong length -- three bytes instead of GRID*GRID.
 	data["visited_b64"] = Marshalls.raw_to_base64(PackedByteArray([1, 2, 3]))
 
 	map.load_data(data)
 
-	assert_almost_eq(map.discovered_fraction(), 0.0,
+	assert_almost_eq(map.discovered_fraction(), 0.0, 0.0001,
 		"a corrupt grid must fall back to a fresh, fully-hidden one, not a partial read")
 	assert_false(map.is_discovered(Vector3(100.0, 0.0, 100.0)))
 	# The grid must still be USABLE, not merely empty.
@@ -243,7 +244,7 @@ func test_reveal_circle_reveals_fog_but_never_discovers_landmarks() -> void:
 
 
 func test_reveal_all_reveals_the_whole_grid_once() -> void:
-	var before := map.revision
+	var before: int = map.revision
 	map.reveal_all()
 
 	assert_almost_eq(map.discovered_fraction(), 1.0)
@@ -251,6 +252,6 @@ func test_reveal_all_reveals_the_whole_grid_once() -> void:
 	assert_true(map.is_discovered(Vector3(-250.0, 0.0, -250.0)))
 	assert_true(map.is_discovered(Vector3(250.0, 0.0, 250.0)))
 
-	var after := map.revision
+	var after: int = map.revision
 	map.reveal_all()
 	assert_eq(map.revision, after, "revealing an already-full grid must not bump again")
