@@ -2487,10 +2487,18 @@ Phase 1 onward rather than at the end.
   already exists (`tab_backpack.gd::_read_use()`) and already heals from
   `heal`-tagged items — `potion_small` (`heal: 35`) is usable today. The real
   remaining gaps are narrower: `berries` carries no `heal` value (`R7.5`
-  owns giving it one), the verb has no equip/drop/split siblings (still
-  genuinely missing, small, `model: sonnet` if anyone wants it), and using
-  any of it required the full backpack menu with no quick path — **fixed by
-  `HD2`, see `DONE.md`.**
+  owns giving it one), and using any of it required the full backpack menu
+  with no quick path — **fixed by `HD2`, see `DONE.md`.**
+  **Drop and split shipped 2026-08-13** — see `DONE.md`
+  (`backpack-drop-split`). **Equip did not**, and is not simply undone work:
+  no item in `items.json` is tagged equippable, and GAME_DESIGN.md's two
+  "Equip" concepts are both unbuilt systems of their own — §13's move
+  loadout (2 Quick/2 Charged known, 1/1 equipped, per-pal) and §18's trainer
+  armor slots (Helmet/Upper body/Lower body/Boots/Backpack). Wiring a
+  backpack verb to either means inventing which one first and then adding
+  real equipment slots to hang it on — CLAUDE.md's "changing type system" /
+  "adding storage" flag, not a verb-on-existing-stack-data task like drop and
+  split were. Left for the owner to pick a direction rather than invented.
 - **`menu.json`'s stray `test_menu_config.gd` references and phantom
   `hotbar_columns` comment fixed — see `DONE.md`.**
 - ~~Opening the menu mid-fight is silently refused with no on-screen

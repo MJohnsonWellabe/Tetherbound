@@ -3,6 +3,71 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## backpack-drop-split — Drop and split verbs added to the satchel; equip scoped out, not invented
+`autoload/inventory.gd`, `scripts/ui/tab_backpack.gd`, `project.godot`,
+`data/config/menu.json`, `tests/test_inventory.gd`, `tests/smoke_menu.gd`.
+`model: sonnet`.
+
+`Found along the way` (`BACKLOG.md`): the backpack's use verb
+(`tab_backpack.gd::_read_use()`) was already real (a stale prior entry had
+already been corrected on this); the genuinely missing pieces were
+equip/drop/split.
+
+**Drop** (new `backpack_drop` action — G / RB) opens a confirm panel — same
+`menu.hold_input`/`override_footer` pattern Use's target picker already
+uses, its own two fixed rows ("Drop it"/"Cancel") built once the way the
+five pal rows are — and on confirm calls the new
+`inventory.gd::drop_slot()`, which deletes the stack for good.
+`drop_slot()`'s own comment says why that is a real delete and not a stash:
+there is no ground-item entity in the game for a dropped stack to become
+yet. That is the honest scope of the verb until one exists, not a masked
+gap.
+
+**Split** (new `backpack_split` action — H / right-stick click) halves the
+focused stack (`n / 2`, floored) into the first empty slot, via the new
+`inventory.gd::split_slot(from, to, amount)` (merges into a same-item
+target, refuses a different-item target, refuses splitting the whole stack
+or nothing, refuses on an unstackable item). Non-destructive — both halves
+stay in the satchel — and needs no destination choice, so unlike Use/Drop
+it applies on the same press with no picker.
+
+Both new input actions needed real entries in `project.godot` (keyboard AND
+gamepad — `test_controls.gd::test_every_action_has_both_a_keyboard_and_a_
+gamepad_binding` requires both) and a new "Backpack" group in `menu.json`'s
+controls screen, or `test_every_rebindable_action_is_on_the_screen` fails on
+any action the input map has that the settings screen doesn't list — adding
+an action there is not free. RB and the right-stick click were genuinely
+free: RB physically doubles as `combat_throw`, but D14 already makes the
+pause menu and a fight mutually exclusive, so the two meanings never
+actually compete (same shape as A already being jump/`combat_quick`/
+`menu_confirm` at once, which `test_controls.gd` treats as expected, not a
+bug).
+
+**Equip did not ship**, and this is not leftover work — it needed a design
+decision this task doesn't own. No item in `items.json` is tagged
+equippable, and GAME_DESIGN.md names two different, both-unbuilt "Equip"
+concepts: §13's per-pal move loadout (2 Quick/2 Charged known, 1/1
+equipped) and §18's trainer armor slots (Helmet/Upper body/Lower
+body/Boots/Backpack). Either is a real equipment-slot system to invent
+before a backpack verb has anywhere to attach to — CLAUDE.md's "changing
+type system"/"adding storage" flag, not the scope of a verb on the
+EXISTING stack model. Left open in `BACKLOG.md` for the owner to pick a
+direction, rather than guessed at.
+
+**Tests**: `tests/test_inventory.gd` — 12 new cases for `split_slot()`/
+`drop_slot()` (merge-into-matching-stack, refuse-different-item,
+refuse-whole-stack-or-nothing, refuse-unstackable, refuse-no-room,
+out-of-range/same-slot no-ops, empty-slot no-ops).
+`tests/smoke_menu.gd::_check_backpack_drop_and_split()` drives the real
+input path — focuses a slot, presses the real `backpack_drop`/
+`backpack_split` actions, reads the tab's own `_confirming`/`_confirm_rows`
+state — the same way the existing Use target-picker check proves the
+wiring and not just the model layer. Full suite (autoload change, so the
+full suite per conventions.md, not just the named tests):
+`406 tests, 70061 assertions, 0 failed`. `smoke_menu.gd` passed headless,
+including the new checks ("backpack_split halves a stack...", "backpack_drop
+removes the stack for good once confirmed").
+
 ## HD2 — A real quick-access item hotbar
 `model: sonnet` · `tests: none` (item's own field); ran the full suite anyway
 per `conventions.md` — 396/396 except one pre-existing, unrelated failure
