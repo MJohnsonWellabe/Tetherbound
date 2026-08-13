@@ -31,6 +31,36 @@ const PATIENCE_FRAMES := 900
 ## an undulating line does not time out a walk that is actually progressing.
 const WALK_FRAMES := 4000
 
+## `_walk_towards()`'s own unstick escape. Investigated 2026-08-13, re-opened
+## from `LP7`'s ~7% residual because CI and local batches were both seeing a
+## much higher rate (`BACKLOG.md`'s "smoke_aggression" item): an instrumented
+## repro (position/velocity logged every frame, `UNSTICK_AFTER_FRAMES`-style
+## detection) caught the walk toward Galecrest going dead — `velocity` pinned
+## to exactly `(0,0,0)` for 700+ consecutive frames while `move_forward`
+## stayed held, `closed_from` stuck around 40m, matching the CI failure
+## signature (44.1m/38.0m/45.1m) exactly.
+##
+## The stuck cause is NOT a scattered prop, which was the live hypothesis
+## going in (LP7's own fix target for the aggressor's chase). A direct
+## physics-shape query at the frozen position (same technique LP7's own
+## session used) found exactly one overlap: the `Terrain3D` node itself, not
+## any `CommonTree_*_Collision` StaticBody3D. `ground_height_at()` at and
+## around that position reads an ordinary ~5-11 degree grade, nowhere near
+## the 45 degree floor_max_angle — this is ordinary walkable meadow ground by
+## every measure this test can take, yet `CharacterBody3D.move_and_slide()`
+## reports `is_on_wall() == true` there and the trainer's horizontal velocity
+## locks to zero. A real human player would feel that in half a second and
+## nudge the stick sideways without thinking about it; this scripted walk has
+## no such adaptation — `Input.action_press("move_forward")` held dead
+## straight for up to `WALK_FRAMES` is a far more rigid input than any real
+## player produces, and rigidity is what turns an ordinary terrain snag into
+## a stuck test. `wild_pal.gd::_tick_aggression` already solves the identical
+## shape of problem (progress stalls, so steer off the direct line) for the
+## aggressor's own chase; this borrows the same numbers and escape pattern
+## rather than the walk continuing to have none.
+const UNSTICK_AFTER_FRAMES := 20
+const UNSTICK_STEER_RAD := 1.3
+
 var _failures: Array[String] = []
 var _world: Node = null
 var _player: CharacterBody3D = null
@@ -216,6 +246,8 @@ func _a_peaceful_pal_never_does() -> void:
 
 
 func _walk_towards(wild: Node3D, stop_at: float) -> void:
+	var stuck_frames := 0
+	var stuck_check_pos := _player.global_position
 	for i in WALK_FRAMES:
 		var to := wild.global_position - _player.global_position
 		to.y = 0.0
@@ -223,9 +255,28 @@ func _walk_towards(wild: Node3D, stop_at: float) -> void:
 			break
 		if bool(_manager.call("is_fighting")):
 			break
-		_rig.set("yaw", atan2(-to.x, -to.z))
+
+		var heading := to.normalized()
+		if stuck_frames > UNSTICK_AFTER_FRAMES:
+			# Wedged against ordinary world geometry with no progress for a
+			# while — see this file's own header comment on UNSTICK_AFTER_FRAMES
+			# for what that geometry actually was when this was diagnosed.
+			# Alternate sides every ~0.5s rather than committing to one escape
+			# angle, same reasoning as wild_pal.gd's own version: the first
+			# angle tried can run into more of the same obstacle.
+			var phase := int((stuck_frames - UNSTICK_AFTER_FRAMES) / 30.0) % 2
+			var side := 1.0 if phase == 0 else -1.0
+			heading = heading.rotated(Vector3.UP, side * UNSTICK_STEER_RAD)
+
+		_rig.set("yaw", atan2(-heading.x, -heading.z))
 		Input.action_press("move_forward")
 		await physics_frame
+
+		if _player.global_position.distance_to(stuck_check_pos) < 0.05:
+			stuck_frames += 1
+		else:
+			stuck_frames = 0
+		stuck_check_pos = _player.global_position
 	Input.action_release("move_forward")
 	for i in 10:
 		await physics_frame

@@ -2470,37 +2470,9 @@ Phase 1 onward rather than at the end.
 
 ## Found along the way — small, unscheduled
 
-### smoke_aggression — re-investigate for real; evidence says this may have regressed past LP7's fix
-`area: perf` · `tests: smoke_aggression` · promoted 2026-08-13 from
-"found along the way, unscheduled" to a real scheduled item — recommended
-to land before `R1.1`, since that rename's verification needs the full
-suite green across ~446 renamed occurrences, and a flake this shaped will
-make that unreliable to trust.
-
-Found on `ralph/R3.0`'s own CI run (unrelated change — a humanoid GLB
-pipeline fix touching only `assets/characters/*`), twice in a row on the
-same run's retry: `aggression FAIL: stood 44.1m from Galecrest for 900
-frames without pressing anything and it never attacked`, then `38.0m` on
-the automatic retry. Both failures report the player far from the 2–3m the
-test expects to be standing at when it checks, which is the same "reads
-player position before the fixture has actually settled there" shape
-`LP7`'s own `DONE.md` entry describes — so `LP7`'s fix likely narrowed the
-window rather than closed it. Reproduced locally, headless, in the same
-checkout immediately after: passed clean on the first try (`Galecrest
-started the fight on its own, from 9.6m`). **Confirmed again on `OF4`'s CI
-run (2026-08-12, unrelated change — `scripts/world/landmark.gd`/
-`tools/capture_wayfinding.gd` only), same signature twice on the automatic
-retry.** This time checked directly rather than assumed: reproduced
-locally 2/5 on `ralph/OF4` (identical message shape, `44.0m`/`45.1m`), then
-reproduced on a clean `origin/main` checkout with zero unrelated changes —
-1/2 runs failed (`44.2m`, same wording) before the comparison timed out.
-**This is the first direct confirmation the flake reproduces on unmodified
-`main` itself, at a rate well above `LP7`'s documented ~7% residual** (2/5
-and 1/2 are small samples, but both far exceed 7%). The rate looks like it
-may have regressed past what `LP7` closed, not just "still has a small
-residual," and whoever picks this up next should start from that, not
-from the 7% figure — the same kind of instrumented reproduction
-`LP7`/`LP2`/`SA2-flake` used, not a guess.
+**`smoke_aggression`'s post-`LP7` flake (the test harness's own player walk
+getting wedged against ordinary terrain, not a scattered prop) root-caused
+and fixed — see `DONE.md`.**
 
 - ~~`docs/ASSET_LEDGER.md` claims "everything currently in the build is
   CC0 1.0". False (Meshy creatures, Plumberry pack). Blocked on the owner

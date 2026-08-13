@@ -3,6 +3,77 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## LP7-remainder — `smoke_aggression`'s post-`LP7` flake, actually root-caused this time: the test harness's own player walk, not a scattered prop
+
+`tests: smoke_aggression` (also ran `run_tests` — 394 tests, 0 failed —
+`smoke_playground`, `smoke_traversal`). Re-opened from `BACKLOG.md`'s "Found
+along the way" item, itself re-opened past `LP7`'s documented ~7% residual
+because two independent CI runs (`R3.0`, `OF4`) and a clean local `main`
+checkout all reproduced the `closed_from` 44.1m/38.0m/44.2m/45.1m signature
+at rates well above 7%.
+
+**The incoming hypothesis was wrong, and the evidence says so directly.** The
+working theory going in was that the player's own straight-line walk in
+`smoke_aggression.gd::_walk_towards()` was snagging on the same kind of
+scattered prop (a tree's `StaticBody3D` collider) that `LP7` already fixed
+for the aggressor's chase. An instrumented scratch repro (position/velocity
+logged every physics frame, `UNSTICK_AFTER_FRAMES`-shaped stuck detection —
+20 consecutive frames with no movement while `move_forward` stayed held)
+caught the walk going dead on the 3rd attempt: `velocity` pinned to exactly
+`(0,0,0)` for 700+ consecutive frames, `closed_from` stuck around 40m,
+matching the reported CI signature almost exactly. A direct physics-shape
+query at the frozen position (`PhysicsShapeQueryParameters3D.intersect_shape`
+against the player's own collider, the same technique `LP7`'s own session
+used) found exactly **one** overlap: the `Terrain3D` node itself
+(`/root/MeadowsPlayground/Terrain`) — no `CommonTree_*_Collision` or any
+other prop anywhere near it. `ground_height_at()` sampled in a grid around
+the frozen position read an ordinary 5-11 degree grade, nowhere near the 45
+degree `floor_max_angle` on `Player`'s own `CharacterBody3D` — by every
+measure this test (or a level designer) can take, that patch of meadow is
+plain walkable ground. Yet `CharacterBody3D.is_on_wall()` reported `true`
+there every frame, with `get_slide_collision()` reporting the SAME ~10.5
+degree terrain normal classified as a wall collision, and the trainer's
+horizontal velocity locked to exactly zero for the rest of the walk budget.
+This is a real, if narrow, Terrain3D/`move_and_slide` interaction on
+ordinary ground — not (as the hypothesis assumed) an obstacle-avoidance gap
+against a discrete prop.
+
+**Why the test still needed a fix even though the terrain finding is
+narrow.** A real player would feel this in under a second and nudge the
+stick sideways without thinking about it — nothing here is a serious
+traversal complaint. But `_walk_towards()` drives the player with
+`Input.action_press("move_forward")` held perfectly straight for up to 4000
+frames with zero adaptation, which is a far more rigid input than any real
+player produces, and that rigidity is what turns a trivial terrain snag into
+a hard test failure. `wild_pal.gd::_tick_aggression` already solves the
+identically-shaped problem (progress stalls → steer off the direct line,
+alternating sides every ~0.5s) for the aggressor's own chase, so
+`_walk_towards()` now carries the same escape, with the same
+`UNSTICK_AFTER_FRAMES`/`UNSTICK_STEER_RAD` numbers, rather than continuing to
+have none.
+
+**Verification.** 20 runs of `smoke_aggression.gd` after the fix, headless,
+one at a time (the box was under real contention from other concurrent
+sessions during this pass — a couple of runs were killed by resource
+starvation rather than failing, and are not counted): **zero** recurrences of
+the targeted `closed_from`-stuck-far-away signature. Two of the 20 hit a
+DIFFERENT, already-known, already-accepted failure —
+`"stood 9.6m/9.7m from Galecrest for 900 frames ... never attacked"` — which
+is `LP7`'s own documented residual (its `DONE.md` entry cites an identical
+example, "one case still 8.34m out"): the aggressor's OWN chase occasionally
+still doesn't finish closing within the 900-frame patience window, unrelated
+to the player's walk this entry fixes. Reported honestly rather than rounded
+away: this pass closed the walk-getting-stuck failure mode at 20/20, and
+left `LP7`'s separate ~1-in-10 residual exactly where it was, not chased
+further here since it is out of this item's scope and already tracked.
+
+Full suite re-run after the fix: 394 tests, 0 failed (matches the pre-fix
+baseline exactly — this only touches `tests/smoke_aggression.gd`).
+`smoke_playground` and `smoke_traversal` both green (`smoke_traversal` is
+just a genuinely slow test — ~4 legs of 2700 frames plus an 11-bearing
+perimeter walk — not related to this fix; it does not exercise
+`smoke_aggression.gd`'s code at all).
+
 ## NP7 — villager_female's twin-ponytail split into a real, re-skinned, toggleable mesh
 `model: sonnet` — mechanical/asset work, no dispatch. `tests: full suite`
 (398/398, 4 new cases in `tests/test_character_hair_split.gd`), plus a real
