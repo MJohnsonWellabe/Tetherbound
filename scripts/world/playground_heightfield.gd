@@ -198,9 +198,69 @@ func height_at(x: float, z: float) -> float:
 	height = _apply_spawn_pad(x, z, height)
 	height = _apply_flats(x, z, height)
 	height -= _stream_carve(x, z)
+	height -= _spoke_carve(x, z)
 	height -= _shore_step(height)
 
 	return height
+
+
+## SA4. How deep the severed spokes' own trenches cut at a world XZ — the
+## river gorge and the storm road's ravine. Zero everywhere else on the map.
+##
+## Alongside `_stream_carve` and for the same reason it sits after the flats:
+## a carve is the LAST thing applied to the shape, so it cuts through whatever
+## the rest of the recipe produced rather than being ironed out by it. The
+## difference is what the two are for. The stream's channel is 0.7m deep and
+## exists so water sits in the ground; a spoke's carve is 11-16m deep and IS
+## the blocker — the wall angle it leaves (roughly atan(depth/rim), 57-66
+## degrees as authored) has to stay well past the player's own 45-degree
+## floor_max_angle, or the road is not severed at all, it just dips.
+##
+## Straight trenches, not polylines: a gorge here is one clean cut across one
+## road, and a straight segment is testable arithmetic. Both cross-section and
+## along-axis profiles are smoothstep, so nothing leaves a crease or a squared
+## end wall in open grass.
+func _spoke_carve(x: float, z: float) -> float:
+	var routes: Array = _config.get("spokes", {}).get("routes", [])
+	if routes.is_empty():
+		return 0.0
+	var spot := Vector2(x, z)
+	var deepest := 0.0
+	for entry: Variant in routes:
+		if not entry is Dictionary:
+			continue
+		if not bool((entry as Dictionary).get("built", false)):
+			continue
+		var carve: Dictionary = ((entry as Dictionary).get("blocker", {}) as Dictionary).get("carve", {})
+		if carve.is_empty():
+			continue
+		deepest = maxf(deepest, _carve_depth(spot, carve))
+	return deepest
+
+
+func _carve_depth(spot: Vector2, carve: Dictionary) -> float:
+	var depth := float(carve.get("depth", 0.0))
+	if depth <= 0.0:
+		return 0.0
+	var at: Array = carve.get("centre", [])
+	if at.size() < 2:
+		return 0.0
+	var centre := Vector2(float(at[0]), float(at[1]))
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+	var local := spot - centre
+	var u := absf(local.dot(axis))
+	var v := absf(local.dot(Vector2(-axis.y, axis.x)))
+
+	var half_width := maxf(float(carve.get("half_width", 6.0)), 0.01)
+	var rim := maxf(float(carve.get("rim", 5.0)), 0.01)
+	var across := 1.0 - smoothstep(half_width, half_width + rim, v)
+	if across <= 0.0:
+		return 0.0
+
+	var half_length := maxf(float(carve.get("half_length", 40.0)), 0.01)
+	var fade := maxf(float(carve.get("end_fade", 16.0)), 0.01)
+	var along := 1.0 - smoothstep(half_length, half_length + fade, u)
+	return depth * across * along
 
 
 func _valley_depth(x: float, z: float) -> float:
@@ -612,21 +672,16 @@ func stream_factor(x: float, z: float) -> float:
 ## regardless (bible sec8: "feathered irregular edges").
 func path_factor(x: float, z: float) -> float:
 	var paths: Dictionary = _config.get("paths", {})
-	var routes: Array = paths.get("routes", [])
+	var routes: Array = road_polylines()
 	if routes.is_empty():
 		return 0.0
 	var half := float(paths.get("width", 3.0)) * 0.5
 	var shoulder := float(paths.get("shoulder", 1.5))
 	var spot := Vector2(x, z)
 	var nearest := INF
-	for entry: Variant in routes:
-		if not entry is Dictionary:
-			continue
-		var points: Array = (entry as Dictionary).get("points", [])
-		for i in points.size() - 1:
-			var a := Vector2(float(points[i][0]), float(points[i][1]))
-			var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
-			nearest = minf(nearest, _segment_distance(spot, a, b))
+	for line: PackedVector2Array in routes:
+		for i in line.size() - 1:
+			nearest = minf(nearest, _segment_distance(spot, line[i], line[i + 1]))
 	var wobble := _path_edge.get_noise_2d(x, z) * shoulder * 0.5
 	var edge_start := maxf(0.0, half + wobble)
 	return 1.0 - smoothstep(edge_start, edge_start + shoulder, nearest)
@@ -652,21 +707,15 @@ func _segment_closest_point(point: Vector2, a: Vector2, b: Vector2) -> Vector2:
 ## "no answer" — a scatter layer with `path_bias` set but no paths configured
 ## falls back to its unbiased placement rather than snapping to a phantom road.
 func nearest_point_on_paths(x: float, z: float) -> Vector2:
-	var paths: Dictionary = _config.get("paths", {})
-	var routes: Array = paths.get("routes", [])
+	var routes: Array = road_polylines()
 	if routes.is_empty():
 		return Vector2.INF
 	var spot := Vector2(x, z)
 	var best := Vector2.INF
 	var best_distance := INF
-	for entry: Variant in routes:
-		if not entry is Dictionary:
-			continue
-		var points: Array = (entry as Dictionary).get("points", [])
-		for i in points.size() - 1:
-			var a := Vector2(float(points[i][0]), float(points[i][1]))
-			var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
-			var candidate := _segment_closest_point(spot, a, b)
+	for line: PackedVector2Array in routes:
+		for i in line.size() - 1:
+			var candidate := _segment_closest_point(spot, line[i], line[i + 1])
 			var distance := spot.distance_to(candidate)
 			if distance < best_distance:
 				best_distance = distance
@@ -687,25 +736,19 @@ func nearest_point_on_paths(x: float, z: float) -> Vector2:
 ## cannot: which way is SIDEWAYS, so a biased clump can be pushed to favour
 ## one shoulder instead of straddling both.
 func nearest_path_tangent(x: float, z: float) -> Vector2:
-	var paths: Dictionary = _config.get("paths", {})
-	var routes: Array = paths.get("routes", [])
+	var routes: Array = road_polylines()
 	if routes.is_empty():
 		return Vector2.ZERO
 	var spot := Vector2(x, z)
 	var best_tangent := Vector2.ZERO
 	var best_distance := INF
-	for entry: Variant in routes:
-		if not entry is Dictionary:
-			continue
-		var points: Array = (entry as Dictionary).get("points", [])
-		for i in points.size() - 1:
-			var a := Vector2(float(points[i][0]), float(points[i][1]))
-			var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
-			var candidate := _segment_closest_point(spot, a, b)
+	for line: PackedVector2Array in routes:
+		for i in line.size() - 1:
+			var candidate := _segment_closest_point(spot, line[i], line[i + 1])
 			var distance := spot.distance_to(candidate)
 			if distance < best_distance:
 				best_distance = distance
-				var along := b - a
+				var along := line[i + 1] - line[i]
 				best_tangent = along.normalized() if along.length_squared() > 0.0001 else Vector2.ZERO
 	return best_tangent
 
@@ -717,20 +760,45 @@ func nearest_path_tangent(x: float, z: float) -> Vector2:
 ## configured — the caller places no fringe, the same graceful fallback the
 ## other path queries use.
 func path_polylines() -> Array:
-	var paths: Dictionary = _config.get("paths", {})
-	var routes: Array = paths.get("routes", [])
+	return road_polylines()
+
+
+## SA4. Every authored road on the map as PackedVector2Arrays: the village's
+## own `paths.routes` PLUS each built spoke's `spokes.routes[].road`.
+##
+## One list, because a spoke is a road in every sense the terrain cares
+## about — the bake paints the same soil into the control map along it
+## (`build_playground_terrain.gd::_path_control` reads `path_factor`), the
+## scatter keeps grass and trees off it and lays path stones down it
+## (`scatter_rules.gd` reads `nearest_point_on_paths`/`path_polylines`), and
+## the verge fringe follows it. Adding the spokes as extra `paths.routes`
+## entries would have got all of that for free too, and was rejected for one
+## reason: `signpost.gd`'s village junction sign draws ONE ARM PER ENTRY in
+## `paths.routes`, so seven more entries would silently turn the four-arm
+## fingerpost in the square into an eleven-arm mast. The spokes keep their own
+## section and this function is where the two meet.
+##
+## Unbuilt spokes (`built: false`) contribute nothing: an authored bearing
+## with no blocker standing yet should not paint a road across the meadow to
+## nowhere.
+func road_polylines() -> Array:
 	var out: Array = []
-	for entry: Variant in routes:
-		if not entry is Dictionary:
-			continue
-		var points: Array = (entry as Dictionary).get("points", [])
-		if points.size() < 2:
-			continue
-		var line := PackedVector2Array()
-		for p: Variant in points:
-			line.append(Vector2(float((p as Array)[0]), float((p as Array)[1])))
-		out.append(line)
+	for entry: Variant in _config.get("paths", {}).get("routes", []):
+		if entry is Dictionary:
+			_append_line(out, (entry as Dictionary).get("points", []))
+	for entry: Variant in _config.get("spokes", {}).get("routes", []):
+		if entry is Dictionary and bool((entry as Dictionary).get("built", false)):
+			_append_line(out, (entry as Dictionary).get("road", []))
 	return out
+
+
+func _append_line(out: Array, points: Array) -> void:
+	if points.size() < 2:
+		return
+	var line := PackedVector2Array()
+	for p: Variant in points:
+		line.append(Vector2(float((p as Array)[0]), float((p as Array)[1])))
+	out.append(line)
 
 
 ## Height before the spawn pad flattening, used as the pad's own target so the

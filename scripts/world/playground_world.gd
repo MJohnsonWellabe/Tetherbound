@@ -28,6 +28,7 @@ const LANDMARK := preload("res://scripts/world/landmark.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
+const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 
 ## SA7: on `paths.routes`' "toward the rocky rise" leg (`[10,-10] -> [45,-22]`,
@@ -536,6 +537,15 @@ func _build_settlement() -> void:
 	landmark.call("build", self)
 
 	_build_road_gate()
+
+	# SA4: the severed outward roads. Before the boundary ring because they
+	# stand INSIDE it (~160-200m out) and are the thing the player is meant to
+	# read at those bearings; the ring is the ordinary field edge behind them.
+	var spokes: Node3D = SEVERED_SPOKES.new()
+	spokes.name = "SeveredSpokes"
+	add_child(spokes)
+	spokes.call("build", self)
+	print("[playground] severed spokes standing: %s" % ", ".join(spokes.call("built")))
 
 	var perimeter: Node3D = WORLD_PERIMETER.new()
 	perimeter.name = "WorldPerimeter"

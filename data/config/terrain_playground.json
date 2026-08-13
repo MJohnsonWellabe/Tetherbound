@@ -259,6 +259,223 @@
       }
     ]
   },
+  "_comment_spokes": "SA4. Seven old roads leaving the Meadows, each severed. Spec 1E ('the Meadows perimeter should visibly contain seven outward routes') and 29 ('Team Tether did not build seven random dead-end roads. They severed existing connections'). The layout rule that follows from 29 is the whole reason this is data and not seven hand-placed props: a spoke is a ROAD that runs the full way out from the village square and then STOPS at something the world can show, with land still visible past it. Never a wall built across a bearing. Bearings were chosen against the geography that already exists rather than spaced evenly on a compass -- the water spoke leaves through the valley the pond already sits in, the fire spoke climbs toward `rises.peaks[1]`, the air spoke runs onto `rises.peaks[0]`'s flank -- so the blockers stand where the ground already justifies them. HARD RULE, from the backlog item and spec 19: nothing here may ever explain itself with UI text. The signs are old destination fingerposts (29's 'old signs'), naming where the road USED to go; none of them says the road is closed.",
+  "_comment_spokes_radius": "Blockers sit at ~160-200m from the origin, INSIDE `world_perimeter.gd`'s 235m boundary ring, not astride it. Two reasons. The ring is one continuous ground-sampled polyline whose collision boxes are generated from the same points (see that file's OF7 header) -- cutting seven openings into it to put a blocker in each is a rebuild of a system that was rebuilt once already because it was not continuous. And a severed road reads better with meadow still running past it: the player walks up to the gorge, sees the roadbed resume on the far rim, and the boundary they eventually reach off to the side is an ordinary field edge rather than the story. TUNABLE.",
+  "_comment_spokes_schema": "Per entry: `id` (node name and log key), `type` (the biome the road pointed at -- data only, nothing reads it yet), `bearing_deg` (atan2(z,x) in degrees, recorded so the layout is auditable without re-deriving it from the points), `road` (polyline in world metres from the village square outward; unioned into `paths` by playground_heightfield so the bake paints real soil along it, the scatter keeps vegetation off it, and path-anchored stone scatter follows it -- WITHOUT adding an arm to the village junction signpost, which reads `paths.routes` only), `sign` (optional; one fingerpost through signpost.gd's `routes_override`, same object as `paths.trailheads`), `blocker` (`kind` plus that kind's own fields), and `built` (false = authored but not yet standing; severed_spokes.gd skips it). Blocker kinds: `gorge` and `collapsed_bridge` both carry a `carve` and are cut into the TERRAIN at bake time; `rockslide` is props and collision only and needs no re-bake.",
+  "spokes": {
+    "seed": 20260813,
+    "_comment_carve": "A carve is a straight trench in the heightfield: local u runs along `axis_deg`, v across it. Full `depth` within `half_width` of the axis, fading to nothing over `rim` -- so the wall angle is roughly atan(depth/rim) and must stay well past the player's 45-degree floor_max_angle for the carve to be the blocker. Full depth within `half_length` of `centre` along u, fading out over `end_fade` so the trench does not stop with a squared-off wall in open grass. Subtracted after the flats and alongside the stream carve (playground_heightfield.height_at).",
+    "routes": [
+      {
+        "id": "river_gorge",
+        "type": "water",
+        "_why": "The valley's own outflow. The pond at [-145,138] is the map's global minimum and the stream already runs into it; a river leaving that basin to the south-east and cutting a gorge on its way out is the one severed crossing the existing geography was already asking for. Spec 1E: 'Water: river gorge / broken bridge'.",
+        "bearing_deg": 118.0,
+        "built": true,
+        "road": [
+          [10.0, -10.0],
+          [-10.0, 25.0],
+          [-35.0, 70.0],
+          [-60.0, 115.0],
+          [-78.0, 145.0],
+          [-90.1, 169.5]
+        ],
+        "sign": {
+          "at": [-84.5, 166.0],
+          "label": "River Road",
+          "points": [[-90.1, 169.5], [-105.0, 205.0]]
+        },
+        "blocker": {
+          "kind": "gorge",
+          "carve": {
+            "centre": [-93.9, 176.6],
+            "axis_deg": 26.3,
+            "half_length": 70.0,
+            "end_fade": 22.0,
+            "half_width": 9.0,
+            "rim": 7.0,
+            "depth": 16.0
+          },
+          "_comment_kerb": "Broken roadbed at the near lip: a short run of the same fieldstone the boundary kerb is built from, tipped and scattered where the road's edge went over. The FAR lip gets the same treatment so the road visibly resumes across the gap -- that is 29's 'distant land' at close range.",
+          "lip_stones": 9,
+          "lip_span": 11.0,
+          "far_lip": true
+        }
+      },
+      {
+        "id": "storm_road",
+        "type": "electric",
+        "_why": "East, across open meadow -- the only long clear bearing on that side once `rises.peaks[0]` is respected. Spec 1E: 'Electric: old road toward storm country'; 29's blocker: collapsed bridge.",
+        "bearing_deg": 15.0,
+        "built": true,
+        "road": [
+          [10.0, -10.0],
+          [55.0, 4.0],
+          [105.0, 22.0],
+          [150.0, 38.0],
+          [185.5, 49.7]
+        ],
+        "sign": {
+          "at": [182.0, 54.8],
+          "label": "Storm Country",
+          "points": [[185.5, 49.7], [220.0, 60.0]]
+        },
+        "blocker": {
+          "kind": "collapsed_bridge",
+          "carve": {
+            "centre": [193.2, 51.8],
+            "axis_deg": 108.2,
+            "half_length": 55.0,
+            "end_fade": 18.0,
+            "half_width": 6.0,
+            "rim": 5.0,
+            "depth": 11.0
+          },
+          "_comment_abutments": "Two masonry abutments facing each other across the channel, drawn from the same T_UnevenBrick sheet the boundary wall and every village building use (D24, one village family). The deck is gone: one fallen beam leans off the near abutment into the ravine. Nothing spans the gap.",
+          "abutment": {
+            "width": 5.4,
+            "depth": 3.2,
+            "height": 3.1
+          },
+          "fallen_beam": true,
+          "lip_stones": 6,
+          "lip_span": 8.0
+        }
+      },
+      {
+        "id": "mountain_trail",
+        "type": "fire",
+        "_why": "North-west, at the foot of `rises.peaks[1]` (centre [-165,-150], radius 58). The trail runs out to where the ground starts to climb and a slide off the mountain has buried it. Spec 1E: 'Fire: mountain trail'; 29's blocker: rockslide. No carve -- this one is props and collision only, so it costs no terrain re-bake.",
+        "bearing_deg": 222.0,
+        "built": true,
+        "road": [
+          [10.0, -10.0],
+          [-20.0, -35.0],
+          [-52.0, -58.0],
+          [-86.0, -83.0],
+          [-118.9, -107.0]
+        ],
+        "sign": {
+          "at": [-113.8, -110.8],
+          "label": "Mountain Road",
+          "points": [[-118.9, -107.0], [-150.0, -135.0]]
+        },
+        "blocker": {
+          "kind": "rockslide",
+          "centre": [-123.3, -111.1],
+          "axis_deg": -53.9,
+          "span": 24.0,
+          "height": 5.6,
+          "_comment_pile": "`blocks` are the boulders you see -- Rock_Medium_* from the one nature family (D24), scaled far past the scatter's own ceiling so they read as slide debris rather than as meadow stones, each with its own collider. `barrier` is the buried continuous wall inside the pile that guarantees no gap between them: spec 1E allows invisible collision 'as support for visible boundaries, not as the only boundary', which is exactly this. Its top is below the pile's own silhouette so it is never the thing the player sees.",
+          "blocks": 13,
+          "block_scale_min": 1.8,
+          "block_scale_max": 3.6,
+          "rubble": 18,
+          "rubble_scale_min": 0.3,
+          "rubble_scale_max": 0.9,
+          "barrier_height": 4.2,
+          "barrier_thickness": 3.6
+        }
+      },
+      {
+        "id": "stone_gate",
+        "type": "psychic",
+        "_why": "Due west, level open ground -- an ancient gate wants to be seen head-on from a distance, which needs a straight approach and no landform behind it. Spec 1E: 'Psychic: ancient stone gate/road'. NOT YET BUILT: needs a gate-arch composition out of the medieval kit that does not exist yet as a prefab.",
+        "bearing_deg": 180.0,
+        "built": false,
+        "road": [
+          [10.0, -10.0],
+          [-30.0, -8.0],
+          [-80.0, -4.0],
+          [-140.0, -2.0],
+          [-192.0, 0.0]
+        ],
+        "sign": {
+          "at": [-187.0, 4.4],
+          "label": "Gate Road",
+          "points": [[-192.0, 0.0], [-228.0, 2.0]]
+        },
+        "blocker": {
+          "kind": "sealed_gate",
+          "centre": [-198.0, 0.0],
+          "axis_deg": 90.0
+        }
+      },
+      {
+        "id": "high_pass",
+        "type": "ice",
+        "_why": "North, the last long clear bearing. Spec 1E: 'Ice: high pass'. NOT YET BUILT, and this one needs terrain work before props: a pass needs a saddle to be a pass, and there is no relief on this bearing today -- see the handoff.",
+        "bearing_deg": 285.0,
+        "built": false,
+        "road": [
+          [10.0, -10.0],
+          [22.0, -55.0],
+          [34.0, -105.0],
+          [43.0, -150.0],
+          [49.7, -185.4]
+        ],
+        "sign": {
+          "at": [45.0, -181.0],
+          "label": "The High Pass",
+          "points": [[49.7, -185.4], [58.0, -225.0]]
+        },
+        "blocker": {
+          "kind": "rockslide",
+          "centre": [51.4, -191.5],
+          "axis_deg": 15.0,
+          "span": 22.0,
+          "height": 5.0
+        }
+      },
+      {
+        "id": "cliff_road",
+        "type": "air",
+        "_why": "Onto `rises.peaks[0]`'s north-west flank -- the only real relief in the game and therefore the only place a cliff road can honestly be. Short by design: the flank's 46-degree collar (see paths.routes 'The Rise') is where the roadbed has fallen away. Spec 1E: 'Air: cliff/highland road'. NOT YET BUILT. Note it ends ~25m from the Rise road's own trailhead; two old roads meeting at a hill's foot is plausible but the pair need to be looked at together in one frame before this is dressed.",
+        "bearing_deg": 340.0,
+        "built": false,
+        "road": [
+          [10.0, -10.0],
+          [45.0, -18.0],
+          [75.0, -27.0],
+          [98.7, -35.9]
+        ],
+        "sign": {
+          "at": [95.0, -31.0],
+          "label": "Cliff Road",
+          "points": [[98.7, -35.9], [135.0, -48.0]]
+        },
+        "blocker": {
+          "kind": "fallen_roadbed",
+          "centre": [102.0, -37.2],
+          "axis_deg": 70.0
+        }
+      },
+      {
+        "id": "blighted_road",
+        "type": "dark",
+        "_why": "South-south-east, skirting `rises.peaks[2]`. Spec 1E: 'Dark: sealed blighted road'. NOT YET BUILT -- the seal is the one blocker with no existing vocabulary at all (it is Team Tether's own work, not weather or rock), so it wants a decision about what a Team Tether seal looks like before anything is placed.",
+        "bearing_deg": 65.0,
+        "built": false,
+        "road": [
+          [10.0, -10.0],
+          [30.0, 22.0],
+          [50.0, 76.0],
+          [67.0, 128.0],
+          [81.2, 174.0]
+        ],
+        "sign": {
+          "at": [76.5, 176.5],
+          "label": "Blighted Road",
+          "points": [[81.2, 174.0], [95.0, 215.0]]
+        },
+        "blocker": {
+          "kind": "sealed_road",
+          "centre": [83.7, 180.0],
+          "axis_deg": -25.0
+        }
+      }
+    ]
+  },
   "_comment_water": "EV5 (bible sec15). One flat water level, not a water body outline: the probe run for this item confirmed the pond valley is the ONLY terrain below -18m anywhere on the 512m map, so everything below `level` is one pond (~2,200 sq.m at -22.5, bbox x[-178,-112] z[116,164]) whose shoreline follows the terrain's own contours instead of tracing an authored ellipse. The 'The Pond' route above already ends at [-105,115], which sits 1.1m above this waterline -- the path genuinely arrives at the bank. `stream` is the pond's inflow: probed at 2m steps from head to mouth with zero uphill reversals, so the water only ever runs downhill. `carve_depth`/`carve_width` cut a real channel into the heightfield (playground_heightfield.gd::_stream_carve) so the ribbon of water sits IN the ground rather than painted on it; `head_ramp` fades the carve in over the first metres so the spring emerges from the meadow instead of starting as an abrupt trench. Geometry lives HERE because the heightfield, the bake and the scatter all read it; how the water LOOKS lives in data/config/water.json. ALL TUNABLE. Stream points were densified through a Catmull-Rom pass over the seven authored waypoints (blind round 1: 'bends are angular chevrons rather than curves') \u2014 re-derive through a spline rather than hand-editing 25 points if the course ever moves.",
   "water": {
     "level": -22.5,
