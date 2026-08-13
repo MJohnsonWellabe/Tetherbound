@@ -461,14 +461,16 @@ func _pick(index: int) -> void:
 	var id := str(piece.get("id", ""))
 	var game := _game()
 
-	# ui_error on an unaffordable pick (spec 20) -- same free-build exemption
-	# `_describe` already reads, and NOT a block: `build_placer.gd`'s own
-	# `_can_afford` gate is what actually refuses placement, unchanged here.
+	# An unaffordable pick refuses to arm — the same contract the old flat
+	# tab kept ("needs more than you are carrying", pinned by
+	# `tests/smoke_free_build.gd`): arming a piece the placer would only
+	# refuse hands the player a ghost that can never land. The menu stays
+	# open so they can pick something they can pay for.
 	var free := game != null and bool(game.get("free_build"))
 	if not free and game != null and not bool(game.call("can_afford", id)):
 		AUDIO_CUES.play(&"ui_error")
-	else:
-		AUDIO_CUES.play(&"ui_accept")
+		return
+	AUDIO_CUES.play(&"ui_accept")
 
 	if not _categories.is_empty():
 		_last_piece_per_category[_categories[_category_index]] = id

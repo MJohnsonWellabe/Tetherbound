@@ -143,6 +143,12 @@ static func icon(id: String, px: int = 36, tint: Color = Color.WHITE) -> String:
 	if not GLYPHS.has(id):
 		return "[%s]" % id
 	var device := "gamepad" if using_gamepad() else "keyboard"
+	# A glyph entry may cover only one device — build_snap_cycle has a pad
+	# icon but no Shift keycap PNG exists to give it a keyboard one. Degrade
+	# to the same bracketed-text fallback an unknown id gets, instead of the
+	# hard indexing error smoke_free_build caught in keyboard mode.
+	if not (GLYPHS[id] as Dictionary).has(device):
+		return "[%s]" % id
 	var entry: Variant = GLYPHS[id][device]
 	var files: Array = entry if entry is Array else [entry]
 	var colour_attr := "" if tint == Color.WHITE else " color=#%s" % tint.to_html(true)

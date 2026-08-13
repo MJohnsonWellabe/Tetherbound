@@ -511,13 +511,9 @@ func _check_a_piece_can_be_built_out_of_an_empty_satchel() -> void:
 		return
 
 	_game.set("pending_build", "")
-	var rows: Array = _build.get("_rows")
-	if rows.is_empty():
-		_fail("the build tab drew no rows")
+	var menu := await _open_build_menu_and_pick_first()
+	if menu == null:
 		return
-	(rows[0] as Button).grab_focus()
-	await process_frame
-	await _press("ui_accept")
 
 	if str(_game.get("pending_build")).is_empty():
 		_fail("a piece could not be built with an empty satchel while free build was on")
@@ -547,10 +543,65 @@ func _check_it_can_be_switched_off_again() -> void:
 		_fail("free build is off and the build tab still says it is free")
 
 	_game.set("pending_build", "")
-	var rows: Array = _build.get("_rows")
-	(rows[0] as Button).grab_focus()
-	await process_frame
-	await _press("ui_accept")
+	var menu := await _open_build_menu_and_pick_first()
+	if menu == null:
+		return
 	if not str(_game.get("pending_build")).is_empty():
 		_fail("a piece was still buildable with an empty satchel after free build was turned off")
+	# A refused pick leaves the build menu open (it only closes on success) —
+	# put it away so the run ends with the world in a normal state.
+	if bool(menu.call("is_open")):
+		menu.call("close")
+		await process_frame
 	print("switched back off, and the empty satchel is short again: '%s'" % _status())
+
+
+## The arming path since the Valheim-style build menu replaced the flat tab
+## list: the Build tab is a launcher whose one button closes the pause menu
+## and opens `build_menu.gd`; picking a grid cell is what arms
+## `pending_build` now. Returns the build menu node, or null after failing.
+func _open_build_menu_and_pick_first() -> Node:
+	_build = await _go_to("build")
+	if _build == null:
+		return null
+	var open_button: Button = _build.get("_open_button")
+	if open_button == null:
+		_fail("the build tab has no open button")
+		return null
+	open_button.grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	# The tab closes the pause menu and defers the build menu's open by a
+	# frame so the two hand-offs don't fight over the mouse mode.
+	for i in 6:
+		await process_frame
+	var menu: Node = null
+	for child in root.get_children():
+		if child.has_method("is_open") and bool(child.call("is_open")):
+			menu = child
+			break
+	if menu == null:
+		_fail("pressing the build tab's button did not open the build menu")
+		return null
+	var cells: Array = menu.get("_cell_buttons")
+	if cells == null or cells.is_empty():
+		_fail("the build menu drew no piece cells")
+		return null
+	(cells[0] as Button).grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	for i in 3:
+		await process_frame
+	# The launcher closed the pause menu on the way in. The checks around
+	# this helper still talk to pause-menu tabs through `_go_to`, which
+	# cycles an OPEN menu — so put the world back the way the old flat-tab
+	# flow left it: pause menu open. (A successful pick closes the build
+	# menu itself; a refused one leaves it up, and the caller handles that.)
+	if bool(menu.call("is_open")):
+		menu.call("close")
+		await process_frame
+	if not bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 3:
+			await process_frame
+	return menu
