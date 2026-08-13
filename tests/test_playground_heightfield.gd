@@ -104,19 +104,30 @@ func test_the_spawn_pad_blends_out() -> void:
 func test_the_building_pads_are_genuinely_flat() -> void:
 	# A barn on an 0.85-flattened slope still tilts; the flats promise FULL
 	# flatten inside their radius, and the structures placed on them lean on it.
+	#
+	# Compared against the flat's own AUTHORED height, not a freshly-measured
+	# centre point: EV6-remainder's mill-crossing pad ([-134.5,110]) has the
+	# stream's carve running through its middle by design (playground_
+	# heightfield.gd applies the carve AFTER flats, so a bridge/mill pad can
+	# still promise level BANKS either side of a real channel). Measuring the
+	# centre there reads the carved streambed, not the pad -- which made every
+	# rim point "fail" against a middle that was never meant to represent the
+	# pad's own height in the first place. The rim is what structures actually
+	# stand on, and every flat authors its own `height` explicitly, so that is
+	# the correct baseline for all of them, carved or not.
 	for entry: Variant in _config.get("flats", []):
 		if not entry is Dictionary:
 			continue
 		var flat: Dictionary = entry
 		var centre: Array = flat.get("centre", [0.0, 0.0])
 		var radius := float(flat.get("radius", 10.0))
-		var middle: float = _field.height_at(float(centre[0]), float(centre[1]))
+		var target: float = float(flat.get("height", _field.height_at(float(centre[0]), float(centre[1]))))
 		for angle in [0.0, PI * 0.5, PI, PI * 1.5]:
 			var x := float(centre[0]) + cos(angle) * radius * 0.7
 			var z := float(centre[1]) + sin(angle) * radius * 0.7
 			var rim: float = _field.height_at(x, z)
-			assert_true(absf(rim - middle) < 0.15,
-				"flat at %s rises %.2fm inside its own radius" % [str(centre), absf(rim - middle)])
+			assert_true(absf(rim - target) < 0.15,
+				"flat at %s rises %.2fm inside its own radius" % [str(centre), absf(rim - target)])
 
 
 func test_the_paths_reach_where_they_promise() -> void:
