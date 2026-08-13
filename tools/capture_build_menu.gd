@@ -20,6 +20,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
+const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const OUT_DIR := "res://shots/_diag"
 
 const SETTLE_FRAMES := 240
@@ -97,7 +98,7 @@ func _run() -> void:
 
 	# --- placement in the world, grid + one wall already standing -----------
 	var placer := world.get_node_or_null(^"BuildPlacer")
-	var player := world.get_node_or_null(^"Player") as Node3D
+	var player := world.get_node_or_null(^"Player") as CharacterBody3D
 	if placer == null or player == null:
 		failures.append("no BuildPlacer or Player in the world")
 	else:
@@ -114,17 +115,26 @@ func _run() -> void:
 		for i in 15:
 			await physics_frame
 
-		# Arm a second wall and aim close to the first so the neighbour-snap
-		# dots have something within range to draw.
-		game.set("pending_build", "wall")
-		var forward: Vector3 = -player.global_transform.basis.z
-		var camera_rig := world.get_node_or_null(^"CameraRig")
-		if camera_rig != null and camera_rig.has_method("planar_basis"):
-			forward = -(camera_rig.call("planar_basis") as Basis).z
-		player.global_position += forward * 0.4 + Vector3(0.3, 0.0, 0.0)
-		for i in POSE_FRAMES * 3:
-			await physics_frame
-		await _shoot("build_placement_snap", written, failures)
+		var wall1 := _first_wall(world)
+		if wall1 == null:
+			failures.append("pressing build_place on the ghost planted no wall — nothing to snap the second one against")
+		else:
+			# Same technique `tests/smoke_free_build.gd::_check_bg1_grid_
+			# rotation_and_snap` uses to aim a placement at an exact world
+			# point: solve for the player position whose ghost (which the
+			# placer always draws `PLACE_AHEAD` metres in front of the
+			# player) lands within `build_grid.gd`'s SNAP_RADIUS of wall #1,
+			# one grid cell to its side — close enough to snap, far enough
+			# that both the placed wall and the new ghost read as two
+			# distinct pieces in frame rather than overlapping.
+			game.set("pending_build", "wall")
+			var forward := _forward(world, player)
+			var target_raw_spot: Vector3 = wall1.global_position + Vector3(2.3, 0.0, 0.3)
+			player.global_position = target_raw_spot - forward * BUILD_PLACER.PLACE_AHEAD
+			player.velocity = Vector3.ZERO
+			for i in POSE_FRAMES * 3:
+				await physics_frame
+			await _shoot("build_placement_snap", written, failures)
 		game.set("pending_build", "")
 
 	print("")
@@ -138,6 +148,23 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
+
+
+## The same forward-direction math `build_placer.gd::_show_ghost` uses (and
+## `tests/smoke_free_build.gd` borrows), so an aimed placement lands at an
+## exact world-space point rather than wherever the camera happens to face.
+func _forward(world: Node, player: Node3D) -> Vector3:
+	var camera_rig := world.get_node_or_null(^"CameraRig")
+	if camera_rig != null and camera_rig.has_method("planar_basis"):
+		return -(camera_rig.call("planar_basis") as Basis).z
+	return -player.global_transform.basis.z
+
+
+func _first_wall(world: Node) -> Node3D:
+	for node: Node in world.get_tree().get_nodes_in_group(BUILD_PLACER.PLACED_GROUP):
+		if str(node.get_meta(BUILD_PLACER.BUILDING_ID_META, "")) == "wall":
+			return node as Node3D
+	return null
 
 
 func _shoot(name: String, written: Array[String], failures: Array[String]) -> void:
