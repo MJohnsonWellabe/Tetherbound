@@ -24,8 +24,9 @@ const FOV := 70.0
 
 ## Kept in sync by hand with data/config/props.json, same reasoning
 ## capture_prop_clusters.gd gives for not importing gameplay scripts' state.
-const TRAINER_CAMP_CENTRE := Vector2(26.0, -28.0)
-const BRIDGE_REPAIR_CENTRE := Vector2(-142.5, 115.5)
+## EV7-clusters-fix moved both clusters; these track the new anchors.
+const TRAINER_CAMP_CENTRE := Vector2(25.9, -28.1)
+const BRIDGE_REPAIR_CENTRE := Vector2(-141.5, 114.0)
 const FOOTBRIDGE_AT := Vector2(-136.3, 113.0)
 
 const VIEWPOINTS := [
@@ -42,8 +43,12 @@ const VIEWPOINTS := [
 		"target": Vector2(29.0, -34.0), "target_h": 1.0,
 	},
 	{
+		# EV7-clusters-fix: eye moved to the bridge side, looking west onto
+		# the bank -- the way a player actually approaches it crossing the
+		# deck, and the only angle that doesn't let the crate hide the axe
+		# leaning on its bridge-facing side.
 		"name": "03-bridge-repair-close",
-		"eye": Vector2(-145.5, 114.5), "eye_h": 1.7,
+		"eye": Vector2(-138.5, 113.4), "eye_h": 1.8,
 		"target": BRIDGE_REPAIR_CENTRE, "target_h": 0.8,
 	},
 	{

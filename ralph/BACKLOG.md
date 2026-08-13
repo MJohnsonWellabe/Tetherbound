@@ -897,22 +897,28 @@ Two of the bible's five named clusters. `bridge repair site`, `quarry station`
 and `trainer camp` need geography that doesn't exist yet (no bridge, no built
 quarry — `SA4`/`EV5` territory) and are carried forward below.
 
-**`EV7-remainder` (`trainer_camp` and `bridge_repair_site`, built 2026-08-13,
-blind-verified 2026-08-13) shipped — see `DONE.md`.** Both clusters built
-from the already-staged, already-ledgered Fantasy Props MegaKit (five more
-of its 94 models), sited with real ground-height probes rather than
-guesses. The item's own done-when — a blind critic given close and
-in-context frames of each site names it as implying a purpose, the bar
-`EV7`'s first two clusters cleared — has now been run for both
-(`DONE.md` §`EV7-remainder-critique`); both pass, no composition changes
-needed. `trainer_camp` reads as a generic waypoint/rest-stop rather than
-specifically a *trainer's* camp — a naming-vs-imagery gap the props
-themselves (bag, bench, barrel, crate) don't close and a composition fix
-can't either; noted honestly, not treated as a defect to chase.
-**`quarry_station` remains open, unbuilt** — confirmed again, no quarry
-exists anywhere in the world (`village_npcs.json`'s Quarry Foreman still
-stands in the square for exactly that reason) — and is `SD16`'s scope (a
-built, reachable Old Quarry), not tracked further here.
+**`EV7-remainder` (`trainer_camp` and `bridge_repair_site`, built 2026-08-13)
+shipped — see `DONE.md`.** Both clusters built from the already-staged,
+already-ledgered Fantasy Props MegaKit (five more of its 94 models), sited
+with real ground-height probes rather than guesses. `DONE.md`'s own
+`EV7-remainder-critique` entry self-graded both as passing the item's
+done-when (a blind critic naming each site's purpose), but disclosed
+plainly that no genuinely isolated subagent was available to run that pass
+blind — it was self-judged. **That self-grade was overturned**: a
+genuinely blind critic run afterward failed `trainer_camp` outright
+("reads as three container props at even spacing... scatter-list output,
+not a place") and named five real composition defects in
+`bridge_repair_site` even though its purpose read passed. `EV7-clusters-fix`
+(`DONE.md`) is the fix round for both — `Bench` dropped from `trainer_camp`,
+both clusters re-spaced/re-sited with real numbers (`tools/_probe_ev7fix.gd`),
+`props.gd` gained `pitch_deg`/`roll_deg`/`sink_m` to fix defects position
+and yaw alone could not (a bolt-upright axe, a shallow-embedded crate). The
+confirm read on the fix is itself self-judged, not blind — no subagent tool
+was available this round either, disclosed the same way. **`quarry_station`
+remains open, unbuilt** — confirmed again, no quarry exists anywhere in the
+world (`village_npcs.json`'s Quarry Foreman still stands in the square for
+exactly that reason) — and is `SD16`'s scope (a built, reachable Old
+Quarry), not tracked further here.
 
 **`EV8` (lighting and atmosphere) shipped — see `DONE.md`.** Two rounds of the
 blind pass. Warm sun and cool fill were already correct and are unchanged;

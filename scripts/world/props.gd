@@ -67,8 +67,27 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 	var scale_factor := float(spec.get("scale", 1.0))
 	var root: Node3D = packed.instantiate()
 	root.name = model
-	root.position = Vector3(x, ground, z)
-	root.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+	# `sink_m` (optional, default 0): extra downward offset below the sampled
+	# ground height. Most of the pack's models embed only a few centimetres at
+	# their own authored origin (EV7-clusters-fix probe:
+	# tools/_probe_ev7fix.gd -- Crate_Wooden embeds just 0.052m), which is
+	# shallower than this meadow's grass card height, so a shallow-buried
+	# crate reads as floating with grass lit up under its own skirt rather
+	# than resting on the ground. Sinking it a little further (like
+	# village.gd's own -0.05 "never hovers on a residual slope" sink for
+	# buildings) buries that gap without touching grass density itself.
+	var sink := float(spec.get("sink_m", 0.0))
+	root.position = Vector3(x, ground - sink, z)
+	# `pitch_deg`/`roll_deg` (optional, default 0): most props in this pack
+	# are authored to stand or lie flat on their own, so yaw-only placement
+	# has been enough -- but a couple (Axe_Bronze) are authored vertical with
+	# no way to rest them at an angle using yaw alone. Full Euler rotation
+	# (Godot's default order) lets one lean against another prop instead of
+	# always standing bolt upright.
+	root.rotation = Vector3(
+		deg_to_rad(float(spec.get("pitch_deg", 0.0))),
+		deg_to_rad(float(spec.get("yaw_deg", 0.0))),
+		deg_to_rad(float(spec.get("roll_deg", 0.0))))
 	root.scale = Vector3.ONE * scale_factor
 	into.add_child(root)
 
@@ -97,7 +116,7 @@ func _place(into: Node3D, spec: Dictionary) -> void:
 	shape.shape = box
 	body.add_child(shape)
 	body.position = root.global_transform * (aabb.position + aabb.size * 0.5)
-	body.rotation.y = root.rotation.y
+	body.rotation = root.rotation
 	into.add_child(body)
 	_placed += 1
 

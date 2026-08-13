@@ -3,6 +3,142 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV7-clusters-fix — trainer_camp and bridge_repair_site: a placement-only fix round after a genuine blind critic overturned the self-graded pass
+`data/config/props.json`, `scripts/world/props.gd`, `tools/capture_ev7r_props.gd`,
+`tools/_probe_ev7fix.gd`, `docs/ASSET_LEDGER.md`. `model: sonnet`.
+
+`EV7-remainder-critique`'s own `DONE.md` entry self-graded both clusters as
+passing the bible's purpose bar, explicitly flagging that the process used
+was not a genuinely isolated blind critic (no subagent-spawning tool was
+available in that lane). A separately-run genuine blind critic on the same
+shipped frames overturned that grade: **`trainer_camp` FAILED** ("reads as
+three container props at even spacing... scatter-list output, not a place"),
+while `bridge_repair_site` passed the purpose question but the critic named
+five real composition defects. This item is the fix round for both,
+honestly recorded as overturning the earlier self-grade rather than quietly
+amending it.
+
+**Root-caused every named defect with real numbers before touching
+`props.json`** (`tools/_probe_ev7fix.gd`, new — loads the actual playground
+scene so heights come from real Terrain3D data and structure transforms
+come from the actually-placed footbridge/mill, not hand geometry):
+
+- **The trestle table (`Bench`) passing through everything**: `props.gd`
+  places every prop flush to the ground with no way to rest one prop ON
+  another — the table's flat top could never actually hold anything set on
+  it, so the crate/sack/barrel always passed clean through its legs. Fixed
+  by dropping `Bench` entirely and committing to the critic's own offered
+  alternative, a supply cache at a waypoint (`Bag`, `Barrel`, `Crate_Wooden`
+  only) — the honest composition this placement system can actually build.
+- **Sack buried in the barrel / even spacing reading as scripted**: fixed by
+  re-spacing — crate+barrel now touch (0.83m centre-to-centre, matching
+  their combined footprint radius) as one pile, while the pack sits 1.9m
+  apart as its own dropped item. Real, uneven gaps instead of a triangle.
+- **Crate canted, lifted base edge**: the probe found this meadow spot
+  genuinely slopes (0.137-0.172m of real corner-height spread across the
+  crate's own exact footprint at every heading tried — yaw alone was never
+  going to fix this, an earlier draft of this fix overstated how much yaw
+  helped before the exact-footprint numbers corrected it). The real fix is
+  a new optional `sink_m` field on `props.gd`'s placement recipe: buries the
+  crate's own shallow ~0.05m embed by another 0.08m, deeper than half the
+  worst-case corner spread, so every corner sits inside the terrain mesh
+  regardless of which way it's turned, instead of floating on the high
+  side.
+- **Bridge_repair_site marooned in open lawn, ~4m off the bridge head**:
+  moved the whole cluster ~3m to hug the footbridge's real west landing
+  (bridge local frame, from the actual placed structure's transform: x=-5.3,
+  z=1.4 — just outside the deck/rail collider's z=±1.05 half-extent).
+- **Crate blocking the walkway's ramp entrance**: the crate this replaces
+  sat at local z=1.4 (clear), but the bucket and rope's ORIGINAL candidate
+  spots landed at local z=0.84/0.89 — inside the deck collider's own
+  footprint. Caught by the probe before shipping, not after; both moved to
+  z≈1.75, clear of the walkway.
+- **Rope hidden behind the crate**: moved to the crate's own bridge-facing
+  (east) side — the side a player crossing the deck sees first — instead of
+  tucked behind it.
+- **Axe levitating, bolt upright, unsupported**: root-caused, not
+  guessed — `Axe_Bronze`'s own glTF authors a baked -90° Z rotation on its
+  root node, so its long axis sits on world Y *regardless of `yaw_deg`*
+  (confirmed by instantiating it at yaw=0 and yaw=-110 and reading the
+  identical world-space AABB both times). No yaw value could ever lay it
+  down or lean it. `props.gd` gets two new optional fields, `pitch_deg` and
+  `roll_deg` (full Euler rotation, default 0 — every existing entry is
+  byte-for-byte unaffected since no other model in current use has a baked
+  root rotation, checked against all 15 models `props.json` references
+  before assuming so). The axe now leans against the crate's bridge-facing
+  face at `pitch_deg: 38`, position picked from the same probe's real
+  world-space AABB overlap check (confirmed contact, not just visual
+  adjacency, before rendering).
+
+**Verification, honestly disclosed, with a real gap named plainly**:
+rendered `tools/capture_ev7r_props.gd` once (round 1) against the fixed
+`props.json` and inspected all 4 frames directly (real pixels, not
+inference). A genuine isolated blind-subagent critic was attempted the same
+way `EV7-remainder-critique` attempted one and hit the same wall: this
+lane's toolset has no subagent-spawning tool that can see local render
+output blind to this conversation, and no message-retrieval path back from
+a spawned `Claude_Code_Remote` session either. Per an explicit owner
+directive received mid-task tightening the time budget, **the confirm read
+here is self-judged, not genuinely blind**, and this entry says so plainly
+rather than dressing it up as a pass.
+
+- `trainer_camp` (frames 01/02, round 1, fully confirmed): crate+barrel read
+  as one touching pile, sack a clear stride apart on the path side, near the
+  practice-meadow route with rabbits in frame — reads as a rest stop /
+  waypoint, not a scatter. No visible floating or interpenetration on the
+  crate.
+- `bridge_repair_site` (frame 04, round 1, fully confirmed): cluster now
+  sits directly at the footbridge's west landing against the mill wall, in
+  frame with the actual crossing and house. Crate sits flush, bucket visible
+  and clear of the walkway.
+- `bridge_repair_site` close shot (frame 03, round 1): the crate itself
+  read as *tilted* in this frame, and the axe wasn't visible at all. Traced
+  this to the capture tool's own camera constants, still pointing at the
+  cluster's OLD position (`BRIDGE_REPAIR_CENTRE` wasn't updated when the
+  cluster moved) — the camera was looking past the actual crate at a steep
+  off-target angle, and the axe (deliberately placed on the crate's
+  *bridge-facing* side, per the rope-visibility fix) was looking straight
+  down the crate's flank from that stale angle, hidden behind it. This is a
+  camera-framing bug, not a geometry defect: `tools/_probe_ev7fix.gd`
+  independently confirms this exact ground is flat (0.000-0.006m corner
+  spread, real Terrain3D data) and confirms the axe's tilted mesh actually
+  overlaps the crate's face by ~0.05m (real contact). Fixed the camera
+  constants and viewpoint in `tools/capture_ev7r_props.gd` (now aimed at the
+  real cluster centre, eye moved to the bridge side so the axe's
+  bridge-facing lean is the angle a player crossing the deck would actually
+  see) and queued a round-2 render to confirm the fix with fresh pixels —
+  **that render never got the lock**: another lane's `survey_combat` render
+  held `render.lock` continuously (verified by checking the process table,
+  not assumed) for the entire remainder of this item's time budget, and the
+  owner's tightened cap arrived before it freed. Stopped waiting rather than
+  blow the cap chasing a render nobody could schedule.
+
+**Net effect: `trainer_camp` and `bridge_repair_site`'s overall siting are
+confirmed with real round-1 pixels; the specific "axe visible, crate reads
+flat" claim for the close bridge_repair shot rests on the geometry probe
+plus an un-rendered camera fix, not a fresh frame.** Whoever next holds the
+render lock: `godot ... --script tools/capture_ev7r_props.gd` with no
+further config changes needed — the fix is already committed, only the
+confirming frame is missing.
+
+Real limits, stated honestly rather than glossed: even where round-1 frames
+exist, this is one person (me) re-applying the same rubric to my own fix,
+a materially weaker check than a critic who was never told what changed.
+The owner directive that arrived mid-task explicitly accepts self-judging
+("say so honestly") and caps this item at one fix round + one confirm read,
+no further rounds regardless of outcome.
+
+**Tests**: `props.gd` was touched (two new optional fields, fully
+backward-compatible — verified no other of the 15 models `props.json`
+references carries a baked root rotation that the rewritten `root.rotation`
+assignment could silently strip). Full suite: 586 tests / 90457 assertions /
+0 failed.
+
+**Not touched, per lane scope**: fences, sky/clouds, grass density, path
+splatmap, water plane, lily pads, tree trunk colour, the white slabs at the
+waterline, fauna. `quarry_station` remains open and untracked here, same as
+every prior entry — `SD16`'s scope, not this item's.
+
 ## EV6-remainder-polish — the three named leftovers, the survival pack's colour bug, and the owed blind rounds
 
 `tests: smoke_opening, smoke_traversal` — both green locally, headless
