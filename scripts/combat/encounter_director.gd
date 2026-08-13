@@ -252,6 +252,9 @@ func adopt_starter(species_id: String, nickname: String = "") -> bool:
 	if pal == null:
 		push_error("starter species '%s' is missing from species.json" % species_id)
 		return false
+	# D30: a starter arrives a little ahead of the wildest thing in the yard.
+	var progression_cfg: Dictionary = PROGRESSION.config()
+	pal.set_level(int(progression_cfg.get("level", {}).get("starter_level", 3)), progression_cfg)
 	if nickname != "":
 		# nickname, not display_name — the same bug already fixed in
 		# party_seam.gd. pal_instance.label() reads nickname first and falls

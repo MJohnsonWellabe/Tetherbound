@@ -213,6 +213,18 @@ func xp_to_next(cfg: Dictionary) -> int:
 ## configured cap), applying stat growth at each level. Returns how many
 ## levels were actually gained, so a caller can decide whether "level up!"
 ## banners are worth showing.
+## Jump straight to a level — starters and story spawns, not gameplay
+## levelling (that is `gain_xp`'s job). Recomputes stats from base the same
+## way a level-up does, and refills hp, because every caller of this sets the
+## level before the creature has ever taken a hit (D30: starter_level).
+func set_level(new_level: int, cfg: Dictionary) -> void:
+	var cap := int(cfg.get("level", {}).get("cap", 30))
+	level = clampi(new_level, 1, cap)
+	xp = 0
+	_apply_level_stats(cfg)
+	hp = max_hp
+
+
 func gain_xp(amount: int, cfg: Dictionary) -> int:
 	if amount <= 0:
 		return 0
