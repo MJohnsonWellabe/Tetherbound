@@ -259,3 +259,79 @@ func test_there_is_no_carry_weight_anywhere() -> void:
 		var definition: Dictionary = db.definition(str(id))
 		assert_false(definition.has("weight"), "%s declares a weight" % id)
 		assert_false(definition.has("mass"), "%s declares a mass" % id)
+
+
+func test_drop_slot_empties_the_slot_and_returns_what_was_there() -> void:
+	bag.add("wood", 6)
+	var occupied: int = bag.find_slot("wood")
+	var dropped: Dictionary = bag.drop_slot(occupied)
+	assert_eq(dropped, {"id": "wood", "n": 6})
+	assert_true(bag.is_slot_empty(occupied))
+	assert_eq(bag.count("wood"), 0)
+
+
+func test_drop_slot_on_an_empty_slot_changes_nothing() -> void:
+	var before: int = bag.revision
+	var dropped: Dictionary = bag.drop_slot(0)
+	assert_true(dropped.is_empty())
+	assert_eq(bag.revision, before)
+
+
+func test_drop_slot_out_of_range_is_a_no_op() -> void:
+	assert_true(bag.drop_slot(-1).is_empty())
+	assert_true(bag.drop_slot(INVENTORY.SLOT_COUNT).is_empty())
+
+
+func test_drop_slot_only_touches_the_named_slot_not_other_stacks_of_the_same_id() -> void:
+	# The reason drop is its own method rather than remove(id, n): remove()
+	# drains whichever stack is smallest, which is never what "discard the
+	# thing I'm looking at" means when the same item is split across slots.
+	bag.set_slot(0, {"id": "wood", "n": 3})
+	bag.set_slot(5, {"id": "wood", "n": 9})
+	bag.drop_slot(5)
+	assert_eq(bag.stack_at(0), {"id": "wood", "n": 3})
+	assert_true(bag.is_slot_empty(5))
+	assert_eq(bag.count("wood"), 3)
+
+
+func test_split_slot_divides_a_stack_into_the_first_empty_slot() -> void:
+	bag.add("wood", 10)
+	var occupied: int = bag.find_slot("wood")
+	assert_true(bag.split_slot(occupied))
+	assert_eq(int(bag.stack_at(occupied).get("n", 0)), 5)
+	# find_slot only ever returns the first match, so read every slot instead
+	# of relying on it to find the second stack.
+	var second := -1
+	for i in INVENTORY.SLOT_COUNT:
+		if i != occupied and not bag.is_slot_empty(i):
+			second = i
+			break
+	assert_true(second >= 0, "the other half must have landed somewhere")
+	assert_eq(int(bag.stack_at(second).get("n", 0)), 5)
+
+
+func test_split_slot_with_an_odd_count_leaves_the_larger_half_in_place() -> void:
+	bag.add("wood", 7)
+	var occupied: int = bag.find_slot("wood")
+	bag.split_slot(occupied)
+	assert_eq(int(bag.stack_at(occupied).get("n", 0)), 4)
+
+
+func test_split_slot_refuses_a_stack_of_one() -> void:
+	bag.add("axe", 1)
+	var occupied: int = bag.find_slot("axe")
+	var before: int = bag.revision
+	assert_false(bag.split_slot(occupied))
+	assert_eq(bag.revision, before)
+
+
+func test_split_slot_refuses_an_empty_slot() -> void:
+	assert_false(bag.split_slot(0))
+
+
+func test_split_slot_refuses_when_the_satchel_is_full() -> void:
+	for i in INVENTORY.SLOT_COUNT:
+		bag.set_slot(i, {"id": "stone", "n": 1})
+	var before: int = bag.revision
+	assert_false(bag.split_slot(0), "there is no empty slot for the other half to go to")
+	assert_eq(bag.revision, before)

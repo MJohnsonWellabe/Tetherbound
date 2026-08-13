@@ -263,6 +263,54 @@ func repair_tool(index: int) -> void:
 	revision += 1
 
 
+## Discard everything in a slot. Different from remove(id, n): drop targets
+## the SPECIFIC slot the player is looking at, never whichever stack of a
+## matching id happens to be smallest elsewhere in the satchel (which is what
+## remove() would touch). Returns what was discarded, empty on a slot that
+## already was.
+func drop_slot(index: int) -> Dictionary:
+	if index < 0 or index >= SLOT_COUNT:
+		return {}
+	var stack: Variant = _slots[index]
+	if stack == null:
+		return {}
+	_slots[index] = null
+	revision += 1
+	return (stack as Dictionary).duplicate()
+
+
+## Split a stack roughly in half into the first empty slot, the larger half
+## staying put. Refuses (returns false, changes nothing) on an empty slot, a
+## stack of 1 -- a tool or a single item, nothing to divide -- or a full
+## satchel with nowhere to put the other half.
+func split_slot(index: int) -> bool:
+	if index < 0 or index >= SLOT_COUNT:
+		return false
+	var stack: Variant = _slots[index]
+	if stack == null:
+		return false
+	var dict := stack as Dictionary
+	var n: int = int(dict.get("n", 0))
+	if n <= 1:
+		return false
+
+	var target := -1
+	for i in SLOT_COUNT:
+		if _slots[i] == null:
+			target = i
+			break
+	if target == -1:
+		return false
+
+	var half := n / 2
+	dict["n"] = n - half
+	var moved := dict.duplicate()
+	moved["n"] = half
+	_slots[target] = moved
+	revision += 1
+	return true
+
+
 ## Write a slot directly, bypassing add()/remove()'s stacking and merge rules.
 ## Used only by save/load (R3.1) to rehydrate a satchel exactly as it was,
 ## position and all — the class comment above is explicit that slot POSITION

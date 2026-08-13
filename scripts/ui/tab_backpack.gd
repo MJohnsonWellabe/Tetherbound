@@ -32,6 +32,10 @@ const PARTY := preload("res://autoload/party.gd")
 ## Same button as the pals tab's "set active": use the focused item.
 const USE_ACTION := "interact"
 
+## Discard the focused item (with confirmation) or split its stack in two.
+const DROP_ACTION := "item_drop"
+const SPLIT_ACTION := "item_split"
+
 var _grid: GridContainer = null
 var _summary: Label = null
 var _detail_name: Label = null
@@ -53,10 +57,16 @@ var _focused: int = 0
 ## is not a second "held" state, nothing moves.
 var _targeting: int = -1
 
+## Slot awaiting a drop confirmation, or -1. Same shape as `_targeting`: the
+## item stays put until `menu_confirm` actually discards it, so a stray press
+## can never lose an item by accident.
+var _confirming_drop: int = -1
+
 var _content_row: Control = null
 var _target_panel: VBoxContainer = null
 var _target_header: Label = null
 var _target_rows: Array = []
+var _drop_confirm_label: Label = null
 
 
 func build() -> void:
@@ -66,6 +76,7 @@ func build() -> void:
 	_target_rows.clear()
 	_held = -1
 	_targeting = -1
+	_confirming_drop = -1
 
 	var config := _config()
 	var backpack: Dictionary = config.get("backpack", {}) as Dictionary
@@ -122,6 +133,12 @@ func build() -> void:
 	_target_panel = _build_target_panel()
 	_target_panel.visible = false
 	add_child(_target_panel)
+
+	_drop_confirm_label = Label.new()
+	_drop_confirm_label.add_theme_font_size_override("font_size", 24)
+	_drop_confirm_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_drop_confirm_label.visible = false
+	add_child(_drop_confirm_label)
 
 	poll()
 
@@ -193,6 +210,8 @@ func poll() -> void:
 	_read_targeting_cancel()
 	if _targeting >= 0:
 		_refresh_target_panel()
+	_read_drop()
+	_read_split()
 
 	var slots: int = int(inventory.call("slot_count"))
 	var used: int = int(inventory.call("used_slots"))
@@ -259,7 +278,7 @@ func _on_slot(index: int) -> void:
 func _read_use() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
-	if _targeting >= 0:
+	if _targeting >= 0 or _confirming_drop >= 0:
 		return
 	if not Input.is_action_just_pressed(USE_ACTION):
 		return
@@ -395,6 +414,91 @@ func _end_targeting() -> void:
 	_content_row.visible = true
 	if _focused >= 0 and _focused < _buttons.size():
 		_buttons[_focused].grab_focus()
+
+
+## Discard the focused item. Two-step, same shape as `_read_use`'s heal
+## picker: the first press only arms the confirmation (grid hidden, so no
+## focused Button double-fires `menu_confirm` into `_on_slot`), and only a
+## second, explicit `menu_confirm` actually empties the slot. `menu_cancel`
+## backs out with nothing lost. Deliberate discard, not a world drop — no
+## pickup-in-the-world system exists yet (that is `R3.2`'s death-satchel
+## territory, not this item's), so "dropped" here means gone.
+func _read_drop() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _targeting >= 0:
+		return
+
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	if inventory == null or db == null:
+		return
+
+	if _confirming_drop < 0:
+		if not Input.is_action_just_pressed(DROP_ACTION):
+			return
+		var stack: Dictionary = inventory.call("stack_at", _focused)
+		if stack.is_empty():
+			return
+		_confirming_drop = _focused
+		menu.call("hold_input", true)
+		menu.call("override_footer", "A  Discard        B  Cancel")
+		_content_row.visible = false
+		if _focused >= 0 and _focused < _buttons.size():
+			_buttons[_focused].release_focus()
+		_drop_confirm_label.text = "Discard %s? This cannot be undone." % [
+			str(db.call("item_name", str(stack.get("id", ""))))
+		]
+		_drop_confirm_label.visible = true
+		return
+
+	if Input.is_action_just_pressed("menu_confirm"):
+		var dropped: Dictionary = inventory.call("drop_slot", _confirming_drop)
+		if not dropped.is_empty():
+			say("Discarded %s." % str(db.call("item_name", str(dropped.get("id", "")))))
+		_end_drop_confirm()
+	elif Input.is_action_just_pressed("menu_cancel"):
+		say("")
+		_end_drop_confirm()
+
+
+func _end_drop_confirm() -> void:
+	_confirming_drop = -1
+	menu.call("hold_input", false)
+	menu.call("override_footer", "")
+	_drop_confirm_label.visible = false
+	_content_row.visible = true
+	if _focused >= 0 and _focused < _buttons.size():
+		_buttons[_focused].grab_focus()
+
+
+## Split the focused stack roughly in half into the first empty slot.
+## Immediate, no confirmation -- nothing is lost, only redistributed, so this
+## does not need the drop verb's two-step guard.
+func _read_split() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _targeting >= 0 or _confirming_drop >= 0:
+		return
+	if not Input.is_action_just_pressed(SPLIT_ACTION):
+		return
+
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	if inventory == null or db == null:
+		return
+
+	var stack: Dictionary = inventory.call("stack_at", _focused)
+	if stack.is_empty():
+		say("Nothing there to split.")
+		return
+	if int(stack.get("n", 0)) <= 1:
+		say("Only one — nothing to split.")
+		return
+	if not bool(inventory.call("split_slot", _focused)):
+		say("No empty slot to split into.")
+		return
+	say("Split %s." % str(db.call("item_name", str(stack.get("id", "")))))
 
 
 func _describe(index: int) -> void:

@@ -3,7 +3,46 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
-## OF6 — World boundary: the hard collision stop now matches the visible perimeter
+## Backpack equip/drop/split verbs — Drop and Split shipped; Equip found to have no referent
+`autoload/inventory.gd`, `scripts/ui/tab_backpack.gd`, `project.godot`,
+`data/config/menu.json`, `tests/test_inventory.gd` on
+`claude/ralph-phase-1-backlog-22u3pz` (manual session). `model: sonnet` —
+mechanical, no dispatch. `tests: test_inventory.gd` (9 new cases), full
+suite green (403 tests, 89366 assertions, 0 failed), `smoke_settings.gd`/
+`smoke_menu.gd`/`smoke_playground.gd` all pass.
+
+Checked what "equip" could mean before building anything: `harvest_logic.gd`
+finds any owned tool by `find_slot()` and uses it directly — there is no
+equipped-tool state anywhere in the codebase, and CLAUDE.md/`conventions.md`
+both say not to invent a mechanic nothing else needs. Equip is out of scope
+until something (a wearable item type, say) actually requires it; that
+would be its own flagged decision, not folded into this item.
+
+Drop and Split are real, both new:
+- `Inventory.drop_slot(index)` — discards a SPECIFIC slot's whole stack.
+  Deliberately not routed through `remove(id, n)`, which drains whichever
+  stack of that id is smallest wherever it happens to be — not what
+  "discard the thing I'm looking at" means once an item is split across
+  slots. No world-pickup exists yet (that's `R3.2`'s death-satchel
+  territory) so dropped means gone, not spawned in the world.
+- `Inventory.split_slot(index)` — divides a stack roughly in half (floor)
+  into the first empty slot, the larger half staying put. Refuses on an
+  empty slot, a stack of 1 (which is every tool, since tools are `stack: 1`
+  — no separate tool-guard needed), or a full satchel.
+- Two new input actions, `item_drop`/`item_split`, added to `project.godot`
+  and to `menu.json`'s Controls screen (new "Backpack" group) — both
+  fully rebindable through the existing D15 settings pipeline for free,
+  since `key_bindings.gd` reads `InputMap.get_actions()` directly rather
+  than a hardcoded list. Bound to G/X on keyboard, D-pad down / right-stick
+  click on gamepad — both genuinely free buttons (checked the full
+  `project.godot` `[input]` block and `menu.json`'s existing `pad_N` glyph
+  table before picking them; no new glyph entries were needed).
+- Drop asks for confirmation before it actually empties the slot — same
+  two-step shape `_read_use()`'s heal-target picker already uses
+  (`_content_row.visible = false` so no focused grid Button can double-fire
+  `menu_confirm` into `_on_slot`, `menu.hold_input`/`override_footer` for
+  the same reason). Split needs no confirmation: nothing is lost, only
+  redistributed.
 `67cb050` on `claude/ralph-backlog-of6-7-10-11-dbiydq` (manual session
 shipping `OF6`/`OF7`/`OF10`/`OF11` together, owner request). `model: sonnet`
 — mechanical, no dispatch.

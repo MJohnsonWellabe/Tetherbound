@@ -2524,18 +2524,14 @@ from the 7% figure — the same kind of instrumented reproduction
   bullet was itself stale — caught 2026-08-13 while auditing the backlog
   ahead of the Phase 1 vocabulary change.
 
-### Backpack equip/drop/split verbs — promoted to a real scheduled item
-`area: ui` · `model: sonnet` · previously "found along the way,
-unscheduled." ~~Backpack has no use/consume/equip/drop/split verb; the
-only action is moving an item.~~ **Corrected 2026-08-11: this was stale.**
-A use verb already exists (`tab_backpack.gd::_read_use()`) and already
-heals from `heal`-tagged items — `potion_small` (`heal: 35`) is usable
-today. The real remaining gap: the verb has no equip/drop/split siblings.
-(`berries` carrying no `heal` value is `R7.5`'s own item; using any of it
-without the full backpack menu is `HD2`'s, Phase -0.85.) Done when: an
-item in the backpack can be equipped, dropped, and split into a partial
-stack, each using the same verb-dispatch pattern `_read_use()` already
-established.
+**Backpack equip/drop/split verbs shipped — see `DONE.md`.** Drop and
+Split are real (`Inventory.drop_slot`/`split_slot`, two new rebindable
+input actions, a two-step confirm on Drop reusing `_read_use()`'s own
+picker mechanism). Equip was checked, not built: nothing in the codebase
+has an equipped-item state to attach it to (tools apply by ownership,
+`harvest_logic.gd::find_slot()`), so building one would be inventing a
+mechanic nothing needs — out of scope unless a real wearable item type
+shows up and makes it a real question.
 - **`menu.json`'s stray `test_menu_config.gd` references and phantom
   `hotbar_columns` comment fixed — see `DONE.md`.**
 - ~~Opening the menu mid-fight is silently refused with no on-screen

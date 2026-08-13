@@ -86,6 +86,10 @@
         {
           "name": "Menus",
           "actions": ["menu_confirm", "menu_cancel"]
+        },
+        {
+          "name": "Backpack",
+          "actions": ["item_drop", "item_split"]
         }
       ],
 
@@ -112,7 +116,9 @@
         "combat_switch_left": "Send out the previous pal",
         "combat_switch_right": "Send out the next pal",
         "menu_confirm": "Confirm",
-        "menu_cancel": "Back  /  close the menu"
+        "menu_cancel": "Back  /  close the menu",
+        "item_drop": "Discard the focused item",
+        "item_split": "Split the focused stack"
       },
 
       "glyphs": {
