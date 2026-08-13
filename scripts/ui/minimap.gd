@@ -279,7 +279,7 @@ func _draw_objective(centre: Vector2, scale_px_per_m: float, visible_radius: flo
 	if clamped:
 		var world_dist := Vector2(_player_pos.x, _player_pos.z).distance_to(pos2)
 		var label := "◇ %d m" % int(round(world_dist))
-		_draw_upright_text(local + offset.normalized() * 16.0, label, UITokens.FONT_TINY, UITokens.TEXT_PRIMARY)
+		_draw_upright_text(local + offset.normalized() * 10.0, label, UITokens.FONT_TINY, UITokens.TEXT_PRIMARY)
 
 
 # --- frame -----------------------------------------------------------------
