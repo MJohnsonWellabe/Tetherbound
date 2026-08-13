@@ -619,7 +619,57 @@ func _build_sign(world: Node3D, spoke: Dictionary, id: String) -> void:
 	var post: Node3D = SIGNPOST.new()
 	post.name = "SpokeSign_%s" % id
 	add_child(post)
-	post.call("build", world, at, [{"label": label, "points": points}])
+	post.call("build", world, at, [{"label": label, "points": _aimed_points(points, spoke.get("road", []))}])
+
+
+## SA4 stage 3. `signpost.gd` paints its labels on the plank's two BROAD
+## faces, whose normal is perpendicular to the arm's own bearing — so an arm
+## aimed straight down the road presents its EDGE to a player walking up that
+## road, and the sign reads as a bare stick. OF10 round 2 found exactly this
+## and `paths.trailheads` answers it by aiming the Rise fingerpost ~25 degrees
+## off the road's bearing.
+##
+## Every spoke sign names where the severed road WENT, so every one of them is
+## authored pointing along the continuation, and every one inherited the
+## failure. SA4's first blind render confirmed it in the plainest possible
+## terms: "a thin brown vertical pole appears in four of the five frames and
+## is unreadable in every one ... signposts whose boards are edge-on to
+## camera, so they present as bare sticks. Four frames, four sticks."
+##
+## The config keeps telling the truth about the destination; the builder turns
+## the plank the minimum needed off the approach LINE (either end of it — an
+## arm aimed back down the road is just as edge-on) to be legible. Signs
+## already clear of the line by SIGN_AIM_OFF_DEG are left exactly as authored.
+const SIGN_AIM_OFF_DEG := 25.0
+
+
+func _aimed_points(points: Array, road: Array) -> Array:
+	if road.size() < 2 or points.size() < 2:
+		return points
+	var origin := _vec2(points[0])
+	var target := _vec2(points[1])
+	var road_end := _vec2(road[road.size() - 1])
+	var road_prev := _vec2(road[road.size() - 2])
+	if origin == Vector2.INF or target == Vector2.INF or road_end == Vector2.INF or road_prev == Vector2.INF:
+		return points
+	var approach := (road_end - road_prev).normalized()
+	var bearing := (target - origin).normalized()
+	if approach == Vector2.ZERO or bearing == Vector2.ZERO:
+		return points
+
+	var off := deg_to_rad(SIGN_AIM_OFF_DEG)
+	var delta := bearing.angle_to(approach)
+	var separation := absf(delta)
+	var behind := separation > PI * 0.5
+	if behind:
+		separation = PI - separation
+	if separation >= off:
+		return points
+
+	var direction := 1.0 if (delta >= 0.0) == behind else -1.0
+	var turned := bearing.rotated(direction * (off - separation))
+	var aimed := origin + turned * origin.distance_to(target)
+	return [[origin.x, origin.y], [aimed.x, aimed.y]]
 
 
 func _rock_mesh(index: int) -> Mesh:
