@@ -43,10 +43,14 @@ static var last_bake_was_cache_hit := false
 
 ## Samples `world.call("ground_height_at", x, z)` on a `resolution`² grid
 ## across the full ±256m playground and colours each pixel by height/slope.
-## `world` only needs to answer `ground_height_at` — the fake world
-## `tests/test_map_baker.gd` builds is a bare `RefCounted`, not a real scene
-## node, and never touches Terrain3D.
-static func bake(world: Node, resolution: int = 512) -> ImageTexture:
+## `world` is typed `Object`, not `Node`, deliberately: it only needs to
+## answer `ground_height_at`, and `tests/test_map_baker.gd` exercises this
+## with a bare `RefCounted` fake — no scene tree, no Terrain3D — so this
+## stays testable headlessly the same way the rest of the pure-logic layer
+## (`playground_heightfield.gd`, `map_state.gd`) already is. The real caller
+## (`tools/capture_minimap.gd`) passes the actual playground `Node`, which is
+## an `Object` too.
+static func bake(world: Object, resolution: int = 512) -> ImageTexture:
 	var step := (HALF_SPAN * 2.0) / float(resolution)
 
 	var heights := PackedFloat32Array()
@@ -108,7 +112,7 @@ static func bake(world: Node, resolution: int = 512) -> ImageTexture:
 ## constant someone has to remember to bump) makes a stale cache impossible
 ## without an explicit "I changed the terrain and forgot" bug in this file
 ## itself.
-static func bake_cached(world: Node, cache_path: String = "user://cache/map_meadows.png") -> ImageTexture:
+static func bake_cached(world: Object, cache_path: String = "user://cache/map_meadows.png") -> ImageTexture:
 	var config_bytes := FileAccess.get_file_as_bytes(TERRAIN_CONFIG_PATH)
 	var key := str(hash(config_bytes))
 	var key_path := cache_path + ".key"

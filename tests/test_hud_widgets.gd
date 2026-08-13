@@ -104,7 +104,7 @@ func test_fainted_entry_dims_and_tints_its_hp_bar_danger() -> void:
 	# fainted."
 	strip.update_from_party(entries, 0)
 
-	assert_almost_eq(strip._rows[0].modulate.a, PARTY_STRIP.FAINTED_MODULATE,
+	assert_almost_eq(strip._rows[0].modulate.a, PARTY_STRIP.FAINTED_MODULATE, 0.001,
 		"a fainted pal should read as dimmed even while selected")
 	assert_eq(strip._hp_fills[0].bg_color, UI_TOKENS.DANGER, "a fainted pal's hp bar should be danger-tinted")
 	strip.free()

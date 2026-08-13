@@ -23,6 +23,11 @@
       "script": "res://scripts/ui/tab_pals.gd"
     },
     {
+      "id": "map",
+      "label": "Map",
+      "script": "res://scripts/ui/tab_map.gd"
+    },
+    {
       "id": "build",
       "label": "Build",
       "script": "res://scripts/ui/tab_build.gd"
