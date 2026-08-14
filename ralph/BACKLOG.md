@@ -1240,28 +1240,10 @@ pressed from the hotbar applies to whichever pal is hurt worst instead of
 opening a picker; recorded as a real, considered fork, not a silent revert of
 `OF2`. One real gap opened below rather than silently shipped.
 
-### HD2-remainder — Hotbar has no combat gate
-`model: sonnet` · `tests: none` · `area: ui`
-
-**Owner-directed handoff, 2026-08-13: this item rides the live HUD-overhaul
-session (`claude/game-upgrades-46qpsy`), which is mid-rewrite on
-`playground_hud.gd` (+950 lines) — do NOT work it from any other session;
-an edit from outside that branch guarantees a merge conflict with work the
-owner has already sanctioned.** Asked directly; the owner chose handing it
-to that session over closing it as intentional or building it in parallel.
-Whoever finishes that HUD branch should absorb the fix below into it (or
-land it immediately after), then mark this item done.
-
-`playground_hud.gd` keeps processing (and its hotbar keeps reading input)
-while a fight is running — `combat_hud.gd` draws on top of it, it does not
-replace it — so a player can free-heal from the hotbar mid-fight today.
-Traced why this wasn't fixed in `HD2` itself: `CombatManager` is wired to
-`encounter_director.gd` by a scene-local `NodePath`, and there is no
-`Game`-visible "a fight is on" flag `playground_hud.gd` can reach without
-adding new cross-system plumbing — bigger than a hotbar item should be.
-Done when: a real `Game.is_in_combat()`-style flag exists and the hotbar
-reads it (the owner declined the close-as-intentional option — free
-mid-fight healing is NOT accepted as permanent design).
+**`HD2-remainder` (hotbar combat gate) shipped — see `DONE.md`.** Landed
+inside the HUD-overhaul branch's own rewrite, as this item's handoff note
+expected, but never logged back here when that branch merged — found done
+by a bookkeeping pass, not by picking the item up.
 
 **`CO1` (manual pal summon, dismiss and swap) shipped — see `DONE.md`.**
 

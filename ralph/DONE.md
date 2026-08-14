@@ -3,6 +3,37 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## HD2-remainder — hotbar goes deaf during combat
+
+`model: sonnet` · `tests: none` · found done, not built
+
+**What shipped:** the fix this item asked for — a real "a fight is on" gate
+before the hotbar reads input — is in `scripts/ui/playground_hud.gd` on
+`main` right now: `_read_hotbar_input()` returns early when
+`_combat_is_running()` is true, and that helper does the defensive
+`CombatManager` lookup (`world.get_node_or_null(^"CombatManager")`, checked
+for `is_fighting()`) the item's own text said didn't exist yet. The inline
+comment above the gate is literally tagged `# HD2:` and calls out the exact
+regression this closes — `hotbar_2`/`hotbar_3` sharing the physical d-pad
+with `combat_switch_left`/`right` (D32), so a mid-fight pal switch was
+quietly eating a potion.
+
+**Not new work — a bookkeeping fix.** This item's own handoff note (written
+2026-08-13) pinned it to the live HUD-overhaul branch
+(`claude/game-upgrades-46qpsy`) precisely so nobody else would touch
+`playground_hud.gd` concurrently. That branch merged into `main` today
+carrying this fix bundled into one of its M-series commits, but nothing
+ever logged it back against this item, so it sat open in `BACKLOG.md`
+describing a bug that no longer exists. Found by re-reading the current file
+against the item's own "done when," not by picking the item up and building
+anything — no code changed here.
+
+**Unverified by render.** Confirmed by reading `_combat_is_running()`'s call
+site and body directly, not by a fresh `tools/survey_combat.sh` capture — no
+Godot binary was available in the environment this bookkeeping pass ran in.
+The gate's logic is unambiguous from the source, but an actual mid-fight
+hotbar press hasn't been re-tested end to end since this was found.
+
 ## EV5-remainder-2 (outlet) — the pond gets a real rim and a stream-width neck into SA4's river_gorge
 
 `model: opus (owner-directed, token budget)` · `tests: smoke_traversal`,
