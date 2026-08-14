@@ -1732,30 +1732,11 @@ already rendered, and it was not.
 
 ## Phase 1 — vocabulary, before the codebase grows
 
-### R1.1 — Rename `pal` → `creature` everywhere
-`model: haiku` · `tests: FULL SUITE`
-
-~446 occurrences across 52 code files at last count (the overhaul will have
-moved it — recount, don't trust it), plus `scripts/pals/` →
-`scripts/creatures/`, `assets/pals/` → `assets/creatures/`, `data/pals/` →
-`data/creatures/`, scene node names, class names, signals, UI strings,
-dialogue, and every doc including `CLAUDE.md` and `GAME_DESIGN.md`.
-
-Mechanical but wide. Godot resource paths (`res://`) live in `.tscn`, `.tres`
-and `.import` files as well as `.gd` — a rename that misses those breaks the
-project silently at load. Do it in one commit so no intermediate state is half
-renamed.
-
-Leave `docs/decisions/D01`–`D20` on the old vocabulary: they are a historical
-record of decisions made when the word was "pal", and rewriting history to
-match present vocabulary is how a decision log stops being trustworthy. Add
-one line to each affected decision noting the rename instead.
-
-Done when: no `\bpals?\b` outside `docs/decisions/`, full suite green, Windows
-export succeeds.
-
-### R1.2 — Vocabulary sweep of the handoff and decision index
-`model: haiku` · `tests: none`
+**`R1.1`/`R1.2` (rename `pal` → `creature` everywhere) shipped 2026-08-14 — see `DONE.md`.** One mechanical commit, camelCase/snake_case-aware, applied
+identically to paths and content; the four directory moves, every code
+reference, and the explicitly-named docs all landed together. `docs/decisions/`
+kept its original vocabulary with a one-line note per affected file, per this
+item's own instruction. Full suite (596 tests) and every CI smoke test green.
 
 ---
 
@@ -1766,17 +1747,6 @@ The session shipped harvest nodes, camp placement, campfire/bedroll and rest
 rather than a scripted route.
 
 **`R2.1` (Tools) shipped — see `DONE.md`.**
-
-**Bookkeeping note, 2026-08-12: `R1.1`'s codebase-wide `pal`→`creature`
-rename is nominally topmost/unheld but was skipped as unsafe to start while
-7 lanes hold `story`/`terrain`/`vegetation`/`village`/`ui`/`lighting`/`perf`
-— it touches ~446 occurrences across every `.gd`/`.tscn`/`.tres` file, which
-collides with every one of those in-flight branches at once rather than
-zero of them. `R1.2` depends on `R1.1` having happened, so it is not
-independently takeable either. Neither is blocked in the `BLOCKED.md`
-sense — both are simply not safe to start with this many concurrent
-lanes live; a future firing with the areas quiet is the right one to
-take them.
 
 **`R2.2` (Tool durability and free repair) shipped — see `DONE.md`.** Repair
 is free, from the backpack menu rather than a physical workbench — `R2.7`

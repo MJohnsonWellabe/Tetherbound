@@ -3,6 +3,76 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R1.1 / R1.2 — pal -> creature, everywhere
+
+`model: sonnet` · `06df0bb` · `tests: full suite (596/596), every verify-core
+and verify-scenarios smoke test run directly`
+
+One mechanical pass, camelCase/snake_case-boundary-aware and case-preserving,
+applied identically to file paths and text content in a single script run so
+paths and their references could never drift apart: `pal`/`Pal`/`PAL`/
+`pals`/`Pals`/`PALS` -> the matching `creature` form, wherever "pal" is its
+own whole word. Verified false-positive-free against this exact codebase
+first (`palette`, `pallet`, `principal`, `appeal`, `special`, `signal`,
+`PALWORLD`, and a coincidental "pal" substring inside a random Godot uid all
+survive untouched, by construction — the algorithm only ever recognises a
+complete camelCase sub-word, never a substring of a longer run).
+
+`scripts/pals/` -> `scripts/creatures/`, `scenes/pals/` -> `scenes/creatures/`,
+`assets/pals/` -> `assets/creatures/`, `data/pals/` -> `data/creatures/`, every
+`pal_*` file inside them (models, textures, `.import`/`.uid` sidecars —
+`source_file=` paths corrected in the same pass), every preload/node-name/
+input-action-id/identifier reference across `.gd`/`.tscn`/`.tres`/`.json`/
+`.cfg`, `tools/` including the Python art pipeline, and `.github/workflows/
+ci.yml`'s own comments.
+
+Docs swept: `CLAUDE.md`, `GAME_DESIGN.md`, `MEADOWS_VERTICAL_SLICE.md`,
+`MEADOWS_PROGRESSION_SPEC.md`, `TECHNICAL_START.md`,
+`ENVIRONMENT_AND_UI_BIBLE.md`, `ASSET_LEDGER.md`, `OPENING_SEQUENCE.md`,
+`CREATURE_ART_SHOPPING_LIST.md`, `HANDOFF.md` (closing `R1.2`),
+`GODOT_AND_CLAUDE_START_HERE.md`, `README.md`, `site/index.html`,
+`site/README.md` — current prescriptive/reference material. Deliberately
+**not** swept: `docs/decisions/` (17 affected files each got one
+`> Vocabulary note:` blockquote instead, per this item's own instruction —
+rewriting a decision record to match present vocabulary is how a decision
+log stops being trustworthy), `docs/art/`, `docs/reference/`,
+`docs/reviews/` (historical production/critique snapshots, same reasoning),
+`ralph/BACKLOG.md`/`DONE.md`/`BLOCKED.md` itself (a live but heavily-quoted
+log — rewriting it would silently edit what past critics and commits
+actually said), `assets_raw/` (raw pipeline working directories, not
+shipped content), and `addons/terrain_3d` (vendored third-party plugin).
+`R1.2`'s own "decision index" does not exist as a separate file — checked
+directly, `docs/decisions/` has no README/index, only the D-numbered
+records — so nothing further was owed there.
+
+One genuine meta-reference caught and hand-fixed rather than left broken:
+`HANDOFF.md`'s own line naming this item as the "pal→creature rename"
+mechanically became "creature→creature rename" under the blind pass, since
+that sentence uses the word specifically to describe renaming it away —
+reworded instead ("vocabulary rename to 'creature'").
+
+**Verified, not asserted.** A clean `--import` (no SCRIPT ERROR/Parse
+Error/Cannot open — the renamed `.import` sidecars resolve correctly); the
+full unit suite; every `verify-core`/`verify-scenarios` smoke test
+(`playground`, `input`, `traversal`, `free_build`, `catching`, `combat`,
+`aggression`, `opening`, `menu`, `settings`) run directly against a fresh
+local Godot 4.7 toolchain (none was pre-installed this session — set up
+specifically for this and the prior OF12/EV2/EV5/EV9 verification work),
+plus `smoke_art` (loads and measures the whole creature roster from its new
+asset paths) and `smoke_creature_control` (renamed from
+`smoke_pal_control`). `smoke_combat` failed once ("the enemy never landed a
+hit") on the first run and passed clean on two immediate re-runs of
+byte-identical code — matches this project's own already-documented,
+pre-existing combat-AI timing flake (`HANDOFF.md` §6, backlog `R4.11`), not
+a regression: this rename only ever changes identifiers, never logic or
+numeric thresholds.
+
+Landed via `ralph/r1.1-r1.2-pal-rename` through the standard CI-gated
+auto-merge; the real Windows `Release` export (not CI's own debug export)
+was dispatched against this exact commit immediately after the merge — see
+whether that run's own record confirms it, since it was still in flight
+when this entry was written.
+
 ## EV9 — HP/stamina/pals HUD icons wired in (owner-supplied art)
 
 `model: sonnet` · `tests: full suite (590/590), test_hud_widgets.gd` ·
