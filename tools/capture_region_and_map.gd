@@ -90,12 +90,24 @@ func _run() -> void:
 			written.append(banner_path)
 			print("  %-20s -> %s" % ["region_banner", banner_path])
 
-	# --- (b) full map: a realistic day-1 footprint through two named regions,
-	# same reveal capture_map_tab.gd seeds, plus entering Grandpa's Meadow so
-	# a second region label has something to draw.
+	# --- (b) full map: a realistic day-1 footprint through three named
+	# regions, same reveal capture_map_tab.gd seeds, plus explicitly
+	# entering Village Square and Grandpa's Meadow.
+	#
+	# EXPLICIT, not incidental: both centres are close enough to the
+	# player's own spawn point that game_state.gd's own periodic
+	# map.update_region() call can auto-discover one or both of them during
+	# the SETTLE_FRAMES wait above, depending on exactly how many real
+	# engine frames that throttled tick catches -- which varies run to run
+	# with this sandbox's frame pacing. Calling update_region() on both
+	# centres directly makes every run exercise the SAME pair (they are
+	# ~33m apart, the closest two of the five authored regions, and the
+	# actual case the label-overlap fix exists for) instead of whatever
+	# subset happened to land first.
 	map_state.reveal_circle(Vector3(-6.0, 0.0, -13.0), 55.0)
 	for point in [Vector3(-22.0, 0.0, -16.0), Vector3(10.0, 0.0, -10.0), Vector3(27.5, 0.0, -16.0)]:
 		map_state.mark_visited(point)
+	map_state.update_region(Vector3(10.0, 0.0, -10.0))
 	map_state.update_region(Vector3(-22.0, 0.0, -16.0))
 	game.call("set_objective", "Restore the Old Mill Crossing", Vector3(200.0, 0.0, -140.0))
 
