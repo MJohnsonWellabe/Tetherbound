@@ -62,7 +62,14 @@ func _run() -> void:
 	if player != null:
 		map_state.mark_visited(player.global_position)
 	menu.call("open", "map")
-	for i in 10:
+	# tab_map.gd's own SETTLE_FRAMES=6 self-expiring redraw exists exactly
+	# for a documented software-rendering race (a freshly baked ImageTexture
+	# is not guaranteed uploaded to the GPU before the SAME frame samples
+	# it, measured as "terrain renders solid white"). The first capture of
+	# this tab rendered exactly that white square, still, after 10 frames —
+	# so this waits far longer to separate "needs more frames in a uniquely
+	# slow sandbox" from "the mitigation does not actually work."
+	for i in 90:
 		await process_frame
 	await _shoot("map_tab_fresh", written, failures)
 	menu.call("close")
@@ -77,7 +84,7 @@ func _run() -> void:
 		map_state.mark_visited(point)
 	game.call("set_objective", "Restore the Old Mill Crossing", Vector3(200.0, 0.0, -140.0))
 	menu.call("open", "map")
-	for i in 10:
+	for i in 90:
 		await process_frame
 	await _shoot("map_tab_day1", written, failures)
 
