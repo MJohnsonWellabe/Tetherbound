@@ -68,9 +68,27 @@ func _run() -> void:
 		player.global_position = Vector3(30.0, player.global_position.y, -40.0)
 	map_state.mark_visited(Vector3(30.0, 0.0, -40.0))
 	map_state.update_region(Vector3(30.0, 0.0, -40.0))
-	for i in 6:
-		await process_frame
-	await _shoot("region_banner", written, failures)
+	# NOT the usual `_shoot()` (an 8-frame pad + frame_post_draw): a debug
+	# probe (tools/_probe_region_banner.gd) proved the banner sets
+	# visible=true exactly one frame after `update_region()`, then confirmed
+	# it was already hidden again just one frame after THAT -- this sandbox's
+	# software rendering is slow enough that a handful of engine frames
+	# reliably burns past REGION_BANNER_SECONDS (3.2s) of real wall-clock
+	# time. Shooting on the very next frame is the only way this capture
+	# catches the banner up rather than proving nothing about it.
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var banner_image := root.get_texture().get_image()
+	if banner_image == null:
+		failures.append("region_banner: viewport returned no image")
+	else:
+		var banner_path := "%s/region_banner.png" % OUT_DIR
+		var banner_err := banner_image.save_png(banner_path)
+		if banner_err != OK:
+			failures.append("region_banner: save_png failed (%d)" % banner_err)
+		else:
+			written.append(banner_path)
+			print("  %-20s -> %s" % ["region_banner", banner_path])
 
 	# --- (b) full map: a realistic day-1 footprint through two named regions,
 	# same reveal capture_map_tab.gd seeds, plus entering Grandpa's Meadow so

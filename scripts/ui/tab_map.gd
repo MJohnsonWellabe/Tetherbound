@@ -396,11 +396,18 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 		var collided := false
 		for other in placed:
 			if rect.intersects(other):
+				# Drop straight to just under THIS collider's own bottom edge,
+				# not down by this label's own height -- two centres that are
+				# only a few pixels apart in Y (Village Square and Grandpa's
+				# Meadow, ~5px apart at this map's scale) mean a same-size
+				# blind shift can still leave the new top a few pixels inside
+				# the old bottom. Anchoring to the actual collider geometry
+				# is what guarantees real clearance regardless of how close
+				# the two centres started.
+				rect.position.y = other.position.y + other.size.y + 2.0
 				collided = true
-				break
 		if not collided:
 			break
-		rect.position.y += text_size.y + 2.0
 		attempts += 1
 	placed.append(rect)
 
