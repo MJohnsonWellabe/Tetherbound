@@ -152,16 +152,13 @@ extreme macro close-ups from specific angles, confirmed invisible in both
 `tools/capture_village_npcs.gd`'s production frame and a matching in-game
 close-up at normal camera distance.
 
-**`villager_male`/`grunt` deliberately not attempted this pass.** Landing
-one clean, fully-verified split (Blender technique, hole-patching, re-skin,
-mechanism wiring, tests, full suite green, in-engine visual confirmation)
-used substantial real effort across several failed patch attempts before
-converging; repeating that for two more bases without knowing yet whether
-they even have a comparably separable feature would risk three rushed,
-uncertain results instead of one solid one. A quick render check found
-both `villager_male` and `grunt` have short/cropped hairstyles with no
-comparable hanging protrusion — worth a real look before assuming either
-is separable the same way, not scoped into this pass.
+**`villager_male`/`grunt` checked directly — both genuinely not separable, item closed for both bases.** The "worth a real look" this entry's own quick check flagged, now actually done: each base independently rendered from 6 close-up angles (front/back/left/right/top/back+top, Blender headless/Cycles, no display needed) and the PNGs actually viewed, the same bar the `villager_female` split used — not inferred from geometry stats alone.
+
+`villager_male`: a short, swept, cropped hairstyle with strand ridges baked directly into the scalp geometry. No boundary loop, tie-groove, parting seam, or hanging protrusion anywhere across all 6 angles — the hair mesh is one continuous fused dome with the skull, unlike `villager_female`'s ponytail which had a real cut edge to find. Forcing a split here would mean inventing a boundary that doesn't exist in the source geometry, which is exactly the "a false split that mangles the mesh is worse than no split" case this item's own guardrail warns against.
+
+`grunt`: no hair geometry exists at all, separable or otherwise — the entire head is covered by a peaked cap plus a face mask/balaclava (confirmed in every angle, including top-down). There is nothing to cut; `hair`/`_apply_hair()` doesn't apply to this base in any form.
+
+No mesh, `character_model.gd`, or `art.json` changes made — none were warranted. This closes the item's own "worth a real look" note for both remaining bases; `NP7` is now fully resolved (one real split shipped for `villager_female`, two honest not-separable findings for the rest).
 
 ---
 
