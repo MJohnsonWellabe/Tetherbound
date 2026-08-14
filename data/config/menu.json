@@ -19,9 +19,9 @@
       "script": "res://scripts/ui/tab_backpack.gd"
     },
     {
-      "id": "pals",
-      "label": "Pals",
-      "script": "res://scripts/ui/tab_pals.gd"
+      "id": "creatures",
+      "label": "Creatures",
+      "script": "res://scripts/ui/tab_creatures.gd"
     },
     {
       "id": "map",
@@ -80,7 +80,7 @@
         },
         {
           "name": "The world",
-          "actions": ["interact", "inventory", "map", "tool_cycle", "menu_tab_right", "pal_recall", "torch_toggle"]
+          "actions": ["interact", "inventory", "map", "tool_cycle", "menu_tab_right", "creature_recall", "torch_toggle"]
         },
         {
           "name": "Building",
@@ -131,7 +131,7 @@
         "map": "Map",
         "tool_cycle": "Next tool  /  previous tab",
         "menu_tab_right": "Next tab",
-        "pal_recall": "Call out  /  put away your pal",
+        "creature_recall": "Call out  /  put away your creature",
         "torch_toggle": "Toggle your torch (it also lights itself after dark)",
         "build_rotate": "Rotate the build ghost",
         "hotbar_1": "Use quick-item slot 1",
@@ -143,8 +143,8 @@
         "combat_charged": "Charged attack",
         "combat_throw": "Throw an orb",
         "combat_run": "Flee the fight",
-        "combat_switch_left": "Send out the previous pal",
-        "combat_switch_right": "Send out the next pal",
+        "combat_switch_left": "Send out the previous creature",
+        "combat_switch_right": "Send out the next creature",
         "menu_confirm": "Confirm",
         "menu_cancel": "Back  /  close the menu",
         "backpack_drop": "Backpack: drop the focused item",

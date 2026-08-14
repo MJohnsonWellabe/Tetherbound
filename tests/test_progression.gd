@@ -1,8 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## Pal progression (D30): the level curve, stat growth, wild level rolls, and
-## bond — both the pure arithmetic in scripts/pals/progression.gd and the
-## instance methods on scripts/pals/pal_instance.gd that call it.
+## Creature progression (D30): the level curve, stat growth, wild level rolls, and
+## bond — both the pure arithmetic in scripts/creatures/progression.gd and the
+## instance methods on scripts/creatures/creature_instance.gd that call it.
 ##
 ## Like test_combat_math.gd, these pin the PROPERTIES a level-up has to have
 ## (strictly more xp needed each level, stats never shrink, an hp fraction
@@ -12,8 +12,8 @@ extends "res://tests/test_case.gd"
 ## needs a concrete curve to assert exact level-up thresholds against, it
 ## builds its own small config rather than reading the shipped one.
 
-const PROGRESSION := preload("res://scripts/pals/progression.gd")
-const PAL := preload("res://scripts/pals/pal_instance.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 
 ## A small, hand-built config with round numbers, so gain_xp's level-up
 ## thresholds and stat growth can be asserted exactly rather than merely
@@ -42,11 +42,11 @@ const DEFINITION := {
 }
 
 
-func _pal() -> RefCounted:
-	return PAL.from_species("terrapup", DEFINITION)
+func _creature() -> RefCounted:
+	return CREATURE.from_species("terrapup", DEFINITION)
 
 
-# --- the pure curve (scripts/pals/progression.gd) ---------------------------
+# --- the pure curve (scripts/creatures/progression.gd) ---------------------------
 
 func test_xp_curve_is_strictly_increasing() -> void:
 	var cfg := PROGRESSION.config()
@@ -87,7 +87,7 @@ func test_bond_node_thresholds_match_the_shipped_boundaries() -> void:
 func test_bond_stat_scale_is_one_at_zero_nodes() -> void:
 	var cfg := PROGRESSION.config()
 	assert_almost_eq(PROGRESSION.bond_stat_scale(0, "attack_scale", cfg), 1.0, 0.0001,
-		"a pal with no bond nodes should fight at its plain stats")
+		"a creature with no bond nodes should fight at its plain stats")
 
 
 func test_bond_stat_scale_grows_with_nodes() -> void:
@@ -110,135 +110,135 @@ func test_party_share_floors_the_split() -> void:
 	assert_eq(PROGRESSION.party_share(10, cfg), int(floor(10.0 * share)))
 
 
-# --- pal_instance.gd: from_species compatibility -----------------------------
+# --- creature_instance.gd: from_species compatibility -----------------------------
 
 func test_from_species_with_no_new_args_reproduces_old_behavior() -> void:
-	var pal := PAL.from_species("terrapup", DEFINITION)
-	assert_eq(pal.level, 1)
-	assert_eq(pal.xp, 0)
-	assert_eq(pal.bond, 0)
-	assert_almost_eq(pal.max_hp, 100.0, 0.0001)
-	assert_almost_eq(pal.attack, 20.0, 0.0001)
-	assert_almost_eq(pal.defence, 20.0, 0.0001)
-	assert_eq(pal.hp, pal.max_hp)
+	var creature := CREATURE.from_species("terrapup", DEFINITION)
+	assert_eq(creature.level, 1)
+	assert_eq(creature.xp, 0)
+	assert_eq(creature.bond, 0)
+	assert_almost_eq(creature.max_hp, 100.0, 0.0001)
+	assert_almost_eq(creature.attack, 20.0, 0.0001)
+	assert_almost_eq(creature.defence, 20.0, 0.0001)
+	assert_eq(creature.hp, creature.max_hp)
 
 
 func test_from_species_with_only_a_roll_and_no_cfg_stays_level_one() -> void:
 	# A roll with nothing to read the wild band from must not guess.
-	var pal := PAL.from_species("terrapup", DEFINITION, 1.0)
-	assert_eq(pal.level, 1)
+	var creature := CREATURE.from_species("terrapup", DEFINITION, 1.0)
+	assert_eq(creature.level, 1)
 
 
 func test_from_species_with_a_roll_and_cfg_levels_up_the_spawn() -> void:
-	var pal := PAL.from_species("terrapup", DEFINITION, 1.0, CFG)
-	assert_eq(pal.level, 6, "roll 1.0 against wild_band [2, 6] should spawn at the top")
-	assert_almost_eq(pal.max_hp, 150.0, 0.0001, "level 6 at growth 0.1 should be 100 * (1 + 0.1*5)")
-	assert_eq(pal.hp, pal.max_hp, "a fresh spawn should be whole regardless of its rolled level")
+	var creature := CREATURE.from_species("terrapup", DEFINITION, 1.0, CFG)
+	assert_eq(creature.level, 6, "roll 1.0 against wild_band [2, 6] should spawn at the top")
+	assert_almost_eq(creature.max_hp, 150.0, 0.0001, "level 6 at growth 0.1 should be 100 * (1 + 0.1*5)")
+	assert_eq(creature.hp, creature.max_hp, "a fresh spawn should be whole regardless of its rolled level")
 
 
 func test_from_species_moves_come_from_the_species_definition() -> void:
 	var definition := DEFINITION.duplicate(true)
 	definition["moves"] = {"quick": "pebble_toss", "charged": "stone_rush"}
-	var pal := PAL.from_species("terrapup", definition)
-	assert_eq(pal.move_quick, "pebble_toss")
-	assert_eq(pal.move_charged, "stone_rush")
+	var creature := CREATURE.from_species("terrapup", definition)
+	assert_eq(creature.move_quick, "pebble_toss")
+	assert_eq(creature.move_charged, "stone_rush")
 
 
 func test_from_species_with_no_moves_field_degrades_to_empty_strings() -> void:
-	var pal := PAL.from_species("terrapup", DEFINITION)
-	assert_eq(pal.move_quick, "")
-	assert_eq(pal.move_charged, "")
+	var creature := CREATURE.from_species("terrapup", DEFINITION)
+	assert_eq(creature.move_quick, "")
+	assert_eq(creature.move_charged, "")
 
 
-# --- pal_instance.gd: gain_xp -------------------------------------------------
+# --- creature_instance.gd: gain_xp -------------------------------------------------
 
 func test_gain_xp_does_not_level_up_below_the_threshold() -> void:
-	var pal := _pal()
-	var gained: int = pal.gain_xp(9, CFG)
+	var creature := _creature()
+	var gained: int = creature.gain_xp(9, CFG)
 	assert_eq(gained, 0)
-	assert_eq(pal.level, 1)
-	assert_eq(pal.xp, 9)
+	assert_eq(creature.level, 1)
+	assert_eq(creature.xp, 9)
 
 
 func test_gain_xp_levels_up_at_the_exact_threshold() -> void:
-	var pal := _pal()
-	pal.gain_xp(9, CFG)
-	var gained: int = pal.gain_xp(1, CFG)
+	var creature := _creature()
+	creature.gain_xp(9, CFG)
+	var gained: int = creature.gain_xp(1, CFG)
 	assert_eq(gained, 1)
-	assert_eq(pal.level, 2)
-	assert_eq(pal.xp, 0, "the spent xp should be removed, not just flagged")
+	assert_eq(creature.level, 2)
+	assert_eq(creature.xp, 0, "the spent xp should be removed, not just flagged")
 
 
 func test_gain_xp_can_chain_multiple_level_ups_in_one_award() -> void:
-	var pal := _pal()
+	var creature := _creature()
 	# 10 to reach level 2, 20 more to reach level 3: 30 total.
-	var gained: int = pal.gain_xp(30, CFG)
+	var gained: int = creature.gain_xp(30, CFG)
 	assert_eq(gained, 2)
-	assert_eq(pal.level, 3)
-	assert_eq(pal.xp, 0)
+	assert_eq(creature.level, 3)
+	assert_eq(creature.xp, 0)
 
 
 func test_gain_xp_grows_stats_by_the_configured_growth() -> void:
-	var pal := _pal()
-	pal.gain_xp(10, CFG)
-	assert_eq(pal.level, 2)
-	assert_almost_eq(pal.max_hp, 110.0, 0.0001)
-	assert_almost_eq(pal.attack, 22.0, 0.0001)
-	assert_almost_eq(pal.defence, 22.0, 0.0001)
+	var creature := _creature()
+	creature.gain_xp(10, CFG)
+	assert_eq(creature.level, 2)
+	assert_almost_eq(creature.max_hp, 110.0, 0.0001)
+	assert_almost_eq(creature.attack, 22.0, 0.0001)
+	assert_almost_eq(creature.defence, 22.0, 0.0001)
 
 
 func test_gain_xp_preserves_hp_fraction_through_a_level_up() -> void:
-	var pal := _pal()
-	pal.take_damage(50.0)
-	assert_almost_eq(pal.hp_fraction(), 0.5, 0.0001)
-	pal.gain_xp(10, CFG)
-	assert_almost_eq(pal.hp_fraction(), 0.5, 0.0001, "a level-up must not top up or waste hp")
-	assert_almost_eq(pal.hp, 55.0, 0.0001, "50% of the new, larger max_hp")
+	var creature := _creature()
+	creature.take_damage(50.0)
+	assert_almost_eq(creature.hp_fraction(), 0.5, 0.0001)
+	creature.gain_xp(10, CFG)
+	assert_almost_eq(creature.hp_fraction(), 0.5, 0.0001, "a level-up must not top up or waste hp")
+	assert_almost_eq(creature.hp, 55.0, 0.0001, "50% of the new, larger max_hp")
 
 
 func test_gain_xp_respects_the_level_cap() -> void:
-	var pal := _pal()
-	pal.gain_xp(100000, CFG)
-	assert_eq(pal.level, 5, "the cap in CFG is 5")
+	var creature := _creature()
+	creature.gain_xp(100000, CFG)
+	assert_eq(creature.level, 5, "the cap in CFG is 5")
 
 
 func test_gain_xp_of_zero_or_negative_does_nothing() -> void:
-	var pal := _pal()
-	assert_eq(pal.gain_xp(0, CFG), 0)
-	assert_eq(pal.gain_xp(-5, CFG), 0)
-	assert_eq(pal.xp, 0)
-	assert_eq(pal.level, 1)
+	var creature := _creature()
+	assert_eq(creature.gain_xp(0, CFG), 0)
+	assert_eq(creature.gain_xp(-5, CFG), 0)
+	assert_eq(creature.xp, 0)
+	assert_eq(creature.level, 1)
 
 
 func test_xp_to_next_matches_the_static_curve() -> void:
-	var pal := _pal()
-	assert_eq(pal.xp_to_next(CFG), PROGRESSION.xp_to_next(pal.level, CFG))
+	var creature := _creature()
+	assert_eq(creature.xp_to_next(CFG), PROGRESSION.xp_to_next(creature.level, CFG))
 
 
-# --- pal_instance.gd: bond ----------------------------------------------------
+# --- creature_instance.gd: bond ----------------------------------------------------
 
 func test_gain_bond_accumulates() -> void:
-	var pal := _pal()
-	pal.gain_bond(4, CFG)
-	pal.gain_bond(4, CFG)
-	assert_eq(pal.bond, 8)
+	var creature := _creature()
+	creature.gain_bond(4, CFG)
+	creature.gain_bond(4, CFG)
+	assert_eq(creature.bond, 8)
 
 
 func test_gain_bond_clamps_at_the_configured_max() -> void:
-	var pal := _pal()
-	pal.gain_bond(1000, CFG)
-	assert_eq(pal.bond, 100)
+	var creature := _creature()
+	creature.gain_bond(1000, CFG)
+	assert_eq(creature.bond, 100)
 
 
 func test_gain_bond_of_zero_or_negative_does_nothing() -> void:
-	var pal := _pal()
-	pal.gain_bond(10, CFG)
-	pal.gain_bond(0, CFG)
-	pal.gain_bond(-50, CFG)
-	assert_eq(pal.bond, 10)
+	var creature := _creature()
+	creature.gain_bond(10, CFG)
+	creature.gain_bond(0, CFG)
+	creature.gain_bond(-50, CFG)
+	assert_eq(creature.bond, 10)
 
 
-func test_pal_bond_nodes_matches_the_static_function() -> void:
-	var pal := _pal()
-	pal.bond = 55
-	assert_eq(pal.bond_nodes(CFG), PROGRESSION.bond_nodes(55, CFG))
+func test_creature_bond_nodes_matches_the_static_function() -> void:
+	var creature := _creature()
+	creature.bond = 55
+	assert_eq(creature.bond_nodes(CFG), PROGRESSION.bond_nodes(55, CFG))

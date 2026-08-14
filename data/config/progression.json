@@ -1,5 +1,5 @@
 {
-  "_comment": "Pal progression (D30). All tunable. Move power multiplies existing combat_math damage, so 1.0 preserves today's balance exactly.",
+  "_comment": "Creature progression (D30). All tunable. Move power multiplies existing combat_math damage, so 1.0 preserves today's balance exactly.",
   "level": {
     "cap": 30, "wild_band": [2, 6], "starter_level": 3,
     "xp_to_next_base": 40, "xp_to_next_exponent": 1.6,
@@ -11,5 +11,5 @@
     "battle_won": 4, "successful_catch_start": 10, "per_day_in_party": 2,
     "effects_per_node": { "attack_scale": 0.01, "defence_scale": 0.01 }
   },
-  "migration": { "v1_pal_level": 3 }
+  "migration": { "v1_creature_level": 3 }
 }

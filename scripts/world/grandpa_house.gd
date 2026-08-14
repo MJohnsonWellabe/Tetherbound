@@ -47,7 +47,7 @@ const FURNITURE_SCALE := 0.5
 ## an axe and a knife rather than a second furniture generation pass.
 const SURVIVAL_DIR := "res://assets/props/quaternius_survival"
 ## The Fantasy Props MegaKit (glTF, real-metre scale, trim-textured — the
-## same family the workshop yard and pal bed already draw from).
+## same family the workshop yard and creature bed already draw from).
 const FANTASY_DIR := "res://assets/props/quaternius_fantasy"
 
 ## Interior camera, tunable in spirit but authored here with the building it

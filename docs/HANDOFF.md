@@ -47,7 +47,7 @@ overlapping building pads, and NPC villagers plus interior dressing.
 ## 1. What the game is
 
 A Godot 4 third-person survival/crafting creature-training game. Windows and
-the ROG Ally, controller-first, solo. You own **five pals, ever** — carried on
+the ROG Ally, controller-first, solo. You own **five creatures, ever** — carried on
 the **creature belt** Grandpa gives you in the opening (D18) — no storage, no
 boxes. Combat is real-time and **piloted**: you play as your creature while
 your trainer stands behind it. The human never fights.
@@ -146,7 +146,7 @@ error — it is not.
 ## 3. What is built and working
 
 - Movement, camera, sprint, jump, stamina, fall damage; Terrain3D terrain and
-  vegetation. Player walk 5.0 / sprint 8.6; piloted pal 5.6 (tunable, in
+  vegetation. Player walk 5.0 / sprint 8.6; piloted creature 5.6 (tunable, in
   `data/config/`).
 - **The opening, restaged indoors and fully wired (D18).** Wake in bed
   upstairs in Grandpa's farmhouse (Quaternius Farm Buildings + Ultimate
@@ -182,10 +182,10 @@ error — it is not.
   ~22 creatures, a `roles` block ({practice: bramblebun, aggressor:
   galecrest}) that tests resolve instead of hardcoding ids, respawn delay in
   the file. Tuskroot removed from the wild; Mudsnout spawns.
-- **Pause menu** (backpack, pals, build tabs), **settings** with full control
+- **Pause menu** (backpack, creatures, build tabs), **settings** with full control
   remapping persisted to `user://settings.json`, **free-build toggle** (D16),
   the **`Game` autoload** (party of five, satchel, day counter), a follower
-  pal.
+  creature.
 - **A landmark stronghold silhouette and wayfinding signposts** (R7.1/
   R7.1-visual), blind-reviewed and iterated: real wall/roofline/crenellation
   geometry replaced three bare prisms, signpost arms/labels fixed for
@@ -272,7 +272,7 @@ Phase 1 onward                   unchanged
 
 Phase -0.85 sits below -0.75 in the file only because it landed after — read
 order at the top of `BACKLOG.md` is what actually governs pick order, not this
-list. It carries its own note on why: three of its reported gaps (follow-pal,
+list. It carries its own note on why: three of its reported gaps (follow-creature,
 orb-throw visuals, potion use) turned out to already be built, checked against
 code before anything was added, so it also corrects two stale claims elsewhere
 in the file (`R2.5`, "Found along the way") rather than just adding new items.
@@ -298,8 +298,10 @@ remainders recorded, not false "done"s). Next is **R9.4**, a full-game
 visual pass covering everything already in the game (not just what this
 session touched) — owner directive: no fixed round cap, iterate until the
 blind critic is actually satisfied, buildings and terrain called out as
-the current weak points. Then Phase 1's **pal→creature rename** (R1.1) and
-a vocabulary sweep of this file (R1.2); then Phase 2's remainder (tools,
+the current weak points. Then Phase 1's **vocabulary rename to "creature"**
+(R1.1, `docs/decisions/` kept on the word "pal" it was written with, per that
+phase's own rule) and a vocabulary sweep of this file (R1.2); then Phase 2's
+remainder (tools,
 durability, real harvesting, orb/potion crafting, then killing the
 auto-heal); then humanoid GLB regeneration; persistence; combat/progression
 including Tuskroot's real model and the evolution ceremony.
@@ -415,7 +417,7 @@ picture stays true.
 
 Earlier roster work ran as **parallel agents in isolated git worktrees**;
 those boundary rules (one grade-script owner, creature agents don't touch
-`scripts/**`, gameplay agents don't touch `assets/pals/**`) still apply
+`scripts/**`, gameplay agents don't touch `assets/creatures/**`) still apply
 whenever that pattern is used.
 
 **Godot's import cache does not travel between worktrees.** After merging any

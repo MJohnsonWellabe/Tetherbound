@@ -7,7 +7,7 @@
     # the repair path: an already-installed creature's loose maps, in place.
     # No Blender: this half is plain numpy + Pillow.
     python3 tools/art_pipeline/blender/grade.py \
-            --species ripplet --textures assets/pals/tetherbound/ripplet/models
+            --species ripplet --textures assets/creatures/tetherbound/ripplet/models
 
 Replaces `grade_terrapup.py`, `grade_ripplet.py` and `grade_galewisp.py`. They
 were three copies of one algorithm with three sets of constants, and the copies
@@ -1008,7 +1008,7 @@ ROLES = {
 
 
 def texture_paths(directory: pathlib.Path, species: str) -> dict[str, dict[str, pathlib.Path]]:
-    """Group `pal_<species>_lod0_<role>.<ext>` by role, keeping every extension.
+    """Group `creature_<species>_lod0_<role>.<ext>` by role, keeping every extension.
 
     Both extensions turn up in a models/ directory and they are NOT duplicates:
     Godot's extractor names the file after the glTF image's mime type, so a map
@@ -1019,7 +1019,7 @@ def texture_paths(directory: pathlib.Path, species: str) -> dict[str, dict[str, 
     first.
     """
     found: dict[str, dict[str, pathlib.Path]] = {}
-    prefix = f"pal_{species}_lod0_"
+    prefix = f"creature_{species}_lod0_"
     for path in sorted(directory.iterdir()):
         if not path.name.startswith(prefix) or path.suffix.lower() not in (".png", ".jpg"):
             continue

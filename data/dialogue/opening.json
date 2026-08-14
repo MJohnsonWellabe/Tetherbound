@@ -1,16 +1,16 @@
 {
   "_comment": "Everything spoken in the first fifteen minutes. Text lives here and never in a script, so a rewrite of Grandpa's voice is a data edit and a translator never has to read GDScript.",
-  "_comment_shape": "A conversation is a speaker, a portrait, and an ordered list of lines. NO branching: docs/OPENING_SEQUENCE.md is explicit that the only choice in this sequence is which pal, and that one is made through scripts/ui/starter_picker.gd's orb preview, not a dialogue branch (SA0-orbs, 2026-08-11; before that it was made by walking up to a body in the meadow, which is what this comment used to describe). The previous prototype's DialogueRunner supported choices and this port deliberately drops them — the moment a line can branch, the starter choice starts wanting to be a text menu instead of something you look at first.",
+  "_comment_shape": "A conversation is a speaker, a portrait, and an ordered list of lines. NO branching: docs/OPENING_SEQUENCE.md is explicit that the only choice in this sequence is which creature, and that one is made through scripts/ui/starter_picker.gd's orb preview, not a dialogue branch (SA0-orbs, 2026-08-11; before that it was made by walking up to a body in the meadow, which is what this comment used to describe). The previous prototype's DialogueRunner supported choices and this port deliberately drops them — the moment a line can branch, the starter choice starts wanting to be a text menu instead of something you look at first.",
   "_comment_lines": "A line is a string, or an object when it needs to override the speaker/portrait or emit an effect. Effects are opaque strings handed back to whoever started the conversation; this file knows that finishing the briefing emits `beat:starter_choice` and that the pack lines emit `give:orb_basic:15`, and the dialogue system has no idea what a beat or an item is. A `give:` effect sits on the exact line that speaks the gift, so the satchel fills as he says it rather than in a lump after the box closes.",
   "_comment_voice": "He is warm, brief, and not sad about it. GAME_DESIGN.md 3 gives him one job in this scene: he cannot go, and he is sending you instead — packed, belted, and out the door. Every line here is either that or getting out of its way.",
   "conversations": {
     "grandpa_house": {
-      "_comment": "Downstairs, the morning the game starts. The whole briefing in one sitting: why there is a journey, the pack, the belt, and the door. The belt line is the five-pal cap said in fiction, which is the only place a rule this hard should be said.",
+      "_comment": "Downstairs, the morning the game starts. The whole briefing in one sitting: why there is a journey, the pack, the belt, and the door. The belt line is the five-creature cap said in fiction, which is the only place a rule this hard should be said.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "There you are. I heard the floorboards. Sit and eat — the bread's still warm. I've been up since dark working out how to say this, so I'll just say it.",
-        "You'll have heard the name by now. Team Tether. Eight places of power in this world, and they hold every one — pals chained to the stones, keeping the lights on for them.",
+        "You'll have heard the name by now. Team Tether. Eight places of power in this world, and they hold every one — creatures chained to the stones, keeping the lights on for them.",
         "I walked those roads once, knew every warden by name. Look at me now — I get winded crossing my own meadow. I'm not walking anywhere.",
         "Someone has to stop them, and I couldn't send you before now — you were too young. They won't wait for you to grow into it, though. Every season they hold those stones, they get stronger, not weaker.",
         "So you go. And you don't go empty-handed.",
@@ -19,11 +19,11 @@
           "effect": "give:orb_basic:15"
         },
         {
-          "text": "Three small potions. Those are for your pal, mind. You get soup, same as always.",
+          "text": "Three small potions. Those are for your creature, mind. You get soup, same as always.",
           "effect": "give:potion_small:3"
         },
         {
-          "text": "And berries off my own bushes. Share them on the road. A fed pal forgives a long day.",
+          "text": "And berries off my own bushes. Share them on the road. A fed creature forgives a long day.",
           "effect": "give:berries:5"
         },
         "Last of all, this — my creature belt. It holds five, no more, a rule older than Team Tether. Five you know by name are worth more than a hundred you don't.",

@@ -22,7 +22,7 @@ extends "res://scripts/ui/menu_tab.gd"
 ## fitting the world to the panel is not a corner cut, it is the actual right
 ## answer for a biome this size. Free pan/zoom was considered and set aside
 ## for a real reason, not laziness: every existing in-menu directional read
-## (`tab_backpack.gd`, `tab_pals.gd`) rides Godot's `ui_*` focus-navigation
+## (`tab_backpack.gd`, `tab_creatures.gd`) rides Godot's `ui_*` focus-navigation
 ## actions, which this canvas cannot also repurpose as a pan axis without
 ## fighting the same stick the d-pad uses to move focus off the map entirely.
 ## Gameplay's `move_*` actions are the wrong tool inside a paused menu (the
@@ -42,7 +42,7 @@ extends "res://scripts/ui/menu_tab.gd"
 ## legend row would tear down mid-frame and controller focus would fall off
 ## the map. `poll()` is what redraws the canvas and refreshes the surveyed-%
 ## and legend text every frame this tab is showing, the same split
-## `tab_pals.gd` uses for HP bars that update without ever rebuilding rows.
+## `tab_creatures.gd` uses for HP bars that update without ever rebuilding rows.
 
 const MAP_STATE := preload("res://autoload/map_state.gd")
 
@@ -434,7 +434,7 @@ func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3) -> void:
 
 ## World (x, z) -> a point inside `map_rect`, using the same grid `MapState`
 ## fogs (`MAP_STATE.ORIGIN`/`CELL`/`GRID` — the const-on-a-preloaded-script
-## read `tab_pals.gd` already uses for `PARTY.MAX_PALS`), so a landmark and
+## read `tab_creatures.gd` already uses for `PARTY.MAX_CREATURES`), so a landmark and
 ## the fog cell under it can never drift apart.
 func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 	var span: float = float(MAP_STATE.CELL) * float(MAP_STATE.GRID)

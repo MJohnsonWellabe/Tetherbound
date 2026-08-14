@@ -16,9 +16,9 @@ extends SceneTree
 ## 1.8m trainer-height bar beside it for scale. This is the ruler the visual
 ## rubric was missing (`docs/reviews/MA-03`, the calibration miss).
 
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
-const BODY := preload("res://scripts/pals/pal_body.gd")
-const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const BODY := preload("res://scripts/creatures/creature_body.gd")
+const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const OUT := "res://shots/_creatures.png"
 
 ## Metres of the trainer, drawn as a reference bar beside every creature.
@@ -33,7 +33,7 @@ func _run() -> void:
 	# Godot's --script SceneTree entry runs _init() before the tree itself has
 	# started iterating: nodes added here get _ready() called (their $Path
 	# children resolve fine) but is_inside_tree() stays false until the first
-	# yield back to the engine. pal_body.gd's setup() gates _build_placeholder()
+	# yield back to the engine. creature_body.gd's setup() gates _build_placeholder()
 	# on is_inside_tree(), so building creatures before this await silently
 	# built nothing — the actual cause behind the reverted attempt this task's
 	# backlog entry mentions. One frame here is enough; render_bounds.gd's own
@@ -68,15 +68,15 @@ func _run() -> void:
 	var spacing := 2.2
 	var x := -spacing * (ids.size() - 1) * 0.5
 	for id: String in ids:
-		# pal.tscn is deliberately scriptless (its $Collision/$Model/$Body/$Head
-		# children are what pal_body.gd's @onready vars resolve against); BODY.new()
+		# creature.tscn is deliberately scriptless (its $Collision/$Model/$Body/$Head
+		# children are what creature_body.gd's @onready vars resolve against); BODY.new()
 		# alone produces a bare CharacterBody3D with none of them, so every
 		# @onready lookup failed and no creature was ever built. Instantiate the
 		# scene and attach the script, the same order encounter_director.gd uses
-		# for wild and ally pals: script attached before add_child, setup() called
+		# for wild and ally creatures: script attached before add_child, setup() called
 		# after — setup() is what actually builds the placeholder/model, since
 		# species_id is still empty when _ready() runs.
-		var body: Node3D = PAL_SCENE.instantiate()
+		var body: Node3D = CREATURE_SCENE.instantiate()
 		body.name = "Preview_%s" % id
 		body.set_script(BODY)
 		world.add_child(body)

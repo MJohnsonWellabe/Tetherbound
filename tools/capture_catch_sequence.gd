@@ -86,7 +86,7 @@ func _run() -> void:
 	if debug_hud != null:
 		debug_hud.visible = false
 
-	await _walk_to_the_wild_pal()
+	await _walk_to_the_wild_creature()
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
 		_failures.append("could not enter combat; nothing captured")
@@ -323,12 +323,12 @@ func _seed_orbs(count: int = 20) -> void:
 
 ## Keep the ally standing and the satchel stocked between attempts, the same
 ## reasoning smoke_catching.gd already carries: aiming genuinely abandons the
-## pal, and a capture run that throws repeatedly would otherwise end "lost".
+## creature, and a capture run that throws repeatedly would otherwise end "lost".
 func _top_up() -> void:
 	_seed_orbs()
-	var pal: RefCounted = _manager.call("active_pal")
-	if pal != null:
-		pal.hp = pal.max_hp
+	var creature: RefCounted = _manager.call("active_creature")
+	if creature != null:
+		creature.hp = creature.max_hp
 
 
 func _collect_nodes() -> bool:
@@ -339,9 +339,9 @@ func _collect_nodes() -> bool:
 	if _player == null or _manager == null or _director == null or _rig == null:
 		_failures.append("scene is missing the player, camera rig, combat manager or director")
 		return false
-	_wild = _director.call("wild_pal") as Node3D
+	_wild = _director.call("wild_creature") as Node3D
 	if _wild == null:
-		_failures.append("the encounter director never spawned a wild pal")
+		_failures.append("the encounter director never spawned a wild creature")
 		return false
 
 	var throw: Node = _manager.call("throw_aim")
@@ -356,7 +356,7 @@ func _resting_orb() -> Node3D:
 	return throw.call("resting_orb") as Node3D
 
 
-func _walk_to_the_wild_pal() -> void:
+func _walk_to_the_wild_creature() -> void:
 	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
 	for i in 1800:
 		var to := _wild.global_position - _player.global_position

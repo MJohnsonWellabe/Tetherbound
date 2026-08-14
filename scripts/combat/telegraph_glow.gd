@@ -70,7 +70,7 @@ func _material() -> StandardMaterial3D:
 	# other `no_depth_test = false` ground/near effects -- both sit apart
 	# from any creature mesh and never hit this). A first off-axis capture
 	# (`04-enemy-winds-up-offaxis.png`, run 1) showed a fully visible,
-	# unoccluded wild pal with NO ring at its feet at all, at a moment the
+	# unoccluded wild creature with NO ring at its feet at all, at a moment the
 	# HUD's own "! incoming" text confirms the wind-up was active -- looked
 	# like the same depth-loses-to-the-creature symptom.
 	#

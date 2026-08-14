@@ -38,7 +38,7 @@ func test_the_menu_config_parses() -> void:
 
 func test_every_tab_has_an_id_a_label_and_a_script_that_exists() -> void:
 	var tabs: Array = config.get("tabs", [])
-	assert_true(tabs.size() >= 3, "backpack, pals and build are all expected")
+	assert_true(tabs.size() >= 3, "backpack, creatures and build are all expected")
 	for entry in tabs:
 		var tab: Dictionary = entry
 		assert_false(str(tab.get("id", "")).is_empty(), "a tab has no id")
@@ -77,7 +77,7 @@ func test_the_expected_three_tabs_are_present() -> void:
 	var ids: Array[String] = []
 	for entry in config.get("tabs", []):
 		ids.append(str((entry as Dictionary).get("id", "")))
-	for expected in ["backpack", "pals", "build"]:
+	for expected in ["backpack", "creatures", "build"]:
 		assert_true(ids.has(expected), "no %s tab" % expected)
 
 

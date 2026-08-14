@@ -1,6 +1,6 @@
 {
   "_comment": "The first fifteen minutes, as data. Beats, placements and the conversations they run — docs/OPENING_SEQUENCE.md is the prose version of this file and the two are meant to be read together.",
-  "_comment_tunable": "Every distance and speed here is TUNABLE and none of it is a mechanic. The expected feedback is 'the walk to Grandpa is too long' and 'my pal keeps treading on me', and both have to be answerable by editing this file.",
+  "_comment_tunable": "Every distance and speed here is TUNABLE and none of it is a mechanic. The expected feedback is 'the walk to Grandpa is too long' and 'my creature keeps treading on me', and both have to be answerable by editing this file.",
   "_comment_positions": "All offsets are metres from the player's spawn point, which playground_world.gd puts on the baked ground at the world origin. Y is never given: everything is stood on the ground by asking the world for its height (docs/decisions/D09), never by a raycast and never by a hand-placed Y that rots the next time the terrain is baked.",
 
   "bed": {
@@ -34,19 +34,19 @@
   },
 
   "follower": {
-    "_comment": "How your pal walks with you. It has no locomotion of its own — every value here is turned into a direction and a speed for pal_body.request_move(), the same call the combat AI and your own stick go through.",
+    "_comment": "How your creature walks with you. It has no locomotion of its own — every value here is turned into a direction and a speed for creature_body.request_move(), the same call the combat AI and your own stick go through.",
     "stop_distance": 3.0,
-    "_comment_stop": "Well clear of the trainer's 0.4m capsule plus a 0.65m pal. A follower that stands on the player shoves the camera about.",
+    "_comment_stop": "Well clear of the trainer's 0.4m capsule plus a 0.65m creature. A follower that stands on the player shoves the camera about.",
     "resume_distance": 4.2,
-    "_comment_resume": "Hysteresis. Equal to stop_distance, the pal oscillates on the boundary and jitters on the spot.",
+    "_comment_resume": "Hysteresis. Equal to stop_distance, the creature oscillates on the boundary and jitters on the spot.",
     "run_distance": 8.0,
     "walk_speed": 3.8,
     "run_speed": 7.2,
-    "_comment_speeds": "Walk is under the trainer's 5.0 and run is under the 8.6 sprint on purpose: a pal that can always keep up never has to hurry, and the little burst when it falls behind is most of what makes it read as alive."
+    "_comment_speeds": "Walk is under the trainer's 5.0 and run is under the 8.6 sprint on purpose: a creature that can always keep up never has to hurry, and the little burst when it falls behind is most of what makes it read as alive."
   },
 
   "encounter": {
-    "_comment": "Beat 6-8. The species is not named here: encounter_director.gd already spawns a bramblebun as its peaceful practice pal and this points at that one, so there is one wild creature rather than two standing in the same meadow.",
+    "_comment": "Beat 6-8. The species is not named here: encounter_director.gd already spawns a bramblebun as its peaceful practice creature and this points at that one, so there is one wild creature rather than two standing in the same meadow.",
     "species": "bramblebun",
     "_comment_species": "docs/OPENING_SEQUENCE.md: highest catch_rate in species.json (0.55), chosen so the tutorial catch cannot fail twice."
   },

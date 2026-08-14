@@ -12,7 +12,7 @@
 
 Tetherbound is a third-person open-world survival/crafting creature-training game centered on one promise:
 
-> **Catch, train, bond with, customize, and build the strongest possible team of five pals.**
+> **Catch, train, bond with, customize, and build the strongest possible team of five creatures.**
 
 The game draws structural inspiration from:
 - Valheim: open wilderness, danger by biome, gathering, crafting, building, preparation, food buffs, death recovery.
@@ -20,13 +20,13 @@ The game draws structural inspiration from:
 - Pokémon: creature levels/types/moves/TMs, trainer teams, eight major regional masters, rare unique creatures.
 - Pokémon GO: real-time creature combat and catching during battle.
 
-This is not a collection game where hundreds of creatures live in storage. The five-pal limit is the core differentiator.
+This is not a collection game where hundreds of creatures live in storage. The five-creature limit is the core differentiator.
 
 ---
 
 ## 2. Non-Negotiable Design Pillars
 
-1. **Five pals means five total.**
+1. **Five creatures means five total.**
    - No box.
    - No reserve team.
    - No stable.
@@ -38,17 +38,17 @@ This is not a collection game where hundreds of creatures live in storage. The f
    - Bond.
    - Favorite foods.
    - Resting together.
-   - Physical pal beds.
+   - Physical creature beds.
    - Traits.
-   - Best Pal progression.
+   - Best Creature progression.
    - Battle history.
    - Emotional release ceremony.
 
 3. **The trainer does not fight.**
    - No swords, guns, bows, or combat tools.
    - Tools gather/build/fish.
-   - Pals fight pals.
-   - Aggressive wild pals can threaten the trainer before combat starts.
+   - Creatures fight creatures.
+   - Aggressive wild creatures can threaten the trainer before combat starts.
 
 4. **The world is not level-gated by UI.**
    - Players may physically reach harder regions early.
@@ -64,7 +64,7 @@ This is not a collection game where hundreds of creatures live in storage. The f
    - Food.
    - Berry farming.
    - Lights/fires/fences.
-   - No pal labor automation.
+   - No creature labor automation.
 
 6. **Build fast and iterate.**
    - Prove moment-to-moment fun before expanding content.
@@ -76,24 +76,24 @@ This is not a collection game where hundreds of creatures live in storage. The f
 
 The player lives with their grandfather, a former trainer who is now too old to travel the world as he once did.
 
-Team Tether has returned and seized eight important regional places of power. They are holding exceptional pals there and using them as part of a larger system. Grandpa cannot stop them himself and entrusts the player with a starter and the beginning of the journey.
+Team Tether has returned and seized eight important regional places of power. They are holding exceptional creatures there and using them as part of a larger system. Grandpa cannot stop them himself and entrusts the player with a starter and the beginning of the journey.
 
-The player chooses between three unique starter pals:
+The player chooses between three unique starter creatures:
 - Ground
 - Water
 - Air
 
 The other two remain with Grandpa. Starter species never appear as wild catches and do not evolve.
 
-There are eight major regional Team Tether strongholds, one associated with each dominant biome/type. Each contains a unique captive legendary/special pal that cannot be obtained elsewhere.
+There are eight major regional Team Tether strongholds, one associated with each dominant biome/type. Each contains a unique captive legendary/special creature that cannot be obtained elsewhere.
 
 General stronghold conclusion:
 1. Defeat Team Tether trainers.
 2. Defeat regional Warden/master trainer.
 3. Disable/free the tether mechanism.
-4. Free the unique pal.
+4. Free the unique creature.
 5. Story moment.
-6. The unique pal voluntarily offers to join.
+6. The unique creature voluntarily offers to join.
 7. If the player already has five, trigger the release ceremony.
 8. Region meaningfully changes / Team Tether influence is reduced.
 9. The world points toward further progression.
@@ -202,7 +202,7 @@ Procedural/rule-based dressing:
 - Grass/bushes.
 - Gatherables.
 - Minor wilderness detail.
-- Wild pal populations.
+- Wild creature populations.
 - Some loot.
 
 Everyone broadly experiences the same geography.
@@ -287,15 +287,15 @@ Do not build 2–8 now.
 
 ---
 
-## 10. Pal Ownership
+## 10. Creature Ownership
 
-- Hard maximum: five owned pals.
-- Pals are not always summoned.
-- Player chooses which pal to deploy when combat begins.
-- Pals can be renamed.
+- Hard maximum: five owned creatures.
+- Creatures are not always summoned.
+- Player chooses which creature to deploy when combat begins.
+- Creatures can be renamed.
 - New captures can keep species name by default.
 - Sixth capture pauses progression for a keep/release ceremony.
-- Released pals are permanently gone.
+- Released creatures are permanently gone.
 - Ceremony should show:
   - name
   - species
@@ -308,13 +308,13 @@ Do not build 2–8 now.
 
 ---
 
-## 11. Pal Stats and Progression
+## 11. Creature Stats and Progression
 
 ### Levels
 - 1–50.
 - Combat is primary XP.
 - Smaller XP can come from exploration and bonding activities.
-- No player-scaling of wild pal levels.
+- No player-scaling of wild creature levels.
 
 ### Core stats
 - HP
@@ -324,23 +324,23 @@ Do not build 2–8 now.
 No generic Speed stat. Cadence/energy lives in move definitions and traits.
 
 ### Individuality
-- Same-species pals have slightly different underlying stat quality.
+- Same-species creatures have slightly different underlying stat quality.
 - Show appraisal through stars/bars, not exact IV numbers.
-- Each pal starts with one trait.
+- Each creature starts with one trait.
 - A second trait can develop later through progression/bond.
 
 ### Evolution
 - Limited, not universal.
 - Starters do not evolve.
-- Some rare pals do.
+- Some rare creatures do.
 - Evolution must visually make sense with available assets.
 - Example: rooting pig → armoured boar.
 - Requirements: level + high bond + item/condition.
-- Preserve nickname, appraisal, traits, bond, TMs, Best Pal progress, and history.
+- Preserve nickname, appraisal, traits, bond, TMs, Best Creature progress, and history.
 
 ---
 
-## 12. Bond and Best Pal
+## 12. Bond and Best Creature
 
 Bond increases through:
 - fighting together
@@ -349,9 +349,9 @@ Bond increases through:
 - feeding
 - favorite food
 
-Best Pal is meaningful progression, not a cosmetic badge.
+Best Creature is meaningful progression, not a cosmetic badge.
 
-Best Pal abilities should be species-specific where possible:
+Best Creature abilities should be species-specific where possible:
 - combat survivability
 - better charged-energy behavior
 - improved traversal
@@ -363,7 +363,7 @@ Avoid punitive low-bond behavior in the first version.
 
 ## 13. Moves and TMs
 
-Each pal can know:
+Each creature can know:
 - 2 Quick moves
 - 2 Charged moves
 
@@ -399,8 +399,8 @@ Combat remains in the physical world.
 When combat begins:
 - Camera moves in.
 - Trainer stays visible.
-- Player selects/deploys one pal.
-- Enemy pal stays visible.
+- Player selects/deploys one creature.
+- Enemy creature stays visible.
 - Combat UI appears.
 
 Commands:
@@ -415,13 +415,13 @@ Rules:
 - No shields.
 - No trainer attacks.
 - Trainer fights are team-vs-team.
-- Trainer-owned pals cannot be caught.
+- Trainer-owned creatures cannot be caught.
 - Switching has a cooldown.
 - No dodge in initial design unless playtest demands it.
 
 **Amended by `docs/decisions/D07-combat-is-piloted-not-commanded.md`.** The five
 commands above are not a menu. On entering Combat Mode the player takes over the
-deployed pal — camera and controls transfer to the creature — and both fighters
+deployed creature — camera and controls transfer to the creature — and both fighters
 move freely inside a bounded arena centred on where the fight started. Attacks
 are aimed and can miss. The trainer still never attacks and cannot be targeted.
 
@@ -430,15 +430,15 @@ There is still no dodge button: **movement is the dodge**. That resolves the
 adding one.
 
 ### Critical trainer safety rule
-Once combat mode begins, attacks are **pal-vs-pal**. The enemy does not simply attack the human while the combat UI is active.
+Once combat mode begins, attacks are **creature-vs-creature**. The enemy does not simply attack the human while the combat UI is active.
 
-Outside combat, aggressive wild pals can threaten the trainer. The player must flee or initiate/deploy into combat.
+Outside combat, aggressive wild creatures can threaten the trainer. The player must flee or initiate/deploy into combat.
 
 Combat initiation:
 - Player challenges/interacts.
 - Player targets and chooses battle.
-- Aggressive pal initiates.
-- **Not** simple proximity for peaceful pals.
+- Aggressive creature initiates.
+- **Not** simple proximity for peaceful creatures.
 
 ---
 
@@ -446,10 +446,10 @@ Combat initiation:
 
 - Throw Orb is always available during a wild fight.
 - Full-health throws are allowed.
-- Powerful/full-health pals should be extremely difficult to catch.
-- Damaging a pal improves catch viability.
+- Powerful/full-health creatures should be extremely difficult to catch.
+- Damaging a creature improves catch viability.
 - Over-damaging it and causing a faint ends the capture opportunity.
-- Fainted wild pals remain visible temporarily but cannot be captured.
+- Fainted wild creatures remain visible temporarily but cannot be captured.
 
 ### Throw interaction
 Use a physical aiming interaction:
@@ -472,29 +472,29 @@ Exact catch formula and orb tiers are tuning data.
 
 ## 16. Fainting and Recovery
 
-Pal at 0 HP:
+Creature at 0 HP:
 - passes out
 - unavailable
 - does not auto-revive with time in the field
 
 Revive via:
 1. Special revival item.
-2. Recovery in its physical pal bed at home.
+2. Recovery in its physical creature bed at home.
 
 Beds:
-- Up to one per owned pal.
+- Up to one per owned creature.
 - Speed normal HP recovery.
 - Contribute to rest/bond.
-- Pals can visibly sleep/rest at home.
+- Creatures can visibly sleep/rest at home.
 
 When the player dies:
-- owned pals return home to their beds
-- no pal loss
+- owned creatures return home to their beds
+- no creature loss
 - preserve their damage/fainted state as appropriate
 
 ---
 
-## 17. Traversal Pals
+## 17. Traversal Creatures
 
 Only some species can support traversal.
 
@@ -506,11 +506,11 @@ Normal progression:
 
 Ride/swim/fly require crafted saddle/harness-type equipment.
 
-Riding saddle is generic across compatible rideable pals.
+Riding saddle is generic across compatible rideable creatures.
 
-Traversal pals remain viable combat pals; do not create "utility-only" dead slots in a five-pal team.
+Traversal creatures remain viable combat creatures; do not create "utility-only" dead slots in a five-creature team.
 
-Legendary pals have exceptional versions:
+Legendary creatures have exceptional versions:
 - Riding: faster / huge jump / exceptional stamina.
 - Swimming: underwater access.
 - Flying: faster and potentially no stamina limitation.
@@ -529,7 +529,7 @@ Exact later systems remain roadmap-only.
 - Boots
 - Backpack
 
-Trainer armor protects the human, not pals.
+Trainer armor protects the human, not creatures.
 
 ### Stamina
 Used by movement and physical world actions.
@@ -574,11 +574,11 @@ Tools:
 Tools:
 - have durability
 - repair for free at appropriate station
-- cannot damage pals or humans
+- cannot damage creatures or humans
 
 There is **no hunting/butchering gameplay**.
 
-Do not create a meat/leather economy that assumes killing pals/wildlife.
+Do not create a meat/leather economy that assumes killing creatures/wildlife.
 
 ---
 
@@ -593,7 +593,7 @@ Base purpose:
 - simple food preparation
 - berry farming
 - light/fire
-- pal beds
+- creature beds
 - personalized home
 
 Expected categories:
@@ -603,14 +603,14 @@ Expected categories:
 - doors
 - fences
 - beds
-- pal beds
+- creature beds
 - lights
 - campfire
 - workbench
 - storage
 - simple farm plots
 
-Pals do not work jobs.
+Creatures do not work jobs.
 
 Recipes primarily unlock through discovering materials/crafting progression.
 
@@ -650,7 +650,7 @@ On player death:
 - each remains marked on map/minimap
 - no XP loss
 - no level loss
-- pals go home
+- creatures go home
 
 Exact item exemptions can be tuned.
 
@@ -671,17 +671,17 @@ Minimap:
 - bed/home
 - death satchels
 
-Do not reveal every wild pal automatically.
+Do not reveal every wild creature automatically.
 
 No free map fast travel before teleport progression.
 
 [Amended by `docs/decisions/D33`, 2026-08-13: minimap and full map now
 share one data layer (`MapState` / `Game.map`), sourced from
 `data/config/map_landmarks.json` and a baked top-down terrain texture
-rather than a second live camera — never a wild-pal radar. Combat UI
+rather than a second live camera — never a wild-creature radar. Combat UI
 around it also changed this session: capture odds display as an explicit
-percentage (`D31`), pal switching is a real mid-combat action (`D32`), and
-pals now carry level/XP/moves/bond (`D30`).]
+percentage (`D31`), creature switching is a real mid-combat action (`D32`), and
+creatures now carry level/XP/moves/bond (`D30`).]
 
 ---
 
@@ -699,9 +699,9 @@ Weather can affect spawn/activity rules.
 Day/night:
 - nocturnal species exist
 - night can be more dangerous due to different species
-- do not just add levels to every pal at night
+- do not just add levels to every creature at night
 
-Rare pals can depend on:
+Rare creatures can depend on:
 - habitat
 - time
 - weather
@@ -744,7 +744,7 @@ Opening:
 
 ---
 
-## 26. Meadows Pal Scope
+## 26. Meadows Creature Scope
 
 Completed Meadows:
 - 3 unique starters
@@ -783,9 +783,9 @@ Air:
 
 These are roles/silhouettes, not locked names/assets.
 
-Pal size should vary substantially.
+Creature size should vary substantially.
 
-Not every pal needs obvious magical effects.
+Not every creature needs obvious magical effects.
 
 ---
 
@@ -818,10 +818,10 @@ First stronghold:
   - cages/tether equipment
   - trainers
 
-First unique pal:
+First unique creature:
 - Ground type
 - ultimate riding mount
-- substantially better traversal than normal riding pals
+- substantially better traversal than normal riding creatures
 - exceptional speed and/or huge jump
 - exact species/asset to be chosen later
 
@@ -848,7 +848,7 @@ ingredients and the spec as the recipe.
 2. Learn Team Tether has returned/seized the regional stronghold.
 3. Choose Ground/Water/Air starter.
 4. Learn movement and basic gathering.
-5. First wild pal encounter.
+5. First wild creature encounter.
 6. Learn combat.
 7. Learn aimed catching.
 8. Gather enough to establish a shelter.
@@ -857,7 +857,7 @@ ingredients and the spec as the recipe.
 11. Catch and shape team.
 12. Learn simple food/berry/fishing systems.
 13. Discover better crafting/orbs.
-14. Encounter rideable pal.
+14. Encounter rideable creature.
 15. Discover/craft generic riding saddle.
 16. Use riding to explore farther.
 17. Discover increasingly dangerous territory.
@@ -916,7 +916,7 @@ Do not implement unless they become necessary for the Meadows slice:
 - flying traversal
 - teleport traversal
 - base raids
-- pal worker automation
+- creature worker automation
 - multiplayer
 - phone UI
 - full web support
@@ -947,10 +947,10 @@ spec's own owner-facing version of the question is worth keeping in view:
 1. Third-person exploration feels good on controller.
 2. Repeated combat is enjoyable, not merely functional.
 3. Throwing/catching feels satisfying.
-4. Building and improving a five-pal team creates meaningful choices.
-5. The five-pal limit creates attachment and interesting release decisions.
+4. Building and improving a five-creature team creates meaningful choices.
+5. The five-creature limit creates attachment and interesting release decisions.
 6. Building a small home feels useful and enjoyable.
-7. Resting/recovering with pals makes the base feel like home.
+7. Resting/recovering with creatures makes the base feel like home.
 8. The Meadows looks visually cohesive rather than assembled from unrelated assets.
 9. Performance is comfortable on the target Windows handheld/PC.
 10. Controller UI is natural.
@@ -972,7 +972,7 @@ Claude Code/Codex MAY:
 
 Claude Code/Codex MAY NOT silently decide:
 - new core mechanics
-- extra owned-pal storage
+- extra owned-creature storage
 - trainer weapons
 - new mandatory survival meters
 - new biomes
@@ -980,7 +980,7 @@ Claude Code/Codex MAY NOT silently decide:
 - multiplayer
 - fundamental art direction
 - major story changes
-- replacement of the five-pal rule
+- replacement of the five-creature rule
 - permanent combat complexity not specified here
 
 When a genuine major design choice blocks work, surface it rather than quietly redesigning the game.

@@ -297,7 +297,7 @@ func _library() -> AnimationLibrary:
 	return _anim.get_animation_library("")
 
 
-## Same measure-and-fit as pal_body: the model is scaled to the size the game
+## Same measure-and-fit as creature_body: the model is scaled to the size the game
 ## already believes in, never the other way round. A character whose art is a
 ## head taller than the capsule the camera frames on is a character who floats.
 ##
@@ -653,7 +653,7 @@ func _find_animation_player(node: Node) -> AnimationPlayer:
 ## broken even when the states are correct.
 ##
 ## `looping` sets the underlying Animation resource's loop mode before playing
-## it, the same way `pal_animator.gd`'s `_play()` already does for creatures.
+## it, the same way `creature_animator.gd`'s `_play()` already does for creatures.
 ## Every clip `animate_humanoid.py` bakes ships as LOOP_NONE — a bare export
 ## default, never set per-clip — so without this, a continuous state like
 ## "walk" (1.38s) plays its cycle once and freezes mid-stride for as long as

@@ -642,7 +642,7 @@ func _place_harvest_nodes() -> void:
 ## `data.get_height` returns a sane value. `move_and_slide` uses shape casts, so
 ## the world has always been solid to walk on; only rays lie about it.
 ##
-## That cost an entire creature. The M3 wild pal was placed by raycast, the ray
+## That cost an entire creature. The M3 wild creature was placed by raycast, the ray
 ## silently missed, and the creature was never spawned at all — no error, no
 ## body, just an encounter that could not happen.
 func ground_height_at(x: float, z: float) -> float:

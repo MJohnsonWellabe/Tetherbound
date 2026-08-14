@@ -16,7 +16,7 @@ extends "res://tests/test_case.gd"
 
 const SPAWNS_PATH := "res://data/config/spawns.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 
 func _config() -> Dictionary:
@@ -91,10 +91,10 @@ func test_every_cluster_is_inside_the_world() -> void:
 # --- the roles resolve -------------------------------------------------------
 
 func test_the_roles_resolve_to_species_that_actually_spawn() -> void:
-	# The whole point of the roles block is that wild_pal()/aggressive_pal() and
+	# The whole point of the roles block is that wild_creature()/aggressive_creature() and
 	# the smoke tests never name a species. A role pointing at a creature the
 	# table does not spawn is those accessors returning null forever, reported as
-	# "no wild pal was spawned" by a test that is telling the truth about a lie.
+	# "no wild creature was spawned" by a test that is telling the truth about a lie.
 	var roles: Dictionary = _config().get("roles", {}) as Dictionary
 	var spawned := _spawned_species()
 	for role: String in ["practice", "aggressor"]:

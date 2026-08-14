@@ -5,7 +5,7 @@ extends "res://tests/test_case.gd"
 ## against a bare, un-`_ready()`d CombatManager instance.
 ##
 ## combat_manager.gd extends Node, not RefCounted, so it cannot be this file's
-## own base class the way pal_instance.gd/progression.gd are for
+## own base class the way creature_instance.gd/progression.gd are for
 ## tests/test_progression.gd. Instead each test builds a throwaway
 ## `CombatManager.new()` and pokes its state through `.set()`/`.get()`/`.call()`
 ## — the exact reflection style `encounter_director.gd` already uses to talk
@@ -22,8 +22,8 @@ extends "res://tests/test_case.gd"
 ## start to finish, including that guard's sibling checks.
 
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
-const PROGRESSION := preload("res://scripts/pals/progression.gd")
-const PAL := preload("res://scripts/pals/pal_instance.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 
 const DEFINITION := {
 	"display_name": "Terrapup", "type": "ground",
@@ -31,11 +31,11 @@ const DEFINITION := {
 }
 
 
-func _pal(level: int, nickname: String) -> RefCounted:
-	var pal: RefCounted = PAL.from_species("terrapup", DEFINITION)
-	pal.level = level
-	pal.nickname = nickname
-	return pal
+func _creature(level: int, nickname: String) -> RefCounted:
+	var creature: RefCounted = CREATURE.from_species("terrapup", DEFINITION)
+	creature.level = level
+	creature.nickname = nickname
+	return creature
 
 
 func _manager() -> Node:
@@ -54,37 +54,37 @@ func _in_combat(party: Array[RefCounted], active: int) -> Node:
 
 # --- XP + bond on victory (D30, combat_manager._award_victory) --------------
 
-func test_award_victory_splits_xp_between_the_active_pal_and_its_bench() -> void:
+func test_award_victory_splits_xp_between_the_active_creature_and_its_bench() -> void:
 	var mgr := _manager()
 	var cfg := PROGRESSION.config()
 
-	var winner := _pal(3, "Champ")
-	var bench := _pal(3, "Bench")
-	var fainted_bench := _pal(3, "Downed")
+	var winner := _creature(3, "Champ")
+	var bench := _creature(3, "Bench")
+	var fainted_bench := _creature(3, "Downed")
 	fainted_bench.fainted = true
-	var enemy := _pal(4, "")
+	var enemy := _creature(4, "")
 
 	mgr.set("_party", [winner, bench, fainted_bench] as Array[RefCounted])
 	mgr.set("_active_index", 0)
 	mgr.set("_enemy", enemy)
 
 	# Ground truth: whatever a direct gain_xp() call against a freshly built
-	# level-3 pal produces, so this does not pin a specific tuned xp number
+	# level-3 creature produces, so this does not pin a specific tuned xp number
 	# from progression.json (CLAUDE.md: those numbers are tunable and expected
 	# to move).
 	var award: int = PROGRESSION.xp_award_for(enemy.level, cfg)
 	var share: int = PROGRESSION.party_share(award, cfg)
-	var reference_winner := _pal(3, "")
+	var reference_winner := _creature(3, "")
 	reference_winner.gain_xp(award, cfg)
-	var reference_bench := _pal(3, "")
+	var reference_bench := _creature(3, "")
 	reference_bench.gain_xp(share, cfg)
 
 	mgr.call("_award_victory")
 
 	assert_eq(winner.level, reference_winner.level,
-		"the active pal's level should match a direct gain_xp(award)")
+		"the active creature's level should match a direct gain_xp(award)")
 	assert_eq(winner.xp, reference_winner.xp,
-		"the active pal's xp should match a direct gain_xp(award)")
+		"the active creature's xp should match a direct gain_xp(award)")
 	assert_eq(bench.level, reference_bench.level,
 		"the bench's level should match a direct gain_xp(party_share)")
 	assert_eq(bench.xp, reference_bench.xp,
@@ -93,30 +93,30 @@ func test_award_victory_splits_xp_between_the_active_pal_and_its_bench() -> void
 	assert_eq(fainted_bench.level, 3, "a fainted party member should not level up")
 
 
-func test_award_victory_grants_battle_won_bond_only_to_the_active_pal() -> void:
+func test_award_victory_grants_battle_won_bond_only_to_the_active_creature() -> void:
 	var mgr := _manager()
 	var cfg := PROGRESSION.config()
 
-	var winner := _pal(3, "Champ")
-	var bench := _pal(3, "Bench")
+	var winner := _creature(3, "Champ")
+	var bench := _creature(3, "Bench")
 	mgr.set("_party", [winner, bench] as Array[RefCounted])
 	mgr.set("_active_index", 0)
-	mgr.set("_enemy", _pal(4, ""))
+	mgr.set("_enemy", _creature(4, ""))
 
 	mgr.call("_award_victory")
 
 	var battle_won := int(cfg.get("bond", {}).get("battle_won", 0))
-	assert_eq(winner.bond, battle_won, "the active pal should gain the battle-won bond")
-	assert_eq(bench.bond, 0, "only the active pal gains bond from landing the win")
+	assert_eq(winner.bond, battle_won, "the active creature should gain the battle-won bond")
+	assert_eq(bench.bond, 0, "only the active creature gains bond from landing the win")
 
 
 func test_award_victory_records_last_xp_award_for_the_hud() -> void:
 	var mgr := _manager()
 	var cfg := PROGRESSION.config()
-	var winner := _pal(3, "Champ")
+	var winner := _creature(3, "Champ")
 	mgr.set("_party", [winner] as Array[RefCounted])
 	mgr.set("_active_index", 0)
-	var enemy := _pal(4, "")
+	var enemy := _creature(4, "")
 	mgr.set("_enemy", enemy)
 
 	var award: int = PROGRESSION.xp_award_for(enemy.level, cfg)
@@ -131,7 +131,7 @@ func test_award_victory_records_last_xp_award_for_the_hud() -> void:
 
 func test_award_victory_does_nothing_with_no_enemy_recorded() -> void:
 	var mgr := _manager()
-	var winner := _pal(3, "Champ")
+	var winner := _creature(3, "Champ")
 	mgr.set("_party", [winner] as Array[RefCounted])
 	mgr.set("_active_index", 0)
 	# _enemy left null -- combat_manager should refuse quietly, not crash.
@@ -145,7 +145,7 @@ func test_award_victory_does_nothing_with_no_enemy_recorded() -> void:
 func test_apply_catch_bond_starts_a_fresh_catch_with_the_configured_bond() -> void:
 	var mgr := _manager()
 	var cfg := PROGRESSION.config()
-	var caught := _pal(2, "")
+	var caught := _creature(2, "")
 	assert_eq(caught.bond, 0, "a fresh instance should start unbonded")
 
 	mgr.call("_apply_catch_bond", caught)
@@ -162,10 +162,10 @@ func test_apply_catch_bond_tolerates_a_null_catch() -> void:
 # --- the switch seam (D32) ---------------------------------------------------
 
 func test_switchable_indices_excludes_the_active_and_fainted_members() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	b.fainted = true
-	var c := _pal(3, "C")
+	var c := _creature(3, "C")
 	var mgr := _in_combat([a, b, c] as Array[RefCounted], 0)
 
 	var options: Array = mgr.call("switchable_indices")
@@ -174,10 +174,10 @@ func test_switchable_indices_excludes_the_active_and_fainted_members() -> void:
 
 
 func test_cycle_active_wraps_and_skips_fainted_members() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	b.fainted = true
-	var c := _pal(3, "C")
+	var c := _creature(3, "C")
 	var mgr := _in_combat([a, b, c] as Array[RefCounted], 0)
 
 	assert_true(bool(mgr.call("cycle_active", 1)), "should switch to the only living non-active member")
@@ -187,23 +187,23 @@ func test_cycle_active_wraps_and_skips_fainted_members() -> void:
 	# the wrong reason.
 	mgr.set("_switch_lockout", 0.0)
 	assert_true(bool(mgr.call("cycle_active", 1)), "should be able to cycle onward")
-	assert_eq(int(mgr.get("_active_index")), 0, "cycling forward again should wrap back to the original pal")
+	assert_eq(int(mgr.get("_active_index")), 0, "cycling forward again should wrap back to the original creature")
 
 
 func test_cycle_active_returns_false_with_nothing_to_switch_to() -> void:
-	var a := _pal(3, "A")
+	var a := _creature(3, "A")
 	var mgr := _in_combat([a] as Array[RefCounted], 0)
 	assert_false(bool(mgr.call("cycle_active", 1)), "a party of one has nothing to switch to")
 
-	var b := _pal(3, "B")
+	var b := _creature(3, "B")
 	b.fainted = true
 	var mgr2 := _in_combat([a, b] as Array[RefCounted], 0)
 	assert_false(bool(mgr2.call("cycle_active", 1)), "an all-fainted bench has nothing to switch to")
 
 
 func test_can_switch_false_when_not_fighting() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	var mgr := _manager()
 	mgr.set("_party", [a, b] as Array[RefCounted])
 	mgr.set("_active_index", 0)
@@ -212,8 +212,8 @@ func test_can_switch_false_when_not_fighting() -> void:
 
 
 func test_can_switch_respects_the_lockout() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
 
 	mgr.set("_switch_lockout", 1.0)
@@ -224,24 +224,24 @@ func test_can_switch_respects_the_lockout() -> void:
 
 
 func test_can_switch_false_while_resolving_a_catch() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
 	mgr.set("_catch_phase", COMBAT_MANAGER.CatchPhase.SHAKING)
 	assert_false(bool(mgr.call("can_switch")), "a resolving catch pauses the whole fight")
 
 
-func test_can_switch_false_while_the_pal_is_committed() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+func test_can_switch_false_while_the_creature_is_committed() -> void:
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
 	mgr.set("_action", COMBAT_MANAGER.Action.WINDUP)
 	assert_false(bool(mgr.call("can_switch")), "switching mid-swing would refund the attack's commitment")
 
 
 func test_request_switch_refuses_a_fainted_target() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	b.fainted = true
 	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
 	assert_false(bool(mgr.call("request_switch", 1)))
@@ -249,8 +249,8 @@ func test_request_switch_refuses_a_fainted_target() -> void:
 
 
 func test_request_switch_refuses_an_invalid_index() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
 	assert_false(bool(mgr.call("request_switch", 0)), "switching to the already-active index is not a switch")
 	assert_false(bool(mgr.call("request_switch", 5)), "an out-of-range index should be refused")
@@ -258,8 +258,8 @@ func test_request_switch_refuses_an_invalid_index() -> void:
 
 
 func test_request_switch_swaps_the_active_index_and_starts_the_lockout() -> void:
-	var a := _pal(3, "A")
-	var b := _pal(3, "B")
+	var a := _creature(3, "A")
+	var b := _creature(3, "B")
 	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
 
 	# A Dictionary, not a bare local: GDScript lambdas capture outer locals by
@@ -267,24 +267,24 @@ func test_request_switch_swaps_the_active_index_and_starts_the_lockout() -> void
 	# silently mutate the lambda's own copy rather than this variable. A
 	# Dictionary is captured by reference, so mutating IT is visible here.
 	var captured := {"index": -1}
-	mgr.connect("pal_switched", func(index: int) -> void: captured["index"] = index)
+	mgr.connect("creature_switched", func(index: int) -> void: captured["index"] = index)
 
 	assert_true(bool(mgr.call("request_switch", 1)))
 	assert_eq(int(mgr.get("_active_index")), 1)
-	assert_eq(int(captured.get("index", -1)), 1, "pal_switched should carry the new index")
+	assert_eq(int(captured.get("index", -1)), 1, "creature_switched should carry the new index")
 	assert_true(float(mgr.get("_switch_lockout")) > 0.0, "a switch should start the lockout")
 	# Immediately switching again should now be refused by the lockout.
 	assert_false(bool(mgr.call("request_switch", 0)))
 
 
-func test_request_switch_preserves_the_switched_out_pals_hp_and_energy() -> void:
-	var a := _pal(3, "A")
+func test_request_switch_preserves_the_switched_out_creatures_hp_and_energy() -> void:
+	var a := _creature(3, "A")
 	a.hp = 41.0
 	a.energy = 60.0
-	var b := _pal(3, "B")
+	var b := _creature(3, "B")
 	var mgr := _in_combat([a, b] as Array[RefCounted], 0)
 
 	mgr.call("request_switch", 1)
 
-	assert_eq(a.hp, 41.0, "the switched-out pal must keep its hp")
-	assert_eq(a.energy, 60.0, "the switched-out pal must keep its energy")
+	assert_eq(a.hp, 41.0, "the switched-out creature must keep its hp")
+	assert_eq(a.energy, 60.0, "the switched-out creature must keep its energy")

@@ -10,7 +10,7 @@ extends SceneTree
 ## and the collision was a 64m bubble.
 ##
 ## Combat is piloted (docs/decisions/D07), so the things that can silently break
-## are new and physical: the pal has to actually move, the arena has to actually
+## are new and physical: the creature has to actually move, the arena has to actually
 ## hold it, an attack has to be able to miss, and control has to come back.
 ##
 ## It drives the real input actions rather than calling the manager's methods, so
@@ -56,7 +56,7 @@ func _run() -> void:
 		_report()
 		return
 
-	await _walk_to_the_wild_pal()
+	await _walk_to_the_wild_creature()
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
 		_fail("could not enter combat; nothing below this point was tested")
@@ -67,7 +67,7 @@ func _run() -> void:
 	_check_the_fight_opened()
 
 	_the_camera_can_see_the_fight()
-	await _the_pal_moves_on_the_stick()
+	await _the_creature_moves_on_the_stick()
 	await _the_arena_holds_you_in()
 	await _a_swing_at_empty_air_misses()
 	await _a_swing_at_the_enemy_connects()
@@ -81,10 +81,10 @@ func _run() -> void:
 ## `meadows_playground.tscn` now always carries a `SequenceDirector` (R0.9),
 ## and its `_ready()` unconditionally calls `suspend_default_starter()` in the
 ## one frame window that exists to call it off — the opening always decides
-## which pal the player gets, never the sandbox default. This test is not the
+## which creature the player gets, never the sandbox default. This test is not the
 ## opening and never drives it, so the encounter director's own
 ## `default_starter` never spawns here either. Proving combat's WIRING does
-## not need the opening's cast; it needs a pal, so this gets one directly,
+## not need the opening's cast; it needs a creature, so this gets one directly,
 ## the same call `sequence_director.gd` makes once a name is confirmed.
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
@@ -125,31 +125,31 @@ func _collect_nodes() -> bool:
 		else:
 			_hits_on_ally += 1)
 
-	_wild = _director.call("wild_pal") as Node3D
+	_wild = _director.call("wild_creature") as Node3D
 	if _wild == null:
-		_fail("the encounter director never spawned a wild pal")
+		_fail("the encounter director never spawned a wild creature")
 		return false
 	if _director.call("ally_instance") == null:
-		_fail("the player has no pal to fight with")
+		_fail("the player has no creature to fight with")
 		return false
 
 	# Asserted explicitly, because the failure mode is silent: if the placement
 	# raycast runs before Terrain3D has built collision it finds nothing, and the
 	# creature sits at the world origin under the terrain. Everything downstream
-	# then "passes" against a pal the player could never have walked up to.
+	# then "passes" against a creature the player could never have walked up to.
 	if _wild.global_position.distance_to(_player.global_position) < 4.0:
-		_fail("the wild pal spawned on top of the player; it was never placed")
+		_fail("the wild creature spawned on top of the player; it was never placed")
 		return false
-	print("wild pal at %.0f, %.0f, %.0f" % [
+	print("wild creature at %.0f, %.0f, %.0f" % [
 		_wild.global_position.x, _wild.global_position.y, _wild.global_position.z
 	])
 	return true
 
 
 ## Walk over and stand next to it, rather than teleporting. Reaching the creature
-## is part of the encounter and a wild pal spawned somewhere unreachable is a
+## is part of the encounter and a wild creature spawned somewhere unreachable is a
 ## real failure.
-func _walk_to_the_wild_pal() -> void:
+func _walk_to_the_wild_creature() -> void:
 	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
 	# 1800 frames covers the practice cluster's far edge (~65m from the origin
 	# since spawns.json moved it to [30, -40] r15) with slack for slopes.
@@ -168,7 +168,7 @@ func _walk_to_the_wild_pal() -> void:
 	var final := _player.global_position.distance_to(_wild.global_position)
 	print("approached to %.1fm (engage range %.1fm)" % [final, engage_range])
 	if final > engage_range:
-		_fail("could not walk within engage range of the wild pal (got to %.1fm)" % final)
+		_fail("could not walk within engage range of the wild creature (got to %.1fm)" % final)
 
 
 ## Point the camera so that "forward" means this direction. Steering through the
@@ -180,7 +180,7 @@ func _aim_camera_along(direction: Vector3) -> void:
 
 func _engage() -> void:
 	if str(_director.call("prompt")) == "":
-		_fail("no engage prompt appeared next to the wild pal")
+		_fail("no engage prompt appeared next to the wild creature")
 	Input.action_press("interact")
 	await physics_frame
 	await physics_frame
@@ -195,18 +195,18 @@ func _check_the_fight_opened() -> void:
 	if bool(_player.call("locomotion_enabled")):
 		_fail("the trainer can still walk during a fight")
 	if _ally == null or not _ally.visible:
-		_fail("the player's pal was never deployed")
+		_fail("the player's creature was never deployed")
 		return
 	if _manager.call("arena") == null:
 		_fail("no arena was opened")
 
-	# The camera is supposed to be on the pal now, not the trainer. Checked by
+	# The camera is supposed to be on the creature now, not the trainer. Checked by
 	# where the rig actually is rather than by reading a private field, so a rig
 	# that stores the right target and follows the wrong one still fails.
-	var to_pal := _rig.global_position.distance_to(_ally.global_position)
+	var to_creature := _rig.global_position.distance_to(_ally.global_position)
 	var to_trainer := _rig.global_position.distance_to(_player.global_position)
-	if to_pal > to_trainer:
-		_fail("the camera is still following the trainer (%.1fm) not the pal (%.1fm)" % [to_trainer, to_pal])
+	if to_creature > to_trainer:
+		_fail("the camera is still following the trainer (%.1fm) not the creature (%.1fm)" % [to_trainer, to_creature])
 
 
 ## Can the camera actually see the fight?
@@ -234,19 +234,19 @@ func _the_camera_can_see_the_fight() -> void:
 	var blocked: Dictionary = _rig.get_world_3d().direct_space_state.intersect_ray(query)
 
 	var distance := eye.distance_to(subject)
-	print("camera %.1fm from the pal, line of sight %s" % [
+	print("camera %.1fm from the creature, line of sight %s" % [
 		distance, "blocked" if not blocked.is_empty() else "clear"
 	])
 	if not blocked.is_empty():
-		_fail("something solid is between the camera and the player's pal; the fight is not visible")
+		_fail("something solid is between the camera and the player's creature; the fight is not visible")
 	# Inside the creature is its own kind of blind.
 	if distance < 1.0:
-		_fail("the camera is %.2fm from the pal; it is inside the creature" % distance)
+		_fail("the camera is %.2fm from the creature; it is inside the creature" % distance)
 
 
-## The whole point of the change. If the stick does not move the pal, combat is
+## The whole point of the change. If the stick does not move the creature, combat is
 ## still the menu it used to be.
-func _the_pal_moves_on_the_stick() -> void:
+func _the_creature_moves_on_the_stick() -> void:
 	var before := _ally.global_position
 	var away := _ally.global_position - _wild.global_position
 	away.y = 0.0
@@ -260,9 +260,9 @@ func _the_pal_moves_on_the_stick() -> void:
 		await physics_frame
 
 	var travelled := before.distance_to(_ally.global_position)
-	print("pal moved %.1fm on the stick" % travelled)
+	print("creature moved %.1fm on the stick" % travelled)
 	if travelled < 1.0:
-		_fail("the stick moved the pal %.2fm; combat is not actually piloted" % travelled)
+		_fail("the stick moved the creature %.2fm; combat is not actually piloted" % travelled)
 
 
 ## The arena is a soft wall, not a flee trigger. Walking into it must hold you
@@ -295,14 +295,14 @@ func _the_arena_holds_you_in() -> void:
 		return
 	# A small overshoot is the correction happening after the move, not a leak.
 	if furthest > radius + 1.0:
-		_fail("the pal reached %.1fm from the centre of an %.1fm arena; the boundary leaks" % [furthest, radius])
+		_fail("the creature reached %.1fm from the centre of an %.1fm arena; the boundary leaks" % [furthest, radius])
 
 
 ## Attacks have to be missable, or spacing is decoration.
 ##
 ## The miss this proves is an OUT-OF-RANGE one. It used to be a facing miss —
 ## turn away and swing at nothing — but the design took facing off the skill
-## list: the pal now turns toward its opponent as every swing starts
+## list: the creature now turns toward its opponent as every swing starts
 ## (combat_manager's windup auto-face), because "I was fifteen degrees off"
 ## on a 7-inch handheld read as noise, not skill. Range and timing are the
 ## skills that remain, so range is what must still be able to say no. This
@@ -315,7 +315,7 @@ func _a_swing_at_empty_air_misses() -> void:
 	var misses_before := _misses
 
 	# Stage the gap directly, the same way the walking tests stage their start
-	# points: put the pal across the arena from the enemy. The input under
+	# points: put the creature across the arena from the enemy. The input under
 	# test is the attack press, not the walk that would get it there — racing
 	# the enemy's chase across the arena on real inputs is exactly the
 	# nondeterminism that made this test flap.
@@ -331,7 +331,7 @@ func _a_swing_at_empty_air_misses() -> void:
 	# the world, never carry a Y across a horizontal move) -- the same bug
 	# `combat_manager.gd::_stand_the_trainer_aside` already paid for once. On
 	# rolling terrain a 9.5m horizontal jump can land well off `centre`'s own
-	# height; carrying it forward embedded the pal under a one-sided heightfield
+	# height; carrying it forward embedded the creature under a one-sided heightfield
 	# collider with no floor to catch it, and it fell through the world for the
 	# rest of the fight -- the actual cause behind this file's own flake entry,
 	# found by watching real position/velocity logs across ~20 runs rather than
@@ -358,7 +358,7 @@ func _a_swing_at_empty_air_misses() -> void:
 
 func _a_swing_at_the_enemy_connects() -> void:
 	var foe: RefCounted = _manager.call("enemy")
-	var pal: RefCounted = _manager.call("active_pal")
+	var creature: RefCounted = _manager.call("active_creature")
 	var quick: Dictionary = MATH.config().get("player_quick", {})
 	var reach := float(quick.get("range", 2.6))
 
@@ -374,7 +374,7 @@ func _a_swing_at_the_enemy_connects() -> void:
 	Input.action_release("move_forward")
 
 	var hp_before: float = foe.hp
-	var energy_before: float = pal.energy
+	var energy_before: float = creature.energy
 	await _press("combat_quick")
 	for i in 25:
 		await physics_frame
@@ -385,13 +385,13 @@ func _a_swing_at_the_enemy_connects() -> void:
 		print("quick attack: enemy %.1f -> %.1f hp" % [hp_before, foe.hp])
 	# Energy is earned by connecting, not by pressing. That is what ties the
 	# charged attack to positioning rather than to button-mashing.
-	if pal.energy <= energy_before:
-		_fail("a landed quick attack built no energy (%.1f -> %.1f)" % [energy_before, pal.energy])
+	if creature.energy <= energy_before:
+		_fail("a landed quick attack built no energy (%.1f -> %.1f)" % [energy_before, creature.energy])
 
 
 ## Without this the fight is a punching bag with a health bar.
 func _the_enemy_closes_and_hits_back() -> void:
-	var pal: RefCounted = _manager.call("active_pal")
+	var creature: RefCounted = _manager.call("active_creature")
 
 	# Start watching from a clean beat.
 	#
@@ -409,7 +409,7 @@ func _the_enemy_closes_and_hits_back() -> void:
 			break
 		await physics_frame
 
-	var hp_before: float = pal.hp
+	var hp_before: float = creature.hp
 	var saw_telegraph := false
 	var saw_opening := false
 	var struck_unannounced := false
@@ -424,16 +424,16 @@ func _the_enemy_closes_and_hits_back() -> void:
 			saw_telegraph = true
 		elif bool(_manager.call("enemy_is_rooted")):
 			saw_opening = true
-		if pal.hp < hp_before:
+		if creature.hp < hp_before:
 			# Ordering matters more than occurrence: a wind-up that arrives after
 			# the damage is not a warning.
 			struck_unannounced = not saw_telegraph
 			break
 
-	if pal.hp >= hp_before:
+	if creature.hp >= hp_before:
 		_fail("the enemy never landed a hit in 15 seconds of standing still")
 	else:
-		print("enemy dealt damage: ally %.1f -> %.1f hp" % [hp_before, pal.hp])
+		print("enemy dealt damage: ally %.1f -> %.1f hp" % [hp_before, creature.hp])
 	if struck_unannounced or not saw_telegraph:
 		_fail("the enemy attacked with no visible wind-up; the fight has no warning")
 	if not saw_opening:
@@ -444,11 +444,11 @@ func _fight_to_a_finish() -> void:
 	var foe: RefCounted = _manager.call("enemy")
 	var frames := 0
 	while bool(_manager.call("is_fighting")) and frames < FIGHT_FRAME_LIMIT:
-		var pal: RefCounted = _manager.call("active_pal")
+		var creature: RefCounted = _manager.call("active_creature")
 		# Keep the ally alive long enough to win: heal it rather than tune the
 		# fight, because this test is about wiring, not balance.
-		if pal != null and pal.hp_fraction() < 0.4:
-			pal.hp = pal.max_hp
+		if creature != null and creature.hp_fraction() < 0.4:
+			creature.hp = creature.max_hp
 
 		var to := _wild.global_position - _ally.global_position
 		to.y = 0.0
@@ -485,18 +485,18 @@ func _fight_to_a_finish() -> void:
 ## removed call directly, so a regression that re-adds healing anywhere in
 ## that path fails here.
 func _hp_is_not_auto_healed_after_the_fight() -> void:
-	var pal: RefCounted = _director.call("ally_instance")
-	if pal == null:
+	var creature: RefCounted = _director.call("ally_instance")
+	if creature == null:
 		_fail("no ally instance to check post-fight HP against")
 		return
-	var hp_at_win: float = pal.hp
-	if hp_at_win >= float(pal.max_hp):
+	var hp_at_win: float = creature.hp
+	if hp_at_win >= float(creature.max_hp):
 		_fail("the ally is at full HP already at the moment of victory; " +
 			"the earlier damage-taken check should have prevented this")
 		return
 	for i in 60:
 		await physics_frame
-	var hp_after: float = pal.hp
+	var hp_after: float = creature.hp
 	if hp_after != hp_at_win:
 		_fail("the ally's HP changed from %.1f to %.1f after the fight ended with no potion or rest — something is still auto-healing" % [
 			hp_at_win, hp_after
@@ -512,7 +512,7 @@ func _exploration_is_restored() -> void:
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("the trainer cannot walk after the fight ended")
 	if _ally != null and _ally.visible:
-		_fail("the player's pal is still standing in the world after the fight")
+		_fail("the player's creature is still standing in the world after the fight")
 	if _manager.call("arena") != null:
 		_fail("the arena was never cleaned up")
 	if _world.get_node_or_null(^"CombatArena") != null:

@@ -8,7 +8,7 @@ extends SceneTree
 ##
 ##   ui_catch_low / ui_catch_high  - the suite's catch phase walked the player
 ##     to the encounter (up to 1800 physics frames). Here the player is
-##     teleported straight into the wild-pal cluster and the fight is started
+##     teleported straight into the wild-creature cluster and the fight is started
 ##     through encounter_director's own entry point
 ##     (`_start_fight` -> `CombatManager.begin`), the same one-way-in
 ##     _on_wild_wants_to_engage() and the trainer's own interact prompt both
@@ -98,7 +98,7 @@ func _run() -> void:
 
 
 func _phase_catch() -> void:
-	print("[catch] teleporting into the wild-pal cluster...")
+	print("[catch] teleporting into the wild-creature cluster...")
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	var manager := _world.get_node_or_null(^"CombatManager")
 	if director == null or manager == null:
@@ -124,15 +124,15 @@ func _phase_catch() -> void:
 	if inventory != null:
 		inventory.call("add", "orb_basic", 10)
 
-	var wild: Node3D = director.call("wild_pal") as Node3D
+	var wild: Node3D = director.call("wild_creature") as Node3D
 	if wild == null:
-		_failures.append("catch: no practice-role wild pal found near the cluster -- cannot engage")
+		_failures.append("catch: no practice-role wild creature found near the cluster -- cannot engage")
 		if debug_hud != null:
 			debug_hud.visible = true
 		return
 
 	# The one way in every real engage route (player interact prompt,
-	# aggressive-pal ambush) already funnels through: encounter_director's
+	# aggressive-creature ambush) already funnels through: encounter_director's
 	# own `_start_fight`, which calls CombatManager.begin() directly. No
 	# walk, no interact button -- this IS the entry point, not a shortcut
 	# around it.
@@ -191,9 +191,9 @@ func _capture_chance_frame(manager: Node, wild: Node3D, hp_fraction: float, fram
 	var inventory: RefCounted = _game.get("inventory")
 	if inventory != null:
 		inventory.call("add", "orb_basic", 10)
-	var pal: RefCounted = manager.call("active_pal")
-	if pal != null:
-		pal.hp = pal.max_hp
+	var creature: RefCounted = manager.call("active_creature")
+	if creature != null:
+		creature.hp = creature.max_hp
 	var foe: RefCounted = manager.call("enemy")
 	foe.hp = clampf(foe.max_hp * hp_fraction, 1.0, foe.max_hp)
 

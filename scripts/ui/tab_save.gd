@@ -76,7 +76,7 @@ func poll() -> void:
 		var slot_name := "Slot %d (Autosave)" % (i + 1) if i == 0 else "Slot %d" % (i + 1)
 		if bool(game.call("has_save", i)):
 			var info: Dictionary = game.call("save_slot_info", i)
-			label.text = "%s — Day %s, %s pals" % [
+			label.text = "%s — Day %s, %s creatures" % [
 				slot_name, str(info.get("day", "?")), str(info.get("party_size", "?"))
 			]
 		else:

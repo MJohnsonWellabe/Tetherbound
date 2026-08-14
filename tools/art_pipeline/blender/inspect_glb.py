@@ -83,7 +83,7 @@ def drop_import_phantoms() -> list[str]:
         after reimport: ARMATURE Armature, MESH Cube(24), MESH Icosphere(42)
 
     So it is an importer artifact, and the consequences run the other way from
-    what was believed. Godot never sees it — `pal_body._fit()` measures what is
+    what was believed. Godot never sees it — `creature_body._fit()` measures what is
     in the file, and smoke_art has been reporting correct fitted heights all
     along. What it does poison is THIS script: a unit sphere around a creature
     standing 0..2.0 makes the reported height 3.0, and the mesh count 2. Both
@@ -112,7 +112,7 @@ def world_bounds(objects: list[bpy.types.Object]) -> dict:
     """Size in metres, as the renderer would draw it.
 
     Object-space bounds are meaningless on a generated asset: they arrive
-    scaled by anything, parented to anything, and pal_body._fit() has already
+    scaled by anything, parented to anything, and creature_body._fit() has already
     been burned once by trusting a bind-pose box. So compose the world matrix.
     """
     low = Vector((math.inf,) * 3)

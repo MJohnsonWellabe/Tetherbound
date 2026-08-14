@@ -44,7 +44,7 @@ Claude should configure the export preset early so you are not discovering expor
 
 From the repository root, give Claude a prompt like:
 
-> Read CLAUDE.md and all files under docs/ before making changes. Start only with M0 and M1 from MEADOWS_VERTICAL_SLICE.md. Set up the Godot project, Windows export preset, controller input map, and a third-person movement playground with walk, sprint, jump, stamina, fall damage, camera orbit, rolling test terrain, and a minimal HUD. Do not implement pals or combat yet. Keep tunable movement values in configuration/resources. Run the project or available validation and document anything I need to test manually on the ROG Ally.
+> Read CLAUDE.md and all files under docs/ before making changes. Start only with M0 and M1 from MEADOWS_VERTICAL_SLICE.md. Set up the Godot project, Windows export preset, controller input map, and a third-person movement playground with walk, sprint, jump, stamina, fall damage, camera orbit, rolling test terrain, and a minimal HUD. Do not implement creatures or combat yet. Keep tunable movement values in configuration/resources. Run the project or available validation and document anything I need to test manually on the ROG Ally.
 
 Then test the result yourself.
 
@@ -74,10 +74,10 @@ This protects the project from accumulating 30 mediocre systems before the basic
 ## Suggested milestone prompts
 
 ### After movement feels good
-> Implement M2 only: one roaming wild pal encounter and Combat Mode. Use placeholders if necessary. Support target/interact, choosing/deploying a pal, Quick Attack, Charged Attack energy, Run, and the switching architecture. Do not implement catching yet. Make it comfortable on controller and stop for playtesting.
+> Implement M2 only: one roaming wild creature encounter and Combat Mode. Use placeholders if necessary. Support target/interact, choosing/deploying a creature, Quick Attack, Charged Attack energy, Run, and the switching architecture. Do not implement catching yet. Make it comfortable on controller and stop for playtesting.
 
 ### Then catching
-> Implement M3 only. Add aimed physical orb throwing during wild combat. Full-health attempts must be allowed; current HP should influence capture success; fainting the wild pal must remove the capture opportunity. Focus on the physical feel of aiming and throwing before adding content.
+> Implement M3 only. Add aimed physical orb throwing during wild combat. Full-health attempts must be allowed; current HP should influence capture success; fainting the wild creature must remove the capture opportunity. Focus on the physical feel of aiming and throwing before adding content.
 
 ### Then party/release
 Proceed through the vertical-slice milestones one at a time.
@@ -108,7 +108,7 @@ A clean commit after each playable milestone gives you a safe rollback point.
 
 ## First human playtest target
 
-Before thinking about the 12 pals, you should be able to launch the `.exe` on the ROG Ally and enjoy simply:
+Before thinking about the 12 creatures, you should be able to launch the `.exe` on the ROG Ally and enjoy simply:
 - moving
 - sprinting
 - jumping

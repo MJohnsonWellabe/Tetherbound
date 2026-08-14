@@ -37,10 +37,10 @@ static func config() -> Dictionary:
 ## How much a target's remaining health is working against you.
 ##
 ## GAME_DESIGN.md §15 asks for two things at once: full-health throws must be
-## ALLOWED, and full-health pals must be EXTREMELY difficult. So this returns a
+## ALLOWED, and full-health creatures must be EXTREMELY difficult. So this returns a
 ## small number rather than zero at full health, and rises to 1 at a sliver.
 ##
-## The curve is back-loaded (exponent above 1) so that chipping a pal to half
+## The curve is back-loaded (exponent above 1) so that chipping a creature to half
 ## buys much less than taking it to a sliver. That is what keeps "damage it
 ## first" a genuine risk against "over-damage it and lose the catch entirely".
 static func hp_factor(hp_fraction: float) -> float:
@@ -79,7 +79,7 @@ static func orb_multiplier(orb_id: String) -> float:
 
 ## The odds this throw succeeds, in 0..1.
 ##
-## `species_rate` comes from data/pals/species.json, so a rare creature is data
+## `species_rate` comes from data/creatures/species.json, so a rare creature is data
 ## rather than a special case in code.
 static func catch_chance(
 	species_rate: float, hp_fraction: float, orb_id: String,
@@ -145,7 +145,7 @@ static func shakes_for(caught: bool, chance: float, roll: float) -> int:
 ## player should be told which of the two they are looking at. Rolling a fainted
 ## target at 2% would eventually catch one.
 static func can_be_caught(is_fainted: bool, already_owned: bool) -> bool:
-	# Trainer-owned pals cannot be caught — a hard rule in CLAUDE.md, enforced
+	# Trainer-owned creatures cannot be caught — a hard rule in CLAUDE.md, enforced
 	# here so every future path into catching inherits it.
 	return not is_fainted and not already_owned
 

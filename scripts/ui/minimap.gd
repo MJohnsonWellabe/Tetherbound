@@ -3,15 +3,15 @@ extends Control
 ## The minimap widget — `D33` / the owner's UI spec §6A. A rounded-square,
 ## player-up-rotated read of `Game.map` (`autoload/map_state.gd`, D33's one
 ## map database): a baked terrain texture (`scripts/world/map_baker.gd`)
-## under a fog-of-war overlay, with landmark/objective/pal markers on top.
-## Never a wild-pal radar (§6A.6) — nothing here ever reads a wild creature's
+## under a fog-of-war overlay, with landmark/objective/creature markers on top.
+## Never a wild-creature radar (§6A.6) — nothing here ever reads a wild creature's
 ## position, and the only positions this file ever draws are whatever
 ## `Game.map` itself exposes.
 ##
 ## PLAYER-UP ROTATION — DERIVED, NOT GUESSED, per the task's own instruction.
 ## This project's yaw convention (used everywhere a facing direction is built
 ## from a yaw angle: `player_controller.gd`'s `atan2(direction.x,
-## direction.z)`, `world_perimeter.gd`, `wild_pal.gd`, `encounter_director.gd`)
+## direction.z)`, `world_perimeter.gd`, `wild_creature.gd`, `encounter_director.gd`)
 ## is `forward(yaw) = Vector3(sin(yaw), 0, cos(yaw))`. `map_baker.gd` bakes a
 ## north-up texture: image column = world X, image row = world Z, so
 ## screen-up before any rotation is world -Z (north) and screen-right is
@@ -49,7 +49,7 @@ extends Control
 const WORLD_HALF := 256.0 ## `terrain_playground.json`'s `world_size` 512, halved.
 const MOVE_EPSILON := 0.05
 const YAW_EPSILON := 0.01
-const PAL_SHOW_DISTANCE := 15.0
+const CREATURE_SHOW_DISTANCE := 15.0
 
 const CORNER_RADIUS := 28.0
 const RING_WIDTH := 8.0
@@ -65,7 +65,7 @@ var _span_m: float = 90.0
 
 var _player_pos: Vector3 = Vector3.ZERO
 var _player_yaw: float = 0.0
-var _pal_pos: Variant = null
+var _creature_pos: Variant = null
 
 var _fog_image: Image = null
 var _fog_texture: ImageTexture = null
@@ -93,19 +93,19 @@ func configure(map_state: RefCounted, terrain: Texture2D, span_m: float = 90.0) 
 
 ## Called once a frame by whatever owns the HUD. Cheap by design: redraw is
 ## only requested when the player actually moved/turned more than a tiny
-## epsilon, the followed pal moved, or `map_state.revision` advanced — a
+## epsilon, the followed creature moved, or `map_state.revision` advanced — a
 ## stationary player standing still must not repaint every frame.
-func update_view(player_pos: Vector3, player_yaw_rad: float, pal_pos: Variant = null) -> void:
+func update_view(player_pos: Vector3, player_yaw_rad: float, creature_pos: Variant = null) -> void:
 	var moved := _player_pos.distance_to(player_pos) > MOVE_EPSILON
 	var turned := absf(angle_difference(_player_yaw, player_yaw_rad)) > YAW_EPSILON
-	var pal_changed := not _pal_equal(pal_pos)
+	var creature_changed := not _creature_equal(creature_pos)
 	var revision_changed := _map_state != null and int(_map_state.revision) != _last_fog_revision
 
 	_player_pos = player_pos
 	_player_yaw = player_yaw_rad
-	_pal_pos = pal_pos
+	_creature_pos = creature_pos
 
-	if moved or turned or pal_changed or revision_changed:
+	if moved or turned or creature_changed or revision_changed:
 		queue_redraw()
 
 
@@ -117,12 +117,12 @@ func set_dim(dim: float) -> void:
 	modulate = Color(1.0, 1.0, 1.0, clampf(dim, 0.0, 1.0))
 
 
-func _pal_equal(new_pal: Variant) -> bool:
-	if new_pal == null and _pal_pos == null:
+func _creature_equal(new_creature: Variant) -> bool:
+	if new_creature == null and _creature_pos == null:
 		return true
-	if new_pal == null or _pal_pos == null:
+	if new_creature == null or _creature_pos == null:
 		return false
-	return (new_pal as Vector3).distance_to(_pal_pos as Vector3) <= MOVE_EPSILON
+	return (new_creature as Vector3).distance_to(_creature_pos as Vector3) <= MOVE_EPSILON
 
 
 # --- drawing -----------------------------------------------------------------
@@ -171,7 +171,7 @@ func _draw() -> void:
 		corner_safe_radius - OBJECTIVE_LABEL_PUSH - 20.0 # 20px: label's own half-extent
 	)
 	_draw_landmarks(centre, scale_px_per_m)
-	_draw_pal_marker(centre, scale_px_per_m)
+	_draw_creature_marker(centre, scale_px_per_m)
 	_draw_objective(centre, scale_px_per_m, visible_radius)
 
 	_draw_corner_masks(box)
@@ -272,13 +272,13 @@ func _draw_landmark_icon(local: Vector2, category: String) -> void:
 		draw_circle(local, r, UITokens.TEXT_PRIMARY)
 
 
-func _draw_pal_marker(centre: Vector2, scale_px_per_m: float) -> void:
-	if not (_pal_pos is Vector3):
+func _draw_creature_marker(centre: Vector2, scale_px_per_m: float) -> void:
+	if not (_creature_pos is Vector3):
 		return
-	var pal: Vector3 = _pal_pos
-	if Vector2(pal.x, pal.z).distance_to(Vector2(_player_pos.x, _player_pos.z)) <= PAL_SHOW_DISTANCE:
+	var creature: Vector3 = _creature_pos
+	if Vector2(creature.x, creature.z).distance_to(Vector2(_player_pos.x, _player_pos.z)) <= CREATURE_SHOW_DISTANCE:
 		return # too close to the player to need its own marker
-	var local := _world_to_local(pal, centre, scale_px_per_m)
+	var local := _world_to_local(creature, centre, scale_px_per_m)
 	_draw_dot(local, 3.0, UITokens.TEAL_SOFT)
 
 

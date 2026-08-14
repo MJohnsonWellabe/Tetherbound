@@ -74,10 +74,10 @@ func _run() -> void:
 				camera.global_position.y - player.global_position.y])
 
 	var director: Node = world.get_node_or_null(^"EncounterDirector")
-	if director != null and director.has_method("wild_pals"):
-		var pals: Array = director.call("wild_pals")
-		print("wild pals: %d" % pals.size())
-		for p in pals:
+	if director != null and director.has_method("wild_creatures"):
+		var creatures: Array = director.call("wild_creatures")
+		print("wild creatures: %d" % creatures.size())
+		for p in creatures:
 			var body: Node3D = p as Node3D
 			if body != null:
 				var b := _world_size(body)

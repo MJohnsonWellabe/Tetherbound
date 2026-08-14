@@ -3,7 +3,7 @@ extends Node3D
 ## Something the player can walk up to and press a button on.
 ##
 ## Bolted onto whatever it belongs to as a child node, so the thing itself —
-## Grandpa's body, a starter pal, a berry bush — stays ignorant of prompts. It
+## Grandpa's body, a starter creature, a berry bush — stays ignorant of prompts. It
 ## measures from ITS OWN position rather than its parent's, which is what lets a
 ## large body offer its prompt from a door, a head, or a face rather than from
 ## the point between its feet.

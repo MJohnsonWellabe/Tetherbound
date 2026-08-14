@@ -936,7 +936,7 @@ func _scatter_lilypads(cfg: Dictionary, shore: Array[Vector2], pond_centre: Vect
 	return total
 
 
-## The jetty (bible §15's "support Water Pal ecology", the blind rounds'
+## The jetty (bible §15's "support Water Creature ecology", the blind rounds'
 ## "the key art's jetty"): a short plank deck the villagers built, walking
 ## out from the shore where the pond path delivers the player. Composed from
 ## the Medieval Village kit's own modules (D24's one village family) —

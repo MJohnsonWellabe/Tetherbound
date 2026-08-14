@@ -1,5 +1,6 @@
 # D14 — One autoload, and a menu described in JSON
 
+> Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Status:** accepted
 **Milestone:** M4/M8/M9 groundwork (party, inventory, build menus)
 

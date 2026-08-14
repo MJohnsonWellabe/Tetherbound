@@ -1,5 +1,6 @@
 # D23 — The Meadows is the first game
 
+> Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Date:** 2026-08-11 · **Decided by:** the owner, in a supplied specification,
 after playing the published Windows build.
 **Source:** `docs/MEADOWS_PROGRESSION_SPEC.md`, stored verbatim. This record is

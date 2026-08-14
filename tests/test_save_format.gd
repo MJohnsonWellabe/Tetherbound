@@ -19,7 +19,7 @@ const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
-const PAL := preload("res://scripts/pals/pal_instance.gd")
+const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 
 const TEST_DIR := "user://test_saves_format/"
@@ -82,13 +82,13 @@ func _game(seed_party: bool = true) -> RefCounted:
 	game.party = PARTY.new()
 	game.inventory = INVENTORY.new(db)
 	if seed_party:
-		var pal: RefCounted = PAL.from_species("terrapup", {
+		var creature: RefCounted = CREATURE.from_species("terrapup", {
 			"display_name": "Terrapup", "type": "ground", "base_hp": 100.0,
 			"base_attack": 20.0, "base_defence": 20.0,
 		})
-		pal.nickname = "Biscuit"
-		pal.take_damage(35.0)
-		game.party.add(pal)
+		creature.nickname = "Biscuit"
+		creature.take_damage(35.0)
+		game.party.add(creature)
 	return game
 
 
@@ -120,11 +120,11 @@ func test_save_then_load_round_trips_the_party() -> void:
 	var read := _game(false)
 	assert_true(saver.load_slot(read, 1))
 	assert_eq(read.party.size(), 1)
-	var pal: RefCounted = read.party.at(0)
-	assert_eq(str(pal.get("species_id")), "terrapup")
-	assert_eq(str(pal.get("nickname")), "Biscuit")
-	assert_almost_eq(float(pal.get("hp")), 65.0)
-	assert_almost_eq(float(pal.get("max_hp")), 100.0)
+	var creature: RefCounted = read.party.at(0)
+	assert_eq(str(creature.get("species_id")), "terrapup")
+	assert_eq(str(creature.get("nickname")), "Biscuit")
+	assert_almost_eq(float(creature.get("hp")), 65.0)
+	assert_almost_eq(float(creature.get("max_hp")), 100.0)
 
 
 func test_save_then_load_replaces_whatever_party_the_loading_game_already_had() -> void:
@@ -278,17 +278,17 @@ func test_slots_are_independent_of_each_other() -> void:
 	assert_eq(saver.slot_info(1).get("day"), 42)
 
 
-# --- VERSION 2: pal progression, satiety, map, building yaw -----------------
+# --- VERSION 2: creature progression, satiety, map, building yaw -----------------
 
 
-func test_save_then_load_round_trips_pal_progression_and_moves() -> void:
+func test_save_then_load_round_trips_creature_progression_and_moves() -> void:
 	var written := _game()
-	var pal: RefCounted = written.party.at(0)
-	pal.level = 7
-	pal.xp = 23
-	pal.bond = 44
-	pal.move_quick = "tackle"
-	pal.move_charged = "slam"
+	var creature: RefCounted = written.party.at(0)
+	creature.level = 7
+	creature.xp = 23
+	creature.bond = 44
+	creature.move_quick = "tackle"
+	creature.move_charged = "slam"
 	assert_true(saver.save(written, 1))
 
 	var read := _game(false)
@@ -352,15 +352,15 @@ func test_save_then_load_round_trips_building_yaw() -> void:
 	assert_almost_eq(float(entry.get("yaw_deg")), 90.0)
 
 
-func test_v1_save_migrates_pals_satiety_map_and_building_yaw_on_load() -> void:
+func test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load() -> void:
 	var v1_data := {
 		"version": 1,
 		"day": 5,
 		"party": [{
 			"species_id": "terrapup",
 			"display_name": "Terrapup",
-			"pal_type": "ground",
-			"nickname": "Old Save Pal",
+			"creature_type": "ground",
+			"nickname": "Old Save Creature",
 			"max_hp": 120.0,
 			"attack": 22.0,
 			"defence": 20.0,
@@ -383,13 +383,13 @@ func test_v1_save_migrates_pals_satiety_map_and_building_yaw_on_load() -> void:
 
 	assert_eq(read.day, 5)
 
-	var pal: RefCounted = read.party.at(0)
-	assert_eq(str(pal.get("nickname")), "Old Save Pal")
-	assert_eq(int(pal.get("level")), 3, "migration.v1_pal_level from progression.json")
-	assert_eq(int(pal.get("xp")), 0)
-	assert_eq(int(pal.get("bond")), 0)
-	assert_eq(str(pal.get("move_quick")), "pebble_toss", "terrapup's own species.json moves")
-	assert_eq(str(pal.get("move_charged")), "stone_rush")
+	var creature: RefCounted = read.party.at(0)
+	assert_eq(str(creature.get("nickname")), "Old Save Creature")
+	assert_eq(int(creature.get("level")), 3, "migration.v1_creature_level from progression.json")
+	assert_eq(int(creature.get("xp")), 0)
+	assert_eq(int(creature.get("bond")), 0)
+	assert_eq(str(creature.get("move_quick")), "pebble_toss", "terrapup's own species.json moves")
+	assert_eq(str(creature.get("move_charged")), "stone_rush")
 
 	assert_eq(read.inventory.stack_at(1), {"id": "wood", "n": 5})
 

@@ -34,10 +34,10 @@ const WAKE := "wake"
 const HOUSE := "house"
 ## Beat 4: the three starters outside the door offer their prompts, and only here.
 const CHOOSE := "choose"
-## Beat 5: the name has been typed and the pal is theirs. Transient — the
+## Beat 5: the name has been typed and the creature is theirs. Transient — the
 ## director moves off it as soon as Grandpa's reply finishes.
 const NAMED := "name"
-## Beat 6: your pal is following and there is a bramblebun out past the rise.
+## Beat 6: your creature is following and there is a bramblebun out past the rise.
 const WALK_OUT := "walk_out"
 ## Beats 7 and 8, which are one state as far as the sequence is concerned: the
 ## fight and the catch both happen inside CombatManager.

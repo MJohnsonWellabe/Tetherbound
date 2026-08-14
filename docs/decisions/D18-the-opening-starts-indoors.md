@@ -1,5 +1,6 @@
 # D18 — The opening starts indoors
 
+> Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Status:** accepted, by the owner
 **Decided:** after the owner's first real playtest of the build, 2026-08-09
 

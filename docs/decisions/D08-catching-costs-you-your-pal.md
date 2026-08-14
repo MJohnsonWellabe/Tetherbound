@@ -1,5 +1,6 @@
 # D08 — Catching costs you your pal
 
+> Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Status:** accepted
 **Decided by:** owner, during M3
 **Builds on:** `D07-combat-is-piloted-not-commanded.md`

@@ -9,21 +9,21 @@ extends "res://tests/test_case.gd"
 ## which trains people to ignore it.
 
 const CATCH := preload("res://scripts/combat/catch_math.gd")
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 const BODY := 0.5
 
 
 # --- health ---------------------------------------------------------------
 
-func test_a_hurt_pal_is_easier_to_catch() -> void:
+func test_a_hurt_creature_is_easier_to_catch() -> void:
 	assert_true(CATCH.hp_factor(0.2) > CATCH.hp_factor(0.9),
-		"damaging a pal has to improve catch viability")
+		"damaging a creature has to improve catch viability")
 
 
 func test_a_full_health_throw_is_allowed_but_poor() -> void:
 	# GAME_DESIGN.md §15 asks for both at once: full-health throws are ALLOWED,
-	# and full-health pals are EXTREMELY difficult. Zero would break the first.
+	# and full-health creatures are EXTREMELY difficult. Zero would break the first.
 	var full := CATCH.hp_factor(1.0)
 	assert_true(full > 0.0, "a full-health throw must be possible at all")
 	assert_true(full < 0.35, "a full-health throw should be a long shot, got %f" % full)
@@ -45,7 +45,7 @@ func test_the_reward_is_back_loaded() -> void:
 	var half := CATCH.hp_factor(0.5)
 	var sliver := CATCH.hp_factor(0.05)
 	assert_true(half - full < sliver - half,
-		"taking a pal from half to a sliver should be worth more than full to half")
+		"taking a creature from half to a sliver should be worth more than full to half")
 
 
 # --- aiming ---------------------------------------------------------------
@@ -138,20 +138,20 @@ func test_a_near_miss_shakes_more_than_a_hopeless_throw() -> void:
 
 # --- legality -------------------------------------------------------------
 
-func test_a_fainted_pal_cannot_be_caught() -> void:
-	# §15: over-damaging a pal and causing a faint ENDS the capture opportunity.
+func test_a_fainted_creature_cannot_be_caught() -> void:
+	# §15: over-damaging a creature and causing a faint ENDS the capture opportunity.
 	# A refusal, not a very low chance — rolling a fainted target at the 2% floor
 	# would eventually catch one.
 	assert_false(CATCH.can_be_caught(true, false))
 
 
-func test_a_trainer_owned_pal_cannot_be_caught() -> void:
+func test_a_trainer_owned_creature_cannot_be_caught() -> void:
 	# A hard rule in CLAUDE.md, enforced in the maths so every future path into
 	# catching inherits it rather than each remembering.
 	assert_false(CATCH.can_be_caught(false, true))
 
 
-func test_a_healthy_wild_pal_can_be_caught() -> void:
+func test_a_healthy_wild_creature_can_be_caught() -> void:
 	assert_true(CATCH.can_be_caught(false, false))
 
 

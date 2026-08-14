@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-## Name your pal. The project's first text entry, and the first time it stops
+## Name your creature. The project's first text entry, and the first time it stops
 ## being a game you only hold a controller for.
 ##
 ## Three things are happening here that have never happened in this project
@@ -18,7 +18,7 @@ extends CanvasLayer
 ##     captured cursor over a modal panel is a panel a desktop player cannot
 ##     click, and worse, the camera keeps turning under it.
 ##  3. **The panel is modal.** Locomotion, the interact prompt and the camera all
-##     have to stop, or the player names their pal while walking off a cliff.
+##     have to stop, or the player names their creature while walking off a cliff.
 ##     Those are switched off by the sequence director, which owns that decision
 ##     for every beat; this node only says whether it is open.
 ##
@@ -52,7 +52,7 @@ const PANEL_BORDER := Color(0.55, 0.60, 0.50, 0.55)
 const OUTLINE := Color(0.03, 0.04, 0.05, 0.95)
 const OUTLINE_SIZE := 6
 
-signal confirmed(pal_name: String)
+signal confirmed(creature_name: String)
 
 var _entry: RefCounted = ENTRY.new()
 var _open: bool = false
@@ -289,7 +289,7 @@ func _draw() -> void:
 	var valid: bool = _entry.is_valid()
 	var glyphs := "%s type    %s delete" % [INPUT_GLYPH.icon("confirm"), INPUT_GLYPH.icon("cancel")]
 	_hint.text = "%s    OK to finish" % glyphs if valid \
-		else "%s    every pal gets a name" % glyphs
+		else "%s    every creature gets a name" % glyphs
 
 	var cursor := Vector2i(int(_entry.column), int(_entry.row))
 	if cursor == _drawn_cursor and valid == _drawn_valid:

@@ -3,7 +3,7 @@ extends Node3D
 ## Marks which creature on screen is the one actually being fought.
 ##
 ## `R9.4-remainder-9-combat`: a blind critic found two visually identical wild
-## pals on screen at once — the one engaged and an ambient, decorative one
+## creatures on screen at once — the one engaged and an ambient, decorative one
 ## from the same spawn cluster (`data/config/spawns.json`'s `count` > 1) —
 ## with nothing telling them apart. This floats a marker over the real
 ## opponent's head for the length of the fight.

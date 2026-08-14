@@ -3,8 +3,8 @@
     blender --background --python tools/art_pipeline/blender/animate_quadruped.py \
             -- <rigged.glb> --out <animated.glb>
 
-The game asks for six roles (scripts/pals/pal_animator.gd, mapped from
-data/pals/species.json): idle, walk, run, attack, hit, faint. Meshy's
+The game asks for six roles (scripts/creatures/creature_animator.gd, mapped from
+data/creatures/species.json): idle, walk, run, attack, hit, faint. Meshy's
 animation library only drives Meshy's own rigs, which are humanoid-only, so a
 quadruped's clips have to come from somewhere else. This authors them in
 Blender as keyframed cycles on the skeleton rig_quadruped.py builds.

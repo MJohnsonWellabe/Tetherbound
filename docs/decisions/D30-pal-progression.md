@@ -1,5 +1,6 @@
 # D30 — Pals gain levels, named moves and a bond stat
 
+> Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Date:** 2026-08-13 · **Decided by:** the owner, as one of four canon
 changes approved in the follow-up session that produced `D29`, `D31` and
 `D32`.

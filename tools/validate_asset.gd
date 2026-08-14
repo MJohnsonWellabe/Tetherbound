@@ -6,7 +6,7 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/validate_asset.gd -- terrapup
 ##
-##   ... --script tools/validate_asset.gd -- res://assets/pals/x.glb 1.2
+##   ... --script tools/validate_asset.gd -- res://assets/creatures/x.glb 1.2
 ##
 ## TETHERBOUND_3D_ART_PIPELINE.md section 15 and 16: a model that looks good in
 ## a Blender close-up can still fail in the game, so do not judge it only in
@@ -20,16 +20,16 @@ extends SceneTree
 ##
 ## WHAT THIS DELIBERATELY REUSES
 ##
-## The creature is built by `pal_body.gd` from `species.json`, not loaded
+## The creature is built by `creature_body.gd` from `species.json`, not loaded
 ## directly. That means these frames show the model AFTER `_fit()` has scaled
 ## it to the gameplay collider and AFTER `model_yaw` has turned it — which is
 ## how the player will see it. Loading the .glb straight would produce a
 ## prettier picture of an asset nobody will ever see at that size.
 
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
-const BODY := preload("res://scripts/pals/pal_body.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const BODY := preload("res://scripts/creatures/creature_body.gd")
 
-const PAL_SCENE := "res://scenes/pals/pal.tscn"
+const CREATURE_SCENE := "res://scenes/creatures/creature.tscn"
 const OUT_DIR := "res://shots/validation"
 
 ## Metres of the trainer, stood beside the creature as a ruler. GAME_DESIGN's
@@ -139,14 +139,14 @@ func _capture_set(lighting: String) -> void:
 ## script, the real species table.
 ##
 ## The first version hand-built the child nodes instead, and got a capsule. It
-## added them AFTER putting the body in the tree, so `pal_body.gd`'s `@onready`
+## added them AFTER putting the body in the tree, so `creature_body.gd`'s `@onready`
 ## references to $Body and $Model had already resolved to null and
-## `_build_placeholder()` quietly declined to run. Instancing `pal.tscn` cannot
+## `_build_placeholder()` quietly declined to run. Instancing `creature.tscn` cannot
 ## drift from the game like that, and cannot go stale when the scene changes.
 func _build_creature(world: Node3D) -> Node3D:
-	var scene: PackedScene = load(PAL_SCENE) as PackedScene
+	var scene: PackedScene = load(CREATURE_SCENE) as PackedScene
 	if scene == null:
-		push_error("could not load %s" % PAL_SCENE)
+		push_error("could not load %s" % CREATURE_SCENE)
 		return null
 
 	var body: Node3D = scene.instantiate() as Node3D
@@ -157,7 +157,7 @@ func _build_creature(world: Node3D) -> Node3D:
 	# This script runs from `_init()`, which is before the SceneTree has come up,
 	# so `_ready()` on anything added here fires later than it looks like it
 	# does. `setup()` called immediately after `add_child` therefore ran while
-	# `pal_body`'s @onready `$Body` was still null, took its `_body != null`
+	# `creature_body`'s @onready `$Body` was still null, took its `_body != null`
 	# guard, and did nothing — leaving a creature that reported no model and
 	# rendered as a capsule. Setting the field first means `_ready()` builds the
 	# model whenever it does fire, which is the pattern
@@ -170,14 +170,14 @@ func _build_creature(world: Node3D) -> Node3D:
 
 	# Freeze it, and freeze it AFTER that await.
 	#
-	# `pal_body` is a CharacterBody3D and applies gravity every physics frame.
+	# `creature_body` is a CharacterBody3D and applies gravity every physics frame.
 	# The ground here is a MeshInstance3D with no collider — it exists to be
 	# looked at, not stood on — so an unfrozen creature falls, and by the third
 	# capture it is metres below the camera. The first run of this tool produced
 	# four photographs of an empty meadow with a scale post in it.
 	#
 	# Freezing before the await is not enough, and the failure is asymmetric in a
-	# way that makes it look like something else. `pal_body._ready()` calls
+	# way that makes it look like something else. `creature_body._ready()` calls
 	# `_on_visibility_changed()`, which sets physics processing back on from
 	# `visible`. On the FIRST lighting pass the tree is still coming up, so
 	# `_ready()` runs after this function's body and undoes the freeze; on the

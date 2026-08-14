@@ -2,7 +2,7 @@ extends SceneTree
 
 ## The owner's 19-shot UI screenshot suite (spec §23), the MISSING half only —
 ## the other twelve already live in shots/_diag/ from earlier capture tools
-## (hud_*, minimap_*, combat_*, pals_tab). This boots the meadows world exactly
+## (hud_*, minimap_*, combat_*, creatures_tab). This boots the meadows world exactly
 ## ONCE (software rendering makes that boot the expensive part) and walks every
 ## remaining UI state in one session: explore/prompt, the inventory trio, the
 ## build menu pair, the placement trio, the catch pair, and a final 720p
@@ -63,7 +63,7 @@ const STEEP_SPOT := Vector2(140.0, -90.0)
 
 ## Same combat-entry coordinates every other combat capture tool uses
 ## (capture_combat_actions.gd, capture_catch_sequence.gd) — outside Grandpa's
-## farmhouse (D18), where the encounter director actually spawns a wild pal.
+## farmhouse (D18), where the encounter director actually spawns a wild creature.
 const COMBAT_START := Vector3(48.0, 0.0, -58.0)
 
 var _world: Node = null
@@ -327,7 +327,7 @@ func _phase_placement() -> void:
 
 
 func _phase_catch() -> void:
-	print("[catch] engaging a wild pal...")
+	print("[catch] engaging a wild creature...")
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	var manager := _world.get_node_or_null(^"CombatManager")
 	if director == null or manager == null:
@@ -351,9 +351,9 @@ func _phase_catch() -> void:
 	if inventory != null:
 		inventory.call("add", "orb_basic", 10)
 
-	var wild: Node3D = director.call("wild_pal") as Node3D
+	var wild: Node3D = director.call("wild_creature") as Node3D
 	if wild == null:
-		_failures.append("catch: the encounter director never spawned a wild pal")
+		_failures.append("catch: the encounter director never spawned a wild creature")
 		return
 
 	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
@@ -411,9 +411,9 @@ func _capture_chance_frame(manager: Node, wild: Node3D, hp_fraction: float, fram
 	var inventory: RefCounted = _game.get("inventory")
 	if inventory != null:
 		inventory.call("add", "orb_basic", 10)
-	var pal: RefCounted = manager.call("active_pal")
-	if pal != null:
-		pal.hp = pal.max_hp
+	var creature: RefCounted = manager.call("active_creature")
+	if creature != null:
+		creature.hp = creature.max_hp
 	var foe: RefCounted = manager.call("enemy")
 	foe.hp = clampf(foe.max_hp * hp_fraction, 1.0, foe.max_hp)
 

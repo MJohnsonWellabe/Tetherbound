@@ -9,9 +9,9 @@ extends SceneTree
 ##     --script tools/capture_refresh.gd
 ##
 ## One frame today:
-##   pals_tab - the pause menu's Pals tab (`scripts/ui/tab_pals.gd`), a full
-##              5-pal party (the hard cap — D-rules, one human, five pals) so
-##              the roster list, not just an empty/one-pal state, is what
+##   creatures_tab - the pause menu's Creatures tab (`scripts/ui/tab_creatures.gd`), a full
+##              5-creature party (the hard cap — D-rules, one human, five creatures) so
+##              the roster list, not just an empty/one-creature state, is what
 ##              gets judged.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -62,17 +62,17 @@ func _run() -> void:
 		for species_id: String in PARTY_SPECIES:
 			if int(party.call("size")) >= 5:
 				break
-			var pal: RefCounted = game.call("make_pal", species_id)
-			if pal != null:
-				party.call("add", pal)
+			var creature: RefCounted = game.call("make_creature", species_id)
+			if creature != null:
+				party.call("add", creature)
 
 	var written: Array[String] = []
 	var failures: Array[String] = []
 
-	menu.call("open", "pals")
+	menu.call("open", "creatures")
 	for i in POSE_FRAMES:
 		await process_frame
-	await _shoot("pals_tab", written, failures)
+	await _shoot("creatures_tab", written, failures)
 
 	print("")
 	print("%d frames -> %s" % [written.size(), OUT_DIR])

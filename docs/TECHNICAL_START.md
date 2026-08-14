@@ -14,7 +14,7 @@ Recommended top-level structure:
 res://
   autoload/
   data/
-    pals/
+    creatures/
     moves/
     traits/
     items/
@@ -22,7 +22,7 @@ res://
     spawns/
   scenes/
     player/
-    pals/
+    creatures/
     combat/
     world/
     building/
@@ -32,7 +32,7 @@ res://
   resources/
   assets/
     characters/
-    pals/
+    creatures/
     environment/
     buildings/
     animations/
@@ -54,9 +54,9 @@ Prefer separated systems:
 - Equipment
 - SaveManager
 - WorldState
-- PalDatabase
+- CreatureDatabase
 - PartyManager
-- PalInstance
+- CreatureInstance
 - CombatManager
 - CatchManager
 - BondSystem
@@ -70,7 +70,7 @@ Prefer separated systems:
 
 Names are recommendations, not API contracts.
 
-## Pal Data vs Pal Instance
+## Creature Data vs Creature Instance
 
 Species data should define:
 - species id
@@ -83,10 +83,10 @@ Species data should define:
 - traversal aptitude
 - evolution definition
 - favorite food
-- Best Pal ability id
+- Best Creature ability id
 - model/animation references
 
-Individual pal instance should store:
+Individual creature instance should store:
 - unique id
 - species id
 - nickname
@@ -109,20 +109,20 @@ Combat Mode should be a state transition, not a separate unrelated game.
 
 Exploration:
 - player controls trainer
-- pals generally stored/not summoned
+- creatures generally stored/not summoned
 - world simulation active
 
 Combat:
 - player locomotion restricted/managed
 - combat camera takes over
-- selected pal instanced/deployed
-- opposing pal positioned
+- selected creature instanced/deployed
+- opposing creature positioned
 - action UI enabled
 - CombatManager owns attack/energy/switch/capture state
 
 On exit:
 - restore exploration camera/input
-- persist pal HP/xp/state
+- persist creature HP/xp/state
 - clean temporary combat actors safely
 
 ## Save Requirements
@@ -134,8 +134,8 @@ Save:
 - inventory/equipment
 - world discovery
 - map markers
-- party and all individual pal state
-- released pal identities if needed for persistence semantics
+- party and all individual creature state
+- released creature identities if needed for persistence semantics
 - structures placed
 - death satchels
 - defeated story encounters

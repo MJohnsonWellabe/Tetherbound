@@ -8,14 +8,14 @@ extends Node
 ## "Combat Mode should be a state transition, not a separate unrelated game"),
 ## and it is also what keeps the transition free of a loading pause.
 ##
-## Combat is PILOTED (docs/decisions/D07): the player takes over their pal,
+## Combat is PILOTED (docs/decisions/D07): the player takes over their creature,
 ## both fighters move inside a bounded arena, and attacks are aimed and can
 ## miss. There is no dodge button — movement is the dodge.
 ##
 ## This is the single place that knows a fight is happening. Everything else —
 ## the player controller, the camera rig, the HUD — is told, and does not ask.
 ##
-## M2 scope: one wild pal, one of yours, quick and charged attacks, and three
+## M2 scope: one wild creature, one of yours, quick and charged attacks, and three
 ## ways out. No catching, no party, no types, no switching UI. The switch SEAM
 ## is here (`_active_index` into `_party`) so M4 adds members rather than
 ## restructuring this file.
@@ -24,14 +24,14 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
 const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
 const TARGET_MARKER := preload("res://scripts/combat/target_marker.gd")
 ## D30: XP/bond arithmetic and named-move power, both pure data readers with
 ## no scene-tree dependency — see their own file headers.
-const PROGRESSION := preload("res://scripts/pals/progression.gd")
-const MOVE_DB := preload("res://scripts/pals/move_db.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 
 signal entered()
 signal exited(outcome: String)
@@ -46,7 +46,7 @@ signal orb_shook(index: int)
 ## D32: a voluntary mid-combat switch just completed. `index` is the new
 ## `_active_index`. Distinct from `state_changed` (still emitted alongside it)
 ## so the HUD can react to "who is out" without diffing the whole state.
-signal pal_switched(index: int)
+signal creature_switched(index: int)
 
 enum State { INACTIVE, ACTIVE, RESOLVING }
 
@@ -55,14 +55,14 @@ enum State { INACTIVE, ACTIVE, RESOLVING }
 ## world needs to treat them differently.
 const OUTCOME_CAUGHT := "caught"
 
-## What the player's pal is doing. Wind-up and recovery are ROOTED: committing
+## What the player's creature is doing. Wind-up and recovery are ROOTED: committing
 ## to an attack costs you your mobility, which is the whole reason a charged
 ## attack is a decision rather than a better button.
 enum Action { READY, WINDUP, RECOVERY }
 
 var state: State = State.INACTIVE
 
-## The player's pals. Length one for M2; M4 grows it. Combat always addresses
+## The player's creatures. Length one for M2; M4 grows it. Combat always addresses
 ## the active fighter through this index so switching is an index change rather
 ## than a rewrite.
 var _party: Array[RefCounted] = []
@@ -75,8 +75,8 @@ var _enemy: RefCounted = null
 ## built") — only the player's own next `request_switch`/`cycle_active` call.
 var _switch_lockout: float = 0.0
 
-## D30. What the active pal and its bench earned from the fight that just
-## ended, keyed by `pal_instance.label()`: `{"xp": int, "levels": int}`. Reset
+## D30. What the active creature and its bench earned from the fight that just
+## ended, keyed by `creature_instance.label()`: `{"xp": int, "levels": int}`. Reset
 ## at the start of every fight and overwritten by the next victory. The HUD
 ## reads this; nothing here draws it. Two un-nicknamed party members of the
 ## same species collide on this key — a later milestone that keys the HUD's
@@ -96,7 +96,7 @@ var _quick_cooldown: float = 0.0
 var _charged_cooldown: float = 0.0
 
 ## An attack press made during wind-up, recovery or cooldown, kept alive for
-## `flow.input_buffer` seconds and fired the moment the pal is ready. Without
+## `flow.input_buffer` seconds and fired the moment the creature is ready. Without
 ## this, presses in the ~0.4s dead window were silently discarded and mashing
 ## at a natural rhythm read as dropped input. "" / "quick" / "charged".
 var _buffered_attack: String = ""
@@ -130,7 +130,7 @@ var _catch_succeeded: bool = false
 var _catch_index: int = 0
 
 ## `R9.4-remainder-9-combat`: floats over the real opponent for the length of
-## the fight, so it cannot be confused with an ambient decorative pal from the
+## the fight, so it cannot be confused with an ambient decorative creature from the
 ## same spawn cluster.
 var _target_marker: Node3D = null
 
@@ -165,7 +165,7 @@ func throw_aim() -> Node:
 	return _throw
 
 
-func active_pal() -> RefCounted:
+func active_creature() -> RefCounted:
 	if _active_index < 0 or _active_index >= _party.size():
 		return null
 	return _party[_active_index]
@@ -183,13 +183,13 @@ func arena() -> Node3D:
 	return _arena
 
 
-## Begin a fight. `ally_body` is the player's deployed pal, `camera_rig` is the
+## Begin a fight. `ally_body` is the player's deployed creature, `camera_rig` is the
 ## exploration camera that will be re-pointed at it.
 func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted], camera_rig: Node = null) -> bool:
 	if is_fighting():
 		return false
 	if player == null or wild == null or ally_body == null or party.is_empty():
-		push_error("cannot begin combat without a player, a wild pal, a deployed body and a party")
+		push_error("cannot begin combat without a player, a wild creature, a deployed body and a party")
 		return false
 
 	_player = player
@@ -200,11 +200,11 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	_active_index = 0
 	_enemy = wild.get("instance")
 	if _enemy == null:
-		push_error("wild pal has no instance")
+		push_error("wild creature has no instance")
 		return false
 
-	var pal := active_pal()
-	if pal == null or pal.fainted:
+	var creature := active_creature()
+	if creature == null or creature.fainted:
 		return false
 
 	_action = Action.READY
@@ -298,11 +298,11 @@ func _place_fighters() -> void:
 	_stand_the_trainer_aside(forward)
 
 
-## The trainer steps to the side of the arena as their pal deploys.
+## The trainer steps to the side of the arena as their creature deploys.
 ##
 ## They stay in the fight, in frame, and untargetable — but not in the LANE. The
-## camera follows the player's pal from behind, and the trainer engaged from
-## directly behind that pal, so leaving them where they stood put a 1.8m body
+## camera follows the player's creature from behind, and the trainer engaged from
+## directly behind that creature, so leaving them where they stood put a 1.8m body
 ## between the camera and the entire fight for the opening seconds of every
 ## single encounter. It filled the frame.
 ##
@@ -320,14 +320,14 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 
 	# Re-grounded rather than trusting the arena centre's own height (D09: ask
 	# the world, never carry a Y across a horizontal move). `centre` is the
-	# midpoint between where the player engaged and the wild pal, and `spot`
+	# midpoint between where the player engaged and the wild creature, and `spot`
 	# is shifted sideways from it — on a slope those two points are at
 	# different heights, and this teleport (a raw position write, not a
 	# physics move) has nothing else to correct it: the trainer fell through
 	# the terrain forever on ground uneven enough for the difference to clear
 	# the collision, `move_and_slide` never finding a floor to catch it on the
 	# way down. A missing ground reading here is a placement to skip, same as
-	# `pal_body.place_on_ground`, rather than a spot to stand on regardless.
+	# `creature_body.place_on_ground`, rather than a spot to stand on regardless.
 	var height := _ground_height(spot.x, spot.z)
 	if not is_nan(height):
 		spot.y = height
@@ -350,7 +350,7 @@ func _place(body: Node3D, spot: Vector3) -> void:
 
 
 ## The world's own ground query, found by walking up the tree — same pattern
-## as `pal_body._ground_height`. Not cached: this is a one-off correction at
+## as `creature_body._ground_height`. Not cached: this is a one-off correction at
 ## the moment a fight opens, not a per-frame lookup.
 func _ground_height(x: float, z: float) -> float:
 	var node: Node = get_parent()
@@ -361,9 +361,9 @@ func _ground_height(x: float, z: float) -> float:
 	return NAN
 
 
-## Point the exploration camera at the pal instead of the trainer.
+## Point the exploration camera at the creature instead of the trainer.
 ##
-## Reusing the orbit rig rather than adding a combat camera: a piloted pal wants
+## Reusing the orbit rig rather than adding a combat camera: a piloted creature wants
 ## exactly the third-person camera M1 already tuned, at a shorter creature's
 ## height. A second camera would be a second thing to keep in sync, and the rig
 ## already eases onto a new target for free.
@@ -407,7 +407,7 @@ func _tick_active(delta: float) -> void:
 		return
 
 	_tick_action(delta)
-	_drive_player_pal()
+	_drive_player_creature()
 	if _input_guard <= 0.0:
 		_read_player_input()
 	_consume_buffered_attack()
@@ -420,11 +420,11 @@ func _tick_action(delta: float) -> void:
 	if _action == Action.READY:
 		return
 
-	# Track the target through the wind-up. The pal is rooted from the press to
+	# Track the target through the wind-up. The creature is rooted from the press to
 	# the end of recovery, and the connect test runs against the enemy's LIVE
 	# position at the end of the wind-up — so a swing whose facing was frozen at
 	# the press whiffed on any enemy that stepped sideways, and standing still
-	# and pressing attack swung at whatever direction the pal last WALKED in.
+	# and pressing attack swung at whatever direction the creature last WALKED in.
 	# Facing is free to give: range and timing stay the real skills, and the
 	# owner's first-playtest verdict was "too hard to hit", not "too easy".
 	if _action == Action.WINDUP and _ally_body != null and _wild != null:
@@ -447,8 +447,8 @@ func _tick_action(delta: float) -> void:
 
 
 func _resolve_player_strike() -> void:
-	var pal := active_pal()
-	if pal == null or _enemy == null or _ally_body == null or _wild == null:
+	var creature := active_creature()
+	if creature == null or _enemy == null or _ally_body == null or _wild == null:
 		return
 
 	var origin: Vector3 = _ally_body.call("centre")
@@ -461,9 +461,9 @@ func _resolve_player_strike() -> void:
 		return
 
 	var is_quick: bool = bool(_pending_move.get("is_quick", false))
-	var move_id: String = pal.move_quick if is_quick else pal.move_charged
+	var move_id: String = creature.move_quick if is_quick else creature.move_charged
 	var damage: float = MATH.rolled_damage(
-		float(_pending_move.get("power", 9.0)), pal.attack, _enemy.defence, _rng.randf(),
+		float(_pending_move.get("power", 9.0)), creature.attack, _enemy.defence, _rng.randf(),
 		_moves.power(move_id)
 	)
 	var killed: bool = _enemy.take_damage(damage)
@@ -474,7 +474,7 @@ func _resolve_player_strike() -> void:
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
 	if is_quick:
-		pal.gain_energy_from_quick()
+		creature.gain_energy_from_quick()
 
 	hit_landed.emit(true, damage)
 	state_changed.emit()
@@ -486,7 +486,7 @@ func _resolve_player_strike() -> void:
 ## --- progression (D30) ------------------------------------------------------
 
 ## The fight has just been WON — `_enemy` is still valid (called before
-## `_begin_resolve` starts tearing anything down). The pal that landed the
+## `_begin_resolve` starts tearing anything down). The creature that landed the
 ## killing blow gets the full award and a bond tick for the win; every other
 ## non-fainted party member gets `party_share` of the same award, matching
 ## the rest of the party having been "in the fight" without taking the risk.
@@ -507,12 +507,12 @@ func _award_victory() -> void:
 		var levels_gained: int = member.gain_xp(amount, cfg)
 		last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
 
-	var winner := active_pal()
+	var winner := active_creature()
 	if winner != null:
 		winner.gain_bond(int(cfg.get("bond", {}).get("battle_won", 0)), cfg)
 
 
-## D30's bond a freshly caught pal starts with. Split out of `_finish_catch`'s
+## D30's bond a freshly caught creature starts with. Split out of `_finish_catch`'s
 ## success branch so this exact rule is reachable on its own, without the rest
 ## of catch resolution's staged VFX/camera machinery.
 func _apply_catch_bond(caught: RefCounted) -> void:
@@ -522,14 +522,14 @@ func _apply_catch_bond(caught: RefCounted) -> void:
 	caught.gain_bond(int(cfg.get("bond", {}).get("successful_catch_start", 0)), cfg)
 
 
-## Movement is the dodge. The pal is driven straight from the stick, in camera
+## Movement is the dodge. The creature is driven straight from the stick, in camera
 ## space, exactly like the trainer — and is rooted while attacking.
-func _drive_player_pal() -> void:
+func _drive_player_creature() -> void:
 	if _ally_body == null:
 		return
 	if _action != Action.READY:
 		return
-	# Aiming abandons your pal. It stops taking stick input while you line up the
+	# Aiming abandons your creature. It stops taking stick input while you line up the
 	# throw and the opponent does not stop attacking it — that is the entire cost
 	# of catching, and without it throwing is free and the correct play is to
 	# throw constantly between attacks.
@@ -546,8 +546,8 @@ func _drive_player_pal() -> void:
 
 
 func _read_player_input() -> void:
-	var pal := active_pal()
-	if pal == null:
+	var creature := active_creature()
+	if creature == null:
 		return
 
 	# While aiming, throw_aim.gd owns the input: Run cancels the aim rather than
@@ -560,7 +560,7 @@ func _read_player_input() -> void:
 		_begin_resolve("fled")
 		return
 
-	# Attack presses are RECORDED whatever state the pal is in, and fired by
+	# Attack presses are RECORDED whatever state the creature is in, and fired by
 	# `_consume_buffered_attack()` the moment it is ready. Throws stay
 	# un-buffered: a throw is a deliberate mode change, and one that fires
 	# half a second after the press feels like the game acting on its own.
@@ -578,7 +578,7 @@ func _read_player_input() -> void:
 		_try_throw()
 
 
-## Fire a buffered attack press once the pal is ready for it.
+## Fire a buffered attack press once the creature is ready for it.
 ##
 ## Split from `_read_player_input` so a press made during recovery fires on the
 ## frame recovery ends rather than waiting for the next press. The charged
@@ -589,15 +589,15 @@ func _consume_buffered_attack() -> void:
 		return
 	if bool(_throw.call("is_busy")):
 		return
-	var pal := active_pal()
-	if pal == null:
+	var creature := active_creature()
+	if creature == null:
 		return
 
 	if _buffered_attack == "charged":
 		if _charged_cooldown > 0.0:
 			return
 		_buffered_attack = ""
-		if pal.spend_charged():
+		if creature.spend_charged():
 			var charged: Dictionary = MATH.config().get("player_charged", {}).duplicate()
 			charged["is_quick"] = false
 			_start_action(charged)
@@ -640,7 +640,7 @@ func _start_action(move: Dictionary) -> void:
 ## attack whiffs at point-blank range — which reads as the game dropping the
 ## input, and is the single complaint most likely to end a playtest.
 ##
-## The wild pal applies the same floor to its own attacks. Both sides space
+## The wild creature applies the same floor to its own attacks. Both sides space
 ## themselves by their bodies; both sides reach as far as they have spaced.
 func _with_reach_for_the_bodies(move: Dictionary) -> Dictionary:
 	if _ally_body == null or _wild == null:
@@ -660,7 +660,7 @@ func _with_reach_for_the_bodies(move: Dictionary) -> Dictionary:
 
 ## The wind-up's own visual event, independent of the "! incoming" banner
 ## text `combat_hud.gd` draws from `enemy_is_winding_up()`. `seconds` is the
-## exact beat duration `wild_pal.gd` just entered, so the glow disappears on
+## exact beat duration `wild_creature.gd` just entered, so the glow disappears on
 ## the same physics tick the strike actually lands rather than an approximate
 ## guess at it.
 func _on_enemy_telegraph(seconds: float) -> void:
@@ -682,8 +682,8 @@ func _on_enemy_telegraph(seconds: float) -> void:
 func _on_enemy_strike() -> void:
 	if state != State.ACTIVE:
 		return
-	var pal := active_pal()
-	if pal == null or _enemy == null:
+	var creature := active_creature()
+	if creature == null or _enemy == null:
 		return
 
 	# The creature's OWN numbers, not the raw config: it spaces itself by how big
@@ -708,10 +708,10 @@ func _on_enemy_strike() -> void:
 	# combat_ai.gd's Intent enum never branches on a move slot), so its own
 	# `move_quick` id stands in for "whatever this creature just swung with".
 	var damage: float = MATH.rolled_damage(
-		float(cfg.get("power", 8.0)), _enemy.attack, pal.defence, _rng.randf(),
+		float(cfg.get("power", 8.0)), _enemy.attack, creature.defence, _rng.randf(),
 		_moves.power(_enemy.move_quick)
 	)
-	var killed: bool = pal.take_damage(damage)
+	var killed: bool = creature.take_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
 	_ally_body.call("play_faint" if killed else "play_hit")
 	_flash_at(_ally_body.call("centre"), false)
@@ -773,7 +773,7 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 		return
 
 	# Re-checked at the moment of impact as well as before the aim: the opponent
-	# can faint to your pal's attack while the orb is still in the air, and an
+	# can faint to your creature's attack while the orb is still in the air, and an
 	# orb that lands on a corpse must not catch it.
 	if not CATCH.can_be_caught(_enemy.fainted, false):
 		catch_refused.emit("%s fainted before the orb landed" % _enemy.display_name)
@@ -838,7 +838,7 @@ func _on_orb_missed() -> void:
 	state_changed.emit()
 
 
-## A cancelled aim hands the camera straight back to the pal. A released throw
+## A cancelled aim hands the camera straight back to the creature. A released throw
 ## keeps the aim camera — watching your own orb arc away is the shot — and
 ## `_on_orb_struck` / `_on_orb_missed` decide where it goes next.
 func _on_aim_exited() -> void:
@@ -893,7 +893,7 @@ func _finish_catch() -> void:
 	var orb: Node3D = _throw.call("resting_orb")
 
 	if _catch_succeeded:
-		# D30: a caught pal starts with a bond head start rather than at zero,
+		# D30: a caught creature starts with a bond head start rather than at zero,
 		# same as GAME_DESIGN.md's read that catching is itself an act of
 		# trust. `_enemy` IS what `caught_instance()` will hand the director in
 		# a moment, so setting it here is setting it on the instance that
@@ -1013,7 +1013,7 @@ func _finish() -> void:
 ## hold opens the party strip, D32) to the functions below.
 ##
 ## There is no auto-switch-on-faint (D32's own "what was deliberately not
-## built") — a faint of the active pal still ends the fight exactly as it
+## built") — a faint of the active creature still ends the fight exactly as it
 ## always has. This only ever fires from the player's own choice.
 
 ## Party indices, in `_party` order, that are alive and not the one currently
@@ -1030,12 +1030,12 @@ func switchable_indices() -> Array[int]:
 
 
 ## Is a voluntary switch allowed RIGHT NOW? Mirrors the guards the fight
-## already applies elsewhere: aiming owns the controls (`_drive_player_pal`'s
+## already applies elsewhere: aiming owns the controls (`_drive_player_creature`'s
 ## own comment), a resolving catch pauses the whole fight
 ## (`is_resolving_catch`'s own comment), and `player_is_committed()` refuses
 ## it mid-swing — switching out from under a wind-up would refund the very
 ## commitment a charged attack is supposed to cost. The lockout stops a tap
-## being spammed into a stutter of pals.
+## being spammed into a stutter of creatures.
 func can_switch() -> bool:
 	return is_fighting() \
 		and not is_aiming() \
@@ -1062,7 +1062,7 @@ func cycle_active(direction: int) -> bool:
 	return false
 
 
-## Switch the piloted pal to party index `index`. Guarded rather than
+## Switch the piloted creature to party index `index`. Guarded rather than
 ## clamped: an illegal request is refused outright (returns false), never
 ## partially applied.
 func request_switch(index: int) -> bool:
@@ -1076,23 +1076,23 @@ func request_switch(index: int) -> bool:
 
 	_activate_party_member(index)
 	_switch_lockout = float(MATH.config().get("switch", {}).get("lockout_seconds", 1.5))
-	pal_switched.emit(index)
+	creature_switched.emit(index)
 	state_changed.emit()
 	return true
 
 
 ## The body-swap core. Re-points `_active_index` at `index` and, if the
-## incoming pal is a different species from whatever `_ally_body` is
+## incoming creature is a different species from whatever `_ally_body` is
 ## currently wearing, re-skins that SAME body through `setup()` — the
 ## identical call `encounter_director._spawn_ally_body()` makes for a brand
-## new pal. There is deliberately only one piloted body in a fight (M2's "one
+## new creature. There is deliberately only one piloted body in a fight (M2's "one
 ## of yours" scope never grew a second one), so a switch re-casts it rather
-## than instancing another; the incoming pal takes over at the exact position
+## than instancing another; the incoming creature takes over at the exact position
 ## and facing the old body already had, because that body never moved.
 ##
-## The switched-OUT pal keeps its hp/energy exactly as the fight left them —
+## The switched-OUT creature keeps its hp/energy exactly as the fight left them —
 ## no reset, no heal; only the piloted identity changes. Action/cooldown state
-## resets to READY because it belongs to whichever pal is being piloted, and
+## resets to READY because it belongs to whichever creature is being piloted, and
 ## it is safe to zero here: `can_switch()`'s `player_is_committed()` guard
 ## already refused this call unless the fight was between actions.
 func _activate_party_member(index: int) -> void:
@@ -1122,12 +1122,12 @@ func quick_ready() -> bool:
 
 
 func charged_ready() -> bool:
-	var pal := active_pal()
-	return pal != null and pal.can_use_charged() \
+	var creature := active_creature()
+	return creature != null and creature.can_use_charged() \
 		and _action == Action.READY and _charged_cooldown <= 0.0
 
 
-## True while the player's pal is committed and cannot move.
+## True while the player's creature is committed and cannot move.
 func player_is_committed() -> bool:
 	return _action != Action.READY
 
@@ -1159,7 +1159,7 @@ func orbs_left() -> int:
 
 ## True from the orb striking to the verdict. The fight is paused around it:
 ## neither fighter acts, because a creature landing a hit on an orb that is
-## deciding whether it caught something is nonsense. (The wild pal's own physics
+## deciding whether it caught something is nonsense. (The wild creature's own physics
 ## is off for the duration — it is inside the orb.)
 func is_resolving_catch() -> bool:
 	return _catch_phase != CatchPhase.NONE

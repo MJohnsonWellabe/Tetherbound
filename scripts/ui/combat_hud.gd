@@ -5,13 +5,13 @@ extends CanvasLayer
 ## fight state: `CombatManager` has no idea whether a d-pad press is 0.1s or
 ## 0.4s into being held, and it should not have to.
 ##
-## Everything else is pulled from CombatManager and the two pal instances each
+## Everything else is pulled from CombatManager and the two creature instances each
 ## frame rather than pushed in on signals. A HUD that keeps its own copy of the
 ## health bar is a HUD that can disagree with the fight, and the first time that
 ## happens it costs an afternoon.
 ##
 ## The exceptions are the outcome banner, the XP line and the "GO, <label>!"
-## line, which are driven by signals (`exited`, `catch_resolved`, `pal_switched`)
+## line, which are driven by signals (`exited`, `catch_resolved`, `creature_switched`)
 ## because each describes a moment rather than a value.
 ##
 ## Rebuilt to the owner's Palworld-inspired spec (§9) plus D32's mid-combat
@@ -22,8 +22,8 @@ extends CanvasLayer
 
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
-const MOVE_DB := preload("res://scripts/pals/move_db.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 
 ## The orb cluster's icon (spec §10.4) and the item id it's counting —
@@ -55,12 +55,12 @@ const SELECTOR_CHIP_SIZE := Vector2(36.0, 36.0)
 const SELECTOR_HP_SIZE := Vector2(84.0, 8.0)
 
 ## Shared screen slot for `PartyStrip` and the selector panel. Both sit
-## directly above the pal block (`AllyPanel`, whose top edge is 206px off the
+## directly above the creature block (`AllyPanel`, whose top edge is 206px off the
 ## bottom of a 1080-tall canvas — see `combat_hud.tscn`'s own offsets) with
 ## generous headroom: `PARTY_STRIP.ROW_SIZE`'s 56px is a MINIMUM, not the
 ## real rendered height — a row's two-line name/level stack plus its
 ## `MarginContainer` padding measured taller than that in a real capture, and
-## the first version of this file placed the strip only 10px above the pal
+## the first version of this file placed the strip only 10px above the creature
 ## block, which overlapped it outright. 430px of clearance covers five rows
 ## at up to ~80px each plus separation with room to spare.
 ##
@@ -199,7 +199,7 @@ func _ready() -> void:
 		_manager.connect("attack_missed", _on_missed)
 		_manager.connect("catch_refused", _on_catch_refused)
 		_manager.connect("catch_resolved", _on_catch_resolved)
-		_manager.connect("pal_switched", _on_pal_switched)
+		_manager.connect("creature_switched", _on_creature_switched)
 		_manager.connect("orb_shook", _on_orb_shook)
 	_show_fight(false)
 
@@ -427,8 +427,8 @@ func _draw_enemy() -> void:
 		return
 	_enemy_eyebrow.text = "LEVEL %d" % int(foe.level)
 	_enemy_name.text = str(foe.display_name)
-	_enemy_type_tag.text = str(foe.pal_type).to_upper()
-	_enemy_type_tag.add_theme_color_override("font_color", _type_color(str(foe.pal_type)))
+	_enemy_type_tag.text = str(foe.creature_type).to_upper()
+	_enemy_type_tag.add_theme_color_override("font_color", _type_color(str(foe.creature_type)))
 
 	var fraction: float = foe.hp_fraction()
 	_enemy_health.value = fraction * 100.0
@@ -439,7 +439,7 @@ func _draw_enemy() -> void:
 	# animation, not a UI decision to keep.
 	#
 	# Silenced through the catch resolution and the fight's ending — the wild
-	# pal freezes mid-beat when it goes into the orb, so whatever it was doing
+	# creature freezes mid-beat when it goes into the orb, so whatever it was doing
 	# otherwise stays on screen shouting stale advice over the wobble.
 	if bool(_manager.call("is_resolving_catch")) or str(_manager.call("outcome")) != "":
 		_telegraph.text = ""
@@ -454,18 +454,18 @@ func _draw_enemy() -> void:
 
 
 func _draw_ally() -> void:
-	var pal: RefCounted = _manager.call("active_pal")
-	if pal == null:
+	var creature: RefCounted = _manager.call("active_creature")
+	if creature == null:
 		return
-	_ally_name.text = pal.label()
-	_ally_level.text = "Lv %d" % int(pal.level)
-	_ally_chip.color = _species_colour(str(pal.species_id))
+	_ally_name.text = creature.label()
+	_ally_level.text = "Lv %d" % int(creature.level)
+	_ally_chip.color = _species_colour(str(creature.species_id))
 
-	var fraction: float = pal.hp_fraction()
+	var fraction: float = creature.hp_fraction()
 	_ally_health.value = fraction * 100.0
 	_ally_health_fill.bg_color = UITokens.DANGER.lerp(UITokens.HP_GREEN, fraction)
 
-	var energy: float = pal.energy_fraction()
+	var energy: float = creature.energy_fraction()
 	_ally_energy.value = energy * 100.0
 
 	# Once, not constantly: a bar that pulses every frame it happens to be full
@@ -546,8 +546,8 @@ func _draw_grid() -> void:
 
 
 func _draw_cells(orbs: int) -> void:
-	var pal: RefCounted = _manager.call("active_pal")
-	if pal == null:
+	var creature: RefCounted = _manager.call("active_creature")
+	if creature == null:
 		return
 
 	var quick_ready: bool = bool(_manager.call("quick_ready"))
@@ -556,8 +556,8 @@ func _draw_cells(orbs: int) -> void:
 	var switchable: Array = _manager.call("switchable_indices")
 	var switch_ready: bool = bool(_manager.call("can_switch")) and not switchable.is_empty()
 
-	_draw_quick_cell(pal, quick_ready)
-	_draw_charged_cell(pal, charged_ready)
+	_draw_quick_cell(creature, quick_ready)
+	_draw_charged_cell(creature, charged_ready)
 	_draw_throw_cell(orbs, throw_ready)
 	_draw_switch_cell(switch_ready)
 
@@ -574,17 +574,17 @@ func _move_type(move_id: String, fallback_type: String) -> String:
 	return fallback_type
 
 
-func _draw_quick_cell(pal: RefCounted, ready: bool) -> void:
-	var name_text := _move_name(str(pal.move_quick), "Quick")
+func _draw_quick_cell(creature: RefCounted, ready: bool) -> void:
+	var name_text := _move_name(str(creature.move_quick), "Quick")
 	var glyph := INPUT_GLYPH.icon("quick", 34, VERB_READY if ready else VERB_DIMMED)
 	_cell_quick_content.text = "[center]%s\n%s[/center]" % [glyph, name_text]
-	_cell_quick_hairline.color = _type_color(_move_type(str(pal.move_quick), str(pal.pal_type)))
+	_cell_quick_hairline.color = _type_color(_move_type(str(creature.move_quick), str(creature.creature_type)))
 	_cell_quick.modulate = CELL_READY if ready else CELL_DIMMED
 	_mark_ready("quick", ready, _cell_quick_pulse)
 
 
-func _draw_charged_cell(pal: RefCounted, ready: bool) -> void:
-	var move_id := str(pal.move_charged)
+func _draw_charged_cell(creature: RefCounted, ready: bool) -> void:
+	var move_id := str(creature.move_charged)
 	var name_text := _move_name(move_id, "Charged")
 	var glyph := INPUT_GLYPH.icon("charged", 34, VERB_READY if ready else VERB_DIMMED)
 	var text := "[center]%s\n%s[/center]" % [glyph, name_text]
@@ -594,7 +594,7 @@ func _draw_charged_cell(pal: RefCounted, ready: bool) -> void:
 			glyph, name_text, UITokens.FONT_TINY, VERB_DIMMED.to_html(false), required
 		]
 	_cell_charged_content.text = text
-	_cell_charged_hairline.color = _type_color(_move_type(move_id, str(pal.pal_type)))
+	_cell_charged_hairline.color = _type_color(_move_type(move_id, str(creature.creature_type)))
 	_cell_charged.modulate = CELL_READY if ready else CELL_DIMMED
 	_mark_ready("charged", ready, _cell_charged_pulse)
 
@@ -840,7 +840,7 @@ func _close_selector() -> void:
 
 
 ## The five party rows: chip/name/level/hp for whichever entries exist, a teal
-## rail on whichever slot is the CURRENTLY PILOTED pal (not the cursor), and a
+## rail on whichever slot is the CURRENTLY PILOTED creature (not the cursor), and a
 ## brighter cursor-highlighted border on whichever slot the d-pad selection is
 ## currently on. Those two are different things on purpose — the player is
 ## choosing who to switch TO, and needs both "who is out now" and "what my
@@ -851,16 +851,16 @@ func _refresh_selector() -> void:
 	var highlighted_index: int = int(_selector_list[_selector_cursor]) if not _selector_list.is_empty() else -1
 
 	for i in SELECTOR_ROWS:
-		var has_pal: bool = i < entries.size()
-		var entry: Dictionary = entries[i] if has_pal else {}
-		var fainted: bool = has_pal and bool(entry.get("fainted", false))
-		var is_active: bool = has_pal and i == active_index
-		var is_cursor: bool = has_pal and i == highlighted_index
+		var has_creature: bool = i < entries.size()
+		var entry: Dictionary = entries[i] if has_creature else {}
+		var fainted: bool = has_creature and bool(entry.get("fainted", false))
+		var is_active: bool = has_creature and i == active_index
+		var is_cursor: bool = has_creature and i == highlighted_index
 
 		_selector_rows[i].add_theme_stylebox_override("panel", UITokens.slot_box(is_cursor))
 		_selector_rails[i].visible = is_active
 
-		if not has_pal:
+		if not has_creature:
 			_selector_chips[i].color = Color(UITokens.TEXT_MUTED, 0.35)
 			_selector_rows[i].modulate.a = 0.35
 			_selector_names[i].text = ""
@@ -909,7 +909,7 @@ func _update_party_strip() -> void:
 ## call site above). Reading a script var through `Object.get()` on an
 ## underscore-prefixed name is the same reflection `combat_manager.gd` itself
 ## already does elsewhere (`_ally_body.get("species_id")`,
-## `pal.get("fainted")` in `autoload/party.gd`) — GDScript's underscore is a
+## `creature.get("fainted")` in `autoload/party.gd`) — GDScript's underscore is a
 ## convention, not enforced privacy. Falls back to `Game.party` if the manager
 ## is unavailable or (a test harness, say) never got a party at all.
 func _party_entries() -> Array:
@@ -939,9 +939,9 @@ func _party_entries() -> Array:
 	return entries
 
 
-func _on_pal_switched(_index: int) -> void:
-	var pal: RefCounted = _manager.call("active_pal") if _manager != null else null
-	_go_text.text = "GO, %s!" % pal.label() if pal != null else ""
+func _on_creature_switched(_index: int) -> void:
+	var creature: RefCounted = _manager.call("active_creature") if _manager != null else null
+	_go_text.text = "GO, %s!" % creature.label() if creature != null else ""
 	_go_left = 1.2
 	if _party_strip != null:
 		_party_strip.call("show_strip")
@@ -1000,11 +1000,11 @@ func _on_exited(outcome: String) -> void:
 			# Already announced by _on_catch_resolved, which knows the name.
 			return
 		"won":
-			_outcome.text = "The wild pal is beaten."
+			_outcome.text = "The wild creature is beaten."
 			_outcome.add_theme_color_override("font_color", UITokens.TEAL)
 			_set_xp_line()
 		"lost":
-			_outcome.text = "Your pal is out of the fight."
+			_outcome.text = "Your creature is out of the fight."
 			_outcome.add_theme_color_override("font_color", UITokens.DANGER)
 		"fled":
 			_outcome.text = "You backed off."
@@ -1014,7 +1014,7 @@ func _on_exited(outcome: String) -> void:
 	_outcome_left = 2.5
 
 
-## D30's award, read off the manager for the pal that fought. `last_xp_award`
+## D30's award, read off the manager for the creature that fought. `last_xp_award`
 ## is a plain public var, not a function — `.get()` reflection is not needed
 ## here, but is used anyway for consistency with `_party_entries()` above and
 ## because `_manager` is typed `Node`, which has no `last_xp_award` of its own
@@ -1022,12 +1022,12 @@ func _on_exited(outcome: String) -> void:
 func _set_xp_line() -> void:
 	if _manager == null:
 		return
-	var pal: RefCounted = _manager.call("active_pal")
-	if pal == null:
+	var creature: RefCounted = _manager.call("active_creature")
+	if creature == null:
 		_xp_line.text = ""
 		return
 	var all_awards: Variant = _manager.get("last_xp_award")
-	var award: Dictionary = (all_awards as Dictionary).get(pal.label(), {}) if all_awards is Dictionary else {}
+	var award: Dictionary = (all_awards as Dictionary).get(creature.label(), {}) if all_awards is Dictionary else {}
 	if award.is_empty():
 		_xp_line.text = ""
 		return

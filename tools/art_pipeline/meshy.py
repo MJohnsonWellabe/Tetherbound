@@ -31,7 +31,7 @@ import urllib.error
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-REFERENCE_ROOT = ROOT / "assets" / "pals" / "tetherbound"
+REFERENCE_ROOT = ROOT / "assets" / "creatures" / "tetherbound"
 RAW_ROOT = ROOT / "assets_raw"
 
 BASE = "https://api.meshy.ai"
@@ -96,7 +96,7 @@ NEGATIVE_CREATURE = ("photorealistic fur, strand hair, humanoid anatomy, clothin
 ##   Meadowhart  is a DEER. Its prompt asks for "LIGHT SLENDER FRAME with long
 ##               legs"; the list bans "long legs, tall slender body". It also
 ##               wears "A SADDLE of woven leaves and worn leather" — its single
-##               most important feature, and the reason it is the rideable pal —
+##               most important feature, and the reason it is the rideable creature —
 ##               against a list banning "clothing, armor, accessories".
 ##   Brooktail   is canonically "a BROAD FLAT SCALED TAIL like a paddle"
 ##               (Water Sheet). The list bans "paddle tail, beaver tail".

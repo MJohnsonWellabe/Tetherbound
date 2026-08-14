@@ -4,7 +4,7 @@ extends SceneTree
 ##
 ##   godot --headless --path . --script tests/smoke_menu.gd
 ##
-## Unit tests can prove the satchel's arithmetic and the five-pal cap. They
+## Unit tests can prove the satchel's arithmetic and the five-creature cap. They
 ## cannot see any of the things that make a menu usable or unusable, and every
 ## one of those is a way this ships broken:
 ##
@@ -272,26 +272,26 @@ func _check_tabs_can_be_cycled() -> void:
 		print("LB steps to the previous tab, RB steps to the next -- opposite directions, as reported")
 
 
-## The five-pal cap, seen from the screen rather than from the unit test.
+## The five-creature cap, seen from the screen rather than from the unit test.
 ##
 ## CLAUDE.md forbids storage beyond five. This fills the party through the real
 ## GameState, asks for a sixth, and checks the screen still shows five rows.
 func _check_the_party_screen_holds_five() -> void:
 	var party: RefCounted = _game.get("party")
 	while not bool(party.call("is_full")):
-		var pal: RefCounted = _game.call("make_pal", "terrapup")
-		if pal == null:
-			_fail("could not build a pal from species.json")
+		var creature: RefCounted = _game.call("make_creature", "terrapup")
+		if creature == null:
+			_fail("could not build a creature from species.json")
 			return
-		party.call("add", pal)
+		party.call("add", creature)
 
-	var sixth: RefCounted = _game.call("make_pal", "bramblebun")
+	var sixth: RefCounted = _game.call("make_creature", "bramblebun")
 	if bool(party.call("add", sixth)):
-		_fail("the party accepted a sixth pal")
+		_fail("the party accepted a sixth creature")
 	if int(party.call("size")) != 5:
-		_fail("the party holds %d pals" % int(party.call("size")))
+		_fail("the party holds %d creatures" % int(party.call("size")))
 
-	# Land on the pal tab and let it draw at least one frame.
+	# Land on the creature tab and let it draw at least one frame.
 	_menu.call("select", 1)
 	for i in 4:
 		await process_frame
@@ -303,13 +303,13 @@ func _check_the_party_screen_holds_five() -> void:
 
 
 ## OF2: reordering was believed missing but turned out to already be built
-## (`autoload/party.gd::move()` and `tab_pals.gd::_on_row()`, pick-up-then-
+## (`autoload/party.gd::move()` and `tab_creatures.gd::_on_row()`, pick-up-then-
 ## place like the backpack's own stack move) — this proves the WIRING, not
 ## just the model layer `tests/test_party.gd` already covers: that pressing
 ## the row button on a controller-focused row actually reaches `party.move()`,
 ## not just that `move()` itself is correct in isolation.
 func _check_party_reorder_button() -> void:
-	_menu.call("select", 1)  # Pals
+	_menu.call("select", 1)  # Creatures
 	for i in 4:
 		await process_frame
 
@@ -323,7 +323,7 @@ func _check_party_reorder_button() -> void:
 	var first: RefCounted = party.call("at", 0)
 	var second: RefCounted = party.call("at", 1)
 	if first == null or second == null:
-		_fail("reorder check needs slots 0 and 1 both filled; the five-pal check should have done that")
+		_fail("reorder check needs slots 0 and 1 both filled; the five-creature check should have done that")
 		return
 
 	(rows[0] as Button).grab_focus()
@@ -335,22 +335,22 @@ func _check_party_reorder_button() -> void:
 
 	await _press("ui_down")
 	if _focused_control() != rows[1]:
-		_fail("ui_down did not move focus from row 0 to row 1 while a pal was held")
+		_fail("ui_down did not move focus from row 0 to row 1 while a creature was held")
 	await _press("ui_accept")
 
 	if int(body.get("_held")) != -1:
 		_fail("placing on row 1 did not release the held slot")
 	if not (party.call("at", 0) == second and party.call("at", 1) == first):
-		_fail("swapping rows 0 and 1 through the UI did not reach party.move() -- the two pals were not exchanged")
+		_fail("swapping rows 0 and 1 through the UI did not reach party.move() -- the two creatures were not exchanged")
 	else:
 		print("party reorder: pressing row 0 then row 1 swapped them via party.move()")
 
 
-## OF2: using a heal item used to apply itself to whichever pal was most hurt
+## OF2: using a heal item used to apply itself to whichever creature was most hurt
 ## with no way to choose. Drives the real input path end to end -- open the
 ## picker, cancel it (nothing spent), reopen it, confirm a specific target
 ## with the SAME button the grid's pick-up-then-place uses, and check the
-## item was spent and the CHOSEN pal (not just "the worst one") was healed.
+## item was spent and the CHOSEN creature (not just "the worst one") was healed.
 func _check_backpack_target_picker() -> void:
 	_menu.call("select", 0)  # Backpack
 	for i in 4:
@@ -362,11 +362,11 @@ func _check_backpack_target_picker() -> void:
 
 	var target: RefCounted = party.call("at", 1)
 	if target == null:
-		_fail("target-picker check needs slot 1 filled; the five-pal check should have done that")
+		_fail("target-picker check needs slot 1 filled; the five-creature check should have done that")
 		return
 	target.set("hp", 1.0)
 	if float(target.call("hp_fraction")) >= 1.0:
-		_fail("could not injure the slot-1 pal to set up the target-picker check")
+		_fail("could not injure the slot-1 creature to set up the target-picker check")
 		return
 
 	inventory.call("add", "potion_small", 3)
@@ -387,7 +387,7 @@ func _check_backpack_target_picker() -> void:
 	if int(inventory.call("count", "potion_small")) != count_before:
 		_fail("opening the target picker already spent the item, before any target was chosen")
 	if float(target.get("hp")) != hp_before:
-		_fail("opening the target picker already healed a pal, before any target was chosen")
+		_fail("opening the target picker already healed a creature, before any target was chosen")
 	print("target picker opens on Use instead of applying immediately")
 
 	await _press("menu_cancel")
@@ -414,15 +414,15 @@ func _check_backpack_target_picker() -> void:
 	if int(inventory.call("count", "potion_small")) != count_before - 1:
 		_fail("confirming a target did not spend the item")
 	if float(target.get("hp")) <= hp_before:
-		_fail("confirming slot 1 as the target did not heal the pal in slot 1")
+		_fail("confirming slot 1 as the target did not heal the creature in slot 1")
 	else:
-		print("target picker heals the CHOSEN pal (slot 1) and spends the item on confirm")
+		print("target picker heals the CHOSEN creature (slot 1) and spends the item on confirm")
 
 
-## Owner playtest report: "berries cannot properly be fed to pals from the
+## Owner playtest report: "berries cannot properly be fed to creatures from the
 ## menu." Root cause turned out narrower than the report -- D29 puts satiety
-## on the PLAYER (`player_vitals.gd`), never on a pal, so `berries` was never
-## going to open the pal target picker at all. The real bug was that
+## on the PLAYER (`player_vitals.gd`), never on a creature, so `berries` was never
+## going to open the creature target picker at all. The real bug was that
 ## `tab_backpack.gd::_read_use()` had no branch for a `food`-kind item's
 ## `satiety` field whatsoever: pressing Use on a berry said "is not something
 ## you can use here" unconditionally. This drives the same real input path

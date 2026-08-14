@@ -67,9 +67,9 @@ var _response_exponent: float = 1.0
 ## to 1.0 by every set_target.
 var _assist_scale: float = 1.0
 
-## While a fight is running the rig follows the player's pal instead of the
+## While a fight is running the rig follows the player's creature instead of the
 ## trainer, at a shorter creature's height. Combat is piloted (D07), and a
-## piloted pal wants exactly this camera — so it is re-pointed rather than
+## piloted creature wants exactly this camera — so it is re-pointed rather than
 ## replaced by a second one that would have to be kept in sync.
 var _retarget_lag: float = 0.0
 
@@ -85,7 +85,7 @@ var _base_fov: float = 70.0
 ## The obvious implementation — sliding the child Camera3D sideways — silently
 ## does nothing. SpringArm3D rewrites its children's transforms every frame to
 ## place them at the end of the arm, so the offset was wiped before it was ever
-## drawn, and combat spent a whole survey with the camera dead behind the pal
+## drawn, and combat spent a whole survey with the camera dead behind the creature
 ## while the config confidently said 1.5.
 var _shoulder: float = 0.0
 
@@ -155,10 +155,10 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	# The arm has to ignore whatever it is following.
 	#
 	# SpringArm3D excludes its own parent automatically, and this rig is
-	# `top_level` so it has no parent to exclude. Following the player's pal put
+	# `top_level` so it has no parent to exclude. Following the player's creature put
 	# the arm's origin inside that creature's capsule, the arm collided with it
 	# on the first cast and collapsed to nothing, and the whole fight was played
-	# from a camera buried in the back of your own pal.
+	# from a camera buried in the back of your own creature.
 	clear_excluded_objects()
 	if target is CollisionObject3D:
 		add_excluded_object((target as CollisionObject3D).get_rid())
@@ -223,7 +223,7 @@ func _follow(delta: float) -> void:
 	# camera feeling different on the handheld than on the desktop.
 	#
 	# `retarget_lag` slows the follow while a fight is opening or closing, so the
-	# swap between trainer and pal is a glide rather than a snap.
+	# swap between trainer and creature is a glide rather than a snap.
 	var lag := _retarget_lag if _retarget_lag > 0.0 else _follow_lag
 	var weight := 1.0 - exp(-lag * delta)
 	global_position = global_position.lerp(desired, weight)

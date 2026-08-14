@@ -1,5 +1,6 @@
 # D29 — Satiety is a light hunger, and it is now real
 
+> Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Date:** 2026-08-13 · **Decided by:** the owner, after the UI spec's §6.6
 laid out a Palworld-style HP/satiety pairing and asked, in the same session,
 for the mechanic underneath it to become real rather than cosmetic.

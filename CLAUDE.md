@@ -23,14 +23,14 @@ Build the Meadows vertical slice quickly and iteratively. The goal is not maximu
 - Windows/ROG Ally is primary.
 - Controller first.
 - Solo.
-- Player can own only five pals total.
-- Never implement pal storage beyond five.
+- Player can own only five creatures total.
+- Never implement creature storage beyond five.
 - Human cannot fight.
-- Pals do not perform base jobs.
-- Combat is real-time pal-vs-pal.
+- Creatures do not perform base jobs.
+- Combat is real-time creature-vs-creature.
 - No shields.
 - Catching is available during wild combat.
-- Trainer-owned pals cannot be caught.
+- Trainer-owned creatures cannot be caught.
 - No hunting/butchering.
 - Light satiety: slow drain, food restores and buffs, soft debuffs when low; NO starvation death (D29).
 - Slot/stack inventory; no carry-weight system.

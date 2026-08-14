@@ -152,7 +152,7 @@ tool_cycle={
 , Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
 ]
 }
-pal_recall={
+creature_recall={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":82,"pressed":false,"script":null)
 , Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)

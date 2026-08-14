@@ -9,7 +9,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## to them; everything interesting about the decision is here.
 ##
 ## There is exactly ONE prompt line on screen, deliberately. Grandpa, three
-## starters standing a metre apart, a wild pal and every resource node M8 adds
+## starters standing a metre apart, a wild creature and every resource node M8 adds
 ## all want it, and a HUD that stacks four of them is a HUD nobody reads. So
 ## somebody has to choose, and this is the choosing.
 ##
@@ -21,7 +21,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## `label` says what pressing the button does, in the imperative. `distance` is
 ## metres from the player. `priority` breaks the tie in favour of something other
 ## than proximity, and `actionable` is false for a line that is a statement
-## rather than an offer ("Your pal is out of the fight") — those draw without a
+## rather than an offer ("Your creature is out of the fight") — those draw without a
 ## button glyph and pressing the button does nothing.
 
 ## Between the glyph and the verb. Three spaces, matching the string this
@@ -34,7 +34,7 @@ const GAP := "   "
 ##
 ## Highest priority first, then nearest, then first registered. Priority before
 ## distance on purpose: proximity is the right default and is what the player
-## intuits, but a status line about the pal at their heels has no meaningful
+## intuits, but a status line about the creature at their heels has no meaningful
 ## distance at all and still has to beat a creature nine metres away.
 static func choose(offers: Array) -> Dictionary:
 	var index := choose_index(offers)

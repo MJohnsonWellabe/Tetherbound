@@ -1,6 +1,6 @@
 extends "res://tests/test_case.gd"
 
-## The wild pal's decision table.
+## The wild creature's decision table.
 ##
 ## These are the questions the owner will actually ask about the opponent —
 ## "it never lets up", "it backs off too far", "it hits me the instant I finish
@@ -115,11 +115,11 @@ func test_movement_survives_standing_on_top_of_the_target() -> void:
 
 func test_the_opponent_can_be_outrun() -> void:
 	# Movement is the dodge (D07). If the opponent is faster than the player's
-	# pal, backing away is impossible and the dodge does not exist.
-	var pal_speed := float(MATH.config().get("pal_movement", {}).get("speed", 5.0))
+	# creature, backing away is impossible and the dodge does not exist.
+	var creature_speed := float(MATH.config().get("creature_movement", {}).get("speed", 5.0))
 	var chase := float(cfg.get("chase_speed", 4.6))
-	assert_true(chase < pal_speed,
-		"the opponent chases at %.2f against a pal speed of %.2f; it cannot be escaped" % [chase, pal_speed])
+	assert_true(chase < creature_speed,
+		"the opponent chases at %.2f against a creature speed of %.2f; it cannot be escaped" % [chase, creature_speed])
 
 
 func test_there_is_a_punish_window() -> void:

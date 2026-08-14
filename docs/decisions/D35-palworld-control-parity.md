@@ -1,5 +1,6 @@
 # D35 — Default controls align to Palworld's conventions
 
+> Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Date:** 2026-08-13 · **Decided by:** the owner directive recorded this
 session: align Tetherbound's DEFAULT bindings with Palworld's, "so a Palworld
 player's hands land right," without breaking this project's existing

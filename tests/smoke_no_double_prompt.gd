@@ -14,7 +14,7 @@ extends SceneTree
 ##   1. Standing at an interactable that has nothing to do with combat (the
 ##      bed) — the arbiter's line is genuine, `CombatHUD`'s prompt row must
 ##      stay blank.
-##   2. Standing at the wild pal `encounter_director.gd` itself offers to
+##   2. Standing at the wild creature `encounter_director.gd` itself offers to
 ##      fight — the row is meant to keep showing "Engage X" before the fight
 ##      starts (`combat_hud.gd`'s own `_show_fight` comment), so the fix must
 ##      not have gone too far and blanked that too.
@@ -52,7 +52,7 @@ func _run() -> void:
 		return
 
 	await _standing_at_an_unrelated_interactable_does_not_double_up()
-	await _standing_at_a_wild_pal_still_shows_engage()
+	await _standing_at_a_wild_creature_still_shows_engage()
 	_report()
 
 
@@ -113,7 +113,7 @@ func _standing_at_an_unrelated_interactable_does_not_double_up() -> void:
 ## keep showing "Engage X" before a fight starts. A fix that blanks
 ## everything outside a fight, not just other providers' offers, would pass
 ## the case above and still be wrong.
-func _standing_at_a_wild_pal_still_shows_engage() -> void:
+func _standing_at_a_wild_creature_still_shows_engage() -> void:
 	# No ally means `encounter_director._engageable()` never offers anything
 	# to begin with, same bypass `smoke_catching.gd`'s `_ensure_ally()` uses:
 	# this test is not the opening and never drives it.
@@ -122,15 +122,15 @@ func _standing_at_a_wild_pal_still_shows_engage() -> void:
 		for i in 20:
 			await physics_frame
 
-	var wild: Node3D = _encounter.call("wild_pal")
+	var wild: Node3D = _encounter.call("wild_creature")
 	if wild == null:
-		_fail("no wild pal in the sandbox; cannot check the engage case")
+		_fail("no wild creature in the sandbox; cannot check the engage case")
 		return
 
-	# Teleported near the wild pal's own actual position rather than a guessed
+	# Teleported near the wild creature's own actual position rather than a guessed
 	# cluster coordinate — same reason `smoke_catching.gd`'s
 	# `_leave_the_farmhouse` teleports at all: the bed the first check left
-	# the player standing at is nowhere near the wild pals, and walking the
+	# the player standing at is nowhere near the wild creatures, and walking the
 	# whole distance is not the point of this check. 8m out, not closer:
 	# within a few metres trips the "spawned on top of the creature" tripwire.
 	var start := wild.global_position + Vector3(8.0, 0.0, 0.0)
@@ -141,7 +141,7 @@ func _standing_at_a_wild_pal_still_shows_engage() -> void:
 		await physics_frame
 
 	# The registered provider is `encounter_director` itself, answering for
-	# whichever wild pal is nearest — not the pal body — same as
+	# whichever wild creature is nearest — not the creature body — same as
 	# `interaction_arbiter.gd`'s own header explains.
 	if not await _walk_until_winning(wild, _encounter):
 		return
@@ -149,16 +149,16 @@ func _standing_at_a_wild_pal_still_shows_engage() -> void:
 	for i in 5:
 		await physics_frame
 	if _combat_prompt.text.is_empty():
-		_fail("standing at a wild pal encounter_director itself offers to fight, and CombatHUD's row is blank")
+		_fail("standing at a wild creature encounter_director itself offers to fight, and CombatHUD's row is blank")
 		return
-	print("wild pal: CombatHUD's row shows '%s' before the fight starts" % _combat_prompt.text)
+	print("wild creature: CombatHUD's row shows '%s' before the fight starts" % _combat_prompt.text)
 
 
 ## Shared by both cases above: walk until the target is the arbiter's actual
 ## winner, not just until close, the same reason `smoke_opening.gd`'s
 ## `_walk_to_and_activate` does — two providers can overlap in range.
 ## `provider` defaults to `target`: true for an interactable, which registers
-## itself; not true for a wild pal, whose provider is `encounter_director`.
+## itself; not true for a wild creature, whose provider is `encounter_director`.
 func _walk_until_winning(target: Node3D, provider: Object = null) -> bool:
 	if provider == null:
 		provider = target

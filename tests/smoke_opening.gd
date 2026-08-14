@@ -17,8 +17,8 @@ extends SceneTree
 ##
 ## What only this test can see:
 ##
-##   - **the chosen pal reaching the real party.** `scripts/story/party_seam.gd`
-##     shipped looking up `/root/GameState` and calling `add_pal()`, when the
+##   - **the chosen creature reaching the real party.** `scripts/story/party_seam.gd`
+##     shipped looking up `/root/GameState` and calling `add_creature()`, when the
 ##     autoload is `Game` and the call is `Game.party.add()`. Both wrong, so the
 ##     seam sat on its own fallback list forever: a phantom party beside the real
 ##     one, with the starter in the wrong one. `tests/test_party_seam.gd` now
@@ -29,7 +29,7 @@ extends SceneTree
 ##     cannot be tested with `Input.action_press` alone. The prompt is the
 ##     project's first text entry and ships to a handheld with no keyboard; a
 ##     poll-only test reports a working grid while the stick moves nothing.
-##   - **the prompt arbitration.** Grandpa and a wild pal both want the one
+##   - **the prompt arbitration.** Grandpa and a wild creature both want the one
 ##     interact line. Which one wins is decided by distance, and a screenshot
 ##     cannot show that the wrong one won.
 ##   - **the orb picker actually opening on its own.** `SA0-orbs` moved beat 4
@@ -120,8 +120,8 @@ func _run() -> void:
 	await _grandpa_says_his_piece()
 	_grandpa_handed_over_the_pack()
 	await _a_starter_can_be_chosen()
-	await _the_pal_is_named_on_the_grid()
-	_the_named_pal_is_in_the_real_party()
+	await _the_creature_is_named_on_the_grid()
+	_the_named_creature_is_in_the_real_party()
 	_the_party_still_holds_at_most_five()
 	await _the_road_gate_stops_until_the_key_is_found()
 	_report()
@@ -152,7 +152,7 @@ func _preflight_scripts() -> bool:
 	if prompt == null or not prompt.can_instantiate():
 		_fail(
 			"%s does not parse — see the SCRIPT ERROR above. " % NAME_PROMPT_SCRIPT
-			+ "Beat 5 is naming the pal, so nothing past beat 4 can run, and no test in the suite "
+			+ "Beat 5 is naming the creature, so nothing past beat 4 can run, and no test in the suite "
 			+ "loads this file: the unit tests cover scripts/ui/name_entry.gd, which is the grid's "
 			+ "arithmetic, not the panel around it."
 		)
@@ -435,7 +435,7 @@ func _a_starter_can_be_chosen() -> void:
 ## if the cursor does not move, everything after it would still "pass" by typing
 ## nothing and the beat would look fine from a screenshot while being impossible
 ## to complete on a pad.
-func _the_pal_is_named_on_the_grid() -> void:
+func _the_creature_is_named_on_the_grid() -> void:
 	if not bool(_name_prompt.call("is_open")):
 		_fail("choosing a starter did not open the naming prompt; beat 5 is missing")
 		return
@@ -486,8 +486,8 @@ func _the_pal_is_named_on_the_grid() -> void:
 ##
 ## `Game.party` is asked directly. If the seam is back on its fallback list — the
 ## bug it shipped with — the party here is EMPTY while `party_seam.party()`
-## cheerfully reports one pal, so asking the seam would agree with the bug.
-func _the_named_pal_is_in_the_real_party() -> void:
+## cheerfully reports one creature, so asking the seam would agree with the bug.
+func _the_named_creature_is_in_the_real_party() -> void:
 	var party: RefCounted = _game.get("party")
 	if party == null:
 		_fail("the Game autoload has no party")
@@ -496,40 +496,40 @@ func _the_named_pal_is_in_the_real_party() -> void:
 	var members: Array = party.members()
 	if members.is_empty():
 		_fail(
-			"the chosen pal never reached Game.party. If scripts/story/party_seam.gd reports a pal "
+			"the chosen creature never reached Game.party. If scripts/story/party_seam.gd reports a creature "
 			+ "while this is empty, the seam is on its fallback list again — check the node name "
 			+ "(`Game`) and the calls (`add`/`members`/`is_full`)."
 		)
 		return
 	if members.size() != 1:
-		_fail("the party holds %d pals after choosing one starter" % members.size())
+		_fail("the party holds %d creatures after choosing one starter" % members.size())
 		return
 
-	var pal: RefCounted = members[0]
-	if str(pal.label()) != CHOSEN_NAME:
-		_fail("the pal in the party is called '%s', not the '%s' that was typed" % [str(pal.label()), CHOSEN_NAME])
-	if str(pal.nickname) != CHOSEN_NAME:
-		_fail("the name was not stored as a nickname; it reads '%s'" % str(pal.nickname))
-	if str(pal.display_name) == CHOSEN_NAME:
-		_fail("naming the pal overwrote its species name; a Terrapup nobody renamed is now indistinguishable")
+	var creature: RefCounted = members[0]
+	if str(creature.label()) != CHOSEN_NAME:
+		_fail("the creature in the party is called '%s', not the '%s' that was typed" % [str(creature.label()), CHOSEN_NAME])
+	if str(creature.nickname) != CHOSEN_NAME:
+		_fail("the name was not stored as a nickname; it reads '%s'" % str(creature.nickname))
+	if str(creature.display_name) == CHOSEN_NAME:
+		_fail("naming the creature overwrote its species name; a Terrapup nobody renamed is now indistinguishable")
 
 	if not SEAM.has_game_state():
 		_fail("the seam cannot see the real party even with the autoload running; it is on its fallback")
 	if SEAM.party().size() != members.size():
-		_fail("the seam reports %d pals and Game.party holds %d; there are two parties" % [
+		_fail("the seam reports %d creatures and Game.party holds %d; there are two parties" % [
 			SEAM.party().size(), members.size()
 		])
-	print("the party holds one pal, called '%s', and the seam and the autoload agree" % str(pal.label()))
+	print("the party holds one creature, called '%s', and the seam and the autoload agree" % str(creature.label()))
 
 
 ## CLAUDE.md's first hard rule, seen at the end of the sequence that creates the
-## project's first two pals.
+## project's first two creatures.
 func _the_party_still_holds_at_most_five() -> void:
 	var party: RefCounted = _game.get("party")
 	if party == null:
 		return
-	if int(party.size()) > PARTY.MAX_PALS:
-		_fail("the opening left %d pals in the party; the cap is %d" % [int(party.size()), PARTY.MAX_PALS])
+	if int(party.size()) > PARTY.MAX_CREATURES:
+		_fail("the opening left %d creatures in the party; the cap is %d" % [int(party.size()), PARTY.MAX_CREATURES])
 	if bool(party.is_full()):
 		_fail("the opening filled the party; the player is supposed to leave it with room")
 
@@ -861,7 +861,7 @@ func _fail(message: String) -> void:
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
-		print("opening: OK — talked, chose, named, and the pal is in the party.")
+		print("opening: OK — talked, chose, named, and the creature is in the party.")
 		quit(0)
 		return
 	for line in _failures:

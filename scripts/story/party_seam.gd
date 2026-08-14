@@ -2,10 +2,10 @@ extends RefCounted
 
 ## The one place the opening sequence touches the party.
 ##
-## **This is a seam, not a party.** CLAUDE.md's first hard rule is five pals
+## **This is a seam, not a party.** CLAUDE.md's first hard rule is five creatures
 ## total and no storage beyond five, and the party that enforces it lives in
 ## `autoload/party.gd`, held by the `Game` autoload. This file's only job is to
-## put a chosen or caught pal in there, and to keep working in a test process
+## put a chosen or caught creature in there, and to keep working in a test process
 ## where the autoload is not running at all.
 ##
 ## ## The bug this file used to have, written down so it is not reintroduced
@@ -16,12 +16,12 @@ extends RefCounted
 ##
 ##   1. it looked up `/root/GameState`. The autoload is registered as **`Game`**
 ##      (project.godot `[autoload]`, docs/decisions/D14). The lookup never hit.
-##   2. it called `add_pal()` / `party()` / `party_is_full()` on it. The real
+##   2. it called `add_creature()` / `party()` / `party_is_full()` on it. The real
 ##      API is `Game.party.add()` / `.members()` / `.is_full()`.
 ##
 ## Either defect alone pins the seam to its fallback forever, and the fallback
 ## is a five-slot array — so the seam looked healthy from the outside while
-## running **a second, phantom party beside the real one**. A pal chosen in the
+## running **a second, phantom party beside the real one**. A creature chosen in the
 ## opening never reached `Game.party`, and nothing said so: the party screen
 ## simply showed an empty party after the naming beat.
 ##
@@ -55,7 +55,7 @@ extends RefCounted
 ## name alone would have swapped a silent bug for a wall of errors.
 const GAME_NODE := ^"Game"
 
-## Mirrors `autoload/party.gd`'s MAX_PALS so a caller can ask without reaching
+## Mirrors `autoload/party.gd`'s MAX_CREATURES so a caller can ask without reaching
 ## for the autoload. The real limit is the party's to enforce; this is the number
 ## the seam refuses at while there is no party to ask. The two are asserted equal
 ## in the tests, because a fallback that allowed six would be a storage system.
@@ -126,12 +126,12 @@ static func has_game_state() -> bool:
 	return _party() != null
 
 
-## Give a caught or chosen pal its name and put it in the party.
+## Give a caught or chosen creature its name and put it in the party.
 ##
 ## Returns false when the party is full. The opening can never see that — it
-## adds two pals to an empty party — but the caller is told rather than assuming,
-## because the sixth-pal release ceremony is real design (GAME_DESIGN.md §3) and
-## a seam that silently drops a pal would hide the day it starts mattering.
+## adds two creatures to an empty party — but the caller is told rather than assuming,
+## because the sixth-creature release ceremony is real design (GAME_DESIGN.md §3) and
+## a seam that silently drops a creature would hide the day it starts mattering.
 static func add(instance: RefCounted, nickname: String = "") -> bool:
 	if instance == null:
 		return false
@@ -147,11 +147,11 @@ static func add(instance: RefCounted, nickname: String = "") -> bool:
 	return true
 
 
-## Name a pal.
+## Name a creature.
 ##
-## Writes `nickname`, which is the field `pal_instance.label()` reads and every
+## Writes `nickname`, which is the field `creature_instance.label()` reads and every
 ## nameplate goes through. It does NOT write `display_name`: that is the species
-## name, and `tests/test_pal_nickname.gd` requires it to survive being nicknamed
+## name, and `tests/test_creature_nickname.gd` requires it to survive being nicknamed
 ## over, because the party screen has to be able to tell a Terrapup nobody
 ## renamed from one deliberately named "Terrapup".
 ##
@@ -193,7 +193,7 @@ static func is_full() -> bool:
 ##
 ## Clears the fallback, and the test root hook. It does NOT empty the real party:
 ## that belongs to `Game` and outlives any one run of the opening, and a helper
-## that quietly removed pals would be a delete path CLAUDE.md puts at a release
+## that quietly removed creatures would be a delete path CLAUDE.md puts at a release
 ## ceremony (M5). A test that wants the real party gone takes the whole thing
 ## away itself, in the open, where it can be seen.
 static func reset() -> void:

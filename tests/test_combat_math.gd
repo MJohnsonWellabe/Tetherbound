@@ -9,7 +9,7 @@ extends "res://tests/test_case.gd"
 ## the fight is made to feel better, which trains people to ignore it.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 
 # --- damage ---------------------------------------------------------------
@@ -211,11 +211,11 @@ func test_unknown_species_returns_null_rather_than_a_broken_instance() -> void:
 
 
 func test_a_spawned_creature_starts_whole() -> void:
-	var pal: RefCounted = SPECIES.spawn("bramblebun")
-	assert_eq(pal.hp, pal.max_hp)
-	assert_eq(pal.energy, 0.0)
-	assert_false(pal.fainted)
-	assert_eq(pal.hp_fraction(), 1.0)
+	var creature: RefCounted = SPECIES.spawn("bramblebun")
+	assert_eq(creature.hp, creature.max_hp)
+	assert_eq(creature.energy, 0.0)
+	assert_false(creature.fainted)
+	assert_eq(creature.hp_fraction(), 1.0)
 
 
 func test_two_creatures_of_one_species_have_independent_health() -> void:
@@ -228,39 +228,39 @@ func test_two_creatures_of_one_species_have_independent_health() -> void:
 
 
 func test_faint_is_reported_exactly_once() -> void:
-	var pal: RefCounted = SPECIES.spawn("bramblebun")
-	assert_false(pal.take_damage(1.0), "a survivable hit is not a faint")
-	assert_true(pal.take_damage(9999.0), "the killing blow reports the faint")
-	assert_false(pal.take_damage(9999.0), "hitting a fainted creature must not re-report")
+	var creature: RefCounted = SPECIES.spawn("bramblebun")
+	assert_false(creature.take_damage(1.0), "a survivable hit is not a faint")
+	assert_true(creature.take_damage(9999.0), "the killing blow reports the faint")
+	assert_false(creature.take_damage(9999.0), "hitting a fainted creature must not re-report")
 
 
 func test_health_floors_at_zero() -> void:
-	var pal: RefCounted = SPECIES.spawn("bramblebun")
-	pal.take_damage(9999.0)
-	assert_eq(pal.hp, 0.0)
-	assert_eq(pal.hp_fraction(), 0.0)
+	var creature: RefCounted = SPECIES.spawn("bramblebun")
+	creature.take_damage(9999.0)
+	assert_eq(creature.hp, 0.0)
+	assert_eq(creature.hp_fraction(), 0.0)
 
 
 func test_a_fainted_creature_cannot_use_a_charged_attack() -> void:
-	var pal: RefCounted = SPECIES.spawn("terrapup")
-	pal.energy = MATH.max_energy()
-	pal.take_damage(9999.0)
-	assert_false(pal.can_use_charged(), "a fainted creature should not act")
+	var creature: RefCounted = SPECIES.spawn("terrapup")
+	creature.energy = MATH.max_energy()
+	creature.take_damage(9999.0)
+	assert_false(creature.can_use_charged(), "a fainted creature should not act")
 
 
 func test_quick_attacks_charge_the_meter_and_charged_spends_it() -> void:
-	var pal: RefCounted = SPECIES.spawn("terrapup")
-	assert_false(pal.can_use_charged())
+	var creature: RefCounted = SPECIES.spawn("terrapup")
+	assert_false(creature.can_use_charged())
 	for i in MATH.quicks_to_charge():
-		pal.gain_energy_from_quick()
-	assert_true(pal.can_use_charged(), "should be chargeable after the expected quicks")
-	assert_true(pal.spend_charged())
-	assert_false(pal.can_use_charged(), "spending should empty the meter")
+		creature.gain_energy_from_quick()
+	assert_true(creature.can_use_charged(), "should be chargeable after the expected quicks")
+	assert_true(creature.spend_charged())
+	assert_false(creature.can_use_charged(), "spending should empty the meter")
 
 
 func test_healing_restores_a_fainted_creature() -> void:
-	var pal: RefCounted = SPECIES.spawn("bramblebun")
-	pal.take_damage(9999.0)
-	pal.heal_fully()
-	assert_eq(pal.hp, pal.max_hp)
-	assert_false(pal.fainted)
+	var creature: RefCounted = SPECIES.spawn("bramblebun")
+	creature.take_damage(9999.0)
+	creature.heal_fully()
+	assert_eq(creature.hp, creature.max_hp)
+	assert_false(creature.fainted)

@@ -4,7 +4,7 @@ extends Node
 ##
 ## This is the project's first autoload, and it is meant to stay its only one.
 ## Before it, state was owned by whichever node happened to hold it — the fight
-## owned the pals, nothing owned the inventory because there was none — and a
+## owned the creatures, nothing owned the inventory because there was none — and a
 ## menu cannot read state that is scattered across three scenes.
 ##
 ## What belongs here: things that outlive the scene tree. What does NOT: the
@@ -18,9 +18,9 @@ extends Node
 ## in scenes nobody has written yet.
 
 const MENU_SCENE := "res://scenes/ui/game_menu.tscn"
-const SPECIES_PATH := "res://data/pals/species.json"
+const SPECIES_PATH := "res://data/creatures/species.json"
 const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
-const PAL_INSTANCE := preload("res://scripts/pals/pal_instance.gd")
+const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
@@ -427,16 +427,16 @@ func _preferences() -> RefCounted:
 	return _menu.get("bindings") if _menu != null else null
 
 
-## Build a live pal from a species id. Party membership still goes through
+## Build a live creature from a species id. Party membership still goes through
 ## `party.add`, which is the only thing that knows about the cap.
-func make_pal(species_id: String, nickname: String = "") -> RefCounted:
+func make_creature(species_id: String, nickname: String = "") -> RefCounted:
 	var definition := _species(species_id)
 	if definition.is_empty():
 		push_warning("unknown species: %s" % species_id)
 		return null
-	var pal: RefCounted = PAL_INSTANCE.from_species(species_id, definition)
-	pal.nickname = nickname
-	return pal
+	var creature: RefCounted = CREATURE_INSTANCE.from_species(species_id, definition)
+	creature.nickname = nickname
+	return creature
 
 
 ## The parsed contents of `data/config/map_landmarks.json`, or `{}` if it is
@@ -479,9 +479,9 @@ func _seed_demo() -> void:
 		["galewisp", "Kite"],
 	]
 	for entry in seeds:
-		var pal: RefCounted = make_pal(str(entry[0]), str(entry[1]))
-		if pal != null:
-			party.add(pal)
+		var creature: RefCounted = make_creature(str(entry[0]), str(entry[1]))
+		if creature != null:
+			party.add(creature)
 	# One of them is hurt, because a party screen where every bar is full cannot
 	# show whether the bars work.
 	var second: RefCounted = party.at(1)

@@ -1,6 +1,6 @@
 extends SceneTree
 func _init() -> void:
-	for path in ["res://assets/pals/bramblit.fbx", "res://assets/pals/thornback.fbx"]:
+	for path in ["res://assets/creatures/bramblit.fbx", "res://assets/creatures/thornback.fbx"]:
 		var packed: PackedScene = load(path)
 		if packed == null: print(path, " FAILED"); continue
 		var s: Node = packed.instantiate(); root.add_child(s)

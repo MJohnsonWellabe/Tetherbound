@@ -1,8 +1,8 @@
 extends Control
 
-## The five-pal reveal strip (`ENVIRONMENT_AND_UI_BIBLE.md` §6.1).
+## The five-creature reveal strip (`ENVIRONMENT_AND_UI_BIBLE.md` §6.1).
 ##
-## Slides in above the active-pal block when the player switches which pal is
+## Slides in above the active-creature block when the player switches which creature is
 ## out, holds for `UITokens.T_PARTY_FADE`, then fades back out — unless
 ## `set_pinned(true)` is holding it up, which is what combat-side switching
 ## will do (a fight is exactly the moment the party needs to stay on screen,
@@ -10,7 +10,7 @@ extends Control
 ##
 ## Decoupled from `/root/Game` ON PURPOSE. Every other value this widget draws
 ## arrives through `update_from_party()` as plain data the caller already
-## pulled off `Party`/`PalInstance` — nothing here calls `get_node(^"/root/Game")`
+## pulled off `Party`/`CreatureInstance` — nothing here calls `get_node(^"/root/Game")`
 ## or reads `party.gd` itself. That is what lets `tests/test_hud_widgets.gd`
 ## build one of these and drive it with hand-made dictionaries, with no
 ## autoload booted and no scene tree required. The eventual mount
@@ -18,8 +18,8 @@ extends Control
 ## reaches into `Game.party` and hands the result in.
 ##
 ## Five ROWS ALWAYS EXIST — never four, never six. `autoload/party.gd`'s own
-## header is blunt about why: "Player can own only five pals total... Never
-## implement pal storage beyond five" (CLAUDE.md, twice over). A strip that
+## header is blunt about why: "Player can own only five creatures total... Never
+## implement creature storage beyond five" (CLAUDE.md, twice over). A strip that
 ## grew or shrank rows with the roster would be one accidental step from a
 ## sixth slot; a strip that always draws five with some of them dim is not.
 ##
@@ -184,7 +184,7 @@ func _build_row() -> PanelContainer:
 	level_row.add_child(level_label)
 
 	# Small "KO" tag next to the level, shown only for a fainted entry — blind
-	# visual review: a fainted pal in the strip had no marker at all, reading
+	# visual review: a fainted creature in the strip had no marker at all, reading
 	# identically to a healthy one at a glance.
 	var ko_label := Label.new()
 	ko_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -214,7 +214,7 @@ func _build_row() -> PanelContainer:
 
 
 ## Reveal the strip and (re)start its `T_PARTY_FADE` countdown. Call this
-## every time the active pal changes, whether or not the strip is already
+## every time the active creature changes, whether or not the strip is already
 ## showing — a second switch inside the fade window should refresh the timer,
 ## not let it lapse mid-read.
 func show_strip() -> void:
@@ -240,18 +240,18 @@ func set_pinned(pinned: bool) -> void:
 ## in party order. Anything beyond `entries.size()` (and always, past
 ## `SLOTS`) reads as a vacant slot. The caller — `playground_hud.gd`, in the
 ## later integration pass — builds these from `Party.members()` and
-## `PalInstance.label()`/`hp_fraction()`; this widget never reaches for either
+## `CreatureInstance.label()`/`hp_fraction()`; this widget never reaches for either
 ## itself (see this file's header).
 func update_from_party(entries: Array, active_index: int) -> void:
 	for i in SLOTS:
-		var has_pal: bool = i < entries.size()
-		var entry: Dictionary = entries[i] if has_pal else {}
-		_update_row(i, entry, has_pal, has_pal and i == active_index)
+		var has_creature: bool = i < entries.size()
+		var entry: Dictionary = entries[i] if has_creature else {}
+		_update_row(i, entry, has_creature, has_creature and i == active_index)
 
 
-func _update_row(i: int, entry: Dictionary, has_pal: bool, selected: bool) -> void:
-	var fainted := has_pal and bool(entry.get("fainted", false))
-	var vacant := not has_pal
+func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool) -> void:
+	var fainted := has_creature and bool(entry.get("fainted", false))
+	var vacant := not has_creature
 
 	if vacant != _last_vacant[i] or selected != _last_selected[i]:
 		_rows[i].add_theme_stylebox_override("panel", UI_TOKENS.slot_box(selected))

@@ -119,7 +119,7 @@ func _additive(colour: Color) -> StandardMaterial3D:
 	# nothing at all at the moment of contact, on the real Terrain3D scene,
 	# despite the exact same mesh/material rendering correctly in an isolated
 	# test scene with a plain ground plane. The burst originates at the
-	# creature's COLLISION centre (pal_body.gd's `centre()`), and pal_body's own
+	# creature's COLLISION centre (creature_body.gd's `centre()`), and creature_body's own
 	# header already documents that the visual mesh is fitted to the collider
 	# with slack ("a footprint allowance") — so on a creature whose model reads
 	# larger than its collider, a depth-tested burst can end up entirely behind

@@ -28,7 +28,7 @@ tools/art_pipeline/crop_views.py --check
 ```
 
 Cuts the four-view turnaround out of each production sheet into
-`assets/pals/tetherbound/<species>/reference/{front,side,back,three_quarter}.png`,
+`assets/creatures/tetherbound/<species>/reference/{front,side,back,three_quarter}.png`,
 one figure per image at a shared scale. Check `docs/art/reference_views.png`
 before trusting the output. Bands and centres are in `views.json`; `--grid`
 writes coordinate overlays for retuning them.
@@ -81,8 +81,8 @@ step 3 afterwards and keep both reports for the production record.
 
 ### 7. Wire it into the game
 
-Point `data/pals/species.json` at the exported GLB and map the clip names.
-`pal_body._fit()` scales it to the gameplay collider; watch for the
+Point `data/creatures/species.json` at the exported GLB and map the clip names.
+`creature_body._fit()` scales it to the gameplay collider; watch for the
 footprint-allowance warning.
 
 ### 8. Validate in the engine, not in Blender
@@ -107,4 +107,4 @@ soft on a sourced or generated asset.
 
 Generation itself, until `MESHY_API_KEY` exists. Everything above runs without
 it, and step 3 onward can be proved against any existing model —
-`assets/pals/plumberry/bruno-the-bear.glb` is what the harness was built against.
+`assets/creatures/plumberry/bruno-the-bear.glb` is what the harness was built against.

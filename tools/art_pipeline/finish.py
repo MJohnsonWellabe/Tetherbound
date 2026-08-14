@@ -16,7 +16,7 @@ thirteen times, and the mistakes that matter are the ones made while retyping
 a path, not while thinking about a rabbit. `--kind humanoid` is the odd one
 out: there is no local Blender rigger for a biped, so `rig` calls out to
 Meshy's own auto-rigger instead, and `install` lands the result in
-assets/characters/, not assets/pals/tetherbound/. There is no humanoid
+assets/characters/, not assets/creatures/tetherbound/. There is no humanoid
 `grade` step -- grade.py has no SPECIES entries for trainer/grandpa/warden
 either, and `install` already falls back to animated.glb when graded.glb
 does not exist.
@@ -172,11 +172,11 @@ def cmd_install(args) -> None:
     if args.kind == "humanoid":
         # Matches the trainer/grandpa/warden layout already in
         # assets/characters/ -- one folder per character, no "models"
-        # subdirectory and no "pal_" prefix, unlike the creature roster.
+        # subdirectory and no "creature_" prefix, unlike the creature roster.
         target = ROOT / "assets" / "characters" / args.species / f"{args.species}_lod0.glb"
     else:
-        target = (ROOT / "assets" / "pals" / "tetherbound" / args.species / "models"
-                  / f"pal_{args.species}_lod0.glb")
+        target = (ROOT / "assets" / "creatures" / "tetherbound" / args.species / "models"
+                  / f"creature_{args.species}_lod0.glb")
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(source.read_bytes())
     print(f"{target.relative_to(ROOT)}  {target.stat().st_size // 1024} KB")

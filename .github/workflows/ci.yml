@@ -245,7 +245,7 @@ jobs:
       - name: Smoke-test catching
         # Aims, misses, and lands a throw through injected input. Asserts the
         # things the catch maths cannot see: aiming hands the camera to the
-        # trainer and abandons the pal, the orb is a projectile that can go
+        # trainer and abandons the creature, the orb is a projectile that can go
         # wide, an orb is spent on a throw and not on a cancel, and a faint is a
         # refusal rather than long odds.
         run: godot --headless --path . --script tests/smoke_catching.gd
@@ -326,29 +326,29 @@ jobs:
           fi
 
       - name: Smoke-test combat
-        # Walks up to a wild pal, engages, and PILOTS the fight to a win through
+        # Walks up to a wild creature, engages, and PILOTS the fight to a win through
         # injected input (docs/decisions/D07). Asserts the things unit tests
-        # cannot see: the pal actually moves on the stick, the arena boundary
+        # cannot see: the creature actually moves on the stick, the arena boundary
         # holds it in without ending the fight, a swing at empty air is reported
         # as a miss, a swing at the opponent connects and earns energy, the
         # opponent closes and telegraphs and leaves an opening, and control and
         # camera come back afterwards.
         #
-        # The bug this exists for: the deployed pal became a CharacterBody3D and
+        # The bug this exists for: the deployed creature became a CharacterBody3D and
         # spent every run standing invisibly inside the trainer, so the two
         # bodies shoved each other and launched the player off the playground at
         # 500 m/s. Every unit test still passed.
         run: godot --headless --path . --script tests/smoke_combat.gd
 
       - name: Smoke-test aggression
-        # Two halves, and the second matters more: an aggressive pal must start
+        # Two halves, and the second matters more: an aggressive creature must start
         # a fight on its own, and a peaceful one must never do so no matter how
         # long the trainer stands next to it. GAME_DESIGN.md §14 allows the
         # first and forbids the second, and one word in species.json is the only
         # thing between them.
         #
         # RB3 root-caused and fixed this suite's own documented flake (the
-        # trainer's own pal walling them in on a direction reversal) — 36
+        # trainer's own creature walling them in on a direction reversal) — 36
         # consecutive clean runs afterward. The retry below is a safety net for
         # any OTHER non-determinism this scene-boot-and-simulate style of test
         # is prone to, not a substitute for root-causing a new one: a second
@@ -369,7 +369,7 @@ jobs:
       - name: Smoke-test the opening
         # Walks the first fifteen minutes end to end: fade in, approach
         # Grandpa, talk, choose a starter, name it with the pad, and confirm
-        # the pal reaches the real party. This wires SequenceDirector,
+        # the creature reaches the real party. This wires SequenceDirector,
         # InteractionArbiter, DialoguePanel and NamePrompt together for the
         # first time in the run — a regression here is a player who spawns
         # with no opening at all, and nothing else in this job would notice.
@@ -377,7 +377,7 @@ jobs:
 
       - name: Smoke-test the menu
         # Opens the pause menu over the real world and closes it again. Unit
-        # tests cover the satchel's arithmetic and the five-pal cap; none of
+        # tests cover the satchel's arithmetic and the five-creature cap; none of
         # them can see the four things that make a menu shippable or not:
         # the mouse is released and RESTORED to what it was (the world captures
         # it and never gives it back), the tree actually pauses so the player

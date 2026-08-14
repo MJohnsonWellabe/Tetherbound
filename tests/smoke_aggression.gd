@@ -7,13 +7,13 @@ extends SceneTree
 ##
 ## Two halves, and the SECOND is the important one.
 ##
-## The first asserts that an aggressive wild pal will close on the trainer and
-## start a fight with no button press — GAME_DESIGN.md §14 lists "Aggressive pal
+## The first asserts that an aggressive wild creature will close on the trainer and
+## start a fight with no button press — GAME_DESIGN.md §14 lists "Aggressive creature
 ## initiates" beside the player's own routes in.
 ##
 ## The second asserts that a PEACEFUL one will not, no matter how long you stand
 ## next to it. That is a regression guard on the other line in the same list:
-## "**Not** simple proximity for peaceful pals." A bug that makes every creature
+## "**Not** simple proximity for peaceful creatures." A bug that makes every creature
 ## aggressive would sail past the first half of this test and would not be
 ## noticed until someone wondered why the meadow felt hostile.
 
@@ -21,7 +21,7 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 
 const SETTLE_FRAMES := 300
 ## How long to stand next to a creature waiting for something to happen. At the
-## configured chase speed this is far more than enough for an aggressive pal to
+## configured chase speed this is far more than enough for an aggressive creature to
 ## cross its notice range.
 const PATIENCE_FRAMES := 900
 ## Physics frames to spend walking toward one creature. The aggressor's cluster
@@ -54,7 +54,7 @@ const WALK_FRAMES := 4000
 ## no such adaptation — `Input.action_press("move_forward")` held dead
 ## straight for up to `WALK_FRAMES` is a far more rigid input than any real
 ## player produces, and rigidity is what turns an ordinary terrain snag into
-## a stuck test. `wild_pal.gd::_tick_aggression` already solves the identical
+## a stuck test. `wild_creature.gd::_tick_aggression` already solves the identical
 ## shape of problem (progress stalls, so steer off the direct line) for the
 ## aggressor's own chase; this borrows the same numbers and escape pattern
 ## rather than the walk continuing to have none.
@@ -86,12 +86,12 @@ func _run() -> void:
 		return
 
 	# Peaceful first, deliberately. Run the ambush half first and the aggressive
-	# pal is still awake and near the trainer for the second half, so it chases
+	# creature is still awake and near the trainer for the second half, so it chases
 	# them across the meadow and the fight it starts gets blamed on the creature
 	# standing next to them. The order is the fix; the species check below is the
 	# belt to its braces.
-	await _a_peaceful_pal_never_does()
-	await _an_aggressive_pal_starts_the_fight_itself()
+	await _a_peaceful_creature_never_does()
+	await _an_aggressive_creature_starts_the_fight_itself()
 	_report()
 
 
@@ -106,11 +106,11 @@ func _fighting_species() -> String:
 ## `meadows_playground.tscn` now always carries a `SequenceDirector` (R0.9),
 ## and its `_ready()` unconditionally calls `suspend_default_starter()` in the
 ## one frame window that exists to call it off — the opening always decides
-## which pal the player gets, never the sandbox default. This test is not the
+## which creature the player gets, never the sandbox default. This test is not the
 ## opening and never drives it, so the encounter director's own
-## `default_starter` never spawns here either. An aggressive pal starting a
+## `default_starter` never spawns here either. An aggressive creature starting a
 ## fight still needs the player to have something to fight WITH, so this gets
-## a pal directly, the same call `sequence_director.gd` makes once a name is
+## a creature directly, the same call `sequence_director.gd` makes once a name is
 ## confirmed.
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
@@ -143,26 +143,26 @@ func _collect_nodes() -> bool:
 		_fail("scene is missing the player, camera rig, combat manager or director")
 		return false
 
-	var aggressive: Node3D = _director.call("aggressive_pal") as Node3D
-	var peaceful: Node3D = _director.call("wild_pal") as Node3D
+	var aggressive: Node3D = _director.call("aggressive_creature") as Node3D
+	var peaceful: Node3D = _director.call("wild_creature") as Node3D
 	if aggressive == null:
-		_fail("no aggressive pal was spawned; nothing in the meadow can threaten the trainer")
+		_fail("no aggressive creature was spawned; nothing in the meadow can threaten the trainer")
 		return false
 	if peaceful == null:
-		_fail("no peaceful pal was spawned; the second half of this test cannot run")
+		_fail("no peaceful creature was spawned; the second half of this test cannot run")
 		return false
 	if not bool(aggressive.get("aggressive")):
-		_fail("the pal spawned as the aggressive one does not carry the flag")
+		_fail("the creature spawned as the aggressive one does not carry the flag")
 		return false
 	if bool(peaceful.get("aggressive")):
-		_fail("the practice pal is flagged aggressive; it is supposed to be safe to walk up to")
+		_fail("the practice creature is flagged aggressive; it is supposed to be safe to walk up to")
 		return false
 	return true
 
 
 ## Walk within notice range and then stop. Nothing is pressed after this point.
-func _an_aggressive_pal_starts_the_fight_itself() -> void:
-	var wild: Node3D = _director.call("aggressive_pal") as Node3D
+func _an_aggressive_creature_starts_the_fight_itself() -> void:
+	var wild: Node3D = _director.call("aggressive_creature") as Node3D
 	await _walk_towards(wild, 10.0)
 
 	var started := false
@@ -179,7 +179,7 @@ func _an_aggressive_pal_starts_the_fight_itself() -> void:
 		])
 		return
 	if _fighting_species() != str(wild.get("species_id")):
-		_fail("a fight started, but against %s rather than the aggressive pal" % _fighting_species())
+		_fail("a fight started, but against %s rather than the aggressive creature" % _fighting_species())
 		return
 	print("%s started the fight on its own, from %.1fm" % [str(wild.get("display_name")), closed_from])
 
@@ -191,7 +191,7 @@ func _an_aggressive_pal_starts_the_fight_itself() -> void:
 		_fail("an ambush opened no arena")
 	var ally: Node3D = _director.call("ally_body") as Node3D
 	if ally == null or not ally.visible:
-		_fail("an ambush did not deploy the player's pal")
+		_fail("an ambush did not deploy the player's creature")
 
 	# Leave, so the next half starts from exploration. The wait is flow's
 	# input_guard: a fight ignores input for a moment after it opens, so a
@@ -208,17 +208,17 @@ func _an_aggressive_pal_starts_the_fight_itself() -> void:
 
 
 ## The half that matters. §14 forbids proximity starting a fight with a peaceful
-## pal, and this is the only thing standing between that rule and a one-word
+## creature, and this is the only thing standing between that rule and a one-word
 ## edit to species.json.
-func _a_peaceful_pal_never_does() -> void:
+func _a_peaceful_creature_never_does() -> void:
 	if bool(_manager.call("is_fighting")):
 		# The previous half left a fight running, so anything measured here would
 		# be about that fight rather than about this creature. Said plainly
-		# rather than reported as the peaceful pal misbehaving.
-		_fail("still in combat from the ambush; the peaceful-pal check could not run")
+		# rather than reported as the peaceful creature misbehaving.
+		_fail("still in combat from the ambush; the peaceful-creature check could not run")
 		return
 
-	var wild: Node3D = _director.call("wild_pal") as Node3D
+	var wild: Node3D = _director.call("wild_creature") as Node3D
 	await _walk_towards(wild, 2.5)
 
 	var distance := _player.global_position.distance_to(wild.global_position)
@@ -228,7 +228,7 @@ func _a_peaceful_pal_never_does() -> void:
 		if not bool(_manager.call("is_fighting")):
 			continue
 		if _fighting_species() == species:
-			_fail("%s started a fight by itself after %d frames; peaceful pals must never initiate" % [
+			_fail("%s started a fight by itself after %d frames; peaceful creatures must never initiate" % [
 				str(wild.get("display_name")), i
 			])
 		else:
@@ -242,7 +242,7 @@ func _a_peaceful_pal_never_does() -> void:
 	# And it is still engageable by choice — "it never initiates" must not have
 	# been achieved by breaking it.
 	if str(_director.call("prompt")) == "":
-		_fail("no engage prompt next to the peaceful pal; it cannot be fought at all")
+		_fail("no engage prompt next to the peaceful creature; it cannot be fought at all")
 
 
 func _walk_towards(wild: Node3D, stop_at: float) -> void:
@@ -262,7 +262,7 @@ func _walk_towards(wild: Node3D, stop_at: float) -> void:
 			# while — see this file's own header comment on UNSTICK_AFTER_FRAMES
 			# for what that geometry actually was when this was diagnosed.
 			# Alternate sides every ~0.5s rather than committing to one escape
-			# angle, same reasoning as wild_pal.gd's own version: the first
+			# angle, same reasoning as wild_creature.gd's own version: the first
 			# angle tried can run into more of the same obstacle.
 			var phase := int((stuck_frames - UNSTICK_AFTER_FRAMES) / 30.0) % 2
 			var side := 1.0 if phase == 0 else -1.0

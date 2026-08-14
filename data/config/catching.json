@@ -1,14 +1,14 @@
 {
   "_comment": "Catching and orbs. ALL of it is TUNABLE. M3 exists to answer one question: does landing a good throw feel satisfying? The expected feedback is 'catching is too hard', 'aiming is fiddly', 'I never know if I was close' — every one of those has to be answerable by editing this file.",
-  "_comment_model": "Throwing hands camera and control to the trainer for a real-time over-the-shoulder aim (docs/decisions/D08). Your pal is undefended while you aim and the opponent does not stop attacking it. That cost is the whole design: it is what makes throwing a decision rather than something you spam between attacks.",
+  "_comment_model": "Throwing hands camera and control to the trainer for a real-time over-the-shoulder aim (docs/decisions/D08). Your creature is undefended while you aim and the opponent does not stop attacking it. That cost is the whole design: it is what makes throwing a decision rather than something you spam between attacks.",
 
   "chance": {
     "_comment": "catch_chance = species_rate * hp_factor * orb_multiplier * accuracy_bonus, clamped. Nothing is ever certain and nothing that is legal is ever impossible; a throw that cannot succeed should be REFUSED with a reason, not rolled at zero.",
 
-    "_comment_hp": "GAME_DESIGN.md 15: full-health throws are allowed, and powerful/full-health pals should be extremely difficult to catch. So this curve is steep. At full health you are multiplying the species rate by 0.10; at a sliver you are multiplying by 1.0.",
+    "_comment_hp": "GAME_DESIGN.md 15: full-health throws are allowed, and powerful/full-health creatures should be extremely difficult to catch. So this curve is steep. At full health you are multiplying the species rate by 0.10; at a sliver you are multiplying by 1.0.",
     "hp_factor_full": 0.10,
     "hp_factor_empty": 1.0,
-    "_comment_curve": "Exponent on the (1 - hp_fraction) term. Above 1 the reward is back-loaded, so chipping a pal down to half does much less for you than taking it to a sliver — which is what keeps 'damage it first' a real risk against 'over-damage it and lose the catch'.",
+    "_comment_curve": "Exponent on the (1 - hp_fraction) term. Above 1 the reward is back-loaded, so chipping a creature down to half does much less for you than taking it to a sliver — which is what keeps 'damage it first' a real risk against 'over-damage it and lose the catch'.",
     "hp_curve": 1.6,
 
     "_comment_accuracy": "How much a good throw is worth. `centre_bonus` applies to a dead-centre hit, `edge_bonus` to one that barely clipped. This is the ONLY reason the aiming skill exists; if these are equal, aiming is decoration and the milestone has no subject.",
@@ -85,7 +85,7 @@
   },
 
   "resolve_camera": {
-    "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the pal on a breakout and to the trainer when a catch ends the fight.",
+    "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the creature on a breakout and to the trainer when a catch ends the fight.",
     "_comment_framing": "First capture at distance 3.2 / height 1.1 / pitch -16 was not a close-up at all: the orb huddled small at the bottom of the frame with dead grass in the centre. Height near the orb itself and a steeper look-down centre it.",
     "distance": 2.4,
     "height": 0.55,
@@ -103,18 +103,18 @@
   },
 
   "faint": {
-    "_comment": "GAME_DESIGN.md 15: over-damaging a pal and causing a faint ends the capture opportunity, and fainted wild pals remain visible temporarily but cannot be captured. The lingering body is not decoration — it is what makes the lost chance legible instead of the creature simply vanishing.",
+    "_comment": "GAME_DESIGN.md 15: over-damaging a creature and causing a faint ends the capture opportunity, and fainted wild creatures remain visible temporarily but cannot be captured. The lingering body is not decoration — it is what makes the lost chance legible instead of the creature simply vanishing.",
     "linger_seconds": 4.0,
     "slump_degrees": 72.0
   },
 
   "aggression": {
-    "_comment": "Aggressive wild pals, per GAME_DESIGN.md pillar 3 and 14 ('Aggressive pal initiates'). The 'not simple proximity' rule in 14 is scoped to PEACEFUL pals; these are the other kind. Deliberately thin: notice, close, initiate. No stalking, no growl phase, no standing your ground — those are a behaviour system and this is a flag and a chase.",
+    "_comment": "Aggressive wild creatures, per GAME_DESIGN.md pillar 3 and 14 ('Aggressive creature initiates'). The 'not simple proximity' rule in 14 is scoped to PEACEFUL creatures; these are the other kind. Deliberately thin: notice, close, initiate. No stalking, no growl phase, no standing your ground — those are a behaviour system and this is a flag and a chase.",
     "notice_range": 14.0,
     "_comment_engage": "Metres at which it forces the fight. Under the peaceful engage_range so you cannot be ambushed from further away than you could have chosen to fight from.",
     "engage_range": 3.2,
     "chase_speed": 3.4,
-    "_comment_giveup": "Metres from its home beyond which it loses interest and walks back. Without this an aggressive pal follows you across the whole meadow and the only escape is a fight.",
+    "_comment_giveup": "Metres from its home beyond which it loses interest and walks back. Without this an aggressive creature follows you across the whole meadow and the only escape is a fight.",
     "give_up_distance": 26.0,
     "_comment_grace": "Seconds after a fight ends before it will come at you again. Being re-engaged the instant you win is not danger, it is a soft lock.",
     "grace_after_combat": 8.0

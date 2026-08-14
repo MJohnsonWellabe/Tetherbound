@@ -17,7 +17,7 @@ extends Node
 ## The manager knows how a fight resolves and nothing about the world; the
 ## encounter director knows about the world and nothing about damage; this knows
 ## about the ORDER OF THINGS and nothing about either. It starts conversations
-## rather than drawing them, asks for a pal rather than spawning one, and reads
+## rather than drawing them, asks for a creature rather than spawning one, and reads
 ## the outcome of a fight rather than running one.
 ##
 ## It does spawn Grandpa, because nothing else does and his placement is
@@ -42,7 +42,7 @@ const BEATS := preload("res://scripts/story/opening_beats.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
@@ -122,7 +122,7 @@ var _choice: int = -1
 ## the picker cannot open the same frame — it waits for the box to clear.
 var _picker_pending: bool = false
 
-## True from the moment a name is confirmed until the pal is standing beside the
+## True from the moment a name is confirmed until the creature is standing beside the
 ## trainer. `adopt_starter` waits for ground, so there are frames in there where
 ## no panel is open and the player must still not be able to walk off.
 var _adopting: bool = false
@@ -141,7 +141,7 @@ func _ready() -> void:
 	# encounter_director spawns its sandbox starter behind
 	# `await get_tree().process_frame`, and every `_ready` in the tree completes
 	# before the next idle frame does — so this is the only window in which the
-	# default pal can be called off. Move it below an await and the player is
+	# default creature can be called off. Move it below an await and the player is
 	# given a terrapup they did not choose, and `adopt_starter` then refuses the
 	# one they did.
 	if _encounter != null:
@@ -186,7 +186,7 @@ func _ready() -> void:
 	# The arbiter becomes the one voice for the prompt line and the one reader of
 	# the interact button. Without this the encounter director keeps its own
 	# hardcoded "Engage X" and two nodes read the same press, so walking between
-	# Grandpa and a wild pal talks to him AND starts a fight.
+	# Grandpa and a wild creature talks to him AND starts a fight.
 	_encounter.call("set_arbiter", _arbiter)
 	# Late binding rather than making the scene set `arbiter.player_path`: this
 	# node already had to be given the player, and two places naming the same
@@ -345,7 +345,7 @@ func _give_items(parts: Array) -> void:
 ##
 ## The fight case is not decoration. `interact` and `combat_charged` are the same
 ## physical button (X), so with the arbiter live during a fight, one press both
-## swings your pal and opens a conversation with Grandpa if the fight happened to
+## swings your creature and opens a conversation with Grandpa if the fight happened to
 ## start near him.
 func _refresh_lockout() -> void:
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
@@ -490,7 +490,7 @@ func _tick_fade(delta: float) -> void:
 ## opening.json's positions.
 ##
 ## Cast parented to this node's PARENT rather than to this node, matching
-## encounter_director: `pal_body` and `npc_body` both find the ground by walking
+## encounter_director: `creature_body` and `npc_body` both find the ground by walking
 ## up the tree looking for `ground_height_at`, and the world root is what offers
 ## it. A creature hung under a plain Node is also outside the 3D transform chain.
 func _spawn_the_cast() -> void:
@@ -706,8 +706,8 @@ func _on_starter_picker_chosen(index: int) -> void:
 	if index < 0 or index >= _starter_species.size():
 		return
 	_choice = index
-	# Naming is mandatory, not skippable (docs/OPENING_SEQUENCE.md): a pal you did
-	# not name is a pal you did not adopt. The panel has no cancel, and the beat
+	# Naming is mandatory, not skippable (docs/OPENING_SEQUENCE.md): a creature you did
+	# not name is a creature you did not adopt. The panel has no cancel, and the beat
 	# does not advance until it comes back with a word.
 	_name_prompt.call("open", _display_name(_starter_species[index]))
 
@@ -751,7 +751,7 @@ func _adopt(index: int, chosen: String) -> void:
 ## and they already work; this reads the result and moves the beat.
 ##
 ## Nothing gates the encounter either, and nothing needs to: the encounter
-## director offers no engagement while the player has no pal, so beats 1 to 5 are
+## director offers no engagement while the player has no creature, so beats 1 to 5 are
 ## already unreachable from a fight.
 
 func _on_combat_entered() -> void:
@@ -773,8 +773,8 @@ func _on_combat_exited(outcome: String) -> void:
 		push_error("combat ended as a catch with nothing caught")
 		return
 	# No nickname. GAME_DESIGN.md 10: a new capture keeps its species name by
-	# default, and `pal_instance.nickname` stays empty so the party screen can
-	# still tell a pal the player never renamed from one they deliberately named
+	# default, and `creature_instance.nickname` stays empty so the party screen can
+	# still tell a creature the player never renamed from one they deliberately named
 	# after its species.
 	if not _give_to_party(kept, ""):
 		push_error("the caught %s never reached the party" % kept.species_id)
@@ -787,7 +787,7 @@ func _on_combat_exited(outcome: String) -> void:
 ##
 ## Not through `scripts/story/party_seam.gd`. That file was written while there
 ## was no autoload to hold a party, and it says so in its own TODO; there is one
-## now, `autoload/party.gd` enforces the five-pal cap in `add()` and nowhere
+## now, `autoload/party.gd` enforces the five-creature cap in `add()` and nowhere
 ## else, and a second path into the party is a second place the cap can be
 ## missed.
 ##
@@ -802,7 +802,7 @@ func _give_to_party(instance: RefCounted, nickname: String) -> bool:
 
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
-		push_error("no Game autoload; the pal exists but nobody owns it")
+		push_error("no Game autoload; the creature exists but nobody owns it")
 		return false
 	var party: RefCounted = game.get("party")
 	if party == null:
@@ -810,9 +810,9 @@ func _give_to_party(instance: RefCounted, nickname: String) -> bool:
 		return false
 
 	if bool(party.call("is_full")):
-		# The opening cannot reach this — it adds two pals to an empty party —
-		# but the sixth-pal release ceremony is real design (GAME_DESIGN.md 3)
-		# and a director that silently dropped a pal would hide the day it starts
+		# The opening cannot reach this — it adds two creatures to an empty party —
+		# but the sixth-creature release ceremony is real design (GAME_DESIGN.md 3)
+		# and a director that silently dropped a creature would hide the day it starts
 		# mattering.
 		push_warning("the party is full; %s was not added" % instance.get("display_name"))
 		return false

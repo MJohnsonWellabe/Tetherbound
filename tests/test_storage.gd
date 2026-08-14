@@ -93,10 +93,10 @@ func test_a_partial_fit_on_deposit_leaves_the_remainder_with_the_player() -> voi
 
 
 func test_storage_never_holds_a_creature_id() -> void:
-	# CLAUDE.md: player can own only five pals, ever, and storage of any kind
+	# CLAUDE.md: player can own only five creatures, ever, and storage of any kind
 	# must never become a way around that. storage_state.gd only ever moves
 	# item ids through Inventory's own {id, n} stack contract — there is no
-	# species/pal-instance path into it at all, which this asserts directly
+	# species/creature-instance path into it at all, which this asserts directly
 	# rather than leaving as an unchecked assumption.
 	for id in db.ids():
 		assert_ne(db.kind(str(id)), "creature",

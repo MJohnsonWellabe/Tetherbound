@@ -9,16 +9,16 @@ extends "res://scripts/ui/menu_tab.gd"
 ## Slot buttons are created ONCE per opening and then only rewritten. Rebuilding
 ## them when the contents change would destroy the focused node, and on a
 ## controller a focus that vanishes mid-press means the cursor cannot be moved
-## at all. This is why `revision()` is constant here while the pal tab's is not.
+## at all. This is why `revision()` is constant here while the creature tab's is not.
 ##
 ## Moving a stack is pick-up-then-place rather than drag. A drag needs a pointer
 ## and this ships on a handheld; two presses of the same button do the same job
 ## with a stick and read the same way with a mouse.
 ##
-## OF2: using a heal item used to always apply to whichever pal was most hurt,
+## OF2: using a heal item used to always apply to whichever creature was most hurt,
 ## with no way for the player to choose. Pressing Use on one now opens a
 ## target picker instead of applying immediately — a second panel of five
-## rows, same shape as the pals tab, confirmed with the SAME button the grid's
+## rows, same shape as the creatures tab, confirmed with the SAME button the grid's
 ## own pick-up-then-place uses (ui_accept, not `interact`, so choosing a
 ## target can never re-trigger Use on the same press). While it is open the
 ## shell is held deaf (`menu.hold_input`, tab_settings.gd's own mechanism for
@@ -43,7 +43,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## the identical glyph the field HUD shows for that same slot.
 const HOTBAR_BADGE_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
 
-## Same button as the pals tab's "set active": use the focused item.
+## Same button as the creatures tab's "set active": use the focused item.
 const USE_ACTION := "interact"
 
 ## Discard the focused stack, after a confirm -- destructive, so it gets one.
@@ -291,7 +291,7 @@ func _build_preview() -> VBoxContainer:
 	return panel
 
 
-## Five rows, same shape as the pals tab's own list — built once, up front,
+## Five rows, same shape as the creatures tab's own list — built once, up front,
 ## and only rewritten, for the same focus-survival reason every other list in
 ## this menu does that.
 func _build_target_panel() -> VBoxContainer:
@@ -302,7 +302,7 @@ func _build_target_panel() -> VBoxContainer:
 	_target_header.add_theme_font_size_override("font_size", 24)
 	panel.add_child(_target_header)
 
-	for i in PARTY.MAX_PALS:
+	for i in PARTY.MAX_CREATURES:
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(620, 64)
 		button.clip_text = true
@@ -318,7 +318,7 @@ func _build_target_panel() -> VBoxContainer:
 
 ## Two rows, built once for the same focus-survival reason as the target
 ## panel above: "Drop it" and "Cancel". Fixed shape, unlike the target panel's
-## five pal rows, because a drop confirmation has nothing to list.
+## five creature rows, because a drop confirmation has nothing to list.
 func _build_confirm_panel() -> VBoxContainer:
 	var panel := VBoxContainer.new()
 	panel.add_theme_constant_override("separation", 8)
@@ -509,13 +509,13 @@ func _on_slot(index: int) -> void:
 ## consumables (opens the target picker below rather than applying
 ## immediately — see the header comment for why), food (D29: restores the
 ## PLAYER's satiety and grants the item's buff — satiety lives on
-## `player_vitals.gd`, never on a pal, so unlike a heal item this applies on
+## `player_vitals.gd`, never on a creature, so unlike a heal item this applies on
 ## this same press with no target to choose), and, R2.2, a damaged tool
 ## (one press repairs it fully, free — GAME_DESIGN.md 19 says "at appropriate
 ## station"; there is no placed workbench yet (R2.7), so this is the whole of
 ## R2.2's "free repair" loop until that station exists to gate it). A tool has
 ## no target to pick, so it still applies on this same press. Polled rather
-## than event-driven for the same reason the pals tab's activate verb is: a
+## than event-driven for the same reason the creatures tab's activate verb is: a
 ## focused Button eats events, and there is always a focused button here.
 func _read_use() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
@@ -572,7 +572,7 @@ func _read_use() -> void:
 	# reads it as Cancel instead (see _read_targeting_cancel) -- the static
 	# footer has to say so too, or it keeps advertising a binding B no longer
 	# has for as long as the picker is open.
-	menu.call("override_footer", "A  Use on this pal        B  Cancel")
+	menu.call("override_footer", "A  Use on this creature        B  Cancel")
 	_content_row.visible = false
 	_target_panel.visible = true
 	_refresh_target_panel()
@@ -732,7 +732,7 @@ func _first_empty_slot(exclude: int) -> int:
 	return -1
 
 
-## The first row that actually holds a pal, so opening the picker focuses
+## The first row that actually holds a creature, so opening the picker focuses
 ## something useful instead of an empty slot the player would have to walk
 ## past first.
 func _first_target_row() -> Control:
@@ -760,14 +760,14 @@ func _refresh_target_panel() -> void:
 
 	for i in _target_rows.size():
 		var button: Button = _target_rows[i]
-		var pal: RefCounted = party.call("at", i)
-		if pal == null:
+		var creature: RefCounted = party.call("at", i)
+		if creature == null:
 			button.text = "  %d.  empty" % (i + 1)
 			button.add_theme_color_override("font_color", Color(0.38, 0.39, 0.37))
 		else:
 			button.text = "%d.  %-16s HP %d / %d" % [
-				i + 1, str(pal.call("label")),
-				int(round(float(pal.get("hp")))), int(round(float(pal.get("max_hp"))))
+				i + 1, str(creature.call("label")),
+				int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))
 			]
 			button.add_theme_color_override("font_color", Color(0.87, 0.89, 0.84))
 
@@ -778,8 +778,8 @@ func _on_target_row(index: int) -> void:
 	if _targeting < 0:
 		return
 	var party: RefCounted = _party()
-	var pal: RefCounted = party.call("at", index) if party != null else null
-	if pal == null:
+	var creature: RefCounted = party.call("at", index) if party != null else null
+	if creature == null:
 		say("Nothing in that slot.")
 		return
 
@@ -795,12 +795,12 @@ func _on_target_row(index: int) -> void:
 	var id := str(stack.get("id", ""))
 	var heal := float((db.call("definition", id) as Dictionary).get("heal", 0.0))
 
-	var restored := float(pal.call("heal", heal))
+	var restored := float(creature.call("heal", heal))
 	if restored <= 0.0:
-		say("%s is already at full health." % str(pal.call("label")))
+		say("%s is already at full health." % str(creature.call("label")))
 		return
 	inventory.call("remove", id, 1)
-	say("%s recovers %d." % [str(pal.call("label")), int(restored)])
+	say("%s recovers %d." % [str(creature.call("label")), int(restored)])
 	_end_targeting()
 
 
@@ -903,7 +903,7 @@ func _verb_hint(id: String, kind: String, def: Dictionary, tool_max: int) -> Str
 	elif float(def.get("satiety", 0.0)) > 0.0:
 		parts.append("A  Eat")
 	elif kind == "consumable" and float(def.get("heal", 0.0)) > 0.0:
-		parts.append("A  Use on a pal")
+		parts.append("A  Use on a creature")
 	parts.append("Drop")
 	var db: RefCounted = _items()
 	if db != null and int(db.call("stack_size", id)) > 1:

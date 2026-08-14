@@ -23,10 +23,10 @@ const LABEL_HEIGHT := 22
 const BACKGROUND := Color(0.07, 0.08, 0.09, 1.0)
 
 ## The UI suite's own filename families (task brief): hud_*, minimap_*,
-## combat_*, pals_tab(.png), ui_*. Filtered rather than "every *.png in the
+## combat_*, creatures_tab(.png), ui_*. Filtered rather than "every *.png in the
 ## dir" so a stray probe/debug frame someone drops in shots/_diag/ later
 ## doesn't silently ride along.
-const PREFIXES := ["hud_", "minimap_", "combat_", "ui_", "pals_tab"]
+const PREFIXES := ["hud_", "minimap_", "combat_", "ui_", "creatures_tab"]
 
 
 func _init() -> void:

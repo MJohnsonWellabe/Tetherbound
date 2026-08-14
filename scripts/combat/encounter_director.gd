@@ -1,6 +1,6 @@
 extends Node
 
-## Everything around a fight that is not the fight: spawning the wild pal,
+## Everything around a fight that is not the fight: spawning the wild creature,
 ## offering the engage prompt, suspending exploration, and putting the world
 ## back afterwards.
 ##
@@ -14,37 +14,37 @@ extends Node
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
-## D30: wild pals spawn inside a level band rather than at one fixed level.
-const PROGRESSION := preload("res://scripts/pals/progression.gd")
-const PAL_INSTANCE := preload("res://scripts/pals/pal_instance.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+## D30: wild creatures spawn inside a level band rather than at one fixed level.
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
 const CAUGHT := "caught"
-const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
-## pal.tscn carries no script; one body shape serves both roles and the script
+const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
+## creature.tscn carries no script; one body shape serves both roles and the script
 ## is chosen here. The alternative is two near-identical scenes, which means
 ## M11's real creature model has to be wired into the game twice.
-const WILD_SCRIPT := preload("res://scripts/pals/wild_pal.gd")
-## The player's own pal walks around the world now instead of appearing for a
+const WILD_SCRIPT := preload("res://scripts/creatures/wild_creature.gd")
+## The player's own creature walks around the world now instead of appearing for a
 ## fight, so it gets the follower subclass rather than the bare body.
-const FOLLOWER_SCRIPT := preload("res://scripts/pals/follower_pal.gd")
+const FOLLOWER_SCRIPT := preload("res://scripts/creatures/follower_creature.gd")
 const OPENING_CONFIG := "res://data/config/opening.json"
 
 signal prompt_changed(text: String)
 
-## The pal the player starts the SANDBOX with.
+## The creature the player starts the SANDBOX with.
 ##
-## This was `const STARTER_SPECIES := "terrapup"`, which meant the player's pal
+## This was `const STARTER_SPECIES := "terrapup"`, which meant the player's creature
 ## was decided in code and the starter choice had nowhere to attach. It is a
 ## sandbox convenience now and nothing else: `meadows_playground.tscn` is the
 ## combat testbed and five smoke tests need something to fight with the moment
 ## they boot.
 ##
 ## The real game does not use it. `scripts/story/sequence_director.gd` calls
-## `suspend_default_starter()` before this node spawns anything, and the pal the
+## `suspend_default_starter()` before this node spawns anything, and the creature the
 ## player actually owns arrives through `adopt_starter()` — chosen by walking up
 ## to one of three creatures, and named.
 @export var default_starter: String = "terrapup"
@@ -68,7 +68,7 @@ const DEFAULT_RESPAWN_DELAY := 45.0
 var _player: CharacterBody3D = null
 var _manager: Node = null
 var _camera_rig: Node = null
-var _wild_pals: Array[Node3D] = []
+var _wild_creatures: Array[Node3D] = []
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
 var _ally: RefCounted = null
@@ -76,7 +76,7 @@ var _ally: RefCounted = null
 var _engage_range: float = 6.0
 var _prompt: String = ""
 
-## `CO1`. The last `Game.party.revision` `_sync_active_pal()` acted on, so a
+## `CO1`. The last `Game.party.revision` `_sync_active_creature()` acted on, so a
 ## party-screen re-activation is caught exactly once instead of every frame.
 var _party_revision_seen: int = -1
 
@@ -88,7 +88,7 @@ var _party_revision_seen: int = -1
 ## moves out to the arbiter and this becomes one voice among several.
 var _arbiter: Node = null
 
-## Pals waiting on their faint to clear, and on their respawn. Keyed by node, so
+## Creatures waiting on their faint to clear, and on their respawn. Keyed by node, so
 ## two creatures can be knocked out at once without one cancelling the other's
 ## timer — which is the bug a single shared `_respawn_left` would have.
 var _faint_timers: Dictionary = {}
@@ -98,7 +98,7 @@ var _respawn_timers: Dictionary = {}
 ## this list is the seam they attach to, exactly as CombatManager's `_party` and
 ## `_active_index` are the seam for switching.
 ##
-## CLAUDE.md forbids implementing storage beyond five pals. This is not storage —
+## CLAUDE.md forbids implementing storage beyond five creatures. This is not storage —
 ## it is a milestone-local record that catching worked, and M4 replaces it.
 var _caught: Array[RefCounted] = []
 
@@ -120,7 +120,7 @@ func _ready() -> void:
 	await _spawn_creatures()
 
 
-## How many physics frames to keep trying to stand the wild pal on the ground.
+## How many physics frames to keep trying to stand the wild creature on the ground.
 ##
 ## Terrain3D builds its collision over several frames after the data directory
 ## loads, and a raycast before then hits nothing. The first version of this
@@ -158,7 +158,7 @@ func _spawn_creatures() -> void:
 		rng.seed = hash("wild_spawn_%d" % index)
 
 		for n in count:
-			var wild: Node3D = PAL_SCENE.instantiate()
+			var wild: Node3D = CREATURE_SCENE.instantiate()
 			# Indexed, because clusters exist now. Two nodes both named
 			# "Wild_bramblebun" under one parent would be silently auto-renamed
 			# by the engine, and a name nobody chose is a name no log line or
@@ -177,20 +177,20 @@ func _spawn_creatures() -> void:
 			_roll_wild_level(wild, species, rng)
 			wild.call("configure", MATH.config().get("wild", {}))
 			wild.set("home", wild.global_position)
-			# An aggressive pal asks; this node decides. Keeping the decision
+			# An aggressive creature asks; this node decides. Keeping the decision
 			# here means every route into a fight goes through one place, so a
 			# new one cannot forget to suspend exploration or hand over the
 			# camera.
 			wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
-			_wild_pals.append(wild)
+			_wild_creatures.append(wild)
 
 	if default_starter != "":
 		# Awaited: `adopt_starter` waits for ground under the spawn point, so
-		# calling it bare would hand back a coroutine and leave the pal unplaced.
+		# calling it bare would hand back a coroutine and leave the creature unplaced.
 		await adopt_starter(default_starter)
 
 
-## Give a freshly `populate()`d wild pal a rolled level (D30), replacing the
+## Give a freshly `populate()`d wild creature a rolled level (D30), replacing the
 ## flat level-1 instance `populate()` just built with one rolled against
 ## `progression.json`'s `level.wild_band`.
 ##
@@ -210,7 +210,7 @@ func _spawn_creatures() -> void:
 func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator) -> void:
 	var cfg: Dictionary = PROGRESSION.config()
 	var definition: Dictionary = SPECIES.definition(species)
-	var leveled: RefCounted = PAL_INSTANCE.from_species(species, definition, rng.randf(), cfg)
+	var leveled: RefCounted = CREATURE_INSTANCE.from_species(species, definition, rng.randf(), cfg)
 	wild.set("instance", leveled)
 
 
@@ -224,7 +224,7 @@ func _vector3_of(raw: Variant) -> Vector3:
 	return Vector3(float(list[0]), float(list[1]), float(list[2]))
 
 
-## Do not spawn the sandbox's default pal; the story is granting one.
+## Do not spawn the sandbox's default creature; the story is granting one.
 ##
 ## Called from the sequence director's `_ready`, which is guaranteed to have run
 ## by the time `_spawn_creatures` gets here: the spawn is behind
@@ -234,9 +234,9 @@ func suspend_default_starter() -> void:
 	default_starter = ""
 
 
-## Give the player a pal, and put it in the world beside them.
+## Give the player a creature, and put it in the world beside them.
 ##
-## This is the inversion the opening needed. The pal used to be instanced with
+## This is the inversion the opening needed. The creature used to be instanced with
 ## `visible = false` and switched on for the length of a fight; now it is
 ## visible, standing on the ground, and following. A creature that exists only
 ## while you are hitting something with it is a weapon, not a companion.
@@ -245,54 +245,54 @@ func suspend_default_starter() -> void:
 ## health in the world.
 func adopt_starter(species_id: String, nickname: String = "") -> bool:
 	if _ally_body != null and is_instance_valid(_ally_body):
-		push_error("the player already has a pal; adopt_starter is not a swap")
+		push_error("the player already has a creature; adopt_starter is not a swap")
 		return false
 
-	var pal: RefCounted = SPECIES.spawn(species_id)
-	if pal == null:
+	var creature: RefCounted = SPECIES.spawn(species_id)
+	if creature == null:
 		push_error("starter species '%s' is missing from species.json" % species_id)
 		return false
 	# D30: a starter arrives a little ahead of the wildest thing in the yard.
 	var progression_cfg: Dictionary = PROGRESSION.config()
-	pal.set_level(int(progression_cfg.get("level", {}).get("starter_level", 3)), progression_cfg)
+	creature.set_level(int(progression_cfg.get("level", {}).get("starter_level", 3)), progression_cfg)
 	if nickname != "":
 		# nickname, not display_name — the same bug already fixed in
-		# party_seam.gd. pal_instance.label() reads nickname first and falls
+		# party_seam.gd. creature_instance.label() reads nickname first and falls
 		# back to display_name, so overwriting display_name instead loses the
 		# species name for good: a Terrapup named "Bud" would show as "Bud"
 		# everywhere, including the places that specifically want to say what
 		# kind of creature it is.
-		pal.nickname = nickname
+		creature.nickname = nickname
 
-	return await _spawn_ally_body(pal)
+	return await _spawn_ally_body(creature)
 
 
-## Instances a following body for `pal` and stands it up beside the trainer.
-## Shared by `adopt_starter()` (the very first pal, a brand new instance) and
-## `summon_active_pal()` (`CO1` — recalling a pal the party already owns). The
+## Instances a following body for `creature` and stands it up beside the trainer.
+## Shared by `adopt_starter()` (the very first creature, a brand new instance) and
+## `summon_active_creature()` (`CO1` — recalling a creature the party already owns). The
 ## RefCounted stats are the caller's; this only ever builds the visible body
 ## around them.
-func _spawn_ally_body(pal: RefCounted) -> bool:
-	_ally = pal
+func _spawn_ally_body(creature: RefCounted) -> bool:
+	_ally = creature
 
 	# Instanced hidden and only shown once it is standing on the ground. An
-	# invisible body is switched off entirely (pal_body._on_visibility_changed),
+	# invisible body is switched off entirely (creature_body._on_visibility_changed),
 	# and a VISIBLE one at the world origin is a solid capsule inside the
 	# terrain — or inside the trainer, which is the overlap that once launched
 	# the player off the playground at 500 m/s.
-	_ally_body = PAL_SCENE.instantiate()
-	_ally_body.name = "AllyPal"
+	_ally_body = CREATURE_SCENE.instantiate()
+	_ally_body.name = "AllyCreature"
 	_ally_body.set_script(FOLLOWER_SCRIPT)
 	_ally_body.visible = false
 	get_parent().add_child(_ally_body)
-	_ally_body.call("setup", pal.species_id)
+	_ally_body.call("setup", creature.species_id)
 	_ally_body.call("configure_following", _follower_config())
 	_ally_body.set("leader", _player)
 
 	# Behind the trainer's right shoulder, which is where it will settle anyway.
 	var spot := _player.global_position - _player.global_basis.z * 2.4 + _player.global_basis.x * 1.2
 	if not await _stand_on_ground(_ally_body, spot):
-		push_error("no ground beside the trainer to put their pal on")
+		push_error("no ground beside the trainer to put their creature on")
 	_ally_body.visible = true
 	_ally_body.call("face_towards", _player.global_position)
 	_ally_body.call("set_following", true)
@@ -318,7 +318,7 @@ func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 	return false
 
 
-## The spawn table, loaded once. Cached because wild_pal()/aggressive_pal() are
+## The spawn table, loaded once. Cached because wild_creature()/aggressive_creature() are
 ## called from prompts and tests every frame, and re-reading a file per frame to
 ## answer "which species is the practice one" would be absurd.
 var _spawns_cfg: Dictionary = {}
@@ -351,19 +351,19 @@ func _role_species(role: String) -> String:
 	return str(roles.get(role, ""))
 
 
-## The peaceful practice pal. Named for what it is used for rather than by
+## The peaceful practice creature. Named for what it is used for rather than by
 ## species or index, so tests and tools do not silently start pointing at a
 ## different creature when the spawn table changes.
-func wild_pal() -> Node3D:
+func wild_creature() -> Node3D:
 	return _wild_of_species(_role_species("practice"))
 
 
-func aggressive_pal() -> Node3D:
+func aggressive_creature() -> Node3D:
 	return _wild_of_species(_role_species("aggressor"))
 
 
-func wild_pals() -> Array[Node3D]:
-	return _wild_pals
+func wild_creatures() -> Array[Node3D]:
+	return _wild_creatures
 
 
 func caught() -> Array[RefCounted]:
@@ -372,13 +372,13 @@ func caught() -> Array[RefCounted]:
 
 ## The NEAREST live instance of a species, now that a species can spawn as a
 ## cluster. First-found was fine when each species existed exactly once; with
-## three bramblebuns, "the practice pal" has to mean the one the player is
+## three bramblebuns, "the practice creature" has to mean the one the player is
 ## actually standing next to, or the engage-prompt tests would assert against a
 ## creature forty metres away.
 func _wild_of_species(id: String) -> Node3D:
 	var best: Node3D = null
 	var best_distance := INF
-	for wild in _wild_pals:
+	for wild in _wild_creatures:
 		if not is_instance_valid(wild) or str(wild.get("species_id")) != id:
 			continue
 		if _player == null:
@@ -398,7 +398,7 @@ func ally_instance() -> RefCounted:
 	return _ally
 
 
-## `CO1`. `Game.party`, the same autoload `tab_pals.gd` reads and writes.
+## `CO1`. `Game.party`, the same autoload `tab_creatures.gd` reads and writes.
 ## Reached through `/root/Game` rather than the bare `Game` autoload name —
 ## `scripts/story/party_seam.gd`'s header explains why: the unit suite runs
 ## scripts under `--script`, which starts no autoloads at all, and this exact
@@ -412,7 +412,7 @@ func _party() -> RefCounted:
 ## Refuses mid-fight — the combat manager drives this same body while a fight
 ## is running, and freeing it out from under one is exactly the failure mode
 ## `_set_exploration_active()`'s own comment already warns about.
-func dismiss_active_pal() -> bool:
+func dismiss_active_creature() -> bool:
 	if _ally_body == null or not is_instance_valid(_ally_body):
 		return false
 	if _manager != null and bool(_manager.call("is_fighting")):
@@ -423,12 +423,12 @@ func dismiss_active_pal() -> bool:
 	return true
 
 
-## `CO1`: bring `Game.party`'s active pal out, if none is out already. Which
+## `CO1`: bring `Game.party`'s active creature out, if none is out already. Which
 ## slot is active is the party screen's own idea — set from "send this one out
-## first", `tab_pals.gd::_read_activate()` — and until this, nothing ever read
-## it back: choosing a different pal there had no effect on who was actually
+## first", `tab_creatures.gd::_read_activate()` — and until this, nothing ever read
+## it back: choosing a different creature there had no effect on who was actually
 ## standing beside the trainer.
-func summon_active_pal() -> bool:
+func summon_active_creature() -> bool:
 	if _ally_body != null and is_instance_valid(_ally_body):
 		return false
 	if _manager != null and bool(_manager.call("is_fighting")):
@@ -436,19 +436,19 @@ func summon_active_pal() -> bool:
 	var party := _party()
 	if party == null:
 		return false
-	var pal: RefCounted = party.call("active")
-	if pal == null or bool(pal.get("fainted")):
+	var creature: RefCounted = party.call("active")
+	if creature == null or bool(creature.get("fainted")):
 		return false
-	return await _spawn_ally_body(pal)
+	return await _spawn_ally_body(creature)
 
 
 ## `CO1`: the third of "dismissed, recalled and swapped" — a party-screen
-## re-activation reaching the pal actually on the ground. Polled against
+## re-activation reaching the creature actually on the ground. Polled against
 ## `party.revision` rather than a signal, the same choice `autoload/party.gd`
 ## and `autoload/inventory.gd` already made and explain in their own headers:
 ## a focused menu Button eats events, so the thing that has to notice a change
 ## made from inside one polls instead.
-func _sync_active_pal() -> void:
+func _sync_active_creature() -> void:
 	var party := _party()
 	if party == null:
 		return
@@ -457,47 +457,47 @@ func _sync_active_pal() -> void:
 		return
 	_party_revision_seen = revision
 	if _ally_body == null or not is_instance_valid(_ally_body):
-		return  # Nothing out to swap; the new active pal comes out on next recall.
+		return  # Nothing out to swap; the new active creature comes out on next recall.
 	if _manager != null and bool(_manager.call("is_fighting")):
 		return  # Never mid-fight — `_start_fight` already snapshotted who is in it.
-	var active_pal: RefCounted = party.call("active")
-	if active_pal == null or active_pal == _ally:
-		return  # The change wasn't to the pal that is actually out.
-	dismiss_active_pal()
-	summon_active_pal()
+	var active_creature: RefCounted = party.call("active")
+	if active_creature == null or active_creature == _ally:
+		return  # The change wasn't to the creature that is actually out.
+	dismiss_active_creature()
+	summon_active_creature()
 
 
 ## `CO1`'s bound action, read whenever nothing else owns it. Guarded the same
 ## way `_read_engage_input()` is: no reading past a running fight, since the
 ## combat manager drives `_ally_body` for the length of one.
-func _read_pal_control_input() -> void:
+func _read_creature_control_input() -> void:
 	if _manager != null and bool(_manager.call("is_fighting")):
 		return
-	if not Input.is_action_just_pressed("pal_recall"):
+	if not Input.is_action_just_pressed("creature_recall"):
 		return
 	if _ally_body != null and is_instance_valid(_ally_body):
-		dismiss_active_pal()
+		dismiss_active_creature()
 	else:
-		summon_active_pal()
+		summon_active_creature()
 
 
 ## The non-actionable status line `interaction_offer()` falls back to once
 ## nothing nearby is offering anything else — see that function's own comment
 ## on why `PROMPTS`'s single line can carry a second button's prompt at all.
-func _pal_control_offer() -> Dictionary:
+func _creature_control_offer() -> Dictionary:
 	if _ally_body != null and is_instance_valid(_ally_body):
 		if _ally == null:
 			return {}
 		return PROMPTS.offer(
-			"%s%sPut %s away" % [INPUT_GLYPH.icon("pal_recall"), PROMPTS.GAP, _ally.label()],
+			"%s%sPut %s away" % [INPUT_GLYPH.icon("creature_recall"), PROMPTS.GAP, _ally.label()],
 			0.0, -1, false
 		)
 	var party := _party()
-	var pal: RefCounted = party.call("active") if party != null else null
-	if pal == null or bool(pal.get("fainted")):
+	var creature: RefCounted = party.call("active") if party != null else null
+	if creature == null or bool(creature.get("fainted")):
 		return {}
 	return PROMPTS.offer(
-		"%s%sCall out %s" % [INPUT_GLYPH.icon("pal_recall"), PROMPTS.GAP, pal.label()],
+		"%s%sCall out %s" % [INPUT_GLYPH.icon("creature_recall"), PROMPTS.GAP, creature.label()],
 		0.0, -1, false
 	)
 
@@ -512,7 +512,7 @@ func prompt() -> String:
 
 
 ## `EV9-double-prompt`: is `prompt()` right now genuinely this node's own
-## offer (engage, the fainted statement, the pal-control fallback), or is it
+## offer (engage, the fainted statement, the creature-control fallback), or is it
 ## mirroring whatever unrelated provider is winning the shared arbiter
 ## (Grandpa, a starter, a harvest node)? `combat_hud.gd` needs this to know
 ## whether its prompt row should draw at all outside a fight — the row exists
@@ -550,7 +550,7 @@ func set_arbiter(node: Node) -> void:
 func interaction_offer(from: Vector3) -> Dictionary:
 	if _manager == null or bool(_manager.call("is_fighting")):
 		return {}
-	# A statement rather than an offer, and it outranks everything: with no pal
+	# A statement rather than an offer, and it outranks everything: with no creature
 	# on its feet there is nothing to fight with, and a "[X] Engage" line the
 	# button refuses is worse than being told why.
 	if _ally != null and _ally.fainted:
@@ -561,21 +561,21 @@ func interaction_offer(from: Vector3) -> Dictionary:
 			"Engage %s" % str(candidate.get("display_name")),
 			from.distance_to(candidate.global_position)
 		)
-	return _pal_control_offer()
+	return _creature_control_offer()
 
 
 func interaction_activate() -> void:
 	var candidate := _engageable()
 	if candidate == null:
 		return
-	# For a PEACEFUL pal this press is the only way in. GAME_DESIGN.md §14
+	# For a PEACEFUL creature this press is the only way in. GAME_DESIGN.md §14
 	# forbids proximity starting a fight with one.
 	_start_fight(candidate)
 
 
 func _process(delta: float) -> void:
 	_tick_respawn(delta)
-	_sync_active_pal()
+	_sync_active_creature()
 	_update_prompt()
 
 
@@ -588,7 +588,7 @@ func _process(delta: float) -> void:
 ## that captured four frames of a fight that had never started.
 func _physics_process(_delta: float) -> void:
 	_read_engage_input()
-	_read_pal_control_input()
+	_read_creature_control_input()
 
 
 ## Two clocks per knocked-out creature: how long its body lies there, and how
@@ -616,7 +616,7 @@ func _tick_respawn(delta: float) -> void:
 			# running dry is a real state the game is allowed to reach.
 
 
-## The nearest wild pal the player could choose to fight right now.
+## The nearest wild creature the player could choose to fight right now.
 func _engageable() -> Node3D:
 	if _ally == null or _manager == null or _ally.fainted:
 		return null
@@ -625,7 +625,7 @@ func _engageable() -> Node3D:
 
 	var best: Node3D = null
 	var best_distance := _engage_range
-	for wild in _wild_pals:
+	for wild in _wild_creatures:
 		if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 			continue
 		var distance := _player.global_position.distance_to(wild.global_position)
@@ -650,7 +650,7 @@ func _update_prompt() -> void:
 		if candidate != null:
 			text = "%s   Engage %s" % [INPUT_GLYPH.icon("interact"), str(candidate.get("display_name"))]
 		else:
-			text = str(_pal_control_offer().get("label", ""))
+			text = str(_creature_control_offer().get("label", ""))
 	if text != _prompt:
 		_prompt = text
 		prompt_changed.emit(text)
@@ -668,16 +668,16 @@ func _read_engage_input() -> void:
 	var candidate := _engageable()
 	if candidate == null:
 		return
-	# For a PEACEFUL pal this press is the only way in. GAME_DESIGN.md §14
+	# For a PEACEFUL creature this press is the only way in. GAME_DESIGN.md §14
 	# forbids proximity starting a fight with one, and nothing but this line
 	# starts a fight with Bramblebun.
 	_start_fight(candidate)
 
 
-## An aggressive pal has reached the trainer and is starting the fight itself.
+## An aggressive creature has reached the trainer and is starting the fight itself.
 ##
-## §14 lists "Aggressive pal initiates" beside the player's own routes in, and
-## scopes the "not simple proximity" rule to peaceful pals. This is that other
+## §14 lists "Aggressive creature initiates" beside the player's own routes in, and
+## scopes the "not simple proximity" rule to peaceful creatures. This is that other
 ## route, and it is guarded rather than trusted: the creature asks, and gets
 ## refused if a fight is already running or the player has nothing to fight with.
 func _on_wild_wants_to_engage(wild: Node3D) -> void:

@@ -147,7 +147,7 @@ func test_the_tutorial_creature_is_the_one_with_the_best_catch_rate() -> void:
 	# docs/OPENING_SEQUENCE.md: chosen so the tutorial catch cannot fail twice.
 	var id := str(BEATS.encounter().get("species", ""))
 	assert_ne(id, "", "beat 6 needs a creature to walk out to")
-	var species := preload("res://scripts/pals/pal_species.gd")
+	var species := preload("res://scripts/creatures/creature_species.gd")
 	assert_true(species.has(id), "the opening's wild creature '%s' is not in species.json" % id)
 	var best := species.catch_rate(id)
 	for other: String in species.table():

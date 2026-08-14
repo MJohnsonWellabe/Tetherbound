@@ -55,7 +55,7 @@ weights from `skin_transfer.py`, which copies them off this rig by nearest-
 face interpolation:
 
     rig_bird.py     clean.glb    --out rigged_clean.glb     # this file
-    skin_transfer.py rigged_clean.glb textured.glb --out pal_<species>.glb
+    skin_transfer.py rigged_clean.glb textured.glb --out creature_<species>.glb
 
 Run inspect_glb.py on the result: skin_transfer exports with the exporter's
 default animation mode rather than NLA_TRACKS, and the clips authored here
@@ -81,7 +81,7 @@ measured rather than eyeballed:
 
   ernie-the-duck.glb    0.87 m, legs 19% of height, wings 1.87x torso -> folded
   ollie-the-songbird    0.86 m, legs not measurable (fell back), 2.00x -> folded
-  pal_galewisp_lod0     2.08 m, legs 8%, wings 3.71x torso -> SPREAD
+  creature_galewisp_lod0     2.08 m, legs 8%, wings 3.71x torso -> SPREAD
 
 All three: 19 bones, one root, six clips, 0 unweighted vertices (the duck has
 3 of 6953, from its own non-manifold geometry). Re-imported, the walk's two
@@ -166,8 +166,8 @@ QUADRUPED_GAP = 0.15
 FPS = 24
 
 ## name -> (frames, loops). Same six roles and the same six names as every
-## other creature in the roster, because data/pals/species.json maps roles to
-## clips by exact string and pal_animator.gd retargets nothing.
+## other creature in the roster, because data/creatures/species.json maps roles to
+## clips by exact string and creature_animator.gd retargets nothing.
 CLIPS = {
     "idle": (72, True),
     "walk": (32, True),
@@ -179,7 +179,7 @@ CLIPS = {
 
 ## IDLE AMPLITUDE — the deliberate part of this file.
 ##
-## HANDOFF.md §6: pals are owner-reported as "static posed and sliding around"
+## HANDOFF.md §6: creatures are owner-reported as "static posed and sliding around"
 ## in combat, and the best remaining lead is that Terrapup's idle moves bones
 ## by 0.088 against 1.53 for its walk — about 6% — while a creature in combat
 ## is in idle almost all of the time. An idle that subtle is indistinguishable
@@ -306,7 +306,7 @@ def purge_incoming_animation() -> None:
     objects. Join those objects and the surviving object keeps its animation
     data; export afterwards and the six clips this script authors ship
     alongside a few hundred inherited ones, several of which drive the object
-    origin — which the game forbids, because pal_body drives position itself.
+    origin — which the game forbids, because creature_body drives position itself.
     """
     dropped = 0
     for obj in bpy.data.objects:
@@ -836,7 +836,7 @@ def strip_scene(body, rig) -> None:
     `arm_l`, a `root` that is not this rig's root. Exporting with
     `select_all(SELECT)` shipped the whole tree as extra glTF nodes, so the
     file had two things called root and a scene root named after the source
-    pack. Godot would load it, but pal_body would be fitting a scene with
+    pack. Godot would load it, but creature_body would be fitting a scene with
     named nodes nobody meant to ship.
     """
     keep = {body, rig}
@@ -1336,8 +1336,8 @@ def set_loop_flag(action, looping: bool) -> None:
 
     Honest note on what this does and does not achieve. glTF has no loop flag;
     Godot's importer only infers one from a clip name ending in `-loop`, and
-    these clips cannot use that suffix because data/pals/species.json maps
-    roles to clip names by exact string. pal_animator.gd therefore sets
+    these clips cannot use that suffix because data/creatures/species.json maps
+    roles to clip names by exact string. creature_animator.gd therefore sets
     `loop_mode` at runtime, which HANDOFF.md §6 already confirms is happening.
 
     So the flag that survives to the game is not a bit in the file, it is the
@@ -1350,7 +1350,7 @@ def set_loop_flag(action, looping: bool) -> None:
     if hasattr(action, "use_cyclic"):
         action.use_cyclic = looping
     if not looping:
-        # A one-shot must hold its final pose while pal_animator's `_hold`
+        # A one-shot must hold its final pose while creature_animator's `_hold`
         # timer runs out; constant extrapolation is what does that.
         for curve in action.fcurves:
             curve.extrapolation = "CONSTANT"

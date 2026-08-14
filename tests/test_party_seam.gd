@@ -13,7 +13,7 @@ extends "res://tests/test_case.gd"
 ##
 ## which is true for every possible value of `answer`. It asserted nothing. Under
 ## it, the seam looked up `/root/GameState` (the autoload is `Game`) and called
-## `add_pal()` / `party()` / `party_is_full()` (the real API is `Game.party.add()`
+## `add_creature()` / `party()` / `party_is_full()` (the real API is `Game.party.add()`
 ## / `.members()` / `.is_full()`), so the real path was unreachable — the seam ran
 ## a phantom party beside the real one and every test here passed.
 ##
@@ -46,7 +46,7 @@ extends "res://tests/test_case.gd"
 ## file assumes.
 
 const SEAM := preload("res://scripts/story/party_seam.gd")
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PARTY := preload("res://autoload/party.gd")
 
 
@@ -77,11 +77,11 @@ func after_each() -> void:
 # runner, and what it played on for real while the seam was broken.
 
 
-func test_a_chosen_pal_joins_the_party() -> void:
-	var pal: RefCounted = SPECIES.spawn("terrapup")
-	assert_true(SEAM.add(pal, "Biscuit"))
+func test_a_chosen_creature_joins_the_party() -> void:
+	var creature: RefCounted = SPECIES.spawn("terrapup")
+	assert_true(SEAM.add(creature, "Biscuit"))
 	assert_eq(SEAM.size(), 1)
-	assert_eq(SEAM.party()[0], pal)
+	assert_eq(SEAM.party()[0], creature)
 
 
 ## The name is the whole point of the naming beat, and it has to be visible
@@ -89,30 +89,30 @@ func test_a_chosen_pal_joins_the_party() -> void:
 ## all read.
 ##
 ## It must NOT be written over `display_name`. That is the species name, and
-## `tests/test_pal_nickname.gd` requires it to survive being nicknamed over: a
+## `tests/test_creature_nickname.gd` requires it to survive being nicknamed over: a
 ## party screen has to be able to tell a Terrapup nobody renamed from one the
 ## player deliberately named "Terrapup". The seam used to overwrite it, which is
 ## the same wrong guess that produced the phantom party — written before
 ## `nickname` existed and never revisited once it did.
-func test_naming_a_pal_changes_the_name_the_game_shows() -> void:
-	var pal: RefCounted = SPECIES.spawn("terrapup")
-	assert_eq(pal.label(), "Terrapup", "before naming, it is its species")
-	SEAM.add(pal, "Biscuit")
-	assert_eq(pal.label(), "Biscuit", "the name the player typed is the name shown")
-	assert_eq(pal.nickname, "Biscuit", "and it is stored as a nickname")
-	assert_eq(pal.display_name, "Terrapup", "the species name must survive being nicknamed over")
+func test_naming_a_creature_changes_the_name_the_game_shows() -> void:
+	var creature: RefCounted = SPECIES.spawn("terrapup")
+	assert_eq(creature.label(), "Terrapup", "before naming, it is its species")
+	SEAM.add(creature, "Biscuit")
+	assert_eq(creature.label(), "Biscuit", "the name the player typed is the name shown")
+	assert_eq(creature.nickname, "Biscuit", "and it is stored as a nickname")
+	assert_eq(creature.display_name, "Terrapup", "the species name must survive being nicknamed over")
 
 
 func test_an_empty_name_leaves_the_species_name_alone() -> void:
-	# The catch in beat 8 adds a pal without asking for a name; only the starter
+	# The catch in beat 8 adds a creature without asking for a name; only the starter
 	# is named. A blank must not blank the creature out.
-	var pal: RefCounted = SPECIES.spawn("bramblebun")
-	SEAM.add(pal)
-	assert_eq(pal.label(), "Bramblebun")
-	assert_eq(pal.nickname, "", "no name typed means no nickname, not an empty one")
+	var creature: RefCounted = SPECIES.spawn("bramblebun")
+	SEAM.add(creature)
+	assert_eq(creature.label(), "Bramblebun")
+	assert_eq(creature.nickname, "", "no name typed means no nickname, not an empty one")
 
 
-func test_the_opening_adds_two_pals_and_the_party_holds_both() -> void:
+func test_the_opening_adds_two_creatures_and_the_party_holds_both() -> void:
 	SEAM.add(SPECIES.spawn("terrapup"), "Biscuit")
 	SEAM.add(SPECIES.spawn("bramblebun"))
 	assert_eq(SEAM.size(), 2)
@@ -120,12 +120,12 @@ func test_the_opening_adds_two_pals_and_the_party_holds_both() -> void:
 
 
 ## CLAUDE.md's first hard rule. The opening can never reach it, but a seam that
-## silently dropped the sixth pal would hide the day it starts mattering.
-func test_the_sixth_pal_is_refused_rather_than_dropped() -> void:
+## silently dropped the sixth creature would hide the day it starts mattering.
+func test_the_sixth_creature_is_refused_rather_than_dropped() -> void:
 	for i in SEAM.PARTY_LIMIT:
-		assert_true(SEAM.add(SPECIES.spawn("bramblebun")), "pal %d should fit" % i)
+		assert_true(SEAM.add(SPECIES.spawn("bramblebun")), "creature %d should fit" % i)
 	assert_true(SEAM.is_full())
-	assert_false(SEAM.add(SPECIES.spawn("bramblebun")), "a sixth pal must be refused")
+	assert_false(SEAM.add(SPECIES.spawn("bramblebun")), "a sixth creature must be refused")
 	assert_eq(SEAM.size(), SEAM.PARTY_LIMIT, "and must not have been stored anyway")
 
 
@@ -138,7 +138,7 @@ func test_adding_nothing_is_refused() -> void:
 ## `autoload/party.gd` ever moved off five, a seam still refusing at its own
 ## five — or worse, at six — would be a storage system CLAUDE.md forbids twice.
 func test_the_fallback_refuses_at_the_same_number_the_real_party_does() -> void:
-	assert_eq(SEAM.PARTY_LIMIT, PARTY.MAX_PALS)
+	assert_eq(SEAM.PARTY_LIMIT, PARTY.MAX_CREATURES)
 
 
 # --- the real party ---------------------------------------------------------
@@ -163,23 +163,23 @@ func test_the_seam_knows_whether_the_real_party_has_landed_yet() -> void:
 	)
 
 
-## The failure that started all of this: a pal added through the seam has to end
+## The failure that started all of this: a creature added through the seam has to end
 ## up in the party the rest of the game reads. Not in a list beside it.
-func test_a_pal_added_through_the_seam_lands_in_the_real_party() -> void:
+func test_a_creature_added_through_the_seam_lands_in_the_real_party() -> void:
 	var party := _install_the_party()
-	var pal: RefCounted = SPECIES.spawn("terrapup")
+	var creature: RefCounted = SPECIES.spawn("terrapup")
 
-	assert_true(SEAM.add(pal, "Biscuit"))
-	assert_eq(int(party.size()), 1, "the pal never reached Game.party")
-	assert_eq(party.members()[0], pal, "Game.party holds something else")
-	assert_eq(pal.label(), "Biscuit", "the naming beat has to survive the real path too")
+	assert_true(SEAM.add(creature, "Biscuit"))
+	assert_eq(int(party.size()), 1, "the creature never reached Game.party")
+	assert_eq(party.members()[0], creature, "Game.party holds something else")
+	assert_eq(creature.label(), "Biscuit", "the naming beat has to survive the real path too")
 
 
 ## The phantom party, asserted directly.
 ##
 ## With a real party present the seam must keep NOTHING of its own. If it stores
-## the pal in both places the party screen looks right and the counts drift
-## apart later; if it stores it only in the fallback, the pal is gone the moment
+## the creature in both places the party screen looks right and the counts drift
+## apart later; if it stores it only in the fallback, the creature is gone the moment
 ## anything reads `Game.party` — which is what shipped.
 func test_the_seam_keeps_no_party_of_its_own_while_the_real_one_is_there() -> void:
 	var party := _install_the_party()
@@ -201,7 +201,7 @@ func test_the_seam_reads_the_party_rather_than_remembering_it() -> void:
 	var straight_in: RefCounted = SPECIES.spawn("ripplet")
 	party.add(straight_in)
 
-	assert_eq(SEAM.size(), 1, "a pal added without the seam is still in the party the seam reports")
+	assert_eq(SEAM.size(), 1, "a creature added without the seam is still in the party the seam reports")
 	assert_eq(SEAM.party()[0], straight_in)
 
 
@@ -214,7 +214,7 @@ func test_what_the_seam_hands_back_cannot_be_appended_to() -> void:
 
 	var handed_out: Array = SEAM.party()
 	handed_out.append(SPECIES.spawn("bramblebun"))
-	assert_eq(int(party.size()), 1, "appending to the returned array added a pal to the party")
+	assert_eq(int(party.size()), 1, "appending to the returned array added a creature to the party")
 	assert_eq(SEAM.size(), 1)
 
 
@@ -222,15 +222,15 @@ func test_what_the_seam_hands_back_cannot_be_appended_to() -> void:
 ## in `autoload/party.gd` and the seam must defer to it — the earlier version
 ## asked `party_is_full()`, a method that does not exist, so `is_full()` would
 ## have answered from the seam's own count of a list the game never sees.
-func test_the_real_party_refuses_the_sixth_pal_through_the_seam() -> void:
+func test_the_real_party_refuses_the_sixth_creature_through_the_seam() -> void:
 	var party := _install_the_party()
-	for i in PARTY.MAX_PALS:
-		assert_true(SEAM.add(SPECIES.spawn("bramblebun")), "pal %d should fit" % i)
+	for i in PARTY.MAX_CREATURES:
+		assert_true(SEAM.add(SPECIES.spawn("bramblebun")), "creature %d should fit" % i)
 
 	assert_true(SEAM.is_full(), "five of five is full, and the real party is the one that says so")
-	assert_false(SEAM.add(SPECIES.spawn("terrapup")), "a sixth pal must be refused")
-	assert_eq(int(party.size()), PARTY.MAX_PALS, "and must not have been stored anyway")
-	assert_eq(SEAM.size(), PARTY.MAX_PALS)
+	assert_false(SEAM.add(SPECIES.spawn("terrapup")), "a sixth creature must be refused")
+	assert_eq(int(party.size()), PARTY.MAX_CREATURES, "and must not have been stored anyway")
+	assert_eq(SEAM.size(), PARTY.MAX_CREATURES)
 
 
 ## A party that is there but does not answer to the interface is a rename or a
@@ -243,7 +243,7 @@ func test_a_party_that_does_not_answer_the_interface_is_not_quietly_accepted() -
 
 	assert_false(
 		SEAM.has_game_state(),
-		"the seam accepted a `party` that cannot add, list or count; the opening would drop pals into nothing"
+		"the seam accepted a `party` that cannot add, list or count; the opening would drop creatures into nothing"
 	)
 
 

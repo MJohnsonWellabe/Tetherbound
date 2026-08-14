@@ -16,9 +16,9 @@ extends SceneTree
 ## judge the pair "side by side, told nothing" -- silhouette rules out shape
 ## alone answering the question for palette work.
 
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
-const BODY := preload("res://scripts/pals/pal_body.gd")
-const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const BODY := preload("res://scripts/creatures/creature_body.gd")
+const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 
 const TRAINER_HEIGHT := 1.8
 
@@ -55,7 +55,7 @@ func _run() -> void:
 	var x := -spacing * (ids.size() - 1) * 0.5
 	var bodies: Array = []
 	for id: String in ids:
-		var body: Node3D = PAL_SCENE.instantiate()
+		var body: Node3D = CREATURE_SCENE.instantiate()
 		body.name = "Closeup_%s" % id
 		body.set_script(BODY)
 		world.add_child(body)

@@ -17,11 +17,11 @@ This is **not** “build every feature eventually needed by the full game.”
 The slice should demonstrate:
 - movement
 - authored wilderness exploration
-- pal encounters
+- creature encounters
 - real-time combat
 - aimed capture
 - party of five
-- pal management
+- creature management
 - traits/levels/basic bond
 - fainting/recovery
 - gathering
@@ -57,23 +57,23 @@ The slice should demonstrate:
 
 **Acceptance:** moving around an empty test meadow already feels pleasant.
 
-### M2 — One pal encounter
-Use placeholder trainer + two placeholder pal models if necessary.
-- peaceful roaming pal
+### M2 — One creature encounter
+Use placeholder trainer + two placeholder creature models if necessary.
+- peaceful roaming creature
 - targeting/interact
 - enter Combat Mode
-- choose/send pal
+- choose/send creature
 - Quick Attack
 - energy
 - Charged Attack
 - Run
-- Switch architecture even if only one pal initially
+- Switch architecture even if only one creature initially
 
 **Amended by `docs/decisions/D07-combat-is-piloted-not-commanded.md`.** Combat is
 piloted rather than commanded: on entering Combat Mode the player takes over the
-deployed pal, both fighters move freely inside a bounded arena, and attacks are
+deployed creature, both fighters move freely inside a bounded arena, and attacks are
 aimed. Add to the list above:
-- camera and control transfer from trainer to pal
+- camera and control transfer from trainer to creature
 - a bounded arena with a visible soft boundary
 - directional melee with a forgiving cone
 - an opponent that closes, commits and backs off
@@ -91,27 +91,27 @@ The real bar is higher and is the owner's: *you want an eleventh fight.*
 - full-health throws allowed
 - faint removes catch opportunity
 
-**Extended by `docs/decisions/D08-catching-costs-you-your-pal.md`.** Throwing
+**Extended by `docs/decisions/D08-catching-costs-you-your-creature.md`.** Throwing
 hands camera and control back to the trainer for a real-time over-the-shoulder
-aim, and leaves your pal undefended for the duration. That cost is what makes
+aim, and leaves your creature undefended for the duration. That cost is what makes
 throwing a decision rather than a free extra button.
 
 **Also in this milestone, from `GAME_DESIGN.md` pillar 3 and §14:**
 - an `aggressive` flag on a species
-- a wild pal that closes on the trainer and starts the fight itself
-- peaceful pals still never initiate
+- a wild creature that closes on the trainer and starts the fight itself
+- peaceful creatures still never initiate
 
 **Acceptance:** landing a good throw feels satisfying.
 
 ### M4 — Party
-- Catch pal
+- Catch creature
 - persistent party data
 - levels
 - HP/ATK/DEF
 - appraisal
 - trait
 - nickname
-- up to five pals
+- up to five creatures
 - switching
 - simple party menu
 
@@ -120,17 +120,17 @@ throwing a decision rather than a free extra button.
 - Present six.
 - Inspect meaningful info.
 - Keep one / release one.
-- Released pal leaves permanently.
+- Released creature leaves permanently.
 
 Do not settle for a generic “delete” dialog.
 
 ### M6 — Fainting and home recovery
-- pal faint
+- creature faint
 - unavailable state
 - revival item stub
-- pal bed
+- creature bed
 - home recovery
-- visible pal rest behavior
+- visible creature rest behavior
 
 ### M7 — First real Meadows exploration space
 Build a dense authored test region:
@@ -177,7 +177,7 @@ Initial build pieces:
 - roof
 - campfire
 - bed
-- pal bed
+- creature bed
 - workbench
 - storage
 - fence
@@ -200,7 +200,7 @@ Initial build pieces:
 - rain
 - fog/cloud variants
 - spawn conditions
-- at least one nocturnal pal
+- at least one nocturnal creature
 - at least one weather-conditioned spawn
 
 ### M11 — Meadows roster pass
@@ -219,7 +219,7 @@ Before final art lock:
 - validate combat readability
 
 ### M12 — Riding
-- compatible rideable pal
+- compatible rideable creature
 - generic Riding Saddle
 - mount/dismount
 - riding stamina if needed
@@ -235,7 +235,7 @@ makes *revisiting* known ground.
 ### M13 — Team Tether slice
 - world encounter/trainer
 - trainer team combat
-- cannot catch trainer pals
+- cannot catch trainer creatures
 - simple authored stronghold route
 - visual language: sacred/natural site industrialized by Tether
 

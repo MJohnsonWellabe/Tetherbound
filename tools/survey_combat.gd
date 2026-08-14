@@ -25,13 +25,13 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const OUT_DIR := "res://shots/combat"
 
-## Metres from the wild pal to drop the player, before `_approach()` walks the
+## Metres from the wild creature to drop the player, before `_approach()` walks the
 ## remaining distance in shot. Found empirically (R9.4-remainder-9): the
 ## scene's own default spawn is now INSIDE Grandpa's farmhouse, upstairs near
 ## the bed (D18/SA0's indoor opening) rather than outdoors in the meadow, which
 ## this survey predates. Two full ~40-minute runs against the unmodified spawn
 ## produced six frames of the bedroom/stairwell interior and zero real combat
-## — `_approach()`'s 1200-frame walk-toward-the-wild-pal loop never gets the
+## — `_approach()`'s 1200-frame walk-toward-the-wild-creature loop never gets the
 ## player out of the house. `survey.gd` and `capture_paths.gd` already solve
 ## the same problem for their own actors by placing them directly via
 ## `playground_heightfield.gd`'s `height_at()`, rather than trusting the
@@ -86,7 +86,7 @@ func _run() -> void:
 		push_error("scene is missing the player, the combat manager or the encounter director")
 		quit(1)
 		return
-	_wild = _director.call("wild_pal") as Node3D
+	_wild = _director.call("wild_creature") as Node3D
 	_place_player_outdoors()
 
 	# A second, independent consequence of the same D18/SA0 opening redesign:
@@ -94,7 +94,7 @@ func _run() -> void:
 	# sequence, so `adopt_starter()` never runs and `_director`'s internal
 	# `_ally` stays null. `_engageable()` refuses to start a fight at all
 	# without one (encounter_director.gd:583), which is why a THIRD full run,
-	# genuinely in the meadow next to the real wild pal this time, still wrote
+	# genuinely in the meadow next to the real wild creature this time, still wrote
 	# six identical exploration-camera frames and the same four failures —
 	# the arena never opened because there was nothing to fight with. Adopt
 	# one of the three starters directly, the same call the opening's own
@@ -131,10 +131,10 @@ func _run() -> void:
 	_ally = _director.call("ally_body") as Node3D
 	await _capture("02-arena-opens")
 
-	# Piloting the pal towards the opponent. This frame is the one that answers
+	# Piloting the creature towards the opponent. This frame is the one that answers
 	# whether the arena boundary reads, whether the camera at a creature's height
 	# is legible, and whether you can tell which capsule you are driving.
-	await _drive_pal_towards_enemy(90, 2.6)
+	await _drive_creature_towards_enemy(90, 2.6)
 	_dump_marker("03-closing-in")
 	await _capture("03-closing-in")
 
@@ -143,7 +143,7 @@ func _run() -> void:
 	# telegraph mechanic is invisible.
 	var waited := 0
 	while not bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("is_fighting")) and waited < 900:
-		await _drive_pal_towards_enemy(1, 2.4)
+		await _drive_creature_towards_enemy(1, 2.4)
 		waited += 1
 		if waited % 15 == 0:
 			_dump_marker("telegraph-wait(frame %d)" % waited)
@@ -160,11 +160,11 @@ func _run() -> void:
 	for i in 4:
 		await physics_frame
 	# R9.4-remainder-9-combat-2: every capture up to this point aims the camera
-	# straight down the ally-to-wild line (`_drive_pal_towards_enemy` sets
+	# straight down the ally-to-wild line (`_drive_creature_towards_enemy` sets
 	# `rig.yaw` to point AT the target every frame, because that is also how the
 	# ally is steered). That is the "favorable" framing the previous remainder's
 	# blind critic never got to see past — frames 04/05 of that capture put the
-	# wild pal almost directly behind the player's own creature. Swinging the
+	# wild creature almost directly behind the player's own creature. Swinging the
 	# camera off that line for the shutter only (yaw is applied instantly in
 	# `camera_rig.gd::_apply_look`, no smoothing, so a couple of `_process`
 	# frames are enough) answers the actual open question instead of asking a
@@ -184,10 +184,10 @@ func _run() -> void:
 	# `combat_manager.gd::_with_reach_for_the_bodies` floors the real reach by
 	# both bodies' radii anyway, so 2.6 was very likely never the binding
 	# constraint. See `R9.4-remainder-9-combat` in BACKLOG.md for the actual
-	# suspected cause (this survey may be steering toward a DIFFERENT wild pal
+	# suspected cause (this survey may be steering toward a DIFFERENT wild creature
 	# than the one combat actually engages) and what a future attempt should
 	# instrument before running this again.
-	await _drive_pal_towards_enemy(120, 2.2)
+	await _drive_creature_towards_enemy(120, 2.2)
 	await _press("combat_quick")
 	await _capture_the_impact("05-quick-attack-lands-offaxis", -70.0)
 
@@ -202,7 +202,7 @@ func _run() -> void:
 	# fill the meter, and each iteration is one attempt.
 	var charge_waited := 0
 	while not bool(_manager.call("charged_ready")) and bool(_manager.call("is_fighting")) and charge_waited < 24:
-		await _drive_pal_towards_enemy(30, 2.2)
+		await _drive_creature_towards_enemy(30, 2.2)
 		await _press("combat_quick")
 		for j in 24:
 			await physics_frame
@@ -211,13 +211,13 @@ func _run() -> void:
 			_log_phase("charging (%d/24 attempts)" % charge_waited)
 	if not bool(_manager.call("charged_ready")):
 		_failures.append("06-charged-attack-lands: energy never reached charged_cost after %d quick-attack attempts" % charge_waited)
-	await _drive_pal_towards_enemy(60, 2.8)
+	await _drive_creature_towards_enemy(60, 2.8)
 	await _press("combat_charged")
 	await _capture_the_impact("06-charged-attack-lands-offaxis", 45.0)
 
-	# Aim mode. The camera leaves the pal and goes over the trainer's shoulder,
+	# Aim mode. The camera leaves the creature and goes over the trainer's shoulder,
 	# and this frame answers whether that reads as aiming at all — a reticle over
-	# a creature several metres away, with your own pal standing undefended in
+	# a creature several metres away, with your own creature standing undefended in
 	# shot.
 	if await _open_the_aim():
 		await _capture("07-aiming-the-orb")
@@ -258,7 +258,7 @@ func _run() -> void:
 	quit(0)
 
 
-## Wait for the pal to finish whatever it is committed to, then open the aim and
+## Wait for the creature to finish whatever it is committed to, then open the aim and
 ## wait until it is actually open.
 ##
 ## Waiting on STATE rather than counting frames. A fixed wait captured the tail
@@ -289,10 +289,10 @@ func _open_the_aim() -> bool:
 	return true
 
 
-## Drop the player onto real outdoor ground near the practice pal, PLAYER_DROP_DISTANCE
+## Drop the player onto real outdoor ground near the practice creature, PLAYER_DROP_DISTANCE
 ## away, instead of trusting the scene's own default spawn (see that constant's
 ## comment for why). Placed along the horizontal direction from the origin
-## towards the pal, which `data/config/spawns.json`'s own comment says is
+## towards the creature, which `data/config/spawns.json`'s own comment says is
 ## already clear meadow the opening is meant to walk a new player through.
 func _place_player_outdoors() -> void:
 	if _player == null or _wild == null:
@@ -323,10 +323,10 @@ func _approach() -> void:
 		await physics_frame
 
 
-## Pilot the player's pal towards the opponent for a while, stopping once it is
+## Pilot the player's creature towards the opponent for a while, stopping once it is
 ## inside `stop_at` metres. Steered through the camera, which is the same path
 ## the player's stick takes.
-func _drive_pal_towards_enemy(frames: int, stop_at: float) -> void:
+func _drive_creature_towards_enemy(frames: int, stop_at: float) -> void:
 	if _ally == null:
 		for i in frames:
 			await physics_frame
@@ -366,7 +366,7 @@ func _aim_at_the_enemy() -> void:
 	rig.set("pitch", atan2(to.y + 0.5 * gravity * flight * flight, maxf(flat, 0.01)))
 
 
-## Rotate the combat camera off whatever line `_drive_pal_towards_enemy` last
+## Rotate the combat camera off whatever line `_drive_creature_towards_enemy` last
 ## aimed it down, around the ally it is orbiting (`camera_rig.gd::_follow`
 ## chases the target's position, not a point along its facing, so a yaw change
 ## alone swings the shot rather than dollying the camera through anything).
@@ -402,7 +402,7 @@ func _log_phase(label: String) -> void:
 ## the target marker "unreliable" on a capture where `target_marker.gd` itself
 ## had not changed since a first critic confirmed it tracking correctly across
 ## a 90 degree camera swing. The likely explanation was visual confusion from
-## decorative rabbits near the real wild pal, not a positioning bug — but that
+## decorative rabbits near the real wild creature, not a positioning bug — but that
 ## is a guess unless checked directly. Same technique the whole-map placement
 ## dumps elsewhere in this codebase use: print the real numbers instead of
 ## reasoning from a render a third time.
@@ -458,7 +458,7 @@ func _capture(name: String) -> void:
 ##
 ## Filtered to `on_enemy == true` — the PLAYER's own attack connecting, which
 ## is what both call sites below are named for and captioned as. Unfiltered,
-## this caught whichever side hit first: the wild pal keeps attacking on its
+## this caught whichever side hit first: the wild creature keeps attacking on its
 ## own cooldown throughout the whole fight, and an earlier run of this survey
 ## captured "05-quick-attack-lands" on the instant the ENEMY's swing landed on
 ## the ally instead — a real gold impact burst, on the wrong creature, telling

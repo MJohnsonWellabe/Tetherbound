@@ -2,11 +2,11 @@ extends Node
 
 ## Aiming and throwing an orb.
 ##
-## Combat is piloted, so the player is driving their pal when they decide to
+## Combat is piloted, so the player is driving their creature when they decide to
 ## throw. Pressing Throw hands camera and control back to the TRAINER for a
 ## real-time over-the-shoulder aim, and hands them forward again on release.
 ##
-## That swap is the design, not an implementation detail. Your pal is left
+## That swap is the design, not an implementation detail. Your creature is left
 ## undefended while you aim and the opponent does not stop attacking it, so
 ## throwing costs you something. Without that cost, throwing is free and the
 ## right play is to throw constantly between attacks, which is the version of
@@ -100,7 +100,7 @@ func is_busy() -> bool:
 ## Orbs live in the satchel, not here.
 ##
 ## `stock` used to be a plain int seeded from catching.json's
-## `orbs.starting_stock` and refilled whenever the practice pal respawned —
+## `orbs.starting_stock` and refilled whenever the practice creature respawned —
 ## the M3-only placeholder that config block warned about. Grandpa now hands
 ## the starting orbs over in the opening (`give:orb_basic` in
 ## data/dialogue/opening.json), every throw spends one from the real

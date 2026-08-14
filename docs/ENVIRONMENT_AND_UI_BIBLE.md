@@ -78,14 +78,14 @@ Study:
 ## Reference B — base overlooking a green clearing
 
 Page:
-`https://medium.com/@nigelmills2000/five-of-the-best-designed-pals-in-palworld-837c01d0fc2f`
+`https://medium.com/@nigelmills2000/five-of-the-best-designed-creatures-in-palworld-837c01d0fc2f`
 
 Image:
 `https://miro.medium.com/1%2A0w05R_Iv8bI99vVBkJE40w.png`
 
 Study:
 - buildings are visually grounded into the clearing
-- the clearing is not empty: props, beds, workstations, Pals, paths, and trees create hierarchy
+- the clearing is not empty: props, beds, workstations, Creatures, paths, and trees create hierarchy
 - forest edge provides a dense frame
 - near-ground texture is noisy enough to feel natural but major silhouettes remain clear
 
@@ -114,7 +114,7 @@ Image:
 Study:
 - base clearings use negative space intentionally
 - fences and small structures create sub-areas
-- Pals and props provide mid-ground detail
+- Creatures and props provide mid-ground detail
 - rocks/trees make the base feel embedded in the world rather than placed on a flat level
 
 ## Reference E — inventory UI
@@ -419,7 +419,7 @@ Use as temporary/production icons where they fit.
 
 Custom Tetherbound icons should eventually replace generic ones for:
 - Orb
-- Pal types
+- Creature types
 - bond
 - Tether Rift
 - Sigils
@@ -837,7 +837,7 @@ Use water to:
 - add depth
 - break up green terrain
 - create progression gates
-- support Water Pal ecology
+- support Water Creature ecology
 - create reflections/highlights
 
 Target:
@@ -859,7 +859,7 @@ The HUD should borrow **information design principles**, not Palworld's exact la
 
 Keep visible:
 - player health/stamina only when relevant
-- current active Pal / party shortcut
+- current active Creature / party shortcut
 - Orb count / currently selected usable item
 - concise current objective
 - contextual prompt

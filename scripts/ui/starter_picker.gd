@@ -20,10 +20,10 @@ extends CanvasLayer
 ## baked to a PNG, and `own_world_3d = true` so three creatures and three
 ## lights do not leak into the meadow's own World3D or each other's.
 
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
-const PAL_SCENE := preload("res://scenes/pals/pal.tscn")
-const PAL_BODY := preload("res://scripts/pals/pal_body.gd")
+const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 
 ## Frames of deafness after opening, for the reason dialogue_panel.gd and
 ## name_prompt.gd both give: the press that closed the conversation and the
@@ -161,7 +161,7 @@ func _build_orbs() -> void:
 		var viewport: SubViewport = built[2]
 		var label: Label = built[3]
 		# The shell goes into the live tree BEFORE the creature is built inside
-		# it, not after — pal_body.gd::setup() gates its mesh-building on
+		# it, not after — creature_body.gd::setup() gates its mesh-building on
 		# `is_inside_tree()`, and tools/preview_creatures.gd's own header names
 		# the exact failure of getting this order backwards: everything appears
 		# to work, `open()` returns, and every orb is silently empty. Caught
@@ -227,7 +227,7 @@ func _orb_mask_material() -> ShaderMaterial:
 
 
 ## A single creature, lit flatly and centred, the way
-## tools/preview_creatures.gd builds one for the art survey — `PAL_SCENE`
+## tools/preview_creatures.gd builds one for the art survey — `CREATURE_SCENE`
 ## instantiated first so `$Collision/$Model/$Body/$Head` resolve, the script
 ## attached before `add_child`, `setup()` called after. `viewport` must
 ## already be inside the live tree (see `_build_orbs`).
@@ -269,9 +269,9 @@ func _build_preview(viewport: SubViewport, id: String) -> Node3D:
 	rim.light_color = Color(0.78, 0.87, 1.0)
 	world.add_child(rim)
 
-	var body: Node3D = PAL_SCENE.instantiate()
+	var body: Node3D = CREATURE_SCENE.instantiate()
 	body.name = "Preview_%s" % id
-	body.set_script(PAL_BODY)
+	body.set_script(CREATURE_BODY)
 	world.add_child(body)
 	body.call("setup", id)
 	# Frozen — nothing here needs gravity or a floor, only the model. Spun by

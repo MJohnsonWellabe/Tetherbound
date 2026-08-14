@@ -19,10 +19,10 @@ extends SceneTree
 ##   hud_lowhp   - health forced to 25% -> the HP bar's danger lerp + pulse
 ##
 ## Every frame seeds a small party and satchel directly through `Game`'s own
-## public API (`make_pal`/`party.add`, the same calls `game_state.gd::
+## public API (`make_creature`/`party.add`, the same calls `game_state.gd::
 ## _seed_demo` makes internally) rather than relying on the `--menu-demo`
 ## command-line flag this tool's own invocation does not pass — an
-## unpopulated party would show nothing but "No pal out" and an all-vacant
+## unpopulated party would show nothing but "No creature out" and an all-vacant
 ## party strip, which is a real state but not the one worth judging the new
 ## layout against. No change to `autoload/game_state.gd` was needed for this.
 
@@ -158,13 +158,13 @@ func _reset_vitals(vitals: RefCounted) -> void:
 
 
 ## A party (one out, two more on the strip, one of them fainted) and a
-## handful of satchel items, so the pal block, the party strip and the
+## handful of satchel items, so the creature block, the party strip and the
 ## hotbar all have something real to draw. Every call here is public API
 ## `Game` already exposes -- no changes to `autoload/game_state.gd`.
 func _seed_demo_state(world: Node) -> void:
 	var game := root.get_node_or_null(^"/root/Game")
 	if game == null:
-		push_warning("Game autoload not found -- pal block/party strip/hotbar will show their empty states")
+		push_warning("Game autoload not found -- creature block/party strip/hotbar will show their empty states")
 		return
 
 	var inventory: RefCounted = game.get("inventory")
@@ -178,9 +178,9 @@ func _seed_demo_state(world: Node) -> void:
 
 	var seeds := [["terrapup", "Biscuit"], ["ripplet", ""], ["galewisp", "Kite"]]
 	for entry in seeds:
-		var pal: RefCounted = game.call("make_pal", str(entry[0]), str(entry[1]))
-		if pal != null:
-			party.call("add", pal)
+		var creature: RefCounted = game.call("make_creature", str(entry[0]), str(entry[1]))
+		if creature != null:
+			party.call("add", creature)
 
 	var active: RefCounted = party.call("at", 0)
 	if active != null:

@@ -12,7 +12,7 @@ extends SceneTree
 ## invisible opponent.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
@@ -21,7 +21,7 @@ const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const SETTLE_FRAMES := 300
 ## How far a rendered model may sit under the collider that represents it.
 ##
-## Was 0.35m, which is wide enough to hide a real bug and did. `pal_body._fit()`
+## Was 0.35m, which is wide enough to hide a real bug and did. `creature_body._fit()`
 ## clamps a model's scale by its footprint, and a long quadruped tripped that
 ## clamp and rendered visibly shorter than its declared height while a compact
 ## creature beside it got its full size — so the largest creature in the game
@@ -94,7 +94,7 @@ func _the_creatures_in_the_world_loaded_their_models() -> void:
 		return
 
 	var bodies: Array[Node3D] = []
-	for wild in (director.call("wild_pals") as Array):
+	for wild in (director.call("wild_creatures") as Array):
 		bodies.append(wild as Node3D)
 	var ally: Node3D = director.call("ally_body") as Node3D
 	if ally != null:
@@ -119,7 +119,7 @@ func _the_creatures_in_the_world_loaded_their_models() -> void:
 			_fail("'%s' has a model with no measurable size" % id)
 		elif actual < wanted - HEIGHT_TOLERANCE:
 			_fail("'%s' renders only %.2fm tall against a %.2fm collider. " % [id, actual, wanted] +
-				"Something scaled it DOWN — check the footprint clamp in pal_body._fit().")
+				"Something scaled it DOWN — check the footprint clamp in creature_body._fit().")
 		elif actual > wanted + HEIGHT_OVERSHOOT:
 			_fail("'%s' renders %.2fm tall against a %.2fm collider; that is more than an " % [
 				id, actual, wanted

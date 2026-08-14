@@ -82,7 +82,7 @@ func test_an_effect_splits_into_a_kind_and_a_value() -> void:
 
 
 ## The first time the game says a word the player wrote.
-func test_the_pals_name_is_substituted_into_the_line() -> void:
+func test_the_creatures_name_is_substituted_into_the_line() -> void:
 	_runner.set_value("name", "Biscuit")
 	_runner.start("grandpa_named")
 	assert_true(
@@ -134,7 +134,7 @@ func test_every_conversation_has_a_speaker_and_a_portrait_that_is_really_there()
 		)
 
 
-## The naming beat is mandatory, so a line that greets the pal by name must
+## The naming beat is mandatory, so a line that greets the creature by name must
 ## actually contain the placeholder. Without this the substitution silently
 ## does nothing and Grandpa says "$name" out loud.
 func test_the_naming_line_actually_contains_the_placeholder() -> void:

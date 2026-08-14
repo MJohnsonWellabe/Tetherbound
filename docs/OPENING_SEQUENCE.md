@@ -16,8 +16,8 @@ below is either serving it or getting out of its way.
 |---|---|---|---|---|
 | 1 | **Wake** | 0–1 | Fade in on a bed upstairs. Get up | Move, camera, one prompt |
 | 2 | **Downstairs** | 1–2 | Walk down through the house to Grandpa | Interact; this is home |
-| 3 | **The briefing** | 2–5 | He explains Team Tether, gives you his old pack — orbs, potions, berries — and the creature belt | Why there is a journey; the satchel; **the five-pal rule, said in fiction** |
-| 4 | **The choice** | 5–7 | Three orbs on the table, each previewing its creature. Look them over, choose one | **The five-pal rule's first bite:** the other two stay with him |
+| 3 | **The briefing** | 2–5 | He explains Team Tether, gives you his old pack — orbs, potions, berries — and the creature belt | Why there is a journey; the satchel; **the five-creature rule, said in fiction** |
+| 4 | **The choice** | 5–7 | Three orbs on the table, each previewing its creature. Look them over, choose one | **The five-creature rule's first bite:** the other two stay with him |
 
 **Beat 4 is no longer unconditional — `docs/decisions/D23`, spec §1D.** The
 owner played the published build and walked straight out of the house, skipping
@@ -27,9 +27,9 @@ work, and §1D is specific about the form it takes: crossing is stopped, Grandpa
 calls out — "Hold on. You're not walking out there empty-handed." — and the
 briefing starts itself. **Not** a "Talk to Grandpa first" error toast. Once
 beat 3 is done the gate lifts for good and never re-arms.
-| 5 | **Your pal** | 7–9 | Name it. Walk with it following you | It is yours; it has a name you typed |
-| 6 | **The encounter** | 9–11 | A wild Bramblebun is grazing down the path. Engage | Targeting; wild pals are individuals, not spawns |
-| 7 | **The fight** | 11–13 | Pilot your pal. Quick attack, energy, charged attack | Combat is piloted (D07), not commanded |
+| 5 | **Your creature** | 7–9 | Name it. Walk with it following you | It is yours; it has a name you typed |
+| 6 | **The encounter** | 9–11 | A wild Bramblebun is grazing down the path. Engage | Targeting; wild creatures are individuals, not spawns |
+| 7 | **The fight** | 11–13 | Pilot your creature. Quick attack, energy, charged attack | Combat is piloted (D07), not commanded |
 | 8 | **The catch** | 13–15 | Throw an orb at the weakened Bramblebun. Catch it | The catch is a physical act you aim |
 | 9 | **The road** | 15 | Grandpa points down the dirt road: follow it, gather from it, make camp before dark | The world is open, and the first day has a shape |
 
@@ -50,11 +50,11 @@ player is in the room with him.
 
 **Downstairs, and the briefing.** One conversation, `grandpa_house`, carries the
 whole of it: the warm greeting, Team Tether — returned, holding the eight
-places of power, pals chained to the stones — why he cannot go himself, and
+places of power, creatures chained to the stones — why he cannot go himself, and
 then the gifts. The gifts are not a cutscene grant: each `give:` effect sits on
 the exact line that speaks it (`give:orb_basic:15`, `give:potion_small:3`,
 `give:berries:5`), so the satchel fills as he says the words. The creature belt
-line is where the five-pal cap is said in fiction — *it holds five, no more; a
+line is where the five-creature cap is said in fiction — *it holds five, no more; a
 rule older than Team Tether* — which is the only kind of place a rule that hard
 should be said. His last line sends the player out the door and emits
 `beat:starter_choice`.
@@ -72,7 +72,7 @@ line if spoken to again mid-choice — is left in the dialogue table but is not
 practically reachable any more: the picker is modal and opens automatically,
 with no window a player can act inside before it does.
 
-**Your pal.** Naming is mandatory. The moment the name is confirmed the
+**Your creature.** Naming is mandatory. The moment the name is confirmed the
 director runs `grandpa_named` with `$name` substituted — the first time in this
 game a line says a word the player wrote — and he points down the path at the
 practice bramblebun (`beat:first_encounter`).
@@ -136,14 +136,14 @@ What the restaging adds, and who owns it:
 - **The gifts are lines, not a cutscene grant.** Each `give:` effect rides the
   line that speaks it. If the pacing of the briefing changes, the gifts move
   with their sentences and never fall out of sync with the prose.
-- **The five-pal cap is spoken as fiction, once, by the belt.** CLAUDE.md's
+- **The five-creature cap is spoken as fiction, once, by the belt.** CLAUDE.md's
   hard rule enters the player's head as a rule of the world, not a tooltip.
   `grandpa_named` gets one short reprise ("that's the belt") and no other line
   restates it.
-- **The first wild pal is Bramblebun and it is peaceful.** `species.json` gives
+- **The first wild creature is Bramblebun and it is peaceful.** `species.json` gives
   it the highest catch rate in the game for exactly this reason: the tutorial
   catch must not fail twice.
-- **Naming is mandatory, not skippable.** A pal you did not name is a pal you
+- **Naming is mandatory, not skippable.** A creature you did not name is a creature you
   did not adopt.
 - **The other two starters stay visible with Grandpa afterwards.** The cost of
   the choice should remain standing in the world where the player can see it.

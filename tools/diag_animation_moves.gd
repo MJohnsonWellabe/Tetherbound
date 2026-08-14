@@ -17,7 +17,7 @@ extends SceneTree
 ## separates the two without guessing.
 
 const MODELS := {
-	"terrapup": "res://assets/pals/tetherbound/terrapup/models/pal_terrapup_lod0.glb",
+	"terrapup": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
 	"trainer": "res://assets/characters/trainer/trainer_lod0.glb",
 }
 const SAMPLES := 8

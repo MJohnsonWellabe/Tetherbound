@@ -708,7 +708,7 @@
     "Bark_TwistedTree": "#918178"
   },
   "_comment_collision": "Layers marked `collides` get real static collision. Two reasons, and the second is the urgent one: a tree you can walk through reads as a hologram, and \u2014 because the camera's SpringArm3D only stops at things with collision \u2014 a bush with none lets the camera end up INSIDE it. Two survey frames came back showing nothing but green because the camera was inside a bush during a fight. Grass and flowers must never collide; you walk through those.",
-  "_comment_clearings": "Open ground kept clear of every layer that can BLOCK. These match the wild pal spawn points in scripts/combat/encounter_director.gd, because a fight starts where a creature is standing and the arena is 11m across: without this, the trees are inside the arena and stand between the camera and the fight. The radius is arena radius plus margin.",
+  "_comment_clearings": "Open ground kept clear of every layer that can BLOCK. These match the wild creature spawn points in scripts/combat/encounter_director.gd, because a fight starts where a creature is standing and the arena is 11m across: without this, the trees are inside the arena and stand between the camera and the fight. The radius is arena radius plus margin.",
   "clearings": [
     {
       "x": 0.0,

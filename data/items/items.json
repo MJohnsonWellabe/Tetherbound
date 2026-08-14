@@ -67,8 +67,8 @@
       "colour": "#5aa356",
       "heal": 35,
       "icon": "res://assets/ui/icons/items/potion_small.png",
-      "blurb": "Patches a pal's scrapes. For your pal, mind — you get soup.",
-      "description": "A small dose that closes cuts and eases bruising on a pal fast. It only works on a pal — for you, it's soup and rest, same as always."
+      "blurb": "Patches a creature's scrapes. For your creature, mind — you get soup.",
+      "description": "A small dose that closes cuts and eases bruising on a creature fast. It only works on a creature — for you, it's soup and rest, same as always."
     },
     "axe": {
       "name": "Axe",

@@ -1,12 +1,12 @@
 extends SceneTree
 
-## Can a wild pal be caught, and does the cost of trying actually apply?
+## Can a wild creature be caught, and does the cost of trying actually apply?
 ##
 ##   godot --headless --path . --script tests/smoke_catching.gd
 ##
 ## tests/test_catch_math.gd already proves the odds. This proves the wiring, and
 ## the wiring is where the design lives: aiming hands control to the trainer and
-## leaves your pal undefended, the orb is a real projectile that can miss, and a
+## leaves your creature undefended, the orb is a real projectile that can miss, and a
 ## faint ends the opportunity rather than lowering the odds.
 ##
 ## It drives the real input actions, so a broken binding fails here rather than
@@ -52,7 +52,7 @@ func _run() -> void:
 		_report()
 		return
 
-	await _walk_to_the_wild_pal()
+	await _walk_to_the_wild_creature()
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
 		_fail("could not enter combat; nothing below this point was tested")
@@ -61,20 +61,20 @@ func _run() -> void:
 	_ally = _director.call("ally_body") as Node3D
 
 	await _aiming_hands_control_to_the_trainer()
-	await _aiming_abandons_your_pal()
+	await _aiming_abandons_your_creature()
 	await _a_throw_at_the_sky_misses_and_still_costs_an_orb()
-	await _a_weakened_pal_can_be_caught()
-	await _a_fainted_pal_cannot_be_caught()
+	await _a_weakened_creature_can_be_caught()
+	await _a_fainted_creature_cannot_be_caught()
 	_report()
 
 
 ## `meadows_playground.tscn` now always carries a `SequenceDirector` (R0.9),
 ## and its `_ready()` unconditionally calls `suspend_default_starter()` in the
 ## one frame window that exists to call it off — the opening always decides
-## which pal the player gets, never the sandbox default. This test is not the
+## which creature the player gets, never the sandbox default. This test is not the
 ## opening and never drives it, so the encounter director's own
 ## `default_starter` never spawns here either. Proving catching's WIRING does
-## not need the opening's cast; it needs a pal, so this gets one directly,
+## not need the opening's cast; it needs a creature, so this gets one directly,
 ## the same call `sequence_director.gd` makes once a name is confirmed.
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
@@ -125,9 +125,9 @@ func _collect_nodes() -> bool:
 	_manager.connect("catch_refused", func(reason: String) -> void: _refusals.append(reason))
 	_manager.connect("catch_resolved", func(success: bool, _shakes: int) -> void: _resolutions.append(success))
 
-	_wild = _director.call("wild_pal") as Node3D
+	_wild = _director.call("wild_creature") as Node3D
 	if _wild == null:
-		_fail("no wild pal to throw at")
+		_fail("no wild creature to throw at")
 		return false
 	if int(_manager.call("orbs_left")) <= 0:
 		_fail("the trainer starts with no orbs; nothing here can run")
@@ -135,7 +135,7 @@ func _collect_nodes() -> bool:
 	return true
 
 
-func _walk_to_the_wild_pal() -> void:
+func _walk_to_the_wild_creature() -> void:
 	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
 	for i in 1500:
 		var to := _wild.global_position - _player.global_position
@@ -163,7 +163,7 @@ func _engage() -> void:
 		await physics_frame
 
 
-## Combat is piloted, so the aim has to take the camera off the pal and put it
+## Combat is piloted, so the aim has to take the camera off the creature and put it
 ## behind the trainer. If it does not, the player is aiming from somewhere they
 ## are not standing.
 func _aiming_hands_control_to_the_trainer() -> void:
@@ -175,10 +175,10 @@ func _aiming_hands_control_to_the_trainer() -> void:
 		_fail("pressing Throw did not open the aim")
 		return
 	var to_trainer := _rig.global_position.distance_to(_player.global_position)
-	var to_pal := _rig.global_position.distance_to(_ally.global_position)
-	if to_trainer > to_pal:
-		_fail("aiming left the camera on the pal (%.1fm) rather than the trainer (%.1fm)" % [to_pal, to_trainer])
-	print("aim opened: camera %.1fm from the trainer, %.1fm from the pal" % [to_trainer, to_pal])
+	var to_creature := _rig.global_position.distance_to(_ally.global_position)
+	if to_trainer > to_creature:
+		_fail("aiming left the camera on the creature (%.1fm) rather than the trainer (%.1fm)" % [to_creature, to_trainer])
+	print("aim opened: camera %.1fm from the trainer, %.1fm from the creature" % [to_trainer, to_creature])
 
 	# Owner playtest report, second round: "when you go to throw should fully
 	# control the character again so you can move him and throw." The camera
@@ -206,10 +206,10 @@ func _aiming_hands_control_to_the_trainer() -> void:
 		_fail("cancelling the aim left the trainer able to walk mid-fight, outside the aim window")
 
 
-## The cost that makes throwing a decision. If the stick still drives the pal
+## The cost that makes throwing a decision. If the stick still drives the creature
 ## while you are lining up a throw, catching is free and the right play is to
 ## throw constantly.
-func _aiming_abandons_your_pal() -> void:
+func _aiming_abandons_your_creature() -> void:
 	await _press("combat_throw")
 	for i in 20:
 		await physics_frame
@@ -224,9 +224,9 @@ func _aiming_abandons_your_pal() -> void:
 	Input.action_release("move_forward")
 	var moved := before.distance_to(_ally.global_position)
 	if moved > 0.75:
-		_fail("the pal moved %.2fm on the stick while aiming; aiming is supposed to abandon it" % moved)
+		_fail("the creature moved %.2fm on the stick while aiming; aiming is supposed to abandon it" % moved)
 	else:
-		print("pal stayed put while aiming (%.2fm drift)" % moved)
+		print("creature stayed put while aiming (%.2fm drift)" % moved)
 
 
 ## Aim at the sky and let go. The orb is a projectile: it has to be able to go
@@ -265,10 +265,10 @@ func _a_throw_at_the_sky_misses_and_still_costs_an_orb() -> void:
 		_fail("an orb thrown at nothing never resolved at all; it is still in the air")
 
 
-func _a_weakened_pal_can_be_caught() -> void:
+func _a_weakened_creature_can_be_caught() -> void:
 	var foe: RefCounted = _manager.call("enemy")
 	# Weakened directly rather than by fighting: this test is about the throw,
-	# and grinding a pal down through combat would be testing M2 again.
+	# and grinding a creature down through combat would be testing M2 again.
 	foe.hp = foe.max_hp * 0.08
 
 	var caught := false
@@ -280,13 +280,13 @@ func _a_weakened_pal_can_be_caught() -> void:
 		if int(_manager.call("orbs_left")) <= 1:
 			_seed_orbs()
 		foe.hp = foe.max_hp * 0.08
-		# Keep the player's pal standing. Aiming genuinely abandons it — that is
-		# the whole design and _aiming_abandons_your_pal asserts it — so a test
-		# that throws twenty-five times in a row will get its pal knocked out and
+		# Keep the player's creature standing. Aiming genuinely abandons it — that is
+		# the whole design and _aiming_abandons_your_creature asserts it — so a test
+		# that throws twenty-five times in a row will get its creature knocked out and
 		# report "catching is broken" when catching was working perfectly.
-		var pal: RefCounted = _manager.call("active_pal")
-		if pal != null:
-			pal.hp = pal.max_hp
+		var creature: RefCounted = _manager.call("active_creature")
+		if creature != null:
+			creature.hp = creature.max_hp
 
 		var resolutions_before := _resolutions.size()
 		if not await _throw_at_the_target():
@@ -303,7 +303,7 @@ func _a_weakened_pal_can_be_caught() -> void:
 			break
 
 	if not caught:
-		_fail("could not catch a pal at 8%% health in %d throws" % MAX_ATTEMPTS)
+		_fail("could not catch a creature at 8%% health in %d throws" % MAX_ATTEMPTS)
 		return
 
 	print("caught it after %d resolved throws" % _resolutions.size())
@@ -314,20 +314,20 @@ func _a_weakened_pal_can_be_caught() -> void:
 	if bool(_manager.call("is_fighting")):
 		_fail("a successful catch did not end the fight")
 	if str(_manager.call("outcome")) != "caught":
-		_fail("caught a pal but the fight ended as '%s'" % str(_manager.call("outcome")))
+		_fail("caught a creature but the fight ended as '%s'" % str(_manager.call("outcome")))
 	var kept: Array = _director.call("caught")
 	if kept.is_empty():
-		_fail("the caught pal was not kept anywhere; M4 has nothing to attach to")
+		_fail("the caught creature was not kept anywhere; M4 has nothing to attach to")
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("the trainer cannot walk after a catch")
 
 
-## §15: over-damaging a pal ENDS the capture opportunity. A refusal, not long
+## §15: over-damaging a creature ENDS the capture opportunity. A refusal, not long
 ## odds — and the player has to be told which it was.
-func _a_fainted_pal_cannot_be_caught() -> void:
-	# Wait for the practice pal to be back on its feet, then walk over and
+func _a_fainted_creature_cannot_be_caught() -> void:
+	# Wait for the practice creature to be back on its feet, then walk over and
 	# engage it again. Waiting for a prompt without moving would never work: the
-	# fight left the trainer at the arena edge, and the pal respawns at its own
+	# fight left the trainer at the arena edge, and the creature respawns at its own
 	# home some distance away. The wait covers the respawn delay, which is data
 	# now (spawns.json respawn_seconds) rather than M2's hardcoded 6 seconds.
 	var respawn := float((_director.call("spawns_config") as Dictionary).get("respawn_seconds", 45.0))
@@ -337,10 +337,10 @@ func _a_fainted_pal_cannot_be_caught() -> void:
 		if _wild.visible and bool(_wild.call("is_alive")):
 			break
 	if not (_wild.visible and bool(_wild.call("is_alive"))):
-		_fail("the wild pal never came back after being caught; the fainted case could not be tested")
+		_fail("the wild creature never came back after being caught; the fainted case could not be tested")
 		return
 
-	await _walk_to_the_wild_pal()
+	await _walk_to_the_wild_creature()
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
 		_fail("could not re-engage after a catch; the fainted case could not be tested")
@@ -356,11 +356,11 @@ func _a_fainted_pal_cannot_be_caught() -> void:
 		await physics_frame
 
 	if bool(_manager.call("is_aiming")):
-		_fail("the aim opened on a fainted pal; the capture opportunity is supposed to be over")
+		_fail("the aim opened on a fainted creature; the capture opportunity is supposed to be over")
 	if _refusals.size() == refusals_before:
-		_fail("throwing at a fainted pal was silently ignored, with no reason given")
+		_fail("throwing at a fainted creature was silently ignored, with no reason given")
 	else:
-		print("a throw at a fainted pal was refused: '%s'" % _refusals[-1])
+		print("a throw at a fainted creature was refused: '%s'" % _refusals[-1])
 
 
 func _throw_at_the_target() -> bool:

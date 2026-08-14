@@ -27,8 +27,8 @@ extends SceneTree
 ##                              label are visible.
 ##   minimap_discovered.png  - a broad reveal around the village/house,
 ##                              several landmarks discovered, and a nearby
-##                              wild pal (close enough that the HUD's own
-##                              PAL_SHOW_DISTANCE logic actually draws it).
+##                              wild creature (close enough that the HUD's own
+##                              CREATURE_SHOW_DISTANCE logic actually draws it).
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/_diag"
@@ -102,7 +102,7 @@ func _run() -> void:
 	game.call("set_objective", "Restore the Old Mill Crossing", Vector3(200.0, 0.0, -140.0))
 	await _shoot("minimap_fogged", written, failures)
 
-	# --- (b) discovered: broad reveal + landmarks + a nearby wild pal ---
+	# --- (b) discovered: broad reveal + landmarks + a nearby wild creature ---
 	# reveal_circle is the debug/testing-only broad reveal (no landmark side
 	# effects, map_state.gd's own contract) — used here to give the shot a
 	# visibly explored area wider than one player-radius reveal would.
@@ -114,12 +114,12 @@ func _run() -> void:
 	for point in [Vector3(-22.0, 0.0, -16.0), Vector3(10.0, 0.0, -10.0), Vector3(27.5, 0.0, -16.0)]:
 		map_state.mark_visited(point)
 
-	# minimap.gd's own PAL_SHOW_DISTANCE (15m) hides a pal marker closer than
+	# minimap.gd's own CREATURE_SHOW_DISTANCE (15m) hides a creature marker closer than
 	# that — 20m keeps this frame honestly showing what the HUD draws by
 	# default rather than a marker that only exists because this script
 	# reached past the widget's own logic.
 	var director := world.get_node_or_null(^"EncounterDirector")
-	var wild: Node3D = director.call("wild_pal") if director != null else null
+	var wild: Node3D = director.call("wild_creature") if director != null else null
 	if wild != null:
 		wild.global_position = player.global_position + Vector3(20.0, 0.0, 0.0)
 	await _shoot("minimap_discovered", written, failures)

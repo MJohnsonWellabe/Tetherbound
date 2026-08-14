@@ -13,13 +13,13 @@ extends Node
 ##
 ## Duck-typed rather than a base class because the two kinds of provider have
 ## nothing else in common: `interactable.gd` is a Node3D bolted to a body, and
-## `encounter_director.gd` is a manager that answers for whichever wild pal
+## `encounter_director.gd` is a manager that answers for whichever wild creature
 ## happens to be nearest. Forcing one class on both would mean the director
 ## inheriting from a spatial node it is not.
 ##
 ## Reading input in one place matters more than it looks. Before this there was
 ## a single hardcoded prompt, so "who owns the interact button" was not a
-## question. With Grandpa, three starters and a wild pal in one meadow it is the
+## question. With Grandpa, three starters and a wild creature in one meadow it is the
 ## whole problem — two nodes each reading `is_action_just_pressed` means walking
 ## between Grandpa and a starter fires both.
 

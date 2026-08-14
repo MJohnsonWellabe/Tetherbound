@@ -9,10 +9,10 @@ extends "res://tests/test_case.gd"
 ## catch the typo at build time instead, the same job test_catch_math.gd
 ## already does for a missing `catch_rate`.
 
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
-const MOVE_DB := preload("res://scripts/pals/move_db.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 
-## The Meadows' whole type vocabulary (data/pals/species.json's own `type`
+## The Meadows' whole type vocabulary (data/creatures/species.json's own `type`
 ## values). A move's `type` field is flavour, not a gameplay check, but it
 ## still has to be a real type or it is just a typo nobody will ever see fail.
 const KNOWN_TYPES := ["ground", "water", "air"]

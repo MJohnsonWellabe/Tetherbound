@@ -3,7 +3,7 @@
 A third-person survival/crafting creature-training game. Godot 4, Windows-first,
 built for handheld PCs and the ROG Ally. Controller first, single player.
 
-You may own **five pals, total.** There is no box and no reserve team. Catching a
+You may own **five creatures, total.** There is no box and no reserve team. Catching a
 sixth forces a permanent release. Everything else in the design follows from that
 one rule.
 

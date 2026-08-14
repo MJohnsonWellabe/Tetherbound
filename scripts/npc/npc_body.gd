@@ -11,7 +11,7 @@ extends "res://scripts/characters/character_model.gd"
 ## which `grandpa` already has. So a second NPC is a data edit and one call.
 ##
 ## He owns a static collider. Walking through the man who is giving you your
-## first pal reads as him not really being there, and a StaticBody3D cannot be
+## first creature reads as him not really being there, and a StaticBody3D cannot be
 ## shoved the way the invisible ally body once shoved the trainer.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
@@ -114,7 +114,7 @@ func _process(delta: float) -> void:
 	to.y = 0.0
 	if to.length() < 0.2 or to.length() > NOTICE_RANGE:
 		return
-	# +Z forward, the same convention the trainer's model and every pal body
+	# +Z forward, the same convention the trainer's model and every creature body
 	# use. There is no convention across asset packs; this one is the project's,
 	# and `model_yaw` in art.json is the per-character correction into it.
 	rotation.y = rotate_toward(rotation.y, atan2(to.x, to.z), TURN_SPEED * delta)

@@ -15,7 +15,7 @@ extends "res://scripts/characters/character_model.gd"
 
 var _player: CharacterBody3D = null
 ## Set while the trainer is aiming a throw, so the body reads as throwing rather
-## than as standing still watching its pal be hit.
+## than as standing still watching its creature be hit.
 var _throwing_for: float = 0.0
 
 

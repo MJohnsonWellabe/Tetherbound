@@ -1,0 +1,30 @@
+[gd_scene load_steps=1 format=3]
+
+; One creature body, used for both the player's creature and wild ones.
+;
+; Deliberately scriptless: scripts/combat/encounter_director.gd attaches
+; creature_body.gd or wild_creature.gd depending on the role. Two scenes would mean M11's
+; real creature model has to be wired in twice.
+;
+; The mesh and the collision shape are both empty here and built in code from
+; data/creatures/species.json, so a species' size is data rather than a scene edit —
+; and so the capsule the player sees is guaranteed to be the capsule attacks
+; collide with.
+
+[node name="Creature" type="CharacterBody3D"]
+floor_max_angle = 0.9599
+floor_snap_length = 0.4
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+
+; The art hangs off this pivot, so procedural motion (bob, squash, lean) can be
+; applied to the LOOK without ever touching the body's real position. The
+; creature's collider and its gameplay position are the manager's; this is not.
+[node name="Model" type="Node3D" parent="."]
+
+; Fallback capsule. Kept, not deleted: a species whose model is missing renders
+; as this and pushes an error, which is a great deal easier to diagnose than a
+; creature that silently is not there.
+[node name="Body" type="MeshInstance3D" parent="."]
+
+[node name="Head" type="MeshInstance3D" parent="."]

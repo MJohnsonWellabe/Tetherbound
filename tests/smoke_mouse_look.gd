@@ -89,7 +89,7 @@ func _run() -> void:
 
 	# --- every Control the exploration HUD owns must be MOUSE_FILTER_IGNORE ---
 	# Not just the full-rect ones above: the Palworld-layout rebuild
-	# (`playground_hud.gd`) builds dozens of small Controls in code -- the pal
+	# (`playground_hud.gd`) builds dozens of small Controls in code -- the creature
 	# block, the vitals cluster, the mounted party_strip/stamina_arc/minimap
 	# widgets, the objective block -- and any ONE of them left at the
 	# Control default (MOUSE_FILTER_STOP) would sit in GUI input's path the

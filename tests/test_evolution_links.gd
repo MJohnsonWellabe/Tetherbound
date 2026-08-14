@@ -1,6 +1,6 @@
 extends "res://tests/test_case.gd"
 
-## The evolution links in data/pals/species.json.
+## The evolution links in data/creatures/species.json.
 ##
 ## There is no evolution SYSTEM in the project (HANDOFF §4) — `evolves_into` and
 ## `evolves_from` are the two ends of a rope nothing pulls on yet. That is
@@ -8,7 +8,7 @@ extends "res://tests/test_case.gd"
 ## contradicts, so it rots silently and the first thing to pull on it inherits
 ## the rot.
 ##
-## The rule these pin is the owner's, given this session: **whatever pal is an
+## The rule these pin is the owner's, given this session: **whatever creature is an
 ## evolution of another needs to be larger in size** (docs/decisions/D17). The
 ## biome's one line already satisfies it — Mudsnout 1.40m → Tuskroot 2.00m — but
 ## it satisfied it by accident until this file existed. Heights are TUNABLE and
@@ -18,7 +18,7 @@ extends "res://tests/test_case.gd"
 ## This tests RELATIVE size within a line only. The absolute band is D12/D13's
 ## settled policy and is not this file's business.
 
-const SPECIES := preload("res://scripts/pals/pal_species.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 
 # --- helpers --------------------------------------------------------------
@@ -57,7 +57,7 @@ func test_every_evolution_source_exists() -> void:
 # --- the owner's rule: an evolution is always larger ------------------------
 
 func test_an_evolution_is_larger_than_what_it_came_from() -> void:
-	# D17, from the owner this session: "whatever pal is an evolution of another
+	# D17, from the owner this session: "whatever creature is an evolution of another
 	# needs to be larger in size". Strictly greater — equal heights would let a
 	# line exist where evolving changes nothing you can see.
 	for id: String in SPECIES.table().keys():
@@ -76,7 +76,7 @@ func test_an_evolution_is_larger_than_what_it_came_from() -> void:
 
 func test_every_species_in_an_evolution_line_declares_a_height() -> void:
 	# Without this the rule above compares two defaults and passes on nothing.
-	# `placeholder.height` is what pal_body._fit() sizes the model to, so a
+	# `placeholder.height` is what creature_body._fit() sizes the model to, so a
 	# missing one is not a cosmetic omission.
 	for id: String in SPECIES.table().keys():
 		var definition: Dictionary = SPECIES.definition(id)

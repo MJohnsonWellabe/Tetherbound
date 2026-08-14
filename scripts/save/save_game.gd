@@ -2,7 +2,7 @@ extends RefCounted
 
 ## Versioned save/load for the state that has to survive a quit: the party,
 ## the satchel, the day counter, placed buildings (R3.1), and — as of
-## VERSION 2 — pal progression, satiety and the map database.
+## VERSION 2 — creature progression, satiety and the map database.
 ##
 ## Same shape `docs/decisions/D15` set for `user://settings.json`: JSON, a
 ## `version` field from the first write, and never fatal on load — a missing,
@@ -12,13 +12,13 @@ extends RefCounted
 ##
 ## ## VERSION 2 — what changed, and the migration story
 ##
-## D30 (pal progression: level/xp/bond/moves) and D33 (the map database) both
+## D30 (creature progression: level/xp/bond/moves) and D33 (the map database) both
 ## landed after VERSION 1 shipped, and D29 (satiety) needed its own slot in
 ## the file. A VERSION 1 save on a VERSION 2 build now migrates instead of
-## being refused (`_migrate_v1`): every pal is set to
-## `data/config/progression.json`'s `migration.v1_pal_level` (fallback 3),
+## being refused (`_migrate_v1`): every creature is set to
+## `data/config/progression.json`'s `migration.v1_creature_level` (fallback 3),
 ## `xp` 0, `bond` 0, and its quick/charged moves looked up from
-## `data/pals/species.json` by `species_id` (empty string for a species the
+## `data/creatures/species.json` by `species_id` (empty string for a species the
 ## catalogue no longer knows, same "trust nothing you cannot look up" rule
 ## `_array_to_party` already followed); satiety is set to full
 ## (`data/config/vitals.json`'s `satiety.max`, fallback 100); the map comes
@@ -59,10 +59,10 @@ extends RefCounted
 ## optionally, a `player_vitals()` method) — the `Game` autoload in the real
 ## build, a small fake in tests.
 
-const PAL_INSTANCE := preload("res://scripts/pals/pal_instance.gd")
+const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
-const SPECIES_PATH := "res://data/pals/species.json"
+const SPECIES_PATH := "res://data/creatures/species.json"
 
 const VERSION := 2
 const SLOT_COUNT := 5
@@ -161,7 +161,7 @@ func _migrate_v1(data: Dictionary) -> Dictionary:
 
 	var progression := _read_json_file(PROGRESSION_CONFIG_PATH)
 	var migration_cfg: Variant = progression.get("migration", {})
-	var default_level := int((migration_cfg as Dictionary).get("v1_pal_level", 3)) \
+	var default_level := int((migration_cfg as Dictionary).get("v1_creature_level", 3)) \
 		if typeof(migration_cfg) == TYPE_DICTIONARY else 3
 
 	var species_raw: Variant = _read_json_file(SPECIES_PATH).get("species", {})
@@ -171,13 +171,13 @@ func _migrate_v1(data: Dictionary) -> Dictionary:
 	for raw: Variant in party:
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
-		var pal := raw as Dictionary
-		pal["level"] = default_level
-		pal["xp"] = 0
-		pal["bond"] = 0
-		var moves := _species_moves(species_table, str(pal.get("species_id", "")))
-		pal["move_quick"] = str(moves.get("quick", ""))
-		pal["move_charged"] = str(moves.get("charged", ""))
+		var creature := raw as Dictionary
+		creature["level"] = default_level
+		creature["xp"] = 0
+		creature["bond"] = 0
+		var moves := _species_moves(species_table, str(creature.get("species_id", "")))
+		creature["move_quick"] = str(moves.get("quick", ""))
+		creature["move_charged"] = str(moves.get("charged", ""))
 	migrated["party"] = party
 
 	var buildings: Array = migrated.get("placed_buildings", [])
@@ -257,12 +257,12 @@ func _party_to_array(party: Variant) -> Array:
 	var out: Array = []
 	if party == null:
 		return out
-	for pal: Variant in ((party as RefCounted).call("members") as Array):
-		var instance := pal as RefCounted
+	for creature: Variant in ((party as RefCounted).call("members") as Array):
+		var instance := creature as RefCounted
 		out.append({
 			"species_id": str(instance.get("species_id")),
 			"display_name": str(instance.get("display_name")),
-			"pal_type": str(instance.get("pal_type")),
+			"creature_type": str(instance.get("creature_type")),
 			"nickname": str(instance.get("nickname")),
 			"max_hp": float(instance.get("max_hp")),
 			"attack": float(instance.get("attack")),
@@ -279,7 +279,7 @@ func _party_to_array(party: Variant) -> Array:
 	return out
 
 
-## Fields are set directly rather than going through `PalInstance.from_species`
+## Fields are set directly rather than going through `CreatureInstance.from_species`
 ## so a load never depends on `species.json` still defining the species —
 ## an instance's saved stats are trusted as-is, the same "carry on with what
 ## the file says" spirit as the rest of this class.
@@ -292,23 +292,23 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var d := raw as Dictionary
-		var pal: RefCounted = PAL_INSTANCE.new()
-		pal.species_id = str(d.get("species_id", ""))
-		pal.display_name = str(d.get("display_name", pal.species_id))
-		pal.pal_type = str(d.get("pal_type", "ground"))
-		pal.nickname = str(d.get("nickname", ""))
-		pal.max_hp = float(d.get("max_hp", 1.0))
-		pal.attack = float(d.get("attack", 1.0))
-		pal.defence = float(d.get("defence", 1.0))
-		pal.hp = float(d.get("hp", pal.max_hp))
-		pal.energy = float(d.get("energy", 0.0))
-		pal.fainted = bool(d.get("fainted", false))
-		pal.level = int(d.get("level", 1))
-		pal.xp = int(d.get("xp", 0))
-		pal.bond = int(d.get("bond", 0))
-		pal.move_quick = str(d.get("move_quick", ""))
-		pal.move_charged = str(d.get("move_charged", ""))
-		party_ref.call("add", pal)
+		var creature: RefCounted = CREATURE_INSTANCE.new()
+		creature.species_id = str(d.get("species_id", ""))
+		creature.display_name = str(d.get("display_name", creature.species_id))
+		creature.creature_type = str(d.get("creature_type", "ground"))
+		creature.nickname = str(d.get("nickname", ""))
+		creature.max_hp = float(d.get("max_hp", 1.0))
+		creature.attack = float(d.get("attack", 1.0))
+		creature.defence = float(d.get("defence", 1.0))
+		creature.hp = float(d.get("hp", creature.max_hp))
+		creature.energy = float(d.get("energy", 0.0))
+		creature.fainted = bool(d.get("fainted", false))
+		creature.level = int(d.get("level", 1))
+		creature.xp = int(d.get("xp", 0))
+		creature.bond = int(d.get("bond", 0))
+		creature.move_quick = str(d.get("move_quick", ""))
+		creature.move_charged = str(d.get("move_charged", ""))
+		party_ref.call("add", creature)
 
 
 func _inventory_to_array(inventory: Variant) -> Array:

@@ -1,5 +1,6 @@
 # D27 — Save format, and where it lives
 
+> Vocabulary note: written when the game called its creatures "pals"; R1.1 (2026-08-14) renamed the term to "creature" throughout the codebase without rewriting this historical record.
 **Status:** accepted
 **Milestone:** R3.1 (Phase 3)
 

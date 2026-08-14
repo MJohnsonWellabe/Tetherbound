@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 ## Third-person locomotion: walk, sprint, jump, stamina, fall damage.
 ##
-## M1's whole job. Nothing here knows about pals, combat or the world beyond the
+## M1's whole job. Nothing here knows about creatures, combat or the world beyond the
 ## ground it stands on, and it should stay that way until traversal feels good
 ## on the Ally (docs/MEADOWS_VERTICAL_SLICE.md M1 acceptance).
 ##

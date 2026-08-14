@@ -4,11 +4,11 @@ extends RefCounted
 ## dynamic markers. The minimap and the full map both read THIS and nothing
 ## else — spec §6A.12 forbids two map databases, and this is the one.
 ##
-## Deliberately not a radar. Spec §6A.6: wild pals never get a marker here,
+## Deliberately not a radar. Spec §6A.6: wild creatures never get a marker here,
 ## and there is no method on this class that could produce one — the only
 ## positions this file ever stores are the player's own fog trail, the
 ## data-driven landmarks and whatever calls `add_dynamic_marker()` (camps,
-## the tracked objective). If a future change wants wild-pal blips, that is a
+## the tracked objective). If a future change wants wild-creature blips, that is a
 ## design decision for someone to flag, not a natural extension of this file.
 ##
 ## Discovery is permanent: fog cells and landmarks only ever move from

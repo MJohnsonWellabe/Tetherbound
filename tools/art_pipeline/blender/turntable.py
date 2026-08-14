@@ -132,7 +132,7 @@ def normalise() -> tuple[Vector, float]:
     arrives at an arbitrary scale with an arbitrary origin — measured across
     the three creatures already in this project, one was 263 units tall with
     its origin at its middle, one 94 units, and one 3.8 units standing on its
-    feet (see pal_body._fit).
+    feet (see creature_body._fit).
     """
     low, high = world_bounds()
     offset = Vector((-(low.x + high.x) / 2, -(low.y + high.y) / 2, -low.z))

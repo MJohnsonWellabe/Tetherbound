@@ -11,7 +11,7 @@ extends RefCounted
 ##
 ## A physical keyboard still types straight into the same buffer. The two paths
 ## share this object rather than sharing a Control, so neither can drift into
-## having its own idea of what the pal is called.
+## having its own idea of what the creature is called.
 
 ## Long enough for a real name, short enough to fit a HUD nameplate beside a
 ## health bar without eliding. TUNABLE.
@@ -133,8 +133,8 @@ func backspace() -> void:
 		text = text.substr(0, text.length() - 1)
 
 
-## Naming is MANDATORY (docs/OPENING_SEQUENCE.md: "a pal you did not name is a
-## pal you did not adopt"), so this is the only gate on the whole beat. Nothing
+## Naming is MANDATORY (docs/OPENING_SEQUENCE.md: "a creature you did not name is a
+## creature you did not adopt"), so this is the only gate on the whole beat. Nothing
 ## anywhere offers a skip.
 func is_valid() -> bool:
 	return sanitised().length() > 0

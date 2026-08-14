@@ -1,7 +1,7 @@
 extends Control
 
 ## The bond tether (spec §8.4): five nodes on a line, the same "how many
-## thresholds crossed" shape `pal_instance.gd::bond_nodes()` and
+## thresholds crossed" shape `creature_instance.gd::bond_nodes()` and
 ## `progression.gd::bond_nodes()` already compute — this widget only draws
 ## what those return, it does not decide bond thresholds itself.
 ##
@@ -36,7 +36,7 @@ func _ready() -> void:
 ## decide how many of the five circles paint filled. Split rather than
 ## deriving nodes from bond here, because the threshold table
 ## (`data/config/progression.json`'s `bond.thresholds`) is not this widget's
-## to know — `pal_instance.bond_nodes(cfg)` already does that work.
+## to know — `creature_instance.bond_nodes(cfg)` already does that work.
 func set_bond(bond: int, bond_max: int, nodes: int, total_nodes: int = 5) -> void:
 	_bond = bond
 	_bond_max = maxi(bond_max, 1)

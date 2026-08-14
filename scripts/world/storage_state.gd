@@ -6,10 +6,10 @@ extends RefCounted
 ## grid format: a chest is "another slot+stack container", the exact shape
 ## Inventory already is, so the transfer panel can reuse the same read API
 ## (`stack_at`, `count`, `slot_count`) it would use for the player's own
-## satchel. CLAUDE.md: player can own only five pals, ever, and storage is
+## satchel. CLAUDE.md: player can own only five creatures, ever, and storage is
 ## never how that limit gets worked around — this class only ever moves
 ## `{id, n}` item stacks, the same contract Inventory enforces everywhere
-## else, so there is no path into it for a pal instance to take.
+## else, so there is no path into it for a creature instance to take.
 ##
 ## Pure logic, no nodes, so tests/test_storage.gd can exercise it headlessly —
 ## the same split test_inventory.gd already draws for the player's satchel.

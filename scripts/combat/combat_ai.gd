@@ -1,6 +1,6 @@
 extends RefCounted
 
-## The wild pal's combat brain.
+## The wild creature's combat brain.
 ##
 ## Pure: it is handed a snapshot of the situation and returns what to do. No
 ## nodes, no timers of its own, no access to the scene. The node layer measures
@@ -14,7 +14,7 @@ extends RefCounted
 ##
 ## The behaviour it implements is the smallest thing that is not a punching bag:
 ##
-##   CLOSE      walk towards the player's pal until inside preferred range
+##   CLOSE      walk towards the player's creature until inside preferred range
 ##   TELEGRAPH  rooted, winding up, visible
 ##   RECOVER    rooted, vulnerable — this is the player's punish window
 ##   REPOSITION back off and circle, so the fight is not two creatures standing
@@ -36,7 +36,7 @@ enum Intent {
 ## Decide what the opponent should be doing.
 ##
 ## `state` is what it is doing now, `distance` is the horizontal gap to the
-## player's pal, and the three timers are how long is left in the current beat.
+## player's creature, and the three timers are how long is left in the current beat.
 ## Returns the intent for this frame; the caller starts a new beat whenever the
 ## returned intent differs from the one it was in.
 static func decide(

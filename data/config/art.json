@@ -76,7 +76,7 @@
   },
   "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above. `hour` (0-24) is when scripts/world/day_cycle.gd treats this as the active preset -- see R5.1.",
   "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it — 46.8% of the image pixel-for-pixel the same — because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",
-  "_comment_day_cycle": "TUNABLE (CLAUDE.md 'Tunable Values'): how fast the clock runs and when the world counts as genuinely dark, for scripts/world/day_cycle.gd. No gameplay reads these yet -- R5.1 is presentation only, matching GAME_DESIGN.md 24's 'do not just add levels to every pal at night'; nocturnal spawn rules are a later, separate decision.",
+  "_comment_day_cycle": "TUNABLE (CLAUDE.md 'Tunable Values'): how fast the clock runs and when the world counts as genuinely dark, for scripts/world/day_cycle.gd. No gameplay reads these yet -- R5.1 is presentation only, matching GAME_DESIGN.md 24's 'do not just add levels to every creature at night'; nocturnal spawn rules are a later, separate decision.",
   "day_length_seconds": 600.0,
   "dark_from_hour": 20.0,
   "dark_to_hour": 5.0,

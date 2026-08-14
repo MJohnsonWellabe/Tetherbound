@@ -15,10 +15,10 @@ extends SceneTree
 ## exactly like "no animation".
 
 const MODELS := {
-	"terrapup": "res://assets/pals/tetherbound/terrapup/models/pal_terrapup_lod0.glb",
-	"ripplet": "res://assets/pals/tetherbound/ripplet/models/pal_ripplet_lod0.glb",
-	"galewisp": "res://assets/pals/tetherbound/galewisp/models/pal_galewisp_lod0.glb",
-	"veridian": "res://assets/pals/tetherbound/veridian/models/pal_veridian_lod0.glb",
+	"terrapup": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
+	"ripplet": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb",
+	"galewisp": "res://assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb",
+	"veridian": "res://assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb",
 	"trainer": "res://assets/characters/trainer/trainer_lod0.glb",
 }
 

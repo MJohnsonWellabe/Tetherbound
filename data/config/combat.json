@@ -1,6 +1,6 @@
 {
   "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
-  "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their pal, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
+  "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their creature, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
   "damage": {
     "_comment": "damage = power * scale * attack / (attack + defence). Bounded on purpose: a raw attack/defence ratio explodes when defence is low and produces one-shot kills that read as bugs. With scale 2, equal attack and defence deals exactly the move's power.",
     "scale": 2.0,
@@ -14,7 +14,7 @@
     "gain_per_quick": 26.0,
     "charged_cost": 100.0
   },
-  "pal_movement": {
+  "creature_movement": {
     "_comment": "How a creature moves while a fight is running. Faster than a walk and slower than the trainer's sprint: the fight should feel busy without turning into a foot race. TUNABLE and expected to change first if combat feels sluggish.",
     "speed": 5.6,
     "acceleration": 34.0,
@@ -64,7 +64,7 @@
     "reposition_time": 1.0,
     "reposition_distance": 4.0,
     "first_attack_delay": 1.5,
-    "_comment_body_clearance": "How far apart two creatures stand, as a multiple of their combined body radii. It FLOORS `preferred_range` rather than replacing it: the config still decides how much breathing room a fight wants, and this only refuses to let it be less than the two bodies occupy. The flat 2.1m below was written when every creature was the same capsule; with real models it is smaller than the pair, so the opponent walked to 2.1m and stopped with its head inside the other creature's flank. The blind critic found that in five of seven combat frames, once with antlers coming out of the other creature's back. Reach and reposition distance are floored to match, or a creature spaces itself to exactly where it can no longer hit anything. Raised from 1.35: `body_radius` is the GAMEPLAY collider, and pal_body fits art to it with a footprint allowance of 2.4, so a model is routinely wider than the capsule that represents it. Spacing by the collider alone still left the meshes overlapping.",
+    "_comment_body_clearance": "How far apart two creatures stand, as a multiple of their combined body radii. It FLOORS `preferred_range` rather than replacing it: the config still decides how much breathing room a fight wants, and this only refuses to let it be less than the two bodies occupy. The flat 2.1m below was written when every creature was the same capsule; with real models it is smaller than the pair, so the opponent walked to 2.1m and stopped with its head inside the other creature's flank. The blind critic found that in five of seven combat frames, once with antlers coming out of the other creature's back. Reach and reposition distance are floored to match, or a creature spaces itself to exactly where it can no longer hit anything. Raised from 1.35: `body_radius` is the GAMEPLAY collider, and creature_body fits art to it with a footprint allowance of 2.4, so a model is routinely wider than the capsule that represents it. Spacing by the collider alone still left the meshes overlapping.",
     "body_clearance": 1.8
   },
   "arena": {
@@ -82,30 +82,30 @@
   "flow": {
     "_comment": "Engagement and resolution timing.",
     "engage_range": 6.0,
-    "_comment_engage": "Metres at which the interact prompt appears. Engagement is ALWAYS an explicit button press: GAME_DESIGN.md 14 forbids proximity starting a fight with a peaceful pal.",
+    "_comment_engage": "Metres at which the interact prompt appears. Engagement is ALWAYS an explicit button press: GAME_DESIGN.md 14 forbids proximity starting a fight with a peaceful creature.",
     "faint_pause": 1.6,
     "run_delay": 0.5,
     "_comment_guard": "Seconds of player input ignored at the start of a fight. Engage and charged attack are the same physical button (X), and without this the press that opens the fight is also read as the first attack of it.",
     "input_guard": 0.25,
-    "_comment_buffer": "Seconds an attack press pressed during wind-up/recovery/cooldown stays alive to fire the moment the pal is ready again. Without it, mashing at natural rhythm drops presses into the ~0.4s dead window and combat reads as unresponsive. Tunable.",
+    "_comment_buffer": "Seconds an attack press pressed during wind-up/recovery/cooldown stays alive to fire the moment the creature is ready again. Without it, mashing at natural rhythm drops presses into the ~0.4s dead window and combat reads as unresponsive. Tunable.",
     "input_buffer": 0.3
   },
   "camera": {
-    "_comment": "The fight reuses the exploration orbit camera rather than adding a second one: a piloted pal wants exactly the third-person camera M1 already tuned, re-pointed at a shorter creature. These are the overrides while a fight is running.",
+    "_comment": "The fight reuses the exploration orbit camera rather than adding a second one: a piloted creature wants exactly the third-person camera M1 already tuned, re-pointed at a shorter creature. These are the overrides while a fight is running.",
     "_comment_distance": "Close. These are metre-tall creatures, not a 1.8m trainer: at the exploration camera's 5.2m they read as specks and the fight is unreadable.",
     "distance": 4.6,
-    "_comment_height": "Pivot height above the pal's feet. Above the creature rather than at its shoulder, so the camera looks slightly DOWN on the fight and the ground the opponent is standing on stays in frame.",
+    "_comment_height": "Pivot height above the creature's feet. Above the creature rather than at its shoulder, so the camera looks slightly DOWN on the fight and the ground the opponent is standing on stays in frame.",
     "height": 2.15,
     "pitch_start_deg": -25.0,
     "_comment_fov": "Narrower than exploration's 70. A wide lens this close distorts both creatures towards the edges of the frame, which is exactly where a fight with free movement puts them.",
     "fov": 62.0,
-    "_comment_shoulder": "Metres the lens slides sideways. Dead centre behind your own pal means your own pal covers the opponent, which is the one thing you must be able to see.",
+    "_comment_shoulder": "Metres the lens slides sideways. Dead centre behind your own creature means your own creature covers the opponent, which is the one thing you must be able to see.",
     "shoulder_offset": 1.5,
-    "_comment_blend": "How fast the rig eases onto the pal when a fight opens, and back onto the trainer when it ends.",
+    "_comment_blend": "How fast the rig eases onto the creature when a fight opens, and back onto the trainer when it ends.",
     "retarget_lag": 6.0
   },
   "wild": {
-    "_comment": "How a wild pal behaves before it is engaged. It never initiates: GAME_DESIGN.md 14 requires proximity not to start a fight with a peaceful pal. It wanders so it does not read as scenery, and it stops and looks at you so there is a cue that it can be engaged at all.",
+    "_comment": "How a wild creature behaves before it is engaged. It never initiates: GAME_DESIGN.md 14 requires proximity not to start a fight with a peaceful creature. It wanders so it does not read as scenery, and it stops and looks at you so there is a cue that it can be engaged at all.",
     "wander_radius": 7.0,
     "wander_speed": 1.4,
     "notice_range": 9.0,
@@ -138,11 +138,11 @@
     "radius": 1.1
   },
   "switch": {
-    "_comment": "D32: voluntary mid-combat pal switching. lockout_seconds is how long after ANY switch before another is allowed, so a tap of combat_switch_left/right cannot be spammed into a stutter of pals. No auto-switch-on-faint: this only ever fires from the player's own choice. TUNABLE.",
+    "_comment": "D32: voluntary mid-combat creature switching. lockout_seconds is how long after ANY switch before another is allowed, so a tap of combat_switch_left/right cannot be spammed into a stutter of creatures. No auto-switch-on-faint: this only ever fires from the player's own choice. TUNABLE.",
     "lockout_seconds": 1.5
   },
   "target_marker": {
-    "_comment": "R9.4-remainder-9-combat: a chevron over the real opponent's head, so it cannot be confused with an ambient decorative pal from the same spawns.json cluster. A pale, near-white colour on purpose \u2014 it must not compete with the impact flash's warm gold or the telegraph's warning red.",
+    "_comment": "R9.4-remainder-9-combat: a chevron over the real opponent's head, so it cannot be confused with an ambient decorative creature from the same spawns.json cluster. A pale, near-white colour on purpose \u2014 it must not compete with the impact flash's warm gold or the telegraph's warning red.",
     "colour": "#f4f7ff",
     "height": 1.6,
     "size": 0.42

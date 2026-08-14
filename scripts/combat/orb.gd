@@ -251,7 +251,7 @@ func _fade_trail() -> void:
 
 
 ## Launch. `target` is the creature this throw is aimed at; the orb only tests
-## against that one, because a throw is at a pal, not at the world.
+## against that one, because a throw is at a creature, not at the world.
 func launch(from: Vector3, direction: Vector3, speed: float, target: Node3D) -> void:
 	global_position = from
 	_velocity = direction.normalized() * speed

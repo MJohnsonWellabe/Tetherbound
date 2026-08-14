@@ -11,9 +11,9 @@
 ; for its two health bars.
 ;
 ; Three fixed regions, none of which overlap at 1920x1080: the enemy plate
-; top-center, the controlled-pal block + party strip lower-left, and the
+; top-center, the controlled-creature block + party strip lower-left, and the
 ; 2x2 move grid + orb count lower-right. The centre strip along the bottom
-; (between the pal block and the grid) is deliberately empty screen — that is
+; (between the creature block and the grid) is deliberately empty screen — that is
 ; where Prompt, the aim row and the catch-resolution row live, one at a time,
 ; never more than one of the three visible together.
 ;
@@ -79,7 +79,7 @@ horizontal_alignment = 1
 theme_override_font_sizes/font_size = 26
 text = ""
 
-; --- Controlled-pal block: lower-left ----------------------------------------
+; --- Controlled-creature block: lower-left ----------------------------------------
 
 [node name="AllyPanel" type="PanelContainer" parent="Root"]
 mouse_filter = 2
@@ -165,7 +165,7 @@ theme_override_font_sizes/font_size = 19
 theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = ""
 
-; "GO, <label>!" — a brief line near the pal block on a switch, not a fixed
+; "GO, <label>!" — a brief line near the creature block on a switch, not a fixed
 ; slot in AllyVBox: it has to disappear again without leaving a gap where the
 ; status row already reserves its own empty line.
 [node name="GoText" type="Label" parent="Root"]

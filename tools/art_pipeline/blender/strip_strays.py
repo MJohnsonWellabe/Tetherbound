@@ -26,7 +26,7 @@ importer reads the file. Reproduced on Blender 4.2.9 with a cube:
 So it is an import artifact of Blender's own round trip, and the consequences
 run opposite to what was believed:
 
-  - **Godot never saw it.** `pal_body._fit()` measures what is in the file.
+  - **Godot never saw it.** `creature_body._fit()` measures what is in the file.
     smoke_art's fitted heights were right all along.
   - **The inspection tool saw it.** A unit sphere wrapped around a creature
     standing 0..2.0 reports the height as 3.0 and the mesh count as 2. Those

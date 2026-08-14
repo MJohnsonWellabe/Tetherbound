@@ -523,8 +523,8 @@ def main() -> None:
                         help="write coordinate overlays instead of crops")
     parser.add_argument("--check", action="store_true",
                         help="also write a contact sheet of every crop")
-    parser.add_argument("--out", default="assets/pals/tetherbound",
-                        help="output root (default: assets/pals/tetherbound)")
+    parser.add_argument("--out", default="assets/creatures/tetherbound",
+                        help="output root (default: assets/creatures/tetherbound)")
     args = parser.parse_args()
 
     config = load_config()

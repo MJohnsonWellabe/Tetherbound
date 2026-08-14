@@ -219,11 +219,11 @@ Blend the useful progression energy of:
 
 But preserve Tetherbound's own pillars:
 - trainer never fights
-- Pals fight
-- only five Pals total
+- Creatures fight
+- only five Creatures total
 - survival supports adventure
 - no mandatory starvation
-- no Pal labor automation
+- no Creature labor automation
 - team decisions matter
 
 The core loop should become:
@@ -347,7 +347,7 @@ Possible uses:
 ### Required dungeon: BURROW WARRENS
 
 Compact cave/nest dungeon:
-- aggressive Ground Pals
+- aggressive Ground Creatures
 - Rootstone deposits
 - navigation through chambers
 - stronger guardian fight
@@ -440,10 +440,10 @@ Keep the economy small and readable.
 
 Riding should become available by Band 3 or early Band 4.
 
-Use **Meadowhart** as the normal rideable Meadows Pal.
+Use **Meadowhart** as the normal rideable Meadows Creature.
 
 Require:
-- compatible Pal
+- compatible Creature
 - generic Riding Saddle
 - Rootstone/Ironwood components
 
@@ -513,7 +513,7 @@ Evolution should feel earned, not automatic.
 
 ---
 
-# 5. THE FIVE-PAL LIMIT MUST MATTER BEFORE THE WARDEN
+# 5. THE FIVE-CREATURE LIMIT MUST MATTER BEFORE THE WARDEN
 
 The Meadows should deliberately create more desirable options than five slots.
 
@@ -522,7 +522,7 @@ A player may want:
 - Water counter
 - Air offense
 - rideable Meadowhart
-- rare trait Pal
+- rare trait Creature
 - Mudsnout/Tuskroot line
 - favorite early catch
 
@@ -540,8 +540,8 @@ Create around **6–10 meaningful optional activities**, not 40 shallow quests.
 
 Good candidates:
 
-### Lost Pal
-Track and recover a villager's missing bonded Pal.
+### Lost Creature
+Track and recover a villager's missing bonded Creature.
 
 ### Broken Cart
 Gather materials to repair a bridgehand's cart.
@@ -652,7 +652,7 @@ Target first-clear time: **30–60 minutes**.
 
 ### Warden Arena
 - dialogue
-- multi-Pal boss trainer battle
+- multi-Creature boss trainer battle
 
 ### Legendary Chamber
 - tether mechanism
@@ -784,7 +784,7 @@ No random battle screens.
 
 Reasons to return:
 - Grandpa dialogue evolves
-- Pal beds/recovery
+- Creature beds/recovery
 - storage/crafting
 - villagers update information
 - rescued NPC returns
@@ -881,7 +881,7 @@ Keep it simple.
 24. stronghold route/interior
 25. Warden
 26. legendary release
-27. five-Pal release ceremony
+27. five-Creature release ceremony
 28. post-Warden state change
 
 ## P7 — pacing pass
@@ -904,7 +904,7 @@ The Meadows is not complete until a fresh player can:
 - never fall off an exposed game-world edge
 - see believable hints of seven future regions
 - choose/name starter
-- catch wild Pals
+- catch wild Creatures
 - form a meaningful five
 - fight trainers to progress
 - earn a bridge key
@@ -920,7 +920,7 @@ The Meadows is not complete until a fresh player can:
 - open the final stronghold
 - defeat the Warden
 - free the legendary
-- make a real five-Pal decision if the roster is full
+- make a real five-Creature decision if the roster is full
 - see the Meadows change afterward
 
 The real owner-facing exit criterion is:
@@ -935,8 +935,8 @@ Do not add:
 - human combat weapons
 - shields
 - mandatory hunger/thirst
-- Pal base labor
-- unlimited Pal storage
+- Creature base labor
+- unlimited Creature storage
 - procedural world seeds
 - random encounter screens
 - all seven future biomes
@@ -1164,7 +1164,7 @@ The eight biomes were not meant to exist as isolated islands/regions.
 
 They were once part of one connected ecosystem.
 
-The eight legendary Pals are living conduits/anchors for different natural forces.
+The eight legendary Creatures are living conduits/anchors for different natural forces.
 
 Each legendary is deeply tied to one biome's energy.
 
@@ -1183,7 +1183,7 @@ Exact final type list remains governed by global game canon.
 
 ## What Team Tether discovered
 
-Team Tether learned how to bind the legendary Pals into massive Tether systems.
+Team Tether learned how to bind the legendary Creatures into massive Tether systems.
 
 By siphoning their energy, Team Tether can maintain unnatural divisions between regions.
 
@@ -1218,7 +1218,7 @@ When each biome is physically isolated:
 
 - settlements cannot trade freely
 - rare resources cannot move freely
-- specialized Pals cannot migrate naturally
+- specialized Creatures cannot migrate naturally
 - knowledge is isolated
 - travel becomes dependent on Team Tether
 - transportation routes can be monopolized
@@ -1247,7 +1247,7 @@ Their official doctrine is:
 
 They claim that before separation:
 
-- dangerous Pals migrated unpredictably
+- dangerous Creatures migrated unpredictably
 - regions competed over resources
 - disasters spread between ecosystems
 - conflicts escalated
@@ -1311,7 +1311,7 @@ They reunite it through:
 - helping settlements
 - connecting ecosystems
 
-The five-Pal limit supports the theme:
+The five-Creature limit supports the theme:
 
 > Strength comes from deep relationships, not ownership of everything.
 
@@ -1373,7 +1373,7 @@ After the Warden loses:
 1. player reaches legendary chamber
 2. legendary is freed
 3. legendary voluntarily offers to join
-4. five-Pal decision occurs if necessary
+4. five-Creature decision occurs if necessary
 5. Tether machinery fails
 6. huge exterior world event begins
 7. the next biome is visibly pulled/reconnected against the Meadows
@@ -1423,7 +1423,7 @@ Every time another legendary is freed:
 - old travel routes reopen
 - trade becomes possible
 - new resources become available
-- new Pals can migrate
+- new Creatures can migrate
 - older regions change subtly
 
 By the late game, the world should feel radically larger and more connected than it did at the beginning.
@@ -1449,7 +1449,7 @@ Benefits:
 - relationships between settlements
 
 Risks:
-- stronger wild Pals migrate
+- stronger wild Creatures migrate
 - predators enter new areas
 - invasive species/ecology issues
 - resource competition
@@ -1769,7 +1769,7 @@ If executing this whole Meadows expansion as one major build plan, work in this 
 39. Meadows Warden.
 40. reveal legendary is powering the Rift.
 41. legendary release.
-42. five-Pal release ceremony if full.
+42. five-Creature release ceremony if full.
 43. fail Tether machinery.
 44. trigger first biome reconnection world event.
 45. next biome physically joins Meadows.

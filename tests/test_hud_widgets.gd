@@ -46,7 +46,7 @@ func test_build_makes_five_fixed_rows() -> void:
 
 func test_build_is_idempotent() -> void:
 	# A test (or a stray double-mount) calling `_build()` twice must not double
-	# the rows — `autoload/party.gd`'s five-pal cap is meaningless if the
+	# the rows — `autoload/party.gd`'s five-creature cap is meaningless if the
 	# widget showing it can grow a sixth row of its own.
 	var strip := _make_strip()
 	strip._build()
@@ -54,7 +54,7 @@ func test_build_is_idempotent() -> void:
 	strip.free()
 
 
-func test_update_from_party_with_three_pals_and_two_vacants_does_not_crash() -> void:
+func test_update_from_party_with_three_creatures_and_two_vacants_does_not_crash() -> void:
 	var strip := _make_strip()
 	var entries: Array = [
 		{"label": "Terrapup", "level": 4, "hp_fraction": 0.8, "tint": Color(0.55, 0.35, 0.15), "fainted": false},
@@ -105,8 +105,8 @@ func test_fainted_entry_dims_and_tints_its_hp_bar_danger() -> void:
 	strip.update_from_party(entries, 0)
 
 	assert_almost_eq(strip._rows[0].modulate.a, PARTY_STRIP.FAINTED_MODULATE, 0.001,
-		"a fainted pal should read as dimmed even while selected")
-	assert_eq(strip._hp_fills[0].bg_color, UI_TOKENS.DANGER, "a fainted pal's hp bar should be danger-tinted")
+		"a fainted creature should read as dimmed even while selected")
+	assert_eq(strip._hp_fills[0].bg_color, UI_TOKENS.DANGER, "a fainted creature's hp bar should be danger-tinted")
 	strip.free()
 
 

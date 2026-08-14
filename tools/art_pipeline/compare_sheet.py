@@ -34,7 +34,7 @@ except ImportError:
     sys.exit("needs Pillow:  pip install pillow")
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-REFERENCE_ROOT = ROOT / "assets" / "pals" / "tetherbound"
+REFERENCE_ROOT = ROOT / "assets" / "creatures" / "tetherbound"
 VIEWS = ["front", "side", "back", "three_quarter"]
 
 CELL = 384
@@ -95,7 +95,7 @@ def build_scorecard(species: str, candidates: list[str]) -> str:
         f"# {species} — candidate scorecard",
         "",
         "Scored against `docs/art/reference/` and the crops in "
-        f"`assets/pals/tetherbound/{species}/reference/`.",
+        f"`assets/creatures/tetherbound/{species}/reference/`.",
         "",
         "**A HARD FAIL is a rejection regardless of the total.** "
         "`TETHERBOUND_3D_ART_PIPELINE.md` §9: *do not hide failures behind a total "

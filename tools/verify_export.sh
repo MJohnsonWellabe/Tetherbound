@@ -85,7 +85,7 @@ fi
 
 # 2. Data loaded by string path at run time is in the pack. None of it is
 #    traceable by the exporter's dependency scan, so none of it is guaranteed.
-for path in "data/terrain/playground" "data/config/art.json" "data/pals/species.json"; do
+for path in "data/terrain/playground" "data/config/art.json" "data/creatures/species.json"; do
   if ! strings -a "$OUT/Tetherbound.pck" | grep -qF "$path"; then
     echo "verify FAILED: '$path' is not in the .pck."
     FAIL=1

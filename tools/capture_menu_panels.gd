@@ -57,9 +57,9 @@ func _run() -> void:
 	var inventory: RefCounted = game.get("inventory")
 	var party: RefCounted = game.get("party")
 	if party != null and int(party.call("size")) == 0:
-		var pal: RefCounted = game.call("make_pal", "terrapup")
-		if pal != null:
-			party.call("add", pal)
+		var creature: RefCounted = game.call("make_creature", "terrapup")
+		if creature != null:
+			party.call("add", creature)
 	if inventory != null:
 		inventory.call("add", "orb_basic", 3)
 		inventory.call("add", "potion_small", 2)

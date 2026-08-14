@@ -5,14 +5,14 @@ extends CanvasLayer
 ## it mounts `party_strip.gd` and `stamina_arc.gd` (built and unit-tested
 ## standalone, `tests/test_hud_widgets.gd`) and `minimap.gd`/`map_baker.gd`
 ## (owned by a concurrent pass; mounted defensively, never edited here), and
-## builds the rest of the layout — the active-pal block, the player vitals
+## builds the rest of the layout — the active-creature block, the player vitals
 ## cluster, and the objective line — directly in code with `UITokens`
 ## factories.
 ##
 ## STRUCTURE VS DATA. The .tscn keeps only what genuinely wants to be
 ## hand-authored scene state: `Root` (and its load-bearing mouse_filter,
 ## see the .tscn's own comment), `HotbarPanel`, `Prompt` and `DebugReadout`.
-## Everything the Palworld layout adds — the pal block, the vitals cluster,
+## Everything the Palworld layout adds — the creature block, the vitals cluster,
 ## the mounted widgets, the objective block — is built once in `_ready()` and
 ## polled every frame in `_process()`, the same "structure once, poll every
 ## frame" split `menu_tab.gd` and `party_strip.gd` already use. Every Control
@@ -37,7 +37,7 @@ const FADE_ALPHA := 0.55
 const FADE_SPEED := 2.2
 
 ## The exploration HUD's own fade while a combat throw is being aimed (spec
-## §10.1) — the reticle over the wild pal is the thing to look at, and this
+## §10.1) — the reticle over the wild creature is the thing to look at, and this
 ## HUD's own bars/hotbar/minimap are not part of that decision. Distinct
 ## from `FADE_ALPHA` above (that one is the per-widget idle fade for a
 ## calm-but-present bar); this one dims the whole `Root` at once, the same
@@ -58,7 +58,7 @@ const FRAME_WINDOW := 120
 
 const MB := 1048576.0
 
-const PAL_SPECIES := preload("res://scripts/pals/pal_species.gd")
+const CREATURE_SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 ## EV9's owner-commissioned HUD glyphs (`docs/ASSET_LEDGER.md`, staged
@@ -69,7 +69,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## unwired rather than forced onto an unrelated widget.
 const ICON_HP := "res://assets/ui/icons/hud/hp_heart.png"
 const ICON_STAMINA := "res://assets/ui/icons/hud/stamina_bolt.png"
-const ICON_PALS := "res://assets/ui/icons/hud/pals_paw.png"
+const ICON_CREATURES := "res://assets/ui/icons/hud/creatures_paw.png"
 
 const PARTY_STRIP_SCRIPT := "res://scripts/ui/party_strip.gd"
 const STAMINA_ARC_SCRIPT := "res://scripts/ui/stamina_arc.gd"
@@ -99,8 +99,8 @@ const REGION_BANNER_SECONDS := 3.2
 ## All positions are in the HUD's own 1920x1080 authoring space (top-left
 ## origin), matching the rest of this file's "sized for the Ally" convention.
 
-const PAL_BLOCK_POS := Vector2(56.0, 830.0)
-const PAL_BLOCK_SIZE := Vector2(374.0, 110.0) ## x 56-430, y 830-940
+const CREATURE_BLOCK_POS := Vector2(56.0, 830.0)
+const CREATURE_BLOCK_SIZE := Vector2(374.0, 110.0) ## x 56-430, y 830-940
 
 const VITALS_POS := Vector2(56.0, 946.0) ## buff row starts here; satiety row ends ~1010
 const VITALS_WIDTH := 300.0
@@ -166,21 +166,21 @@ var _max_raw_axis_seen := 0.0
 var _hotbar_last_text: Array[String] = ["", "", "", "", ""]
 var _hotbar_message_until := 0.0
 
-## --- active-pal block --------------------------------------------------------
+## --- active-creature block --------------------------------------------------------
 
-var _pal_block: Control = null
-var _pal_content: Control = null
-var _pal_chip: ColorRect = null
-var _pal_name_label: Label = null
-var _pal_level_label: Label = null
-var _pal_type_label: Label = null
-var _pal_hp_bar: ProgressBar = null
-var _pal_hp_fill: StyleBoxFlat = null
-var _pal_energy_bar: ProgressBar = null
-var _pal_energy_fill: StyleBoxFlat = null
-var _pal_no_pal_label: Label = null
-var _pal_block_has_pal_last := true ## forces the first _update_pal_block to write
-var _pal_icon: TextureRect = null
+var _creature_block: Control = null
+var _creature_content: Control = null
+var _creature_chip: ColorRect = null
+var _creature_name_label: Label = null
+var _creature_level_label: Label = null
+var _creature_type_label: Label = null
+var _creature_hp_bar: ProgressBar = null
+var _creature_hp_fill: StyleBoxFlat = null
+var _creature_energy_bar: ProgressBar = null
+var _creature_energy_fill: StyleBoxFlat = null
+var _creature_no_creature_label: Label = null
+var _creature_block_has_creature_last := true ## forces the first _update_creature_block to write
+var _creature_icon: TextureRect = null
 
 ## --- party strip --------------------------------------------------------------
 
@@ -238,7 +238,7 @@ func _ready() -> void:
 	if _arbiter != null and _arbiter.has_signal("prompt_changed"):
 		_arbiter.connect("prompt_changed", _on_prompt_changed)
 
-	_build_pal_block()
+	_build_creature_block()
 	_mount_party_strip()
 	_build_vitals_cluster()
 	_mount_stamina_arc()
@@ -281,135 +281,135 @@ func _style_hotbar() -> void:
 		chip.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 
 
-# --- active-pal block ----------------------------------------------------------
+# --- active-creature block ----------------------------------------------------------
 
 
 ## Portrait chip, label()/level, HP bar, an energy strip shown only while
-## there IS energy to show, and a type tag — or, with no active pal, a dim
-## "No pal out" chip. Species tint comes from `PalSpecies.placeholder()`, the
+## there IS energy to show, and a type tag — or, with no active creature, a dim
+## "No creature out" chip. Species tint comes from `CreatureSpecies.placeholder()`, the
 ## same lookup `party_strip.gd`'s caller (this file, below) uses, so the two
-## widgets can never tint the same pal two different colours.
-func _build_pal_block() -> void:
-	_pal_block = Control.new()
-	_pal_block.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_block.position = PAL_BLOCK_POS
-	_pal_block.size = PAL_BLOCK_SIZE
-	_root.add_child(_pal_block)
+## widgets can never tint the same creature two different colours.
+func _build_creature_block() -> void:
+	_creature_block = Control.new()
+	_creature_block.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_block.position = CREATURE_BLOCK_POS
+	_creature_block.size = CREATURE_BLOCK_SIZE
+	_root.add_child(_creature_block)
 
-	_pal_content = Control.new()
-	_pal_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_content.size = PAL_BLOCK_SIZE
-	_pal_block.add_child(_pal_content)
+	_creature_content = Control.new()
+	_creature_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_content.size = CREATURE_BLOCK_SIZE
+	_creature_block.add_child(_creature_content)
 
-	_pal_chip = ColorRect.new()
-	_pal_chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_chip.position = Vector2(0.0, 4.0)
-	_pal_chip.size = Vector2(40.0, 40.0)
-	_pal_content.add_child(_pal_chip)
+	_creature_chip = ColorRect.new()
+	_creature_chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_chip.position = Vector2(0.0, 4.0)
+	_creature_chip.size = Vector2(40.0, 40.0)
+	_creature_content.add_child(_creature_chip)
 
-	_pal_icon = TextureRect.new()
-	_pal_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_icon.texture = load(ICON_PALS)
-	_pal_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_pal_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_pal_icon.position = Vector2(-6.0, -14.0)
-	_pal_icon.size = Vector2(20.0, 20.0)
-	_pal_block.add_child(_pal_icon)
+	_creature_icon = TextureRect.new()
+	_creature_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_icon.texture = load(ICON_CREATURES)
+	_creature_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_creature_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_creature_icon.position = Vector2(-6.0, -14.0)
+	_creature_icon.size = Vector2(20.0, 20.0)
+	_creature_block.add_child(_creature_icon)
 
-	_pal_name_label = Label.new()
-	_pal_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_name_label.position = Vector2(52.0, -2.0)
-	_pal_name_label.size = Vector2(280.0, 32.0)
-	_pal_name_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
-	_pal_content.add_child(_pal_name_label)
+	_creature_name_label = Label.new()
+	_creature_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_name_label.position = Vector2(52.0, -2.0)
+	_creature_name_label.size = Vector2(280.0, 32.0)
+	_creature_name_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	_creature_content.add_child(_creature_name_label)
 
-	_pal_level_label = Label.new()
-	_pal_level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_level_label.position = Vector2(52.0, 30.0)
-	_pal_level_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_pal_level_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	_pal_content.add_child(_pal_level_label)
+	_creature_level_label = Label.new()
+	_creature_level_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_level_label.position = Vector2(52.0, 30.0)
+	_creature_level_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_creature_level_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	_creature_content.add_child(_creature_level_label)
 
-	_pal_type_label = Label.new()
-	_pal_type_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_type_label.position = Vector2(170.0, 30.0)
-	_pal_type_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_pal_content.add_child(_pal_type_label)
+	_creature_type_label = Label.new()
+	_creature_type_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_type_label.position = Vector2(170.0, 30.0)
+	_creature_type_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_creature_content.add_child(_creature_type_label)
 
-	_pal_hp_bar = ProgressBar.new()
-	_pal_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_hp_bar.position = Vector2(0.0, 54.0)
-	_pal_hp_bar.size = Vector2(240.0, 14.0)
-	_pal_hp_bar.show_percentage = false
-	_pal_hp_bar.min_value = 0.0
-	_pal_hp_bar.max_value = 1.0
-	_pal_hp_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
-	_pal_hp_fill = UITokens.fill_box(UITokens.HP_GREEN)
-	_pal_hp_bar.add_theme_stylebox_override("fill", _pal_hp_fill)
-	_pal_content.add_child(_pal_hp_bar)
+	_creature_hp_bar = ProgressBar.new()
+	_creature_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_hp_bar.position = Vector2(0.0, 54.0)
+	_creature_hp_bar.size = Vector2(240.0, 14.0)
+	_creature_hp_bar.show_percentage = false
+	_creature_hp_bar.min_value = 0.0
+	_creature_hp_bar.max_value = 1.0
+	_creature_hp_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
+	_creature_hp_fill = UITokens.fill_box(UITokens.HP_GREEN)
+	_creature_hp_bar.add_theme_stylebox_override("fill", _creature_hp_fill)
+	_creature_content.add_child(_creature_hp_bar)
 
-	_pal_energy_bar = ProgressBar.new()
-	_pal_energy_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_energy_bar.position = Vector2(0.0, 72.0)
-	_pal_energy_bar.size = Vector2(240.0, 6.0)
-	_pal_energy_bar.show_percentage = false
-	_pal_energy_bar.min_value = 0.0
-	_pal_energy_bar.max_value = 1.0
-	_pal_energy_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
-	_pal_energy_fill = UITokens.fill_box(UITokens.TEAL)
-	_pal_energy_bar.add_theme_stylebox_override("fill", _pal_energy_fill)
-	_pal_content.add_child(_pal_energy_bar)
+	_creature_energy_bar = ProgressBar.new()
+	_creature_energy_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_energy_bar.position = Vector2(0.0, 72.0)
+	_creature_energy_bar.size = Vector2(240.0, 6.0)
+	_creature_energy_bar.show_percentage = false
+	_creature_energy_bar.min_value = 0.0
+	_creature_energy_bar.max_value = 1.0
+	_creature_energy_bar.add_theme_stylebox_override("background", UITokens.fill_box(UITokens.TRACK))
+	_creature_energy_fill = UITokens.fill_box(UITokens.TEAL)
+	_creature_energy_bar.add_theme_stylebox_override("fill", _creature_energy_fill)
+	_creature_content.add_child(_creature_energy_bar)
 
-	_pal_no_pal_label = Label.new()
-	_pal_no_pal_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_pal_no_pal_label.position = Vector2(0.0, 40.0)
-	_pal_no_pal_label.text = "No pal out"
-	_pal_no_pal_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
-	_pal_no_pal_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	_pal_no_pal_label.visible = false
-	_pal_block.add_child(_pal_no_pal_label)
+	_creature_no_creature_label = Label.new()
+	_creature_no_creature_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_creature_no_creature_label.position = Vector2(0.0, 40.0)
+	_creature_no_creature_label.text = "No creature out"
+	_creature_no_creature_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_creature_no_creature_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_creature_no_creature_label.visible = false
+	_creature_block.add_child(_creature_no_creature_label)
 
 
-func _update_pal_block() -> void:
-	var pal: RefCounted = null
+func _update_creature_block() -> void:
+	var creature: RefCounted = null
 	if _party != null and int(_party.call("size")) > 0:
-		pal = _party.call("active")
-	var has_pal := pal != null
+		creature = _party.call("active")
+	var has_creature := creature != null
 
-	if has_pal != _pal_block_has_pal_last:
-		_pal_content.visible = has_pal
-		_pal_no_pal_label.visible = not has_pal
-		_pal_block_has_pal_last = has_pal
+	if has_creature != _creature_block_has_creature_last:
+		_creature_content.visible = has_creature
+		_creature_no_creature_label.visible = not has_creature
+		_creature_block_has_creature_last = has_creature
 
-	if not has_pal:
+	if not has_creature:
 		return
 
-	var species_id := str(pal.get("species_id"))
-	_pal_chip.color = _species_tint(species_id)
-	_pal_name_label.text = str(pal.call("label"))
-	_pal_level_label.text = "Lv %d" % int(pal.get("level"))
+	var species_id := str(creature.get("species_id"))
+	_creature_chip.color = _species_tint(species_id)
+	_creature_name_label.text = str(creature.call("label"))
+	_creature_level_label.text = "Lv %d" % int(creature.get("level"))
 
-	var pal_type := str(pal.get("pal_type"))
-	_pal_type_label.text = pal_type.to_upper()
-	_pal_type_label.add_theme_color_override("font_color", _type_colour(pal_type))
+	var creature_type := str(creature.get("creature_type"))
+	_creature_type_label.text = creature_type.to_upper()
+	_creature_type_label.add_theme_color_override("font_color", _type_colour(creature_type))
 
-	_pal_hp_bar.value = clampf(float(pal.call("hp_fraction")), 0.0, 1.0)
+	_creature_hp_bar.value = clampf(float(creature.call("hp_fraction")), 0.0, 1.0)
 
-	var energy := float(pal.get("energy"))
-	_pal_energy_bar.visible = energy > 0.0
-	if _pal_energy_bar.visible:
-		_pal_energy_bar.value = clampf(float(pal.call("energy_fraction")), 0.0, 1.0)
+	var energy := float(creature.get("energy"))
+	_creature_energy_bar.visible = energy > 0.0
+	if _creature_energy_bar.visible:
+		_creature_energy_bar.value = clampf(float(creature.call("energy_fraction")), 0.0, 1.0)
 
 
 func _species_tint(species_id: String) -> Color:
 	if species_id.is_empty():
 		return UITokens.TEXT_MUTED
-	var placeholder: Dictionary = PAL_SPECIES.placeholder(species_id)
+	var placeholder: Dictionary = CREATURE_SPECIES.placeholder(species_id)
 	return Color(str(placeholder.get("colour", "#cccccc")))
 
 
-func _type_colour(pal_type: String) -> Color:
-	match pal_type:
+func _type_colour(creature_type: String) -> Color:
+	match creature_type:
 		"ground":
 			return UITokens.GROUND_OCHRE
 		"water":
@@ -437,7 +437,7 @@ func _mount_party_strip() -> void:
 	_party_strip = inst
 	_party_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	# Positioned to slide in ABOVE the active-pal block, sharing its left
+	# Positioned to slide in ABOVE the active-creature block, sharing its left
 	# edge -- SLOTS/ROW_SIZE/ROW_SEPARATION are the widget's own consts, read
 	# rather than duplicated, so this position can never drift out of step
 	# with what party_strip.gd actually draws.
@@ -445,7 +445,7 @@ func _mount_party_strip() -> void:
 		float(script.SLOTS) * script.ROW_SIZE.y
 		+ float(script.SLOTS - 1) * script.ROW_SEPARATION
 	)
-	_party_strip.position = Vector2(PAL_BLOCK_POS.x, PAL_BLOCK_POS.y - height - UITokens.GAP)
+	_party_strip.position = Vector2(CREATURE_BLOCK_POS.x, CREATURE_BLOCK_POS.y - height - UITokens.GAP)
 	_root.add_child(_party_strip)
 
 
@@ -464,13 +464,13 @@ func _update_party_strip() -> void:
 	_party_strip_last_revision = revision
 
 	var entries: Array = []
-	for pal: RefCounted in _party.call("members"):
+	for creature: RefCounted in _party.call("members"):
 		entries.append({
-			"label": str(pal.call("label")),
-			"level": int(pal.get("level")),
-			"hp_fraction": float(pal.call("hp_fraction")),
-			"tint": _species_tint(str(pal.get("species_id"))),
-			"fainted": bool(pal.get("fainted")),
+			"label": str(creature.call("label")),
+			"level": int(creature.get("level")),
+			"hp_fraction": float(creature.call("hp_fraction")),
+			"tint": _species_tint(str(creature.get("species_id"))),
+			"fainted": bool(creature.get("fainted")),
 		})
 	_party_strip.call("update_from_party", entries, index)
 	_party_strip.call("show_strip")
@@ -749,8 +749,8 @@ func _ensure_minimap_baked() -> void:
 ## `player.global_position` and a yaw DERIVED from `CameraRig.planar_basis()`
 ## rather than read off a private field -- see the task brief's own reasoning,
 ## which mirrors `minimap.gd`'s own header derivation
-## (`forward(yaw) = (sin(yaw), 0, cos(yaw))`). `pal_pos` is the follower pal's
-## position when `encounter_director.gd` has spawned one (named "AllyPal" in
+## (`forward(yaw) = (sin(yaw), 0, cos(yaw))`). `creature_pos` is the follower creature's
+## position when `encounter_director.gd` has spawned one (named "AllyCreature" in
 ## the world, per that file), else null.
 func _update_minimap() -> void:
 	if _minimap == null or not _minimap_baked or _player == null:
@@ -763,13 +763,13 @@ func _update_minimap() -> void:
 			var basis: Basis = rig.call("planar_basis")
 			yaw = atan2(basis.z.x, basis.z.z)
 
-	var pal_pos: Variant = null
+	var creature_pos: Variant = null
 	if world != null:
-		var follower := world.get_node_or_null(^"AllyPal")
+		var follower := world.get_node_or_null(^"AllyCreature")
 		if follower != null and is_instance_valid(follower) and follower is Node3D:
-			pal_pos = (follower as Node3D).global_position
+			creature_pos = (follower as Node3D).global_position
 
-	_minimap.call("update_view", _player.global_position, yaw, pal_pos)
+	_minimap.call("update_view", _player.global_position, yaw, creature_pos)
 
 	var dim := 1.0
 	if world != null:
@@ -888,7 +888,7 @@ func _input(event: InputEvent) -> void:
 
 ## Perf readout first, always (see `_debug_text`'s header). Everything else
 ## polls in a fixed order: `_game` refreshed once, hotbar (functionally
-## unchanged), the pal block/party strip/objective (all `Game`-sourced), the
+## unchanged), the creature block/party strip/objective (all `Game`-sourced), the
 ## minimap (bake-once then update), then player-sourced vitals/stamina last,
 ## behind the same null-player / null-vitals guards the old HUD used --
 ## a capture tool or a headless smoke boot with no player still gets every
@@ -904,7 +904,7 @@ func _process(delta: float) -> void:
 	_refresh_game_ref()
 	_update_hotbar_and_message()
 	_read_hotbar_input()
-	_update_pal_block()
+	_update_creature_block()
 	_update_party_strip()
 	_update_objective()
 	_update_region_banner()
@@ -1063,7 +1063,7 @@ func _read_hotbar_input() -> void:
 		return
 	# HD2: the hotbar is deaf during a fight. hotbar_2/3 share the physical
 	# d-pad with combat_switch_left/right (D32), and Input's action reads are
-	# global -- without this gate a mid-fight pal switch also quietly ate a
+	# global -- without this gate a mid-fight creature switch also quietly ate a
 	# potion. The combat HUD owns the d-pad while a fight runs.
 	if _combat_is_running():
 		return
@@ -1129,13 +1129,13 @@ func _use_hotbar_slot(index: int) -> void:
 	var target: RefCounted = null
 	var worst_deficit := 0.0
 	for i in int(_party.call("size")):
-		var pal: RefCounted = _party.call("at", i)
-		if pal == null:
+		var creature: RefCounted = _party.call("at", i)
+		if creature == null:
 			continue
-		var deficit: float = float(pal.get("max_hp")) - float(pal.get("hp"))
+		var deficit: float = float(creature.get("max_hp")) - float(creature.get("hp"))
 		if deficit > worst_deficit:
 			worst_deficit = deficit
-			target = pal
+			target = creature
 
 	if target == null:
 		_show_hotbar_message("Everybody's already at full health.")
@@ -1160,7 +1160,7 @@ func _fade_toward(control: Control, target: float, delta: float) -> void:
 
 ## Fades this whole HUD toward `AIM_FADE_ALPHA` while a throw is being
 ## aimed, and back to fully opaque the moment it is not — `_root`, not any
-## one block, so the pal block/vitals/hotbar/minimap dim together rather
+## one block, so the creature block/vitals/hotbar/minimap dim together rather
 ## than each needing their own aim check layered onto their own idle-fade.
 func _update_aim_fade(delta: float) -> void:
 	var target := AIM_FADE_ALPHA if _combat_is_aiming() else 1.0

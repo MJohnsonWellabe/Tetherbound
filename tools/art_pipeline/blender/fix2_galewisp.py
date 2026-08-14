@@ -6,7 +6,7 @@
 Round 1's fix cut the ground-dragging tail to 0.6x; the in-engine gate
 critique says it went too far: "the tail plume is missing or vestigial...
 visibly changes the character's outline from any rear or side angle — exactly
-the angles the player sees most while following a pal." Re-inflate the rear
+the angles the player sees most while following a creature." Re-inflate the rear
 overhang and sweep it up into the concept's plume. Run on the rigged mesh —
 weights are per-vertex and ride along with position edits.
 """

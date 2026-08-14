@@ -36,7 +36,7 @@ const GLYPHS := {
 		"keyboard": ["keyboard_arrow_left.png", "keyboard_arrow_right.png"],
 		"gamepad": ["xbox_dpad_left.png", "xbox_dpad_right.png"],
 	},
-	"pal_recall": {"keyboard": "keyboard_r.png", "gamepad": "xbox_dpad_up.png"},
+	"creature_recall": {"keyboard": "keyboard_r.png", "gamepad": "xbox_dpad_up.png"},
 	## The starting torch (owner playtest report: night is too dark, and the
 	## player must have a torch from the beginning). Manual override on top of
 	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.
@@ -67,7 +67,7 @@ const GLYPHS := {
 	## `cancel` above, so combat_hud.gd's Run AND Cancel verbs both reach for
 	## the `cancel` id directly rather than this duplicating its two files.
 
-	## D32's `combat_switch_left`/`combat_switch_right` (mid-combat pal
+	## D32's `combat_switch_left`/`combat_switch_right` (mid-combat creature
 	## switching -- the move grid's Switch cell and, tap-vs-hold, the party
 	## selector). Shares files with `horizontal`'s own left/right pair rather
 	## than vendoring anything new: same left/right keyboard arrows, same
@@ -81,7 +81,7 @@ const GLYPHS := {
 	## what CLAUDE.md's "controller first" asks for, not keyboard getting a
 	## one-press hotbar while a pad gets a slower cycle-and-confirm one.
 	## Chosen from buttons nothing else in exploration reads: Y, LB and
-	## D-pad left/right/down are all free (D-pad up is `pal_recall`; A/B/X
+	## D-pad left/right/down are all free (D-pad up is `creature_recall`; A/B/X
 	## are jump/cancel/interact; RB and mouse-left/right are combat-only).
 	"hotbar_1": {"keyboard": "keyboard_1.png", "gamepad": "xbox_button_y.png"},
 	"hotbar_2": {"keyboard": "keyboard_2.png", "gamepad": "xbox_dpad_left.png"},
