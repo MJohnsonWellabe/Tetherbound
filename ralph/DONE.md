@@ -68,10 +68,10 @@ a regression: this rename only ever changes identifiers, never logic or
 numeric thresholds.
 
 Landed via `ralph/r1.1-r1.2-pal-rename` through the standard CI-gated
-auto-merge; the real Windows `Release` export (not CI's own debug export)
-was dispatched against this exact commit immediately after the merge — see
-whether that run's own record confirms it, since it was still in flight
-when this entry was written.
+auto-merge; the real Windows `Release` export (not CI's own debug export,
+run 31847497774) was dispatched against this exact commit immediately
+after the merge and **confirmed green** — the ~250 renamed asset files
+export cleanly, not just import cleanly.
 
 ## EV9 — HP/stamina/pals HUD icons wired in (owner-supplied art)
 
