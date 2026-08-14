@@ -485,9 +485,10 @@ func _shoreline(pond_centre: Vector2) -> Array[Vector2]:
 
 ## Reeds at the banks (bible §15) plus, EV5-remainder, a second marginal
 ## species — the broadleaf Plant_1_Big at the waterline, in-family per D24,
-## a different silhouette from the wispy-grass reed. (True sedge/cattail
-## forms stay owner-blocked: the fuller nature MegaKit has not been
-## supplied — see BACKLOG.md's EV5-remainder note.)
+## a different silhouette from the wispy-grass reed. EV5-remainder-2 added a
+## third: Grass_Wheat, the closest available sedge/cattail read in the fuller
+## MegaKit (no literal cattail model exists in the pack) — a tall, narrow,
+## dense blade-cluster distinct from Plant_1_Big's broad arch.
 func _build_shore_flora(shore: Array[Vector2]) -> void:
 	if shore.is_empty():
 		return

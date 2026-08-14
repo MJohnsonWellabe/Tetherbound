@@ -510,7 +510,15 @@ func _capture_the_impact(name: String, yaw_offset_deg: float = 0.0) -> void:
 		await physics_frame
 	if not is_zero_approx(yaw_offset_deg):
 		_swing_camera_offaxis(yaw_offset_deg)
-		await physics_frame
+		# camera_rig.gd has no _physics_process() -- it only bakes `yaw` into
+		# `rotation`/`global_position` inside `_process()`. Awaiting a physics
+		# tick here does not guarantee that pass has run, so the swing could
+		# still be un-applied when `paused = true` freezes _process() below.
+		# Two process frames, not a physics one, is what the comment above
+		# this function's caller already promised ("a couple of `_process`
+		# frames are enough") but the code never actually awaited.
+		await process_frame
+		await process_frame
 	_dump_marker(name)
 	paused = true
 	await _capture(name)

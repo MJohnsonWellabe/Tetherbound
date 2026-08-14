@@ -152,16 +152,13 @@ extreme macro close-ups from specific angles, confirmed invisible in both
 `tools/capture_village_npcs.gd`'s production frame and a matching in-game
 close-up at normal camera distance.
 
-**`villager_male`/`grunt` deliberately not attempted this pass.** Landing
-one clean, fully-verified split (Blender technique, hole-patching, re-skin,
-mechanism wiring, tests, full suite green, in-engine visual confirmation)
-used substantial real effort across several failed patch attempts before
-converging; repeating that for two more bases without knowing yet whether
-they even have a comparably separable feature would risk three rushed,
-uncertain results instead of one solid one. A quick render check found
-both `villager_male` and `grunt` have short/cropped hairstyles with no
-comparable hanging protrusion — worth a real look before assuming either
-is separable the same way, not scoped into this pass.
+**`villager_male`/`grunt` checked directly — both genuinely not separable, item closed for both bases.** The "worth a real look" this entry's own quick check flagged, now actually done: each base independently rendered from 6 close-up angles (front/back/left/right/top/back+top, Blender headless/Cycles, no display needed) and the PNGs actually viewed, the same bar the `villager_female` split used — not inferred from geometry stats alone.
+
+`villager_male`: a short, swept, cropped hairstyle with strand ridges baked directly into the scalp geometry. No boundary loop, tie-groove, parting seam, or hanging protrusion anywhere across all 6 angles — the hair mesh is one continuous fused dome with the skull, unlike `villager_female`'s ponytail which had a real cut edge to find. Forcing a split here would mean inventing a boundary that doesn't exist in the source geometry, which is exactly the "a false split that mangles the mesh is worse than no split" case this item's own guardrail warns against.
+
+`grunt`: no hair geometry exists at all, separable or otherwise — the entire head is covered by a peaked cap plus a face mask/balaclava (confirmed in every angle, including top-down). There is nothing to cut; `hair`/`_apply_hair()` doesn't apply to this base in any form.
+
+No mesh, `character_model.gd`, or `art.json` changes made — none were warranted. This closes the item's own "worth a real look" note for both remaining bases; `NP7` is now fully resolved (one real split shipped for `villager_female`, two honest not-separable findings for the rest).
 
 ---
 
@@ -1621,7 +1618,26 @@ genuinely blind critic reached it this round — self-judged only, disclosed
 as such, not a substitute for the real blind pass). The backdrop-drift
 oddity is very likely just the arena's small fixed radius plus genuinely
 different off-axis camera headings revealing/hiding a real, static nearby
-village — not a repositioning bug, not chased further. **The full-roster
+village — not a repositioning bug, not chased further.
+
+**Both named next-levers now actually checked.** The camera-occlusion
+pattern is root-caused, not a mystery: `survey_combat.gd::_capture_the_impact()`
+swung the camera off-axis then awaited a PHYSICS frame before pausing —
+but `camera_rig.gd` has no `_physics_process()` at all, only `_process()`,
+so the swing had no guaranteed chance to bake into `rotation`/`global_position`
+before processing froze. Fixed by awaiting two `process_frame`s instead.
+The exact "confirm `telegraph_started` reaches `_on_enemy_telegraph()`" lever
+this entry itself named was also run for real: instrumented all three links
+(emit, handler, draw) and drove a live `smoke_combat.gd` fight, not a static
+trace. Every link fires cleanly every time — `telegraph_started` emits,
+`_on_enemy_telegraph()` receives it, `_draw_ring()` runs with sane numbers
+(radius ~0.46, alpha ~0.9, `visible=true`, `custom_aabb` correctly set).
+The signal/logic chain is confirmed clean, not the bug. What's left, per
+`telegraph_glow.gd`'s own updated comment: the one real structural
+difference from its working siblings is that it draws flat on the ground
+plane instead of as a camera-facing billboard — a rendering-only question
+now, needing the actual render pass to test, not more code archaeology.
+**The full-roster
 creature sheet (`tools/preview_creatures.gd`) is still NOT run and still open
 for `SA5`/`SA6`** — this round's tightened time cap said pick it up only if
 already rendered, and it was not.

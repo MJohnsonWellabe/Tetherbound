@@ -102,6 +102,18 @@ func _physics_process(delta: float) -> void:
 ## Flat on the ground rather than camera-facing: it is a mark on the terrain
 ## under the creature, readable from the combat camera's own downward angle
 ## the same way the arena boundary's ground line already is.
+## R9.4-remainder-9-combat-2: instrumented and confirmed CLEAN, not the bug.
+## A live smoke_combat.gd run (real fight, real signal chain, not a static
+## trace) showed telegraph_started emitting, _on_enemy_telegraph() firing,
+## and this function drawing with sane numbers every time -- radius ~0.46,
+## alpha ~0.9, `visible=true`, `_ring`'s own custom_aabb correctly set from
+## `reach` in _ready(). The signal/logic chain is not where this bug lives.
+## Whoever renders this next: the one real structural difference from its
+## working siblings (impact_flash.gd, target_marker.gd) is that those are
+## camera-facing billboards rebuilt from the camera basis every frame, and
+## this deliberately draws flat on the XZ ground plane instead (by design,
+## see the header comment above) -- that is the remaining lead, not a second
+## logic bug to hunt for blind.
 func _draw_ring(radius: float, alpha: float) -> void:
 	var inner := radius * 0.72
 	_ring_mesh.clear_surfaces()

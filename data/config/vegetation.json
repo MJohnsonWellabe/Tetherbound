@@ -98,8 +98,9 @@
     "grove": {
       "_comment": "The ancient twisted oaks, 15-19m and far broader. A genuinely DIFFERENT species, not the same mesh retinted \u2014 which was the previous version of this layer and exactly what the critic caught. These are the landmark trees: at twice the height of a common tree and three times the canopy, a stand of them reads from across the playground.",
       "_comment_ev2": "EV2 (bible sec10): 'hero trees' wants 2-3 large forms -- 'broad oak, asymmetrical old tree, tall landmark tree' -- not all 5. Measured with tools/measure_models.gd: TwistedTree_1 has the widest footprint (13.52x11.55, the 'broad oak'), TwistedTree_2 is the tallest (18.95m, the 'tall landmark tree'), and TwistedTree_4 is the only one of the five where depth exceeds width (10.38x11.29 -- a genuinely lopsided footprint, the 'asymmetrical old tree'). TwistedTree_3 and _5 read as near-symmetric restatements of _1 and _2 by the same measure and are cut.",
+      "_comment_ev2_landmark_ceiling": "EV2-landmark-ceiling: a blind critic ranked all 3 TwistedTree forms short of the key art's oaks -- 'canopies wider than they are tall, trunks visibly fork and lean' -- and TwistedTree_1 (the 'broad oak' slot, width/height 0.81) was the least-bad, still failing. Measured every tree in the fuller Stylized Nature MegaKit (assets_raw/vendor/quaternius_stylized-nature-megakit/, staged d64df71) by reading each glTF's own POSITION bounds directly: CherryBlossom_3 (16.59w x 14.49h x 13.03d, width/height 1.15) is the ONLY form in the entire pack genuinely wider than tall. Replaces TwistedTree_1 -- not appended as a 4th form -- because ENVIRONMENT_AND_UI_BIBLE.md sec10 caps hero trees at 2-3 forms. Honest limit: no candidate's glTF has separate trunk/branch nodes, so 'visibly forking trunk' isn't confirmed by data alone -- a render/blind-judge question, not yet run.",
       "models": [
-        "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+        "res://assets/environment/stylized_nature/CherryBlossom_3.gltf",
         "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
         "res://assets/environment/stylized_nature/TwistedTree_4.gltf"
       ],
@@ -271,9 +272,12 @@
     },
     "grass": {
       "_comment": "Tufts, not a ground texture. These are what make the terrain read as a meadow rather than as a painted surface, and they are the layer whose density most separates these frames from the reference \u2014 Palworld's meadows measure 3-9% featureless ground against this build's 56-66%.",
+      "_comment_species_of12_b": "OF12-remainder (b): grass had exactly one species (a Common Short/Tall pair) despite the layer's own density work above. Grass_Wide_Short/Tall, curated from the fuller Stylized Nature MegaKit (assets_raw/vendor/quaternius_stylized-nature-megakit/, staged d64df71), add a second matched pair with a genuinely broader footprint (1.04-1.16m vs Common's 0.64-0.90m) -- real silhouette variety, not a renamed duplicate. Same Grass/Grass.png material as every other model in this layer, so no new texture or retint plumbing needed; the existing scale_min/scale_max trims both pairs into the same knee-height band uniformly (scatter_rules.gd has no per-model weight/scale field). TUNABLE -- Grass_Wheat was considered and left for drygrass instead, its stalk form reads dry/warm not knee-grass.",
       "models": [
         "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
-        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf"
+        "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+        "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf"
       ],
       "clumps": 110,
       "per_clump": 130,
