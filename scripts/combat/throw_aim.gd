@@ -81,6 +81,12 @@ func disarm() -> void:
 	_despawn_orb()
 	state = State.IDLE
 	set_physics_process(false)
+	# Belt-and-braces alongside `_leave_aim()`'s own call below: `disarm()` is
+	# the combat manager's general "stop whatever the throw was doing" path
+	# and can fire while `state` is THROWN (orb already in flight, catch
+	# still resolving) as well as AIMING, so `_leave_aim()` alone would miss
+	# restoring the lock in that case.
+	_set_trainer_movable(false)
 
 
 func is_aiming() -> bool:
@@ -170,6 +176,18 @@ func try_begin_aim(target_can_be_caught: bool, refusal: String) -> bool:
 	_guard = 0.15
 	_windup = 0.0
 	_apply_aim_camera()
+	# Owner playtest report, second round: "when you go to throw should fully
+	# control the character again so you can move him and throw." This file's
+	# own header already documented the INTENT ("hands camera and control
+	# back to the TRAINER") but only the camera swap was ever wired up --
+	# encounter_director.gd disables the trainer's locomotion for the whole
+	# fight (D07: "the trainer stands where they engaged"), and nothing here
+	# ever turned it back on for the one window D07 did not anticipate: a
+	# real-time aim explicitly meant to be a repositionable over-the-shoulder
+	# shot, not a static reticle. This is a deliberate, owner-directed
+	# amendment to D07's stationary-trainer sub-rule, scoped to exactly the
+	# aim/throw window -- general combat still holds the trainer still.
+	_set_trainer_movable(true)
 	aim_entered.emit()
 	return true
 
@@ -180,10 +198,16 @@ func _apply_aim_camera() -> void:
 	_camera_rig.call("set_target", _player, CATCH.config().get("aim", {}))
 
 
+func _set_trainer_movable(movable: bool) -> void:
+	if _player != null and _player.has_method("set_locomotion_enabled"):
+		_player.call("set_locomotion_enabled", movable)
+
+
 func _leave_aim() -> void:
 	state = State.IDLE
 	_windup = 0.0
 	_hide_preview()
+	_set_trainer_movable(false)
 	aim_exited.emit()
 
 

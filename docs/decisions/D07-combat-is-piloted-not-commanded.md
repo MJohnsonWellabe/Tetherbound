@@ -94,3 +94,21 @@ has been played on the Ally.
 Specifically **not** in the first pass: dodge roll, invulnerability frames,
 combos, blocking, stamina cost on attacks, knockback chains, or a second
 opponent.
+
+## Amendment — the trainer moves during aim (owner, playtest pass)
+
+"The trainer: stands where they engaged" above did not anticipate
+`throw_aim.gd`: pressing Throw already swapped the camera to a real-time
+over-the-shoulder shot on the trainer (that file's own header called this
+"hands camera and control back to the TRAINER"), but the trainer's actual
+locomotion stayed switched off for the whole fight regardless, so "control"
+only ever meant look direction. A blind playtest pass named this directly:
+"when you go to throw should fully control the character again so you can
+move him and throw."
+
+`throw_aim.gd::try_begin_aim()` now re-enables the trainer's movement for
+exactly the aim/throw window (`_set_trainer_movable`), and every exit path
+(`_leave_aim()`, `disarm()`) turns it back off. The trainer is stationary
+everywhere else in a fight — engaging, being attacked, switching pals — this
+is scoped to the one state that was always meant to be a repositionable
+shot, not a menu with a camera cut.

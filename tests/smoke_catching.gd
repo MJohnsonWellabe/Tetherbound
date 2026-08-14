@@ -180,6 +180,17 @@ func _aiming_hands_control_to_the_trainer() -> void:
 		_fail("aiming left the camera on the pal (%.1fm) rather than the trainer (%.1fm)" % [to_pal, to_trainer])
 	print("aim opened: camera %.1fm from the trainer, %.1fm from the pal" % [to_trainer, to_pal])
 
+	# Owner playtest report, second round: "when you go to throw should fully
+	# control the character again so you can move him and throw." The camera
+	# swap alone (checked above) is not the same claim as movement actually
+	# working — this file's own docstring already promised "hands control to
+	# the trainer," and a blind render is what caught that only the camera
+	# half was ever wired up.
+	if not bool(_player.call("locomotion_enabled")):
+		_fail("aiming swapped the camera to the trainer but did not give back movement")
+	else:
+		print("aiming also re-enables the trainer's own movement, not just the camera")
+
 	# Backing out is free and must spend nothing.
 	var before := int(_manager.call("orbs_left"))
 	await _press("combat_run")
@@ -191,6 +202,8 @@ func _aiming_hands_control_to_the_trainer() -> void:
 		_fail("cancelling the aim ended the whole fight")
 	if int(_manager.call("orbs_left")) != before:
 		_fail("cancelling an aim spent an orb")
+	if bool(_player.call("locomotion_enabled")):
+		_fail("cancelling the aim left the trainer able to walk mid-fight, outside the aim window")
 
 
 ## The cost that makes throwing a decision. If the stick still drives the pal

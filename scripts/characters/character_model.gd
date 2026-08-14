@@ -164,7 +164,94 @@ func _build_art(path: String) -> bool:
 		_art.add_child(_anim)
 		_anim.root_node = _anim.get_path_to(_art)
 	_merge_libraries()
+	_tame_gait_arm_swing()
 	return true
+
+
+## Owner playtest report, second round, watching a rendered walk cycle:
+## "his arms bend backwards and look unnatural." `tools/art_pipeline/blender/
+## animate_humanoid.py::author_gait()` is a `bpy`-only offline script (no
+## Blender exists in this environment to re-bake trainer_lod0.glb with
+## retuned numbers), so this corrects the ALREADY-BAKED walk/sprint clips at
+## load time instead: every keyframe on the upper-arm and forearm rotation
+## tracks is pulled proportionally back toward that same clip's own rest
+## pose (its first keyframe, which a cyclic clip already shares with its
+## last). This shrinks the swing without needing to know this rig's own
+## bone-axis convention or touching the authored ANGLE at all -- a
+## `Quaternion.slerp` toward rest stays on the same rotation axis the
+## original animator's key was already on, so a bend can only ever come out
+## smaller, never in the wrong direction.
+##
+## SWING_KEEP was tuned against real renders, not guessed once and left: a
+## probe of the baked walk clip (tools/_probe_gait_keys.gd) measured the
+## forearm swinging from a 34deg resting bend to a 51deg peak and the upper
+## arm swinging a full 63deg on top of that -- combined, the hand travelled
+## all the way up past the ribcage toward the shoulder strap on a plain
+## 5m/s walk (shots/gait/walk-quarter.png, before this fix: the near hand at
+## collarbone height mid-stride, not the hip-to-thigh arc a loose walking
+## swing actually has). 0.65 was tried first and rendered better but still
+## tucked; 0.45 (kept) reads as a natural loose swing across the whole
+## cycle in a fresh render, hand travelling hip-to-belt height rather than
+## hip-to-collarbone. Only Arm/ForeArm are touched -- Hips/Spine/Leg/Foot
+## were not part of the report and OF5 already spent real effort getting
+## the legs right.
+const ELBOW_TAME_CLIPS := ["walk", "sprint"]
+const ELBOW_TAME_BONES := ["LeftArm", "RightArm", "LeftForeArm", "RightForeArm"]
+const ELBOW_TAME_SWING_KEEP := 0.45
+
+
+func _tame_gait_arm_swing() -> void:
+	if _anim == null:
+		return
+	for clip_name in ELBOW_TAME_CLIPS:
+		if not _anim.has_animation(clip_name):
+			continue
+		var library := _owning_library(clip_name)
+		if library == null:
+			continue
+		var original: Animation = library.get_animation(clip_name)
+		if original == null:
+			continue
+		# Duplicated before mutating: an imported glTF's Animation resources
+		# are not guaranteed local-to-scene, so writing into `original`
+		# directly could bleed into every other instance sharing the same
+		# cached resource (every other trainer/grandpa/villager built from
+		# this same .glb), not just this one character.
+		var tamed: Animation = original.duplicate()
+		for bone in ELBOW_TAME_BONES:
+			_scale_rotation_track_toward_rest(tamed, bone, ELBOW_TAME_SWING_KEEP)
+		library.remove_animation(clip_name)
+		library.add_animation(clip_name, tamed)
+
+
+func _owning_library(clip_name: String) -> AnimationLibrary:
+	for library_name in _anim.get_animation_library_list():
+		var library := _anim.get_animation_library(library_name)
+		if library != null and library.has_animation(clip_name):
+			return library
+	return null
+
+
+## Scales every keyframe on the rotation track whose bone path ends with
+## `bone_suffix` proportionally toward that track's own first keyframe
+## (`keep=1.0` leaves it untouched, `keep=0.0` freezes the bone at rest).
+## `slerp` rather than a linear blend on the Euler components -- rotation
+## interpolation that stays correct regardless of Euler order or gimbal
+## position, and it cannot introduce a rotation axis that was not already in
+## the original key.
+func _scale_rotation_track_toward_rest(animation: Animation, bone_suffix: String, keep: float) -> void:
+	for track_idx in animation.get_track_count():
+		if animation.track_get_type(track_idx) != Animation.TYPE_ROTATION_3D:
+			continue
+		if not str(animation.track_get_path(track_idx)).ends_with(bone_suffix):
+			continue
+		var key_count := animation.track_get_key_count(track_idx)
+		if key_count == 0:
+			continue
+		var rest: Quaternion = animation.track_get_key_value(track_idx, 0)
+		for k in key_count:
+			var original: Quaternion = animation.track_get_key_value(track_idx, k)
+			animation.track_set_key_value(track_idx, k, rest.slerp(original, keep))
 
 
 ## Pull clips from separate animation files onto this character.
@@ -516,7 +603,18 @@ func _attach_part(mesh: Mesh, bone: String, offset: Vector3, part_name: String) 
 		attachment.bone_name = bone
 		skeleton.add_child(attachment)
 		attachment.add_child(instance)
-		var chain_scale: Vector3 = attachment.global_transform.basis.get_scale()
+		# `global_transform` needs the node inside the tree to mean anything —
+		# harmless in normal play (character_model.gd is always a child of a
+		# Player/NPC node already in the tree by the time build() runs) but a
+		# real, previously-silent bug for any off-tree caller (found by NP8's
+		# accessory addition: tools/capture_village_npcs.gd builds a model
+		# before adding it to the scene, and this printed a Godot engine error
+		# — "!is_inside_tree()" — every time, silently falling through to a
+		# wrong 0-scale transform rather than the intended identity fallback).
+		var chain_scale: Vector3 = (
+			attachment.global_transform.basis.get_scale() if attachment.is_inside_tree()
+			else Vector3.ONE
+		)
 		var safe_scale := Vector3(
 			chain_scale.x if absf(chain_scale.x) > 0.0001 else 1.0,
 			chain_scale.y if absf(chain_scale.y) > 0.0001 else 1.0,

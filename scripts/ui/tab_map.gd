@@ -362,7 +362,24 @@ func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
 ## concurrent agent's and not this agent's to reach into, but D33 wants the
 ## two screens to read as one fog treatment and matching the colour costs
 ## nothing.
-const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 0.95)
+##
+## OWNER PLAYTEST REPORT: "the larger map in the menus shows nothing but
+## black." Root cause: this is genuinely correct fog-of-war behaviour, just
+## tuned for the wrong SCREEN. The world is 512x512m; a day-1 player has
+## typically explored a couple hundred metres around the house/village --
+## under 10% of the grid -- and the minimap this alpha was copied from only
+## ever shows a ~90m window centred on the player (mostly already-revealed
+## ground by definition), so 95% opacity read as reasonable there. Stretched
+## over the FULL map's whole-world view, that same 95% opacity black is
+## correct at covering >90% of the panel in solid near-black, which is
+## exactly what "shows nothing but black" describes -- not a rendering bug,
+## a fog treatment that never got re-judged at the full map's own scale.
+## Dropped to 55%: still clearly reads as unexplored/fogged (a real
+## incentive to go look), but the terrain's own colour and shape now show
+## through dimly everywhere, so a player opening the map for the first time
+## sees the whole Meadows' silhouette immediately instead of a blob of
+## colour in a black void.
+const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 0.55)
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 
 
