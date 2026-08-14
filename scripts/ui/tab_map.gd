@@ -316,9 +316,19 @@ func _draw_map(canvas: Control) -> void:
 	# both to decide that for itself"). Drawn after the fog/icon passes so the
 	# text sits on top of both, same "text is the topmost layer" ordering the
 	# legend row already uses.
+	#
+	# `placed_label_rects` is shared across every region drawn THIS frame:
+	# Village Square and Grandpa's Meadow (map_landmarks.json's own centres,
+	# 10,-10 and -22,-16) are only ~33m apart -- both being close to the
+	# spawn hub is the actual design, not a coincidence a wider default
+	# radius would dodge -- and at this map's scale their two centres land
+	# on nearly the same pixel, so their names rendered stacked directly on
+	# top of each other and both read as garbage. `_draw_region_label` nudges
+	# a label down past whatever it would otherwise collide with instead.
+	var placed_label_rects: Array[Rect2] = []
 	for region: Dictionary in (map_state.call("regions") as Array):
 		if bool(region.get("discovered", false)):
-			_draw_region_label(canvas, map_rect, region)
+			_draw_region_label(canvas, map_rect, region, placed_label_rects)
 
 	var objective: Dictionary = map_state.call("objective_marker")
 	if not objective.is_empty():
@@ -360,7 +370,14 @@ func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary) -> vo
 ## Centred on the region's own centre point, same font UITokens hands every
 ## other HUD/menu text (`_font` caching mirrors `minimap.gd`'s own pattern —
 ## loaded once, reused every draw rather than re-loading a Resource per frame).
-func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary) -> void:
+##
+## `placed` is every label rect already drawn this frame (see the call site's
+## own comment for why two of this game's five regions can legitimately land
+## on nearly the same pixel). If this label's own rect would overlap one of
+## them, it drops straight down by its own height and re-checks — bounded to
+## a handful of tries so a pathological cluster degrades to "stacked but
+## readable" rather than an infinite loop.
+func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, placed: Array[Rect2]) -> void:
 	if _region_font == null:
 		_region_font = load(UITokens.FONT_PATH)
 	if _region_font == null:
@@ -371,7 +388,23 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary) ->
 	var point := _world_to_canvas(region.get("centre", Vector2.ZERO), map_rect)
 	var font_size := UITokens.FONT_LABEL
 	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
-	var baseline := point + Vector2(-text_size.x * 0.5, text_size.y * 0.5 - _region_font.get_descent(font_size))
+
+	var top_left := point + Vector2(-text_size.x * 0.5, -text_size.y * 0.5)
+	var rect := Rect2(top_left, text_size)
+	var attempts := 0
+	while attempts < 6:
+		var collided := false
+		for other in placed:
+			if rect.intersects(other):
+				collided = true
+				break
+		if not collided:
+			break
+		rect.position.y += text_size.y + 2.0
+		attempts += 1
+	placed.append(rect)
+
+	var baseline := rect.position + Vector2(0.0, text_size.y - _region_font.get_descent(font_size))
 	canvas.draw_string(_region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
 
 

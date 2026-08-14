@@ -55,11 +55,19 @@ func _run() -> void:
 	var written: Array[String] = []
 	var failures: Array[String] = []
 
-	# --- (a) region banner: enter the village square for the first time ---
+	# --- (a) region banner: enter Practice Meadow for the first time ---
+	#
+	# NOT village_square: its centre (10,-10) sits only ~14m from the
+	# player's own spawn (0,0), well inside its own 26m discovery radius --
+	# so game_state.gd's own periodic map.update_region() call already fires
+	# and gets consumed during the SETTLE_FRAMES wait above, before this
+	# script ever runs, proving nothing about the banner itself. Practice
+	# Meadow's centre (30,-40) is ~50m out, outside every authored region's
+	# radius at spawn, so walking the player there is a genuine first entry.
 	if player != null:
-		player.global_position = Vector3(10.0, player.global_position.y, -10.0)
-	map_state.mark_visited(Vector3(10.0, 0.0, -10.0))
-	map_state.update_region(Vector3(10.0, 0.0, -10.0))
+		player.global_position = Vector3(30.0, player.global_position.y, -40.0)
+	map_state.mark_visited(Vector3(30.0, 0.0, -40.0))
+	map_state.update_region(Vector3(30.0, 0.0, -40.0))
 	for i in 6:
 		await process_frame
 	await _shoot("region_banner", written, failures)
