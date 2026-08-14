@@ -317,14 +317,16 @@ func _draw_map(canvas: Control) -> void:
 	# text sits on top of both, same "text is the topmost layer" ordering the
 	# legend row already uses.
 	#
-	# `placed_label_rects` is shared across every region drawn THIS frame:
-	# Village Square and Grandpa's Meadow (map_landmarks.json's own centres,
-	# 10,-10 and -22,-16) are only ~33m apart -- both being close to the
-	# spawn hub is the actual design, not a coincidence a wider default
-	# radius would dodge -- and at this map's scale their two centres land
-	# on nearly the same pixel, so their names rendered stacked directly on
-	# top of each other and both read as garbage. `_draw_region_label` nudges
-	# a label down past whatever it would otherwise collide with instead.
+	# `placed_label_rects` is shared across every region drawn THIS frame.
+	# The regions in map_landmarks.json today are spaced far enough apart
+	# that this rarely has anything to do (owner playtest: a first cut named
+	# the village square, Grandpa's house and the practice meadow as three
+	# SEPARATE regions only 15-35m apart, which read as clutter; they are
+	# now one "Grandpa's Village" region — see that file's own
+	# `_comment_regions`). This stays as a backstop for whatever gets
+	# authored later, not a fix for a design problem that still exists:
+	# `_draw_region_label` nudges a label down past anything it collides
+	# with rather than trusting that no two centres will ever land close.
 	var placed_label_rects: Array[Rect2] = []
 	for region: Dictionary in (map_state.call("regions") as Array):
 		if bool(region.get("discovered", false)):
@@ -371,12 +373,13 @@ func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary) -> vo
 ## other HUD/menu text (`_font` caching mirrors `minimap.gd`'s own pattern —
 ## loaded once, reused every draw rather than re-loading a Resource per frame).
 ##
-## `placed` is every label rect already drawn this frame (see the call site's
-## own comment for why two of this game's five regions can legitimately land
-## on nearly the same pixel). If this label's own rect would overlap one of
-## them, it drops straight down by its own height and re-checks — bounded to
-## a handful of tries so a pathological cluster degrades to "stacked but
-## readable" rather than an infinite loop.
+## `placed` is every label rect already drawn this frame — a backstop against
+## whatever gets authored into map_landmarks.json later (see the call site's
+## own comment), not a fix for today's regions, which are spaced apart on
+## purpose. If this label's own rect would overlap a previously placed one,
+## it drops to just below that other rect's own bottom edge and re-checks —
+## bounded to a handful of tries so a pathological cluster degrades to
+## "stacked but readable" rather than an infinite loop.
 func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, placed: Array[Rect2]) -> void:
 	if _region_font == null:
 		_region_font = load(UITokens.FONT_PATH)

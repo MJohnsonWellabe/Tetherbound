@@ -50,9 +50,19 @@ var _dynamic: Dictionary = {}
 ## Owner directive: "name some of the areas and uncover them like fortnite
 ## maps do." A named region is broader than a landmark (spec's landmarks are
 ## single points of interest -- the house, the well; a region is the AREA
-## around one, "Grandpa's Meadow" rather than just "Grandpa's House"), and
+## around one, "Grandpa's Village" rather than just "Grandpa's House"), and
 ## unlike a landmark it is discovered by ENTERING it, not by a proximity
 ## check the player may never trigger by walking a road that skirts past.
+##
+## FORTNITE-SIZED, NOT ONE-PER-BUILDING. A first cut named the village
+## square, Grandpa's house and the practice meadow as three separate
+## regions -- all real destinations, but only 15-35m apart, so all three
+## names landed on the full map within a few pixels of each other and read
+## as clutter rather than geography (owner: "we shouldn't have region
+## labels that close together... look at a fortnite map. the regions are
+## much larger and the names aren't close"). data/config/map_landmarks.json
+## now authors a handful of large zones instead — see that file's own
+## `_comment_regions`.
 ## id -> {display_name, centre: Vector2, radius}
 var _region_defs: Dictionary = {}
 ## id -> true, for every region the player has ever entered.

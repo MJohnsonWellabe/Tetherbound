@@ -238,23 +238,25 @@ func test_a_corrupted_visited_grid_is_discarded_without_crashing() -> void:
 #
 # Real ids/centres from data/config/map_landmarks.json's own "regions" array,
 # same "run against the real data file" convention this whole test file uses
-# for landmarks. village_square: centre (10,-10), radius 26.
+# for landmarks. grandpas_village: centre (6,-22), radius 60 -- one region for
+# the whole starting hub (village square, Grandpa's house, the practice
+# meadow), not three that used to sit close enough to collide on the map.
 
 
 func test_regions_start_undiscovered_with_no_current_region() -> void:
 	assert_eq(map.take_pending_region_announcement(), "")
 	var found := false
 	for region: Dictionary in map.regions():
-		if str(region.get("id")) == "village_square":
+		if str(region.get("id")) == "grandpas_village":
 			found = true
 			assert_false(bool(region.get("discovered")))
-	assert_true(found, "map_landmarks.json must still define village_square")
+	assert_true(found, "map_landmarks.json must still define grandpas_village")
 
 
 func test_entering_a_region_queues_its_display_name_exactly_once() -> void:
 	map.update_region(Vector3(10.0, 0.0, -10.0))
 
-	assert_eq(map.take_pending_region_announcement(), "Village Square")
+	assert_eq(map.take_pending_region_announcement(), "Grandpa's Village")
 	assert_eq(map.take_pending_region_announcement(), "",
 		"a second poll before the next entry must find nothing queued")
 
@@ -273,7 +275,7 @@ func test_leaving_and_returning_to_an_already_discovered_region_does_not_requeue
 	map.take_pending_region_announcement()
 
 	map.update_region(Vector3(250.0, 0.0, 250.0)) # open pasture, no authored region
-	map.update_region(Vector3(10.0, 0.0, -10.0)) # back into the village square
+	map.update_region(Vector3(10.0, 0.0, -10.0)) # back into Grandpa's Village
 
 	assert_eq(map.take_pending_region_announcement(), "",
 		"a region only announces itself the first time it is ever entered")
@@ -299,7 +301,7 @@ func test_regions_persist_through_save_and_load() -> void:
 
 	var discovered := false
 	for region: Dictionary in loaded.regions():
-		if str(region.get("id")) == "village_square":
+		if str(region.get("id")) == "grandpas_village":
 			discovered = bool(region.get("discovered"))
 	assert_true(discovered)
 
