@@ -34,6 +34,25 @@ extends RefCounted
 
 const TERRAIN_CONFIG_PATH := "res://data/config/terrain_playground.json"
 const HALF_SPAN := 256.0 ## World spans ±256m (`terrain_playground.json`'s `world_size` 512).
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+
+## Owner playtest report: "can we put paths and structures onto the mini
+## map." Before this, the bake coloured purely by height/slope -- a real
+## dirt road and a village square baked into the exact same green-to-ochre
+## ramp as open pasture, because nothing here ever asked
+## `playground_heightfield.gd` whether a sample point was ON anything. That
+## file already answers both questions authoritatively (`path_factor`,
+## `building_apron_factor` -- the same functions the terrain shader and the
+## vegetation scatter read, D09's "one mechanism answers the question"),
+## so this reuses them rather than re-deriving path/footprint geometry a
+## second time from the raw config, which is exactly the drift D09 exists
+## to prevent. Warm brown for paths (matches the terrain material's own
+## post-playtest retint, terrain_playground.json's `paths.textures[0].tint`)
+## and a cooler worked-stone grey for building aprons, blended in that
+## order so a path crossing a village square still reads as path -- the
+## same "paths win" rule the terrain shader itself already follows.
+const PATH_COLOUR := Color(0.65, 0.54, 0.42)
+const BUILDING_APRON_COLOUR := Color(0.58, 0.56, 0.52)
 
 ## Set by `bake_cached()` on every call — true when the cached PNG was reused,
 ## false when a bake actually ran. Exists purely so `tests/test_map_baker.gd`
@@ -85,9 +104,12 @@ static func bake(world: Object, resolution: int = 512) -> ImageTexture:
 	var pale_high := UITokens.GROUND_OCHRE.lerp(Color(0.85, 0.83, 0.78), 0.55) ## highest ground: pale gray-ochre.
 
 	var image := Image.create(resolution, resolution, false, Image.FORMAT_RGB8)
+	var heightfield: RefCounted = HEIGHTFIELD.new()
 
 	for iz in resolution:
+		var z := -HALF_SPAN + (float(iz) + 0.5) * step
 		for ix in resolution:
+			var x := -HALF_SPAN + (float(ix) + 0.5) * step
 			var h := heights[iz * resolution + ix]
 			var h_east := heights[iz * resolution + mini(ix + 1, resolution - 1)]
 			var h_south := heights[mini(iz + 1, resolution - 1) * resolution + ix]
@@ -99,6 +121,18 @@ static func bake(world: Object, resolution: int = 512) -> ImageTexture:
 			var slope := absf(h_east - h) + absf(h_south - h)
 			var darken := clampf(slope / (step * 6.0), 0.0, 0.25)
 			colour = colour.darkened(darken)
+
+			# Paths/structures, on top of the height ramp -- never under
+			# water (a road does not paint through the pond), and paths win
+			# over building aprons where both overlap, same rule the
+			# terrain shader itself already follows.
+			if is_nan(water_level) or h >= water_level:
+				var apron_t: float = heightfield.call("building_apron_factor", x, z)
+				if apron_t > 0.0:
+					colour = colour.lerp(BUILDING_APRON_COLOUR, apron_t)
+				var path_t: float = heightfield.call("path_factor", x, z)
+				if path_t > 0.0:
+					colour = colour.lerp(PATH_COLOUR, path_t)
 
 			image.set_pixel(ix, iz, colour)
 

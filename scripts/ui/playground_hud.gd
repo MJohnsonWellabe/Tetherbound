@@ -77,6 +77,14 @@ const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar
 
 const HOTBAR_MESSAGE_SECONDS := 2.2
 
+## Owner directive, playtest pass: "name some of the areas and uncover them
+## like fortnite maps do." `map_state.gd::take_pending_region_announcement()`
+## queues the newly-entered region's display name once; this is how long the
+## banner stays up before fading, same read-and-clear/timeout shape as
+## `_hotbar_message` above just with a longer hold -- a location card is meant
+## to be noticed, not glanced at.
+const REGION_BANNER_SECONDS := 3.2
+
 ## --- layout (spec §6/§6.6, numbers inlined per the task) --------------------
 ## All positions are in the HUD's own 1920x1080 authoring space (top-left
 ## origin), matching the rest of this file's "sized for the Ally" convention.
@@ -200,6 +208,11 @@ var _minimap_baked := false
 var _objective_text_label: Label = null
 var _objective_last_text := ""
 
+## --- region banner ---------------------------------------------------------------
+
+var _region_banner: Label = null
+var _region_banner_until := 0.0
+
 
 func _ready() -> void:
 	_player = get_node_or_null(player_path) as CharacterBody3D
@@ -218,10 +231,12 @@ func _ready() -> void:
 	_mount_stamina_arc()
 	_mount_minimap()
 	_build_objective_block()
+	_build_region_banner()
 	_style_hotbar()
 
 	UITokens.make_text_legible(_prompt_label)
 	UITokens.make_text_legible(_hotbar_message)
+	UITokens.make_text_legible(_region_banner)
 	for slot in _hotbar_slots:
 		UITokens.make_text_legible(slot)
 
@@ -761,6 +776,52 @@ func _update_objective() -> void:
 	_objective_text_label.text = text
 
 
+# --- region banner ---------------------------------------------------------------
+
+
+## Top-centre, well clear of the prompt/hotbar block anchored to the bottom of
+## the screen -- a Fortnite-style location card announces itself where the
+## player is already looking, not down where their eyes are on the hotbar.
+## Naked text, no panel, same "legibility outline instead of a box" call the
+## objective block above already makes.
+func _build_region_banner() -> void:
+	_region_banner = Label.new()
+	_region_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_region_banner.visible = false
+	_region_banner.anchor_left = 0.5
+	_region_banner.anchor_right = 0.5
+	_region_banner.offset_left = -400.0
+	_region_banner.offset_right = 400.0
+	_region_banner.offset_top = 120.0
+	_region_banner.offset_bottom = 168.0
+	_region_banner.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_region_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_region_banner.add_theme_font_size_override("font_size", 40)
+	_region_banner.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	_root.add_child(_region_banner)
+
+
+## Polls `Game.map`'s one-shot queue (`take_pending_region_announcement()`)
+## every frame, the same read-and-clear contract `_hotbar_message` already
+## uses for its own timed banners -- a region is entered on at most one frame,
+## so a plain equality check like `_update_objective()`'s would miss it the
+## instant the queue is cleared by this same call.
+func _update_region_banner() -> void:
+	if _game == null:
+		return
+	var map: RefCounted = _game.get("map")
+	if map == null:
+		return
+	var text := str(map.call("take_pending_region_announcement"))
+	if not text.is_empty():
+		_region_banner.text = text
+		_region_banner.visible = true
+		_region_banner_until = Time.get_ticks_msec() / 1000.0 + REGION_BANNER_SECONDS
+	elif _region_banner_until > 0.0 and Time.get_ticks_msec() / 1000.0 >= _region_banner_until:
+		_region_banner_until = 0.0
+		_region_banner.visible = false
+
+
 # --- frame / lifecycle ---------------------------------------------------------------
 
 
@@ -796,6 +857,7 @@ func _process(delta: float) -> void:
 	_update_pal_block()
 	_update_party_strip()
 	_update_objective()
+	_update_region_banner()
 	_ensure_minimap_baked()
 	_update_minimap()
 	_update_aim_fade(delta)

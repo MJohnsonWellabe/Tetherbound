@@ -94,6 +94,13 @@ var _has_last_player_pos: bool = false
 var _terrain_attempted: bool = false
 var _terrain_tex: Texture2D = null
 var _icon_cache: Dictionary = {}
+var _region_font: Font = null
+
+## Cache for `_fog_texture()`, keyed on `map_state.revision` — see that
+## function's own header for why this exists: the bug it fixed, not a
+## pre-emptive optimisation.
+var _fog_tex: ImageTexture = null
+var _fog_tex_revision: int = -1
 
 ## Frames left to force a redraw regardless of `revision`/movement, counted
 ## down from `SETTLE_FRAMES` by every `poll()` right after `build()`. A freshly
@@ -118,6 +125,8 @@ func build() -> void:
 		child.queue_free()
 	_terrain_attempted = false
 	_terrain_tex = null
+	_fog_tex = null
+	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
 	_has_last_player_pos = false
@@ -302,6 +311,15 @@ func _draw_map(canvas: Control) -> void:
 		elif bool(entry.get("silhouette", false)):
 			_draw_icon(canvas, map_rect, {"icon": "question", "position": entry.get("position")}, 0.6)
 
+	# Region name labels — only for regions the player has actually entered
+	# (map_state.gd's own regions() doc: "a renderer needs the geometry for
+	# both to decide that for itself"). Drawn after the fog/icon passes so the
+	# text sits on top of both, same "text is the topmost layer" ordering the
+	# legend row already uses.
+	for region: Dictionary in (map_state.call("regions") as Array):
+		if bool(region.get("discovered", false)):
+			_draw_region_label(canvas, map_rect, region)
+
 	var objective: Dictionary = map_state.call("objective_marker")
 	if not objective.is_empty():
 		_draw_objective(canvas, map_rect, objective)
@@ -337,6 +355,24 @@ func _draw_objective(canvas: Control, map_rect: Rect2, marker: Dictionary) -> vo
 		PackedVector2Array([points[0], points[1], points[2], points[3], points[0]]),
 		UITokens.TEXT_PRIMARY, 1.5, true
 	)
+
+
+## Centred on the region's own centre point, same font UITokens hands every
+## other HUD/menu text (`_font` caching mirrors `minimap.gd`'s own pattern —
+## loaded once, reused every draw rather than re-loading a Resource per frame).
+func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary) -> void:
+	if _region_font == null:
+		_region_font = load(UITokens.FONT_PATH)
+	if _region_font == null:
+		return
+	var text := str(region.get("display_name", ""))
+	if text.is_empty():
+		return
+	var point := _world_to_canvas(region.get("centre", Vector2.ZERO), map_rect)
+	var font_size := UITokens.FONT_LABEL
+	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
+	var baseline := point + Vector2(-text_size.x * 0.5, text_size.y * 0.5 - _region_font.get_descent(font_size))
+	canvas.draw_string(_region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
 
 
 func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3) -> void:
@@ -384,10 +420,39 @@ const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 
 
 ## One `ImageTexture` baked from the fog grid rather than ~16k individual
-## `draw_rect` calls — only built on an actual redraw (gated by `poll()`),
-## never per physics frame, so the cost is the same order as any other panel
-## refresh in this menu.
+## `draw_rect` calls — only REBUILT when `map_state.revision` actually moved,
+## never unconditionally on every `_draw()`.
+##
+## THIS CACHE IS THE FIX FOR "the larger map in the menus shows nothing but
+## black/white" (owner playtest report). Before it existed, this function ran
+## fresh on every single redraw — every `poll()` while `_settle_frames_left`
+## was still counting down, every player step, every revision bump — so it
+## created a BRAND NEW `ImageTexture` far more often than `_terrain_texture()`
+## below ever does (that one is memoized after its first call). A texture
+## `ImageTexture.create_from_image()` just produced is not guaranteed visible
+## to the SAME frame's draw commands on software (llvmpipe) rendering —
+## exactly the race `_terrain_texture()`'s own header already documents — and
+## it samples as opaque WHITE until the upload lands, not the transparent/
+## near-black fog it is supposed to be. Redraws stop the instant
+## `_settle_frames_left` reaches 0 and nothing else changed (a player standing
+## still with a stable revision), so whichever frame's fresh fog texture last
+## happened to land mid-race is what stays on screen forever after — proven
+## by raising the settle-frame wait to 90 frames in `tools/capture_map_tab.gd`
+## and seeing the exact same solid white square: more WAITING never helped
+## because nothing was still triggering new REDRAWS by then, and every past
+## redraw had rebuilt this same texture from scratch. Caching it the same way
+## `_terrain_tex` already is (build once per real state change, not once per
+## draw call) means there are only ever a handful of "brand new texture" frames
+## over the tab's whole lifetime instead of one per redraw, and — just as
+## importantly — a LATER redraw (there will always be at least a few more
+## while `_settle_frames_left` counts down) has every chance to draw the
+## SAME already-uploaded RID correctly instead of manufacturing a fresh race
+## of its own on every attempt.
 func _fog_texture(map_state: RefCounted) -> ImageTexture:
+	var revision: int = int(map_state.get("revision"))
+	if _fog_tex != null and revision == _fog_tex_revision:
+		return _fog_tex
+
 	var grid: int = int(map_state.call("cell_grid_size"))
 	if grid <= 0:
 		return null
@@ -396,7 +461,9 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 		for ix in grid:
 			var discovered: bool = bool(map_state.call("cell_at", ix, iz))
 			image.set_pixel(ix, iz, FOG_DISCOVERED if discovered else FOG_UNDISCOVERED)
-	return ImageTexture.create_from_image(image)
+	_fog_tex = ImageTexture.create_from_image(image)
+	_fog_tex_revision = revision
+	return _fog_tex
 
 
 ## Lazily bakes the terrain texture through `scripts/world/map_baker.gd`, and

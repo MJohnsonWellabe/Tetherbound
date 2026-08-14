@@ -194,6 +194,7 @@ func _process(delta: float) -> void:
 	if player == null:
 		return
 	map.mark_visited(player.global_position)
+	map.update_region(player.global_position)
 
 
 ## The one Player in the running world, or null. Every existing test/tool in

@@ -28,6 +28,20 @@ extends "res://scripts/ui/menu_tab.gd"
 
 const CONFIG_PATH := "res://data/config/menu.json"
 const PARTY := preload("res://autoload/party.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+
+## Owner playtest report: "we should be able to pick what goes in the
+## hotbar in our inventory." That already works -- HD2's hotbar
+## (playground_hud.gd::_update_hotbar) mirrors satchel slots 0-4 directly,
+## and this grid already lets a player move any item into any slot
+## (pick-up-then-place, the same mechanic that powers Drop/Split). The gap
+## was never the mechanic, it was that nothing in this screen told the
+## player those five slots WERE the hotbar -- so placing an item in slot 3
+## silently changed what D-pad-right does out in the field with no visible
+## connection between the two. `_HOTBAR_ACTIONS` matches playground_hud.gd's
+## own list exactly, badge-for-badge, so the glyph shown here on a slot is
+## the identical glyph the field HUD shows for that same slot.
+const HOTBAR_BADGE_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
 
 ## Same button as the pals tab's "set active": use the focused item.
 const USE_ACTION := "interact"
@@ -182,6 +196,20 @@ func build() -> void:
 			button.add_theme_stylebox_override("normal", _slot_style(false)))
 		_grid.add_child(button)
 		_buttons.append(button)
+
+		if i < HOTBAR_BADGE_ACTIONS.size():
+			var badge := RichTextLabel.new()
+			badge.bbcode_enabled = true
+			badge.fit_content = true
+			badge.scroll_active = false
+			badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+			badge.offset_left = 2
+			badge.offset_top = 2
+			badge.offset_right = 24
+			badge.offset_bottom = 24
+			badge.text = INPUT_GLYPH.icon(HOTBAR_BADGE_ACTIONS[i], 18)
+			button.add_child(badge)
 
 		var qty := Label.new()
 		qty.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
@@ -805,13 +833,21 @@ func _describe(index: int) -> void:
 	if inventory == null or db == null or _detail_name == null:
 		return
 
+	var hotbar_note := (
+		"  •  Hotbar %d" % (index + 1) if index < HOTBAR_BADGE_ACTIONS.size() else ""
+	)
+
 	var stack: Dictionary = inventory.call("stack_at", index)
 	if stack.is_empty():
 		_preview_icon.texture = null
 		_preview_name.text = "Empty"
 		_detail_name.text = "Empty"
 		_detail_kind.text = ""
-		_detail_blurb.text = "Slot %d." % (index + 1)
+		_detail_blurb.text = "Slot %d.%s" % [
+			index + 1,
+			" Whatever you place here is also hotbar slot %d." % (index + 1)
+			if index < HOTBAR_BADGE_ACTIONS.size() else "",
+		]
 		_detail_effect.text = ""
 		_detail_count.text = ""
 		_detail_hint.text = ""
@@ -826,7 +862,7 @@ func _describe(index: int) -> void:
 	_preview_name.text = name
 
 	_detail_name.text = name
-	_detail_kind.text = kind.to_upper()
+	_detail_kind.text = "%s%s" % [kind.to_upper(), hotbar_note]
 	_detail_blurb.text = str(def.get("description", db.call("blurb", id)))
 
 	# Primary effect number: heal (consumables) or satiety (food), whichever

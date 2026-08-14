@@ -234,6 +234,82 @@ func test_a_corrupted_visited_grid_is_discarded_without_crashing() -> void:
 	assert_true(map.mark_visited(Vector3(100.0, 0.0, 100.0)))
 
 
+# --- named regions -----------------------------------------------------------
+#
+# Real ids/centres from data/config/map_landmarks.json's own "regions" array,
+# same "run against the real data file" convention this whole test file uses
+# for landmarks. village_square: centre (10,-10), radius 26.
+
+
+func test_regions_start_undiscovered_with_no_current_region() -> void:
+	assert_eq(map.take_pending_region_announcement(), "")
+	var found := false
+	for region: Dictionary in map.regions():
+		if str(region.get("id")) == "village_square":
+			found = true
+			assert_false(bool(region.get("discovered")))
+	assert_true(found, "map_landmarks.json must still define village_square")
+
+
+func test_entering_a_region_queues_its_display_name_exactly_once() -> void:
+	map.update_region(Vector3(10.0, 0.0, -10.0))
+
+	assert_eq(map.take_pending_region_announcement(), "Village Square")
+	assert_eq(map.take_pending_region_announcement(), "",
+		"a second poll before the next entry must find nothing queued")
+
+
+func test_standing_still_inside_a_region_does_not_requeue() -> void:
+	map.update_region(Vector3(10.0, 0.0, -10.0))
+	map.take_pending_region_announcement()
+
+	map.update_region(Vector3(11.0, 0.0, -9.0))
+
+	assert_eq(map.take_pending_region_announcement(), "")
+
+
+func test_leaving_and_returning_to_an_already_discovered_region_does_not_requeue() -> void:
+	map.update_region(Vector3(10.0, 0.0, -10.0))
+	map.take_pending_region_announcement()
+
+	map.update_region(Vector3(250.0, 0.0, 250.0)) # open pasture, no authored region
+	map.update_region(Vector3(10.0, 0.0, -10.0)) # back into the village square
+
+	assert_eq(map.take_pending_region_announcement(), "",
+		"a region only announces itself the first time it is ever entered")
+
+
+func test_update_region_outside_every_authored_region_is_a_silent_no_op() -> void:
+	var before: int = map.revision
+
+	map.update_region(Vector3(250.0, 0.0, 250.0))
+
+	assert_eq(map.revision, before)
+	assert_eq(map.take_pending_region_announcement(), "")
+
+
+func test_regions_persist_through_save_and_load() -> void:
+	map.update_region(Vector3(10.0, 0.0, -10.0))
+	map.take_pending_region_announcement()
+
+	var data: Dictionary = map.save_data()
+	var loaded: RefCounted = MAP_STATE.new()
+	loaded.configure(_config())
+	loaded.load_data(data)
+
+	var discovered := false
+	for region: Dictionary in loaded.regions():
+		if str(region.get("id")) == "village_square":
+			discovered = bool(region.get("discovered"))
+	assert_true(discovered)
+
+	# Re-entering the same region after a fresh load must not re-announce —
+	# load_data resets `_current_region_id` to "", not the discovery itself.
+	loaded.update_region(Vector3(250.0, 0.0, 250.0))
+	loaded.update_region(Vector3(10.0, 0.0, -10.0))
+	assert_eq(loaded.take_pending_region_announcement(), "")
+
+
 # --- debug / testing helpers ------------------------------------------------
 
 func test_reveal_circle_reveals_fog_but_never_discovers_landmarks() -> void:

@@ -30,15 +30,22 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+; Shifted up 26px (offset_top/offset_bottom both -254/-144 -> -280/-170) from
+; its original authoring. Owner playtest report, a real rendered frame
+; (shots/_diag/hud_full.png): the contextual prompt row (Root/Prompt below,
+; offset_top -140) sat only 4px under this panel's own original bottom edge
+; (-144), reading as a single crowded block with "Call out Biscuit" jammed
+; against the hotbar slots. Moving the whole panel up preserves its own
+; height and every slot's internal layout untouched.
 [node name="HotbarPanel" type="PanelContainer" parent="Root"]
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = -257.0
-offset_top = -254.0
+offset_top = -280.0
 offset_right = 257.0
-offset_bottom = -144.0
+offset_bottom = -170.0
 grow_horizontal = 2
 mouse_filter = 2
 

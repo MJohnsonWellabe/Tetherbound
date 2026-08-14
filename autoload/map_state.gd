@@ -47,6 +47,26 @@ var _discovered: Dictionary = {}
 ## id -> {icon, position: Vector2}
 var _dynamic: Dictionary = {}
 
+## Owner directive: "name some of the areas and uncover them like fortnite
+## maps do." A named region is broader than a landmark (spec's landmarks are
+## single points of interest -- the house, the well; a region is the AREA
+## around one, "Grandpa's Meadow" rather than just "Grandpa's House"), and
+## unlike a landmark it is discovered by ENTERING it, not by a proximity
+## check the player may never trigger by walking a road that skirts past.
+## id -> {display_name, centre: Vector2, radius}
+var _region_defs: Dictionary = {}
+## id -> true, for every region the player has ever entered.
+var _discovered_regions: Dictionary = {}
+## The region id the player is standing in right now, "" for open pasture
+## outside every authored region. Tracked so a region only announces itself
+## on the frame it is ENTERED, not on every poll while standing inside it.
+var _current_region_id: String = ""
+## Set by `update_region()` on the exact frame a NEW region is entered for
+## the first time; read-and-cleared by `take_pending_region_announcement()`
+## so the HUD shows the toast exactly once, the same one-shot contract
+## `playground_hud.gd`'s own `_hotbar_message` uses for its timed banners.
+var _pending_region_announcement: String = ""
+
 
 ## Takes the parsed contents of data/config/map_landmarks.json. Resets
 ## discovery to fresh (nothing visited, nothing discovered, no dynamic
@@ -85,6 +105,28 @@ func configure(config: Dictionary) -> void:
 			"silhouette": bool(d.get("silhouette", false)),
 		}
 
+	_region_defs.clear()
+	_discovered_regions.clear()
+	_current_region_id = ""
+	_pending_region_announcement = ""
+	var raw_regions: Array = config.get("regions", [])
+	for entry: Variant in raw_regions:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var d := entry as Dictionary
+		var id := str(d.get("id", ""))
+		if id.is_empty():
+			continue
+		var pos: Array = d.get("centre", d.get("center", [0.0, 0.0]))
+		var centre := Vector2.ZERO
+		if pos.size() >= 2:
+			centre = Vector2(float(pos[0]), float(pos[1]))
+		_region_defs[id] = {
+			"display_name": str(d.get("display_name", id)),
+			"centre": centre,
+			"radius": float(d.get("radius", 40.0)),
+		}
+
 	revision += 1
 
 
@@ -107,6 +149,74 @@ func mark_visited(world_pos: Vector3) -> bool:
 func is_discovered(world_pos: Vector3) -> bool:
 	var cell := world_to_cell(world_pos)
 	return cell_at(cell.x, cell.y)
+
+
+# --- named regions ---------------------------------------------------------
+
+## Called every discovery tick alongside `mark_visited` (`game_state.gd`'s
+## own throttle, not a raw per-physics-frame call). Tracks which authored
+## region (if any) the position falls inside and, the moment the player
+## crosses into one they have never entered before, queues an announcement
+## for the HUD to show once — the Fortnite-style "you have entered X" beat
+## the owner asked for. Silent (no queued text, no revision bump) on every
+## other call: re-entering an already-discovered region, wandering between
+## two regions, or standing in open pasture outside all of them.
+func update_region(world_pos: Vector3) -> void:
+	var here := Vector2(world_pos.x, world_pos.z)
+	var region := _region_at(here)
+	var new_id := str(region.get("id", "")) if not region.is_empty() else ""
+	if new_id == _current_region_id:
+		return
+	_current_region_id = new_id
+	if new_id.is_empty() or _discovered_regions.has(new_id):
+		return
+	_discovered_regions[new_id] = true
+	_pending_region_announcement = str(region.get("display_name", ""))
+	revision += 1
+
+
+## The region whose centre `here` is nearest to, among every region `here`
+## actually falls inside (there is no authored overlap today, but nearest-
+## centre-among-candidates is the well-defined answer if that ever changes,
+## rather than "whichever the dictionary iterates to last"). {} outside
+## every authored region.
+func _region_at(here: Vector2) -> Dictionary:
+	var best: Dictionary = {}
+	var best_dist := INF
+	for id: String in _region_defs.keys():
+		var def: Dictionary = _region_defs[id]
+		var centre: Vector2 = def.get("centre", Vector2.ZERO)
+		var dist := here.distance_to(centre)
+		if dist <= float(def.get("radius", 0.0)) and dist < best_dist:
+			best_dist = dist
+			best = {"id": id, "display_name": def.get("display_name", id)}
+	return best
+
+
+## Read-and-clear: "" if nothing is waiting (the common case, polled every
+## frame), the newly-entered region's display name exactly once otherwise.
+func take_pending_region_announcement() -> String:
+	var text := _pending_region_announcement
+	_pending_region_announcement = ""
+	return text
+
+
+## Every authored region, discovered or not — the full map draws a name
+## label only for the discovered ones, but a renderer needs the geometry
+## for both to decide that for itself (same split `landmarks()` already
+## gives silhouettes for undiscovered majors).
+func regions() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for id: String in _region_defs.keys():
+		var def: Dictionary = _region_defs[id]
+		out.append({
+			"id": id,
+			"display_name": def.get("display_name", id),
+			"centre": def.get("centre", Vector2.ZERO),
+			"radius": def.get("radius", 40.0),
+			"discovered": _discovered_regions.has(id),
+		})
+	return out
 
 
 func discovered_fraction() -> float:
@@ -227,6 +337,7 @@ func save_data() -> Dictionary:
 		"visited_b64": Marshalls.raw_to_base64(_visited),
 		"landmarks": _discovered.keys(),
 		"dynamic_markers": markers,
+		"regions": _discovered_regions.keys(),
 	}
 
 
@@ -241,6 +352,9 @@ func load_data(data: Dictionary) -> void:
 	_visited_count = 0
 	_discovered.clear()
 	_dynamic.clear()
+	_discovered_regions.clear()
+	_current_region_id = ""
+	_pending_region_announcement = ""
 
 	var b64 := str(data.get("visited_b64", ""))
 	if not b64.is_empty():
@@ -255,6 +369,11 @@ func load_data(data: Dictionary) -> void:
 		var sid := str(id)
 		if _landmark_defs.has(sid):
 			_discovered[sid] = true
+
+	for id: Variant in data.get("regions", []):
+		var sid := str(id)
+		if _region_defs.has(sid):
+			_discovered_regions[sid] = true
 
 	for entry: Variant in data.get("dynamic_markers", []):
 		if typeof(entry) != TYPE_DICTIONARY:
