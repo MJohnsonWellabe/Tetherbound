@@ -14,11 +14,17 @@ extends CharacterBody3D
 const CONFIG_PATH := "res://data/config/movement.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const VITALS := preload("res://scripts/player/player_vitals.gd")
+const TORCH := preload("res://scripts/player/torch.gd")
 
 signal landed(impact_speed: float, damage: float)
 signal died()
 
 var vitals: RefCounted = VITALS.new()
+## Carried from the first frame (scripts/player/torch.gd's own header
+## explains why this is not an inventory item). Exposed the same way
+## `vitals` is, so the HUD can read `torch.is_on()` without reaching past
+## this node.
+var torch: Node3D = null
 
 @export var camera_rig_path: NodePath
 var _camera_rig: Node3D = null
@@ -59,6 +65,10 @@ func _ready() -> void:
 	_model = get_node_or_null(^"Model") as Node3D
 	if _camera_rig != null and _camera_rig.has_method("set_target"):
 		_camera_rig.call("set_target", self)
+
+	torch = TORCH.new()
+	torch.name = "Torch"
+	add_child(torch)
 
 
 func _load_config() -> void:

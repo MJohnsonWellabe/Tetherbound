@@ -174,7 +174,9 @@
     "model_yaw": 0.0,
     "tint": "#c9793a",
     "hair": {
-      "visible": true
+      "visible": true,
+      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour, not a whole-body hue shift (spec §21). villager_female's real hair_ponytail mesh (NP7) is the one part of this rig `tint` does NOT also multiply, so it is the actual per-material differentiator spec §21 asks for. Warm chestnut, distinct from smith's and ranger's below.",
+      "color": "#5c3a22"
     },
     "clips": {
       "idle": "idle",
@@ -187,10 +189,11 @@
   },
   "villager_keeper": {
     "_comment": "R7.2, moved off the trainer's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_male base, not the same body the player controls. Cooler, greener tint keeps Oskar visually apart from villager_farmer's warmer one, same as before.",
+    "_comment_tint_softened": "Owner playtest report: NPCs should not look like whole-body hue-shifted clones. villager_male has no separable hair mesh (NP7 only cut one for villager_female), so unlike farmer/smith/ranger above, Oskar has no per-material differentiator to fall back on -- `tint` is the only knob, and CLAUDE.md is explicit that when clean per-material variation is not available without new asset work, a muted, near-neutral tint is preferable to an ugly saturated whole-model hue shift. The original #4f8a5b (S 43%, a genuinely saturated green) was the most clone-like tint in the cast by a clear margin next to farmer's/smith's/ranger's warm-neutral or pale-blue ones; desaturated to S ~15% at a similar-to-brighter value (NP6's own finding elsewhere in this file: a dark saturated tint reads as an unlit silhouette once emission is tinted along with albedo) so Oskar still reads as cooler-toned than the rest of the square without reading as a green person.",
     "model": "res://assets/characters/villager_male/villager_male_lod0.glb",
     "height": 1.78,
     "model_yaw": 0.0,
-    "tint": "#4f8a5b",
+    "tint": "#82998c",
     "clips": {
       "idle": "idle",
       "walk": "walk",
@@ -207,7 +210,9 @@
     "model_yaw": 0.0,
     "tint": "#bccbe6",
     "hair": {
-      "visible": true
+      "visible": true,
+      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour (spec §21). NOT touching `tint` itself here -- NP6's own comment above documents three rounds of a blind visual pass fighting this exact rig's face reading as 'unlit clay' before landing on this value, and re-litigating that without being able to re-run the same blind pass in this session risks reintroducing it. Hair is untouched by that history and gives smith a real differentiator without the risk: silver-grey, distinct from farmer's and ranger's.",
+      "color": "#8a8578"
     },
     "clips": {
       "idle": "idle",
@@ -240,7 +245,9 @@
     "model_yaw": 0.0,
     "tint": "#c2a878",
     "hair": {
-      "visible": true
+      "visible": true,
+      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour (spec §21). Deep auburn -- chosen to contrast against this rig's own pale tan wardrobe tint as well as against farmer's and smith's hair above; a blonde close to the tint's own hue would have stopped reading as a separate feature.",
+      "color": "#7a3c22"
     },
     "clips": {
       "idle": "idle",

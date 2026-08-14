@@ -9,14 +9,10 @@
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "There you are. I heard the floorboards. Sit and eat something — the bread's still warm.",
-        "I let you sleep late on purpose. I've been up since dark working out how to say this, so I'll just say it.",
-        "You'll have heard the name by now. Team Tether. They came back while you were small.",
-        "Eight places of power in this world, and they hold every one. Pals chained to the stones, keeping the lights on for them.",
-        "I walked those roads once. Knew every warden by their first name.",
-        "Look at me. I get winded crossing my own meadow. I'm not walking anywhere.",
-        "Someone has to stop them. I've known that since the day they came back — I just couldn't send you, not yet.",
-        "You were too young. That was reason enough to wait, and I'd have kept waiting if they'd let me. They won't. Every season they hold those stones, they get stronger, not weaker.",
+        "There you are. I heard the floorboards. Sit and eat — the bread's still warm. I've been up since dark working out how to say this, so I'll just say it.",
+        "You'll have heard the name by now. Team Tether. Eight places of power in this world, and they hold every one — pals chained to the stones, keeping the lights on for them.",
+        "I walked those roads once, knew every warden by name. Look at me now — I get winded crossing my own meadow. I'm not walking anywhere.",
+        "Someone has to stop them, and I couldn't send you before now — you were too young. They won't wait for you to grow into it, though. Every season they hold those stones, they get stronger, not weaker.",
         "So you go. And you don't go empty-handed.",
         {
           "text": "That pack by the door carried me thirty years. It's yours now. Orbs first — fifteen, plain make. A good throw matters more than a good orb.",
@@ -30,11 +26,9 @@
           "text": "And berries off my own bushes. Share them on the road. A fed pal forgives a long day.",
           "effect": "give:berries:5"
         },
-        "Last of all, this. My creature belt. It holds five, no more — a rule older than Team Tether, older than the stones they're squatting on.",
-        "Five is enough. Five you know by name are worth more than a hundred you don't.",
-        "Now. Three orbs, right there on the table. Ground, water, air. I raised all three from the shell, and each one's been waiting to meet you.",
+        "Last of all, this — my creature belt. It holds five, no more, a rule older than Team Tether. Five you know by name are worth more than a hundred you don't.",
         {
-          "text": "Go on, take a look at them. Whichever one catches your eye — that's the one that's yours.",
+          "text": "Now — three orbs, right there on the table. Ground, water, air. I raised all three from the shell, each one waiting to meet you. Go on, take a look — whichever one catches your eye, that's the one that's yours.",
           "effect": "beat:starter_choice"
         }
       ]

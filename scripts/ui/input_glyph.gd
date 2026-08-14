@@ -37,27 +37,31 @@ const GLYPHS := {
 		"gamepad": ["xbox_dpad_left.png", "xbox_dpad_right.png"],
 	},
 	"pal_recall": {"keyboard": "keyboard_r.png", "gamepad": "xbox_dpad_up.png"},
+	## The starting torch (owner playtest report: night is too dark, and the
+	## player must have a torch from the beginning). Manual override on top of
+	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.
+	"torch_toggle": {"keyboard": "keyboard_l.png", "gamepad": "xbox_button_start.png"},
 	## Combat's five verbs (`HD1`). `combat_quick`/`combat_charged` bind to
 	## mouse buttons on keyboard-and-mouse, not keys -- the "keyboard" bucket
 	## key is kept for both (matching every other entry's two-way device
 	## split) even though the icon itself is a mouse glyph.
 	##
-	## D35 (Palworld parity): gamepad defaults moved to the triggers --
-	## `quick`=RT, `charged`=LT -- to match Palworld's RT-attack/LT-aim. The
-	## vendored set has no trigger PNGs (same gap `build_rotate_left`/
-	## `build_rotate_right` already document below), so these borrow LB/RB as
-	## the closest shape on disk rather than block on an asset pass. Swap for
-	## real LT/RT glyphs once Kenney's trigger icons are pulled in.
+	## D35 (Palworld parity): gamepad defaults sit on the triggers --
+	## `quick`=RT, `charged`=LT -- to match Palworld's RT-attack/LT-aim.
 	##
-	## KNOWN GLYPH COLLISION until that asset pass: `quick`'s stand-in
-	## (xbox_rb.png, standing in for RT) is visually identical to `throw`'s
-	## icon (xbox_rb.png, `throw`'s REAL button), and combat_hud.gd's Actions
-	## row draws both cells at once -- so the row shows two matching RB icons
-	## for two different physical buttons. Real trigger art is the only fix;
-	## do not "fix" this by pointing `quick` at an unrelated button glyph,
-	## which would be actively wrong instead of merely imprecise.
-	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_rb.png"},
-	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_lb.png"},
+	## FORMERLY a known glyph collision: `quick`/`charged` used to borrow
+	## `xbox_rb.png`/`xbox_lb.png` (the SHOULDER icons) because the vendored
+	## set had no trigger PNGs, which made `quick`'s icon visually identical
+	## to `throw`'s (both `xbox_rb.png`, two different physical buttons drawn
+	## side by side in combat_hud.gd's Actions row) -- exactly the "on-screen
+	## control instruction lies about its binding" defect a blind playtest
+	## flagged directly. `xbox_lt.png`/`xbox_rt.png` were already sitting in
+	## the vendored raw pack (`assets_raw/vendor/kenney_input-prompts/Xbox
+	## Series/Default/`, same CC0 pack `xbox_lb.png`/`xbox_rb.png` came
+	## from) and just needed extracting -- no new asset generation, no new
+	## licence to track.
+	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_rt.png"},
+	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_lt.png"},
 	"throw": {"keyboard": "keyboard_f.png", "gamepad": "xbox_rb.png"},
 	## `combat_run` binds to Escape/gamepad-B -- physically identical to
 	## `cancel` above, so combat_hud.gd's Run AND Cancel verbs both reach for
@@ -90,16 +94,17 @@ const GLYPHS := {
 	## of a caller, the same order combat's row was added in for HD1.
 	"build_place": {"keyboard": "mouse_left.png", "gamepad": "xbox_button_x.png"},
 	"build_cancel": {"keyboard": "mouse_right.png", "gamepad": "xbox_button_b.png"},
-	## Defaults are mouse wheel up/down and gamepad LT/RT (project.godot). The
-	## vendored set in assets/ui/input_prompts/ has no wheel or trigger PNGs
-	## (only mouse_left/right, and xbox_lb/rb, ever got extracted from the
-	## Kenney pack) -- CLAUDE.md forbids vendoring new art mid-task, so these
-	## stand in with the closest shape already on disk rather than block on an
-	## asset pass: keyboard-side borrows the arrow-key icons, gamepad-side
-	## borrows LB/RB. Swap both for real wheel/LT/RT glyphs once Kenney's
-	## trigger and scroll icons are pulled into the vendored set.
-	"build_rotate_left": {"keyboard": "keyboard_arrow_left.png", "gamepad": "xbox_lb.png"},
-	"build_rotate_right": {"keyboard": "keyboard_arrow_right.png", "gamepad": "xbox_rb.png"},
+	## Defaults are mouse wheel up/down and gamepad LT/RT (project.godot).
+	## Gamepad side now uses the real trigger glyphs (`xbox_lt.png`/
+	## `xbox_rt.png`, extracted from the same already-vendored Kenney pack
+	## `quick`/`charged` draw on above) -- these used to borrow the LB/RB
+	## shoulder icons, which is wrong on its face for a trigger-bound action.
+	## Keyboard/mouse side still has no wheel-icon PNG extracted (only
+	## mouse_left/right ever were), so it keeps borrowing the arrow-key
+	## icons as the closest shape already on disk; wheel glyphs are a PC-only
+	## gap the controller-first playtest report did not raise.
+	"build_rotate_left": {"keyboard": "keyboard_arrow_left.png", "gamepad": "xbox_lt.png"},
+	"build_rotate_right": {"keyboard": "keyboard_arrow_right.png", "gamepad": "xbox_rt.png"},
 	## Keyboard default is Shift, which has no vendored keycap PNG at all (the
 	## Kenney sheet in assets/ui/input_prompts/ never had one extracted). Rather
 	## than point it at an unrelated icon, this id is left gamepad-only; a

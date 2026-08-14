@@ -334,6 +334,16 @@ func next_tab() -> void:
 	select(_index + 1)
 
 
+## Owner playtest report: "LB = tab left, RB = tab right." `cycle_action`
+## (LB / Q by default) used to be wired to `next_tab()`, which moves the
+## selection RIGHT through the on-screen tab row — backwards from what the
+## button's own position on the controller promises. This is the LB half;
+## `reverse_cycle_action` (RB, below in `_read_actions`) is the RB half.
+func previous_tab() -> void:
+	AUDIO_CUES.play(&"ui_tab")
+	select(_index - 1)
+
+
 ## One status line for the whole menu, so a message cannot appear somewhere the
 ## player was not looking.
 func say(message: String) -> void:
@@ -487,6 +497,16 @@ func _read_actions() -> void:
 		return
 
 	if Input.is_action_just_pressed(str(_config.get("cycle_action", "tool_cycle"))):
+		previous_tab()
+		return
+
+	# RB's half of "LB = tab left, RB = tab right" (owner playtest report).
+	# `menu_tab_right` is a dedicated action (project.godot) rather than a
+	# reuse of `backpack_drop`'s old RB binding — `backpack_drop` moved to
+	# gamepad Start (button 6) specifically to free RB for this, since both
+	# actions would otherwise fire off the same physical press whenever the
+	# backpack tab is the one open.
+	if Input.is_action_just_pressed(str(_config.get("reverse_cycle_action", "menu_tab_right"))):
 		next_tab()
 		return
 

@@ -479,7 +479,10 @@ func _on_slot(index: int) -> void:
 
 ## Use the focused item, if it is usable. Today that is the healing
 ## consumables (opens the target picker below rather than applying
-## immediately — see the header comment for why) and, R2.2, a damaged tool
+## immediately — see the header comment for why), food (D29: restores the
+## PLAYER's satiety and grants the item's buff — satiety lives on
+## `player_vitals.gd`, never on a pal, so unlike a heal item this applies on
+## this same press with no target to choose), and, R2.2, a damaged tool
 ## (one press repairs it fully, free — GAME_DESIGN.md 19 says "at appropriate
 ## station"; there is no placed workbench yet (R2.7), so this is the whole of
 ## R2.2's "free repair" loop until that station exists to gate it). A tool has
@@ -500,6 +503,7 @@ func _read_use() -> void:
 	if stack.is_empty():
 		return
 	var id := str(stack.get("id", ""))
+	var def := db.call("definition", id) as Dictionary
 
 	if str(db.call("kind", id)) == "tool":
 		var maximum := int(inventory.call("max_durability_at", _focused))
@@ -512,7 +516,19 @@ func _read_use() -> void:
 				say("%s repaired, free." % str(db.call("item_name", id)))
 			return
 
-	var heal := float((db.call("definition", id) as Dictionary).get("heal", 0.0))
+	var satiety := float(def.get("satiety", 0.0))
+	if satiety > 0.0:
+		var player := _player_node()
+		var vitals: RefCounted = player.get("vitals") as RefCounted if player != null else null
+		if vitals == null:
+			say("Nothing to eat that here.")
+			return
+		vitals.call("eat", satiety, def.get("buff", {}))
+		inventory.call("remove", id, 1)
+		say("Ate %s." % str(db.call("item_name", id)))
+		return
+
+	var heal := float(def.get("heal", 0.0))
 	if heal <= 0.0:
 		say("%s is not something you can use here." % str(db.call("item_name", id)))
 		return
@@ -848,6 +864,8 @@ func _verb_hint(id: String, kind: String, def: Dictionary, tool_max: int) -> Str
 	var parts: Array[String] = []
 	if tool_max > 0:
 		parts.append("A  Repair (free)")
+	elif float(def.get("satiety", 0.0)) > 0.0:
+		parts.append("A  Eat")
 	elif kind == "consumable" and float(def.get("heal", 0.0)) > 0.0:
 		parts.append("A  Use on a pal")
 	parts.append("Drop")
@@ -870,6 +888,18 @@ func _items() -> RefCounted:
 func _party() -> RefCounted:
 	var game := state()
 	return game.get("party") if game != null else null
+
+
+## Same defensive lookup `tab_map.gd::_player_node()` already uses: no tree,
+## no current scene, or no `Player` node all read as "nothing to eat this
+## with," never a crash.
+func _player_node() -> Node3D:
+	if not is_inside_tree():
+		return null
+	var world := get_tree().get_current_scene()
+	if world == null:
+		return null
+	return world.get_node_or_null(^"Player") as Node3D
 
 
 func _config() -> Dictionary:

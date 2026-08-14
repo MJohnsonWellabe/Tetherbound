@@ -89,6 +89,7 @@ func test_every_action_the_menu_binds_exists_in_the_input_map() -> void:
 		str(config.get("open_action", "")),
 		str(config.get("close_action", "")),
 		str(config.get("cycle_action", "")),
+		str(config.get("reverse_cycle_action", "")),
 	]
 	var shortcuts: Dictionary = config.get("shortcuts", {})
 	for action in shortcuts.keys():

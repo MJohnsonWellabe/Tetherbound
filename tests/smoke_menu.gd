@@ -67,6 +67,7 @@ func _run() -> void:
 	await _check_the_party_screen_holds_five()
 	await _check_party_reorder_button()
 	await _check_backpack_target_picker()
+	await _check_backpack_food_eat()
 	await _check_backpack_drop_and_split()
 	await _check_closes_and_gives_the_game_back(world)
 	await _check_opens_on_the_menu_button()
@@ -249,6 +250,27 @@ func _check_tabs_can_be_cycled() -> void:
 		_fail("changing tab left nothing focused; the menu becomes undrivable")
 	print("tab cycles on `tool_cycle`, focus follows")
 
+	# Owner playtest report: "LB = tab left, RB = tab right". `tool_cycle` (Q /
+	# LB) must step BACKWARD and `menu_tab_right` (Tab / RB) must step
+	# FORWARD -- opposite directions, checked directly against `_index`
+	# rather than just "changed", so a future regression that makes both
+	# buttons cycle the same way fails loudly instead of passing on "it moved".
+	var tab_count := int(_menu.get("_tabs").size())
+	var mid := int(_menu.get("_index"))
+	var both_ok := true
+	await _press("tool_cycle")
+	var after_lb := int(_menu.get("_index"))
+	if after_lb != posmod(mid - 1, tab_count):
+		_fail("`tool_cycle` (LB) should step to the PREVIOUS tab; went from %d to %d" % [mid, after_lb])
+		both_ok = false
+	await _press("menu_tab_right")
+	var after_rb := int(_menu.get("_index"))
+	if after_rb != posmod(after_lb + 1, tab_count):
+		_fail("`menu_tab_right` (RB) should step to the NEXT tab; went from %d to %d" % [after_lb, after_rb])
+		both_ok = false
+	if both_ok:
+		print("LB steps to the previous tab, RB steps to the next -- opposite directions, as reported")
+
 
 ## The five-pal cap, seen from the screen rather than from the unit test.
 ##
@@ -395,6 +417,57 @@ func _check_backpack_target_picker() -> void:
 		_fail("confirming slot 1 as the target did not heal the pal in slot 1")
 	else:
 		print("target picker heals the CHOSEN pal (slot 1) and spends the item on confirm")
+
+
+## Owner playtest report: "berries cannot properly be fed to pals from the
+## menu." Root cause turned out narrower than the report -- D29 puts satiety
+## on the PLAYER (`player_vitals.gd`), never on a pal, so `berries` was never
+## going to open the pal target picker at all. The real bug was that
+## `tab_backpack.gd::_read_use()` had no branch for a `food`-kind item's
+## `satiety` field whatsoever: pressing Use on a berry said "is not something
+## you can use here" unconditionally. This drives the same real input path
+## the potion check above does and checks the player actually gets fed.
+func _check_backpack_food_eat() -> void:
+	_menu.call("select", 0)  # Backpack
+	for i in 4:
+		await process_frame
+
+	var inventory: RefCounted = _game.get("inventory")
+	var db: RefCounted = _game.get("items")
+	var body: Node = _menu.get("_bodies")[0]
+	var player: Node = current_scene.get_node_or_null(^"Player")
+	if player == null:
+		_fail("food-eat check needs a Player node in the scene")
+		return
+	var vitals: RefCounted = player.get("vitals")
+	if vitals == null:
+		_fail("food-eat check needs the Player to carry vitals")
+		return
+
+	vitals.set("satiety", 10.0)
+
+	inventory.call("add", "berries", 3)
+	var slot: int = int(inventory.call("find_slot", "berries"))
+	if slot < 0:
+		_fail("could not find the berries slot after adding some")
+		return
+	var count_before: int = int(inventory.call("count", "berries"))
+	var satiety_before: float = float(vitals.get("satiety"))
+	var restore: float = float((db.call("definition", "berries") as Dictionary).get("satiety", 0.0))
+	if restore <= 0.0:
+		_fail("berries' own item definition carries no satiety value; cannot verify the fix meaningfully")
+		return
+
+	(body.get("_buttons")[slot] as Button).grab_focus()
+	await process_frame
+	await _press("interact")
+
+	if int(inventory.call("count", "berries")) != count_before - 1:
+		_fail("pressing Use on berries did not spend one from the stack")
+	if float(vitals.get("satiety")) <= satiety_before:
+		_fail("pressing Use on berries did not restore the player's satiety")
+	else:
+		print("Use on berries restores the player's satiety and spends the item, no target picker")
 
 
 ## Drop discards a stack after a confirm; split halves a stack into an empty

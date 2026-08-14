@@ -2,11 +2,12 @@
   "_comment": "The pause menu, described rather than coded. The previous prototype kept its menu in src/data/pauseMenu.json for the same reason: adding a screen should be a JSON entry plus a tab script, never a new branch in the shell.",
   "_comment_tabs": "Order is the on-screen order. `script` is the tab body; it must extend scripts/ui/menu_tab.gd. tests/test_menu_data.gd fails the build if a listed script is missing, because a typo'd path would otherwise show as a silently blank tab.",
   "_comment_open": "`menu_cancel` is Escape / B by DEFAULT and the player can now move it — Settings > Controls. It shares its default with `combat_run`, so out of the box the menu still refuses to open mid-fight; see docs/decisions/D14. `inventory` (I / Y) opens straight onto the backpack and works everywhere the menu does.",
-  "_comment_cycle": "`tool_cycle` (Q / left shoulder) steps to the next tab. Shoulder buttons are the handheld convention for this. The tab row is also focusable, and left/right on it does the same job.",
+  "_comment_cycle": "`tool_cycle` (Q / LB) steps to the PREVIOUS tab, `menu_tab_right` (Tab / RB) steps to the NEXT one -- owner playtest report: 'LB = tab left, RB = tab right', matching the buttons' own left/right position on the controller. The tab row is also focusable, and left/right on it does the same job.",
 
   "open_action": "menu_cancel",
   "close_action": "menu_cancel",
   "cycle_action": "tool_cycle",
+  "reverse_cycle_action": "menu_tab_right",
   "shortcuts": {
     "inventory": "backpack"
   },
@@ -79,7 +80,7 @@
         },
         {
           "name": "The world",
-          "actions": ["interact", "inventory", "map", "tool_cycle", "pal_recall"]
+          "actions": ["interact", "inventory", "map", "tool_cycle", "menu_tab_right", "pal_recall", "torch_toggle"]
         },
         {
           "name": "Building",
@@ -109,7 +110,7 @@
         },
         {
           "name": "Backpack",
-          "note": "RB doubles as 'throw an orb' in a fight, and the right stick click does nothing there -- the pause menu can't open mid-fight (see menu_cancel's note), so neither button ever means two things at once.",
+          "note": "backpack_drop sits on gamepad Start rather than RB -- RB is menu_tab_right now (owner playtest report: 'LB = tab left, RB = tab right'), and the pause menu (where Drop lives) is exactly where that action reads. The right stick click does nothing in a fight, so backpack_split's RB-adjacent button never means two things at once either.",
           "actions": ["backpack_drop", "backpack_split"]
         }
       ],
@@ -128,8 +129,10 @@
         "interact": "Interact",
         "inventory": "Open the backpack",
         "map": "Map",
-        "tool_cycle": "Next tool  /  next tab",
+        "tool_cycle": "Next tool  /  previous tab",
+        "menu_tab_right": "Next tab",
         "pal_recall": "Call out  /  put away your pal",
+        "torch_toggle": "Toggle your torch (it also lights itself after dark)",
         "build_rotate": "Rotate the build ghost",
         "hotbar_1": "Use quick-item slot 1",
         "hotbar_2": "Use quick-item slot 2",
@@ -189,5 +192,5 @@
   },
 
   "_comment_footer": "The button legend. Written out because this ships on a handheld with no manual open beside it.",
-  "footer": "A  Select        B  Close        Q / LB  Next tab        Menu + View held, or F10  Reset all controls"
+  "footer": "A  Select        B  Close        Q / LB  Prev tab        Tab / RB  Next tab        Menu + View held, or F10  Reset all controls"
 }
