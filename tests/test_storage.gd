@@ -92,6 +92,45 @@ func test_a_partial_fit_on_deposit_leaves_the_remainder_with_the_player() -> voi
 	assert_eq(player.count("wood"), 10, "refused wood must stay in the player's satchel")
 
 
+func test_save_data_round_trips_through_load_data() -> void:
+	# R3.1-remainder: this is the chest-side half of save/load — a fresh
+	# STORAGE_STATE loading another one's save_data() output should end up
+	# holding the same stacks in the same slots.
+	chest.inventory.set_slot(3, {"id": "wood", "n": 12})
+	chest.inventory.set_slot(9, {"id": "stone", "n": 4})
+
+	var restored: RefCounted = STORAGE_STATE.new(db)
+	restored.load_data(chest.save_data())
+
+	assert_eq(restored.inventory.stack_at(3), {"id": "wood", "n": 12})
+	assert_eq(restored.inventory.stack_at(9), {"id": "stone", "n": 4})
+	assert_true(restored.inventory.is_slot_empty(0))
+
+
+func test_load_data_coerces_stack_counts_back_to_int_after_a_json_round_trip() -> void:
+	# save_game.gd embeds save_data()'s output inside the wider save file it
+	# JSON.stringify()s, and JSON has no integer type -- every "n" comes back
+	# a float. load_data must undo that the same way save_game.gd's own
+	# _stack_from_json does for the player's satchel, or a reloaded chest's
+	# stacks would silently carry "n": 5.0 instead of 5.
+	chest.inventory.set_slot(2, {"id": "wood", "n": 5})
+	var round_tripped: Variant = JSON.parse_string(JSON.stringify(chest.save_data()))
+
+	var restored: RefCounted = STORAGE_STATE.new(db)
+	restored.load_data(round_tripped)
+
+	var stack: Dictionary = restored.inventory.stack_at(2)
+	assert_eq(stack.get("id"), "wood")
+	assert_eq(typeof(stack.get("n")), TYPE_INT)
+	assert_eq(int(stack.get("n")), 5)
+
+
+func test_load_data_ignores_a_non_array_payload() -> void:
+	chest.inventory.set_slot(0, {"id": "wood", "n": 1})
+	chest.load_data("not an array")
+	assert_eq(chest.inventory.stack_at(0), {"id": "wood", "n": 1})
+
+
 func test_storage_never_holds_a_creature_id() -> void:
 	# CLAUDE.md: player can own only five creatures, ever, and storage of any kind
 	# must never become a way around that. storage_state.gd only ever moves

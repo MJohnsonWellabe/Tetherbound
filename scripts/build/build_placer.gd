@@ -49,6 +49,12 @@ const BUILD_PLACER_GROUP := "build_placer"
 ## below) lives in this file.
 const BUILDING_ID_META := "building_id"
 
+## R3.1-remainder. This node's own index into `GameState.placed_buildings` —
+## how `sync_state_to_game` below finds the array entry a live stateful
+## piece's current data belongs on, cheaper than adding a second id field to
+## the save format just to link a node back to its own record.
+const PLACED_INDEX_META := "placed_index"
+
 ## BG1's original rotate action (project.godot, data/config/menu.json's
 ## "Building" controls group): rotates the armed ghost one FIXED 90-degree
 ## step, regardless of `_rotation_step_deg` below. Keyboard T and gamepad
@@ -304,7 +310,15 @@ func _can_afford(game: Node, armed: String) -> bool:
 ## `yaw_deg` is applied to the whole node: every stateful piece's own
 ## sub-parts (`camp.gd`'s fire/bedroll, `storage_container.gd`'s prompt) are
 ## positioned in ITS local space, so rotating the root carries them with it.
-func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0) -> Node3D:
+##
+## `index` (R3.1-remainder) is this node's future position in
+## `GameState.placed_buildings` — stashed as metadata so `sync_state_to_game`
+## can find its way back without a position-based search. `state_data`, when
+## given, is a stateful piece's own saved payload (a chest's `storage_state
+## .save_data()` output) to restore onto the freshly-built node immediately;
+## a fresh placement (not a load) always passes null, since there is nothing
+## yet to restore.
+func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = -1, state_data: Variant = null) -> Node3D:
 	var placed: Node3D = null
 	if id == "camp":
 		placed = CAMP.new()
@@ -316,6 +330,10 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0) -> Node3D:
 		placed.name = "Storage"
 		get_parent().add_child(placed)
 		placed.call("build_real")
+		if state_data != null:
+			var state: RefCounted = placed.get("state")
+			if state != null:
+				state.call("load_data", state_data)
 	else:
 		var mesh_path := _piece_mesh(game, id)
 		placed = BUILD_PIECE.new()
@@ -324,6 +342,8 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0) -> Node3D:
 		placed.call("build_real", mesh_path)
 	placed.rotation.y = deg_to_rad(yaw_deg)
 	placed.set_meta(BUILDING_ID_META, id)
+	if index >= 0:
+		placed.set_meta(PLACED_INDEX_META, index)
 	placed.add_to_group(PLACED_GROUP)
 	return placed
 
@@ -338,7 +358,10 @@ func _place(game: Node, armed: String) -> void:
 			return
 
 	var yaw_deg := _yaw_deg
-	var placed := _spawn_building(game, armed, yaw_deg)
+	# R3.1-remainder: `register_building` below appends, so the size right
+	# now is the index the new entry is about to occupy.
+	var index := int((game.get("placed_buildings") as Array).size())
+	var placed := _spawn_building(game, armed, yaw_deg, index)
 	placed.global_position = _ghost.global_position
 	# R3.1. The registry, not this node, is what a save actually persists —
 	# see GameState.placed_buildings.
@@ -359,7 +382,9 @@ func restore_from_game(game: Node) -> void:
 		return
 	for node in get_tree().get_nodes_in_group(PLACED_GROUP):
 		node.queue_free()
-	for entry: Variant in (game.get("placed_buildings") as Array):
+	var buildings: Array = game.get("placed_buildings") as Array
+	for i in buildings.size():
+		var entry: Variant = buildings[i]
 		if typeof(entry) != TYPE_DICTIONARY:
 			continue
 		var record := entry as Dictionary
@@ -371,10 +396,37 @@ func restore_from_game(game: Node) -> void:
 		# GameState.register_building's own comment on why that is not a
 		# version bump.
 		var yaw_deg := float(record.get("yaw_deg", 0.0))
-		var placed := _spawn_building(game, id, yaw_deg)
+		# R3.1-remainder: `record.get("state")` is null for any piece with
+		# nothing to restore (every non-storage id, and a storage entry from
+		# a save written before this shipped) — `_spawn_building` already
+		# treats null as "nothing to restore."
+		var placed := _spawn_building(game, id, yaw_deg, i, record.get("state"))
 		placed.global_position = Vector3(float(position[0]), float(position[1]), float(position[2]))
 		# R3.1 VERSION 2: buildings placed before yaw was tracked default to 0.
 		placed.rotation.y = deg_to_rad(float(record.get("yaw_deg", 0.0)))
+
+
+## R3.1-remainder. The reverse of the `state_data` half of restore: called by
+## `GameState.save_game` right before it writes, so a chest's live, currently-
+## held contents (`storage_state.gd`, owned by the scene node, never by
+## `placed_buildings` itself) land in the record a save actually persists.
+## Only pieces this placer itself planted carry `PLACED_INDEX_META`, so a
+## piece from a stale or foreign group membership is silently skipped rather
+## than guessed at.
+func sync_state_to_game(game: Node) -> void:
+	if game == null:
+		return
+	var buildings: Array = game.get("placed_buildings") as Array
+	for node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		if str(node.get_meta(BUILDING_ID_META, "")) != "storage":
+			continue
+		var index := int(node.get_meta(PLACED_INDEX_META, -1))
+		if index < 0 or index >= buildings.size():
+			continue
+		var state: RefCounted = node.get("state")
+		if state == null:
+			continue
+		(buildings[index] as Dictionary)["state"] = state.call("save_data")
 
 
 func _drop_ghost() -> void:

@@ -194,6 +194,29 @@ func test_save_then_load_round_trips_a_placed_buildings_rotation() -> void:
 	assert_almost_eq(float((read.placed_buildings[0] as Dictionary).get("yaw_deg", -1.0)), 90.0)
 
 
+func test_save_then_load_round_trips_a_placed_buildings_state_payload() -> void:
+	# R3.1-remainder: a placed storage chest's own contents ride along as an
+	# opaque `state` key on its own placed_buildings entry -- save_game.gd
+	# does not know or care what is inside it, the same as `yaw_deg` above.
+	# GameState is what populates/consumes this key for real (via
+	# build_placer.gd's sync_state_to_game / restore_from_game); this proves
+	# only that save_game.gd itself carries the nested payload through a real
+	# JSON round trip unharmed, whatever shape it turns out to hold.
+	var written := _game()
+	written.placed_buildings = [
+		{"id": "storage", "position": [1.0, 0.0, 2.0], "state": [{"id": "wood", "n": 5}, null]},
+	]
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var entry := read.placed_buildings[0] as Dictionary
+	var state: Array = entry.get("state", [])
+	assert_eq(state.size(), 2)
+	assert_eq((state[0] as Dictionary).get("id"), "wood")
+	assert_eq(state[1], null)
+
+
 func test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry() -> void:
 	# A save written before BG1 shipped rotation has plain {id, position}
 	# entries and no `yaw_deg` key at all. `save_game.gd` treats

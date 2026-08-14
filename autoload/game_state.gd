@@ -273,7 +273,19 @@ func register_building(id: String, position: Vector3, yaw_deg: float = 0.0) -> v
 
 ## Write `slot`. Returns whether it succeeded.
 func save_game(slot: int) -> bool:
+	_sync_placed_building_state()
 	return bool(save_system.call("save", self, slot))
+
+
+## R3.1-remainder. A placed storage chest's own contents live on the live
+## scene node (`storage_state.gd`), not in `placed_buildings` — `save_game
+## .gd` deliberately never touches the scene tree (see its own header), so
+## this is the one seam that does, right before every write. Mirrors
+## `load_game`'s own "ask build_placer.gd" pattern below, just in reverse.
+func _sync_placed_building_state() -> void:
+	for node in get_tree().get_nodes_in_group("build_placer"):
+		if node.has_method("sync_state_to_game"):
+			node.call("sync_state_to_game", self)
 
 
 ## Load `slot` onto this live state and tell the world to rebuild whatever it
