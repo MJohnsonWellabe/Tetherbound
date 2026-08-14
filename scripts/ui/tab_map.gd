@@ -392,6 +392,15 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 	var font_size := UITokens.FONT_LABEL
 	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
 
+	# PADDING is real breathing room, not the bare minimum that stops
+	# `intersects()` from returning true. A confirmed render at PADDING=2
+	# separated two labels by exactly enough that Rect2.intersects() called
+	# it "clear" while the rendered text still read as visually cramped —
+	# capital letters and glyph overshoot fill more of a font's own line
+	# height than the tight box get_string_size() reports, so a hairline
+	# geometric gap is not the same thing as a comfortable visual one.
+	const PADDING := 8.0
+
 	var top_left := point + Vector2(-text_size.x * 0.5, -text_size.y * 0.5)
 	var rect := Rect2(top_left, text_size)
 	var attempts := 0
@@ -401,13 +410,12 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 			if rect.intersects(other):
 				# Drop straight to just under THIS collider's own bottom edge,
 				# not down by this label's own height -- two centres that are
-				# only a few pixels apart in Y (Village Square and Grandpa's
-				# Meadow, ~5px apart at this map's scale) mean a same-size
-				# blind shift can still leave the new top a few pixels inside
-				# the old bottom. Anchoring to the actual collider geometry
-				# is what guarantees real clearance regardless of how close
-				# the two centres started.
-				rect.position.y = other.position.y + other.size.y + 2.0
+				# only a few pixels apart in Y mean a same-size blind shift
+				# can still leave the new top a few pixels inside the old
+				# bottom. Anchoring to the actual collider geometry is what
+				# guarantees real clearance regardless of how close the two
+				# centres started.
+				rect.position.y = other.position.y + other.size.y + PADDING
 				collided = true
 		if not collided:
 			break
