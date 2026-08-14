@@ -1618,7 +1618,26 @@ genuinely blind critic reached it this round — self-judged only, disclosed
 as such, not a substitute for the real blind pass). The backdrop-drift
 oddity is very likely just the arena's small fixed radius plus genuinely
 different off-axis camera headings revealing/hiding a real, static nearby
-village — not a repositioning bug, not chased further. **The full-roster
+village — not a repositioning bug, not chased further.
+
+**Both named next-levers now actually checked.** The camera-occlusion
+pattern is root-caused, not a mystery: `survey_combat.gd::_capture_the_impact()`
+swung the camera off-axis then awaited a PHYSICS frame before pausing —
+but `camera_rig.gd` has no `_physics_process()` at all, only `_process()`,
+so the swing had no guaranteed chance to bake into `rotation`/`global_position`
+before processing froze. Fixed by awaiting two `process_frame`s instead.
+The exact "confirm `telegraph_started` reaches `_on_enemy_telegraph()`" lever
+this entry itself named was also run for real: instrumented all three links
+(emit, handler, draw) and drove a live `smoke_combat.gd` fight, not a static
+trace. Every link fires cleanly every time — `telegraph_started` emits,
+`_on_enemy_telegraph()` receives it, `_draw_ring()` runs with sane numbers
+(radius ~0.46, alpha ~0.9, `visible=true`, `custom_aabb` correctly set).
+The signal/logic chain is confirmed clean, not the bug. What's left, per
+`telegraph_glow.gd`'s own updated comment: the one real structural
+difference from its working siblings is that it draws flat on the ground
+plane instead of as a camera-facing billboard — a rendering-only question
+now, needing the actual render pass to test, not more code archaeology.
+**The full-roster
 creature sheet (`tools/preview_creatures.gd`) is still NOT run and still open
 for `SA5`/`SA6`** — this round's tightened time cap said pick it up only if
 already rendered, and it was not.
