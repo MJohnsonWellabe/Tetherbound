@@ -3,6 +3,56 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R3.1-remainder — A placed storage chest's own contents now survive save/load
+
+`model: sonnet` · `8af9f25` · `tests: test_save_format (24 tests), test_storage
+(10 tests) — 36 tests, 141 assertions, 0 failed, run locally headless`
+
+`R3.1` made `GameState.placed_buildings` the canonical save record, and a
+placed storage chest round-tripped fine as an entry in it — but the chest's
+own independent `Inventory` (`storage_state.gd`) lived only on the live scene
+node, never read at save time or restored at load time, so a chest that came
+back after a reload was real and in the right place, just empty.
+
+Fixed by giving each stateful placed piece a `state` payload on its own
+registry entry, synced from the live node right before every save:
+`build_placer.gd` stashes each placed node's own index into
+`placed_buildings` as node metadata (`PLACED_INDEX_META`) at placement and at
+restore, and gained `sync_state_to_game(game)` — the save-side mirror of its
+existing `restore_from_game(game)` — which walks the `placed_building` group,
+finds each `storage` node by that index, and writes its live
+`storage_state.save_data()` onto `placed_buildings[index]["state"]`.
+`GameState.save_game()` calls it right before handing off to `save_system`.
+On load, `restore_from_game` now passes `record.get("state")` through to the
+freshly-spawned storage node, which calls `storage_state.load_data()`.
+
+`save_game.gd` itself needed **no changes** — it already carries any extra
+key on a building dict through save/load opaquely (the same mechanism that
+already carried `yaw_deg`), confirmed by a new `test_save_format.gd` case
+that round-trips an arbitrary nested `state` payload through a real
+`JSON.stringify`/`parse_string` cycle.
+
+`storage_state.gd` gained `save_data()`/`load_data()` — the same `{id, n[,
+durability]}`-per-slot array shape `save_game.gd::_inventory_to_array` uses
+for the player's own satchel. `load_data()` re-coerces `n` back to `int`
+after the JSON round trip (JSON has no integer type), the same fix
+`save_game.gd::_stack_from_json` already applies for the player's satchel —
+confirmed by a dedicated `test_storage.gd` case that runs stack data through
+an actual `JSON.stringify`/`parse_string` round trip and checks the result's
+`typeof()`, not just its value.
+
+Scoped to `storage` only, per the item's own brief: `camp` is the only other
+stateful placed piece and carries nothing worth persisting beyond position
+(already handled by the existing `id`/`position`/`yaw_deg` fields), so no
+generic "every building might have state" mechanism was built.
+
+Done-when met directly: deposit items in a chest, save, reload, open the same
+chest — same items. Not verified in a live running game this pass (no
+render/playtest step for a save-format change); the 36 tests above exercise
+every seam this touches (`GameState` → `build_placer.gd` → `storage_state.gd`
+→ `save_game.gd`) at the unit level, including the JSON round trip that would
+otherwise hide a float-vs-int bug.
+
 ## R1.1 / R1.2 — pal -> creature, everywhere
 
 `model: sonnet` · `06df0bb` · `tests: full suite (596/596), every verify-core

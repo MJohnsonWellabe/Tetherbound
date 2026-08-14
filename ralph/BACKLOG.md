@@ -1840,23 +1840,7 @@ to carry (Phase 3.5 is still ahead of this in the file), so version 1 has no
 progression-flag section; whoever ships `SB9` owns the version bump this
 item's own brief anticipated. One narrower gap opened below.
 
-### R3.1-remainder — A placed storage chest's own contents do not survive save/load
-`model: sonnet` · `tests: test_save_format` · `area: save`
-`R3.1` made `GameState.placed_buildings` the canonical record of what the
-player has built, and a placed storage chest (`R2.7`) round-trips as an
-entry in it like anything else — but the chest's own independent
-`Inventory` (`storage_state.gd`) is never read at save time or restored at
-load time, so a chest that comes back after a reload is real and in the
-right place, just empty. The registry entry would need an optional `state`
-payload (the chest's own `slot_count()` stacks, same shape the player's
-satchel already uses) captured at save time by walking the live
-`placed_building` group rather than trusting a snapshot taken once at
-placement, since a chest's contents change long after it is planted.
-`camp`, the only other stateful piece, carries nothing worth persisting
-beyond its position, so this is scoped to storage specifically rather than
-a generic "every building might have state" mechanism. Done when: depositing
-items in a chest, saving, reloading, and opening the same chest shows the
-same items.
+**`R3.1-remainder` (a placed storage chest's own contents now survive save/load) shipped — see `DONE.md`.**
 
 ### R3.2 — Death satchels persist across save/load
 `model: sonnet` · `tests: test_satchel` (new)
