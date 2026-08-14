@@ -64,7 +64,7 @@ func _run() -> void:
 	_the_creatures_in_the_world_loaded_their_models()
 	_the_trainer_has_a_model_and_animations()
 	_every_human_fits_at_its_declared_height()
-	_the_villagers_still_tint_the_way_r7_2_shipped()
+	_the_villagers_no_longer_tint_the_whole_body()
 	_the_npc_variant_system_differentiates_independently()
 	_the_team_tether_ranks_read_as_distinct()
 	_the_meadow_was_dressed()
@@ -258,41 +258,36 @@ func _every_human_fits_at_its_declared_height() -> void:
 		holder.queue_free()
 
 
-## NP1 replaced the flat `_apply_tint` multiply with `_apply_palette`, which
-## reads `tint` as a legacy `{"*": tint}` palette entry when no `palette` key
-## is present. R7.2's three villagers still carry only `tint` — this is the
-## regression guard that the translation actually keeps producing a coloured
-## body rather than silently doing nothing now that the field is read
-## differently.
-func _the_villagers_still_tint_the_way_r7_2_shipped() -> void:
+## SUPERSEDES the old R7.2 guard (`_the_villagers_still_tint_the_way_r7_2_
+## shipped`), which asserted the OPPOSITE of the current, intentional design
+## and was failing this smoke test on every run since the fix landed. Owner
+## playtest, second round, was blunt about why: "all of the NPCs still look
+## like different hues across their whole body. it looks stupid." These
+## rigs have exactly one material for skin, face AND clothes together (no
+## separate skin surface — NP1-geometry's own documented limit), so any
+## non-identity `tint` here was never just "rustier wardrobe colour", it was
+## an orange- or blue-tinted FACE. `tint` is now `#ffffff` (this codebase's
+## own established identity multiply) on all three, and farmer/smith (the
+## two that share the villager_female body) differentiate through hair
+## colour instead — the one part of this rig `tint` never multiplied anyway.
+func _the_villagers_no_longer_tint_the_whole_body() -> void:
 	for key in ["villager_farmer", "villager_keeper", "villager_smith"]:
 		var cfg: Dictionary = _art_config().get(key, {})
 		var tint := str(cfg.get("tint", ""))
-		if tint == "":
-			_fail("'%s' has lost its R7.2 tint entry" % key)
-			continue
-		var holder := Node3D.new()
-		holder.set_script(CHARACTER_MODEL)
-		root.add_child(holder)
-		if not bool(holder.call("build", key)):
-			_fail("'%s' failed to build from art.json" % key)
-			holder.queue_free()
-			continue
-		var material: Material = holder.call("body_material")
-		if material == null or not material is BaseMaterial3D:
-			_fail("'%s' built with no material to check its tint against" % key)
-		else:
-			var albedo: Color = (material as BaseMaterial3D).albedo_color
-			# The exact colour depends on the source texture's own albedo, which
-			# this test cannot know without loading it — but a tint that did
-			# nothing leaves an untouched StandardMaterial3D default (flat white,
-			# 1,1,1), which no villager's rustier/greener/bluer wardrobe should be.
-			if albedo.is_equal_approx(Color(1, 1, 1)):
-				_fail("'%s' rendered with an untinted default material; the palette " % key +
-					"translation of its legacy 'tint' may not have run")
-			else:
-				print("  %-16s tint '%s' -> albedo %s" % [key, tint, albedo])
-		holder.queue_free()
+		if tint != "" and tint != "#ffffff":
+			_fail(("'%s' carries a non-identity body tint (%s); the owner's " +
+				"'looks stupid' hue-shift report asked for whole-body tinting " +
+				"removed, not adjusted") % [key, tint])
+
+	var farmer_hair := str(_art_config().get("villager_farmer", {}).get("hair", {}).get("color", ""))
+	var smith_hair := str(_art_config().get("villager_smith", {}).get("hair", {}).get("color", ""))
+	if farmer_hair == "" or smith_hair == "":
+		_fail("villager_farmer and villager_smith share the villager_female body; " +
+			"one is missing the hair colour that now differentiates them")
+	elif farmer_hair == smith_hair:
+		_fail("villager_farmer and villager_smith share a body AND a hair colour -- they will render as clones")
+	else:
+		print("  villager hue fix   untinted body, farmer/smith differ by hair (%s vs %s)" % [farmer_hair, smith_hair])
 
 
 ## NP1's own "done when": two NPCs built from the SAME base model differ in
