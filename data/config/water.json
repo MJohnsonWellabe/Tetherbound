@@ -53,10 +53,11 @@
     "seed": 20260812,
     "_comment_stands": "EV5 blind rounds 4-5, the one repeated in-scope ask not yet acted on: 34 small clumps spaced around a ~300m shoreline read as 'a perimeter ring', not vegetation. A dozen anchors at 20 stalks each makes a few REAL brakes with long open banks between them -- open water access, the thing both rounds asked for. Tint lifted a step (#6c8850 -> #7a9460): the stands rendered near-black against bright water. TUNABLE."
   },
-  "_comment_marginals": "EV5-remainder: a SECOND waterside plant silhouette beyond the wispy-grass reed — the nature pack's own broadleaf Plant_1_Big, arching over the waterline at reduced scale, in-family per D24. Same band keys as `reeds` (water.gd routes both through one builder). A true sedge/cattail form stays owner-blocked: it needs the fuller nature MegaKit the owner has not supplied — do not try to source it, see BACKLOG.md. ALL TUNABLE.",
+  "_comment_marginals": "EV5-remainder: a SECOND waterside plant silhouette beyond the wispy-grass reed — the nature pack's own broadleaf Plant_1_Big, arching over the waterline at reduced scale, in-family per D24. Same band keys as `reeds` (water.gd routes both through one builder). EV5-remainder-2: the fuller Stylized Nature MegaKit landed (d64df71) and was searched for a literal sedge/cattail model — none exists by name in any of its 270 files. Grass_Wheat is the closest available read: a tall, narrow, dense blade-cluster mesh with a distinct seed-head silhouette (1.11x1.78x1.01m raw bbox, 1530 verts) genuinely distinct from Plant_1_Big's broad arching leaf (2.89x3.76x3.13m, 360 verts) — reuses the already-staged Grass.png texture, a plain vertical gradient strip fully controlled by this band's own tint. ALL TUNABLE, including whether Grass_Wheat should get its own tint/scale split from Plant_1_Big's if a verify pass flags a proportion mismatch.",
   "marginals": {
     "models": [
-      "res://assets/environment/stylized_nature/Plant_1_Big.gltf"
+      "res://assets/environment/stylized_nature/Plant_1_Big.gltf",
+      "res://assets/environment/stylized_nature/Grass_Wheat.gltf"
     ],
     "tint": "#5f8a52",
     "clumps": 8,
