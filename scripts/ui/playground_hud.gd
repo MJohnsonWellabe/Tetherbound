@@ -61,6 +61,16 @@ const MB := 1048576.0
 const PAL_SPECIES := preload("res://scripts/pals/pal_species.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
+## EV9's owner-commissioned HUD glyphs (`docs/ASSET_LEDGER.md`, staged
+## `369ecc5`). `orb_capture.png` has no mount yet — there is no orb-count
+## panel anywhere in this HUD to hang it on (removed somewhere between the
+## first EV9 slice's own note and this file's later full rewrite; a fresh
+## grep of scripts/ui confirms no orb counter exists today) — so it stays
+## unwired rather than forced onto an unrelated widget.
+const ICON_HP := "res://assets/ui/icons/hud/hp_heart.png"
+const ICON_STAMINA := "res://assets/ui/icons/hud/stamina_bolt.png"
+const ICON_PALS := "res://assets/ui/icons/hud/pals_paw.png"
+
 const PARTY_STRIP_SCRIPT := "res://scripts/ui/party_strip.gd"
 const STAMINA_ARC_SCRIPT := "res://scripts/ui/stamina_arc.gd"
 ## Owned by a concurrent agent this pass (see CLAUDE.md task header) — never
@@ -170,6 +180,7 @@ var _pal_energy_bar: ProgressBar = null
 var _pal_energy_fill: StyleBoxFlat = null
 var _pal_no_pal_label: Label = null
 var _pal_block_has_pal_last := true ## forces the first _update_pal_block to write
+var _pal_icon: TextureRect = null
 
 ## --- party strip --------------------------------------------------------------
 
@@ -183,6 +194,7 @@ var _vitals_cluster: Control = null
 var _buff_chips: Array[Panel] = []
 var _buff_chip_labels: Array[Label] = []
 var _buff_overflow_label: Label = null
+var _hp_icon: TextureRect = null
 var _hp_bar: ProgressBar = null
 var _hp_fill: StyleBoxFlat = null
 var _hp_value_label: Label = null
@@ -196,6 +208,7 @@ var _hp_pulse_time := 0.0
 ## --- stamina arc ---------------------------------------------------------------
 
 var _stamina_arc: Control = null
+var _stamina_icon: TextureRect = null
 var _last_stamina_fraction := -1.0
 
 ## --- minimap (owned by a concurrent pass; mounted defensively) ----------------
@@ -293,6 +306,15 @@ func _build_pal_block() -> void:
 	_pal_chip.position = Vector2(0.0, 4.0)
 	_pal_chip.size = Vector2(40.0, 40.0)
 	_pal_content.add_child(_pal_chip)
+
+	_pal_icon = TextureRect.new()
+	_pal_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_pal_icon.texture = load(ICON_PALS)
+	_pal_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_pal_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_pal_icon.position = Vector2(-6.0, -14.0)
+	_pal_icon.size = Vector2(20.0, 20.0)
+	_pal_block.add_child(_pal_icon)
 
 	_pal_name_label = Label.new()
 	_pal_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -470,6 +492,15 @@ func _build_vitals_cluster() -> void:
 
 	_build_buff_row(_vitals_cluster)
 
+	_hp_icon = TextureRect.new()
+	_hp_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hp_icon.texture = load(ICON_HP)
+	_hp_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_hp_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_hp_icon.position = Vector2(-26.0, 32.0)
+	_hp_icon.size = Vector2(18.0, 18.0)
+	_vitals_cluster.add_child(_hp_icon)
+
 	_hp_bar = ProgressBar.new()
 	_hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hp_bar.position = Vector2(0.0, 32.0)
@@ -636,6 +667,21 @@ func _mount_stamina_arc() -> void:
 	_stamina_arc.position = STAMINA_ARC_POS
 	_root.add_child(_stamina_arc)
 
+	# Centred above the arc's own SIZE (48x160, stamina_arc.gd), so it reads
+	# as the gauge's label rather than a stray badge. Fades with the arc
+	# itself in _update_stamina_arc below -- the icon has nothing to say
+	# once the gauge has hidden.
+	_stamina_icon = TextureRect.new()
+	_stamina_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_stamina_icon.texture = load(ICON_STAMINA)
+	_stamina_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_stamina_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_stamina_icon.position = STAMINA_ARC_POS + Vector2(15.0, -24.0)
+	_stamina_icon.size = Vector2(18.0, 18.0)
+	_stamina_icon.visible = false
+	_stamina_icon.modulate.a = 0.0
+	_root.add_child(_stamina_icon)
+
 
 func _update_stamina_arc(vitals: RefCounted, delta: float) -> void:
 	if _stamina_arc == null:
@@ -645,6 +691,10 @@ func _update_stamina_arc(vitals: RefCounted, delta: float) -> void:
 	var draining := sprinting or (_last_stamina_fraction >= 0.0 and fraction < _last_stamina_fraction - 0.0001)
 	_stamina_arc.call("update_stamina", fraction, draining, delta)
 	_last_stamina_fraction = fraction
+
+	if _stamina_icon != null:
+		_stamina_icon.visible = _stamina_arc.visible
+		_stamina_icon.modulate.a = _stamina_arc.modulate.a
 
 
 # --- minimap (mounted defensively; owned by a concurrent pass) ---------------------

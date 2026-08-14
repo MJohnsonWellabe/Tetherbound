@@ -449,6 +449,39 @@ backlog items. The loop keeps building past them.
 
 ## Design questions awaiting the owner
 
+### OPEN — EV2-landmark-ceiling: `CherryBlossom_3` is the pack's ceiling, confirmed by render, not a placement lever
+
+**2026-08-14.** `CherryBlossom_3` was already established as the only tree
+in the full 270-file Stylized Nature MegaKit measured genuinely wider than
+tall (16.59w × 14.49h glTF bounds). A real config bug kept it rendering in
+its native pink/purple blossom colour instead of the intended green — found
+and fixed (`data/config/vegetation.json`'s `grove` layer never keyed
+`Leaves_CherryBlossom`, only `Leaves_TwistedTree`) — and a fresh blind
+close-up render (trainer parked alongside for scale) confirms the fix: green
+canopy, a real leaning/curving trunk. But the same blind pass's direct
+verdict on the item's own question is **"not yet" a landmark specimen** —
+canopy reads roughly 1.5:1 wide, not the reference's 2.5-3:1 flat-topped,
+multi-lobed spread, and the trunk leans but does not fork (no candidate in
+the whole pack has separate trunk/branch nodes to produce one).
+
+This is not a curation problem — `CherryBlossom_3` is already the pack's
+best available option and nothing else in it is wider than tall at all.
+Two paths, neither a firing's call:
+1. **Accept it.** Real, confirmed improvement over every `TwistedTree` form
+   tried before it — green, leaning, modestly wide — even if it stops short
+   of "landmark."
+2. **Treat true landmark-oak geometry (a genuinely broad, multi-lobed,
+   forking-trunk canopy) as content this pack doesn't have.** `CLAUDE.md`/
+   `D24` forbid a new creature/nature-hero Meshy generation for the
+   Meadows regardless of credit balance — so if the owner wants this
+   pushed further, it needs to be named explicitly as an exception to that
+   rule, not assumed.
+
+Evidence: `shots/grove/cherryblossom-closeup.png` (gitignored; re-render
+with `tools/_capture_grove_closeup.gd` if it's aged out).
+
+---
+
 **All entries below are closed.** They are kept rather than deleted because
 each one records *why* the answer is what it is, and every answer is the kind
 a later firing would otherwise be tempted to relitigate.

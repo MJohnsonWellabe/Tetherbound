@@ -123,16 +123,19 @@
       "_comment_palette": "The twisted trees' canopy is CRIMSON (the pack's leaf texture, not a tint). The key art's Meadows is green-oak country with red held back as an accent, and the blind critique called the old mix (38 red trees, clumped near the spawn) 'autumn-danger everywhere' - red is also supposed to be reserved for Team Tether. ~16 spread across the map keeps them as the landmark accent they were meant to be. TUNABLE.",
       "_comment_leaf": "R9.4. THE RED LEAK, found by two independent blind reviews eleven days apart. Leaves_TwistedTree_C.png is RGB(167,23,23) -- hue 0, saturation 0.86, a crimson autumn leaf -- which made the grove the most saturated warm thing in the whole survey, on decorative trees beside the starting village. docs/reference/README.md and the visual-judge rubric both reserve deep red/oxblood for Team Tether danger, and spending it on scenery leaves the faction nothing to claim. The bushes layer hit this exact texture and fixed it by swapping -- see its retexture block and _retint()'s own comment in vegetation.gd -- the grove was simply never given the same treatment. No multiply turns red into green, so it has to be a swap. TUNABLE. R9.4 round 2: the retint now aims at palette.json's meadow.leaf_green_deep (#496c34, hue 98) rather than at a warm cream. Round 1 swapped the texture and stopped the canopy being the MOST saturated thing in frame, but left it at hue ~70 -- the same family as the ground, so frame_stats still measured 85-89% of chromatic pixels in one hue bin against the references' three to five. A canopy has to be a different green from the grass under it, not a brighter one.",
       "_comment_leaf_magenta_fix": "Magenta-canopy fix (see `trees` layer's own comment for the full mechanism): Leaves.png is a multi-species sample sheet, not a single muted leaf, and this layer's leaf cards sample nearly the whole canvas the same way CommonTree's do -- so the hero oaks carried the same green/blue/orange/magenta contamination. Swap target changed to Leaves_NormalTree_C.png, matching the `bushes` layer's own already-safe choice for this exact material.",
+      "_comment_cherryblossom_material": "EV2-landmark-ceiling's blind-verify render (a close-up of the shipped CherryBlossom_3 instance, since none of tools/survey.gd's 5 fixed cameras happen to land near a grove clump) found the canopy still rendering its native pink/purple cherry-blossom texture, in the flesh, not swapped -- every retexture/retint/variant_retint key below was `Leaves_TwistedTree`, and CherryBlossom_3.gltf's own leaf material is named `Leaves_CherryBlossom` (checked directly against the glTF JSON), a different string that none of them ever matched. Added alongside, not instead of, the TwistedTree keys -- both models share this layer.",
       "retexture": {
-        "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
+        "Leaves_TwistedTree": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png",
+        "Leaves_CherryBlossom": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
       },
       "retint": {
-        "Leaves_TwistedTree": "#78c86e"
+        "Leaves_TwistedTree": "#78c86e",
+        "Leaves_CherryBlossom": "#78c86e"
       },
-      "_comment_variant": "EV2: the same 3-step spring/deep/yellow-green family as the `trees` layer (bible sec10), so the hero trees read as kin to the standard canopy rather than a fourth palette. One variant per remaining model, not per-instance jitter.",
+      "_comment_variant": "EV2: the same 3-step spring/deep/yellow-green family as the `trees` layer (bible sec10), so the hero trees read as kin to the standard canopy rather than a fourth palette. One variant per remaining model, not per-instance jitter. CherryBlossom_3 takes the `spring` step, the same one TwistedTree_1 carried before EV2-landmark-ceiling replaced it in this species slot.",
       "variant_retint": {
-        "res://assets/environment/stylized_nature/TwistedTree_1.gltf": {
-          "Leaves_TwistedTree": "#78c86e"
+        "res://assets/environment/stylized_nature/CherryBlossom_3.gltf": {
+          "Leaves_CherryBlossom": "#78c86e"
         },
         "res://assets/environment/stylized_nature/TwistedTree_2.gltf": {
           "Leaves_TwistedTree": "#325f3c"

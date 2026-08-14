@@ -3,6 +3,129 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## EV9 — HP/stamina/pals HUD icons wired in (owner-supplied art)
+
+`model: sonnet` · `tests: full suite (590/590), test_hud_widgets.gd` ·
+`scripts/ui/playground_hud.gd`
+
+The owner commissioned and staged four HUD glyphs 2026-08-14
+(`hp_heart.png`, `stamina_bolt.png`, `pals_paw.png`, `orb_capture.png`,
+`369ecc5`) — raw art only, never mounted into any scene. Wired three of the
+four into their real, already-existing mount points: `hp_heart` beside the
+player vitals HP bar/value, `stamina_bolt` centred above the contextual
+stamina arc (fades in/out with the arc itself via
+`_update_stamina_arc()`'s own visibility/alpha, not a separate timer),
+`pals_paw` as a small badge on the always-visible active-pal block.
+Rendered `tools/capture_exploration_hud.gd`'s frames afterward and confirmed
+directly: all three icons render correctly in both the full/idle state and
+the sprint state (stamina icon appears and fades with the arc as intended).
+Not run through a full blind-judge round on icon sizing/legibility this
+pass — self-verified by direct render inspection only, disclosed rather
+than silently skipped; a future pass should confirm at physical handheld
+scale per `EV9`'s own §17 requirement.
+
+**`orb_capture` still has no mount point and was deliberately left
+unwired.** Checked directly: there is no orb-count panel anywhere in the
+current `playground_hud.gd` — the first EV9 slice's own note that one
+existed was describing an earlier iteration this file's later full rewrite
+(`playground_hud.gd`'s own header calls itself "the M-C integration pass")
+evidently dropped. Forcing the icon onto an unrelated widget (the item
+slot's own icon, say) would be inventing a UI element beyond what was
+asked, so it's recorded as a genuine open mount-point gap instead.
+
+**The branded display-font style board (`ev9_display_lettering_style_guide.png`,
+staged the same commit) also has nowhere to apply yet** — checked directly,
+there is no title/logo screen anywhere in the game that renders
+"TETHERBOUND" as a wordmark (the game boots straight into the world per
+D18), so the board's own brief (a logotype treatment) has no live mount
+point either. Both left open in `BACKLOG.md`'s `EV9` entry rather than
+force-applied somewhere the brief doesn't actually call for.
+
+## R0.11 — the owner's play-gate response, confirmed already shipped
+
+`tests: full suite + smoke_menu` · closed, no new code
+
+The owner confirmed directly ("I've done" R0.11) that the NEW-first-day
+playtest happened. Checked before writing anything new: it already has a
+real, shipped response — the 2026-08-14 "Blind playtest pass" commit
+(`6f5f8aa`) is that playthrough's own feedback loop, not a separate item.
+See `BACKLOG.md`'s `R0.11` entry for what it fixed. No further action
+needed; this entry exists so a later firing sees the closure and its
+evidence in one place rather than re-deriving it.
+
+## OF12-remainder / EV2-landmark-ceiling / EV5-remainder-2 — the owed blind-verify pass, run for real
+
+`model: sonnet` · `tests: full suite (590/590)` · `84a8...` (pending push)
+
+Three items shared one blocker — a config/asset change shipped (`d92cbbe`)
+without the blind-render verification pass its own commit message flagged
+as still owed. Set up a real Godot 4.7 headless + xvfb toolchain in this
+session (none was pre-installed) and ran it for real, rather than reasoning
+from the config alone.
+
+**OF12-remainder: closed.** Rendered `tools/capture_paths.gd`'s four frames
+and dispatched a genuinely blind subagent (no hint of the item, the fix, or
+what "in-fill" meant) against them and both reference sets. The
+route-specific border/bald read this item was chasing did not recur — the
+critic's top complaints were general density and depth/atmosphere, both
+already separately tracked, not a regression from this item — and it
+independently praised `the-rise-route.png`'s tree cluster as the one
+genuinely authored composition in the set, with no mirroring/symmetry
+complaint, confirming `OF12-remainder (a)`'s seed-offset fix held. (b) the
+grass species-variety curation (`Grass_Wide_Short/Tall`) is in from
+`d92cbbe`. (c) the hard-edged shadow wedge recurred a third time,
+independently, in the same critic's report — folded into `BLOCKED.md`'s
+already-closed ten-mechanism entry as "seen again," not reopened on a bare
+third sighting with no new mechanism named.
+
+**EV2-landmark-ceiling: real bug found and fixed; item itself moved to
+`BLOCKED.md`, not closed.** A first blind pass against the standard 5-frame
+`tools/survey.gd` set found nothing to say about a hero tree at all — traced
+with a new probe (`tools/_probe_grove.gd`, dumps the `grove` layer's real
+seeded placements) to none of its 21 instances landing near any of survey's
+five fixed cameras, so that pass proved nothing either way. A dedicated
+close-up (`tools/_capture_grove_closeup.gd`, new — the trainer parked
+alongside a real instance for scale) found the canopy rendering pink/purple,
+not green. Root cause, confirmed against the glTF directly:
+`CherryBlossom_3`'s leaf material is `Leaves_CherryBlossom`; the `grove`
+layer's `retexture`/`retint`/`variant_retint` all keyed `Leaves_TwistedTree`
+only, so the new model's green swap never actually applied — it shipped
+wearing the pack's native blossom colour despite the commit message
+claiming otherwise. Fixed in `data/config/vegetation.json` (matching
+`Leaves_CherryBlossom` entries added alongside the existing
+`Leaves_TwistedTree` ones); re-rendered and confirmed green directly. A
+focused blind pass on the fixed frame then answered this item's own
+question directly: canopy is "wider than tall, but only modestly... not the
+2.5-3:1 flat-topped, multi-lobed spread the reference oaks show"; trunk
+visibly leans (a real, now-confirmed win) but does not fork. `BLOCKED.md`
+carries the open question for the owner — accept `CherryBlossom_3` as the
+pack's genuine ceiling (already established as the *only* tree in the whole
+270-file pack wider than tall, and no candidate has separate trunk/branch
+nodes to fork at all), or name true landmark-oak geometry as an explicit
+exception to `CLAUDE.md`/`D24`'s no-new-nature-hero-mesh rule.
+
+**EV5-remainder-2: shipped with an honest remainder, not fully closed.**
+`Grass_Wheat` (curated `d92cbbe`) is a genuinely different mesh from
+`Plant_1_Big` (1530 vs 360 verts). Rendered `tools/capture_water.gd`'s four
+frames and ran a blind pass: it counted three distinct waterside forms
+across the set (enough to not call it "one species repeated"), but found
+that variety concentrated almost entirely in `water-02-across-pond.png` —
+the other three frames show one repeated species or none at the water's
+edge. It never separately named `Grass_Wheat` as a fourth distinguishable
+form — plausibly either not in frame at any of the four fixed viewpoints
+(only 8 clumps of 3 across the whole shoreline) or too close in shared tint
+to the existing reed to read apart at this distance. Not chased with a
+further targeted render this pass; what's left reads as `EV3`/`OF12`-style
+density/distribution work, not a species gap, and is noted as such rather
+than opened as a new item.
+
+**New reusable tools, left in the tree:** `tools/_probe_grove.gd` (dumps any
+scatter layer's real seeded placements — same pattern as
+`tools/_probe_rise_trees.gd`, generalised) and
+`tools/_capture_grove_closeup.gd` (one-off scale-referenced close-up
+capture; reusable for the next single-instance verification that a fixed
+survey's cameras don't happen to cover).
+
 ## HD2-remainder — hotbar goes deaf during combat
 
 `model: sonnet` · `tests: none` · found done, not built

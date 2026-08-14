@@ -82,29 +82,30 @@ decision is recorded in `BLOCKED.md`'s entry, now marked resolved.
 
 **`OF12-remainder`'s defect (a) — the-rise-route's mirrored tree stand — fixed, see `DONE.md`.** A new per-layer `seed_offset` mechanism on `scatter_rules.gd` broke the LEFT/LEFT/LEFT-then-RIGHT segregation a probe confirmed at the old seed; not re-rendered/blind-checked, only probe-verified — see the DONE entry for exactly what that does and doesn't confirm.
 
-### OF12-remainder — Blind-confirm the in-fill state; carry the two still-open out-of-scope defects
-`area: vegetation` · `tests: none (visual)`. `OF12` shipped (see `DONE.md`)
-after 3 genuinely blind critic rounds plus a 4th, un-critiqued scene state:
-the final build widened the verge into route-neighbourhood in-fill (the fix
-both independent critics' own fix-lists named), and the shipping firing's
-own read plus placement dumps say it lands — but its wrap-up deadline hit
-before a 4th blind round could confirm it, so "the border/bald read is
-cleared" is measured and self-judged, not blind-verified. **Still owed,
-after a second firing on this item was also cut short (see `DONE.md`'s
-`OF12-remainder (a)` entry for why):** run one blind round on the shipped
-state (`tools/capture_paths.gd` frames, `.claude/skills/visual-judge`) —
-that round should also look at whether the tree-stand fix above actually
-reads right, since it was never rendered. Two remaining out-of-scope
-defects the OF12 critics named, neither a regression from it: (b) the
-ground-cover species-variety gap ("same one or two prefabs" — grass has
-exactly 2 tuft models; a real fix needs more authored ground-cover forms —
-the Stylized Nature MegaKit landed on `main` 2026-08-13, `d64df71`, so this
-is now unblocked in principle, just not curated yet); (c) the hard-edged
-no-visible-caster shadow wedge on `grandpas-house-route.png` /
-`square-convergence.png` — likely the same owner-accepted material-contrast
-read `BLOCKED.md` closed on 2026-08-12, but two fresh critics tripping on it
-independently was worth one look before re-accepting, and that look still
-hasn't happened.
+**`OF12-remainder` CLOSED 2026-08-14 — the blind round it was owed finally ran.** Rendered `tools/capture_paths.gd`'s four frames fresh and dispatched a
+genuinely blind subagent (no hint of what OF12 was, what changed, or what
+"in-fill" meant) against them and both reference sets. Result: the
+border/bald route-specific read this item was chasing did **not** recur —
+the critic's own top-ranked gaps were general vegetation density and a
+missing depth/atmosphere layer (both already known, separately tracked
+territory, not a regression from OF12), and it explicitly praised
+`the-rise-route.png`'s tree/rock cluster as the frame's one genuinely
+"authored composition," with no mirroring or symmetry complaint — which is
+exactly what `OF12-remainder (a)`'s seed-offset fix needed to hold and
+was never rendered to confirm before now. (b) is also done: the Stylized
+Nature MegaKit's `Grass_Wide_Short`/`Grass_Wide_Tall` are curated into the
+`grass` layer (`d92cbbe`), a second, genuinely broader-footprint species
+pair alongside `Grass_Common_Short/Tall`. (c) recurred a third time —
+the same critic, independently and unprompted, flagged the same
+hard-edged no-visible-caster shadow shapes in `square-convergence.png` and
+`the-rise-route.png`, calling them "the clearest bug-like element in the
+set." `BLOCKED.md`'s closed entry already tested ten separate mechanisms
+against this exact symptom and the owner accepted the result as ordinary
+grass/path luma contrast, not a bug — noted here as "seen again" rather
+than reopened, since a third critic's gut read isn't new mechanism-level
+evidence against ten already-ruled-out ones. If a fourth independent critic
+ever traces it to a *specific* untested mechanism, that would be worth
+reopening; a bare "looks like a bug" repeat is not.
 
 ### BG2 — Source a CC0 castle/fortress asset kit
 Shipped, staged raw — see `DONE.md`'s `BG2` entry. Quaternius's own
@@ -185,14 +186,20 @@ ghost preview and real material costs (old R2.4's core, proving the
 and rest-until-morning advancing the day counter and healing (old R2.8's
 core). What those items still owe is listed under Phase 2 below.
 
-### R0.11 ▶ Play gate — the owner plays the NEW first day, end to end
-Wake in bed upstairs → downstairs to Grandpa, the belt, orbs and potions →
-out the door to the three starters → choose and name → the village square and
-the paths → harvest along the tutorial route → a fight and a catch → make
-camp before dark → rest to morning, day counter ticks. `GAME_DESIGN.md` §33
-criteria 1, 3, 6 and 11 — plus the two things D19 flagged for exactly this
-playtest: does the combat camera crowd at the new sizes, and does the arena
-still feel roomy.
+**`R0.11` ▶ CLOSED 2026-08-14 — the owner played it.** The response is
+already shipped and on record rather than a separate write-up: the
+2026-08-14 "Blind playtest pass" commit (`6f5f8aa`) is that playthrough's
+direct feedback loop — input-glyph lies (LT/RT shown as LB/RB on
+combat/build verbs), one-directional pause-menu tab cycling, a missing
+Use-on-berries path, NPCs reading as one flat colour multiply, no starting
+light source after dark, and an overlong opening conversation were all
+found, root-caused and fixed in that pass, each with real headless
+input-driven smoke coverage, not just asserted. Camera collision and gait
+cadence were checked against this same playtest and found to already have
+real, working fixes in place (`SpringArm3D` margin tuning, `OF5`'s gait-rate
+match) — not re-tuned blind without a fresh complaint. Nothing from this
+playthrough is still open under this item; anything that surfaces later is
+new feedback, not a reason to reopen R0.11 itself.
 
 ---
 
@@ -557,12 +564,61 @@ found it.
 **Owner answered 2026-08-13 (asked directly in an interactive session): the
 owner will supply the Stylized Nature MegaKit zip themselves**, the same way
 the Village and Fantasy Props kits arrived — explicitly chosen over
-accepting the current ceiling. Until the zip is actually staged in
-`assets_raw/vendor/` and ledgered, this item stays parked exactly as-is
-(do NOT search for a pack that is not there yet — see the paragraph above
-for how twice-burned that assumption already is). When it lands, the same
-delivery also unblocks `EV5-remainder-2`'s third waterside plant and
-`OF12-remainder`'s ground-cover species-variety half.
+accepting the current ceiling. The zip landed the same day (`d64df71`,
+staged full pack) and `d92cbbe` curated `CherryBlossom_3` — the only tree in
+the full 270-file pack measured genuinely wider than tall by its glTF
+`POSITION` bounds (16.59w × 14.49h) — into the `grove` layer in place of
+`TwistedTree_1`, but left it "not yet rendered or blind-judged."
+
+**2026-08-14 — rendered and blind-verified. Found and fixed a real bug the
+config-only ship had, and the underlying ceiling question is now answered
+by direct evidence rather than glTF bounds alone.**
+
+A first blind pass against `tools/survey.gd`'s standard 5-frame set never
+named a wide-canopy hero tree at all — turned out to prove nothing either
+way: `tools/_probe_grove.gd` (new, dumps the layer's real seeded placements)
+showed none of the 21 `grove` instances land anywhere near any of that
+survey's five fixed cameras. A dedicated close-up
+(`tools/_capture_grove_closeup.gd`, new — frames one `CherryBlossom_3`
+instance with the trainer parked alongside for scale) found the canopy
+rendering bright pink/purple, not green. Root cause, confirmed by reading
+the glTF directly: `CherryBlossom_3`'s leaf material is named
+`Leaves_CherryBlossom`; the `grove` layer's `retexture`/`retint`/
+`variant_retint` blocks all keyed `Leaves_TwistedTree` only, so none of
+them ever matched the new model — it shipped wearing its pack-native
+blossom texture, untouched by the green swap the commit message claimed.
+Fixed in `data/config/vegetation.json`: added matching `Leaves_CherryBlossom`
+entries alongside the existing `Leaves_TwistedTree` ones, same
+`Leaves_NormalTree_C.png` swap and `#78c86e` (`spring`) tint TwistedTree_1
+carried before this item replaced it in that species slot. Re-rendered and
+confirmed green by direct inspection.
+
+With the colour bug fixed, a focused blind pass on that single frame
+(scale ruler: the 1.8m trainer standing beside it) gave a direct, honest
+answer to this item's own question: canopy reads "wider than tall, but only
+modestly — roughly 1.5:1, not the 2.5-3:1, flat-topped, multi-lobed spread
+the reference oaks show"; the trunk visibly leans/curves (a real, confirmed
+win — the previous entry's "not confirmed by data alone" caveat is now
+resolved, and it does NOT fork, staying one curving stem into the foliage).
+Verdict: **"not yet" a landmark specimen** — the lean and modest width help,
+but canopy shape/complexity, not scale, is what still falls short.
+
+**Where this leaves the item.** Real, shipped progress (a genuine bug fixed,
+confirmed by render) that is NOT the same thing as clearing this item's own
+bar. `CherryBlossom_3` was already established as the ONLY tree in the full
+270-file pack that's wider than tall at all, and no candidate anywhere in
+that pack has separate trunk/branch nodes to produce a forking silhouette —
+so this isn't a placement or curation lever left to pull; it's the pack's
+own ceiling, now confirmed by direct render rather than inferred from glTF
+bounds. Moved to `BLOCKED.md` for the owner: accept the current tree
+(genuinely the pack's best option, and a real improvement — leaning trunk,
+modestly wider canopy, correct colour) as the ceiling, or treat true
+landmark-oak geometry as needing content this pack doesn't have (which
+runs straight into `CLAUDE.md`/`D24`'s bar on new creature/nature-hero
+meshes for the Meadows — a question for the owner, not a firing's call).
+Unblocked in principle, same delivery: `EV5-remainder-2`'s third waterside
+plant and `OF12-remainder`'s ground-cover species-variety half — both acted
+on below/above.
 
 **`EV3` (a first, narrower slice) shipped — see `DONE.md`.** Fixed the one
 concrete, already-diagnosed defect (`path_stones` clumps disconnected from the
@@ -872,13 +928,34 @@ spoke, which gave the pond a real basin to drain into; the outlet fix is a
 deliberate sill+channel neck through what had been a diffuse merge shelf,
 not the Band-3 downstream-terrain project this entry originally called for.
 
-### EV5-remainder-2 — the third waterside species
-`model: fable` · `tests: none` · `area: vegetation`
-The one leftover this item still owes: **a third waterside plant silhouette
-(sedge/cattail).** No longer owner-blocked in principle — the Stylized
-Nature MegaKit landed on `main` 2026-08-13 (`d64df71`) — but not yet curated
-into `water.json`'s marginals. The second species already shipped in-pack
-(`Plant_1_Big` marginals), so this is polish, not a gap.
+**`EV5-remainder-2`'s third waterside species curated (`d92cbbe`) and now
+blind-verified — real but partial, honest remainder open.** No literal
+sedge/cattail model exists anywhere in the 270-file pack (searched by name
+and by inspecting candidates); `Grass_Wheat` — a genuinely different mesh
+from `Plant_1_Big` (1530 vs 360 verts, a tall narrow blade-cluster with a
+seed-head vs. a broad arching leaf) — was added to `water.json`'s
+`marginals`, sharing the layer's own `#5f8a52` tint.
+
+Rendered `tools/capture_water.gd`'s four frames fresh and ran a genuinely
+blind critique against them. It counted **three** distinct waterside forms
+across the four frames (an upright blade/reed cluster, a dark lily-pad
+cluster, a flowering shrub) — enough that it did not call this "one species
+repeated" outright. But it also found that variety concentrated almost
+entirely in one frame (`water-02-across-pond.png`); the other three each
+show one repeated species or, in `water-04-approach.png`'s case, none at
+the water's edge at all. It did not separately name `Grass_Wheat` as a
+distinguishable fourth form from the pre-existing reed — either it wasn't
+in frame at any of the four fixed viewpoints (only 8 clumps of 3 exist
+across the whole ~300m shoreline, the same low-density trap `EV2-landmark-
+ceiling` hit with `grove`), or its shared tint with `Plant_1_Big` reads too
+close to call apart at this render's distance. Not chased further with a
+fifth targeted render this pass — the config change is real and shipped,
+the item's own original ask (a third silhouette) is met by the pack search,
+and what's left (whether `Grass_Wheat` reads as distinct where it *is*
+placed, and the density/distribution gap the critic's top-ranked complaint
+actually names) is genuinely a `EV3`/`OF12`-style density question, not a
+species-gap question — a narrower remainder for whoever next touches
+`water.json`'s marginal density, not a new item.
 
 **`EV6` (settlement rebuilt on the Medieval Village MegaKit) shipped — see
 `DONE.md`.** Workshop, two cottages, composed well, kit fences, two authored
@@ -990,11 +1067,20 @@ item's remainder:**
   opposite of §16's "hide/fade what's not relevant."
 - Compass — bible says "if it exists"; it doesn't yet, not this item's job to
   invent one.
-- Icon glyphs for HP/STA/Pals/Orbs, a branded display font matching the
-  "TETHERBOUND" key-art logotype, and gradient/beveled bar fills — all named
-  explicitly by the round-3 blind critic as needing new assets, not scene
-  tuning. No board exists for a display font; flag to the owner before
-  picking one, per `CLAUDE.md`'s asset-generation rule.
+- ~~Icon glyphs for HP/STA/Pals/Orbs~~ **HP/Stamina/Pals wired 2026-08-14 —
+  see `DONE.md`.** The owner supplied all four (`369ecc5`); three now mount
+  on their real widgets (HP bar, stamina arc, pal block), confirmed by
+  direct render. `orb_capture` still has no mount point — there is no
+  orb-count panel anywhere in the current HUD to hang it on, checked
+  directly rather than assumed. Not yet run through a blind-judge round on
+  sizing/legibility at handheld scale (§17) — self-verified by render only.
+- A branded display font matching the "TETHERBOUND" key-art logotype, and
+  gradient/beveled bar fills — still open. The owner supplied a style board
+  (`ev9_display_lettering_style_guide.png`, same commit) but it has nowhere
+  to apply: there is no title/logo screen anywhere in the game that renders
+  a "TETHERBOUND" wordmark at all (the game boots straight into the world,
+  D18), checked directly. Needs either a mount point (a title screen) to
+  exist first, or the owner naming a different place this should apply.
 
 **`EV9-double-prompt` (CombatHUD silently mirrored the exploration prompt outside a fight) fixed — see `DONE.md`.**
 
