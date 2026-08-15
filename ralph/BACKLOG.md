@@ -628,8 +628,10 @@ item's remainder:**
   on their real widgets (HP bar, stamina arc, pal block), confirmed by
   direct render. `orb_capture` still has no mount point — there is no
   orb-count panel anywhere in the current HUD to hang it on, checked
-  directly rather than assumed. Not yet run through a blind-judge round on
-  sizing/legibility at handheld scale (§17) — self-verified by render only.
+  directly rather than assumed, and stays open. **The handheld-scale
+  blind-judge round this bullet asked for ran 2026-08-15 and found and
+  fixed two real defects — see `DONE.md`'s `EV9-handheld-icon-judge`
+  entry.**
 - A branded display font matching the "TETHERBOUND" key-art logotype, and
   gradient/beveled bar fills — still open. The owner supplied a style board
   (`ev9_display_lettering_style_guide.png`, same commit) but it has nowhere

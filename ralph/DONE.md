@@ -122,6 +122,66 @@ Full unit suite run locally before pushing (save-format change, per
 item — 8 new, all in `test_satchel.gd`; the two changed lines in
 `test_save_format.gd` are a rename/fix, not a net-new test).
 
+## EV9-handheld-icon-judge — the HP/Stamina/Pals icon glyphs' still-owed handheld-scale blind-judge round, two real defects found and fixed
+
+`model: sonnet` · `area: ui` · `tests: smoke_menu` (green locally)
+
+EV9's own remainder said the three wired icon glyphs (`hp_heart`, `stamina_bolt`,
+`creatures_paw`, wired 2026-08-14) were "self-verified by render only," still
+owing the blind-judge round on sizing/legibility at physical 7-inch/315ppi
+handheld scale that bible §17 requires. Ran it for real.
+
+**Method.** `tools/capture_exploration_hud.gd` renders the exploration HUD at
+1920x1080 — the Ally's own native resolution, so a pixel in the render is a
+pixel on the physical device, no scaling assumption needed. New
+`tools/_crop_hud_icons.py` (one-off, kept) crops each icon at its exact native
+pixel bounds (read directly from `playground_hud.gd`'s own position/size
+constants) plus a 4x nearest-neighbour blowup for shape inspection, and hands
+a fresh blind sub-agent both the full frames and the crops with the real
+pixel-to-mm math (18px≈1.45mm, 20px≈1.6mm, 24px≈1.94mm at ~315ppi) so it judges
+against the physical size, not the desktop-scale image it's actually looking
+at.
+
+**Round 1 found a real defect, confirmed by direct pixel sampling before
+trusting it**: `hp_heart` (a green glyph, colour-matched to `HP_GREEN` by
+design per `ASSET_LEDGER.md`) sits directly on the game world with no panel
+behind it — the vitals cluster is deliberately panel-less (§16's "legibility
+outline instead of a box," the same reason `_root`'s text gets
+`UITokens.make_text_legible`'s outline/shadow treatment) — so at true 18px it
+nearly disappeared into grass. `stamina_bolt` and `creatures_paw` both passed
+this round clean. **Fixed**: added a small round `BG_PANEL` backing chip
+behind `_hp_icon` in `_build_vitals_cluster()` — the same colour
+`ASSET_LEDGER.md` says the icon was originally contrast-checked against —
+without touching the owner-supplied PNG. `playground_hud.gd`.
+
+**Round 2 (fresh critic, no memory of round 1) confirmed the heart fix held**,
+but named a genuinely new defect: `stamina_bolt`'s zigzag notch — the one
+feature that reads as "lightning" rather than a blob — softened away at true
+18px. **Fixed** with the same lever this project's own EV9 second slice
+already used for an identical input-glyph legibility miss (28px→36px): grew
+`stamina_bolt` from 18x18 to 24x24, repositioning to keep it centred on the
+same anchor point above the stamina arc.
+
+**Round 3 (fresh critic again) confirmed `stamina_bolt`'s fix and named two
+more things — neither survived direct verification**, the same "checked
+before accepting" discipline `EV9`'s second slice round 4 already established
+for this project: claimed `hp_heart` was "hue-on-hue, weak" against its new
+backing chip — direct pixel sampling on the actual rendered frame shows a
+~3x luma gap between the heart (103) and the chip (34), a strong lightness
+separation regardless of both being loosely green-family hues. Also claimed
+`creatures_paw` "collapses to a blob" — contradicted both by round 1 and
+round 2's independent clean reads of the same icon and by direct inspection
+of the native-scale crop, which shows a legible paw silhouette (pad + toes,
+real negative space) at 20px. Converged here on that basis, matching the
+existing precedent for treating an unconfirmed critic claim as noise rather
+than chasing a fourth render cycle.
+
+**Net result**: two real, confirmed defects found and fixed
+(`hp_heart` contrast, `stamina_bolt` shape-at-size); `creatures_paw` needed
+no change across all three rounds. `orb_capture` stays unwired — no mount
+point exists, unchanged from EV9's own note, not this item's job to invent
+one.
+
 ## R2.3-remainder — The harvest-point glint reads as a designed convention, not a debug sticker
 
 `model: opus` · `4210d81` · `tests: none (visual) — a fresh local render + blind
