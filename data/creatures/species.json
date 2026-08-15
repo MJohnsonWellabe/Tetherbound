@@ -144,7 +144,7 @@
       "catch_rate": 0.5,
       "aggressive": false,
       "evolves_into": "tuskroot",
-      "_comment_evolution": "Recorded so the link survives in data. There is still no evolution SYSTEM in the project; this and tuskroot's `evolves_from` are the two ends of a rope nothing pulls on yet.",
+      "_comment_evolution": "R4.6: the evolution SYSTEM is real now (scripts/creatures/evolution.gd), gated by data/config/progression.json's `evolution.mudsnout` block (level/bond/item). This link is what that block's `target` resolves through.",
       "moves": { "quick": "root_nibble", "charged": "rootquake" },
       "placeholder": {
         "colour": "#8a6a44",
@@ -266,7 +266,7 @@
       "catch_rate": 0.28,
       "aggressive": true,
       "evolves_from": "mudsnout",
-      "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild \u2014 the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). Recorded here so the link is not lost. `mudsnout` now exists in this table, so both ends of the link are real; there is still no evolution SYSTEM in the project. The pair's heights (Mudsnout 1.55m -> Tuskroot 2.15m after D19's size pass) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
+      "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild \u2014 the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). R4.6 built the evolution SYSTEM (scripts/creatures/evolution.gd, data/config/progression.json's `evolution` block); a caught Mudsnout can now actually become this. The pair's heights (Mudsnout 1.55m -> Tuskroot 2.15m after D19's size pass) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
       "moves": { "quick": "root_nibble", "charged": "rootquake" },
       "placeholder": {
         "_comment_colour": "Drawn from Tuskroot's own COLOR PALETTE row on docs/art/reference/wild/05_Meadows_Wild_Scale_Palette_Implementation_Guide.png (which despite its filename is Ground Sheet B) \u2014 the secondary fur/hide brown, which is what most of the body reads as in the turnarounds. Retained only for the fallback capsule, which is now genuinely a fallback: R0.6 installed a real rigged, animated, graded model.",

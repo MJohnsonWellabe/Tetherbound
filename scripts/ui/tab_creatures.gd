@@ -29,6 +29,7 @@ const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 
 ## Reordering is pick-up-then-place, matching the backpack. Setting the deployed
 ## creature needs a second verb, and `interact` (E / X) is the one already bound that
@@ -43,9 +44,23 @@ const ACTIVATE_ACTION := "interact"
 ## field verb or a different tab already owns.
 const TEACH_ACTION := "backpack_split"
 
+## R4.6: evolving the focused creature. `backpack_drop` (G / gamepad LB) is
+## the same reuse `TEACH_ACTION` above already does with `backpack_split` —
+## a menu-only verb borrowing a binding `tab_backpack.gd` owns in a
+## different tab, which never collides because only one tab is visible/open
+## at once (see `_read_teach()`'s own note on this pattern).
+const EVOLVE_ACTION := "backpack_drop"
+
 ## progression_state's flag namespace for a found TM (tm_pickup.gd), matched
 ## here so this screen can tell "found" from "not found".
 const TM_FLAG_PREFIX := "tm:"
+
+## `_describe()` appends "G evolve" to this for a creature R4.6's `evolution`
+## config actually names -- shown whether or not it is currently eligible,
+## the same "always show the verb, explain the refusal on press" shape
+## `TEACH_ACTION` already uses.
+const DETAIL_HINT_BASE := "A  pick up, then A again to reorder      E / X  send this one out first" \
+	+ "      H  teach a known TM"
 
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
@@ -110,6 +125,24 @@ var _moves: RefCounted = null
 var _traits: RefCounted = null
 var _tms: RefCounted = null
 
+## --- evolution ceremony (R4.6) ----------------------------------------------
+
+var _list: VBoxContainer = null
+var _detail_panel: Control = null
+
+## "" outside a ceremony, "glow" while the creature is transforming (waiting
+## for the player's own confirm press, not a timer — see `_poll_evolution()`'s
+## header note on why this is player-paced rather than wall-clock-timed),
+## "reveal" once the swap has happened and the new species/name is on screen.
+var _evolution_stage: String = ""
+var _evolving: RefCounted = null
+var _evolution_from_name: String = ""
+
+var _evolution_panel: Control = null
+var _evolution_title: Label = null
+var _evolution_body: Label = null
+var _evolution_hint: Label = null
+
 
 func build() -> void:
 	for child in get_children():
@@ -125,6 +158,8 @@ func build() -> void:
 	_row_content.clear()
 	_held = -1
 	_shown_species = ""
+	_evolution_stage = ""
+	_evolving = null
 	if _moves == null:
 		_moves = MOVE_DB.load_default()
 	if _traits == null:
@@ -145,6 +180,7 @@ func build() -> void:
 	list.add_theme_constant_override("separation", 8)
 	list.custom_minimum_size = Vector2(ROW_WIDTH + SELECTED_POKE, 0)
 	row.add_child(list)
+	_list = list
 
 	for i in PARTY.MAX_CREATURES:
 		list.add_child(_build_slot_row(i))
@@ -152,7 +188,13 @@ func build() -> void:
 	_viewport = CREATURE_VIEWPORT.new()
 	row.add_child(_viewport)
 
-	row.add_child(_build_detail())
+	_detail_panel = _build_detail()
+	row.add_child(_detail_panel)
+
+	_evolution_panel = _build_evolution_panel()
+	_evolution_panel.visible = false
+	row.add_child(_evolution_panel)
+
 	UITokens.make_text_legible(self)
 	poll()
 
@@ -356,11 +398,46 @@ func _build_detail() -> Control:
 	_detail_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	_detail_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	_detail_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_detail_hint.text = "A  pick up, then A again to reorder      E / X  send this one out first" \
-		+ "      H  teach a known TM"
+	_detail_hint.text = DETAIL_HINT_BASE
 	panel.add_child(_detail_hint)
 
 	return panel
+
+
+## R4.6's ceremony: sits in the same slot `_build_detail()`'s panel occupies
+## (swapped by visibility, not rebuilt), so the list column stays hidden and
+## the centre `_viewport` stays up and visible throughout -- the player
+## watches the live 3D preview change species mid-ceremony via `_describe()`'s
+## own existing species-change detection, not a separate effect this file
+## has to drive by hand.
+func _build_evolution_panel() -> Control:
+	var body := VBoxContainer.new()
+	body.custom_minimum_size = Vector2(360, 0)
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body.alignment = BoxContainer.ALIGNMENT_CENTER
+	body.add_theme_constant_override("separation", 14)
+
+	_evolution_title = Label.new()
+	_evolution_title.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
+	_evolution_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_evolution_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(_evolution_title)
+
+	_evolution_body = Label.new()
+	_evolution_body.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_evolution_body.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	_evolution_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_evolution_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(_evolution_body)
+
+	_evolution_hint = Label.new()
+	_evolution_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_evolution_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_evolution_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(_evolution_hint)
+
+	return _panel(body)
 
 
 ## One horizontal move row (spec §8.3): "[icon] Name  TAG" on line 1,
@@ -432,6 +509,7 @@ func poll() -> void:
 		return
 	_read_activate()
 	_read_teach()
+	_read_evolve()
 
 	var size: int = int(party.call("size"))
 	if bool(party.call("is_full")):
@@ -529,6 +607,7 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_bond_meter.call("set_bond", 0, 100, 0, 5)
 		_bond_caption.text = ""
 		_detail_status.text = ""
+		_detail_hint.text = DETAIL_HINT_BASE
 		if _shown_species != "":
 			_shown_species = ""
 			_viewport.call("set_species", "")
@@ -608,6 +687,10 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	else:
 		_detail_status.text = ""
 
+	_detail_hint.text = DETAIL_HINT_BASE
+	if not EVOLUTION.requirements(species_id, cfg).is_empty():
+		_detail_hint.text += "      G  evolve"
+
 
 func _fill_move_row(
 	move_id: String, tag: String, fallback_type: String,
@@ -669,6 +752,8 @@ func _on_row(index: int) -> void:
 func _read_activate() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
+	if _evolution_stage != "":
+		return
 	if not Input.is_action_just_pressed(ACTIVATE_ACTION):
 		return
 
@@ -692,6 +777,8 @@ func _read_activate() -> void:
 ## building ahead of content that does not exist (CLAUDE.md).
 func _read_teach() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _evolution_stage != "":
 		return
 	if not Input.is_action_just_pressed(TEACH_ACTION):
 		return
@@ -736,6 +823,95 @@ func _teach_next(creature: RefCounted) -> String:
 		if TEACHING.teach(creature, id, _tms, _moves):
 			return str(_tms.call("display_name", id))
 	return ""
+
+
+## R4.6: start (or advance) the focused creature's evolution ceremony.
+##
+## Split into "start" here and "advance" in `_poll_evolution()` rather than
+## one function, because a ceremony in progress reads `menu_confirm`
+## instead of `EVOLVE_ACTION` -- the same fork `_read_teach()`'s sibling
+## reads never need, since teaching has no multi-beat sequence to be mid-way
+## through.
+func _read_evolve() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _evolution_stage != "":
+		_poll_evolution()
+		return
+	if _held >= 0:
+		return
+	if not Input.is_action_just_pressed(EVOLVE_ACTION):
+		return
+
+	var party: RefCounted = _party()
+	var creature: RefCounted = party.call("at", _focused) if party != null else null
+	if creature == null:
+		say("Nothing in that slot.")
+		return
+
+	var cfg: Dictionary = PROGRESSION.config()
+	var result: Dictionary = EVOLUTION.check(creature, cfg, _inventory())
+	if not bool(result.get("eligible", false)):
+		say(str(result.get("reason", "Cannot evolve right now.")))
+		return
+
+	_evolving = creature
+	_evolution_from_name = str(creature.call("label"))
+	_evolution_stage = "glow"
+	menu.call("hold_input", true)
+	menu.call("override_footer", "")
+	_list.visible = false
+	_detail_panel.visible = false
+	_evolution_panel.visible = true
+	_evolution_title.text = "%s is evolving..." % _evolution_from_name
+	_evolution_body.text = ""
+	_evolution_hint.text = "A  continue"
+
+
+## Advances the ceremony one beat per `menu_confirm` press -- player-paced
+## rather than a wall-clock timer on purpose. `conventions.md`'s testing
+## traps section (and `LP9`'s own investigation) already found this
+## project's tick-counted waits decoupling from real time under CPU load;
+## a fixed-duration "glow" stage would be exactly that class of bug, in a
+## screen this agent has no reason to add it to. The actual transformation
+## happens on the FIRST press (species swap, stat recompute, item spend),
+## not at ceremony start, so `_describe()`'s already-existing species-change
+## detection is what makes the live `_viewport` visibly change mid-ceremony
+## -- nothing here talks to the viewport directly.
+func _poll_evolution() -> void:
+	if not Input.is_action_just_pressed("menu_confirm"):
+		return
+
+	if _evolution_stage == "glow":
+		var cfg: Dictionary = PROGRESSION.config()
+		if not bool(EVOLUTION.evolve(_evolving, cfg, _inventory())):
+			say("%s could not evolve." % _evolution_from_name)
+			_end_evolution()
+			return
+		_evolution_stage = "reveal"
+		_evolution_title.text = "%s evolved!" % _evolution_from_name
+		_evolution_body.text = "%s is now %s." % [_evolution_from_name, str(_evolving.call("label"))]
+		_evolution_hint.text = "A  close"
+		return
+
+	_end_evolution()
+
+
+func _end_evolution() -> void:
+	_evolving = null
+	_evolution_stage = ""
+	menu.call("hold_input", false)
+	menu.call("override_footer", "")
+	_evolution_panel.visible = false
+	_list.visible = true
+	_detail_panel.visible = true
+	if _focused >= 0 and _focused < _rows.size():
+		(_rows[_focused] as Button).grab_focus()
+
+
+func _inventory() -> RefCounted:
+	var game := state()
+	return game.get("inventory") if game != null else null
 
 
 func _party() -> RefCounted:

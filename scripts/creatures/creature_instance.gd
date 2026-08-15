@@ -291,6 +291,28 @@ func gain_xp(amount: int, cfg: Dictionary) -> int:
 	return levels_gained
 
 
+## --- evolution (R4.6) --------------------------------------------------------
+
+## Mutate this instance in place into `definition` (a species.json entry for
+## the evolved form) -- the only thing evolution ever changes. Everything the
+## player earned survives untouched: nickname, level, xp, bond, individuality
+## rolls, traits, hp fraction (via `_apply_level_stats`, the same level-up
+## machinery this reuses rather than duplicates) and already-taught moves --
+## a TM taught before evolving is not silently reverted by it. `moves` is
+## deliberately left alone for the same reason: this line's two species
+## currently share one move pair anyway, and the day they do not, a fresh
+## catch getting the new species' defaults is `from_species`'s job, not this
+## one's.
+func evolve_into(new_species_id: String, definition: Dictionary, cfg: Dictionary) -> void:
+	species_id = new_species_id
+	display_name = str(definition.get("display_name", new_species_id))
+	creature_type = str(definition.get("type", creature_type))
+	base_hp = float(definition.get("base_hp", base_hp))
+	base_attack = float(definition.get("base_attack", base_attack))
+	base_defence = float(definition.get("base_defence", base_defence))
+	_apply_level_stats(cfg)
+
+
 ## Raise bond, clamped at the configured max so nothing that keeps calling
 ## this (a daily tick, a string of wins) can walk it past 100 and off the end
 ## of `thresholds`.
