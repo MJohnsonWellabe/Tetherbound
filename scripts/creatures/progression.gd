@@ -66,6 +66,16 @@ static func party_share(amount: int, cfg: Dictionary) -> int:
 	return int(floor(float(amount) * share))
 
 
+## §11's "smaller XP from... bonding activities" (R4.1-remainder): a flat
+## award every party member gets for resting through the night together,
+## whether or not they fought that day. Combat's per-kill award excludes
+## fainted members because they did not fight; this one does not, because
+## resting at camp is not something a member can opt out of by being hurt.
+static func rest_xp(cfg: Dictionary) -> int:
+	var award_cfg: Dictionary = cfg.get("xp_award", {})
+	return int(award_cfg.get("rest_bonus", 0))
+
+
 ## A stat at `level`, scaled linearly from its level-1 `base` by `growth` per
 ## level above 1. `stat_at_level(base, 1, growth)` is always exactly `base`,
 ## whatever `growth` is — level 1 is the species' base stat by definition, not

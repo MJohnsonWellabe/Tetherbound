@@ -28,7 +28,7 @@ const CFG := {
 		"xp_to_next_exponent": 1.0,
 		"growth_per_level": {"hp": 0.1, "attack": 0.1, "defence": 0.1},
 	},
-	"xp_award": {"base": 18, "per_enemy_level": 6, "party_share": 0.35},
+	"xp_award": {"base": 18, "per_enemy_level": 6, "party_share": 0.35, "rest_bonus": 5},
 	"bond": {
 		"max": 100,
 		"thresholds": [10, 30, 55, 80, 100],
@@ -108,6 +108,17 @@ func test_party_share_floors_the_split() -> void:
 	var cfg := PROGRESSION.config()
 	var share := float(cfg.get("xp_award", {}).get("party_share", 0.35))
 	assert_eq(PROGRESSION.party_share(10, cfg), int(floor(10.0 * share)))
+
+
+func test_rest_xp_reads_from_config() -> void:
+	assert_eq(PROGRESSION.rest_xp(CFG), 5)
+
+
+func test_rest_xp_matches_the_shipped_config() -> void:
+	var cfg := PROGRESSION.config()
+	var expected := int(cfg.get("xp_award", {}).get("rest_bonus", 0))
+	assert_eq(PROGRESSION.rest_xp(cfg), expected)
+	assert_true(expected > 0, "resting is supposed to be a real xp source, not a silent no-op")
 
 
 # --- creature_instance.gd: from_species compatibility -----------------------------

@@ -13,6 +13,7 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const BONFIRE := "res://assets/props/quaternius_survival/Bonfire_Fire.obj"
 const BEDROLL := "res://assets/props/quaternius_furniture/BedTwin.obj"
 
@@ -152,8 +153,15 @@ func _pass_the_night(game: Node) -> void:
 	var day := int(game.call("advance_day"))
 	var party: RefCounted = game.get("party")
 	if party != null:
+		var cfg := PROGRESSION.config()
+		var rest_xp: int = PROGRESSION.rest_xp(cfg)
 		for member: Variant in (party.call("members") as Array):
 			(member as RefCounted).call("heal_fully")
+			# R4.1-remainder (spec §11): a bonding XP source, separate from
+			# combat's. Every member gets it, fainted or not — see
+			# progression.gd::rest_xp()'s own comment for why.
+			if rest_xp > 0:
+				(member as RefCounted).call("gain_xp", rest_xp, cfg)
 	# The trainer too — find them by the vitals they carry.
 	var world := get_parent()
 	var player := world.get_node_or_null(^"Player")

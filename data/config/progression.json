@@ -5,7 +5,7 @@
     "xp_to_next_base": 40, "xp_to_next_exponent": 1.6,
     "growth_per_level": { "hp": 0.06, "attack": 0.05, "defence": 0.05 }
   },
-  "xp_award": { "base": 18, "per_enemy_level": 6, "party_share": 0.35 },
+  "xp_award": { "base": 18, "per_enemy_level": 6, "party_share": 0.35, "rest_bonus": 5 },
   "bond": {
     "max": 100, "thresholds": [10, 30, 55, 80, 100],
     "battle_won": 4, "successful_catch_start": 10, "per_day_in_party": 2,
