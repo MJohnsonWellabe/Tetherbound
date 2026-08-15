@@ -8,7 +8,12 @@ extends SceneTree
 ##   xvfb-run -a -s "-screen 0 1280x720x24" ~/godot-bin/godot --path . \
 ##     --rendering-driver opengl3 --script tools/capture_shiny_pairs.gd
 
-const SPECIES_IDS := ["paddlenewt", "burrowback"]
+const SPECIES_IDS := [
+	"paddlenewt", "burrowback", "terrapup", "ripplet", "galewisp",
+	"meadowhart", "tuskroot", "mosshell", "brooktail", "galecrest",
+	"duskhush", "pipwing", "reedwing", "bramblebun", "mudsnout",
+	"trailpup", "veridian",
+]
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const OUT := "res://shots/_shiny_pairs.png"
 
