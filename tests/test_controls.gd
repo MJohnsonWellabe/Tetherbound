@@ -228,6 +228,54 @@ func test_the_shipped_defaults_share_triggers_between_combat_and_build() -> void
 	assert_true(on_lt.has("build_rotate_left"))
 
 
+## OF21: no two WORLD-context actions may share a gamepad button. Cross-context
+## sharing (world+combat, world+build, world+menu) is fine and deliberate --
+## the two consumers can never both be listening at once, the same argument
+## D35 already used for the combat/build triggers -- and is exactly what
+## `test_the_shipped_defaults_already_share_buttons` above exists to protect.
+## This test only guards the one kind of collision that IS a real bug: two
+## actions BOTH live during ordinary exploration fighting over one button
+## (the `inventory`/`hotbar_1` and `torch_toggle`/`backpack_drop` bugs OF21
+## fixed). The list below is hand-picked, not derived from menu.json's
+## "The world" group, because that group is a settings-screen grouping
+## (organizational) rather than a runtime-context claim -- `tool_cycle` and
+## `menu_tab_right` are listed there too but are only ever read while a menu
+## or the build catalogue is open (`game_menu.gd`, `build_menu.gd`), so they
+## are MENU-context here, not world.
+const WORLD_CONTEXT_ACTIONS := [
+	"move_forward", "move_back", "move_left", "move_right",
+	"look_up", "look_down", "look_left", "look_right",
+	"jump", "sprint", "interact", "inventory", "map", "creature_recall",
+	"torch_toggle", "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
+	"build_open", "torch_place",
+]
+
+
+func test_no_two_world_context_actions_share_a_gamepad_button() -> void:
+	# Keyed by "button:N" or "axis:N:+/-" so a button and an axis with the same
+	# index never get treated as the same key.
+	var claimed: Dictionary = {}
+	for action in WORLD_CONTEXT_ACTIONS:
+		assert_true(InputMap.has_action(str(action)), "%s is not a real action" % action)
+		for event in InputMap.action_get_events(str(action)):
+			var key := ""
+			var button := event as InputEventJoypadButton
+			var motion := event as InputEventJoypadMotion
+			if button != null:
+				key = "button:%d" % button.button_index
+			elif motion != null:
+				key = "axis:%d:%s" % [motion.axis, "+" if motion.axis_value >= 0.0 else "-"]
+			else:
+				continue
+			assert_false(
+				claimed.has(key),
+				"%s and %s both claim gamepad %s -- both are world-context, so this is a real collision" % [
+					claimed.get(key), action, key
+				]
+			)
+			claimed[key] = action
+
+
 func test_a_clash_is_allowed_and_then_visible_from_both_sides() -> void:
 	bindings.set_binding("map", "keyboard", _key(KEY_I))
 	assert_true(bindings.current_conflicts("map").has("inventory"))

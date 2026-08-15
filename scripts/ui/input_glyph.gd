@@ -40,7 +40,19 @@ const GLYPHS := {
 	## The starting torch (owner playtest report: night is too dark, and the
 	## player must have a torch from the beginning). Manual override on top of
 	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.
-	"torch_toggle": {"keyboard": "keyboard_l.png", "gamepad": "xbox_button_start.png"},
+	##
+	## OF21: gamepad moved off Start -- `torch_toggle` and `backpack_drop`
+	## both shipped on Start (button 6), so pressing it in the field also
+	## dropped whatever the backpack UI had focused. Start stays
+	## `backpack_drop`'s (documented reason: data/config/menu.json's
+	## "Backpack" group note); `torch_toggle` gets its own button, the
+	## Guide button (button 5), which nothing else in the input map used at
+	## all. `xbox_guide.png` was already sitting in the vendored raw pack
+	## (`assets_raw/vendor/kenney_input-prompts/Xbox Series/Default/`, the
+	## same CC0 pack every other icon here comes from) and just needed
+	## extracting -- no new asset generation, no new licence to track, same
+	## move D35 made for the trigger icons below.
+	"torch_toggle": {"keyboard": "keyboard_l.png", "gamepad": "xbox_guide.png"},
 	## Combat's five verbs (`HD1`). `combat_quick`/`combat_charged` bind to
 	## mouse buttons on keyboard-and-mouse, not keys -- the "keyboard" bucket
 	## key is kept for both (matching every other entry's two-way device
@@ -80,10 +92,26 @@ const GLYPHS := {
 	## press on both devices (no select-then-confirm step) -- true parity is
 	## what CLAUDE.md's "controller first" asks for, not keyboard getting a
 	## one-press hotbar while a pad gets a slower cycle-and-confirm one.
-	## Chosen from buttons nothing else in exploration reads: Y, LB and
-	## D-pad left/right/down are all free (D-pad up is `creature_recall`; A/B/X
-	## are jump/cancel/interact; RB and mouse-left/right are combat-only).
-	"hotbar_1": {"keyboard": "keyboard_1.png", "gamepad": "xbox_button_y.png"},
+	## Chosen from buttons nothing else in exploration reads: LB and D-pad
+	## left/right/down are all free (D-pad up is `creature_recall`; A/B/X/Y
+	## are jump/cancel/interact/inventory; RB and mouse-left/right were
+	## combat-only).
+	##
+	## OF21: `hotbar_1` moved OFF Y -- Y was `inventory` AND `hotbar_1` at
+	## once, so opening the backpack also quietly ate whatever sat in slot 1.
+	## Y stays `inventory` (the more load-bearing of the two); `hotbar_1`
+	## moves to RB. RB's only other reader, `combat_throw`, is combat-only
+	## (`combat_manager.gd` reads it exclusively from `State.ACTIVE`) while
+	## the hotbar is explicitly deaf during a fight
+	## (`playground_hud.gd::_combat_is_running()`), so the two can never
+	## both mean something at the same moment -- the same mutual-exclusion
+	## argument D35 already used for the combat/build triggers, and the one
+	## `hotbar_5`/`tool_cycle` below already relies on for LB. `hotbar_1` and
+	## `combat_throw` now draw the identical `xbox_rb.png` icon on purpose
+	## (never shown on screen at the same time -- one's the field HUD, the
+	## other's the fight HUD), the same reuse this file already does for
+	## `switch_left`/`switch_right` and D-pad below.
+	"hotbar_1": {"keyboard": "keyboard_1.png", "gamepad": "xbox_rb.png"},
 	"hotbar_2": {"keyboard": "keyboard_2.png", "gamepad": "xbox_dpad_left.png"},
 	"hotbar_3": {"keyboard": "keyboard_3.png", "gamepad": "xbox_dpad_right.png"},
 	"hotbar_4": {"keyboard": "keyboard_4.png", "gamepad": "xbox_dpad_down.png"},
@@ -112,6 +140,29 @@ const GLYPHS := {
 	## until a real Shift PNG is vendored, the same way combat_hud.gd reaches
 	## for the `cancel` id instead of a `combat_run` entry that was never added.
 	"build_snap_cycle": {"gamepad": "xbox_dpad_down.png"},
+
+	## OF21 input groundwork: two new world-context actions, wired for real by
+	## OF24 (a hammer hotkey that opens the build menu straight from the
+	## field, and a hotkey that arms a free ground-torch placement without
+	## going through the catalogue). Both do nothing yet -- nothing calls
+	## `icon()` with these ids -- but they exist, are rebindable, and read a
+	## real icon the moment a caller shows up, the same "wired ahead of a
+	## caller" pattern `build_place`/`build_cancel` used above.
+	##
+	## `build_open` sits on gamepad Start/Menu (button 6), freed up by
+	## `torch_toggle`'s move off it above -- Start's only other reader,
+	## `backpack_drop`, only fires while the backpack tab is open
+	## (`tab_backpack.gd` gates on `menu.is_open()`), a state a build hotkey
+	## is never read in, so the two can't collide.
+	##
+	## `torch_place` sits on gamepad RT, alongside `combat_quick` (combat-only)
+	## and `build_rotate_right` (only live while a build ghost is already out)
+	## -- `torch_place` itself only makes sense from ordinary exploration,
+	## before any ghost exists and outside a fight, so all three read RT in
+	## mutually exclusive states, the same trigger dual-use D35 already
+	## established for `combat_charged`/`build_rotate_left` on LT.
+	"build_open": {"keyboard": "keyboard_b.png", "gamepad": "xbox_button_start.png"},
+	"torch_place": {"keyboard": "keyboard_p.png", "gamepad": "xbox_rt.png"},
 }
 
 

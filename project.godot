@@ -161,7 +161,7 @@ creature_recall={
 hotbar_1={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":49,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
 ]
 }
 hotbar_2={
@@ -269,7 +269,7 @@ menu_tab_right={
 torch_toggle={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":76,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":6,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":5,"pressed":false,"script":null)
 ]
 }
 backpack_split={
@@ -294,5 +294,17 @@ build_rotate={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":84,"pressed":false,"script":null)
 , Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+]
+}
+build_open={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":66,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":6,"pressed":false,"script":null)
+]
+}
+torch_place={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":80,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":5,"axis_value":1.0,"script":null)
 ]
 }

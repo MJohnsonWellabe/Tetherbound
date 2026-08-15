@@ -3,6 +3,7 @@
   "_comment_tabs": "Order is the on-screen order. `script` is the tab body; it must extend scripts/ui/menu_tab.gd. tests/test_menu_data.gd fails the build if a listed script is missing, because a typo'd path would otherwise show as a silently blank tab.",
   "_comment_open": "`menu_cancel` is Escape / B by DEFAULT and the player can now move it — Settings > Controls. It shares its default with `combat_run`, so out of the box the menu still refuses to open mid-fight; see docs/decisions/D14. `inventory` (I / Y) opens straight onto the backpack and works everywhere the menu does.",
   "_comment_cycle": "`tool_cycle` (Q / LB) steps to the PREVIOUS tab, `menu_tab_right` (Tab / RB) steps to the NEXT one -- owner playtest report: 'LB = tab left, RB = tab right', matching the buttons' own left/right position on the controller. The tab row is also focusable, and left/right on it does the same job.",
+  "_comment_of21": "OF21: the shipped defaults had two same-context gamepad collisions -- `inventory` and `hotbar_1` both on Y, `torch_toggle` and `backpack_drop` both on Start -- each one a real bug (opening the backpack also ate hotbar slot 1; toggling the torch also dropped the focused item). Y stays `inventory` (the more load-bearing of the two); `hotbar_1` moved to RB, alongside `combat_throw` (combat-only) -- see `scripts/ui/input_glyph.gd`'s `hotbar_1` entry for why that's safe. `torch_toggle` moved to the Guide button (button 5, previously unused by anything) rather than displacing `backpack_drop`, which already had a documented reason for sitting on Start (see the \"Backpack\" group note below). `build_open` and `torch_place` are new world-context actions this same pass added ahead of their caller (OF24 wires them) -- `build_open` reused Start (freed by `torch_toggle`'s move, and `backpack_drop` is menu-only so the two can't collide), `torch_place` reused RT alongside `combat_quick`/`build_rotate_right`, the same trigger dual-use D35 already established for LT.",
 
   "open_action": "menu_cancel",
   "close_action": "menu_cancel",
@@ -85,7 +86,7 @@
         },
         {
           "name": "The world",
-          "actions": ["interact", "inventory", "map", "tool_cycle", "menu_tab_right", "creature_recall", "torch_toggle"]
+          "actions": ["interact", "inventory", "map", "tool_cycle", "menu_tab_right", "creature_recall", "torch_toggle", "build_open", "torch_place"]
         },
         {
           "name": "Building",
@@ -98,7 +99,7 @@
         },
         {
           "name": "Fighting",
-          "note": "D35 (Palworld parity). `combat_quick`/`combat_charged` sit on RT/LT, the same triggers `build_rotate_right`/`build_rotate_left` use -- a build ghost is never out mid-fight (build_placer.gd only reads its actions while `pending_build` is set, combat_manager.gd only reads these while a fight is State.ACTIVE), so the triggers never mean two things at once.",
+          "note": "D35 (Palworld parity). `combat_quick`/`combat_charged` sit on RT/LT, the same triggers `build_rotate_right`/`build_rotate_left` use -- a build ghost is never out mid-fight (build_placer.gd only reads its actions while `pending_build` is set, combat_manager.gd only reads these while a fight is State.ACTIVE), so the triggers never mean two things at once. OF21 adds a third RT reader, `torch_place` (The world group) -- it only fires from ordinary exploration, before any ghost exists and outside a fight, so all three stay mutually exclusive.",
           "actions": [
             "combat_quick", "combat_charged", "combat_throw", "combat_run",
             "combat_switch_left", "combat_switch_right"
@@ -115,7 +116,7 @@
         },
         {
           "name": "Backpack",
-          "note": "backpack_drop sits on gamepad Start rather than RB -- RB is menu_tab_right now (owner playtest report: 'LB = tab left, RB = tab right'), and the pause menu (where Drop lives) is exactly where that action reads. The right stick click does nothing in a fight, so backpack_split's RB-adjacent button never means two things at once either.",
+          "note": "backpack_drop sits on gamepad Start rather than RB -- RB is menu_tab_right now (owner playtest report: 'LB = tab left, RB = tab right'), and the pause menu (where Drop lives) is exactly where that action reads. The right stick click does nothing in a fight, so backpack_split's RB-adjacent button never means two things at once either. OF21 moved `torch_toggle` off Start (it used to collide with backpack_drop here) and, separately, put the new `build_open` (The world group) on Start too -- safe for the same reason: build_open is only read from ordinary exploration, a state backpack_drop's own `menu.is_open()` gate never overlaps with.",
           "actions": ["backpack_drop", "backpack_split"]
         }
       ],
@@ -138,6 +139,8 @@
         "menu_tab_right": "Next tab",
         "creature_recall": "Call out  /  put away your creature",
         "torch_toggle": "Toggle your torch (it also lights itself after dark)",
+        "build_open": "Open the build menu",
+        "torch_place": "Place a free ground torch",
         "build_rotate": "Rotate the build ghost",
         "hotbar_1": "Use quick-item slot 1",
         "hotbar_2": "Use quick-item slot 2",
