@@ -216,6 +216,26 @@ re-read `LP1`'s own "20/20 consecutive clean runs" claim skeptically —
 that was 20 runs, uncontended, which per this entry's own theory is close
 to the least likely condition to reproduce a load-sensitive flake.
 
+**Second, independent test confirms this isn't `smoke_combat.gd`-specific.**
+Found 2026-08-15 shipping `ralph/SB10` (a road-gate item touching zero
+combat/catching code): CI's `verify-catching` job failed —
+`tests/smoke_catching.gd`'s post-catch re-engage step timed out with
+"could not re-engage after a catch; the fainted case could not be tested"
+(the test throws an orb, catches the wild creature, then starts a SECOND
+fight to confirm a fainted target refuses a throw — the hang is in getting
+that second fight to actually start/resolve). Followed the same flake
+procedure: SB10's diff touches only `scripts/world/road_gate.gd` and adds
+`scripts/world/item_gate.gd`/its test, nothing combat- or catching-adjacent.
+Local repro (headless, same commit, no CI contention): 2 of 3 runs hung
+past 200s at the exact same point (re-engage after catch, no error, no
+progress); the 3rd passed clean end-to-end in well under 200s. Same shape
+as `LP9`'s own theory — a load/timing-sensitive fight-loop issue, not a
+deterministic bug, and not unique to `smoke_combat.gd`'s specific
+assertions. Rerunning the failed job in CI (uncontended, one job) passed
+green on the first retry, consistent with contention being the variable.
+Whoever picks up `LP9` should widen its scope to `smoke_catching.gd`'s
+post-catch fight-start path, not just `smoke_combat.gd`'s in-fight steps.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
