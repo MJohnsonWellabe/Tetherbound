@@ -1,4 +1,4 @@
-# D42 — Dialogue writes progression flags, and a recipe can wait on one
+# D43 — Dialogue writes progression flags, and a recipe can wait on one
 
 **Date:** 2026-08-15 · **Decided by:** this firing, implementing `OF30` (Tam the
 blacksmith) against the owner's report: *"Make one of the villagers a blacksmith

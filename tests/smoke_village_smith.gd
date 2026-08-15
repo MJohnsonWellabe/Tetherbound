@@ -48,7 +48,7 @@ const TOOLS_CONVERSATION := "village_tam_tools"
 const ORBS_CONVERSATION := "village_tam_orbs"
 
 ## What the handover is expected to contain. Three, not the owner's two — see
-## data/dialogue/village.json's `_comment_of30_knife` and D42: without the
+## data/dialogue/village.json's `_comment_of30_knife` and D43: without the
 ## knife, owning the other two makes fiber ungatherable outright.
 const HANDOVER: Array[String] = ["axe", "pickaxe", "knife"]
 
@@ -208,7 +208,7 @@ func _the_follow_up_conversation_unlocks_the_orb_recipe() -> void:
 
 ## Nothing left to hand over: he is a Field Scout with opinions about the
 ## bramblebun again, exactly as NP3 wrote him. This is the dual-role rule
-## (D39/D42) holding — a vendor branch that ran out did not eat his greeting.
+## (D39/D43) holding — a vendor branch that ran out did not eat his greeting.
 func _after_both_he_goes_back_to_being_a_villager() -> void:
 	var progression: RefCounted = _game.get("progression")
 	var chosen := VILLAGE_NPCS.greeting_for(_tam(), progression)

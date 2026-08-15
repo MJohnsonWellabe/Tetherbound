@@ -164,7 +164,7 @@ func test_craft_never_touches_free_build() -> void:
 
 ## Owner-reported: "Then he'll give you the recipe for basic orbs." The gate is
 ## a plain progression flag named by the recipe itself (recipes.json's
-## `unlocked_by`); see docs/decisions/D42.
+## `unlocked_by`); see docs/decisions/D43.
 func test_the_orb_recipe_names_the_flag_that_unlocks_it() -> void:
 	assert_eq(db.recipe_unlock_flag(TAUGHT_RECIPE), TAUGHT_FLAG,
 		"recipes.json's '%s' should wait on '%s'" % [TAUGHT_RECIPE, TAUGHT_FLAG])
