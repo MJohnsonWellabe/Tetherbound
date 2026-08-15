@@ -3,6 +3,101 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SF33-remainder — Rift dressing for the other five spokes
+
+`model: fable` · `tests: none` · `area: terrain` · `0ce417a`
+
+Applies `SF33`'s pylon/conduit/freight grammar to the five spokes `SF33`
+itself didn't reach: `mountain_trail`, `high_pass`, `cliff_road`, `stone_gate`,
+`blighted_road`. All seven of `SA4`'s severed spokes now read as Tether Rifts.
+
+**Dispatched per `ralph/PROMPT.md`'s `model: fable` rule.** Unlike `SF33`'s own
+dispatch, a subagent-spawning tool WAS available this time, so the required
+blind-pass rubric ran as a genuine isolated critic (a fresh `general-purpose`
+subagent, shown only the ten new frames plus the project's own reference
+boards, no context on what changed) rather than self-administered.
+
+**Composition, not a copy-paste of five identical spokes.** Each site got its
+own reasoning, recorded in `terrain_playground.json`'s per-spoke
+`_comment_sf33`:
+
+- **`mountain_trail`/`high_pass`** — both rockslide blockers, deliberately
+  built as *opposites* rather than twins: `mountain_trail`'s line runs dead
+  INTO the pile (a buried terminal pylon, leaning the way the rock pushed
+  it, conduit cut and dangling toward the climb it used to make);
+  `high_pass`'s line stays live the whole way and simply STOPS at the foot
+  of the fallen pass (power still arrives, the far end is just gone). No
+  far pylon on either — the far side of a rockslide is buried, not visible,
+  and a glimpse would promise ground the blocker denies.
+- **`cliff_road`** — `river_gorge`'s crossing grammar (live/dead/live-far,
+  far_road, gateposts) compressed onto a 9m notch instead of a 40m gorge,
+  with a tighter pylon spacing to match the shorter run.
+- **`stone_gate`/`blighted_road`** — the two WALL compositions the item's own
+  brief called out as a different kind of obstruction (no far side to see
+  across, so the crossing grammar doesn't apply). `stone_gate`: a live line
+  that runs right up to the sealed arch and stops, upright and still lit —
+  nothing here is dead, because nothing was physically wrecked, only
+  deliberately cut. `blighted_road`: the one site where the wall and the
+  pylons are the same author's work (Team Tether's own oxblood-capped
+  masonry, Team Tether's own network) — the near line stays live up to the
+  wall, and two drained pylons continue DEAD behind it, hidden from the
+  road by the peak's own skirt, a reward for a player who climbs up and
+  looks over rather than something visible from the route itself.
+
+**The blind pass found real defects and they got fixed, not just noted:**
+
+1. **Two viewpoints hid the exact thing they existed to show.**
+   `rift-mountain-at-slide`'s original framing put a scatter tree over the
+   buried pylon; `rift-cliff-at-notch`'s original eye stood too close to a
+   steep flank and framed mostly sky. Both viewpoints in
+   `tools/capture_severed_spokes.gd` were repositioned (further along the
+   road / pulled back and raised) and re-verified by direct render — the
+   dead pylon and the notch composition are both clearly legible now.
+2. **The cut conduit's dangling stub was a rigid two-piece elbow** — sharp
+   and pipe-like, most visible 10m from the player against `stone_gate`'s
+   flat masonry. `severed_spokes.gd::_build_pylons()` now samples the droop
+   off a quadratic (5 segments) instead of two straight pieces, for a
+   natural cable sag.
+3. **A real material bug, not just a dressing gap**: `stone_gate`'s leaves
+   and `blighted_road`'s pier caps (both `_tether_material()`, the shared
+   Team Tether oxblood) shaded to visually pure black under
+   `gl_compatibility` in day light — the critic called the gate door
+   specifically "the single most bug-like thing in the set... reads as a
+   missing/unlit material." Root cause: `tether_oxblood`'s own max channel
+   is ~0.2, and bare albedo under this renderer's lighting model crushes
+   that near to zero. Fixed with a low, tuned emission floor
+   (`emission_energy_multiplier = 0.55`) — confirmed by direct pixel
+   sampling, not just by eye: the door went from what would have measured
+   `(0,0,0)` at the first-tried value of 0.3 to a real, if dark, colour.
+   **Honest remainder, disclosed rather than chased further**: sampled
+   pixels on the fixed door still read `(14,8,14)` — genuinely a colour now,
+   not literally black, but still visually dark under this renderer and
+   likely to read as "dark" rather than "clearly oxblood" from a distance.
+   Going brighter was tried in reasoning and rejected on purpose (the
+   comment in `_tether_material()` says why: anything near 1.0 would read as
+   the seal being *powered*, which breaks the whole "Team Tether cut this,
+   deliberately" statement more than a slightly-too-dark colour does). This
+   is a genuine value-floor tradeoff, not an oversight — a future pass
+   wanting a brighter read should look at the base `tether_oxblood` palette
+   value itself (`data/config/palette.json`, shared across every Team Tether
+   asset in the game, out of this item's scope to change) rather than
+   pushing the emission multiplier further.
+
+**Two other things the blind critic named that are real but out of this
+item's scope, left untouched on purpose:** flat/unvarying lighting and fast-
+closing fog across the whole survey (pre-existing, `EV4`/`EV8` territory);
+one rockslide rock asset reused across `mountain_trail`/`high_pass`/the
+`cliff_road` scree (a deliberate, already-documented `SA4` choice — "one
+mechanism, two sites," not a new decision this item made); and
+`blighted_road` not visually reading as "corrupted" beyond its oxblood caps
+(the site is named for a future narrative beat this item was never asked to
+build — dressing the road as a severed Team Tether checkpoint, not inventing
+a blight/corruption VFX system).
+
+Import check clean (`godot --headless --path . --import`, no script errors).
+`tests: none` is what the backlog item names; no Godot test suite touches this
+work.
+
 ## R4.4 — TMs and teaching moves
 
 `model: sonnet` · `tests: test_moves (11/11), full unit suite (675/83960/0 failed)` · `area: ui` · `eea92f2`, `ef248e9`

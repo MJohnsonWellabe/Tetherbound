@@ -1741,24 +1741,7 @@ stronghold requires a third new material.
 
 **`SF33` (the Tether Energy Pylon hero asset, generated and ledgered; two of the seven spokes — `river_gorge` and `storm_road` — dressed with the full severed-rift grammar) shipped, partial — see `DONE.md`.** `model: fable` dispatch, done in the authoring agent's own session with no subagent spawning available, so its blind-pass rubric was self-administered rather than an isolated critic — recorded honestly in `DONE.md`, same disclosure pattern as `OF10-remainder`. The other five spokes continue in `SF33-remainder` below.
 
-### SF33-remainder — Rift dressing for the other five spokes
-`model: fable` · `tests: none` · `lane: art`
-`SF33` built the pylon hero asset (ledgered, `assets/environment/team_tether/`)
-and the full severed-rift grammar — pylon line crossing the seam (live both
-sides, dead only where the rift physically wrecked one), cut conduit dangling
-from both ends, mirrored gateposts on both lips, far roadbed kerb rows,
-stranded freight on both rims — but applied it to **two of the seven spokes**:
-`river_gorge` and `storm_road`, the two long carve seams where "the two sides
-used to be joined" can actually be judged across a gap. The mechanism is
-entirely config (`terrain_playground.json` `spokes.routes[*].pylons` /
-`far_road` / `abandoned` — see `river_gorge`'s `_comment_sf33` for the layout
-rules, including the r≤228 perimeter check every authored point needs). The
-remaining five (`mountain_trail`, `stone_gate`, `high_pass`, `cliff_road`,
-`blighted_road`) still read as terrain dead ends. Note the wall-type blockers
-(`stone_gate`, `blighted_road`) have no far-side sightline, so their treatment
-is a pylon line ENDING at the seal — different composition question, same kit.
-Blind pass per `conventions.md` again; extend
-`tools/capture_severed_spokes.gd`'s SF33 viewpoints.
+**`SF33-remainder` (rift dressing for the other five spokes — `mountain_trail`, `high_pass`, `cliff_road`, `stone_gate`, `blighted_road`) shipped — see `DONE.md`.** All seven spokes now carry the severed-rift grammar. `model: fable` dispatch with a genuinely blind visual-judge pass this time (the dispatching session's own subagent tool was available); found and fixed two occluded viewpoints, a rigid-elbow cable artefact, and a real material bug (the Team Tether wall/gate colour shading to pure black under `gl_compatibility`). One honest, disclosed remainder: the fixed wall/gate material still reads dark by design (confirmed by direct pixel sampling), not fully resolved to the critic's original "reads as a bug" complaint — see `DONE.md` for why going brighter would be the wrong fix.
 
 ### SF34 — Three regional captains, three Sigils
 `model: fable` · `tests: smoke_trainer_battle`
