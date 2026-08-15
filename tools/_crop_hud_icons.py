@@ -27,7 +27,7 @@ os.makedirs(OUT, exist_ok=True)
 
 ICONS = {
     "hp_heart": (30, 978, 18, 18),
-    "stamina_bolt": (1023, 436, 18, 18),
+    "stamina_bolt": (1020, 433, 24, 24),  # enlarged 18->24px, round 2 fix
     "creatures_paw": (50, 816, 20, 20),
 }
 
