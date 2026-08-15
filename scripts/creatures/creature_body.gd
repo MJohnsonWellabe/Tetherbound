@@ -347,6 +347,11 @@ func request_move(direction: Vector3, speed: float = -1.0) -> void:
 	if _requested.length() > 1.0:
 		_requested = _requested.normalized()
 	_requested_speed = _speed if speed < 0.0 else speed
+	# Real movement beats a stale one-shot pose. See `creature_animator.gd`'s
+	# `cancel_hold` for why: a creature already being driven again must not
+	# stay frozen on an attack/hit pose for the rest of that clip's length.
+	if _requested.length() > 0.01 and _animator != null:
+		_animator.call("cancel_hold")
 
 
 func add_impulse(direction: Vector3, strength: float) -> void:

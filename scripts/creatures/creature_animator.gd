@@ -91,6 +91,21 @@ func revive() -> void:
 	_current = ""
 
 
+## A one-shot hold is presentation for a moment nothing more important is
+## happening — but "nothing more important" stops being true the instant
+## something asks this creature to move under its own power again. Recorded
+## with a real fight (`tools/diag_combat_animation.gd`, R4.11): a wild
+## creature hit mid-chase keeps closing distance the very next physics frame
+## (its AI's CLOSE intent does not pause for being hit), so the body was
+## visibly sliding across the arena for the rest of the hit clip's length
+## while the pose stayed frozen on the hit reaction — 23.8% of sampled
+## frames in one fight. `request_move` calls this whenever it is given a real
+## direction, so a creature already back under way is never shown standing
+## still for a pose that finished being true.
+func cancel_hold() -> void:
+	_hold = 0.0
+
+
 func _play(role: String, looping: bool) -> void:
 	var clip := _resolve(role)
 	if clip == "" or clip == _current:
