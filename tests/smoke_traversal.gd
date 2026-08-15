@@ -19,9 +19,15 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
-## Physics ticks per leg. At the configured walk speed this is roughly 190m,
-## comfortably past the 64m dynamic radius that caused the original bug.
-const LEG_FRAMES := 2700
+## Physics ticks per leg. At the configured walk speed this is roughly 120m —
+## still more than 1.8x the 64m dynamic radius that caused the original bug,
+## and comfortably past this file's own `furthest < 100.0` failure floor
+## below, just not the original 190m/2700-frame margin (was ~3x). Shortened
+## 2026-08-15 because this was the single slowest step in CI (~6 min); the
+## invariant this test exists to catch — collision reverting to a small
+## bubble around the player — only needs "far enough to leave any plausible
+## bubble," not "as far as possible."
+const LEG_FRAMES := 1700
 ## Below this the player is definitionally through the floor: the whole
 ## playground's lowest point is about -26m.
 const THROUGH_THE_FLOOR := -80.0
