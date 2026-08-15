@@ -16,6 +16,17 @@ const DEATH_SATCHEL := preload("res://scripts/world/death_satchel.gd")
 const FADE_SECONDS := 1.2
 const MAP_ICON := "death_satchel"
 
+## R3.2. This component's own group — mirrors `build_placer.gd` joining
+## `"build_placer"`, and is how `GameState.save_game`/`load_game` reach
+## `sync_state_to_game`/`restore_from_game` below without a direct handle on
+## whichever world scene happens to be live.
+const GROUP := "player_death"
+
+## Which entry in `GameState.death_satchels` a given live satchel node is —
+## the same role `build_placer.gd`'s `PLACED_INDEX_META` plays for a placed
+## building's index into `placed_buildings`.
+const SATCHEL_INDEX_META := "death_satchel_index"
+
 var _world: Node3D = null
 var _player: CharacterBody3D = null
 var _fallback_home: Vector3 = Vector3.ZERO
@@ -30,6 +41,7 @@ func build(world: Node3D, player: CharacterBody3D, spawn_position: Vector3) -> v
 	_world = world
 	_player = player
 	_fallback_home = spawn_position
+	add_to_group(GROUP)
 	if player.has_signal("died"):
 		player.connect("died", _on_died)
 
@@ -51,16 +63,79 @@ func _on_died() -> void:
 
 
 func _drop_satchel(carried: Array, at: Vector3, game: Node) -> void:
+	# R3.2. Register the persisted record FIRST, so the live node can carry
+	# its own index into `GameState.death_satchels` from the moment it
+	# exists — the same order `build_placer.gd::_place()` uses (compute the
+	# index the entry is about to occupy, then spawn).
+	var index := int(game.call("register_death_satchel", at))
+
 	var satchel: Node3D = DEATH_SATCHEL.new()
 	_satchel_count += 1
 	satchel.name = "DeathSatchel_%d" % _satchel_count
 	satchel.position = at
+	satchel.set_meta(SATCHEL_INDEX_META, index)
 	_world.add_child(satchel)
 	satchel.call("build", carried, game.get("items"))
 
 	var map: RefCounted = game.get("map")
 	if map != null:
 		map.call("add_dynamic_marker", "death_satchel_%d" % _satchel_count, MAP_ICON, at)
+
+
+## R3.2. The reverse of `restore_from_game`'s `state` half: called by
+## `GameState.save_game` right before it writes, so every live satchel's
+## CURRENT contents (opened, withdrawn from, deposited into since the last
+## save) land in the record a save actually persists — the exact same "ask
+## the scene tree right before writing" seam `build_placer
+## .gd::sync_state_to_game` already uses for a placed chest.
+func sync_state_to_game(game: Node) -> void:
+	if game == null:
+		return
+	var satchels: Array = game.get("death_satchels") as Array
+	for node in get_tree().get_nodes_in_group(DEATH_SATCHEL.GROUP):
+		var index := int(node.get_meta(SATCHEL_INDEX_META, -1))
+		if index < 0 or index >= satchels.size():
+			continue
+		var state: RefCounted = node.get("state")
+		if state == null:
+			continue
+		(satchels[index] as Dictionary)["state"] = state.call("save_data")
+
+
+## R3.2. Rebuild every satchel `GameState.death_satchels` remembers — called
+## by `GameState.load_game`, mirroring `build_placer.gd::restore_from_game`.
+## Existing satchels are cleared first so a mid-session load cannot leave two
+## copies of the same satchel standing on top of each other. Deliberately
+## does not touch the map's dynamic markers: `MapState.save_data`/
+## `load_data` already round-trip `death_satchel_N` markers on their own
+## (`autoload/map_state.gd`), so re-adding them here would just be a second,
+## redundant writer.
+func restore_from_game(game: Node) -> void:
+	if game == null or _world == null:
+		return
+	for node in get_tree().get_nodes_in_group(DEATH_SATCHEL.GROUP):
+		node.queue_free()
+
+	var satchels: Array = game.get("death_satchels") as Array
+	var db: RefCounted = game.get("items")
+	_satchel_count = 0
+	for i in satchels.size():
+		var entry: Variant = satchels[i]
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var record := entry as Dictionary
+		var position: Array = record.get("position", [])
+		if position.size() != 3:
+			continue
+		var at := Vector3(float(position[0]), float(position[1]), float(position[2]))
+
+		var satchel: Node3D = DEATH_SATCHEL.new()
+		_satchel_count += 1
+		satchel.name = "DeathSatchel_%d" % _satchel_count
+		satchel.position = at
+		satchel.set_meta(SATCHEL_INDEX_META, i)
+		_world.add_child(satchel)
+		satchel.call("restore", record.get("state", []), db)
 
 
 ## The last-placed camp's bed, or the world's own opening spawn point if none

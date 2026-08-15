@@ -18,6 +18,13 @@ const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
 const MESH_PATH := "res://assets/props/quaternius_fantasy/Bag.gltf"
 const MESH_SCALE := 0.6
 
+## R3.2. Every death satchel joins this group, the same pattern
+## `build_placer.gd`'s `PLACED_GROUP` uses for placed buildings — it is what
+## lets `player_death.gd::sync_state_to_game`/`restore_from_game` find every
+## live satchel in the scene without `GameState` needing a direct handle on
+## each one.
+const GROUP := "death_satchel"
+
 ## Shared across every satchel the same way `storage_container.gd`'s own
 ## panel is shared across every chest — one screen, re-pointed at whichever
 ## container opened it.
@@ -34,6 +41,22 @@ func build(dropped: Array, db: RefCounted) -> void:
 	state = STORAGE_STATE.new(db)
 	for i in dropped.size():
 		state.inventory.call("set_slot", i, dropped[i])
+	_build_visuals()
+
+
+## R3.2. The load-side counterpart to `build()`: rehydrate a satchel from
+## `storage_state.gd::save_data()`'s own output (a full-width array, `null`
+## for an empty slot — see that file's header) instead of from a fresh
+## `drain()`. `state.load_data` already re-coerces `n`/`durability` back from
+## JSON's float-only numbers, so this needs no extra conversion of its own.
+func restore(data: Variant, db: RefCounted) -> void:
+	state = STORAGE_STATE.new(db)
+	state.call("load_data", data)
+	_build_visuals()
+
+
+func _build_visuals() -> void:
+	add_to_group(GROUP)
 
 	if ResourceLoader.exists(MESH_PATH):
 		var mesh := MeshInstance3D.new()

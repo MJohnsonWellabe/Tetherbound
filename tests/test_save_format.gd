@@ -7,8 +7,9 @@ extends "res://tests/test_case.gd"
 ## reload, a version bump that bricks an old save instead of leaving it
 ## alone. `FakeGame` below stands in for the `Game` autoload — it needs no
 ## scene tree, no menu, nothing `save_game.gd` does not actually read or
-## write (`day`, `party`, `inventory`, `placed_buildings`, `map`, `satiety`,
-## and — only when a test opts in — a live `player_vitals()`).
+## write (`day`, `party`, `inventory`, `placed_buildings`, `death_satchels`,
+## `map`, `satiety`, and — only when a test opts in — a live
+## `player_vitals()`).
 ##
 ## Writes to a dedicated `user://test_saves_format/` directory rather than the
 ## real `user://saves/`, wiped before every test, so this file cannot leave
@@ -40,6 +41,7 @@ class FakeGame:
 	var party: RefCounted = null
 	var inventory: RefCounted = null
 	var placed_buildings: Array = []
+	var death_satchels: Array = []
 	var map: RefCounted = null
 	var progression: RefCounted = null
 	## Fallback satiety — round-tripped directly when `_vitals` below is null,
@@ -428,15 +430,22 @@ func test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load() -> v
 	assert_eq(read.progression.all_set(), [], "a v1 save predates progression flags too; nothing to recover")
 
 
-func test_version_4_payload_is_refused() -> void:
+func test_a_version_newer_than_this_build_is_refused() -> void:
+	# R3.2: hardcoded to "version 4" before this build's own VERSION became 4,
+	# which made this test start asserting the exact opposite of its own
+	# intent the moment that bump landed. SAVE_GAME.VERSION + 1 keeps this
+	# test meaning "newer than we can read" across every future bump instead
+	# of needing a matching edit each time.
+	var future_version: int = int(SAVE_GAME.VERSION) + 1
 	DirAccess.make_dir_recursive_absolute(TEST_DIR)
 	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
-	file.store_string(JSON.stringify({"version": 4, "day": 55}))
+	file.store_string(JSON.stringify({"version": future_version, "day": 55}))
 	file = null
 
 	var game := _game()
 	game.day = 1
-	assert_false(saver.load_slot(game, 1), "version 4 is newer than this build's VERSION 3 -- refuse it")
+	assert_false(saver.load_slot(game, 1),
+		"version %d is newer than this build's VERSION %d -- refuse it" % [future_version, SAVE_GAME.VERSION])
 	assert_eq(game.day, 1)
 
 

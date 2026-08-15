@@ -74,6 +74,19 @@ var pending_build: String = ""
 ## to facing 0.
 var placed_buildings: Array = []
 
+## R3.2. Every death satchel the player has left in the world, as data —
+## `{position: [x,y,z], state: [...]}` — the same "registry, not the scene
+## node, is what a save persists" split `placed_buildings` draws above.
+## `state` is whatever `storage_state.gd::save_data()` last returned for that
+## satchel (a chest's own contents shape); a freshly-registered satchel
+## starts with an empty array and `player_death.gd::sync_state_to_game` fills
+## it in right before every write, mirroring `_sync_placed_building_state()`
+## below for a placed chest. Joined the save format at VERSION 4 (see
+## `scripts/save/save_game.gd`) — a save written before this has none, and
+## migrates to an empty list, the same "no fog trail predates the map"
+## answer VERSION 1 -> 2 gave `map`.
+var death_satchels: Array = []
+
 ## R3.1. Save/load logic — `scripts/save/save_game.gd`. A plain RefCounted,
 ## same split as `party`/`inventory` above, so it is testable without a scene
 ## tree. See that file's header for the format and versioning rule.
@@ -278,9 +291,25 @@ func register_building(id: String, position: Vector3, yaw_deg: float = 0.0) -> v
 	})
 
 
+## R3.2. `player_death.gd::_drop_satchel` calls this once, right before it
+## spawns the live satchel node — the registry, not the scene node, is what a
+## save actually persists, same split `register_building` draws above.
+## Returns the new entry's index, which the caller stashes as node metadata
+## so `sync_state_to_game`/`restore_from_game` can find their way back to it
+## without a position-based search (the same role `PLACED_INDEX_META` plays
+## for a placed building).
+func register_death_satchel(position: Vector3) -> int:
+	death_satchels.append({
+		"position": [position.x, position.y, position.z],
+		"state": [],
+	})
+	return death_satchels.size() - 1
+
+
 ## Write `slot`. Returns whether it succeeded.
 func save_game(slot: int) -> bool:
 	_sync_placed_building_state()
+	_sync_death_satchel_state()
 	return bool(save_system.call("save", self, slot))
 
 
@@ -291,6 +320,15 @@ func save_game(slot: int) -> bool:
 ## `load_game`'s own "ask build_placer.gd" pattern below, just in reverse.
 func _sync_placed_building_state() -> void:
 	for node in get_tree().get_nodes_in_group("build_placer"):
+		if node.has_method("sync_state_to_game"):
+			node.call("sync_state_to_game", self)
+
+
+## R3.2. Same seam as `_sync_placed_building_state` above, for death
+## satchels — `player_death.gd` is the group's owner, not `build_placer.gd`,
+## since a satchel is not a placed building (the player never built it).
+func _sync_death_satchel_state() -> void:
+	for node in get_tree().get_nodes_in_group("player_death"):
 		if node.has_method("sync_state_to_game"):
 			node.call("sync_state_to_game", self)
 
@@ -306,6 +344,9 @@ func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
 	for node in get_tree().get_nodes_in_group("build_placer"):
+		if node.has_method("restore_from_game"):
+			node.call("restore_from_game", self)
+	for node in get_tree().get_nodes_in_group("player_death"):
 		if node.has_method("restore_from_game"):
 			node.call("restore_from_game", self)
 	return true

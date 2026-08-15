@@ -2,8 +2,9 @@ extends RefCounted
 
 ## Versioned save/load for the state that has to survive a quit: the party,
 ## the satchel, the day counter, placed buildings (R3.1), creature
-## progression/satiety/the map database (VERSION 2), and — as of VERSION 3 —
-## SB9's progression-flag store.
+## progression/satiety/the map database (VERSION 2), SB9's progression-flag
+## store (VERSION 3), and — as of VERSION 4 — every death satchel the player
+## has left in the world (R3.2).
 ##
 ## Same shape `docs/decisions/D15` set for `user://settings.json`: JSON, a
 ## `version` field from the first write, and never fatal on load — a missing,
@@ -36,6 +37,13 @@ extends RefCounted
 ## gave the map. A version newer than this build still refuses exactly as
 ## VERSION 1 always refused everything but itself — there is still nothing to
 ## migrate an unreleased future format DOWN from.
+##
+## ## VERSION 4 — death satchels (R3.2)
+##
+## `GameState.death_satchels` did not exist before this either, so the same
+## "nothing to migrate FROM" answer applies again: `_migrate_v3` hands back
+## an empty list. A death satchel dropped under an older build is simply not
+## in that save — it was never written down anywhere for this to recover.
 ##
 ## ## The satiety seam
 ##
@@ -73,7 +81,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 3
+const VERSION := 4
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -121,6 +129,7 @@ func save(game: Object, slot: int) -> bool:
 		"party": _party_to_array(game.get("party")),
 		"inventory": _inventory_to_array(game.get("inventory")),
 		"placed_buildings": (game.get("placed_buildings") as Array).duplicate(true),
+		"death_satchels": (game.get("death_satchels") as Array).duplicate(true),
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
 		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
@@ -144,8 +153,12 @@ func load_slot(game: Object, slot: int) -> bool:
 	if version == 1:
 		data = _migrate_v1(data)
 		data = _migrate_v2(data)
+		data = _migrate_v3(data)
 	elif version == 2:
 		data = _migrate_v2(data)
+		data = _migrate_v3(data)
+	elif version == 3:
+		data = _migrate_v3(data)
 	elif version != VERSION:
 		push_warning("save slot %d is version %d, this build reads %d -- not loading" % [
 			slot, version, VERSION
@@ -156,6 +169,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	_array_to_party(data.get("party", []), game.get("party"))
 	_array_to_inventory(data.get("inventory", []), game.get("inventory"))
 	game.set("placed_buildings", (data.get("placed_buildings", []) as Array).duplicate(true))
+	game.set("death_satchels", (data.get("death_satchels", []) as Array).duplicate(true))
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
 	var map_obj: Variant = game.get("map")
@@ -217,10 +231,22 @@ func _migrate_v1(data: Dictionary) -> Dictionary:
 ## so there is nothing to recover — a save from before this system existed
 ## starts with every flag unset, the same "nothing to migrate FROM" answer
 ## VERSION 1 -> 2 already gave the map (no fog trail predates the map either).
+## Lands on VERSION 3's own shape, not the build's current `VERSION` — every
+## caller chains straight into `_migrate_v3` after this, same as a real
+## VERSION 3 file would.
 func _migrate_v2(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
-	migrated["version"] = VERSION
+	migrated["version"] = 3
 	migrated["progression"] = {}
+	return migrated
+
+
+## VERSION 3 -> VERSION 4. `death_satchels` (R3.2) did not exist in VERSION 3
+## either — same "nothing to migrate FROM" answer as `_migrate_v2` above.
+func _migrate_v3(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = VERSION
+	migrated["death_satchels"] = []
 	return migrated
 
 
