@@ -26,6 +26,7 @@ extends Node
 
 const CAMP := preload("res://scripts/build/camp.gd")
 const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
+const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
@@ -34,7 +35,10 @@ const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 ## Ids placed by their own hand-authored script rather than build_piece.gd's
 ## generic path — kept as one list so the "is this a special id" question is
 ## answered in exactly one place instead of every branch below re-deriving it.
-const STATEFUL_IDS := ["camp", "storage"]
+## R4.8: `creature_bed` joins this list for its interaction, not for any
+## saved state — unlike `storage`, it has nothing worth persisting (a rest is
+## momentary), so `_spawn_building`'s `state_data` branch stays storage-only.
+const STATEFUL_IDS := ["camp", "storage", "creature_bed"]
 
 ## R3.1. Every node this script has planted for real, ghost excluded — how
 ## `restore_from_game` finds and clears the old set before rebuilding from a
@@ -211,6 +215,10 @@ func _show_ghost(game: Node, armed: String) -> void:
 			_ghost = STORAGE_CONTAINER.new()
 			_ghost.name = "StorageGhost"
 			_ghost.call("build_ghost")
+		elif armed == "creature_bed":
+			_ghost = CREATURE_BED.new()
+			_ghost.name = "CreatureBedGhost"
+			_ghost.call("build_ghost")
 		else:
 			var mesh_path := _piece_mesh(game, armed)
 			_ghost = BUILD_PIECE.new()
@@ -334,6 +342,11 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 			var state: RefCounted = placed.get("state")
 			if state != null:
 				state.call("load_data", state_data)
+	elif id == "creature_bed":
+		placed = CREATURE_BED.new()
+		placed.name = "CreatureBed"
+		get_parent().add_child(placed)
+		placed.call("build_real")
 	else:
 		var mesh_path := _piece_mesh(game, id)
 		placed = BUILD_PIECE.new()
