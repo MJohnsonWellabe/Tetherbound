@@ -34,6 +34,7 @@ const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 ## Reordering is pick-up-then-place, matching the backpack. Setting the deployed
 ## creature needs a second verb, and `interact` (E / X) is the one already bound that
@@ -132,7 +133,16 @@ var _bond_meter: Control = null
 var _bond_caption: Label = null
 var _best_caption: Label = null
 var _detail_status: Label = null
-var _detail_hint: Label = null
+## RichTextLabel, not Label (blind-judge findings #2/#5): the ceremony's one
+## instruction ("A this one goes free") used to be the least prominent text
+## on screen -- tiny, muted, stacked under a dense stat block -- and every
+## button hint in the flow spelled its input as a bare capital letter instead
+## of the glyph convention `input_glyph.gd` already establishes everywhere
+## else (dialogue, combat, the backpack hotbar). BBCode is what lets this one
+## Label-turned-RichTextLabel host both the outside-the-ceremony plain hint
+## text (unchanged) and, during the ceremony, a real glyph plus a size/colour
+## bump -- see `_describe()`'s own branch below for the two treatments.
+var _detail_hint: RichTextLabel = null
 
 var _moves: RefCounted = null
 var _traits: RefCounted = null
@@ -188,7 +198,9 @@ var _farewell_body: Label = null
 var _farewell_keep: Button = null
 var _farewell_release: Button = null
 var _farewell_done: Button = null
-var _farewell_hint: Label = null
+## RichTextLabel for the same reason `_detail_hint` above is: a real B glyph
+## instead of a bare letter (defect 5).
+var _farewell_hint: RichTextLabel = null
 
 
 func build() -> void:
@@ -242,6 +254,12 @@ func build() -> void:
 	# "beside the belt", never as a sixth holder. Built hidden on every rebuild
 	# and shown only for the length of a ceremony.
 	_pending_rule = _hairline()
+	# WARNING, not the shared `_hairline()` default: blind-judge defect #4 --
+	# the choose/inspect beats read as a routine "check my team" screen with no
+	# signal this browsing is part of a permanent choice. Tinting the ceremony's
+	# own divider (rather than inventing a new banner) is the restrained
+	# extension the design record already gestures at.
+	(_pending_rule as ColorRect).color = UITokens.WARNING
 	_pending_rule.visible = false
 	list.add_child(_pending_rule)
 	_pending_caption = Label.new()
@@ -250,7 +268,11 @@ func build() -> void:
 	# of the ceremony's one caption would be worse than a hyphen.
 	_pending_caption.text = "JUST CAUGHT - NOT ON THE BELT"
 	_pending_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_pending_caption.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	# WARNING rather than TEXT_MUTED, same defect #4 tonal cue as the hairline
+	# above -- the caption is the first thing naming why a sixth row exists at
+	# all, so it is the natural place for the "this is not routine" signal to
+	# live, not a new element bolted on elsewhere.
+	_pending_caption.add_theme_color_override("font_color", UITokens.WARNING)
 	_pending_caption.visible = false
 	list.add_child(_pending_caption)
 	_pending_wrap = _build_slot_row(PARTY.MAX_CREATURES)
@@ -483,10 +505,14 @@ func _build_detail() -> Control:
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	panel.add_child(spacer)
 
-	_detail_hint = Label.new()
-	_detail_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_detail_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	_detail_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_detail_hint = RichTextLabel.new()
+	_detail_hint.bbcode_enabled = true
+	_detail_hint.fit_content = true
+	_detail_hint.scroll_active = false
+	_detail_hint.shortcut_keys_enabled = false
+	_detail_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_detail_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_detail_hint.text = DETAIL_HINT_BASE
 	panel.add_child(_detail_hint)
 
@@ -581,10 +607,15 @@ func _build_farewell_panel() -> Control:
 	# six-row list pushes the footer off the bottom of the frame for the
 	# length of the ceremony (seen in the R4.10 capture pass), so a hint
 	# down there is a hint nobody gets.
-	_farewell_hint = Label.new()
-	_farewell_hint.text = "B  keep looking"
-	_farewell_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_farewell_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_farewell_hint = RichTextLabel.new()
+	_farewell_hint.bbcode_enabled = true
+	_farewell_hint.fit_content = true
+	_farewell_hint.scroll_active = false
+	_farewell_hint.shortcut_keys_enabled = false
+	_farewell_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_farewell_hint.text = "%s  keep looking" % INPUT_GLYPH.icon("cancel", 24)
+	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_farewell_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(_farewell_hint)
 
@@ -701,6 +732,13 @@ func poll() -> void:
 		_header.text = "Belt  %d / %d      %d free" % [size, PARTY.MAX_CREATURES, PARTY.MAX_CREATURES - size]
 	if _held >= 0:
 		_header.text += "      holding slot %d" % (_held + 1)
+	# Blind-judge defect #4: WARNING amber for the whole length of the
+	# ceremony, not just the confirm/done beats it already reads as weighty on
+	# -- the same "pay attention" tone `_detail_status` already uses elsewhere
+	# on this screen, not a new colour invented for this one line.
+	_header.add_theme_color_override(
+		"font_color", UITokens.WARNING if _release_stage != "" else UITokens.TEXT_PRIMARY
+	)
 
 	var cfg: Dictionary = PROGRESSION.config()
 	var active: int = int(party.call("active_index"))
@@ -796,6 +834,8 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_bond_caption.text = ""
 		_best_caption.text = ""
 		_detail_status.text = ""
+		_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+		_detail_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 		_detail_hint.text = DETAIL_HINT_BASE
 		if _shown_species != "":
 			_shown_species = ""
@@ -909,9 +949,18 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	if _release_stage != "":
 		# The ceremony has exactly one verb, and advertising the reorder/
 		# activate/teach/evolve hints here would promise four the guards below
-		# refuse.
-		_detail_hint.text = "A  this one goes free"
+		# refuse. Blind-judge defect #2: this is the one instruction that
+		# matters most on the choose/inspect beats, so it gets the confirm
+		# beat's own visual weight -- a real glyph (not a bare "A"), a body-size
+		# font rather than the tiny stat-block size every other hint uses, and
+		# WARNING's amber rather than muted grey, the same "pay attention" tone
+		# `_detail_status` already reaches for elsewhere on this screen.
+		_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_BODY)
+		_detail_hint.add_theme_color_override("default_color", UITokens.WARNING)
+		_detail_hint.text = "%s  this one goes free" % INPUT_GLYPH.icon("confirm", 30, UITokens.WARNING)
 		return
+	_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_detail_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_detail_hint.text = DETAIL_HINT_BASE
 	if not EVOLUTION.requirements(species_id, cfg).is_empty():
 		_detail_hint.text += "      G  evolve"
@@ -1278,6 +1327,17 @@ func _begin_farewell(index: int) -> void:
 	_farewell_hint.visible = true
 	_detail_panel.visible = false
 	_farewell_panel.visible = true
+	# Blind-judge defect #3: the confirm beat's own text already resolves the
+	# newcomer's presence in words ("X gives up their holder and NEWCOMER takes
+	# it", or the newcomer's own name as the question itself) -- their row in
+	# the list is no longer doing any work once the question is up, and left
+	# on screen with no other change it read as an unfinished layout rather
+	# than a beat. Hiding it here is the exact same move `_do_release()` below
+	# already makes for the done beat (also five rows, never reported as dead
+	# space), not a new mechanism -- the question narrows focus to the five
+	# belt rows the farewell text is actually about, matching D38's own "during
+	# the question you look at the five you would keep."
+	_show_pending_row(false)
 	menu.call("override_footer", "B  keep looking")
 	_farewell_keep.grab_focus()
 
@@ -1288,6 +1348,7 @@ func _back_to_choosing() -> void:
 	_release_stage = "choose"
 	_farewell_panel.visible = false
 	_detail_panel.visible = true
+	_show_pending_row(true)
 	menu.call("override_footer", "Up / Down  look them over        A  this one goes free")
 	var back: Button = _pending_button if _release_target >= PARTY.MAX_CREATURES \
 		else (_rows[_release_target] as Button)

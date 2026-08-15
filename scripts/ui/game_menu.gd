@@ -77,6 +77,27 @@ var _panic_left: float = PANIC_SECONDS
 ## knowledge of another agent's scene layout. Re-found when it goes away.
 var _combat: Node = null
 
+## The exploration HUD (`playground_hud.gd`), found by the same by-name
+## convention `game_state.gd::_find_player()` and `playground_hud.gd`'s own
+## `AllyCreature` lookup already use for a world scene's singular nodes.
+## Re-found on every open() the same defensive way `_combat` is, since a
+## capture tool or test harness may add/remove the world scene between opens.
+##
+## R4.10 bug (blind-judge pass): the world HUD was never hidden while this
+## menu was open at all -- not for this tab, not for any other. Dim's 60%
+## wash and the panel's own 86%-alpha background (UITokens.BG_PANEL) were
+## carrying the whole job of masking it, and neither is fully opaque nor
+## full-screen (the panel stops short of the frame's own margin on the right,
+## and a content overflow -- six rows during the release ceremony -- pushes
+## rows past the panel's bottom edge entirely). The result was readable
+## quest-log text and hotbar prompts bleeding through at the screen edges on
+## every tab; the ceremony's taller list just made it impossible to miss.
+## Actually hiding the HUD's CanvasLayer, not just trusting translucency to
+## cover it, is the fix that holds regardless of panel geometry or content
+## height, and it now runs for every tab because it lives in open()/close()
+## rather than in any one tab's script.
+var _world_hud: CanvasLayer = null
+
 ## Last focus owner seen while the menu was open, per `AudioCues` wiring
 ## below -- lets `_process` play `ui_focus` only on a real change, never once
 ## per frame while the stick sits still on one button.
@@ -268,6 +289,7 @@ func open(tab_id: String = "") -> bool:
 	_status_left = 0.0
 	# Force a rebuild: state may have moved while the menu was shut.
 	_last_revision = -1
+	_set_world_hud_visible(false)
 
 	AUDIO_CUES.play(&"ui_accept")
 
@@ -294,6 +316,7 @@ func close() -> void:
 	# cursor the player needs.
 	Input.mouse_mode = _mouse_before
 	get_tree().paused = _paused_before
+	_set_world_hud_visible(true)
 	if _index >= 0 and _index < _bodies.size():
 		_bodies[_index].call("say", "")
 
@@ -551,3 +574,20 @@ func _find_combat(node: Node) -> Node:
 		if found != null:
 			return found
 	return null
+
+
+## Hides (or restores) the world's exploration HUD for the length of this menu
+## being open. Looked up fresh each call rather than cached across opens: the
+## world scene it lives in can be swapped out from under this autoload (a
+## capture tool, a scene reload) between one open() and the next, same reason
+## `_find_combat` re-finds `_combat` rather than trusting a stale reference.
+## Silently does nothing with no current scene or no HUD in it -- the menu-only
+## boot screen and every headless tool/test that never loads a world scene
+## still need open()/close() to work.
+func _set_world_hud_visible(value: bool) -> void:
+	var world := get_tree().get_current_scene()
+	if world == null:
+		return
+	var hud := world.get_node_or_null(^"PlaygroundHUD")
+	if hud != null:
+		hud.visible = value
