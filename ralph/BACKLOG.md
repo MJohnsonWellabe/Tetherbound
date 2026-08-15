@@ -1322,7 +1322,28 @@ completing an objective changes the HUD line without a scene reload.
 
 ## Phase 4 — combat, progression, the team
 
-### R4.1 — Levels and XP · `model: sonnet` · `tests: test_progression` (new) · §11
+**`R4.1` (Levels and XP) shipped — see `DONE.md`.** The mechanic itself
+(level/XP curve, combat-XP award, wild-level independence from player level)
+was already built by `D30` and never recorded here or in `DONE.md`; this
+pass verified it against §11 directly (full suite, 600/83762/0 failed,
+before and after) and found one real spec gap — the level cap was a
+tunable `30`, §11 says "1–50" — fixed to `50`. **One honest remainder**:
+§11's "smaller XP can come from exploration and bonding activities" has no
+implementation; combat is currently the *only* XP source (trivially
+"primary" by default, not by design). Not built this pass — which
+activities and how much XP is a real content/balance call, not a
+mechanical follow-on, so opened as `R4.1-remainder` below rather than
+invented here.
+
+### R4.1-remainder — A second, smaller XP source: exploration and/or bonding
+`model: sonnet` · `tests: test_progression` · §11
+§11: "Smaller XP can come from exploration and bonding activities." Only
+`combat_manager.gd::_award_victory()` calls `creature_instance.gd::gain_xp()`
+today (checked directly — the only production call site). Needs a concrete,
+small decision about which activity(ies) grant XP and how much relative to
+combat (`xp_award` in `data/config/progression.json`, `ALL TUNABLE`) — not a
+new mechanism, `gain_xp()` already exists and takes a plain `int` amount.
+
 ### R4.2 — Core stats and per-instance individuality · `model: sonnet` · `tests: test_progression` · §11
 ### R4.3 — Moves · `model: sonnet` · `tests: test_moves` (new) · §13. `data/moves/` is **empty**.
 ### R4.4 — TMs and teaching moves · `model: sonnet` · `tests: test_moves` · §13

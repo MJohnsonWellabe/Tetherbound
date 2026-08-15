@@ -3,6 +3,47 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R4.1 — Levels and XP
+
+`model: sonnet` · `af728ea` · `tests: test_progression, test_combat_progression, full suite`
+
+**The mechanic already existed and was uncredited.** `docs/decisions/D30-
+pal-progression.md` (2026-08-13, back when creatures were "pals") shipped
+level/XP/bond/named-moves in one pass, but `BACKLOG.md`/`DONE.md` never
+recorded it against `R4.1` (or `R4.2`/`R4.3`/`R4.7`, which D30 also
+substantially covers — not verified against their own done-when bars by
+this pass, but worth checking before a future firing assumes those start
+from nothing). `tests/test_progression.gd` (23 tests) and
+`tests/test_combat_progression.gd` (18 tests) already existed and are
+comprehensive, not stubs — `R4.1`'s own `tests: test_progression (new)` tag
+was stale.
+
+Verified directly against spec §11 rather than trusted:
+- **Levels 1–50** — was `30` in `data/config/progression.json`'s
+  `level.cap` (a tunable, per its own `_comment`). Fixed to `50`. Matching
+  defensive fallback in `creature_instance.gd::set_level()` updated too
+  (`cfg.get("level", {}).get("cap", 30)` → `50`); the real config always
+  supplies `cap` so this only guards a hypothetical missing key. No other
+  code hardcodes the old value (checked directly), and the test suite uses
+  its own local `CFG` with `cap: 5` — unaffected by the real config number.
+- **Combat is the XP source** — confirmed: `combat_manager.gd::
+  _award_victory()` is the only production call site of `gain_xp()`.
+  Trivially "primary" since it's the *only* source today.
+- **No player-scaling of wild levels** — confirmed: `encounter_director.gd::
+  _roll_wild_level()` reads only `progression.json`'s global `wild_band`
+  and a seeded per-spawn RNG value; no reference to the player or party
+  anywhere in the call path.
+
+**Real gap found and left open, not silently shipped as done**: §11 also
+says "smaller XP can come from exploration and bonding activities" —
+`gain_xp()` has never been called from anywhere but combat. Fixing that
+needs a concrete call on which activity(ies) award XP and how much, which
+is a content/balance decision, not a mechanical follow-on — opened as
+`R4.1-remainder` in `BACKLOG.md` rather than invented here.
+
+Full suite run twice, headless, real Godot 4.7-stable: 600 tests / 83762
+assertions / 0 failed before the cap fix, identical counts after.
+
 ## R2.3-remainder — The harvest-point glint reads as a designed convention, not a debug sticker
 
 `model: opus` · `4210d81` · `tests: none (visual) — a fresh local render + blind
