@@ -1533,6 +1533,70 @@ sold on, not raw speed.
 
 ---
 
+## Phase 6.5 — locomotion quality rebuild (owner's quality plan, `MQ1A`/`MQ1B`)
+
+**Added 2026-08-15.** `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §1's
+build order puts a full locomotion rebuild and a movement/catching checkpoint
+strictly before any large-scale Meadows world construction (`R7.3`/`MQ2A`).
+Nothing in the backlog previously encoded that ordering — `R7.3`'s own text
+cited `R0.11` (closed, but its shipped scope was input-glyph/menu fixes, never
+locomotion feel) and `R6.3` (a play gate, which per this file's own legend and
+`D21` does not block the loop) as having already answered "is movement fun."
+Neither actually had. These three items exist to make the plan's ordering
+self-enforcing for a lane working top-down, not just something a careful lane
+notices by separately reading the plan.
+
+### MQ1A — Full locomotion motion rebuild · `model: fable` · `tests: none` · quality plan §2
+**START WITH FABLE.** Do not hand this to a lesser tier to inherit the current
+procedural gait and tune it further — assume the current clips may themselves
+be the ceiling (already tuned repeatedly, still visibly unnatural). Fable
+reviews fresh walk/run renders from rear, side, front three-quarter, rear
+three-quarter, start, stop and turn, then decides what's fundamentally wrong
+and whether to rebuild clips procedurally, author/import better ones, or use
+another allowed approach. Target: grounded, weighty, readable, natural enough
+the player stops noticing it — anatomically correct arm/leg opposition,
+natural stride and cadence, a clear walk/sprint distinction, no foot skating
+on flat ground. Fix the shared humanoid locomotion foundation once — the
+trainer, Grandpa, Warden and villagers all ride on it, so don't leave any of
+them on visibly worse motion than the trainer ends up with.
+
+**Done when** a fresh blind visual critic, given full walk-cycle and
+sprint-cycle contact sheets plus rear/side/start/stop/turn captures, does not
+flag broken arm/knee/elbow anatomy, floatiness, robotic cadence, or obvious
+flat-ground foot skating. If the critic still calls the motion fundamentally
+wrong after multiple implementation rounds, stop micro-tuning that approach —
+return to Fable and restart the motion solution rather than iterate further.
+
+### MQ1B — Terrain adaptation and foot placement · `model: fable` · `tests: none` · quality plan §3
+**START WITH FABLE.** Depends on `MQ1A` closing first — don't build terrain IK
+on top of a base cycle that hasn't already passed its own blind critique.
+Evaluate and implement the minimum robust solution for uphill, downhill,
+cross-slope and uneven-ground walking, small terrain height variation, and
+idle stance on slopes (foot planting/IK, orientation to ground normal, pelvis
+compensation, stance-phase locking as needed — don't add complexity for its
+own sake).
+
+**Done when** blind rendered/play inspection on flat and sloped test terrain
+shows no gross foot penetration, no obvious hovering, no sustained slope
+skating, no knee inversion, no broken pelvis motion, no visible IK snapping,
+and walk/run still reads as natural.
+
+### MQ1-gate ▶ Play gate — movement + catching owner checkpoint · quality plan §4
+Before `R7.3` (large-scale Meadows world construction) begins: does `MQ1A`/
+`MQ1B` actually read as fixed in real play? And separately, judged on its own
+current merits (trajectory preview, aim-assist already shipped, not old
+complaints) — can the player predict the throw before release, does aiming
+feel controllable, is the tutorial/common catch experience satisfying? Only
+open a new catch-probability task if play still shows a real problem. Same as
+`R6.3`: this is an owner judgment call, not something a lane can pass/fail
+itself — per this file's legend and `D21` it does not block the loop on its
+own. What actually keeps the loop from reaching `R7.3` first is `MQ1A`/`MQ1B`
+sitting above it in this file's top-down order; this gate exists so the
+owner's read on the result is captured and visible in `BLOCKED.md`, the same
+way `R6.3` already works for riding.
+
+---
+
 ## Phase 7 — the village lives, the meadow reads
 
 **R7.1 (wayfinding polish) and R7.2 (villagers and interior polish)
@@ -1541,8 +1605,11 @@ runs before Phase 1 onward.
 
 ### R7.3 — Grow the authored space toward the 4–8 hour arc · `model: opus` · `tests: smoke_traversal` · M7, §30
 The village and paths were the seed; §30 is explicit — dense rather than
-empty, and do not pick a kilometre count before movement is fun (R0.11 and
-R6.3 answer that).
+empty, and do not pick a kilometre count before movement is fun. That is now
+gated on `MQ1A`/`MQ1B` and the movement+catching checkpoint in Phase 6.5, per
+`ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §1/§4 — not `R0.11`/`R6.3`
+(neither actually answered it; see Phase 6.5's header for why). Do not start
+this item until Phase 6.5's `MQ1A` and `MQ1B` are closed.
 
 **This is now the chapter's capacity item, and the single largest unpriced
 piece of D23.** `terrain_playground.json`'s own first line says it is *a test
