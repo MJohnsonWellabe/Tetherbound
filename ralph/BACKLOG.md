@@ -1532,18 +1532,7 @@ present. No generation or graft needed.
 
 **`R4.9` (Orb economy and tiers) shipped — see `DONE.md`.** The tier ladder mechanic and its first rung (`orb_greater`, 1.6x multiplier) are real and tested end to end — `throw_aim.gd` auto-selects and spends the strongest tier owned, the catch resolves at that tier's actual odds, the HUD names it correctly. Honest remainder: `orb_greater` has no acquisition path yet, by design — `SD18` (Rootstone, not yet built) owns the recipe, per `recipes.json`'s own prior note.
 
-### R4.10 — The release ceremony · `model: fable` · `tests: test_party, smoke_release` (new)
-`party.add()` refuses a sixth creature and there is no ritual. The slice
-warns it must not be "a generic delete dialog" — it is the emotional payload
-of the five-creature rule, and since D18 the five-cap has a physical body in
-the world: the belt Grandpa gave you has five holders.
-
-**Spec §5 states the precondition, and it is not work on this item.** The
-ceremony only lands if the Meadows has already produced more creatures worth
-keeping than five slots — a Ground tank, a Water counter, an Air attacker, a
-rideable Meadowhart, a rare-trait catch, the Mudsnout line, a favourite first
-catch. That is a content requirement on Phase 8's bands, not on R4.10, and the
-first biome must not be allowed to dodge the tension.
+**`R4.10` (the release ceremony) shipped — see `DONE.md` and `D38`.** Three player-paced beats on the Team screen: six-up choice (five belt rows + a "JUST CAUGHT" row, full viewport/detail inspection of all six), a farewell question with focus on the safe answer, a goodbye beat with the released creature in the viewport. Also closed the real plumbing gap underneath it: ordinary catches now reach `Game.party` at all (`encounter_director.gd::_resolve_catch`), with a full belt parking the catch on `Game.pending_catch` and the Game autoload force-opening the un-dodgeable ceremony. Spec §5's precondition (five creatures worth keeping before the squeeze) remains Phase 8 content work, as the item itself said.
 
 **`R4.11` (combat animation bug: "static posed and sliding around") root-caused and fixed — see `DONE.md`.** A real fight, instrumented and logged (`tools/diag_combat_animation.gd`, kept in the repo), confirmed the mechanism: `creature_animator.gd`'s one-shot hold blocked locomotion for a clip's full length regardless of the body continuing to move under fresh AI/player drive (measured: 27-32 consecutive frozen-while-moving frames before the fix). `creature_body.gd::request_move()` now cancels the hold whenever real movement is re-commanded; rooted beats (`TELEGRAPH`/`RECOVER`, which never call `request_move`) are untouched. Re-measured after the fix: the sustained freeze pattern is gone; what remains is correct knockback-during-a-rooted-beat motion, a different and intentional thing.
 

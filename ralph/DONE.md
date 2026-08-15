@@ -287,6 +287,61 @@ pass, run locally, pushed once):
   weather-conditioned spawn) -- this item only makes the states exist, cycle
   and read as visually distinct.
 
+## R4.10 — The release ceremony
+
+`model: fable` · `tests: full unit suite (696/84031/0 failed, test_party grows the ceremony-order case), smoke_release (new, input-driven, both release paths), smoke_catching, smoke_menu, smoke_opening, smoke_evolution (all green headless)` · `area: party/UI` · `e6274eb` · `2026-08-15`
+
+The emotional payload of the five-creature rule (spec M5: "do not settle
+for a generic 'delete' dialog"), plus the plumbing gap it turned out to sit
+behind. Design record: `docs/decisions/D38`.
+
+- **The gap was real and came first.** `encounter_director.gd`'s CAUGHT
+  branch appended to a dead-end M3 list nothing read — no creature caught
+  outside the opening ever reached `Game.party` at all. `_resolve_catch()`
+  now owns catch→party for every catch; `sequence_director.gd` no longer
+  double-adds the tutorial catch (that double-add push_error'd on every
+  ordinary catch the moment the real wiring landed).
+- **Overflow is a seam, not storage.** A catch on a full belt parks on
+  `Game.pending_catch` — exactly one, never saved, a second is refused
+  loudly — and `Game._watch_pending_catch()` force-opens the Team screen's
+  ceremony and reopens it after ANY escape route. Un-dodgeable by
+  construction, self-healing by the same three lines.
+- **Three player-paced beats on the Team screen** (R4.6's swap-by-visibility
+  architecture): six-up choice — five belt rows plus a "JUST CAUGHT - NOT ON
+  THE BELT" row, full viewport/detail inspection of all six, focus starting
+  on the newcomer; a farewell question with the cost restated (level, bond)
+  and focus landing on "Keep them" (the forever-press is Buttons, not a
+  polled confirm — a polled `menu_confirm` would fire on the very press that
+  opened the question); a goodbye with the released creature holding the
+  viewport (`party.remove_at()` returns it for exactly this) while the belt
+  rows behind it settle into the final five. Releasing the newcomer is a
+  first-class answer and the belt comes through untouched.
+- **The sixth row is never in `_rows`** — `smoke_menu.gd`'s five-slot
+  contract holds — and never reaches `party.add()` until a release makes
+  room. Focus is fenced inside the ceremony (up from row 0 wraps to the
+  newcomer; without the fence the cursor escapes to the shell's tab row,
+  whose select() un-holds the shell).
+- **Honest gap: the blind visual pass could not be run in this session.**
+  The environment had no Agent tool and no reachable independent session
+  (the one listed subagent loops back to this session — verified by the
+  critique request arriving in my own transcript). What ran instead: a
+  strict sighted self-review of all four rendered beats
+  (`tools/capture_release.gd`, new), which caught and fixed two real
+  defects — the confirm beat's "B keep looking" hint lived in the shell
+  footer, which the six-row list pushes off-frame (moved into the farewell
+  panel), and the goodbye beat's restored default footer advertised
+  "B Close" while the shell was deliberately deaf (blanked). Re-rendered
+  and verified. A genuinely blind pass over `shots/_diag/release_*.png`
+  remains for the reviewing firing; frames are in the tree's shot dir and
+  the capture tool reproduces them in one run.
+- Known shared-chrome items, not this item's: world HUD bleed-through
+  behind the translucent menu; `creature_viewport.gd`'s tight per-species
+  crop (Terrapup's head clips in the inspect frame exactly as it does on
+  the normal Team screen).
+- Deliberately not built (D38): no "time with you" line (needs a caught-day
+  field = save-format change), no release ledger, no memorial. Released is
+  gone; the absence is the rule's weight.
+
 ## R4.9 — Orb economy and tiers
 
 `model: sonnet` · `tests: test_catch_math (24/24, new), full unit suite (686/83990/0 failed), smoke_catching (clean)` · `area: catching` · `b219495`
