@@ -49,6 +49,50 @@ live `VegetationHarvestPoint` nodes with no script errors each render — not
 just a syntax check. No code elsewhere referenced the renamed/removed
 `_build_glint()`; nothing else to update.
 
+## SB9 — The smallest progression-state system that survives the chapter
+
+`model: opus` (done at sonnet) · `26e6b8d` · `tests: test_progression_state (16
+tests, new) + FULL SUITE — 617 tests, 83799 assertions, 0 failed, run locally
+headless`
+
+New `autoload/progression_state.gd`: a flat `id -> set` flag store for spec
+§15's world-state list (objective flags, completion flags, trainer-defeated
+state, bridge/dungeon/stronghold unlocks, Warden-defeated, post-Warden state)
+behind a `has` / `set_flag` / `completed` API — `completed()` is the same
+query as `has()`, spelled for call sites where the spec's own "completion
+flag" vocabulary reads better. `revision` follows the same polling idiom
+`party.gd`/`inventory.gd`/`map_state.gd` already use, for a future quest-log
+UI (SB11) to redraw on. Deliberately NOT a quest engine, per this item's own
+warning and spec §19/§15's ban on one — no branching, no timers, no
+prerequisite chains, and nothing here invents one.
+
+Wired onto `Game` (D14's one autoload) beside `party`/`inventory`/`map`,
+instantiated in `_ready()` the same way `map` is.
+
+**Save format bumps VERSION 2 -> 3 to carry it.** `scripts/save/save_game.gd`
+now chains `_migrate_v1` (unchanged, but now lands on VERSION 2's own shape
+rather than the build's current `VERSION`) into a new `_migrate_v2`
+(VERSION 2 -> 3), so a VERSION 1 save runs both migrations in sequence. Both
+migration paths hand back an empty progression store — there is nothing to
+recover, the same "nothing to migrate FROM" answer VERSION 1 -> 2 already
+gave the map for a save that predates it. `tests/test_save_format.gd` gained
+round-trip coverage, a VERSION 2 -> 3 migration case, a progression assertion
+folded into the existing VERSION 1 migration test, and its
+`test_version_3_payload_is_refused` renamed/bumped to
+`test_version_4_payload_is_refused` now that 3 is a real, readable version.
+
+**Scope kept deliberately small, per this item's own done-when.** No
+consumer wired up anywhere yet — nothing calls `set_flag`/`has`/`completed`
+from game logic, so "no gameplay script hardcodes a story boolean" holds
+trivially rather than by migrating existing ad hoc state (e.g. the opening
+beat machine's own flags, `SA2`'s door gate) into this store, which would
+have been scope creep beyond the flag-store-plus-API brief. `data/progression/`
+(the objectives-as-data half the item's brief names) is also not built yet —
+nothing enumerates objectives today, so there is nothing yet for it to hold;
+whoever wires the first real consumer (most likely `SB10` or `SB11`) should
+create it then, against a real objective list, rather than this item
+guessing its shape blind.
+
 ## R3.1-remainder — A placed storage chest's own contents now survive save/load
 
 `model: sonnet` · `8af9f25` · `tests: test_save_format (24 tests), test_storage

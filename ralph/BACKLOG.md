@@ -1614,20 +1614,10 @@ faction NPC; keep the main-character base for civilians until §22's optional
 grunt base exists. Done when: the relay captain, a regional captain and the
 Warden stand in one frame and a blind critic ranks them correctly by seniority.
 
-### SB9 — The smallest progression-state system that survives the chapter
-`model: opus` · `tests: test_progression_state` (new), FULL SUITE
-Spec §15. Objective flags, completion flags, trainer-defeated state, keys and
-tokens, bridge-unlocked, dungeon-cleared, captive-rescued, Sigils 0/3,
-stronghold-unlocked, Warden-defeated, post-Warden world state. Lives on the
-`Game` autoload beside the party and the satchel — D14 is explicit that one
-autoload is the design and a second is not. Objectives are data
-(`data/progression/`); the code is a flag store plus a has/set/completed API.
-**Spec §19 bans a "giant generic quest engine" and §15 says the same thing
-twice; this is the item on the whole backlog most likely to become one.** If it
-starts wanting branching, timers, prerequisites-of-prerequisites or a scripting
-language, stop and split it. Done when: a flag set in one scene is readable in
-another, survives save/load (R3.1), and no gameplay script hardcodes a story
-boolean.
+**`SB9` (the smallest progression-state system that survives the chapter) shipped — see `DONE.md`.** No consumer wired up yet — `data/progression/`
+(objectives as data) and the first real caller are left for whoever picks up
+`SB10`/`SB11` against a real objective list, rather than this item guessing
+its shape blind.
 
 ### SB10 — Physical keys, gears and Sigils that open real things
 `model: sonnet` · `tests: test_progression_state`
