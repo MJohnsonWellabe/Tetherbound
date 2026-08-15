@@ -143,17 +143,18 @@ const VIEWPOINTS := [
 		"target": Vector2(110.0, -43.0), "target_h": 2.5,
 	},
 	{
-		# The notch: lean-in dead pylon, both dangles, live far pylon, far
-		# kerb rows and gateposts on the shelf beyond. Eye back on the road,
-		# not under the flank — from the first framing the frame was all
-		# hillside and sky with the break itself below the bottom edge.
-		# Eye back on uncarved ground (an eye nearer the lip than v=+9 sinks
-		# with the rim — the heightfield is the carved one), aim DOWN INTO the
-		# slot: a negative target height is what makes a 9m-deep notch in a
-		# steep flank present as a gap instead of as its own far wall.
+		# The notch's dressing: dead line arriving, lean-in lip pylon, live
+		# far pylon, far kerb rows and freight. The GAP itself is absent from
+		# this frame ON PURPOSE, after three failed framings (SF33-remainder
+		# rounds 2-4): from the road a terrain fold hides the trench; an eye
+		# near the lip sinks with the carved rim (height_at samples the
+		# carved heightfield) and sees only the far wall; an eye backed off
+		# to uncarved ground has the near bump in the way. A 9m slot cut
+		# into a 46-degree flank reads at the lip in-game and from nowhere
+		# at player eye height in a still — record of the honest limit.
 		"name": "rift-cliff-at-notch",
-		"eye": Vector2(89.8, -32.8), "eye_h": 2.8,
-		"target": Vector2(103.5, -38.0), "target_h": -5.0,
+		"eye": Vector2(81.4, -27.0), "eye_h": 2.8,
+		"target": Vector2(107.0, -41.5), "target_h": 1.0,
 	},
 	{
 		# stone_gate, wall composition: a live line running out of road at a
