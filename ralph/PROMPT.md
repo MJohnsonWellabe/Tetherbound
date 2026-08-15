@@ -74,12 +74,19 @@ Nothing else matters if work cannot ship. Every firing, first:
    always the same, rebase onto current main and push again."* Two branches
    were stranded before the workflow could do it for you; that is what the
    change removes.
-   **A branch CI run is ~5.2 minutes with essentially no queue time.** Older
-   notes in this repo say eight or nine; they are stale, and the loop spent a
-   while optimising against a number 80% too high. Five minutes is cheap enough
-   that pushing to *find out* whether something works is a reasonable move; it
-   is not cheap enough to do eight times for one visual pass, which is what the
-   local-iteration rule below exists to stop.
+   **A branch CI run is ~7.5 minutes with essentially no queue time,
+   measured 2026-08-15 on a real `ralph/**` branch (not the docs-only skip
+   path).** The "~5.2 minutes" this used to say was never actually true for
+   a code-touching branch — measured the same day before fixing it, real
+   runs were taking 17-23 minutes, because `verify-core`'s five smoke tests
+   plus the unit suite ran sequentially inside one job. `.github/workflows/
+   ci.yml` now splits every check (unit suite + all ten smoke tests) into
+   its own parallel job, and `tests/smoke_traversal.gd`'s walk legs were
+   shortened (still ~1.8x past the 64m collision bug this test exists to
+   catch). ~7.5 minutes is cheap enough that pushing to *find out* whether
+   something works is a reasonable move; it is not cheap enough to do eight
+   times for one visual pass, which is what the local-iteration rule below
+   exists to stop.
 3. **If a test fails on your branch that has nothing to do with your change**,
    that is a flake, and a flake is a real defect here: `ralph-merge.yml` only
    ships green branches, so an intermittent test rejects healthy work at random.
