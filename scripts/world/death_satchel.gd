@@ -55,14 +55,29 @@ func restore(data: Variant, db: RefCounted) -> void:
 	_build_visuals()
 
 
+## OF20: `Bag.gltf` imports as a PackedScene (same pack, same `.import`
+## sidecar shape as harvest_node.gd's own models), so `load(MESH_PATH)` handed
+## straight to `MeshInstance3D.mesh` was an invalid assignment -- every death
+## satchel was invisible. Same PackedScene-vs-Mesh branch as
+## `harvest_node.gd::_build_visual` now uses, wrapped in a plain Node3D so
+## `.scale` applies to the whole bag.
 func _build_visuals() -> void:
 	add_to_group(GROUP)
 
 	if ResourceLoader.exists(MESH_PATH):
-		var mesh := MeshInstance3D.new()
-		mesh.mesh = load(MESH_PATH)
-		mesh.scale = Vector3.ONE * MESH_SCALE
-		add_child(mesh)
+		var resource: Resource = load(MESH_PATH)
+		if resource is PackedScene:
+			var wrapper := Node3D.new()
+			wrapper.add_child((resource as PackedScene).instantiate())
+			wrapper.scale = Vector3.ONE * MESH_SCALE
+			add_child(wrapper)
+		elif resource is Mesh:
+			var mesh := MeshInstance3D.new()
+			mesh.mesh = resource as Mesh
+			mesh.scale = Vector3.ONE * MESH_SCALE
+			add_child(mesh)
+		else:
+			push_warning("death satchel mesh '%s' loaded as neither a Mesh nor a PackedScene" % MESH_PATH)
 
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = "Interactable"

@@ -14,6 +14,19 @@ const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+
+## A real authored spot from data/config/harvest.json, kept inline rather than
+## re-parsed from the file: OF20's bug was specific to loading a `.gltf` model
+## (a PackedScene, not a Mesh — see harvest_node.gd's own header), so the test
+## below needs one of the pack's actual models, not a synthetic path.
+const WOOD_SPEC := {
+	"item": "wood",
+	"amount": 4,
+	"label": "Gather deadwood",
+	"model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+	"model_scale": 0.22,
+}
 
 var db: RefCounted = null
 var bag: RefCounted = null
@@ -142,3 +155,74 @@ func test_marking_is_deterministic_for_the_same_seed() -> void:
 
 	assert_eq(first_marked, second_marked, "the same seed must mark the same instances every run")
 	veg.free()
+
+
+# --- OF20: harvest_node.gd's model loading and the hide/respawn cycle ------
+#
+# Both of these run `HarvestNode` standing entirely alone -- never added to
+# any tree -- the same "pure logic" shape as the rest of this file (D02). That
+# is enough to cover OF20's actual bug: `_build_visual()`'s PackedScene-vs-
+# Mesh branch and `_process()`'s respawn timer touch nothing but the node's
+# own children. What is deliberately NOT exercised here is `_on_gathered()`'s
+# inventory half, which needs the real `/root/Game` autoload -- unreachable
+# from a node with no SceneTree (see `test_party_seam.gd`'s header for why
+# `run_tests.gd` boots none) -- and is already covered pure-logic-only by
+# `harvest_logic.gd`'s own tests above. The respawn case below reproduces the
+# hidden -> respawned half of that cycle directly, the same fields
+# `_on_gathered()` itself sets on a successful gather.
+
+
+func _walk(node: Node) -> Array[Node]:
+	var out: Array[Node] = [node]
+	for child in node.get_children():
+		out.append_array(_walk(child))
+	return out
+
+
+## The real acid test. `mesh.mesh = load(<gltf>)` (the OF20 bug) does not
+## throw or abort -- it silently leaves a `MeshInstance3D` in the tree with
+## `.mesh == null` (confirmed against the unfixed code before this fix: no
+## script error, just a null mesh). A plain "is there a MeshInstance3D
+## anywhere" check passes on that broken node just as happily as on a fixed
+## one, so this checks for one with an actual mesh resource attached --
+## which is what OF20 was really missing.
+func _has_a_populated_mesh_instance(node: Node) -> bool:
+	for descendant in _walk(node):
+		if descendant is MeshInstance3D and (descendant as MeshInstance3D).mesh != null:
+			return true
+	return false
+
+
+func test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", WOOD_SPEC)
+	assert_true(_has_a_populated_mesh_instance(node),
+		"a .gltf model (a PackedScene, per its own .import sidecar) must produce a MeshInstance3D with a real mesh somewhere in the visual subtree, not a null one")
+	node.free()
+
+
+func test_a_missing_model_still_falls_back_to_the_box() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", {"item": "wood", "amount": 4, "label": "Gather deadwood", "model": ""})
+	assert_true(_has_a_populated_mesh_instance(node),
+		"the no-model fallback must still be a real, populated MeshInstance3D (the BoxMesh mound)")
+	node.free()
+
+
+func test_gather_hides_the_visual_and_respawn_restores_it() -> void:
+	var node: Node3D = HARVEST_NODE.new()
+	node.call("setup", WOOD_SPEC)
+	var visual: Node3D = node.get("_visual")
+	assert_true(is_instance_valid(visual) and visual.visible, "a fresh node's visual must start visible")
+
+	# The state `_on_gathered()` itself sets on a successful gather (harvest_node.gd
+	# lines ~101-104) -- set directly here rather than through `_on_gathered()`,
+	# which needs the `/root/Game` autoload this runner never boots.
+	visual.visible = false
+	node.set("_respawn_left", HARVEST_NODE.RESPAWN_SECONDS)
+	node.set_process(true)
+	assert_false(visual.visible, "gathering must hide the visual")
+
+	node.call("_process", HARVEST_NODE.RESPAWN_SECONDS + 0.01)
+	assert_true(visual.visible, "the respawn timer must restore the visual once it elapses")
+	node.free()

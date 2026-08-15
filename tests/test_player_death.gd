@@ -59,6 +59,37 @@ func test_build_on_an_empty_drop_leaves_an_empty_but_valid_satchel() -> void:
 	assert_eq(satchel.state.inventory.used_slots(), 0)
 
 
+## OF20. Bag.gltf imports as a PackedScene, the same bug class
+## harvest_node.gd's models had — `mesh.mesh = load("...gltf")` is an invalid
+## assignment onto MeshInstance3D. It does not throw or abort; it silently
+## leaves a `MeshInstance3D` in the tree with `.mesh == null` (confirmed
+## against the unfixed code before this fix), so the check below is for a
+## MeshInstance3D with an actual mesh attached, not merely one that exists.
+## Standing alone, never added to a tree, is enough to cover this:
+## `_build_visuals()`'s PackedScene branch touches nothing but the satchel's
+## own children.
+func test_build_produces_a_visible_bag_not_a_dead_mesh_assignment() -> void:
+	var satchel: Node3D = DEATH_SATCHEL.new()
+	satchel.build([], db)
+	assert_true(_has_a_populated_mesh_instance(satchel),
+		"Bag.gltf (a PackedScene) must produce a MeshInstance3D with a real mesh somewhere in the satchel's visual subtree, not a null one")
+	satchel.free()
+
+
+func _walk(node: Node) -> Array[Node]:
+	var out: Array[Node] = [node]
+	for child in node.get_children():
+		out.append_array(_walk(child))
+	return out
+
+
+func _has_a_populated_mesh_instance(node: Node) -> bool:
+	for descendant in _walk(node):
+		if descendant is MeshInstance3D and (descendant as MeshInstance3D).mesh != null:
+			return true
+	return false
+
+
 func test_resolve_home_falls_back_when_no_camp_has_been_placed() -> void:
 	var fallback := Vector3(1.0, 2.0, 3.0)
 	assert_eq(PLAYER_DEATH.resolve_home([], fallback), fallback)

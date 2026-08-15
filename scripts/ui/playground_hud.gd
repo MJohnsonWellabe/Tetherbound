@@ -931,6 +931,7 @@ func _process(delta: float) -> void:
 
 	_refresh_game_ref()
 	_update_hotbar_and_message()
+	_update_world_message()
 	_read_hotbar_input()
 	_update_creature_block()
 	_update_party_strip()
@@ -1172,6 +1173,19 @@ func _use_hotbar_slot(index: int) -> void:
 	var restored := float(target.call("heal", heal))
 	inventory.call("remove", id, 1)
 	_show_hotbar_message("%s recovers %d." % [str(target.call("label")), int(restored)])
+
+
+## OF20. Polls `Game`'s one-shot toast queue (`take_pending_world_message()`)
+## every frame -- the same read-and-clear contract `_update_region_banner()`
+## already polls `map` through -- and surfaces it through the same message
+## strip a hotbar-triggered refusal (repair, heal) already uses, rather than
+## inventing a second banner for what is the same kind of event.
+func _update_world_message() -> void:
+	if _game == null:
+		return
+	var text := str(_game.call("take_pending_world_message"))
+	if not text.is_empty():
+		_show_hotbar_message(text)
 
 
 func _show_hotbar_message(text: String) -> void:

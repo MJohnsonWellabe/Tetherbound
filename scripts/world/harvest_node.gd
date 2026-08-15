@@ -41,26 +41,52 @@ func setup(spec: Dictionary) -> void:
 	add_child(_prompt)
 
 
+## OF20. Every `model` in data/config/harvest.json is a `.gltf` from the
+## Quaternius stylized-nature kit (see the header above, R9.4), and a glTF
+## imports as a PackedScene, not a bare Mesh (check the `.import` sidecar:
+## `type="PackedScene"`). `load(_model_path)` handed straight to
+## `MeshInstance3D.mesh` was therefore an invalid assignment on every single
+## authored node — none of the twelve ever rendered. Branch on what `load()`
+## actually returns, the same PackedScene-vs-Mesh fork
+## `grandpa_house.gd::_furnish` and `props.gd::_place` already use for this
+## exact pack. A PackedScene gets instantiated and wrapped in a plain Node3D
+## so `_visual` stays a single node whose `.visible` and `.scale` mean "the
+## whole prop" regardless of how many parts the scene's own root has.
 func _build_visual() -> void:
 	if _model_path != "" and ResourceLoader.exists(_model_path):
-		var mesh := MeshInstance3D.new()
-		mesh.mesh = load(_model_path)
-		mesh.scale = Vector3.ONE * _model_scale
-		_visual = mesh
+		var resource: Resource = load(_model_path)
+		if resource is PackedScene:
+			var wrapper := Node3D.new()
+			wrapper.add_child((resource as PackedScene).instantiate())
+			wrapper.scale = Vector3.ONE * _model_scale
+			_visual = wrapper
+		elif resource is Mesh:
+			var mesh := MeshInstance3D.new()
+			mesh.mesh = resource as Mesh
+			mesh.scale = Vector3.ONE * _model_scale
+			_visual = mesh
+		else:
+			push_warning("harvest model '%s' loaded as neither a Mesh nor a PackedScene; falling back to the box" % _model_path)
+			_visual = _box_visual()
 	else:
-		# A low mound in the item's own slot colour: legible from a distance
-		# without pretending to be final art.
-		var mesh := MeshInstance3D.new()
-		var box := BoxMesh.new()
-		box.size = Vector3(0.7, 0.35, 0.7)
-		mesh.mesh = box
-		var material := StandardMaterial3D.new()
-		material.albedo_color = _item_colour()
-		material.roughness = 0.9
-		mesh.material_override = material
-		mesh.position = Vector3.UP * 0.18
-		_visual = mesh
+		_visual = _box_visual()
 	add_child(_visual)
+
+
+## A low mound in the item's own slot colour: legible from a distance without
+## pretending to be final art. The fallback for a node with no `model` at
+## all, and now also for a `model` that loads as something unusable.
+func _box_visual() -> MeshInstance3D:
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(0.7, 0.35, 0.7)
+	mesh.mesh = box
+	var material := StandardMaterial3D.new()
+	material.albedo_color = _item_colour()
+	material.roughness = 0.9
+	mesh.material_override = material
+	mesh.position = Vector3.UP * 0.18
+	return mesh
 
 
 func _item_colour() -> Color:
@@ -87,7 +113,14 @@ func _on_gathered() -> void:
 
 	if actual_amount <= 0:
 		# The wrong tool for this resource: refused, and the node stays put for
-		# whenever the player comes back with the right one.
+		# whenever the player comes back with the right one. OF20: say so on
+		# the HUD -- a silent refusal reads as "gathering does nothing at
+		# all," which was the owner's actual bug report, and this rule only
+		# starts firing once OF30 puts tools in a player's hands.
+		if items != null:
+			var required_tool := str(items.call("gathered_with", _item_id))
+			if not required_tool.is_empty():
+				game.call("push_world_message", "Needs a %s." % str(items.call("item_name", required_tool)))
 		return
 	if not bool(inventory.call("has_room_for", _item_id, actual_amount)):
 		# Refused, visibly: the node stays and the prompt keeps offering, which

@@ -80,6 +80,17 @@ var day: int = 1
 ## this when there is one; until then it is the honest end of the build screen.
 var pending_build: String = ""
 
+## OF20. A one-line toast for a world node that just refused something (wrong
+## tool, satchel full) and has no HUD handle of its own to say so through —
+## `playground_hud.gd`'s own `_show_hotbar_message` covers refusals the HUD
+## triggers itself (an item used off the hotbar), but a gather refused by
+## walking up to `harvest_node.gd` happens with no HUD in the call stack at
+## all. Read-and-cleared by `take_pending_world_message()`, the exact
+## one-shot contract `map_state.gd`'s `take_pending_region_announcement()`
+## already uses for the same reason: the event happens on one frame and a
+## plain equality check would miss it the instant it is cleared.
+var _pending_world_message: String = ""
+
 ## R4.10. The creature caught while the belt was already full, held here between
 ## the catch resolving and the release ceremony resolving. Exactly one, and it
 ## is NOT storage: it is never saved, a second overflow catch is refused rather
@@ -325,6 +336,21 @@ func set_objective(text: String, world_pos: Variant = null) -> void:
 		map.add_dynamic_marker("objective", "objective", world_pos as Vector3)
 	else:
 		map.remove_dynamic_marker("objective")
+
+
+## OF20. Any world node with no HUD handle of its own queues its one-line
+## refusal here; see `_pending_world_message`'s own comment for why this
+## exists instead of the node reaching for the HUD directly.
+func push_world_message(text: String) -> void:
+	_pending_world_message = text
+
+
+## Read-and-clear: "" if nothing is waiting (the common case, polled every
+## frame by `playground_hud.gd`), the queued line exactly once otherwise.
+func take_pending_world_message() -> String:
+	var text := _pending_world_message
+	_pending_world_message = ""
+	return text
 
 
 # --- save / load (R3.1) ------------------------------------------------------
