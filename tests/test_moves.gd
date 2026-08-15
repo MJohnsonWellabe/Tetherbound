@@ -31,14 +31,14 @@ func test_every_tm_has_a_display_name() -> void:
 
 func test_every_tm_move_id_exists_in_the_move_table() -> void:
 	for id: Variant in tms.tm_ids():
-		var move_id := tms.move_id(str(id))
+		var move_id := str(tms.move_id(str(id)))
 		assert_true(moves.has(move_id),
 			"TM '%s' points at unknown move '%s'" % [id, move_id])
 
 
 func test_every_tm_has_at_least_one_compatible_type_from_the_known_vocabulary() -> void:
 	for id: Variant in tms.tm_ids():
-		var types := tms.compatible_types(str(id))
+		var types := tms.compatible_types(str(id)) as Array
 		assert_false(types.is_empty(), "TM '%s' has no compatible_types" % id)
 		for t: Variant in types:
 			assert_true(KNOWN_TYPES.has(str(t)),
