@@ -3,6 +3,34 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SB10 — Physical keys, gears and Sigils that open real things
+
+`model: sonnet` · `3a818bd` · `tests: test_item_gate (new, 8/8), full unit suite (631/0 failed), smoke_opening.gd`
+
+**The generic mechanism, not a specific gate** — the South Bridge Key, Mill
+Bridge Gear and three Sigils this item names all want geography that doesn't
+exist yet (`SC14`/`SE22`/`SF34`, still open). What's buildable now is the
+reusable "a carried item operates the world" logic itself: `item_gate.gd`,
+pure `RefCounted` (no `Node`, no transform — same split `progression_state.gd`
+draws), holding an `item_id`/`flag_id` pair. `try_open(inventory, progression)`
+consumes one item and sets the flag the first time the player has it;
+`is_open(progression)` is a read of that same flag, so persistence rides
+`progression_state.gd`'s existing save/load path for free rather than
+inventing a second one.
+
+`road_gate.gd` (SA7's gate) is refactored onto it as the first real caller —
+proof the mechanism actually gates something, not just a unit-tested class
+sitting unused. This also fixes a real latent bug found while wiring it up:
+the gate's `_open` was a plain in-memory bool, so a gate opened and then
+saved would come back **locked** on reload (`build()` always started fresh).
+Now `build()` checks `_gate.is_open(progression)` before setting up the
+resting pose, silently — no re-triggered dialogue, no second item consumed.
+
+Whoever picks up `SC14`/`SE22`/`SF34`: reach for `ITEM_GATE.new(item_id,
+flag_id)` directly rather than re-deriving `road_gate.gd`'s
+`_on_tried`/`_unlock` pattern — the mesh/collision/prompt plumbing stays
+scene-specific, but the has-item/consume/flag logic does not.
+
 ## R4.1 — Levels and XP
 
 `model: sonnet` · `af728ea` · `tests: test_progression, test_combat_progression, full suite`

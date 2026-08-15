@@ -1344,14 +1344,7 @@ Warden stand in one frame and a blind critic ranks them correctly by seniority.
 `SB10`/`SB11` against a real objective list, rather than this item guessing
 its shape blind.
 
-### SB10 — Physical keys, gears and Sigils that open real things
-`model: sonnet` · `tests: test_progression_state`
-Spec §3 Gate 1, §15, §19. A gate is a mechanism in the world that a carried
-item operates — the South Bridge Key, the Mill Bridge Gear, three Sigils —
-never a level check and never a UI lock. The player may walk to a closed gate
-at any level and be refused by the gate, not by a dialog. Done when: holding
-the right item and interacting opens the crossing, and not holding it produces
-an in-world response.
+**`SB10` (the generic item-gate mechanism, `road_gate.gd` refactored onto it) shipped — see `DONE.md`.** The three specific gates the spec names (South Bridge Key, Mill Bridge Gear, three Sigils) still want geography that doesn't exist yet — `SC14`/`SE22`/`SF34` own building those, and should reach for `item_gate.gd` directly rather than re-deriving the pattern.
 
 ### SB11 — One tracked objective, and a two-list quest log
 `model: sonnet` · `tests: smoke_menu`
