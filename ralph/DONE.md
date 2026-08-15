@@ -58,6 +58,85 @@ useful any time a future combat/animation change needs the same kind of
 real-fight evidence rather than another round of reading the code and
 guessing.
 
+## R5.2 — Rain, fog and cloud variants
+
+`model: sonnet` · `tests: none (backlog item's own field); ran tests/smoke_playground.gd headless as a sanity check on the modified scene -- clean, "smoke: OK")` · `area: weather` (new area) · `fed5a20`
+
+M10's weather checklist item. Weather is a second axis layered on top of
+`world_look.gd`'s existing time-of-day system through a new
+`world_look.gd::set_weather(delta)` entry point, rather than folded into the
+`times` block -- a rainy noon and a clear noon still share the same sun
+angle. `scripts/world/world_weather.gd` (new node, wired into
+`meadows_playground.tscn`) cycles between `clear`/`cloudy`/`fog`/`rain` on a
+randomised real-time timer (240-480s), holding `data/config/weather.json`'s
+tunable sun/sky/environment deltas, and builds a ring-emission
+`GPUParticles3D` rain rig procedurally (same code-only-material pattern
+`vegetation_harvest_point.gd` already uses for its sparkle motes -- no new
+texture asset).
+
+`tools/capture_weather.gd` is a new purpose-built capture harness (one
+viewpoint, one shot per preset) -- `survey.gd`'s own five viewpoints are
+deliberately untouched, since they are always shot at "clear" weather on
+purpose and adding a weather axis to them would break that comparison.
+
+**Three real blind-pass rounds** (conventions.md's required visual-affecting
+pass, run locally, pushed once):
+- **Round 1** found two real defects. Rain streaks could spawn inside the
+  camera's own follow radius (`camera_rig.gd`'s spring arm holds the camera
+  ~5.8m from the player) and blew up to frame-filling size in perspective,
+  one reading as "drawn at the wrong depth" straight through the trainer
+  capsule. Fixed by switching the emission shape from a box to a **ring**
+  (`EMISSION_SHAPE_RING`) with an inner radius (6.5m) safely outside the
+  camera's normal orbit, plus switching the streak material from additive to
+  ordinary alpha blend (additive read as "glowing"/a bug, not water). The
+  same round also flagged cloudy/fog/rain's shadow staying pixel-identical
+  to `clear`'s hard sun shadow.
+- **A real dead end, worth recording so nobody repeats it.** Fixing the
+  shadow complaint by driving `DirectionalLight3D.shadow_enabled` false for
+  overcast weather seemed like the obvious, physically-motivated fix (real
+  diffuse skies cast no hard shadow) -- but an isolated before/after render
+  with every other value held constant showed it made the WHOLE ground
+  render as if fully occluded (near-black), not just remove the shadow:
+  Terrain3D's own shader apparently treats "no shadow map" as "assume fully
+  shadowed" rather than "assume fully lit" under this project's Compatibility
+  renderer. Reverted; `world_look.gd::_apply_sun`'s comment records the
+  finding so it isn't rediscovered the hard way. The mechanism (`sun.
+  shadow_enabled` is config-driven, defaulting to `true`) is left in place
+  in case a future renderer/Terrain3D version fixes the interaction, but
+  nothing in this project sets it `false` today.
+- **Round 2** confirmed the rain fix held (no near-camera blowup) and found
+  one narrow real residual: a single streak scaled visibly larger than its
+  neighbours. Tightened `scale_min` 0.7 -> 0.85 (less per-particle variance).
+  Also restated (not new) the shadow ceiling above and the pre-existing "no
+  literal cloud shapes" limitation `world_look.gd`'s own header has
+  documented since before this item (`ProceduralSkyMaterial` can only
+  produce a gradient and a soft sun blob).
+- **Round 3** confirmed the streak-scale fix (pixel analysis: width scales
+  with length at a consistent ~6:1 ratio across the whole population, no
+  outlier) and found one further real defect: the `fog` preset's higher
+  density (`fog_density_add` 0.028) made the pond read as a hard-edged pale
+  plateau against the hazier hillside. Lowered to `0.015`; not re-verified by
+  a fourth blind round after that specific change (see remainder below).
+
+**Honest remainder, not chased further this pass:**
+- Cloudy/fog/rain's sun shadow stays identical to `clear`'s hard-edged one.
+  Confirmed a real ceiling, not a tuning gap -- see the dead-end above.
+  Softening it needs either a scene-level change (a second, dimmer fill
+  light) or a renderer/Terrain3D fix, neither of which is a `weather.json`
+  config edit.
+- No literal cloud shapes in any sky -- pre-existing `ProceduralSkyMaterial`
+  ceiling, unrelated to this item, already documented in `world_look.gd`'s
+  own header before this item touched it.
+- The fog/pond seam fix (density lowered 0.028 -> 0.015) was not re-rendered
+  and re-judged by a fourth blind pass after the change -- the visual
+  difference was checked by eye only. Whoever next touches `fog`'s density
+  should re-run `tools/capture_weather.gd` and a fresh blind pass before
+  assuming this is fully closed.
+- `R5.3` (spawn conditions, next in `BACKLOG.md`) is the item that lets
+  gameplay react to whichever weather state is active (e.g. a
+  weather-conditioned spawn) -- this item only makes the states exist, cycle
+  and read as visually distinct.
+
 ## R4.9 — Orb economy and tiers
 
 `model: sonnet` · `tests: test_catch_math (24/24, new), full unit suite (686/83990/0 failed), smoke_catching (clean)` · `area: catching` · `b219495`

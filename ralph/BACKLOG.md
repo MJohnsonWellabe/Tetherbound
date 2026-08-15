@@ -1465,7 +1465,7 @@ first biome must not be allowed to dodge the tension.
 **R5.1 (day/night cycle) relocated to Phase -0.5** — owner directive,
 2026-08-10: visual-pass work runs before Phase 1 onward.
 
-### R5.2 — Rain, fog and cloud variants · `model: sonnet` · `tests: none`
+**`R5.2` (rain, fog and an overcast cloudy weather variant) shipped — see `DONE.md`.** Honest remainder: cloudy/fog/rain's sun shadow stays identical to `clear`'s (a real Terrain3D/Compatibility-renderer ceiling, not a tuning gap — see `world_look.gd::_apply_sun`'s comment) and there are no literal cloud shapes (a pre-existing `ProceduralSkyMaterial` limitation, unrelated to this item). `R5.3` below is the item that wires gameplay to whichever state is active.
 
 ### R5.3 — Spawn conditions · `model: sonnet` · `tests: test_spawns`
 At least one nocturnal (Duskhush) and one weather-gated, per M10. Extend
