@@ -131,6 +131,29 @@ failing with any regularity, that is a real signal contention has gotten
 worse, not a reason to add a second retry — re-open and dig further, per
 `conventions.md`'s flake procedure.
 
+## R4.1-remainder — A second, smaller XP source: resting at camp
+
+`model: sonnet` · `059caf3` · `tests: test_progression (new: test_rest_xp_reads_from_config, test_rest_xp_matches_the_shipped_config), full unit suite (641/83852 assertions/0 failed)`
+
+§11: "Smaller XP can come from exploration and bonding activities." Picked
+the one activity that already has a single clean call site touching the
+whole party at once — resting at camp overnight (`camp.gd::_pass_the_night()`,
+the same place `R2.4`'s heal-on-rest lives) — over exploration/discovery,
+which has no equivalent single hook yet. `progression.gd::rest_xp(cfg)`
+reads a new `xp_award.rest_bonus` tunable (shipped at `5`); every party
+member gains it via the existing `gain_xp()`, fainted or not — unlike
+combat's per-kill award, which skips fainted members because they didn't
+fight, resting isn't something a hurt member opts out of.
+
+**Found, not fixed, and worth flagging separately**: `data/config/
+progression.json`'s `bond.per_day_in_party` (a bond-points tunable, not xp)
+has been defined since `D30` shipped bond but is never read anywhere in the
+codebase — grepped directly, zero call sites. It would wire into this exact
+same `_pass_the_night()` call site, but is a different mechanic (bond
+points, not creature XP) than this item's own scope, so left alone rather
+than folded in silently. Whoever wants "resting also deepens bond" should
+open it as its own small item.
+
 ## SB10 — Physical keys, gears and Sigils that open real things
 
 `model: sonnet` · `3a818bd` · `tests: test_item_gate (new, 8/8), full unit suite (631/0 failed), smoke_opening.gd`

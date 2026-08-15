@@ -1415,14 +1415,7 @@ activities and how much XP is a real content/balance call, not a
 mechanical follow-on, so opened as `R4.1-remainder` below rather than
 invented here.
 
-### R4.1-remainder — A second, smaller XP source: exploration and/or bonding
-`model: sonnet` · `tests: test_progression` · §11
-§11: "Smaller XP can come from exploration and bonding activities." Only
-`combat_manager.gd::_award_victory()` calls `creature_instance.gd::gain_xp()`
-today (checked directly — the only production call site). Needs a concrete,
-small decision about which activity(ies) grant XP and how much relative to
-combat (`xp_award` in `data/config/progression.json`, `ALL TUNABLE`) — not a
-new mechanism, `gain_xp()` already exists and takes a plain `int` amount.
+**`R4.1-remainder` (a second, smaller XP source: resting at camp, the bonding half) shipped — see `DONE.md`.** §11 says "can come from exploration and bonding activities" (permissive, not a checklist), so one real source clears the bar; picked resting because `camp.gd::_pass_the_night()` was already the single call site touching the whole party at once. **Exploration XP was not built** — no equivalent single hook exists yet (nothing today marks "the player discovered something new"), so that half stays open rather than being invented against no real trigger. Also found and deliberately not touched: `bond.per_day_in_party` in `data/config/progression.json` has been dead config since `D30` — never read anywhere in the codebase — and would wire into this same rest call site if anyone wants "resting also deepens bond" as its own item.
 
 ### R4.2 — Core stats and per-instance individuality · `model: sonnet` · `tests: test_progression` · §11
 ### R4.3 — Moves · `model: sonnet` · `tests: test_moves` (new) · §13. `data/moves/` is **empty**.
