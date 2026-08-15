@@ -1,0 +1,17 @@
+{
+  "_comment": "TM definitions (R4.4, GAME_DESIGN.md 13). A TM is found once in the world and picking it up permanently unlocks its move as teachable -- never consumed after that, so the same found TM can teach any number of compatible creatures. `move_id` must exist in data/moves/moves.json; `compatible_types` lists which data/creatures/species.json `type` values may learn it. Same-type only for this pass -- 13's 'off-type moves are allowed when physically/thematically sensible' is a real design call this data does not make on its own.",
+  "tms": {
+    "tm_stone_rush": {
+      "display_name": "TM: Stone Rush",
+      "move_id": "stone_rush",
+      "compatible_types": ["ground"],
+      "colour": "#8a8577"
+    },
+    "tm_burrow_strike": {
+      "display_name": "TM: Burrow Strike",
+      "move_id": "burrow_strike",
+      "compatible_types": ["ground"],
+      "colour": "#6b4f36"
+    }
+  }
+}

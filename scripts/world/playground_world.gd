@@ -27,6 +27,7 @@ const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
+const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
@@ -57,6 +58,16 @@ const GATE_KEY_AT := Vector2(24.0, -10.0)
 ## centre, [10,-10], which is also where every route in `paths.routes`
 ## starts) so the signpost has its own footing instead of sharing the well's.
 const SIGNPOST_AT := Vector2(13.5, -7.0)
+
+## R4.4: two TMs standing in the open field, well clear of every other
+## interactable's radius (checked against GATE_AT/GATE_KEY_AT and every
+## data/config/harvest.json node — nearest is >7m). Both `ground`-compatible,
+## the Meadows' dominant type (GAME_DESIGN.md 8), same as every wild species
+## placed here so far.
+const TM_AT := {
+	"tm_stone_rush": Vector2(34.0, -20.0),
+	"tm_burrow_strike": Vector2(6.0, -30.0),
+}
 
 ## Where Grandpa's house stands: the west building pad in
 ## data/config/terrain_playground.json's `flats`. One source of truth would be
@@ -554,6 +565,7 @@ func _build_settlement() -> void:
 	perimeter.call("build", self, _player, _spawn_position)
 
 	_place_harvest_nodes()
+	_place_tms()
 
 	var placer := BUILD_PLACER.new()
 	placer.name = "BuildPlacer"
@@ -609,6 +621,23 @@ func _build_road_gate() -> void:
 	key.position = Vector3(GATE_KEY_AT.x, ground, GATE_KEY_AT.y)
 	add_child(key)
 	key.call("setup", "castle_gate_key", "Take the old key")
+
+
+## R4.4: TMs found in the world (GAME_DESIGN.md 13). Each is a one-time
+## physical prop; what it grants is permanent (tm_pickup.gd sets a
+## progression_state flag, not an inventory item).
+func _place_tms() -> void:
+	for tm_id: String in TM_AT:
+		var at: Vector2 = TM_AT[tm_id]
+		var ground := ground_height_at(at.x, at.y)
+		if is_nan(ground):
+			push_error("no ground under TM '%s' at %.0f, %.0f" % [tm_id, at.x, at.y])
+			continue
+		var pickup: Node3D = TM_PICKUP.new()
+		pickup.name = "TM_%s" % tm_id
+		pickup.position = Vector3(at.x, ground, at.y)
+		add_child(pickup)
+		pickup.call("setup", tm_id)
 
 
 ## The first day's gathering spots, from data/config/harvest.json.

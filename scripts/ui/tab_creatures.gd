@@ -24,6 +24,8 @@ extends "res://scripts/ui/menu_tab.gd"
 const PARTY := preload("res://autoload/party.gd")
 const CREATURE_VIEWPORT := preload("res://scripts/ui/creature_viewport.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const TM_DB := preload("res://scripts/creatures/tm_db.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -33,6 +35,17 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## is not doing anything else inside a menu. This agent may not add actions to
 ## project.godot's input map.
 const ACTIVATE_ACTION := "interact"
+
+## R4.4: teaching a known TM. `backpack_split` (H / gamepad back-button) is
+## already bound and unused inside this tab, the same reuse `ACTIVATE_ACTION`
+## above already does with `interact` — this agent may not add actions to
+## project.godot's input map, so a menu-only verb has to borrow a binding a
+## field verb or a different tab already owns.
+const TEACH_ACTION := "backpack_split"
+
+## progression_state's flag namespace for a found TM (tm_pickup.gd), matched
+## here so this screen can tell "found" from "not found".
+const TM_FLAG_PREFIX := "tm:"
 
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
@@ -95,6 +108,7 @@ var _detail_hint: Label = null
 
 var _moves: RefCounted = null
 var _traits: RefCounted = null
+var _tms: RefCounted = null
 
 
 func build() -> void:
@@ -115,6 +129,8 @@ func build() -> void:
 		_moves = MOVE_DB.load_default()
 	if _traits == null:
 		_traits = TRAIT_DB.load_default()
+	if _tms == null:
+		_tms = TM_DB.load_default()
 
 	_header = Label.new()
 	_header.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
@@ -340,7 +356,8 @@ func _build_detail() -> Control:
 	_detail_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	_detail_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	_detail_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_detail_hint.text = "A  pick up, then A again to reorder      E / X  send this one out first"
+	_detail_hint.text = "A  pick up, then A again to reorder      E / X  send this one out first" \
+		+ "      H  teach a known TM"
 	panel.add_child(_detail_hint)
 
 	return panel
@@ -414,6 +431,7 @@ func poll() -> void:
 	if party == null or _header == null:
 		return
 	_read_activate()
+	_read_teach()
 
 	var size: int = int(party.call("size"))
 	if bool(party.call("is_full")):
@@ -664,6 +682,60 @@ func _read_activate() -> void:
 		say("%s goes out first." % str(creature.call("label")))
 	else:
 		say("%s is out of the fight." % str(creature.call("label")))
+
+
+## R4.4: teach the focused creature the first known, compatible TM it does
+## not already know, same "one press, one clear effect" shape as
+## `_read_activate()`. Repeated presses work through every applicable TM one
+## at a time rather than opening a picker — a picker is real UI this item
+## does not need yet with two TMs in the game, and adding one now would be
+## building ahead of content that does not exist (CLAUDE.md).
+func _read_teach() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if not Input.is_action_just_pressed(TEACH_ACTION):
+		return
+
+	var party: RefCounted = _party()
+	if party == null:
+		return
+	var creature: RefCounted = party.call("at", _focused)
+	if creature == null:
+		say("Nothing in that slot.")
+		return
+
+	var learned := _teach_next(creature)
+	if learned == "":
+		say("%s has no new TM to learn." % str(creature.call("label")))
+	else:
+		say("%s learned %s!" % [str(creature.call("label")), learned])
+
+
+## The first known TM (SB9's flag store, `TM_FLAG_PREFIX`-namespaced) this
+## creature is compatible with and does not already know, applied. Order is
+## `_tms.tm_ids()`'s own order — stable across calls, so repeated presses
+## sweep forward through the list rather than re-offering the same TM.
+func _teach_next(creature: RefCounted) -> String:
+	var game := state()
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression == null:
+		return ""
+
+	var creature_type := str(creature.get("creature_type"))
+	for tm_id: Variant in (_tms.call("tm_ids") as Array):
+		var id := str(tm_id)
+		if not bool(progression.call("has", TM_FLAG_PREFIX + id)):
+			continue
+		if not TEACHING.can_learn(creature_type, id, _tms):
+			continue
+		var move_id := str(_tms.call("move_id", id))
+		var slot := str(_moves.call("slot", move_id))
+		var current := str(creature.get("move_quick")) if slot == "quick" else str(creature.get("move_charged"))
+		if current == move_id:
+			continue
+		if TEACHING.teach(creature, id, _tms, _moves):
+			return str(_tms.call("display_name", id))
+	return ""
 
 
 func _party() -> RefCounted:
