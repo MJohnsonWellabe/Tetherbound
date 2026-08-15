@@ -3,28 +3,56 @@ extends CanvasLayer
 ## Name your creature. The project's first text entry, and the first time it stops
 ## being a game you only hold a controller for.
 ##
-## Three things are happening here that have never happened in this project
-## before, and each of them is a way for the beat to break on the owner's
-## handheld while every test stays green:
+## Two input surfaces, swapped by device rather than picked once:
 ##
-##  1. **There is no keyboard.** The primary target is a ROG Ally.
-##     `DisplayServer.virtual_keyboard_show()` is a mobile API and does nothing
-##     on Windows, and Steam's overlay keyboard only exists when the game was
-##     launched through Steam. So the game ships its own grid, navigated with the
-##     d-pad or the left stick — `scripts/ui/name_entry.gd` is that grid, and it
-##     is unit-tested without a screen.
-##  2. **Mouse capture has to be released.** `playground_world.gd` sets
-##     MOUSE_MODE_CAPTURED at boot and nothing had ever asked for it back. A
-##     captured cursor over a modal panel is a panel a desktop player cannot
-##     click, and worse, the camera keeps turning under it.
-##  3. **The panel is modal.** Locomotion, the interact prompt and the camera all
-##     have to stop, or the player names their creature while walking off a cliff.
-##     Those are switched off by the sequence director, which owns that decision
-##     for every beat; this node only says whether it is open.
+##  1. **A gamepad gets the on-screen grid.** The primary target is a ROG
+##     Ally. `DisplayServer.virtual_keyboard_show()` is a mobile API and does
+##     nothing on Windows, and Steam's overlay keyboard only exists when the
+##     game was launched through Steam. So the game ships its own grid,
+##     navigated with the d-pad or the left stick — `scripts/ui/name_entry.gd`
+##     is that grid, and it is unit-tested without a screen.
+##  2. **A physical keyboard gets `_field`, a real `LineEdit`** — OF25, and
+##     the project's first one. Owner report: "the keyboard in game still
+##     sucks. Just make it use the real keyboard." The grid used to be the
+##     ONLY path, with a second, hand-rolled key reader
+##     (`_unhandled_key_input`, now gone) typing straight into the same
+##     buffer for a physical keyboard. That reader only ever consumed the
+##     raw key EVENT (`set_input_as_handled()`); it did nothing about the
+##     ACTION STATE the same keypress also set, so everything else in the
+##     game that polls `Input.is_action_just_pressed()` still saw it —
+##     typing `i` opened the pause menu over this panel (`inventory`'s
+##     default key), space jumped, and Enter both confirmed here AND
+##     registered as a `menu_confirm` poll the same frame, closing a panel
+##     that had already closed itself. A focused `LineEdit` does not have
+##     that problem: Godot's own Control input pipeline consumes a keystroke
+##     before it becomes an action-state change, for every key Godot's text
+##     editing already understands (typing, backspace, arrows, Enter). See
+##     `_apply_mode()` for which device is showing and `_set_menu_deaf()` for
+##     the one collision a focused Control cannot prevent on its own — the
+##     pause menu's shortcut keys, read by a completely different node.
 ##
-## Draws by polling, like `combat_hud.gd`. The cells are rebuilt only when the
-## cursor moves, because restyling seventy panels every frame is real work for a
-## screen that changes about once a second.
+## `_using_gamepad` (`input_glyph.gd`'s own "last input used" signal, `HD1`)
+## decides which of the two is live, recomputed every frame so a hand moving
+## from the pad to the keyboard mid-prompt is seen the same frame it happens,
+## the same as every other glyph in the game. Both keep the SAME buffer
+## (`_entry.text`, `scripts/ui/name_entry.gd`) regardless of which is
+## currently visible — two Controls that both hold "the name" is two things
+## that can disagree, and the one the player is looking at is not
+## necessarily the one that gets stored.
+##
+## Also true regardless of device:
+##  - **Mouse capture has to be released.** `playground_world.gd` sets
+##    MOUSE_MODE_CAPTURED at boot and nothing had ever asked for it back. A
+##    captured cursor over a modal panel is a panel a desktop player cannot
+##    click, and worse, the camera keeps turning under it.
+##  - **The panel is modal.** Locomotion, the interact prompt and the camera
+##    all have to stop, or the player names their creature while walking off
+##    a cliff. Those are switched off by the sequence director, which owns
+##    that decision for every beat; this node only says whether it is open.
+##
+## Draws by polling, like `combat_hud.gd`. The grid's cells are rebuilt only
+## when the cursor moves, because restyling seventy panels every frame is
+## real work for a screen that changes about once a second.
 
 const ENTRY := preload("res://scripts/ui/name_entry.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
@@ -67,10 +95,20 @@ var _drawn_cursor: Vector2i = Vector2i(-1, -1)
 var _drawn_valid: bool = false
 var _restore_mouse: int = Input.MOUSE_MODE_CAPTURED
 
+## Which surface is live right now. Recomputed from `INPUT_GLYPH.using_gamepad()`
+## every `_physics_process`, not just at `open()` — see the file header.
+var _using_gamepad: bool = true
+## Guards the frame a device switch happens, same reason `_guard` guards the
+## frame this whole panel opens: the press that just changed `_using_gamepad`
+## is still this frame's action state, and polling it immediately below would
+## fire whatever the grid's cursor happens to already sit on.
+var _mode_guard: int = 0
+
 @onready var _root: Control = $Root
 @onready var _title: Label = $Root/Box/Margin/Column/Title
 @onready var _entry_label: Label = $Root/Box/Margin/Column/Entry
 @onready var _keys: VBoxContainer = $Root/Box/Margin/Column/Keys
+@onready var _field: LineEdit = $Root/Box/Margin/Column/Field
 @onready var _hint: RichTextLabel = $Root/Box/Margin/Column/Hint
 
 
@@ -78,6 +116,9 @@ func _ready() -> void:
 	_dress()
 	_build_keyboard()
 	_make_text_legible($Root)
+	_field.max_length = ENTRY.MAX_LENGTH
+	_field.text_changed.connect(_on_field_text_changed)
+	_field.text_submitted.connect(_on_field_text_submitted)
 	_root.visible = false
 
 
@@ -97,9 +138,9 @@ func _dress() -> void:
 
 
 func _make_text_legible(node: Node) -> void:
-	# Both node types share this theme property name, unlike font_color/
+	# All three share this theme property name, unlike font_color/
 	# default_color below -- see dialogue_panel.gd's own note on that split.
-	if node is Label or node is RichTextLabel:
+	if node is Label or node is RichTextLabel or node is LineEdit:
 		var control := node as Control
 		control.add_theme_constant_override("outline_size", OUTLINE_SIZE)
 		control.add_theme_color_override("font_outline_color", OUTLINE)
@@ -149,6 +190,7 @@ func open(subject: String) -> void:
 	_entry.reset()
 	_open = true
 	_guard = OPEN_GUARD_FRAMES
+	_mode_guard = 0
 	_held = Vector2i.ZERO
 	_repeat_left = 0.0
 	_title.text = "Name your %s" % subject
@@ -159,6 +201,9 @@ func open(subject: String) -> void:
 	# project's life and the value to restore is recorded rather than assumed.
 	_restore_mouse = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_using_gamepad = INPUT_GLYPH.using_gamepad()
+	_apply_mode()
+	_set_menu_deaf(true)
 	_draw()
 
 
@@ -168,6 +213,9 @@ func close() -> void:
 	_open = false
 	_root.visible = false
 	Input.mouse_mode = _restore_mouse as Input.MouseMode
+	if _field.has_focus():
+		_field.release_focus()
+	_set_menu_deaf(false)
 
 
 func entry() -> RefCounted:
@@ -178,6 +226,45 @@ func entry() -> RefCounted:
 ## without reading into the entry object.
 func current_text() -> String:
 	return _entry.sanitised()
+
+
+## --- which surface is live ----------------------------------------------------
+
+## Shows and focuses whichever of the grid / `_field` matches `_using_gamepad`,
+## and hides the other. Called at `open()` and again the frame the device
+## changes (`_physics_process`, below).
+func _apply_mode() -> void:
+	_keys.visible = _using_gamepad
+	_entry_label.visible = _using_gamepad
+	_field.visible = not _using_gamepad
+	if _using_gamepad:
+		if _field.has_focus():
+			_field.release_focus()
+	else:
+		# Resync from the grid's own buffer -- the player may have typed part
+		# of the name on the pad before switching devices, and `_field` was
+		# not live to see it.
+		_field.text = _entry.text
+		_field.caret_column = _field.text.length()
+		_field.grab_focus()
+
+
+## OF25: the actual reported defect. `game_menu.gd` reads its own open button
+## and its `inventory` shortcut by polling — a completely different node from
+## this one, so a focused `LineEdit` consuming a keystroke does nothing to
+## stop it. `hold_input` is the shell's own mechanism for exactly this (until
+## now used only by its own tabs — the backpack's target picker, the release
+## ceremony); this is its first caller from outside the menu's own tree.
+## Reached through `/root/Game` rather than the bare `Game` autoload name for
+## the reason `scripts/story/party_seam.gd`'s header gives: this script can
+## load in a process with no autoloads running at all.
+func _set_menu_deaf(held: bool) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or not game.has_method("menu"):
+		return
+	var menu: Object = game.call("menu")
+	if menu != null and menu.has_method("hold_input"):
+		menu.call("hold_input", held)
 
 
 ## --- input ------------------------------------------------------------------
@@ -193,6 +280,25 @@ func _physics_process(delta: float) -> void:
 		return
 	if _guard > 0:
 		_guard -= 1
+		return
+
+	var now_gamepad := INPUT_GLYPH.using_gamepad()
+	if now_gamepad != _using_gamepad:
+		_using_gamepad = now_gamepad
+		_apply_mode()
+		_draw()
+		_mode_guard = OPEN_GUARD_FRAMES
+	if _mode_guard > 0:
+		_mode_guard -= 1
+		return
+
+	if not _using_gamepad:
+		# `_field` is live and focused; it reads its own keys through Godot's
+		# Control input pipeline (`_on_field_text_changed`/`_submitted` below),
+		# not by polling. Polling `menu_confirm` here too — the same physical
+		# Enter key `_field` just reacted to — is the exact double-confirm OF25
+		# reported: this panel closing once from `_on_field_text_submitted` and
+		# once from this poll, the second one finding nothing left to close.
 		return
 
 	_tick_cursor(delta)
@@ -229,33 +335,26 @@ func _tick_cursor(delta: float) -> void:
 		_draw()
 
 
-## A physical keyboard types straight into the same buffer.
-##
-## Handled here rather than through a LineEdit so there is exactly one buffer.
-## Two Controls that both hold "the name" is two things that can disagree, and
-## the one the player is looking at is not necessarily the one that gets stored.
-func _unhandled_key_input(event: InputEvent) -> void:
+## `_field` mirrors every edit straight into `_entry.text` — typing,
+## backspace, arrow-key repositioning, all of Godot's own `LineEdit` editing
+## are Godot's job, not this file's; this just keeps the one real buffer in
+## step with what the box on screen shows. `max_length` (`_ready()`) is the
+## native `LineEdit` property doing the same job `name_entry.gd::type()`'s
+## own length check does for the grid, so nothing here re-enforces it.
+func _on_field_text_changed(new_text: String) -> void:
+	_entry.text = new_text
+	_draw()
+
+
+## The ONLY way a physical keyboard confirms (OF25). Firing `_confirm()` from
+## both this AND a `menu_confirm` poll below was the reported double-confirm;
+## `_physics_process`'s own `_using_gamepad` gate is the other half of why
+## that cannot happen any more.
+func _on_field_text_submitted(_new_text: String) -> void:
 	if not _open:
 		return
-	var key := event as InputEventKey
-	if key == null or not key.pressed:
-		return
-	match key.keycode:
-		KEY_BACKSPACE:
-			_entry.backspace()
-			_draw()
-			get_viewport().set_input_as_handled()
-			return
-		KEY_ENTER, KEY_KP_ENTER:
-			if _entry.is_valid():
-				_confirm()
-			get_viewport().set_input_as_handled()
-			return
-	var unicode := key.unicode
-	if unicode >= 32 and unicode < 127:
-		_entry.type(char(unicode))
-		_draw()
-		get_viewport().set_input_as_handled()
+	if _entry.is_valid():
+		_confirm()
 
 
 func _activate() -> void:
@@ -283,13 +382,33 @@ func _confirm() -> void:
 
 ## --- drawing ----------------------------------------------------------------
 
+## OF25: the hint below the panel used to be drawn for the grid only and
+## shown to both devices — a keyboard player was told "[Enter] type" (that
+## icon meant "confirm this grid cell", a cell they were never looking at)
+## and "[Esc] delete" (`GLYPHS["cancel"]`'s keyboard icon, which is really
+## Escape and does not delete anything for a keyboard player at all; the
+## grid's own B/Escape-means-backspace mapping is a gamepad-only substitution
+## — see `_physics_process`'s comment on why `menu_cancel` means backspace
+## there). Both ids are real (`input_glyph.gd`'s `GLYPHS`); they were just
+## being read for a control surface the current device was not using. Now
+## each device only ever sees the hint for the surface it is actually
+## looking at, and `confirm`'s icon is accurate on both — Enter on a
+## keyboard, A on a pad — so it is the only one still shared.
 func _draw() -> void:
-	var caret := "_" if _entry.text.length() < ENTRY.MAX_LENGTH else ""
-	_entry_label.text = "%s%s" % [_entry.text, caret]
 	var valid: bool = _entry.is_valid()
-	var glyphs := "%s type    %s delete" % [INPUT_GLYPH.icon("confirm"), INPUT_GLYPH.icon("cancel")]
-	_hint.text = "%s    OK to finish" % glyphs if valid \
-		else "%s    every creature gets a name" % glyphs
+	var confirm_glyph := INPUT_GLYPH.icon("confirm")
+	if _using_gamepad:
+		var caret := "_" if _entry.text.length() < ENTRY.MAX_LENGTH else ""
+		_entry_label.text = "%s%s" % [_entry.text, caret]
+		var glyphs := "%s type    %s delete" % [confirm_glyph, INPUT_GLYPH.icon("cancel")]
+		_hint.text = "%s    OK to finish" % glyphs if valid \
+			else "%s    every creature gets a name" % glyphs
+	else:
+		_hint.text = "%s    finishes the name" % confirm_glyph if valid \
+			else "every creature gets a name"
+
+	if not _using_gamepad:
+		return  # the grid is hidden; nothing below to restyle
 
 	var cursor := Vector2i(int(_entry.column), int(_entry.row))
 	if cursor == _drawn_cursor and valid == _drawn_valid:

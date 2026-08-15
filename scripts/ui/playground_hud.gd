@@ -1096,6 +1096,15 @@ func _read_hotbar_input() -> void:
 	# potion. The combat HUD owns the d-pad while a fight runs.
 	if _combat_is_running():
 		return
+	# OF25: also deaf while a modal panel owns the screen (a conversation, the
+	# naming prompt, the starter picker). `1`-`5` are real hotbar keys, so
+	# typing a name that happens to contain a digit used to also spend
+	# whatever sat in that satchel slot. Reuses the arbiter's own `enabled`
+	# flag -- already false for exactly this window
+	# (`sequence_director._refresh_lockout`) -- rather than a second copy of
+	# "is something modal open" invented here.
+	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
+		return
 	for i in HOTBAR_SLOTS:
 		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
 			_use_hotbar_slot(i)

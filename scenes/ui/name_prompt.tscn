@@ -58,7 +58,9 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 34
 horizontal_alignment = 1
 
-; What the player has typed so far, big. This is the whole point of the screen.
+; What the player has typed so far, big. This is the whole point of the
+; screen -- the gamepad grid's own display. `Entry`/`Keys` and `Field` below
+; are never both visible at once (scripts/ui/name_prompt.gd::_apply_mode()).
 [node name="Entry" type="Label" parent="Root/Box/Margin/Column"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 52
@@ -68,6 +70,15 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
+
+; OF25: the physical-keyboard path, and the project's first LineEdit.
+; `_apply_mode()` shows and focuses this in place of `Entry`+`Keys` above the
+; moment the last input used is a keyboard.
+[node name="Field" type="LineEdit" parent="Root/Box/Margin/Column"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+horizontal_alignment = 1
+caret_blink = true
 
 [node name="Hint" type="RichTextLabel" parent="Root/Box/Margin/Column"]
 layout_mode = 2

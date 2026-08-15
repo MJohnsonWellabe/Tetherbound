@@ -504,8 +504,16 @@ func _sync_active_creature() -> void:
 ## `CO1`'s bound action, read whenever nothing else owns it. Guarded the same
 ## way `_read_engage_input()` is: no reading past a running fight, since the
 ## combat manager drives `_ally_body` for the length of one.
+##
+## OF25: also deaf while `_arbiter` is (a conversation, the naming prompt, the
+## starter picker) -- `R` is bound to `creature_recall`, so typing a name that
+## happened to contain one used to summon or dismiss the ally out from under
+## the panel. Reuses the same `enabled` flag `_read_engage_input()` already
+## defers to above, rather than a second modal check invented here.
 func _read_creature_control_input() -> void:
 	if _manager != null and bool(_manager.call("is_fighting")):
+		return
+	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
 		return
 	if not Input.is_action_just_pressed("creature_recall"):
 		return

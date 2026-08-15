@@ -25,12 +25,14 @@ extends Node3D
 ## player at all times is the wrong place to spend a handheld's frame budget.
 
 const CONFIG_PATH := "res://data/config/movement.json"
+const ARBITER_NODE := preload("res://scripts/world/interaction_arbiter.gd")
 
 var _light: SpotLight3D = null
 var _auto_at_night: bool = true
 var _manual_override: bool = false
 var _manual_on: bool = false
 var _world_look: Node = null
+var _arbiter: Node = null
 
 
 func _ready() -> void:
@@ -64,8 +66,23 @@ func _load_config() -> Dictionary:
 	return (parsed as Dictionary).get("torch", {}) as Dictionary
 
 
+## OF25: `L` is also a letter. Without this, typing an "l" while naming a
+## creature toggled the torch under the panel. Looked up lazily (not cached
+## once in `_ready()`) because `torch.gd` is built in code from
+## `player_controller._ready()` and can run before the arbiter's own
+## `_ready()` has added it to its group -- a caller that only tried once could
+## permanently miss it. Reuses the arbiter's `enabled` flag, the same one
+## `sequence_director._refresh_lockout` already clears for a conversation, the
+## naming prompt or the starter picker, rather than a second copy of "is
+## something modal open" invented here.
+func _world_input_suppressed() -> bool:
+	if _arbiter == null or not is_instance_valid(_arbiter):
+		_arbiter = get_tree().get_first_node_in_group(ARBITER_NODE.GROUP)
+	return _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled"))
+
+
 func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed(&"torch_toggle"):
+	if not _world_input_suppressed() and Input.is_action_just_pressed(&"torch_toggle"):
 		_manual_override = true
 		_manual_on = not _is_on()
 	if _light != null:
