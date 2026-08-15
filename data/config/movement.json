@@ -12,6 +12,14 @@
     "turn_speed": 11.0
   },
 
+  "gait_feel": {
+    "_comment": "MQ1A, TUNABLE. Momentum tilt: the trainer's model leans into acceleration and banks into turns (character_model.gd::apply_momentum_tilt, driven from trainer_model.gd). lean_deg_per_accel converts m/s^2 to degrees; at ground_acceleration 42 the launch lean approaches pitch_limit_deg. smoothing_rate is 1/seconds-to-settle-ish; higher snaps, lower wallows.",
+    "lean_deg_per_accel": 0.18,
+    "pitch_limit_deg": 7.0,
+    "roll_limit_deg": 8.0,
+    "smoothing_rate": 9.0
+  },
+
   "jump": {
     "_comment": "Height in metres, converted to launch velocity against gravity so retuning gravity does not silently change jump height.",
     "height": 1.35,

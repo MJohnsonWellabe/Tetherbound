@@ -17,14 +17,29 @@ var _player: CharacterBody3D = null
 ## Set while the trainer is aiming a throw, so the body reads as throwing rather
 ## than as standing still watching its creature be hit.
 var _throwing_for: float = 0.0
+## movement.json's `gait_feel` block (MQ1A, TUNABLE) — momentum-tilt limits for
+## character_model.gd's apply_momentum_tilt(). Read once at ready.
+var _gait_feel: Dictionary = {}
 
 
 func _ready() -> void:
 	_player = get_node_or_null(player_path) as CharacterBody3D
+	_gait_feel = _load_gait_feel()
 	if not build("trainer"):
 		# The scene's capsule stays visible, so a missing trainer is a trainer
 		# that looks wrong rather than a trainer who is not there.
 		push_error("no trainer model; falling back to the placeholder capsule")
+
+
+static func _load_gait_feel() -> Dictionary:
+	var file := FileAccess.open("res://data/config/movement.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	var feel: Variant = (parsed as Dictionary).get("gait_feel", {})
+	return feel if feel is Dictionary else {}
 
 
 # Physics tick, not _process: every input here — ground_speed, is_on_floor,
@@ -58,6 +73,11 @@ func _physics_process(delta: float) -> void:
 	# not the one speed the clip was baked at. No-op (resets to 1x) for every
 	# non-gait role — see character_model.gd's match_gait_rate().
 	match_gait_rate(role, _player.call("ground_speed"))
+	# MQ1A: the body tips into starts, stops and turns. Grounded only — in
+	# the air the jump clip owns the silhouette and a tilt reads as tumbling.
+	var planar := Vector3(_player.velocity.x, 0.0, _player.velocity.z) \
+		if _player.is_on_floor() else Vector3.ZERO
+	apply_momentum_tilt(planar, delta, _gait_feel)
 
 
 ## What the trainer's body should be doing, from what the trainer is doing.

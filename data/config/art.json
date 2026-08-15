@@ -7,7 +7,7 @@
     "height": 1.8,
     "_comment_yaw": "Degrees of correction for which way the source model faces. Verified from a survey frame, not assumed — there is no convention across asset packs.",
     "model_yaw": 0.0,
-    "_comment_clips": "Five clips, authored by tools/art_pipeline/blender/animate_humanoid.py and baked into the .glb, so the role and the clip name are the same string and nothing is retargeted. They are procedural cycles, not hand-animated character work — the first thing to upgrade.",
+    "_comment_clips": "Five clips, authored by tools/art_pipeline/blender/animate_humanoid.py and baked into the .glb, so the role and the clip name are the same string and nothing is retargeted. MQ1A rebuilt them as key-pose authored cycles (contact/loading/mid-stance/toe-off/whip/mid-swing/reach through a cyclic spline, on render-verified bone axes) with pelvis rotation, chest counter-rotation and head stabilisation.",
     "clips": {
       "idle": "idle",
       "walk": "walk",
@@ -164,6 +164,11 @@
       "jump": "jump",
       "throw": "throw"
     },
+    "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
     "animation_libraries": []
   },
   "villager_farmer": {
@@ -186,6 +191,11 @@
       "jump": "jump",
       "throw": "throw"
     },
+    "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
     "animation_libraries": []
   },
   "villager_keeper": {
@@ -202,6 +212,11 @@
       "sprint": "sprint",
       "jump": "jump",
       "throw": "throw"
+    },
+    "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
     },
     "animation_libraries": []
   },
@@ -224,13 +239,18 @@
       "jump": "jump",
       "throw": "throw"
     },
+    "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
     "animation_libraries": []
   },
   "villager_quarryman": {
     "_comment": "NP3, moved off Grandpa's rig by NP5 (owner directive 2026-08-12). Now NP4-rig's villager_male base, sharing a body with villager_keeper.",
     "_comment_tint_removed": "Owner playtest report, second round: still read as a hue-shifted clone, 'looks stupid'. Same fix as villager_keeper above -- `tint` removed outright (`#ffffff`, this codebase's identity multiply). A per-material accessory was tried and reverted for the same reason documented on villager_keeper above (a real render placed it wrong); Oskar and Callum are visually identical until that has a real fix.",
     "model": "res://assets/characters/villager_male/villager_male_lod0.glb",
-    "height": 1.80,
+    "height": 1.8,
     "model_yaw": 0.0,
     "tint": "#ffffff",
     "clips": {
@@ -239,6 +259,11 @@
       "sprint": "sprint",
       "jump": "jump",
       "throw": "throw"
+    },
+    "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
     },
     "animation_libraries": []
   },
@@ -261,6 +286,11 @@
       "jump": "jump",
       "throw": "throw"
     },
+    "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
+    },
     "animation_libraries": []
   },
   "warden": {
@@ -275,6 +305,11 @@
       "sprint": "sprint",
       "jump": "jump",
       "throw": "throw"
+    },
+    "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
+    "gait_reference_speeds": {
+      "walk": 5.0,
+      "sprint": 8.6
     },
     "animation_libraries": []
   }

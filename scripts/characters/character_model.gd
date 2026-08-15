@@ -164,94 +164,17 @@ func _build_art(path: String) -> bool:
 		_art.add_child(_anim)
 		_anim.root_node = _anim.get_path_to(_art)
 	_merge_libraries()
-	_tame_gait_arm_swing()
 	return true
 
 
-## Owner playtest report, second round, watching a rendered walk cycle:
-## "his arms bend backwards and look unnatural." `tools/art_pipeline/blender/
-## animate_humanoid.py::author_gait()` is a `bpy`-only offline script (no
-## Blender exists in this environment to re-bake trainer_lod0.glb with
-## retuned numbers), so this corrects the ALREADY-BAKED walk/sprint clips at
-## load time instead: every keyframe on the upper-arm and forearm rotation
-## tracks is pulled proportionally back toward that same clip's own rest
-## pose (its first keyframe, which a cyclic clip already shares with its
-## last). This shrinks the swing without needing to know this rig's own
-## bone-axis convention or touching the authored ANGLE at all -- a
-## `Quaternion.slerp` toward rest stays on the same rotation axis the
-## original animator's key was already on, so a bend can only ever come out
-## smaller, never in the wrong direction.
-##
-## SWING_KEEP was tuned against real renders, not guessed once and left: a
-## probe of the baked walk clip (tools/_probe_gait_keys.gd) measured the
-## forearm swinging from a 34deg resting bend to a 51deg peak and the upper
-## arm swinging a full 63deg on top of that -- combined, the hand travelled
-## all the way up past the ribcage toward the shoulder strap on a plain
-## 5m/s walk (shots/gait/walk-quarter.png, before this fix: the near hand at
-## collarbone height mid-stride, not the hip-to-thigh arc a loose walking
-## swing actually has). 0.65 was tried first and rendered better but still
-## tucked; 0.45 (kept) reads as a natural loose swing across the whole
-## cycle in a fresh render, hand travelling hip-to-belt height rather than
-## hip-to-collarbone. Only Arm/ForeArm are touched -- Hips/Spine/Leg/Foot
-## were not part of the report and OF5 already spent real effort getting
-## the legs right.
-const ELBOW_TAME_CLIPS := ["walk", "sprint"]
-const ELBOW_TAME_BONES := ["LeftArm", "RightArm", "LeftForeArm", "RightForeArm"]
-const ELBOW_TAME_SWING_KEEP := 0.45
-
-
-func _tame_gait_arm_swing() -> void:
-	if _anim == null:
-		return
-	for clip_name in ELBOW_TAME_CLIPS:
-		if not _anim.has_animation(clip_name):
-			continue
-		var library := _owning_library(clip_name)
-		if library == null:
-			continue
-		var original: Animation = library.get_animation(clip_name)
-		if original == null:
-			continue
-		# Duplicated before mutating: an imported glTF's Animation resources
-		# are not guaranteed local-to-scene, so writing into `original`
-		# directly could bleed into every other instance sharing the same
-		# cached resource (every other trainer/grandpa/villager built from
-		# this same .glb), not just this one character.
-		var tamed: Animation = original.duplicate()
-		for bone in ELBOW_TAME_BONES:
-			_scale_rotation_track_toward_rest(tamed, bone, ELBOW_TAME_SWING_KEEP)
-		library.remove_animation(clip_name)
-		library.add_animation(clip_name, tamed)
-
-
-func _owning_library(clip_name: String) -> AnimationLibrary:
-	for library_name in _anim.get_animation_library_list():
-		var library := _anim.get_animation_library(library_name)
-		if library != null and library.has_animation(clip_name):
-			return library
-	return null
-
-
-## Scales every keyframe on the rotation track whose bone path ends with
-## `bone_suffix` proportionally toward that track's own first keyframe
-## (`keep=1.0` leaves it untouched, `keep=0.0` freezes the bone at rest).
-## `slerp` rather than a linear blend on the Euler components -- rotation
-## interpolation that stays correct regardless of Euler order or gimbal
-## position, and it cannot introduce a rotation axis that was not already in
-## the original key.
-func _scale_rotation_track_toward_rest(animation: Animation, bone_suffix: String, keep: float) -> void:
-	for track_idx in animation.get_track_count():
-		if animation.track_get_type(track_idx) != Animation.TYPE_ROTATION_3D:
-			continue
-		if not str(animation.track_get_path(track_idx)).ends_with(bone_suffix):
-			continue
-		var key_count := animation.track_get_key_count(track_idx)
-		if key_count == 0:
-			continue
-		var rest: Quaternion = animation.track_get_key_value(track_idx, 0)
-		for k in key_count:
-			var original: Quaternion = animation.track_get_key_value(track_idx, k)
-			animation.track_set_key_value(track_idx, k, rest.slerp(original, keep))
+## MQ1A removed `_tame_gait_arm_swing()` from here. It scaled the baked
+## walk/sprint arm keys 0.45x toward the clip's frame-0 pose at load time,
+## because the session that added it had no Blender to re-bake with. The
+## frame-0 pose it preserved carried the actual defect — a permanently
+## hyperextended elbow, keyed backward on this rig's forearm axis — so the
+## hack removed the swing and kept the anatomical error. The clips are now
+## authored on render-verified axes (animate_humanoid.py's AXES table) at
+## the amplitude they ship at, and nothing corrects them at load.
 
 
 ## Pull clips from separate animation files onto this character.
@@ -694,3 +617,49 @@ func match_gait_rate(role: String, ground_speed: float) -> void:
 		_anim.speed_scale = 1.0
 		return
 	_anim.speed_scale = clampf(ground_speed / reference, 0.5, 1.4)
+
+
+## MQ1A: weight in the transitions. The gait clips are steady-state cycles;
+## what sells a start, a stop and a hard turn is the BODY tipping into the
+## acceleration — a sprinter leans out of the blocks, a stopping runner sits
+## back, a turning one banks. The controller owns yaw; this leans the whole
+## model a few degrees about its own local X (pitch into/out of travel) and
+## Z (bank into a turn) from the actual planar acceleration, smoothed so a
+## one-frame velocity spike cannot snap the spine. Godot's YXZ euler order
+## applies X/Z inside the yaw the controller already set, so the two writers
+## compose instead of fighting.
+##
+## Caller passes the planar velocity each physics tick; limits live in
+## movement.json's `gait_feel` block (TUNABLE) and arrive here as a config
+## dict so this base class stays free of gameplay file reads.
+var _tilt := Vector2.ZERO      # x = pitch degrees, y = roll degrees
+var _tilt_prev_velocity := Vector3.ZERO
+
+
+func apply_momentum_tilt(planar_velocity: Vector3, delta: float, feel: Dictionary) -> void:
+	if delta <= 0.0:
+		return
+	var accel := (planar_velocity - _tilt_prev_velocity) / delta
+	_tilt_prev_velocity = planar_velocity
+	accel.y = 0.0
+
+	var yaw := rotation.y
+	var forward := Vector3(sin(yaw), 0.0, cos(yaw))
+	var lateral := Vector3(cos(yaw), 0.0, -sin(yaw))
+
+	var lean_per := float(feel.get("lean_deg_per_accel", 0.18))
+	var pitch_limit := float(feel.get("pitch_limit_deg", 7.0))
+	var roll_limit := float(feel.get("roll_limit_deg", 8.0))
+	var rate := float(feel.get("smoothing_rate", 9.0))
+
+	var target := Vector2(
+		clampf(accel.dot(forward) * lean_per, -pitch_limit, pitch_limit),
+		clampf(accel.dot(lateral) * lean_per, -roll_limit, roll_limit))
+	var blend := 1.0 - exp(-rate * delta)
+	_tilt = _tilt.lerp(target, blend)
+
+	# Forward lean is negative X for a +Z-facing model; bank rolls the top of
+	# the body toward the inside of the turn. Signs verified in the MQ1A turn
+	# capture rather than derived on paper.
+	rotation.x = deg_to_rad(-_tilt.x)
+	rotation.z = deg_to_rad(-_tilt.y)

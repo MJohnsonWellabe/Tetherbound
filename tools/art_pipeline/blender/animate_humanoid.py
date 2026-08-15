@@ -28,10 +28,27 @@ So the clips are authored here on the rig Meshy fitted to this mesh, which is
 a standard humanoid skeleton (Hips / UpLeg / Leg / Foot, Spine / Spine01 /
 Spine02, Shoulder / Arm / ForeArm / Hand, neck / Head).
 
-WHAT THESE CLIPS ARE, HONESTLY. Procedural cycles, the same standard as the
-creatures': counter-phased limb swings on sine curves, with a torso bob and a
-head counterweight. Walk reads as walk and throw reads as throw. They are not
-hand-animated character work, and the production report says so.
+WHAT THESE CLIPS ARE, HONESTLY. Key-pose authored cycles (MQ1A): each gait is
+a table of anatomical key poses — contact, loading, mid-stance, toe-off, whip,
+mid-swing, reach — sampled through a cyclic Catmull-Rom spline, with pelvis
+rotation/list, chest counter-rotation and head stabilisation on top. They are
+authored in this script rather than hand-keyed in a DCC, but they are pose
+work, not oscillators: the earlier sine-synthesis version (OF5) hit a ceiling
+a blind pass kept calling robotic, and its axis conventions were part-inverted
+(knees folded forward, elbows hyperextended backward — see AXES below).
+
+AXES, VERIFIED BY RENDER (tools/_probe_pose_axes.gd, MQ1A). Blender pose
+eulers on this rig, in the bone's own rest frame:
+  thigh  X:  + = swing back,   - = swing forward
+  shin   X:  + = knee flexion, - = IMPOSSIBLE forward hyperextension
+  foot   X:  + = plantarflex (toes down), - = dorsiflex (toes up)
+  arm    X:  + = swing back,   - = swing forward
+  forearm X: - = elbow flexion, + = IMPOSSIBLE backward hyperextension
+  hips/chest/head Y: + = left side leads (yaw)
+  hips   Z:  + = left hip up (pelvic list)
+Do not key a joint here without checking this table; the pre-MQ1A clips keyed
+knee folds and elbow bends on the wrong sign for months and every render
+review read it as "unnatural" without anyone spotting why.
 
 All clips animate bones only — the object's origin never moves, because the
 game drives the body's position and expects animation in place. That includes
@@ -57,12 +74,15 @@ FPS = 24
 ## speed of a sinusoidal swing is amplitude(rad) x (2*pi/cycle) x leg length
 ## (~0.9m on a 1.8m human). The old walk (32 frames, +-24 deg) peaked at
 ## ~1.7 m/s under a 5.0 m/s body -- a >3 m/s skate, and the single loudest
-## thing the owner read as "unnatural". 15 frames at +-32 deg peaks at
-## ~5.1 m/s; 12 frames at +-45 deg peaks at ~8.9 m/s against sprint's 8.6.
+## thing the owner read as "unnatural". The sprint runs an 11-frame cycle:
+## 0.458s at 8.6 m/s is a 1.97m step at 4.4 steps/s with ~0.1s of ground
+## contact, which is what a real 8.6 m/s runner actually does -- the 12-frame
+## version measured ~2 m/s of planted skate because an ankle on a flexed knee
+## cannot sweep 8.6 m/s horizontally for any longer contact than that.
 CLIPS = {
     "idle": 96,
     "walk": 15,
-    "sprint": 12,
+    "sprint": 11,
     "jump": 28,
     "throw": 24,
 }
@@ -145,75 +165,185 @@ def author_idle(rig, frames: int) -> None:
         key(rig, "head", frame, euler=(-1.0 * breath, 2.2 * sway, 0))
         key(rig, "hips", frame, euler=(0, 0, -0.7 * sway))
         # Arms hang; a touch of shoulder rise on the inhale keeps them alive.
-        for side, sign in (("l", 1.0), ("r", -1.0)):
+        # Elbows carry a small natural FLEXION (negative X — see AXES): the
+        # pre-MQ1A +2 here was a subtle backward hyperextension.
+        for side, sign in (("l", -1.0), ("r", 1.0)):
             key(rig, f"arm.{side}", frame, euler=(1.4 * breath, 0, sign * 2.0))
-            key(rig, f"forearm.{side}", frame, euler=(2.0 + 1.2 * breath, 0, 0))
+            key(rig, f"forearm.{side}", frame, euler=(-6.0 - 1.2 * breath, 0, 0))
 
 
-def author_gait(rig, frames: int, swing: float, knee: float, arm: float,
-                elbow: float, lean: float, bob: float, sway: float,
-                plantar: float) -> None:
-    """A jog or a run — never a stroll, because the controller never strolls.
+## Key-pose tables (MQ1A). Values are Blender pose eulers in DEGREES on the
+## verified axes above; fractions are of one full cycle, LEFT-leg contact at
+## 0.0. The pose names are the animator's checklist — contact, loading,
+## mid-stance, toe-off, whip, mid-swing, reach — and the asymmetric fractions
+## are the point: a sine gait puts the same time between every pose, which is
+## the metronome read the blind pass called robotic. Stance occupies ~40% of
+## the cycle at a jog and ~32% at a sprint; everything else is swing.
+##
+## Stride geometry: the stance thigh sweeps contact->toe-off while the body
+## covers speed * stance_time; the sweep angle times ~0.95m leg length plus
+## the heel-toe rocker (~0.2-0.3m) must meet that distance or the planted
+## foot skates (OF5's measured 3x skate). Both tables below land within ~5%,
+## slightly over — overshoot reads as grip, undershoot as ice.
+##
+## Each entry: fraction -> (thigh_x, knee_x, foot_x).
+## Stance fractions are short — 28% (jog) and 25% (sprint) — because both
+## speeds are RUNS and a run flies: with the two legs offset 0.5, these
+## timings give the cycle two genuine flight windows (0.28-0.5, 0.78-1.0 at
+## the jog). The first cut of these tables used a 40% walking stance and
+## measured 2.4 m/s of real skate (tools/_probe_foot_skate.gd): the ankle
+## only travels ~sin(sweep)x0.95m backward per stance, so the only honest
+## ways to close the gap are a bigger sweep (cartoon splits) or less time
+## planted. Less time planted is what real legs do at 5+ m/s. The stance
+## knots are also spaced so the thigh sweeps at a near-CONSTANT rate while
+## planted — a curve that saves its sweep for toe-off skates through early
+## stance even when the totals add up (measured, same probe).
+JOG_LEG = [
+    (0.00, -34.0, 14.0, -12.0),   # contact: heel leads, knee soft
+    (0.08, -15.0, 30.0, 2.0),     # loading: knee absorbs, sweep stays linear
+    (0.17, 5.0, 18.0, 2.0),       # mid-stance: body passes over, heel rising
+    (0.28, 30.0, 20.0, 28.0),     # toe-off: hip extended, ankle pushes
+    (0.42, 14.0, 66.0, 12.0),     # early swing: heel lifts toward seat
+    (0.62, -16.0, 60.0, -4.0),    # mid-swing: knee leads through
+    (0.84, -36.0, 24.0, -14.0),   # reach: shin swings out, toes up
+]
+SPRINT_LEG = [
+    (0.00, -36.0, 24.0, -6.0),    # contact: midfoot, knee loaded
+    (0.06, -17.0, 42.0, 6.0),     # loading: deep absorption, sweep linear
+    (0.13, 5.0, 28.0, 8.0),       # mid-stance: heel rising already
+    (0.22, 32.0, 32.0, 34.0),     # toe-off: full drive
+    (0.38, 16.0, 100.0, 18.0),    # whip: heel near the seat
+    (0.56, -24.0, 88.0, 0.0),     # mid-swing: folded knee swings through
+    (0.75, -46.0, 56.0, -8.0),    # knee drive: thigh high
+    (0.89, -40.0, 30.0, -10.0),   # reach: leg extends for contact
+]
 
-    Rewritten for OF5 ("running and walking look unnatural"). What the first
-    version got wrong, visible in a Muybridge strip over striped ground:
+## fraction -> value tables for the body. Bob dips as each leg loads and
+## rises into the flight half of the stride; yaw/list peak at the contacts.
+JOG_BODY = {
+    "bob":       [(0.08, -0.040), (0.34, 0.012), (0.58, -0.040), (0.84, 0.012)],
+    "hips_yaw":  [(0.0, 6.0), (0.25, 0.0), (0.5, -6.0), (0.75, 0.0)],
+    "hips_list": [(0.04, 1.5), (0.15, 3.0), (0.34, 0.0),
+                  (0.54, -1.5), (0.65, -3.0), (0.84, 0.0)],
+    "chest_yaw": [(0.0, -8.0), (0.25, 0.0), (0.5, 8.0), (0.75, 0.0)],
+}
+SPRINT_BODY = {
+    "bob":       [(0.06, -0.050), (0.28, 0.022), (0.56, -0.050), (0.78, 0.022)],
+    "hips_yaw":  [(0.0, 8.0), (0.25, 0.0), (0.5, -8.0), (0.75, 0.0)],
+    "hips_list": [(0.03, 1.5), (0.11, 3.0), (0.28, 0.0),
+                  (0.53, -1.5), (0.61, -3.0), (0.78, 0.0)],
+    "chest_yaw": [(0.0, -12.0), (0.25, 0.0), (0.5, 12.0), (0.75, 0.0)],
+}
 
-    - The recovery leg swung through dead straight; the knee only bent while
-      the leg was planted BEHIND the body. Real gait folds the knee while the
-      leg swings forward (ground clearance) and lands it near-straight. Here
-      the fold is gated on the leg's forward VELOCITY (cos), not its position.
-    - Both legs passed through a bolt-upright feet-together rest pose twice a
-      cycle. The knee fold above removes it: the passing pose now has a bent
-      recovery leg, which is the pose that makes a gait read as a gait.
-    - Arms hung straight and nearly still — the "zombie" read. Elbows now
-      carry a real standing bend that deepens as the arm swings forward, and
-      the shoulder amplitude is worth seeing.
-    - Torso was vertical at 5-8.6 m/s. A forward lean scaled to the gait, with
-      the head holding level, reads as effort.
-    - Feet were plantar-flat throughout. Heel-strike dorsiflexion at front
-      contact and a toe-off push at the back give the stride its ends.
+## Whole-gait constants: (lean_hips, lean_spine, lean_chest, head_pitch,
+## arm_bias, arm_amp, elbow_base, elbow_deepen, arm_out, hand_curl).
+## Arm swing stays sinusoidal on purpose — a swinging arm genuinely is close
+## to a pendulum — with the forward peak led slightly (0.47, not 0.5) so the
+## arm arrives before the opposite foot the way a real counterweight does.
+## Elbow flexes as the arm swings FORWARD (negative X) and opens at the back.
+JOG_STYLE = (5.0, 3.0, 4.0, -6.0, -4.0, 22.0, -44.0, -18.0, 5.0, -10.0)
+SPRINT_STYLE = (9.0, 5.0, 5.0, -11.0, -6.0, 30.0, -70.0, -24.0, 7.0, -14.0)
 
-    Everything keys on sines of one phase so the cycle still loops seamlessly.
+ARM_LEAD = 0.47
+
+
+def _cyclic_catmull(points):
+    """A C1 interpolant through cyclic (fraction, value) key poses.
+
+    Catmull-Rom via non-uniform finite differences: the curve passes through
+    every authored pose exactly and eases between them, which is what Blender
+    would do with hand-set keys — done here numerically so the pose tables
+    stay plain data and the same sampler serves every channel.
     """
-    # 15/12-frame cycles need denser keys than idle's 96: STEP=4 would sample
-    # a sine three times per cycle and export a triangle wave.
+    pts = sorted(points)
+    n = len(pts)
+
+    def sample(p: float) -> float:
+        p = p % 1.0
+        # A phase before the first knot belongs to the wrap segment (last
+        # knot -> first knot + 1), not to a cubic extrapolated backwards off
+        # it — the first bake of this sampler launched the hips metres off
+        # the ground at exactly the contact frames because of that.
+        if p < pts[0][0]:
+            p += 1.0
+        for i in range(n):
+            t1, v1 = pts[i]
+            t2, v2 = pts[(i + 1) % n]
+            if (i + 1) == n:
+                t2 += 1.0
+            if t1 <= p < t2 or (i + 1) == n:
+                t0, v0 = pts[(i - 1) % n]
+                if i == 0:
+                    t0 -= 1.0
+                t3, v3 = pts[(i + 2) % n]
+                if (i + 2) >= n:
+                    t3 += 1.0
+                u = (p - t1) / (t2 - t1)
+                m1 = (v2 - v0) / (t2 - t0) * (t2 - t1)
+                m2 = (v3 - v1) / (t3 - t1) * (t2 - t1)
+                u2, u3 = u * u, u * u * u
+                return ((2 * u3 - 3 * u2 + 1) * v1 + (u3 - 2 * u2 + u) * m1
+                        + (-2 * u3 + 3 * u2) * v2 + (u3 - u2) * m2)
+        return pts[0][1]
+
+    return sample
+
+
+def author_gait(rig, frames: int, leg_table, body_tables, style) -> None:
+    """One gait cycle from key poses — see the tables above for the design.
+
+    Everything below is sampled and keyed per frame: the splines are already
+    smooth, and dense keys survive glTF's animation sampling without
+    re-interpolation surprises.
+    """
+    (lean_hips, lean_spine, lean_chest, head_pitch, arm_bias, arm_amp,
+     elbow_base, elbow_deepen, arm_out, hand_curl) = style
+
+    thigh = _cyclic_catmull([(f, v) for f, v, _, _ in leg_table])
+    knee = _cyclic_catmull([(f, v) for f, _, v, _ in leg_table])
+    foot = _cyclic_catmull([(f, v) for f, _, _, v in leg_table])
+    bob = _cyclic_catmull(body_tables["bob"])
+    hips_yaw = _cyclic_catmull(body_tables["hips_yaw"])
+    hips_list = _cyclic_catmull(body_tables["hips_list"])
+    chest_yaw = _cyclic_catmull(body_tables["chest_yaw"])
+
     for frame in range(0, frames + 1):
-        phase = 2 * math.pi * frame / frames
-        left = math.sin(phase)
-        right = math.sin(phase + math.pi)
+        p = (frame / frames) % 1.0
 
-        # Twice-per-cycle vertical bob, dipping just after each foot loads.
-        # Hips location Y is along the bone (toward the spine) — vertical on
-        # this rig — and the units are metres after the normalisation below.
-        dip = (0.5 * math.cos(2.0 * phase - 0.6) - 0.5) * bob
         key(rig, "hips", frame,
-            euler=(lean * 0.5, 0, sway * left), location=(0, dip, 0))
-        key(rig, "spine", frame, euler=(lean * 0.35, 0, -3.0 * left))
-        key(rig, "chest", frame, euler=(lean * 0.3, 0, 2.0 * left))
-        # Head counter-pitches so the character watches where it is going
-        # rather than the ground its torso is leaning toward.
-        key(rig, "head", frame, euler=(-lean * 0.75, 0, 0))
+            euler=(lean_hips, hips_yaw(p), hips_list(p)),
+            location=(0, bob(p), 0))
+        key(rig, "spine", frame, euler=(lean_spine, 0, 0))
+        key(rig, "chest", frame, euler=(lean_chest, chest_yaw(p), 0))
+        # The head stabilises: pitch counters the lean so the gaze stays on
+        # the horizon, yaw counters a third of the chest so the face does not
+        # swing with the shoulders. Frozen heads read robotic; fully keyed
+        # heads read drunk; a damped counter reads alive.
+        key(rig, "head", frame, euler=(head_pitch, -chest_yaw(p) * 0.35, 0))
 
-        for side, value, vel in (("l", left, math.cos(phase)),
-                                 ("r", right, -math.cos(phase))):
-            # fold: 1 while the leg swings forward (recovery), 0 in stance.
-            fold = max(0.0, vel)
-            key(rig, f"upleg.{side}", frame, euler=(swing * value, 0, 0))
-            key(rig, f"leg.{side}", frame,
-                euler=(-(knee * fold ** 1.5 + 6.0), 0, 0))
-            # Heel strike (toes up) at front contact, toe-off push (toes
-            # down) at the back, mild dorsiflexion for clearance mid-swing.
-            foot = (12.0 * max(0.0, value) ** 2 + 8.0 * fold
-                    - plantar * max(0.0, -value) ** 2)
-            key(rig, f"foot.{side}", frame, euler=(foot, 0, 0))
+        for side, off in (("l", 0.0), ("r", 0.5)):
+            key(rig, f"upleg.{side}", frame, euler=(thigh(p + off), 0, 0))
+            key(rig, f"leg.{side}", frame, euler=(knee(p + off), 0, 0))
+            key(rig, f"foot.{side}", frame, euler=(foot(p + off), 0, 0))
 
-        for side, value, sign in (("l", right, 1.0), ("r", left, -1.0)):
-            # Carried slightly forward of the hang (-12): a runner's arms work
-            # in front of the body's line, and the bias also keeps the swing
-            # visible instead of buried against the backpack.
-            key(rig, f"arm.{side}", frame, euler=(arm * value - 12.0, 0, sign * 5.0))
+        # Arms are contralateral: the LEFT arm swings forward with the RIGHT
+        # leg, so its forward peak sits near the right leg's contact (0.5),
+        # led slightly (ARM_LEAD). Negative X is forward on this rig.
+        for side, lead, out_sign in (("l", ARM_LEAD, -1.0), ("r", ARM_LEAD - 0.5, 1.0)):
+            swing = math.cos(2 * math.pi * (p - lead))
+            # The swing plane is not flat: the hand drifts toward the body's
+            # midline as the arm comes forward (adduction), which is what
+            # keeps a three-quarter view from flattening the bent arm into a
+            # straight zombie reach — the round-1 blind pass's one new find.
+            out = arm_out - (arm_out + 4.0) * max(0.0, swing)
+            key(rig, f"arm.{side}", frame,
+                euler=(arm_bias - arm_amp * swing, 0, out_sign * out))
+            # Deepen the elbow as the arm comes forward, open it at the back:
+            # base is the mid-swing carry, base + deepen the forward peak,
+            # base - deepen the open trail.
             key(rig, f"forearm.{side}", frame,
-                euler=(elbow + 18.0 * max(0.0, value), 0, 0))
+                euler=(elbow_base + elbow_deepen * swing, 0, 0))
+            key(rig, f"hand.{side}", frame, euler=(hand_curl, 0, 0))
 
 
 def author_jump(rig, frames: int) -> None:
@@ -222,41 +352,45 @@ def author_jump(rig, frames: int) -> None:
     The body does not translate: the controller owns the arc, and a clip that
     moved the character would fight it.
     """
+    # Re-signed for MQ1A against the verified AXES table: the first version
+    # keyed every limb mirrored (legs swung back in the "crouch", arms swung
+    # back at full "extension", shins hyperextended forward), and the hips
+    # location rode the wrong axis (Z; vertical is Y on this rig).
     crouch, extend, tuck, land = 0, int(frames * 0.28), int(frames * 0.60), frames
-    key(rig, "hips", crouch, euler=(6, 0, 0), location=(0, 0, -0.06))
+    key(rig, "hips", crouch, euler=(6, 0, 0), location=(0, -0.06, 0))
     key(rig, "spine", crouch, euler=(10, 0, 0))
     key(rig, "chest", crouch, euler=(6, 0, 0))
     for side in ("l", "r"):
-        key(rig, f"upleg.{side}", crouch, euler=(34, 0, 0))
-        key(rig, f"leg.{side}", crouch, euler=(-52, 0, 0))
-        key(rig, f"foot.{side}", crouch, euler=(18, 0, 0))
-        key(rig, f"arm.{side}", crouch, euler=(-28, 0, 0))
-        key(rig, f"forearm.{side}", crouch, euler=(22, 0, 0))
+        key(rig, f"upleg.{side}", crouch, euler=(-34, 0, 0))
+        key(rig, f"leg.{side}", crouch, euler=(52, 0, 0))
+        key(rig, f"foot.{side}", crouch, euler=(-18, 0, 0))
+        key(rig, f"arm.{side}", crouch, euler=(26, 0, 0))
+        key(rig, f"forearm.{side}", crouch, euler=(-14, 0, 0))
 
-    key(rig, "hips", extend, euler=(-4, 0, 0), location=(0, 0, 0.03))
+    key(rig, "hips", extend, euler=(-4, 0, 0), location=(0, 0.03, 0))
     key(rig, "spine", extend, euler=(-6, 0, 0))
     key(rig, "chest", extend, euler=(-4, 0, 0))
     key(rig, "head", extend, euler=(-8, 0, 0))
     for side in ("l", "r"):
-        key(rig, f"upleg.{side}", extend, euler=(-12, 0, 0))
-        key(rig, f"leg.{side}", extend, euler=(-6, 0, 0))
-        key(rig, f"foot.{side}", extend, euler=(-22, 0, 0))
-        key(rig, f"arm.{side}", extend, euler=(64, 0, 0))
-        key(rig, f"forearm.{side}", extend, euler=(10, 0, 0))
+        key(rig, f"upleg.{side}", extend, euler=(10, 0, 0))
+        key(rig, f"leg.{side}", extend, euler=(6, 0, 0))
+        key(rig, f"foot.{side}", extend, euler=(22, 0, 0))
+        key(rig, f"arm.{side}", extend, euler=(-64, 0, 0))
+        key(rig, f"forearm.{side}", extend, euler=(-10, 0, 0))
 
     key(rig, "hips", tuck, euler=(8, 0, 0), location=(0, 0, 0))
     for side in ("l", "r"):
-        key(rig, f"upleg.{side}", tuck, euler=(40, 0, 0))
-        key(rig, f"leg.{side}", tuck, euler=(-64, 0, 0))
-        key(rig, f"arm.{side}", tuck, euler=(24, 0, 0))
+        key(rig, f"upleg.{side}", tuck, euler=(-40, 0, 0))
+        key(rig, f"leg.{side}", tuck, euler=(64, 0, 0))
+        key(rig, f"arm.{side}", tuck, euler=(-20, 0, 0))
 
-    key(rig, "hips", land, euler=(4, 0, 0), location=(0, 0, -0.03))
+    key(rig, "hips", land, euler=(4, 0, 0), location=(0, -0.03, 0))
     key(rig, "spine", land, euler=(7, 0, 0))
     for side in ("l", "r"):
-        key(rig, f"upleg.{side}", land, euler=(22, 0, 0))
-        key(rig, f"leg.{side}", land, euler=(-34, 0, 0))
-        key(rig, f"foot.{side}", land, euler=(12, 0, 0))
-        key(rig, f"arm.{side}", land, euler=(-14, 0, 0))
+        key(rig, f"upleg.{side}", land, euler=(-22, 0, 0))
+        key(rig, f"leg.{side}", land, euler=(34, 0, 0))
+        key(rig, f"foot.{side}", land, euler=(-12, 0, 0))
+        key(rig, f"arm.{side}", land, euler=(14, 0, 0))
 
 
 def author_throw(rig, frames: int) -> None:
@@ -268,35 +402,39 @@ def author_throw(rig, frames: int) -> None:
     """
     ready, wind, release, recover = 0, int(frames * 0.33), int(frames * 0.62), frames
 
+    # Re-signed for MQ1A (see AXES): the elbow of the throwing arm was keyed
+    # +62 backward at the cocked pose — a hyperextended joint at the one
+    # moment the camera is looking straight at it — and the follow-through
+    # whipped the upper arm down BEHIND the body instead of across it.
     key(rig, "chest", ready, euler=(0, 0, 0))
     key(rig, "arm.r", ready, euler=(0, 0, -4))
-    key(rig, "forearm.r", ready, euler=(6, 0, 0))
+    key(rig, "forearm.r", ready, euler=(-6, 0, 0))
 
     key(rig, "hips", wind, euler=(0, 0, -8))
     key(rig, "spine", wind, euler=(-4, 0, -12))
     key(rig, "chest", wind, euler=(-6, 0, -14))
     key(rig, "head", wind, euler=(0, 0, 8))
     key(rig, "arm.r", wind, euler=(-96, 20, -18))
-    key(rig, "forearm.r", wind, euler=(62, 0, 0))
-    key(rig, "hand.r", wind, euler=(-18, 0, 0))
-    key(rig, "arm.l", wind, euler=(28, 0, 10))
-    key(rig, "forearm.l", wind, euler=(20, 0, 0))
+    key(rig, "forearm.r", wind, euler=(-62, 0, 0))
+    key(rig, "hand.r", wind, euler=(14, 0, 0))
+    key(rig, "arm.l", wind, euler=(-20, 0, 10))
+    key(rig, "forearm.l", wind, euler=(-20, 0, 0))
 
     key(rig, "hips", release, euler=(0, 0, 10))
     key(rig, "spine", release, euler=(8, 0, 16))
     key(rig, "chest", release, euler=(10, 0, 18))
     key(rig, "head", release, euler=(4, 0, -6))
-    key(rig, "arm.r", release, euler=(58, -10, -8))
-    key(rig, "forearm.r", release, euler=(4, 0, 0))
-    key(rig, "hand.r", release, euler=(16, 0, 0))
-    key(rig, "arm.l", release, euler=(-16, 0, 8))
+    key(rig, "arm.r", release, euler=(-8, -10, -8))
+    key(rig, "forearm.r", release, euler=(-4, 0, 0))
+    key(rig, "hand.r", release, euler=(-12, 0, 0))
+    key(rig, "arm.l", release, euler=(12, 0, 8))
 
     key(rig, "hips", recover, euler=(0, 0, 2))
     key(rig, "spine", recover, euler=(2, 0, 4))
     key(rig, "chest", recover, euler=(2, 0, 4))
     key(rig, "head", recover, euler=(0, 0, 0))
-    key(rig, "arm.r", recover, euler=(12, 0, -6))
-    key(rig, "forearm.r", recover, euler=(8, 0, 0))
+    key(rig, "arm.r", recover, euler=(6, 0, -6))
+    key(rig, "forearm.r", recover, euler=(-8, 0, 0))
     key(rig, "arm.l", recover, euler=(0, 0, 6))
 
 
@@ -310,11 +448,9 @@ def author(rig, name: str, frames: int) -> None:
         author_idle(rig, frames)
     elif name == "walk":
         # The controller's "walk" is 5.0 m/s — a jog, and authored as one.
-        author_gait(rig, frames, swing=32.0, knee=55.0, arm=34.0, elbow=50.0,
-                    lean=6.0, bob=0.035, sway=2.0, plantar=25.0)
+        author_gait(rig, frames, JOG_LEG, JOG_BODY, JOG_STYLE)
     elif name == "sprint":
-        author_gait(rig, frames, swing=45.0, knee=95.0, arm=48.0, elbow=85.0,
-                    lean=14.0, bob=0.06, sway=0.0, plantar=40.0)
+        author_gait(rig, frames, SPRINT_LEG, SPRINT_BODY, SPRINT_STYLE)
     elif name == "jump":
         author_jump(rig, frames)
     elif name == "throw":
