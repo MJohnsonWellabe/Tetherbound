@@ -7,6 +7,14 @@ Before coding, read:
 2. `docs/MEADOWS_VERTICAL_SLICE.md`
 3. `docs/MEADOWS_PROGRESSION_SPEC.md`
 4. `docs/TECHNICAL_START.md`
+5. `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` — the owner's later
+   execution brief for locomotion/animation work, world-layout work,
+   progression plumbing, Meadows content, catching, captain/dungeon work,
+   and leveling/XP work. It does not replace this file, `ralph/BACKLOG.md`,
+   or any decision below — it raises the quality bar and build order for
+   the specific work it names (see its own §0.3). Where it overlaps
+   (1)–(4), it wins for that overlap the same way (3) already wins over
+   (1)/(2) below.
 
 These documents are authoritative. Where (3) disagrees with (1) or (2), **(3)
 wins** — it is the owner's later word, made canon by

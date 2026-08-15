@@ -16,11 +16,19 @@ memory of previous firings. Everything you need is on disk.
    ordering) for anything it names: movement/animation work, `R7.3`
    world-layout work, `SB9`–`SB11` progression plumbing, `SC12`–`SF34`
    Meadows content, catching, captain/dungeon work, and future leveling/XP
-   work. If your item is one of these, read the matching section there
-   BEFORE starting — it changes what "done" means for that item (e.g. no
-   more incremental tuning on locomotion once it has clearly hit a ceiling;
-   restart the creative solution instead). It does not replace `BACKLOG.md`
-   or create a second task list — see its own §0.3.
+   work. If your item is one of these, read the matching numbered section
+   there BEFORE starting — it changes what "done" means for that item (e.g.
+   no more incremental tuning on locomotion once it has clearly hit a
+   ceiling; restart the creative solution instead). **Also read §0
+   (execution rules), §1 (build order), §13 (quality gates for every
+   region), §14 (restart rule for ceilinged work) and §15 (blind-verification
+   rule) regardless of which section matches your item** — these are
+   cross-cutting and "read the matching section" alone will not surface
+   them. §1 in particular orders `MQ1A`/`MQ1B`/the movement+catching
+   checkpoint strictly before `R7.3`; `BACKLOG.md`'s Phase 6.5 now encodes
+   that ordering directly, but the plan's own §1 is the reasoning behind it.
+   It does not replace `BACKLOG.md` or create a second task list — see its
+   own §0.3.
 5. `ralph/BLOCKED.md` — what is parked, and why.
 6. `docs/HANDOFF.md` — where the project actually is.
 7. `docs/decisions/D23-the-meadows-is-the-first-game.md` and
