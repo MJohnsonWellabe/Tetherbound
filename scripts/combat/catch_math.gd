@@ -77,6 +77,34 @@ static func orb_multiplier(orb_id: String) -> float:
 	return 1.0
 
 
+## R4.9: the tier ladder. Every orb in `catching.json`'s `orbs` table is a
+## real inventory item id (`orb_basic`, `orb_greater`, ...), so this is the
+## one place that decides which tier a throw actually uses -- the strongest
+## one the player is carrying, never a weaker one left in the same satchel.
+##
+## `counts` is `{orb_id: n}`. Returns "" if every tier is empty, which the
+## caller reads as "no legal throw" the same way `stock() <= 0` already did.
+static func best_orb(counts: Dictionary) -> String:
+	var orbs: Dictionary = config().get("orbs", {})
+	var best_id := ""
+	var best_multiplier := -1.0
+	for id: String in orbs.keys():
+		if int(counts.get(id, 0)) <= 0:
+			continue
+		var multiplier := orb_multiplier(id)
+		if multiplier > best_multiplier:
+			best_multiplier = multiplier
+			best_id = id
+	return best_id
+
+
+## Every real orb tier id, in `catching.json` order. `throw_aim.gd` reads
+## these to know which inventory ids to count -- the tier table is data, so
+## nothing in code should ever hard-code a tier's item id.
+static func orb_ids() -> Array:
+	return config().get("orbs", {}).keys()
+
+
 ## The odds this throw succeeds, in 0..1.
 ##
 ## `species_rate` comes from data/creatures/species.json, so a rare creature is data

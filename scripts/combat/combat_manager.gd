@@ -787,10 +787,16 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 		radius = float(_wild.call("body_radius"))
 
 	# The decision, made once. Everything after this dramatises it.
+	#
+	# R4.9: the orb id has to be the one `throw_aim.gd` actually SPENT for
+	# this throw, not whatever tier is best right now — the satchel already
+	# lost that orb by the time the strike resolves, and re-querying "best
+	# available" here could silently price a greater-orb throw at the basic
+	# multiplier (or vice versa) if the two ever disagree.
 	var decision: Dictionary = CATCH.resolve(
 		SPECIES.catch_rate(_enemy.species_id),
 		_enemy.hp_fraction(),
-		"basic",
+		str(_throw.call("thrown_orb_id")),
 		offset,
 		radius,
 		_rng.randf()
@@ -1157,6 +1163,13 @@ func orbs_left() -> int:
 	return int(_throw.call("stock")) if _throw != null else 0
 
 
+## R4.9: which orb tier a throw right now would actually use — the HUD's own
+## orb cluster reads this so it never names/shows a tier the player is not
+## about to spend.
+func current_orb_id() -> String:
+	return str(_throw.call("current_orb_id")) if _throw != null else "orb_basic"
+
+
 ## True from the orb striking to the verdict. The fight is paused around it:
 ## neither fighter acts, because a creature landing a hit on an orb that is
 ## deciding whether it caught something is nonsense. (The wild creature's own physics
@@ -1176,7 +1189,7 @@ func catch_chance_now() -> float:
 	if _wild != null and _wild.has_method("body_radius"):
 		radius = float(_wild.call("body_radius"))
 	return CATCH.catch_chance(
-		SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), "basic", 0.0, radius
+		SPECIES.catch_rate(_enemy.species_id), _enemy.hp_fraction(), current_orb_id(), 0.0, radius
 	)
 
 

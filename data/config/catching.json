@@ -20,12 +20,17 @@
   },
 
   "orbs": {
-    "_comment": "Orb types. M3 ships one; better orbs are M8+ crafting rewards. GAME_DESIGN.md 15: basic orbs should be affordable enough that players are encouraged to try, and never so scarce that they are afraid to experiment.",
-    "basic": {
+    "_comment": "Orb types. GAME_DESIGN.md 15: basic orbs should be affordable enough that players are encouraged to try, and never so scarce that they are afraid to experiment; better orbs are meaningful crafting/progression rewards. Every key here IS the real satchel item id (data/items/items.json) -- catch_math.gd's best_orb()/orb_ids() read this table directly rather than translating between a tier name and an item id, so adding a tier is one entry in one file.",
+    "orb_basic": {
       "display_name": "Tether Orb",
       "multiplier": 1.0
     },
-    "_comment_stock": "RETIRED as a live value: orbs are satchel items now (data/items/items.json `orb_basic`), spent by throw_aim.gd from the real inventory, and Grandpa's opening gift is the starting supply (data/dialogue/opening.json give: effects). Kept only so catch_math.starting_stock() keeps answering for anything historical; nothing refills from it.",
+    "_comment_greater": "R4.9: the tier ladder's first rung. MEADOWS_PROGRESSION_SPEC.md Band 2 names 'improved Orb tier' as the first thing Rootstone (SD18) buys -- this builds the mechanic and the item now; SD18 owns the recipe that actually lets a player craft/find one, once Rootstone exists. Until then orb_greater has no acquisition path, same honest gap SB9 shipped ahead of its own first consumer. Multiplier is TUNABLE, not load-bearing: comfortably better without being 'just throw this and it's basically a catch' -- that would make the basic tier feel like a mistake to ever use, which is its own kind of failure per GAME_DESIGN.md 15's affordability rule.",
+    "orb_greater": {
+      "display_name": "Greater Tether Orb",
+      "multiplier": 1.6
+    },
+    "_comment_stock": "RETIRED as a live value: orbs are satchel items now (data/items/items.json), spent by throw_aim.gd from the real inventory, and Grandpa's opening gift is the starting supply (data/dialogue/opening.json give: effects). Kept only so catch_math.starting_stock() keeps answering for anything historical; nothing refills from it.",
     "starting_stock": 15
   },
 

@@ -96,6 +96,38 @@ func test_an_unknown_orb_does_not_silently_zero_the_odds() -> void:
 	assert_almost_eq(CATCH.orb_multiplier("does_not_exist"), 1.0, 0.001)
 
 
+# --- orb tiers (R4.9) ------------------------------------------------------
+
+func test_a_better_orb_beats_a_basic_orb_at_the_same_throw() -> void:
+	# The whole point of a tier ladder: carrying a better orb has to be worth
+	# something, or "better orbs are meaningful progression rewards"
+	# (GAME_DESIGN.md §15) is a lie.
+	var basic: float = CATCH.catch_chance(0.4, 0.5, "orb_basic", 0.0, BODY)
+	var greater: float = CATCH.catch_chance(0.4, 0.5, "orb_greater", 0.0, BODY)
+	assert_true(greater > basic,
+		"orb_greater (%f) should beat orb_basic (%f) at identical hp/aim" % [greater, basic])
+
+
+func test_best_orb_picks_the_strongest_tier_actually_owned() -> void:
+	assert_eq(CATCH.best_orb({"orb_basic": 3, "orb_greater": 1}), "orb_greater",
+		"a single greater orb should still outrank a full stack of basic ones")
+
+
+func test_best_orb_never_picks_a_tier_at_zero() -> void:
+	# Owning zero is the same as not owning it — the satchel can carry a
+	# stale key at 0 (a slot that emptied without being removed), and that
+	# must not read as "carrying" the tier.
+	assert_eq(CATCH.best_orb({"orb_basic": 0, "orb_greater": 0}), "",
+		"no tier in stock should mean no legal throw, not a silent fallback")
+	assert_eq(CATCH.best_orb({"orb_basic": 5, "orb_greater": 0}), "orb_basic")
+
+
+func test_orb_ids_names_every_configured_tier() -> void:
+	var ids: Array = CATCH.orb_ids()
+	assert_true(ids.has("orb_basic"))
+	assert_true(ids.has("orb_greater"))
+
+
 # --- the decision ---------------------------------------------------------
 
 func test_a_low_roll_catches_and_a_high_roll_does_not() -> void:

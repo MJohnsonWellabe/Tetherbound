@@ -60,6 +60,15 @@
       "blurb": "Plain make, from Grandpa's pack. A good throw matters more than a good orb.",
       "description": "A plain, unmarked sphere from Grandpa's old pack — no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb."
     },
+    "orb_greater": {
+      "name": "Greater Orb",
+      "kind": "gear",
+      "stack": 20,
+      "colour": "#c9932e",
+      "icon": "res://assets/ui/icons/items/orb_greater.png",
+      "blurb": "Reinforced tether bands. Meaningfully better odds than a plain orb.",
+      "description": "A reinforced take on the plain orb, its tether bands doubled and set tighter. A creature caught in this one has a real fight on its hands before it breaks free."
+    },
     "potion_small": {
       "name": "Small Potion",
       "kind": "consumable",

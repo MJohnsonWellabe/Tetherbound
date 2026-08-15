@@ -184,6 +184,23 @@ def icon_orb_basic() -> Image.Image:
     return img
 
 
+def icon_orb_greater() -> Image.Image:
+    """R4.9: the second orb tier. Same sphere-and-tether-bands language as
+    `icon_orb_basic` (same family, not a different object) plus one outer
+    ring cutout -- a reinforcing band -- so a fuller satchel slot reads as
+    'the better one' at a glance rather than needing the count/name text to
+    tell tiers apart."""
+    img = icon_orb_basic()
+    d = ImageDraw.Draw(img)
+    cx, cy, r = 128, 128, 96
+    ring_r = r * 0.78
+    d.ellipse(
+        (cx - ring_r, cy - ring_r, cx + ring_r, cy + ring_r),
+        outline=CLEAR, width=int(STROKE * 0.8),
+    )
+    return img
+
+
 def icon_potion_small() -> Image.Image:
     """Round-bottom flask, cork, liquid line."""
     img = new_canvas()
@@ -311,6 +328,7 @@ ITEM_ICONS = {
     "fiber.png": icon_fiber,
     "berries.png": icon_berries,
     "orb_basic.png": icon_orb_basic,
+    "orb_greater.png": icon_orb_greater,
     "potion_small.png": icon_potion_small,
     "axe.png": icon_axe,
     "pickaxe.png": icon_pickaxe,

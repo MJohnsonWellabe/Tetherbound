@@ -26,10 +26,13 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 
-## The orb cluster's icon (spec §10.4) and the item id it's counting —
-## `data/items/items.json`'s own display name is read at runtime through
-## `Game.items`, same lookup `playground_hud.gd`'s hotbar already uses, so a
-## renamed item cannot drift out of step with what this cluster prints.
+## The orb cluster's fallback icon/id (spec §10.4), used only if the combat
+## manager cannot be reached. R4.9: the real icon and name are read per-frame
+## off whichever tier `combat_manager.gd::current_orb_id()` says a throw
+## would actually spend, through `data/items/items.json`'s own `Game.items`
+## lookup (same convention `playground_hud.gd`'s hotbar already uses) — so a
+## fuller satchel showing a stronger tier changes what this cluster prints,
+## and it never claims to be about to throw an orb that a throw would not.
 const ORB_ICON_PATH := "res://assets/ui/icons/items/orb_basic.png"
 const ORB_ITEM_ID := "orb_basic"
 
@@ -652,14 +655,19 @@ func _draw_orb_cluster(orbs: int) -> void:
 	if _orb_cluster == null:
 		return
 	_orb_cluster.visible = true
+	var orb_id := ORB_ITEM_ID
+	if _manager != null:
+		orb_id = str(_manager.call("current_orb_id"))
 	var item_name := "Tether Orb"
+	var icon_path := ORB_ICON_PATH
 	var game := get_node_or_null(^"/root/Game")
 	if game != null:
 		var db: RefCounted = game.get("items")
 		if db != null:
-			item_name = str(db.call("item_name", ORB_ITEM_ID))
+			item_name = str(db.call("item_name", orb_id))
+			icon_path = str(db.call("definition", orb_id).get("icon", ORB_ICON_PATH))
 	_orb_cluster.text = "[right][img=24x24]%s[/img]  %s  x%d\n%s %s     %s %s[/right]" % [
-		ORB_ICON_PATH, item_name, orbs,
+		icon_path, item_name, orbs,
 		INPUT_GLYPH.icon("throw", 26, VERB_READY), "Throw",
 		INPUT_GLYPH.icon("cancel", 26, VERB_READY), "Cancel",
 	]

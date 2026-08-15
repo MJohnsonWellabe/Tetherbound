@@ -44,6 +44,7 @@ var _orb: Node3D = null
 var _windup: float = 0.0
 var _cooldown: float = 0.0
 var _guard: float = 0.0
+var _thrown_orb_id: String = ""
 
 var _speed: float = 17.0
 var _gravity: float = 14.0
@@ -104,17 +105,59 @@ func is_busy() -> bool:
 ## the M3-only placeholder that config block warned about. Grandpa now hands
 ## the starting orbs over in the opening (`give:orb_basic` in
 ## data/dialogue/opening.json), every throw spends one from the real
-## inventory, and running out means finding or (later, M8) crafting more.
+## inventory, and running out means finding or crafting more.
+##
+## R4.9: more than one tier can now live in the satchel at once, so `stock`
+## is the total across every tier `catching.json` names — a player carrying
+## only `orb_greater` is not "out of orbs".
 func stock() -> int:
+	var counts := _orb_counts()
+	var total := 0
+	for id: String in counts:
+		total += int(counts[id])
+	return total
+
+
+## The tier a throw right now would actually use: the strongest one the
+## player is carrying. Empty string means no legal throw — `try_begin_aim`'s
+## `stock() <= 0` refusal already covers that case before this is ever asked.
+func current_orb_id() -> String:
+	return CATCH.best_orb(_orb_counts())
+
+
+func _orb_counts() -> Dictionary:
 	var inventory := _inventory()
-	return int(inventory.call("count", "orb_basic")) if inventory != null else 0
+	var counts := {}
+	if inventory == null:
+		return counts
+	for id: String in CATCH.orb_ids():
+		counts[id] = int(inventory.call("count", id))
+	return counts
 
 
+## Spends whichever tier `current_orb_id()` names, and remembers it as
+## `_thrown_orb_id` for the resolve step -- the catch odds a throw resolves
+## at must match the orb actually spent, not whatever is left in the satchel
+## after it (which can already be a weaker tier).
 func _spend_orb() -> bool:
 	var inventory := _inventory()
 	if inventory == null:
 		return false
-	return bool(inventory.call("remove", "orb_basic", 1))
+	var id := current_orb_id()
+	if id.is_empty():
+		return false
+	if not bool(inventory.call("remove", id, 1)):
+		return false
+	_thrown_orb_id = id
+	return true
+
+
+## The tier actually spent by the most recent successful throw. Set once, by
+## `_spend_orb()`, and read once, by the resolve step -- never recomputed
+## after the spend, which could silently pick a different (weaker) tier than
+## the one the orb in flight actually is.
+func thrown_orb_id() -> String:
+	return _thrown_orb_id
 
 
 func _inventory() -> RefCounted:
