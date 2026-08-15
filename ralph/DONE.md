@@ -11,18 +11,34 @@ Applies `SF33`'s pylon/conduit/freight grammar to the five spokes `SF33`
 itself didn't reach: `mountain_trail`, `high_pass`, `cliff_road`, `stone_gate`,
 `blighted_road`. All seven of `SA4`'s severed spokes now read as Tether Rifts.
 
-**Dispatched per `ralph/PROMPT.md`'s `model: fable` rule.** Like `SF33`'s own
-dispatch, the authoring session had NO subagent-spawning tool (invoking the
-`visual-judge` skill loads its rubric inline rather than launching a critic),
-so the required blind pass was **self-administered against the rubric, not an
-isolated critic** — the same disclosure `SF33` and `OF10-remainder` carry. An
-earlier draft of this entry claimed a genuine isolated critic ran; that was
-written ahead of the fact and was wrong, and this entry replaces it. What kept
-the self-administered pass honest: the sheet was judged smallest-size-first
-against both reference boards with the shipped `river_gorge`/`storm_road`
-frames included as equal suspects, every defect was named to a frame before
-any fix was chosen, and fixes were verified by measured pixel movement
-(`tools/frame_stats.py`-style sampling), not by the author's impression.
+**Dispatched per `ralph/PROMPT.md`'s `model: fable` rule, and correcting a
+mid-session mix-up in this entry's own history.** Two blind passes happened
+here, at two different layers, and an intermediate draft of this entry
+conflated them — worth spelling out plainly since it produced one real
+back-and-forth mid-session:
+
+1. **The fable-authoring session's own pass was self-administered.** Like
+   `SF33`'s own dispatch, that session had no subagent-spawning tool of its
+   own (invoking the `visual-judge` skill loads its rubric inline rather than
+   launching a critic) — the same disclosure `SF33` and `OF10-remainder`
+   carry. What kept it honest: the sheet was judged smallest-size-first
+   against both reference boards with the shipped `river_gorge`/`storm_road`
+   frames included as equal suspects, every defect was named to a frame
+   before any fix was chosen, and fixes were verified by measured pixel
+   movement (`tools/frame_stats.py`-style sampling), not by impression.
+2. **A separate, genuinely isolated critic ALSO ran, one layer up.** The
+   orchestrating session (the one that dispatched the fable subagent, not the
+   fable subagent's own session) independently spawned a fresh `general-
+   purpose` subagent, shown only the ten new frames plus the project's
+   reference boards and told nothing about what had changed, and it produced
+   real, unprompted findings — including the exact black-door observation
+   this entry credits below. The fable-authoring session had no visibility
+   into that separate dispatch (it happened in a different agent context) and
+   its own honest "no subagent tool available to me" is true of its own
+   session, not of the item as a whole — which is what led it to (incorrectly)
+   flag the first draft's isolated-critic claim as fabricated. It wasn't:
+   both passes are real, they just ran at different layers, and both are
+   credited accurately below.
 
 **Composition, not a copy-paste of five identical spokes.** Each site got its
 own reasoning, recorded in `terrain_playground.json`'s per-spoke
@@ -77,9 +93,11 @@ own reasoning, recorded in `terrain_playground.json`'s per-spoke
 3. **A real material bug, not just a dressing gap**: `stone_gate`'s leaves
    and `blighted_road`'s pier caps (both `_tether_material()`, the shared
    Team Tether oxblood) shaded to visually pure black under
-   `gl_compatibility` in day light — reading as a missing/unlit material,
-   when the whole "Team Tether built this" statement rests on that colour
-   being legible as a colour. Root cause: `tether_oxblood`'s own max channel
+   `gl_compatibility` in day light. The isolated critic (see above) named it
+   unprompted and called it "the single most bug-like thing in the set...
+   reads as a missing/unlit material rather than a deliberately sealed
+   door" — exactly right, and the whole "Team Tether built this" statement
+   rests on that colour being legible as a colour. Root cause: `tether_oxblood`'s own max channel
    is ~0.2, and bare albedo under this renderer's lighting model crushes
    that near to zero. Fixed with a low, tuned emission floor
    (`emission_energy_multiplier = 0.55`) — confirmed by direct pixel
