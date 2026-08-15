@@ -115,6 +115,22 @@
         { "id": "wood", "n": 6 },
         { "id": "fiber", "n": 8 }
       ]
+    },
+    {
+      "id": "torch",
+      "name": "Torch",
+      "category": "survival",
+      "blurb": "A stick and a flame, planted in the ground. Lights the spot it stands on.",
+      "mesh": "res://assets/props/built/torch_prop.tscn",
+      "thumbnail": "res://assets/ui/icons/buildables/torch.png",
+      "light": {
+        "color": "#ffb366",
+        "energy": 1.6,
+        "range": 6.0,
+        "flicker": 0.35
+      },
+      "_comment_free": "OF24, explicit owner directive: 'Torch building should be free.' No cost entries at all -- not cheap, free -- so lighting a camp is never blocked on materials. `mesh` is the same primitives-built prop the carried torch uses (scripts/world/torch_prop.gd via scripts/player/torch.gd); `light` is read generically by scripts/build/build_piece.gd, not a torch-specific code path.",
+      "cost": []
     }
   ]
 }

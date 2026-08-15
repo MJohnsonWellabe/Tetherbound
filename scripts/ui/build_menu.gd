@@ -62,6 +62,28 @@ const UNAFFORDABLE_ALPHA := 0.4
 ## surface next to that one does not read as tuned differently for no reason.
 const STATUS_SECONDS := 3.0
 
+## OF24: two doors into this menu now -- `tab_build.gd`'s pause-menu launcher
+## and `playground_hud.gd`'s hammer hotkey, straight from the world. Both
+## need "the one build menu", not each lazily minting their own competing
+## instance that steals focus/mouse-mode from the other. The lookup-or-create
+## group is the same convention `interaction_arbiter.gd`'s own `GROUP`
+## constant already uses for "find the one of these that exists".
+const GROUP := "build_menu"
+const SELF_PATH := "res://scripts/ui/build_menu.gd"
+
+
+## The shared instance, creating it under `tree.root` the first time anything
+## asks. Callers that only need "is one open right now" should search `GROUP`
+## themselves rather than calling this -- it creates on a miss, which a mere
+## open-check should never do.
+static func get_or_make(tree: SceneTree) -> CanvasLayer:
+	for node in tree.get_nodes_in_group(GROUP):
+		if node is CanvasLayer:
+			return node as CanvasLayer
+	var menu: CanvasLayer = (load(SELF_PATH) as GDScript).new()
+	tree.root.add_child(menu)
+	return menu
+
 ## Which piece id was last chosen in each category — a plain `static var`
 ## rather than a save-file field: this is a within-session convenience
 ## ("I keep placing walls, land the cursor back on Wall"), not state anyone

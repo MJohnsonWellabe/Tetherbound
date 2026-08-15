@@ -14,24 +14,37 @@ extends Node3D
 
 var _model: Node3D = null
 
+## OF24: a data-driven point light for any buildable that wants one -- see
+## `_build_light()`. Only the torch uses this today, but nothing here is
+## torch-specific: a second lit buildable is a `light` block in
+## data/items/buildables.json, not new code.
+var _light: OmniLight3D = null
+var _light_base_energy := 0.0
+var _light_flicker := 0.0
+var _flicker_time := 0.0
 
-## The see-through preview the placer drags around. No collision.
+
+## The see-through preview the placer drags around. No collision, no light --
+## a glowing ghost would read as already-placed.
 func build_ghost(mesh_path: String) -> void:
-	_spawn(mesh_path, false)
+	_spawn(mesh_path, false, {})
 
 
-## The real thing: solid and collidable.
-func build_real(mesh_path: String) -> void:
-	_spawn(mesh_path, true)
+## The real thing: solid, collidable, and lit if `light` (the buildable's own
+## `data/items/buildables.json` `light` block) is non-empty.
+func build_real(mesh_path: String, light: Dictionary = {}) -> void:
+	_spawn(mesh_path, true, light)
 
 
-func _spawn(mesh_path: String, solid: bool) -> void:
+func _spawn(mesh_path: String, solid: bool, light: Dictionary) -> void:
 	if not ResourceLoader.exists(mesh_path):
 		push_warning("build piece missing: %s" % mesh_path)
 		return
 	var scene: PackedScene = load(mesh_path)
 	_model = scene.instantiate() as Node3D
 	add_child(_model)
+	if not light.is_empty():
+		_build_light(light)
 	if not solid:
 		return
 
@@ -62,6 +75,41 @@ func _mesh_instances(node: Node) -> Array[MeshInstance3D]:
 	for child in node.get_children():
 		found.append_array(_mesh_instances(child))
 	return found
+
+
+## OF24: `{color, energy, range, flicker}` off the buildable's own JSON entry
+## -- the torch's `light` block first, but generic on purpose (see this
+## file's own top-of-class comment). Sits at the placed model's
+## `flame_local_position()` if it exposes one (torch_prop.gd does, the SAME
+## point the carried torch's own OmniLight in scripts/player/torch.gd reads,
+## so the ground and handheld versions glow from the same spot on the shared
+## mesh) or the model's local origin otherwise. `flicker` is a 0-1 fraction
+## of `energy` the light wobbles by; 0 (or the field absent) is a steady
+## light with no per-frame cost.
+func _build_light(light: Dictionary) -> void:
+	_light = OmniLight3D.new()
+	_light.name = "PieceLight"
+	_light.light_color = Color(str(light.get("color", "#ffb366")))
+	_light_base_energy = float(light.get("energy", 1.6))
+	_light.light_energy = _light_base_energy
+	_light.omni_range = float(light.get("range", 6.0))
+	_light.shadow_enabled = false
+	_light_flicker = clampf(float(light.get("flicker", 0.0)), 0.0, 1.0)
+	if _model != null and _model.has_method("flame_local_position"):
+		_light.position = _model.call("flame_local_position")
+	add_child(_light)
+
+
+func _process(delta: float) -> void:
+	if _light == null or _light_flicker <= 0.0:
+		return
+	# Same two-out-of-phase-sines shape scripts/player/torch.gd's own OmniLight
+	# flicker uses, not shared code -- this and that light have different
+	# owners (a placed piece here, the carried torch there) and no third
+	# caller yet to justify factoring the six-line shape out.
+	_flicker_time += delta
+	var noise := sin(_flicker_time * 9.0) * 0.6 + sin(_flicker_time * 24.3 + 1.3) * 0.4
+	_light.light_energy = _light_base_energy * (1.0 + noise * _light_flicker)
 
 
 ## D34/spec 13: three ghost states, each its own colour. `VALID` legal to

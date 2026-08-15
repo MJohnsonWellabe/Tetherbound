@@ -562,6 +562,16 @@ func _find_skeleton(node: Node) -> Skeleton3D:
 	return null
 
 
+## OF24: the trainer rig's own `Skeleton3D`, for a caller that needs to hang
+## something off a bone directly rather than through `_apply_accessories`'
+## single-mesh-plus-palette shape (scripts/player/torch.gd's carried torch is
+## a multi-part prop -- stick, flame, embers -- not a coloured primitive).
+## Null the same way `find_part()` answers null: no art built yet, or no
+## skeleton on whatever did build.
+func skeleton() -> Skeleton3D:
+	return _find_skeleton(_art) if _art != null else null
+
+
 func _find_animation_player(node: Node) -> AnimationPlayer:
 	if node is AnimationPlayer:
 		return node as AnimationPlayer

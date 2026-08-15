@@ -15,6 +15,11 @@ extends "res://scripts/ui/menu_tab.gd"
 ## `craft_panel.gd`/`storage_panel.gd` — not parented to this tab, which gets
 ## torn down and rebuilt (`build()`) far more often than the menu itself
 ## should be recreated.
+##
+## OF24 added a second door in: `playground_hud.gd`'s hammer hotkey
+## (`build_open`), straight from the world. `build_menu.gd::get_or_make()` is
+## the shared lookup-or-create both doors go through now, so the two can
+## never mint two competing instances.
 
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
 
@@ -24,7 +29,6 @@ const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
 const FREE_NOTE_COLOUR := Color(0.851, 0.702, 0.251)
 
 var _open_button: Button = null
-var _build_menu: CanvasLayer = null
 var _free_note: Label = null
 
 
@@ -66,16 +70,6 @@ func build() -> void:
 	_open_button.pressed.connect(_on_open_pressed)
 	panel.add_child(_open_button)
 
-	# A gap this pass does not close (task brief): there is no exploration
-	# hotkey that jumps straight to the build menu yet — the pause menu's
-	# Build tab is the only door in today. Noted rather than silently worked
-	# around with a new input action this agent was not asked to add.
-	var gap_note := Label.new()
-	gap_note.text = "(no hammer hotkey yet — this button is the only way in)"
-	gap_note.add_theme_font_size_override("font_size", 19)
-	gap_note.add_theme_color_override("font_color", Color(0.5, 0.51, 0.48))
-	panel.add_child(gap_note)
-
 	add_child(_panel(panel))
 
 
@@ -100,16 +94,8 @@ func _on_open_pressed() -> void:
 		return
 	if menu != null:
 		menu.call("close")
-	var build_menu := _get_or_make_build_menu()
+	var build_menu := BUILD_MENU.get_or_make(get_tree())
 	# Deferred: `game_menu.gd::close()` un-pauses the tree and hides its own
 	# root this same frame — opening the build menu one frame later keeps the
 	# two hand-offs from fighting over `Input.mouse_mode` in the same frame.
 	build_menu.call_deferred("open")
-
-
-func _get_or_make_build_menu() -> CanvasLayer:
-	if _build_menu != null and is_instance_valid(_build_menu):
-		return _build_menu
-	_build_menu = BUILD_MENU.new()
-	get_tree().root.add_child(_build_menu)
-	return _build_menu

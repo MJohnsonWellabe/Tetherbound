@@ -154,7 +154,11 @@ func _spawn_model(mesh_path: String) -> Variant:
 		child.queue_free()
 
 	var node: Node3D = null
-	if mesh_path.ends_with(".gltf") or mesh_path.ends_with(".glb"):
+	# OF24: `.tscn` joins `.gltf`/`.glb` here -- the torch's own `mesh` entry
+	# is a hand-authored scene (assets/props/built/torch_prop.tscn) wrapping a
+	# script-built prop (scripts/world/torch_prop.gd), not a vendored file,
+	# but it is still a `PackedScene` that has to be instantiated the same way.
+	if mesh_path.ends_with(".gltf") or mesh_path.ends_with(".glb") or mesh_path.ends_with(".tscn"):
 		var scene: PackedScene = load(mesh_path)
 		if scene == null:
 			return null

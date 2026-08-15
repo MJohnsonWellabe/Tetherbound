@@ -141,13 +141,12 @@ const GLYPHS := {
 	## for the `cancel` id instead of a `combat_run` entry that was never added.
 	"build_snap_cycle": {"gamepad": "xbox_dpad_down.png"},
 
-	## OF21 input groundwork: two new world-context actions, wired for real by
-	## OF24 (a hammer hotkey that opens the build menu straight from the
-	## field, and a hotkey that arms a free ground-torch placement without
-	## going through the catalogue). Both do nothing yet -- nothing calls
-	## `icon()` with these ids -- but they exist, are rebindable, and read a
-	## real icon the moment a caller shows up, the same "wired ahead of a
-	## caller" pattern `build_place`/`build_cancel` used above.
+	## OF21 input groundwork, wired for real by OF24: `playground_hud.gd`'s
+	## `_read_world_hotkeys()` reads both straight from the world -- `build_open`
+	## opens the build menu without a trip through the pause menu first, and
+	## `torch_place` arms the free ground torch directly, the same "wired
+	## ahead of a caller" pattern `build_place`/`build_cancel` used above,
+	## finally given its caller.
 	##
 	## `build_open` sits on gamepad Start/Menu (button 6), freed up by
 	## `torch_toggle`'s move off it above -- Start's only other reader,

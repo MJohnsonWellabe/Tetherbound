@@ -60,6 +60,8 @@ const MB := 1048576.0
 
 const CREATURE_SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
+const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
 ## EV9's owner-commissioned HUD glyphs (`docs/ASSET_LEDGER.md`, staged
 ## `369ecc5`). `orb_capture.png` has no mount yet — there is no orb-count
@@ -933,6 +935,7 @@ func _process(delta: float) -> void:
 	_update_hotbar_and_message()
 	_update_world_message()
 	_read_hotbar_input()
+	_read_world_hotkeys()
 	_update_creature_block()
 	_update_party_strip()
 	_update_objective()
@@ -1211,6 +1214,71 @@ func _use_hotbar_slot(index: int) -> void:
 	var restored := float(heal_target.call("heal", heal))
 	inventory.call("remove", id, 1)
 	_show_hotbar_message("%s recovers %d." % [str(heal_target.call("label")), int(restored)])
+
+
+## OF24: the hammer and torch-place hotkeys, read straight from the world --
+## `build_open` (gamepad Start / keyboard B) opens the build menu without a
+## trip through the pause menu's Build tab first; `torch_place` (RT /
+## keyboard P) arms the free ground torch directly, the same hand-off
+## `build_menu.gd::_pick` does for anything chosen off its grid. Gated the
+## same way `_read_hotbar_input` gates the hotbar: silent during a fight, and
+## (new here) silent while the interaction arbiter is asleep -- a
+## conversation, a naming prompt or a fade owns the screen exactly when that
+## flag goes false (`sequence_director.gd::_refresh_lockout`), and a hammer
+## opening over a dialogue box is the same class of bug OF23 fixed for a
+## refused build pick. Neither reads while the build menu is already open --
+## `build_open` because a second press should not fight the first one's
+## `open()`, `torch_place` because arming a placement UNDER an open menu
+## makes no sense to the player.
+func _read_world_hotkeys() -> void:
+	if not _world_hotkeys_enabled():
+		return
+	if _build_menu_is_open():
+		return
+	if Input.is_action_just_pressed(&"build_open"):
+		BUILD_MENU.get_or_make(get_tree()).call_deferred("open")
+		return
+	if Input.is_action_just_pressed(&"torch_place"):
+		_arm_torch_placement()
+
+
+## Combat and the interaction arbiter's modal flag both stand in for "the
+## player does not have free run of the world right now" -- the same two
+## states `_read_hotbar_input`'s own combat gate and
+## `sequence_director.gd::_refresh_lockout` already treat as mutually
+## exclusive with ordinary exploration. No arbiter reachable (a stripped-down
+## test/capture scene) reads as permissive, the same null-safe default
+## `_combat_is_running()` already uses -- nothing here to be modal ABOUT.
+func _world_hotkeys_enabled() -> bool:
+	if _combat_is_running():
+		return false
+	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
+		return false
+	return true
+
+
+func _build_menu_is_open() -> bool:
+	for node: Node in get_tree().get_nodes_in_group(BUILD_MENU.GROUP):
+		if node.has_method("is_open") and bool(node.call("is_open")):
+			return true
+	return false
+
+
+## Arms `pending_build = "torch"` the same way `build_menu.gd::_pick` arms
+## whatever the player picked off its grid (~L477-478) -- `can_afford` is
+## checked for the same reason `_pick` checks it (OF23: a refused arm needs
+## to SAY so, not just do nothing), even though the torch's own `cost: []`
+## means this refusal path is dead today; free build or a future costed
+## torch both still go through the same one check.
+func _arm_torch_placement() -> void:
+	if _game == null:
+		return
+	if not bool(_game.call("can_afford", "torch")):
+		AUDIO_CUES.play(&"ui_error")
+		_show_hotbar_message("Can't place a torch right now.")
+		return
+	AUDIO_CUES.play(&"ui_accept")
+	_game.set("pending_build", "torch")
 
 
 ## OF20. Polls `Game`'s one-shot toast queue (`take_pending_world_message()`)

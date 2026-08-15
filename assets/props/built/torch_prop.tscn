@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/torch_prop.gd" id="1_torch_prop"]
+
+; OF24: the handheld/ground torch's visible prop -- stick, flame, embers,
+; NO light (each caller adds its own OmniLight3D from its own data source;
+; see scripts/world/torch_prop.gd's own header). Empty root: every child is
+; built in code, the same "load-bearing script, empty scene shell" shape
+; scenes/combat/orb.tscn already uses for the same reason -- the geometry is
+; parametric (movement.json-tunable via each caller), not hand-placed.
+
+[node name="TorchProp" type="Node3D"]
+script = ExtResource("1_torch_prop")

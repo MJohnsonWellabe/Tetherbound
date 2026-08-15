@@ -115,6 +115,8 @@ func _run() -> void:
 
 	failures.append_array(await _the_perf_overlay_reports_numbers(world))
 	failures.append_array(await _the_hotbar_heals_a_creature(world))
+	failures.append_array(await _the_torch_shows_a_visible_prop_when_lit(world))
+	failures.append_array(await _build_open_opens_the_menu_from_the_world(world))
 
 	print("")
 	if failures.is_empty():
@@ -267,5 +269,99 @@ func _the_hotbar_heals_a_creature(world: Node) -> Array[String]:
 	if int(inventory.call("count", "potion_small")) != 0:
 		found.append("the hotbar heal press did not spend the potion")
 
+	return found
+
+
+## OF24, owner clarification: "what I was really talking about is one you
+## carry around to light the way" -- `scripts/player/torch.gd` had been an
+## invisible SpotLight since R0.11, and no test ever would have caught that
+## a lit torch drew nothing, because none checked for a visible PROP, only
+## the light's own boolean state. Toggles the real torch action (at most
+## twice: once to flip it on if it happened to spawn unlit, once more is
+## never reached once `is_on()` reads true) and asserts the prop node this
+## pass added (`torch.prop_node()`) actually exists and is visible -- a light
+## with no prop behind it would pass every check that came before this one.
+func _the_torch_shows_a_visible_prop_when_lit(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var player: Node = world.get_node_or_null(^"Player")
+	if player == null:
+		return ["no Player node; cannot check the carried torch"] as Array[String]
+	var torch: Node = player.get("torch")
+	if torch == null:
+		return ["Player has no torch (scripts/player/torch.gd did not attach)"] as Array[String]
+
+	for attempt in 2:
+		if bool(torch.call("is_on")):
+			break
+		Input.action_press(&"torch_toggle")
+		await physics_frame
+		await physics_frame
+		Input.action_release(&"torch_toggle")
+		for i in 6:
+			await physics_frame
+
+	if not bool(torch.call("is_on")):
+		return ["could not get the carried torch lit to check its prop"] as Array[String]
+
+	if not torch.has_method("prop_node"):
+		return ["torch.gd exposes no prop_node() accessor for the visible prop"] as Array[String]
+	var prop: Node = torch.call("prop_node")
+	if prop == null or not is_instance_valid(prop):
+		found.append("the torch is lit but carries no visible prop node (a light with nothing to see)")
+		return found
+	if not (prop as Node3D).visible:
+		found.append("the torch is lit but its prop node is not visible")
+	else:
+		print("torch lit: visible prop '%s' present" % prop.name)
+
+	# Leave the torch off so nothing after this in the run (or a future check
+	# added after this one) inherits a torch this check lit.
+	if bool(torch.call("is_on")):
+		Input.action_press(&"torch_toggle")
+		await physics_frame
+		await physics_frame
+		Input.action_release(&"torch_toggle")
+		for i in 4:
+			await physics_frame
+	return found
+
+
+## OF24: the hammer hotkey. `build_open` is meant to open the real build menu
+## straight from exploration, no trip through the pause menu's Build tab
+## first -- `smoke_free_build.gd` already proves the Build-tab door works,
+## this proves the world door does too, through the same shared
+## `build_menu.gd::get_or_make()` lookup `tab_build.gd` was rewritten to use.
+func _build_open_opens_the_menu_from_the_world(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	if hud == null:
+		return ["no PlaygroundHUD in the scene"] as Array[String]
+
+	const BUILD_MENU_GROUP := "build_menu"
+	for node in get_nodes_in_group(BUILD_MENU_GROUP):
+		if node.has_method("is_open") and bool(node.call("is_open")):
+			node.call("close")
+			await physics_frame
+
+	Input.action_press(&"build_open")
+	await physics_frame
+	await physics_frame
+	Input.action_release(&"build_open")
+	for i in 10:
+		await physics_frame
+
+	var menu: Node = null
+	for node in get_nodes_in_group(BUILD_MENU_GROUP):
+		menu = node
+		break
+	if menu == null or not bool(menu.call("is_open")):
+		found.append("pressing build_open in the world did not open the build menu")
+		return found
+	print("build_open opened the build menu straight from the world")
+
+	# Leave the world how the run found it.
+	menu.call("close")
+	for i in 5:
+		await physics_frame
 	return found
 

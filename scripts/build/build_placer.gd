@@ -203,6 +203,21 @@ func _piece_mesh(game: Node, id: String) -> String:
 	return str(entry.get("mesh", ""))
 
 
+## OF24: the same catalogue entry's own `light` block, {} for anything that
+## has none (every entry but the torch, today). Fed straight into
+## `build_piece.gd::build_real` -- see that file's own comment on why this is
+## generic rather than torch-specific.
+func _piece_light(game: Node, id: String) -> Dictionary:
+	if STATEFUL_IDS.has(id):
+		return {}
+	var items: RefCounted = game.get("items")
+	if items == null:
+		return {}
+	var entry: Dictionary = items.call("buildable", id)
+	var light: Variant = entry.get("light", {})
+	return light if light is Dictionary else {}
+
+
 ## The ghost: the armed piece's own silhouette at half alpha, coloured by
 ## legality. Rebuilt whenever the armed id changes, so switching pieces in
 ## the Build tab swaps the ghost rather than leaving the old one behind.
@@ -371,7 +386,7 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 		placed = BUILD_PIECE.new()
 		placed.name = "Piece_%s" % id
 		get_parent().add_child(placed)
-		placed.call("build_real", mesh_path)
+		placed.call("build_real", mesh_path, _piece_light(game, id))
 	placed.rotation.y = deg_to_rad(yaw_deg)
 	placed.set_meta(BUILDING_ID_META, id)
 	if index >= 0:

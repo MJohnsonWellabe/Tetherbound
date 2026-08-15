@@ -128,18 +128,29 @@ func test_the_menu_scene_loads_and_is_a_canvas_layer() -> void:
 	assert_eq(state.get_node_type(0), "CanvasLayer")
 
 
+## OF24: `torch` is DELIBERATELY free -- explicit owner directive ("Torch
+## building should be free"), recorded with its own `_comment_free` right in
+## data/items/buildables.json next to the empty `cost: []` this guard would
+## otherwise flag. Every other id still has to cost something; an empty cost
+## array anywhere else is still almost certainly a typo, which is the whole
+## reason this guard exists.
+const INTENTIONALLY_FREE_IDS := ["torch"]
+
+
 func test_every_buildable_costs_items_that_exist() -> void:
 	var buildables: Array = db.buildables()
 	assert_true(buildables.size() >= 1, "the build menu needs at least one entry")
 	for entry in buildables:
 		var piece: Dictionary = entry
-		assert_false(str(piece.get("id", "")).is_empty())
+		var id := str(piece.get("id", ""))
+		assert_false(id.is_empty())
 		assert_false(str(piece.get("name", "")).is_empty())
 		var cost: Array = piece.get("cost", [])
-		assert_true(cost.size() > 0, "%s is free, which is almost certainly a typo" % piece.get("id"))
+		if not INTENTIONALLY_FREE_IDS.has(id):
+			assert_true(cost.size() > 0, "%s is free, which is almost certainly a typo" % id)
 		for requirement in cost:
-			var id := str((requirement as Dictionary).get("id", ""))
-			assert_true(db.has(id), "%s costs an item that does not exist: %s" % [piece.get("id"), id])
+			var cost_id := str((requirement as Dictionary).get("id", ""))
+			assert_true(db.has(cost_id), "%s costs an item that does not exist: %s" % [id, cost_id])
 			assert_true(int((requirement as Dictionary).get("n", 0)) > 0)
 
 

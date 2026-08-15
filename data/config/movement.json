@@ -90,6 +90,15 @@
     "spot_angle_deg": 46.0,
     "energy": 3.2,
     "attenuation": 1.4,
-    "shadows": false
+    "shadows": false,
+    "_comment_prop": "OF24, owner clarification after seeing an invisible SpotLight and nothing else: 'what I was really talking about is one you carry around to light the way' -- so the torch now has an actual visible prop (scripts/world/torch_prop.gd, bone-attached by scripts/player/torch.gd), plus its OWN warm OmniLight so the glow reads as coming from the prop rather than the separate forward-throw SpotLight above. `prop_bone` is the trainer rig bone it hangs from -- RightHand carries the throw clip (creature-catching), so the torch rides the hip instead, a fixed offset from the pelvis across every clip rather than swinging through the throw pose. `prop_offset`/`prop_rotation_deg` are local to that bone, [x,y,z] metres / degrees.",
+    "prop_bone": "Hips",
+    "prop_offset": [0.14, -0.05, 0.06],
+    "prop_rotation_deg": [0.0, 20.0, 26.0],
+    "_comment_omni": "The prop's own point light, separate from the SpotLight throw above. Modest range/energy for the same D06 Compatibility-renderer reason the SpotLight stays unshadowed -- this one is unshadowed unconditionally, never toggled by `shadows` above. `flicker_amount` is a fraction of `omni_energy` the light wobbles by (0 = steady); `flicker_speed` is roughly how many wobbles per second.",
+    "omni_energy": 1.6,
+    "omni_range": 6.0,
+    "flicker_amount": 0.35,
+    "flicker_speed": 9.0
   }
 }
