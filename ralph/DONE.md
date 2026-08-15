@@ -107,7 +107,7 @@ pre-existing gap this item did not invent a fix for.
 
 ## R4.6 — Evolution mechanic and ceremony
 
-`model: opus` · `tests: test_evolution_links, test_evolution (new), smoke_evolution (new)` · `area: ui` · COMMIT_PLACEHOLDER
+`model: opus` · `tests: test_evolution_links, test_evolution (new), smoke_evolution (new)` · `area: ui` · `5029370`
 
 D20's "the evolution system itself remains unbuilt, deliberately... until it
 lands a caught Mudsnout simply stays a Mudsnout" is no longer true. Real
