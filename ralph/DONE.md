@@ -3,6 +3,52 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R2.3-remainder — The harvest-point glint reads as a designed convention, not a debug sticker
+
+`model: opus` · `4210d81` · `tests: none (visual) — a fresh local render + blind
+visual-judge pass, per conventions.md`
+
+`R2.3`'s marker (a plain unshaded gold sphere beside the trunk/rock) shipped,
+but a blind critic on this session's own re-render called it "a flat,
+unshaded, arbitrarily-positioned sticker... reads as a debug/placeholder, not
+a designed interact-here affordance" — no gradient, no glow falloff. The
+remainder's own note named two untried levers: real light falloff, or a
+`GPUParticles3D` sparkle. Used both, procedurally (no new asset files):
+`vegetation_harvest_point.gd`'s `_glint` is now three parts — a tight
+billboard "core" gradient, a larger soft "halo" gradient (both sampling a
+`GradientTexture2D` built at runtime via a new `inner_hold`-parameterised
+`_build_radial_gradient_texture()`), and a `GPUParticles3D` node emitting a
+handful of slow, upward-drifting motes.
+
+Three local rounds, each fixing a real defect the previous round's blind
+critic found, per `conventions.md`'s iterate-locally-push-once rule:
+
+1. Round 1 (halo + a geometric `SphereMesh` core): the halo's gradient
+   falloff read well, but the critic called the low-poly sphere (12 radial
+   segments, 6 rings, 0.11m radius) "blocky, hard-edged rectangles... an
+   unantialiased sprite" up close — its facets were resolving as visible
+   edges under software rendering.
+2. Round 2 (sphere replaced with a second, tighter billboard gradient — no
+   polygon silhouette left to facet): confirmed fixed, but surfaced a new
+   defect the first round's frame hadn't shown clearly — the sparkle quads
+   had no texture at all, so a flat colour rendered as literal hard-edged
+   squares, "leftover debug gizmos... stacked vertically."
+3. Round 3 (gave the sparkle quads the same gradient texture, widened their
+   emission spread 60°→100° so they scatter instead of lining up): a fourth,
+   fresh blind critic gave the item's own done-when verdict directly —
+   "reads as an intentional resource-glint convention... not a debug
+   leftover." Two minor notes recorded, not chased further because they
+   don't change the verdict and this converges the pass rather than being a
+   flat round: the glow's hue sits close enough to the scene's own warm dusk
+   lighting to occasionally read as ambient bounce rather than sparkle at a
+   glance, and a still frame can't show the particles' motion.
+
+Verified by real render (`tools/capture_harvest_points.gd`, three iterations,
+software Compatibility renderer) and by the scene actually instantiating 12
+live `VegetationHarvestPoint` nodes with no script errors each render — not
+just a syntax check. No code elsewhere referenced the renamed/removed
+`_build_glint()`; nothing else to update.
+
 ## R3.1-remainder — A placed storage chest's own contents now survive save/load
 
 `model: sonnet` · `8af9f25` · `tests: test_save_format (24 tests), test_storage

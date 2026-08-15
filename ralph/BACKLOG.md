@@ -1761,44 +1761,13 @@ tutorial spots, sharing the durability/tool logic through a new
 `harvest_logic.gd` rather than a second copy of it. **Did not fully clear
 the owner's own added bar** — narrower remainder opened below.
 
-### R2.3-remainder — The distance marker works but reads as a debug placeholder, not a designed "gather me" convention
-`model: opus` · `tests: none (visual)` · `area: vegetation`
-`R2.3`'s own done-when (owner feedback, 2026-08-11) added a real requirement:
-a harvestable prop has to read as harvestable from an approach distance, not
-just once the prompt appears. Two mechanisms were tried, in order, each with
-a real blind-judge verdict:
-
-1. **A per-instance MultiMesh colour tint** (the same mechanism
-   `R7.1-remainder` uses for grass jitter), applied to the whole tree/rock
-   instance. Round 1 was too weak to register at all — confirmed by
-   rendering and sampling actual pixel values, not by eye. Round 2 (strong,
-   red-dominant) was clearly visible but two independent blind critics
-   called the canopy "hard-edged red/yellow patchwork... reads as scorching
-   or disease, not a marker." Round 3 (a more balanced gold, less red) got
-   the same verdict from a fresh critic. This is a structural wall, not a
-   colour-tuning miss: the Quaternius leaf mesh carries its own baked
-   per-vertex shading variation, and any per-instance multiply exaggerates
-   it into blotches rather than a clean colour shift. Reverted.
-2. **A small standalone glint** — an unshaded emissive gold sphere positioned
-   beside (not inside) the trunk/rock, toggled off during the respawn
-   cooldown. This sidesteps the leaf-blotch problem entirely (it doesn't
-   touch the tree/rock material at all) and a blind critic confirmed it is
-   genuinely visible and correctly positioned at both distances tested. **It
-   shipped, but the same critic called it "a flat, unshaded, arbitrarily-
-   positioned sticker" that "reads as a debug/placeholder... not a designed
-   interact-here affordance"** — real, specific, and not yet addressed:
-   no gradient, no glow falloff, no relation to the trunk's own geometry
-   (bark grooves, a notch, a branch).
-
-Both are real, verified rounds — this is not "still not right," it is two
-different levers tried and two different specific verdicts recorded. Not
-chased a third round this pass (`conventions.md`'s own stopping guidance,
-and the underlying mechanism — harvesting itself — is solid and shipped).
-Whoever continues: a soft glow/particle treatment (add real light falloff or
-a `GPUParticles3D` sparkle rather than a flat unshaded mesh) is the next
-untried lever, distinct from both attempts above. Done when: a fresh blind
-critic looking at the marker calls it an intentional resource convention
-rather than a debug sprite.
+**`R2.3-remainder` (the harvest-point glint reads as a designed convention,
+not a debug sticker) shipped — see `DONE.md`.** The next untried lever this
+entry itself named — real glow falloff, a `GPUParticles3D` sparkle — closed
+it: three local rounds (each fixing a real defect a fresh blind critic found
+in the previous one — a faceted low-poly sphere core, then untextured hard-
+edged sparkle quads), converging on a fourth critic's direct verdict, "reads
+as an intentional resource-glint convention... not a debug leftover."
 
 **`R2.4` (Orb and potion crafting) shipped — see `DONE.md`.**
 
