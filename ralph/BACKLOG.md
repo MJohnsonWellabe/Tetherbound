@@ -1423,39 +1423,15 @@ invented here.
 
 ### R4.4 — TMs and teaching moves · `model: sonnet` · `tests: test_moves` · §13
 
-### R4.5 — Tuskroot's REAL model 🔒 — LIKELY ALREADY DONE, needs verification
-`model: sonnet` · `tests: smoke_art`
-**R0.8.5's full blind review (2026-08-09) found this is probably no longer
-true.** `assets/pals/tetherbound/tuskroot/models/pal_tuskroot_lod0.glb` has
-a different file hash from `ollie-the-songbird.glb`, and a fresh turntable
-render (`docs/reviews/2026-08-09-r0.8.5-full-blind-review.md`) shows a real
-tusked boar carrying the same moss-and-stone material language as Mudsnout —
-exactly the "must read as Mudsnout grown up" brief below. `species.json`
-already has it at height 2.15 against Mudsnout's 1.55, matching D17/D19's
-numbers. What that review did NOT do: run `smoke_art` or check the rig/clip
-wiring, which is what this item's own `tests:` field names. Next firing on
-this item: run `smoke_art`, confirm the model is properly rigged and
-animated (not just present), and if it passes, close this as done instead
-of doing the generation work described below — do not silently invent a
-replacement model over a real one already installed.
-
-**Constraint change, spec §20 / D23: the "fresh generation from the sheet"
-fallback below is now illegal.** No new creature Meshy generations for the
-Meadows, at all. The remaining paths are (1) verify the installed model, which
-R0.8.5's review suggests will pass, or (2) graft off Mudsnout's finished model,
-which costs no credits either way. If both fail this becomes a `BLOCKED.md`
-question for the owner — **not** a credit spend. The `🔒` marker above is
-therefore misleading and should go when this item is next touched.
-
-Original brief, kept for whoever verifies: the last stand-in was
-`ollie-the-songbird.glb`. Since D20 it never spawns wild, so the only place
-it will ever be seen is the evolution ceremony: the single most emotionally
-loaded reveal a creature model gets. `CLAUDE.md`'s prototyping rule applies
-with full force — the ceremony may not be judged with a songbird wearing a
-boar's name. If verification finds it's NOT actually done: needs its own
-call first, fresh generation from the sheet, or a graft off Mudsnout's
-finished model (try the graft first, it costs no credits). Height 2.15 per
-D19; strictly larger than Mudsnout per D17.
+**`R4.5` (Tuskroot's real model) verified and closed — see `DONE.md`.** It
+was already a real rigged/animated model, not the songbird stand-in — the
+open question was whether `smoke_art` actually proved that, and it didn't:
+Tuskroot never spawns wild (D13, the Meadows' one evolution, no evolution
+system built yet to trigger it), so the test's existing world-check never
+saw it. Extended `smoke_art.gd` to build any `evolves_from` species directly
+and run the same height/clip checks the wild-spawned creatures get.
+Confirmed clean: 2.15m model against its 2.15m collider, all six clips
+present. No generation or graft needed.
 
 ### R4.6 — Evolution mechanic and ceremony
 `model: opus` · `tests: test_evolution_links, smoke_evolution` (new)

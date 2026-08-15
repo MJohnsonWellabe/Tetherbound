@@ -52,6 +52,41 @@ just before this pass) was missing its committed `.uid` sidecar — the only
 gap among all 66 `tests/*.gd` files, checked directly. Same shape as the
 `SB10` `test_player_death.gd.uid` fix. Added.
 
+## R4.5 — Tuskroot's real model, verified (not regenerated)
+
+`model: sonnet` · `7dbcb0f` · `tests: smoke_art.gd (extended, headless run clean: "art: OK — models loaded, sized to their colliders, and the meadow is dressed.")`
+
+The item read "LIKELY ALREADY DONE, needs verification" — R0.8.5's blind
+review had already found a real tusked-boar model installed
+(`assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb`,
+not the `ollie-the-songbird.glb` stand-in the original brief worried about)
+but had not run `smoke_art` or checked rig/clip wiring, which is what this
+item's own `tests:` field names.
+
+Running `smoke_art.gd` unmodified would not have proved anything: Tuskroot
+is the Meadows' one evolution (`D13`), reached only through Mudsnout, and
+there is no evolution system built yet to spawn it — `species.json` confirms
+it names no wild-spawn table entry anywhere. The test's
+`_the_creatures_in_the_world_loaded_their_models()` only checks creatures
+actually standing in the loaded playground, so it silently never touched
+Tuskroot at all, then or now.
+
+Fixed by extending `smoke_art.gd` with `_evolution_only_species_are_verified()`:
+for any species whose data names an `evolves_from`, build it directly via
+`creature.tscn` + `creature_body.gd`, the same construction
+`tools/validate_asset.gd` already uses to judge a species outside the world,
+then run the exact same height-fit and clip-presence checks the wild-spawned
+creatures get. Not Tuskroot-specific — driven off the data, so a future
+second evolution gets the same coverage automatically.
+
+Headless run confirms the model is real and correctly wired: renders 2.15m
+against its 2.15m collider (matching D17/D19's Mudsnout→Tuskroot size step),
+and all six declared clips (`idle`, `walk`, `run`, `attack`, `hit`, `faint`)
+are present on the model under those exact names. No regeneration, no graft
+off Mudsnout — the installed asset was already correct, it was just never
+mechanically checked. `R4.6` (the evolution mechanic/ceremony, blocked on
+this item) is now unblocked.
+
 ## SB11 — One tracked objective, and a two-list quest log
 
 `model: sonnet` · `2706cac` · `tests: test_quest_log.gd (new, 6/6), smoke_menu.gd, full unit suite (645/83864/0 failed)`
