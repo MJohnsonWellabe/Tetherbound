@@ -1217,23 +1217,17 @@ item's own brief anticipated. One narrower gap opened below.
 
 **`R3.1-remainder` (a placed storage chest's own contents now survive save/load) shipped — see `DONE.md`.**
 
-### R3.2 — Death satchels persist across save/load
-`model: sonnet` · `tests: test_satchel` (new)
-**Was blocked on its own prerequisite, now clear.** As literally scoped this
-could not be built before `R3.3` existed: there was no death-satchel
-mechanism anywhere in the project for anything to persist. `R3.3` (now
-shipped, see below) built it as `death_satchel.gd`, a `storage_state.gd`
-instance under the hood — and `storage_state.gd` already grew `save_data()`/
-`load_data()` for `R3.1-remainder`'s chest persistence, the exact shape this
-item needs. What is left is narrow: walk whatever group death satchels get
-placed in (the same pattern `build_placer.gd` already uses for
-`placed_buildings`), record each one's position/id plus `save_data()`'s
-output in the save file, and restore/rebuild them on load the way
-`GameState.load_game()`'s `build_placer` group callback already does for
-placed buildings — a death satchel is not a `placed_building` (the player
-never built it), so it likely wants its own small array in the save format
-rather than overloading that one, versioned in from the start the way `R3.1`
-already asks every future save-format addition to be.
+**`R3.2` (death satchels persist across save/load) shipped — see `DONE.md`.**
+`GameState.death_satchels` joins `placed_buildings` as its own small array
+(`{position, state}`, `state` in `storage_state.gd::save_data()`'s own
+shape), joined at save format VERSION 4. `player_death.gd` gained the same
+group-based sync/restore seam `build_placer.gd` already had for placed
+buildings: every live satchel joins a `"player_death"`/`"death_satchel"`
+group pair, `GameState.save_game`/`load_game` walk it the same way they
+already walked `"build_placer"`. A save written before this migrates to an
+empty list — no death satchel can exist in a save that predates the system
+that persists them, the same "nothing to migrate FROM" answer `VERSION 1 -> 2`
+already gave the map.
 
 **`R3.3` (player death and respawn) shipped — see `DONE.md`.**
 

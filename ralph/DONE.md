@@ -44,6 +44,84 @@ is a content/balance decision, not a mechanical follow-on — opened as
 Full suite run twice, headless, real Godot 4.7-stable: 600 tests / 83762
 assertions / 0 failed before the cap fix, identical counts after.
 
+## R3.2 — Death satchels persist across save/load
+
+`model: sonnet` · `fd0eaea` · `tests: test_satchel (new)`
+
+Was blocked on its own prerequisite until `R3.3` built `death_satchel.gd`;
+that item's own remainder note already named the shape this needed, and this
+firing built exactly that.
+
+`GameState.death_satchels` is a new small array — `{position: [x,y,z],
+state: [...]}` per satchel, `state` in `storage_state.gd::save_data()`'s own
+shape (the same one `R3.1-remainder`'s placed chest already uses) — kept
+separate from `placed_buildings` per the item's own reasoning: a death
+satchel is not a placed building, the player never built it.
+
+`player_death.gd` gained the group-based sync/restore seam
+`build_placer.gd` already had for placed buildings:
+- `build()` now joins a `"player_death"` group (mirroring `build_placer.gd`
+  joining `"build_placer"`); `death_satchel.gd::build()`/`restore()` join a
+  new `"death_satchel"` group.
+- `GameState.register_death_satchel(position)` records the position and
+  returns the entry's index, called by `_drop_satchel` right before the live
+  node spawns; the node carries that index as metadata
+  (`SATCHEL_INDEX_META`), the same role `PLACED_INDEX_META` plays for a
+  placed chest.
+- `sync_state_to_game(game)` (new): walks the `"death_satchel"` group and
+  writes each live satchel's current contents into its `death_satchels`
+  entry — called from `GameState._sync_death_satchel_state()`, wired into
+  `save_game()` alongside the existing `_sync_placed_building_state()`.
+- `restore_from_game(game)` (new): clears existing satchel nodes, then
+  rebuilds one per `death_satchels` entry via a new
+  `death_satchel.gd::restore(data, db)` (the load-side counterpart to
+  `build()` — same visuals, but rehydrates from a saved `state` array
+  instead of a live `drain()` array). Wired into `GameState.load_game()`
+  alongside the existing `build_placer` restore call.
+- Deliberately does NOT re-add map markers on restore:
+  `autoload/map_state.gd::save_data()`/`load_data()` already round-trip
+  `death_satchel_N` dynamic markers on their own — checked directly rather
+  than assumed, to avoid a second, redundant writer.
+
+Save format VERSION 3 -> 4 (`scripts/save/save_game.gd`): a save written
+before this has no `death_satchels` key at all, and `_migrate_v3` supplies
+an empty list — the same "nothing to migrate FROM" answer VERSION 1 -> 2
+already gave the map (no fog trail predates the map; no death satchel
+predates the system that persists one). `_migrate_v2` now lands on VERSION
+3's own shape and chains into `_migrate_v3`, rather than jumping straight to
+the build's current `VERSION` the way it used to when it was the last step
+in the chain.
+
+Found and fixed one pre-existing test bug while touching this:
+`tests/test_save_format.gd::test_version_4_payload_is_refused` hardcoded the
+literal "version 4" to mean "newer than this build can read" — true only
+while `VERSION` was 3. The moment this item's own version bump landed, that
+test would have started asserting the opposite of its intent (silently
+passing for the wrong reason, since 4 was no longer newer than the build's
+own `VERSION`). Renamed to
+`test_a_version_newer_than_this_build_is_refused` and switched to
+`SAVE_GAME.VERSION + 1`, the same dynamic pattern
+`test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched`
+(a separate, already-correct test a few lines above it) already used — this
+class of test should never again go stale on the next version bump.
+
+`tests/test_satchel.gd` (new): `GameState.register_death_satchel`'s own
+contract (same split `test_register_building.gd` draws for
+`register_building`), `death_satchel.gd::restore()` round-tripping contents
+and tool durability exactly (mirroring `test_player_death.gd`'s existing
+`build()` coverage), a full `save_game.gd` round trip of a `death_satchels`
+entry, and the VERSION 3 -> 4 migration default for both a VERSION 3 and a
+VERSION 1 save. `sync_state_to_game`/`restore_from_game` themselves are NOT
+unit-tested — both walk `get_tree()`'s groups, the same live-scene-tree
+carve-out `test_player_death.gd`'s own header already states for
+`player_death.gd`'s fade/tween/teleport half; manual/smoke verification is
+still open for that half.
+
+Full unit suite run locally before pushing (save-format change, per
+`conventions.md`): 631 tests, 0 failed (up from 623 immediately before this
+item — 8 new, all in `test_satchel.gd`; the two changed lines in
+`test_save_format.gd` are a rename/fix, not a net-new test).
+
 ## R2.3-remainder — The harvest-point glint reads as a designed convention, not a debug sticker
 
 `model: opus` · `4210d81` · `tests: none (visual) — a fresh local render + blind
