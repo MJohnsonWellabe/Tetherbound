@@ -1435,7 +1435,7 @@ present. No generation or graft needed.
 
 **`R4.6` (evolution mechanic and ceremony: Mudsnout → Tuskroot, a real gated system plus a player-paced ceremony on the Team screen) shipped — see `DONE.md`.** Level+bond gate live (15/55, tunable); the item gate is real, unit-tested infrastructure left deliberately OFF (no Heartstone/`SD17` yet to source it from).
 
-### R4.7 — Bond and best creature · `model: sonnet` · `tests: test_bond` (new) · §12
+**`R4.7` (bond and best creature) shipped — see `DONE.md`.**
 
 **`R4.8` (fainting and home recovery) shipped — see `DONE.md`.** The mechanical half: a placed `creature_bed` now has a real interaction (`R2.8`'s own deferred brief) that revives/tops up any party member and grants the same flat rest bonus XP camp's overnight rest already gives. "Unavailable state" and catching-refuses-fainted were already built and are tested here as the baseline this recovers from, not as new code. Deliberately not built: a live in-world animation cue for "visible creature rest behaviour" — that is visual-affecting work needing a genuinely blind `visual-judge` pass, out of this item's budget; clear on-screen text stands in instead.
 

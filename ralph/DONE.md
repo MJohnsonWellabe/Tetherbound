@@ -49,6 +49,69 @@ mechanic are real and tested (`best_orb()` correctly prefers it, `throw_aim`
 would correctly spend and resolve it) but unreachable in a normal
 playthrough, the same shape `SB9` shipped ahead of its own first consumer.
 
+## R4.7 — Bond and best creature
+
+`model: sonnet` · `tests: test_bond` (new) · `area: creatures` · `39ed4aa`
+
+GAME_DESIGN.md §12. Two halves, both real gaps rather than new mechanics
+invented from scratch:
+
+**Bond actually reaches a fight.** `PROGRESSION.bond_stat_scale`
+(`attack_scale`/`defence_scale` per bond node) has read a real
+`progression.json` table since D30, and `bond.per_day_in_party` has sat
+there unused just as long (flagged explicitly as ready in `R4.1-remainder`'s
+own note) — neither was ever applied anywhere. New
+`creature_instance.effective_attack()`/`effective_defence()` multiply bond's
+scale into every hit (`combat_manager.gd`'s `_resolve_player_strike`/
+`_on_enemy_strike`, both sides); `camp.gd`'s `_pass_the_night` now pays
+`rest_bond` (new `progression.gd` function, mirrors `rest_xp`) to every
+party member alongside the existing rest XP.
+
+**Best Creature is built from nothing** — GAME_DESIGN.md §12: "meaningful
+progression, not a cosmetic badge," species-specific abilities. A standing
+designation on `autoload/party.gd` (`_best`, mirroring `_active`'s shape
+exactly, including the move/remove_at/clear index bookkeeping) — unlike
+`_active`, a fainted creature can still hold the title, since it is not
+"who fights next." Each of the 17 shipped species now carries a
+`best_creature: {id, kind, value}` block in `species.json` (`survivability`
+→ effective-defence bonus, `energy` → quick-attack energy-gain bonus — the
+two combat hooks that already exist), read only through new
+`creature_species.best_creature_ability()` so it never touches instance
+state or the save format. Applied in combat only when the fielded creature
+is the party's flagged Best Creature (`combat_manager.gd`'s new
+`begin(..., best_creature)` arg, wired from `encounter_director.gd`'s
+`_start_fight`). Team screen (`tab_creatures.gd`): `G` (`backpack_drop`,
+unused in this tab — same cross-tab reuse `TEACH_ACTION` already does)
+toggles it, a row gets a `★` marker, and the detail panel shows the
+ability's name and effect.
+
+**Honest remainder, not silently dropped:** §12's other two bond sources,
+"feeding" and "favorite food," are NOT built. There is no feed-a-creature
+interaction anywhere in the game — food only affects the player's own
+satiety (D29) — so there is nothing to hook a bond gain onto, the same
+"no real trigger exists yet" call `R4.1-remainder` made for exploration XP.
+Whoever builds a feed-creature mechanic should wire bond gain into it then,
+not before.
+
+Neither Best Creature's designation nor bond's per-node stat scale is
+persisted through save/load — `_best` resets on `party.clear()` exactly like
+`_active` already does (also unpersisted, checked directly:
+`save_game.gd::_array_to_party` never touches either), so this did not
+newly break anything; picking up a save-format bump for either is a
+separate item if the owner wants the title to survive a quit.
+
+`tests/test_bond.gd` (new, 24 tests): bond scaling reaching combat via
+`effective_attack`/`effective_defence`, Best Creature's effect being
+additive-only (absent unless flagged, never a penalty), every shipped
+species having a real ability, `rest_bond`, and `party.gd`'s best-creature
+bookkeeping through add/remove/move/clear. Full local suite: 700 tests,
+84018 assertions, 0 failed (was 676 before this item). `smoke_combat.gd`,
+`smoke_catching.gd` and `smoke_menu.gd` also run clean locally — the first
+two exercise the changed `combat_manager.gd`/`encounter_director.gd` code
+paths directly, the third exercises the changed `tab_creatures.gd` and
+confirms `backpack_drop` still works correctly for `tab_backpack.gd`'s own
+meaning.
+
 ## R4.8 — Fainting and home recovery
 
 `model: sonnet` · `tests: test_fainting (7/7), full unit suite (682/83977/0 failed)` · `area: build` · `e2acd58`
