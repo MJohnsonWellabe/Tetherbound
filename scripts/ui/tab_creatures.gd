@@ -1343,8 +1343,15 @@ func _begin_farewell(index: int) -> void:
 	# glyph. A second copy in the shell's own corner footer -- found duplicated,
 	# and in two different input conventions (a keyboard Esc glyph down here
 	# vs the footer's hardcoded "B"), by a fresh blind pass on this exact beat
-	# -- is redundant at best and contradictory at worst. Blank it instead.
-	menu.call("override_footer", "")
+	# -- is redundant at best and contradictory at worst.
+	#
+	# A single space, not "": "" restores the shell's own DEFAULT footer (the
+	# full "A Select / B Close / Q/LB Prev tab / Tab/RB Next tab / ..." bar),
+	# which is worse than the duplicate it replaces -- most of those verbs are
+	# refused while the ceremony holds the shell (`smoke_release.gd`'s own "no
+	# close, no tab away"). Same lever the "done" beat below already uses for
+	# the identical reason.
+	menu.call("override_footer", " ")
 	_farewell_keep.grab_focus()
 
 
