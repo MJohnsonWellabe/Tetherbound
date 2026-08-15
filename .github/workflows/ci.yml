@@ -14,11 +14,28 @@ name: CI
 # What this CANNOT check: whether the game feels good. That is the owner
 # playing it on the Ally, and no amount of green here substitutes.
 #
-# The ten smoke tests run as two PARALLEL jobs (verify-core / verify-scenarios)
-# instead of one sequential list. Same tests, same assertions, half the
-# wall-clock per push — each job pays its own checkout/import cost again, which
-# is the trade: a bit more billed runner time for less time waiting on a push
-# this pipeline sees dozens of times a day.
+# The eleven checks (unit suite + ten smoke tests) each run as their OWN
+# parallel job instead of being grouped into two jobs of five-plus-one. This
+# is the same trade the previous split (one job of eleven -> two jobs of
+# five-plus-six) already made, carried one step further, for the same reason:
+# less wall-clock on a pipeline this project watches dozens of times a day, at
+# the cost of each job paying its own checkout/import setup again.
+#
+# Measured on 2026-08-15, real `ralph/**` branch runs (not the docs-only skip
+# path): `verify-core` alone (unit suite + 5 smoke tests, sequential inside
+# one job) took ~16m47s, and was the long pole — `verify-scenarios` (its own
+# 5 smoke tests) finished in ~9m52s in parallel alongside it, so overall wall
+# time tracked verify-core's ~17 minutes, not the ~5.2 minutes a stale note
+# elsewhere in this repo (ralph/PROMPT.md, corrected in the same change that
+# added this comment) still claimed. Godot install was already a cache hit in
+# that run and cost near-nothing; the real cost was test execution itself --
+# "Run tests" (unit suite) ~3m25s, and the five smoke tests inside
+# verify-core summing to ~11m52s with `smoke_traversal.gd` alone at ~5m59s,
+# the single worst step in the whole pipeline. That is sequential-inside-one-
+# job time that parallel jobs turn into wall-clock nobody waits through
+# serially: splitting every check into its own job bounds the critical path
+# at (shared setup) + (the single slowest check) instead of (shared setup) +
+# (the sum of five checks).
 
 on:
   push:
@@ -48,15 +65,8 @@ env:
 jobs:
   # Roughly half of this workflow's runs change nothing but markdown: the loop
   # pushes a `<task-id>-record` branch after every task, carrying edits to
-  # BACKLOG.md, DONE.md and BLOCKED.md and nothing else. Each one spent a full
-  # build exporting a Windows executable to verify a changed bullet.
-  #
-  # The figure that used to be written here -- "about nine minutes" -- was
-  # never re-measured after the branch runs were sped up, and by 2026-08-11 a
-  # full branch run was 5.2 minutes with no queue time. The skip below is still
-  # worth having; it just saves about half what this comment used to claim.
-  # D25 has the rest of the loop's real costs, several of which were similarly
-  # off.
+  # BACKLOG.md, DONE.md and BLOCKED.md and nothing else. Each one used to spend
+  # a full build exporting a Windows executable to verify a changed bullet.
   #
   # The obvious fix -- `paths-ignore: ['**.md']` on the push trigger -- is a
   # trap, and an expensive one. For push events a non-matching path filter means
@@ -68,11 +78,10 @@ jobs:
   #
   # So the run must still happen. This job is what makes it happen: it always
   # runs, so the run always has an executed job and always concludes `success`,
-  # which is the only thing ralph-merge.yml reads. `verify-core`/`verify-
-  # scenarios` below then skip themselves when there is nothing to verify.
-  # Skipped jobs do not change a run's conclusion -- but a run where EVERY job
-  # skipped concludes `skipped`, not `success`, and would be refused. Keep this
-  # job unconditional.
+  # which is the only thing ralph-merge.yml reads. Every `verify-*` job below
+  # then skips itself when there is nothing to verify. Skipped jobs do not
+  # change a run's conclusion -- but a run where EVERY job skipped concludes
+  # `skipped`, not `success`, and would be refused. Keep this job unconditional.
   changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -130,9 +139,9 @@ jobs:
             echo "code=false" >> "$GITHUB_OUTPUT"
           fi
 
-  verify-core:
+  verify-unit-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     needs: changes
     if: needs.changes.outputs.code == 'true'
 
@@ -176,7 +185,7 @@ jobs:
         # on every run; with it, only assets the push actually changed are
         # re-imported. The hash key means an exact match on an unchanged
         # asset tree, and restore-keys means a near match still starts warm.
-        # Shared across all three jobs in this workflow that need it — a
+        # Shared across every job in this workflow that needs it — a
         # concurrent restore from more than one job is safe; a concurrent
         # save of a key that doesn't exist yet just leaves one winner, which
         # actions/cache tolerates without failing the step.
@@ -212,11 +221,72 @@ jobs:
           fi
 
       - name: Run tests
-        # The unit suite lives here rather than split across both jobs — it is
-        # a few seconds regardless, so duplicating it would cost more than it
-        # saves. If either job's smoke tests regress from an import fault, this
-        # step already caught the underlying error.
+        # The unit suite itself: several hundred tests, real minutes now, not
+        # the "a few seconds" an earlier version of this comment claimed
+        # (measured 2026-08-15: ~3m25s) — worth its own job now that jobs run
+        # in parallel instead of piggybacking on a smoke-test job "because it's
+        # cheap".
         run: godot --headless --path . --script tests/run_tests.gd
+
+  verify-playground:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
 
       - name: Smoke-test the playground
         # Boots the real main scene and asserts the terrain loaded, the player
@@ -227,6 +297,66 @@ jobs:
         # is verified to fail when the baked terrain is removed.
         run: godot --headless --path . --script tests/smoke_playground.gd
 
+  verify-input:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
       - name: Smoke-test the input path
         # Injects actions and asserts the character actually moves. Catches the
         # class of bug where input is read correctly and then silently
@@ -235,12 +365,135 @@ jobs:
         # does nothing while this passes, the fault is upstream of Godot.
         run: godot --headless --path . --script tests/smoke_input.gd
 
+  verify-traversal:
+    runs-on: ubuntu-latest
+    # Generous on purpose: this is the single slowest check in the whole
+    # pipeline (~5m59s measured 2026-08-15) and the one most worth NOT
+    # timing out on a slow runner.
+    timeout-minutes: 15
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
       - name: Smoke-test traversal
         # Walks ~190m per leg. A short walk proves only that the spawn point
         # works: collision_mode silently reverting to Dynamic/Game built ground
         # in a 64m bubble, and every other check passed inside it while the
         # player fell to y=-49950 outside it.
         run: godot --headless --path . --script tests/smoke_traversal.gd
+
+  verify-catching:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
 
       - name: Smoke-test catching
         # Aims, misses, and lands a throw through injected input. Asserts the
@@ -249,6 +502,66 @@ jobs:
         # wide, an orb is spent on a throw and not on a cancel, and a faint is a
         # refusal rather than long odds.
         run: godot --headless --path . --script tests/smoke_catching.gd
+
+  verify-free-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
 
       - name: Smoke-test the free build toggle
         # A development toggle that changes what everything costs
@@ -265,9 +578,9 @@ jobs:
         # cheat left switched on there would follow every later step in this job.
         run: godot --headless --path . --script tests/smoke_free_build.gd
 
-  verify-scenarios:
+  verify-combat:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     needs: changes
     if: needs.changes.outputs.code == 'true'
 
@@ -340,6 +653,66 @@ jobs:
         # 500 m/s. Every unit test still passed.
         run: godot --headless --path . --script tests/smoke_combat.gd
 
+  verify-aggression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
       - name: Smoke-test aggression
         # Two halves, and the second matters more: an aggressive creature must start
         # a fight on its own, and a peaceful one must never do so no matter how
@@ -366,6 +739,66 @@ jobs:
           fi
           exit $code
 
+  verify-opening:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
       - name: Smoke-test the opening
         # Walks the first fifteen minutes end to end: fade in, approach
         # Grandpa, talk, choose a starter, name it with the pad, and confirm
@@ -374,6 +807,66 @@ jobs:
         # first time in the run — a regression here is a player who spawns
         # with no opening at all, and nothing else in this job would notice.
         run: godot --headless --path . --script tests/smoke_opening.gd
+
+  verify-menu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
 
       - name: Smoke-test the menu
         # Opens the pause menu over the real world and closes it again. Unit
@@ -391,6 +884,66 @@ jobs:
         # verifies the menu records and restores the mode it found and says so
         # in its own output. The capture is the owner's to confirm on the Ally.
         run: godot --headless --path . --script tests/smoke_menu.gd
+
+  verify-settings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        run: godot --headless --path . --import
+
+      - name: Fail on script or scene errors
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
 
       - name: Smoke-test the settings screen
         # Rebinds controls through the real screen with injected input. The unit
@@ -416,12 +969,24 @@ jobs:
   # publishing, so a broken export can never reach the download link through
   # a branch — it would surface on main's own run, where fixing red main is
   # the loop's standing first priority. Split into its own job (rather than
-  # trailing steps in `verify-core`) so it starts only once BOTH smoke-test
-  # jobs have actually passed — `needs:` on two jobs waits for both.
+  # trailing steps in a verify job) so it starts only once EVERY verify-*
+  # job has actually passed — `needs:` on all of them waits for every one.
   export:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [changes, verify-core, verify-scenarios]
+    needs:
+      - changes
+      - verify-unit-tests
+      - verify-playground
+      - verify-input
+      - verify-traversal
+      - verify-catching
+      - verify-free-build
+      - verify-combat
+      - verify-aggression
+      - verify-opening
+      - verify-menu
+      - verify-settings
     if: |
       needs.changes.outputs.code == 'true' &&
       (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
