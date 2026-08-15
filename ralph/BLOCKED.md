@@ -6,7 +6,7 @@ design decision rather than inventing one.
 
 ---
 
-## OPEN, 2026-08-15 — `model: fable` dispatch is unavailable (Claude API out of usage credits)
+## ✅ RESOLVED, 2026-08-15 — `model: fable` dispatch is available again (was: out of usage credits)
 
 `ralphKeyed-20260815-0251` held the Meshy key this firing and, per `PROMPT.md`'s
 `model: fable` dispatch rule, tried to hand `SF33`'s pylon-generation slice to a
@@ -18,22 +18,20 @@ is an account-level Claude API condition, not a bug in the dispatch mechanism or
 a Meshy problem — the Meshy key itself was confirmed working (`meshy.py check`:
 4790 credits) before this was hit.
 
-**Effect: every `model: fable` item is unpickable by any firing right now.**
-That includes `SF33` (parked, `art`/`assets` leases released, no code changed),
-and by the same mechanism would block `SE23`, the Phase 8e Tether Chamber
-asset, `R8.3`, `SG40`, `R8.4`, `R8.6`, `SE21`, `SE30`, `SF34`, `R4.10`, `EV10`
-if any firing reached them next. Per `PROMPT.md`, a firing may not do a
-`model: fable` item's creative work at a lesser tier as a workaround — so
-until this clears, the loop should skip every `model: fable` item exactly as
-it would skip a `lane: art` item with no key, and take the next item instead,
-same as this firing did (fell through to `R3.2`).
+**While this was open, every `model: fable` item was unpickable by any firing**
+— `SF33` (parked, `art`/`assets` leases released, no code changed), and by the
+same mechanism `SE23`, the Phase 8e Tether Chamber asset, `R8.3`, `SG40`,
+`R8.4`, `R8.6`, `SE21`, `SE30`, `SF34`, `R4.10`, `EV10`. Per `PROMPT.md`, a
+firing may not do a `model: fable` item's creative work at a lesser tier as a
+workaround — so the loop skipped every `model: fable` item exactly as it would
+skip a `lane: art` item with no key, and took the next item instead (fell
+through to `R3.2`).
 
-**What would clear it:** the account's fable-tier usage credits refresh or get
-topped up (outside any firing's control — this is not a repository or backlog
-question), or the owner confirms a specific model substitution is acceptable
-for a specific item (a decision, not a default any firing should assume).
-Whoever next reaches a `model: fable` item should re-probe with a cheap
-one-word dispatch before assuming this is still true — it may be transient.
+**Resolved, same day.** The owner confirmed the account's usage reset a few
+hours later. A firing independently re-probed and confirmed fable dispatch
+working again, then successfully dispatched and shipped `SF33` itself
+(`a35f02d`, two of seven severed spokes) — real evidence, not just a probe.
+All `model: fable` items above are pickable again.
 
 ---
 
