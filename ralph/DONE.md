@@ -289,7 +289,7 @@ pass, run locally, pushed once):
 
 ## R4.10 — The release ceremony
 
-`model: fable` · `tests: full unit suite (696/84031/0 failed, test_party grows the ceremony-order case), smoke_release (new, input-driven, both release paths), smoke_catching, smoke_menu, smoke_opening, smoke_evolution (all green headless)` · `area: party/UI` · `e6274eb` · `2026-08-15`
+`model: fable` · `tests: full unit suite (696/84031/0 failed, test_party grows the ceremony-order case), smoke_release (new, input-driven, both release paths), smoke_catching, smoke_menu, smoke_opening, smoke_evolution (all green headless)` · `area: party/UI` · `e6274eb`, `9e02640`, `78ed9b1`, `9723e6a`, `c81452a` · `2026-08-15`
 
 The emotional payload of the five-creature rule (spec M5: "do not settle
 for a generic 'delete' dialog"), plus the plumbing gap it turned out to sit
@@ -321,23 +321,68 @@ behind. Design record: `docs/decisions/D38`.
   room. Focus is fenced inside the ceremony (up from row 0 wraps to the
   newcomer; without the fence the cursor escapes to the shell's tab row,
   whose select() un-holds the shell).
-- **Honest gap: the blind visual pass could not be run in this session.**
-  The environment had no Agent tool and no reachable independent session
-  (the one listed subagent loops back to this session — verified by the
-  critique request arriving in my own transcript). What ran instead: a
-  strict sighted self-review of all four rendered beats
-  (`tools/capture_release.gd`, new), which caught and fixed two real
-  defects — the confirm beat's "B keep looking" hint lived in the shell
-  footer, which the six-row list pushes off-frame (moved into the farewell
-  panel), and the goodbye beat's restored default footer advertised
-  "B Close" while the shell was deliberately deaf (blanked). Re-rendered
-  and verified. A genuinely blind pass over `shots/_diag/release_*.png`
-  remains for the reviewing firing; frames are in the tree's shot dir and
-  the capture tool reproduces them in one run.
-- Known shared-chrome items, not this item's: world HUD bleed-through
-  behind the translucent menu; `creature_viewport.gd`'s tight per-species
-  crop (Terrapup's head clips in the inspect frame exactly as it does on
-  the normal Team screen).
+- **The `model: fable` dispatch itself could not run a genuine blind pass**
+  (no Agent tool in that subagent's own environment — disclosed honestly
+  rather than faked) and shipped a sighted self-review instead. The
+  dispatching firing then ran the real thing: four genuinely blind
+  `visual-judge` rounds against `tools/capture_release.gd`'s four frames,
+  fixing real defects each round and re-rendering before the next —
+  **`--headless` is a trap for this tool** (silently swaps in a no-op
+  renderer, per this repo's own RENDER-PERF-DIAG history) and cost two
+  hung processes before switching to the documented `xvfb-run ... godot
+  --rendering-driver opengl3` invocation.
+  - **Round 1** (fresh critic, no knowledge of the fable pass): the world
+    exploration HUD was never actually hidden behind ANY menu tab, only
+    trusted to translucency — the ceremony's six-row list was just the
+    first content tall enough to expose it clearly (quest text and a
+    "Get up [E]" prompt bleeding through). Fixed at the source in
+    `game_menu.gd`'s `open()`/`close()`, not the ceremony alone. Also
+    fixed: the choose/inspect beat's one instruction was the least
+    prominent text on screen (given real weight — body font, WARNING
+    amber, a real glyph via `input_glyph.gd`); the newcomer's row left as
+    dead space once the confirm beat narrowed to one candidate (hidden,
+    the same lever the done beat already used); the choose/inspect beats
+    read as routine roster browsing (extended the "JUST CAUGHT" divider's
+    WARNING accent through the header for the ceremony's length).
+  - **Round 2**: found the confirm beat showing "keep looking" TWICE — the
+    new in-panel glyph hint and the shell's own hardcoded-text footer
+    override, in two different input conventions simultaneously. Fixed by
+    blanking the footer override for that beat — except the first attempt
+    used `override_footer("")`, which restores the shell's full DEFAULT
+    footer bar rather than blanking it (a regression caught by re-rendering
+    and looking before the next critique round, not by a critic) — a
+    single space is the actual "blank" this shell recognises, the same
+    lever the goodbye beat already used for the identical reason.
+  - **Round 3**: named five things; two were verified false positives by
+    direct pixel inspection rather than taken on faith — "garbled" Bond
+    digits are `kenney_future.ttf`'s intentional geometric numeral shapes
+    (confirmed by cropping and zooming; "74/100" reads correctly once
+    magnified) and the "mismatched music-note icon" is a keyboard
+    Enter-key glyph, correct because this headless capture environment has
+    no gamepad connected (`input_glyph.gd::using_gamepad()` — on a real
+    controller session this renders the Xbox A-button icon instead). The
+    one real finding — the full top tab bar stayed lit through the
+    ceremony despite Q/LB and Tab/RB already being refused the whole
+    time — was fixed once, in `game_menu.gd::hold_input()` itself rather
+    than the ceremony alone, so it also now covers the backpack's target
+    picker and its drop confirmation, which had the identical gap.
+  - **Round 4, converged**: one genuinely new but low-severity finding
+    (the inspect beat's static "this one goes free" caption doesn't name
+    which creature it means when a DIFFERENT belt member is under
+    inspection — the header banner and list divider both still identify
+    the newcomer, so this is a clarity nit, not a broken flow) is left as
+    an honest, disclosed remainder rather than chased into a fifth round.
+    Everything else the round checked had stabilised.
+- Known shared-chrome items, not this item's: `creature_viewport.gd`'s
+  tight per-species crop (Terrapup's head clips in the inspect frame
+  exactly as it does on the normal Team screen); flat-colour-square
+  creature list icons (a project-wide pre-existing limitation, not new
+  here, and out of scope per `CLAUDE.md`/`D24`'s no-new-creature-art rule
+  regardless).
+- **Remainder, not chased**: round 4's inspect-beat caption ambiguity
+  above. Fix is cheap (name the creature explicitly, or anchor the caption
+  to the newcomer's list row instead of the currently-inspected creature's
+  detail panel) whenever someone is next in this file.
 - Deliberately not built (D38): no "time with you" line (needs a caught-day
   field = save-format change), no release ledger, no memorial. Released is
   gone; the absence is the rule's weight.
