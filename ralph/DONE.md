@@ -3,6 +3,76 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R4.2 — Core stats and per-instance individuality
+
+`model: sonnet` · `tests: test_progression (42/42), test_save_format (29/29), full unit suite (663/83923/0 failed), smoke_menu, smoke_aggression, smoke_combat, smoke_catching, all green` · `area: progression`
+
+Both halves of `GAME_DESIGN.md` 11's "Individuality" section, against a
+starting state where D30 had shipped level/xp/bond/moves but explicitly
+punted this ("Traits stay deliberately out of scope. `data/traits/` stays an
+empty placeholder"), confirmed by reading `creature_instance.gd` directly
+before writing anything — every creature of a species had byte-identical
+stats, and `data/traits/` held nothing but a `.gitkeep`.
+
+**Individuality (real stat variance).** Every creature now carries three
+0.0-1.0 quality rolls (`iv_hp`/`iv_attack`/`iv_defence`), applied as a real
+multiplier on top of the level curve — `progression.json`'s new
+`individuality.variance_pct` (shipped at 0.12: a stat can run ±12% off the
+species base). Shown to the player as a 1-5 star/bar rating
+(`PROGRESSION.appraisal_stars`, `creature_instance.gd::appraisal_stars`/
+`overall_appraisal_stars`), never the raw roll, matching the spec's explicit
+"not exact IV numbers." `data/config/progression.json`'s `star_thresholds`
+buckets the roll.
+
+**Traits (flavour/display, no numeric effect — see `docs/decisions/D37`).**
+Every creature rolls a primary trait at creation from a small curated pool
+(`data/traits/traits.json`: Bold, Calm, Sturdy, Swift, Gentle, Stubborn,
+Curious, Watchful — new `scripts/creatures/trait_db.gd`, same shape as
+`move_db.gd`). A hidden secondary trait is rolled at the same time but
+withheld from every caller (`creature_instance.gd::revealed_trait_secondary`)
+until bond crosses `progression.json`'s new `traits.unlock_bond_nodes`
+(shipped at 5, i.e. fully bonded) — spec: "a second trait can develop later
+through progression/bond." D37 records why this stops at flavour: nothing in
+`GAME_DESIGN.md` or `MEADOWS_PROGRESSION_SPEC.md` defines what a trait
+mechanically *does*, and inventing a stat-bonus table now would be inventing
+balance-affecting mechanics with no owner brief behind them.
+
+**Wiring.** `creature_instance.gd::from_species` gained `iv_rolls`/
+`trait_rolls`, both opt-in arrays following the exact `level_roll`/`cfg`
+shape D30 established — every existing caller that does not pass them
+(`make_creature`'s starters, most tests, an old save) keeps today's stats
+byte-for-byte, because the defaults (0.5 average, "" untraited) are no-ops
+by construction (`individuality_multiplier(0.5, cfg) == 1.0` always, even
+with no `individuality` config block at all). Wild spawns
+(`encounter_director.gd::_roll_wild_level`) roll both through the same
+seeded, never-`randomize()`d `rng` the level roll already uses, so a
+creature met at a given spot stays reproducible across boots — deliberately
+NOT wired into starters, so the "pick your starter by type" choice stays a
+known quantity rather than gaining a hidden quality roll; `Meadows_
+progression_spec.md` 11's own "seek better traits/appraisal" grinding loop
+is what wild individuality is actually for.
+
+**UI.** The Team screen's detail panel (`tab_creatures.gd`) now shows an
+appraisal bar (`Appraisal  [***--]`, plain ASCII — `kenney_future` has no
+confirmed glyph coverage for a unicode star, and a new icon asset needs a
+reference board `CLAUDE.md`/D24 don't have) and the revealed trait(s).
+
+**Save format — VERSION 4 → 5.** `_migrate_v4` gives every party member on a
+pre-R4.2 save average IVs and no traits — the same "nothing to migrate FROM"
+answer every prior bump has given a field that did not exist yet. Found and
+fixed a latent bug while writing this: `_migrate_v3` used to write
+`migrated["version"] = VERSION` (the build's current constant) instead of a
+literal `4`, which was harmless only by coincidence while `VERSION` itself
+was 4 — the moment this pass bumped `VERSION` to 5, that line would have
+made a VERSION-3 save jump straight to 5 and skip `_migrate_v4` entirely,
+losing nothing user-visible today (no fields existed to lose) but silently
+breaking the chain contract every other migration step's own comment
+promises. Fixed to a literal `4`, matching `_migrate_v1`/`_migrate_v2`.
+
+**Deliberate scope stop, not a gap:** starters (see above), and any
+mechanical trait effect (see D37). Both are named explicitly rather than
+silently absent.
+
 ## R4.3 — Named moves per species (verified, not rebuilt — already shipped by D30)
 
 `model: sonnet` · `tests: test_moves_data.gd (11/11), full unit suite (645/83864/0 failed)` · `area: moves`
