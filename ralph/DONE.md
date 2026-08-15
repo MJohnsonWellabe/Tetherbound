@@ -3,6 +3,59 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SB11 — One tracked objective, and a two-list quest log
+
+`model: sonnet` · `2706cac` · `tests: test_quest_log.gd (new, 6/6), smoke_menu.gd, full unit suite (645/83864/0 failed)`
+
+Spec §16, reading `SB9`'s flag store. `data/progression/objectives.json` is
+the first real content in `data/progression/` (SB9's own header anticipated
+this — "objectives themselves are DATA... once something needs to enumerate
+them"): two lists, `main` and `local`, each entry `{id, flag_id, label}`. One
+real objective exists today: `road_gate_open` (SA7's village gate), the only
+production flag any code currently sets. `local` is a genuine empty array —
+no side-request system exists in the game yet, not a stub.
+
+`scripts/world/quest_log.gd` is the pure reader: `tracked_text()` returns the
+first `main` entry whose flag is unset, in file order, or `""` once every
+authored entry is done — deliberately not a quest engine, no branching, no
+prerequisites, no counters (spec §19, `CLAUDE.md`). `main_entries()`/
+`local_entries()` give the same data as `{label, done}` rows for the menu.
+
+`autoload/game_state.gd`'s `objective_text` was a plain field nobody ever
+wrote to in production (`set_objective()` had zero real callers — only three
+capture tools posing a demo string for screenshots). It now recomputes from
+`quest_log.tracked_text()` every time `_process()` sees `progression.revision`
+move — the same polling idiom `progression_state.gd`'s own header already
+names for exactly this UI. `set_objective()` stays, narrowed to a manual
+override for a caller that wants to show something the data file doesn't
+know about (the capture tools keep working unchanged, since a manual set now
+sticks until the next real flag change recomputes it, not until the next
+frame).
+
+New `Quests` tab (`scripts/ui/tab_quest_log.gd`, registered in
+`data/config/menu.json` after `map`) draws both lists through the same
+reader the HUD line uses, so the two can never disagree about what counts as
+done. Rebuilds only on a `progression.revision` change, not every frame,
+mirroring `tab_map.gd`'s own `revision()`-gated redraw discipline.
+
+**Done-when proved directly, not just plausible**: `smoke_menu.gd` opens the
+real Quests tab and confirms the road-gate row reads open; then, with the
+menu closed (so the tree is unpaused and the HUD's own `_process()` actually
+runs), sets `road_gate_open` for real and checks BOTH `Game.objective_text`
+and the on-screen HUD Label changed within a few frames — no scene reload,
+no menu reopen. `tests/test_quest_log.gd` covers the reader in isolation
+(6/6): data parses, tracked text changes on the real flag, two independent
+reader instances never disagree, and the empty `local` list reads as real
+data rather than a parse failure.
+
+**Not built, and correctly not this item's job**: the spec's own counter
+example ("Defeat the Upper Meadows captains. 2/3") — no such content exists
+yet (`SF34`'s three captains are unbuilt), and the schema was kept to plain
+flag objectives rather than pre-building a counter mechanism speculatively
+(`CLAUDE.md`: don't over-generalize for a future system). Whoever ships the
+first counted objective can extend `objectives.json`'s schema and
+`quest_log.gd`'s `tracked_text()` then, against real content.
+
 ## LP9 — `smoke_combat.gd`/`smoke_catching.gd` flaky under real CI load; closed as confirmed load-sensitivity
 
 `model: sonnet` · `be71011` · `tests: smoke_combat.gd, smoke_catching.gd (both run locally, both clean; no test-file changes)`

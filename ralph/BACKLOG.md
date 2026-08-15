@@ -1396,13 +1396,7 @@ its shape blind.
 
 **`SB10` (the generic item-gate mechanism, `road_gate.gd` refactored onto it) shipped — see `DONE.md`.** The three specific gates the spec names (South Bridge Key, Mill Bridge Gear, three Sigils) still want geography that doesn't exist yet — `SC14`/`SE22`/`SF34` own building those, and should reach for `item_gate.gd` directly rather than re-deriving the pattern.
 
-### SB11 — One tracked objective, and a two-list quest log
-`model: sonnet` · `tests: smoke_menu`
-Spec §16. One concise line on the HUD ("Earn access to the South Bridge",
-"Defeat the Upper Meadows captains. 2/3") and a log with exactly two lists,
-Main Story and Local Requests. `playground_hud.gd` owns the line, `game_menu.gd`
-gains the tab. Reads `SB9` and invents no state of its own. Done when:
-completing an objective changes the HUD line without a scene reload.
+**`SB11` (one tracked objective, and a two-list quest log) shipped — see `DONE.md`.** `data/progression/objectives.json` (Main Story / Local Requests, one real entry today — the road gate) plus `scripts/world/quest_log.gd`, a pure reader over `SB9`'s flags with no branching/prerequisites/counters. `Game.objective_text` now recomputes from it whenever `progression.revision` moves, replacing the never-written placeholder; a new Quests tab (`scripts/ui/tab_quest_log.gd`) shows both lists. `smoke_menu.gd` drives the real tab and proves the HUD line changes live, no scene reload.
 
 ---
 
