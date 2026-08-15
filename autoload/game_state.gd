@@ -26,6 +26,7 @@ const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
@@ -43,6 +44,11 @@ var party: RefCounted = null
 ## these. Configured from `data/config/map_landmarks.json` in `_ready()`, the
 ## same "load+parse a data file" pattern `_species()` below already uses.
 var map: RefCounted = null
+
+## SB9. The flag store behind objective/completion/world-state tracking —
+## see `autoload/progression_state.gd`'s own header for the full contract.
+## Instantiated in `_ready()`, same as `map` above.
+var progression: RefCounted = null
 
 ## What the HUD's objective pointer shows right now. A plain field, not a
 ## quest system — SB11's real one will replace it. `set_objective()` is the
@@ -126,6 +132,7 @@ func _ready() -> void:
 	party = PARTY.new()
 	map = MAP_STATE.new()
 	map.configure(_map_landmarks_config())
+	progression = PROGRESSION_STATE.new()
 	save_system = SAVE_GAME.new()
 
 	if OS.get_cmdline_args().has(DEMO_FLAG):

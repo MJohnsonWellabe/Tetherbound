@@ -21,6 +21,7 @@ const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
 const TEST_DIR := "user://test_saves_format/"
 
@@ -40,6 +41,7 @@ class FakeGame:
 	var inventory: RefCounted = null
 	var placed_buildings: Array = []
 	var map: RefCounted = null
+	var progression: RefCounted = null
 	## Fallback satiety — round-tripped directly when `_vitals` below is null,
 	## mirroring the real `Game.satiety` field's job.
 	var satiety: float = 100.0
@@ -402,6 +404,7 @@ func test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load() -> v
 	var read := _game(false)
 	read.map = MAP_STATE.new()
 	read.map.configure({})
+	read.progression = PROGRESSION_STATE.new()
 	assert_true(saver.load_slot(read, 1))
 
 	assert_eq(read.day, 5)
@@ -422,15 +425,57 @@ func test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load() -> v
 
 	assert_almost_eq(read.satiety, 100.0, 0.0001, "a v1 save has no satiety on record; migrate to full")
 	assert_almost_eq(read.map.discovered_fraction(), 0.0, 0.0001, "a v1 save predates the map; fog stays fresh")
+	assert_eq(read.progression.all_set(), [], "a v1 save predates progression flags too; nothing to recover")
 
 
-func test_version_3_payload_is_refused() -> void:
+func test_version_4_payload_is_refused() -> void:
 	DirAccess.make_dir_recursive_absolute(TEST_DIR)
 	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
-	file.store_string(JSON.stringify({"version": 3, "day": 55}))
+	file.store_string(JSON.stringify({"version": 4, "day": 55}))
 	file = null
 
 	var game := _game()
 	game.day = 1
-	assert_false(saver.load_slot(game, 1), "version 3 is newer than this build's VERSION 2 -- refuse it")
+	assert_false(saver.load_slot(game, 1), "version 4 is newer than this build's VERSION 3 -- refuse it")
 	assert_eq(game.day, 1)
+
+
+# --- VERSION 3: SB9 progression flags ---------------------------------------
+
+
+func test_save_then_load_round_trips_progression_flags() -> void:
+	var written := _game()
+	written.progression = PROGRESSION_STATE.new()
+	written.progression.set_flag("bridge_unlocked")
+	written.progression.set_flag("trainer_mira_defeated")
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	read.progression = PROGRESSION_STATE.new()
+	assert_true(saver.load_slot(read, 1))
+	assert_true(read.progression.has("bridge_unlocked"))
+	assert_true(read.progression.completed("trainer_mira_defeated"))
+	assert_false(read.progression.has("never_set"))
+
+
+func test_v2_save_migrates_with_a_fresh_progression_store() -> void:
+	var v2_data := {
+		"version": 2,
+		"day": 6,
+		"party": [],
+		"inventory": [],
+		"placed_buildings": [],
+		"satiety": 80.0,
+		"map": {},
+	}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(v2_data))
+	file = null
+
+	var read := _game(false)
+	read.progression = PROGRESSION_STATE.new()
+	assert_true(saver.load_slot(read, 1))
+	assert_eq(read.day, 6)
+	assert_almost_eq(read.satiety, 80.0)
+	assert_eq(read.progression.all_set(), [], "a v2 save predates progression flags; nothing to recover")

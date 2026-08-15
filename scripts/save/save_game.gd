@@ -1,8 +1,9 @@
 extends RefCounted
 
 ## Versioned save/load for the state that has to survive a quit: the party,
-## the satchel, the day counter, placed buildings (R3.1), and — as of
-## VERSION 2 — creature progression, satiety and the map database.
+## the satchel, the day counter, placed buildings (R3.1), creature
+## progression/satiety/the map database (VERSION 2), and — as of VERSION 3 —
+## SB9's progression-flag store.
 ##
 ## Same shape `docs/decisions/D15` set for `user://settings.json`: JSON, a
 ## `version` field from the first write, and never fatal on load — a missing,
@@ -14,7 +15,7 @@ extends RefCounted
 ##
 ## D30 (creature progression: level/xp/bond/moves) and D33 (the map database) both
 ## landed after VERSION 1 shipped, and D29 (satiety) needed its own slot in
-## the file. A VERSION 1 save on a VERSION 2 build now migrates instead of
+## the file. A VERSION 1 save on a VERSION 2+ build now migrates instead of
 ## being refused (`_migrate_v1`): every creature is set to
 ## `data/config/progression.json`'s `migration.v1_creature_level` (fallback 3),
 ## `xp` 0, `bond` 0, and its quick/charged moves looked up from
@@ -24,8 +25,16 @@ extends RefCounted
 ## (`data/config/vitals.json`'s `satiety.max`, fallback 100); the map comes
 ## back fresh (nothing visited, nothing discovered — there is no fog trail to
 ## recover from a save that predates the map); and every building gets
-## `yaw_deg: 0.0`. A version newer than this build still refuses exactly as
-## VERSION 1 refused everything but itself — there is still nothing to
+## `yaw_deg: 0.0`. `_migrate_v1` lands on VERSION 2's shape and then chains
+## into `_migrate_v2` below, same as a real VERSION 2 file would.
+##
+## ## VERSION 3 — SB9's progression flags
+##
+## `autoload/progression_state.gd` did not exist before this, so a VERSION 1
+## or 2 save has no flags to recover — `_migrate_v2` hands back an empty
+## store, the same "nothing to migrate FROM" answer VERSION 1 -> 2 already
+## gave the map. A version newer than this build still refuses exactly as
+## VERSION 1 always refused everything but itself — there is still nothing to
 ## migrate an unreleased future format DOWN from.
 ##
 ## ## The satiety seam
@@ -64,7 +73,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 2
+const VERSION := 3
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -105,6 +114,7 @@ func save(game: Object, slot: int) -> bool:
 	DirAccess.make_dir_recursive_absolute(_dir)
 
 	var map_obj: Variant = game.get("map")
+	var progression_obj: Variant = game.get("progression")
 	var data := {
 		"version": VERSION,
 		"day": int(game.get("day")),
@@ -113,6 +123,7 @@ func save(game: Object, slot: int) -> bool:
 		"placed_buildings": (game.get("placed_buildings") as Array).duplicate(true),
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
+		"progression": (progression_obj as RefCounted).call("save_data") if progression_obj != null else {},
 	}
 
 	var file := FileAccess.open(slot_path(slot), FileAccess.WRITE)
@@ -132,6 +143,9 @@ func load_slot(game: Object, slot: int) -> bool:
 	var version := int(data.get("version", 0))
 	if version == 1:
 		data = _migrate_v1(data)
+		data = _migrate_v2(data)
+	elif version == 2:
+		data = _migrate_v2(data)
 	elif version != VERSION:
 		push_warning("save slot %d is version %d, this build reads %d -- not loading" % [
 			slot, version, VERSION
@@ -148,6 +162,11 @@ func load_slot(game: Object, slot: int) -> bool:
 	if map_obj != null:
 		var map_data: Variant = data.get("map", {})
 		(map_obj as RefCounted).call("load_data", map_data if typeof(map_data) == TYPE_DICTIONARY else {})
+
+	var progression_obj: Variant = game.get("progression")
+	if progression_obj != null:
+		var progression_data: Variant = data.get("progression", {})
+		(progression_obj as RefCounted).call("load_data", progression_data if typeof(progression_data) == TYPE_DICTIONARY else {})
 	return true
 
 
@@ -155,9 +174,12 @@ func load_slot(game: Object, slot: int) -> bool:
 ## `data` is trusted no further than any other save file — every read below
 ## has the same "wrong type, missing key -> a safe default" tolerance
 ## `_array_to_party`/`_array_to_inventory` already apply to VERSION 2 data.
+## Lands on VERSION 2's own shape, not the build's current `VERSION` — the
+## caller chains straight into `_migrate_v2` after this, same as a real
+## VERSION 2 file would.
 func _migrate_v1(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
-	migrated["version"] = VERSION
+	migrated["version"] = 2
 
 	var progression := _read_json_file(PROGRESSION_CONFIG_PATH)
 	var migration_cfg: Variant = progression.get("migration", {})
@@ -188,6 +210,17 @@ func _migrate_v1(data: Dictionary) -> Dictionary:
 
 	migrated["satiety"] = _default_satiety()
 	migrated["map"] = {}
+	return migrated
+
+
+## VERSION 2 -> VERSION 3. SB9's progression flags did not exist in VERSION 2,
+## so there is nothing to recover — a save from before this system existed
+## starts with every flag unset, the same "nothing to migrate FROM" answer
+## VERSION 1 -> 2 already gave the map (no fog trail predates the map either).
+func _migrate_v2(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = VERSION
+	migrated["progression"] = {}
 	return migrated
 
 
