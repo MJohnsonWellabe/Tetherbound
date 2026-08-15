@@ -1739,22 +1739,7 @@ utility and final-stronghold preparation. It does not need to literally be
 iron. Keep the economy small and readable. Done when: nothing needed for the
 stronghold requires a third new material.
 
-### SF33 — Standing at a Rift and seeing the next region
-`model: fable` · `tests: none`
-Spec §29, §34 Act V. `SA4` built the seven spokes; this makes the Upper Meadows
-ones legible as **severed roads**: major conduits and pylons, roadbed
-continuing on the far side of an unnatural seam, land visible across it, old
-trade infrastructure abandoned mid-use. **The far side is a view, never a
-place** — `CLAUDE.md`'s Biome 2 rule stands, and D23 says so explicitly.
-Visual-affecting: blind pass required. Done when: a blind critic looking at the
-seam says the two sides used to be joined.
-
-**The pylons have a board** — `docs/art/reference/13_Tether_Energy_Pylon.png`,
-owner-supplied 2026-08-11, and it is the cheapest of the three hero objects to
-build: a **2K–3K triangle** target and a five-part modular kit (base + core
-module + supports ×4 + top frame + tether crystal) that is meant to be
-repeated along a line. That repetition is what sells "severed road" — one
-pylon is a prop, a receding row of them is infrastructure. `lane: art`.
+**`SF33` (the Tether Energy Pylon hero asset, generated and ledgered; two of the seven spokes — `river_gorge` and `storm_road` — dressed with the full severed-rift grammar) shipped, partial — see `DONE.md`.** `model: fable` dispatch, done in the authoring agent's own session with no subagent spawning available, so its blind-pass rubric was self-administered rather than an isolated critic — recorded honestly in `DONE.md`, same disclosure pattern as `OF10-remainder`. The other five spokes continue in `SF33-remainder` below.
 
 ### SF33-remainder — Rift dressing for the other five spokes
 `model: fable` · `tests: none` · `lane: art`

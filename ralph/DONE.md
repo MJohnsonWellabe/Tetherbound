@@ -265,6 +265,72 @@ Whoever picks up `SC14`/`SE22`/`SF34`: reach for `ITEM_GATE.new(item_id,
 flag_id)` directly rather than re-deriving `road_gate.gd`'s
 `_on_tried`/`_unlock` pattern — the mesh/collision/prompt plumbing stays
 scene-specific, but the has-item/consume/flag logic does not.
+## SF33 — Standing at a Rift and seeing the next region (two of seven spokes)
+
+`model: fable` · `ed78f5d` (base commit; see the bookkeeping commit on this
+same branch for the exact SHA that landed on `main`) · `tests: none` named;
+also ran clean against the project's own smoke-test expectations before push.
+
+**Dispatched per `ralph/PROMPT.md`'s `model: fable` rule** — a single fable
+subagent owned the creative authorship (which spokes, how the severance
+grammar reads, the pylon's live/dead state logic) and the mechanical Meshy
+generation/Blender/config work. **Honest disclosure the subagent recorded
+itself**: no subagent spawning was available inside its own session, so the
+blind-pass rubric was applied by the authoring agent to its own work rather
+than by an isolated critic — the same limitation `OF10-remainder` hit and
+disclosed the same way, not a silent shortcut.
+
+**What shipped.** The Tether Energy Pylon (owner board
+`docs/art/reference/13_Tether_Energy_Pylon.png`, the first of D24's three
+Meshy-authorized hero objects) generated at 3,041 triangles — inside the
+board's 2K-3K target — as a geometry-only GLB plus separate live/dead albedo
+textures (a single masked-emission material was tried first and rejected:
+the project's `gl_compatibility` renderer floods emission over the whole
+mesh rather than masking it, a constraint now recorded in
+`severed_spokes.gd`'s own header for whoever touches this next). Ledgered in
+`docs/ASSET_LEDGER.md`.
+
+Two of `SA4`'s seven severed spokes — `river_gorge` and `storm_road`, the two
+long carve-seam blockers where a far side is actually visible across a gap —
+got the full grammar, authored in `terrain_playground.json`'s
+`spokes.routes[*]` as new `pylons`/`far_road`/`abandoned` blocks: a pylon
+line following the road and continuing across the seam (lit on both sides,
+dark only at the one pylon the rift's collapse physically wrecked), a
+conduit run severed at the gap with both cut ends left dangling, mirrored
+broken gateposts on both lips, kerb-stone roadbed resuming on the far side,
+and stranded freight props on both rims. Everything except the pylon reuses
+the existing nature/village families (D24) — no new vocabulary. The far side
+is dressing only, never terrain the player can reach — D23's carve-out holds
+by construction, same as `SA4` itself.
+
+**Blind-pass record, stated plainly per this item's own honesty
+requirement**: four rounds, self-administered (see disclosure above).
+Rounds 3 and 4 named no new defect and `tools/frame_stats.py`-style sheet
+stats were flat (blue ~41%, chartreuse 35-36%, yellow ~19%) — the
+project's own two-consecutive-flat-rounds convergence rule, just not run by
+an independent critic. **A genuinely blind third-party pass on
+`river_gorge`/`storm_road` is still owed** before this should be treated as
+having the same evidentiary weight as this project's other blind-verified
+visual work.
+
+**Not done — the remaining five spokes.** `mountain_trail`, `stone_gate`,
+`high_pass`, `cliff_road` and `blighted_road` are untouched and still read
+as plain terrain dead ends, not Tether Rifts. Continued as
+`SF33-remainder` in `BACKLOG.md`, which also notes the two wall-type
+blockers (`stone_gate`, `blighted_road`) have no far-side sightline at all,
+so their treatment is a different composition (a pylon line ending at the
+seal, not crossing a gap) using the same kit.
+
+**Lease-hygiene note for the record, not a defect in the ship itself.** This
+item's own dispatching firing (`ralphKeyed-20260815-0451`) heartbeat went
+stale during the fable subagent's ~110-minute run (no branch existed to
+check against for most of that time), and a later keyed firing
+(`ralphKeyed-20260815-0552`) correctly-by-the-letter reclaimed the
+`lane-keyed` lease per `PROMPT.md`'s liveness rule and picked up `LP9`
+instead — no work collided or duplicated, but it is the same near-miss
+pattern `PROMPT.md` already documents from `OF1` (2026-08-12). Worth a
+second look at whether a fable dispatch this long needs a sturdier
+heartbeat mechanism than one firing's own scheduled wakeup.
 
 ## R4.1 — Levels and XP
 
