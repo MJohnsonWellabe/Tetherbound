@@ -3,6 +3,81 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## LP9 — `smoke_combat.gd`/`smoke_catching.gd` flaky under real CI load; closed as confirmed load-sensitivity
+
+`model: sonnet` · `be71011` · `tests: smoke_combat.gd, smoke_catching.gd (both run locally, both clean; no test-file changes)`
+
+**No game code changed — the fix is entirely in `.github/workflows/ci.yml`.**
+LP9's own done-when asked for one of two things: a live repro of the
+reported hang, or enough clean instrumented runs to say load-sensitivity is
+more likely than a live bug. Got both.
+
+**Method**: extended LP1's per-frame position/velocity watchdog (which only
+covered one teleport, in `_a_swing_at_empty_air_misses`) to cover the WHOLE
+fight — both bodies, every physics tick, from `_check_the_fight_opened()`
+through `_fight_to_a_finish()` in `smoke_combat.gd`, and the respawn-wait /
+re-walk / re-engage path in `smoke_catching.gd`'s
+`_a_fainted_creature_cannot_be_caught()`, which is where the second,
+independently-found CI failure (found shipping `SB10`) actually hangs. Kept
+entirely local and never committed, the same way LP1's own instrumented copy
+never was — copied outside the repo (`/tmp`) partway through specifically so
+the scratch files would never even appear as untracked in `git status`,
+since Godot's `--script` flag runs a `.gd` file fine from any filesystem
+path as long as `--path .` still points at the real project root for `res://`
+resolution.
+
+**26 runs total, escalating contention on a 4-core box**: 6x concurrent
+`smoke_combat.gd` (round 1), then 4x combat + 4x catching mixed (round 2,
+8-way), then 6x combat + 6x catching plus 4 pure-CPU `yes > /dev/null` loops
+(round 3, 16 processes competing for 4 cores — deliberately past anything a
+real CI runner sees, to force whatever mechanism is there to show itself).
+
+**Zero terrain-embedding anomalies fired in any of the 26 runs** — no Y
+dropping, no body ending up below the world, on either creature, in either
+test. LP1's specific mechanism (a raw position write carrying the wrong Y
+across a horizontal teleport) does not reproduce here, at any contention
+level tried. That's a real, informative negative: whatever LP9 originally
+saw in CI (`smoke_combat.gd`'s "point-blank swing did no damage" and "enemy
+never landed a hit" failures, `smoke_catching.gd`'s "could not re-engage")
+is a different class of flake than LP1 fixed, not a residual of it.
+
+**Caught a live repro twice, both in round 3 (16-way), both in
+`smoke_catching.gd`'s post-catch respawn wait.** Both were killed by my own
+outer `timeout 500` wrapper (not an internal test failure) with the
+watchdog's throttled heartbeat still ticking every 300 physics frames right
+up to the kill — `wild.visible=false` and the same frozen position printed
+at frames 0, 300, 600, 900, 1200, 1500, one run stalling at 1500/3600. That
+heartbeat is the actual finding: physics ticks WERE still advancing (300
+ticks between each print, exactly as many as an uncontended run produces in
+under a second), so the simulated game was not stuck — it was legitimately
+still running, just needing far more real wall-clock time per tick than the
+uncontended baseline (2698-2699 ticks to respawn, consistently, across every
+clean run at every contention level — the tick count itself never moved,
+only how long real time it took to get there). Every one of these tests
+bounds itself in PHYSICS TICKS — `respawn_seconds * physics_ticks_per_second
++ 900`, `FIGHT_FRAME_LIMIT = 2500`, "15 seconds" counted as 900 ticks — which
+implicitly assumes ticks track real time closely enough that a tick budget
+and a wall-clock CI timeout mean roughly the same thing. Under genuine CPU
+starvation (this repo's own words: "12 jobs racing on shared runners") they
+decouple, and a tick budget that comfortably finishes in ~93s uncontended can
+blow through either its own internal budget or an external job timeout
+without any game logic actually being stuck.
+
+**Fix shipped**: `verify-combat` and `verify-catching` in `ci.yml` now retry
+once on failure, matching the exact pattern already shipped for
+`verify-aggression` (`RB3`/`LP7`) for the identical reason — that job's own
+comment already calls this "a safety net for any OTHER non-determinism this
+scene-boot-and-simulate style of test is prone to." A second straight
+failure still fails the job; this is not a "make flakes disappear" change,
+it is a "one transient contention spike doesn't reject an unrelated, healthy
+branch" change, which is the actual cost `LP9` was opened to fix.
+
+**What this does not do**: reduce how long these tests take, or make the
+per-tick cost of heavy CI contention go away. If the retry itself starts
+failing with any regularity, that is a real signal contention has gotten
+worse, not a reason to add a second retry — re-open and dig further, per
+`conventions.md`'s flake procedure.
+
 ## SB10 — Physical keys, gears and Sigils that open real things
 
 `model: sonnet` · `3a818bd` · `tests: test_item_gate (new, 8/8), full unit suite (631/0 failed), smoke_opening.gd`

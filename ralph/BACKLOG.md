@@ -169,6 +169,8 @@ that path was already safe and needed no change.
 
 **`LP8`** (`smoke_opening.gd`'s road-gate check failing against `main`) fixed — see `DONE.md`'s `OF3` entry. Root cause was `OF3`'s own `dialogue_panel.gd` advance-guard buffering change (`f8a42a92`), not `main`, not a CI race — fixed by suppressing the input check for one physics tick after `start()`; verified on two independent live CI runs.
 
+**`LP9`** (`smoke_combat.gd`/`smoke_catching.gd` flaky under real CI load) closed — see `DONE.md`. Confirmed load-sensitivity, not a live bug: 26 instrumented runs escalating to 16-way CPU oversubscription reproduced two real hangs, both in `smoke_catching.gd`'s post-catch re-engage wait, with zero terrain-embedding signatures (LP1's mechanism doesn't reproduce here). `ci.yml`'s `verify-combat`/`verify-catching` jobs now retry once on failure, matching the existing `smoke_aggression`/`RB3`/`LP7` precedent.
+
 ### LP9 — `smoke_combat.gd` is flaky under real CI load; `LP1` did not fully close it
 `model: sonnet` · `tests: smoke_combat`
 Found 2026-08-15 shipping `ralph/R3.2` (a save/load item touching zero combat
@@ -235,6 +237,34 @@ assertions. Rerunning the failed job in CI (uncontended, one job) passed
 green on the first retry, consistent with contention being the variable.
 Whoever picks up `LP9` should widen its scope to `smoke_catching.gd`'s
 post-catch fight-start path, not just `smoke_combat.gd`'s in-fight steps.
+
+**Closed 2026-08-15 — the done-when is met.** Extended LP1's per-frame
+position/velocity watchdog to cover the whole fight (both `smoke_combat.gd`
+and, per the note above, `smoke_catching.gd`'s post-catch re-engage path),
+kept local and never committed exactly as LP1's own instrumentation was.
+26 runs total, escalating CPU contention on a 4-core box: 6x concurrent
+combat (uncontended-ish), 8x mixed combat+catching, then 12x mixed plus 4
+pure-CPU `yes` loops (16 competing processes on 4 cores, deliberately past
+what a real CI runner would see, to force the mechanism to show itself).
+**Zero Y-plunge/embedded-under-terrain anomalies fired in any run** — LP1's
+specific mechanism does not reproduce here, confirming this is a genuinely
+different class of flake. **Caught a live repro twice**, both under the
+16-way round, both in `smoke_catching.gd`'s post-catch respawn wait
+(`_a_fainted_creature_cannot_be_caught`), both external-timeout kills, not
+an internal fail — the watchdog showed physics ticks still advancing
+normally (300-tick-spaced heartbeats present) with the wild creature's
+state frozen between them, i.e. real simulated time passing with no
+terrain/position fault, just far more real-world wall-clock cost per tick
+than uncontended. That is the mechanism: every one of these tests bounds
+itself in PHYSICS TICKS (`respawn_seconds * physics_ticks_per_second + 900`,
+"2500 action frames", "15 seconds of standing still" counted in ticks), which
+assumes ticks track real time. Under genuine CPU starvation they decouple,
+and a tick budget that finishes in ~93s uncontended can blow through a CI
+job's wall-clock timeout without the game logic itself being stuck. Shipped
+the same mitigation `smoke_aggression` already uses for the identical reason
+(`RB3`/`LP7`): `verify-combat` and `verify-catching` in `ci.yml` now retry
+once before failing the job. Not a game bug, so nothing in `tests/` or
+`scripts/` changed — the fix is entirely in the CI workflow.
 
 ---
 
