@@ -206,12 +206,16 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        # This is the authoritative import check. Non-zero here is a real
-        # failure: a script that no longer parses, a scene referencing a
-        # missing resource, a malformed project.godot.
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two. A
+        # non-zero exit is a real failure on its own (a malformed
+        # project.godot, a crash) -- `pipefail` makes that survive the `tee`.
+        # But Godot's own exit code is not sufficient by itself: a script
+        # that no longer parses or a scene referencing a missing resource
+        # can print SCRIPT ERROR / Parse Error and still exit 0, so the log
+        # text is inspected too. This used to be two full import passes (one
+        # for the exit code, a second identical one purely to capture text
+        # to grep) -- merged 2026-08-15 into the one pass that already has
+        # the output in hand.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -277,9 +281,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -346,9 +349,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -417,9 +419,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -484,9 +485,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -552,9 +552,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -627,9 +626,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -702,9 +700,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -788,9 +785,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -857,9 +853,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
@@ -934,9 +929,8 @@ jobs:
         run: godot --headless --path . --import || true
 
       - name: Import project (verify)
-        run: godot --headless --path . --import
-
-      - name: Fail on script or scene errors
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
         run: |
           set -euo pipefail
           godot --headless --path . --import 2>&1 | tee /tmp/import.log
