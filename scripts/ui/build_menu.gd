@@ -50,6 +50,18 @@ const COLUMNS := 10
 const CELL_SIZE := 92
 const CELL_GAP := 7
 
+## How dim an unaffordable grid cell reads next to a full-alpha one it stands
+## beside (OF23) -- greyed, not hidden or disabled: the button still has to
+## take the press so `_pick` can say WHY it refuses (spec's own "silent
+## refusal" complaint, one level up from the missing text this whole item
+## fixes).
+const UNAFFORDABLE_ALPHA := 0.4
+
+## OF23: how long a refusal/shortfall line sits in `_message` before it clears
+## -- same duration `game_menu.gd`'s own `_status` line uses, so a message
+## surface next to that one does not read as tuned differently for no reason.
+const STATUS_SECONDS := 3.0
+
 ## Which piece id was last chosen in each category — a plain `static var`
 ## rather than a save-file field: this is a within-session convenience
 ## ("I keep placing walls, land the cursor back on Wall"), not state anyone
@@ -64,6 +76,8 @@ var _grid: GridContainer = null
 var _cell_buttons: Array[Button] = []
 var _detail_name: Label = null
 var _detail_rows: VBoxContainer = null
+var _message: Label = null
+var _message_left := 0.0
 var _footer: RichTextLabel = null
 
 var _categories: Array[String] = []
@@ -76,9 +90,14 @@ var _mouse_before: int = Input.MOUSE_MODE_VISIBLE
 var _last_focus_owner: Control = null
 
 
+## OF23: `game_menu.gd::_read_actions` looks this group up before it reacts
+## to `menu_cancel` — see that method's own comment on why.
+const GROUP := "build_menu"
+
 func _ready() -> void:
 	layer = UITokens.LAYER_WORLD_PANELS
 	visible = false
+	add_to_group(GROUP)
 	_build_ui()
 
 
@@ -101,6 +120,7 @@ func open() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_rebuild_catalogue()
 	_update_footer()
+	_say("")
 	visible = true
 	if not _categories.is_empty():
 		_select_category(_category_index)
@@ -122,10 +142,20 @@ func close(play_cue: bool = true) -> void:
 	Input.mouse_mode = _mouse_before
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not _open:
 		return
 	if Input.is_action_just_pressed("menu_cancel") or Input.is_action_just_pressed("build_cancel"):
+		# OF23: `menu_cancel` and `build_cancel` share gamepad B (project.godot),
+		# so the SAME still-just-pressed press that closes this menu is also
+		# what `game_menu.gd::_read_actions` reads as "open the pause menu" on
+		# its own `_process` this same frame -- pressing B to leave the build
+		# screen would fall straight back into the pause menu it never opened
+		# from. Tell it to sit out the next couple frames before we close.
+		var game := _game()
+		var pause_menu: Node = game.call("menu") if game != null else null
+		if pause_menu != null and pause_menu.has_method("suppress_reopen"):
+			pause_menu.call("suppress_reopen")
 		close()
 		return
 	# `tool_cycle` (keyboard Q / right-stick click) and the rotate-left/right
@@ -148,10 +178,16 @@ func _process(_delta: float) -> void:
 		if focus_owner != null:
 			AUDIO_CUES.play(&"ui_focus")
 
-	# Cheap (at most a handful of cost rows) and keeps owned/required numbers
-	# live if the player gathers or crafts while the menu sits open over a
-	# still-running world.
+	# Cheap (at most a handful of cost rows, at most COLUMNS cells) and keeps
+	# owned/required numbers AND which cells are greyed live if the player
+	# gathers or crafts while the menu sits open over a still-running world.
 	_describe(_selected_index)
+	_refresh_afford_state()
+
+	if _message_left > 0.0:
+		_message_left -= delta
+		if _message_left <= 0.0:
+			_message.text = ""
 
 
 func _game() -> Node:
@@ -262,6 +298,17 @@ func _build_ui() -> void:
 	_detail_rows = VBoxContainer.new()
 	_detail_rows.add_theme_constant_override("separation", 2)
 	strip_vbox.add_child(_detail_rows)
+
+	# OF23: the menu's own message surface -- a refused pick used to say
+	# nothing at all past a `ui_error` sound. Lives in the strip, right under
+	# the cost rows it is explaining, so a refusal reads next to the numbers
+	# that caused it rather than somewhere the player was not looking.
+	_message = Label.new()
+	_message.text = ""
+	_message.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_message.add_theme_color_override("font_color", UITokens.DANGER)
+	_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	strip_vbox.add_child(_message)
 
 	_footer = RichTextLabel.new()
 	_footer.bbcode_enabled = true
@@ -380,6 +427,27 @@ func _build_grid() -> void:
 	if not _cell_buttons.is_empty():
 		_cell_buttons[_selected_index].call_deferred("grab_focus")
 	_describe(_selected_index)
+	_refresh_afford_state()
+
+
+## OF23: dims every grid cell the satchel cannot currently pay for -- greyed
+## AT A GLANCE, without needing to focus each one and read the strip. The
+## button underneath stays fully pressable (no `disabled`): a press on a
+## greyed cell is still a real refusal, and `_pick` is what explains why.
+## Free build cells never grey (`GameState.can_afford` already reads it), so
+## this reads correctly with no special-casing here.
+func _refresh_afford_state() -> void:
+	var game := _game()
+	if game == null:
+		return
+	var free := bool(game.get("free_build"))
+	var pieces := _current_pieces()
+	for i in _cell_buttons.size():
+		if i >= pieces.size():
+			continue
+		var id := str((pieces[i] as Dictionary).get("id", ""))
+		var afford := free or bool(game.call("can_afford", id))
+		_cell_buttons[i].modulate = Color(1, 1, 1, 1.0 if afford else UNAFFORDABLE_ALPHA)
 
 
 ## Piece name + resource rows (spec 12.4): "[icon] owned / required", green
@@ -432,7 +500,12 @@ func _describe(index: int) -> void:
 
 		var name := str(items.call("item_name", id)) if items != null else id
 		var label := Label.new()
-		label.text = "%s  %d / %d" % [name, owned, required]
+		# OF23: a short row still has to say the actual number missing, not just
+		# a colour -- "2 / 6" red reads as "not enough" but not "how much".
+		if owned < required:
+			label.text = "%s  %d / %d — need %d more" % [name, owned, required, required - owned]
+		else:
+			label.text = "%s  %d / %d" % [name, owned, required]
 		label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 		label.add_theme_color_override("font_color", UITokens.SUCCESS if owned >= required else UITokens.DANGER)
 		row.add_child(label)
@@ -459,6 +532,7 @@ func _pick(index: int) -> void:
 		return
 	var piece: Dictionary = pieces[index]
 	var id := str(piece.get("id", ""))
+	var piece_name := str(piece.get("name", id))
 	var game := _game()
 
 	# An unaffordable pick refuses to arm — the same contract the old flat
@@ -466,9 +540,17 @@ func _pick(index: int) -> void:
 	# `tests/smoke_free_build.gd`): arming a piece the placer would only
 	# refuse hands the player a ghost that can never land. The menu stays
 	# open so they can pick something they can pay for.
+	#
+	# OF23: a refusal used to be JUST the `ui_error` cue — every press on an
+	# unaffordable cell looked dead, which owner-reported as "the build menu
+	# doesn't work at all." Now it says exactly what is short, in the same
+	# `_message` surface the grid's greyed cells are already hinting at.
 	var free := game != null and bool(game.get("free_build"))
 	if not free and game != null and not bool(game.call("can_afford", id)):
 		AUDIO_CUES.play(&"ui_error")
+		var shortfall := _shortfall_text(game, id)
+		_say(("Can't afford %s — %s" % [piece_name, shortfall]) if not shortfall.is_empty() \
+			else "Can't afford %s" % piece_name)
 		return
 	AUDIO_CUES.play(&"ui_accept")
 
@@ -477,3 +559,39 @@ func _pick(index: int) -> void:
 	if game != null:
 		game.set("pending_build", id)
 	close(false)
+
+
+## "need 4 more Wood" — joined across every resource the satchel is still
+## short of for `id`, right now. Empty when `id` is unknown, free build is on
+## (`GameState.build_cost_for` already returns no cost then), or the satchel
+## already covers it — callers decide what an empty string means.
+func _shortfall_text(game: Node, id: String) -> String:
+	if game == null:
+		return ""
+	var items: RefCounted = game.get("items")
+	var inventory: RefCounted = game.get("inventory")
+	if items == null or inventory == null:
+		return ""
+	var parts: Array[String] = []
+	for requirement: Variant in (game.call("build_cost_for", id) as Array):
+		var need: Dictionary = requirement
+		var item_id := str(need.get("id", ""))
+		var required := int(need.get("n", 0))
+		var owned := int(inventory.call("count", item_id))
+		var missing := required - owned
+		if missing > 0:
+			parts.append("%d more %s" % [missing, str(items.call("item_name", item_id))])
+	if parts.is_empty():
+		return ""
+	return "need " + ", ".join(parts)
+
+
+## The build menu's own message surface (OF23) — a refusal or shortfall line
+## under the cost rows it explains. Same decay-on-a-timer shape as
+## `game_menu.gd::say`, so this reads as the same kind of thing rather than a
+## bespoke toast.
+func _say(message: String) -> void:
+	if _message == null:
+		return
+	_message.text = message
+	_message_left = STATUS_SECONDS if not message.is_empty() else 0.0

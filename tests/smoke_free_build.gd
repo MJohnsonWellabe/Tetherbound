@@ -74,6 +74,8 @@ func _run() -> void:
 	await _check_it_can_be_switched_off_again()
 	await _check_the_first_day_arc(world)
 	await _check_bg1_grid_rotation_and_snap(world)
+	await _check_an_unaffordable_pick_shows_the_shortfall_and_refuses()
+	await _check_b_closes_only_the_build_menu()
 
 	_cleanup()
 	_report()
@@ -556,11 +558,11 @@ func _check_it_can_be_switched_off_again() -> void:
 	print("switched back off, and the empty satchel is short again: '%s'" % _status())
 
 
-## The arming path since the Valheim-style build menu replaced the flat tab
-## list: the Build tab is a launcher whose one button closes the pause menu
-## and opens `build_menu.gd`; picking a grid cell is what arms
-## `pending_build` now. Returns the build menu node, or null after failing.
-func _open_build_menu_and_pick_first() -> Node:
+## The hand-off half of the arming path: the Build tab's one button closes
+## the pause menu and opens `build_menu.gd`. Assumes the pause menu is
+## already open (every caller below opens it first). Returns the live build
+## menu node, or null after failing.
+func _open_build_menu_from_pause() -> Node:
 	_build = await _go_to("build")
 	if _build == null:
 		return null
@@ -582,6 +584,15 @@ func _open_build_menu_and_pick_first() -> Node:
 			break
 	if menu == null:
 		_fail("pressing the build tab's button did not open the build menu")
+	return menu
+
+
+## The arming path since the Valheim-style build menu replaced the flat tab
+## list: picking a grid cell is what arms `pending_build` now. Returns the
+## build menu node, or null after failing.
+func _open_build_menu_and_pick_first() -> Node:
+	var menu := await _open_build_menu_from_pause()
+	if menu == null:
 		return null
 	var cells: Array = menu.get("_cell_buttons")
 	if cells == null or cells.is_empty():
@@ -592,16 +603,131 @@ func _open_build_menu_and_pick_first() -> Node:
 	await _press("ui_accept")
 	for i in 3:
 		await process_frame
-	# The launcher closed the pause menu on the way in. The checks around
-	# this helper still talk to pause-menu tabs through `_go_to`, which
-	# cycles an OPEN menu — so put the world back the way the old flat-tab
-	# flow left it: pause menu open. (A successful pick closes the build
-	# menu itself; a refused one leaves it up, and the caller handles that.)
-	if bool(menu.call("is_open")):
+	await _close_build_menu_and_restore_pause(menu)
+	return menu
+
+
+## The launcher closed the pause menu on the way in. The checks around this
+## helper still talk to pause-menu tabs through `_go_to`, which cycles an
+## OPEN menu — so put the world back the way the old flat-tab flow left it:
+## pause menu open. (A successful pick closes the build menu itself; a
+## refused one leaves it up, so this only reopens the build menu's OWN close
+## when needed.)
+func _close_build_menu_and_restore_pause(menu: Node) -> void:
+	if menu != null and bool(menu.call("is_open")):
 		menu.call("close")
 		await process_frame
 	if not bool(_menu.call("is_open")):
 		await _press("menu_cancel")
 		for i in 3:
 			await process_frame
-	return menu
+
+
+## OF23. `build_menu.gd::_pick` used to refuse an unaffordable piece with
+## nothing but a `ui_error` beep — the owner's exact complaint ("the build
+## menu doesn't work at all"). Proves, through the real menu with an emptied
+## satchel: the grid greys the unaffordable cell, the pick still refuses (the
+## menu stays open), and the refusal names what's short rather than staying
+## silent.
+func _check_an_unaffordable_pick_shows_the_shortfall_and_refuses() -> void:
+	_game.set("free_build", false)
+	_game.set("pending_build", "")
+	if not bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 10:
+			await physics_frame
+
+	var inventory: RefCounted = _game.get("inventory")
+	for id in ["wood", "stone", "fiber"]:
+		inventory.call("remove", id, int(inventory.call("count", id)))
+
+	var menu := await _open_build_menu_from_pause()
+	if menu == null:
+		return
+	var cells: Array = menu.get("_cell_buttons")
+	if cells == null or cells.is_empty():
+		_fail("the build menu drew no piece cells with an empty satchel")
+		await _close_build_menu_and_restore_pause(menu)
+		return
+
+	# Camp — survival, the first tab and first cell — costs wood/stone/fiber,
+	# all zeroed above, so it is guaranteed unaffordable here.
+	var cell := cells[0] as Button
+	if cell.modulate.a >= 0.999:
+		_fail("an unaffordable piece's grid cell is not greyed (alpha %.2f)" % cell.modulate.a)
+	else:
+		print("unaffordable cell greyed: alpha %.2f" % cell.modulate.a)
+
+	cell.grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	for i in 3:
+		await process_frame
+
+	if not str(_game.get("pending_build")).is_empty():
+		_fail("an unaffordable piece armed anyway: '%s'" % _game.get("pending_build"))
+	elif not bool(menu.call("is_open")):
+		_fail("a refused pick closed the build menu -- it should stay open so the player can pick something they can afford")
+	else:
+		print("an unaffordable piece refused to arm")
+
+	var message_label: Label = menu.get("_message")
+	var message := str(message_label.text) if message_label != null else ""
+	if not message.to_lower().contains("need"):
+		_fail("picking an unaffordable piece said nothing about what's short: '%s'" % message)
+	elif not message.contains("Wood"):
+		_fail("the shortfall message did not name the missing resource: '%s'" % message)
+	else:
+		print("build menu shortfall message: '%s'" % message)
+
+	await _close_build_menu_and_restore_pause(menu)
+
+
+## OF23. `menu_cancel` and `build_cancel` are both bound to gamepad button 1
+## (project.godot) — the owner-reported bug is that closing the build menu
+## on B reopens the pause menu the same frame. Driven with a raw joypad
+## button press (not two separate actions) so this proves the actual shared
+## button is fixed, not just that two independently-pressed actions behave.
+func _check_b_closes_only_the_build_menu() -> void:
+	_game.set("pending_build", "")
+	if not bool(_menu.call("is_open")):
+		await _press("menu_cancel")
+		for i in 10:
+			await physics_frame
+
+	var menu := await _open_build_menu_from_pause()
+	if menu == null:
+		return
+	if bool(_menu.call("is_open")):
+		_fail("the pause menu is still open after the build tab handed off to the build menu")
+
+	await _tap_pad(JOY_BUTTON_B)
+	for i in 10:
+		await process_frame
+
+	var build_menu_closed := not bool(menu.call("is_open"))
+	var pause_menu_stayed_shut := not bool(_menu.call("is_open"))
+	if not build_menu_closed:
+		_fail("pressing B did not close the build menu")
+	if not pause_menu_stayed_shut:
+		_fail("pressing B to leave the build menu reopened the pause menu the same frame")
+	if build_menu_closed and pause_menu_stayed_shut:
+		print("B closed the build menu without reopening the pause menu")
+
+
+## Same shape as `smoke_settings.gd::_tap_pad` — a raw device event, not an
+## action, so a shared physical button (this file's whole point for this
+## check) is exercised honestly.
+func _tap_pad(index: int) -> void:
+	var down := InputEventJoypadButton.new()
+	down.button_index = index
+	down.pressed = true
+	Input.parse_input_event(down)
+	await process_frame
+	await process_frame
+	var up := InputEventJoypadButton.new()
+	up.button_index = index
+	up.pressed = false
+	Input.parse_input_event(up)
+	for i in 3:
+		await process_frame

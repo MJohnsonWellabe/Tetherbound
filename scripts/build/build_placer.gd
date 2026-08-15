@@ -113,6 +113,11 @@ var _camera_rig: Node = null
 var _ghost: Node3D = null
 var _ghost_ok := false
 var _ghost_id := ""
+## OF23: why the ghost currently refuses to place — "" when it is fine.
+## `_hint_text` folds this into the always-visible control strip so "can't
+## afford / too steep / occupied" reads the instant the ghost turns red, not
+## only after a wasted `build_place` press and a bare `ui_error` beep.
+var _ghost_reason := ""
 ## Previous frame's `snapped_to_neighbour`, per `AudioCues` wiring below --
 ## `build_snap` plays on the false->true edge only, not every frame the ghost
 ## happens to already be sitting snapped.
@@ -235,6 +240,7 @@ func _show_ghost(game: Node, armed: String) -> void:
 	if is_nan(ground):
 		_ghost.visible = false
 		_ghost_ok = false
+		_ghost_reason = ""
 		_set_overlay_visible(false)
 		return
 
@@ -258,7 +264,20 @@ func _show_ghost(game: Node, armed: String) -> void:
 				rise = maxf(rise, absf(h - ground))
 
 	var occupied := _cell_occupied(armed, spot)
-	_ghost_ok = rise <= MAX_SLOPE_RISE and not occupied and _can_afford(game, armed)
+	var too_steep := rise > MAX_SLOPE_RISE
+	var afford := _can_afford(game, armed)
+	_ghost_ok = not too_steep and not occupied and afford
+	# OF23: one reason, picked in the order a player would want to hear it —
+	# "something is already there" and "the ground won't take it" are about
+	# THIS spot and get fixed by moving; "can't afford it" is true everywhere
+	# and would drown the other two out if it went first.
+	_ghost_reason = ""
+	if occupied:
+		_ghost_reason = "Something is already here"
+	elif too_steep:
+		_ghost_reason = "Too steep to build here"
+	elif not afford:
+		_ghost_reason = "Can't afford this — check the build menu for what's short"
 	_ghost.visible = true
 	_ghost.global_position = spot
 	_ghost.rotation.y = deg_to_rad(_yaw_deg)
@@ -447,6 +466,7 @@ func _drop_ghost() -> void:
 		_ghost.queue_free()
 	_ghost = null
 	_ghost_ok = false
+	_ghost_reason = ""
 	_ghost_id = ""
 	_was_snapped = false
 	_yaw_deg = 0.0
@@ -584,13 +604,21 @@ func _set_overlay_visible(shown: bool) -> void:
 ## D34/spec 13.4: bottom-center strip naming the four verbs a ghost responds
 ## to right now, glyph-first the same way every other control hint in this
 ## project reads (`input_glyph.gd`).
+## OF23: prefixed with WHY the ghost is red when it is — a bare `ui_error` on
+## a wasted `build_place` press used to be the only signal a bad spot ever
+## gave. `_ghost_reason` is set (or cleared) every frame in `_show_ghost`, so
+## this reads correctly the instant the ghost turns red, not only after a
+## failed press.
 func _hint_text() -> String:
-	return "%s Rotate    %s Snap step    %s Place    %s Cancel" % [
+	var controls := "%s Rotate    %s Snap step    %s Place    %s Cancel" % [
 		"%s/%s" % [INPUT_GLYPH.icon(ROTATE_LEFT_ACTION, 28), INPUT_GLYPH.icon(ROTATE_RIGHT_ACTION, 28)],
 		INPUT_GLYPH.icon(SNAP_CYCLE_ACTION, 28),
 		INPUT_GLYPH.icon(PLACE_ACTION, 28),
 		INPUT_GLYPH.icon(CANCEL_ACTION, 28),
 	]
+	if _ghost_reason.is_empty():
+		return controls
+	return "[color=#%s]%s[/color]    %s" % [UITokens.DANGER.to_html(false), _ghost_reason, controls]
 
 
 func _position_hint_label() -> void:

@@ -34,6 +34,16 @@ const STATUS_SECONDS := 3.0
 ## default. Long enough that it cannot happen by accident during a fight.
 const PANIC_SECONDS := 1.5
 
+## OF23: frames `_read_actions` sits out its own "not open -> open on
+## `menu_cancel`" check after `suppress_reopen()` is called. `menu_cancel` and
+## `build_cancel` share gamepad B (project.godot) — closing `build_menu.gd` on
+## a B press is the SAME still-just-pressed press this shell would otherwise
+## read, on its own `_process`, as "open." Two frames, the same width
+## `dialogue_panel.gd::OPEN_GUARD_FRAMES` uses for its own edge, for the same
+## reason: whichever node's `_process` happens to run first this frame, the
+## guard still covers it.
+const REOPEN_GUARD_FRAMES := 2
+
 var game: Node = null
 
 ## The player's controls. Owned here rather than by the autoload because this
@@ -72,6 +82,8 @@ var _refusal_label: Label = null
 ## and the button being rebound is very often one the shell itself reads.
 var _deaf: bool = false
 var _panic_left: float = PANIC_SECONDS
+## OF23. See `REOPEN_GUARD_FRAMES` / `suppress_reopen`.
+var _reopen_guard: int = 0
 
 ## The fight, found by capability rather than by path so this file holds no
 ## knowledge of another agent's scene layout. Re-found when it goes away.
@@ -328,6 +340,16 @@ func toggle() -> void:
 		open()
 
 
+## OF23: called by `build_menu.gd` right before it closes on a `menu_cancel`/
+## `build_cancel` press — B is double-bound to both actions, so without this
+## `_read_actions` below sees the exact same still-just-pressed press and
+## reopens this shell the instant the build menu closes. A player pressing B
+## to leave the build screen would fall straight back into a pause menu they
+## never opened from.
+func suppress_reopen() -> void:
+	_reopen_guard = REOPEN_GUARD_FRAMES
+
+
 func select(index: int) -> void:
 	if _tabs.is_empty():
 		return
@@ -516,6 +538,27 @@ func _read_actions() -> void:
 		return
 
 	if not _open:
+		# OF23: `menu_cancel` and `build_cancel` share gamepad B
+		# (project.godot). `build_menu.gd` is added straight under
+		# `get_tree().root` AFTER this shell (which lives nested inside the
+		# `Game` autoload, mounted first) — so on the frame that shared press
+		# lands, THIS runs before an open build menu's own `_process` gets a
+		# turn to react and close itself. Opening here first would pause the
+		# tree, and a paused, non-`PROCESS_MODE_ALWAYS` build menu would never
+		# see that same press to close on — it would be stuck open behind a
+		# pause menu it never asked for. Standing aside while one is open lets
+		# it close on its own turn, later this same frame, tree still
+		# unpaused.
+		var open_build_menu: Node = get_tree().get_first_node_in_group(&"build_menu")
+		if open_build_menu != null and bool(open_build_menu.call("is_open")):
+			return
+		# Belt-and-suspenders for the reverse ordering (a future refactor that
+		# processes build_menu first): `suppress_reopen()` sits this shell out
+		# for a couple frames right after a shared-button close, the same
+		# width `dialogue_panel.gd::OPEN_GUARD_FRAMES` uses for its own edge.
+		if _reopen_guard > 0:
+			_reopen_guard -= 1
+			return
 		if Input.is_action_just_pressed(str(_config.get("open_action", "menu_cancel"))):
 			if not open() and _fight_in_progress():
 				_flash_refusal()
