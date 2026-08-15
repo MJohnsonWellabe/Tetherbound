@@ -169,6 +169,53 @@ that path was already safe and needed no change.
 
 **`LP8`** (`smoke_opening.gd`'s road-gate check failing against `main`) fixed — see `DONE.md`'s `OF3` entry. Root cause was `OF3`'s own `dialogue_panel.gd` advance-guard buffering change (`f8a42a92`), not `main`, not a CI race — fixed by suppressing the input check for one physics tick after `start()`; verified on two independent live CI runs.
 
+### LP9 — `smoke_combat.gd` is flaky under real CI load; `LP1` did not fully close it
+`model: sonnet` · `tests: smoke_combat`
+Found 2026-08-15 shipping `ralph/R3.2` (a save/load item touching zero combat
+code): CI run 31862240991's `verify-combat` job failed on **two consecutive
+attempts, two different ways**, while `tests/smoke_combat.gd` reproduced
+clean 4/4 times in an isolated local headless run on the exact same commit.
+`conventions.md`'s flake procedure was followed before treating this as
+someone else's bug: R3.2's own diff touches only `autoload/game_state.gd`,
+`scripts/save/save_game.gd`, `scripts/world/death_satchel.gd`,
+`scripts/world/player_death.gd` and two test files — nothing in the combat
+path.
+
+- **Attempt 1:** the fight resolved normally (enemy fainted, 'won'), but
+  `_a_swing_at_the_enemy_connects`'s point-blank check failed: "a quick
+  attack at point-blank range did no damage (117.8 -> 117.8)" and "a landed
+  quick attack built no energy (0.0 -> 0.0)".
+- **Attempt 2 (a GitHub Actions re-run of just the failed job, not a new
+  push):** a quick attack landed fine this time (117.8 -> 108.2), but the
+  FOLLOW-ON fight-to-finish step hung: "the enemy never landed a hit in 15
+  seconds of standing still", "the fight never resolved after 2500 action
+  frames", plus every downstream cleanup assertion failing in a cascade
+  (arena never torn down, trainer input never restored) — the same
+  symptom LP1's own history lists as caused by the enemy pal ending up
+  embedded under terrain with no floor to catch it.
+
+**Two different failure shapes on two attempts, both clean locally in
+isolation, reads as CI-load-sensitive timing rather than a deterministic
+bug** — this file's own history (`D25`) already states batching/concurrent
+jobs make these exact two tests worse, and this run had 12 jobs racing on
+shared runners. That said, attempt 2's specific wording is close enough to
+what `LP1` catalogued as symptoms of the terrain-embedding bug that `LP1`'s
+fix (grounding the teleport in `_a_swing_at_empty_air_misses` only) should
+not be assumed to have fully closed the class — `_a_swing_at_the_enemy_
+connects` and `_the_enemy_closes_and_hits_back` do their own real-time
+movement/AI stepping that was never instrumented the way `LP1` instrumented
+the one function it fixed.
+
+**Not the fix, just the finding, backed by real evidence this time (unlike
+a guess).** Done when: an instrumented run (the same per-frame position/
+velocity watchdog `LP1` used, extended to cover the whole fight, not just
+the opening teleport) either catches a live repro of attempt 2's hang, or
+enough clean instrumented runs accumulate to say the load-sensitivity
+theory is more likely than a live bug. Whoever picks this up should also
+re-read `LP1`'s own "20/20 consecutive clean runs" claim skeptically —
+that was 20 runs, uncontended, which per this entry's own theory is close
+to the least likely condition to reproduce a load-sensitive flake.
+
 ---
 
 ## Phase -0.9 — the two blockers from the published build (owner, 2026-08-11)
