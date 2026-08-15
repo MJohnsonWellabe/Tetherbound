@@ -3,6 +3,62 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R4.8 — Fainting and home recovery
+
+`model: sonnet` · `tests: test_fainting (7/7), full unit suite (682/83977/0 failed)` · `area: build` · `e2acd58`
+
+`R2.8` shipped `creature_bed` as bare, non-interactive geometry (a JSON
+buildables entry placed by the generic `build_piece.gd`) and explicitly
+deferred GAME_DESIGN.md 16/20's full brief -- "revives a fainted creature...
+visible creature rest behaviour" -- to this item.
+
+- `scripts/creatures/home_recovery.gd` (new, pure logic): `rest(creature,
+  cfg)` heals fully (reviving a fainted creature) and grants the same flat
+  rest bonus XP `camp.gd`'s overnight rest already gives every party member
+  (`progression.gd::rest_xp`) -- reused rather than a second tunable, so a
+  creature bed reads as "the same rest, on demand" rather than a different
+  mechanic that happens to look similar.
+- `scripts/build/creature_bed.gd` (new): the placed piece's real
+  interaction, the same "carries state/interaction, gets its own
+  hand-authored script" shape `storage_container.gd` (R2.7) already set --
+  a world-space prompt opens a rest screen, mirroring `storage_container.gd`
+  exactly (ghost/real placement via `build_piece.gd`, an `Interactable`
+  child, a lazily-built shared panel).
+- `scripts/ui/creature_bed_panel.gd` (new): one row per party slot (name,
+  HP or "fainted"), press to rest that member; mirrors `storage_panel.gd`'s
+  shell/open/close pattern (pauses the tree, releases the mouse, `menu_cancel`
+  closes it) rather than inventing a new panel shape.
+- `scripts/build/build_placer.gd`: `creature_bed` joins `STATEFUL_IDS`
+  alongside `camp`/`storage` and gets its own ghost/real branches. It needs
+  no `state_data` restore branch -- unlike a chest's contents, a rest is
+  momentary and has nothing worth persisting.
+
+**"Unavailable state" was already built, not new work here**: `party.gd`'s
+`set_active()` already refuses a fainted creature and `all_fainted()`
+already exists (if unused elsewhere); `catch_math.gd` already refuses a
+fainted target. Tested in `test_fainting.gd` as the documented baseline a
+creature bed's revival recovers FROM.
+
+**Deliberately not built: a live in-world "visible creature rest
+behaviour."** The natural mechanism already exists --
+`creature_body.gd::play_faint()`/`revive_animation()`, the same primitives
+combat already uses -- and an early draft of `creature_bed_panel.gd` drove
+them on the active creature's own body (found by name, `"AllyCreature"`,
+per `encounter_director.gd`) while the rest screen was open. Backed out
+before shipping: `conventions.md` requires any scene/animation change to
+clear a genuinely blind `visual-judge` render pass before it counts as
+done, and this item's remaining budget did not stretch to that (plus a
+real, unresolved wrinkle -- the rest screen pauses the tree the way
+`storage_panel.gd` does, and an animation held during a game-tree pause
+needs the body's `process_mode` bumped to `ALWAYS` or the pose likely never
+visually updates; untested). What ships instead is honest text feedback
+("X wakes up, fully rested." / "X rests and wakes refreshed.") rather than
+a half-verified animation cue. Whoever picks this up next: the mechanism
+above is the concrete next lever, and only the party's ACTIVE creature has
+a world body to animate at all today -- the other four party members have
+no rendered presence outside a fight, which is a real, separate,
+pre-existing gap this item did not invent a fix for.
+
 ## SF33-remainder — Rift dressing for the other five spokes
 
 `model: fable` · `tests: none` · `area: terrain` · `6358600`

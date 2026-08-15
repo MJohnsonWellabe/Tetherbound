@@ -1449,7 +1449,8 @@ deep branch (`SD17`). All three numbers and the item name are tunable per
 `CLAUDE.md`; do not let a working name become a permanent mechanic.
 
 ### R4.7 — Bond and best creature · `model: sonnet` · `tests: test_bond` (new) · §12
-### R4.8 — Fainting and home recovery · `model: sonnet` · `tests: test_fainting` (new) · M6
+
+**`R4.8` (fainting and home recovery) shipped — see `DONE.md`.** The mechanical half: a placed `creature_bed` now has a real interaction (`R2.8`'s own deferred brief) that revives/tops up any party member and grants the same flat rest bonus XP camp's overnight rest already gives. "Unavailable state" and catching-refuses-fainted were already built and are tested here as the baseline this recovers from, not as new code. Deliberately not built: a live in-world animation cue for "visible creature rest behaviour" — that is visual-affecting work needing a genuinely blind `visual-judge` pass, out of this item's budget; clear on-screen text stands in instead.
 
 ### R4.9 — Orb economy and tiers · `model: sonnet` · `tests: test_catch_math` · §15
 Spec §3 Band 2: the improved orb tier is the **first** thing Rootstone
