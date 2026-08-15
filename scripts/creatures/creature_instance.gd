@@ -92,6 +92,14 @@ var iv_defence: float = 0.5
 var trait_primary: String = ""
 var trait_secondary: String = ""
 
+## OF27: "make a version that is a 'shiny' like Pokemon go. Rare and nothing
+## different than just the colors" (owner report). Purely cosmetic — nothing
+## in combat_math.gd/progression.gd reads this, and it never should; the day
+## a shiny is quietly stronger is the day "just the colors" stops being true.
+## Defaults false for the same "old caller, byte-for-byte old behaviour"
+## reason iv_hp/trait_primary already default to their own no-op values.
+var shiny: bool = false
+
 
 ## Build a live creature at level 1 with base stats, unless told otherwise.
 ##
@@ -113,9 +121,19 @@ var trait_secondary: String = ""
 ## passes up to 3 floats (hp, attack, defence, each 0..1) in `iv_rolls`; a
 ## caller that wants a trait passes 1 or 2 floats in `trait_rolls` (primary,
 ## optionally the hidden secondary — see `trait_secondary`'s own comment).
+##
+## `is_shiny` is OF27's own opt-in, same shape again: a caller that already
+## knows the answer (a save-load reconstruction going through this instead of
+## `_array_to_party`, a test) can hand it straight in and gets it set exactly
+## as given. `encounter_director._roll_wild_level` deliberately does NOT pass
+## its roll through here — the shiny draw has to be the LAST rng.randf() in
+## the seeded per-spawn stream, after the level_roll argument above has
+## already been evaluated as part of THIS call, so that caller sets `.shiny`
+## on the returned instance directly instead. Either path reaches the same
+## field.
 static func from_species(
 	id: String, definition: Dictionary, level_roll: float = -1.0, cfg: Dictionary = {},
-	iv_rolls: Array = [], trait_rolls: Array = []
+	iv_rolls: Array = [], trait_rolls: Array = [], is_shiny: bool = false
 ) -> RefCounted:
 	var instance: RefCounted = (load("res://scripts/creatures/creature_instance.gd") as GDScript).new()
 	instance.species_id = id
@@ -158,6 +176,7 @@ static func from_species(
 	instance.energy = 0.0
 	instance.fainted = false
 	instance.nickname = ""
+	instance.shiny = is_shiny
 	return instance
 
 

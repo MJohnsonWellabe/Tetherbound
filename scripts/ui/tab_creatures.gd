@@ -111,6 +111,11 @@ var _held: int = -1
 
 var _viewport: SubViewportContainer = null
 var _shown_species: String = ""
+## OF27: tracked alongside `_shown_species` for the same reason
+## creature_viewport.gd tracks its own `_shiny` -- two party members can share
+## a species and disagree on shiny, and the species-only gate would leave the
+## wrong one on screen.
+var _shown_shiny: bool = false
 
 var _detail_name: Label = null
 var _detail_type_icon: TextureRect = null
@@ -839,13 +844,16 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_detail_hint.text = DETAIL_HINT_BASE
 		if _shown_species != "":
 			_shown_species = ""
+			_shown_shiny = false
 			_viewport.call("set_species", "")
 		return
 
 	var species_id := str(creature.get("species_id"))
-	if species_id != _shown_species:
+	var shiny := bool(creature.get("shiny"))
+	if species_id != _shown_species or shiny != _shown_shiny:
 		_shown_species = species_id
-		_viewport.call("set_species", species_id)
+		_shown_shiny = shiny
+		_viewport.call("set_species", species_id, shiny)
 
 	var nickname := str(creature.get("nickname")).strip_edges()
 	var display_name := str(creature.get("display_name"))
@@ -1425,8 +1433,10 @@ func _do_release() -> void:
 	# goodbye beat. poll() skips `_describe` while stage is "done" so nothing
 	# wrenches it away; the belt rows behind it are already showing the final
 	# five.
+	var released_shiny := bool(released.get("shiny"))
 	_shown_species = released_species
-	_viewport.call("set_species", released_species)
+	_shown_shiny = released_shiny
+	_viewport.call("set_species", released_species, released_shiny)
 
 
 func _end_release() -> void:

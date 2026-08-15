@@ -1116,8 +1116,9 @@ func request_switch(index: int) -> bool:
 
 
 ## The body-swap core. Re-points `_active_index` at `index` and, if the
-## incoming creature is a different species from whatever `_ally_body` is
-## currently wearing, re-skins that SAME body through `setup()` — the
+## incoming creature is a different species OR a different shiny status
+## (OF27) from whatever `_ally_body` is currently wearing, re-skins that
+## SAME body through `setup()` — the
 ## identical call `encounter_director._spawn_ally_body()` makes for a brand
 ## new creature. There is deliberately only one piloted body in a fight (M2's "one
 ## of yours" scope never grew a second one), so a switch re-casts it rather
@@ -1133,8 +1134,9 @@ func _activate_party_member(index: int) -> void:
 	var incoming: RefCounted = _party[index]
 	_active_index = index
 
-	if _ally_body != null and str(_ally_body.get("species_id")) != incoming.species_id:
-		_ally_body.call("setup", incoming.species_id)
+	if _ally_body != null and (str(_ally_body.get("species_id")) != incoming.species_id
+			or bool(_ally_body.get("shiny")) != bool(incoming.get("shiny"))):
+		_ally_body.call("setup", incoming.species_id, bool(incoming.get("shiny")))
 
 	_action = Action.READY
 	_action_timer = 0.0

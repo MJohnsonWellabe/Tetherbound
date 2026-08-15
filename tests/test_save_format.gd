@@ -532,6 +532,78 @@ func test_v4_save_migrates_with_average_individuality_and_no_traits() -> void:
 	assert_eq(str(creature.get("trait_secondary")), "")
 
 
+# --- VERSION 6: shiny (OF27) -------------------------------------------------
+
+
+func test_save_then_load_round_trips_shiny() -> void:
+	var written := _game()
+	var creature: RefCounted = written.party.at(0)
+	creature.shiny = true
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var loaded: RefCounted = read.party.at(0)
+	assert_true(bool(loaded.get("shiny")))
+
+
+func test_save_then_load_round_trips_a_non_shiny_creature_too() -> void:
+	# The reverse case: `shiny` defaults false on `_game()`'s own creature, so
+	# this proves `false` round-trips honestly rather than every load reading
+	# as truthy because a bare presence check would.
+	var written := _game()
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	assert_false(bool(read.party.at(0).get("shiny")))
+
+
+func test_v5_save_migrates_with_shiny_false() -> void:
+	var v5_data := {
+		"version": 5,
+		"day": 9,
+		"party": [{
+			"species_id": "terrapup",
+			"display_name": "Terrapup",
+			"creature_type": "ground",
+			"nickname": "Pre-OF27 Save",
+			"max_hp": 120.0, "attack": 22.0, "defence": 20.0,
+			"hp": 90.0, "energy": 0.0, "fainted": false,
+			"level": 4, "xp": 10, "bond": 20,
+			"move_quick": "pebble_toss", "move_charged": "stone_rush",
+			"iv_hp": 0.6, "iv_attack": 0.4, "iv_defence": 0.5,
+			"trait_primary": "bold", "trait_secondary": "",
+		}],
+		"inventory": [],
+		"placed_buildings": [],
+		"death_satchels": [],
+		"satiety": 80.0,
+		"map": {},
+		"progression": {},
+	}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(v5_data))
+	file = null
+
+	var read := _game(false)
+	read.map = MAP_STATE.new()
+	read.map.configure({})
+	read.progression = PROGRESSION_STATE.new()
+	assert_true(saver.load_slot(read, 1))
+
+	assert_eq(read.day, 9)
+	var creature: RefCounted = read.party.at(0)
+	assert_eq(str(creature.get("nickname")), "Pre-OF27 Save")
+	assert_false(bool(creature.get("shiny")), "a save predating OF27 reads as not shiny, never retroactively rare")
+	# The fields VERSION 5 already carried must still be intact after the
+	# extra migration step -- a shiny migration that clobbers individuality
+	# would be its own regression.
+	assert_almost_eq(float(creature.get("iv_hp")), 0.6, 0.0001)
+	assert_eq(str(creature.get("trait_primary")), "bold")
+
+
 func test_v2_save_migrates_with_a_fresh_progression_store() -> void:
 	var v2_data := {
 		"version": 2,

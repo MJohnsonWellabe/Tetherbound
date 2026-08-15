@@ -273,7 +273,10 @@ func _build_preview(viewport: SubViewport, id: String) -> Node3D:
 	body.name = "Preview_%s" % id
 	body.set_script(CREATURE_BODY)
 	world.add_child(body)
-	body.call("setup", id)
+	# Starters are never rolled shiny (OF27 only rolls the wild encounter
+	# stream) -- explicit false here, not the default, so a reader does not
+	# have to go check creature_body.gd's signature to know that.
+	body.call("setup", id, false)
 	# Frozen — nothing here needs gravity or a floor, only the model. Spun by
 	# hand in `_process` instead of moved.
 	body.set_physics_process(false)

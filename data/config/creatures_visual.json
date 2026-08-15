@@ -1,0 +1,4 @@
+{
+	"_comment": "tunable -- shiny odds (OF27). OF28 adds per-species base/shiny palettes here or in data/creatures/palettes.json; this file starts with only the roll odds because OF27 is plumbing, not colours.",
+	"shiny_chance": 0.0078
+}

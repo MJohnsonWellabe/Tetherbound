@@ -41,8 +41,24 @@ const GROUND_PROBE_DOWN := 300.0
 ## colliders touch, which reads as attacks landing at the wrong distance.
 const FOOTPRINT_ALLOWANCE := 2.4
 
+## OF27 placeholder tint: a deliberately garish magenta-shift multiply,
+## applied to both albedo AND emission (see `_shared_variant_material`'s own
+## comment for why emission has to be included). This is not the shiny
+## LOOK — OF28 owns that, per-species, in real palette data — it exists only
+## to prove the roll -> save -> tint pipeline actually changes what renders.
+## Values above 1.0 on purpose: multiplying a mid-value albedo by ~1 leaves it
+## nearly unchanged, and "nearly unchanged" is exactly the kind of tint that
+## silently fails to prove anything in a screenshot.
+const SHINY_PLACEHOLDER_TINT := Color(2.6, 0.12, 2.6)
+
 var species_id: String = ""
 var display_name: String = ""
+
+## OF27: "make a version that is a 'shiny' like Pokemon go... nothing
+## different than just the colors" (owner report). Set through `setup()`/
+## `set_shiny()`, never rolled here — this node draws whatever it is told,
+## the same way it never decides its own species.
+var shiny: bool = false
 
 var _height: float = 1.0
 var _radius: float = 0.4
@@ -133,11 +149,33 @@ func _load_config() -> void:
 
 ## Configure from the species table. Safe to call before or after the node is in
 ## the tree; the mesh is built on whichever happens second.
-func setup(id: String) -> void:
+##
+## `is_shiny` defaults false so every existing caller that has not been
+## taught about OF27 yet keeps building the ordinary, untinted body it always
+## has. A wild spawn is the one caller that does not know its own shiny
+## status yet at `setup()` time (the roll happens after `populate()` calls
+## this) — see `set_shiny()` below for how that one re-tints after the fact.
+func setup(id: String, is_shiny: bool = false) -> void:
 	species_id = id
+	shiny = is_shiny
 	display_name = str(SPECIES.definition(id).get("display_name", id))
 	if is_inside_tree() and _body != null:
 		_build_placeholder()
+
+
+## Change shiny status on a body that may already be built, and re-tint it —
+## the wild-spawn path: `encounter_director._roll_wild_level` rolls the
+## outcome from the seeded per-spawn stream AFTER `populate()` has already
+## called `setup()` and built this body (the shiny draw has to be the
+## stream's LAST draw, so every earlier draw stays byte-for-byte what it was
+## before OF27 — see that function's own comment). A no-op if the status has
+## not actually changed, so a caller that calls this defensively every frame
+## cannot re-tint (and re-cache) a material it already tinted.
+func set_shiny(value: bool) -> void:
+	if shiny == value:
+		return
+	shiny = value
+	_refresh_shiny_tint()
 
 
 func _build_placeholder() -> void:
@@ -165,6 +203,7 @@ func _build_placeholder() -> void:
 
 	if not _build_model(look):
 		_build_capsule(look)
+	_refresh_shiny_tint()
 
 
 ## Load the species' model and fit it to the gameplay size. Returns false when
@@ -312,6 +351,124 @@ func _build_capsule(look: Dictionary) -> void:
 	_head.position = Vector3(0.0, _height * 0.82, _radius * 0.9)
 	_head.visible = true
 	_has_model = false
+
+
+## --- variant tinting (OF27) --------------------------------------------------
+##
+## Modelled directly on `scripts/characters/character_model.gd`'s
+## `_apply_palette`/`_palette_node`/`_shared_variant_material` — same
+## dict-of-material-name-to-colour contract, same recursive walk, same shared-
+## material cache, same emission fix. Kept as a second implementation rather
+## than a shared one because the two operate on different shapes (that file
+## takes hex strings through `art.json`; this one takes `Color`s directly,
+## since OF27 has no palette data file yet to hold hex strings in — see
+## `_shiny_palette()`) and because creature_body.gd already has no dependency
+## on scripts/characters/, which this would otherwise create.
+
+## Re-applies (or applies for the first time) whatever tint `shiny` implies.
+## Called after every model/capsule build, and from `set_shiny()` when shiny
+## status changes on a body that already exists. Does nothing when not shiny
+## — OF27 never needs to UN-tint a body, because nothing ever un-shinies a
+## creature once rolled, so there is no "restore the original material" path
+## to maintain.
+func _refresh_shiny_tint() -> void:
+	if not shiny:
+		return
+	_apply_variant_tint(_shiny_palette())
+
+
+## OF27's placeholder answer to "what colour is a shiny": one magenta-shift
+## wildcard, applied to every surface with no more specific entry. OF28 owns
+## the real answer — per-species base AND shiny palettes read from data
+## (spec: OF27 is "nothing different than just the colors" made to WORK;
+## OF28 is choosing what the colors actually are) — and is expected to
+## replace this function's body with a data read, not to touch
+## `_apply_variant_tint` itself.
+func _shiny_palette() -> Dictionary:
+	return {"*": SHINY_PLACEHOLDER_TINT}
+
+
+## The tint hook. `colours` maps a mesh surface's material `resource_name`
+## (or `"*"` as the wildcard every other name falls back to) to a `Color`
+## multiplier, applied to both the real model (when one loaded) and the
+## capsule fallback (when it did not) — a creature whose model failed to load
+## should not also silently lose its shiny tint, the one thing a player
+## catching it would actually notice.
+func _apply_variant_tint(colours: Dictionary) -> void:
+	if colours.is_empty():
+		return
+	if _has_model:
+		_tint_node(_model, colours)
+	else:
+		_tint_capsule(colours)
+
+
+func _tint_node(node: Node, colours: Dictionary) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		var surfaces := mesh.get_surface_count() if mesh != null else 0
+		for surface in surfaces:
+			var source: Material = instance.get_active_material(surface)
+			var name := source.resource_name if source != null and source.resource_name != "" \
+				else "surface_%d" % surface
+			var colour: Variant = colours.get(name, colours.get("*"))
+			if colour == null:
+				continue
+			instance.set_surface_override_material(
+				surface, _shared_variant_material(source, name, colour as Color))
+	for child in node.get_children():
+		_tint_node(child, colours)
+
+
+## The capsule fallback sets `material_override` directly (`_build_capsule`
+## above), which takes rendering priority over any per-surface override —
+## `_tint_node`'s `set_surface_override_material` calls would compile, cache
+## a material, and change nothing on screen. Handled as its own small path
+## instead of folding into `_tint_node` so that mismatch cannot silently
+## reappear the way character_model.gd's own NP2 history warns an
+## albedo-only tint can.
+func _tint_capsule(colours: Dictionary) -> void:
+	var colour: Variant = colours.get("*")
+	if colour == null:
+		return
+	for node in [_body, _head]:
+		if node == null or node.material_override == null:
+			continue
+		node.material_override = _shared_variant_material(
+			node.material_override, "capsule", colour as Color)
+
+
+## One Material per (species, material-or-part name, colour) tuple, shared by
+## every body of the same species asking for the same tint — the same "mints
+## a material per variant" mistake `character_model.gd`'s own cache comment
+## warns against, avoided the same way.
+##
+## Found doing `NP2` on the human rigs, and treated as true here on the same
+## authority (OF27's own brief): these creature assets ship
+## `emission_enabled = true` with the SAME painted texture set as both
+## `albedo_texture` and `emission_texture`, at a full white `emission`
+## multiplier — a self-lit "painted" look, not a shading bug. Emission is
+## additive and reads independently of lighting, so it swamps any
+## `albedo_color` change completely; an albedo-only tint here would compile,
+## pass a material-only unit test, and still be invisible in a render.
+## `smoke_art.gd`'s own shiny check asserts the emission channel specifically
+## for exactly this reason. Tinting `emission` the same way `albedo_color`
+## already is closes the gap either way.
+static var _variant_materials: Dictionary = {}
+
+
+func _shared_variant_material(source: Material, name: String, colour: Color) -> Material:
+	var key := "%s|%s|%s" % [species_id, name, colour.to_html()]
+	if _variant_materials.has(key):
+		return _variant_materials[key]
+	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
+		if source is BaseMaterial3D else StandardMaterial3D.new()
+	material.albedo_color = material.albedo_color * colour
+	if material.emission_enabled:
+		material.emission = material.emission * colour
+	_variant_materials[key] = material
+	return material
 
 
 func body_height() -> float:

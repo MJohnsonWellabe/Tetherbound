@@ -65,6 +65,7 @@ func _run() -> void:
 	_every_species_has_art()
 	_the_creatures_in_the_world_loaded_their_models()
 	await _evolution_only_species_are_verified()
+	_a_forced_shiny_creature_renders_a_different_material()
 	_the_trainer_has_a_model_and_animations()
 	_every_human_fits_at_its_declared_height()
 	_the_villagers_no_longer_tint_the_whole_body()
@@ -205,6 +206,64 @@ func _evolution_only_species_are_verified() -> void:
 
 		_the_creature_has_the_clips_it_claims(body, id)
 		body.queue_free()
+
+
+## OF27's own "done when": a forced-shiny spawn visibly differs in a render.
+## `test_shiny.gd` covers the roll and the save field, but a unit test cannot
+## see a rendered pixel (docs/decisions/D02) — this builds a plain terrapup
+## and a forced-shiny one side by side and reads back the actual material
+## each produced, the same way `_the_npc_variant_system_differentiates_
+## independently()` above proves character_model.gd's palette mechanism.
+##
+## Checks emission specifically, not just albedo — `creature_body.gd`'s own
+## `_shared_variant_material` comment documents why: these models ship
+## `emission_enabled` with the same painted texture as albedo, so an
+## albedo-only tint would pass a naive "the colours differ" check while
+## still rendering identically to a plain creature, the exact failure
+## character_model.gd's own NP2 history hid behind a passing test suite.
+func _a_forced_shiny_creature_renders_a_different_material() -> void:
+	var plain: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+	plain.set_script(CREATURE_BODY)
+	root.add_child(plain)
+	plain.call("setup", "terrapup", false)
+	plain.set_physics_process(false)
+
+	var shiny: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+	shiny.set_script(CREATURE_BODY)
+	root.add_child(shiny)
+	shiny.call("setup", "terrapup", true)
+	shiny.set_physics_process(false)
+
+	var plain_mat := _first_material(plain.call("model_pivot") as Node3D)
+	var shiny_mat := _first_material(shiny.call("model_pivot") as Node3D)
+	if plain_mat == null or shiny_mat == null or not plain_mat is BaseMaterial3D or not shiny_mat is BaseMaterial3D:
+		_fail("shiny tint check: could not read a material off a plain and a forced-shiny terrapup")
+	else:
+		var plain_base := plain_mat as BaseMaterial3D
+		var shiny_base := shiny_mat as BaseMaterial3D
+		if plain_base.albedo_color.is_equal_approx(shiny_base.albedo_color):
+			_fail("shiny tint check: a forced-shiny terrapup renders the same albedo colour as a plain one")
+		elif plain_base.emission_enabled and plain_base.emission.is_equal_approx(shiny_base.emission):
+			_fail("shiny tint check: terrapup ships emission_enabled but the shiny tint left emission " +
+				"untouched -- an albedo-only tint on this asset is invisible on screen (see " +
+				"creature_body.gd's _shared_variant_material comment)")
+		else:
+			print("  shiny tint       forced-shiny terrapup differs from plain (albedo%s)" % [
+				" + emission" if plain_base.emission_enabled else ""
+			])
+
+	plain.queue_free()
+	shiny.queue_free()
+
+
+## The first material an actual mesh renders with, walking down from a model
+## pivot -- reuses `_mesh_instances()`'s own recursive walk rather than
+## writing a third one.
+func _first_material(pivot: Node3D) -> Material:
+	if pivot == null:
+		return null
+	var meshes := _mesh_instances(pivot)
+	return meshes[0].get_active_material(0) if not meshes.is_empty() else null
 
 
 func _the_trainer_has_a_model_and_animations() -> void:

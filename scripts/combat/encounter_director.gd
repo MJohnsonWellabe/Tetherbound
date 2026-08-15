@@ -18,6 +18,10 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 ## D30: wild creatures spawn inside a level band rather than at one fixed level.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
+## OF27: the shiny roll's odds. A pure data reader, same static-cache shape as
+## PROGRESSION/MATH/CATCH above, so this stays a one-line addition to the
+## existing config-loading pattern rather than a new one.
+const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
@@ -221,6 +225,19 @@ func _spawn_creatures() -> void:
 ## the same seeded, never-`randomize()`d generator changes nothing about the
 ## determinism promise above — a creature met at a given spot still rolls
 ## the same way across boots, just for three more numbers than before.
+##
+## OF27: one more `rng.randf()`, drawn LAST, decides whether this individual
+## is shiny. Deliberately the final draw in the sequence rather than mixed in
+## earlier — every draw before it (the three IVs, the two trait rolls, the
+## level) has to keep landing on the exact numbers every existing save,
+## smoke test and screenshot already depends on, and appending a draw is the
+## only order that leaves all of them untouched. `VISUAL.shiny_chance()` is
+## OF27's own tunable, not the wild band's — the same "one config file per
+## kind of number" split `PROGRESSION`/`MATH`/`CATCH` already keep. The body
+## does not yet have this instance's shiny status when it was built in
+## `populate()` above (that happened before this roll), so it is told
+## directly via `set_shiny`, which re-tints the model already standing in
+## the world rather than rebuilding it.
 func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator) -> void:
 	var cfg: Dictionary = PROGRESSION.config()
 	var definition: Dictionary = SPECIES.definition(species)
@@ -229,7 +246,10 @@ func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator)
 	var leveled: RefCounted = CREATURE_INSTANCE.from_species(
 		species, definition, rng.randf(), cfg, iv_rolls, trait_rolls
 	)
+	var is_shiny: bool = rng.randf() < VISUAL.shiny_chance()
+	leveled.shiny = is_shiny
 	wild.set("instance", leveled)
+	wild.call("set_shiny", is_shiny)
 
 
 ## Positions in spawns.json are absolute world metres — [x, y, z] with y always
@@ -303,7 +323,7 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 	_ally_body.set_script(FOLLOWER_SCRIPT)
 	_ally_body.visible = false
 	get_parent().add_child(_ally_body)
-	_ally_body.call("setup", creature.species_id)
+	_ally_body.call("setup", creature.species_id, bool(creature.get("shiny")))
 	_ally_body.call("configure_following", _follower_config())
 	_ally_body.set("leader", _player)
 

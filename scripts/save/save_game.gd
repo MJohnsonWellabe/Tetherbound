@@ -57,6 +57,15 @@ extends RefCounted
 ## existed should read as: unremarkable and untraited, not retroactively
 ## graded.
 ##
+## ## VERSION 6 — shiny (OF27)
+##
+## `creature_instance.gd`'s `shiny` did not exist before this — same
+## "nothing to migrate FROM" answer every migration above already gives.
+## `_migrate_v5` sets every migrated creature's `shiny` to `false`: a
+## creature caught before the roll existed was never entered into it, the
+## same way a save from before R4.2 was never entered into the individuality
+## roll and comes back merely average rather than retroactively perfect.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -93,7 +102,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 5
+const VERSION := 6
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -167,15 +176,21 @@ func load_slot(game: Object, slot: int) -> bool:
 		data = _migrate_v2(data)
 		data = _migrate_v3(data)
 		data = _migrate_v4(data)
+		data = _migrate_v5(data)
 	elif version == 2:
 		data = _migrate_v2(data)
 		data = _migrate_v3(data)
 		data = _migrate_v4(data)
+		data = _migrate_v5(data)
 	elif version == 3:
 		data = _migrate_v3(data)
 		data = _migrate_v4(data)
+		data = _migrate_v5(data)
 	elif version == 4:
 		data = _migrate_v4(data)
+		data = _migrate_v5(data)
+	elif version == 5:
+		data = _migrate_v5(data)
 	elif version != VERSION:
 		push_warning("save slot %d is version %d, this build reads %d -- not loading" % [
 			slot, version, VERSION
@@ -300,6 +315,25 @@ func _migrate_v4(data: Dictionary) -> Dictionary:
 	return migrated
 
 
+## VERSION 5 -> VERSION 6. `shiny` (OF27) did not exist in VERSION 5 either —
+## same "nothing to migrate FROM" answer as every migration above. Every
+## party member gets `false`: a creature caught before the roll existed was
+## never entered into it, not retroactively granted the rare outcome. Lands
+## on VERSION 6's own shape via a literal, not `VERSION`, matching
+## `_migrate_v3`'s own comment on why every step names its target version by
+## hand rather than trusting the build's current constant.
+func _migrate_v5(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 6
+	var party: Array = migrated.get("party", [])
+	for raw: Variant in party:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		(raw as Dictionary)["shiny"] = false
+	migrated["party"] = party
+	return migrated
+
+
 func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary:
 	var entry_raw: Variant = species_table.get(species_id, {})
 	var entry: Dictionary = entry_raw as Dictionary if typeof(entry_raw) == TYPE_DICTIONARY else {}
@@ -389,6 +423,7 @@ func _party_to_array(party: Variant) -> Array:
 			"iv_defence": float(instance.get("iv_defence")),
 			"trait_primary": str(instance.get("trait_primary")),
 			"trait_secondary": str(instance.get("trait_secondary")),
+			"shiny": bool(instance.get("shiny")),
 		})
 	return out
 
@@ -427,6 +462,7 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.iv_defence = float(d.get("iv_defence", 0.5))
 		creature.trait_primary = str(d.get("trait_primary", ""))
 		creature.trait_secondary = str(d.get("trait_secondary", ""))
+		creature.shiny = bool(d.get("shiny", false))
 		party_ref.call("add", creature)
 
 

@@ -49,6 +49,12 @@ var _viewport: SubViewport = null
 var _turntable: Node3D = null
 var _body: Node3D = null
 var _species_id: String = ""
+## OF27: tracked alongside `_species_id` so a same-species swap (releasing a
+## shiny creature and having a non-shiny one of the same species scroll into
+## its spot, or vice versa -- rare, but not impossible with a five-creature
+## party) still rebuilds the preview instead of `set_species` short-circuiting
+## on the species id matching.
+var _shiny: bool = false
 var _dragging: bool = false
 var _drag_device: int = -1
 
@@ -111,10 +117,11 @@ func _build_world() -> void:
 ## species id, a missing model, or no renderer at all all resolve to SOME
 ## visible content (a flat capsule, or the colour-chip fallback), because a
 ## blank centre column reads as broken and this tab must never crash on it.
-func set_species(species_id: String) -> void:
-	if species_id == _species_id and _body != null and is_instance_valid(_body):
+func set_species(species_id: String, shiny: bool = false) -> void:
+	if species_id == _species_id and shiny == _shiny and _body != null and is_instance_valid(_body):
 		return
 	_species_id = species_id
+	_shiny = shiny
 	_clear_body()
 
 	if species_id == "":
@@ -124,7 +131,7 @@ func set_species(species_id: String) -> void:
 	var height := 1.0
 	var radius := 0.4
 	if not Engine.is_editor_hint():
-		body = _try_build_body(species_id)
+		body = _try_build_body(species_id, shiny)
 	if body != null:
 		height = float(body.call("body_height")) if body.has_method("body_height") else 1.0
 		radius = float(body.call("body_radius")) if body.has_method("body_radius") else 0.4
@@ -138,14 +145,14 @@ func set_species(species_id: String) -> void:
 	_frame_camera(height, radius)
 
 
-func _try_build_body(species_id: String) -> Node3D:
+func _try_build_body(species_id: String, shiny: bool = false) -> Node3D:
 	var instance: Node3D = CREATURE_SCENE.instantiate() as Node3D
 	if instance == null:
 		return null
 	instance.name = "TeamPreview_%s" % species_id
 	instance.set_script(CREATURE_BODY)
 	_turntable.add_child(instance)
-	instance.call("setup", species_id)
+	instance.call("setup", species_id, shiny)
 	instance.set_physics_process(false)
 	instance.rotation.y = deg_to_rad(200.0)
 	return instance
