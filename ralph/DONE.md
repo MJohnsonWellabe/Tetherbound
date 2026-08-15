@@ -93,6 +93,71 @@ whoever wires the first real consumer (most likely `SB10` or `SB11`) should
 create it then, against a real objective list, rather than this item
 guessing its shape blind.
 
+## R3.3 — Player death drops a satchel and respawns at home (§22)
+
+`model: sonnet` · `1add753` · `tests: test_player_death (new, 6 tests), full
+suite — 606 tests, 83772 assertions, 0 failed, run locally headless; plus
+smoke_playground.gd for the new node's boot wiring`
+
+**Picked out of order.** `R3.2` sits above this item in `BACKLOG.md` but
+names a mechanism ("death satchels") that didn't exist anywhere in the
+project — nothing to persist across save/load. `R3.3` is what actually
+builds it, so it went first; `BACKLOG.md`'s `R3.2` entry now says so and
+names the concrete path forward.
+
+`player_controller.gd` already had a `died()` signal (fired once on fatal
+fall damage, `_resolve_landing()`) that nothing in the project listened to —
+death was a no-op past that point. Wired a new `player_death.gd` component
+into it, built the same way `camp.gd`/`world_perimeter.gd` are:
+`playground_world.gd::_build_settlement()` instantiates and hands it the
+player node and the opening's own spawn position.
+
+On death: `Game.inventory.drain()` (already existed, its own comment says
+"this is what a death satchel is made from" — R3.1/R3.2's era left it
+unused) hands back everything carried; a new `death_satchel.gd` spawns at
+the death site and rehydrates those exact stacks via `set_slot()` (not
+`add()` — durability rides along untouched, nothing gets re-stacked or
+merged). `death_satchel.gd` is a thin wrapper around `storage_state.gd` and
+reuses `storage_panel.gd` wholesale for the open/transfer screen — a death
+satchel is "another slot+stack container standing in the world," exactly
+what a placed chest (`storage_container.gd`) already is. One known rough
+edge: the shared panel's column label reads "Chest — press to take" even
+when opened on a death satchel; cosmetic only, not chased this pass.
+
+The satchel is marked on the map via `Game.map.add_dynamic_marker()`
+(already existed, used by camps) with a new `death_satchel` icon —
+`shoppingBasket.png` from Kenney Game Icons' White/2x set, curated and
+ledgered the same way `D33`'s other eleven map icons were (no bag/sack/pouch
+silhouette exists in either vendored Kenney pack, checked by filename). The
+minimap needs no icon work at all: `minimap.gd::_draw_landmarks()` already
+draws every dynamic marker as a generic dot regardless of its `icon` field.
+Satchels never move once placed and several independent ones can coexist —
+each death spawns a fresh node, nothing is reused or overwritten.
+
+Respawn: fades out (the same two-tween shape `camp.gd::_on_rest()` uses,
+not shared code — camp's version also advances the day and autosaves,
+neither of which belongs to a death), teleports to the most recently placed
+`camp` (read from `GameState.placed_buildings`, last entry with `id ==
+"camp"` wins) or the world's own opening spawn point if none has been
+built yet, fully heals via `player_vitals.gd`'s existing `rest()`, fades
+back in. No XP/level loss to implement — there is no XP/level system yet,
+Phase 4 — and the party is untouched, since nothing here ever removes a
+creature from it.
+
+**Tested:** `tests/test_player_death.gd` covers the two pure-logic pieces
+headlessly — `death_satchel.gd.build()` rehydrating a drained inventory
+exactly (a durability-preservation case included, proving `set_slot()`
+rather than `add()` was actually used) and `player_death.gd.resolve_home()`
+(static, no node needed) picking the last-placed camp over the fallback,
+falling back correctly on an empty/malformed list. The fade/tween/teleport
+wiring itself is not unit-tested, the same gap `camp.gd`'s own rest leaves —
+`smoke_playground.gd` confirms the new `PlayerDeath` node boots into the
+scene tree with no errors, which is what a wiring mistake here would break.
+**Not verified by an actual in-game death** — the fall-damage threshold to
+trigger one is real work to set up in a script, and neither a screenshot nor
+a headless test can honestly confirm the fade/teleport *feel* right; worth a
+real playtest check the way `RB1`/`SA1` still are.
+
 ## R3.1-remainder — A placed storage chest's own contents now survive save/load
 
 `model: sonnet` · `8af9f25` · `tests: test_save_format (24 tests), test_storage
