@@ -114,6 +114,7 @@ func _run() -> void:
 			failures.append("player died on spawn: the drop height is dealing fall damage")
 
 	failures.append_array(await _the_perf_overlay_reports_numbers(world))
+	failures.append_array(await _the_hotbar_heals_a_creature(world))
 
 	print("")
 	if failures.is_empty():
@@ -200,6 +201,71 @@ func _the_perf_overlay_reports_numbers(world: Node) -> Array[String]:
 	hud.call("_input", f3)
 	if readout.visible:
 		found.append("F3 did not cycle back to hidden after three presses")
+
+	return found
+
+
+## OF16: owner-reported "still can't use potions" -- HD2's hotbar quick-use
+## path (`playground_hud.gd::_use_hotbar_slot()`) shipped with zero smoke
+## coverage, unlike `tab_backpack.gd`'s Use verb, which `smoke_menu.gd`'s
+## `_check_backpack_target_picker()` already drives end to end. Re-verified
+## both paths against current main by hand before writing this: the backpack
+## menu path passes cleanly, and this hotbar path also heals correctly in
+## isolation -- no live regression reproduced. This closes the coverage gap
+## either way, so a future regression on the untested path fails CI instead
+## of surfacing only as another playtest report.
+func _the_hotbar_heals_a_creature(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var game: Node = world.get_node_or_null(^"/root/Game")
+	if game == null:
+		return ["no Game autoload; cannot drive the hotbar heal check"] as Array[String]
+
+	var party: RefCounted = game.get("party")
+	var inventory: RefCounted = game.get("inventory")
+	if party == null or inventory == null:
+		return ["Game exposes no party/inventory; cannot drive the hotbar heal check"] as Array[String]
+
+	if int(party.call("size")) == 0:
+		var creature: RefCounted = game.call("make_creature", "terrapup")
+		if creature == null:
+			return ["could not build a creature from species.json"] as Array[String]
+		party.call("add", creature)
+
+	var target: RefCounted = party.call("at", 0)
+	target.set("hp", 1.0)
+
+	inventory.call("add", "potion_small", 1)
+	var slot: int = int(inventory.call("find_slot", "potion_small"))
+	if slot < 0 or slot > 4:
+		found.append("potion_small landed outside the hotbar's mirrored slots 0-4 (slot %d)" % slot)
+		return found
+
+	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	if hud == null:
+		return ["no PlaygroundHUD in the scene"] as Array[String]
+	# `_refresh_game_ref()` normally runs on the HUD's own poll cadence; force
+	# it so the just-added party/inventory refs are live before the press.
+	if hud.has_method("_refresh_game_ref"):
+		hud.call("_refresh_game_ref")
+
+	var action := "hotbar_%d" % (slot + 1)
+	var press := InputEventAction.new()
+	press.action = action
+	press.pressed = true
+	Input.parse_input_event(press)
+	await process_frame
+	await process_frame
+	var release := InputEventAction.new()
+	release.action = action
+	release.pressed = false
+	Input.parse_input_event(release)
+	for i in 4:
+		await process_frame
+
+	if float(target.get("hp")) <= 1.0:
+		found.append("pressing %s on a heal item did not heal the injured creature via the hotbar" % action)
+	if int(inventory.call("count", "potion_small")) != 0:
+		found.append("the hotbar heal press did not spend the potion")
 
 	return found
 
