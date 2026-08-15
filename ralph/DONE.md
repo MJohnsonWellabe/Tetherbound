@@ -105,6 +105,80 @@ a world body to animate at all today -- the other four party members have
 no rendered presence outside a fight, which is a real, separate,
 pre-existing gap this item did not invent a fix for.
 
+## R4.6 — Evolution mechanic and ceremony
+
+`model: opus` · `tests: test_evolution_links, test_evolution (new), smoke_evolution (new)` · `area: ui` · COMMIT_PLACEHOLDER
+
+D20's "the evolution system itself remains unbuilt, deliberately... until it
+lands a caught Mudsnout simply stays a Mudsnout" is no longer true. Real
+system, built on top of the two dangling `evolves_into`/`evolves_from` links
+D20 left in `data/creatures/species.json`:
+
+- **`scripts/creatures/evolution.gd`** (new, mirrors `teaching.gd`'s split
+  between pure data-shaped logic and instance state): `requirements()` reads
+  a species' evolution gate from `data/config/progression.json`'s new
+  `evolution` block; `check()` reports eligibility with a human-readable
+  refusal reason; `evolve()` re-validates and applies.
+- **`creature_instance.gd::evolve_into()`** (new): mutates species_id,
+  display_name, creature_type and base stats in place, recomputes
+  max_hp/attack/defence through the SAME `_apply_level_stats` a level-up
+  uses (so the hp fraction survives exactly the way it survives levelling)
+  — nickname, level, xp, bond, individuality rolls, traits and already-taught
+  moves are all left untouched. A TM taught before evolving is not reverted
+  by it.
+- **`data/config/progression.json`'s `evolution` block**: keyed by the
+  PRE-evolution species id, `{level, bond, item_id}`. Mudsnout ships at
+  `level: 15, bond: 55, item_id: ""`. The item gate is real infrastructure
+  (wired and unit-tested) but deliberately left OFF for now — the spec's own
+  suggested catalyst is a Heartstone from the Burrow Warrens (`SD17`), which
+  does not exist yet, and gating the biome's one evolution on an item nothing
+  can drop would make it unreachable for the whole span until Phase 8b. Flip
+  `item_id` to a real item once `SD17` ships one. All three numbers are
+  tunable per `CLAUDE.md` — 15/55 are not meant to be permanent canon.
+- **The ceremony, in `tab_creatures.gd` (Team screen)**: `G` (gamepad LB,
+  `backpack_drop` reused the same way `TEACH_ACTION` already reuses
+  `backpack_split` — tabs never collide since only one is visible/open at
+  once) on the focused creature starts it if eligible, or explains the
+  refusal via `say()` if not (same shape `TEACH_ACTION` already uses for "no
+  new TM to learn"). Two `menu_confirm` beats: the first performs the real
+  mutation and reveals the new name, the second closes. **Deliberately
+  player-paced, not wall-clock-timed** — `conventions.md`'s testing traps
+  section and `LP9`'s own investigation already found this project's
+  tick-counted timers decoupling from real time under CPU load; a fixed
+  "glow" duration would be exactly that class of bug for no reason, since a
+  press-to-advance beat is this codebase's own established convention for
+  every other narrative moment (dialogue, naming). The list column and
+  detail column hide during the ceremony (matching `tab_backpack.gd`'s own
+  confirm-panel pattern, `menu.hold_input(true)` so the shell doesn't treat
+  `menu_cancel`/`tool_cycle` as close/tab-cycle mid-ceremony) but the centre
+  `creature_viewport` stays up throughout — the player watches the live 3D
+  model change species mid-ceremony via `_describe()`'s ALREADY-EXISTING
+  species-change detection, not a new effect this item had to add.
+- **`_detail_hint` now shows "G evolve"** whenever the focused creature's
+  species names an evolution link, whether or not it is currently eligible
+  — the same "always show the verb, explain the refusal on press" shape
+  `TEACH_ACTION`'s hint already uses.
+
+**Testing.** `tests/test_evolution.gd` (new, 9 tests): requirements lookup,
+level/bond/item gating individually, the item actually being consumed
+exactly once, and the core promise — species/stats change, everything the
+player earned (nickname, xp, bond, IV rolls, trait, taught move, hp
+fraction) does not. `tests/smoke_evolution.gd` (new): boots the real world,
+drives the real Team screen through both an ineligible refusal and a full
+eligible ceremony via real input actions, and — the regression this exists
+to catch — confirms `menu_cancel` still closes the menu afterward (proving
+`hold_input` was actually released, not left deaf). Full local suite: 684
+tests, 83990 assertions, 0 failed. `smoke_menu.gd` and `smoke_art.gd` also
+run clean (shared UI code and creature data touched).
+
+**Honest scope note on `smoke_evolution.gd`'s CI coverage**: not wired into
+`.github/workflows/ci.yml` as its own job. This is not a new gap —
+`smoke_creature_control.gd`, `smoke_art.gd`, `smoke_mouse_look.gd`,
+`smoke_no_double_prompt.gd` and `smoke_wake_softlock.gd` are already in the
+same position (5 of the project's 15 `smoke_*.gd` files have no dedicated CI
+job); this is a sixth. Wiring all of them in is real, separate work, not
+folded into this item silently.
+
 ## SF33-remainder — Rift dressing for the other five spokes
 
 `model: fable` · `tests: none` · `area: terrain` · `6358600`

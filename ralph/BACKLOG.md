@@ -1433,20 +1433,7 @@ and run the same height/clip checks the wild-spawned creatures get.
 Confirmed clean: 2.15m model against its 2.15m collider, all six clips
 present. No generation or graft needed.
 
-### R4.6 — Evolution mechanic and ceremony
-`model: opus` · `tests: test_evolution_links, smoke_evolution` (new)
-Mudsnout → Tuskroot gets a rope pulled at last. D20 fixed the intent: the
-first evolution the owner sees will be a creature they caught as a piglet and
-have carried since — build the ceremony knowing that. Honour D17 (the evolved
-form is always larger — at D19 scale that is 1.55 → 2.15). Blocked on R4.5:
-no ceremony with the stand-in.
-
-**Spec §4 (D23) fixes the shape.** Mudsnout → Tuskroot is **the** Meadows
-evolution line and no other normal species evolves — it exists to teach the
-limited evolution system. Recommended: a level requirement (~15), a bond
-requirement, and one Heartstone-type item from the Burrow Warrens' optional
-deep branch (`SD17`). All three numbers and the item name are tunable per
-`CLAUDE.md`; do not let a working name become a permanent mechanic.
+**`R4.6` (evolution mechanic and ceremony: Mudsnout → Tuskroot, a real gated system plus a player-paced ceremony on the Team screen) shipped — see `DONE.md`.** Level+bond gate live (15/55, tunable); the item gate is real, unit-tested infrastructure left deliberately OFF (no Heartstone/`SD17` yet to source it from).
 
 ### R4.7 — Bond and best creature · `model: sonnet` · `tests: test_bond` (new) · §12
 
