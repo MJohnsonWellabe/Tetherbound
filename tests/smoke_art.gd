@@ -17,6 +17,8 @@ const RULES := preload("res://scripts/world/scatter_rules.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
+const CREATURE_SCENE := "res://scenes/creatures/creature.tscn"
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 
 const SETTLE_FRAMES := 300
 ## How far a rendered model may sit under the collider that represents it.
@@ -62,6 +64,7 @@ func _run() -> void:
 
 	_every_species_has_art()
 	_the_creatures_in_the_world_loaded_their_models()
+	await _evolution_only_species_are_verified()
 	_the_trainer_has_a_model_and_animations()
 	_every_human_fits_at_its_declared_height()
 	_the_villagers_no_longer_tint_the_whole_body()
@@ -157,6 +160,51 @@ func _the_creature_has_the_clips_it_claims(body: Node3D, id: String) -> void:
 	for required in ["idle", "attack", "faint"]:
 		if not clips.has(required):
 			_fail("'%s' has no '%s' clip; combat drives that one" % [id, required])
+
+
+## R4.5/D13: Tuskroot is the Meadows' one evolution, reached only through
+## Mudsnout, and nothing spawns it wild -- so `_the_creatures_in_the_world_
+## loaded_their_models()` above never sees it, and its rig could regress
+## silently forever. Built directly instead of waited for, the same way
+## `tools/validate_asset.gd` builds a species for judging: species set BEFORE
+## `add_child` so `_ready()` builds the real model instead of racing its own
+## "already built?" guard.
+func _evolution_only_species_are_verified() -> void:
+	for id: String in SPECIES.table().keys():
+		if str(SPECIES.definition(id).get("evolves_from", "")) == "":
+			continue
+
+		var scene: PackedScene = load(CREATURE_SCENE) as PackedScene
+		if scene == null:
+			_fail("could not load %s to verify '%s'" % [CREATURE_SCENE, id])
+			continue
+		var body: Node3D = scene.instantiate() as Node3D
+		body.set_script(CREATURE_BODY)
+		body.set("species_id", id)
+		root.add_child(body)
+		await process_frame
+		body.set_physics_process(false)
+		for i in SETTLE_FRAMES:
+			await physics_frame
+
+		if not bool(body.call("has_model")):
+			_fail("'%s' (evolution-only, never spawns wild) fell back to the placeholder capsule; its model did not load" % id)
+			body.queue_free()
+			continue
+
+		var wanted := float(body.call("body_height"))
+		var actual := _rendered_height(body.call("model_pivot") as Node3D)
+		if actual <= 0.0:
+			_fail("'%s' has a model with no measurable size" % id)
+		elif actual < wanted - HEIGHT_TOLERANCE:
+			_fail("'%s' renders only %.2fm tall against a %.2fm collider (evolution-only species, checked directly since it never spawns wild)" % [id, actual, wanted])
+		elif actual > wanted + HEIGHT_OVERSHOOT:
+			_fail("'%s' renders %.2fm tall against a %.2fm collider; that is more than an animation should add" % [id, actual, wanted])
+		else:
+			print("  %-16s model %.2fm, collider %.2fm (evolution-only)" % [id, actual, wanted])
+
+		_the_creature_has_the_clips_it_claims(body, id)
+		body.queue_free()
 
 
 func _the_trainer_has_a_model_and_animations() -> void:
