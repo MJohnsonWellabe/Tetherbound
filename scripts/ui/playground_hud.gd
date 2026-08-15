@@ -492,6 +492,27 @@ func _build_vitals_cluster() -> void:
 
 	_build_buff_row(_vitals_cluster)
 
+	# hp_heart.png is a mid-tone green glyph, matching HP_GREEN by design (see
+	# ASSET_LEDGER.md) -- but this cluster has no panel behind it (§16's
+	# "legibility outline instead of a box" call, same as the text below), so
+	# without a backing chip the icon sits directly on grass/terrain and
+	# nearly disappears into it (blind-judge finding, EV9 handheld-scale
+	# remainder). A small round BG_PANEL chip -- the same fill the ledger says
+	# the icon was originally colour-checked against -- restores the contrast
+	# without touching the owner-supplied art itself.
+	var hp_icon_bg := Panel.new()
+	hp_icon_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hp_icon_bg.position = Vector2(-30.0, 28.0)
+	hp_icon_bg.size = Vector2(26.0, 26.0)
+	var hp_icon_bg_box := StyleBoxFlat.new()
+	hp_icon_bg_box.bg_color = UITokens.BG_PANEL
+	hp_icon_bg_box.corner_radius_top_left = 13
+	hp_icon_bg_box.corner_radius_top_right = 13
+	hp_icon_bg_box.corner_radius_bottom_left = 13
+	hp_icon_bg_box.corner_radius_bottom_right = 13
+	hp_icon_bg.add_theme_stylebox_override("panel", hp_icon_bg_box)
+	_vitals_cluster.add_child(hp_icon_bg)
+
 	_hp_icon = TextureRect.new()
 	_hp_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hp_icon.texture = load(ICON_HP)
