@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/combat/encounter_director.gd" id="6_encounter"]
 [ext_resource type="PackedScene" path="res://scenes/combat/combat_hud.tscn" id="8_combat_hud"]
 [ext_resource type="Script" path="res://scripts/world/world_look.gd" id="9_look"]
+[ext_resource type="Script" path="res://scripts/world/world_weather.gd" id="15_weather"]
 [ext_resource type="Script" path="res://scripts/world/interaction_arbiter.gd" id="10_arbiter"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_panel.tscn" id="11_dialogue"]
 [ext_resource type="PackedScene" path="res://scenes/ui/name_prompt.tscn" id="12_name_prompt"]
@@ -81,6 +82,13 @@ camera_rig_path = NodePath("../CameraRig")
 script = ExtResource("9_look")
 sun_path = NodePath("../Sun")
 environment_path = NodePath("../WorldEnvironment")
+
+; R5.2: layered on top of WorldLook through WorldLook.set_weather() -- see
+; scripts/world/world_weather.gd. Needs the player to centre the rain box on.
+[node name="WorldWeather" type="Node" parent="."]
+script = ExtResource("15_weather")
+look_path = NodePath("../WorldLook")
+player_path = NodePath("../Player")
 
 [node name="PlaygroundHUD" parent="." instance=ExtResource("2_hud")]
 

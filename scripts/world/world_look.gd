@@ -31,6 +31,13 @@ var _time: String = DEFAULT_TIME
 var _cycle: RefCounted = null
 var _elapsed_seconds: float = 0.0
 
+## R5.2: a weather delta layered on top of whichever time-of-day preset is
+## active, set by world_weather.gd. Empty means no weather override -- the
+## time-of-day preset's own look, unchanged. Kept as a second axis rather
+## than folded into `times` so a rainy noon and a clear noon still share the
+## same sun angle.
+var _weather: Dictionary = {}
+
 
 func _ready() -> void:
 	_config = _load()
@@ -97,11 +104,61 @@ func apply_time(name: String) -> void:
 	_time = name
 
 	var over: Dictionary = times.get(name, {})
-	_apply_sun(_merged("sun", over))
-	_apply_environment(_merged("environment", over), _merged("sky", over))
+	var sun_cfg := _merged("sun", over)
+	var sky_cfg := _merged("sky", over)
+	var env_cfg := _merged("environment", over)
+	_layer_weather(sun_cfg, sky_cfg, env_cfg)
+
+	_apply_sun(sun_cfg)
+	_apply_environment(env_cfg, sky_cfg)
 
 	if _cycle != null and over.has("hour"):
 		_elapsed_seconds = _cycle.elapsed_for_hour(float(over["hour"]))
+
+
+## R5.2: world_weather.gd calls this whenever the weather changes. `delta` is
+## one entry from data/config/weather.json's `presets` block (or {} for
+## "clear"/no override). Re-applies the CURRENT time of day immediately so
+## the new weather takes effect without waiting for the next natural preset
+## change, and so weather never has to be reapplied by hand when the clock
+## advances on its own -- apply_time() always re-layers whatever `_weather`
+## currently holds.
+func set_weather(delta: Dictionary) -> void:
+	_weather = delta
+	apply_time(_time)
+
+
+## Multiplies/overrides onto the already-merged time-of-day dicts, never onto
+## a live node property -- reading `sun.light_energy` back and multiplying it
+## again on the next weather change would compound every time weather rolls,
+## since the previous weather's multiplier is already baked into the node.
+## Computing from the fresh per-call `_merged()` result is idempotent: the
+## same weather delta on the same time of day always lands on the same value.
+func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionary) -> void:
+	if _weather.is_empty():
+		return
+	var sun_over: Dictionary = _weather.get("sun", {})
+	if sun_over.has("energy_mult"):
+		sun_cfg["energy"] = float(sun_cfg.get("energy", 1.25)) * float(sun_over["energy_mult"])
+	if sun_over.has("angular_distance"):
+		sun_cfg["angular_distance"] = float(sun_over["angular_distance"])
+	if sun_over.has("shadow_enabled"):
+		sun_cfg["shadow_enabled"] = bool(sun_over["shadow_enabled"])
+
+	var sky_over: Dictionary = _weather.get("sky", {})
+	for key: String in ["top_colour", "horizon_colour", "ground_horizon_colour"]:
+		if sky_over.has(key):
+			sky_cfg[key] = sky_over[key]
+
+	var env_over: Dictionary = _weather.get("environment", {})
+	if env_over.has("ambient_energy_mult"):
+		env_cfg["ambient_energy"] = float(env_cfg.get("ambient_energy", 1.0)) * float(env_over["ambient_energy_mult"])
+	if env_over.has("ambient_colour"):
+		env_cfg["ambient_colour"] = env_over["ambient_colour"]
+	if env_over.has("fog_density_add"):
+		env_cfg["fog_density"] = float(env_cfg.get("fog_density", 0.0016)) + float(env_over["fog_density_add"])
+	if env_over.has("fog_colour"):
+		env_cfg["fog_colour"] = env_over["fog_colour"]
 
 
 func time_of_day() -> String:
@@ -153,7 +210,17 @@ func _apply_sun(cfg: Dictionary) -> void:
 	sun.light_color = Color(str(cfg.get("colour", "#fff3e0")))
 	sun.light_angular_distance = float(cfg.get("angular_distance", 0.6))
 
-	sun.shadow_enabled = true
+	# R5.2 tried driving this false for overcast weather (a real diffuse sky
+	# casts no hard directional shadow) and reverted it: with no shadow map,
+	# Terrain3D's own shader rendered the entire ground as if fully occluded
+	# instead of fully lit -- confirmed by an isolated before/after render
+	# with every other value held constant. A known, narrower version of the
+	# same class of Compatibility-renderer/Terrain3D interaction
+	# EV4-textures-lighting-remainder already catalogued (shadow_blur and
+	# light_angular_distance both no-op under Compatibility). Left
+	# overridable via config in case a future renderer/Terrain3D version
+	# fixes the interaction, but nothing in this project sets it false today.
+	sun.shadow_enabled = bool(cfg.get("shadow_enabled", true))
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
 	sun.directional_shadow_max_distance = float(cfg.get("shadow_max_distance", 220.0))
 	# Normal bias fights the acne a heightmap terrain produces at grazing angles.

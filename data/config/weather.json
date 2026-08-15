@@ -1,0 +1,66 @@
+{
+  "_comment": "M10 / R5.2: weather variants layered on top of whichever data/config/art.json time-of-day preset world_look.gd currently has applied -- a rainy noon and a clear noon share the same sun angle and only differ in what weather actually changes. world_weather.gd reads this file; world_look.gd's set_weather() merges each preset's sun/sky/environment keys the same way a `times` entry merges over the base block. All numbers here are TUNABLE.",
+  "_comment_cycle": "How long one weather state holds before world_weather.gd rolls a new one, in real seconds. Wide range on purpose -- a fixed interval reads as a scripted flicker, not weather.",
+  "cycle_seconds_min": 240.0,
+  "cycle_seconds_max": 480.0,
+  "presets": {
+    "clear": {
+      "_comment": "No sun/sky/environment override -- whatever the active time-of-day preset already set. Present so it is a real, selectable state (survey/debug included) rather than an implicit absence.",
+      "rain": false
+    },
+    "cloudy": {
+      "_comment": "A stylised flat-overcast look, not literal cloud shapes -- world_look.gd's own header already states why: a ProceduralSkyMaterial can produce a gradient and a soft sun blob and nothing else. 'Cloudy' here means a dimmer, flatter sky and lower-contrast light; the sun's own cast shadow stays on (world_look.gd::_apply_sun's comment has the real reason -- driving it off blanked the whole terrain under this renderer/Terrain3D combination, a worse defect than the shadow it was meant to soften).",
+      "rain": false,
+      "sun": {
+        "energy_mult": 0.5,
+        "angular_distance": 3.5
+      },
+      "sky": {
+        "top_colour": "#8b97a0",
+        "horizon_colour": "#c9ced1",
+        "ground_horizon_colour": "#c9ced1"
+      },
+      "environment": {
+        "ambient_energy_mult": 0.9,
+        "ambient_colour": "#a9afb6",
+        "fog_density_add": 0.0009
+      }
+    },
+    "fog": {
+      "_comment": "Ground-hugging haze, much denser than any time-of-day preset's own light depth-cueing fog. Sky pushed toward the fog colour (not the sun's own horizon colour) so distant terrain fades into a flat void instead of meeting a hard-edged horizon band -- the exact seam EV8 already fixed once for the ordinary time-of-day fog.",
+      "rain": false,
+      "sun": {
+        "energy_mult": 0.65,
+        "angular_distance": 3.0
+      },
+      "sky": {
+        "top_colour": "#c6cdcf",
+        "horizon_colour": "#d7dcdc",
+        "ground_horizon_colour": "#d7dcdc"
+      },
+      "environment": {
+        "ambient_energy_mult": 0.95,
+        "fog_density_add": 0.015,
+        "fog_colour": "#d2d8d8"
+      }
+    },
+    "rain": {
+      "_comment": "Cloudy plus falling rain plus a cooler, wetter ambient. Shares the cloudy sky family rather than inventing a third palette -- rain reads as 'cloudy, and now it is raining', not a fourth unrelated mood.",
+      "rain": true,
+      "sun": {
+        "energy_mult": 0.4,
+        "angular_distance": 3.5
+      },
+      "sky": {
+        "top_colour": "#5f6d76",
+        "horizon_colour": "#8d979c",
+        "ground_horizon_colour": "#8d979c"
+      },
+      "environment": {
+        "ambient_energy_mult": 0.8,
+        "ambient_colour": "#8d99a3",
+        "fog_density_add": 0.0022
+      }
+    }
+  }
+}
