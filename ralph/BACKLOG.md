@@ -67,7 +67,7 @@ entries that stopped clearing after repeated tuning rounds — see
 
 **`OF12-remainder`'s defect (a) — the-rise-route's mirrored tree stand — fixed, see `DONE.md`.** A new per-layer `seed_offset` mechanism on `scatter_rules.gd` broke the LEFT/LEFT/LEFT-then-RIGHT segregation a probe confirmed at the old seed; not re-rendered/blind-checked, only probe-verified — see the DONE entry for exactly what that does and doesn't confirm.
 
-**`OF12-remainder` CLOSED 2026-08-14 — the blind round it was owed finally ran, see `DONE.md`.** A fresh, genuinely blind critic confirmed all three defects: (a) the mirrored-tree-stand seed-offset fix held (no mirroring/symmetry complaint; the tree/rock cluster was praised as an "authored composition"), (b) a second, genuinely broader-footprint grass species pair is curated into the `grass` layer, and (c) the hard-edged shadow-shape complaint recurred a third time but was not reopened — `BLOCKED.md`'s closed entry already tested ten mechanisms against this symptom and the owner accepted it as ordinary grass/path contrast, not a bug. A fourth critic tracing it to a specific untested mechanism would be grounds to reopen it.
+**`OF12-remainder` CLOSED 2026-08-14 — the blind round it was owed finally ran, see `DONE.md`.** A fresh, genuinely blind critic confirmed all three defects resolved or accepted: the mirrored-tree-stand fix held, a second broader-footprint grass species pair is curated into the `grass` layer, and the recurring hard-edged shadow-shape complaint was not reopened (`BLOCKED.md`'s closed entry already tested ten mechanisms and the owner accepted it as ordinary grass/path contrast). A fourth critic tracing that shadow complaint to a specific untested mechanism would be grounds to reopen it.
 
 **`BG2`** (source a CC0 castle/fortress asset kit) shipped — see `DONE.md`. Quaternius's "Modular Medieval Building Pack" (30 models) staged at `assets_raw/vendor/quaternius_modular-medieval-buildings/`, ledgered in `docs/ASSET_LEDGER.md`.
 
@@ -81,39 +81,9 @@ entries that stopped clearing after repeated tuning rounds — see
 
 ## Phase 0 — the owner played. This is the response.
 
-**R0.10's play gate fired on 2026-08-09: the owner played the first build,
-and the overhaul session that followed absorbed the entire feedback loop.**
-What shipped (see `docs/HANDOFF.md` §3 and `docs/decisions/D18`–`D20` for the
-full record): the giant-player fix with render-space measurement
-(`render_bounds.gd`, `smoke_art`'s new [0.1,10] fit-factor trip), the combat
-feel pass (auto-face on windup, lunge at windup start, 0.3s input buffer, new
-speeds), orbs and potions as real items granted by Grandpa's `give:` dialogue
-effects, the throw trajectory preview and the finally-wired aim profile, the
-D19 roster resize, `spawns.json` replacing `WILD_SPAWNS` (D20), the indoor
-opening in Grandpa's farmhouse (D18), the village and baked dirt paths, and
-the website redesign.
+**`R0.10`'s play gate fired 2026-08-09 — the owner played the first build, and the overhaul session that followed absorbed the entire feedback loop** — see `docs/HANDOFF.md` §3 and `docs/decisions/D18`–`D20` for the full record. It also absorbed much of Phase 2's first-day scope: ~10 authored harvest nodes, camp placement, campfire/bedroll, and rest-until-morning (parts of old R2.1/R2.4/R2.6/R2.8). What those items still owe is listed under Phase 2 below.
 
-**It also absorbed much of Phase 2's first-day scope**: ~10 authored harvest
-nodes for wood/stone/fiber/berries (part of old R2.1), camp placement with
-ghost preview and real material costs (old R2.4's core, proving the
-`build_cost_for` path D16 demanded), campfire + bedroll (part of old R2.6),
-and rest-until-morning advancing the day counter and healing (old R2.8's
-core). What those items still owe is listed under Phase 2 below.
-
-**`R0.11` ▶ CLOSED 2026-08-14 — the owner played it.** The response is
-already shipped and on record rather than a separate write-up: the
-2026-08-14 "Blind playtest pass" commit (`6f5f8aa`) is that playthrough's
-direct feedback loop — input-glyph lies (LT/RT shown as LB/RB on
-combat/build verbs), one-directional pause-menu tab cycling, a missing
-Use-on-berries path, NPCs reading as one flat colour multiply, no starting
-light source after dark, and an overlong opening conversation were all
-found, root-caused and fixed in that pass, each with real headless
-input-driven smoke coverage, not just asserted. Camera collision and gait
-cadence were checked against this same playtest and found to already have
-real, working fixes in place (`SpringArm3D` margin tuning, `OF5`'s gait-rate
-match) — not re-tuned blind without a fresh complaint. Nothing from this
-playthrough is still open under this item; anything that surfaces later is
-new feedback, not a reason to reopen R0.11 itself.
+**`R0.11` ▶ CLOSED 2026-08-14 — the owner played it.** The response is on record in the 2026-08-14 "Blind playtest pass" commit (`6f5f8aa`): input-glyph lies, one-directional pause-menu tab cycling, a missing Use-on-berries path, flat-colour NPCs, no starting light source after dark, and an overlong opening conversation were all found, root-caused and fixed, each with real headless input-driven smoke coverage. Nothing from this playthrough is still open under this item; anything that surfaces later is new feedback, not a reason to reopen `R0.11` itself.
 
 ---
 
@@ -123,28 +93,7 @@ The owner played the published Windows build. One bug left, ahead of
 everything else in this file — **do this first, then Phase -0.5, then
 Phase 1 onward.**
 
-**RB1 (mouse look) — the first fix was WRONG. The real cause is found and fixed;
-see `RB1-actual` in `DONE.md`.** The owner reported on 2026-08-11 that mouse look
-*still* did not work after RB1 shipped, which is the on-device confirmation that
-entry was waiting for and it came back negative.
-
-RB1 blamed a mouse capture dropped before the window had OS focus and
-re-asserted capture on `focus_entered`. That was diagnosed by reading code and
-never reproduced, and it was the wrong cause. The real one:
-`scenes/ui/playground_hud.tscn`'s `Root` is a **full-rect `Control` with no
-`mouse_filter` line**, so it took Godot's default of `MOUSE_FILTER_STOP` and
-consumed every `InputEventMouseMotion` during GUI handling — which runs *before*
-`_unhandled_input`, where `camera_rig.gd` accumulates look. Every other UI scene
-in the project already sets `mouse_filter = 2`; this one missed it.
-
-**RB1's fix is kept.** Re-asserting capture on focus gain is correct behaviour
-and `SH53` still wants it. It simply was not this bug.
-
-Note also that RB1's entry contains a **disproven guess**: it suggested the
-owner could not reach Grandpa because they could not turn toward him, "a symptom
-of RB1, not a second bug." That was wrong — `SA0` later root-caused the Grandpa
-report to a one-way beat machine. Two separate real bugs, and the guess linking
-them cost time.
+**`RB1` (mouse look) — the first fix was WRONG; the real cause is found and fixed, see `RB1-actual` in `DONE.md`.** The owner's 2026-08-11 report that mouse look still didn't work after `RB1` shipped was the negative on-device confirmation the original fix (a mouse-capture race on focus) was waiting for. The real cause: `scenes/ui/playground_hud.tscn`'s `Root` `Control` had no `mouse_filter` line, so it defaulted to `MOUSE_FILTER_STOP` and consumed every mouse-motion event before `camera_rig.gd`'s `_unhandled_input` could see it — every other UI scene already set `mouse_filter = 2`. The original fix (re-asserting capture on focus gain) is kept, since `SH53` still wants it, but it was not this bug. A separate disproven guess in `RB1`'s original entry — that the owner's inability to reach Grandpa was a symptom of this same bug — was also wrong; `SA0` later root-caused that to an unrelated one-way beat machine.
 
 **RB2 (walk/run animation) fixed — see `DONE.md`.** Real bug, found after
 the owner corrected an earlier wrong "already fixed" pass this same firing:
@@ -373,91 +322,19 @@ Unblocked in principle, same delivery: `EV5-remainder-2`'s third waterside
 plant and `OF12-remainder`'s ground-cover species-variety half — both acted
 on below/above.
 
-**`EV3` (a first, narrower slice) shipped — see `DONE.md`.** Fixed the one
-concrete, already-diagnosed defect (`path_stones` clumps disconnected from the
-real paths) and applied R7.1-remainder-2's own named density lever
-(tighter `clump_radius`, same instance count) to `grass`/`drygrass`. Did
-**not** reach the item's full bar — "seven layered bands... driven by slope,
-elevation, path distance AND landmark distance" is broader than this slice,
-and a fresh blind critic still ranked two other things first (both already
-owned by concurrent lanes: `EV4-textures-lighting`'s shadow artefact,
-`EV4-textures-remainder`'s decal-like path texture). A narrower remainder is
-opened below for what a future pass should try next.
+**`EV3` (a first, narrower ground-cover slice) shipped — see `DONE.md`.** Fixed `path_stones` clumps disconnected from the real paths, and tightened `clump_radius` on `grass`/`drygrass`. Did not reach the item's full bar — "seven layered bands driven by slope, elevation, path distance AND landmark distance" is broader than this slice; the remainder continues in the `EV3-remainder` chain below.
 
-**`EV3-remainder` (round 1 of 2, the flowers-along-a-path half) shipped a real
-but partial improvement — see `DONE.md`.** `path_bias` (0.35) plus a new
-`path_bias_jitter` (4.0, so biased clump centres stop landing exactly
-collinear on the centreline) genuinely improved one of three judged frames
-(`the-rise-route.png`, called "a real step toward it" by a second blind
-critic) with no regression on the other two. Did not reach the done-when —
-`square-convergence.png` still shows a visibly row-planted flower patch and
-`grandpas-house-route.png` is still under-clustered. Stopped after two rounds
-rather than continuing indefinitely (owner checked in mid-session on the
-combination of a long infra-blocked wait and slow iteration; conventions.md's
-own budget guard applies here too). A narrower remainder is opened below.
-**The elevation/landmark-distance placement-bias half was not attempted this
-round either** — still open, still needs new mechanisms bible §7C names, and
-`EV5` (water) still has to exist before "distance to water" means anything.
+**`EV3-remainder` round 1 (the flowers-along-a-path density bias) shipped a real but partial improvement — see `DONE.md`.** `path_bias`/`path_bias_jitter` measurably improved one of three judged frames with no regression on the other two, but `square-convergence.png` and `grandpas-house-route.png` still miss the done-when. **The elevation/landmark-distance placement-bias half of this item was not attempted at all this round** — still open, still needs the mechanisms bible §7C names, and needs `EV5` (water) to exist before "distance to water" means anything. Remainder continued in `EV3-remainder-2` below.
 
-**`EV3-remainder-2`'s `square-convergence.png` half (row-planted flowers at
-the well) fixed — see `DONE.md`.** Root cause was not clump placement at
-all: `terrain_playground.json`'s four routes all share one endpoint at the
-well, so every ground-cover layer's path-exclusion isoline forms a straight
-four-way wedge there, not a per-layer artefact. Confirmed by two independent
-blind critics; the second called it "the exception... doesn't show the hedge
-pattern."
+**`EV3-remainder-2`'s `square-convergence.png` half (row-planted flowers at the well) fixed — see `DONE.md`.** Root cause was not clump placement: `terrain_playground.json`'s four routes all share one endpoint at the well, so every ground-cover layer's path-exclusion isoline forms a straight four-way wedge there. Confirmed by two independent blind critics.
 
-**`EV3-remainder-3`'s grass/drygrass mechanism fix shipped — see `DONE.md`.**
-Confirmed against real placement data both before AND after the fix (not
-just a rendered PNG): grandpas-house-route and the-rise-route's remaining
-grass/drygrass clump centres near a path dropped from 2.35-4.26m (three
-offending clumps found) to 9.46-11.16m (nearest survivor) after `EV3-
-remainder-3`'s own `path_avoid_radius` shipped — the grass/drygrass half of
-the mechanism genuinely works and is verified, not asserted. **Did not
-close the item**: a third blind critic on the fixed state still named the
-same hedge pattern on both frames. Root cause turned out to be different
-from what either this entry or `EV3-remainder-2` diagnosed — see
-`EV3-remainder-4` below for what a fourth diagnostic pass actually found
-once grass/drygrass stopped being the dominant signal.
+**`EV3-remainder-3`'s grass/drygrass mechanism fix shipped — see `DONE.md`.** Verified with real placement data before/after: offending clump distances from a path dropped from 2.35-4.26m to 9.46-11.16m after `path_avoid_radius` shipped. Did not close the parent item — a third blind critic still named the same hedge pattern; root cause traced further in `EV3-remainder-4` below.
 
-**`EV3-remainder-4` (grass/drygrass strays fixed structurally; flowers'
-path-biased clumps stop straddling the road) shipped, partial — see
-`DONE.md`.** Two real, verified mechanism fixes across two rounds. Did not
-close the item — a fresh blind critic on the round-2 render still named
-`grandpas-house-route.png` for the same pattern, but a whole-map placement
-dump of the *real* seed (not a guess) found neither `flowers` (0 clumps,
-biased or unbiased, within 15m of any path in that frame's actual region)
-nor `bushes` (1 instance within 20m of the house) present there in any
-meaningful quantity — ruling out further `path_bias`/`path_avoid_radius`
-tuning as the lever for that specific frame. Narrower remainder opened
-below.
+**`EV3-remainder-4`** (grass/drygrass strays fixed structurally; flowers' path-biased clumps stop straddling the road) shipped, partial — see `DONE.md`. Did not close the parent item — a fresh critic still named `grandpas-house-route.png` for the same pattern, but a real placement-data dump found neither `flowers` nor `bushes` present there in meaningful quantity, ruling out further `path_bias`/`path_avoid_radius` tuning as the lever for that frame. Remainder continued in `EV3-remainder-5` below.
 
-**`EV3-remainder-5` round 1 (the `path_stones` clump_radius fix) shipped, partial — see `DONE.md`.** Found and fixed a real, verified mechanism the
-prior round's diagnosis chain hadn't reached yet: `path_stones`' own
-`clump_radius` (8.0, unchanged since before real paths existed) was more
-than twice the path's actual visible width, spreading stones out to 7-8m
-off centreline in a near-perfectly symmetric 7-left/7-right pattern near
-Grandpa's house — exactly the "matched clusters... flanking both sides"
-shape two critics had already named. Cut to 3.5m, verified before/after
-with real placement data (18→6 in-region instances, worst-case offset
-8m→2.8m). **Did not close the item** — a fresh critic on the re-rendered
-frame still named the same frame for a flanking pattern, but attributed it
-to flowers/grass rather than stones, which a frustum-projection check
-(exact camera, not a guessed region) doesn't support: real near-field
-flowers there are heavily left-skewed, not symmetric. Narrower remainder
-opened below.
+**`EV3-remainder-5` round 1 (the `path_stones` clump_radius fix) shipped, partial — see `DONE.md`.** Cut `clump_radius` from 8.0 to 3.5m near Grandpa's house, verified before/after (18→6 in-region instances, worst-case offset 8m→2.8m). Did not close the parent item — a fresh critic still named a flanking pattern there but attributed it to flowers/grass, not stones; a frustum-projection check does not support that attribution (real near-field flowers there are heavily left-skewed, not symmetric). Remainder continued in `EV3-remainder-6` below.
 
-**`EV3-remainder-6` tried the item's own named lever (denser ground cover,
-an `extra_clumps` placement-authoring mechanism, not a path-proximity
-tweak) and got a real result: worse, not better — see `DONE.md`.** The new
-off-path clump paired with the pre-existing left-side flower concentration
-`EV3-remainder-5` found and produced exactly the mirrored flanking read
-this whole line exists to eliminate. Reverted cleanly. Five real,
-evidence-first rounds (`EV3-remainder` through `-6`) have each found and
-fixed a genuine mechanism, and the mechanism side of this investigation now
-reads as exhausted — moved to `BLOCKED.md` for the owner rather than
-leaving it in `BACKLOG.md` for a future firing to guess a sixth coordinate
-blind.
+**`EV3-remainder-6`** tried the item's own named lever (denser ground cover via a new `extra_clumps` mechanism) and got a real result: worse, not better — see `DONE.md`. The new clump paired with the pre-existing left-side flower concentration and reproduced the exact mirrored flanking read the whole investigation was trying to eliminate; reverted cleanly. Five real, evidence-first rounds (`EV3-remainder` through `-6`) exhausted the mechanism-level investigation — moved to `BLOCKED.md` for the owner.
 
 **EV4's mechanism (paths as a real control-map material, not a colour-map
 tint) shipped — see `DONE.md`.** Five blind-judge rounds; the first four
@@ -467,40 +344,15 @@ by another lane specifically for this, credited in `DONE.md`) as a dedicated
 "real progress... works as a navigational read." Two narrower remainders
 opened below from round 5's own honest read of what is still wrong.
 
-**`EV4-textures` (moss-blotch saturation, and the slope-specific edge stepping) shipped — see `DONE.md`.** Three local blind-judge rounds, both original complaints converged: edge-stepping never reproduced past a mild, ambiguous waviness and a third critic called it "largely resolved... no rectangular notches"; moss saturation measurably dropped (0.36 -> 0.09, at/below the texture's own baseline) via a direct, feathered-mask edit to the CC0 source photo rather than fighting it through a tint multiply. **Two new findings from round 3, out of this item's scope, opened below**: the path reads paler than the references even where moss is fully resolved, and an unmotivated hard-edged shadow crosses sunlit path frames.
+**`EV4-textures`** (moss-blotch saturation, and the slope-specific edge stepping) shipped — see `DONE.md`. Both converged over three blind-judge rounds: edge-stepping never reproduced past mild, ambiguous waviness, and moss saturation dropped from 0.36 to 0.09 via a direct feathered-mask edit to the CC0 source photo. Two new findings from round 3, out of this item's scope, were opened separately: the path reads paler than references even where moss is resolved, and an unmotivated hard-edged shadow crosses sunlit path frames.
 
 **The `path_stones`-disconnected-from-the-real-paths finding (found
 independently while blind-judging `EV4`'s paths, 2026-08-11) is fixed by
 `EV3` — see `DONE.md`.**
 
-**`EV4-textures-remainder` (moss blobs reshaped from circular stamps to
-varied streaks) shipped, partial — see `DONE.md`.** Two blind-judge rounds.
-Round 1 fixed the hard-edge/circular-outline complaint outright — a fresh
-critic confirmed "no perfect geometric circles... edges consistently soft,
-not stamped," genuinely closing the original "stamped decal" framing. Round
-2 (added a per-blob asymmetric taper) only partially closed the follow-on
-complaint it surfaced — limited shape variety, "one repeated template,
-resized" — and a second, separate, deliberately out-of-scope class of grey
-fibrous "tuft" blobs (texture/luminance-driven, not colour, so not caught by
-this fix) still reads as repeating. Stopped after two rounds of real,
-measured movement rather than pushing a third: the residual gap matches
-what the original item predicted — genuine shape *variety* (not just
-irregularity) needs hand-authored moss silhouette variants, which a
-procedural per-blob warp on one source photo structurally can't produce.
-Accepted as the item's own "low priority... finish question" framing said
-to expect. No further remainder opened; `docs/ASSET_LEDGER.md`'s `Ground030`
-row has the full before/after account if anyone revisits it.
+**`EV4-textures-remainder`** (moss blobs reshaped from circular stamps to varied streaks) shipped, partial — see `DONE.md`. Round 1 fixed the hard-edge/circular-outline complaint outright; round 2 (per-blob asymmetric taper) only partially fixed the follow-on shape-variety complaint, and a separate class of grey fibrous "tuft" blobs still reads as repeating. Accepted as the item's own low-priority framing predicted — genuine shape variety needs hand-authored moss silhouette variants a procedural warp can't produce; no further remainder opened. `docs/ASSET_LEDGER.md`'s `Ground030` row has the full before/after account for anyone revisiting.
 
-**`EV4-textures-lighting` (blown-highlight/shadow-contrast on sunlit ground)
-shipped — see `DONE.md`.** `SA1`'s shadow-atlas cut, the lead-off hypothesis,
-is now ruled out (raising the atlas back to 4096 at runtime changed the
-`square-convergence.png` shadow edge not at all). What actually explained the
-"unmotivated shadow" complaint turned out to be two different things:
-`square-convergence.png`'s dark diagonal is a real occlusion shadow from the
-Barn, and `grandpas-house-route.png`'s flanking bands aren't a shadow at all
-— ordinary grass reading dark purely by contrast against a path blown to
-near-white. Fixed the shared cause (day `exposure` 1.22 → 0.6, `ambient_energy`
-1.02 → 1.5). **Did not fully clear the bar — narrower remainder opened below.**
+**`EV4-textures-lighting`** (blown-highlight/shadow-contrast on sunlit ground) shipped — see `DONE.md`. `SA1`'s shadow-atlas cut was ruled out as the cause; the real fix was day `exposure` 1.22→0.6 and `ambient_energy` 1.02→1.5, which resolved both the Barn's real occlusion shadow (`square-convergence.png`) and grass-vs-path contrast reading as a false shadow (`grandpas-house-route.png`). Did not fully clear the bar — remainder continued in `EV4-textures-lighting-remainder` below.
 
 **`EV4-textures-lighting-remainder` (the unmotivated dark near-camera patch
 at `square-convergence`/`the-rise-route`) closed 2026-08-12 — identified, not
@@ -621,31 +473,13 @@ coverage as the next thing to instrument directly. Done when: a blind
 critic given any of the four `tools/capture_paths.gd` frames stops naming
 an unmotivated dark patch, or explicitly traces it to a visible object.
 
-**`EV4-hillside-seam` (blotchy hillside slope material) rounds 1-4 shipped —
-see `DONE.md`.** Rock went from mathematically unreachable (round 2's wider
-blend pushed its threshold past this landform's own max slope) to a
-proportionate accent, verified by three independent blind-critic rounds.
-**Did not fully clear the bar — narrower remainder opened below.**
+**`EV4-hillside-seam`** (blotchy hillside slope material) rounds 1-4 shipped — see `DONE.md`. Rock went from mathematically unreachable to a proportionate accent, verified by three independent blind-critic rounds. Did not fully clear the bar — remainder continued in `EV4-hillside-seam-remainder` below.
 
-**`EV4-hillside-seam-remainder` (rock near-black, ring-like placement) fixed;
-soil band still not visible — see `DONE.md`.** Two of round 4's three named
-defects are genuinely resolved, each confirmed by an independent blind
-critic on the re-rendered frames: rock's `ao_strength`/`normal_depth` cut
-(0.4/0.6 → 0.15/0.3) stopped it reading as a cast shadow — a fresh critic
-called the close-range patch "granite... visible directional streaking/
-veining" — and a new coarse noise field (`outcrop_jitter_deg`,
-`playground_heightfield.gd`) added to the slope sample before the band
-lookup broke the uniform ring into separated blobs at different positions,
-confirmed by two independent critics ("not one continuous collar," "blob-
-shaped rather than a continuous ring"). **The third defect — no visible
-soil band — was NOT fixed after two real attempts** (widening the pure-soil
-plateau; then pushing `soil`'s tint/relief further) and the second attempt
-was reverted as a regression (see `EV4-hillside-seam-remainder-2` below for
-why, and for the root cause both attempts ran into).
+**`EV4-hillside-seam-remainder`** (rock near-black, ring-like placement) fixed; soil band still not visible — see `DONE.md`. Two of round 4's three named defects were resolved and confirmed by independent blind critics (rock's `ao_strength`/`normal_depth` cut stopped it reading as a cast shadow; a new `outcrop_jitter_deg` noise field broke the uniform rock ring into separated blobs). The third defect — no visible soil band — was NOT fixed after two real attempts, and the second was reverted as a regression; see `EV4-hillside-seam-remainder-2` below for the root cause both attempts ran into.
 
-**`EV4-hillside-seam-remainder-2` (the two lever-2 fixes: photo saturation, then the tint/colour-map compounding it hid) shipped, partial — see `DONE.md`.** Two more rounds after the two documented above (widened plateau, reverted stronger tint). Round 3 finally executed lever 2 from this item's own list — a feathered pixel-level correction on `Ground003_Color.jpg` itself — and found why both prior tint-only rounds failed: the raw photo's own saturation (mean 0.45) measured ~4.5x every sibling ground texture already in the project (Ground030 0.099, Rock030 0.126), oversaturated across nearly its whole area rather than a narrow green patch, so no tint multiply could ever fully tame it without either undershooting or overshooting. Fixed the photo directly (`tools/art_pipeline/desaturate_soil_texture.py`, same local-luminance-blend technique as `Ground030`'s own moss fix); real, measured, verified movement (0.45 → 0.17). A fresh blind critic on the re-render still found no visible third material, but round 4 found a *second* real bug the first render exposed: `colour.soil` (`#e0cea4`) — a separate multiply layer meant to be "near white, modulates rather than paints" per this file's own top comment — was itself saturated (0.27) and compounding with the texture's own `tint`, landing rendered soil saturation at 0.65–0.76 even after the photo fix, the same multiplicative-saturation bug `R9.4` already diagnosed and fixed for grass elsewhere in this exact file. Fixed both together (`tint` → `#fafafa`, matching rock's own near-white convention now that the photo carries the real colour; `colour.soil` → `#f3ebdb`, now honestly above this file's own `#c0` floor) and reverified by direct pixel sampling of the actual rendered frame, not just the offline texture: transition-zone saturation dropped from 0.65–0.76 to 0.18–0.43, with a real, visible brighter warm band now present above the darker rock in the re-rendered frames. **Did not close the item**: a third blind critic still reported no clearly legible third material — not because the colour is wrong now, but because soil and rock differ mainly in *value* (bright vs. dark) rather than hue, so rock's own low native brightness (`Rock030_Color.jpg` mean value 0.31, further darkened by its `normal_depth`/`ao_strength` under a grazing sun) reads as "a shadow hole" rather than a second material, which eats the contrast budget that would otherwise sell the soil band as distinct. Two real, root-caused, verified bugs fixed this round with no regression (no critic named a new worse defect the way the round-2 tint push once did) — genuine progress, just not enough to clear the bar on its own. Narrower remainder opened below for the value/contrast half specifically, since colour-only levers on `soil` are now close to exhausted.
+**`EV4-hillside-seam-remainder-2`** (the two lever-2 fixes: photo saturation, then the tint/colour-map compounding it hid) shipped, partial — see `DONE.md`. Fixed the raw soil photo's oversaturation directly (0.45 → 0.17, same technique as `Ground030`'s moss fix), then found and fixed a second compounding bug: `colour.soil`'s own multiply layer was itself saturated and stacking with the texture's `tint` (the same multiplicative-saturation bug `R9.4` already fixed for grass elsewhere in this file) — fixed both, reverified by direct pixel sampling (transition-zone saturation 0.65–0.76 → 0.18–0.43). Did not close the item: a third blind critic still reported no clearly legible third material, because soil and rock now differ mainly in value rather than hue and rock's low native brightness reads as "a shadow hole" rather than a second material. Colour-only levers on `soil` are now close to exhausted; narrower remainder opened below for the value/contrast half.
 
-**`EV4-hillside-seam-remainder-3` (both named levers tried: rock's floor brightness, soil's hue pushed away from rock) shipped, partial — see `DONE.md`.** Three real rounds. Round 1 (rock photo brightness lift + a further AO/relief cut) got the first critic-confirmed positive on rock specifically: a fresh critic described real internal texture/veining where the previous round's critic saw none. Rounds 2-3 chased the soil half and found the round-2 diagnosis above was reasoning from the wrong data — the *offline* photo×tint×colour-map chain, not the actual lit render. Direct pixel sampling of the real rendered frame (sky masked out) found ~87% of all visible ground pixels landing in one narrow hue band (50–60°) regardless of what the offline chain predicted for soil — pushing soil's hue further from rock's (round 2) was landing on top of grass's own real rendered hue, not separating from it. Round 3 pushed the opposite direction instead — true tan/dirt (hue ~30–40°), which an earlier round had tried and reverted as "burnt orange" but on the OLD, oversaturated soil photo; retried on `remainder-2`'s already-fixed photo, it moved measurably (ground hue mass shifted from centred at 50–60° to centred at 30–50°, confirmed by direct pixel histogram) with no rust regression. **Did not close the item**: the blind critic's core verdict did not move across any of the three rounds — no third material, rock still read as a stain/AO artefact rather than stone, in all three. Colour/value levers on this specific soil/rock pair now read as genuinely exhausted rather than merely "close" — both of this item's own named levers were tried, plus the hue-direction reversal a fresh diagnosis motivated, and none produced a critic-visible third material despite real, verified, measured movement on every axis tried. Narrower remainder opened below, aimed at a different kind of lever entirely.
+**`EV4-hillside-seam-remainder-3`** (both named levers tried: rock's floor brightness, soil's hue pushed away from rock) shipped, partial — see `DONE.md`. Three rounds: round 1 got the first critic-confirmed positive on rock (real internal texture/veining); rounds 2-3 found direct pixel sampling of the real render (not the offline texture chain) showed ~87% of visible ground pixels in one narrow hue band, and pushed soil toward true tan/dirt hue instead, moving the ground-hue histogram measurably with no rust regression. Did not close the item — the blind critic's core verdict did not move across any of the three rounds; no third material, rock still read as a stain/AO artefact. Colour/value levers on this specific soil/rock pair now read as genuinely exhausted; narrower remainder opened below, aimed at a different kind of lever entirely.
 
 **`EV4-hillside-seam-remainder-4` (real height relief, gated to each rise's flank, tried at two amplitudes) shipped, did not clear the bar — see `DONE.md`.** A genuinely different lever from every colour round above; still didn't move the critic's core verdict even at 2.5m amplitude. Moved to `BLOCKED.md` per this item's own pre-authorized fallback — the hillside's rock/soil read is now an owner-facing question, not an open backlog item.
 
@@ -681,34 +515,7 @@ spoke, which gave the pond a real basin to drain into; the outlet fix is a
 deliberate sill+channel neck through what had been a diffuse merge shelf,
 not the Band-3 downstream-terrain project this entry originally called for.
 
-**`EV5-remainder-2`'s third waterside species curated (`d92cbbe`) and now
-blind-verified — real but partial, honest remainder open.** No literal
-sedge/cattail model exists anywhere in the 270-file pack (searched by name
-and by inspecting candidates); `Grass_Wheat` — a genuinely different mesh
-from `Plant_1_Big` (1530 vs 360 verts, a tall narrow blade-cluster with a
-seed-head vs. a broad arching leaf) — was added to `water.json`'s
-`marginals`, sharing the layer's own `#5f8a52` tint.
-
-Rendered `tools/capture_water.gd`'s four frames fresh and ran a genuinely
-blind critique against them. It counted **three** distinct waterside forms
-across the four frames (an upright blade/reed cluster, a dark lily-pad
-cluster, a flowering shrub) — enough that it did not call this "one species
-repeated" outright. But it also found that variety concentrated almost
-entirely in one frame (`water-02-across-pond.png`); the other three each
-show one repeated species or, in `water-04-approach.png`'s case, none at
-the water's edge at all. It did not separately name `Grass_Wheat` as a
-distinguishable fourth form from the pre-existing reed — either it wasn't
-in frame at any of the four fixed viewpoints (only 8 clumps of 3 exist
-across the whole ~300m shoreline, the same low-density trap `EV2-landmark-
-ceiling` hit with `grove`), or its shared tint with `Plant_1_Big` reads too
-close to call apart at this render's distance. Not chased further with a
-fifth targeted render this pass — the config change is real and shipped,
-the item's own original ask (a third silhouette) is met by the pack search,
-and what's left (whether `Grass_Wheat` reads as distinct where it *is*
-placed, and the density/distribution gap the critic's top-ranked complaint
-actually names) is genuinely a `EV3`/`OF12`-style density question, not a
-species-gap question — a narrower remainder for whoever next touches
-`water.json`'s marginal density, not a new item.
+**`EV5-remainder-2`'s third waterside species** (`Grass_Wheat`, curated `d92cbbe`) shipped and blind-verified, real but partial. A blind critique found three distinguishable waterside forms across four frames, meeting the item's original "third silhouette" ask, but variety concentrated in one frame while the other three showed one repeated species or none; `Grass_Wheat` itself wasn't confirmed as visually distinct from the existing reed (only 8 clumps across ~300m shoreline, or its shared tint reads too close to call apart). Not chased further this pass — the remaining gap is a `water.json` marginal-density question for whoever next touches that layer, an `EV3`/`OF12`-style density question, not a species gap.
 
 **`EV6` (settlement rebuilt on the Medieval Village MegaKit) shipped — see
 `DONE.md`.** Workshop, two cottages, composed well, kit fences, two authored
@@ -716,44 +523,18 @@ square oaks; the windmill removed rather than left as a second family. The
 mill, the ranger station, the bridges and Grandpa's-house-as-modules are
 carried forward below.
 
-**`EV6-remainder` (mill/crossing, ranger station, farmhouse-as-modules, furniture blackness, well RockTrim — and now `EV6-remainder-polish`: the cottage_b shelf-shadow flat, the settlement-wide soil-apron ground blend, the ShortCloset→Cabinet swap, and the Survival pack's linear-`Kd` gamma fix) shipped — see `DONE.md`.** Surviving follow-ups: **(a)** the mill-crossing round-1 verdict is now recorded (`DONE.md` §EV6-remainder-polish) and its headline defect is open: the mill's fence-section water wheel does not read as a wheel ("no axle, spokes, or paddles" — the site loses its landmark identity without it) — recomposing it, the stray hillside plank, and giving the ranger station an identifying silhouette element are the named follow-ups; plus a settlement round 2 to confirm the polish fixes stable (round 1 named none of them) and to re-judge the un-re-judged Backpack→`Bag` swap in Grandpa's house. **(b)** Oskar to his bridge and the Rescued Ranger to the station is a cheap `lane: npc` follow-up; village NPCs reading flat-black in exteriors is `lane: npc` (`NP2`). **(c)** Out-of-scope defects the polish round named (sky/atmosphere, hard black shadows, rock-family clash, ivy decal, toon oaks, interior staircase/wall texture) are recorded in `DONE.md` §EV6-remainder-polish for their owning areas.
+**`EV6-remainder`** (mill/crossing, ranger station, farmhouse-as-modules, furniture blackness, well RockTrim, and `EV6-remainder-polish`'s cottage/soil-apron/cabinet/gamma fixes) shipped — see `DONE.md`. Open follow-ups: the mill's water wheel doesn't read as a wheel (no axle/spokes/paddles) and needs recomposing, along with a stray hillside plank and an identifying silhouette element for the ranger station; a settlement round 2 is still needed to confirm the polish fixes and re-judge the Backpack→`Bag` swap. Placing Oskar/the Rescued Ranger and fixing flat-black exterior NPCs are cheap `lane: npc` follow-ups (also `NP2`); other out-of-scope defects the polish round named are recorded in `DONE.md`'s `EV6-remainder-polish` entry.
 
-**`EV6-remainder-well-rocktrim-shadow` (root cause found: `MI_RockTrim` imported with `metallic=1.0`, fixed) shipped, real improvement, not fully closed — see `DONE.md`.** The `ao_light_affect` lever this item originally named turned out to be moot (`ao_enabled=false` on the material — checked with a new probe tool before implementing it blind) — the real defect was a wrong PBR value, not a missing hook. A genuine blind critic on the fixed render still names a colour-temperature mismatch, but a visibly softer and more specific one than before, most likely the Compatibility renderer's own lack of ambient bounce/GI (`D06`) rather than a further material property — `roughness` is already maxed and `ao_light_affect` is confirmed inert. Accepted as the honest ceiling; no further remainder opened.
+**`EV6-remainder-well-rocktrim-shadow`** (root cause: `MI_RockTrim` imported with `metallic=1.0`) fixed — see `DONE.md`. A genuine blind critic on the fixed render still names a softer colour-temperature mismatch, most likely the Compatibility renderer's lack of ambient bounce/GI (`D06`) rather than a further material property (`roughness` already maxed, `ao_light_affect` confirmed inert). Accepted as the honest ceiling; no further remainder opened.
 
 **`EV7` (a first slice: work area and farmhouse yard) shipped — see `DONE.md`.**
 Two of the bible's five named clusters. `bridge repair site`, `quarry station`
 and `trainer camp` need geography that doesn't exist yet (no bridge, no built
 quarry — `SA4`/`EV5` territory) and are carried forward below.
 
-**`EV7-remainder` (`trainer_camp` and `bridge_repair_site`, built 2026-08-13)
-shipped — see `DONE.md`.** Both clusters built from the already-staged,
-already-ledgered Fantasy Props MegaKit (five more of its 94 models), sited
-with real ground-height probes rather than guesses. `DONE.md`'s own
-`EV7-remainder-critique` entry self-graded both as passing the item's
-done-when (a blind critic naming each site's purpose), but disclosed
-plainly that no genuinely isolated subagent was available to run that pass
-blind — it was self-judged. **That self-grade was overturned**: a
-genuinely blind critic run afterward failed `trainer_camp` outright
-("reads as three container props at even spacing... scatter-list output,
-not a place") and named five real composition defects in
-`bridge_repair_site` even though its purpose read passed. `EV7-clusters-fix`
-(`DONE.md`) is the fix round for both — `Bench` dropped from `trainer_camp`,
-both clusters re-spaced/re-sited with real numbers (`tools/_probe_ev7fix.gd`),
-`props.gd` gained `pitch_deg`/`roll_deg`/`sink_m` to fix defects position
-and yaw alone could not (a bolt-upright axe, a shallow-embedded crate). The
-confirm read on the fix is itself self-judged, not blind — no subagent tool
-was available this round either, disclosed the same way. **`quarry_station`
-remains open, unbuilt** — confirmed again, no quarry exists anywhere in the
-world (`village_npcs.json`'s Quarry Foreman still stands in the square for
-exactly that reason) — and is `SD16`'s scope (a built, reachable Old
-Quarry), not tracked further here.
+**`EV7-remainder`** (`trainer_camp` and `bridge_repair_site`, built 2026-08-13) shipped — see `DONE.md`. A genuinely blind critic run overturned an initial self-graded pass, naming real composition defects in both clusters (`trainer_camp` failed outright, `bridge_repair_site` had five defects despite its purpose reading through); `EV7-clusters-fix` addressed them (re-spaced/re-sited, `props.gd` gained `pitch_deg`/`roll_deg`/`sink_m`), but that fix's own confirm read was self-judged, not blind — no subagent tool was available either round. `quarry_station` remains open and unbuilt, and is `SD16`'s scope, not tracked further here.
 
-**`EV8` (lighting and atmosphere) shipped — see `DONE.md`.** Two rounds of the
-blind pass. Warm sun and cool fill were already correct and are unchanged;
-the pale-horizon and sky-inconsistency defects (`R9.4-remainder-2`) are fixed.
-A parallel lane independently fixed a narrower instance of the same
-sky-inconsistency class in `tools/capture_site_shots.gd` (a website capture
-tool, not the exploration survey) — see `DONE.md`'s follow-on entry.
+**`EV8`** (lighting and atmosphere) shipped — see `DONE.md`. Two rounds of the blind pass; warm sun/cool fill were already correct, and the pale-horizon/sky-inconsistency defects (`R9.4-remainder-2`) are fixed. A parallel lane independently fixed the same sky-inconsistency class in the website capture tool (`tools/capture_site_shots.gd`) — see `DONE.md`'s follow-on entry.
 
 ### EV9 — Rebuild the HUD
 `model: opus` · `tests: smoke_menu` · `area: ui`
@@ -762,34 +543,9 @@ translucent panels, teal accent, warm gold for progression, no fantasy scroll
 frames. **Tested at physical 7-inch scale, not on a desktop monitor** — §17 is
 explicit.
 
-**First slice shipped 2026-08-11 (`eea16a9`): the exploration HUD only.**
-`scripts/ui/playground_hud.gd`/`scenes/ui/playground_hud.tscn` rebuilt —
-styled health/stamina bars (dark translucent panel, teal border, rounded
-corners, labeled "HP"/"STA") that fade to a low-emphasis state when full and
-idle, a party/orb count panel, and the contextual interact prompt read live
-from `InteractionArbiter`. The old always-on debug telemetry dump still
-exists but is now F3-toggled instead of covering a third of the screen.
-Blind visual-judge (3 rounds, `tools/capture_exploration_hud.gd`) converged
-on "coherent, intentional HUD"; remaining gaps were named explicitly as
-needing new assets rather than more scene tuning.
+**First slice shipped 2026-08-11 (`eea16a9`): the exploration HUD.** Styled health/stamina bars, a party/orb count panel, and a live contextual interact prompt replaced the old always-on debug overlay (now F3-toggled). Blind visual-judge (3 rounds) converged on "coherent, intentional HUD"; remaining gaps were named as needing new assets, not more scene tuning.
 
-**Second slice shipped 2026-08-11: real icon glyphs on five of the prompts
-the paragraph below flags, before `HD1` was found — see `DONE.md`.** Built
-independently and in parallel with the owner's `HD1` report landing on
-`main`; the overlap is real and is reconciled in `HD1`'s own entry below
-rather than here. `dialogue_panel.gd`, `name_prompt.gd`, `starter_picker.gd`,
-`prompt_arbiter.gd` (the actual exploration-HUD prompt `format()`) and
-`encounter_director.gd`'s matching combat-engage prompt all draw a real
-Kenney Input Prompts icon now, through new `scripts/ui/input_glyph.gd`,
-instead of literal bracket text. **Does not close `HD1`**: device selection
-is "a joypad is connected," not the last-input-used tracker `HD1` actually
-asks for (so a mouse-and-keyboard player with a pad merely plugged in would
-still see gamepad glyphs), and `combat_hud.gd`'s Actions row — the owner's
-own reproduction case, the F/RB throw button — was left untouched on
-purpose, a separate five-verb glyph set from the four ids this slice built.
-Four local blind-judge rounds, three real legibility fixes (two Kenney
-source icons' baked-in text turned to mush at the size this renders at;
-swapped for symbol-only alternatives and a larger base size).
+**Second slice shipped 2026-08-11: real icon glyphs on five prompts, before `HD1` was found** — see `DONE.md`. `dialogue_panel.gd`, `name_prompt.gd`, `starter_picker.gd`, `prompt_arbiter.gd` and `encounter_director.gd` now draw real Kenney Input Prompts icons via new `input_glyph.gd`, with three real legibility fixes found across four blind-judge rounds. Does not close `HD1`: device selection still checks "a joypad is connected" rather than last-input-used, and `combat_hud.gd`'s Actions row (the owner's own F/RB repro case) was left untouched on purpose — reconciled in `HD1`'s own entry below.
 
 **Third slice landed: `tab_backpack.gd` quantity-clipping bugfix — see
 `DONE.md`.** A round-3 blind-judge finding (item quantity vanishing off
@@ -983,7 +739,7 @@ signature.
 
 **`SA3` (physical perimeter + below-world failsafe) shipped — see `DONE.md`.**
 
-**`SA4` (seven outward spokes, each believably severed) shipped — see `DONE.md`.** All seven stand and all seven physically hold: `tools/_probe_sa4.gd` walks the real player controller at each blocker and every one HELD, and no spoke explains itself with UI text. Honest residue lives in the `DONE.md` entry rather than in a new item: `high_pass` has no ice/snow reading yet (altitude and bare rock only), `mountain_trail`'s pile and `stone_gate`'s wall sever the road but stop short of the meadow either side so they read as props rather than terrain, and `river_gorge` currently reads as a flat reservoir rather than a gorge — its floor sits ~11m below the waterline and no depth that still blocks keeps it dry, so moving the spoke is the only route to a dry gorge. The `cliff_road`/Rise-trailhead duplication risk stage 1 flagged is **closed**: a blind critic shown both in one frame did not read them as duplicates.
+**`SA4`** (seven outward spokes, each believably severed) shipped — see `DONE.md`. All seven physically hold, verified by `tools/_probe_sa4.gd` walking the real player controller into each blocker. Honest residue, recorded here rather than as a new item: `high_pass` has no ice/snow reading yet (altitude and bare rock only); `mountain_trail`'s pile and `stone_gate`'s wall sever the road but stop short of the meadow on either side, reading as props rather than terrain; and `river_gorge` reads as a flat reservoir, not a gorge — its floor sits ~11m below the waterline and no depth that still blocks keeps it dry, so moving the spoke is the only route to a dry gorge. The `cliff_road`/Rise-trailhead duplication risk is closed — a blind critic shown both in one frame did not read them as duplicates.
 
 **`SA5` (recolour Burrowback away from Terrapup) shipped — see `DONE.md`.**
 
@@ -1013,30 +769,9 @@ follow system rather than replacing it; `SA7`/`SA8` are explicit owner
 directives (`CLAUDE.md`'s carve-out applies — implementing these is not a
 firing inventing a story beat).
 
-**`HD1` (device-aware input glyphs) shipped — see `DONE.md`.** Both real gaps
-closed: `combat_hud.gd`'s Actions row now draws real device-aware icons
-instead of hardcoded Xbox letters, and `input_glyph.gd` reads a real
-last-used-input-device tracker (new, on the `Game` autoload) instead of "is a
-pad connected." Two blind-judge rounds found and fixed a size regression and
-a dimming bug; one narrower remainder opened below. Deliberately did **not**
-build UI for `combat_switch_left`/`combat_switch_right` — traced them and
-confirmed no code anywhere reads those bindings (mid-combat pal switching
-isn't an implemented mechanic; `CO1`'s swap is exploration-only), so building
-icons for them would be inventing combat UI for a feature that doesn't exist
-rather than wiring up a real one.
+**`HD1`** (device-aware input glyphs) shipped — see `DONE.md`. `combat_hud.gd`'s Actions row now draws real device-aware icons, and `input_glyph.gd` reads a real last-used-input-device tracker instead of "is a pad connected"; two blind-judge rounds found and fixed a size regression and a dimming bug. Deliberately did not build UI for `combat_switch_left`/`combat_switch_right` — confirmed no code reads those bindings, so there's no real feature to wire icons to. One remainder (`HD1-remainder`, closed) is below.
 
-**`HD1-remainder` (Quick and Charged render the same mouse-button icon,
-mirrored) closed 2026-08-13 — owner accepts the current icon pair as
-final.** A second blind-judge round on `HD1`'s combat Actions row confirmed
-the dimming and sizing fixes but named one persisting defect:
-`mouse_left.png`/`mouse_right.png` (Kenney Input Prompts) are the same
-mouse-body silhouette with only the highlighted button-half mirrored, and
-at ~36px on-screen that reads as "one icon, two colours" rather than two
-distinct buttons — the label text is what actually disambiguates them, not
-the icon. Checked the staged pack (`assets_raw/vendor/kenney_input-prompts/
-Keyboard & Mouse/Default/`) for a better-differentiated pair and none
-exists — a real asset-ceiling, not an unexplored lever. Owner accepted
-this rather than sourcing a replacement pack.
+**`HD1-remainder`** (Quick and Charged combat icons render the same mouse-button silhouette, only mirrored) closed 2026-08-13 — owner accepts the current icon pair as final — see `DONE.md`. Checked the staged Kenney pack for a better-differentiated pair; none exists — a real asset ceiling, not an unexplored lever.
 
 **Corroborating evidence from an independent re-check, 2026-08-13** (before
 the owner's acceptance above landed): the staged Kenney Game Icons
@@ -1050,21 +785,9 @@ visible style-cohesion regression (CLAUDE.md). No other staged pack has a
 mouse-button asset at all. Reinforces the owner's call rather than
 reopening it.
 
-**`HD2` (a real quick-access item hotbar) shipped — see `DONE.md`.** The five
-slots are satchel slots 0-4 directly (the "quick-select band"
-`autoload/inventory.gd` already reserved for this), drawn live on
-`playground_hud.gd` with a real `HD1`-style device-aware prompt per slot and
-usable with one press each on both devices. Deliberately did NOT share code
-with `tab_backpack.gd::_read_use()` — its `OF2` target picker pauses the
-whole menu shell, which has no place over live exploration — so a heal item
-pressed from the hotbar applies to whichever pal is hurt worst instead of
-opening a picker; recorded as a real, considered fork, not a silent revert of
-`OF2`. One real gap opened below rather than silently shipped.
+**`HD2`** (a real quick-access item hotbar) shipped — see `DONE.md`. The five slots are satchel slots 0-4, drawn live with `HD1`-style device-aware prompts and usable with one press each. Deliberately does not share code with `tab_backpack.gd`'s target picker — a hotbar heal applies to whichever pal is hurt worst instead of opening a picker, a considered fork not a silent revert of `OF2`. One gap (`HD2-remainder`, shipped) is below.
 
-**`HD2-remainder` (hotbar combat gate) shipped — see `DONE.md`.** Landed
-inside the HUD-overhaul branch's own rewrite, as this item's handoff note
-expected, but never logged back here when that branch merged — found done
-by a bookkeeping pass, not by picking the item up.
+**`HD2-remainder`** (hotbar combat gate) shipped — see `DONE.md`. Landed inside the HUD-overhaul branch's own rewrite as expected, but wasn't logged back here until a bookkeeping pass found it done.
 
 **`CO1` (manual pal summon, dismiss and swap) shipped — see `DONE.md`.**
 
@@ -1248,31 +971,7 @@ scripts/world/build_playground_terrain.gd`), and `frame_stats` puts mean
 saturation inside 0.40–0.50 without the ground going grey. Expect a large
 binary diff on the `.res` files; that is the cost of the fix, not a mistake.
 
-**R9.4-remainder-2 CLOSED by `EV8` — see `DONE.md`.** Neither of the costed
-options fired: not a bigger bake, not authored distant geometry. The actual
-fix was a third Terrain3D setting nobody had tried — `world_background = 0`
-(NONE) draws nothing past the bake instead of NOISE's dune-shaped continuation
-or FLAT's hard seam — paired with dropping the photographic sky panoramas,
-whose baked-in sun position doesn't track this file's own sun angle and was
-the real cause of the sky-treatment inconsistency. Evidence kept:
-
-Original entry — The world past 512m draws pale and colourless:
-
-The single largest contributor to the compressed value range, and it appears in
-every outdoor frame as a near-white band along the horizon. Past the baked
-512 m, `shader.world_background = 2` (NOISE) continues the terrain
-procedurally — and that continuation has no colour map and no texture control,
-so it draws in a flat pale default. Two critics independently read it as fog
-"eating the world" and as distant hills "washed to 219,226,205, nearly white,
-so the far ground has no form left"; both are describing this. It is the same
-limit `R7.1-remainder` hit from the other side (the continuation cannot hold
-props either), and `world_background = 1` (FLAT) was already tried and produced
-a measured 0.146 luminance step across the whole frame. Options worth costing
-before picking one: grow the bake (which `R7.3` has to do anyway for the
-chapter), fake the far band with authored distant geometry, or lean into it
-with a deliberate haze that reads as atmosphere rather than as absence. Done
-when: a critic given the frames stops naming the horizon as the reason they
-feel empty.
+**`R9.4-remainder-2` CLOSED by `EV8`** — see `DONE.md`. The pale-horizon/sky-inconsistency defect was fixed by `world_background = 0` (NONE, draws nothing past the bake) combined with dropping the photographic sky panoramas, whose baked-in sun position didn't track the scene's own sun angle — the real cause of the sky-treatment inconsistency.
 
 **R9.4-remainder-3 COLLAPSED into `EV6`**, which already names it. Building a
 `retint` hook for the Quaternius structures that `EV6` then replaces wholesale
@@ -1372,30 +1071,9 @@ see the remainder below.
 One real, one a false alarm on the same pattern as the windmill rock. A
 narrower open item, `R9.4-remainder-8-rocks-repeat`, is below it.
 
-**`R9.4-remainder-8-rocks-repeat` (the colour half — the rocks layer now reads as varied stone) shipped — see `DONE.md`.** Three rounds: hue-only in one
-value band was crushed flat by scene lighting; value-only (same hue, spread
-dark/light) got real pixel movement but a fresh blind critic correctly called
-it out as indistinguishable from lit-face-vs-shadow-face on one mesh; three
-genuinely different HUE families (warm tan, cool blue-grey slate, rust-brown
-ironstone) survive that confound because a single directional light changes
-value with face angle but not hue, and a third blind critic confirmed it
-directly — "real material variety, not a repeated instance." **What is NOT
-fixed, and is not this item's scope**: every rock is still the same faceted
-low-poly silhouette at the same rough scale in a loose evenly-spaced row, not
-a jumbled quarry pile — real shape/size variety needs the itch.io-blocked
-fuller Stylized Nature MegaKit (`EV1-remainder`), same ceiling
-`EV2-landmark-ceiling` already hit for hero trees.
+**`R9.4-remainder-8-rocks-repeat`** (the colour half — rocks layer now reads as varied stone) shipped — see `DONE.md`. Three genuinely different hue families (warm tan, cool blue-grey slate, rust-brown ironstone) survive scene lighting, confirmed by a third blind critic as "real material variety, not a repeated instance." Not fixed, and out of this item's scope: every rock is still the same faceted low-poly silhouette at the same scale in a loose evenly-spaced row — real shape/size variety needs the itch.io-blocked Stylized Nature MegaKit (`EV1-remainder`), the same ceiling `EV2-landmark-ceiling` already hit for hero trees.
 
-**`R9.4-remainder-6` (root-caused why `survey_combat.sh` never completed) shipped — see `DONE.md`.** Not a hang: real per-phase timing (added to the
-script itself) shows `SETTLE_FRAMES` alone costs ~278s running completely
-alone on this box's software renderer, ~1.16s per physics frame against a
-scene with 24,314 scattered props — at that rate `_approach()`'s own
-1200-frame cap could cost another ~23 minutes on top, before any combat
-logic runs at all. One real bug found and fixed along the way (the
-charged-attack energy wait had no iteration cap, unlike every other wait
-in the file). **The arena still has not been visually reviewed** — a
-narrower remainder for that is opened below with the timing evidence a
-future attempt needs.
+**`R9.4-remainder-6`** (root-caused why `survey_combat.sh` never completed) shipped — see `DONE.md`. Not a hang: real per-phase timing showed `SETTLE_FRAMES` alone costs ~278s on this box's software renderer, ~1.16s per physics frame against a 24,314-prop scene. Fixed a real bug found along the way (the charged-attack energy wait had no iteration cap). The arena still had not been visually reviewed at this point — continued in `R9.4-remainder-9` below with the timing evidence needed.
 
 **`R9.4-remainder-9` (get real combat frames) shipped — see `DONE.md`.** All
 eight frames, for the first time — but getting there needed three separate,
@@ -1406,17 +1084,7 @@ wild pal, never having an ally pal to fight with, and never having orbs to
 throw. All three fixed. The required blind pass on the real frames then found
 genuine combat-presentation defects — narrower remainder opened below.
 
-**`R9.4-remainder-9-combat` (impact flash, telegraph glow and a real-opponent
-marker, all newly working — verified by direct pixel inspection, not
-asserted) shipped, partial — see `DONE.md`.** Two genuine blind passes and
-four real `tools/survey_combat.sh` captures. The charged-vs-quick size
-differentiation is confirmed working by a fresh blind critic; the orb now
-sits correctly on its drawn arc. What didn't close: this specific encounter's
-camera kept putting the two fighters in a line from the camera, which
-occluded exactly the ground-level telegraph ring and the quick-attack target
-being judged — not proof the mechanisms don't work, but not proof they read
-in the case that matters either. A narrower remainder is opened below for
-what a future capture should check first.
+**`R9.4-remainder-9-combat`** (impact flash, telegraph glow, and a real-opponent marker, all newly working — verified by direct pixel inspection) shipped, partial — see `DONE.md`. Charged-vs-quick size differentiation is confirmed working by a fresh blind critic; the orb now sits correctly on its drawn arc. What didn't close: this encounter's camera lined the two fighters up from the camera, occluding the ground-level telegraph ring and the quick-attack target being judged — not proof the mechanisms fail, just not proof they read in the case that matters. Continued in `R9.4-remainder-9-combat-2` below.
 
 **`R9.4-remainder-9-combat-2`** (off-axis combat survey finally rendered, twice
 over — see `DONE.md`) shipped. The target marker's "unreliable" complaint is
