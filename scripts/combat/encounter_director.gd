@@ -102,14 +102,6 @@ var _respawn_timers: Dictionary = {}
 ## actually need a check.
 var _wild_gates: Dictionary = {}
 
-## Everything the player has caught. The party and the five-slot rule are M4;
-## this list is the seam they attach to, exactly as CombatManager's `_party` and
-## `_active_index` are the seam for switching.
-##
-## CLAUDE.md forbids implementing storage beyond five creatures. This is not storage —
-## it is a milestone-local record that catching worked, and M4 replaces it.
-var _caught: Array[RefCounted] = []
-
 
 func _ready() -> void:
 	_engage_range = float(MATH.config().get("flow", {}).get("engage_range", 6.0))
@@ -390,10 +382,6 @@ func aggressive_creature() -> Node3D:
 
 func wild_creatures() -> Array[Node3D]:
 	return _wild_creatures
-
-
-func caught() -> Array[RefCounted]:
-	return _caught
 
 
 ## The NEAREST live instance of a species, now that a species can spawn as a
@@ -809,12 +797,12 @@ func _on_combat_exited(outcome: String) -> void:
 				_faint_timers[wild] = float(CATCH.config().get("faint", {}).get("linger_seconds", 4.0))
 				_respawn_timers[wild] = _respawn_delay()
 			CAUGHT:
-				var kept: RefCounted = _manager.call("caught_instance")
-				if kept != null:
-					_caught.append(kept)
+				_resolve_catch(_manager.call("caught_instance") as RefCounted)
 				wild.visible = false
-				# M3-only: the caught creature comes back so the owner can keep
-				# testing throws. M4 owns it properly and this goes away.
+				# The spawn POINT refills with a new wild individual on the
+				# usual delay — the caught instance now lives in the party (or
+				# on the ceremony's seam), and the meadow does not empty out
+				# one catch at a time.
 				_respawn_timers[wild] = _respawn_delay()
 
 	# R2.5: the M2 auto-heal above this comment used to run here. It was a
@@ -822,6 +810,46 @@ func _on_combat_exited(outcome: String) -> void:
 	# exist yet. All three exist now (R2.4's crafting, the campfire's rest,
 	# tab_backpack.gd's use verb), so HP persists after a fight and is
 	# restored only by those — not by walking away from a win.
+
+
+## R4.10: an ordinary catch reaches the real party, or forces the release
+## ceremony. This was the plumbing gap the whole ceremony sat behind — until
+## it, `_caught` here was a dead-end list nothing read, so no creature caught
+## outside the opening ever reached `Game.party` at all.
+##
+## The same null-checked `/root/Game` lookup `_party()` uses, for the same
+## reason its own comment gives. When the belt is full the creature is parked
+## on `Game.pending_catch` — exactly one, never saved, not storage — and the
+## Game autoload's `_watch_pending_catch()` opens the Team screen's release
+## ceremony on it. Play never resumes with six creatures owned.
+func _resolve_catch(kept: RefCounted) -> void:
+	if kept == null:
+		push_error("combat ended as a catch with nothing caught")
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; the caught creature exists but nobody owns it")
+		return
+	var party: RefCounted = game.get("party")
+	if party == null:
+		push_error("the Game autoload has no party")
+		return
+
+	if not bool(party.call("is_full")):
+		if not bool(party.call("add", kept)):
+			push_error("the caught %s never reached the party" % str(kept.get("species_id")))
+		return
+
+	if game.get("pending_catch") != null:
+		# Holding two overflow catches would be a second creature past the cap
+		# — storage, in exactly the form CLAUDE.md forbids. The first catch
+		# keeps its claim on the ceremony; this one goes back to the wild. In
+		# practice unreachable: the ceremony pauses the tree within a frame of
+		# the first one, but a silent overwrite here would lose a creature the
+		# player fought for, so the refusal is loud.
+		push_error("a second catch resolved while one was already waiting on the ceremony; the %s went free" % str(kept.get("species_id")))
+		return
+	game.set("pending_catch", kept)
 
 
 ## Hand control back and forth between exploration and combat. One place, so a

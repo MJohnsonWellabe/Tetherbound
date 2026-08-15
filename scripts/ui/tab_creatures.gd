@@ -11,8 +11,12 @@ extends "res://scripts/ui/menu_tab.gd"
 ##
 ## There is no box, no next page and no scrollbar here, and there is nowhere to
 ## put a sixth creature. That is the design, not an unfinished screen. When a sixth
-## capture happens the answer is the release ceremony (M5), which is another
-## agent's work and is deliberately not stubbed here.
+## capture happens the answer is the release ceremony (R4.10, spec M5), which
+## now lives at the bottom of this file: the five belt rows stay put, a sixth
+## row appears below a hairline — visibly NOT one of the belt's holders — and
+## the player inspects all six with the same viewport and detail column the
+## screen always had, then chooses who goes free. The sixth row is never in
+## `_rows` and never reaches `party.add()` until a release has made room.
 ##
 ## The row/reorder/set-active machinery below is unchanged from the original
 ## two-panel layout, on purpose: `tests/smoke_menu.gd` drives `_rows`, `_held`
@@ -152,6 +156,40 @@ var _evolution_title: Label = null
 var _evolution_body: Label = null
 var _evolution_hint: Label = null
 
+## --- release ceremony (R4.10) ------------------------------------------------
+
+## "" outside the ceremony. "choose" while the six are on screen and the player
+## is looking them over; "confirm" while the farewell question is up for one of
+## them; "done" for the player-paced goodbye beat after the release has
+## actually happened. Advanced by Button presses rather than a polled confirm
+## action on purpose: the choose press and the confirm press share the A
+## button, and a polled `menu_confirm` would see the very press that entered
+## the beat and resolve a permanent release on it. A Button only fires on a
+## fresh press, so each beat costs its own deliberate one.
+var _release_stage: String = ""
+## Extended index of the creature the farewell question is about: 0..4 a belt
+## slot, MAX_CREATURES the newcomer.
+var _release_target: int = -1
+## Which row the cursor lands on when the ceremony ends — the newcomer's new
+## holder when they joined, slot 0 when they were the one released.
+var _release_land: int = 0
+
+## The newcomer's row. Deliberately NOT in `_rows`: that array is the five-slot
+## contract `smoke_menu.gd` asserts on, and a sixth entry there would be the
+## screen quietly growing a sixth slot.
+var _pending_wrap: Control = null
+var _pending_button: Button = null
+var _pending_rule: Control = null
+var _pending_caption: Label = null
+
+var _farewell_panel: Control = null
+var _farewell_title: Label = null
+var _farewell_body: Label = null
+var _farewell_keep: Button = null
+var _farewell_release: Button = null
+var _farewell_done: Button = null
+var _farewell_hint: Label = null
+
 
 func build() -> void:
 	for child in get_children():
@@ -169,6 +207,12 @@ func build() -> void:
 	_shown_species = ""
 	_evolution_stage = ""
 	_evolving = null
+	# A rebuild mid-ceremony (the menu reopening on this tab) drops straight
+	# back to "": poll() re-enters the ceremony on its own the moment it sees
+	# `Game.pending_catch` is still set, so nothing is lost — and stale stage
+	# state pointing at freed nodes would crash the first poll after a rebuild.
+	_release_stage = ""
+	_release_target = -1
 	if _moves == null:
 		_moves = MOVE_DB.load_default()
 	if _traits == null:
@@ -194,6 +238,25 @@ func build() -> void:
 	for i in PARTY.MAX_CREATURES:
 		list.add_child(_build_slot_row(i))
 
+	# R4.10: the newcomer's row, below a hairline and a caption so it reads as
+	# "beside the belt", never as a sixth holder. Built hidden on every rebuild
+	# and shown only for the length of a ceremony.
+	_pending_rule = _hairline()
+	_pending_rule.visible = false
+	list.add_child(_pending_rule)
+	_pending_caption = Label.new()
+	# Plain ASCII, same reason `_fill_bar` gives: kenney_future is a display
+	# font with no confirmed coverage past ASCII, and a tofu box in the middle
+	# of the ceremony's one caption would be worse than a hyphen.
+	_pending_caption.text = "JUST CAUGHT - NOT ON THE BELT"
+	_pending_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_pending_caption.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_pending_caption.visible = false
+	list.add_child(_pending_caption)
+	_pending_wrap = _build_slot_row(PARTY.MAX_CREATURES)
+	_pending_wrap.visible = false
+	list.add_child(_pending_wrap)
+
 	_viewport = CREATURE_VIEWPORT.new()
 	row.add_child(_viewport)
 
@@ -204,6 +267,10 @@ func build() -> void:
 	_evolution_panel.visible = false
 	row.add_child(_evolution_panel)
 
+	_farewell_panel = _build_farewell_panel()
+	_farewell_panel.visible = false
+	row.add_child(_farewell_panel)
+
 	UITokens.make_text_legible(self)
 	poll()
 
@@ -212,6 +279,11 @@ func build() -> void:
 ## focusable Button (for `smoke_menu.gd`'s `_rows` contract) around an
 ## anchored content row (portrait chip, name/level/HP, bond marker) that the
 ## Button draws neither of on its own.
+##
+## Index MAX_CREATURES is the ceremony's newcomer row (R4.10): same anatomy,
+## same parallel arrays, but the Button lands on `_pending_button` rather than
+## in `_rows` — see that var's own comment for why the five-slot array must
+## never grow.
 func _build_slot_row(index: int) -> Control:
 	var wrap := MarginContainer.new()
 	_row_wraps.append(wrap)
@@ -224,7 +296,10 @@ func _build_slot_row(index: int) -> Control:
 	button.pressed.connect(func() -> void: _on_row(slot))
 	button.focus_entered.connect(func() -> void: _focused = slot)
 	wrap.add_child(button)
-	_rows.append(button)
+	if index < PARTY.MAX_CREATURES:
+		_rows.append(button)
+	else:
+		_pending_button = button
 
 	var content := HBoxContainer.new()
 	content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -454,6 +529,79 @@ func _build_evolution_panel() -> Control:
 	return _panel(body)
 
 
+## R4.10's farewell panel: sits in the same slot `_build_detail()`'s panel
+## occupies, the swap-by-visibility architecture `_build_evolution_panel()`
+## established. The belt rows stay VISIBLE beside it on purpose — during the
+## question the player is looking at the five they would keep, and during the
+## goodbye they watch the belt settle into its final five behind the words.
+func _build_farewell_panel() -> Control:
+	var body := VBoxContainer.new()
+	body.custom_minimum_size = Vector2(360, 0)
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body.alignment = BoxContainer.ALIGNMENT_CENTER
+	body.add_theme_constant_override("separation", 14)
+
+	_farewell_title = Label.new()
+	_farewell_title.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
+	_farewell_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_farewell_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(_farewell_title)
+
+	_farewell_body = Label.new()
+	_farewell_body.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_farewell_body.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	_farewell_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_farewell_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(_farewell_body)
+
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 12)
+	body.add_child(gap)
+
+	# "Keep them" first and focused first (`_begin_farewell`): the permanent
+	# choice is one deliberate press DOWN from the safe one, never the default
+	# under a mashed A.
+	_farewell_keep = _farewell_button("Keep them")
+	_farewell_keep.pressed.connect(_back_to_choosing)
+	body.add_child(_farewell_keep)
+
+	_farewell_release = _farewell_button("Let them go")
+	_farewell_release.add_theme_color_override("font_color", UITokens.DANGER)
+	_farewell_release.add_theme_color_override("font_focus_color", UITokens.DANGER)
+	_farewell_release.add_theme_color_override("font_hover_color", UITokens.DANGER)
+	_farewell_release.pressed.connect(_do_release)
+	body.add_child(_farewell_release)
+
+	_farewell_done = _farewell_button("Back to the belt")
+	_farewell_done.pressed.connect(_end_release)
+	body.add_child(_farewell_done)
+
+	# The back-out hint lives IN the panel, not in the shell footer: the
+	# six-row list pushes the footer off the bottom of the frame for the
+	# length of the ceremony (seen in the R4.10 capture pass), so a hint
+	# down there is a hint nobody gets.
+	_farewell_hint = Label.new()
+	_farewell_hint.text = "B  keep looking"
+	_farewell_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_farewell_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_farewell_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_child(_farewell_hint)
+
+	_fence_farewell_buttons()
+	return _panel(body)
+
+
+func _farewell_button(label: String) -> Button:
+	var button := Button.new()
+	button.text = label
+	button.focus_mode = Control.FOCUS_ALL
+	button.custom_minimum_size = Vector2(300, 56)
+	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	button.add_theme_font_size_override("font_size", UITokens.FONT_BUTTON)
+	return button
+
+
 ## One horizontal move row (spec §8.3): "[icon] Name  TAG" on line 1,
 ## "Power x1.0   Energy +26" (or "Cost 100") on line 2. A row, not a card —
 ## no panel background, just the hairlines `_build_detail` places around it.
@@ -507,6 +655,15 @@ func _hairline() -> Control:
 
 
 func first_focus() -> Control:
+	# Mid-ceremony, the shell's own select() grabs this AFTER poll() has run
+	# and entered the right beat — without these branches it would stomp the
+	# ceremony's focus back onto row 0 every time the menu (re)opens.
+	if _release_stage == "choose" and _pending_button != null:
+		return _pending_button
+	if _release_stage == "confirm" and _farewell_keep != null:
+		return _farewell_keep
+	if _release_stage == "done" and _farewell_done != null:
+		return _farewell_done
 	return _rows[0] if not _rows.is_empty() else null
 
 
@@ -521,13 +678,21 @@ func poll() -> void:
 	var party: RefCounted = _party()
 	if party == null or _header == null:
 		return
+	_poll_release()
 	_read_activate()
 	_read_teach()
 	_read_evolve()
 	_read_set_best()
 
 	var size: int = int(party.call("size"))
-	if bool(party.call("is_full")):
+	if _release_stage == "choose" or _release_stage == "confirm":
+		var pending := _pending_catch()
+		_header.text = "You caught %s.  The belt holds five, and one of the six goes free." % (
+			str(pending.call("label")) if pending != null else "one too many"
+		)
+	elif _release_stage == "done":
+		_header.text = "The belt holds five."
+	elif bool(party.call("is_full")):
 		# Said plainly, and said before it matters. The sixth capture is a
 		# ceremony, not an error message, and a player who is surprised by the
 		# cap has been let down by this screen.
@@ -541,13 +706,19 @@ func poll() -> void:
 	var active: int = int(party.call("active_index"))
 	for i in _rows.size():
 		_poll_row(i, party, cfg, active, size)
+	if _pending_wrap != null and _pending_wrap.visible:
+		_poll_row(PARTY.MAX_CREATURES, party, cfg, active, size)
 
-	_describe(_focused, cfg)
+	# During the goodbye beat the viewport belongs to the creature that just
+	# left — `_do_release` pointed it there — and `_describe` would wrench it
+	# back to whichever row the cursor last touched.
+	if _release_stage != "done":
+		_describe(_focused, cfg)
 
 
 func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: int) -> void:
-	var button: Button = _rows[i]
-	var creature: RefCounted = party.call("at", i)
+	var button: Button = _rows[i] if i < PARTY.MAX_CREATURES else _pending_button
+	var creature: RefCounted = _creature_at(i)
 	var content: Control = _row_content[i]
 	var chip: PanelContainer = _row_chips[i]
 
@@ -601,7 +772,7 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	if _detail_name == null:
 		return
 	var party: RefCounted = _party()
-	var creature: RefCounted = party.call("at", index) if party != null else null
+	var creature: RefCounted = _creature_at(index)
 
 	if creature == null:
 		_detail_name.text = "Empty slot"
@@ -698,7 +869,11 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	var per_node: float = float(cfg.get("bond", {}).get("effects_per_node", {}).get("attack_scale", 0.0))
 	_bond_caption.text = "+%d%% ATK/DEF per node" % int(round(per_node * 100.0))
 
-	if index == int(party.call("best_index")):
+	# R4.7's Best Creature caption, null-guarded for R4.10's ceremony: during
+	# the ceremony `_creature_at()` can hand back the pending sixth catch while
+	# `party` itself is unavailable, and `best_index` only ever names a belt
+	# slot, so the sixth row can never match it.
+	if party != null and index == int(party.call("best_index")):
 		var ability: Dictionary = SPECIES.best_creature_ability(species_id)
 		var kind := str(ability.get("kind", ""))
 		var pct := int(round(float(ability.get("value", 0.0)) * 100.0))
@@ -715,15 +890,28 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	else:
 		_best_caption.text = ""
 
+	# R4.7's accumulating status list, with R4.10's sixth row folded in. The
+	# pending catch is not on the belt, so no belt-relative line (goes out
+	# first / Best Creature) can describe it, and `party` may be null while the
+	# ceremony still has a creature to show.
 	var status_lines: Array[String] = []
 	if bool(creature.get("fainted")):
 		status_lines.append("Out of the fight.")
-	if index == int(party.call("active_index")):
-		status_lines.append("Goes out first.")
-	if index == int(party.call("best_index")):
-		status_lines.append("Best Creature.")
+	if index >= PARTY.MAX_CREATURES:
+		status_lines.append("Not on the belt yet.")
+	elif party != null:
+		if index == int(party.call("active_index")):
+			status_lines.append("Goes out first.")
+		if index == int(party.call("best_index")):
+			status_lines.append("Best Creature.")
 	_detail_status.text = "  ".join(status_lines)
 
+	if _release_stage != "":
+		# The ceremony has exactly one verb, and advertising the reorder/
+		# activate/teach/evolve hints here would promise four the guards below
+		# refuse.
+		_detail_hint.text = "A  this one goes free"
+		return
 	_detail_hint.text = DETAIL_HINT_BASE
 	if not EVOLUTION.requirements(species_id, cfg).is_empty():
 		_detail_hint.text += "      G  evolve"
@@ -755,6 +943,15 @@ func _fill_move_row(
 
 
 func _on_row(index: int) -> void:
+	# R4.10: while the ceremony is choosing, the row press IS the choice. In
+	# any later beat a row press (still reachable by mouse, since the belt
+	# stays on screen behind the farewell panel) does nothing at all.
+	if _release_stage == "choose":
+		_begin_farewell(index)
+		return
+	if _release_stage != "":
+		return
+
 	var party: RefCounted = _party()
 	if party == null:
 		return
@@ -789,7 +986,7 @@ func _on_row(index: int) -> void:
 func _read_activate() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
-	if _evolution_stage != "":
+	if _evolution_stage != "" or _release_stage != "":
 		return
 	if not Input.is_action_just_pressed(ACTIVATE_ACTION):
 		return
@@ -813,6 +1010,11 @@ func _read_activate() -> void:
 ## flagged slot clears the title.
 func _read_set_best() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	# R4.10: the ceremony has exactly one verb, the same reason
+	# `_read_activate()`/`_read_teach()`/`_read_evolve()` bail here. `_focused`
+	# can also be the sixth row during it, which `party.at()` has no slot for.
+	if _release_stage != "":
 		return
 	if not Input.is_action_just_pressed(BEST_ACTION):
 		return
@@ -840,7 +1042,7 @@ func _read_set_best() -> void:
 func _read_teach() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
-	if _evolution_stage != "":
+	if _evolution_stage != "" or _release_stage != "":
 		return
 	if not Input.is_action_just_pressed(TEACH_ACTION):
 		return
@@ -896,6 +1098,8 @@ func _teach_next(creature: RefCounted) -> String:
 ## through.
 func _read_evolve() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _release_stage != "":
 		return
 	if _evolution_stage != "":
 		_poll_evolution()
@@ -969,6 +1173,268 @@ func _end_evolution() -> void:
 	_detail_panel.visible = true
 	if _focused >= 0 and _focused < _rows.size():
 		(_rows[_focused] as Button).grab_focus()
+
+
+## --- release ceremony (R4.10) ------------------------------------------------
+##
+## The emotional payload of the five-creature rule (GAME_DESIGN.md 3, spec M5:
+## "Do not settle for a generic 'delete' dialog"). Three beats, all
+## player-paced, all inside the screen the player already knows:
+##
+##   choose   the five belt rows plus the newcomer's row below the hairline.
+##            Full inspection through the same viewport and detail column as
+##            always — the decision is made by comparing real creatures, not
+##            by reading a list of names. Focus starts on the newcomer: the
+##            first question is "is this one worth a holder?"
+##   confirm  the farewell question, in the detail column's slot. Focus lands
+##            on "Keep them" — letting a creature go forever takes a
+##            deliberate stick move, and B backs out to more looking.
+##   done     the goodbye. The released creature holds the viewport one last
+##            time (`party.remove_at` returns it for exactly this) while the
+##            belt rows behind it visibly settle into the final five.
+##
+## Entered from poll() whenever `Game.pending_catch` is set — the Game
+## autoload's `_watch_pending_catch()` guarantees this tab is on screen for
+## it. The shell is held deaf the whole time and focus is fenced inside the
+## ceremony's own controls: there is no closing, no tab away, no save screen,
+## and no sixth creature in `Game.party` at any point in any beat.
+
+
+func _poll_release() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _release_stage == "":
+		_maybe_begin_release()
+		return
+	# choose advances through the row Buttons, confirm/done through the
+	# farewell Buttons — see `_release_stage`'s own comment for why presses,
+	# not a polled confirm action. Only backing out is polled, backpack-style.
+	if _release_stage == "confirm" and Input.is_action_just_pressed("menu_cancel"):
+		_back_to_choosing()
+
+
+func _maybe_begin_release() -> void:
+	if _evolution_stage != "":
+		return
+	var pending := _pending_catch()
+	if pending == null:
+		return
+	var party: RefCounted = _party()
+	var game := state()
+	if party == null or game == null:
+		return
+	if not bool(party.call("is_full")):
+		# Room opened between the catch and the ceremony (a load, a future
+		# system). No choice to stage — the newcomer just takes the free
+		# holder, said out loud.
+		if bool(party.call("add", pending)):
+			game.set("pending_catch", null)
+			say("%s joins the belt." % str(pending.call("label")))
+		return
+
+	_release_stage = "choose"
+	_release_target = -1
+	_held = -1
+	menu.call("hold_input", true)
+	menu.call("override_footer", "Up / Down  look them over        A  this one goes free")
+	_show_pending_row(true)
+	_fence_choose_focus(true)
+	if _pending_button != null:
+		_pending_button.grab_focus()
+
+
+## The farewell question for the creature on extended row `index`. Nothing is
+## spent here: the party, the newcomer and the seam are all untouched until
+## `_do_release`.
+func _begin_farewell(index: int) -> void:
+	var creature := _creature_at(index)
+	if creature == null:
+		return
+	_release_target = index
+	_release_stage = "confirm"
+
+	var label := str(creature.call("label"))
+	_farewell_title.text = "Let %s go?" % label
+	if index >= PARTY.MAX_CREATURES:
+		_farewell_body.text = ("%s was never on the belt. They go back to the meadow, " +
+			"and your five keep their holders.") % label
+	else:
+		var cfg: Dictionary = PROGRESSION.config()
+		var nodes: int = int(creature.call("bond_nodes", cfg))
+		var total: int = maxi(int(cfg.get("bond", {}).get("thresholds", []).size()), 1)
+		var pending := _pending_catch()
+		var newcomer := str(pending.call("label")) if pending != null else "the newcomer"
+		# Level and bond restated at the moment of the question — the two
+		# numbers that say what is being given up, in front of the player at
+		# the exact press that gives it up.
+		_farewell_body.text = ("Lv %d, bond %d/%d. %s gives up their holder and %s takes it. " +
+			"A released creature does not come back.") % [
+			int(creature.get("level")), nodes, total, label, newcomer
+		]
+
+	_farewell_keep.visible = true
+	_farewell_release.visible = true
+	_farewell_done.visible = false
+	_farewell_hint.visible = true
+	_detail_panel.visible = false
+	_farewell_panel.visible = true
+	menu.call("override_footer", "B  keep looking")
+	_farewell_keep.grab_focus()
+
+
+func _back_to_choosing() -> void:
+	if _release_stage != "confirm":
+		return
+	_release_stage = "choose"
+	_farewell_panel.visible = false
+	_detail_panel.visible = true
+	menu.call("override_footer", "Up / Down  look them over        A  this one goes free")
+	var back: Button = _pending_button if _release_target >= PARTY.MAX_CREATURES \
+		else (_rows[_release_target] as Button)
+	_release_target = -1
+	if back != null:
+		back.grab_focus()
+
+
+## The one irreversible press in the ceremony. Wired to the "Let them go"
+## Button and nothing else.
+func _do_release() -> void:
+	if _release_stage != "confirm":
+		return
+	var game := state()
+	var party: RefCounted = _party()
+	var pending := _pending_catch()
+	if game == null or party == null or pending == null:
+		_end_release()
+		return
+
+	var released: RefCounted = null
+	if _release_target >= PARTY.MAX_CREATURES:
+		released = pending
+		_release_land = 0
+	else:
+		released = party.call("remove_at", _release_target)
+		if released == null:
+			push_error("release ceremony chose slot %d but nothing was there" % _release_target)
+			_end_release()
+			return
+		if not bool(party.call("add", pending)):
+			# remove_at just made the room, so this cannot refuse — but if it
+			# somehow does, the pending seam still holds the newcomer and the
+			# ceremony will re-enter rather than lose a creature silently.
+			push_error("the freed holder refused %s" % str(pending.call("label")))
+			return
+		_release_land = maxi(int(party.call("size")) - 1, 0)
+	game.set("pending_catch", null)
+
+	var released_label := str(released.call("label"))
+	var released_species := str(released.get("species_id"))
+	_release_stage = "done"
+	_show_pending_row(false)
+	_farewell_title.text = "%s goes free." % released_label
+	if _release_target >= PARTY.MAX_CREATURES:
+		_farewell_body.text = "The meadow takes them back. The belt stays as it was."
+	else:
+		_farewell_body.text = "The meadow takes them back. %s settles into the empty holder." % \
+			str(pending.call("label"))
+	_farewell_keep.visible = false
+	_farewell_release.visible = false
+	_farewell_done.visible = true
+	_farewell_hint.visible = false
+	# A single space, not "": empty restores the shell's default footer, which
+	# advertises "B  Close" — a button that does nothing while the shell is
+	# held deaf, seen doing exactly that in the R4.10 capture pass.
+	menu.call("override_footer", " ")
+	_farewell_done.grab_focus()
+
+	# One last look: the released creature holds the 3D viewport through the
+	# goodbye beat. poll() skips `_describe` while stage is "done" so nothing
+	# wrenches it away; the belt rows behind it are already showing the final
+	# five.
+	_shown_species = released_species
+	_viewport.call("set_species", released_species)
+
+
+func _end_release() -> void:
+	_release_stage = ""
+	_release_target = -1
+	menu.call("hold_input", false)
+	menu.call("override_footer", "")
+	_farewell_panel.visible = false
+	_detail_panel.visible = true
+	_show_pending_row(false)
+	_fence_choose_focus(false)
+	var land: int = clampi(_release_land, 0, _rows.size() - 1)
+	_release_land = 0
+	if land < _rows.size():
+		(_rows[land] as Button).grab_focus()
+
+
+func _show_pending_row(on: bool) -> void:
+	if _pending_rule != null:
+		_pending_rule.visible = on
+	if _pending_caption != null:
+		_pending_caption.visible = on
+	if _pending_wrap != null:
+		_pending_wrap.visible = on
+
+
+## Keep the controller cursor inside the six rows for the length of the
+## ceremony. Without this, ui_up from row 0 escapes to the shell's tab row —
+## whose buttons call select(), which un-holds the shell and walks the player
+## out of a ceremony that must not be left. Up from the top wraps to the
+## newcomer and down from the newcomer wraps to the top, which also makes the
+## newcomer one press away from anywhere.
+func _fence_choose_focus(on: bool) -> void:
+	if _rows.is_empty() or _pending_button == null:
+		return
+	var top: Button = _rows[0]
+	var everyone: Array = _rows.duplicate()
+	everyone.append(_pending_button)
+	for entry in everyone:
+		var row := entry as Button
+		row.focus_neighbor_left = row.get_path_to(row) if on else NodePath("")
+		row.focus_neighbor_right = row.get_path_to(row) if on else NodePath("")
+	top.focus_neighbor_top = top.get_path_to(_pending_button) if on else NodePath("")
+	top.focus_previous = top.focus_neighbor_top
+	_pending_button.focus_neighbor_bottom = _pending_button.get_path_to(top) if on else NodePath("")
+	_pending_button.focus_next = _pending_button.focus_neighbor_bottom
+
+
+## Same fence for the farewell Buttons: keep/release wrap onto each other,
+## the lone done button points every direction at itself.
+func _fence_farewell_buttons() -> void:
+	for pair in [[_farewell_keep, _farewell_release], [_farewell_release, _farewell_keep]]:
+		var it := pair[0] as Button
+		var other := pair[1] as Button
+		var to_other := it.get_path_to(other)
+		it.focus_neighbor_top = to_other
+		it.focus_neighbor_bottom = to_other
+		it.focus_neighbor_left = it.get_path_to(it)
+		it.focus_neighbor_right = it.get_path_to(it)
+		it.focus_next = to_other
+		it.focus_previous = to_other
+	var to_self := _farewell_done.get_path_to(_farewell_done)
+	_farewell_done.focus_neighbor_top = to_self
+	_farewell_done.focus_neighbor_bottom = to_self
+	_farewell_done.focus_neighbor_left = to_self
+	_farewell_done.focus_neighbor_right = to_self
+	_farewell_done.focus_next = to_self
+	_farewell_done.focus_previous = to_self
+
+
+## The creature the ceremony's extended index space points at: belt slots
+## 0..MAX-1 are the party's, MAX is the catch waiting on the seam.
+func _creature_at(index: int) -> RefCounted:
+	if index >= PARTY.MAX_CREATURES:
+		return _pending_catch()
+	var party: RefCounted = _party()
+	return party.call("at", index) if party != null else null
+
+
+func _pending_catch() -> RefCounted:
+	var game := state()
+	return game.get("pending_catch") if game != null else null
 
 
 func _inventory() -> RefCounted:

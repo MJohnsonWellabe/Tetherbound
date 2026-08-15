@@ -92,6 +92,25 @@ func test_removing_makes_room_again() -> void:
 	assert_eq(party.size(), 5)
 
 
+func test_the_ceremony_swap_produces_the_expected_five() -> void:
+	# R4.10's resolution order, exactly as tab_creatures.gd performs it: the
+	# sixth catch is refused while the belt is full and held OUTSIDE the party
+	# (Game.pending_catch), and only after a release does it take the freed
+	# holder. A regression in any step here is the ceremony either losing a
+	# creature or smuggling a sixth one in.
+	_fill(5)
+	var newcomer: RefCounted = _creature("Newcomer")
+	assert_false(party.add(newcomer), "the catch must be withheld until a release happens")
+	assert_eq(party.size(), 5)
+	var released: RefCounted = party.remove_at(1)
+	assert_ne(released, null)
+	assert_true(party.add(newcomer), "the freed holder must accept the withheld catch")
+	assert_eq(party.size(), 5)
+	assert_eq(party.at(4), newcomer, "the newcomer takes the last holder, not the released one's index")
+	for i in 5:
+		assert_ne(party.at(i), released, "the released creature must be gone from every slot")
+
+
 func test_reordering_moves_the_creature_and_nothing_else() -> void:
 	_fill(4)
 	var first: RefCounted = party.at(0)

@@ -768,16 +768,15 @@ func _on_combat_exited(outcome: String) -> void:
 		# not have to succeed first time.
 		return
 
-	var kept: RefCounted = _manager.call("caught_instance")
-	if kept == null:
-		push_error("combat ended as a catch with nothing caught")
-		return
-	# No nickname. GAME_DESIGN.md 10: a new capture keeps its species name by
-	# default, and `creature_instance.nickname` stays empty so the party screen can
-	# still tell a creature the player never renamed from one they deliberately named
-	# after its species.
-	if not _give_to_party(kept, ""):
-		push_error("the caught %s never reached the party" % kept.species_id)
+	# R4.10: the catch itself reaches `Game.party` through
+	# `encounter_director.gd::_resolve_catch()` now — the one path EVERY catch
+	# takes, this tutorial one included. This handler used to call
+	# `_give_to_party` here because nothing else put a catch anywhere; once the
+	# director's own wiring landed, that second add was refused as a duplicate
+	# on every single catch and push_error'd about it. The story's only job at
+	# this beat is to move the story. (A new capture still keeps its species
+	# name by default — GAME_DESIGN.md 10 — because nothing anywhere nicknames
+	# it.)
 	_set_beat(BEATS.ROAD)
 
 

@@ -315,9 +315,25 @@ func _a_weakened_creature_can_be_caught() -> void:
 		_fail("a successful catch did not end the fight")
 	if str(_manager.call("outcome")) != "caught":
 		_fail("caught a creature but the fight ended as '%s'" % str(_manager.call("outcome")))
-	var kept: Array = _director.call("caught")
-	if kept.is_empty():
-		_fail("the caught creature was not kept anywhere; M4 has nothing to attach to")
+	# R4.10: an ordinary catch lands in the REAL party — the M3 `caught()` list
+	# this used to check was a dead end nothing ever read. The sandbox ally
+	# comes from adopt_starter() and is not in the party, so the party was
+	# empty before this catch and holds exactly the caught creature now.
+	var game := root.get_node_or_null(^"/root/Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	if party == null or int(party.call("size")) == 0:
+		_fail("the caught creature never reached Game.party; catching is a dead end again")
+	else:
+		var newest: RefCounted = party.call("at", int(party.call("size")) - 1)
+		var practice := str((_director.call("spawns_config") as Dictionary).get("roles", {}).get("practice", ""))
+		if practice != "" and str(newest.get("species_id")) != practice:
+			_fail("the newest party member is a %s, not the %s that was just caught" % [
+				str(newest.get("species_id")), practice
+			])
+		else:
+			print("the caught %s reached Game.party (%d member(s))" % [
+				str(newest.get("species_id")), int(party.call("size"))
+			])
 	if not bool(_player.call("locomotion_enabled")):
 		_fail("the trainer cannot walk after a catch")
 

@@ -80,6 +80,15 @@ var day: int = 1
 ## this when there is one; until then it is the honest end of the build screen.
 var pending_build: String = ""
 
+## R4.10. The creature caught while the belt was already full, held here between
+## the catch resolving and the release ceremony resolving. Exactly one, and it
+## is NOT storage: it is never saved, a second overflow catch is refused rather
+## than queued (`encounter_director.gd::_resolve_catch`), and `_process` below
+## keeps reopening the Team screen until the ceremony has emptied it — the
+## player cannot walk around owning six. Set by the encounter director, cleared
+## only by `tab_creatures.gd`'s ceremony.
+var pending_catch: RefCounted = null
+
 ## R3.1. Every build piece the player has planted, as data — `{id, position:
 ## [x,y,z], yaw_deg}` — independent of whatever scene node currently renders
 ## it. This is the thing save/load actually persists; `build_placer.gd` reads
@@ -224,6 +233,7 @@ func advance_day() -> int:
 ## `SceneTree.change_scene_to` (and so never becomes `current_scene`) all hit
 ## this path, and none of them should ever see an error for it.
 func _process(delta: float) -> void:
+	_watch_pending_catch()
 	var progression_revision: int = int(progression.get("revision"))
 	if progression_revision != _last_progression_revision:
 		_last_progression_revision = progression_revision
@@ -238,6 +248,26 @@ func _process(delta: float) -> void:
 		return
 	map.mark_visited(player.global_position)
 	map.update_region(player.global_position)
+
+
+## R4.10. While a catch is waiting on the release ceremony, the Team screen is
+## the only place the game is allowed to be.
+##
+## Retried from `_process` rather than fired once at the moment of the catch,
+## and that is the whole design: this autoload runs paused-inherit, so the loop
+## is naturally silent while the menu is open (the ceremony itself is in
+## charge there), and the moment the menu is closed by ANY route — the panic
+## chord's settings jump, a future caller of close(), a code path nobody has
+## written yet — the next unpaused frame puts the ceremony back on screen.
+## `open()` refusing mid-fight is fine too: it returns false silently and this
+## simply tries again when the fight is over. The ceremony cannot be dodged,
+## only resolved.
+func _watch_pending_catch() -> void:
+	if pending_catch == null or _menu == null:
+		return
+	if bool(_menu.call("is_open")):
+		return
+	_menu.call("open", "creatures")
 
 
 ## The one Player in the running world, or null. Every existing test/tool in
