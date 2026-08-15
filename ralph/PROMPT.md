@@ -8,12 +8,22 @@ memory of previous firings. Everything you need is on disk.
 1. `CLAUDE.md` — the hard rules. They override everything here.
 2. `ralph/conventions.md` — how work is done and shipped in this repo.
 3. `ralph/BACKLOG.md` — the ordered task list. **This is the state of the
-   project.** It is ~83 KB and you do not need all of it: **read from the top
+   project.** It is ~150 KB and you do not need all of it: **read from the top
    until you have found your item, then stop.** The open phases are at the top
    by design and everything below Phase 1 is months away.
-4. `ralph/BLOCKED.md` — what is parked, and why.
-5. `docs/HANDOFF.md` — where the project actually is.
-6. `docs/decisions/D23-the-meadows-is-the-first-game.md` and
+4. `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` — an owner-directed
+   execution brief that supersedes the quality bar (not the backlog ID or
+   ordering) for anything it names: movement/animation work, `R7.3`
+   world-layout work, `SB9`–`SB11` progression plumbing, `SC12`–`SF34`
+   Meadows content, catching, captain/dungeon work, and future leveling/XP
+   work. If your item is one of these, read the matching section there
+   BEFORE starting — it changes what "done" means for that item (e.g. no
+   more incremental tuning on locomotion once it has clearly hit a ceiling;
+   restart the creative solution instead). It does not replace `BACKLOG.md`
+   or create a second task list — see its own §0.3.
+5. `ralph/BLOCKED.md` — what is parked, and why.
+6. `docs/HANDOFF.md` — where the project actually is.
+7. `docs/decisions/D23-the-meadows-is-the-first-game.md` and
    `D24-one-nature-family-one-village-family.md` — both short, and between them
    they change what several older docs mean. D24 also sets two rules that will
    stop a task dead if you learn them late: **no Meshy generation without an
