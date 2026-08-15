@@ -119,6 +119,24 @@ NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weap
             "text, watermark, multiple people, base, pedestal")
 HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "grunt"}
 
+## The three hero objects D24 reserves Meshy for are STRUCTURES, and both the
+## creature and human lists ban "base, pedestal" — which, sent with the Tether
+## Energy Pylon, bans the pylon's own grounded base, the exact mistake
+## DROP_FOR_SPECIES exists to prevent one asset class later. Structures also
+## need their own style line: "single creature, neutral standing pose" is
+## nonsense for a tower. The dominant drift risk for "energy pylon" is the
+## real-world steel lattice transmission tower, so that family is banned by
+## name.
+PROPS = {"tether_pylon"}
+STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
+              "clean readable forms, large clear colour regions, restrained "
+              "surface detail, single object, upright, full structure visible")
+NEGATIVE_PROP = ("realistic electrical transmission tower, steel lattice, metal "
+                 "truss, cables, power lines, scaffolding, photorealistic, "
+                 "creature, character, human figure, weapon, tree, building, "
+                 "noisy surface detail, wet plastic shading, text, watermark, "
+                 "multiple objects")
+
 ## Meshy's documented ceiling for /openapi/v2/text-to-3d prompts, counted on
 ## the final string including the STYLE suffix. image-to-3d does not enforce it.
 TEXT_PROMPT_LIMIT = 800
@@ -137,6 +155,8 @@ def negative_for(species: str) -> str:
         return NEGATIVE_PLANT
     if species in HUMANS:
         return NEGATIVE_HUMAN
+    if species in PROPS:
+        return NEGATIVE_PROP
     negative = NEGATIVE_CREATURE
     for term in DROP_FOR_SPECIES.get(species, ()):
         if term not in negative:
@@ -437,6 +457,22 @@ SPECIES_PROMPTS = {
         "BANDOLIER STRAPS over the chest, wide utility belt with pouches, "
         "dark grey trousers, black boots, tactical gloves, stern guarded "
         "posture"),
+    # SF33. One of D24's three Meshy-reserved hero objects, from the owner's
+    # board 13. Signature first, in capitals, per this file's own rule: the
+    # floating crystal and the four inward-leaning struts are what make it a
+    # tether pylon rather than a lamp post. Built once, instanced along a
+    # line, so the prompt asks for the whole assembled pylon, not the board's
+    # five-part kit exploded.
+    "tether_pylon": (
+        "fantasy tether energy pylon, dark stone and bronze infrastructure "
+        "tower. LARGE FLOATING FACETED TEAL CRYSTAL held point-up above the "
+        "top by a clawed bronze frame on a slender central column. FOUR "
+        "ANGLED DARK STONE SUPPORT STRUTS leaning inward from the base to "
+        "the top frame. Cylindrical glass energy core module in the centre "
+        "glowing bright teal, wide round stepped stone base, bronze-gold "
+        "trim bands and rivets, thin glowing teal energy conduit lines "
+        "inlaid in weathered dark grey slate stone, faint moss in the stone "
+        "seams, ancient but maintained"),
 }
 
 
@@ -507,7 +543,8 @@ def prompt_for(species: str) -> str:
     if species not in SPECIES_PROMPTS:
         sys.exit(f"no prompt for '{species}'. Known: {', '.join(SPECIES_PROMPTS)}.\n"
                  f"Add one from docs/art/CLAUDE_BUILD_PROMPTS.md.")
-    return f"{SPECIES_PROMPTS[species]}. {STYLE}"
+    style = STYLE_PROP if species in PROPS else STYLE
+    return f"{SPECIES_PROMPTS[species]}. {style}"
 
 
 def cmd_check(_args) -> None:
@@ -540,7 +577,9 @@ def cmd_generate(args) -> None:
         "negative_prompt": negative_for(species),
         "should_remesh": True,
         "should_texture": args.tier != "preview",
-        "topology": "quad",
+        # Quad remesh suits organic deformation; a hard-surface structure at a
+        # 2-3K triangle budget keeps its edges better triangulated directly.
+        "topology": "triangle" if species in PROPS else "quad",
         "target_polycount": args.polycount,
         "symmetry_mode": "auto",
     }

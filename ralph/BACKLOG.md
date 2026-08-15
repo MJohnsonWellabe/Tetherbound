@@ -1756,6 +1756,25 @@ module + supports ×4 + top frame + tether crystal) that is meant to be
 repeated along a line. That repetition is what sells "severed road" — one
 pylon is a prop, a receding row of them is infrastructure. `lane: art`.
 
+### SF33-remainder — Rift dressing for the other five spokes
+`model: fable` · `tests: none` · `lane: art`
+`SF33` built the pylon hero asset (ledgered, `assets/environment/team_tether/`)
+and the full severed-rift grammar — pylon line crossing the seam (live both
+sides, dead only where the rift physically wrecked one), cut conduit dangling
+from both ends, mirrored gateposts on both lips, far roadbed kerb rows,
+stranded freight on both rims — but applied it to **two of the seven spokes**:
+`river_gorge` and `storm_road`, the two long carve seams where "the two sides
+used to be joined" can actually be judged across a gap. The mechanism is
+entirely config (`terrain_playground.json` `spokes.routes[*].pylons` /
+`far_road` / `abandoned` — see `river_gorge`'s `_comment_sf33` for the layout
+rules, including the r≤228 perimeter check every authored point needs). The
+remaining five (`mountain_trail`, `stone_gate`, `high_pass`, `cliff_road`,
+`blighted_road`) still read as terrain dead ends. Note the wall-type blockers
+(`stone_gate`, `blighted_road`) have no far-side sightline, so their treatment
+is a pylon line ENDING at the seal — different composition question, same kit.
+Blind pass per `conventions.md` again; extend
+`tools/capture_severed_spokes.gd`'s SF33 viewpoints.
+
 ### SF34 — Three regional captains, three Sigils
 `model: fable` · `tests: smoke_trainer_battle`
 Spec §3 Band 4. Field Captain (Ground team, Field Sigil), Ridge Captain (Air,

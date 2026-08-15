@@ -74,6 +74,33 @@ const VIEWPOINTS := [
 		"eye": Vector2(56.0, -12.0), "eye_h": 4.0,
 		"target": Vector2(100.0, -38.0), "target_h": 1.0,
 	},
+	# SF33: the two rift-dressed spokes. Two frames each — the walk-up (does
+	# the pylon row read as infrastructure receding toward the seam?) and the
+	# lip (do the two sides read as one severed route: dead pylon and roadbed
+	# resuming across, cut conduit dangling, freight stranded both sides?).
+	# Eyes ON the road (opposite shoulder from the pylon line, never inside
+	# it) — the first pass stood 3m from a pylon and its cable crossed the
+	# whole sky as a two-metre ribbon.
+	{
+		"name": "rift-river-walkup",
+		"eye": Vector2(-67.7, 131.7), "eye_h": 2.6,
+		"target": Vector2(-99.0, 184.0), "target_h": 2.0,
+	},
+	{
+		"name": "rift-river-at-lip",
+		"eye": Vector2(-73.6, 150.9), "eye_h": 2.8,
+		"target": Vector2(-102.0, 189.0), "target_h": 2.0,
+	},
+	{
+		"name": "rift-storm-walkup",
+		"eye": Vector2(144.3, 40.2), "eye_h": 2.6,
+		"target": Vector2(202.0, 51.0), "target_h": 2.0,
+	},
+	{
+		"name": "rift-storm-at-lip",
+		"eye": Vector2(164.8, 48.7), "eye_h": 3.2,
+		"target": Vector2(209.8, 52.3), "target_h": 3.0,
+	},
 ]
 
 

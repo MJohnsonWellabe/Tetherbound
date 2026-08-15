@@ -2,6 +2,7 @@
   "_comment": "The Meadows palette, sampled from docs/reference/tetherbound-meadows-keyart.png. One source for materials, UI and lighting, so they cannot drift apart. The previous prototype tuned its sky colour and its ambient light as two separate values and they disagreed for months without anyone being able to name why.",
   "_caveat": "Sampled from a painted board, so treat these as the intended relationships rather than as final surface albedo. A colour that reads correct in concept art is usually too saturated once a real directional light multiplies it.",
   "_reserved": "tether_oxblood is the danger accent. It appears only on Team Tether banners, equipment and uniforms, never on friendly or neutral elements. A reserved colour is what lets a player read threat at distance without a marker.",
+  "_reserved_teal": "tether_teal is Team Tether's ENERGY colour (bible sec13: green/teal conduits and pylon glow), sampled from the owner's pylon board (13_Tether_Energy_Pylon.png). Same reservation as the oxblood: it appears only where Team Tether's machinery is live -- pylon crystals, conduits, rift energy -- never on water, UI or friendly effects, so a lit conduit at distance can only mean one thing.",
 
   "meadow": {
     "leaf_green_deep": "#496c34",
@@ -21,6 +22,7 @@
     "night_plum": "#704f71"
   },
   "accent": {
-    "tether_oxblood": "#332228"
+    "tether_oxblood": "#332228",
+    "tether_teal": "#3fe8c4"
   }
 }

@@ -41,6 +41,33 @@ extends Node3D
 ## use. Rocks are the same three `Rock_Medium_*` meshes the vegetation scatter
 ## and the boundary's rock-formation style already place. No new asset, no
 ## generation.
+##
+## SF33 adds the layer above the blockers: what makes a severed spoke read as
+## a severed TETHER RIFT (spec §29, §34 Act V) rather than as a terrain dead
+## end. Three optional per-spoke blocks, all authored in the same config:
+##
+##   `pylons`  A line of Tether Energy Pylons (the one D24 hero object with an
+##     owner board, Meshy-generated, ~3.0K triangles) marching along the road
+##     and CONTINUING on the far side of the seam. The rhythm surviving the
+##     cut is what says the two sides used to be one route: near-side pylons
+##     are live (teal crystal/conduit glow, `palette.json`'s reserved
+##     `tether_teal`), the pylon at the lip leans toward the gap and is dead,
+##     the far-side pylon is dead — the severance broke the line mid-use.
+##     Consecutive pylons carry a sagging conduit cable; `break_after` cuts
+##     the run at the seam and `dangle_toward` hangs the severed stub ends
+##     into the gap from both sides.
+##
+##   `far_road`  Two ordered kerbstone rows receding from the far lip — the
+##     roadbed itself continuing across, §29's "broken roads ... distant
+##     land". Same KERB_SIZE fieldstone as the lips, but SEATED, not tumbled:
+##     the far road is abandoned, not destroyed.
+##
+##   `abandoned`  Stranded freight from the one prop family (D24): crates,
+##     barrels and bags left on BOTH sides of the break — trade stopped
+##     mid-transit, nobody came back for the goods.
+##
+## The far side of every seam stays a VIEW (D23): nothing this file places
+## there can be reached, and nothing there is gameplay.
 
 const SPOKE_CONFIG := "res://data/config/terrain_playground.json"
 const PALETTE_CONFIG := "res://data/config/palette.json"
@@ -75,9 +102,50 @@ const RECOVERY_CLEARANCE := 6.0
 ## these are the edge of a road, not boulders.
 const KERB_SIZE := Vector3(0.9, 0.42, 0.62)
 
+## SF33 — the Tether Energy Pylon (owner board 13, Meshy-generated, ~3.0K
+## triangles) and its two texture states. Loaded with load() rather than
+## preload so a checkout without the asset degrades to a warning instead of a
+## parse error in every scene that touches this script.
+##
+## There is deliberately NO emission texture. The shipped renderer is
+## gl_compatibility (D01), and under it a StandardMaterial3D with
+## emission_enabled + emission_texture rendered the WHOLE pylon as a white
+## ghost — the mask was ignored and the white emission colour applied to
+## every texel (first SF33 capture, both walk-up frames). The lit read is
+## carried by the albedo's own saturated teal instead; only the conduit
+## cables use emission, as a uniform colour with no texture, which the same
+## capture proved works.
+const PYLON_GLB := "res://assets/environment/team_tether/tether_pylon.glb"
+const PYLON_ALBEDO := "res://assets/environment/team_tether/tether_pylon_albedo.png"
+const PYLON_ALBEDO_DEAD := "res://assets/environment/team_tether/tether_pylon_albedo_dead.png"
+
+## Stranded freight, from the one prop family (D24).
+const FREIGHT_MESHES := {
+	"crates": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+	"barrels": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+	"bags": "res://assets/props/quaternius_fantasy/Bag.gltf",
+}
+
+## Where the conduit cable meets the pylon, as a fraction of pylon height —
+## the top frame, under the crystal; 0.78 attached at the crystal itself and
+## the cable read as skewering it. TUNABLE.
+const CONDUIT_ATTACH := 0.66
+## Cable droop at mid-span, as a fraction of span length. TUNABLE.
+const CONDUIT_SAG := 0.05
+const CONDUIT_RADIUS := 0.055
+## Straight pieces per hanging cable. Two made a bent pipe with an elbow;
+## six against a parabola reads as a catenary from any road distance.
+const CONDUIT_SEGMENTS := 6
+
 var _built: Array[String] = []
 var _stone_material_cache: StandardMaterial3D = null
 var _tether_material_cache: StandardMaterial3D = null
+var _pylon_mesh_cache: Mesh = null
+var _pylon_mesh_missing := false
+var _pylon_lit_material: StandardMaterial3D = null
+var _pylon_dead_material: StandardMaterial3D = null
+var _conduit_lit_material: StandardMaterial3D = null
+var _conduit_dead_material: StandardMaterial3D = null
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -105,6 +173,11 @@ func build(world: Node3D) -> void:
 		add_child(holder)
 		_build_blocker(world, holder, spoke, seed_value)
 		_build_sign(world, spoke, id)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = seed_value + hash(id) + 7919
+		_build_pylons(world, holder, spoke)
+		_build_far_road(world, holder, spoke, rng)
+		_build_abandoned(world, holder, spoke, rng)
 		_built.append(id)
 
 
@@ -574,6 +647,286 @@ func _build_fallen_roadbed(world: Node3D, holder: Node3D, blocker: Dictionary, r
 	_build_gorge_lip(world, holder, blocker, rng)
 
 
+## SF33. The pylon line: what turns "the road stops at a gorge" into "one
+## piece of infrastructure, cut". The list is authored in order along the
+## line; consecutive entries are joined by a sagging conduit cable unless the
+## upstream entry says `break_after` — the seam. Entries carry:
+##   `at`            world XZ (required)
+##   `lit`           live (teal glow) or dead. Default false.
+##   `lean_deg`      tip the pylon this far toward `lean_toward` — the one at
+##                   the lip leans into the gap the rift tore under it.
+##   `dangle_toward` hang a severed conduit stub from the top frame toward
+##                   this point: the cut cable's own end, on both sides.
+##   `break_after`   no cable from this pylon to the next entry.
+func _build_pylons(world: Node3D, holder: Node3D, spoke: Dictionary) -> void:
+	var config: Dictionary = spoke.get("pylons", {})
+	var list: Array = config.get("list", [])
+	if list.is_empty():
+		return
+	var mesh := _pylon_mesh()
+	if mesh == null:
+		return
+	var height := float(config.get("height", 4.6))
+	var aabb := mesh.get_aabb()
+	if aabb.size.y <= 0.001:
+		return
+	var fit := height / aabb.size.y
+
+	var attachments: Array = []  # Vector3 top-frame point per pylon, INF where skipped
+	for i in list.size():
+		if not list[i] is Dictionary:
+			attachments.append(Vector3.INF)
+			continue
+		var entry: Dictionary = list[i]
+		var at := _vec2(entry.get("at", []))
+		if at == Vector2.INF:
+			attachments.append(Vector3.INF)
+			continue
+		var ground := float(world.call("ground_height_at", at.x, at.y))
+		if is_nan(ground):
+			attachments.append(Vector3.INF)
+			continue
+
+		var pylon := MeshInstance3D.new()
+		pylon.name = "Pylon_%d" % i
+		pylon.mesh = mesh
+		pylon.material_override = _pylon_material(bool(entry.get("lit", false)))
+
+		# Face along the line, so the four struts present the same aspect the
+		# whole run — a rhythm is a rhythm only if the beats match.
+		var aim := _neighbour_direction(list, i)
+		var basis := Basis(Vector3.UP, atan2(aim.x, aim.y))
+		var lean := float(entry.get("lean_deg", 0.0))
+		if absf(lean) > 0.01:
+			var toward := _vec2(entry.get("lean_toward", []))
+			var lean_dir := (toward - at).normalized() if toward != Vector2.INF else aim
+			var lean_axis := Vector3(lean_dir.x, 0.0, lean_dir.y).cross(Vector3.UP)
+			basis = Basis(lean_axis.normalized(), deg_to_rad(-lean)) * basis
+		basis = basis.scaled(Vector3.ONE * fit)
+		# The GLB is centred on its origin, so lift by half its scaled height,
+		# then sink slightly so the stepped base sits IN the ground.
+		var base_y := ground - 0.22
+		pylon.transform = Transform3D(
+			basis, Vector3(at.x, base_y + aabb.size.y * fit * 0.5 - aabb.get_center().y * fit, at.y))
+		holder.add_child(pylon)
+		_add_box_collider(holder, Vector3(at.x, base_y + height * 0.35, at.y),
+			Vector3(1.7, height * 0.7, 1.7), atan2(aim.x, aim.y))
+
+		var attach := Vector3(at.x, base_y + height * CONDUIT_ATTACH, at.y)
+		attachments.append(attach)
+
+		var dangle := _vec2(entry.get("dangle_toward", []))
+		if dangle != Vector2.INF:
+			# The cut cable's own end: out toward where the line used to go,
+			# then straight down under its own weight. Two pieces, a knee.
+			var out := (dangle - at).normalized()
+			var out3 := Vector3(out.x, 0.0, out.y)
+			var knee := attach + out3 * 1.8 + Vector3.DOWN * 0.9
+			var tip := knee + out3 * 0.5 + Vector3.DOWN * 2.6
+			var stub_material := _conduit_material(bool(entry.get("lit", false)))
+			_conduit_segment(holder, "DangleStub_%d_a" % i, attach, knee, stub_material, 0.075)
+			_conduit_segment(holder, "DangleStub_%d_b" % i, knee, tip, stub_material, 0.075)
+
+	for i in range(list.size() - 1):
+		if attachments[i] == Vector3.INF or attachments[i + 1] == Vector3.INF:
+			continue
+		if not list[i] is Dictionary:
+			continue
+		var entry: Dictionary = list[i]
+		if bool(entry.get("break_after", false)):
+			continue
+		var live: bool = bool(entry.get("lit", false)) \
+			and bool((list[i + 1] as Dictionary).get("lit", false))
+		# A live line is kept taut; a dead one has hung slack since the
+		# severance. The extra droop is also what keeps the dead span out of
+		# the skyline when seen from under it.
+		_conduit_span(holder, i, attachments[i], attachments[i + 1],
+			_conduit_material(live), 1.0 if live else 2.2)
+
+
+## Which way pylon `i` faces: toward its neighbour along the line.
+func _neighbour_direction(list: Array, i: int) -> Vector2:
+	var here := _vec2((list[i] as Dictionary).get("at", []))
+	var other := Vector2.INF
+	if i + 1 < list.size() and list[i + 1] is Dictionary:
+		other = _vec2((list[i + 1] as Dictionary).get("at", []))
+	if other == Vector2.INF and i > 0 and list[i - 1] is Dictionary:
+		other = _vec2((list[i - 1] as Dictionary).get("at", []))
+	if other == Vector2.INF or here == Vector2.INF or other.is_equal_approx(here):
+		return Vector2.RIGHT
+	return (other - here).normalized()
+
+
+## One cable between two top frames, hung as a sampled parabola — close
+## enough to a catenary that no road-distance eye can tell, far enough from
+## the two-piece V of the first pass that it stops reading as a bent pipe.
+func _conduit_span(parent: Node3D, index: int, a: Vector3, b: Vector3,
+		material: StandardMaterial3D, sag_scale: float = 1.0) -> void:
+	var sag := a.distance_to(b) * CONDUIT_SAG * sag_scale
+	var previous := a
+	for s in range(1, CONDUIT_SEGMENTS + 1):
+		var t := float(s) / float(CONDUIT_SEGMENTS)
+		var point := a.lerp(b, t) + Vector3.DOWN * (sag * 4.0 * t * (1.0 - t))
+		_conduit_segment(parent, "Conduit_%d_%d" % [index, s], previous, point, material)
+		previous = point
+
+
+func _conduit_segment(parent: Node3D, node_name: String, a: Vector3, b: Vector3,
+		material: StandardMaterial3D, radius: float = CONDUIT_RADIUS) -> void:
+	var length := a.distance_to(b)
+	if length < 0.05:
+		return
+	var instance := MeshInstance3D.new()
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = radius
+	mesh.bottom_radius = radius
+	mesh.height = length
+	mesh.radial_segments = 6
+	mesh.material = material
+	instance.mesh = mesh
+	instance.name = node_name
+	instance.position = (a + b) * 0.5
+	# A CylinderMesh runs along local Y; aim that at the far point.
+	var up := (b - a) / length
+	var side := up.cross(Vector3.UP)
+	if side.length() < 0.01:
+		side = Vector3.RIGHT
+	side = side.normalized()
+	instance.basis = Basis(side, up, side.cross(up))
+	parent.add_child(instance)
+
+
+## SF33. The roadbed continuing on the far side of the seam: two ordered kerb
+## rows, seated rather than tumbled — this road is abandoned, not destroyed.
+## A few stones are missing (dropout) because nobody has maintained it since
+## the severance, but the two parallel lines survive, and parallel lines
+## receding from the far lip are what read as "the same road" from across.
+func _build_far_road(world: Node3D, holder: Node3D, spoke: Dictionary,
+		rng: RandomNumberGenerator) -> void:
+	var config: Dictionary = spoke.get("far_road", {})
+	if config.is_empty():
+		return
+	var from := _vec2(config.get("from", []))
+	var to := _vec2(config.get("to", []))
+	if from == Vector2.INF or to == Vector2.INF or from.is_equal_approx(to):
+		return
+	var width := float(config.get("width", 4.6))
+	var count := int(config.get("kerbs", 8))
+	var dir := (to - from).normalized()
+	var across := Vector2(-dir.y, dir.x)
+	var length := from.distance_to(to)
+	var transforms: Array = []
+	for i in count:
+		var t := float(i) / float(maxi(count - 1, 1))
+		for side: float in [1.0, -1.0]:
+			# A tenth missing, not a fifth: at across-the-gorge distance a
+			# gappy row falls apart into scattered stones, and scattered
+			# stones are what the lips already say. The rows must read.
+			if rng.randf() < 0.06:
+				continue
+			var at := from + dir * (t * length + rng.randf_range(-0.5, 0.5)) \
+				+ across * (width * 0.5 * side + rng.randf_range(-0.25, 0.25))
+			var ground := float(world.call("ground_height_at", at.x, at.y))
+			if is_nan(ground):
+				continue
+			# Kerbs lie ALONG the road edge; seated, only slightly disturbed.
+			# Oversized against the lips' tumbled stones on purpose — they are
+			# read from 30-50m across a gap, never from beside.
+			var basis := Basis(Vector3.UP, atan2(dir.x, dir.y) + PI * 0.5 \
+				+ rng.randf_range(-0.14, 0.14))
+			basis = basis.scaled(Vector3.ONE * rng.randf_range(1.2, 1.55))
+			transforms.append(Transform3D(basis, Vector3(at.x, ground - 0.14, at.y)))
+	if transforms.is_empty():
+		return
+	_batch_boxes(holder, "FarRoadKerbs", KERB_SIZE, transforms)
+
+	# Gateposts. The kerb rows recede almost straight away from a near-side
+	# eye and hide behind the far rim's own crest, so at the one grazing
+	# angle the player actually has, the roadbed read cannot rest on them.
+	# What survives a grazing view is VERTICAL masonry: a pair of square
+	# stone posts flanking the roadbed where it meets each lip — the same
+	# pair, mirrored across the gap, one post of each pair broken short.
+	# Matched verticals on both rims are the "one road, cut" statement that
+	# works from eye height.
+	if bool(config.get("gateposts", false)):
+		_road_posts(world, holder, "FarGatePosts", from, across, width, rng)
+	var near_at := _vec2(config.get("near_posts", []))
+	if near_at != Vector2.INF:
+		_road_posts(world, holder, "NearGatePosts", near_at, across, width, rng)
+
+
+## One pair of old flanking posts across a roadbed. The second post of each
+## pair is snapped short — these have stood unmaintained since the severance.
+func _road_posts(world: Node3D, holder: Node3D, node_name: String, at: Vector2,
+		across: Vector2, width: float, rng: RandomNumberGenerator) -> void:
+	var tall := 2.5
+	var broken := rng.randf_range(1.1, 1.6)
+	var side_pick := 1.0 if rng.randf() < 0.5 else -1.0
+	for side: float in [1.0, -1.0]:
+		var post_at := at + across * ((width * 0.5 + 0.7) * side)
+		var ground := float(world.call("ground_height_at", post_at.x, post_at.y))
+		if is_nan(ground):
+			continue
+		var height := tall if side != side_pick else broken
+		var post := _stone_box(Vector3(0.72, height, 0.72))
+		post.name = "%s_%s" % [node_name, "a" if side > 0.0 else "b"]
+		post.position = Vector3(post_at.x, ground - 0.35 + height * 0.5, post_at.y)
+		post.rotation.y = atan2(across.x, across.y)
+		post.rotate_object_local(Vector3.RIGHT, rng.randf_range(-0.05, 0.05))
+		holder.add_child(post)
+		_add_box_collider(holder, post.position, Vector3(0.72, height, 0.72), post.rotation.y)
+
+
+## SF33. Freight nobody came back for — crates, barrels and bags from the one
+## prop family, clustered where the road stops on BOTH sides of the break.
+## Goods stranded across the gap are §29's "abandoned trade infrastructure"
+## in one image: the consignment left mid-transit when the route was cut.
+func _build_abandoned(world: Node3D, holder: Node3D, spoke: Dictionary,
+		rng: RandomNumberGenerator) -> void:
+	var clusters: Array = spoke.get("abandoned", [])
+	for c in clusters.size():
+		if not clusters[c] is Dictionary:
+			continue
+		var cluster: Dictionary = clusters[c]
+		var centre := _vec2(cluster.get("at", []))
+		if centre == Vector2.INF:
+			continue
+		for kind: String in FREIGHT_MESHES:
+			var wanted := int(cluster.get(kind, 0))
+			for i in wanted:
+				var at := centre + Vector2.RIGHT.rotated(rng.randf_range(0.0, TAU)) \
+					* rng.randf_range(0.0, 2.1)
+				var ground := float(world.call("ground_height_at", at.x, at.y))
+				if is_nan(ground):
+					continue
+				var scene: PackedScene = load(FREIGHT_MESHES[kind])
+				if scene == null:
+					continue
+				var prop: Node3D = scene.instantiate() as Node3D
+				prop.name = "Freight_%d_%s_%d" % [c, kind, i]
+				prop.position = Vector3(at.x, ground - 0.04, at.y)
+				prop.rotation.y = rng.randf_range(0.0, TAU)
+				holder.add_child(prop)
+				if kind != "bags":
+					var box := _scene_aabb(prop)
+					if box.size.length() > 0.01:
+						_add_box_collider(holder, prop.position + Vector3(0, box.size.y * 0.5, 0),
+							Vector3(box.size.x, box.size.y, box.size.z), prop.rotation.y)
+
+
+## Combined mesh bounds of an instantiated prop scene, in its own space.
+func _scene_aabb(node: Node3D) -> AABB:
+	var box := AABB()
+	var first := true
+	for child: Node in _all_children(node):
+		if child is MeshInstance3D:
+			var m := child as MeshInstance3D
+			var b := m.get_aabb()
+			box = b if first else box.merge(b)
+			first = false
+	return box
+
+
 ## A wall run that follows the ground it stands on instead of hanging over the
 ## dips at its ends — the failure OF7 fixed once already in the boundary ring.
 ## Visible masonry and its collider are the same box, so nothing here is an
@@ -755,22 +1108,95 @@ func _stone_material() -> StandardMaterial3D:
 func _tether_material() -> StandardMaterial3D:
 	if _tether_material_cache != null:
 		return _tether_material_cache
-	var colour := Color(0.2, 0.133, 0.157)
-	var file := FileAccess.open(PALETTE_CONFIG, FileAccess.READ)
-	if file != null:
-		var parsed: Variant = JSON.parse_string(file.get_as_text())
-		if parsed is Dictionary:
-			for section: Variant in (parsed as Dictionary).values():
-				if section is Dictionary and (section as Dictionary).has("tether_oxblood"):
-					colour = Color(str((section as Dictionary)["tether_oxblood"]))
-					break
-	else:
-		push_warning("cannot read %s; the seal falls back to a hard-coded oxblood" % PALETTE_CONFIG)
 	var material := StandardMaterial3D.new()
-	material.albedo_color = colour
+	material.albedo_color = _palette_colour("tether_oxblood", Color(0.2, 0.133, 0.157))
 	material.roughness = 0.86
 	material.metallic = 0.0
 	_tether_material_cache = material
+	return material
+
+
+func _palette_colour(key: String, fallback: Color) -> Color:
+	var file := FileAccess.open(PALETTE_CONFIG, FileAccess.READ)
+	if file == null:
+		push_warning("cannot read %s; '%s' falls back to a hard-coded value" % [PALETTE_CONFIG, key])
+		return fallback
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary:
+		for section: Variant in (parsed as Dictionary).values():
+			if section is Dictionary and (section as Dictionary).has(key):
+				return Color(str((section as Dictionary)[key]))
+	return fallback
+
+
+## The pylon mesh, from the Meshy GLB. load() so a checkout without the asset
+## keeps every other spoke standing; the warning fires once, not per spoke.
+func _pylon_mesh() -> Mesh:
+	if _pylon_mesh_cache != null or _pylon_mesh_missing:
+		return _pylon_mesh_cache
+	if not ResourceLoader.exists(PYLON_GLB):
+		push_warning("%s is missing; pylon lines are skipped" % PYLON_GLB)
+		_pylon_mesh_missing = true
+		return null
+	var packed: PackedScene = load(PYLON_GLB)
+	if packed == null:
+		_pylon_mesh_missing = true
+		return null
+	var root: Node = packed.instantiate()
+	for child: Node in _all_children(root):
+		if child is MeshInstance3D:
+			_pylon_mesh_cache = (child as MeshInstance3D).mesh
+			break
+	root.queue_free()
+	if _pylon_mesh_cache == null:
+		_pylon_mesh_missing = true
+	return _pylon_mesh_cache
+
+
+## Live and dead pylons are the SAME mesh under per-material variants — the
+## project's standing pattern (spec §21 for humans, D23 for creatures). Live:
+## the Meshy albedo, whose conduits and crystal are already saturated teal.
+## Dead: a graded albedo whose teal has been pulled to cold slate — not just
+## switched off, but visibly drained. See the PYLON_GLB comment for why the
+## lit state carries no emission map.
+func _pylon_material(lit: bool) -> StandardMaterial3D:
+	if lit and _pylon_lit_material != null:
+		return _pylon_lit_material
+	if not lit and _pylon_dead_material != null:
+		return _pylon_dead_material
+	var material := StandardMaterial3D.new()
+	material.roughness = 0.82
+	material.metallic = 0.0
+	var albedo_path := PYLON_ALBEDO if lit else PYLON_ALBEDO_DEAD
+	if ResourceLoader.exists(albedo_path):
+		material.albedo_texture = load(albedo_path)
+	if lit:
+		_pylon_lit_material = material
+	else:
+		_pylon_dead_material = material
+	return material
+
+
+func _conduit_material(lit: bool) -> StandardMaterial3D:
+	if lit and _conduit_lit_material != null:
+		return _conduit_lit_material
+	if not lit and _conduit_dead_material != null:
+		return _conduit_dead_material
+	var material := StandardMaterial3D.new()
+	if lit:
+		var teal := _palette_colour("tether_teal", Color(0.25, 0.91, 0.77))
+		material.albedo_color = teal.darkened(0.7)
+		material.emission_enabled = true
+		material.emission = teal
+		# 2.2 read as a white-hot ribbon under ACES at exposure 0.6, and 1.1
+		# still read as a flat drawn line against sky; this is a live cable
+		# seen by day, not a laser. TUNABLE.
+		material.emission_energy_multiplier = 0.8
+		_conduit_lit_material = material
+	else:
+		material.albedo_color = Color(0.16, 0.18, 0.17)
+		material.roughness = 0.92
+		_conduit_dead_material = material
 	return material
 
 

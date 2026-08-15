@@ -423,7 +423,23 @@
           "lip_stones": 9,
           "lip_span": 11.0,
           "far_lip": true
-        }
+        },
+        "_comment_sf33": "SF33 rift dressing. The pylon line follows the road's own curve at 4.5m to its LEFT (the fingerpost holds the right), ~21m spacing, and CROSSES the seam: three live pylons walking out, a dead one leaning 7 degrees into the gap at the near lip (the rift tore the ground from under the line mid-use), and a LIVE one alone on the far rim at u=+20 (dead slate against the grey boundary wall was invisible at 45m -- and a live line on BOTH sides with only the span across the gap cut is the stronger statement that this was one route; only the lip pylon the rift physically wrecked is dead) -- the deepest the far meadow goes before world_perimeter's 232m minimum (u=+33 lands at r=233, inside the fence's own wobble). The conduit run breaks at the seam; both cut ends dangle into the gorge. far_road is the roadbed itself resuming: seated kerb rows from the far lip to r=230. Freight stranded on BOTH rims -- the consignment that was mid-crossing. All positions r-checked against the 235-3m ring. TUNABLE.",
+        "pylons": {
+          "height": 4.6,
+          "list": [
+            { "at": [-57.3, 100.9], "lit": true },
+            { "at": [-68.1, 119.8], "lit": true },
+            { "at": [-79.5, 138.7], "lit": true },
+            { "at": [-89.3, 157.6], "lean_deg": 7.0, "lean_toward": [-105.1, 193.6], "dangle_toward": [-105.1, 193.6], "break_after": true },
+            { "at": [-105.1, 193.6], "lit": true, "dangle_toward": [-89.3, 157.6] }
+          ]
+        },
+        "far_road": { "from": [-99.8, 192.6], "to": [-104.8, 204.5], "width": 4.6, "kerbs": 20, "gateposts": true, "near_posts": [-86.1, 161.4] },
+        "abandoned": [
+          { "at": [-92.5, 163.5], "crates": 2, "barrels": 1, "bags": 2 },
+          { "at": [-103.0, 197.2], "crates": 2, "barrels": 1 }
+        ]
       },
       {
         "id": "storm_road",
@@ -495,7 +511,23 @@
           "fallen_beam": true,
           "lip_stones": 6,
           "lip_span": 8.0
-        }
+        },
+        "_comment_sf33": "SF33 rift dressing, same grammar as river_gorge's (see its _comment_sf33): pylon line at 4.5m RIGHT of the road (the fingerpost holds the left), ~21m spacing, live/leaning-dead/far-dead across the collapsed bridge, conduit cut dangling over the channel, far roadbed kerbs to r=230, freight stranded either side of the crossing the bridge no longer makes. TUNABLE.",
+        "pylons": {
+          "height": 4.6,
+          "list": [
+            { "at": [118.9, 22.2], "lit": true },
+            { "at": [139.6, 29.5], "lit": true },
+            { "at": [160.3, 36.7], "lit": true },
+            { "at": [180.3, 43.2], "lean_deg": 7.0, "lean_toward": [209.8, 52.3], "dangle_toward": [209.8, 52.3], "break_after": true },
+            { "at": [209.8, 52.3], "lit": true, "dangle_toward": [180.3, 43.2] }
+          ]
+        },
+        "far_road": { "from": [204.7, 55.4], "to": [221.9, 60.6], "width": 4.6, "kerbs": 24, "gateposts": true, "near_posts": [181.7, 48.4] },
+        "abandoned": [
+          { "at": [176.5, 57.5], "crates": 3, "barrels": 2, "bags": 1 },
+          { "at": [212.3, 55.2], "crates": 2, "barrels": 1 }
+        ]
       },
       {
         "id": "mountain_trail",
