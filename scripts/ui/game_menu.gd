@@ -447,8 +447,20 @@ func _refresh() -> void:
 ## Stop reading actions for a moment. Called by the settings tab while it is
 ## waiting for a button: without this, binding `menu_cancel` to A would close the
 ## menu on the very press that bound it.
+##
+## R4.10 blind-judge finding (round 3): the tab row stayed fully lit through
+## the release ceremony's farewell/goodbye beats, which is genuinely true of
+## every OTHER `hold_input(true)` caller too (the backpack's target picker,
+## its drop confirmation) -- Q/LB and Tab/RB are refused the whole time
+## regardless of which tab is holding the shell, and the row looked live
+## anyway. Dimming it here, once, for every held state rather than adding a
+## one-off ceremony-only treatment, is both the smaller change and the more
+## honest one: "you cannot leave this" is true in all of them, not just this
+## one.
 func hold_input(held: bool) -> void:
 	_deaf = held
+	if _tab_row != null:
+		_tab_row.modulate.a = 0.35 if held else 1.0
 
 
 ## A tab that borrows a button's meaning while `hold_input` is engaged (the
