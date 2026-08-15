@@ -19,8 +19,10 @@ extends Node3D
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const LEAF_PREFAB := "road_gate_leaf"
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 
 const KEY_ITEM_ID := "castle_gate_key"
+const FLAG_ID := "road_gate_open"
 const LOCKED_CONVERSATION := "road_gate_locked"
 const UNLOCKED_CONVERSATION := "road_gate_unlocked"
 
@@ -29,6 +31,9 @@ var _shape: CollisionShape3D = null
 var _prompt: Node3D = null
 var _lock: MeshInstance3D = null
 var _open := false
+## SB10's generic gate logic — `item_id`/`flag_id` are this gate's own, the
+## mesh/collision/prompt above stay this file's job.
+var _gate: RefCounted = ITEM_GATE.new(KEY_ITEM_ID, FLAG_ID)
 
 
 ## `world` only for `ground_height_at` — the same duck-typed climb
@@ -145,6 +150,14 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	_prompt.connect("activated", _on_tried)
 	add_child(_prompt)
 
+	# SB10: a gate the player already opened stays open across a reload —
+	# `_gate`'s flag is the source of truth, not the fresh `_open := false`
+	# above. Silent: no dialogue, no item to consume, just the resting pose.
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression != null and _gate.is_open(progression):
+		_unlock()
+
 
 func is_open() -> bool:
 	return _open
@@ -155,10 +168,9 @@ func _on_tried() -> void:
 		return
 	var game := get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory") if game != null else null
-	var has_key: bool = inventory != null and int(inventory.call("count", KEY_ITEM_ID)) > 0
+	var progression: RefCounted = game.get("progression") if game != null else null
 
-	if has_key:
-		inventory.call("remove", KEY_ITEM_ID, 1)
+	if inventory != null and progression != null and _gate.try_open(inventory, progression):
 		_unlock()
 		_say(UNLOCKED_CONVERSATION)
 	else:
