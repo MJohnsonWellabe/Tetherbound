@@ -13,11 +13,15 @@ extends Node
 ## it.
 ##
 ## Cycles on a randomised real-time timer so the meadow does not sit in one
-## weather state forever -- R5.3 (spawn conditions) is the item that will
-## eventually let gameplay react to whichever state is active; this item only
-## has to make the states exist and be visibly different.
+## weather state forever -- R5.3 (spawn conditions) reads `weather()` through
+## GROUP below to gate wild spawns on the active state.
 
 const CONFIG_PATH := "res://data/config/weather.json"
+
+## Reachable by group, not NodePath -- the same decoupled pattern
+## world_look.gd's GROUP ("day_cycle") already uses, so encounter_director.gd
+## can read the active weather without the scene wiring a path to this node.
+const GROUP := "weather"
 
 ## Metres above the player the rain emitter is centred, and its shape: a RING
 ## in the XZ plane, not a box. A first render (R5.2's own required blind pass)
@@ -52,6 +56,7 @@ var _rain: GPUParticles3D = null
 
 
 func _ready() -> void:
+	add_to_group(GROUP)
 	_config = _load()
 	_presets = _config.get("presets", {})
 	for key: String in _presets.keys():

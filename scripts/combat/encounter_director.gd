@@ -94,6 +94,14 @@ var _arbiter: Node = null
 var _faint_timers: Dictionary = {}
 var _respawn_timers: Dictionary = {}
 
+## R5.3: which wild nodes are conditionally present. Keyed by node, holding
+## whichever of spawns.json's `time`/`weather` fields that entry carried;
+## a wild with no entry here is unconditional, exactly like every spawn
+## before this item. Kept separate from `_wild_creatures` (which is every
+## wild, gated or not) so `_sync_spawn_gates()` only iterates the ones that
+## actually need a check.
+var _wild_gates: Dictionary = {}
+
 ## Everything the player has caught. The party and the five-slot rule are M4;
 ## this list is the seam they attach to, exactly as CombatManager's `_party` and
 ## `_active_index` are the seam for switching.
@@ -183,6 +191,11 @@ func _spawn_creatures() -> void:
 			# camera.
 			wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
 			_wild_creatures.append(wild)
+
+			var gate := _gate_for_spawn(spawn)
+			if not gate.is_empty():
+				_wild_gates[wild] = gate
+				wild.visible = _gate_active(gate)
 
 	if default_starter != "":
 		# Awaited: `adopt_starter` waits for ground under the spawn point, so
@@ -588,6 +601,7 @@ func interaction_activate() -> void:
 
 func _process(delta: float) -> void:
 	_tick_respawn(delta)
+	_sync_spawn_gates()
 	_sync_active_creature()
 	_update_prompt()
 
@@ -627,6 +641,69 @@ func _tick_respawn(delta: float) -> void:
 			# Orbs deliberately do NOT refill here any more. They are real
 			# satchel items now — Grandpa's gift is the starting supply, and
 			# running dry is a real state the game is allowed to reach.
+
+
+## R5.3 (D20's deferred schema extension). Extracts spawns.json's optional
+## per-entry `time`/`weather` gate into the small dict `_wild_gates` stores,
+## or {} for an ungated entry -- callers check is_empty() rather than typing
+## the field names twice.
+func _gate_for_spawn(spawn: Dictionary) -> Dictionary:
+	var gate := {}
+	var time_req := str(spawn.get("time", ""))
+	if time_req != "":
+		gate["time"] = time_req
+	var weather_req: Variant = spawn.get("weather", [])
+	if weather_req is Array and not (weather_req as Array).is_empty():
+		gate["weather"] = weather_req
+	return gate
+
+
+## True if the wild(s) this gate describes should be present RIGHT NOW.
+##
+## `time` and `weather` are independent axes, same as world_look.gd/
+## world_weather.gd themselves -- both must hold when both are set.
+func _gate_active(gate: Dictionary) -> bool:
+	if gate.has("time"):
+		var wants_night := str(gate["time"]) == "night"
+		if wants_night != _is_night():
+			return false
+	if gate.has("weather"):
+		var allowed: Array = gate["weather"]
+		if not allowed.has(_current_weather()):
+			return false
+	return true
+
+
+## Group lookup, not a NodePath -- see world_look.gd's own GROUP comment.
+## Missing (a scene with no WorldLook, e.g. the combat sandbox) reads as
+## "day never became night", which keeps every gated spawn exactly as
+## reachable as an ungated one used to be.
+func _is_night() -> bool:
+	var look: Node = get_tree().get_first_node_in_group(&"day_cycle")
+	return look != null and look.has_method("is_dark") and bool(look.call("is_dark"))
+
+
+## Same pattern as _is_night(); missing WorldWeather reads as "clear",
+## world_weather.gd's own default state.
+func _current_weather() -> String:
+	var weather: Node = get_tree().get_first_node_in_group(&"weather")
+	if weather != null and weather.has_method("weather"):
+		return str(weather.call("weather"))
+	return "clear"
+
+
+## Show/hide every gated wild against the current time/weather. Skips a wild
+## mid-fight (`_engaged_with`) or mid-faint/respawn (already own its
+## visibility via `_faint_timers`/`_respawn_timers`) -- toggling a creature
+## out from under either would read as it vanishing mid-encounter rather than
+## as the meadow's population changing between encounters.
+func _sync_spawn_gates() -> void:
+	for wild: Node3D in _wild_gates.keys():
+		if not is_instance_valid(wild):
+			continue
+		if wild == _engaged_with or _faint_timers.has(wild) or _respawn_timers.has(wild):
+			continue
+		wild.visible = _gate_active(_wild_gates[wild])
 
 
 ## The nearest wild creature the player could choose to fight right now.
