@@ -77,6 +77,80 @@ func test_gather_of_an_untool_gated_resource_always_pays_the_full_amount() -> vo
 	assert_eq(int(result["required_slot"]), -1)
 
 
+# --- OF30: the set Tam hands over --------------------------------------
+
+## The tool gate has been correct since R2.1 and unreachable since R2.1: no
+## axe, pickaxe or knife existed anywhere in the world, so "the right tool" was
+## a rule the player could only ever fail. OF30 makes the blacksmith the source
+## of all three. This is the yield side of that — the exact set he gives,
+## against the exact resources they gate, with nothing else in the satchel.
+##
+## `tests/test_dialogue_runner.gd` is what checks he really gives THESE three;
+## this checks that having them changes anything.
+func test_the_smiths_set_covers_every_tool_gated_meadow_resource() -> void:
+	const HANDOVER := {"axe": "wood", "pickaxe": "stone", "knife": "fiber"}
+	for tool_id: String in HANDOVER:
+		var resource: String = HANDOVER[tool_id]
+		assert_eq(db.gathered_with(resource), tool_id,
+			"'%s' should be gathered with '%s'" % [resource, tool_id])
+
+		var barehanded: Dictionary = HARVEST_LOGIC.gather(resource, 4, INVENTORY.new(db), db)
+		var equipped: RefCounted = INVENTORY.new(db)
+		equipped.add(tool_id, 1)
+		var with_tool: Dictionary = HARVEST_LOGIC.gather(resource, 4, equipped, db)
+
+		assert_eq(int(with_tool["amount"]), 4,
+			"'%s' should pay '%s' in full" % [tool_id, resource])
+		assert_true(int(with_tool["amount"]) > int(barehanded["amount"]),
+			"'%s' should beat bare hands on '%s'" % [tool_id, resource])
+		assert_true(int(with_tool["required_slot"]) >= 0,
+			"'%s' should be the tool that wears down" % tool_id)
+
+
+## All three at once is the state the player is actually left in after the
+## handover, and it is the state the wrong-tool rule would otherwise have
+## broken. Owning a pickaxe alone pays ZERO on wood (test above), so any gap in
+## the set leaves the player strictly worse off at that resource than they were
+## bare-handed a minute earlier — which is why the knife is in the handover
+## even though the owner named two tools. See village.json's
+## `_comment_of30_knife`. This is the test that fails if it is ever taken back
+## out without re-gating `fiber`.
+func test_carrying_his_whole_set_gathers_everything_the_meadow_offers() -> void:
+	bag.add("axe", 1)
+	bag.add("pickaxe", 1)
+	bag.add("knife", 1)
+	for resource in ["wood", "stone", "fiber", "berries"]:
+		var result: Dictionary = HARVEST_LOGIC.gather(resource, 3, bag, db)
+		assert_eq(int(result["amount"]), 3,
+			"carrying the smith's set, '%s' should pay in full" % resource)
+
+
+## The generalisation of the case above, so a NEW tool-gated resource added
+## later cannot quietly become unreachable: whatever the smith hands over must
+## cover every resource in items.json that gates on a tool. Read straight off
+## the dialogue data rather than restated here.
+func test_nothing_the_smith_gives_leaves_a_tool_gated_resource_stranded() -> void:
+	const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+	var owned: RefCounted = INVENTORY.new(db)
+	var conversation: Dictionary = RUNNER.table().get("village_tam_tools", {})
+	for raw: Variant in (conversation.get("lines", []) as Array):
+		if not raw is Dictionary:
+			continue
+		for effect: Variant in ((raw as Dictionary).get("effects", []) as Array):
+			var parts: Array = RUNNER.parse_effect(str(effect))
+			if str(parts[0]) == "give":
+				owned.add(str(parts[1]).split(":")[0], 1)
+
+	for id: Variant in db.ids():
+		var resource := str(id)
+		if db.gathered_with(resource).is_empty():
+			continue
+		var result: Dictionary = HARVEST_LOGIC.gather(resource, 2, owned, db)
+		assert_eq(int(result["amount"]), 2,
+			"'%s' gates on '%s', which Tam's handover does not include -- with his other tools in hand it now pays nothing at all" % [
+				resource, db.gathered_with(resource)])
+
+
 # --- vegetation.json data integrity ------------------------------------
 
 func test_every_harvest_item_named_in_vegetation_json_is_a_real_tool_gated_resource() -> void:

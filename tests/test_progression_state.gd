@@ -120,3 +120,34 @@ func test_load_data_tolerates_an_empty_dictionary() -> void:
 func test_load_data_ignores_non_string_and_empty_entries() -> void:
 	progression.load_data({"flags": ["real_flag", 7, "", null, true]})
 	assert_eq(progression.all_set(), ["real_flag"])
+
+
+## --- OF30: the flags a one-time gift depends on ------------------------------
+
+## Tam the blacksmith hands over the axe, pickaxe and knife exactly once, and
+## teaches the orb recipe exactly once. Both facts live here and nowhere else —
+## `village_npcs.greeting_for()` reads `tam_tools_given` to decide whether to
+## offer the handover again, and `game_state.recipe_known()` reads
+## `recipe_orb_basic` to decide whether the orb can be made.
+##
+## The store is generic and stays generic; what these two cases pin is that the
+## specific ids OF30 relies on behave like every other flag through the one
+## route that could quietly lose them — a save and a reload. A gift flag that
+## did not survive would re-arm the handover on the next launch, and the player
+## would find a second axe in a satchel that already had one.
+func test_the_smiths_gift_flags_survive_a_save_and_reload() -> void:
+	progression.set_flag("tam_tools_given")
+	progression.set_flag("recipe_orb_basic")
+
+	var reloaded: RefCounted = PROGRESSION_STATE.new()
+	reloaded.load_data(progression.save_data())
+	assert_true(reloaded.has("tam_tools_given"), "a re-loaded save would hand the tools over again")
+	assert_true(reloaded.has("recipe_orb_basic"), "a re-loaded save would forget the orb recipe")
+
+
+## A save written before OF30 existed has neither flag, and must read as "not
+## yet" rather than as anything else — an old save meets Tam for the first time.
+func test_a_save_from_before_the_blacksmith_has_neither_flag() -> void:
+	progression.load_data({"flags": ["road_gate_open"]})
+	assert_false(progression.has("tam_tools_given"))
+	assert_false(progression.has("recipe_orb_basic"))

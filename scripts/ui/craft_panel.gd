@@ -63,9 +63,35 @@ func is_open() -> bool:
 	return _open
 
 
+## OF30. The list of recipes the player knows can GROW between two visits to a
+## campfire — Tam writes the orb recipe down and the row has to be there the
+## next time this opens. `_build()` runs once in `_ready()`, so the check is
+## here: rebuild only when the known set has actually changed, which is never
+## on the common path and exactly once on the interesting one.
+## No Game autoload means no item database either (`_items()` reads it off the
+## same node), so there is nothing to list and every other method here already
+## degrades to drawing an empty panel rather than erroring.
+func _known_ids() -> Array:
+	if game == null:
+		return []
+	return game.call("known_recipe_ids") as Array
+
+
+func _known_ids_differ_from_the_list_on_screen() -> bool:
+	var known: Array = _known_ids()
+	if known.size() != _recipe_ids.size():
+		return true
+	for i in known.size():
+		if str(known[i]) != _recipe_ids[i]:
+			return true
+	return false
+
+
 func open() -> void:
 	if _open:
 		return
+	if _known_ids_differ_from_the_list_on_screen():
+		_build()
 	_open = true
 	visible = true
 	_mouse_before = Input.mouse_mode
@@ -150,18 +176,21 @@ func _build() -> void:
 
 ## LEFT: one row per recipe — output icon, name, and an affordability-coloured
 ## cost summary, exactly the fields `_poll` and `_describe` keep live.
+##
+## OF30: KNOWN recipes, not all of them. A locked recipe is absent rather than
+## greyed — a greyed row with no way to explain itself ("come back when someone
+## has taught you this") is the silent-refusal shape OF23 was raised about, and
+## an orb recipe the player has never been told exists has nothing to say yet.
 func _build_list_zone() -> Control:
 	var side := VBoxContainer.new()
 	side.add_theme_constant_override("separation", 8)
 	side.custom_minimum_size = Vector2(300, 0)
 
 	var db := _items()
-	var ids: Array = (db.call("recipe_ids") as Array) if db != null else []
-	ids.sort()
-	for id: Variant in ids:
+	for id: Variant in _known_ids():
 		var recipe_id := str(id)
 		_recipe_ids.append(recipe_id)
-		var recipe: Dictionary = db.call("recipe", recipe_id)
+		var recipe: Dictionary = db.call("recipe", recipe_id) if db != null else {}
 		side.add_child(_make_row(recipe_id, recipe))
 
 	return side

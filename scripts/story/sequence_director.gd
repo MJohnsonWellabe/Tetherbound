@@ -285,6 +285,13 @@ func _process(delta: float) -> void:
 ## frame rather than on `finished`, so an effect takes hold when its line is
 ## SPOKEN — the intro's last line offers the choice while it is still on screen,
 ## and the prompts are live the instant the box closes.
+##
+## Conversation-blind on purpose, and OF30 is what proved that matters: the
+## panel this drains is the ONE dialogue panel, found by `village_npcs.gd`
+## through the `dialogue_panel` group. Tam the blacksmith hands his tools over
+## through the same `give:` effects Grandpa's briefing uses, and not a line of
+## routing had to be written for it — a villager's conversation arrives in this
+## queue exactly like the opening's own.
 func _drain_effects() -> void:
 	for effect: String in _dialogue.call("drain_effects"):
 		var parts: Array = RUNNER.parse_effect(effect)
@@ -297,8 +304,39 @@ func _drain_effects() -> void:
 				_set_beat(target)
 			"give":
 				_give_items(parts)
+			"flag":
+				_set_progression_flag(str(parts[1]))
 			_:
-				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:' and 'give:' and nothing else" % effect)
+				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:' and 'flag:' and nothing else" % effect)
+
+
+## `flag:tam_tools_given` — OF30. Write one progression flag, on the line that
+## earns it.
+##
+## The store is `autoload/progression_state.gd`, the same flat flag store the
+## road gate (`item_gate.gd`) and the TM pickups already write to; there is no
+## second one and there must never be. What reads these: `village_npcs.gd`'s
+## `greeting_for()` (which conversation a villager opens next, and therefore
+## whether a one-time gift can be taken twice) and `game_state.recipe_known()`
+## (`recipes.json`'s `unlocked_by`).
+##
+## Deliberately NOT a beat. Beats are the opening's own spine, ordered and
+## refusing to run backwards; these are flat, unordered facts about the save.
+## A villager's handover is the second kind and folding it into the first would
+## put the village in the opening's state machine.
+func _set_progression_flag(flag_id: String) -> void:
+	if flag_id == "":
+		push_warning("a flag: effect reads flag:<flag_id>; got an empty id")
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; the flag '%s' was written nowhere" % flag_id)
+		return
+	var progression: RefCounted = game.get("progression")
+	if progression == null:
+		push_error("the Game autoload has no progression store; '%s' was written nowhere" % flag_id)
+		return
+	progression.call("set_flag", flag_id)
 
 
 ## `give:orb_basic:15` — Grandpa's parting gifts, granted on the line that

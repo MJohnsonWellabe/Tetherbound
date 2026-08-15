@@ -140,3 +140,11 @@ func recipe_ids() -> Array:
 func recipe(id: String) -> Dictionary:
 	var value: Variant = _recipes.get(id, {})
 	return value as Dictionary if typeof(value) == TYPE_DICTIONARY else {}
+
+
+## OF30. The progression flag `id` waits on, or "" for a recipe that is known
+## from the start. See recipes.json's own `_comment_unlock`; the question
+## "is it known right now" is `game_state.recipe_known()`, because only that
+## side of the house can see the flag store.
+func recipe_unlock_flag(id: String) -> String:
+	return str(recipe(id).get("unlocked_by", ""))

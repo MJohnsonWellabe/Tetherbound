@@ -1,6 +1,10 @@
 {
-  "_comment": "Village banter (R7.2), merged onto data/dialogue/opening.json's table by dialogue_runner.gd. Same shape, same no-branching rule (see opening.json's own `_comment_shape`): a line or two per villager, flavour only. No `give:` or `beat:` effects — these people have nothing to hand over and nothing to gate. `portrait` reuses trainer.png, the only generic human portrait art the project has; a bespoke portrait per villager is not part of this pass.",
-  "_comment_np3": "NP3 (spec sec35) gave Mira, Oskar and Tam their named roles -- Meadow Keeper, Bridgehand, Field Scout -- as an opening identity line each, and added the Quarry Foreman and the Rescued Ranger as two new reused-rig villagers. None of the five offer a real fight: R8.1 (trainer combat) doesn't exist yet, so this is identity and foreshadowing only, same no-give/no-beat rule as the original three.",
+  "_comment": "Village banter (R7.2), merged onto data/dialogue/opening.json's table by dialogue_runner.gd. Same shape, same no-branching rule (see opening.json's own `_comment_shape`): a line or two per villager. `portrait` reuses trainer.png, the only generic human portrait art the project has; a bespoke portrait per villager is not part of this pass.",
+  "_comment_np3": "NP3 (spec sec35) gave Mira, Oskar and Tam their named roles -- Meadow Keeper, Bridgehand, Field Scout -- as an opening identity line each, and added the Quarry Foreman and the Rescued Ranger as two new reused-rig villagers. None of the five offer a real fight: R8.1 (trainer combat) doesn't exist yet, so this is identity and foreshadowing only.",
+  "_comment_of30_effects": "OF30 retires this file's original 'no `give:` or `beat:` effects -- these people have nothing to hand over' rule. Tam has something to hand over now. The effects work with no new plumbing on the panel side: `scripts/story/sequence_director.gd::_drain_effects()` drains the SHARED dialogue panel every frame and does not care which conversation is in it, and `scripts/world/village_npcs.gd` opens village lines on that very panel (through the `dialogue_panel` group). `beat:` is still forbidden here -- beats belong to the opening -- but `give:` and OF30's new `flag:` are not.",
+  "_comment_of30_tam": "OF30 (owner: \"Make one of the villagers a blacksmith who will give you a torch, an axe for trees and a pickaxe for stones. Then he'll give you the recipe for basic orbs.\"). `village_tam` stays exactly as NP3 wrote it and is still what Tam says on an ordinary greeting -- these two are ADDED branches, chosen by flag in data/config/village_npcs.json's `greeting_when`, not a replacement. Tam keeps the Field Scout identity: he is a smith who scouts, and the tools conversation opens by saying so. SC12 later adds his battle offer as a third entry in the same list. The torch line is narrative only -- OF24 owns the visible carried torch and there is deliberately no torch ITEM.",
+  "_comment_of30_knife": "The owner named two tools (\"an axe for trees and a pickaxe for stones\") and the handover gives three. Not an embellishment -- without the knife the gift makes the game WORSE. item_db.harvest_yield()'s rule since R2.1 is right-tool = full, NO tool = half, WRONG tool = nothing, and `fiber` is gated on `knife` (items.json's `gathered_with`). A player carrying only an axe and a pickaxe therefore owns 'some tool, just not that one' at every patch of meadow grass and gathers ZERO fiber, where a minute earlier bare hands paid two -- and fiber is two of the five materials in the orb recipe Tam teaches in his very next conversation, plus ten of a camp. The three tools are one set, from one bench, in one line. If the owner wants the knife withheld, the fix is deleting one `give:` here and re-gating `fiber` -- not re-litigating this file.",
+  "_comment_of30_flags": "`flag:<id>` sets an autoload/progression_state.gd flag, the same store the road gate and the TM pickups already write to. `tam_tools_given` is what stops the tool set being handed over twice; `recipe_orb_basic` is what unlocks the orb recipe in data/recipes/recipes.json (its `unlocked_by`). Both are set on the SAME line as the thing they record, so a conversation that is somehow cut short cannot bank the gift without the flag or the flag without the gift.",
   "conversations": {
     "village_mira": {
       "speaker": "Mira",
@@ -26,6 +30,37 @@
         "Field Scout, that's me — I track what's out there before it tracks you. Watch a creature's temper as much as its size; the placid-looking ones surprise you most.",
         "Careful on the yard fence, the post on the end is looser than it looks.",
         "Good road out to the meadow from here. Watch for the bramblebun, it startles easy."
+      ]
+    },
+    "village_tam_tools": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Field Scout when I'm out past the fence. Smith when I'm in. Same pair of hands either way.",
+        "You've been at the oaks and the outcrops with nothing but your hands, haven't you. It shows.",
+        {
+          "text": "Here. Axe for the trees, pick for the stone, and the little knife for grass — you'll want cord before you want anything else. Made the set last winter and never had cause for all three at once.",
+          "effects": [
+            "give:axe:1",
+            "give:pickaxe:1",
+            "give:knife:1",
+            "flag:tam_tools_given"
+          ]
+        },
+        "Take the spare torch off the wall too. Meadow goes dark quicker than it has any right to.",
+        "Come back when they're blunt. I'll see to them."
+      ]
+    },
+    "village_tam_orbs": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Keeping company now, I see. You walk differently with something following you.",
+        {
+          "text": "Orbs aren't smith's work, strictly. But I've watched enough made. Three lengths of wood for the frame, two of fiber for the mesh, and a steady hand on the weave. There — that's it, you have it.",
+          "effect": "flag:recipe_orb_basic"
+        },
+        "They won't match old Elias's. They'll hold, though, if your throw's any good."
       ]
     },
     "village_quarry_foreman": {

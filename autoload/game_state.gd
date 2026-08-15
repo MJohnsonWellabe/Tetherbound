@@ -504,11 +504,56 @@ func recipe_cost_for(id: String) -> Array:
 	return raw as Array if typeof(raw) == TYPE_ARRAY else []
 
 
+## OF30. Has the player been taught this recipe yet?
+##
+## A recipe with no `unlocked_by` in data/recipes/recipes.json is known from the
+## first minute; one that names a flag waits for `progression` to hold it. Tam
+## the blacksmith's second conversation is what writes `recipe_orb_basic`, which
+## is the only gated recipe today.
+##
+## Every recipe unknown when there is no flag store at all -- rather than every
+## recipe known -- because the store is the whole record of what has been
+## taught, and answering "yes, you know it" with nothing to check against is
+## how a gate silently stops being one. An unknown recipe id is likewise not
+## known, matching `can_craft`'s existing refusal.
+func recipe_known(id: String) -> bool:
+	if items == null:
+		return false
+	var recipe: Dictionary = items.recipe(id)
+	if recipe.is_empty():
+		return false
+	var flag := str(items.recipe_unlock_flag(id))
+	if flag == "":
+		return true
+	if progression == null:
+		return false
+	return bool(progression.has(flag))
+
+
+## Every recipe the craft screen should be showing right now, sorted the way it
+## draws them. The screen asks for this rather than filtering `recipe_ids()`
+## itself, so "what does the player know" has exactly one answer.
+func known_recipe_ids() -> Array:
+	if items == null:
+		return []
+	var out: Array = (items.recipe_ids() as Array).filter(
+		func(id: Variant) -> bool: return recipe_known(str(id))
+	)
+	out.sort()
+	return out
+
+
 ## Is there enough in the satchel to craft this right now?
 func can_craft(id: String) -> bool:
 	if items == null or inventory == null:
 		return false
 	if items.recipe(id).is_empty():
+		return false
+	# OF30: a recipe nobody has taught you refuses however full the satchel is.
+	# Checked here rather than only in the craft screen's list: hiding a row is
+	# presentation, and a gate that only exists in presentation is one hotbar
+	# shortcut away from not existing.
+	if not recipe_known(id):
 		return false
 	for requirement in recipe_cost_for(id):
 		if typeof(requirement) != TYPE_DICTIONARY:
