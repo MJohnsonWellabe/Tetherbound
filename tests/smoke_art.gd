@@ -241,18 +241,69 @@ func _a_forced_shiny_creature_renders_a_different_material() -> void:
 	else:
 		var plain_base := plain_mat as BaseMaterial3D
 		var shiny_base := shiny_mat as BaseMaterial3D
-		if plain_base.albedo_color.is_equal_approx(shiny_base.albedo_color):
-			_fail("shiny tint check: a forced-shiny terrapup renders the same albedo colour as a plain one")
-		elif plain_base.emission_enabled and plain_base.emission.is_equal_approx(shiny_base.emission):
-			_fail("shiny tint check: terrapup ships emission_enabled but the shiny tint left emission " +
+		## OF28: a species with an authored colourway REPAINTS (swaps
+		## textures, albedo_color untouched); one without falls back to
+		## OF27's tint (albedo_color changed). Either way the shiny must
+		## differ, and on the same channel pair -- albedo AND emission.
+		var texture_swapped := plain_base.albedo_texture != shiny_base.albedo_texture
+		var colour_tinted := not plain_base.albedo_color.is_equal_approx(shiny_base.albedo_color)
+		if not texture_swapped and not colour_tinted:
+			_fail("shiny check: a forced-shiny terrapup renders the same albedo (texture and colour) as a plain one")
+		elif plain_base.emission_enabled and texture_swapped \
+				and plain_base.emission_texture == shiny_base.emission_texture:
+			_fail("shiny check: terrapup's shiny swapped the albedo texture but left the emission " +
+				"texture -- the emission channel carries the same painted image, so the repaint is " +
+				"invisible without it (see creature_body.gd's _shiny_swapped_material)")
+		elif plain_base.emission_enabled and not texture_swapped \
+				and plain_base.emission.is_equal_approx(shiny_base.emission):
+			_fail("shiny check: terrapup ships emission_enabled but the shiny tint left emission " +
 				"untouched -- an albedo-only tint on this asset is invisible on screen (see " +
 				"creature_body.gd's _shared_variant_material comment)")
 		else:
-			print("  shiny tint       forced-shiny terrapup differs from plain (albedo%s)" % [
+			print("  shiny            forced-shiny terrapup differs from plain (%s, albedo%s)" % [
+				"repainted textures" if texture_swapped else "tinted",
 				" + emission" if plain_base.emission_enabled else ""
 			])
 
 	plain.queue_free()
+	shiny.queue_free()
+
+	_a_colourway_species_swaps_textures_not_tints()
+
+
+## OF28's own "done when": a species with an AUTHORED colourway (the owner's
+## pilot pair — the red newt, the blue-striped badger) must REPAINT, not
+## tint: the forced-shiny body's material has to point at the `*_shiny.png`
+## textures tools/repaint_creature_textures.py wrote, on albedo AND emission
+## — a tint multiplier over the blue texture can never make the red the
+## owner asked for ("not blue with a red shade over it").
+func _a_colourway_species_swaps_textures_not_tints() -> void:
+	var shiny: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+	shiny.set_script(CREATURE_BODY)
+	root.add_child(shiny)
+	shiny.call("setup", "paddlenewt", true)
+	shiny.set_physics_process(false)
+
+	var mat := _first_material(shiny.call("model_pivot") as Node3D)
+	if mat == null or not mat is BaseMaterial3D:
+		_fail("shiny repaint check: could not read a material off a forced-shiny paddlenewt")
+	else:
+		var base := mat as BaseMaterial3D
+		var albedo_path := base.albedo_texture.resource_path if base.albedo_texture != null else ""
+		var emission_path := base.emission_texture.resource_path \
+			if base.emission_enabled and base.emission_texture != null else ""
+		if not albedo_path.ends_with("_shiny.png"):
+			_fail("shiny repaint check: paddlenewt has an authored colourway but its forced-shiny " +
+				"albedo texture is %s, not the repainted *_shiny.png" % (albedo_path if albedo_path != "" else "<none>"))
+		elif base.emission_enabled and not emission_path.ends_with("_shiny.png"):
+			_fail("shiny repaint check: paddlenewt's shiny swapped albedo but left the emission " +
+				"texture at %s -- the emission channel carries the same painted image, so the " +
+				"repaint is invisible without it" % (emission_path if emission_path != "" else "<none>"))
+		else:
+			print("  shiny repaint    forced-shiny paddlenewt swaps to *_shiny.png (albedo%s)" % [
+				" + emission" if base.emission_enabled else ""
+			])
+
 	shiny.queue_free()
 
 

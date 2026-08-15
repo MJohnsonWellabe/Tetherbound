@@ -374,7 +374,88 @@ func _build_capsule(look: Dictionary) -> void:
 func _refresh_shiny_tint() -> void:
 	if not shiny:
 		return
+	## OF28 (owner directive, quoted in ralph/BACKLOG.md): a shiny is a
+	## REPAINT, never a tint — "if our newt is blue, I want red. not blue
+	## with a red shade over it." Species with an authored colourway
+	## (tools/repaint_creature_textures.py writes `*_shiny.png` siblings
+	## from data/creatures/shiny_colourways.json) get their painted
+	## textures swapped wholesale, albedo AND emission — the emission
+	## channel carries the same painted image on these assets, so swapping
+	## albedo alone would be invisible (the NP2 lesson, again). Species
+	## whose colourway is not authored yet fall back to the OF27
+	## placeholder tint so a shiny is never silently indistinguishable.
+	if _has_model and _swap_shiny_textures():
+		return
 	_apply_variant_tint(_shiny_palette())
+
+
+## Walks the model's surfaces looking for materials whose albedo texture has
+## a `_shiny` sibling on disk; swaps albedo+emission to the repainted pair on
+## a cached duplicate material. Returns true if at least one surface swapped
+## — the caller falls back to the placeholder tint otherwise.
+func _swap_shiny_textures() -> bool:
+	return _swap_node_textures(_model)
+
+
+func _swap_node_textures(node: Node) -> bool:
+	var swapped := false
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		var surfaces := mesh.get_surface_count() if mesh != null else 0
+		for surface in surfaces:
+			var source: Material = instance.get_active_material(surface)
+			if not (source is BaseMaterial3D):
+				continue
+			var replacement := _shiny_swapped_material(source as BaseMaterial3D, species_id)
+			if replacement != null:
+				instance.set_surface_override_material(surface, replacement)
+				swapped = true
+	for child in node.get_children():
+		if _swap_node_textures(child):
+			swapped = true
+	return swapped
+
+
+## One swapped Material per source material, shared by every body of the same
+## species — same cache discipline as `_shared_variant_material` below.
+static var _shiny_swap_materials: Dictionary = {}
+
+
+static func _shiny_swapped_material(source: BaseMaterial3D, species: String) -> BaseMaterial3D:
+	var shiny_albedo := _shiny_texture_for(source.albedo_texture, species)
+	if shiny_albedo == null:
+		return null
+	var key := source.get_instance_id()
+	if _shiny_swap_materials.has(key):
+		return _shiny_swap_materials[key]
+	var copy := source.duplicate() as BaseMaterial3D
+	copy.resource_name = "%s_shiny" % source.resource_name
+	copy.albedo_texture = shiny_albedo
+	if copy.emission_enabled:
+		var shiny_emission := _shiny_texture_for(source.emission_texture, species)
+		copy.emission_texture = shiny_emission if shiny_emission != null else shiny_albedo
+	_shiny_swap_materials[key] = copy
+	return copy
+
+
+## `<texture path minus .png>_shiny.png`, or null when no repaint exists —
+## the naming contract tools/repaint_creature_textures.py writes. A texture
+## embedded inside a .glb has no usable resource_path; those species'
+## repaints live at the tool's extracted-texture path instead, keyed by
+## species id (the tool extracts the glb's images before repainting them).
+static func _shiny_texture_for(tex: Texture2D, species: String) -> Texture2D:
+	if tex == null:
+		return null
+	var path := tex.resource_path
+	var candidate := ""
+	if path != "" and path.ends_with(".png"):
+		candidate = "%s_shiny.png" % path.get_basename()
+	else:
+		candidate = "res://assets/creatures/tetherbound/%s/models/%s_extracted_base_color_shiny.png" % [species, species]
+	if not ResourceLoader.exists(candidate):
+		return null
+	return load(candidate) as Texture2D
 
 
 ## OF27's placeholder answer to "what colour is a shiny": one magenta-shift
