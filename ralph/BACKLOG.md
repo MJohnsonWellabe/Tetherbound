@@ -25,6 +25,237 @@ after the roster was real). `model: haiku` when it is just screenshots.
 
 ---
 
+## Phase -1.3 — the owner played again, same day (owner-reported, 2026-08-15 evening)
+
+A second batch the same day, reported directly to an interactive session while
+a separate blind-playtest session was mid-run. **Every item below is claimed by
+the interactive session `claude/playtesting-bug-fixes-uzt2t8`** (the owner's
+instruction: farm to subagents, verify anything the playtest session fixes
+first, don't duplicate). Blind-playtest repair passes and any restarted loop
+firings: skip these unless their entry says otherwise, or coordinate via the
+session's ralph-status leases.
+
+Owner decisions taken with this batch (asked, not invented): a simple **coin
+currency** for the merchant; creature trades are **swaps** (party stays ≤5,
+not a catch); **potions stop reviving** once the Revive item exists (D40);
+villager vendor roles are **dual-roles** with the SC12 trainer plan (the
+battle offer is an added dialogue branch, never a replacement).
+
+### OF20 — Gathering is broken: every authored harvest node is invisible
+`model: sonnet` · `tests: test_harvest (extend), smoke_playground` · `area: vegetation`
+Owner-reported: "Is gathering in the game? I'm not getting any materials at
+all." Root-caused: `harvest_node.gd::_build_visual()` assigns `load(<path>.gltf)`
+— a PackedScene — to `MeshInstance3D.mesh`, an invalid assignment that aborts
+the visual build. All 12 authored nodes (the ONLY source of fiber and berries)
+render nothing; the gathered→hidden→respawn cycle also aborts mid-way, so a
+found node farms forever. R9.4 introduced this when it swapped the visible
+BoxMesh placeholders for `model` keys. Same bug class in `death_satchel.gd:63`
+(Bag.gltf). Fix by instantiating scenes (the `grandpa_house.gd:296` /
+`props.gd` branch pattern); keep the BoxMesh fallback. Add a one-line HUD
+message when a gather yields 0 (the wrong-tool rule goes live the moment OF30
+grants tools). Done when: all 12 nodes visible in a booted world, gather →
+hide → respawn cycle works, fiber and berries obtainable bare-handed.
+
+### OF21 — Gamepad collisions + the build/torch actions (input groundwork)
+`model: sonnet` · `tests: test_controls (extend), smoke_settings` · `area: ui`
+`inventory` and `hotbar_1` are both joypad button 3 (Y); `torch_toggle` and
+`backpack_drop` are both button 6 — the carried-torch toggle the owner wants
+exists but also drops items. Keep Y = inventory, move `hotbar_1`; give the
+torch a clean dedicated button (read D35 before choosing; list the final map
+in the commit message — the owner may veto specific buttons). Add new actions
+`build_open` and `torch_place` (world context, wired by OF24) to
+`project.godot`, the `menu.json` rebind list, and `input_glyph.gd` GLYPHS.
+Add a `test_controls` assertion that no two world-context actions share a
+gamepad button. Done when: the collision test exists and passes, and the new
+actions are rebindable in Settings.
+
+### OF22 — The full-menu potion picker dead-ends and loses focus
+`model: sonnet` · `tests: smoke_menu (fix + extend)` · `area: ui`
+Owner-reported: "Can't take potions from the full menu. You get to the point
+where you choose the creature to use it on but it doesn't do anything. You
+can't choose. You can use them from the hot bar though." This is `OF16`'s
+unexplained remainder, now explained: `tab_backpack.gd`'s target picker has
+dead-end confirms (full-HP creature and empty row both `say()` + `return`
+with the picker still open) and `_first_target_row()` can return null,
+leaving keyboard/gamepad focus on nothing — literally "you can't choose".
+`smoke_menu.gd` masked all of it by grabbing focus itself before pressing
+accept. Fix: rows show HP, ineligible rows greyed, focus the first *eligible*
+row, refuse to open with a loud message when nobody is eligible, every exit
+re-grabs focus. De-mask the test (assert `gui_get_focus_owner()` lands via
+`_read_use()`'s own path) and add a full-HP-party case. Done when: the
+de-masked test passes and the owner's exact flow works on gamepad.
+
+### OF23 — The build menu refuses everything silently
+`model: sonnet` · `tests: smoke_free_build, test_build_catalogue (extend)` · `area: ui`
+Owner-reported: "The build menu doesn't work at all." Root cause: with
+gathering broken (OF20) nothing is affordable, and `build_menu.gd::_pick`
+refuses unaffordable picks with only a `ui_error` sound — every press looks
+dead. Also: B is double-bound on exit (closes the build menu AND re-opens the
+pause menu the same frame), and `build_placer.gd`'s bad-place refusals are
+silent too. Fix: per-entry cost lines with "need N more X" deltas, grey
+unaffordable entries, message on refused picks/places, consume the close
+input (the `dialogue_panel.gd` OPEN_GUARD_FRAMES pattern). Keep
+`smoke_free_build`'s existing text contract intact. Done when: a broke player
+can see exactly why each entry refuses, and B closes only the build menu.
+
+### OF24 — A torch you can see: carried torch, hammer hotkey, free ground torch
+`model: sonnet` · `tests: test_build_catalogue, smoke_free_build (extend)` · `area: ui, assets`
+Owner-reported: "You need a hotkey for a hammer and a hotkey for a torch.
+Torch building should be free" — clarified: "torches that go in the ground
+are good but what I was really talking about is one you carry around to
+light the way at night." A carried torch technically exists
+(`scripts/player/torch.gd`) but it is an INVISIBLE SpotLight that auto-fires
+at dusk on a colliding button — the owner has never seen a torch. Three
+parts: (1) visible handheld torch prop (stick + flame from existing
+pack/prop assets — D24, no generation) attached to the player while lit,
+warm flickering OmniLight, values tunable in `movement.json`'s `torch`
+block; auto-on at dusk stays; manual toggle on OF21's clean button. Not
+gated on OF30's blacksmith handover (don't regress R0.11's
+first-night-light fix) — gating is a one-liner later if the owner wants it.
+(2) `build_open` opens the build menu straight from the world (hammer
+hotkey). (3) a free `torch` buildable (`cost: []`) with a data-driven
+`light` block and a capture-pipeline thumbnail; `torch_place` arms its
+placement directly. Done when: the lit torch is a visible prop in a render,
+the build menu opens on one press in the world, and a ground torch places
+for free.
+
+### OF25 — Naming uses a real keyboard
+`model: sonnet` · `tests: test_name_entry, smoke_opening (extend)` · `area: ui`
+Owner-reported: "The keyboard in game still sucks. Just make it use the real
+keyboard or the rog keyboard. We shouldn't need the in game one." Physical
+typing already works in `name_prompt.gd` — but every keystroke also fires
+polled game actions (`i` opens the pause menu over the naming panel, space
+jumps) and Enter double-confirms. Replace the keyboard path with the
+project's first `LineEdit` (holds focus, consumes keys), deafen polled
+actions while the prompt is open (`hold_input`-style), single confirm path;
+`name_entry.gd` stays the validator; the letter grid stays as the gamepad
+path (switch on last-input-device). Done when: typing a name containing
+`i e q r m l g h t f 1-5 space` neither opens menus nor jumps, and Enter
+confirms exactly once.
+
+### OF26 — Debug teleport to named places
+`model: sonnet` · `tests: smoke_settings or smoke_menu (extend)` · `area: ui`
+Owner-reported: "Give me the ability to teleport and spawn in at different
+points so I can test different things." Settings-gated like free-build
+(D16 — this is scaffolding, same as free-build; do not polish it): a
+teleport list in the pause menu fed by `map_state.regions()` + `landmarks()`
+plus the named road-ends/spokes from `terrain_playground.json`. Position =
+`ground_height_at(x,z) + clearance` (D09: never raycast for ground; prior
+art `tools/capture_region_and_map.gd`). Done when: with the toggle on, the
+owner can jump to village / Grandpa's house / the pond / the rise /
+stronghold / each spoke end and lands on ground; with it off, the UI is
+hidden.
+
+### OF27 — Shiny plumbing: the roll, the save field, the tint hook
+`model: sonnet` · `tests: test_save_format (extend), test_shiny (new), smoke_art` · `area: art`
+Owner-reported: "make a version that is a 'shiny' like Pokemon go. Rare and
+nothing different than just the colors." Mechanical half (OF28 is the
+colours): `shiny: bool` on `creature_instance.gd` threaded through
+`from_species` and the serializer; save VERSION 5→6 with a fixture-based
+migration (absent → false); ONE extra `rng.randf()` in
+`encounter_director.gd`'s seeded per-spawn stream (determinism preserved —
+a respawned encounter re-rolls identically per seed, recorded here as
+accepted); odds tunable in `data/config/creatures_visual.json`
+(`shiny_chance`, default 1/128). Implement `_apply_variant_tint()` on
+`creature_body.gd` modelled on `character_model.gd`'s palette machinery
+INCLUDING the emission fix (albedo-only tints are invisible on these
+assets — tint emission too). Thread through starter picker, ally body,
+creature viewport. Done when: a forced-shiny spawn visibly differs in a
+render, survives save/load, and a v5 save loads clean.
+
+### OF28 — Fantastical species palettes + shiny colours
+`model: fable` · `tests: smoke_art + judged renders` · `area: art, visual`
+Owner-reported: "Change the creature colors to be more fantastical. Don't
+redo meshy, but make them more mystical like in palworld." Materials only —
+no new meshes (hard rule, reaffirmed 2026-08-11). Per-species mystical base
+palette + shiny palette in `data/creatures/palettes.json` feeding OF27's
+tint hook; re-point the HUD chips and fallback capsule at the same palette
+so menus agree with the world. Verified by RENDER (contact sheets +
+`visual-judge`), never by code alone — the emission no-op tint is the known
+killer (NP1's own history). Decision doc D43 with render evidence. Done
+when: a blind render pass judges the roster more mystical than baseline and
+each shiny reads as clearly special at gameplay distance.
+
+### OF29 — TMs go in the inventory: inspect, then choose who learns
+`model: opus` · `tests: test_moves, test_inventory, smoke_menu (extend)` · `area: ui`
+Owner-reported: "I can pick up a TM but it needs to go in my inventory and
+then I see it's stats and choose who to teach it to." Today `tm_pickup.gd`
+sets a flag and frees itself, and teaching silently applies the first
+compatible TM from the Team screen. Change: pickup → `inventory.add`
+(full satchel keeps the pickup in the world); `kind: "tm"` items whose
+backpack detail view shows the move's power/type via the existing
+`tm_db.gd`/`move_db.gd` (reconcile, don't duplicate); Use → the OF22
+target picker with `teaching.can_learn` eligibility and reason text;
+retire the silent auto-teach. NOTE an owner-directed change to `R4.4`:
+TMs were never-consumed permanent unlocks; "choose who to teach it to"
+reads as one-creature-per-copy, so a TM is now consumed on teach (revert
+is one line if the owner prefers reusable — flagged, not silent). Saves
+that already consumed a `tm:` flag get a migration note. Done when: pick
+up → inspect stats → choose an eligible creature → move taught, and the
+TM stack decrements.
+
+### OF30 — Tam the blacksmith: tools, the torch handover, the orb recipe
+`model: opus` · `tests: test_dialogue_runner, test_recipes, test_inventory, test_harvest, test_progression_state` · `area: village, npc`
+Owner-reported: "Make one of the villagers a blacksmith who will give you a
+torch, an axe for trees and a pickaxe for stones. Then he'll give you the
+recipe for basic orbs." Role mapping (D39): Tam — his rig is literally
+`villager_smith` and the workshop's open bay exists. Add `axe` and
+`pickaxe` items (icons via the existing item-icon pipeline;
+`test_item_icons` enforces them); FIRST prove village dialogue drains
+`give:` effects (sequence_director drains the shared panel every frame —
+write the `test_dialogue_runner` case before building any new plumbing);
+one-time-gift flag in progression state so re-greeting never re-gifts. The
+torch line is the in-world handover of OF24's carried torch (no separate
+torch item). Follow-up conversation unlocks the basic-orb recipe in
+`recipes.json`. Dual-role note: SC12 later adds Tam's battle offer as a NEW
+branch — this vendor branch survives. Done when: first conversation yields
+axe + pickaxe once, tool-boosted yields work, the orb recipe unlocks and
+crafts.
+
+### OF31 — Mira the merchant, Oskar the creature trader, one real interior
+`model: opus` · `tests: test_trade (new), test_party (extend), smoke_traversal` · `area: village, npc, ui`
+Owner-reported: "Make the villagers so I can trade with them. Creatures and
+materials... Make one of the villagers the merchant. He has a store in his
+house. He'll buy and sell goods from you. Make the third whatever makes
+sense." Owner chose a simple **coin** economy and **swap** creature trades.
+D39 records: `coin` as an ordinary stacking inventory item (no wallet UI),
+per-item prices in `data/config/trade.json` (tunable); Mira's cottage gets
+the village's second real interior (the `grandpa_house.gd` worked example:
+authored colliders in `building_prefabs.json`, open doorway) with her shop
+inside (storage/craft-panel UI pattern); Oskar offers a rotating creature
+swap — his creature for one of yours via the OF22 picker. A swap is NOT a
+catch ("trainer-owned creatures cannot be caught" untouched) and the
+five-cap is enforced structurally (remove-then-add, one transaction) — the
+cap test is non-negotiable. SC15's trainer payouts later pay coins too.
+Done when: buy, sell, and one creature swap all work in-game, the cap
+invariant test passes, and Mira's door leads somewhere real.
+
+### OF32 — Grandpa gives Revives, and potions stop reviving (D40)
+`model: sonnet` · `tests: test_fainting (extend), smoke_opening` · `area: story`
+Owner-reported: "Grandpa should give you revives at the beginning too."
+New `revive` item (~half-HP restore that clears `fainted` — tunable);
+`opening.json`'s grandpa_house conversation gains `give:revive:2` beside
+the orbs/potions/berries. Owner decision (D40): `creature_instance.heal()`
+no longer un-faints — potions heal the standing, Revives raise the fallen;
+hotbar auto-target and the OF22 picker both learn faint-eligibility. Done
+when: a fainted creature refuses a potion with a message, accepts a
+Revive, and a new game starts with 2.
+
+### OF33 — The chapter is 3–4 hours (docs)
+`model: opus` · `tests: none (docs-only)` · `area: story`
+Owner-reported: "I think the meadows should only play 3-4 hours. Not the
+longer end." Decision doc D42 + in-place "amended by D42" pointers at every
+4–7h statement (spec §0/§3 band cumulative times/§17/§38/§39, GAME_DESIGN
+§29/§30/§33, VERTICAL_SLICE, HANDOFF, D23) and SH47 retitled to 3–4 hours.
+EXPLICIT carve-out: do NOT resize the terrain (D23 argued map size from arc
+length; the answer is density/XP/travel tuning, not a rebake). Written with
+D41 (the stations drain the land — the same owner message's story
+directive, spliced into SD16/SE23/SG44/SG46 rather than opened as an OF
+item). Done when: no doc states 4–7h without a D42 pointer and both
+decision docs quote the owner verbatim.
+
+---
+
 ## Phase -1.2 — the owner played again (owner-reported, 2026-08-15)
 
 Fresh playtest feedback, folded in the same way `Phase -1.1` absorbed the
