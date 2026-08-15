@@ -31,13 +31,7 @@ Fresh playtest feedback, folded in the same way `Phase -1.1` absorbed the
 2026-08-12 round: spliced ahead of everything else because it's the owner's
 direct, current read on the build.
 
-### OF14 — World clipping: player/objects pass through rocks and terrain props in places
-`model: sonnet` · `tests: smoke_traversal` (extend)
-Owner-reported, 2026-08-15: multiple spots where the player can phase
-through rocks/props instead of colliding with them. No specific locations
-named yet — the first real step is a fresh playthrough pass that logs where
-it happens (screenshot + position), the same evidence standard `OF10`/`OF11`
-already used for collision work, before scoping a fix.
+**`OF14` (world clipping: player/objects pass through rocks and terrain props) — root-caused and fixed, see `DONE.md`.** `vegetation.gd`'s `rocks` layer tilts the VISUAL mesh to the ground normal on a slope (`align_to_slope`) but left the collision cylinder world-up regardless; on a steep anchor site (up to 52 degrees) a scaled-up boulder's silhouette pokes out past a vertical collider. Fixed by tilting the collider to match, and `smoke_traversal.gd` gained a real regression check (samples the same heightfield the placement path used) that found 229 of 268 sloped rock colliders genuinely misaligned before the fix and 0 after — falsified against the unfixed code first, not just asserted. Scope note: this covers the `rocks` scatter layer specifically, the only layer with `align_to_slope` + `collides` both set; authored props (`props.gd`) and buildings already compute rotation-aware colliders correctly and were not the cause here. If clipping is still reported after this ships, it is a different location/mechanism, not this one.
 
 ### OF15 — Geometry snags: player can get stuck in places
 `model: sonnet` · `tests: smoke_traversal` (extend)

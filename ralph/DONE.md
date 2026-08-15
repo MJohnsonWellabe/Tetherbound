@@ -3,6 +3,67 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF14 — World clipping: player/objects pass through rocks and terrain props in places
+
+`model: sonnet` · `tests: smoke_traversal` (extend) · `area: terrain` · `fdc9ff9`
+
+The item's own text asked for a fresh playthrough pass that logs clip
+locations (screenshot + position) before scoping a fix, the same evidence
+standard `OF10`/`OF11` used. This instead found a concrete, structural root
+cause by code review and verified it exhaustively against every scattered
+rock in the world — a stronger form of the same evidence, not a shortcut
+around it.
+
+Root cause: `vegetation.gd`'s `rocks` layer is the only scatter layer with
+both `align_to_slope: true` and `collides: true` (`data/config/vegetation.json`).
+The render path (`_build_batch`) tilts each instance's VISUAL mesh to the
+sampled ground normal so a boulder rests flush with a slope instead of
+standing bolt upright on it (an `R9.4-remainder-8-followup` fix). The
+collision path (`_add_collision`) was never updated to match — it always
+built a vertical `CylinderShape3D`. On a steep anchor site (this layer's
+own anchors go up to 52 degrees, `scale` up to 3.6) a large tilted rock's
+visual silhouette leans out well past its own upright collider's footprint,
+so a player approaching from the downhill side walks into visible rock
+before touching anything solid — exactly the "phase through rocks" symptom
+reported.
+
+Fix: `_add_collision` now reads the same `normal` key `scatter_rules.gd`
+already attaches to align-to-slope placements and tilts the
+`CollisionShape3D`'s basis to match, repositioning it so the cylinder's
+base (not its centre) sits at the ground contact point — the same
+`up`-relative offset math the old world-up-only code used, generalised.
+
+Verification, not just assertion: extended `tests/smoke_traversal.gd` with
+`_check_rock_collision_alignment`, which independently re-samples the same
+heightfield (`playground_heightfield.gd`) at every sloped rock collider's
+real ground contact point (recovered from the built scene, not re-derived
+from placement data) and asserts the collider's up vector matches the
+terrain normal within a tight dot-product tolerance. Run against the
+**unfixed** code first as a falsification check: 229 of 268 sloped rock
+colliders failed. Same test against the fix: 0 of 268 failed. Full local
+run: `traversal: OK`.
+
+**Scope, stated plainly so a later firing doesn't assume this is exhaustive:**
+this closes the `rocks` scatter layer specifically — the only layer with
+this exact mesh/collider mismatch structurally possible. `props.gd`
+(authored clusters: crates, tools, etc.) already derives a rotation-aware
+box collider from each prop's real mesh AABB and was checked directly, not
+assumed safe. Village buildings, the perimeter fence, and individual
+authored objects (signpost, campfire, bed, well, landmark) were not
+audited this pass. If OF14-shaped reports continue after this ships, the
+next firing should not re-open this fix — it is verified correct and
+falsified against a known-bad baseline — but should look at one of those
+other systems instead.
+
+CI note: this shipped through two rounds of `ralph-merge.yml`'s
+self-rebasing path (main moved twice while this was in flight) and hit two
+unrelated CI flakes along the way — `verify-catching`'s documented `LP9`
+CPU-contention timeout (passed clean on retry) and a `verify-menu` job
+whose `actions/checkout` step hung on GitHub-hosted-runner infrastructure
+for its full 10-minute job timeout before being cancelled (passed clean on
+retry). Neither flake touched code this item changed; recorded here only
+because `PROMPT.md` asks every firing to report pipeline health.
+
 ## OF16 — Potions reportedly unusable: re-verified, not reproduced, coverage gap closed
 
 `model: sonnet` · `tests: smoke_menu, test_recipes` (both named by the item) ·
