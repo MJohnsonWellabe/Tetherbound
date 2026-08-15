@@ -1624,6 +1624,16 @@ complaints) — can the player predict the throw before release, does aiming
 feel controllable, is the tutorial/common catch experience satisfying? Only
 open a new catch-probability task if play still shows a real problem.
 
+**Methodology, when the owner explicitly authorizes running this:
+`ralph/planning/TETHERBOUND_OWNER_ONLY_FULL_BLIND_PLAYTEST.md`.** That
+document is its own hard gate — it is explicit that no autonomous firing,
+scheduled process, or successor agent may decide on its own to run it, and
+merely being read here is not authorization. It is broader than this one
+checkpoint (a full player-experience audit across every system, not just
+movement/catching), so treat it as the methodology this gate would use if
+the owner asks for the full pass, not as something this gate triggers by
+itself.
+
 **Already has real evidence, don't re-discover it blind: `Phase -1.2`'s
 `OF19`** (2026-08-15) is exactly this — the owner reported the throw is hard
 to read and ordinary Meadows creatures cost too many orbs, with a concrete
