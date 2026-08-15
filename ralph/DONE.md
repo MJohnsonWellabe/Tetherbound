@@ -3,6 +3,82 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R4.4 — TMs and teaching moves
+
+`model: sonnet` · `tests: test_moves (11/11), full unit suite (675/83960/0 failed)` · `area: ui` · `eea92f2`, `ef248e9`
+
+`GAME_DESIGN.md` 13: "TMs: Found in the world. Finding one permanently
+unlocks that move as teachable. Not consumed after one teaching. Species
+have compatibility lists." Built against `D30`'s standing decision that a
+species carries exactly one quick and one charged move — no 4-slot
+"2 known, 1 equipped" system exists, so teaching replaces whichever slot
+the TM's move occupies rather than adding a slot.
+
+**Data.** `data/moves/tms.json`: two TMs, `tm_stone_rush` and
+`tm_burrow_strike`, each pointing at an existing `data/moves/moves.json`
+id and a `compatible_types` list (`["ground"]` for both — the Meadows'
+dominant type, and the only type this pass makes compatible; 13's
+"off-type moves are allowed when physically/thematically sensible" is a
+real design call left for content that actually wants it, not invented
+here). `scripts/creatures/tm_db.gd` reads it, same shape as
+`move_db.gd`/`trait_db.gd`.
+
+**Logic.** `scripts/creatures/teaching.gd` (`can_learn()`/`teach()`),
+pure functions over a creature instance, a TM id, `tm_db` and `move_db`.
+`teach()` reads the move's own `slot` from `moves.json` rather than
+trusting the TM entry, so a mis-tagged TM cannot silently overwrite the
+wrong move, and changes nothing on any failure (unknown TM, incompatible
+species, unknown move).
+
+**Persistence.** Not a new save-format version. A found TM sets a flag on
+`progression_state` (SB9's flat flag store), namespaced `tm:<id>` so it
+cannot collide with an objective/completion flag. That store already
+saves/loads, so this needed no `save_game.gd` change — the "not consumed"
+requirement falls out for free, since the flag is knowledge, not a
+count.
+
+**World.** `scripts/world/tm_pickup.gd`: a one-time physical prop (not an
+inventory item — picking it up sets the flag directly and `queue_free()`s,
+mirroring `key_pickup.gd`'s interactable shape but with its own simple
+standing-tablet mesh, since a TM is found knowledge rather than a
+hand-holdable object). `playground_world.gd::_place_tms()` places both at
+hand-picked coordinates (`TM_AT`) checked against every existing
+interactable's radius (nearest is >7m).
+
+**UI.** `tab_creatures.gd` (Team screen): pressing `backpack_split` (H /
+gamepad back button — reused, not a new input-map action, same as
+`ACTIVATE_ACTION` reusing `interact`) teaches the focused creature the
+first known, compatible TM it does not already know. No picker UI —
+two TMs do not need one yet; a third TM competing for the same slot
+would.
+
+**Testing.** `tests/test_moves.gd` (new, 11/11): `tms.json` data
+integrity (every `move_id` real, every `compatible_types` entry from the
+known vocabulary), `can_learn()` compatibility in both directions,
+`teach()` writing the correct slot and leaving the other alone, refusal
+(incompatible species, unknown TM) changing nothing, and the same TM
+teaching two different creatures (the "not consumed" contract). Full
+local suite run clean before pushing (675/83960/0 failed, up from 664
+before this item).
+
+**One real bug found and fixed before shipping, not by CI.** The first
+push (`eea92f2`) had two `:=` local-variable declarations in
+`test_moves.gd` inferring their type from a dynamic `.call()`-style
+method result on a `RefCounted`-typed variable — GDScript's static
+analyzer cannot type that, and it is a parse error, not a runtime
+failure, so `run_tests.gd` reported the whole file as
+"could not be parsed or instantiated" rather than a normal assertion
+failure. Caught by a local full-suite run before trusting CI (which then
+also failed on it, confirming); fixed by wrapping both in `str()`/`as
+Array`, the same pattern `test_moves_data.gd` already uses for the
+identical `tms`/`moves` access shape. `ef248e9` is the fix; CI green and
+`main` confirmed fast-forwarded to it before this entry was written.
+
+Not built, out of scope for the smallest coherent version: a TM picker
+UI (only matters once more than one known TM can compete for the same
+slot), off-type compatibility (13 allows it; no TM asks for it yet), and
+any in-world telegraphing beyond the interactable prompt itself.
+
 ## R4.2 — Core stats and per-instance individuality
 
 `model: sonnet` · `tests: test_progression (42/42), test_save_format (29/29), full unit suite (663/83923/0 failed), smoke_menu, smoke_aggression, smoke_combat, smoke_catching, all green` · `area: progression`

@@ -1421,7 +1421,7 @@ invented here.
 
 **`R4.3` (named moves per species: quick/charged, power multiplier, wired into combat and the Team screen) shipped — see `DONE.md`.** This line's own "`data/moves/` is empty" was stale: `D30` (2026-08-13) already built the data-driven moves layer — `data/moves/moves.json`, `scripts/creatures/move_db.gd`, every species pointing at one quick/one charged id — and wired it into `combat_manager.gd`'s damage calc, `combat_hud.gd`'s in-fight display and `tab_creatures.gd`'s Team screen, with a full test file (`tests/test_moves_data.gd`, 11/11) already covering it. Verified rather than rebuilt: ran the full local suite (645 tests, 83864 assertions, 0 failed) to confirm. `D30` itself explicitly punts spec §13's "2 known, 1 equipped, swap moves" 4-slot system as deliberate future scope, not required here — a species carries exactly one quick and one charged move today, by owner decision, not by gap.
 
-### R4.4 — TMs and teaching moves · `model: sonnet` · `tests: test_moves` · §13
+**`R4.4` (TMs and teaching moves) shipped — see `DONE.md`.** A TM found in the world permanently unlocks its move as teachable (never consumed — the same TM can teach any number of compatible creatures); species compatibility is a per-TM list, same-type only this pass. D30's one-quick/one-charged-slot decision stands — teaching replaces whichever slot the move belongs to, not a 4-slot system.
 
 **`R4.5` (Tuskroot's real model) verified and closed — see `DONE.md`.** It
 was already a real rigged/animated model, not the songbird stand-in — the
