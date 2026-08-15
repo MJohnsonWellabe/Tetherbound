@@ -218,7 +218,7 @@ func xp_to_next(cfg: Dictionary) -> int:
 ## way a level-up does, and refills hp, because every caller of this sets the
 ## level before the creature has ever taken a hit (D30: starter_level).
 func set_level(new_level: int, cfg: Dictionary) -> void:
-	var cap := int(cfg.get("level", {}).get("cap", 30))
+	var cap := int(cfg.get("level", {}).get("cap", 50))
 	level = clampi(new_level, 1, cap)
 	xp = 0
 	_apply_level_stats(cfg)

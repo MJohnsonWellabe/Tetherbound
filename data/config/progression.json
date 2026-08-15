@@ -1,7 +1,7 @@
 {
   "_comment": "Creature progression (D30). All tunable. Move power multiplies existing combat_math damage, so 1.0 preserves today's balance exactly.",
   "level": {
-    "cap": 30, "wild_band": [2, 6], "starter_level": 3,
+    "cap": 50, "wild_band": [2, 6], "starter_level": 3,
     "xp_to_next_base": 40, "xp_to_next_exponent": 1.6,
     "growth_per_level": { "hp": 0.06, "attack": 0.05, "defence": 0.05 }
   },
