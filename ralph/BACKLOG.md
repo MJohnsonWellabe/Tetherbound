@@ -1452,14 +1452,7 @@ deep branch (`SD17`). All three numbers and the item name are tunable per
 
 **`R4.8` (fainting and home recovery) shipped — see `DONE.md`.** The mechanical half: a placed `creature_bed` now has a real interaction (`R2.8`'s own deferred brief) that revives/tops up any party member and grants the same flat rest bonus XP camp's overnight rest already gives. "Unavailable state" and catching-refuses-fainted were already built and are tested here as the baseline this recovers from, not as new code. Deliberately not built: a live in-world animation cue for "visible creature rest behaviour" — that is visual-affecting work needing a genuinely blind `visual-judge` pass, out of this item's budget; clear on-screen text stands in instead.
 
-### R4.9 — Orb economy and tiers · `model: sonnet` · `tests: test_catch_math` · §15
-Spec §3 Band 2: the improved orb tier is the **first** thing Rootstone
-(`SD18`) buys. Build the tier ladder here; `SD18` supplies the material.
-Note: the old "rework orb aiming" item that sat beside this was **absorbed by
-the overhaul** — trajectory preview sharing `_release()`'s math, wired
-sensitivity, fine-aim exponent, piecewise snap assist, cancel during windup.
-Whether it now *feels* satisfying (§33 criterion 3) is R0.11's and R4.12's
-question, not a build task.
+**`R4.9` (Orb economy and tiers) shipped — see `DONE.md`.** The tier ladder mechanic and its first rung (`orb_greater`, 1.6x multiplier) are real and tested end to end — `throw_aim.gd` auto-selects and spends the strongest tier owned, the catch resolves at that tier's actual odds, the HUD names it correctly. Honest remainder: `orb_greater` has no acquisition path yet, by design — `SD18` (Rootstone, not yet built) owns the recipe, per `recipes.json`'s own prior note.
 
 ### R4.10 — The release ceremony · `model: fable` · `tests: test_party, smoke_release` (new)
 `party.add()` refuses a sixth creature and there is no ritual. The slice

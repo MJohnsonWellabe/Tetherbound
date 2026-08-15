@@ -3,6 +3,52 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R4.9 — Orb economy and tiers
+
+`model: sonnet` · `tests: test_catch_math (24/24, new), full unit suite (686/83990/0 failed), smoke_catching (clean)` · `area: catching` · `b219495`
+
+GAME_DESIGN.md §15 / spec Band 2: "better orbs become meaningful
+crafting/progression rewards", and Rootstone (`SD18`, not yet built) names
+the improved orb tier as the first thing it buys. Built the tier ladder
+mechanic and its first rung (`orb_greater`) now, so `SD18` only has to add
+the recipe that lets a player actually acquire one.
+
+- **One namespace, not two.** `catching.json`'s `orbs` table keys used to be
+  a bare tier name (`"basic"`) separate from the real satchel item id
+  (`orb_basic`). Renamed the key to the real item id and registered
+  `orb_greater` alongside it, so `catch_math.gd`'s new `best_orb()`/
+  `orb_ids()` read the config table directly — no translation layer to keep
+  in sync as tiers are added.
+- **`throw_aim.gd` auto-selects the strongest tier in stock.** `stock()` now
+  sums every configured tier (carrying only `orb_greater` is not "out of
+  orbs"); `current_orb_id()` reports which tier a throw right now would use;
+  `_spend_orb()` spends that tier and remembers it as `_thrown_orb_id`.
+- **The resolve step uses what was actually spent, not a fresh "best available"
+  query.** `combat_manager.gd::_on_orb_struck()` reads `thrown_orb_id()`
+  rather than re-deriving it after the satchel already changed — the two
+  could otherwise disagree (a throw spends `orb_greater`, the satchel now
+  reads `orb_basic` as best, and the catch would silently resolve at the
+  wrong multiplier). `catch_chance_now()` (the live HUD readout) reads
+  `current_orb_id()` each frame instead of a hard-coded `"basic"`.
+- **`combat_hud.gd`'s orb cluster** names and icons whichever tier a throw
+  would actually spend, read live off `combat_manager.gd::current_orb_id()`,
+  instead of a hard-coded `orb_basic` label that would have lied once a
+  second tier existed.
+- **`orb_greater.png`** extends `gen_item_icons.py`'s existing
+  `icon_orb_basic()` sphere-and-tether-bands silhouette with one added outer
+  ring cutout — same generated-icon language as the rest of the item set
+  (spec §21), not a new visual vocabulary. Ledgered in `ASSET_LEDGER.md`.
+  Re-running `python3 tools/gen_item_icons.py` reproduces every existing
+  icon byte-identical (checked directly) plus the new file.
+
+**Honest remainder, by design, not an oversight:** `orb_greater` has no
+acquisition path yet. `recipes.json`'s own comment already said Rootstone's
+tier "adds... later, in its own file rather than growing this one" — `SD18`
+owns that recipe once Rootstone exists. Until then the item and its
+mechanic are real and tested (`best_orb()` correctly prefers it, `throw_aim`
+would correctly spend and resolve it) but unreachable in a normal
+playthrough, the same shape `SB9` shipped ahead of its own first consumer.
+
 ## R4.8 — Fainting and home recovery
 
 `model: sonnet` · `tests: test_fainting (7/7), full unit suite (682/83977/0 failed)` · `area: build` · `e2acd58`
