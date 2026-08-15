@@ -14,7 +14,7 @@ name: CI
 # What this CANNOT check: whether the game feels good. That is the owner
 # playing it on the Ally, and no amount of green here substitutes.
 #
-# The eleven checks (unit suite + ten smoke tests) each run as their OWN
+# The twelve checks (unit suite + eleven smoke tests) each run as their OWN
 # parallel job instead of being grouped into two jobs of five-plus-one. This
 # is the same trade the previous split (one job of eleven -> two jobs of
 # five-plus-six) already made, carried one step further, for the same reason:
@@ -690,6 +690,90 @@ jobs:
           if [ $code -ne 0 ]; then
             echo "::warning::smoke_combat failed once; retrying once before failing the job"
             godot --headless --path . --script tests/smoke_combat.gd
+            code=$?
+          fi
+          exit $code
+
+  verify-trainer-battle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
+      - name: Smoke-test a trainer battle
+        # R8.1. Walks the challenge end to end in the real scene: the trainer
+        # is placed from data/config/trainers.json, the prompt opens their
+        # challenge conversation, the conversation opens a fight, their SECOND
+        # creature comes out when the first one falls, and beating the last of
+        # them sets the SB9 defeat flag, pays the reward and cannot be done
+        # twice. It also presses Throw mid-fight and asserts the refusal:
+        # trainer-owned creatures cannot be caught is a CLAUDE.md hard rule,
+        # and a HUD that merely hides the button would not enforce it.
+        #
+        # Same retry-once mitigation as verify-combat above, for the same
+        # measured reason (LP9): this is a tick-budget-bounded scene-boot-and-
+        # simulate test, and under heavy CI contention a budget can expire for
+        # real without the logic being stuck.
+        run: |
+          set +e
+          godot --headless --path . --script tests/smoke_trainer_battle.gd
+          code=$?
+          if [ $code -ne 0 ]; then
+            echo "::warning::smoke_trainer_battle failed once; retrying once before failing the job"
+            godot --headless --path . --script tests/smoke_trainer_battle.gd
             code=$?
           fi
           exit $code

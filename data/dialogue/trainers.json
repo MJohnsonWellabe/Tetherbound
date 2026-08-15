@@ -1,0 +1,23 @@
+{
+  "_comment": "R8.1. What a trainer says before a battle, and what they say once they have lost one. Same `{\"conversations\": {...}}` shape as opening.json and village.json, merged onto the same table by scripts/story/dialogue_runner.gd -- a separate file so a trainer's challenge and Grandpa's briefing stay independently editable, and so test_dialogue_runner.gd's coverage of the opening's own ids is unaffected by how many trainers exist.",
+  "_comment_battle_start": "The BATTLE is not an effect in here. scripts/world/trainer_npc.gd starts it when the challenge conversation closes -- the words are the challenge, and a `battle:` effect would put trainer fights inside the opening's beat machine (sequence_director.gd), which is the one state machine they are not part of.",
+  "_comment_short": "Two or three lines. A trainer who monologues is a trainer the player skips, and the fight is the content.",
+  "conversations": {
+    "trainer_practice_challenge": {
+      "speaker": "Bryn",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You've got one at your heel and no idea what it can do yet. That's the same place everyone starts.",
+        "Two of mine, one at a time. Beat them both and you'll know something you can't be told."
+      ]
+    },
+    "trainer_practice_defeated": {
+      "speaker": "Bryn",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Both of them, and you barely stopped to think about it. Good.",
+        "I've nothing left to teach you out here. Try the folk down by the square — they don't go easy."
+      ]
+    }
+  }
+}

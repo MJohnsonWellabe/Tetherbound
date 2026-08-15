@@ -41,6 +41,24 @@ func setup(config_key: String, player: Node3D) -> bool:
 	return built
 
 
+## Same, from a config dict instead of an art.json key.
+##
+## R8.1's trainers are built this way: a trainer is an existing rig plus that
+## person's own hair colour or badge (`trainer_npc.model_config()`), and
+## `character_model.build_from_config()` already exists to take exactly that —
+## a one-off variant that has no business being written into the shared
+## production config file as a new key per person.
+func setup_from_config(config: Dictionary, player: Node3D) -> bool:
+	_player = player
+	var built := build_from_config(config)
+	if not built:
+		push_error("an NPC config named no usable model; there will be nothing standing there")
+	else:
+		play(clip_for("idle"))
+	_build_collider()
+	return built
+
+
 ## The prompt he offers. Created here rather than by the caller so an NPC always
 ## has one and it is always in the same place — at chest height, not between his
 ## feet, which is where the player is actually looking.

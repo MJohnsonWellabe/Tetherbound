@@ -1,0 +1,68 @@
+{
+  "_comment": "R8.1. Every trainer battle in the chapter, as data. Spec §12 sizes what this table has to carry -- roughly 12-17 battles (3 Lower Meadows trainers, 2-3 in the relay station, 3 regional captains, 2-4 in the stronghold, 2-4 optional patrols) -- so a new trainer is an entry here, never a new script. `scripts/world/trainer_npc.gd` places them and `scripts/combat/encounter_director.gd` fights them.",
+
+  "_comment_defeat_flag": "SB9 (autoload/progression_state.gd), the same flat flag store the road gate, the TM pickups and Tam's handover already write to. Set by the encounter director the moment the trainer's last creature faints. It is what makes the battle unrepeatable (`rechallenge: false`), what SC14's bridge will read, and what SC15's reward is recorded against so beating a trainer twice pays once.",
+
+  "_comment_rechallenge": "false everywhere for now, and spec §11/§17 is why: a re-fightable trainer is an XP faucet, and grinding is supposed to mean 'play more of the game', not 'replay one fight'. The field exists because a later sparring partner may legitimately want it -- it is not a promise that one does.",
+
+  "_comment_team": "Fought SEQUENTIALLY: the trainer sends out the next creature when one faints, in this order. `level` is the creature's real level (D30 arithmetic, data/config/progression.json), NOT a difficulty band. `moves` is optional and overrides the species' own quick/charged pair (data/creatures/species.json) -- for a trainer whose lesson is a specific move, SC13's Tam being the obvious case.",
+
+  "_comment_reward": "SC15's shape, wired but deliberately thin here: `items` are real item ids granted once, `flags` are extra progression flags to set alongside the defeat flag (SC14's South Bridge Key is a flag AND an item). XP needs no entry -- it happens naturally, per creature felled, through the ordinary victory award. Paid only when the defeat flag was NOT already set, so a rechallenge can never pay twice.",
+
+  "_comment_art": "`config_key` names a block in data/config/art.json; `rank` instead names a Team Tether rank in data/config/npc_ranks.json (SE25's relay trainers, SF34's captains). Optional `hair`/`palette`/`accessories` are laid over that base -- per-part variants, never one global tint (CLAUDE.md, spec §21). No new human generations here.",
+
+  "_comment_positions": "World metres [x, z]; Y is always asked of the world (D09). `facing_deg` is the yaw the trainer is placed with; npc_body.gd turns them to face the player on approach regardless.",
+
+  "flow": {
+    "_comment": "ALL TUNABLE. `send_out_seconds` is the beat between one of the trainer's creatures fainting and the next stepping up -- long enough to read as them making a decision, short enough that it is not a loading pause. `linger_seconds` is how long a fallen creature stays on the ground before its body is cleared, matching catching.json's own faint linger.",
+    "send_out_seconds": 1.6,
+    "linger_seconds": 2.4,
+    "deploy_offset": 3.0
+  },
+
+  "prompts": {
+    "_comment": "Built here rather than in code so a trainer can be challenged in words that suit them later. `%s` is the trainer's display name. Never contains \"talk\" or \"choose\": tests/smoke_opening.gd finds Grandpa and the starters by exactly those substrings.",
+    "challenge": "Challenge %s",
+    "defeated": "Greet %s"
+  },
+
+  "trainers": [
+    {
+      "id": "practice_trainer",
+      "name": "Bryn",
+      "_placeholder": "PLACEHOLDER, for SC12/SC13 to replace with Mira, Oskar and Tam -- who already stand in the square (data/config/village_npcs.json) and must not be duplicated by a fourth body. Bryn exists so R8.1's substrate is playable and smokeable the day it lands; delete this entry when the three real Band 1 trainers take over.",
+      "config_key": "villager_farmer",
+      "hair": {
+        "visible": true,
+        "color": "#c9a86a",
+        "_comment": "Spec §21 and the owner's own playtest note: villagers differ primarily by hair colour. Distinct from farmer (#5c3a22), smith (#8a8578) and ranger (#7a3c22) so a second body on the same base does not read as one of them wandered off."
+      },
+      "position": [13.0, 9.0],
+      "facing_deg": -171.1,
+      "_why_here": "The open north field behind the village square -- inside the square's own 22m vegetation clearing (extended in data/config/vegetation.json so the 11m arena is not fought through a tree), 12m clear of every structure, villager, harvest node and prop, and well outside the bramblebun cluster at [30,-40] so a wild engage prompt never contests the challenge prompt.",
+      "challenge": "trainer_practice_challenge",
+      "defeated": "trainer_practice_defeated",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 2
+        },
+        {
+          "species": "mudsnout",
+          "level": 3
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "orb_basic",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "trainer_defeated_practice",
+      "rechallenge": false
+    }
+  ]
+}

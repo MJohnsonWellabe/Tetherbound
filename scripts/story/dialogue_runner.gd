@@ -24,6 +24,14 @@ const DIALOGUE_PATH := "res://data/dialogue/opening.json"
 ## how many villagers exist.
 const VILLAGE_DIALOGUE_PATH := "res://data/dialogue/village.json"
 
+## R8.1's trainer challenges, on the same terms as the village's banter above.
+## Listed together so a fourth file is one array entry rather than a third
+## copy of the merge loop.
+const EXTRA_DIALOGUE_PATHS := [
+	VILLAGE_DIALOGUE_PATH,
+	"res://data/dialogue/trainers.json",
+]
+
 signal finished(conversation_id: String)
 
 static var _table: Dictionary = {}
@@ -46,14 +54,17 @@ static func table() -> Dictionary:
 
 	# Additive only: a missing village.json degrades to "no village banter",
 	# never to a broken opening, and an id village.json shares with opening.json
-	# loses rather than silently overwriting Grandpa's own lines.
-	if ResourceLoader.exists(VILLAGE_DIALOGUE_PATH):
-		var village := _load_conversations(VILLAGE_DIALOGUE_PATH)
-		for id: String in village:
+	# loses rather than silently overwriting Grandpa's own lines. Same for
+	# trainers.json, and for whatever the next file is.
+	for path: String in EXTRA_DIALOGUE_PATHS:
+		if not ResourceLoader.exists(path):
+			continue
+		var extra := _load_conversations(path)
+		for id: String in extra:
 			if _table.has(id):
-				push_warning("%s reuses conversation id '%s'; the opening's own copy wins" % [VILLAGE_DIALOGUE_PATH, id])
+				push_warning("%s reuses conversation id '%s'; the earlier table's copy wins" % [path, id])
 				continue
-			_table[id] = village[id]
+			_table[id] = extra[id]
 	return _table
 
 

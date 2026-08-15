@@ -735,6 +735,12 @@
       "_why": "the practice meadow: the opening's bramblebun and the arena around it"
     },
     {
+      "x": 13.0,
+      "z": 9.0,
+      "radius": 14.0,
+      "_why": "R8.1: the practice trainer's ground north of the square (data/config/trainers.json). Same reason as the entries above -- a trainer battle's arena is 11m across and forms between the player and the creature their opponent just sent out, so without this the fight is watched through a tree. Most of it already falls inside the village square's own 22m clearing; this covers the northern edge that does not."
+    },
+    {
       "x": -133.5,
       "z": 110.0,
       "radius": 15.0,

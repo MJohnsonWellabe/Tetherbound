@@ -23,6 +23,9 @@ const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd
 ## existing config-loading pattern rather than a new one.
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
+## R8.1: the trainer table's own reader. `trainer_npc.gd` places the people;
+## this only ever asks it for numbers and teams.
+const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## Mirrors CombatManager.OUTCOME_CAUGHT. Declared rather than typed twice so a
 ## renamed outcome cannot silently stop matching here.
@@ -105,6 +108,48 @@ var _respawn_timers: Dictionary = {}
 ## wild, gated or not) so `_sync_spawn_gates()` only iterates the ones that
 ## actually need a check.
 var _wild_gates: Dictionary = {}
+
+## --- R8.1: trainer battles -------------------------------------------------
+##
+## A trainer battle is not a second combat system. It is the SAME fight this
+## node already runs against a wild creature, entered from a person instead of
+## from a prompt on an animal, with three differences: the opponent's creature
+## belongs to somebody (so it cannot be caught), there can be several of them
+## in a row (so the fight re-opens against the next one rather than ending),
+## and beating the last of them writes a progression flag (so it cannot be
+## fought again into an XP faucet).
+##
+## Everything else — the arena, the camera, piloting, switching, XP, the
+## fainted body on the ground — is `combat_manager.gd` and is untouched. That
+## is deliberate: spec §12 wants 12-17 of these across the chapter, and a
+## parallel fight loop would be 12-17 chances for the two to drift.
+
+## The trainers.json entry being fought right now, or {} between battles.
+## This, not `_manager.is_fighting()`, is what "a trainer battle is happening"
+## means — it stays true across the beat between one of their creatures
+## falling and the next stepping up, which is a gap the fight itself is not
+## running in.
+var _trainer_spec: Dictionary = {}
+## The NPC who issued the challenge; their creatures are sent out from beside
+## them. Null is legal (a battle started by a test or a tool), in which case
+## the opponent is placed relative to the player instead.
+var _trainer_node: Node3D = null
+## Their team, minus whoever has already been sent out. Instances, built once
+## at the start of the battle so a creature's damage is not undone by it being
+## rebuilt.
+var _trainer_queue: Array[RefCounted] = []
+## The opponent body currently on the field.
+var _trainer_body: Node3D = null
+## Bodies waiting to be cleared: the ones that have fallen, and — once the
+## battle is over — whichever was still standing.
+var _trainer_fallen: Array[Node3D] = []
+## Seconds until the next creature is sent out, and (after the battle) until
+## the bodies are freed. Only one of the two ever runs at a time.
+var _trainer_send_delay: float = 0.0
+var _trainer_cleanup_delay: float = 0.0
+## How many of their creatures have been sent out, ever. Names the bodies; see
+## `_send_out_next_creature()` for why it is not derived from a list that empties.
+var _trainer_sent: int = 0
 
 
 func _ready() -> void:
@@ -451,6 +496,10 @@ func dismiss_active_creature() -> bool:
 		return false
 	if _manager != null and bool(_manager.call("is_fighting")):
 		return false
+	# R8.1: and never between two rounds of a trainer battle, which is the
+	# same window for the same reason — the next round re-deploys this body.
+	if trainer_battle_active():
+		return false
 	_ally_body.queue_free()
 	_ally_body = null
 	_ally = null
@@ -466,6 +515,8 @@ func summon_active_creature() -> bool:
 	if _ally_body != null and is_instance_valid(_ally_body):
 		return false
 	if _manager != null and bool(_manager.call("is_fighting")):
+		return false
+	if trainer_battle_active():
 		return false
 	var party := _party()
 	if party == null:
@@ -494,6 +545,8 @@ func _sync_active_creature() -> void:
 		return  # Nothing out to swap; the new active creature comes out on next recall.
 	if _manager != null and bool(_manager.call("is_fighting")):
 		return  # Never mid-fight — `_start_fight` already snapshotted who is in it.
+	if trainer_battle_active():
+		return  # Nor between its rounds; the next round re-deploys the same body.
 	var active_creature: RefCounted = party.call("active")
 	if active_creature == null or active_creature == _ally:
 		return  # The change wasn't to the creature that is actually out.
@@ -512,6 +565,8 @@ func _sync_active_creature() -> void:
 ## defers to above, rather than a second modal check invented here.
 func _read_creature_control_input() -> void:
 	if _manager != null and bool(_manager.call("is_fighting")):
+		return
+	if trainer_battle_active():
 		return
 	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
 		return
@@ -592,6 +647,12 @@ func set_arbiter(node: Node) -> void:
 func interaction_offer(from: Vector3) -> Dictionary:
 	if _manager == null or bool(_manager.call("is_fighting")):
 		return {}
+	# R8.1: nothing this node offers is available between two rounds of a
+	# trainer battle. The fight is not running for that beat and every gate
+	# below would open — engage a passing wild creature, put your creature
+	# away — in the middle of somebody else's challenge.
+	if trainer_battle_active():
+		return {}
 	# A statement rather than an offer, and it outranks everything: with no creature
 	# on its feet there is nothing to fight with, and a "[X] Engage" line the
 	# button refuses is worse than being told why.
@@ -617,6 +678,7 @@ func interaction_activate() -> void:
 
 func _process(delta: float) -> void:
 	_tick_respawn(delta)
+	_tick_trainer_battle(delta)
 	_sync_spawn_gates()
 	_sync_active_creature()
 	_update_prompt()
@@ -726,7 +788,7 @@ func _sync_spawn_gates() -> void:
 func _engageable() -> Node3D:
 	if _ally == null or _manager == null or _ally.fainted:
 		return null
-	if bool(_manager.call("is_fighting")):
+	if bool(_manager.call("is_fighting")) or trainer_battle_active():
 		return null
 
 	var best: Node3D = null
@@ -799,18 +861,58 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 
 ## One way in, whoever started it. A second route that forgot to suspend
 ## exploration or hand over the camera would be a bug that only shows up when
-## something ambushes you.
-func _start_fight(wild: Node3D) -> void:
-	var party: Array[RefCounted] = [_ally]
+## something ambushes you. R8.1's trainer battles come through here too, with
+## `opponent_owned` true — that flag is the whole of what a trainer's creature
+## does differently once the fight is running.
+func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	var party_obj := _party()
 	var best: RefCounted = party_obj.call("best") if party_obj != null else null
-	if not bool(_manager.call("begin", _player, wild, _ally_body, party, _camera_rig, best)):
+	if not bool(_manager.call(
+		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best, opponent_owned
+	)):
 		return
 	_engaged_with = wild
 	_set_exploration_active(false)
 
 
+## Who is IN this fight: the creature standing beside the trainer first,
+## then the rest of the living party behind it.
+##
+## The deployed creature has to be index 0 — `combat_manager.begin()` pilots
+## `_party[0]` and says so — and which slot `Game.party` has it in is the
+## party screen's own business, so the order here is the fight's, not the
+## belt's. Everything that indexes into it (D32's `switchable_indices()` /
+## `request_switch()`, the HUD's party strip, `_award_victory`'s bench share)
+## reads that same array, so the two cannot disagree.
+##
+## This used to be `[_ally]` — the single deployed creature — which meant D32's
+## switching had nothing to switch to and `_award_victory`'s documented bench
+## share reached nobody, in wild fights and trainer fights alike. Fixed in one
+## place rather than two, because a trainer battle where switching works and a
+## wild one where it does not is a rule the player would have to discover.
+func _fight_party() -> Array[RefCounted]:
+	var out: Array[RefCounted] = []
+	if _ally != null:
+		out.append(_ally)
+	var party_obj := _party()
+	if party_obj != null:
+		for member: Variant in party_obj.call("members"):
+			var creature := member as RefCounted
+			if creature == null or creature == _ally or bool(creature.get("fainted")):
+				continue
+			out.append(creature)
+	return out
+
+
 func _on_combat_exited(outcome: String) -> void:
+	# R8.1: a round of a trainer battle resolves on its own terms — the next
+	# creature may still be coming, and exploration must not come back if it
+	# is. Checked before anything else here so the wild path below never sees
+	# a trainer's creature.
+	if _trainer_body != null and _engaged_with == _trainer_body:
+		_on_trainer_round_ended(outcome)
+		return
+
 	_set_exploration_active(true)
 	var wild := _engaged_with
 	_engaged_with = null
@@ -878,6 +980,279 @@ func _resolve_catch(kept: RefCounted) -> void:
 		push_error("a second catch resolved while one was already waiting on the ceremony; the %s went free" % str(kept.get("species_id")))
 		return
 	game.set("pending_catch", kept)
+
+
+## --- R8.1: trainer battles --------------------------------------------------
+
+## Is a trainer battle running right now, including the beat between one of
+## their creatures falling and the next being sent out?
+##
+## Read by this node's own gates above, and by `sequence_director.gd`, which
+## keeps the interaction arbiter and the trainer's locomotion locked for as
+## long as this is true — otherwise the player could walk away mid-battle
+## during that beat, which is when the fight itself is not running.
+func trainer_battle_active() -> bool:
+	return not _trainer_spec.is_empty()
+
+
+## Which trainer, for a HUD or a test. "" when no battle is running.
+func trainer_battle_id() -> String:
+	return str(_trainer_spec.get("id", ""))
+
+
+## How many of the trainer's creatures are still to be sent out, the one on
+## the field not included.
+func trainer_creatures_left() -> int:
+	return _trainer_queue.size()
+
+
+## May this trainer be fought right now? A separate question from
+## `begin_trainer_battle()` succeeding, because the NPC has to ask it before
+## it opens its mouth — a beaten trainer greets you instead of challenging
+## you, and that decision is made from this.
+func can_challenge(spec: Dictionary) -> bool:
+	if spec.is_empty() or TRAINERS.team_of(spec).is_empty():
+		return false
+	if _manager == null or bool(_manager.call("is_fighting")) or trainer_battle_active():
+		return false
+	if _ally == null or _ally.fainted or _ally_body == null or not is_instance_valid(_ally_body):
+		return false
+	return not TRAINERS.already_beaten(spec, _progression())
+
+
+## Take up a trainer's challenge. `trainer` is the body that issued it, used
+## to decide where their creatures come from; null is legal.
+##
+## Returns false rather than half-starting: a battle that began with an empty
+## team, or with the player having nothing to fight with, would suspend
+## exploration and never give it back.
+func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
+	if not can_challenge(spec):
+		return false
+
+	var team: Array = TRAINERS.team_of(spec)
+	_trainer_queue.clear()
+	for entry: Variant in team:
+		var creature := TRAINERS.creature_for(entry as Dictionary)
+		if creature == null:
+			push_error("trainer '%s' fields a creature species that is not in species.json" % str(spec.get("id", "")))
+			continue
+		_trainer_queue.append(creature)
+	if _trainer_queue.is_empty():
+		push_error("trainer '%s' has no creatures that could be built; the battle was refused" % str(spec.get("id", "")))
+		return false
+
+	_trainer_spec = spec
+	_trainer_node = trainer
+	_trainer_send_delay = 0.0
+	_trainer_cleanup_delay = 0.0
+	if not _send_out_next_creature():
+		_finish_trainer_battle(false)
+		return false
+	return true
+
+
+## Put the trainer's next creature on the field and open a fight against it.
+##
+## The body is `wild_creature.gd` — the same script the meadow's own creatures
+## use — because it is already everything the combat manager talks to: an
+## instance, a telegraph, a strike, a faint. What it is NOT given is a wander
+## radius it will use or a respawn: it is engaged from the frame it appears
+## and freed when the battle ends. It is also never aggressive, whatever its
+## species says: this creature does not decide when the fight starts, its
+## trainer already did.
+func _send_out_next_creature() -> bool:
+	if _trainer_queue.is_empty():
+		return false
+	var creature: RefCounted = _trainer_queue.pop_front()
+
+	var body: Node3D = CREATURE_SCENE.instantiate()
+	# Numbered off a counter that only ever goes up, never off `_trainer_fallen`
+	# — that list is emptied when the previous body is cleared, so an index
+	# derived from it repeats, and `add_child()` silently renames a colliding
+	# name to `@CharacterBody3D@2179`. A name nobody chose is a name no log
+	# line, remote-tree screenshot or smoke test can match against, which is
+	# exactly how this was found.
+	_trainer_sent += 1
+	body.name = "TrainerCreature_%s_%d" % [str(_trainer_spec.get("id", "trainer")), _trainer_sent]
+	body.set_script(WILD_SCRIPT)
+	get_parent().add_child(body)
+	body.call("populate", str(creature.get("species_id")), _player)
+	body.set("instance", creature)
+	body.call("set_shiny", bool(creature.get("shiny")))
+	body.set("aggressive", false)
+	body.call("configure", MATH.config().get("wild", {}))
+
+	var spot := _send_out_spot()
+	if not bool(body.call("place_on_ground", spot)):
+		# No ground reading (a bare test scene, a gap in the collision bake) is
+		# a placement to take as given rather than a battle to refuse — the
+		# fight itself re-places both fighters a frame later anyway.
+		body.global_position = spot
+	body.set("home", body.global_position)
+	body.call("face_towards", _player.global_position)
+
+	_trainer_body = body
+	_start_fight(body, true)
+	if not bool(_manager.call("is_fighting")):
+		body.queue_free()
+		_trainer_body = null
+		return false
+	return true
+
+
+## Beside the trainer, a stride toward the player — so their creature comes
+## out from where they are standing rather than materialising in the middle of
+## the field. With no trainer body (a test, a tool) it comes out in front of
+## the player instead, which is where a wild creature would have been.
+func _send_out_spot() -> Vector3:
+	var reach := float(TRAINERS.flow().get("deploy_offset", 3.0))
+	if _trainer_node != null and is_instance_valid(_trainer_node):
+		var toward := _player.global_position - _trainer_node.global_position
+		toward.y = 0.0
+		if toward.length() < 0.01:
+			toward = Vector3.FORWARD
+		return _trainer_node.global_position + toward.normalized() * reach
+	var forward := -_player.global_basis.z
+	forward.y = 0.0
+	if forward.length() < 0.01:
+		forward = Vector3.FORWARD
+	return _player.global_position + forward.normalized() * (reach * 2.0)
+
+
+## One round is over. Won means their creature fell; anything else (your
+## creature fainted, you ran) ends the whole battle then and there, with no
+## flag and no reward — exactly what a wild loss costs, which is the fight and
+## nothing else. Nobody dies over it: the human never fights (CLAUDE.md), so
+## losing a trainer battle is the same "your creature is out of the fight"
+## state a wild loss leaves behind, and `player_death.gd` — which is about
+## falling off things — is not involved.
+func _on_trainer_round_ended(outcome: String) -> void:
+	var body := _trainer_body
+	_trainer_body = null
+	_engaged_with = null
+	if body != null and is_instance_valid(body):
+		_trainer_fallen.append(body)
+		if outcome == "won":
+			# §15's own rule, applied to somebody else's creature: the body
+			# stays down for a moment rather than blinking out.
+			body.call("notify_fainted")
+
+	if outcome != "won":
+		_finish_trainer_battle(false)
+		return
+	if _trainer_queue.is_empty():
+		_finish_trainer_battle(true)
+		return
+	# Their next one steps up. Exploration deliberately stays suspended
+	# through this beat — `trainer_battle_active()` is still true.
+	_trainer_send_delay = float(TRAINERS.flow().get("send_out_seconds", 1.6))
+
+
+## The two clocks a trainer battle runs between fights: the beat before the
+## next creature is sent out, and the one after the battle that clears the
+## bodies. Only ever one at a time, and both are cheap no-ops otherwise —
+## same shape as `_tick_respawn` above, and kept separate from it because a
+## trainer's creature never respawns.
+func _tick_trainer_battle(delta: float) -> void:
+	if _trainer_send_delay > 0.0:
+		_trainer_send_delay -= delta
+		if _trainer_send_delay > 0.0:
+			return
+		_clear_fallen_bodies()
+		if not _send_out_next_creature():
+			_finish_trainer_battle(false)
+		return
+
+	if _trainer_cleanup_delay > 0.0:
+		_trainer_cleanup_delay -= delta
+		if _trainer_cleanup_delay <= 0.0:
+			_clear_fallen_bodies()
+
+
+## End the battle, whoever won it. Exploration comes back here and only here,
+## so no exit from a trainer battle can leave the player unable to walk.
+func _finish_trainer_battle(won: bool) -> void:
+	var spec := _trainer_spec
+	_trainer_spec = {}
+	_trainer_node = null
+	_trainer_queue.clear()
+	_trainer_send_delay = 0.0
+	_trainer_cleanup_delay = float(TRAINERS.flow().get("linger_seconds", 2.4))
+	_set_exploration_active(true)
+	if won:
+		_record_trainer_defeat(spec)
+
+
+## SB9's flag, and SC15's payout hook.
+##
+## The flag is written FIRST-time-only semantics by nature — it is a set, not
+## a counter — and the reward is paid only if it was not already set, so a
+## trainer marked `rechallenge: true` later cannot be farmed for items. XP
+## needs nothing here: it was awarded per creature felled, by the ordinary
+## victory award, while the battle was still running.
+func _record_trainer_defeat(spec: Dictionary) -> void:
+	var flag := str(spec.get("defeat_flag", ""))
+	var progression := _progression()
+	if progression == null:
+		push_error("no progression store; the defeat of trainer '%s' was recorded nowhere" % str(spec.get("id", "")))
+		return
+	var already: bool = flag != "" and bool(progression.call("has", flag))
+	if flag != "":
+		progression.call("set_flag", flag)
+	else:
+		push_warning("trainer '%s' names no defeat_flag; beating them changes nothing" % str(spec.get("id", "")))
+	if already:
+		return
+	for extra: String in TRAINERS.reward_flags(spec):
+		progression.call("set_flag", extra)
+	_pay_trainer_reward(spec)
+
+
+## The authored payout (spec §17 P1 step 9). Deliberately thin: SC15 is the
+## item that tunes what a trainer is worth, and this is the plumbing it will
+## tune. A full satchel is warned about rather than swallowed, same as
+## `sequence_director.gd::_give_items()`.
+func _pay_trainer_reward(spec: Dictionary) -> void:
+	var items: Array = TRAINERS.reward_items(spec)
+	if items.is_empty():
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; a trainer's reward was given to nobody")
+		return
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return
+	var catalogue: RefCounted = game.get("items")
+	for entry: Variant in items:
+		var item := entry as Dictionary
+		var id := str(item.get("id", ""))
+		var count := int(item.get("count", 1))
+		if id == "" or count <= 0:
+			continue
+		if catalogue != null and not bool(catalogue.call("has", id)):
+			push_error("trainer '%s' rewards '%s', which data/items/items.json does not define" % [
+				str(spec.get("id", "")), id
+			])
+			continue
+		var leftover := int(inventory.call("add", id, count))
+		if leftover > 0:
+			push_warning("the satchel was full; %d of the %d %s from a trainer did not fit" % [leftover, count, id])
+
+
+func _clear_fallen_bodies() -> void:
+	for body: Node3D in _trainer_fallen:
+		if is_instance_valid(body):
+			body.queue_free()
+	_trainer_fallen.clear()
+
+
+## `Game.progression`, SB9's flat flag store. Same null-tolerant `/root/Game`
+## lookup `_party()` uses, for the reason its own comment gives.
+func _progression() -> RefCounted:
+	var game := get_node_or_null(^"/root/Game")
+	return game.get("progression") if game != null else null
 
 
 ## Hand control back and forth between exploration and combat. One place, so a

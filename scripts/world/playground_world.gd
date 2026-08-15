@@ -20,6 +20,7 @@ const WATER := preload("res://scripts/world/water.gd")
 const VILLAGE := preload("res://scripts/world/village.gd")
 const PROPS := preload("res://scripts/world/props.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
@@ -535,6 +536,15 @@ func _build_settlement() -> void:
 	village_npcs.name = "VillageNPCs"
 	add_child(village_npcs)
 	village_npcs.call("build", _player)
+
+	# R8.1: the people who challenge you. After the villagers, so a trainer
+	# standing too close to one is visible in the same pass rather than a
+	# frame later, and named separately because SC12 moves three of these
+	# roles onto villagers who are already placed above.
+	var trainers: Node3D = TRAINER_NPCS.new()
+	trainers.name = "Trainers"
+	add_child(trainers)
+	trainers.call("build", _player)
 
 	var signpost: Node3D = SIGNPOST.new()
 	signpost.name = "Signpost"

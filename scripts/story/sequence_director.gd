@@ -387,6 +387,14 @@ func _give_items(parts: Array) -> void:
 ## start near him.
 func _refresh_lockout() -> void:
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
+	# R8.1: a trainer battle is longer than any one fight inside it — their
+	# next creature is still coming during the beat after the last one fell,
+	# and the fight is not running for that beat. Without this, the arbiter
+	# and the trainer's own legs come back in the gap, and the player can walk
+	# out of a challenge they are in the middle of. `has_method` because a
+	# bare scene may carry an older director.
+	if not fighting and _encounter != null and _encounter.has_method("trainer_battle_active"):
+		fighting = bool(_encounter.call("trainer_battle_active"))
 	var panel: bool = bool(_dialogue.call("is_open")) or bool(_name_prompt.call("is_open")) \
 			or bool(_starter_picker.call("is_open"))
 	var modal := panel or is_fading() or _adopting

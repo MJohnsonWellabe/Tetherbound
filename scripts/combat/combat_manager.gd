@@ -69,6 +69,16 @@ var _party: Array[RefCounted] = []
 var _active_index: int = 0
 var _enemy: RefCounted = null
 
+## R8.1. Does the creature on the other side of the arena BELONG to somebody?
+##
+## Set by `begin()` and read by the two places a catch can be attempted. A
+## trainer's creature cannot be caught — a CLAUDE.md hard rule — and the
+## refusal is enforced here, at the entry to the throw, rather than by hiding
+## the button: the orb is never spent, the aim never opens, and the player is
+## told why. `catch_math.can_be_caught()` has carried the `already_owned`
+## argument since M3 for exactly this; until now every caller passed `false`.
+var _enemy_owned: bool = false
+
 ## R4.7: whichever `_party` member is `autoload/party.gd`'s flagged Best
 ## Creature, passed in by whoever calls `begin()` (this file never reads the
 ## Party autoload directly — see `_is_best()`). Null means nobody is flagged,
@@ -201,9 +211,15 @@ func arena() -> Node3D:
 ## exploration camera that will be re-pointed at it. `best_creature` is R4.7's
 ## Best Creature flag (`autoload/party.gd::best()`); optional and defaulting
 ## to null so every existing caller/test keeps behaving exactly as before.
+##
+## `opponent_owned` (R8.1) marks the opponent as somebody else's creature — a
+## trainer's. The only thing it changes here is that catching is refused; a
+## trainer's creature fights, takes damage, faints and grants XP exactly like a
+## wild one. Defaults to false, so a wild fight is unaffected.
 func begin(
 	player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted],
-	camera_rig: Node = null, best_creature: RefCounted = null
+	camera_rig: Node = null, best_creature: RefCounted = null,
+	opponent_owned: bool = false
 ) -> bool:
 	if is_fighting():
 		return false
@@ -218,6 +234,7 @@ func begin(
 	_best_creature = best_creature
 	_party = party
 	_active_index = 0
+	_enemy_owned = opponent_owned
 	_enemy = wild.get("instance")
 	if _enemy == null:
 		push_error("wild creature has no instance")
@@ -787,13 +804,24 @@ func _flash_at(where: Vector3, charged: bool) -> void:
 ##
 ## §15 says a faint ENDS the capture opportunity. That is a refusal, not a very
 ## low chance, and telling the player before they spend an orb and a vulnerable
-## second of aiming is the difference between a rule and a punishment.
+## second of aiming is the difference between a rule and a punishment. R8.1
+## adds the second refusal — somebody else's creature — on the same terms and
+## through the same door, so no route into a throw can miss either.
 func _try_throw() -> void:
 	if _enemy == null:
 		return
-	var allowed: bool = CATCH.can_be_caught(_enemy.fainted, false)
-	_throw.call("try_begin_aim", allowed, "%s is out cold — too late to catch it" % _enemy.display_name)
+	var allowed: bool = CATCH.can_be_caught(_enemy.fainted, _enemy_owned)
+	_throw.call("try_begin_aim", allowed, _catch_refusal())
 	state_changed.emit()
+
+
+## Why this throw is being refused. Ownership is named FIRST: a trainer's
+## creature that has also just fainted is still refused for the reason that
+## will never change, not for the one that would have expired.
+func _catch_refusal() -> String:
+	if _enemy_owned:
+		return "You can't catch a trained creature"
+	return "%s is out cold — too late to catch it" % _enemy.display_name
 
 
 func _on_orb_struck(_target: Node3D, offset: float) -> void:
@@ -802,9 +830,13 @@ func _on_orb_struck(_target: Node3D, offset: float) -> void:
 
 	# Re-checked at the moment of impact as well as before the aim: the opponent
 	# can faint to your creature's attack while the orb is still in the air, and an
-	# orb that lands on a corpse must not catch it.
-	if not CATCH.can_be_caught(_enemy.fainted, false):
-		catch_refused.emit("%s fainted before the orb landed" % _enemy.display_name)
+	# orb that lands on a corpse must not catch it. The ownership half is
+	# unreachable from here (`_try_throw` already refused to open the aim) and
+	# is checked anyway — a second route into a throw is exactly the kind of
+	# thing a later milestone adds without reading this file.
+	if not CATCH.can_be_caught(_enemy.fainted, _enemy_owned):
+		catch_refused.emit(_catch_refusal() if _enemy_owned
+			else "%s fainted before the orb landed" % _enemy.display_name)
 		_throw.call("clear_orb")
 		_take_camera()
 		state_changed.emit()
