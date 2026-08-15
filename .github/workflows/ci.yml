@@ -501,7 +501,23 @@ jobs:
         # trainer and abandons the creature, the orb is a projectile that can go
         # wide, an orb is spent on a throw and not on a cancel, and a faint is a
         # refusal rather than long odds.
-        run: godot --headless --path . --script tests/smoke_catching.gd
+        #
+        # LP9: same tick-budget-vs-wall-clock retry as verify-combat below,
+        # for the same measured reason — see that job's comment. The specific
+        # failure this covers: the post-catch re-engage wait (a fixed
+        # respawn-seconds-in-ticks budget) timing out for real under heavy
+        # CI contention, reproduced locally at 16-way oversubscription with
+        # no terrain-embedding signature in the position/velocity watchdog.
+        run: |
+          set +e
+          godot --headless --path . --script tests/smoke_catching.gd
+          code=$?
+          if [ $code -ne 0 ]; then
+            echo "::warning::smoke_catching failed once; retrying once before failing the job"
+            godot --headless --path . --script tests/smoke_catching.gd
+            code=$?
+          fi
+          exit $code
 
   verify-free-build:
     runs-on: ubuntu-latest
@@ -649,7 +665,34 @@ jobs:
         # spent every run standing invisibly inside the trainer, so the two
         # bodies shoved each other and launched the player off the playground at
         # 500 m/s. Every unit test still passed.
-        run: godot --headless --path . --script tests/smoke_combat.gd
+        #
+        # LP9: this scene-boot-and-simulate test is tick-budget-bounded, not
+        # wall-clock-bounded — it waits for a fixed number of physics frames
+        # (e.g. "the enemy never landed a hit in 15 seconds", "the fight never
+        # resolved after 2500 action frames"), which assumes physics ticks
+        # advance at something close to real time. Reproduced locally
+        # (26 instrumented runs escalating from 6-way to 16-way CPU
+        # oversubscription on 4 cores, LP9 in ralph/DONE.md): under heavy
+        # contention ticks can take far longer per tick in wall-clock terms
+        # than uncontended, which can exhaust a tick budget for real even
+        # though the fight logic itself is not stuck — none of those runs
+        # showed LP1's terrain-embedding signature (a per-frame position/
+        # velocity watchdog covering the whole fight, not just LP1's one
+        # teleport, never caught a Y-plunge or an embedded creature). Same
+        # mitigation smoke_aggression already uses below for the same reason
+        # (RB3/LP7): retry once before failing the job, since a second
+        # straight failure is much less likely to be the same transient
+        # contention.
+        run: |
+          set +e
+          godot --headless --path . --script tests/smoke_combat.gd
+          code=$?
+          if [ $code -ne 0 ]; then
+            echo "::warning::smoke_combat failed once; retrying once before failing the job"
+            godot --headless --path . --script tests/smoke_combat.gd
+            code=$?
+          fi
+          exit $code
 
   verify-aggression:
     runs-on: ubuntu-latest
