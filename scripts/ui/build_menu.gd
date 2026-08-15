@@ -68,6 +68,8 @@ const STATUS_SECONDS := 3.0
 ## instance that steals focus/mouse-mode from the other. The lookup-or-create
 ## group is the same convention `interaction_arbiter.gd`'s own `GROUP`
 ## constant already uses for "find the one of these that exists".
+## OF23 also reads this group from `game_menu.gd::_read_actions` before it
+## reacts to `menu_cancel` — see that method's own comment on why.
 const GROUP := "build_menu"
 const SELF_PATH := "res://scripts/ui/build_menu.gd"
 
@@ -111,10 +113,6 @@ var _mouse_before: int = Input.MOUSE_MODE_VISIBLE
 ## Same focus-owner watch `game_menu.gd` uses for its own `ui_focus` tick.
 var _last_focus_owner: Control = null
 
-
-## OF23: `game_menu.gd::_read_actions` looks this group up before it reacts
-## to `menu_cancel` — see that method's own comment on why.
-const GROUP := "build_menu"
 
 func _ready() -> void:
 	layer = UITokens.LAYER_WORLD_PANELS
