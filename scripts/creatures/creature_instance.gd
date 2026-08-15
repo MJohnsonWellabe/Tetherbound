@@ -182,8 +182,8 @@ func take_damage(amount: float) -> bool:
 	return false
 
 
-func gain_energy_from_quick() -> void:
-	energy = MATH.energy_after_quick(energy)
+func gain_energy_from_quick(multiplier: float = 1.0) -> void:
+	energy = MATH.energy_after_quick(energy, multiplier)
 
 
 func can_use_charged() -> bool:
@@ -328,6 +328,44 @@ func gain_bond(points: int, cfg: Dictionary) -> void:
 ## `PROGRESSION.bond_stat_scale` — this only counts the crossings.
 func bond_nodes(cfg: Dictionary) -> int:
 	return PROGRESSION.bond_nodes(bond, cfg)
+
+
+## --- Best Creature (R4.7, GAME_DESIGN.md §12) -------------------------------
+##
+## The ability dict these three take is `creature_species.best_creature_ability
+## (species_id)` — species data, not instance state, the same
+## "Creature Data vs Creature Instance" split TECHNICAL_START.md draws for
+## catch_rate/is_aggressive. A caller that is not the party's flagged Best
+## Creature just omits `is_best`/`ability`, which is why every existing
+## damage/energy call site keeps working unchanged.
+
+## Attack for one hit: base `attack` scaled by however many bond thresholds
+## are crossed. `PROGRESSION.bond_stat_scale` has read a real config table
+## since D30 but nothing multiplied it into a fight until this — GAME_DESIGN.md
+## §12: "Bond increases through fighting together" needs fighting to actually
+## pay bond back, not just take it in.
+func effective_attack(cfg: Dictionary) -> float:
+	return attack * PROGRESSION.bond_stat_scale(bond_nodes(cfg), "attack_scale", cfg)
+
+
+## Defence for one hit taken: bond's `defence_scale`, then a "survivability"
+## Best Creature ability on top if this creature is the one flagged and its
+## species has that kind. Bond is never a penalty for a creature nobody has
+## bonded with yet (see `bond_stat_scale`'s own comment); the ability is the
+## same — it only ever adds, never subtracts.
+func effective_defence(cfg: Dictionary, is_best: bool = false, ability: Dictionary = {}) -> float:
+	var scaled := defence * PROGRESSION.bond_stat_scale(bond_nodes(cfg), "defence_scale", cfg)
+	if is_best and str(ability.get("kind", "")) == "survivability":
+		scaled *= 1.0 + float(ability.get("value", 0.0))
+	return scaled
+
+
+## Multiplier on a landed quick attack's energy gain. 1.0 unless this creature
+## is flagged Best and its species' ability is the "energy" kind.
+func quick_energy_multiplier(is_best: bool = false, ability: Dictionary = {}) -> float:
+	if is_best and str(ability.get("kind", "")) == "energy":
+		return 1.0 + float(ability.get("value", 0.0))
+	return 1.0
 
 
 ## --- individuality (R4.2) ----------------------------------------------------

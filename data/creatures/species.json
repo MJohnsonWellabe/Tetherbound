@@ -11,6 +11,7 @@
   "_comment_evolution_size": "An evolution is ALWAYS larger than the form it came from — the owner's rule, `docs/decisions/D17`. Every `evolves_into` target must have a strictly greater `placeholder.height` than its source. This constrains RELATIVE size inside a line only; it does not reopen the settled peer band (D12/D13, recentred by D19 at 1.20-2.60m overall). Mudsnout 1.55m -> Tuskroot 2.15m satisfies it, and the pair satisfied D17 by accident until tests/test_evolution_links.gd started failing loudly on it, because heights here are tunable and a tune that inverts a line is otherwise completely silent.",
 
   "_comment_aggressive": "`aggressive` decides whether a wild creature will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL creature, and the same list allows 'Aggressive creature initiates' \u2014 so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
+  "_comment_best_creature": "R4.7, GAME_DESIGN.md 12: 'Best Creature abilities should be species-specific where possible.' `kind` is `survivability` (a percentage bonus to the effective defence a Best Creature fights with) or `energy` (the same percentage bonus applied to energy gained from a landed quick attack) \u2014 the two D30-era combat hooks that already exist. Read only through `creature_species.best_creature_ability()`, and only applied when a creature is the party's flagged Best Creature (`autoload/party.gd::best()`); it never affects a creature nobody has designated. Traversal and other perk kinds named by GAME_DESIGN.md 12 are not built \u2014 no out-of-exploration companion-speed system exists yet for one to hook into.",
   "species": {
     "terrapup": {
       "display_name": "Terrapup",
@@ -21,6 +22,7 @@
       "catch_rate": 0.3,
       "aggressive": false,
       "moves": { "quick": "pebble_toss", "charged": "stone_rush" },
+      "best_creature": { "id": "shell_guard", "kind": "survivability", "value": 0.15 },
       "placeholder": {
         "colour": "#9c5224",
         "height": 2.0,
@@ -55,6 +57,7 @@
       "catch_rate": 0.3,
       "aggressive": false,
       "moves": { "quick": "ripple_jab", "charged": "undertow" },
+      "best_creature": { "id": "riptide_focus", "kind": "energy", "value": 0.12 },
       "placeholder": {
         "colour": "#4fb8c9",
         "height": 1.95,
@@ -85,6 +88,7 @@
       "catch_rate": 0.3,
       "aggressive": false,
       "moves": { "quick": "gale_peck", "charged": "sky_rend" },
+      "best_creature": { "id": "updraft_rhythm", "kind": "energy", "value": 0.15 },
       "placeholder": {
         "colour": "#cfe3ea",
         "height": 1.9,
@@ -115,6 +119,7 @@
       "catch_rate": 0.55,
       "aggressive": false,
       "moves": { "quick": "bramble_whip", "charged": "warren_charge" },
+      "best_creature": { "id": "bramble_ward", "kind": "survivability", "value": 0.10 },
       "placeholder": {
         "colour": "#f2c14f",
         "height": 1.5,
@@ -146,6 +151,7 @@
       "evolves_into": "tuskroot",
       "_comment_evolution": "R4.6: the evolution SYSTEM is real now (scripts/creatures/evolution.gd), gated by data/config/progression.json's `evolution.mudsnout` block (level/bond/item). This link is what that block's `target` resolves through.",
       "moves": { "quick": "root_nibble", "charged": "rootquake" },
+      "best_creature": { "id": "root_instinct", "kind": "energy", "value": 0.10 },
       "placeholder": {
         "colour": "#8a6a44",
         "height": 1.55,
@@ -176,6 +182,7 @@
       "catch_rate": 0.38,
       "aggressive": false,
       "moves": { "quick": "pack_bite", "charged": "trailblaze_pounce" },
+      "best_creature": { "id": "trail_drive", "kind": "energy", "value": 0.14 },
       "placeholder": {
         "colour": "#c2a173",
         "height": 1.7,
@@ -206,6 +213,7 @@
       "catch_rate": 0.4,
       "aggressive": false,
       "moves": { "quick": "burrow_strike", "charged": "tremor_roll" },
+      "best_creature": { "id": "burrow_plating", "kind": "survivability", "value": 0.18 },
       "placeholder": {
         "colour": "#5c4a3a",
         "height": 1.85,
@@ -236,6 +244,7 @@
       "catch_rate": 0.45,
       "aggressive": false,
       "moves": { "quick": "hoofbeat", "charged": "verdant_burst" },
+      "best_creature": { "id": "steady_heart", "kind": "survivability", "value": 0.12 },
       "placeholder": {
         "colour": "#b98d52",
         "height": 2.05,
@@ -268,6 +277,7 @@
       "evolves_from": "mudsnout",
       "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild \u2014 the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). R4.6 built the evolution SYSTEM (scripts/creatures/evolution.gd, data/config/progression.json's `evolution` block); a caught Mudsnout can now actually become this. The pair's heights (Mudsnout 1.55m -> Tuskroot 2.15m after D19's size pass) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
       "moves": { "quick": "root_nibble", "charged": "rootquake" },
+      "best_creature": { "id": "tusk_momentum", "kind": "energy", "value": 0.16 },
       "placeholder": {
         "_comment_colour": "Drawn from Tuskroot's own COLOR PALETTE row on docs/art/reference/wild/05_Meadows_Wild_Scale_Palette_Implementation_Guide.png (which despite its filename is Ground Sheet B) \u2014 the secondary fur/hide brown, which is what most of the body reads as in the turnarounds. Retained only for the fallback capsule, which is now genuinely a fallback: R0.6 installed a real rigged, animated, graded model.",
         "colour": "#5d4831",
@@ -298,6 +308,7 @@
       "catch_rate": 0.5,
       "aggressive": false,
       "moves": { "quick": "splash_snap", "charged": "riptide_rush" },
+      "best_creature": { "id": "paddle_surge", "kind": "energy", "value": 0.13 },
       "placeholder": {
         "colour": "#3f8080",
         "height": 1.65,
@@ -328,6 +339,7 @@
       "catch_rate": 0.4,
       "aggressive": false,
       "moves": { "quick": "shell_bash", "charged": "tremor_roll" },
+      "best_creature": { "id": "moss_carapace", "kind": "survivability", "value": 0.20 },
       "placeholder": {
         "colour": "#5e7a4a",
         "height": 1.75,
@@ -354,6 +366,7 @@
       "catch_rate": 0.45,
       "aggressive": false,
       "moves": { "quick": "tail_splash", "charged": "riptide_rush" },
+      "best_creature": { "id": "brook_current", "kind": "energy", "value": 0.12 },
       "placeholder": {
         "colour": "#6b4a2f",
         "height": 1.6,
@@ -380,6 +393,7 @@
       "catch_rate": 0.28,
       "aggressive": true,
       "moves": { "quick": "talon_dive", "charged": "storm_strike" },
+      "best_creature": { "id": "storm_instinct", "kind": "energy", "value": 0.16 },
       "placeholder": {
         "colour": "#4a6478",
         "height": 2.1,
@@ -407,6 +421,7 @@
       "catch_rate": 0.42,
       "aggressive": false,
       "moves": { "quick": "quick_flit", "charged": "night_swoop" },
+      "best_creature": { "id": "dusk_veil", "kind": "survivability", "value": 0.14 },
       "placeholder": {
         "colour": "#5b6b74",
         "height": 1.7,
@@ -434,6 +449,7 @@
       "catch_rate": 0.5,
       "aggressive": false,
       "moves": { "quick": "quick_flit", "charged": "gust_burst" },
+      "best_creature": { "id": "quickwing_flutter", "kind": "energy", "value": 0.15 },
       "placeholder": {
         "colour": "#7a97a8",
         "height": 1.35,
@@ -462,6 +478,7 @@
       "catch_rate": 0.48,
       "aggressive": false,
       "moves": { "quick": "tail_splash", "charged": "sky_rend" },
+      "best_creature": { "id": "reed_glide", "kind": "energy", "value": 0.11 },
       "placeholder": {
         "colour": "#4a8a8a",
         "height": 1.8,
@@ -490,6 +507,7 @@
       "_comment_catch": "The lowest in the game by a wide margin. A legendary you catch on the second orb is not a legendary. TUNABLE.",
       "aggressive": true,
       "moves": { "quick": "hoofbeat", "charged": "antler_slam" },
+      "best_creature": { "id": "antler_bulwark", "kind": "survivability", "value": 0.20 },
       "placeholder": {
         "colour": "#4f7a3a",
         "height": 2.6,

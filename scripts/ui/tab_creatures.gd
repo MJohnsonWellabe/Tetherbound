@@ -51,6 +51,14 @@ const TEACH_ACTION := "backpack_split"
 ## at once (see `_read_teach()`'s own note on this pattern).
 const EVOLVE_ACTION := "backpack_drop"
 
+## R4.7: designate the focused creature as Best Creature. `backpack_drop`
+## went to R4.6's `EVOLVE_ACTION` first, so this borrows `creature_recall`
+## (R / gamepad D-pad up) instead — `encounter_director.gd`'s only consumer
+## of it has no `process_mode` override, so it inherits the game tree's
+## pause exactly like `backpack_drop`/`backpack_split` do while a menu is
+## open, and cannot fire underneath this screen.
+const BEST_ACTION := "creature_recall"
+
 ## progression_state's flag namespace for a found TM (tm_pickup.gd), matched
 ## here so this screen can tell "found" from "not found".
 const TM_FLAG_PREFIX := "tm:"
@@ -60,7 +68,7 @@ const TM_FLAG_PREFIX := "tm:"
 ## the same "always show the verb, explain the refusal on press" shape
 ## `TEACH_ACTION` already uses.
 const DETAIL_HINT_BASE := "A  pick up, then A again to reorder      E / X  send this one out first" \
-	+ "      H  teach a known TM"
+	+ "      H  teach a known TM      R  set as Best Creature"
 
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
@@ -118,6 +126,7 @@ var _move_charged_tag: Label = null
 var _move_charged_sub: Label = null
 var _bond_meter: Control = null
 var _bond_caption: Label = null
+var _best_caption: Label = null
 var _detail_status: Label = null
 var _detail_hint: Label = null
 
@@ -385,6 +394,11 @@ func _build_detail() -> Control:
 	_bond_caption.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	bond_wrap.add_child(_bond_caption)
 
+	_best_caption = Label.new()
+	_best_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_best_caption.add_theme_color_override("font_color", UITokens.WARNING)
+	bond_wrap.add_child(_best_caption)
+
 	_detail_status = Label.new()
 	_detail_status.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_detail_status.add_theme_color_override("font_color", UITokens.WARNING)
@@ -510,6 +524,7 @@ func poll() -> void:
 	_read_activate()
 	_read_teach()
 	_read_evolve()
+	_read_set_best()
 
 	var size: int = int(party.call("size"))
 	if bool(party.call("is_full")):
@@ -565,6 +580,8 @@ func _poll_row(i: int, party: RefCounted, cfg: Dictionary, active: int, size: in
 	chip.add_theme_stylebox_override("panel", chip_box)
 
 	var marker := " *" if i == active and size > 0 else ""
+	if i == int(party.call("best_index")):
+		marker += " ★"
 	(_row_names[i] as Label).text = "%s%s" % [str(creature.call("label")), marker]
 	(_row_names[i] as Label).add_theme_color_override(
 		"font_color", HEALTH_LOW if bool(creature.get("fainted")) else UITokens.TEXT_PRIMARY
@@ -606,6 +623,7 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_move_charged_icon.texture = null
 		_bond_meter.call("set_bond", 0, 100, 0, 5)
 		_bond_caption.text = ""
+		_best_caption.text = ""
 		_detail_status.text = ""
 		_detail_hint.text = DETAIL_HINT_BASE
 		if _shown_species != "":
@@ -680,12 +698,31 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	var per_node: float = float(cfg.get("bond", {}).get("effects_per_node", {}).get("attack_scale", 0.0))
 	_bond_caption.text = "+%d%% ATK/DEF per node" % int(round(per_node * 100.0))
 
-	if bool(creature.get("fainted")):
-		_detail_status.text = "Out of the fight."
-	elif index == int(party.call("active_index")):
-		_detail_status.text = "Goes out first."
+	if index == int(party.call("best_index")):
+		var ability: Dictionary = SPECIES.best_creature_ability(species_id)
+		var kind := str(ability.get("kind", ""))
+		var pct := int(round(float(ability.get("value", 0.0)) * 100.0))
+		if kind == "survivability":
+			_best_caption.text = "★ Best Creature — %s: +%d%% effective defence" % [
+				str(ability.get("id", "")), pct
+			]
+		elif kind == "energy":
+			_best_caption.text = "★ Best Creature — %s: +%d%% energy per quick hit" % [
+				str(ability.get("id", "")), pct
+			]
+		else:
+			_best_caption.text = "★ Best Creature"
 	else:
-		_detail_status.text = ""
+		_best_caption.text = ""
+
+	var status_lines: Array[String] = []
+	if bool(creature.get("fainted")):
+		status_lines.append("Out of the fight.")
+	if index == int(party.call("active_index")):
+		status_lines.append("Goes out first.")
+	if index == int(party.call("best_index")):
+		status_lines.append("Best Creature.")
+	_detail_status.text = "  ".join(status_lines)
 
 	_detail_hint.text = DETAIL_HINT_BASE
 	if not EVOLUTION.requirements(species_id, cfg).is_empty():
@@ -767,6 +804,31 @@ func _read_activate() -> void:
 		say("%s goes out first." % str(creature.call("label")))
 	else:
 		say("%s is out of the fight." % str(creature.call("label")))
+
+
+## R4.7 (GAME_DESIGN.md §12: "Best Creature is meaningful progression, not a
+## cosmetic badge"). Unlike `_read_activate()`, a fainted creature is allowed
+## — this is a standing title, not "who takes the field next" — and
+## `party.set_best()` itself is the toggle: pressing it again on the already-
+## flagged slot clears the title.
+func _read_set_best() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if not Input.is_action_just_pressed(BEST_ACTION):
+		return
+
+	var party: RefCounted = _party()
+	if party == null:
+		return
+	var creature: RefCounted = party.call("at", _focused)
+	if creature == null:
+		say("Nothing in that slot.")
+		return
+	party.call("set_best", _focused)
+	if int(party.call("best_index")) == _focused:
+		say("%s is your Best Creature." % str(creature.call("label")))
+	else:
+		say("%s is no longer your Best Creature." % str(creature.call("label")))
 
 
 ## R4.4: teach the focused creature the first known, compatible TM it does

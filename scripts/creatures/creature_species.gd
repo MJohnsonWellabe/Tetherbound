@@ -64,3 +64,20 @@ static func is_aggressive(species_id: String) -> bool:
 ## The species' base share of the catch formula. Lower is rarer.
 static func catch_rate(species_id: String) -> float:
 	return float(definition(species_id).get("catch_rate", 0.3))
+
+
+## Best Creature's species-specific perk (GAME_DESIGN.md §12: "Best Creature
+## abilities should be species-specific where possible"). Lives with the rest
+## of species data rather than being copied onto every instance, the same
+## split `catch_rate`/`is_aggressive` already use. Missing or malformed data
+## reads as "no ability" (`kind` "") rather than crashing — a party's flagged
+## Best Creature simply fights at its plain stats, never worse, if a species
+## entry has none.
+static func best_creature_ability(species_id: String) -> Dictionary:
+	var raw: Variant = definition(species_id).get("best_creature")
+	var ability: Dictionary = raw if raw is Dictionary else {}
+	return {
+		"id": str(ability.get("id", "")),
+		"kind": str(ability.get("kind", "")),
+		"value": float(ability.get("value", 0.0)),
+	}

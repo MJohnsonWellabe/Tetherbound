@@ -69,6 +69,13 @@ var _party: Array[RefCounted] = []
 var _active_index: int = 0
 var _enemy: RefCounted = null
 
+## R4.7: whichever `_party` member is `autoload/party.gd`'s flagged Best
+## Creature, passed in by whoever calls `begin()` (this file never reads the
+## Party autoload directly — see `_is_best()`). Null means nobody is flagged,
+## which is also what every existing caller/test that omits the new `begin()`
+## argument gets.
+var _best_creature: RefCounted = null
+
 ## D32. Seconds left before another voluntary switch is allowed. Set by
 ## `request_switch`, ticked down in `_tick_active`. Does not gate a faint —
 ## there is no auto-switch-on-faint (D32's own "what was deliberately not
@@ -175,6 +182,13 @@ func enemy() -> RefCounted:
 	return _enemy
 
 
+## R4.7: is `creature` the fight's flagged Best Creature? Compared by
+## reference — `_best_creature` and `_party`'s members are the same live
+## instances the caller's Party autoload holds, never copies.
+func _is_best(creature: RefCounted) -> bool:
+	return creature != null and _best_creature != null and creature == _best_creature
+
+
 func is_fighting() -> bool:
 	return state != State.INACTIVE
 
@@ -184,8 +198,13 @@ func arena() -> Node3D:
 
 
 ## Begin a fight. `ally_body` is the player's deployed creature, `camera_rig` is the
-## exploration camera that will be re-pointed at it.
-func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted], camera_rig: Node = null) -> bool:
+## exploration camera that will be re-pointed at it. `best_creature` is R4.7's
+## Best Creature flag (`autoload/party.gd::best()`); optional and defaulting
+## to null so every existing caller/test keeps behaving exactly as before.
+func begin(
+	player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted],
+	camera_rig: Node = null, best_creature: RefCounted = null
+) -> bool:
 	if is_fighting():
 		return false
 	if player == null or wild == null or ally_body == null or party.is_empty():
@@ -196,6 +215,7 @@ func begin(player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCoun
 	_wild = wild
 	_ally_body = ally_body
 	_camera_rig = camera_rig
+	_best_creature = best_creature
 	_party = party
 	_active_index = 0
 	_enemy = wild.get("instance")
@@ -462,8 +482,12 @@ func _resolve_player_strike() -> void:
 
 	var is_quick: bool = bool(_pending_move.get("is_quick", false))
 	var move_id: String = creature.move_quick if is_quick else creature.move_charged
+	var cfg: Dictionary = PROGRESSION.config()
+	var is_best := _is_best(creature)
+	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
 	var damage: float = MATH.rolled_damage(
-		float(_pending_move.get("power", 9.0)), creature.attack, _enemy.defence, _rng.randf(),
+		float(_pending_move.get("power", 9.0)),
+		creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
 		_moves.power(move_id)
 	)
 	var killed: bool = _enemy.take_damage(damage)
@@ -474,7 +498,7 @@ func _resolve_player_strike() -> void:
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
 	if is_quick:
-		creature.gain_energy_from_quick()
+		creature.gain_energy_from_quick(creature.quick_energy_multiplier(is_best, ability))
 
 	hit_landed.emit(true, damage)
 	state_changed.emit()
@@ -707,9 +731,13 @@ func _on_enemy_strike() -> void:
 	# The wild AI has one attack, not a quick/charged pair (scripts/combat/
 	# combat_ai.gd's Intent enum never branches on a move slot), so its own
 	# `move_quick` id stands in for "whatever this creature just swung with".
+	var prog_cfg: Dictionary = PROGRESSION.config()
+	var is_best := _is_best(creature)
+	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
 	var damage: float = MATH.rolled_damage(
-		float(cfg.get("power", 8.0)), _enemy.attack, creature.defence, _rng.randf(),
-		_moves.power(_enemy.move_quick)
+		float(cfg.get("power", 8.0)),
+		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability),
+		_rng.randf(), _moves.power(_enemy.move_quick)
 	)
 	var killed: bool = creature.take_damage(damage)
 	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)

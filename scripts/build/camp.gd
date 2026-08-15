@@ -155,6 +155,7 @@ func _pass_the_night(game: Node) -> void:
 	if party != null:
 		var cfg := PROGRESSION.config()
 		var rest_xp: int = PROGRESSION.rest_xp(cfg)
+		var rest_bond: int = PROGRESSION.rest_bond(cfg)
 		for member: Variant in (party.call("members") as Array):
 			(member as RefCounted).call("heal_fully")
 			# R4.1-remainder (spec §11): a bonding XP source, separate from
@@ -162,6 +163,11 @@ func _pass_the_night(game: Node) -> void:
 			# progression.gd::rest_xp()'s own comment for why.
 			if rest_xp > 0:
 				(member as RefCounted).call("gain_xp", rest_xp, cfg)
+			# R4.7 (spec §12: "Bond increases through... time together...
+			# resting"). Same "every member, fainted or not" shape as rest_xp
+			# above — resting is not something a hurt party member opts out of.
+			if rest_bond > 0:
+				(member as RefCounted).call("gain_bond", rest_bond, cfg)
 	# The trainer too — find them by the vitals they carry.
 	var world := get_parent()
 	var player := world.get_node_or_null(^"Player")

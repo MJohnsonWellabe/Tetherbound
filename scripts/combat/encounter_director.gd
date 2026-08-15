@@ -709,7 +709,9 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 ## something ambushes you.
 func _start_fight(wild: Node3D) -> void:
 	var party: Array[RefCounted] = [_ally]
-	if not bool(_manager.call("begin", _player, wild, _ally_body, party, _camera_rig)):
+	var party_obj := _party()
+	var best: RefCounted = party_obj.call("best") if party_obj != null else null
+	if not bool(_manager.call("begin", _player, wild, _ally_body, party, _camera_rig, best)):
 		return
 	_engaged_with = wild
 	_set_exploration_active(false)

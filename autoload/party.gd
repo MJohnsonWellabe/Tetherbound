@@ -25,6 +25,13 @@ var revision: int = 0
 var _creatures: Array = []
 var _active: int = 0
 
+## GAME_DESIGN.md §12: "Best Creature is meaningful progression, not a
+## cosmetic badge." A standing title the player sets, distinct from `_active`
+## ("who takes the field next") — a fainted or benched creature can still be
+## the Best Creature. -1 means nobody is flagged, same "no selection" shape
+## `_active` would use if slot 0 were not always a legal default.
+var _best: int = -1
+
 
 func size() -> int:
 	return _creatures.size()
@@ -72,6 +79,10 @@ func remove_at(index: int) -> RefCounted:
 	_creatures.remove_at(index)
 	if _active >= _creatures.size():
 		_active = maxi(0, _creatures.size() - 1)
+	if _best == index:
+		_best = -1
+	elif _best > index:
+		_best -= 1
 	revision += 1
 	return gone
 
@@ -94,6 +105,12 @@ func move(from: int, to: int) -> void:
 		_active -= 1
 	elif from > _active and to <= _active:
 		_active += 1
+	if _best == from:
+		_best = to
+	elif from < _best and to >= _best:
+		_best -= 1
+	elif from > _best and to <= _best:
+		_best += 1
 	revision += 1
 
 
@@ -118,12 +135,34 @@ func set_active(index: int) -> bool:
 	return true
 
 
+func best_index() -> int:
+	return _best
+
+
+func best() -> RefCounted:
+	return at(_best)
+
+
+## Toggle the Best Creature designation. Pressing it again on the same slot
+## clears the title rather than re-confirming it — the same "second press
+## undoes the first" shape reordering's pick-up-then-place already uses.
+## Unlike `set_active`, a fainted creature is still allowed: this is a
+## standing title earned by play, not "who takes the field next."
+func set_best(index: int) -> bool:
+	if index < 0 or index >= _creatures.size():
+		return false
+	_best = -1 if _best == index else index
+	revision += 1
+	return true
+
+
 ## Empty the party. Used only by save/load (R3.1) to rehydrate from a slot
 ## without leaving whichever creatures were already in it mixed in with the loaded
 ## ones.
 func clear() -> void:
 	_creatures.clear()
 	_active = 0
+	_best = -1
 	revision += 1
 
 

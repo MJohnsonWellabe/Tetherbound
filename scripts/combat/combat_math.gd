@@ -128,9 +128,12 @@ static func charged_cost() -> float:
 	return float(config().get("energy", {}).get("charged_cost", 100.0))
 
 
-## Energy after landing a quick attack, clamped to the maximum.
-static func energy_after_quick(current: float) -> float:
-	return minf(max_energy(), current + energy_per_quick())
+## Energy after landing a quick attack, clamped to the maximum. `multiplier`
+## is Best Creature's "energy" ability (GAME_DESIGN.md §12) layered on top of
+## the flat per-hit gain; every existing caller omits it and gets exactly
+## today's `energy_per_quick()`.
+static func energy_after_quick(current: float, multiplier: float = 1.0) -> float:
+	return minf(max_energy(), current + energy_per_quick() * multiplier)
 
 
 static func can_use_charged(current_energy: float) -> bool:
