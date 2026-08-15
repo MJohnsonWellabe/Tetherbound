@@ -163,18 +163,31 @@ assets — tint emission too). Thread through starter picker, ally body,
 creature viewport. Done when: a forced-shiny spawn visibly differs in a
 render, survives save/load, and a v5 save loads clean.
 
-### OF28 — Fantastical species palettes + shiny colours
+### OF28 — Fantastical species repaints + shiny colourways
 `model: fable` · `tests: smoke_art + judged renders` · `area: art, visual`
 Owner-reported: "Change the creature colors to be more fantastical. Don't
-redo meshy, but make them more mystical like in palworld." Materials only —
-no new meshes (hard rule, reaffirmed 2026-08-11). Per-species mystical base
-palette + shiny palette in `data/creatures/palettes.json` feeding OF27's
-tint hook; re-point the HUD chips and fallback capsule at the same palette
-so menus agree with the world. Verified by RENDER (contact sheets +
-`visual-judge`), never by code alone — the emission no-op tint is the known
-killer (NP1's own history). Decision doc D43 with render evidence. Done
-when: a blind render pass judges the roster more mystical than baseline and
-each shiny reads as clearly special at gameplay distance.
+redo meshy, but make them more mystical like in palworld." And, clarified
+2026-08-15 after OF27 shipped its placeholder tint: **"the shinys shouldn't
+be a tint. it should be repainting the character. I don't just want a hue
+shaded over them. I want a genuinely different. like if our newt is blue, I
+want red. not blue with a red shade over it. for the white and black
+striped badger maybe it becomes blue stripes."**
+So: NOT colour multipliers — a multiply can never turn blue into red. The
+mechanism is **offline texture repaints**: a repaint tool (Python/PIL in
+`tools/`) that loads each species' painted albedo texture and remaps colour
+regions per a per-species spec (stripes stay stripes, but become blue),
+writing checked-in `_shiny` (and, where the base look changes, `_vivid`)
+texture variants; shiny bodies swap albedo+emission textures to the shiny
+colourway (the emission channel carries the same painted texture — swap
+both or the repaint is invisible, NP1's own lesson). OF27's multiply hook
+stays only as the capsule-fallback path. Textures and materials only — no
+new meshes, no Meshy (hard rule, reaffirmed 2026-08-11). Re-point HUD chips
+and fallback capsule colours at the new palettes so menus agree with the
+world. Verified by RENDER (contact sheets + `visual-judge`), never by code
+alone. Decision doc (next free D number) with render evidence. Done when: a
+blind render pass judges the roster more mystical than baseline, and each
+shiny reads as a genuinely different colourway — not a shade — at gameplay
+distance.
 
 ### OF29 — TMs go in the inventory: inspect, then choose who learns
 `model: opus` · `tests: test_moves, test_inventory, smoke_menu (extend)` · `area: ui`
