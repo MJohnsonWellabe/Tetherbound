@@ -388,3 +388,137 @@ func test_every_conversation_a_villager_can_open_really_exists() -> void:
 		for id: String in ids:
 			assert_ne(id, "", "%s has a branch naming no conversation" % who)
 			assert_true(RUNNER.has(id), "%s would open '%s', which no dialogue file defines" % [who, id])
+
+
+## --- OF31/D39: Mira the merchant, Oskar the creature trader -------------------
+##
+## The same split OF30 drew: the WIRING (a `shop:` effect actually opening a
+## panel with a real Game autoload under it) is proven in
+## `tests/smoke_village_trade.gd`, because it is a Node reading `/root/Game` in
+## `_process` and neither exists here. What is checked here is the data half —
+## the conversations carry the right effects, spelled the way
+## `sequence_director.gd::_queue_shop` parses them, and every vendor they name
+## is really in data/config/trade.json.
+
+const TRADE_DB := preload("res://scripts/trade/trade_db.gd")
+const MIRA_FLAG := "mira_shop_open"
+const OSKAR_FLAG := "oskar_trade_open"
+const MIRA_INTRO := "village_mira_shop_intro"
+const MIRA_SHOP := "village_mira_shop"
+const OSKAR_INTRO := "village_oskar_trade_intro"
+const OSKAR_SWAP := "village_oskar_trade"
+
+
+## `shop:<goods|creatures>:<vendor_id>`, the fourth dialogue effect. A typo in
+## either half is a villager whose shop silently never opens.
+func test_every_shop_effect_names_a_known_kind_and_a_real_vendor() -> void:
+	var trade: RefCounted = TRADE_DB.new()
+	var found := 0
+	for id: String in RUNNER.table():
+		for effect: String in _effects_of(id):
+			var parts: Array = RUNNER.parse_effect(effect)
+			if str(parts[0]) != "shop":
+				continue
+			found += 1
+			var pieces: PackedStringArray = str(parts[1]).split(":")
+			assert_eq(pieces.size(), 2,
+				"'%s' has effect '%s'; it reads shop:<kind>:<vendor_id>" % [id, effect])
+			if pieces.size() != 2:
+				continue
+			var kind := str(pieces[0])
+			var vendor := str(pieces[1])
+			assert_true(kind == "goods" or kind == "creatures",
+				"'%s' asks for a '%s' shop; only goods and creatures exist" % [id, kind])
+			if kind == "goods":
+				assert_true((trade.vendor_ids() as Array).has(vendor),
+					"'%s' opens vendor '%s', which trade.json does not define" % [id, vendor])
+			else:
+				assert_false(CREATURE_TRADE.trader(trade.config(), vendor).is_empty(),
+					"'%s' opens creature trader '%s', which trade.json does not define" % [id, vendor])
+	assert_true(found >= 4, "Mira and Oskar each open their screen from two branches; found %d" % found)
+
+
+const CREATURE_TRADE := preload("res://scripts/trade/creature_trade.gd")
+
+
+## Both of Mira's branches have to END at the store, or a greeting is a
+## cul-de-sac that mentions a shop the player cannot reach.
+func test_both_of_miras_branches_open_the_store() -> void:
+	for id in [MIRA_INTRO, MIRA_SHOP]:
+		assert_true(_effects_of(id).has("shop:goods:mira"),
+			"'%s' never opens the store" % id)
+
+
+func test_both_of_oskars_branches_open_the_swap() -> void:
+	for id in [OSKAR_INTRO, OSKAR_SWAP]:
+		assert_true(_effects_of(id).has("shop:creatures:oskar"),
+			"'%s' never opens the swap screen" % id)
+
+
+## Same rule D43 set for Tam's tools: the gift and the flag that records it are
+## on ONE line, so a conversation cut short cannot bank one without the other.
+func test_the_starting_coins_and_the_flag_that_records_them_are_the_same_line() -> void:
+	var lines: Array = (RUNNER.table().get(MIRA_INTRO, {}) as Dictionary).get("lines", [])
+	var found := false
+	for raw: Variant in lines:
+		if not raw is Dictionary:
+			continue
+		var effects: Array = ((raw as Dictionary).get("effects", []) as Array)
+		var gives_coins := false
+		for effect: Variant in effects:
+			if str(effect).begins_with("give:coin:"):
+				gives_coins = true
+		if not gives_coins:
+			continue
+		found = true
+		assert_true(effects.has("flag:%s" % MIRA_FLAG),
+			"the line that hands over the coins must also set '%s'" % MIRA_FLAG)
+	assert_true(found, "'%s' never hands over any coins" % MIRA_INTRO)
+
+
+## A swap is not a purchase. Oskar must never hand out items, and above all must
+## never hand out coins for a creature — the owner's answer was a straight swap.
+func test_oskar_never_gives_anything_away() -> void:
+	for id in [OSKAR_INTRO, OSKAR_SWAP]:
+		for effect: String in _effects_of(id):
+			assert_false(effect.begins_with("give:"),
+				"'%s' hands something over; Oskar trades creature for creature" % id)
+
+
+## The dual-role rule from the other side: the merchant's own branches resolve
+## in the right order and her plain greeting is still there underneath.
+func test_the_merchants_branches_resolve_in_order() -> void:
+	var mira := _villager("Mira")
+	assert_false(mira.is_empty(), "village_npcs.json has no villager named Mira")
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_INTRO,
+		"a fresh save should get the shop-opening conversation")
+	progression.set_flag(MIRA_FLAG)
+	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_SHOP,
+		"once the shop is open, greeting her should open it again")
+	assert_eq(str(mira.get("greeting", "")), "village_mira",
+		"NP3's Meadow Keeper line must survive her becoming a merchant")
+
+
+func test_the_creature_traders_branches_resolve_in_order() -> void:
+	var oskar := _villager("Oskar")
+	assert_false(oskar.is_empty(), "village_npcs.json has no villager named Oskar")
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	assert_eq(VILLAGE_NPCS.greeting_for(oskar, progression), OSKAR_INTRO)
+	progression.set_flag(OSKAR_FLAG)
+	assert_eq(VILLAGE_NPCS.greeting_for(oskar, progression), OSKAR_SWAP)
+	assert_eq(str(oskar.get("greeting", "")), "village_oskar",
+		"NP3's Bridgehand line must survive him becoming a trader")
+
+
+func _villager(who: String) -> Dictionary:
+	var file := FileAccess.open("res://data/config/village_npcs.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return {}
+	for entry: Variant in ((parsed as Dictionary).get("villagers", []) as Array):
+		if entry is Dictionary and str((entry as Dictionary).get("name", "")) == who:
+			return entry as Dictionary
+	return {}

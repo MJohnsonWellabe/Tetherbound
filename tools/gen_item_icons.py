@@ -391,7 +391,40 @@ def icon_tm_burrow_strike() -> Image.Image:
     return _icon_tm(icon_move_quick())
 
 
+def icon_coin() -> Image.Image:
+    """OF31/D39. A stack of three coins seen at a slight angle: two edge-on
+    discs below, one face-on disc above with a cut rim ring so it reads as
+    struck metal rather than a plain dot.
+
+    Deliberately generated here rather than reusing the old Kenney `coin`
+    glyph that still sits (stale) inside `assets/ui/icons/ui/orb_tier_basic.png`
+    -- see docs/ASSET_LEDGER.md's own note on that copy. Same silhouette
+    language as every other item in this file, so the satchel does not gain a
+    web glyph in the middle of a set of drawn objects.
+    """
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    # The coin behind, up and to the right, so the icon reads as money rather
+    # than as one lone disc (which at 64px is every round icon in every pack).
+    d.ellipse((108, 26, 234, 152), fill=FG)
+    # Front coin, punched clear of the back one first so the two stay separate
+    # shapes at 64px instead of merging into a peanut.
+    cutout_ellipse(d, (10, 62, 200, 252))
+    d.ellipse((18, 70, 192, 244), fill=FG)
+    # Rim line, and a struck diamond device on the face. Both cutouts, the
+    # same "ink line punched through a silhouette" language as the rest.
+    cutout_arc(d, (34, 86, 176, 228), 0, 360)
+    cx, cy, r = 105, 157, 30
+    cutout_ellipse(d, (cx - 3, cy - 3, cx + 3, cy + 3))
+    d.polygon(
+        [(cx, cy - r), (cx + r * 0.62, cy), (cx, cy + r), (cx - r * 0.62, cy)],
+        fill=CLEAR,
+    )
+    return img
+
+
 ITEM_ICONS = {
+    "coin.png": icon_coin,
     "wood.png": icon_wood,
     "stone.png": icon_stone,
     "fiber.png": icon_fiber,

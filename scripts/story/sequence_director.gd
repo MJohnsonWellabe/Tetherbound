@@ -43,6 +43,11 @@ const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
+const SHOP_PANEL := preload("res://scripts/ui/shop_panel.gd")
+const SWAP_PANEL := preload("res://scripts/ui/swap_panel.gd")
+const SHOP_GOODS := "goods"
+const SHOP_CREATURES := "creatures"
 
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
@@ -121,6 +126,13 @@ var _choice: int = -1
 ## is still open (`_drain_effects` runs before the player has closed it), so
 ## the picker cannot open the same frame — it waits for the box to clear.
 var _picker_pending: bool = false
+
+## D39 (OF31). `[kind, vendor_id]` while a villager's `shop:` effect is waiting
+## for the dialogue box to close, empty otherwise. Same "wait for the box"
+## problem `_picker_pending` above solves, same shape.
+var _shop_pending: Array = []
+var _shop_panel: CanvasLayer = null
+var _swap_panel: CanvasLayer = null
 
 ## True from the moment a name is confirmed until the creature is standing beside the
 ## trainer. `adopt_starter` waits for ground, so there are frames in there where
@@ -275,6 +287,7 @@ func _process(delta: float) -> void:
 	_refresh_door_gate()
 	_check_left_the_bed()
 	_maybe_open_picker()
+	_maybe_open_shop()
 
 
 ## Effects are drained in production, here, every frame.
@@ -306,8 +319,66 @@ func _drain_effects() -> void:
 				_give_items(parts)
 			"flag":
 				_set_progression_flag(str(parts[1]))
+			"shop":
+				_queue_shop(str(parts[1]))
 			_:
-				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:' and 'flag:' and nothing else" % effect)
+				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:' and 'shop:' and nothing else" % effect)
+
+
+## `shop:goods:mira` / `shop:creatures:oskar` — D39 (OF31). A villager opens a
+## trading screen at the end of their line.
+##
+## Two kinds, because there are two genuinely different transactions and the
+## owner settled them differently: `goods` is Mira's coin store (buy and sell,
+## `shop_panel.gd`), `creatures` is Oskar's straight swap (`swap_panel.gd`, no
+## coins at all). The second half of the effect names WHO, and is a key in
+## data/config/trade.json's `vendors`/`creature_traders` — so a second merchant
+## is a data entry plus a dialogue line, not a change here.
+##
+## Queued rather than opened, for exactly the reason `_maybe_open_picker` is:
+## effects are drained while the line that carries them is still ON SCREEN, so
+## opening here would put a shop behind an open dialogue box. `_maybe_open_shop`
+## waits for the box to close, the same way the starter picker does.
+func _queue_shop(payload: String) -> void:
+	var pieces := payload.split(":")
+	if pieces.size() != 2 or str(pieces[0]).is_empty() or str(pieces[1]).is_empty():
+		push_warning("a shop: effect reads shop:<goods|creatures>:<vendor_id>; got 'shop:%s'" % payload)
+		return
+	if str(pieces[0]) != SHOP_GOODS and str(pieces[0]) != SHOP_CREATURES:
+		push_warning("dialogue asked for a '%s' shop; only '%s' and '%s' exist" % [
+			str(pieces[0]), SHOP_GOODS, SHOP_CREATURES
+		])
+		return
+	_shop_pending = [str(pieces[0]), str(pieces[1])]
+
+
+## The other half of `_queue_shop`, polled every frame beside the picker's own.
+##
+## The panels are made on first use and kept, under the SceneTree root rather
+## than under this node — the same lazy-instance shape `camp.gd` uses for the
+## craft panel and `storage_container.gd` for the storage panel, and for the
+## same reason: they pause the tree themselves and must not be children of
+## anything that gets freed while they are open.
+func _maybe_open_shop() -> void:
+	if _shop_pending.is_empty():
+		return
+	if bool(_dialogue.call("is_open")):
+		return
+	var kind: String = str(_shop_pending[0])
+	var vendor: String = str(_shop_pending[1])
+	_shop_pending = []
+	if kind == SHOP_GOODS:
+		if _shop_panel == null or not is_instance_valid(_shop_panel):
+			_shop_panel = SHOP_PANEL.new()
+			_shop_panel.name = "ShopPanel"
+			get_tree().root.add_child(_shop_panel)
+		_shop_panel.call("open", vendor)
+	else:
+		if _swap_panel == null or not is_instance_valid(_swap_panel):
+			_swap_panel = SWAP_PANEL.new()
+			_swap_panel.name = "SwapPanel"
+			get_tree().root.add_child(_swap_panel)
+		_swap_panel.call("open", vendor)
 
 
 ## `flag:tam_tools_given` — OF30. Write one progression flag, on the line that

@@ -5,7 +5,7 @@
     { "prefab": "well", "at": [10.0, -10.0], "yaw_deg": 15.0, "_why": "the square's centre; slightly off-axis so the square does not read as gridded" },
     { "prefab": "workshop", "at": [2.0, 2.0], "yaw_deg": -125.0, "_why": "the big working building, north of the square, arch bay facing the work_area cluster" },
     { "prefab": "wagon", "at": [6.5, -1.5], "yaw_deg": -150.0, "_why": "parked off the workshop's front-right corner, mid-delivery" },
-    { "prefab": "cottage_a", "at": [18.0, -2.0], "yaw_deg": -135.0, "_why": "a neighbour's house, north-east of the square, door facing the well" },
+    { "prefab": "cottage_a", "at": [18.0, -2.0], "yaw_deg": -135.0, "interior": "shop", "_why": "a neighbour's house, north-east of the square, door facing the well. OF31/D39: this is Mira's, and the owner asked for the merchant to have 'a store in his house' -- so the recipe now authors wall colliders with the doorway left open and `interior: shop` (scripts/world/shop_interior.gd, attached by village.gd) puts a floor, a counter and a lamp inside it. Position and yaw unchanged; the door already faced the well." },
     { "prefab": "cottage_b", "at": [21.0, -14.0], "yaw_deg": -70.0, "_why": "the stone cottage, east of the square, fronting the well" },
     { "prefab": "fence_run", "at": [14.0, -20.0], "yaw_deg": 55.0, "_why": "along the practice-meadow path" },
     { "prefab": "fence_run", "at": [19.5, -25.5], "yaw_deg": 55.0, "_why": "along the practice-meadow path" },

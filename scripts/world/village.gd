@@ -116,7 +116,39 @@ func _place(spec: Dictionary) -> void:
 	add_child(building)
 
 	_collide(building, prefab_name)
+	_interior(building, spec)
 	_placed += 1
+
+
+## OF31/D39. Some buildings have an inside.
+##
+## `"interior": "shop"` in data/config/village.json attaches
+## `scripts/world/shop_interior.gd` as a child of the placement, so the room
+## inherits the building's position, yaw and scale for free and the interior
+## script can be written entirely in the prefab's own local metres.
+##
+## Deliberately a small named table rather than a script path in the JSON: data
+## naming a res:// script is data that can load code, and the set of interiors
+## is going to stay countable (D39 built one; Grandpa's house has its own
+## dedicated scene script and is not in here). An unknown name is a loud error,
+## never a silent brick.
+const INTERIORS := {
+	"shop": preload("res://scripts/world/shop_interior.gd"),
+}
+
+func _interior(building: Node3D, spec: Dictionary) -> void:
+	var kind := str(spec.get("interior", ""))
+	if kind.is_empty():
+		return
+	if not INTERIORS.has(kind):
+		push_error("village.json asks for interior '%s'; village.gd knows %s" % [
+			kind, str(INTERIORS.keys())
+		])
+		return
+	var interior: Node3D = (INTERIORS[kind] as GDScript).new()
+	interior.name = "Interior"
+	building.add_child(interior)
+	interior.call("build")
 
 
 func _collide(building: Node3D, prefab_name: String) -> void:

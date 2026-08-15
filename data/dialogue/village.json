@@ -5,6 +5,8 @@
   "_comment_of30_tam": "OF30 (owner: \"Make one of the villagers a blacksmith who will give you a torch, an axe for trees and a pickaxe for stones. Then he'll give you the recipe for basic orbs.\"). `village_tam` stays exactly as NP3 wrote it and is still what Tam says on an ordinary greeting -- these two are ADDED branches, chosen by flag in data/config/village_npcs.json's `greeting_when`, not a replacement. Tam keeps the Field Scout identity: he is a smith who scouts, and the tools conversation opens by saying so. SC12 later adds his battle offer as a third entry in the same list. The torch line is narrative only -- OF24 owns the visible carried torch and there is deliberately no torch ITEM.",
   "_comment_of30_knife": "The owner named two tools (\"an axe for trees and a pickaxe for stones\") and the handover gives three. Not an embellishment -- without the knife the gift makes the game WORSE. item_db.harvest_yield()'s rule since R2.1 is right-tool = full, NO tool = half, WRONG tool = nothing, and `fiber` is gated on `knife` (items.json's `gathered_with`). A player carrying only an axe and a pickaxe therefore owns 'some tool, just not that one' at every patch of meadow grass and gathers ZERO fiber, where a minute earlier bare hands paid two -- and fiber is two of the five materials in the orb recipe Tam teaches in his very next conversation, plus ten of a camp. The three tools are one set, from one bench, in one line. If the owner wants the knife withheld, the fix is deleting one `give:` here and re-gating `fiber` -- not re-litigating this file.",
   "_comment_of30_flags": "`flag:<id>` sets an autoload/progression_state.gd flag, the same store the road gate and the TM pickups already write to. `tam_tools_given` is what stops the tool set being handed over twice; `recipe_orb_basic` is what unlocks the orb recipe in data/recipes/recipes.json (its `unlocked_by`). Both are set on the SAME line as the thing they record, so a conversation that is somehow cut short cannot bank the gift without the flag or the flag without the gift.",
+  "_comment_of31_trade": "D39 (OF31, owner: \"Make the villagers so I can trade with them. Creatures and materials... Make one of the villagers the merchant. He has a store in his house. He'll buy and sell goods from you. Make the third whatever makes sense.\"). Mira is the merchant and Oskar the creature trader; Tam stays the smith OF30 made him. Same additive shape as Tam's: `village_mira` and `village_oskar` are untouched and are still what each of them says on an ordinary greeting -- the trading lines are ADDED branches in data/config/village_npcs.json's `greeting_when`. The `shop:` effect is new (scripts/story/sequence_director.gd::_queue_shop) and reads `shop:<goods|creatures>:<vendor_id>`, where the vendor id is a key in data/config/trade.json. It opens the screen once the dialogue box has CLOSED, the same wait the starter picker already needed.",
+  "_comment_of31_coins": "D39 chose the friendlier of the two starts the brief offered: Mira's first conversation hands over a float so the first visit to the shop can buy something, rather than a zero-start that has to be bootstrapped by selling. The count here and `starting_coins` in data/config/trade.json are checked against each other by tests/test_trade.gd -- a line that says thirty while the config says ten is a lie the player can count.",
   "conversations": {
     "village_mira": {
       "speaker": "Mira",
@@ -14,6 +16,34 @@
         "That workshop's mended every tool this village ever broke. Still smells of iron and oak shavings."
       ]
     },
+    "village_mira_shop_intro": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Meadow Keeper's the title, but the front room here has been a shop since my mother's day. Whatever the square needs and can't grow itself.",
+        {
+          "text": "Elias settled his account with me last spring and overpaid, stubborn old thing. Thirty coins of it are yours. Don't argue arithmetic with a merchant.",
+          "effects": [
+            "give:coin:30",
+            "flag:mira_shop_open"
+          ]
+        },
+        {
+          "text": "Now then. I sell, and I buy — so if you're hauling wood and cut grass about the meadow, haul it here first.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
+    "village_mira_shop": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        {
+          "text": "Back again. Shelves are where you left them, and my prices haven't improved.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
     "village_oskar": {
       "speaker": "Oskar",
       "portrait": "res://assets/ui/portraits/trainer.png",
@@ -21,6 +51,31 @@
         "Bridgehand's my trade — I keep the old crossing south of here in one piece, when it lets me. Team Tether's been sniffing round it lately, which helps nobody.",
         "Well rope's been fraying since the spring thaw. Nobody's got round to it.",
         "You're the one staying with old Elias, aren't you? Whole square knows by now."
+      ]
+    },
+    "village_oskar_trade_intro": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Bridgehand's my trade, but I keep pens behind the cottage as well — creatures that came off the crossing road with nobody walking beside them.",
+        {
+          "text": "I don't sell them and I won't buy yours. Straight swap: one of mine for one of yours, and both of us shake on it. That's how it's done here.",
+          "effect": "flag:oskar_trade_open"
+        },
+        {
+          "text": "One rule of my own, mind — I'll not take your last. Nobody walks back out to that meadow on their own. Come and see who's up.",
+          "effect": "shop:creatures:oskar"
+        }
+      ]
+    },
+    "village_oskar_trade": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        {
+          "text": "Same terms as ever. Have a look at who's in the pen — they change about, so it's worth the walk.",
+          "effect": "shop:creatures:oskar"
+        }
       ]
     },
     "village_tam": {

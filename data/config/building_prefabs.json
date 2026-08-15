@@ -563,8 +563,8 @@
             0.0,
             3.0
           ],
-          "yaw_deg": 0.0,
-          "_why": "closed leaf; hinge is the module's own origin, so the leaf spans the doorway centred on x=1"
+          "yaw_deg": -100.0,
+          "_why": "OF31: the leaf stands OPEN, swung out against the facade. The hinge is the module's own origin at x=0.45, so -100 deg carries the free edge out to +z and a little back along -x, clear of the wall it hangs on. It was a shut leaf at yaw 0 while this cottage was one solid AABB brick; now that the doorway is a real gap in the colliders below, a visibly closed door standing in an opening the player walks straight through would be village.gd's hologram warning from the other side."
         },
         {
           "module": "Wall_Plaster_Window_Wide_Flat",
@@ -837,6 +837,16 @@
           ],
           "yaw_deg": -90.0
         }
+      ],
+      "_why_colliders": "OF31/D39. Mira's shop is inside this cottage, so it stops being a solid AABB brick and gets authored walls with a real hole in them -- the same thing the workshop's arch bay already needed, and the same shape of answer. The kit puts this cottage's wall lines on x=+-2 and z=+-3 (4m x 6m, walls 3.12 tall) and the front doorway module at x=1 with a 1.6m clear opening, so the front wall is authored as two pieces and a lintel around x in [0.2, 1.8] and the player walks in. The roof box is the workshop's trick too: its bottom sits at the wall top, so it keeps the camera arm and any jump out of the roof shell without blocking anything walkable. Everything inside -- floor, counter, shelf, light -- is scripts/world/shop_interior.gd, attached by village.gd from village.json's `interior` key, exactly as grandpa_house.gd keeps its own interior out of its recipe.",
+      "colliders": [
+        { "at": [-2.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "west wall (local -x)" },
+        { "at": [2.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "east wall (local +x)" },
+        { "at": [0.0, 1.56, -3.0], "size": [4.4, 3.12, 0.45], "_why": "back wall" },
+        { "at": [-1.0, 1.56, 3.0], "size": [2.4, 3.12, 0.45], "_why": "front, left of the doorway (x -2.2 to 0.2)" },
+        { "at": [2.0, 1.56, 3.0], "size": [0.4, 3.12, 0.45], "_why": "front, the short return right of the doorway (x 1.8 to 2.2)" },
+        { "at": [1.0, 2.71, 3.0], "size": [1.6, 0.82, 0.45], "_why": "the lintel over the 2.3m doorway; below it is the way in" },
+        { "at": [0.0, 4.1, 0.0], "size": [4.4, 2.2, 6.4], "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on" }
       ],
       "retint": {
         "MI_WindowGlass": {

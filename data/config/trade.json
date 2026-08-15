@@ -1,0 +1,41 @@
+{
+  "_comment": "D39 (OF31, owner: 'Make the villagers so I can trade with them. Creatures and materials... Make one of the villagers the merchant. He has a store in his house. He'll buy and sell goods from you.'). Everything about who trades what, and for how much. ALL TUNABLE -- these are first numbers chosen to make the loop legible, not an economy. Read by scripts/trade/trade_db.gd; no price literal exists anywhere in scripts/ or autoload/, the same rule data/items/items.json's own header keeps for item data.",
+  "_comment_currency": "`currency` names an ORDINARY item id in data/items/items.json. Coins stack in a satchel slot like wood does (D39: no wallet, no second store). Changing this key to another item id is all it would take to make the village barter in something else, which is the honest test of whether the money is really data.",
+  "_comment_prices": "`buy` is what the player PAYS the vendor for one unit; `sell` is what the vendor PAYS the player for one unit. sell < buy always, and tests/test_trade.gd fails the build if any entry breaks it -- a vendor who pays more than they charge is an infinite coin loop, which is the one economy bug that ruins a save rather than annoying a player. The spread is wide on purpose (roughly 3-4x on materials): selling gathered materials is meant to be a slow trickle that bootstraps a first purchase, not a substitute for gathering.",
+  "_comment_stock": "What a vendor will SELL is exactly the ids listed with a `stock` count; what they will BUY is every id listed at all. Materials are `stock: 0` -- Mira buys wood off you all day and has no interest in selling it back, which is what a village merchant is. `stock` is per-visit and NOT depleted (no restock clock in the slice); the number is there so a future task can make it one without moving the data.",
+  "_comment_starting_coins": "D39 picked the friendlier of the two options the brief offered: Mira's first conversation hands over a small float (`give:coin:N` in data/dialogue/village.json, on the same line that says so) so the very first visit to the store can BUY something. A zero-start would have worked -- selling berries bootstraps it -- but 'the shop opens and you can afford nothing' is a bad first impression of a system the owner asked for by name. This number is the one in that dialogue line; the two are checked against each other by tests/test_trade.gd, since a silent drift would make the line a lie.",
+  "currency": "coin",
+  "starting_coins": 30,
+  "vendors": {
+    "mira": {
+      "title": "Mira's Store",
+      "keeper": "Mira",
+      "goods": {
+        "wood": { "buy": 4, "sell": 1, "stock": 0 },
+        "stone": { "buy": 5, "sell": 1, "stock": 0 },
+        "fiber": { "buy": 4, "sell": 1, "stock": 0 },
+        "berries": { "buy": 6, "sell": 2, "stock": 0 },
+        "orb_basic": { "buy": 22, "sell": 7, "stock": 20 },
+        "potion_small": { "buy": 28, "sell": 9, "stock": 10 },
+        "revive": { "buy": 80, "sell": 26, "stock": 5 }
+      }
+    }
+  },
+  "_comment_creature_traders": "The owner asked to trade 'Creatures and materials'. D39 settled creature trades as SWAPS, not purchases: Oskar offers one of his for one of yours, no coins involved. That keeps CLAUDE.md's two hard rules intact without special-casing either -- the party never exceeds five because the swap is remove-then-add in one transaction, and nothing is CAUGHT (a trainer-owned creature is handed over, orbs never enter it).",
+  "_comment_rotation": "`rotation_days` is how many in-game days one offer stands for; the offer index walks `offers` in order and wraps. Deterministic from the day number alone, so the same day always shows the same creature and a player cannot re-roll a trade by re-opening the panel. `level` is the level Oskar's creature arrives at; the individuality/trait rolls behind it are seeded from the offer's own id and period (scripts/trade/creature_trade.gd), which is the same 'seeded, not random-per-open' discipline the wild spawn stream keeps.",
+  "creature_traders": {
+    "oskar": {
+      "title": "Oskar's Swap",
+      "keeper": "Oskar",
+      "rotation_days": 2,
+      "offers": [
+        { "species": "bramblebun", "level": 6, "_why": "the meadow's own, but a few levels above what day-one catching hands you" },
+        { "species": "paddlenewt", "level": 7, "_why": "water-typed, from the pond side of the valley" },
+        { "species": "trailpup", "level": 7 },
+        { "species": "pipwing", "level": 6 },
+        { "species": "mosshell", "level": 8 },
+        { "species": "brooktail", "level": 8 }
+      ]
+    }
+  }
+}

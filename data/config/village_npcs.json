@@ -1,15 +1,27 @@
 {
   "_comment": "R7.2. Villagers standing in the square, placed by scripts/world/village_npcs.gd the same way opening.json places the opening's cast: data describes, code places. `config_key` names a block in data/config/art.json (a tint on Grandpa's or the trainer's rig, never KayKit's Ranger — see art.json's own comment on those keys). `greeting` names a conversation id in data/dialogue/village.json; the prompt label is always \"Greet <name>\", built by the placer rather than stored here, so it can never accidentally contain \"talk\" or \"choose\" — tests/smoke_opening.gd finds Grandpa and the starters by exactly those substrings.",
   "_comment_greeting_when": "OF30. `greeting` is what a villager says by default and never stops being that. `greeting_when` is an OPTIONAL, ORDERED list of branches checked ahead of it, each `{ if_flag | unless_flag, conversation }` against autoload/progression_state.gd -- first match wins, no match falls through to `greeting`. Deliberately additive: a villager who gains a role gains a list entry, and nobody's greeting is ever replaced (D39's dual-role rule -- SC12 adds Tam's battle offer as a THIRD entry here, and OF31 gives Mira and Oskar their own lists, without touching this one). Either key may hold a single flag id or an array of them, all of which must hold. No `and`/`or`/`not` beyond that, and no nesting: this is a lookup table, not a quest engine (spec sec19 bans one, and progression_state.gd's own header says so twice).",
-  "_comment_positions": "World metres, on the village square flat (data/config/terrain_playground.json's `flats`, centre [10,-10], radius 18). Chosen and checked against the real runtime structure colliders and the square's four dirt paths (data/config/terrain_playground.json's `paths.routes`, all of which start at [10,-10]) with a headless probe — every position clears every building footprint and every path's 3m width + 1.5m shoulder by several metres, and all three sit far short of Grandpa's house/door/outside markers (~-16,-15 to -9.7,-15), well clear of the smoke test's walked lanes there. `facing_deg` points each villager at the well so the square reads as people gathered around it; `npc_body.gd` turns them to face the player on approach regardless.",
+  "_comment_positions": "World metres, on the village square flat (data/config/terrain_playground.json's `flats`, centre [10,-10], radius 18). Chosen and checked against the real runtime structure colliders and the square's four dirt paths (data/config/terrain_playground.json's `paths.routes`, all of which start at [10,-10]) with a headless probe — every position clears every building footprint and every path's 3m width + 1.5m shoulder by several metres, and all three sit far short of Grandpa's house/door/outside markers (~-16,-15 to -9.7,-15), well clear of the smoke test's walked lanes there. `facing_deg` points each villager at the well so the square reads as people gathered around it; `npc_body.gd` turns them to face the player on approach regardless. AMENDED BY OF31: Mira no longer stands in the square at all -- the merchant has a shop, so she is inside cottage_a behind her counter (see her own `_why`). The probe's clearances above still describe the other four.",
   "villagers": [
     {
       "name": "Mira",
       "config_key": "villager_farmer",
-      "position": [12.0, -3.0],
-      "facing_deg": -164.1,
+      "position": [18.99, -1.01],
+      "facing_deg": -135.0,
       "greeting": "village_mira",
-      "_why": "between the workshop and cottage_a, north of the well (EV6 rebuilt the settlement; positions unchanged)"
+      "greeting_when": [
+        {
+          "unless_flag": "mira_shop_open",
+          "conversation": "village_mira_shop_intro",
+          "_why": "OF31/D39. The shop opening: she explains the front room, hands over the starting float on the same line that says so, and ends by opening the store. Sets `mira_shop_open`, so this entry stops matching after the first visit."
+        },
+        {
+          "if_flag": "mira_shop_open",
+          "conversation": "village_mira_shop",
+          "_why": "OF31/D39. The standing vendor branch: one line, then the store. This is the entry D39 says SURVIVES when SC12 makes her a Band-1 trainer -- that battle offer goes in ABOVE this one as a one-time `unless_flag` entry, so it is offered once and the shop resumes underneath it."
+        }
+      ],
+      "_why": "OF31 moved her indoors: she is the merchant and the owner asked for a store in a villager's house, so she stands behind her own counter inside cottage_a (village.json places it at [18,-2] yawed -135; this is the cottage's local [0,-1.4], a stride behind the counter, facing the open doorway). Was [12,-3] in the square."
     },
     {
       "name": "Oskar",
@@ -17,7 +29,19 @@
       "position": [22.0, -6.0],
       "facing_deg": -108.4,
       "greeting": "village_oskar",
-      "_why": "east side, near the two cottages (EV6: the small-barn-and-coop pair became cottage_a and cottage_b)"
+      "greeting_when": [
+        {
+          "unless_flag": "oskar_trade_open",
+          "conversation": "village_oskar_trade_intro",
+          "_why": "OF31/D39. The swap explained once: his creatures for yours, no coins, and never your last one. Sets `oskar_trade_open`."
+        },
+        {
+          "if_flag": "oskar_trade_open",
+          "conversation": "village_oskar_trade",
+          "_why": "OF31/D39. The standing swap branch, same survives-a-later-role shape as Mira's above."
+        }
+      ],
+      "_why": "east side, near the two cottages (EV6: the small-barn-and-coop pair became cottage_a and cottage_b). Stays outdoors: his pens are 'behind the cottage' in dialogue and the swap screen is the pen -- OF31 built one interior, not three."
     },
     {
       "name": "Tam",
