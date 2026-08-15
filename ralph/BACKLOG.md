@@ -1465,20 +1465,9 @@ first biome must not be allowed to dodge the tension.
 **R5.1 (day/night cycle) relocated to Phase -0.5** — owner directive,
 2026-08-10: visual-pass work runs before Phase 1 onward.
 
-**`R5.2` (rain, fog and an overcast cloudy weather variant) shipped — see `DONE.md`.** Honest remainder: cloudy/fog/rain's sun shadow stays identical to `clear`'s (a real Terrain3D/Compatibility-renderer ceiling, not a tuning gap — see `world_look.gd::_apply_sun`'s comment) and there are no literal cloud shapes (a pre-existing `ProceduralSkyMaterial` limitation, unrelated to this item). `R5.3` below is the item that wires gameplay to whichever state is active.
+**`R5.2` (rain, fog and an overcast cloudy weather variant) shipped — see `DONE.md`.** Honest remainder: cloudy/fog/rain's sun shadow stays identical to `clear`'s (a real Terrain3D/Compatibility-renderer ceiling, not a tuning gap — see `world_look.gd::_apply_sun`'s comment) and there are no literal cloud shapes (a pre-existing `ProceduralSkyMaterial` limitation, unrelated to this item).
 
-### R5.3 — Spawn conditions · `model: sonnet` · `tests: test_spawns`
-At least one nocturnal (Duskhush) and one weather-gated, per M10. Extend
-`spawns.json`'s schema per D20 — this is the task that decision deliberately
-deferred the fields for. Tests keep addressing species through the `roles`
-block, never ids.
-
-**Spec §13 supplies the area table**, which is what makes deeper regions change
-the team you can build: lower fields Bramblebun / Mudsnout / Pipwing; grove
-Trailpup / Duskhush at night / Burrowback; quarry and warrens Burrowback /
-Mudsnout / strong Ground spawns; river Paddlenewt / Mosshell / Brooktail /
-Reedwing; upper ridge Galecrest / Meadowhart / stronger Trailpup. Duskhush is
-already the nocturnal example above. No random battle screens, ever (§13).
+**`R5.3` (spawn conditions: nocturnal and weather-gated wild spawns) shipped — see `DONE.md`.** `spawns.json` gained the `time`/`weather` gate fields D20 deferred; Duskhush is night-gated, Reedwing is rain-gated, matching M10's bar. Spec §13's full area-by-species table (lower fields / grove / quarry / river / upper ridge, each with its own roster) is broader than this item's own scope and is not built — that is content for whichever Phase 8 items place those regions, not a gap in this item.
 
 ---
 

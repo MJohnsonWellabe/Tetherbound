@@ -477,6 +477,11 @@ backlog items. The loop keeps building past them.
   and enjoyable? Noted here 2026-08-15 (`R3.2` firing) the first time it was
   the topmost unblocked item and got skipped, per D21 and this file's own
   standing instruction not to let a gate fall off the list silently.
+- **`R4.12`** — §33 criterion 2: is repeated combat enjoyable, not merely
+  functional? Noted here 2026-08-15 (`R5.3` firing): `R4.10` (above it) was
+  topmost but its `ui` area was live-leased by another lane, so `R4.12` was
+  the topmost item this firing could actually pick, and it is a gate — logged
+  per D21 rather than skipped silently, then `R5.3` was taken instead.
 
 ---
 

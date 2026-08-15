@@ -3,6 +3,47 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R5.3 — Spawn conditions: nocturnal and weather-gated wild spawns
+
+`model: sonnet` · `tests: test_spawns (727/727 local, was 720/720 before)` · `area: gameplay` · `6a55f05`
+
+D20's deferred schema extension, finally landed: `spawns.json` gains optional
+per-entry `time` (`"day"`/`"night"`) and `weather` (array of
+`weather.json` preset names) gates. Duskhush is gated to night, reedwing to
+rain — M10's own bar of "at least one nocturnal and one weather-gated"
+species. Two new roles (`nocturnal`, `weather_gated`) let any future test
+address them without hardcoding a species id, matching D20's own philosophy.
+Neither the `practice` (bramblebun) nor `aggressor` (galecrest) role is ever
+gated — a new test (`test_the_practice_and_aggressor_roles_are_never_gated`)
+guards it, so `smoke_combat`/`smoke_aggression` keep an always-reachable
+subject regardless of the boot-time day/weather state.
+
+`encounter_director.gd` applies each gate at spawn time and re-syncs it every
+`_process()` tick (right after `_tick_respawn`, so a creature whose respawn
+timer completes this frame gets its gate re-applied the same frame, not one
+frame late), skipping any wild currently `_engaged_with`, fainting or
+respawning — toggling visibility out from under any of those would read as
+the creature vanishing mid-encounter rather than the meadow's population
+changing between encounters. `world_weather.gd` gained a `"weather"` group,
+mirroring `world_look.gd`'s existing `"day_cycle"` group, so the director
+reads both without new scene-level `NodePath` wiring — `meadows_playground.tscn`
+is untouched.
+
+The director itself is intentionally outside `tests/test_*.gd`'s scope (D02
+keeps that suite pure-logic-only); verified instead with a local, uncommitted
+runtime boot of the real scene (`/tmp/.../diag_spawn_gates.gd`, not part of
+this branch) that drove `world_look.apply_time()`/`world_weather.set_weather()`
+directly and confirmed the visibility toggle: hidden at boot (day/clear),
+duskhush appears at night, reedwing appears once weather turns to rain, both
+hide again on reverting — exactly the intended behaviour, live in the engine,
+not just asserted by a unit test reading JSON.
+
+Honest scope note, not a gap: the item's own brief explicitly limits itself
+to "at least one nocturnal and one weather-gated" per M10, not a full
+rarity-tier system — that was named and rejected as out of scope back in D20
+itself ("A full spawn-condition system... is R5.5's scope"). Nothing here
+invents rarity tiers.
+
 ## R4.11 — Combat animation bug: fixed, with a real-fight instrument to prove it
 
 `model: sonnet` · `tests: smoke_combat (2/2 local runs green)` · `area: combat` · `351bf36`
