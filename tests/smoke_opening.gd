@@ -276,13 +276,16 @@ func _grandpa_handed_over_the_pack() -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var orbs := int(inventory.call("count", "orb_basic"))
 	var potions := int(inventory.call("count", "potion_small"))
+	var revives := int(inventory.call("count", "revive"))
 	if orbs < 15:
 		_fail("Grandpa's talk ended with %d orbs in the satchel; his pack carries 15" % orbs)
 	elif potions < 3:
 		_fail("Grandpa's talk ended with %d potions in the satchel; his pack carries 3" % potions)
+	elif revives < 2:
+		_fail("Grandpa's talk ended with %d revives in the satchel; his pack carries 2 (D40)" % revives)
 	else:
-		print("the pack: %d orbs, %d potions, %d berries in the satchel" % [
-			orbs, potions, int(inventory.call("count", "berries"))])
+		print("the pack: %d orbs, %d potions, %d revives, %d berries in the satchel" % [
+			orbs, potions, revives, int(inventory.call("count", "berries"))])
 
 
 ## SA2 (spec sec1D): "the player cannot leave Grandpa's house until the

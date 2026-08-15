@@ -225,15 +225,38 @@ func heal_fully() -> void:
 
 
 ## Partial healing, for potions. Returns how much was actually restored so the
-## caller can refuse to waste an item on a full-health creature. A fainted
-## creature is brought back up — a potion that cannot help the creature that needs
-## it most is a trap item.
+## caller can refuse to waste an item on a full-health creature.
+##
+## D40 (owner decision, 2026-08-15, "Grandpa should give you revives at the
+## beginning too"): a fainted creature now REFUSES a potion outright rather
+## than being brought back up by one. The comment this replaced argued the
+## opposite — "a potion that cannot help the creature that needs it most is
+## a trap item" — and that was the rule for a year of development. The owner
+## chose "potions stop reviving" over "both revive" when asked directly:
+## fainting needed its own dedicated answer (`revive()`, below) rather than
+## letting the same item quietly cover both jobs. Left here rather than
+## deleted so the old reasoning stays legible next to the new one.
 func heal(amount: float) -> float:
+	if fainted:
+		return 0.0
 	var before := hp
 	hp = clampf(hp + maxf(0.0, amount), 0.0, max_hp)
-	if hp > 0.0:
-		fainted = false
 	return hp - before
+
+
+## D40's dedicated un-fainter. Only acts on a fainted creature — refuses
+## (returns 0.0, leaves `fainted` and `hp` untouched) on anything still
+## standing, the mirror image of `heal()`'s new refusal above, so a Revive
+## used on a healthy creature cannot be mistaken for a wasted potion. `fraction`
+## is the portion of `max_hp` restored (see `data/items/items.json`'s `revive`
+## item — 0.5, tunable) rather than a flat amount, so the same item makes
+## sense on a level 3 Terrapup and a level 20 one.
+func revive(fraction: float) -> float:
+	if not fainted:
+		return 0.0
+	fainted = false
+	hp = clampf(max_hp * maxf(0.0, fraction), 0.0, max_hp)
+	return hp
 
 
 func hp_fraction() -> float:

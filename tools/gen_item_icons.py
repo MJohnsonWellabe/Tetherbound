@@ -224,6 +224,25 @@ def icon_potion_small() -> Image.Image:
     return img
 
 
+def icon_revive() -> Image.Image:
+    """OF32/D40. Same flask silhouette as `icon_potion_small` -- deliberately
+    the same object language, since a Revive reads on the belt as 'a
+    consumable, same family' -- but a plus-mark cutout on the body stands in
+    for the liquid-line, the same 'same base shape, one marker added' trick
+    `icon_orb_greater` already uses to tell a tier apart from `icon_orb_basic`
+    without a second silhouette. The plus is the one symbol a 64px glyph can
+    carry that reads as 'revival' rather than 'a drink' at a glance."""
+    img = icon_potion_small()
+    d = ImageDraw.Draw(img)
+    cx, body_cy = 128, 168
+    arm = 34
+    thick = 16
+    # a cutout plus-mark, punched through the flask body
+    d.rectangle((cx - thick / 2, body_cy - arm, cx + thick / 2, body_cy + arm), fill=CLEAR)
+    d.rectangle((cx - arm, body_cy - thick / 2, cx + arm, body_cy + thick / 2), fill=CLEAR)
+    return img
+
+
 def icon_axe() -> Image.Image:
     """Hafted axe: a vertical haft with a D-shaped blade (a half-disc)
     bulging to one side -- the plainest, most legible axe-head silhouette,
@@ -330,6 +349,7 @@ ITEM_ICONS = {
     "orb_basic.png": icon_orb_basic,
     "orb_greater.png": icon_orb_greater,
     "potion_small.png": icon_potion_small,
+    "revive.png": icon_revive,
     "axe.png": icon_axe,
     "pickaxe.png": icon_pickaxe,
     "hammer.png": icon_hammer,

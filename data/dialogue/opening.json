@@ -26,6 +26,10 @@
           "text": "And berries off my own bushes. Share them on the road. A fed creature forgives a long day.",
           "effect": "give:berries:5"
         },
+        {
+          "text": "Two Revives too, tucked at the bottom. A potion can't help a creature that's already down — these can. Half strength back, and on its feet again. Don't waste them.",
+          "effect": "give:revive:2"
+        },
         "Last of all, this — my creature belt. It holds five, no more, a rule older than Team Tether. Five you know by name are worth more than a hundred you don't.",
         {
           "text": "Now — three orbs, right there on the table. Ground, water, air. I raised all three from the shell, each one waiting to meet you. Go on, take a look — whichever one catches your eye, that's the one that's yours.",

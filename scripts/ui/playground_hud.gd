@@ -1146,8 +1146,13 @@ func _use_hotbar_slot(index: int) -> void:
 				_show_hotbar_message("%s repaired, free." % str(db.call("item_name", id)))
 			return
 
-	var heal := float((db.call("definition", id) as Dictionary).get("heal", 0.0))
-	if heal <= 0.0:
+	# D40 (OF32): `heal` (potions) and `revive` (Revives) are mutually
+	# exclusive fields on an item's definition -- a potion tops up the
+	# living, a Revive raises the fallen, and never the same item both ways.
+	var definition := db.call("definition", id) as Dictionary
+	var heal := float(definition.get("heal", 0.0))
+	var revive_fraction := float(definition.get("revive", 0.0))
+	if heal <= 0.0 and revive_fraction <= 0.0:
 		_show_hotbar_message("%s is not something you can use here." % str(db.call("item_name", id)))
 		return
 
@@ -1155,24 +1160,48 @@ func _use_hotbar_slot(index: int) -> void:
 		_show_hotbar_message("Nobody on the belt yet.")
 		return
 
-	var target: RefCounted = null
+	if revive_fraction > 0.0:
+		# Auto-targets the first fainted party member -- there is no "worst"
+		# among the fallen the way there is a most-hurt among the living, so
+		# party order (the same order the belt/strip already shows) is the
+		# tiebreak.
+		var revive_target: RefCounted = null
+		for i in int(_party.call("size")):
+			var creature: RefCounted = _party.call("at", i)
+			if creature != null and bool(creature.get("fainted")):
+				revive_target = creature
+				break
+
+		if revive_target == null:
+			_show_hotbar_message("Nobody needs reviving.")
+			return
+
+		revive_target.call("revive", revive_fraction)
+		inventory.call("remove", id, 1)
+		_show_hotbar_message("%s is back on its feet." % str(revive_target.call("label")))
+		return
+
+	var heal_target: RefCounted = null
 	var worst_deficit := 0.0
 	for i in int(_party.call("size")):
 		var creature: RefCounted = _party.call("at", i)
-		if creature == null:
+		# A fainted creature is skipped, not targeted -- `heal()` now refuses
+		# it anyway (D40), and a potion auto-aimed at the one creature it
+		# cannot help would read as broken.
+		if creature == null or bool(creature.get("fainted")):
 			continue
 		var deficit: float = float(creature.get("max_hp")) - float(creature.get("hp"))
 		if deficit > worst_deficit:
 			worst_deficit = deficit
-			target = creature
+			heal_target = creature
 
-	if target == null:
+	if heal_target == null:
 		_show_hotbar_message("Everybody's already at full health.")
 		return
 
-	var restored := float(target.call("heal", heal))
+	var restored := float(heal_target.call("heal", heal))
 	inventory.call("remove", id, 1)
-	_show_hotbar_message("%s recovers %d." % [str(target.call("label")), int(restored)])
+	_show_hotbar_message("%s recovers %d." % [str(heal_target.call("label")), int(restored)])
 
 
 ## OF20. Polls `Game`'s one-shot toast queue (`take_pending_world_message()`)
