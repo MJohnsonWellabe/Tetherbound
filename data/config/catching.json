@@ -8,12 +8,12 @@
     "_comment_hp": "GAME_DESIGN.md 15: full-health throws are allowed, and powerful/full-health creatures should be extremely difficult to catch. So this curve is steep. At full health you are multiplying the species rate by 0.10; at a sliver you are multiplying by 1.0.",
     "hp_factor_full": 0.10,
     "hp_factor_empty": 1.0,
-    "_comment_curve": "Exponent on the (1 - hp_fraction) term. Above 1 the reward is back-loaded, so chipping a creature down to half does much less for you than taking it to a sliver — which is what keeps 'damage it first' a real risk against 'over-damage it and lose the catch'.",
-    "hp_curve": 1.6,
+    "_comment_curve": "Exponent on the (1 - hp_fraction) term. Above 1 the reward is back-loaded, so chipping a creature down to half does much less for you than taking it to a sliver — which is what keeps 'damage it first' a real risk against 'over-damage it and lose the catch'. TUNABLE, retuned 1.6 -> 1.2 for OF19: the endpoints (hp_factor_full/empty) are untouched by this exponent, so full-health throws stay exactly as hard as before — only the middle of the curve moves, so a realistic 'brought it to about half, didn't risk a faint' throw stops being punished almost as hard as a full-health one.",
+    "hp_curve": 1.2,
 
-    "_comment_accuracy": "How much a good throw is worth. `centre_bonus` applies to a dead-centre hit, `edge_bonus` to one that barely clipped. This is the ONLY reason the aiming skill exists; if these are equal, aiming is decoration and the milestone has no subject.",
+    "_comment_accuracy": "How much a good throw is worth. `centre_bonus` applies to a dead-centre hit, `edge_bonus` to one that barely clipped. This is the ONLY reason the aiming skill exists; if these are equal, aiming is decoration and the milestone has no subject. TUNABLE, edge_bonus nudged 0.75 -> 0.80 for OF19: a clipped-but-landed hit (the realistic outcome on a handheld when the throw itself is hard to read) was being penalised almost as hard as a whiff, on top of orb.gd's own miss case for throws that never reach the body at all. centre_bonus stays put so a dead-centre throw is still clearly worth more (1.45 vs 0.80) — aiming still matters.",
     "centre_bonus": 1.45,
-    "edge_bonus": 0.75,
+    "edge_bonus": 0.80,
 
     "min": 0.02,
     "max": 0.95
@@ -38,8 +38,8 @@
     "_comment": "The projectile. A real arc, not a hitscan — GAME_DESIGN.md 15 forbids throwing without player aim, and an instant hit gives nothing to aim.",
     "speed": 17.0,
     "gravity": 14.0,
-    "_comment_radius": "Collision radius of the orb in metres. The FIRST lever to reach for if aiming feels fiddly on the handheld: widen this before touching anything else, because it forgives the input without removing the skill.",
-    "radius": 0.42,
+    "_comment_radius": "Collision radius of the orb in metres. The FIRST lever to reach for if aiming feels fiddly on the handheld: widen this before touching anything else, because it forgives the input without removing the skill. TUNABLE, widened 0.42 -> 0.60 for OF19 (owner report: 'too hard to know where the ball is going to go') — orb.gd's own hit test is body_radius + this radius, so this is pure forgiveness on the miss/no-miss line and does not touch accuracy_bonus's centre/edge scoring at all.",
+    "radius": 0.60,
     "spawn_height": 1.5,
     "spawn_forward": 0.6,
     "max_flight_time": 4.0,

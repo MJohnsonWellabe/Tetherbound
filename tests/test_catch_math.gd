@@ -201,3 +201,22 @@ func test_the_shipped_orb_stock_is_generous() -> void:
 	# §15: players should never be afraid to experiment with basic orbs.
 	assert_true(CATCH.starting_stock() >= 10,
 		"only %d orbs; scarcity discourages the experimentation the design asks for" % CATCH.starting_stock())
+
+
+## OF19: the owner's concrete target ("only like 5 orbs wasted would be
+## reasonable" for an ordinary Meadows creature) pinned as a real assertion
+## rather than left to eyeballing. Bramblebun is the practice creature and
+## sits in the 0.5-0.55 common band the owner named. This is deliberately NOT
+## a best-case throw: hp=0.2 is low but not a hairline sliver, and offset ==
+## body_radius is a merely-clipped hit rather than dead centre, because the
+## owner's other reported symptom is that the throw itself is hard to read —
+## a test pinned only to a perfect throw would miss that entirely. Expected
+## value is 1/chance orbs to land a catch (geometric distribution mean).
+func test_a_common_species_at_low_health_costs_about_five_orbs_or_fewer() -> void:
+	var rate: float = SPECIES.catch_rate("bramblebun")
+	var chance: float = CATCH.catch_chance(rate, 0.2, "orb_basic", BODY, BODY)
+	var expected_orbs := 1.0 / chance
+	assert_true(expected_orbs <= 5.5,
+		("a common Meadows creature at low HP should cost about 5 orbs or " +
+		"fewer even on a merely-clipped throw, got %.2f expected orbs " +
+		"(chance %.3f)") % [expected_orbs, chance])

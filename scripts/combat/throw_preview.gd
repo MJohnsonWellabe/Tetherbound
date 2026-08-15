@@ -45,6 +45,13 @@ var _marker_dot: MeshInstance3D = null
 
 var _gravity: float = 14.0
 var _max_flight: float = 4.0
+## OF19: was a bare `0.42` literal at the hit-test below, which quietly
+## drifted out of sync with `catching.json`'s own `throw.radius` the moment
+## that got widened — the preview would keep promising the OLD, narrower hit
+## zone while `orb.gd` was actually using the new, wider one. Read the same
+## key `orb.gd` does so the preview never again lies about what counts as
+## a hit.
+var _orb_radius: float = 0.42
 
 ## Colour states: aimed at the creature vs landing on dirt. `_ready()` pulls
 ## the actual values from `UITokens` (`TEAL_SOFT` on-target, `TEXT_SECONDARY`
@@ -64,6 +71,7 @@ func _ready() -> void:
 			var throw: Dictionary = (parsed as Dictionary).get("throw", {})
 			_gravity = float(throw.get("gravity", _gravity))
 			_max_flight = float(throw.get("max_flight_time", _max_flight))
+			_orb_radius = float(throw.get("radius", _orb_radius))
 
 	ON_TARGET = Color(UITokens.TEAL_SOFT, 0.9)
 	ON_GROUND = Color(UITokens.TEXT_SECONDARY, 0.55)
@@ -133,7 +141,7 @@ func update_arc(origin: Vector3, direction: Vector3, speed: float, target: Node3
 		var p := origin + velocity * t + Vector3.DOWN * (0.5 * _gravity * t * t)
 		points.append(p)
 		end = p
-		if target_centre != Vector3.INF and p.distance_to(target_centre) <= target_radius + 0.42:
+		if target_centre != Vector3.INF and p.distance_to(target_centre) <= target_radius + _orb_radius:
 			hit_target = true
 			break
 		var ground := _ground_height(p)
