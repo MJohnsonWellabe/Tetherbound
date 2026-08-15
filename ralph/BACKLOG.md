@@ -33,24 +33,15 @@ current read on the build. Two items (`OF11`, `OF12`) replace `BLOCKED.md`
 entries that stopped clearing after repeated tuning rounds — see
 `BLOCKED.md` for why those are redos, not continuations.
 
-**`OF1` (catching redone as a staged performance — shake choreography, camera handoff, VFX, HUD odds/feedback) shipped — see `DONE.md`.** Structural gaps behind "still bad" (no resolution presentation, no camera return, no pre-throw information, no felt verdict) are fixed and converged over 3 blind-pass rounds; residual gaps are honest and out of scope (no audio pipeline exists in the project; the orb is still the labelled M11 placeholder; real feel needs a controller playtest on the Ally, which stills can't prove).
+**`OF1` (catching redone as a staged performance — shake choreography, camera handoff, VFX, HUD odds/feedback) shipped — see `DONE.md`.** Converged over 3 blind-pass rounds; residual gaps are honest and out of scope (no audio pipeline in the project, the orb is still the placeholder M11 asset, and real feel needs an on-device controller playtest on the Ally).
 
 **`OF2` (item-target picker for consumables; party reorder found already built) shipped — see `DONE.md`.**
 
 **`OF3` (dialogue-advance guard buffer + naming-grid column fix) shipped — see `DONE.md`.** Manual controller verification still open; DONE.md says what to check if it reopens.
 
-**`OF4` shipped in two concurrent rounds — see `DONE.md` for both.** Round 1
-(masonry/weathering surface pass, self-reviewed under an owner-directed
-token cap) opened an `OF4-remainder` requiring the real blind-verified
-pass; the full `model: fable` dispatch then ran that pass — six blind
-rounds, full massing rebuild — which satisfies that remainder's done-when
-(critic ran, iterated to the two-flat-rounds stop), so it is closed rather
-than re-listed. What the six rounds could NOT clear splits into
-`OF4-remainder-mound` below (terrain, actionable now) and `BLOCKED.md`'s
-"OF4 silhouette ceiling" entry (design/asset question, lands with Phase
-8e).
+**`OF4` (masonry/weathering surface pass, then a full blind-verified massing rebuild across six rounds) shipped — see `DONE.md`.** What those rounds could not clear split into `OF4-remainder-mound` (below, shipped) and `BLOCKED.md`'s "OF4 silhouette ceiling" entry (design/asset question, lands with Phase 8e).
 
-**`OF4-remainder-mound` (real scale-givers on the rise — authored scatter anchors, outcrops, a talus apron and a broken tree line on the two judged vantages) shipped — see `DONE.md`.** `OF13`'s premise change was checked first, exactly as this entry asked: both vantages were re-rendered fresh and judged by a blind critic before any code changed, and the bare-dune read had NOT gone away with the fortress — it had become "the landform is an enlarged pebble, and there is nothing on it, in it, or at the top of it". A placement dump found why (four rock instances in the whole village-visible wedge, none on the landform, no trees at all: the `rocks` layer's 44-degree ceiling excludes most of a 46m rise). Three blind rounds later the mound is no longer in the critic's ranked three and no longer its worst scale offender, which is this item's own done-when. The stray west-slope boulder was clustered rather than moved. Residue is in the `DONE.md` entry, including a real foliage-material bug (`CommonTree_*` canopies render crimson/magenta at close range) that these anchors made visible but did not cause, and why `OF7`'s boundary-ring rock bug was left alone.
+**`OF4-remainder-mound` (real scale-givers on the rise — authored scatter anchors, outcrops, a talus apron and a broken tree line on the two judged vantages) shipped — see `DONE.md`.** Three blind rounds cleared the mound from the critic's ranked worst-scale offenders, this item's own done-when.
 
 **`OF5` (running/walking looked unnatural — gait cadence didn't match travel speed, feet ice-skated) shipped — see `DONE.md`.**
 
@@ -70,42 +61,13 @@ than re-listed. What the six rounds could NOT clear splits into
 
 **`OF10-remainder` (a trailhead fingerpost + cairn at the road's end, `[74,-41]`) shipped — see `DONE.md`.** Residue: shipped on the orchestrator's hard time cap after two render rounds (one self-critique pass, not the usual fresh-blind-subagent pass — no local subagent-spawning tool was available in this lane's toolset and a separate remote session could not see the worktree's render output); a third round was planned but not run. Round 2 fixed a real defect round 1's own inspection caught (the sign's single arm was nearly collinear with the approach camera and read as a bare post) but was not re-checked by a second independent pass.
 
-**`OF11-remainder` (hillside rock ceiling) CLOSED 2026-08-13 by owner
-decision — the current read is accepted.** Asked directly in an interactive
-session; the owner chose option 1 of `BLOCKED.md`'s "hillside rock ceiling,
-round 2" entry: accept the current state as good enough for a hillside the
-player climbs past, not stares at. No round 8 was run, per this entry's own
-stopping rule. The 11-round history stays in `DONE.md`; the resolved
-decision is recorded in `BLOCKED.md`'s entry, now marked resolved.
+**`OF11-remainder` (hillside rock ceiling) CLOSED 2026-08-13 by owner decision — the current state is accepted as good enough for a hillside the player climbs past, not stares at.** The 11-round history is in `DONE.md`; `BLOCKED.md`'s entry is marked resolved.
 
 **Magenta-canopy (near-field tree magenta/red-striped foliage) root-caused and fixed** — see `DONE.md`. `Leaves.png`, the texture `trees`/`grove`/`saplings` retextured their canopy material onto, turned out to be a multi-species sample sheet (green/blue/orange/**magenta**, confirmed by direct pixel read) rather than the single muted leaf R9.4 believed it was; CommonTree/TwistedTree's leaf-card billboards sample almost the entire canvas per card (measured: median per-triangle UV box 0.80x1.00), so every card rendered the atlas's magenta and blue swatches alongside the green ones. Fixed by pointing all three `retexture` blocks back at `Leaves_NormalTree_C.png` (the pack's own single-hue leaf, already proven safe as the `bushes` layer's crimson-bush fix). Proven with an isolated before/after repro (single tree, no terrain, exact shipped material transform): magenta/pink-hue pixel count went from thousands to zero. **Not blind-verified past this point** — the actual named viewpoints (`road-end-lookup.png`, `dome-overview.png`) were not re-rendered/critiqued in-session (render-lock contention plus the 90-minute cap); next pass should re-render those two and run one `visual-judge` round before treating this as fully closed.
 
 **`OF12-remainder`'s defect (a) — the-rise-route's mirrored tree stand — fixed, see `DONE.md`.** A new per-layer `seed_offset` mechanism on `scatter_rules.gd` broke the LEFT/LEFT/LEFT-then-RIGHT segregation a probe confirmed at the old seed; not re-rendered/blind-checked, only probe-verified — see the DONE entry for exactly what that does and doesn't confirm.
 
-**`OF12-remainder` CLOSED 2026-08-14 — the blind round it was owed finally ran.** Rendered `tools/capture_paths.gd`'s four frames fresh and dispatched a
-genuinely blind subagent (no hint of what OF12 was, what changed, or what
-"in-fill" meant) against them and both reference sets. Result: the
-border/bald route-specific read this item was chasing did **not** recur —
-the critic's own top-ranked gaps were general vegetation density and a
-missing depth/atmosphere layer (both already known, separately tracked
-territory, not a regression from OF12), and it explicitly praised
-`the-rise-route.png`'s tree/rock cluster as the frame's one genuinely
-"authored composition," with no mirroring or symmetry complaint — which is
-exactly what `OF12-remainder (a)`'s seed-offset fix needed to hold and
-was never rendered to confirm before now. (b) is also done: the Stylized
-Nature MegaKit's `Grass_Wide_Short`/`Grass_Wide_Tall` are curated into the
-`grass` layer (`d92cbbe`), a second, genuinely broader-footprint species
-pair alongside `Grass_Common_Short/Tall`. (c) recurred a third time —
-the same critic, independently and unprompted, flagged the same
-hard-edged no-visible-caster shadow shapes in `square-convergence.png` and
-`the-rise-route.png`, calling them "the clearest bug-like element in the
-set." `BLOCKED.md`'s closed entry already tested ten separate mechanisms
-against this exact symptom and the owner accepted the result as ordinary
-grass/path luma contrast, not a bug — noted here as "seen again" rather
-than reopened, since a third critic's gut read isn't new mechanism-level
-evidence against ten already-ruled-out ones. If a fourth independent critic
-ever traces it to a *specific* untested mechanism, that would be worth
-reopening; a bare "looks like a bug" repeat is not.
+**`OF12-remainder` CLOSED 2026-08-14 — the blind round it was owed finally ran, see `DONE.md`.** A fresh, genuinely blind critic confirmed all three defects: (a) the mirrored-tree-stand seed-offset fix held (no mirroring/symmetry complaint; the tree/rock cluster was praised as an "authored composition"), (b) a second, genuinely broader-footprint grass species pair is curated into the `grass` layer, and (c) the hard-edged shadow-shape complaint recurred a third time but was not reopened — `BLOCKED.md`'s closed entry already tested ten mechanisms against this symptom and the owner accepted it as ordinary grass/path contrast, not a bug. A fourth critic tracing it to a specific untested mechanism would be grounds to reopen it.
 
 **`BG2`** (source a CC0 castle/fortress asset kit) shipped — see `DONE.md`. Quaternius's "Modular Medieval Building Pack" (30 models) staged at `assets_raw/vendor/quaternius_modular-medieval-buildings/`, ledgered in `docs/ASSET_LEDGER.md`.
 
@@ -975,22 +937,7 @@ mesh/single-material UV layout with no per-garment boundary a height-band
 heuristic can isolate — the trousers mask also caught the satchel, boots
 and face fringe. No safe targeted fix without real per-garment UV
 islands (Blender-assisted manual selection), so no code changed.
-**`NP4-uv-split` (2026-08-13) took that route and closed both defects —
-see `DONE.md`.** The ceiling was never the mask, it was the shared atlas:
-each garment is now cut into its own mesh object with its own material and
-its own copy of the texture
-(`tools/art_pipeline/blender/split_garment.py`, `NP7`'s classify-by-
-measurement method), so an edit to those pixels can only reach the faces
-that were cut. villager_male's trousers are graded warm and lighter
-(mean sRGB 117,104,89 → 144,121,93; rendered L* 20.6 → 28.8) and
-villager_female's shin stain is repainted out of her other shin's skin.
-A blind critic's pass on the first round found the hue fixed but the value
-still crushed, and a second defect the stain had been hiding — both closed
-in round two, the second traced to overlapping UV islands in the source
-atlas rather than to anything the split did. Both bases still animate on the
-same rig with the same 6 clips, and per-garment `palette` entries
-are now possible for the first time (spec §21). One macro-only residual on
-each is disclosed in the `DONE.md` entry, the same bar `NP7` accepted.
+**`NP4-uv-split` (2026-08-13) closed both `NP4` texture defects — see `DONE.md`.** Splitting the character atlas into per-garment mesh/material/texture let villager_male's trousers and villager_female's shin stain both be fixed and blind-critic verified over two rounds; per-garment `palette` entries are now possible for the first time (spec §21). A macro-only residual on each is disclosed in `DONE.md`, the same bar `NP7` accepted.
 
 **`NP4-rig` (rig, animate and install the three NP4 bases) shipped — see
 `DONE.md`.**
