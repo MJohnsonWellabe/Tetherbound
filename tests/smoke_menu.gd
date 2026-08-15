@@ -67,6 +67,7 @@ func _run() -> void:
 	await _check_the_party_screen_holds_five()
 	await _check_party_reorder_button()
 	await _check_backpack_target_picker()
+	await _check_backpack_target_picker_full_party()
 	await _check_backpack_food_eat()
 	await _check_backpack_drop_and_split()
 	await _check_quest_log_tab()
@@ -390,7 +391,19 @@ func _check_backpack_target_picker() -> void:
 		_fail("opening the target picker already spent the item, before any target was chosen")
 	if float(target.get("hp")) != hp_before:
 		_fail("opening the target picker already healed a creature, before any target was chosen")
-	print("target picker opens on Use instead of applying immediately")
+
+	# OF22: the picker must focus the first ELIGIBLE row on its own -- slot 0
+	# is at full health (ineligible, greyed) and slot 1 is the only creature
+	# below max HP, so an unassisted `_read_use()` has to land here. This is
+	# deliberately NOT preceded by a `grab_focus()` call of the test's own --
+	# that was the exact thing masking the "you can't choose" bug the owner
+	# reported (OF22's brief). If this assertion ever needs a manual
+	# grab_focus to pass, the bug is back.
+	var target_rows: Array = body.get("_target_rows")
+	if _focused_control() != target_rows[1]:
+		_fail("opening the target picker did not focus the first eligible row (slot 1, the only injured creature) on its own")
+		return
+	print("target picker opens on Use instead of applying immediately, and focuses the first eligible row unassisted")
 
 	await _press("menu_cancel")
 	if int(body.get("_targeting")) != -1:
@@ -405,10 +418,10 @@ func _check_backpack_target_picker() -> void:
 	if int(body.get("_targeting")) != slot:
 		_fail("could not reopen the target picker for the confirm half of the check")
 		return
+	if _focused_control() != target_rows[1]:
+		_fail("reopening the target picker did not refocus the first eligible row on its own")
+		return
 
-	var target_rows: Array = body.get("_target_rows")
-	(target_rows[1] as Button).grab_focus()
-	await process_frame
 	await _press("ui_accept")
 
 	if int(body.get("_targeting")) != -1:
@@ -419,6 +432,55 @@ func _check_backpack_target_picker() -> void:
 		_fail("confirming slot 1 as the target did not heal the creature in slot 1")
 	else:
 		print("target picker heals the CHOSEN creature (slot 1) and spends the item on confirm")
+
+
+## OF22 owner report: "you choose the creature to use it on but it doesn't do
+## anything. You can't choose." Root cause included `_first_target_row()`
+## returning null whenever nothing was eligible (a full-HP party makes every
+## row ineligible under this task's own rule), which used to open the picker
+## anyway with focus landing on nothing. The fix refuses to open at all in
+## that case. Runs against a party healed back to full by the previous check.
+func _check_backpack_target_picker_full_party() -> void:
+	_menu.call("select", 0)  # Backpack
+	for i in 4:
+		await process_frame
+
+	var party: RefCounted = _game.get("party")
+	var inventory: RefCounted = _game.get("inventory")
+	var body: Node = _menu.get("_bodies")[0]
+
+	for i in int(party.call("size")):
+		var creature: RefCounted = party.call("at", i)
+		if creature != null:
+			creature.call("heal_fully")
+			if float(creature.call("hp_fraction")) < 1.0:
+				_fail("heal_fully() did not bring slot %d back to full health" % i)
+				return
+
+	inventory.call("add", "potion_small", 1)
+	var slot: int = int(inventory.call("find_slot", "potion_small"))
+	if slot < 0:
+		_fail("could not find a potion slot for the full-HP-party check")
+		return
+	var count_before: int = int(inventory.call("count", "potion_small"))
+
+	var item_button: Button = body.get("_buttons")[slot] as Button
+	item_button.grab_focus()
+	await process_frame
+	await _press("interact")
+
+	if int(body.get("_targeting")) != -1:
+		_fail("Use opened the target picker even though the whole party is at full health")
+		return
+	if int(inventory.call("count", "potion_small")) != count_before:
+		_fail("refusing to open the picker for a full-HP party still spent the item")
+	if _focused_control() != item_button:
+		_fail("refusing the full-HP-party Use did not leave focus on the item grid")
+	var status: Label = _menu.get("_status") as Label
+	if status == null or not status.text.to_lower().contains("full health"):
+		_fail("refusing the full-HP-party Use showed no on-screen reason")
+	else:
+		print("Use on a heal item refuses to open the picker when the whole party is at full health, and says so: \"%s\"" % status.text)
 
 
 ## Owner playtest report: "berries cannot properly be fed to creatures from the

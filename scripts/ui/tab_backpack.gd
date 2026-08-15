@@ -94,6 +94,16 @@ var _focused: int = 0
 ## is not a second "held" state, nothing moves.
 var _targeting: int = -1
 
+## Effect fields of the item being targeted, captured once when `_read_use()`
+## opens the picker. `_refresh_target_panel()`, `_eligible()`,
+## `_first_eligible_target_row()` and `_on_target_row()` all read these rather
+## than re-deriving them from the slot, so which rows are choosable can never
+## drift from what actually opened the picker mid-frame. `_targeting_revive`
+## is OF32's field (a Revive item) — coded defensively here since nothing in
+## the shipped item set sets it yet; a plain heal item leaves it at 0.
+var _targeting_heal: float = 0.0
+var _targeting_revive: float = 0.0
+
 ## Slot pending a drop confirmation, or -1. Same shape as `_targeting`: the
 ## item stays in its slot, unspent, until the player actually confirms.
 var _confirming: int = -1
@@ -118,6 +128,8 @@ func build() -> void:
 	_confirm_rows.clear()
 	_held = -1
 	_targeting = -1
+	_targeting_heal = 0.0
+	_targeting_revive = 0.0
 	_confirming = -1
 
 	var config := _config()
@@ -556,8 +568,12 @@ func _read_use() -> void:
 		say("Ate %s." % str(db.call("item_name", id)))
 		return
 
+	# Revive is OF32's field, added to items.json in parallel -- coded for here
+	# defensively (a plain heal item never sets it, so `revive` reads 0.0 and
+	# every branch below behaves exactly as it did before OF32 exists).
 	var heal := float(def.get("heal", 0.0))
-	if heal <= 0.0:
+	var revive := float(def.get("revive", 0.0))
+	if heal <= 0.0 and revive <= 0.0:
 		say("%s is not something you can use here." % str(db.call("item_name", id)))
 		return
 
@@ -566,7 +582,16 @@ func _read_use() -> void:
 		say("Nobody on the belt yet.")
 		return
 
+	if not _any_eligible_target(party, heal, revive):
+		# Nobody this item could possibly help -- refuse instead of opening a
+		# picker with every row greyed out and nowhere for focus to land.
+		# Focus stays exactly where it already is, on the item grid.
+		say("Nobody needs reviving." if revive > 0.0 else "Everyone is already at full health.")
+		return
+
 	_targeting = _focused
+	_targeting_heal = heal
+	_targeting_revive = revive
 	menu.call("hold_input", true)
 	# hold_input stops the shell reading `menu_cancel` as Close, and this tab
 	# reads it as Cancel instead (see _read_targeting_cancel) -- the static
@@ -576,9 +601,17 @@ func _read_use() -> void:
 	_content_row.visible = false
 	_target_panel.visible = true
 	_refresh_target_panel()
-	var first := _first_target_row()
+	var first := _first_eligible_target_row()
 	if first != null:
 		first.grab_focus()
+	else:
+		# Defensive only: `_any_eligible_target` just said yes above, so this
+		# should be unreachable. If party state somehow changed between that
+		# check and here, refuse cleanly rather than leave the picker open
+		# with focus on nothing -- the exact failure mode this task exists
+		# to close.
+		say("Nobody eligible right now.")
+		_end_targeting()
 
 
 ## Drop the focused stack, after a confirm -- it deletes the stack for good
@@ -732,15 +765,63 @@ func _first_empty_slot(exclude: int) -> int:
 	return -1
 
 
-## The first row that actually holds a creature, so opening the picker focuses
-## something useful instead of an empty slot the player would have to walk
-## past first.
-func _first_target_row() -> Control:
+## Whether `creature` is a legal target for an item with these effect fields --
+## the single source of truth `_refresh_target_panel()` (rendering),
+## `_any_eligible_target()` / `_first_eligible_target_row()` (focus) and
+## `_on_target_row()` (confirm) all defer to, so the three can never disagree
+## about which rows are choosable. A `revive` item (> 0, OF32) targets ONLY
+## fainted creatures; a `heal` item targets creatures that are alive AND below
+## max HP; a creature that is neither is never a valid target for either kind.
+func _eligible(creature: RefCounted, heal: float, revive: float) -> bool:
+	if creature == null:
+		return false
+	var is_fainted := bool(creature.get("fainted"))
+	if revive > 0.0:
+		return is_fainted
+	if heal > 0.0:
+		return not is_fainted and float(creature.call("hp_fraction")) < 1.0
+	return false
+
+
+## Why a row is greyed out, shown IN the row text so the reason is never
+## hidden behind a colour a player might not register on a handheld outdoors.
+## "" for an eligible row (nothing to explain).
+func _ineligible_reason(creature: RefCounted, heal: float, revive: float) -> String:
+	if creature == null:
+		return "empty"
+	var is_fainted := bool(creature.get("fainted"))
+	if revive > 0.0:
+		return "" if is_fainted else "not fainted"
+	if heal > 0.0:
+		if is_fainted:
+			return "fainted"
+		elif float(creature.call("hp_fraction")) >= 1.0:
+			return "full health"
+	return ""
+
+
+## Is there ANY row this item could land on, checked against the live party
+## rather than `_target_rows`' rendered text -- called before the picker opens
+## at all, so a fully-healed party (or, once OF32 lands, no fainted creature
+## for a Revive) refuses the picker instead of opening one nobody can use.
+func _any_eligible_target(party: RefCounted, heal: float, revive: float) -> bool:
+	for i in PARTY.MAX_CREATURES:
+		if _eligible(party.call("at", i), heal, revive):
+			return true
+	return false
+
+
+## The first ELIGIBLE row, so opening the picker focuses something the player
+## can actually confirm instead of an empty or ineligible row -- or, same as
+## the old bug, nothing at all. Returns null only when `_any_eligible_target()`
+## said yes moments ago and the party changed underneath that answer; callers
+## treat null as "refuse, do not open" rather than "focus nothing".
+func _first_eligible_target_row() -> Control:
 	var party: RefCounted = _party()
 	if party == null:
 		return null
 	for i in _target_rows.size():
-		if party.call("at", i) != null:
+		if _eligible(party.call("at", i), _targeting_heal, _targeting_revive):
 			return _target_rows[i]
 	return null
 
@@ -761,15 +842,47 @@ func _refresh_target_panel() -> void:
 	for i in _target_rows.size():
 		var button: Button = _target_rows[i]
 		var creature: RefCounted = party.call("at", i)
+		var eligible := _eligible(creature, _targeting_heal, _targeting_revive)
 		if creature == null:
 			button.text = "  %d.  empty" % (i + 1)
-			button.add_theme_color_override("font_color", Color(0.38, 0.39, 0.37))
 		else:
-			button.text = "%d.  %-16s HP %d / %d" % [
+			var hp_text := "%d.  %-16s HP %d / %d" % [
 				i + 1, str(creature.call("label")),
 				int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))
 			]
-			button.add_theme_color_override("font_color", Color(0.87, 0.89, 0.84))
+			var reason := _ineligible_reason(creature, _targeting_heal, _targeting_revive)
+			button.text = hp_text if eligible else "%s  (%s)" % [hp_text, reason]
+		# Ineligible rows are greyed AND pulled out of focus order (not just
+		# `disabled`, which stops a mouse click/gamepad press but NOT
+		# ui_focus_next/previous walking a stick onto them) -- this is the
+		# actual fix for "focus lands on nothing": a null-returning
+		# `_first_eligible_target_row()` never had this problem, ineligible
+		# rows sitting IN the focus chain did.
+		button.disabled = not eligible
+		button.focus_mode = Control.FOCUS_ALL if eligible else Control.FOCUS_NONE
+		button.add_theme_color_override(
+			"font_color",
+			Color(0.87, 0.89, 0.84) if eligible else Color(0.38, 0.39, 0.37)
+		)
+
+
+## The message for a press that should not have been possible (a disabled,
+## focus-skipped row pressed anyway -- e.g. a stale mouse click queued the
+## same frame the picker refreshed). Never a silent no-op: every exit from
+## targeting has to land focus somewhere concrete, and this one does by
+## falling through to `_end_targeting()`.
+func _ineligible_row_message(creature: RefCounted) -> String:
+	if creature == null:
+		return "Nothing in that slot."
+	match _ineligible_reason(creature, _targeting_heal, _targeting_revive):
+		"full health":
+			return "%s is already at full health." % str(creature.call("label"))
+		"fainted":
+			return "%s has fainted." % str(creature.call("label"))
+		"not fainted":
+			return "%s hasn't fainted." % str(creature.call("label"))
+		_:
+			return "Can't use that there."
 
 
 ## Confirm a target. Same button the grid's own pick-up-then-place uses
@@ -779,8 +892,13 @@ func _on_target_row(index: int) -> void:
 		return
 	var party: RefCounted = _party()
 	var creature: RefCounted = party.call("at", index) if party != null else null
-	if creature == null:
-		say("Nothing in that slot.")
+	if not _eligible(creature, _targeting_heal, _targeting_revive):
+		# Ineligible rows are disabled and out of the focus chain (see
+		# `_refresh_target_panel()`), so this should not be reachable through
+		# normal input -- but it must never be a dead end that leaves the
+		# picker sitting open and unresponsive if it somehow is.
+		say(_ineligible_row_message(creature))
+		_end_targeting()
 		return
 
 	var inventory: RefCounted = _inventory()
@@ -793,12 +911,24 @@ func _on_target_row(index: int) -> void:
 		_end_targeting()
 		return
 	var id := str(stack.get("id", ""))
-	var heal := float((db.call("definition", id) as Dictionary).get("heal", 0.0))
 
-	var restored := float(creature.call("heal", heal))
-	if restored <= 0.0:
-		say("%s is already at full health." % str(creature.call("label")))
+	if _targeting_revive > 0.0:
+		# OF32 lands `creature_instance.gd::revive()` in parallel; nothing in
+		# the shipped item set sets a `revive` field yet, so this branch
+		# cannot fire today. It stays honest about the contract this picker
+		# was written against rather than assuming a revive item can only
+		# ever arrive alongside a working revive() to call.
+		if not creature.has_method("revive"):
+			say("Can't revive that here yet.")
+			_end_targeting()
+			return
+		creature.call("revive", _targeting_revive)
+		inventory.call("remove", id, 1)
+		say("%s is back on its feet." % str(creature.call("label")))
+		_end_targeting()
 		return
+
+	var restored := float(creature.call("heal", _targeting_heal))
 	inventory.call("remove", id, 1)
 	say("%s recovers %d." % [str(creature.call("label")), int(restored)])
 	_end_targeting()
@@ -814,6 +944,8 @@ func _read_targeting_cancel() -> void:
 
 func _end_targeting() -> void:
 	_targeting = -1
+	_targeting_heal = 0.0
+	_targeting_revive = 0.0
 	menu.call("hold_input", false)
 	menu.call("override_footer", "")
 	_target_panel.visible = false
@@ -865,13 +997,17 @@ func _describe(index: int) -> void:
 	_detail_kind.text = "%s%s" % [kind.to_upper(), hotbar_note]
 	_detail_blurb.text = str(def.get("description", db.call("blurb", id)))
 
-	# Primary effect number: heal (consumables) or satiety (food), whichever
-	# the item actually declares. Neither present (resources, gear, tools,
-	# keys) means no effect line -- an empty Label rather than a "0" that
-	# would read as a real, useless stat.
+	# Primary effect number: heal or revive (consumables) or satiety (food),
+	# whichever the item actually declares. `revive` is OF32's field, read
+	# defensively here since nothing in the shipped item set sets it yet.
+	# None present (resources, gear, tools, keys) means no effect line -- an
+	# empty Label rather than a "0" that would read as a real, useless stat.
 	var heal := float(def.get("heal", 0.0))
+	var revive := float(def.get("revive", 0.0))
 	var satiety := float(def.get("satiety", 0.0))
-	if heal > 0.0:
+	if revive > 0.0:
+		_detail_effect.text = "Revives, restores %d HP" % int(revive)
+	elif heal > 0.0:
 		_detail_effect.text = "Heals %d HP" % int(heal)
 	elif satiety > 0.0:
 		_detail_effect.text = "Restores %d satiety" % int(satiety)
@@ -902,7 +1038,7 @@ func _verb_hint(id: String, kind: String, def: Dictionary, tool_max: int) -> Str
 		parts.append("A  Repair (free)")
 	elif float(def.get("satiety", 0.0)) > 0.0:
 		parts.append("A  Eat")
-	elif kind == "consumable" and float(def.get("heal", 0.0)) > 0.0:
+	elif kind == "consumable" and (float(def.get("heal", 0.0)) > 0.0 or float(def.get("revive", 0.0)) > 0.0):
 		parts.append("A  Use on a creature")
 	parts.append("Drop")
 	var db: RefCounted = _items()
