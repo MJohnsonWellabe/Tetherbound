@@ -29,6 +29,7 @@ const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 
 ## SA7: on `paths.routes`' "toward the rocky rise" leg (`[10,-10] -> [45,-22]`,
@@ -559,6 +560,12 @@ func _build_settlement() -> void:
 	placer.player_path = NodePath("../Player")
 	placer.camera_rig_path = NodePath("../CameraRig")
 	add_child(placer)
+
+	# §22: on player death, drop a satchel and respawn at home.
+	var death: Node3D = PLAYER_DEATH.new()
+	death.name = "PlayerDeath"
+	add_child(death)
+	death.call("build", self, _player, _spawn_position)
 
 
 ## OF10-remainder: one small fingerpost per entry in `paths.trailheads`,
