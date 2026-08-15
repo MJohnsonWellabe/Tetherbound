@@ -25,6 +25,97 @@ after the roster was real). `model: haiku` when it is just screenshots.
 
 ---
 
+## Phase -1.2 — the owner played again (owner-reported, 2026-08-15)
+
+Fresh playtest feedback, folded in the same way `Phase -1.1` absorbed the
+2026-08-12 round: spliced ahead of everything else because it's the owner's
+direct, current read on the build.
+
+### OF14 — World clipping: player/objects pass through rocks and terrain props in places
+`model: sonnet` · `tests: smoke_traversal` (extend)
+Owner-reported, 2026-08-15: multiple spots where the player can phase
+through rocks/props instead of colliding with them. No specific locations
+named yet — the first real step is a fresh playthrough pass that logs where
+it happens (screenshot + position), the same evidence standard `OF10`/`OF11`
+already used for collision work, before scoping a fix.
+
+### OF15 — Geometry snags: player can get stuck in places
+`model: sonnet` · `tests: smoke_traversal` (extend)
+Owner-reported, 2026-08-15. Distinct from `OF14` — this is movement getting
+wedged/blocked rather than passing through. Same evidence gap: needs
+locations logged from a fresh playthrough before a fix can be scoped.
+
+### OF16 — Potions still unusable, contradicting the recorded fix
+`model: sonnet` · `tests: smoke_menu, test_recipes`
+Owner-reported, 2026-08-15: "still can't use potions." This directly
+contradicts this file's own record — the 2026-08-11 correction above says
+`tab_backpack.gd::_read_use()` already heals from `heal`-tagged items and
+`potion_small` was confirmed usable, and `HD2`'s hotbar shipped a quick-use
+path on top of it. Per `MEADOWS_QUALITY_REBUILD_PLAN.md` §0.4 ("current
+main wins over stale documentation"), re-verify against current `main`
+before assuming either side is right — this could be a real regression
+since 2026-08-13, a hotbar-specific gap the backpack-menu path doesn't
+share, or the owner playing a stale downloadable build (see the note
+below). Do not close this by re-reading the old fix; confirm it actually
+works today, from both the backpack menu and the hotbar.
+
+### OF17 — The "put creature away" control overlaps the hotbar
+`model: sonnet` · `tests: smoke_menu` (extend), `capture_ui_suite` (screenshot)
+Owner-reported, 2026-08-15: the put-away/return-to-party control renders on
+top of `HD2`'s hotbar instead of beside or above it. A UI layering bug, not
+a design question.
+
+### OF18 — Re-shoot the website's screenshots
+`model: haiku` · `tests: none`
+This file's own standing task (top of file) says to re-shoot after any
+milestone that changes how the game looks. `site/img/*.jpg` was last
+touched 2026-08-13; `EV9` (HUD rebuild), `EV6-remainder` (mill wheel),
+`SF33`/`SF33-remainder` (Tether Rift pylons and dressing) and `R5.2`
+(weather variants) have all shipped since, none reflected on the site.
+Overdue, not a new problem — the owner's "the website art isn't updating"
+report is accurate.
+
+**Investigated, not a real problem: the downloadable build itself.** The
+owner wondered whether the game they played was stale. `release.yml`'s run
+history shows it publishing successfully on every push to `main`, most
+recently on `main`'s current tip minutes before this was written — the
+pipeline is healthy and current. If what was played felt stale, a locally
+cached download is the more likely explanation than a broken pipeline;
+worth a fresh download before assuming a build problem, but nothing here
+needs fixing.
+
+### OF19 — Catching costs too many orbs on ordinary Meadows creatures
+`model: sonnet` · `tests: test_catch_math`
+Owner-reported, 2026-08-15, with a concrete target: catching one of the
+common early Meadows creatures (Bramblebun/Mudsnout/Pipwing, `catch_rate`
+0.5-0.55 in `data/creatures/species.json`) shouldn't burn through much of
+the starting 15-orb supply (`data/config/catching.json`'s
+`orbs.starting_stock`) — "only like 5 orbs wasted would be reasonable" for
+the easy ones, and it's fine if the more striking/rarer creatures cost
+more. `GAME_DESIGN.md` §15 already states the principle directly ("basic
+orbs should be affordable enough that players are encouraged to try...
+exact catch formula and orb tiers are tuning data") — this is a tuning
+pass against a real number the owner gave, not a design question.
+
+Two owner-named symptoms feed it: the throw itself is hard to read ("too
+hard to know where the ball is going to go") — `catching.json`'s own
+`throw.radius` comment already names widening the orb's collision radius
+as "the FIRST lever to reach for if aiming feels fiddly," try that before
+touching the probability curve — and some creatures are "too hard to
+catch" outright, which is the `chance.hp_factor`/`hp_curve`/species
+`catch_rate` side. Retune both, verify against `test_catch_math.gd`, and
+confirm the ~5-orb target empirically (log expected orbs-to-catch at
+typical low-HP throws for a couple of the common species) rather than
+eyeballing it.
+
+This is also real, current-build evidence for `MQ1-gate`'s (Phase 6.5) own
+catching checkpoint questions — noted there too so it isn't re-discovered
+blind when that checkpoint runs. Fixing the throw/orb-cost numbers now
+doesn't need to wait for `MQ1A`/`MQ1B` (locomotion); it's an independently
+tunable system.
+
+---
+
 ## Phase -1.1 — the owner played again (owner-reported, 2026-08-12)
 
 Fresh playtest feedback, folded in the same way `Phase 0` absorbed the first
@@ -1548,7 +1639,16 @@ Before `R7.3` (large-scale Meadows world construction) begins: does `MQ1A`/
 current merits (trajectory preview, aim-assist already shipped, not old
 complaints) — can the player predict the throw before release, does aiming
 feel controllable, is the tutorial/common catch experience satisfying? Only
-open a new catch-probability task if play still shows a real problem. Same as
+open a new catch-probability task if play still shows a real problem.
+
+**Already has real evidence, don't re-discover it blind: `Phase -1.2`'s
+`OF19`** (2026-08-15) is exactly this — the owner reported the throw is hard
+to read and ordinary Meadows creatures cost too many orbs, with a concrete
+~5-orb target for the easy ones. `OF19` doesn't wait for this gate (it's an
+independently tunable system, not locomotion-dependent) and should be closed
+well before `MQ1A`/`MQ1B` land. When this checkpoint actually runs, check
+whether `OF19`'s fix held up rather than re-litigating the same complaint
+from scratch. Same as
 `R6.3`: this is an owner judgment call, not something a lane can pass/fail
 itself — per this file's legend and `D21` it does not block the loop on its
 own. What actually keeps the loop from reaching `R7.3` first is `MQ1A`/`MQ1B`
