@@ -41,6 +41,8 @@ const COLLISION_FULL_GAME := 3
 ## never got there. The margin keeps the player clear of edge interpolation.
 const WORLD_EDGE := 240.0
 
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+
 
 func _init() -> void:
 	_run()
@@ -187,6 +189,7 @@ func _run() -> void:
 
 	await _check_perimeter(world, player, failures)
 	await _check_kill_volume(world, player, failures)
+	_check_rock_collision_alignment(world, failures)
 
 	print("")
 	if failures.is_empty():
@@ -304,4 +307,74 @@ func _check_kill_volume(world: Node, player: CharacterBody3D, failures: Array[St
 	if after.y < THROUGH_THE_FLOOR:
 		failures.append("kill volume did not return the player to spawn (still at y=%.0f after %d frames)" % [
 			after.y, KILL_SETTLE_FRAMES
+		])
+
+
+## OF14: the owner reported the player/objects passing through rocks and
+## terrain props in places. `vegetation.gd`'s `rocks` layer tilts its VISUAL
+## mesh to the ground normal on a slope (`align_to_slope`) but, before this
+## check existed, left the collider vertical regardless — on a steep anchor
+## site (up to 52 degrees, `data/config/vegetation.json`) a scaled-up boulder
+## leans its silhouette out past a world-up cylinder's footprint, so a player
+## approaching from the downhill side walks into visible rock before
+## touching collision. Rather than trust the fix was exercised, this samples
+## the SAME heightfield the render/placement path used and checks every
+## sloped rock's real collider basis against it directly.
+const ROCK_SLOPE_CHECK_MIN_DEG := 10.0
+## Dot-product slack between the collider's up and the terrain normal, loose
+## enough for float noise but tight enough that "still world-up" (dot ~=
+## cos(slope)) reliably fails it on anything above the min-slope floor.
+const ROCK_ALIGNMENT_MIN_DOT := 0.98
+
+
+func _check_rock_collision_alignment(world: Node, failures: Array[String]) -> void:
+	var vegetation: Node = world.get_node_or_null(^"Vegetation")
+	if vegetation == null:
+		failures.append("no Vegetation node in the scene; cannot check rock collision alignment")
+		return
+
+	var field := HEIGHTFIELD.new()
+	var checked := 0
+	var mismatched := 0
+	for body in vegetation.get_children():
+		if not (body is StaticBody3D):
+			continue
+		var body_name := (body as Node).name as String
+		if not (body_name.begins_with("Rock_") or body_name.begins_with("Pebble_")):
+			continue
+		for shape_node in (body as Node).get_children():
+			if not (shape_node is CollisionShape3D):
+				continue
+			var cyl := (shape_node as CollisionShape3D).shape as CylinderShape3D
+			if cyl == null:
+				continue
+			var actual_up: Vector3 = (shape_node as Node3D).global_transform.basis.y.normalized()
+			# vegetation.gd positions the shape's NODE at the ground contact
+			# point plus half its height along `up` (so the cylinder's base,
+			# not its centre, sits on the ground) — recover that base point
+			# rather than querying the heightfield at the node's own
+			# position, which is offset horizontally by exactly the tilt
+			# this check exists to verify.
+			var base: Vector3 = (shape_node as Node3D).global_position - actual_up * (cyl.height * 0.5)
+			var slope_deg: float = field.call("slope_degrees_at", base.x, base.z)
+			if slope_deg < ROCK_SLOPE_CHECK_MIN_DEG:
+				continue
+			checked += 1
+			var expected_up: Vector3 = field.call("normal_at", base.x, base.z)
+			var alignment := actual_up.dot(expected_up)
+			if alignment < ROCK_ALIGNMENT_MIN_DOT:
+				mismatched += 1
+				if mismatched <= 5:
+					print("  rock collider %s at %.1f,%.1f (slope %.0f deg): alignment=%.3f (want >= %.2f)" % [
+						body_name, base.x, base.z, slope_deg, alignment, ROCK_ALIGNMENT_MIN_DOT
+					])
+
+	print("rock collision alignment: checked %d sloped rock colliders, %d not tilted to match the visual mesh" % [
+		checked, mismatched
+	])
+	if checked == 0:
+		failures.append("no sloped rock colliders found to check -- the rocks layer may not have scattered")
+	elif mismatched > 0:
+		failures.append("%d of %d sloped rock colliders are not tilted to match their visual mesh -- a player can clip through the gap (OF14)" % [
+			mismatched, checked
 		])

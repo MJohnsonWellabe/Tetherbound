@@ -409,7 +409,19 @@ func _add_collision(model_path: String, placements: Array) -> void:
 		shape.height = 4.0 * scale
 		var node := CollisionShape3D.new()
 		node.shape = shape
-		node.position = (placement["position"] as Vector3) + Vector3.UP * (shape.height * 0.5)
+		# OF14: the render path (above, `_build_batch`) tilts a rock's VISUAL
+		# mesh to the slope normal when its layer opts into `align_to_slope`
+		# (rocks only), but this collider stayed world-up regardless — on a
+		# steep anchor site (up to 52 degrees) a scaled-up boulder leans its
+		# silhouette out past a vertical cylinder's footprint, letting the
+		# player walk into visible rock before touching collision. Give the
+		# shape the same tilt the mesh gets, so the collider bounds what is
+		# actually on screen instead of an upright approximation of it.
+		var up := Vector3.UP
+		if placement.has("normal"):
+			up = placement["normal"]
+			node.basis = Basis(Quaternion(Vector3.UP, up))
+		node.position = (placement["position"] as Vector3) + up * (shape.height * 0.5)
 		body.add_child(node)
 	_solid += placements.size()
 
