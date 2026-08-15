@@ -1,0 +1,11 @@
+{
+  "_comment": "SB11's objective data (spec sec16). Each entry: id (bookkeeping only), flag_id (the autoload/progression_state.gd flag that marks it done) and label (the exact line shown, both as the HUD's one tracked line and as a quest-log row). Order is priority within its list: scripts/world/quest_log.gd tracks the first 'main' entry whose flag is not yet set. No prerequisites/branching/counters here on purpose -- spec sec19 and CLAUDE.md both ban a quest engine; an entry is only ever DONE or not-yet.",
+  "main": [
+    {
+      "id": "open_road_gate",
+      "flag_id": "road_gate_open",
+      "label": "Find a way through the village gate."
+    }
+  ],
+  "local": []
+}

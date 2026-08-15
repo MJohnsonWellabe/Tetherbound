@@ -27,6 +27,7 @@ const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
 const MAP_STATE := preload("res://autoload/map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
@@ -50,11 +51,25 @@ var map: RefCounted = null
 ## Instantiated in `_ready()`, same as `map` above.
 var progression: RefCounted = null
 
-## What the HUD's objective pointer shows right now. A plain field, not a
-## quest system — SB11's real one will replace it. `set_objective()` is the
-## only writer, so a marker on `map` and this text can never disagree about
-## what is currently tracked.
-var objective_text: String = "Follow the road to the village"
+## SB11. Reads `progression`'s flags against `data/progression/objectives.json`
+## to answer "what is the one tracked Main Story line" and "what does the
+## two-list quest log show" — see its own header. Instantiated in `_ready()`,
+## same as `map`/`progression` above.
+var quest_log: RefCounted = null
+
+## What the HUD's objective pointer shows right now. Kept in step with
+## `progression`'s flags by `_process()` below (recomputed only when
+## `progression.revision` actually moves, the same polling idiom that file's
+## own header describes) — never guessed at or scripted by hand, except
+## through `set_objective()`, which stays available for a caller that wants
+## to show something `data/progression/objectives.json` does not (a capture
+## tool posing a demo objective, e.g.) and sticks until the next real flag
+## change recomputes it.
+var objective_text: String = ""
+
+## `progression.revision` last seen by `_process()` — see `objective_text`'s
+## own comment.
+var _last_progression_revision: int = -1
 
 ## In-game day, counted from 1. The release ledger and "time with you" on the
 ## ceremony screen both need a clock that is not wall time, and this is it.
@@ -146,6 +161,9 @@ func _ready() -> void:
 	map = MAP_STATE.new()
 	map.configure(_map_landmarks_config())
 	progression = PROGRESSION_STATE.new()
+	quest_log = QUEST_LOG.new()
+	objective_text = quest_log.call("tracked_text", progression)
+	_last_progression_revision = int(progression.get("revision"))
 	save_system = SAVE_GAME.new()
 
 	if OS.get_cmdline_args().has(DEMO_FLAG):
@@ -206,6 +224,11 @@ func advance_day() -> int:
 ## `SceneTree.change_scene_to` (and so never becomes `current_scene`) all hit
 ## this path, and none of them should ever see an error for it.
 func _process(delta: float) -> void:
+	var progression_revision: int = int(progression.get("revision"))
+	if progression_revision != _last_progression_revision:
+		_last_progression_revision = progression_revision
+		objective_text = quest_log.call("tracked_text", progression)
+
 	_discovery_elapsed += delta
 	if _discovery_elapsed < _DISCOVERY_INTERVAL_S:
 		return
@@ -258,10 +281,14 @@ func player_vitals() -> RefCounted:
 	return vitals as RefCounted if vitals is RefCounted else null
 
 
-## Set (or clear) what the HUD's objective pointer shows. `world_pos` is
-## optional: pass a `Vector3` to also drop a "objective" dynamic marker on
-## `map` at that spot, or leave it null (the default) to track text only, or
-## to clear a marker a previous objective left behind.
+## A manual override for `objective_text`, for a caller that wants the HUD to
+## show something `data/progression/objectives.json` does not know about (the
+## map/minimap capture tools pose a demo objective this way). Sticks until
+## `_process()` next sees `progression.revision` move, at which point the
+## real quest-log line takes back over. `world_pos` is optional: pass a
+## `Vector3` to also drop a "objective" dynamic marker on `map` at that spot,
+## or leave it null (the default) to track text only, or to clear a marker a
+## previous objective left behind.
 func set_objective(text: String, world_pos: Variant = null) -> void:
 	objective_text = text
 	if world_pos is Vector3:

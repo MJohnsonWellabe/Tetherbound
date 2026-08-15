@@ -69,7 +69,9 @@ func _run() -> void:
 	await _check_backpack_target_picker()
 	await _check_backpack_food_eat()
 	await _check_backpack_drop_and_split()
+	await _check_quest_log_tab()
 	await _check_closes_and_gives_the_game_back(world)
+	await _check_objective_line_updates_without_reload(world)
 	await _check_opens_on_the_menu_button()
 	_check_focus_recapture_respects_open_ui(world)
 
@@ -556,6 +558,79 @@ func _check_backpack_drop_and_split() -> void:
 		_fail("confirming Drop did not remove the item from the satchel")
 	else:
 		print("backpack_drop removes the stack for good once confirmed")
+
+
+## SB11: the quest log tab reads the same flag store the HUD's tracked line
+## does, and shows the one authored Main Story objective as OPEN before its
+## flag is set.
+func _check_quest_log_tab() -> void:
+	var tabs: Array = _menu.get("_tabs")
+	var index := -1
+	for i in tabs.size():
+		if str((tabs[i] as Dictionary).get("id", "")) == "quest_log":
+			index = i
+			break
+	if index < 0:
+		_fail("no quest_log tab is registered in menu.json")
+		return
+
+	_menu.call("select", index)
+	for i in 4:
+		await process_frame
+
+	var body: Node = _menu.get("_bodies")[index]
+	var main_list: VBoxContainer = body.get("_main_list")
+	if main_list == null or main_list.get_child_count() == 0:
+		_fail("quest log's Main Story list drew no rows")
+		return
+
+	var first_row: Label = main_list.get_child(0) as Label
+	if first_row == null or first_row.text.find("gate") == -1:
+		_fail("quest log's Main Story list does not show the road-gate objective")
+	elif first_row.text.begins_with("✓"):
+		_fail("the road-gate objective reads done before its flag is set")
+	else:
+		print("quest log tab shows the road-gate objective, correctly open")
+
+
+## SB11's own done-when: completing an objective changes the HUD line without
+## a scene reload. Sets the real progression flag the way road_gate.gd does,
+## waits a few frames for `Game._process()` to notice `progression.revision`
+## moved, and checks BOTH the source of truth (`Game.objective_text`) and the
+## actual on-screen Label -- a passing check against the field alone would not
+## prove the HUD itself redrew. Run with the menu CLOSED: the tree is paused
+## while it is open, so the HUD's own `_process()` would never run and this
+## would falsely pass for the wrong reason.
+func _check_objective_line_updates_without_reload(world: Node) -> void:
+	var progression: RefCounted = _game.get("progression")
+	if progression == null:
+		_fail("Game has no progression state; cannot check the objective line")
+		return
+	if bool(progression.call("has", "road_gate_open")):
+		_fail("road_gate_open is already set; this check needs to see it flip")
+		return
+
+	var text_before: String = str(_game.get("objective_text"))
+	var hud: Node = world.get_node_or_null(^"PlaygroundHUD")
+	var hud_label: Label = hud.get("_objective_text_label") if hud != null else null
+	var label_before := hud_label.text if hud_label != null else ""
+
+	progression.call("set_flag", "road_gate_open")
+	for i in 6:
+		await process_frame
+
+	var text_after: String = str(_game.get("objective_text"))
+	if text_after == text_before:
+		_fail("Game.objective_text did not change after completing road_gate_open")
+	elif hud_label != null and hud_label.text == label_before:
+		_fail("the HUD's on-screen objective line did not redraw after the flag changed")
+	else:
+		print("objective line updates live, no scene reload: \"%s\" -> \"%s\"" % [
+			label_before, hud_label.text if hud_label != null else text_after
+		])
+
+	# Reset so this run's own state does not leak into anything checked after it.
+	progression.call("set_flag", "road_gate_open", false)
 
 
 # --- closing ----------------------------------------------------------------

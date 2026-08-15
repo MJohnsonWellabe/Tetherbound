@@ -29,6 +29,11 @@
       "script": "res://scripts/ui/tab_map.gd"
     },
     {
+      "id": "quest_log",
+      "label": "Quests",
+      "script": "res://scripts/ui/tab_quest_log.gd"
+    },
+    {
       "id": "build",
       "label": "Build",
       "script": "res://scripts/ui/tab_build.gd"
