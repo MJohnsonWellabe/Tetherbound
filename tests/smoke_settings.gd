@@ -26,12 +26,20 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
+## OF26. Only for its `DEBUG_TELEPORT_CLEARANCE` const, the same "preload the
+## script, read the const off it" idiom `scripts/ui/tab_map.gd` already uses
+## for `MAP_STATE.CELL`/`MAP_STATE.GRID`.
+const GAME_STATE := preload("res://autoload/game_state.gd")
 const SETTLE_FRAMES := 240
 
 var _failures: Array[String] = []
 var _menu: CanvasLayer = null
 var _tab: Node = null
 var _rows: Array = []
+
+## OF26. The Game autoload, kept as a field so `_check_debug_teleport` can
+## reach it the same way every other check reaches `_menu`/`_tab`.
+var _game: Node = null
 
 
 func _init() -> void:
@@ -41,10 +49,18 @@ func _init() -> void:
 func _run() -> void:
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
+	# Real boot reaches this scene through the engine's own main-scene load, which
+	# sets `current_scene` as a side effect. This harness adds the scene by hand
+	# instead, so without this line `current_scene` stays null and anything that
+	# walks it — OF26's debug teleport (`GameState.debug_teleport_to`'s own
+	# `ground_height_at` lookup) included — silently finds nothing, whatever the
+	# real state of the game is. Same fix tests/smoke_menu.gd already carries.
+	current_scene = world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
 	var game: Node = root.get_node_or_null(^"Game")
+	_game = game
 	_menu = game.call("menu") if game != null else null
 	if _menu == null:
 		print("FAIL: the autoload did not stand up the menu")
@@ -71,6 +87,7 @@ func _run() -> void:
 	await _check_one_row_can_be_put_back()
 	await _check_everything_can_be_put_back()
 	await _check_the_change_reached_the_file()
+	await _check_debug_teleport()
 	await _check_the_panic_chord()
 
 	_cleanup()
@@ -372,6 +389,208 @@ func _check_the_change_reached_the_file() -> void:
 	if KEY_BINDINGS.code(reloaded.call("binding", "interact", "keyboard")) != "key:%d" % KEY_G:
 		_fail("the rebind did not survive a reload")
 	print("the rebind survives a reload from %s" % path)
+
+
+## OF26. Off by default and its list hidden; the toggle shows it; a region and
+## a spoke road-end both compute the promised `ground_height_at(x,z) +
+## DEBUG_TELEPORT_CLEARANCE` position exactly; pressing a row's button also
+## teleports and closes the menu; the toggle hides the list again.
+## `debug_teleport` is checked, not read through code — every assertion below
+## is against `GameState`/the live `Player`, the same "the game agrees, not
+## just the model" standard `_check_a_key_can_be_rebound` already holds
+## itself to for key bindings.
+##
+## The precise position/y math is checked by calling `debug_teleport_to`
+## DIRECTLY, still inside the (paused) menu, not through a button press: the
+## menu closing on a successful teleport (brief's own "press A = teleport,
+## close the menu") unpauses the tree, and `_press()`'s own several-frame
+## settle then gives real gravity real physics ticks to run before this test
+## can look — a player teleported 2m above ground legitimately falls the rest
+## of the way once play resumes, which is correct in-game behaviour, not a
+## bug in the math it started from. Confirmed live: the same "River Road"
+## spoke end used here, checked a few frames after a button press instead of
+## synchronously, showed the world's own carve failsafe relocating the player
+## entirely (`severed_spokes.gd`'s "went over the edge ... back to the road")
+## — a real system doing its real job, and exactly why this test does not
+## try to pin an exact position down once physics has had a turn.
+func _check_debug_teleport() -> void:
+	if _game == null:
+		_fail("no Game autoload to test debug teleport against")
+		return
+
+	await _ensure_on_settings()
+
+	if bool(_game.get("debug_teleport")):
+		_fail("debug_teleport was already on; earlier checks left it on")
+	var section: Control = _tab.get("_teleport_section")
+	if section == null or section.visible:
+		_fail("the teleport list is visible while the toggle is off")
+
+	var village := _teleport_entry("The Village")
+	if not village.is_empty():
+		_fail("'The Village' should have been deduped into 'Grandpa's Village'")
+
+	var toggle: Button = _tab.get("_debug_teleport_button")
+	if toggle == null:
+		_fail("there is no debug teleport toggle")
+		return
+	toggle.grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	if not bool(_game.get("debug_teleport")):
+		_fail("pressing the debug teleport toggle did not turn it on")
+		return
+	section = _tab.get("_teleport_section")
+	if section == null or not section.visible:
+		_fail("the teleport list stayed hidden after the toggle turned on")
+		return
+	print("debug teleport toggles on and its list appears")
+
+	# One region + one spoke end, checked exactly, synchronously, while the
+	# menu (and so the world) is still paused.
+	var pond := _teleport_entry("The Pond")
+	if pond.is_empty():
+		_fail("'The Pond' is not in the teleport list")
+	else:
+		_check_teleport_math(pond.get("position", Vector2.ZERO), Vector2(-92.0, 100.0), "The Pond")
+
+	var river := _teleport_entry("River Road")
+	if river.is_empty():
+		_fail("'River Road' is not in the teleport list")
+	else:
+		_check_teleport_math(river.get("position", Vector2.ZERO), Vector2(-90.1, 169.5), "River Road")
+
+	if not bool(_menu.call("is_open")):
+		_fail("the direct teleport calls above closed the menu; they should only move the player")
+
+	# One real button press end to end: a spoke with no carve/failsafe of its
+	# own (mountain_trail's blocker is a rockslide -- props and collision
+	# only, per terrain_playground.json's own blocker-kind comment), so a few
+	# settling frames of real gravity cannot also trigger a relocation and
+	# muddy what this is actually checking: that the ROW works and closes
+	# the menu, landing at the right (x, z) -- gravity only ever moves y.
+	var mountain := _teleport_entry("Mountain Road")
+	if mountain.is_empty():
+		_fail("'Mountain Road' is not in the teleport list")
+	else:
+		await _check_teleport_button(mountain, Vector2(-118.9, -107.0), "Mountain Road")
+	await _ensure_on_settings()
+
+	var toggle_off: Button = _tab.get("_debug_teleport_button")
+	if toggle_off == null:
+		_fail("the debug teleport toggle did not survive a rebuild")
+		return
+	toggle_off.grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	if bool(_game.get("debug_teleport")):
+		_fail("pressing the debug teleport toggle a second time did not turn it off")
+	var section_off: Control = _tab.get("_teleport_section")
+	if section_off != null and section_off.visible:
+		_fail("the teleport list stayed visible after the toggle turned off")
+	else:
+		print("debug teleport toggles off and its list hides")
+
+
+## `_teleport_rows` is torn down and rebuilt every time the Settings tab's
+## `build()` reruns (forced on every `open()`/`select()`), so this always
+## reads the CURRENT rows rather than a set captured once and gone stale.
+func _teleport_entry(display_name: String) -> Dictionary:
+	var rows: Array = _tab.get("_teleport_rows")
+	for record: Variant in rows:
+		if str((record as Dictionary).get("display_name", "")) == display_name:
+			return record as Dictionary
+	return {}
+
+
+## Calls `GameState.debug_teleport_to` directly — no button, no awaited
+## frame — and checks the result immediately: with the menu still open (the
+## tree still paused), nothing else can move the player between the call and
+## this read. Exactly the "assert player position matches expected coords, y
+## is at ground+clearance" check the brief asks for, pinned to the one moment
+## it is actually true.
+func _check_teleport_math(entry_pos: Vector2, expected_xz: Vector2, label: String) -> void:
+	if not entry_pos.is_equal_approx(expected_xz):
+		_fail("%s is listed at (%.1f,%.1f), expected (%.1f,%.1f)" % [
+			label, entry_pos.x, entry_pos.y, expected_xz.x, expected_xz.y
+		])
+
+	if not bool(_game.call("debug_teleport_to", expected_xz.x, expected_xz.y)):
+		_fail("debug_teleport_to refused %s" % label)
+		return
+
+	var player: Node3D = _game.call("find_player") as Node3D
+	if player == null:
+		_fail("teleporting to %s: no Player to check" % label)
+		return
+	var pos: Vector3 = player.global_position
+	if not is_equal_approx(pos.x, expected_xz.x) or not is_equal_approx(pos.z, expected_xz.y):
+		_fail("teleporting to %s landed at (%.1f,%.1f), expected (%.1f,%.1f)" % [
+			label, pos.x, pos.z, expected_xz.x, expected_xz.y
+		])
+
+	var world: Node = current_scene
+	var ground: float = float(world.call("ground_height_at", expected_xz.x, expected_xz.y))
+	var expected_y := ground + float(GAME_STATE.DEBUG_TELEPORT_CLEARANCE)
+	if not is_equal_approx(pos.y, expected_y):
+		_fail("teleporting to %s landed at y=%.2f, expected ground(%.2f) + clearance(%.2f) = %.2f" % [
+			label, pos.y, ground, GAME_STATE.DEBUG_TELEPORT_CLEARANCE, expected_y
+		])
+	print("debug_teleport_to(%s): (%.1f, %.2f, %.1f), exactly ground + clearance" % [label, pos.x, pos.y, pos.z])
+
+
+## Presses the row's own button — the real controller path, `ui_accept` on a
+## focused row — and checks what that path can still promise once gravity has
+## had a few real ticks: the same (x, z) the row named, and a closed menu.
+func _check_teleport_button(entry: Dictionary, expected_xz: Vector2, label: String) -> void:
+	var button: Button = entry.get("button")
+	if button == null:
+		_fail("%s has no row button" % label)
+		return
+	button.grab_focus()
+	await process_frame
+	await _press("ui_accept")
+	for i in 6:
+		await process_frame
+
+	if bool(_menu.call("is_open")):
+		_fail("pressing %s's row did not close the menu" % label)
+
+	var world: Node = current_scene
+	var player: Node3D = world.get_node_or_null(^"Player") as Node3D if world != null else null
+	if player == null:
+		_fail("pressing %s's row: no Player to check" % label)
+		return
+	var pos: Vector3 = player.global_position
+	if not is_equal_approx(pos.x, expected_xz.x) or not is_equal_approx(pos.z, expected_xz.y):
+		_fail("pressing %s's row landed at (%.1f,%.1f), expected (%.1f,%.1f)" % [
+			label, pos.x, pos.z, expected_xz.x, expected_xz.y
+		])
+	print("pressing %s's row teleported to (%.1f, %.2f, %.1f) and closed the menu" % [
+		label, pos.x, pos.y, pos.z
+	])
+
+
+## Reopens the pause menu on the Settings tab if a teleport (or anything else)
+## just closed it, and re-selects it if some other tab is current — so every
+## caller here can assume the menu is open on Settings and `_tab`'s handles
+## are fresh, without repeating the tab-row walk
+## `_check_the_tab_is_reachable_with_a_pad` already did once.
+func _ensure_on_settings() -> void:
+	if not bool(_menu.call("is_open")):
+		_menu.call("open", "settings")
+		for i in 6:
+			await process_frame
+		return
+	var tabs: Array = _menu.get("_tabs")
+	var wanted := -1
+	for i in tabs.size():
+		if str((tabs[i] as Dictionary).get("id", "")) == "settings":
+			wanted = i
+	if wanted >= 0 and int(_menu.get("_index")) != wanted:
+		_menu.call("select", wanted)
+		for i in 6:
+			await process_frame
 
 
 ## The way back when the input map itself is the problem.

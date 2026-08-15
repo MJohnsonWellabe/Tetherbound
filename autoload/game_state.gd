@@ -127,6 +127,15 @@ var death_satchels: Array = []
 ## tree. See that file's header for the format and versioning rule.
 var save_system: RefCounted = null
 
+## OF26 debug scaffolding. The public door onto `_find_player()` above —
+## every other caller of that lookup is inside this file already; the debug
+## teleport list (`scripts/ui/tab_settings.gd`) is the first one outside it,
+## and this wraps rather than duplicates so there stays exactly one player
+## lookup, not two that can drift apart.
+func find_player() -> Node3D:
+	return _find_player()
+
+
 ## Fallback satiety, read/written by `save_game.gd` ONLY when no live
 ## `PlayerVitals` is reachable through `player_vitals()` below — a running
 ## game always has one, since the project's single main scene always carries
@@ -147,6 +156,20 @@ var free_build: bool = false
 
 ## The key `free_build` is stored under in user://settings.json.
 const PREF_FREE_BUILD := "free_build"
+
+## OF26. DEVELOPMENT CONVENIENCE, AND IT IS MEANT TO BE DELETED.
+##
+## Owner-reported: "Give me the ability to teleport and spawn in at different
+## points so I can test different things. Like teleport to different named
+## areas." Same D16 scaffolding pattern as `free_build` right above — off
+## unless switched on in Settings > Gameplay, persisted the same way, and
+## confined to this block, one section of data/config/menu.json and the
+## teleport builder in scripts/ui/tab_settings.gd. Removing it is deleting
+## those three things.
+var debug_teleport: bool = false
+
+## The key `debug_teleport` is stored under in user://settings.json.
+const PREF_DEBUG_TELEPORT := "debug_teleport"
 
 var _menu: CanvasLayer = null
 
@@ -600,12 +623,26 @@ func set_free_build(on: bool) -> bool:
 	return bool(prefs.call("save"))
 
 
+## OF26. Turn the debug teleport list on or off and write it down. Same
+## contract as `set_free_build` above, including the "false means this
+## session only" return.
+func set_debug_teleport(on: bool) -> bool:
+	debug_teleport = on
+	var prefs := _preferences()
+	if prefs == null:
+		return false
+	var table: Dictionary = prefs.get("gameplay")
+	table[PREF_DEBUG_TELEPORT] = on
+	return bool(prefs.call("save"))
+
+
 func _adopt_preferences() -> void:
 	var prefs := _preferences()
 	if prefs == null:
 		return
 	var table: Dictionary = prefs.get("gameplay")
 	free_build = bool(table.get(PREF_FREE_BUILD, false))
+	debug_teleport = bool(table.get(PREF_DEBUG_TELEPORT, false))
 
 
 ## The settings file, which the menu shell owns (docs/decisions/D15). There is
@@ -613,6 +650,165 @@ func _adopt_preferences() -> void:
 ## gets into it.
 func _preferences() -> RefCounted:
 	return _menu.get("bindings") if _menu != null else null
+
+
+# --- debug teleport (OF26) ---------------------------------------------------
+#
+# TEMPORARY, D16-style — see `debug_teleport`'s own comment above. Two jobs:
+# name every place the list can send the player (`debug_teleport_destinations`)
+# and actually move the player there (`debug_teleport_to`). Both are read by
+# scripts/ui/tab_settings.gd, which owns the UI half.
+
+const TERRAIN_PLAYGROUND_PATH := "res://data/config/terrain_playground.json"
+
+## How close two destinations have to sit before the list treats them as the
+## same place. Exists for one concrete case: the landmark "The Village"
+## (10,-10) and the region "Grandpa's Village" (centre 6,-22) are 12.6m apart
+## and are, in play, the same dooryard — a teleport list that offers both is
+## not two destinations, it is one destination twice. 15m catches that pair
+## with room to spare while staying well short of "Road Gate" (27.5,-16),
+## which sits 18.5m from the village and is a genuinely separate destination.
+const DEBUG_TELEPORT_DEDUPE_RADIUS := 15.0
+
+## How far above the ground a teleported player lands. Matches
+## `playground_world.gd`'s own SPAWN_CLEARANCE (2.0) — not read from it
+## directly, since that constant lives on the world scene script and this
+## autoload has no guaranteed world node to read it from except at teleport
+## time itself, by which point a plain literal is simpler than reaching for one.
+const DEBUG_TELEPORT_CLEARANCE := 2.0
+
+## OF26 debug scaffolding. Every place the pause menu's debug teleport list
+## can send the player, in file order — `map.regions()`, then
+## `map.landmarks()`, then the seven severed-spoke road-ends from
+## `data/config/terrain_playground.json`. Deliberately NOT a hand-authored
+## table: everything here already exists for other reasons (the full map, the
+## road signs), so a new region or a re-routed spoke shows up here for free
+## instead of needing a second list kept in sync by hand.
+##
+## Deduped by position (`DEBUG_TELEPORT_DEDUPE_RADIUS`) rather than by id or
+## name: "The Village" and "Grandpa's Village" do not share either, only a
+## dooryard. Regions are read before landmarks before spokes, so ties keep
+## the REGION's name — the Fortnite-style area name the map itself already
+## favours for "the village" over the older single-point landmark.
+func debug_teleport_destinations() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	if map != null:
+		for region: Dictionary in (map.regions() as Array):
+			_debug_teleport_add(out, str(region.get("display_name", "")), region.get("centre", Vector2.ZERO))
+		for landmark: Dictionary in (map.landmarks() as Array):
+			# Dynamic markers (camps, the tracked objective) come and go with
+			# play and are never a fixed "place" worth naming in a debug list.
+			if bool(landmark.get("dynamic", false)):
+				continue
+			_debug_teleport_add(out, str(landmark.get("display_name", "")), landmark.get("position", Vector2.ZERO))
+	for spoke: Dictionary in _debug_teleport_spokes():
+		_debug_teleport_add(out, str(spoke.get("display_name", "")), spoke.get("position", Vector2.ZERO))
+	return out
+
+
+func _debug_teleport_add(out: Array[Dictionary], display_name: String, position: Vector2) -> void:
+	if display_name.is_empty():
+		return
+	for existing: Dictionary in out:
+		if (existing.get("position", Vector2.ZERO) as Vector2).distance_to(position) <= DEBUG_TELEPORT_DEDUPE_RADIUS:
+			return
+	out.append({"display_name": display_name, "position": position})
+
+
+## The seven severed-spoke road-ends from `data/config/terrain_playground.json`
+## — each spoke's `road` polyline's own LAST point, which is where the road
+## itself actually stops (the blocker prop sits a little further on; the road
+## end is honestly walkable ground, not inside the gorge/rockslide/gate).
+## Labelled from the spoke's own fingerpost sign, falling back to its id if a
+## spoke somehow has none. Read fresh on every call rather than cached — this
+## backs a menu list opened rarely, not a per-frame read.
+func _debug_teleport_spokes() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var file := FileAccess.open(TERRAIN_PLAYGROUND_PATH, FileAccess.READ)
+	if file == null:
+		return out
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return out
+	var spokes: Variant = (parsed as Dictionary).get("spokes", {})
+	if typeof(spokes) != TYPE_DICTIONARY:
+		return out
+	var routes: Variant = (spokes as Dictionary).get("routes", [])
+	if typeof(routes) != TYPE_ARRAY:
+		return out
+	for entry: Variant in routes as Array:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		var route := entry as Dictionary
+		var road: Variant = route.get("road", [])
+		if typeof(road) != TYPE_ARRAY or (road as Array).is_empty():
+			continue
+		var end: Variant = (road as Array).back()
+		if typeof(end) != TYPE_ARRAY or (end as Array).size() < 2:
+			continue
+		var sign: Dictionary = route.get("sign", {}) as Dictionary
+		var label := str(sign.get("label", route.get("id", "")))
+		out.append({
+			"display_name": label,
+			"position": Vector2(float((end as Array)[0]), float((end as Array)[1])),
+		})
+	return out
+
+
+## OF26 debug scaffolding. Moves the live player to world `(x, z)`, at
+## `ground_height_at(x, z) + DEBUG_TELEPORT_CLEARANCE` — NEVER a raycast for
+## ground (D09, `tools/capture_region_and_map.gd` and every other
+## `ground_height_at` caller in this codebase). Refuses (returns false,
+## touches nothing) with no live player, no world that answers
+## `ground_height_at`, or a fight running — the pause menu already refuses to
+## OPEN mid-fight (`game_menu.gd::open()`), so the combat check here is a
+## second, redundant guard for whichever future caller reaches this some
+## other way.
+func debug_teleport_to(x: float, z: float) -> bool:
+	if _debug_teleport_combat_running():
+		return false
+	var player := _find_player()
+	if player == null:
+		return false
+	var world := _debug_teleport_world()
+	if world == null:
+		return false
+	var ground: float = float(world.call("ground_height_at", x, z))
+	if is_nan(ground):
+		return false
+	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+	return true
+
+
+## The world node that answers `ground_height_at` — `current_scene` itself on
+## every real scene this project has (`playground_world.gd`), the same lookup
+## `playground_hud.gd::_ensure_minimap_baked` and `_combat_is_running` already
+## use rather than a group, since a single "the current scene" is already the
+## whole answer.
+func _debug_teleport_world() -> Node:
+	var tree := get_tree()
+	if tree == null:
+		return null
+	var world := tree.get_current_scene()
+	if world != null and world.has_method("ground_height_at"):
+		return world
+	return null
+
+
+## Same defensive CombatManager lookup `playground_hud.gd::_combat_is_running`
+## already uses, copied rather than shared (that file is UI-owned, this is the
+## autoload).
+func _debug_teleport_combat_running() -> bool:
+	var tree := get_tree()
+	if tree == null:
+		return false
+	var world := tree.get_current_scene()
+	if world == null:
+		return false
+	var combat := world.get_node_or_null(^"CombatManager")
+	return combat != null and combat.has_method("is_fighting") and bool(combat.call("is_fighting"))
 
 
 ## Build a live creature from a species id. Party membership still goes through

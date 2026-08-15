@@ -55,6 +55,18 @@ var _scroll: ScrollContainer = null
 var _free_build_button: Button = null
 var _free_build_label: String = "Free build"
 
+## OF26. Debug teleport, the same D16-style temporary toggle as free build
+## above — see `_build_debug_teleport_section` for the list it gates.
+var _debug_teleport_button: Button = null
+var _debug_teleport_label: String = "Debug teleport"
+var _teleport_section: Control = null
+
+## One entry per destination row: {display_name, position: Vector2, button}.
+## Kept the same way `_rows` above is, for the same reason: tests/smoke_settings.gd
+## drives this screen with a pad, and a test cannot `grab_focus()` a button it
+## has no handle on.
+var _teleport_rows: Array = []
+
 var _capturing: bool = false
 var _capture_action: String = ""
 var _capture_slot: String = ""
@@ -72,6 +84,9 @@ func build() -> void:
 	_free_build_button = null
 
 	_config = _read_config()
+	_debug_teleport_button = null
+	_teleport_section = null
+	_teleport_rows.clear()
 	var bindings: RefCounted = _bindings()
 	if bindings == null:
 		var broken := Label.new()
@@ -141,6 +156,31 @@ func _build_gameplay(section: Dictionary, gameplay: Dictionary) -> void:
 	note.text = str(gameplay.get("free_build_note", ""))
 	add_child(note)
 
+	# OF26. Same shape as free build immediately above: a toggle button plus a
+	# note. The list it gates is built once, right here, and shown/hidden by
+	# poll() rather than rebuilt — a rebuild on every toggle press would drop
+	# controller focus, the same reason `_rows` above is built once in
+	# `_build_controls` and never torn down while this tab stays open.
+	_debug_teleport_button = Button.new()
+	_debug_teleport_button.custom_minimum_size = Vector2(560, 56)
+	_debug_teleport_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_debug_teleport_button.focus_mode = Control.FOCUS_ALL
+	_debug_teleport_button.toggle_mode = true
+	_debug_teleport_label = str(gameplay.get("debug_teleport_label", "Debug teleport"))
+	_debug_teleport_button.pressed.connect(_on_debug_teleport)
+	add_child(_debug_teleport_button)
+
+	var teleport_note := Label.new()
+	teleport_note.add_theme_font_size_override("font_size", 22)
+	teleport_note.add_theme_color_override("font_color", COLOUR_QUIET)
+	teleport_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	teleport_note.custom_minimum_size = Vector2(1100, 0)
+	teleport_note.text = str(gameplay.get("debug_teleport_note", ""))
+	add_child(teleport_note)
+
+	_teleport_section = _build_debug_teleport_section()
+	add_child(_teleport_section)
+
 
 func _on_free_build() -> void:
 	var game := state()
@@ -169,6 +209,104 @@ func _poll_gameplay() -> void:
 	_free_build_button.add_theme_color_override(
 		"font_color", COLOUR_CHANGED if on else COLOUR_DEFAULT
 	)
+
+	if _debug_teleport_button == null:
+		return
+	var teleport_on := game != null and bool(game.get("debug_teleport"))
+	_debug_teleport_button.button_pressed = teleport_on
+	_debug_teleport_button.text = "  %s:  %s" % [_debug_teleport_label, "On" if teleport_on else "Off"]
+	_debug_teleport_button.add_theme_color_override(
+		"font_color", COLOUR_CHANGED if teleport_on else COLOUR_DEFAULT
+	)
+	if _teleport_section != null:
+		_teleport_section.visible = teleport_on
+
+
+func _on_debug_teleport() -> void:
+	var game := state()
+	if game == null:
+		return
+	# Read the truth back off the state rather than off the button, same as
+	# `_on_free_build` above.
+	var wanted := not bool(game.get("debug_teleport"))
+	var saved := bool(game.call("set_debug_teleport", wanted))
+	var said := "Debug teleport is on. Pick a destination below." if wanted \
+		else "Debug teleport is off."
+	if not saved:
+		said += " (This session only — the settings file could not be written.)"
+	say(said)
+
+
+## OF26 debug scaffolding. One row per `GameState.debug_teleport_destinations()`
+## entry, built once (see the call site's own comment on why this is not
+## rebuilt on toggle). Bounded to a fixed-height ScrollContainer of its own —
+## the outer Content area (`game_menu.gd`) does not scroll, and this list's
+## length depends on how many regions/landmarks/spokes happen to be authored,
+## not on anything this tab controls.
+func _build_debug_teleport_section() -> Control:
+	var section := VBoxContainer.new()
+	section.add_theme_constant_override("separation", 6)
+
+	var heading := Label.new()
+	heading.add_theme_font_size_override("font_size", 24)
+	heading.add_theme_color_override("font_color", COLOUR_CHANGED)
+	heading.text = "\n%s destinations" % _debug_teleport_label
+	section.add_child(heading)
+
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(0, 260)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	section.add_child(scroll)
+
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 4)
+	scroll.add_child(list)
+
+	var game := state()
+	var destinations: Array = game.call("debug_teleport_destinations") if game != null else []
+	if destinations.is_empty():
+		var empty := Label.new()
+		empty.add_theme_color_override("font_color", COLOUR_QUIET)
+		empty.text = "No destinations found."
+		list.add_child(empty)
+		return section
+
+	for entry: Variant in destinations:
+		if typeof(entry) != TYPE_DICTIONARY:
+			continue
+		list.add_child(_build_teleport_row(entry as Dictionary))
+
+	return section
+
+
+func _build_teleport_row(entry: Dictionary) -> Control:
+	var display_name := str(entry.get("display_name", "?"))
+	var position: Vector2 = entry.get("position", Vector2.ZERO)
+
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(560, 48)
+	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	button.focus_mode = Control.FOCUS_ALL
+	button.text = "  %s" % display_name
+	button.pressed.connect(func() -> void: _on_teleport(display_name, position))
+	_teleport_rows.append({"display_name": display_name, "position": position, "button": button})
+	return button
+
+
+## Press = teleport there, then close the menu (brief's own "press A =
+## teleport, close the menu"): the whole point is testing the destination
+## from inside the world, not from behind a paused screen. Combat is checked
+## by `debug_teleport_to` itself, not here — see that function's own header.
+func _on_teleport(display_name: String, position: Vector2) -> void:
+	var game := state()
+	if game == null:
+		return
+	if not bool(game.call("debug_teleport_to", position.x, position.y)):
+		say("Could not teleport to %s." % display_name)
+		return
+	if menu != null:
+		menu.call("close")
 
 
 # --- the Controls section ---------------------------------------------------
