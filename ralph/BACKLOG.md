@@ -45,19 +45,7 @@ Owner-reported, 2026-08-15. Distinct from `OF14` — this is movement getting
 wedged/blocked rather than passing through. Same evidence gap: needs
 locations logged from a fresh playthrough before a fix can be scoped.
 
-### OF16 — Potions still unusable, contradicting the recorded fix
-`model: sonnet` · `tests: smoke_menu, test_recipes`
-Owner-reported, 2026-08-15: "still can't use potions." This directly
-contradicts this file's own record — the 2026-08-11 correction above says
-`tab_backpack.gd::_read_use()` already heals from `heal`-tagged items and
-`potion_small` was confirmed usable, and `HD2`'s hotbar shipped a quick-use
-path on top of it. Per `MEADOWS_QUALITY_REBUILD_PLAN.md` §0.4 ("current
-main wins over stale documentation"), re-verify against current `main`
-before assuming either side is right — this could be a real regression
-since 2026-08-13, a hotbar-specific gap the backpack-menu path doesn't
-share, or the owner playing a stale downloadable build (see the note
-below). Do not close this by re-reading the old fix; confirm it actually
-works today, from both the backpack menu and the hotbar.
+**`OF16` (potions reportedly unusable) — re-verified against current `main`; BOTH paths work, no regression reproduced. A real test-coverage gap on the hotbar path was found and closed — see `DONE.md`.** Honest remainder: the owner's report could not be reproduced, so whatever they hit is still unexplained. The two live candidates are a stale local download (`OF18`'s own investigation confirmed `release.yml` publishes on every push, so a cached build is the likelier explanation than a broken pipeline) and a scenario this pass didn't reach — mid-combat, for one: `playground_hud.gd::_read_hotbar_input()` deliberately makes the hotbar deaf while a fight runs (`HD2`/D32, the d-pad belongs to combat then), so a player trying to potion mid-fight gets nothing and no message. That is by design, not a bug, but it would read exactly as "can't use potions" — worth asking the owner whether that's when they tried.
 
 ### OF17 — The "put creature away" control overlaps the hotbar
 `model: sonnet` · `tests: smoke_menu` (extend), `capture_ui_suite` (screenshot)

@@ -3,6 +3,57 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF16 — Potions reportedly unusable: re-verified, not reproduced, coverage gap closed
+
+`model: sonnet` · `tests: smoke_menu, test_recipes` (both named by the item) ·
+`area: ui` · `51fb010`
+
+The item's own instruction was not to close this by re-reading the old fix,
+so both paths were driven for real against current `main` before concluding
+anything:
+
+- **Backpack menu path** — `tests/smoke_menu.gd` green headless, including
+  its existing `_check_backpack_target_picker()`, which drives the real
+  input path end to end: Use opens the target picker, cancel spends
+  nothing, confirm heals the CHOSEN creature and spends the potion.
+- **Full unit suite** — `731 tests, 84386 assertions, 0 failed`, covering
+  `test_recipes.gd`'s `potion_small` crafting case.
+- **Hotbar path** — driven with a real throwaway probe against the actual
+  playground scene (injected `hotbar_1`, real `InputEventAction`, not a
+  direct method call). Result: `1.0 -> 36.0` HP, potion count `3 -> 2`,
+  message "Terrapup recovers 35." It works.
+
+**No regression exists on either path.** What the report did surface is a
+real gap: `HD2` shipped `playground_hud.gd::_use_hotbar_slot()` as a full
+parallel heal implementation (deliberately, not a call into
+`tab_backpack.gd` — see `HD2`'s own entry for why the picker has no
+sane real-time equivalent) and nothing in `tests/` touched it. A `grep`
+for "hotbar" across the whole test suite returned zero files. So the one
+of the two potion paths nobody had a test for was the one shipped most
+recently.
+
+Closed that: `tests/smoke_playground.gd::_the_hotbar_heals_a_creature()`
+injures a party creature, adds a potion, presses the real hotbar action,
+and asserts both the heal and the spend. Verified green under both
+`xvfb-run` and plain `--headless` (CI's exact invocation), then green in
+CI's own `verify-playground` job.
+
+**What is still open, honestly:** the owner's report is unexplained, not
+refuted — see `BACKLOG.md`'s note. The likeliest candidates are a stale
+local download, or a mid-fight attempt: `_read_hotbar_input()` gates the
+whole hotbar off while a fight runs (`HD2`/D32 — `hotbar_2`/`hotbar_3`
+share the physical d-pad with `combat_switch_left`/`right`, and without
+that gate a mid-fight creature switch also silently ate a potion). That
+gate is correct, but it is *silent* — no refusal message, unlike every
+other rejection path in `_use_hotbar_slot()`. If the owner confirms they
+were mid-fight, the fix is a message, not a behaviour change.
+
+**Pipeline note for the next firing:** this branch went green, then
+`ralph-merge.yml` found `main` had moved under it (an unrelated docs
+commit), auto-rebased `ralph/OF16` and dispatched a fresh CI run, which
+also went green and shipped. That is exactly the self-healing path
+`PROMPT.md` describes — no manual rebase was needed or attempted.
+
 ## R7.5 — Food buffs
 
 `model: sonnet` · `tests: test_food (731/731 local, was 728/728 before)` · `area: gameplay` · `82d7aab`
