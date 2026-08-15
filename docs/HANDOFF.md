@@ -29,6 +29,8 @@ before anything else in this file: it changes what several older documents
 mean, adds two hard production constraints, and names the two carve-outs where
 an older rule still wins. `ralph/BACKLOG.md` grew four sections for it
 (Phase -0.75, Phase 3.5, a restructured Phase 8, Phase 8.5).
+**Amended by `docs/decisions/D42` on 2026-08-15: that chapter is 3–4 hours, not
+4–7** — a pacing change only; the terrain footprint is explicitly carved out.
 
 Before that, the 2026-08-10/11 owner-directed interactive
 session worked Phase -0.5's remainder through the start of Phase 1 —
@@ -53,8 +55,9 @@ boxes. Combat is real-time and **piloted**: you play as your creature while
 your trainer stands behind it. The human never fights.
 
 The current target is the **Meadows chapter** — the vertical slice as it was,
-plus the 4–7 hour arc the owner specified on 2026-08-11 (D23). Nothing from
-Biome 2 starts until Meadows passes its exit gate.
+plus the 4–7 hour arc the owner specified on 2026-08-11 (D23) — **cut to 3–4
+hours on 2026-08-15 by D42, with the terrain footprint carved out.** Nothing
+from Biome 2 starts until Meadows passes its exit gate.
 
 The story behind it, settled by D23: the eight biomes were one connected
 landmass. Each of the eight legendaries is a living conduit for a natural
@@ -62,7 +65,10 @@ force, and Team Tether binds them to hold **Tether Rifts** open — physical
 separations that keep the regions apart, because a divided world is one you can
 control the movement of trade, resources and people through. Freeing a
 legendary collapses its Rift and physically reconnects a region. The Meadows
-ending demonstrates that for the first time.
+ending demonstrates that for the first time. **Extended by D41 (2026-08-15):**
+Team Tether's stations line the traveled roads and visibly drain the land
+around them — dying ground, withered vegetation — and killing the machinery in
+the stronghold frees and heals the whole meadow, not only the distant view.
 
 ---
 

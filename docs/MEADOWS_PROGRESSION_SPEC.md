@@ -25,6 +25,10 @@ The Meadows should not be a 15-minute tutorial followed by "walk to the gym." It
 
 Target first-completion time: **4–7 hours**, longer for exploration, team-building, optional trainers, gathering, and catching.
 
+**Amended by `docs/decisions/D42`.** The owner cut the target to **3–4 hours**
+on 2026-08-15 — "not the longer end." Longer runs for exploration and catching
+are still expected. The terrain footprint does **not** shrink with it.
+
 ---
 
 # 1. OWNER-REPORTED FIXES — IMPLEMENT BEFORE STORY EXPANSION
@@ -233,6 +237,13 @@ The core loop should become:
 ---
 
 # 3. MEADOWS MAIN PROGRESSION — 4 TO 7 HOURS
+
+**Amended by `docs/decisions/D42`: the target is 3–4 hours.** This applies to
+the heading and to every band's cumulative time below — those times are the old
+arc's shape and now overshoot. They stay as the *relative* weighting of the five
+bands and get compressed to fit by `SH47`'s pacing pass (XP curve, trainer
+levels, material costs, travel time, spawn density, remove dead walking). Not by
+cutting bands, and not by resizing the map.
 
 ## BAND 0 — HOMEBOUND
 **~20–40 minutes**
@@ -666,6 +677,11 @@ Do not turn this into a giant puzzle dungeon unless separately decided.
 
 # 9. WORLD-STATE CHANGE AFTER WINNING
 
+**Extended by `docs/decisions/D41`:** the drained ground around every Tether
+station and pylon visibly heals. Shutting the machinery down frees the whole
+meadow, not only the distant view — this is the strongest single answer to "do
+not leave the region visually identical."
+
 The Meadows must visibly respond after the Warden.
 
 Examples:
@@ -885,6 +901,10 @@ Keep it simple.
 28. post-Warden state change
 
 ## P7 — pacing pass
+
+**Amended by `docs/decisions/D42`: this pass now targets 3–4 hours.** These six
+levers — not a smaller map — are the whole answer to the shorter target.
+
 29. XP tuning
 30. trainer difficulty
 31. material costs
@@ -927,6 +947,10 @@ The real owner-facing exit criterion is:
 
 > **"I had a reason to keep playing for several hours before the first Warden."**
 
+**Unchanged by `docs/decisions/D42`.** "Several hours" reads the same at the new
+3–4 hour target as it did at 4–7. This criterion was always the real test; the
+range was always an estimate around it.
+
 ---
 
 # 19. NON-GOALS
@@ -958,6 +982,10 @@ It must express the full Tetherbound loop in miniature:
 **explore → survive → catch → choose → bond → train → prepare → overcome → free**
 
 The first Warden should be the culmination of hours of becoming capable, not the first meaningful destination on the map.
+
+**Still true at `docs/decisions/D42`'s 3–4 hours.** A shorter chapter is still a
+chapter — D42 is a pacing decision, never permission to cut Phase 8 content to
+hit a clock.
 
 ---
 
@@ -1155,6 +1183,11 @@ If only one extra generation is possible, choose the civilian/trainer base first
 ---
 
 # 23. TEAM TETHER — CORE STORY CANON
+
+**Extended by `docs/decisions/D41`:** the siphon is visible on the ground. Team
+Tether's stations pull power out of the land and the land near them is visibly
+dying — discolored ground, suppressed and withered vegetation — and it heals
+when the machinery fails.
 
 This is now the preferred macro-story direction.
 
@@ -1384,6 +1417,11 @@ This is the reward for finishing the biome.
 
 # 29. THE SEVEN MEADOWS SPOKES ARE TETHER RIFTS
 
+**Extended by `docs/decisions/D41`:** the spokes are past evidence at the
+perimeter, but Team Tether's drain stations sit along the **traveled interior
+roads** as a live network the player walks through from the first hour. Both,
+additively — the seven spokes are unchanged.
+
 The seven outward routes described earlier now have a stronger explanation.
 
 They are remnants of the old connected roads between regions.
@@ -1465,6 +1503,11 @@ They must help prove a connected world can function.
 ---
 
 # 32. MEADOWS STORY REVEAL PACING
+
+**Extended by `docs/decisions/D41`:** each rung of this ladder also escalates in
+*landscape*, not only information — the quarry's ground is a little wrong, the
+relay's is badly wrong, the Upper Meadows pylon field is worst. The story and
+the terrain say the same thing at the same time, at no cost in dialogue.
 
 Do not tell the player the full Team Tether plan in Grandpa's opening dialogue.
 
@@ -1776,6 +1819,10 @@ If executing this whole Meadows expansion as one major build plan, work in this 
 46. update Meadows post-Warden world state.
 
 ## Phase H — pacing/QA
+
+**Amended by `docs/decisions/D42`: step 47's target is 3–4 hours.** Steps 48–52
+are how it is hit; a terrain rebake is not.
+
 47. tune 4–7 hour target.
 48. tune XP.
 49. tune trainer levels.
@@ -1806,6 +1853,7 @@ The Meadows chapter is complete only when:
 - player unlocks riding.
 - player defeats three regional captains.
 - player enters the Warden stronghold after several hours of preparation.
+  (**`docs/decisions/D42`:** several hours means 3–4 now, not 4–7.)
 - player learns the legendary is powering the Meadows Tether Rift.
 - player defeats the Warden.
 - player frees the legendary.

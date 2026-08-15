@@ -837,6 +837,10 @@ and freeing it collapses the Rift.
 
 ## 29. Meadows 4–8 Hour Arc
 
+**Amended by `docs/decisions/D42`: the target is 3–4 hours, below this section's
+own 4–8 hour band.** The heading's range is historical. Every beat below still
+happens; the chapter is simply denser per minute.
+
 **Superseded in ordering and detail by `docs/decisions/D23`.** Every beat below
 still happens, and the 4–7 hour target in
 `docs/MEADOWS_PROGRESSION_SPEC.md` sits inside this section's own 4–8 hour
@@ -872,6 +876,15 @@ ingredients and the spec as the recipe.
 ---
 
 ## 30. Meadows Size
+
+**Amended by `docs/decisions/D42`, with a carve-out.** The target arc is now
+3–4 hours, but **the terrain does not shrink to match** — D42 explicitly
+suspends the "size the authored Meadows so the target 4–8 hour arc feels dense"
+sentence below as a *sizing* instruction. `D23` argued the footprint from arc
+length in one direction only; that argument does not run backwards into a
+rebake. The locked direction below — dense, not enormous — is unchanged and
+reinforced: a world sized for the longer arc, played in 3–4 hours, is denser
+per minute, which is where §30 already points.
 
 LOCKED DIRECTION:
 - Not enormous.
@@ -941,6 +954,8 @@ by number, and renumbering would silently break every one of those citations.
 alongside these, testing the arc rather than the feel. Both must pass. The
 spec's own owner-facing version of the question is worth keeping in view:
 *"I had a reason to keep playing for several hours before the first Warden."*
+(**`docs/decisions/D42`:** several hours is now a 3–4 hour target, not 4–7. The
+criterion itself is unchanged — it was always the real test.)
 
 **Do not begin Biome 2 until the owner can play Meadows and genuinely say the following are true:**
 

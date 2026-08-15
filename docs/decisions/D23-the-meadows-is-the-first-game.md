@@ -18,6 +18,8 @@ very different blast radii.
 2. **The Meadows becomes a 4–7 hour chapter.** Five progression bands, two
    material tiers, physical gates, 12–17 trainer battles, a dungeon, a
    mini-stronghold and a rescue — not a tutorial followed by a walk to the gym.
+   *Amended by `D42` (2026-08-15): 3–4 hours; footprint unchanged. Everything
+   else in this line stands.*
 3. **Team Tether's macro-story is settled.** The eight legendaries are living
    anchors for natural forces; Team Tether binds them to hold **Tether Rifts**
    apart; freeing one physically reconnects a region to the world.
@@ -53,7 +55,8 @@ before the game, the Meadows is the first game.*
 - **§29's 24-step arc** — superseded in *ordering and detail* by the spec's
   Acts I–VI and Bands 0–4. Every §29 beat still happens; §29 stops being the
   authority on their sequence. The 4–7 hour target sits inside §29's own 4–8
-  hour band, so this is a refinement, not a conflict.
+  hour band, so this is a refinement, not a conflict. *Amended by `D42`: 3–4
+  hours, now below §29's band rather than inside it.*
 - **§27 Difficulty** — unchanged and reinforced. Recommended team levels (5–8,
   10–16) are guidance, never a lock; the spec's own §19 bans "arbitrary
   level-lock UI".
@@ -157,6 +160,9 @@ in its own first line that it is *a test area, not the Meadows*, and 512 m on a
 side cannot hold a 4–7 hour arc. Growing it costs a terrain rebake, more
 Terrain3D regions and a real performance question on the Ally. That is the
 single largest unpriced item in this integration and it belongs to `R7.3`.
+*Amended by `D42` (3–4 hours; footprint unchanged): this paragraph is the
+argument D42 explicitly refuses to run backwards. A shorter arc does not shrink
+the map or revert `R7.3` — the answer is `SH47`'s density/XP/travel tuning.*
 
 **What it forecloses.** Any Meadows plan that needs a new creature model. In
 particular **`R4.5`'s "fresh generation from the sheet" fallback is now

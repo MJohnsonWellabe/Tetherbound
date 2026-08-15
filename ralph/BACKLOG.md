@@ -1877,6 +1877,11 @@ R7.3 owns the *space and the bake*; the individual areas belong to `SD16`,
 `SD17`, `SE21`, `SE23` and `SF31`. §30's rule still governs the number: prove
 movement and riding are fun first, then size it.
 
+**Unchanged by `docs/decisions/D42` (the chapter is now 3–4 hours, not 4–7).**
+D42 carves the terrain out by name: a shorter arc does not shrink the map or
+revert this item. The list of areas above is what the footprint has to hold, and
+none of it was cut. The shorter target is `SH47`'s job, not this one's.
+
 ### R7.4 — Map and minimap · `model: sonnet` · `tests: smoke_menu` · §23
 The `map` action is bound, labelled and rebindable, and **read by nobody**.
 Spec §16 adds the rule: the map reveals explored areas and landmarks and never
@@ -1970,6 +1975,12 @@ stronghold. Evidence, not an explanation: §32's reveal ladder is explicit that
 nobody here knows about the legendary. Done when: the quarry is reachable past
 the South Bridge and yields Rootstone.
 
+**D41: the quarry debuts the drained-ground grammar.** This is where the player
+first sees Team Tether's machinery killing the land around it — discolored
+ground and suppressed vegetation in a radius around the conduits — so the
+reusable terrain/vegetation treatment every later station uses is authored here
+first, mild at this rung of §32's ladder.
+
 ### SD17 — Burrow Warrens, the required dungeon
 `model: fable` · `tests: smoke_traversal, smoke_combat`
 Spec §3 Band 2. A compact cave: aggressive Ground creatures, Rootstone
@@ -2026,6 +2037,12 @@ serviceable, conductor arms and manifolds replaceable*, with five labelled
 subassemblies (tether core, conductor ring, control console, output manifolds,
 grounding base). The console is the thing the player disables, and the board
 details it down to individual routing levers.
+
+**D41: the drain is at its worst here.** The relay is the largest live station
+in the chapter, so `SD16`'s drained-ground treatment runs strongest around it —
+dead ground, withered vegetation, healthy meadow only well past the perimeter.
+The visible damage is the argument for disabling the console, made without a
+line of dialogue.
 
 ### SE25 — Relay trainers and the relay captain
 `model: sonnet` · `tests: smoke_trainer_battle`
@@ -2146,6 +2163,12 @@ believable barrier. If that reads as an unsatisfying payoff, it is a
 `SF33` put the seam, before and after the Warden, gives two visibly different
 horizons — and the player still cannot walk into the next region.
 
+**D41: the collapse frees the whole meadow, not only the far view.** The owner's
+payoff is local as well as distant — the drain network dies with the stronghold
+machinery. The far horizon is this item; the local healing is `SG46`. The
+carve-out above is untouched by that: "the whole meadow" means inside the
+Meadows.
+
 ### SG46 — The Meadows answers
 `model: fable` · `tests: test_progression_state`
 Spec §9. Barriers deactivate, patrol density drops, the rescued NPC is back in
@@ -2153,6 +2176,13 @@ the settlement, villagers acknowledge the victory, stronghold effects change,
 the legendary is no longer tethered, and at least one outward spoke gains new
 dialogue. Done when: no part of the region is visually or conversationally
 identical to how it was before the Warden.
+
+**D41: the healing is part of the answer, and its strongest part.** The drained
+ground around every station and pylon recovers — color returns, suppressed
+vegetation comes back, the dead radius closes. The player's own walk home from
+the stronghold passes the stations they walked past in hour one, and they are
+different. Whether it snaps at the moment the machinery fails or resolves over
+that walk is this item's call to make once the effect exists.
 
 ### R8.5 — The legendary's superior ride ability · `model: sonnet` · `tests: smoke_riding`
 The tier above Meadowhart's (R6.2), not a parallel system.
@@ -2166,16 +2196,23 @@ intentionally open" is false as of D23 and is amended there.
 
 ## Phase 8.5 — pacing and the chapter's own gate (spec Phase H)
 
-### SH47 — Tune the chapter to 4–7 hours
+### SH47 — Tune the chapter to 3–4 hours
 `model: sonnet` · `tests: none`
-Spec §17 P7, §38 Phase H. XP curve, trainer levels, material costs, travel
-time, spawn density, and the specific instruction to **remove dead walking**.
-Distinct from R9.1 (input feel and combat cadence) and R9.3 (performance on
-hardware): this is arc pacing, and it can only be judged once 8a–8e exist.
-§11's test of a good grind is the standard — "I know a harder challenge is
-ahead, so I am deliberately improving my five", never walking in circles
-killing identical weak enemies to inflate a number. Done when: a full run is
-timed end to end and lands inside 4–7 hours.
+Spec §17 P7, §38 Phase H, **D42**. XP curve, trainer levels, material costs,
+travel time, spawn density, and the specific instruction to **remove dead
+walking**. Distinct from R9.1 (input feel and combat cadence) and R9.3
+(performance on hardware): this is arc pacing, and it can only be judged once
+8a–8e exist. §11's test of a good grind is the standard — "I know a harder
+challenge is ahead, so I am deliberately improving my five", never walking in
+circles killing identical weak enemies to inflate a number. The owner cut the
+target from 4–7 to **3–4 hours** on 2026-08-15 ("not the longer end"), and D42
+carves the terrain out explicitly: **this item does not shrink the map, revert
+`R7.3`, or rebake the terrain.** Those six levers are the whole answer, and
+"remove dead walking" is the first place to spend — dead walking is the failure
+mode a larger-than-needed map produces, and deleting it is cheaper and better
+than deleting the map. Not a scope cut either: no Phase 8 content item is
+dropped to hit the clock. Done when: a full run is timed end to end and lands
+inside 3–4 hours.
 
 ### SH53 ▶ Play gate — the P0 fixes are actually gone on real hardware
 `model: haiku`

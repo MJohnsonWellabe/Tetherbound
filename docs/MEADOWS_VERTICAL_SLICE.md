@@ -8,6 +8,10 @@ M8–M11 are unchanged and the spec assumes them; **M7, M12, M13, M14 and the
 slice exit gate are amended in place below.** Do not read this document as the
 ceiling any more.
 
+**Amended by `docs/decisions/D42`: the chapter target is 3–4 hours, not 4–7.**
+Every band, gate, dungeon, mini-stronghold and rescue above stays; only the
+clock moved. The terrain footprint does not shrink with it.
+
 ## Goal
 
 Build the smallest complete version of Tetherbound that proves the actual game is fun.
