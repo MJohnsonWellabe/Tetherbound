@@ -3,6 +3,55 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R4.3 — Named moves per species (verified, not rebuilt — already shipped by D30)
+
+`model: sonnet` · `tests: test_moves_data.gd (11/11), full unit suite (645/83864/0 failed)` · `area: moves`
+
+The backlog line for `R4.3` read "`data/moves/` is empty," which was stale.
+`D30` (2026-08-13, "Pals gain levels, named moves and a bond stat") already
+built the whole data-driven moves layer described there, just never got its
+own `BACKLOG.md`/`DONE.md` closure — the same trap `R4.1`, `R4.5`'s Tuskroot
+check and `EV9`'s objective-label bullet already hit this backlog.
+
+Checked directly rather than trusted: `data/moves/moves.json` has 26 real
+named moves (`Pebble Toss`, `Stone Rush`, etc., one `type`/`slot`/`power`/
+`energy_gain`-or-`energy_cost` each); `scripts/creatures/move_db.gd` reads it
+once and resolves ids; every species in `data/creatures/species.json` names
+exactly one `quick` and one `charged` move id; `combat_manager.gd` calls
+`_moves.power(move_id)` into the damage calc; `combat_hud.gd` shows the
+resolved `display_name` in the fight UI; `tab_creatures.gd` shows moves on
+the Team screen (spec §8.3). `tests/test_moves_data.gd` already existed,
+comprehensively covering all of the above (every species declares/resolves
+a quick+charged id, slots match, every move has a valid slot/type/power and
+the right energy field for its slot, unknown ids degrade gracefully) — ran
+it via the full local suite (no per-file filter in `run_tests.gd`): 645
+tests, 83864 assertions, 0 failed, `test_moves_data.gd`'s own 11/11 passing
+individually confirmed in the log.
+
+**What `D30` deliberately did not build, and this item does not either,
+because `D30` already settled it as a decision, not a gap**: spec §13's
+"2 Quick + 2 Charged known, 1 of each equipped" four-slot system. `D30`'s
+own "what was deliberately not built" section is explicit — moves map onto
+the two existing `quick`/`charged` combat verbs, a species can carry more
+than one move per verb as *future* scope, and "nothing here builds move
+selection UI for it." So a species having exactly one quick and one charged
+move today is the owner-approved shape, not an open TODO this item should
+have closed.
+
+No code changed. `data/moves/moves.json`'s on-disk mtime reads today only
+because this is a fresh checkout (git sets mtimes at checkout, not commit);
+`git log --follow` confirms both it and `move_db.gd` (then
+`scripts/pals/move_db.gd`, later renamed by `R1.1/R1.2`) were actually
+created in `6f5f8aa` ("Blind playtest pass..."), the large session commit
+that implemented `D30` alongside its own named work without saying so in
+the message — not by this pass.
+
+**One incidental fix, unrelated to `R4.3` itself, found while running the
+local suite in this checkout**: `tests/test_quest_log.gd` (`SB11`, shipped
+just before this pass) was missing its committed `.uid` sidecar — the only
+gap among all 66 `tests/*.gd` files, checked directly. Same shape as the
+`SB10` `test_player_death.gd.uid` fix. Added.
+
 ## SB11 — One tracked objective, and a two-list quest log
 
 `model: sonnet` · `2706cac` · `tests: test_quest_log.gd (new, 6/6), smoke_menu.gd, full unit suite (645/83864/0 failed)`

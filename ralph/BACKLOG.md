@@ -1418,7 +1418,9 @@ invented here.
 **`R4.1-remainder` (a second, smaller XP source: resting at camp, the bonding half) shipped — see `DONE.md`.** §11 says "can come from exploration and bonding activities" (permissive, not a checklist), so one real source clears the bar; picked resting because `camp.gd::_pass_the_night()` was already the single call site touching the whole party at once. **Exploration XP was not built** — no equivalent single hook exists yet (nothing today marks "the player discovered something new"), so that half stays open rather than being invented against no real trigger. Also found and deliberately not touched: `bond.per_day_in_party` in `data/config/progression.json` has been dead config since `D30` — never read anywhere in the codebase — and would wire into this same rest call site if anyone wants "resting also deepens bond" as its own item.
 
 ### R4.2 — Core stats and per-instance individuality · `model: sonnet` · `tests: test_progression` · §11
-### R4.3 — Moves · `model: sonnet` · `tests: test_moves` (new) · §13. `data/moves/` is **empty**.
+
+**`R4.3` (named moves per species: quick/charged, power multiplier, wired into combat and the Team screen) shipped — see `DONE.md`.** This line's own "`data/moves/` is empty" was stale: `D30` (2026-08-13) already built the data-driven moves layer — `data/moves/moves.json`, `scripts/creatures/move_db.gd`, every species pointing at one quick/one charged id — and wired it into `combat_manager.gd`'s damage calc, `combat_hud.gd`'s in-fight display and `tab_creatures.gd`'s Team screen, with a full test file (`tests/test_moves_data.gd`, 11/11) already covering it. Verified rather than rebuilt: ran the full local suite (645 tests, 83864 assertions, 0 failed) to confirm. `D30` itself explicitly punts spec §13's "2 known, 1 equipped, swap moves" 4-slot system as deliberate future scope, not required here — a species carries exactly one quick and one charged move today, by owner decision, not by gap.
+
 ### R4.4 — TMs and teaching moves · `model: sonnet` · `tests: test_moves` · §13
 
 ### R4.5 — Tuskroot's REAL model 🔒 — LIKELY ALREADY DONE, needs verification
