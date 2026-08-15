@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwwvvjjv3bhuf"
-path="res://.godot/imported/xbox_guide.png-17a0ac80c0c79bcc0404c9e648ae8f16.ctex"
+uid="uid://dtbdsd8t2n3jn"
+path="res://.godot/imported/xbox_stick_r_press.png-67240cc346434d21c648f0048b76bd19.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/input_prompts/xbox_guide.png"
-dest_files=["res://.godot/imported/xbox_guide.png-17a0ac80c0c79bcc0404c9e648ae8f16.ctex"]
+source_file="res://assets/ui/input_prompts/xbox_stick_r_press.png"
+dest_files=["res://.godot/imported/xbox_stick_r_press.png-67240cc346434d21c648f0048b76bd19.ctex"]
 
 [params]
 

@@ -269,7 +269,7 @@ menu_tab_right={
 torch_toggle={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":76,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":5,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
 ]
 }
 backpack_split={

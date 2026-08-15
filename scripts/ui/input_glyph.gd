@@ -45,14 +45,14 @@ const GLYPHS := {
 	## both shipped on Start (button 6), so pressing it in the field also
 	## dropped whatever the backpack UI had focused. Start stays
 	## `backpack_drop`'s (documented reason: data/config/menu.json's
-	## "Backpack" group note); `torch_toggle` gets its own button, the
-	## Guide button (button 5), which nothing else in the input map used at
-	## all. `xbox_guide.png` was already sitting in the vendored raw pack
-	## (`assets_raw/vendor/kenney_input-prompts/Xbox Series/Default/`, the
-	## same CC0 pack every other icon here comes from) and just needed
-	## extracting -- no new asset generation, no new licence to track, same
-	## move D35 made for the trigger icons below.
-	"torch_toggle": {"keyboard": "keyboard_l.png", "gamepad": "xbox_guide.png"},
+	## "Backpack" group note). The first replacement was the Guide button
+	## (button 5, unused in the map) -- but on the ROG Ally, the primary
+	## device, Guide-class buttons are captured by the system overlay and
+	## never reach the game, so it moved again to R3 (button 8), whose only
+	## other reader (`backpack_split`) is menu-context and can never overlap
+	## a field press. Icon extracted from the same vendored CC0 Kenney pack
+	## as every other glyph here -- no new asset generation, no new licence.
+	"torch_toggle": {"keyboard": "keyboard_l.png", "gamepad": "xbox_stick_r_press.png"},
 	## Combat's five verbs (`HD1`). `combat_quick`/`combat_charged` bind to
 	## mouse buttons on keyboard-and-mouse, not keys -- the "keyboard" bucket
 	## key is kept for both (matching every other entry's two-way device
