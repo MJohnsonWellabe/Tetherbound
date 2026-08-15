@@ -692,13 +692,20 @@ func _mount_stamina_arc() -> void:
 	# as the gauge's label rather than a stray badge. Fades with the arc
 	# itself in _update_stamina_arc below -- the icon has nothing to say
 	# once the gauge has hidden.
+	# 24x24, not 18x18 -- blind-judge finding (EV9 handheld-scale remainder,
+	# round 2): the bolt's zigzag notch, the one feature that reads as
+	# "lightning" rather than a generic blob, softens into a rounded paddle
+	# shape at 18px/315ppi. Same lever EV9's second slice already used for
+	# an input-glyph legibility miss (28px->36px). Position offset shifted
+	# by -half the size delta so the icon stays centred on the same anchor
+	# point above the arc.
 	_stamina_icon = TextureRect.new()
 	_stamina_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stamina_icon.texture = load(ICON_STAMINA)
 	_stamina_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_stamina_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_stamina_icon.position = STAMINA_ARC_POS + Vector2(15.0, -24.0)
-	_stamina_icon.size = Vector2(18.0, 18.0)
+	_stamina_icon.position = STAMINA_ARC_POS + Vector2(12.0, -27.0)
+	_stamina_icon.size = Vector2(24.0, 24.0)
 	_stamina_icon.visible = false
 	_stamina_icon.modulate.a = 0.0
 	_root.add_child(_stamina_icon)
