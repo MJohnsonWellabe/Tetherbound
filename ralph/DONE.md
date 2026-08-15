@@ -69,6 +69,90 @@ rarity-tier system — that was named and rejected as out of scope back in D20
 itself ("A full spawn-condition system... is R5.5's scope"). Nothing here
 invents rarity tiers.
 
+## MQ1A — Full locomotion motion rebuild: key-pose gait on render-verified axes
+
+`model: fable` · `tests: none per item; full suite 720/84364 green anyway` ·
+`area: player, animation` · `041a190` on `ralph/MQ1A`.
+
+**The ceiling call the item asked Fable to make: OF5's sine-synthesis gait
+was the ceiling, and the reason was not style — the axis conventions were
+part-inverted.** A render-evidence probe of the rig (`tools/_probe_pose_axes.gd`,
+single-bone rotations rendered and read off the frame, both sides) found the
+shin flexes on +X and the forearm on -X on this rig, while the shipped clips
+keyed knee folds negative and elbows +50..+68 positive: every recovery-leg
+knee bent FORWARD (reads as a straight leg skimming the ground — the exact
+"dead straight recovery leg" OF5 thought it had fixed) and both elbows rode
+the whole cycle hyperextended BACKWARD — the owner's literal "his arms bend
+backwards" report. `character_model.gd`'s `_tame_gait_arm_swing()` load-time
+hack (0.45x toward the frame-0 pose) shrank the swing and PRESERVED the
+backward bend, which is why tuning never reached it. No amount of amplitude
+work fixes a wrong sign; hence rebuild, per the quality plan's §0.1/§14.
+
+**What shipped.** `animate_humanoid.py::author_gait()` rewritten from sine
+oscillators to key-pose tables — contact / loading / mid-stance / toe-off /
+whip / mid-swing / reach, per gait — sampled through a cyclic Catmull-Rom
+spline (knots hit exactly, C1 across the wrap; a unit check runs the sampler
+standalone). Asymmetric stance/swing timing with real flight windows: 28%
+stance jog; sprint on an 11-frame cycle (4.4 steps/s, 1.97m stride, ~0.1s
+contact — textbook numbers for a real 8.6 m/s runner, and the only honest
+way to keep a planted ankle at body speed without cartoon splits). Loading
+knee flexion (weight), ankle heel-toe rocker, pelvis yaw + list, chest
+counter-rotation, damped head stabilisation, arm pump with elbow drag on a
+CURVED swing plane (hands drift to the midline coming forward). The jump and
+throw one-shots were mirrored/hyperextended on the same wrong axes and are
+re-signed. An AXES table in the script header records the verified
+conventions so nobody keys this rig blind again. All six humanoid rigs
+re-baked (trainer, grandpa, warden, villager_female, villager_male, grunt) —
+shared-rig scope honoured, verified by re-rendering villager_farmer's strips;
+NPC configs gain `gait_reference_speeds`. Runtime: the taming hack is
+deleted; `apply_momentum_tilt()` (character_model.gd, driven by
+trainer_model.gd, limits in movement.json `gait_feel`, TUNABLE) tips the
+model into starts/stops and banks it through turns.
+
+**Measured, bias-proof:** planted-foot ground-relative speed from bone data
+(`tools/_probe_foot_skate.gd`): walk mean 0.52 m/s / worst 1.64 (the old
+clips' planted windows were effectively body-speed skate); sprint ~2.3 m/s
+inside a 0.1s contact — a 2-3 frame event at 24fps, and the physical limit
+short of splits. Getting there took two real authoring fixes the probe
+caught and renders would have flattered: a wrap-segment extrapolation bug in
+the spline sampler that launched the hips metres off the ground at contact
+frames, and a back-loaded stance sweep (knots now spaced for near-constant
+sweep rate while planted).
+
+**Critique rounds — honest disclosure.** No Task/Agent tool exists in this
+environment (same situation OF5 disclosed), so the `visual-judge` protocol's
+process-isolated critic was NOT available. Substituted the OF5 pattern:
+measurement-first (the skate numbers above) plus structured fresh-eyes
+rubric passes over full evidence sheets from `tools/capture_gait_suite.gd`
+(new, committed: 12-frame side contact strips both gaits, rear / front-3/4 /
+rear-3/4 strips, and start/stop/turn sequences driven through the REAL
+runtime path — play() cross-fade, match_gait_rate, momentum tilt — under
+AnimationMixer MANUAL advance). Three rounds: round 1 named one new defect
+(sagittal-flat arm swing plane reading as a straight zombie reach in
+three-quarter views — fixed with forward-swing adduction); rounds 2 and 3
+named no new defect and the skate axis did not move; stopped per the
+two-flat-rounds rule. Round-3 state against the item's gate: no backward
+arms, no broken knee/elbow anatomy, no metronome cadence, walk/sprint
+clearly distinct actions, planted boots hold their stripes.
+
+**Tests:** full suite 720 tests / 84364 assertions / 0 failed, plus
+`smoke_input` (OF5 cadence assertion) and `check_character_clips` green,
+repeated clean headless imports. `test_gait_arm_taming.gd` (4 tests pinning
+the deleted hack — they demand the mannequin arms) replaced by
+`test_gait_anatomy.gd` (4 tests pinning what actually matters, straight off
+the baked keys in rest-relative pose space: elbows may never hyperextend in
+any clip, gait knees may never bend forward, walk arms must genuinely swing
+>= 20 deg so no load-time hack can re-zombie them, both gaits must flex the
+stance knee >= 30 deg somewhere).
+
+**Honest remainders:** (1) on-device/real-play confirmation is still the true
+gate (`MQ1-gate`) — everything here is headless-render and bone-data
+evidence; (2) sprint retains ~2.3 m/s planted residual for ~0.1s per step,
+judged imperceptible at 24fps but worth an eye at the checkpoint; (3) the
+momentum tilt reads correctly in the turn/start/stop captures but its
+magnitudes (`gait_feel`) are first-guess TUNABLE values; (4) `MQ1B` terrain
+adaptation deliberately untouched.
+
 ## R4.11 — Combat animation bug: fixed, with a real-fight instrument to prove it
 
 `model: sonnet` · `tests: smoke_combat (2/2 local runs green)` · `area: combat` · `351bf36`

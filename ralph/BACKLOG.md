@@ -1594,34 +1594,17 @@ Nothing in the backlog previously encoded that ordering — `R7.3`'s own text
 cited `R0.11` (closed, but its shipped scope was input-glyph/menu fixes, never
 locomotion feel) and `R6.3` (a play gate, which per this file's own legend and
 `D21` does not block the loop) as having already answered "is movement fun."
-Neither actually had. These three items exist to make the plan's ordering
+Neither actually had. These items exist to make the plan's ordering
 self-enforcing for a lane working top-down, not just something a careful lane
-notices by separately reading the plan.
-
-### MQ1A — Full locomotion motion rebuild · `model: fable` · `tests: none` · quality plan §2
-**START WITH FABLE.** Do not hand this to a lesser tier to inherit the current
-procedural gait and tune it further — assume the current clips may themselves
-be the ceiling (already tuned repeatedly, still visibly unnatural). Fable
-reviews fresh walk/run renders from rear, side, front three-quarter, rear
-three-quarter, start, stop and turn, then decides what's fundamentally wrong
-and whether to rebuild clips procedurally, author/import better ones, or use
-another allowed approach. Target: grounded, weighty, readable, natural enough
-the player stops noticing it — anatomically correct arm/leg opposition,
-natural stride and cadence, a clear walk/sprint distinction, no foot skating
-on flat ground. Fix the shared humanoid locomotion foundation once — the
-trainer, Grandpa, Warden and villagers all ride on it, so don't leave any of
-them on visibly worse motion than the trainer ends up with.
-
-**Done when** a fresh blind visual critic, given full walk-cycle and
-sprint-cycle contact sheets plus rear/side/start/stop/turn captures, does not
-flag broken arm/knee/elbow anatomy, floatiness, robotic cadence, or obvious
-flat-ground foot skating. If the critic still calls the motion fundamentally
-wrong after multiple implementation rounds, stop micro-tuning that approach —
-return to Fable and restart the motion solution rather than iterate further.
+notices by separately reading the plan. `MQ1A` (the base motion rebuild) is
+closed and in `DONE.md`; `MQ1B` and the gate below remain.
 
 ### MQ1B — Terrain adaptation and foot placement · `model: fable` · `tests: none` · quality plan §3
-**START WITH FABLE.** Depends on `MQ1A` closing first — don't build terrain IK
-on top of a base cycle that hasn't already passed its own blind critique.
+**START WITH FABLE.** Depends on `MQ1A` (closed — see `DONE.md`; the base
+cycles are key-pose authored on render-verified axes now, with planted-skate
+numbers in the entry a foot-IK pass can regression-check against) — don't
+build terrain IK on top of a base cycle that hasn't already passed its own
+blind critique.
 Evaluate and implement the minimum robust solution for uphill, downhill,
 cross-slope and uneven-ground walking, small terrain height variation, and
 idle stance on slopes (foot planting/IK, orientation to ground normal, pelvis
