@@ -15,6 +15,7 @@ extends RefCounted
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 
 var species_id: String = ""
 var display_name: String = ""
@@ -65,6 +66,32 @@ var bond: int = 0
 var move_quick: String = ""
 var move_charged: String = ""
 
+## --- individuality (R4.2) ----------------------------------------------------
+
+## Per-stat quality rolls, 0.0-1.0, 0.5 = perfectly average (GAME_DESIGN.md 11:
+## "same-species creatures have slightly different underlying stat quality").
+## Stored raw rather than as a baked-in multiplier so `appraisal_stars()` can
+## bucket them for display, and so a species retune (a new `base_hp`) still
+## recomputes correctly through `_apply_level_stats` the same way level-ups
+## already do. Defaulting every roll to 0.5 — the exact "no variance" value —
+## is what keeps every caller that does not roll individuality (an old save,
+## `make_creature`'s starters, most tests) at today's stats byte-for-byte.
+var iv_hp: float = 0.5
+var iv_attack: float = 0.5
+var iv_defence: float = 0.5
+
+## Ids into data/traits/traits.json. "" means no trait rolled (an old save, a
+## caller that did not opt in, or an empty trait pool) — the same "empty
+## string is a legitimate value" contract move_quick/move_charged already
+## use. `trait_secondary` is rolled at the same time as `trait_primary`, but
+## stays hidden from callers until `revealed_trait_secondary()` says bond has
+## unlocked it (GAME_DESIGN.md 11: "a second trait can develop later through
+## progression/bond") — rolling it up front means nothing needs live
+## randomness at bond-gain time, the same "roll once, reveal later" shape
+## `_apply_level_stats` already uses for stat growth.
+var trait_primary: String = ""
+var trait_secondary: String = ""
+
 
 ## Build a live creature at level 1 with base stats, unless told otherwise.
 ##
@@ -78,8 +105,17 @@ var move_charged: String = ""
 ## equal the species' base stats exactly, byte-for-byte. Levelling is
 ## something a caller now has to ask for, not something that started
 ## happening to them.
+##
+## `iv_rolls` and `trait_rolls` are the same opt-in shape, added for R4.2:
+## empty arrays (the default) leave every `iv_*` field at 0.5 — the exact "no
+## variance" value — and both trait fields at "", reproducing pre-R4.2 stats
+## and an untraited creature exactly. A caller that wants individuality
+## passes up to 3 floats (hp, attack, defence, each 0..1) in `iv_rolls`; a
+## caller that wants a trait passes 1 or 2 floats in `trait_rolls` (primary,
+## optionally the hidden secondary — see `trait_secondary`'s own comment).
 static func from_species(
-	id: String, definition: Dictionary, level_roll: float = -1.0, cfg: Dictionary = {}
+	id: String, definition: Dictionary, level_roll: float = -1.0, cfg: Dictionary = {},
+	iv_rolls: Array = [], trait_rolls: Array = []
 ) -> RefCounted:
 	var instance: RefCounted = (load("res://scripts/creatures/creature_instance.gd") as GDScript).new()
 	instance.species_id = id
@@ -93,6 +129,18 @@ static func from_species(
 	var moves: Dictionary = definition.get("moves", {})
 	instance.move_quick = str(moves.get("quick", ""))
 	instance.move_charged = str(moves.get("charged", ""))
+
+	instance.iv_hp = float(iv_rolls[0]) if iv_rolls.size() > 0 else 0.5
+	instance.iv_attack = float(iv_rolls[1]) if iv_rolls.size() > 1 else 0.5
+	instance.iv_defence = float(iv_rolls[2]) if iv_rolls.size() > 2 else 0.5
+
+	instance.trait_primary = ""
+	instance.trait_secondary = ""
+	if trait_rolls.size() > 0:
+		var traits := TRAIT_DB.load_default()
+		instance.trait_primary = str(traits.call("roll", float(trait_rolls[0])))
+		if trait_rolls.size() > 1:
+			instance.trait_secondary = str(traits.call("roll", float(trait_rolls[1])))
 
 	# Only roll a level when a caller supplied both a config AND a roll — the
 	# two args exist to work together, and a config with no roll (or a roll
@@ -196,9 +244,12 @@ func energy_fraction() -> float:
 func _apply_level_stats(cfg: Dictionary) -> void:
 	var growth: Dictionary = cfg.get("level", {}).get("growth_per_level", {})
 	var fraction := hp_fraction() if max_hp > 0.0 else 1.0
-	max_hp = PROGRESSION.stat_at_level(base_hp, level, float(growth.get("hp", 0.0)))
-	attack = PROGRESSION.stat_at_level(base_attack, level, float(growth.get("attack", 0.0)))
-	defence = PROGRESSION.stat_at_level(base_defence, level, float(growth.get("defence", 0.0)))
+	max_hp = PROGRESSION.stat_at_level(base_hp, level, float(growth.get("hp", 0.0))) \
+		* PROGRESSION.individuality_multiplier(iv_hp, cfg)
+	attack = PROGRESSION.stat_at_level(base_attack, level, float(growth.get("attack", 0.0))) \
+		* PROGRESSION.individuality_multiplier(iv_attack, cfg)
+	defence = PROGRESSION.stat_at_level(base_defence, level, float(growth.get("defence", 0.0))) \
+		* PROGRESSION.individuality_multiplier(iv_defence, cfg)
 	hp = max_hp * fraction
 
 
@@ -255,3 +306,42 @@ func gain_bond(points: int, cfg: Dictionary) -> void:
 ## `PROGRESSION.bond_stat_scale` — this only counts the crossings.
 func bond_nodes(cfg: Dictionary) -> int:
 	return PROGRESSION.bond_nodes(bond, cfg)
+
+
+## --- individuality (R4.2) ----------------------------------------------------
+
+## 1-5 stars/bars for one core stat's quality roll (GAME_DESIGN.md 11: "show
+## appraisal through stars/bars, not exact IV numbers"). `stat_name` is
+## "hp", "attack" or "defence"; an unrecognised name reads as perfectly
+## average (3 stars against the shipped thresholds) rather than crashing.
+func appraisal_stars(stat_name: String, cfg: Dictionary) -> int:
+	var iv := 0.5
+	match stat_name:
+		"hp":
+			iv = iv_hp
+		"attack":
+			iv = iv_attack
+		"defence":
+			iv = iv_defence
+	return PROGRESSION.appraisal_stars(iv, cfg)
+
+
+## The overall appraisal a trainer would actually look at — the mean of the
+## three per-stat rolls, bucketed the same way. Kept separate from the
+## per-stat stars above because a UI showing one headline rating (a party
+## row) and a UI showing three (a detail panel) both come from the same raw
+## data honestly, rather than one being derived from the other's buckets.
+func overall_appraisal_stars(cfg: Dictionary) -> int:
+	return PROGRESSION.appraisal_stars((iv_hp + iv_attack + iv_defence) / 3.0, cfg)
+
+
+## The second trait, once bond has actually unlocked it (GAME_DESIGN.md 11:
+## "a second trait can develop later through progression/bond") — "" both
+## before that and when nothing was ever rolled. `trait_secondary` itself
+## always holds the rolled value from creation; this is the gate every
+## caller should read through instead, so a UI cannot leak an unearned trait
+## by reading the raw field.
+func revealed_trait_secondary(cfg: Dictionary) -> String:
+	if trait_secondary == "":
+		return ""
+	return trait_secondary if PROGRESSION.trait_unlocked(bond_nodes(cfg), cfg) else ""

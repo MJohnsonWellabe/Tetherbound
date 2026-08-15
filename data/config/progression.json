@@ -11,5 +11,14 @@
     "battle_won": 4, "successful_catch_start": 10, "per_day_in_party": 2,
     "effects_per_node": { "attack_scale": 0.01, "defence_scale": 0.01 }
   },
+  "_comment_individuality": "R4.2, GAME_DESIGN.md 11: 'same-species creatures have slightly different underlying stat quality.' Each core stat (hp/attack/defence) carries its own 0.0-1.0 quality roll, 0.5 = perfectly average -- variance_pct is the swing at the extremes (0.0 or 1.0), so 0.12 means a stat can run +/-12% off the species base. star_thresholds buckets a roll into 1-5 stars for appraisal display (spec: 'show appraisal through stars/bars, not exact IV numbers') -- four cut points splitting 0..1 into five bands.",
+  "individuality": {
+    "variance_pct": 0.12,
+    "star_thresholds": [0.2, 0.4, 0.6, 0.8]
+  },
+  "_comment_traits": "R4.2, GAME_DESIGN.md 11: 'each creature starts with one trait. A second trait can develop later through progression/bond.' unlock_bond_nodes reuses bond.thresholds' own node count -- 5 here means every node crossed, the same 'fully bonded' milestone the Team screen already shows.",
+  "traits": {
+    "unlock_bond_nodes": 5
+  },
   "migration": { "v1_creature_level": 3 }
 }

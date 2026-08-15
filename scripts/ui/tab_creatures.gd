@@ -24,6 +24,7 @@ extends "res://scripts/ui/menu_tab.gd"
 const PARTY := preload("res://autoload/party.gd")
 const CREATURE_VIEWPORT := preload("res://scripts/ui/creature_viewport.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
@@ -75,6 +76,8 @@ var _detail_type_icon: TextureRect = null
 var _detail_type_label: Label = null
 var _detail_hp: Label = null
 var _detail_stats: Label = null
+var _detail_appraisal: Label = null
+var _detail_traits: Label = null
 var _detail_xp: Label = null
 var _detail_xp_bar: ProgressBar = null
 var _move_quick_icon: TextureRect = null
@@ -91,6 +94,7 @@ var _detail_status: Label = null
 var _detail_hint: Label = null
 
 var _moves: RefCounted = null
+var _traits: RefCounted = null
 
 
 func build() -> void:
@@ -109,6 +113,8 @@ func build() -> void:
 	_shown_species = ""
 	if _moves == null:
 		_moves = MOVE_DB.load_default()
+	if _traits == null:
+		_traits = TRAIT_DB.load_default()
 
 	_header = Label.new()
 	_header.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
@@ -261,6 +267,16 @@ func _build_detail() -> Control:
 	_detail_stats.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	panel.add_child(_detail_stats)
 
+	_detail_appraisal = Label.new()
+	_detail_appraisal.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_appraisal.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	panel.add_child(_detail_appraisal)
+
+	_detail_traits = Label.new()
+	_detail_traits.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_traits.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	panel.add_child(_detail_traits)
+
 	_detail_xp = Label.new()
 	_detail_xp.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	_detail_xp.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
@@ -364,6 +380,15 @@ func _build_move_row() -> Array:
 	box.add_child(sub_label)
 
 	return [icon, name_label, tag_label, sub_label, box]
+
+
+## A `total`-character fill bar for the appraisal line — `stars` of `*`,
+## the rest `-`. Plain ASCII rather than a unicode star glyph: kenney_future
+## is a display font with no confirmed coverage for U+2605, and a tofu box
+## in place of the rating would be worse than an honest asterisk.
+func _fill_bar(stars: int, total: int = 5) -> String:
+	var filled := clampi(stars, 0, total)
+	return "*".repeat(filled) + "-".repeat(total - filled)
 
 
 func _hairline() -> Control:
@@ -471,6 +496,8 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_detail_type_label.text = "Nothing here yet."
 		_detail_hp.text = ""
 		_detail_stats.text = ""
+		_detail_appraisal.text = ""
+		_detail_traits.text = ""
 		_detail_xp.text = ""
 		_detail_xp_bar.value = 0.0
 		_move_quick_name.text = ""
@@ -513,6 +540,22 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	_detail_stats.text = "ATK %d    DEF %d" % [
 		int(round(float(creature.get("attack")))), int(round(float(creature.get("defence"))))
 	]
+
+	# GAME_DESIGN.md 11: "show appraisal through stars/bars, not exact IV
+	# numbers" — a five-character fill bar, never the raw 0.0-1.0 roll.
+	var overall: int = int(creature.call("overall_appraisal_stars", cfg))
+	_detail_appraisal.text = "Appraisal  [%s]" % _fill_bar(overall)
+
+	var primary := str(creature.get("trait_primary"))
+	var secondary: String = str(creature.call("revealed_trait_secondary", cfg))
+	if primary == "":
+		_detail_traits.text = ""
+	elif secondary == "":
+		_detail_traits.text = "Trait: %s" % str(_traits.call("display_name", primary))
+	else:
+		_detail_traits.text = "Traits: %s, %s" % [
+			str(_traits.call("display_name", primary)), str(_traits.call("display_name", secondary))
+		]
 
 	var xp: int = int(creature.get("xp"))
 	var xp_needed: int = int(creature.call("xp_to_next", cfg))

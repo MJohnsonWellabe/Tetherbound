@@ -207,10 +207,23 @@ func _spawn_creatures() -> void:
 ## produced it asked for a rarer species to skew stronger, and adding that
 ## split here would be inventing a rule nobody asked for. spawns.json stays
 ## untouched by this change.
+##
+## Also rolls individuality and a trait pair (R4.2) through this same `rng` —
+## the wild encounter is where GAME_DESIGN.md 11's "same-species creatures
+## have slightly different underlying stat quality" is actually met by the
+## player, and MEADOWS_PROGRESSION_SPEC.md 11 names "seek better traits/
+## appraisal" as one of the good reasons to keep catching. Consuming more of
+## the same seeded, never-`randomize()`d generator changes nothing about the
+## determinism promise above — a creature met at a given spot still rolls
+## the same way across boots, just for three more numbers than before.
 func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator) -> void:
 	var cfg: Dictionary = PROGRESSION.config()
 	var definition: Dictionary = SPECIES.definition(species)
-	var leveled: RefCounted = CREATURE_INSTANCE.from_species(species, definition, rng.randf(), cfg)
+	var iv_rolls: Array = [rng.randf(), rng.randf(), rng.randf()]
+	var trait_rolls: Array = [rng.randf(), rng.randf()]
+	var leveled: RefCounted = CREATURE_INSTANCE.from_species(
+		species, definition, rng.randf(), cfg, iv_rolls, trait_rolls
+	)
 	wild.set("instance", leveled)
 
 

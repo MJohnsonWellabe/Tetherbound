@@ -3,8 +3,9 @@ extends RefCounted
 ## Versioned save/load for the state that has to survive a quit: the party,
 ## the satchel, the day counter, placed buildings (R3.1), creature
 ## progression/satiety/the map database (VERSION 2), SB9's progression-flag
-## store (VERSION 3), and — as of VERSION 4 — every death satchel the player
-## has left in the world (R3.2).
+## store (VERSION 3), every death satchel the player has left in the world
+## (VERSION 4, R3.2), and — as of VERSION 5 — each creature's individuality
+## rolls and traits (R4.2).
 ##
 ## Same shape `docs/decisions/D15` set for `user://settings.json`: JSON, a
 ## `version` field from the first write, and never fatal on load — a missing,
@@ -45,6 +46,17 @@ extends RefCounted
 ## an empty list. A death satchel dropped under an older build is simply not
 ## in that save — it was never written down anywhere for this to recover.
 ##
+## ## VERSION 5 — individuality and traits (R4.2)
+##
+## `creature_instance.gd`'s `iv_hp`/`iv_attack`/`iv_defence` and
+## `trait_primary`/`trait_secondary` did not exist before this — same
+## "nothing to migrate FROM" answer again. `_migrate_v4` sets every migrated
+## creature's IVs to 0.5 (perfectly average, `PROGRESSION.individuality_
+## multiplier`'s own no-op value) and both trait fields to "" (no trait
+## rolled), which is exactly what a creature caught before this system
+## existed should read as: unremarkable and untraited, not retroactively
+## graded.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -81,7 +93,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 4
+const VERSION := 5
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -154,11 +166,16 @@ func load_slot(game: Object, slot: int) -> bool:
 		data = _migrate_v1(data)
 		data = _migrate_v2(data)
 		data = _migrate_v3(data)
+		data = _migrate_v4(data)
 	elif version == 2:
 		data = _migrate_v2(data)
 		data = _migrate_v3(data)
+		data = _migrate_v4(data)
 	elif version == 3:
 		data = _migrate_v3(data)
+		data = _migrate_v4(data)
+	elif version == 4:
+		data = _migrate_v4(data)
 	elif version != VERSION:
 		push_warning("save slot %d is version %d, this build reads %d -- not loading" % [
 			slot, version, VERSION
@@ -243,10 +260,43 @@ func _migrate_v2(data: Dictionary) -> Dictionary:
 
 ## VERSION 3 -> VERSION 4. `death_satchels` (R3.2) did not exist in VERSION 3
 ## either — same "nothing to migrate FROM" answer as `_migrate_v2` above.
+## Lands on VERSION 4's own shape via a literal, not `VERSION` — R4.2's own
+## VERSION 5 bump is the reason why: this used to read `migrated["version"] =
+## VERSION`, which was harmless only by coincidence while VERSION 4 was the
+## newest version this file knew about, and would have silently skipped
+## `_migrate_v4` below the moment VERSION became 5. Every migration step now
+## names its own target version literally, matching `_migrate_v1`/
+## `_migrate_v2` above, so the chain stays correct however many more versions
+## get added after this one.
 func _migrate_v3(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
-	migrated["version"] = VERSION
+	migrated["version"] = 4
 	migrated["death_satchels"] = []
+	return migrated
+
+
+## VERSION 4 -> VERSION 5. `iv_hp`/`iv_attack`/`iv_defence`/`trait_primary`/
+## `trait_secondary` (R4.2) did not exist in VERSION 4 either — same
+## "nothing to migrate FROM" answer as every migration above. Every party
+## member gets 0.5 on each IV (perfectly average, `PROGRESSION.
+## individuality_multiplier`'s own no-op value, and the same default
+## `creature_instance.gd`'s fields already carry) and "" on both traits —
+## a creature caught before this system existed is unremarkable and
+## untraited, not retroactively rolled.
+func _migrate_v4(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 5
+	var party: Array = migrated.get("party", [])
+	for raw: Variant in party:
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var creature := raw as Dictionary
+		creature["iv_hp"] = 0.5
+		creature["iv_attack"] = 0.5
+		creature["iv_defence"] = 0.5
+		creature["trait_primary"] = ""
+		creature["trait_secondary"] = ""
+	migrated["party"] = party
 	return migrated
 
 
@@ -334,6 +384,11 @@ func _party_to_array(party: Variant) -> Array:
 			"bond": int(instance.get("bond")),
 			"move_quick": str(instance.get("move_quick")),
 			"move_charged": str(instance.get("move_charged")),
+			"iv_hp": float(instance.get("iv_hp")),
+			"iv_attack": float(instance.get("iv_attack")),
+			"iv_defence": float(instance.get("iv_defence")),
+			"trait_primary": str(instance.get("trait_primary")),
+			"trait_secondary": str(instance.get("trait_secondary")),
 		})
 	return out
 
@@ -367,6 +422,11 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.bond = int(d.get("bond", 0))
 		creature.move_quick = str(d.get("move_quick", ""))
 		creature.move_charged = str(d.get("move_charged", ""))
+		creature.iv_hp = float(d.get("iv_hp", 0.5))
+		creature.iv_attack = float(d.get("iv_attack", 0.5))
+		creature.iv_defence = float(d.get("iv_defence", 0.5))
+		creature.trait_primary = str(d.get("trait_primary", ""))
+		creature.trait_secondary = str(d.get("trait_secondary", ""))
 		party_ref.call("add", creature)
 
 

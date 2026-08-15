@@ -253,3 +253,117 @@ func test_creature_bond_nodes_matches_the_static_function() -> void:
 	var creature := _creature()
 	creature.bond = 55
 	assert_eq(creature.bond_nodes(CFG), PROGRESSION.bond_nodes(55, CFG))
+
+
+# --- individuality (R4.2) -----------------------------------------------------
+
+const IV_CFG := {
+	"individuality": {"variance_pct": 0.1, "star_thresholds": [0.2, 0.4, 0.6, 0.8]},
+	"traits": {"unlock_bond_nodes": 5},
+	"bond": {
+		"max": 100, "thresholds": [10, 30, 55, 80, 100],
+		"effects_per_node": {"attack_scale": 0.01, "defence_scale": 0.01},
+	},
+}
+
+
+func test_individuality_multiplier_is_one_at_perfectly_average() -> void:
+	assert_almost_eq(PROGRESSION.individuality_multiplier(0.5, IV_CFG), 1.0, 0.0001)
+
+
+func test_individuality_multiplier_spans_the_configured_variance() -> void:
+	assert_almost_eq(PROGRESSION.individuality_multiplier(0.0, IV_CFG), 0.9, 0.0001,
+		"the worst roll should be variance_pct below 1.0")
+	assert_almost_eq(PROGRESSION.individuality_multiplier(1.0, IV_CFG), 1.1, 0.0001,
+		"the best roll should be variance_pct above 1.0")
+
+
+func test_individuality_multiplier_is_a_no_op_with_no_individuality_config() -> void:
+	# A config predating R4.2 (or a hand-built test config, like CFG above)
+	# must not silently start applying variance nobody asked for.
+	assert_almost_eq(PROGRESSION.individuality_multiplier(0.0, CFG), 1.0, 0.0001)
+	assert_almost_eq(PROGRESSION.individuality_multiplier(1.0, CFG), 1.0, 0.0001)
+
+
+func test_appraisal_stars_buckets_against_the_configured_thresholds() -> void:
+	assert_eq(PROGRESSION.appraisal_stars(0.0, IV_CFG), 1)
+	assert_eq(PROGRESSION.appraisal_stars(0.19, IV_CFG), 1)
+	assert_eq(PROGRESSION.appraisal_stars(0.2, IV_CFG), 2)
+	assert_eq(PROGRESSION.appraisal_stars(0.5, IV_CFG), 3)
+	assert_eq(PROGRESSION.appraisal_stars(0.8, IV_CFG), 5)
+	assert_eq(PROGRESSION.appraisal_stars(1.0, IV_CFG), 5)
+
+
+func test_trait_unlocked_matches_the_configured_bond_node_requirement() -> void:
+	assert_false(PROGRESSION.trait_unlocked(4, IV_CFG))
+	assert_true(PROGRESSION.trait_unlocked(5, IV_CFG))
+
+
+func test_from_species_with_no_iv_rolls_stays_at_average() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, IV_CFG)
+	assert_almost_eq(creature.iv_hp, 0.5, 0.0001)
+	assert_almost_eq(creature.iv_attack, 0.5, 0.0001)
+	assert_almost_eq(creature.iv_defence, 0.5, 0.0001)
+	assert_almost_eq(creature.max_hp, 100.0, 0.0001, "average iv must not move the stat")
+
+
+func test_from_species_with_iv_rolls_applies_the_variance_to_stats() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, IV_CFG, [1.0, 0.0, 0.5])
+	assert_almost_eq(creature.iv_hp, 1.0, 0.0001)
+	assert_almost_eq(creature.iv_attack, 0.0, 0.0001)
+	assert_almost_eq(creature.iv_defence, 0.5, 0.0001)
+	assert_almost_eq(creature.max_hp, 110.0, 0.0001, "best-possible hp roll at 10% variance")
+	assert_almost_eq(creature.attack, 18.0, 0.0001, "worst-possible attack roll at 10% variance")
+	assert_almost_eq(creature.defence, 20.0, 0.0001, "an average defence roll should not move it")
+	assert_eq(creature.hp, creature.max_hp, "a fresh spawn should be whole at its individuality-adjusted max")
+
+
+func test_from_species_with_partial_iv_rolls_defaults_the_rest_to_average() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, IV_CFG, [1.0])
+	assert_almost_eq(creature.iv_hp, 1.0, 0.0001)
+	assert_almost_eq(creature.iv_attack, 0.5, 0.0001)
+	assert_almost_eq(creature.iv_defence, 0.5, 0.0001)
+
+
+func test_appraisal_stars_reads_the_right_stat_off_the_instance() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, IV_CFG, [1.0, 0.0, 0.5])
+	assert_eq(creature.appraisal_stars("hp", IV_CFG), 5)
+	assert_eq(creature.appraisal_stars("attack", IV_CFG), 1)
+	assert_eq(creature.appraisal_stars("defence", IV_CFG), 3)
+
+
+func test_overall_appraisal_stars_averages_the_three_rolls() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, IV_CFG, [1.0, 1.0, 1.0])
+	assert_eq(creature.overall_appraisal_stars(IV_CFG), 5)
+	var mediocre := CREATURE.from_species("terrapup", DEFINITION, -1.0, IV_CFG, [0.5, 0.5, 0.5])
+	assert_eq(mediocre.overall_appraisal_stars(IV_CFG), 3)
+
+
+func test_from_species_with_no_trait_rolls_leaves_both_traits_empty() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION)
+	assert_eq(creature.trait_primary, "")
+	assert_eq(creature.trait_secondary, "")
+	assert_eq(creature.revealed_trait_secondary(IV_CFG), "")
+
+
+func test_from_species_with_a_trait_roll_sets_the_primary_trait() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, {}, [], [0.0])
+	assert_true(creature.trait_primary != "", "rolling with a real trait pool should not come back empty")
+
+
+func test_revealed_trait_secondary_stays_hidden_until_bond_unlocks_it() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, {}, [], [0.0, 0.5])
+	assert_true(creature.trait_secondary != "", "the roll should have picked something")
+	creature.bond = 30
+	assert_eq(creature.revealed_trait_secondary(IV_CFG), "",
+		"only 2 of 5 bond nodes crossed -- the second trait must stay hidden")
+	creature.bond = 100
+	assert_eq(creature.revealed_trait_secondary(IV_CFG), creature.trait_secondary,
+		"fully bonded should reveal the rolled second trait")
+
+
+func test_from_species_with_only_a_primary_trait_roll_leaves_secondary_empty() -> void:
+	var creature := CREATURE.from_species("terrapup", DEFINITION, -1.0, {}, [], [0.0])
+	assert_eq(creature.trait_secondary, "", "no second roll supplied -- nothing to reveal, ever")
+	creature.bond = 100
+	assert_eq(creature.revealed_trait_secondary(IV_CFG), "")

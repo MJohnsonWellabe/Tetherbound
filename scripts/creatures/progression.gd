@@ -122,3 +122,40 @@ static func bond_stat_scale(nodes: int, key: String, cfg: Dictionary) -> float:
 	var effects: Dictionary = bond_cfg.get("effects_per_node", {})
 	var per_node := float(effects.get(key, 0.0))
 	return 1.0 + float(nodes) * per_node
+
+
+## --- individuality (R4.2, GAME_DESIGN.md 11) --------------------------------
+
+## The multiplier a per-stat quality roll (0.0-1.0, 0.5 = perfectly average)
+## applies on top of the level curve. 1.0 exactly at `iv == 0.5` regardless of
+## `variance_pct`, and 1.0 for every `iv` when `individuality` config is
+## missing (`variance_pct` defaults to 0.0) — both are what keep every
+## existing caller that does not roll individuality (a default 0.5 field, or
+## a config with no `individuality` block) reproducing today's stats exactly.
+static func individuality_multiplier(iv: float, cfg: Dictionary) -> float:
+	var indiv_cfg: Dictionary = cfg.get("individuality", {})
+	var variance := float(indiv_cfg.get("variance_pct", 0.0))
+	return 1.0 + variance * (clampf(iv, 0.0, 1.0) - 0.5) * 2.0
+
+
+## 1-5 stars/bars for an appraisal display (GAME_DESIGN.md 11: "show
+## appraisal through stars/bars, not exact IV numbers" — never show `iv`
+## itself). Buckets `iv` against `individuality.star_thresholds`, whose four
+## cut points split 0..1 into five bands.
+static func appraisal_stars(iv: float, cfg: Dictionary) -> int:
+	var indiv_cfg: Dictionary = cfg.get("individuality", {})
+	var thresholds: Array = indiv_cfg.get("star_thresholds", [0.2, 0.4, 0.6, 0.8])
+	var stars := 1
+	for threshold: Variant in thresholds:
+		if iv >= float(threshold):
+			stars += 1
+	return stars
+
+
+## Whether `nodes` bond nodes crossed is enough to unlock a creature's second
+## trait (GAME_DESIGN.md 11: "a second trait can develop later through
+## progression/bond").
+static func trait_unlocked(nodes: int, cfg: Dictionary) -> bool:
+	var trait_cfg: Dictionary = cfg.get("traits", {})
+	var required := int(trait_cfg.get("unlock_bond_nodes", 5))
+	return nodes >= required

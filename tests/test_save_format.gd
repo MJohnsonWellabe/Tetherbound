@@ -467,6 +467,71 @@ func test_save_then_load_round_trips_progression_flags() -> void:
 	assert_false(read.progression.has("never_set"))
 
 
+# --- VERSION 5: individuality and traits (R4.2) -----------------------------
+
+
+func test_save_then_load_round_trips_individuality_and_traits() -> void:
+	var written := _game()
+	var creature: RefCounted = written.party.at(0)
+	creature.iv_hp = 0.9
+	creature.iv_attack = 0.1
+	creature.iv_defence = 0.5
+	creature.trait_primary = "bold"
+	creature.trait_secondary = "calm"
+	assert_true(saver.save(written, 1))
+
+	var read := _game(false)
+	assert_true(saver.load_slot(read, 1))
+	var loaded: RefCounted = read.party.at(0)
+	assert_almost_eq(float(loaded.get("iv_hp")), 0.9, 0.0001)
+	assert_almost_eq(float(loaded.get("iv_attack")), 0.1, 0.0001)
+	assert_almost_eq(float(loaded.get("iv_defence")), 0.5, 0.0001)
+	assert_eq(str(loaded.get("trait_primary")), "bold")
+	assert_eq(str(loaded.get("trait_secondary")), "calm")
+
+
+func test_v4_save_migrates_with_average_individuality_and_no_traits() -> void:
+	var v4_data := {
+		"version": 4,
+		"day": 8,
+		"party": [{
+			"species_id": "terrapup",
+			"display_name": "Terrapup",
+			"creature_type": "ground",
+			"nickname": "Pre-R4.2 Save",
+			"max_hp": 120.0, "attack": 22.0, "defence": 20.0,
+			"hp": 90.0, "energy": 0.0, "fainted": false,
+			"level": 4, "xp": 10, "bond": 20,
+			"move_quick": "pebble_toss", "move_charged": "stone_rush",
+		}],
+		"inventory": [],
+		"placed_buildings": [],
+		"death_satchels": [],
+		"satiety": 80.0,
+		"map": {},
+		"progression": {},
+	}
+	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
+	file.store_string(JSON.stringify(v4_data))
+	file = null
+
+	var read := _game(false)
+	read.map = MAP_STATE.new()
+	read.map.configure({})
+	read.progression = PROGRESSION_STATE.new()
+	assert_true(saver.load_slot(read, 1))
+
+	assert_eq(read.day, 8)
+	var creature: RefCounted = read.party.at(0)
+	assert_eq(str(creature.get("nickname")), "Pre-R4.2 Save")
+	assert_almost_eq(float(creature.get("iv_hp")), 0.5, 0.0001, "a save predating R4.2 reads as perfectly average")
+	assert_almost_eq(float(creature.get("iv_attack")), 0.5, 0.0001)
+	assert_almost_eq(float(creature.get("iv_defence")), 0.5, 0.0001)
+	assert_eq(str(creature.get("trait_primary")), "", "a save predating R4.2 has no trait to recover")
+	assert_eq(str(creature.get("trait_secondary")), "")
+
+
 func test_v2_save_migrates_with_a_fresh_progression_store() -> void:
 	var v2_data := {
 		"version": 2,

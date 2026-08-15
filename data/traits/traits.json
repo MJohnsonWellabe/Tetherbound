@@ -1,0 +1,13 @@
+{
+  "_comment": "Flavour traits (R4.2, GAME_DESIGN.md 11). Every creature rolls one at creation; a second is rolled at the same time but withheld from display until bond crosses data/config/progression.json's traits.unlock_bond_nodes (creature_instance.gd::revealed_trait_secondary). Flavour/appraisal only -- nothing in GAME_DESIGN.md or MEADOWS_PROGRESSION_SPEC.md defines a numeric combat effect for a trait, so none is invented here; see scripts/creatures/trait_db.gd's own header.",
+  "traits": {
+    "bold": { "display_name": "Bold", "description": "Charges into a fight without hesitating." },
+    "calm": { "display_name": "Calm", "description": "Steady under pressure, rarely startled." },
+    "sturdy": { "display_name": "Sturdy", "description": "Shrugs off knocks that would stagger others." },
+    "swift": { "display_name": "Swift", "description": "Quick on its feet, first to react." },
+    "gentle": { "display_name": "Gentle", "description": "Easygoing around the trainer and the rest of the team." },
+    "stubborn": { "display_name": "Stubborn", "description": "Digs in and does not back down." },
+    "curious": { "display_name": "Curious", "description": "Investigates everything new before anything else." },
+    "watchful": { "display_name": "Watchful", "description": "Notices trouble before it arrives." }
+  }
+}
