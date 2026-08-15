@@ -718,14 +718,22 @@ func _build_pylons(world: Node3D, holder: Node3D, spoke: Dictionary) -> void:
 		var dangle := _vec2(entry.get("dangle_toward", []))
 		if dangle != Vector2.INF:
 			# The cut cable's own end: out toward where the line used to go,
-			# then straight down under its own weight. Two pieces, a knee.
+			# then down under its own weight. Sampled off a quadratic, for the
+			# same reason the spans are: the original two-piece knee read as a
+			# rigid bent pipe with a sharp elbow — glaring at the stone gate,
+			# where the stub hangs 10m from the player against flat masonry.
 			var out := (dangle - at).normalized()
 			var out3 := Vector3(out.x, 0.0, out.y)
-			var knee := attach + out3 * 1.8 + Vector3.DOWN * 0.9
-			var tip := knee + out3 * 0.5 + Vector3.DOWN * 2.6
+			var control := attach + out3 * 2.0 + Vector3.DOWN * 0.4
+			var tip := attach + out3 * 2.3 + Vector3.DOWN * 3.5
 			var stub_material := _conduit_material(bool(entry.get("lit", false)))
-			_conduit_segment(holder, "DangleStub_%d_a" % i, attach, knee, stub_material, 0.075)
-			_conduit_segment(holder, "DangleStub_%d_b" % i, knee, tip, stub_material, 0.075)
+			var previous := attach
+			for s in range(1, 6):
+				var t := float(s) / 5.0
+				var point := attach.lerp(control, t).lerp(control.lerp(tip, t), t)
+				_conduit_segment(holder, "DangleStub_%d_%d" % [i, s], previous, point,
+					stub_material, 0.075)
+				previous = point
 
 	for i in range(list.size() - 1):
 		if attachments[i] == Vector3.INF or attachments[i + 1] == Vector3.INF:
@@ -1109,9 +1117,21 @@ func _tether_material() -> StandardMaterial3D:
 	if _tether_material_cache != null:
 		return _tether_material_cache
 	var material := StandardMaterial3D.new()
-	material.albedo_color = _palette_colour("tether_oxblood", Color(0.2, 0.133, 0.157))
+	var oxblood := _palette_colour("tether_oxblood", Color(0.2, 0.133, 0.157))
+	material.albedo_color = oxblood
 	material.roughness = 0.86
 	material.metallic = 0.0
+	# A value floor, not a glow. Under gl_compatibility in day light the bare
+	# albedo shades to pure black — the seal's caps and the gate's leaves read
+	# as holes in the sky, and the whole "Team Tether built this" statement
+	# rests on that colour being legible as a COLOUR. Low energy on purpose:
+	# 0.3 still shaded to black on the seal's caps (the palette colour's own
+	# max channel is 0.2, so 0.3 lifts them by almost nothing); 0.55 reads as
+	# dark oxblood paint; anything near 1.0 would read as the seal being
+	# powered, which it is not. TUNABLE.
+	material.emission_enabled = true
+	material.emission = oxblood
+	material.emission_energy_multiplier = 0.55
 	_tether_material_cache = material
 	return material
 

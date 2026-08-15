@@ -101,6 +101,90 @@ const VIEWPOINTS := [
 		"eye": Vector2(164.8, 48.7), "eye_h": 3.2,
 		"target": Vector2(209.8, 52.3), "target_h": 3.0,
 	},
+	# SF33-remainder: the other five spokes. Same discipline — walk-up plus
+	# at-blocker, eyes on the road's opposite shoulder from the pylon line,
+	# never within ~8m of a pylon.
+	{
+		# Does the live line read as one route marching INTO the slide, and
+		# does the buried terminal read as hit rather than as placed?
+		"name": "rift-mountain-walkup",
+		"eye": Vector2(-78.6, -80.3), "eye_h": 2.6,
+		"target": Vector2(-123.3, -111.1), "target_h": 3.0,
+	},
+	{
+		# The buried pylon itself: dead, leaning with the slide, its cut
+		# conduit dangling toward the mountain the line used to climb. Eye
+		# further along the road than the walk-up — the first framing stood
+		# where a scatter tree owned the right half of the frame.
+		"name": "rift-mountain-at-slide",
+		"eye": Vector2(-105.7, -100.1), "eye_h": 2.6,
+		"target": Vector2(-122.8, -104.3), "target_h": 2.5,
+	},
+	{
+		# high_pass's contrast with mountain_trail: the line is live the whole
+		# climb and stops SHORT of the pile — nothing buried, nothing dead.
+		"name": "rift-pass-walkup",
+		"eye": Vector2(40.8, -150.4), "eye_h": 2.6,
+		"target": Vector2(51.4, -191.5), "target_h": 3.5,
+	},
+	{
+		# The terminal pylon at the foot of the fallen pass, still lit, its
+		# severed conduit dangling live toward the crest. Eye near the road
+		# end: from further back a scatter tree hides the pylon entirely.
+		"name": "rift-pass-at-slide",
+		"eye": Vector2(45.4, -174.5), "eye_h": 2.6,
+		"target": Vector2(54.5, -183.0), "target_h": 2.4,
+	},
+	{
+		# cliff_road runs the full crossing grammar over a 9m notch: does the
+		# compressed version still read as one cut route, or as clutter?
+		"name": "rift-cliff-walkup",
+		"eye": Vector2(60.9, -20.5), "eye_h": 2.6,
+		"target": Vector2(110.0, -43.0), "target_h": 2.5,
+	},
+	{
+		# The notch: lean-in dead pylon, both dangles, live far pylon, far
+		# kerb rows and gateposts on the shelf beyond. Eye back on the road,
+		# not under the flank — from the first framing the frame was all
+		# hillside and sky with the break itself below the bottom edge.
+		# Eye back on uncarved ground (an eye nearer the lip than v=+9 sinks
+		# with the rim — the heightfield is the carved one), aim DOWN INTO the
+		# slot: a negative target height is what makes a 9m-deep notch in a
+		# steep flank present as a gap instead of as its own far wall.
+		"name": "rift-cliff-at-notch",
+		"eye": Vector2(89.8, -32.8), "eye_h": 2.8,
+		"target": Vector2(103.5, -38.0), "target_h": -5.0,
+	},
+	{
+		# stone_gate, wall composition: a live line running out of road at a
+		# sealed arch. Head-on-ish, the framing the spoke was sited for.
+		"name": "rift-gate-walkup",
+		"eye": Vector2(-158.0, 1.0), "eye_h": 2.6,
+		"target": Vector2(-198.0, 0.0), "target_h": 3.5,
+	},
+	{
+		# The last pylon short of the arch and its cut conduit dangling toward
+		# the sealed opening the cable used to pass through.
+		"name": "rift-gate-at-seal",
+		"eye": Vector2(-184.0, 1.6), "eye_h": 2.6,
+		"target": Vector2(-197.0, -2.0), "target_h": 2.8,
+	},
+	{
+		# blighted_road, the Team Tether seal: live line walking up to the
+		# faction's own wall. Do the oxblood caps and the pylons read as the
+		# same author's work?
+		"name": "rift-blight-walkup",
+		"eye": Vector2(70.8, 147.7), "eye_h": 2.6,
+		"target": Vector2(83.7, 180.0), "target_h": 3.0,
+	},
+	{
+		# The terminus: last live pylon against the wall face, stub dangling
+		# down the masonry between oxblood piers, checkpoint freight piled at
+		# the wall's foot on the road.
+		"name": "rift-blight-at-seal",
+		"eye": Vector2(76.7, 166.8), "eye_h": 2.6,
+		"target": Vector2(86.0, 178.3), "target_h": 2.2,
+	},
 ]
 
 

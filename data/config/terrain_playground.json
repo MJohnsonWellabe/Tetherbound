@@ -592,7 +592,60 @@
           "rubble_scale_max": 0.9,
           "barrier_height": 4.2,
           "barrier_thickness": 3.6
-        }
+        },
+        "_comment_sf33": "SF33 rift dressing, the pile variant: no seam to cross, so the statement is the line going INTO the slide and not coming out. Three live pylons walk the trail's shoulder (opposite the fingerpost, ~21m spacing); the fourth stands in the slide's leading rubble at the pile's near edge, dead, leaning 12 degrees downhill the way the rock pushed it, its dead span from the third sagging into the pile and its onward conduit cut, dangling toward where the line used to climb ([-150,-135]). No far pylon and no far_road on purpose: the far side of a rockslide is buried, not visible, and a glimpse would promise ground the blocker denies. One stranded pack-consignment at the trail end. All points r<=167, far inside the 235-3m ring; the buried pylon sits at u=-5.2/v=+4.4 in slide-local space -- inside the rubble apron (+-6.5), clear of the boulder band (+-2.2) and the buried barrier (+-1.8). TUNABLE.",
+        "pylons": {
+          "height": 4.6,
+          "list": [
+            {
+              "at": [
+                -72.4,
+                -67.4
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -92.7,
+                -82.4
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -109.7,
+                -94.7
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -122.8,
+                -104.3
+              ],
+              "lean_deg": 12.0,
+              "lean_toward": [
+                -114.7,
+                -98.4
+              ],
+              "dangle_toward": [
+                -150.0,
+                -135.0
+              ]
+            }
+          ]
+        },
+        "abandoned": [
+          {
+            "at": [
+              -118.3,
+              -97.8
+            ],
+            "crates": 1,
+            "barrels": 1,
+            "bags": 2
+          }
+        ]
       },
       {
         "id": "stone_gate",
@@ -655,7 +708,56 @@
           "wall_height": 4.2,
           "wall_thickness": 1.7,
           "span": 19.0
-        }
+        },
+        "_comment_sf33": "SF33 rift dressing, the first of the two WALL compositions (no far side to see across, so the crossing grammar does not apply -- see also blighted_road). The statement is a line that runs out of road: four live pylons walk the south shoulder to the gate and the last stops ~7m short of the gate plane, upright and still lit, its severed conduit dangling toward the sealed opening the cable used to pass through. Nothing here is dead -- dead on this map means physically wrecked (river_gorge's rule) and nothing at the gate was wrecked; the cut is clean, which is itself the message: rock and weather severed the other roads, somebody severed this one. No far_road and no gateposts (the arch IS the vertical masonry), and nothing placed beyond: the gate swallowed the route whole. One consignment pulled over at the road's edge where the gate turned it back. Max r=198 (the gate itself). TUNABLE.",
+        "pylons": {
+          "height": 4.6,
+          "list": [
+            {
+              "at": [
+                -125.1,
+                -7.0
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -148.2,
+                -6.2
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -169.2,
+                -5.4
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -190.2,
+                -4.6
+              ],
+              "lit": true,
+              "dangle_toward": [
+                -198.0,
+                0.0
+              ]
+            }
+          ]
+        },
+        "abandoned": [
+          {
+            "at": [
+              -186.0,
+              -3.4
+            ],
+            "crates": 2,
+            "barrels": 1,
+            "bags": 1
+          }
+        ]
       },
       {
         "id": "high_pass",
@@ -720,7 +822,55 @@
           "rubble_scale_max": 0.85,
           "barrier_height": 4.2,
           "barrier_thickness": 3.4
-        }
+        },
+        "_comment_sf33": "SF33 rift dressing, the pass variant -- deliberately NOT a copy of mountain_trail's buried line (same blocker mechanism, opposite statement): here the slide never touched the pylons. The line climbs the road's east shoulder live the whole way and simply STOPS at the foot of the fallen pass: the terminal pylon stands upright, still lit, its severed conduit dangling live toward the crest the route used to cross ([56.5,-197]) -- power still arrives and has nowhere left to go, which against mountain_trail's dead half-buried terminal is the pair's whole contrast. Nothing beyond the crest: the far side of a pass that has fallen in is a promise the blocker cannot keep. Porter loads (bags-heavy) left at the top of the climb. Terminal pylon 14m off the slide's centreline, well clear of the rubble apron (+-6.5) and of the scatter trees that crowd the road end; max r=198. TUNABLE.",
+        "pylons": {
+          "height": 4.6,
+          "list": [
+            {
+              "at": [
+                41.1,
+                -117.8
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                45.3,
+                -138.4
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                49.3,
+                -159.0
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                52.6,
+                -176.6
+              ],
+              "lit": true,
+              "dangle_toward": [
+                56.5,
+                -197.0
+              ]
+            }
+          ]
+        },
+        "abandoned": [
+          {
+            "at": [
+              51.5,
+              -174.9
+            ],
+            "bags": 3,
+            "barrels": 1
+          }
+        ]
       },
       {
         "id": "cliff_road",
@@ -792,7 +942,86 @@
           "lip_stones": 7,
           "lip_span": 9.0,
           "far_lip": true
-        }
+        },
+        "_comment_sf33": "SF33 rift dressing, the short-carve variant: river_gorge's crossing grammar (its _comment_sf33 holds the layout rules) compressed to a 9m notch. Two live pylons up the road's downhill shoulder at ~16m spacing (a short spoke wants a tighter rhythm), a dead one leaning into the notch at v=+10 -- 1m outside the rim, and pulled a metre downhill so its collider clears the revetment's wall line by 1.8m -- the break, both cut ends dangling into the notch, then a LIVE pylon alone on the far shelf at v=-14 (river_gorge's own reasoning: dead slate vanishes against grey hillside, and only the pylon the rift physically wrecked is dead). far_road resumes the shelf from v=-10 to v=-20 with far gateposts at the far lip. NO near_posts, uniquely: the revetment's broken end already holds the near lip's vertical masonry, and a post pair there lands inside the revetment's own run. Freight stranded on both sides of the break; the near cluster sits at v=+11.5 because everything south of the road nearer the carve centreline than v=+9 is inside the notch's own rim. Max r=133. TUNABLE.",
+        "pylons": {
+          "height": 4.6,
+          "list": [
+            {
+              "at": [
+                58.7,
+                -26.6
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                75.9,
+                -32.4
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                90.6,
+                -39.2
+              ],
+              "lean_deg": 7.0,
+              "lean_toward": [
+                113.7,
+                -45.8
+              ],
+              "dangle_toward": [
+                113.7,
+                -45.8
+              ],
+              "break_after": true
+            },
+            {
+              "at": [
+                113.7,
+                -45.8
+              ],
+              "lit": true,
+              "dangle_toward": [
+                90.6,
+                -39.2
+              ]
+            }
+          ]
+        },
+        "far_road": {
+          "from": [
+            111.5,
+            -40.4
+          ],
+          "to": [
+            121.0,
+            -43.5
+          ],
+          "width": 4.6,
+          "kerbs": 9,
+          "gateposts": true
+        },
+        "abandoned": [
+          {
+            "at": [
+              87.1,
+              -44.6
+            ],
+            "crates": 1,
+            "barrels": 1,
+            "bags": 1
+          },
+          {
+            "at": [
+              118.5,
+              -47.0
+            ],
+            "crates": 1,
+            "bags": 1
+          }
+        ]
       },
       {
         "id": "blighted_road",
@@ -853,7 +1082,73 @@
           "piers": 5,
           "pier_height": 4.6,
           "marker_height": 1.5
-        }
+        },
+        "_comment_sf33": "SF33 rift dressing, the second WALL composition, and the one place the line and the seal are the same author's work: the wall is Team Tether's own build (tether_oxblood piers) and the pylons are Team Tether's own network, so the composition makes them touch. The line runs live up the road's east shoulder and its last near pylon stands 2.8m off the wall plane between the piers at t=+4.2 and t=+8.4, severed stub dangling flush against the masonry -- the cut and the thing built over the cut in the same square metre of frame. break_after there: no span crosses the seal. BEHIND the wall the line continues DEAD -- two drained pylons at 11m and 29m past the plane, deliberately breaking river_gorge's live-far-side rule, because what this seal holds back is exactly the side that lost its tether. From the road they hide behind the wall (peaks[2]'s outer skirt falls away faster than their tops rise), and that is fine: they are the payoff for a player who climbs the peak's west skirt and looks over. The one big freight cluster is piled against the wall's foot ON the road: not a consignment stranded mid-journey but goods stopped and stacked at a checkpoint -- this blocker's deliberateness, restated by its props. All points r<=228 (far pylon 2 at r=227.4 against world_perimeter's 232m minimum). TUNABLE.",
+        "pylons": {
+          "height": 4.6,
+          "list": [
+            {
+              "at": [
+                66.7,
+                112.6
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                74.8,
+                138.2
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                80.2,
+                155.3
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                87.1,
+                175.3
+              ],
+              "lit": true,
+              "dangle_toward": [
+                88.2,
+                177.9
+              ],
+              "break_after": true
+            },
+            {
+              "at": [
+                91.2,
+                188.7
+              ],
+              "dangle_toward": [
+                87.1,
+                175.3
+              ]
+            },
+            {
+              "at": [
+                96.5,
+                205.9
+              ]
+            }
+          ]
+        },
+        "abandoned": [
+          {
+            "at": [
+              82.5,
+              177.4
+            ],
+            "crates": 4,
+            "barrels": 3,
+            "bags": 2
+          }
+        ]
       }
     ]
   },
