@@ -1454,15 +1454,7 @@ rideable Meadowhart, a rare-trait catch, the Mudsnout line, a favourite first
 catch. That is a content requirement on Phase 8's bands, not on R4.10, and the
 first biome must not be allowed to dodge the tension.
 
-### R4.11 — Combat animation bug · `model: sonnet` · `tests: smoke_combat`
-Owner-reported: creatures "static posed and sliding around". Ruled out by
-measurement — clips exist, drive real bone motion, the animator is ticked
-every physics frame with real velocity, loops are set at runtime. Best
-remaining lead: Terrapup's idle moves bones by 0.088 against 1.53 for walk,
-and a creature in combat is in idle almost always. **Next step is a recorded
-fight logging the clip playing against the body's speed — not more
-reasoning.** Re-check against the owner's R0.11 impressions first; the feel
-pass (auto-face, lunge timing) may have changed the report.
+**`R4.11` (combat animation bug: "static posed and sliding around") root-caused and fixed — see `DONE.md`.** A real fight, instrumented and logged (`tools/diag_combat_animation.gd`, kept in the repo), confirmed the mechanism: `creature_animator.gd`'s one-shot hold blocked locomotion for a clip's full length regardless of the body continuing to move under fresh AI/player drive (measured: 27-32 consecutive frozen-while-moving frames before the fix). `creature_body.gd::request_move()` now cancels the hold whenever real movement is re-commanded; rooted beats (`TELEGRAPH`/`RECOVER`, which never call `request_move`) are untouched. Re-measured after the fix: the sustained freeze pattern is gone; what remains is correct knockback-during-a-rooted-beat motion, a different and intentional thing.
 
 ### R4.12 ▶ Play gate — is repeated combat enjoyable, not merely functional? §33 criterion 2.
 

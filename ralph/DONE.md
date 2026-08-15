@@ -3,6 +3,61 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R4.11 — Combat animation bug: fixed, with a real-fight instrument to prove it
+
+`model: sonnet` · `tests: smoke_combat (2/2 local runs green)` · `area: combat` · `351bf36`
+
+The owner's report — creatures "static posed and sliding around" — was real
+and root-caused, not another dead end. Built `tools/diag_combat_animation.gd`
+(the item's own named next step: "a recorded fight logging the clip playing
+against the body's speed — not more reasoning"), which reuses
+`tests/smoke_combat.gd`'s own real-fight setup and samples every physics
+frame of a genuine fight: the body's velocity, and the animator's resolved
+role, read directly off `creature_body.gd`'s `_animator` (`_current`,
+`_hold`) rather than guessed at.
+
+**The mechanism, confirmed by the log, not assumed:** `creature_animator.gd`'s
+one-shot hold (`play_once`) blocks `tick()` from updating the locomotion pose
+for the ENTIRE length of the attack/hit clip, no matter what the body does in
+the meantime. A wild creature hit mid-chase does not have its AI pause —
+`combat_ai.gd`'s `CLOSE` intent keeps calling `request_move` every physics
+frame regardless of being hit — so the body kept moving under fresh,
+continuing AI drive while the animator stayed frozen on the stale "hit" pose
+for the rest of that clip's length. Measured before any fix: 27-32
+*consecutive* physics frames (0.45-0.53s) of a body moving at real speed
+(up to ~1.7 m/s) while showing a frozen one-shot pose, on a `CLOSE`-intent
+creature actively being re-driven the whole time — a genuine, visible
+freeze-then-catch-up, not a one-frame lunge blip.
+
+**Fix:** `creature_body.gd::request_move()` now calls a new
+`creature_animator.gd::cancel_hold()` whenever it is given a real (non-zero)
+direction. A one-shot hold is presentation for a moment nothing more
+important is happening; the instant something asks the creature to move
+under its own power again, that stops being true, so the hold ends there
+instead of running out the clip's full length regardless. Attacks and hits
+during a genuinely ROOTED beat (`TELEGRAPH`/`RECOVER`, where `request_move`
+is never called because `combat_ai.gd::movement_for` returns `Vector3.ZERO`)
+are untouched — the fix only fires when real movement is actually
+re-commanded, which is exactly the condition the bug needed.
+
+**Re-measured after the fix, same instrument, several runs:** the
+sustained `CLOSE`/`REPOSITION`-intent freeze pattern is gone (0 frames in
+most runs). What remains is a much shorter (≤16 frame, ≤0.27s) blip that is
+a *different*, correct thing: a creature's own knockback-from-being-hit
+decaying while it is legitimately rooted in `TELEGRAPH`/`RECOVER` — the
+body is meant to be shoved by the hit it just took while its pain pose
+plays; `request_move` is never called there so the fix correctly leaves it
+alone. Distinguishing "one lunge frame" from "many consecutive frozen
+frames" needed a second pass on the diagnostic itself (a raw per-frame
+anomaly count conflated both) — the tool now also tracks the longest
+consecutive freeze streak per body, which is the number that actually
+matches what a player would see as a glitch.
+
+`tools/diag_combat_animation.gd` is kept in the repo (not a throwaway) —
+useful any time a future combat/animation change needs the same kind of
+real-fight evidence rather than another round of reading the code and
+guessing.
+
 ## R4.9 — Orb economy and tiers
 
 `model: sonnet` · `tests: test_catch_math (24/24, new), full unit suite (686/83990/0 failed), smoke_catching (clean)` · `area: catching` · `b219495`
