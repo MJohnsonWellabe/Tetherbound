@@ -3,7 +3,32 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
-## R5.3 — Spawn conditions: nocturnal and weather-gated wild spawns
+## R7.5 — Food buffs
+
+`model: sonnet` · `tests: test_food (731/731 local, was 728/728 before)` · `area: gameplay` · `82d7aab`
+
+The backlog item's whole bar ("Buffs only. No starvation meter, ever.") was
+already met by shipped code before this was picked up: D29 built a real
+satiety stat with food-item buffs and soft debuffs, and `tab_backpack.gd`'s
+`_read_use()` already wires eating a food item straight through to
+`player_vitals.eat()`. What R7.5 still owed, per its own `tests:` field, was
+the named regression test — `test_player_vitals.gd` only ever exercised the
+arithmetic with synthetic buff dicts, never the real `data/items/items.json`
+data.
+
+Added `tests/test_food.gd`: loads the real `ItemDB`, asserts every
+`kind: "food"` item actually restores satiety (a food item with none would
+silently do nothing when eaten), feeds the real `berries` entry through
+`player_vitals.eat()` exactly the way `_read_use()` does and checks the
+buff lands correctly, and — the part that matters most given `CLAUDE.md`'s
+hard rule — drives satiety to zero with no food at all and asserts the
+player is never dead, never loses health, and only ever sits at the
+"critical" soft-debuff tier. A fourth test checks the critical-hunger
+debuff and a real food buff compose correctly (multiply, not overwrite).
+
+No production code changed — this was a coverage gap, not a functionality
+gap. Full local suite: 731 tests, 84100 assertions, 0 failed (was 728/84088
+before adding the file).
 
 `model: sonnet` · `tests: test_spawns (727/727 local, was 720/720 before)` · `area: gameplay` · `6a55f05`
 

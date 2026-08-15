@@ -1692,8 +1692,11 @@ quest log are `SB11`, not this item — R7.4 owns the map itself.
 here; Phase -0.85 only points at it. The minimap is unblocked and can be
 picked up from either location.
 
-### R7.5 — Food buffs · `model: sonnet` · `tests: test_food` (new)
-Buffs only. No starvation meter, ever.
+**`R7.5` (food buffs) shipped — see `DONE.md`.** The mechanic (satiety,
+per-item buffs, soft debuffs, no starvation death) was already fully built
+and wired by D29/HD2; this item added the `test_food` regression coverage
+its own `tests:` field named, proving the real `items.json` data (not just
+synthetic dicts) drives it correctly.
 
 ### R7.6 — Berry plot and simple fishing · `model: sonnet` · `tests: test_farming` (new)
 Deliberately shallow — §32 excludes deep farming.
