@@ -1338,7 +1338,13 @@ func _begin_farewell(index: int) -> void:
 	# belt rows the farewell text is actually about, matching D38's own "during
 	# the question you look at the five you would keep."
 	_show_pending_row(false)
-	menu.call("override_footer", "B  keep looking")
+	# Not "B  keep looking" here too: `_farewell_hint` (built above, right next
+	# to the buttons it describes) already says this with a real device-aware
+	# glyph. A second copy in the shell's own corner footer -- found duplicated,
+	# and in two different input conventions (a keyboard Esc glyph down here
+	# vs the footer's hardcoded "B"), by a fresh blind pass on this exact beat
+	# -- is redundant at best and contradictory at worst. Blank it instead.
+	menu.call("override_footer", "")
 	_farewell_keep.grab_focus()
 
 
