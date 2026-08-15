@@ -28,8 +28,6 @@ extends "res://scripts/ui/menu_tab.gd"
 const PARTY := preload("res://autoload/party.gd")
 const CREATURE_VIEWPORT := preload("res://scripts/ui/creature_viewport.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
-const TM_DB := preload("res://scripts/creatures/tm_db.gd")
-const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -42,18 +40,12 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## project.godot's input map.
 const ACTIVATE_ACTION := "interact"
 
-## R4.4: teaching a known TM. `backpack_split` (H / gamepad back-button) is
-## already bound and unused inside this tab, the same reuse `ACTIVATE_ACTION`
-## above already does with `interact` — this agent may not add actions to
-## project.godot's input map, so a menu-only verb has to borrow a binding a
-## field verb or a different tab already owns.
-const TEACH_ACTION := "backpack_split"
-
-## R4.6: evolving the focused creature. `backpack_drop` (G / gamepad LB) is
-## the same reuse `TEACH_ACTION` above already does with `backpack_split` —
-## a menu-only verb borrowing a binding `tab_backpack.gd` owns in a
-## different tab, which never collides because only one tab is visible/open
-## at once (see `_read_teach()`'s own note on this pattern).
+## R4.6: evolving the focused creature. `backpack_drop` (G / gamepad LB) is a
+## menu-only verb borrowing a binding `tab_backpack.gd` owns in a different
+## tab — this agent may not add actions to project.godot's input map, and the
+## borrow never collides because only one tab is visible/open at once. (R4.4's
+## `TEACH_ACTION` borrowed `backpack_split` the same way until OF29 retired
+## the auto-teach it drove; see `_read_evolve()`'s neighbouring comment.)
 const EVOLVE_ACTION := "backpack_drop"
 
 ## R4.7: designate the focused creature as Best Creature. `backpack_drop`
@@ -64,16 +56,14 @@ const EVOLVE_ACTION := "backpack_drop"
 ## open, and cannot fire underneath this screen.
 const BEST_ACTION := "creature_recall"
 
-## progression_state's flag namespace for a found TM (tm_pickup.gd), matched
-## here so this screen can tell "found" from "not found".
-const TM_FLAG_PREFIX := "tm:"
-
 ## `_describe()` appends "G evolve" to this for a creature R4.6's `evolution`
 ## config actually names -- shown whether or not it is currently eligible,
-## the same "always show the verb, explain the refusal on press" shape
-## `TEACH_ACTION` already uses.
+## the same "always show the verb, explain the refusal on press" shape the
+## rest of this screen's verbs use. Teaching is NOT a verb here (OF29): the
+## line points at the satchel, where the TM itself now lives and where the
+## player picks who learns it.
 const DETAIL_HINT_BASE := "A  pick up, then A again to reorder      E / X  send this one out first" \
-	+ "      H  teach a known TM      R  set as Best Creature"
+	+ "      R  set as Best Creature      TMs are taught from the backpack"
 
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
@@ -151,7 +141,6 @@ var _detail_hint: RichTextLabel = null
 
 var _moves: RefCounted = null
 var _traits: RefCounted = null
-var _tms: RefCounted = null
 
 ## --- evolution ceremony (R4.6) ----------------------------------------------
 
@@ -234,8 +223,6 @@ func build() -> void:
 		_moves = MOVE_DB.load_default()
 	if _traits == null:
 		_traits = TRAIT_DB.load_default()
-	if _tms == null:
-		_tms = TM_DB.load_default()
 
 	_header = Label.new()
 	_header.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
@@ -716,7 +703,6 @@ func poll() -> void:
 		return
 	_poll_release()
 	_read_activate()
-	_read_teach()
 	_read_evolve()
 	_read_set_best()
 
@@ -1069,7 +1055,7 @@ func _read_set_best() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
 	# R4.10: the ceremony has exactly one verb, the same reason
-	# `_read_activate()`/`_read_teach()`/`_read_evolve()` bail here. `_focused`
+	# `_read_activate()`/`_read_evolve()` bail here. `_focused`
 	# can also be the sixth row during it, which `party.at()` has no slot for.
 	if _release_stage != "":
 		return
@@ -1090,69 +1076,25 @@ func _read_set_best() -> void:
 		say("%s is no longer your Best Creature." % str(creature.call("label")))
 
 
-## R4.4: teach the focused creature the first known, compatible TM it does
-## not already know, same "one press, one clear effect" shape as
-## `_read_activate()`. Repeated presses work through every applicable TM one
-## at a time rather than opening a picker — a picker is real UI this item
-## does not need yet with two TMs in the game, and adding one now would be
-## building ahead of content that does not exist (CLAUDE.md).
-func _read_teach() -> void:
-	if not visible or menu == null or not bool(menu.call("is_open")):
-		return
-	if _evolution_stage != "" or _release_stage != "":
-		return
-	if not Input.is_action_just_pressed(TEACH_ACTION):
-		return
-
-	var party: RefCounted = _party()
-	if party == null:
-		return
-	var creature: RefCounted = party.call("at", _focused)
-	if creature == null:
-		say("Nothing in that slot.")
-		return
-
-	var learned := _teach_next(creature)
-	if learned == "":
-		say("%s has no new TM to learn." % str(creature.call("label")))
-	else:
-		say("%s learned %s!" % [str(creature.call("label")), learned])
-
-
-## The first known TM (SB9's flag store, `TM_FLAG_PREFIX`-namespaced) this
-## creature is compatible with and does not already know, applied. Order is
-## `_tms.tm_ids()`'s own order — stable across calls, so repeated presses
-## sweep forward through the list rather than re-offering the same TM.
-func _teach_next(creature: RefCounted) -> String:
-	var game := state()
-	var progression: RefCounted = game.get("progression") if game != null else null
-	if progression == null:
-		return ""
-
-	var creature_type := str(creature.get("creature_type"))
-	for tm_id: Variant in (_tms.call("tm_ids") as Array):
-		var id := str(tm_id)
-		if not bool(progression.call("has", TM_FLAG_PREFIX + id)):
-			continue
-		if not TEACHING.can_learn(creature_type, id, _tms):
-			continue
-		var move_id := str(_tms.call("move_id", id))
-		var slot := str(_moves.call("slot", move_id))
-		var current := str(creature.get("move_quick")) if slot == "quick" else str(creature.get("move_charged"))
-		if current == move_id:
-			continue
-		if TEACHING.teach(creature, id, _tms, _moves):
-			return str(_tms.call("display_name", id))
-	return ""
+## R4.4 put a `TEACH_ACTION` here: one press taught the focused creature the
+## first known, compatible TM it did not already know, chosen for the player
+## by list order. OF29 retires it. The owner's report — "I can pick up a TM
+## but it needs to go in my inventory and then I see it's stats and choose
+## who to teach it to" — is precisely the complaint that this screen picked
+## the TM AND applied it with nothing shown and nothing chosen. Teaching now
+## starts from the disc in the satchel (`tab_backpack.gd`, which shows the
+## move's stats and opens the same target picker a potion uses), so there is
+## no second, silent path here to disagree with it. `DETAIL_HINT_BASE` points
+## at the backpack instead of advertising a verb this tab no longer has.
 
 
 ## R4.6: start (or advance) the focused creature's evolution ceremony.
 ##
 ## Split into "start" here and "advance" in `_poll_evolution()` rather than
 ## one function, because a ceremony in progress reads `menu_confirm`
-## instead of `EVOLVE_ACTION` -- the same fork `_read_teach()`'s sibling
-## reads never need, since teaching has no multi-beat sequence to be mid-way
-## through.
+## instead of `EVOLVE_ACTION` -- a fork the tab's single-press verbs
+## (`_read_activate()`, `_read_set_best()`) never need, since neither has a
+## multi-beat sequence to be mid-way through.
 func _read_evolve() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return

@@ -624,10 +624,24 @@ func _build_road_gate() -> void:
 
 
 ## R4.4: TMs found in the world (GAME_DESIGN.md 13). Each is a one-time
-## physical prop; what it grants is permanent (tm_pickup.gd sets a
-## progression_state flag, not an inventory item).
+## physical prop, and OF29 makes what it grants a real satchel item -- so
+## "one-time" now has to be enforced here. A TM whose `tm:<id>` flag is
+## already set was taken in an earlier session and is simply not placed; a
+## reload cannot mint a second copy of a consumable disc.
+##
+## Migration: a save written BEFORE OF29 carries that same flag from the old
+## flag-only pickup, and gets exactly this treatment -- prop gone, no free
+## item. That is the honest reading. The flag was only ever a key to
+## `tab_creatures.gd::_teach_next()`'s auto-teach, which OF29 retires; a
+## player who took a TM under the old rules already had every teach that
+## screen would give them, and handing them a fresh disc now would be
+## inventing a reward the old design never promised.
 func _place_tms() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
 	for tm_id: String in TM_AT:
+		if progression != null and bool(progression.call("has", TM_PICKUP.FLAG_PREFIX + tm_id)):
+			continue
 		var at: Vector2 = TM_AT[tm_id]
 		var ground := ground_height_at(at.x, at.y)
 		if is_nan(ground):

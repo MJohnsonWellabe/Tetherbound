@@ -1,22 +1,38 @@
 extends Node3D
 
-## R4.4: a TM sitting in the world. Picking it up is not an inventory pickup
-## like key_pickup.gd's key -- GAME_DESIGN.md 13 says a TM is "not consumed
-## after one teaching", which means it is not consumed by ANY teaching: the
-## physical prop is a one-time find, but what it grants (the move is now
-## teachable) is permanent knowledge, not a held item with a use count. So
-## this sets a flag on progression_state (SB9's flat flag store, namespaced
-## `tm:<id>` so it cannot collide with an objective/completion flag that
-## happens to share a plain id) and disappears, rather than joining the
-## satchel.
+## A TM sitting in the world, picked up into the satchel.
+##
+## R4.4 originally argued the opposite: GAME_DESIGN.md 13's "not consumed
+## after one teaching" was read as "a TM is permanent knowledge, not an
+## object", so this set a `tm:<id>` progression flag and vanished. OF29
+## overrules that on the owner's own words -- "I can pick up a TM but it needs
+## to go in my inventory and then I see it's stats and choose who to teach it
+## to." A thing you inspect and then spend on ONE creature is an item, not a
+## flag, and there is nowhere but the satchel for an item to live. So this is
+## now exactly key_pickup.gd's contract: `inventory.add`, and a full satchel
+## REFUSES -- the prop stays in the world, still offering, rather than
+## deleting a find the player cannot carry yet.
+##
+## The `tm:<id>` flag survives, with a narrower job: "this world pickup has
+## been taken". `playground_world.gd::_place_tms()` reads it and skips
+## placing an already-taken TM, which is what stops a reload from minting a
+## fresh copy now that the pickup grants a real item. Old saves carrying that
+## flag from before OF29 therefore keep their TM prop gone and get no free
+## item -- see that function's own comment for the migration note.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 
 ## progression_state flag ids for TMs live in this namespace so a TM id and
 ## an unrelated objective/completion flag can never collide in the one flat
-## store SB9 documents.
+## store SB9 documents. Set once the pickup is actually taken (OF29: "taken
+## from the world", no longer "this move is teachable forever").
 const FLAG_PREFIX := "tm:"
+
+## A `kind: "tm"` item id is the SAME string as its data/moves/tms.json id
+## (see items.json's own `_comment_tm`), so this prop hands `_tm_id` straight
+## to the satchel with no mapping table to keep in step -- and
+## tests/test_moves.gd asserts the two files agree in both directions.
 
 var _tm_id: String = ""
 var _tms: RefCounted = null
@@ -77,11 +93,21 @@ func _build_visual() -> void:
 func _on_picked_up() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
-		push_error("no Game autoload; a TM was found but has nowhere to record it")
+		push_error("no Game autoload; a TM was found but has nowhere to go")
 		return
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		push_error("no inventory; a TM was found but has nowhere to go")
+		return
+	if not bool(inventory.call("has_room_for", _tm_id, 1)):
+		# Refused, visibly, same as key_pickup.gd/harvest_node.gd: the disc
+		# stays planted and keeps offering rather than vanishing into a full
+		# satchel. The flag below is deliberately NOT set on this path -- a
+		# TM that is still in the world must not be recorded as taken.
+		game.call("push_world_message", "Satchel is full.")
+		return
+	inventory.call("add", _tm_id, 1)
 	var progression: RefCounted = game.get("progression")
-	if progression == null:
-		push_error("no progression_state; a TM was found but has nowhere to record it")
-		return
-	progression.call("set_flag", FLAG_PREFIX + _tm_id)
+	if progression != null:
+		progression.call("set_flag", FLAG_PREFIX + _tm_id)
 	queue_free()

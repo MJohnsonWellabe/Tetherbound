@@ -37,6 +37,39 @@ func test_the_five_tools_are_defined() -> void:
 		assert_eq(db.kind(id), "tool")
 
 
+## OF29. A TM is a carried item now, not a progression flag — and a single-use
+## one, so it deliberately does NOT stack: two discs of the same TM occupy two
+## slots, the same way two axes would. The design choice is recorded in
+## items.json's `_comment_tm`; this is what stops a later data edit quietly
+## turning one slot into "several lessons in hand" without anyone deciding to.
+func test_two_copies_of_one_tm_take_two_slots() -> void:
+	assert_eq(db.kind("tm_stone_rush"), "tm")
+	assert_eq(db.stack_size("tm_stone_rush"), 1, "a TM must not stack")
+
+	assert_eq(bag.add("tm_stone_rush", 1), 0)
+	assert_eq(bag.used_slots(), 1)
+	assert_eq(bag.count("tm_stone_rush"), 1)
+
+	assert_eq(bag.add("tm_stone_rush", 1), 0, "a second disc must still fit, in its own slot")
+	assert_eq(bag.used_slots(), 2)
+	assert_eq(bag.count("tm_stone_rush"), 2)
+
+
+## Teaching spends exactly one disc (tab_backpack.gd::_on_target_row()), so the
+## satchel arithmetic underneath it has to empty the slot rather than leave a
+## zero-count stack sitting there looking like an item.
+func test_spending_a_tm_empties_its_slot() -> void:
+	bag.add("tm_burrow_strike", 1)
+	var slot: int = bag.find_slot("tm_burrow_strike")
+	assert_true(slot >= 0, "the disc should be findable after adding it")
+
+	assert_true(bag.remove("tm_burrow_strike", 1))
+
+	assert_eq(bag.count("tm_burrow_strike"), 0)
+	assert_eq(bag.used_slots(), 0)
+	assert_true(bag.is_slot_empty(slot))
+
+
 func test_gathered_with_names_the_right_tool_for_each_tutorial_resource() -> void:
 	assert_eq(db.gathered_with("wood"), "axe")
 	assert_eq(db.gathered_with("stone"), "pickaxe")

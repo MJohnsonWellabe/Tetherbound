@@ -69,6 +69,8 @@ func _run() -> void:
 	await _check_backpack_target_picker()
 	await _check_backpack_target_picker_full_party()
 	await _check_backpack_food_eat()
+	await _check_backpack_tm_teach()
+	await _check_backpack_tm_refuses_when_nobody_can_learn()
 	await _check_backpack_drop_and_split()
 	await _check_quest_log_tab()
 	await _check_closes_and_gives_the_game_back(world)
@@ -532,6 +534,155 @@ func _check_backpack_food_eat() -> void:
 		_fail("pressing Use on berries did not restore the player's satiety")
 	else:
 		print("Use on berries restores the player's satiety and spends the item, no target picker")
+
+
+## OF29 owner report: "I can pick up a TM but it needs to go in my inventory
+## and then I see it's stats and choose who to teach it to." The old build
+## made a TM a progression flag and let the Team screen silently auto-teach
+## whichever creature was focused, so none of this path existed. Drives the
+## whole of it through real input: a TM item in the satchel, Use, the target
+## picker with per-row eligibility, confirm, and the disc actually spent.
+##
+## The smoke party is five terrapups (`_check_the_party_screen_holds_five`),
+## a ground species whose quick move is `pebble_toss` — so `tm_burrow_strike`
+## (quick, ground) is teachable to every one of them, and teaching slot 0
+## makes THAT SAME creature ineligible on the next open, which is how the
+## "already knows it" reason gets exercised without disturbing the party.
+func _check_backpack_tm_teach() -> void:
+	_menu.call("select", 0)  # Backpack
+	for i in 4:
+		await process_frame
+
+	var party: RefCounted = _game.get("party")
+	var inventory: RefCounted = _game.get("inventory")
+	var body: Node = _menu.get("_bodies")[0]
+
+	var student: RefCounted = party.call("at", 0)
+	if student == null:
+		_fail("TM check needs slot 0 filled; the five-creature check should have done that")
+		return
+	if str(student.get("move_quick")) == "burrow_strike":
+		_fail("TM check fixture already knew burrow_strike; the check would prove nothing")
+		return
+
+	inventory.call("add", "tm_burrow_strike", 1)
+	var slot: int = int(inventory.call("find_slot", "tm_burrow_strike"))
+	if slot < 0:
+		_fail("could not find the TM slot after adding one -- did the pickup ever reach the satchel?")
+		return
+
+	# "I see it's stats": the detail panel has to name the move and its
+	# numbers before any of the choosing happens.
+	(body.get("_buttons")[slot] as Button).grab_focus()
+	for i in 4:
+		await process_frame
+	var effect: Label = body.get("_detail_effect") as Label
+	var detail: String = effect.text if effect != null else ""
+	if not (detail.contains("Burrow Strike") and detail.to_lower().contains("quick")
+			and detail.to_lower().contains("ground")):
+		_fail("the TM's detail panel did not show the move, its slot and its compatibility (showed \"%s\")"
+			% detail.replace("\n", " / "))
+	else:
+		print("TM detail panel reads: \"%s\"" % detail.replace("\n", " / "))
+
+	await _press("interact")
+
+	if int(body.get("_targeting")) != slot:
+		_fail("pressing Use on a TM did not open the target picker")
+		return
+	if str(body.get("_targeting_tm")) != "tm_burrow_strike":
+		_fail("the picker opened without recording which TM it was opened for")
+	if int(inventory.call("count", "tm_burrow_strike")) != 1:
+		_fail("opening the TM picker already spent the disc, before any creature was chosen")
+	var header: Label = body.get("_target_header") as Label
+	if header == null or not header.text.contains("Burrow Strike"):
+		_fail("the TM picker's header did not name the move being taught")
+
+	var target_rows: Array = body.get("_target_rows")
+	if _focused_control() != target_rows[0]:
+		_fail("opening the TM picker did not focus the first eligible row on its own")
+		return
+
+	await _press("ui_accept")
+
+	if int(body.get("_targeting")) != -1:
+		_fail("confirming a TM target did not close the picker")
+	if str(student.get("move_quick")) != "burrow_strike":
+		_fail("confirming slot 0 did not teach it the TM's move (move_quick is '%s')"
+			% str(student.get("move_quick")))
+	if int(inventory.call("count", "tm_burrow_strike")) != 0:
+		_fail("teaching did not consume the TM (OF29: one disc teaches one creature)")
+	else:
+		print("TM taught to the CHOSEN creature and the disc was consumed")
+
+	# Second copy: slot 0 now already knows the move, so its row must grey out
+	# with the reason showing, and focus must skip past it to slot 1.
+	inventory.call("add", "tm_burrow_strike", 1)
+	var slot_two: int = int(inventory.call("find_slot", "tm_burrow_strike"))
+	if slot_two < 0:
+		_fail("could not find the second TM disc after adding it")
+		return
+	(body.get("_buttons")[slot_two] as Button).grab_focus()
+	await process_frame
+	await _press("interact")
+
+	if int(body.get("_targeting")) != slot_two:
+		_fail("could not reopen the TM picker for the eligibility half of the check")
+		return
+	target_rows = body.get("_target_rows")
+	var taught_row: Button = target_rows[0] as Button
+	if not taught_row.disabled or not taught_row.text.contains("already knows it"):
+		_fail("the row for the creature that just learned the move was not greyed out with a reason (row reads \"%s\")"
+			% taught_row.text)
+	else:
+		print("TM picker greys the creature that already knows the move: \"%s\"" % taught_row.text.strip_edges())
+	if _focused_control() != target_rows[1]:
+		_fail("the TM picker focused an ineligible row instead of skipping to the next eligible creature")
+
+	await _press("menu_cancel")
+	if int(body.get("_targeting")) != -1:
+		_fail("`menu_cancel` did not back out of the TM picker")
+	if int(inventory.call("count", "tm_burrow_strike")) != 1:
+		_fail("cancelling the TM picker spent the disc anyway")
+	else:
+		print("TM picker cancels without spending the disc")
+
+
+## The same "never open a picker nobody can use" rule OF22 put on potions,
+## for TMs: every smoke-party terrapup already knows `stone_rush` (it is their
+## species' own charged move), so a Stone Rush disc must refuse to open at all
+## and say why, rather than showing five greyed rows with nowhere for focus.
+func _check_backpack_tm_refuses_when_nobody_can_learn() -> void:
+	_menu.call("select", 0)  # Backpack
+	for i in 4:
+		await process_frame
+
+	var inventory: RefCounted = _game.get("inventory")
+	var body: Node = _menu.get("_bodies")[0]
+
+	inventory.call("add", "tm_stone_rush", 1)
+	var slot: int = int(inventory.call("find_slot", "tm_stone_rush"))
+	if slot < 0:
+		_fail("could not find the Stone Rush disc after adding it")
+		return
+
+	var item_button: Button = body.get("_buttons")[slot] as Button
+	item_button.grab_focus()
+	await process_frame
+	await _press("interact")
+
+	if int(body.get("_targeting")) != -1:
+		_fail("Use opened the TM picker even though every creature already knows the move")
+		return
+	if int(inventory.call("count", "tm_stone_rush")) != 1:
+		_fail("refusing to open the TM picker still spent the disc")
+	if _focused_control() != item_button:
+		_fail("refusing the TM Use did not leave focus on the item grid")
+	var status: Label = _menu.get("_status") as Label
+	if status == null or not status.text.contains("Stone Rush"):
+		_fail("refusing the TM Use showed no on-screen reason")
+	else:
+		print("Use on a TM nobody can learn refuses to open the picker, and says so: \"%s\"" % status.text)
 
 
 ## Drop discards a stack after a confirm; split halves a stack into an empty

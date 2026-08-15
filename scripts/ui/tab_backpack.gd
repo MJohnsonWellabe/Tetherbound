@@ -25,10 +25,19 @@ extends "res://scripts/ui/menu_tab.gd"
 ## exactly this — a sub-mode that needs `menu_cancel` for itself instead of
 ## letting the shell close the whole menu on it) and this tab reads
 ## `menu_cancel` itself to back out without spending the item.
+##
+## OF29: a TM is an item now (see scripts/world/tm_pickup.gd's header for why
+## it stopped being a progression flag), and "choose who to teach it to" is
+## the same question "choose who to heal" already asks — so a TM reuses this
+## exact picker rather than growing a second one. Its rows are eligible by
+## `teaching.gd::can_learn` instead of by HP, and confirming SPENDS the disc.
 
 const CONFIG_PATH := "res://data/config/menu.json"
 const PARTY := preload("res://autoload/party.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const TM_DB := preload("res://scripts/creatures/tm_db.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
 
 ## Owner playtest report: "we should be able to pick what goes in the
 ## hotbar in our inventory." That already works -- HD2's hotbar
@@ -104,6 +113,18 @@ var _targeting: int = -1
 var _targeting_heal: float = 0.0
 var _targeting_revive: float = 0.0
 
+## OF29: the TM id being targeted, or "" when the open picker is a heal/revive
+## one. Captured alongside the two numbers above and read by exactly the same
+## four functions, so "which rows are choosable" has one answer whichever kind
+## of item opened the picker.
+var _targeting_tm: String = ""
+
+## TM/move lookups, loaded on first use and kept. `tm_db.gd` owns the
+## compatibility list and `move_db.gd` owns power/type/slot; this screen reads
+## both and duplicates neither (OF29's brief: reconcile, don't duplicate).
+var _tms: RefCounted = null
+var _moves: RefCounted = null
+
 ## Slot pending a drop confirmation, or -1. Same shape as `_targeting`: the
 ## item stays in its slot, unspent, until the player actually confirms.
 var _confirming: int = -1
@@ -130,6 +151,7 @@ func build() -> void:
 	_targeting = -1
 	_targeting_heal = 0.0
 	_targeting_revive = 0.0
+	_targeting_tm = ""
 	_confirming = -1
 
 	var config := _config()
@@ -526,7 +548,9 @@ func _on_slot(index: int) -> void:
 ## (one press repairs it fully, free — GAME_DESIGN.md 19 says "at appropriate
 ## station"; there is no placed workbench yet (R2.7), so this is the whole of
 ## R2.2's "free repair" loop until that station exists to gate it). A tool has
-## no target to pick, so it still applies on this same press. Polled rather
+## no target to pick, so it still applies on this same press. OF29 adds TMs,
+## which take the same target picker a heal item does — a TM has a target to
+## choose and that is the whole point of the owner's report. Polled rather
 ## than event-driven for the same reason the creatures tab's activate verb is: a
 ## focused Button eats events, and there is always a focused button here.
 func _read_use() -> void:
@@ -568,6 +592,18 @@ func _read_use() -> void:
 		say("Ate %s." % str(db.call("item_name", id)))
 		return
 
+	# OF29: a TM picks its student the same way a potion picks its patient.
+	# The refusal line names the MOVE, not the disc, because "nobody can learn
+	# Stone Rush" is the fact the player needs; the disc's own name is already
+	# on screen in the detail panel next to the cursor.
+	if str(db.call("kind", id)) == "tm":
+		_open_target_picker(
+			0.0, 0.0, id,
+			"Nobody on the belt can learn %s." % _tm_move_name(id),
+			"A  Teach this creature        B  Cancel"
+		)
+		return
+
 	# Revive is OF32's field, added to items.json in parallel -- coded for here
 	# defensively (a plain heal item never sets it, so `revive` reads 0.0 and
 	# every branch below behaves exactly as it did before OF32 exists).
@@ -577,27 +613,43 @@ func _read_use() -> void:
 		say("%s is not something you can use here." % str(db.call("item_name", id)))
 		return
 
+	_open_target_picker(
+		heal, revive, "",
+		"Nobody needs reviving." if revive > 0.0 else "Everyone is already at full health.",
+		"A  Use on this creature        B  Cancel"
+	)
+
+
+## Open the picker on the focused slot for an item with these effect fields,
+## or refuse outright with `refusal` when no row could take it. One function
+## for both kinds of targeted item (heal/revive, and OF29's TMs) so the
+## "never open a picker nobody can use" rule OF22 exists to enforce cannot
+## come back for the new kind alone.
+func _open_target_picker(
+	heal: float, revive: float, tm: String, refusal: String, footer: String
+) -> void:
 	var party: RefCounted = _party()
 	if party == null or int(party.call("size")) == 0:
 		say("Nobody on the belt yet.")
 		return
 
-	if not _any_eligible_target(party, heal, revive):
+	if not _any_eligible_target(party, heal, revive, tm):
 		# Nobody this item could possibly help -- refuse instead of opening a
 		# picker with every row greyed out and nowhere for focus to land.
 		# Focus stays exactly where it already is, on the item grid.
-		say("Nobody needs reviving." if revive > 0.0 else "Everyone is already at full health.")
+		say(refusal)
 		return
 
 	_targeting = _focused
 	_targeting_heal = heal
 	_targeting_revive = revive
+	_targeting_tm = tm
 	menu.call("hold_input", true)
 	# hold_input stops the shell reading `menu_cancel` as Close, and this tab
 	# reads it as Cancel instead (see _read_targeting_cancel) -- the static
 	# footer has to say so too, or it keeps advertising a binding B no longer
 	# has for as long as the picker is open.
-	menu.call("override_footer", "A  Use on this creature        B  Cancel")
+	menu.call("override_footer", footer)
 	_content_row.visible = false
 	_target_panel.visible = true
 	_refresh_target_panel()
@@ -772,9 +824,12 @@ func _first_empty_slot(exclude: int) -> int:
 ## about which rows are choosable. A `revive` item (> 0, OF32) targets ONLY
 ## fainted creatures; a `heal` item targets creatures that are alive AND below
 ## max HP; a creature that is neither is never a valid target for either kind.
-func _eligible(creature: RefCounted, heal: float, revive: float) -> bool:
+## A `tm` (OF29) ignores HP entirely and asks `teaching.gd` instead.
+func _eligible(creature: RefCounted, heal: float, revive: float, tm: String) -> bool:
 	if creature == null:
 		return false
+	if not tm.is_empty():
+		return _tm_teachable(creature, tm)
 	var is_fainted := bool(creature.get("fainted"))
 	if revive > 0.0:
 		return is_fainted
@@ -786,9 +841,13 @@ func _eligible(creature: RefCounted, heal: float, revive: float) -> bool:
 ## Why a row is greyed out, shown IN the row text so the reason is never
 ## hidden behind a colour a player might not register on a handheld outdoors.
 ## "" for an eligible row (nothing to explain).
-func _ineligible_reason(creature: RefCounted, heal: float, revive: float) -> String:
+func _ineligible_reason(creature: RefCounted, heal: float, revive: float, tm: String) -> String:
 	if creature == null:
 		return "empty"
+	if not tm.is_empty():
+		if _tm_already_known(creature, tm):
+			return "already knows it"
+		return "" if _tm_teachable(creature, tm) else "can't learn it"
 	var is_fainted := bool(creature.get("fainted"))
 	if revive > 0.0:
 		return "" if is_fainted else "not fainted"
@@ -800,13 +859,44 @@ func _ineligible_reason(creature: RefCounted, heal: float, revive: float) -> Str
 	return ""
 
 
+## OF29: can this creature take this TM right now? Compatibility is
+## `teaching.gd::can_learn` — the one rule GAME_DESIGN.md §13 states, read
+## from `tm_db.gd`'s own list rather than re-derived here — plus "does not
+## already have that exact move in the slot it would land in", which is not a
+## compatibility question and so is this screen's to answer. Fainted is
+## deliberately NOT a bar: teaching is not medicine.
+func _tm_teachable(creature: RefCounted, tm_id: String) -> bool:
+	if not TEACHING.can_learn(str(creature.get("creature_type")), tm_id, _tm_db()):
+		return false
+	var move_id := str(_tm_db().call("move_id", tm_id))
+	if not bool(_move_db().call("has", move_id)):
+		return false
+	return not _tm_already_known(creature, tm_id)
+
+
+## Whether the creature already carries this TM's move in the slot that move
+## occupies. Reads the slot from the move's own data, exactly as
+## `teaching.gd::teach()` does, so this preview and that write can never
+## disagree about which slot is at stake.
+func _tm_already_known(creature: RefCounted, tm_id: String) -> bool:
+	var move_id := str(_tm_db().call("move_id", tm_id))
+	if move_id.is_empty():
+		return false
+	var slot := str(_move_db().call("slot", move_id))
+	if slot != "quick" and slot != "charged":
+		return false
+	var current := str(creature.get("move_quick" if slot == "quick" else "move_charged"))
+	return current == move_id
+
+
 ## Is there ANY row this item could land on, checked against the live party
 ## rather than `_target_rows`' rendered text -- called before the picker opens
-## at all, so a fully-healed party (or, once OF32 lands, no fainted creature
-## for a Revive) refuses the picker instead of opening one nobody can use.
-func _any_eligible_target(party: RefCounted, heal: float, revive: float) -> bool:
+## at all, so a fully-healed party (or a belt of creatures that all already
+## know a TM's move, or none that can learn it) refuses the picker instead of
+## opening one nobody can use.
+func _any_eligible_target(party: RefCounted, heal: float, revive: float, tm: String) -> bool:
 	for i in PARTY.MAX_CREATURES:
-		if _eligible(party.call("at", i), heal, revive):
+		if _eligible(party.call("at", i), heal, revive, tm):
 			return true
 	return false
 
@@ -821,7 +911,7 @@ func _first_eligible_target_row() -> Control:
 	if party == null:
 		return null
 	for i in _target_rows.size():
-		if _eligible(party.call("at", i), _targeting_heal, _targeting_revive):
+		if _eligible(party.call("at", i), _targeting_heal, _targeting_revive, _targeting_tm):
 			return _target_rows[i]
 	return null
 
@@ -835,14 +925,20 @@ func _refresh_target_panel() -> void:
 
 	var stack: Dictionary = inventory.call("stack_at", _targeting)
 	var id := str(stack.get("id", ""))
-	_target_header.text = (
-		"Use %s on who?" % str(db.call("item_name", id)) if not id.is_empty() else "Use on who?"
-	)
+	if not _targeting_tm.is_empty():
+		# OF29: the verb is the question. "Use a TM on who" reads as consuming
+		# it on a creature the way a potion is; "teach ... to who" is what the
+		# player is actually deciding.
+		_target_header.text = "Teach %s to who?" % _tm_move_name(_targeting_tm)
+	else:
+		_target_header.text = (
+			"Use %s on who?" % str(db.call("item_name", id)) if not id.is_empty() else "Use on who?"
+		)
 
 	for i in _target_rows.size():
 		var button: Button = _target_rows[i]
 		var creature: RefCounted = party.call("at", i)
-		var eligible := _eligible(creature, _targeting_heal, _targeting_revive)
+		var eligible := _eligible(creature, _targeting_heal, _targeting_revive, _targeting_tm)
 		if creature == null:
 			button.text = "  %d.  empty" % (i + 1)
 		else:
@@ -850,7 +946,9 @@ func _refresh_target_panel() -> void:
 				i + 1, str(creature.call("label")),
 				int(round(float(creature.get("hp")))), int(round(float(creature.get("max_hp"))))
 			]
-			var reason := _ineligible_reason(creature, _targeting_heal, _targeting_revive)
+			var reason := _ineligible_reason(
+				creature, _targeting_heal, _targeting_revive, _targeting_tm
+			)
 			button.text = hp_text if eligible else "%s  (%s)" % [hp_text, reason]
 		# Ineligible rows are greyed AND pulled out of focus order (not just
 		# `disabled`, which stops a mouse click/gamepad press but NOT
@@ -874,13 +972,21 @@ func _refresh_target_panel() -> void:
 func _ineligible_row_message(creature: RefCounted) -> String:
 	if creature == null:
 		return "Nothing in that slot."
-	match _ineligible_reason(creature, _targeting_heal, _targeting_revive):
+	match _ineligible_reason(creature, _targeting_heal, _targeting_revive, _targeting_tm):
 		"full health":
 			return "%s is already at full health." % str(creature.call("label"))
 		"fainted":
 			return "%s has fainted." % str(creature.call("label"))
 		"not fainted":
 			return "%s hasn't fainted." % str(creature.call("label"))
+		"already knows it":
+			return "%s already knows %s." % [
+				str(creature.call("label")), _tm_move_name(_targeting_tm)
+			]
+		"can't learn it":
+			return "%s can't learn %s." % [
+				str(creature.call("label")), _tm_move_name(_targeting_tm)
+			]
 		_:
 			return "Can't use that there."
 
@@ -892,7 +998,7 @@ func _on_target_row(index: int) -> void:
 		return
 	var party: RefCounted = _party()
 	var creature: RefCounted = party.call("at", index) if party != null else null
-	if not _eligible(creature, _targeting_heal, _targeting_revive):
+	if not _eligible(creature, _targeting_heal, _targeting_revive, _targeting_tm):
 		# Ineligible rows are disabled and out of the focus chain (see
 		# `_refresh_target_panel()`), so this should not be reachable through
 		# normal input -- but it must never be a dead end that leaves the
@@ -911,6 +1017,24 @@ func _on_target_row(index: int) -> void:
 		_end_targeting()
 		return
 	var id := str(stack.get("id", ""))
+
+	if not _targeting_tm.is_empty():
+		if not TEACHING.teach(creature, _targeting_tm, _tm_db(), _move_db()):
+			# `_eligible()` said yes a line ago, so this is the same defensive
+			# dead-end guard the ineligible-row branch above is: never leave
+			# the picker open, never spend the disc on a teach that failed.
+			say("%s can't learn that." % str(creature.call("label")))
+			_end_targeting()
+			return
+		# OF29, an owner-directed change to R4.4: a TM used to be permanent
+		# knowledge that any number of creatures could be taught from. "Choose
+		# who to teach it to" only means something if the choice costs
+		# something, so one disc now teaches one creature. Reverting to the
+		# never-consumed design is exactly this one line.
+		inventory.call("remove", id, 1)
+		say("%s learned %s!" % [str(creature.call("label")), _tm_move_name(_targeting_tm)])
+		_end_targeting()
+		return
 
 	if _targeting_revive > 0.0:
 		# OF32 lands `creature_instance.gd::revive()` in parallel; nothing in
@@ -946,6 +1070,7 @@ func _end_targeting() -> void:
 	_targeting = -1
 	_targeting_heal = 0.0
 	_targeting_revive = 0.0
+	_targeting_tm = ""
 	menu.call("hold_input", false)
 	menu.call("override_footer", "")
 	_target_panel.visible = false
@@ -1005,7 +1130,13 @@ func _describe(index: int) -> void:
 	var heal := float(def.get("heal", 0.0))
 	var revive := float(def.get("revive", 0.0))
 	var satiety := float(def.get("satiety", 0.0))
-	if revive > 0.0:
+	if kind == "tm":
+		# OF29, the owner's "I see it's stats": what the disc teaches, what
+		# that move is, and who can take it. Every number here is read from
+		# the move/TM tables (move_db.gd, tm_db.gd) rather than copied into
+		# items.json, so a balance pass on a move updates this line for free.
+		_detail_effect.text = _tm_detail(id)
+	elif revive > 0.0:
 		_detail_effect.text = "Revives, restores %d HP" % int(revive)
 	elif heal > 0.0:
 		_detail_effect.text = "Heals %d HP" % int(heal)
@@ -1038,6 +1169,8 @@ func _verb_hint(id: String, kind: String, def: Dictionary, tool_max: int) -> Str
 		parts.append("A  Repair (free)")
 	elif float(def.get("satiety", 0.0)) > 0.0:
 		parts.append("A  Eat")
+	elif kind == "tm":
+		parts.append("A  Teach a creature")
 	elif kind == "consumable" and (float(def.get("heal", 0.0)) > 0.0 or float(def.get("revive", 0.0)) > 0.0):
 		parts.append("A  Use on a creature")
 	parts.append("Drop")
@@ -1045,6 +1178,58 @@ func _verb_hint(id: String, kind: String, def: Dictionary, tool_max: int) -> Str
 	if db != null and int(db.call("stack_size", id)) > 1:
 		parts.append("Split")
 	return "    ".join(parts)
+
+
+## OF29's detail block for a `kind: "tm"` item: what it teaches, that move's
+## own stats, and who can take it. `move_db.gd` owns the stats and `tm_db.gd`
+## owns the compatibility list — the item entry only names its `move` id, and
+## this reads the rest rather than duplicating it (the brief's "reconcile,
+## don't duplicate"). The item id IS the TM id (items.json's `_comment_tm`),
+## so no lookup table stands between the two.
+func _tm_detail(item_id: String) -> String:
+	var moves := _move_db()
+	var move_id := str(_tm_db().call("move_id", item_id))
+	if move_id.is_empty() or not bool(moves.call("has", move_id)):
+		# A TM item whose move or TM entry is missing -- tests/test_moves.gd
+		# fails the build on exactly this, so it is a data bug in progress,
+		# not a state a player should ever see. Say so plainly instead of
+		# printing a blank effect line that reads as "does nothing".
+		return "Teaches an unknown move (%s)." % item_id
+	var stats := "%s  ·  %s  ·  power %s" % [
+		str(moves.call("slot", move_id)).capitalize(),
+		str((moves.call("move", move_id) as Dictionary).get("type", "?")).capitalize(),
+		String.num(float(moves.call("power", move_id)), 2),
+	]
+	var types: Array = _tm_db().call("compatible_types", item_id)
+	var learners := "nothing can learn it"
+	if not types.is_empty():
+		var names: Array[String] = []
+		for t: Variant in types:
+			names.append(str(t).capitalize())
+		learners = "%s creatures can learn it" % " / ".join(names)
+	return "Teaches %s\n%s\n%s" % [str(moves.call("display_name", move_id)), stats, learners]
+
+
+## The taught move's display name — what the picker header, the refusals and
+## the confirmation all call a TM, because "Stone Rush" is the thing the
+## player is choosing, not "TM: Stone Rush" the object.
+func _tm_move_name(item_id: String) -> String:
+	var move_id := str(_tm_db().call("move_id", item_id))
+	if move_id.is_empty():
+		return str(_tm_db().call("display_name", item_id))
+	return str(_move_db().call("display_name", move_id))
+
+
+func _tm_db() -> RefCounted:
+	if _tms == null:
+		_tms = TM_DB.load_default()
+	return _tms
+
+
+func _move_db() -> RefCounted:
+	if _moves == null:
+		_moves = MOVE_DB.load_default()
+	return _moves
 
 
 func _inventory() -> RefCounted:

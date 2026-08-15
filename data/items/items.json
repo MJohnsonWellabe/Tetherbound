@@ -9,7 +9,8 @@
   "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (R7.6) are what will read them.",
   "_comment_durability": "R2.2. `durability` is the number of full-yield gathers a tool survives before it breaks (GAME_DESIGN.md 19: 'have durability', 'repair for free at appropriate station'). Tunable, same for all five for now. A broken tool (0 durability) stops counting as owned for item_db.gd's harvest_yield() gating until repaired -- inventory.gd tracks the current value per-slot, defaulting to this max when a slot carries no durability key of its own (so a freshly-added tool needs no special-cased add-time write). Only `axe`/`pickaxe`/`knife` actually lose durability today, from harvest_node.gd's gather loop; `hammer` and `fishing_rod` carry the field for GAME_DESIGN.md consistency but nothing damages them yet, matching R2.1's own precedent for those two.",
   "_comment_satiety": "D29. `satiety` is how much of player_vitals.gd's satiety meter one use restores (see data/config/vitals.json); `buff` is that same use's optional temporary buff, passed straight through to player_vitals.gd's eat() as-is: { id, stat, amount, duration_s }. Only berries carry it so far. Nothing calls eat() from an eating action yet -- that wiring lands with the HUD pass, per this task's brief.",
-  "_comment_icons": "M-G groundwork. `icon` is a res:// path to a 64px Kenney Game Icons silhouette (see docs/ASSET_LEDGER.md's 'Item + shared UI icons' row for the per-item source mapping and its honest mismatches -- this pack has no literal axe/wood/flask glyphs, so several are the closest available stand-in, same convention as the map icons row). `description` is the fuller inventory-detail text; `blurb` stays as the shorter existing field, both kept side by side rather than one replacing the other. Joined with the UI icon-set vendoring pass in the same commit-to-be.",
+  "_comment_tm": "OF29 (owner: 'I can pick up a TM but it needs to go in my inventory and then I see it's stats and choose who to teach it to'). A `kind: \"tm\"` item is a teaching disc you carry: its id is EXACTLY the matching data/moves/tms.json id (that is the whole link between the two files -- tests/test_moves.gd asserts it both ways, so a TM item with no TM entry, or a TM entry with no item, fails the build). `move` names the data/moves/moves.json id it teaches and must match that TM entry's own `move_id`; the backpack detail view reads power/type/slot from move_db.gd and the compatibility list from tm_db.gd rather than duplicating either here. `stack: 1` because a TM is now CONSUMED on teach (owner-directed change to R4.4's never-consumed design) -- one disc teaches one creature, so a satchel slot holding 'a stack of TMs' would be a lie about what the player can actually do with it.",
+  "_comment_icons":"M-G groundwork. `icon` is a res:// path to a 64px Kenney Game Icons silhouette (see docs/ASSET_LEDGER.md's 'Item + shared UI icons' row for the per-item source mapping and its honest mismatches -- this pack has no literal axe/wood/flask glyphs, so several are the closest available stand-in, same convention as the map icons row). `description` is the fuller inventory-detail text; `blurb` stays as the shorter existing field, both kept side by side rather than one replacing the other. Joined with the UI icon-set vendoring pass in the same commit-to-be.",
   "items": {
     "wood": {
       "name": "Wood",
@@ -139,6 +140,26 @@
       "icon": "res://assets/ui/icons/items/fishing_rod.png",
       "blurb": "For water that doesn't exist yet.",
       "description": "A proper rod and line, ready the moment there's water worth casting into. For now it just rides in the satchel, waiting."
+    },
+    "tm_stone_rush": {
+      "name": "TM: Stone Rush",
+      "kind": "tm",
+      "move": "stone_rush",
+      "stack": 1,
+      "colour": "#8a8577",
+      "icon": "res://assets/ui/icons/items/tm_stone_rush.png",
+      "blurb": "A teaching disc. One creature, one lesson.",
+      "description": "A flat grey disc that hums faintly when a ground-type creature is near. Hold it out and the creature takes the shape of the move straight off it — once. The disc goes dull afterwards."
+    },
+    "tm_burrow_strike": {
+      "name": "TM: Burrow Strike",
+      "kind": "tm",
+      "move": "burrow_strike",
+      "stack": 1,
+      "colour": "#6b4f36",
+      "icon": "res://assets/ui/icons/items/tm_burrow_strike.png",
+      "blurb": "A teaching disc. One creature, one lesson.",
+      "description": "Earth-brown and gritty to the touch, this one carries the trick of coming up underneath something instead of at it. A ground-type creature learns it in a single sitting, and the disc is spent."
     },
     "castle_gate_key": {
       "name": "Old Key",

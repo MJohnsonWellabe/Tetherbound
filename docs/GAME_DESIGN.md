@@ -388,6 +388,12 @@ TMs:
 - Species have compatibility lists.
 - Off-type moves are allowed when physically/thematically sensible.
 
+**Amended by `docs/decisions/D44`, 2026-08-15, on the owner's playtest report
+("I can pick up a TM but it needs to go in my inventory and then I see it's
+stats and choose who to teach it to"): a found TM is an ITEM in the satchel,
+not a permanent unlock, and teaching SPENDS it — one disc, one creature. The
+compatibility-list and off-type lines above are untouched.**
+
 Exact statuses/move counts are not locked.
 
 ---

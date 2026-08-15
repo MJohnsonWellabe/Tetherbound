@@ -9,16 +9,28 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
+const ITEM_DB := preload("res://autoload/item_db.gd")
 
 const KNOWN_TYPES := ["ground", "water", "air"]
 
 var moves: RefCounted = null
 var tms: RefCounted = null
+var items: RefCounted = null
 
 
 func before_each() -> void:
 	moves = MOVE_DB.new()
 	tms = TM_DB.new()
+	items = ITEM_DB.new()
+
+
+## Every `kind: "tm"` item id in data/items/items.json.
+func _tm_item_ids() -> Array:
+	var found: Array = []
+	for id: Variant in items.ids():
+		if items.kind(str(id)) == "tm":
+			found.append(str(id))
+	return found
 
 
 # --- tms.json is well-formed and every move_id is real -----------------------
@@ -118,9 +130,55 @@ func test_teach_refuses_an_unknown_tm_and_changes_nothing() -> void:
 	assert_eq(str(terrapup.get("move_charged")), before_charged)
 
 
-# --- not consumed: the same found TM teaches any number of creatures ---------
+# --- OF29: every TM is also a carryable item, and the two files agree --------
 
-func test_the_same_tm_can_teach_more_than_one_creature() -> void:
+## The whole link between data/moves/tms.json and data/items/items.json is
+## that a TM's id and its item's id are the same string (items.json's own
+## `_comment_tm`). Nothing in the code can enforce that, so these two do:
+## a TM with no disc to pick up, or a disc that teaches nothing, is a data
+## bug that reaches the player as a satchel slot that does nothing on Use.
+
+func test_every_tm_has_a_matching_kind_tm_item() -> void:
+	for id: Variant in tms.tm_ids():
+		var tm_id := str(id)
+		assert_true(items.has(tm_id),
+			"TM '%s' has no matching item in items.json" % tm_id)
+		assert_eq(items.kind(tm_id), "tm",
+			"item '%s' backs a TM but is not kind 'tm'" % tm_id)
+
+
+func test_every_tm_item_names_the_same_move_its_tm_entry_does() -> void:
+	for item_id: Variant in _tm_item_ids():
+		var id := str(item_id)
+		assert_true(tms.has(id), "item '%s' is kind 'tm' but tms.json has no such TM" % id)
+		var declared := str((items.definition(id) as Dictionary).get("move", ""))
+		assert_false(declared.is_empty(), "TM item '%s' names no move" % id)
+		assert_eq(declared, str(tms.move_id(id)),
+			"TM item '%s' and tms.json disagree about which move it teaches" % id)
+		assert_true(moves.has(declared),
+			"TM item '%s' names unknown move '%s'" % [id, declared])
+
+
+## OF29 makes a TM consumed on teach: one disc, one creature. A stack cap
+## above 1 would promise the player a slot holding several lessons when
+## picking a second one up needs a second slot's worth of disc.
+func test_a_tm_item_does_not_stack() -> void:
+	for item_id: Variant in _tm_item_ids():
+		assert_eq(items.stack_size(str(item_id)), 1,
+			"TM item '%s' must not stack -- one disc teaches one creature" % item_id)
+
+
+# --- teaching.gd itself stays pure: it writes a move, it spends nothing ------
+
+## R4.4 read GAME_DESIGN.md 13's "not consumed after one teaching" as "a TM is
+## never consumed at all"; OF29 overrules that at the ITEM layer (the disc is
+## removed from the satchel on a successful teach -- see
+## `tab_backpack.gd::_on_target_row()`). `teaching.gd` itself never touched an
+## inventory and still does not: it takes a creature and a TM id and writes a
+## move slot. That separation is what makes the owner's rule reversible in one
+## line, so this test guards it rather than the old "not consumed" wording.
+
+func test_teaching_the_same_tm_twice_is_a_pure_function_of_the_creature() -> void:
 	var mudsnout: RefCounted = SPECIES.spawn("mudsnout")
 	var burrowback: RefCounted = SPECIES.spawn("burrowback")
 	assert_ne(str(mudsnout.get("move_charged")), "stone_rush", "test fixture already knew this move")

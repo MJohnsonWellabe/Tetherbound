@@ -341,6 +341,56 @@ def icon_castle_gate_key() -> Image.Image:
     return img
 
 
+def _punch(base: Image.Image, mark: Image.Image, box) -> Image.Image:
+    """Punch `mark`'s silhouette out of `base`, scaled into `box`.
+
+    The same 'same base shape, one marker added' trick `icon_orb_greater` and
+    `icon_revive` already use to tell two members of one family apart -- but
+    reusing an EXISTING icon function as the marker rather than redrawing its
+    shape by hand, so the mark on a TM disc is literally the same glyph the
+    move list shows for that slot.
+    """
+    x0, y0, x1, y1 = box
+    scaled = mark.resize((int(x1 - x0), int(y1 - y0)), Image.LANCZOS)
+    base.paste(CLEAR, (int(x0), int(y0)), scaled)
+    return base
+
+
+def _icon_tm(mark: Image.Image) -> Image.Image:
+    """OF29. A TM is a held item now, not a flag, so it needs a satchel icon.
+
+    A keyed disc: a circle with a flat chord cut off the bottom (so it is a
+    disc/chip, not another sphere -- `icon_orb_basic` already owns the plain
+    circle silhouette) and a rim groove, with the taught move's own slot glyph
+    punched through the middle. `stone_rush` is a charged move and
+    `burrow_strike` a quick one, so the two shipped TMs never render the same
+    icon without either of them needing a bespoke drawing.
+    """
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx, cy, r = 128, 122, 102
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
+    # flat chord off the bottom -- the silhouette cue that says "disc", not
+    # "ball", at 64px where the rim groove alone would blur away
+    d.rectangle((cx - r, cy + r * 0.74, cx + r, S), fill=CLEAR)
+    # rim groove
+    d.ellipse(
+        (cx - r * 0.86, cy - r * 0.86, cx + r * 0.86, cy + r * 0.86),
+        outline=CLEAR, width=int(STROKE * 0.8),
+    )
+    return _punch(img, mark, (cx - 52, cy - 52, cx + 52, cy + 52))
+
+
+def icon_tm_stone_rush() -> Image.Image:
+    """TM disc stamped with the charged-move starburst (`stone_rush`)."""
+    return _icon_tm(icon_move_charged())
+
+
+def icon_tm_burrow_strike() -> Image.Image:
+    """TM disc stamped with the quick-move bolt (`burrow_strike`)."""
+    return _icon_tm(icon_move_quick())
+
+
 ITEM_ICONS = {
     "wood.png": icon_wood,
     "stone.png": icon_stone,
@@ -356,6 +406,8 @@ ITEM_ICONS = {
     "knife.png": icon_knife,
     "fishing_rod.png": icon_fishing_rod,
     "castle_gate_key.png": icon_castle_gate_key,
+    "tm_stone_rush.png": icon_tm_stone_rush,
+    "tm_burrow_strike.png": icon_tm_burrow_strike,
 }
 
 
