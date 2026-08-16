@@ -5,14 +5,115 @@
     "tm_stone_rush": {
       "display_name": "TM: Stone Rush",
       "move_id": "stone_rush",
-      "compatible_types": ["ground"],
+      "compatible_types": [
+        "ground"
+      ],
       "colour": "#8a8577"
     },
     "tm_burrow_strike": {
       "display_name": "TM: Burrow Strike",
       "move_id": "burrow_strike",
-      "compatible_types": ["ground"],
+      "compatible_types": [
+        "ground"
+      ],
       "colour": "#6b4f36"
+    },
+    "tm_rock_throw": {
+      "display_name": "TM: Rock Throw",
+      "move_id": "rock_throw",
+      "compatible_types": [
+        "ground"
+      ],
+      "colour": "#8a8577"
+    },
+    "tm_stone_spike": {
+      "display_name": "TM: Stone Spike",
+      "move_id": "stone_spike",
+      "compatible_types": [
+        "ground"
+      ],
+      "colour": "#7d7060"
+    },
+    "tm_earth_fist": {
+      "display_name": "TM: Earth Fist",
+      "move_id": "earth_fist",
+      "compatible_types": [
+        "ground"
+      ],
+      "colour": "#6b5a3c"
+    },
+    "tm_earthshatter": {
+      "display_name": "TM: Earthshatter",
+      "move_id": "earthshatter",
+      "compatible_types": [
+        "ground"
+      ],
+      "colour": "#4a3a22"
+    },
+    "tm_aqua_shot": {
+      "display_name": "TM: Aqua Shot",
+      "move_id": "aqua_shot",
+      "compatible_types": [
+        "water"
+      ],
+      "colour": "#4f9fd0"
+    },
+    "tm_tidal_burst": {
+      "display_name": "TM: Tidal Burst",
+      "move_id": "tidal_burst",
+      "compatible_types": [
+        "water"
+      ],
+      "colour": "#3f8fc4"
+    },
+    "tm_riptide_lance": {
+      "display_name": "TM: Riptide Lance",
+      "move_id": "riptide_lance",
+      "compatible_types": [
+        "water"
+      ],
+      "colour": "#2f7fb8"
+    },
+    "tm_leviathan_surge": {
+      "display_name": "TM: Leviathan Surge",
+      "move_id": "leviathan_surge",
+      "compatible_types": [
+        "water"
+      ],
+      "colour": "#1f5f96"
+    },
+    "tm_wind_blade": {
+      "display_name": "TM: Wind Blade",
+      "move_id": "wind_blade",
+      "compatible_types": [
+        "air"
+      ],
+      "colour": "#b9d6ea"
+    },
+    "tm_aerial_flash": {
+      "display_name": "TM: Aerial Flash",
+      "move_id": "aerial_flash",
+      "compatible_types": [
+        "air"
+      ],
+      "colour": "#a7c9e2"
+    },
+    "tm_cyclone": {
+      "display_name": "TM: Cyclone",
+      "move_id": "cyclone",
+      "compatible_types": [
+        "air"
+      ],
+      "colour": "#8fb8d8"
+    },
+    "tm_heavenfall": {
+      "display_name": "TM: Heavenfall",
+      "move_id": "heavenfall",
+      "compatible_types": [
+        "air"
+      ],
+      "colour": "#7aa9cc"
     }
-  }
+  },
+  "_comment_catalogue": "Owner, after playing: there were exactly TWO TMs in the game, both ground, and each taught a move some creature already had -- \"far too few\" and \"they're not upgrades\". Both halves needed the move work that landed alongside this: while every move was power 1.0 with the same reach and timing, there was nothing for an upgrade to BE better than. TM moves now sit at 1.15x-2.0x a base move's power and buy real reach or area with it, and the 2.0x tier (earthshatter, leviathan_surge, heavenfall) is deliberately one per type and deliberately rare. Compatibility stays same-type-only; GAME_DESIGN.md 13's 'off-type moves where thematically sensible' is still a design call nobody has made, and this data does not make it."
 }

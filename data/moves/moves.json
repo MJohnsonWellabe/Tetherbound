@@ -1,189 +1,630 @@
 {
   "_comment": "Named moves (D30, creature progression). Every species in data/creatures/species.json points at exactly one quick and one charged id here through its own `moves` field. `type` is flavour/vocabulary (ground|water|air) and is not cross-checked against the wielding species' own type -- Reedwing borrows an air-flavoured charged move on purpose, because the wild canon calls it a Water/Air waterfowl.",
-  "_comment_balance": "All `power` is 1.0 and every quick/charged carries the same energy_gain/energy_cost combat.json already used before D30 (26 / 100). That makes this a pure naming and data-wiring pass: combat_math.gd's new `power` multiplier at 1.0 reproduces today's damage exactly, so nothing about how a fight feels changes the day this ships. Retuning individual moves away from 1.0 is a later, deliberate balance pass, not this one.",
+  "_comment_balance": "Each move now carries its OWN reach, arc, timing, commitment and presentation. Before this every one of the 26 was power 1.0 with the identical range and cone, so a named move was a display string and nothing else and all quick attacks felt the same as each other -- the owner's report was that TMs 'aren't upgrades', which is what happens when the thing being upgraded has no stats. `power` stays a multiplier over combat.json's player_quick/player_charged blocks; `range`, `cone_degrees`, `windup`, `recovery` and `lunge` OVERRIDE the matching key in those blocks (combat_manager.gd::_move_profile). Ranged moves trade arc for distance and give up the lunge entirely -- you plant and fire instead of closing. ALL TUNABLE.",
   "_comment_slots": "`slot` is \"quick\" (fast, low-commitment, builds energy) or \"charged\" (the energy-spend finisher). Quick moves carry `energy_gain`; charged moves carry `energy_cost`, mirroring combat.json's energy.gain_per_quick / energy.charged_cost so a designer tuning one move at a time does not have to touch two files to keep them honest.",
   "moves": {
     "pebble_toss": {
       "display_name": "Pebble Toss",
       "type": "ground",
       "slot": "quick",
-      "power": 1.0,
-      "energy_gain": 26
+      "power": 0.85,
+      "energy_gain": 26,
+      "range": 9.0,
+      "cone_degrees": 26.0,
+      "windup": 0.22,
+      "recovery": 0.24,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "colour": "#d9b26a",
+        "speed": 26.0
+      }
     },
     "stone_rush": {
       "display_name": "Stone Rush",
       "type": "ground",
       "slot": "charged",
       "power": 1.0,
-      "energy_cost": 100
+      "energy_cost": 100,
+      "range": 3.2,
+      "cone_degrees": 80.0,
+      "windup": 0.5,
+      "recovery": 0.5,
+      "lunge": 7.5,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "bramble_whip": {
       "display_name": "Bramble Whip",
       "type": "ground",
       "slot": "quick",
       "power": 1.0,
-      "energy_gain": 26
+      "energy_gain": 26,
+      "range": 3.4,
+      "cone_degrees": 92.0,
+      "windup": 0.16,
+      "recovery": 0.2,
+      "lunge": 2.6,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "warren_charge": {
       "display_name": "Warren Charge",
       "type": "ground",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 0.95,
+      "energy_cost": 100,
+      "range": 3.0,
+      "cone_degrees": 75.0,
+      "windup": 0.45,
+      "recovery": 0.45,
+      "lunge": 8.5,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "root_nibble": {
       "display_name": "Root Nibble",
       "type": "ground",
       "slot": "quick",
-      "power": 1.0,
-      "energy_gain": 26
+      "power": 1.05,
+      "energy_gain": 26,
+      "range": 2.4,
+      "cone_degrees": 110.0,
+      "windup": 0.14,
+      "recovery": 0.18,
+      "lunge": 3.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "rootquake": {
       "display_name": "Rootquake",
       "type": "ground",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 1.05,
+      "energy_cost": 100,
+      "range": 5.5,
+      "cone_degrees": 360.0,
+      "windup": 0.65,
+      "recovery": 0.6,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "area",
+        "colour": "#d9b26a"
+      }
     },
     "pack_bite": {
       "display_name": "Pack Bite",
       "type": "ground",
       "slot": "quick",
       "power": 1.0,
-      "energy_gain": 26
+      "energy_gain": 26,
+      "range": 2.6,
+      "cone_degrees": 100.0,
+      "windup": 0.13,
+      "recovery": 0.17,
+      "lunge": 3.8,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "trailblaze_pounce": {
       "display_name": "Trailblaze Pounce",
       "type": "ground",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 1.05,
+      "energy_cost": 100,
+      "range": 3.2,
+      "cone_degrees": 70.0,
+      "windup": 0.42,
+      "recovery": 0.5,
+      "lunge": 9.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "burrow_strike": {
       "display_name": "Burrow Strike",
       "type": "ground",
       "slot": "quick",
-      "power": 1.0,
-      "energy_gain": 26
+      "power": 1.1,
+      "energy_gain": 26,
+      "range": 2.8,
+      "cone_degrees": 120.0,
+      "windup": 0.24,
+      "recovery": 0.26,
+      "lunge": 1.2,
+      "vfx": {
+        "kind": "area",
+        "colour": "#d9b26a"
+      }
     },
     "tremor_roll": {
       "display_name": "Tremor Roll",
       "type": "ground",
       "slot": "charged",
       "power": 1.0,
-      "energy_cost": 100
+      "energy_cost": 100,
+      "range": 3.4,
+      "cone_degrees": 90.0,
+      "windup": 0.5,
+      "recovery": 0.55,
+      "lunge": 8.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "hoofbeat": {
       "display_name": "Hoofbeat",
       "type": "ground",
       "slot": "quick",
       "power": 1.0,
-      "energy_gain": 26
+      "energy_gain": 26,
+      "range": 2.8,
+      "cone_degrees": 100.0,
+      "windup": 0.18,
+      "recovery": 0.22,
+      "lunge": 3.2,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "verdant_burst": {
       "display_name": "Verdant Burst",
       "type": "ground",
       "slot": "charged",
       "power": 1.0,
-      "energy_cost": 100
+      "energy_cost": 100,
+      "range": 8.0,
+      "cone_degrees": 60.0,
+      "windup": 0.6,
+      "recovery": 0.55,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "cone",
+        "colour": "#d9b26a",
+        "speed": 18.0
+      }
     },
     "antler_slam": {
       "display_name": "Antler Slam",
       "type": "ground",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 1.15,
+      "energy_cost": 100,
+      "range": 3.6,
+      "cone_degrees": 70.0,
+      "windup": 0.6,
+      "recovery": 0.6,
+      "lunge": 6.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
     },
     "ripple_jab": {
       "display_name": "Ripple Jab",
       "type": "water",
       "slot": "quick",
       "power": 1.0,
-      "energy_gain": 26
+      "energy_gain": 26,
+      "range": 2.6,
+      "cone_degrees": 100.0,
+      "windup": 0.14,
+      "recovery": 0.18,
+      "lunge": 3.2,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#57b6e8"
+      }
     },
     "undertow": {
       "display_name": "Undertow",
       "type": "water",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 1.05,
+      "energy_cost": 100,
+      "range": 6.5,
+      "cone_degrees": 55.0,
+      "windup": 0.55,
+      "recovery": 0.55,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "cone",
+        "colour": "#57b6e8",
+        "speed": 16.0
+      }
     },
     "splash_snap": {
       "display_name": "Splash Snap",
       "type": "water",
       "slot": "quick",
       "power": 1.0,
-      "energy_gain": 26
+      "energy_gain": 26,
+      "range": 2.5,
+      "cone_degrees": 105.0,
+      "windup": 0.15,
+      "recovery": 0.19,
+      "lunge": 3.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#57b6e8"
+      }
     },
     "riptide_rush": {
       "display_name": "Riptide Rush",
       "type": "water",
       "slot": "charged",
       "power": 1.0,
-      "energy_cost": 100
+      "energy_cost": 100,
+      "range": 3.2,
+      "cone_degrees": 78.0,
+      "windup": 0.48,
+      "recovery": 0.5,
+      "lunge": 8.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#57b6e8"
+      }
     },
     "shell_bash": {
       "display_name": "Shell Bash",
       "type": "water",
       "slot": "quick",
-      "power": 1.0,
-      "energy_gain": 26
+      "power": 1.1,
+      "energy_gain": 26,
+      "range": 2.6,
+      "cone_degrees": 95.0,
+      "windup": 0.22,
+      "recovery": 0.26,
+      "lunge": 2.4,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#57b6e8"
+      }
     },
     "tail_splash": {
       "display_name": "Tail Splash",
       "type": "water",
       "slot": "quick",
-      "power": 1.0,
-      "energy_gain": 26
+      "power": 0.85,
+      "energy_gain": 26,
+      "range": 7.5,
+      "cone_degrees": 34.0,
+      "windup": 0.2,
+      "recovery": 0.24,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "colour": "#57b6e8",
+        "speed": 22.0
+      }
     },
     "gale_peck": {
       "display_name": "Gale Peck",
       "type": "air",
       "slot": "quick",
-      "power": 1.0,
-      "energy_gain": 26
+      "power": 0.95,
+      "energy_gain": 26,
+      "range": 2.5,
+      "cone_degrees": 100.0,
+      "windup": 0.12,
+      "recovery": 0.15,
+      "lunge": 3.4,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#dbeaf7"
+      }
     },
     "sky_rend": {
       "display_name": "Sky Rend",
       "type": "air",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 1.05,
+      "energy_cost": 100,
+      "range": 10.0,
+      "cone_degrees": 30.0,
+      "windup": 0.55,
+      "recovery": 0.5,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "colour": "#dbeaf7",
+        "speed": 34.0
+      }
     },
     "talon_dive": {
       "display_name": "Talon Dive",
       "type": "air",
       "slot": "quick",
-      "power": 1.0,
-      "energy_gain": 26
+      "power": 1.05,
+      "energy_gain": 26,
+      "range": 2.8,
+      "cone_degrees": 90.0,
+      "windup": 0.2,
+      "recovery": 0.24,
+      "lunge": 4.5,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#dbeaf7"
+      }
     },
     "storm_strike": {
       "display_name": "Storm Strike",
       "type": "air",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 1.1,
+      "energy_cost": 100,
+      "range": 3.4,
+      "cone_degrees": 75.0,
+      "windup": 0.6,
+      "recovery": 0.55,
+      "lunge": 7.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#dbeaf7"
+      }
     },
     "quick_flit": {
       "display_name": "Quick Flit",
       "type": "air",
       "slot": "quick",
-      "power": 1.0,
-      "energy_gain": 26
+      "power": 0.85,
+      "energy_gain": 26,
+      "range": 2.4,
+      "cone_degrees": 110.0,
+      "windup": 0.1,
+      "recovery": 0.13,
+      "lunge": 3.6,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#dbeaf7"
+      }
     },
     "night_swoop": {
       "display_name": "Night Swoop",
       "type": "air",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 1.05,
+      "energy_cost": 100,
+      "range": 3.2,
+      "cone_degrees": 70.0,
+      "windup": 0.5,
+      "recovery": 0.5,
+      "lunge": 9.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#dbeaf7"
+      }
     },
     "gust_burst": {
       "display_name": "Gust Burst",
       "type": "air",
       "slot": "charged",
-      "power": 1.0,
-      "energy_cost": 100
+      "power": 0.95,
+      "energy_cost": 100,
+      "range": 7.0,
+      "cone_degrees": 70.0,
+      "windup": 0.5,
+      "recovery": 0.45,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "cone",
+        "colour": "#dbeaf7",
+        "speed": 20.0
+      }
+    },
+    "rock_throw": {
+      "display_name": "Rock Throw",
+      "type": "ground",
+      "slot": "quick",
+      "power": 1.15,
+      "energy_gain": 26,
+      "range": 10.0,
+      "cone_degrees": 24.0,
+      "windup": 0.22,
+      "recovery": 0.24,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "colour": "#d9b26a",
+        "speed": 28.0
+      }
+    },
+    "stone_spike": {
+      "display_name": "Stone Spike",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.3,
+      "energy_cost": 100,
+      "range": 9.0,
+      "cone_degrees": 34.0,
+      "windup": 0.55,
+      "recovery": 0.5,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "cone",
+        "colour": "#d9b26a",
+        "speed": 20.0
+      }
+    },
+    "earth_fist": {
+      "display_name": "Earth Fist",
+      "type": "ground",
+      "slot": "charged",
+      "power": 1.4,
+      "energy_cost": 100,
+      "range": 3.8,
+      "cone_degrees": 72.0,
+      "windup": 0.62,
+      "recovery": 0.62,
+      "lunge": 6.5,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#d9b26a"
+      }
+    },
+    "earthshatter": {
+      "display_name": "Earthshatter",
+      "type": "ground",
+      "slot": "charged",
+      "power": 2.0,
+      "energy_cost": 100,
+      "range": 7.5,
+      "cone_degrees": 360.0,
+      "windup": 0.85,
+      "recovery": 0.75,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "area",
+        "colour": "#d9b26a"
+      }
+    },
+    "aqua_shot": {
+      "display_name": "Aqua Shot",
+      "type": "water",
+      "slot": "quick",
+      "power": 1.15,
+      "energy_gain": 26,
+      "range": 9.0,
+      "cone_degrees": 26.0,
+      "windup": 0.2,
+      "recovery": 0.22,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "colour": "#57b6e8",
+        "speed": 30.0
+      }
+    },
+    "tidal_burst": {
+      "display_name": "Tidal Burst",
+      "type": "water",
+      "slot": "charged",
+      "power": 1.3,
+      "energy_cost": 100,
+      "range": 7.5,
+      "cone_degrees": 70.0,
+      "windup": 0.55,
+      "recovery": 0.52,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "cone",
+        "colour": "#57b6e8",
+        "speed": 18.0
+      }
+    },
+    "riptide_lance": {
+      "display_name": "Riptide Lance",
+      "type": "water",
+      "slot": "charged",
+      "power": 1.5,
+      "energy_cost": 100,
+      "range": 11.0,
+      "cone_degrees": 22.0,
+      "windup": 0.6,
+      "recovery": 0.55,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "colour": "#57b6e8",
+        "speed": 36.0
+      }
+    },
+    "leviathan_surge": {
+      "display_name": "Leviathan Surge",
+      "type": "water",
+      "slot": "charged",
+      "power": 2.0,
+      "energy_cost": 100,
+      "range": 9.0,
+      "cone_degrees": 120.0,
+      "windup": 0.85,
+      "recovery": 0.75,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "cone",
+        "colour": "#57b6e8",
+        "speed": 22.0
+      }
+    },
+    "wind_blade": {
+      "display_name": "Wind Blade",
+      "type": "air",
+      "slot": "quick",
+      "power": 1.2,
+      "energy_gain": 26,
+      "range": 9.5,
+      "cone_degrees": 20.0,
+      "windup": 0.2,
+      "recovery": 0.22,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "colour": "#dbeaf7",
+        "speed": 32.0
+      }
+    },
+    "aerial_flash": {
+      "display_name": "Aerial Flash",
+      "type": "air",
+      "slot": "charged",
+      "power": 1.4,
+      "energy_cost": 100,
+      "range": 4.2,
+      "cone_degrees": 60.0,
+      "windup": 0.45,
+      "recovery": 0.52,
+      "lunge": 11.0,
+      "vfx": {
+        "kind": "melee",
+        "colour": "#dbeaf7"
+      }
+    },
+    "cyclone": {
+      "display_name": "Cyclone",
+      "type": "air",
+      "slot": "charged",
+      "power": 1.6,
+      "energy_cost": 100,
+      "range": 6.5,
+      "cone_degrees": 360.0,
+      "windup": 0.7,
+      "recovery": 0.65,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "area",
+        "colour": "#dbeaf7"
+      }
+    },
+    "heavenfall": {
+      "display_name": "Heavenfall",
+      "type": "air",
+      "slot": "charged",
+      "power": 2.0,
+      "energy_cost": 100,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.9,
+      "recovery": 0.8,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "cone",
+        "colour": "#dbeaf7",
+        "speed": 26.0
+      }
     }
-  }
+  },
+  "_comment_vfx": "`vfx.kind` is how the move reads on screen: `melee` (impact only, at the target), `projectile` (a travelling bolt drawn from the attacker to the target, arriving as the impact plays), `cone` (a spreading wash) and `area` (a ring centred on the attacker). `colour` is the elemental tint and follows the move's type, so ground/water/air stay tellable apart at a glance. The hit itself is still resolved instantly by the same cone arithmetic (owner's call: a visible projectile, not a dodgeable object) -- the travel time only delays the IMPACT, never the damage."
 }

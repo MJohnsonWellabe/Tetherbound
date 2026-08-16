@@ -76,11 +76,12 @@
       "name": "Rootstone",
       "kind": "resource",
       "stack": 50,
-      "colour": "#5c6b4a",
+      "colour": "#6f7f6a",
       "gathered_with": "pickaxe",
-      "icon": "res://assets/ui/icons/items/rootstone.png",
-      "blurb": "A harder seam than the outcrops. Worth the extra swing.",
-      "description": "Dense, root-veined stone pulled from a deeper seam than the meadow's ordinary outcrops. The pickaxe that cracks regular stone loose bites into this too, slower and with more effort — and what it makes is worth the wait."
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "_comment": "SD17. MEADOWS_PROGRESSION_SPEC.md Sec10: the FIRST of exactly two tier materials in the whole biome (Rootstone, then Ironwood) on top of wood/stone/fiber/berries. The Burrow Warrens' deposits are its first source in the world; the Old Quarry is the other, and SD18 owns every recipe that spends it -- per that item, Rootstone only ever UPGRADES something the player already has (better orb tier, workbench, gathering tool, saddle component), never opens a new tree. The icon reuses the existing `stone` silhouette on purpose: the icon set has no rootstone glyph, this is an honest stand-in in the same convention several other items already use, and it is not new asset sourcing.",
+      "blurb": "Green-veined stone from deep ground. Better than plain rock.",
+      "description": "Grey stone shot through with living green veins that keep their colour long after the block is broken out. It comes only from deep seams -- warrens, old quarry faces -- and everything made with it comes out stronger than the same thing made of ordinary rock."
     },
     "ironwood": {
       "name": "Ironwood",
@@ -319,16 +320,6 @@
       "blurb": "Heavy and old. Something nearby is still locked.",
       "description": "Iron gone dark with age, too heavy for the small lock it probably once fit. Something nearby is still shut tight, and this is the only thing you own that might open it."
     },
-    "rootstone": {
-      "name": "Rootstone",
-      "kind": "resource",
-      "stack": 50,
-      "colour": "#7c6f8a",
-      "gathered_with": "pickaxe",
-      "icon": "res://assets/ui/icons/items/rootstone.png",
-      "blurb": "Veined stone out of the quarry. Better than what you have.",
-      "description": "Grey stone shot through with pale veins that run like roots, prised out of the Old Quarry's floor. It takes an edge and a fitting far better than ordinary stone, which is why everything you already own can be made better with it."
-    },
     "south_bridge_key": {
       "name": "South Bridge Key",
       "kind": "key",
@@ -337,17 +328,6 @@
       "icon": "res://assets/ui/icons/items/south_bridge_key.png",
       "blurb": "Oskar's own. Turns the old crossing south of the village.",
       "description": "Plain iron, kept oiled and working rather than decorative -- a bridgehand's tool, not a keepsake. Oskar hands it over the moment he loses fair, square terms he was plain about from the start. It turns the mechanism at the old south bridge."
-    },
-    "rootstone": {
-      "name": "Rootstone",
-      "kind": "resource",
-      "stack": 50,
-      "colour": "#6f7f6a",
-      "gathered_with": "pickaxe",
-      "icon": "res://assets/ui/icons/items/stone.png",
-      "_comment": "SD17. MEADOWS_PROGRESSION_SPEC.md Sec10: the FIRST of exactly two tier materials in the whole biome (Rootstone, then Ironwood) on top of wood/stone/fiber/berries. The Burrow Warrens' deposits are its first source in the world; the Old Quarry is the other, and SD18 owns every recipe that spends it -- per that item, Rootstone only ever UPGRADES something the player already has (better orb tier, workbench, gathering tool, saddle component), never opens a new tree. The icon reuses the existing `stone` silhouette on purpose: the icon set has no rootstone glyph, this is an honest stand-in in the same convention several other items already use, and it is not new asset sourcing.",
-      "blurb": "Green-veined stone from deep ground. Better than plain rock.",
-      "description": "Grey stone shot through with living green veins that keep their colour long after the block is broken out. It comes only from deep seams -- warrens, old quarry faces -- and everything made with it comes out stronger than the same thing made of ordinary rock."
     },
     "heartstone": {
       "name": "Heartstone",
@@ -368,6 +348,126 @@
       "icon": "res://assets/ui/icons/items/mill_bridge_gear.png",
       "blurb": "The drive gear out of the mill crossing. Team Tether took it; you took it back.",
       "description": "A machined bronze cog, heavier than it looks, with a keyway cut through the bore for the shaft it seats on. Team Tether did not break the Old Mill Crossing -- they simply removed the one part that made it work, and then removed the one person who knew where it went. Refitted, the crossing works again, for good."
+    },
+    "tm_rock_throw": {
+      "name": "TM: Rock Throw",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#8a8577",
+      "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "blurb": "A heavier stone, thrown harder and further than a pebble.",
+      "description": "A heavier stone, thrown harder and further than a pebble. Teaching it spends the disc, and it replaces whatever sits in that creature's quick slot.",
+      "move": "rock_throw"
+    },
+    "tm_stone_spike": {
+      "name": "TM: Stone Spike",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#7d7060",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A ridge of stone erupts along the ground ahead of you.",
+      "description": "A ridge of stone erupts along the ground ahead of you. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "stone_spike"
+    },
+    "tm_earth_fist": {
+      "name": "TM: Earth Fist",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#6b5a3c",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A committed blow that carries a shockwave through the ground.",
+      "description": "A committed blow that carries a shockwave through the ground. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "earth_fist"
+    },
+    "tm_earthshatter": {
+      "name": "TM: Earthshatter",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#4a3a22",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "The ground itself comes apart. Very rare, and it ends fights.",
+      "description": "The ground itself comes apart. Very rare, and it ends fights. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "earthshatter"
+    },
+    "tm_aqua_shot": {
+      "name": "TM: Aqua Shot",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#4f9fd0",
+      "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "blurb": "A fast bolt of pressurised water. Reaches where a jab cannot.",
+      "description": "A fast bolt of pressurised water. Reaches where a jab cannot. Teaching it spends the disc, and it replaces whatever sits in that creature's quick slot.",
+      "move": "aqua_shot"
+    },
+    "tm_tidal_burst": {
+      "name": "TM: Tidal Burst",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#3f8fc4",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A short wave that washes over everything in front of it.",
+      "description": "A short wave that washes over everything in front of it. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "tidal_burst"
+    },
+    "tm_riptide_lance": {
+      "name": "TM: Riptide Lance",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#2f7fb8",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A single focused spear of water, thrown the length of the arena.",
+      "description": "A single focused spear of water, thrown the length of the arena. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "riptide_lance"
+    },
+    "tm_leviathan_surge": {
+      "name": "TM: Leviathan Surge",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#1f5f96",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "Something vast moves through the water ahead of you. Very rare.",
+      "description": "Something vast moves through the water ahead of you. Very rare. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "leviathan_surge"
+    },
+    "tm_wind_blade": {
+      "name": "TM: Wind Blade",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#b9d6ea",
+      "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "blurb": "A visible cutting edge of compressed air.",
+      "description": "A visible cutting edge of compressed air. Teaching it spends the disc, and it replaces whatever sits in that creature's quick slot.",
+      "move": "wind_blade"
+    },
+    "tm_aerial_flash": {
+      "name": "TM: Aerial Flash",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#a7c9e2",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A dash so fast the strike lands before the movement reads.",
+      "description": "A dash so fast the strike lands before the movement reads. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "aerial_flash"
+    },
+    "tm_cyclone": {
+      "name": "TM: Cyclone",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#8fb8d8",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A turning column of wind that stays where you put it.",
+      "description": "A turning column of wind that stays where you put it. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "cyclone"
+    },
+    "tm_heavenfall": {
+      "name": "TM: Heavenfall",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#7aa9cc",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "Everything the sky has, at once. Very rare.",
+      "description": "Everything the sky has, at once. Very rare. Teaching it spends the disc, and it replaces whatever sits in that creature's charged slot.",
+      "move": "heavenfall"
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop)."

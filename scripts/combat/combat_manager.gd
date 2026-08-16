@@ -28,6 +28,9 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
 const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
 const TARGET_MARKER := preload("res://scripts/combat/target_marker.gd")
+## A ranged move's visible travel. Presentation only -- the hit is still
+## decided instantly by the cone test (see its own header).
+const PROJECTILE := preload("res://scripts/combat/move_projectile.gd")
 ## D30: XP/bond arithmetic and named-move power, both pure data readers with
 ## no scene-tree dependency — see their own file headers.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -573,7 +576,18 @@ func _resolve_player_strike() -> void:
 	var killed: bool = _enemy.take_damage(damage)
 	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
 	_wild.call("play_faint" if killed else "play_hit")
-	_flash_at(_wild.call("centre"), not is_quick)
+	# Ranged moves draw their travel, and the impact waits for it to land. A
+	# melee move has no travel to draw, so `launch` hands back null and the
+	# burst goes off here exactly as it always did.
+	var vfx: Dictionary = _pending_move.get("vfx", {}) as Dictionary
+	var tint: Variant = Color(str(vfx["colour"])) if vfx.has("colour") else null
+	var host: Node = _arena if _arena != null else _player.get_parent()
+	var shot := PROJECTILE.launch(host, origin, target, vfx)
+	if shot != null:
+		var landing: Vector3 = target
+		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint))
+	else:
+		_flash_at(_wild.call("centre"), not is_quick, tint)
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -702,7 +716,7 @@ func _consume_buffered_attack() -> void:
 			return
 		_buffered_attack = ""
 		if creature.spend_charged():
-			var charged: Dictionary = MATH.config().get("player_charged", {}).duplicate()
+			var charged := _move_profile("player_charged", str(creature.move_charged))
 			charged["is_quick"] = false
 			_start_action(charged)
 			_charged_cooldown = float(charged.get("cooldown", 1.2))
@@ -711,10 +725,39 @@ func _consume_buffered_attack() -> void:
 	if _quick_cooldown > 0.0:
 		return
 	_buffered_attack = ""
-	var quick: Dictionary = MATH.config().get("player_quick", {}).duplicate()
+	var quick := _move_profile("player_quick", str(creature.move_quick))
 	quick["is_quick"] = true
 	_start_action(quick)
 	_quick_cooldown = float(quick.get("cooldown", 0.45))
+
+
+## The config block for a slot, with the named move's own numbers laid over it.
+##
+## Every one of the 26 moves used to be `power: 1.0` and nothing else, so a
+## named move contributed a display string and a multiplier of exactly one:
+## mechanically all quick attacks were the same attack and all charged attacks
+## were the same attack. That is the ground under the owner's report that TMs
+## "aren't upgrades" -- there was nothing for an upgrade to be better THAN.
+##
+## A move may now override reach, arc, timing and commitment. Anything it does
+## not name falls through to `combat.json`'s block exactly as before, so a move
+## with no overrides still plays precisely as it did. `power` is deliberately
+## NOT merged here: it stays a multiplier applied at damage time
+## (`combat_math.gd::rolled_damage`), because the block's own `power` is what a
+## plain hit is worth and the move scales it.
+func _move_profile(block: String, move_id: String) -> Dictionary:
+	var profile: Dictionary = MATH.config().get(block, {}).duplicate()
+	if move_id.is_empty() or _moves == null:
+		return profile
+	var move: Dictionary = _moves.call("move", move_id)
+	for key in ["range", "cone_degrees", "windup", "recovery", "cooldown", "lunge"]:
+		if move.has(key):
+			profile[key] = float(move[key])
+	# Carried so `_start_action` and the impact can read how this move should
+	# look without going back to the database for it.
+	profile["vfx"] = move.get("vfx", {})
+	profile["move_id"] = move_id
+	return profile
 
 
 func _start_action(move: Dictionary) -> void:
@@ -839,7 +882,13 @@ func _on_enemy_strike() -> void:
 ##
 ## Charged hits burst larger and warmer than quick ones. If the expensive move
 ## and the free one look the same, building energy was never worth doing.
-func _flash_at(where: Vector3, charged: bool) -> void:
+## `tint` overrides the impact's colour when the move that landed carries one
+## of its own. Quick-vs-charged still decides SIZE and duration -- an expensive
+## move should still burst bigger -- but the hue now says which element hit
+## you. Before this the only per-move visual difference in the entire game was
+## a three-colour hairline on a HUD button, so a Water creature and an Air
+## creature landing a blow produced the identical orange ring.
+func _flash_at(where: Vector3, charged: bool, tint: Variant = null) -> void:
 	var cfg: Dictionary = MATH.config().get("impact", {})
 	if not bool(cfg.get("enabled", true)):
 		return
@@ -851,10 +900,17 @@ func _flash_at(where: Vector3, charged: bool) -> void:
 	# them. The arena is a Node3D that already exists for exactly the length of
 	# the fight, so it also cleans these up on its way out.
 	var host: Node = _arena if _arena != null else _player.get_parent()
+	# The move's elemental hue when it has one, warmed halfway toward the
+	# config's own impact colour so a hit still reads as a HIT rather than as a
+	# coloured light -- the brightness of the burst is what sells contact, and a
+	# fully saturated blue ring loses it.
+	var colour := Color(str(spec.get("colour", "#ffd27a")))
+	if tint != null:
+		colour = (tint as Color).lerp(colour, 0.35)
 	FLASH.burst(
 		host,
 		where,
-		Color(str(spec.get("colour", "#ffd27a"))),
+		colour,
 		float(spec.get("radius", 1.5)),
 		float(spec.get("duration", 0.34)),
 		float(spec.get("strength", 1.0))

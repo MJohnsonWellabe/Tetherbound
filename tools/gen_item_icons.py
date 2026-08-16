@@ -536,6 +536,23 @@ def _icon_tm(mark: Image.Image) -> Image.Image:
     return _punch(img, mark, (cx - 52, cy - 52, cx + 52, cy + 52))
 
 
+def icon_tm_quick() -> Image.Image:
+    """The shared TM disc for a QUICK move, stamped with the quick-move bolt.
+
+    Every TM that teaches a quick move points at this one file. The disc says
+    "TM, and it goes in your quick slot", which is the thing a player has to
+    know before spending it; WHICH move is on the disc is the item's own name
+    and the detail panel's job, not something twenty near-identical 64px
+    stamps could ever carry legibly.
+    """
+    return _icon_tm(icon_move_quick())
+
+
+def icon_tm_charged() -> Image.Image:
+    """The shared TM disc for a CHARGED move. See `icon_tm_quick`."""
+    return _icon_tm(icon_move_charged())
+
+
 def icon_tm_stone_rush() -> Image.Image:
     """TM disc stamped with the charged-move starburst (`stone_rush`)."""
     return _icon_tm(icon_move_charged())
@@ -730,6 +747,8 @@ ITEM_ICONS = {
     "castle_gate_key.png": icon_castle_gate_key,
     "south_bridge_key.png": icon_south_bridge_key,
     "mill_bridge_gear.png": icon_mill_bridge_gear,
+    "tm_quick.png": icon_tm_quick,
+    "tm_charged.png": icon_tm_charged,
     "tm_stone_rush.png": icon_tm_stone_rush,
     "tm_burrow_strike.png": icon_tm_burrow_strike,
     # SF31/SF34: the Ironwood tier and the three captains' Sigils.

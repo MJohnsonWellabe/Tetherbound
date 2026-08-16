@@ -11,13 +11,86 @@
       "title": "Mira's Store",
       "keeper": "Mira",
       "goods": {
-        "wood": { "buy": 4, "sell": 1, "stock": 0 },
-        "stone": { "buy": 5, "sell": 1, "stock": 0 },
-        "fiber": { "buy": 4, "sell": 1, "stock": 0 },
-        "berries": { "buy": 6, "sell": 2, "stock": 0 },
-        "orb_basic": { "buy": 22, "sell": 7, "stock": 20 },
-        "potion_small": { "buy": 28, "sell": 9, "stock": 10 },
-        "revive": { "buy": 80, "sell": 26, "stock": 5 }
+        "wood": {
+          "buy": 4,
+          "sell": 1,
+          "stock": 0
+        },
+        "stone": {
+          "buy": 5,
+          "sell": 1,
+          "stock": 0
+        },
+        "fiber": {
+          "buy": 4,
+          "sell": 1,
+          "stock": 0
+        },
+        "berries": {
+          "buy": 6,
+          "sell": 2,
+          "stock": 0
+        },
+        "orb_basic": {
+          "buy": 22,
+          "sell": 7,
+          "stock": 20
+        },
+        "potion_small": {
+          "buy": 28,
+          "sell": 9,
+          "stock": 10
+        },
+        "revive": {
+          "buy": 80,
+          "sell": 26,
+          "stock": 5
+        },
+        "tm_rock_throw": {
+          "buy": 120,
+          "sell": 40,
+          "stock": 2
+        },
+        "tm_aqua_shot": {
+          "buy": 120,
+          "sell": 40,
+          "stock": 2
+        },
+        "tm_wind_blade": {
+          "buy": 135,
+          "sell": 45,
+          "stock": 2
+        },
+        "tm_stone_spike": {
+          "buy": 190,
+          "sell": 63,
+          "stock": 1
+        },
+        "tm_tidal_burst": {
+          "buy": 190,
+          "sell": 63,
+          "stock": 1
+        },
+        "tm_earth_fist": {
+          "buy": 230,
+          "sell": 76,
+          "stock": 1
+        },
+        "tm_aerial_flash": {
+          "buy": 230,
+          "sell": 76,
+          "stock": 1
+        },
+        "tm_riptide_lance": {
+          "buy": 260,
+          "sell": 86,
+          "stock": 1
+        },
+        "tm_cyclone": {
+          "buy": 300,
+          "sell": 100,
+          "stock": 1
+        }
       }
     }
   },
@@ -29,13 +102,34 @@
       "keeper": "Oskar",
       "rotation_days": 2,
       "offers": [
-        { "species": "bramblebun", "level": 6, "_why": "the meadow's own, but a few levels above what day-one catching hands you" },
-        { "species": "paddlenewt", "level": 7, "_why": "water-typed, from the pond side of the valley" },
-        { "species": "trailpup", "level": 7 },
-        { "species": "pipwing", "level": 6 },
-        { "species": "mosshell", "level": 8 },
-        { "species": "brooktail", "level": 8 }
+        {
+          "species": "bramblebun",
+          "level": 6,
+          "_why": "the meadow's own, but a few levels above what day-one catching hands you"
+        },
+        {
+          "species": "paddlenewt",
+          "level": 7,
+          "_why": "water-typed, from the pond side of the valley"
+        },
+        {
+          "species": "trailpup",
+          "level": 7
+        },
+        {
+          "species": "pipwing",
+          "level": 6
+        },
+        {
+          "species": "mosshell",
+          "level": 8
+        },
+        {
+          "species": "brooktail",
+          "level": 8
+        }
       ]
     }
-  }
+  },
+  "_comment_tms": "Mira stocks the mid-tier TM discs, priced off the move's own power multiplier: a 1.15x disc is an early luxury and a 1.6x one is a real goal. Stock is deliberately 1-2 per disc -- a TM is spent on ONE creature (D44), so an unlimited shelf would let coins buy the whole roster the same moveset. The three 2.0x discs (earthshatter, leviathan_surge, heavenfall) are NOT here and must not be: the owner asked for 2.0x to be very rare, and anything purchasable is only as rare as your coin pile. They belong to the world -- a dungeon, a captain, the stronghold. Selling a disc back pays about a third, the same spread every other good keeps."
 }
