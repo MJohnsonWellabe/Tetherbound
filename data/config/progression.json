@@ -7,18 +7,20 @@
       6
     ],
     "starter_level": 3,
+    "_comment_curve_sh47": "SH47/D42 (3-4 hour chapter). EXPONENT WAS 1.6, base was 40. TUNABLE, and the exponent is the single largest lever in this file. Why it moved, measured by tools/_probe_pacing.py against the shipped critical path: with a LINEAR award (`xp_award` below is `base + per_enemy_level * L`) and a cost curve of `base * L^e`, the number of level-matched fights one level costs grows like L^(e-1). At e=1.6 that meant 10.9 fights per level at L5 and 33.7 at L19 -- and the chapter's whole critical path (46 creature battles plus every authored xp_bonus) paid 5104 xp against the 30135 needed to reach the Warden-ready L19. The player made up the other 83% by killing level-2-to-6 wild creatures: 648 of them, 8.1 of the run's 9.0 hours. That is MEADOWS_PROGRESSION_SPEC.md 11's `bad grind` verbatim -- 'walk in circles killing identical weak enemies only to inflate a number' -- and it was the entire overshoot. e=1.15 keeps the one property progression.gd actually requires (each level strictly costs more than the last) and keeps a real sense of slowing (2.4 fights per level at L5, 3.8 at L19) without compounding out of reach. Base stays 40.",
     "xp_to_next_base": 40,
-    "xp_to_next_exponent": 1.6,
+    "xp_to_next_exponent": 1.15,
     "growth_per_level": {
       "hp": 0.06,
       "attack": 0.05,
       "defence": 0.05
     }
   },
+  "_comment_award_sh47": "SH47/D42. WAS base 18, per_enemy_level 6, party_share 0.35. ALL TUNABLE. The curve change above is only half the fix: the award also has to keep pace with the enemy levels the chapter actually fields, which run 2 at the practice fight to 22 in the stronghold gauntlet. Doubling both terms (30 + 16L) takes the critical path's own payout from 5104 to 11003 xp against the 10904 the flattened curve asks for the L3 starter to reach the Warden's own level-20 ace -- i.e. the main line alone arrives level with the boss, which tests/test_trainers_data.gd::test_the_critical_path_alone_pays_for_the_warden_ready_level now fails the build over. 16 rather than 15 on the per-level term is exactly that test talking back: at 15 the path paid 10405 against 10904 and landed half a level short. party_share 0.35 -> 0.5 is the quieter half: the bench got barely a third of every fight, so a five that the spec explicitly wants LEVELLED ('level the five' is its first named GOOD grind) fell steadily behind the lead and had to be brought up by repeating fights. At 0.5 ordinary play keeps the team together and the deliberate part of levelling -- choosing who leads, who to bring, who to catch instead -- is what is left.",
   "xp_award": {
-    "base": 18,
-    "per_enemy_level": 6,
-    "party_share": 0.35,
+    "base": 30,
+    "per_enemy_level": 16,
+    "party_share": 0.5,
     "rest_bonus": 5
   },
   "bond": {

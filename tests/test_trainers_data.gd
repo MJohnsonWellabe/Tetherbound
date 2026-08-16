@@ -637,3 +637,152 @@ func test_the_legendary_is_an_existing_roster_species() -> void:
 		"the legendary has no containment VFX; scale alone is not differentiation")
 	assert_false((legendary.get("freed", {}) as Dictionary).is_empty(),
 		"the legendary looks the same freed as it did bound")
+
+
+## --- SH47 / D42: the chapter's pacing, pinned in data ------------------------
+##
+## `SH47` tuned this chapter to a 3-4 hour first completion (`D42`) by
+## flattening the XP curve, doubling the per-fight award and closing two level
+## gaps in the trainer table. `tools/_probe_pacing.py` is what measured it and
+## what to re-run after any further tuning; the tests below are the part of
+## that measurement worth failing a build over, because every one of them
+## guards the same failure: the critical path stops paying for the levels the
+## next thing on it expects, and the player makes up the difference by killing
+## level-2-to-6 field creatures in circles. `MEADOWS_PROGRESSION_SPEC.md` §11
+## names that exact activity as the one kind of grind this game must not have.
+
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const WARRENS_PATH := "res://data/config/burrow_warrens.json"
+
+## The chapter's critical-path trainers, in the order they are fought. Optional
+## trainers and patrols are deliberately absent: the point of these tests is
+## that the REQUIRED fights alone carry the player, so a player who skips every
+## optional one is never walled.
+const CRITICAL_PATH := [
+	"practice_trainer", "trainer_mira", "trainer_tam", "trainer_oskar",
+	"relay_picket_hess", "relay_picket_orrin", "relay_officer_dell", "relay_captain",
+	"captain_field", "captain_ridge", "captain_riverwatch",
+	"stronghold_patrol", "stronghold_courtyard", "stronghold_elite", "warden_aldis",
+]
+
+
+func _warrens() -> Dictionary:
+	var file := FileAccess.open(WARRENS_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
+
+
+## Every enemy creature the critical path fields, in fight order, as levels —
+## the trainer teams plus the Burrow Warrens' own residents and guardian, which
+## are ordinary wild fights but are not optional.
+func _critical_path_levels() -> Array:
+	var levels: Array = []
+	for id: String in CRITICAL_PATH:
+		if id == "relay_picket_hess":
+			var warrens: Dictionary = _warrens()
+			for entry: Variant in warrens.get("spawns", []):
+				for _i in range(int((entry as Dictionary).get("count", 1))):
+					levels.append(int((entry as Dictionary).get("level", 1)))
+			levels.append(int((warrens.get("guardian", {}) as Dictionary).get("level", 1)))
+		for member: Variant in TRAINERS.team_of(TRAINERS.trainer(id)):
+			levels.append(int((member as Dictionary).get("level", 1)))
+	return levels
+
+
+## What the critical path pays a lead creature that wins every one of its own
+## fights: the per-kill award for each enemy plus every authored `xp_bonus`,
+## including the warrens' clear reward.
+func _critical_path_xp() -> int:
+	var cfg: Dictionary = PROGRESSION.config()
+	var total := 0
+	for level: Variant in _critical_path_levels():
+		total += PROGRESSION.xp_award_for(int(level), cfg)
+	for id: String in CRITICAL_PATH:
+		total += TRAINERS.reward_xp_bonus(TRAINERS.trainer(id))
+	total += int((_warrens().get("clear", {}) as Dictionary).get("reward", {}).get("xp_bonus", 0))
+	return total
+
+
+func _cumulative_xp(from_level: int, to_level: int) -> int:
+	var cfg: Dictionary = PROGRESSION.config()
+	var total := 0
+	for level in range(from_level, to_level):
+		total += PROGRESSION.xp_to_next(level, cfg)
+	return total
+
+
+## THE LOAD-BEARING ONE. The fights the chapter actually contains have to pay
+## for the levels the chapter actually asks for. Before `SH47` this ratio was
+## 0.17: the critical path paid 5104 xp against the 30135 needed to reach the
+## Warden-ready band, and the player found the other 83% by grinding the field.
+func test_the_critical_path_alone_pays_for_the_warden_ready_level() -> void:
+	var cfg: Dictionary = PROGRESSION.config()
+	var starter := int((cfg.get("level", {}) as Dictionary).get("starter_level", 3))
+	var warden_ace := 0
+	for member: Variant in TRAINERS.team_of(TRAINERS.trainer(WARDEN_ID)):
+		warden_ace = maxi(warden_ace, int((member as Dictionary).get("level", 1)))
+	# Level with the Warden's ace, not above it: the boss is allowed to be the
+	# hardest fight in the chapter, it is not allowed to be unreachable.
+	var needed := _cumulative_xp(starter, warden_ace)
+	var paid := _critical_path_xp()
+	assert_true(paid >= needed,
+		("the critical path pays %d xp but reaching L%d from the L%d starter costs %d — "
+		+ "the gap is made up by grinding wild creatures, which is §11's 'bad grind'")
+		% [paid, warden_ace, starter, needed])
+
+
+## The curve must not compound out of reach. With a LINEAR award, a cost curve
+## of `base * L^e` makes one level cost proportionally more fights as L rises;
+## at the pre-SH47 exponent of 1.6 a level cost 10.9 level-matched fights at L5
+## and 33.7 at L19. The chapter does not contain 33 fights per level and never
+## will, so the exponent is what has to give.
+func test_a_level_never_costs_more_than_six_level_matched_fights() -> void:
+	var cfg: Dictionary = PROGRESSION.config()
+	for level in range(3, 23):
+		var cost: int = PROGRESSION.xp_to_next(level, cfg)
+		var award: int = PROGRESSION.xp_award_for(level, cfg)
+		assert_true(float(cost) / float(maxi(award, 1)) <= 6.0,
+			"L%d costs %.1f level-matched fights (%d xp at %d each); the chapter's own bands do not contain that many"
+			% [level, float(cost) / float(maxi(award, 1)), cost, award])
+
+
+## Monotonicity is the one property `progression.gd::xp_to_next` promises in
+## its own header, and flattening the exponent must not have broken it.
+func test_each_level_still_costs_strictly_more_than_the_last() -> void:
+	var cfg: Dictionary = PROGRESSION.config()
+	for level in range(1, int((cfg.get("level", {}) as Dictionary).get("cap", 50))):
+		assert_true(PROGRESSION.xp_to_next(level + 1, cfg) > PROGRESSION.xp_to_next(level, cfg),
+			"L%d costs no more than L%d; the curve is flat or inverted there" % [level + 1, level])
+
+
+## No step on the critical path may jump more than four levels above the last
+## thing the player was asked to beat. A bigger step is a wall, and a wall in a
+## game with no level requirement anywhere is answered the only way it can be:
+## by grinding the field until it goes away. The two this caught were Band 1's
+## level-7 gate handing the player to a level-18 warren guardian, and the
+## regional captains' level-16 cap handing them to a level-22 gauntlet.
+func test_no_step_on_the_critical_path_jumps_more_than_four_levels() -> void:
+	var levels: Array = _critical_path_levels()
+	var high := 0
+	for i in levels.size():
+		var level := int(levels[i])
+		assert_true(level <= high + 4,
+			"fight %d fields a level %d creature after a peak of %d; that is a %d-level wall"
+			% [i, level, high, level - high])
+		high = maxi(high, level)
+
+
+## Spec §8's shape: the Warden is the culmination. A gauntlet trainer standing
+## above the boss they guard inverts the whole approach, and it was literally
+## true before `SH47` — the elite fielded 21 and 22 against the Warden's 20.
+func test_nothing_in_the_stronghold_out_levels_the_warden() -> void:
+	var warden_ace := 0
+	for member: Variant in TRAINERS.team_of(TRAINERS.trainer(WARDEN_ID)):
+		warden_ace = maxi(warden_ace, int((member as Dictionary).get("level", 1)))
+	for id: String in ["stronghold_patrol", "stronghold_courtyard", "stronghold_elite"]:
+		for member: Variant in TRAINERS.team_of(TRAINERS.trainer(id)):
+			assert_true(int((member as Dictionary).get("level", 1)) < warden_ace,
+				"%s fields a level %d creature against the Warden's own ace at %d"
+				% [id, int((member as Dictionary).get("level", 1)), warden_ace])

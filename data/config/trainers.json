@@ -5,6 +5,7 @@
   "_comment_team": "Fought SEQUENTIALLY: the trainer sends out the next creature when one faints, in this order. `level` is the creature's real level (D30 arithmetic, data/config/progression.json), NOT a difficulty band. `moves` is optional and overrides the species' own quick/charged pair (data/creatures/species.json) -- for a trainer whose lesson is a specific move, SC13's Tam being the obvious case.",
   "_comment_reward": "SC15's shape (spec Sec17 P1 step 9; D39: 'SC15's trainer payouts later pay coins too'). ALL TUNABLE. `coins` (int, default 0) is granted through the ordinary satchel -- `coin` is just another items.json entry (D39), so this is `inventory.add('coin', coins)`, nothing more. `items` are real item ids granted once, each `{id, count}`. `flags` are extra progression flags to set alongside the defeat flag (SC14's South Bridge Key is a flag AND an item). `xp_bonus` (int, default 0, optional) is a FLAT bonus on top of the fight's own per-kill XP -- ordinary victory XP already happens naturally, per creature felled, through combat_manager's award; this is the authored extra, applied flatly (no party-share split, unlike the per-kill award) to every non-fainted party member. Every field pays out only when the defeat flag was NOT already set, so a rechallenge can never pay twice.",
   "_comment_art": "`config_key` names a block in data/config/art.json; `rank` instead names a Team Tether rank in data/config/npc_ranks.json (SE25's relay trainers, SF34's captains). Optional `hair`/`palette`/`accessories` are laid over that base -- per-part variants, never one global tint (CLAUDE.md, spec §21). No new human generations here.",
+  "_comment_levels_sh47": "SH47/D42, the gauntlet. WAS patrol 17/18, courtyard 18/19/19, elite 21/22/22; NOW 15/16, 16/17/17, 18/19/19. TUNABLE, and no fight is removed or added. Two reasons, both measured with tools/_probe_pacing.py. First, the ladder ran the wrong way at the top: the elite's aces were 21 and 22 while the Warden's own ace -- the chapter's boss, the fight everything else prepares for -- is 20. A gauntlet harder than the boss it guards inverts spec Sec8's whole shape. Second, the three regional captains cap at 16, so a player arriving off the Sigil gate faced a five-level step and the probe showed the cost: seven forced wild fights against level-2-to-6 field creatures purely to inflate a number, which is Sec11's `bad grind` by name. The gauntlet now climbs 15 -> 19 across three fights and hands the player to a Warden whose last creature is still the highest level in the chapter. Nothing about the ROOM sequence, the rewards or the rank ladder moved -- only the numbers on the teams.",
   "_comment_positions": "World metres [x, z]; Y is always asked of the world (D09). `facing_deg` is the yaw the trainer is placed with; npc_body.gd turns them to face the player on approach regardless.",
   "_comment_placed_by": "SC12/SC13. An entry naming `placed_by` is a trainer whose body already exists somewhere else -- `scripts/world/trainer_npc.gd::build()` skips it rather than standing up a second, duplicate body. Mira, Oskar and Tam all name `\"village_npcs\"`: they are the three existing village NPCs (data/config/village_npcs.json, placed by scripts/world/village_npcs.gd) and spec sec3 Band 1 says outright to reuse them rather than add a fourth. `position`/`facing_deg` below still mirror their real village_npcs.json entry for anyone reading this table, even though nothing spawns from them. Their challenge is offered through village_npcs.gd's own `greeting_when` list (not this file's prompt system) and their fight is started by sequence_director.gd's `battle:<trainer_id>` dialogue effect (not `_on_challenged`/`_on_conversation_finished` below) -- but this table, and `encounter_director.begin_trainer_battle()`, are exactly what both routes read and run.",
   "flow": {
@@ -350,11 +351,11 @@
       "team": [
         {
           "species": "trailpup",
-          "level": 17
+          "level": 15
         },
         {
           "species": "burrowback",
-          "level": 18
+          "level": 16
         }
       ],
       "reward": {
@@ -387,15 +388,15 @@
       "team": [
         {
           "species": "mosshell",
-          "level": 18
+          "level": 16
         },
         {
           "species": "reedwing",
-          "level": 19
+          "level": 17
         },
         {
           "species": "mudsnout",
-          "level": 19
+          "level": 17
         }
       ],
       "reward": {
@@ -432,15 +433,15 @@
       "team": [
         {
           "species": "galecrest",
-          "level": 21
+          "level": 18
         },
         {
           "species": "burrowback",
-          "level": 22
+          "level": 19
         },
         {
           "species": "duskhush",
-          "level": 22
+          "level": 19
         }
       ],
       "reward": {

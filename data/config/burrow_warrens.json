@@ -36,16 +36,17 @@
     {"at": [15.0, 40.0], "y": 3.2, "energy": 0.7, "range": 9.0, "colour": "#b09a6a"}
   ],
   "_comment_spawns": "The warrens' own population, spawned through encounter_director.gd's `spawn_wild()` so these are ORDINARY wild creatures -- same engage prompt, same fight, same catching, same respawn. No second combat mode exists and none is wanted. `aggressive: true` overrides the species' own temperament for THESE bodies only (species.json still has Burrowback and Mudsnout as non-aggressive animals out in the meadow): a creature defending the tunnel it lives in comes at you, the same one grazing a field does not. `level` overrides the wild band roll (progression.json) -- the warrens is Band 2 content and its residents are above the field's. Ground species only, from the existing roster; no new species and no new meshes (Sec20, D23). Tuskroot is deliberately absent for the same reason spawns.json leaves it out: D20 makes it the EVOLVED form, obtainable only by evolving a caught Mudsnout.",
+  "_comment_spawns_sh47": "SH47/D42 LEVELS LOWERED: mouth 10->9, hall 12->10, warren 11->10, den 13->11, and the guardian 18->14 below. Still TUNABLE, and the shape is unchanged -- the residents still climb as you go deeper and the guardian is still well above them. What moved is the STEP UP FROM BAND 1. Band 1's gate trainer (Oskar) fields levels 6 and 7 and spec Sec3 recommends a team of 5-8 at the bridge; arriving here at 7 to meet a 13 in the den and an 18 at the bottom was an eleven-level gulf, and tools/_probe_pacing.py measured what a player actually did about it: 25 wild fights against level-2-to-6 field creatures before daring to go in, 19 minutes of Sec11's `bad grind` bolted onto the front of the chapter's best dungeon. Clearing the warrens is on Sec11's GOOD list and nothing about it is cut -- the fights are the same fights, the deposits the same deposits, the heartstone still behind the guardian. They now sit where a player who played Band 1 actually is.",
   "spawns": [
-    {"species": "mudsnout", "chamber": "mouth", "count": 1, "level": 10, "aggressive": true, "offset": [1.8, -1.5]},
-    {"species": "burrowback", "chamber": "hall", "count": 2, "level": 12, "aggressive": true, "offset": [-4.0, 2.0], "spread": 4.0},
-    {"species": "mudsnout", "chamber": "warren", "count": 2, "level": 11, "aggressive": true, "offset": [0.0, 0.0], "spread": 3.0},
-    {"species": "trailpup", "chamber": "den", "count": 1, "level": 13, "aggressive": true, "offset": [-5.0, -4.0]}
+    {"species": "mudsnout", "chamber": "mouth", "count": 1, "level": 9, "aggressive": true, "offset": [1.8, -1.5]},
+    {"species": "burrowback", "chamber": "hall", "count": 2, "level": 10, "aggressive": true, "offset": [-4.0, 2.0], "spread": 4.0},
+    {"species": "mudsnout", "chamber": "warren", "count": 2, "level": 10, "aggressive": true, "offset": [0.0, 0.0], "spread": 3.0},
+    {"species": "trailpup", "chamber": "den", "count": 1, "level": 11, "aggressive": true, "offset": [-5.0, -4.0]}
   ],
   "_comment_guardian": "Spec Sec3 Band 2 and Sec20: a STRONG NORMAL SPECIES, explicitly not a new legendary and explicitly not a new mesh. Burrowback is the roster's highest-defence Ground creature and the animal this whole warren belongs to, so the biggest one in it is the thing at the bottom. Level is well above its own residents and above the recommended Band 2 team, TUNABLE -- it is meant to be the fight you come back for, not a wall. It can be CAUGHT rather than beaten (catching is available during wild combat, CLAUDE.md; a guardian is not trainer-owned) and either way the warrens counts as cleared -- a dungeon that can only be resolved one of the two legal ways would be a rule this game does not have.",
   "guardian": {
     "species": "burrowback",
-    "level": 18,
+    "level": 14,
     "chamber": "den",
     "offset": [3.0, 4.0],
     "name": "Warren Guardian"

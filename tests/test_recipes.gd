@@ -583,3 +583,99 @@ func test_ironwood_is_gathered_with_the_axe_and_really_grows_somewhere() -> void
 		if str((raw as Dictionary).get("item", "")) == "ironwood":
 			stands += 1
 	assert_true(stands >= 3, "only %d ironwood nodes stand in the world" % stands)
+
+
+## --- SH47 / D42: the material gates cannot cost more than the chapter gives --
+##
+## Spec §17 P7 names material costs as a pacing lever and `D42` explains why:
+## "Rootstone and Ironwood gates that each cost a gathering session are where an
+## hour silently goes." A recipe on the critical path that costs more of a
+## material than the band supplying it can actually yield does not fail loudly —
+## it turns into an unbounded gathering loop, waiting on `harvest_node.gd`'s
+## respawn timer. These pin the supply against the demand so that stops being
+## something only a playthrough can discover.
+##
+## `tools/_probe_pacing.py` prints the same two sums; this is the half worth
+## failing a build over.
+
+const HARVEST_PATH := "res://data/config/harvest.json"
+const WARRENS_PATH := "res://data/config/burrow_warrens.json"
+
+## The recipes a player must craft to finish the chapter: the saddle (spec §3
+## Band 4's riding unlock, and its intermediate frame) and the upgraded orb the
+## §18 gate's "form a meaningful five" leans on.
+const CRITICAL_PATH_RECIPES := ["saddle_frame", "saddle", "orb_greater"]
+
+
+func _load_json(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
+
+
+## Everything one pass over the chapter's authored nodes and rewards yields of
+## `item` — harvest.json's own nodes, the warrens' deposits, and the warrens'
+## clear reward. Deliberately counts each node ONCE: `harvest_node.gd` respawns
+## them, but a design that needs the respawn is a design that needs the player
+## to stand and wait, which is the cost this test exists to prevent.
+func _one_pass_supply(item: String) -> int:
+	var total := 0
+	for node: Variant in _load_json(HARVEST_PATH).get("nodes", []):
+		if str((node as Dictionary).get("item", "")) == item:
+			total += int((node as Dictionary).get("amount", 0))
+	var warrens: Dictionary = _load_json(WARRENS_PATH)
+	for deposit: Variant in warrens.get("deposits", []):
+		if str((deposit as Dictionary).get("item", "")) == item:
+			total += int((deposit as Dictionary).get("amount", 0))
+	for reward: Variant in (warrens.get("clear", {}) as Dictionary).get("reward", {}).get("items", []):
+		if str((reward as Dictionary).get("id", "")) == item:
+			total += int((reward as Dictionary).get("count", 0))
+	return total
+
+
+## What the critical-path recipes cost in total, resolving intermediate items
+## (the saddle consumes a `saddle_frame`, which is itself crafted) so the price
+## is the raw material a player has to find, not the shopping list.
+func _critical_path_demand(item: String) -> int:
+	var total := 0
+	for id: String in CRITICAL_PATH_RECIPES:
+		for line: Variant in db.recipe(id).get("cost", []):
+			if str((line as Dictionary).get("id", "")) == item:
+				total += int((line as Dictionary).get("n", 0))
+	return total
+
+
+func test_one_pass_over_the_chapter_can_afford_its_own_rootstone_recipes() -> void:
+	var supply := _one_pass_supply("rootstone")
+	var demand := _critical_path_demand("rootstone")
+	assert_true(supply >= demand,
+		("the critical path costs %d rootstone and the chapter's authored deposits yield %d in one pass; "
+		+ "the difference can only be made up by waiting on harvest respawns")
+		% [demand, supply])
+
+
+func test_one_pass_over_the_chapter_can_afford_its_own_ironwood_recipes() -> void:
+	var supply := _one_pass_supply("ironwood")
+	var demand := 0
+	for line: Variant in db.recipe("orb_prime").get("cost", []):
+		if str((line as Dictionary).get("id", "")) == "ironwood":
+			demand += int((line as Dictionary).get("n", 0))
+	assert_true(supply >= demand,
+		"orb_prime costs %d ironwood and the grove yields %d in one pass" % [demand, supply])
+
+
+## No single recipe on the critical path may cost more than half of what one
+## pass supplies. Meeting the total is not enough on its own: a single recipe
+## that eats most of the band's material leaves nothing for the others and
+## re-creates the gathering loop one recipe at a time.
+func test_no_critical_path_recipe_eats_more_than_half_the_rootstone() -> void:
+	var supply := _one_pass_supply("rootstone")
+	for id: String in CRITICAL_PATH_RECIPES:
+		for line: Variant in db.recipe(id).get("cost", []):
+			if str((line as Dictionary).get("id", "")) != "rootstone":
+				continue
+			var n := int((line as Dictionary).get("n", 0))
+			assert_true(float(n) <= float(supply) * 0.5,
+				"%s costs %d rootstone against a one-pass supply of %d" % [id, n, supply])
