@@ -7,6 +7,7 @@
   "_comment_of30_flags": "`flag:<id>` sets an autoload/progression_state.gd flag, the same store the road gate and the TM pickups already write to. `tam_tools_given` is what stops the tool set being handed over twice; `recipe_orb_basic` is what unlocks the orb recipe in data/recipes/recipes.json (its `unlocked_by`). Both are set on the SAME line as the thing they record, so a conversation that is somehow cut short cannot bank the gift without the flag or the flag without the gift.",
   "_comment_of31_trade": "D39 (OF31, owner: \"Make the villagers so I can trade with them. Creatures and materials... Make one of the villagers the merchant. He has a store in his house. He'll buy and sell goods from you. Make the third whatever makes sense.\"). Mira is the merchant and Oskar the creature trader; Tam stays the smith OF30 made him. Same additive shape as Tam's: `village_mira` and `village_oskar` are untouched and are still what each of them says on an ordinary greeting -- the trading lines are ADDED branches in data/config/village_npcs.json's `greeting_when`. The `shop:` effect is new (scripts/story/sequence_director.gd::_queue_shop) and reads `shop:<goods|creatures>:<vendor_id>`, where the vendor id is a key in data/config/trade.json. It opens the screen once the dialogue box has CLOSED, the same wait the starter picker already needed.",
   "_comment_of31_coins": "D39 chose the friendlier of the two starts the brief offered: Mira's first conversation hands over a float so the first visit to the shop can buy something, rather than a zero-start that has to be bootstrapped by selling. The count here and `starting_coins` in data/config/trade.json are checked against each other by tests/test_trade.gd -- a line that says thirty while the config says ten is a lie the player can count.",
+  "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam each gain a `_challenge` and a `_beaten` conversation, chosen by data/config/village_npcs.json's `greeting_when` once their vendor/gift branch is spent (spec sec3 Band 1, D39's dual-role rule). Every challenge's LAST line carries `battle:<trainer_id>` -- scripts/story/sequence_director.gd's fourth dialogue effect, read the moment the dialogue box closes, the same deferred-start contract scripts/world/trainer_npc.gd already uses for a standalone trainer. Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their standing vendor branch always has, so the store/swap stay reachable forever once they are beaten (D39's rule made real); Tam's is flavour only -- he has no vendor effect left to carry.",
   "conversations": {
     "village_mira": {
       "speaker": "Mira",
@@ -44,6 +45,27 @@
         }
       ]
     },
+    "village_mira_challenge": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You've been kind to the meadow. So here's something it taught me: it pushes back.",
+        {
+          "text": "A keeper learns to stand her ground. Want to learn it with me? Nothing held back.",
+          "effect": "battle:trainer_mira"
+        }
+      ]
+    },
+    "village_mira_beaten": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        {
+          "text": "That was honest fighting. Stall's open whenever you need it.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
     "village_oskar": {
       "speaker": "Oskar",
       "portrait": "res://assets/ui/portraits/trainer.png",
@@ -74,6 +96,27 @@
       "lines": [
         {
           "text": "Same terms as ever. Have a look at who's in the pen — they change about, so it's worth the walk.",
+          "effect": "shop:creatures:oskar"
+        }
+      ]
+    },
+    "village_oskar_challenge": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "That bridge south of here? Mine to keep shut. Tether pays this village well for it.",
+        {
+          "text": "But rules bend for strength. Beat me square, and the key's yours.",
+          "effect": "battle:trainer_oskar"
+        }
+      ]
+    },
+    "village_oskar_beaten": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        {
+          "text": "Square's square — the key's yours. Mind the far bank. Nobody's walked it in years.",
           "effect": "shop:creatures:oskar"
         }
       ]
@@ -116,6 +159,24 @@
           "effect": "flag:recipe_orb_basic"
         },
         "They won't match old Elias's. They'll hold, though, if your throw's any good."
+      ]
+    },
+    "village_tam_challenge": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Scouting teaches you one thing fast: no single creature answers every question.",
+        {
+          "text": "Bring your whole belt, not your favourite. I'll show you what I mean.",
+          "effect": "battle:trainer_tam"
+        }
+      ]
+    },
+    "village_tam_beaten": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "See? Right creature, right moment. Same craft as smithing."
       ]
     },
     "village_quarry_foreman": {

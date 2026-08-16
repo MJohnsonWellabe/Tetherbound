@@ -47,6 +47,11 @@ const RECIPE_FLAG := "recipe_orb_basic"
 const TOOLS_CONVERSATION := "village_tam_tools"
 const ORBS_CONVERSATION := "village_tam_orbs"
 
+## SC12/SC13. Added after both his one-time gifts are spent.
+const CHALLENGE_CONVERSATION := "village_tam_challenge"
+const BEATEN_CONVERSATION := "village_tam_beaten"
+const DEFEATED_FLAG := "defeated_tam"
+
 ## What the handover is expected to contain. Three, not the owner's two — see
 ## data/dialogue/village.json's `_comment_of30_knife` and D43: without the
 ## knife, owning the other two makes fiber ungatherable outright.
@@ -206,17 +211,31 @@ func _the_follow_up_conversation_unlocks_the_orb_recipe() -> void:
 	print("recipe: orb_basic taught and crafted")
 
 
-## Nothing left to hand over: he is a Field Scout with opinions about the
-## bramblebun again, exactly as NP3 wrote him. This is the dual-role rule
-## (D39/D43) holding — a vendor branch that ran out did not eat his greeting.
+## SC12/SC13 amendment: nothing left to HAND OVER, but he is not simply a
+## Field Scout with opinions about the bramblebun again — the moment both
+## one-time gifts are spent he becomes challengeable, and `greeting_when`
+## offers his Band-1 battle instead of falling all the way back to
+## NP3's plain greeting. This IS the dual-role rule (D39/D43) holding: a
+## vendor/gift branch that ran out did not eat his greeting, it handed off to
+## the next one in the list rather than skipping to the very bottom.
 func _after_both_he_goes_back_to_being_a_villager() -> void:
 	var progression: RefCounted = _game.get("progression")
 	var chosen := VILLAGE_NPCS.greeting_for(_tam(), progression)
-	if chosen != str(_tam().get("greeting", "")):
-		_fail("with both branches spent Tam should fall back to '%s'; got '%s'" % [
-			str(_tam().get("greeting", "")), chosen
+	if chosen != CHALLENGE_CONVERSATION:
+		_fail("with both gifts spent Tam should offer his Band-1 challenge ('%s'); got '%s'" % [
+			CHALLENGE_CONVERSATION, chosen
 		])
 	print("branch: both spent -> %s" % chosen)
+
+	# And once he is actually beaten, HE falls all the way through to his own
+	# flavour-only steady state — the real "villager again" case, one flag
+	# further down the road than a fresh save can reach.
+	progression.call("set_flag", DEFEATED_FLAG)
+	var after_defeat := VILLAGE_NPCS.greeting_for(_tam(), progression)
+	if after_defeat != BEATEN_CONVERSATION:
+		_fail("once beaten, Tam should settle on '%s'; got '%s'" % [BEATEN_CONVERSATION, after_defeat])
+	print("branch: beaten -> %s" % after_defeat)
+	progression.call("set_flag", DEFEATED_FLAG, false)
 
 
 ## --- driving ------------------------------------------------------------------

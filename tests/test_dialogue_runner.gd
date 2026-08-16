@@ -81,6 +81,15 @@ func test_an_effect_splits_into_a_kind_and_a_value() -> void:
 	assert_eq(RUNNER.parse_effect("bare"), ["bare", ""])
 
 
+## SC12/SC13. `battle:<trainer_id>` is the fourth dialogue effect
+## `sequence_director.gd::_drain_effects` knows, beside `beat:`/`give:`/`flag:`/
+## `shop:`. Parsing is the same generic split as any other effect -- this just
+## proves the id half survives whole, since a trainer id can itself contain an
+## underscore (`trainer_mira`) and must not be chopped at the first one.
+func test_a_battle_effect_splits_into_the_kind_and_the_trainer_id() -> void:
+	assert_eq(RUNNER.parse_effect("battle:trainer_mira"), ["battle", "trainer_mira"])
+
+
 ## The first time the game says a word the player wrote.
 func test_the_creatures_name_is_substituted_into_the_line() -> void:
 	_runner.set_value("name", "Biscuit")
@@ -408,6 +417,18 @@ const MIRA_SHOP := "village_mira_shop"
 const OSKAR_INTRO := "village_oskar_trade_intro"
 const OSKAR_SWAP := "village_oskar_trade"
 
+## SC12/SC13. The three Band-1 trainer conversations, and the flags that gate
+## challengeability.
+const MIRA_CHALLENGE := "village_mira_challenge"
+const MIRA_BEATEN := "village_mira_beaten"
+const OSKAR_CHALLENGE := "village_oskar_challenge"
+const OSKAR_BEATEN := "village_oskar_beaten"
+const TAM_CHALLENGE := "village_tam_challenge"
+const TAM_BEATEN := "village_tam_beaten"
+const DEFEATED_MIRA := "defeated_mira"
+const DEFEATED_OSKAR := "defeated_oskar"
+const DEFEATED_TAM := "defeated_tam"
+
 
 ## `shop:<goods|creatures>:<vendor_id>`, the fourth dialogue effect. A typo in
 ## either half is a villager whose shop silently never opens.
@@ -435,24 +456,67 @@ func test_every_shop_effect_names_a_known_kind_and_a_real_vendor() -> void:
 			else:
 				assert_false(CREATURE_TRADE.trader(trade.config(), vendor).is_empty(),
 					"'%s' opens creature trader '%s', which trade.json does not define" % [id, vendor])
-	assert_true(found >= 4, "Mira and Oskar each open their screen from two branches; found %d" % found)
+	assert_true(found >= 6,
+		"Mira and Oskar each open their screen from THREE branches now (SC13's beaten line carries it too); found %d" % found)
 
 
 const CREATURE_TRADE := preload("res://scripts/trade/creature_trade.gd")
+const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 
 
-## Both of Mira's branches have to END at the store, or a greeting is a
-## cul-de-sac that mentions a shop the player cannot reach.
+## Every one of Mira's and Oskar's branches that reaches the store/swap has to
+## END there, or a greeting is a cul-de-sac that mentions a shop the player
+## cannot reach. `village_mira_beaten`/`village_oskar_beaten` are SC13's
+## additions and D39's rule made real: the store/swap survive their vendor
+## becoming a trainer.
 func test_both_of_miras_branches_open_the_store() -> void:
-	for id in [MIRA_INTRO, MIRA_SHOP]:
+	for id in [MIRA_INTRO, MIRA_SHOP, MIRA_BEATEN]:
 		assert_true(_effects_of(id).has("shop:goods:mira"),
 			"'%s' never opens the store" % id)
 
 
 func test_both_of_oskars_branches_open_the_swap() -> void:
-	for id in [OSKAR_INTRO, OSKAR_SWAP]:
+	for id in [OSKAR_INTRO, OSKAR_SWAP, OSKAR_BEATEN]:
 		assert_true(_effects_of(id).has("shop:creatures:oskar"),
 			"'%s' never opens the swap screen" % id)
+
+
+## `battle:<trainer_id>`, the fifth dialogue effect. A typo here is a
+## challenge that reads fine and starts nothing.
+func test_every_battle_effect_names_a_real_trainer() -> void:
+	var found := 0
+	for id: String in RUNNER.table():
+		for effect: String in _effects_of(id):
+			var parts: Array = RUNNER.parse_effect(effect)
+			if str(parts[0]) != "battle":
+				continue
+			found += 1
+			var trainer_id := str(parts[1])
+			assert_false(TRAINERS.trainer(trainer_id).is_empty(),
+				"'%s' opens a battle with '%s', which trainers.json does not define" % [id, trainer_id])
+	assert_true(found >= 3, "Mira, Oskar and Tam each offer a battle; found %d" % found)
+
+
+## The battle: effect has to sit on the LAST line of each challenge -- the
+## same contract `trainer_npc.gd` relies on: the fight starts once the
+## dialogue box has closed, not mid-conversation.
+func test_the_battle_effect_is_the_challenges_last_word() -> void:
+	for pair in [[MIRA_CHALLENGE, "trainer_mira"], [OSKAR_CHALLENGE, "trainer_oskar"], [TAM_CHALLENGE, "trainer_tam"]]:
+		var id := str(pair[0])
+		var trainer_id := str(pair[1])
+		var lines: Array = (RUNNER.table().get(id, {}) as Dictionary).get("lines", [])
+		assert_false(lines.is_empty(), "'%s' has no lines at all" % id)
+		if lines.is_empty():
+			continue
+		var last: Variant = lines[lines.size() - 1]
+		var effects: Array = []
+		if last is Dictionary:
+			if (last as Dictionary).has("effects"):
+				effects = (last as Dictionary).get("effects", [])
+			elif (last as Dictionary).has("effect"):
+				effects = [(last as Dictionary).get("effect", "")]
+		assert_true(effects.has("battle:%s" % trainer_id),
+			"'%s' should end on battle:%s; its last line is %s" % [id, trainer_id, str(last)])
 
 
 ## Same rule D43 set for Tam's tools: the gift and the flag that records it are
@@ -478,8 +542,9 @@ func test_the_starting_coins_and_the_flag_that_records_them_are_the_same_line() 
 
 ## A swap is not a purchase. Oskar must never hand out items, and above all must
 ## never hand out coins for a creature — the owner's answer was a straight swap.
+## Covers his challenge and beaten lines too, not just the original two.
 func test_oskar_never_gives_anything_away() -> void:
-	for id in [OSKAR_INTRO, OSKAR_SWAP]:
+	for id in [OSKAR_INTRO, OSKAR_SWAP, OSKAR_CHALLENGE, OSKAR_BEATEN]:
 		for effect: String in _effects_of(id):
 			assert_false(effect.begins_with("give:"),
 				"'%s' hands something over; Oskar trades creature for creature" % id)
@@ -487,6 +552,15 @@ func test_oskar_never_gives_anything_away() -> void:
 
 ## The dual-role rule from the other side: the merchant's own branches resolve
 ## in the right order and her plain greeting is still there underneath.
+##
+## SC12/SC13 inserted two branches between the intro and the original standing
+## shop branch: once the shop is open, greeting Mira now offers her Band-1
+## challenge (repeatedly, for as long as she is unbeaten) rather than
+## reopening the shop directly -- and once she is beaten, `village_mira_beaten`
+## takes over as the permanent steady state, itself carrying the same
+## `shop:goods:mira` effect (proven separately by
+## `test_both_of_miras_branches_open_the_store`), so the store never actually
+## becomes unreachable.
 func test_the_merchants_branches_resolve_in_order() -> void:
 	var mira := _villager("Mira")
 	assert_false(mira.is_empty(), "village_npcs.json has no villager named Mira")
@@ -494,21 +568,51 @@ func test_the_merchants_branches_resolve_in_order() -> void:
 	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_INTRO,
 		"a fresh save should get the shop-opening conversation")
 	progression.set_flag(MIRA_FLAG)
-	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_SHOP,
-		"once the shop is open, greeting her should open it again")
+	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_CHALLENGE,
+		"once the shop is open and she is unbeaten, greeting her should offer the Band-1 challenge")
+	progression.set_flag(DEFEATED_MIRA)
+	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_BEATEN,
+		"once she is beaten, greeting her should open her permanent steady state")
 	assert_eq(str(mira.get("greeting", "")), "village_mira",
-		"NP3's Meadow Keeper line must survive her becoming a merchant")
+		"NP3's Meadow Keeper line must survive her becoming a merchant and a trainer")
 
 
+## Same shape as Mira's, for Oskar's swap-offer/challenge/beaten branches.
 func test_the_creature_traders_branches_resolve_in_order() -> void:
 	var oskar := _villager("Oskar")
 	assert_false(oskar.is_empty(), "village_npcs.json has no villager named Oskar")
 	var progression: RefCounted = PROGRESSION_STATE.new()
 	assert_eq(VILLAGE_NPCS.greeting_for(oskar, progression), OSKAR_INTRO)
 	progression.set_flag(OSKAR_FLAG)
-	assert_eq(VILLAGE_NPCS.greeting_for(oskar, progression), OSKAR_SWAP)
+	assert_eq(VILLAGE_NPCS.greeting_for(oskar, progression), OSKAR_CHALLENGE,
+		"once the swap is open and he is unbeaten, greeting him should offer the Band-1 challenge")
+	progression.set_flag(DEFEATED_OSKAR)
+	assert_eq(VILLAGE_NPCS.greeting_for(oskar, progression), OSKAR_BEATEN,
+		"once he is beaten, greeting him should open his permanent steady state")
 	assert_eq(str(oskar.get("greeting", "")), "village_oskar",
-		"NP3's Bridgehand line must survive him becoming a trader")
+		"NP3's Bridgehand line must survive him becoming a trader and a trainer")
+
+
+## Tam has no standing vendor branch to carry forward -- both of his gifts are
+## one-time and spent before he is even challengeable -- so his own real
+## branches are checked end to end here: tools, then the orb recipe, then
+## (once BOTH are spent) the challenge repeatedly until beaten, then his
+## flavour-only beaten line forever after.
+func test_the_smiths_branches_resolve_in_order_including_the_challenge() -> void:
+	var tam := _villager("Tam")
+	assert_false(tam.is_empty(), "village_npcs.json has no villager named Tam")
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	assert_eq(VILLAGE_NPCS.greeting_for(tam, progression), TOOLS_CONVERSATION)
+	progression.set_flag(TOOLS_FLAG)
+	assert_eq(VILLAGE_NPCS.greeting_for(tam, progression), ORBS_CONVERSATION)
+	progression.set_flag(RECIPE_FLAG)
+	assert_eq(VILLAGE_NPCS.greeting_for(tam, progression), TAM_CHALLENGE,
+		"once both gifts are spent and he is unbeaten, greeting him should offer the Band-1 challenge")
+	progression.set_flag(DEFEATED_TAM)
+	assert_eq(VILLAGE_NPCS.greeting_for(tam, progression), TAM_BEATEN,
+		"once he is beaten, greeting him should open his permanent (flavour-only) steady state")
+	assert_eq(str(tam.get("greeting", "")), "village_tam",
+		"NP3's Field Scout line must survive him becoming a smith and a trainer")
 
 
 func _villager(who: String) -> Dictionary:

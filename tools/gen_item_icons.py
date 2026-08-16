@@ -341,6 +341,32 @@ def icon_castle_gate_key() -> Image.Image:
     return img
 
 
+def icon_south_bridge_key() -> Image.Image:
+    """SC12/SC13/SC14. Oskar's key: same ward-key language as
+    `icon_castle_gate_key` (ring bow, shaft, stepped teeth) -- a second key
+    silhouette would read as a second concept if it were drawn differently,
+    and this is deliberately the same object made by the same hand, not a
+    new one. Told apart in the satchel by `colour` (`items.json`: worn iron
+    `#8a8a86` here against the castle key's brass `#c9a227`) and by a single
+    ring hole through the bow, which the castle key's is-round bow does not
+    have -- a plain workman's key rather than an ornamental one.
+    """
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx, cy, r = 92, 92, 54
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
+    cutout_ellipse(d, (cx - r * 0.55, cy - r * 0.55, cx + r * 0.55, cy + r * 0.55))
+    # bore hole through the bow -- the plain-workman's-key cue
+    cutout_ellipse(d, (cx - r * 0.2, cy - r * 0.2, cx + r * 0.2, cy + r * 0.2))
+    # shaft
+    d.rectangle((cx - 12, cy, cx + 12, 210), fill=FG)
+    # ward teeth at the bottom, a different step pattern from the castle key's
+    d.rectangle((cx - 12, 176, cx + 34, 190), fill=FG)
+    d.rectangle((cx - 12, 192, cx + 34, 206), fill=FG)
+    d.rectangle((cx - 12, 208, cx + 20, 222), fill=FG)
+    return img
+
+
 def _punch(base: Image.Image, mark: Image.Image, box) -> Image.Image:
     """Punch `mark`'s silhouette out of `base`, scaled into `box`.
 
@@ -439,6 +465,7 @@ ITEM_ICONS = {
     "knife.png": icon_knife,
     "fishing_rod.png": icon_fishing_rod,
     "castle_gate_key.png": icon_castle_gate_key,
+    "south_bridge_key.png": icon_south_bridge_key,
     "tm_stone_rush.png": icon_tm_stone_rush,
     "tm_burrow_strike.png": icon_tm_burrow_strike,
 }

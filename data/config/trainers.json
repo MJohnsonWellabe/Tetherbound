@@ -13,6 +13,8 @@
 
   "_comment_positions": "World metres [x, z]; Y is always asked of the world (D09). `facing_deg` is the yaw the trainer is placed with; npc_body.gd turns them to face the player on approach regardless.",
 
+  "_comment_placed_by": "SC12/SC13. An entry naming `placed_by` is a trainer whose body already exists somewhere else -- `scripts/world/trainer_npc.gd::build()` skips it rather than standing up a second, duplicate body. Mira, Oskar and Tam all name `\"village_npcs\"`: they are the three existing village NPCs (data/config/village_npcs.json, placed by scripts/world/village_npcs.gd) and spec sec3 Band 1 says outright to reuse them rather than add a fourth. `position`/`facing_deg` below still mirror their real village_npcs.json entry for anyone reading this table, even though nothing spawns from them. Their challenge is offered through village_npcs.gd's own `greeting_when` list (not this file's prompt system) and their fight is started by sequence_director.gd's `battle:<trainer_id>` dialogue effect (not `_on_challenged`/`_on_conversation_finished` below) -- but this table, and `encounter_director.begin_trainer_battle()`, are exactly what both routes read and run.",
+
   "flow": {
     "_comment": "ALL TUNABLE. `send_out_seconds` is the beat between one of the trainer's creatures fainting and the next stepping up -- long enough to read as them making a decision, short enough that it is not a loading pause. `linger_seconds` is how long a fallen creature stays on the ground before its body is cleared, matching catching.json's own faint linger.",
     "send_out_seconds": 1.6,
@@ -30,7 +32,7 @@
     {
       "id": "practice_trainer",
       "name": "Bryn",
-      "_placeholder": "PLACEHOLDER, for SC12/SC13 to replace with Mira, Oskar and Tam -- who already stand in the square (data/config/village_npcs.json) and must not be duplicated by a fourth body. Bryn exists so R8.1's substrate is playable and smokeable the day it lands; delete this entry when the three real Band 1 trainers take over.",
+      "_placeholder": "SC12/SC13 replaced R8.1's placeholder role with Mira, Oskar and Tam below (villager-greeting trainers, `placed_by: \"village_npcs\"`) -- but this entry stays. tests/smoke_trainer_battle.gd is the ONE test that drives a trainer through trainer_npc.gd's OWN placement-and-prompt system end to end (a real Terrain3D body, a real 'Challenge Bryn' prompt, a real interact-button press) rather than through a villager's greeting_when/battle: route, and there is no other standalone trainer in the game yet for it to stand up. Deleting Bryn would delete that coverage, not just a placeholder -- so it is kept, and noted here rather than silently left behind. A future standalone trainer (the relay station's, a captain's) can take over this exact role later.",
       "config_key": "villager_farmer",
       "hair": {
         "visible": true,
@@ -63,6 +65,110 @@
         "flags": []
       },
       "defeat_flag": "trainer_defeated_practice",
+      "rechallenge": false
+    },
+    {
+      "id": "trainer_mira",
+      "name": "Mira",
+      "_comment": "SC12/SC13. Spec sec3 Band 1: 'Mira -- Meadow Keeper -- introductory trainer battle, reward: XP + useful early item/TM/recipe.' The introduction -- one creature, low level, a coin purse and a potion. Team level is TUNABLE and this task's to set; SC15 owns the payout table's final numbers.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_farmer",
+      "position": [18.99, -1.01],
+      "facing_deg": -135.0,
+      "challenge": "village_mira_challenge",
+      "defeated": "village_mira_beaten",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 4
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 10
+          },
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_mira",
+      "rechallenge": false
+    },
+    {
+      "id": "trainer_oskar",
+      "name": "Oskar",
+      "_comment": "SC12/SC13/SC14. Spec sec3 Band 1: 'Oskar -- Bridgehand -- moderate trainer battle, controls or possesses the old bridge mechanism, reward: South Bridge Key.' The gate -- a real two-creature team, sturdier than Mira's. `south_bridge_key` is SC14's Gate 1 mechanism; this entry hands it over the moment it is defeated so the bridge task has a real item to read rather than a stub.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_keeper",
+      "position": [22.0, -6.0],
+      "facing_deg": -108.4,
+      "challenge": "village_oskar_challenge",
+      "defeated": "village_oskar_beaten",
+      "team": [
+        {
+          "species": "terrapup",
+          "level": 6
+        },
+        {
+          "species": "mosshell",
+          "level": 7
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 15
+          },
+          {
+            "id": "south_bridge_key",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_oskar",
+      "rechallenge": false
+    },
+    {
+      "id": "trainer_tam",
+      "name": "Tam",
+      "_comment": "SC12/SC13. Spec sec3 Band 1: 'Tam -- Field Scout -- battle emphasizing switching/type awareness, reward: TM, Orb-related item, or map hint.' The switching lesson -- two creatures of different types, so a one-note team cannot answer both.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_smith",
+      "position": [8.0, -16.0],
+      "facing_deg": 18.4,
+      "challenge": "village_tam_challenge",
+      "defeated": "village_tam_beaten",
+      "team": [
+        {
+          "species": "pipwing",
+          "level": 5
+        },
+        {
+          "species": "mudsnout",
+          "level": 6
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 12
+          },
+          {
+            "id": "orb_basic",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_tam",
       "rechallenge": false
     }
   ]

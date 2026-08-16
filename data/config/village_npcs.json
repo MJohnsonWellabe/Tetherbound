@@ -1,6 +1,7 @@
 {
   "_comment": "R7.2. Villagers standing in the square, placed by scripts/world/village_npcs.gd the same way opening.json places the opening's cast: data describes, code places. `config_key` names a block in data/config/art.json (a tint on Grandpa's or the trainer's rig, never KayKit's Ranger — see art.json's own comment on those keys). `greeting` names a conversation id in data/dialogue/village.json; the prompt label is always \"Greet <name>\", built by the placer rather than stored here, so it can never accidentally contain \"talk\" or \"choose\" — tests/smoke_opening.gd finds Grandpa and the starters by exactly those substrings.",
   "_comment_greeting_when": "OF30. `greeting` is what a villager says by default and never stops being that. `greeting_when` is an OPTIONAL, ORDERED list of branches checked ahead of it, each `{ if_flag | unless_flag, conversation }` against autoload/progression_state.gd -- first match wins, no match falls through to `greeting`. Deliberately additive: a villager who gains a role gains a list entry, and nobody's greeting is ever replaced (D39's dual-role rule -- SC12 adds Tam's battle offer as a THIRD entry here, and OF31 gives Mira and Oskar their own lists, without touching this one). Either key may hold a single flag id or an array of them, all of which must hold. No `and`/`or`/`not` beyond that, and no nesting: this is a lookup table, not a quest engine (spec sec19 bans one, and progression_state.gd's own header says so twice).",
+  "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam are the Meadows' three Band-1 trainers (spec sec3, D39's dual-role rule made real): once each one's vendor/gift branch has actually been spent, greeting them again offers a CHALLENGE conversation instead -- and keeps offering it, every greeting, for as long as their defeat flag (`defeated_mira`/`defeated_oskar`/`defeated_tam`, encounter_director.gd's SB9 write) is unset. The challenge's last line carries `battle:<trainer_id>` (sequence_director.gd), the same fight `data/config/trainers.json`'s matching `placed_by: \"village_npcs\"` entry runs. Once beaten, a `_beaten` conversation takes over as their permanent steady state and is inserted ABOVE their old standing vendor branch -- Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their old standing branch always did, so the store/swap stays reachable forever even though the old branch entry below it is now unreachable in practice (kept verbatim rather than deleted, per D39: a vendor branch is never rewritten, only superseded). Tam has no such branch to carry -- his gifts are one-time and both already spent by the time he is challengeable -- so his `_beaten` line is flavour only.",
   "_comment_positions": "World metres, on the village square flat (data/config/terrain_playground.json's `flats`, centre [10,-10], radius 18). Chosen and checked against the real runtime structure colliders and the square's four dirt paths (data/config/terrain_playground.json's `paths.routes`, all of which start at [10,-10]) with a headless probe — every position clears every building footprint and every path's 3m width + 1.5m shoulder by several metres, and all three sit far short of Grandpa's house/door/outside markers (~-16,-15 to -9.7,-15), well clear of the smoke test's walked lanes there. `facing_deg` points each villager at the well so the square reads as people gathered around it; `npc_body.gd` turns them to face the player on approach regardless. AMENDED BY OF31: Mira no longer stands in the square at all -- the merchant has a shop, so she is inside cottage_a behind her counter (see her own `_why`). The probe's clearances above still describe the other four.",
   "villagers": [
     {
@@ -17,8 +18,19 @@
         },
         {
           "if_flag": "mira_shop_open",
+          "unless_flag": "defeated_mira",
+          "conversation": "village_mira_challenge",
+          "_why": "SC12/SC13. Her Band-1 challenge -- the introduction (spec sec3). Offered every greeting once the shop has opened, for as long as she is unbeaten. Ends on `battle:trainer_mira`."
+        },
+        {
+          "if_flag": "defeated_mira",
+          "conversation": "village_mira_beaten",
+          "_why": "SC13/D39. Her permanent steady state once beaten -- carries the SAME `shop:goods:mira` effect the standing branch below always has, so the store stays reachable forever. Ahead of that branch in the list for exactly that reason."
+        },
+        {
+          "if_flag": "mira_shop_open",
           "conversation": "village_mira_shop",
-          "_why": "OF31/D39. The standing vendor branch: one line, then the store. This is the entry D39 says SURVIVES when SC12 makes her a Band-1 trainer -- that battle offer goes in ABOVE this one as a one-time `unless_flag` entry, so it is offered once and the shop resumes underneath it."
+          "_why": "OF31/D39. The ORIGINAL standing vendor branch, left exactly as OF31 wrote it (D39: a vendor branch is never rewritten). Superseded in practice by the two entries above it once she becomes challengeable -- while unbeaten the challenge branch matches first, and once beaten `village_mira_beaten` above already carries this branch's own shop: effect -- but the entry itself is kept rather than deleted."
         }
       ],
       "_why": "OF31 moved her indoors: she is the merchant and the owner asked for a store in a villager's house, so she stands behind her own counter inside cottage_a (village.json places it at [18,-2] yawed -135; this is the cottage's local [0,-1.4], a stride behind the counter, facing the open doorway). Was [12,-3] in the square."
@@ -37,8 +49,19 @@
         },
         {
           "if_flag": "oskar_trade_open",
+          "unless_flag": "defeated_oskar",
+          "conversation": "village_oskar_challenge",
+          "_why": "SC12/SC13/SC14. His Band-1 challenge -- the gate (spec sec3): a sturdier team than Mira's, and the fight the South Bridge Key is won from. Offered every greeting once the swap is open, for as long as he is unbeaten. Ends on `battle:trainer_oskar`."
+        },
+        {
+          "if_flag": "defeated_oskar",
+          "conversation": "village_oskar_beaten",
+          "_why": "SC13/D39. His permanent steady state once beaten -- precedes, and carries the same `shop:creatures:oskar` effect, the standing swap branch below has always had, so the pen stays reachable forever. Ahead of that branch in the list for exactly that reason -- 'the swap branch still fires' because this entry now fires it."
+        },
+        {
+          "if_flag": "oskar_trade_open",
           "conversation": "village_oskar_trade",
-          "_why": "OF31/D39. The standing swap branch, same survives-a-later-role shape as Mira's above."
+          "_why": "OF31/D39. The ORIGINAL standing swap branch, left exactly as OF31 wrote it (D39: a vendor branch is never rewritten). Superseded in practice by the two entries above it once he becomes challengeable, the same shape as Mira's own standing branch."
         }
       ],
       "_why": "east side, near the two cottages (EV6: the small-barn-and-coop pair became cottage_a and cottage_b). Stays outdoors: his pens are 'behind the cottage' in dialogue and the swap screen is the pen -- OF31 built one interior, not three."
@@ -59,6 +82,17 @@
           "unless_flag": "recipe_orb_basic",
           "conversation": "village_tam_orbs",
           "_why": "OF30. The follow-up: he writes down the basic-orb recipe, which sets the flag data/recipes/recipes.json gates `orb_basic` behind."
+        },
+        {
+          "if_flag": ["tam_tools_given", "recipe_orb_basic"],
+          "unless_flag": "defeated_tam",
+          "conversation": "village_tam_challenge",
+          "_why": "SC12/SC13. His Band-1 challenge -- the switching lesson (spec sec3): two creatures of different types. Offered every greeting once BOTH of his one-time gifts are spent, for as long as he is unbeaten. Ends on `battle:trainer_tam`."
+        },
+        {
+          "if_flag": "defeated_tam",
+          "conversation": "village_tam_beaten",
+          "_why": "SC13. His permanent steady state once beaten. Flavour only, unlike Mira's and Oskar's -- he has no standing vendor branch to carry forward; both his gifts are one-time and already spent by the time he is even challengeable."
         }
       ],
       "_why": "south of the well, by the yard fence toward Grandpa's"

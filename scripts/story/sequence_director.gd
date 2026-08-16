@@ -49,6 +49,11 @@ const SWAP_PANEL := preload("res://scripts/ui/swap_panel.gd")
 const SHOP_GOODS := "goods"
 const SHOP_CREATURES := "creatures"
 
+## SC12/SC13. The table `battle:<trainer_id>` reads from — the same reader
+## `trainer_npc.gd` itself uses, so a villager's challenge and a standalone
+## trainer's challenge look up the exact same data.
+const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+
 ## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
 ## renamed outcome cannot silently stop matching here. Same reason
 ## encounter_director.gd declares its own.
@@ -132,6 +137,13 @@ var _picker_pending: bool = false
 ## problem `_picker_pending` above solves, same shape.
 var _shop_pending: Array = []
 var _shop_panel: CanvasLayer = null
+
+## SC12/SC13. The trainer id a `battle:` effect named, while it waits for the
+## dialogue box to close — same "wait for the box" shape as `_shop_pending`,
+## and for the identical reason: `_drain_effects` reads the last line of a
+## challenge conversation while that line is STILL ON SCREEN, and opening a
+## fight under an open dialogue box is the bug both of these avoid.
+var _battle_pending: String = ""
 var _swap_panel: CanvasLayer = null
 
 ## True from the moment a name is confirmed until the creature is standing beside the
@@ -288,6 +300,7 @@ func _process(delta: float) -> void:
 	_check_left_the_bed()
 	_maybe_open_picker()
 	_maybe_open_shop()
+	_maybe_start_battle()
 
 
 ## Effects are drained in production, here, every frame.
@@ -321,8 +334,10 @@ func _drain_effects() -> void:
 				_set_progression_flag(str(parts[1]))
 			"shop":
 				_queue_shop(str(parts[1]))
+			"battle":
+				_queue_battle(str(parts[1]))
 			_:
-				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:' and 'shop:' and nothing else" % effect)
+				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:' and 'battle:' and nothing else" % effect)
 
 
 ## `shop:goods:mira` / `shop:creatures:oskar` — D39 (OF31). A villager opens a
@@ -379,6 +394,60 @@ func _maybe_open_shop() -> void:
 			_swap_panel.name = "SwapPanel"
 			get_tree().root.add_child(_swap_panel)
 		_swap_panel.call("open", vendor)
+
+
+## `battle:trainer_mira` — SC12/SC13. A villager's challenge line ends the
+## conversation with a fight, the same way `trainer_npc.gd::_on_challenged` /
+## `_on_conversation_finished` starts one for a standalone trainer body — this
+## is the village-greeting half of that same contract, because Mira, Oskar and
+## Tam are challenged through `village_npcs.gd`'s ordinary greeting flow
+## (`greeting_when`), never through `trainer_npc.gd`'s own placement and prompt
+## (spec §3 Band 1: "possible existing village NPCs can fill these roles" — no
+## fourth body). `trainers.json`'s entries for the three of them carry
+## `placed_by: "village_npcs"` precisely so `trainer_npc.gd::build()` never
+## stands up a duplicate.
+##
+## Queued rather than started here, for the exact reason `_queue_shop` is:
+## effects drain while the line that carries them is still ON SCREEN, and a
+## battle dropped on top of an open dialogue box is the bug this avoids.
+func _queue_battle(trainer_id: String) -> void:
+	if trainer_id == "":
+		push_warning("a battle: effect reads battle:<trainer_id>; got an empty id")
+		return
+	_battle_pending = trainer_id
+
+
+## The other half of `_queue_battle`, polled every frame beside the shop and
+## the picker's own. Waits for the dialogue box to close, then hands the
+## fight to `encounter_director.gd` exactly the way `trainer_npc.gd` does:
+## `can_challenge()` decides, `begin_trainer_battle()` starts it, and a
+## refusal (the ally already fainted to something else, say) is quiet rather
+## than an error — the player can walk back and ask again.
+##
+## The second argument `trainer_npc.gd` passes is the trainer's own placed
+## body, used only to decide which direction their creature steps out from
+## (`encounter_director._send_out_spot()`). A villager has no such body
+## registered here — `village_npcs.gd` places them and keeps no lookup this
+## file has any business reaching into — so `null` is passed, the same
+## "smallest honest thing" `_send_out_spot()` already falls back to for a
+## battle with no trainer body at all: the creature steps out in front of the
+## player instead, exactly where a wild encounter would have put it.
+func _maybe_start_battle() -> void:
+	if _battle_pending.is_empty():
+		return
+	if bool(_dialogue.call("is_open")):
+		return
+	var trainer_id := _battle_pending
+	_battle_pending = ""
+	if _encounter == null:
+		push_error("no EncounterDirector; '%s' offered a battle nobody can run" % trainer_id)
+		return
+	var spec := TRAINERS.trainer(trainer_id)
+	if spec.is_empty():
+		push_error("battle: named '%s', which trainers.json does not define" % trainer_id)
+		return
+	if not bool(_encounter.call("begin_trainer_battle", spec, null)):
+		print("[village] '%s' offered a battle that could not start" % trainer_id)
 
 
 ## `flag:tam_tools_given` — OF30. Write one progression flag, on the line that

@@ -200,3 +200,51 @@ func test_the_flow_numbers_are_sane() -> void:
 		"send_out_seconds is zero; the next creature would appear on the same frame the last one fell")
 	assert_true(float(flow.get("linger_seconds", 0.0)) > 0.0,
 		"linger_seconds is zero; a beaten creature would vanish rather than fall")
+
+
+# --- SC12/SC13: Mira, Oskar and Tam ---------------------------------------------
+
+## Spec §3 Band 1 names three trainers by role; this is the id contract every
+## other SC13 test below, `sequence_director.gd`'s `battle:` effect and
+## `data/config/village_npcs.json`'s `greeting_when` branches all rely on.
+func test_mira_oskar_and_tam_are_all_in_the_table() -> void:
+	for id in ["trainer_mira", "trainer_oskar", "trainer_tam"]:
+		assert_false(TRAINERS.trainer(id).is_empty(),
+			"'%s' is not in trainers.json; SC13's Band 1 circuit has a hole in it" % id)
+
+
+## The whole point of SC12: no fourth body. An entry naming `placed_by` must
+## be excluded from `trainer_npc.gd`'s own placement loop, the same filter
+## `build()` applies, checked here without booting a scene.
+func test_mira_oskar_and_tam_are_placed_elsewhere_not_spawned_here() -> void:
+	for id in ["trainer_mira", "trainer_oskar", "trainer_tam"]:
+		var spec := TRAINERS.trainer(id)
+		assert_eq(str(spec.get("placed_by", "")), "village_npcs",
+			"'%s' should name village_npcs.gd as its placer, or trainer_npc.gd will stand up a second body for them" % id)
+	for entry: Variant in TRAINERS.trainers():
+		var spec: Dictionary = entry
+		if str(spec.get("id", "")) == "practice_trainer":
+			assert_eq(str(spec.get("placed_by", "")), "",
+				"practice_trainer is trainer_npc.gd's OWN placed body; it must not name placed_by")
+
+
+## Oskar's reward is checked by name and not just by "some item exists": SC14
+## reads `south_bridge_key` specifically off his table entry, and a renamed
+## item id here would silently strand that task.
+func test_oskars_reward_names_the_south_bridge_key() -> void:
+	var ids: Array[String] = []
+	for item: Variant in TRAINERS.reward_items(TRAINERS.trainer("trainer_oskar")):
+		ids.append(str((item as Dictionary).get("id", "")))
+	assert_true(ids.has("south_bridge_key"),
+		"trainer_oskar's reward should include south_bridge_key; got %s" % str(ids))
+
+
+## D39: coins are an ordinary stacking item, so a trainer paying coin is just
+## another reward_items entry, id "coin" -- no separate top-level field, and no
+## payout code beyond what encounter_director.gd already runs for any item.
+func test_every_band_one_trainer_pays_coins_alongside_their_authored_item() -> void:
+	for id in ["trainer_mira", "trainer_oskar", "trainer_tam"]:
+		var ids: Array[String] = []
+		for item: Variant in TRAINERS.reward_items(TRAINERS.trainer(id)):
+			ids.append(str((item as Dictionary).get("id", "")))
+		assert_true(ids.has("coin"), "'%s' should pay coins as part of its reward; got %s" % [id, str(ids)])

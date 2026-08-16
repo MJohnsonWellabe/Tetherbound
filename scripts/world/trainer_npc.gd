@@ -20,6 +20,18 @@ extends Node3D
 ## `village_npcs.greeting_for()` is: `tests/test_trainers_data.gd` can check
 ## the real table without standing anybody on Terrain3D, and the encounter
 ## director can read a team without depending on a placed body existing.
+##
+## SC12/SC13. `build()` below is the PLACER half, and it does not place every
+## row of the table any more: an entry naming `placed_by` (Mira, Oskar and
+## Tam all name `"village_npcs"`) is a trainer whose body already exists
+## elsewhere — spec §3 Band 1 explicitly reuses the three existing village
+## NPCs rather than adding a fourth. Their challenge is offered through
+## `village_npcs.gd`'s own greeting flow instead of this file's prompt system,
+## and their fight is started by `sequence_director.gd`'s `battle:` dialogue
+## effect rather than by `_on_challenged`/`_on_conversation_finished` below —
+## but it is still THIS table those three read from, and still
+## `encounter_director.begin_trainer_battle()` that runs their fight, so
+## nothing about a trainer's data or its battle logic forked in two.
 
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
@@ -52,7 +64,7 @@ func build(player: Node3D) -> void:
 		push_warning("trainers.json lists nobody; there are no trainer battles in this world")
 		return
 	for spec: Variant in entries:
-		if spec is Dictionary:
+		if spec is Dictionary and str((spec as Dictionary).get("placed_by", "")).is_empty():
 			_spawn(spec as Dictionary)
 	_watch_the_dialogue_panel()
 	print("[trainers] placed %d trainer(s)" % _placed)

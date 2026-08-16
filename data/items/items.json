@@ -179,6 +179,15 @@
       "icon": "res://assets/ui/icons/items/castle_gate_key.png",
       "blurb": "Heavy and old. Something nearby is still locked.",
       "description": "Iron gone dark with age, too heavy for the small lock it probably once fit. Something nearby is still shut tight, and this is the only thing you own that might open it."
+    },
+    "south_bridge_key": {
+      "name": "South Bridge Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#8a8a86",
+      "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "blurb": "Oskar's own. Turns the old crossing south of the village.",
+      "description": "Plain iron, kept oiled and working rather than decorative -- a bridgehand's tool, not a keepsake. Oskar hands it over the moment he loses fair, square terms he was plain about from the start. It turns the mechanism at the old south bridge."
     }
   }
 }
