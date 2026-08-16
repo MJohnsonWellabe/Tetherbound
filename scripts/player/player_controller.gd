@@ -164,11 +164,78 @@ func _physics_process(delta: float) -> void:
 	_try_jump()
 
 	var falling_speed := -velocity.y
+	# Captured BEFORE move_and_slide: sliding against a wall zeroes the
+	# into-wall component of velocity, which is precisely the motion the
+	# step-up probe needs to test.
+	var planned_motion := Vector3(velocity.x, 0.0, velocity.z) * delta
 	move_and_slide()
+	_try_step_up(planned_motion)
 	_resolve_landing(falling_speed)
 
 	vitals.tick(delta, _sprinting and velocity.length() > 0.5)
 	vitals.tick_satiety(delta)
+
+
+## Step up small ledges instead of stopping dead against them.
+##
+## Godot 4's CharacterBody3D has no built-in step offset, and the gap has been
+## a documented constraint since the loft bug: "a CharacterBody3D cannot step
+## UP a ledge: run it across the stair head and the loft is a cell"
+## (grandpa_house.gd, which shortened a beam rather than fix this). The
+## owner's brief asked for the traversal audit that finally fixes it.
+##
+## Shape: only when grounded, moving, and pressed against a wall. Three probes
+## through the physics server's own sweep (`test_move`), never a teleport into
+## unchecked space: (1) headroom straight up by the step height, (2) forward at
+## the raised height by this frame's motion, (3) back down onto the step. The
+## landing must be walkable ground (normal within `floor_max_angle`), so a
+## steep bank does not become climbable by being approached in 0.35m slices.
+##
+## STEP_HEIGHT is deliberately small. Kerbs, stair treads, bridge lips and
+## rock shelves are in; every intentional barrier stays a barrier -- the
+## terrain carves are 11m walls, the arena ring is code, and a fence rail is
+## over a metre. TUNABLE, but raise it knowing every barrier in the game was
+## sized against players who cannot climb.
+const STEP_HEIGHT := 0.35
+## Minimum forward advance of the step probe. Far enough past the lip that the
+## landing contact is walkable (sin(0.25/0.4) = 38.7 degrees, inside the 45 the
+## body accepts), small enough that a step never reads as a lunge. TUNABLE.
+const STEP_FORWARD_PROBE := 0.25
+
+
+func _try_step_up(motion: Vector3) -> void:
+	if not is_on_wall() or not is_on_floor():
+		return
+	if motion.length() < 0.001:
+		return
+
+	# One frame of walk motion is ~7cm -- nowhere near enough to carry the
+	# capsule's 0.4m-radius bottom OVER a ledge lip, so a frame-sized probe
+	# lands on the edge at a wall-steep contact normal forever (measured: the
+	# first version fired every frame and never once stepped). The probe
+	# advances at least far enough that the landing contact sits inside the
+	# capsule's walkable cone. The whole path is swept at the raised height
+	# first, so this can never push the body through geometry.
+	var probe := motion.normalized() * maxf(motion.length(), STEP_FORWARD_PROBE)
+	var up := Vector3.UP * STEP_HEIGHT
+	if test_move(global_transform, up):
+		return
+	var raised := global_transform.translated(up)
+	if test_move(raised, probe):
+		return
+	var forward := raised.translated(probe)
+	var drop := PhysicsTestMotionResult3D.new()
+	var params := PhysicsTestMotionParameters3D.new()
+	params.from = forward
+	params.motion = Vector3.DOWN * STEP_HEIGHT
+	if not PhysicsServer3D.body_test_motion(get_rid(), params, drop):
+		return
+	if drop.get_collision_normal().angle_to(Vector3.UP) > floor_max_angle:
+		return
+	global_position = forward.origin + Vector3.DOWN * drop.get_travel().length()
+	# The step ate this frame's forward motion; killing the upward remnant of
+	# the slide keeps the camera from popping.
+	velocity.y = minf(velocity.y, 0.0)
 
 
 func _track_airborne(delta: float) -> void:
