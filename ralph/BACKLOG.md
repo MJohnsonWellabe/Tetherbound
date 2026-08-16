@@ -508,25 +508,44 @@ throughput collapses, and is `MAX_REBASES=3` or CI duration the binding
 constraint? If the ceiling is real, batching belongs *in* `ralph-merge.yml`
 where it can be tested, not in a coordinator's hands where it is a one-off.
 
-### LANE1 — a running lane has no channel to the coordinator
+### LANE1 — lanes and the coordinator could not talk, in either direction
 `model: sonnet` · `tests: none (process)` · `area: ops`
-On 2026-08-16 the coordinator learned mid-run that `verify-aggression` was
-rejecting healthy branches, and that two lanes were each about to duplicate work
-that already existed on `ralph/OW5-stream` and `ralph/SCAT1` — and **could not
-tell them.** Cross-session messaging was not reachable from the coordinating
-container, and the lanes had already been briefed at launch. The only levers
-left were interrupting a lane or starting a new one, both of which throw away
-the context that made the lane useful.
+**Built the same day it was filed — `ralph/NOTES.md` on `ralph-status`. This
+entry stays open for the half that is process rather than file.**
 
-The cheap fix is a file, not a protocol: a coordinator-written note at a known
-path that every lane brief instructs it to re-read before it pushes — known-red
-CI jobs, branches carrying prior art for its task, anything learned after launch.
-`ralph-status` is the natural home, since it is already a branch nothing merges
-and every lane already knows about it.
+Two failures, and the second is the worse one.
 
-The expensive failure this prevents is not duplicated effort. It is a lane
+**Downward.** The coordinator learned mid-run that `verify-aggression` was
+rejecting healthy branches, and that two live lanes were each about to duplicate
+work already sitting on `ralph/OW5-stream` and `ralph/SCAT1` — and could not tell
+them. The expensive outcome that prevents is not duplicated effort; it is a lane
 chasing a CI failure into its own diff, finding nothing, and weakening its own
 work until the red goes away.
+
+**Upward, and this was invisible until the owner asked.** The UI lane finished
+four owner-reported items and reported `flagged gamepad & test issues` — twelve
+words, and nothing else survived. That lane had spent four consecutive tasks
+inside this game's input handling and knew more about it than anyone alive, and
+all of that went into a closed container. Every lane before it did the same. The
+loop has been discarding its own best observations at the exact moment they were
+most informed, and calling it a completed task.
+
+**What exists now.** `ralph/NOTES.md` on `ralph-status` — a shared notepad that
+goes both ways, on a branch that merges into nothing and runs no CI, so writing
+to it is free and cannot conflict with anyone's work. Coordinator writes down
+what a lane could not know; lanes write up what they found that is worth knowing
+and does not belong in a diff, **especially the things they noticed and ruled
+out of scope.**
+
+**And the channel does exist after all**, which the first version of this entry
+got wrong: `create_trigger` with `persistent_session_id` delivers a prompt into a
+named live session as an ordinary turn, keeping its context. Interrupting or
+respawning a lane was never the only lever.
+
+**What is left here:** make it habit rather than instruction. Every lane brief
+must say read the notes before you push and write the notes before you finish,
+and `ralph/PROMPT.md` should carry it so it survives this coordinator. A file
+nobody is required to read is a file nobody reads.
 
 ---
 
