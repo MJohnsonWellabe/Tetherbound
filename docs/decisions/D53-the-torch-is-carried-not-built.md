@@ -1,4 +1,4 @@
-# D50 — The torch is a carried item, not a buildable
+# D53 — The torch is a carried item, not a buildable
 
 **Date:** 2026-08-16 · **Decided by:** this firing, implementing `OW12`
 against the owner's report: *"torches need to be a carry able item not

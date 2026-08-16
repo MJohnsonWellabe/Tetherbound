@@ -282,7 +282,7 @@ func test_the_follow_up_conversation_writes_the_orb_recipe_flag() -> void:
 ## fixture, not satchel inventory, so a `give:torch` would have named
 ## something items.json did not define and vanished. OW12 (2026-08-16) made
 ## the torch a real item (items.json's `torch`, `kind: "tool"`) and, in the
-## same shipping pass (docs/decisions/D50's own "gap that got closed"
+## same shipping pass (docs/decisions/D53's own "gap that got closed"
 ## section), wired `give:torch:1` onto this very line -- a torch that could
 ## never actually reach the satchel would have made the whole feature
 ## unreachable, since nothing else in the game hands one out and
