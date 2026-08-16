@@ -388,43 +388,27 @@ footer p{margin:.4rem 0}
     </div>
   </section>
 
-  <section class="wrap">
-    <h2>Seventeen, and you keep five</h2>
-    <p class="lede">
-      The whole Meadows roster. Ground, water and air — no fire, no electric,
-      not in this biome. Every one of them is modelled from the project's own
-      concept art, and a handful carry a rarer colourway you will only see if
-      you meet the right one.
-    </p>
-    <!-- The one real <img> on the page: this frame's detail matters more than
-         its crop, so it must scale rather than cover. Every other slot is a
-         layered CSS background that falls back on its own; this one cannot, so
-         it removes itself instead of showing a broken image. -->
-    <figure class="roster" id="roster">
-      <img src="img/roster.jpg" alt="The seventeen Meadows creatures, each shown in its ordinary colourway beside its rarer one" loading="lazy" decoding="async" width="1280" height="720"
-           onerror="document.getElementById('roster').hidden=true">
-      <figcaption>Every species in the chapter. The belt holds five of them.</figcaption>
-    </figure>
-  </section>
+  <!-- TWO SECTIONS ARE WRITTEN AND WAITING ON IMAGES — see OF18 in the backlog.
+       The markup is deliberately removed rather than left showing empty
+       gradient boxes: a section captioned "Rain" over a grey gradient is worse
+       than no section. Their CSS (.roster, .s-rain, .s-night) and their entries
+       in tools/site_images.py are already in place, so finishing them is:
 
-  <section class="wrap">
-    <h2>Weather, and the dark</h2>
-    <p class="lede">
-      The meadow is not one clear afternoon. Rain and fog roll through, some
-      creatures only come out at night, and after sunset you carry your own
-      light or you do not see the path.
-    </p>
-    <div class="shots">
-      <figure>
-        <div class="shot s-rain" role="img" aria-label="The meadow under rain, the far hills lost in grey"></div>
-        <figcaption><b>Rain</b>Weather is a condition of the world, not a filter over it — and some spawns wait for it.</figcaption>
-      </figure>
-      <figure>
-        <div class="shot s-night" role="img" aria-label="The meadow at night, lit by a carried torch"></div>
-        <figcaption><b>Night</b>You carry a torch. Beyond its reach the meadow is genuinely dark.</figcaption>
-      </figure>
-    </div>
-  </section>
+         1. godot --headless --path . --import          (ALWAYS first)
+         2. capture tools/capture_shiny_pairs.gd        -> the 17-species roster
+                    tools/capture_weather.gd            -> rain
+                    tools/capture_torch_night.gd        -> night with the torch
+         3. python3 tools/site_images.py
+         4. restore the two <section> blocks from this file's git history
+            (they are in the commit that added this comment)
+
+       "Seventeen, and you keep five" — the whole roster, ordinary and rare
+       colourways, tied to the five-creature pillar: this is what you choose
+       between.
+
+       "Weather, and the dark" — rain and a torch-lit night, because every
+       frame on this page is currently a clear afternoon.
+  -->
 
   <section class="wrap" id="patch-notes-section" hidden>
     <h2>Recent changes</h2>
