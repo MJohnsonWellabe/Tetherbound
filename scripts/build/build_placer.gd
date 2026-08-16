@@ -29,6 +29,8 @@ const STORAGE_CONTAINER := preload("res://scripts/build/storage_container.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
+const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
@@ -424,12 +426,43 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 		placed.name = "Piece_%s" % id
 		get_parent().add_child(placed)
 		placed.call("build_real", mesh_path, _piece_light(game, id))
+		# The workbench is a crafting STATION now, not scenery. Owner brief:
+		# "use the workbench to craft capture orbs, knives, axes, pickaxes" --
+		# it was placeable geometry with no interaction at all, which is most
+		# of why the owner reported building as not working: the loop's centre
+		# piece did nothing. Same Craft prompt the campfire carries (camp.gd's
+		# R2.4 pattern), opening the same panel, so "at the campfire or
+		# workbench" -- the claim craft_panel.gd has made in its own header
+		# since R2.4 -- is finally true rather than half true. Attached here
+		# rather than in a new stateful class because a prompt is the ONLY
+		# thing the workbench adds over plain geometry; this path also runs on
+		# `restore_from_game`, so a loaded bench keeps its prompt for free.
+		if id == "workbench":
+			var craft_prompt: Node3D = INTERACTABLE.new()
+			craft_prompt.name = "CraftInteractable"
+			craft_prompt.position = Vector3(0.0, 0.6, 0.9)
+			craft_prompt.call("configure", "Craft", 2.6, true)
+			craft_prompt.connect("activated", _open_craft_panel)
+			placed.add_child(craft_prompt)
 	placed.rotation.y = deg_to_rad(yaw_deg)
 	placed.set_meta(BUILDING_ID_META, id)
 	if index >= 0:
 		placed.set_meta(PLACED_INDEX_META, index)
 	placed.add_to_group(PLACED_GROUP)
 	return placed
+
+
+## The workbench's half of R2.4's "at the campfire or workbench". One panel
+## instance, lazily built, exactly as camp.gd::_on_craft() keeps its own --
+## two stations, one screen, zero copies of the recipe logic.
+var _craft_panel: CanvasLayer = null
+
+
+func _open_craft_panel() -> void:
+	if _craft_panel == null or not is_instance_valid(_craft_panel):
+		_craft_panel = CRAFT_PANEL.new()
+		get_tree().root.add_child(_craft_panel)
+	_craft_panel.call("open")
 
 
 func _place(game: Node, armed: String) -> void:

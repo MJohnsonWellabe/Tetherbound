@@ -187,6 +187,53 @@ func _check_the_first_day_arc(world: Node) -> void:
 		_fail("planting the camp left the build armed; every press would plant another")
 	print("camp planted, costs spent")
 
+	# The workbench: place one, and CRAFT AT IT. Owner brief: "use the
+	# workbench to craft capture orbs, knives, axes, pickaxes" -- it used to be
+	# plain geometry with no interaction, so this block is the loop's proof:
+	# fund it, plant it through the same ghost path the camp just used, then
+	# find its Craft prompt and craft a knife standing at the bench.
+	inventory.call("add", "wood", 12)
+	inventory.call("add", "stone", 8)
+	inventory.call("add", "fiber", 6)
+	_game.set("pending_build", "workbench")
+	for i in 30:
+		await physics_frame
+	Input.action_press("build_place")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_place")
+	for i in 20:
+		await physics_frame
+	var bench: Node3D = null
+	for child in world.get_children():
+		if str(child.name).begins_with("Piece_workbench"):
+			bench = child
+			break
+	if bench == null:
+		_fail("pressing build_place on a legal workbench ghost planted no workbench")
+		return
+	var bench_prompt := bench.get_node_or_null(^"CraftInteractable")
+	if bench_prompt == null:
+		_fail("the placed workbench has no Craft prompt; it is scenery again")
+		return
+	player.global_position = bench.global_position + Vector3(0.0, 0.5, 1.2)
+	for i in 30:
+		await physics_frame
+	var wood_before_craft := int(inventory.call("count", "wood"))
+	if not bool(_game.call("can_craft", "knife")):
+		_fail("standing at the bench with materials in hand, can_craft('knife') still refuses")
+		return
+	if not bool(_game.call("craft", "knife")):
+		_fail("craft('knife') failed with materials in hand")
+		return
+	if int(inventory.call("count", "knife")) < 1:
+		_fail("crafting a knife granted no knife")
+		return
+	if int(inventory.call("count", "wood")) >= wood_before_craft:
+		_fail("crafting a knife spent no wood")
+		return
+	print("workbench planted, Craft prompt present, knife crafted at the bench")
+
 	# Rest. The camp's own prompt, through the arbiter.
 	var day_before := int(_game.get("day"))
 	var vitals: RefCounted = player.get("vitals")

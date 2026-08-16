@@ -52,8 +52,12 @@ func after_each() -> void:
 		state.free()
 
 
-func test_the_two_base_recipes_are_defined() -> void:
-	for id in ["orb_basic", "potion_small"]:
+func test_the_base_recipes_are_defined() -> void:
+	# The three tool recipes joined the base tier per the owner's brief ("use
+	# the workbench to craft capture orbs, knives, axes, pickaxes") -- Tam's
+	# gifts stay the tutorial path; these make a broken tool an errand instead
+	# of a dead end.
+	for id in ["orb_basic", "potion_small", "axe", "pickaxe", "knife"]:
 		var recipe: Dictionary = db.recipe(id)
 		assert_false(recipe.is_empty(), "recipes.json is missing '%s'" % id)
 		assert_true(recipe.has("cost"), "'%s' names no cost" % id)
@@ -68,7 +72,7 @@ func test_the_two_base_recipes_are_defined() -> void:
 ## flagging it as a violation; named explicitly here rather than filtered out
 ## of `db.recipe_ids()` by convention, so the base tier staying baseline-only
 ## is still checked for exactly what it always was.
-const BASE_TIER_RECIPES := ["orb_basic", "potion_small"]
+const BASE_TIER_RECIPES := ["orb_basic", "potion_small", "axe", "pickaxe", "knife"]
 
 ## SF31, data/recipes/recipes_ironwood.json -- the second and last tier.
 const IRONWOOD_TIER_RECIPES := ["orb_prime", "ironwood_haft_axe", "ironwood_haft_pickaxe", "potion_large"]
