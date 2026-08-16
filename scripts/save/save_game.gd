@@ -66,6 +66,16 @@ extends RefCounted
 ## same way a save from before R4.2 was never entered into the individuality
 ## roll and comes back merely average rather than retroactively perfect.
 ##
+## ## VERSION 7 — the hotbar became assignable
+##
+## The hotbar used to be a view, not state: `playground_hud.gd` mirrored
+## satchel slots 0-4, so there was nothing to save. Owner directive after
+## playing made it a real assignable bar of item ids, which means it is now
+## state and has to survive a quit. `_migrate_v6` writes an empty bar and
+## `game_state.gd::autofill_hotbar()` refills it from what the player is
+## carrying — the closest honest reconstruction of what the old mirror showed,
+## minus the raw materials that used to occupy action slots and do nothing.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -102,7 +112,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 6
+const VERSION := 7
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -149,6 +159,7 @@ func save(game: Object, slot: int) -> bool:
 		"day": int(game.get("day")),
 		"party": _party_to_array(game.get("party")),
 		"inventory": _inventory_to_array(game.get("inventory")),
+		"hotbar": _hotbar_to_array(game),
 		"placed_buildings": (game.get("placed_buildings") as Array).duplicate(true),
 		"death_satchels": (game.get("death_satchels") as Array).duplicate(true),
 		"satiety": _read_satiety(game),
@@ -177,20 +188,25 @@ func load_slot(game: Object, slot: int) -> bool:
 		data = _migrate_v3(data)
 		data = _migrate_v4(data)
 		data = _migrate_v5(data)
+		data = _migrate_v6(data)
 	elif version == 2:
 		data = _migrate_v2(data)
 		data = _migrate_v3(data)
 		data = _migrate_v4(data)
 		data = _migrate_v5(data)
+		data = _migrate_v6(data)
 	elif version == 3:
 		data = _migrate_v3(data)
 		data = _migrate_v4(data)
 		data = _migrate_v5(data)
+		data = _migrate_v6(data)
 	elif version == 4:
 		data = _migrate_v4(data)
 		data = _migrate_v5(data)
+		data = _migrate_v6(data)
 	elif version == 5:
 		data = _migrate_v5(data)
+		data = _migrate_v6(data)
 	elif version != VERSION:
 		push_warning("save slot %d is version %d, this build reads %d -- not loading" % [
 			slot, version, VERSION
@@ -200,6 +216,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("day", int(data.get("day", 1)))
 	_array_to_party(data.get("party", []), game.get("party"))
 	_array_to_inventory(data.get("inventory", []), game.get("inventory"))
+	_array_to_hotbar(data.get("hotbar", []), game)
 	game.set("placed_buildings", (data.get("placed_buildings", []) as Array).duplicate(true))
 	game.set("death_satchels", (data.get("death_satchels", []) as Array).duplicate(true))
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
@@ -331,6 +348,21 @@ func _migrate_v5(data: Dictionary) -> Dictionary:
 			continue
 		(raw as Dictionary)["shiny"] = false
 	migrated["party"] = party
+	return migrated
+
+
+## VERSION 6 -> 7: the hotbar became its own assignable bar of item ids.
+##
+## Before this the HUD mirrored satchel slots 0-4, so a v6 save recorded no
+## hotbar at all -- the bar was whatever bag order happened to be. An empty
+## array is the honest migration: `game_state.gd::autofill_hotbar()` then
+## rebuilds it from what the player is actually carrying, in bag order, which
+## is the same thing the mirror used to show minus the wood and stone that
+## used to clog the action slots.
+func _migrate_v6(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 7
+	migrated["hotbar"] = []
 	return migrated
 
 
@@ -487,6 +519,42 @@ func _array_to_inventory(entries: Variant, inventory: Variant) -> void:
 	for i in count:
 		var stack: Variant = array[i] if i < array.size() else null
 		inventory_ref.call("set_slot", i, _stack_from_json(stack))
+
+
+## The five action slots, as item ids (see `game_state.gd::hotbar`).
+##
+## Rebuilt defensively rather than assigned wholesale: a slot naming an item
+## this build no longer defines is dropped, and a short or over-long array is
+## padded/truncated to the real slot count. Same "trust nothing you cannot look
+## up" rule `_array_to_party` already follows for species ids.
+##
+## Anything still empty afterwards is filled from what the player is actually
+## carrying. That covers both a migrated v6 save (which has no bar at all) and
+## a save whose bound item no longer exists, and it is why a loaded game never
+## comes back with a blank bar the player has to rebuild by hand.
+func _array_to_hotbar(entries: Variant, game: Object) -> void:
+	# Duck-typed like every other accessor in this file: a headless test double
+	# that never grew a hotbar simply has nothing to restore, and must not take
+	# the whole load down with it.
+	if game == null or typeof(game.get("hotbar")) != TYPE_ARRAY:
+		return
+	var slots: int = (game.get("hotbar") as Array).size()
+	var array: Array = entries as Array if typeof(entries) == TYPE_ARRAY else []
+	var can_hold := game.has_method("hotbar_can_hold")
+	var rebuilt: Array[String] = []
+	for i in slots:
+		var id := str(array[i]) if i < array.size() else ""
+		rebuilt.append(id if (not can_hold or bool(game.call("hotbar_can_hold", id))) else "")
+	game.set("hotbar", rebuilt)
+	if game.has_method("autofill_hotbar"):
+		game.call("autofill_hotbar")
+
+
+## The five bindings, or an empty list for an object that has no bar.
+func _hotbar_to_array(game: Object) -> Array:
+	if game == null or typeof(game.get("hotbar")) != TYPE_ARRAY:
+		return []
+	return (game.get("hotbar") as Array).duplicate()
 
 
 ## JSON has no integer type — every number round-trips as a float

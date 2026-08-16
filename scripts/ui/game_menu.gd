@@ -374,6 +374,15 @@ func suppress_reopen() -> void:
 	_reopen_guard = REOPEN_GUARD_FRAMES
 
 
+## The id of the tab currently showing ("backpack", "map", ...), or "" when no
+## tabs are configured. Lets a caller ask "am I already here?" without reaching
+## into `_index` and the tab table itself.
+func current_tab_id() -> String:
+	if _tabs.is_empty() or _index < 0 or _index >= _tabs.size():
+		return ""
+	return str((_tabs[_index] as Dictionary).get("id", ""))
+
+
 func select(index: int) -> void:
 	if _tabs.is_empty():
 		return
@@ -678,9 +687,17 @@ func _read_actions() -> void:
 
 	# The shortcut key doubles as a jump-to-tab while the menu is already open,
 	# so pressing I twice lands on the backpack rather than opening and closing.
+	#
+	# A shortcut aimed at the tab ALREADY showing is left alone rather than
+	# re-selected. Re-selecting was a no-op that still swallowed the press, and
+	# `inventory` shares gamepad Y with `backpack_assign` -- which only ever
+	# fires on the backpack tab, exactly where `inventory` has nothing left to
+	# do. Returning here would have eaten every assign press on a controller.
 	for action in _shortcuts().keys():
 		if Input.is_action_just_pressed(str(action)):
 			var wanted := str(_shortcuts()[action])
+			if wanted == current_tab_id():
+				continue
 			for i in _tabs.size():
 				if str((_tabs[i] as Dictionary).get("id", "")) == wanted:
 					AUDIO_CUES.play(&"ui_tab")

@@ -3,7 +3,7 @@
   "_comment_scope": "MEADOWS_VERTICAL_SLICE.md M8 asks for a minimal starting set. Orbs and the small potion joined it when the opening gained Grandpa's parting gifts and orbs stopped being a placeholder counter in throw_aim.gd — they are real inventory now, spent from the satchel by every throw. Tools and cooked food are still M8/M9 and deliberately absent rather than stubbed.",
   "_comment_heal": "`heal` is what one use restores on a creature, in HP. Present only on consumables that heal; tunable.",
   "_comment_revive": "D40 (OF32, owner: 'Grandpa should give you revives at the beginning too'). `revive` is the fraction of max HP a Revive restores when used on a FAINTED creature (0.5 == half, tunable) -- creature_instance.gd's revive() reads it, not heal(). As of D40, `heal` items (potions) refuse a fainted creature outright instead of un-fainting it; `revive` items are the only thing that clears `fainted` outside of rest (home_recovery.gd/creature beds, which still heal_fully() -- that is rest, not a potion, and stays untouched).",
-  "_comment_stack": "`stack` is the slot cap. GAME_DESIGN.md 19: slot + stack, NO weight limit \u2014 there is no `weight` key here and there must never be one.",
+  "_comment_stack": "`stack` is the slot cap. GAME_DESIGN.md 19: slot + stack, NO weight limit — there is no `weight` key here and there must never be one.",
   "_comment_fiber": "Spelled `fiber`, matching MEADOWS_VERTICAL_SLICE.md section M8 AND the harvest data the gathering work will port from the pre-Godot prototype (git show c45dee5^:src/data/harvest.json), which drops wood, stone, fiber, berries and flint under exactly these ids. The id is what harvesting keys off, so it had to match one of them; it now matches both.",
   "_comment_colour": "`colour` is the slot tile's tint. Placeholder standing in for an icon, and sampled so four resources are told apart at a glance on a 7-inch screen rather than by reading four short words.",
   "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (R7.6) are what will read them.",
@@ -60,7 +60,12 @@
       "stack": 30,
       "colour": "#a33a55",
       "satiety": 18,
-      "buff": { "id": "berry_verve", "stat": "stamina_regen_scale", "amount": 1.15, "duration_s": 120 },
+      "buff": {
+        "id": "berry_verve",
+        "stat": "stamina_regen_scale",
+        "amount": 1.15,
+        "duration_s": 120
+      },
       "icon": "res://assets/ui/icons/items/berries.png",
       "blurb": "A handful off a bush. Food buffs, never starvation.",
       "description": "A cupped handful picked straight off a meadow bush, still warm from the sun. A quick bite tops up satiety and leaves a little spring in your step for a couple of minutes after."
@@ -130,7 +135,18 @@
       "colour": "#5c6b73",
       "icon": "res://assets/ui/icons/items/axe.png",
       "blurb": "Bites into oak cleanly. Bare hands barely dent it.",
-      "description": "A proper woodcutter's edge. It takes a full swing off an oak in the time bare hands would still be scraping bark, and it wears down a little with every tree."
+      "description": "A proper woodcutter's edge. It takes a full swing off an oak in the time bare hands would still be scraping bark, and it wears down a little with every tree.",
+      "held_model": "res://assets/props/quaternius_fantasy/Axe_Bronze.gltf",
+      "held_offset": [
+        0.02,
+        0.0,
+        0.0
+      ],
+      "held_rotation_deg": [
+        0,
+        0,
+        -15
+      ]
     },
     "pickaxe": {
       "name": "Pickaxe",
@@ -140,7 +156,18 @@
       "colour": "#4a4a4a",
       "icon": "res://assets/ui/icons/items/pickaxe.png",
       "blurb": "Cracks stone loose whole. Bare hands just bruise.",
-      "description": "Heavy-headed and built for outcrops. It cracks a full block of stone loose in one go where bare hands would only bruise a knuckle against it."
+      "description": "Heavy-headed and built for outcrops. It cracks a full block of stone loose in one go where bare hands would only bruise a knuckle against it.",
+      "held_model": "res://assets/props/quaternius_fantasy/Pickaxe_Bronze.gltf",
+      "held_offset": [
+        0.02,
+        0.0,
+        0.0
+      ],
+      "held_rotation_deg": [
+        0,
+        0,
+        -15
+      ]
     },
     "hammer": {
       "name": "Hammer",
@@ -150,7 +177,18 @@
       "colour": "#c47a3d",
       "icon": "res://assets/ui/icons/items/hammer.png",
       "blurb": "For the workbench, not the woods. Free repairs start here.",
-      "description": "A workbench tool, not a woodcutting one. Bring a worn-out tool to the bench with this in hand and the repair costs nothing but time."
+      "description": "A workbench tool, not a woodcutting one. Bring a worn-out tool to the bench with this in hand and the repair costs nothing but time.",
+      "held_model": "res://assets/props/quaternius_survival/Axe.obj",
+      "held_offset": [
+        0.02,
+        0.0,
+        0.0
+      ],
+      "held_rotation_deg": [
+        0,
+        0,
+        -15
+      ]
     },
     "knife": {
       "name": "Knife",
@@ -160,7 +198,18 @@
       "colour": "#b0b8bf",
       "icon": "res://assets/ui/icons/items/knife.png",
       "blurb": "Strips fiber in one clean pull.",
-      "description": "Short, sharp, and built for stripping — one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly."
+      "description": "Short, sharp, and built for stripping — one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly.",
+      "held_model": "res://assets/props/quaternius_survival/Knife.obj",
+      "held_offset": [
+        0.02,
+        0.0,
+        0.0
+      ],
+      "held_rotation_deg": [
+        0,
+        0,
+        -10
+      ]
     },
     "fishing_rod": {
       "name": "Fishing Rod",
@@ -170,7 +219,8 @@
       "colour": "#3d6b52",
       "icon": "res://assets/ui/icons/items/fishing_rod.png",
       "blurb": "For water that doesn't exist yet.",
-      "description": "A proper rod and line, ready the moment there's water worth casting into. For now it just rides in the satchel, waiting."
+      "description": "A proper rod and line, ready the moment there's water worth casting into. For now it just rides in the satchel, waiting.",
+      "held_model": ""
     },
     "tm_stone_rush": {
       "name": "TM: Stone Rush",
@@ -241,5 +291,6 @@
       "blurb": "Warm to hold, and beating slowly.",
       "description": "A dark red stone the size of a fist, warm in a way stone should not be, with a slow pulse somewhere under the surface. A creature held close to one has been known to finish becoming whatever it was already turning into."
     }
-  }
+  },
+  "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop)."
 }

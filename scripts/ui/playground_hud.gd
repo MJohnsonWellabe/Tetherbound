@@ -1090,7 +1090,17 @@ func _update_hotbar_and_message() -> void:
 		_hotbar_message.visible = false
 
 
-## HD2. The hotbar mirrors satchel slots 0-4 directly.
+## The hotbar draws `Game.hotbar` — five item ids the player assigned, NOT
+## satchel slots 0-4.
+##
+## It used to mirror the satchel directly, which is why the owner found wood
+## and stone occupying action slots that answered "is not something you can
+## use here", and why the 2026-08-15 blind playtest (PT-11) watched a potion
+## silently leave slot 2 when the backpack was rearranged. A slot now names an
+## item and looks up whatever stack currently holds it, so sorting the bag,
+## splitting a stack, or spending the last one and picking another up all
+## leave the binding alone. A bound item the satchel has none of draws greyed
+## with a zero rather than disappearing — the habit survives running out.
 ##
 ## Blind visual review: the old chip drew glyph + "Name xN" text at 13px,
 ## illegible at handheld distance. The backpack already owns telling the
@@ -1103,22 +1113,42 @@ func _update_hotbar(inventory: RefCounted) -> void:
 	var db: RefCounted = _game.get("items")
 	if db == null:
 		return
+	var assignments: Array = _game.get("hotbar") as Array
+	# A completely empty bar fills itself from what the player is carrying.
+	# That covers a brand new game -- Grandpa hands over orbs, potions, berries
+	# and revives in one conversation, and a bar that stayed blank until the
+	# player found the assign verb would read as broken. The condition is
+	# deliberately "ALL five empty", not "any empty": once a single slot is
+	# bound the bar is the player's, and nothing rearranges it behind them.
+	# That is the whole complaint PT-11 recorded against the old mirror.
+	if not assignments.is_empty() and assignments.count("") == assignments.size():
+		_game.call("autofill_hotbar")
+		assignments = _game.get("hotbar") as Array
 	for i in HOTBAR_SLOTS:
-		var stack: Dictionary = inventory.call("stack_at", i)
+		var id := str(assignments[i]) if i < assignments.size() else ""
+		# The satchel slot currently holding this item, or -1 for "assigned but
+		# carrying none". Everything below reads from the LIVE slot, so a stack
+		# that moved in the bag keeps drawing its real count here.
+		var slot := int(inventory.call("find_slot", id)) if not id.is_empty() else -1
+		var stack: Dictionary = inventory.call("stack_at", slot) if slot >= 0 else {}
 		var glyph := INPUT_GLYPH.icon(HOTBAR_ACTIONS[i], 28)
 		var text: String
-		if stack.is_empty():
+		if id.is_empty():
 			text = "%s\n[color=#666a63]-[/color]" % glyph
 		else:
-			var id := str(stack.get("id", ""))
 			var icon_path := str(db.call("definition", id).get("icon", ""))
 			var colour: Color = db.call("colour", id)
-			var tool_max: int = int(inventory.call("max_durability_at", i))
+			var tool_max: int = int(inventory.call("max_durability_at", slot)) if slot >= 0 else 0
 			var count_text: String
 			if tool_max > 0:
-				count_text = "%d/%d" % [int(inventory.call("durability_at", i)), tool_max]
+				count_text = "%d/%d" % [int(inventory.call("durability_at", slot)), tool_max]
 			else:
 				count_text = "x%d" % int(stack.get("n", 0))
+			# Out of stock, still bound: greyed, so the slot reads as "yours,
+			# empty" rather than vanishing and shuffling the bar under the
+			# player's thumb.
+			if stack.is_empty():
+				colour = Color(0.4, 0.42, 0.39)
 			var icon_bbcode := "[img=28x28]%s[/img]" % icon_path if not icon_path.is_empty() else ""
 			text = "%s\n%s [font_size=16][color=#%s]%s[/color][/font_size]" % [
 				glyph, icon_bbcode, colour.to_html(false), count_text
@@ -1175,26 +1205,50 @@ func _combat_is_aiming() -> bool:
 	return combat != null and combat.has_method("is_aiming") and bool(combat.call("is_aiming"))
 
 
-func _use_hotbar_slot(index: int) -> void:
+func _use_hotbar_slot(slot_index: int) -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	var db: RefCounted = _game.get("items")
 	if inventory == null or db == null:
 		return
+
+	# `slot_index` is a position on the BAR; the id it names is the thing being
+	# used, and its satchel slot is looked up fresh every press.
+	var assignments: Array = _game.get("hotbar") as Array
+	var id := str(assignments[slot_index]) if slot_index < assignments.size() else ""
+	if id.is_empty():
+		_show_hotbar_message("Nothing on that slot yet — assign one from the backpack.")
+		return
+	var index := int(inventory.call("find_slot", id))
+	if index < 0:
+		_show_hotbar_message("Out of %s." % str(db.call("item_name", id)))
+		return
 	var stack: Dictionary = inventory.call("stack_at", index)
 	if stack.is_empty():
 		return
-	var id := str(stack.get("id", ""))
 
+	# Owner directive: "press slot, tool in hand". A tool slot EQUIPS now --
+	# pressing it again puts the tool away, so one button is both draw and
+	# stow. Repair moved to the backpack's own Use verb (`tab_backpack.gd`),
+	# which is where it always belonged: free repair was the only thing a tool
+	# press did before this, and it is why the owner could carry an axe for a
+	# whole session without ever seeing one.
 	if str(db.call("kind", id)) == "tool":
-		var maximum := int(inventory.call("max_durability_at", index))
-		if maximum > 0:
-			var current := int(inventory.call("durability_at", index))
-			if current >= maximum:
-				_show_hotbar_message("%s is already in good repair." % str(db.call("item_name", id)))
-			else:
-				inventory.call("repair_tool", index)
-				_show_hotbar_message("%s repaired, free." % str(db.call("item_name", id)))
+		var item_name := str(db.call("item_name", id))
+		if str(_game.get("equipped_tool")) == id:
+			_game.set("equipped_tool", "")
+			_show_hotbar_message("Put the %s away." % item_name.to_lower())
 			return
+		# A tool worn down to nothing still equips -- it just gathers like bare
+		# hands until repaired, which `harvest_logic.gd` already decides. Saying
+		# so here beats letting the player wonder why the swing yields less.
+		var maximum := int(inventory.call("max_durability_at", index))
+		var current := int(inventory.call("durability_at", index))
+		_game.set("equipped_tool", id)
+		if maximum > 0 and current <= 0:
+			_show_hotbar_message("%s in hand — but it's blunt. Repair it at the bench." % item_name)
+		else:
+			_show_hotbar_message("%s in hand." % item_name)
+		return
 
 	# D40 (OF32): `heal` (potions) and `revive` (Revives) are mutually
 	# exclusive fields on an item's definition -- a potion tops up the
@@ -1202,6 +1256,24 @@ func _use_hotbar_slot(index: int) -> void:
 	var definition := db.call("definition", id) as Dictionary
 	var heal := float(definition.get("heal", 0.0))
 	var revive_fraction := float(definition.get("revive", 0.0))
+
+	# Food. The backpack could always eat berries (`tab_backpack.gd`'s Use verb
+	# reads `satiety` the same way) and the hotbar could not -- pressing them
+	# here answered "Berries is not something you can use here", which is the
+	# kind of inconsistency that teaches a player the bar is unreliable. Same
+	# call, same buff dictionary, so one food item cannot behave two ways
+	# depending on which screen reached it.
+	var satiety := float(definition.get("satiety", 0.0))
+	if satiety > 0.0:
+		var vitals := _game.call("player_vitals") as RefCounted
+		if vitals == null:
+			_show_hotbar_message("Nothing to eat that here.")
+			return
+		vitals.call("eat", satiety, definition.get("buff", {}))
+		inventory.call("remove", id, 1)
+		_show_hotbar_message("Ate %s." % str(db.call("item_name", id)))
+		return
+
 	if heal <= 0.0 and revive_fraction <= 0.0:
 		_show_hotbar_message("%s is not something you can use here." % str(db.call("item_name", id)))
 		return
@@ -1278,6 +1350,13 @@ func _read_world_hotkeys() -> void:
 		return
 	if Input.is_action_just_pressed(&"torch_place"):
 		_arm_torch_placement()
+		return
+	# Swing whatever is in hand. Read here rather than in the player controller
+	# so it inherits this function's gating for free: silent during a fight,
+	# during a conversation, and while a build ghost is armed -- the three
+	# states where the trainer does not have free run of the world.
+	if Input.is_action_just_pressed(&"use_tool"):
+		_swing_equipped_tool()
 
 
 ## Combat and the interaction arbiter's modal flag both stand in for "the
@@ -1308,6 +1387,26 @@ func _build_menu_is_open() -> bool:
 ## to SAY so, not just do nothing), even though the torch's own `cost: []`
 ## means this refusal path is dead today; free build or a future costed
 ## torch both still go through the same one check.
+## Swing the equipped tool at whatever is in front of the trainer.
+##
+## The refusal is deliberately spoken rather than silent. The 2026-08-15 blind
+## playtest (PT-08) recorded the opposite pattern for the combat buttons --
+## "silently inert outside an encounter... nothing teaches the player that
+## these buttons need an encounter, so they read as broken" -- and an empty
+## hand pressing swing is exactly that shape of mistake.
+func _swing_equipped_tool() -> void:
+	if _game == null:
+		return
+	var player := _game.call("find_player") as Node3D
+	var hold: Node3D = player.get("tool_hold") if player != null else null
+	if hold == null:
+		return
+	if str(_game.get("equipped_tool")).is_empty():
+		_show_hotbar_message("Nothing in hand — press a tool on the bar first.")
+		return
+	hold.call("swing")
+
+
 func _arm_torch_placement() -> void:
 	if _game == null:
 		return

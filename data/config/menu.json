@@ -9,8 +9,10 @@
   "close_action": "menu_cancel",
   "cycle_action": "tool_cycle",
   "reverse_cycle_action": "menu_tab_right",
+  "_comment_shortcuts": "Action id -> tab id. `game_menu.gd` reads this generically in both directions: pressed with the menu closed it opens onto that tab, pressed with the menu already open it switches to it. `map` (M / gamepad Back) was defined in project.godot and listed as rebindable in the \"The world\" group below since the map shipped, and NOTHING read it -- the owner's brief asked for `M` to open the map and for the handheld to have a dedicated button, and both bindings already existed. The full map was reachable only by opening the pause menu and cycling tabs across to it. One line here, because the reader was already general.",
   "shortcuts": {
-    "inventory": "backpack"
+    "inventory": "backpack",
+    "map": "map"
   },
 
   "tabs": [
@@ -89,7 +91,8 @@
         },
         {
           "name": "The world",
-          "actions": ["interact", "inventory", "map", "tool_cycle", "menu_tab_right", "creature_recall", "torch_toggle", "build_open", "torch_place"]
+          "note": "`use_tool` is LMB and gamepad LT. LT is genuinely free during ordinary exploration -- its other two readers, `combat_charged` and `build_rotate_left`, are each locked to a context this one never overlaps (a running fight, an armed build ghost). The right trigger was the obvious choice and is already `torch_place`, which OF24 put there deliberately; taking it would have made one press both swing an axe and plant a torch, the exact collision class the build fixes removed.",
+          "actions": ["interact", "use_tool", "inventory", "map", "tool_cycle", "menu_tab_right", "creature_recall", "torch_toggle", "build_open", "torch_place"]
         },
         {
           "name": "Building",
@@ -120,7 +123,7 @@
         {
           "name": "Backpack",
           "note": "backpack_drop sits on gamepad Start rather than RB -- RB is menu_tab_right now (owner playtest report: 'LB = tab left, RB = tab right'), and the pause menu (where Drop lives) is exactly where that action reads. The right stick click does nothing in a fight, so backpack_split's RB-adjacent button never means two things at once either. OF21 moved `torch_toggle` off Start (it used to collide with backpack_drop here) and, separately, put the new `build_open` (The world group) on Start too -- safe for the same reason: build_open is only read from ordinary exploration, a state backpack_drop's own `menu.is_open()` gate never overlaps with.",
-          "actions": ["backpack_drop", "backpack_split"]
+          "actions": ["backpack_drop", "backpack_split", "backpack_assign"]
         }
       ],
 
@@ -142,6 +145,7 @@
         "menu_tab_right": "Next tab",
         "creature_recall": "Call out  /  put away your creature",
         "torch_toggle": "Toggle your torch (it also lights itself after dark)",
+        "use_tool": "Swing the equipped tool",
         "build_open": "Open the build menu",
         "torch_place": "Place a free ground torch",
         "build_rotate": "Rotate the build ghost",
@@ -160,6 +164,7 @@
         "menu_cancel": "Back  /  close the menu",
         "backpack_drop": "Backpack: drop the focused item",
         "backpack_split": "Backpack: split the focused stack",
+        "backpack_assign": "Backpack: put the focused item on an action slot",
         "build_place": "Build: place the piece",
         "build_cancel": "Build: put the piece away",
         "build_rotate_left": "Build: rotate left",

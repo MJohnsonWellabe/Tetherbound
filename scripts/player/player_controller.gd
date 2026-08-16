@@ -15,6 +15,7 @@ const CONFIG_PATH := "res://data/config/movement.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const VITALS := preload("res://scripts/player/player_vitals.gd")
 const TORCH := preload("res://scripts/player/torch.gd")
+const TOOL_HOLD := preload("res://scripts/player/tool_hold.gd")
 
 signal landed(impact_speed: float, damage: float)
 signal died()
@@ -25,6 +26,11 @@ var vitals: RefCounted = VITALS.new()
 ## `vitals` is, so the HUD can read `torch.is_on()` without reaching past
 ## this node.
 var torch: Node3D = null
+
+## The tool in the trainer's hand, and the swing that harvests with it. Held
+## here for the same reason `torch` and `vitals` are: the HUD and the harvest
+## nodes ask the player for it rather than hunting the tree for it.
+var tool_hold: Node3D = null
 
 @export var camera_rig_path: NodePath
 var _camera_rig: Node3D = null
@@ -69,6 +75,10 @@ func _ready() -> void:
 	torch = TORCH.new()
 	torch.name = "Torch"
 	add_child(torch)
+
+	tool_hold = TOOL_HOLD.new()
+	tool_hold.name = "ToolHold"
+	add_child(tool_hold)
 
 
 func _load_config() -> void:

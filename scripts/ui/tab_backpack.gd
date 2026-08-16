@@ -62,6 +62,11 @@ const DROP_ACTION := "backpack_drop"
 ## same press with no picker or confirm.
 const SPLIT_ACTION := "backpack_split"
 
+## Put the focused item on an action slot (or take it off). Keyboard G, gamepad
+## Y -- Y is `inventory`'s button, which on this tab has nothing left to do
+## (`game_menu.gd` now skips a shortcut aimed at the tab already showing).
+const ASSIGN_ACTION := "backpack_assign"
+
 var _grid: GridContainer = null
 var _summary: Label = null
 var _detail_name: Label = null
@@ -81,6 +86,9 @@ var _buttons: Array = []
 ## travel with it if a future pass ever reflows the grid.
 var _qty_labels: Array = []
 var _durability_bars: Array = []
+## One badge per slot button, index-matched with `_buttons`. Shows the input
+## glyph of the action slot the item in that tile is bound to, or nothing.
+var _hotbar_badges: Array = []
 
 ## Loaded icon textures, keyed by item id, so 24 slots redrawing every poll()
 ## does not mean 24 `load()` calls every frame. `load()` on a res:// path
@@ -145,6 +153,7 @@ func build() -> void:
 	_buttons.clear()
 	_qty_labels.clear()
 	_durability_bars.clear()
+	_hotbar_badges.clear()
 	_target_rows.clear()
 	_confirm_rows.clear()
 	_held = -1
@@ -231,19 +240,24 @@ func build() -> void:
 		_grid.add_child(button)
 		_buttons.append(button)
 
-		if i < HOTBAR_BADGE_ACTIONS.size():
-			var badge := RichTextLabel.new()
-			badge.bbcode_enabled = true
-			badge.fit_content = true
-			badge.scroll_active = false
-			badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-			badge.offset_left = 2
-			badge.offset_top = 2
-			badge.offset_right = 24
-			badge.offset_bottom = 24
-			badge.text = INPUT_GLYPH.icon(HOTBAR_BADGE_ACTIONS[i], 18)
-			button.add_child(badge)
+		# A badge on EVERY tile, blank until the item sitting there is bound to
+		# an action slot. It used to be created only on tiles 0-4 and never
+		# updated, because the hotbar WAS satchel slots 0-4 -- a badge on a
+		# position. The bar is assignable now, so the badge belongs to the
+		# ITEM and has to travel with it; `poll()` writes the text.
+		var badge := RichTextLabel.new()
+		badge.bbcode_enabled = true
+		badge.fit_content = true
+		badge.scroll_active = false
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+		badge.offset_left = 2
+		badge.offset_top = 2
+		badge.offset_right = 24
+		badge.offset_bottom = 24
+		badge.text = ""
+		button.add_child(badge)
+		_hotbar_badges.append(badge)
 
 		var qty := Label.new()
 		qty.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
@@ -441,6 +455,7 @@ func poll() -> void:
 	_read_use()
 	_read_drop()
 	_read_split()
+	_read_assign()
 	_read_targeting_cancel()
 	_read_confirm_cancel()
 	if _targeting >= 0:
@@ -463,18 +478,29 @@ func poll() -> void:
 		_describe(_focused)
 
 	var db: RefCounted = _items()
+	var game := state()
 	for i in _buttons.size():
 		var button: Button = _buttons[i]
 		var qty: Label = _qty_labels[i]
 		var bar: ColorRect = _durability_bars[i]
+		var badge: RichTextLabel = _hotbar_badges[i] if i < _hotbar_badges.size() else null
 		var stack: Dictionary = inventory.call("stack_at", i)
 		if stack.is_empty():
 			button.icon = null
 			qty.visible = false
 			bar.visible = false
+			if badge != null:
+				badge.text = ""
 		else:
 			var id := str(stack.get("id", ""))
 			button.icon = _icon_for(db, id)
+			# The action slot this ITEM is bound to, if any -- so the glyph sits
+			# on the stack wherever the player has moved it, which is the whole
+			# difference between an assignable bar and the old position mirror.
+			if badge != null:
+				var bound := int(game.call("hotbar_slot_of", id)) if game != null else -1
+				badge.text = INPUT_GLYPH.icon(HOTBAR_BADGE_ACTIONS[bound], 18) \
+						if bound >= 0 and bound < HOTBAR_BADGE_ACTIONS.size() else ""
 			var tool_max: int = int(inventory.call("max_durability_at", i))
 			if tool_max > 0:
 				# R2.2: a tool's count is always 1 (owned, not consumed) --
@@ -768,6 +794,56 @@ func _end_confirm() -> void:
 ## Halve the focused stack into the first empty slot. Non-destructive (both
 ## halves stay in the satchel) and needs no destination choice the way Drop's
 ## confirm or Use's target does, so it applies on the same press.
+## Bind the focused item to an action slot, or unbind it.
+##
+## Owner directive: the hotbar is "a separate assignable bar", and raw
+## materials must never fill action slots. `game_state.gd::hotbar` holds the
+## five bindings; this is the only place a player edits them.
+##
+## Pressing the verb cycles the focused item forward through the slots and then
+## off the bar entirely: unbound -> 1 -> 2 -> 3 -> 4 -> 5 -> unbound. A cycle
+## rather than a slot picker because it is one button on a handheld, it needs
+## no new panel, and the answer is visible immediately in the badges on the
+## grid and on the field HUD's own bar. `assign_hotbar` moves an already-bound
+## item rather than duplicating it, so cycling can never leave the same stack
+## on two slots.
+func _read_assign() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _targeting >= 0 or _confirming >= 0 or _held >= 0:
+		return
+	if not Input.is_action_just_pressed(ASSIGN_ACTION):
+		return
+
+	var game := state()
+	var inventory: RefCounted = _inventory()
+	var db: RefCounted = _items()
+	if game == null or inventory == null or db == null:
+		return
+	var stack: Dictionary = inventory.call("stack_at", _focused)
+	if stack.is_empty():
+		say("Nothing there to put on the bar.")
+		return
+
+	var id := str(stack.get("id", ""))
+	var item_name := str(db.call("item_name", id))
+	if not bool(game.call("hotbar_can_hold", id)):
+		# The material rule, said out loud. A silent refusal here reads as the
+		# button being broken, which is how the old mirror felt when wood
+		# occupied a slot and answered "not something you can use here".
+		say("%s is a raw material — the bar is for things you use." % item_name)
+		return
+
+	var slots: int = (game.get("hotbar") as Array).size()
+	var next := int(game.call("hotbar_slot_of", id)) + 1
+	if next >= slots:
+		game.call("assign_hotbar", int(game.call("hotbar_slot_of", id)), "")
+		say("%s taken off the bar." % item_name)
+	else:
+		game.call("assign_hotbar", next, id)
+		say("%s on slot %d." % [item_name, next + 1])
+
+
 func _read_split() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return

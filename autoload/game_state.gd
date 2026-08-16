@@ -109,6 +109,46 @@ var pending_catch: RefCounted = null
 ## to facing 0.
 var placed_buildings: Array = []
 
+## The five action slots, as item ids — NOT satchel indices.
+##
+## Owner directive, after playing: the hotbar is "a separate assignable bar",
+## and raw materials must never fill action slots. Before this it was neither:
+## `playground_hud.gd` mirrored satchel slots 0-4 directly, so whatever the
+## satchel happened to put first WAS the hotbar. Wood and stone sat in action
+## slots answering "is not something you can use here", and rearranging the
+## backpack silently rebound the bar under the player (the 2026-08-15 blind
+## playtest's PT-11: a potion vanished from slot 2 with no indication).
+##
+## Ids rather than indices is the whole point. An index is a position in the
+## satchel and moving a stack changes it; an id survives sorting, splitting,
+## spending the last one and picking another up. A slot naming an item the
+## satchel does not currently hold stays assigned and simply reads as empty —
+## that is what makes "I keep potions on 2" a stable habit rather than a
+## coincidence of bag order.
+##
+## `HOTBAR_KINDS_REFUSED` is the material rule, applied at assignment time.
+var hotbar: Array[String] = ["", "", "", "", ""]
+
+## Item kinds that may never occupy an action slot. `resource` is wood/stone/
+## fiber and `currency` is coins: things you spend from the satchel or that a
+## shop reads, never things you press a button to use.
+const HOTBAR_KINDS_REFUSED := ["resource", "currency"]
+const HOTBAR_SLOTS := 5
+
+## The tool the trainer is holding, as an item id, or "" for empty-handed.
+##
+## Owner directive: "press slot, tool in hand" — the tool is visibly carried and
+## stays there until you switch away, and swinging it is what harvests. Before
+## this there was no equip concept at all: pressing a tool on the hotbar only
+## repaired it, which is why the owner reported the tools existing but being
+## impossible to pull out and use.
+##
+## Deliberately NOT saved. Which tool is in your hand is a moment-to-moment
+## posture, not progression — the satchel that actually holds the tools is what
+## persists, and loading a game with empty hands is both harmless and the
+## expected reading of "you just arrived".
+var equipped_tool: String = ""
+
 ## R3.2. Every death satchel the player has left in the world, as data —
 ## `{position: [x,y,z], state: [...]}` — the same "registry, not the scene
 ## node, is what a save persists" split `placed_buildings` draws above.
@@ -410,6 +450,78 @@ func register_death_satchel(position: Vector3) -> int:
 		"state": [],
 	})
 	return death_satchels.size() - 1
+
+
+## --- the hotbar ------------------------------------------------------------
+##
+## See `hotbar`'s own comment for why these are item ids and not satchel
+## indices. Everything here is pure bookkeeping over that array; the HUD owns
+## drawing it and resolving an id to a live stack.
+
+## Whether `item_id` is allowed in an action slot at all. Unknown ids are
+## refused rather than allowed: a slot naming something `items.json` has never
+## heard of can only ever draw blank and refuse on press.
+func hotbar_can_hold(item_id: String) -> bool:
+	if item_id.is_empty():
+		return false
+	var definition := items.call("definition", item_id) as Dictionary
+	if definition.is_empty():
+		return false
+	return not HOTBAR_KINDS_REFUSED.has(str(items.call("kind", item_id)))
+
+
+## Put `item_id` on `slot`. Passing "" clears the slot. Returns false (and
+## changes nothing) for an out-of-range slot or a refused kind, so a caller can
+## tell the player exactly why rather than silently doing nothing.
+##
+## Assigning an item that already sits on another slot MOVES it rather than
+## duplicating it: two slots holding the same id would both draw the same count
+## and both spend from the same stack, which reads as a bug the first time a
+## player presses the one they think is a spare.
+func assign_hotbar(slot: int, item_id: String) -> bool:
+	if slot < 0 or slot >= HOTBAR_SLOTS:
+		return false
+	if item_id.is_empty():
+		hotbar[slot] = ""
+		return true
+	if not hotbar_can_hold(item_id):
+		return false
+	for i in HOTBAR_SLOTS:
+		if hotbar[i] == item_id:
+			hotbar[i] = ""
+	hotbar[slot] = item_id
+	return true
+
+
+## The slot `item_id` occupies, or -1. Lets the backpack mark which of its
+## tiles are already bound without duplicating the search.
+func hotbar_slot_of(item_id: String) -> int:
+	if item_id.is_empty():
+		return -1
+	return hotbar.find(item_id)
+
+
+## Fill any empty slots from what the satchel is actually carrying, in bag
+## order, skipping refused kinds and anything already bound.
+##
+## Two callers, one reason: a brand new game (so the pack Grandpa hands over
+## lands on the bar instead of leaving it blank), and a save written before the
+## bar existed (`save_game.gd::_migrate_v6`) — where the honest reconstruction
+## of "the hotbar mirrored satchel slots 0-4" is "the first few usable things
+## you were carrying", minus the wood and stone that used to clog it.
+func autofill_hotbar() -> void:
+	for slot in HOTBAR_SLOTS:
+		if not hotbar[slot].is_empty():
+			continue
+		for index in int(inventory.get("SLOT_COUNT")):
+			var stack: Dictionary = inventory.call("stack_at", index)
+			if stack.is_empty():
+				continue
+			var id := str(stack.get("id", ""))
+			if not hotbar_can_hold(id) or hotbar.has(id):
+				continue
+			hotbar[slot] = id
+			break
 
 
 ## Write `slot`. Returns whether it succeeded.

@@ -278,6 +278,18 @@ backpack_split={
 , Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
 ]
 }
+use_tool={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"double_click":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
+]
+}
+backpack_assign={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":71,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
+]
+}
 menu_confirm={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":4194309,"pressed":false,"script":null)

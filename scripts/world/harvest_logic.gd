@@ -7,6 +7,17 @@ extends RefCounted
 ## resource the same way and neither should carry a second copy of R2.2's
 ## durability rules to drift out of sync with the other.
 
+## Every gather spot in the world, whichever of the two kinds it is.
+##
+## Added so a tool swing (`scripts/player/tool_hold.gd`) can find what is in
+## front of the trainer without knowing which script drew it. The interact
+## prompt never needed this -- `interaction_arbiter.gd` already tracks every
+## registered `Interactable` -- but a swing has to pick out gather spots
+## specifically, and swinging an axe at Grandpa should do nothing at all.
+##
+## Members are expected to expose `gather()`; both kinds do.
+const GROUP := "harvestable"
+
 ## Returns `{"amount": int, "required_slot": int}`. `amount` is what the
 ## caller should actually grant (0 means refused: wrong tool for a
 ## tool-gated resource). `required_slot` is the inventory slot that should

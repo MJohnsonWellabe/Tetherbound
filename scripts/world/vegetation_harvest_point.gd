@@ -278,3 +278,16 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	set_process(false)
+	# So a tool swing can find this without knowing which of the two gather
+	# scripts drew it (`harvest_logic.gd::GROUP`).
+	add_to_group(HARVEST_LOGIC.GROUP)
+
+## Gather this spot, the same as pressing the interact prompt on it.
+##
+## Public so a tool swing (`scripts/player/tool_hold.gd`) can drive the exact
+## same path the prompt drives -- one gather implementation, two ways to reach
+## it, so a swing and a press can never disagree about yield, tool gating,
+## durability or respawn.
+func gather() -> void:
+	_on_gathered()
+

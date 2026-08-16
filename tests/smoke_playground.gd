@@ -238,9 +238,23 @@ func _the_hotbar_heals_a_creature(world: Node) -> Array[String]:
 	target.set("hp", 1.0)
 
 	inventory.call("add", "potion_small", 1)
-	var slot: int = int(inventory.call("find_slot", "potion_small"))
-	if slot < 0 or slot > 4:
-		found.append("potion_small landed outside the hotbar's mirrored slots 0-4 (slot %d)" % slot)
+
+	# The bar is assignable now, so this binds the potion explicitly instead of
+	# hoping the satchel dropped it into one of the mirrored slots 0-4. That
+	# old check was itself a symptom of the mirror: which button healed you
+	# depended on bag order, which is exactly what the owner asked to be rid of
+	# and what the blind playtest's PT-11 caught rebinding itself underfoot.
+	var slot := 0
+	if not bool(game.call("assign_hotbar", slot, "potion_small")):
+		found.append("assigning potion_small to an action slot was refused")
+		return found
+	if int(game.call("hotbar_slot_of", "potion_small")) != slot:
+		found.append("potion_small did not stay on the slot it was assigned to")
+		return found
+
+	# The material rule, checked where a player would actually hit it.
+	if bool(game.call("assign_hotbar", 1, "wood")):
+		found.append("wood was allowed onto an action slot; raw materials must be refused")
 		return found
 
 	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer

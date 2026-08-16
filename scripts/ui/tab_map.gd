@@ -63,6 +63,14 @@ const MAP_BAKER_PATH := "res://scripts/world/map_baker.gd"
 const ICON_DIR := "res://assets/ui/icons/map/"
 const ICON_SIZE := 26.0
 const PLAYER_MARKER_RADIUS := 6.0
+## The facing arrow, in pixels: where its base sits (just clear of the dot's
+## cream ring, which is drawn at `PLAYER_MARKER_RADIUS + 3`), how far past that
+## the tip reaches, and how wide the base is. Long enough to read as a heading
+## at a glance on a handheld, short enough not to be mistaken for a route line
+## to something. TUNABLE.
+const PLAYER_FACING_BASE := 10.0
+const PLAYER_FACING_LENGTH := 10.0
+const PLAYER_FACING_HALF_WIDTH := 6.0
 const OBJECTIVE_RADIUS := 9.0
 
 ## How far the player has to move before a redraw is worth spending — the fog
@@ -339,7 +347,7 @@ func _draw_map(canvas: Control) -> void:
 	if world != null:
 		var player := _player_node()
 		if player != null:
-			_draw_player(canvas, map_rect, player.global_position)
+			_draw_player(canvas, map_rect, player.global_position, _facing_yaw(world, player))
 
 
 func _draw_icon(canvas: Control, map_rect: Rect2, entry: Dictionary, alpha: float) -> void:
@@ -426,10 +434,59 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 	canvas.draw_string(_region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
 
 
-func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3) -> void:
+## The player's dot, and which way they are facing.
+##
+## The owner's brief asks that a player be able to answer "which way am I
+## facing?" from the map. The minimap conveys it by rotating the whole world
+## under a fixed screen-up triangle; this screen is deliberately north-up
+## (see this file's own header), so the world cannot rotate here and the
+## marker has to carry the heading itself. It used to be a plain circle: a
+## position with no heading at all.
+##
+## `yaw` is the CAMERA's planar yaw, the same value `playground_hud.gd` feeds
+## `minimap.update_view` — so both screens answer the question the same way
+## rather than one showing where the body points and the other where the view
+## does.
+##
+## Direction math, from the project convention `forward(yaw) =
+## Vector3(sin(yaw), 0, cos(yaw))` (`minimap.gd`'s header derives it): this
+## map draws -Z up, so world +Z is canvas-down and world +X is canvas-right,
+## giving `Vector2(sin(yaw), cos(yaw))` with no extra sign flips. Sanity check
+## by hand: at `yaw = 0` forward is world south, and `(sin 0, cos 0) = (0, 1)`
+## is canvas-down, which on a north-up map is south.
+func _draw_player(canvas: Control, map_rect: Rect2, world_pos: Vector3, yaw: float) -> void:
 	var point := _world_to_canvas(Vector2(world_pos.x, world_pos.z), map_rect)
+	var forward := Vector2(sin(yaw), cos(yaw))
+	var side := Vector2(-forward.y, forward.x)
+
+	# The arrow sits wholly OUTSIDE the dot's ring rather than starting at the
+	# centre. A first pass ran it from the middle and the ring cut straight
+	# across it, so at map scale the two merged into one teal blob that showed
+	# a position and no heading -- which was the entire point of adding it.
+	var base := point + forward * PLAYER_FACING_BASE
+	var tip := base + forward * PLAYER_FACING_LENGTH
+	canvas.draw_colored_polygon(
+		PackedVector2Array([
+			tip,
+			base + side * PLAYER_FACING_HALF_WIDTH,
+			base - side * PLAYER_FACING_HALF_WIDTH,
+		]),
+		UITokens.TEAL
+	)
 	canvas.draw_circle(point, PLAYER_MARKER_RADIUS, UITokens.TEAL)
 	canvas.draw_arc(point, PLAYER_MARKER_RADIUS + 3.0, 0.0, TAU, 16, UITokens.TEXT_PRIMARY, 1.5, true)
+
+
+## The camera's planar yaw, derived exactly as `playground_hud.gd` derives it
+## for the minimap. Falls back to the body's own yaw when no rig is reachable
+## (a bare capture scene), and to 0.0 when there is no player either.
+func _facing_yaw(world: Node, player: Node3D) -> float:
+	if world != null:
+		var rig := world.get_node_or_null(^"CameraRig")
+		if rig != null and rig.has_method("planar_basis"):
+			var basis: Basis = rig.call("planar_basis")
+			return atan2(basis.z.x, basis.z.z)
+	return player.global_rotation.y if player != null else 0.0
 
 
 ## World (x, z) -> a point inside `map_rect`, using the same grid `MapState`
