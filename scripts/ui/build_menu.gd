@@ -27,6 +27,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## on top of the `UITokens.BUILD_*` colours this file reaches for directly.
 const BUILD_THEME := preload("res://assets/ui/theme/build_theme.tres")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Order the tab row draws in when present — `docs/decisions/D34`. A category
 ## with zero buildables in it (SURVIVAL/FARMING/TETHER stay unbuilt per that
@@ -168,6 +169,13 @@ func _ready() -> void:
 	layer = UITokens.LAYER_WORLD_PANELS
 	visible = false
 	add_to_group(GROUP)
+	# OW10: this panel does not pause the tree (see the header — that is the
+	# point of it), so the HUD keeps polling the world's verbs underneath it and
+	# a d-pad press meant for this grid also ate a hotbar slot. Joining
+	# `input_owner.gd`'s group is the whole fix and the whole contract: every
+	# world-verb poll asks that one question, so nothing here has to be kept in
+	# sync with what the HUD happens to check.
+	add_to_group(INPUT_OWNER.GROUP)
 	_build_ui()
 
 

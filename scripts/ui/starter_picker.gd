@@ -26,6 +26,7 @@ const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 ## For its `STORY_MODAL_GROUP` name only; see the `add_to_group` in `_ready()`.
 const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Frames of deafness after opening, for the reason dialogue_panel.gd and
 ## name_prompt.gd both give: the press that closed the conversation and the
@@ -112,6 +113,12 @@ func _ready() -> void:
 	# `game_menu.hold_input()` from its own `open()`; joining a group instead
 	# means the next modal is covered without having to remember to.
 	add_to_group(GAME_MENU.STORY_MODAL_GROUP)
+	# OW10: and the same panel claims input, so the world's verbs (the hotbar,
+	# the hammer/torch hotkeys) stand down while it is up. The arbiter's own
+	# lockout already covers this window, so joining changes nothing today --
+	# it is here so "who owns input" has ONE membership list rather than a
+	# per-panel scattering of the answer.
+	add_to_group(INPUT_OWNER.GROUP)
 
 
 func _make_text_legible(node: Node) -> void:

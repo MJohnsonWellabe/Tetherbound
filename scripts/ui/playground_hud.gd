@@ -61,6 +61,8 @@ const MB := 1048576.0
 const CREATURE_SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
+## OW10: the one "who owns input right now" question both world-verb polls ask.
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 
 ## EV9's owner-commissioned HUD glyphs (`docs/ASSET_LEDGER.md`, staged
@@ -1162,20 +1164,12 @@ func _update_hotbar(inventory: RefCounted) -> void:
 func _read_hotbar_input() -> void:
 	if _game == null:
 		return
-	# HD2: the hotbar is deaf during a fight. hotbar_2/3 share the physical
-	# d-pad with combat_switch_left/right (D32), and Input's action reads are
-	# global -- without this gate a mid-fight creature switch also quietly ate a
-	# potion. The combat HUD owns the d-pad while a fight runs.
-	if _combat_is_running():
-		return
-	# OF25: also deaf while a modal panel owns the screen (a conversation, the
-	# naming prompt, the starter picker). `1`-`5` are real hotbar keys, so
-	# typing a name that happens to contain a digit used to also spend
-	# whatever sat in that satchel slot. Reuses the arbiter's own `enabled`
-	# flag -- already false for exactly this window
-	# (`sequence_director._refresh_lockout`) -- rather than a second copy of
-	# "is something modal open" invented here.
-	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
+	# OW10: one gate, shared with `_read_world_hotkeys`. This poll used to carry
+	# its own two-thirds of the answer (a fight, the arbiter's modal flag) and
+	# not the third -- `_build_menu_is_open()` was written onto the world-hotkey
+	# poll alone -- which is exactly why the hotbar leaked under an open build
+	# menu and the hammer did not.
+	if not _world_input_allowed():
 		return
 	for i in HOTBAR_SLOTS:
 		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
@@ -1371,9 +1365,7 @@ func _use_hotbar_slot(slot_index: int) -> void:
 ## `open()`, `torch_place` because arming a placement UNDER an open menu
 ## makes no sense to the player.
 func _read_world_hotkeys() -> void:
-	if not _world_hotkeys_enabled():
-		return
-	if _build_menu_is_open():
+	if not _world_input_allowed():
 		return
 	if Input.is_action_just_pressed(&"build_open"):
 		BUILD_MENU.get_or_make(get_tree()).call_deferred("open")
@@ -1389,17 +1381,40 @@ func _read_world_hotkeys() -> void:
 		_swing_equipped_tool()
 
 
-## Combat and the interaction arbiter's modal flag both stand in for "the
-## player does not have free run of the world right now" -- the same two
-## states `_read_hotbar_input`'s own combat gate and
-## `sequence_director.gd::_refresh_lockout` already treat as mutually
-## exclusive with ordinary exploration. No arbiter reachable (a stripped-down
-## test/capture scene) reads as permissive, the same null-safe default
-## `_combat_is_running()` already uses -- nothing here to be modal ABOUT.
-func _world_hotkeys_enabled() -> bool:
+## Does the trainer have free run of the world this frame?
+##
+## OW10: the ONE answer both world-verb polls ask -- the hotbar
+## (`_read_hotbar_input`) and the hammer/torch/tool hotkeys
+## (`_read_world_hotkeys`). It used to be two functions with two different
+## ideas of the answer: this one, and an inline pair inside the hotbar poll.
+## They agreed about a fight and about the arbiter and disagreed about the
+## build menu, which is the whole of the owner's report -- a d-pad press with
+## the build menu open moved the grid selection AND spent a potion, because
+## `hotbar_2`/`3`/`4` are bound to d-pad left/right/down (project.godot,
+## joypad 13/14/12) and that menu deliberately does not pause the tree.
+##
+## Three things can hold input, and they are asked in cost order:
+##
+##   - a fight (HD2: `hotbar_2`/`3` share the d-pad with
+##     `combat_switch_left`/`right` per D32, so without this a mid-fight
+##     creature switch also quietly ate a potion)
+##   - the interaction arbiter being asleep, which is a conversation, a naming
+##     prompt or a fade (`sequence_director.gd::_refresh_lockout`) -- reused
+##     rather than re-derived, and the reason OF25 stopped a digit typed into a
+##     name from spending a satchel slot
+##   - any panel that has claimed input via `input_owner.gd`'s group, which is
+##     how a non-pausing panel says so without anything here naming it
+##
+## A tree-pausing panel needs no entry: `PlaygroundHUD` is `PAUSABLE`, so it is
+## already not running. No arbiter reachable (a stripped-down test or capture
+## scene) reads as permissive, the same null-safe default `_combat_is_running()`
+## already uses -- nothing there to be modal ABOUT.
+func _world_input_allowed() -> bool:
 	if _combat_is_running():
 		return false
 	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
+		return false
+	if INPUT_OWNER.current(get_tree()) != null:
 		return false
 	return true
 

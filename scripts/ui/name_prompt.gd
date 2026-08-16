@@ -58,6 +58,7 @@ const ENTRY := preload("res://scripts/ui/name_entry.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## For its `STORY_MODAL_GROUP` name only; see the `add_to_group` in `_ready()`.
 const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Frames of deafness after opening, for the reason dialogue_panel.gd gives: the
 ## press that opened this is still in the same frame's input state.
@@ -128,6 +129,12 @@ func _ready() -> void:
 	# the two are deliberately kept both — the deafness also covers the shell's
 	# tab cycling if it were ever open first.
 	add_to_group(GAME_MENU.STORY_MODAL_GROUP)
+	# OW10: and the same panel claims input, so the world's verbs (the hotbar,
+	# the hammer/torch hotkeys) stand down while it is up. The arbiter's own
+	# lockout already covers this window, so joining changes nothing today --
+	# it is here so "who owns input" has ONE membership list rather than a
+	# per-panel scattering of the answer.
+	add_to_group(INPUT_OWNER.GROUP)
 
 
 func _dress() -> void:

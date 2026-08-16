@@ -17,6 +17,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## For its `STORY_MODAL_GROUP` name only — the group is the whole contract, and
 ## naming it in one place beats three panels each spelling the same string.
 const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Frames of deafness after opening.
 ##
@@ -78,6 +79,12 @@ func _ready() -> void:
 	# file so a second dialogue panel instanced anywhere (a tool, a test) is
 	# covered by the same rule without anyone remembering to tick a box.
 	add_to_group(GAME_MENU.STORY_MODAL_GROUP)
+	# OW10: and the same panel claims input, so the world's verbs (the hotbar,
+	# the hammer/torch hotkeys) stand down while it is up. The arbiter's own
+	# lockout already covers this window, so joining changes nothing today --
+	# it is here so "who owns input" has ONE membership list rather than a
+	# per-panel scattering of the answer.
+	add_to_group(INPUT_OWNER.GROUP)
 
 
 func _dress() -> void:
