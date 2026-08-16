@@ -6,14 +6,21 @@
 **Model note:** part of `OW5`, tagged `model: fable`, run at **opus** on the
 owner's direction because he has no Fable usage left. Not a Fable pass.
 
+**Revised 2026-08-16 (second commit on `ralph/OW5A`), after a blind review.**
+`D50`'s footprint was not region-aligned and its width moved from 1536 m to
+2048 m, so the long edges move from `x = ±768` to **`x = ±1024`** and the
+perimeter from 19.5 km to **20.5 km**. The edge grammar, the per-band style
+sequence and everything this decision preserves are unchanged. One thing is
+added: a note on the survey tool that photographs this boundary.
+
 ## The decision
 
 `scripts/world/world_perimeter.gd` builds a **closed circle at `RADIUS` 235**:
 40 segments × 18 spans, one continuous ground-sampled polyline, with collision
 boxes generated from the same points. In D50's corridor that circle is
 geometrically impossible, so it is replaced by **two long authored edge
-polylines** at `x = −768` and `x = +768`, plus two short ends at `z = −512` and
-`z = +7680`.
+polylines** at **`x = −1024` and `x = +1024`**, plus two short ends at
+`z = −512` and `z = +7680`.
 
 The generator's *through-line* is kept exactly: a continuous earth bank and
 fieldstone kerb running the whole length under every dressing style, with a
@@ -70,7 +77,7 @@ boundary. Three properties came out of that and all three survive:
 
 ## What it costs
 
-**19.5 km of perimeter, against the ring's 1.48 km — 13×.** The current
+**20.5 km of perimeter, against the ring's 1.48 km — 14×.** The current
 implementation draws the bank and stonework as two merged meshes and batches
 bushes, boulders and fence panels through MultiMesh, about a dozen draw calls
 for the whole boundary. Merged meshes do not stream, so at 13× that becomes a
@@ -85,21 +92,42 @@ can disagree with it about which region is loaded.
 ## What was rejected
 
 - **Keeping the ring and putting the corridor inside it.** A circle enclosing
-  8192 × 1536 has radius 4,168, which is 54 km² of world to bake to hold 12.6
+  8192 × 2048 has radius 4,227, which is 56 km² of world to bake to hold 16.8
   km² of game. It also puts the boundary 3–4 km off the trail everywhere except
   the two ends, so the player never sees it — which fails §1E's actual purpose:
   the Meadows must not read as a floating level, and a boundary you never reach
   does not stop that.
-- **Invisible walls at `x = ±768` with dressing scattered near them.** This is
+- **Invisible walls at `x = ±1024` with dressing scattered near them.** This is
   precisely what §1E forbids and precisely what the pre-ring implementation did.
   It was rebuilt once already for this reason.
-- **One style for the whole length.** 19.5 km of the same hedgerow is 19.5 km of
+- **One style for the whole length.** 20.5 km of the same hedgerow is 20.5 km of
   the same hedgerow. The per-band sequence costs nothing at build time — it is a
   lookup on z — and it is the cheapest regional-identity lever on the map.
 - **A river or sea down both long sides.** The owner offered "broken land **or**
   sea"; using water for both would make the Meadows an island, which no document
   says it is, and would make the seven spokes' "land still visible past it" rule
   unsatisfiable on six of the seven.
+
+## What this breaks in the survey tooling, which nothing else records
+
+**Added in revision 2.** `tools/capture_perimeter.gd` is the tool that
+photographs this boundary, and it hard-codes the ring it is looking at:
+`RADIUS := 235.0` and `SEGMENTS := 40` at `:30`, the same two constants
+`world_perimeter.gd` uses, copied. It does not read them from the world; it
+walks its own circle.
+
+So this decision does not merely rewrite `world_perimeter.gd` — **it obsoletes
+`capture_perimeter.gd` outright.** A tool that orbits a radius has nothing to
+orbit once the boundary is two 8 km polylines and two 2 km ends. It needs
+rewriting as a traverse: sample stations along each edge, one per band boundary
+at minimum, so the per-band style sequence above is actually verifiable in
+frames rather than asserted in this table.
+
+Relatedly, `tools/capture_hillside.gd:50` documents its viewpoints as "MUST stay
+inside the baked world (±256 m, `world_size` 512)" and records that an eye past
+the edge broke Terrain3D's streaming for a **whole survey run**, not one frame.
+Both tools move with the world or the first evidence that the corridor is wrong
+will be a survey that renders nothing.
 
 ## The honest remainder
 

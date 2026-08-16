@@ -15,6 +15,19 @@ Companion decisions: `docs/decisions/D50` (the footprint and the 40-minute
 target) and `docs/decisions/D51` (the edge grammar that replaces the radial
 perimeter).
 
+**Revision 2, 2026-08-16 (second commit on `ralph/OW5A`).** A blind review of
+revision 1 found five things wrong and several smaller ones. All are corrected
+in place. The largest: **revision 1's footprint was not region-aligned** and has
+been replaced — the corridor is now **8192 × 2048 m, 64 regions**, not 8192 ×
+1536 / 48. Every region, pixel, bake, memory and margin figure downstream of
+that has been recomputed. The band table in §3 is *not* changed: it was checked
+independently and all six polylines recompute to 11,593.6 m against the 11,594
+stated. What changed around it is the land the trail sits in.
+
+Where this document previously stated something the review disproved, the old
+claim is left visible and marked, not deleted. A layout document that quietly
+rewrites its own evidence is worth less than one that shows where it was wrong.
+
 ---
 
 ## 0. The directive being implemented
@@ -64,57 +77,146 @@ region bake is `OW5B`'s job and would have consumed this item's whole budget.
 The unit costs below are measured; the totals are extrapolations and are
 labelled as such.
 
-### 1.1 The bake cost, finally re-measured
+### 1.1 The bake cost — measured per pixel, and unanchored
 
-The repo carries three conflicting bake times (5.5 / 12 / 15 min) and none was
-re-measured after the river landed. Measured per-pixel cost of
-`build_playground_terrain.gd`'s two passes (colour+height, then control):
+Measured per-pixel cost of `build_playground_terrain.gd`'s two passes
+(colour+height, then control), on this container:
 
 | tile | µs/pixel | colour pass | control pass |
 |---|---|---|---|
 | busy centre (village, river, rises all in range) | **2584** | 1270 | 1315 |
 | far field at (900, 900), only the noise layers answer | **2523** | 1228 | 1295 |
 
-The probe validates against a known figure: 262,144 px × 2584 µs = **11.3
-minutes**, which is the repo's "12 min" number and not its "5.5 min" one. Treat
-5.5 as stale.
+#### The anchor problem — read this before quoting any total below
 
-Projected, at 2584 µs/px:
+Revision 1 said the probe "validates against a known figure: 262,144 px × 2584
+µs = 11.3 minutes, which is the repo's '12 min' number". **That was wrong and
+the error was in the probe's own header.** There is no 12-minute bake figure
+anywhere in this tree. Grepped, 2026-08-16, the complete set of recorded bake
+times is:
 
-| footprint | pixels | field work |
+- `ralph/DONE.md:2752` — "The bake is **~5.5 minutes** and everything geometric
+  depends on it."
+- `docs/decisions/D45:115`, `scripts/world/meadow_healing.gd:30` and
+  `data/config/meadow_healing.json` — "**~15-minute** bake", the figure `SG46`
+  was explicitly forbidden to re-run.
+
+Those two disagree with each other by **2.7×**, and the probe's 11.3 min agrees
+with neither: it is 2.05× the 5.5 and 0.75× the 15. Both recorded figures are
+wall-clock times for a *whole bake* on unnamed hardware at unnamed dates; the
+probe's figure is *field work only* on this container, excluding image
+allocation, control-word packing, PNG/res encoding and disk. So the three are
+not even measuring the same thing, and the 11.3 was never a validation.
+
+**State plainly: the bake unit cost is unvalidated.** 2584 µs/px is a real
+measurement of a real inner loop on this box, and it is the best number anyone
+has, but nothing independent confirms it and every total below inherits that
+uncertainty. Do not present any bake projection in this document as a schedule.
+The first thing `OW5B` should produce is a **timed single-region bake** on the
+new footprint — one region, ~65,536 px, a couple of minutes — which turns the
+unit cost into an anchored one and costs almost nothing to obtain.
+
+#### Projections, at 2584 µs/px, carrying that caveat
+
+| footprint | regions | pixels | field work |
+|---|---|---|---|
+| current 512 m @ 1.0 (512×512) | 4 | 262,144 | 11.3 min |
+| 6144 × 2048 @ 2.0 (3072×1024) | 48 | 3,145,728 | 135 min |
+| 8192 × 1024 @ 2.0 (4096×512) | 32 | 2,097,152 | 90 min |
+| **8192 × 2048 @ 2.0 (4096×1024)** | **64** | **4,194,304** | **181 min** |
+| 8192 × 2048 @ 1.0 (8192×2048) | 64 | 16,777,216 | 723 min |
+
+*(Revision 1's headline was "48 regions, 3,145,728 px, 135 min" for an 8192 ×
+1536 footprint. That footprint is not region-aligned and does not exist; see
+§1.3 and §2. The 135 min now belongs to a 6144 × 2048 alternative that §2
+rejects for a different reason.)*
+
+#### What the two-tile experiment can and cannot tell you
+
+Revision 1 concluded from the 2.4% gap between the busy tile and the far-field
+tile that **"bake cost scales with pixel count and nothing else."** That
+conclusion does not follow from this experiment, and the review that found it
+was right.
+
+`playground_heightfield.gd::path_factor` (`:905`) opens with
+`var routes: Array = road_polylines()`. `road_polylines()` (`:1116`) rebuilds
+the entire road set from the config Dictionary on **every call** — allocating a
+fresh `Array` and a fresh `PackedVector2Array` per line — and there is **no
+cache and no distance rejection anywhere in the path**. It then measures the
+point against every segment of every line. Today that is 13 lines / **47
+segments**, paid in full at every pixel of both tiles, including the far-field
+tile 1,270 m from the nearest road.
+
+So the far-field tile is not a low-content tile. It is a tile that pays exactly
+the same road scan as the busy one, and the experiment therefore **cannot
+detect content scaling at all** — the two tiles were never differentiated in
+the one term that scales with authored content. The 2.4% gap measures noise
+evaluation variance between two locations, nothing more.
+
+This matters immediately, because §11 proposes unioning `trail.bands[]` (the
+§3.1 spine: **81 segments**) and `trail.loops[]` (ten more) into
+`road_polylines()`. That is roughly **4× the segment count**, evaluated per
+pixel, over **16× the pixels** — into an inner loop with no cache and no
+rejection. Revision 1's "adding features to fill the corridor costs almost
+nothing at bake time" is an unsupported claim about the exact change this
+document asks for.
+
+**Status of the fix.** A sibling lane was fixing the `road_polylines()` cache on
+branch `ralph/PERF1`. Checked against `origin/main` at `5c7ec165` on 2026-08-16:
+**it has not landed.** `road_polylines()` on `main` is byte-identical to the
+version above, with no cache field and no `PERF1` marker. If and when it does
+land, the "cost scales with pixel count" conclusion may become true again — but
+it must be **re-measured with a probe that actually varies the content**, not
+inherited. The corrected experiment is: hold the tile fixed and vary the number
+of road segments in the config, or add a third tile with the roads removed.
+
+Two consequences for `OW5B`, replacing revision 1's:
+
+1. **Do not budget the corridor bake on the assumption that content is free.**
+   Until the cache lands and the varying-content probe is run, treat the road
+   term as scaling with (pixels × segments) and assume the §11 trail data
+   multiplies it.
+2. **There is a large, unclaimed optimisation available, and it is now two
+   things.** The `road_polylines()` cache (or a bounding-box rejection per line)
+   is the bigger one and is mechanical. Hoisting the per-call
+   `_config.get(...)` lookups in `playground_heightfield.gd` into typed fields
+   at `_init` is the smaller one and is also mechanical. Neither is measured;
+   do not treat any multiplier as known. But three hours of one-shot bake is
+   worth an hour of both, because `OW5B` will not run the bake once.
+
+### 1.2 The carve-resolution question — the margin is ~5°, not ~15°
+
+This was the measurement most likely to kill the footprint. It does not kill
+it, but revision 1 reported it against the wrong statistic and made the margin
+look three times larger than it is.
+
+#### First, the false premise
+
+Revision 1 opened "**every blocker on this map is a `_carve_depth` trench**".
+That is not true, and it is checkable from `terrain_playground.json` in one
+pass. Of the seven spokes, **three carry a carve and four do not**:
+
+| spoke | blocker kind | carve? |
 |---|---|---|
-| current 512 m @ 1.0 (512×512) | 262,144 | 11.3 min |
-| 6144 × 1536 @ 2.0 (3072×768) | 2,359,296 | 102 min |
-| **8192 × 1536 @ 2.0 (4096×768)** | **3,145,728** | **135 min** |
-| 8192 × 1536 @ 1.0 (8192×1536) | 12,582,912 | 542 min |
+| `river_gorge` | `gorge` | **yes** — depth 16, rim 7 |
+| `storm_road` | `collapsed_bridge` | **yes** — depth 11, rim 5 |
+| `cliff_road` | `fallen_roadbed` | **yes** — depth 9, rim 4 |
+| `mountain_trail` | `rockslide` | no — props + buried collision barrier |
+| `high_pass` | `rockslide` | no — props + buried collision barrier |
+| `stone_gate` | `sealed_gate` | no — a built, sealed gate |
+| `blighted_road` | `sealed_road` | no — a sealed road |
 
-**The busy tile and the far-field tile cost the same to within 2.4%.** That is
-the most useful thing this probe found. The bake's cost is not the river, the
-carves or the drains — those are cheap distance rejections. It is the noise
-evaluation plus GDScript call and dictionary overhead in the innermost loop:
-`slope_degrees_at` calls `height_at` four more times, each of which re-reads
-`_config.get("hills")`, `_config.get("detail")`, `_config.get("valley")` and so
-on from a Dictionary, and `rock_bias_deg` runs a ridged FBM with a domain warp
-on top.
+Plus two non-spoke carves: the `south_bridge` gully (depth 11, rim 3.4) and the
+river's own 18-point course (depths 10–18, rims 3.4–7).
 
-Two consequences, both for `OW5B`:
+`vertex_spacing` therefore governs the safety of **five** blockers, not eleven.
+The four rockslide/gate/sealed-road blockers are props and collision volumes,
+`severed_spokes.gd`'s own vocabulary, and are **completely unaffected by
+heightfield resolution** — which is a real and previously unstated reduction in
+the risk this section exists to price. Say it that way round rather than
+overstating the exposure.
 
-1. **Bake cost scales with pixel count and nothing else.** You cannot buy it
-   back by authoring fewer features, and adding features to fill the corridor
-   costs almost nothing at bake time.
-2. **There is a large, unclaimed optimisation available.** Hoisting the
-   per-call `_config.get(...)` lookups in `playground_heightfield.gd` into typed
-   fields at `_init` is a mechanical change with no behaviour risk, and the hot
-   path does several of them per sample. This is not measured, so do not treat
-   the multiplier as known — but 135 minutes of one-shot bake is worth an hour
-   of hoisting before running it, because `OW5B` will not run the bake once.
-
-### 1.2 The carve-resolution question — 2.0 m spacing does NOT destroy the carves
-
-This was the measurement most likely to kill the footprint, and it did not.
-
-Every blocker on this map is a `_carve_depth` trench whose *walls* are the
-blocker. Two limits, both real and both already tested:
+For the five that *are* carves, two limits, both real and both already tested:
 
 - `scenes/player/player.tscn` `floor_max_angle` 0.7854 rad = **45°**.
 - `scenes/creatures/creature.tscn` gives every creature **55°**, and
@@ -128,69 +230,225 @@ reconstruct from samples at each candidate spacing and walks transects over
 *that*, rather than reading the analytic field — reading the field would report
 the angle the config asks for, which is the number that was never in doubt.
 
-Steepest reconstructed wall angle, by transect and spacing:
+#### The statistic revision 1 used, and why it is the wrong one
 
-| transect | 1.0 m | 1.5 m | 2.0 m | 2.5 m |
+The probe prints `max_deg`: the **single steepest 0.1 m finite difference**
+found anywhere on a 48–68 m transect. Revision 1 tabulated it and told the
+reader to "read the angle column". That is the wrong number for this question.
+
+Whether a body climbs out of a trench is not decided by the steepest 10 cm of
+it. It is decided by the **shallowest sustained line** out — the gentlest
+continuous run from floor to rim. A character controller with
+`floor_max_angle` walks up anything at or under its limit and is stopped only
+where *every* route out exceeds it. A wall with one 81° pixel and an otherwise
+58° face is not a wall.
+
+`max_deg` on a smoothstepped trench is a **peak**, and it is guaranteed to
+exceed the wall's mean gradient by construction: a smoothstep's derivative
+peaks at 1.5× its mean. Reporting the peak against a limit that acts on the
+mean overstates the margin by exactly that factor.
+
+The probe already computes a better proxy, and revision 1 ignored it:
+**`blocked_60`** — the longest *unbroken* run of ≥60° slope, measured in metres
+of vertical rise, with the run reset to zero the moment the slope drops below
+the limit (`_measure_transect`, `:114–136`). That is a sustained statistic. Its
+verdict test (`blocked_60 < depth × 0.5` → "RIDDEN CREATURE CLIMBS OUT") is the
+right shape of question.
+
+#### Reconciling with the three figures the repo already recorded
+
+Revision 1's 79–81° for the storm ravine is flatly contradicted by three
+independent places in this repo, all of which say ~65°:
+
+| source | figure | what it is |
+|---|---|---|
+| `scripts/world/severed_spokes.gd:24` | "11–16 m deep with **57–66 degree** walls" | the design range across all three spoke carves, including their tapering ends |
+| `tests/smoke_riding.gd:163` | `SHALLOWEST_SPOKE_WALL_DEG := 65.0` | the asserted floor, with the comment "storm_road: 11 m over a 5 m rim" |
+| `ralph/DONE.md:16` (`SG44`) | storm_road "a BAKED 11 m carve with **65.6°** walls" | as shipped |
+
+They are not in conflict with the probe; they are measuring the mean and the
+probe is measuring the peak. Computed straight from
+`terrain_playground.json` — the wall's mean gradient is `atan(depth / rim)`:
+
+| carve | depth | rim | mean wall | margin over ridden 60° |
 |---|---|---|---|---|
-| river @ north dry gorge | 78.0° | 77.0° | 76.2° | 76.5° |
-| river @ mill narrows (`rim` 3.4, the thinnest on the map) | 81.5° | 80.1° | 80.3° | 75.6° |
-| river @ south broad | 70.6° | 70.3° | 69.5° | 68.2° |
-| south gully (South Bridge crossing) | 77.9° | 76.6° | 76.5° | 70.2° |
-| spoke `river_gorge` | 76.3° | 75.9° | 75.0° | 74.2° |
-| spoke `storm_road` ravine | 81.0° | 80.4° | 79.1° | 75.6° |
-| spoke `cliff_road` notch | 77.1° | 77.8° | 76.1° | 75.5° |
+| `river_gorge` | 16.0 | 7.0 | **66.4°** | +6.4° |
+| `cliff_road` notch | 9.0 | 4.0 | **66.0°** | +6.0° |
+| `storm_road` ravine | 11.0 | 5.0 | **65.6°** | **+5.6°** |
+| `south_bridge` gully | 11.0 | 3.4 | 72.8° | +12.8° |
+| river @ north gorge | 18.0 | 7.0 | 68.7° | +8.7° |
 
-**Going from 1.0 m to 2.0 m costs 1–2 degrees of wall.** Every carve stays 15°
-or more past the ridden 60° limit. Even the mill narrows, whose `rim` is 3.4 m
-and therefore under two samples wide at 2.0 m spacing, holds 80°. The footprint
-decision does not have to fight the carves.
+65.6° reproduces `smoke_riding`'s constant and `DONE.md`'s shipped figure
+exactly. The peak for a smoothstep at that mean is `atan(1.5 × 11/5)` = **73.1°**
+— already well above the 65.6 the repo quotes, and the probe's 79–81° is higher
+still because a transect crossing at an angle to the carve axis, or one that
+also clips a `rises` flank, reports a steeper apparent gradient than the carve
+has. **That is a further reason not to read `max_deg`: it is not even a clean
+measurement of the carve.**
 
-Three honest caveats:
+**So the real margin over the ridden 60° limit is nearer 5° than 15°**, and it
+is 5.6° on the shallowest one. Revision 1's "every carve stays 15° or more past
+the ridden limit" is withdrawn.
 
-- **Degradation is phase-dependent, not monotonic.** 2.5 m is sometimes *better*
-  than 2.0 m in the table above. That is grid phase — where the sample lines
-  happen to fall relative to the trench — and it is a ±few-degree band, not a
-  trend. It means a carve that measures fine at one offset can measure worse
-  after the world origin moves. `OW5B` must re-run this probe **after** the
-  corridor's origin is fixed, not before.
-- The *vertical extent* of wall steeper than 60° does shrink, most at
-  `cliff_road` (12.7 m at 1.0 m spacing → 9.8 m at 2.0 m) and `river @ south
-  broad` (8.3 m → 7.0 m). The wall is still a wall; there is simply less margin
-  for the next person who tunes a `rim` value.
-- The probe's own "verdict" column compares blocked extent against rim-to-floor
+#### What the resolution loss actually costs against a 5.6° margin
+
+The probe's own finding — **1–2° of wall lost going from 1.0 m to 2.0 m
+spacing** — is a measurement of the *peak*. The loss on the *mean*, which is
+the number that matters, is **unmeasured**. But the mean cannot be immune: at
+2.0 m spacing `storm_road`'s 5.0 m rim is **2.5 samples** of horizontal run and
+`cliff_road`'s 4.0 m rim is **2.0 samples**. A wall reconstructed from two or
+three samples cannot hold a profile shape; it becomes a straight ramp between
+them, and its mean is whatever those samples happen to bracket.
+
+If the mean loses even the same 1–2° the peak does, the margin on `storm_road`
+goes from **5.6° to 3.6–4.6°**. And the probe's own second caveat — that
+degradation is **phase-dependent** and swings by a few degrees depending on
+where the sample lines fall relative to the trench — is a band **as wide as the
+entire remaining margin.**
+
+This does not kill 2.0 m spacing. It does mean the previous section's
+conclusion ("the footprint decision does not have to fight the carves") was
+bought with a statistic that was not measuring the risk. The honest position:
+
+> **2.0 m spacing is probably safe on the three spoke carves and the gully, with
+> single-digit degrees of margin, and it has not yet been measured on the
+> statistic that decides it.** The failure mode is not subtle if it happens — a
+> ridden legendary walks out of the Meadows and breaks `D23`'s carve-out — and
+> it is caught by tests that already exist.
+
+Retained caveats from revision 1, unchanged and still true:
+
+- **Degradation is phase-dependent, not monotonic.** 2.5 m sometimes measures
+  *better* than 2.0 m. That is grid phase, not a trend, and it means a carve
+  that measures fine at one offset can measure worse after the world origin
+  moves. `OW5B` must re-run this probe **after** the corridor's origin is
+  fixed, not before — and the origin is now fixed, at `x ∈ [−1024, +1024]`,
+  `z ∈ [−512, +7680]` (§2).
+- The *vertical extent* of wall steeper than 60° shrinks, most at `cliff_road`
+  (12.7 m at 1.0 m → 9.8 m at 2.0 m) and `river @ south broad` (8.3 m → 7.0 m).
+- The probe's "verdict" column compares blocked extent against rim-to-floor
   depth over the whole transect, which for the north gorge includes
-  `rises.peaks[0]`'s flank rather than the carve. Read the angle column; the
-  verdict column is only meaningful where transect depth ≈ carve depth.
+  `rises.peaks[0]`'s flank rather than the carve. It is only meaningful where
+  transect depth ≈ carve depth.
 
-**Rule for `OW5B`, from this measurement:** at 2.0 m spacing keep every carve's
-`rim` at **≥ 2 × vertex_spacing** (i.e. ≥ 4.0 m). Today's narrows sits at 3.4 m
-and survives; it is the only one that does, and it should be widened to 4.0 m
-when the crossing is re-sited, which costs nothing because the `south_bridge`
-prefab's 18.4 m span clears a 14 m gap and 4.0 m rim makes that 15.2 m.
+#### The rules `OW5B` inherits from this, restated on the right statistic
 
-### 1.3 Two engineering defects the corridor exposes
+1. **Report `blocked_60` against carve depth, not `max_deg`.** A carve passes
+   when its longest unbroken ≥60° run covers essentially the whole climb out.
+   `max_deg` may stay in the probe's output as diagnostics; it must not be the
+   headline and must not appear in a pass/fail sentence.
+2. **Keep every carve's mean wall `atan(depth / rim)` at ≥ 65°.** That is the
+   number `smoke_riding.gd` already asserts and the number the shipped
+   `storm_road` already holds. It is a data check, cheap, and it is what would
+   silently drift when someone re-sites a carve.
+3. **Keep every carve's `rim` at ≥ 2 × `vertex_spacing`** (≥ 4.0 m at 2.0 m
+   spacing) — necessary, not sufficient. Today `cliff_road` sits exactly at
+   4.0 and the `south_bridge` gully at **3.4, below the floor**. The gully
+   should go to 4.0 when the crossing is re-sited, which costs nothing: the
+   `south_bridge` prefab's 18.4 m span clears a 14 m gap and a 4.0 m rim makes
+   that 15.2 m.
+4. **Widen before you re-bake, not after.** Raising a `rim` after a 3-hour bake
+   costs another 3-hour bake. `height_at` is analytic and reads the JSON live
+   (`ralph/DONE.md:2752`), so every carve can be re-probed at the new origin
+   without baking anything.
+5. The tapering ends of a carve (`end_fade`) run **shallower than the full-depth
+   mean** — that is where `severed_spokes.gd`'s "57" comes from, and 57° is
+   *below* the ridden 60° limit. A carve's ends are not held by wall angle;
+   they are held by `half_length + end_fade` reaching past navigable ground.
+   That property is geometric, survives any spacing, and must be re-verified
+   when each carve is re-sited into the corridor.
 
-Both are `OW5B`'s to fix; recorded here so they are not discovered at bake time.
+### 1.3 Three engineering defects the corridor exposes
 
-- **`build_playground_terrain.gd:44` validates the wrong thing.** It asserts
-  `world_size % region_size != 0`, but a region covers `region_size ×
-  vertex_spacing` **metres**. At spacing 2.0 that check passes for
-  `world_size = 6400` (6400 % 256 == 0) while 6400 / 512 = 12.5 — regions
-  straddle exactly the way the check exists to prevent. It must become
-  `world_size % (region_size * vertex_spacing)`.
-- **The bake is square-only.** `world_size` is one number, `size = world_size /
-  spacing` is used for both axes, and `import_images` centres the maps on the
-  world origin. A corridor needs an explicit two-axis extent. The layout below
-  is therefore specified as **authored world bounds**, not as a centred square:
-  `x ∈ [-768, +768]`, `z ∈ [-512, +7680]`.
+All three are `OW5B`'s to fix; recorded here so they are not discovered at bake
+time. **The first one invalidated revision 1's entire footprint** and is the
+reason this document has a revision 2.
+
+#### (a) Region alignment is about the origin, not the extent
+
+Terrain3D places regions on an **integer lattice**. A region's world origin is
+
+```
+region_location (Vector2i) × region_size × vertex_spacing
+```
+
+At `region_size` 256 and `vertex_spacing` 2.0 that is a **512 m grid**, so
+region boundaries fall at … −1024, −512, 0, +512, +1024 … and nowhere else.
+A world's min *and* max bounds must both land on that lattice or the outermost
+regions are only partly written, and the unwritten part bakes as flat default
+terrain — the exact failure `build_playground_terrain.gd:44`'s guard exists to
+prevent.
+
+**Revision 1 of this document specified `x ∈ [−768, +768]`.** 768 is 1.5 × 512.
+Neither bound is on the lattice. A 1536 m width centred on the origin straddles
+**four** region columns (−2, −1, 0, +1) and fills only the middle 1536 m of the
+2048 m those four columns cover, leaving **256 m of unfilled flat terrain along
+each long edge for the full 8192 m of the corridor** — which is also, precisely,
+where `D51` puts the boundary the player is meant to walk up to.
+
+The corrected consequences, propagated through this document, `D50` and `D51`:
+**64 regions, not 48. 4096 × 1024 px, not 4096 × 768. ~22 MB of region data,
+not 17.** §2 chooses the aligned footprint and shows the working.
+
+#### (b) The guard tests the wrong property, and the proposed fix does not fix it
+
+`build_playground_terrain.gd:44` asserts `world_size % region_size != 0`, but a
+region covers `region_size × vertex_spacing` **metres**. At spacing 2.0 that
+check passes for `world_size = 6400` (6400 % 256 == 0) while 6400 / 512 = 12.5.
+
+**Revision 1 proposed replacing it with `world_size % (region_size *
+vertex_spacing)`. That does not catch the bug that actually bit.** 1536 % 512 ==
+0, so the proposed check passes the very footprint it was written to reject. It
+tests **extent**, and the defect is one of **origin**: a 1536 m extent is fine,
+a 1536 m extent *centred on zero* is not.
+
+The check must verify that **both bounds** fall on the region lattice:
+
+```gdscript
+# A region's origin is region_location * region_size * vertex_spacing, so the
+# lattice pitch is that product in METRES. Extent alone is not enough:
+# 1536 % 512 == 0, but a 1536m width centred on the origin runs -768..+768 and
+# NEITHER bound is on the lattice. Checking both bounds subsumes the extent
+# check -- if min and max are both multiples of the pitch, so is max - min.
+var pitch := float(region_size) * vertex_spacing
+for bound: float in [min_x, max_x, min_z, max_z]:
+    if not is_zero_approx(fposmod(bound, pitch)):
+        push_error(
+            "world bound %.1f is not a multiple of the %.1fm region pitch; " % [bound, pitch]
+            + "the outermost regions would be partly written and bake as flat gaps")
+        quit(1)
+        return
+```
+
+`fposmod`, not `%`: GDScript's `%` on a negative float operand does not return
+a value in `[0, pitch)`, and every bound on the west and north sides of this
+corridor is negative.
+
+#### (c) The bake is square-only
+
+`world_size` is one number, `size = world_size / spacing` is used for both axes,
+and `import_images` places the maps with their **centre** at the passed origin
+(`:142–149`, origin computed as `-0.5 * size * spacing`). A corridor needs an
+explicit two-axis extent. The layout below is therefore specified as **authored
+world bounds**, not as a centred square:
+
+**`x ∈ [−1024, +1024]`, `z ∈ [−512, +7680]`.**
+
+Both x bounds are ±2 × 512. Both z bounds are −1 × 512 and +15 × 512. Region
+columns −2 … +1 (four) and rows −1 … +14 (sixteen). **64 regions, every one of
+them fully written.**
 
 ---
 
 ## 2. The footprint
 
-**8192 m long × 1536 m wide**, `region_size` 256, `vertex_spacing` **2.0** →
-512 m per region → **16 × 3 = 48 regions**. Bounds `x ∈ [-768, +768]`,
-`z ∈ [-512, +7680]`. Long axis is **+Z**, running south, away from home.
+**8192 m long × 2048 m wide**, `region_size` 256, `vertex_spacing` **2.0** →
+512 m per region → **16 × 4 = 64 regions**. Bounds **`x ∈ [−1024, +1024]`,
+`z ∈ [−512, +7680]`**. Long axis is **+Z**, running south, away from home.
+
+Both x bounds are exact multiples of the 512 m region pitch (±2), and both z
+bounds are too (−1 and +15). §1.3(a) is why that sentence is the first one in
+this section.
 
 ### The arithmetic, verified
 
@@ -200,31 +458,212 @@ Both are `OW5B`'s to fix; recorded here so they are not discovered at bake time.
 - 40 min at 5.0 m/s = **12,000 m of trail**. The authored spine in §3 measures
   **11,594 m** = **38.6 min walking** = **3.86 in-game days**. Camping is
   forced, which is what `camp` has been waiting for.
-- Sprinting the whole way would be 22.5 min, but `stamina.sprint_drain_per_
-  second` 12 against `max` 100 buys 8.3 s of sprint per 5 s of recovery, so the
-  sustained rate is much nearer the walk. Riding (Band 3/4) is the intended
-  fast return, per spec §3 Band 4.
-- 5 min side to side at 5.0 m/s = **1500 m**. 1536 is that, rounded up to three
-  whole regions.
+- 5 min side to side at 5.0 m/s = **1,500 m**. 1,536 would have been that
+  rounded up — but 1,536 is not region-aligned in any centred placement, so the
+  width goes to the next aligned value, **2,048 m** = **6 min 49 s** side to
+  side. That is over the owner's "maybe five minutes", not under it, and it is
+  the direction to err in: the flanks are where "off the path in either
+  direction" lives.
 
-### Why not the coordinator's 6144 × 1536
+#### The sprint duty cycle — corrected, and it does not say what revision 1 said
 
-6144 m of corridor for 12,000 m of trail is **tortuosity 1.95**. A path that
-long over that little advance has to swing roughly ±500 m every 600 m of
-progress — which consumes the entire width. The width would stop being "off the
-trail for different tasks" and become the trail. 8192 m gives **tortuosity
-1.53**, and the authored spine's x range is **−430 … +450**, leaving over 300 m
-of genuinely off-trail land on both flanks the whole way down. That is the
-owner's "off the path in either direction" actually existing.
+Revision 1 wrote that the stamina cycle buys "8.3 s of sprint per 5 s of
+recovery, so the sustained rate is much nearer the walk." The 5 s is wrong and
+so is the conclusion. From `movement.json` `stamina`:
+`max` 100, `sprint_drain_per_second` 12, `regen_per_second` 18,
+**`regen_delay` 1.1**, `exhausted_below` 10.
 
-The cost of the extra 2048 m is 33 more minutes of one-shot bake (135 vs 102)
-and 3.1 km² more land to keep dense. The first is cheap and offline. The second
-is the real price and §4 is how it gets paid.
+- Sprint 100 → 0: **8.33 s**, covering 71.7 m at 8.6 m/s.
+- Recovery 0 → 100: `regen_delay` **1.1 s** plus 100/18 = 5.56 s = **6.67 s**,
+  not 5, covering 33.3 m at walk speed.
+- Cycle: 104.9 m in 15.0 s = **7.00 m/s sustained**.
+
+7.00 is **60% of the way from the walk to the sprint**, not "much nearer the
+walk". And it is the *ceiling*: `player_vitals.gd` latches exhaustion at 0 and
+clears it only above `exhausted_below` 10, and running the algebra over every
+partial-meter cycle shows the average is monotonically increasing in how full
+you let the meter get — so full-meter cycling at 7.00 m/s is also the optimal
+strategy, not just one of them. A short-cycle sprinter who resumes at 10
+stamina averages 6.20 m/s and is worse off.
+
+**At 7.00 m/s the 11,594 m trail is 27.6 minutes.** That is **31% under the
+owner's forty**, and it is achievable by any player who holds sprint and
+releases it when the bar empties — i.e. by every player, within an hour.
+
+This is recorded rather than fixed, because fixing it is not a layout decision:
+
+- The directive says "**a walk** from the end of the meadows to the other end
+  should take 40 minutes." On its own terms the layout meets it — 38.6 min, 3.5%
+  short (see `D50`'s honest remainder).
+- If the forty minutes is meant as a floor for *any* playstyle, the trail needs
+  40 × 60 × 7.00 = **16,800 m**, a 45% increase over the authored spine. That is
+  a different world and a different decision, and this document does not take
+  it. It is the first question in §12.
+- Riding is a third rate again and is the *intended* fast return (spec §3 Band
+  4), so it is not a defect that it is faster.
+
+### Why 2048 m of width, and not the three other aligned options
+
+The width had to move off 1,536 because 1,536 is unaligned in every centred
+placement (§1.3a). Four candidates were on the table. The measurements that
+decide between them are the spine's own x range, **−430 … +450** (from §3.1,
+recomputed: Band 1 reaches −430 and +430, Band 2 −420 and +400, Band 3 −160 and
++350, Band 4 −420 and +450), and the seven spokes' blocker positions, which run
+out to **x = ±700 … ±740** (§7).
+
+| option | width | regions | flank past spine | spoke blockers | verdict |
+|---|---|---|---|---|---|
+| `x ∈ [−512, +512]` | 1024 | 32 | 62–82 m | **outside the world** | rejected |
+| `x ∈ [−512, +1024]`, offset | 1536 | 48 | 82 m west | **outside the world** | rejected |
+| same, with the spine shifted +256 | 1536 | 48 | 318–338 m | 38–68 m inside | rejected |
+| **`x ∈ [−1024, +1024]`** | **2048** | **64** | **574–594 m** | **284–324 m inside** | **chosen** |
+
+**Why not 1024 m** — §12 offered narrowing to 1,024 as a fallback and 1,024 *is*
+aligned, so the review was right to ask whether that ends the discussion. It
+does not, and the reason is **§2's own objection to a 6144 m length, applied to
+the width**. That objection was: a trail whose swings consume the entire width
+turns the width *into* the trail, and "off the path in either direction" stops
+existing. At ±768 the spine's ±430–450 swing used 56–59% of the half-width. At
+**±512 it uses 84–88%** — the trail would be pressed against both edges through
+Bands 1, 2 and 4, and there is no room left for the ten regional loops in §3.2
+to leave the spine at all, since most of them swing further out than it does.
+It also puts **all six lateral spoke blockers outside the world**, so either the
+spokes go or the width does. The same objection, the same answer.
+
+**Why not the 1536 m offset placement** — `x ∈ [−512, +1024]` is aligned and
+keeps 48 regions and every number revision 1 quoted, which makes it tempting.
+It fails for a concrete reason: the spine already reaches x = −430 and the west
+spokes end at x = −700, −720, −730. All three fall outside a −512 boundary.
+Shifting the entire spine +256 m east to compensate re-authors every waypoint in
+§3.1 and every "new" coordinate in §10.2 — and even then it lands the western
+blockers **38–68 m** inside the boundary, which is the *precise defect* §7 was
+flagged for. An option that costs a full re-authoring pass and does not fix the
+defect is not an option.
+
+**What 2048 costs, honestly.** 16.78 km² instead of 12.58 — **4.2 km² more land
+to keep dense**, which is the price §5's rule ("only as large as the team can
+make meaningfully dense") is most likely to be broken by. Plus 16 more regions,
+46 more minutes of one-shot bake (181 vs 135), 5 MB more region data, 12 MB more
+map memory and ~1 km more perimeter. §4 is how the density gets paid and §8 is
+where the rest lands.
+
+**What 2048 buys, which is not only alignment.** It is the reason §7's
+"blockers stand ~300 m inside the boundary, so the ground genuinely continues"
+becomes **true** rather than aspirational: at ±1024 the six lateral blockers sit
+**284–324 m** inside the edge. At ±768 they sat **28–68 m** inside it, which is
+inside the edge dressing itself. The alignment fix and the spoke fix are the
+same fix.
+
+### Why not the coordinator's 6144 m length
+
+*(Corrected: revision 1 compared two tortuosity figures computed on different
+bases and presented them as evidence against each other.)*
+
+Tortuosity has to be quoted on one basis. Two are in play in this document:
+
+- **trail ÷ corridor length** — how much walking the corridor's full extent buys.
+- **trail ÷ spine z-advance** (7,576 m, from −40 to 7,536 of actual progress) —
+  how much walking the *authored route's own* advance buys.
+
+Revision 1 quoted **1.95** for 6144 (which is 12,000 ÷ 6144, the *target* trail
+over corridor length) against **1.53** for 8192 (which is 11,594 ÷ 7,576, the
+*authored* trail over spine advance). Different numerators, different
+denominators, presented as a comparison.
+
+On a consistent basis, with the authored 11,594 m trail:
+
+| | trail ÷ corridor length | trail ÷ spine advance |
+|---|---|---|
+| 6144 m corridor | **1.89** | ~2.10 |
+| **8192 m corridor** | **1.42** | **1.53** |
+
+**The conclusion survives; the numbers quoted as evidence did not.** 1.89 still
+means the trail has to double back through most of its own length, swinging
+roughly ±500 m every 600 m of advance, which consumes the entire width and
+turns the flanks into the path. 1.42 leaves the spine inside ±450 of a ±1024
+corridor. The extra 2,048 m of length costs 46 more minutes of offline bake and
+4.2 km² more land; §4 is how the second is paid.
 
 ### What this is, in area terms
 
-12.58 km², against today's 0.262 km². **48× the current world.** Hold that
-number: it is what §5 below is about.
+8192 × 2048 = **16.78 km²**, against today's 512 × 512 = 0.262 km². **Exactly
+64× the current world** — the same 64 as the region count, which is not a
+coincidence and is a useful thing to hold: every per-region and per-area cost
+in §8 multiplies by the same number.
+
+---
+
+## 2A. "The world must not feel like one long corridor"
+
+`MQ2A` §5, in the sentence this document has to answer and revision 1 never
+quoted:
+
+> But the world must **not** feel like one long corridor.
+
+That sits eleven lines above `D50`'s title, which is *"The Meadows is a long
+narrow corridor"*. Not quoting it was the single most conspicuous omission in
+revision 1. There is a defensible answer and it has to be made out loud.
+
+**First, what the sentence is about.** Read it with the eight lines that
+immediately follow it, which are the plan's own remedy:
+
+> Each progression band should open into an explorable regional loop. Use:
+> branching paths; reconnecting paths; overlooks; shortcuts; side valleys; small
+> vertical loops; optional clearings; hidden pockets; alternate return routes;
+> while preserving the understandable macro progression.
+
+and the mental model it names two paragraphs later — *"a connected adventure
+through several real places"*, not *"a road with content placed beside it."*
+
+`MQ2A` §5 is not legislating a footprint. It never mentions dimensions, aspect
+ratio or region counts; it defines the failure by **route topology and content
+placement**, and it prescribes the cure in the same breath. "Corridor" there is
+a synonym for *one way forward with scenery bolted to the sides*, which is a
+property of how the trail branches, not of how wide the world is.
+
+**Second, the shape question was settled above `MQ2A` anyway.** The owner, on
+2026-08-16: *"the world should be long but can be narrow… it doesn't have to be
+a giant square."* `CLAUDE.md` makes the owner's later word win, and `MQ2A`'s own
+§0.3 subordinates it where it overlaps. So even a direct conflict would resolve
+this way. But it is not a direct conflict, because of the paragraph above.
+
+**Third, the actual answer — this layout satisfies every clause of the cure.**
+
+| `MQ2A` §5 asks for | where it is |
+|---|---|
+| each band opens into an explorable regional loop | §3.2 — ten loops, two or three per band, every one leaves the spine and rejoins it |
+| branching paths | seven lateral spokes (§7), each leaving the spine and running to the flank |
+| reconnecting paths | every loop rejoins; the two shortcuts below |
+| overlooks | quarry rim overlook (Band 2), wind ridge traverse (Band 4) |
+| shortcuts / alternate return routes | quarry haul road (2.4 km → 600 m), river ferry landing |
+| side valleys | pond valley (Band 1), Warren undertrail (Band 2) |
+| small vertical loops | wind ridge traverse, watchtower spur |
+| optional clearings, hidden pockets | §4's beat budget; the four authored camps |
+| understandable macro progression preserved | five bands, one direction, one arrival |
+
+And the geometry itself argues against the feel: **tortuosity 1.42** means that
+for every metre of southward progress the player walks 1.42 m, so the heading is
+changing more or less constantly. Band 1 crosses the corridor's full width
+**twice** in its first 2.4 km. There is no point on the map where the trail runs
+straight for more than a few hundred metres except the stronghold approach,
+which is straight **on purpose** (§3, 1.16) because after eleven kilometres of
+winding a direct final approach is the arrival.
+
+**Fourth, the honest concession, because the answer is not free.** A corridor
+*can* fail `MQ2A` §5 in a way a square cannot, because there is genuinely only
+one axis of progress: if the loops are shallow and the beats are thin, the
+player experiences a road. The two mitigations are §4's beat budget (no 250 m
+spine window without a beat, checkable from data and specified as a test) and
+the ten loops being *real roads* in the `road_polylines()` sense — painted soil,
+path stones, vegetation held off — not suggestions. The **2,048 m width chosen
+in §2 helps directly here**: at 1,536 m most of the §3.2 loops would have folded
+back inside the spine's own ±450 swing envelope, which is a loop that never gets
+off the trail, which is exactly the failure `MQ2A` §5 names.
+
+**And it is falsifiable.** `MQ2B`'s playtest gate asks a blind tester "where did
+you choose to leave the path" and "whether traversal felt empty". If the answer
+to the first is "nowhere", this section is wrong and the width or the loops are
+what change — not the length, which is the owner's.
 
 ---
 
@@ -299,6 +738,11 @@ The river runs **across the corridor** at z ≈ 4,200 (see §5). The crossing is
 the two waypoints at (−150,4170) → (−150,4235). The relay is the eastern lobe
 at (350,3760), on the near bank, which is what makes it a place you must clear
 before the gate opens rather than a detour past it.
+
+The `blighted_road` spoke leaves this band's **near-bank** approach at
+(−150, 4150) and runs due west, staying north of the river the whole way —
+revision 1 sent it to (−720, 4250), across a river it cannot bridge. §7 has the
+correction and the reasoning.
 
 **Band 4 — Upper Meadows / Ironwood** — old-growth, wind ridge, high pasture,
 ruined watchtower, three regional captains
@@ -381,11 +825,22 @@ Two rules that follow, and they are the ones that will actually get broken:
   cluster: the quarry rim and the relay picket should be dense, and the wind
   ridge traverse should be sparse on purpose so the vista lands.
 
-The corridor is what makes this affordable. 12.58 km² of narrow land has far
-less interior than a square of the same length, and 1,100 m of the 1,536 m
-width is either flank (§5) rather than fillable interior. The land that has to
-carry beats is roughly the 400 m band the trail wanders within, not the whole
-footprint.
+The corridor is what makes this affordable. 16.78 km² of narrow land has far
+less interior than a square of the same length, and **1,150 m of the 2,048 m
+width is flank** (§5/§6 — broken land, scarp, marsh, old-growth, ridge) rather
+than fillable interior. The land that has to carry beats is roughly the 900 m
+band the trail and its loops wander within, not the whole footprint.
+
+**The wider corridor makes this harder, and the increase is real.** At 1,536 m
+the fillable band was ~400 m; at 2,048 m it is ~900 m, because the ten regional
+loops in §3.2 now have room to leave the spine properly instead of folding back
+inside its own swing envelope. That is the point of the extra width — a loop
+that never gets more than 80 m off the trail is not a loop — but it is also
+more land that has to earn its beats. **The beat budget is per metre of route,
+not per square metre of world**, which is what keeps it bounded: 11,594 m of
+spine plus the loops, not 16.78 km² of ground. The flanks carry the edge
+grammar and the "broken land or sea" the owner asked for, and they are
+deliberately not beat-bearing.
 
 ---
 
@@ -473,7 +928,8 @@ boundary.*
 ### What it becomes
 
 **Two long edges, authored as polylines rather than generated as a circle**, at
-`x = −768` and `x = +768`, following the terrain the way the ring already does.
+**`x = −1024` and `x = +1024`**, following the terrain the way the ring already
+does.
 The existing generator's *through-line* is kept exactly — a continuous earth
 bank and fieldstone kerb running the whole length under every dressing style,
 with a stone pier at each join, so at any distance the boundary reads as one
@@ -484,7 +940,7 @@ polyline with a style sequence, instead of a closed circle with a cycle.
 The style sequence is per-band, and it is how the edge carries regional
 identity instead of fighting it:
 
-| band | west edge (x = −768) | east edge (x = +768) |
+| band | west edge (x = −1024) | east edge (x = +1024) |
 |---|---|---|
 | 1 | hedgerow on bank, ranch fence at gaps | fieldstone wall, the village's own field boundary continued |
 | 2 | quarried rock face — the same `rock_form` grammar, run as a scarp | dense impassable growth over a terrain ridge |
@@ -499,6 +955,8 @@ is the band boundary, so the edge changes when the place changes.
 
 ### The two short ends
 
+Both are 2,048 m long now rather than 1,536.
+
 - **North (z = −512), behind Grandpa's farm.** Fieldstone and hedge, the
   gentlest boundary on the map. It is the back of the home fields and should
   read as "nothing over there", not as a wall.
@@ -510,10 +968,10 @@ is the band boundary, so the edge changes when the place changes.
 
 Collision follows the visible line and never precedes it. The current
 implementation generates its collision boxes from the same polyline that
-generates the bank — keep that. A corridor is 19.5 km of perimeter against the
-ring's 1.48 km, so this is also a cost item: `OW5B` should build the edge
-**per region** and let it stream with the terrain, not build 19.5 km of banks
-and MultiMesh at load. §8 covers that.
+generates the bank — keep that. A corridor is **20.5 km** of perimeter
+(2 × 8192 + 2 × 2048) against the ring's 1.48 km — **14×** — so this is also a
+cost item: `OW5B` should build the edge **per region** and let it stream with
+the terrain, not build 20.5 km of banks and MultiMesh at load. §8 covers that.
 
 ---
 
@@ -531,24 +989,81 @@ inside the 235 m ring, on evenly-ish spread bearings. In a corridor, roads
 leave **laterally across the broken land** and **at the far end**. Bearings are
 no longer the organising idea; *where the corridor's edge is interesting* is.
 
-| spoke | biome | leaves at | direction | ends at | blocker | kept? |
+| spoke | biome | blocker kind | leaves at | direction | ends at | margin to edge |
 |---|---|---|---|---|---|---|
-| `river_gorge` | water | (−360,400) | west, through the pond valley | (−700,470) | gorge (existing carve, re-sited) | yes, Band 1 |
-| `cliff_road` | air | (430,1020) | east, onto the oak grove's high shoulder | (720,1080) | fallen roadbed | yes, Band 1 |
-| `mountain_trail` | fire | (400,1800) | east, up the quarry scarp | (740,1860) | rockslide | yes, Band 2 |
-| `stone_gate` | psychic | (−420,2470) | west, past the Warrens | (−730,2510) | sealed gate | yes, Band 2 |
-| `blighted_road` | dark | (−150,4170) | west, along the marsh edge | (−720,4250) | sealed road | yes, Band 3 |
-| `high_pass` | ice | (450,5860) | east, off the wind ridge | (740,5960) | rockslide | yes, Band 4 |
-| `storm_road` | electric | (0,7000) | **south, past the stronghold** | (0,7620) | collapsed bridge | **yes — recovered, see §9** |
+| `river_gorge` | water | gorge **(carve)** | (−360,400) | west, through the pond valley | (−700,470) | 324 m |
+| `cliff_road` | air | fallen roadbed **(carve)** | (430,1020) | east, onto the oak grove's high shoulder | (720,1080) | 304 m |
+| `mountain_trail` | fire | rockslide (props) | (400,1800) | east, up the quarry scarp | (740,1860) | 284 m |
+| `stone_gate` | psychic | sealed gate (built) | (−420,2470) | west, past the Warrens | (−730,2510) | 294 m |
+| `blighted_road` | dark | sealed road (built) | (−150,4150) | west, along the **near** bank's marsh edge | (−730,**4150**) | 294 m |
+| `high_pass` | ice | rockslide (props) | (450,5860) | east, off the wind ridge | (740,5960) | 284 m |
+| `storm_road` | electric | collapsed bridge **(carve)** | (0,7000) | **south, past the stronghold** | (0,7620) | 60 m — see below |
 
 Six leave laterally, one at the far end. The far-end one is the storm road, and
 that placement is deliberate: the last thing the player sees past the
 stronghold should be a road going on, not the edge of a level.
 
-Each still needs the property that makes it work: **land visible past it.** The
-corridor helps here, because the boundary at x = ±768 is 300+ m past where the
-blockers stand, so the ground genuinely continues. Do not move a blocker onto
-the boundary line to save a region.
+**Only three of the seven are carves** (`river_gorge`, `storm_road`,
+`cliff_road`), which is why §1.2's resolution question touches three spokes and
+not seven. Revision 1's "every blocker on this map is a carve" was wrong;
+`mountain_trail` and `high_pass` are rockslides — props over a buried continuous
+collision barrier — `stone_gate` is a built sealed gate and `blighted_road` a
+sealed road. All four are `severed_spokes.gd`'s own vocabulary and none of them
+cares what `vertex_spacing` is.
+
+### The margin claim, corrected
+
+Revision 1 said the blockers sit "300+ m past" the boundary and the review was
+right that the table then showed 28–68 m. **Both were describing real things and
+neither was the blockers.** The 300+ m was the *spine's* flank margin — the
+trail's own x range against a ±768 edge — and it got attached to the wrong
+subject. Against a ±768 edge the blockers, which reach out to x = ±700…±740,
+had **28–68 m**: inside the edge dressing itself, which is not "land visibly
+continuing past the blocker", it is "the blocker is standing on the boundary".
+
+§2's aligned width fixes it rather than papering over it. At **x = ±1024** the
+six lateral blockers sit **284–324 m** inside the edge, the spine's own flanks
+are **574–594 m**, and the sentence becomes true as written. **The alignment fix
+and this fix are the same fix** — which is the main reason 2,048 m won over the
+other two aligned candidates in §2, both of which put these blockers outside the
+world entirely.
+
+Do not move a blocker outward to save a region. The 284 m is the minimum and it
+is the design's floor, not slack.
+
+### The storm road's far end is answered by sky, not by ground
+
+`storm_road` is the exception: its blocker at (0, 7620) has only **60 m** of
+terrain before the south end at z = +7680. That is not a defect and it is not
+to be fixed by extending the world. The storm road is the reconnection spoke,
+and `scripts/world/rift_collapse.gd` (`SG44`, `ralph/DONE.md:16`) already
+answers its "land visible past it" with **sky**: four ridge silhouettes and a
+warm horizon glow at 380–460 m, outside the terrain, no collider, no spawn, no
+prompt — measured at 70,645 m² of visible land-form after the collapse. That is
+the shipped mechanism for this one spoke and it is the correct one; a far-end
+blocker at the end of an 8 km corridor should read as *the world continuing
+past the horizon*, not as sixty metres of grass. Recorded here so `OW5C` does
+not "fix" it by pushing the south bound out.
+
+### `blighted_road` was authored across the river
+
+Revision 1 put `blighted_road` leaving at (−150, **4170**) and ending at
+(−720, **4250**), while §3/§5 run the river **across the full width at
+z ≈ 4,200**. The spoke therefore crossed the river. It could only ever have
+meant one of two broken things: a road that bridges an impassable river 550 m
+west of the one authored crossing, or a blocker stranded on the far bank that
+the player cannot reach until after the Old Mill Crossing opens — at which point
+a Band 3 severed spoke is being discovered in Band 4.
+
+**Corrected above: it leaves and ends at z = 4,150, wholly on the near (north)
+bank**, running due west along the bank rather than across it. This is better
+than the original intent, not a compromise: the spoke's own line is "west, along
+the marsh edge", `D51` puts Band 3's **west edge in the marsh the river drains
+into**, and a sealed road ending at the marsh has exactly the property §7
+requires — the ground visibly continues, as water and reed, and the reason you
+cannot follow it is legible without a word of UI. `OW5C` must keep the whole
+polyline north of the river course; the river's `end_fade` is 14 m, so hold at
+least 30 m of clearance from the nearest course point.
 
 ---
 
@@ -564,13 +1079,15 @@ systems are not.
 A bigger baked map does **not** mean a longer load, for the terrain:
 
 - **Baked region data is small.** `data/terrain/playground` is **1.4 MB for 4
-  regions** — 350 KB per region. 48 regions is **~17 MB on disk**. That is
-  nothing.
+  regions** — 350 KB per region. **64 regions is ~22 MB on disk.** That is
+  nothing. (Revision 1 said 17 MB for 48 regions; same per-region figure, wrong
+  region count — see §1.3a.)
 - **Render cost does not scale with world size.** Terrain3D draws with a
   clipmap (`mesh_lods`, `mesh_size`, `cull_margin` on the node). The mesh drawn
-  around the camera is the same mesh whether the world is 4 regions or 48.
-- **Map memory is bounded and modest.** 48 regions × 3 maps × 256² × 4 bytes ≈
-  **38 MB** of texture-array memory. Fine on an Ally.
+  around the camera is the same mesh whether the world is 4 regions or 64.
+- **Map memory is bounded and modest.** 64 regions × 3 maps × 256² × 4 bytes =
+  **48 MB** of texture-array memory. Still fine on an Ally, and worth noting it
+  is now within a factor of two of a figure that would need thinking about.
 
 So the terrain is resident, small, and does not need streaming. **Say this
 plainly to anyone who assumes otherwise.**
@@ -589,10 +1106,10 @@ to 1 (Dynamic/Game), which built collision only inside a 64 m bubble, and
 everything looked correct until you walked a couple of hundred metres and fell
 through the world.
 
-At 4 regions FULL_GAME is cheap. At 48 it is 12× the shapes and 12× the memory,
+At 4 regions FULL_GAME is cheap. At 64 it is 16× the shapes and 16× the memory,
 all at startup, and at `vertex_spacing` 2.0 each region is 512 m so
-`collision_shape_size` must rise to 512 to stay one-shape-per-region — 48
-`HeightMapShape3D`s of 256² samples each, ≈ **12.6 MB of shape data plus
+`collision_shape_size` must rise to 512 to stay one-shape-per-region — 64
+`HeightMapShape3D`s of 256² samples each, ≈ **16.8 MB of shape data plus
 broadphase**, built during the load screen.
 
 **Recommendation: dynamic collision, set correctly and asserted.**
@@ -624,10 +1141,23 @@ is unmeasured and is the thing `OW5B` must put a number on.
 ### 8.3 The scatter is the hard prerequisite
 
 `scripts/world/vegetation.gd` `build()` instantiates every MultiMesh instance
-for the whole world at startup — about **28,790 today over 0.262 km²**. The
-corridor is **12.58 km²**, i.e. **48×**. At the same density that is roughly
-**1.38 million instances built during the load screen**, in GDScript, with a
-per-instance `height_at` sample.
+for the whole world at startup.
+
+**Revision 1 said "about 28,790 today" and that number has no source.** Grepped:
+it appears nowhere in this tree except in revision 1 of this document and `D50`.
+The figures the repo has actually recorded, each a snapshot of the full
+`meadows_playground.tscn` scatter at a different content state, are
+**23,452** (`ralph/DONE.md:10002`, the `SA1-lod` note), **23,762** (`:7206`),
+**24,314** (`:7018`, `:7077`) and **25,946** (`:3631`). The blind review's own
+measurement is **23,707**, which sits inside that spread. Take **~23.7 k** as
+the working figure and the 23.4–25.9 k spread as its honest uncertainty; the
+28,790 is withdrawn.
+
+Over 0.262 km² that is ~90,400 instances per km². The corridor is **16.78 km²**,
+i.e. **64×**. At the same density that is roughly **1.52 million instances**
+(1.50 M–1.66 M across the recorded spread) **built during the load screen**, in
+GDScript, with a per-instance `height_at` sample. Revision 1's 1.38 M inherited
+both the wrong base and the wrong area.
 
 This is not a tuning problem. **Streaming the scatter is a hard prerequisite
 for the corridor, not a follow-up.** The corridor cannot land until it exists.
@@ -670,36 +1200,168 @@ Two things that swap will break and must be planned for, not discovered:
 
 | system | resident at boot | streamed | note |
 |---|---|---|---|
-| terrain region data | ~17 MB, all 48 regions | — | small; loaded from `data_directory` |
-| terrain map memory | ~38 MB texture arrays | — | fine on an Ally |
+| terrain region data | ~22 MB, all 64 regions | — | small; loaded from `data_directory` |
+| terrain map memory | ~48 MB texture arrays | — | fine on an Ally |
 | terrain mesh | clipmap around camera | yes, by Terrain3D | independent of world size |
 | **terrain collision** | **nothing** | **yes — `collision_mode` 1, `collision_radius` 512** | changed by this document; see §8.2 |
 | **scatter** | **nothing** | **yes — `Terrain3DInstancer`, per region** | changed by this document; hard prerequisite |
-| perimeter edge | nothing | yes, per region | 19.5 km of edge; see §6 |
+| perimeter edge | nothing | yes, per region | 20.5 km of edge; see §6 |
+| **the baked map texture** | **nothing at boot, but a one-shot bake on first launch** | **must become per-region or per-band** | **added in revision 2; see §8.6 — this is the second hard prerequisite** |
+| **`MapState` fog grid** | one `PackedByteArray`, sized by the world | — | **save-format change; see §8.6** |
 | structures (village, quarry, relay, stronghold) | all | — | a few dozen prefabs; cheap and they anchor the map |
 | NPCs, trainers, harvest nodes, props | all | — | ~60 nodes total; cheap |
 | creature spawns | all spawn *points*; bodies on demand | — | already how `spawns.json` works |
 
 `PT-18` records that boot cost already rose sharply on the current 512 m world.
-Nothing in this document reduces that; §8.2 and §8.3 stop it from being
-multiplied by 48.
+Nothing in this document reduces that; §8.2, §8.3 and §8.6 stop it from being
+multiplied by 64.
+
+### 8.6 The map system — the one that runs on the player's hardware
+
+**Missing from revision 1 entirely**, in all three documents, and it is the only
+item in this section whose cost is paid by the player rather than by an offline
+bake. Three files hard-code the world's extent, and one of them writes it to the
+save file.
+
+| file | constant | value | what breaks |
+|---|---|---|---|
+| `scripts/world/map_baker.gd:36` | `HALF_SPAN` | `256.0` | the baked map texture covers only the middle 512 m of an 8 km corridor |
+| `scripts/ui/minimap.gd:49` | `WORLD_HALF` | `256.0` | the minimap's player dot and its texture sampling both use it; wrong world → wrong position |
+| `autoload/map_state.gd:28–30` | `GRID` 128, `CELL` 4.0, `ORIGIN` (−256, −256) | a 128×128 grid of 4 m cells over ±256 m | fog-of-war covers 0.26 km² of a 16.78 km² world — **and it is persisted** |
+
+Each of the three carries a comment tying itself to `terrain_playground.json`'s
+`world_size` 512, so none of them is an accident; they are three places one
+number was copied to. §10's relocation table omitted all three.
+
+**(a) `map_state`'s grid is in the save file, so this is a save-format change.**
+`save_data()` writes `visited_b64` = `Marshalls.raw_to_base64(_visited)`, a
+`GRID × GRID` = 16,384-byte array. `load_data()` is defensive — a
+`visited_b64` of the wrong length is discarded with a `push_warning` and a fresh
+fully-hidden grid is kept — so **an existing save does not crash, it silently
+loses all map discovery.** That is the benign case.
+
+The dangerous case is the one `load_data` cannot detect: **changing `CELL` or
+`ORIGIN` while `GRID × GRID` stays the same length.** The byte array validates,
+loads, and every cell now means a different piece of world. A player's explored
+Meadows comes back as an arbitrary pattern of revealed squares somewhere else.
+Any change here must therefore go through `D27`'s save format properly — a
+version bump or an explicit grid descriptor in the payload, not a silent
+constant edit — and `D33` ("one map database … a 128×128 cell grid over the
+±256 m playground world") states the current geometry as part of its decision
+and needs amending, not just the code.
+
+**Sizing it, for `OW5B`/`OW5D` to argue with.** The grid must become
+rectangular; a square grid over an 8192 × 2048 world wastes three quarters of
+itself. At the current `CELL` 4.0 the corridor needs 2048 × 512 = **1,048,576
+cells = 1 MB per save slot**, which is absurd for fog-of-war. At `CELL` 16.0 it
+is 512 × 128 = **65,536 bytes**, four times today's file for 64 times the world,
+with cells the size of a small clearing. The reveal radius (~45 m today) is
+already three `CELL` 16 cells wide, so the fog's *edge* resolution barely
+changes. **`CELL` 16.0, `GRID_X` 512, `GRID_Z` 128 is the recommendation**, and
+it is a recommendation, not a measurement.
+
+**(b) `map_baker.bake()` runs on the player's machine, on first launch.**
+It walks a `resolution²` grid — 512² = 262,144 pixels by default — and per pixel
+calls `ground_height_at`, then in a second pass `building_apron_factor` and
+**`path_factor`**. Per §1.1, `path_factor` rebuilds `road_polylines()` from the
+config Dictionary on every one of those calls with no cache and no distance
+rejection. `bake_cached()` writes the result to `user://cache/map_meadows.png`
+keyed on a hash of `terrain_playground.json`, and `playground_hud.gd:796`
+(`_ensure_minimap_baked`) and `tab_map.gd:600` both call it lazily — so the
+**first player to open the map after a fresh install pays the whole thing, on
+an Ally, inside a frame budget.**
+
+At 64× the world and the same metres-per-pixel, that is 8192 × 2048 =
+**16.78 M pixels**. Even at four times coarser (2048 × 512 = 1.05 M px) it is
+4× today's pixel count with a road scan that has grown from 47 segments to ~130
+(§11). This is not a tuning problem either. **The map bake must become
+per-region or per-band and incremental — baked as the player enters a band, or
+shipped pre-baked as an asset — before the corridor lands.** It is the second
+hard prerequisite alongside the scatter, and unlike the terrain bake it cannot
+be moved offline by fiat, because `bake_cached`'s whole design is that the
+terrain recipe is the only input and the cache key is its hash.
+
+The honest option worth pricing first: **ship the baked map PNG as a committed
+asset** the way the terrain regions already are, and keep `bake_cached` as the
+dev-tooling path. The terrain is baked offline and committed; there is no reason
+its top-down picture should not be.
+
+**(c) The capture tooling hard-codes the same constants.**
+`tools/capture_perimeter.gd:30` `RADIUS := 235.0` and `SEGMENTS := 40` walk the
+ring that `D51` deletes outright — that tool needs rewriting, not re-tuning,
+alongside `world_perimeter.gd`. `tools/capture_hillside.gd:50` documents its
+viewpoints as "MUST stay inside the baked world (±256 m, `world_size` 512)" and
+records that an eye past the edge broke Terrain3D's streaming for a whole
+survey run, not just one frame. Both are survey infrastructure, so if they are
+not moved with the world the first evidence of the corridor being wrong will be
+a survey that renders nothing.
 
 ### 8.5 What this does to the build order
 
 **Streaming is a prerequisite, so it is a child item ahead of the trail work,
 not after it.** The order that follows:
 
-1. Scatter streaming (`Terrain3DInstancer` swap) and dynamic collision, on the
-   **current 512 m world**, where a regression is visible in one survey run and
-   `smoke_traversal` already covers the ground. Ship it before the footprint
-   changes.
-2. The footprint and the bake (`OW5B`), including the two defects in §1.3 and
-   the `_config` hoist in §1.1.
+1. Scatter streaming (`Terrain3DInstancer` swap), dynamic collision, **and the
+   map system (§8.6)**, on the **current 512 m world**, where a regression is
+   visible in one survey run and `smoke_traversal` already covers the ground.
+   Ship it before the footprint changes.
+2. The footprint and the bake (`OW5B`), including the **three** defects in §1.3,
+   the `road_polylines()` cache and the `_config` hoist in §1.1, and a **timed
+   single-region bake first** to anchor the unit cost (§1.1).
 3. The trail, loops and edges (`OW5C`).
 4. Relocation of everything in §10 (`OW5D`).
 
-Doing (1) after (2) means debugging a streaming bug and a 48-region bake at the
-same time, with a two-hour turnaround on the bake.
+Doing (1) after (2) means debugging a streaming bug and a 64-region bake at the
+same time, with a three-hour turnaround on the bake.
+
+#### Reconciling this order with `MQ2B`
+
+`MQ2B` is explicit: *"Do not build all five bands at mediocre density. Take the
+first appropriate Meadows region and finish it to the actual desired production
+standard… Only after this region passes should its composition/content
+principles be used to author the remaining bands."* Step 2 above bakes all five
+bands' terrain before any region has passed that gate. The review is right that
+this needs an answer rather than silence.
+
+**The answer is that `MQ2B`'s gate is about content density, and the terrain
+bake is not content.** The two are separable and the seam is clean:
+
+- **`build_playground_terrain.gd` is monolithic by construction.** It writes one
+  height/colour/control image pair for the whole world and calls `import_images`
+  once. There is no per-band bake and building one would be a new system, which
+  §0.6 and `MQ2A`'s "do not create a parallel second world-layout system" both
+  argue against. So the bake is all-or-nothing regardless of the build order.
+- **What the bake commits is landform, not density**: the heightfield, the road
+  paint, the carves. `MQ2B`'s checklist — vegetation structure, landmark,
+  exploration loop, gatherable placement, creature habitat, optional discovery,
+  memorable encounter, day/night readability, no empty filler — is **entirely
+  above the terrain layer**, in `vegetation.json`, `props.json`, `spawns.json`,
+  `harvest.json`, `map_landmarks.json`, `trainers.json` and the scene.
+- **The bake is cheap to redo and cheap to avoid redoing.** `height_at` is
+  analytic and reads the JSON live (`ralph/DONE.md:2752`), so any landform
+  change can be *measured* with a probe before it is baked. A failed `MQ2B`
+  gate does not invalidate the bake; it changes what gets scattered on it.
+
+**So the reconciliation, stated as a rule `OW5C`/`OW5D` are bound by:**
+
+> `OW5B` may bake all 64 regions of landform. **No band beyond the `MQ2B`
+> region may receive content** — scatter authoring, prop clusters, spawn
+> placement, harvest nodes, landmarks, trainers or beats — until that region has
+> passed `MQ2B`'s playtest gate. Baked ground with nothing on it is not "five
+> bands at mediocre density"; it is an empty canvas, and `MQ2B`'s prohibition is
+> about density, not about pixels.
+
+**And the `MQ2B` region is Band 2 — Stone & Root — not Band 1.** Band 1 is the
+shipped Lower Meadows, which §3 and §0.6 keep at its exact current coordinates
+and which was authored to an older standard; proving Band 1 proves nothing about
+the production recipe, because the recipe is not what built it. Band 2 is the
+first wholly new band and it independently satisfies `MQ2B`'s checklist without
+being stretched to fit: final-quality terrain composition (the `rock_form`
+scarp), a major landmark (the Old Quarry), a dungeon (the Burrow Warrens), three
+regional loops, a reconnect/shortcut (the quarry haul road), `D41`'s drained
+ground as environmental story, and its own creature set. If it passes, its
+composition principles carry to Bands 3 and 4; if it fails, the failure is
+discovered on 3.2 km of corridor rather than on 12.
 
 ---
 
@@ -715,15 +1377,25 @@ bearing was searched at 1° and every offset at 2.5 m, and the best compliant
 chord left a far side 17 m deep — a verge, not a region. The choice was "divide
 it and pay one spoke, or do not divide it."
 
-In a 1536 m-wide corridor that constraint evaporates. A river crossing the
-**width** at z ≈ 4,200 divides the map completely and trivially: it needs 1,536
+In a 2,048 m-wide corridor that constraint evaporates. A river crossing the
+**width** at z ≈ 4,200 divides the map completely and trivially: it needs 2,048
 m of course plus overrun past both edges, it crosses every possible route
 because there is only one direction of travel, and the far side is 3,400 m
 deep. There is no search to run and no chord to compromise.
 
-**Decision: the storm road is recovered.** All seven spokes stand, and the
-storm road moves to the far end at (0,7000) → (0,7620), past the stronghold, in
-Band 4/approach. D46's cost is repaid.
+**Decision: the storm road is recovered — conditionally.** In this layout all
+seven spokes stand, and the storm road moves to the far end at (0,7000) →
+(0,7620), past the stronghold, in Band 4/approach. D46's cost is repaid.
+
+**Stated in the right tense, which revision 1 did not.** The shipped game has a
+severed storm road: `rift_collapse.gd` is built against it, `smoke_riding` and
+`smoke_boss` assert against its walls, and `ralph/DONE.md:16` records it as
+delivered. Nothing in this document has moved it. The recovery is what becomes
+true **once `OW5B`, `OW5C` and `OW5D` have all landed** — the corridor baked,
+the spokes re-sited, the river re-authored across the width. Until then D46
+still describes the world as it runs. `D50` records the supersession with that
+condition attached; do not read either document as saying the seven spokes stand
+today.
 
 What is deliberately kept from D46, because it was right about these and they
 are not about the disc:
@@ -797,8 +1469,30 @@ Band 0 and the village are **unmoved by design** (§3). Everything else moves.
 | all remaining `spawns.json` entries | `spawns.json` | within ±150 m | to their band per spec §13 (§5 above) |
 | `props.json` clusters ×5 | `props.json` | near village | per band |
 | perimeter | `world_perimeter.gd` | circle r235 | §6, D51 |
-| `world_size` / `vertex_spacing` | `terrain_playground.json` | 512 / 1.0 | bounds x[−768,768] z[−512,7680] / 2.0 |
+| `world_size` / `vertex_spacing` | `terrain_playground.json` | 512 / 1.0 | bounds **x[−1024,+1024] z[−512,+7680]** / 2.0 |
 | `WORLD_EDGE` | `tests/smoke_traversal.gd` | 240.0 | corridor bounds |
+
+### 10.2b The map system and the survey tooling
+
+**Added in revision 2. Revision 1 omitted every file in this table**, including
+the three that hard-code the world's extent and the one that writes it to the
+save. The reasoning for each is §8.6; this is the checklist.
+
+| what | file | current | new |
+|---|---|---|---|
+| map bake extent | `scripts/world/map_baker.gd:36` `HALF_SPAN` | 256.0 | two-axis bounds; **and the bake must become per-region/per-band or pre-baked — §8.6(b)** |
+| map bake cost | `map_baker.gd::bake()` / `bake_cached()` | 512² px on the player's first launch | incremental or shipped as an asset |
+| minimap extent | `scripts/ui/minimap.gd:49` `WORLD_HALF` | 256.0 | two-axis bounds, matching `map_baker` exactly |
+| fog grid | `autoload/map_state.gd:28–30` `GRID` / `CELL` / `ORIGIN` | 128 / 4.0 / (−256,−256) | rectangular: **`GRID_X` 512, `GRID_Z` 128, `CELL` 16.0, `ORIGIN` (−1024, −512)** |
+| **the save format** | `map_state.save_data()` `visited_b64`, via `D27` | 16,384 bytes, geometry implicit | **explicit grid descriptor or a version bump — a silent constant edit silently corrupts every existing save (§8.6a)** |
+| the map decision itself | `docs/decisions/D33` | states "a 128×128 cell grid over the ±256 m playground world" as part of the decision | amend, do not just edit the code |
+| perimeter survey | `tools/capture_perimeter.gd:30` `RADIUS` 235.0, `SEGMENTS` 40 | walks the ring | **rewrite — `D51` deletes the ring** |
+| hillside survey | `tools/capture_hillside.gd:50` | viewpoints documented as "MUST stay inside ±256 m" | re-site; an eye past the edge broke Terrain3D streaming for a whole survey run, per the file's own comment |
+
+**Run the full suite on the `map_state` change.** It is the only item in this
+document that touches persisted player data, and `test_map_baker.gd`,
+`test_progression_state.gd` and the save round-trip tests are what stand between
+a constant edit and a corrupted save.
 
 **New coordinates in this table are the layout's intent, not surveyed ground.**
 `height_at` is analytic and unbounded, so every one of them can and must be
@@ -846,6 +1540,22 @@ So the corridor's spine and loops are expressed as **new sources unioned into
   four-arm fingerpost by the well keeps naming the four places you can walk to
   from the square, which is what a village junction sign is for.
 
+**This is not free, and §1.1 is why.** `road_polylines()` is called from inside
+`path_factor`, which the bake calls once per pixel and `map_baker` calls once
+per map pixel, and it rebuilds its whole result from the config Dictionary on
+every call with no cache and no distance rejection. Today it returns **13 lines
+/ 47 segments**. The §3.1 spine adds **81 segments** across six polylines and
+the §3.2 loops add ten more polylines — roughly **4× the per-pixel road work,
+over 16× the pixels.**
+
+So this section's data change and §1.1's `road_polylines()` cache are **one
+piece of work, not two**, and the cache must land first. The cheap version is a
+bounding box per line, rejected before the segment loop: the trail's bands are
+1.4–3.4 km long and 900 m wide at most, so a pixel in Band 4 rejects Bands 0–2
+in three comparisons instead of 54 segment-distance calls. The complete version
+caches the `PackedVector2Array` set at `_init` and rebuilds it only when the
+config is reloaded, which nothing does at bake time.
+
 Wayfinding along the trail is `paths.trailheads` — the existing one-arm
 fingerpost object, already used for The Rise and the South Bridge, and already
 reused by `severed_spokes.gd` through `signpost.gd`'s `routes_override`. One
@@ -857,6 +1567,25 @@ was never built for.
 
 ## 12. Open questions this document does not settle
 
+- **Whether forty minutes is a walking figure or a floor.** §2's corrected
+  sprint arithmetic gives a sustained 7.00 m/s and a **27.6 minute** crossing —
+  31% under the directive — for any player who cycles the stamina bar. At walk
+  the layout meets the target (38.6 min). Making forty minutes hold for a
+  sprinter needs a **16,800 m** trail, 45% longer than the authored spine. That
+  is an owner question, not a layout decision, and it is the first thing to put
+  in front of him.
+- **The bake unit cost has no anchor** (§1.1). 2584 µs/px is measured on this
+  container and confirmed by nothing. Every minute figure in this document and
+  in `D50` inherits that. A timed single-region bake settles it for the price of
+  a coffee.
+- **Whether content is free at bake time** (§1.1). The two-tile experiment could
+  not answer this because `path_factor` rebuilds `road_polylines()` per call and
+  both tiles paid the same road scan. `ralph/PERF1`'s cache had **not** landed
+  on `origin/main` as of `5c7ec165`. Re-measure with content varied, not tiles.
+- **Whether 2.0 m spacing holds the carves on the statistic that decides it**
+  (§1.2). `blocked_60` against carve depth, at the now-fixed origin, on the
+  three spoke carves and the gully. The margin is ~5°, not ~15°, and the
+  phase-dependent swing is as wide as the margin.
 - **The frame cost of a dynamic collision rebuild step** at
   `collision_shape_size` 64 vs 256. §8.2's radius recommendation is reasoned
   from `sprint_speed`, not measured.
@@ -867,7 +1596,21 @@ was never built for.
   through four bands cannot use one plane for everything; Band 3's marsh (§6)
   and the pond are 3,600 m apart. `OW5B` needs a plan for more than two water
   bodies, or an authored per-body level.
-- **Whether 1,536 m of width is right after the first band is built.** §5's own
-  rule is "only as large as the team can make meaningfully dense". If Band 1's
-  flanks come out empty, narrowing to 1,024 m (two regions) is cheaper than
-  filling them, and the spine's x range (−430 … +450) survives it.
+- **Whether 2,048 m of width is right after the `MQ2B` region is built.** §5's
+  own rule is "only as large as the team can make meaningfully dense". If Band
+  2's flanks come out empty, the fallback is **1,024 m** (`x ∈ [−512, +512]`,
+  two region columns, 32 regions) — the next aligned value down; 1,536 is not
+  available at any centring (§1.3a). But narrowing is **not** the cheap edit
+  revision 1 implied: at ±512 the spine's own ±430–450 swing uses 84–88% of the
+  half-width, all six lateral spoke blockers fall outside the world, and most
+  of §3.2's loops have nowhere to go. Narrowing means re-authoring the spine,
+  the loops and the spokes together, and it should be decided before `OW5B`
+  bakes, not after.
+- **How `map_state`'s save format changes** (§8.6a). The recommendation is
+  `GRID_X` 512 / `GRID_Z` 128 / `CELL` 16.0, and it is reasoned from the reveal
+  radius rather than measured. Whether it lands as a version bump or an explicit
+  grid descriptor is `D27`'s question, not this document's.
+- **Whether the baked map ships as an asset** (§8.6b). Committing the top-down
+  PNG the way the terrain regions are already committed removes a first-launch
+  cost from the player's hardware entirely, and nothing about `bake_cached`'s
+  design forbids it. Not decided here.
