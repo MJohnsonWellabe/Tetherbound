@@ -7,6 +7,7 @@
   "_comment_of30_flags": "`flag:<id>` sets an autoload/progression_state.gd flag, the same store the road gate and the TM pickups already write to. `tam_tools_given` is what stops the tool set being handed over twice; `recipe_orb_basic` is what unlocks the orb recipe in data/recipes/recipes.json (its `unlocked_by`). Both are set on the SAME line as the thing they record, so a conversation that is somehow cut short cannot bank the gift without the flag or the flag without the gift.",
   "_comment_of31_trade": "D39 (OF31, owner: \"Make the villagers so I can trade with them. Creatures and materials... Make one of the villagers the merchant. He has a store in his house. He'll buy and sell goods from you. Make the third whatever makes sense.\"). Mira is the merchant and Oskar the creature trader; Tam stays the smith OF30 made him. Same additive shape as Tam's: `village_mira` and `village_oskar` are untouched and are still what each of them says on an ordinary greeting -- the trading lines are ADDED branches in data/config/village_npcs.json's `greeting_when`. The `shop:` effect is new (scripts/story/sequence_director.gd::_queue_shop) and reads `shop:<goods|creatures>:<vendor_id>`, where the vendor id is a key in data/config/trade.json. It opens the screen once the dialogue box has CLOSED, the same wait the starter picker already needed.",
   "_comment_of31_coins": "D39 chose the friendlier of the two starts the brief offered: Mira's first conversation hands over a float so the first visit to the shop can buy something, rather than a zero-start that has to be bootstrapped by selling. The count here and `starting_coins` in data/config/trade.json are checked against each other by tests/test_trade.gd -- a line that says thirty while the config says ten is a lie the player can count.",
+  "_comment_ow9_foreman": "OW9 (owner: \"Someone at the beginning needs to tell you to go gather materials to build things like orbs. Someone else will need to tell you to get wood and build a base camp. They should probably give you a hammer and recipe.\"). The gather half is Tam's already (OF30/`village_tam_orbs`); this is the build half, spoken by the Quarry Foreman -- the one villager with a trade that touches building and nothing yet to hand over. Second use of OF30's route exactly: one `give:`+`flag:` line, gated in data/config/village_npcs.json's `greeting_when` so it can never repeat. `hammer` is not a new item -- R2.1 shipped it as a real tool with nothing that gave it out yet (its own `_comment_tools`); this is that gift. There is no separate 'recipe' flag or item: `camp` (data/items/buildables.json) has never been locked behind an unlock flag the way `orb_basic` is -- GAME_DESIGN.md 20's mandatory tutorial shelter is meant reachable from minute one -- so gating the BUILDABLE would be inventing a system the design does not call for. The 'recipe' the owner asked for is spoken, the same way OF30 handed the torch over in words with no torch item: the Foreman names the materials a camp actually costs on the same line he hands over the hammer.",
   "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam each gain a `_challenge` and a `_beaten` conversation, chosen by data/config/village_npcs.json's `greeting_when` once their vendor/gift branch is spent (spec sec3 Band 1, D39's dual-role rule). Every challenge's LAST line carries `battle:<trainer_id>` -- scripts/story/sequence_director.gd's fourth dialogue effect, read the moment the dialogue box closes, the same deferred-start contract scripts/world/trainer_npc.gd already uses for a standalone trainer. Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their standing vendor branch always has, so the store/swap stay reachable forever once they are beaten (D39's rule made real); Tam's is flavour only -- he has no vendor effect left to carry.",
   "_comment_hall_approach": "SF34. The Meadows Hall approach gate (scripts/world/playground_world.gd::_build_sigil_gate). Nobody stands at this gate, so the words are a Team Tether notice bolted to the leaf — the same trick road_gate_locked plays with Grandpa's voice, but diegetic here rather than remote narration. The PORTRAIT IS A STAND-IN: the project has exactly two portraits on disk (grandpa, trainer) and neither is a faction notice; tests/test_dialogue_runner.gd requires a real one, so this uses the trainer plate under CLAUDE.md's Prototyping rule and should be replaced when the faction has art of its own. The sealed line never names how many Sigils are missing — the objective tracker counts (data/progression/objectives.json), and saying it twice in two voices is how a count drifts.",
   "conversations": {
@@ -190,6 +191,22 @@
         "Foreman by trade, though there's no quarry to run yet — Team Tether's been working the old rootstone seams south of here longer than anyone local has.",
         "Give it time. Stone doesn't go anywhere. Neither do I.",
         "You want the honest version? Every seam they've run a line off has gone bad above ground within the month. Grass first, then the scrub, then it's bare. They tell me that's the weather."
+      ]
+    },
+    "village_quarry_foreman_hammer": {
+      "speaker": "Quarry Foreman",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "No quarry to run leaves a foreman with time on his hands. Enough to watch you crossing this square with an armful of deadwood and nowhere under a roof to put it down.",
+        "Wood left in a heap too long swells and rots on you. A trainer left out in the open does worse. Neither keeps well that way.",
+        {
+          "text": "Take this — my old hammer. No use to me without stone to cut. Get enough wood together, stone too if the trip's worth it, fiber for the binding, and you've a fire and a roof both. Simplest thing any of us ever raised.",
+          "effects": [
+            "give:hammer:1",
+            "flag:camp_hammer_given"
+          ]
+        },
+        "Don't put it on the road itself. Learned that one the hard way."
       ]
     },
     "village_rescued_ranger": {
