@@ -160,3 +160,40 @@ board, the four head crops, the board-16 prompts, and the head-only crop rule
 that took two attempts to find. What remains is body → graft → remesh → rig →
 animate → install. Blender is required for it and is NOT part of this image; it
 was installed ad hoc here (`apt-get install blender`).
+
+### Three routes tried, and why the fourth is the right one
+
+1. **Retexture the shipped body against board 16.** Rejected: it drained the
+   colour, lost the gold trim, dulled the cream cape, and the face came back no
+   better. `enable_original_uv` is false on that endpoint, so it re-UVs and
+   discards the hand-graded texture the current asset carries.
+2. **Graft the new head onto the shipped body.** The graft itself WORKS —
+   `graft_head.py` finds the body's neck at 0.917 of height once the armature
+   is stripped, scales the bust to the board's ~7-heads ratio and drops it in.
+   What kills it is the step after: `cleanup_mesh.py`'s voxel remesh, which the
+   graft explicitly depends on to weld the two volumes, shreds this body. The
+   shipped Warden is a finished asset with a THIN-WALLED cape, coat skirt and
+   layered collar; voxel remeshing at 28k triangles eats thin surfaces, and the
+   result was a hole-riddled mass with the head gone entirely.
+3. Raising the voxel budget was not attempted, because the failure is
+   structural rather than a tuning miss — the graft path assumes a freshly
+   generated, solid, PRE-RIG body, and every other character in this project
+   went through it in that state.
+
+**The fourth route, and the one to take: run the Warden through the character
+pipeline once more as if he were new.** Generate his BODY from board 16, pick a
+winner, graft the head that is already good, remesh, texture, rig, animate,
+install, validate. That is the same run Terrapup, the trainer, Grandpa and the
+villagers each had, and it is the only one of the four that does not fight the
+tools.
+
+It is a proper job — a few hundred credits and its own verification pass — and
+it REPLACES a working, rigged, animated in-game asset, so it deserves its own
+task rather than being tacked onto the end of an unrelated one. What is
+committed here means it starts from the interesting part: board 16 is vendored,
+the four head crops are cut, the head-only crop rule is written down, the
+board-16 body and head prompts are in `meshy.py`, and the head candidates are
+generated and judged.
+
+**The current Warden is untouched and still works.** That was deliberate at
+every step: nothing was installed that had not been rendered and looked at.
