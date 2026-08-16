@@ -691,6 +691,9 @@ func poll() -> void:
 	_read_assign()
 	_read_held_cancel()
 	_read_targeting_cancel()
+	# OW4: confirm is polled next to cancel, because on a pad the row Button
+	# can never be pressed -- `ui_accept` has no joypad binding in this project.
+	_read_targeting_confirm()
 	_read_confirm_cancel()
 	if _targeting >= 0:
 		_refresh_target_panel()
@@ -1717,6 +1720,61 @@ func _read_targeting_cancel() -> void:
 	if Input.is_action_just_pressed("menu_cancel"):
 		say("")
 		_end_targeting()
+
+
+## Confirm the focused row, polled -- the other half of the pair above.
+##
+## OW4, the owner's second report of it: *"When I use a potion I get to the
+## screen to choose the creature then you can't choose."* OF22 fixed the half
+## where the picker opened with focus landing on nothing. The half left behind
+## is gamepad-only, which is exactly why every keyboard-driven test of it
+## passed: the picker had NO confirm poll and leaned entirely on the row
+## `Button` activating itself, and a `Button` activates on `ui_accept`.
+##
+## Measured from a real `InputEventJoypadButton` rather than an
+## `InputEventAction`, which is the whole difference between the passing test
+## and the owner's hardware:
+##
+##   ui_accept     -> key, key, key      <- no pad binding at all
+##   ui_left       -> key, JOY:13, axis:0
+##   menu_confirm  -> key, JOY:0
+##
+## So on a pad, focus MOVES between rows and nothing can ever press one. The
+## probe opened the picker with X, landed focus on the one eligible row, then
+## pressed A and nothing happened: HP 1.0 -> 1.0, potions 3 -> 3, picker still
+## open. A dead end, precisely as reported.
+##
+## Polling `menu_confirm` is the fix rather than giving `ui_accept` a pad
+## binding, because that binding is missing GAME-WIDE and every other
+## pad-driven screen here already works around it this same way --
+## `starter_picker.gd`, `tab_creatures.gd` and `combat_hud.gd` all poll
+## `menu_confirm` for exactly this reason. Adding JOY:0 to `ui_accept` globally
+## would make every one of those screens confirm TWICE from one press, which is
+## the double-confirm `name_prompt.gd`'s own header records having paid for.
+## That the binding is missing at all is a real finding and a wider one than
+## this item, so it is reported rather than quietly fixed here.
+##
+## Safe to run alongside the `Button` path rather than instead of it: a
+## keyboard `ui_accept` still activates the row directly, `_on_target_row`
+## clears `_targeting`, and this poll's own guard makes the duplicate press a
+## no-op in the same frame.
+func _read_targeting_confirm() -> void:
+	if _targeting < 0:
+		return
+	if not Input.is_action_just_pressed("menu_confirm"):
+		return
+	var viewport := get_viewport()
+	var focused: Control = viewport.gui_get_focus_owner() if viewport != null else null
+	var index := _target_rows.find(focused)
+	if index < 0:
+		# Focus is not on a row at all. `_open_target_picker` lands it on the
+		# first eligible row and ineligible rows are out of the focus chain, so
+		# this is the "somehow nothing is selected" case. Say so rather than
+		# leave the player pressing A at a screen that never answers, which is
+		# the exact shape of the report this fixes.
+		say("Pick a creature first.")
+		return
+	_on_target_row(index)
 
 
 func _end_targeting() -> void:
