@@ -1779,16 +1779,17 @@ components cost Rootstone and Ironwood, which is a progression step rather than
 a free-standing milestone. Their briefs are kept here; the ordering is there.
 R6.3's play gate stays where it is.
 
-### R6.1 — Riding · `model: opus` · `tests: smoke_riding` (new) · M12
-Mount/dismount, generic saddle, riding stamina, a clear advantage over
-running, and no species-specific saddle clutter.
+**`R6.1` (mount/dismount on the interact verb, the stick driving the CREATURE, camera handoff, and every guard rail) shipped — see `DONE.md` and `docs/decisions/D46`.** Riding is an ordinary interaction provider on the shared arbiter, so it costs no new binding and inherits `sequence_director`'s whole modal lockout for free. STAMINA DECISION: riding costs nothing and the mount has no meter of its own — the trainer is sitting down, and a meter that ends the ride attacks the only thing riding is being sold on (D46 §3 has the full reasoning and where a cost would honestly go if one is ever wanted). Found and fixed a real bug every unit test passed through: **a freed Object compares EQUAL to `null` in GDScript**, so both despawn guards were dead code and dismissing your creature mid-ride left an invisible, collisionless trainer falling through the world.
 
-### R6.2 — Meadowhart as the rideable creature; craftable generic saddle
-`model: sonnet` · `tests: test_build_catalogue`
-Spec §3 Band 4 confirms Meadowhart as the rideable Meadows creature and prices
-the saddle in Rootstone/Ironwood components (`SD18`, `SF31`). Riding should
-dramatically improve *revisiting* known areas — that is the value it is being
-sold on, not raw speed.
+**`R6.2` (Meadowhart's `rideable` block + the craftable generic saddle) shipped — see `DONE.md`.** One generic saddle, never one per species; which creature it fits is the CREATURE's data (`species.json`'s `rideable.requires_item`), so `R8.5`'s mount is a second block rather than a second branch. Priced at `saddle_frame` (SD18) + Rootstone + wood + fiber, with the **Ironwood seam** written into the recipe's own comment: `SF31` adds one `cost` line and drops the wood count, and nothing in code reads the cost. Shipping at the Rootstone price rather than blocking on SF31 is deliberate — a recipe costing an item `item_db` cannot resolve is a recipe the craft screen cannot draw.
+
+Honest residue on both, for `R6.3`'s play gate to judge rather than for a
+follow-up item: the trainer's ART is **hidden** while mounted rather than seated,
+because the M11 rig has no sit clip (idle/walk/sprint/throw) and a standing
+trainer would ride bolt upright on the deer's back. The mount offset is already
+authored for where a rider belongs, so that is an art swap in one line. Nothing
+has been ridden on a controller on the Ally yet, and the ride camera pose
+(`movement.json`'s `riding.camera`) is a first guess.
 
 ### R6.3 ▶ Play gate — does riding make exploring better?
 
@@ -2026,9 +2027,10 @@ power source.
 
 ### 8d — Upper Meadows (spec Phase F)
 
-**R6.1 and R6.2 (riding, Meadowhart, the generic saddle) are worked here** —
-spec §3 makes riding a Band 3 / early Band 4 unlock priced in Rootstone and
-Ironwood. Their briefs stay in Phase 6; the ordering is this.
+**R6.1 and R6.2 (riding, Meadowhart, the generic saddle) shipped 2026-08-16** —
+see Phase 6 for what landed and `docs/decisions/D46` for why it is shaped that
+way. They did NOT wait for `SF31`: the saddle ships at the Rootstone price with
+a named seam for Ironwood.
 
 ### SF31 — Ironwood, the second preparation tier
 `model: sonnet` · `tests: test_recipes`
@@ -2036,6 +2038,14 @@ Spec §3 Band 4, §10. Supports stronger crafting, riding equipment, better
 utility and final-stronghold preparation. It does not need to literally be
 iron. Keep the economy small and readable. Done when: nothing needed for the
 stronghold requires a third new material.
+
+**Riding equipment is already waiting for this one.** `data/recipes/recipes_rootstone.json`'s
+`saddle` recipe carries a `_comment_ironwood` seam spelling out the exact edit:
+add `{ "id": "ironwood", "n": 2 }` to its `cost` and drop the `wood` count from
+4 to 2, keeping the total investment roughly where it is. Nothing in code reads
+that cost, so no riding code changes. `tests/test_recipes.gd::
+test_the_saddle_costs_nothing_that_does_not_exist_yet` is what stops it being
+added before the item exists.
 
 **`SF33` (the Tether Energy Pylon hero asset, generated and ledgered; two of the seven spokes — `river_gorge` and `storm_road` — dressed with the full severed-rift grammar) shipped, partial — see `DONE.md`.** `model: fable` dispatch, done in the authoring agent's own session with no subagent spawning available, so its blind-pass rubric was self-administered rather than an isolated critic — recorded honestly in `DONE.md`, same disclosure pattern as `OF10-remainder`. The other five spokes continue in `SF33-remainder` below.
 

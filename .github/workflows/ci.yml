@@ -694,6 +694,95 @@ jobs:
           fi
           exit $code
 
+  verify-riding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
+      - name: Smoke-test riding
+        # R6.1/R6.2. Mounts the player's own Meadowhart through the real
+        # interact binding and the real interaction arbiter, drives it on the
+        # real movement actions, and gets off again — asserting the things unit
+        # tests are structurally blind to: that the CREATURE is what moves, that
+        # it beats the trainer's own walk speed, that the camera follows the
+        # mount, and that the trainer comes back visible, collidable and on the
+        # ground.
+        #
+        # The two bugs it already caught, both of which every unit test passed
+        # through: a freed Object compares EQUAL to null in GDScript, so both
+        # "the mount was despawned under the rider" guards were dead code and
+        # dismissing your creature mid-ride left an invisible, collisionless
+        # trainer falling through the world.
+        #
+        # LP9: same tick-budget-vs-wall-clock retry as verify-combat above, for
+        # the same measured reason — this is a scene-boot-and-simulate test
+        # whose waits are counted in physics frames, and heavy CI contention can
+        # exhaust a frame budget without anything being stuck.
+        run: |
+          set +e
+          godot --headless --path . --script tests/smoke_riding.gd
+          code=$?
+          if [ $code -ne 0 ]; then
+            echo "::warning::smoke_riding failed once; retrying once before failing the job"
+            godot --headless --path . --script tests/smoke_riding.gd
+            code=$?
+          fi
+          exit $code
+
   verify-warrens:
     runs-on: ubuntu-latest
     timeout-minutes: 10

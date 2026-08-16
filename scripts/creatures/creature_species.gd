@@ -66,6 +66,45 @@ static func catch_rate(species_id: String) -> float:
 	return float(definition(species_id).get("catch_rate", 0.3))
 
 
+## R6.1/R6.2: can this species be ridden, and on what terms?
+##
+## A species with no `rideable` block cannot be ridden at all, which is the
+## whole roster except Meadowhart today. Returned as a Dictionary with every
+## key filled in rather than raw, so `riding_controller.gd` never has to
+## defend against half-written data — a block that names only a multiplier
+## still answers `mount_offset` and `requires_item`.
+##
+## Deliberately NOT a bool on the species: "which creature is the mount" is a
+## data question the spec answers per band (Meadowhart now, the legendary at
+## R8.5), and the moment it is a hardcoded id in code the second mount needs a
+## second branch instead of a second block.
+static func rideable(species_id: String) -> Dictionary:
+	var raw: Variant = definition(species_id).get("rideable")
+	if not raw is Dictionary:
+		return {}
+	var block: Dictionary = raw
+	var offset_raw: Variant = block.get("mount_offset", [0.0, 1.0, 0.0])
+	var offset := Vector3(0.0, 1.0, 0.0)
+	if offset_raw is Array and (offset_raw as Array).size() == 3:
+		var list: Array = offset_raw
+		offset = Vector3(float(list[0]), float(list[1]), float(list[2]))
+	return {
+		"can_carry": bool(block.get("can_carry", true)),
+		"requires_item": str(block.get("requires_item", "")),
+		"mount_offset": offset,
+		"ride_speed_multiplier": float(block.get("ride_speed_multiplier", 1.5)),
+		"dismount_distance": float(block.get("dismount_distance", 1.6)),
+	}
+
+
+## Shorthand for "is this thing a mount at all". False for a species with no
+## block AND for one whose block says `can_carry: false`, so a species can be
+## tuned before it is switched on.
+static func is_rideable(species_id: String) -> bool:
+	var block := rideable(species_id)
+	return not block.is_empty() and bool(block.get("can_carry", false))
+
+
 ## Best Creature's species-specific perk (GAME_DESIGN.md §12: "Best Creature
 ## abilities should be species-specific where possible"). Lives with the rest
 ## of species data rather than being copied onto every instance, the same

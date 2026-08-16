@@ -56,6 +56,16 @@
     "max": 100.0
   },
 
+  "riding": {
+    "_comment": "R6.1. Deliberately SMALL: how fast a mount goes and what it needs to be ridden are per-species data (data/creatures/species.json's `rideable` block), because 'which creature is the mount' is a progression question the spec answers per band. What lives here is only the part that is about the RIG rather than about the animal -- the camera pose while mounted. All TUNABLE.",
+    "camera": {
+      "_comment": "Pulled back and raised a little from the walking pose (distance 5.2 / height 1.75 above): the thing being followed is a 2m animal with a rider on it, moving at twice walking pace, and the exploration framing puts its rump in your face. `retarget_lag` is the same easing combat uses when the rig swaps from the trainer to a creature -- mounting is the same handoff, and a hard cut loses the connection between the animal you walked up to and the animal you are now sitting on.",
+      "distance": 6.8,
+      "height": 2.35,
+      "retarget_lag": 6.0
+    }
+  },
+
   "camera": {
     "_comment": "Orbit camera on a spring arm. distance/height are the resting pose; the arm shortens automatically when terrain intrudes.",
     "distance": 5.2,

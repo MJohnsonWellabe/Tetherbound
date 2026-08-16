@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/playground_hud.tscn" id="2_hud"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/name_prompt.tscn" id="12_name_prompt"]
 [ext_resource type="Script" path="res://scripts/story/sequence_director.gd" id="13_director"]
 [ext_resource type="PackedScene" path="res://scenes/ui/starter_picker.tscn" id="14_starter_picker"]
+[ext_resource type="Script" path="res://scripts/world/riding_controller.gd" id="16_riding"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -107,6 +108,16 @@ script = ExtResource("10_arbiter")
 [node name="NamePrompt" parent="." instance=ExtResource("12_name_prompt")]
 
 [node name="StarterPicker" parent="." instance=ExtResource("14_starter_picker")]
+
+; R6.1. Registers itself with the InteractionArbiter through its group, the
+; same way every interactable does, so mounting is one more offer competing for
+; the one prompt line rather than a second reader of the interact button.
+[node name="RidingController" type="Node" parent="."]
+script = ExtResource("16_riding")
+player_path = NodePath("../Player")
+camera_rig_path = NodePath("../CameraRig")
+encounter_path = NodePath("../EncounterDirector")
+manager_path = NodePath("../CombatManager")
 
 [node name="SequenceDirector" type="Node" parent="."]
 script = ExtResource("13_director")

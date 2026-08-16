@@ -64,6 +64,33 @@ var _sprinting: bool = false
 ## leaves the player hovering wherever combat happened to open.
 var _locomotion_enabled: bool = true
 
+## R6.1. Something else is carrying this body: a node whose transform this one
+## rides on, plus the local offset to sit at.
+##
+## Deliberately a bare Node3D rather than "the mount". This file's own header
+## promises it knows nothing about creatures, and it still does not — it knows
+## that a body can be carried, which is the same statement a lift or a cart
+## would need. `riding_controller.gd` is the thing that knows the carrier is a
+## Meadowhart.
+##
+## While carried, the trainer runs NO locomotion of its own: no gravity, no
+## friction, no jump, no move_and_slide. Two things writing one transform in one
+## frame is one of them silently losing, the same rule `_set_exploration_active`
+## states for the ally body.
+var _carrier: Node3D = null
+## Whether this body is currently being carried, tracked separately from
+## `_carrier` because a FREED Object reference compares equal to null in
+## GDScript. `if _carrier != null` therefore goes false the instant the mount is
+## deleted, which silently skips the one branch written to handle exactly that —
+## measured, not guessed (tests/smoke_riding.gd's despawn case caught it leaving
+## the trainer invisible and collisionless).
+var _carried: bool = false
+var _carry_offset: Vector3 = Vector3.ZERO
+## Saved so dismounting restores exactly what mounting took, rather than
+## assuming the layer this scene happened to ship with.
+var _carry_saved_layer: int = 0
+var _carry_saved_mask: int = 0
+
 
 func _ready() -> void:
 	_load_config()
@@ -128,6 +155,9 @@ func _load_vitals_config() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _carried:
+		_ride(delta)
+		return
 	_track_airborne(delta)
 	_apply_gravity(delta)
 	_apply_movement(delta)
@@ -247,3 +277,95 @@ func set_locomotion_enabled(enabled: bool) -> void:
 
 func locomotion_enabled() -> bool:
 	return _locomotion_enabled
+
+
+## --- being carried (R6.1) ---------------------------------------------------
+
+## Ride `node`, seated at `offset` in that node's local frame. Pass null to be
+## put down again; the caller is responsible for where the body lands, because
+## only it knows what there is to stand on beside whatever was carrying it.
+##
+## Physics layers are dropped while carried. A 0.4m capsule sitting inside a
+## creature's capsule is two solid CharacterBody3Ds aimed at each other, which
+## is the exact overlap that once launched the player off the playground at
+## 500 m/s (encounter_director._spawn_ally_body's own comment) — and the reason
+## `follower_creature.gd` already zeroes its layer while following.
+func set_carrier(node: Node3D, offset: Vector3 = Vector3.ZERO) -> void:
+	if node != null and not _carried:
+		_carry_saved_layer = collision_layer
+		_carry_saved_mask = collision_mask
+		collision_layer = 0
+		collision_mask = 0
+	elif node == null and _carried:
+		collision_layer = _carry_saved_layer
+		collision_mask = _carry_saved_mask
+	_carrier = node
+	_carried = node != null
+	_carry_offset = offset
+	# The trainer's ART is hidden while carried, not the node: the torch is a
+	# child of this body (scripts/player/torch.gd) and a rider who loses their
+	# light at dusk because they got on a deer is a bug. Hiding is tied to the
+	# carrier here, in ONE place, rather than left to the caller — that is what
+	# makes "the player is never left invisible" an invariant of clearing the
+	# carrier rather than a step somebody can forget on one of the exit paths.
+	#
+	# There is no seated pose in the trainer rig (M11's clips are idle/walk/
+	# sprint/throw), so a visible standing trainer would ride the Meadowhart
+	# standing bolt upright on its back. Hidden is the honest placeholder until
+	# a sit clip exists; the mount offset is already authored for where the
+	# rider belongs, so that swap is art, not code.
+	if _model != null:
+		_model.visible = node == null
+	if node == null:
+		# Nothing about the ride carries over into standing up: no leftover
+		# velocity, no buffered jump from a button pressed in the saddle.
+		velocity = Vector3.ZERO
+		_jump_buffered_for = INF
+		_was_on_floor = true
+		_airborne_for = 0.0
+		_sprinting = false
+
+
+func carrier() -> Node3D:
+	return _carrier if _carried else null
+
+
+## Is the trainer's own art on screen? False only while carried. Read by
+## tests/smoke_riding.gd, which exists mostly to prove this comes back true.
+func rider_visible() -> bool:
+	return _model == null or _model.visible
+
+
+func is_carried() -> bool:
+	return _carried
+
+
+## Sit where the carrier says, and keep the trainer's own clocks running.
+##
+## STAMINA DECISION (R6.1): riding costs the PLAYER nothing and the mount has no
+## stamina meter of its own. The honest reasons, in order — the trainer is
+## sitting down, so a drain would be modelling exertion nobody is doing; a
+## second stamina bar on the creature is a whole HUD element and a whole tuning
+## problem for a system whose value (spec §3) is "revisiting known areas is less
+## of a chore", which a meter that ends the ride directly undermines; and the
+## creature's stamina is already spoken for by combat energy, which is a
+## different resource with a different meaning. So the meter simply REGENERATES
+## while mounted: `tick` is still called, with sprinting false, which is exactly
+## what standing still does. Satiety still drains — riding is not a pause button
+## on the day (D29).
+func _ride(delta: float) -> void:
+	if not is_instance_valid(_carrier):
+		# The carrier was freed out from under us. Put the body back under its
+		# own power immediately rather than following a dangling reference — it
+		# stays exactly where it was, falls under gravity from the next frame,
+		# and `riding_controller.gd` moves it somewhere sensible when it notices.
+		set_carrier(null)
+		return
+	velocity = Vector3.ZERO
+	global_position = _carrier.to_global(_carry_offset)
+	# Face the way the mount faces, so dismounting does not spin the trainer.
+	if _model != null:
+		_model.global_rotation.y = _carrier.global_rotation.y
+	_sprinting = false
+	vitals.tick(delta, false)
+	vitals.tick_satiety(delta)

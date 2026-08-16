@@ -247,6 +247,14 @@
       "aggressive": false,
       "moves": { "quick": "hoofbeat", "charged": "verdant_burst" },
       "best_creature": { "id": "steady_heart", "kind": "survivability", "value": 0.12 },
+      "_comment_rideable": "R6.1/R6.2. Riding is DATA, not a hardcoded species check: `creature_species.rideable()` reads this block and `scripts/world/riding_controller.gd` refuses anything that does not carry one, so R8.5's legendary mount is a second block here rather than a second branch in code. Every number below is TUNABLE. `mount_offset` is metres in the creature's own local frame from the point between its feet (creature_body's origin, see `place_on_ground`) to where the rider is seated -- y is a little under two thirds of the 2.05m height, which is this model's back line, and the small negative z sits the rider behind the shoulders rather than on the neck. `ride_speed_multiplier` multiplies the trainer's own `walk_speed` from data/config/movement.json (5.0), so 2.0 is 10 m/s against a 8.6 m/s sprint -- riding has to beat SPRINTING, not walking, or the spec's promise that it 'dramatically improves revisiting known areas' is a lie. `requires_item` is the tack this particular species needs; `can_carry` false would keep the tuning here while disabling the ride, which is how a species gets tuned before it is unlocked.",
+      "rideable": {
+        "can_carry": true,
+        "requires_item": "saddle",
+        "mount_offset": [0.0, 1.3, -0.15],
+        "ride_speed_multiplier": 2.0,
+        "dismount_distance": 1.6
+      },
       "placeholder": {
         "colour": "#b98d52",
         "height": 2.05,

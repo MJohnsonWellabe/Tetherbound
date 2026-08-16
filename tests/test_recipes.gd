@@ -70,11 +70,15 @@ func test_the_two_base_recipes_are_defined() -> void:
 ## is still checked for exactly what it always was.
 const BASE_TIER_RECIPES := ["orb_basic", "potion_small"]
 
-## SD18: the Rootstone tier's own recipes, named once here so the tests below
-## don't each re-list them and drift apart if a fifth is ever added.
-const ROOTSTONE_TIER_RECIPES := ["orb_greater", "reinforce_axe", "reinforce_pickaxe", "saddle_frame"]
 ## SF31, data/recipes/recipes_ironwood.json -- the second and last tier.
 const IRONWOOD_TIER_RECIPES := ["orb_prime", "ironwood_haft_axe", "ironwood_haft_pickaxe", "potion_large"]
+## SD18 named the Rootstone tier's recipes once so the tests below don't each
+## re-list them and drift apart. R6.2 added `saddle` to that list -- it belongs to the same tier for the same
+## reason `saddle_frame` does (it costs Rootstone, it improves something the
+## player already owns, and its real gate is owning Rootstone rather than a
+## flag), so it is held to all three of this tier's rules below rather than
+## living beside them untested.
+const ROOTSTONE_TIER_RECIPES := ["orb_greater", "reinforce_axe", "reinforce_pickaxe", "saddle_frame", "saddle"]
 
 
 func test_recipes_only_use_baseline_materials() -> void:
@@ -344,6 +348,56 @@ func test_saddle_frame_recipe_crafts_a_real_saddle_frame() -> void:
 		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
 	assert_true(state.craft("saddle_frame"))
 	assert_eq(bag.count("saddle_frame"), 1)
+
+
+## --- R6.2: the Riding Saddle ------------------------------------------------
+##
+## The item riding is gated on (`scripts/world/riding_controller.gd::_has_tack`
+## asks the satchel for exactly this id), so a rename or a deletion here is a
+## silently unrideable game. Tested through the real merged recipe book, same
+## as everything above.
+
+## The saddle exists, is craftable, and eats the intermediate frame rather than
+## re-buying its Rootstone -- which is the entire reason `saddle_frame` is a
+## separate item at all.
+func test_saddle_recipe_consumes_the_frame_and_makes_a_saddle() -> void:
+	var costs: Array = state.recipe_cost_for("saddle")
+	assert_false(costs.is_empty(), "recipes_rootstone.json defines no saddle recipe")
+	var names: Array[String] = []
+	for requirement in costs:
+		var id := str((requirement as Dictionary).get("id", ""))
+		names.append(id)
+		bag.add(id, int((requirement as Dictionary).get("n", 0)))
+	assert_true(names.has("saddle_frame"), "the saddle does not consume SD18's saddle_frame")
+	assert_true(names.has("rootstone"), "the saddle is not priced in Rootstone (spec 3 Band 4)")
+
+	assert_true(state.can_craft("saddle"), "a full satchel could not afford the saddle")
+	assert_true(state.craft("saddle"))
+	assert_eq(bag.count("saddle"), 1)
+	assert_eq(bag.count("saddle_frame"), 0, "crafting the saddle did not consume the frame")
+
+
+## Riding's gate is the ITEM, so the item has to be one the satchel and the
+## craft screen both understand. `stack: 1` on purpose -- there is one generic
+## saddle (the R6.1 brief's "no species-specific saddle clutter"), and nothing
+## in the game consumes it, so a second one is dead weight in a slot.
+func test_the_saddle_is_a_real_item_the_riding_gate_can_ask_for() -> void:
+	assert_true(db.has("saddle"), "items.json defines no 'saddle'; riding can never be unlocked")
+	assert_eq(db.stack_size("saddle"), 1)
+	assert_false(db.item_name("saddle").is_empty())
+
+
+## The saddle must be affordable without anything that does not exist yet.
+##
+## This is the guard on `recipes_rootstone.json`'s Ironwood seam: the recipe is
+## written to take an `ironwood` line when SF31 lands, and until it does, every
+## ingredient has to be an item a player can actually hold. The generic
+## `test_recipe_cost_only_names_real_items` above would catch a bad id; this
+## says specifically that R6.2 did not ship blocked on R-something-else.
+func test_the_saddle_costs_nothing_that_does_not_exist_yet() -> void:
+	for requirement in state.recipe_cost_for("saddle"):
+		var id := str((requirement as Dictionary).get("id", ""))
+		assert_true(db.has(id), "the saddle costs '%s', which items.json does not define" % id)
 
 
 ## --- SD18: reinforced tools (inventory.gd::reinforce_tool) -----------------

@@ -3,6 +3,79 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## R6.1 + R6.2 — Riding, Meadowhart as the mount, and the craftable saddle
+
+`model: opus` · `tests: smoke_riding` (new), `test_recipes` (extended) ·
+`area: traversal/progression` · `decision: docs/decisions/D46`
+
+**What shipped.** You can walk up to your own Meadowhart, press the ordinary
+interact button, and ride it at 10 m/s against a 5 m/s walk and an 8.6 m/s
+sprint. Pressing the same button again gets off. Riding is gated on a craftable
+Riding Saddle.
+
+**Architecture.** `scripts/world/riding_controller.gd` is a new node in
+`scenes/world/meadows_playground.tscn` and an ordinary interaction provider
+registered with the shared `interaction_arbiter` — so mounting reads like every
+other world verb, competes for the one prompt line by the same rule, needs no
+new binding (`OF21`'s rebind plumbing was checked and deliberately not used),
+and inherits `sequence_director._refresh_lockout()`'s entire modal set (fight,
+trainer battle, dialogue, naming, starter picker, fade, armed build ghost) as
+the thing that ends a ride. While mounted:
+
+    stick   -> riding_controller -> creature_body.request_move()
+    camera  -> camera_rig.set_target(mount, movement.json riding.camera)
+    trainer -> player_controller.set_carrier(mount, species mount_offset)
+
+No second movement implementation: the mount uses the same acceleration, turn
+rate, slope handling and animation blending it uses while following or fighting.
+`player_controller.gd` gained only `set_carrier(node, offset)` and still knows
+nothing about creatures — it knows a body can be *carried*, which a lift or a
+cart would need too. Which creature is a mount is data
+(`species.json`'s per-species `rideable` block), so `R8.5` is a second block,
+not a second branch.
+
+**Stamina decision (D46 §3).** Riding costs the player nothing and the mount has
+no meter of its own — the trainer is sitting down, a second bar is a whole HUD
+element for a system whose entire value (spec §3) is that revisiting is less of
+a chore, and the creature's endurance is already spoken for by combat energy.
+The player's meter REGENERATES while mounted; satiety still drains (D29).
+
+**The saddle.** One generic saddle, `kind: gear`, stack 1, never consumed, no
+durability — riding only ever asks whether one is in the satchel. Costs
+`saddle_frame` (SD18's intermediate) + 3 rootstone + 4 wood + 8 fiber. No
+`unlocked_by`: the real gate is Rootstone, which is quarry-locked, and a flag
+would gate the same door twice. It is taught in the WORLD instead — standing
+next to a rideable creature without one draws "Meadowhart needs a Riding
+Saddle." **Ironwood (`SF31`) does not exist**, so the saddle ships at the
+Rootstone price with the exact edit for SF31 written into the recipe's own
+`_comment_ironwood`, and a test that stops it being added early.
+
+**The bug this found, and it will happen again: in GDScript a freed Object
+reference compares EQUAL to `null`.** Both despawn guards were written
+`if _mount != null` and were dead code from the first frame — dismissing your
+creature while riding it left the trainer invisible, on no collision layer,
+falling through the world (measured: y = -216 and still going). Fixed with
+explicit `_riding_now` / `_carried` booleans, both carrying the reason in a
+comment. Every one of the 865 unit tests passed throughout; only the new smoke
+test saw it.
+
+**Honest residue**, for `R6.3`'s play gate rather than a follow-up item:
+
+- The trainer's ART is hidden while mounted rather than seated. The M11 rig has
+  no sit clip (idle/walk/sprint/throw), and a standing trainer would ride bolt
+  upright on the deer's back. The mount offset is already authored for where a
+  rider belongs, so a sit pose is an art swap in one line.
+- Nothing has been ridden on a controller on the Ally. The ride camera pose
+  (`movement.json`'s `riding.camera`: distance 6.8, height 2.35) is a first
+  guess and is exactly the kind of number the owner's play gate answers.
+- `smoke_riding`'s speed step relocates the mount to open ground and tries up to
+  four headings before measuring, because the ride starts in the yard where the
+  opening leaves the trainer and a mount wedged against the house wall is a fair
+  thing for the game to do and a useless thing to measure a top speed against.
+  The assertion is on PEAK speed with a displacement sanity check, not on
+  average displacement, for the same reason.
+- The `verify-riding` CI job mirrors `verify-combat`, retry-once and all (LP9).
+
 ## OF17 — The "put creature away" control overlaps the hotbar
 
 `model: sonnet` · `tests: smoke_playground` (extend) · `area: ui`

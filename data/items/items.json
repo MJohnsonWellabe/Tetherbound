@@ -147,6 +147,16 @@
       "blurb": "A rootstone-braced skeleton. Wants leather and a creature's back, in that order.",
       "description": "A rigid frame built to take real weight, its joints braced with worked rootstone rather than plain wood. Not a saddle yet — just the part that has to be right before the rest of one is worth building."
     },
+    "_comment_saddle": "R6.2. ONE generic saddle for every mount, never a saddle per species — the backlog brief's own words, 'a generic saddle ... and no species-specific saddle clutter'. Which creature it fits is the CREATURE's business (species.json's `rideable.requires_item`), so a second mount at R8.5 either wants this same saddle or names its own tack there, and either way nothing changes here. `kind: gear` rather than `material`: it is a thing you own and use, like an orb, not a thing you spend. It is never consumed by riding and there is no durability on it — `scripts/world/riding_controller.gd::_has_tack()` only ever ASKS whether one is in the satchel. Icon deliberately points at `saddle_frame.png`: the frame is what a saddle is built on and the silhouette is right, and CLAUDE.md's asset rules say to source coherently rather than mint a near-duplicate icon for the sake of a distinct filename. A dedicated icon is a clean later swap in this one line.",
+    "saddle": {
+      "name": "Riding Saddle",
+      "kind": "gear",
+      "stack": 1,
+      "colour": "#8a5a34",
+      "icon": "res://assets/ui/icons/items/saddle_frame.png",
+      "blurb": "Frame, girth and stirrups. Whatever will carry you can carry you now.",
+      "description": "A finished saddle: the rootstone-braced frame wrapped, padded and strapped, with a girth long enough to go round something with a deer's chest. Owning one is the whole difference between a creature that walks beside you and a creature you can get on."
+    },
     "orb_basic": {
       "name": "Orb",
       "kind": "gear",
