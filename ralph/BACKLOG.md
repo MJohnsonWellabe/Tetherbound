@@ -1944,86 +1944,22 @@ a firing's.**
 
 **`SD16` (the Old Quarry) shipped — see `DONE.md`.** Floor at `[23,158]` past the South Bridge, region `the_old_quarry` r62, five Rootstone deposits, old foundations, and four LIT pylons running toward the stronghold's bearing — `severed_spokes.gd`'s own conduit builder called directly, same grammar in the opposite state (whole and lit here, dead and severed on the spokes). D41's drained ground debuts: 2737 px painted via a new `drain_factor()`. Site chosen by probe, not by eye (the first candidate measured 45-67 degrees). Two bakes, unrelated regions byte-identical.
 
-### SD17 — Burrow Warrens, the required dungeon
-`model: fable` · `tests: smoke_traversal, smoke_combat`
-Spec §3 Band 2. A compact cave: aggressive Ground creatures, Rootstone
-deposits, chamber navigation, a guardian fight, one rare side branch. **The
-guardian is a strong normal species — the spec says outright not to invent
-another legendary**, and §20 forbids the model anyway. The optional deep branch
-is where the Mudsnout evolution item lives (R4.6). Done when: it can be
-entered, cleared, and cleared only once for its story reward.
+**`SD17` (the Burrow Warrens) shipped — see `DONE.md`.** A five-chamber cave into the rise at `[70,-140]` (site measured, not guessed: a probe ranked five candidates and this was the only walkable approach), six aggressive Ground residents, a level-18 Burrowback guardian in its own den, and a flag-gated deep vault holding the **Heartstone** — which finally switches ON R4.6's evolution gate, built and tested long ago and left waiting for a source. Honest remainder: the guardian respawns on the ordinary wild timer; the flag and reward stay once-only.
 
 **`SD18` (Rootstone, the first progression tier) shipped — see `DONE.md`.** Four recipes in a new `recipes_rootstone.json`, every one improving something already owned: `orb_greater` (closing R4.9's own acquisition remainder), axe/pickaxe REINFORCE recipes that permanently raise a tool's durability ceiling (rather than minting a second tool id and new gating code), and `saddle_frame` for R6.2. Workbench/storage upgrades deliberately SKIPPED and the reason recorded in `buildables.json`: neither supports a cheap variant, and building the systems they'd need is exactly the large crafting tree spec §32 bans.
 
 ### 8c — the river and the relay (spec Phase E)
 
-### SE21 — A real river divides the deeper Meadows
-`model: fable` · `tests: smoke_traversal`
-Spec §3 Band 3. Also closes a question the visual pass left open:
-`R7.1-remainder-2`'s second bullet found "no middle-distance layering anywhere
-in the set (no tree lines, ridgelines, or water)" and asked outright whether a
-water feature would do more for depth-reading than more vegetation tuning. This
-is that feature, and it is load-bearing for the story too. Done when: the river
-reads as a landmark from the ridge and cannot be crossed except at authored
-points.
+**`SE21` (the Long Water) shipped — see `DONE.md` and `D46`.** A 340 m polyline river down the east side whose ends run PAST the 235 m perimeter, so there is no walking around either one — the long chord SC14's own honest-limit note said a real division needs. Walls measured at 70.1 degrees minimum along the whole course against the player's 45 degree limit, and three probe-walks at different points all failed to reach the centreline. Chained independent bars were rejected and the reason recorded: `max()` of two smoothstepped ends leaves a half-depth saddle at every join, i.e. a crossable spot every few dozen metres.
 
-### SE22 — Old Mill Crossing, seized and then restored
-`model: sonnet` · `tests: smoke_traversal`
-Spec §3 Band 3. Team Tether has disabled the crossing and taken the person who
-knows the mechanism. Freeing them (`SE27`) yields the Mill Bridge Gear
-(`SB10`) and the crossing opens for good. Done when: the same bridge is
-impassable before the rescue and passable after, with no menu in between.
+**`SE22` (Old Mill Crossing) shipped — see `DONE.md`.** At the narrows `[162.4,42.1]` where the channel pinches to the South Bridge's own cross-section, so it reuses that prefab unchanged: `south_bridge.gd` became `gated_crossing.gd` and both bridges are now thin subclasses over `item_gate.gd`. Impassable at -8.0 m without the Mill Bridge Gear, passable at +23.4 m with it, no menu in between. The Gear's only source is SE27's rescue — deliberately no placeholder pickup, which would be a Band 3 gate opened by walking past a prop.
 
-### SE23 — The Tether Relay Station
-`model: fable` · `tests: smoke_traversal`
-Spec §3 Band 3. The first mini-stronghold: a natural site partly
-industrialised, a compact traversal and environment challenge, and the moment
-Team Tether stops being something Grandpa described and becomes a threat the
-player has personally confronted. R8.2's visual-language brief is used here
-first, at small scale. Done when: it can be entered, fought through, and its
-local tether/control equipment disabled.
+**`SE23` (the Tether Relay Station) shipped — see `DONE.md`.** Built at `[108,34]` — ADOPTED from SE25/SE27's `relay_site.json` rather than picking a second site — from `severed_spokes.gd`'s own wall/pylon/conduit builders, so almost no new visual vocabulary. The console is one-way: 56 lit surfaces die by material identity, the prompt never returns, and the state is re-read from the flag on load. D41's drain at full strength here (1.0 over 46 m against the quarry's 0.85 over 24 m). **The hero apparatus is a clearly-marked placeholder** — `ApparatusSeam`, laid out as the board's own five subassemblies, with the swap procedure written into the config; the Meshy generation stays owner-gated. Its own smoke found a gantry leg standing inside the ramp's width — a pillar in the middle of the only route to the console.
 
-**The "local tether/control equipment" now has a board** —
-`docs/art/reference/14_Relay_Apparatus.png`, owner-supplied 2026-08-11 and
-labelled Band 3, so it is drawn for exactly this item. It is one of the three
-hero objects D24 reserves Meshy for, and it is `lane: art`. Its artist note is
-the build spec rather than flavour: *modular construction, core and rings
-serviceable, conductor arms and manifolds replaceable*, with five labelled
-subassemblies (tether core, conductor ring, control console, output manifolds,
-grounding base). The console is the thing the player disables, and the board
-details it down to individual routing levers.
+**`SE25`/`SE27` (the relay cast, and the captive they hold) shipped — see `DONE.md`.** Three Team Tether personnel on grunt/officer palettes plus Captain Vance, laid along the approach axis with Sela 5.6 m PAST the captain so the fight cannot be walked around. Beating him frees her; she hands over the Mill Bridge Gear and reappears in the village on SE27's new `place_when` mechanism (the same ordered-branch shape `greeting_when` uses, asked about whether a body stands there at all). §32 is enforced rather than promised: a test fails the build if her three conversations name the legendary, and a companion test checks she DOES give the three things the spec asks for.
 
-**D41: the drain is at its worst here.** The relay is the largest live station
-in the chapter, so `SD16`'s drained-ground treatment runs strongest around it —
-dead ground, withered vegetation, healthy meadow only well past the perimeter.
-The visible damage is the argument for disabling the console, made without a
-line of dialogue.
 
-### SE25 — Relay trainers and the relay captain
-`model: sonnet` · `tests: smoke_trainer_battle`
-Spec §3 Band 3, §12: two or three Team Tether trainers and a relay captain, all
-on `SB8`'s rank palettes — the captain visibly outranking the trainers and
-visibly below the Warden. Done when: the captain's defeat sets the flag `SE27`
-waits on.
-
-### SE27 — Free the captive
-`model: sonnet` · `tests: test_dialogue_runner`
-Spec §3 Band 3, §35. The captive ranger/researcher is built on the civilian or
-main-character base — **not a new model** (§20/§21 apply to the whole cast).
-Rescue scene, the Gear, and the first testimony that the region's isolation is
-made rather than natural. They return to the settlement afterward (`SG46`,
-§14). Done when: rescued, the NPC exists in the village and their dialogue has
-changed.
-
-### SE30 — The reveal ladder, laid in
-`model: fable` · `tests: test_dialogue_runner`
-Spec §32. Villagers know travel is controlled and trade restricted, and no
-more. The quarry shows conduits. The relay shows energy routing and a captured
-investigator. The captive knows the separation is artificial but **not** that a
-legendary is the source. Grandpa's opening must not spoil any of it — §32 and
-§1's "do not dump the entire plot in one speech" are the same instruction.
-Done when: no line of dialogue before the stronghold names the legendary as the
-power source.
+**`SE30` (the reveal ladder) shipped — see `DONE.md`.** The missing rung was D41's own: the world had thousands of pixels of dying ground and not one character who would admit it. Mira's rows come up grey and thin, nothing dens within a hundred paces of Tam's masts, every seam the foreman taps goes bad within the month, Oskar's waist-high verge is gone — and none of them offers a cause, because knowing why is the captive's rung. Plus a guard rail over the whole cast: no pre-stronghold dialogue file may name the legendary, with `STRONGHOLD_FILES` as the one documented exemption. Note for anyone extending it: scan SPOKEN LINES, not raw file text — a whole-file scan flags the comment that documents the rule.
 
 ### 8d — Upper Meadows (spec Phase F)
 
@@ -2032,34 +1968,13 @@ see Phase 6 for what landed and `docs/decisions/D46` for why it is shaped that
 way. They did NOT wait for `SF31`: the saddle ships at the Rootstone price with
 a named seam for Ironwood.
 
-### SF31 — Ironwood, the second preparation tier
-`model: sonnet` · `tests: test_recipes`
-Spec §3 Band 4, §10. Supports stronger crafting, riding equipment, better
-utility and final-stronghold preparation. It does not need to literally be
-iron. Keep the economy small and readable. Done when: nothing needed for the
-stronghold requires a third new material.
-
-**Riding equipment is already waiting for this one.** `data/recipes/recipes_rootstone.json`'s
-`saddle` recipe carries a `_comment_ironwood` seam spelling out the exact edit:
-add `{ "id": "ironwood", "n": 2 }` to its `cost` and drop the `wood` count from
-4 to 2, keeping the total investment roughly where it is. Nothing in code reads
-that cost, so no riding code changes. `tests/test_recipes.gd::
-test_the_saddle_costs_nothing_that_does_not_exist_yet` is what stops it being
-added before the item exists.
+**`SF31` (Ironwood) shipped — see `DONE.md`.** Five stands in the upper Meadows, `orb_prime` (the third catch tier), Ironwood hafts stacking on Rootstone's reinforce, and a Ridge Tonic as the stronghold-run supply. A lantern and a climbing kit were SKIPPED with the reason recorded: both need systems that do not exist (a player light source; any climbing verb), and the stronghold is a trainer gauntlet, so the honest preparation is supplies. Nothing the stronghold needs requires a third material — asserted, not asserted-in-prose.
 
 **`SF33` (the Tether Energy Pylon hero asset, generated and ledgered; two of the seven spokes — `river_gorge` and `storm_road` — dressed with the full severed-rift grammar) shipped, partial — see `DONE.md`.** `model: fable` dispatch, done in the authoring agent's own session with no subagent spawning available, so its blind-pass rubric was self-administered rather than an isolated critic — recorded honestly in `DONE.md`, same disclosure pattern as `OF10-remainder`. The other five spokes continue in `SF33-remainder` below.
 
 **`SF33-remainder` (rift dressing for the other five spokes — `mountain_trail`, `high_pass`, `cliff_road`, `stone_gate`, `blighted_road`) shipped — see `DONE.md`.** All seven spokes now carry the severed-rift grammar. `model: fable` dispatch, verified at two layers: the fable-authoring session self-administered its own pass (no subagent tool in that session, same disclosure `SF33` carries), and the orchestrating session separately dispatched a genuinely isolated critic — both real, both credited in `DONE.md` (an intermediate draft of this entry conflated the two into "no critic ran at all"; corrected). Found and fixed: three occluded/mis-framed viewpoints, a rigid-elbow cable artefact, and a real material bug (the Team Tether wall/gate colour shading to pure black under `gl_compatibility`, named unprompted by the isolated critic). Two honest, disclosed remainders: the fixed material still reads dark by design (measured, not eyeballed — see `DONE.md` for why brighter would be the wrong fix), and `cliff_road`'s notch itself never reads in a player-height still after four framings; the convergence stop and the reason are recorded in the capture tool's own comment.
 
-### SF34 — Three regional captains, three Sigils
-`model: fable` · `tests: smoke_trainer_battle`
-Spec §3 Band 4. Field Captain (Ground team, Field Sigil), Ridge Captain (Air,
-Ridge Sigil), Riverwatch Captain (Water/balanced, River Sigil), all on `SB8`'s
-captain palette with one regional accent each. The three physical Sigils open
-the Hall approach through `SB10`. This is what gives trainer battles direct
-progression meaning. Natural team expectation entering this band is roughly
-10–16 — **tunable, and never player-scaled** (§3). Done when: the approach is
-sealed at 2/3 and open at 3/3, and the count is visible on `SB11`'s tracker.
+**`SF34` (three captains, three Sigils) shipped — see `DONE.md`.** Halder `[52,-122]` (Ground), Vess `[75,-150]` (Air) and Oreth `[112,-177]` (Water), each dropping a Sigil, with the Hall approach gate at `[130,-176]` sealed at 2/3 and open at 3/3 — `item_gate.gd` grew multi-key support and `road_gate.gd` grew overridable fields, so it is the same body rather than a second gate script. The count shows on SB11's tracker via a new `count_flags` field. Coordinates measured with a probe: the whole eastern quadrant past x≈130 is 45-75 degree rock, and the walkable upper Meadows is the corridor round the Rise's south-west flank.
 
 ### 8e — the stronghold and the first reconnection (spec Phase G)
 
@@ -2077,41 +1992,12 @@ occupant.** `D23` §20 forbids new creature meshes at any credit balance, so
 the bound creature is an existing roster asset or VFX. Generating the whole
 board as one asset breaks a hard rule while appearing to follow one.
 
-### R8.2 — Authored stronghold route · `model: sonnet` · `tests: smoke_traversal`
-Visual language: a sacred natural site industrialised by Tether. R7.1's ridge
-silhouette is the promise this pays off. Spec §8 gives the interior: Outer
-Works → Courtyard / Hall Approach → Tether Chamber Approach → Warden Arena →
-Legendary Chamber, target first clear 30–60 minutes. **Not a giant puzzle
-dungeon** — §8 rules that out unless separately decided. Note the same
-industrialised-sacred-site language is used twice: first at `SE23`, then here at
-full scale.
+**`R8.2`/`SG38` (the stronghold route and its gauntlet) shipped — see `DONE.md`.** Spec §8's five spaces in order — Outer Works, Courtyard, Tether Chamber Approach, Warden Arena, Legendary Chamber — as an L running east then north, on one authored floor with an 18 m revetment skirt, siting measured after a probe killed two earlier layouts. Three gauntlet fights (patrol, courtyard, elite) plus R4.8's creature bed as the recovery beat before the Warden. **The Tether Machine is a clearly-marked placeholder** sized to the board's own scale bar so the room survives the swap; no creature was created — the board licenses the machine, not its occupant. Two integration bugs found and fixed on landing: the gauntlet's placer hung where `trainer_npc.gd` could not find the encounter director (three fights that greet you politely and never happen), and every stronghold trainer was grounded to the terrain BENEATH the floor slab.
 
-### SG38 — The stronghold trainer gauntlet
-`model: sonnet` · `tests: smoke_trainer_battle`
-Spec §8, §12: a patrol trainer at the Outer Works, a courtyard fight, an elite
-before the Tether Chamber, and a recovery opportunity before the Warden. Two to
-four battles across the five named spaces. Done when: a prepared team clears it
-inside an hour and an unprepared one does not.
 
-### R8.3 — The Warden boss fight · `model: fable` · `tests: smoke_boss` (new) · M14
-His face is still painted, not modelled — needs a real sheet before this is
-judged (HANDOFF §6). Note §20 covers *creatures*; a Warden face pass is still
-legal under §22's budget. Spec §33 gives the character: he sincerely believes
-separation prevents chaos and that ordinary people do not understand the risks.
-Not a moustache-twirler. His line is closer to "You don't understand what these
-barriers are holding apart" than "You cannot stop me."
+**`R8.3`/`SG40`/`R8.4` (the Warden, the reveal, and freeing the legendary) shipped — see `DONE.md`.** Warden Aldis fields the chapter's only full team of five (16-20, three types, no single counter) on the ordinary trainer system — no boss mode. He confirms the reveal rather than denying it, argues the cost is worth paying, never says 'you cannot stop me', and warns rather than recants after losing; those are asserted in tests, not left to a comment. The reveal readout stands at the ARENA THRESHOLD, not in the chamber past it, because §28 and Act VI put the discovery BEFORE the final battle. §28's order is then followed exactly: freed, voluntary offer, R4.10's release ceremony if the belt is full, machinery fails, `legendary_freed` set once for SG44. The legendary is `veridian` — an existing roster body at 1.22x pivot scale with a containment cage and its own light, no new mesh. **His face is still painted rather than modelled and wants owner-supplied art before the scene is judged.**
 
-### SG40 — The reveal: the legendary is the power source
-`model: fable` · `tests: test_dialogue_runner`
-Spec §28, §32, §33. Inside the stronghold and nowhere earlier — `SE30` holds
-the rest of the ladder. The Warden warns rather than gloats, and genuinely
-believes freeing it is reckless. Done when: the reveal happens in the
-stronghold and the player makes the choice knowing what it costs.
 
-### R8.4 — Free the legendary; it offers to join; triggers the release ceremony if full · `model: fable` · `tests: smoke_boss`
-Spec §28's order, which is not optional: reach the chamber → the legendary is
-freed → it **voluntarily** offers to join → the five-creature decision if the
-roster is full (R4.10) → the tether machinery fails → `SG44`'s world event.
 
 ### SG44 — The first Tether Rift collapses and the world gets bigger
 `model: fable` · `tests: smoke_boss`
