@@ -316,12 +316,26 @@ func _physics_process(_delta: float) -> void:
 	if _guard > 0:
 		_guard -= 1
 		return
-	if Input.is_action_just_pressed("ui_right"):
+	# Confirm is tested BEFORE the directions, and that order is the whole
+	# point. `is_action_just_pressed` is true for exactly one physics frame, so
+	# when a confirm lands on the same frame as a direction the old chain
+	# checked the direction first and the confirm was not deferred -- it was
+	# dropped, permanently. `_move` then returned early whenever the index was
+	# already clamped at either end, so the press that ate the confirm produced
+	# no visible change either: the arrows appeared to work while confirming an
+	# orb silently did nothing, on the one screen the player cannot skip.
+	#
+	# Found by the 2026-08-15 blind playtest (PT-01, and its own
+	# POST_BLIND_CORRECTIONS entry). `name_prompt.gd` never had the bug because
+	# it keeps confirm in its own chain, away from the directions; this file was
+	# the outlier. Confirm-wins is the right resolution for a genuine same-frame
+	# tie: the panel is closing, so a lost direction press costs nothing.
+	if Input.is_action_just_pressed("menu_confirm"):
+		_confirm()
+	elif Input.is_action_just_pressed("ui_right"):
 		_move(1)
 	elif Input.is_action_just_pressed("ui_left"):
 		_move(-1)
-	elif Input.is_action_just_pressed("menu_confirm"):
-		_confirm()
 
 
 func _move(delta: int) -> void:

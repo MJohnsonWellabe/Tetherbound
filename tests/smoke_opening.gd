@@ -414,14 +414,38 @@ func _a_starter_can_be_chosen() -> void:
 	# so the parsed event is pure redundancy here — and under load it can
 	# register "just pressed" a physics frame later than the action-state
 	# path (the same two-signals-different-frames race `_press_polled`'s own
-	# docstring names for LP2's `interact` fix). If that late `ui_right`
-	# registration lands on the SAME frame as the very next `menu_confirm`
-	# press, the `elif` chain checks `ui_right` first and swallows
-	# `menu_confirm` for the one frame it was ever going to be "just
-	# pressed" — exactly the observed "confirming an orb did not close the
-	# picker" symptom, present on unmodified `main` before this test existed.
+	# docstring names for LP2's `interact` fix).
+	#
+	# That late `ui_right` registration landing on the SAME frame as the next
+	# `menu_confirm` press USED to swallow the confirm: `starter_picker.gd`
+	# checked `ui_right` first in its if/elif chain, and a dropped
+	# `is_action_just_pressed` is gone rather than deferred. That was the real
+	# defect behind the 2026-08-15 blind playtest's PT-01, and the paragraph
+	# that used to sit here described it accurately — as expected behaviour,
+	# stepping around it rather than failing on it, which is how a known bug
+	# stayed encoded in a green suite.
+	#
+	# The picker now tests `menu_confirm` BEFORE the directions, so a
+	# same-frame tie resolves in the player's favour. This sequence is kept
+	# exactly as it was: it is the ordering that used to provoke the bug, so
+	# it is the ordering most worth keeping green.
 	await _press_polled("ui_right")
-	await _press_polled("menu_confirm")
+
+	# The same-frame collision itself, made deterministic. Both actions go down
+	# together and are read by the SAME `_physics_process` pass, so both are
+	# "just pressed" on the one frame either was ever going to be. Against the
+	# old `ui_right`-first chain this is the exact input that dropped the
+	# confirm and left the picker open forever; against the fixed order the
+	# confirm wins and the picker closes.
+	#
+	# Provoking it by racing two sequential presses (what this used to rely on)
+	# only reproduced under load, which is why the bug survived a green suite.
+	Input.action_press("ui_right")
+	Input.action_press("menu_confirm")
+	for i in 3:
+		await physics_frame
+	Input.action_release("ui_right")
+	Input.action_release("menu_confirm")
 	for i in 20:
 		await physics_frame
 
