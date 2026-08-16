@@ -14,6 +14,9 @@ extends CanvasLayer
 
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+## For its `STORY_MODAL_GROUP` name only — the group is the whole contract, and
+## naming it in one place beats three panels each spelling the same string.
+const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
 
 ## Frames of deafness after opening.
 ##
@@ -70,6 +73,11 @@ func _ready() -> void:
 	_make_text_legible($Root)
 	_runner.finished.connect(_on_runner_finished)
 	_box.visible = false
+	# `game_menu.gd::STORY_MODAL_GROUP`: while a conversation is on screen the
+	# pause shell refuses to open over it. Joined here rather than in the scene
+	# file so a second dialogue panel instanced anywhere (a tool, a test) is
+	# covered by the same rule without anyone remembering to tick a box.
+	add_to_group(GAME_MENU.STORY_MODAL_GROUP)
 
 
 func _dress() -> void:

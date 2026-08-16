@@ -45,6 +45,19 @@ const PANIC_SECONDS := 1.5
 ## guard still covers it.
 const REOPEN_GUARD_FRAMES := 2
 
+## Screens that own the whole display while they are up: the conversation box,
+## the naming grid, the starter orbs. Joined by the panels themselves in their
+## own `_ready()`, and consulted by `open()` below.
+##
+## A group rather than a list of node paths, for the same reason
+## `_find_combat()` looks for a method instead of a path: these panels live in
+## the world scene and this shell is an autoload, so any path written here is a
+## path that rots the day a scene is rearranged. A group also means the rule is
+## enforced in ONE place — a fourth modal joins the group and is covered, rather
+## than having to remember to call `hold_input()` from its own `open()`, which
+## is exactly what the starter picker and the dialogue panel both forgot.
+const STORY_MODAL_GROUP := &"story_modal"
+
 var game: Node = null
 
 ## The player's controls. Owned here rather than by the autoload because this
@@ -285,10 +298,16 @@ func is_open() -> bool:
 ## binding (Escape / B) in project.godot's input map, so in a fight that button
 ## already means "flee" — see docs/decisions/D14. This agent may not add input
 ## actions, so the menu yields rather than stealing the flee button.
+##
+## Refuses the same way while a story modal owns the screen — see
+## `_refusal_reason()`. The blind playtest opened this shell on top of the
+## starter orbs: the picker kept drawing (it is not `PROCESS_MODE_ALWAYS`, so
+## the pause stopped it processing but not rendering) and its title and hints
+## ghosted through the menu, over a selector that could no longer be answered.
 func open(tab_id: String = "") -> bool:
 	if _open:
 		return false
-	if _fight_in_progress():
+	if not _refusal_reason().is_empty():
 		return false
 
 	_mouse_before = Input.mouse_mode
@@ -401,12 +420,47 @@ func say(message: String) -> void:
 	_status_left = STATUS_SECONDS if not message.is_empty() else 0.0
 
 
-## The on-screen explanation `open()` refusing mid-fight never had: without
-## this, the menu button just does nothing and looks broken rather than rules-
-## respecting. See `open()`'s own comment on why the menu yields here at all.
-func _flash_refusal() -> void:
+## Why `open()` would refuse right now, or "" if it would not.
+##
+## One function so the guard and the on-screen explanation cannot drift apart:
+## a reason that can be enforced without being said is the silent refusal
+## `_flash_refusal()` was written to stop, and a reason that can be said without
+## being enforced is worse.
+func _refusal_reason() -> String:
+	if _fight_in_progress():
+		return "Can't open the menu during a fight"
+	if _story_modal_open():
+		return "Finish what's on screen first"
+	return ""
+
+
+## Is one of the story panels (STORY_MODAL_GROUP) up?
+##
+## Asked of the group rather than of any particular node, so a panel that is not
+## in the current scene — every headless test that never loads a world, the
+## menu-only boot screen — simply contributes nothing instead of erroring.
+func _story_modal_open() -> bool:
+	for node in get_tree().get_nodes_in_group(STORY_MODAL_GROUP):
+		if node.has_method("is_open") and bool(node.call("is_open")):
+			return true
+	return false
+
+
+## The on-screen explanation `open()` refusing never had: without this, the menu
+## button just does nothing and looks broken rather than rules-respecting. See
+## `open()`'s own comment on why the menu yields here at all.
+## Say whatever `open()` just refused for, if it refused for a reason a player
+## needs to hear. Silent when there is none — `open()` also returns false when
+## the menu is simply already open, and flashing "..." at that would be noise.
+func _explain_refusal() -> void:
+	var reason := _refusal_reason()
+	if not reason.is_empty():
+		_flash_refusal(reason)
+
+
+func _flash_refusal(message: String) -> void:
 	AUDIO_CUES.play(&"ui_error")
-	_refusal_label.text = "Can't open the menu during a fight"
+	_refusal_label.text = message
 	_refusal_label.visible = true
 	_refusal_left = STATUS_SECONDS
 
@@ -594,13 +648,13 @@ func _read_actions() -> void:
 			_reopen_guard -= 1
 			return
 		if Input.is_action_just_pressed(str(_config.get("open_action", "menu_cancel"))):
-			if not open() and _fight_in_progress():
-				_flash_refusal()
+			if not open():
+				_explain_refusal()
 			return
 		for action in _shortcuts().keys():
 			if Input.is_action_just_pressed(str(action)):
-				if not open(str(_shortcuts()[action])) and _fight_in_progress():
-					_flash_refusal()
+				if not open(str(_shortcuts()[action])):
+					_explain_refusal()
 				return
 		return
 

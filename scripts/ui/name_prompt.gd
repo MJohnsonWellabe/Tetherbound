@@ -56,6 +56,8 @@ extends CanvasLayer
 
 const ENTRY := preload("res://scripts/ui/name_entry.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+## For its `STORY_MODAL_GROUP` name only; see the `add_to_group` in `_ready()`.
+const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
 
 ## Frames of deafness after opening, for the reason dialogue_panel.gd gives: the
 ## press that opened this is still in the same frame's input state.
@@ -120,6 +122,12 @@ func _ready() -> void:
 	_field.text_changed.connect(_on_field_text_changed)
 	_field.text_submitted.connect(_on_field_text_submitted)
 	_root.visible = false
+	# `game_menu.gd::STORY_MODAL_GROUP`. `_set_menu_deaf()` below (OF25) already
+	# stops the shell reading buttons while this is up; the group is the same
+	# rule stated where the shell can enforce it for every modal at once, and
+	# the two are deliberately kept both — the deafness also covers the shell's
+	# tab cycling if it were ever open first.
+	add_to_group(GAME_MENU.STORY_MODAL_GROUP)
 
 
 func _dress() -> void:

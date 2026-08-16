@@ -24,6 +24,8 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+## For its `STORY_MODAL_GROUP` name only; see the `add_to_group` in `_ready()`.
+const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
 
 ## Frames of deafness after opening, for the reason dialogue_panel.gd and
 ## name_prompt.gd both give: the press that closed the conversation and the
@@ -102,6 +104,14 @@ var _restore_mouse: int = Input.MOUSE_MODE_CAPTURED
 func _ready() -> void:
 	_make_text_legible($Root)
 	_root.visible = false
+	# `game_menu.gd::STORY_MODAL_GROUP`: the pause shell refuses to open while
+	# this is up. The blind playtest opened it straight over the orbs — the
+	# picker stops processing under the pause but keeps drawing, so its title
+	# and hints ghosted through the menu above a selector that could no longer
+	# be answered. name_prompt.gd solved its half of this by calling
+	# `game_menu.hold_input()` from its own `open()`; joining a group instead
+	# means the next modal is covered without having to remember to.
+	add_to_group(GAME_MENU.STORY_MODAL_GROUP)
 
 
 func _make_text_legible(node: Node) -> void:

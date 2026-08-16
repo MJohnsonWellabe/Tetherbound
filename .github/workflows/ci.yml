@@ -931,6 +931,21 @@ jobs:
         # with no opening at all, and nothing else in this job would notice.
         run: godot --headless --path . --script tests/smoke_opening.gd
 
+      - name: Smoke-test the starter picker's input reads
+        # The blind playtest's P0, kept fixed: a `ui_right` and a `menu_confirm`
+        # in the SAME physics frame used to destroy the confirm, so the orb
+        # picker could not be confirmed and the opening could not be finished.
+        # smoke_opening above drives the picker with presses frames apart, which
+        # always worked — this is the collision itself, and it runs in seconds
+        # because it instantiates the picker alone.
+        run: godot --headless --path . --script tests/smoke_starter_picker.gd
+
+      - name: Smoke-test modal stacking
+        # The pause shell must refuse to open over a screen the player has to
+        # answer — the starter orbs, a conversation. It used to open straight on
+        # top of both, drawing over a selector that could no longer be reached.
+        run: godot --headless --path . --script tests/smoke_modal_stacking.gd
+
   verify-menu:
     runs-on: ubuntu-latest
     timeout-minutes: 10
