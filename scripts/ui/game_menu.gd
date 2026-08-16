@@ -25,6 +25,7 @@ const CONFIG_PATH := "res://data/config/menu.json"
 const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 ## How long a status line stays up. Long enough to read on a handheld held at
 ## arm's length, short enough that it is gone before the next one arrives.
@@ -133,7 +134,7 @@ func _ready() -> void:
 	if theme_resource != null:
 		_root.theme = theme_resource
 
-	_footer.text = str(_config.get("footer", ""))
+	_footer.text = legend(str(_config.get("footer", "")))
 	_build_tabs()
 	_root.visible = false
 	_build_refusal_label()
@@ -297,6 +298,10 @@ func open(tab_id: String = "") -> bool:
 
 	_open = true
 	_root.visible = true
+	# Re-read on every open: the Settings tab can rebind any of the keys the
+	# footer names, and a legend built once at boot would go stale the moment
+	# it did.
+	_footer.text = legend(str(_config.get("footer", "")))
 	_status.text = ""
 	_status_left = 0.0
 	# Force a rebuild: state may have moved while the menu was shut.
@@ -491,7 +496,36 @@ func hold_input(held: bool) -> void:
 ## the shell's own binding for a button that means something else right now.
 ## Empty restores the configured default.
 func override_footer(text: String) -> void:
-	_footer.text = text if not text.is_empty() else str(_config.get("footer", ""))
+	_footer.text = legend(text if not text.is_empty() else str(_config.get("footer", "")))
+
+
+## Fill `{action}` placeholders in a button legend with the key that action is
+## really bound to right now.
+##
+## The footer used to be a hand-typed string, and it told keyboard players to
+## press gamepad buttons: "A  Select    B  Close", while the two entries beside
+## them ("Q / LB", "Tab / RB") correctly named both devices. That was not merely
+## cosmetic. The literal keyboard B is bound to `build_open` (project.godot), so
+## a keyboard player who obeyed the legend and pressed B opened the Build tab
+## instead of closing the menu — found by a blind playtest, which spent the rest
+## of the session unable to leave the screen the same way it came in.
+##
+## Read off the InputMap rather than retyped, because the Settings tab lets the
+## player move every one of these, and a legend that goes stale on a rebind is
+## the same defect again with a longer fuse. The gamepad half stays literal:
+## `input_glyph.gd`'s icons need a RichTextLabel and this is a plain Label.
+func legend(template: String) -> String:
+	var out := template
+	while true:
+		var start := out.find("{")
+		if start < 0:
+			break
+		var end := out.find("}", start)
+		if end < 0:
+			break
+		var action := out.substr(start + 1, end - start - 1)
+		out = out.substr(0, start) + INPUT_GLYPH.key_name_for_action(action) + out.substr(end + 1)
+	return out
 
 
 ## The way back from a layout the player has broken.

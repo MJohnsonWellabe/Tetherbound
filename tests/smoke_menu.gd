@@ -19,6 +19,10 @@ extends SceneTree
 ##     the menu is decoration. Nothing about that shows up in a screenshot.
 ##   - the fight. `menu_cancel` and `combat_run` share a binding, so the menu
 ##     must yield mid-fight or the flee button opens a menu instead.
+##   - the button legend. It shipped hand-typed and gamepad-only for two of its
+##     four entries, so it told keyboard players to press a key that is bound to
+##     something else entirely. See
+##     `_check_the_footer_names_keys_a_keyboard_player_can_press`.
 ##
 ## Boots the real main scene with the real autoload, and drives it with injected
 ## input rather than by calling open() directly — calling the method would prove
@@ -26,6 +30,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
+const GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 var _failures: Array[String] = []
 var _menu: CanvasLayer = null
@@ -62,6 +67,7 @@ func _run() -> void:
 	_check_the_fight_guard_can_see_the_fight(world)
 	await _check_refusal_shows_an_on_screen_reason(world)
 	await _check_opens_on_the_inventory_button(world)
+	_check_the_footer_names_keys_a_keyboard_player_can_press()
 	await _check_focus_can_be_driven()
 	await _check_tabs_can_be_cycled()
 	await _check_the_party_screen_holds_five()
@@ -223,6 +229,71 @@ func _check_opens_on_the_inventory_button(world: Node) -> void:
 			_fail("the player moved %.2fm while the menu was open" % drift)
 
 	print("opened on `inventory`: mouse released, tree paused, player still")
+
+
+## Does the legend along the bottom name keys that exist on a keyboard?
+##
+## It shipped hand-typed: "A  Select        B  Close        Q / LB  Prev tab
+## Tab / RB  Next tab". Two entries named both devices and two named only the
+## pad — and the literal keyboard B is bound to `build_open` (project.godot),
+## so a blind playtest obeying the legend pressed B, opened the Build tab, and
+## spent the rest of the session unable to leave the screen the way it came in.
+##
+## Asserted against the InputMap rather than against a expected string, because
+## the Settings tab lets the player move every one of these and a legend pinned
+## to today's bindings would be the same defect with a longer fuse.
+##
+## What deliberately is NOT asserted: that the legend avoids naming a key bound
+## to something else. The pad face button and the keyboard key that caused this
+## are both called "B", so no substring test can tell "the pad's B" from "the
+## key build_open owns" — which is most of why the original legend read as
+## plausible.
+func _check_the_footer_names_keys_a_keyboard_player_can_press() -> void:
+	var footer := _menu.get_node_or_null(^"Root/Frame/Panel/Body/Footer") as Label
+	if footer == null:
+		_fail("the pause menu has no Footer label; there is no button legend to check")
+		return
+	var text := str(footer.text)
+	if text.is_empty():
+		_fail("the pause menu draws an empty button legend")
+		return
+
+	# Verb -> the action the legend's entry for it must name a key for. The verbs
+	# are read off the drawn text, so a renamed verb fails here loudly rather
+	# than passing by matching nothing.
+	var verbs := {
+		"Select": "menu_confirm",
+		"Close": "menu_cancel",
+		"Prev tab": "tool_cycle",
+		"Next tab": "menu_tab_right",
+	}
+	for verb: String in verbs.keys():
+		var action := str(verbs[verb])
+		var key := GLYPH.key_name_for_action(action)
+		if key == action:
+			# `key_name_for_action` hands back the action id when nothing on a
+			# keyboard is bound to it at all.
+			_fail("`%s` has no keyboard binding, so the legend's '%s' entry cannot name one" % [action, verb])
+			continue
+		var entry := _legend_entry_for(text, verb)
+		if entry.is_empty():
+			_fail("the button legend has no '%s' entry at all: '%s'" % [verb, text])
+		elif not entry.contains(key):
+			_fail("the legend's '%s' entry reads '%s' and never names '%s', the key `%s` is bound to; "
+				% [verb, entry, key, action]
+				+ "a keyboard player is being told to press a gamepad button")
+	print("footer legend: '%s'" % text)
+
+
+## The one entry of the legend that ends in `verb`. Entries are separated by a
+## run of spaces and the key names inside one are separated by " / ", so a split
+## on a four-space run keeps "Escape / B  Close" whole.
+func _legend_entry_for(text: String, verb: String) -> String:
+	for chunk: String in text.split("    ", false):
+		var entry := chunk.strip_edges()
+		if entry.ends_with(verb):
+			return entry
+	return ""
 
 
 func _check_focus_can_be_driven() -> void:

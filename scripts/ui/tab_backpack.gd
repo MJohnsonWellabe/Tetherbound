@@ -688,7 +688,7 @@ func _read_drop() -> void:
 
 	_confirming = _focused
 	menu.call("hold_input", true)
-	menu.call("override_footer", "A  Drop it        B  Cancel")
+	menu.call("override_footer", "{menu_confirm} / A  Drop it        {menu_cancel} / B  Cancel")
 	_content_row.visible = false
 	_confirm_panel.visible = true
 	_refresh_confirm_panel()

@@ -198,13 +198,23 @@ static func using_gamepad() -> bool:
 ## fallbacks: "Shift" for build_snap_cycle. Falls back to the action id when
 ## the action has no key event at all (then the caller's brackets at least
 ## name the verb).
-static func _key_name_for_action(action: String) -> String:
+##
+## Public because the pause menu's footer needs the same answer for a plain
+## Label that cannot draw a glyph at all — and needs it read off the InputMap
+## rather than typed out, since the Settings tab lets the player move these.
+static func key_name_for_action(action: String) -> String:
 	if not InputMap.has_action(action):
 		return action
 	for event in InputMap.action_get_events(action):
 		var key := event as InputEventKey
 		if key != null:
-			var text := key.as_text().trim_suffix(" (Physical)")
+			# Godot 4.7 marks a physical binding as "Q - Physical", not the
+			# "Q (Physical)" this line was written against — and only for keys
+			# whose physical and logical layouts can differ, so "Enter" and
+			# "Escape" came back clean and nothing noticed. Both forms are
+			# trimmed rather than the current one only, because this string is
+			# an engine display detail and has already moved once.
+			var text := key.as_text().trim_suffix(" (Physical)").trim_suffix(" - Physical")
 			if not text.is_empty():
 				return text
 	return action
@@ -220,7 +230,7 @@ static func icon(id: String, px: int = 36, tint: Color = Color.WHITE) -> String:
 	# action id ("[BUILD_SNAP_CYCLE]"), which leaked into the build footer,
 	# and instead of the hard indexing error smoke_free_build caught.
 	if not (GLYPHS[id] as Dictionary).has(device):
-		return "[%s]" % _key_name_for_action(id)
+		return "[%s]" % key_name_for_action(id)
 	var entry: Variant = GLYPHS[id][device]
 	var files: Array = entry if entry is Array else [entry]
 	var colour_attr := "" if tint == Color.WHITE else " color=#%s" % tint.to_html(true)

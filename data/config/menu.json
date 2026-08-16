@@ -202,6 +202,6 @@
     }
   },
 
-  "_comment_footer": "The button legend. Written out because this ships on a handheld with no manual open beside it.",
-  "footer": "A  Select        B  Close        Q / LB  Prev tab        Tab / RB  Next tab        Menu + View held, or F10  Reset all controls"
+  "_comment_footer": "The button legend. Written out because this ships on a handheld with no manual open beside it. `{action}` is replaced at draw time by whatever key that action is currently bound to (game_menu.gd::legend), so rebinding in Settings does not leave the legend lying; the gamepad half stays literal because this is a plain Label and cannot draw a glyph. Select and Close used to read 'A' and 'B' with no keyboard half at all, while Prev/Next tab beside them named both devices -- and the literal keyboard B is bound to build_open, so a keyboard player obeying the legend opened the Build tab instead of closing the menu.",
+  "footer": "{menu_confirm} / A  Select        {menu_cancel} / B  Close        {tool_cycle} / LB  Prev tab        {menu_tab_right} / RB  Next tab        Menu + View held, or F10  Reset all controls"
 }
