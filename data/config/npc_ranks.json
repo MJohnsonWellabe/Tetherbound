@@ -10,13 +10,13 @@
       },
       "badge": {
         "shape": "sphere",
-        "size": 7.0,
+        "size": 0.07,
         "color": "#5c6b73",
         "bone": "Spine02",
         "offset": [
           0.0,
-          30.0,
-          25.0
+          0.3,
+          0.25
         ],
         "name": "badge"
       }
@@ -28,13 +28,13 @@
       },
       "badge": {
         "shape": "sphere",
-        "size": 10.0,
+        "size": 0.1,
         "color": "#a6672f",
         "bone": "Spine02",
         "offset": [
           0.0,
-          30.0,
-          25.0
+          0.3,
+          0.25
         ],
         "name": "badge"
       }
@@ -46,13 +46,13 @@
       },
       "badge": {
         "shape": "sphere",
-        "size": 13.0,
+        "size": 0.13,
         "color": "#c2661e",
         "bone": "Spine02",
         "offset": [
           0.0,
-          30.0,
-          25.0
+          0.3,
+          0.25
         ],
         "name": "badge"
       }
@@ -61,18 +61,19 @@
       "label": "Warden",
       "badge": {
         "shape": "sphere",
-        "size": 16.0,
+        "size": 0.16,
         "color": "#9c2b3a",
         "bone": "Spine02",
         "offset": [
           0.0,
-          30.0,
-          25.0
+          0.3,
+          0.25
         ],
         "name": "badge"
       },
       "_comment": "No palette override -- his own board-06 painted finish is already the richest tier. Only the badge is added, at the top of the same escalating language the other three use. Round-2 blind review: gold-on-gold made captain and Warden collapse into the same badge at a glance ('the color plateau between rank 3 and rank 4'). Shifted the Warden's own badge to a red/crimson family instead of a brighter gold -- data/config/palette.json's tether_oxblood is reserved for exactly this ('Team Tether banners, equipment and uniforms, never on friendly or neutral elements'), and the Warden IS the top of that same faction, so a red accent both solves the collision and uses the project's own reserved colour correctly rather than inventing an unrelated one."
     }
   },
-  "_comment_scale": "Every human rig (trainer/Grandpa/Warden) sits under an Armature node with a flat 0.01 scale -- HANDOFF.md sec6's 'centimetre-unit skeleton under a 0.01 Armature node with x100 inverse binds', the same bug that produced the giant-player fit issue. character_model.gd's _attach_part() sets a placeholder's `position` as a LOCAL child of a BoneAttachment3D inside that scaled chain, so both `offset` and `size` below are in that same shrunk local space, not real metres: a size of 13.0 here renders as a 0.13m sphere in the actual game world, and an offset of 30 along one axis moves it 0.30m in world space. Measured directly (offset [30,0,0]/[0,30,0]/[0,0,30] each moved the attached part almost exactly 0.30m along the matching WORLD axis with no rotation to account for), not guessed -- confirmed the shared _attach_part() mechanism NP1's hair also uses has this same scale, so hair's own tiny offset (0.08) is likely rendering at ~0.0008m, effectively invisible too. Left untouched here rather than fixed for everyone: changing hair's placement is a real, currently-unverified visual change outside NP2's scope, not a call to make inside this item."
+  "_comment_scale": "Every human rig (trainer/Grandpa/Warden) sits under an Armature node with a flat 0.01 scale -- HANDOFF.md sec6's 'centimetre-unit skeleton under a 0.01 Armature node with x100 inverse binds', the same bug that produced the giant-player fit issue. character_model.gd's _attach_part() sets a placeholder's `position` as a LOCAL child of a BoneAttachment3D inside that scaled chain, so both `offset` and `size` below are in that same shrunk local space, not real metres: a size of 13.0 here renders as a 0.13m sphere in the actual game world, and an offset of 30 along one axis moves it 0.30m in world space. Measured directly (offset [30,0,0]/[0,30,0]/[0,0,30] each moved the attached part almost exactly 0.30m along the matching WORLD axis with no rotation to account for), not guessed -- confirmed the shared _attach_part() mechanism NP1's hair also uses has this same scale, so hair's own tiny offset (0.08) is likely rendering at ~0.0008m, effectively invisible too. Left untouched here rather than fixed for everyone: changing hair's placement is a real, currently-unverified visual change outside NP2's scope, not a call to make inside this item.",
+  "_comment_badge_scale": "Badge sizes and offsets are METRES, and were authored 100x too large -- size 7.0 to 16.0 with an offset of [0,30,25]. character_model.gd's own default (`acc.get(\"size\", 0.12)`) is the giveaway: 12cm is what a chest badge should be. Applied as metres, the grunt wore a 3.5m-RADIUS sphere thirty metres above his own head, and the ladder made it worse with rank -- the Warden's was 8m. The owner saw them from across the valley and asked what the balls on the stronghold were. Divided by 100 here, which preserves the intended escalation exactly (7cm grunt -> 16cm warden) and puts the badge on the chest."
 }

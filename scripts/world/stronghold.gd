@@ -232,6 +232,12 @@ func _size_of(raw: Variant) -> Vector2:
 	return Vector2(float(list[0]), float(list[1]))
 
 
+## Height of the decorative dark base course run along the foot of each
+## chamber wall, and how far it stands proud of the wall face. TUNABLE.
+const BASE_COURSE_H := 0.9
+const BASE_COURSE_PROUD := 0.35
+
+
 ## --- materials --------------------------------------------------------------
 
 func _material(colour: Color, emissive := 0.0) -> StandardMaterial3D:
@@ -272,6 +278,42 @@ func _load_palette() -> void:
 
 func _stone() -> Color:
 	return Color(str(_config.get("site", {}).get("stone", "#6a6157")))
+
+
+## The castle's own kit palette, so the works read as the same fortress the
+## walls above them belong to.
+##
+## Owner, seeing the complex from the valley: "it looks too sterile overall.
+## make the whole thing look a little more like the actual castle in the back
+## and give it color not a plain grey all the way through." He was right, and
+## the cause was structural: every wall, floor and ceiling in here asked for
+## ONE colour, so a 116m fortress interior was a single flat grey from end to
+## end, while the Quaternius castle beside it carries six retinted materials
+## (building_prefabs.json's `castle.retint`). These are those same values --
+## quoted from that block, not re-picked -- so the two structures share a
+## palette rather than merely coexisting.
+##
+## `_stone()` stays the base wall tone and the config key still overrides it;
+## these are the accents that were missing. All TUNABLE.
+func _stone_light() -> Color:
+	return Color(str(_config.get("site", {}).get("stone_light", "#786d5e")))
+
+
+func _stone_dark() -> Color:
+	return Color(str(_config.get("site", {}).get("stone_dark", "#463f37")))
+
+
+func _timber() -> Color:
+	return Color(str(_config.get("site", {}).get("timber", "#7a5c39")))
+
+
+## A wall's own tone, varied by where it stands. Outer walls take the castle's
+## lighter face stone (they are what a player sees from outside), inner walls
+## the base tone, and every wall gets a dark base course under it -- the single
+## cheapest cue that turns a flat box into built masonry, and the one the
+## castle's own two-course curtain already uses.
+func _wall_material(outer: bool) -> StandardMaterial3D:
+	return _material(_stone_light() if outer else _stone())
 
 
 func _floor_colour() -> Color:
@@ -334,7 +376,7 @@ func _build_chambers() -> void:
 			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour()))
 		if not bool(chamber.get("open", false)):
 			_box(Vector3(outer.x, 1.0, outer.y),
-				Vector3(centre.x, _floor_y + height + 0.5, centre.z), _material(_stone()))
+				Vector3(centre.x, _floor_y + height + 0.5, centre.z), _material(_timber()))
 
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			_build_wall(centre, size, height, side, _opening_on(id, side))
@@ -422,7 +464,20 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	# stone meeting the ground rather than as a floating box.
 	var extra := 0.0 if base > 0.0 else _skirt
 	size.y += extra
-	_box(size, Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z), _material(_stone()))
+	_box(size, Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z),
+		_wall_material(true))
+	# A darker base course along the foot of every chamber wall. Thin, slightly
+	# proud, and purely decorative (solid: false) so it can never narrow a
+	# doorway -- the flat-box-into-masonry cue, and the reason the interior no
+	# longer reads as one grey extrusion.
+	var course := Vector3(size.x, BASE_COURSE_H, size.z)
+	# Proud on the two FACE sides only, never along the run's length.
+	if along_x:
+		course.z += BASE_COURSE_PROUD
+	else:
+		course.x += BASE_COURSE_PROUD
+	_box(course, Vector3(at.x, _floor_y + base - extra + BASE_COURSE_H * 0.5, at.z),
+		_material(_stone_dark()), false)
 
 
 ## The ways between spaces: floor, side walls, and a ceiling wherever BOTH ends
@@ -461,7 +516,8 @@ func _build_passages() -> void:
 			ceiling_size = Vector3(width + _wall_t * 2.0, 1.0, length)
 		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour()))
 		if roofed:
-			_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.5, centre.z), _material(_stone()))
+			_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.5, centre.z),
+				_material(_timber()))
 
 		for s in [-1.0, 1.0]:
 			var wall_at := centre
@@ -472,7 +528,7 @@ func _build_passages() -> void:
 				wall_at.x += s * (width * 0.5 + _wall_t * 0.5)
 				wall_size = Vector3(_wall_t, height + _skirt, length)
 			_box(wall_size, Vector3(wall_at.x, _floor_y + height * 0.5 - _skirt * 0.5, wall_at.z),
-				_material(_stone()))
+				_wall_material(false))
 
 		var flag := str(passage.get("gated_by_flag", ""))
 		if flag != "":
