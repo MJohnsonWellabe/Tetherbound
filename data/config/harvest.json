@@ -133,6 +133,63 @@
       ],
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
       "model_scale": 1.2
+    },
+    {
+      "_comment_sd16": "SD16, spec §3 Band 2 and §10: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        17.0,
+        155.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.15
+    },
+    {
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        22.0,
+        150.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05
+    },
+    {
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        29.0,
+        158.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.25,
+      "_why": "hard against the quarry's own cut face, where the working stopped"
+    },
+    {
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        24.0,
+        167.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.1
+    },
+    {
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        16.0,
+        160.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.0
     }
   ],
   "_comment_models_r9_4": "R9.4. Every node here had no `model`, and harvest_node.gd's fallback for that is a BoxMesh tinted by the item's colour -- so all twelve harvest spots rendered as coloured boxes. The blind critic found two of them sitting a couple of metres from the player in the spawn framing and noted they were 'MORE legible than the player', being the only hard-edged geometric shapes in frame; it listed them among the three assets doing the most damage. These are the vegetation's own Quaternius pack, deliberately: assets/environment/nature is the Kenney kit, which ships flat untextured vertex colours including a teal-green rock material, and mixing it in would trade one cohesion problem for another (CLAUDE.md, visual cohesion). The box fallback stays in the code -- it is the right behaviour for a node whose model is missing. TUNABLE (scales especially)."

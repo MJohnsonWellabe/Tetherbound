@@ -3604,6 +3604,89 @@
           "energy": 0.85
         }
       }
+    },
+    "south_bridge": {
+      "_why": "SC14, spec 3 Gate 1. The same timber-deck-on-stone-abutments language as `footbridge` above (bible sec12), stretched to carry the south gully's 14m clear span instead of a 0.7m stream channel: seven deck slabs from -7 to +7, a stone landing on each rim at +-8, and the kit's exterior border capping each approach. Nothing new -- every module is one the settlement already stands on (D24, one village family). scripts/world/south_bridge.gd owns where it sits, what height it sits at and the gate across it; this is only the span. Deliberately NOT a scaled copy of `footbridge`: a prefab scaled 2.3x would scale its plank thickness and rail height with it, and the result reads as a toy bridge photographed close up.",
+      "modules": [
+        { "module": "Floor_WoodDark", "at": [-6.0, 0.1, 0.0], "_why": "timber deck, seven kit floor slabs spanning the gully" },
+        { "module": "Floor_WoodDark", "at": [-4.0, 0.1, 0.0] },
+        { "module": "Floor_WoodDark", "at": [-2.0, 0.1, 0.0] },
+        { "module": "Floor_WoodDark", "at": [0.0, 0.1, 0.0] },
+        { "module": "Floor_WoodDark", "at": [2.0, 0.1, 0.0] },
+        { "module": "Floor_WoodDark", "at": [4.0, 0.1, 0.0] },
+        { "module": "Floor_WoodDark", "at": [6.0, 0.1, 0.0] },
+        { "module": "Prop_WoodenFence_Single", "at": [-6.0, 0.12, 0.95], "_why": "rails, the kit fence at deck height" },
+        { "module": "Prop_WoodenFence_Single", "at": [-4.0, 0.12, 0.95] },
+        { "module": "Prop_WoodenFence_Single", "at": [-2.0, 0.12, 0.95] },
+        { "module": "Prop_WoodenFence_Single", "at": [0.0, 0.12, 0.95] },
+        { "module": "Prop_WoodenFence_Single", "at": [2.0, 0.12, 0.95] },
+        { "module": "Prop_WoodenFence_Single", "at": [4.0, 0.12, 0.95] },
+        { "module": "Prop_WoodenFence_Single", "at": [6.0, 0.12, 0.95] },
+        { "module": "Prop_WoodenFence_Single", "at": [-6.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Prop_WoodenFence_Single", "at": [-4.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Prop_WoodenFence_Single", "at": [-2.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Prop_WoodenFence_Single", "at": [0.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Prop_WoodenFence_Single", "at": [2.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Prop_WoodenFence_Single", "at": [4.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Prop_WoodenFence_Single", "at": [6.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Prop_WoodenFence_Single", "at": [-8.0, 0.12, 0.95], "_why": "the parapet carries on over each stone landing, which is also what stops a player stepping onto the deck from the side PAST the gate -- see the rail colliders below" },
+        { "module": "Prop_WoodenFence_Single", "at": [8.0, 0.12, 0.95] },
+        { "module": "Prop_WoodenFence_Single", "at": [-8.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Prop_WoodenFence_Single", "at": [8.0, 0.12, -0.95], "yaw_deg": 180.0 },
+        { "module": "Floor_UnevenBrick", "at": [-8.0, 0.02, 0.0], "_why": "the stone abutment landing on each rim" },
+        { "module": "Floor_UnevenBrick", "at": [8.0, 0.02, 0.0] },
+        { "module": "Prop_ExteriorBorder_Straight1", "at": [-9.0, 0.0, 0.0], "yaw_deg": -90.0 },
+        { "module": "Prop_ExteriorBorder_Straight2", "at": [9.0, 0.0, 0.0], "yaw_deg": 90.0 }
+      ],
+      "colliders": [
+        {
+          "at": [0.0, 0.0, 0.0],
+          "size": [18.4, 0.24, 2.1],
+          "_why": "the walkable deck and both landings; top at 0.12 = deck surface. Reaches +-9.2, comfortably past the gully's own zero-depth contour at +-7.0, so the span always lands on solid rim"
+        },
+        {
+          "at": [0.0, 0.55, 0.95],
+          "size": [17.2, 0.9, 0.14],
+          "_why": "rail, run out to +-8.6 so it covers the stone landings too. This is load-bearing for the gate, not decoration: the deck sits barely 0.12m above the levelled abutments, so a rail that stopped at the timber (+-7.15) would leave a step-on-from-the-side gap between it and a gate standing further out, and the whole crossing could be walked around the leaf in one sidestep"
+        },
+        { "at": [0.0, 0.55, -0.95], "size": [17.2, 0.9, 0.14], "_why": "rail" }
+      ]
+    },
+    "quarry_foundation": {
+      "_why": "SD16, spec §3 Band 2's 'old foundations'. A building the meadow has taken back: a brick floor, one long wall course and two stub returns, all of them the SAME `Wall_UnevenBrick_Straight` the village's own cottages are built from (D24) but SUNK so only the bottom metre stands. That is the whole trick and it is deliberate -- a ruin drawn from the same family as the living buildings is what makes the quarry read as older than the village rather than as a different game's asset pack. Vines on the standing course, brick rubble where the rest of it went.",
+      "_comment_sink": "The kit's walls are 3.12m tall with their origin at the base, so y = -2.1 leaves ~1.0m proud and y = -2.45 leaves ~0.67m. Sinking rather than modelling a broken top edge: the kit ships no ruined pieces, and a wall cut off by the ground plane reads as a buried course, which is what an old foundation IS.",
+      "modules": [
+        { "module": "Floor_UnevenBrick", "at": [-2.0, 0.03, -1.0], "_why": "the floor slab, 6x4m of it" },
+        { "module": "Floor_UnevenBrick", "at": [0.0, 0.03, -1.0] },
+        { "module": "Floor_UnevenBrick", "at": [2.0, 0.03, -1.0] },
+        { "module": "Floor_UnevenBrick", "at": [-2.0, 0.03, 1.0] },
+        { "module": "Floor_UnevenBrick", "at": [0.0, 0.03, 1.0] },
+        { "module": "Floor_UnevenBrick", "at": [2.0, 0.03, 1.0] },
+        { "module": "Wall_UnevenBrick_Straight", "at": [-2.0, -2.1, -2.0], "yaw_deg": 180.0, "_why": "the one long course still standing, knee-to-waist high" },
+        { "module": "Wall_UnevenBrick_Straight", "at": [0.0, -2.25, -2.0], "yaw_deg": 180.0 },
+        { "module": "Wall_UnevenBrick_Straight", "at": [2.0, -2.45, -2.0], "yaw_deg": 180.0, "_why": "sinking further along the run, so the course dies away instead of ending square" },
+        { "module": "Wall_UnevenBrick_Straight", "at": [-3.0, -2.35, -1.0], "yaw_deg": -90.0, "_why": "a stub return at each end -- two walls meeting is what says building rather than wall" },
+        { "module": "Wall_UnevenBrick_Straight", "at": [3.0, -2.55, 1.0], "yaw_deg": 90.0 },
+        { "module": "Prop_ExteriorBorder_Straight1", "at": [-1.0, 0.0, 2.1], "yaw_deg": 0.0, "_why": "the open side's own sill, where the fourth wall went" },
+        { "module": "Prop_ExteriorBorder_Straight2", "at": [1.0, 0.0, 2.1], "yaw_deg": 0.0 },
+        { "module": "Prop_Brick1", "at": [-3.4, 0.0, 2.4], "yaw_deg": 25.0, "_why": "rubble from the courses that went" },
+        { "module": "Prop_Brick2", "at": [2.6, 0.0, 2.6], "yaw_deg": -40.0 },
+        { "module": "Prop_Brick1", "at": [3.6, 0.0, -1.8], "yaw_deg": 70.0 },
+        { "module": "Prop_Vine1", "at": [-2.0, -1.2, -2.0], "yaw_deg": 180.0, "_why": "growing over the standing course" },
+        { "module": "Prop_Vine2", "at": [0.0, -1.35, -2.0], "yaw_deg": 180.0 }
+      ],
+      "colliders": [
+        { "at": [0.0, 0.45, -2.0], "size": [6.2, 0.9, 0.35], "_why": "the standing course -- low enough to see over, solid enough to stop a walk through" },
+        { "at": [-3.0, 0.3, -1.0], "size": [0.35, 0.6, 2.1], "_why": "stub return" },
+        { "at": [3.0, 0.2, 1.0], "size": [0.35, 0.4, 2.1], "_why": "stub return, the lower one" }
+      ]
+    },
+    "south_bridge_gate": {
+      "_why": "SC14's leaf: `road_gate_leaf` above at ONE segment instead of two, because it shuts a 2.1m bridge deck rather than a 4.1m road. Same construction and same reason for it -- kit fencing, two courses, the upper one flipped so the post rhythm reads built rather than tiled. Authors no colliders: scripts/world/south_bridge.gd owns the collision, the padlock and the swing, exactly as road_gate.gd does for its own leaf.",
+      "modules": [
+        { "module": "Prop_WoodenFence_Single", "at": [0.0, 0.0, 0.0], "yaw_deg": 0.0 },
+        { "module": "Prop_WoodenFence_Extension2", "at": [0.0, 0.62, 0.0], "yaw_deg": 180.0 }
+      ]
     }
   }
 }

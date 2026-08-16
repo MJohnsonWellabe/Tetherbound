@@ -170,6 +170,154 @@ func test_every_harvest_item_named_in_vegetation_json_is_a_real_tool_gated_resou
 		assert_true(int(layer.get("harvest_amount", 0)) > 0, "layer '%s's harvest_amount must be positive" % name)
 
 
+# --- data/config/harvest.json: the authored spots themselves ---------------
+#
+# Nothing read this file until SD16 added the Old Quarry's Rootstone to it,
+# and every failure below is silent at run time. `playground_world.gd::
+# _place_harvest_nodes()` skips a node whose ground sample is NaN and warns
+# about nothing else: a typo'd item id builds a prompt that hands over an item
+# the satchel has never heard of, a missing model quietly falls back to the
+# coloured box R9.4's blind critic named as one of the three worst assets in
+# the game, and a position outside the baked world simply never appears.
+
+const HARVEST_CONFIG := "res://data/config/harvest.json"
+const WORLD_HALF := 256.0
+## Two authored spots closer than this contest for the same interact prompt
+## (`interactable.gd`'s own radius here is 2.4m, and the arbiter picks by
+## distance) — the exact problem `playground_world.gd`'s GATE_AT comment
+## records paying for once with the road gate and a berry bush.
+const MIN_SPOT_SEPARATION := 4.5
+
+
+func _authored_nodes() -> Array:
+	var file := FileAccess.open(HARVEST_CONFIG, FileAccess.READ)
+	if file == null:
+		return []
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return []
+	return (parsed as Dictionary).get("nodes", []) as Array
+
+
+func test_every_authored_harvest_spot_is_real_and_reachable() -> void:
+	var nodes := _authored_nodes()
+	assert_false(nodes.is_empty(), "harvest.json has no nodes at all")
+	for entry: Variant in nodes:
+		var spec := entry as Dictionary
+		var item_id := str(spec.get("item", ""))
+		assert_false(db.definition(item_id).is_empty(),
+			"a harvest spot names '%s', which is not an item in items.json" % item_id)
+		assert_true(int(spec.get("amount", 0)) > 0,
+			"the '%s' spot pays %d" % [item_id, int(spec.get("amount", 0))])
+		assert_false(str(spec.get("label", "")).is_empty(),
+			"the '%s' spot has no prompt label" % item_id)
+		var at: Array = spec.get("at", [])
+		assert_eq(at.size(), 2, "the '%s' spot's `at` is not an [x, z] pair" % item_id)
+		if at.size() == 2:
+			assert_true(absf(float(at[0])) <= WORLD_HALF and absf(float(at[1])) <= WORLD_HALF,
+				"the '%s' spot at %s is outside the ±%.0fm playground" % [item_id, str(at), WORLD_HALF])
+		var model := str(spec.get("model", ""))
+		if not model.is_empty():
+			assert_true(ResourceLoader.exists(model),
+				"the '%s' spot names a model that does not exist: %s" % [item_id, model])
+
+
+func test_no_two_authored_harvest_spots_contest_the_same_prompt() -> void:
+	var nodes := _authored_nodes()
+	for i in nodes.size():
+		for j in range(i + 1, nodes.size()):
+			var a: Array = (nodes[i] as Dictionary).get("at", [])
+			var b: Array = (nodes[j] as Dictionary).get("at", [])
+			if a.size() != 2 or b.size() != 2:
+				continue
+			var gap := Vector2(float(a[0]), float(a[1])).distance_to(Vector2(float(b[0]), float(b[1])))
+			assert_true(gap >= MIN_SPOT_SEPARATION,
+				"the '%s' spot at %s and the '%s' spot at %s are %.1fm apart; one prompt will always beat the other" % [
+					str((nodes[i] as Dictionary).get("item", "?")), str(a),
+					str((nodes[j] as Dictionary).get("item", "?")), str(b), gap])
+
+
+# --- SD16: Rootstone, and where it may be taken from -----------------------
+
+## Spec §3 Band 2 / §10. Rootstone is the chapter's first tier material and the
+## whole reason the South Bridge is worth opening, so the two properties that
+## make that true get asserted rather than assumed: it is a real tool-gated
+## resource, and every deposit of it is on the far side of Gate 1.
+##
+## The second half is the one worth having. "The quarry is past the bridge" is
+## a claim about geometry that a later re-tune of either could break silently —
+## drop a Rootstone node on the village side and Band 2's material is free, the
+## gate stops meaning anything, and nothing in the game says a word about it.
+## Both sides are read from their own config, never restated here.
+const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
+
+
+func _crossing() -> Dictionary:
+	var file := FileAccess.open(TERRAIN_CONFIG, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	for entry: Variant in (parsed as Dictionary).get("crossings", []):
+		if entry is Dictionary and str((entry as Dictionary).get("id", "")) == "south_bridge":
+			return entry as Dictionary
+	return {}
+
+
+func test_rootstone_is_a_real_pickaxe_gated_resource() -> void:
+	var definition: Dictionary = db.definition("rootstone")
+	assert_false(definition.is_empty(), "rootstone is not in items.json")
+	assert_eq(db.gathered_with("rootstone"), "pickaxe",
+		"rootstone should want the same tool stone does; §10 upgrades what exists rather than adding a system")
+	var bare: Dictionary = HARVEST_LOGIC.gather("rootstone", 2, INVENTORY.new(db), db)
+	var equipped: RefCounted = INVENTORY.new(db)
+	equipped.add("pickaxe", 1)
+	var with_tool: Dictionary = HARVEST_LOGIC.gather("rootstone", 2, equipped, db)
+	assert_eq(int(with_tool["amount"]), 2, "a pickaxe should pay rootstone in full")
+	assert_true(int(with_tool["amount"]) > int(bare["amount"]),
+		"a pickaxe should beat bare hands on rootstone")
+
+
+func test_every_rootstone_deposit_is_past_the_south_bridge() -> void:
+	var crossing := _crossing()
+	assert_false(crossing.is_empty(), "no `south_bridge` crossing in terrain_playground.json")
+	var carve: Dictionary = crossing.get("carve", {})
+	var at: Array = carve.get("centre", [])
+	assert_eq(at.size(), 2, "the south gully's carve has no centre")
+	if at.size() != 2:
+		return
+	var centre := Vector2(float(at[0]), float(at[1]))
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+	var across := Vector2(-axis.y, axis.x)
+	# Which side of the gully the village is on, resolved the same way
+	# south_bridge.gd resolves it: from the road's own start point.
+	var road: Array = crossing.get("road", [])
+	assert_true(road.size() >= 2, "the crossing has no road to take a bearing from")
+	if road.size() < 2:
+		return
+	var start := Vector2(float((road[0] as Array)[0]), float((road[0] as Array)[1]))
+	if start.distance_to(centre + across) < start.distance_to(centre - across):
+		across = -across
+	var reach: float = float(carve.get("half_width", 3.6)) + float(carve.get("rim", 3.4))
+
+	var deposits := 0
+	for entry: Variant in _authored_nodes():
+		var spec := entry as Dictionary
+		if str(spec.get("item", "")) != "rootstone":
+			continue
+		deposits += 1
+		var node_at: Array = spec.get("at", [])
+		if node_at.size() != 2:
+			continue
+		var past := (Vector2(float(node_at[0]), float(node_at[1])) - centre).dot(across)
+		assert_true(past > reach,
+			"a rootstone deposit at %s is only %.1fm past the gully centre (the far rim is at %.1fm) — Band 2's material is not behind Gate 1" % [
+				str(node_at), past, reach])
+	assert_true(deposits >= 3,
+		"only %d rootstone deposits authored; one trip to the quarry should be worth the walk" % deposits)
+
+
 # --- selection: scripts/world/vegetation.gd's _mark_harvestable ------------
 
 func _placements() -> Dictionary:

@@ -30,6 +30,8 @@ const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
 const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
+const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
+const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
@@ -559,6 +561,24 @@ func _build_settlement() -> void:
 	landmark.call("build", self)
 
 	_build_road_gate()
+
+	# SC14: the South Bridge over the south gully, and the leaf across it.
+	# After the road gate so the two gates build in the order the player meets
+	# them, and before the spokes for no reason but readability — neither
+	# touches the other.
+	var south_bridge: Node3D = SOUTH_BRIDGE.new()
+	south_bridge.name = "SouthBridge"
+	add_child(south_bridge)
+	south_bridge.call("build", self)
+
+	# SD16: the Old Quarry past it — foundations and the Tether conduit run.
+	# Its Rootstone deposits are ordinary `harvest.json` nodes and stand up in
+	# `_place_harvest_nodes()` below with every other gathering spot; its
+	# abandoned gear is a `props.json` cluster and is already standing.
+	var quarry: Node3D = OLD_QUARRY.new()
+	quarry.name = "OldQuarry"
+	add_child(quarry)
+	quarry.call("build", self)
 
 	# SA4: the severed outward roads. Before the boundary ring because they
 	# stand INSIDE it (~160-200m out) and are the thing the player is meant to

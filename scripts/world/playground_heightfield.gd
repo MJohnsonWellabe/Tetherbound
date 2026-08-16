@@ -199,6 +199,7 @@ func height_at(x: float, z: float) -> float:
 	height = _apply_flats(x, z, height)
 	height -= _stream_carve(x, z)
 	height -= _spoke_carve(x, z)
+	height -= _crossing_carve(x, z)
 	height += _outlet_shape(x, z)
 	height -= _shore_step(height)
 
@@ -233,6 +234,33 @@ func _spoke_carve(x: float, z: float) -> float:
 		if not bool((entry as Dictionary).get("built", false)):
 			continue
 		var carve: Dictionary = ((entry as Dictionary).get("blocker", {}) as Dictionary).get("carve", {})
+		if carve.is_empty():
+			continue
+		deepest = maxf(deepest, _carve_depth(spot, carve))
+	return deepest
+
+
+## SC14. How deep an authored INTERIOR crossing's gully cuts at a world XZ —
+## today just the south gully under the South Bridge. Zero everywhere else.
+##
+## Deliberately the same `_carve_depth` profile, and deliberately a separate
+## config list from `spokes`: a spoke is a road LEAVING the Meadows that ends
+## at something the player may never pass, and a crossing is a road that stays
+## inside it and has a way over. Sharing `spokes.routes` would have meant an
+## eighth "spoke" that is not one, with a `built` flag and a blocker `kind`
+## neither of which mean anything here; sharing `_carve_depth` costs nothing
+## and keeps one falloff evaluator on this map, which is the property that
+## actually matters (see `_outlet_shape`'s own note on the same choice).
+func _crossing_carve(x: float, z: float) -> float:
+	var crossings: Array = _config.get("crossings", [])
+	if crossings.is_empty():
+		return 0.0
+	var spot := Vector2(x, z)
+	var deepest := 0.0
+	for entry: Variant in crossings:
+		if not entry is Dictionary:
+			continue
+		var carve: Dictionary = (entry as Dictionary).get("carve", {})
 		if carve.is_empty():
 			continue
 		deepest = maxf(deepest, _carve_depth(spot, carve))
@@ -778,6 +806,58 @@ func building_apron_factor(x: float, z: float) -> float:
 	return best
 
 
+## D41 (debuted by SD16). How badly Team Tether's hardware has drained the
+## ground at a world XZ: 1.0 at a station, falling to 0.0 past its radius,
+## zero everywhere else on the map.
+##
+## This is a shape, not a decision. It says how dead the ground is and nothing
+## about what that looks like — the bake turns it into a colour tint and a
+## texture blend, `scatter_rules.gd` turns it into thinned-out vegetation, and
+## each weights it by its own tunable. That split is why there is one function
+## here rather than a "drained" flag in three files: the terrain and the
+## scatter agreeing about exactly where the dead radius ends is the whole
+## effect, and they can only agree by asking the same question.
+##
+## Same contract shape as `path_factor`, `stream_factor` and
+## `building_apron_factor` above, deliberately, so the bake composes all four
+## with one rule. Circular rather than a rotated rectangle: a station poisons
+## the ground around itself, which has no orientation, where a building's
+## worked apron follows its own walls.
+##
+## NOT gated on the station's props actually standing. A drain is authored in
+## `terrain_playground.json` and baked; the pylons are placed at run time from
+## `old_quarry.json`. Keeping the two lists separate is the honest split
+## (offline bake, live scene — the same one `building_aprons` already lives
+## with) and both files say so.
+func drain_factor(x: float, z: float) -> float:
+	var drains: Dictionary = _config.get("drains", {})
+	var stations: Array = drains.get("stations", [])
+	if stations.is_empty():
+		return 0.0
+	var global_strength := clampf(float(drains.get("strength", 1.0)), 0.0, 1.0)
+	if global_strength <= 0.0:
+		return 0.0
+	var spot := Vector2(x, z)
+	var worst := 0.0
+	for entry: Variant in stations:
+		if not entry is Dictionary:
+			continue
+		var station: Dictionary = entry
+		var at: Array = station.get("centre", [])
+		if at.size() < 2:
+			continue
+		var radius := maxf(float(station.get("radius", 0.0)), 0.001)
+		var distance := spot.distance_to(Vector2(float(at[0]), float(at[1])))
+		if distance >= radius:
+			continue
+		# `inner` is the fully-dead core; between it and `radius` the ground
+		# recovers on a smoothstep, so nothing anywhere draws a circle.
+		var inner := clampf(float(station.get("inner", 0.0)), 0.0, radius - 0.001)
+		var strength := clampf(float(station.get("strength", 1.0)), 0.0, 1.0)
+		worst = maxf(worst, strength * (1.0 - smoothstep(inner, radius, distance)))
+	return worst * global_strength
+
+
 func _segment_distance(point: Vector2, a: Vector2, b: Vector2) -> float:
 	return point.distance_to(_segment_closest_point(point, a, b))
 
@@ -879,6 +959,13 @@ func road_polylines() -> Array:
 			_append_line(out, (entry as Dictionary).get("points", []))
 	for entry: Variant in _config.get("spokes", {}).get("routes", []):
 		if entry is Dictionary and bool((entry as Dictionary).get("built", false)):
+			_append_line(out, (entry as Dictionary).get("road", []))
+	# SC14: an interior crossing's road is a road in exactly the same sense —
+	# painted soil, no scatter on it, path stones down it. It joins here rather
+	# than in `paths.routes` for the reason the spokes do: one signpost arm per
+	# route entry, and the junction post by the well has room for four.
+	for entry: Variant in _config.get("crossings", []):
+		if entry is Dictionary:
 			_append_line(out, (entry as Dictionary).get("road", []))
 	return out
 

@@ -183,6 +183,39 @@
       "radius": 5.5,
       "height": -18.2,
       "skirt": 8.0
+    },
+    {
+      "_comment_sc14": "SC14: the South Bridge's NORTH (village-side) abutment. The corridor south of the square falls steadily -- roughly -1.2m at z=67 against -4.5m at z=93, measured with tools/_probe_south.gd -- so an un-levelled crossing would need a deck tilted ~3m end to end, which the kit's flat floor modules cannot express. Both abutment pads carry the SAME explicit height (their natural mean), so the two rims of the gully meet at one level and the bridge deck is honestly flat. Radius is sized so the flatness test's own 0.7r samples (tests/test_playground_heightfield.gd) stay OUTSIDE the gully's zero-depth contour at z=73: 0.7*7.5 = 5.25m, reaching z=72.25. The pad's outer ring does extend into the cut, which is intended and is exactly the mill-crossing pad's precedent -- carves are subtracted AFTER flats, so a pad can promise level BANKS either side of a real channel. TUNABLE.",
+      "centre": [
+        5.0,
+        67.0
+      ],
+      "radius": 7.5,
+      "height": -2.9,
+      "skirt": 9.0,
+      "_why": "the South Bridge's village-side abutment and approach"
+    },
+    {
+      "_comment_skirt": "Skirt 9, not the 16 the first cut used. The two pads are only 26m apart and share one authored height, so wide skirts made them merge: a probe (tools/_probe_south.gd) read -2.90m dead flat for 41 continuous metres of z and 47 of x -- a terrace, not a crossing. At 9 each pad keeps its own 15m of level approach, the merge happens inside the gully where nothing can see it, and the blend back to natural ground is ~21 degrees, ordinary meadow bank.",
+      "centre": [
+        5.0,
+        93.0
+      ],
+      "radius": 7.5,
+      "height": -2.9,
+      "skirt": 9.0,
+      "_why": "the South Bridge's deeper-side abutment -- same authored height as the north pad, which is the whole point"
+    },
+    {
+      "_comment_sd16": "SD16: the Old Quarry's working floor. Sited by probe, not by eye -- the first candidate (centred [30,156], out on the rise's own flank) measured 45-67 degree slopes across most of its footprint, because `rock_form`'s ribs and bedding planes live there and a 10m sample grid cannot see them. This is the gentle bench WEST of that flank (measured 4-10 degrees over x 14-26, z 148-168), which puts the crag at the quarry's back where a quarry's high wall belongs instead of underneath its floor. The pad's east edge does cut into the rising ground, and its skirt is steep there on purpose: that ramp IS the cut face, and above 42 degrees the bake's own band rule paints it as rock. Height is EXPLICIT (natural at this centre is about -0.3) so a later noise change cannot quietly tilt the floor the foundations stand on. TUNABLE.",
+      "centre": [
+        23.0,
+        158.0
+      ],
+      "radius": 8.0,
+      "height": -0.5,
+      "skirt": 10.0,
+      "_why": "the Old Quarry's floor -- foundations, rootstone and the conduit head all stand on it"
     }
   ],
   "building_aprons": {
@@ -343,6 +376,131 @@
             -45.3
           ]
         ]
+      },
+      {
+        "_why": "SC14: where the south road leaves the square, pointing at the crossing. The bridge is NOT a fifth entry in `routes` above on purpose -- signpost.gd draws one arm per route on the junction fingerpost by the well, and its post is only tall enough for four (ARM_START_HEIGHT 2.05 stepping down by ARM_SPACING 0.44 puts a fifth arm at 0.29m, in the grass). A trailhead is the same object with one arm, which is what OF10-remainder built it for. The plank names the destination and never its condition -- the same hard rule the seven spokes' signs carry.",
+        "at": [
+          8.6,
+          6.0
+        ],
+        "label": "South Bridge",
+        "points": [
+          [
+            8.6,
+            6.0
+          ],
+          [
+            6.0,
+            50.0
+          ]
+        ]
+      }
+    ]
+  },
+  "_comment_crossings": "SC14. Roads that stay INSIDE the Meadows and cross something, as opposed to `spokes` (roads that leave it and are severed) and `paths.routes` (the village's own four dirt tracks, one signpost arm each). A crossing owns three things at once and they have to agree, which is why they are one entry rather than three: the `road` polyline (unioned into playground_heightfield.road_polylines(), so the bake paints the same trodden soil along it and the scatter keeps grass and trees off it, exactly as a spoke road gets), the `carve` that interrupts it (the same straight-trench profile `_carve_depth` evaluates for every spoke gorge and the pond outlet -- one falloff evaluator on this map), and the `bridge` that is the only way over. Spec 3's Gate 1: the deeper Meadows is visible across an old bridge, and the bridge is a mechanism, not a message -- nothing here or in scripts/world/south_bridge.gd ever explains itself with UI text.",
+  "_comment_crossings_reach": "HONEST LIMIT, recorded here rather than discovered later. The south gully seals the ROAD, not the region: its ends fade to zero at x=-40 and x=+50, which is where the river-gorge spoke road (x~-42 at this z) and the blighted-road spoke (x~+51) run. Those two are the only ways around, they cost a real detour, and they are roads that visibly go somewhere else. Extending the cut across either of them was rejected outright: the gorge road is how a player reaches The Pond (a Band 0/1 destination and a named region), and walling that off behind Gate 1 would be a regression, not a gate. Sealing the whole southern half instead needs a ~360m chord across world_perimeter's 235m disc, through the pond basin and both spoke roads -- the deeper-Meadows footprint that makes a real division cheap is R7.3's job, and SE21's river is the feature the spec actually intends for it.",
+  "crossings": [
+    {
+      "id": "south_bridge",
+      "label": "South Bridge",
+      "_why": "spec 3 Gate 1. The gully runs east-west across the corridor between the river-gorge and blighted-road spokes, at the one bearing out of the village that had no road on it. Its centre sits 90m south of the square with clear line of sight from the well (measured, tools/_probe_south.gd: the sight line clears the intervening ground by 1.3m to a 4m-tall parapet head).",
+      "road": [
+        [
+          10.0,
+          -10.0
+        ],
+        [
+          8.0,
+          20.0
+        ],
+        [
+          6.0,
+          50.0
+        ],
+        [
+          5.0,
+          72.0
+        ],
+        [
+          5.0,
+          88.0
+        ],
+        [
+          10.0,
+          112.0
+        ],
+        [
+          16.0,
+          136.0
+        ],
+        [
+          21.0,
+          152.0
+        ]
+      ],
+      "_comment_road_sd16": "The last three points are SD16's: the same road carries on from the far landing to the Old Quarry's floor, because it is the same road -- the reason the crossing exists is the ground past it. Kept in this one entry rather than opened as a second route so `road_polylines()` sees one continuous polyline and the bake paints one continuous track.",
+      "_comment_carve": "Depth 11m against a 3.4m rim is ~72 degrees of wall, well past the player's own 45-degree floor_max_angle (player.tscn) -- the same arithmetic every spoke gorge is sized by. half_width 3.6 + rim 3.4 puts the zero-depth contour 7.0m either side of the centreline, so the crossing is a 14m clear span the bridge prefab is built to match. `failsafe` hangs SA4's own recovery volume in the trench; scripts/world/south_bridge.gd hands it a VILLAGE-SIDE recovery road on purpose -- recovering to the far lip would turn falling in into a free crossing. TUNABLE.",
+      "carve": {
+        "centre": [
+          5.0,
+          80.0
+        ],
+        "axis_deg": 0.0,
+        "half_length": 33.0,
+        "end_fade": 12.0,
+        "half_width": 3.6,
+        "rim": 3.4,
+        "depth": 11.0,
+        "failsafe": true
+      },
+      "bridge": {
+        "prefab": "south_bridge",
+        "gate_prefab": "south_bridge_gate",
+        "_comment_gate_offset": "Metres from the carve centre, back along the bridge's own run toward the village, where the locked leaf stands: at the outer lip of the near landing, level with the end of the span's own rails, so the player is stopped at the mouth of the crossing with the whole thing in front of them. It has to be AT the rails' end rather than inboard of it -- the deck sits only 0.12m above the levelled abutment, so any deck the rails do not cover can be stepped onto from the side, and a gate inboard of that gap gates nothing. TUNABLE, but not independently of the rail colliders in building_prefabs.json.",
+        "gate_offset": 8.5
+      }
+    }
+  ],
+  "_comment_drains": "D41, debuted by SD16 at the Old Quarry. Team Tether's hardware is pulling something out of the ground and the ground shows it: discoloured, desaturated earth and suppressed vegetation in a radius around every station, thinning toward the machine and healthy meadow resuming past it. This block is the ONE authored source for where that happens. `playground_heightfield.drain_factor()` reads it and returns 0..1, and all three consumers ask that one function -- the bake's colour map (a tint lerp), the bake's control map (a blend toward the dead-soil texture) and `scatter_rules.gd` (which thins each layer's placements by its own `drain_suppression`). Same contract shape as `path_factor`/`stream_factor`/`building_apron_factor`, and the same reason for it: three systems agreeing about one edge because they read one function. D41 says mild at this rung of 32's reveal ladder -- the quarry's own head station is 0.85 and the run out of it falls away to 0.5, against the relay (SE23), which is meant to be the worst thing the player has seen. Widening these radii is how a later station gets worse; a new grammar is not. ALL TUNABLE.",
+  "drains": {
+    "strength": 1.0,
+    "_comment_strength": "A global multiplier over every station below, for turning the whole effect down (or off, at 0) in one place while judging a render. Not a per-station knob -- those are per-station.",
+    "tint": "#bfb6a0",
+    "colour_strength": 0.85,
+    "_comment_tint": "The colour map MULTIPLIES the PBR albedo (see this file's own `_comment_colour`), so this is deliberately not far below the near-white the healthy bands use -- most of the dead read comes from the control map swapping the pixel to bare soil below, and a much darker tint here would be a brightness change pretending to be a colour, which is the exact mistake that comment exists to prevent. Desaturated and slightly warm-grey: sun-killed ground, not ash.",
+    "control_strength": 0.7,
+    "_comment_control_strength": "How far a fully drained pixel blends toward the `soil` texture. Not 1.0: at this rung the ground is dying, not dead, and leaving a fraction of the grass texture showing through is the difference between 'this is going wrong' and 'this is a dirt patch'.",
+    "stations": [
+      {
+        "id": "quarry_conduit_head",
+        "centre": [27.0, 162.0],
+        "radius": 24.0,
+        "inner": 8.0,
+        "strength": 0.85,
+        "_why": "the conduit head standing on the quarry floor -- the worst ground in the chapter so far, and the first the player ever sees"
+      },
+      {
+        "id": "quarry_run_1",
+        "centre": [31.7, 148.4],
+        "radius": 15.0,
+        "inner": 5.0,
+        "strength": 0.7,
+        "_why": "first pylon out of the quarry, on the stronghold bearing"
+      },
+      {
+        "id": "quarry_run_2",
+        "centre": [36.4, 134.8],
+        "radius": 15.0,
+        "inner": 5.0,
+        "strength": 0.6
+      },
+      {
+        "id": "quarry_run_3",
+        "centre": [41.1, 121.2],
+        "radius": 15.0,
+        "inner": 5.0,
+        "strength": 0.5,
+        "_why": "the last one standing before the run leaves the quarry region -- weakest, so the damage visibly fades with distance from the site rather than stopping at a line"
       }
     ]
   },

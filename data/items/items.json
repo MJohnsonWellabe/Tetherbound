@@ -180,6 +180,16 @@
       "blurb": "Heavy and old. Something nearby is still locked.",
       "description": "Iron gone dark with age, too heavy for the small lock it probably once fit. Something nearby is still shut tight, and this is the only thing you own that might open it."
     },
+    "rootstone": {
+      "name": "Rootstone",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#7c6f8a",
+      "gathered_with": "pickaxe",
+      "icon": "res://assets/ui/icons/items/rootstone.png",
+      "blurb": "Veined stone out of the quarry. Better than what you have.",
+      "description": "Grey stone shot through with pale veins that run like roots, prised out of the Old Quarry's floor. It takes an edge and a fitting far better than ordinary stone, which is why everything you already own can be made better with it."
+    },
     "south_bridge_key": {
       "name": "South Bridge Key",
       "kind": "key",

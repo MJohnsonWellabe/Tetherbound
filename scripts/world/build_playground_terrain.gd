@@ -104,6 +104,18 @@ func _run() -> void:
 			if wet > 0.0:
 				var wet_tint := Color(str(colour_cfg.get("wet_tint", "#c2b49a")))
 				ground = ground.lerp(wet_tint, wet * float(colour_cfg.get("wet_strength", 0.5)))
+			# D41/SD16: the drained ground around a Tether station. Last of the
+			# three colour lerps, so it discolours whatever the ground already
+			# was -- dying grass, dying path and a dying stream bank all read as
+			# the same sickness, which is the point. It cannot come earlier for
+			# that reason: applied before the wet lerp, a drained bank would come
+			# back damp and healthy.
+			var drain: float = field.drain_factor(world_x, world_z)
+			if drain > 0.0:
+				var drain_cfg: Dictionary = config.get("drains", {})
+				var drain_tint := Color(str(drain_cfg.get("tint", "#bfb6a0")))
+				ground = ground.lerp(drain_tint,
+					drain * float(drain_cfg.get("colour_strength", 0.85)))
 			colour_image.set_pixel(pixel_x, pixel_z, ground)
 
 			lowest = minf(lowest, height)
@@ -185,6 +197,7 @@ func _paint_control_map(
 	var painted_path_pixels := 0
 	var painted_wet_pixels := 0
 	var painted_apron_pixels := 0
+	var painted_drain_pixels := 0
 	var water_level: float = field.water_level()
 	for pixel_z in size:
 		var world_z := origin + pixel_z * spacing
@@ -223,6 +236,21 @@ func _paint_control_map(
 				if apron > worn:
 					var apron_dither: float = field.path_dominant_dither(world_x, world_z)
 					control = _blend_control_toward(control, apron, int(ids["soil"]), apron_dither)
+			# D41/SD16: the drained ground swaps toward the same dead soil the
+			# aprons use -- a station kills the ground cover, it does not lay a
+			# new material. Ordered with the apron and behind `worn` for the
+			# reason the apron already is: a road worn through dying ground is
+			# still a road, and the pebbled path texture has to survive crossing
+			# a drain radius or the track vanishes exactly where the conduits
+			# are. The colour lerp above still discolours the path itself, so
+			# the road reads as sick without reading as gone.
+			var drain: float = field.drain_factor(world_x, world_z)
+			if drain > 0.0:
+				painted_drain_pixels += 1
+				var drain_weight: float = drain * float(config.get("drains", {}).get("control_strength", 0.7))
+				if drain_weight > worn and drain_weight > apron:
+					var drain_dither: float = field.path_dominant_dither(world_x, world_z)
+					control = _blend_control_toward(control, drain_weight, int(ids["soil"]), drain_dither)
 			if worn > 0.0:
 				var dither: float = field.path_dominant_dither(world_x, world_z)
 				control = _path_control(control, worn, ids, dither)
@@ -234,8 +262,8 @@ func _paint_control_map(
 			data.call("set_control_blend", pos, control["blend"])
 			data.call("set_control_auto", pos, false)
 
-	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), building aprons in soil (%d pixels), auto-shader off" %
-		["path" if ids.has("path") else "soil", painted_path_pixels, painted_wet_pixels, painted_apron_pixels])
+	print("  control map painted: base/overlay/blend by slope, paths in %s (%d pixels), wet bed (%d pixels), building aprons in soil (%d pixels), drained ground in soil (%d pixels), auto-shader off" %
+		["path" if ids.has("path") else "soil", painted_path_pixels, painted_wet_pixels, painted_apron_pixels, painted_drain_pixels])
 
 
 ## The step at which slope is sampled for the material band pick, in metres:

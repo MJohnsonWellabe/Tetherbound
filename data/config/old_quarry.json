@@ -1,0 +1,32 @@
+{
+  "_comment": "SD16 — the Old Quarry, spec §3 Band 2 and §32 rung 2. What STANDS at the quarry, read by scripts/world/old_quarry.gd. Deliberately NOT everything about the place: the ground it stands on is terrain_playground.json (`flats`, the `crossings` road, `drains`), what grows there is vegetation.json, what the player can take is harvest.json, and the loose gear is props.json's `quarry_station` cluster. Each of those files already owns its kind of thing and adding a fifth copy of 'where the quarry is' to any of them would be the drift this comment exists to prevent. ALL POSITIONS TUNABLE, in world metres.",
+  "_comment_evidence": "§32's reveal ladder is explicit that the quarry is EVIDENCE, not explanation: conduits, excavation, energy-routing hardware, material moving toward the stronghold, and NOBODY here who knows what it is for. There is no dialogue in this file, no interactable on the hardware, no note to read, and there must never be one — the rung after this is the relay, and the rung after that is the stronghold. What the player is given is a working face somebody left in a hurry, foundations older than the village, and a line of live pylons walking away over the hill on the stronghold's own bearing.",
+  "foundations": [
+    {
+      "prefab": "quarry_foundation",
+      "at": [20.0, 163.0],
+      "yaw_deg": 30.0,
+      "_why": "the larger ruin, on the quarry floor's north-west side, its standing course facing the approach so it is the first thing read on the way in"
+    },
+    {
+      "prefab": "quarry_foundation",
+      "at": [27.0, 152.0],
+      "yaw_deg": -50.0,
+      "_why": "a second, turned well off the first's axis -- two buildings on the same bearing read as a placed pair, two at an angle read as a site somebody laid out for their own reasons"
+    }
+  ],
+  "_comment_pylons": "SF33's Tether Energy Pylon and its conduit spans, reused wholesale (severed_spokes.gd owns the builder; old_quarry.gd calls it). The grammar is the same and the STATEMENT is the opposite, which is the whole point of reusing it: on the seven spokes the line is broken and the far pylon is dead, because that severance is old. Here the run is unbroken and every pylon is LIT, because this is happening now. D41's own words — present-tense machinery doing present-tense harm, not ruins. Bearing is the stronghold's: [229.8,-144.4] from the quarry floor is (0.55,-0.84), and the run holds it as closely as walkable ground allows (the rise's flank east of here measures 45-67 degrees; pylons were sited on the gentle band the road itself uses, probed with tools/_probe_south.gd). Each pylon's position matches a `drains.stations` entry in terrain_playground.json — the two lists are separate because one is baked offline and one is placed at run time, and both say so.",
+  "pylons": {
+    "height": 4.6,
+    "list": [
+      {
+        "at": [27.0, 162.0],
+        "lit": true,
+        "_why": "the conduit head, standing on the quarry floor itself: whatever is being taken out of this ground leaves from here"
+      },
+      { "at": [31.7, 148.4], "lit": true },
+      { "at": [36.4, 134.8], "lit": true },
+      { "at": [41.1, 121.2], "lit": true }
+    ]
+  }
+}

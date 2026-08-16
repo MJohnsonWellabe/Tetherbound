@@ -40,6 +40,61 @@
         { "model": "Rope_1", "at": [-141.0, 114.34], "yaw_deg": 30.0, "scale": 1.0, "_why": "EV7-clusters-fix: moved to the crate's own east/bridge-facing side, in front rather than tucked behind it ('the rope coil -- the most purpose-carrying prop -- is 90% hidden behind the crate'). This is the side a player sees first walking off the bridge, so the repair stock reads immediately instead of needing to walk around the crate to find it." },
         { "model": "Bucket_Wooden_1", "at": [-142.13, 114.25], "yaw_deg": 160.0, "scale": 1.0, "_why": "EV7-clusters-fix: water bucket at the pile's far (west) side, foot of the pile -- kept off the deck/rail collider the same way the rest of the cluster is now (local z 1.75, not 0.89 like the position this replaced, which was inside the walkway's own collider footprint)." }
       ]
+    },
+    {
+      "name": "quarry_station",
+      "_why": "SD16, and the cluster EV7-remainder listed as still unbuilt and left to this item. The Old Quarry's own working face, abandoned mid-shift: the gear a crew leaves when the work stops rather than when it finishes. It sits on the quarry floor between the two foundations and the conduit head, so the walk in reads working face -> old foundations -> Team Tether hardware, which is the order §32's reveal ladder wants that rung told in. Every model is one the settlement already uses (D24, one prop family); nothing here is new.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [24.4, 157.2],
+          "yaw_deg": 20.0,
+          "sink_m": 0.08,
+          "scale": 1.0,
+          "_why": "the cluster's anchor -- a crate of cut stone still standing where it was filled"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [25.3, 156.5],
+          "yaw_deg": -35.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "set against the first crate's side, not merely near it -- EV7-clusters-fix's own finding: a loose arc of props reads as dumped, a touching pile reads as one load"
+        },
+        {
+          "model": "Barrel",
+          "at": [23.6, 156.3],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water for the crew, kept with the load"
+        },
+        {
+          "model": "Pickaxe_Bronze",
+          "at": [26.2, 158.4],
+          "yaw_deg": 62.0,
+          "pitch_deg": -74.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "leaning where it was set down, pitched off vertical against the rock -- the one prop in the cluster that names the work, and the reason the player's own pickaxe is the tool the rootstone wants"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [22.4, 159.4],
+          "yaw_deg": -15.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "tipped over a couple of paces off the pile, so the group has an edge instead of a boundary"
+        },
+        {
+          "model": "Bag",
+          "at": [21.8, 158.6],
+          "yaw_deg": 130.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "somebody's pack, still here -- the detail that makes the site abandoned rather than merely disused"
+        }
+      ]
     }
   ]
 }

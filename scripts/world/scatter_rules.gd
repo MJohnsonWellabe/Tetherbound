@@ -32,6 +32,14 @@ const RIDGE_CANDIDATES := 6
 ## cheap enough that a badly-placed anchor costs nothing.
 const ANCHOR_ATTEMPTS_PER_INSTANCE := 12
 
+## Metres per lattice cell of the noise that decides WHICH instances a drain
+## radius kills. Small enough that the thinning is patchy rather than a clean
+## gradient, large enough that neighbouring tufts tend to share a fate --
+## which is how ground actually dies. TUNABLE.
+const DRAIN_PATCHINESS := 1.8
+## Its own noise stream, unrelated to any path standoff salt.
+const DRAIN_SALT := 8681
+
 static var _config: Dictionary = {}
 
 
@@ -159,8 +167,54 @@ static func placements_for(
 		if entry is Dictionary:
 			_place_anchor(out, layer, field, models, entry as Dictionary, half, rng)
 
-	return out
+	# D41 (SD16): the drained ground around a Tether station, applied LAST and
+	# as a filter. See `_thin_by_drain` for why it cannot be a gate inside
+	# `_consider` like every other rule here.
+	return _thin_by_drain(out, layer, field)
 
+
+## D41 (SD16), the vegetation half of the drained-ground grammar: Team Tether's
+## hardware is pulling something out of the ground, and what grows there gives
+## up. `drain_factor` (playground_heightfield.gd) is the same 0..1 field the
+## bake discolours the ground with, so the dead earth and the bald patch end at
+## exactly the same contour -- which is the entire effect. A layer's own
+## `drain_suppression` (vegetation.json, TUNABLE, default 1.0) scales it: 1.0
+## means gone at the machine, 0.0 means this layer does not care, and the
+## values in between are what let dry grass hang on in ground the green has
+## abandoned.
+##
+## THIS IS A FILTER, NEVER A GATE. Every other rule in this file rejects a
+## candidate inside `_consider`, before its scale and yaw are drawn -- which
+## means a rejection shifts every later instance in that layer onto different
+## random draws. That is fine for a rule that has always been there and is
+## exactly wrong for one being added now: a new rejection in the far south
+## would reshuffle the whole map's trees and rocks, including placements three
+## visual passes have already tuned around the village. Filtering the finished
+## list instead removes instances and moves nothing.
+##
+## Which instance dies is coherent position noise, not `rng`, for the same
+## reason -- drawing here would consume the layer's stream and reintroduce the
+## shuffle the filter exists to avoid. It also gives a better result: noise is
+## patchy at metre scale, so the survivors thin out in drifts rather than at a
+## uniform per-instance rate.
+static func _thin_by_drain(
+	out: Array[Dictionary], layer: Dictionary, field: RefCounted
+) -> Array[Dictionary]:
+	if field == null or not field.has_method("drain_factor"):
+		return out
+	var suppression := clampf(float(layer.get("drain_suppression", 1.0)), 0.0, 1.0)
+	if suppression <= 0.0:
+		return out
+	var kept: Array[Dictionary] = []
+	for placement: Dictionary in out:
+		var at: Vector3 = placement["position"]
+		var drain: float = field.drain_factor(at.x, at.z)
+		if drain > 0.0:
+			var spot := Vector2(at.x, at.z)
+			if _value_noise(spot / DRAIN_PATCHINESS, DRAIN_SALT) < drain * suppression:
+				continue
+		kept.append(placement)
+	return kept
 
 ## An AUTHORED clump: this layer, this many instances, at this spot on the map.
 ##
@@ -177,8 +231,9 @@ static func placements_for(
 ## An anchor may override ANY of its layer's own keys for its own draws
 ## (`max_slope_deg` to let an outcrop stand on a collar the meadow scatter
 ## must not, `scale_min`/`scale_max` for an outcrop rather than a field
-## boulder), so a hand-placed group stays part of its layer — same models,
-## same retint, same collision, same harvest rules — instead of becoming a
+## boulder, and — since SD16 — `models`, to narrow the layer's own list to a
+## subset that suits one site), so a hand-placed group stays part of its
+## layer — same retint, same collision, same harvest rules — instead of becoming a
 ## parallel layer with its own copy of all of that. Sharing a model across two
 ## LAYERS silently drops one layer's tint (see vegetation.gd's
 ## `_warn_about_shared_models`), which is exactly what a separate `outcrops`
@@ -212,6 +267,17 @@ static func _place_anchor(
 			continue
 		local[name] = anchor[key]
 
+	# `models` was silently exempt from "any of its layer's own keys" above:
+	# the list is read once at the top of `placements_for` and handed down, so
+	# an anchor overriding it changed nothing. SD16 needs the exemption gone --
+	# the quarry's dead stand is the `deadfall` layer (same retint, same
+	# collision, same everything) narrowed to its three dead trees, because
+	# mushrooms sprouting in drained ground says the opposite of what the
+	# ground is for. Still one list per draw, still no new layer.
+	var anchor_models: Array = local.get("models", models)
+	if anchor_models.is_empty():
+		anchor_models = models
+
 	var placed := 0
 	var attempts := 0
 	var budget := wanted * ANCHOR_ATTEMPTS_PER_INSTANCE
@@ -221,7 +287,7 @@ static func _place_anchor(
 		var distance := sqrt(rng.randf()) * radius
 		var spot := centre + Vector2(sin(angle), cos(angle)) * distance
 		var before := out.size()
-		_consider(out, local, field, models, spot, half, rng)
+		_consider(out, local, field, anchor_models, spot, half, rng)
 		if out.size() > before:
 			placed += 1
 	if placed < wanted:

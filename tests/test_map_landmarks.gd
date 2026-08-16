@@ -107,3 +107,102 @@ func test_every_category_is_recognised() -> void:
 		var category := str(d.get("category", ""))
 		assert_true(_valid_categories.has(category),
 			"'%s' has category '%s', not one of %s" % [id, category, _valid_categories])
+
+
+# --- D36's named regions ---------------------------------------------------
+#
+# The `regions` array joined this file when D36 landed and nothing here ever
+# checked it — `test_map_state.gd` drives the BEHAVIOUR (discovery, the
+# one-shot banner, persistence) against three hardcoded ids, which is the right
+# split, but it means a fourth region added later is exercised by nothing at
+# all. These are the same silent-failure guards the landmark half above gets:
+# a region with no radius can never be entered, a centre outside the baked
+# world can never be walked to, and a duplicate id is two entries the map
+# cannot tell apart.
+
+func _regions() -> Array:
+	return _config().get("regions", []) as Array
+
+
+## D36's own rule, made checkable: "a handful of large, well-separated zones,
+## not one per building." The first cut put three centres 15-35m apart and
+## their labels garbled into each other on the full map, which is the failure
+## this guards.
+const REGION_MIN_RADIUS := 30.0
+
+
+func test_every_region_has_a_unique_id_and_a_display_name() -> void:
+	var seen: Array[String] = []
+	for entry: Variant in _regions():
+		var d := entry as Dictionary
+		var id := str(d.get("id", ""))
+		assert_false(id.is_empty(), "a region entry has no id")
+		assert_false(seen.has(id), "region id '%s' appears more than once" % id)
+		seen.append(id)
+		assert_false(str(d.get("display_name", "")).is_empty(),
+			"region '%s' has no display_name; its banner and map label would be blank" % id)
+
+
+func test_every_region_centre_is_inside_the_playground() -> void:
+	for entry: Variant in _regions():
+		var d := entry as Dictionary
+		var id := str(d.get("id", "?"))
+		var centre: Variant = d.get("centre", [])
+		assert_true(centre is Array and (centre as Array).size() == 2,
+			"region '%s' centre is not a 2-element [x, z] pair" % id)
+		if not (centre is Array) or (centre as Array).size() != 2:
+			continue
+		var x := float((centre as Array)[0])
+		var z := float((centre as Array)[1])
+		assert_true(absf(x) <= WORLD_HALF and absf(z) <= WORLD_HALF,
+			"region '%s' is centred at %.1f, %.1f, outside the ±%.0fm playground" % [id, x, z, WORLD_HALF])
+
+
+func test_every_region_is_large_enough_to_be_a_region() -> void:
+	for entry: Variant in _regions():
+		var d := entry as Dictionary
+		var id := str(d.get("id", "?"))
+		var radius := float(d.get("radius", 0.0))
+		assert_true(radius >= REGION_MIN_RADIUS,
+			"region '%s' has radius %.1f; D36 says regions are FEW AND LARGE — anything this small is a landmark wearing a region's hat" % [id, radius])
+
+
+## No region's centre may fall inside another region.
+##
+## This is deliberately NOT the stricter "no two discs may overlap anywhere",
+## which is what this check asserted when it was first written — and which
+## FAILED, on shipped content this item never touched: `grandpas_village`
+## (r60) and `the_rise` (r55) are 85m apart, so their fringes overlap by 30m.
+## That is recorded here rather than quietly softened away, and rather than
+## "fixed" by retuning two regions D36 sized on the owner's own playtest note.
+##
+## Fringe overlap is survivable and centre overlap is not, which is why the
+## line is drawn here. `map_state.gd::update_region` takes the FIRST matching
+## region in file order, so inside an overlap band the answer depends on how
+## the file is sorted — a band of ambiguity out at the edges, where a player is
+## arguably in neither place, is a different thing from a region whose own
+## middle belongs to its neighbour. The label half of D36 lands the same way:
+## two names 85m apart are legible, two names on top of each other are the
+## clutter the decision exists to prevent.
+##
+## SD16's `the_old_quarry` clears every existing region by both measures
+## (nearest disc is The Pond's, still 12m clear), so nothing here is a licence
+## it granted itself.
+func test_no_regions_centre_falls_inside_another_region() -> void:
+	var regions := _regions()
+	for i in regions.size():
+		for j in range(i + 1, regions.size()):
+			var a := regions[i] as Dictionary
+			var b := regions[j] as Dictionary
+			var a_centre: Variant = a.get("centre", [])
+			var b_centre: Variant = b.get("centre", [])
+			if not (a_centre is Array) or not (b_centre is Array):
+				continue
+			if (a_centre as Array).size() != 2 or (b_centre as Array).size() != 2:
+				continue
+			var gap := Vector2(float((a_centre as Array)[0]), float((a_centre as Array)[1])).distance_to(
+				Vector2(float((b_centre as Array)[0]), float((b_centre as Array)[1])))
+			var claimed := maxf(float(a.get("radius", 0.0)), float(b.get("radius", 0.0)))
+			assert_true(gap > claimed,
+				"regions '%s' and '%s' are only %.0fm apart against a %.0fm radius — one region's own centre is inside the other, so which place a player is standing in depends on the order of this file" % [
+					str(a.get("id", "?")), str(b.get("id", "?")), gap, claimed])

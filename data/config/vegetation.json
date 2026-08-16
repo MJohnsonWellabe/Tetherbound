@@ -217,6 +217,26 @@
       "per_clump": 2,
       "clump_radius": 12.0,
       "strays": 6,
+      "_comment_drain_sd16": "D41: a dead tree does not die twice. This layer is the one thing that should INCREASE around a Tether station, so it opts out of the suppression entirely and the quarry gets an authored stand instead (below). `models` on that anchor narrows this layer's list to the three dead trees -- the mushrooms belong under a living canopy, not on drained ground.",
+      "drain_suppression": 0.0,
+      "anchors": [
+        {
+          "at": [26.0, 161.0],
+          "radius": 15.0,
+          "count": 6,
+          "models": [
+            "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+            "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+            "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+          ],
+          "max_slope_deg": 30.0,
+          "scale_min": 0.55,
+          "scale_max": 1.05,
+          "cleared_by_clearings": false,
+          "_comment_cleared": "The quarry's own clearing (below) covers this anchor's whole radius, and a clearing culls every layer that can block sight -- deadfall included -- so without this the stand would be authored and then silently thrown away. An anchor overriding a layer key for its own draws is exactly what anchors are for: the clearing exists to stop the SCATTER growing a copse through a working face, not to veto a hand-placed one.",
+          "_why": "SD16/D41: the standing dead around the quarry's conduit head. Half the drained-ground read is what is MISSING (the scatter thins itself out); this is the other half, the grey verticals that say something used to grow here."
+        }
+      ],
       "max_slope_deg": 20.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). A dead tree IN the pond would be a nice touch one day, but placed deliberately, not by a scatter that cannot see the water. TUNABLE.",
       "min_height": -21.6,
@@ -332,6 +352,8 @@
       "retint": {
         "Grass": "#e8d89a"
       },
+      "_comment_drain_sd16": "D41: partial, not total. The green layers give up completely at a station (`drain_suppression` defaults to 1.0) and this dry, wispy, already-half-dead grass mostly hangs on -- so the drained ground is not bald, it changes SPECIES, which is both truer and much easier to read at a distance than an absence.",
+      "drain_suppression": 0.35,
       "clumps": 52,
       "per_clump": 90,
       "_comment_clump_radius_ev3": "EV3: same tighter-packing lever as `grass` above, same reasoning -- 19.0 -> 12.0 keeps the instance count fixed and concentrates it. TUNABLE.",
@@ -423,6 +445,8 @@
       "clump_radius": 11.0,
       "strays": 130,
       "_comment_slope": "The only layer with a MINIMUM slope as well as a maximum, so boulders gather on the shoulders and rises where they belong instead of sitting on flat grass like dropped props.",
+      "_comment_drain_sd16": "D41: stone does not wither. The drained radius takes the ground cover, not the boulders standing in it -- and a quarry with no rock in it would be a strange quarry.",
+      "drain_suppression": 0.0,
       "min_slope_deg": 6.0,
       "max_slope_deg": 44.0,
       "_comment_min_height_ev5": "EV5: keep out of the pond. Only the pond basin is below -18m anywhere on the map, so a min_height gate is exactly a waterline rule (water level -22.5, terrain_playground.json). DEEPER than the waterline on purpose: a boulder breaking the surface near the shore is one of the contact points the water's foam band exists for. TUNABLE.",
@@ -751,6 +775,18 @@
       "z": 100.0,
       "radius": 10.0,
       "_why": "EV6-remainder: the ranger station and its yard on the pond route"
+    },
+    {
+      "x": 5.0,
+      "z": 80.0,
+      "radius": 20.0,
+      "_why": "SC14: the South Bridge and both its abutment aprons -- a tree or a boulder on either rim would stand between the player and the one thing the whole south road exists to show them"
+    },
+    {
+      "x": 23.0,
+      "z": 158.0,
+      "radius": 17.0,
+      "_why": "SD16: the Old Quarry's worked floor -- foundations, the conduit head and five rootstone deposits stand on it, and a copse growing through the middle of a working face would undo the read before the drained ground ever got a chance. The `deadfall` anchor above sets `cleared_by_clearings: false` so this does not throw its authored stand away -- see its own note"
     }
   ],
   "_comment_footprints": "R9.4-remainder-8: unlike clearings above, EVERY layer respects these, including grass/drygrass/flowers -- a footprint is the literal extent of a solid structure, not the wider 'keep the arena/yard readable' radius clearings exist for, so the grass/flowers exemption that avoids a bald ring around the yard has no reason to apply here. Found by real grass tufts standing on Grandpa's own interior floor and rug in a tools/capture_buildings.gd render. Radius is the building's half-diagonal plus a small margin, not a repeat of the wider yard clearing above.",
@@ -784,6 +820,12 @@
       "z": 100.0,
       "radius": 4.5,
       "_why": "the ranger station"
+    },
+    {
+      "x": 5.0,
+      "z": 80.0,
+      "radius": 10.5,
+      "_why": "SC14: the South Bridge's deck and both stone landings -- the same treatment the mill's footbridge already gets, at this span's own half-length"
     }
   ]
 }

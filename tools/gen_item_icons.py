@@ -24,6 +24,7 @@ point at; no filenames change.
 from __future__ import annotations
 
 import math
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -367,6 +368,27 @@ def icon_south_bridge_key() -> Image.Image:
     return img
 
 
+def icon_rootstone() -> Image.Image:
+    """SD16/spec §10. The first tier material: a faceted stone in the same
+    silhouette language as `icon_stone`, but split by a branching vein that
+    runs through it rather than by facet lines that sit on it -- the name is
+    the whole read, and a plain second rock at 64px is just `stone` again."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    pts = [
+        (52, 116), (96, 48), (162, 38), (216, 86),
+        (222, 154), (182, 216), (104, 222), (38, 172),
+    ]
+    d.polygon(pts, fill=FG)
+    # One vein up the middle with two branches, punched through as cutouts so
+    # the stone stays a single silhouette.
+    cutout_line(d, [(122, 220), (128, 156), (146, 104), (140, 46)], width=STROKE + 6)
+    cutout_line(d, [(130, 140), (196, 100)], width=STROKE + 3)
+    cutout_line(d, [(126, 174), (62, 148)], width=STROKE + 3)
+    cutout_line(d, [(144, 112), (198, 158)], width=STROKE)
+    return img
+
+
 def _punch(base: Image.Image, mark: Image.Image, box) -> Image.Image:
     """Punch `mark`'s silhouette out of `base`, scaled into `box`.
 
@@ -468,6 +490,7 @@ ITEM_ICONS = {
     "south_bridge_key.png": icon_south_bridge_key,
     "tm_stone_rush.png": icon_tm_stone_rush,
     "tm_burrow_strike.png": icon_tm_burrow_strike,
+    "rootstone.png": icon_rootstone,
 }
 
 
@@ -579,10 +602,22 @@ UI_ICONS = {
 
 
 def main() -> None:
+    """No arguments regenerates every icon; naming files regenerates only
+    those. The filter exists because a later pass adding ONE item (SC14's key,
+    SD16's rootstone) should not rewrite the other sixteen PNGs -- Pillow's
+    resampling is not guaranteed byte-identical across versions, so a
+    full rerun would show up as sixteen modified binaries in a diff that
+    changed nothing anyone can see."""
+    wanted = set(sys.argv[1:])
     for name, fn in ITEM_ICONS.items():
-        save(fn(), ITEMS_DIR / name)
+        if not wanted or name in wanted:
+            save(fn(), ITEMS_DIR / name)
     for name, fn in UI_ICONS.items():
-        save(fn(), UI_DIR / name)
+        if not wanted or name in wanted:
+            save(fn(), UI_DIR / name)
+    unknown = wanted - set(ITEM_ICONS) - set(UI_ICONS)
+    if unknown:
+        raise SystemExit("no generator for: %s" % ", ".join(sorted(unknown)))
 
 
 if __name__ == "__main__":

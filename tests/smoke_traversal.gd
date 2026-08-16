@@ -190,10 +190,12 @@ func _run() -> void:
 	await _check_perimeter(world, player, failures)
 	await _check_kill_volume(world, player, failures)
 	_check_rock_collision_alignment(world, failures)
+	await _check_south_bridge(world, player, failures)
+	await _check_the_quarry(world, player, failures)
 
 	print("")
 	if failures.is_empty():
-		print("traversal: OK — the ground is solid across the playground, the perimeter holds, and the kill volume returns a fallen player to spawn.")
+		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, and the Old Quarry past it stands and holds a player up.")
 		quit(0)
 	else:
 		for line in failures:
@@ -308,6 +310,183 @@ func _check_kill_volume(world: Node, player: CharacterBody3D, failures: Array[St
 		failures.append("kill volume did not return the player to spawn (still at y=%.0f after %d frames)" % [
 			after.y, KILL_SETTLE_FRAMES
 		])
+
+
+## SC14: spec §3's Gate 1, walked rather than asserted about.
+##
+## The check is deliberately shaped like the bug it would catch. "The gate
+## node exists and `is_open()` returns false" would pass on a crossing a
+## player can stroll around the leaf of, and that is exactly the failure this
+## geometry invites: the deck sits 0.12m above its own levelled abutments, so
+## anything the rails do not cover can be stepped onto from the side. So both
+## halves are a real walk with real input, at the real gate, in the real
+## scene: hold forward at it locked, hold forward at it unlocked, and measure
+## how far past the gully's centreline the player got either way.
+##
+## `depth_past_crossing` comes from `south_bridge.gd` rather than being
+## re-derived here from a hardcoded +Z, for the reason `SE21`/`SE22` will
+## appreciate: which way "deeper" points is resolved at build time from the
+## road, and a test that hardcodes it stops testing the thing when the
+## geography moves.
+const BRIDGE_START_BACK := 11.0
+const BRIDGE_WALK_FRAMES := 420
+## The player has crossed when they are this far past the gully's centre —
+## past the span's far landing (9.2m) with room to spare, so a player merely
+## standing ON the bridge cannot pass for one who got over it.
+const BRIDGE_CROSSED_M := 11.0
+## And is still shut when they never got past the centreline at all. The gate
+## itself stands 8.5m short of it.
+const BRIDGE_BLOCKED_M := 0.0
+
+
+func _check_south_bridge(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	var bridge: Node3D = world.get_node_or_null(^"SouthBridge") as Node3D
+	if bridge == null:
+		failures.append("no SouthBridge in the scene; spec §3's Gate 1 is not built")
+		return
+	var camera_rig: Node3D = world.get_node_or_null(^"CameraRig") as Node3D
+	if camera_rig == null:
+		failures.append("no CameraRig in the scene; cannot aim the walk at the South Bridge")
+		return
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		failures.append("no Game autoload; the South Bridge has no inventory or flag store to read")
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var progression: RefCounted = game.get("progression")
+
+	var prompt: Node3D = bridge.get_node_or_null(^"Interactable") as Node3D
+	if prompt == null:
+		failures.append("the South Bridge has no Interactable; the gate cannot be tried at all")
+		return
+
+	if bool(bridge.call("is_open")):
+		failures.append("the South Bridge started open on a fresh world; Gate 1 is not a gate")
+		return
+
+	# --- locked: the key is not in the satchel, and trying it changes nothing.
+	# `remove` is all-or-nothing, so ask for exactly what is there — a blanket
+	# "remove 99" would return false and leave a key sitting in the satchel.
+	var carried := int(inventory.call("count", "south_bridge_key"))
+	if carried > 0:
+		inventory.call("remove", "south_bridge_key", carried)
+	prompt.call("interaction_activate")
+	await physics_frame
+	if bool(bridge.call("is_open")):
+		failures.append("the South Bridge opened without its key")
+	if bool(progression.call("has", "south_bridge_open")):
+		failures.append("trying the locked bridge set its open flag anyway")
+
+	var reached_locked: float = await _walk_at_the_bridge(bridge, player, camera_rig)
+	print("  south bridge, locked:   reached %+.1fm past the gully centre" % reached_locked)
+	if reached_locked > BRIDGE_BLOCKED_M:
+		failures.append("crossed the South Bridge without the key (%.1fm past the gully centre) — the gate can be walked around" % reached_locked)
+
+	# --- unlocked: the key opens it, is spent doing so, and the span carries.
+	inventory.call("add", "south_bridge_key", 1)
+	prompt.call("interaction_activate")
+	await physics_frame
+	if not bool(bridge.call("is_open")):
+		failures.append("the South Bridge stayed shut with its key in the satchel")
+		return
+	if int(inventory.call("count", "south_bridge_key")) != 0:
+		failures.append("the South Bridge Key was not consumed opening the bridge")
+	if not bool(progression.call("has", "south_bridge_open")):
+		failures.append("the open bridge did not set its progression flag; a reload would relock it")
+
+	var reached_open: float = await _walk_at_the_bridge(bridge, player, camera_rig)
+	print("  south bridge, unlocked: reached %+.1fm past the gully centre" % reached_open)
+	if reached_open < BRIDGE_CROSSED_M:
+		failures.append("could not cross the open South Bridge (only %.1fm past the gully centre)" % reached_open)
+	if player.global_position.y < THROUGH_THE_FLOOR:
+		failures.append("fell into the south gully while crossing the open bridge")
+
+
+## SD16: the Old Quarry is reachable past the bridge, and it is a place rather
+## than a coordinate — the floor holds the player up, its foundations and
+## conduit run actually stood, and the Rootstone deposits are standing on
+## ground rather than skipped for want of it.
+##
+## `_place_harvest_nodes()` drops any node whose ground sample is NaN without
+## a word, which is exactly how a deposit authored into a hole disappears; the
+## count check is what catches that.
+const QUARRY_SETTLE_FRAMES := 90
+
+
+func _check_the_quarry(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	var quarry: Node3D = world.get_node_or_null(^"OldQuarry") as Node3D
+	if quarry == null:
+		failures.append("no OldQuarry in the scene; spec §3 Band 2's quarry is not built")
+		return
+	var stats: Dictionary = quarry.call("stats")
+	print("  quarry: %d foundations, %d pylons" % [int(stats["foundations"]), int(stats["pylons"])])
+	if int(stats["foundations"]) < 1:
+		failures.append("the Old Quarry stood no foundations")
+	if int(stats["pylons"]) < 2:
+		failures.append("the Old Quarry stood %d pylons; the conduit run needs at least two to carry a cable between them" % int(stats["pylons"]))
+
+	# Every authored rootstone deposit, standing where it was authored.
+	var wanted := 0
+	var file := FileAccess.open("res://data/config/harvest.json", FileAccess.READ)
+	if file != null:
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		if parsed is Dictionary:
+			for entry: Variant in (parsed as Dictionary).get("nodes", []):
+				if entry is Dictionary and str((entry as Dictionary).get("item", "")) == "rootstone":
+					wanted += 1
+	var standing := 0
+	var first := Vector3.ZERO
+	for node in world.get_children():
+		if not node.has_method("setup") or not (node is Node3D):
+			continue
+		if str(node.get("_item_id")) != "rootstone":
+			continue
+		standing += 1
+		if standing == 1:
+			first = (node as Node3D).global_position
+	print("  quarry: %d of %d authored rootstone deposits standing" % [standing, wanted])
+	if wanted > 0 and standing < wanted:
+		failures.append("%d of %d rootstone deposits never stood up — a harvest node whose ground sampled NaN is skipped silently" % [
+			wanted - standing, wanted])
+	if standing == 0:
+		return
+
+	# And the floor they stand on holds a player up.
+	player.velocity = Vector3.ZERO
+	player.global_position = first + Vector3.UP * 1.5
+	for i in QUARRY_SETTLE_FRAMES:
+		await physics_frame
+	var landed := player.global_position
+	var surface: float = float(world.call("ground_height_at", landed.x, landed.z))
+	print("  quarry: player dropped at a deposit settled at %.1f, %.1f, %.1f (ground %.1f, grounded=%s)" % [
+		landed.x, landed.y, landed.z, surface, player.is_on_floor()])
+	if landed.y < surface - 1.5:
+		failures.append("the quarry floor did not hold the player up (%.1fm below the terrain surface)" % (surface - landed.y))
+
+
+## One walk at the crossing from the village side, returning how far past the
+## gully's centreline the player ended up.
+func _walk_at_the_bridge(bridge: Node3D, player: CharacterBody3D, camera_rig: Node3D) -> float:
+	var start: Vector2 = bridge.call("near_point", BRIDGE_START_BACK)
+	var target: Vector2 = bridge.call("far_point", BRIDGE_START_BACK)
+	var ground: float = float(bridge.get_parent().call("ground_height_at", start.x, start.y))
+	player.global_position = Vector3(start.x, ground + 1.0, start.y)
+	player.velocity = Vector3.ZERO
+	var outward := Vector3(target.x - start.x, 0.0, target.y - start.y).normalized()
+	camera_rig.set("yaw", Vector3(0.0, 0.0, -1.0).signed_angle_to(outward, Vector3.UP))
+	for i in 10:
+		await physics_frame
+
+	var best := -INF
+	Input.action_press("move_forward")
+	for i in BRIDGE_WALK_FRAMES:
+		await physics_frame
+		var here := player.global_position
+		best = maxf(best, float(bridge.call("depth_past_crossing", Vector2(here.x, here.z))))
+	Input.action_release("move_forward")
+	for i in 20:
+		await physics_frame
+	return best
 
 
 ## OF14: the owner reported the player/objects passing through rocks and
