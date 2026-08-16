@@ -38,7 +38,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-## D45: elixir caps live in data/config/progression.json, read through the
+## D47: elixir caps live in data/config/progression.json, read through the
 ## same loader the level curve uses.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
@@ -130,7 +130,7 @@ var _targeting_revive: float = 0.0
 ## of item opened the picker.
 var _targeting_tm: String = ""
 
-## D45. The elixir item id being targeted, or "" when the open picker is a
+## D47. The elixir item id being targeted, or "" when the open picker is a
 ## heal/revive/TM one. Same shape and same four readers as `_targeting_tm` --
 ## an elixir asks the identical question a TM asks ("which of yours gets
 ## this?") and spends itself the same way, so it reuses the picker rather than
@@ -629,7 +629,7 @@ func _read_use() -> void:
 		say("Ate %s." % str(db.call("item_name", id)))
 		return
 
-	# D45: an elixir picks its drinker the same way a TM picks its student.
+	# D47: an elixir picks its drinker the same way a TM picks its student.
 	# Placed ahead of the TM branch only because `kind` is checked in order;
 	# the two are mutually exclusive kinds and neither shadows the other.
 	if str(db.call("kind", id)) == "elixir":

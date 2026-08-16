@@ -127,7 +127,7 @@ HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "g
 ## nonsense for a tower. The dominant drift risk for "energy pylon" is the
 ## real-world steel lattice transmission tower, so that family is banned by
 ## name.
-PROPS = {"tether_pylon"}
+PROPS = {"tether_pylon", "relay_apparatus", "tether_machine"}
 STYLE_PROP = ("stylized PBR game environment prop, hand-painted fantasy style, "
               "clean readable forms, large clear colour regions, restrained "
               "surface detail, single object, upright, full structure visible")
@@ -150,7 +150,20 @@ NEGATIVE_PLANT = ("photorealistic bark, realistic deer, scary, skeletal, "
             "base, pedestal")
 
 
+## Board 15 draws the machine WITH its victim in the cage, because that is what
+## the machine is for. The licence is for the machine alone (D24, and the R8.2
+## backlog item says so in capitals): the bound creature is an existing roster
+## asset or VFX placed inside at runtime. A generator handed that board's
+## silhouette will happily fuse a dragon into the mesh, so the ban is explicit
+## rather than left to the "single object" line in STYLE_PROP.
+NEGATIVE_MACHINE = (NEGATIVE_PROP + ", creature inside, dragon, beast, "
+                    "bound animal, wings, horns, claws, skull, face, "
+                    "figure in cage, glowing creature silhouette")
+
+
 def negative_for(species: str) -> str:
+    if species == "tether_machine":
+        return NEGATIVE_MACHINE
     if species == "veridian":
         return NEGATIVE_PLANT
     if species in HUMANS:
@@ -473,6 +486,46 @@ SPECIES_PROMPTS = {
         "trim bands and rivets, thin glowing teal energy conduit lines "
         "inlaid in weathered dark grey slate stone, faint moss in the stone "
         "seams, ancient but maintained"),
+
+    # SE23. D24's second reserved hero, from the owner's board 14. The board
+    # numbers its own five subassemblies and the top view shows the manifolds
+    # radiating evenly, so the signature — a lit glass core inside an arched
+    # cage, with tubes curling out of it — leads in capitals per this file's
+    # rule. Human-scale: the board's own scale guide stands a figure beside it
+    # at roughly chest-to-head height, so this is ~4m, not a building.
+    "relay_apparatus": (
+        "fantasy tether relay apparatus, a single squat machine on a stepped "
+        "octagonal dark stone base. TALL GLOWING TEAL GLASS CYLINDER CORE "
+        "standing upright in the centre under a round brass cap. FOUR DARK "
+        "METAL ARCHED RIBS curving up and over the core from the base "
+        "corners to form an open domed cage around it. CURVED TRANSLUCENT "
+        "TEAL CONDUIT TUBES arcing outward and down from brass valve wheels "
+        "on each side. Angled brass-framed control console with a glowing "
+        "green screen and a row of brass knobs across the front face. Dark "
+        "green-black panels, brass-gold trim bands, rivets, weathered grey "
+        "stonework"),
+
+    # R8.2. D24's third and last reserved hero, from the owner's board 15.
+    #
+    # THE BOARD DEPICTS A BOUND CREATURE INSIDE THE CAGE AND THE LICENCE DOES
+    # NOT COVER IT. Board 15 licenses the MACHINE. Its occupant is an existing
+    # roster asset or VFX in-engine and must never be generated here, which is
+    # why the centre is described as EMPTY in the prompt and the creature terms
+    # are banned outright in NEGATIVE_MACHINE below. A candidate that arrives
+    # with a creature fused into the mesh is a reject, not a bonus.
+    #
+    # ~15m against the board's own 0-20m bar — the chamber (data/config/
+    # stronghold.json's `machine` block) is already built at that scale.
+    "tether_machine": (
+        "fantasy tether extraction machine, a huge EMPTY containment device, "
+        "no creature inside. Round stepped dark stone dais with stairs. FOUR "
+        "TALL GOTHIC STONE-AND-BRASS BUTTRESS ARCHES rising from the rim and "
+        "leaning inward to enclose an OPEN EMPTY CENTRE. TWO STACKED "
+        "HORIZONTAL RUNIC BRASS CONTAINMENT RINGS floating one above the "
+        "other around that empty middle, glowing teal. Heavy chains draping "
+        "from the arches and a pointed clamp head hanging on chains from the "
+        "apex above the rings. Tall banner pennants on the outer pillars, "
+        "glowing teal runic channels inlaid in dark stone, brass-gold trim"),
 }
 
 

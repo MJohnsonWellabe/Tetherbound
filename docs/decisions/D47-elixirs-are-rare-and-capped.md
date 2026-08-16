@@ -1,4 +1,4 @@
-# D45 — Permanent stat elixirs exist, and they are rare and capped
+# D47 — Permanent stat elixirs exist, and they are rare and capped
 
 **Date:** 2026-08-16 · **Decided by:** the owner, asked directly during the
 playtest-repair session, against the potions board from their reference pack.

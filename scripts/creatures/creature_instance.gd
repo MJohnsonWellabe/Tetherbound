@@ -90,7 +90,7 @@ var iv_defence: float = 0.5
 ## rolled and traits are flavour, precisely so nobody can farm a perfect
 ## creature. This does not reopen that: an elixir is a rare, findable object
 ## that adds a FLAT, capped number of points, and it is applied on top of the
-## level curve rather than into it. See `docs/decisions/D45`.
+## level curve rather than into it. See `docs/decisions/D47`.
 ##
 ## Flat rather than multiplicative, and added AFTER the level scaling, because
 ## a multiplier would compound with every level and make an early elixir worth
@@ -324,7 +324,7 @@ func _apply_level_stats(cfg: Dictionary) -> void:
 ## taken, so a caller can tell "drank it, +3" from "already at the cap" and say
 ## so instead of silently spending the item.
 ##
-## The cap is what keeps this a prize rather than a grind (`D45`). Without it,
+## The cap is what keeps this a prize rather than a grind (`D47`). Without it,
 ## a player with enough coins and enough patience converts money straight into
 ## an arbitrarily strong creature, which is the outcome `D37` refused when it
 ## kept individuality rolls out of player hands.

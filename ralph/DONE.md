@@ -73,7 +73,7 @@ one flag `stronghold_climax.gd` already set — `legendary_freed`.
 ## R6.1 + R6.2 — Riding, Meadowhart as the mount, and the craftable saddle
 
 `model: opus` · `tests: smoke_riding` (new), `test_recipes` (extended) ·
-`area: traversal/progression` · `decision: docs/decisions/D46`
+`area: traversal/progression` · `decision: docs/decisions/D48`
 
 **What shipped.** You can walk up to your own Meadowhart, press the ordinary
 interact button, and ride it at 10 m/s against a 5 m/s walk and an 8.6 m/s
@@ -101,7 +101,7 @@ cart would need too. Which creature is a mount is data
 (`species.json`'s per-species `rideable` block), so `R8.5` is a second block,
 not a second branch.
 
-**Stamina decision (D46 §3).** Riding costs the player nothing and the mount has
+**Stamina decision (D48 §3).** Riding costs the player nothing and the mount has
 no meter of its own — the trainer is sitting down, a second bar is a whole HUD
 element for a system whose entire value (spec §3) is that revisiting is less of
 a chore, and the creature's endurance is already spoken for by combat energy.

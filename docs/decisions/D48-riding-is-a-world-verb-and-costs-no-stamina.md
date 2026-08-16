@@ -1,4 +1,4 @@
-# D46 — Riding is a world verb, and it costs no stamina
+# D48 — Riding is a world verb, and it costs no stamina
 
 **Date:** 2026-08-16
 **Items:** `R6.1` (riding), `R6.2` (Meadowhart + the craftable saddle)

@@ -1779,7 +1779,7 @@ components cost Rootstone and Ironwood, which is a progression step rather than
 a free-standing milestone. Their briefs are kept here; the ordering is there.
 R6.3's play gate stays where it is.
 
-**`R6.1` (mount/dismount on the interact verb, the stick driving the CREATURE, camera handoff, and every guard rail) shipped — see `DONE.md` and `docs/decisions/D46`.** Riding is an ordinary interaction provider on the shared arbiter, so it costs no new binding and inherits `sequence_director`'s whole modal lockout for free. STAMINA DECISION: riding costs nothing and the mount has no meter of its own — the trainer is sitting down, and a meter that ends the ride attacks the only thing riding is being sold on (D46 §3 has the full reasoning and where a cost would honestly go if one is ever wanted). Found and fixed a real bug every unit test passed through: **a freed Object compares EQUAL to `null` in GDScript**, so both despawn guards were dead code and dismissing your creature mid-ride left an invisible, collisionless trainer falling through the world.
+**`R6.1` (mount/dismount on the interact verb, the stick driving the CREATURE, camera handoff, and every guard rail) shipped — see `DONE.md` and `docs/decisions/D48`.** Riding is an ordinary interaction provider on the shared arbiter, so it costs no new binding and inherits `sequence_director`'s whole modal lockout for free. STAMINA DECISION: riding costs nothing and the mount has no meter of its own — the trainer is sitting down, and a meter that ends the ride attacks the only thing riding is being sold on (D48 §3 has the full reasoning and where a cost would honestly go if one is ever wanted). Found and fixed a real bug every unit test passed through: **a freed Object compares EQUAL to `null` in GDScript**, so both despawn guards were dead code and dismissing your creature mid-ride left an invisible, collisionless trainer falling through the world.
 
 **`R6.2` (Meadowhart's `rideable` block + the craftable generic saddle) shipped — see `DONE.md`.** One generic saddle, never one per species; which creature it fits is the CREATURE's data (`species.json`'s `rideable.requires_item`), so `R8.5`'s mount is a second block rather than a second branch. Priced at `saddle_frame` (SD18) + Rootstone + wood + fiber, with the **Ironwood seam** written into the recipe's own comment: `SF31` adds one `cost` line and drops the wood count, and nothing in code reads the cost. Shipping at the Rootstone price rather than blocking on SF31 is deliberate — a recipe costing an item `item_db` cannot resolve is a recipe the craft screen cannot draw.
 
@@ -1950,7 +1950,7 @@ a firing's.**
 
 ### 8c — the river and the relay (spec Phase E)
 
-**`SE21` (the Long Water) shipped — see `DONE.md` and `D46`.** A 340 m polyline river down the east side whose ends run PAST the 235 m perimeter, so there is no walking around either one — the long chord SC14's own honest-limit note said a real division needs. Walls measured at 70.1 degrees minimum along the whole course against the player's 45 degree limit, and three probe-walks at different points all failed to reach the centreline. Chained independent bars were rejected and the reason recorded: `max()` of two smoothstepped ends leaves a half-depth saddle at every join, i.e. a crossable spot every few dozen metres.
+**`SE21` (the Long Water) shipped — see `DONE.md` and `D48`.** A 340 m polyline river down the east side whose ends run PAST the 235 m perimeter, so there is no walking around either one — the long chord SC14's own honest-limit note said a real division needs. Walls measured at 70.1 degrees minimum along the whole course against the player's 45 degree limit, and three probe-walks at different points all failed to reach the centreline. Chained independent bars were rejected and the reason recorded: `max()` of two smoothstepped ends leaves a half-depth saddle at every join, i.e. a crossable spot every few dozen metres.
 
 **`SE22` (Old Mill Crossing) shipped — see `DONE.md`.** At the narrows `[162.4,42.1]` where the channel pinches to the South Bridge's own cross-section, so it reuses that prefab unchanged: `south_bridge.gd` became `gated_crossing.gd` and both bridges are now thin subclasses over `item_gate.gd`. Impassable at -8.0 m without the Mill Bridge Gear, passable at +23.4 m with it, no menu in between. The Gear's only source is SE27's rescue — deliberately no placeholder pickup, which would be a Band 3 gate opened by walking past a prop.
 
@@ -1964,7 +1964,7 @@ a firing's.**
 ### 8d — Upper Meadows (spec Phase F)
 
 **R6.1 and R6.2 (riding, Meadowhart, the generic saddle) shipped 2026-08-16** —
-see Phase 6 for what landed and `docs/decisions/D46` for why it is shaped that
+see Phase 6 for what landed and `docs/decisions/D48` for why it is shaped that
 way. They did NOT wait for `SF31`: the saddle ships at the Rootstone price with
 a named seam for Ironwood.
 
@@ -2046,23 +2046,26 @@ intentionally open" is false as of D23 and is amended there.
 
 ## Phase 8.5 — pacing and the chapter's own gate (spec Phase H)
 
-### SH47 — Tune the chapter to 3–4 hours
-`model: sonnet` · `tests: none`
-Spec §17 P7, §38 Phase H, **D42**. XP curve, trainer levels, material costs,
-travel time, spawn density, and the specific instruction to **remove dead
-walking**. Distinct from R9.1 (input feel and combat cadence) and R9.3
-(performance on hardware): this is arc pacing, and it can only be judged once
-8a–8e exist. §11's test of a good grind is the standard — "I know a harder
-challenge is ahead, so I am deliberately improving my five", never walking in
-circles killing identical weak enemies to inflate a number. The owner cut the
-target from 4–7 to **3–4 hours** on 2026-08-15 ("not the longer end"), and D42
-carves the terrain out explicitly: **this item does not shrink the map, revert
-`R7.3`, or rebake the terrain.** Those six levers are the whole answer, and
-"remove dead walking" is the first place to spend — dead walking is the failure
-mode a larger-than-needed map produces, and deleting it is cheaper and better
-than deleting the map. Not a scope cut either: no Phase 8 content item is
-dropped to hit the clock. Done when: a full run is timed end to end and lands
-inside 3–4 hours.
+### SH47 — Tune the chapter to 3–4 hours — **SHIPPED** (2026-08-16)
+`model: opus` · `tests: test_trainers_data, test_recipes, run_tests` · `area: story`
+Data-only per **D42** (no terrain resize, no content cut). `tools/_probe_pacing.py`
+walks the shipped critical path and prices it: the chapter measured **6.22 h of
+floor / 12.45 h projected**, and **4.76 h of that was forced wild grinding** —
+381 fights against level-2-to-6 field creatures, which is §11's "bad grind"
+verbatim. Four levers moved, each documented in place beside the number it
+changed: the XP curve (exponent 1.6 → 1.15, award 18+6L → 30+16L, party_share
+0.35 → 0.5), the stronghold gauntlet (21/22/22 → 18/19/19 — **the elite
+out-levelled the Warden it guards**), the Burrow Warrens (guardian 18 → 14
+against a Band 1 gate that fields level 7), and a second Meadowhart cluster on
+the South Bridge leg (the only rideable creature lived a 624 m round trip off
+every route — "remove dead walking", exactly). Now **1.51 h floor / 3.02 h
+projected / 0.07 h grinding**. Six new assertions in `test_trainers_data.gd`
+fail the build if it regresses.
+**Limits, honestly:** 3.02 h sits at the *bottom* of the 3–4 h band, and the
+projection is a model (`floor × 2.0`), not a stopwatch — this item's own
+done-when asks for **a timed end-to-end run**, and only the owner playing it
+can supply that. Every remaining minute is content, not grind, so the levers
+that are left would mean cutting content, which D42 forbids.
 
 ### SH53 ▶ Play gate — the P0 fixes are actually gone on real hardware
 `model: haiku`

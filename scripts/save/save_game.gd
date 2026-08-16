@@ -76,7 +76,7 @@ extends RefCounted
 ## carrying — the closest honest reconstruction of what the old mirror showed,
 ## minus the raw materials that used to occupy action slots and do nothing.
 ##
-## ## VERSION 8 — permanent stat elixirs (D45)
+## ## VERSION 8 — permanent stat elixirs (D47)
 ##
 ## `creature_instance.gd`'s `boost_hp`/`boost_attack`/`boost_defence` did not
 ## exist before this. Same "nothing to migrate FROM" answer every migration
@@ -512,7 +512,7 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.bond = int(d.get("bond", 0))
 		creature.move_quick = str(d.get("move_quick", ""))
 		creature.move_charged = str(d.get("move_charged", ""))
-		# Elixir points (D45). Absent on any save older than VERSION 8, and 0
+		# Elixir points (D47). Absent on any save older than VERSION 8, and 0
 		# is exactly right for one: a creature from before elixirs existed
 		# never drank any.
 		creature.boost_hp = int(d.get("boost_hp", 0))
