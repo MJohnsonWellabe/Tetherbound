@@ -25,7 +25,7 @@
       "display_name": "Tether Orb",
       "multiplier": 1.0
     },
-    "_comment_greater": "R4.9: the tier ladder's first rung. MEADOWS_PROGRESSION_SPEC.md Band 2 names 'improved Orb tier' as the first thing Rootstone (SD18) buys -- this builds the mechanic and the item now; SD18 owns the recipe that actually lets a player craft/find one, once Rootstone exists. Until then orb_greater has no acquisition path, same honest gap SB9 shipped ahead of its own first consumer. Multiplier is TUNABLE, not load-bearing: comfortably better without being 'just throw this and it's basically a catch' -- that would make the basic tier feel like a mistake to ever use, which is its own kind of failure per GAME_DESIGN.md 15's affordability rule.",
+    "_comment_greater": "R4.9: the tier ladder's first rung. MEADOWS_PROGRESSION_SPEC.md Band 2 names 'improved Orb tier' as the first thing Rootstone (SD18) buys -- R4.9 built the mechanic and the item; SD18 (data/recipes/recipes_rootstone.json's `orb_greater` recipe) closed the remainder by adding the recipe that actually lets a player craft one, from Rootstone plus wood and fiber. Multiplier is TUNABLE, not load-bearing: comfortably better without being 'just throw this and it's basically a catch' -- that would make the basic tier feel like a mistake to ever use, which is its own kind of failure per GAME_DESIGN.md 15's affordability rule.",
     "orb_greater": {
       "display_name": "Greater Tether Orb",
       "multiplier": 1.6

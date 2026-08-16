@@ -501,4 +501,10 @@ func _stack_from_json(stack: Variant) -> Variant:
 	var fixed := {"id": str(dict.get("id", "")), "n": int(dict.get("n", 0))}
 	if dict.has("durability"):
 		fixed["durability"] = int(dict.get("durability"))
+	if dict.has("durability_bonus"):
+		# SD18: a reinforced tool's raised ceiling (inventory.gd::reinforce_tool)
+		# is per-slot state exactly like `durability` above, and needs the same
+		# JSON-float round-trip fix or a save/load would silently forget the
+		# upgrade ever happened.
+		fixed["durability_bonus"] = int(dict.get("durability_bonus"))
 	return fixed

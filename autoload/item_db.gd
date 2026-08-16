@@ -14,6 +14,12 @@ extends RefCounted
 const ITEMS_PATH := "res://data/items/items.json"
 const BUILDABLES_PATH := "res://data/items/buildables.json"
 const RECIPES_PATH := "res://data/recipes/recipes.json"
+## SD18. The Rootstone tier, kept out of `RECIPES_PATH` on purpose -- see that
+## file's own `_comment_scope` and this file's own `_comment` header. Merged
+## into the same `_recipes` table on load so every other reader (`recipe()`,
+## `recipe_ids()`, `craft_panel.gd`, `game_state.gd`) sees one recipe book,
+## not two.
+const ROOTSTONE_RECIPES_PATH := "res://data/recipes/recipes_rootstone.json"
 
 ## Fallback stack size for an id with no definition. One, so an unknown item
 ## cannot merge with anything and quietly lose itself.
@@ -27,11 +33,19 @@ var _recipes: Dictionary = {}
 func _init(
 	items_path: String = ITEMS_PATH,
 	buildables_path: String = BUILDABLES_PATH,
-	recipes_path: String = RECIPES_PATH
+	recipes_path: String = RECIPES_PATH,
+	rootstone_recipes_path: String = ROOTSTONE_RECIPES_PATH
 ) -> void:
 	_items = _read(items_path).get("items", {})
 	_buildables = _read(buildables_path).get("buildables", [])
 	_recipes = _read(recipes_path).get("recipes", {})
+	# SD18: merge the Rootstone tier in. A duplicate id would silently favour
+	# whichever file merges second; the two tables are hand-authored with no
+	# overlap today, so this stays a plain merge rather than growing a
+	# conflict check nothing has ever needed.
+	var rootstone_recipes: Dictionary = _read(rootstone_recipes_path).get("recipes", {})
+	for id: Variant in rootstone_recipes:
+		_recipes[id] = rootstone_recipes[id]
 
 
 func _read(path: String) -> Dictionary:

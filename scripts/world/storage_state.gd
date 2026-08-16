@@ -92,4 +92,8 @@ func _stack_from_json(stack: Variant) -> Variant:
 	var fixed := {"id": str(dict.get("id", "")), "n": int(dict.get("n", 0))}
 	if dict.has("durability"):
 		fixed["durability"] = int(dict.get("durability"))
+	if dict.has("durability_bonus"):
+		# SD18: same JSON-float round-trip fix as `durability` above, so a
+		# reinforced tool stashed in a chest doesn't lose its raised ceiling.
+		fixed["durability_bonus"] = int(dict.get("durability_bonus"))
 	return fixed

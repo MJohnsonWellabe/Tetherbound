@@ -584,6 +584,15 @@ func can_craft(id: String) -> bool:
 		var entry := requirement as Dictionary
 		if int(inventory.count(str(entry.get("id", "")))) < int(entry.get("n", 0)):
 			return false
+	# SD18: a `reinforce` recipe (see recipes_rootstone.json) upgrades a
+	# specific owned tool rather than granting a new item -- refuse if the
+	# named tool is not actually in the satchel, the same "you cannot craft
+	# what you do not have the base of" refusal an item-output recipe gets
+	# for free from the cost loop above.
+	var reinforce: Dictionary = items.recipe(id).get("reinforce", {})
+	if not reinforce.is_empty():
+		if int(inventory.find_slot(str(reinforce.get("tool", "")))) < 0:
+			return false
 	return true
 
 
@@ -603,7 +612,20 @@ func craft(id: String) -> bool:
 				id, str(entry.get("id", ""))
 			])
 			return false
-	var output: Dictionary = items.recipe(id).get("output", {})
+	var recipe: Dictionary = items.recipe(id)
+	# SD18: a `reinforce` recipe upgrades the named owned tool in place
+	# instead of granting a new satchel item -- see `inventory.gd`'s own
+	# `reinforce_tool()` comment for why this is a permanent durability-ceiling
+	# raise and not just a paid re-skin of the already-free `repair_tool()`.
+	var reinforce: Dictionary = recipe.get("reinforce", {})
+	if not reinforce.is_empty():
+		var slot: int = int(inventory.find_slot(str(reinforce.get("tool", ""))))
+		if slot < 0:
+			push_error("craft '%s': afford check passed but the tool to reinforce is gone" % id)
+			return false
+		inventory.reinforce_tool(slot, int(reinforce.get("bonus", 0)))
+		return true
+	var output: Dictionary = recipe.get("output", {})
 	inventory.add(str(output.get("id", "")), int(output.get("n", 0)))
 	return true
 

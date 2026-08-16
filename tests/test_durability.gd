@@ -103,3 +103,60 @@ func test_damage_and_repair_on_a_non_tool_slot_are_harmless_no_ops() -> void:
 func test_durability_at_on_an_empty_slot_is_zero() -> void:
 	assert_eq(bag.durability_at(0), 0)
 	assert_eq(bag.max_durability_at(0), 0)
+
+
+## --- SD18: reinforce_tool() ---------------------------------------------
+
+func test_reinforce_tool_raises_the_ceiling_and_tops_up_to_match() -> void:
+	bag.add("axe", 1)
+	var slot: int = bag.find_slot("axe")
+	var base_max: int = db.max_durability("axe")
+
+	bag.reinforce_tool(slot, 20)
+	assert_eq(bag.max_durability_at(slot), base_max + 20,
+		"reinforcing must raise the ceiling item_db's own per-id max does not carry")
+	assert_eq(bag.durability_at(slot), base_max + 20,
+		"a fresh tool reinforced should sit at its new, higher max")
+
+
+func test_reinforce_tool_stacks_across_two_applications() -> void:
+	bag.add("axe", 1)
+	var slot: int = bag.find_slot("axe")
+	var base_max: int = db.max_durability("axe")
+	bag.reinforce_tool(slot, 20)
+	bag.reinforce_tool(slot, 10)
+	assert_eq(bag.max_durability_at(slot), base_max + 30)
+
+
+func test_reinforce_tool_tops_up_by_the_bonus_not_to_the_new_max() -> void:
+	bag.add("axe", 1)
+	var slot: int = bag.find_slot("axe")
+	bag.damage_tool(slot, 25)
+	var worn: int = bag.durability_at(slot)
+
+	bag.reinforce_tool(slot, 20)
+	assert_eq(bag.durability_at(slot), worn + 20,
+		"reinforcing is a ceiling raise plus a top-up, not a free full repair")
+
+
+func test_reinforce_tool_on_a_non_tool_slot_is_a_harmless_no_op() -> void:
+	bag.add("wood", 5)
+	var slot: int = bag.find_slot("wood")
+	bag.reinforce_tool(slot, 20)
+	var stack: Dictionary = bag.stack_at(slot)
+	assert_eq(int(stack.get("n", 0)), 5)
+	assert_false(stack.has("durability_bonus"), "a resource must never gain a stray durability_bonus key")
+
+
+func test_reinforce_tool_on_an_empty_slot_is_a_harmless_no_op() -> void:
+	bag.reinforce_tool(0, 20)
+	assert_true(bag.is_slot_empty(0))
+
+
+func test_reinforce_tool_ignores_a_non_positive_bonus() -> void:
+	bag.add("axe", 1)
+	var slot: int = bag.find_slot("axe")
+	var base_max: int = db.max_durability("axe")
+	bag.reinforce_tool(slot, 0)
+	bag.reinforce_tool(slot, -5)
+	assert_eq(bag.max_durability_at(slot), base_max)

@@ -1,0 +1,54 @@
+{
+  "_comment": "SD18. Rootstone, the first progression-tier material. `data/recipes/recipes.json`'s own `_comment_scope` said this would land in its own file rather than growing that one, and `ralph/DONE.md`'s R4.9 entry made the same promise for `orb_greater` specifically -- this file is that promise kept, not a second, competing recipe table. `item_db.gd` reads both files and merges them into one `recipe()`/`recipe_ids()` surface, so nothing else (craft_panel.gd, game_state.gd) has to know there are two files on disk.",
+  "_comment_unlock": "None of these are `unlocked_by`-gated, unlike `orb_basic` (Tam specifically has to teach that one). The real gate here is Rootstone itself: nothing below can be crafted without it, and Rootstone is quarry-locked content (SD16, a sibling item) reached by playing into Band 2 -- a second flag on top of that would gate the same door twice. This matches `potion_small`'s own precedent: a recipe with nothing to teach ships known from the first minute, per recipes.json's `_comment_unlock`.",
+  "_comment_tier": "MEADOWS_PROGRESSION_SPEC.md 10/11 and GAME_DESIGN.md 32's non-goals ('large crafting tree') both bound this file: every recipe below improves something the player can already own by this point in a normal playthrough (an orb tier, a tool, a saddle component) rather than opening a new system. Four recipes, not forty.",
+  "_comment_costs": "Every `cost` and `bonus` value in this file is TUNABLE, same as `data/recipes/recipes.json`'s own base tier -- picked to feel like a real step up from the base tier (roughly double the material investment, plus Rootstone itself) without being balanced against a Rootstone gather rate nothing has measured yet.",
+
+  "recipes": {
+    "orb_greater": {
+      "name": "Greater Orb",
+      "output": { "id": "orb_greater", "n": 1 },
+      "cost": [
+        { "id": "rootstone", "n": 4 },
+        { "id": "wood", "n": 3 },
+        { "id": "fiber", "n": 3 }
+      ],
+      "blurb": "Doubled tether bands, rootstone-braced. Closes R4.9's honest remainder -- the tier ladder finally has a way in.",
+      "_comment": "R4.9 built the mechanic (`data/config/catching.json`'s `orb_greater` entry, a real 1.6x multiplier `catch_math.gd` already reads) and the item (`items.json`), and shipped with no acquisition path on purpose, naming this exact recipe as the thing that would close it. Cost mirrors `orb_basic` (wood+fiber) with Rootstone added and roughly doubled base materials -- a meaningfully bigger ask for a meaningfully better orb, same affordability logic GAME_DESIGN.md 15 asks for at the basic tier."
+    },
+
+    "reinforce_axe": {
+      "name": "Reinforce Axe",
+      "reinforce": { "tool": "axe", "bonus": 20 },
+      "cost": [
+        { "id": "rootstone", "n": 3 },
+        { "id": "wood", "n": 2 }
+      ],
+      "blurb": "Rootstone wedges driven into the haft and the edge re-set. Raises the axe's ceiling for good -- it comes back full, and it wears down slower from here.",
+      "_comment": "The SIMPLEST honest read of 'a rootstone upgrade for axe/pickaxe' that does not invent a second tool-gating system: `inventory.gd::repair_tool()` already restores durability to `max_durability_at()` for free, at no station, so a recipe that only did that again would waste Rootstone matching a button the player already has. A genuinely separate `axe_reinforced` item, by contrast, would need `harvest_logic.gd` to recognise a SECOND tool id for the same `gathered_with: axe` resource -- new gating code, exactly what SD18's brief says to avoid if the plain version needs it. This recipe instead PERMANENTLY raises the max (`durability_bonus`, `inventory.gd::reinforce_tool()`) on the axe already in the satchel and tops it up to the new max in the same action -- a real upgrade to a real owned item, using only the durability plumbing R2.2 already built. `game_state.craft()` special-cases the `reinforce` key: no `output` item is granted, `can_craft`/`craft` require the named tool to actually be owned. Bonus (TUNABLE) is half the axe's own base 40 durability -- a real step, not a rounding error, without doubling it outright."
+    },
+
+    "reinforce_pickaxe": {
+      "name": "Reinforce Pickaxe",
+      "reinforce": { "tool": "pickaxe", "bonus": 20 },
+      "cost": [
+        { "id": "rootstone", "n": 3 },
+        { "id": "wood", "n": 2 }
+      ],
+      "blurb": "Same rootstone treatment as the axe, for the pick. Deeper seams want a tool that lasts.",
+      "_comment": "Twin of `reinforce_axe` -- see its own comment for the full reasoning. Same cost and bonus; the pick has no reason to be cheaper or tougher than the axe at this tier."
+    },
+
+    "saddle_frame": {
+      "name": "Saddle Frame",
+      "output": { "id": "saddle_frame", "n": 1 },
+      "cost": [
+        { "id": "rootstone", "n": 5 },
+        { "id": "wood", "n": 4 },
+        { "id": "fiber", "n": 2 }
+      ],
+      "blurb": "The skeleton a real saddle gets built on. Braced with rootstone so it can actually take a rider's weight.",
+      "_comment": "R6.2's Riding Saddle spec names Rootstone/Ironwood components (backlog: 'the saddle in Rootstone/Ironwood components'). This is SD18's half of that -- an intermediate ITEM and its recipe, consumed by whatever R6.2 eventually builds. No mount/dismount, no riding stat, no saddle item itself -- that is R6.1/R6.2's own scope, not this one's."
+    }
+  }
+}

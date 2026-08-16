@@ -223,18 +223,27 @@ func durability_at(index: int) -> int:
 	var stack := stack_at(index)
 	if stack.is_empty():
 		return 0
-	var id := str(stack.get("id", ""))
-	var maximum: int = _db.call("max_durability", id)
+	var maximum := max_durability_at(index)
 	if maximum <= 0:
 		return 0
 	return clampi(int(stack.get("durability", maximum)), 0, maximum)
 
 
+## SD18: `max_durability_at` used to be a straight pass-through to
+## `item_db.gd`'s per-ID `max_durability()` -- the same number for every axe
+## that ever existed. `durability_bonus` is the one thing that can now make
+## an individual slot's ceiling higher than its item id's own base value (see
+## `reinforce_tool()` below); `durability_at` reads through this rather than
+## recomputing the base itself, so the two can never disagree about what
+## "full" means for a given slot.
 func max_durability_at(index: int) -> int:
 	var stack := stack_at(index)
 	if stack.is_empty():
 		return 0
-	return int(_db.call("max_durability", str(stack.get("id", ""))))
+	var base: int = int(_db.call("max_durability", str(stack.get("id", ""))))
+	if base <= 0:
+		return 0
+	return base + maxi(0, int(stack.get("durability_bonus", 0)))
 
 
 ## Wear the tool in `index` down by `amount`, floored at 0 (broken, not
@@ -260,6 +269,28 @@ func repair_tool(index: int) -> void:
 	if int(stack.get("durability", maximum)) == maximum:
 		return
 	stack["durability"] = maximum
+	revision += 1
+
+
+## SD18. Permanently raises the slot's durability CEILING by `bonus`
+## (`durability_bonus`, read by `max_durability_at` above) and tops current
+## durability up by the same amount, so the upgrade is felt immediately
+## rather than requiring the tool to wear down first. Unlike `repair_tool`,
+## this is a real, permanent improvement to the item in that slot -- not a
+## reset to a fixed max. No-op on an empty slot, a non-tool (nothing to
+## reinforce), or a non-positive bonus.
+func reinforce_tool(index: int, bonus: int) -> void:
+	if bonus <= 0 or index < 0 or index >= SLOT_COUNT:
+		return
+	var stack: Variant = _slots[index]
+	if stack == null:
+		return
+	var dict := stack as Dictionary
+	if int(_db.call("max_durability", str(dict.get("id", "")))) <= 0:
+		return
+	var current: int = int(dict.get("durability", max_durability_at(index)))
+	dict["durability_bonus"] = maxi(0, int(dict.get("durability_bonus", 0))) + bonus
+	dict["durability"] = current + bonus
 	revision += 1
 
 

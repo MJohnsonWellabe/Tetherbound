@@ -60,21 +60,55 @@ func test_the_two_base_recipes_are_defined() -> void:
 		assert_true(recipe.has("output"), "'%s' names no output" % id)
 
 
+## GAME_DESIGN.md 15 / MEADOWS_PROGRESSION_SPEC.md 10: wood, stone, fiber and
+## berries, nothing else, for the BASE tier -- `orb_basic`/`potion_small`,
+## the two recipes `data/recipes/recipes.json` itself defines. SD18's
+## Rootstone tier lives in a separate file on purpose (that file's own
+## `_comment_scope`) precisely so it can cost Rootstone without this test
+## flagging it as a violation; named explicitly here rather than filtered out
+## of `db.recipe_ids()` by convention, so the base tier staying baseline-only
+## is still checked for exactly what it always was.
+const BASE_TIER_RECIPES := ["orb_basic", "potion_small"]
+
+## SD18: the Rootstone tier's own recipes, named once here so the tests below
+## don't each re-list them and drift apart if a fifth is ever added.
+const ROOTSTONE_TIER_RECIPES := ["orb_greater", "reinforce_axe", "reinforce_pickaxe", "saddle_frame"]
+
+
 func test_recipes_only_use_baseline_materials() -> void:
-	# GAME_DESIGN.md 15 / MEADOWS_PROGRESSION_SPEC.md 10: wood, stone, fiber
-	# and berries, nothing else, for the base tier.
 	const ALLOWED := ["wood", "stone", "fiber", "berries"]
-	for id in db.recipe_ids():
-		var recipe: Dictionary = db.recipe(str(id))
+	for id in BASE_TIER_RECIPES:
+		var recipe: Dictionary = db.recipe(id)
 		for requirement in (recipe.get("cost", []) as Array):
 			var ingredient := str((requirement as Dictionary).get("id", ""))
 			assert_true(ALLOWED.has(ingredient),
 				"'%s' costs '%s', which is not a baseline material" % [id, ingredient])
 
 
+## Every recipe's cost names a real satchel item, whatever tier it belongs
+## to -- unlike the baseline-materials test above, this runs over every
+## recipe in the merged book (`db.recipe_ids()`), base tier and Rootstone
+## tier alike.
+func test_recipe_cost_only_names_real_items() -> void:
+	for id in db.recipe_ids():
+		var recipe: Dictionary = db.recipe(str(id))
+		for requirement in (recipe.get("cost", []) as Array):
+			var entry := requirement as Dictionary
+			var ingredient := str(entry.get("id", ""))
+			assert_true(db.has(ingredient), "'%s' costs unknown item '%s'" % [id, ingredient])
+			assert_true(int(entry.get("n", 0)) > 0, "'%s' costs zero or fewer '%s'" % [id, ingredient])
+
+
+## SD18: a `reinforce` recipe (see `recipes_rootstone.json`) upgrades a tool
+## already in the satchel instead of granting a new item, so it carries no
+## `output` at all -- skipped here, and covered by its own tests below
+## instead.
 func test_recipe_output_is_a_real_item() -> void:
 	for id in db.recipe_ids():
-		var output: Dictionary = db.recipe(str(id)).get("output", {})
+		var recipe: Dictionary = db.recipe(str(id))
+		if not (recipe.get("reinforce", {}) as Dictionary).is_empty():
+			continue
+		var output: Dictionary = recipe.get("output", {})
 		var output_id := str(output.get("id", ""))
 		assert_true(db.has(output_id), "'%s' produces unknown item '%s'" % [id, output_id])
 		assert_true(int(output.get("n", 0)) > 0, "'%s' produces zero or fewer" % id)
@@ -252,3 +286,121 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 			continue
 		assert_true(written.has(flag),
 			"recipe '%s' waits on flag '%s', which no conversation ever sets" % [id, flag])
+
+
+## --- SD18: the Rootstone tier (data/recipes/recipes_rootstone.json) --------
+
+func test_the_rootstone_tier_recipes_are_defined() -> void:
+	for id in ROOTSTONE_TIER_RECIPES:
+		var recipe: Dictionary = db.recipe(id)
+		assert_false(recipe.is_empty(), "recipes_rootstone.json is missing '%s'" % id)
+		assert_true(recipe.has("cost"), "'%s' names no cost" % id)
+
+
+## Every recipe in this tier costs Rootstone -- otherwise it does not belong
+## here, per SD18's own done-when ("every recipe that consumes Rootstone
+## improves something the player already owns").
+func test_every_rootstone_tier_recipe_actually_costs_rootstone() -> void:
+	for id in ROOTSTONE_TIER_RECIPES:
+		var names_rootstone := false
+		for requirement in (db.recipe(id).get("cost", []) as Array):
+			if str((requirement as Dictionary).get("id", "")) == "rootstone":
+				names_rootstone = true
+		assert_true(names_rootstone, "'%s' does not cost rootstone" % id)
+
+
+## Unlike orb_basic (Tam has to teach it), nothing in this tier waits on a
+## flag -- recipes_rootstone.json's own `_comment_unlock` makes owning
+## Rootstone itself the real gate. Checked against a state that has never had
+## ANY flag set, so this is not just "no flag happens to be set right now".
+func test_the_rootstone_tier_needs_no_unlock_flag() -> void:
+	for id in ROOTSTONE_TIER_RECIPES:
+		assert_eq(db.recipe_unlock_flag(id), "",
+			"'%s' should be known from the first minute, gated by owning Rootstone" % id)
+		assert_true(state.recipe_known(id), "'%s' must be known with no flag ever set" % id)
+
+
+## R4.9 shipped `orb_greater` (the tier ladder's mechanic and item) with no
+## way to actually make one, naming this exact recipe as the thing that would
+## close that gap. Closed: crafting it produces a real orb_greater that
+## catch_math.gd's tier ladder correctly ranks above orb_basic.
+func test_orb_greater_is_craftable_and_reaches_the_tier_ladder() -> void:
+	const CATCH := preload("res://scripts/combat/catch_math.gd")
+	for requirement in state.recipe_cost_for("orb_greater"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_true(state.can_craft("orb_greater"))
+	assert_true(state.craft("orb_greater"))
+	assert_eq(bag.count("orb_greater"), 1)
+	assert_eq(CATCH.best_orb({"orb_basic": 3, "orb_greater": 1}), "orb_greater",
+		"a crafted orb_greater should outrank orb_basic the same way a found one would")
+
+
+## `saddle_frame` the recipe makes `saddle_frame` the item -- R6.2's future
+## saddle recipe has something real to consume once it exists.
+func test_saddle_frame_recipe_crafts_a_real_saddle_frame() -> void:
+	for requirement in state.recipe_cost_for("saddle_frame"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_true(state.craft("saddle_frame"))
+	assert_eq(bag.count("saddle_frame"), 1)
+
+
+## --- SD18: reinforced tools (inventory.gd::reinforce_tool) -----------------
+
+## The whole point of a `reinforce` recipe: it does not add a new item to the
+## satchel, it raises the ceiling on the tool already there and tops it up to
+## match, in one step.
+func test_reinforce_axe_raises_durability_ceiling_and_tops_up() -> void:
+	bag.add("axe", 1)
+	for requirement in state.recipe_cost_for("reinforce_axe"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	var slot: int = bag.find_slot("axe")
+	var base_max: int = bag.max_durability_at(slot)
+
+	assert_true(state.can_craft("reinforce_axe"))
+	assert_true(state.craft("reinforce_axe"))
+
+	assert_eq(bag.count("axe"), 1, "reinforcing must not duplicate the tool")
+	assert_eq(bag.max_durability_at(slot), base_max + 20)
+	assert_eq(bag.durability_at(slot), base_max + 20, "a fresh axe reinforced should end up full at the new max")
+
+
+## A worn tool is topped up by the bonus relative to where it WAS, not reset
+## to the new max -- reinforcing is not a free repair in disguise.
+func test_reinforce_pickaxe_tops_up_from_current_durability_not_from_full() -> void:
+	bag.add("pickaxe", 1)
+	var slot: int = bag.find_slot("pickaxe")
+	bag.damage_tool(slot, 30)
+	var worn: int = bag.durability_at(slot)
+	assert_true(worn < bag.max_durability_at(slot))
+
+	for requirement in state.recipe_cost_for("reinforce_pickaxe"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_true(state.craft("reinforce_pickaxe"))
+
+	assert_eq(bag.durability_at(slot), worn + 20)
+
+
+## Rootstone and wood in hand are not enough on their own -- there has to be
+## an axe to reinforce, the same way `orb_basic` refuses without fiber.
+func test_reinforce_axe_refuses_without_owning_an_axe() -> void:
+	for requirement in state.recipe_cost_for("reinforce_axe"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_false(state.can_craft("reinforce_axe"), "no axe in the satchel should refuse the reinforce")
+	assert_false(state.craft("reinforce_axe"))
+	assert_eq(bag.count("rootstone"), int(state.recipe_cost_for("reinforce_axe")[0].get("n", 0)),
+		"a refused craft must not have spent anything")
+
+
+## Short of Rootstone, a reinforce refuses the same all-or-nothing way any
+## other recipe does, and touches neither the satchel nor the tool.
+func test_reinforce_axe_fails_all_or_nothing_when_short_of_rootstone() -> void:
+	bag.add("axe", 1)
+	bag.add("wood", 2)  # the recipe's wood cost, in full -- only rootstone is short
+	var slot: int = bag.find_slot("axe")
+	var before_max: int = bag.max_durability_at(slot)
+
+	assert_false(state.can_craft("reinforce_axe"))
+	assert_false(state.craft("reinforce_axe"))
+
+	assert_eq(bag.count("wood"), 2, "a refused craft must not spend the wood it did have")
+	assert_eq(bag.max_durability_at(slot), before_max, "a refused reinforce must not touch the tool")

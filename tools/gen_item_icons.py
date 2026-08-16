@@ -153,6 +153,51 @@ def icon_berries() -> Image.Image:
     return img
 
 
+def icon_rootstone() -> Image.Image:
+    """SD18. `icon_stone()`'s own faceted-rock silhouette (same family, one
+    resource generation up), with root tendrils threading out from its
+    underside instead of `icon_stone`'s interior facet lines -- the one
+    visual change that says 'a deeper, root-veined seam' rather than
+    reusing plain stone's icon unmodified."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    pts = [
+        (58, 96), (100, 38), (168, 34), (214, 82),
+        (218, 142), (176, 190), (96, 194), (40, 152),
+    ]
+    d.polygon(pts, fill=FG)
+    # root tendrils, curling down from the rock's underside
+    for x0, ctrl, x1 in (
+        ((80, 176), (64, 210), (52, 236)),
+        ((128, 190), (132, 220), (122, 246)),
+        ((172, 178), (188, 208), (196, 232)),
+    ):
+        d.line([x0, ctrl, x1], fill=FG, width=10, joint="curve")
+    # a couple of interior facet cutouts, same language as icon_stone
+    cutout_line(d, [(100, 38), (128, 118)])
+    cutout_line(d, [(128, 118), (58, 96)])
+    cutout_line(d, [(128, 118), (214, 82)])
+    return img
+
+
+def icon_saddle_frame() -> Image.Image:
+    """SD18. A saddle's rigid skeleton, not the finished tack: a curved top
+    bow over two straight side struts, with a cross-brace cutout low down
+    where a real frame's rootstone joint would sit -- reads as structure
+    waiting to be covered, not as a bag or a shield."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    # the bow: a thick arc, open underneath
+    d.arc((44, 40, 212, 200), 200, 340, fill=FG, width=34)
+    # two straight legs dropping from the bow's ends
+    for x0, y0, x1, y1 in ((60, 118, 50, 220), (196, 118, 206, 220)):
+        d.line([(x0, y0), (x1, y1)], fill=FG, width=26, joint="curve")
+        d.ellipse((x1 - 15, y1 - 15, x1 + 15, y1 + 15), fill=FG)
+    # cross-brace joint, low on the frame
+    cutout_line(d, [(66, 188), (190, 188)], width=int(STROKE * 0.9))
+    return img
+
+
 def icon_orb_basic() -> Image.Image:
     """The game's own tether-orb language, deliberately NOT a pokeball: two
     tilted wrap-bands crossing the sphere (a bound/tethered look) rather
@@ -477,6 +522,8 @@ ITEM_ICONS = {
     "stone.png": icon_stone,
     "fiber.png": icon_fiber,
     "berries.png": icon_berries,
+    "rootstone.png": icon_rootstone,
+    "saddle_frame.png": icon_saddle_frame,
     "orb_basic.png": icon_orb_basic,
     "orb_greater.png": icon_orb_greater,
     "potion_small.png": icon_potion_small,
