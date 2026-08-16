@@ -3,6 +3,59 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## OF17 — The "put creature away" control overlaps the hotbar
+
+`model: sonnet` · `tests: smoke_playground` (extend) · `area: ui`
+
+Owner-reported a second time (an earlier same-day fix, `80beac89`, had
+already widened the static gap between `Root/HotbarPanel` and `Root/Prompt`
+from 4px to 30px and was believed to have closed this). Reproduced for real
+by measuring both Controls' live `get_global_rect()` instead of trusting
+authored offsets.
+
+Root cause: `Root/HotbarPanel` is not a fixed-height box. Godot never lets a
+Control's actual size fall below its own computed minimum size regardless of
+anchors/offsets, and `Root/HotbarPanel/Margin/Layout/Message` (the row
+`_show_hotbar_message()` shows for "repaired, free.", heal readouts, "Nobody
+on the belt yet.", every hotbar-slot response) is `visible = false` most of
+the time but joins the `VBoxContainer` as a real row the instant it shows,
+growing the panel's measured height by 30px. The previous fix's 30px static
+gap was tuned against the panel's QUIET height; the moment a player pressed
+a hotbar slot for real, that growth ate the entire gap and the panel's
+bottom edge crossed into the recall prompt below it — confirmed empirically:
+re-running the new test against the pre-fix offsets with the message row
+showing reproduces `intersects=true` on real engine rects, not hand math.
+
+Fix: widened `HotbarPanel`'s own offsets another 20px in
+`scenes/ui/playground_hud.tscn` (`-280/-170` → `-300/-190`), so the 50px
+static gap survives the message row's 30px growth with a real 14-16px of
+clearance left, verified via `get_global_rect()` in all three states below
+(not assumed from the pixel change alone).
+
+`tests/smoke_playground.gd::_the_recall_prompt_never_overlaps_the_hotbar`
+drives the actual offer text off `encounter_director.gd::
+_creature_control_offer()` (decoupled from the wake-up-in-bed beat's
+higher-priority "Get up" offer, which wins arbitration on a fresh boot and
+would otherwise make a live-text read assert against the wrong prompt) and
+asserts `Root/HotbarPanel` and `Root/Prompt` never intersect in three states:
+nobody out ("Call out X"), a creature out ("Put X away"), and a creature out
+**while the hotbar message row is showing** — the actual reproducing
+combination, driven through the real `hud.call("_show_hotbar_message", ...)`
+call site. Falsified against the pre-fix offsets first (all three states
+failed with real overlapping rects), then verified green against the fix.
+
+Verified with a real (non-dummy-driver) screenshot, not just asserted
+numbers: `shots/_diag/of17_hotbar_prompt.png` (gitignored, not committed)
+renders `playground_hud.tscn` alone under `xvfb-run … --rendering-driver
+opengl3` with populated hotbar slots, the message row showing, and the real
+"Put Biscuit away" offer — full `meadows_playground` terrain/prop scatter
+skipped since only the HUD's own two Controls were in question, which also
+sidestepped `tools/capture_exploration_hud.gd`'s multi-minute cost under
+software rendering. A before/after pair was rendered by temporarily
+swapping in the pre-fix `.tscn`: the before shot visibly shows the panel's
+own bottom border cutting through the "R Put Biscuit away" row; the after
+shot shows a clean gap.
+
 ## OF14 — World clipping: player/objects pass through rocks and terrain props in places
 
 `model: sonnet` · `tests: smoke_traversal` (extend) · `area: terrain` · `fdc9ff9`

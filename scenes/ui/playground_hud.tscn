@@ -30,22 +30,43 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-; Shifted up 26px (offset_top/offset_bottom both -254/-144 -> -280/-170) from
-; its original authoring. Owner playtest report, a real rendered frame
-; (shots/_diag/hud_full.png): the contextual prompt row (Root/Prompt below,
-; offset_top -140) sat only 4px under this panel's own original bottom edge
-; (-144), reading as a single crowded block with "Call out Biscuit" jammed
-; against the hotbar slots. Moving the whole panel up preserves its own
-; height and every slot's internal layout untouched.
+; Shifted up 46px total from its original authoring (-254/-144 -> -280/-170
+; -> -300/-190). The first 26px (offset_top/offset_bottom -254/-144 ->
+; -280/-170) fixed an owner playtest report -- Root/Prompt below (offset_top
+; -140) sat only 4px under this panel's original bottom edge (-144), reading
+; as a single crowded block with "Call out Biscuit" jammed against the
+; hotbar slots.
+;
+; OF17: the owner reported the SAME overlap again after that fix, still
+; described as the recall/put-away hint rendering "on top of" the hotbar.
+; Real root cause, found by measuring both Controls' live get_global_rect()
+; instead of trusting the authored offsets: this panel is NOT a fixed-height
+; box. Godot never lets a Control's actual size fall below its own computed
+; minimum size, offsets or no offsets -- and Margin/Layout/Message
+; (`_show_hotbar_message()`: "repaired, free.", a heal readout, every
+; hotbar-slot response) is `visible = false` most of the time but joins the
+; VBoxContainer as a real row the instant it shows, measured growing this
+; panel's actual height by 30px. The first fix's 30px static gap was tuned
+; against this panel's QUIET height; the moment a player pressed a hotbar
+; slot for real, that growth ate the entire gap and this panel's bottom edge
+; crossed into Root/Prompt below it -- confirmed by re-running
+; tests/smoke_playground.gd's `_the_recall_prompt_never_overlaps_the_hotbar`
+; (added alongside this fix) against the pre-fix offsets with the message
+; row showing: real engine rects, `intersects=true`, not hand math. This
+; pass widens the margin another 20px so the 50px static gap survives the
+; message row's 30px growth with real clearance left, instead of trusting a
+; pixel count tuned against one quiet screenshot. Moving the whole panel up
+; again preserves its own height and every slot's internal layout untouched,
+; the same technique the first fix used.
 [node name="HotbarPanel" type="PanelContainer" parent="Root"]
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = -257.0
-offset_top = -280.0
+offset_top = -300.0
 offset_right = 257.0
-offset_bottom = -170.0
+offset_bottom = -190.0
 grow_horizontal = 2
 mouse_filter = 2
 

@@ -285,12 +285,6 @@ locations logged from a fresh playthrough before a fix can be scoped.
 
 **`OF16` (potions reportedly unusable) — re-verified against current `main`; BOTH paths work, no regression reproduced. A real test-coverage gap on the hotbar path was found and closed — see `DONE.md`.** Honest remainder: the owner's report could not be reproduced, so whatever they hit is still unexplained. The two live candidates are a stale local download (`OF18`'s own investigation confirmed `release.yml` publishes on every push, so a cached build is the likelier explanation than a broken pipeline) and a scenario this pass didn't reach — mid-combat, for one: `playground_hud.gd::_read_hotbar_input()` deliberately makes the hotbar deaf while a fight runs (`HD2`/D32, the d-pad belongs to combat then), so a player trying to potion mid-fight gets nothing and no message. That is by design, not a bug, but it would read exactly as "can't use potions" — worth asking the owner whether that's when they tried.
 
-### OF17 — The "put creature away" control overlaps the hotbar
-`model: sonnet` · `tests: smoke_menu` (extend), `capture_ui_suite` (screenshot)
-Owner-reported, 2026-08-15: the put-away/return-to-party control renders on
-top of `HD2`'s hotbar instead of beside or above it. A UI layering bug, not
-a design question.
-
 ### OF18 — Re-shoot the website's screenshots
 `model: haiku` · `tests: none`
 This file's own standing task (top of file) says to re-shoot after any

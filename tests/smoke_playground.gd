@@ -117,6 +117,7 @@ func _run() -> void:
 	failures.append_array(await _the_hotbar_heals_a_creature(world))
 	failures.append_array(await _the_torch_shows_a_visible_prop_when_lit(world))
 	failures.append_array(await _build_open_opens_the_menu_from_the_world(world))
+	failures.append_array(await _the_recall_prompt_never_overlaps_the_hotbar(world))
 
 	print("")
 	if failures.is_empty():
@@ -363,5 +364,137 @@ func _build_open_opens_the_menu_from_the_world(world: Node) -> Array[String]:
 	menu.call("close")
 	for i in 5:
 		await physics_frame
+	return found
+
+
+## OF17: owner-reported, twice -- the creature_recall control (drawn by
+## `encounter_director.gd::_creature_control_offer()` through PlaygroundHUD's
+## shared `Root/Prompt` line) rendered ON TOP of the hotbar instead of beside
+## or above it. Root cause, found by measuring `Root/HotbarPanel`'s live
+## `get_global_rect()` rather than trusting its authored offsets: it is NOT a
+## fixed-height box. Godot never lets a Control's actual size fall below its
+## own computed minimum size, offsets or no offsets -- and `Root/HotbarPanel
+## /Margin/Layout/Message` (`_show_hotbar_message()`: "repaired, free.", a
+## heal readout, "Nobody on the belt yet.", every hotbar-slot response) is
+## `visible = false` most of the time but joins the `VBoxContainer` as a real
+## row the instant it shows, pushing the panel's minimum -- and therefore its
+## actual -- height up by a measured 30px. A static pixel gap tuned against
+## the panel's QUIET height (which the previous two fixes for this same
+## report both were) still reads as clear in the editor and in a screenshot
+## taken between messages, and still closes to a sliver -- or less -- the
+## moment a player presses a hotbar slot for real. That is the "renders ON
+## TOP of the hotbar" the owner saw a second time.
+##
+## Fixed by widening `HotbarPanel`'s own offsets another 20px (see that
+## node's tscn comment) so the gap survives the message row's growth with
+## room to spare, and by this check driving that exact growth for real
+## (`hud.call("_show_hotbar_message", ...)`, the genuine call site every
+## hotbar response uses) rather than only the two quiet states the first fix
+## was screenshotted against.
+##
+## `_creature_control_offer()`'s label is pulled directly rather than trusted
+## off `Root/Prompt`'s live text: `meadows_playground` opens on the
+## wake-up-in-bed beat, whose "Get up" offer legitimately outranks the
+## creature-control fallback on priority for a fresh world, so reading
+## `Root/Prompt` here would assert against an unrelated story prompt instead
+## of this one. Assigning the label directly to `Root/Prompt` (the same node
+## `_on_prompt_changed` writes in the real game) still measures the actual
+## Control the player sees, just decoupled from which offer happens to be
+## winning arbitration in this particular boot.
+##
+## Drives three states: nobody out ("Call out X"), a creature out ("Put X
+## away"), and a creature out WHILE the hotbar message row is showing -- the
+## combination that actually closes the gap -- asserting the two Controls'
+## live rects never intersect in any of them.
+##
+## Combat is not separately driven here: `HotbarPanel`/`Root/Prompt`'s own
+## offsets are not conditioned on `is_fighting` anywhere in playground_hud.gd
+## (only hotbar INPUT is gated, per that file's `_read_hotbar_input` header),
+## so a fight changes neither rect this check reads -- if the states below
+## pass, mid-fight passes too. `smoke_creature_control.gd` already covers the
+## mid-fight dismiss/recall REFUSAL itself; duplicating a full encounter here
+## would only slow this file down for no new coverage.
+func _the_recall_prompt_never_overlaps_the_hotbar(world: Node) -> Array[String]:
+	var found: Array[String] = []
+	var hud: CanvasLayer = world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	var director: Node = world.get_node_or_null(^"EncounterDirector")
+	var game: Node = world.get_node_or_null(^"/root/Game")
+	if hud == null or director == null or game == null:
+		return ["missing PlaygroundHUD/EncounterDirector/Game; " +
+			"cannot drive the recall prompt check"] as Array[String]
+
+	var hotbar: Control = hud.get_node_or_null(^"Root/HotbarPanel") as Control
+	var prompt_label: RichTextLabel = hud.get_node_or_null(^"Root/Prompt") as RichTextLabel
+	var message: Label = hud.get_node_or_null(^"Root/HotbarPanel/Margin/Layout/Message") as Label
+	if hotbar == null or prompt_label == null or message == null:
+		return ["PlaygroundHUD is missing Root/HotbarPanel, Root/Prompt or the hotbar Message row"] \
+			as Array[String]
+
+	var party: RefCounted = game.get("party")
+	if party == null:
+		return ["Game exposes no party; cannot drive the recall prompt check"] as Array[String]
+	if int(party.call("size")) == 0:
+		var creature: RefCounted = game.call("make_creature", "terrapup")
+		if creature == null:
+			return ["could not build a creature from species.json"] as Array[String]
+		party.call("add", creature)
+
+	var saved_prompt_text := prompt_label.text
+	var saved_message_visible := message.visible
+	var saved_message_text := message.text
+
+	if director.call("ally_instance") != null:
+		director.call("dismiss_active_creature")
+	for i in 10:
+		await physics_frame
+	found.append_array(await _assert_offer_clear_of_hotbar(director, hotbar, prompt_label, "Call out"))
+
+	await director.call("summon_active_creature")
+	for i in 20:
+		await physics_frame
+	found.append_array(await _assert_offer_clear_of_hotbar(director, hotbar, prompt_label, "Put"))
+
+	# The state that actually reproduces OF17: a hotbar response ("repaired,
+	# free.", a heal readout, ...) grows the panel by a real, measured amount
+	# right while the recall prompt is showing underneath it.
+	hud.call("_show_hotbar_message", "Wooden Axe repaired, free.")
+	for i in 4:
+		await process_frame
+	found.append_array(await _assert_offer_clear_of_hotbar(
+		director, hotbar, prompt_label, "Put", " (hotbar message showing)"))
+
+	# Leave the world (and the labels this check borrowed) how the run found it.
+	director.call("dismiss_active_creature")
+	prompt_label.text = saved_prompt_text
+	message.visible = saved_message_visible
+	message.text = saved_message_text
+	return found
+
+
+func _assert_offer_clear_of_hotbar(
+	director: Node, hotbar: Control, prompt_label: RichTextLabel, expect_substring: String,
+	context: String = ""
+) -> Array[String]:
+	var found: Array[String] = []
+	var offer: Dictionary = director.call("_creature_control_offer")
+	var label := str(offer.get("label", ""))
+	print("recall offer%s: '%s'" % [context, label])
+	if not label.contains(expect_substring):
+		found.append("expected the recall offer to contain '%s', got '%s'%s" %
+			[expect_substring, label, context])
+		return found
+
+	prompt_label.text = label
+	for i in 2:
+		await process_frame
+
+	if hotbar.visible and prompt_label.visible:
+		var r_hotbar: Rect2 = hotbar.get_global_rect()
+		var r_prompt: Rect2 = prompt_label.get_global_rect()
+		print("hotbar rect %s   prompt rect %s   intersects=%s%s" %
+			[r_hotbar, r_prompt, r_hotbar.intersects(r_prompt), context])
+		if r_hotbar.intersects(r_prompt):
+			found.append("recall prompt rect %s overlaps the hotbar rect %s%s" %
+				[r_prompt, r_hotbar, context])
 	return found
 
