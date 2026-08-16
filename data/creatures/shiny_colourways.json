@@ -5,111 +5,629 @@
     "paddlenewt": {
       "_comment": "Base: teal body, cream/tan belly plates, salmon accents, gold spots + eyes. Shiny: the owner's red newt -- teal goes deep ember red, salmon accents go molten gold so they still read as separate markings, cream and gold stay put.",
       "rules": [
-        { "match": { "hue": [100, 250], "sat_min": 0.06 }, "set_hue": 6, "sat_scale": 1.45 },
-        { "match": { "hue": [5, 45], "sat_min": 0.3 }, "set_hue": 46, "sat_scale": 1.1 }
+        {
+          "match": {
+            "hue": [
+              100,
+              250
+            ],
+            "sat_min": 0.06
+          },
+          "set_hue": 6,
+          "sat_scale": 1.45
+        },
+        {
+          "match": {
+            "hue": [
+              5,
+              45
+            ],
+            "sat_min": 0.3
+          },
+          "set_hue": 46,
+          "sat_scale": 1.1
+        }
+      ],
+      "vivid_comment": "grey-teal -> jewel emerald-teal",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              100,
+              250
+            ],
+            "sat_min": 0.06
+          },
+          "set_hue": 168,
+          "sat_scale": 1.7
+        }
       ]
     },
     "burrowback": {
       "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Shiny: the owner's blue-striped badger -- the pale patches saturate to a clear cornflower blue, the near-black fur cools toward blue-black, the grey plates pick up a slate-blue cast.",
       "rules": [
-        { "match": { "sat_max": 0.28, "val_min": 0.55 }, "set_hue": 218, "set_sat": 0.62 },
-        { "match": { "sat_max": 0.45, "val_min": 0.28, "val_max": 0.55 }, "set_hue": 218, "set_sat": 0.35 },
-        { "match": { "val_max": 0.28 }, "set_hue": 225, "set_sat": 0.3 }
+        {
+          "match": {
+            "sat_max": 0.28,
+            "val_min": 0.55
+          },
+          "set_hue": 218,
+          "set_sat": 0.62
+        },
+        {
+          "match": {
+            "sat_max": 0.45,
+            "val_min": 0.28,
+            "val_max": 0.55
+          },
+          "set_hue": 218,
+          "set_sat": 0.35
+        },
+        {
+          "match": {
+            "val_max": 0.28
+          },
+          "set_hue": 225,
+          "set_sat": 0.3
+        }
+      ],
+      "vivid_comment": "drab brown/grey -> violet-black with warm cream stripes",
+      "vivid_rules": [
+        {
+          "match": {
+            "sat_max": 0.3,
+            "val_min": 0.55
+          },
+          "set_hue": 48,
+          "set_sat": 0.22
+        },
+        {
+          "match": {
+            "hue": [
+              10,
+              60
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 270,
+          "sat_scale": 1.35
+        }
       ]
     },
     "terrapup": {
       "_comment": "Base: amber/brown pup, mostly dark. Shiny: frost pup -- ambers go slate blue, the darks cool.",
       "rules": [
-        { "match": { "hue": [15, 65], "sat_min": 0.2 }, "set_hue": 210, "sat_scale": 0.9 },
-        { "match": { "hue": [0, 15], "sat_min": 0.2 }, "set_hue": 220, "sat_scale": 0.7 }
+        {
+          "match": {
+            "hue": [
+              15,
+              65
+            ],
+            "sat_min": 0.2
+          },
+          "set_hue": 210,
+          "sat_scale": 0.9
+        },
+        {
+          "match": {
+            "hue": [
+              0,
+              15
+            ],
+            "sat_min": 0.2
+          },
+          "set_hue": 220,
+          "sat_scale": 0.7
+        }
+      ],
+      "vivid_comment": "muddy brown -> warm copper-amber",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              10,
+              60
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 28,
+          "sat_scale": 1.7,
+          "val_scale": 1.06
+        }
       ]
     },
     "ripplet": {
       "_comment": "Base: bright teal water sprite. Shiny: sunset coral.",
       "rules": [
-        { "match": { "hue": [140, 230], "sat_min": 0.08 }, "set_hue": 352, "sat_scale": 1.2 }
+        {
+          "match": {
+            "hue": [
+              140,
+              230
+            ],
+            "sat_min": 0.08
+          },
+          "set_hue": 352,
+          "sat_scale": 1.2
+        }
+      ],
+      "vivid_comment": "pale teal -> vivid aqua",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              140,
+              230
+            ],
+            "sat_min": 0.06
+          },
+          "set_hue": 186,
+          "sat_scale": 1.5,
+          "val_scale": 1.04
+        }
       ]
     },
     "galewisp": {
       "_comment": "Base: pale cyan + soft yellow, airy. Shiny: lavender-violet wisp; the yellows go pale gold-white.",
       "rules": [
-        { "match": { "hue": [140, 240], "sat_min": 0.06 }, "set_hue": 278, "sat_scale": 1.25 },
-        { "match": { "hue": [40, 70], "sat_min": 0.15 }, "sat_scale": 0.55 }
+        {
+          "match": {
+            "hue": [
+              140,
+              240
+            ],
+            "sat_min": 0.06
+          },
+          "set_hue": 278,
+          "sat_scale": 1.25
+        },
+        {
+          "match": {
+            "hue": [
+              40,
+              70
+            ],
+            "sat_min": 0.15
+          },
+          "sat_scale": 0.55
+        }
+      ],
+      "vivid_comment": "washed cyan -> luminous sky + gold",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              140,
+              250
+            ],
+            "sat_min": 0.04
+          },
+          "set_hue": 196,
+          "sat_scale": 1.9
+        },
+        {
+          "match": {
+            "hue": [
+              35,
+              75
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 52,
+          "sat_scale": 1.5
+        }
       ]
     },
     "meadowhart": {
       "_comment": "Base: golden-tan deer. Shiny: pale silver spirit-hart -- the golds desaturate to moonlight with a cool cast.",
       "rules": [
-        { "match": { "hue": [20, 70], "sat_min": 0.15 }, "set_hue": 200, "set_sat": 0.1, "val_scale": 1.18 }
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.15
+          },
+          "set_hue": 200,
+          "set_sat": 0.1,
+          "val_scale": 1.18
+        }
+      ],
+      "vivid_comment": "dun -> burnished gold",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 38,
+          "sat_scale": 1.75,
+          "val_scale": 1.08
+        }
       ]
     },
     "tuskroot": {
       "_comment": "Base: dark earth-brown boar. Shiny: deep jade -- the browns go mossy green, keeping the dark mass.",
       "rules": [
-        { "match": { "hue": [15, 70], "sat_min": 0.15 }, "set_hue": 135, "sat_scale": 1.1 }
+        {
+          "match": {
+            "hue": [
+              15,
+              70
+            ],
+            "sat_min": 0.15
+          },
+          "set_hue": 135,
+          "sat_scale": 1.1
+        }
+      ],
+      "vivid_comment": "dark earth -> deep amethyst heartwood (first pass read neon; hue pulled to violet, saturation pinned, value dropped)",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              15,
+              70
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 285,
+          "set_sat": 0.42,
+          "val_scale": 0.92
+        }
       ]
     },
     "mosshell": {
       "_comment": "Base: green/yellow-green turtle. Shiny: autumn -- the greens turn ember orange-red.",
       "rules": [
-        { "match": { "hue": [55, 160], "sat_min": 0.12 }, "set_hue": 16, "sat_scale": 1.15 }
+        {
+          "match": {
+            "hue": [
+              55,
+              160
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 16,
+          "sat_scale": 1.15
+        }
+      ],
+      "vivid_comment": "olive -> vivid moss green",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              55,
+              160
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 112,
+          "sat_scale": 1.7,
+          "val_scale": 1.04
+        }
       ]
     },
     "brooktail": {
       "_comment": "Base: warm brown otter. Shiny: midnight indigo with the same markings.",
       "rules": [
-        { "match": { "hue": [15, 70], "sat_min": 0.15 }, "set_hue": 252, "sat_scale": 0.85 }
+        {
+          "match": {
+            "hue": [
+              15,
+              70
+            ],
+            "sat_min": 0.15
+          },
+          "set_hue": 252,
+          "sat_scale": 0.85
+        }
+      ],
+      "vivid_comment": "brown -> river blue",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              15,
+              70
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 205,
+          "sat_scale": 1.45,
+          "val_scale": 1.05
+        }
       ]
     },
     "galecrest": {
       "_comment": "Base: rust red-orange raptor. Shiny: storm-white -- the rusts bleach to pale ice blue, reading as a white bird at distance.",
       "rules": [
-        { "match": { "hue": [0, 60], "sat_min": 0.15 }, "set_hue": 202, "set_sat": 0.18, "val_scale": 1.25 }
+        {
+          "match": {
+            "hue": [
+              0,
+              60
+            ],
+            "sat_min": 0.15
+          },
+          "set_hue": 202,
+          "set_sat": 0.18,
+          "val_scale": 1.25
+        }
+      ],
+      "vivid_comment": "dull rust -> bright ember",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              0,
+              60
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 18,
+          "sat_scale": 1.8,
+          "val_scale": 1.05
+        }
       ]
     },
     "duskhush": {
       "_comment": "Base: grey-teal nocturne. Shiny: deep plum-magenta night creature.",
       "rules": [
-        { "match": { "hue": [140, 240], "sat_min": 0.08 }, "set_hue": 305, "sat_scale": 1.2 },
-        { "match": { "sat_max": 0.15, "val_min": 0.3 }, "set_hue": 300, "set_sat": 0.18 }
+        {
+          "match": {
+            "hue": [
+              140,
+              240
+            ],
+            "sat_min": 0.08
+          },
+          "set_hue": 305,
+          "sat_scale": 1.2
+        },
+        {
+          "match": {
+            "sat_max": 0.15,
+            "val_min": 0.3
+          },
+          "set_hue": 300,
+          "set_sat": 0.18
+        }
+      ],
+      "vivid_comment": "grey-teal -> deep twilight indigo",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              140,
+              240
+            ],
+            "sat_min": 0.06
+          },
+          "set_hue": 250,
+          "sat_scale": 1.8
+        },
+        {
+          "match": {
+            "sat_max": 0.15,
+            "val_min": 0.3
+          },
+          "set_hue": 248,
+          "set_sat": 0.3
+        }
       ]
     },
     "pipwing": {
       "_comment": "Base: sunny yellow songbird. Shiny: sky-blue.",
       "rules": [
-        { "match": { "hue": [25, 75], "sat_min": 0.12 }, "set_hue": 206, "sat_scale": 1.05 }
+        {
+          "match": {
+            "hue": [
+              25,
+              75
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 206,
+          "sat_scale": 1.05
+        }
+      ],
+      "vivid_comment": "dull straw -> bright canary",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              25,
+              75
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 56,
+          "sat_scale": 1.8,
+          "val_scale": 1.05
+        }
       ]
     },
     "reedwing": {
       "_comment": "Base: mixed teal/green/straw wader. Shiny: flamingo -- the cools go pink, the straws go warm gold.",
       "rules": [
-        { "match": { "hue": [70, 230], "sat_min": 0.1 }, "set_hue": 335, "sat_scale": 1.15 },
-        { "match": { "hue": [30, 70], "sat_min": 0.2 }, "set_hue": 44, "sat_scale": 1.15 }
+        {
+          "match": {
+            "hue": [
+              70,
+              230
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 335,
+          "sat_scale": 1.15
+        },
+        {
+          "match": {
+            "hue": [
+              30,
+              70
+            ],
+            "sat_min": 0.2
+          },
+          "set_hue": 44,
+          "sat_scale": 1.15
+        }
+      ],
+      "vivid_comment": "muddled -> spring green + gold",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              70,
+              230
+            ],
+            "sat_min": 0.08
+          },
+          "set_hue": 158,
+          "sat_scale": 1.7
+        },
+        {
+          "match": {
+            "hue": [
+              30,
+              70
+            ],
+            "sat_min": 0.15
+          },
+          "set_hue": 48,
+          "sat_scale": 1.6
+        }
       ]
     },
     "bramblebun": {
       "_comment": "Embedded-texture species (extracted from the glb by the tool). Base: golden bunny. Shiny: mint-green.",
       "rules": [
-        { "match": { "hue": [20, 70], "sat_min": 0.15 }, "set_hue": 152, "sat_scale": 0.95 }
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.15
+          },
+          "set_hue": 152,
+          "sat_scale": 0.95
+        }
+      ],
+      "vivid_comment": "tan -> saffron gold",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 42,
+          "sat_scale": 1.6,
+          "val_scale": 1.05
+        }
       ]
     },
     "mudsnout": {
       "_comment": "Embedded-texture species. Base: mud-brown snuffler. Shiny: rosy pink piglet.",
       "rules": [
-        { "match": { "hue": [10, 60], "sat_min": 0.15 }, "set_hue": 348, "sat_scale": 0.8, "val_scale": 1.12 }
+        {
+          "match": {
+            "hue": [
+              10,
+              60
+            ],
+            "sat_min": 0.15
+          },
+          "set_hue": 348,
+          "sat_scale": 0.8,
+          "val_scale": 1.12
+        }
+      ],
+      "vivid_comment": "mud -> rich terracotta",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              10,
+              60
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 22,
+          "sat_scale": 1.75
+        }
       ]
     },
     "trailpup": {
       "_comment": "Embedded-texture species. Base: sandy tan pup. Shiny: russet fox-red.",
       "rules": [
-        { "match": { "hue": [20, 70], "sat_min": 0.12 }, "set_hue": 14, "sat_scale": 1.35 }
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 14,
+          "sat_scale": 1.35
+        }
+      ],
+      "vivid_comment": "sandy -> warm amber",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 33,
+          "sat_scale": 1.8,
+          "val_scale": 1.05
+        }
       ]
     },
     "veridian": {
       "_comment": "Embedded-texture species. Base: leaf green. Shiny: amber-gold.",
       "rules": [
-        { "match": { "hue": [60, 160], "sat_min": 0.12 }, "set_hue": 45, "sat_scale": 1.15 }
+        {
+          "match": {
+            "hue": [
+              60,
+              160
+            ],
+            "sat_min": 0.12
+          },
+          "set_hue": 45,
+          "sat_scale": 1.15
+        }
+      ],
+      "vivid_comment": "flat green -> luminous forest green",
+      "vivid_rules": [
+        {
+          "match": {
+            "hue": [
+              60,
+              160
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 142,
+          "sat_scale": 1.8,
+          "val_scale": 1.06
+        }
       ]
     }
-  }
+  },
+  "_comment_vivid": "OF28's other half (owner: 'Change the creature colors to be more fantastical... more mystical like in palworld'). `vivid_rules` repaint the ORDINARY creature the same way `rules` repaint the shiny -- the shipped roster reads naturalistic and mud-brown, which is exactly what does not read as mystical. Each species' vivid hue is kept clear of its own shiny hue so the two never converge. Written to *_vivid.png; creature_body prefers it for every non-shiny body."
 }

@@ -72,7 +72,8 @@ def find_textures(species):
     out = {}
     for kind in ("base_color", "emissive"):
         direct = [f for f in os.listdir(models)
-                  if f.endswith(f"{kind}.png") and "_shiny" not in f and "extracted" not in f]
+                  if f.endswith(f"{kind}.png") and "_shiny" not in f
+                  and "_vivid" not in f and "extracted" not in f]
         if direct:
             out[kind] = os.path.join(models, sorted(direct)[0])
     if out:
@@ -218,9 +219,9 @@ def repaint(src_path, rules, dst_path):
     return dst_path
 
 
-def shiny_path(src_path):
+def variant_path(src_path, suffix):
     stem, ext = os.path.splitext(src_path)
-    return f"{stem}_shiny{ext}"
+    return f"{stem}_{suffix}{ext}"
 
 
 def main():
@@ -230,16 +231,24 @@ def main():
         if species not in spec:
             print(f"skip {species}: no colourway in spec")
             continue
-        rules = spec[species]["rules"]
         textures = find_textures(species)
-        done = {}
-        for kind, src in textures.items():
-            if src in done:  # emissive may share the base image
-                dst = done[src]
-            else:
-                dst = repaint(src, rules, shiny_path(src))
-                done[src] = dst
-            print(f"{species}: {kind} -> {os.path.relpath(dst, ROOT)}")
+        # Two colourways per species: `rules` -> *_shiny (the rare variant) and
+        # `vivid_rules` -> *_vivid (OF28's other half, the ordinary creature
+        # repainted off naturalistic mud toward the mystical palette the owner
+        # asked for). A species with no vivid_rules simply keeps its shipped
+        # base texture.
+        for suffix, key in (("shiny", "rules"), ("vivid", "vivid_rules")):
+            rules = spec[species].get(key)
+            if not rules:
+                continue
+            done = {}
+            for kind, src in textures.items():
+                if src in done:  # emissive may share the base image
+                    dst = done[src]
+                else:
+                    dst = repaint(src, rules, variant_path(src, suffix))
+                    done[src] = dst
+                print(f"{species}: {kind} -> {os.path.relpath(dst, ROOT)}")
 
 
 if __name__ == "__main__":
