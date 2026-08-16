@@ -37,6 +37,7 @@ const TETHER_RELAY := preload("res://scripts/world/tether_relay.gd")
 const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
 const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 
@@ -634,6 +635,7 @@ func _build_settlement() -> void:
 	_place_harvest_nodes()
 	_place_tms()
 	_build_burrow_warrens()
+	_build_stronghold()
 
 	var placer := BUILD_PLACER.new()
 	placer.name = "BuildPlacer"
@@ -738,6 +740,22 @@ func _build_burrow_warrens() -> void:
 	var director := get_node_or_null(^"EncounterDirector")
 	if not bool(warrens.call("build", self, _camera_rig, _player, director)):
 		push_warning("the Burrow Warrens did not build; the required dungeon is missing")
+
+
+## R8.2/SG38: the authored stronghold route behind `landmark.gd`'s castle, and
+## the three-fight gauntlet standing in it. Its layout, contents and trainers
+## live in data/config/stronghold.json; like the warrens, the world only hands
+## it the ground query, the camera rig and the player. Placed after the warrens
+## so a regression in either dungeon cannot take the other down with it, and
+## after the trainers pass above on purpose -- the stronghold's own people carry
+## `placed_by: "stronghold"`, so that pass has already skipped them and this one
+## stands them on the stronghold's floor rather than on the meadow under it.
+func _build_stronghold() -> void:
+	var stronghold: Node3D = STRONGHOLD.new()
+	stronghold.name = "Stronghold"
+	add_child(stronghold)
+	if not bool(stronghold.call("build", self, _camera_rig, _player)):
+		push_warning("the stronghold route did not build; spec §8's five spaces are missing")
 
 
 ## The first day's gathering spots, from data/config/harvest.json.

@@ -1,0 +1,1008 @@
+extends Node3D
+
+## R8.2 -- the authored stronghold route, and SG38's gauntlet standing in it.
+##
+## MEADOWS_PROGRESSION_SPEC.md §8 gives five spaces in one order -- Outer Works
+## -> Courtyard / Hall Approach -> Tether Chamber Approach -> Warden Arena ->
+## Legendary Chamber -- a 30-60 minute first-clear target, and one instruction
+## in its own sentence: "Do not turn this into a giant puzzle dungeon." So this
+## is a compact authored ROUTE, not a maze. One spine, no branches, no keys to
+## hunt, one door, and every space readable from its own doorway.
+##
+## Everything that is a number, a position, a colour or a trainer lives in
+## `data/config/stronghold.json`; this file is only the machine that stands it
+## up. That file's own header carries the siting evidence and the design calls.
+##
+## Built on `burrow_warrens.gd`'s grammar deliberately -- boxes with REAL
+## colliders, walls split around their openings so a CharacterBody3D can only
+## leave through a doorway that was actually cut, named markers so later items
+## ask the building where its rooms are, an Area3D that swaps the camera
+## profile, one door that follows a progression flag, and a `ground_height_at`
+## override so anything parented here stands on the built floor rather than on
+## the meadow underneath it. Three things are new, because a fortress is not a
+## cave:
+##
+##  * `open` chambers get no ceiling. The outer works and the courtyard are
+##    yards inside high walls, under the real sky and the real weather; only
+##    the three inner spaces are roofed.
+##  * The whole complex shares ONE floor level, chosen at build time as the
+##    HIGHEST ground under its own footprint plus a clearance. A cave can bury
+##    itself under rising ground; a built fortress cannot have the hillside
+##    coming up through its floor. The 6.4m of relief this site actually has
+##    (measured -- see the config header) is absorbed by the skirt below the
+##    floor slabs, which reads as a revetment, the same answer `landmark.gd`'s
+##    plinth already gives for the castle.
+##  * Team Tether hardware is bolted ONTO the stone rather than replacing it:
+##    oxblood girder bands and braces, teal conduit runs pointing deeper. Both
+##    colours come from `palette.json` through `severed_spokes.gd`'s own
+##    reserved-colour reading, so the faction cannot drift between the pylons
+##    on the spokes, the quarry's conduits and this building.
+##
+## THE MACHINE IS A PLACEHOLDER AND SAYS SO. `docs/art/reference/
+## 15_Legendary_Tether_Machine.png` is an owner-supplied board and the machine
+## is one of the three hero objects D24 reserves Meshy for. The agent that
+## built this route had no Meshy access, so `_build_machine` stands primitives
+## in the Tether materials at the board's own ~15m scale and leaves the seam
+## visible in the node name, in the config (`machine.placeholder`) and in the
+## boot log. The chamber, its lighting, its markers and its scale are real
+## work; the object in the middle of it is not the asset. Swapping it is a
+## single `machine.model` path.
+##
+## AND THE RULE THAT COMES WITH THAT BOARD: it draws a legendary bound inside
+## the containment ring because that is what the machine does. It licenses the
+## MACHINE, never its occupant. §20/D23 forbid a new creature mesh at any
+## credit balance, so nothing in here creates a creature and nothing may.
+
+const CONFIG_PATH := "res://data/config/stronghold.json"
+const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
+const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+
+## Which trainers.json rows belong to this building. `trainer_npc.gd` skips
+## every row naming a `placed_by` it was not asked for, so the table stays the
+## one source of teams, rewards and defeat flags while the ROOM decides where
+## its people stand.
+const PLACED_BY := "stronghold"
+
+## Roomier than the warrens' cave profile: the arena is 24x26m and a 2.6m arm
+## puts the camera inside the player's back in a space that size. Still tighter
+## than the meadow default, because every one of these rooms has a wall close
+## enough to clip through.
+const INTERIOR_PROFILE := {
+	"distance": 3.6,
+	"height": 1.9,
+	"fov": 72.0,
+	"pitch_min_deg": -35.0,
+	"pitch_max_deg": 30.0,
+	"retarget_lag": 10.0,
+}
+
+var _config: Dictionary = {}
+var _world: Node = null
+var _camera_rig: Node = null
+var _player: Node3D = null
+
+var _floor_y: float = 0.0
+var _wall_t: float = 1.2
+var _skirt: float = 18.0
+var _chambers: Dictionary = {}          # id -> chamber dict
+var _order: Array[String] = []          # route order, as authored
+var _markers: Dictionary = {}           # name -> global Vector3
+var _materials: Dictionary = {}
+var _footprint: Array = []              # local AABB rects [minx, minz, maxx, maxz]
+var _doors: Array = []                  # [{flag, body, mesh}]
+var _trainers: Node3D = null
+var _bed: Node3D = null
+var _machine: Node3D = null
+var _colours: Node3D = null             # a throwaway severed_spokes instance, for palette reads
+var _palette_cache: Dictionary = {}
+
+
+## --- build -----------------------------------------------------------------
+
+## `world` answers `ground_height_at`; `camera_rig` and `player` may be null in
+## a bare test scene and the complex still stands, just without the camera swap
+## and without anybody to greet.
+func build(world: Node, camera_rig: Node = null, player: Node3D = null) -> bool:
+	_world = world
+	_camera_rig = camera_rig
+	_player = player
+	_config = _load_config()
+	if _config.is_empty():
+		push_error("stronghold.json missing or malformed; the stronghold route does not exist")
+		return false
+
+	var site: Dictionary = _config.get("site", {})
+	var at: Array = site.get("at", [0.0, 0.0])
+	_wall_t = float(site.get("wall_thickness", 1.2))
+	_skirt = float(site.get("skirt", 18.0))
+	position = Vector3(float(at[0]), 0.0, float(at[1]))
+	rotation.y = deg_to_rad(float(site.get("yaw_deg", 0.0)))
+
+	for entry: Variant in _config.get("chambers", []):
+		var chamber: Dictionary = entry as Dictionary
+		var id := str(chamber.get("id", ""))
+		if id == "":
+			push_error("a stronghold.json chamber has no id; it was skipped")
+			continue
+		_chambers[id] = chamber
+		_order.append(id)
+		var centre := _local_of(chamber.get("at", [0.0, 0.0]))
+		var size := _size_of(chamber.get("size", [8.0, 8.0]))
+		_footprint.append([centre.x - size.x * 0.5, centre.z - size.y * 0.5,
+			centre.x + size.x * 0.5, centre.z + size.y * 0.5])
+	if _order.is_empty():
+		push_error("stronghold.json lists no chambers; there is no route")
+		return false
+
+	# The one measurement that has to happen before any geometry: a built floor
+	# sits above ALL of its own ground, never through it.
+	if not _choose_floor_level():
+		return false
+
+	for id: String in _chambers:
+		var centre := _local_of((_chambers[id] as Dictionary).get("at", []))
+		_markers[id] = to_global(Vector3(centre.x, _floor_y, centre.z))
+
+	_load_palette()
+	_build_chambers()
+	_build_passages()
+	_build_approach_ramp()
+	_build_trim()
+	_build_conduits()
+	_build_lights()
+	_build_interior_area()
+	_build_machine()
+	_build_recovery_point()
+	_build_marks()
+	_place_gauntlet()
+	_sync_doors()
+
+	# The entrance is the ramp's own foot when there is one -- the point of a
+	# marker is that a caller lands somewhere they can stand.
+	if not _markers.has("entrance"):
+		_markers["entrance"] = _markers.get("ramp_foot",
+			to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 4.0)))
+	set_process(true)
+	print("[stronghold] %d spaces on the route (%s), floor y=%.2f, %d gauntlet trainer(s)%s" % [
+		_order.size(), " -> ".join(_order), global_position.y + _floor_y, gauntlet_size(),
+		", machine is a PLACEHOLDER" if machine_is_placeholder() else ""])
+	return true
+
+
+func _load_config() -> Dictionary:
+	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## The floor. Sampled on a 4m grid over every chamber's own footprint (plus its
+## walls), taking the MAXIMUM -- see this file's header for why a fortress
+## cannot do what a cave does. The node itself is placed at the lowest sampled
+## ground so the skirt has somewhere honest to hang from.
+func _choose_floor_level() -> bool:
+	var highest := -INF
+	var lowest := INF
+	if _world == null or not _world.has_method("ground_height_at"):
+		# A bare test scene with no terrain: stand the complex at y=0.
+		position.y = 0.0
+		_floor_y = float(_config.get("site", {}).get("floor_clearance", 0.5))
+		return true
+	for rect: Array in _footprint:
+		var min_x := float(rect[0]) - _wall_t
+		var min_z := float(rect[1]) - _wall_t
+		var max_x := float(rect[2]) + _wall_t
+		var max_z := float(rect[3]) + _wall_t
+		var steps_x := maxi(2, int(ceil((max_x - min_x) / 4.0)))
+		var steps_z := maxi(2, int(ceil((max_z - min_z) / 4.0)))
+		for ix in steps_x + 1:
+			for iz in steps_z + 1:
+				var local := Vector3(
+					lerpf(min_x, max_x, float(ix) / float(steps_x)), 0.0,
+					lerpf(min_z, max_z, float(iz) / float(steps_z)))
+				var world_at := to_global(local)
+				var height: float = float(_world.call("ground_height_at", world_at.x, world_at.z))
+				if is_nan(height):
+					push_error("no ground under the stronghold at %.0f, %.0f; the route cannot stand" % [
+						world_at.x, world_at.z])
+					return false
+				highest = maxf(highest, height)
+				lowest = minf(lowest, height)
+	position.y = lowest
+	_floor_y = (highest - lowest) + float(_config.get("site", {}).get("floor_clearance", 0.5))
+	if _floor_y + 2.0 > _skirt:
+		push_warning("the stronghold's skirt (%.1fm) is shorter than its own relief (%.1fm); slabs may float" % [
+			_skirt, _floor_y])
+	return true
+
+
+func _local_of(raw: Variant) -> Vector3:
+	var list: Array = raw if raw is Array else []
+	if list.size() < 2:
+		return Vector3.ZERO
+	return Vector3(float(list[0]), 0.0, float(list[1]))
+
+
+func _size_of(raw: Variant) -> Vector2:
+	var list: Array = raw if raw is Array else []
+	if list.size() < 2:
+		return Vector2(8.0, 8.0)
+	return Vector2(float(list[0]), float(list[1]))
+
+
+## --- materials --------------------------------------------------------------
+
+func _material(colour: Color, emissive := 0.0) -> StandardMaterial3D:
+	var key := "%s_%.2f" % [colour.to_html(), emissive]
+	if _materials.has(key):
+		return _materials[key]
+	var m := StandardMaterial3D.new()
+	m.albedo_color = colour
+	m.roughness = 0.92
+	if emissive > 0.0:
+		m.emission_enabled = true
+		m.emission = colour
+		m.emission_energy_multiplier = emissive
+	_materials[key] = m
+	return m
+
+
+## The two reserved faction colours, read through `severed_spokes.gd`'s own
+## palette reader rather than typed in here -- palette.json calls both of them
+## reserved, and a second copy of the lookup is how a reserved colour drifts.
+func _palette(key: String, fallback: Color) -> Color:
+	return _palette_cache.get(key, fallback)
+
+
+## Read once, at the top of the build, through a throwaway `severed_spokes.gd`
+## instance. That file already owns the reserved-colour lookup (and the reason
+## the emission floor exists); a second copy of it here is exactly how a colour
+## palette.json calls RESERVED drifts between the pylons, the quarry and this
+## building. The instance is freed immediately -- it is a Node3D and nothing
+## here wants it in the tree.
+func _load_palette() -> void:
+	_colours = SEVERED_SPOKES.new()
+	for pair: Array in [["tether_oxblood", Color("#332228")], ["tether_teal", Color("#3fe8c4")]]:
+		_palette_cache[str(pair[0])] = _colours.call("_palette_colour", str(pair[0]), pair[1] as Color)
+	_colours.free()
+	_colours = null
+
+
+func _stone() -> Color:
+	return Color(str(_config.get("site", {}).get("stone", "#6a6157")))
+
+
+func _floor_colour() -> Color:
+	return Color(str(_config.get("site", {}).get("floor_colour", "#57503f")))
+
+
+## Oxblood: dark faction paint on stone. The emission is a value FLOOR, not a
+## glow -- severed_spokes.gd's own header records why (under gl_compatibility
+## the bare albedo shades to pure black and the colour stops being readable as
+## a colour at all).
+func _tether_material() -> StandardMaterial3D:
+	return _material(_palette("tether_oxblood", Color("#332228")), 0.55)
+
+
+## Teal: the reserved ENERGY colour, and it appears only where Team Tether's
+## machinery is live.
+func _live_material() -> StandardMaterial3D:
+	return _material(_palette("tether_teal", Color("#3fe8c4")), 1.4)
+
+
+## --- geometry ---------------------------------------------------------------
+
+## A box with matching collision, positioned by its centre in complex-local
+## space. `solid: false` is decoration that must never block a doorway.
+func _box(size: Vector3, at: Vector3, material: StandardMaterial3D, solid := true,
+		node_name := "") -> MeshInstance3D:
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = size
+	mesh.mesh = box
+	mesh.material_override = material
+	mesh.position = at
+	if node_name != "":
+		mesh.name = node_name
+	add_child(mesh)
+	if solid:
+		var body := StaticBody3D.new()
+		var shape := CollisionShape3D.new()
+		var box_shape := BoxShape3D.new()
+		box_shape.size = size
+		shape.shape = box_shape
+		body.add_child(shape)
+		body.position = at
+		add_child(body)
+	return mesh
+
+
+## Every chamber: a floor slab reaching `skirt` metres down, a ceiling slab
+## unless the chamber is `open`, and four walls split around whatever passages
+## meet them.
+func _build_chambers() -> void:
+	for id: String in _chambers:
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		var outer := Vector2(size.x + _wall_t * 2.0, size.y + _wall_t * 2.0)
+
+		_box(Vector3(outer.x, _skirt, outer.y),
+			Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour()))
+		if not bool(chamber.get("open", false)):
+			_box(Vector3(outer.x, 1.0, outer.y),
+				Vector3(centre.x, _floor_y + height + 0.5, centre.z), _material(_stone()))
+
+		for side: String in ["-x", "+x", "-z", "+z"]:
+			_build_wall(centre, size, height, side, _opening_on(id, side))
+
+
+## The opening (if any) in one side of one chamber, derived from the passage
+## table rather than authored twice.
+func _opening_on(chamber_id: String, side: String) -> Dictionary:
+	for entry: Variant in _config.get("passages", []):
+		var passage: Dictionary = entry as Dictionary
+		var from := str(passage.get("from", ""))
+		var to := str(passage.get("to", ""))
+		if from != chamber_id and to != chamber_id:
+			continue
+		var other := to if from == chamber_id else from
+		if not _chambers.has(other):
+			continue
+		if _side_toward(chamber_id, other) == side:
+			return {"width": float(passage.get("width", 3.0)),
+				"height": float(passage.get("height", 4.0))}
+	# The way in: the first space's outward wall carries the same opening its
+	# inward passage does.
+	if chamber_id == _order[0] and side == "-z":
+		var first: Dictionary = _first_passage()
+		return {"width": float(first.get("width", 4.0)), "height": float(first.get("height", 4.5))}
+	return {}
+
+
+func _first_passage() -> Dictionary:
+	var list: Array = _config.get("passages", [])
+	return list[0] as Dictionary if not list.is_empty() else {}
+
+
+## Which of `a`'s four sides faces `b`. Passages are axis-aligned by contract
+## (see stronghold.json's own frame note), so this is a comparison, not a ray.
+func _side_toward(a_id: String, b_id: String) -> String:
+	var a := _local_of((_chambers[a_id] as Dictionary).get("at", []))
+	var b := _local_of((_chambers[b_id] as Dictionary).get("at", []))
+	if absf(b.x - a.x) >= absf(b.z - a.z):
+		return "+x" if b.x > a.x else "-x"
+	return "+z" if b.z > a.z else "-z"
+
+
+## One wall, in up to three pieces: two flanks either side of the opening and a
+## lintel over it. A gap that was never cut is a wall, whatever the mesh shows.
+func _build_wall(centre: Vector3, size: Vector2, height: float, side: String,
+		opening: Dictionary) -> void:
+	var along_x := side == "-z" or side == "+z"
+	var span := (size.x if along_x else size.y) + _wall_t * 2.0
+	var offset := (size.y if along_x else size.x) * 0.5 + _wall_t * 0.5
+	var sign_ := -1.0 if side.begins_with("-") else 1.0
+	var wall_centre := centre
+	if along_x:
+		wall_centre.z += sign_ * offset
+	else:
+		wall_centre.x += sign_ * offset
+	var wall_h := height + 1.4
+
+	if opening.is_empty():
+		_wall_piece(along_x, wall_centre, span, wall_h, 0.0)
+		return
+
+	var gap := float(opening.get("width", 3.0))
+	var gap_h := minf(float(opening.get("height", 4.0)), height)
+	var flank := (span - gap) * 0.5
+	if flank > 0.05:
+		_wall_piece(along_x, _shift(wall_centre, along_x, -(gap * 0.5 + flank * 0.5)), flank, wall_h, 0.0)
+		_wall_piece(along_x, _shift(wall_centre, along_x, gap * 0.5 + flank * 0.5), flank, wall_h, 0.0)
+	_wall_piece(along_x, wall_centre, gap, wall_h - gap_h, gap_h)
+
+
+func _shift(at: Vector3, along_x: bool, by: float) -> Vector3:
+	if along_x:
+		at.x += by
+	else:
+		at.z += by
+	return at
+
+
+func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: float) -> void:
+	if span <= 0.01 or height <= 0.01:
+		return
+	var size := Vector3(span, height, _wall_t) if along_x else Vector3(_wall_t, height, span)
+	# Walls reach the skirt below the floor too, so the outside reads as built
+	# stone meeting the ground rather than as a floating box.
+	var extra := 0.0 if base > 0.0 else _skirt
+	size.y += extra
+	_box(size, Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z), _material(_stone()))
+
+
+## The ways between spaces: floor, side walls, and a ceiling wherever BOTH ends
+## are roofed (a passage between two open yards stays open to the sky).
+func _build_passages() -> void:
+	for entry: Variant in _config.get("passages", []):
+		var passage: Dictionary = entry as Dictionary
+		var from := str(passage.get("from", ""))
+		var to := str(passage.get("to", ""))
+		if not _chambers.has(from) or not _chambers.has(to):
+			push_warning("stronghold.json passage names an unknown chamber (%s -> %s)" % [from, to])
+			continue
+		var side := _side_toward(from, to)
+		var along_x := side == "+x" or side == "-x"
+		var a := _local_of((_chambers[from] as Dictionary).get("at", []))
+		var b := _local_of((_chambers[to] as Dictionary).get("at", []))
+		var a_size := _size_of((_chambers[from] as Dictionary).get("size", []))
+		var b_size := _size_of((_chambers[to] as Dictionary).get("size", []))
+		var a_edge: float = (a.x + signf(b.x - a.x) * a_size.x * 0.5) if along_x \
+			else (a.z + signf(b.z - a.z) * a_size.y * 0.5)
+		var b_edge: float = (b.x - signf(b.x - a.x) * b_size.x * 0.5) if along_x \
+			else (b.z - signf(b.z - a.z) * b_size.y * 0.5)
+		var mid: float = (a_edge + b_edge) * 0.5
+		var length := absf(b_edge - a_edge) + _wall_t * 2.0
+		var width := float(passage.get("width", 3.0))
+		var height := float(passage.get("height", 4.0))
+		var lateral := a.z if along_x else a.x
+		var centre := Vector3(mid, 0.0, lateral) if along_x else Vector3(lateral, 0.0, mid)
+		var roofed := not bool((_chambers[from] as Dictionary).get("open", false)) \
+			or not bool((_chambers[to] as Dictionary).get("open", false))
+
+		var floor_size := Vector3(length, _skirt, width + _wall_t * 2.0)
+		var ceiling_size := Vector3(length, 1.0, width + _wall_t * 2.0)
+		if not along_x:
+			floor_size = Vector3(width + _wall_t * 2.0, _skirt, length)
+			ceiling_size = Vector3(width + _wall_t * 2.0, 1.0, length)
+		_box(floor_size, Vector3(centre.x, _floor_y - _skirt * 0.5, centre.z), _material(_floor_colour()))
+		if roofed:
+			_box(ceiling_size, Vector3(centre.x, _floor_y + height + 0.5, centre.z), _material(_stone()))
+
+		for s in [-1.0, 1.0]:
+			var wall_at := centre
+			var wall_size := Vector3(length, height + _skirt, _wall_t)
+			if along_x:
+				wall_at.z += s * (width * 0.5 + _wall_t * 0.5)
+			else:
+				wall_at.x += s * (width * 0.5 + _wall_t * 0.5)
+				wall_size = Vector3(_wall_t, height + _skirt, length)
+			_box(wall_size, Vector3(wall_at.x, _floor_y + height * 0.5 - _skirt * 0.5, wall_at.z),
+				_material(_stone()))
+
+		var flag := str(passage.get("gated_by_flag", ""))
+		if flag != "":
+			_build_door(flag, centre, along_x, width, height)
+
+
+## The complex's one door: a Tether blast shutter filling a passage, gone for
+## good once `flag` is set. No prompt, no UI, no key -- a mechanism, the same
+## way the warrens' vault door and SC14's bridge are.
+func _build_door(flag: String, centre: Vector3, along_x: bool, width: float, height: float) -> void:
+	var size := Vector3(0.7, height, width) if along_x else Vector3(width, height, 0.7)
+	var colour := Color(str(_config.get("site", {}).get("door_colour", "#3a3f3c")))
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = size
+	mesh.mesh = box
+	mesh.material_override = _material(colour)
+	mesh.position = Vector3(centre.x, _floor_y + height * 0.5, centre.z)
+	mesh.name = "BlastShutter_%s" % flag
+	add_child(mesh)
+
+	var body := StaticBody3D.new()
+	body.name = "BlastShutterBody_%s" % flag
+	var shape := CollisionShape3D.new()
+	var box_shape := BoxShape3D.new()
+	box_shape.size = size
+	shape.shape = box_shape
+	body.add_child(shape)
+	body.position = mesh.position
+	add_child(body)
+	_doors.append({"flag": flag, "body": body, "mesh": mesh})
+
+
+## The way in, and the one piece of this build that had to be rebuilt once.
+##
+## The complex's floor stands above its own highest ground, which on this site
+## is several metres over the meadow at the west end. `burrow_warrens.gd`'s
+## apron answers the same problem with a flight of shallow STEPS, and that works
+## there because its whole rise is 0.35m. Here the rise is metres, and a flight
+## of steps that tall has risers a CharacterBody3D simply stops against: the
+## first run of `smoke_stronghold.gd` walked 0.5m out of a 26m ramp and reported
+## the entrance as unreachable. Godot's character body does no stair-stepping of
+## its own, so the fix is not more steps -- it is an actual INCLINE.
+##
+## So: one long slab, tilted to the real gradient, with a matching rotated
+## collider. Sampled at both ends (the floor here, whatever the terrain actually
+## is `ramp_run` metres out) so it meets the meadow wherever the site is retuned
+## to, and the slope is reported at build time because a ramp steeper than the
+## player's floor-max-angle is a wall wearing a ramp's shape.
+func _build_approach_ramp() -> void:
+	var first: String = _order[0]
+	var width := float(_first_passage().get("width", 4.0)) + 3.0
+	var outer_z := _mouth_outer_z()
+	var run := maxf(4.0, float(_config.get("site", {}).get("ramp_run", 26.0)))
+	var lateral := _local_of((_chambers[first] as Dictionary).get("at", [])).x
+	var end_local := _floor_y - 1.0
+	if _world != null and _world.has_method("ground_height_at"):
+		var far := to_global(Vector3(lateral, 0.0, outer_z - run))
+		var height: float = float(_world.call("ground_height_at", far.x, far.z))
+		if not is_nan(height):
+			end_local = height - global_position.y
+
+	var rise := _floor_y - end_local
+	var angle := atan2(rise, run)
+	var length := sqrt(run * run + rise * rise) + 3.0   # overlap the floor slab at the top
+	var thickness := 4.0
+	var top_mid := Vector3(lateral, (_floor_y + end_local) * 0.5, outer_z - run * 0.5)
+	# The slab's own up vector once tilted, so the WALKING SURFACE passes through
+	# both sampled ends rather than the slab's centreline.
+	var up := Vector3(0.0, cos(angle), -sin(angle))
+	var mesh := MeshInstance3D.new()
+	mesh.name = "ApproachRamp"
+	var box := BoxMesh.new()
+	box.size = Vector3(width, thickness, length)
+	mesh.mesh = box
+	mesh.material_override = _material(_floor_colour())
+	mesh.position = top_mid - up * (thickness * 0.5)
+	mesh.rotation.x = -angle
+	add_child(mesh)
+
+	var body := StaticBody3D.new()
+	body.name = "ApproachRampBody"
+	var shape := CollisionShape3D.new()
+	var box_shape := BoxShape3D.new()
+	box_shape.size = box.size
+	shape.shape = box_shape
+	body.add_child(shape)
+	body.position = mesh.position
+	body.rotation.x = mesh.rotation.x
+	add_child(body)
+
+	_markers["ramp_foot"] = to_global(Vector3(lateral, end_local, outer_z - run))
+	if rad_to_deg(angle) > 40.0:
+		push_warning("the stronghold's approach ramp climbs at %.0f degrees; that is a wall, not a way in" % [
+			rad_to_deg(angle)])
+	print("[stronghold] approach ramp: %.1fm of rise over %.0fm (%.0f degrees)" % [
+		rise, run, rad_to_deg(angle)])
+
+
+## --- the industrial layer ---------------------------------------------------
+
+func _build_trim() -> void:
+	for entry: Variant in _config.get("trim", []):
+		var spec: Dictionary = entry as Dictionary
+		var id := str(spec.get("chamber", ""))
+		if not _chambers.has(id):
+			continue
+		var chamber: Dictionary = _chambers[id]
+		var centre := _local_of(chamber.get("at", []))
+		var size := _size_of(chamber.get("size", []))
+		var height := float(chamber.get("height", 6.0))
+		var material := _live_material() if bool(spec.get("lit", false)) else _tether_material()
+
+		match str(spec.get("kind", "band")):
+			"band":
+				var side := str(spec.get("side", "+x"))
+				var along_x := side == "-z" or side == "+z"
+				var sign_ := -1.0 if side.begins_with("-") else 1.0
+				var y := minf(float(spec.get("y", height * 0.6)), height - 0.5)
+				var at := centre
+				if along_x:
+					at.z += sign_ * (size.y * 0.5 - 0.35)
+				else:
+					at.x += sign_ * (size.x * 0.5 - 0.35)
+				var band := Vector3(size.x, 0.5, 0.6) if along_x else Vector3(0.6, 0.5, size.y)
+				# Decoration: never solid. A girder with a collider is a ledge
+				# the player can stand on halfway up a wall.
+				_box(band, Vector3(at.x, _floor_y + y, at.z), material, false)
+			"pillar":
+				var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+				_box(Vector3(0.7, height, 0.7),
+					Vector3(centre.x + offset.x, _floor_y + height * 0.5, centre.z + offset.z),
+					material, true)
+			_:
+				push_warning("stronghold.json trim has an unknown kind '%s'" % str(spec.get("kind", "")))
+
+
+## Lit cable runs along the floor between chambers, all of them pointing at the
+## Legendary Chamber. Decoration only -- no collider, ever: these cross
+## doorways, and a doorway with a kerb in it is a doorway the player catches on.
+func _build_conduits() -> void:
+	for entry: Variant in _config.get("conduits", []):
+		var spec: Dictionary = entry as Dictionary
+		var from := str(spec.get("from", ""))
+		var to := str(spec.get("to", ""))
+		if not _chambers.has(from) or not _chambers.has(to):
+			continue
+		var a := _local_of((_chambers[from] as Dictionary).get("at", []))
+		var b := _local_of((_chambers[to] as Dictionary).get("at", []))
+		var offset := float(spec.get("offset", 0.0))
+		var along_x := absf(b.x - a.x) >= absf(b.z - a.z)
+		var mid := (a + b) * 0.5
+		var length := absf(b.x - a.x) if along_x else absf(b.z - a.z)
+		var size := Vector3(length, 0.16, 0.34) if along_x else Vector3(0.34, 0.16, length)
+		if along_x:
+			mid.z += offset
+		else:
+			mid.x += offset
+		_box(size, Vector3(mid.x, _floor_y + 0.08, mid.z), _live_material(), false)
+
+
+func _build_lights() -> void:
+	for entry: Variant in _config.get("lights", []):
+		var spec: Dictionary = entry as Dictionary
+		var at := _local_of(spec.get("at", []))
+		var light := OmniLight3D.new()
+		light.position = Vector3(at.x, _floor_y + float(spec.get("y", 5.0)), at.z)
+		light.light_color = Color(str(spec.get("colour", "#8a8a8a")))
+		light.light_energy = float(spec.get("energy", 0.5))
+		light.omni_range = float(spec.get("range", 14.0))
+		light.shadow_enabled = false
+		add_child(light)
+
+
+## The camera swap, over the whole footprint -- the same Area3D grandpa_house.gd
+## and burrow_warrens.gd both use, handed back on exit.
+func _build_interior_area() -> void:
+	if _footprint.is_empty():
+		return
+	var min_x := INF
+	var min_z := INF
+	var max_x := -INF
+	var max_z := -INF
+	for rect: Array in _footprint:
+		min_x = minf(min_x, float(rect[0]))
+		min_z = minf(min_z, float(rect[1]))
+		max_x = maxf(max_x, float(rect[2]))
+		max_z = maxf(max_z, float(rect[3]))
+	var area := Area3D.new()
+	area.name = "Interior"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(max_x - min_x, 26.0, max_z - min_z)
+	shape.shape = box
+	area.add_child(shape)
+	area.position = Vector3((min_x + max_x) * 0.5, _floor_y + 13.0, (min_z + max_z) * 0.5)
+	area.body_entered.connect(_on_body_entered)
+	area.body_exited.connect(_on_body_exited)
+	add_child(area)
+
+
+func _on_body_entered(body: Node3D) -> void:
+	if body != _player or _camera_rig == null:
+		return
+	_camera_rig.call("set_target", _player, INTERIOR_PROFILE)
+
+
+func _on_body_exited(body: Node3D) -> void:
+	if body != _player or _camera_rig == null:
+		return
+	_camera_rig.call("set_target", _player, {})
+
+
+## --- the centrepiece --------------------------------------------------------
+
+## THE TETHER MACHINE, AND IT IS A PLACEHOLDER. Read this file's header before
+## touching it: the board is owner-supplied, the object is one of D24's three
+## licensed Meshy heroes, and this massing exists only so the chamber can be
+## built and verified at the right SCALE while the real asset is unavailable.
+##
+## What stands here is deliberately, visibly primitive: a stepped base, a ring
+## of upright containment pillars with a lit collar, a tapering core column and
+## a light inside it. It is sized off the board's own 0-20m scale bar (~15m
+## tall, containment ring a little under half that across) so the room around it
+## is honestly proportioned and does not have to be rebuilt when the mesh lands.
+## The player-blocking collision is the BASE only -- the ring and the core are
+## decoration, so a later freeing sequence can play inside the ring without
+## fighting a collider that was never part of the design.
+##
+## NOTHING HERE IS A CREATURE. The board draws a legendary bound in the ring;
+## the board licenses the machine, not its occupant, and §20/D23 forbid a new
+## creature mesh outright. R8.4 places an existing roster body or a VFX there.
+func _build_machine() -> void:
+	var spec: Dictionary = _config.get("machine", {})
+	if spec.is_empty():
+		return
+	var id := str(spec.get("chamber", ""))
+	if not _chambers.has(id):
+		push_warning("stronghold.json's machine names an unknown chamber '%s'" % id)
+		return
+	var centre := _local_of((_chambers[id] as Dictionary).get("at", []))
+	var placeholder := bool(spec.get("placeholder", true))
+	var model := str(spec.get("model", ""))
+
+	_machine = Node3D.new()
+	_machine.name = "TetherMachinePlaceholder" if placeholder else "TetherMachine"
+	_machine.position = Vector3(centre.x, _floor_y, centre.z)
+	add_child(_machine)
+
+	if model != "" and ResourceLoader.exists(model):
+		# The seam closes here, and only here: a real mesh replaces every
+		# primitive below without the chamber changing.
+		var scene := load(model) as PackedScene
+		if scene != null:
+			var instance := scene.instantiate() as Node3D
+			if instance != null:
+				instance.name = "Model"
+				_machine.add_child(instance)
+				return
+
+	var height := float(spec.get("height", 15.0))
+	var base_r := float(spec.get("base_radius", 5.6))
+	var ring_r := float(spec.get("ring_radius", 7.2))
+	var pillars := maxi(3, int(spec.get("ring_pillars", 8)))
+	var core_r := float(spec.get("core_radius", 1.9))
+	var stone := _material(_stone())
+	var tether := _tether_material()
+	var live := _live_material()
+
+	# Base: two stepped drums, solid, so the machine is a thing the player walks
+	# around rather than through.
+	_drum(_machine, "BasePlinth", base_r, 1.2, 0.6, stone, true)
+	_drum(_machine, "BaseCollar", base_r * 0.78, 1.0, 1.7, tether, true)
+
+	# Containment ring: uprights on a circle, a lit collar band at their tops.
+	var ring_h := height * 0.62
+	for i in pillars:
+		var angle := TAU * float(i) / float(pillars)
+		var post := MeshInstance3D.new()
+		post.name = "RingPost%d" % (i + 1)
+		var box := BoxMesh.new()
+		box.size = Vector3(0.8, ring_h, 0.8)
+		post.mesh = box
+		post.material_override = tether
+		post.position = Vector3(cos(angle) * ring_r, ring_h * 0.5, sin(angle) * ring_r)
+		post.rotation.y = -angle
+		_machine.add_child(post)
+		var lamp := MeshInstance3D.new()
+		lamp.name = "RingLamp%d" % (i + 1)
+		var lamp_box := BoxMesh.new()
+		lamp_box.size = Vector3(0.9, 0.5, 0.9)
+		lamp.mesh = lamp_box
+		lamp.material_override = live
+		lamp.position = Vector3(cos(angle) * ring_r, ring_h, sin(angle) * ring_r)
+		_machine.add_child(lamp)
+
+	# Core: a tapering column up the middle, lit inside.
+	_drum(_machine, "CoreColumn", core_r, height * 0.86, 1.5, tether, false)
+	_drum(_machine, "CoreCrown", core_r * 1.5, 1.4, height * 0.86, live, false)
+	var glow := OmniLight3D.new()
+	glow.name = "CoreLight"
+	var light_spec: Dictionary = spec.get("core_light", {})
+	glow.light_color = _palette("tether_teal", Color("#3fe8c4"))
+	glow.light_energy = float(light_spec.get("energy", 3.2))
+	glow.omni_range = float(light_spec.get("range", 26.0))
+	glow.shadow_enabled = false
+	glow.position = Vector3(0.0, height * 0.55, 0.0)
+	_machine.add_child(glow)
+
+	_markers["machine"] = _machine.global_position
+
+
+func _drum(parent: Node3D, node_name: String, radius: float, height: float, base_y: float,
+		material: StandardMaterial3D, solid: bool) -> void:
+	var mesh := MeshInstance3D.new()
+	mesh.name = node_name
+	var cylinder := CylinderMesh.new()
+	cylinder.top_radius = radius
+	cylinder.bottom_radius = radius
+	cylinder.height = height
+	mesh.mesh = cylinder
+	mesh.material_override = material
+	mesh.position = Vector3(0.0, base_y + height * 0.5, 0.0)
+	parent.add_child(mesh)
+	if not solid:
+		return
+	var body := StaticBody3D.new()
+	body.name = "%sBody" % node_name
+	var shape := CollisionShape3D.new()
+	var cyl := CylinderShape3D.new()
+	cyl.radius = radius
+	cyl.height = height
+	shape.shape = cyl
+	body.add_child(shape)
+	body.position = mesh.position
+	parent.add_child(body)
+
+
+## --- contents ---------------------------------------------------------------
+
+## SG38's recovery opportunity: R4.8's creature bed, the object the player has
+## already met at home, standing past the elite and before the Warden. Same
+## panel, same `home_recovery.rest`, same rest XP -- reusing it is the point.
+func _build_recovery_point() -> void:
+	var spec: Dictionary = _config.get("recovery", {})
+	var id := str(spec.get("chamber", ""))
+	if spec.is_empty() or not _chambers.has(id):
+		return
+	var centre := _local_of((_chambers[id] as Dictionary).get("at", []))
+	var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+	_bed = CREATURE_BED.new()
+	_bed.name = "StrongholdRestPoint"
+	_bed.position = Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z)
+	_bed.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
+	add_child(_bed)
+	_bed.call("build_real")
+	_markers["recovery"] = _bed.global_position
+
+
+## SG38's gauntlet. Every fight is an ordinary trainers.json row carrying
+## `placed_by: "stronghold"`; this hands `trainer_npc.gd` that group plus the
+## world position each one's own room says they stand at. The Trainers node is
+## a CHILD of this one, so `npc_body.gd::_ground_source` walks up and finds this
+## file's `ground_height_at` -- which is what puts them on the stronghold floor
+## instead of on the meadow several metres below it.
+func _place_gauntlet() -> void:
+	var list: Array = _config.get("gauntlet", [])
+	if list.is_empty():
+		return
+	var positions := {}
+	var facings := {}
+	for entry: Variant in list:
+		var spec: Dictionary = entry as Dictionary
+		var id := str(spec.get("chamber", ""))
+		if not _chambers.has(id):
+			push_warning("stronghold.json's gauntlet names an unknown chamber '%s'" % id)
+			continue
+		var centre := _local_of((_chambers[id] as Dictionary).get("at", []))
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		var at := to_global(Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z))
+		var trainer := str(spec.get("trainer", ""))
+		positions[trainer] = Vector2(at.x, at.z)
+		facings[trainer] = float(spec.get("facing_deg", 0.0))
+		_markers["trainer_%s" % trainer] = at
+
+	_trainers = TRAINER_NPCS.new()
+	_trainers.name = "StrongholdTrainers"
+	add_child(_trainers)
+	_trainers.call("build", _player, PLACED_BY, positions, facings)
+
+
+## Named spots later items ask for by name: where the Warden stands, where the
+## player is stopped for his dialogue, where the reveal is delivered, the
+## machine's foot, and where a freed legendary appears. Registering them here
+## is what stops R8.3/SG40/R8.4 hard-coding a metre.
+func _build_marks() -> void:
+	for entry: Variant in _config.get("marks", []):
+		var spec: Dictionary = entry as Dictionary
+		var id := str(spec.get("chamber", ""))
+		if not _chambers.has(id):
+			push_warning("stronghold.json's marks name an unknown chamber '%s'" % id)
+			continue
+		var centre := _local_of((_chambers[id] as Dictionary).get("at", []))
+		var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+		_markers[str(spec.get("id", ""))] = to_global(
+			Vector3(centre.x + offset.x, _floor_y, centre.z + offset.z))
+
+
+## --- the one door -----------------------------------------------------------
+
+## Polled rather than signal-driven for the same reason burrow_warrens.gd polls
+## its guardian: a trainer defeat is written to the flag store by the encounter
+## director, and there is no single signal this node could listen to that covers
+## a fight won now and a fight won before the last save.
+func _process(_delta: float) -> void:
+	if _doors.is_empty():
+		return
+	_sync_doors()
+
+
+func _sync_doors() -> void:
+	var progression := _progression()
+	for entry: Variant in _doors:
+		var door: Dictionary = entry as Dictionary
+		var open: bool = progression != null and bool(progression.call("has", str(door["flag"])))
+		var body: StaticBody3D = door["body"]
+		var mesh: MeshInstance3D = door["mesh"]
+		if is_instance_valid(body):
+			body.process_mode = Node.PROCESS_MODE_DISABLED if open else Node.PROCESS_MODE_INHERIT
+			for child in body.get_children():
+				if child is CollisionShape3D:
+					(child as CollisionShape3D).disabled = open
+		if is_instance_valid(mesh):
+			mesh.visible = not open
+
+
+## Whether the way into the Warden Arena is open. False before the elite in
+## front of it has been beaten.
+func door_is_open(flag: String = "") -> bool:
+	if _doors.is_empty():
+		return true
+	for entry: Variant in _doors:
+		var door: Dictionary = entry as Dictionary
+		if flag != "" and str(door["flag"]) != flag:
+			continue
+		var body: StaticBody3D = door["body"]
+		if not is_instance_valid(body):
+			return true
+		for child in body.get_children():
+			if child is CollisionShape3D:
+				return (child as CollisionShape3D).disabled
+	return true
+
+
+## --- queries other systems use ---------------------------------------------
+
+## The stronghold floor inside its own footprint, the meadow outside it. Same
+## contract burrow_warrens.gd keeps, and the reason trainers, the creature bed
+## and anything else parented here stand on the built floor.
+func ground_height_at(x: float, z: float) -> float:
+	var local := to_local(Vector3(x, 0.0, z))
+	for rect: Array in _footprint:
+		if local.x >= float(rect[0]) - _wall_t and local.x <= float(rect[2]) + _wall_t \
+				and local.z >= float(rect[1]) - _wall_t and local.z <= float(rect[3]) + _wall_t:
+			return global_position.y + _floor_y
+	if _world != null and is_instance_valid(_world) and _world.has_method("ground_height_at"):
+		return float(_world.call("ground_height_at", x, z))
+	return NAN
+
+
+## Global position of a named place: any chamber id, any `marks` id, plus
+## "entrance", "recovery", "machine" and "trainer_<id>".
+func marker(name_key: String) -> Vector3:
+	return _markers.get(name_key, global_position)
+
+
+func has_marker(name_key: String) -> bool:
+	return _markers.has(name_key)
+
+
+func marker_names() -> Array:
+	return _markers.keys()
+
+
+## The five spaces, in the order §8 names them. A test or a later item walks
+## this rather than assuming ids.
+func route() -> Array[String]:
+	return _order.duplicate()
+
+
+func chamber_ids() -> Array:
+	return _chambers.keys()
+
+
+## The inside dimensions of one space, in metres [lateral, depth, height].
+func chamber_size(id: String) -> Vector3:
+	if not _chambers.has(id):
+		return Vector3.ZERO
+	var size := _size_of((_chambers[id] as Dictionary).get("size", []))
+	return Vector3(size.x, size.y, float((_chambers[id] as Dictionary).get("height", 0.0)))
+
+
+func trainers_node() -> Node3D:
+	return _trainers
+
+
+func gauntlet_size() -> int:
+	return int(_trainers.call("placed")) if _trainers != null else 0
+
+
+func recovery_point() -> Node3D:
+	return _bed
+
+
+func machine() -> Node3D:
+	return _machine
+
+
+## True while the centrepiece is the primitive massing rather than the licensed
+## hero asset. Public so a test, a capture tool or a later art pass can assert
+## on the seam instead of guessing at it.
+func machine_is_placeholder() -> bool:
+	return bool(_config.get("machine", {}).get("placeholder", true))
+
+
+func _mouth_outer_z() -> float:
+	var first: Dictionary = _chambers[_order[0]]
+	return _local_of(first.get("at", [])).z - _size_of(first.get("size", [])).y * 0.5
+
+
+func _progression() -> RefCounted:
+	var game := get_node_or_null(^"/root/Game")
+	return game.get("progression") if game != null else null

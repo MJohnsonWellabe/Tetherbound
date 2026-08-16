@@ -765,6 +765,7 @@ jobs:
         run: godot --headless --path . --script tests/smoke_warrens.gd
 
   verify-relay:
+  verify-stronghold:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
@@ -844,6 +845,19 @@ jobs:
         # in the village with changed dialogue. Both agents named their file
         # smoke_relay.gd; the station's kept its own name on merge.
         run: godot --headless --path . --script tests/smoke_relay.gd
+      - name: Smoke-test the stronghold route
+        # R8.2/SG38. Boots the real world, stands the player inside the
+        # stronghold and walks spec §8's five spaces in §8's order. Asserts
+        # what no unit test can see: each space has a floor the player settles
+        # on, the doorways between them are actually cut, the approach ramp is
+        # climbable (the first build of it was a flight of steps whose risers
+        # stopped the player 0.5m into a 26m ramp), the one shutter is shut
+        # before the elite's defeat flag and open after, all three gauntlet
+        # trainers stand in their own spaces with their own teams and flags,
+        # the recovery point really revives a fainted creature, and the
+        # Legendary Chamber's ~15m centrepiece still reports itself as the
+        # placeholder it is.
+        run: godot --headless --path . --script tests/smoke_stronghold.gd
 
   verify-trainer-battle:
     runs-on: ubuntu-latest

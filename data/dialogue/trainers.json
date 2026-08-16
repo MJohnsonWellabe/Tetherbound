@@ -20,7 +20,6 @@
         "I've nothing left to teach you out here. Try the folk down by the square — they don't go easy."
       ]
     },
-
     "relay_hess_challenge": {
       "speaker": "Hess",
       "portrait": "res://assets/ui/portraits/trainer.png",
@@ -37,7 +36,6 @@
         "Go on up if you're going. You'll find people up there who outrank my opinion of you."
       ]
     },
-
     "relay_orrin_challenge": {
       "speaker": "Orrin",
       "portrait": "res://assets/ui/portraits/trainer.png",
@@ -54,7 +52,6 @@
         "Whatever you think you'll find at the top of this road — it's work, that's all. It's just work."
       ]
     },
-
     "relay_dell_challenge": {
       "speaker": "Officer Dell",
       "portrait": "res://assets/ui/portraits/trainer.png",
@@ -71,7 +68,6 @@
         "The Captain's at the console. Say what you like to him — he's better at this part than I am."
       ]
     },
-
     "relay_captain_challenge": {
       "speaker": "Captain Vance",
       "portrait": "res://assets/ui/portraits/trainer.png",
@@ -89,6 +85,55 @@
         "You'll take our prisoner as well, I expect. Take them. They only ever asked questions.",
         "Ask me again when you've seen the far end of this line. I doubt either of us will enjoy the answer."
       ]
+    },
+    "stronghold_patrol_challenge": {
+      "speaker": "Patrolman Verrick",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Nobody walks the works. That's the whole of my orders and I've never had to explain them before.",
+        "Turn round or take the fight. I'd rather you turned round -- it's a long way in and it only gets worse."
+      ]
+    },
+    "stronghold_patrol_defeated": {
+      "speaker": "Patrolman Verrick",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Fine. You're better than the orders account for.",
+        "There's a yard past the gate and someone in it who won't say that."
+      ]
+    },
+    "stronghold_courtyard_challenge": {
+      "speaker": "Warder Solene",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You saw what we pulled out of the quarry. You saw the lines going in. And you came anyway.",
+        "Three of mine. If you don't have three worth sending out, this is where you find that out."
+      ]
+    },
+    "stronghold_courtyard_defeated": {
+      "speaker": "Warder Solene",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Three, and you didn't lose one. All right.",
+        "Keeper Hald holds the shutter into the chamber approach. He won't talk to you the way I did."
+      ]
+    },
+    "stronghold_elite_challenge": {
+      "speaker": "Keeper Hald",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "The shutter behind me stays down while I'm standing. That isn't a threat, it's the wiring.",
+        "The Warden doesn't want you dead. He wants you to understand. I'd rather you didn't get the chance."
+      ]
+    },
+    "stronghold_elite_defeated": {
+      "speaker": "Keeper Hald",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "It's open. I can't hold it shut from the floor.",
+        "Rest your five first. He fields more than I do, and he'll wait -- he always thinks people will listen if he waits."
+      ]
     }
-  }
+  },
+  "_comment_stronghold": "SG38. The three stronghold gauntlet trainers. Same two-or-three-line rule as everyone above -- the fight is the content. What they say is Sec33's Warden read down the ladder: none of them is gloating, all three would rather the player stopped, and Keeper Hald says outright that the Warden wants to be understood rather than obeyed. None of them reveals what the machine is; that is SG40's, inside the stronghold and nowhere earlier."
 }

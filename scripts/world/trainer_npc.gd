@@ -57,17 +57,34 @@ var _pending_spec: Dictionary = {}
 var _pending_conversation: String = ""
 
 
-func build(player: Node3D) -> void:
+## `group` selects which rows of the table this placer owns, matched against
+## each row's `placed_by`. The default ("") is the world's own pass and places
+## exactly the rows that name nobody, which is the behaviour every caller had
+## before R8.2 — the three villager-trainers (`placed_by: "village_npcs"`) are
+## still skipped here and still greeted through `village_npcs.gd`.
+##
+## R8.2/SG38 adds the second case: a BUILDING that owns where its own people
+## stand. `scripts/world/stronghold.gd` asks for group `"stronghold"` and hands
+## in world positions and facings keyed by trainer id, because a room's
+## coordinates belong to the room and not to a table of teams and rewards.
+## Everything else about those trainers — team, reward, dialogue, defeat flag,
+## the fight itself — is the same table and the same encounter director as
+## every other trainer in the chapter. `positions` maps id -> Vector2(x, z) and
+## `facings` maps id -> degrees; a row not named in them uses its own authored
+## `position`/`facing_deg` as usual.
+func build(player: Node3D, group: String = "", positions: Dictionary = {},
+		facings: Dictionary = {}) -> void:
 	_player = player
 	var entries := trainers()
 	if entries.is_empty():
 		push_warning("trainers.json lists nobody; there are no trainer battles in this world")
 		return
 	for spec: Variant in entries:
-		if spec is Dictionary and str((spec as Dictionary).get("placed_by", "")).is_empty():
-			_spawn(spec as Dictionary)
+		if spec is Dictionary and str((spec as Dictionary).get("placed_by", "")) == group:
+			_spawn(spec as Dictionary, positions, facings)
 	_watch_the_dialogue_panel()
-	print("[trainers] placed %d trainer(s)" % _placed)
+	print("[trainers] placed %d trainer(s)%s" % [
+		_placed, "" if group == "" else " for group '%s'" % group])
 
 
 func placed() -> int:
@@ -84,7 +101,7 @@ func body_for(id: String) -> Node3D:
 	return null
 
 
-func _spawn(spec: Dictionary) -> void:
+func _spawn(spec: Dictionary, positions: Dictionary = {}, facings: Dictionary = {}) -> void:
 	var id := str(spec.get("id", ""))
 	var display_name := str(spec.get("name", "Trainer"))
 	if id == "":
@@ -101,10 +118,14 @@ func _spawn(spec: Dictionary) -> void:
 	var at: Array = spec.get("position", [])
 	var x := float(at[0]) if at.size() > 0 else 0.0
 	var z := float(at[1]) if at.size() > 1 else 0.0
+	if positions.has(id):
+		var override: Vector2 = positions[id]
+		x = override.x
+		z = override.y
 	if not bool(npc.call("stand_at", x, z)):
 		push_error("no ground under trainer '%s' at %.0f, %.0f" % [id, x, z])
 		return
-	npc.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
+	npc.rotation.y = deg_to_rad(float(facings.get(id, spec.get("facing_deg", 0.0))))
 
 	# The whole spec is bound rather than a resolved label: whether this person
 	# is offering a battle or a nod depends on a progression flag, and that
