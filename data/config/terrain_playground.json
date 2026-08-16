@@ -216,6 +216,27 @@
       "height": -0.5,
       "skirt": 10.0,
       "_why": "the Old Quarry's floor -- foundations, rootstone and the conduit head all stand on it"
+    },
+    {
+      "_comment_se22": "SE22: the Old Mill Crossing's two abutments and the mill yard, levelled to ONE authored height for the reason SC14's pads carry one -- the kit has no tilted deck, so both banks have to meet at the same level or the span is a lie. Height is the probed mean of natural ground across the narrows (tools/_probe_river.gd). The river carve is subtracted AFTER the flats (playground_heightfield.gd), so the channel still cuts through what these pads promise and what they promise is level BANKS either side of a real gap -- the mill-crossing pad at [-133,109] is the same trick and said so first. GEOMETRY, not taste: centre 13.5m out with radius 6 is sized so tests/test_playground_heightfield.gd's own 0.7r rim samples all land at least 9.5m from the centreline, outside the channel's 7.0m zero-depth contour, while the span's landing (8.0m out) still sits inside the pad's fully-flattened disc. The first cut was radius 8 at 9.5m and its nearest rim sample landed 4.1m from the centreline -- 14m down a river. TUNABLE, but not independently of the narrows' half_width + rim.",
+      "centre": [
+        175.2,
+        46.4
+      ],
+      "radius": 6.0,
+      "height": -2.0,
+      "skirt": 9.0,
+      "_why": "the Old Mill Crossing's far-bank abutment (gated_crossing.gd resolves which bank is which from the road; it is the +x side here)"
+    },
+    {
+      "centre": [
+        149.6,
+        37.8
+      ],
+      "radius": 6.0,
+      "height": -2.0,
+      "skirt": 9.0,
+      "_why": "the Old Mill Crossing's village-side abutment, its landing, and the mill's own yard"
     }
   ],
   "building_aprons": {
@@ -225,44 +246,86 @@
     "colour_strength": 0.6,
     "footprints": [
       {
-        "centre": [-22.0, -16.0],
-        "half_extents": [5.3, 3.3],
+        "centre": [
+          -22.0,
+          -16.0
+        ],
+        "half_extents": [
+          5.3,
+          3.3
+        ],
         "yaw_deg": 0.0,
         "_why": "Grandpa's farmhouse (farmhouse_shell; playground_world.gd HOUSE_AT)"
       },
       {
-        "centre": [2.0, 2.0],
-        "half_extents": [4.3, 5.0],
+        "centre": [
+          2.0,
+          2.0
+        ],
+        "half_extents": [
+          4.3,
+          5.0
+        ],
         "yaw_deg": -125.0,
         "_why": "the workshop"
       },
       {
-        "centre": [18.0, -2.0],
-        "half_extents": [3.05, 4.05],
+        "centre": [
+          18.0,
+          -2.0
+        ],
+        "half_extents": [
+          3.05,
+          4.05
+        ],
         "yaw_deg": -135.0,
         "_why": "cottage_a"
       },
       {
-        "centre": [21.0, -14.0],
-        "half_extents": [3.05, 3.05],
+        "centre": [
+          21.0,
+          -14.0
+        ],
+        "half_extents": [
+          3.05,
+          3.05
+        ],
         "yaw_deg": -70.0,
         "_why": "cottage_b"
       },
       {
-        "centre": [10.0, -10.0],
-        "half_extents": [2.9, 2.9],
+        "centre": [
+          10.0,
+          -10.0
+        ],
+        "half_extents": [
+          2.9,
+          2.9
+        ],
         "yaw_deg": 15.0,
         "_why": "the well and its paved apron"
       },
       {
-        "centre": [-132.0, 107.0],
-        "half_extents": [4.5, 4.2],
+        "centre": [
+          -132.0,
+          107.0
+        ],
+        "half_extents": [
+          4.5,
+          4.2
+        ],
         "yaw_deg": 0.0,
         "_why": "the mill -- the stream carve and its wet bed cut through this ring and stay wet (worn weight wins where stronger)"
       },
       {
-        "centre": [-100.0, 100.0],
-        "half_extents": [3.05, 4.05],
+        "centre": [
+          -100.0,
+          100.0
+        ],
+        "half_extents": [
+          3.05,
+          4.05
+        ],
         "yaw_deg": 75.0,
         "_why": "the ranger station"
       }
@@ -459,6 +522,56 @@
         "_comment_gate_offset": "Metres from the carve centre, back along the bridge's own run toward the village, where the locked leaf stands: at the outer lip of the near landing, level with the end of the span's own rails, so the player is stopped at the mouth of the crossing with the whole thing in front of them. It has to be AT the rails' end rather than inboard of it -- the deck sits only 0.12m above the levelled abutment, so any deck the rails do not cover can be stepped onto from the side, and a gate inboard of that gap gates nothing. TUNABLE, but not independently of the rail colliders in building_prefabs.json.",
         "gate_offset": 8.5
       }
+    },
+    {
+      "id": "old_mill_crossing",
+      "label": "Old Mill Crossing",
+      "_why": "SE22, spec 3 Band 3's main gate. Sited where the river's narrows meet the storm road -- the one old road that already ran out this way (spokes.routes[1], village -> [185.5,49.7]) -- because a mill and a bridge stand where a road meets a water, not where a designer wants a gate.",
+      "road": [
+        [
+          150.0,
+          38.0
+        ],
+        [
+          162.4,
+          42.1
+        ],
+        [
+          176.0,
+          46.4
+        ]
+      ],
+      "_comment_road": "A short stub, not a second copy of the storm road: road_polylines() unions it with the spoke's own road, so this only has to cover the mill yard and both landings for the bake's trodden soil and the scatter's keep-off.",
+      "_comment_channel": "`channel`, not `carve`: the river cut this gap, so _crossing_carve must NOT cut a second one here (it reads `carve` and skips an entry without one). Everything else about the shape is the river's own narrows point -- same centre, the course's axis through it, the half_width/rim it pinches to -- restated here so gated_crossing.gd can place a span and a gate from ONE dictionary the way it does for the South Bridge.",
+      "channel": {
+        "centre": [
+          162.4,
+          42.1
+        ],
+        "axis_deg": 108.5,
+        "half_length": 6.0,
+        "end_fade": 6.0,
+        "half_width": 3.6,
+        "rim": 3.4,
+        "depth": 15.0,
+        "failsafe": false
+      },
+      "bridge": {
+        "prefab": "south_bridge",
+        "gate_prefab": "south_bridge_gate",
+        "gate_offset": 7.4,
+        "_comment_gate_offset": "Metres back along the bridge's own run toward the village, at the outer lip of the near landing where the span's rails end -- SC14 measured this the hard way (the deck sits 0.12m above its own levelled abutment, so a gate inboard of the rails can be stepped around). Same prefab, same span, same number."
+      },
+      "mill": {
+        "prefab": "mill",
+        "offset": [
+          -12.0,
+          4.0
+        ],
+        "_comment": "Metres in the crossing's own frame: local x runs along the bridge (negative = the village side), local z along the river. Sited on the village-side abutment pad so the mill stands on level ground, and 12.6m out from the centreline so the tower clears the channel's rim where the course widens again north of the narrows (measured against the course, not eyed). `yaw_deg` 180 turns the prefab so its wheel -- local -4.0 on its own x, the same wheel the village mill hangs over the stream (village.json, EV6-remainder) -- faces the water instead of the meadow. Same prefab, same kit: D24's one village family, no new architecture for a second mill.",
+        "yaw_deg": 180.0
+      },
+      "_comment_reach": "HONEST LIMIT, recorded here the way SC14 recorded its own. A chord long enough to actually divide this map cannot avoid every spoke: the Meadows disc is full, and a search over every bearing and offset that keeps the village, the pond, the South Bridge, the Old Quarry, The Rise and all seven blockers clear left a far side only 17m deep -- not a region, a verge. This course takes the one cost that buys a 70m-deep, 334m-long far side: the storm road's collapsed bridge and its `Storm Country` fingerpost end up 25-40m PAST the river, visible across the water from the near bank but not reachable until the crossing opens. Every other spoke, and every named place a Band 0-2 player is sent to, stays on the near side."
     }
   ],
   "_comment_drains": "D41, debuted by SD16 at the Old Quarry. Team Tether's hardware is pulling something out of the ground and the ground shows it: discoloured, desaturated earth and suppressed vegetation in a radius around every station, thinning toward the machine and healthy meadow resuming past it. This block is the ONE authored source for where that happens. `playground_heightfield.drain_factor()` reads it and returns 0..1, and all three consumers ask that one function -- the bake's colour map (a tint lerp), the bake's control map (a blend toward the dead-soil texture) and `scatter_rules.gd` (which thins each layer's placements by its own `drain_suppression`). Same contract shape as `path_factor`/`stream_factor`/`building_apron_factor`, and the same reason for it: three systems agreeing about one edge because they read one function. D41 says mild at this rung of 32's reveal ladder -- the quarry's own head station is 0.85 and the run out of it falls away to 0.5, against the relay (SE23), which is meant to be the worst thing the player has seen. Widening these radii is how a later station gets worse; a new grammar is not. ALL TUNABLE.",
@@ -473,7 +586,10 @@
     "stations": [
       {
         "id": "quarry_conduit_head",
-        "centre": [27.0, 162.0],
+        "centre": [
+          27.0,
+          162.0
+        ],
         "radius": 24.0,
         "inner": 8.0,
         "strength": 0.85,
@@ -481,7 +597,10 @@
       },
       {
         "id": "quarry_run_1",
-        "centre": [31.7, 148.4],
+        "centre": [
+          31.7,
+          148.4
+        ],
         "radius": 15.0,
         "inner": 5.0,
         "strength": 0.7,
@@ -489,14 +608,20 @@
       },
       {
         "id": "quarry_run_2",
-        "centre": [36.4, 134.8],
+        "centre": [
+          36.4,
+          134.8
+        ],
         "radius": 15.0,
         "inner": 5.0,
         "strength": 0.6
       },
       {
         "id": "quarry_run_3",
-        "centre": [41.1, 121.2],
+        "centre": [
+          41.1,
+          121.2
+        ],
         "radius": 15.0,
         "inner": 5.0,
         "strength": 0.5,
@@ -611,17 +736,91 @@
         "pylons": {
           "height": 4.6,
           "list": [
-            { "at": [-57.3, 100.9], "lit": true },
-            { "at": [-68.1, 119.8], "lit": true },
-            { "at": [-79.5, 138.7], "lit": true },
-            { "at": [-89.3, 157.6], "lean_deg": 7.0, "lean_toward": [-105.1, 193.6], "dangle_toward": [-105.1, 193.6], "break_after": true },
-            { "at": [-105.1, 193.6], "lit": true, "dangle_toward": [-89.3, 157.6] }
+            {
+              "at": [
+                -57.3,
+                100.9
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -68.1,
+                119.8
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -79.5,
+                138.7
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                -89.3,
+                157.6
+              ],
+              "lean_deg": 7.0,
+              "lean_toward": [
+                -105.1,
+                193.6
+              ],
+              "dangle_toward": [
+                -105.1,
+                193.6
+              ],
+              "break_after": true
+            },
+            {
+              "at": [
+                -105.1,
+                193.6
+              ],
+              "lit": true,
+              "dangle_toward": [
+                -89.3,
+                157.6
+              ]
+            }
           ]
         },
-        "far_road": { "from": [-99.8, 192.6], "to": [-104.8, 204.5], "width": 4.6, "kerbs": 20, "gateposts": true, "near_posts": [-86.1, 161.4] },
+        "far_road": {
+          "from": [
+            -99.8,
+            192.6
+          ],
+          "to": [
+            -104.8,
+            204.5
+          ],
+          "width": 4.6,
+          "kerbs": 20,
+          "gateposts": true,
+          "near_posts": [
+            -86.1,
+            161.4
+          ]
+        },
         "abandoned": [
-          { "at": [-92.5, 163.5], "crates": 2, "barrels": 1, "bags": 2 },
-          { "at": [-103.0, 197.2], "crates": 2, "barrels": 1 }
+          {
+            "at": [
+              -92.5,
+              163.5
+            ],
+            "crates": 2,
+            "barrels": 1,
+            "bags": 2
+          },
+          {
+            "at": [
+              -103.0,
+              197.2
+            ],
+            "crates": 2,
+            "barrels": 1
+          }
         ]
       },
       {
@@ -699,17 +898,91 @@
         "pylons": {
           "height": 4.6,
           "list": [
-            { "at": [118.9, 22.2], "lit": true },
-            { "at": [139.6, 29.5], "lit": true },
-            { "at": [160.3, 36.7], "lit": true },
-            { "at": [180.3, 43.2], "lean_deg": 7.0, "lean_toward": [209.8, 52.3], "dangle_toward": [209.8, 52.3], "break_after": true },
-            { "at": [209.8, 52.3], "lit": true, "dangle_toward": [180.3, 43.2] }
+            {
+              "at": [
+                118.9,
+                22.2
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                139.6,
+                29.5
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                160.3,
+                36.7
+              ],
+              "lit": true
+            },
+            {
+              "at": [
+                180.3,
+                43.2
+              ],
+              "lean_deg": 7.0,
+              "lean_toward": [
+                209.8,
+                52.3
+              ],
+              "dangle_toward": [
+                209.8,
+                52.3
+              ],
+              "break_after": true
+            },
+            {
+              "at": [
+                209.8,
+                52.3
+              ],
+              "lit": true,
+              "dangle_toward": [
+                180.3,
+                43.2
+              ]
+            }
           ]
         },
-        "far_road": { "from": [204.7, 55.4], "to": [221.9, 60.6], "width": 4.6, "kerbs": 24, "gateposts": true, "near_posts": [181.7, 48.4] },
+        "far_road": {
+          "from": [
+            204.7,
+            55.4
+          ],
+          "to": [
+            221.9,
+            60.6
+          ],
+          "width": 4.6,
+          "kerbs": 24,
+          "gateposts": true,
+          "near_posts": [
+            181.7,
+            48.4
+          ]
+        },
         "abandoned": [
-          { "at": [176.5, 57.5], "crates": 3, "barrels": 2, "bags": 1 },
-          { "at": [212.3, 55.2], "crates": 2, "barrels": 1 }
+          {
+            "at": [
+              176.5,
+              57.5
+            ],
+            "crates": 3,
+            "barrels": 2,
+            "bags": 1
+          },
+          {
+            "at": [
+              212.3,
+              55.2
+            ],
+            "crates": 2,
+            "barrels": 1
+          }
         ]
       },
       {
@@ -1614,5 +1887,180 @@
       "_comment_ev4_textures": "EV4-textures, three rounds, converged. Round 5's own moss patches (real detail in the source photo, hue ~97 deg, sat ~0.36 against the photo's own ~0.11 mean) measured to a blind critic as 'too saturated and too crisply circular... a texture-blend artifact rather than moss.' Round 1 tried a tint-only fix (a blue-lifted near-neutral, brute-force-searched to minimise moss saturation through the albedo_color multiply alone) -- moved the needle but a second blind critic named a NEW defect it caused: the whole path read 'too pale... closer to bone/sand/chalk' than trodden earth, because desaturating the WHOLE texture through one multiplier to chase the moss also flattened the dirt's own warmth. Rounds 2-3 fixed the actual pixels instead of fighting them through a multiply: `assets/environment/terrain/Ground030_Color.jpg` is CC0 (ASSET_LEDGER.md), so its moss regions (feathered-mask, hue 65-175 deg, sat>0.15 by round 3) are blended toward their own luminance in place -- taking the same measured moss patch's saturation 0.36 -> 0.13 (round 2) -> 0.09 (round 3, at/below the photo's own ~0.11 baseline), an effect no global tint could reach without also flattening the good 98% of the texture. `tint` reverted to the original warm #e4dac2 and `normal_depth` restored to 0.22 (round 5 shipped 0.25) once the pixels themselves carried the fix. A third blind critic confirmed real, described improvement ('no longer hard flat circles... softer-edged and less garishly saturated') and explicitly called the slope-edge-stepping half of this item resolved ('largely resolved... no rectangular notches or obvious staircasing'). What's left after three rounds is a softer, different complaint -- the moss blobs' own roughly-circular, similarly-sized SHAPE (real content in the source photo) still reads as 'a repeated stamped-decal layer' at close range, which no colour/saturation lever can fix; that's a content limit, not a tunable value, and is the honest place this item stops. Round 3 also turned up two defects outside this item's scope, both reproduced across all three critique rounds and worth carrying forward rather than losing: the path reads notably paler than the Palworld/key-art references even where the moss issue is fully resolved (edge-detail.png), and an unmotivated hard-edged shadow/overexposure band crosses the path in sunlit frames with no caster in shot -- see the new BACKLOG.md entry.",
       "_comment_which": "Chosen over Ground037 (also pre-sourced, damp mossy forest floor) because Ground037 is bible sec8's item 5 Deep Grass/Forest Floor, a different layer for under groves -- not the path. Ground037 is still unused; whoever wires up EV2/EV3's forest-floor layer should reach for it directly rather than re-sourcing."
     }
-  ]
+  ],
+  "_comment_river": "SE21. See the block itself.",
+  "river": {
+    "_comment": "SE21, spec 3 Band 3 ('a substantial river divides the deeper Meadows'). Not a `crossing` and not a `spoke`: those are both single straight bars cut across one road, and this is a 340m channel with a bend in it that severs EVERY bearing it crosses. It is authored as a POLYLINE with a per-point cross-section -- playground_heightfield._river_carve walks the course the same way _stream_carve does and shapes it with the same smoothstep profile _carve_depth uses across and along, so there is still one falloff grammar on this map. Both ends run PAST world_perimeter's 235m ring (r=248 north, r=257 south), which is the property SC14's own `_comment_crossings_reach` said a real division needs and its gully could not have: there is no walking around either end, only the ring, and the only ground link between the near Meadows and the far bank is the Old Mill Crossing.",
+    "_comment_depths": "Depths are AUTHORED PER POINT against probed ground (tools/_probe_river.gd), not one number, because a single flat water plane has to sit in the finished bed from end to end. Target bed is about -15 through the wet reaches (ground runs -7.6 at the low middle, so the cut is the 10m floor there) and the cut is capped at 18m where the course climbs rises.peaks[0]'s south flank in the north (ground +19.5 at [199,-60]) -- so the bed rises above the water there and the last ~60m is a DRY gorge feeding the water, which is what the ground actually allows and is recorded here rather than pretended away. Every depth is at least 10m against a rim of 3.4-7m: 55-77 degrees of wall against the player's own 45-degree floor_max_angle (player.tscn), the same arithmetic every spoke gorge and the south gully are sized by. ALL TUNABLE.",
+    "_comment_narrows": "The five points from [166,32] to [158.6,52.2] are the Old Mill Crossing's narrows (SE22): the channel pinches from 22m wide to 7.2m at [162.4,42.1] and opens again over ~12m either side. That is not decoration -- it is what lets the crossing reuse the `south_bridge` prefab unchanged (an 18.4m span over a 14m clear gap: half_width 3.6 + rim 3.4, exactly the numbers here) instead of authoring a 34m river bridge no kit in this project owns. A river narrowing at the one place people built a mill and a bridge is also why such a place exists.",
+    "water_level": -9.0,
+    "_comment_water_level": "ONE flat surface for the whole river (water.gd::_build_river), the pond's own mechanism rather than the stream's ribbon: the ribbon is monotone-clamped to descend, and a 340m course over ground that swings 27m cannot be both level and descending. -9.0 sits 1.5-6m below the natural grade of the low middle and south, so the water fills most of the channel and the visible bank is a couple of metres of earth -- a broad water that reads from the ridge -- and it thins to nothing as the bed climbs north. TUNABLE, but not independently of the depths above: raise it and the mid-course banks flood.",
+    "end_fade": 14.0,
+    "failsafe": true,
+    "_comment_failsafe": "The channel is 10-18m deep with walls past the slope limit and there is no swimming system, so a player who walks in is stuck exactly the way SA4's probe found a body stuck in the storm ravine. river.gd hangs severed_spokes._add_carve_failsafe over each course segment with a VILLAGE-SIDE recovery point -- the same call and the same reasoning south_bridge.gd uses for its gully: recovering to the far bank would turn falling in into a free crossing.",
+    "course": [
+      {
+        "at": [
+          211.0,
+          -87.0
+        ],
+        "depth": 18.0,
+        "half_width": 13.0,
+        "rim": 7.0
+      },
+      {
+        "at": [
+          199.0,
+          -60.0
+        ],
+        "depth": 18.0,
+        "half_width": 13.0,
+        "rim": 7.0
+      },
+      {
+        "at": [
+          190.0,
+          -33.0
+        ],
+        "depth": 18.0,
+        "half_width": 12.0,
+        "rim": 6.0
+      },
+      {
+        "at": [
+          178.0,
+          -7.0
+        ],
+        "depth": 18.0,
+        "half_width": 11.0,
+        "rim": 5.5
+      },
+      {
+        "at": [
+          171.0,
+          20.0
+        ],
+        "depth": 18.0,
+        "half_width": 11.0,
+        "rim": 5.0
+      },
+      {
+        "at": [
+          166.0,
+          32.0
+        ],
+        "depth": 15.5,
+        "half_width": 7.0,
+        "rim": 4.0
+      },
+      {
+        "at": [
+          163.6,
+          38.4
+        ],
+        "depth": 15.0,
+        "half_width": 4.2,
+        "rim": 3.4
+      },
+      {
+        "at": [
+          162.4,
+          42.1
+        ],
+        "depth": 15.0,
+        "half_width": 3.6,
+        "rim": 3.4
+      },
+      {
+        "at": [
+          161.2,
+          45.8
+        ],
+        "depth": 15.0,
+        "half_width": 4.2,
+        "rim": 3.4
+      },
+      {
+        "at": [
+          158.6,
+          52.2
+        ],
+        "depth": 15.5,
+        "half_width": 7.0,
+        "rim": 4.0
+      },
+      {
+        "at": [
+          152.0,
+          68.0
+        ],
+        "depth": 10.0,
+        "half_width": 11.0,
+        "rim": 5.0
+      },
+      {
+        "at": [
+          140.0,
+          96.0
+        ],
+        "depth": 10.0,
+        "half_width": 12.0,
+        "rim": 5.5
+      },
+      {
+        "at": [
+          133.0,
+          124.0
+        ],
+        "depth": 10.0,
+        "half_width": 12.0,
+        "rim": 5.5
+      },
+      {
+        "at": [
+          121.0,
+          150.0
+        ],
+        "depth": 10.0,
+        "half_width": 12.0,
+        "rim": 5.5
+      },
+      {
+        "at": [
+          110.0,
+          176.0
+        ],
+        "depth": 10.5,
+        "half_width": 11.0,
+        "rim": 5.0
+      },
+      {
+        "at": [
+          97.0,
+          202.0
+        ],
+        "depth": 12.0,
+        "half_width": 11.0,
+        "rim": 5.0
+      },
+      {
+        "at": [
+          84.0,
+          228.0
+        ],
+        "depth": 10.0,
+        "half_width": 11.0,
+        "rim": 5.0
+      },
+      {
+        "at": [
+          75.0,
+          246.0
+        ],
+        "depth": 10.0,
+        "half_width": 11.0,
+        "rim": 5.0
+      }
+    ]
+  }
 }

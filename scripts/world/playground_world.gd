@@ -34,6 +34,8 @@ const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
 const TETHER_RELAY := preload("res://scripts/world/tether_relay.gd")
+const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
+const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
@@ -601,6 +603,19 @@ func _build_settlement() -> void:
 	relay.name = "TetherRelay"
 	add_child(relay)
 	relay.call("build", self)
+	# SE21: the river that divides the deeper Meadows. Only its recovery
+	# volumes are built here -- the channel is terrain (the bake cut it) and
+	# the water is the water layer's.
+	var river: Node3D = RIVER.new()
+	river.name = "River"
+	add_child(river)
+	river.call("build", self)
+
+	# SE22: the Old Mill Crossing, the one authored way over that river.
+	var mill_crossing: Node3D = MILL_CROSSING.new()
+	mill_crossing.name = "MillCrossing"
+	add_child(mill_crossing)
+	mill_crossing.call("build", self)
 
 	# SA4: the severed outward roads. Before the boundary ring because they
 	# stand INSIDE it (~160-200m out) and are the thing the player is meant to

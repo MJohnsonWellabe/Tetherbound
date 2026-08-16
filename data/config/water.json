@@ -153,5 +153,50 @@
   "_comment_round2": "EV5 blind round 1 (first genuinely blind critique, fresh headless session, no context): verbatim defects and the levers moved — 'swimming-pool cyan against olive land' -> deep/shallow/fresnel all pulled toward the keyart's warm teal-green family; 'shallow-to-deep gradient is a constant-width ring, not depth' -> depth_falloff 1.2->2.2 so the ramp spreads wide on shallow banks and stays narrow on steep ones; 'no sun glint... unfinished' -> roughness back to 0.10, shader SPECULAR restored to 0.5, wave normals up 0.22->0.4 and finer (uv_scale 0.09->0.12); 'foam is a bead chain' -> foam_scale down plus a second decorrelating noise scale in the shader; 'one reed asset, one scale... on the sand, not in the water' -> band reaches 0.55m BELOW the waterline, scale span widened, per-instance lean/tone jitter in water.gd. Reflections are the one named defect deliberately NOT chased: bible sec15 forbids the expensive tier, gl_compatibility has no SSR, and a planar reflection probe is exactly the simulation the spec rules out — fresnel-toward-sky is this tier's honest ceiling, recorded in DONE.md rather than faked. ALL TUNABLE.",
   "_comment_round3": "EV5 blind round 2: the two water-scope defects still actionable at this tier were the depth ramp's mach banding (dithered in the shader now) and the stream reading as a different, darker water than the pond -- the stream's read is its dark pebble bed showing through shallow water at grazing angle, so alpha_shallow comes up 0.42->0.52 (the surface's own colour carries more of both waters) and the stream rides 0.35 above its bed instead of 0.45, which shifts its depth colour toward the pond's shallow family. Round 2 also asked for CONTINUOUS rim foam -- the exact 'drawn ring' round 1 condemned; the two critics disagree and the broken-lap read stays, recorded here so a future pass doesn't ping-pong. 'No reflections' repeats from round 1 and stays the recorded ceiling of this tier: bible sec15 rules out the expensive route and gl_compatibility has no SSR; fresnel-toward-sky is the honest substitute. A pond OUTLET (round 2, real hydrology note) is Band 3's river's natural starting point -- see DONE.md's EV5 entry. ALL TUNABLE.",
   "_comment_round4": "EV5 blind round 3: two NEW water-scope defects and one root cause found by CPU-replicating the shader. The 'stream is a different water' complaint from rounds 1-3 was never colour tuning -- the depth texture's fixed level±8m window clamped every texel more than 8m above the pond, so the upper stream computed ~5m of phantom depth and rendered the deep colour (see water.gd's height_min/max scan comment). With that fixed, round-3 asks land as: ripple normals now attenuate with camera distance in the shader (far sheen scattered into a 'flat cyan fill' read), shallow colour pulled a step deeper/greener toward the board and its alpha trimmed so the sunlit sand bed stops lifting the whole pond toward tropical cyan, and the reed band above the waterline tightened 0.45->0.28m so stands stop straying onto dry lawn. Round 3 also asked for foam 'continuous or removed' -- the third different foam verdict in three rounds; the broken-lap middle stays. ALL TUNABLE.",
-  "_comment_rounds5_8": "EV5 blind rounds 5-8 (each a fresh, context-free session). Round 5: no new in-scope defect. Round 6: 'glass cards' = submerged grass tufts read as artifacts -> grass min_height pulled to ankle depth (vegetation.json); reed perimeter-ring note acted on (see _comment_stands). Round 7: repeats and two verified misreads ('water plane escaping the bank' is the pond's own west arm behind a low sand spit, checked by crop; 'butt-joint' is the drone angle). Round 8: judged identical frames, no new in-scope defect -> two consecutive flat rounds, CONVERGED per ralph/conventions.md's stopping rule. Bar question B (same kind of game as the references) flipped to a qualified YES in rounds 7 and 8, carried by the water frames. What the critics still name, recorded as the wall rather than chased: real reflections/refraction/caustics (bible sec15's own 'no physically expensive simulation' line, and gl_compatibility has no SSR -- fresnel-toward-sky is this tier's ceiling); aquatic dressing that needs assets not in the build (lily pads, driftwood, jetty, submerged-rock meshes); and world-level gaps outside EV5 entirely (sky/clouds/haze, near-field ground-cover density, canopy-scale trees, creature/trainer art, the perimeter's placeholder slabs). Foam received five contradictory verdicts across eight rounds (broken/continuous/remove/depth-driven[it is]/fixed-offset[it isn't]); the broken-lap treatment stands."
+  "_comment_rounds5_8": "EV5 blind rounds 5-8 (each a fresh, context-free session). Round 5: no new in-scope defect. Round 6: 'glass cards' = submerged grass tufts read as artifacts -> grass min_height pulled to ankle depth (vegetation.json); reed perimeter-ring note acted on (see _comment_stands). Round 7: repeats and two verified misreads ('water plane escaping the bank' is the pond's own west arm behind a low sand spit, checked by crop; 'butt-joint' is the drone angle). Round 8: judged identical frames, no new in-scope defect -> two consecutive flat rounds, CONVERGED per ralph/conventions.md's stopping rule. Bar question B (same kind of game as the references) flipped to a qualified YES in rounds 7 and 8, carried by the water frames. What the critics still name, recorded as the wall rather than chased: real reflections/refraction/caustics (bible sec15's own 'no physically expensive simulation' line, and gl_compatibility has no SSR -- fresnel-toward-sky is this tier's ceiling); aquatic dressing that needs assets not in the build (lily pads, driftwood, jetty, submerged-rock meshes); and world-level gaps outside EV5 entirely (sky/clouds/haze, near-field ground-cover density, canopy-scale trees, creature/trainer art, the perimeter's placeholder slabs). Foam received five contradictory verdicts across eight rounds (broken/continuous/remove/depth-driven[it is]/fixed-offset[it isn't]); the broken-lap treatment stands.",
+  "_comment_river": "SE21 -- how the RIVER looks. Its geometry (course, per-point depth and width, water level) is in terrain_playground.json's `river` block for the same reason the pond's is: the heightfield cuts the channel from it and this file only says what the water on top looks like. The surface reuses the same shader and the same material builder as the pond, over its OWN region rect. ALL TUNABLE.",
+  "river": {
+    "sample_step": 4.0,
+    "_comment_sample_step": "Metres between ribbon stations along the 340m course. Each station measures its own waterline outward from the centreline, so this also sets how closely the water's edge follows a meander.",
+    "alpha_shallow": 0.7,
+    "_comment_alpha": "Between the pond's 0.48 and the stream's 0.78. The channel is raw cut earth 6-9m under the surface through the middle reaches; at the pond's alpha the whole river read as its own dark bed seen through glass, which is the measurement EV5 already made once when it split the stream's alpha off.",
+    "flow_speed": 0.7,
+    "flow_stretch": 0.7,
+    "_comment_flow": "A big river runs slower than the brook (1.1) and its ripples are longer. Direction is the course's own authored order -- north, off the rise's flank, to the southern ring.",
+    "reeds": {
+      "models": [
+        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf",
+        "res://assets/environment/stylized_nature/Grass_Wispy_Short.gltf"
+      ],
+      "tint": "#7a9460",
+      "clumps": 90,
+      "per_clump": 14,
+      "clump_radius": 3.4,
+      "band_below": 0.5,
+      "band_above": 0.5,
+      "scale_min": 0.6,
+      "scale_max": 1.4,
+      "max_bank_slope_deg": 78.0,
+      "seed": 20260816,
+      "_comment": "Anchors come from the river's own measured waterline (both banks, every station), so `clumps` is spread over ~680m of bank rather than the pond's ~300m -- hence the count. max_bank_slope_deg is high because a river bank IS steep here (70-80 degrees, measured): the pond's 33 would reject every anchor and place nothing at all."
+    },
+    "bank_scrub": {
+      "models": [
+        "res://assets/environment/stylized_nature/Bush_Common.gltf",
+        "res://assets/environment/stylized_nature/Fern_1.gltf",
+        "res://assets/environment/stylized_nature/Plant_1_Big.gltf"
+      ],
+      "tint": "#6f9153",
+      "clumps": 70,
+      "per_clump": 5,
+      "clump_radius": 7.0,
+      "band_below": -0.6,
+      "band_above": 4.5,
+      "scale_min": 0.5,
+      "scale_max": 1.1,
+      "max_bank_slope_deg": 78.0,
+      "seed": 20260817,
+      "_comment": "The band that makes the river read from 150m out. `band_below` is NEGATIVE on purpose -- the arithmetic in _build_plant_band is `skip if ground < level - band_below`, so -0.6 means 'start 0.6m ABOVE the water' and nothing is placed in the river itself. Scrub rather than trees: this band has no collision (it is the pond's reed mechanism), and a tree standing on the walkable rim that a player can walk through is exactly OF14's defect. The tree line either side of the channel comes for free instead -- vegetation.gd's own slope rule keeps trees off the 70-degree walls and lands them on the rims."
+    }
+  }
 }

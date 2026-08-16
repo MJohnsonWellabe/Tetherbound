@@ -89,3 +89,24 @@ func test_the_shared_ui_icon_set_loads_as_textures() -> void:
 		var path := "%s%s.png" % [UI_ICON_DIR, icon_name]
 		var tex: Texture2D = load(path) as Texture2D
 		assert_ne(tex, null, "%s exists but did not load as a Texture2D" % path)
+
+
+## SE22. The Mill Bridge Gear is what opens the Old Mill Crossing, and the two
+## properties that make it work as a gate item -- one per satchel, and its own
+## silhouette in that satchel -- are exactly the two a later edit could break
+## without anything crashing.
+func test_the_mill_bridge_gear_is_a_single_stack_key_with_its_own_icon() -> void:
+	var items := _items()
+	assert_true(items.has("mill_bridge_gear"),
+		"items.json has no `mill_bridge_gear`; SE22's crossing is keyed to an item that does not exist")
+	if not items.has("mill_bridge_gear"):
+		return
+	var gear := items["mill_bridge_gear"] as Dictionary
+	assert_eq(str(gear.get("kind", "")), "key",
+		"the Mill Bridge Gear is not `kind: key`, so it sorts and reads as ordinary loot")
+	assert_eq(int(gear.get("stack", 0)), 1,
+		"the Mill Bridge Gear stacks; a gate item the player can hold two of is a bug waiting to be found")
+	var icon := str(gear.get("icon", ""))
+	assert_true(icon.ends_with("mill_bridge_gear.png"),
+		"the Mill Bridge Gear shares another item's icon (%s) -- it needs its own silhouette" % icon)
+	assert_true(ResourceLoader.exists(icon), "no icon file at %s" % icon)

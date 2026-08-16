@@ -47,6 +47,8 @@ var _stats := {
 	"pond_quads": 0, "stream_points": 0, "reeds": 0,
 	# EV5-remainder — the waterside dressing the blind rounds asked for.
 	"marginals": 0, "rocks": 0, "driftwood": 0, "lilypads": 0, "jetty_pieces": 0,
+	# SE21 — the river is a second body of water in the same layer.
+	"river_quads": 0, "river_reeds": 0, "river_scrub": 0,
 }
 
 
@@ -62,7 +64,7 @@ func build() -> void:
 	var stream: Dictionary = terrain_cfg.get("water", {}).get("stream", {})
 	var pond_centre: Array = terrain_cfg.get("water", {}).get("pond_centre", [0.0, 0.0])
 
-	var material := _build_material(stream)
+	var material := _build_material(_region())
 	_build_pond(material)
 	# The stream carries the same shader with more opaque water: at 0.35m
 	# deep, a see-through surface is mostly its own carved, wet-darkened,
@@ -83,6 +85,8 @@ func build() -> void:
 	stream_material.set_shader_parameter("flow_stretch", float(surface_cfg.get("flow_stretch", 0.6)))
 	_build_stream(stream_material, stream)
 
+	_build_river()
+
 	var centre := Vector2(float(pond_centre[0]), float(pond_centre[1]))
 	# The shoreline fan is shared by every shore-anchored layer below —
 	# computed once so they all agree about where the waterline is.
@@ -94,6 +98,9 @@ func build() -> void:
 		_stats["pond_quads"], _stats["stream_points"], _stats["reeds"],
 		_stats["marginals"], _stats["rocks"], _stats["driftwood"],
 		_stats["lilypads"], _stats["jetty_pieces"], _level
+	])
+	print("[water] river quads %d, bank reeds %d, bank scrub %d" % [
+		_stats["river_quads"], _stats["river_reeds"], _stats["river_scrub"]
 	])
 
 
@@ -134,9 +141,15 @@ func _region() -> Rect2:
 	return Rect2(lo, hi - lo)
 
 
-func _build_material(_stream: Dictionary) -> ShaderMaterial:
+## The shared water material, baked over ONE world rect. Taken as an argument
+## rather than read from `_region()` because SE21's river is a second body of
+## water somewhere else entirely: the shader decodes depth from a height
+## texture covering its own `region`, and a river surface handed the pond's
+## rect would read every one of its texels as clamped ceiling and render deep
+## navy water over a phantom chasm — the exact failure this function's
+## `height_min`/`height_max` comment already records once.
+func _build_material(region: Rect2) -> ShaderMaterial:
 	var surface: Dictionary = _water_cfg.get("surface", {})
-	var region := _region()
 
 	var material := ShaderMaterial.new()
 	material.shader = SHADER
@@ -313,6 +326,189 @@ func _build_pond(material: ShaderMaterial) -> void:
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
 	_stats["pond_quads"] = quads
+
+
+## SE21 — the river: one flat sheet of water lying in the channel
+## `playground_heightfield._river_carve` cuts, from the ridge in the north to
+## the ring in the south.
+##
+## FLAT, like the pond, and not a descending ribbon like the stream. The
+## ribbon's height is clamped monotone non-increasing, which is right for a
+## 90m brook probed downhill; this course is 340m across ground that swings
+## 27m, and no monotone surface can lie in it without either floating over a
+## bank or sinking under the bed. The channel is authored to hold one level
+## instead (the config's own `_comment_depths` is the arithmetic), so the
+## river gets the pond's mechanism: one height, and the shader's per-pixel
+## depth does the rest.
+##
+## It is still built as a RIBBON rather than the pond's trimmed grid, because
+## the grid's flood fill needs a seed cell and a basin, and this water's own
+## bbox contains two things that are also below its level and are not it (the
+## storm ravine's floor and, at the south end, open low meadow). Walking the
+## course and finding the waterline outward from the centreline can only ever
+## produce water that is in the river.
+func _build_river() -> void:
+	var terrain_cfg: Dictionary = HEIGHTFIELD.load_config()
+	var river: Dictionary = terrain_cfg.get("river", {})
+	var course: Array = river.get("course", [])
+	if course.size() < 2 or not river.has("water_level"):
+		return
+	var level := float(river.get("water_level"))
+	var cfg: Dictionary = _water_cfg.get("river", {})
+	var step := maxf(float(cfg.get("sample_step", 4.0)), 1.0)
+
+	# Resample the authored course evenly, and carry the local channel reach
+	# with each sample so the waterline search never has to guess how wide
+	# this reach of the river is.
+	var samples: Array[Vector2] = []
+	var reaches: Array[float] = []
+	for i in course.size() - 1:
+		var a: Dictionary = course[i]
+		var b: Dictionary = course[i + 1]
+		var pa := _vec2(a.get("at", []))
+		var pb := _vec2(b.get("at", []))
+		var count := maxi(1, int(pa.distance_to(pb) / step))
+		for s in count:
+			var t := float(s) / count
+			samples.append(pa.lerp(pb, t))
+			reaches.append(
+				lerpf(float(a.get("half_width", 9.0)), float(b.get("half_width", 9.0)), t)
+				+ lerpf(float(a.get("rim", 5.0)), float(b.get("rim", 5.0)), t))
+	samples.append(_vec2((course[course.size() - 1] as Dictionary).get("at", [])))
+	reaches.append(float((course[course.size() - 1] as Dictionary).get("half_width", 9.0))
+		+ float((course[course.size() - 1] as Dictionary).get("rim", 5.0)))
+
+	# Half-widths of actual WATER at each station: outward from the
+	# centreline until the ground climbs past the level. Negative means the
+	# bed itself is above the level — the dry gorge at the north end — and
+	# those stations carry no surface at all.
+	var left: Array[float] = []
+	var right: Array[float] = []
+	var bank_points: Array[Vector2] = []
+	for i in samples.size():
+		var p := samples[i]
+		var across := _river_across(samples, i)
+		if float(_field.call("height_at", p.x, p.y)) >= level:
+			left.append(-1.0)
+			right.append(-1.0)
+			continue
+		var found: Array[float] = []
+		for side: float in [-1.0, 1.0]:
+			var d := 0.0
+			var limit := reaches[i] + 3.0
+			while d < limit:
+				var q := p + across * (side * (d + 0.25))
+				if float(_field.call("height_at", q.x, q.y)) >= level:
+					break
+				d += 0.25
+			found.append(d)
+			bank_points.append(p + across * (side * d))
+		left.append(found[0])
+		right.append(found[1])
+
+	var region := _river_region(samples, reaches)
+	var material: ShaderMaterial = _build_material(region).duplicate()
+	# The river runs deep (6-9m through the middle reaches) and its bed is
+	# raw cut earth rather than the pond's shallow silt, so it takes the
+	# stream's more opaque shallow alpha: without it the whole channel reads
+	# as its own dark bed seen through glass, which EV5 already measured once
+	# and split the stream's alpha off for.
+	material.set_shader_parameter("alpha_shallow", float(cfg.get("alpha_shallow", 0.7)))
+
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var along := 0.0
+	var quads := 0
+	for i in samples.size() - 1:
+		var a := samples[i]
+		var b := samples[i + 1]
+		along += a.distance_to(b)
+		if left[i] < 0.0 or left[i + 1] < 0.0:
+			continue
+		var across_a := _river_across(samples, i)
+		var across_b := _river_across(samples, i + 1)
+		# Half a metre of overshoot past the measured waterline on each side:
+		# the shader feathers alpha to zero exactly where its depth reaches
+		# zero, so the mesh edge must sit OUTSIDE the waterline or the water
+		# ends in a hard cut short of the bank.
+		var la := across_a * -(left[i] + 0.5)
+		var ra := across_a * (right[i] + 0.5)
+		var lb := across_b * -(left[i + 1] + 0.5)
+		var rb := across_b * (right[i + 1] + 0.5)
+		_add_quad(tool,
+			Vector3(a.x + la.x, level, a.y + la.y),
+			Vector3(a.x + ra.x, level, a.y + ra.y),
+			Vector3(b.x + rb.x, level, b.y + rb.y),
+			Vector3(b.x + lb.x, level, b.y + lb.y),
+			# UV2 is the course parameterisation the shader scrolls its waves
+			# along — the same flow trick the stream ribbon uses, so the
+			# river visibly runs, downstream being the way the course is
+			# authored (north, off the ridge, to the southern ring).
+			[
+				Vector2(along, -left[i]), Vector2(along, right[i]),
+				Vector2(along + a.distance_to(b), right[i + 1]),
+				Vector2(along + a.distance_to(b), -left[i + 1]),
+			])
+		quads += 1
+	if quads == 0:
+		push_warning("the river's bed never dips below its water level %.1f; no surface built" % level)
+		return
+	tool.generate_tangents()
+	var node := MeshInstance3D.new()
+	node.name = "RiverSurface"
+	node.mesh = tool.commit()
+	material.set_shader_parameter("flow_enabled", true)
+	material.set_shader_parameter("flow_speed", float(cfg.get("flow_speed", 0.7)))
+	material.set_shader_parameter("flow_stretch", float(cfg.get("flow_stretch", 0.7)))
+	node.material_override = material
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(node)
+	_stats["river_quads"] = quads
+
+	# The banks. `R7.1-remainder-2`'s open question was whether water would do
+	# more for the set's missing middle distance than more vegetation tuning;
+	# the honest answer is that a bare cut with water in it still reads as a
+	# trench from 150m out. What makes a river legible at that range is the
+	# LINE of standing vegetation along it, so the same `_build_plant_band`
+	# the pond's reeds use runs here twice against the river's own waterline
+	# — a reed band at the water and a taller band up the bank — with the
+	# bands themselves configured in water.json like everything else.
+	var previous := _level
+	_level = level
+	_stats["river_reeds"] = _build_plant_band(cfg.get("reeds", {}), bank_points)
+	_stats["river_scrub"] = _build_plant_band(cfg.get("bank_scrub", {}), bank_points)
+	_level = previous
+
+
+## The rect the river's height texture covers: its own channel, padded. Kept
+## tight to the course rather than to the bbox of everything nearby, because
+## the texture is a fixed number of texels however large the rect is and this
+## river is 340m long — a rect stretched to the far corner of the map would
+## halve the depth resolution of the water itself for nothing.
+func _river_region(samples: Array[Vector2], reaches: Array[float]) -> Rect2:
+	var lo := Vector2(INF, INF)
+	var hi := Vector2(-INF, -INF)
+	for i in samples.size():
+		var pad := reaches[i] + 4.0
+		lo = Vector2(minf(lo.x, samples[i].x - pad), minf(lo.y, samples[i].y - pad))
+		hi = Vector2(maxf(hi.x, samples[i].x + pad), maxf(hi.y, samples[i].y + pad))
+	return Rect2(lo, hi - lo)
+
+
+## Unit vector across the course at sample `i`, from the tangent either side.
+func _river_across(samples: Array[Vector2], i: int) -> Vector2:
+	var previous: Vector2 = samples[maxi(i - 1, 0)]
+	var next: Vector2 = samples[mini(i + 1, samples.size() - 1)]
+	var tangent := (next - previous).normalized()
+	if tangent == Vector2.ZERO:
+		tangent = Vector2.RIGHT
+	return Vector2(-tangent.y, tangent.x)
+
+
+func _vec2(raw: Variant) -> Vector2:
+	if not raw is Array or (raw as Array).size() < 2:
+		return Vector2.ZERO
+	return Vector2(float((raw as Array)[0]), float((raw as Array)[1]))
 
 
 ## The stream: a ribbon of surface water following the carved bed downhill.

@@ -3,23 +3,146 @@
   "reveal_radius": 45.0,
   "minimap_span_m": 90.0,
   "landmarks": [
-    { "id": "grandpa_house", "display_name": "Grandpa's House", "icon": "home",      "position": [-22.0, -16.0],  "discover_radius": 30.0, "category": "major" },
-    { "id": "village",       "display_name": "The Village",     "icon": "village",   "position": [10.0, -10.0],   "discover_radius": 35.0, "category": "major" },
-    { "id": "road_gate",     "display_name": "Road Gate",       "icon": "gate",      "position": [27.5, -16.0],   "discover_radius": 25.0, "category": "minor" },
-    { "id": "stronghold",    "display_name": "Meadows Hall",    "icon": "stronghold","position": [229.8, -144.4], "discover_radius": 60.0, "category": "major", "silhouette": true },
-    { "id": "south_bridge",  "display_name": "The South Bridge","icon": "bridge",    "position": [5.0, 80.0],     "discover_radius": 35.0, "category": "major" },
-    { "id": "tether_relay",  "display_name": "The Tether Relay","icon": "relay",     "position": [108.0, 34.0],   "discover_radius": 45.0, "category": "major" }
+    {
+      "id": "grandpa_house",
+      "display_name": "Grandpa's House",
+      "icon": "home",
+      "position": [
+        -22.0,
+        -16.0
+      ],
+      "discover_radius": 30.0,
+      "category": "major"
+    },
+    {
+      "id": "village",
+      "display_name": "The Village",
+      "icon": "village",
+      "position": [
+        10.0,
+        -10.0
+      ],
+      "discover_radius": 35.0,
+      "category": "major"
+    },
+    {
+      "id": "road_gate",
+      "display_name": "Road Gate",
+      "icon": "gate",
+      "position": [
+        27.5,
+        -16.0
+      ],
+      "discover_radius": 25.0,
+      "category": "minor"
+    },
+    {
+      "id": "stronghold",
+      "display_name": "Meadows Hall",
+      "icon": "stronghold",
+      "position": [
+        229.8,
+        -144.4
+      ],
+      "discover_radius": 60.0,
+      "category": "major",
+      "silhouette": true
+    },
+    {
+      "id": "south_bridge",
+      "display_name": "The South Bridge",
+      "icon": "bridge",
+      "position": [
+        5.0,
+        80.0
+      ],
+      "discover_radius": 35.0,
+      "category": "major"
+    },
+    {
+      "id": "tether_relay",
+      "display_name": "The Tether Relay",
+      "icon": "relay",
+      "position": [
+        108.0,
+        34.0
+      ],
+      "discover_radius": 45.0,
+      "category": "major"
+    },
+    {
+      "id": "old_mill_crossing",
+      "display_name": "Old Mill Crossing",
+      "icon": "bridge",
+      "position": [
+        162.4,
+        42.1
+      ],
+      "discover_radius": 40.0,
+      "category": "major"
+    }
   ],
   "_comment_tether_relay": "SE23, spec 3 Band 3. A `major` landmark: the chapter's first mini-stronghold and the rung of 32's ladder where Team Tether becomes a place rather than a rumour, not a piece of furniture on the way somewhere else. NOT a `silhouette` -- the stronghold is drawn before discovery because it is meant to be seen from across the meadow and never reached; the relay is meant to be walked into, so it appears the ordinary way, by going there. `relay` is an icon that already exists in assets/ui/icons/map/ and was drawn for exactly this. Position is the site centre data/config/relay_site.json authored and scripts/world/tether_relay.gd builds from -- if it moves, all three move together.",
   "_comment_south_bridge": "SC14, spec 3 Gate 1. A `major` landmark rather than a `minor` one: it is the chapter's first physical gate and the thing the whole south road exists to reach, not a piece of furniture on the way somewhere else. NOT a `silhouette` -- the stronghold is drawn before discovery because it is meant to be seen from across the meadow and never reached; the bridge is meant to be walked to on day one, so it appears the ordinary way, by going there. Position is the gully carve's own centre (terrain_playground.json `crossings[0].carve.centre`); if that moves, this moves.",
   "_comment_regions": "Owner directive, playtest pass: 'name some of the areas and uncover them like fortnite maps do.' A region is broader than a landmark -- the AREA around a point of interest, not the point itself -- and is discovered by entering it (map_state.gd::update_region), not by proximity like a landmark. A region is NOT one destination: a real Fortnite map names a handful of large, well-separated zones, not one per building. The first cut of this named village square, Grandpa's house and the practice meadow as three separate regions -- all real destinations (data/config/terrain_playground.json's own paths.routes[].label) but only 15-35m apart, so their labels landed on top of each other on the full map and read as clutter rather than geography. They are now one region, matching what they actually are: the single starting hub the player spends their first minutes in. The Pond and The Rise stay separate -- 150m+ from the hub and 230m from each other, genuinely distinct places a player walks TO, not three names for one dooryard. TUNABLE.",
   "regions": [
-    { "id": "grandpas_village", "display_name": "Grandpa's Village", "centre": [6.0, -22.0],     "radius": 60.0 },
-    { "id": "the_pond",         "display_name": "The Pond",          "centre": [-92.0, 100.0],   "radius": 55.0 },
-    { "id": "the_rise",         "display_name": "The Rise",          "centre": [88.0, -43.0],    "radius": 55.0 },
-    { "id": "the_old_quarry",   "display_name": "The Old Quarry",    "centre": [26.0, 152.0],    "radius": 62.0 },
-    { "id": "the_tether_relay", "display_name": "The Tether Relay",  "centre": [106.0, 30.0],    "radius": 48.0 }
+    {
+      "id": "grandpas_village",
+      "display_name": "Grandpa's Village",
+      "centre": [
+        6.0,
+        -22.0
+      ],
+      "radius": 60.0
+    },
+    {
+      "id": "the_pond",
+      "display_name": "The Pond",
+      "centre": [
+        -92.0,
+        100.0
+      ],
+      "radius": 55.0
+    },
+    {
+      "id": "the_rise",
+      "display_name": "The Rise",
+      "centre": [
+        88.0,
+        -43.0
+      ],
+      "radius": 55.0
+    },
+    {
+      "id": "the_old_quarry",
+      "display_name": "The Old Quarry",
+      "centre": [
+        26.0,
+        152.0
+      ],
+      "radius": 62.0
+    },
+    {
+      "id": "the_tether_relay",
+      "display_name": "The Tether Relay",
+      "centre": [
+        106.0,
+        30.0
+      ],
+      "radius": 48.0
+    },
+    {
+      "id": "the_long_water",
+      "display_name": "The Long Water",
+      "centre": [
+        150.0,
+        70.0
+      ],
+      "radius": 72.0
+    }
   ],
   "_comment_the_tether_relay": "SE23, and D36's rule applied the same way the quarry applies it: few and LARGE. ONE region for the whole station -- the approach road, the compound, the pad and the three conduit runs converging on it -- not one per feature. Its centre sits between the compound centre ([108,34]) and the apparatus pad ([104.5,23.1]) so the map label lands over the site rather than off one edge of it, and 48m carries the outermost pylon on every run. Separation: 111m to Grandpa's Village and 145m to The Old Quarry, both clear of any overlap. The Rise is the exception and the first authored overlap on this map -- 75m between centres against 55+48m of radius, so their rims cross in a 28m band. That is deliberate rather than sloppy: shrinking this region enough to avoid it entirely (20m) would stop it covering its own compound. map_state.gd::_region_at already defines the answer -- the nearest centre among every region you are inside wins -- so the band resolves on the midline and neither label moves. The two LABELS are 75m apart, which is the thing the first regions cut got wrong (three names 15-35m apart, printed on top of each other). Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having gone past the quarry on the stronghold bearing. TUNABLE.",
-  "_comment_the_old_quarry": "SD16, and D36's rule applied rather than quoted: few and LARGE. This is one region for the whole worked site -- the quarry floor, its foundations, the standing dead, and the conduit run leaving it on the stronghold bearing -- not one per feature, exactly the mistake D36 was written to correct. Its centre sits between the floor ([23,158]) and the first pylon out ([31.7,148.4]) so the map label lands over the site rather than off one edge of it, and 62m carries the whole run out to [41,121]. Separation from every existing region is comfortable: 175m to Grandpa's Village, 130m to The Pond, 205m to The Rise -- no two labels can crowd each other the way the first regions cut did. Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having crossed the South Bridge, so the name arrives at the moment the gate pays off. TUNABLE."
+  "_comment_the_old_quarry": "SD16, and D36's rule applied rather than quoted: few and LARGE. This is one region for the whole worked site -- the quarry floor, its foundations, the standing dead, and the conduit run leaving it on the stronghold bearing -- not one per feature, exactly the mistake D36 was written to correct. Its centre sits between the floor ([23,158]) and the first pylon out ([31.7,148.4]) so the map label lands over the site rather than off one edge of it, and 62m carries the whole run out to [41,121]. Separation from every existing region is comfortable: 175m to Grandpa's Village, 130m to The Pond, 205m to The Rise -- no two labels can crowd each other the way the first regions cut did. Discovery is by ENTERING it (map_state.gd::update_region), which for this region means having crossed the South Bridge, so the name arrives at the moment the gate pays off. TUNABLE.",
+  "_comment_old_mill_crossing": "SE22, spec 3 Band 3's main gate, and `major` for the reason the South Bridge is: it is the only ground link across SE21's river, so it is the thing a whole band of the chapter exists to reach, not furniture on the way somewhere else. Shares the South Bridge's `bridge` icon deliberately -- the player has already learned what that mark means and what standing at one costs. Position is the river's narrows, terrain_playground.json crossings[1].channel.centre; if that moves, this moves.",
+  "_comment_the_long_water": "SE21, and D36's rule again: few and LARGE. ONE region for the whole river -- both banks, the narrows, the mill, and the ground the water is the edge of -- not one for the crossing and another for the reach above it. Centre sits on the course itself just downstream of the Old Mill Crossing so the label lands over the water rather than off one bank, and 72m carries it up the reach to the gorge and down past the far bank the player first stands on. Separation is comfortable and was checked, not assumed: 129m to The Rise, 149m to The Old Quarry, 168m to Grandpa's Village -- no two labels can crowd each other. Discovery is by ENTERING (map_state.gd::update_region), which for this region means walking out to the water, and that is the point: the river is meant to be found by seeing it. The NAME is the one piece of world-building invented here rather than quoted from the spec (which says only 'a substantial river'); it is TUNABLE like everything else in this file and reads in the family the other three already set."
 }

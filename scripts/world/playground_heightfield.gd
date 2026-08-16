@@ -30,6 +30,17 @@ var _warp_x := FastNoiseLite.new()
 var _warp_z := FastNoiseLite.new()
 var _fracture := FastNoiseLite.new()
 
+## SE21. The river's course, flattened once into plain floats, plus the rect
+## that bounds it. Built on first use and never again: `_river_carve` is
+## called for every one of the bake's 262144 samples and again for every
+## ground query in play, and re-reading a Dictionary tree of 18 points inside
+## that loop is the difference between a bake that takes minutes and one that
+## does not finish. The rect is the real saving -- the river touches maybe a
+## twentieth of the map, so almost every call returns on one Rect2 test.
+var _river_segments: Array = []
+var _river_bounds := Rect2()
+var _river_ready := false
+
 
 func _init(config: Dictionary = {}) -> void:
 	_config = config if not config.is_empty() else load_config()
@@ -200,6 +211,7 @@ func height_at(x: float, z: float) -> float:
 	height -= _stream_carve(x, z)
 	height -= _spoke_carve(x, z)
 	height -= _crossing_carve(x, z)
+	height -= _river_carve(x, z)
 	height += _outlet_shape(x, z)
 	height -= _shore_step(height)
 
@@ -265,6 +277,155 @@ func _crossing_carve(x: float, z: float) -> float:
 			continue
 		deepest = maxf(deepest, _carve_depth(spot, carve))
 	return deepest
+
+
+## SE21. How deep the river's channel cuts at a world XZ. Zero everywhere off
+## its course.
+##
+## The one carve on this map that is a POLYLINE rather than a straight bar,
+## because it is the one that has to divide the whole disc rather than
+## interrupt one road: 340m from ring to ring with a bend in it. So it walks
+## the course the way `_stream_carve` walks the stream's, and shapes what it
+## finds with the same smoothstep profile `_carve_depth` uses — full depth
+## within `half_width` of the centreline, fading to nothing over `rim`, and
+## fading out past the two ends over `end_fade`. One falloff grammar on this
+## map still, just evaluated per segment.
+##
+## `depth`, `half_width` and `rim` are authored PER COURSE POINT and
+## interpolated along the segment between them, which is the whole reason
+## this is not `_crossing_carve` with more entries. A chain of independent
+## bars would take `max()` of two smoothstepped ends wherever they meet, and
+## at the midpoint of any such join both fades are ~0.5 — a half-depth SADDLE
+## every few dozen metres, i.e. a crossable spot every few dozen metres,
+## which is precisely the property this feature exists to not have. Depth
+## also has to vary along the course for the water plane to sit level in the
+## finished bed (see the config's own `_comment_depths`), and interpolation
+## is how a bed gets shaped rather than stepped.
+func _river_carve(x: float, z: float) -> float:
+	if not _river_ready:
+		_build_river_cache()
+	if _river_segments.is_empty():
+		return 0.0
+	var spot := Vector2(x, z)
+	if not _river_bounds.has_point(spot):
+		return 0.0
+	var deepest := 0.0
+	var end_fade := maxf(float(_config.get("river", {}).get("end_fade", 14.0)), 0.001)
+	for segment: Dictionary in _river_segments:
+		var pa: Vector2 = segment["a"]
+		var ab: Vector2 = segment["ab"]
+		var length: float = segment["length"]
+		# Where along THIS segment the nearest point is, so depth/width/rim
+		# can be read at that exact station rather than at a vertex.
+		var t: float = clampf((spot - pa).dot(ab) / (length * length), 0.0, 1.0)
+		var nearest := spot.distance_to(pa + ab * t)
+		if nearest > float(segment["reach"]):
+			continue
+		var depth: float = lerpf(segment["depth_a"], segment["depth_b"], t)
+		if depth <= 0.0:
+			continue
+		var half: float = maxf(lerpf(segment["half_a"], segment["half_b"], t), 0.01)
+		var rim: float = maxf(lerpf(segment["rim_a"], segment["rim_b"], t), 0.01)
+		var across := 1.0 - smoothstep(half, half + rim, nearest)
+		if across <= 0.0:
+			continue
+		# Distance from whichever end of the whole course is nearer, so the
+		# channel closes off past the last point instead of ending in a
+		# squared wall. Both ends are outside the perimeter ring, so this fade
+		# is never something a player can stand in.
+		var station: float = float(segment["station"]) + length * t
+		var from_end: float = minf(station, float(segment["total"]) - station)
+		var along: float = smoothstep(0.0, end_fade, from_end) if from_end < end_fade else 1.0
+		deepest = maxf(deepest, depth * across * along)
+	return deepest
+
+
+## One pass over the authored course, flattened into segments with their
+## cross-sections and their distance from the head already worked out.
+func _build_river_cache() -> void:
+	_river_ready = true
+	_river_segments = []
+	var course: Array = _config.get("river", {}).get("course", [])
+	if course.size() < 2:
+		return
+	var total := _river_length()
+	var station := 0.0
+	var lo := Vector2(INF, INF)
+	var hi := Vector2(-INF, -INF)
+	for i in course.size() - 1:
+		var a: Dictionary = course[i]
+		var b: Dictionary = course[i + 1]
+		var pa := _vec2_of(a.get("at", []))
+		var pb := _vec2_of(b.get("at", []))
+		var length := pa.distance_to(pb)
+		if length <= 0.001:
+			continue
+		var reach: float = maxf(
+			float(a.get("half_width", 9.0)) + float(a.get("rim", 5.0)),
+			float(b.get("half_width", 9.0)) + float(b.get("rim", 5.0)))
+		_river_segments.append({
+			"a": pa, "ab": pb - pa, "length": length, "reach": reach,
+			"depth_a": float(a.get("depth", 0.0)), "depth_b": float(b.get("depth", 0.0)),
+			"half_a": float(a.get("half_width", 9.0)), "half_b": float(b.get("half_width", 9.0)),
+			"rim_a": float(a.get("rim", 5.0)), "rim_b": float(b.get("rim", 5.0)),
+			"station": station, "total": total,
+		})
+		station += length
+		for p: Vector2 in [pa, pb]:
+			lo = Vector2(minf(lo.x, p.x - reach), minf(lo.y, p.y - reach))
+			hi = Vector2(maxf(hi.x, p.x + reach), maxf(hi.y, p.y + reach))
+	_river_bounds = Rect2(lo, hi - lo)
+
+
+func _river_length() -> float:
+	var course: Array = _config.get("river", {}).get("course", [])
+	var total := 0.0
+	for i in course.size() - 1:
+		total += _vec2_of((course[i] as Dictionary).get("at", [])).distance_to(
+			_vec2_of((course[i + 1] as Dictionary).get("at", [])))
+	return total
+
+
+## How much a world point belongs to the river's channel: 1.0 inside the
+## water's own half-width, fading to 0.0 across the rim. Same contract shape
+## as `stream_factor`, `path_factor` and `drain_factor`, and for the same
+## reason those exist — the bake paints its wet bed from this and the scatter
+## keeps vegetation out of the channel with it, and the two agreeing about
+## where the water's edge is depends on them asking one function.
+func river_factor(x: float, z: float) -> float:
+	var course: Array = _config.get("river", {}).get("course", [])
+	if course.size() < 2:
+		return 0.0
+	var spot := Vector2(x, z)
+	var most := 0.0
+	for i in course.size() - 1:
+		var a: Dictionary = course[i]
+		var b: Dictionary = course[i + 1]
+		var pa := _vec2_of(a.get("at", []))
+		var pb := _vec2_of(b.get("at", []))
+		var length := pa.distance_to(pb)
+		if length <= 0.001:
+			continue
+		var t: float = clampf((spot - pa).dot(pb - pa) / (length * length), 0.0, 1.0)
+		var nearest := spot.distance_to(pa.lerp(pb, t))
+		var half: float = maxf(lerpf(float(a.get("half_width", 9.0)), float(b.get("half_width", 9.0)), t), 0.01)
+		var rim: float = maxf(lerpf(float(a.get("rim", 5.0)), float(b.get("rim", 5.0)), t), 0.01)
+		most = maxf(most, 1.0 - smoothstep(half, half + rim * 0.6, nearest))
+	return most
+
+
+## The river's water level, or NAN if this map has no river.
+func river_level() -> float:
+	var river: Dictionary = _config.get("river", {})
+	if not river.has("water_level"):
+		return NAN
+	return float(river.get("water_level"))
+
+
+func _vec2_of(raw: Variant) -> Vector2:
+	if not raw is Array or (raw as Array).size() < 2:
+		return Vector2.ZERO
+	return Vector2(float((raw as Array)[0]), float((raw as Array)[1]))
 
 
 ## EV5-remainder-2. The pond's outlet: a signed shape, positive where the bar

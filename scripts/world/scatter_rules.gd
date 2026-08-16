@@ -583,6 +583,22 @@ static func _consider(
 		if float(field.stream_factor(spot.x, spot.y)) > stream_threshold:
 			return
 
+	# SE21: nor in the river's channel, and here it matters more than it does
+	# for the brook. The river's bed is 10-18m below its rims and, at the
+	# bottom, FLAT and gentle -- exactly the ground every layer's slope rule
+	# says yes to -- so without this gate the scatter grows a meadow, with
+	# trees in it, along the floor of a river, several metres under the water
+	# surface. Same shape and same jitter as the two gates above; the reeds and
+	# scrub that DO belong at this waterline are placed by water.gd against the
+	# river's own measured shoreline, not by this scatter.
+	if not bool(layer.get("grows_in_stream", false)) and field.has_method("river_factor"):
+		var river_jitter := float(layer.get("path_edge_jitter", 0.0))
+		var river_threshold := 0.2
+		if river_jitter > 0.0:
+			river_threshold = maxf(river_threshold + rng.randf_range(-river_jitter, river_jitter), 0.02)
+		if float(field.river_factor(spot.x, spot.y)) > river_threshold:
+			return
+
 	# `path_standoff` (OF12): how far off a path this layer keeps, and the
 	# replacement for `path_avoid_radius`'s constant exclusion circle. The
 	# owner's verdict on `grandpas-house-route.png` — a landscaped

@@ -153,6 +153,37 @@ def icon_berries() -> Image.Image:
     return img
 
 
+def icon_mill_bridge_gear() -> Image.Image:
+    """SE22. The Old Mill Crossing's missing gear: a cogwheel, drawn as a hub
+    ring with square teeth around it. Deliberately NOT the key language
+    `icon_castle_gate_key` and `icon_south_bridge_key` share -- the Mill
+    Bridge Gear is the same KIND of item (`kind: key`) but it is a machine
+    part somebody pulled out, not something that turns in a lock, and the
+    silhouette is the only place that distinction can be made at 64px."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx = cy = 128
+    r = 84
+    teeth = 8
+    # Square teeth first, so the body drawn over them merges into one shape.
+    for i in range(teeth):
+        angle = i * (2 * math.pi / teeth)
+        tx = cx + math.cos(angle) * (r + 16)
+        ty = cy + math.sin(angle) * (r + 16)
+        d.regular_polygon((tx, ty, 26), n_sides=4, rotation=int(math.degrees(angle)), fill=FG)
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
+    # Hub bore, and the square keyway in it that says this drives something.
+    cutout_ellipse(d, (cx - 34, cy - 34, cx + 34, cy + 34))
+    d.rectangle((cx - 8, cy - 46, cx + 8, cy - 26), fill=FG)
+    # The rim, cut back to a spoked wheel rather than a solid disc.
+    for i in range(4):
+        angle = i * (math.pi / 2) + math.pi / 4
+        hx = cx + math.cos(angle) * 56
+        hy = cy + math.sin(angle) * 56
+        cutout_ellipse(d, (hx - 22, hy - 22, hx + 22, hy + 22))
+    return img
+
+
 def icon_rootstone() -> Image.Image:
     """SD18. `icon_stone()`'s own faceted-rock silhouette (same family, one
     resource generation up), with root tendrils threading out from its
@@ -570,6 +601,7 @@ ITEM_ICONS = {
     "tm_stone_rush.png": icon_tm_stone_rush,
     "tm_burrow_strike.png": icon_tm_burrow_strike,
     "rootstone.png": icon_rootstone,
+    "mill_bridge_gear.png": icon_mill_bridge_gear,
 }
 
 

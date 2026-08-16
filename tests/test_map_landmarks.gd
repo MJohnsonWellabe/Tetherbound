@@ -206,3 +206,75 @@ func test_no_regions_centre_falls_inside_another_region() -> void:
 			assert_true(gap > claimed,
 				"regions '%s' and '%s' are only %.0fm apart against a %.0fm radius — one region's own centre is inside the other, so which place a player is standing in depends on the order of this file" % [
 					str(a.get("id", "?")), str(b.get("id", "?")), gap, claimed])
+
+
+## SE21/SE22. The two new map entries are both anchored to geography that
+## lives in another file, and a map marker that has quietly drifted off the
+## thing it marks is invisible until someone walks there.
+const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+
+
+func _terrain() -> Dictionary:
+	var file := FileAccess.open(TERRAIN_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
+
+
+func _entry(list: Array, id: String) -> Dictionary:
+	for candidate: Variant in list:
+		if candidate is Dictionary and str((candidate as Dictionary).get("id", "")) == id:
+			return candidate as Dictionary
+	return {}
+
+
+func test_the_old_mill_crossing_marker_stands_on_the_crossing() -> void:
+	var landmark := _entry(_landmarks(), "old_mill_crossing")
+	assert_false(landmark.is_empty(), "no `old_mill_crossing` landmark; SE22's gate is not on the map")
+	if landmark.is_empty():
+		return
+	var crossing := _entry(_terrain().get("crossings", []) as Array, "old_mill_crossing")
+	assert_false(crossing.is_empty(), "no `old_mill_crossing` entry in terrain_playground.json")
+	if crossing.is_empty():
+		return
+	var channel: Dictionary = crossing.get("channel", {})
+	var at: Array = channel.get("centre", [])
+	var pos: Array = landmark.get("position", [])
+	assert_eq(at.size(), 2, "the crossing's channel has no centre")
+	assert_eq(pos.size(), 2, "the landmark has no position")
+	if at.size() != 2 or pos.size() != 2:
+		return
+	var drift := Vector2(float(at[0]), float(at[1])).distance_to(Vector2(float(pos[0]), float(pos[1])))
+	assert_true(drift < 1.0,
+		"the Old Mill Crossing marker is %.1fm off the narrows it marks -- the map would send a player to open water" % drift)
+
+
+func test_the_long_water_region_covers_its_own_river() -> void:
+	var region := _entry(_regions(), "the_long_water")
+	assert_false(region.is_empty(), "no `the_long_water` region; SE21's river is not a named place")
+	if region.is_empty():
+		return
+	var centre: Array = region.get("centre", [])
+	var radius := float(region.get("radius", 0.0))
+	if centre.size() != 2:
+		return
+	var middle := Vector2(float(centre[0]), float(centre[1]))
+	var course: Array = (_terrain().get("river", {}) as Dictionary).get("course", [])
+	assert_true(course.size() >= 2, "the river has no course to be a region around")
+	# The region must actually sit ON the water, not beside it, and it must
+	# take in the one crossing -- that is the whole reason it is a region and
+	# not a landmark.
+	var nearest := INF
+	for entry: Variant in course:
+		var at: Array = (entry as Dictionary).get("at", [])
+		if at.size() == 2:
+			nearest = minf(nearest, middle.distance_to(Vector2(float(at[0]), float(at[1]))))
+	assert_true(nearest < radius,
+		"the Long Water's centre is %.0fm from its own river against a %.0fm radius -- the label would land on dry meadow" % [nearest, radius])
+	var crossing := _entry(_terrain().get("crossings", []) as Array, "old_mill_crossing")
+	var at_crossing: Array = (crossing.get("channel", {}) as Dictionary).get("centre", [])
+	if at_crossing.size() == 2:
+		var reach := middle.distance_to(Vector2(float(at_crossing[0]), float(at_crossing[1])))
+		assert_true(reach < radius,
+			"the Old Mill Crossing is %.0fm outside The Long Water -- the crossing is not in the region it crosses" % (reach - radius))

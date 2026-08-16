@@ -192,10 +192,12 @@ func _run() -> void:
 	_check_rock_collision_alignment(world, failures)
 	await _check_south_bridge(world, player, failures)
 	await _check_the_quarry(world, player, failures)
+	await _check_the_river(world, player, failures)
+	await _check_mill_crossing(world, player, failures)
 
 	print("")
 	if failures.is_empty():
-		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, and the Old Quarry past it stands and holds a player up.")
+		print("traversal: OK — the ground is solid across the playground, the perimeter holds, the kill volume returns a fallen player to spawn, the South Bridge is shut without its key and open with it, the Old Quarry past it stands and holds a player up, the river cannot be walked across between its crossings, and the Old Mill Crossing is shut without its gear and open with it.")
 		quit(0)
 	else:
 		for line in failures:
@@ -340,66 +342,178 @@ const BRIDGE_BLOCKED_M := 0.0
 
 
 func _check_south_bridge(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
-	var bridge: Node3D = world.get_node_or_null(^"SouthBridge") as Node3D
+	await _check_gated_crossing(world, player, failures,
+		^"SouthBridge", "the South Bridge", "south_bridge_key", "south_bridge_open")
+
+
+## SE22: the Old Mill Crossing, the only way over SE21's river. Same
+## assertions as the South Bridge and deliberately the same function — the two
+## crossings are one mechanism (`gated_crossing.gd`) with two sets of ids, and
+## a second copy of this walk would be a second thing to keep in step.
+func _check_mill_crossing(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	await _check_gated_crossing(world, player, failures,
+		^"MillCrossing", "the Old Mill Crossing", "mill_bridge_gear", "mill_crossing_restored")
+
+
+func _check_gated_crossing(world: Node, player: CharacterBody3D, failures: Array[String],
+		node_name: StringName, label: String, key_item: String, flag: String) -> void:
+	var bridge: Node3D = world.get_node_or_null(node_name) as Node3D
 	if bridge == null:
-		failures.append("no SouthBridge in the scene; spec §3's Gate 1 is not built")
+		failures.append("no %s in the scene; %s is not built" % [node_name, label])
 		return
 	var camera_rig: Node3D = world.get_node_or_null(^"CameraRig") as Node3D
 	if camera_rig == null:
-		failures.append("no CameraRig in the scene; cannot aim the walk at the South Bridge")
+		failures.append("no CameraRig in the scene; cannot aim the walk at %s" % label)
 		return
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
-		failures.append("no Game autoload; the South Bridge has no inventory or flag store to read")
+		failures.append("no Game autoload; %s has no inventory or flag store to read" % label)
 		return
 	var inventory: RefCounted = game.get("inventory")
 	var progression: RefCounted = game.get("progression")
 
 	var prompt: Node3D = bridge.get_node_or_null(^"Interactable") as Node3D
 	if prompt == null:
-		failures.append("the South Bridge has no Interactable; the gate cannot be tried at all")
+		failures.append("%s has no Interactable; the gate cannot be tried at all" % label)
 		return
 
 	if bool(bridge.call("is_open")):
-		failures.append("the South Bridge started open on a fresh world; Gate 1 is not a gate")
+		failures.append("%s started open on a fresh world; it is not a gate" % label)
 		return
 
 	# --- locked: the key is not in the satchel, and trying it changes nothing.
 	# `remove` is all-or-nothing, so ask for exactly what is there — a blanket
 	# "remove 99" would return false and leave a key sitting in the satchel.
-	var carried := int(inventory.call("count", "south_bridge_key"))
+	var carried := int(inventory.call("count", key_item))
 	if carried > 0:
-		inventory.call("remove", "south_bridge_key", carried)
+		inventory.call("remove", key_item, carried)
 	prompt.call("interaction_activate")
 	await physics_frame
 	if bool(bridge.call("is_open")):
-		failures.append("the South Bridge opened without its key")
-	if bool(progression.call("has", "south_bridge_open")):
-		failures.append("trying the locked bridge set its open flag anyway")
+		failures.append("%s opened without its key" % label)
+	if bool(progression.call("has", flag)):
+		failures.append("trying the locked gate at %s set its open flag anyway" % label)
 
 	var reached_locked: float = await _walk_at_the_bridge(bridge, player, camera_rig)
-	print("  south bridge, locked:   reached %+.1fm past the gully centre" % reached_locked)
+	print("  %s, locked:   reached %+.1fm past the gap" % [label, reached_locked])
 	if reached_locked > BRIDGE_BLOCKED_M:
-		failures.append("crossed the South Bridge without the key (%.1fm past the gully centre) — the gate can be walked around" % reached_locked)
+		failures.append("crossed %s without the key (%.1fm past the gap) — the gate can be walked around" % [
+			label, reached_locked])
 
 	# --- unlocked: the key opens it, is spent doing so, and the span carries.
-	inventory.call("add", "south_bridge_key", 1)
+	inventory.call("add", key_item, 1)
 	prompt.call("interaction_activate")
 	await physics_frame
 	if not bool(bridge.call("is_open")):
-		failures.append("the South Bridge stayed shut with its key in the satchel")
+		failures.append("%s stayed shut with its key in the satchel" % label)
 		return
-	if int(inventory.call("count", "south_bridge_key")) != 0:
-		failures.append("the South Bridge Key was not consumed opening the bridge")
-	if not bool(progression.call("has", "south_bridge_open")):
-		failures.append("the open bridge did not set its progression flag; a reload would relock it")
+	if int(inventory.call("count", key_item)) != 0:
+		failures.append("'%s' was not consumed opening %s" % [key_item, label])
+	if not bool(progression.call("has", flag)):
+		failures.append("the open crossing at %s did not set its progression flag; a reload would relock it" % label)
 
 	var reached_open: float = await _walk_at_the_bridge(bridge, player, camera_rig)
-	print("  south bridge, unlocked: reached %+.1fm past the gully centre" % reached_open)
+	print("  %s, unlocked: reached %+.1fm past the gap" % [label, reached_open])
 	if reached_open < BRIDGE_CROSSED_M:
-		failures.append("could not cross the open South Bridge (only %.1fm past the gully centre)" % reached_open)
+		failures.append("could not cross the open %s (only %.1fm past the gap)" % [label, reached_open])
 	if player.global_position.y < THROUGH_THE_FLOOR:
-		failures.append("fell into the south gully while crossing the open bridge")
+		failures.append("fell into the gap while crossing the open %s" % label)
+
+
+## SE21: the river itself, asserted the only way that is worth anything — by
+## walking a body at it, away from the one place it can be crossed, and
+## measuring how far the body got. Not "is the config deep enough": the gully
+## SC14 cut was deep enough too, and what its own probe caught was a player
+## stepping onto the deck from the side, which no config check can see.
+##
+## Three stations, spread down the course, none of them near the narrows.
+const RIVER_STATIONS: Array[int] = [11, 13, 15]
+const RIVER_START_BACK := 14.0
+const RIVER_WALK_FRAMES := 420
+## The player has crossed the river when they are this far past the
+## centreline. Deliberately NOT a small number, and the reason is the shape of
+## the thing: the channel is 22-26m wide, so a player who slides down the near
+## wall and comes to rest on the bed is legitimately within a few metres of the
+## centreline without having crossed anything. 12m puts them up the FAR wall.
+## The stricter half of this check is the settled position below — whatever
+## happened mid-walk, a player who did not cross ends up back on the near bank,
+## because that is where river.gd's recovery volumes put them.
+const RIVER_CROSSED_M := 12.0
+## And where they must have ended up: still on the near side, or at worst on
+## the bed. Anything past this is standing on the far bank.
+const RIVER_SETTLED_M := 4.0
+const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
+
+
+func _check_the_river(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
+	var camera_rig: Node3D = world.get_node_or_null(^"CameraRig") as Node3D
+	if camera_rig == null:
+		failures.append("no CameraRig in the scene; cannot aim a walk at the river")
+		return
+	var file := FileAccess.open(TERRAIN_CONFIG, FileAccess.READ)
+	var parsed: Variant = JSON.parse_string(file.get_as_text()) if file != null else null
+	var course: Array = ((parsed as Dictionary).get("river", {}) as Dictionary).get("course", []) \
+		if parsed is Dictionary else []
+	if course.size() < 3:
+		failures.append("no river course in %s; SE21's river is not authored" % TERRAIN_CONFIG)
+		return
+	if world.get_node_or_null(^"River") == null:
+		failures.append("no River node in the scene; nothing would recover a player who walks in")
+
+	for index in RIVER_STATIONS:
+		if index >= course.size() - 1:
+			continue
+		var here := _course_point(course, index)
+		var next := _course_point(course, index + 1)
+		var previous := _course_point(course, maxi(index - 1, 0))
+		var along := (next - previous).normalized()
+		var across := Vector2(-along.y, along.x)
+		# Toward the far bank, whichever side that is here: the course bends,
+		# and a hardcoded +X would stop testing the thing the moment it moves.
+		if (here - Vector2(10.0, -10.0)).dot(across) < 0.0:
+			across = -across
+
+		var start := here - across * RIVER_START_BACK
+		var ground: float = float(world.call("ground_height_at", start.x, start.y))
+		if is_nan(ground):
+			failures.append("no ground at the river's near bank at %.0f, %.0f" % [start.x, start.y])
+			continue
+		player.global_position = Vector3(start.x, ground + 1.0, start.y)
+		player.velocity = Vector3.ZERO
+		var outward := Vector3(across.x, 0.0, across.y)
+		camera_rig.set("yaw", Vector3(0.0, 0.0, -1.0).signed_angle_to(outward, Vector3.UP))
+		for i in 10:
+			await physics_frame
+
+		var best := -INF
+		Input.action_press("move_forward")
+		for i in RIVER_WALK_FRAMES:
+			await physics_frame
+			var at := player.global_position
+			best = maxf(best, (Vector2(at.x, at.z) - here).dot(across))
+		Input.action_release("move_forward")
+		for i in 20:
+			await physics_frame
+		var settled := player.global_position
+		print("  river at %.0f, %.0f: reached %+.1fm past the centreline, settled %+.1fm across at y %.1f" % [
+			here.x, here.y, best, (Vector2(settled.x, settled.z) - here).dot(across), settled.y])
+		if best >= RIVER_CROSSED_M:
+			failures.append("walked across the river at %.0f, %.0f (%.1fm past the centreline) — it divides nothing" % [
+				here.x, here.y, best])
+		var ended := (Vector2(settled.x, settled.z) - here).dot(across)
+		if ended >= RIVER_SETTLED_M:
+			failures.append("ended up %.1fm past the river's centreline at %.0f, %.0f — on the far bank, without a crossing" % [
+				ended, here.x, here.y])
+		# And whatever happened, the player is not left at the bottom of a
+		# channel they cannot climb out of: river.gd's recovery volumes put
+		# them back on the bank they started from.
+		if settled.y < THROUGH_THE_FLOOR:
+			failures.append("fell out of the world at the river at %.0f, %.0f" % [here.x, here.y])
+
+
+func _course_point(course: Array, index: int) -> Vector2:
+	var at: Array = (course[index] as Dictionary).get("at", [])
+	return Vector2(float(at[0]), float(at[1]))
 
 
 ## SD16: the Old Quarry is reachable past the bridge, and it is a place rather
