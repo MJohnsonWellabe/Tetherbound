@@ -38,6 +38,96 @@ The owner also asked whether they were on an old build. Partly answered here:
 `OW3`'s fog does not exist in code at all, and `OW1`'s hotbar has no separate
 section *by design* — so those two are real regardless of build age.
 
+### OW10 — A menu does not own the d-pad, so navigating a menu uses a potion
+`model: opus` · `tests: smoke_menu, smoke_modal_stacking, test_inventory` · `area: ui`
+Owner, 2026-08-16: *"the inputs don't know how to read menus. so if I have a menu
+up and hit a dpad button, it still reads the hot bar control not to the menu. it
+tries to use a potion or whatever rather than move on the menu."*
+
+**Game-breaking, and confirmed in code — this is a missing gate, not a mystery.**
+`playground_hud.gd::_read_hotbar_input` (1161) has exactly two gates: a fight is
+running, and the interaction arbiter's `enabled` flag is false. That flag covers
+the *story* modals only — a conversation, the naming prompt, the starter picker,
+set by `sequence_director.gd::_refresh_lockout`. **Nothing gates it on the pause
+shell, the backpack, or any tab being open.** So with a menu up, combat idle and
+the arbiter enabled, a d-pad press fires `hotbar_2`/`hotbar_3` and
+`_use_hotbar_slot()` spends whatever is in that slot. `_read_world_hotkeys`
+(1373) has the same two gates plus `_build_menu_is_open()`, so it leaks the same
+way for `use_tool` and `build_open`.
+
+`combat_hud.gd:725-737` documents the mirror of this leak and calls it "a
+documented, pre-existing gap." **Half of that comment is now stale** — it claims
+`playground_hud.gd` "polls its hotbar with no combat gate at all", and the combat
+gate exists today. The menu half was never closed. Correct the comment as part of
+this.
+
+**Do not add a third ad-hoc gate.** Two have been added one at a time (HD2 for
+combat, OF25 for story modals) and a third arrives the moment a fourth panel
+exists. The mechanism is that world verbs are polled from `_process` with
+`Input.is_action_just_pressed`, which is a global read with no concept of one
+consumer taking a press before another. Give the game **one authoritative answer
+to "who owns input right now"** and have every world-verb poll ask it.
+
+**Likely upstream of two open items.** `OW4`'s potion picker dead end and the
+blind playtest's stray-confirm-picked-up-an-orb-stack are both consistent with
+world verbs firing under a panel. Check them against this before fixing either
+separately.
+
+**Done when** no press that a menu is meant to consume also reaches the world,
+on a gamepad, with a regression test that fails on today's build.
+
+### OW11 — Building happens through a menu you cannot see past
+`model: opus` · `tests: smoke_free_build, test_build_grid` · `area: ui`
+Owner, 2026-08-16: *"building needs to work how Valheim does. you get a piece
+then the menu disappears for you to place it. right now it's asking you to build
+through a menu and you can't see shit."*
+
+**Read `scripts/build/build_placer.gd` before assuming this is unbuilt.** Its
+header (145-153) records that the ghost/rotate/snap/grid system "was working the
+entire time" and that `build_menu.gd::_pick()` already arms `pending_build` and
+closes the menu on the same press. A `build_open` hotkey and a `torch_place`
+hotkey both already hand off to the placer directly
+(`playground_hud.gd:1360-1390`). So the Valheim shape may be most of the way
+there and the defect is the **selector** in front of it, not the placement.
+
+Establish what the player actually sees first: how the build menu is reached
+(the pause shell's Build tab versus the direct `build_open` hotkey), how much of
+the screen it covers, and whether the armed ghost is legible once it closes. The
+owner's "can't see shit" is the symptom to reproduce — decide from a real frame
+whether it names the selector's opacity, the ghost's readability, or the trip
+through the pause shell.
+
+Keep what works. `build_grid.gd` is pure, tested, and shared with the authored
+`building_prefabs.json` grid so player-placed and author-placed walls land on the
+same lines; nothing here should touch it.
+
+**Done when** picking a piece takes the player straight to placing it in the
+world with the world visible, and the ghost reads at a glance.
+
+### OW12 — The torch should be a carried item, not a thing you build
+`model: sonnet` · `tests: smoke_playground, test_inventory` · `area: ui`
+Owner, 2026-08-16: *"torches need to be a carry able item not placeable one."*
+
+**Both halves already exist, which makes this smaller than it sounds.** A carried
+torch is real — `scripts/player/torch.gd` bone-attaches it, and `items.json:550`
+names it as the pattern `tool_hold.gd` copied for tools. A placeable torch is
+also real — `buildables.json:121-133`, free to build.
+
+**This supersedes `OF24`, and that should be said out loud rather than quietly
+undone.** `OF24` was itself an explicit owner directive — *"Torch building should
+be free"* — and `buildables.json:133` records it verbatim. The newer word wins
+(the same rule D23 applies to the spec), but leave the old `_comment_free` in
+place with a note naming this item, so the reversal is legible to whoever reads
+that file next.
+
+Working assumption, cheap for the owner to reverse in one line: the carried torch
+becomes the real one and reaches the hand from the inventory the way a tool does;
+the buildable is retired rather than kept as a second path. If retiring it
+strands camp lighting at night, say so instead of inventing a replacement.
+
+**Done when** a player can take a torch out of the backpack and carry it lit,
+and is not offered a torch to build.
+
 ### OW1 — Inventory items cannot be moved, and the hotbar has no home in the UI
 `model: opus` · `tests: smoke_menu, test_inventory` · `area: ui`
 Owner: *"I can't move things in my inventory. There's no separate hot bar
