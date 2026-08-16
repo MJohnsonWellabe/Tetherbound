@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tetherbound</title>
-<meta name="description" content="A third-person survival, crafting and creature-training game. Five creatures, no storage. Windows and ROG Ally build.">
+<meta name="description" content="A third-person survival, crafting and creature-training game. Five creatures, no storage. A 3-4 hour first chapter for Windows and the ROG Ally.">
 <meta property="og:title" content="Tetherbound">
 <meta property="og:description" content="Five creatures. No storage. Your creature does the fighting, and you have to be there.">
 <!-- og:image cannot fall back gracefully, so it must point at a file that is
@@ -13,38 +13,32 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🌿</text></svg>">
 
 <!--
-  SCREENSHOTS STILL TO CAPTURE (after the world rebuild, via tools/survey.sh):
+  Every image on this page is a REAL in-game frame from the project's own
+  capture tools, not concept art and not a mock-up. That is deliberate: a
+  download page that promises something the build does not do is the fastest
+  way to stop trusting your own screenshots.
 
-    img/hero-meadow.jpg           hero — rolling meadows, village in the middle
-                                  distance, room at the bottom for the gradient
-    img/opening-bedroom.jpg       the upstairs bedroom in Grandpa's farmhouse,
-                                  first light through the window
-    img/starters-by-the-door.jpg  the three starters standing by the door,
-                                  trainer approaching one of them
-    img/village-square.jpg        the farmstead village square, dirt paths
-                                  leading out into the meadows
-    img/combat-arena.jpg          piloted combat inside the bounded arena
-    img/aim-arc.jpg               catch aiming, trajectory arc visible
-    img/camp-dusk.jpg             first-day camp under the stars — fire,
-                                  bedroll, creature beside it
+  It also means these rot. Re-shoot after any milestone that changes how the
+  game looks — site/README.md carries the commands. Every frame here was
+  captured 2026-08-16; the set before it was allowed to age past a settlement
+  rebuild, a roster repaint and a control-scheme change, and the page spent a
+  week showing a village that no longer existed.
 
-  Every slot degrades gracefully: each is a layered CSS background, so a
-  missing file falls through to an existing committed frame where one fits,
-  or to a palette gradient where none does. The page never shows a broken
-  image and never needs all seven to exist.
-
-  Every image on this page is a REAL in-game frame from the survey tools, not
-  concept art and not a mock-up. That is deliberate: a download page that
-  promises something the build does not do is the fastest way to stop trusting
-  your own screenshots. When the game looks better, these get replaced by
-  re-running the survey.
+  Each image slot is a layered CSS background, so a missing file falls through
+  to another committed frame where one fits, or to a palette gradient where
+  none does. The page never shows a broken image.
 
   Colours are data/config/palette.json — the same file the game's materials,
   lighting and UI read. The site and the build cannot drift apart in palette
   without somebody changing that file.
 
-  Everything is inline. No fonts, no analytics, no CDN, no JS: the page is one
-  request plus its images, and it works offline once loaded.
+  Type direction is docs/art/reference/ev9_display_lettering_style_guide.png:
+  rounded geometric sans, high x-height, wide stance, cream on near-black with
+  gold rules. The wordmark is set in live type rather than an image, so it
+  stays crisp at any size and nothing needs re-exporting.
+
+  Everything is inline. No fonts, no analytics, no CDN: the page is one request
+  plus its images, and it works offline once loaded.
 -->
 
 <style>
@@ -61,7 +55,11 @@
   --day-blue:#3b6f93;
   --dusk:#5a5c92;
   --night-plum:#704f71;
-  /* Reserved for danger in-game; used here only for the "prototype" mark,
+  /* Team Tether's reserved energy colour (SF33, sampled from the owner's pylon
+     board). Added to palette.json 2026-08-15; mirrored here because this file
+     claims to track that one verbatim. */
+  --tether-teal:#3fe8c4;
+  /* Reserved for danger in-game; used here only for the build-state mark,
      which is the one warning on the page. */
   --oxblood:#332228;
 
@@ -112,13 +110,32 @@ a{color:var(--flower-gold)}
   background:
     linear-gradient(to top, #12160f 4%, rgba(18,22,15,.72) 34%, rgba(18,22,15,.15) 68%, rgba(59,111,147,.10) 100%);
 }
+/* Set in live type, not an image. The direction is the game's own display
+   lettering board (docs/art/reference/ev9_display_lettering_style_guide.png):
+   rounded geometric sans, high x-height, wide stance, cream on near-black.
+   Avenir/Nunito/Century Gothic are the closest rounded geometrics that ship
+   with the platforms this page is read on; the stack degrades to the system
+   sans rather than pulling a webfont, because one request plus images is the
+   whole point of this page. */
 .wordmark{
+  font-family:"Avenir Next","Nunito Sans",Nunito,"Century Gothic",
+              ui-rounded,"Segoe UI",system-ui,sans-serif;
   font-size:clamp(2.9rem,10vw,6.5rem);
   line-height:.95;
-  margin:0 0 .3em;
-  font-weight:800;
-  letter-spacing:-.03em;
+  margin:0 0 .28em;
+  font-weight:700;
+  /* Wide stance, per the board. Display type only — body copy keeps normal
+     tracking. */
+  letter-spacing:.055em;
+  text-transform:uppercase;
   text-shadow:var(--shadow);
+}
+/* The gold rule under the mark, from the same board. */
+.wordmark::after{
+  content:""; display:block;
+  width:min(15rem,42vw); height:3px; margin-top:.34em;
+  border-radius:2px;
+  background:linear-gradient(90deg,var(--flower-gold),var(--tether-teal) 78%,transparent);
 }
 .wordmark span{
   background:linear-gradient(100deg,var(--flower-gold),var(--trail-wheat) 55%,var(--stone-sand));
@@ -235,6 +252,23 @@ figcaption b{color:var(--flower-gold);font-weight:700;letter-spacing:.08em;text-
 .s-combat{background-image:url("img/combat-arena.jpg"),url("img/02-arena-opens.jpg"),linear-gradient(160deg,var(--slate-cool),var(--timber))}
 .s-aim{background-image:url("img/aim-arc.jpg"),url("img/08-orb-in-flight.jpg"),linear-gradient(160deg,var(--day-blue),var(--dusk))}
 .s-strike{background-image:url("img/06-charged-attack-lands.jpg"),linear-gradient(160deg,var(--slate-cool),var(--oxblood))}
+.s-rain{background-image:url("img/weather-rain.jpg"),linear-gradient(160deg,var(--slate-cool),var(--stone-grey))}
+.s-night{background-image:url("img/night-torch.jpg"),linear-gradient(160deg,var(--night-plum),#0b0e0a)}
+
+/* The roster grid is a real <img> rather than a background: it is the one
+   image on the page whose detail matters more than its crop, and it must be
+   able to scale down without being cut. */
+.roster{margin:0}
+.roster img{
+  width:100%; height:auto; display:block;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:var(--shadow);
+  background:linear-gradient(160deg,var(--timber),#0b0e0a);
+}
+.roster figcaption{
+  margin-top:.7rem; color:var(--ink-dim); font-size:.95rem;
+}
 
 .band{
   background:
@@ -258,8 +292,8 @@ footer p{margin:.4rem 0}
 <body>
 
 <header class="hero">
-  <div class="hero-art" role="img" aria-label="Rolling meadows under a day sky, with the farmstead village in the middle distance"></div>
-  <span class="flag">Vertical slice · in progress</span>
+  <div class="hero-art" role="img" aria-label="Rolling meadows under a day sky, with the village in the middle distance"></div>
+  <span class="flag">First chapter · in progress</span>
   <h1 class="wordmark"><span>Tetherbound</span></h1>
   <p class="tagline">Five creatures on your belt. No storage box, no second chances at the roster. Your creature does the fighting — and you are in there with it.</p>
 
@@ -272,9 +306,11 @@ footer p{margin:.4rem 0}
       <span>Download for Windows<small>ROG Ally · handheld ready</small></span>
     </a>
     <p class="get-note">
-      Unzip anywhere and run <code>Tetherbound.exe</code>. Keep the <code>.pck</code>
-      and the <code>.dll</code> beside it. Controller first — a gamepad is the
-      way this is meant to be played.
+      About 477&nbsp;MB. Unzip it and keep the folder as it comes — run
+      <code>Tetherbound.exe</code> from inside it. The terrain library is
+      loaded from its own subfolder, so moving the exe out on its own gets you
+      a world you fall through. Controller first — a gamepad is the way this is
+      meant to be played.
     </p>
   </div>
 </header>
@@ -284,9 +320,10 @@ footer p{margin:.4rem 0}
     <h2>What it is</h2>
     <p class="lede">
       A third-person survival, crafting and creature-training game built in Godot,
-      aimed at a handheld first. This build is the Meadows vertical slice: wake up
-      in a farmhouse, choose a starter, walk out into the biome, and fight and
-      catch wild creatures yourself.
+      aimed at a handheld first. This build is the Meadows — the game's first
+      chapter, about three to four hours: wake up in a farmhouse, choose a
+      starter, walk out into the biome, and fight and catch wild creatures
+      yourself.
     </p>
 
     <ul class="rules">
@@ -303,9 +340,9 @@ footer p{margin:.4rem 0}
       Not with a menu. You wake in the upstairs bedroom of Grandpa's farmhouse,
       and three starters are standing by the door. You choose one by walking up
       to it. The other two stay with Grandpa. Then the village lets you out —
-      a handful of farmsteads around a square, dirt paths running off into the
-      meadows — and by nightfall you have built your first camp and your first
-      day is over.
+      plaster and timber around a square, a well, a workshop, dirt paths running
+      off into the meadows — and by nightfall you have built your first camp and
+      your first day is over.
     </p>
     <div class="shots">
       <figure>
@@ -317,7 +354,7 @@ footer p{margin:.4rem 0}
         <figcaption><b>Choose</b>The starters wait by the door. You pick one by walking to it, not by scrolling a list.</figcaption>
       </figure>
       <figure>
-        <div class="shot s-village" role="img" aria-label="The farmstead village square, with dirt paths leading out into rolling meadows"></div>
+        <div class="shot s-village" role="img" aria-label="The village square, with dirt paths leading out into rolling meadows"></div>
         <figcaption><b>Leave</b>The village square. Every dirt path out of it ends in meadow.</figcaption>
       </figure>
       <figure>
@@ -351,6 +388,39 @@ footer p{margin:.4rem 0}
     </div>
   </section>
 
+  <section class="wrap">
+    <h2>Seventeen, and you keep five</h2>
+    <p class="lede">
+      The whole Meadows roster. Ground, water and air — no fire, no electric,
+      not in this biome. Every one of them is modelled from the project's own
+      concept art, and a handful carry a rarer colourway you will only see if
+      you meet the right one.
+    </p>
+    <figure class="roster">
+      <img src="img/roster.jpg" alt="The seventeen Meadows creatures, each shown in its ordinary colourway beside its rarer one" loading="lazy" decoding="async" width="1280" height="720">
+      <figcaption>Every species in the chapter. The belt holds five of them.</figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap">
+    <h2>Weather, and the dark</h2>
+    <p class="lede">
+      The meadow is not one clear afternoon. Rain and fog roll through, some
+      creatures only come out at night, and after sunset you carry your own
+      light or you do not see the path.
+    </p>
+    <div class="shots">
+      <figure>
+        <div class="shot s-rain" role="img" aria-label="The meadow under rain, the far hills lost in grey"></div>
+        <figcaption><b>Rain</b>Weather is a condition of the world, not a filter over it — and some spawns wait for it.</figcaption>
+      </figure>
+      <figure>
+        <div class="shot s-night" role="img" aria-label="The meadow at night, lit by a carried torch"></div>
+        <figcaption><b>Night</b>You carry a torch. Beyond its reach the meadow is genuinely dark.</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section class="wrap" id="patch-notes-section" hidden>
     <h2>Recent changes</h2>
     <p class="patch-date" id="patch-notes-date"></p>
@@ -380,15 +450,20 @@ footer p{margin:.4rem 0}
   <section class="wrap">
     <h2>Honest state of it</h2>
     <p class="lede">
-      This is a prototype of one biome, not a finished game. What is here is the
-      Meadows: the opening morning, the village, wild combat, catching, and the
-      first camp. What is not here is everything past the slice. The creatures
-      and characters — all fifteen species, the trainer, Grandpa, the Warden,
-      the Veridian Stag — are original productions, modelled from the project's
-      own concept art through a Meshy-assisted pipeline. The environments are
-      assembled from CC0 kits, credited below. A blind reviewer looks at every
-      build and says what is wrong with it; those reviews are in the repository
-      alongside the code.
+      This is one chapter, not a finished game. What is here is the Meadows,
+      end to end: the opening morning, the village and the people in it, wild
+      combat and catching, trainers who want a battle, levels and moves and
+      evolution, building, riding, weather, day and night, and saves. What is
+      not here is the seven biomes after it.
+    </p>
+    <p class="lede">
+      The creatures and characters — all seventeen species, the trainer,
+      Grandpa, the Warden, the Veridian Stag — are original productions,
+      modelled from the project's own concept art through a Meshy-assisted
+      pipeline. The environments are assembled from CC0 kits, credited below.
+      A blind reviewer looks at every build and says what is wrong with it,
+      including a full play-through audit that found the opening unfinishable
+      and got it fixed; those reviews are in the repository alongside the code.
     </p>
     <div class="get">
       <a class="btn" href="https://github.com/MJohnsonWellabe/Tetherbound">
@@ -403,8 +478,8 @@ footer p{margin:.4rem 0}
 
 <footer>
   <p>Built with Godot 4.7. Windows and ROG Ally.</p>
-  <p>Creatures and characters — all fifteen species, the trainer, Grandpa, the Warden and the Veridian Stag — are original productions, generated from the project's own concept art.</p>
-  <p>Environment art: Quaternius (Stylized Nature MegaKit, Farm Buildings, furniture and survival packs, CC0) and Kenney (Nature Kit, CC0). Terrain textures: ambientCG (CC0). Skies: Poly Haven (CC0). Full provenance in <a href="https://github.com/MJohnsonWellabe/Tetherbound/blob/main/docs/ASSET_LEDGER.md">the asset ledger</a>.</p>
+  <p>Creatures and characters — all seventeen species, the trainer, Grandpa, the Warden and the Veridian Stag — are original productions, generated from the project's own concept art.</p>
+  <p>Environment art: Quaternius (Stylized Nature MegaKit, Medieval Village MegaKit, Modular Medieval Building Pack, furniture and survival packs, CC0). Interface icons, fonts and input prompts: Kenney (CC0). Terrain textures: ambientCG (CC0). Skies: Poly Haven (CC0). Full provenance in <a href="https://github.com/MJohnsonWellabe/Tetherbound/blob/main/docs/ASSET_LEDGER.md">the asset ledger</a>.</p>
 </footer>
 
 </body>

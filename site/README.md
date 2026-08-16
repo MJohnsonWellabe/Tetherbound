@@ -41,35 +41,49 @@ the wrong fix: the flag is telling the truth.
 `site/img/*.jpg` are in-game captures, not concept art and not mock-ups. To
 refresh them after a visual change:
 
+**Import first.** Godot loads textures from `.godot/`, not from the repo, so a
+capture run straight after pulling art changes renders the *old* textures — or
+fails to load them at all and renders flat. This has bitten a refresh already:
+
+```bash
+godot --headless --path . --import      # ALWAYS, after any pull that touched art
+git checkout project.godot              # the import pass strips its comments
+```
+
+Then capture. Shoot at 1280x720 and downscale in the conversion step — the
+small figures only need 960 wide, and a bigger source survives a re-crop:
+
 ```bash
 tools/survey.sh                                            # exploration frames
 tools/survey_combat.sh                                     # combat frames
-xvfb-run -a -s "-screen 0 960x540x24" godot --path . \
-  --rendering-driver opengl3 --resolution 960x540 \
-  --script tools/capture_site_shots.gd                     # authored page shots
-python3 - <<'EOF'
-from PIL import Image
-for src, out in [
-    ("shots/site/hero-meadow.png", "site/img/hero-meadow.jpg"),
-    ("shots/site/village-square.png", "site/img/village-square.jpg"),
-    ("shots/site/opening-bedroom.png", "site/img/opening-bedroom.jpg"),
-    ("shots/site/starters-by-the-door.png", "site/img/starters-by-the-door.jpg"),
-    ("shots/site/camp-dusk.png", "site/img/camp-dusk.jpg"),
-    ("shots/01-spawn-outward.png", "site/img/01-spawn-outward.jpg"),
-    ("shots/03-rise-overlook.png", "site/img/03-rise-overlook.jpg"),
-    ("shots/05-spawn-low-sun.png", "site/img/05-spawn-low-sun.jpg"),
-    ("shots/combat/02-arena-opens.png", "site/img/02-arena-opens.jpg"),
-    ("shots/combat/06-charged-attack-lands.png", "site/img/06-charged-attack-lands.jpg"),
-    ("shots/combat/08-orb-in-flight.png", "site/img/08-orb-in-flight.jpg"),
-]:
-    Image.open(src).convert("RGB").save(out, quality=82, optimize=True)
-EOF
+for t in capture_site_shots capture_shiny_pairs capture_weather \
+         capture_torch_night capture_catch_sequence; do
+  xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
+    --rendering-driver opengl3 --resolution 1280x720 --script tools/$t.gd
+done
 ```
 
-The page is written to survive missing authored shots: `combat-arena.jpg` and
-`aim-arc.jpg` fall back to the survey combat frames via CSS multi-background,
-and each section keeps a palette gradient as its floor. Skipping a capture
-degrades the page, it does not break it.
+Never pass `--headless` to anything that renders — it swaps in a no-op renderer
+and the run hangs. Check the **file count**, not the exit code: Terrain3D aborts
+on shutdown after rendering (D06), so a successful run still exits non-zero.
+
+Conversion is `tools/site_images.py` — it holds the source-to-slot mapping so
+this README cannot drift out of sync with it again (it did: it named
+`06-charged-attack-lands.png` for a year after the tool started writing
+`06-charged-attack-lands-offaxis.png`, so the documented recipe failed outright).
+
+```bash
+python3 tools/site_images.py
+```
+
+The page is written to survive missing shots: several slots fall back to another
+committed frame via CSS multi-background, and each section keeps a palette
+gradient as its floor. Skipping a capture degrades the page, it does not break
+it.
+
+Do not commit `site/img/*.jpg.import`. They are Godot sidecars — `site/` lives
+inside the Godot project, so the editor imports the page's JPEGs as textures.
+They serve no purpose on a website and get uploaded to Pages.
 
 `shots/` is gitignored and regenerated; `site/img/` is committed, because the
 page has to keep working without anyone re-running a survey first.
