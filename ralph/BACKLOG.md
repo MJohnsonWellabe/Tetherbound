@@ -1930,63 +1930,18 @@ a firing's.**
 
 ### 8a — Lower Meadows (spec Phase C)
 
-### R8.1 — World trainer encounter and team combat · `model: sonnet` · `tests: smoke_trainer_battle` (new)
-Trainer-owned creatures **cannot** be caught. Spec §12 sizes what this has to
-carry: 12–17 battles across the chapter, spread over meaningful locations
-rather than one long trainer tunnel. It is the substrate for everything in 8a
-through 8e, not a single encounter.
+**`R8.1` (world trainer encounters and team combat) shipped — see `DONE.md`.** `trainer_npc.gd` + `data/config/trainers.json` + `begin_trainer_battle` on the existing wild-combat substrate: sequential team fights, D32 switching, catching refused with a message (hard rule enforced at the throw, not just hidden in UI), SB9 defeat flags, `smoke_trainer_battle` + a `verify-trainer-battle` CI job. Also fixed a real pre-existing bug it uncovered: `_start_fight` passed only the deployed creature as the fight's party, so D32 switching had nothing to switch to and the bench XP share reached nobody — in WILD fights too.
 
-### SC12 — Mira, Oskar and Tam become the three Band 1 trainers
-`model: fable` · `tests: test_dialogue_runner`
-Spec §3 Band 1 and §35. **These three already exist** —
-`data/config/village_npcs.json` places Mira, Oskar and Tam around the well with
-greetings in `data/dialogue/village.json`, and the spec names the same three
-("possible existing village NPCs can fill these roles if their existing
-characterization fits"). Do not add three more people to the square. Mira
-becomes the Meadow Keeper, Oskar the Bridgehand who holds the South Bridge
-mechanism (he is already `villager_keeper`), Tam the Field Scout. Repalette
-through `SB7`, extend their conversations, give each a battle offer. Done when:
-all three are challengeable and none of them is a newly-placed body.
+**`SC12`/`SC13` (Mira, Oskar and Tam become the three Band 1 trainers, each with a distinct lesson) shipped — see `DONE.md`.** No new bodies: a new `battle:<trainer_id>` dialogue effect plus ordered `greeting_when` branches so each villager's vendor role SURVIVES the trainer role (D39's dual-role rule made real — Mira's beaten greeting still carries her `shop:` effect, Oskar's still reaches his swap). Mira is the introduction (Bramblebun 4), Oskar the gate (Terrapup 6 + Mosshell 7, drops the South Bridge Key), Tam teaches switching (Pipwing 5 + Mudsnout 6). `smoke_village_trainer` drives the whole loop through the real village greeting route.
 
-### SC13 — The three Band 1 trainer battles, each with a distinct lesson
-`model: sonnet` · `tests: smoke_trainer_battle`
-Spec §3 Band 1, §12. Mira is the introduction, Oskar is the gate, Tam teaches
-switching and type awareness. Uses R8.1's system, `SB9`'s defeated flags and
-`SC15`'s rewards. Recommended natural team level by the time the bridge opens
-is roughly 5–8 — **guidance for tuning, never a check the game performs**
-(§3, §19). Done when: each can be beaten once, sets its flag, and cannot be
-re-fought into an XP faucet.
 
-### SC14 — The South Bridge, and the key that opens it
-`model: sonnet` · `tests: smoke_traversal`
-Spec §3 Gate 1. The deeper Meadows is visible across an old bridge the player
-can walk to at any level and cannot cross. Beating Oskar yields the South
-Bridge Key (`SB10`); the bridge is a mechanism, not a message. Done when: the
-crossing is visible from the village, blocked without the key, open with it,
-and never explains itself with UI text.
+**`SC14` (the South Bridge and its key) shipped — see `DONE.md`.** An 11 m gully cut east-west at `[5,80]` with measured 73-76 degree walls (past the player's 45 degree floor limit), an 18.4 m authored deck, and `item_gate.gd` reading `south_bridge_key` — no UI text explains it, the mechanism is physical. Honest limit recorded in the config itself: the gully seals the ROAD, not the region; its ends fade where the flanking spoke roads run, and a full seal wants `SE21`'s river.
 
-### SC15 — Trainer battles pay out
-`model: sonnet` · `tests: test_progression_state`
-Spec §17 P1 step 9. A defeated trainer grants XP plus one authored reward — an
-item, a TM, a recipe or a key — recorded against `SB9`'s flag so it cannot be
-farmed. Done when: beating a trainer twice pays once.
+**`SC15` (trainer battles pay out) shipped — see `DONE.md`.** `reward: {coins, items, flags, xp_bonus}` per trainer, granted through the ordinary satchel with an on-screen acknowledgment, guarded on the defeat flag so beating a trainer twice pays once (asserted both ways in `smoke_trainer_battle`).
 
 ### 8b — Rootstone (spec Phase D)
 
-### SD16 — The Old Quarry
-`model: sonnet` · `tests: smoke_traversal`
-Spec §3 Band 2, §32. Rootstone deposits, old foundations, and the first
-physical evidence Team Tether is routing something beneath the region —
-conduits, excavation, energy-routing hardware, material moving toward the
-stronghold. Evidence, not an explanation: §32's reveal ladder is explicit that
-nobody here knows about the legendary. Done when: the quarry is reachable past
-the South Bridge and yields Rootstone.
-
-**D41: the quarry debuts the drained-ground grammar.** This is where the player
-first sees Team Tether's machinery killing the land around it — discolored
-ground and suppressed vegetation in a radius around the conduits — so the
-reusable terrain/vegetation treatment every later station uses is authored here
-first, mild at this rung of §32's ladder.
+**`SD16` (the Old Quarry) shipped — see `DONE.md`.** Floor at `[23,158]` past the South Bridge, region `the_old_quarry` r62, five Rootstone deposits, old foundations, and four LIT pylons running toward the stronghold's bearing — `severed_spokes.gd`'s own conduit builder called directly, same grammar in the opposite state (whole and lit here, dead and severed on the spokes). D41's drained ground debuts: 2737 px painted via a new `drain_factor()`. Site chosen by probe, not by eye (the first candidate measured 45-67 degrees). Two bakes, unrelated regions byte-identical.
 
 ### SD17 — Burrow Warrens, the required dungeon
 `model: fable` · `tests: smoke_traversal, smoke_combat`
@@ -1997,15 +1952,7 @@ another legendary**, and §20 forbids the model anyway. The optional deep branch
 is where the Mudsnout evolution item lives (R4.6). Done when: it can be
 entered, cleared, and cleared only once for its story reward.
 
-### SD18 — Rootstone, the first progression tier material
-`model: sonnet` · `tests: test_recipes`
-Spec §10. Two tier materials in the entire biome — Rootstone then Ironwood — on
-top of wood, stone, fiber and berries. Rootstone **upgrades what already
-exists** rather than opening ten new systems: better orb tier (R4.9), workbench
-upgrade (R2.7), better gathering tool (R2.1), the saddle component (R6.2), a TM
-component, a modest camp/storage improvement. §32's ban on a large crafting
-tree is the boundary. Done when: every recipe that consumes Rootstone improves
-something the player already owns.
+**`SD18` (Rootstone, the first progression tier) shipped — see `DONE.md`.** Four recipes in a new `recipes_rootstone.json`, every one improving something already owned: `orb_greater` (closing R4.9's own acquisition remainder), axe/pickaxe REINFORCE recipes that permanently raise a tool's durability ceiling (rather than minting a second tool id and new gating code), and `saddle_frame` for R6.2. Workbench/storage upgrades deliberately SKIPPED and the reason recorded in `buildables.json`: neither supports a cheap variant, and building the systems they'd need is exactly the large crafting tree spec §32 bans.
 
 ### 8c — the river and the relay (spec Phase E)
 
