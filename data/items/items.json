@@ -290,6 +290,26 @@
       "description": "A proper rod and line, ready the moment there's water worth casting into. For now it just rides in the satchel, waiting.",
       "held_model": ""
     },
+    "torch": {
+      "name": "Torch",
+      "kind": "tool",
+      "stack": 1,
+      "colour": "#c9863a",
+      "icon": "res://assets/ui/icons/buildables/torch.png",
+      "blurb": "Pull it from the pack and it lights your way.",
+      "description": "A pitch-soaked stick, ready to strike. Draw it from the satchel like any other tool and it rides lit in the trainer's hand -- on its own once night falls, or sooner with a press.",
+      "held_model": "res://assets/props/built/torch_prop.tscn",
+      "held_offset": [
+        0.03,
+        -0.02,
+        0.05
+      ],
+      "held_rotation_deg": [
+        0.0,
+        15.0,
+        -65.0
+      ]
+    },
     "tm_stone_rush": {
       "name": "TM: Stone Rush",
       "kind": "tm",
@@ -548,6 +568,7 @@
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",
+  "_comment_torch": "OW12 (owner, 2026-08-16: 'torches need to be a carry able item not placeable one'), which supersedes OF24's placeable torch (see data/items/buildables.json's own retirement note) and OF24's earlier always-on kit torch (scripts/player/torch.gd used to build and attach it unconditionally at spawn, no item required). The torch is now `kind: \"tool\"` like axe/pickaxe/knife -- equipped off the hotbar/backpack the same way, `held_model`/`held_offset`/`held_rotation_deg` reaching the hand through tool_hold.gd's existing generic mechanism rather than a second hand-attachment system. `scripts/player/torch.gd` now owns only the light (the forward-throw SpotLight and the prop's own flickering OmniLight) and stays dark, whatever the hour, unless the torch is the equipped tool -- an unequipped torch is an inert satchel row, same as an unequipped axe. `icon` reuses the existing build-menu torch silhouette (assets/ui/icons/buildables/torch.png) rather than sourcing a new one -- same honest-stand-in convention rootstone/heartstone already use, and D24 forbids a fresh asset for one prop anyway. No `durability`: it gathers nothing, so nothing here wears it down. See docs/decisions/D50 for the full reasoning, including the one gap this task deliberately did not invent a fix for (camp lighting at night, now stranded with the placeable retired).",
   "_comment_elixirs": "D47. `kind: \"elixir\"` is a PERMANENT stat gain spent on one creature, and it is the one thing in this file that is not reversible -- every other consumable heals, feeds or revives. `elixir_stat` is hp/attack/defence and `elixir_points` is raw stat points, capped per creature by data/config/progression.json's `elixirs.cap_per_stat`. They deliberately do NOT appear in Mira's stock (data/config/trade.json): the owner asked for permanent boosters to stay rare, and anything purchasable is only as rare as your coin pile. They belong in the world -- a dungeon, a captain, a stronghold. They share the potion icon for now rather than blocking on new art (D24: no new asset family for three items); tools/gen_item_icons.py is where a bespoke one would go.",
   "_comment_saddle": "R6.2. ONE generic saddle for every mount, never a saddle per species — the backlog brief's own words, 'a generic saddle ... and no species-specific saddle clutter'. Which creature it fits is the CREATURE's business (species.json's `rideable.requires_item`), so a second mount at R8.5 either wants this same saddle or names its own tack there, and either way nothing changes here. `kind: gear` rather than `material`: it is a thing you own and use, like an orb, not a thing you spend. It is never consumed by riding and there is no durability on it — `scripts/world/riding_controller.gd::_has_tack()` only ever ASKS whether one is in the satchel. Icon deliberately points at `saddle_frame.png`: the frame is what a saddle is built on and the silhouette is right, and CLAUDE.md's asset rules say to source coherently rather than mint a near-duplicate icon for the sake of a distinct filename. A dedicated icon is a clean later swap in this one line. [Moved out of the `items` object: every other entry in there is an item dictionary, and tests/test_item_icons.gd casts each one, so a bare string inside it threw a cast error on three separate tests. Top level is where every other _comment in this file already sits.]",
   "_comment_tonics": "The potions board's TEMPORARY half (the permanent half is D47's elixirs). A `creature_buff` block is a timed multiplier on ONE creature stat -- applied through creature_instance.gd::apply_buff, ticked down by GameState._process, multiplied into effective_attack/effective_defence (or the combat drive speed), and gone when the clock runs out. Re-drinking refreshes the clock, never stacks the multiplier -- the owner's brief forbade mandatory buff maintenance and stacking is how that ritual is born. NOT saved: a timed buff dying on quit is the honest reading of temporary. Sold by Mira at modest prices -- tonics are the RENEWABLE economy hook, elixirs stay unsold and rare. Board names where the board had them (Swift Tonic, Stoneguard Brew). They share the potion icon for now (D24: no new asset family for three items)."

@@ -147,7 +147,7 @@
         "torch_toggle": "Toggle your torch (it also lights itself after dark)",
         "use_tool": "Swing the equipped tool",
         "build_open": "Open the build menu",
-        "torch_place": "Place a free ground torch",
+        "torch_place": "Draw or stow your torch",
         "build_rotate": "Rotate the build ghost",
         "hotbar_1": "Use quick-item slot 1",
         "hotbar_2": "Use quick-item slot 2",

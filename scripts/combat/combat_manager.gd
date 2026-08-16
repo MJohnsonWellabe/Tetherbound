@@ -471,8 +471,9 @@ func _refuse_combat_input() -> void:
 	#
 	# All four only mean anything with a placement armed, so one check covers
 	# them. `torch_place` is the exception that needs its own: it shares RT with
-	# `combat_quick` outright and arms the ground torch on the same press, so
-	# that press is not an inert button at all.
+	# `combat_quick` outright and equips/stows the carried torch on the same
+	# press (playground_hud.gd::_arm_torch_placement, OW12), so that press is
+	# not an inert button at all.
 	if Input.is_action_just_pressed("torch_place"):
 		return
 	var game := get_node_or_null(^"/root/Game")
