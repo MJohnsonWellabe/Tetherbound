@@ -264,6 +264,17 @@ stronghold is visibly the far end of a journey rather than a neighbour, and the
 existing regions (quarry, warrens, river, relay, Ironwood) hang off a trail
 rather than sitting near the start.
 
+
+**A constraint `OW5C` inherits from `OF15` (added 2026-08-16).** The player's
+`floor_max_angle` is 45 deg, and a confirmed wedge at (60, -106) on the rocky rise
+turned out most likely to be slope rather than props — a route crossing ground the
+character controller refuses to climb. **No trail segment may cross ground steeper
+than `floor_max_angle`.** Assert it with a probe over the candidate route *before*
+the bake, not by walking it afterwards: `height_at` is analytic and unbounded, so
+the whole spine can be sampled without baking anything, and at hours per bake that
+is not optional. A trail that is 12 km long has 12 km of chances to make this
+mistake once.
+
 ### OW6 — The captain you can challenge is too close to the start
 `model: sonnet` · `tests: none` · `area: village`
 Owner: *"The captain to challenge is way too close to where you start. You need
@@ -426,6 +437,96 @@ The rest: Escape silently stops meaning Close while holding; the 1–5 badges ar
 Orb" should be "6 Orbs"; the screen is Backpack while the grid inside is
 Satchel; and `Menu + View held, or F10 Reset all controls` is a leftover from a
 controls screen sitting in an inventory footer.
+
+---
+
+## Phase -1.42 — the tourniquets, and the questions nobody asked
+
+Filed 2026-08-16 by the coordinating session, as a self-audit rather than as
+new work discovered. Every item here exists because a fix that shipped today
+was a *workaround*, and the thing it worked around is still standing. They are
+filed so the workarounds cannot quietly become the design.
+
+### EXP1 — put `verify_export.sh` back to being a guard
+`model: sonnet` · `tests: verify_export` · `area: ops`
+**Depends on `PERF2` and `STREAM-SCATTER` landing.** `tools/verify_export.sh`
+allowed the exported build 180 s to boot. On 2026-08-16 the world build reached
+188 s and every branch going through `ralph-merge`'s rebase-and-dispatch path
+started failing — on a tree that had passed CI minutes earlier, because the
+`export` job runs only on `main` or a `workflow_dispatch` and is skipped on a
+branch push. It was raised to **420 s**, and its own comment says plainly that
+this is a tourniquet.
+
+The reason this is an item and not a footnote: 420 s against a boot that
+`PERF2` and scatter streaming should take well under 60 s is **not a margin, it
+is a rubber stamp**. The next time boot cost triples, nothing will notice —
+which is precisely the failure that produced this item in the first place.
+
+Once the perf work lands: re-measure the exported boot from `user://boot_log.txt`,
+set the allowance to roughly 2x the measured figure, and say in the comment what
+it was measured against and when. A timeout with no recorded basis is how this
+one drifted.
+
+### TEST1 — audit the smoke suite for the defect `verify-aggression` has
+`model: sonnet` · `tests: the smoke suite itself` · `area: tests`
+`verify-aggression` failed on five unrelated branches on 2026-08-16, including
+one whose only change was a shell script, and killed a six-branch integration
+run where the other 18 jobs were green. The signature — *"stood 9.6m from
+Galecrest for 900 frames without pressing anything and it never attacked"*,
+retrying at 9.5 m — points at a test that positions itself relative to wherever
+a creature happened to spawn, and fails when that lands outside aggro range
+while the creature behaves correctly.
+
+`CI-AGGRESSION` fixes that one test. **This item asks the question that one
+test cannot answer: which of the other sixteen smoke tests depend on a position,
+a spawn, a timing window or an RNG draw they do not control?** Read them for the
+pattern rather than waiting for each to fail on an innocent branch. In this repo
+that failure mode is expensive out of proportion to its size, because
+`ralph-merge.yml` only fast-forwards fully-green branches — so an intermittent
+job does not annoy anyone, it silently stops healthy work from shipping and
+leaves no trace saying so.
+
+Record what you find even where you do not fix it. A list of "these four are
+position-dependent, here is which" is worth more than one more repair.
+
+### MERGE1 — the ship path serialises, and it is about to be asked to carry seven lanes
+`model: sonnet` · `tests: none (CI config)` · `area: ops`
+`ralph-merge.yml` fast-forwards one branch at a time and rebases the rest, with
+`MAX_REBASES=3` and `MAX_BEHIND=20`. With six branches ready at once on
+2026-08-16 the sweeps shipped nothing for a stretch: every landing invalidated
+the other five. The coordinator's answer that day was to hand-merge six branches
+into one `ralph/integrate-1` bundle so a single CI run and a single fast-forward
+would land all of them — and that bundle then died on the `TEST1` flake, while
+the sweep quietly shipped the same branches serially anyway once the export
+timeout was fixed.
+
+So the bundle was solving a problem that had already been fixed elsewhere, and
+this item exists so the next person does not reinvent it. **The real question is
+whether the serialisation has a genuine ceiling or only had one while a
+20-minute job was failing.** Measure it: how many branches can be queued before
+throughput collapses, and is `MAX_REBASES=3` or CI duration the binding
+constraint? If the ceiling is real, batching belongs *in* `ralph-merge.yml`
+where it can be tested, not in a coordinator's hands where it is a one-off.
+
+### LANE1 — a running lane has no channel to the coordinator
+`model: sonnet` · `tests: none (process)` · `area: ops`
+On 2026-08-16 the coordinator learned mid-run that `verify-aggression` was
+rejecting healthy branches, and that two lanes were each about to duplicate work
+that already existed on `ralph/OW5-stream` and `ralph/SCAT1` — and **could not
+tell them.** Cross-session messaging was not reachable from the coordinating
+container, and the lanes had already been briefed at launch. The only levers
+left were interrupting a lane or starting a new one, both of which throw away
+the context that made the lane useful.
+
+The cheap fix is a file, not a protocol: a coordinator-written note at a known
+path that every lane brief instructs it to re-read before it pushes — known-red
+CI jobs, branches carrying prior art for its task, anything learned after launch.
+`ralph-status` is the natural home, since it is already a branch nothing merges
+and every lane already knows about it.
+
+The expensive failure this prevents is not duplicated effort. It is a lane
+chasing a CI failure into its own diff, finding nothing, and weakening its own
+work until the red goes away.
 
 ---
 
@@ -618,6 +719,24 @@ behaves, close this item.
 Owner-reported, 2026-08-15. Movement getting wedged/blocked rather than passing
 through. Needs locations logged from a fresh playthrough before a fix can be
 scoped.
+
+**Located, mis-diagnosed, and PARKED on purpose — 2026-08-16.** A lane confirmed
+the wedge at **(60, -106)** and **(65, -108)** and blamed clumped tree colliders.
+A cross-layer spacing filter was built against that diagnosis, measured working
+(23,707 placements to 23,650; rocks 345 to 300, trees 129 to 118) — **and the
+player still wedges at (60, -106).** So the diagnosis was wrong. The evidence
+points at terrain slope on the rocky rise instead: an earlier traversal run ended
+that leg at exactly `(60.0, 0.2, -106.3)` after 46 m of a 190 m walk, and a review
+of the same ground noted it "snags on the rocky rise". The player's
+`floor_max_angle` is 45 deg, so the test may be flagging correct behaviour at a
+place a route should never have crossed.
+
+It is parked because **that ground is about to be rewritten.** `OW5B`/`OW5C`
+rebake the world and lay a new trail; fixing terrain that is being replaced this
+week is wasted work. The durable outcome is a constraint, not a repair, and it is
+recorded on `OW5` rather than here: **no trail segment may cross ground steeper
+than `floor_max_angle`, and a probe must assert it before the trail is committed.**
+Re-open this item only if the wedge survives the rebake.
 
 ### OF18 — Re-shoot the website's screenshots · **partly done 2026-08-16**
 `model: sonnet` · `tests: none` · `area: visual`
