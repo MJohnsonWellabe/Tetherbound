@@ -1,0 +1,61 @@
+{
+  "_comment": "SF31. Ironwood, the SECOND and last preparation tier (MEADOWS_PROGRESSION_SPEC.md §3 Band 4, §10). Its own file for exactly the reason `data/recipes/recipes_rootstone.json` is: `item_db.gd` reads all three and merges them into one `recipe()`/`recipe_ids()` surface, so `craft_panel.gd` and `game_state.gd` never learn there is more than one recipe book on disk, and a tier stays editable without touching the tier under it.",
+
+  "_comment_the_rule": "SF31's done-when, and the rule every entry below is checked against by tests/test_recipes.gd: NOTHING THE STRONGHOLD NEEDS MAY REQUIRE A THIRD NEW MATERIAL. Everything here is built from wood/stone/fiber/berries (baseline), rootstone (Band 2) and ironwood (Band 4) -- the exact list spec §10 authorises -- plus items the player already crafts from those. If a later item wants a fourth material to enter the stronghold, that is a spec change, not a recipe.",
+
+  "_comment_small": "FOUR recipes, like the Rootstone tier, and for the same reason (§10 'keep the economy small and readable', GAME_DESIGN.md §32's 'large crafting tree' non-goal). Every one of them improves something the player already owns and understands by Band 4 -- an orb tier, the two gathering tools, the potion they have been drinking since the first fight. Not one opens a new system.",
+
+  "_comment_saddle": "R6.2's Riding Saddle is NOT in this file, deliberately. `saddle_frame` (the Rootstone tier's own intermediate) plus raw `ironwood` IS the spec's 'Rootstone/Ironwood components' -- the Ironwood half of the saddle is the material itself, not a second intermediate item, so R6.2's saddle recipe lists `ironwood` in its `cost` and needs nothing further from here. A second `ironwood_bracing`-shaped component would be one more id doing `saddle_frame`'s job on the other tier, which is the crafting-tree growth this file's own header rules out.",
+
+  "_comment_costs": "Every `cost`, `bonus` and `heal` figure here is TUNABLE. Sized as a real step above the Rootstone tier (roughly the same shape of cost, with ironwood replacing the bulk wood) rather than balanced against an ironwood gather rate nothing has measured yet -- `data/config/harvest.json` currently stands five ironwood nodes at 3 apiece.",
+
+  "_comment_unlock": "None of these carry `unlocked_by`, same as the Rootstone tier: the gate is the MATERIAL. Ironwood only grows in the upper Meadows, past the road gate, past the south bridge and up the trainer road, so a flag on top of that would gate the same door twice.",
+
+  "recipes": {
+    "orb_prime": {
+      "name": "Prime Orb",
+      "output": { "id": "orb_prime", "n": 1 },
+      "cost": [
+        { "id": "ironwood", "n": 4 },
+        { "id": "rootstone", "n": 2 },
+        { "id": "fiber", "n": 4 }
+      ],
+      "blurb": "A greater orb rebuilt around a sprung ironwood core. The top of the ladder, and the last rung the Meadows has materials for.",
+      "_comment": "Spec Band 4's 'better utility' cashed out on the one ladder the player already climbs. `data/config/catching.json`'s `orb_prime` entry is the mechanic (a 2.0x multiplier `catch_math.gd` already reads through the same table `orb_greater` uses); this is the only way to obtain one. Cost deliberately keeps ROOTSTONE in it -- a Band 4 recipe that forgets Band 2 exists makes the earlier tier feel skippable, and §10's whole point is two materials that both stay worth collecting."
+    },
+
+    "ironwood_haft_axe": {
+      "name": "Ironwood Haft (Axe)",
+      "reinforce": { "tool": "axe", "bonus": 30 },
+      "cost": [
+        { "id": "ironwood", "n": 3 },
+        { "id": "rootstone", "n": 1 }
+      ],
+      "blurb": "The rootstone wedges come out and the whole haft is rebuilt in ironwood. Nothing in the Meadows wears this axe down quickly again.",
+      "_comment": "The second rung of `recipes_rootstone.json`'s `reinforce_axe`, using the same `reinforce` key `game_state.craft()` already special-cases: no output item is granted, the named tool must actually be owned, `inventory.reinforce_tool()` raises its permanent max durability and tops it up. Bonus 30 on top of Rootstone's 20 and the axe's own base 40 -- a tool that started at 40 ends the chapter at 90 if the player works both tiers, which is the 'stronger crafting' half of Band 4 with no new gating code and no second axe id. TUNABLE. Stacking is the mechanic, not a bug: reinforce_tool() adds, and the two tiers are meant to be bought in order."
+    },
+
+    "ironwood_haft_pickaxe": {
+      "name": "Ironwood Haft (Pickaxe)",
+      "reinforce": { "tool": "pickaxe", "bonus": 30 },
+      "cost": [
+        { "id": "ironwood", "n": 3 },
+        { "id": "rootstone", "n": 1 }
+      ],
+      "blurb": "Same ironwood rebuild, for the pick. The stronghold run is a long way from a workbench.",
+      "_comment": "Twin of `ironwood_haft_axe` -- see its comment. Same cost and bonus; neither tool has a reason to be cheaper or tougher than the other at this tier, exactly as at the Rootstone tier."
+    },
+
+    "potion_large": {
+      "name": "Ridge Tonic",
+      "output": { "id": "potion_large", "n": 1 },
+      "cost": [
+        { "id": "ironwood", "n": 2 },
+        { "id": "berries", "n": 5 },
+        { "id": "fiber", "n": 2 }
+      ],
+      "blurb": "Ironwood bark boiled down and cut with berry pulp. Eighty points in one pour, for a fight that does not pause.",
+      "_comment": "SF31's 'final-stronghold preparation' item, and the reason it is a potion rather than a lantern or a climbing kit: those two would each need a system that does not exist (a player-carried light source; any climbing verb at all), and inventing one to justify a material is precisely the 'do not turn temporary numbers into a new permanent mechanic' trap. What the stronghold actually is, per spec §3 Band 4 / ACT VI, is a GAUNTLET of trainer battles -- so the honest preparation is supplies that survive it, and healing is the one supply line the player has been running since Band 0. `heal: 80` in items.json is pure data (`creature_instance.heal()` reads it); no code path is new. TUNABLE. Cost keeps berries in it so the berry plots and bushes stay worth walking to at Band 4."
+    }
+  }
+}

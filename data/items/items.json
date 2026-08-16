@@ -13,6 +13,8 @@
   "_comment_coin": "D39 (OF31, owner: 'Make the villagers so I can trade with them'). The owner chose a simple coin currency, and `coin` is an ORDINARY item in this table for that reason -- it stacks in a satchel slot, shows in the backpack like everything else, saves through the same inventory array, and can be dropped in a death satchel. There is no wallet, no second store and no `coins` field on game_state, and there must never be one: the moment currency lives somewhere else, every screen that shows your things has to learn about it separately. `kind: currency` is descriptive only -- nothing branches on it (item_db.gd's only kind branch is `tool`), it exists so the backpack detail line can say what this is. Prices are NOT here: they are per-vendor and tunable, and live in data/config/trade.json.",
   "_comment_icons": "M-G groundwork. `icon` is a res:// path to a 64px Kenney Game Icons silhouette (see docs/ASSET_LEDGER.md's 'Item + shared UI icons' row for the per-item source mapping and its honest mismatches -- this pack has no literal axe/wood/flask glyphs, so several are the closest available stand-in, same convention as the map icons row). `description` is the fuller inventory-detail text; `blurb` stays as the shorter existing field, both kept side by side rather than one replacing the other. Joined with the UI icon-set vendoring pass in the same commit-to-be.",
   "_comment_rootstone": "SD18. MEADOWS_PROGRESSION_SPEC.md 10: the first of the Meadows' two progression-tier materials, above baseline wood/stone/fiber/berries. `gathered_with: pickaxe` matches the existing stone convention -- Rootstone is a harder seam, not a different gathering verb. SD16 (a sibling item, quarry harvest nodes) owns where it is actually found in the world; this entry only makes it a real, nameable satchel item so SD18's recipes have something to spend. `kind: resource` (same as wood/stone/fiber) rather than a new kind -- nothing branches on kind besides `tool`, so a fourth resource-shaped id needs no new code path.",
+  "_comment_ironwood": "SF31. MEADOWS_PROGRESSION_SPEC.md §3 Band 4 and §10: the SECOND and LAST of the Meadows' two progression-tier materials, above baseline wood/stone/fiber/berries and alongside Rootstone. `gathered_with: axe` because it is wood -- the spec's own note that it 'does not need to literally be iron' cuts both ways, and giving a hardwood a new gathering verb would be a mechanic where the spec asked for a tier. `kind: resource`, same as Rootstone, so no new code path. Where it grows is `data/config/harvest.json`'s `ironwood` nodes (the old-growth stands on the Rise's south-west flank, spec Band 4's 'old-growth forest'); what it buys is `data/recipes/recipes_ironwood.json`, and that file's own header holds the rule this tier is judged by: nothing the stronghold needs may require a THIRD new material.",
+  "_comment_sigils": "SF34, spec §3 Band 4. Three physical items, one per regional captain, each granted through that captain's `reward` block in data/config/trainers.json. `kind: key` and `stack: 1`, exactly like `south_bridge_key` -- they are gate items, and the gate is SB10's `item_gate.gd` requiring all three at once, not a level check and not a UI lock. There is no fourth sigil and no way to buy, craft or find one: beating the captain IS the acquisition.",
   "_comment_saddle_frame": "SD18/R6.2. An intermediate crafted component, not a gathered resource -- `kind: material` says so without inventing a branch nothing reads yet (same 'descriptive only' rule `coin`'s `kind: currency` documents). Consumed later by the Riding Saddle (R6.2, spec Band 4) once the saddle recipe itself is built; this item and the recipe that makes it are SD18's whole contribution toward that -- no riding code, no mount/dismount, nothing here reads or writes anything about a creature.",
   "items": {
     "coin": {
@@ -79,6 +81,62 @@
       "icon": "res://assets/ui/icons/items/rootstone.png",
       "blurb": "A harder seam than the outcrops. Worth the extra swing.",
       "description": "Dense, root-veined stone pulled from a deeper seam than the meadow's ordinary outcrops. The pickaxe that cracks regular stone loose bites into this too, slower and with more effort — and what it makes is worth the wait."
+    },
+    "ironwood": {
+      "name": "Ironwood",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#4a3a2c",
+      "gathered_with": "axe",
+      "icon": "res://assets/ui/icons/items/ironwood.png",
+      "blurb": "Upper-Meadows hardwood. Dulls an ordinary axe and outlasts everything you build from it.",
+      "description": "Close-grained wood cut from the old-growth stands on the Rise's flank, so dense a fresh-cut round barely floats. It is still wood — the axe is still the tool — but it takes twice the swinging, and what it braces does not give."
+    },
+    "orb_prime": {
+      "name": "Prime Orb",
+      "kind": "gear",
+      "stack": 20,
+      "colour": "#b4703a",
+      "icon": "res://assets/ui/icons/items/orb_prime.png",
+      "blurb": "Ironwood-sprung bands. The best odds the Meadows can build.",
+      "description": "A greater orb rebuilt around a sprung ironwood core, so the bands close harder and hold longer instead of flexing open on the first surge. The last rung of the tier ladder the Meadows has materials for."
+    },
+    "potion_large": {
+      "name": "Ridge Tonic",
+      "kind": "consumable",
+      "stack": 10,
+      "colour": "#3f8f6a",
+      "heal": 80,
+      "icon": "res://assets/ui/icons/items/potion_large.png",
+      "blurb": "A proper dose, brewed from ironwood bark. For the long fights.",
+      "description": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go — the thing you carry into a gauntlet where there is no time to stop and pour three."
+    },
+    "field_sigil": {
+      "name": "Field Sigil",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#a68b45",
+      "icon": "res://assets/ui/icons/items/field_sigil.png",
+      "blurb": "The Field Captain's own. One of three that turn the Hall approach.",
+      "description": "A heavy bronze disc struck with Team Tether's mark and the ploughed-furrow device of the high pasture posting. A captain carries one, and hands it over when they lose — the officers' own rule, and they keep it."
+    },
+    "ridge_sigil": {
+      "name": "Ridge Sigil",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#8fa2b0",
+      "icon": "res://assets/ui/icons/items/ridge_sigil.png",
+      "blurb": "The Ridge Captain's own. One of three that turn the Hall approach.",
+      "description": "The same bronze disc, struck instead with the wind-ridge's three-peak device and worn pale along one edge by a lanyard that has spent years in a crosswind."
+    },
+    "river_sigil": {
+      "name": "River Sigil",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#4e8ea3",
+      "icon": "res://assets/ui/icons/items/river_sigil.png",
+      "blurb": "The Riverwatch Captain's own. One of three that turn the Hall approach.",
+      "description": "The Riverwatch posting's disc, its device a channel running between two banks. Water-stained, and kept polished anyway."
     },
     "saddle_frame": {
       "name": "Saddle Frame",

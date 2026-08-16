@@ -578,6 +578,138 @@ def icon_coin() -> Image.Image:
     return img
 
 
+def icon_ironwood() -> Image.Image:
+    """SF31. The second tier material, and deliberately `icon_wood`'s own
+    stacked-log-ends language one rung up rather than a new object: two
+    heavier rounds instead of three light ones, each showing tight growth
+    rings (two cutout rings, not one) because close grain is exactly what
+    ironwood IS, with a wedge and a split running down the top round -- the
+    axe's read, since this is the one tier material that is felled rather
+    than prised."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    logs = [(88, 182, 66), (168, 182, 66)]
+    for cx, cy, r in logs:
+        d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
+    for cx, cy, r in logs:
+        # two rings rather than wood's one: tight grain, the whole point
+        for f in (0.72, 0.40):
+            cutout_ellipse(d, (cx - r * f, cy - r * f, cx + r * f, cy + r * f))
+            r2 = r * (f - 0.14)
+            d.ellipse((cx - r2, cy - r2, cx + r2, cy + r2), fill=FG)
+    # the standing round on top, split by a driven wedge
+    cx, cy, r = 128, 84, 66
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
+    for f in (0.72, 0.40):
+        cutout_ellipse(d, (cx - r * f, cy - r * f, cx + r * f, cy + r * f))
+        r2 = r * (f - 0.14)
+        d.ellipse((cx - r2, cy - r2, cx + r2, cy + r2), fill=FG)
+    cutout_line(d, [(cx, cy - r), (cx, cy + r)], width=int(STROKE * 1.2))
+    return img
+
+
+def icon_orb_prime() -> Image.Image:
+    """SF31. The third and last orb tier, extending `icon_orb_greater`'s own
+    trick exactly one step: greater adds ONE reinforcing ring cutout to the
+    basic orb, prime adds a second, tighter one inside it. Three tiers then
+    read as one, two and three bands at a glance in a satchel slot, which is
+    the only job this icon has."""
+    img = icon_orb_greater()
+    d = ImageDraw.Draw(img)
+    cx, cy, r = 128, 128, 96
+    ring_r = r * 0.56
+    d.ellipse(
+        (cx - ring_r, cy - ring_r, cx + ring_r, cy + ring_r),
+        outline=CLEAR, width=int(STROKE * 0.8),
+    )
+    return img
+
+
+def icon_potion_large() -> Image.Image:
+    """SF31. `icon_potion_small`'s flask, scaled up and squared into a
+    stoppered jar with a shoulder -- the same family, obviously the bigger
+    vessel, with the liquid line sitting HIGHER in the body (it is a full
+    dose, not a measure) so the two potions are told apart by silhouette
+    rather than by reading the count."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx = 128
+    # short, thick neck
+    d.rectangle((cx - 26, 52, cx + 26, 96), fill=FG)
+    # stopper, wider than the neck
+    d.rectangle((cx - 40, 30, cx + 40, 58), fill=FG)
+    cutout_line(d, [(cx - 40, 46), (cx + 40, 46)], width=max(3, STROKE // 2))
+    # body: a rounded jar, wider and squarer than the small flask's sphere
+    d.rounded_rectangle((cx - 92, 92, cx + 92, 232), radius=52, fill=FG)
+    # liquid line, high in the body
+    cutout_line(d, [(cx - 78, 136), (cx + 78, 136)], width=STROKE)
+    return img
+
+
+def _sigil_disc(device) -> Image.Image:
+    """SF34. The shared blank every Sigil is struck on: one heavy disc with a
+    raised rim (a ring cutout) and a lanyard hole at the top, so the three
+    captains' rewards read as three of ONE thing -- a set the player is
+    collecting -- and are told apart only by the device punched into the
+    middle. `device` draws that device as cutouts on the already-filled
+    disc."""
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx, cy, r = 128, 140, 100
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=FG)
+    # raised rim
+    d.ellipse(
+        (cx - r * 0.86, cy - r * 0.86, cx + r * 0.86, cy + r * 0.86),
+        outline=CLEAR, width=int(STROKE * 0.8),
+    )
+    # lanyard tab and its hole, breaking the circle at the top
+    d.rounded_rectangle((cx - 26, 14, cx + 26, 62), radius=18, fill=FG)
+    cutout_ellipse(d, (cx - 13, 22, cx + 13, 48))
+    device(d, cx, cy, r)
+    return img
+
+
+def icon_field_sigil() -> Image.Image:
+    """SF34. The Field Captain's disc: three ploughed furrows, the high
+    pasture's device."""
+    def device(d, cx, cy, r):
+        for i, off in enumerate((-42, 0, 42)):
+            span = int(r * (0.62 - abs(off) / 220.0))
+            cutout_line(
+                d,
+                [(cx - span, cy + off + 14), (cx, cy + off - 4), (cx + span, cy + off + 14)],
+                width=int(STROKE * 1.1),
+            )
+    return _sigil_disc(device)
+
+
+def icon_ridge_sigil() -> Image.Image:
+    """SF34. The Ridge Captain's disc: the wind ridge's three peaks."""
+    def device(d, cx, cy, r):
+        cutout_line(
+            d,
+            [(cx - 62, cy + 44), (cx - 30, cy - 10), (cx - 4, cy + 26),
+             (cx + 26, cy - 34), (cx + 62, cy + 44)],
+            width=int(STROKE * 1.1),
+        )
+    return _sigil_disc(device)
+
+
+def icon_river_sigil() -> Image.Image:
+    """SF34. The Riverwatch Captain's disc: a channel running between two
+    banks."""
+    def device(d, cx, cy, r):
+        for off in (-34, 34):
+            cutout_line(
+                d,
+                [(cx - 62, cy + off - 12), (cx - 20, cy + off + 8),
+                 (cx + 20, cy + off - 12), (cx + 62, cy + off + 8)],
+                width=int(STROKE * 1.1),
+            )
+        cutout_line(d, [(cx - 46, cy), (cx + 46, cy)], width=int(STROKE * 0.7))
+    return _sigil_disc(device)
+
+
 ITEM_ICONS = {
     "coin.png": icon_coin,
     "wood.png": icon_wood,
@@ -600,8 +732,13 @@ ITEM_ICONS = {
     "mill_bridge_gear.png": icon_mill_bridge_gear,
     "tm_stone_rush.png": icon_tm_stone_rush,
     "tm_burrow_strike.png": icon_tm_burrow_strike,
-    "rootstone.png": icon_rootstone,
-    "mill_bridge_gear.png": icon_mill_bridge_gear,
+    # SF31/SF34: the Ironwood tier and the three captains' Sigils.
+    "ironwood.png": icon_ironwood,
+    "orb_prime.png": icon_orb_prime,
+    "potion_large.png": icon_potion_large,
+    "field_sigil.png": icon_field_sigil,
+    "ridge_sigil.png": icon_ridge_sigil,
+    "river_sigil.png": icon_river_sigil,
 }
 
 

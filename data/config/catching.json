@@ -30,6 +30,11 @@
       "display_name": "Greater Tether Orb",
       "multiplier": 1.6
     },
+    "_comment_prime": "SF31: the ladder's LAST rung, and the Ironwood tier's answer to Band 2's Rootstone rung above. This block's own header says adding a tier is one entry in one file, and that is all this is -- catch_math.gd's best_orb()/orb_ids() read the table, `orb_prime` is a real items.json id, and data/recipes/recipes_ironwood.json is the only way to get one. Multiplier is TUNABLE and deliberately NOT a big jump over greater (1.6 -> 2.0): the same rule the greater orb's own comment sets out applies harder at the top of a ladder, since an orb that reads as 'basically a catch' would retire both tiers under it and the catch minigame with them. There is no fourth tier; the Meadows has exactly two progression materials (spec §10) and this spends the second.",
+    "orb_prime": {
+      "display_name": "Prime Tether Orb",
+      "multiplier": 2.0
+    },
     "_comment_stock": "RETIRED as a live value: orbs are satchel items now (data/items/items.json), spent by throw_aim.gd from the real inventory, and Grandpa's opening gift is the starting supply (data/dialogue/opening.json give: effects). Kept only so catch_math.starting_stock() keeps answering for anything historical; nothing refills from it.",
     "starting_stock": 15
   },

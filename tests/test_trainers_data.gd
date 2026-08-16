@@ -20,6 +20,12 @@ const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const ITEMS_PATH := "res://data/items/items.json"
+## SF34's captains: the rank palette they stand on, and the gate their Sigils
+## open.
+const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
+const INVENTORY := preload("res://autoload/inventory.gd")
+const ITEM_DB := preload("res://autoload/item_db.gd")
+const ITEM_GATE := preload("res://scripts/world/item_gate.gd")
 
 
 func _item_ids() -> Array:
@@ -405,3 +411,119 @@ func test_every_relay_position_sits_inside_the_authored_site() -> void:
 		assert_true(here.distance_to(centre) <= radius,
 			"'%s' stands %.1fm from the relay site centre, outside its own %.0fm radius" % [
 				str((entry as Dictionary).get("name", "?")), here.distance_to(centre), radius])
+# --- SF34: the three regional captains and their Sigils --------------------------
+
+## id -> the Sigil that captain is the ONLY source of. Spec §3 Band 4.
+const CAPTAINS := {
+	"captain_field": "field_sigil",
+	"captain_ridge": "ridge_sigil",
+	"captain_riverwatch": "river_sigil",
+}
+const HALL_FLAG := "hall_approach_open"
+
+
+func test_all_three_regional_captains_are_in_the_table() -> void:
+	for id: String in CAPTAINS:
+		assert_false(TRAINERS.trainer(id).is_empty(),
+			"'%s' is not in trainers.json; the Hall approach would have two keys at most" % id)
+
+
+## Each captain hands over its OWN Sigil, by name. Checked per-captain rather
+## than "some sigil is paid somewhere" because two captains paying the same
+## disc would leave the gate permanently sealed with every fight won.
+func test_each_captain_rewards_its_own_sigil() -> void:
+	for id: String in CAPTAINS:
+		var ids: Array[String] = []
+		for item: Variant in TRAINERS.reward_items(TRAINERS.trainer(id)):
+			ids.append(str((item as Dictionary).get("id", "")))
+		assert_true(ids.has(str(CAPTAINS[id])),
+			"'%s' should reward %s; got %s" % [id, str(CAPTAINS[id]), str(ids)])
+
+
+func test_no_two_captains_hand_over_the_same_sigil() -> void:
+	var seen: Array[String] = []
+	for id: String in CAPTAINS:
+		for item: Variant in TRAINERS.reward_items(TRAINERS.trainer(id)):
+			var item_id := str((item as Dictionary).get("id", ""))
+			if item_id.ends_with("_sigil"):
+				assert_false(seen.has(item_id), "two captains reward '%s'" % item_id)
+				seen.append(item_id)
+	assert_eq(seen.size(), 3, "the three captains between them should pay exactly three Sigils")
+
+
+## SB8/NP2: the captains stand on a REAL rank palette, not an invented key.
+## `model_config` resolving empty is already covered for every trainer; this
+## asserts the specific thing SF34 promises -- the captain rank, plus one
+## regional accent laid over it per captain, never one shared tint.
+func test_every_captain_uses_the_real_captain_rank_with_its_own_accent() -> void:
+	var accents: Array[String] = []
+	for id: String in CAPTAINS:
+		var spec := TRAINERS.trainer(id)
+		assert_eq(str(spec.get("rank", "")), "captain",
+			"'%s' should be on the captain rank palette" % id)
+		assert_false(NPC_RANKS.config_for("captain").is_empty(),
+			"npc_ranks.json has no 'captain' rank; the captains would have no body")
+		var palette: Dictionary = spec.get("palette", {})
+		assert_false(palette.is_empty(), "'%s' has no regional accent over the rank base" % id)
+		var accent := str(palette.get("*", ""))
+		assert_false(accents.has(accent),
+			"'%s' shares its accent colour with another captain; spec §21 wants one accent EACH" % id)
+		accents.append(accent)
+
+
+## The rank's own badge survives the accent. `model_config` overwrites the
+## palette wholesale, so a captain who lost the captain badge would read as an
+## officer wearing a different coat.
+func test_the_captain_badge_survives_the_regional_accent() -> void:
+	for id: String in CAPTAINS:
+		var cfg := TRAINERS.model_config(TRAINERS.trainer(id))
+		var accessories: Array = cfg.get("accessories", [])
+		assert_eq(accessories.size(), 1,
+			"'%s' resolves to a body with no rank badge" % id)
+		assert_eq(str((accessories[0] as Dictionary).get("name", "")), "badge",
+			"'%s' wears something other than the rank badge" % id)
+
+
+## §3: "roughly 10-16 entering this band -- tunable, and never player-scaled."
+## The band check is deliberately loose (it is tunable); what it really guards
+## is a captain accidentally authored at Band 1 levels, or scaled off anything.
+func test_captain_teams_sit_in_the_bands_own_level_range() -> void:
+	for id: String in CAPTAINS:
+		var team: Array = TRAINERS.trainer(id).get("team", [])
+		assert_true(team.size() >= 3, "'%s' fields fewer than three creatures" % id)
+		for member: Variant in team:
+			var level := int((member as Dictionary).get("level", 0))
+			assert_true(level >= 10 and level <= 16,
+				"'%s' fields a level %d creature; §3 puts this band at roughly 10-16" % [id, level])
+
+
+## The done-when, at the data level: sealed at 2/3, open at 3/3, using the real
+## reward table and the real gate class. The scene-tree half of this is
+## `tests/smoke_trainer_battle.gd`.
+func test_beating_two_captains_leaves_the_hall_approach_sealed() -> void:
+	var bag: RefCounted = INVENTORY.new(ITEM_DB.new())
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	var gate: RefCounted = ITEM_GATE.new(CAPTAINS.values(), HALL_FLAG)
+	for id: String in ["captain_field", "captain_ridge"]:
+		for item: Variant in TRAINERS.reward_items(TRAINERS.trainer(id)):
+			bag.add(str((item as Dictionary).get("id", "")), int((item as Dictionary).get("count", 1)))
+	assert_eq(gate.held(bag), 2)
+	assert_false(gate.try_open(bag, progression), "the Hall approach opened on two Sigils")
+	assert_false(progression.has(HALL_FLAG))
+	# and nothing was spent on the failed attempt
+	assert_eq(bag.count("field_sigil"), 1)
+	assert_eq(bag.count("ridge_sigil"), 1)
+
+
+func test_beating_all_three_captains_opens_the_hall_approach() -> void:
+	var bag: RefCounted = INVENTORY.new(ITEM_DB.new())
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	var gate: RefCounted = ITEM_GATE.new(CAPTAINS.values(), HALL_FLAG)
+	for id: String in CAPTAINS:
+		for item: Variant in TRAINERS.reward_items(TRAINERS.trainer(id)):
+			bag.add(str((item as Dictionary).get("id", "")), int((item as Dictionary).get("count", 1)))
+	assert_eq(gate.held(bag), 3)
+	assert_true(gate.try_open(bag, progression), "three Sigils did not open the Hall approach")
+	assert_true(progression.has(HALL_FLAG))
+	for sigil: Variant in CAPTAINS.values():
+		assert_eq(bag.count(str(sigil)), 0, "%s was not consumed by the gate" % str(sigil))

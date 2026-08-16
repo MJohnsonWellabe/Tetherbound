@@ -73,6 +73,8 @@ const BASE_TIER_RECIPES := ["orb_basic", "potion_small"]
 ## SD18: the Rootstone tier's own recipes, named once here so the tests below
 ## don't each re-list them and drift apart if a fifth is ever added.
 const ROOTSTONE_TIER_RECIPES := ["orb_greater", "reinforce_axe", "reinforce_pickaxe", "saddle_frame"]
+## SF31, data/recipes/recipes_ironwood.json -- the second and last tier.
+const IRONWOOD_TIER_RECIPES := ["orb_prime", "ironwood_haft_axe", "ironwood_haft_pickaxe", "potion_large"]
 
 
 func test_recipes_only_use_baseline_materials() -> void:
@@ -404,3 +406,126 @@ func test_reinforce_axe_fails_all_or_nothing_when_short_of_rootstone() -> void:
 
 	assert_eq(bag.count("wood"), 2, "a refused craft must not spend the wood it did have")
 	assert_eq(bag.max_durability_at(slot), before_max, "a refused reinforce must not touch the tool")
+
+
+## --- SF31: the Ironwood tier (data/recipes/recipes_ironwood.json) ----------
+
+func test_the_ironwood_tier_recipes_are_defined() -> void:
+	for id in IRONWOOD_TIER_RECIPES:
+		var recipe: Dictionary = db.recipe(id)
+		assert_false(recipe.is_empty(), "recipes_ironwood.json is missing '%s'" % id)
+		assert_true(recipe.has("cost"), "'%s' names no cost" % id)
+
+
+func test_every_ironwood_tier_recipe_actually_costs_ironwood() -> void:
+	for id in IRONWOOD_TIER_RECIPES:
+		var names_ironwood := false
+		for requirement in (db.recipe(id).get("cost", []) as Array):
+			if str((requirement as Dictionary).get("id", "")) == "ironwood":
+				names_ironwood = true
+		assert_true(names_ironwood, "'%s' does not cost ironwood" % id)
+
+
+func test_the_ironwood_tier_needs_no_unlock_flag() -> void:
+	for id in IRONWOOD_TIER_RECIPES:
+		assert_eq(db.recipe_unlock_flag(id), "",
+			"'%s' should be known from the first minute, gated by owning Ironwood" % id)
+		assert_true(state.recipe_known(id), "'%s' must be known with no flag ever set" % id)
+
+
+## SF31's DONE-WHEN, asserted directly and over the WHOLE recipe book rather
+## than one tier: spec §10 lists exactly six materials for the Meadows
+## (wood/stone/fiber/berries baseline, rootstone, ironwood) plus items crafted
+## from them. A seventh gathered material appearing in any cost -- the "third
+## new material" SF31 exists to prevent -- fails here, whichever file added it.
+func test_no_recipe_anywhere_needs_a_third_progression_material() -> void:
+	const MATERIALS := ["wood", "stone", "fiber", "berries", "rootstone", "ironwood"]
+	# Ids a recipe may legitimately cost that are NOT raw materials: things the
+	# player crafts or is handed. Kept explicit so a genuinely new material
+	# cannot hide in it.
+	const CRAFTED_OR_GIVEN := ["saddle_frame", "orb_basic", "orb_greater", "orb_prime",
+		"potion_small", "potion_large", "revive", "coin", "axe", "pickaxe", "hammer",
+		"knife", "fishing_rod"]
+	for id in db.recipe_ids():
+		for requirement in (db.recipe(str(id)).get("cost", []) as Array):
+			var ingredient := str((requirement as Dictionary).get("id", ""))
+			assert_true(MATERIALS.has(ingredient) or CRAFTED_OR_GIVEN.has(ingredient),
+				"'%s' costs '%s', a material outside spec §10's list -- SF31's done-when is that nothing needed for the stronghold requires a third new material" % [id, ingredient])
+
+
+## The three recipe files are merged into one book by item_db.gd, and a
+## duplicate id would silently let whichever merged last win. Asserted here
+## rather than growing a runtime conflict check.
+func test_no_recipe_id_is_defined_in_two_tier_files() -> void:
+	var seen: Array[String] = []
+	for path in ["res://data/recipes/recipes.json", "res://data/recipes/recipes_rootstone.json",
+			"res://data/recipes/recipes_ironwood.json"]:
+		var file := FileAccess.open(path, FileAccess.READ)
+		assert_true(file != null, "%s is missing" % path)
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		assert_true(parsed is Dictionary, "%s is not a JSON object" % path)
+		for id: Variant in ((parsed as Dictionary).get("recipes", {}) as Dictionary):
+			assert_false(seen.has(str(id)), "recipe '%s' is defined in two files" % str(id))
+			seen.append(str(id))
+
+
+func test_orb_prime_is_craftable_and_tops_the_tier_ladder() -> void:
+	const CATCH := preload("res://scripts/combat/catch_math.gd")
+	for requirement in state.recipe_cost_for("orb_prime"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_true(state.can_craft("orb_prime"))
+	assert_true(state.craft("orb_prime"))
+	assert_eq(bag.count("orb_prime"), 1)
+	assert_eq(CATCH.best_orb({"orb_basic": 3, "orb_greater": 2, "orb_prime": 1}), "orb_prime",
+		"a crafted orb_prime should outrank both tiers under it")
+
+
+func test_the_ridge_tonic_crafts_and_heals_more_than_a_small_potion() -> void:
+	for requirement in state.recipe_cost_for("potion_large"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_true(state.craft("potion_large"))
+	assert_eq(bag.count("potion_large"), 1)
+	assert_true(int(db.definition("potion_large").get("heal", 0)) > int(db.definition("potion_small").get("heal", 0)),
+		"the Band 4 tonic must actually be the bigger dose, or the recipe is decoration")
+
+
+## The Ironwood haft is the SECOND rung on the same tool: reinforcing stacks
+## on top of the Rootstone tier rather than replacing it (recipes_ironwood's
+## own comment says so), so an axe worked through both tiers ends at
+## base + 20 + 30.
+func test_the_two_tool_tiers_stack_on_the_same_axe() -> void:
+	bag.add("axe", 1)
+	var slot: int = bag.find_slot("axe")
+	var base_max: int = bag.max_durability_at(slot)
+	for requirement in state.recipe_cost_for("reinforce_axe"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_true(state.craft("reinforce_axe"))
+	for requirement in state.recipe_cost_for("ironwood_haft_axe"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_true(state.craft("ironwood_haft_axe"))
+	assert_eq(bag.count("axe"), 1, "reinforcing must never duplicate the tool")
+	assert_eq(bag.max_durability_at(slot), base_max + 20 + 30)
+
+
+func test_the_ironwood_haft_refuses_without_owning_the_tool() -> void:
+	for requirement in state.recipe_cost_for("ironwood_haft_pickaxe"):
+		bag.add(str(requirement.get("id", "")), int(requirement.get("n", 0)))
+	assert_false(state.can_craft("ironwood_haft_pickaxe"), "no pickaxe should refuse the reinforce")
+	assert_false(state.craft("ironwood_haft_pickaxe"))
+	assert_eq(bag.count("ironwood"), int(state.recipe_cost_for("ironwood_haft_pickaxe")[0].get("n", 0)),
+		"a refused craft must not have spent anything")
+
+
+## SF31's source half: ironwood is a real gathered resource with real nodes in
+## the world, felled with the axe. A tier with recipes and no deposits is a
+## craft screen full of rows nobody can fill.
+func test_ironwood_is_gathered_with_the_axe_and_really_grows_somewhere() -> void:
+	assert_eq(str(db.definition("ironwood").get("gathered_with", "")), "axe")
+	var file := FileAccess.open("res://data/config/harvest.json", FileAccess.READ)
+	assert_true(file != null, "harvest.json is missing")
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var stands := 0
+	for raw: Variant in ((parsed as Dictionary).get("nodes", []) as Array):
+		if str((raw as Dictionary).get("item", "")) == "ironwood":
+			stands += 1
+	assert_true(stands >= 3, "only %d ironwood nodes stand in the world" % stands)

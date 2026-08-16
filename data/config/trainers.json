@@ -459,6 +459,153 @@
       },
       "defeat_flag": "defeated_stronghold_elite",
       "rechallenge": false
+    },
+    {
+      "id": "captain_field",
+      "name": "Captain Halder",
+      "_comment": "SF34, spec §3 Band 4. The first of the three regional captains: Ground-focused team, rewards the Field Sigil. Team levels are TUNABLE and sit inside §3's own 'roughly 10-16 entering this band' -- NEVER player-scaled (§3 says so outright): a player who over-levels walks through him, and that is the reward for over-levelling.",
+      "rank": "captain",
+      "palette": {
+        "*": "#a89a6b"
+      },
+      "_comment_palette": "NP2's CAPTAIN rank palette (#b0a271, data/config/npc_ranks.json) with ONE regional accent -- a half-step toward the dry straw of the high pasture. Per CLAUDE.md and spec §21 this is a per-material variant laid over the rank base, not a new mesh and not a global tint; `character_model.gd` applies `rank` first and this over it, so all three captains still read as the same rank at a glance and differ by posting.",
+      "position": [
+        52.0,
+        -122.0
+      ],
+      "facing_deg": -20.6,
+      "_why_here": "The high pasture west of the Rise, on the trainer road up-country (spec Band 4's 'high pasture' and 'trainer road'). MEASURED, not guessed: `tools/_probe_upper_meadows.gd` reads h=0.59m, 0.64m of height spread and a worst local slope of 6.0 degrees over an 8m pad -- a real arena, on the flattest ground in the upper Meadows. 28.6m clear of the Burrow Warrens' mouth at [70,-140] so the dungeon's own prompt never contests the challenge, 133m from the origin and well inside world_perimeter.gd's 235m ring. `facing_deg` is the yaw that looks back down the road toward the village, the same atan2(dx, dz) convention every other entry in this file uses.",
+      "challenge": "captain_field_challenge",
+      "defeated": "captain_field_defeated",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 11
+        },
+        {
+          "species": "tuskroot",
+          "level": 12
+        },
+        {
+          "species": "meadowhart",
+          "level": 13
+        }
+      ],
+      "reward": {
+        "coins": 40,
+        "items": [
+          {
+            "id": "field_sigil",
+            "count": 1
+          },
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 60
+      },
+      "defeat_flag": "defeated_captain_field",
+      "rechallenge": false
+    },
+    {
+      "id": "captain_ridge",
+      "name": "Captain Vess",
+      "_comment": "SF34. The second captain: Air-focused team, rewards the Ridge Sigil. A level step above the Field Captain -- the three are meant to be fought in road order, not in one sitting, and nothing enforces that order because nothing needs to: the Sigils are a set and the gate counts them, not their sequence.",
+      "rank": "captain",
+      "palette": {
+        "*": "#a3a79c"
+      },
+      "_comment_palette": "Captain base, accented toward the pale grey-green of the wind ridge -- see captain_field's own note for why this is a per-material accent rather than a tint or a new body.",
+      "position": [
+        75.0,
+        -150.0
+      ],
+      "facing_deg": -24.9,
+      "_why_here": "The shoulder under the Rise's south-west face, where the wind ridge starts and the walkable ground ends -- everything east of here measures 43 to 76 degrees of rock in the same probe, so this is literally the last place on the ridge a fight can happen. MEASURED: h=-1.51m, 2.79m spread, worst slope 12.8 degrees over a 9m pad, 168m out. 36m from the Field Captain and 46m from the Riverwatch Captain: three distinct places, none of them in sight-and-prompt range of another.",
+      "challenge": "captain_ridge_challenge",
+      "defeated": "captain_ridge_defeated",
+      "team": [
+        {
+          "species": "pipwing",
+          "level": 12
+        },
+        {
+          "species": "duskhush",
+          "level": 13
+        },
+        {
+          "species": "galecrest",
+          "level": 15
+        }
+      ],
+      "reward": {
+        "coins": 45,
+        "items": [
+          {
+            "id": "ridge_sigil",
+            "count": 1
+          },
+          {
+            "id": "revive",
+            "count": 1
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 70
+      },
+      "defeat_flag": "defeated_captain_ridge",
+      "rechallenge": false
+    },
+    {
+      "id": "captain_riverwatch",
+      "name": "Captain Oreth",
+      "_comment": "SF34. The third captain: Water-led but deliberately BALANCED (spec §3 says 'Water/balanced'), so a party built to answer the first two cannot walk this one on type alone -- two Water and one Ground, the only mixed team of the three. Top of the band's tunable 10-16.",
+      "rank": "captain",
+      "palette": {
+        "*": "#8f9a86"
+      },
+      "_comment_palette": "Captain base, accented toward the wet slate of the draw. Same per-material rule as the other two.",
+      "position": [
+        112.0,
+        -177.0
+      ],
+      "facing_deg": -31.4,
+      "_why_here": "The low draw at the foot of the Rise's south-east flank -- the lowest ground in the upper Meadows (h=-6.54m, 6.9m below the Field Captain's pasture), which is where the ridge's runoff would collect and what a Riverwatch posting is watching. MEASURED: 1.48m spread, worst slope 10.5 degrees over an 8m pad, 209m out. HONEST LIMIT, recorded rather than papered over: there is no actual watercourse here yet -- the Meadows' only running water is the west stream and the pond (terrain_playground.json `water`), and Band 3's river geography is SE22's, not this item's. This is the right SHAPE of ground for the posting and the terrain lease is held elsewhere, so no bake was run to put water in it. If SE22 ever cuts an upper draw, it belongs on this spot.",
+      "challenge": "captain_riverwatch_challenge",
+      "defeated": "captain_riverwatch_defeated",
+      "team": [
+        {
+          "species": "mosshell",
+          "level": 13
+        },
+        {
+          "species": "trailpup",
+          "level": 14
+        },
+        {
+          "species": "brooktail",
+          "level": 16
+        }
+      ],
+      "reward": {
+        "coins": 50,
+        "items": [
+          {
+            "id": "river_sigil",
+            "count": 1
+          },
+          {
+            "id": "orb_greater",
+            "count": 2
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 80
+      },
+      "defeat_flag": "defeated_captain_riverwatch",
+      "rechallenge": false
     }
   ],
   "_comment_stronghold": "SG38 (spec Sec8, Sec12). The stronghold gauntlet: a patrol at the Outer Works, a fight in the Courtyard, and an elite in front of the Tether Chamber Approach's door -- three of Sec12's '2-4 final stronghold trainers', with the Warden himself (R8.3) the fourth fight in the building. All three carry `placed_by: \"stronghold\"`, so trainer_npc.gd's world pass skips them and scripts/world/stronghold.gd places them from the room layout instead. Levels are TUNABLE and never player-scaled (Sec3): they sit above the 10-16 the captains' band expects, which is the whole point of a gauntlet an unprepared party should not clear."

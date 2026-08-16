@@ -78,6 +78,59 @@ func test_trying_again_after_opening_does_not_spend_a_second_item() -> void:
 	assert_eq(bag.count(KEY_ID), 0)
 
 
+## --- SF34: a gate with more than one key -------------------------------------
+
+const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
+const HALL_FLAG := "hall_approach_open"
+
+
+func test_a_three_key_gate_reports_what_it_needs() -> void:
+	var hall: RefCounted = ITEM_GATE.new(SIGILS, HALL_FLAG)
+	assert_eq(hall.required(), 3)
+	assert_eq(hall.held(bag), 0)
+
+
+func test_two_of_three_sigils_leaves_the_gate_sealed_and_spends_nothing() -> void:
+	var hall: RefCounted = ITEM_GATE.new(SIGILS, HALL_FLAG)
+	bag.add("field_sigil", 1)
+	bag.add("ridge_sigil", 1)
+	assert_eq(hall.held(bag), 2)
+	assert_false(hall.try_open(bag, progression))
+	assert_false(hall.is_open(progression))
+	assert_eq(bag.count("field_sigil"), 1, "a failed attempt must not eat a Sigil")
+	assert_eq(bag.count("ridge_sigil"), 1)
+
+
+func test_three_of_three_opens_and_consumes_one_of_each() -> void:
+	var hall: RefCounted = ITEM_GATE.new(SIGILS, HALL_FLAG)
+	for id: String in SIGILS:
+		bag.add(id, 1)
+	assert_true(hall.try_open(bag, progression))
+	assert_true(hall.is_open(progression))
+	for id: String in SIGILS:
+		assert_eq(bag.count(id), 0)
+
+
+## Three copies of ONE key are not three keys. `held()` counts distinct
+## required ids, never stack size.
+func test_a_stack_of_one_sigil_does_not_count_as_three() -> void:
+	var hall: RefCounted = ITEM_GATE.new(SIGILS, HALL_FLAG)
+	bag.add("field_sigil", 3)
+	assert_eq(hall.held(bag), 1)
+	assert_false(hall.try_open(bag, progression))
+
+
+## The single-key form still behaves exactly as it did before SF34 -- this is
+## the same class `road_gate.gd` and the bridge still construct with a String.
+func test_a_one_key_gate_still_takes_a_plain_string() -> void:
+	var single: RefCounted = ITEM_GATE.new(KEY_ID, "some_other_gate")
+	assert_eq(single.required(), 1)
+	assert_eq(single.item_id, KEY_ID)
+	bag.add(KEY_ID, 1)
+	assert_true(single.try_open(bag, progression))
+	assert_eq(bag.count(KEY_ID), 0)
+
+
 func test_open_state_survives_a_save_load_round_trip_through_progression_state() -> void:
 	bag.add(KEY_ID, 1)
 	gate.try_open(bag, progression)

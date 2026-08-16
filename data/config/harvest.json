@@ -190,7 +190,63 @@
       ],
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 1.0
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        60.0,
+        -136.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "model_scale": 0.28
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        66.0,
+        -152.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "model_scale": 0.3
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        76.0,
+        -146.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
+      "model_scale": 0.28
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        80.0,
+        -152.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "model_scale": 0.32
+    },
+    {
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        92.0,
+        -158.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "model_scale": 0.28
     }
   ],
+  "_comment_ironwood_sf31": "SF31, spec §3 Band 4: the old-growth stands on the Rise's south-west flank, up the trainer road past the Burrow Warrens' mouth ([70,-140]) -- the upper Meadows, and the only place ironwood grows. Nodes here rather than in a new `ironwood_grove.json` because this file already IS where a gathered material lives: SD16's quarry made exactly this call for rootstone (`old_quarry.gd`'s own header: 'the Rootstone deposits are harvest.json, placed by playground_world.gd like every other harvest node') and a second config would be the drift that comment exists to prevent. Every position is MEASURED, not guessed -- `tools/_probe_upper_meadows.gd` (heights -3.3m to +0.5m, worst local slope 2.3-11.3 degrees over a 3m pad, all inside world_perimeter.gd's 235m ring at 149-183m out); the eastern quadrant beyond them is the Rise's own 45-75 degree rock and will not hold a node a player can stand at. `TwistedTree` rather than `DeadTree_2` (which `wood` already uses): the gnarled trunk is the read, and a second dead tree would say 'wood' at a glance. Amounts and scales TUNABLE.",
   "_comment_models_r9_4": "R9.4. Every node here had no `model`, and harvest_node.gd's fallback for that is a BoxMesh tinted by the item's colour -- so all twelve harvest spots rendered as coloured boxes. The blind critic found two of them sitting a couple of metres from the player in the spawn framing and noted they were 'MORE legible than the player', being the only hard-edged geometric shapes in frame; it listed them among the three assets doing the most damage. These are the vegetation's own Quaternius pack, deliberately: assets/environment/nature is the Kenney kit, which ships flat untextured vertex colours including a teal-green rock material, and mixing it in would trade one cohesion problem for another (CLAUDE.md, visual cohesion). The box fallback stays in the code -- it is the right behaviour for a node whose model is missing. TUNABLE (scales especially)."
 }

@@ -133,7 +133,62 @@
         "It's open. I can't hold it shut from the floor.",
         "Rest your five first. He fields more than I do, and he'll wait -- he always thinks people will listen if he waits."
       ]
+    },
+    "captain_field_challenge": {
+      "speaker": "Captain Halder",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Far as the pasture, no further. That's the posting, and I've kept it eleven years.",
+        "You've seen what walks in off the high ground when a fence goes down. I've buried the difference.",
+        "Sigil's on my belt and it stays there unless you take it properly. Bring them out."
+      ]
+    },
+    "captain_field_defeated": {
+      "speaker": "Captain Halder",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Clean. No arguing with clean.",
+        "Take it — that's the rule and I'd not be worth the badge if I bent it.",
+        "Two more of us up the road. Vess won't like the wind doing your aiming for you."
+      ]
+    },
+    "captain_ridge_challenge": {
+      "speaker": "Captain Vess",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Careful. Crosswind on this shoulder has taken better-footed than you off it.",
+        "People call the ridge line cruel. It's a wall, and a wall is the kindest thing we've built up here.",
+        "Mine fly it every day. Let's see yours."
+      ]
+    },
+    "captain_ridge_defeated": {
+      "speaker": "Captain Vess",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You read the gusts. Most don't bother.",
+        "The Ridge Sigil, then. I'd sooner it went to someone who watches the sky.",
+        "Oreth's down in the draw. He's the patient one — don't let him tire you into a mistake."
+      ]
+    },
+    "captain_riverwatch_challenge": {
+      "speaker": "Captain Oreth",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Riverwatch. We keep the low ground, and the low ground is where everything ends up.",
+        "You'll think the barriers are what's wrong here. Stand a season in this draw and you'll thank whoever set them.",
+        "Three of mine. Not all one type — you'll want a plan, not a favourite."
+      ]
+    },
+    "captain_riverwatch_defeated": {
+      "speaker": "Captain Oreth",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "A plan, then. Good.",
+        "That's the third. The Hall approach reads all three or it reads none — no bargaining with a lock.",
+        "Go on up. I hope you're right about whatever you think is in there."
+      ]
     }
   },
-  "_comment_stronghold": "SG38. The three stronghold gauntlet trainers. Same two-or-three-line rule as everyone above -- the fight is the content. What they say is Sec33's Warden read down the ladder: none of them is gloating, all three would rather the player stopped, and Keeper Hald says outright that the Warden wants to be understood rather than obeyed. None of them reveals what the machine is; that is SG40's, inside the stronghold and nowhere earlier."
+  "_comment_stronghold": "SG38. The three stronghold gauntlet trainers. Same two-or-three-line rule as everyone above -- the fight is the content. What they say is Sec33's Warden read down the ladder: none of them is gloating, all three would rather the player stopped, and Keeper Hald says outright that the Warden wants to be understood rather than obeyed. None of them reveals what the machine is; that is SG40's, inside the stronghold and nowhere earlier.",
+  "_comment_captains": "SF34. The three regional captains. Spec §35-§36's rule for Team Tether officers is the one thing these lines exist to carry: they are NOT sneering villains, they believe the barriers protect people, and each of them has a specific regional reason to believe it. Nobody explains the Rifts here -- §32's reveal ladder keeps the explanation for the stronghold, and a captain who monologued the plot would spend it three rungs early. Two or three lines each, same as every other trainer in this file."
 }

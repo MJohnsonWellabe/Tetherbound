@@ -20,6 +20,10 @@ const RECIPES_PATH := "res://data/recipes/recipes.json"
 ## `recipe_ids()`, `craft_panel.gd`, `game_state.gd`) sees one recipe book,
 ## not two.
 const ROOTSTONE_RECIPES_PATH := "res://data/recipes/recipes_rootstone.json"
+## SF31. The Ironwood tier, on the same terms as the Rootstone one above: its
+## own file, merged into the same table on load. Two tiers is the whole of the
+## Meadows economy (spec §10), so this is the last of these constants.
+const IRONWOOD_RECIPES_PATH := "res://data/recipes/recipes_ironwood.json"
 
 ## Fallback stack size for an id with no definition. One, so an unknown item
 ## cannot merge with anything and quietly lose itself.
@@ -34,18 +38,20 @@ func _init(
 	items_path: String = ITEMS_PATH,
 	buildables_path: String = BUILDABLES_PATH,
 	recipes_path: String = RECIPES_PATH,
-	rootstone_recipes_path: String = ROOTSTONE_RECIPES_PATH
+	rootstone_recipes_path: String = ROOTSTONE_RECIPES_PATH,
+	ironwood_recipes_path: String = IRONWOOD_RECIPES_PATH
 ) -> void:
 	_items = _read(items_path).get("items", {})
 	_buildables = _read(buildables_path).get("buildables", [])
 	_recipes = _read(recipes_path).get("recipes", {})
-	# SD18: merge the Rootstone tier in. A duplicate id would silently favour
-	# whichever file merges second; the two tables are hand-authored with no
-	# overlap today, so this stays a plain merge rather than growing a
-	# conflict check nothing has ever needed.
-	var rootstone_recipes: Dictionary = _read(rootstone_recipes_path).get("recipes", {})
-	for id: Variant in rootstone_recipes:
-		_recipes[id] = rootstone_recipes[id]
+	# SD18/SF31: merge the two progression tiers in, base first. A duplicate id
+	# would silently favour whichever file merges last; the three tables are
+	# hand-authored with no overlap today, and `tests/test_recipes.gd` now
+	# asserts that directly rather than this growing a runtime conflict check.
+	for tier_path: String in [rootstone_recipes_path, ironwood_recipes_path]:
+		var tier_recipes: Dictionary = _read(tier_path).get("recipes", {})
+		for id: Variant in tier_recipes:
+			_recipes[id] = tier_recipes[id]
 
 
 func _read(path: String) -> Dictionary:

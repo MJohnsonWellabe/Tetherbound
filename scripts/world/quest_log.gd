@@ -8,9 +8,16 @@ extends RefCounted
 ## drift out of sync with `progression`.
 ##
 ## Deliberately NOT a quest engine (spec §19, CLAUDE.md): no branching, no
-## prerequisites, no counters. An entry is DONE the instant its own `flag_id`
-## is set; the tracked line is just the first "main" entry not yet done, in
-## file order.
+## prerequisites. An entry is DONE the instant its own `flag_id` is set; the
+## tracked line is just the first "main" entry not yet done, in file order.
+##
+## SF34 added the one exception, and kept it as small as it sounds: an entry
+## may carry `count_flags`, a list of flags whose set-count is appended to its
+## label as " n/total" (spec §16's own example line is "Defeat the Upper
+## Meadows captains. 2/3"). It changes nothing about DONE — that is still the
+## entry's own `flag_id` — and an entry without `count_flags` renders exactly
+## as it did before. See `data/progression/objectives.json`'s own comment for
+## why this is not the counter system §19 bans.
 
 const DATA_PATH := "res://data/progression/objectives.json"
 
@@ -52,8 +59,26 @@ func _entries(source: Array, progression: RefCounted) -> Array:
 		var entry := raw as Dictionary
 		var flag_id := str(entry.get("flag_id", ""))
 		var done := not flag_id.is_empty() and bool(progression.call("has", flag_id))
-		out.append({"label": str(entry.get("label", "")), "done": done})
+		out.append({"label": _label(entry, progression), "done": done})
 	return out
+
+
+## The entry's label, with SF34's " n/total" appended when it carries
+## `count_flags`. One place, so the HUD's tracked line and the quest-log row
+## can never disagree about the count.
+func _label(entry: Dictionary, progression: RefCounted) -> String:
+	var label := str(entry.get("label", ""))
+	var raw: Variant = entry.get("count_flags", [])
+	if typeof(raw) != TYPE_ARRAY:
+		return label
+	var flags := raw as Array
+	if flags.is_empty():
+		return label
+	var have := 0
+	for flag: Variant in flags:
+		if bool(progression.call("has", str(flag))):
+			have += 1
+	return "%s %d/%d" % [label, have, flags.size()]
 
 
 ## Spec §16's one concise HUD line: the first Main Story entry not yet done,
@@ -67,5 +92,5 @@ func tracked_text(progression: RefCounted) -> String:
 		var entry := raw as Dictionary
 		var flag_id := str(entry.get("flag_id", ""))
 		if flag_id.is_empty() or not bool(progression.call("has", flag_id)):
-			return str(entry.get("label", ""))
+			return _label(entry, progression)
 	return ""

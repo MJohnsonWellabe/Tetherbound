@@ -1,10 +1,22 @@
 {
   "_comment": "SB11's objective data (spec sec16). Each entry: id (bookkeeping only), flag_id (the autoload/progression_state.gd flag that marks it done) and label (the exact line shown, both as the HUD's one tracked line and as a quest-log row). Order is priority within its list: scripts/world/quest_log.gd tracks the first 'main' entry whose flag is not yet set. No prerequisites/branching/counters here on purpose -- spec sec19 and CLAUDE.md both ban a quest engine; an entry is only ever DONE or not-yet.",
+  "_comment_count_flags": "SF34, spec sec16, whose own example line is literally 'Defeat the Upper Meadows captains. 2/3'. An entry MAY carry `count_flags`: a list of progression flags whose set-count is appended to the label as ' n/total'. That is the whole feature -- it is not prerequisites, not branching and not a quest engine (sec19/CLAUDE.md still ban those); the entry is still DONE only when its own `flag_id` is set, and an entry without `count_flags` behaves exactly as before. The count exists because a three-part objective that reads the same at 0/3 and at 2/3 is the one place where 'DONE or not-yet' genuinely fails the player.",
   "main": [
     {
       "id": "open_road_gate",
       "flag_id": "road_gate_open",
       "label": "Find a way through the village gate."
+    },
+    {
+      "id": "defeat_the_captains",
+      "flag_id": "hall_approach_open",
+      "label": "Defeat the Upper Meadows captains.",
+      "count_flags": [
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "defeated_captain_riverwatch"
+      ],
+      "_comment": "SF34. `flag_id` is the GATE's flag, not a fourth captain flag: the objective is not finished by winning three fights, it is finished by walking up to the Hall approach and putting the three Sigils in it -- which is the last thing the player physically does in the band. The three captain defeat flags are the count, so the line reads 'Defeat the Upper Meadows captains. 2/3' on the way there and only clears once the gate is open."
     }
   ],
   "local": []

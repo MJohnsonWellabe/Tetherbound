@@ -60,6 +60,73 @@ func test_local_entries_is_a_real_empty_list_not_a_parse_failure() -> void:
 	assert_true(log_reader.main_entries(progression).size() >= 1)
 
 
+## --- SF34: the captains' 2/3 count (spec §16) --------------------------------
+
+const CAPTAIN_FLAGS := ["defeated_captain_field", "defeated_captain_ridge",
+	"defeated_captain_riverwatch"]
+
+
+func _captain_line() -> String:
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).find("captains") != -1:
+			return str(entry.get("label", ""))
+	return ""
+
+
+func test_the_captains_objective_shows_a_count_and_starts_at_zero_of_three() -> void:
+	var line: String = _captain_line()
+	assert_false(line.is_empty(), "objectives.json has no Upper Meadows captains entry")
+	assert_true(line.ends_with("0/3"), "the captains line should start at 0/3; got '%s'" % line)
+
+
+## The exact line spec §16 gives as its example.
+func test_beating_two_captains_reads_two_of_three() -> void:
+	progression.set_flag(CAPTAIN_FLAGS[0])
+	progression.set_flag(CAPTAIN_FLAGS[1])
+	assert_true(_captain_line().ends_with("2/3"), "got '%s'" % _captain_line())
+
+
+func test_the_count_reaches_three_of_three_before_the_objective_is_done() -> void:
+	for flag: String in CAPTAIN_FLAGS:
+		progression.set_flag(flag)
+	var line: String = _captain_line()
+	assert_true(line.ends_with("3/3"), "got '%s'" % line)
+	# Winning three fights is not the objective -- opening the gate is.
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")) == line:
+			assert_false(bool(entry.get("done", true)),
+				"the captains objective read done before the Hall approach was opened")
+
+
+func test_the_captains_objective_is_done_only_once_the_hall_approach_opens() -> void:
+	for flag: String in CAPTAIN_FLAGS:
+		progression.set_flag(flag)
+	progression.set_flag("hall_approach_open")
+	var found_done := false
+	for entry: Dictionary in log_reader.main_entries(progression):
+		if str(entry.get("label", "")).find("captains") != -1:
+			found_done = bool(entry.get("done", false))
+	assert_true(found_done, "opening the Hall approach did not close the captains objective")
+
+
+## The HUD's one tracked line and the quest-log row are the same string,
+## counter included -- the count is computed in one place for exactly this
+## reason.
+func test_the_tracked_line_carries_the_same_count_as_the_log_row() -> void:
+	progression.set_flag("road_gate_open")
+	progression.set_flag(CAPTAIN_FLAGS[0])
+	assert_eq(log_reader.tracked_text(progression), _captain_line())
+	assert_true(log_reader.tracked_text(progression).ends_with("1/3"))
+
+
+## An entry with no `count_flags` must be untouched by the feature -- no
+## trailing " 0/0", no change of any kind.
+func test_an_uncounted_objective_still_renders_as_a_plain_label() -> void:
+	var line: String = log_reader.tracked_text(progression)
+	assert_false(line.is_empty())
+	assert_false(line.ends_with("/0"), "an uncounted objective grew a counter: '%s'" % line)
+
+
 func test_two_readers_never_disagree_about_the_same_flag_state() -> void:
 	# The HUD line and the quest-log tab must never show a different verdict
 	# on the same objective -- both are this one class, asked twice.

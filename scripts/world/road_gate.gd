@@ -26,20 +26,36 @@ const FLAG_ID := "road_gate_open"
 const LOCKED_CONVERSATION := "road_gate_locked"
 const UNLOCKED_CONVERSATION := "road_gate_unlocked"
 
+## SF34: this file is the gate BODY — leaf, lock, collision, prompt, re-pose —
+## and the only things that ever differed between two physical gates are the
+## five values below. They default to the village road gate this script was
+## written for, so nothing that already builds one changes; the Meadows Hall
+## approach (`playground_world._build_sigil_gate()`) sets them before `build()`
+## and gets the same body with three Sigils as its key. A second script would
+## have been a second copy of the lock-material and prefab-holder bugs this
+## file's own comments record fighting.
+var key_item_ids: Variant = KEY_ITEM_ID
+var flag_id := FLAG_ID
+var locked_conversation := LOCKED_CONVERSATION
+var unlocked_conversation := UNLOCKED_CONVERSATION
+var prompt_text := "Try the gate"
+
 var _mesh: Node3D = null
 var _shape: CollisionShape3D = null
 var _prompt: Node3D = null
 var _lock: MeshInstance3D = null
 var _open := false
-## SB10's generic gate logic — `item_id`/`flag_id` are this gate's own, the
-## mesh/collision/prompt above stay this file's job.
-var _gate: RefCounted = ITEM_GATE.new(KEY_ITEM_ID, FLAG_ID)
+## SB10's generic gate logic — the item(s) and flag are this gate's own, the
+## mesh/collision/prompt above stay this file's job. Built in `build()` rather
+## than here so the caller's overrides above are the ones it reads.
+var _gate: RefCounted = null
 
 
 ## `world` only for `ground_height_at` — the same duck-typed climb
 ## village.gd's own `_ground_height` uses, so this does not need a direct
 ## reference to playground_world.gd.
 func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
+	_gate = ITEM_GATE.new(key_item_ids, flag_id)
 	var prefabs: RefCounted = PREFABS.new()
 	if not prefabs.call("load_recipes"):
 		push_error("no building recipes; the road gate cannot build its leaf")
@@ -146,7 +162,7 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	# rail) an approach from an angle can be stopped by the panel's face
 	# well outside a tighter radius, and the interaction should not demand a
 	# more perpendicular approach than a locked gate reasonably does.
-	_prompt.call("configure", "Try the gate", 4.0, true)
+	_prompt.call("configure", prompt_text, 4.0, true)
 	_prompt.connect("activated", _on_tried)
 	add_child(_prompt)
 
@@ -172,9 +188,9 @@ func _on_tried() -> void:
 
 	if inventory != null and progression != null and _gate.try_open(inventory, progression):
 		_unlock()
-		_say(UNLOCKED_CONVERSATION)
+		_say(unlocked_conversation)
 	else:
-		_say(LOCKED_CONVERSATION)
+		_say(locked_conversation)
 
 
 func _unlock() -> void:

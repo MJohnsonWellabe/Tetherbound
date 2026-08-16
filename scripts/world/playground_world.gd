@@ -62,6 +62,28 @@ const GATE_YAW_DEG := 71.0
 ## would naturally stand to try the gate, and the closer one always won.
 const GATE_KEY_AT := Vector2(24.0, -10.0)
 
+## SF34: the Meadows Hall approach, the chapter's last gate (spec §3 Band 4).
+## Three Sigils, one lock — sealed at two of three, open at three. The body is
+## `road_gate.gd` configured, not a second gate script; see that file's own
+## note on why.
+##
+## Sited where the walkable upper Meadows ENDS on the stronghold's bearing:
+## `map_landmarks.json` puts Meadows Hall at [229.8,-144.4], which is 271m out
+## and therefore beyond `world_perimeter.gd`'s 235m ring — it is a silhouette,
+## drawn to be seen and not reached, and the approach to it is the last ground
+## the player can stand on facing it. [130,-176] is 219m out, measured by
+## `tools/_probe_upper_meadows.gd` at 1.19m of height spread and a worst local
+## slope of 9.8 degrees over a 5m pad, with the Riverwatch Captain 18m back
+## down the draw — close enough that the sealed gate is visible over his
+## shoulder while you fight him, far enough that their two prompts (4.0m and
+## 4.2m) never contest. `SIGIL_GATE_YAW_DEG` puts the leaf across the bearing
+## to the Hall (72.4 degrees from here) and is TUNABLE by eye, exactly like
+## `GATE_YAW_DEG` above and for the same reason.
+const SIGIL_GATE_AT := Vector2(130.0, -176.0)
+const SIGIL_GATE_YAW_DEG := -17.6
+const SIGIL_ITEM_IDS := ["field_sigil", "ridge_sigil", "river_sigil"]
+const SIGIL_GATE_FLAG := "hall_approach_open"
+
 ## A few metres off the well (village.json stands it at the square's exact
 ## centre, [10,-10], which is also where every route in `paths.routes`
 ## starts) so the signpost has its own footing instead of sharing the well's.
@@ -575,6 +597,7 @@ func _build_settlement() -> void:
 	landmark.call("build", self)
 
 	_build_road_gate()
+	_build_sigil_gate()
 
 	# SC14: the South Bridge over the south gully, and the leaf across it.
 	# After the road gate so the two gates build in the order the player meets
@@ -691,6 +714,22 @@ func _build_road_gate() -> void:
 	key.position = Vector3(GATE_KEY_AT.x, ground, GATE_KEY_AT.y)
 	add_child(key)
 	key.call("setup", "castle_gate_key", "Take the old key")
+
+
+## SF34: the Hall approach. Same body as the road gate, three Sigils instead
+## of one key — and no key lying nearby, because the keys are three captains
+## (`data/config/trainers.json`). Nothing here checks a level or a flag the
+## player cannot see in their own satchel.
+func _build_sigil_gate() -> void:
+	var gate: Node3D = ROAD_GATE.new()
+	gate.name = "SigilGate"
+	gate.set("key_item_ids", SIGIL_ITEM_IDS)
+	gate.set("flag_id", SIGIL_GATE_FLAG)
+	gate.set("locked_conversation", "hall_approach_sealed")
+	gate.set("unlocked_conversation", "hall_approach_opened")
+	gate.set("prompt_text", "Try the Hall gate")
+	add_child(gate)
+	gate.call("build", self, SIGIL_GATE_AT, SIGIL_GATE_YAW_DEG)
 
 
 ## R4.4: TMs found in the world (GAME_DESIGN.md 13). Each is a one-time
