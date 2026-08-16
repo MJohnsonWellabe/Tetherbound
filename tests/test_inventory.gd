@@ -30,11 +30,46 @@ func test_the_four_starting_items_are_all_defined() -> void:
 		assert_true(db.stack_size(id) > 1, "%s must stack" % id)
 
 
-func test_the_five_tools_are_defined() -> void:
-	# R2.1. Axe, pickaxe, hammer, knife, fishing rod — owned, not consumed.
-	for id in ["axe", "pickaxe", "hammer", "knife", "fishing_rod"]:
+func test_the_six_tools_are_defined() -> void:
+	# R2.1's five — axe, pickaxe, hammer, knife, fishing rod — plus R7.6's
+	# hoe. Owned, not consumed.
+	for id in ["axe", "pickaxe", "hammer", "knife", "fishing_rod", "hoe"]:
 		assert_true(db.has(id), "items.json is missing %s" % id)
 		assert_eq(db.kind(id), "tool")
+
+
+## R7.6. A hoe is an ordinary tool in the satchel and nothing more: it holds
+## one, it wears down like the other five, and a second one opens its own slot
+## rather than stacking. The farm's own rules are `tests/test_farming.gd`'s
+## subject; this is the half that belongs to the bag.
+func test_the_hoe_is_an_ordinary_single_slot_tool() -> void:
+	assert_eq(db.stack_size("hoe"), 1, "a tool that stacks is a tool you can hoard")
+	assert_eq(bag.add("hoe", 1), 0)
+	var slot: int = bag.find_slot("hoe")
+	assert_true(slot >= 0)
+	assert_eq(bag.durability_at(slot), db.max_durability("hoe"),
+		"a freshly-added tool must read as fully repaired without add() writing the field")
+	bag.damage_tool(slot)
+	assert_eq(bag.durability_at(slot), db.max_durability("hoe") - 1)
+	assert_eq(bag.add("hoe", 1), 0)
+	assert_eq(bag.count("hoe"), 2)
+	assert_eq(bag.used_slots(), 2)
+
+
+## R7.6. Seeds are a plain stacking resource — a satchel that needed one slot
+## per seed would make sowing six beds an inventory problem.
+func test_berry_seeds_stack_like_any_other_resource() -> void:
+	assert_true(db.has("berry_seeds"), "items.json is missing berry_seeds")
+	assert_eq(db.kind("berry_seeds"), "resource")
+	assert_true(db.stack_size("berry_seeds") > 1, "seeds must stack")
+	assert_eq(bag.add("berry_seeds", 6), 0)
+	assert_eq(bag.used_slots(), 1, "six seeds must be one slot, not six")
+	assert_eq(bag.count("berry_seeds"), 6)
+	# Sowing spends exactly one, all-or-nothing like every other removal.
+	assert_true(bag.remove("berry_seeds", 1))
+	assert_eq(bag.count("berry_seeds"), 5)
+	assert_false(bag.remove("berry_seeds", 99), "a sow must not half-consume the stack")
+	assert_eq(bag.count("berry_seeds"), 5)
 
 
 ## OF29. A TM is a carried item now, not a progression flag — and a single-use

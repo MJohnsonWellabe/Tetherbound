@@ -4,8 +4,9 @@ extends RefCounted
 ## the satchel, the day counter, placed buildings (R3.1), creature
 ## progression/satiety/the map database (VERSION 2), SB9's progression-flag
 ## store (VERSION 3), every death satchel the player has left in the world
-## (VERSION 4, R3.2), and — as of VERSION 5 — each creature's individuality
-## rolls and traits (R4.2).
+## (VERSION 4, R3.2), each creature's individuality rolls and traits
+## (VERSION 5, R4.2), and — as of VERSION 9 — what each bed of the berry farm
+## is growing (R7.6).
 ##
 ## Same shape `docs/decisions/D15` set for `user://settings.json`: JSON, a
 ## `version` field from the first write, and never fatal on load — a missing,
@@ -84,6 +85,22 @@ extends RefCounted
 ## read side defaults each to 0, which is what a creature that never drank an
 ## elixir has. The migration exists only to move the version number.
 ##
+## ## VERSION 9 — the berry farm's beds (R7.6)
+##
+## `game_state.gd::farm_plots` did not exist before this, so `_migrate_v8`
+## gives the same "nothing to migrate FROM" answer: an empty list, read back
+## as six fallow beds. This is the first save field whose value CHANGES while
+## the player is nowhere near it — a sown bed ripens off `day`, not off a
+## timer running in a loaded scene — which is exactly why it had to be in the
+## file rather than rebuilt on load the way a harvest node's respawn clock is.
+##
+## VERSION 9 is also where the migration DISPATCH was rewritten from a
+## per-version `if/elif` ladder into a loop (`_migrate_to_current`). That was
+## not tidying: the ladder had no branch for versions 6 or 7, so saves written
+## between the hotbar change and the elixir one were refused outright by a
+## build that had both of their migration steps sitting right there. See that
+## function's own comment.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -120,7 +137,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 8
+const VERSION := 9
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -169,6 +186,7 @@ func save(game: Object, slot: int) -> bool:
 		"inventory": _inventory_to_array(game.get("inventory")),
 		"hotbar": _hotbar_to_array(game),
 		"placed_buildings": (game.get("placed_buildings") as Array).duplicate(true),
+		"farm_plots": (game.get("farm_plots") as Array).duplicate(true),
 		"death_satchels": (game.get("death_satchels") as Array).duplicate(true),
 		"satiety": _read_satiety(game),
 		"map": (map_obj as RefCounted).call("save_data") if map_obj != null else {},
@@ -190,40 +208,16 @@ func load_slot(game: Object, slot: int) -> bool:
 	if data.is_empty():
 		return false
 	var version := int(data.get("version", 0))
-	if version == 1:
-		data = _migrate_v1(data)
-		data = _migrate_v2(data)
-		data = _migrate_v3(data)
-		data = _migrate_v4(data)
-		data = _migrate_v5(data)
-		data = _migrate_v6(data)
-		data = _migrate_v7(data)
-	elif version == 2:
-		data = _migrate_v2(data)
-		data = _migrate_v3(data)
-		data = _migrate_v4(data)
-		data = _migrate_v5(data)
-		data = _migrate_v6(data)
-		data = _migrate_v7(data)
-	elif version == 3:
-		data = _migrate_v3(data)
-		data = _migrate_v4(data)
-		data = _migrate_v5(data)
-		data = _migrate_v6(data)
-		data = _migrate_v7(data)
-	elif version == 4:
-		data = _migrate_v4(data)
-		data = _migrate_v5(data)
-		data = _migrate_v6(data)
-		data = _migrate_v7(data)
-	elif version == 5:
-		data = _migrate_v5(data)
-		data = _migrate_v6(data)
-		data = _migrate_v7(data)
-	elif version != VERSION:
+	if version < 1 or version > VERSION:
+		# A newer-than-this-build file still refuses, exactly as VERSION 1
+		# always refused everything but itself: there is nothing to migrate an
+		# unreleased future format DOWN from.
 		push_warning("save slot %d is version %d, this build reads %d -- not loading" % [
 			slot, version, VERSION
 		])
+		return false
+	data = _migrate_to_current(data, version, slot)
+	if data.is_empty():
 		return false
 
 	game.set("day", int(data.get("day", 1)))
@@ -231,6 +225,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	_array_to_inventory(data.get("inventory", []), game.get("inventory"))
 	_array_to_hotbar(data.get("hotbar", []), game)
 	game.set("placed_buildings", (data.get("placed_buildings", []) as Array).duplicate(true))
+	game.set("farm_plots", (data.get("farm_plots", []) as Array).duplicate(true))
 	game.set("death_satchels", (data.get("death_satchels", []) as Array).duplicate(true))
 	_write_satiety(game, float(data.get("satiety", _default_satiety())))
 
@@ -244,6 +239,45 @@ func load_slot(game: Object, slot: int) -> bool:
 		var progression_data: Variant = data.get("progression", {})
 		(progression_obj as RefCounted).call("load_data", progression_data if typeof(progression_data) == TYPE_DICTIONARY else {})
 	return true
+
+
+## Run `data` through every migration step from its own version up to this
+## build's, or return {} if it cannot get there.
+##
+## This replaced a hand-written `if version == 1: ... elif version == 2: ...`
+## ladder that listed, per starting version, every step from there to the top.
+## The ladder was O(versions squared) lines to maintain and it had already
+## rotted: it carried branches for versions 1 through 5 and none for 6 or 7,
+## so a VERSION 6 or VERSION 7 save — anything written between the hotbar
+## change and the elixir one — fell through to the final `elif version !=
+## VERSION` and was REFUSED with "not loading", despite `_migrate_v6` and
+## `_migrate_v7` both existing, being complete, and being called from the five
+## older branches. The bug was invisible from either end: the migrations
+## looked written and the ladder looked exhaustive. A loop cannot have that
+## shape of hole, which is the whole reason for the rewrite.
+##
+## Each step is still responsible for stamping its own target version by hand
+## (see `_migrate_v3`'s comment on why none of them may write `VERSION`), and
+## this checks that it did: a step that forgets refuses the load rather than
+## spinning forever on the same number.
+func _migrate_to_current(data: Dictionary, version: int, slot: int) -> Dictionary:
+	var migrated := data
+	while version < VERSION:
+		var step := "_migrate_v%d" % version
+		if not has_method(step):
+			push_warning("save slot %d is version %d and this build has no %s -- not loading" % [
+				slot, version, step
+			])
+			return {}
+		migrated = call(step, migrated) as Dictionary
+		var advanced := int(migrated.get("version", 0))
+		if advanced <= version:
+			push_warning("%s left save slot %d at version %d -- not loading" % [
+				step, slot, version
+			])
+			return {}
+		version = advanced
+	return migrated
 
 
 ## VERSION 1 -> VERSION 2. See the class header for what each field becomes.
@@ -383,6 +417,19 @@ func _migrate_v6(data: Dictionary) -> Dictionary:
 func _migrate_v7(data: Dictionary) -> Dictionary:
 	var migrated := data.duplicate(true)
 	migrated["version"] = 8
+	return migrated
+
+
+## VERSION 8 -> 9: R7.6's farm beds. An empty list — the same "nothing to
+## migrate FROM" answer every step above gives, and the right one here: a save
+## written before the farm existed recorded no crop because there was no
+## ground to sow. `game_state.gd::farm_plot_at()` reads a short or missing
+## list as fallow, so the player loads in to an untilled farm and starts it
+## the way a new game would.
+func _migrate_v8(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 9
+	migrated["farm_plots"] = []
 	return migrated
 
 

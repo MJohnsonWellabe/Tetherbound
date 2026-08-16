@@ -4,7 +4,8 @@
   "_comment_prices": "`buy` is what the player PAYS the vendor for one unit; `sell` is what the vendor PAYS the player for one unit. sell < buy always, and tests/test_trade.gd fails the build if any entry breaks it -- a vendor who pays more than they charge is an infinite coin loop, which is the one economy bug that ruins a save rather than annoying a player. The spread is wide on purpose (roughly 3-4x on materials): selling gathered materials is meant to be a slow trickle that bootstraps a first purchase, not a substitute for gathering.",
   "_comment_stock": "What a vendor will SELL is exactly the ids listed with a `stock` count; what they will BUY is every id listed at all. Materials are `stock: 0` -- Mira buys wood off you all day and has no interest in selling it back, which is what a village merchant is. `stock` is per-visit and NOT depleted (no restock clock in the slice); the number is there so a future task can make it one without moving the data.",
   "_comment_starting_coins": "D39 picked the friendlier of the two options the brief offered: Mira's first conversation hands over a small float (`give:coin:N` in data/dialogue/village.json, on the same line that says so) so the very first visit to the store can BUY something. A zero-start would have worked -- selling berries bootstraps it -- but 'the shop opens and you can afford nothing' is a bad first impression of a system the owner asked for by name. This number is the one in that dialogue line; the two are checked against each other by tests/test_trade.gd, since a silent drift would make the line a lie.",
-  "currency": "coin",
+  "_comment_seeds": "R7.6. `berry_seeds` is the first line here that Mira both buys AND stocks, and the only one of the two the farm actually needs -- the craft path (3 berries -> 4 seeds, data/recipes/recipes.json) is the free one, and this is the coin path for a player who would rather not spend a picking. Priced under the berries they came from on purpose: seed is the cheap half of farming and the wait is the expensive half. The 3-4x materials spread the header describes does not apply to a stocked good, so this pair follows the orb/potion shape instead; test_trade.gd's sell < buy rule holds either way.",
+ "currency": "coin",
   "starting_coins": 30,
   "vendors": {
     "mira": {
@@ -30,6 +31,11 @@
           "buy": 6,
           "sell": 2,
           "stock": 0
+        },
+        "berry_seeds": {
+          "buy": 5,
+          "sell": 1,
+          "stock": 20
         },
         "orb_basic": {
           "buy": 22,

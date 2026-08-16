@@ -23,6 +23,7 @@ const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+const FARM_PLOT := preload("res://scripts/world/farm_plot.gd")
 const BURROW_WARRENS := preload("res://scripts/world/burrow_warrens.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
@@ -659,6 +660,7 @@ func _build_settlement() -> void:
 	perimeter.call("build", self, _player, _spawn_position)
 
 	_place_harvest_nodes()
+	_place_farm_plots()
 	_place_tms()
 	_build_burrow_warrens()
 	_build_stronghold()
@@ -857,6 +859,52 @@ func _place_harvest_nodes() -> void:
 		node.call("setup", spec)
 		placed += 1
 	print("[playground] placed %d harvest nodes" % placed)
+
+
+## R7.6. The berry farm's beds, from data/config/farm.json.
+##
+## Its own placer rather than a row in harvest.json: a farm bed is not a
+## harvest node. It carries saved state, it has four appearances instead of
+## two, and it answers to the hoe — none of which `harvest_node.gd::setup()`
+## has a field for. What the two DO share is `harvest_logic.gd`, and they
+## share it through the code (`farm_plot.gd::_harvest`), not through the data.
+##
+## The index passed to each plot is its position in the file, which is the key
+## its saved state is stored under (`game_state.gd::farm_plots`).
+func _place_farm_plots() -> void:
+	var file := FileAccess.open("res://data/config/farm.json", FileAccess.READ)
+	if file == null:
+		push_warning("farm.json missing; the farmhouse has no farm")
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		push_error("farm.json is not valid JSON; the farmhouse has no farm")
+		return
+	var config := parsed as Dictionary
+
+	var root := Node3D.new()
+	root.name = "BerryFarm"
+	add_child(root)
+
+	var placed := 0
+	for entry: Variant in config.get("plots", []):
+		if not entry is Dictionary:
+			continue
+		var at: Array = (entry as Dictionary).get("at", [0.0, 0.0])
+		var x := float(at[0])
+		var z := float(at[1])
+		# D09: ask the world, never a raycast.
+		var ground := ground_height_at(x, z)
+		if is_nan(ground):
+			push_warning("no ground under farm plot %d at %.0f, %.0f" % [placed, x, z])
+			continue
+		var plot: Node3D = FARM_PLOT.new()
+		plot.name = "Plot%d" % placed
+		plot.position = Vector3(x, ground, z)
+		root.add_child(plot)
+		plot.call("setup", placed, config)
+		placed += 1
+	print("[playground] placed %d farm plots" % placed)
 
 
 ## Ground height at a world x/z, or NAN where there is no terrain.

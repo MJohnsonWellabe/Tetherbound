@@ -108,7 +108,44 @@
         }
       ],
       "blurb": "Short and sharp, for stripping fiber clean."
+    },
+    "hoe": {
+      "name": "Hoe",
+      "output": {
+        "id": "hoe",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "wood",
+          "n": 3
+        },
+        {
+          "id": "stone",
+          "n": 2
+        },
+        {
+          "id": "fiber",
+          "n": 1
+        }
+      ],
+      "blurb": "A broad blade on a long shaft. Breaks ground into a seedbed."
+    },
+    "berry_seeds": {
+      "name": "Berry Seeds",
+      "output": {
+        "id": "berry_seeds",
+        "n": 4
+      },
+      "cost": [
+        {
+          "id": "berries",
+          "n": 3
+        }
+      ],
+      "blurb": "Dried out of a picking and kept back for the ground."
     }
   },
+  "_comment_r7_6": "R7.6. `hoe` and `berry_seeds` join the tool block above under exactly its rule: ungated, because the material cost is the gate and a flag on top would gate the same door twice. The hoe is priced between the knife and the axe -- it is the cheapest way into farming and is meant to be, since it buys the player nothing until they also have seeds and a bed. `berry_seeds` turns 3 berries into 4, which is the one number that decides whether farming is a loop or a leak: at 4-for-3 a single wild picking (3 berries, data/config/harvest.json) seeds four beds that return 4 each, so the farm pays for itself on the first crop and the player is never stranded with plots and no seed. It is also why the seed recipe is not gated behind the hoe -- somebody who sells their hoe should still be able to sow the beds they already tilled. Mira sells seeds too (data/config/trade.json), for a player who would rather spend coin than berries. ALL TUNABLE.",
   "_comment_tools": "Owner brief section 4/5: 'use the workbench to craft capture orbs, knives, axes, pickaxes and other equipment.' Tam's gifts stay the tutorial path (village_tam_tools -- free, guaranteed, first conversation); these recipes are what makes a REPLACEMENT possible when a tool breaks or a second one is wanted, so losing an axe is an errand rather than a dead end. Ungated on purpose: the material cost is the gate (a tool costs real stone, which needs the pickaxe loop or bare-handed scraping), and a flag on top would gate the same door twice -- recipes_rootstone.json's own _comment_unlock argues exactly this for orb_greater. All costs TUNABLE."
 }
