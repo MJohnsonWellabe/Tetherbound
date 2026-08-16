@@ -1567,13 +1567,19 @@ was never built for.
 
 ## 12. Open questions this document does not settle
 
-- **Whether forty minutes is a walking figure or a floor.** §2's corrected
-  sprint arithmetic gives a sustained 7.00 m/s and a **27.6 minute** crossing —
-  31% under the directive — for any player who cycles the stamina bar. At walk
-  the layout meets the target (38.6 min). Making forty minutes hold for a
-  sprinter needs a **16,800 m** trail, 45% longer than the authored spine. That
-  is an owner question, not a layout decision, and it is the first thing to put
-  in front of him.
+- ~~**Whether forty minutes is a walking figure or a floor.**~~ **ANSWERED by
+  the owner, 2026-08-16: it is a walking figure.** He was shown the arithmetic —
+  §2's corrected sprint cycle gives a sustained 7.00 m/s and a **27.6 minute**
+  crossing for a player who works the stamina bar, 31% under the directive,
+  against **38.6 minutes** at walk — and the three alternatives it opens
+  (lengthen the trail to 16,800 m, retune stamina so the sustained rate falls
+  nearer the walk, or accept 27 minutes as the real target). He chose to ship
+  the layout as authored.
+
+  So **the 11,594 m spine and the 8192 × 2048 footprint are settled**, and a
+  sprinter crossing in 27.6 minutes is the intended outcome rather than a miss:
+  sprinting is supposed to save time. Do not re-open this by treating the 40
+  in `OW5`'s text as a floor, and do not lengthen the trail to chase it.
 - **The bake unit cost has no anchor** (§1.1). 2584 µs/px is measured on this
   container and confirmed by nothing. Every minute figure in this document and
   in `D50` inherits that. A timed single-region bake settles it for the price of
