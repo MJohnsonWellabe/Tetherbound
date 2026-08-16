@@ -106,11 +106,25 @@
       "_why": "west of the workshop (EV6; was the big barn), clear of every structure and villager by 8m+ -- NP3, spec sec35. No built quarry to stand him at yet (SD16), so the square is where he waits."
     },
     {
-      "name": "Rescued Ranger",
+      "name": "Sela",
+      "_name_was": "\"Rescued Ranger\" until SE27, which gave the placeholder a rescue to be rescued FROM and therefore a name to be greeted by. Same entry, same rig, same position -- only the label and the two additions below changed, so the prompt reads \"Greet Sela\" rather than \"Greet Rescued Ranger\", which was always a description rather than a name.",
       "config_key": "villager_ranger",
       "position": [16.0, -10.0],
       "facing_deg": -90.0,
       "greeting": "village_rescued_ranger",
+      "place_when": [
+        {
+          "if_flag": "captive_rescued",
+          "_why": "SE27/SG46, spec §14. She is Team Tether's prisoner at the relay station until the player frees her (data/config/relay_site.json places that body), and only then does she come to the village. Before SE27 she stood here from the first frame of a new save, which meant a rescued NPC existed before there was a rescue. village_npcs.gd re-reads this gate whenever the flag store changes, so she walks into an already-built square rather than waiting for a reload."
+        }
+      ],
+      "greeting_when": [
+        {
+          "if_flag": "captive_rescued",
+          "conversation": "village_rescued_ranger_home",
+          "_why": "SE27/D39. Her post-rescue lines, ADDED above the standing greeting rather than replacing it -- `village_rescued_ranger` stays exactly as NP3 wrote it and is still the fallback, which is what a capture tool or a bare test scene with no flag store will get. In an actual game this branch always matches, because `place_when` above means she is not standing here at all unless the same flag is set."
+        }
+      ],
       "_why": "between the well and cottage_a (EV6; was the small barn), clear of every structure and villager by 5m+ -- NP3, spec sec35."
     }
   ]

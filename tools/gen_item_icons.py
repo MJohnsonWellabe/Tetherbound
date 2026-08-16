@@ -387,6 +387,37 @@ def icon_castle_gate_key() -> Image.Image:
     return img
 
 
+def icon_mill_bridge_gear() -> Image.Image:
+    """SE27. The Old Mill Crossing's missing drive gear -- the part Team
+    Tether pulled out of the mechanism when they took the person who knew how
+    to work it. Drawn as a machined cog rather than another ward key
+    (`icon_south_bridge_key`) on purpose: SB10 gates two crossings and they
+    should not read as the same object in the satchel, so Gate 1 is a key you
+    turn and Gate 2 is a part you refit.
+    """
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    cx = cy = 128
+    outer, inner = 96, 74
+    teeth = 8
+    # Body.
+    d.ellipse((cx - outer, cy - outer, cx + outer, cy + outer), fill=FG)
+    # Tooth gaps punched into the rim, so the silhouette reads as cut metal.
+    for i in range(teeth):
+        a = math.radians(360.0 / teeth * i + 360.0 / teeth / 2.0)
+        gx = cx + math.cos(a) * (outer - 6)
+        gy = cy + math.sin(a) * (outer - 6)
+        d.ellipse((gx - 20, gy - 20, gx + 20, gy + 20), fill=CLEAR)
+    # Hub bore and the spoke lightening holes around it.
+    cutout_ellipse(d, (cx - 26, cy - 26, cx + 26, cy + 26))
+    cutout_ellipse(d, (cx - inner + 6, cy - inner + 6, cx + inner - 6, cy + inner - 6))
+    d.ellipse((cx - 44, cy - 44, cx + 44, cy + 44), fill=FG)
+    cutout_ellipse(d, (cx - 22, cy - 22, cx + 22, cy + 22))
+    # Keyway notch in the bore -- the cue that this seats on a shaft.
+    d.rectangle((cx - 8, cy - 34, cx + 8, cy - 18), fill=CLEAR)
+    return img
+
+
 def icon_south_bridge_key() -> Image.Image:
     """SC12/SC13/SC14. Oskar's key: same ward-key language as
     `icon_castle_gate_key` (ring bow, shaft, stepped teeth) -- a second key
@@ -535,6 +566,7 @@ ITEM_ICONS = {
     "fishing_rod.png": icon_fishing_rod,
     "castle_gate_key.png": icon_castle_gate_key,
     "south_bridge_key.png": icon_south_bridge_key,
+    "mill_bridge_gear.png": icon_mill_bridge_gear,
     "tm_stone_rush.png": icon_tm_stone_rush,
     "tm_burrow_strike.png": icon_tm_burrow_strike,
     "rootstone.png": icon_rootstone,

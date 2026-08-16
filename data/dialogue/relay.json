@@ -1,0 +1,37 @@
+{
+  "_comment": "SE27. The captive at the Tether Relay Station, and the first testimony that the region's isolation is made rather than natural. Same `{\"conversations\": {...}}` shape as opening.json, village.json and trainers.json, merged onto the same table by scripts/story/dialogue_runner.gd — a fourth file rather than more of village.json, because these lines are not village banter and because the whole SE27 arc being findable in one place is worth one array entry in `EXTRA_DIALOGUE_PATHS`.",
+
+  "_comment_reveal_ladder": "SPEC §32, AND IT IS THE POINT OF THIS FILE. The spec's own rung for this conversation is exact — the captive has evidence that the Tether Rifts are ARTIFICIAL, that the regional separation is being ACTIVELY MAINTAINED, and that power FLOWS TOWARD THE WARDEN'S STRONGHOLD — and then one more sentence: 'They may still not know the legendary is the source.' In this game she does not. She says so herself, in as many words, because a character who knows the shape of a thing and not its centre has to be SEEN not knowing or the player will assume they were told offscreen. Nothing here names the legendary, the Veridian Stag, or a living power source, and tests/test_dialogue_runner.gd asserts those words are absent from this file rather than trusting a comment to hold the line. The rung above this one is the Upper Meadows; the rung above THAT is the stronghold, and that is where the answer lives.",
+
+  "_comment_register": "She is a professional, not a victim: a border researcher who was doing fieldwork, got taken for it, and spent the whole captivity still working the problem. Relief, not hysterics. She hands over the Gear on the same line she explains what it is, and leaves for the village on her own feet.",
+
+  "conversations": {
+    "relay_captive_held": {
+      "speaker": "Sela",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Don't stand there. They walk the perimeter on the hour and they will simply add you to me.",
+        "If you're set on this, the one at the console is the one who matters. The rest take his word for what's necessary."
+      ]
+    },
+    "relay_captive_freed": {
+      "speaker": "Sela",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You beat the Captain. I heard the whole thing from here and I still don't quite believe it.",
+        "Sela. Border survey — I mapped where the Meadows stops, which turns out to be the one job nobody wanted done.",
+        {
+          "text": "Take this first, before I talk myself out of being useful. It's the drive gear out of the Old Mill Crossing. They didn't break that bridge; they took one part out of it and then took me, because I'm the one who knew where it goes. Refit it and the crossing works again for good.",
+          "effects": [
+            "give:mill_bridge_gear:1",
+            "flag:captive_rescued"
+          ]
+        },
+        "Now the part they took me for. The seams at the edge of the Meadows are not weather and they are not old rockfalls. I surveyed nine of them. Every one is cut, and every cut is the same cut — the same width, the same face, the same age. Somebody made them, on purpose, in one season of work.",
+        "And they are being HELD that way. That is what this station is. It doesn't guard the road, it feeds something: I've watched the gauges on that console for six weeks and the flow is one direction, always outward from here, and every relay I ever surveyed points the same way — up the line toward the Warden's stronghold.",
+        "What's at the far end of it, I genuinely do not know. Something is paying for all of this and I never got close enough to see what. You may.",
+        "I'll walk to your village. It's the nearest roof that isn't theirs, and I'd like to be sat down when I write this up."
+      ]
+    }
+  }
+}

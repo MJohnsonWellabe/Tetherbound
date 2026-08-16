@@ -545,6 +545,15 @@ func _build_settlement() -> void:
 	# standing too close to one is visible in the same pass rather than a
 	# frame later, and named separately because SC12 moves three of these
 	# roles onto villagers who are already placed above.
+	# SE27: the relay station's captive, placed by the same script from a
+	# second list (data/config/relay_site.json). Not a new placer — the only
+	# thing she needs that a villager does not is a `place_when` gate, and
+	# village_npcs.gd grew one for the pair of them.
+	var relay_npcs: Node3D = VILLAGE_NPCS.new()
+	relay_npcs.name = "RelayNPCs"
+	add_child(relay_npcs)
+	relay_npcs.call("build", _player, VILLAGE_NPCS.RELAY_CONFIG_PATH)
+
 	var trainers: Node3D = TRAINER_NPCS.new()
 	trainers.name = "Trainers"
 	add_child(trainers)

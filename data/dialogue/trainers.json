@@ -1,6 +1,7 @@
 {
   "_comment": "R8.1. What a trainer says before a battle, and what they say once they have lost one. Same `{\"conversations\": {...}}` shape as opening.json and village.json, merged onto the same table by scripts/story/dialogue_runner.gd -- a separate file so a trainer's challenge and Grandpa's briefing stay independently editable, and so test_dialogue_runner.gd's coverage of the opening's own ids is unaffected by how many trainers exist.",
   "_comment_battle_start": "The BATTLE is not an effect in here. scripts/world/trainer_npc.gd starts it when the challenge conversation closes -- the words are the challenge, and a `battle:` effect would put trainer fights inside the opening's beat machine (sequence_director.gd), which is the one state machine they are not part of.",
+  "_comment_relay": "SE25. Team Tether at the relay station. The register is OFFICIOUS, not cartoonish: these are people doing a job they believe in, who think the barriers are necessary and that the player is interfering with important work. Nobody gloats, nobody monologues, and nobody threatens. They also never explain what the relay is FOR -- spec 32's ladder puts the explanation two rungs above this one, and a grunt who knew would be a grunt who tells you.",
   "_comment_short": "Two or three lines. A trainer who monologues is a trainer the player skips, and the fight is the content.",
   "conversations": {
     "trainer_practice_challenge": {
@@ -17,6 +18,76 @@
       "lines": [
         "Both of them, and you barely stopped to think about it. Good.",
         "I've nothing left to teach you out here. Try the folk down by the square — they don't go easy."
+      ]
+    },
+
+    "relay_hess_challenge": {
+      "speaker": "Hess",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Road's closed past this post. It's been closed since before you could walk it, and there's a reason for that.",
+        "You want through, you go through me first. That's procedure, not a grudge."
+      ]
+    },
+    "relay_hess_defeated": {
+      "speaker": "Hess",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Logged and reported. That's all I can do from a picket.",
+        "Go on up if you're going. You'll find people up there who outrank my opinion of you."
+      ]
+    },
+
+    "relay_orrin_challenge": {
+      "speaker": "Orrin",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Hess radioed. Second post, same answer — I'd rather turn you round than write you up.",
+        "You people always think a closed road is somebody being unkind. It isn't. Stand ready."
+      ]
+    },
+    "relay_orrin_defeated": {
+      "speaker": "Orrin",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Fair. I'll not pretend otherwise.",
+        "Whatever you think you'll find at the top of this road — it's work, that's all. It's just work."
+      ]
+    },
+
+    "relay_dell_challenge": {
+      "speaker": "Officer Dell",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Two pickets down and you walked up the service road like it was market day. Impressive. Also unacceptable.",
+        "I run this station's duty roster, not its policy. But I do keep its perimeter. Three of mine."
+      ]
+    },
+    "relay_dell_defeated": {
+      "speaker": "Officer Dell",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Beaten cleanly, at my own post. I'll not dress that up in the log.",
+        "The Captain's at the console. Say what you like to him — he's better at this part than I am."
+      ]
+    },
+
+    "relay_captain_challenge": {
+      "speaker": "Captain Vance",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You've come a long way to be told something simple, so I'll be plain about it: this station is necessary, and it stays.",
+        "Every road you found closed was closed on purpose, by people who weighed the cost and paid it. Your village is safe because of what we do here.",
+        "I'd rather you understood that than fought me. But I'll take the fight if that's the only language left."
+      ]
+    },
+    "relay_captain_defeated_greeting": {
+      "speaker": "Captain Vance",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "The station's yours to walk through. I won't stop you, and I won't apologise for it either.",
+        "You'll take our prisoner as well, I expect. Take them. They only ever asked questions.",
+        "Ask me again when you've seen the far end of this line. I doubt either of us will enjoy the answer."
       ]
     }
   }

@@ -30,6 +30,9 @@ const VILLAGE_DIALOGUE_PATH := "res://data/dialogue/village.json"
 const EXTRA_DIALOGUE_PATHS := [
 	VILLAGE_DIALOGUE_PATH,
 	"res://data/dialogue/trainers.json",
+	# SE27's captive at the relay station. A fourth file exactly as the note
+	# above anticipated: one array entry, no third copy of the merge loop.
+	"res://data/dialogue/relay.json",
 ]
 
 signal finished(conversation_id: String)

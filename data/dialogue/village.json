@@ -195,6 +195,16 @@
         "Whatever you're chasing out there, watch the Tether patrols. They don't take kindly to company."
       ]
     },
+    "village_rescued_ranger_home": {
+      "_comment": "SE27/SG46 (spec §14). What she says once she has walked here on her own feet, in a square where the player is the reason she can. Deliberately does NOT repeat the testimony — she gave it once, at the relay, and a villager who recites the plot every greeting is how §32's ladder turns into a wall of text. She restates only what the player can now ACT on (the crossing is open, the line goes on north) and otherwise gets on with being a person in a village. Still names no legendary and no power source: she does not know, and she does not learn it by moving house.",
+      "speaker": "Sela",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Sela. I got here — and I've eaten, and slept indoors, and neither of those was true a week ago.",
+        "The mill crossing will hold once that gear's back in it. Go and see for yourself; I'd rather it was walked on than trusted.",
+        "I'm writing the survey up properly while I still remember the numbers. When you get further up that line than I did, come and tell me what you found. I'll believe you."
+      ]
+    },
     "road_gate_locked": {
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",

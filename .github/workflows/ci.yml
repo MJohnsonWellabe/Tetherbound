@@ -835,6 +835,14 @@ jobs:
         # at the quarry. The first build put a gantry leg inside the ramp's
         # own width and this test is what found it — a player who climbed to
         # within a metre of the only route in and stopped.
+        run: godot --headless --path . --script tests/smoke_relay_station.gd
+
+      - name: Smoke-test the relay cast
+        # SE25/SE27. The other half of the same site, kept as its own script
+        # because it is a different question: beating the relay captain frees
+        # the captive, who hands over the Mill Bridge Gear and then turns up
+        # in the village with changed dialogue. Both agents named their file
+        # smoke_relay.gd; the station's kept its own name on merge.
         run: godot --headless --path . --script tests/smoke_relay.gd
 
   verify-trainer-battle:

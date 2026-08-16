@@ -626,3 +626,196 @@ func _villager(who: String) -> Dictionary:
 		if entry is Dictionary and str((entry as Dictionary).get("name", "")) == who:
 			return entry as Dictionary
 	return {}
+
+
+## --- SE27: freeing the captive, and what she is allowed to know --------------
+##
+## The same split every section above keeps: the WIRING (a real world, a real
+## fight, a real satchel) is `tests/smoke_relay.gd`. What is checked here is
+## the data — the rescue conversation grants the Gear once and only once, the
+## gate that makes "once" true is spelled correctly, and the testimony stops
+## exactly where spec §32 says it stops.
+
+const RELAY_SITE_PATH := "res://data/config/relay_site.json"
+const RELAY_DIALOGUE_PATH := "res://data/dialogue/relay.json"
+const CAPTAIN_FLAG := "relay_captain_defeated"
+const RESCUE_FLAG := "captive_rescued"
+const GEAR_ID := "mill_bridge_gear"
+const RESCUE_CONVERSATION := "relay_captive_freed"
+const HELD_CONVERSATION := "relay_captive_held"
+
+## §32's rung, made testable. The captive knows the Rifts are ARTIFICIAL and
+## that power flows toward the stronghold; she does NOT know what is at the far
+## end of it, and nothing she says may name the thing that is. These are the
+## words that would give it away — the concept, the species, and the phrase the
+## stronghold's own reveal uses ("living power source").
+const FORBIDDEN_WORDS := [
+	"legendary",
+	"veridian",
+	"stag",
+	"living power",
+	"power source",
+]
+
+
+func _relay_site() -> Dictionary:
+	var file := FileAccess.open(RELAY_SITE_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+func _captive_spec() -> Dictionary:
+	for entry: Variant in (_relay_site().get("people", []) as Array):
+		if entry is Dictionary and not (entry as Dictionary).get("greeting_when", []).is_empty():
+			return entry as Dictionary
+	return {}
+
+
+## Every line of a conversation as plain text, effects stripped.
+func _spoken_text(id: String) -> String:
+	var conversation: Dictionary = RUNNER.table().get(id, {})
+	var out := ""
+	for line: Variant in (conversation.get("lines", []) as Array):
+		if typeof(line) == TYPE_STRING:
+			out += str(line) + "\n"
+		elif typeof(line) == TYPE_DICTIONARY:
+			out += str((line as Dictionary).get("text", "")) + "\n"
+	return out
+
+
+func test_the_relay_dialogue_file_is_merged_onto_the_table() -> void:
+	assert_true(RUNNER.has(HELD_CONVERSATION),
+		"'%s' is not in the dialogue table; data/dialogue/relay.json is not being loaded" % HELD_CONVERSATION)
+	assert_true(RUNNER.has(RESCUE_CONVERSATION),
+		"'%s' is not in the dialogue table" % RESCUE_CONVERSATION)
+
+
+## The rescue hands over the Gear, and the flag that closes the branch is set
+## on the SAME line -- the rule OF30 wrote for Tam's tools and for the same
+## reason: a conversation cut short must not bank the gift without the flag or
+## the flag without the gift.
+func test_the_rescue_grants_the_gear_and_records_it_on_one_line() -> void:
+	var gives := 0
+	var conversation: Dictionary = RUNNER.table().get(RESCUE_CONVERSATION, {})
+	for line: Variant in (conversation.get("lines", []) as Array):
+		if typeof(line) != TYPE_DICTIONARY:
+			continue
+		var effects: Array = (line as Dictionary).get("effects", [])
+		var gave_gear := false
+		var set_flag := false
+		for effect: Variant in effects:
+			var parts: Array = RUNNER.parse_effect(str(effect))
+			if str(parts[0]) == "give" and str(parts[1]).begins_with(GEAR_ID):
+				gave_gear = true
+				gives += 1
+			if str(parts[0]) == "flag" and str(parts[1]) == RESCUE_FLAG:
+				set_flag = true
+		if gave_gear:
+			assert_true(set_flag,
+				"the line that hands over the %s does not also set '%s'; the gift could be banked without being recorded" % [
+					GEAR_ID, RESCUE_FLAG])
+	assert_eq(gives, 1,
+		"the rescue conversation grants the %s %d times; it must be exactly once" % [GEAR_ID, gives])
+
+
+## "Once" is not a property of the conversation, it is a property of the gate
+## in front of it. `relay_captive_held` is what she says until the captain
+## falls; the rescue branch requires his flag AND the absence of her own, so
+## the moment the gift lands the branch that gave it stops matching.
+func test_the_rescue_is_gated_shut_before_and_after() -> void:
+	var spec := _captive_spec()
+	assert_false(spec.is_empty(), "relay_site.json has no captive with a gated greeting")
+
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	assert_eq(VILLAGE_NPCS.greeting_for(spec, progression), HELD_CONVERSATION,
+		"on a fresh save the captive should be held, not rescuable")
+
+	progression.set_flag(CAPTAIN_FLAG)
+	assert_eq(VILLAGE_NPCS.greeting_for(spec, progression), RESCUE_CONVERSATION,
+		"beating the relay captain does not open the rescue")
+
+	progression.set_flag(RESCUE_FLAG)
+	assert_ne(VILLAGE_NPCS.greeting_for(spec, progression), RESCUE_CONVERSATION,
+		"the rescue conversation can be opened a second time; the Gear would be granted twice")
+
+
+## SE27's other half of the same flag: she stops standing at the relay and
+## starts standing in the village. Both placements read the one flag, and
+## neither is true at the same time as the other.
+func test_the_captive_and_the_villager_are_never_both_standing() -> void:
+	var captive := _captive_spec()
+	var villager := _named_villager("Sela")
+	assert_false(villager.is_empty(), "village_npcs.json has no entry named 'Sela'")
+
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	assert_true(VILLAGE_NPCS.placement_holds(captive, progression),
+		"the captive is not at the relay on a fresh save")
+	assert_false(VILLAGE_NPCS.placement_holds(villager, progression),
+		"the rescued villager stands in the square before there has been a rescue")
+
+	progression.set_flag(RESCUE_FLAG)
+	assert_false(VILLAGE_NPCS.placement_holds(captive, progression),
+		"the captive is still at the relay after being freed")
+	assert_true(VILLAGE_NPCS.placement_holds(villager, progression),
+		"the rescued villager never turns up in the village")
+
+
+## A villager with no `place_when` at all is always placed -- the shape has to
+## be additive or every NPC written before SE27 vanishes.
+func test_an_entry_with_no_placement_gate_is_always_placed() -> void:
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	assert_true(VILLAGE_NPCS.placement_holds({"name": "Tam"}, progression))
+	assert_true(VILLAGE_NPCS.placement_holds({"name": "Tam", "place_when": []}, progression))
+
+
+## SG46 / §14: she is in the village AND she is saying something new. The
+## `greeting` itself is untouched (D39), so this is about the branch above it.
+func test_the_rescued_villager_says_something_new() -> void:
+	var villager := _named_villager("Sela")
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	progression.set_flag(RESCUE_FLAG)
+	var after := VILLAGE_NPCS.greeting_for(villager, progression)
+	assert_ne(after, str(villager.get("greeting", "")),
+		"the rescued villager opens the same conversation she did before the rescue")
+	assert_true(RUNNER.has(after), "she would open '%s', which no dialogue file defines" % after)
+
+
+## §32, and the reason this file exists at all. Asserted over the WORDS rather
+## than trusted to a comment: the captive knows the separation is made and
+## which way the power flows, and does not know what is making it.
+func test_the_captive_never_names_the_legendary() -> void:
+	var suspect := ""
+	for id: String in [HELD_CONVERSATION, RESCUE_CONVERSATION, "village_rescued_ranger_home"]:
+		suspect += _spoken_text(id)
+	assert_ne(suspect.strip_edges(), "", "no captive dialogue was found to check")
+	var lowered := suspect.to_lower()
+	for word: String in FORBIDDEN_WORDS:
+		assert_false(lowered.contains(word),
+			"the captive says '%s'; spec §32 puts that reveal at the stronghold, not here" % word)
+
+
+## And the positive half of the same rung -- she DOES have to say the three
+## things the spec lists, or the rescue is a fetch quest with a cutscene.
+func test_the_captive_gives_the_testimony_the_spec_asks_for() -> void:
+	var said := _spoken_text(RESCUE_CONVERSATION).to_lower()
+	assert_true(said.contains("cut") or said.contains("made"),
+		"the captive never says the seams are made rather than natural")
+	assert_true(said.contains("held") or said.contains("maintain"),
+		"the captive never says the separation is being actively maintained")
+	assert_true(said.contains("stronghold"),
+		"the captive never says which way the power flows")
+
+
+func _named_villager(who: String) -> Dictionary:
+	var file := FileAccess.open("res://data/config/village_npcs.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	for entry: Variant in ((parsed as Dictionary).get("villagers", []) as Array):
+		if entry is Dictionary and str((entry as Dictionary).get("name", "")) == who:
+			return entry as Dictionary
+	return {}

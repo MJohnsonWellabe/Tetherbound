@@ -1,0 +1,46 @@
+{
+  "_comment": "SE25/SE27. The Tether Relay Station's SITE — its one authored coordinate, and the people standing on it who are not trainers.",
+
+  "_comment_se23": "SE23 (the relay station itself: the industrialised site, its traversal challenge, its apparatus and the console the player disables) IS NOT BUILT YET AND IS NOT THIS FILE'S WORK. What is here is the site's agreed position and the cast that occupies it, so that SE25's four battles and SE27's rescue could be built and played before the buildings exist. When SE23 builds the station it should ADOPT `site.centre` below rather than choose a second one, and if it needs to move the site it should move this value and the four `data/config/trainers.json` positions derived from it together. Nothing else in the codebase hard-codes a relay coordinate.",
+
+  "site": {
+    "centre": [108.0, 34.0],
+    "radius": 26.0,
+    "approach_bearing_deg": -34.4,
+    "_why_here": "On the Old Quarry's own conduit bearing toward the stronghold. old_quarry.json states that bearing exactly — the stronghold is at [229.8,-144.4], and the quarry floor at [23,158] gives the unit vector (0.565,-0.826) which the quarry's lit pylon run already walks. This site is 150m further along that same line, which is the whole §32 argument made as geography: the quarry showed conduits leaving on a bearing, and this is the next thing standing on that bearing. r=113m from the world origin, comfortably inside world_perimeter.gd's 235m ring; 107m from the village square; 128m from `rises.peaks[0]` centre against its 78m radius, so the site is on open ground rather than a flank.",
+    "_ground": "Probed with the real heightfield (tools/_probe_relay.gd): the site centre sits at -2.85m with 1.32m of height spread over an 8m box, and each of the five occupied positions below/in trainers.json measures between 0.5m and 2.0m of spread over the same box. Gentle enough for an 11m battle arena at every one of them, which is why these five points and not the nearest round numbers.",
+    "_drain": "D41 says the drained-ground treatment is at its WORST here — worse than the quarry's own 0.85 head station. Adding that is SE23's job (a `drains.stations` entry in terrain_playground.json plus a re-bake), not this file's: nothing here changes the terrain."
+  },
+
+  "_comment_people": "Read by scripts/world/village_npcs.gd — the same placer the square uses, pointed at a second file. Spelled `people` rather than `villagers` because these are not villagers; the placer accepts either key. Every field means what it means in data/config/village_npcs.json (`config_key`, `position` [x,z], `facing_deg`, `greeting`, `greeting_when`), plus two SE27 additions used here and documented in that file too: `place_when` (an ordered branch list deciding whether this body STANDS here at all, re-read whenever the flag store changes) and the per-part model overrides (`palette`, `hair`, `tint`, `height`, `accessories`) a trainer entry already accepts. NO NEW MODEL: the captive is `villager_ranger` — NP4-rig's villager_female base, the exact rig the village's Rescued Ranger already uses — with one palette variant over it, per CLAUDE.md and spec §20/§21.",
+
+  "people": [
+    {
+      "name": "Sela",
+      "config_key": "villager_ranger",
+      "_why_this_rig": "Spec §21's 'Rescued Ranger / Researcher: use generic civilian base if generated; otherwise main-character base. Distinct teal/cream or tan palette.' `villager_ranger` IS that generic civilian base with that tan palette and it is already installed and already this character's entry in data/config/village_npcs.json — so the captive and the villager are one person on one rig, which is the point.",
+      "palette": {
+        "*": "#8d8778",
+        "_comment": "The one variant, and it is a state rather than a costume: this rig carries a single fused material (see data/config/npc_ranks.json's own note on why every human here does), so a `palette` map is the per-material mechanism available, the same one NP2's rank palettes use. Dulled and greyed against the ranger's ordinary warm tan — weeks of being held, outdoors, in the same clothes. She loses it when she gets home: her village_npcs.json entry names no palette, so the rescued villager is the clean original tan. TUNABLE."
+      },
+      "position": [114.0, 27.0],
+      "facing_deg": 145.6,
+      "_why_here": "7.3m past the captain on the site's own bearing, facing back down it — so she is looking at the player the whole way up the road, and the captain is physically between the two of them. The rescue cannot be walked around. Ground -2.04m, 0.53m spread over an 8m box: the flattest of the five.",
+      "place_when": [
+        {
+          "unless_flag": "captive_rescued",
+          "_why": "She is here until she is freed, and then she is not — her body is removed the moment the flag lands and the same person stands up in the village square (data/config/village_npcs.json). One character, two placements, one flag deciding which."
+        }
+      ],
+      "greeting": "relay_captive_held",
+      "greeting_when": [
+        {
+          "if_flag": "relay_captain_defeated",
+          "unless_flag": "captive_rescued",
+          "conversation": "relay_captive_freed",
+          "_why": "SE27's gate, and it is the captain's defeat flag (data/config/trainers.json, `relay_captain`) that opens it. Before that this branch does not match and she falls through to `relay_captive_held` — she is visible and talkable from the moment the player reaches the site, and what she says is that they should not be talking to her yet. The rescue conversation carries `give:mill_bridge_gear:1` and `flag:captive_rescued` on the same line, and setting that flag closes this branch AND removes this body, so the Gear can be granted once and only once."
+        }
+      ]
+    }
+  ]
+}
