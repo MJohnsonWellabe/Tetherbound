@@ -114,6 +114,7 @@ func _run() -> void:
 		return
 
 	_the_trainer_starts_lying_in_bed()
+	_the_way_down_is_marked()
 	await _the_trainer_can_walk()
 	await _the_trainer_gets_up_from_the_bed()
 	await _the_door_is_gated_until_grandpa_is_heard()
@@ -243,6 +244,85 @@ func _the_trainer_starts_lying_in_bed() -> void:
 		_fail("the trainer is not lying down at the start of the wake beat; OF8's bed pose never applied")
 		return
 	print("wake: the trainer starts lying in bed")
+
+
+## PT-03. Two testers — one of them the owner, twice — could not find the way
+## out of the opening loft, and both eventually jumped off the mezzanine
+## instead. Whether a stranger SEES a staircase is not something a headless
+## run can decide, so this asserts the two facts whose absence the blind
+## playtest root-caused, and nothing more.
+##
+## The geometry is the whole story. The loft floor's own east edge occludes
+## everything below it from anywhere on the loft, and every tread of this
+## flight sits below that edge — so the stair can only announce itself with
+## something that rises ABOVE the loft floor inside the stair's own footprint.
+## `grandpa_house.gd::_build_stair_rail()` is that something.
+##
+##   1. some piece of the house stands inside the stair footprint and clears
+##      the loft floor plane, so there is anything at all to see;
+##   2. a light stands at the head of the flight rather than only in the
+##      middle of the room, so what is there is not a dark shape on a dark
+##      wall.
+##
+## Both go red if the affordance is deleted: before PT-03 the tallest thing in
+## the footprint was the top tread at FLOOR_H (below the loft floor), and the
+## nearest light was the ground-floor omni two and a half metres away and a
+## storey down.
+func _the_way_down_is_marked() -> void:
+	var house: Node3D = _world.get_node_or_null(^"GrandpaHouse") as Node3D
+	if house == null:
+		# grandpa_house.gd documents a houseless world as a legal one; the bare
+		# smoke scene boots that way and has no loft to leave.
+		return
+	var consts: Dictionary = house.get_script().get_script_constant_map()
+	var stair_x0: float = -float(consts["INNER_W"]) * 0.5 + float(consts["LOFT_W"])
+	var stair_x1: float = stair_x0 + float(consts["STAIR_RUN"])
+	var stair_z: float = -float(consts["INNER_D"]) * 0.5 + 0.6
+	var half_w: float = float(consts["STAIR_WIDTH"]) * 0.5
+	var loft_top: float = float(consts["FLOOR_H"]) + 0.25
+	var to_local := house.global_transform.affine_inverse()
+
+	var tallest := -INF
+	var lit := false
+	for node in _descendants(house):
+		# Hidden subtrees do not count. `_build_kit_shell()` parks the prefab
+		# composer's un-parented template trees under an invisible holder so
+		# they cannot leak render resources at shutdown, and a template that
+		# happened to land in this footprint would pass the test with geometry
+		# no player will ever see.
+		if node is Node3D and not (node as Node3D).is_visible_in_tree():
+			continue
+		if node is MeshInstance3D:
+			var mesh := node as MeshInstance3D
+			if mesh.mesh == null:
+				continue
+			var box: AABB = (to_local * mesh.global_transform) * mesh.mesh.get_aabb()
+			# Contained in the footprint, not merely overlapping it: the walls,
+			# the loft slab and the roof all cross this z band and would each
+			# satisfy an overlap test while telling the player nothing.
+			if box.position.x < stair_x0 - 0.4 or box.end.x > stair_x1 + 0.4:
+				continue
+			if box.position.z < stair_z - half_w - 0.2 or box.end.z > stair_z + half_w + 0.2:
+				continue
+			tallest = maxf(tallest, box.end.y)
+		elif node is OmniLight3D:
+			var at: Vector3 = to_local * (node as Node3D).global_position
+			if at.y <= float(consts["FLOOR_H"]):
+				continue
+			if at.x < stair_x0 - 0.4 or at.x > stair_x1 + 0.4:
+				continue
+			if absf(at.z - stair_z) > half_w + 0.4:
+				continue
+			lit = true
+
+	if tallest < loft_top + 0.4:
+		_fail("nothing in the stair footprint rises above the loft floor (tallest %.2fm vs loft %.2fm); the flight is invisible from the loft it leaves" % [tallest, loft_top])
+	else:
+		print("stairs: the flight is marked %.2fm above the loft floor" % (tallest - loft_top))
+	if not lit:
+		_fail("no light at the head of the stairs; the way out is a dark shape against a dark wall")
+	else:
+		print("stairs: a light stands at the head of the flight")
 
 
 ## The wake beat: the opening starts in the loft bedroom of Grandpa's
@@ -888,6 +968,13 @@ func _find_interactable_matching(words: Array) -> Node3D:
 			if label.contains(str(word)):
 				return candidate
 	return null
+
+
+func _descendants(node: Node) -> Array[Node]:
+	var out: Array[Node] = [node]
+	for child in node.get_children():
+		out.append_array(_descendants(child))
+	return out
 
 
 func _all_interactables(node: Node) -> Array[Node3D]:

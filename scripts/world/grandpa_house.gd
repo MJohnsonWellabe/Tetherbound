@@ -84,6 +84,20 @@ const DOOR_H := 2.3
 ## stair has headroom and the ground floor gets height over the door.
 const LOFT_W := 4.6
 
+## The flight, as named numbers rather than as locals inside the loop that
+## lays the treads. PT-03's handrail has to sit ON the pitch line those
+## numbers describe, and a rail that re-derives the pitch by eye is a rail
+## parallel to nothing in particular.
+const STAIR_STEPS := 10
+const STAIR_RUN := 3.4
+const STAIR_WIDTH := 1.2
+## Handrail height above the nosing line, metres. Picked so the raked rail
+## arrives at the loft edge within ~0.1m of the existing loft rail's cap
+## (FLOOR_H + 0.25 + 0.9 = 4.35): that near-match is what makes the two
+## read as ONE rail turning a corner and going down, rather than as a rail
+## and, separately, a diagonal.
+const RAIL_ABOVE_NOSING := 0.85
+
 const COL_TIMBER := Color("#5a4030")
 const COL_FLOOR := Color("#7a5a35")
 
@@ -271,15 +285,106 @@ func _build_shell() -> void:
 
 func _build_stairs() -> void:
 	# Straight run against the north wall, climbing westward to the loft edge.
-	var steps := 10
-	var run_length := 3.4
-	var step_rise := FLOOR_H / float(steps)
-	var step_depth := run_length / float(steps)
-	var start_x := -INNER_W * 0.5 + LOFT_W + run_length
-	for i in steps:
+	var step_rise := FLOOR_H / float(STAIR_STEPS)
+	var step_depth := STAIR_RUN / float(STAIR_STEPS)
+	var start_x := -INNER_W * 0.5 + LOFT_W + STAIR_RUN
+	var stair_z := -INNER_D * 0.5 + 0.6
+	for i in STAIR_STEPS:
 		var x := start_x - (float(i) + 0.5) * step_depth
-		_box(Vector3(step_depth + 0.02, step_rise * (i + 1), 1.2),
-			Vector3(x, step_rise * (i + 1) * 0.5, -INNER_D * 0.5 + 0.6), COL_FLOOR)
+		_box(Vector3(step_depth + 0.02, step_rise * (i + 1), STAIR_WIDTH),
+			Vector3(x, step_rise * (i + 1) * 0.5, stair_z), COL_FLOOR)
+	_build_stair_rail(start_x, stair_z, step_rise, step_depth)
+
+
+## PT-03: the affordance that tells a stranger this is the way out.
+##
+## Two testers — one of them the owner, twice — could not find these stairs
+## and jumped off the mezzanine instead
+## (docs/reviews/2026-08-15-full-blind-playtest/PLAYER_LOG.md beats 16-20:
+## "no stairs/exit visible in any frame yet from this room"). The cause is
+## geometric and total: the loft floor's own east edge occludes everything
+## below it, and every tread of this flight sits below that edge. Measured
+## from the spot the opening leaves the player standing, the sightline that
+## grazes the loft edge passes ABOVE the treads for the entire run — so no
+## amount of light on the treads could ever have reached that eye. What the
+## player sees instead is a floor edge with a shallow ledge under it, which
+## is exactly what a parapet looks like.
+##
+## So the flight is given the one part of a staircase that can rise above the
+## occluding edge: a handrail raked to its own pitch, ending in a newel at
+## the head where the loft rail stops. The same arithmetic says the rail
+## clears that sightline from x = the loft edge out to x ~ 1.9, which is over
+## half the run — a long descending diagonal, and nothing else in this room
+## is diagonal. A parapet cannot be mistaken for one.
+##
+## Nothing here is solid. The interior camera's spring arm collapsing against
+## this room's geometry was the same playtest's dominant complaint, and a
+## handrail is exactly the wrong place to put fresh collision at head height
+## beside a player walking a 1.2m flight. It is also not needed: the rail
+## sits 0.11m inside the flight's own south face, and the walked lane
+## (`stairs_top` -> `stairs_bottom`) runs down the middle.
+func _build_stair_rail(start_x: float, stair_z: float, step_rise: float, step_depth: float) -> void:
+	# The pitch line, through the nosing of each tread: step 0's nose is its
+	# east edge, at (start_x, step_rise), and every nose above it is one rise
+	# up and one going west.
+	var pitch := step_rise / step_depth
+	var head_x := -INNER_W * 0.5 + LOFT_W - 0.06  # the loft rail's own x
+	var foot_x := start_x
+	# Inside the flight's south face, so that below tread height the balusters
+	# are buried in the step solids rather than hanging in open air beside them.
+	var rail_z := stair_z + STAIR_WIDTH * 0.5 - 0.11
+	var head_y := step_rise + (foot_x - head_x) * pitch + RAIL_ABOVE_NOSING
+	var foot_y := step_rise + RAIL_ABOVE_NOSING
+
+	var span := Vector2(foot_x - head_x, foot_y - head_y)
+	_raked_box(Vector3(span.length(), 0.10, 0.12),
+		Vector3((head_x + foot_x) * 0.5, (head_y + foot_y) * 0.5, rail_z),
+		atan2(span.y, span.x), COL_TIMBER)
+
+	# The head newel, standing on the loft where the loft rail ends. The
+	# vertical accent matters as much as the diagonal: it is what turns "the
+	# rail simply stops" into "the rail arrives somewhere".
+	var loft_top := FLOOR_H + 0.25
+	var head_cap := head_y + 0.10
+	# Deeper in z than the foot newel so it reaches back to the loft rail's own
+	# north face: the rail line and the flight line are 0.11m apart, and a
+	# hairline gap between the two at eye level reads as a modelling error.
+	_raked_box(Vector3(0.16, head_cap - loft_top, 0.22),
+		Vector3(head_x, (loft_top + head_cap) * 0.5, rail_z), 0.0, COL_TIMBER)
+	# The foot newel, on the ground slab, for the same reason seen from below.
+	var foot_cap := foot_y + 0.10
+	_raked_box(Vector3(0.16, foot_cap - 0.12, 0.16),
+		Vector3(foot_x, (0.12 + foot_cap) * 0.5, rail_z), 0.0, COL_TIMBER)
+
+	# Balusters. Without them the rail is a plank floating at 43 degrees; with
+	# them it is a staircase seen edge-on. Each one runs from just under the
+	# rail down through the pitch line by one rise, so it always meets its own
+	# tread whatever fraction of the going it lands on, and disappears into
+	# the step solid below.
+	for i in 5:
+		var t := (float(i) + 0.5) / 5.0
+		var x: float = lerpf(head_x, foot_x, t)
+		var top: float = lerpf(head_y, foot_y, t) - 0.05
+		var bottom := step_rise + (foot_x - x) * pitch - step_rise
+		_raked_box(Vector3(0.07, top - bottom, 0.07),
+			Vector3(x, (top + bottom) * 0.5, rail_z), 0.0, COL_TIMBER)
+
+
+## A box that may be tilted in the x-y plane, positioned by its centre.
+##
+## `_box()` cannot express the one piece of this house that is not
+## axis-aligned, and a staircase of small axis-aligned boxes approximating a
+## diagonal is the silhouette the player already fails to read. Never solid:
+## see `_build_stair_rail()`'s own note on the interior camera.
+func _raked_box(size: Vector3, at: Vector3, roll: float, colour: Color) -> void:
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = size
+	mesh.mesh = box
+	mesh.material_override = _material(colour)
+	mesh.position = at
+	mesh.rotation.z = roll
+	add_child(mesh)
 
 
 func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FURNITURE_SCALE,
@@ -437,7 +542,18 @@ func _build_rugs() -> void:
 
 func _build_lights() -> void:
 	# Warm interior light; the shell blocks the sun entirely.
-	for at: Vector3 in [Vector3(0, 2.6, 0), Vector3(-2.5, FLOOR_H + 2.0, -1.0)]:
+	#
+	# The third one is PT-03's other half. The first two sit in the middle of
+	# the ground floor and over the bed, which is why the stair head — the one
+	# corner a first-time player has to find — was the darkest place in the
+	# room. It hangs over the stairwell above the top treads, so it lights the
+	# new handrail from the side the loft looks at it from, and puts a warm
+	# pool on the loft floor at the corner the player has to walk to. Shadows
+	# stay on, as on the other two: unshadowed it would spill straight through
+	# the north wall onto the village square.
+	var stair_head := Vector3(-INNER_W * 0.5 + LOFT_W + 0.6, FLOOR_H + 0.8,
+		-INNER_D * 0.5 + 0.6)
+	for at: Vector3 in [Vector3(0, 2.6, 0), Vector3(-2.5, FLOOR_H + 2.0, -1.0), stair_head]:
 		var light := OmniLight3D.new()
 		light.position = at
 		light.light_color = Color(1.0, 0.88, 0.7)
