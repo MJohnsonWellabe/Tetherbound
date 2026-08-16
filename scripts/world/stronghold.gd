@@ -872,6 +872,19 @@ func _place_gauntlet() -> void:
 	host.add_child(_trainers)
 	_trainers.call("build", _player, PLACED_BY, positions, facings)
 
+	# Same floor-vs-terrain correction the Warden needs (see
+	# stronghold_climax.gd's own note): the placer grounds to the terrain
+	# under a point, and inside these spaces the terrain is metres below the
+	# authored floor slab. Each gauntlet trainer is lifted onto the floor of
+	# the room it belongs to, which is the height its own marker already
+	# carries.
+	for spec: Variant in list:
+		var who := str((spec as Dictionary).get("trainer", ""))
+		var body: Node3D = _trainers.call("body_for", who) as Node3D
+		var mark: Vector3 = _markers.get("trainer_%s" % who, Vector3.ZERO)
+		if body != null and mark != Vector3.ZERO:
+			body.global_position = Vector3(body.global_position.x, mark.y, body.global_position.z)
+
 
 ## Named spots later items ask for by name: where the Warden stands, where the
 ## player is stopped for his dialogue, where the reveal is delivered, the

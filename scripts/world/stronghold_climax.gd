@@ -154,6 +154,26 @@ func _place_warden() -> void:
 	)
 	if int(_trainers.call("placed")) == 0:
 		push_warning("the Warden was not placed; trainers.json has no row '%s'" % id)
+		return
+
+	# Stand him on the ARENA FLOOR, not on the terrain under it.
+	#
+	# `trainer_npc.build()` takes an (x, z) and grounds to `ground_height_at`,
+	# which is right everywhere in the open meadow and wrong inside R8.2's
+	# stronghold: its five spaces are built slabs at a single authored floor
+	# height with an 18 m revetment skirt below them, so the terrain under the
+	# Warden Arena is metres beneath the floor the player walks in on. Placed
+	# by terrain, the Warden sinks below his own arena, the player standing in
+	# front of him is nowhere near him, and the prompt line goes to whatever
+	# global offer is left -- in the failing run, "Put Terrapup away". The
+	# marker already carries the floor height; this uses it.
+	#
+	# Only visible once the real stronghold exists: this item was built against
+	# its own fallback coordinates out on open ground, where terrain IS the
+	# floor, and passed. Integration is what found it.
+	var body := warden_body()
+	if body != null and _stronghold != null:
+		body.global_position = Vector3(body.global_position.x, at.y, body.global_position.z)
 
 
 func warden_body() -> Node3D:
