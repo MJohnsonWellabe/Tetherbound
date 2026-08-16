@@ -132,6 +132,38 @@ func _check_the_first_day_arc(world: Node) -> void:
 	inventory.call("add", "wood", 12)
 	inventory.call("add", "stone", 8)
 	inventory.call("add", "fiber", 10)
+
+	# Arming must never plant, even with the place button already held down.
+	#
+	# The owner's report was "you go to build, select the thing you want to
+	# build and it just places. there is no decision for you, you don't place
+	# it, you don't rotate, there's no grid." `build_place` is LMB, and
+	# `build_menu.gd::_pick()` arms `pending_build` and closes on that same
+	# click -- so the click that CHOSE the piece also satisfied the placer's
+	# `is_action_just_pressed(build_place)` in the very same physics frame, and
+	# the piece went into the ground `PLACE_AHEAD` metres away before a ghost
+	# was ever drawn.
+	#
+	# Every other press in this file arms with the button up and then waits,
+	# which is exactly why the whole suite stayed green through the entire bug.
+	# This block holds the button across the arming frame, the way a real mouse
+	# click does.
+	Input.action_press("build_place")
+	_game.set("pending_build", "camp")
+	for i in 12:
+		await physics_frame
+	if world.get_node_or_null(^"Camp") != null:
+		_fail("arming a piece with the place button held planted it instantly -- "
+				+ "the player never sees a ghost, and never gets to rotate or position it")
+		return
+	if str(_game.get("pending_build")) != "camp":
+		_fail("arming with the place button held disarmed the piece instead of holding the ghost")
+		return
+	Input.action_release("build_place")
+	for i in 5:
+		await physics_frame
+	print("arming with place held planted nothing -- the ghost gets its frames")
+
 	_game.set("pending_build", "camp")
 	var wood_before_build := int(inventory.call("count", "wood"))
 	for i in 30:

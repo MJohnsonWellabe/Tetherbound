@@ -134,6 +134,30 @@ var _yaw_deg := 0.0
 ## preference ("I am doing fine work right now"), not a per-ghost value.
 var _rotation_step_deg: float = BUILD_GRID.SNAP_STEP_DEGS[0]
 
+## The piece armed on the previous frame, and whether `PLACE_ACTION` is
+## currently barred from planting it. Together these are the fix for the
+## owner's playtest report: *"you go to build, select the thing you want to
+## build and it just places. there is no decision for you, you don't place it,
+## you don't rotate, there's no grid."*
+##
+## The whole ghost/rotate/grid system below was working the entire time — it
+## just never got a frame to run. `build_place` is bound to LMB, and
+## `build_menu.gd::_pick()` arms `pending_build` and closes on that same click.
+## `Input.is_action_just_pressed` is GLOBAL polling: it knows nothing about the
+## Button that consumed the click, and it stays true for the whole physics
+## frame the press landed in. So the click that chose the piece also satisfied
+## the place check further down this function, in that same frame, and the
+## piece went straight into the ground `PLACE_AHEAD` metres away — before a
+## ghost was ever drawn.
+##
+## The rule now: **arming never places.** A newly armed piece bars the place
+## action until it has been seen released at least once, so planting always
+## costs a fresh, deliberate press. Arming from a path that never touched the
+## place button (a keyboard pick, a gamepad pick) clears the bar on the very
+## next frame, so nothing gets slower for them.
+var _armed_last := ""
+var _place_blocked := false
+
 ## D34/spec 13.2-13.4: the placer's own screen-space overlay (snap dots, the
 ## bottom-center control strip) and the world-space local grid mesh, all
 ## built lazily on first use rather than in `_ready` — most of a session has
@@ -165,6 +189,12 @@ func _physics_process(_delta: float) -> void:
 	if game == null or _player == null:
 		return
 	var armed := str(game.get("pending_build"))
+	# Arming — including swapping straight from one piece to another without
+	# disarming in between — bars the place action until it is released. See
+	# `_place_blocked`'s comment for why this exists.
+	if armed != _armed_last:
+		_armed_last = armed
+		_place_blocked = armed != ""
 	if armed == "":
 		_drop_ghost()
 		return
@@ -184,7 +214,14 @@ func _physics_process(_delta: float) -> void:
 		_rotation_step_deg = BUILD_GRID.next_snap_step_deg(_rotation_step_deg)
 
 	_show_ghost(game, armed)
-	if Input.is_action_just_pressed(PLACE_ACTION):
+	if _place_blocked:
+		# Never plant on the frame a piece was armed. The bar lifts as soon as
+		# the button is up — which for a mouse pick is the moment the player
+		# lets go of the click that chose the piece, and for every other pick
+		# path is the very next frame.
+		if not Input.is_action_pressed(PLACE_ACTION):
+			_place_blocked = false
+	elif Input.is_action_just_pressed(PLACE_ACTION):
 		if _ghost_ok:
 			_place(game, armed)
 		else:

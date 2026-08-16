@@ -525,6 +525,14 @@ func _give_items(parts: Array) -> void:
 ## physical button (X), so with the arbiter live during a fight, one press both
 ## swings your creature and opens a conversation with Grandpa if the fight happened to
 ## start near him.
+##
+## The build case is the identical argument one context along, and it is the
+## other half of the owner's "building doesn't work" report: `interact` and
+## `build_place` are ALSO the same physical button (X). With the arbiter live
+## while a ghost is armed, the press that plants a wall also opens whatever
+## conversation or harvest prompt happened to be in reach — so building next to
+## anything interactive fought the player for the button. An armed ghost owns
+## the screen the same way a fight does.
 func _refresh_lockout() -> void:
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
 	# R8.1: a trainer battle is longer than any one fight inside it — their
@@ -538,8 +546,11 @@ func _refresh_lockout() -> void:
 	var panel: bool = bool(_dialogue.call("is_open")) or bool(_name_prompt.call("is_open")) \
 			or bool(_starter_picker.call("is_open"))
 	var modal := panel or is_fading() or _adopting
+	# An armed build ghost is a fourth owner of the screen — see the header.
+	var game := get_node_or_null(^"/root/Game")
+	var building: bool = game != null and str(game.get("pending_build")) != ""
 
-	_arbiter.call("set_enabled", not modal and not fighting)
+	_arbiter.call("set_enabled", not modal and not fighting and not building)
 
 	# Locomotion and the camera belong to combat while a fight is running.
 	# Handing them back here every frame would undo what the encounter director

@@ -251,7 +251,7 @@ build_rotate_right={
 build_snap_cycle={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":4194325,"pressed":false,"script":null)
-, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
 ]
 }
 backpack_drop={
