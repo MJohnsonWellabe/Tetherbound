@@ -375,11 +375,40 @@ Owner-reported, 2026-08-15. Movement getting wedged/blocked rather than passing
 through. Needs locations logged from a fresh playthrough before a fix can be
 scoped.
 
-### OF18 — Re-shoot the website's screenshots
-`model: haiku` · `tests: none`
-`site/img/*.jpg` predates the roster repaint (`OF28`), the carried torch
-(`OF24`), the shiny work and the playtest repairs. More overdue than when it was
-filed, not less.
+### OF18 — Re-shoot the website's screenshots · **partly done 2026-08-16**
+`model: sonnet` · `tests: none` · `area: visual`
+**Done already:** all the copy (seventeen species — it said fifteen, twice;
+credits corrected — two shipped kits were uncredited and a retired one was still
+listed; "vertical slice" → the 3–4 hour chapter D23/D42 describe; download
+instructions that no longer tell people to keep three files out of a 477 MB
+folder). A wordmark set in live type per the game's own display-lettering board.
+`tools/site_images.py` now owns the capture→slot mapping so `site/README.md`
+cannot drift out of sync with it again — it had named a combat frame the tool
+stopped writing, so the documented recipe failed outright. And the hero, village
+and camp frames are current, which gets the demolished Farm Buildings village
+off the page and out of the `og:image`.
+
+**Still to do, and the reason this item stays open:**
+1. `godot --headless --path . --import` **first** — a capture run before an
+   import renders missing textures and the frames come out plausible and wrong.
+   This cost a full run in the session that filed this note.
+2. Re-shoot the rest: `tools/survey.sh` (the exploration frames and the
+   `.band` parallax, which still has no stronghold on the rise) and
+   `tools/survey_combat.sh` (the combat frames still show a placeholder
+   blob-headed trainer, Kenney foliage, the dead names "Meadow Hopper" and
+   "Bramblit", and `[A] Quick / [X] Charged` — D35 moved those to RT/LT).
+3. Capture the three images the two removed sections need:
+   `capture_shiny_pairs.gd` (roster), `capture_weather.gd` (rain),
+   `capture_torch_night.gd` (night). Then `python3 tools/site_images.py` and
+   restore the two `<section>` blocks from `site/index.html`'s git history —
+   the comment where they were removed carries the recipe.
+4. `capture_catch_sequence.gd` gives `aim-arc.jpg`, a slot that has fallen
+   through to a frame with **no arc and no orb** since the page was built,
+   under a caption promising the arc shows exactly where the orb will land.
+5. Blind visual pass before shipping (`conventions.md`: visual work needs a
+   pass, not a look), then close.
+
+Do not commit `site/img/*.jpg.import` — Godot sidecars, no purpose on a website.
 
 ### R7.7 — Player HP and armour slot architecture · `model: sonnet` · `tests: test_player_hp` (new)
 
