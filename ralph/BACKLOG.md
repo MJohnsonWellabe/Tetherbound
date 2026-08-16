@@ -440,6 +440,121 @@ controls screen sitting in an inventory footer.
 
 ---
 
+## Phase -1.41 — what the UI lane found on its way out
+
+The four owner-reported UI items shipped in one lane on 2026-08-16 (`OW11`,
+`OW10`, `OW4`, `OW8`). On finishing, that lane was asked to write down what it
+had learned that did not belong in a diff. **What came back was larger than the
+four items it had just closed**, and none of it would have survived otherwise —
+which is the whole argument for `LANE1`'s notepad. Verbatim record in
+`ralph/NOTES.md` on `ralph-status`.
+
+### UI-PAD1 — `ui_accept` has no joypad binding, so no focused Button can be pressed with a pad
+`model: sonnet` · `tests: test_controls, run_tests, a new pad test` · `area: ui`
+**This is a controller-first game in which the player cannot choose a build
+piece.** Dumped from the live `InputMap` at runtime, not read off `project.godot`:
+
+```
+ui_accept     -> key, key, key       <- no joypad event at all
+ui_left       -> key, JOY:13, axis:0
+ui_right      -> key, JOY:14, axis:0
+menu_confirm  -> key, JOY:0
+```
+
+A Godot `Button` activates on `ui_accept`. Focus *navigation* has pad bindings
+and works; *accept* has none. So on a pad, focus moves between controls and
+nothing can ever be pressed. Every screen that works today works through a
+hand-written `menu_confirm` poll — `starter_picker.gd`, `tab_creatures.gd`,
+`combat_hud.gd` each carry their own, each with its own comment about why.
+`OW4`'s target picker was the one that never got the workaround.
+
+**`OW11` shipped without catching that the build menu has the same defect.**
+Verified after the fact with real `InputEventJoypadButton` events, free build on,
+focus confirmed on a grid cell: pad A leaves `pending_build` empty and the menu
+open; pad X likewise. `build_menu.gd`'s cells are plain `Button`s wired to
+`_pick` via `pressed`, with no confirm poll anywhere. `OW11` made that menu
+readable and correctly sized. It did not make it operable, and it was not
+operable before either. This sits directly under the owner's report that
+building must work the way Valheim's does.
+
+**Do not fix this by adding `JOY:0` to `ui_accept` and stopping.** `menu_confirm`
+is already JOY:0, so every screen currently polling it would fire twice from one
+press — the double-confirm `name_prompt.gd`'s header records this repo having
+already paid for once. The fix is an audit: add the binding, then remove each
+now-redundant poll **in the same change**.
+
+### UI-PAD2 — `OW10`'s input owner is real but partial; `build_placer.gd` is outside it
+`model: sonnet` · `tests: smoke_free_build, run_tests` · `area: ui, build`
+`OW10` landed `scripts/ui/input_owner.gd` — a panel that owns input joins a
+group, and world-verb polls ask `current()`. That replaced two divergent gate
+sets in `playground_hud.gd` and fixed the reported bug. It converted **that
+file's** pollers and no others.
+`grep -n "input_owner" scripts/build/build_placer.gd` returns nothing.
+
+`build_placer.gd::_physics_process` polls `build_place`, `build_rotate`,
+`build_rotate_left/right`, `build_snap_cycle` and `build_cancel` directly. It is
+`PAUSABLE`, so the six tree-pausing panels stop it. **The build menu is the one
+panel that deliberately does not pause** — that is its whole point — so the
+placer keeps polling underneath it, exactly as the hotbar used to. Path: arm a
+piece (menu closes, ghost live), reopen the build menu; `_read_world_hotkeys`
+refuses `build_open` while the menu is open but not while a ghost is armed, and
+the pause shell's Build tab is a second door. Now `build_place` is live behind
+an open menu.
+
+**Reported honestly by the finding lane as structural, not observed** — the
+missing gate is grep-verified and the pause semantics read off
+`PROCESS_MODE_PAUSABLE` and `build_menu.gd::open()`, but the end-to-end exploit
+was not driven, because a real player node needs a ~9-minute world boot under
+software GL. Treat it as very likely live.
+
+Other pollers outside the gate, for whoever takes this:
+`scripts/player/player_controller.gd`, `scripts/player/torch.gd`,
+`scripts/combat/throw_aim.gd`, `scripts/world/interaction_arbiter.gd`. Most are
+plausibly fine via `PAUSABLE`; none asks `input_owner.gd`. **The group exists and
+joining it is one line — the work is deciding which of these should.**
+
+### TEST2 — four tests that passed while the thing they name was broken
+`model: sonnet` · `tests: the ones named here` · `area: tests`
+Companion to `TEST1`, which asks the same question of the smoke suite generally.
+These four are specific, found the hard way, and each is a distinct shape:
+
+1. **No test in this repo chooses a build piece through input.**
+   `tests/smoke_free_build.gd` calls itself "the menu-driving shortcut of arming
+   `pending_build` directly" (~:152), and `tests/smoke_build_menu_footprint.gd`
+   calls `menu.call("_select_category", i)`. That is exactly why a build menu no
+   controller can operate has been green this whole time.
+2. **`InputEventAction` hides every binding bug.** `tests/smoke_menu.gd` drives
+   the backpack target picker end to end and asserts the heal lands — and passes
+   on code where a pad could not confirm at all, because `InputEventAction` names
+   the action directly and never travels the `InputMap`. **Any test asserting
+   "the player can do X" with an action event asserts something weaker than it
+   reads.** `tests/smoke_backpack_pad_target.gd` is the pattern to copy: real
+   joypad events, button indices read from the live `InputMap`.
+3. **`test_controls.gd::test_no_two_menu_context_actions_share_a_keyboard_key`
+   only sees keyboard.** It does `var key := event as InputEventKey` and
+   `continue`s on anything else, so joypad collisions are invisible. Its own
+   failure message talks about a verb being "dead" — the exact bug that then went
+   unnoticed on the pad side. Widening it to joypad buttons is cheap.
+4. **`OW8`'s own test is weaker than it looks, recorded by its author.**
+   `tests/smoke_prompt_hotbar_dock.gd` fails on pre-`OW8` code *only* on its
+   structural assertion; all four rect-intersection cases pass there, because
+   `_reflow_prompt` recomputes from the hotbar's live rect on `resized` and the
+   harness grants the frames. **That is why the two previous OW8 fixes tested
+   green and still failed on the owner's hardware, twice.** Anyone judging that
+   fix by the rect cases alone concludes there was never a bug. The shared-parent
+   assertion is the load-bearing one.
+
+### OPS2 — two concurrent headless Godot runs corrupt each other's script loading
+`model: sonnet` · `tests: none` · `area: ops`
+Two concurrent headless runs on a four-core container produced
+`Attempt to open script ... resulted in error 'File not found'` for a file
+present on disk; re-running serially passed. Every lane brief now says serialise
+your runs, but that is instruction, not enforcement. **If a smoke test dies with
+a missing-script error, check what else was running before believing it** — this
+is a plausible source of "flaky" CI that is not flaky at all.
+
+---
+
 ## Phase -1.42 — the tourniquets, and the questions nobody asked
 
 Filed 2026-08-16 by the coordinating session, as a self-audit rather than as
