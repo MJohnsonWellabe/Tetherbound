@@ -173,6 +173,21 @@ func _the_gauntlet_is_placed_and_challengeable(world: Node, hold: Node3D) -> voi
 		"stronghold_courtyard": "courtyard",
 		"stronghold_elite": "tether_approach",
 	}
+	# The gauntlet's placer must hang where `trainer_npc.gd::_director()` can
+	# see the fight: it looks the director up as `get_parent().get_node_or_null
+	# ("EncounterDirector")`, so a placer parented under the Stronghold itself
+	# finds nothing, quietly decides every trainer is unchallengeable, and
+	# opens their DEFEATED conversation instead — three fights that greet you
+	# politely and never happen. That shipped once and this assertion is why it
+	# cannot ship twice. The check below it only PRINTS (a bare boot has no
+	# living ally, so `can_challenge` is not meaningful here), which is exactly
+	# how the bug got past this file the first time.
+	var placer_host := trainers.get_parent()
+	if placer_host == null or placer_host.get_node_or_null(^"EncounterDirector") == null:
+		_fail("the gauntlet's placer hangs under '%s', which has no EncounterDirector sibling; "
+			% (placer_host.name if placer_host != null else "<nothing>")
+			+ "every trainer under it is silently unchallengeable")
+
 	var placed := int(trainers.call("placed"))
 	print("gauntlet: %d trainer(s) placed" % placed)
 	if placed < 2 or placed > 4:

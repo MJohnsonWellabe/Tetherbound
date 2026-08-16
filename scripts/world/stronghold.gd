@@ -860,7 +860,16 @@ func _place_gauntlet() -> void:
 
 	_trainers = TRAINER_NPCS.new()
 	_trainers.name = "StrongholdTrainers"
-	add_child(_trainers)
+	# Parented to the WORLD, not to this node. `trainer_npc.gd::_director()`
+	# finds the fight through `get_parent().get_node_or_null("EncounterDirector")`,
+	# so a placer hung under any node but the world silently finds no director,
+	# decides its trainers cannot be challenged, and opens their DEFEATED
+	# conversation instead — a gauntlet that greets you politely and never
+	# fights. Found by R8.3's agent, which hit the identical shape placing the
+	# Warden and cost itself a debug cycle on it. The trainers' own world
+	# positions are absolute, so where the placer hangs changes nothing else.
+	var host: Node = _world if _world != null else self
+	host.add_child(_trainers)
 	_trainers.call("build", _player, PLACED_BY, positions, facings)
 
 
