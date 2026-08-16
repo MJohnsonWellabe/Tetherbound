@@ -3,17 +3,32 @@
 Written as a handoff: everything a fresh context needs to pick this up without
 re-deriving it. Read `CLAUDE.md` first for the hard rules, then this.
 
-> ### ⏩ NEWER: read `docs/HANDOFF_2026-08-16_playtest_round3_and_heroes.md` first
+> ### ⏩ NEWER: two 2026-08-16 sessions supersede this file. Read both.
 >
-> One long session on 2026-08-16 took the Meadows chapter to content-complete
-> (all of Phase 8), shipped the owner's third playtest round, generated the last
-> two of `D24`'s hero objects, and rebuilt the Warden from his own character
-> sheet. That file supersedes this one wherever they disagree about the chapter,
-> the hero assets or the Warden. It also documents a five-hour window in which
-> **CI silently stopped running while looking like ordinary failure** — worth
-> knowing before trusting any green tick from that day.
+> **`docs/HANDOFF_2026-08-16_playtest_round3_and_heroes.md`** — one long session
+> took the Meadows chapter to content-complete (all of Phase 8), shipped the
+> owner's third playtest round, generated the last two of `D24`'s hero objects,
+> and rebuilt the Warden from his own character sheet. It supersedes this file
+> wherever they disagree about the chapter, the hero assets or the Warden. It
+> also documents a five-hour window in which **CI silently stopped running while
+> looking like ordinary failure** — worth knowing before trusting any green tick
+> from that day.
+>
+> **`docs/HANDOFF_2026-08-16_playtest_and_prune.md`** — a parallel session ran
+> the owner-authorized blind playtest, shipped six repairs, and pruned the
+> backlog from 2,173 lines to ~680. Read its first section before restarting the
+> loop: **every `▶` play gate is retired, `R9.5` included**, so the loop no
+> longer parks anywhere and an empty backlog is now its terminal condition. §8
+> below has been corrected for that. The playtest's own reports are in
+> `docs/reviews/2026-08-15-full-blind-playtest/`.
 
-**Last updated:** 2026-08-11 (second update that day — read both notes).
+**Last updated:** 2026-08-11 (second update that day — read both notes), with
+targeted corrections on 2026-08-16.
+
+**A warning about the rest of this file:** most of it is still dated 2026-08-11
+and parts are stale. §4's "what is NOT built" list and §6's known defects have
+both been overtaken repeatedly. Prefer `git log`, `ralph/BACKLOG.md` and the
+code over any claim here.
 
 **The art direction is now settled, and two P0 bugs are fixed.** The owner
 played the published build and reported that the opening soft-locks (you can
@@ -67,7 +82,16 @@ your trainer stands behind it. The human never fights.
 The current target is the **Meadows chapter** — the vertical slice as it was,
 plus the 4–7 hour arc the owner specified on 2026-08-11 (D23) — **cut to 3–4
 hours on 2026-08-15 by D42, with the terrain footprint carved out.** Nothing
-from Biome 2 starts until Meadows passes its exit gate.
+from Biome 2 starts until Meadows meets `GAME_DESIGN.md` §33. **That criteria
+list is still the rule; the `R9.5` item that used to represent it is not — it
+was retired with every other play gate on 2026-08-16, so nothing in the backlog
+stands between the loop and Biome 2 except the rule itself.**
+
+**Shape directive, 2026-08-16 (`OW5`).** The owner wants the Meadows to read as
+a long journey away from home ending at the stronghold: a square footprint, but
+a winding, forking trail leading progressively further from Grandpa's house,
+with off-trail detours for optional work, long enough end to end that camping on
+the way is forced rather than optional.
 
 The story behind it, settled by D23: the eight biomes were one connected
 landmass. Each of the eight legendaries is a living conduit for a natural
@@ -426,10 +450,12 @@ Recorded because they were written into commit messages and reports:
 
 **The Ralph loop** (`ralph/PROMPT.md`) runs the backlog autonomously between
 owner sessions: hourly firings, a lease on the `ralph-status` branch, work
-shipped via `ralph/<task-id>` branches through CI auto-merge. `▶` play gates
-park the loop until the owner plays. Big overhauls — like this session — are
-done interactively and then **recorded into the backlog** so the loop's
-picture stays true.
+shipped via `ralph/<task-id>` branches through CI auto-merge. **Play gates no
+longer exist** — every `▶` gate was retired on 2026-08-16, `R9.5` included, so
+the loop's terminal condition is an empty backlog: report and stop, rather than
+park. `docs/decisions/D21` still describes gates and reads as superseded, not
+violated. Big overhauls — like this session — are done interactively and then
+**recorded into the backlog** so the loop's picture stays true.
 
 Earlier roster work ran as **parallel agents in isolated git worktrees**;
 those boundary rules (one grade-script owner, creature agents don't touch
