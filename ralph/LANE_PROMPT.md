@@ -46,7 +46,7 @@ YOU ARE A LANE. Three Routines fire on staggered schedules and concurrent firing
 
 YOU DO NOT HAVE THE MESHY API KEY, and this is deliberate rather than a fault. Skip every backlog item marked `lane: art` as though its area were held, and take the next one down. Do NOT report this as blocked — it is not blocked, it is simply not yours; the keyed Routine picks it up. Do NOT pivot to ledger or bookkeeping busywork instead; a firing did that once after losing the key and produced nothing anyone wanted. In-engine survey and screenshot renders need no key and are fully available to you.
 
-Take the topmost unblocked item whose area is free. `▶` play gates do NOT stop the loop (D21): make sure `BLOCKED.md`'s play-gate section lists it for the owner and take the next item below. The one exception is R9.5, the exit gate, where the loop correctly parks.
+Take the topmost unblocked item whose area is free. **There are no play gates any more** — the owner retired every `▶` gate on 2026-08-16, including R9.5, the exit gate the loop used to park on; D21 stays as history and reads as superseded, so do not re-add one. When the backlog runs out, stop and report — an empty backlog is the terminal condition, and inventing work or starting Biome 2 is not.
 
 ONE ITEM ONLY. Branch `ralph/<task-id>`, build the smallest coherent version, and run ONLY the tests that item names — locally and headless, before you push. Push that single item's commit (plus its bookkeeping commit, last). Pushing the branch IS the ship action; no pull request, no self-merge.
 

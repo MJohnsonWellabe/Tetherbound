@@ -79,10 +79,11 @@ never a budget rule. Creatures and humans are rework-only, permanently.
 `GAME_DESIGN.md` §33's exit criteria are entirely subjective — "is repeated
 combat enjoyable, not merely functional", "would you voluntarily keep
 playing". No amount of green CI substitutes, and the bible says so directly.
-**Per your 2026-08-09 directive (D21) the loop no longer parks at gates** —
-it keeps building and your playtest feedback lands as new backlog items
-whenever you play. The one place it still stops is R9.5, the exit gate,
-which only you can call.
+**Per your 2026-08-16 directive every play gate is gone**, including R9.5, the
+exit gate the loop used to park on. The loop keeps building and your playtest
+feedback lands as new backlog items whenever you play. It now stops only when
+the backlog is empty, and reports rather than inventing work. D21 stays as
+history and reads as superseded.
 
 Each push to `main` publishes a Windows build at
 `/releases/download/latest/Tetherbound-windows.zip` — **by tag**. The

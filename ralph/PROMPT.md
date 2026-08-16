@@ -379,17 +379,20 @@ luck, not the protocol working as intended.
 ## The loop
 
 1. **Pick** the topmost item in `BACKLOG.md` that is not blocked **and whose
-   `area:` no live lease holds**. **`▶` play
-   gates do not stop the loop** — owner directive, 2026-08-09 (D21): the owner
-   plays in parallel and their feedback arrives as new backlog items, so when
-   the topmost item is a `▶` gate, leave it in place for the owner, make sure
-   `BLOCKED.md`'s play-gate section lists it, and take the next item below it.
-   For `▶`-marked work items (R9.1–R9.4), do everything automatable inside
-   them and record what genuinely needs hands on the Ally, then continue.
-   The one exception is **R9.5, the exit gate**: only the owner can call
-   `GAME_DESIGN.md` §33, and `CLAUDE.md` forbids Biome 2 work until it
-   passes — when nothing remains but R9.5, the loop is correctly done and
-   parks.
+   `area:` no live lease holds**.
+
+   **There are no play gates any more.** The owner retired every `▶` gate on
+   2026-08-16, including `R9.5`, the exit gate the loop used to park on.
+   `docs/decisions/D21` stays as history and now reads as superseded — do not
+   re-add a gate because D21 describes one. The owner plays when they choose
+   and their feedback arrives as new backlog items, exactly as before.
+
+   **When the backlog runs out, stop and report.** There is no longer a
+   terminal item to park on, so an empty backlog is the terminal condition:
+   say so in the completion message and do not invent work, do not promote
+   items out of "Found along the way" on your own authority, and do not start
+   Biome 2 — `CLAUDE.md`'s rule stands on `GAME_DESIGN.md` §33 regardless of
+   whether an item points at it.
 2. **Branch**: `ralph/<task-id>`, e.g. `ralph/R2.1`.
 3. **Do the work.** Smallest coherent version that delivers the stated outcome.
 4. **Test** exactly what the task's `tests:` field names. Not the full suite —
@@ -510,8 +513,6 @@ then take the next item. Block — do not improvise — when:
   required; inventing it is forbidden.
 - **Meshy credits run out.** Record the exact balance and the species reached.
 - The task needs something only the owner can provide (a licence term, a key).
-  (A `▶` play gate above it is NOT a blocker — D21; the loop continues past
-  gates and the owner plays in parallel.)
 
 A blocked item is a good outcome. A quietly redesigned game is not.
 

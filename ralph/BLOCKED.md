@@ -446,45 +446,18 @@ art tasks rather than guessing.
 
 ---
 
-## Play gates awaiting the owner — the loop does NOT wait here (D21)
+## Play gates — retired 2026-08-16
 
-The owner plays these whenever they can; their feedback comes back as new
-backlog items. The loop keeps building past them.
+The owner removed every `▶` play gate from `BACKLOG.md` on 2026-08-16,
+including `R9.5`, the exit gate. Nothing is listed here any more and nothing
+should be added. `docs/decisions/D21` stays as history and reads as
+superseded, not violated — do not re-create a gate because D21 describes one.
 
-- **R0.11** — play the NEW first day end to end (wake upstairs → Grandpa's
-  gifts → choose and name a starter → the paths → harvest → a fight and a
-  catch → camp before dark → day 2).
-- **`SA0` / `SA1`** — the two P0 fixes shipped 2026-08-11 (`6dffa21`,
-  `28af489`; Windows build published 13:09 UTC). Two questions only the
-  owner's device can answer:
-  1. **Can you talk to Grandpa now?** Walk off the bed *without* pressing it,
-     then go downstairs. `tests/smoke_wake_softlock.gd` proves this headless
-     and was verified to fail against the unfixed build first, but the report
-     came from the device.
-  2. **Is the choppiness gone?** CI cannot measure VRAM — the device is the
-     instrument, exactly as with RB4. If it is better but not fixed, the next
-     suspect is already written down: `vegetation.gd::_retint()` rebuilds an
-     `ArrayMesh` and discards the importer's LOD chain, so every tree and tuft
-     draws at LOD0 at every distance. That is `SA1-lod`, already queued.
-- **`EV10`** — bible §22 Phase G's cohesion pass. Marked `▶` because it is a
-  re-shoot-and-judge-against-both-reference-sets checkpoint that only
-  converges once `EV2`–`EV9` (the look, the cast) are actually shipped — doing
-  it earlier just re-measures gaps those items already own. Per D21 the loop
-  does not wait on it; noting it here each time it is the topmost unblocked
-  item and getting skipped (2026-08-11, `EV8` firing) so it does not silently
-  fall off the list.
-- **`R2.9`** — §33 criteria 6 and 7: does building a small home feel useful
-  and enjoyable? Noted here 2026-08-15 (`R3.2` firing) the first time it was
-  the topmost unblocked item and got skipped, per D21 and this file's own
-  standing instruction not to let a gate fall off the list silently.
-- **`R4.12`** — §33 criterion 2: is repeated combat enjoyable, not merely
-  functional? Noted here 2026-08-15 (`R5.3` firing): `R4.10` (above it) was
-  topmost but its `ui` area was live-leased by another lane, so `R4.12` was
-  the topmost item this firing could actually pick, and it is a gate — logged
-  per D21 rather than skipped silently, then `R5.3` was taken instead.
-
----
-
+**`EV2-landmark-ceiling` lives here** (moved out of `BACKLOG.md` in the same
+pass, per `DONE.md`'s own note that the item moved to `BLOCKED.md` rather than
+closing): the hero-tree asset cannot reach the key art's broad-canopy oak
+silhouette by rescaling or re-curating what is installed. It needs an asset
+the project does not own, so it is an owner purchase decision, not work.
 ## Design questions awaiting the owner
 
 ### OPEN — EV2-landmark-ceiling: `CherryBlossom_3` is the pack's ceiling, confirmed by render, not a placement lever

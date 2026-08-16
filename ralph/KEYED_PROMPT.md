@@ -83,7 +83,7 @@ Three Routines fire on staggered schedules and concurrent firings are the intend
 
 BEFORE SPENDING A SINGLE CREDIT: the balance is 5000 and is no longer the constraint — owner-supplied reference art is. `D24` and `CLAUDE.md` forbid generating anything the owner has not supplied a reference board for in `docs/art/reference/`. If a task appears to need a new model and no board exists, that is a `BLOCKED.md` entry, not a spend. `D23` §20 additionally forbids creature regeneration at any balance; it was reaffirmed WITH 5000 credits available, so a healthy balance does not lift it. In-engine survey and screenshot renders need no key and are always available.
 
-Take the topmost unblocked item whose area is free. `▶` play gates do NOT stop the loop (D21): make sure `BLOCKED.md`'s play-gate section lists it for the owner and take the next item below. The one exception is R9.5, the exit gate, where the loop correctly parks.
+Take the topmost unblocked item whose area is free. **There are no play gates any more** — the owner retired every `▶` gate on 2026-08-16, including R9.5, the exit gate the loop used to park on; D21 stays as history and reads as superseded, so do not re-add one. When the backlog runs out, stop and report — an empty backlog is the terminal condition, and inventing work or starting Biome 2 is not.
 
 ONE ITEM ONLY. Branch `ralph/<task-id>`, build the smallest coherent version, and run ONLY the tests that item names — locally and headless, before you push. Push that single item's commit (plus its bookkeeping commit, last). Pushing the branch IS the ship action; no pull request, no self-merge.
 
