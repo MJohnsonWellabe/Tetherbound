@@ -695,11 +695,9 @@ jobs:
           exit $code
 
   verify-riding:
+    # Split back out of its neighbour: a merge left this job as a bare header with no `steps:`, which is a workflow-level validation error — GitHub refused to start the WHOLE run, so every job silently stopped running.
     runs-on: ubuntu-latest
     timeout-minutes: 10
-  verify-boss:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
     needs: changes
     if: needs.changes.outputs.code == 'true'
 
@@ -782,6 +780,65 @@ jobs:
           if [ $code -ne 0 ]; then
             echo "::warning::smoke_riding failed once; retrying once before failing the job"
             godot --headless --path . --script tests/smoke_riding.gd
+  verify-boss:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
       - name: Smoke-test the chapter's climax
         # R8.3/SG40/R8.4. Mirrors verify-combat's shape because it has the
         # same shape of risk: a scene-boot-and-simulate test that drives real
@@ -885,9 +942,9 @@ jobs:
         run: godot --headless --path . --script tests/smoke_warrens.gd
 
   verify-relay:
-  verify-stronghold:
+    # Split back out of its neighbour: a merge left this job as a bare header with no `steps:`, which is a workflow-level validation error — GitHub refused to start the WHOLE run, so every job silently stopped running.
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
 
@@ -965,6 +1022,66 @@ jobs:
         # in the village with changed dialogue. Both agents named their file
         # smoke_relay.gd; the station's kept its own name on merge.
         run: godot --headless --path . --script tests/smoke_relay.gd
+
+  verify-stronghold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
       - name: Smoke-test the stronghold route
         # R8.2/SG38. Boots the real world, stands the player inside the
         # stronghold and walks spec §8's five spaces in §8's order. Asserts
