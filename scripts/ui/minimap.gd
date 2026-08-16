@@ -56,7 +56,14 @@ const RING_WIDTH := 8.0
 const CORNER_STEPS := 10
 const OBJECTIVE_LABEL_PUSH := 10.0 ## px the distance label sits past the clamped diamond, toward the rim.
 
-const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 0.95)
+## OW3: was 0.95 — 5% show-through, which stacked with this widget's already
+## tight ~90m span meant unexplored ground at the rim read as dim terrain
+## rather than hidden fog. Bumped to fully opaque (1.0) to match `tab_map.gd`'s
+## own OW3 fix and actually satisfy spec §16 ("does not reveal everything
+## automatically") rather than merely approximate it. See that file's header
+## comment for why the colour stays near-black rather than becoming a
+## parchment-style fill.
+const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 1.0)
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 
 var _map_state: RefCounted = null

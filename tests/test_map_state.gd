@@ -59,12 +59,19 @@ func test_mark_visited_reveals_a_plausible_area_and_returns_true() -> void:
 	assert_true(changed, "the first visit to fresh ground must report a change")
 	assert_true(map.revision > before, "a real reveal must bump revision")
 
-	# pi * 45^2 / 16 (cell area) ~= 397.6 cells; a generous band around it
-	# catches a badly wrong radius or an off-by-one in the cell math without
-	# being pinned to the exact discretisation.
+	# pi * reveal_radius^2 / cell_area is the ideal circle's cell count,
+	# derived from `map.reveal_radius` itself (map_landmarks.json's own
+	# tunable — OW3 raised it 45 -> 80 to keep an opaque fog from reading as
+	# a void) rather than a number baked into this test, so a future retune
+	# does not silently break this assertion the way OW3's own retune did
+	# the first time this was hardcoded. A generous +/-15% band around the
+	# ideal catches a badly wrong radius or an off-by-one in the cell math
+	# without being pinned to the exact discretisation.
+	var cell_area := MAP_STATE.CELL * MAP_STATE.CELL
+	var ideal: float = PI * map.reveal_radius * map.reveal_radius / cell_area
 	var revealed := int(round(map.discovered_fraction() * float(MAP_STATE.GRID * MAP_STATE.GRID)))
-	assert_between(float(revealed), 350.0, 450.0,
-		"revealed cell count %d is not plausible for a %.0fm radius" % [revealed, map.reveal_radius])
+	assert_between(float(revealed), ideal * 0.85, ideal * 1.15,
+		"revealed cell count %d is not plausible for a %.0fm radius (expected ~%.0f)" % [revealed, map.reveal_radius, ideal])
 
 
 func test_repeating_mark_visited_at_the_same_spot_changes_nothing() -> void:
