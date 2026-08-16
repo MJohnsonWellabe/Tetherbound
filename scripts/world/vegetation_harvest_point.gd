@@ -31,6 +31,16 @@ extends Node3D
 ## unshaded mesh"). No new asset files: the gradient and the particle's
 ## colour ramp are both built procedurally in code.
 ##
+## OW7: the glint was still the ONLY thing at a wood point, and the owner
+## played it and said so — "wood to pick up doesn't look like wood, it's just
+## random yellow glowing spots." Rendering the frame shows exactly that: two
+## gold blobs hanging in open air over grass. Every round above tuned how the
+## MARKER looked, and none of them noticed that a "wood" point is bolted onto
+## one of the scatter's own LIVING trees, so there was no wood-shaped object
+## anywhere for the marker to mark. No amount of gradient fixes that. A pile of
+## cut logs now stands at the point and the glint sits on top of it, so the
+## thing a player recognises is the resource and the glow only says which one.
+##
 ## Respawn is a prompt-and-glint cooldown, not a hide/show like
 ## `harvest_node.gd`'s resource piles. A pile vanishing after one gather reads
 ## as "spent, come back later"; a living tree vanishing reads as a bug — real
@@ -48,16 +58,45 @@ const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 ## TUNABLE.
 const GLINT_COLOUR := Color(1.0, 0.78, 0.25, 1.0)
 const GLINT_RADIUS := 0.11
-const HALO_SIZE := 0.85
 const HALO_TEXTURE_SIZE := 64
 const SPARKLE_COUNT := 5
 const SPARKLE_ORBIT_RADIUS := 0.22
+
+## OW7. The halo was 0.85m across with the core's own emission on top of it,
+## and it was the ONLY thing at a gather point — so a frame of the meadow
+## showed two gold blobs hanging over grass and nothing else, which is the
+## owner's report word for word: "just random yellow glowing spots." It is
+## smaller now because it no longer has to be the whole affordance. The pile
+## below says what the resource is; the glint only has to say "this one".
+const HALO_SIZE := 0.55
+
+## OW7. The woodpile: three Kenney logs, already in the build and already
+## ledgered for their log shapes (`water.gd` stands the same mesh on end for
+## the jetty's pilings), so this adds no asset and joins no new family (D24).
+##
+## `log.glb` measures 0.234 x 0.173 x 0.710m and sits on its own y=0, lying
+## along local Z. Two on the ground and one in the groove between them is the
+## universally readable firewood stack, and at ~0.35m tall it is knee-high
+## next to a 4-7m tree — present without competing with it.
+const LOG_MODEL := "res://assets/environment/nature/log.glb"
+const LOG_LENGTH := 0.710
+const LOG_RISE := 0.173
+
+## The pack's logs ship untextured, as a pale cream on both surfaces — the
+## same flat near-white that made `water.gd`'s pilings read as concrete posts
+## until it tinted them. Bark and cut face are separate surfaces here, so they
+## get separate colours rather than one override over both: the pale END
+## GRAIN against dark bark is the cue that says sawn wood rather than branch
+## litter, and it is the whole reason this reads as a resource. TUNABLE.
+const BARK_COLOUR := Color("#5d452e")
+const CUT_COLOUR := Color("#c2a172")
 
 var _item_id: String = ""
 var _amount: int = 0
 var _respawn_seconds: float = 90.0
 var _prompt: Node3D = null
 var _glint: Node3D = null
+var _prop: Node3D = null
 var _respawn_left: float = 0.0
 
 
@@ -74,20 +113,121 @@ func setup(spec: Dictionary) -> void:
 	_prompt.connect("activated", _on_gathered)
 	add_child(_prompt)
 
+	# Offset out to one side rather than straight up from the base -- a real
+	# tree/rock's own trunk or bulk sits exactly on this node's local origin,
+	# so anything placed directly above it renders INSIDE that geometry from
+	# most angles instead of beside it. `vegetation.gd` hashes the placement's
+	# own world position for the bearing and samples the ground at the far end
+	# of it, so the offset arrives here already standing on the terrain.
+	var bearing := float(spec.get("prop_yaw", 0.0))
+	var offset: Vector3 = spec.get("prop_offset", Vector3.ZERO)
+	if offset == Vector3.ZERO:
+		# No offset supplied (a caller that predates OW7, or a test): fall back
+		# to the bearing alone at the old height, which is at least beside the
+		# trunk rather than inside it.
+		bearing = float(hash(position) & 0xFFFFFF) / float(0xFFFFFF) * TAU
+		offset = Vector3(sin(bearing) * 1.3, prompt_height * 0.75, cos(bearing) * 1.3)
+
+	# OW7. A resource prop, where there is one for this item. Wood was the
+	# item with nothing to look at: a "wood" gather point is bolted onto one of
+	# the scatter's own LIVING trees, so before this there was no wood-shaped
+	# object anywhere near it and the glint was marking a spot rather than a
+	# thing. Stone already has its object -- the point is on the rock itself --
+	# so it keeps the marker it had.
+	_prop = _build_resource_prop(bearing)
+	if _prop != null:
+		_prop.position = offset
+		add_child(_prop)
+
 	_glint = Node3D.new()
+	_glint.name = "Glint"
 	_glint.add_child(_build_core())
 	_glint.add_child(_build_halo())
 	_glint.add_child(_build_sparkles())
-	# Offset out to one side rather than straight up from the base -- a real
-	# tree/rock's own trunk or bulk sits exactly on this node's local origin,
-	# so a glint placed directly above it renders INSIDE that geometry from
-	# most angles instead of beside it. `vegetation.gd` sets this node's own
-	# `position` (a real, distinct world spot) before calling setup(), so
-	# hashing it gives a deterministic-but-varied bearing per instance
-	# without needing a separate seed threaded through the spec dict.
-	var bearing := float(hash(position) & 0xFFFFFF) / float(0xFFFFFF) * TAU
-	_glint.position = Vector3(sin(bearing) * 1.3, prompt_height * 0.75, cos(bearing) * 1.3)
+	# Sit the glint just clear of the pile's own crown, so the glow and the
+	# thing it marks read as one object rather than as a light near some logs.
+	_glint.position = offset + Vector3.UP * (LOG_RISE * 2.0 + 0.24) if _prop != null else offset
 	add_child(_glint)
+
+
+## The pile of cut logs a "wood" gather point stands on, or null for an item
+## whose own object is already there.
+##
+## Built from the PackedScene the glTF actually imports as, never assigned
+## straight to a `mesh` property: that is the OF20 trap, where every authored
+## harvest node silently rendered nothing for weeks because a PackedScene
+## assigned to a Mesh-typed property fails without raising anything.
+func _build_resource_prop(bearing: float) -> Node3D:
+	if _item_id != "wood":
+		return null
+	if not ResourceLoader.exists(LOG_MODEL):
+		push_warning("log model %s missing; the wood point keeps its glint alone" % LOG_MODEL)
+		return null
+	var packed: PackedScene = load(LOG_MODEL) as PackedScene
+	if packed == null:
+		push_warning("log model %s did not load as a PackedScene; the wood point keeps its glint alone" % LOG_MODEL)
+		return null
+
+	var pile := Node3D.new()
+	pile.name = "Woodpile"
+	# Two logs on the ground either side of the centreline, one resting in the
+	# groove between them. The small yaw offsets stop the stack reading as a
+	# manufactured object -- these are logs somebody dropped, not a woodshed.
+	for spec: Array in [
+		[Vector3(-0.14, 0.0, 0.0), 0.0],
+		[Vector3(0.15, 0.0, 0.03), 0.06],
+		[Vector3(0.005, LOG_RISE, -0.02), -0.11],
+	]:
+		var log_node := packed.instantiate() as Node3D
+		if log_node == null:
+			continue
+		log_node.transform = Transform3D(
+			Basis(Vector3.UP, bearing + float(spec[1])),
+			(spec[0] as Vector3).rotated(Vector3.UP, bearing)
+		)
+		_paint_wood(log_node)
+		pile.add_child(log_node)
+	# A woodpile's own shadow is what sets it on the ground rather than over
+	# it -- the same rule vegetation.gd applies to its solid layers, and the
+	# opposite of the one it applies to grass.
+	for child: Node in _mesh_nodes(pile):
+		(child as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	return pile
+
+
+## Bark on one surface, sawn end grain on the other, per surface rather than
+## with a `material_override` -- an override replaces the material on EVERY
+## surface at once, which would flatten the cut faces back into the bark and
+## throw away the only cue that says this wood was worked.
+func _paint_wood(root: Node) -> void:
+	for node: Node in _mesh_nodes(root):
+		var instance := node as MeshInstance3D
+		var mesh: Mesh = instance.mesh
+		if mesh == null:
+			continue
+		for surface in mesh.get_surface_count():
+			var material := StandardMaterial3D.new()
+			var source := mesh.surface_get_material(surface) as StandardMaterial3D
+			# The pack marks bark and cut face only by albedo, and the bark is
+			# the darker of the two. Reading the source rather than assuming an
+			# index keeps this correct if the kit reorders its surfaces.
+			var is_cut := source != null and source.albedo_color.get_luminance() > 0.9
+			material.albedo_color = CUT_COLOUR if is_cut else BARK_COLOUR
+			material.roughness = 0.92
+			material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+			instance.set_surface_override_material(surface, material)
+
+
+func _mesh_nodes(root: Node) -> Array[Node]:
+	var out: Array[Node] = []
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node is MeshInstance3D:
+			out.append(node)
+		for child in node.get_children():
+			stack.append(child)
+	return out
 
 
 ## A tight billboard gradient, same soft-falloff language as the halo but
@@ -262,6 +402,13 @@ func _on_gathered() -> void:
 		inventory.call("damage_tool", required_slot)
 	_prompt.call("set_enabled", false)
 	_glint.visible = false
+	# The pile goes with it. A living tree vanishing reads as a bug, which is
+	# why this node dims a marker instead of hiding the tree — but the pile is
+	# the wood itself, and wood you have just picked up and put in your satchel
+	# should not still be lying there. Same "spent, come back later" the
+	# authored resource piles use, with the tree left standing behind it.
+	if _prop != null:
+		_prop.visible = false
 	_respawn_left = _respawn_seconds
 	set_process(true)
 
@@ -274,6 +421,8 @@ func _process(delta: float) -> void:
 	if _respawn_left <= 0.0:
 		_prompt.call("set_enabled", true)
 		_glint.visible = true
+		if _prop != null:
+			_prop.visible = true
 
 
 func _ready() -> void:

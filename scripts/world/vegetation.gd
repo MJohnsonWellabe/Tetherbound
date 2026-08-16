@@ -23,6 +23,12 @@ const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd"
 ## terrain under a prop is sampled at a single point, but the prop has width.
 const SINK := 0.06
 
+## OW7. How far off a marked tree its woodpile stands. Clear of the widest
+## trunk this scatter places (CommonTree at 1.35 scale) so the pile never
+## intersects the tree it belongs to, and close enough to read as ITS pile
+## rather than as unrelated dressing. TUNABLE.
+const PROP_OFFSET := 1.3
+
 var _placed: int = 0
 ## SG46: layer name -> the placements `scatter_rules._thin_by_drain` took out
 ## around Team Tether's stations, held from the build so the healing can put
@@ -33,6 +39,10 @@ var _regrown: int = 0
 var _draw_calls: int = 0
 var _solid: int = 0
 var _harvest_points: int = 0
+## OW7. Kept from `build` for `_spawn_harvest_point`, which stands a woodpile on
+## the ground a metre or so off the tree it belongs to — and the ground there is
+## not the ground under the tree.
+var _field: RefCounted = null
 
 
 ## Build the whole scatter. `world_size` should match the terrain's.
@@ -49,6 +59,7 @@ func build(world_size: float) -> void:
 	if cfg.is_empty():
 		return
 	var field: RefCounted = HEIGHTFIELD.new()
+	_field = field
 	# SG46/D41: what the drain removed, kept aside instead of dropped. Nothing
 	# is built from it here -- these instances are exactly the ones that are
 	# meant to be missing while Team Tether's stations are running. See
@@ -378,16 +389,32 @@ func _build_batch(model_path: String, placements: Array) -> void:
 ## two independent blind critics once applied to a tree canopy, because the
 ## leaf mesh's own baked per-vertex shading survives the multiply. A small
 ## separate marker sidesteps that entirely.
+##
+## OW7 adds the `prop_offset` the gather point stands its resource prop on. The
+## bearing is hashed from the placement's own world position — deterministic,
+## varied per instance, and identical to the bearing the glint already used —
+## but the DROP is sampled from the heightfield here, because this is the file
+## that holds one. A pile placed at the tree's own Y would hang in the air or
+## sink into the bank wherever the ground falls away over that metre and a
+## third, which on a meadow of rolling hills is most of them.
 func _spawn_harvest_point(placement: Dictionary) -> void:
 	var point := HARVEST_POINT.new()
-	point.position = placement["position"]
+	var spot: Vector3 = placement["position"]
+	point.position = spot
 	add_child(point)
+	var bearing := float(hash(spot) & 0xFFFFFF) / float(0xFFFFFF) * TAU
+	var away := Vector2(sin(bearing), cos(bearing)) * PROP_OFFSET
+	var drop := 0.0
+	if _field != null:
+		drop = float(_field.call("height_at", spot.x + away.x, spot.z + away.y)) - spot.y
 	point.call("setup", {
 		"item": placement["harvest_item"],
 		"amount": placement["harvest_amount"],
 		"respawn_seconds": placement["harvest_respawn_seconds"],
 		"prompt_height": 1.0 + float(placement["scale"]),
 		"label": "Gather",
+		"prop_offset": Vector3(away.x, drop - SINK, away.y),
+		"prop_yaw": bearing,
 	})
 	_harvest_points += 1
 

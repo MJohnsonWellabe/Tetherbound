@@ -95,25 +95,70 @@ func _run() -> void:
 		if player is CharacterBody3D:
 			(player as CharacterBody3D).velocity = Vector3.ZERO
 
-	# Replicates vegetation_harvest_point.gd's own bearing math so the camera
-	# can be aimed AT the glint's actual offset position -- a fixed diagonal
-	# guess put the glint behind the trunk from that specific angle on the
-	# first few attempts (confirmed via an isolated render that the glint
-	# mesh itself draws fine; the miss was framing, not the marker).
-	var bearing := float(hash(nearest) & 0xFFFFFF) / float(0xFFFFFF) * TAU
-	var glint_offset := Vector3(sin(bearing) * 1.3, 1.5, cos(bearing) * 1.3)
-	var glint_pos := nearest + glint_offset
+	# OW7: ASK the gather point where its marker is, rather than replicating the
+	# maths that puts it there. This used to recompute the bearing hash and the
+	# 1.3m offset itself, so the moment OW7 moved the marker down onto a
+	# woodpile the camera carried on aiming a metre and a half above it and
+	# photographed the air the glint used to float in. A capture tool that
+	# duplicates the thing it photographs drifts out of date exactly when that
+	# thing changes, which is the only time the frames matter.
+	var marker: Node3D = null
+	for child in veg.get_children():
+		if not (child is Node3D) or str(child.get("_item_id")) != "wood":
+			continue
+		if not (child as Node3D).global_position.is_equal_approx(nearest):
+			continue
+		marker = (child as Node3D).get_node_or_null(^"Woodpile") as Node3D
+		if marker == null:
+			marker = (child as Node3D).get_node_or_null(^"Glint") as Node3D
+		break
+	if marker == null:
+		push_warning("no Woodpile/Glint under the nearest wood point; framing its trunk instead")
+	var focus: Vector3 = marker.global_position if marker != null else nearest + Vector3.UP
 
+	# Pick the bearing to stand on by TESTING it, not by assuming the pile's own
+	# offset direction is clear. The first version stood the camera 3m along
+	# that direction and put it inside a boulder -- this scatter places rocks
+	# up to 2.1 scale and a gather point can easily have one at its shoulder,
+	# so a frame aimed through it photographs bark-coloured stone and proves
+	# nothing about the pile. The scatter's solid layers all carry collision,
+	# so the physics space already knows what is in the way; ask it.
+	var space := (world as Node3D).get_world_3d().direct_space_state
+	var out_dir := Vector3.FORWARD
+	var found_clear := false
+	var preferred := focus - nearest
+	preferred.y = 0.0
+	preferred = preferred.normalized() if preferred.length() > 0.01 else Vector3.FORWARD
+	for step in 12:
+		# Start at the pile's own bearing off the tree (the composition that
+		# gets the tree behind it) and walk around only as far as needed.
+		var angle := float(step) * TAU / 12.0
+		var candidate := preferred.rotated(Vector3.UP, angle)
+		var eye := focus + candidate * 3.0 + Vector3.UP * 1.5
+		var query := PhysicsRayQueryParameters3D.create(eye, focus + Vector3.UP * 0.15)
+		if space.intersect_ray(query).is_empty():
+			out_dir = candidate
+			found_clear = true
+			break
+	if not found_clear:
+		push_warning("no clear line of sight to the pile from any bearing; using its own")
+		out_dir = preferred
+	print("framing marker at %s (tree at %s) from bearing %.0f deg, clear=%s" % [
+		focus, nearest, rad_to_deg(preferred.signed_angle_to(out_dir, Vector3.UP)), found_clear])
+
+	# Eye heights are a standing player's, not a hovering camera's: the question
+	# this item has to answer is whether someone WALKING UP can name the
+	# resource before the prompt tells them what it is.
 	var viewpoints := [
 		{
 			"name": "close-single",
-			"eye": glint_pos + Vector3(sin(bearing) * 4.0, 1.0, cos(bearing) * 4.0),
-			"target": glint_pos,
+			"eye": focus + out_dir * 3.0 + Vector3.UP * 1.5,
+			"target": focus + Vector3.UP * 0.15,
 		},
 		{
 			"name": "wide-among-neighbours",
-			"eye": glint_pos + Vector3(sin(bearing) * 10.0, 2.5, cos(bearing) * 10.0),
-			"target": nearest + Vector3(0.0, 1.5, 0.0),
+			"eye": focus + out_dir * 9.0 + Vector3.UP * 2.0,
+			"target": nearest + Vector3(0.0, 1.0, 0.0),
 		},
 	]
 
