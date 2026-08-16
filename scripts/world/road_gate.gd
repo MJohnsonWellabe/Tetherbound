@@ -179,6 +179,18 @@ func is_open() -> bool:
 	return _open
 
 
+## SG46. The Warden falls, the machinery dies, and the region's keyed gates
+## stop being gates -- §9's "barriers deactivate". The flag itself is set by
+## `meadow_healing.gd` (this gate's OWN flag, the same one the key sets), so a
+## reload opens it through `_gate.is_open()` in `build()` above for the ordinary
+## reason; this call is only what makes the panel swing on the frame it
+## happens rather than on the next load. Idempotent.
+func open_permanently() -> void:
+	if _open:
+		return
+	_unlock()
+
+
 func _on_tried() -> void:
 	if _open:
 		return

@@ -1,0 +1,60 @@
+{
+  "_comment": "SG46 and R8.6 -- what the Meadows says once the Warden has fallen and the machinery is dead. Every conversation here is reached through an ordinary `greeting_when` branch gated on `legendary_freed` (data/config/village_npcs.json), the same mechanism OF30, SC12 and SE27 all use. Separate file rather than more entries in village.json so the post-victory voice of the region is one thing somebody can read end to end, the same reason relay.json and stronghold.json are their own files.",
+  "_comment_spoiler_rule": "THIS FILE IS SCANNED, NOT EXEMPT. tests/test_dialogue_runner.gd's STRONGHOLD_FILES stays exactly one file -- the stronghold's -- and this one is in DIALOGUE_FILES with everything else, so §32's forbidden words ('legendary', 'veridian', 'stag', 'power source') must not appear in a spoken line here either. That is a real constraint and it makes the writing better: villagers who watched the machines go dark talk about the grass, the roads and the quiet, because the grass and the roads and the quiet are what they can actually see. The one character who knows what happened inside the stronghold is the player.",
+  "conversations": {
+    "village_mira_freed": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Every machine on the road went quiet at once. I was counting stock and the humming just -- stopped.",
+        "Ground's coming back green along the quarry track. Waist high by autumn, my grandmother would have said.",
+        {
+          "text": "Whatever you did up there, the stall's yours for it. Always was, but now I mean it.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
+    "village_oskar_freed": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "The pens are loud again. They've been half-asleep for a season and now they won't settle.",
+        "They knew before we did. Animals always do.",
+        {
+          "text": "Come swap whenever. Half of them would follow you out of here on their own.",
+          "effect": "shop:creatures:oskar"
+        }
+      ]
+    },
+    "village_tam_freed": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Their gate's standing open on the north road. No one on it. First time in my life I've walked through without asking.",
+        "I scouted this valley for eleven years and never once got told why the grass by their sheds wouldn't take.",
+        "Now it's taking. That's answer enough for me."
+      ]
+    },
+    "village_quarry_foreman_freed": {
+      "speaker": "Quarry Foreman",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Floor's still grey down there. Some of it won't come back in my lifetime -- that's just true.",
+        "But there's green at the rim again, and there wasn't yesterday. I'll take the rim."
+      ]
+    },
+    "spoke_traveller_storm_road": {
+      "speaker": "Kell",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Don't come further. The bridge is still gone and the drop hasn't got any kinder.",
+        "But look past it. There was a wall of weather stood across that sky my whole life, and now there's country behind it.",
+        "My grandfather's maps have seven roads out of this valley. Seven. I always thought he'd drawn them wrong.",
+        "They weren't wrong. Something cut them, one by one, and something was holding them cut.",
+        "Six to go, then. Not today, and not by this road -- but somebody's going to have to walk them.",
+        "When you do, come tell me what was on the other side."
+      ]
+    }
+  },
+  "_comment_traveller": "R8.6, and SG46's 'at least one outward spoke gains new dialogue'. Kell stands at the STORM ROAD's end, the spoke SG44 reconnects, and she is not placed there at all until `legendary_freed` is set (data/config/village_npcs.json's `place_when`, SE27's mechanism). Two rules she is written against. FIRST, severed_spokes.gd's hard rule -- a spoke never explains itself with UI text -- is untouched: there is no prompt on the blocker, no sign that says closed, nothing added to the road. She is a PERSON who walked out to look, met after the payoff, and the road she is looking at is exactly as impassable while she talks as it was before. SECOND, the carve-out: she says what is VISIBLE from where she stands and never that it can be reached. 'One of seven' is the macro-story hook (spec §23-§31, SA4's seven roads as its physical form); it is deliberately a question rather than a plan, because the answer is a later chapter's and D23 forbids this one from having it."
+}

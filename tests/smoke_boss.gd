@@ -81,8 +81,11 @@ func _run() -> void:
 	await _fight_him()
 	_he_stays_beaten()
 
+	_the_horizon_before_the_warden()
 	await _free_the_legendary()
 	_the_legendary_joined_the_party()
+	await _the_rift_collapses_and_the_barrier_holds()
+	_the_meadows_answers()
 
 	await _a_full_belt_opens_the_ceremony_instead()
 	_report()
@@ -381,6 +384,177 @@ func _a_full_belt_opens_the_ceremony_instead() -> void:
 			_fail("the pending legendary never opened the release ceremony")
 			return
 	print("a full belt hands the legendary to R4.10's release ceremony instead of dropping it")
+
+
+## --- SG44: the first Tether Rift collapses -----------------------------------
+
+## The horizon at the storm-road seam, before the Warden. SG44's done-when is
+## that this and the reading after him are visibly different, so the "before"
+## has to be taken while it still is one.
+var _horizon_before: Dictionary = {}
+## Metres a probe body may travel along the road past the seam before the
+## barrier has failed. The collapsed bridge's carve is centred 8m past the road
+## end with a 6m half-width and a 5m rim, so the FAR rim is ~19m out: a body
+## that gets past 18 is on the other side. Anything short of that is either
+## still on this bank or standing on the channel floor, and the drop measured
+## alongside it is what tells those two apart from a crossing.
+const BARRIER_LIMIT_M := 18.0
+## The legendary's own climb limit (R8.5, species.json's `climb_max_slope_deg`).
+## The probe walks at the best mobility the game will ever hand the player,
+## because a barrier that only holds against a walking trainer is not a barrier
+## by the end of this chapter. Raise this with that number if it ever moves.
+const PROBE_CLIMB_DEG := 60.0
+
+
+func _rift() -> Node:
+	return _world.get_node_or_null(^"RiftCollapse")
+
+
+func _the_horizon_before_the_warden() -> void:
+	var rift := _rift()
+	if rift == null:
+		_fail("the world built no RiftCollapse node; SG44's event cannot happen")
+		return
+	_horizon_before = rift.call("horizon")
+	if float(_horizon_before.get("storm_cover", 0.0)) <= 0.0:
+		_fail("nothing is standing on the horizon past the seam before the Warden; there is nothing to collapse")
+	if float(_horizon_before.get("far_cover", 0.0)) > 0.0:
+		_fail("the far country is already visible before the Warden falls; the payoff is spent on a fresh boot")
+
+
+## Spec §27/§28/§30 and the carve-out that comes with them, in one place: the
+## horizon HAS to change, and the road HAS to stay shut.
+func _the_rift_collapses_and_the_barrier_holds() -> void:
+	var rift := _rift()
+	if rift == null:
+		return
+	# The collapse is timed (a hold, then a dissipate) so it is given real
+	# frames rather than asserted on the frame the flag lands.
+	for i in 900:
+		await physics_frame
+	var after: Dictionary = rift.call("horizon")
+	var before_storm := float(_horizon_before.get("storm_cover", 0.0))
+	var after_storm := float(after.get("storm_cover", 0.0))
+	var after_far := float(after.get("far_cover", 0.0))
+	if after_storm >= before_storm:
+		_fail("the storm wall is still covering %.0f m2 of sky (was %.0f); nothing dissipated"
+			% [after_storm, before_storm])
+	if after_far <= 0.0:
+		_fail("nothing came up behind it; the world did not get bigger")
+	if is_equal_approx(float(_horizon_before.get("signature", 0.0)), float(after.get("signature", 1.0))):
+		_fail("the horizon signature is identical before and after the Warden")
+	print("SG44: the %s horizon went from %.0f m2 of storm / %.0f m2 of land to %.0f / %.0f"
+		% [str(after.get("spoke", "?")), before_storm, float(_horizon_before.get("far_cover", 0.0)),
+			after_storm, after_far])
+
+	# Nothing built for the view may be reachable: no collider anywhere in it,
+	# and all of it outside the boundary ring.
+	for mesh: MeshInstance3D in (rift.call("meshes") as Array):
+		if mesh == null or not is_instance_valid(mesh):
+			continue
+		for child in mesh.get_children():
+			if child is CollisionObject3D or child is CollisionShape3D:
+				_fail("the reconnected view has a collider on it; it is a place, not a view")
+		var flat := Vector2(mesh.global_position.x, mesh.global_position.z)
+		if flat.length() < 240.0:
+			_fail("part of the far view stands %.0fm from the origin, inside the world boundary" % flat.length())
+
+	# And the walking probe: a body at the LEGENDARY's climb limit, driven at
+	# the seam, still does not get across. Same shape SC14/SE21 used.
+	var probe: Dictionary = await _probe_the_seam(rift)
+	var travelled := float(probe.get("along", 0.0))
+	var dropped := float(probe.get("drop", 0.0))
+	if travelled > BARRIER_LIMIT_M:
+		_fail("a %.0f-degree probe walked %.1f m past the storm road's end after the collapse; the region is enterable"
+			% [PROBE_CLIMB_DEG, travelled])
+	else:
+		# The drop is printed rather than asserted on: whether the body ends up
+		# on the channel floor or wedged against its 65-degree wall is a detail
+		# of one capsule against one carve, and both are the barrier working.
+		# What is asserted is the only thing that matters -- it did not reach
+		# the far roadbed, which starts ~19m out.
+		print("SG44: the barrier holds -- a %.0f-degree probe made %.1f m past the seam (fell %.1f m; the far rim is %.1f m out)"
+			% [PROBE_CLIMB_DEG, travelled, dropped, BARRIER_LIMIT_M])
+
+
+## Drive a real body, on real collision, straight down the road past the seam.
+## Not the player: the player is mid-ending several hundred metres away inside
+## the stronghold, and teleporting them out and back is a bigger disturbance
+## than standing up a probe. Returns metres of progress ALONG THE ROAD, which
+## is the only direction that means anything here.
+func _probe_the_seam(rift: Node) -> Dictionary:
+	var seam: Vector2 = rift.call("seam")
+	if seam == Vector2.ZERO:
+		return {"along": 0.0, "drop": 0.0}
+	var forward := seam.normalized()
+	var horizon: Dictionary = rift.call("horizon")
+	var origin: Vector2 = horizon.get("origin", seam)
+	if (origin - seam).length() > 0.01:
+		forward = (origin - seam).normalized()
+
+	var probe := CharacterBody3D.new()
+	probe.floor_max_angle = deg_to_rad(PROBE_CLIMB_DEG)
+	var shape := CollisionShape3D.new()
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = 0.4
+	capsule.height = 1.8
+	shape.shape = capsule
+	probe.add_child(shape)
+	_world.add_child(probe)
+	var ground := float(_world.call("ground_height_at", seam.x, seam.y))
+	probe.global_position = Vector3(seam.x, (0.0 if is_nan(ground) else ground) + 1.2, seam.y)
+	for i in 10:
+		await physics_frame
+
+	var start := Vector2(probe.global_position.x, probe.global_position.z)
+	var start_height := probe.global_position.y
+	var best := 0.0
+	var lowest := probe.global_position.y
+	var step := Vector3(forward.x, 0.0, forward.y) * 8.0
+	for i in 420:
+		probe.velocity.x = step.x
+		probe.velocity.z = step.z
+		probe.velocity.y = 0.0 if probe.is_on_floor() else probe.velocity.y - 26.0 * (1.0 / 60.0)
+		probe.move_and_slide()
+		await physics_frame
+		var here := Vector2(probe.global_position.x, probe.global_position.z)
+		best = maxf(best, (here - start).dot(forward))
+		lowest = minf(lowest, probe.global_position.y)
+	probe.queue_free()
+	return {"along": best, "drop": start_height - lowest}
+
+
+## --- SG46: the Meadows answers ------------------------------------------------
+
+## Spec §9. The region must not be identical to how it was before the Warden,
+## and the world half of that claim only exists once somebody has actually run
+## the healing over a built scene — which is what this checks. The FLAG half
+## (which branch each villager takes, which patrol is withdrawn) is
+## tests/test_progression_state.gd's.
+func _the_meadows_answers() -> void:
+	var healing := _world.get_node_or_null(^"MeadowHealing")
+	if healing == null:
+		_fail("the world built no MeadowHealing node; the Meadows never answers")
+		return
+	if not bool(healing.call("applied")):
+		_fail("the Warden fell and the legendary was freed, and the region did not respond")
+		return
+	var report: Dictionary = healing.call("report")
+	if int(report.get("regrown", 0)) <= 0:
+		_fail("nothing grew back around the drain stations; D41's third clause is not paid")
+	var vegetation := _world.get_node_or_null(^"Vegetation")
+	if vegetation != null and int(vegetation.call("drained_count")) > 0:
+		_fail("%d suppressed plants are still being held out of the world after the healing"
+			% int(vegetation.call("drained_count")))
+	var relay := _world.get_node_or_null(^"TetherRelay")
+	if relay != null and relay.has_method("dead_ground_visible"):
+		# The fade is timed; it has had SEQUENCE_FRAMES plus the collapse's own
+		# 900 frames by now, which is well past it.
+		if bool(relay.call("dead_ground_visible")):
+			_fail("the relay's drained ground is still painted on after the machinery died")
+	print("SG46: %d plants back, %d tether lights out, %d barriers open, %d beaten patrols withdrawn"
+		% [int(report.get("regrown", 0)), int(report.get("lights_killed", 0)),
+			int(report.get("barriers_opened", 0)), int(report.get("patrols_withdrawn", 0))])
 
 
 func _watch_the_flag() -> void:

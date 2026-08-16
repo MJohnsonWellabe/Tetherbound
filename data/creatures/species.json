@@ -519,6 +519,15 @@
       "aggressive": true,
       "moves": { "quick": "hoofbeat", "charged": "antler_slam" },
       "best_creature": { "id": "antler_bulwark", "kind": "survivability", "value": 0.20 },
+      "_comment_rideable": "R8.5, and deliberately the SECOND block of exactly the same shape Meadowhart's is (see its own `_comment_rideable` for what every key means) rather than a parallel system: `creature_species.rideable()` and `scripts/world/riding_controller.gd` are untouched by a new mount except for the one key added below. The tier above Meadowhart is THREE things, and only the first is a number. FASTER: 2.8 x the trainer's 5.0 m/s walk = 14 m/s, against Meadowhart's 10 and a sprint's 8.6. NO TACK: `requires_item` is EMPTY, the only mount in the game that needs none. Meadowhart is a saddled animal and the saddle is the permission; this one carries you because it offered to (spec sec28: the legendary \u0076oluntarily joins), and strapping the crafting bench's leather to it would be the wrong sentence about what just happened in that chamber. Costs no new code -- riding_controller._has_tack() already returns true for an empty requirement, which is why that key was written per-species in R6.2. AND GROUND NOTHING ELSE HOLDS: `climb_max_slope_deg` becomes the mount's own `floor_max_angle` while it is ridden. MEASURED, not assumed -- scenes/creature.tscn gives EVERY creature 0.9599 rad (55 degrees) and scenes/player.tscn gives the trainer 0.7854 (45), so 55 is the baseline this has to beat, not 45. At 60 the legendary holds flanks that slide every other creature in the roster, including Meadowhart, straight back down. 60 IS A CEILING WITH A REASON: every severed spoke's carve walls are 65-66 degrees (16/7, 11/5 and 9/4 in terrain_playground.json's own carves), so this mount still cannot climb out of a rift trench and D23's carve-out survives it -- tests/smoke_boss.gd drives a probe body at this exact limit at the storm-road seam to prove it, and tests/smoke_riding.gd fails the build if the number is ever raised into that band. TUNABLE below that line only.",
+      "rideable": {
+        "can_carry": true,
+        "requires_item": "",
+        "mount_offset": [0.0, 1.72, -0.2],
+        "ride_speed_multiplier": 2.8,
+        "dismount_distance": 2.0,
+        "climb_max_slope_deg": 60.0
+      },
       "placeholder": {
         "colour": "#4f7a3a",
         "height": 2.6,

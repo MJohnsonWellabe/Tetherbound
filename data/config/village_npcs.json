@@ -7,10 +7,21 @@
     {
       "name": "Mira",
       "config_key": "villager_farmer",
-      "position": [18.99, -1.01],
+      "position": [
+        18.99,
+        -1.01
+      ],
       "facing_deg": -135.0,
       "greeting": "village_mira",
       "greeting_when": [
+        {
+          "if_flag": [
+            "legendary_freed",
+            "mira_shop_open"
+          ],
+          "conversation": "village_mira_freed",
+          "_why": "SG46, spec §9's 'villagers acknowledge the victory'. FIRST in the list on purpose and safely: `legendary_freed` is the last flag the chapter sets, everything below it has already been spent by then, and this branch's own conversation carries the same `shop:goods:mira` effect her beaten and standing branches carry so nothing that was reachable before the Warden becomes unreachable after him (D39's rule -- a vendor branch is never lost, only ever carried forward). Additive as always: the standing greeting is untouched. Paired with `mira_shop_open` so a player who never opened the stall still gets that one-time introduction (and its starting float) rather than losing it to this branch."
+        },
         {
           "unless_flag": "mira_shop_open",
           "conversation": "village_mira_shop_intro",
@@ -38,10 +49,21 @@
     {
       "name": "Oskar",
       "config_key": "villager_keeper",
-      "position": [22.0, -6.0],
+      "position": [
+        22.0,
+        -6.0
+      ],
       "facing_deg": -108.4,
       "greeting": "village_oskar",
       "greeting_when": [
+        {
+          "if_flag": [
+            "legendary_freed",
+            "oskar_trade_open"
+          ],
+          "conversation": "village_oskar_freed",
+          "_why": "SG46, spec §9's 'villagers acknowledge the victory'. FIRST in the list on purpose and safely: `legendary_freed` is the last flag the chapter sets, everything below it has already been spent by then, and this branch's own conversation carries the same `shop:creatures:oskar` effect his beaten and standing branches carry so nothing that was reachable before the Warden becomes unreachable after him (D39's rule -- a vendor branch is never lost, only ever carried forward). Additive as always: the standing greeting is untouched. Paired with `oskar_trade_open` for the same reason Mira's is paired with hers: a one-time introduction must not be swallowed by the ending."
+        },
         {
           "unless_flag": "oskar_trade_open",
           "conversation": "village_oskar_trade_intro",
@@ -69,7 +91,10 @@
     {
       "name": "Tam",
       "config_key": "villager_smith",
-      "position": [8.0, -16.0],
+      "position": [
+        8.0,
+        -16.0
+      ],
       "facing_deg": 18.4,
       "greeting": "village_tam",
       "greeting_when": [
@@ -84,7 +109,15 @@
           "_why": "OF30. The follow-up: he writes down the basic-orb recipe, which sets the flag data/recipes/recipes.json gates `orb_basic` behind."
         },
         {
-          "if_flag": ["tam_tools_given", "recipe_orb_basic"],
+          "if_flag": "legendary_freed",
+          "conversation": "village_tam_freed",
+          "_why": "SG46, spec §9. Placed AFTER his two one-time gift branches rather than first: both of Tam's gifts are one-shot and a player who reached the stronghold without collecting them must still be able to, which a first-position branch would block forever. Flavour only, like his `_beaten` lines -- he has no vendor effect to carry."
+        },
+        {
+          "if_flag": [
+            "tam_tools_given",
+            "recipe_orb_basic"
+          ],
           "unless_flag": "defeated_tam",
           "conversation": "village_tam_challenge",
           "_why": "SC12/SC13. His Band-1 challenge -- the switching lesson (spec sec3): two creatures of different types. Offered every greeting once BOTH of his one-time gifts are spent, for as long as he is unbeaten. Ends on `battle:trainer_tam`."
@@ -100,16 +133,29 @@
     {
       "name": "Quarry Foreman",
       "config_key": "villager_quarryman",
-      "position": [0.0, -6.0],
+      "position": [
+        0.0,
+        -6.0
+      ],
       "facing_deg": 111.8,
       "greeting": "village_quarry_foreman",
-      "_why": "west of the workshop (EV6; was the big barn), clear of every structure and villager by 8m+ -- NP3, spec sec35. No built quarry to stand him at yet (SD16), so the square is where he waits."
+      "_why": "west of the workshop (EV6; was the big barn), clear of every structure and villager by 8m+ -- NP3, spec sec35. No built quarry to stand him at yet (SD16), so the square is where he waits.",
+      "greeting_when": [
+        {
+          "if_flag": "legendary_freed",
+          "conversation": "village_quarry_foreman_freed",
+          "_why": "SG46. The foreman's ground is the one D45 says stays baked and partly unhealed, so he is the character who says so out loud -- the honest remainder spoken by the person standing on it. His first `greeting_when` list; the standing greeting is untouched and is still the fallback."
+        }
+      ]
     },
     {
       "name": "Sela",
       "_name_was": "\"Rescued Ranger\" until SE27, which gave the placeholder a rescue to be rescued FROM and therefore a name to be greeted by. Same entry, same rig, same position -- only the label and the two additions below changed, so the prompt reads \"Greet Sela\" rather than \"Greet Rescued Ranger\", which was always a description rather than a name.",
       "config_key": "villager_ranger",
-      "position": [16.0, -10.0],
+      "position": [
+        16.0,
+        -10.0
+      ],
       "facing_deg": -90.0,
       "greeting": "village_rescued_ranger",
       "place_when": [
@@ -126,6 +172,26 @@
         }
       ],
       "_why": "between the well and cottage_a (EV6; was the small barn), clear of every structure and villager by 5m+ -- NP3, spec sec35."
+    },
+    {
+      "name": "Kell",
+      "_comment": "R8.6 / SG46's 'at least one outward spoke gains new dialogue'. She stands at the STORM ROAD's end -- the spoke SG44 reconnects -- and only after `legendary_freed`. Placed from this file rather than from severed_spokes.gd deliberately: that script carries a hard rule that a spoke never explains itself with UI text, and it still does not. Nothing is added to the road, the blocker or the sign; a PERSON walked out to look at a horizon that changed, and she is met the way every other person in the chapter is met. The road past her is exactly as impassable while she talks as it was in hour one, which tests/smoke_boss.gd re-proves after the flag.",
+      "config_key": "villager_keeper",
+      "position": [
+        184.2,
+        52.6
+      ],
+      "_comment_position": "At the storm road's own end (terrain_playground.json's spokes.routes[1] finishes at [185.5,49.7]), a couple of metres off the roadbed so she is beside the way rather than standing in it -- the same rule stronghold.json's trainer offsets follow.",
+      "facing_deg": 15.0,
+      "_comment_facing": "Down the road's own outward bearing: she is looking at the thing she is talking about.",
+      "greeting": "spoke_traveller_storm_road",
+      "place_when": [
+        {
+          "if_flag": "legendary_freed",
+          "_why": "SE27's mechanism, reused exactly: she does not exist in the world before the machinery fails. village_npcs.gd re-reads this whenever the flag store's revision moves, so she is standing there on the walk home rather than after a reload."
+        }
+      ],
+      "_comment_config_key": "CLAUDE.md/§21: no new human generation and no new model. `villager_keeper` is the NP4 villager_male base already standing in the square (Oskar's), reused as-is -- she is a villager who walked twenty minutes out of town to look at a horizon, not a new archetype. art.json's own note records that this base has no separable hair mesh, so there is no per-material differentiator to give her; CLAUDE.md's stated fallback for exactly that case is that identical NPCs beat an ugly whole-body hue shift."
     }
   ]
 }

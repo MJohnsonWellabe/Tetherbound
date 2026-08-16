@@ -67,6 +67,15 @@ var _u := Vector2(1.0, 0.0)    ## along the approach bearing
 var _p := Vector2(0.0, 1.0)    ## across it
 var _console_prompt: Node3D = null
 var _built := {"walls": 0, "decks": 0, "ramps": 0, "pylons": 0}
+## SG46: the drained-ground skin and its material, held so the healing can fade
+## them. Null on a build where `dead_ground.enabled` is false — after a terrain
+## re-bake, this site's discolouration is baked and there is nothing to fade.
+var _dead_ground: MeshInstance3D = null
+var _dead_ground_material: StandardMaterial3D = null
+var _healing: bool = false
+var _healed: bool = false
+var _heal_seconds: float = 0.0
+var _heal_elapsed: float = 0.0
 
 
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
@@ -785,6 +794,73 @@ func _build_dead_ground() -> void:
 	skin.mesh = surface.commit()
 	skin.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(skin)
+	_dead_ground = skin
+	_dead_ground_material = material
+
+
+## SG46 / D41's third clause. The relay's machinery is dead, so the skin that
+## stands in for the drained ground goes with it.
+##
+## This is the ONE part of the drained-ground grammar that can heal at run
+## time, and it can only because of an accident of build order that D45 wrote
+## down: the relay's stations were never baked into the terrain's colour and
+## control maps (a sibling agent held the terrain lease), so its discolouration
+## is this skin -- a runtime overlay whose alpha is drain_factor() -- rather
+## than a texel. The quarry's stations WERE baked and cannot be undone without
+## a re-bake, which SG46 is explicitly not allowed to run.
+##
+## The fade is the material's own albedo alpha, which multiplies the per-vertex
+## alpha the drain contour is stored in, so the skin dies out preserving its
+## shape rather than shrinking to a circle: the ground pales from what it was,
+## everywhere at once, which is what "the tether let go" looks like.
+##
+## `seconds <= 0` snaps, for a save loaded with the flag already set.
+func heal(seconds: float = 0.0) -> void:
+	if _dead_ground == null or not is_instance_valid(_dead_ground):
+		return
+	if _healing:
+		return
+	if seconds <= 0.0:
+		_finish_healing()
+		return
+	_healing = true
+	_heal_seconds = seconds
+	_heal_elapsed = 0.0
+	set_process(true)
+
+
+func _process(delta: float) -> void:
+	if not _healing:
+		set_process(false)
+		return
+	_heal_elapsed += delta
+	var fraction := clampf(_heal_elapsed / maxf(_heal_seconds, 0.01), 0.0, 1.0)
+	if _dead_ground_material != null:
+		_dead_ground_material.albedo_color.a = 1.0 - fraction
+	if fraction >= 1.0:
+		_finish_healing()
+
+
+func _finish_healing() -> void:
+	_healing = false
+	set_process(false)
+	if _dead_ground_material != null:
+		_dead_ground_material.albedo_color.a = 0.0
+	if _dead_ground != null and is_instance_valid(_dead_ground):
+		_dead_ground.visible = false
+	_healed = true
+
+
+## Whether the drained skin is still painting the ground. Read by SG46's own
+## test, which has to prove the relay looks different after the Warden rather
+## than trust that something called heal().
+func dead_ground_visible() -> bool:
+	return _dead_ground != null and is_instance_valid(_dead_ground) and _dead_ground.visible \
+		and (_dead_ground_material == null or _dead_ground_material.albedo_color.a > 0.01)
+
+
+func healed() -> bool:
+	return _healed
 
 
 ## --- plumbing --------------------------------------------------------------

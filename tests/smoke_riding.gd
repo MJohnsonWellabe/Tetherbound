@@ -88,6 +88,10 @@ func _run() -> void:
 	await _the_stick_moves_the_creature()
 	await _dismounts_and_gives_the_body_back()
 	await _despawning_the_mount_does_not_strand_the_player()
+	# R8.5 before the mid-fight check on purpose: that check deliberately leaves
+	# a fight RUNNING when it returns, and the director will not swap the active
+	# creature out from under a live battle.
+	await _the_legendarys_tier_is_above_it()
 	await _refuses_mid_fight()
 	_report()
 
@@ -132,6 +136,118 @@ func _put_the_mount_in_the_world() -> bool:
 		return false
 	print("setup: a %s is out and following" % MOUNT_SPECIES)
 	return true
+
+
+## R8.5 — the tier above Meadowhart, on the SAME system.
+##
+## Three claims, and the two that matter are not numbers. FASTER is checked
+## against the live controller's own `ride_speed()` rather than against
+## species.json. NEEDS NO TACK: the legendary's `requires_item` is empty, so it
+## is mounted with an empty bag — checked by emptying the bag first, because
+## "it carries you because it offered to" is only true if the game agrees when
+## the saddle is gone. AND HOLDS GROUND NOTHING ELSE DOES:
+## `climb_max_slope_deg` becomes the body's own `floor_max_angle` while ridden,
+## asserted against the LIVE baseline the creature scene sets (55 degrees for
+## every creature in the roster, 45 for the trainer) rather than against a
+## number typed here — the first version of this test measured against 45,
+## passed, and was proving nothing, because every creature already walks 55.
+##
+## And the ceiling: the mount must NOT be able to climb out of a severed
+## spoke's carve, whose walls are 65-66 degrees. That is the carve-out D23 and
+## CLAUDE.md hold over the whole chapter, and it is a data check here as well
+## as a walking probe in tests/smoke_boss.gd, because the number is what would
+## silently drift.
+const LEGENDARY_SPECIES := "veridian"
+## The shallowest wall on any severed spoke (storm_road: 11m over a 5m rim).
+## Measured from terrain_playground.json rather than assumed.
+const SHALLOWEST_SPOKE_WALL_DEG := 65.0
+
+func _the_legendarys_tier_is_above_it() -> void:
+	var legendary := SPECIES.rideable(LEGENDARY_SPECIES)
+	if legendary.is_empty() or not SPECIES.is_rideable(LEGENDARY_SPECIES):
+		_fail("species.json gives '%s' no rideable block; R8.5 has no mount" % LEGENDARY_SPECIES)
+		return
+	var mount_tier := float(SPECIES.rideable(MOUNT_SPECIES).get("ride_speed_multiplier", 0.0))
+	var legendary_tier := float(legendary.get("ride_speed_multiplier", 0.0))
+	if legendary_tier <= mount_tier:
+		_fail("the legendary rides at x%.2f against %s's x%.2f; R8.5 asks for the tier ABOVE it"
+			% [legendary_tier, MOUNT_SPECIES, mount_tier])
+	if str(legendary.get("requires_item", "x")) != "":
+		_fail("the legendary wants '%s' to be ridden; R8.5's tack-free mount is the advantage that is not a number"
+			% str(legendary.get("requires_item", "")))
+	if str(SPECIES.rideable(MOUNT_SPECIES).get("requires_item", "")) == "":
+		_fail("%s stopped needing a saddle too; the legendary's advantage is meant to be its own" % MOUNT_SPECIES)
+	var climb := float(legendary.get("climb_max_slope_deg", 0.0))
+	if climb >= SHALLOWEST_SPOKE_WALL_DEG:
+		_fail("the legendary can climb %.0f degrees and the shallowest severed-spoke wall is %.0f; the mount would open the Meadows"
+			% [climb, SHALLOWEST_SPOKE_WALL_DEG])
+	if float(SPECIES.rideable(MOUNT_SPECIES).get("climb_max_slope_deg", 0.0)) > 0.0:
+		_fail("%s claims a climb limit too; the advantage is meant to be the legendary's alone" % MOUNT_SPECIES)
+
+	# Live half: swap the party's active creature for the legendary, ride it,
+	# and read the limit off the body the physics actually uses.
+	var legendary_instance: RefCounted = SPECIES.spawn(LEGENDARY_SPECIES)
+	if legendary_instance == null or not bool(_party.call("add", legendary_instance)):
+		print("note: the party is full, so the legendary's live ride could not be driven here")
+		return
+	for i in int(_party.call("size")):
+		if _party.call("at", i) == legendary_instance:
+			_party.call("set_active", i)
+			break
+	if _director.call("ally_body") != null:
+		_director.call("dismiss_active_creature")
+		for i in 20:
+			await physics_frame
+	await _director.call("summon_active_creature")
+	for i in 90:
+		await physics_frame
+		var out: Node3D = _director.call("ally_body")
+		if out != null and is_instance_valid(out) and out.visible:
+			break
+	var body: Node3D = _director.call("ally_body")
+	if body == null or not is_instance_valid(body) or str(body.get("species_id")) != LEGENDARY_SPECIES:
+		_fail("the legendary never stood up in the world; its ride cannot be driven")
+		return
+	var walking_limit := rad_to_deg((body as CharacterBody3D).floor_max_angle)
+	if climb <= walking_limit:
+		_fail("the legendary's climb limit is %.0f degrees and every creature already walks %.0f; that is not an advantage"
+			% [climb, walking_limit])
+	# Empty the bag: the legendary needs no tack, and this is where that stops
+	# being a data claim.
+	var saddles := int(_bag.call("count", "saddle"))
+	if saddles > 0:
+		_bag.call("remove", "saddle", saddles)
+	_player.global_position = body.global_position + Vector3(1.2, 0.4, 0.0)
+	for i in 20:
+		await physics_frame
+	if not bool(_riding.call("mount")):
+		_fail("the legendary refused to be mounted with an empty bag; it needs no tack")
+		_bag.call("add", "saddle", maxi(saddles, 1))
+		return
+	for i in 10:
+		await physics_frame
+	var ridden_limit := float(_riding.call("ride_climb_limit_deg"))
+	var ride_speed := float(_riding.call("ride_speed"))
+	if ridden_limit <= walking_limit + 0.5:
+		_fail("mounted, the legendary still treats %.0f degrees as floor; the climb advantage never reaches the body" % ridden_limit)
+	if ride_speed <= _walk_speed():
+		_fail("the legendary's live ride speed is %.2f m/s against a %.2f m/s walk" % [ride_speed, _walk_speed()])
+	print("legendary: x%.2f (%.2f m/s live), no tack, %.0f-degree ground -- against %s's x%.2f, a saddle, and the roster's %.0f degrees"
+		% [legendary_tier, ride_speed, ridden_limit, MOUNT_SPECIES, mount_tier, walking_limit])
+	if not bool(_riding.call("dismount")):
+		_fail("could not get off the legendary")
+		return
+	for i in 20:
+		await physics_frame
+	if is_instance_valid(body):
+		var after := rad_to_deg((body as CharacterBody3D).floor_max_angle)
+		if absf(after - walking_limit) > 0.5:
+			_fail("after dismounting, the legendary's body still holds %.0f degrees (was %.0f); the perk leaked out of the ride"
+				% [after, walking_limit])
+		else:
+			print("the climb advantage ended with the ride: back to %.0f degrees on foot" % after)
+	if saddles > 0:
+		_bag.call("add", "saddle", saddles)
 
 
 ## R6.2's gate. Owning the creature is not owning the tack.

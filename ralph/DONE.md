@@ -3,6 +3,73 @@
 Append-only. Newest at the top. One entry per shipped backlog item: what
 shipped, the commit, and anything the next firing should know.
 
+## SG44 + SG46 + R8.5 + R8.6 — the Rift collapses, the Meadows answers, the legendary carries you, and the chapter points somewhere
+
+`model: opus` · `tests: smoke_boss` (extended), `test_progression_state`
+(extended), `smoke_riding` (extended), `test_dialogue_runner` (extended) ·
+`area: world/progression/traversal/story`
+
+**What shipped.** The Meadows chapter's last four items, all hanging off the
+one flag `stronghold_climax.gd` already set — `legendary_freed`.
+
+- **SG44** — `scripts/world/rift_collapse.gd` + `data/config/rift_collapse.json`.
+  The spoke is **`storm_road`**: its blocker is a BAKED 11m carve with 65.6°
+  walls plus a recovery volume (nothing at run time can open it), §30's own
+  list of reconnection images includes "a storm wall dissipating" and this is
+  the road the map already calls Storm Country, and SF33 had already dressed
+  that seam with a live pylon and a resuming roadbed on the far rim. Before:
+  three slate slabs of weather standing across the eastern sky at 260–356m.
+  After: they dissipate over 9s while four ridge silhouettes and one warm
+  horizon glow (#e8d79a, the freed legendary's own colour) come up behind them
+  at 380–460m. All of it is SKY — outside the 512m terrain, past the 235m ring,
+  no collider, no spawn, no prompt. Measured: 167,632 m² of storm / 0 m² of
+  land before, 0 / 70,645 after.
+- **SG46** — `scripts/world/meadow_healing.gd` + `data/config/meadow_healing.json`.
+  D41's third clause is paid where it can be: `scatter_rules._thin_by_drain`
+  now KEEPS what it removes (`drained_out`) and `vegetation.restore_drained()`
+  rebuilds exactly those 440 instances through the ordinary batch path, so the
+  bald ground round every station grows back into the meadow the player walked
+  through rather than a re-rolled second scatter. The relay's runtime drain
+  skin fades over 12s (`tether_relay.heal()`), 9 lit pylons/conduits go to
+  their dead material, both keyed gates deactivate through their own flags,
+  and beaten Team Tether trainers are withdrawn (nobody unbeaten, no defeat
+  flag cleared). Villagers gain post-victory `greeting_when` branches and Sela
+  is verified still home. **What did NOT heal: the quarry's baked colour and
+  control maps.** D45 priced that in advance and its file now records the
+  outcome; the Quarry Foreman says it in-game ("Floor's still grey down
+  there").
+- **R8.5** — a second `rideable` block on `veridian`. x2.8 (14 m/s), and two
+  advantages that are not numbers: `requires_item` is EMPTY (the only mount
+  needing no tack — it offered to carry you, §28), and `climb_max_slope_deg`
+  60 becomes the body's own `floor_max_angle` while ridden, restored on
+  dismount. **Measured baseline, and the trap worth knowing:** `creature.tscn`
+  already gives EVERY creature 55° (the trainer is 45°), so the first version
+  of this at 55 was proving nothing and passed. 60 is above the roster and
+  still 5–6° below every spoke's carve walls, which is what keeps D23's
+  carve-out safe.
+- **R8.6** — `data/dialogue/meadows_freed.json` (in DIALOGUE_FILES, NOT in
+  STRONGHOLD_FILES: the exemption stays one file) and Kell, a traveller placed
+  at the storm road's end only once the flag is set. She names the seven roads,
+  says six are left, and says outright that the bridge is still gone.
+  `GAME_DESIGN.md` §3 gained a second bolded in-place pointer recording where
+  the mystery now lives in the game rather than in prose.
+
+**For the next firing.**
+
+- The barrier proof is a real probe: a CharacterBody3D at the legendary's own
+  60° climb limit (`smoke_boss.gd`'s `PROBE_CLIMB_DEG`), driven at the seam
+  after the collapse. It makes ~14m of the 18m needed to reach the far rim. If
+  R8.5's climb limit ever moves, move this constant with it.
+- `progression_state.gd` has NO `flag_set` signal (by design, its own header
+  says so twice). Both new nodes poll `revision`, like village_npcs.gd. A first
+  pass wired them to a signal and they silently never fired.
+- `smoke_riding.gd`'s `_refuses_mid_fight` leaves a fight RUNNING when it
+  returns, so anything that swaps the active creature must run before it.
+- Not visually judged. No renders were taken of the storm wall, the far country
+  or the healed ground — the horizon is proved by covered-area numbers, not by
+  a frame. A `visual-judge` pass on the storm-road seam before and after is the
+  honest next step, and the slab colours/heights are all TUNABLE for it.
+
 ## R6.1 + R6.2 — Riding, Meadowhart as the mount, and the craftable saddle
 
 `model: opus` · `tests: smoke_riding` (new), `test_recipes` (extended) ·

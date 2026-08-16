@@ -1,0 +1,47 @@
+{
+  "_comment": "SG44 -- the first Tether Rift collapses, seen from inside the Meadows. Spec §27, §28, §30. ALL NUMBERS TUNABLE per CLAUDE.md.",
+
+  "_comment_carveout": "THE CARVE-OUT IS ABSOLUTE AND THIS FILE IS WHERE IT IS EASIEST TO BREAK. CLAUDE.md forbids Biome 2 work until the Meadows passes its exit gate and D23 holds that rule over this step; the spec's own §19 non-goals agree. So everything below is SKY, at 300-460m from the seam -- outside the 512m terrain entirely, past `world_perimeter.gd`'s 235m ring, past the spoke's own 11m-deep carve. No terrain, no collider, no spawn, no species, no interactable, no navigation. The road still ends at the collapsed bridge it has always ended at, and `tests/smoke_boss.gd` walks a body -- at the LEGENDARY's own 55-degree climb limit, the best mobility in the game -- at that seam before and after the flag to prove the barrier holds.",
+
+  "_comment_spoke": "WHICH SPOKE, AND WHY THIS ONE. `storm_road` (spec §1E's 'Electric: old road toward storm country', §29's collapsed bridge), of the seven in terrain_playground.json's `spokes`. Three reasons, in order of weight: (1) its blocker is a BAKED terrain carve -- 11m deep, 65.6-degree walls, plus severed_spokes.gd's own recovery volume -- so the payoff physically cannot open a route, where a rockslide or a sealed gate is props this file could be tempted to move; (2) §30's own list of what a reconnection may look like includes 'a storm wall dissipating', and this is the one spoke the whole map already calls Storm Country, so the effect is the spoke's own vocabulary rather than a new one; (3) SF33 already dressed this seam for exactly this reading -- a live pylon line walking out, a dead one leaning into the gap, and a LIVE pylon alone on the far rim with the roadbed resuming behind it, which is the near-range half of 'the world got bigger' already standing. The far half is what this file adds.",
+  "spoke": "storm_road",
+
+  "_comment_frame": "The effect is placed off the spoke's OWN data (its road end and its `far_road`), never off numbers copied out of it -- move the storm road and this moves with it. `origin` is the far rim; `forward` is the road's own outward bearing.",
+
+  "storm_wall": {
+    "_comment": "BEFORE. The rift, from 200m of open meadow away: a slate wall of weather standing across the whole eastern sky behind the broken bridge, with land visible nowhere past it. Three overlapping slabs at slightly different distances and yaws rather than one flat card, so the near edge does not read as a billboard and the horizon has depth. Unshaded (D-lighting on a thing that is meant to BE the light level of that sky reads as cardboard) and drawn with alpha so it can go away.",
+    "distance": 300.0,
+    "spread_deg": 26.0,
+    "slabs": [
+      { "distance": 300.0, "yaw_deg": 0.0, "width": 420.0, "height": 150.0, "base": -46.0, "colour": "#39404f", "alpha": 0.94 },
+      { "distance": 356.0, "yaw_deg": -13.0, "width": 460.0, "height": 190.0, "base": -46.0, "colour": "#2b3140", "alpha": 0.88 },
+      { "distance": 262.0, "yaw_deg": 15.0, "width": 360.0, "height": 122.0, "base": -46.0, "colour": "#454d5d", "alpha": 0.72 }
+    ],
+    "pulse_seconds": 5.5,
+    "_comment_pulse": "A slow brightness breathe so the wall reads as live weather rather than as a painted backdrop. Small -- this is the thing the player stops noticing after hour one, which is the whole point of it being gone later."
+  },
+
+  "far_country": {
+    "_comment": "AFTER, and NOT A PLACE. Ridge silhouettes and a horizon glow at 380-460m: the land that was always on the other side, no longer hidden. Deliberately flat, hazy and untextured -- a silhouette is a view, and the moment it gains a road, a tree or a creature it has become Biome 2 and broken the rule this file exists to keep. Hidden (alpha 0) until the flag.",
+    "ridges": [
+      { "distance": 392.0, "yaw_deg": -19.0, "width": 250.0, "height": 62.0, "base": -30.0, "colour": "#5a6a78", "alpha": 0.85 },
+      { "distance": 428.0, "yaw_deg": 4.0, "width": 300.0, "height": 84.0, "base": -34.0, "colour": "#4c5b6a", "alpha": 0.8 },
+      { "distance": 380.0, "yaw_deg": 21.0, "width": 210.0, "height": 48.0, "base": -26.0, "colour": "#66757f", "alpha": 0.7 },
+      { "distance": 460.0, "yaw_deg": -6.0, "width": 340.0, "height": 108.0, "base": -40.0, "colour": "#3f4d5c", "alpha": 0.62 }
+    ],
+    "glow": { "distance": 340.0, "yaw_deg": 0.0, "width": 520.0, "height": 90.0, "base": 14.0, "colour": "#e8d79a", "alpha": 0.16 },
+    "_comment_glow": "The one warm thing on that horizon, and the same #e8d79a the freed legendary is lit by in stronghold_climax.json -- the light that is not Team Tether's, arriving 200m away at the same moment."
+  },
+
+  "collapse": {
+    "_comment": "The event itself. `hold` is dead air after the flag before anything moves (the player is still indoors when the machinery fails; the sky must not have finished changing before they walk out). Then the wall dissipates while the land behind it comes up, overlapping deliberately -- the reveal is one motion, not two.",
+    "hold_seconds": 1.2,
+    "dissipate_seconds": 9.0,
+    "reveal_seconds": 7.0,
+    "reveal_delay_seconds": 2.5,
+    "_comment_load": "A save loaded with `legendary_freed` already set snaps straight to the after state with no animation, the same way every other post-flag world change in this chapter does."
+  },
+
+  "flag": "legendary_freed",
+  "_comment_flag": "Set exactly once by scripts/world/stronghold_climax.gd (R8.4). This file only ever READS it -- a world event that could set its own trigger is a world event that fires on a fresh boot."
+}

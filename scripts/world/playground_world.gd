@@ -37,6 +37,8 @@ const TETHER_RELAY := preload("res://scripts/world/tether_relay.gd")
 const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
 const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+const RIFT_COLLAPSE := preload("res://scripts/world/rift_collapse.gd")
+const MEADOW_HEALING := preload("res://scripts/world/meadow_healing.gd")
 const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
 const STRONGHOLD_CLIMAX := preload("res://scripts/world/stronghold_climax.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
@@ -661,6 +663,23 @@ func _build_settlement() -> void:
 	_build_burrow_warrens()
 	_build_stronghold()
 	_build_stronghold_climax()
+
+	# SG44: the first Tether Rift collapses. Sky only -- a distant,
+	# non-enterable view past the storm road's seam, built last because it
+	# depends on nothing and nothing depends on it. See the file's header for
+	# the carve-out it is written around.
+	var rift: Node3D = RIFT_COLLAPSE.new()
+	rift.name = "RiftCollapse"
+	add_child(rift)
+	rift.call("build", self)
+
+	# SG46 / D41: and the local half of the same event -- the meadow itself is
+	# freed. After everything it heals (the vegetation, the relay, the pylon
+	# lines, the gates, the trainers), because it walks the world it is given.
+	var healing: Node3D = MEADOW_HEALING.new()
+	healing.name = "MeadowHealing"
+	add_child(healing)
+	healing.call("build", self)
 
 	var placer := BUILD_PLACER.new()
 	placer.name = "BuildPlacer"

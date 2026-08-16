@@ -1,0 +1,45 @@
+{
+  "_comment": "SG46 -- the Meadows answers. Spec §9, and D41's third clause ('killing the machinery frees the whole meadow, and the land heals'). Everything here is keyed on ONE flag, `legendary_freed`, which scripts/world/stronghold_climax.gd sets exactly once. ALL NUMBERS TUNABLE.",
+
+  "flag": "legendary_freed",
+
+  "_comment_what_heals_and_what_does_not": "READ D45 BEFORE CHANGING ANY OF THIS. The drained ground is THREE consumers of one authored radius, and only two of them live in the running scene. (1) THE SCATTER is live: `scatter_rules._thin_by_drain` removed real instances at build time and `vegetation.gd::restore_drained()` puts back exactly those instances -- same models, same positions, same scales -- so the bald ground around every station grows back. (2) THE RELAY'S DEAD-GROUND SKIN is live: it is a runtime overlay standing in for a bake that never happened (see tether_relay.json's `_comment_dead_ground`), and it fades out. (3) THE BAKED COLOUR AND CONTROL MAPS ARE NOT. The quarry's stations were painted into the terrain textures by build_playground_terrain.gd, D45 priced that out loud ('the grammar chosen for the damage is baked, so the grammar for the repair is a separate piece of work'), and SG46 is explicitly not allowed to re-run a 15-minute bake. So the quarry floor's discolouration survives the healing and is the honest remainder; D45's own file records it.",
+
+  "vegetation": {
+    "enabled": true,
+    "_comment": "The single strongest beat available: the player's walk home passes the stations they walked past in hour one and the grass is back."
+  },
+
+  "dead_ground": {
+    "enabled": true,
+    "fade_seconds": 12.0,
+    "_comment": "The relay's runtime drain skin, faded rather than switched off. 12 seconds is long enough that a player standing in the compound when the flag lands sees it happen and short enough that a player walking home from the stronghold arrives to ground that has already changed. D41 left 'instant or over the walk home' to this item; this is the answer -- over the walk, and the walk is about four minutes."
+  },
+
+  "tether_lights": {
+    "enabled": true,
+    "_comment": "D41 in one sentence: the drain network dies with the stronghold machinery. Every LIT pylon on every road, every glowing conduit and every Team Tether fitting in the stronghold itself goes dark -- the same per-material live/dead pair severed_spokes.gd already ships (`_pylon_material`, `_conduit_material`), applied to what is already standing rather than rebuilt. This is also §9's 'stronghold effects change': the building's own tether lighting is drawn from the same reserved teal and goes out with the rest of the network. Nothing warm is touched, which is why the freed legendary's own #e8d79a light survives it.",
+    "dead_albedo": "res://assets/environment/team_tether/tether_pylon_albedo_dead.png",
+    "lit_albedo": "res://assets/environment/team_tether/tether_pylon_albedo.png"
+  },
+
+  "barriers": {
+    "enabled": true,
+    "_comment": "§9's 'barriers deactivate'. Every keyed gate in the region stands open once the machinery is dead -- the road gate and the Meadows Hall approach. Done by setting each gate's OWN flag (the same flag the key sets, the same one item_gate.gd reads on a reload) and then telling the standing body to take its open pose, so a save written after the Warden loads with the gates open for the ordinary reason rather than through a second mechanism.",
+    "flags": ["road_gate_open", "hall_approach_open"]
+  },
+
+  "patrols": {
+    "enabled": true,
+    "_comment": "§9's 'patrol density drops'. The rule is deliberately narrow: a Team Tether trainer the player has ALREADY BEATEN is withdrawn from the world once the machinery is dead, and one who is still unbeaten is left exactly where they stand. Beaten trainers stay beaten (their defeat flag is untouched and this file never clears one), and no fight the player has not yet taken is deleted by the ending -- which is what 'thins' has to mean if it is not to quietly destroy content. Listed by id rather than swept up by faction so nobody is withdrawn by accident.",
+    "withdraw": [
+      "relay_picket_hess",
+      "relay_picket_orrin",
+      "relay_officer_dell",
+      "relay_captain",
+      "stronghold_patrol",
+      "stronghold_courtyard",
+      "stronghold_elite"
+    ]
+  }
+}

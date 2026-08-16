@@ -24,6 +24,12 @@ const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd"
 const SINK := 0.06
 
 var _placed: int = 0
+## SG46: layer name -> the placements `scatter_rules._thin_by_drain` took out
+## around Team Tether's stations, held from the build so the healing can put
+## back the very same instances rather than roll a second scatter that would
+## not match the meadow the player walked through.
+var _drained: Dictionary = {}
+var _regrown: int = 0
 var _draw_calls: int = 0
 var _solid: int = 0
 var _harvest_points: int = 0
@@ -43,7 +49,13 @@ func build(world_size: float) -> void:
 	if cfg.is_empty():
 		return
 	var field: RefCounted = HEIGHTFIELD.new()
-	var by_layer: Dictionary = RULES.all_placements(field, world_size, int(cfg.get("seed", 1)))
+	# SG46/D41: what the drain removed, kept aside instead of dropped. Nothing
+	# is built from it here -- these instances are exactly the ones that are
+	# meant to be missing while Team Tether's stations are running. See
+	# `restore_drained()` for what puts them back and when.
+	_drained.clear()
+	_regrown = 0
+	var by_layer: Dictionary = RULES.all_placements(field, world_size, int(cfg.get("seed", 1)), _drained)
 	_mark_harvestable(by_layer)
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should
@@ -469,8 +481,74 @@ func _collect(node: Node, into: Array[MeshInstance3D]) -> void:
 		_collect(child, into)
 
 
+## SG46 / D41's third clause: the meadow is freed, and what the stations killed
+## comes back.
+##
+## The drain took real instances out of this scatter at build time
+## (`scatter_rules._thin_by_drain`), and this puts back exactly those — the
+## same models, at the same positions, at the same scales and yaws — through
+## the same `_build_batch` every other prop in the meadow goes through. So the
+## regrowth gets the same retint, the same per-instance colour jitter, the same
+## collision and the same harvest wiring, because it IS the same code path;
+## there is no second vegetation system and no "healed" variant asset.
+##
+## Why the placements were kept rather than re-rolled: a fresh scatter with the
+## drain switched off would return a DIFFERENT meadow — every clump and stray
+## after the first re-draw shifts — and the player would walk home past ground
+## that changed everywhere instead of ground that healed where the machines
+## were. Keeping the removed list is the only version of this that is honest
+## about which trees these are.
+##
+## What this CANNOT do is repaint the ground: the drained colour and control
+## maps for the quarry stations are baked into the terrain textures, and D45
+## priced that out loud ("the grammar chosen for the damage is baked, so the
+## grammar for the repair is a separate piece of work"). Vegetation is the half
+## that lives in the live scene; `tether_relay.gd::heal()` is the runtime skin.
+## `docs/decisions/D45-the-drained-ground-grammar.md` records what stays baked.
+##
+## Returns how many instances came back, so the caller can log a real number
+## rather than an intention. Safe to call twice: the second call is a no-op.
+func restore_drained() -> int:
+	if _drained.is_empty():
+		return 0
+	var by_model: Dictionary = {}
+	for layer_name: String in _drained.keys():
+		for entry: Variant in (_drained[layer_name] as Array):
+			var placement: Dictionary = entry
+			var model := str(placement["model"])
+			if not by_model.has(model):
+				by_model[model] = []
+			(by_model[model] as Array).append(placement)
+	var before := _placed
+	for model: String in by_model.keys():
+		_build_batch(model, by_model[model])
+	_regrown = _placed - before
+	_drained.clear()
+	return _regrown
+
+
+## How many instances the drain is currently holding out of the world — the
+## size of the regrowth still owed. Zero once it has been paid.
+func drained_count() -> int:
+	var total := 0
+	for layer_name: String in _drained.keys():
+		total += (_drained[layer_name] as Array).size()
+	return total
+
+
+func regrown_count() -> int:
+	return _regrown
+
+
 ## For the survey's cost readout. Not a budget and not a gate — software
 ## rendering cannot measure frame time honestly (D06) — but "how much did we
 ## just put in the world" is worth being able to say out loud.
 func stats() -> Dictionary:
-	return {"instances": _placed, "batches": _draw_calls, "solid": _solid, "harvest_points": _harvest_points}
+	return {
+		"instances": _placed,
+		"batches": _draw_calls,
+		"solid": _solid,
+		"harvest_points": _harvest_points,
+		"drained_out": drained_count(),
+		"regrown": _regrown,
+	}

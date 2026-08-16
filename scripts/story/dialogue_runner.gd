@@ -38,6 +38,11 @@ const EXTRA_DIALOGUE_PATHS := [
 	# tests/test_dialogue_runner.gd's STRONGHOLD_FILES is where that exemption
 	# is written down, and every other file in this list is still checked.
 	"res://data/dialogue/stronghold.json",
+	# SG46/R8.6: what the region says once the Warden has fallen. A sixth
+	# entry, and NOT exempt from anything -- it is read after the reveal but
+	# it is still scanned for §32's words, because the villagers who say these
+	# lines never learned what was inside that building.
+	"res://data/dialogue/meadows_freed.json",
 ]
 
 signal finished(conversation_id: String)

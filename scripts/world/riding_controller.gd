@@ -242,6 +242,7 @@ func mount() -> bool:
 	if body.has_method("set_following"):
 		body.call("set_following", false)
 
+	_apply_climb_limit(body, species_id)
 	var offset: Vector3 = SPECIES.rideable(species_id).get("mount_offset", Vector3.UP)
 	_player.call("set_carrier", body, offset)
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_target"):
@@ -268,6 +269,7 @@ func dismount() -> bool:
 	var alive := is_instance_valid(body)
 	if alive:
 		_last_mount_position = body.global_position
+	_restore_climb_limit(body if alive else null)
 
 	if _player != null and is_instance_valid(_player):
 		_player.call("set_carrier", null)
@@ -350,6 +352,72 @@ func _physics_process(_delta: float) -> void:
 	# The one line that is riding. Everything else about how the creature moves
 	# is the creature's, unchanged.
 	_mount.call("request_move", direction.normalized(), ride_speed())
+
+
+## --- R8.5: the tier above Meadowhart ----------------------------------------
+##
+## Part of the legendary's tier. Its `rideable` block carries
+## `climb_max_slope_deg`, and while it is being ridden that becomes the
+## creature body's own `floor_max_angle` — so ground that slides every other
+## creature in the roster off holds this one. The baseline is MEASURED rather
+## than assumed: `scenes/creatures/creature.tscn` already gives every creature
+## 55 degrees (the trainer's own body gets 45), so the legendary's 60 is a
+## capability none of the others have, not a restatement of one they all do.
+##
+## Deliberately the smallest thing that could possibly work: `move_and_slide()`
+## already reads that property every physics frame on every CharacterBody3D, so
+## there is no climb state, no second locomotion path and no new movement code
+## — the same "riding changes the speed it asks for, nothing else" rule this
+## file opens with, extended by exactly one property.
+##
+## It is set on MOUNT and put back on DISMOUNT, never left on the body: a
+## legendary walking beside you as a follower is an ordinary creature, and a
+## permanent 55-degree floor on a body the combat AI also drives would change
+## fights nobody tuned for it.
+##
+## The ceiling matters and species.json says why: every severed spoke's carve
+## walls are 65-66 degrees, so this stays a mobility perk and never a way out
+## of the Meadows (D23's carve-out). `tests/smoke_boss.gd` drives a probe body
+## at this limit against the storm-road seam to keep that true, and
+## `tests/smoke_riding.gd` fails if the number is ever raised into that band.
+##
+## The legendary's OTHER advantage needs no code at all and is deliberately not
+## here: its `requires_item` is empty, so `_has_tack()` above already lets it be
+## ridden with nothing in the bag. A mount that needs no saddle is the whole
+## point of that key having been per-species since R6.2.
+func _apply_climb_limit(body: Node3D, species_id: String) -> void:
+	var limit := float(SPECIES.rideable(species_id).get("climb_max_slope_deg", 0.0))
+	if limit <= 0.0 or not body is CharacterBody3D:
+		return
+	var character := body as CharacterBody3D
+	# Remembered on the body rather than in a field here, so a ride that ends
+	# through the despawn path (this node's `_mount` already freed) still has
+	# somewhere honest to read the old value back from if the body survives.
+	if not character.has_meta("ride_floor_max_angle"):
+		character.set_meta("ride_floor_max_angle", character.floor_max_angle)
+	character.floor_max_angle = deg_to_rad(limit)
+
+
+func _restore_climb_limit(body: Node3D) -> void:
+	if body == null or not is_instance_valid(body) or not body is CharacterBody3D:
+		return
+	var character := body as CharacterBody3D
+	if not character.has_meta("ride_floor_max_angle"):
+		return
+	character.floor_max_angle = float(character.get_meta("ride_floor_max_angle"))
+	character.remove_meta("ride_floor_max_angle")
+
+
+## The slope, in degrees, the current mount treats as floor. The trainer's own
+## 45 when the mount has no opinion, and zero when nothing is being ridden —
+## read by the smoke test so the legendary's tier is proved against the live
+## body rather than against the number in the data file.
+func ride_climb_limit_deg() -> float:
+	if not is_mounted():
+		return 0.0
+	if not _mount is CharacterBody3D:
+		return 0.0
+	return rad_to_deg((_mount as CharacterBody3D).floor_max_angle)
 
 
 ## --- the provider contract, see scripts/world/interaction_arbiter.gd --------

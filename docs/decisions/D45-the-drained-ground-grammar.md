@@ -85,6 +85,48 @@ rather than letting `SG46` discover it: the grammar chosen for the *damage* is
 baked, so the grammar for the *repair* is a separate piece of work, and pricing
 it now is cheaper than being surprised by it in Band 5.
 
+## SG46 shipped, and this is what healed and what did not (2026-08-16)
+
+Recorded here because this file is where the cost was priced, and a price
+nobody comes back to settle is a guess. `SG46` built the repair and the split
+landed exactly where the section above predicted:
+
+**Healed, at run time, on `legendary_freed`:**
+
+- **The vegetation, everywhere.** `scatter_rules._thin_by_drain` now keeps the
+  instances it removes instead of dropping them (`drained_out`), and
+  `vegetation.gd::restore_drained()` rebuilds precisely those placements
+  through the ordinary `_build_batch` path — same models, same positions, same
+  scales, same retint, same collision. The bald ground around every station,
+  the quarry's and the relay's alike, grows back into the meadow the player
+  actually walked through rather than into a re-rolled second scatter.
+- **The relay's dead-ground skin.** `tether_relay.gd::heal()` fades the
+  overlay's material alpha to zero over twelve seconds. That site was only ever
+  discoloured by a runtime skin — the honest partial `SE23` recorded — so at
+  the relay the ground colour genuinely recovers.
+- **The network's light**, which is not this decision's but arrives with it:
+  every lit pylon and glowing conduit in the region goes to its dead material.
+
+**NOT healed, and this is the honest remainder:**
+
+- **The quarry's baked colour and control maps.** The four `quarry_*` stations
+  were painted into the terrain textures by `build_playground_terrain.gd`. No
+  run-time code can repaint a texel, `SG46` was explicitly forbidden from
+  re-running a ~15-minute bake, and inventing a green overlay to cancel a baked
+  tint would be a second, undecided vocabulary for the repair — precisely what
+  this decision exists to prevent. So the quarry floor keeps its sun-killed
+  cast and its bare-soil blend forever, with regrown vegetation standing on
+  top of it.
+
+That is defensible as fiction — the worst-hit ground in the chapter is the
+ground that scars — and the Quarry Foreman now says so in as many words
+(`village_quarry_foreman_freed`), so the player is told rather than left to
+notice a bug. But it is a limitation, not a design: **the day the terrain is
+re-baked for any other reason, the drained bake should be re-evaluated** —
+either baked healthy with the drain carried entirely by runtime skins (which
+would make the whole effect switchable), or left as is by an explicit choice
+rather than by inheritance.
+
 ## What it does not decide
 
 Intensity, which is per-station data. The quarry's own head station is 0.85

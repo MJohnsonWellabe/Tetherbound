@@ -123,7 +123,8 @@ static func _inside_a_footprint(spot: Vector2) -> bool:
 ## Returns dictionaries of `{ model, position, yaw, scale }` — enough for a
 ## renderer and nothing that assumes one.
 static func placements_for(
-	layer: Dictionary, field: RefCounted, world_size: float, seed_value: int
+	layer: Dictionary, field: RefCounted, world_size: float, seed_value: int,
+	drained_out: Array[Dictionary] = []
 ) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var models: Array = layer.get("models", [])
@@ -170,7 +171,7 @@ static func placements_for(
 	# D41 (SD16): the drained ground around a Tether station, applied LAST and
 	# as a filter. See `_thin_by_drain` for why it cannot be a gate inside
 	# `_consider` like every other rule here.
-	return _thin_by_drain(out, layer, field)
+	return _thin_by_drain(out, layer, field, drained_out)
 
 
 ## D41 (SD16), the vegetation half of the drained-ground grammar: Team Tether's
@@ -198,7 +199,8 @@ static func placements_for(
 ## patchy at metre scale, so the survivors thin out in drifts rather than at a
 ## uniform per-instance rate.
 static func _thin_by_drain(
-	out: Array[Dictionary], layer: Dictionary, field: RefCounted
+	out: Array[Dictionary], layer: Dictionary, field: RefCounted,
+	drained_out: Array[Dictionary] = []
 ) -> Array[Dictionary]:
 	if field == null or not field.has_method("drain_factor"):
 		return out
@@ -212,6 +214,12 @@ static func _thin_by_drain(
 		if drain > 0.0:
 			var spot := Vector2(at.x, at.z)
 			if _value_noise(spot / DRAIN_PATCHINESS, DRAIN_SALT) < drain * suppression:
+				# SG46/D41: what the drain took, kept rather than dropped, so
+				# the healing can put back exactly these instances and not a
+				# freshly-rolled second scatter that would not match the
+				# meadow the player walked through. See this function's own
+				# note below on why that list can be handed out safely.
+				drained_out.append(placement)
 				continue
 		kept.append(placement)
 	return kept
@@ -669,7 +677,8 @@ static func _consider(
 ## framed like a gateway (three blind critics named it, all seed luck, no
 ## authored anchor involved) without perturbing every other layer's
 ## already-tuned placement the way changing the top-level `seed` would.
-static func all_placements(field: RefCounted, world_size: float, base_seed: int) -> Dictionary:
+static func all_placements(field: RefCounted, world_size: float, base_seed: int,
+		drained_out: Dictionary = {}) -> Dictionary:
 	var layers: Dictionary = config().get("layers", {})
 	var built: Dictionary = {}
 	var offset := 0
@@ -678,6 +687,9 @@ static func all_placements(field: RefCounted, world_size: float, base_seed: int)
 			continue
 		var layer: Dictionary = layers[name]
 		var seed_value := base_seed + offset * 7919 + int(layer.get("seed_offset", 0))
-		built[name] = placements_for(layer, field, world_size, seed_value)
+		var removed: Array[Dictionary] = []
+		built[name] = placements_for(layer, field, world_size, seed_value, removed)
+		if not removed.is_empty():
+			drained_out[name] = removed
 		offset += 1
 	return built

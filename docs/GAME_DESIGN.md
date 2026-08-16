@@ -115,6 +115,19 @@ reconnects a region.
 The nuance rule above survives intact and matters more now: a Warden can be
 sincere while the system is oppressive.
 
+**Built, as of `R8.6` — and where the mystery now lives in the game rather than
+in this file.** The macro-story above is no longer only prose: the Meadows
+perimeter carries **seven severed outward roads** (`SA4`, one per region this
+one used to reach), each stopped by something that was done to it and dressed
+with Team Tether's own hardware (`SF33`); the stronghold's readout and Warden
+say what the machinery is for (`SG40`, spec §28/§32); and beating him collapses
+the first Rift, which is a **distant, non-enterable view** and stays one —
+`docs/decisions/D23` and `CLAUDE.md` forbid Biome 2 work until the Meadows
+passes its exit gate, and `SG44` is written around that carve-out rather than
+against it. The open question the chapter deliberately ends on is therefore
+"six roads to go, and who cut them" — asked in the world by a traveller at the
+reconnected spoke (`spoke_traveller_storm_road`), never answered here.
+
 ---
 
 ## 4. Engine and Delivery

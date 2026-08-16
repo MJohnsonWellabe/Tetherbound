@@ -94,6 +94,11 @@ static func rideable(species_id: String) -> Dictionary:
 		"mount_offset": offset,
 		"ride_speed_multiplier": float(block.get("ride_speed_multiplier", 1.5)),
 		"dismount_distance": float(block.get("dismount_distance", 1.6)),
+		# R8.5. The slope this mount's own body will accept as floor while it
+		# is being ridden, in degrees. 0.0 means "this species has no opinion",
+		# which is every mount but the legendary — riding_controller.gd then
+		# leaves `floor_max_angle` exactly as the creature scene set it.
+		"climb_max_slope_deg": maxf(float(block.get("climb_max_slope_deg", 0.0)), 0.0),
 	}
 
 

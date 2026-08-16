@@ -831,6 +831,11 @@ const DIALOGUE_FILES := [
 	# exemption is expressed by ALSO naming it in STRONGHOLD_FILES rather
 	# than by quietly leaving it out of the scan.
 	"res://data/dialogue/stronghold.json",
+	# SG46/R8.6's post-victory region. Deliberately NOT in STRONGHOLD_FILES
+	# below: it is reached only after the reveal, but the people speaking it
+	# never saw it, so it is held to the same rule as every other file and the
+	# exemption stays at one.
+	"res://data/dialogue/meadows_freed.json",
 ]
 
 ## Dialogue that is allowed to name it, because it happens at or after the
@@ -1011,3 +1016,86 @@ func _named_villager(who: String) -> Dictionary:
 		if entry is Dictionary and str((entry as Dictionary).get("name", "")) == who:
 			return entry as Dictionary
 	return {}
+
+
+## --- R8.6 / SG46: the outward spokes and the larger mystery --------------------
+
+## R8.6. The chapter has to end pointing somewhere, and spec §23-§31 says where:
+## seven regions, seven severed roads, something that cut them and something
+## that was holding them cut. `SA4` built the seven roads and `SG44` reconnects
+## the first; this is the voice that names the pattern.
+##
+## Written against two rules at once, and both are checked here rather than
+## trusted to the comment in the file. The traveller must point at the
+## macro-story, and she must NOT promise a crossing — the carve-out from D23 and
+## CLAUDE.md means the next region is a view, and a line saying "come with me"
+## would make a liar of the barrier that is still standing there.
+const SPOKE_CONVERSATION := "spoke_traveller_storm_road"
+
+
+func test_the_reconnected_spoke_points_at_the_seven_road_mystery() -> void:
+	assert_true(RUNNER.has(SPOKE_CONVERSATION),
+		"nothing is said at the reconnected spoke; R8.6 has no hook")
+	var said := _spoken_text(SPOKE_CONVERSATION).to_lower()
+	assert_ne(said.strip_edges(), "", "the spoke traveller has no lines")
+	assert_true(said.contains("seven"),
+		"the spoke traveller never names the seven roads; that IS the macro-story (§23-§31)")
+	assert_true(said.contains("cut") or said.contains("severed"),
+		"the spoke traveller never says the roads were cut rather than never built (§29)")
+	assert_true(said.contains("six"),
+		"the spoke traveller never says how many are left; the chapter stops pointing anywhere")
+
+
+## The carve-out, in the words as well as in the terrain. Nothing said at that
+## seam may invite the player across it or describe a place on the other side
+## as somewhere to go: the collapse is a VIEW (D23, CLAUDE.md, spec §19's
+## non-goals), and tests/smoke_boss.gd proves the ground agrees.
+func test_the_spoke_dialogue_never_promises_a_crossing() -> void:
+	var said := _spoken_text(SPOKE_CONVERSATION).to_lower()
+	for phrase: String in ["we can cross", "follow me", "let\'s go", "the way is open",
+			"you can get through", "come with me", "i\'ll take you"]:
+		assert_false(said.contains(phrase),
+			"the spoke traveller says '%s'; the reconnection is a view, not a road" % phrase)
+	# And she says so herself, which is the positive half: the bridge is still
+	# gone and she is not going anywhere either.
+	assert_true(said.contains("still gone") or said.contains("not by this road")
+			or said.contains("don\'t come further"),
+		"nobody at the seam says the road is still impassable; the view reads as an invitation")
+
+
+## SG46/§9. The region answers in words as well as in the terrain, and the
+## villagers who answer are the ones who were there for the drain (SE30's
+## rung): the ground they complained about is the ground that changed.
+func test_the_village_answers_the_victory() -> void:
+	var spoken := ""
+	for id: String in ["village_mira_freed", "village_oskar_freed", "village_tam_freed",
+			"village_quarry_foreman_freed"]:
+		assert_true(RUNNER.has(id), "the village is missing its post-victory conversation '%s'" % id)
+		spoken += _spoken_text(id)
+	var lowered := spoken.to_lower()
+	assert_ne(lowered.strip_edges(), "", "the village says nothing after the Warden falls")
+	assert_true(lowered.contains("quiet") or lowered.contains("stopped"),
+		"nobody notices the machinery going silent")
+	assert_true(lowered.contains("green") or lowered.contains("grass") or lowered.contains("taking"),
+		"nobody notices the ground coming back; D41's payoff is unspoken")
+
+
+## D45's honest remainder, said out loud in the game rather than only in a
+## decision file: the quarry's discolouration is baked and does not heal, so
+## the man standing on it says the floor is still grey. A future firing that
+## re-bakes the terrain healthy should change this line and this test together.
+func test_the_quarry_admits_what_did_not_heal() -> void:
+	var said := _spoken_text("village_quarry_foreman_freed").to_lower()
+	assert_true(said.contains("grey") or said.contains("gray"),
+		"the foreman never admits the quarry floor is still discoloured (D45: that bake cannot heal at run time)")
+
+
+## The post-victory file is held to §32's rule like every other pre-stronghold
+## file — the people speaking it never saw what was inside that building. The
+## scan above already covers it; this asserts the LIST did not quietly grow an
+## exemption while adding it.
+func test_the_post_victory_file_is_scanned_and_not_exempt() -> void:
+	assert_true(DIALOGUE_FILES.has("res://data/dialogue/meadows_freed.json"),
+		"the post-victory dialogue is loaded by the game but not scanned")
+	assert_false(STRONGHOLD_FILES.has("res://data/dialogue/meadows_freed.json"),
+		"the post-victory dialogue took the stronghold's exemption; the reveal stays in one file")
