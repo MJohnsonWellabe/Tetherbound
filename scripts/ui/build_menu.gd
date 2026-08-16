@@ -50,6 +50,52 @@ const COLUMNS := 10
 const CELL_SIZE := 92
 const CELL_GAP := 7
 
+# OW11. The owner's report on this screen was *"it's asking you to build
+# through a menu and you can't see shit."* The arm-then-place handoff it sounds
+# like it is describing was already right — `_pick` arms the piece and closes on
+# the same press, and `build_placer.gd` draws a perfectly legible ghost once it
+# does (both confirmed from real frames this pass). What was wrong is this
+# panel's FOOTPRINT while you are choosing.
+#
+# It was a fixed 1200x680 slab in a `CenterContainer`, which on the Ally's
+# 1920x1080 puts an opaque brown rectangle over y=200..880 — the middle 63% of
+# the screen, centred on exactly the ground the ghost is about to stand on. Most
+# of that was empty: the grid was a hard 10 columns however few pieces the
+# category held, so Structures' five thumbnails sat in a void ten wide.
+#
+# So the selector docks along the bottom and sizes to its contents. Measured at
+# 1920x1080 by `tests/smoke_build_menu_footprint.gd`: 1200x680 covering the
+# centre point and 39.4% of the screen, down to 803x439 clear of the centre and
+# 17.0%. The three constants below are what set that.
+
+## How far the docked selector's bottom edge sits above the screen bottom.
+##
+## Small on purpose: the selector lands ON the hotbar block rather than above
+## it, which is what Valheim itself does — the build bar replaces the hotbar
+## while you are building, it does not stack on top of it.
+##
+## Occupying that space is not enough by itself to own it. This panel's
+## background is semi-transparent, so the first captured frame of the docked
+## menu had the hotbar's five numbered slot chips reading straight THROUGH the
+## thumbnail row, looking like missing art. `playground_hud.gd` hides the
+## hotbar and the context prompt while this menu is open
+## (`_yield_bottom_to_build_menu`) — that is the half that makes the swap read
+## as one surface replacing another.
+##
+## Docking above the hotbar instead was tried and does not work: the hotbar's
+## top edge is 300px up, and no panel carrying a tab row, a thumbnail row, a
+## cost strip and a footer fits into the 240px left below the screen's centre
+## line. It would have put the selector back over the middle of the screen —
+## the exact thing this item is fixing.
+const BOTTOM_MARGIN := 24
+## Enough width that the footer's five glyph/label pairs and a cost row read
+## as a deliberate strip rather than a cramped one. Categories wider than this
+## grow past it on their own; nothing forces the panel back down to it.
+const PANEL_MIN_WIDTH := 640
+## Rows of thumbnails visible before the grid starts scrolling. Two keeps the
+## docked panel short; the `ScrollContainer` still reaches the rest.
+const MAX_VISIBLE_ROWS := 2
+
 ## How dim an unaffordable grid cell reads next to a full-alpha one it stands
 ## beside (OF23) -- greyed, not hidden or disabled: the button still has to
 ## take the press so `_pick` can say WHY it refuses (spec's own "silent
@@ -97,6 +143,10 @@ var _tab_row: HBoxContainer = null
 var _tab_buttons: Array[Button] = []
 var _tab_underlines: Array[ColorRect] = []
 var _grid: GridContainer = null
+## OW11: held so `_build_grid` can size it to the rows the current category
+## actually needs. Left to `SIZE_EXPAND_FILL` it ate the whole 680px panel and
+## drew most of the void this pass removes.
+var _scroll: ScrollContainer = null
 var _cell_buttons: Array[Button] = []
 var _detail_name: Label = null
 var _detail_rows: VBoxContainer = null
@@ -214,6 +264,24 @@ func _game() -> Node:
 	return get_node_or_null(^"/root/Game")
 
 
+## Empties a container NOW, not at the end of the frame.
+##
+## OW11: `queue_free` alone leaves the old children parented until the frame
+## ends, so a container that clears and refills in the same call spends that
+## frame holding both sets — and its minimum size is computed from both.
+## `_describe` does exactly that on EVERY `_process` tick, so the cost strip
+## never saw a frame without its own stale copy in it and laid out at double
+## height permanently: 196px of strip for the two cost rows that measure 90.
+## That inflation was most of the docked panel's excess height.
+##
+## `remove_child` first takes them out of the layout immediately; `queue_free`
+## still does the actual freeing safely afterwards.
+func _clear(container: Node) -> void:
+	for child in container.get_children():
+		container.remove_child(child)
+		child.queue_free()
+
+
 # --- catalogue ---------------------------------------------------------
 
 
@@ -258,20 +326,46 @@ func _build_ui() -> void:
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
 
-	var center := CenterContainer.new()
-	center.name = "Center"
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
-	# A menu, per this task's own scenes note: a full-rect Control here has
-	# to STOP the mouse, or a click meant for a grid cell falls through to
-	# the (still-live) world behind it.
-	center.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(center)
+	# OW11: a bottom dock, not a centre stage. The outer VBox fills the screen
+	# and pushes its children to the END, so the row below hugs the bottom
+	# edge; the spacer under it lifts the whole thing clear of the hotbar. The
+	# inner HBox centres the panel horizontally without stretching it, which is
+	# what lets the panel keep its own content width.
+	#
+	# Both are MOUSE_FILTER_IGNORE: `Dim` above already STOPs the mouse across
+	# the full rect, which is what keeps a click meant for a grid cell from
+	# falling through to the still-live world behind it. A second STOP here
+	# would only take that job away from the node whose comment explains it.
+	var dock := VBoxContainer.new()
+	dock.name = "Dock"
+	dock.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dock.alignment = BoxContainer.ALIGNMENT_END
+	dock.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dock.add_theme_constant_override("separation", 0)
+	add_child(dock)
+
+	var row := HBoxContainer.new()
+	row.name = "Row"
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dock.add_child(row)
+
+	var margin := Control.new()
+	margin.name = "BottomMargin"
+	margin.custom_minimum_size = Vector2(0, BOTTOM_MARGIN)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dock.add_child(margin)
 
 	_panel = PanelContainer.new()
 	_panel.theme = BUILD_THEME
-	_panel.custom_minimum_size = Vector2(1200, 680)
+	# Width only, and a floor rather than a size: the panel takes its height
+	# from the tab row, the grid's own rows and the strip, so a category with
+	# one row of pieces draws a short panel instead of padding 680px of brown
+	# out to a fixed number.
+	_panel.custom_minimum_size = Vector2(PANEL_MIN_WIDTH, 0)
+	_panel.size_flags_vertical = Control.SIZE_SHRINK_END
 	_panel.add_theme_stylebox_override("panel", UITokens.build_panel_box())
-	center.add_child(_panel)
+	row.add_child(_panel)
 
 	var root_vbox := VBoxContainer.new()
 	root_vbox.add_theme_constant_override("separation", 12)
@@ -289,16 +383,16 @@ func _build_ui() -> void:
 	rail.custom_minimum_size = Vector2(0, 2)
 	root_vbox.add_child(rail)
 
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	root_vbox.add_child(scroll)
+	_scroll = ScrollContainer.new()
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	root_vbox.add_child(_scroll)
 
 	_grid = GridContainer.new()
 	_grid.columns = COLUMNS
 	_grid.add_theme_constant_override("h_separation", CELL_GAP)
 	_grid.add_theme_constant_override("v_separation", CELL_GAP)
-	scroll.add_child(_grid)
+	_scroll.add_child(_grid)
 
 	var strip := PanelContainer.new()
 	var strip_box := UITokens.build_panel_box()
@@ -341,8 +435,7 @@ func _build_ui() -> void:
 
 
 func _build_tabs() -> void:
-	for child in _tab_row.get_children():
-		child.queue_free()
+	_clear(_tab_row)
 	_tab_buttons.clear()
 	_tab_underlines.clear()
 
@@ -398,14 +491,19 @@ func _select_category(index: int) -> void:
 ## Rebuilds the thumbnail grid for the current category and lands focus on
 ## the remembered piece (spec 17), or the first cell if none is remembered.
 func _build_grid() -> void:
-	for child in _grid.get_children():
-		child.queue_free()
+	_clear(_grid)
 	_cell_buttons.clear()
 
 	var pieces := _current_pieces()
 	var category := _categories[_category_index] if not _categories.is_empty() else ""
 	var remembered := str(_last_piece_per_category.get(category, ""))
 	var target_index := 0
+
+	# OW11: the grid is as wide as the category has pieces, up to COLUMNS —
+	# not a hard ten every time. Structures holds six, and a fixed ten-column
+	# grid spread those six across a row four cells wider than anything drew
+	# in, which is most of what read as "you can't see shit".
+	_size_grid_to(pieces.size())
 
 	for i in pieces.size():
 		var piece: Dictionary = pieces[i]
@@ -431,6 +529,10 @@ func _build_grid() -> void:
 		var thumb := TextureRect.new()
 		thumb.custom_minimum_size = Vector2(CELL_SIZE - 16, CELL_SIZE - 16)
 		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		# Same reason as the cost-row icon below: a thumbnail bigger than the
+		# cell would otherwise drag the whole grid out past CELL_SIZE rather
+		# than being scaled down into it.
+		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		thumb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var thumbnail_path := str(piece.get("thumbnail", ""))
 		if thumbnail_path != "" and ResourceLoader.exists(thumbnail_path):
@@ -445,9 +547,39 @@ func _build_grid() -> void:
 
 	_selected_index = target_index
 	if not _cell_buttons.is_empty():
-		_cell_buttons[_selected_index].call_deferred("grab_focus")
+		_grab_when_in_tree.call_deferred(_cell_buttons[_selected_index])
 	_describe(_selected_index)
 	_refresh_afford_state()
+
+
+## Lands focus on a grid cell, one frame late and only if that cell is still
+## real.
+##
+## OW11: `_clear` above now unparents the old cells immediately instead of
+## leaving them for the end of the frame, which is what stops the grid from
+## laying out at double width. The cost is that a `grab_focus` already
+## deferred onto a cell from a PREVIOUS `_build_grid` fires after that cell has
+## left the tree — `Condition "!is_inside_tree()" is true`, and no focus. Two
+## category switches in quick succession is enough to hit it, and a build menu
+## that loses focus is a build menu a controller cannot drive at all.
+func _grab_when_in_tree(button: Button) -> void:
+	if is_instance_valid(button) and button.is_inside_tree():
+		button.grab_focus()
+
+
+## OW11: columns follow the piece count so a short category draws a short
+## grid, and the scroll viewport is given the exact height of the rows that
+## produces (capped at MAX_VISIBLE_ROWS). Both numbers are set here rather
+## than in `_build_ui` because both change with the category, and the panel
+## takes its own height from whatever this leaves behind.
+func _size_grid_to(count: int) -> void:
+	if _grid == null or _scroll == null:
+		return
+	var columns := clampi(count, 1, COLUMNS)
+	_grid.columns = columns
+	var rows := ceili(float(count) / float(columns)) if count > 0 else 1
+	var shown := clampi(rows, 1, MAX_VISIBLE_ROWS)
+	_scroll.custom_minimum_size = Vector2(0, shown * CELL_SIZE + (shown - 1) * CELL_GAP)
 
 
 ## OF23: dims every grid cell the satchel cannot currently pay for -- greyed
@@ -479,8 +611,7 @@ func _describe(index: int) -> void:
 	if _detail_name == null:
 		return
 	var pieces := _current_pieces()
-	for child in _detail_rows.get_children():
-		child.queue_free()
+	_clear(_detail_rows)
 	if index < 0 or index >= pieces.size():
 		_detail_name.text = ""
 		return
@@ -513,6 +644,11 @@ func _describe(index: int) -> void:
 		var icon := TextureRect.new()
 		icon.custom_minimum_size = Vector2(22, 22)
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		# OW11: without this a TextureRect's minimum size is its TEXTURE's own
+		# size, which made the 22x22 above decorative — the item icons are 64px
+		# files, so every cost row laid out 64 tall instead of 22. Three rows of
+		# that is 96px of strip on a panel this item exists to make short.
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		var icon_path := "res://assets/ui/icons/items/%s.png" % id
 		if ResourceLoader.exists(icon_path):
 			icon.texture = load(icon_path)

@@ -970,6 +970,7 @@ func _process(delta: float) -> void:
 			_debug_readout.text = _debug_text()
 
 	_refresh_game_ref()
+	_yield_bottom_to_build_menu()
 	_update_hotbar_and_message()
 	_update_world_message()
 	_read_hotbar_input()
@@ -1401,6 +1402,28 @@ func _world_hotkeys_enabled() -> bool:
 	if _arbiter != null and is_instance_valid(_arbiter) and not bool(_arbiter.call("enabled")):
 		return false
 	return true
+
+
+## OW11: the build selector docks along the bottom of the screen, over the
+## ground the hotbar block stands on, the same way Valheim's build bar takes
+## the hotbar's place while you are building. So the hotbar and the context
+## prompt stand down while it is open.
+##
+## This is a visibility swap, not a nudge. `build_menu.gd` is its own
+## CanvasLayer and cannot see these rects (nor they its), so leaving both drawn
+## does not produce two panels sharing a space — it produces the hotbar's slot
+## chips reading THROUGH the selector's semi-transparent background, which is
+## what the first captured frame of the docked menu showed: five numbered
+## squares scattered along the thumbnail row like missing art.
+##
+## The hotbar is already inert while the selector is open, so nothing readable
+## is being taken away — only the drawing of it.
+func _yield_bottom_to_build_menu() -> void:
+	var building := _build_menu_is_open()
+	if _hotbar_panel != null:
+		_hotbar_panel.visible = not building
+	if _prompt_label != null:
+		_prompt_label.visible = not building
 
 
 func _build_menu_is_open() -> bool:
