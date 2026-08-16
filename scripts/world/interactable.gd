@@ -15,6 +15,33 @@ extends Node3D
 const ARBITER := preload("res://scripts/world/prompt_arbiter.gd")
 const ARBITER_NODE := preload("res://scripts/world/interaction_arbiter.gd")
 
+## Metres above the caller's point the sight line is drawn to.
+##
+## The arbiter measures from the player's own origin, which sits on the ground
+## between their feet (scenes/player/player.tscn: the capsule is offset up to
+## y 0.9, the node itself is not). A line drawn from there skims every hummock,
+## stair nose and doorsill between here and the prompt, so it is raised to
+## roughly eye height on a 1.8m trainer. TUNABLE.
+const SIGHT_EYE_HEIGHT := 1.4
+
+## Metres of the sight line, at the prompt end, that are not tested.
+##
+## A prompt is routinely hung ON the thing it belongs to — Grandpa's chest at
+## 0.6 of his height, a harvest tree's prompt on the trunk axis — or just
+## outside it — a satchel's 0.6m, a storage chest's 0.7m. None of those bodies
+## may occlude their own offer, and this file cannot work out from the node tree
+## which collider belongs to whom: a scattered tree's trunk lives in one shared
+## StaticBody3D that is a SIBLING of the prompt, and the bed's "Get up" prompt
+## is parented to the world rather than to the bed. So the ray simply starts
+## clear of whatever the prompt is bolted to. TUNABLE.
+const SIGHT_SELF_CLEARANCE := 0.9
+
+## Metres of the sight line, at the player end, that are not tested. The
+## trainer's own capsule is 0.4m in radius (scenes/player/player.tscn) and the
+## eye point is on its axis, so a ray run all the way to the eye ends inside the
+## player and reports the player as the occluder every single time.
+const SIGHT_TRAINER_CLEARANCE := 0.55
+
 signal activated()
 
 ## What the button does, in the imperative and already containing the subject:
@@ -82,7 +109,54 @@ func interaction_offer(from: Vector3) -> Dictionary:
 	var distance := from.distance_to(global_position)
 	if distance > radius:
 		return {}
+	if not _has_line_of_sight(from):
+		return {}
 	return ARBITER.offer(label, distance, priority)
+
+
+## Is there solid geometry between the player and this prompt?
+##
+## Raw distance on its own let the player finish Grandpa's ENTIRE opening —
+## story, gifts, starter, naming — from the loft bedroom directly above him:
+## ~2.9m of Euclidean distance, comfortably inside the 4.0m prompt radius
+## (data/config/opening.json), through 0.25m of loft floor slab. Found by a
+## blind playtest, and it is not specific to Grandpa: every offer in the game
+## reached through every wall.
+##
+## The ray is cast FROM the prompt TOWARD the player rather than the other way
+## round, and both ends are trimmed (see the two clearance constants). Starting
+## at the prompt also means that when the trimmed origin is still inside the
+## prompt's own body — a fat tree trunk — `hit_from_inside` staying false makes
+## the physics server skip that shape, which is a second line of defence against
+## a thing occluding itself.
+##
+## Refuses only what it can prove is blocked: with no world or no space state
+## (a bare tool scene, a node not yet in a viewport) it offers. A prompt that
+## never appears is worse than one that appears through a wall.
+func _has_line_of_sight(from: Vector3) -> bool:
+	var world := get_world_3d()
+	if world == null:
+		return true
+	var space := world.direct_space_state
+	if space == null:
+		return true
+
+	var eye := from + Vector3.UP * SIGHT_EYE_HEIGHT
+	var to_eye := eye - global_position
+	var span := to_eye.length()
+	if span <= SIGHT_SELF_CLEARANCE + SIGHT_TRAINER_CLEARANCE:
+		# Arm's reach. Nothing can fit in what is left of the line, and a
+		# degenerate reversed ray would report nonsense.
+		return true
+
+	var direction := to_eye / span
+	var query := PhysicsRayQueryParameters3D.create(
+		global_position + direction * SIGHT_SELF_CLEARANCE,
+		global_position + direction * (span - SIGHT_TRAINER_CLEARANCE))
+	# Areas are triggers, not geometry — the house's own interior camera area
+	# covers the whole ground floor and would occlude everything in it.
+	query.collide_with_areas = false
+	return space.intersect_ray(query).is_empty()
 
 
 func interaction_activate() -> void:
