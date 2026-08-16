@@ -41,6 +41,49 @@ var _river_segments: Array = []
 var _river_bounds := Rect2()
 var _river_ready := false
 
+## PERF2. The same lesson as `_river_segments` above, applied to the rest of
+## `height_at`'s inner loop. These cache the PARSE, never the result: every
+## value here is a pure function of `_config` alone, which is assigned once in
+## `_init` and never written again, so the shape this file describes is
+## bit-identical with them and without them.
+##
+## Measured before: `height_at` cost 323 us, of which `_apply_flats` alone was
+## 228 us. The cause is that `Dictionary.get(key, default)` evaluates its
+## default argument EAGERLY, so
+##
+##     flat.get("height", _raw_height(centre.x, centre.y))
+##
+## ran a full `_raw_height` — hills, detail, valley and the whole ridged/
+## terraced rise stack — for all ELEVEN building pads on every single query,
+## including the ten that carry an explicit `height` and never used the result.
+## It was also a pure function of the pad's own centre, so it computed the same
+## eleven numbers 262144 times per baked texture.
+##
+## The rest is ordinary re-parsing: rebuilding the stream's 25 Vector2s, each
+## spoke's rotated carve axis, and the outlet's two profiles per call.
+var _flats_ready := false
+var _flats: Array = []
+
+var _stream_ready := false
+var _stream_points := PackedVector2Array()
+var _stream_head := Vector2.ZERO
+var _stream_bounds := Rect2()
+var _stream_carve_depth_m := 0.0
+var _stream_carve_half := 0.0
+var _stream_water_half := 0.0
+var _stream_shoulder := 0.0
+var _stream_ramp := 0.001
+
+var _spoke_carves_ready := false
+var _spoke_carves: Array = []
+var _crossing_carves_ready := false
+var _crossing_carves: Array = []
+
+var _outlet_ready := false
+var _outlet_sill: Dictionary = {}
+var _outlet_channel: Dictionary = {}
+var _outlet_full := 0.001
+
 
 func _init(config: Dictionary = {}) -> void:
 	_config = config if not config.is_empty() else load_config()
@@ -235,20 +278,25 @@ func height_at(x: float, z: float) -> float:
 ## along-axis profiles are smoothstep, so nothing leaves a crease or a squared
 ## end wall in open grass.
 func _spoke_carve(x: float, z: float) -> float:
-	var routes: Array = _config.get("spokes", {}).get("routes", [])
-	if routes.is_empty():
+	if not _spoke_carves_ready:
+		_spoke_carves_ready = true
+		for entry: Variant in _config.get("spokes", {}).get("routes", []):
+			if not entry is Dictionary:
+				continue
+			if not bool((entry as Dictionary).get("built", false)):
+				continue
+			var carve: Dictionary = ((entry as Dictionary).get("blocker", {}) as Dictionary).get("carve", {})
+			if carve.is_empty():
+				continue
+			var prepared := _prepare_carve(carve)
+			if not prepared.is_empty():
+				_spoke_carves.append(prepared)
+	if _spoke_carves.is_empty():
 		return 0.0
 	var spot := Vector2(x, z)
 	var deepest := 0.0
-	for entry: Variant in routes:
-		if not entry is Dictionary:
-			continue
-		if not bool((entry as Dictionary).get("built", false)):
-			continue
-		var carve: Dictionary = ((entry as Dictionary).get("blocker", {}) as Dictionary).get("carve", {})
-		if carve.is_empty():
-			continue
-		deepest = maxf(deepest, _carve_depth(spot, carve))
+	for prepared: Dictionary in _spoke_carves:
+		deepest = maxf(deepest, _prepared_carve_depth(spot, prepared))
 	return deepest
 
 
@@ -264,18 +312,23 @@ func _spoke_carve(x: float, z: float) -> float:
 ## and keeps one falloff evaluator on this map, which is the property that
 ## actually matters (see `_outlet_shape`'s own note on the same choice).
 func _crossing_carve(x: float, z: float) -> float:
-	var crossings: Array = _config.get("crossings", [])
-	if crossings.is_empty():
+	if not _crossing_carves_ready:
+		_crossing_carves_ready = true
+		for entry: Variant in _config.get("crossings", []):
+			if not entry is Dictionary:
+				continue
+			var carve: Dictionary = (entry as Dictionary).get("carve", {})
+			if carve.is_empty():
+				continue
+			var prepared := _prepare_carve(carve)
+			if not prepared.is_empty():
+				_crossing_carves.append(prepared)
+	if _crossing_carves.is_empty():
 		return 0.0
 	var spot := Vector2(x, z)
 	var deepest := 0.0
-	for entry: Variant in crossings:
-		if not entry is Dictionary:
-			continue
-		var carve: Dictionary = (entry as Dictionary).get("carve", {})
-		if carve.is_empty():
-			continue
-		deepest = maxf(deepest, _carve_depth(spot, carve))
+	for prepared: Dictionary in _crossing_carves:
+		deepest = maxf(deepest, _prepared_carve_depth(spot, prepared))
 	return deepest
 
 
@@ -452,12 +505,17 @@ func _vec2_of(raw: Variant) -> Vector2:
 ## the second is not — the shore step must see the finished bed so the neck
 ## gets the same half-metre lip as the rest of the shoreline.
 func _outlet_shape(x: float, z: float) -> float:
-	var outlet: Dictionary = _config.get("water", {}).get("outlet", {})
-	if outlet.is_empty():
+	if not _outlet_ready:
+		_outlet_ready = true
+		var outlet: Dictionary = _config.get("water", {}).get("outlet", {})
+		var sill_cfg: Dictionary = outlet.get("sill", {})
+		_outlet_sill = _prepare_carve(sill_cfg)
+		_outlet_channel = _prepare_carve(outlet.get("channel", {}))
+		_outlet_full = maxf(float(sill_cfg.get("depth", 0.0)), 0.001)
+	if _outlet_sill.is_empty():
 		return 0.0
 	var spot := Vector2(x, z)
-	var sill: Dictionary = outlet.get("sill", {})
-	var raise_by := _carve_depth(spot, sill)
+	var raise_by := _prepared_carve_depth(spot, _outlet_sill)
 	if raise_by <= 0.0:
 		# Outside the bar there is nothing to cut through, and cutting anyway
 		# would gouge a slot across the pond floor and on down the gorge.
@@ -466,33 +524,54 @@ func _outlet_shape(x: float, z: float) -> float:
 	# the sill's own falloff, so the two reach zero on the same contour. Left
 	# independent, the channel would still be metres deep exactly where the
 	# sill had faded to nothing and the neck would end in a submerged cliff.
-	var full := maxf(float(sill.get("depth", 0.0)), 0.001)
-	return raise_by - _carve_depth(spot, outlet.get("channel", {})) * (raise_by / full)
+	return raise_by - _prepared_carve_depth(spot, _outlet_channel) * (raise_by / _outlet_full)
 
 
 func _carve_depth(spot: Vector2, carve: Dictionary) -> float:
+	return _prepared_carve_depth(spot, _prepare_carve(carve))
+
+
+## A carve's authored block, resolved into plain floats and a unit axis. Split
+## out of `_carve_depth` for PERF2: the profile itself is a handful of dot
+## products, but re-reading six Dictionary keys and rebuilding a rotated axis
+## vector for every spoke on every query was most of what it cost. An empty
+## Dictionary means "no carve here", the same answer the depth<=0 and
+## missing-centre guards gave before.
+func _prepare_carve(carve: Dictionary) -> Dictionary:
 	var depth := float(carve.get("depth", 0.0))
 	if depth <= 0.0:
-		return 0.0
+		return {}
 	var at: Array = carve.get("centre", [])
 	if at.size() < 2:
+		return {}
+	return {
+		"depth": depth,
+		"centre": Vector2(float(at[0]), float(at[1])),
+		"axis": Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0)))),
+		"half_width": maxf(float(carve.get("half_width", 6.0)), 0.01),
+		"rim": maxf(float(carve.get("rim", 5.0)), 0.01),
+		"half_length": maxf(float(carve.get("half_length", 40.0)), 0.01),
+		"fade": maxf(float(carve.get("end_fade", 16.0)), 0.01),
+	}
+
+
+func _prepared_carve_depth(spot: Vector2, carve: Dictionary) -> float:
+	if carve.is_empty():
 		return 0.0
-	var centre := Vector2(float(at[0]), float(at[1]))
-	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+	var centre: Vector2 = carve["centre"]
+	var axis: Vector2 = carve["axis"]
 	var local := spot - centre
 	var u := absf(local.dot(axis))
 	var v := absf(local.dot(Vector2(-axis.y, axis.x)))
 
-	var half_width := maxf(float(carve.get("half_width", 6.0)), 0.01)
-	var rim := maxf(float(carve.get("rim", 5.0)), 0.01)
-	var across := 1.0 - smoothstep(half_width, half_width + rim, v)
+	var half_width: float = carve["half_width"]
+	var across := 1.0 - smoothstep(half_width, half_width + float(carve["rim"]), v)
 	if across <= 0.0:
 		return 0.0
 
-	var half_length := maxf(float(carve.get("half_length", 40.0)), 0.01)
-	var fade := maxf(float(carve.get("end_fade", 16.0)), 0.01)
-	var along := 1.0 - smoothstep(half_length, half_length + fade, u)
-	return depth * across * along
+	var half_length: float = carve["half_length"]
+	var along := 1.0 - smoothstep(half_length, half_length + float(carve["fade"]), u)
+	return float(carve["depth"]) * across * along
 
 
 func _valley_depth(x: float, z: float) -> float:
@@ -747,22 +826,26 @@ func _apply_spawn_pad(x: float, z: float, height: float) -> float:
 ## sequential-blend version of that bug is what `test_the_building_pads_are_
 ## genuinely_flat` already guards against).
 func _apply_flats(x: float, z: float, height: float) -> float:
-	var flats: Array = _config.get("flats", [])
+	if not _flats_ready:
+		_build_flat_cache()
 	var in_core := false
 	var core_fraction := INF
 	var core_height := height
 	var total_weight := 0.0
 	var weighted_target := 0.0
 	var max_weight := 0.0
-	for entry: Variant in flats:
-		if not entry is Dictionary:
-			continue
-		var flat: Dictionary = entry
-		var centre: Array = flat.get("centre", [0.0, 0.0])
-		var radius := float(flat.get("radius", 10.0))
-		var skirt := float(flat.get("skirt", 8.0))
-		var target := float(flat.get("height", _raw_height(float(centre[0]), float(centre[1]))))
-		var distance := Vector2(x - float(centre[0]), z - float(centre[1])).length()
+	for prepared: Dictionary in _flats:
+		var radius: float = prepared["radius"]
+		var skirt: float = prepared["skirt"]
+		var target: float = prepared["target"]
+		# The centre is kept as two GDScript floats, NOT as a Vector2: Vector2
+		# is 32-bit, so packing it would round the centre before the subtraction
+		# instead of after it, and shift the finished height by ~1e-6 m. That is
+		# far below anything visible, and it is still wrong to do here — the
+		# scatter gates placements on thresholds read off this value, so a
+		# last-bits change silently moves instances (the identity requirement
+		# PERF1 records for the same reason).
+		var distance := Vector2(x - float(prepared["cx"]), z - float(prepared["cz"])).length()
 		if distance <= radius:
 			# Two authored pads never overlap cores today (checked by the
 			# pad-flatness test) but if a future one ever did, the nearer
@@ -786,6 +869,31 @@ func _apply_flats(x: float, z: float, height: float) -> float:
 		return height
 	var blended_target := weighted_target / total_weight
 	return lerpf(height, blended_target, clampf(max_weight, 0.0, 1.0))
+
+
+## One pass over the authored pads. A pad's target height is either authored
+## outright or read off the natural ground at the pad's own centre — either way
+## a constant, so it is resolved once here instead of eleven times per query.
+## `_raw_height` deliberately, not `height_at`: the pad's target must be the
+## ground BEFORE any pad flattening, exactly as the eager default did, or a pad
+## would recurse into itself.
+func _build_flat_cache() -> void:
+	_flats_ready = true
+	_flats = []
+	for entry: Variant in _config.get("flats", []):
+		if not entry is Dictionary:
+			continue
+		var flat: Dictionary = entry
+		var centre: Array = flat.get("centre", [0.0, 0.0])
+		var cx := float(centre[0])
+		var cz := float(centre[1])
+		_flats.append({
+			"cx": cx,
+			"cz": cz,
+			"radius": float(flat.get("radius", 10.0)),
+			"skirt": float(flat.get("skirt", 8.0)),
+			"target": float(flat.get("height", _raw_height(cx, cz))),
+		})
 
 
 ## The still-water surface height in metres, or NAN when the config has no
@@ -817,25 +925,59 @@ func water_level() -> float:
 ## building pad, and applying the carve last means a future stream segment
 ## near a pad would still cut a visible channel instead of being ironed flat.
 func _stream_carve(x: float, z: float) -> float:
+	if not _stream_ready:
+		_build_stream_cache()
+	if _stream_points.size() < 2:
+		return 0.0
+	if _stream_carve_depth_m <= 0.0 or _stream_carve_half <= 0.0:
+		return 0.0
+	var spot := Vector2(x, z)
+	# Cheap reject on the course's own bounding box, grown by the carve's
+	# half-width. Outside it the nearest segment is further than `half`, which
+	# the test below would have returned 0.0 for anyway — so this changes no
+	# height, it just stops walking 24 segments for the ~95% of the map the
+	# stream does not touch. (`grow` is the same margin, not a guess.)
+	if not _stream_bounds.grow(_stream_carve_half).has_point(spot):
+		return 0.0
+	var nearest := _nearest_on_stream(spot)
+	if nearest >= _stream_carve_half:
+		return 0.0
+	var ramp: float = smoothstep(0.0, _stream_ramp, spot.distance_to(_stream_head))
+	return _stream_carve_depth_m * (1.0 - smoothstep(0.0, _stream_carve_half, nearest)) * ramp
+
+
+func _nearest_on_stream(spot: Vector2) -> float:
+	var nearest := INF
+	for i in _stream_points.size() - 1:
+		nearest = minf(nearest, _segment_distance(spot, _stream_points[i], _stream_points[i + 1]))
+	return nearest
+
+
+## The stream's authored course and its two cross-sections, parsed once. The
+## carve's width and the WATER's width are different numbers on the same
+## polyline (`_stream_carve` shapes the channel, `stream_factor` says how wet
+## the bed is), so both live here rather than either owning the points.
+func _build_stream_cache() -> void:
+	_stream_ready = true
 	var stream: Dictionary = _config.get("water", {}).get("stream", {})
 	var points: Array = stream.get("points", [])
 	if points.size() < 2:
-		return 0.0
-	var depth := float(stream.get("carve_depth", 0.7))
-	var half := float(stream.get("carve_width", 5.0)) * 0.5
-	if depth <= 0.0 or half <= 0.0:
-		return 0.0
-	var spot := Vector2(x, z)
-	var nearest := INF
-	for i in points.size() - 1:
-		var a := Vector2(float(points[i][0]), float(points[i][1]))
-		var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
-		nearest = minf(nearest, _segment_distance(spot, a, b))
-	if nearest >= half:
-		return 0.0
-	var head := Vector2(float(points[0][0]), float(points[0][1]))
-	var ramp: float = smoothstep(0.0, maxf(float(stream.get("head_ramp", 14.0)), 0.001), spot.distance_to(head))
-	return depth * (1.0 - smoothstep(0.0, half, nearest)) * ramp
+		return
+	_stream_points = PackedVector2Array()
+	var lo := Vector2(INF, INF)
+	var hi := Vector2(-INF, -INF)
+	for p: Variant in points:
+		var at := Vector2(float((p as Array)[0]), float((p as Array)[1]))
+		_stream_points.append(at)
+		lo = Vector2(minf(lo.x, at.x), minf(lo.y, at.y))
+		hi = Vector2(maxf(hi.x, at.x), maxf(hi.y, at.y))
+	_stream_bounds = Rect2(lo, hi - lo)
+	_stream_head = _stream_points[0]
+	_stream_carve_depth_m = float(stream.get("carve_depth", 0.7))
+	_stream_carve_half = float(stream.get("carve_width", 5.0)) * 0.5
+	_stream_water_half = float(stream.get("width", 2.4)) * 0.5
+	_stream_shoulder = float(stream.get("shoulder", 1.2))
+	_stream_ramp = maxf(float(stream.get("head_ramp", 14.0)), 0.001)
 
 
 ## An extra half-metre drop for everything already under the waterline, faded
@@ -869,21 +1011,14 @@ func stream_carve_depth(x: float, z: float) -> float:
 ## the bake paints the wet bed from it and the scatter keeps vegetation out
 ## of the channel with it, and both agreeing is why it lives here.
 func stream_factor(x: float, z: float) -> float:
-	var stream: Dictionary = _config.get("water", {}).get("stream", {})
-	var points: Array = stream.get("points", [])
-	if points.size() < 2:
+	if not _stream_ready:
+		_build_stream_cache()
+	if _stream_points.size() < 2:
 		return 0.0
-	var half := float(stream.get("width", 2.4)) * 0.5
-	var shoulder := float(stream.get("shoulder", 1.2))
 	var spot := Vector2(x, z)
-	var nearest := INF
-	for i in points.size() - 1:
-		var a := Vector2(float(points[i][0]), float(points[i][1]))
-		var b := Vector2(float(points[i + 1][0]), float(points[i + 1][1]))
-		nearest = minf(nearest, _segment_distance(spot, a, b))
-	var head := Vector2(float(points[0][0]), float(points[0][1]))
-	var ramp: float = smoothstep(0.0, maxf(float(stream.get("head_ramp", 14.0)), 0.001), spot.distance_to(head))
-	return (1.0 - smoothstep(half, half + shoulder, nearest)) * ramp
+	var nearest := _nearest_on_stream(spot)
+	var ramp: float = smoothstep(0.0, _stream_ramp, spot.distance_to(_stream_head))
+	return (1.0 - smoothstep(_stream_water_half, _stream_water_half + _stream_shoulder, nearest)) * ramp
 
 
 ## How much a world point belongs to a dirt path: 1.0 on the centreline,
