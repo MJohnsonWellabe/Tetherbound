@@ -697,6 +697,9 @@ jobs:
   verify-riding:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+  verify-boss:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: changes
     if: needs.changes.outputs.code == 'true'
 
@@ -779,6 +782,34 @@ jobs:
           if [ $code -ne 0 ]; then
             echo "::warning::smoke_riding failed once; retrying once before failing the job"
             godot --headless --path . --script tests/smoke_riding.gd
+      - name: Smoke-test the chapter's climax
+        # R8.3/SG40/R8.4. Mirrors verify-combat's shape because it has the
+        # same shape of risk: a scene-boot-and-simulate test that drives real
+        # input through a real fight. What it covers that no unit test can —
+        # the Warden is REACHABLE (a body on real ground offering a real
+        # prompt), the reveal is readable BEFORE him, the Legendary Chamber's
+        # lever is REFUSED until he falls (spec §28's order is not optional
+        # and that gate is the one place it could be walked around), the boss
+        # fight runs and can be won on the ordinary trainer substrate, the
+        # legendary is freed and `legendary_freed` is set exactly once (SG44's
+        # world event reads it, and a double-fire is worse than none), its
+        # voluntary join reaches the party, and a FULL belt hands it to
+        # R4.10's release ceremony rather than dropping it on the floor.
+        #
+        # LP9's retry, for the same measured reason verify-combat carries it:
+        # this test is tick-budget-bounded rather than wall-clock-bounded, and
+        # under heavy CI contention a budget can be exhausted for real without
+        # the logic being stuck. A second straight failure is much less likely
+        # to be the same transient. The budget here is the largest in the
+        # suite (five creatures back to back, then a scripted sequence), which
+        # is also why this job's timeout is 15 minutes rather than 10.
+        run: |
+          set +e
+          godot --headless --path . --script tests/smoke_boss.gd
+          code=$?
+          if [ $code -ne 0 ]; then
+            echo "::warning::smoke_boss failed once; retrying once before failing the job"
+            godot --headless --path . --script tests/smoke_boss.gd
             code=$?
           fi
           exit $code

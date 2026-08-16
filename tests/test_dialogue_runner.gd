@@ -826,11 +826,22 @@ const DIALOGUE_FILES := [
 	"res://data/dialogue/relay.json",
 	"res://data/dialogue/trainers.json",
 	"res://data/dialogue/opening.json",
+	# SG40/R8.3/R8.4's stronghold. Listed here as well as below on purpose:
+	# every dialogue file the game loads belongs in this array, and the
+	# exemption is expressed by ALSO naming it in STRONGHOLD_FILES rather
+	# than by quietly leaving it out of the scan.
+	"res://data/dialogue/stronghold.json",
 ]
 
 ## Dialogue that is allowed to name it, because it happens at or after the
-## reveal. Empty until SG40/R8.3 land.
-const STRONGHOLD_FILES: Array[String] = []
+## reveal. SG40 fills this with exactly one path — the stronghold's own file,
+## which is where §32 puts the final reveal — and the rule above is not
+## weakened by it: every other file in DIALOGUE_FILES is still scanned, and
+## `test_the_exemption_is_exactly_one_file` below keeps this list from quietly
+## growing into a licence.
+const STRONGHOLD_FILES: Array[String] = [
+	"res://data/dialogue/stronghold.json",
+]
 
 
 func test_no_dialogue_before_the_stronghold_names_the_legendary() -> void:
@@ -847,6 +858,93 @@ func test_no_dialogue_before_the_stronghold_names_the_legendary() -> void:
 				"a character in %s says '%s'; §32 puts that reveal in the stronghold, and this is read before it"
 					% [path, word])
 	assert_true(checked >= 4, "expected to scan every pre-stronghold dialogue file, scanned %d" % checked)
+
+
+## SG40. The exemption is a seam, not a door: exactly one file may carry the
+## reveal, and it has to be the stronghold's. A second entry here would mean
+## somebody moved a spoiler earlier rather than moved a scene later.
+func test_the_exemption_is_exactly_one_file() -> void:
+	assert_eq(STRONGHOLD_FILES.size(), 1,
+		"the legendary's reveal is exempt in %d files; §32 puts it in exactly one" % STRONGHOLD_FILES.size())
+	assert_eq(STRONGHOLD_FILES[0], "res://data/dialogue/stronghold.json")
+	for path: String in STRONGHOLD_FILES:
+		assert_true(DIALOGUE_FILES.has(path),
+			"%s is exempt from a scan it is not part of; the exemption must name a file the game actually loads" % path)
+
+
+## And the positive half: the reveal has to actually BE in there. A rule that
+## forbids the words everywhere and a stronghold that never says them is a
+## chapter with no reveal at all — which is exactly the failure the ladder was
+## built to prevent, arrived at from the other side.
+func test_the_stronghold_delivers_the_reveal() -> void:
+	var spoken := _all_spoken_in("res://data/dialogue/stronghold.json").to_lower()
+	assert_ne(spoken.strip_edges(), "", "the stronghold's dialogue file has no spoken lines")
+	assert_true(spoken.contains("legendary"),
+		"the stronghold never says the word the whole ladder has been climbing toward")
+	assert_true(spoken.contains("veridian"),
+		"the stronghold never names which creature it is")
+	# §32's stronghold rung, in three parts: it is the source, Team Tether is
+	# taking from it, and the Warden knows what freeing it does.
+	assert_true(spoken.contains("source") or spoken.contains("draw"),
+		"the reveal never says the legendary is what the system runs on")
+	assert_true(spoken.contains("contained") or spoken.contains("containment") or spoken.contains("ring"),
+		"the reveal never says it is being held")
+
+
+## §33, asserted rather than trusted to a comment. He is a believer, not a
+## moustache-twirler: the spec forbids one line in particular and asks for the
+## shape of another, and both are checkable.
+func test_the_warden_argues_rather_than_gloats() -> void:
+	var spoken := ""
+	for id: String in ["stronghold_warden_challenge", "stronghold_warden_defeated"]:
+		spoken += _spoken_text(id)
+	assert_ne(spoken.strip_edges(), "", "the Warden has no lines")
+	var lowered := spoken.to_lower()
+	assert_false(lowered.contains("you cannot stop me"),
+		"the Warden says the exact line §28 rules out")
+	assert_true(lowered.contains("holding apart"),
+		"the Warden never makes §28's argument — that the barriers are holding something apart")
+	assert_true(lowered.contains("disorder"),
+		"the Warden never states §33's worldview (freedom without control becomes disorder)")
+	# He WARNS rather than gloats after losing, which is SG40's own wording.
+	var after := _spoken_text("stronghold_warden_defeated").to_lower()
+	assert_true(after.contains("warning") or after.contains("warn"),
+		"the beaten Warden never warns the player about what they are about to do")
+
+
+## R8.4 / §28. The order is not optional, and the conversations are written in
+## it — so the conversations themselves have to exist, in that order, and the
+## freeing has to record itself on the same line it happens.
+func test_the_ending_conversations_exist_in_order() -> void:
+	for id: String in [
+		"stronghold_reveal",
+		"stronghold_warden_challenge",
+		"stronghold_warden_defeated",
+		"stronghold_chamber",
+		"stronghold_free_legendary",
+		"stronghold_legendary_joins",
+		"stronghold_machinery_fails",
+	]:
+		assert_true(RUNNER.has(id), "the ending is missing conversation '%s'" % id)
+
+	# The line the ring drops on is the line that sets the flag: a conversation
+	# cut short must not bank the freeing without the words or the reverse.
+	var freed := 0
+	var conversation: Dictionary = RUNNER.table().get("stronghold_free_legendary", {})
+	for line: Variant in (conversation.get("lines", []) as Array):
+		if not line is Dictionary:
+			continue
+		for effect: Variant in ((line as Dictionary).get("effects", []) as Array):
+			var parts: Array = RUNNER.parse_effect(str(effect))
+			if str(parts[0]) == "flag" and str(parts[1]) == "legendary_freed":
+				freed += 1
+	assert_eq(freed, 1,
+		"'legendary_freed' is set %d times by the freeing conversation; it must be exactly once" % freed)
+
+	# The voluntary join is voluntary in the words too — nothing is thrown.
+	var join := _spoken_text("stronghold_legendary_joins").to_lower()
+	assert_false(join.contains("orb at") or join.contains("threw"),
+		"the legendary is caught rather than offered; §28's word is 'voluntarily'")
 
 
 ## Every SPOKEN line in a dialogue file, and only the spoken lines. The

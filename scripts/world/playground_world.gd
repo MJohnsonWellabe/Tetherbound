@@ -38,6 +38,7 @@ const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
 const RIVER := preload("res://scripts/world/river.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
+const STRONGHOLD_CLIMAX := preload("res://scripts/world/stronghold_climax.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 
@@ -659,6 +660,7 @@ func _build_settlement() -> void:
 	_place_tms()
 	_build_burrow_warrens()
 	_build_stronghold()
+	_build_stronghold_climax()
 
 	var placer := BUILD_PLACER.new()
 	placer.name = "BuildPlacer"
@@ -795,6 +797,21 @@ func _build_stronghold() -> void:
 	add_child(stronghold)
 	if not bool(stronghold.call("build", self, _camera_rig, _player)):
 		push_warning("the stronghold route did not build; spec §8's five spaces are missing")
+## R8.3/SG40/R8.4: the Warden, the reveal and the freeing of the legendary.
+##
+## Built LAST of the authored content, and after `_build_stronghold()` when
+## R8.2's route is present, because the climax asks that building for its
+## named marks (`warden_stand`, `machine_foot`, `legendary_stand`) rather than
+## hard-coding a metre inside somebody else's rooms. Where the route is not in
+## the tree yet the climax falls back to its own world coordinates in
+## data/config/stronghold_climax.json and still runs end to end — the merge is
+## then only a matter of the markers starting to answer.
+func _build_stronghold_climax() -> void:
+	var climax: Node3D = STRONGHOLD_CLIMAX.new()
+	climax.name = "StrongholdClimax"
+	add_child(climax)
+	if not bool(climax.call("build", self, _player)):
+		push_warning("the stronghold climax did not build; the chapter has no ending")
 
 
 ## The first day's gathering spots, from data/config/harvest.json.

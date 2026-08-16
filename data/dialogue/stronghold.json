@@ -1,0 +1,112 @@
+{
+  "_comment": "SG40 / R8.3 / R8.4. The stronghold's own words: the reveal, the Warden, and the freeing. Same `{\"conversations\": {...}}` shape as opening.json, village.json, trainers.json and relay.json, merged onto the same table by scripts/story/dialogue_runner.gd's EXTRA_DIALOGUE_PATHS.",
+
+  "_comment_exemption": "THIS IS THE ONE FILE ALLOWED TO NAME THE LEGENDARY. SE30 laid a rule across every other dialogue file (tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary) that fails the build if 'legendary', 'veridian', 'stag', 'living power' or 'power source' appears in anything the player can read before this building. That rule is not weakened by this file existing -- it is COMPLETED by it. This path is listed in that test's STRONGHOLD_FILES, which is the single named exemption the seam was designed with, and it is exempt for exactly one reason: spec §32 puts the final reveal inside the stronghold, and a reveal has to happen somewhere.",
+
+  "_comment_order": "Spec §28's order is not optional and this file is written in it. The READOUT (`stronghold_reveal`) is spec Act VI step 33's environmental/story reveal and it sits on the threshold of the Warden Arena, so the player learns what is at the far end of the cables BEFORE the Warden opens his mouth and before the fight. Then step 34, his dialogue. Then step 35, the battle. Only after that do the chamber conversations exist to be reached at all.",
+
+  "_comment_portraits": "The four narration beats (`stronghold_chamber` and the three after it) are attributed to 'Chamber Five' and the readout to 'Tether Readout', and all of them point at the EXISTING generic portrait. tests/test_dialogue_runner.gd requires every conversation to have a speaker and a portrait that is really on disk, and that rule was not weakened to fit these lines in. But it is an acknowledged STAND-IN and it is flagged, not faked: the room and the machine do not have a face of their own, and neither does the Warden (his own is still painted rather than modelled -- HANDOFF §6). Both want owner-gated art before this scene is judged final, and no generation was spent guessing at either.",
+
+  "_comment_warden": "Spec §33, and it is the whole assignment. He sincerely believes separation prevents chaos, that controlled trade prevents regional conflict, that dangerous migration must be limited, that ordinary people do not understand the risks, and that Team Tether carries the burden of holding it together. He can still be abusing power -- he is -- and he is NOT a moustache-twirler. He never says 'you cannot stop me'. He says a version of 'you don't understand what these barriers are holding apart', and he means it, and he is not entirely wrong, and he is doing this to a living thing anyway. He does not recant when he loses. That is the point: the player has to make the choice against a real argument, not against a sneer.",
+
+  "conversations": {
+    "stronghold_reveal": {
+      "_comment": "SG40. A Team Tether maintenance readout bolted to the arena threshold -- environmental storytelling, in the flat institutional voice of a machine nobody expected an outsider to read. It says the three things §32's stronghold rung lists: the legendary is the living power source, Team Tether is siphoning it, and the people running it know exactly what they are doing. The horror is in the register: this is a status board, and none of it is phrased as a crime.",
+      "speaker": "Tether Readout",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "MEADOWS STATION — PRIMARY DRAW. STATUS: NOMINAL. SEVEN SPOKES HELD.",
+        "SOURCE: LEGENDARY CLASS, GROUND. DESIGNATION VERIDIAN. CONTAINED, CHAMBER 5.",
+        "The board is a column of numbers with a shape you have already seen: every gauge in the Meadows, every conduit out of the quarry, every relay on the river — all of it feeds inward, and all of it stops here, on one line.",
+        "DRAW SUSTAINED 1,411 DAYS. SUBJECT VITALS: DECLINING, WITHIN TOLERANCE.",
+        {
+          "text": "The Rifts are not holding themselves apart. Something alive is holding them apart, and it has been doing it for four years, and there is a tolerance band printed under the word for how much of it is left.",
+          "effects": [
+            "flag:learned_legendary_is_the_source"
+          ]
+        }
+      ]
+    },
+
+    "stronghold_warden_challenge": {
+      "_comment": "R8.3, spec Act VI step 34. He has watched you come the whole way and he is not surprised, because he thinks the ending is arithmetic. Note what he does NOT do: threaten, gloat, or deny the readout. He confirms it, and then argues that it is worth it -- which is the harder version and the one §33 asks for. His last line is the challenge; scripts/world/trainer_npc.gd starts the fight when the words run out, so nothing here carries a `battle:` effect.",
+      "speaker": "Warden Aldis",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "You read the board. Good. I would rather you did — I have no interest in a person who came all this way to break something they never bothered to look at.",
+        "Then you know it is true, and you can stop hunting for the lie. There isn't one. It is exactly what it says.",
+        "So the only question left is the one you came here not to ask. What do you think those seams are holding apart?",
+        "I have stood on the far side of one. There is a whole country over that ridge and it is not gentle. When the Meadows was open, the herds came through in the spring and took the crops down to the soil, and the people who followed the herds took what the herds left, and every village on this plain learned the same lesson twice a generation. I have read those years. You have not.",
+        "Freedom without control becomes disorder. I did not invent that; I only stopped pretending it wasn't so. Trade is controlled because uncontrolled trade became a fight. The crossings are held because unheld crossings emptied this valley once already.",
+        "And yes — it costs. You saw what it costs. I read that same board every morning of my life and I have never once looked away from the last line of it. I carry that. Someone has to, and it will not be a boy from a farmhouse who has never had to hold anything.",
+        "You don't understand what these barriers are holding apart. I am not going to be able to explain it to you, and I am done trying.",
+        "So show me. If your creatures are stronger than mine, then you are right about the world and I have been wrong about it for eleven years. Let's find out which."
+      ]
+    },
+
+    "stronghold_warden_defeated": {
+      "_comment": "R8.3. He loses and does not fold. A villain would recant; a believer does the thing this does -- concedes the fight, concedes nothing else, and tells you the truth about what the door behind him leads to, because he thinks the truth is his best remaining argument. That he stands aside at all is the one crack in him: he plays by the rules he says he is defending.",
+      "speaker": "Warden Aldis",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "…Well fought. Genuinely. I do not say that to soften it.",
+        "I won't stop you at the door. That was the wager and I lost it, and a man who breaks his own rules the moment they cost him was never keeping rules at all.",
+        "But hear the last of it, because after the chamber nobody will be able to un-hear it. Pull that thing out of the ring and the draw stops, and when the draw stops the seams do not tidily heal. They come DOWN. Everything on the other side arrives, all at once, and it arrives at your village first.",
+        "I am not warning you to frighten you. I am warning you because I think you are about to do it anyway, and I would rather you did it knowing.",
+        "Go on, then. Chamber five. Mind the ring — it does not know the difference between you and it."
+      ]
+    },
+
+    "stronghold_chamber": {
+      "_comment": "R8.4, and the first thing the player is given in the chamber is a LOOK, not a button. The room is the machine and the machine has something in it. Deliberately wordless about what to do next -- the prompt on the machine is the next thing, and it is the player's hand on it.",
+      "speaker": "Chamber Five",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Chamber five is one room and one object, and the object is running.",
+        "Inside the containment ring, a stag stands with its head down. It is enormous — taller at the shoulder than any creature you have met in the Meadows — and it is standing the way a thing stands when it has been standing for a very long time.",
+        "It lifts its head and looks at you. Not at the ring. At you.",
+        "Every cable in this building comes to a stop at its feet."
+      ]
+    },
+
+    "stronghold_free_legendary": {
+      "_comment": "R8.4, spec §28 steps 1-2. The choice is made HERE, with the Warden's warning still fresh and unrefuted -- 'the player makes the choice knowing what it costs' is SG40's own done-condition. The machine does not fail yet; it fails after, which is §28's order (free the legendary, then it offers, then the five-creature decision, then the machinery fails).",
+      "speaker": "Chamber Five",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "The shutdown is not hidden and it is not locked. It is a lever with a painted grip, sized for a hand, because it was built by people who never imagined anyone would want to pull it.",
+        "Aldis was not lying to you. You are fairly sure of that. It is going to cost something, and you do not know what, and the numbers on the board upstairs are still counting down whether you pull it or not.",
+        {
+          "text": "You pull it. The ring drops its light in a single beat — and for the first time in one thousand four hundred and eleven days, the Veridian Stag is standing in a room and nothing is holding it there.",
+          "effects": [
+            "flag:legendary_freed"
+          ]
+        },
+        "It does not bolt. It shakes itself out, slowly, the way something does when it is remembering the whole of its own body, and the light that comes up off it is warm and enormous and nobody's but its own."
+      ]
+    },
+
+    "stronghold_legendary_joins": {
+      "_comment": "R8.4, spec §28 step 3 -- VOLUNTARILY offers to join, which is the load-bearing word. It is not caught, it is not thrown at, it is not weakened first. Spec §5 and the whole five-creature rule then do the rest: if the belt is already full this hands the decision to R4.10's release ceremony (Game.pending_catch), and the answer the spec itself gives to that moment is 'Yes. This is my team.'",
+      "speaker": "Chamber Five",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "It crosses the chamber to you. There is no ring to stop it and no reason left to be in this building, and it comes over anyway and puts its head down until the two of you are level.",
+        "It waits there. Whatever this is, it is being asked, not taken — you have not so much as reached for an orb.",
+        "You could walk out of here and it would walk out behind you."
+      ]
+    },
+
+    "stronghold_machinery_fails": {
+      "_comment": "R8.4, spec §28 step 5. The machinery fails AFTER the join and after the five-creature decision, and this file's job stops at the moment it does. The exterior world event is SG44 -- a SEPARATE item -- and all this conversation is allowed to do is be the last thing said indoors. The flag `legendary_freed` is already set by `stronghold_free_legendary` above and is what SG44 will read.",
+      "speaker": "Chamber Five",
+      "portrait": "res://assets/ui/portraits/trainer.png",
+      "lines": [
+        "Behind you, the machine notices what it has lost.",
+        "It does not explode. It does something worse for the people who built it: it runs down. The core light goes from teal to nothing over about four seconds, the ring pillars drop one after another in a falling order, and the whole enormous sound this building has been making since you stepped into the outer works — a sound you had entirely stopped hearing — stops.",
+        "In the quiet you can hear water somewhere in the stonework, and the stag breathing, and, a long way off and getting louder, something very large beginning to move.",
+        "Aldis said the seams come down. He was right about that much."
+      ]
+    }
+  }
+}

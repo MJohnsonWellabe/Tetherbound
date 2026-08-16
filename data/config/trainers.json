@@ -606,6 +606,64 @@
       },
       "defeat_flag": "defeated_captain_riverwatch",
       "rechallenge": false
+    },
+    {
+      "id": "warden_aldis",
+      "name": "Warden Aldis",
+      "_comment": "R8.3, spec Act VI step 35 and M14 -- the chapter's last fight. THERE IS NO BOSS MODE AND NO BOSS SCRIPT. He is an ordinary row of this same table: the same team schema, the same reward schema, the same defeat flag, the same encounter_director.begin_trainer_battle(), the same sequential send-out, and catching refused exactly as it is refused for every other trainer in the game (a trainer's creatures are theirs -- CLAUDE.md's hard rule). What makes him the boss is the ONLY thing spec sec12 says makes a boss: a full team of five and the highest levels in the chapter.",
+      "_comment_character": "Spec sec33 gives him a worldview rather than a motive, and the lines are in data/dialogue/stronghold.json. He is not a moustache-twirler: he believes separation prevents chaos and that ordinary people do not understand the risks, he confirms the readout rather than denying it, and he does not recant when he loses. His face is still PAINTED rather than modelled (HANDOFF sec6) -- flagged, not faked. Sec20 covers creatures, so a Warden face sheet is legal under sec22's budget, but it is owner-gated art and no generation was spent here.",
+      "rank": "warden",
+      "_comment_rank": "data/config/npc_ranks.json's top tier -- the crimson badge at its largest, on the Warden's own rig. He is the rig every other Team Tether rank in the chapter has been a variant of, met last and unmodified.",
+      "placed_by": "stronghold_climax",
+      "position": [
+        232.0,
+        -206.0
+      ],
+      "_position_note": "FALLBACK ONLY, and it mirrors the Warden Arena's own centre-ish point. scripts/world/stronghold_climax.gd places him from the `warden_stand` mark that R8.2's data/config/stronghold.json registers, because a room's coordinates belong to the room. Written out so the row still stands somewhere sane if the building ever fails to build.",
+      "facing_deg": 180.0,
+      "challenge": "stronghold_warden_challenge",
+      "defeated": "stronghold_warden_defeated",
+      "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Levels 16-20 sit above SF34's captains (10-16) with the ace a clear step above the rest. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 16
+        },
+        {
+          "species": "brooktail",
+          "level": 17
+        },
+        {
+          "species": "galecrest",
+          "level": 17
+        },
+        {
+          "species": "meadowhart",
+          "level": 18
+        },
+        {
+          "species": "tuskroot",
+          "level": 20
+        }
+      ],
+      "reward": {
+        "coins": 150,
+        "items": [
+          {
+            "id": "revive",
+            "count": 2
+          },
+          {
+            "id": "potion_small",
+            "count": 4
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 400
+      },
+      "_comment_defeat_flag": "R8.4 waits on exactly this id: data/config/stronghold_climax.json gates the tether machine shut until it is set, so a player who sprints past him cannot reach the Legendary Chamber's lever with the boss still standing. Spec sec28's order is not optional and this flag is where that is enforced. SG44's world event reads `legendary_freed`, not this.",
+      "defeat_flag": "defeated_warden",
+      "rechallenge": false
     }
   ],
   "_comment_stronghold": "SG38 (spec Sec8, Sec12). The stronghold gauntlet: a patrol at the Outer Works, a fight in the Courtyard, and an elite in front of the Tether Chamber Approach's door -- three of Sec12's '2-4 final stronghold trainers', with the Warden himself (R8.3) the fourth fight in the building. All three carry `placed_by: \"stronghold\"`, so trainer_npc.gd's world pass skips them and scripts/world/stronghold.gd places them from the room layout instead. Levels are TUNABLE and never player-scaled (Sec3): they sit above the 10-16 the captains' band expects, which is the whole point of a gauntlet an unprepared party should not clear."

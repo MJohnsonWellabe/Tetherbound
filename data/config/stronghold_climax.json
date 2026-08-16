@@ -1,0 +1,85 @@
+{
+  "_comment": "R8.3 / SG40 / R8.4 -- the chapter's climax, as data. This file owns the three things the stronghold's ROUTE (R8.2, data/config/stronghold.json) deliberately does not: who stands in the Warden Arena, where the reveal is delivered from, and what the freed legendary is. ALL NUMBERS TUNABLE per CLAUDE.md.",
+
+  "_comment_seam": "R8.2/SG38's route was built by a sibling agent in parallel with this item. NOTHING here invents a second stronghold: every `mark` named below is one of the five `marks` that file already registers (warden_stand, warden_challenge, reveal_stand, machine_foot, legendary_stand), resolved at runtime through `scripts/world/stronghold.gd::marker()`, and the trainer group is its own `placed_by` convention. `fallback` on each entry is world metres [x, z] used ONLY when no stronghold node is in the tree -- a bare test scene, or this branch before the route merges -- so smoke_boss can drive the whole climax without depending on somebody else's building existing yet. When both exist the marker wins, always.",
+
+  "site": {
+    "_comment": "The stronghold node this climax attaches itself to, by node name under the world. Nothing else about the building is assumed.",
+    "stronghold_node": "Stronghold",
+    "fallback_comment": "The Warden Arena's own world box per stronghold.json is x[219,245] z[-227.4,-203.4] and the Legendary Chamber's is x[218,246] z[-197.4,-169.4]. These fallbacks are points inside those boxes, so a merged build and an unmerged one put the climax in the same place to within a couple of metres. They are a safety net, not a second layout.",
+    "prompt_radius": 4.2
+  },
+
+  "_comment_reveal": "SG40, spec Act VI step 33 ('environmental/story reveal') and Sec32's top rung. It is delivered by a Team Tether READOUT bolted to the arena's threshold -- the sibling's `warden_challenge` mark, which is the spot the player is stopped at on the way in -- so the reveal is environmental storytelling the player chooses to read, and it lands BEFORE the Warden speaks and before the fight, which is the order Sec28 makes non-optional. Nothing outside data/dialogue/stronghold.json may say these words; tests/test_dialogue_runner.gd fails the build if anything does.",
+  "reveal": {
+    "mark": "warden_challenge",
+    "fallback": [232.0, -222.0],
+    "label": "Read the Tether readout",
+    "conversation": "stronghold_reveal",
+    "flag": "learned_legendary_is_the_source",
+    "height": 1.35,
+    "panel_size": [1.5, 1.1, 0.28],
+    "colour": "#332228",
+    "screen_colour": "#7fd8c4"
+  },
+
+  "_comment_warden": "R8.3. He is an ORDINARY row of data/config/trainers.json -- same table, same team schema, same reward schema, same defeat flag, same encounter_director.begin_trainer_battle() -- carrying `placed_by: \"stronghold_climax\"` so the world's own trainer pass and the stronghold's gauntlet pass both skip him and this file's mark decides where he stands. There is no boss combat mode and there is no boss script: 'the hardest trainer in the chapter' is a team and a set of levels, which is exactly what Sec12 asks for.",
+  "warden": {
+    "trainer": "warden_aldis",
+    "mark": "warden_stand",
+    "fallback": [232.0, -206.0],
+    "facing_deg": 180.0,
+    "placed_by": "stronghold_climax"
+  },
+
+  "_comment_legendary": "R8.4. CLAUDE.md's hard rule, restated so nobody has to go looking: no new creature meshes for the Meadows at any credit balance. `veridian` is already in data/creatures/species.json with real production art (board 06, owner-approved as the legendary's direct source), already the tallest body in the roster at 2.6m, and already has an OF28 `vivid` colourway. Everything below is the LEGAL differentiation on top of that one existing mesh: a scale multiplier that puts it a further half-metre over its own wild size, a containment VFX while it is bound and a release VFX when it is freed. No new model, no new generation, no repaint beyond the colourway system that already ships.",
+  "legendary": {
+    "species": "veridian",
+    "display_name": "Veridian Stag",
+    "level": 22,
+    "_comment_level": "Above the Warden's own team, which is the point -- this is what Team Tether was holding. TUNABLE.",
+    "mark": "legendary_stand",
+    "fallback": [232.0, -177.0],
+    "facing_deg": 180.0,
+    "scale": 1.22,
+    "_comment_scale": "On top of the species' own 2.6m, so it stands ~3.2m in the chamber -- a head and a rack above anything else the player has met, and visibly not the same animal as a wild one would be if one ever spawned. Applied to the model pivot, so the collider and the fit are untouched.",
+    "bound": {
+      "_comment": "While it is still in the machine's containment ring: drained, held, lit by somebody else's light. A cold teal cage (data/config/palette.json's reserved Tether teal) tight around the body, plus a slow pulse so it reads as machinery working rather than as scenery.",
+      "colour": "#7fd8c4",
+      "energy": 2.4,
+      "range": 9.0,
+      "pulse_seconds": 2.6,
+      "ring_radius": 3.4,
+      "ring_segments": 24
+    },
+    "freed": {
+      "_comment": "The instant it is loose: the cage colour is gone and the light is its OWN -- warm, wide, and brighter than the machine ever was. This is the only moment in the chapter lit by something that is not Team Tether.",
+      "colour": "#e8d79a",
+      "energy": 5.5,
+      "range": 22.0,
+      "rise_seconds": 1.8
+    }
+  },
+
+  "_comment_machine": "R8.2 builds the Tether Machine itself (its board is owner-supplied and it is one of D24's three hero objects). This block only says where the player pushes the button and what it says -- `machine_foot` is that file's own mark for the machine's base.",
+  "machine": {
+    "mark": "machine_foot",
+    "fallback": [232.0, -183.0],
+    "label": "Shut down the tether machine",
+    "chamber_conversation": "stronghold_chamber",
+    "free_conversation": "stronghold_free_legendary",
+    "join_conversation": "stronghold_legendary_joins",
+    "failure_conversation": "stronghold_machinery_fails",
+    "height": 1.2
+  },
+
+  "_comment_flags": "Every flag this item introduces, in the order the climax sets them. `legendary_freed` is the one SG44 reads -- the world event is a SEPARATE item and this file must never try to run it; it only records, once, that the thing which causes it has happened.",
+  "flags": {
+    "reveal_read": "learned_legendary_is_the_source",
+    "warden_defeated": "defeated_warden",
+    "legendary_freed": "legendary_freed",
+    "legendary_joined": "legendary_joined",
+    "gate": "defeated_warden",
+    "_comment_gate": "The machine refuses to be touched until the Warden has fallen. Sec28's order is not optional and this is the one place a player could otherwise walk around it -- the Legendary Chamber is through the Warden Arena, and a player who sprints past him would otherwise reach the machine with the boss still standing."
+  }
+}

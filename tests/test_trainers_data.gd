@@ -526,3 +526,114 @@ func test_beating_all_three_captains_opens_the_hall_approach() -> void:
 	assert_true(progression.has(HALL_FLAG))
 	for sigil: Variant in CAPTAINS.values():
 		assert_eq(bag.count(str(sigil)), 0, "%s was not consumed by the gate" % str(sigil))
+
+
+## --- R8.3: the Warden --------------------------------------------------------
+##
+## The chapter's last fight is an ordinary row of this same table and that is
+## the claim worth defending: no boss mode, no boss script, no second combat
+## substrate. What makes him the boss is a full team and the highest levels in
+## the chapter, and both are checkable here.
+
+const WARDEN_ID := "warden_aldis"
+const CLIMAX_CONFIG := "res://data/config/stronghold_climax.json"
+
+
+func _climax() -> Dictionary:
+	var file := FileAccess.open(CLIMAX_CONFIG, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+func test_the_warden_is_an_ordinary_row_of_this_table() -> void:
+	var warden := TRAINERS.trainer(WARDEN_ID)
+	assert_false(warden.is_empty(), "trainers.json has no '%s'; there is no boss fight" % WARDEN_ID)
+	assert_eq(str(warden.get("rank", "")), "warden",
+		"the Warden does not carry npc_ranks.json's top rank; he would read as another captain")
+	assert_ne(str(warden.get("challenge", "")), "", "the Warden has no challenge conversation")
+	assert_true(RUNNER.has(str(warden.get("challenge", ""))),
+		"the Warden's challenge conversation is not in the dialogue table")
+	assert_true(RUNNER.has(str(warden.get("defeated", ""))),
+		"the Warden's beaten conversation is not in the dialogue table")
+	assert_false(bool(warden.get("rechallenge", false)),
+		"the Warden is re-fightable; the chapter's last fight must not be an XP faucet")
+
+
+## Spec §5 and §12: a FULL team of five, the only one in the chapter, met by a
+## player whose own limit is the same five. And the levels are above SF34's
+## captains — a boss the captains' team clears is not the end of anything.
+func test_the_wardens_team_is_the_hardest_in_the_chapter() -> void:
+	var warden := TRAINERS.trainer(WARDEN_ID)
+	var team := TRAINERS.team_of(warden)
+	assert_eq(team.size(), 5,
+		"the Warden fields %d creatures; §5's five-creature limit only lands if the boss meets it" % team.size())
+
+	var lowest := 999
+	var highest := 0
+	for entry: Variant in team:
+		var level := int((entry as Dictionary).get("level", 0))
+		lowest = mini(lowest, level)
+		highest = maxi(highest, level)
+		assert_true(SPECIES.definition(str((entry as Dictionary).get("species", ""))).size() > 0,
+			"the Warden fields '%s', which is not in species.json" % str((entry as Dictionary).get("species", "")))
+
+	var captain_high := 0
+	for entry: Variant in TRAINERS.team_of(TRAINERS.trainer("relay_captain")):
+		captain_high = maxi(captain_high, int((entry as Dictionary).get("level", 0)))
+	assert_true(lowest > captain_high,
+		"the Warden's weakest creature (Lv %d) is not above the relay captain's best (Lv %d)" % [lowest, captain_high])
+	assert_true(highest >= lowest + 2,
+		"the Warden has no ace; his team is flat at Lv %d-%d" % [lowest, highest])
+
+	# Three types across the five, so no single answer sweeps the fight.
+	var types := {}
+	for entry: Variant in team:
+		types[str(SPECIES.definition(str((entry as Dictionary).get("species", ""))).get("type", ""))] = true
+	assert_true(types.size() >= 3,
+		"the Warden's five cover only %d type(s); one counter would sweep the chapter's last fight" % types.size())
+
+
+## R8.4 waits on the Warden's defeat flag and the machine is gated on it, so a
+## rename here would silently make the Legendary Chamber's lever unreachable —
+## or, worse, reachable with the boss still standing, which breaks §28's order.
+func test_the_wardens_defeat_flag_is_what_gates_the_chamber() -> void:
+	assert_eq(str(TRAINERS.trainer(WARDEN_ID).get("defeat_flag", "")), "defeated_warden")
+	var flags: Dictionary = _climax().get("flags", {})
+	assert_eq(str(flags.get("gate", "")), "defeated_warden",
+		"stronghold_climax.json's machine gate is not the Warden's defeat flag; §28's order could be walked around")
+	assert_eq(str(flags.get("legendary_freed", "")), "legendary_freed",
+		"the flag SG44's world event reads is not named 'legendary_freed'")
+
+
+## He is placed by the climax node from R8.2's `warden_stand` mark, not by the
+## world's own trainer pass and not by the stronghold's gauntlet pass — an
+## accidentally empty `placed_by` would stand a second Warden out in the
+## meadow, which is a spoiler and a duplicate body at once.
+func test_the_warden_is_placed_by_the_climax_and_nothing_else() -> void:
+	assert_eq(str(TRAINERS.trainer(WARDEN_ID).get("placed_by", "")), "stronghold_climax")
+	var warden: Dictionary = _climax().get("warden", {})
+	assert_eq(str(warden.get("trainer", "")), WARDEN_ID,
+		"stronghold_climax.json places a trainer id that is not in trainers.json")
+	assert_eq(str(warden.get("placed_by", "")), "stronghold_climax",
+		"the climax asks trainer_npc.gd for a group the Warden's row does not name")
+	assert_eq(str(warden.get("mark", "")), "warden_stand",
+		"the climax does not adopt R8.2's own 'warden_stand' mark; it would invent a second position")
+
+
+## CLAUDE.md's hard rule, checked in data rather than trusted to a comment:
+## the legendary is an EXISTING roster species. A new species id appearing
+## here is a new creature mesh by another name.
+func test_the_legendary_is_an_existing_roster_species() -> void:
+	var legendary: Dictionary = _climax().get("legendary", {})
+	var id := str(legendary.get("species", ""))
+	assert_ne(id, "", "stronghold_climax.json names no legendary species")
+	assert_true(SPECIES.definition(id).size() > 0,
+		"the legendary is '%s', which is not in species.json — no new creature meshes (CLAUDE.md)" % id)
+	assert_true(float(legendary.get("scale", 1.0)) > 1.0,
+		"the legendary is not scaled above its own roster size; it would read as a wild spawn")
+	assert_false((legendary.get("bound", {}) as Dictionary).is_empty(),
+		"the legendary has no containment VFX; scale alone is not differentiation")
+	assert_false((legendary.get("freed", {}) as Dictionary).is_empty(),
+		"the legendary looks the same freed as it did bound")

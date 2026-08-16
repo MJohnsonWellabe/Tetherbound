@@ -33,6 +33,11 @@ const EXTRA_DIALOGUE_PATHS := [
 	# SE27's captive at the relay station. A fourth file exactly as the note
 	# above anticipated: one array entry, no third copy of the merge loop.
 	"res://data/dialogue/relay.json",
+	# SG40/R8.3/R8.4's stronghold: the reveal, the Warden and the freeing.
+	# A fifth entry, and the ONE file allowed to name the legendary --
+	# tests/test_dialogue_runner.gd's STRONGHOLD_FILES is where that exemption
+	# is written down, and every other file in this list is still checked.
+	"res://data/dialogue/stronghold.json",
 ]
 
 signal finished(conversation_id: String)
