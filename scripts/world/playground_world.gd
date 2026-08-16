@@ -108,9 +108,30 @@ const TM_AT := {
 ## meet at this number and the bake test asserts the pad is genuinely flat.
 const HOUSE_AT := Vector2(-22.0, -16.0)
 
-## Terrain3D.CollisionMode. 3 is FULL_GAME: real collision shapes across the
-## loaded regions, which is what the character controller needs to walk on.
-const COLLISION_FULL_GAME := 3
+## Terrain3D.CollisionMode. 1 is DYNAMIC_GAME: real collision shapes rebuilt
+## incrementally around the camera, out to `COLLISION_RADIUS_REQUESTED`.
+##
+## §8.2: FULL_GAME (3) was the fix for a lifecycle bug (see the `_ready()`
+## comment below), not a statement that dynamic collision is wrong. At 4
+## regions FULL_GAME is cheap; at the 64 regions the corridor bakes, it is
+## real shapes across the entire loaded world built at load, all at once, on
+## the load screen. Dynamic collision with a radius the player cannot
+## outrun is the streaming answer -- see `_apply_dynamic_collision()`.
+const COLLISION_DYNAMIC_GAME := 1
+
+## What `_apply_dynamic_collision()` asks Terrain3D for. Verified against the
+## vendored addon (`tools/_probe_terrain_collision.gd`, run 2026-08-16) that
+## `collision_radius` is SILENTLY CLAMPED to the nearest legal value in
+## [16, 256] step 16 -- asking for 512, the number §8.2 reasoned from (based
+## on `sprint_speed` alone, before this was checked against the addon), gets
+## you 256 back, not 512. `_ready()` reads back what was actually granted and
+## uses THAT for the "can the player outrun it" reasoning, not this constant.
+const COLLISION_RADIUS_REQUESTED := 512
+## `collision_shape_size` clamps to [8, 64] step 8 on the same build. 64 is
+## already inside that range, so this one is not a request in the same
+## aspirational sense as the radius above -- it is expected to be granted
+## exactly, and `_ready()` still reads it back rather than assuming so.
+const COLLISION_SHAPE_SIZE := 64
 
 ## Metres above the sampled ground to drop the player from, so a small mismatch
 ## between the collision bake and the heightfield does not spawn them inside it.
@@ -144,19 +165,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	BOOT_LOG.line("playground: terrain data_directory assigned")
 
-	# collision_mode is set HERE, after the data is loaded, and then read back.
-	#
-	# Setting it before the node entered the tree silently reverted to 1
-	# (Dynamic/Game), which builds collision only inside a 64m bubble. Everything
-	# looked correct: the terrain rendered, the player spawned on the ground, and
-	# the smoke test passed — because all of that happens within the bubble. Walk
-	# a couple of hundred metres and the ground stops existing and you fall
-	# through the world at terminal velocity.
-	_terrain.set("collision_mode", COLLISION_FULL_GAME)
-	var applied: int = int(_terrain.get("collision_mode"))
-	if applied != COLLISION_FULL_GAME:
-		push_error("terrain collision_mode is %d, expected %d (Full/Game). " % [applied, COLLISION_FULL_GAME] +
-			"The player will fall through the world outside the dynamic collision radius.")
+	_apply_dynamic_collision()
 
 	_apply_ground_materials()
 	BOOT_LOG.line("playground: ground materials/shader applied")
@@ -179,6 +188,42 @@ func _ready() -> void:
 	BOOT_LOG.line("playground: _ready complete, waiting for first frame")
 	await get_tree().process_frame
 	BOOT_LOG.line("playground: first frame presented")
+
+
+## Sets dynamic collision (mode, radius, shape size) and reads every value
+## back rather than trusting what was set — §8.2's two verified traps:
+##
+## 1. Terrain3D setters are no-ops while the node is out of the tree (this is
+##    what silently reverted `collision_mode` to Dynamic/Game before the fix
+##    that gave this function its home in `_ready()`, after `data_directory`
+##    is assigned and the node has been in the tree for a frame).
+## 2. `collision_radius` and `collision_shape_size` are silently CLAMPED to
+##    ranges this build's addon does not document anywhere reachable from
+##    script -- confirmed empirically (`tools/_probe_terrain_collision.gd`):
+##    radius to [16, 256] step 16, shape size to [8, 64] step 8. Asking for
+##    `COLLISION_RADIUS_REQUESTED` (512) silently gets 256, not 512.
+##
+## So every value used below the `set()` calls is the READBACK, never the
+## requested constant -- the whole point of this function is to not repeat
+## the mistake `collision_mode` already made once.
+func _apply_dynamic_collision() -> void:
+	_terrain.set("collision_mode", COLLISION_DYNAMIC_GAME)
+	_terrain.set("collision_radius", COLLISION_RADIUS_REQUESTED)
+	_terrain.set("collision_shape_size", COLLISION_SHAPE_SIZE)
+
+	var mode: int = int(_terrain.get("collision_mode"))
+	var radius: int = int(_terrain.get("collision_radius"))
+	var shape_size: int = int(_terrain.get("collision_shape_size"))
+	BOOT_LOG.line("playground: dynamic collision mode=%d radius=%d (requested %d) shape_size=%d (requested %d)" % [
+		mode, radius, COLLISION_RADIUS_REQUESTED, shape_size, COLLISION_SHAPE_SIZE])
+
+	if mode != COLLISION_DYNAMIC_GAME:
+		push_error("terrain collision_mode is %d, expected %d (Dynamic/Game). " % [mode, COLLISION_DYNAMIC_GAME] +
+			"The player will fall through the world outside the dynamic collision radius.")
+	if radius <= 0:
+		push_error("terrain collision_radius read back as %d; Terrain3D exposed no usable dynamic collision" % radius)
+	if shape_size <= 0:
+		push_error("terrain collision_shape_size read back as %d; Terrain3D exposed no usable collision shapes" % shape_size)
 
 
 ## Capture the mouse for camera look — unless a menu, dialogue box or the
@@ -309,16 +354,13 @@ func _build_terrain() -> Node3D:
 	terrain.name = "Terrain"
 	terrain.set("region_size", int(config.get("region_size", 256)))
 	terrain.set("vertex_spacing", float(config.get("vertex_spacing", 1.0)))
-	# One collision shape per region rather than the 16m default, which over a
-	# 512m playground would ask for 1024 shapes instead of four. Set before the
-	# node enters the tree: the shape pool is allocated once, so changing this
-	# later and calling build() does nothing.
-	#
-	# This is a cost choice, not a correctness one. The playground is solid at
-	# either setting — see ground_height_at() below for the thing that actually
-	# was broken.
-	terrain.set("collision_shape_size", int(config.get("region_size", 256)))
-	# collision_mode is deliberately NOT set here; see _ready() for why.
+	# collision_mode/collision_radius/collision_shape_size are deliberately
+	# NOT set here: confirmed against this build (`tools/_probe_terrain_
+	# collision.gd`) that Terrain3D's collision setters are no-ops while the
+	# node is out of the tree, silently keeping their defaults instead of
+	# raising an error. `_apply_dynamic_collision()` sets and reads all three
+	# back in `_ready()`, once the node has actually been in the tree for a
+	# frame.
 	add_child(terrain)
 	return terrain
 

@@ -16,6 +16,16 @@ extends SceneTree
 ## walks thirteen metres proves the spawn point works and nothing else. This one
 ## walks far enough to leave any plausible bubble, and asserts the terrain is
 ## solid the entire way.
+##
+## §8.2 (ralph/BAKE-GUARDS) moved collision from FULL_GAME to dynamic with a
+## radius Terrain3D grants (see COLLISION_DYNAMIC_GAME above), and asked for a
+## body driven 600m down the corridor's spine as the real stress case -- that
+## world does not exist yet on this branch (footprint work is out of scope
+## here, see the branch's own task). What this file can and does check today:
+## the granted radius covers this playground's actual WORLD_EDGE with margin,
+## and the existing four-direction walk below already goes far enough to have
+## caught the original 64m-bubble bug on its own terms. The 600m case is real
+## work for whichever lane bakes the corridor (OW5C), not a box this ticks.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
@@ -31,7 +41,16 @@ const LEG_FRAMES := 1700
 ## Below this the player is definitionally through the floor: the whole
 ## playground's lowest point is about -26m.
 const THROUGH_THE_FLOOR := -80.0
-const COLLISION_FULL_GAME := 3
+## §8.2 (ralph/BAKE-GUARDS): dynamic collision, not FULL_GAME. FULL_GAME built
+## real shapes across every loaded region at load; at the 64-region corridor
+## that is real shapes for the whole world, at once, on the load screen.
+## Dynamic (mode 1) rebuilds incrementally around the camera, out to whatever
+## `collision_radius` Terrain3D actually grants -- see the readback check
+## below, which asserts the GRANTED radius/shape_size, not the requested one:
+## `tools/_probe_terrain_collision.gd` confirmed both are silently clamped
+## (radius to [16,256] step 16, shape_size to [8,64] step 8) rather than
+## rejected out of range.
+const COLLISION_DYNAMIC_GAME := 1
 ## The baked world spans ±256m (terrain_playground.json world_size 512, centred
 ## on the origin). A leg that reaches this line stops early: past the rim there
 ## is legitimately no ground, and walking off it reads as "fell through the
@@ -75,10 +94,25 @@ func _run() -> void:
 	var failures: Array[String] = []
 
 	# The direct cause, asserted directly. Everything below is the symptom.
+	#
+	# Radius/shape_size are read back and sanity-checked (positive, and a
+	# player cannot outrun them within this playground's own extent) rather
+	# than compared against a requested constant -- §8.2's clamping trap
+	# means the requested value and the granted one are not the same number.
 	var mode: int = int(terrain.get("collision_mode"))
-	print("collision_mode = %d (want %d, Full/Game)" % [mode, COLLISION_FULL_GAME])
-	if mode != COLLISION_FULL_GAME:
-		failures.append("collision_mode is %d, not Full/Game; collision exists only near the player" % mode)
+	var radius: int = int(terrain.get("collision_radius"))
+	var shape_size: int = int(terrain.get("collision_shape_size"))
+	print("collision_mode = %d (want %d, Dynamic/Game)   collision_radius = %d   collision_shape_size = %d" % [
+		mode, COLLISION_DYNAMIC_GAME, radius, shape_size])
+	if mode != COLLISION_DYNAMIC_GAME:
+		failures.append("collision_mode is %d, not Dynamic/Game; collision may be built all at once at load" % mode)
+	if radius <= 0:
+		failures.append("collision_radius read back as %d; dynamic collision has no usable radius" % radius)
+	elif radius < WORLD_EDGE:
+		failures.append("collision_radius %d is smaller than this playground's own %.0fm edge; a player near the rim would outrun it" % [
+			radius, WORLD_EDGE])
+	if shape_size <= 0:
+		failures.append("collision_shape_size read back as %d; dynamic collision has no usable shapes" % shape_size)
 
 	var furthest := 0.0
 	var lowest := player.global_position.y
