@@ -1209,13 +1209,20 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 	_pay_trainer_reward(spec)
 
 
-## The authored payout (spec §17 P1 step 9). Deliberately thin: SC15 is the
-## item that tunes what a trainer is worth, and this is the plumbing it will
-## tune. A full satchel is warned about rather than swallowed, same as
-## `sequence_director.gd::_give_items()`.
+## The authored payout (spec §17 P1 step 9; D39: payouts include coins). SC15
+## is the item that tunes what a trainer is worth; this is the plumbing it
+## tunes. A full satchel is warned about rather than swallowed, same as
+## `sequence_director.gd::_give_items()` -- and, unlike that quieter grant,
+## what actually landed is read back to the player in one line through the
+## same one-shot toast a refused gather or a full satchel already surfaces
+## (`Game.push_world_message()`, polled by `playground_hud.gd`), because a
+## trainer's reward is a moment worth a line and not just a satchel that
+## quietly got heavier.
 func _pay_trainer_reward(spec: Dictionary) -> void:
+	var coins := TRAINERS.reward_coins(spec)
 	var items: Array = TRAINERS.reward_items(spec)
-	if items.is_empty():
+	var xp_bonus := TRAINERS.reward_xp_bonus(spec)
+	if coins <= 0 and items.is_empty() and xp_bonus <= 0:
 		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
@@ -1225,6 +1232,16 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 	if inventory == null:
 		return
 	var catalogue: RefCounted = game.get("items")
+	var won: Array[String] = []
+
+	if coins > 0:
+		var leftover := int(inventory.call("add", "coin", coins))
+		if leftover > 0:
+			push_warning("the satchel was full; %d of the %d coin from a trainer did not fit" % [leftover, coins])
+		var landed := coins - leftover
+		if landed > 0:
+			won.append("%d %s" % [landed, str(catalogue.call("item_name", "coin")) if catalogue != null else "coin"])
+
 	for entry: Variant in items:
 		var item := entry as Dictionary
 		var id := str(item.get("id", ""))
@@ -1239,6 +1256,21 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 		var leftover := int(inventory.call("add", id, count))
 		if leftover > 0:
 			push_warning("the satchel was full; %d of the %d %s from a trainer did not fit" % [leftover, count, id])
+		var landed := count - leftover
+		if landed > 0:
+			won.append("%d %s" % [landed, str(catalogue.call("item_name", id)) if catalogue != null else id])
+
+	if xp_bonus > 0:
+		var party := _party()
+		if party != null:
+			var cfg: Dictionary = PROGRESSION.config()
+			for i in int(party.call("size")):
+				var member: RefCounted = party.call("at", i)
+				if member != null and not bool(member.get("fainted")):
+					member.call("gain_xp", xp_bonus, cfg)
+
+	if not won.is_empty():
+		game.call("push_world_message", "%s's reward: %s" % [str(spec.get("name", "Trainer")), ", ".join(won)])
 
 
 func _clear_fallen_bodies() -> void:

@@ -163,6 +163,27 @@ func test_every_reward_item_exists() -> void:
 				"trainer '%s' rewards zero of '%s'" % [str(spec.get("id", "")), id])
 
 
+func test_reward_coins_and_xp_bonus_are_not_negative() -> void:
+	for entry: Variant in TRAINERS.trainers():
+		var spec: Dictionary = entry
+		assert_true(TRAINERS.reward_coins(spec) >= 0,
+			"trainer '%s' rewards negative coins" % str(spec.get("id", "")))
+		assert_true(TRAINERS.reward_xp_bonus(spec) >= 0,
+			"trainer '%s' rewards a negative xp_bonus" % str(spec.get("id", "")))
+
+
+func test_at_least_one_trainer_pays_coins() -> void:
+	# D39: "SC15's trainer payouts later pay coins too." A reward table that
+	# never actually pays a coin would leave that promise unkept.
+	var any_coins := false
+	for entry: Variant in TRAINERS.trainers():
+		if TRAINERS.reward_coins(entry as Dictionary) > 0:
+			any_coins = true
+			break
+	assert_true(any_coins,
+		"no trainer reward pays out any coins; D39 promised trainer payouts include coins")
+
+
 func test_every_trainer_has_a_body_to_stand_up_in() -> void:
 	for entry: Variant in TRAINERS.trainers():
 		var spec: Dictionary = entry

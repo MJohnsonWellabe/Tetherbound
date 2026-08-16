@@ -240,6 +240,26 @@ static func reward_flags(spec: Dictionary) -> Array[String]:
 	return out
 
 
+## SC15/D39: coins are an ordinary satchel item (`coin`, items.json), granted
+## alongside whatever else the trainer names. 0 (not paying coins) is the
+## honest default rather than an error -- most of the table will name none.
+static func reward_coins(spec: Dictionary) -> int:
+	var reward: Variant = spec.get("reward", {})
+	if not reward is Dictionary:
+		return 0
+	return int((reward as Dictionary).get("coins", 0))
+
+
+## SC15's optional flat top-up, on top of the XP the fight itself already
+## paid per creature felled. 0 by default -- most trainers need nothing here,
+## the ordinary victory award already does the work.
+static func reward_xp_bonus(spec: Dictionary) -> int:
+	var reward: Variant = spec.get("reward", {})
+	if not reward is Dictionary:
+		return 0
+	return int((reward as Dictionary).get("xp_bonus", 0))
+
+
 ## Has this trainer already been beaten, and does that stop them being fought?
 ##
 ## A null `progression` (no Game autoload — a bare test scene, a capture tool)

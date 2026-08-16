@@ -17,8 +17,10 @@ extends SceneTree
 ##     hard rule (trainer-owned creatures cannot be caught) that the HUD
 ##     hiding a button would not enforce
 ##   - beating the last of them sets the SB9 defeat flag and pays the reward
+##     (SC15: coins and items, EXACTLY the authored amounts, once)
 ##   - the player's creatures gain XP for it
-##   - and the trainer cannot be fought a second time
+##   - and the trainer cannot be fought a second time, and that second attempt
+##     pays out nothing at all -- the reward is not farmable
 ##
 ## It drives the real input actions rather than calling the director's
 ## methods, so a broken binding fails here rather than on the handheld — same
@@ -51,6 +53,11 @@ var _spec: Dictionary = {}
 var _refusals: Array[String] = []
 var _opponents_felled: int = 0
 var _xp_before: Array = []
+## SC15: satchel counts for "coin" plus every authored reward item, taken
+## BEFORE the challenge opens, so the payout can be checked for the exact
+## authored amount rather than merely "some of it landed" -- and so a second,
+## refused challenge attempt can be checked for paying nothing at all.
+var _reward_before: Dictionary = {}
 
 
 func _init() -> void:
@@ -76,6 +83,7 @@ func _run() -> void:
 		return
 
 	_stand_in_front_of_the_trainer()
+	_snapshot_reward_counts()
 	await _challenge()
 	if not bool(_manager.call("is_fighting")):
 		_fail("the challenge never started a fight; nothing below this point was tested")
@@ -90,6 +98,7 @@ func _run() -> void:
 	_the_party_earned_xp()
 	await _exploration_is_restored()
 	await _the_trainer_cannot_be_fought_again()
+	_the_second_attempt_paid_nothing()
 	_report()
 
 
@@ -121,6 +130,24 @@ func _seed_orbs(count: int = 10) -> void:
 func _progression() -> RefCounted:
 	var game := root.get_node_or_null(^"/root/Game")
 	return game.get("progression") if game != null else null
+
+
+## SC15: the satchel count for "coin" (if this trainer pays any) and every
+## authored reward item, taken before the fight starts. `_the_reward_was_paid`
+## and `_the_second_attempt_paid_nothing` both read against this rather than
+## an absolute count, because `_seed_orbs()` above already put items in the
+## satchel and a trainer could in principle reward one of those same ids.
+func _snapshot_reward_counts() -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	var inventory: RefCounted = game.get("inventory") if game != null else null
+	if inventory == null:
+		return
+	if TRAINERS.reward_coins(_spec) > 0:
+		_reward_before["coin"] = int(inventory.call("count", "coin"))
+	for entry: Variant in TRAINERS.reward_items(_spec):
+		var id := str((entry as Dictionary).get("id", ""))
+		if id != "":
+			_reward_before[id] = int(inventory.call("count", id))
 
 
 func _collect_nodes() -> bool:
@@ -332,19 +359,55 @@ func _the_trainer_is_recorded_as_beaten() -> void:
 		print("defeat flag '%s' set" % flag)
 
 
+## Exactly the authored coins and item counts, no more and no less. A delta
+## against `_snapshot_reward_counts()`'s baseline rather than an absolute
+## floor, because the fight itself spends nothing (no orb was thrown; every
+## throw was refused) but a reward item could in principle share an id with
+## something already seeded (`_seed_orbs()`) or otherwise already carried.
 func _the_reward_was_paid() -> void:
-	var items: Array = TRAINERS.reward_items(_spec)
-	if items.is_empty():
-		return
 	var game := root.get_node_or_null(^"/root/Game")
 	var inventory: RefCounted = game.get("inventory")
-	for entry: Variant in items:
+	var coins := TRAINERS.reward_coins(_spec)
+	if coins > 0:
+		var got: int = int(inventory.call("count", "coin")) - int(_reward_before.get("coin", 0))
+		if got != coins:
+			_fail("the trainer's reward promised %d coin but %d landed in the satchel" % [coins, got])
+		else:
+			print("reward paid: %d coin" % got)
+	for entry: Variant in TRAINERS.reward_items(_spec):
 		var id := str((entry as Dictionary).get("id", ""))
-		# Counted against what the satchel holds rather than a delta, because
-		# the fight itself spends nothing: no orb was thrown (every throw was
-		# refused) and nothing else consumes items mid-battle.
-		if int(inventory.call("count", id)) <= 0:
-			_fail("the trainer's reward '%s' never reached the satchel" % id)
+		var count := int((entry as Dictionary).get("count", 0))
+		var got: int = int(inventory.call("count", id)) - int(_reward_before.get(id, 0))
+		if got != count:
+			_fail("the trainer's reward promised %d %s but %d landed in the satchel" % [count, id, got])
+		else:
+			print("reward paid: %d %s" % [got, id])
+
+
+## The prior test already proves a re-challenge cannot open a second battle
+## at all; this proves the reward specifically follows from that -- a
+## trainer marked `rechallenge: true` later, or a director regression that
+## re-ran `_pay_trainer_reward()` on an already-flagged trainer, would show
+## up here as coins or items increasing with no second fight to explain them.
+func _the_second_attempt_paid_nothing() -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	var inventory: RefCounted = game.get("inventory")
+	var coins := TRAINERS.reward_coins(_spec)
+	if coins > 0:
+		var now: int = int(inventory.call("count", "coin"))
+		var expected: int = int(_reward_before.get("coin", 0)) + coins
+		if now != expected:
+			_fail("the coin count changed after the refused re-challenge (%d -> %d); the reward paid twice" % [
+				expected, now])
+	for entry: Variant in TRAINERS.reward_items(_spec):
+		var id := str((entry as Dictionary).get("id", ""))
+		var count := int((entry as Dictionary).get("count", 0))
+		var now: int = int(inventory.call("count", id))
+		var expected: int = int(_reward_before.get(id, 0)) + count
+		if now != expected:
+			_fail("the '%s' count changed after the refused re-challenge (%d -> %d); the reward paid twice" % [
+				id, expected, now])
+	print("re-challenge granted nothing; the reward paid exactly once")
 
 
 func _the_party_earned_xp() -> void:
