@@ -55,7 +55,22 @@ LOG="$OUT/run.log"
 # killed mid-run flushes nothing and every positive check reads as a failure.
 # Letting it exit on its own is the difference between "the world never
 # reported spawning the player" and knowing where they spawned.
-( cd "$OUT" && timeout 180 xvfb-run -a -s "-screen 0 640x480x24" \
+# 180 was not a margin, it was a coin flip, and on 2026-08-16 it started
+# landing tails. The exported build reached its EXPORT-CHECK line and then hit
+# the 180s wall, killing every branch that went through ralph-merge's
+# rebase-and-dispatch path -- the export job only runs on `main` or a dispatch,
+# so a branch could pass CI on push and fail on the identical tree minutes
+# later. Measured from user://boot_log.txt, a world build is 188s: water 137s,
+# vegetation scatter 45s, everything else ~6s. It had been sitting eight
+# seconds under the limit.
+#
+# 420 is not the fix, it is the tourniquet. The fix is the boot cost, and it is
+# being worked -- water.gd grid-scans the shoreline at 4m steps calling
+# height_at (230us/call) twice over, and playground_heightfield's path_factor
+# rebuilds the whole road set from JSON on every one of those calls with no
+# cache. When that lands, drop this back and let it be a real margin again
+# rather than a number chosen to outrun a regression.
+( cd "$OUT" && timeout 420 xvfb-run -a -s "-screen 0 640x480x24" \
   ./Tetherbound.x86_64 --rendering-driver opengl3 --verify-export > run.log 2>&1 )
 RAN=$?
 
