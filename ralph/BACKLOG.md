@@ -27,6 +27,164 @@ just screenshots.
 
 ---
 
+## Phase -1.5 — the owner played the ROG build (owner-reported, 2026-08-16)
+
+Reported from the real handheld, which is the instrument no test in this repo
+substitutes for. **Three of these have been "fixed" before** — check the current
+build before rebuilding, then fix the mechanism rather than the symptom, because
+the symptom has come back every time so far.
+
+The owner also asked whether they were on an old build. Partly answered here:
+`OW3`'s fog does not exist in code at all, and `OW1`'s hotbar has no separate
+section *by design* — so those two are real regardless of build age.
+
+### OW1 — Inventory items cannot be moved, and the hotbar has no home in the UI
+`model: opus` · `tests: smoke_menu, test_inventory` · `area: ui`
+Owner: *"I can't move things in my inventory. There's no separate hot bar
+section. I can't move anything into it."*
+
+Both halves are real and they are one problem. The move verb **does** exist —
+`tab_backpack.gd:487` renders "holding slot N — choose where it goes" — so items
+can be picked up and placed. The owner could not operate it. The blind playtest
+hit the same wall from the other side: a stray confirm press picked up an orb
+stack with no way to tell what had happened.
+
+The hotbar has no section because slots 0–4 of the backpack **are** the hotbar
+(`tab_backpack.gd:46-56`, `playground_hud.gd::_update_hotbar`). That is a
+deliberate design, and the mitigation shipped for it was a badge on those five
+slots. The badge is not landing: the owner looked for a hotbar, did not find
+one, and concluded he could not put anything in it.
+
+Note `d21f32ce` shipped "an assignable hotbar" after most of that reasoning was
+written — establish what the current behaviour actually is before changing it.
+
+**Done when** a player can move a stack to a chosen slot and can tell, without
+being told, which slots are the hotbar and that they just changed one.
+
+### OW2 — The opening does not advance reliably, and text entry is bad
+`model: opus` · `tests: smoke_opening, smoke_name_prompt_keyboard` · `area: ui`
+Owner: *"The initial scene didn't move every time I hit x. The initial keyboard
+sucks."*
+
+The unreliable advance is the more serious half and matches a defect already
+root-caused during the blind playtest: `starter_picker.gd` polled its inputs in
+an `elif` chain, so a confirm landing on the same physics frame as a direction
+press was dropped permanently. That specific chain is fixed (`6be2ce87`), but
+the owner is describing the same *class* of failure on the dialogue advance —
+audit the other polled `_physics_process` input readers in the opening path for
+the same shape rather than assuming the one fix covered it.
+
+The keyboard is the naming grid. Related: `PT-04`, which is unconfirmed and
+needs exactly this — a real-window check on hardware. This report may be that
+confirmation; treat the two together.
+
+### OW3 — The whole map is revealed before you explore anything
+`model: sonnet` · `tests: smoke_menu` · `area: ui`
+Owner: *"The full map is rendered before I explore anything."*
+
+**Confirmed in code, not just reported:** `scripts/world/map_baker.gd` contains
+no fog, reveal, explored or discovery logic of any kind. Spec §16's rule — the
+map reveals explored areas and landmarks and *never reveals everything
+automatically* — was never built. This is the surviving half of `R7.4` and the
+owner has now hit it; do that item's remainder here.
+
+### OW4 — Choosing which creature to use a potion on is a dead end
+`model: opus` · `tests: test_inventory, smoke_menu` · `area: ui`
+Owner: *"When I use a potion I get to the screen to choose the creature then you
+can't choose."*
+
+**Second report of this exact dead end.** `OF22` (`6026fc60`) shipped as "fix the
+full-menu potion picker dead end and lost focus" and it is back, or never left on
+hardware. The picker's focus path is `tab_backpack.gd`'s `_targeting` block
+(`:115-131`, `_first_eligible_target_row`, `_on_target_row`).
+
+Given it has already been fixed once, do not re-fix the focus placement blind:
+reproduce it first, on a build, with the same inputs the owner used. If it only
+fails on a gamepad, that is the finding.
+
+### OW5 — The Meadows should be a long journey from home, not a compact square
+`model: fable` · `tests: smoke_traversal` · `area: terrain`
+**The owner's world-shape directive, and the largest item in this phase.**
+
+Owner: *"The meadow needs to read as a long journey away from home ending at the
+stronghold. But the whole area should be a big square. It's a long trail working
+progressively further from Grandpa's house. You can go off the trail for
+different tasks. It can wind and fork and whatever but this should be the
+general layout. Walking end to end should take several in game days so you have
+to camp along the way."*
+
+So: a square **footprint**, but a long, winding, forking **trail** through it
+that carries the player progressively away from home and ends at the stronghold.
+Off-trail is where optional work lives. The end-to-end walk must be long enough
+that camping on the way is forced rather than optional — which is what finally
+gives `camp` a job beyond the first night, and what makes the stronghold read as
+far away instead of nearby.
+
+This supersedes `R7.3`'s framing. R7.3 keeps only its bake-and-capacity half
+(does the terrain footprint and Terrain3D region count support this, and what
+does it cost on the Ally). **The shape is this item.**
+
+Read `ralph/planning/MEADOWS_QUALITY_REBUILD_PLAN.md` §5 (`MQ2A`, the Meadows
+macro-world redesign) before starting — it is the existing quality brief for
+exactly this work and it says START WITH FABLE.
+
+**Done when** walking the trail end to end takes several in-game days, the
+stronghold is visibly the far end of a journey rather than a neighbour, and the
+existing regions (quarry, warrens, river, relay, Ironwood) hang off a trail
+rather than sitting near the start.
+
+### OW6 — The captain you can challenge is too close to the start
+`model: sonnet` · `tests: none` · `area: village`
+Owner: *"The captain to challenge is way too close to where you start. You need
+to work to find him."* Positions are data (`data/config/trainers.json`), so this
+is a placement change once `OW5` establishes the trail — sequence it after, or
+it gets moved twice.
+
+### OW7 — Gatherable wood does not look like wood
+`model: sonnet` · `tests: smoke_playground` · `area: vegetation`
+Owner: *"Wood to pick up doesn't look like wood. It's just random yellow glowing
+spots."*
+
+The glow is the interact affordance reading louder than the object under it —
+so either the node has no real mesh at this distance, or the highlight is
+swamping it. Note `OF20` (`f868aa95`) fixed harvest nodes that were *invisible*
+because of a dead `PackedScene` assignment; this may be the same area healing
+badly. A player should be able to name what they are about to pick up before the
+prompt tells them.
+
+### OW8 — The "put away" prompt still sits on top of the hotbar
+`model: opus` · `tests: smoke_playground` · `area: ui`
+Owner: *"The put pup away text still lays over the hot bar."*
+
+**Third report. Two fixes have already shipped** — `OF17` (`cee57f0c`, "the
+recall/put-away prompt still overlapped the hotbar") and `80860c46` ("place the
+context prompt from the hotbar's real edge, not a magic number") — and it is
+still there on hardware.
+
+Stop nudging offsets. Two fixes have moved numbers and it has come back both
+times; the third attempt should make the collision structurally impossible (one
+bottom-anchored container that owns both, so neither can be positioned into the
+other) and add a test that fails when their rects intersect at a realistic
+prompt length, on a handheld-width viewport rather than a desktop one.
+
+### OW9 — Nobody tells you to gather, to craft orbs, or to build a camp
+`model: fable` · `tests: test_dialogue_runner, test_progression_state` · `area: npc`
+Owner: *"Someone at the beginning needs to tell you to go gather materials to
+build things like orbs. Someone else will need to tell you to get wood and build
+a base camp. They should probably give you a hammer and recipe."*
+
+Two handovers, two different speakers, both in the opening band. The precedent
+is `OF30` (Tam gives the axe, the pickaxe and the basic-orb recipe) — the
+machinery for a one-time gift plus a recipe unlock already exists and is tested;
+this is a second use of it, plus the dialogue that makes the player *want* the
+materials before they are handed the means.
+
+The hammer is the build tool and already exists as an item. Sequence the two
+beats so the player is told to gather *before* they are told to build, and so
+neither instruction arrives while they are still indoors.
+
+---
+
 ## Phase -1.4 — the blind playtest's open findings (2026-08-15/16)
 
 Full record in `docs/reviews/2026-08-15-full-blind-playtest/`. The six repairs
@@ -189,18 +347,17 @@ trainer branch coexisting through ordered `greeting_when`), with `SE30`'s
 rest or quest-board function, reconcile against spec §6 ("6–10 optional
 activities, not forty shallow quests") rather than inventing a quest list.
 
-### R7.3 — Grow the authored space toward the arc · `model: opus` · `tests: smoke_traversal` · M7, §30
-**Re-scoped 2026-08-16.** This item used to gate on `MQ1A`/`MQ1B` and claim the
-individual areas belonged to `SD16`, `SD17`, `SE21`, `SE23` and `SF31` — all
-five have since shipped, along with SC14, SE22, SE25/SE27, SF34, R8.2 and the
-stronghold. The world this was going to authorise has already been built.
+### R7.3 — The footprint and the bake underneath `OW5` · `model: opus` · `tests: smoke_traversal` · M7, §30
+**Re-scoped twice on 2026-08-16 — the second time by the owner.** This item used
+to gate on `MQ1A`/`MQ1B` and claim the areas belonged to `SD16`, `SD17`, `SE21`,
+`SE23` and `SF31`; all five shipped. Then `OW5` took the world's *shape* as an
+owner directive.
 
-What is left is the part that was never done: `terrain_playground.json`'s own
-first line still says it is *a test area, not the Meadows*, and the bake, the
-Terrain3D region count and the performance question on the Ally were never
-budgeted. So this is now an audit and a bake, not a construction item: measure
-what the built chapter actually costs, decide whether the footprint needs to
-grow underneath it, and rebake. §30's rule still governs any number.
+What remains here is only the engineering half of `OW5`: `terrain_playground.json`
+still says it is *a test area, not the Meadows*, and the bake, the Terrain3D
+region count and the cost on the Ally were never budgeted. Measure what a trail
+long enough to need several days of camping actually requires, grow the footprint
+underneath it, rebake. **Do not decide the layout here — that is `OW5`.**
 
 ### R7.4 — Map reveal rule · `model: sonnet` · `tests: smoke_menu` · §23
 **Re-scoped 2026-08-16.** The old text said the `map` action was "read by
