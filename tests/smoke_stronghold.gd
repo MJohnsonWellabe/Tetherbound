@@ -334,6 +334,16 @@ func _the_route_is_traversable_in_order(player: CharacterBody3D, hold: Node3D,
 
 ## --- harness ---------------------------------------------------------------
 
+## Measure by the FULL transform, not by position alone.
+##
+## This used to read `mesh.mesh.get_aabb()` and merely translate it, which is
+## correct only while every mesh in the subject sits at scale 1 — true of the
+## machine's primitive massing, and false the moment a generated GLB is dropped
+## in and fitted to the authored height. The scale-blind version measured the
+## installed hero mesh at its raw exported 1.7m and failed the build over a
+## machine that was in fact standing at its full 15m. A measurement helper that
+## silently ignores scale is worse than no helper: it fails honest work and
+## would just as happily pass a mesh that really was too small.
 func _aabb_of(node: Node3D) -> AABB:
 	var box := AABB()
 	var first := true
@@ -341,8 +351,8 @@ func _aabb_of(node: Node3D) -> AABB:
 		var mesh := child as MeshInstance3D
 		if mesh == null or mesh.mesh == null:
 			continue
-		var local := mesh.mesh.get_aabb()
-		var here := AABB(node.to_local(mesh.global_position) + local.position, local.size)
+		var into := node.global_transform.affine_inverse() * mesh.global_transform
+		var here: AABB = into * mesh.mesh.get_aabb()
 		if first:
 			box = here
 			first = false

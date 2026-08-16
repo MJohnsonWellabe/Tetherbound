@@ -35,7 +35,13 @@ REFERENCE_ROOT = ROOT / "assets" / "creatures" / "tetherbound"
 RAW_ROOT = ROOT / "assets_raw"
 
 BASE = "https://api.meshy.ai"
-VIEWS = ["front", "side", "back", "three_quarter", "head"]
+## `top` is here for the PROPS, and it earns its place: a plan view is a
+## standard drawing on an object board and it is sometimes the only clean one.
+## The Legendary Tether Machine is exactly that case — board 15 draws the bound
+## creature in every elevation except the rear, so the rear and the TOP are the
+## two views the licence lets us use at all (see prop_views.json). No creature
+## board carries a top.png, so this costs the creature path nothing.
+VIEWS = ["front", "side", "back", "three_quarter", "head", "top"]
 
 ## Seconds between polls, and how long to wait before giving up. Generation
 ## takes minutes, not seconds; polling harder does not make it faster.

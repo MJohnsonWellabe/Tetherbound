@@ -23,32 +23,17 @@ at the time it was fetched, not as remembered.
 | Relay Apparatus board | Owner-supplied (AI-generated) | Provided by owner | Owner's own | No | `docs/art/reference/14_Relay_Apparatus.png` | None. Band 3. Artist note is the build spec: *"modular construction, core and rings serviceable, conductor arms and manifolds replaceable"*. Five labelled subassemblies. Serves `SE23`. |
 | Legendary Tether Machine board | Owner-supplied (AI-generated) | Provided by owner | Owner's own | No | `docs/art/reference/15_Legendary_Tether_Machine.png` | None. Warden stronghold, ~15 m against its own 0–20 m scale bar. **Depicts a bound legendary inside the containment ring — the board licenses the MACHINE, not its occupant.** D23 §20 forbids new creature meshes at any credit balance, so the bound creature is an existing roster asset or VFX. |
 
-> **The two remaining hero objects are prompt-ready and blocked only on the key.**
-> The owner authorised these two generations on 2026-08-16 ("finish the meshy work
-> except the warden's face"). `tools/art_pipeline/meshy.py` now carries prompts for
-> both — `relay_apparatus` (board 14) and `tether_machine` (board 15), written off
-> the boards' own numbered subassemblies and length-checked against the 800-char
-> text-to-3D limit. The machine additionally gets `NEGATIVE_MACHINE`, which bans
-> the creature terms outright: board 15 draws the machine *with its victim in the
-> cage*, and the licence covers the machine alone.
->
-> What is missing is `MESHY_API_KEY`, which is not present in this remote
-> container's environment — `meshy.py` reads it from the environment and nowhere
-> else, by design. With the key exported, each is one command:
->
-> ```
-> tools/art_pipeline/meshy.py check                       # confirms key + balance
-> tools/art_pipeline/meshy.py generate relay_apparatus --candidates 3
-> tools/art_pipeline/meshy.py generate tether_machine  --candidates 3
-> ```
->
-> Both currently ship as clearly-marked placeholder massing with a one-path swap
-> seam (`ApparatusSeam` in `scripts/world/tether_relay.gd`; `machine.model` in
-> `data/config/stronghold.json`, with `machine.placeholder` asserted by
-> `smoke_stronghold`). **The Warden's face is deliberately NOT included** — it has
-> no owner-supplied reference sheet, and CLAUDE.md forbids spending a generation
-> without one.
+| Relay Apparatus — production hero object | Generated (Meshy multi-image-to-3D: preview x3 to choose, then refine x2) from FRONT/SIDE/REAR crops of the owner's board `14_Relay_Apparatus.png`, cut by `tools/art_pipeline/crop_prop_views.py` | `tools/art_pipeline/`, task ids in `assets_raw/relay_apparatus/*/provenance.json`; winner `01a00ae3-9cf0-7e34-83b2-1d3504f13236` | Meshy ToS at generation date (paid credits of owner's account); derived from owner's own concept art. All Rights Reserved / proprietary, owner-licensed | Paid credits (100: 3 preview + 2 refine) | `assets/environment/team_tether/relay_apparatus.glb` | SE23. D24's second reserved hero. The board's hero render is NOT among the inputs — its callout numbers and leader lines sit on the object. Installed at the `ApparatusSeam` in `scripts/world/tether_relay.gd` and fitted to `apparatus.height` (4.2m) by the mesh's own visual bounds; the placeholder massing stays as the fallback the code takes when `model` is unset. In-engine renders: `shots/_hero_relay_*.png`. |
+| Legendary Tether Machine — production hero object | Generated (Meshy multi-image-to-3D: preview x3 rejected, preview x3 accepted, then refine x2) from four crops of the owner's board `15_Legendary_Tether_Machine.png` — **and the front and side crops had the bound legendary programmatically LIFTED OUT of them first** (`crop_prop_views.py::lift_occupant`) | `tools/art_pipeline/`, task ids in `assets_raw/tether_machine/*/provenance.json`; winner `01a00ae7-0325-7f01-b8db-07097a7929e1` | Meshy ToS at generation date (paid credits of owner's account); derived from owner's own concept art. All Rights Reserved / proprietary, owner-licensed | Paid credits (200: 6 preview + 2 refine) | `assets/environment/team_tether/tether_machine.glb` | R8.2. D24's third and last reserved hero. **THE BOARD LICENSES THE MACHINE, NOT ITS PRISONER** — D24, and D23 §20 forbids a new creature mesh at any balance. The occupant was removed from the INPUT IMAGES rather than only banned in the negative prompt, because image-to-3D follows its pictures. Every candidate was checked by eye and none contains a creature. Installed at `machine.model` in `data/config/stronghold.json`, fitted to `machine.height` (15m) — `smoke_stronghold` measures it at 16.6 x 15.0 x 12.0 m. In-engine renders: `shots/_hero_machine_*.png`. |
 
+> **All three of D24's reserved hero objects are now generated.** The Tether
+> Energy Pylon (SF33), the Relay Apparatus (SE23) and the Legendary Tether
+> Machine (R8.2). No further Meshy generation is licensed for the Meadows: D23
+> §20 forbids creature meshes at any balance, and CLAUDE.md forbids generating
+> anything the owner has not supplied a reference board for. **The Warden's
+> face remains ungenerated and is the one outstanding art request** — the owner
+> excluded it explicitly on 2026-08-16 ("finish the meshy work except the
+> warden's face") and no reference sheet exists for it.
 | Terrapup/Ripplet/Galewisp/trainer turnaround crops ×17 | Derived from the owner's art pack | `tools/art_pipeline/crop_views.py` | Owner's own. Reference only; `.gdignore`d out of the export | No | `assets/creatures/tetherbound/{terrapup,ripplet,galewisp,trainer}/reference/*.png` | Cut from the four production sheets: one figure per image, shared scale, flat background. Regenerate with the script; never hand-edited. Seventeen rather than sixteen since the trainer gained a separate `head.png`, which is what the head-graft technique generates against. |
 | Grandpa/Warden/Veridian Stag crops ×10 | Derived from the owner's art pack | `tools/art_pipeline/crop_views.py` | Owner's own. Reference only; `.gdignore`d out of the export | No | `assets/creatures/tetherbound/{grandpa,warden,veridian}/reference/*.png` | Cut from concept boards `05` and `06` rather than from a sheet, because these three have none. Grandpa and the Warden each carry a `head.png`; the Warden's is a ~165 px region upscaled and it is why his face is painted rather than modelled. |
 | Wild roster turnaround crops ×51 | Derived from the owner's Meadows Wild Canon Pack | `tools/art_pipeline/crop_views.py` | Owner's own. Reference only; `.gdignore`d out of the export | No | `assets/creatures/tetherbound/{bramblebun,mudsnout,trailpup,meadowhart,burrowback,tuskroot,paddlenewt,mosshell,brooktail,reedwing,pipwing,duskhush,galecrest}/reference/*.png` | Cut from the four wild sheets in `docs/art/reference/wild/` — `02` Ground A (Bramblebun, Mudsnout, Trailpup), `03` Water, `04` Air, `05` Ground B (Meadowhart, Burrowback, Tuskroot, and misnamed a scale guide). Same rule as the crops above: one figure per image, shared scale, flat background, regenerate rather than hand-edit. Fifty-one and not fifty-two because Galecrest is drawn as a single wide spread-wing figure labelled FRONT and SIDE, so it yields no separate front view. `crop_views.py` also erases the sheets' pale panel-divider rules, which are faint enough to ignore on a contact sheet and quite visible enough that a generator modelled one as a plank. |

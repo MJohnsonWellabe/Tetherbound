@@ -1,12 +1,12 @@
 {
   "_comment": "R8.2 -- the authored stronghold route. MEADOWS_PROGRESSION_SPEC.md Sec8 names exactly five spaces in exactly one order (Outer Works -> Courtyard / Hall Approach -> Tether Chamber Approach -> Warden Arena -> Legendary Chamber) with a 30-60 minute first-clear target, and rules out a giant puzzle dungeon in the same breath. So this is a COMPACT authored route: five rooms on one L-shaped spine, no branches, no keys to hunt, one door. Everything that is a number, a position or a species lives here; scripts/world/stronghold.gd is only the machine that stands it up. ALL NUMBERS TUNABLE per CLAUDE.md.",
-
   "_comment_where": "The route is the WORKS BEHIND the castle, not a rebuild of it. `scripts/world/landmark.gd` already assembles a real Quaternius castle at [229.8,-144.4] (OF4-rebuild, D28) and moving or re-massing that is explicitly outside any item's authority; this complex stands on the flat ground south of it and the player works east and then north until the Legendary Chamber sits directly behind the castle's own footprint. Siting was MEASURED, not guessed -- tools/_probe_stronghold.gd sampled an 8m grid over x[124,252] z[-166,-238] against the live heightfield. Findings that decided the layout: (1) the terrain simply ends past x~250, which killed a first layout that ran the deep chambers east; (2) the rise's west flank climbs 32m over the warden/legendary boxes of a second layout that ran them west, which no single flat floor can sit above; (3) the band this layout uses has 6.4m of relief and no gaps at all. `world_perimeter.gd`'s 235m ring passes near the far end, so every chamber corner was checked to fall OUTSIDE it -- the stronghold has always been beyond the boundary (the castle itself is at radius 271), and how the player is let past it is `SF34`'s three-Sigil approach gate, not this file's business.",
-
   "_comment_frame": "`site.at` is the OUTER WORKS' own centre in world metres, and `site.yaw_deg` 90 turns the complex's LOCAL +z (its depth axis) onto world +x -- so walking deeper walks EAST toward the castle, which is the direction the player arrives from the meadow. Local +x is therefore world -z (north). Chamber `at` is [lateral, depth] in that local frame and `size` is [lateral width, depth]. Chambers joined by a passage MUST share the perpendicular axis exactly (the wall opener splits one wall at its own centre; it does not cut diagonals) -- the L's corner is handled by the arena and the chamber sharing its depth, not by an offset.",
-
   "site": {
-    "at": [141.8, -215.4],
+    "at": [
+      141.8,
+      -215.4
+    ],
     "yaw_deg": 90.0,
     "floor_clearance": 0.5,
     "wall_thickness": 1.2,
@@ -18,111 +18,465 @@
     "tether_trim": "#332228",
     "door_colour": "#3a3f3c"
   },
-
   "_comment_language": "R8.2's brief: a sacred natural site INDUSTRIALISED by Tether. The same grammar `SE23` uses at the relay, at full scale here. In geometry that means three things and nothing more elaborate: the shell is old cut stone (`site.stone`, the same weathered value family the castle's own plinth uses), every space carries Team Tether hardware bolted ONTO that stone rather than replacing it (`trim` bands and `conduits` below, in the reserved oxblood and the reserved teal from palette.json), and the deeper you go the more of the room is machine and the less of it is masonry. `conduits` are lit teal runs; they all point at the Legendary Chamber because that is where the power comes from, which is `SG40`'s reveal drawn a room early and never said out loud.",
-
   "_comment_chambers": "`open: true` means no roof -- the outer works and the courtyard are open-air yards inside high walls, the three inner spaces are roofed. `height` is floor-to-ceiling (or wall height, for the open ones). The Legendary Chamber's 22m is set by the machine, not by taste: the board draws it at ~15m against its own 0-20m scale bar, so the room has to be architecture-sized or the centrepiece cannot stand up in it.",
   "chambers": [
-    {"id": "outer_works", "at": [0.0, 0.0], "size": [20.0, 24.0], "height": 8.0, "open": true,
-      "_role": "Sec8: patrol trainer, visible Team Tether industrial intrusion. World box x[129.8,153.8] z[-225.4,-205.4]."},
-    {"id": "courtyard", "at": [0.0, 32.0], "size": [22.0, 28.0], "height": 9.0, "open": true,
-      "_role": "Sec8: trainer fight, environmental storytelling. World box x[159.8,187.8] z[-226.4,-204.4]."},
-    {"id": "tether_approach", "at": [0.0, 64.0], "size": [16.0, 18.0], "height": 6.5,
-      "_role": "Sec8: elite trainer, recovery opportunity. Roofed, and the first space that is more machine than masonry. World box x[196.8,214.8] z[-223.4,-207.4]."},
-    {"id": "warden_arena", "at": [0.0, 90.2], "size": [24.0, 26.0], "height": 11.0,
-      "_role": "Sec8: dialogue, multi-Creature boss trainer battle (R8.3 fights it; this item only builds the room and the way in). Deliberately the emptiest room in the complex -- a floor, a height and nothing to trip over. World box x[219.0,245.0] z[-227.4,-203.4]."},
-    {"id": "legendary_chamber", "at": [-32.0, 90.2], "size": [28.0, 28.0], "height": 22.0,
-      "_role": "Sec8: tether mechanism, freeing sequence, voluntary join, release ceremony. Built AROUND the machine. World box x[218.0,246.0] z[-197.4,-169.4] -- directly behind the castle's own plinth (z[-154.4,-134.4]), 15m clear of it."}
+    {
+      "id": "outer_works",
+      "at": [
+        0.0,
+        0.0
+      ],
+      "size": [
+        20.0,
+        24.0
+      ],
+      "height": 8.0,
+      "open": true,
+      "_role": "Sec8: patrol trainer, visible Team Tether industrial intrusion. World box x[129.8,153.8] z[-225.4,-205.4]."
+    },
+    {
+      "id": "courtyard",
+      "at": [
+        0.0,
+        32.0
+      ],
+      "size": [
+        22.0,
+        28.0
+      ],
+      "height": 9.0,
+      "open": true,
+      "_role": "Sec8: trainer fight, environmental storytelling. World box x[159.8,187.8] z[-226.4,-204.4]."
+    },
+    {
+      "id": "tether_approach",
+      "at": [
+        0.0,
+        64.0
+      ],
+      "size": [
+        16.0,
+        18.0
+      ],
+      "height": 6.5,
+      "_role": "Sec8: elite trainer, recovery opportunity. Roofed, and the first space that is more machine than masonry. World box x[196.8,214.8] z[-223.4,-207.4]."
+    },
+    {
+      "id": "warden_arena",
+      "at": [
+        0.0,
+        90.2
+      ],
+      "size": [
+        24.0,
+        26.0
+      ],
+      "height": 11.0,
+      "_role": "Sec8: dialogue, multi-Creature boss trainer battle (R8.3 fights it; this item only builds the room and the way in). Deliberately the emptiest room in the complex -- a floor, a height and nothing to trip over. World box x[219.0,245.0] z[-227.4,-203.4]."
+    },
+    {
+      "id": "legendary_chamber",
+      "at": [
+        -32.0,
+        90.2
+      ],
+      "size": [
+        28.0,
+        28.0
+      ],
+      "height": 22.0,
+      "_role": "Sec8: tether mechanism, freeing sequence, voluntary join, release ceremony. Built AROUND the machine. World box x[218.0,246.0] z[-197.4,-169.4] -- directly behind the castle's own plinth (z[-154.4,-134.4]), 15m clear of it."
+    }
   ],
-
   "_comment_passages": "One spine, in route order, no branches. `gated_by_flag` is the complex's ONE door: a Tether blast shutter across the way into the Warden Arena that lifts when the elite in front of it has been beaten. Deliberately NOT an `item_gate.gd` gate -- that class is a carried KEY operating the world, `SF34`'s three Sigils are the carried keys that open the Hall APPROACH from outside, and nothing in here hands out a key. 'You have beaten the thing standing in the doorway' is already a fact the SB9 flag store remembers across saves, which is the same call `burrow_warrens.gd` made for its vault door and for the same reason.",
   "passages": [
-    {"from": "outer_works", "to": "courtyard", "width": 4.0, "height": 4.5},
-    {"from": "courtyard", "to": "tether_approach", "width": 3.6, "height": 4.0},
-    {"from": "tether_approach", "to": "warden_arena", "width": 3.4, "height": 4.0,
-      "gated_by_flag": "defeated_stronghold_elite"},
-    {"from": "warden_arena", "to": "legendary_chamber", "width": 5.0, "height": 6.0}
+    {
+      "from": "outer_works",
+      "to": "courtyard",
+      "width": 4.0,
+      "height": 4.5
+    },
+    {
+      "from": "courtyard",
+      "to": "tether_approach",
+      "width": 3.6,
+      "height": 4.0
+    },
+    {
+      "from": "tether_approach",
+      "to": "warden_arena",
+      "width": 3.4,
+      "height": 4.0,
+      "gated_by_flag": "defeated_stronghold_elite"
+    },
+    {
+      "from": "warden_arena",
+      "to": "legendary_chamber",
+      "width": 5.0,
+      "height": 6.0
+    }
   ],
-
   "_comment_trim": "Team Tether hardware bolted onto old stone. `band` is a horizontal girder run along one wall of a chamber at `y` above the floor; `pillar` is an upright brace at an `offset` from the chamber centre. Oxblood by default (`site.tether_trim`, palette.json's reserved faction colour); `lit: true` swaps to the reserved teal with emission, which marks a run that is CARRYING something.",
   "trim": [
-    {"chamber": "outer_works", "kind": "band", "side": "+x", "y": 5.0},
-    {"chamber": "outer_works", "kind": "pillar", "offset": [-7.0, -8.0]},
-    {"chamber": "outer_works", "kind": "pillar", "offset": [7.0, -8.0]},
-    {"chamber": "courtyard", "kind": "band", "side": "-x", "y": 5.6},
-    {"chamber": "courtyard", "kind": "band", "side": "+x", "y": 5.6},
-    {"chamber": "courtyard", "kind": "pillar", "offset": [-8.0, 0.0]},
-    {"chamber": "courtyard", "kind": "pillar", "offset": [8.0, 0.0]},
-    {"chamber": "tether_approach", "kind": "band", "side": "+x", "y": 4.2, "lit": true},
-    {"chamber": "tether_approach", "kind": "band", "side": "-x", "y": 4.2, "lit": true},
-    {"chamber": "warden_arena", "kind": "band", "side": "+x", "y": 7.0},
-    {"chamber": "warden_arena", "kind": "band", "side": "-x", "y": 7.0},
-    {"chamber": "warden_arena", "kind": "pillar", "offset": [-10.0, -10.0]},
-    {"chamber": "warden_arena", "kind": "pillar", "offset": [10.0, -10.0]},
-    {"chamber": "warden_arena", "kind": "pillar", "offset": [-10.0, 10.0]},
-    {"chamber": "warden_arena", "kind": "pillar", "offset": [10.0, 10.0]},
-    {"chamber": "legendary_chamber", "kind": "band", "side": "+x", "y": 15.0, "lit": true},
-    {"chamber": "legendary_chamber", "kind": "band", "side": "-x", "y": 15.0, "lit": true},
-    {"chamber": "legendary_chamber", "kind": "pillar", "offset": [-12.0, -12.0]},
-    {"chamber": "legendary_chamber", "kind": "pillar", "offset": [12.0, -12.0]},
-    {"chamber": "legendary_chamber", "kind": "pillar", "offset": [-12.0, 12.0]},
-    {"chamber": "legendary_chamber", "kind": "pillar", "offset": [12.0, 12.0]}
+    {
+      "chamber": "outer_works",
+      "kind": "band",
+      "side": "+x",
+      "y": 5.0
+    },
+    {
+      "chamber": "outer_works",
+      "kind": "pillar",
+      "offset": [
+        -7.0,
+        -8.0
+      ]
+    },
+    {
+      "chamber": "outer_works",
+      "kind": "pillar",
+      "offset": [
+        7.0,
+        -8.0
+      ]
+    },
+    {
+      "chamber": "courtyard",
+      "kind": "band",
+      "side": "-x",
+      "y": 5.6
+    },
+    {
+      "chamber": "courtyard",
+      "kind": "band",
+      "side": "+x",
+      "y": 5.6
+    },
+    {
+      "chamber": "courtyard",
+      "kind": "pillar",
+      "offset": [
+        -8.0,
+        0.0
+      ]
+    },
+    {
+      "chamber": "courtyard",
+      "kind": "pillar",
+      "offset": [
+        8.0,
+        0.0
+      ]
+    },
+    {
+      "chamber": "tether_approach",
+      "kind": "band",
+      "side": "+x",
+      "y": 4.2,
+      "lit": true
+    },
+    {
+      "chamber": "tether_approach",
+      "kind": "band",
+      "side": "-x",
+      "y": 4.2,
+      "lit": true
+    },
+    {
+      "chamber": "warden_arena",
+      "kind": "band",
+      "side": "+x",
+      "y": 7.0
+    },
+    {
+      "chamber": "warden_arena",
+      "kind": "band",
+      "side": "-x",
+      "y": 7.0
+    },
+    {
+      "chamber": "warden_arena",
+      "kind": "pillar",
+      "offset": [
+        -10.0,
+        -10.0
+      ]
+    },
+    {
+      "chamber": "warden_arena",
+      "kind": "pillar",
+      "offset": [
+        10.0,
+        -10.0
+      ]
+    },
+    {
+      "chamber": "warden_arena",
+      "kind": "pillar",
+      "offset": [
+        -10.0,
+        10.0
+      ]
+    },
+    {
+      "chamber": "warden_arena",
+      "kind": "pillar",
+      "offset": [
+        10.0,
+        10.0
+      ]
+    },
+    {
+      "chamber": "legendary_chamber",
+      "kind": "band",
+      "side": "+x",
+      "y": 15.0,
+      "lit": true
+    },
+    {
+      "chamber": "legendary_chamber",
+      "kind": "band",
+      "side": "-x",
+      "y": 15.0,
+      "lit": true
+    },
+    {
+      "chamber": "legendary_chamber",
+      "kind": "pillar",
+      "offset": [
+        -12.0,
+        -12.0
+      ]
+    },
+    {
+      "chamber": "legendary_chamber",
+      "kind": "pillar",
+      "offset": [
+        12.0,
+        -12.0
+      ]
+    },
+    {
+      "chamber": "legendary_chamber",
+      "kind": "pillar",
+      "offset": [
+        -12.0,
+        12.0
+      ]
+    },
+    {
+      "chamber": "legendary_chamber",
+      "kind": "pillar",
+      "offset": [
+        12.0,
+        12.0
+      ]
+    }
   ],
-
   "_comment_conduits": "Lit teal cable runs along the floor, every one of them pointing deeper. `from`/`to` are chamber ids; the run is drawn between their centres at ankle height and is DECORATION ONLY (no collider) so it can never block a doorway or trip a fight.",
   "conduits": [
-    {"from": "courtyard", "to": "tether_approach", "offset": 3.0},
-    {"from": "tether_approach", "to": "warden_arena", "offset": 2.6},
-    {"from": "warden_arena", "to": "legendary_chamber", "offset": 3.4},
-    {"from": "warden_arena", "to": "legendary_chamber", "offset": -3.4}
+    {
+      "from": "courtyard",
+      "to": "tether_approach",
+      "offset": 3.0
+    },
+    {
+      "from": "tether_approach",
+      "to": "warden_arena",
+      "offset": 2.6
+    },
+    {
+      "from": "warden_arena",
+      "to": "legendary_chamber",
+      "offset": 3.4
+    },
+    {
+      "from": "warden_arena",
+      "to": "legendary_chamber",
+      "offset": -3.4
+    }
   ],
-
   "_comment_lights": "Not a cave. The two open yards are lit by the sky and get only a low fill; the roofed rooms get real Tether worklights, and the Legendary Chamber is lit mostly BY the machine (see `machine.core_light`). `at` is chamber-local [lateral, depth], `y` is above the floor.",
   "lights": [
-    {"at": [0.0, 0.0], "y": 6.0, "energy": 0.35, "range": 18.0, "colour": "#9aa6a0"},
-    {"at": [0.0, 32.0], "y": 7.0, "energy": 0.35, "range": 22.0, "colour": "#9aa6a0"},
-    {"at": [0.0, 60.0], "y": 5.0, "energy": 0.9, "range": 14.0, "colour": "#7fd8c4"},
-    {"at": [0.0, 68.0], "y": 5.0, "energy": 0.7, "range": 12.0, "colour": "#8fa6b8"},
-    {"at": [-8.0, 90.2], "y": 8.0, "energy": 0.8, "range": 20.0, "colour": "#8fa6b8"},
-    {"at": [8.0, 90.2], "y": 8.0, "energy": 0.8, "range": 20.0, "colour": "#8fa6b8"},
-    {"at": [-32.0, 78.0], "y": 12.0, "energy": 0.55, "range": 24.0, "colour": "#7d8a99"},
-    {"at": [-32.0, 102.0], "y": 12.0, "energy": 0.55, "range": 24.0, "colour": "#7d8a99"}
+    {
+      "at": [
+        0.0,
+        0.0
+      ],
+      "y": 6.0,
+      "energy": 0.35,
+      "range": 18.0,
+      "colour": "#9aa6a0"
+    },
+    {
+      "at": [
+        0.0,
+        32.0
+      ],
+      "y": 7.0,
+      "energy": 0.35,
+      "range": 22.0,
+      "colour": "#9aa6a0"
+    },
+    {
+      "at": [
+        0.0,
+        60.0
+      ],
+      "y": 5.0,
+      "energy": 0.9,
+      "range": 14.0,
+      "colour": "#7fd8c4"
+    },
+    {
+      "at": [
+        0.0,
+        68.0
+      ],
+      "y": 5.0,
+      "energy": 0.7,
+      "range": 12.0,
+      "colour": "#8fa6b8"
+    },
+    {
+      "at": [
+        -8.0,
+        90.2
+      ],
+      "y": 8.0,
+      "energy": 0.8,
+      "range": 20.0,
+      "colour": "#8fa6b8"
+    },
+    {
+      "at": [
+        8.0,
+        90.2
+      ],
+      "y": 8.0,
+      "energy": 0.8,
+      "range": 20.0,
+      "colour": "#8fa6b8"
+    },
+    {
+      "at": [
+        -32.0,
+        78.0
+      ],
+      "y": 12.0,
+      "energy": 0.55,
+      "range": 24.0,
+      "colour": "#7d8a99"
+    },
+    {
+      "at": [
+        -32.0,
+        102.0
+      ],
+      "y": 12.0,
+      "energy": 0.55,
+      "range": 24.0,
+      "colour": "#7d8a99"
+    }
   ],
-
   "_comment_machine": "PLACEHOLDER MASSING, AND IT MUST NOT BE MISTAKEN FOR THE ASSET. The Tether Machine has an owner-supplied board (docs/art/reference/15_Legendary_Tether_Machine.png, 2026-08-11) and is one of the three hero objects D24 reserves a Meshy generation for. The agent that built this route had no Meshy access, so what stands here is primitives plus the Tether materials, sized to the board's own ~15m scale bar, and the seam is left deliberately obvious: `placeholder: true` below, a name of `TetherMachinePlaceholder` in the scene tree, and no attempt at the board's surfacing. Replacing it is a one-object swap into `machine.model` -- the chamber, the lighting and the markers around it are all real and are what this item actually delivered. AND THE STANDING WARNING FROM THE BACKLOG: the board draws a legendary bound inside the containment ring because that is what the machine DOES to legendaries. The board licenses the MACHINE, never its occupant. Sec20/D23 forbid a new creature mesh at any credit balance, so the bound creature is an existing roster body or VFX placed by R8.4 -- there is no creature in this block and none may be added to it.",
   "machine": {
-    "placeholder": true,
-    "model": "",
+    "placeholder": false,
+    "model": "res://assets/environment/team_tether/tether_machine.glb",
     "chamber": "legendary_chamber",
     "height": 15.0,
     "base_radius": 5.6,
     "ring_radius": 7.2,
     "ring_pillars": 8,
     "core_radius": 1.9,
-    "core_light": {"energy": 3.2, "range": 26.0},
-    "_scale_note": "15m against the board's own 0-20m bar. base_radius/ring_radius are read off the same board's plan proportions (the containment ring is a little under half the total height across), not invented -- but they are TUNABLE and will be replaced wholesale by the real mesh's own extents."
+    "core_light": {
+      "energy": 3.2,
+      "range": 26.0
+    },
+    "_scale_note": "15m against the board's own 0-20m bar. base_radius/ring_radius are read off the same board's plan proportions (the containment ring is a little under half the total height across), not invented -- but they are TUNABLE and will be replaced wholesale by the real mesh's own extents.",
+    "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner authorised the generation and the key came from the Ralph art-lane Routine. Meshy multi-image-to-3D, refine tier, from four crops of board 15 cut by tools/art_pipeline/crop_prop_views.py -- and the front and side crops had the BOUND LEGENDARY LIFTED OUT of them first, because D24 licenses the machine and not its prisoner and image-to-3D follows its pictures rather than its negative prompt. `height` below is still the authority: stronghold.gd fits the mesh to it by its own visual bounds. The primitive massing under `base_radius`/`ring_radius`/`core_radius` is kept as the fallback the code still takes when `model` is empty or missing, and as the record of what the chamber was built around."
   },
-
   "_comment_recovery": "SG38's recovery opportunity, and Sec8 puts it in the Tether Chamber Approach -- past the elite, before the Warden. It is `scripts/build/creature_bed.gd`, the SAME object R4.8 already ships as a buildable, placed here instead of built by the player: `home_recovery.gd::rest` heals a party member fully (reviving a fainted one) and grants progression.gd's rest XP. Reusing it rather than inventing a stronghold-only heal is the whole point -- a player who has built a bed at home already knows exactly what this is.",
   "recovery": {
     "chamber": "tether_approach",
-    "offset": [-5.0, 4.0],
+    "offset": [
+      -5.0,
+      4.0
+    ],
     "facing_deg": 90.0
   },
-
   "_comment_gauntlet": "SG38. Sec8 and Sec12 between them ask for a patrol trainer at the Outer Works, a courtyard fight, an elite before the Tether Chamber, and 2-4 battles across the five spaces. Three is what stands here, and the fourth fight in the building is the Warden himself (R8.3). Every one of them is an ORDINARY entry in data/config/trainers.json -- same table, same teams, same SC15 reward schema, same defeat flags, same encounter_director.begin_trainer_battle() -- carrying `placed_by: \"stronghold\"` so trainer_npc.gd's own placer skips them and this file's layout decides where they stand. That is the only reason a position appears here rather than in trainers.json: a room's coordinates belong to the room. Every offset is deliberately OFF the doorway-to-doorway line through its space: a trainer standing in the middle of the way through is a body the player has to walk around before they have even been challenged.",
   "gauntlet": [
-    {"trainer": "stronghold_patrol", "chamber": "outer_works", "offset": [-5.0, 6.0], "facing_deg": 90.0},
-    {"trainer": "stronghold_courtyard", "chamber": "courtyard", "offset": [-4.0, 4.0], "facing_deg": 90.0},
-    {"trainer": "stronghold_elite", "chamber": "tether_approach", "offset": [4.5, 5.0], "facing_deg": 90.0}
+    {
+      "trainer": "stronghold_patrol",
+      "chamber": "outer_works",
+      "offset": [
+        -5.0,
+        6.0
+      ],
+      "facing_deg": 90.0
+    },
+    {
+      "trainer": "stronghold_courtyard",
+      "chamber": "courtyard",
+      "offset": [
+        -4.0,
+        4.0
+      ],
+      "facing_deg": 90.0
+    },
+    {
+      "trainer": "stronghold_elite",
+      "chamber": "tether_approach",
+      "offset": [
+        4.5,
+        5.0
+      ],
+      "facing_deg": 90.0
+    }
   ],
-
   "_comment_marks": "Named spots later items ask for BY NAME instead of by coordinate, exactly the rule burrow_warrens.gd's markers keep. R8.3 needs somewhere to stand the Warden and somewhere to stop the player for his dialogue; SG40 needs the spot the reveal is delivered from; R8.4 needs the machine's own foot and the place the freed legendary appears. All five are here so none of those items has to hard-code a metre. `offset` is [lateral, depth] from that chamber's own centre.",
   "marks": [
-    {"id": "warden_stand", "chamber": "warden_arena", "offset": [0.0, 8.0]},
-    {"id": "warden_challenge", "chamber": "warden_arena", "offset": [0.0, -8.0]},
-    {"id": "reveal_stand", "chamber": "legendary_chamber", "offset": [0.0, -10.0]},
-    {"id": "machine_foot", "chamber": "legendary_chamber", "offset": [0.0, 0.0]},
-    {"id": "legendary_stand", "chamber": "legendary_chamber", "offset": [0.0, 6.0]}
+    {
+      "id": "warden_stand",
+      "chamber": "warden_arena",
+      "offset": [
+        0.0,
+        8.0
+      ]
+    },
+    {
+      "id": "warden_challenge",
+      "chamber": "warden_arena",
+      "offset": [
+        0.0,
+        -8.0
+      ]
+    },
+    {
+      "id": "reveal_stand",
+      "chamber": "legendary_chamber",
+      "offset": [
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "id": "machine_foot",
+      "chamber": "legendary_chamber",
+      "offset": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "legendary_stand",
+      "chamber": "legendary_chamber",
+      "offset": [
+        0.0,
+        6.0
+      ]
+    }
   ]
 }

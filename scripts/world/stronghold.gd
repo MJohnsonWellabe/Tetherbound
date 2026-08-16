@@ -38,15 +38,17 @@ extends Node3D
 ##    reserved-colour reading, so the faction cannot drift between the pylons
 ##    on the spokes, the quarry's conduits and this building.
 ##
-## THE MACHINE IS A PLACEHOLDER AND SAYS SO. `docs/art/reference/
+## THE MACHINE IS THE REAL ASSET NOW (D49, 2026-08-16). `docs/art/reference/
 ## 15_Legendary_Tether_Machine.png` is an owner-supplied board and the machine
-## is one of the three hero objects D24 reserves Meshy for. The agent that
-## built this route had no Meshy access, so `_build_machine` stands primitives
-## in the Tether materials at the board's own ~15m scale and leaves the seam
-## visible in the node name, in the config (`machine.placeholder`) and in the
-## boot log. The chamber, its lighting, its markers and its scale are real
-## work; the object in the middle of it is not the asset. Swapping it is a
-## single `machine.model` path.
+## is one of the three hero objects D24 reserves Meshy for; the owner
+## authorised the generation and it is installed at `machine.model`, fitted to
+## `machine.height` by its own visual bounds. `machine.placeholder` is false
+## and the node is named `TetherMachine`.
+##
+## The primitive massing below is NOT dead. It is the fallback `_build_machine`
+## still takes when `model` is unset or its file is missing, it is what let the
+## chamber be built and verified at the right SCALE before the asset existed,
+## and it is the record of what the room was designed around. Leave it.
 ##
 ## AND THE RULE THAT COMES WITH THAT BOARD: it draws a legendary bound inside
 ## the containment ring because that is what the machine does. It licenses the
@@ -744,10 +746,10 @@ func _on_body_exited(body: Node3D) -> void:
 
 ## --- the centrepiece --------------------------------------------------------
 
-## THE TETHER MACHINE, AND IT IS A PLACEHOLDER. Read this file's header before
-## touching it: the board is owner-supplied, the object is one of D24's three
-## licensed Meshy heroes, and this massing exists only so the chamber can be
-## built and verified at the right SCALE while the real asset is unavailable.
+## THE TETHER MACHINE. Read this file's header before touching it. The licensed
+## hero mesh is installed (D49); the massing below is the fallback path, kept
+## because it still runs whenever `machine.model` is unset or missing, and
+## because it is the record of the scale the chamber was designed around.
 ##
 ## What stands here is deliberately, visibly primitive: a stepped base, a ring
 ## of upright containment pillars with a lit collar, a tapering core column and
@@ -778,18 +780,28 @@ func _build_machine() -> void:
 	_machine.position = Vector3(centre.x, _floor_y, centre.z)
 	add_child(_machine)
 
+	var height := float(spec.get("height", 15.0))
 	if model != "" and ResourceLoader.exists(model):
-		# The seam closes here, and only here: a real mesh replaces every
-		# primitive below without the chamber changing.
+		# The seam closes here: a real mesh replaces the DECORATIVE primitives
+		# below. It does NOT replace the base collider, the core light or the
+		# marker — those three are contract, not decoration, and the first
+		# version of this branch returned before all of them. That would have
+		# shipped a 15m machine the player walks straight through, in an
+		# unlit chamber, with `_markers["machine"]` missing from the dictionary
+		# R8.4's freeing sequence reads its position out of. The bug could only
+		# ever appear on the day the seam was actually used, which is exactly
+		# the day nobody is looking at the placeholder path any more.
 		var scene := load(model) as PackedScene
 		if scene != null:
 			var instance := scene.instantiate() as Node3D
 			if instance != null:
 				instance.name = "Model"
 				_machine.add_child(instance)
+				_fit_to_height(instance, height)
+				_machine_shell(spec, height)
+				_markers["machine"] = _machine.global_position
 				return
 
-	var height := float(spec.get("height", 15.0))
 	var base_r := float(spec.get("base_radius", 5.6))
 	var ring_r := float(spec.get("ring_radius", 7.2))
 	var pillars := maxi(3, int(spec.get("ring_pillars", 8)))
@@ -839,6 +851,71 @@ func _build_machine() -> void:
 	_machine.add_child(glow)
 
 	_markers["machine"] = _machine.global_position
+
+
+## Scale a generated mesh to the authored height. A Meshy GLB arrives in the
+## generator's own units — roughly a unit cube, never metres — so dropping one
+## in unscaled puts a 15-metre machine in the chamber at the size of a stool.
+## The board's 0-20m bar is the authority for what 15m means here, and
+## `stronghold.json`'s `machine.height` is where that number already lives, so
+## the mesh is fitted to it rather than to a magic multiplier.
+##
+## Fitted by its own visual bounds, not by an exported transform: a generated
+## scene's root transform is not something we control or can trust.
+func _fit_to_height(instance: Node3D, height: float) -> void:
+	var bounds := _visual_bounds(instance)
+	if bounds.size.y <= 0.001:
+		return
+	var scale_to := height / bounds.size.y
+	instance.scale = Vector3.ONE * scale_to
+	# Sit it ON the floor: the mesh's own lowest point goes to y = 0, whatever
+	# the exporter thought the origin was.
+	instance.position = Vector3(
+		-bounds.get_center().x * scale_to,
+		-bounds.position.y * scale_to,
+		-bounds.get_center().z * scale_to)
+
+
+func _visual_bounds(node: Node) -> AABB:
+	var total := AABB()
+	var seeded := false
+	for child in node.find_children("*", "VisualInstance3D", true, false):
+		var visual := child as VisualInstance3D
+		var box := visual.get_aabb()
+		# Into the instance's own space, so a nested exporter transform counts.
+		var here := (node as Node3D).global_transform.affine_inverse() \
+			* visual.global_transform
+		box = here * box
+		total = box if not seeded else total.merge(box)
+		seeded = true
+	return total
+
+
+## What the machine owes the room no matter who drew it: something solid to walk
+## around, and the light the chamber is lit by. The primitive path builds both
+## out of its own drums; the model path has no drums, so it gets them here.
+func _machine_shell(spec: Dictionary, height: float) -> void:
+	var base_r := float(spec.get("base_radius", 5.6))
+	var body := StaticBody3D.new()
+	body.name = "MachineBody"
+	var shape := CollisionShape3D.new()
+	var cyl := CylinderShape3D.new()
+	cyl.radius = base_r
+	cyl.height = 2.7
+	shape.shape = cyl
+	body.add_child(shape)
+	body.position = Vector3(0.0, 1.35, 0.0)
+	_machine.add_child(body)
+
+	var glow := OmniLight3D.new()
+	glow.name = "CoreLight"
+	var light_spec: Dictionary = spec.get("core_light", {})
+	glow.light_color = _palette("tether_teal", Color("#3fe8c4"))
+	glow.light_energy = float(light_spec.get("energy", 3.2))
+	glow.omni_range = float(light_spec.get("range", 26.0))
+	glow.shadow_enabled = false
+	glow.position = Vector3(0.0, height * 0.55, 0.0)
+	_machine.add_child(glow)
 
 
 func _drum(parent: Node3D, node_name: String, radius: float, height: float, base_y: float,

@@ -30,15 +30,17 @@ extends Node3D
 ## the relay apparatus (2026-08-11, labelled Band 3 — drawn for this item).
 ## The apparatus is one of the THREE hero objects D24 reserves Meshy for. The
 ## generation is an OWNER-GATED task in the `art` lane and did not happen in
-## this build: there was no Meshy access, and CLAUDE.md is explicit that a hero
-## object must not be improvised from scratch as though it were final art.
+## this build. The owner authorised the generation on 2026-08-16 and the mesh is
+## installed (D49): `apparatus.model` names it, `_build_apparatus` instantiates
+## it under `ApparatusSeam` and fits it to `apparatus.height` by its own visual
+## bounds.
 ##
-## So `_build_apparatus` puts up a PLACEHOLDER MASSING under a node called
-## `ApparatusSeam`, laid out as the board's own five labelled subassemblies, in
-## the board's own order, wearing materials `severed_spokes.gd` already
-## defines. Nothing outside that node depends on any part of it except the
-## console, which is found by the name `Console`. The swap procedure is written
-## out in `data/config/tether_relay.json`'s `_comment_apparatus`.
+## The PLACEHOLDER MASSING is still here below and is still reachable: it is the
+## fallback taken whenever `model` is unset or its file is missing, and it is
+## laid out as the board's own five labelled subassemblies in the board's own
+## order. Nothing outside `ApparatusSeam` depends on any part of it except the
+## console, which is found by the name `Console` and is built on BOTH paths --
+## it is the thing the player presses and it was never part of the massing.
 ##
 ## ---------------------------------------------------------------------------
 ## WHY SO LITTLE OF THIS IS NEW CODE
@@ -441,6 +443,30 @@ func _build_apparatus() -> void:
 	var deck_y := float(apparatus.get("deck_y", 0.0))
 	var yaw := atan2(_u.x, _u.y)
 	var massing: Dictionary = apparatus.get("massing", {})
+
+	# THE SEAM, CLOSED. `model` names the generated hero mesh; when it is set,
+	# it replaces the five massing subassemblies below and nothing else. The
+	# console is still built by `_build_console` at its own authored spot — it
+	# is the thing the player presses and it was never part of the massing —
+	# and the body collider is still raised here, because "the player walks
+	# around it rather than through it" is a property of the OBJECT, not of
+	# whichever version of the object is standing.
+	var model := str(apparatus.get("model", ""))
+	if model != "" and ResourceLoader.exists(model):
+		var scene := load(model) as PackedScene
+		if scene != null:
+			var instance := scene.instantiate() as Node3D
+			if instance != null:
+				instance.name = "Model"
+				seam.add_child(instance)
+				instance.rotation.y = yaw
+				var tall := float(apparatus.get("height", 4.2))
+				_fit_apparatus(instance, tall, Vector3(centre.x, deck_y, centre.y))
+				_works.call("_add_box_collider", seam,
+					Vector3(centre.x, deck_y + tall * 0.5, centre.y),
+					Vector3(tall * 1.15, tall, tall * 1.15), yaw)
+				_build_console(seam, apparatus)
+				return
 	var stone: StandardMaterial3D = _works.call("_stone_material")
 	var faction: StandardMaterial3D = _works.call("_tether_material")
 	var live: StandardMaterial3D = _works.call("_conduit_material", true)
@@ -547,6 +573,37 @@ func _build_apparatus() -> void:
 ## levers; this is a cabinet with a lit face, and it is the ONE thing on this
 ## site the player presses a button on. Its node is named `Console` and found
 ## by that name, so the generated apparatus can bring its own.
+## Stand a generated mesh at `foot`, at the authored height. A Meshy GLB comes
+## back in the generator's units rather than metres, and its origin is wherever
+## the exporter left it, so both the size and the footing are measured off the
+## mesh's own visual bounds instead of trusted from its transform. Board 14's
+## own scale guide puts a person at about this object's shoulder, which is what
+## `apparatus.height` records.
+func _fit_apparatus(instance: Node3D, tall: float, foot: Vector3) -> void:
+	var bounds := _model_bounds(instance)
+	if bounds.size.y <= 0.001:
+		instance.position = foot
+		return
+	var factor := tall / bounds.size.y
+	instance.scale = Vector3.ONE * factor
+	instance.position = foot + Vector3(
+		-bounds.get_center().x * factor,
+		-bounds.position.y * factor,
+		-bounds.get_center().z * factor)
+
+
+func _model_bounds(instance: Node3D) -> AABB:
+	var total := AABB()
+	var seeded := false
+	for child in instance.find_children("*", "VisualInstance3D", true, false):
+		var visual := child as VisualInstance3D
+		var here := instance.global_transform.affine_inverse() * visual.global_transform
+		var box: AABB = here * visual.get_aabb()
+		total = box if not seeded else total.merge(box)
+		seeded = true
+	return total
+
+
 func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 	var console: Dictionary = apparatus.get("console", {})
 	if console.is_empty():

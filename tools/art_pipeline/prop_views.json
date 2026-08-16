@@ -1,0 +1,47 @@
+{
+  "_comment": "Where each PROP hero object's usable views sit on its production reference board. Read by tools/art_pipeline/crop_prop_views.py.",
+
+  "_comment_why_not_views_json": "views.json models a creature sheet: one horizontal turnaround ROW, described as a single `band` plus four x `centres`, because that is how sheets 01-05 are drawn. The prop boards are not drawn that way. Board 14 puts FRONT/SIDE/REAR in a row but the TOP VIEW in a separate block below, and board 15 scatters its views around a large beauty render — front and side stacked down the right edge, top and rear side by side along the bottom. A band-and-centres model cannot address those, so props get explicit per-view boxes instead of a worse fit.",
+
+  "_comment_boxes": "`views` maps a view name to [x0, y0, x1, y1] in source pixels, containing the figure and NOTHING else — no view label, no callout number, no leader line, no artist note. Boards 14 and 15 both label BELOW the figure, so every box stops short of its caption.",
+
+  "_comment_scale": "Every view of one prop is emitted at one resolution with the figure at its ORIGINAL pixel scale, padded (never rescaled per-view) onto a common square canvas. Multi-image-to-3D reconciles views by apparent size, so per-view normalisation would destroy the one signal that tells it the front and the side are the same object. Padding preserves it; the `pad` size is simply the largest box on the board plus a margin.",
+
+  "_comment_omissions": "A view listed here is a view that survived being looked at. Board 14's hero render is omitted because the callout numbers 1, 2 and 4 and their leader lines cross the object itself and cannot be cropped off. Board 15's beauty render and its FRONT and SIDE views are omitted for a different and much more important reason -- see `_comment_the_occupant`.",
+
+  "_comment_the_occupant": "BOARD 15 DRAWS THE MACHINE WITH A BOUND LEGENDARY INSIDE THE CAGE, AND THE LICENCE COVERS THE MACHINE ALONE. D24 reserves three Meshy generations for hero OBJECTS; D23 section 20 forbids new creature meshes at any credit balance and was reaffirmed with 5000 credits available. A text negative alone is not enough insurance here, because multi-image-to-3D is driven far more by its images than by its words -- feeding four pictures that all contain a dragon would very likely return a dragon fused into the mesh. So the machine is cut from the two views that CONTAIN NO CREATURE: the rear view, where the structure stands empty, and the top view, where the centre is only the core's glow. Two clean views is the documented minimum and meshy.py enforces it. The rings, arches, chains and clamp the omitted views would have shown are carried by the text prompt instead, which names each of them in capitals.",
+
+  "output_size": 1024,
+
+  "props": {
+    "relay_apparatus": {
+      "file": "14_Relay_Apparatus.png",
+      "background": [249, 246, 242],
+      "pad": 380,
+      "views": {
+        "front": [30, 742, 378, 1032],
+        "side": [396, 742, 667, 1032],
+        "back": [700, 742, 1028, 1032]
+      },
+      "_comment": "The FRONT/SIDE/REAR row, captions above at y~737 and the panel dividers at x~390 and x~684 both cleared. The hero render above is deliberately not used: its callouts sit on the object."
+    },
+
+    "tether_machine": {
+      "file": "15_Legendary_Tether_Machine.png",
+      "background": [236, 233, 228],
+      "pad": 400,
+      "views": {
+        "front": [665, 140, 1015, 505],
+        "side": [672, 548, 1015, 928],
+        "back": [346, 985, 588, 1288],
+        "top": [35, 985, 300, 1288]
+      },
+      "lift_occupant": {
+        "front": [55, 110, 292, 340],
+        "side": [16, 150, 180, 340]
+      },
+      "_comment": "All four drawn views, but the front and the side only after the bound legendary is LIFTED OUT of them -- see `_comment_the_occupant`. The rear and top views need no lifting: the board draws the machine empty in both. Boxes in `lift_occupant` are the cage interior, relative to each view's own crop, and they contain the creature and open air and nothing else.",
+      "_comment_two_views_was_not_enough": "The first attempt used the rear and top views alone, on the reasoning that they were the only two the licence allowed untouched. Three preview candidates came back as shattered spires with no arch, dais or ring recoverable: one elevation plus one orthographic plan is not enough for multi-view reconstruction, and the plan view in particular reads as a disc rather than as the top of anything. That is what motivated lifting the occupant instead of avoiding the views that contain it -- the licence problem and the reconstruction problem have the same fix."
+    }
+  }
+}
