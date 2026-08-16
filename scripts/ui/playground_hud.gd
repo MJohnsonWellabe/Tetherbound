@@ -89,6 +89,19 @@ const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar
 
 const HOTBAR_MESSAGE_SECONDS := 2.2
 
+## Pixels of clear screen between the hotbar panel's real bottom edge and the
+## top of the context prompt, and the prompt row's own resting height.
+##
+## The two used to be pinned to the screen bottom independently — the prompt at
+## -140, the hotbar at -144 — which read as one crowded block, and the first fix
+## nudged the hotbar up by a hand-measured 26px. That number described one
+## arrangement of one frame: the row collided again the moment either side
+## changed height, which the hotbar does every time its message row appears.
+## Stating the GAP instead and deriving the prompt from it is the same look with
+## the relationship written down. TUNABLE.
+const PROMPT_GAP := 30.0
+const PROMPT_HEIGHT := 44.0
+
 ## Owner directive, playtest pass: "name some of the areas and uncover them
 ## like fortnite maps do." `map_state.gd::take_pending_region_announcement()`
 ## queues the newly-entered region's display name once; this is how long the
@@ -163,6 +176,7 @@ var _max_raw_axis_seen := 0.0
 	$Root/HotbarPanel/Margin/Layout/Slots/Slot4/Label,
 	$Root/HotbarPanel/Margin/Layout/Slots/Slot5/Label,
 ]
+@onready var _hotbar_panel: PanelContainer = $Root/HotbarPanel
 @onready var _hotbar_message: Label = $Root/HotbarPanel/Margin/Layout/Message
 
 var _hotbar_last_text: Array[String] = ["", "", "", "", ""]
@@ -249,6 +263,12 @@ func _ready() -> void:
 	_build_region_banner()
 	_style_hotbar()
 
+	# Placed FROM the hotbar rather than beside it. `resized` is the hook that
+	# matters: the panel's height changes whenever its message row appears, and
+	# nothing else fires on that.
+	_hotbar_panel.resized.connect(_reflow_prompt)
+	_reflow_prompt.call_deferred()
+
 	UITokens.make_text_legible(_prompt_label)
 	UITokens.make_text_legible(_hotbar_message)
 	UITokens.make_text_legible(_region_banner)
@@ -275,6 +295,24 @@ func _ready() -> void:
 	# file just built, in one pass, rather than one make_text_legible call per
 	# widget scattered through the builders above.
 	UITokens.make_text_legible(_root)
+
+
+## Sit the context prompt PROMPT_GAP below whatever the hotbar's bottom edge
+## actually is this frame.
+##
+## Both controls are anchored to the screen bottom, so the arithmetic is done in
+## that same space: the panel's real rect minus the root's height gives its
+## bottom edge as a negative offset from the bottom of the screen, directly
+## comparable with the prompt's own offsets. The rect is read rather than the
+## panel's `offset_bottom` because a Control forced past its minimum size grows
+## its cached rect and never writes the growth back to its offsets — which is
+## precisely the drift that made the hand-measured gap wrong.
+func _reflow_prompt() -> void:
+	if _hotbar_panel == null or _prompt_label == null or _root == null:
+		return
+	var hotbar_bottom := _hotbar_panel.position.y + _hotbar_panel.size.y - _root.size.y
+	_prompt_label.offset_top = hotbar_bottom + PROMPT_GAP
+	_prompt_label.offset_bottom = _prompt_label.offset_top + PROMPT_HEIGHT
 
 
 func _style_hotbar() -> void:
