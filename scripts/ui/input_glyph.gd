@@ -168,19 +168,27 @@ const GLYPHS := {
 	## attached -- the owner could not work out how to move a stack, and the one
 	## place that would have told him was naming verbs without naming buttons.
 	##
-	## GAMEPAD-ONLY on purpose. The keyboard defaults are G/H/J and the vendored
-	## Kenney keycap sheet has no G, H or J PNG, so rather than point at an
-	## unrelated icon these fall through `icon()`'s own missing-device path to
-	## "[G]" / "[H]" / "[J]" -- read off the InputMap, so a rebind in Settings
-	## cannot leave the legend lying. Same treatment `build_snap_cycle` above
-	## already gets for Shift.
+	## The keyboard defaults are G/H/J. When OW1 landed, the vendored Kenney
+	## keycap sheet had no G, H or J PNG, so all three fell through `icon()`'s
+	## own missing-device path to "[G]" / "[H]" / "[J]" -- read off the
+	## InputMap, so a rebind in Settings cannot leave the legend lying. Same
+	## treatment `build_snap_cycle` above already gets for Shift.
+	##
+	## PT-17 then sourced `keyboard_h.png` fresh from that same raw Kenney pack
+	## (`docs/ASSET_LEDGER.md`) for its own rename verb, which reuses this same
+	## `backpack_split` binding (H / gamepad R3) rather than adding a new
+	## action -- see `tab_creatures.gd`'s own header for why borrowing beats a
+	## second action, and `torch_toggle` above for R3's other, mutually
+	## exclusive, world-context reader. So `backpack_split` gets real keyboard
+	## art now; `backpack_drop` (G) and `backpack_assign` (J) still have none
+	## and stay on the bracket-letter fallback until one is sourced for them
+	## too.
 	##
 	## Files are reused, not new: Start is `backpack_drop`'s real button
 	## (see data/config/menu.json's "Backpack" group note), R3 is
-	## `backpack_split`'s and is shared with `torch_toggle` (world context,
-	## never on screen at the same moment), and Y is `backpack_assign`'s.
+	## `backpack_split`'s, and Y is `backpack_assign`'s.
 	"backpack_drop": {"gamepad": "xbox_button_start.png"},
-	"backpack_split": {"gamepad": "xbox_stick_r_press.png"},
+	"backpack_split": {"keyboard": "keyboard_h.png", "gamepad": "xbox_stick_r_press.png"},
 	"backpack_assign": {"gamepad": "xbox_button_y.png"},
 }
 

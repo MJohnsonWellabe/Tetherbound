@@ -201,8 +201,18 @@ func is_open() -> bool:
 
 
 ## `subject` is what is being named, for the title: "Name your Terrapup".
-func open(subject: String) -> void:
+## `prefill`, non-empty, seeds the buffer with an existing name -- PT-17's
+## rename verb (`tab_creatures.gd`) opens this way so a stray press lands on
+## the creature's current name already typed, not an empty buffer. This
+## panel's own `menu_cancel` handling is backspace, not cancel (see
+## `_physics_process`'s comment on why -- naming is mandatory in the opening
+## and there is nothing to back out to there), so a prefilled buffer is what
+## makes confirming immediately, unedited, a harmless no-op instead of the
+## only way out of the panel being to type an entirely new name.
+func open(subject: String, prefill: String = "") -> void:
 	_entry.reset()
+	if prefill != "":
+		_entry.text = prefill
 	_open = true
 	_guard = OPEN_GUARD_FRAMES
 	_mode_guard = 0

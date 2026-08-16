@@ -33,6 +33,15 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+## PT-17. `party_seam.gd::set_nickname` is the one place a nickname gets
+## written anywhere in the project (the opening beat routes through it too,
+## `sequence_director.gd::_give_to_party`) -- the rename verb below reuses it
+## rather than assigning `creature.nickname` a second way in a second file.
+const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
+## The opening's own naming panel (`scripts/ui/name_prompt.gd`), reused
+## verbatim rather than a second text-entry UI -- see `_read_rename()`'s own
+## header for the rest.
+const NAME_PROMPT_SCENE := preload("res://scenes/ui/name_prompt.tscn")
 
 ## Reordering is pick-up-then-place, matching the backpack. Setting the deployed
 ## creature needs a second verb, and `interact` (E / X) is the one already bound that
@@ -56,14 +65,30 @@ const EVOLVE_ACTION := "backpack_drop"
 ## open, and cannot fire underneath this screen.
 const BEST_ACTION := "creature_recall"
 
+## PT-17: rename the focused creature. A name is otherwise settable exactly
+## once, in the opening (`name_prompt.gd`'s only other caller,
+## `sequence_director.gd`) -- one mis-navigated press there named a creature
+## forever, with no way back. Borrows `backpack_split` (H / gamepad R3) the
+## same way `EVOLVE_ACTION`/`BEST_ACTION` above already borrow
+## `backpack_drop`/`creature_recall`: this agent may not add actions to
+## project.godot's input map, only one menu tab is ever visible at a time,
+## and `backpack_split`'s only other reader (`tab_backpack.gd`) is not this
+## one. Free to reuse again for the same reason `R4.4`'s retired
+## `TEACH_ACTION` already was, per that const's own comment above.
+const RENAME_ACTION := "backpack_split"
+
 ## `_describe()` appends "G evolve" to this for a creature R4.6's `evolution`
 ## config actually names -- shown whether or not it is currently eligible,
 ## the same "always show the verb, explain the refusal on press" shape the
 ## rest of this screen's verbs use. Teaching is NOT a verb here (OF29): the
 ## line points at the satchel, where the TM itself now lives and where the
 ## player picks who learns it.
+## "H / R3", not a bare keyboard letter, for the rename segment specifically
+## (PT-17) -- CLAUDE.md's controller-first rule: this ships on a 7-inch ROG
+## Ally, and a verb shown as a keyboard key alone is a verb a pad player has
+## to guess at. The other segments predate that being enforced here.
 const DETAIL_HINT_BASE := "A  pick up, then A again to reorder      E / X  send this one out first" \
-	+ "      R  set as Best Creature      TMs are taught from the backpack"
+	+ "      R  set as Best Creature      H / R3  rename      TMs are taught from the backpack"
 
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 const HEALTH_LOW := Color(0.72, 0.22, 0.18)
@@ -142,6 +167,18 @@ var _detail_hint: RichTextLabel = null
 var _moves: RefCounted = null
 var _traits: RefCounted = null
 
+## --- rename (PT-17) ----------------------------------------------------------
+
+## The creature being renamed, non-null only while `NAME_PROMPT_SCENE` is on
+## screen. Guards the other verbs the same way `_evolution_stage`/
+## `_release_stage` guard each other -- see those readers' own bail-outs.
+var _renaming: RefCounted = null
+## A fresh instance per rename rather than a standing child: this tab already
+## rebuilds its whole node tree on `build()` (menu reopen), and a scene
+## instanced once outside that lifecycle would either leak or dangle. Freed in
+## `_on_rename_confirmed()` the moment the name comes back.
+var _rename_panel: CanvasLayer = null
+
 ## --- evolution ceremony (R4.6) ----------------------------------------------
 
 var _list: VBoxContainer = null
@@ -219,6 +256,12 @@ func build() -> void:
 	# state pointing at freed nodes would crash the first poll after a rebuild.
 	_release_stage = ""
 	_release_target = -1
+	# Same "rebuild drops the ceremony cleanly" reasoning as the two resets
+	# above -- `get_children()` above already queued the panel node itself for
+	# freeing (it is a child of this tab), this just drops the dangling
+	# reference to it.
+	_renaming = null
+	_rename_panel = null
 	if _moves == null:
 		_moves = MOVE_DB.load_default()
 	if _traits == null:
@@ -705,6 +748,7 @@ func poll() -> void:
 	_read_activate()
 	_read_evolve()
 	_read_set_best()
+	_read_rename()
 
 	var size: int = int(party.call("size"))
 	if _release_stage == "choose" or _release_stage == "confirm":
@@ -992,7 +1036,7 @@ func _on_row(index: int) -> void:
 	if _release_stage == "choose":
 		_begin_farewell(index)
 		return
-	if _release_stage != "":
+	if _release_stage != "" or _renaming != null:
 		return
 
 	var party: RefCounted = _party()
@@ -1029,7 +1073,7 @@ func _on_row(index: int) -> void:
 func _read_activate() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
-	if _evolution_stage != "" or _release_stage != "":
+	if _evolution_stage != "" or _release_stage != "" or _renaming != null:
 		return
 	if not Input.is_action_just_pressed(ACTIVATE_ACTION):
 		return
@@ -1057,7 +1101,7 @@ func _read_set_best() -> void:
 	# R4.10: the ceremony has exactly one verb, the same reason
 	# `_read_activate()`/`_read_evolve()` bail here. `_focused`
 	# can also be the sixth row during it, which `party.at()` has no slot for.
-	if _release_stage != "":
+	if _release_stage != "" or _renaming != null:
 		return
 	if not Input.is_action_just_pressed(BEST_ACTION):
 		return
@@ -1074,6 +1118,51 @@ func _read_set_best() -> void:
 		say("%s is your Best Creature." % str(creature.call("label")))
 	else:
 		say("%s is no longer your Best Creature." % str(creature.call("label")))
+
+
+## PT-17: a name is otherwise settable exactly once, in the opening
+## (`name_prompt.gd`'s only other caller, `sequence_director.gd`) -- one
+## mis-navigated press there named a creature forever, with no way back. This
+## opens the same panel rather than a second text-entry UI, prefilled with
+## the creature's current name (`open()`'s `prefill` param) so a stray press
+## and an immediate, unedited confirm is a harmless no-op -- `name_prompt.gd`
+## has no real cancel (naming is mandatory in the opening, so `menu_cancel`
+## there means backspace, not back-out), and prefill is what makes that
+## survivable here too, where there IS something to back out to.
+func _read_rename() -> void:
+	if not visible or menu == null or not bool(menu.call("is_open")):
+		return
+	if _evolution_stage != "" or _release_stage != "" or _renaming != null:
+		return
+	if _held >= 0:
+		return
+	if not Input.is_action_just_pressed(RENAME_ACTION):
+		return
+
+	var party: RefCounted = _party()
+	var creature: RefCounted = party.call("at", _focused) if party != null else null
+	if creature == null:
+		say("Nothing in that slot.")
+		return
+
+	_renaming = creature
+	_rename_panel = NAME_PROMPT_SCENE.instantiate() as CanvasLayer
+	add_child(_rename_panel)
+	_rename_panel.connect("confirmed", _on_rename_confirmed)
+	_rename_panel.call("open", str(creature.get("display_name")), str(creature.call("label")))
+
+
+func _on_rename_confirmed(chosen: String) -> void:
+	if _renaming == null:
+		return
+	PARTY_SEAM.set_nickname(_renaming, chosen)
+	say("Renamed to %s." % chosen)
+	_renaming = null
+	if _rename_panel != null:
+		_rename_panel.queue_free()
+		_rename_panel = null
+	if _focused >= 0 and _focused < _rows.size():
+		(_rows[_focused] as Button).grab_focus()
 
 
 ## R4.4 put a `TEACH_ACTION` here: one press taught the focused creature the
@@ -1098,7 +1187,7 @@ func _read_set_best() -> void:
 func _read_evolve() -> void:
 	if not visible or menu == null or not bool(menu.call("is_open")):
 		return
-	if _release_stage != "":
+	if _release_stage != "" or _renaming != null:
 		return
 	if _evolution_stage != "":
 		_poll_evolution()
@@ -1213,7 +1302,7 @@ func _poll_release() -> void:
 
 
 func _maybe_begin_release() -> void:
-	if _evolution_stage != "":
+	if _evolution_stage != "" or _renaming != null:
 		return
 	var pending := _pending_catch()
 	if pending == null:
