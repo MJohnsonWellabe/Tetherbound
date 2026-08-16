@@ -442,6 +442,28 @@ func _the_creature_is_named_on_the_grid() -> void:
 	if not bool(_name_prompt.call("is_open")):
 		_fail("choosing a starter did not open the naming prompt; beat 5 is missing")
 		return
+
+	# OF25 split the prompt into two live surfaces: a LineEdit for keyboard
+	# players and the letter grid for gamepad players, switched on the
+	# device of the LAST REAL INPUT EVENT (Game.last_input_was_gamepad).
+	# Headless CI has no pad connected, so the tracker boots in keyboard
+	# mode and the grid this test drives is hidden — inject one real joypad
+	# press first, exactly what a controller player's first button does, so
+	# the prompt shows the grid this smoke exists to prove. The keyboard
+	# surface has its own smoke (tests/smoke_name_prompt_keyboard.gd).
+	var pad := InputEventJoypadButton.new()
+	pad.button_index = JOY_BUTTON_A
+	pad.pressed = true
+	Input.parse_input_event(pad)
+	var pad_up := InputEventJoypadButton.new()
+	pad_up.button_index = JOY_BUTTON_A
+	pad_up.pressed = false
+	Input.parse_input_event(pad_up)
+	# One frame for the tracker to see it, plus the prompt's own mode-switch
+	# guard frames before the grid answers ui_* polling.
+	for i in 8:
+		await process_frame
+
 	var entry: RefCounted = _name_prompt.call("entry")
 	print("beat 5: naming prompt open, cursor on '%s'" % str(entry.selected()))
 
