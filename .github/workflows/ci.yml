@@ -780,6 +780,10 @@ jobs:
           if [ $code -ne 0 ]; then
             echo "::warning::smoke_riding failed once; retrying once before failing the job"
             godot --headless --path . --script tests/smoke_riding.gd
+            code=$?
+          fi
+          exit $code
+
   verify-boss:
     runs-on: ubuntu-latest
     timeout-minutes: 15

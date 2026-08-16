@@ -157,8 +157,21 @@ func _the_population_and_the_guardian_are_placed(warrens: Node3D) -> void:
 	print("guardian: %s at level %d, standing at %.0f, %.1f, %.0f" % [
 		str(guardian.get("species_id")), level,
 		guardian.global_position.x, guardian.global_position.y, guardian.global_position.z])
-	if level < 15:
-		_fail("the guardian is level %d; it is supposed to outclass the field" % level)
+	# "Outclasses the field" is a RELATIVE claim, so measure it against the
+	# field. This was a bare `level < 15` until SH47 retuned the warrens down
+	# to sit where a player leaving Band 1 actually is (residents 10-13 -> 9-11,
+	# guardian 18 -> 14) and the constant failed a guardian that had in fact
+	# got RELATIVELY stronger: 15 was two levels over the old deepest resident,
+	# 14 is three over the new one. A magic number here silently pins the
+	# dungeon's tuning to whatever it happened to be the day it was written.
+	var deepest := 0
+	for body: Node3D in population:
+		var resident: RefCounted = body.get("instance") if is_instance_valid(body) else null
+		if resident != null:
+			deepest = maxi(deepest, int(resident.get("level")))
+	if level <= deepest:
+		_fail("the guardian is level %d and the warrens' own residents reach %d; "
+			% [level, deepest] + "it is supposed to outclass the field, not join it")
 	var den: Vector3 = warrens.call("marker", "den")
 	if guardian.global_position.distance_to(den) > 14.0:
 		_fail("the guardian is not in its own chamber")

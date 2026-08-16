@@ -436,18 +436,36 @@ func _refuses_mid_fight() -> void:
 		_fail("no wild creature in the world; the mid-fight refusal cannot be tested")
 		return
 
-	var spot := wild.global_position - wild.global_basis.z * 2.5
-	spot.y = float(_world.call("ground_height_at", spot.x, spot.z)) + 1.0
-	_player.global_position = spot
-	_player.velocity = Vector3.ZERO
-	_rig.set("yaw", atan2(-(wild.global_position.x - spot.x), -(wild.global_position.z - spot.z)))
-	for i in 30:
-		await physics_frame
-	await _press("interact")
-	for i in 60:
-		await physics_frame
-	if not bool(_manager.call("is_fighting")):
-		_fail("could not enter combat; the mid-fight refusal could not be tested")
+	# RE-AIM BEFORE EVERY PRESS, AND POLL FOR THE FIGHT RATHER THAN COUNTING
+	# FRAMES. This was one teleport, a flat 30-frame settle and a flat 60-frame
+	# wait, and it failed intermittently — on CI first, then roughly one local
+	# run in three. The creature is the moving part: wild creatures roam, so the
+	# spot computed from its position is already stale by the time the player is
+	# standing there, and on a slow frame it has walked out of interact range
+	# before the press lands. Snapping to where it is NOW on each attempt
+	# removes the race instead of widening the window and hoping.
+	var entered := false
+	for attempt in 4:
+		var spot := wild.global_position - wild.global_basis.z * 2.5
+		spot.y = float(_world.call("ground_height_at", spot.x, spot.z)) + 1.0
+		_player.global_position = spot
+		_player.velocity = Vector3.ZERO
+		_rig.set("yaw", atan2(
+			-(wild.global_position.x - spot.x), -(wild.global_position.z - spot.z)))
+		for i in 30:
+			await physics_frame
+		await _press("interact")
+		for i in 90:
+			if bool(_manager.call("is_fighting")):
+				break
+			await physics_frame
+		if bool(_manager.call("is_fighting")):
+			entered = true
+			break
+		if not is_instance_valid(wild):
+			break
+	if not entered:
+		_fail("could not enter combat in 4 attempts; the mid-fight refusal could not be tested")
 		return
 	if bool(_riding.call("mount")):
 		_fail("mounted in the middle of a fight")
