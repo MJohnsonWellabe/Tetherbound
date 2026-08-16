@@ -3,6 +3,16 @@
 Written as a handoff: everything a fresh context needs to pick this up without
 re-deriving it. Read `CLAUDE.md` first for the hard rules, then this.
 
+> ### ⏩ NEWER: read `docs/HANDOFF_2026-08-16_playtest_round3_and_heroes.md` first
+>
+> One long session on 2026-08-16 took the Meadows chapter to content-complete
+> (all of Phase 8), shipped the owner's third playtest round, generated the last
+> two of `D24`'s hero objects, and rebuilt the Warden from his own character
+> sheet. That file supersedes this one wherever they disagree about the chapter,
+> the hero assets or the Warden. It also documents a five-hour window in which
+> **CI silently stopped running while looking like ordinary failure** — worth
+> knowing before trusting any green tick from that day.
+
 **Last updated:** 2026-08-11 (second update that day — read both notes).
 
 **The art direction is now settled, and two P0 bugs are fixed.** The owner
