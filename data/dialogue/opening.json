@@ -5,34 +5,34 @@
   "_comment_voice": "He is warm, brief, and not sad about it. GAME_DESIGN.md 3 gives him one job in this scene: he cannot go, and he is sending you instead — packed, belted, and out the door. Every line here is either that or getting out of its way.",
   "conversations": {
     "grandpa_house": {
-      "_comment": "Downstairs, the morning the game starts. The whole briefing in one sitting: why there is a journey, the pack, the belt, and the door. The belt line is the five-creature cap said in fiction, which is the only place a rule this hard should be said.",
+      "_comment": "Downstairs, the morning the game starts. Rewritten 2026-08-16 to the owner's five beats (docs/reference/owner-board-2026-08-15-systems-and-castle.png, 'Dialogue Update' panel, and the implementation brief's 'short urgent sequence' instruction): waited as long as I could / we stopped them once, too old now / eight strongholds taken, pylons draining the land / it's in your blood, will you go / take the pack, choose, never keep more than five. Improved wording only -- no exposition the beats do not carry. Down from 299 words to ~190; the urgency is the cut. The belt line is still the five-creature cap said in fiction, the only place a rule this hard should be said, and it now also carries the owner's 'you'll catch more as you go' half. Reveal-ladder note (SE30/spec 32): 'draining the land's energy' is the owner's own supplied line and names the drain's SHAPE, never its source -- tests/test_dialogue_runner.gd's forbidden-word scan covers this file and stays the enforcement.",
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "There you are. I heard the floorboards. Sit and eat — the bread's still warm. I've been up since dark working out how to say this, so I'll just say it.",
-        "You'll have heard the name by now. Team Tether. Eight places of power in this world, and they hold every one — creatures chained to the stones, keeping the lights on for them.",
-        "I walked those roads once, knew every warden by name. Look at me now — I get winded crossing my own meadow. I'm not walking anywhere.",
-        "Someone has to stop them, and I couldn't send you before now — you were too young. They won't wait for you to grow into it, though. Every season they hold those stones, they get stronger, not weaker.",
-        "So you go. And you don't go empty-handed.",
+        "You're up. Sit — no, leave the bread. Listen. I've waited as long as I dared to say this, and Team Tether is only getting stronger.",
+        "We stopped them once — my friends and I, years back, when the eight strongholds were still ours. This time we're too old. All of us.",
+        "So now they hold all eight. Their pylons are strung across the land, draining its energy season by season. They get stronger. The land gets weaker.",
+        "Someone has to stop them. It's in your blood. Will you go?",
+        "I thought so. Then you go ready.",
         {
-          "text": "That pack by the door carried me thirty years. It's yours now. Orbs first — fifteen, plain make. A good throw matters more than a good orb.",
+          "text": "My pack — yours now. Fifteen orbs, plain make. A good throw beats a good orb.",
           "effect": "give:orb_basic:15"
         },
         {
-          "text": "Three small potions. Those are for your creature, mind. You get soup, same as always.",
+          "text": "Three potions. For your creature, mind — you get soup.",
           "effect": "give:potion_small:3"
         },
         {
-          "text": "And berries off my own bushes. Share them on the road. A fed creature forgives a long day.",
+          "text": "Berries off my bushes. A fed creature forgives a long day.",
           "effect": "give:berries:5"
         },
         {
-          "text": "Two Revives too, tucked at the bottom. A potion can't help a creature that's already down — these can. Half strength back, and on its feet again. Don't waste them.",
+          "text": "Two Revives, at the bottom. For when a potion comes too late. Don't waste them.",
           "effect": "give:revive:2"
         },
-        "Last of all, this — my creature belt. It holds five, no more, a rule older than Team Tether. Five you know by name are worth more than a hundred you don't.",
+        "And my belt. It holds five — no more, ever, and that rule is older than Team Tether. You'll catch more than you can count out there; keep the five you'd know in the dark.",
         {
-          "text": "Now — three orbs, right there on the table. Ground, water, air. I raised all three from the shell, each one waiting to meet you. Go on, take a look — whichever one catches your eye, that's the one that's yours.",
+          "text": "Now — three orbs on the table. Ground, water, air. I raised all three from the shell. Take the one that pulls at you.",
           "effect": "beat:starter_choice"
         }
       ]
