@@ -1,20 +1,52 @@
 {
   "_comment": "Creature progression (D30). All tunable. Move power multiplies existing combat_math damage, so 1.0 preserves today's balance exactly.",
   "level": {
-    "cap": 50, "wild_band": [2, 6], "starter_level": 3,
-    "xp_to_next_base": 40, "xp_to_next_exponent": 1.6,
-    "growth_per_level": { "hp": 0.06, "attack": 0.05, "defence": 0.05 }
+    "cap": 50,
+    "wild_band": [
+      2,
+      6
+    ],
+    "starter_level": 3,
+    "xp_to_next_base": 40,
+    "xp_to_next_exponent": 1.6,
+    "growth_per_level": {
+      "hp": 0.06,
+      "attack": 0.05,
+      "defence": 0.05
+    }
   },
-  "xp_award": { "base": 18, "per_enemy_level": 6, "party_share": 0.35, "rest_bonus": 5 },
+  "xp_award": {
+    "base": 18,
+    "per_enemy_level": 6,
+    "party_share": 0.35,
+    "rest_bonus": 5
+  },
   "bond": {
-    "max": 100, "thresholds": [10, 30, 55, 80, 100],
-    "battle_won": 4, "successful_catch_start": 10, "per_day_in_party": 2,
-    "effects_per_node": { "attack_scale": 0.01, "defence_scale": 0.01 }
+    "max": 100,
+    "thresholds": [
+      10,
+      30,
+      55,
+      80,
+      100
+    ],
+    "battle_won": 4,
+    "successful_catch_start": 10,
+    "per_day_in_party": 2,
+    "effects_per_node": {
+      "attack_scale": 0.01,
+      "defence_scale": 0.01
+    }
   },
   "_comment_individuality": "R4.2, GAME_DESIGN.md 11: 'same-species creatures have slightly different underlying stat quality.' Each core stat (hp/attack/defence) carries its own 0.0-1.0 quality roll, 0.5 = perfectly average -- variance_pct is the swing at the extremes (0.0 or 1.0), so 0.12 means a stat can run +/-12% off the species base. star_thresholds buckets a roll into 1-5 stars for appraisal display (spec: 'show appraisal through stars/bars, not exact IV numbers') -- four cut points splitting 0..1 into five bands.",
   "individuality": {
     "variance_pct": 0.12,
-    "star_thresholds": [0.2, 0.4, 0.6, 0.8]
+    "star_thresholds": [
+      0.2,
+      0.4,
+      0.6,
+      0.8
+    ]
   },
   "_comment_traits": "R4.2, GAME_DESIGN.md 11: 'each creature starts with one trait. A second trait can develop later through progression/bond.' unlock_bond_nodes reuses bond.thresholds' own node count -- 5 here means every node crossed, the same 'fully bonded' milestone the Team screen already shows.",
   "traits": {
@@ -23,7 +55,17 @@
   "_comment_evolution": "R4.6, spec sec4/D13/D17/D20: keyed by the PRE-evolution species id (species.json's own `evolves_into` names the target, so this block only needs the gate numbers). level/bond gate the live instance; item_id names a catalyst item to consume, empty meaning no item is required. Mudsnout's item_id starts empty ON PURPOSE -- the spec's own suggestion is a Heartstone from the Burrow Warrens (SD17), which does not exist yet, and gating the biome's one evolution on an item nothing can drop would make it unreachable for the whole span between now and Phase 8b. Flip item_id once SD17 ships a real Heartstone pickup; until then this is level+bond only. All numbers (and the item id, once one exists) are tunable per CLAUDE.md -- do not let 15/55 become permanent canon.",
   "_comment_evolution_sd17": "SD17 SHIPPED THAT PICKUP, so the flip above has happened: `item_id` is `heartstone` (data/items/items.json), and the one in the world sits in the Burrow Warrens' branch chamber -- past the guardian, off the critical path, one-time. The gate stops being unit-tested-but-off infrastructure and becomes a real reason to clear the dungeon. Still tunable: emptying `item_id` again reverts to level+bond only, with no code change.",
   "evolution": {
-    "mudsnout": { "level": 15, "bond": 55, "item_id": "heartstone" }
+    "mudsnout": {
+      "level": 15,
+      "bond": 55,
+      "item_id": "heartstone"
+    }
   },
-  "migration": { "v1_creature_level": 3 }
+  "migration": {
+    "v1_creature_level": 3
+  },
+  "elixirs": {
+    "_comment": "D45. How many raw stat points one creature may ever gain from elixirs, per stat. The cap is what keeps a permanent booster a prize rather than a grind -- uncapped, coins plus patience convert straight into an arbitrarily strong creature, which is the outcome D37 refused when it kept individuality rolls out of the player's hands. 24 is roughly a handful of levels' worth on a mid-game stat: worth hunting for, never a substitute for levelling. TUNABLE.",
+    "cap_per_stat": 24
+  }
 }

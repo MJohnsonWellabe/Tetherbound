@@ -38,6 +38,9 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
+## D45: elixir caps live in data/config/progression.json, read through the
+## same loader the level curve uses.
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 ## Owner playtest report: "we should be able to pick what goes in the
 ## hotbar in our inventory." That already works -- HD2's hotbar
@@ -127,6 +130,13 @@ var _targeting_revive: float = 0.0
 ## of item opened the picker.
 var _targeting_tm: String = ""
 
+## D45. The elixir item id being targeted, or "" when the open picker is a
+## heal/revive/TM one. Same shape and same four readers as `_targeting_tm` --
+## an elixir asks the identical question a TM asks ("which of yours gets
+## this?") and spends itself the same way, so it reuses the picker rather than
+## growing a fourth one.
+var _targeting_elixir: String = ""
+
 ## TM/move lookups, loaded on first use and kept. `tm_db.gd` owns the
 ## compatibility list and `move_db.gd` owns power/type/slot; this screen reads
 ## both and duplicates neither (OF29's brief: reconcile, don't duplicate).
@@ -161,6 +171,7 @@ func build() -> void:
 	_targeting_heal = 0.0
 	_targeting_revive = 0.0
 	_targeting_tm = ""
+	_targeting_elixir = ""
 	_confirming = -1
 
 	var config := _config()
@@ -618,6 +629,18 @@ func _read_use() -> void:
 		say("Ate %s." % str(db.call("item_name", id)))
 		return
 
+	# D45: an elixir picks its drinker the same way a TM picks its student.
+	# Placed ahead of the TM branch only because `kind` is checked in order;
+	# the two are mutually exclusive kinds and neither shadows the other.
+	if str(db.call("kind", id)) == "elixir":
+		_targeting_elixir = id
+		_open_target_picker(
+			0.0, 0.0, "",
+			"Nobody can take any more of that.",
+			"Who drinks it? This is permanent."
+		)
+		return
+
 	# OF29: a TM picks its student the same way a potion picks its patient.
 	# The refusal line names the MOVE, not the disc, because "nobody can learn
 	# Stone Rush" is the fact the player needs; the disc's own name is already
@@ -901,9 +924,33 @@ func _first_empty_slot(exclude: int) -> int:
 ## fainted creatures; a `heal` item targets creatures that are alive AND below
 ## max HP; a creature that is neither is never a valid target for either kind.
 ## A `tm` (OF29) ignores HP entirely and asks `teaching.gd` instead.
+## Elixir points this creature can still take on the stat the open picker's
+## elixir raises. 0 means the row is refused with "already at the limit".
+func _elixir_headroom(creature: RefCounted) -> int:
+	if creature == null or _targeting_elixir.is_empty():
+		return 0
+	var db: RefCounted = _items()
+	if db == null:
+		return 0
+	var definition := db.call("definition", _targeting_elixir) as Dictionary
+	var stat := str(definition.get("elixir_stat", ""))
+	var cap := int(PROGRESSION.config().get("elixirs", {}).get("cap_per_stat", 24))
+	var current := 0
+	match stat:
+		"hp": current = int(creature.get("boost_hp"))
+		"attack": current = int(creature.get("boost_attack"))
+		"defence": current = int(creature.get("boost_defence"))
+		_: return 0
+	return maxi(0, cap - current)
+
+
 func _eligible(creature: RefCounted, heal: float, revive: float, tm: String) -> bool:
 	if creature == null:
 		return false
+	if not _targeting_elixir.is_empty():
+		# Any living creature can drink one; the only refusal is a stat that
+		# has already taken all the elixir points it will ever hold.
+		return not bool(creature.get("fainted")) and _elixir_headroom(creature) > 0
 	if not tm.is_empty():
 		return _tm_teachable(creature, tm)
 	var is_fainted := bool(creature.get("fainted"))
@@ -920,6 +967,10 @@ func _eligible(creature: RefCounted, heal: float, revive: float, tm: String) -> 
 func _ineligible_reason(creature: RefCounted, heal: float, revive: float, tm: String) -> String:
 	if creature == null:
 		return "empty"
+	if not _targeting_elixir.is_empty():
+		if bool(creature.get("fainted")):
+			return "fainted"
+		return "" if _elixir_headroom(creature) > 0 else "already at the limit"
 	if not tm.is_empty():
 		if _tm_already_known(creature, tm):
 			return "already knows it"
@@ -1093,6 +1144,26 @@ func _on_target_row(index: int) -> void:
 		_end_targeting()
 		return
 	var id := str(stack.get("id", ""))
+
+	if not _targeting_elixir.is_empty():
+		var definition := db.call("definition", id) as Dictionary
+		var gained: int = int(creature.call("drink_elixir",
+			str(definition.get("elixir_stat", "")),
+			int(definition.get("elixir_points", 0)),
+			PROGRESSION.config()))
+		if gained <= 0:
+			# `_eligible()` said yes a line ago; this is the same defensive
+			# dead-end guard the TM branch below keeps. Never leave the picker
+			# open, never spend a permanent item on nothing.
+			say("%s can't take any more of that." % str(creature.call("label")))
+			_end_targeting()
+			return
+		inventory.call("remove", id, 1)
+		say("%s drank the %s. +%d, permanently." % [
+			str(creature.call("label")), str(db.call("item_name", id)), gained
+		])
+		_end_targeting()
+		return
 
 	if not _targeting_tm.is_empty():
 		if not TEACHING.teach(creature, _targeting_tm, _tm_db(), _move_db()):

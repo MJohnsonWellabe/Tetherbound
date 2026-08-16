@@ -80,6 +80,26 @@ var iv_hp: float = 0.5
 var iv_attack: float = 0.5
 var iv_defence: float = 0.5
 
+## Permanent stat gains from elixirs, in raw stat points, one per stat.
+##
+## Owner directive (2026-08-16), choosing "both, permanent stays rare" for the
+## potion economy: temporary tonics AND a small number of permanent stat
+## elixirs, scarce enough that they read as a prize rather than a grind.
+##
+## `D37` deliberately kept stat variance out of the player's hands -- IVs are
+## rolled and traits are flavour, precisely so nobody can farm a perfect
+## creature. This does not reopen that: an elixir is a rare, findable object
+## that adds a FLAT, capped number of points, and it is applied on top of the
+## level curve rather than into it. See `docs/decisions/D45`.
+##
+## Flat rather than multiplicative, and added AFTER the level scaling, because
+## a multiplier would compound with every level and make an early elixir worth
+## more than a late one -- which is exactly the grind D37 was protecting
+## against. A flat +N is worth the same whenever it is drunk.
+var boost_hp: int = 0
+var boost_attack: int = 0
+var boost_defence: int = 0
+
 ## Ids into data/traits/traits.json. "" means no trait rolled (an old save, a
 ## caller that did not opt in, or an empty trait pool) — the same "empty
 ## string is a legitimate value" contract move_quick/move_charged already
@@ -286,13 +306,49 @@ func energy_fraction() -> float:
 func _apply_level_stats(cfg: Dictionary) -> void:
 	var growth: Dictionary = cfg.get("level", {}).get("growth_per_level", {})
 	var fraction := hp_fraction() if max_hp > 0.0 else 1.0
+	# Elixir points are added AFTER the level curve and the individuality
+	# multiplier, never folded into either -- see `boost_hp`'s own comment for
+	# why a flat late add is the thing that keeps this out of D37's territory.
 	max_hp = PROGRESSION.stat_at_level(base_hp, level, float(growth.get("hp", 0.0))) \
-		* PROGRESSION.individuality_multiplier(iv_hp, cfg)
+		* PROGRESSION.individuality_multiplier(iv_hp, cfg) + float(boost_hp)
 	attack = PROGRESSION.stat_at_level(base_attack, level, float(growth.get("attack", 0.0))) \
-		* PROGRESSION.individuality_multiplier(iv_attack, cfg)
+		* PROGRESSION.individuality_multiplier(iv_attack, cfg) + float(boost_attack)
 	defence = PROGRESSION.stat_at_level(base_defence, level, float(growth.get("defence", 0.0))) \
-		* PROGRESSION.individuality_multiplier(iv_defence, cfg)
+		* PROGRESSION.individuality_multiplier(iv_defence, cfg) + float(boost_defence)
 	hp = max_hp * fraction
+
+
+## Drink an elixir: add `points` to one stat, permanently, up to the cap.
+##
+## `stat` is "hp" / "attack" / "defence". Returns how many points were actually
+## taken, so a caller can tell "drank it, +3" from "already at the cap" and say
+## so instead of silently spending the item.
+##
+## The cap is what keeps this a prize rather than a grind (`D45`). Without it,
+## a player with enough coins and enough patience converts money straight into
+## an arbitrarily strong creature, which is the outcome `D37` refused when it
+## kept individuality rolls out of player hands.
+func drink_elixir(stat: String, points: int, cfg: Dictionary) -> int:
+	var cap := int(cfg.get("elixirs", {}).get("cap_per_stat", 24))
+	var current := 0
+	match stat:
+		"hp": current = boost_hp
+		"attack": current = boost_attack
+		"defence": current = boost_defence
+		_: return 0
+	var taken := clampi(points, 0, maxi(0, cap - current))
+	if taken <= 0:
+		return 0
+	match stat:
+		"hp": boost_hp += taken
+		"attack": boost_attack += taken
+		"defence": boost_defence += taken
+	# Straight back through the same recompute a level-up uses, so an elixir
+	# and a level cannot disagree about what a stat is worth. It preserves the
+	# hp FRACTION, which is why a vitality elixir raises the ceiling without
+	# also acting as a free full heal.
+	_apply_level_stats(cfg)
+	return taken
 
 
 ## XP still needed to reach the next level, from this creature's CURRENT

@@ -76,6 +76,14 @@ extends RefCounted
 ## carrying — the closest honest reconstruction of what the old mirror showed,
 ## minus the raw materials that used to occupy action slots and do nothing.
 ##
+## ## VERSION 8 — permanent stat elixirs (D45)
+##
+## `creature_instance.gd`'s `boost_hp`/`boost_attack`/`boost_defence` did not
+## exist before this. Same "nothing to migrate FROM" answer every migration
+## above already gives, and `_migrate_v7` does not need to write anything: the
+## read side defaults each to 0, which is what a creature that never drank an
+## elixir has. The migration exists only to move the version number.
+##
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
@@ -112,7 +120,7 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-const VERSION := 7
+const VERSION := 8
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
@@ -189,24 +197,29 @@ func load_slot(game: Object, slot: int) -> bool:
 		data = _migrate_v4(data)
 		data = _migrate_v5(data)
 		data = _migrate_v6(data)
+		data = _migrate_v7(data)
 	elif version == 2:
 		data = _migrate_v2(data)
 		data = _migrate_v3(data)
 		data = _migrate_v4(data)
 		data = _migrate_v5(data)
 		data = _migrate_v6(data)
+		data = _migrate_v7(data)
 	elif version == 3:
 		data = _migrate_v3(data)
 		data = _migrate_v4(data)
 		data = _migrate_v5(data)
 		data = _migrate_v6(data)
+		data = _migrate_v7(data)
 	elif version == 4:
 		data = _migrate_v4(data)
 		data = _migrate_v5(data)
 		data = _migrate_v6(data)
+		data = _migrate_v7(data)
 	elif version == 5:
 		data = _migrate_v5(data)
 		data = _migrate_v6(data)
+		data = _migrate_v7(data)
 	elif version != VERSION:
 		push_warning("save slot %d is version %d, this build reads %d -- not loading" % [
 			slot, version, VERSION
@@ -366,6 +379,13 @@ func _migrate_v6(data: Dictionary) -> Dictionary:
 	return migrated
 
 
+## VERSION 7 -> 8: elixir points. Nothing to write; see the header.
+func _migrate_v7(data: Dictionary) -> Dictionary:
+	var migrated := data.duplicate(true)
+	migrated["version"] = 8
+	return migrated
+
+
 func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary:
 	var entry_raw: Variant = species_table.get(species_id, {})
 	var entry: Dictionary = entry_raw as Dictionary if typeof(entry_raw) == TYPE_DICTIONARY else {}
@@ -456,6 +476,9 @@ func _party_to_array(party: Variant) -> Array:
 			"trait_primary": str(instance.get("trait_primary")),
 			"trait_secondary": str(instance.get("trait_secondary")),
 			"shiny": bool(instance.get("shiny")),
+			"boost_hp": int(instance.get("boost_hp")),
+			"boost_attack": int(instance.get("boost_attack")),
+			"boost_defence": int(instance.get("boost_defence")),
 		})
 	return out
 
@@ -489,6 +512,12 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.bond = int(d.get("bond", 0))
 		creature.move_quick = str(d.get("move_quick", ""))
 		creature.move_charged = str(d.get("move_charged", ""))
+		# Elixir points (D45). Absent on any save older than VERSION 8, and 0
+		# is exactly right for one: a creature from before elixirs existed
+		# never drank any.
+		creature.boost_hp = int(d.get("boost_hp", 0))
+		creature.boost_attack = int(d.get("boost_attack", 0))
+		creature.boost_defence = int(d.get("boost_defence", 0))
 		creature.iv_hp = float(d.get("iv_hp", 0.5))
 		creature.iv_attack = float(d.get("iv_attack", 0.5))
 		creature.iv_defence = float(d.get("iv_defence", 0.5))
