@@ -222,12 +222,34 @@ different tasks. It can wind and fork and whatever but this should be the
 general layout. Walking end to end should take several in game days so you have
 to camp along the way."*
 
-So: a square **footprint**, but a long, winding, forking **trail** through it
+**SUPERSEDED IN PART, 2026-08-16, by the owner in conversation. The square is
+gone.** Recorded here because it existed only in a chat thread, and a decision
+document was already citing it while this entry still said the opposite — the
+same failure that made a sibling session paint the roster against boards it
+could not see (`docs/HANDOFF_2026-08-16_colour_and_brief.md`). His words:
+
+> *"the world should be long but can be narrow with broken land or sea off the
+> path in either direction. it doesn't have to be a giant square. it should be
+> long as I've stated but can be significantly less wide. like maybe it's five
+> minutes of walking from side to side."*
+
+> *"a day from midnight to midnight should take about 10 minutes. a walk from
+> the end of the meadows to the other end should take 40 minutes."*
+
+At `walk_speed` 5.0 and `day_length_seconds` 600 that is **~12,000 m of trail**
+and **~1,500 m of width**. Everything else below stands.
+
+One arithmetic caution for whoever sizes it: 40 minutes is a *walking* figure,
+and a player who cycles sprint sustains about 7.0 m/s once
+`stamina.regen_delay` 1.1 and `regen_per_second` 18 are both counted — roughly
+28 minutes for the same trail. Size to the directive, but know the spread.
+
+So: a long, narrow **corridor**, with a winding, forking **trail** through it
 that carries the player progressively away from home and ends at the stronghold.
-Off-trail is where optional work lives. The end-to-end walk must be long enough
-that camping on the way is forced rather than optional — which is what finally
-gives `camp` a job beyond the first night, and what makes the stronghold read as
-far away instead of nearby.
+Off-trail is where optional work lives, and the flanks are broken land or sea.
+The end-to-end walk must be long enough that camping on the way is forced rather
+than optional — which is what finally gives `camp` a job beyond the first night,
+and what makes the stronghold read as far away instead of nearby.
 
 This supersedes `R7.3`'s framing. R7.3 keeps only its bake-and-capacity half
 (does the terrain footprint and Terrain3D region count support this, and what
