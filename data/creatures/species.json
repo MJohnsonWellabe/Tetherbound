@@ -1,17 +1,15 @@
 {
   "_comment": "Species definitions. Base stats and presentation only; a live creature's current HP and energy belong to a creature_instance, never here (TECHNICAL_START.md, Creature Data vs Creature Instance). M11 replaces `model` and the colours with real rigged creatures without touching combat code.",
   "_comment_moves": "Each species carries a `moves` field (D30, creature progression): {\"quick\": id, \"charged\": id}, both ids into data/moves/moves.json. Chosen for flavour fit, not balance -- every move ships at power 1.0 so this is balance-neutral. Related species (an evolution line, a shared archetype) may reuse the same move id on purpose; see data/moves/moves.json for the full pool.",
-  "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance \u2014 clearly different silhouettes and clearly different colours \u2014 and nothing else.",
+  "_placeholder": "M2 ships coloured capsules on purpose. CLAUDE.md forbids judging creature appeal on placeholders, so these are shaped for READABILITY at combat distance — clearly different silhouettes and clearly different colours — and nothing else.",
   "_comment_catch": "`catch_rate` is the species' base share of the catch formula in scripts/combat/catch_math.gd. Lower is rarer. Every species must declare one; tests/test_catch_math.gd fails the build if any is missing, because a creature that is accidentally trivial to catch is the kind of bug nobody reports.",
   "_comment_names": "Ids and display names for the wild roster are canon from `docs/art/wild/` — the owner's Meadows Wild Canon Pack, which supersedes `docs/art/ROSTER_MANIFEST.md` for these creatures (`docs/decisions/D13`). The meshes under them do not all match yet: Tuskroot is still a songbird from the Plumberry pack (`docs/decisions/D10`) and is the last stand-in in the table. Bramblebun WAS a duck and is not any more — it was produced properly from its own sheet.",
   "_comment_scale": "Creatures stand as PEERS to the 1.8m trainer, not as pets at his ankles (docs/decisions/D12), and the band was raised a second time by the owner's D19 decision: starters at boar scale. Starters 1.90-2.00m, wild creatures 1.35-2.15m so GAME_DESIGN.md 26's 'creature size should vary substantially' still holds around the new centre. Radii scale by the SAME ratio as height per D12, so nothing gets easier to hit relative to its own size. The reference sheets' real-world sizes (Terrapup 0.45m at the shoulder) are the CREATURE'S biology, not its game scale, and the two are allowed to differ -- see D12/D19.",
   "_comment_wild_stats": "TUNABLE, all of them. The wild roster's statlines are set from the sheets' own ROLE and STRENGTHS lines and from nothing else: a digger is tougher than a scout, a tracker hits harder than it takes, a shell is defence and a raptor is not. Nobody has played a fight with any of them yet, so treat every number below as a first guess that combat feedback is expected to move.",
-
   "_comment_wild_heights": "Heights follow D13's rule (the sheets' RELATIVE ordering is preserved) inside D19's raised band: the owner's decision this pass, starters at boar scale, so the wild roster runs 1.35-2.15m around them. The pack's own centimetre figures (Pipwing 0.25m body length, Galecrest 1.80m) are the creature's biology, not its game scale, exactly as sheets 01-04's figures already are. Pipwing and Bramblebun stay the smallest; Meadowhart, Galecrest and Tuskroot stay the largest.",
   "_comment_evolution_size": "An evolution is ALWAYS larger than the form it came from — the owner's rule, `docs/decisions/D17`. Every `evolves_into` target must have a strictly greater `placeholder.height` than its source. This constrains RELATIVE size inside a line only; it does not reopen the settled peer band (D12/D13, recentred by D19 at 1.20-2.60m overall). Mudsnout 1.55m -> Tuskroot 2.15m satisfies it, and the pair satisfied D17 by accident until tests/test_evolution_links.gd started failing loudly on it, because heights here are tunable and a tune that inverts a line is otherwise completely silent.",
-
-  "_comment_aggressive": "`aggressive` decides whether a wild creature will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL creature, and the same list allows 'Aggressive creature initiates' \u2014 so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
-  "_comment_best_creature": "R4.7, GAME_DESIGN.md 12: 'Best Creature abilities should be species-specific where possible.' `kind` is `survivability` (a percentage bonus to the effective defence a Best Creature fights with) or `energy` (the same percentage bonus applied to energy gained from a landed quick attack) \u2014 the two D30-era combat hooks that already exist. Read only through `creature_species.best_creature_ability()`, and only applied when a creature is the party's flagged Best Creature (`autoload/party.gd::best()`); it never affects a creature nobody has designated. Traversal and other perk kinds named by GAME_DESIGN.md 12 are not built \u2014 no out-of-exploration companion-speed system exists yet for one to hook into.",
+  "_comment_aggressive": "`aggressive` decides whether a wild creature will start a fight on its own. GAME_DESIGN.md 14 forbids simple proximity starting a fight with a PEACEFUL creature, and the same list allows 'Aggressive creature initiates' — so this flag is the line between those two rules, and it lives in data because it is a property of the creature, not of the code.",
+  "_comment_best_creature": "R4.7, GAME_DESIGN.md 12: 'Best Creature abilities should be species-specific where possible.' `kind` is `survivability` (a percentage bonus to the effective defence a Best Creature fights with) or `energy` (the same percentage bonus applied to energy gained from a landed quick attack) — the two D30-era combat hooks that already exist. Read only through `creature_species.best_creature_ability()`, and only applied when a creature is the party's flagged Best Creature (`autoload/party.gd::best()`); it never affects a creature nobody has designated. Traversal and other perk kinds named by GAME_DESIGN.md 12 are not built — no out-of-exploration companion-speed system exists yet for one to hook into.",
   "species": {
     "terrapup": {
       "display_name": "Terrapup",
@@ -21,17 +19,24 @@
       "base_defence": 20.0,
       "catch_rate": 0.3,
       "aggressive": false,
-      "moves": { "quick": "pebble_toss", "charged": "stone_rush" },
-      "best_creature": { "id": "shell_guard", "kind": "survivability", "value": 0.15 },
+      "moves": {
+        "quick": "pebble_toss",
+        "charged": "stone_rush"
+      },
+      "best_creature": {
+        "id": "shell_guard",
+        "kind": "survivability",
+        "value": 0.15
+      },
       "placeholder": {
-        "colour": "#9c5224",
+        "colour": "#8a6138",
         "height": 2.0,
         "radius": 0.76,
-        "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
+        "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims — silently, until MA4.",
         "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "_comment_animations": "26 clips ship baked into each .glb, so nothing is retargeted and nothing can be mangled. `pain` and `fall_over` are what hit and faint have wanted since M2; `uppercut` is a real committed swing rather than a lunge with no animation.",
         "animations": {
           "idle": "idle",
@@ -41,10 +46,10 @@
           "hit": "hit",
           "faint": "faint"
         },
-        "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
-        "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
-        "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own creature is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
-        "_comment_role": "Your partner, and therefore the one that must never be lost in a frame \u2014 so it gets the most saturated character in the pack."
+        "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock — which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
+        "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters — bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
+        "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf — which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own creature is the least readable object in your own fight'. Re-picked against its stated criterion — hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  — orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  — bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  — blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
+        "_comment_role": "Your partner, and therefore the one that must never be lost in a frame — so it gets the most saturated character in the pack."
       }
     },
     "ripplet": {
@@ -56,10 +61,17 @@
       "base_defence": 17.0,
       "catch_rate": 0.3,
       "aggressive": false,
-      "moves": { "quick": "ripple_jab", "charged": "undertow" },
-      "best_creature": { "id": "riptide_focus", "kind": "energy", "value": 0.12 },
+      "moves": {
+        "quick": "ripple_jab",
+        "charged": "undertow"
+      },
+      "best_creature": {
+        "id": "riptide_focus",
+        "kind": "energy",
+        "value": 0.12
+      },
       "placeholder": {
-        "colour": "#4fb8c9",
+        "colour": "#2f6cb8",
         "height": 1.95,
         "radius": 0.74,
         "_comment_footprint": "Upright sitter with a torso-sized tail fan behind it; the fan is most of the footprint.",
@@ -87,10 +99,17 @@
       "base_defence": 14.0,
       "catch_rate": 0.3,
       "aggressive": false,
-      "moves": { "quick": "gale_peck", "charged": "sky_rend" },
-      "best_creature": { "id": "updraft_rhythm", "kind": "energy", "value": 0.15 },
+      "moves": {
+        "quick": "gale_peck",
+        "charged": "sky_rend"
+      },
+      "best_creature": {
+        "id": "updraft_rhythm",
+        "kind": "energy",
+        "value": 0.15
+      },
       "placeholder": {
-        "colour": "#cfe3ea",
+        "colour": "#dbe8f2",
         "height": 1.9,
         "radius": 0.72,
         "_comment_footprint": "Spread wings make it far wider than deep; the allowance is for span, not body.",
@@ -119,17 +138,24 @@
       "_comment_of19": "TUNABLE, nudged 0.55 -> 0.6 for OF19 (owner report: catching an ordinary Meadows creature burned through too much of the 15-orb starting stock). See catch_math.gd + data/config/catching.json's chance block for the rest of the retune; this alone is the species half of it.",
       "catch_rate": 0.6,
       "aggressive": false,
-      "moves": { "quick": "bramble_whip", "charged": "warren_charge" },
-      "best_creature": { "id": "bramble_ward", "kind": "survivability", "value": 0.10 },
+      "moves": {
+        "quick": "bramble_whip",
+        "charged": "warren_charge"
+      },
+      "best_creature": {
+        "id": "bramble_ward",
+        "kind": "survivability",
+        "value": 0.1
+      },
       "placeholder": {
-        "colour": "#f2c14f",
+        "colour": "#7a8a3f",
         "height": 1.5,
         "radius": 0.6,
         "footprint_allowance": 2.2,
         "model": "res://assets/creatures/tetherbound/bramblebun/models/creature_bramblebun_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "Produced by tools/art_pipeline from the owner's wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. Replaces the Plumberry duck that stood in for it. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_art": "Produced by tools/art_pipeline from the owner's wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. Replaces the Plumberry duck that stood in for it. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
@@ -152,10 +178,17 @@
       "aggressive": false,
       "evolves_into": "tuskroot",
       "_comment_evolution": "R4.6: the evolution SYSTEM is real now (scripts/creatures/evolution.gd), gated by data/config/progression.json's `evolution.mudsnout` block (level/bond/item). This link is what that block's `target` resolves through.",
-      "moves": { "quick": "root_nibble", "charged": "rootquake" },
-      "best_creature": { "id": "root_instinct", "kind": "energy", "value": 0.10 },
+      "moves": {
+        "quick": "root_nibble",
+        "charged": "rootquake"
+      },
+      "best_creature": {
+        "id": "root_instinct",
+        "kind": "energy",
+        "value": 0.1
+      },
       "placeholder": {
-        "colour": "#8a6a44",
+        "colour": "#6e492c",
         "height": 1.55,
         "radius": 0.62,
         "_comment_footprint": "A low piglet is much longer than it is tall.",
@@ -183,10 +216,17 @@
       "base_defence": 15.0,
       "catch_rate": 0.38,
       "aggressive": false,
-      "moves": { "quick": "pack_bite", "charged": "trailblaze_pounce" },
-      "best_creature": { "id": "trail_drive", "kind": "energy", "value": 0.14 },
+      "moves": {
+        "quick": "pack_bite",
+        "charged": "trailblaze_pounce"
+      },
+      "best_creature": {
+        "id": "trail_drive",
+        "kind": "energy",
+        "value": 0.14
+      },
       "placeholder": {
-        "colour": "#c2a173",
+        "colour": "#b3925e",
         "height": 1.7,
         "radius": 0.57,
         "_comment_footprint": "Long-bodied and narrow -- the leanest silhouette in the Ground group.",
@@ -214,10 +254,17 @@
       "base_defence": 23.0,
       "catch_rate": 0.4,
       "aggressive": false,
-      "moves": { "quick": "burrow_strike", "charged": "tremor_roll" },
-      "best_creature": { "id": "burrow_plating", "kind": "survivability", "value": 0.18 },
+      "moves": {
+        "quick": "burrow_strike",
+        "charged": "tremor_roll"
+      },
+      "best_creature": {
+        "id": "burrow_plating",
+        "kind": "survivability",
+        "value": 0.18
+      },
       "placeholder": {
-        "colour": "#5c4a3a",
+        "colour": "#6c7061",
         "height": 1.85,
         "radius": 0.67,
         "_comment_footprint": "Low, broad digging body with heavy forelimbs -- more footprint than a compact biped, similar register to Tuskroot's heavy stance but at Medium rather than Large size class.",
@@ -245,18 +292,29 @@
       "base_defence": 17.0,
       "catch_rate": 0.45,
       "aggressive": false,
-      "moves": { "quick": "hoofbeat", "charged": "verdant_burst" },
-      "best_creature": { "id": "steady_heart", "kind": "survivability", "value": 0.12 },
+      "moves": {
+        "quick": "hoofbeat",
+        "charged": "verdant_burst"
+      },
+      "best_creature": {
+        "id": "steady_heart",
+        "kind": "survivability",
+        "value": 0.12
+      },
       "_comment_rideable": "R6.1/R6.2. Riding is DATA, not a hardcoded species check: `creature_species.rideable()` reads this block and `scripts/world/riding_controller.gd` refuses anything that does not carry one, so R8.5's legendary mount is a second block here rather than a second branch in code. Every number below is TUNABLE. `mount_offset` is metres in the creature's own local frame from the point between its feet (creature_body's origin, see `place_on_ground`) to where the rider is seated -- y is a little under two thirds of the 2.05m height, which is this model's back line, and the small negative z sits the rider behind the shoulders rather than on the neck. `ride_speed_multiplier` multiplies the trainer's own `walk_speed` from data/config/movement.json (5.0), so 2.0 is 10 m/s against a 8.6 m/s sprint -- riding has to beat SPRINTING, not walking, or the spec's promise that it 'dramatically improves revisiting known areas' is a lie. `requires_item` is the tack this particular species needs; `can_carry` false would keep the tuning here while disabling the ride, which is how a species gets tuned before it is unlocked.",
       "rideable": {
         "can_carry": true,
         "requires_item": "saddle",
-        "mount_offset": [0.0, 1.3, -0.15],
+        "mount_offset": [
+          0.0,
+          1.3,
+          -0.15
+        ],
         "ride_speed_multiplier": 2.0,
         "dismount_distance": 1.6
       },
       "placeholder": {
-        "colour": "#b98d52",
+        "colour": "#9b7442",
         "height": 2.05,
         "radius": 0.74,
         "_comment_footprint": "Long-legged deer/mount with a saddle silhouette -- more footprint than a compact biped, less than Trailpup's low lean canine body.",
@@ -278,26 +336,33 @@
     "tuskroot": {
       "display_name": "Tuskroot",
       "type": "ground",
-      "_comment": "The one that comes at you. Tougher and rarer than the Hopper, because being ambushed should be a moment rather than an interruption \u2014 and because the first thing anyone does when something charges them is find out whether they can beat it.",
+      "_comment": "The one that comes at you. Tougher and rarer than the Hopper, because being ambushed should be a moment rather than an interruption — and because the first thing anyone does when something charges them is find out whether they can beat it.",
       "base_hp": 130.0,
       "base_attack": 24.0,
       "base_defence": 19.0,
       "catch_rate": 0.28,
       "aggressive": true,
       "evolves_from": "mudsnout",
-      "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild \u2014 the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). R4.6 built the evolution SYSTEM (scripts/creatures/evolution.gd, data/config/progression.json's `evolution` block); a caught Mudsnout can now actually become this. The pair's heights (Mudsnout 1.55m -> Tuskroot 2.15m after D19's size pass) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
-      "moves": { "quick": "root_nibble", "charged": "rootquake" },
-      "best_creature": { "id": "tusk_momentum", "kind": "energy", "value": 0.16 },
+      "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild — the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). R4.6 built the evolution SYSTEM (scripts/creatures/evolution.gd, data/config/progression.json's `evolution` block); a caught Mudsnout can now actually become this. The pair's heights (Mudsnout 1.55m -> Tuskroot 2.15m after D19's size pass) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
+      "moves": {
+        "quick": "root_nibble",
+        "charged": "rootquake"
+      },
+      "best_creature": {
+        "id": "tusk_momentum",
+        "kind": "energy",
+        "value": 0.16
+      },
       "placeholder": {
-        "_comment_colour": "Drawn from Tuskroot's own COLOR PALETTE row on docs/art/reference/wild/05_Meadows_Wild_Scale_Palette_Implementation_Guide.png (which despite its filename is Ground Sheet B) \u2014 the secondary fur/hide brown, which is what most of the body reads as in the turnarounds. Retained only for the fallback capsule, which is now genuinely a fallback: R0.6 installed a real rigged, animated, graded model.",
-        "colour": "#5d4831",
+        "_comment_colour": "Re-pointed 2026-08-16 at the vivid colourway's deep mature brown (data/creatures/shiny_colourways.json, board: 'Deeper browns + Moss + Mature') so the fallback capsule and every HUD chip that reads this hex agree with what the world now renders -- the menus said mud-brown while the world said something else, which was OF28's own dropped half. Previously sampled from Ground Sheet B's palette row; the vivid pass supersedes that source.",
+        "colour": "#503823",
         "height": 2.15,
         "radius": 0.77,
         "footprint_allowance": 3.5,
         "model": "res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
+        "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider — and therefore the hit cone and the catch accuracy bonus — does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
@@ -317,10 +382,17 @@
       "base_defence": 12.0,
       "catch_rate": 0.5,
       "aggressive": false,
-      "moves": { "quick": "splash_snap", "charged": "riptide_rush" },
-      "best_creature": { "id": "paddle_surge", "kind": "energy", "value": 0.13 },
+      "moves": {
+        "quick": "splash_snap",
+        "charged": "riptide_rush"
+      },
+      "best_creature": {
+        "id": "paddle_surge",
+        "kind": "energy",
+        "value": 0.13
+      },
       "placeholder": {
-        "colour": "#3f8080",
+        "colour": "#2f7fd0",
         "height": 1.65,
         "radius": 0.55,
         "_comment_footprint": "Compact agile newt body with a fin/tail silhouette that extends past a plain quadruped footprint but not as far as a winged creature's -- between Trailpup's lean canine body and Ripplet's otter build.",
@@ -348,10 +420,17 @@
       "base_defence": 26.0,
       "catch_rate": 0.4,
       "aggressive": false,
-      "moves": { "quick": "shell_bash", "charged": "tremor_roll" },
-      "best_creature": { "id": "moss_carapace", "kind": "survivability", "value": 0.20 },
+      "moves": {
+        "quick": "shell_bash",
+        "charged": "tremor_roll"
+      },
+      "best_creature": {
+        "id": "moss_carapace",
+        "kind": "survivability",
+        "value": 0.2
+      },
       "placeholder": {
-        "colour": "#5e7a4a",
+        "colour": "#4d9c8a",
         "height": 1.75,
         "radius": 0.73,
         "_comment_footprint": "Broad low shell body, wider relative to its height than a quadruped -- more footprint than Burrowback's already-broad digging stance, similar register to a tortoise rather than a mammal.",
@@ -361,8 +440,12 @@
         "model_yaw": 0.0,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate b). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md; R0.4's report also flags a topology check (a thin protrusion near the hindquarters that might read as an errant tail/spike) that could not be visually confirmed or ruled out here -- this container has no libEGL, so no turntable render could be produced, and inspect_glb.py's structural report shows only the usual post-retexture non-manifold/duplicate-vertex noise that rigging (0 unweighted vertices) already tolerated fine. Flagged for whoever next looks at a rendered frame of this creature. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
-          "idle": "idle", "walk": "walk", "run": "run",
-          "attack": "attack", "hit": "hit", "faint": "faint"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
         }
       }
     },
@@ -375,10 +458,17 @@
       "base_defence": 13.0,
       "catch_rate": 0.45,
       "aggressive": false,
-      "moves": { "quick": "tail_splash", "charged": "riptide_rush" },
-      "best_creature": { "id": "brook_current", "kind": "energy", "value": 0.12 },
+      "moves": {
+        "quick": "tail_splash",
+        "charged": "riptide_rush"
+      },
+      "best_creature": {
+        "id": "brook_current",
+        "kind": "energy",
+        "value": 0.12
+      },
       "placeholder": {
-        "colour": "#6b4a2f",
+        "colour": "#4a86b8",
         "height": 1.6,
         "radius": 0.55,
         "_comment_footprint": "Low lean semi-aquatic mammal body with a tail, similar register to Trailpup's lean canine build rather than a broad tank stance.",
@@ -388,8 +478,12 @@
         "model_yaw": 0.0,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. TWO known defects on this creature, both flagged rather than fixed: (1) R0.4 recorded a HARD FAIL shared by every candidate -- the canon's broad flat scaled paddle tail is absent, both candidates give a round tapering tail instead. The report's own instruction is to ship it forward with the defect flagged rather than block or re-roll ('iterating on what exists'), and that a real sculpting pass is separate future work -- not attempted here. (2) rig_quadruped.py's automatic weighting left 35 of 14,034 vertices (0.25%) unweighted, the first species in this batch where residual post-retexture mesh noise (6,075 non-manifold edges, 81 microscopic disconnected components -- the same category every species carries after Meshy's retexture re-unwrap, see Tuskroot's DONE.md entry) actually crossed into un-rigged vertices rather than being silently absorbed. Confirmed scattered across the whole body rather than concentrated at the tail, so not obviously the same root cause as (1); will read as tiny pinned-in-bind-pose specks during animation rather than one visible tear. A proper fix likely needs a fresh clean/remesh pass or the eventual tail sculpt, not attempted here. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
-          "idle": "idle", "walk": "walk", "run": "run",
-          "attack": "attack", "hit": "hit", "faint": "faint"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
         }
       }
     },
@@ -402,10 +496,17 @@
       "base_defence": 15.0,
       "catch_rate": 0.28,
       "aggressive": true,
-      "moves": { "quick": "talon_dive", "charged": "storm_strike" },
-      "best_creature": { "id": "storm_instinct", "kind": "energy", "value": 0.16 },
+      "moves": {
+        "quick": "talon_dive",
+        "charged": "storm_strike"
+      },
+      "best_creature": {
+        "id": "storm_instinct",
+        "kind": "energy",
+        "value": 0.16
+      },
       "placeholder": {
-        "colour": "#4a6478",
+        "colour": "#a9bfd8",
         "height": 2.1,
         "radius": 0.65,
         "_comment_size": "2.10m after D19's size pass (was R0.7's 2.00m) -- still in the largest tier alongside Meadowhart (2.05m) and just under Tuskroot (2.15m), preserving D13's relative ordering inside the raised band.",
@@ -416,8 +517,12 @@
         "model_yaw": 0.0,
         "_comment_art": "R0.6: first bird species. tools/art_pipeline finish.py clean -> texture -> rig --kind bird -> grade -> install, from the R0.4 winner (candidate a). This run also exercised a fix to finish.py's `rig` command: it previously called animate_quadruped.py unconditionally after rigging, which for a bird would have silently re-detected rig_bird.py's output as a glider (their bone names deliberately overlap) and overwritten rig_bird.py's own already-authored, already-proven six clips with generic glider animation -- including animate_quadruped.py's documented faint-spin bug. finish.py now skips that call when --kind is bird, since rig_bird.py authors all six clips itself. rig_report.json: 19 bones, 14004 vertices, 6 unweighted (0.04%, same noise-level pattern as Brooktail's), idle motion at 108% of walk (well clear of the 6%-is-frozen threshold flagged in rig_bird.py's own self-check). model_yaw not visually verified -- this container has no libEGL.so.1, so turntable.py cannot render a frame, a persistent limitation recorded for every species finished this session; 0.0 follows the same default every quadruped so far shipped with. Two glossy black hooked-beak shapes were checked and rejected as eye_guard candidates in grade.py -- see that file's comment. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
-          "idle": "idle", "walk": "walk", "run": "run",
-          "attack": "attack", "hit": "hit", "faint": "faint"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
         }
       }
     },
@@ -430,10 +535,17 @@
       "base_defence": 18.0,
       "catch_rate": 0.42,
       "aggressive": false,
-      "moves": { "quick": "quick_flit", "charged": "night_swoop" },
-      "best_creature": { "id": "dusk_veil", "kind": "survivability", "value": 0.14 },
+      "moves": {
+        "quick": "quick_flit",
+        "charged": "night_swoop"
+      },
+      "best_creature": {
+        "id": "dusk_veil",
+        "kind": "survivability",
+        "value": 0.14
+      },
       "placeholder": {
-        "colour": "#5b6b74",
+        "colour": "#3d4270",
         "height": 1.7,
         "radius": 0.6,
         "_comment_size": "1.70m after D19's size pass (was R0.7's 1.55m) -- still D13's 'small' owl sizing relative to Galecrest and Meadowhart's largest tier, now sitting under the 1.90m Air starter Galewisp.",
@@ -444,8 +556,12 @@
         "model_yaw": 0.0,
         "_comment_art": "R0.6: second bird species, using the --kind bird path fixed and proved on Galecrest (see that entry). tools/art_pipeline finish.py clean -> texture -> rig --kind bird -> grade -> install, from the R0.4 winner (candidate a, no hard-fail flagged -- only a cosmetic brow-ridge note). rig_report.json: 19 bones, 14006 vertices, 0 unweighted -- cleaner than Galecrest's -- idle motion at 65% of walk (well clear of the 6%-is-frozen threshold). Four eye-guard rectangles in grade.py, the clearest eye signature of any species so far (a gold ring, a blue/teal inner ring, black pupil, white catchlight -- unmistakable against the grey-blue plumage). model_yaw not visually verified -- this container has no libEGL.so.1, so turntable.py cannot render a frame; 0.0 follows the same default every species so far shipped with. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
-          "idle": "idle", "walk": "walk", "run": "run",
-          "attack": "attack", "hit": "hit", "faint": "faint"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
         }
       }
     },
@@ -459,10 +575,17 @@
       "_comment_of19": "TUNABLE, nudged 0.5 -> 0.55 for OF19 (owner report: catching an ordinary Meadows creature burned through too much of the 15-orb starting stock), staying tied with Mudsnout and just under Bramblebun's 0.6 per this species' own comment above. See catch_math.gd + data/config/catching.json's chance block for the rest of the retune.",
       "catch_rate": 0.55,
       "aggressive": false,
-      "moves": { "quick": "quick_flit", "charged": "gust_burst" },
-      "best_creature": { "id": "quickwing_flutter", "kind": "energy", "value": 0.15 },
+      "moves": {
+        "quick": "quick_flit",
+        "charged": "gust_burst"
+      },
+      "best_creature": {
+        "id": "quickwing_flutter",
+        "kind": "energy",
+        "value": 0.15
+      },
       "placeholder": {
-        "colour": "#7a97a8",
+        "colour": "#c3ccd4",
         "height": 1.35,
         "radius": 0.51,
         "_comment_size": "1.35m after D19's size pass (was R0.7's 1.20m), still the shortest in the roster, consistent with D13/the roster canon naming Pipwing and Bramblebun the smallest pair.",
@@ -473,8 +596,12 @@
         "model_yaw": 0.0,
         "_comment_art": "R0.6: third bird species, same --kind bird path proved on Galecrest and Duskhush, no code changes needed. tools/art_pipeline finish.py clean -> texture -> rig --kind bird -> grade -> install, from the R0.4 winner (candidate b, no hard-fail flagged -- only a cosmetic thin/blade-like crest note). rig_report.json: 19 bones, 14002 vertices, 0 unweighted, idle motion at 86% of walk (well clear of the 6%-is-frozen threshold). Four eye-guard rectangles in grade.py -- the sheet's 'oversized teal eyes' dominate several UV islands on this small a creature; one ambiguous dark shape immediately beside a confirmed eye was checked and rejected as a probable shading/seam artifact rather than a separate instance. model_yaw not visually verified -- this container has no libEGL.so.1, so turntable.py cannot render a frame; 0.0 follows the same default every species so far shipped with. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
-          "idle": "idle", "walk": "walk", "run": "run",
-          "attack": "attack", "hit": "hit", "faint": "faint"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
         }
       }
     },
@@ -488,10 +615,17 @@
       "base_defence": 14.0,
       "catch_rate": 0.48,
       "aggressive": false,
-      "moves": { "quick": "tail_splash", "charged": "sky_rend" },
-      "best_creature": { "id": "reed_glide", "kind": "energy", "value": 0.11 },
+      "moves": {
+        "quick": "tail_splash",
+        "charged": "sky_rend"
+      },
+      "best_creature": {
+        "id": "reed_glide",
+        "kind": "energy",
+        "value": 0.11
+      },
       "placeholder": {
-        "colour": "#4a8a8a",
+        "colour": "#5b87b0",
         "height": 1.8,
         "radius": 0.62,
         "_comment_size": "1.80m after D19's size pass (was R0.7's 1.65m), between Duskhush's 1.70m and Galecrest's 2.10m -- radius scaled by the same ratio as height, per D12's rule.",
@@ -502,41 +636,56 @@
         "model_yaw": 0.0,
         "_comment_art": "R0.6: fourth and last bird species, finishing R0.6 entirely. Same --kind bird path proved on Galecrest, Duskhush and Pipwing, no code changes needed. tools/art_pipeline finish.py clean -> texture -> rig --kind bird -> grade -> install, from the R0.4 winner (candidate a, no hard-fail flagged -- only a minor neck-proportion note). rig_report.json: 19 bones, 14006 vertices, 0 unweighted, idle motion at 88% of walk (well clear of the 6%-is-frozen threshold). Five eye-guard rectangles in grade.py -- a different eye style from the other three birds (a dark pupil-only mass with a soft catchlight rather than a bright iris ring, consistent with a waterfowl's eye); a dark beak-tip wedge and a glossy neck-feather highlight were checked and rejected as non-eyes. model_yaw not visually verified -- this container has no libEGL.so.1, so turntable.py cannot render a frame; 0.0 follows the same default every species so far shipped with. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
-          "idle": "idle", "walk": "walk", "run": "run",
-          "attack": "attack", "hit": "hit", "faint": "faint"
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "hit": "hit",
+          "faint": "faint"
         }
       }
     },
     "veridian": {
       "display_name": "Veridian Stag",
       "type": "ground",
-      "_comment_type": "Board 06 labels it Grass/Earth. The Meadows has three types \u2014 Ground, Water, Air \u2014 and REFERENCE_CANON's precedence rule is that the markdown wins on type while the image wins on looks, so it is the GROUND legendary per GAME_DESIGN.md section 26.",
+      "_comment_type": "Board 06 labels it Grass/Earth. The Meadows has three types — Ground, Water, Air — and REFERENCE_CANON's precedence rule is that the markdown wins on type while the image wins on looks, so it is the GROUND legendary per GAME_DESIGN.md section 26.",
       "base_hp": 420.0,
       "base_attack": 46.0,
       "base_defence": 44.0,
       "catch_rate": 0.02,
       "_comment_catch": "The lowest in the game by a wide margin. A legendary you catch on the second orb is not a legendary. TUNABLE.",
       "aggressive": true,
-      "moves": { "quick": "hoofbeat", "charged": "antler_slam" },
-      "best_creature": { "id": "antler_bulwark", "kind": "survivability", "value": 0.20 },
-      "_comment_rideable": "R8.5, and deliberately the SECOND block of exactly the same shape Meadowhart's is (see its own `_comment_rideable` for what every key means) rather than a parallel system: `creature_species.rideable()` and `scripts/world/riding_controller.gd` are untouched by a new mount except for the one key added below. The tier above Meadowhart is THREE things, and only the first is a number. FASTER: 2.8 x the trainer's 5.0 m/s walk = 14 m/s, against Meadowhart's 10 and a sprint's 8.6. NO TACK: `requires_item` is EMPTY, the only mount in the game that needs none. Meadowhart is a saddled animal and the saddle is the permission; this one carries you because it offered to (spec sec28: the legendary \u0076oluntarily joins), and strapping the crafting bench's leather to it would be the wrong sentence about what just happened in that chamber. Costs no new code -- riding_controller._has_tack() already returns true for an empty requirement, which is why that key was written per-species in R6.2. AND GROUND NOTHING ELSE HOLDS: `climb_max_slope_deg` becomes the mount's own `floor_max_angle` while it is ridden. MEASURED, not assumed -- scenes/creature.tscn gives EVERY creature 0.9599 rad (55 degrees) and scenes/player.tscn gives the trainer 0.7854 (45), so 55 is the baseline this has to beat, not 45. At 60 the legendary holds flanks that slide every other creature in the roster, including Meadowhart, straight back down. 60 IS A CEILING WITH A REASON: every severed spoke's carve walls are 65-66 degrees (16/7, 11/5 and 9/4 in terrain_playground.json's own carves), so this mount still cannot climb out of a rift trench and D23's carve-out survives it -- tests/smoke_boss.gd drives a probe body at this exact limit at the storm-road seam to prove it, and tests/smoke_riding.gd fails the build if the number is ever raised into that band. TUNABLE below that line only.",
+      "moves": {
+        "quick": "hoofbeat",
+        "charged": "antler_slam"
+      },
+      "best_creature": {
+        "id": "antler_bulwark",
+        "kind": "survivability",
+        "value": 0.2
+      },
+      "_comment_rideable": "R8.5, and deliberately the SECOND block of exactly the same shape Meadowhart's is (see its own `_comment_rideable` for what every key means) rather than a parallel system: `creature_species.rideable()` and `scripts/world/riding_controller.gd` are untouched by a new mount except for the one key added below. The tier above Meadowhart is THREE things, and only the first is a number. FASTER: 2.8 x the trainer's 5.0 m/s walk = 14 m/s, against Meadowhart's 10 and a sprint's 8.6. NO TACK: `requires_item` is EMPTY, the only mount in the game that needs none. Meadowhart is a saddled animal and the saddle is the permission; this one carries you because it offered to (spec sec28: the legendary voluntarily joins), and strapping the crafting bench's leather to it would be the wrong sentence about what just happened in that chamber. Costs no new code -- riding_controller._has_tack() already returns true for an empty requirement, which is why that key was written per-species in R6.2. AND GROUND NOTHING ELSE HOLDS: `climb_max_slope_deg` becomes the mount's own `floor_max_angle` while it is ridden. MEASURED, not assumed -- scenes/creature.tscn gives EVERY creature 0.9599 rad (55 degrees) and scenes/player.tscn gives the trainer 0.7854 (45), so 55 is the baseline this has to beat, not 45. At 60 the legendary holds flanks that slide every other creature in the roster, including Meadowhart, straight back down. 60 IS A CEILING WITH A REASON: every severed spoke's carve walls are 65-66 degrees (16/7, 11/5 and 9/4 in terrain_playground.json's own carves), so this mount still cannot climb out of a rift trench and D23's carve-out survives it -- tests/smoke_boss.gd drives a probe body at this exact limit at the storm-road seam to prove it, and tests/smoke_riding.gd fails the build if the number is ever raised into that band. TUNABLE below that line only.",
       "rideable": {
         "can_carry": true,
         "requires_item": "",
-        "mount_offset": [0.0, 1.72, -0.2],
+        "mount_offset": [
+          0.0,
+          1.72,
+          -0.2
+        ],
         "ride_speed_multiplier": 2.8,
         "dismount_distance": 2.0,
         "climb_max_slope_deg": 60.0
       },
       "placeholder": {
-        "colour": "#4f7a3a",
+        "colour": "#46a050",
         "height": 2.6,
         "radius": 0.95,
         "_comment_size": "Above every other creature in the biome, which D12 asked for explicitly: after D19's size pass the range runs 1.50m for the practice creature to 2.15m for the evolved Tuskroot, 'and the legendary above all of them'. At 2.6m it stands a head and antlers over the 1.8m trainer.",
         "model": "res://assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique \u2014 the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
+        "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique — the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
@@ -548,5 +697,5 @@
       }
     }
   },
-  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ \u2014 twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. All twelve wild species have real production art now (R0.6 complete); Tuskroot's evolved-form model is the one remaining stand-in, tracked separately. Heights follow D13's relative ordering inside D19's raised band (starters at boar scale)."
+  "_comment_wild_roster": "The Meadows wild roster is canonised by docs/art/wild/ — twelve species plus one evolution. Species appear in this file as each is produced, because smoke_art.gd requires every entry to name a model that exists. All twelve wild species have real production art now (R0.6 complete); Tuskroot's evolved-form model is the one remaining stand-in, tracked separately. Heights follow D13's relative ordering inside D19's raised band (starters at boar scale)."
 }

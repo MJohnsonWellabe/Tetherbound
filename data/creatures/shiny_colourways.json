@@ -3,7 +3,7 @@
   "_comment_pilots": "paddlenewt and burrowback are the owner's own named examples and the pilot pair; the rest of the roster gets colourways after the pilots pass a render judge.",
   "species": {
     "paddlenewt": {
-      "_comment": "Base: teal body, cream/tan belly plates, salmon accents, gold spots + eyes. Shiny: the owner's red newt -- teal goes deep ember red, salmon accents go molten gold so they still read as separate markings, cream and gold stay put.",
+      "_comment": "Base: teal body, cream/tan belly plates, salmon accents, gold spots + eyes. Vivid (board: 'Vibrant blues + Wet sheen'): vibrant BLUE, not the first pass's emerald; the salmon and gold accents sit outside the band and keep their identity. Shiny: ember red, unchanged.",
       "rules": [
         {
           "match": {
@@ -38,13 +38,14 @@
             ],
             "sat_min": 0.06
           },
-          "set_hue": 168,
-          "sat_scale": 1.7
+          "set_hue": 210,
+          "sat_scale": 1.55,
+          "val_scale": 1.03
         }
       ]
     },
     "burrowback": {
-      "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Shiny: the owner's blue-striped badger -- the pale patches saturate to a clear cornflower blue, the near-black fur cools toward blue-black, the grey plates pick up a slate-blue cast.",
+      "_comment": "Base: charcoal-black fur, off-white/cream stripe patches, grey stone plates. Vivid (board: 'Stone plates + Moss + Ancient'): the violet is gone -- the base ALREADY matches the board, so the vivid only warms the cream, mosses the plate mid-tones, and leaves the charcoal alone. Shiny: cornflower-blue stripes, unchanged.",
       "rules": [
         {
           "match": {
@@ -78,8 +79,17 @@
             "sat_max": 0.3,
             "val_min": 0.55
           },
-          "set_hue": 48,
-          "set_sat": 0.22
+          "set_hue": 45,
+          "set_sat": 0.14
+        },
+        {
+          "match": {
+            "sat_max": 0.28,
+            "val_min": 0.3,
+            "val_max": 0.55
+          },
+          "set_hue": 95,
+          "set_sat": 0.18
         },
         {
           "match": {
@@ -89,13 +99,12 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 270,
-          "sat_scale": 1.35
+          "sat_scale": 1.1
         }
       ]
     },
     "terrapup": {
-      "_comment": "Base: amber/brown pup, mostly dark. Shiny: frost pup -- ambers go slate blue, the darks cool.",
+      "_comment": "Base: amber/brown pup, mostly dark. Vivid (board: 'Warm earth tones + Moss accents -- Natural, grounded feel'): warm earth, modest saturation -- the first pass's x1.7 crank made it copper-loud, which is not 'grounded'. Shiny: frost pup, unchanged.",
       "rules": [
         {
           "match": {
@@ -124,20 +133,29 @@
       "vivid_rules": [
         {
           "match": {
+            "sat_max": 0.28,
+            "val_min": 0.28,
+            "val_max": 0.5
+          },
+          "set_hue": 95,
+          "set_sat": 0.16
+        },
+        {
+          "match": {
             "hue": [
               10,
               60
             ],
             "sat_min": 0.12
           },
-          "set_hue": 28,
-          "sat_scale": 1.7,
-          "val_scale": 1.06
+          "set_hue": 27,
+          "sat_scale": 1.25,
+          "val_scale": 1.04
         }
       ]
     },
     "ripplet": {
-      "_comment": "Base: bright teal water sprite. Shiny: sunset coral.",
+      "_comment": "Base: bright teal water sprite. Vivid (board: 'Deep blues + Translucent fins'): the teal goes DEEP blue rather than brighter aqua. Shiny: sunset coral, unchanged.",
       "rules": [
         {
           "match": {
@@ -161,14 +179,13 @@
             ],
             "sat_min": 0.06
           },
-          "set_hue": 186,
-          "sat_scale": 1.5,
-          "val_scale": 1.04
+          "set_hue": 206,
+          "sat_scale": 1.5
         }
       ]
     },
     "galewisp": {
-      "_comment": "Base: pale cyan + soft yellow, airy. Shiny: lavender-violet wisp; the yellows go pale gold-white.",
+      "_comment": "Base: pale cyan + soft yellow. Vivid (board: 'Clean whites + Sky blues -- Ethereal, wind-kissed'): cools go sky, yellows bleach toward white instead of the first pass's gold push. Shiny: lavender-violet, unchanged.",
       "rules": [
         {
           "match": {
@@ -202,8 +219,8 @@
             ],
             "sat_min": 0.04
           },
-          "set_hue": 196,
-          "sat_scale": 1.9
+          "set_hue": 200,
+          "sat_scale": 1.3
         },
         {
           "match": {
@@ -213,13 +230,13 @@
             ],
             "sat_min": 0.12
           },
-          "set_hue": 52,
-          "sat_scale": 1.5
+          "sat_scale": 0.45,
+          "val_scale": 1.06
         }
       ]
     },
     "meadowhart": {
-      "_comment": "Base: golden-tan deer. Shiny: pale silver spirit-hart -- the golds desaturate to moonlight with a cool cast.",
+      "_comment": "Base: golden-tan deer. Vivid (board: 'Natural browns + Antlers'): tawny natural brown, restrained -- the burnished-gold pass read as a trophy, not an animal. Shiny: pale silver spirit-hart, unchanged.",
       "rules": [
         {
           "match": {
@@ -238,20 +255,28 @@
       "vivid_rules": [
         {
           "match": {
+            "sat_max": 0.3,
+            "val_min": 0.25,
+            "val_max": 0.48
+          },
+          "set_hue": 95,
+          "set_sat": 0.14
+        },
+        {
+          "match": {
             "hue": [
               20,
               70
             ],
             "sat_min": 0.12
           },
-          "set_hue": 38,
-          "sat_scale": 1.75,
-          "val_scale": 1.08
+          "set_hue": 32,
+          "sat_scale": 1.2
         }
       ]
     },
     "tuskroot": {
-      "_comment": "Base: dark earth-brown boar. Shiny: deep jade -- the browns go mossy green, keeping the dark mass.",
+      "_comment": "Base: dark earth-brown boar. Vivid (board: 'Deeper browns + Moss + Mature'; canon: must read as Mudsnout grown up, same colour logic): rich deep brown, darker value -- the amethyst pass broke the family line outright. Shiny: deep jade, unchanged (green against brown, clearly apart).",
       "rules": [
         {
           "match": {
@@ -275,14 +300,14 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 285,
-          "set_sat": 0.42,
-          "val_scale": 0.92
+          "set_hue": 20,
+          "sat_scale": 1.0,
+          "val_scale": 0.68
         }
       ]
     },
     "mosshell": {
-      "_comment": "Base: green/yellow-green turtle. Shiny: autumn -- the greens turn ember orange-red.",
+      "_comment": "Base: green/yellow-green turtle. Vivid (board: 'Teal shell + Moss growth'; canon: primary read is WATER): the greens go teal, the yellow-greens stay moss -- the first pass pushed everything green, which is exactly the Grass read the canon forbids. Shiny: autumn ember, unchanged.",
       "rules": [
         {
           "match": {
@@ -301,19 +326,29 @@
         {
           "match": {
             "hue": [
-              55,
-              160
+              40,
+              78
             ],
             "sat_min": 0.1
           },
-          "set_hue": 112,
-          "sat_scale": 1.7,
-          "val_scale": 1.04
+          "set_hue": 100,
+          "sat_scale": 1.25
+        },
+        {
+          "match": {
+            "hue": [
+              78,
+              175
+            ],
+            "sat_min": 0.1
+          },
+          "set_hue": 178,
+          "sat_scale": 1.5
         }
       ]
     },
     "brooktail": {
-      "_comment": "Base: warm brown otter. Shiny: midnight indigo with the same markings.",
+      "_comment": "Base: warm brown otter. Vivid (board: 'Cool blues + White accents'): the river blue the first pass chose already matches the board and stays; the pale chest now bleaches toward white. Shiny: midnight indigo, unchanged.",
       "rules": [
         {
           "match": {
@@ -331,6 +366,14 @@
       "vivid_rules": [
         {
           "match": {
+            "sat_max": 0.25,
+            "val_min": 0.6
+          },
+          "sat_scale": 0.6,
+          "val_scale": 1.08
+        },
+        {
+          "match": {
             "hue": [
               15,
               70
@@ -338,13 +381,13 @@
             "sat_min": 0.1
           },
           "set_hue": 205,
-          "sat_scale": 1.45,
+          "sat_scale": 1.4,
           "val_scale": 1.05
         }
       ]
     },
     "galecrest": {
-      "_comment": "Base: rust red-orange raptor. Shiny: storm-white -- the rusts bleach to pale ice blue, reading as a white bird at distance.",
+      "_comment": "Base: rust red-orange raptor. Vivid (board: 'White + blue + Noble'): saturated rust becomes slate-blue feathering, pale rust bleaches white -- an eagle, not the first pass's ember hawk. Shiny: SWAPPED ROLES with the old vivid -- the golden-ember look becomes the rare, because a storm-white shiny beside a white-bodied ordinary is invisible.",
       "rules": [
         {
           "match": {
@@ -352,11 +395,11 @@
               0,
               60
             ],
-            "sat_min": 0.15
+            "sat_min": 0.12
           },
-          "set_hue": 202,
-          "set_sat": 0.18,
-          "val_scale": 1.25
+          "set_hue": 32,
+          "sat_scale": 1.7,
+          "val_scale": 1.08
         }
       ],
       "vivid_comment": "dull rust -> bright ember",
@@ -367,16 +410,26 @@
               0,
               60
             ],
+            "sat_min": 0.35
+          },
+          "set_hue": 215,
+          "set_sat": 0.42
+        },
+        {
+          "match": {
+            "hue": [
+              0,
+              60
+            ],
             "sat_min": 0.12
           },
-          "set_hue": 18,
-          "sat_scale": 1.8,
-          "val_scale": 1.05
+          "set_sat": 0.12,
+          "val_scale": 1.12
         }
       ]
     },
     "duskhush": {
-      "_comment": "Base: grey-teal nocturne. Shiny: deep plum-magenta night creature.",
+      "_comment": "Base: grey-teal nocturne. Vivid (board: 'Midnight tones + Glowing accents'): the first pass's twilight indigo matches the board and stays, saturation pulled just off neon. Shiny: plum-magenta, unchanged.",
       "rules": [
         {
           "match": {
@@ -409,7 +462,8 @@
             "sat_min": 0.06
           },
           "set_hue": 250,
-          "sat_scale": 1.8
+          "sat_scale": 1.3,
+          "val_scale": 0.55
         },
         {
           "match": {
@@ -417,12 +471,13 @@
             "val_min": 0.3
           },
           "set_hue": 248,
-          "set_sat": 0.3
+          "set_sat": 0.3,
+          "val_scale": 0.6
         }
       ]
     },
     "pipwing": {
-      "_comment": "Base: sunny yellow songbird. Shiny: sky-blue.",
+      "_comment": "Base: sunny yellow songbird. Vivid (board: 'Soft grays + Blue tips'): the body goes pale gray, the saturated markings go sky blue. Shiny: the sunny yellow the vivid retires comes back saturated as a canary-gold rare -- the old sky-blue shiny would have sat next door to the new blue-tipped ordinary.",
       "rules": [
         {
           "match": {
@@ -430,10 +485,11 @@
               25,
               75
             ],
-            "sat_min": 0.12
+            "sat_min": 0.1
           },
-          "set_hue": 206,
-          "sat_scale": 1.05
+          "set_hue": 50,
+          "sat_scale": 1.9,
+          "val_scale": 1.05
         }
       ],
       "vivid_comment": "dull straw -> bright canary",
@@ -444,16 +500,26 @@
               25,
               75
             ],
+            "sat_min": 0.45
+          },
+          "set_hue": 210,
+          "set_sat": 0.5
+        },
+        {
+          "match": {
+            "hue": [
+              25,
+              75
+            ],
             "sat_min": 0.1
           },
-          "set_hue": 56,
-          "sat_scale": 1.8,
+          "set_sat": 0.08,
           "val_scale": 1.05
         }
       ]
     },
     "reedwing": {
-      "_comment": "Base: mixed teal/green/straw wader. Shiny: flamingo -- the cools go pink, the straws go warm gold.",
+      "_comment": "Base: mixed teal/green/straw wader. Vivid (board: 'Blue + white + Reed accents'): cools go teal-blue, pales go white, straws STAY reed -- the first pass's spring green traded the wader's water read away. Shiny: flamingo, unchanged.",
       "rules": [
         {
           "match": {
@@ -483,29 +549,37 @@
         {
           "match": {
             "hue": [
-              70,
-              230
-            ],
-            "sat_min": 0.08
-          },
-          "set_hue": 158,
-          "sat_scale": 1.7
-        },
-        {
-          "match": {
-            "hue": [
               30,
               70
             ],
             "sat_min": 0.15
           },
-          "set_hue": 48,
-          "sat_scale": 1.6
+          "set_hue": 45,
+          "sat_scale": 1.2
+        },
+        {
+          "match": {
+            "sat_max": 0.12,
+            "val_min": 0.55
+          },
+          "sat_scale": 0.7,
+          "val_scale": 1.06
+        },
+        {
+          "match": {
+            "hue": [
+              70,
+              230
+            ],
+            "sat_min": 0.08
+          },
+          "set_hue": 205,
+          "sat_scale": 1.4
         }
       ]
     },
     "bramblebun": {
-      "_comment": "Embedded-texture species (extracted from the glb by the tool). Base: golden bunny. Shiny: mint-green.",
+      "_comment": "Embedded-texture species. Base: golden bunny. Vivid (board: 'Forest greens + Leafy details'): saturated golds become leaf green, the coat goes olive green-brown. Shiny: REAUTHORED to snow-white -- the first render showed the old mint shiny beside the new leafy vivid as two greens, which fails the owner's 'genuinely different colourway' rule. A snow bunny against a forest one cannot be mistaken at any distance.",
       "rules": [
         {
           "match": {
@@ -513,10 +587,10 @@
               20,
               70
             ],
-            "sat_min": 0.15
+            "sat_min": 0.1
           },
-          "set_hue": 152,
-          "sat_scale": 0.95
+          "set_sat": 0.06,
+          "val_scale": 1.18
         }
       ],
       "vivid_comment": "tan -> saffron gold",
@@ -527,16 +601,26 @@
               20,
               70
             ],
+            "sat_min": 0.4
+          },
+          "set_hue": 110,
+          "sat_scale": 1.2
+        },
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
             "sat_min": 0.12
           },
-          "set_hue": 42,
-          "sat_scale": 1.6,
-          "val_scale": 1.05
+          "set_hue": 62,
+          "sat_scale": 1.15
         }
       ]
     },
     "mudsnout": {
-      "_comment": "Embedded-texture species. Base: mud-brown snuffler. Shiny: rosy pink piglet.",
+      "_comment": "Embedded-texture species. Base: mud-brown snuffler. Vivid (board: 'Rich browns + Mud texture'): richer and slightly deeper, never orange. Shiny: pulled to clear rose-pink with a saturation floor -- the old h348 sat next to the vivid's warm brown across the red wrap.",
       "rules": [
         {
           "match": {
@@ -544,11 +628,11 @@
               10,
               60
             ],
-            "sat_min": 0.15
+            "sat_min": 0.1
           },
-          "set_hue": 348,
-          "sat_scale": 0.8,
-          "val_scale": 1.12
+          "set_hue": 335,
+          "set_sat": 0.55,
+          "val_scale": 1.08
         }
       ],
       "vivid_comment": "mud -> rich terracotta",
@@ -561,13 +645,14 @@
             ],
             "sat_min": 0.1
           },
-          "set_hue": 22,
-          "sat_scale": 1.75
+          "set_hue": 15,
+          "sat_scale": 1.05,
+          "val_scale": 0.7
         }
       ]
     },
     "trailpup": {
-      "_comment": "Embedded-texture species. Base: sandy tan pup. Shiny: russet fox-red.",
+      "_comment": "Embedded-texture species. Base: sandy tan pup with a darker back stripe and dark-tipped tail. Vivid (board: 'Tan + moss'): modest tan, value untouched so the stripe and tip survive. Shiny: deep fox-red, moved off the old h14 that sat 19 degrees from the old vivid.",
       "rules": [
         {
           "match": {
@@ -575,10 +660,10 @@
               20,
               70
             ],
-            "sat_min": 0.12
+            "sat_min": 0.1
           },
-          "set_hue": 14,
-          "sat_scale": 1.35
+          "set_hue": 6,
+          "sat_scale": 1.6
         }
       ],
       "vivid_comment": "sandy -> warm amber",
@@ -589,16 +674,28 @@
               20,
               70
             ],
+            "sat_min": 0.15,
+            "val_min": 0.2,
+            "val_max": 0.42
+          },
+          "set_hue": 90,
+          "sat_scale": 0.9
+        },
+        {
+          "match": {
+            "hue": [
+              20,
+              70
+            ],
             "sat_min": 0.1
           },
-          "set_hue": 33,
-          "sat_scale": 1.8,
-          "val_scale": 1.05
+          "set_hue": 35,
+          "sat_scale": 1.2
         }
       ]
     },
     "veridian": {
-      "_comment": "Embedded-texture species. Base: leaf green. Shiny: amber-gold.",
+      "_comment": "Embedded-texture species. Base: leaf green. Vivid (board: 'Verdant glow + Ancient + Sacred'): the first pass's luminous forest green matches the board and is kept as shipped. Shiny: amber-gold, unchanged.",
       "rules": [
         {
           "match": {
@@ -629,5 +726,5 @@
       ]
     }
   },
-  "_comment_vivid": "OF28's other half (owner: 'Change the creature colors to be more fantastical... more mystical like in palworld'). `vivid_rules` repaint the ORDINARY creature the same way `rules` repaint the shiny -- the shipped roster reads naturalistic and mud-brown, which is exactly what does not read as mystical. Each species' vivid hue is kept clear of its own shiny hue so the two never converge. Written to *_vivid.png; creature_body prefers it for every non-shiny body."
+  "_comment_vivid": "REDO 2026-08-16, against the owner's vendored boards (docs/reference/owner-board-2026-08-15-*.png, see docs/ASSET_LEDGER.md). The first vivid pass was authored without them and went jewel-toned -- amethyst tuskroot, emerald paddlenewt, canary pipwing, ember galecrest -- where the boards call for natural palettes with elemental accents ('Warm earth tones + Moss accents', 'Vibrant blues + Wet sheen', 'Soft grays + Blue tips', 'White + blue + Noble'). Three species' first-pass hues already matched the boards and are kept: duskhush, brooktail, veridian. Every vivid hue stays clear of its own species' shiny hue; galecrest and pipwing swapped/reauthored their shinies to preserve that after their vivids moved. Boards are direction, not pixel targets (owner: 'none are the exact direction') -- the render judge against the boards is the gate, never this file's numbers."
 }
