@@ -396,8 +396,13 @@ footer p{margin:.4rem 0}
       concept art, and a handful carry a rarer colourway you will only see if
       you meet the right one.
     </p>
-    <figure class="roster">
-      <img src="img/roster.jpg" alt="The seventeen Meadows creatures, each shown in its ordinary colourway beside its rarer one" loading="lazy" decoding="async" width="1280" height="720">
+    <!-- The one real <img> on the page: this frame's detail matters more than
+         its crop, so it must scale rather than cover. Every other slot is a
+         layered CSS background that falls back on its own; this one cannot, so
+         it removes itself instead of showing a broken image. -->
+    <figure class="roster" id="roster">
+      <img src="img/roster.jpg" alt="The seventeen Meadows creatures, each shown in its ordinary colourway beside its rarer one" loading="lazy" decoding="async" width="1280" height="720"
+           onerror="document.getElementById('roster').hidden=true">
       <figcaption>Every species in the chapter. The belt holds five of them.</figcaption>
     </figure>
   </section>
