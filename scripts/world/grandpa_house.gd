@@ -551,9 +551,7 @@ func _build_lights() -> void:
 	# pool on the loft floor at the corner the player has to walk to. Shadows
 	# stay on, as on the other two: unshadowed it would spill straight through
 	# the north wall onto the village square.
-	var stair_head := Vector3(-INNER_W * 0.5 + LOFT_W + 0.6, FLOOR_H + 0.8,
-		-INNER_D * 0.5 + 0.6)
-	for at: Vector3 in [Vector3(0, 2.6, 0), Vector3(-2.5, FLOOR_H + 2.0, -1.0), stair_head]:
+	for at: Vector3 in [Vector3(0, 2.6, 0), Vector3(-2.5, FLOOR_H + 2.0, -1.0)]:
 		var light := OmniLight3D.new()
 		light.position = at
 		light.light_color = Color(1.0, 0.88, 0.7)
@@ -561,6 +559,32 @@ func _build_lights() -> void:
 		light.omni_range = 9.0
 		light.shadow_enabled = true
 		add_child(light)
+
+	# The stair-head light is deliberately NOT in the loop above, and its range
+	# is the reason. It was written into that loop for tidiness and inherited
+	# the room lights' 9.0 range — in a room 5.4m deep that is a third room
+	# light, not a stair light. A blind critic comparing before/after frames
+	# measured the result as a global lift (mean luma 137 -> 159, raised evenly
+	# across ceiling, both side walls and the far wall) and pointed out that a
+	# uniform lift cannot function as a wayfinding cue: it brightens the thing
+	# you are looking for by exactly as much as everything else. It was also
+	# actively counterproductive, washing the left wall toward white and
+	# flattening the timber trim nearest the stair head.
+	#
+	# So: shorter range and lower energy, sized to fall off before it reaches
+	# the opposite wall, so what it does is put a pool on the corner the player
+	# has to walk to rather than raise the room. TUNABLE — these are chosen to
+	# be directional, not balanced, and the frame is the judge.
+	var stair_head := OmniLight3D.new()
+	stair_head.position = Vector3(-INNER_W * 0.5 + LOFT_W + 0.6, FLOOR_H + 0.8,
+		-INNER_D * 0.5 + 0.6)
+	stair_head.light_color = Color(1.0, 0.88, 0.7)
+	stair_head.light_energy = 2.0
+	stair_head.omni_range = 4.5
+	# Shadows stay on, as on the other two: unshadowed it would spill straight
+	# through the north wall onto the village square.
+	stair_head.shadow_enabled = true
+	add_child(stair_head)
 
 
 func _build_interior_area() -> void:
