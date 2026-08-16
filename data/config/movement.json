@@ -74,7 +74,9 @@
     "follow_lag": 14.0,
     "collision_recover_speed": 4.0,
     "_comment_collision_margin": "How far the spring arm stops short of whatever it hit. The Meadows scatter's trees and rocks collide (scripts/world/vegetation.gd), and are dense enough that a trunk can sit almost directly behind the player; the old 0.3 default then read as the camera buried in bark rather than a normal close-up.",
-    "collision_margin": 0.6
+    "collision_margin": 0.6,
+    "_comment_probe": "Radius, in metres, of the ball the spring arm sweeps along itself. A SpringArm3D with no `shape` falls back to a single infinitely thin raycast, which is what shipped: indoors the ray slipped between a chair back and a table edge and drew the camera inside them, and when it did hit something nearer than the margin the arm collapsed to nothing and put the camera in the player's head. Keep it small -- it stands in for the camera's near plane, not for the player, and a large ball shortens the arm for doorframes it would have fitted through.",
+    "collision_probe_radius": 0.25
   },
 
   "torch": {

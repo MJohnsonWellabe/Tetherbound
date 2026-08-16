@@ -44,6 +44,24 @@ var _recover_speed: float = 4.0
 ## camera being INSIDE the obstruction.
 var _collision_margin: float = 0.6
 
+## Radius of the ball the arm sweeps along itself, in metres.
+##
+## SpringArm3D only shape-casts if it has been given a `shape`. Nothing ever
+## assigned one — not the .tscn, not this file — so the arm fell back to its
+## default single, infinitely thin raycast down the centre line, and a
+## third-person camera indoors behaved exactly the way that implies. It slipped
+## between a chair back and a table edge and then drew the camera inside them,
+## and when the one ray did hit something nearer than `margin` the arm collapsed
+## to about zero length and put the camera inside the player's head. Both were
+## reported by the same blind playtest as one symptom ("the camera collapses
+## into the character indoors"), and neither is reachable by tuning distance or
+## margin, because a ray that misses reports no hit at all.
+##
+## Small on purpose: the ball is a stand-in for the camera's near plane, not for
+## the player. Too large and the arm shortens for doorframes it would have fitted
+## through. TUNABLE.
+var _probe_radius: float = 0.25
+
 var _target: Node3D = null
 var _mouse_delta := Vector2.ZERO
 
@@ -95,6 +113,13 @@ func _ready() -> void:
 	top_level = true          # the arm follows the player by code, not by parenting
 	spring_length = _distance
 	margin = _collision_margin
+	# Set here rather than in the .tscn for the same reason `margin` is: the rig
+	# is configured from movement.json in one place, and the scene carrying half
+	# the values is how `collision_margin` sat in the config being ignored.
+	if shape == null:
+		var probe := SphereShape3D.new()
+		probe.radius = _probe_radius
+		shape = probe
 	pitch = deg_to_rad(clampf(pitch, _pitch_min, _pitch_max))
 
 
@@ -121,6 +146,7 @@ func _load_config() -> void:
 	_follow_lag = float(cfg.get("follow_lag", _follow_lag))
 	_recover_speed = float(cfg.get("collision_recover_speed", _recover_speed))
 	_collision_margin = float(cfg.get("collision_margin", _collision_margin))
+	_probe_radius = float(cfg.get("collision_probe_radius", _probe_radius))
 	_base_distance = _distance
 	_base_height = _height
 	if _camera != null:
