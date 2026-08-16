@@ -1,0 +1,80 @@
+{
+  "_comment": "SD17 -- the Burrow Warrens, the Meadows' one required dungeon (MEADOWS_PROGRESSION_SPEC.md Sec3 Band 2). A COMPACT cave, not a puzzle box: five chambers, one gated side branch, aggressive Ground creatures, Rootstone in the walls, and one guardian that has to be beaten. ALL NUMBERS TUNABLE per CLAUDE.md. scripts/world/burrow_warrens.gd is the only reader.",
+  "_comment_site": "`entrance.at` is world metres [x, z]; `entrance.yaw_deg` turns the cave's LOCAL +z (its depth axis) toward the rocky rise at [140,-90], so walking in walks INTO the hill. The site was measured, not guessed (a throwaway probe over data/config/terrain_playground.json's own heightfield): [70,-140] is the flattest approach of five candidates on that flank -- 8 degrees of local relief over 4m against 46-54 degrees at every candidate further up the flank, which the spawns.json header already records as unwalkable ground. Terrain along the depth axis climbs 0.3 -> 10.7 -> 20.9 -> 27.0m at 0/20/30/40m in, so the mouth chamber's roof breaks the surface as a rocky outcrop and everything past it is genuinely buried. It sits ~143m south-east of the village square, past where the deeper Meadows begins, and a short walk from the Burrowback cluster spawns.json already places at [55,-145] -- the warrens is where they come from.",
+  "_comment_floor": "The cave floor is ONE level, `floor_clearance` above the terrain height at the mouth. Everything deeper is under rising ground rather than stepped down, which is what makes a flat floor honest here. `wall_thickness`, `skirt` (how far floor slabs and walls extend BELOW the floor, so nothing floats where the hillside falls away) and `rock` colours are presentation, all tunable.",
+  "site": {
+    "at": [70.0, -140.0],
+    "yaw_deg": 54.5,
+    "floor_clearance": 0.35,
+    "wall_thickness": 1.2,
+    "skirt": 10.0,
+    "rock": "#5b5147",
+    "floor_colour": "#4a423a",
+    "vault_door_colour": "#6d5f4a"
+  },
+  "_comment_chambers": "Local metres: x is lateral, +z is depth into the hill; `at` is the chamber centre, `size` is [width, depth], `height` is floor-to-ceiling. Chambers connected by a passage MUST share the axis the passage runs on (the wall opener splits one wall, it does not cut diagonals). `branch: true` marks the optional deep branch -- it is not on the way to anything.",
+  "chambers": [
+    {"id": "mouth", "at": [0.0, 6.0], "size": [7.0, 10.0], "height": 4.2},
+    {"id": "hall", "at": [0.0, 22.0], "size": [14.0, 12.0], "height": 5.0},
+    {"id": "warren", "at": [-16.0, 22.0], "size": [10.0, 9.0], "height": 4.0},
+    {"id": "den", "at": [0.0, 40.0], "size": [16.0, 14.0], "height": 6.0},
+    {"id": "vault", "at": [15.0, 40.0], "size": [8.0, 8.0], "height": 4.0, "branch": true}
+  ],
+  "_comment_passages": "`gated: true` is the one door in the cave: a rock slab across the den->vault passage that only lifts once `clear.flag` is set (see `guardian`). Deliberately NOT an item_gate.gd gate -- SB10's mechanism is a carried KEY operating the world, and nothing in the warrens hands out a key; the thing that opens this is having beaten the guardian, which is a fact about the world the flag store already remembers.",
+  "passages": [
+    {"from": "mouth", "to": "hall", "width": 3.0, "height": 3.0},
+    {"from": "hall", "to": "warren", "width": 2.6, "height": 2.8},
+    {"from": "hall", "to": "den", "width": 3.2, "height": 3.4},
+    {"from": "den", "to": "vault", "width": 2.4, "height": 2.8, "gated": true}
+  ],
+  "_comment_lights": "Dim on purpose. OF24 shipped a carried torch and this is the place it is supposed to matter, so these are low-energy pools that shape the chambers without lighting them -- a player who walks in without a torch should be able to find the way back out and not much else. `at` is [x, z] local plus `y` above the floor.",
+  "lights": [
+    {"at": [0.0, 2.0], "y": 3.0, "energy": 0.55, "range": 9.0, "colour": "#8fa6b8"},
+    {"at": [0.0, 22.0], "y": 4.0, "energy": 0.5, "range": 13.0, "colour": "#7d8a99"},
+    {"at": [-16.0, 22.0], "y": 3.2, "energy": 0.4, "range": 10.0, "colour": "#7d8a99"},
+    {"at": [0.0, 40.0], "y": 5.0, "energy": 0.6, "range": 16.0, "colour": "#8a7f6a"},
+    {"at": [15.0, 40.0], "y": 3.2, "energy": 0.7, "range": 9.0, "colour": "#b09a6a"}
+  ],
+  "_comment_spawns": "The warrens' own population, spawned through encounter_director.gd's `spawn_wild()` so these are ORDINARY wild creatures -- same engage prompt, same fight, same catching, same respawn. No second combat mode exists and none is wanted. `aggressive: true` overrides the species' own temperament for THESE bodies only (species.json still has Burrowback and Mudsnout as non-aggressive animals out in the meadow): a creature defending the tunnel it lives in comes at you, the same one grazing a field does not. `level` overrides the wild band roll (progression.json) -- the warrens is Band 2 content and its residents are above the field's. Ground species only, from the existing roster; no new species and no new meshes (Sec20, D23). Tuskroot is deliberately absent for the same reason spawns.json leaves it out: D20 makes it the EVOLVED form, obtainable only by evolving a caught Mudsnout.",
+  "spawns": [
+    {"species": "mudsnout", "chamber": "mouth", "count": 1, "level": 10, "aggressive": true, "offset": [1.8, -1.5]},
+    {"species": "burrowback", "chamber": "hall", "count": 2, "level": 12, "aggressive": true, "offset": [-4.0, 2.0], "spread": 4.0},
+    {"species": "mudsnout", "chamber": "warren", "count": 2, "level": 11, "aggressive": true, "offset": [0.0, 0.0], "spread": 3.0},
+    {"species": "trailpup", "chamber": "den", "count": 1, "level": 13, "aggressive": true, "offset": [-5.0, -4.0]}
+  ],
+  "_comment_guardian": "Spec Sec3 Band 2 and Sec20: a STRONG NORMAL SPECIES, explicitly not a new legendary and explicitly not a new mesh. Burrowback is the roster's highest-defence Ground creature and the animal this whole warren belongs to, so the biggest one in it is the thing at the bottom. Level is well above its own residents and above the recommended Band 2 team, TUNABLE -- it is meant to be the fight you come back for, not a wall. It can be CAUGHT rather than beaten (catching is available during wild combat, CLAUDE.md; a guardian is not trainer-owned) and either way the warrens counts as cleared -- a dungeon that can only be resolved one of the two legal ways would be a rule this game does not have.",
+  "guardian": {
+    "species": "burrowback",
+    "level": 18,
+    "chamber": "den",
+    "offset": [3.0, 4.0],
+    "name": "Warren Guardian"
+  },
+  "_comment_clear": "SB9's flat flag store (autoload/progression_state.gd), the same one trainer defeats, the road gate and the TM pickups already write to. `flag` is set the moment the guardian goes down; `reward` pays exactly once against it, so re-entering a cleared warrens is a walk through an empty cave, not a payout faucet. Reward shape is SC15's (`coins`/`items`/`xp_bonus`), on purpose -- the trainer payout is the same idea and a second reward format would drift from it.",
+  "clear": {
+    "flag": "warrens_cleared",
+    "reward": {
+      "coins": 45,
+      "items": [{"id": "rootstone", "count": 4}],
+      "xp_bonus": 60,
+      "message": "The warren goes quiet. Something deeper in it just opened."
+    }
+  },
+  "_comment_deposits": "Rootstone in the walls -- Sec3 Band 2's own material, the first tier above wood/stone/fiber/berries. These are harvest_node.gd nodes with their specs written HERE rather than in data/config/harvest.json: that file is the first day's tutorial gathering out in the meadow (and the Old Quarry lane owns its own additions to it), and a deposit inside a dungeon has no business being in the same list. `at` is chamber-local [x, z] like everything above.",
+  "deposits": [
+    {"at": [-5.0, 20.0], "item": "rootstone", "amount": 3, "label": "Break out rootstone"},
+    {"at": [5.5, 25.0], "item": "rootstone", "amount": 3, "label": "Break out rootstone"},
+    {"at": [-17.5, 20.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone"},
+    {"at": [-6.0, 43.0], "item": "rootstone", "amount": 4, "label": "Break out rootstone"},
+    {"at": [-13.0, 24.5], "item": "stone", "amount": 4, "label": "Break out stone"}
+  ],
+  "_comment_prize": "R4.6 built the evolution item gate as real, unit-tested infrastructure and then left it switched OFF, because nothing in the world could source the item (see data/config/progression.json's own note). THIS is the source: the Heartstone, sitting in the one chamber that is off the critical path, behind the guardian. Taking it flips nothing by itself -- progression.json's `evolution.mudsnout.item_id` is what turns the gate on, and it is now `heartstone`. `flag` makes the pickup one-time across saves, the same rule tm_pickup.gd already keeps for a disc.",
+  "prize": {
+    "item": "heartstone",
+    "chamber": "vault",
+    "offset": [0.0, 1.0],
+    "label": "Take the heartstone",
+    "flag": "warrens_heartstone_taken",
+    "message": "A heartstone. Warm, and beating slowly."
+  }
+}

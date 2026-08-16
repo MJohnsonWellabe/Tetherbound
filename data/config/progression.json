@@ -21,8 +21,9 @@
     "unlock_bond_nodes": 5
   },
   "_comment_evolution": "R4.6, spec sec4/D13/D17/D20: keyed by the PRE-evolution species id (species.json's own `evolves_into` names the target, so this block only needs the gate numbers). level/bond gate the live instance; item_id names a catalyst item to consume, empty meaning no item is required. Mudsnout's item_id starts empty ON PURPOSE -- the spec's own suggestion is a Heartstone from the Burrow Warrens (SD17), which does not exist yet, and gating the biome's one evolution on an item nothing can drop would make it unreachable for the whole span between now and Phase 8b. Flip item_id once SD17 ships a real Heartstone pickup; until then this is level+bond only. All numbers (and the item id, once one exists) are tunable per CLAUDE.md -- do not let 15/55 become permanent canon.",
+  "_comment_evolution_sd17": "SD17 SHIPPED THAT PICKUP, so the flip above has happened: `item_id` is `heartstone` (data/items/items.json), and the one in the world sits in the Burrow Warrens' branch chamber -- past the guardian, off the critical path, one-time. The gate stops being unit-tested-but-off infrastructure and becomes a real reason to clear the dungeon. Still tunable: emptying `item_id` again reverts to level+bond only, with no code change.",
   "evolution": {
-    "mudsnout": { "level": 15, "bond": 55, "item_id": "" }
+    "mudsnout": { "level": 15, "bond": 55, "item_id": "heartstone" }
   },
   "migration": { "v1_creature_level": 3 }
 }

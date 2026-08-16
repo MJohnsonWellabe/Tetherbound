@@ -138,3 +138,65 @@ func test_evolve_changes_species_and_stats_but_preserves_what_the_player_earned(
 	# by evolving.
 	assert_almost_eq(float(creature.call("hp_fraction")), hp_fraction_before, 0.001,
 		"hp fraction should survive an evolution the same way it survives a level-up")
+
+
+## --- SD17: the item gate now has a real source in the world ----------------
+##
+## Everything above uses hand-built configs, deliberately (see this file's own
+## header). These three read the SHIPPED data instead, because what changed
+## with the Burrow Warrens is not the logic — it is that
+## `data/config/progression.json` finally names a catalyst and
+## `data/items/items.json` finally defines it. That pairing is exactly the
+## class of thing that rots silently: an item id typo'd in one file and never
+## in the other locks the biome's one evolution shut with no error anywhere.
+## The gate's numbers stay unpinned (tunable); only the LINK is asserted.
+
+func _shipped_config() -> Dictionary:
+	var file := FileAccess.open("res://data/config/progression.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+func _shipped_items() -> Dictionary:
+	var file := FileAccess.open("res://data/items/items.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	var items: Variant = (parsed as Dictionary).get("items", {})
+	return items as Dictionary if items is Dictionary else {}
+
+
+func test_the_shipped_evolution_catalyst_is_a_real_item() -> void:
+	var cfg := _shipped_config()
+	var entry: Variant = cfg.get("evolution", {}).get("mudsnout", {})
+	var item_id := str((entry as Dictionary).get("item_id", "")) if entry is Dictionary else ""
+	if item_id.is_empty():
+		# Legal: an empty id means "no catalyst", which is what shipped before
+		# SD17. Nothing to check, and nothing broken.
+		return
+	assert_true(_shipped_items().has(item_id),
+		"progression.json's evolution catalyst '%s' is not defined in items.json" % item_id)
+
+
+func test_the_shipped_gate_refuses_without_the_catalyst_and_allows_with_it() -> void:
+	var cfg := _shipped_config()
+	var entry: Dictionary = cfg.get("evolution", {}).get("mudsnout", {}) as Dictionary
+	var item_id := str(entry.get("item_id", ""))
+	if item_id.is_empty():
+		return
+	var creature := _mudsnout(int(entry.get("level", 15)) + 5, int(entry.get("bond", 55)) + 5)
+	var inventory := FakeInventory.new()
+	var without := EVOLUTION.check(creature, cfg, inventory)
+	assert_false(bool(without.get("eligible")),
+		"a level+bond-ready Mudsnout must still be refused without the catalyst")
+	assert_true(str(without.get("reason")).length() > 0,
+		"the refusal must say what is missing, not fail silently")
+	inventory.counts[item_id] = 1
+	assert_true(bool(EVOLUTION.check(creature, cfg, inventory).get("eligible")),
+		"carrying the catalyst the Burrow Warrens drops must open the gate")
+	assert_true(EVOLUTION.evolve(creature, cfg, inventory))
+	assert_eq(inventory.count(item_id), 0, "evolving must spend the catalyst")

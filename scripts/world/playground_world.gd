@@ -23,6 +23,7 @@ const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+const BURROW_WARRENS := preload("res://scripts/world/burrow_warrens.gd")
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const LANDMARK := preload("res://scripts/world/landmark.gd")
@@ -596,6 +597,7 @@ func _build_settlement() -> void:
 
 	_place_harvest_nodes()
 	_place_tms()
+	_build_burrow_warrens()
 
 	var placer := BUILD_PLACER.new()
 	placer.name = "BuildPlacer"
@@ -682,6 +684,24 @@ func _place_tms() -> void:
 		pickup.position = Vector3(at.x, ground, at.y)
 		add_child(pickup)
 		pickup.call("setup", tm_id)
+
+
+## SD17: the Burrow Warrens, dug into the flank of the rocky rise out in the
+## deeper Meadows. Its position, layout, population and contents all live in
+## data/config/burrow_warrens.json; the world only hands it the three things
+## it cannot find on its own — the ground query, the camera rig it swaps
+## profiles on, and the encounter director that owns every wild body.
+##
+## Placed after the harvest nodes and TMs for the ordinary reason everything
+## in this function is ordered: a regression in the dungeon must not be able
+## to take the field's own contents down with it.
+func _build_burrow_warrens() -> void:
+	var warrens: Node3D = BURROW_WARRENS.new()
+	warrens.name = "BurrowWarrens"
+	add_child(warrens)
+	var director := get_node_or_null(^"EncounterDirector")
+	if not bool(warrens.call("build", self, _camera_rig, _player, director)):
+		push_warning("the Burrow Warrens did not build; the required dungeon is missing")
 
 
 ## The first day's gathering spots, from data/config/harvest.json.

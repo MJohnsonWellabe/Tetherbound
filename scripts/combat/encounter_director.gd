@@ -244,6 +244,79 @@ func _spawn_creatures() -> void:
 		await adopt_starter(default_starter)
 
 
+## SD17: one wild creature, placed by somebody else.
+##
+## `_spawn_creatures()` above builds the MEADOW's population from
+## `spawns.json` — a seeded scatter of clusters, rolled levels, deterministic
+## across boots. A hand-authored place (the Burrow Warrens; anything later
+## that wants a specific creature in a specific room) needs the opposite: an
+## exact spot, an exact level, and a temperament its species does not have out
+## in the field. This is that call, and it deliberately does NOT touch the
+## seeded loop's own draw order — every existing save, screenshot and smoke
+## test depends on those numbers landing exactly where they already do.
+##
+## What it shares with the loop is everything that matters afterwards: the
+## body is an ordinary `wild_creature.gd`, it is registered in
+## `_wild_creatures`, its `wants_to_engage` runs through the same one place
+## every fight is started from, and it faints, respawns and can be caught like
+## anything else. There is no second kind of wild creature.
+##
+## `opts` keys, all optional:
+##   level      — a fixed level, instead of the wild band roll
+##   aggressive — override the species' own temperament for THIS body
+##   parent     — the node to add it under (defaults to this director's own
+##                parent, the world root). A caller that provides its own
+##                `ground_height_at` — the warrens' cave floor — parents its
+##                creatures under itself so `creature_body.gd` finds it.
+##   name       — the node name, so a log line or a remote tree can be matched
+func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D:
+	if not SPECIES.has(species):
+		push_error("spawn_wild('%s') names a species that is not in species.json" % species)
+		return null
+	var wild: Node3D = CREATURE_SCENE.instantiate()
+	wild.set_script(WILD_SCRIPT)
+	wild.name = str(opts.get("name", "Wild_%s_%d" % [species, _wild_creatures.size() + 1]))
+	var parent: Node = opts.get("parent", null) as Node
+	if parent == null or not is_instance_valid(parent):
+		parent = get_parent()
+	parent.add_child(wild)
+	wild.call("populate", species, _player)
+	var level := int(opts.get("level", 0))
+	if level > 0:
+		_set_fixed_level(wild, species, level)
+	if opts.has("aggressive"):
+		wild.set("aggressive", bool(opts["aggressive"]))
+	wild.call("configure", MATH.config().get("wild", {}))
+	# No `await` here, unlike the cluster loop: a placed creature's ground is
+	# the caller's own floor, which exists the moment the node is in the tree.
+	# The fallback keeps it out of the world origin if that ever fails.
+	if not bool(wild.call("place_on_ground", spot)):
+		wild.global_position = spot
+	wild.set("home", wild.global_position)
+	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
+	_wild_creatures.append(wild)
+	return wild
+
+
+## The fixed-level counterpart to `_roll_wild_level()`. Same instance build
+## (IVs and traits still roll, from a seed derived from the body's own name so
+## the same room produces the same creature every boot), then the level is set
+## outright rather than drawn from `progression.json`'s wild band.
+func _set_fixed_level(wild: Node3D, species: String, level: int) -> void:
+	var cfg: Dictionary = PROGRESSION.config()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("placed_%s_%s" % [wild.name, species])
+	var leveled: RefCounted = CREATURE_INSTANCE.from_species(
+		species, SPECIES.definition(species), rng.randf(), cfg,
+		[rng.randf(), rng.randf(), rng.randf()], [rng.randf(), rng.randf()]
+	)
+	leveled.call("set_level", level, cfg)
+	var is_shiny: bool = rng.randf() < VISUAL.shiny_chance()
+	leveled.shiny = is_shiny
+	wild.set("instance", leveled)
+	wild.call("set_shiny", is_shiny)
+
+
 ## Give a freshly `populate()`d wild creature a rolled level (D30), replacing the
 ## flat level-1 instance `populate()` just built with one rolled against
 ## `progression.json`'s `level.wild_band`.

@@ -219,6 +219,27 @@
       "icon": "res://assets/ui/icons/items/south_bridge_key.png",
       "blurb": "Oskar's own. Turns the old crossing south of the village.",
       "description": "Plain iron, kept oiled and working rather than decorative -- a bridgehand's tool, not a keepsake. Oskar hands it over the moment he loses fair, square terms he was plain about from the start. It turns the mechanism at the old south bridge."
+    },
+    "rootstone": {
+      "name": "Rootstone",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#6f7f6a",
+      "gathered_with": "pickaxe",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "_comment": "SD17. MEADOWS_PROGRESSION_SPEC.md Sec10: the FIRST of exactly two tier materials in the whole biome (Rootstone, then Ironwood) on top of wood/stone/fiber/berries. The Burrow Warrens' deposits are its first source in the world; the Old Quarry is the other, and SD18 owns every recipe that spends it -- per that item, Rootstone only ever UPGRADES something the player already has (better orb tier, workbench, gathering tool, saddle component), never opens a new tree. The icon reuses the existing `stone` silhouette on purpose: the icon set has no rootstone glyph, this is an honest stand-in in the same convention several other items already use, and it is not new asset sourcing.",
+      "blurb": "Green-veined stone from deep ground. Better than plain rock.",
+      "description": "Grey stone shot through with living green veins that keep their colour long after the block is broken out. It comes only from deep seams -- warrens, old quarry faces -- and everything made with it comes out stronger than the same thing made of ordinary rock."
+    },
+    "heartstone": {
+      "name": "Heartstone",
+      "kind": "resource",
+      "stack": 1,
+      "colour": "#c8564a",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "_comment": "SD17 / R4.6. The evolution catalyst the evolution gate was built for and then left switched off waiting on -- see data/config/progression.json's `_comment_evolution`, which named this exact item and this exact backlog entry a phase in advance. `evolution.mudsnout.item_id` is now `heartstone`, and the one in the world sits in the Burrow Warrens' branch chamber behind the guardian. `stack: 1` because there is exactly one, and consuming it in an evolution is what removes it from play. Same honest icon stand-in as `rootstone` above.",
+      "blurb": "Warm to hold, and beating slowly.",
+      "description": "A dark red stone the size of a fist, warm in a way stone should not be, with a slow pulse somewhere under the surface. A creature held close to one has been known to finish becoming whatever it was already turning into."
     }
   }
 }

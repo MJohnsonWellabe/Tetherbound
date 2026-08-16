@@ -89,9 +89,15 @@ func _refuses_below_the_requirements() -> void:
 		_fail("the menu did not close after the refusal check")
 
 
-## The real path: level and bond both met, no item required (the shipped
-## data/config/progression.json's own `mudsnout` entry) -- evolve, watch the
+## The real path: level, bond AND the catalyst item met -- evolve, watch the
 ## two-beat ceremony, and confirm the menu is handed back usable.
+##
+## SD17 flipped `evolution.mudsnout.item_id` in the shipped
+## data/config/progression.json from "" to `heartstone`, because the Burrow
+## Warrens now has a real one to find. So this path has to carry one, exactly
+## as a player would: the stone goes in the satchel first and the evolution
+## spends it. (The refusal path above is unchanged -- a level-1 creature is
+## refused on the level gate long before the item is looked at.)
 func _evolves_a_ready_creature_and_hands_the_menu_back_clean() -> void:
 	var party: RefCounted = _game.get("party")
 	var creature: RefCounted = _game.call("make_creature", "mudsnout", "Snorty")
@@ -103,6 +109,10 @@ func _evolves_a_ready_creature_and_hands_the_menu_back_clean() -> void:
 	if not bool(party.call("add", creature)):
 		_fail("could not seed the ready Mudsnout")
 		return
+	var inventory: RefCounted = _game.get("inventory")
+	var catalyst := str(_evolution_item_id())
+	if catalyst != "" and int(inventory.call("count", catalyst)) < 1:
+		inventory.call("add", catalyst, 1)
 	var slot := int(party.call("size")) - 1
 
 	if not bool(_menu.call("is_open")):
@@ -170,6 +180,20 @@ func _press(action: String) -> void:
 	Input.parse_input_event(event)
 	for i in 4:
 		await process_frame
+
+
+## The catalyst the SHIPPED config asks for, read rather than hard-coded --
+## `item_id` is tunable (and was "" until SD17), so this test follows it
+## instead of pinning it.
+func _evolution_item_id() -> String:
+	var file := FileAccess.open("res://data/config/progression.json", FileAccess.READ)
+	if file == null:
+		return ""
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return ""
+	var entry: Variant = (parsed as Dictionary).get("evolution", {}).get("mudsnout", {})
+	return str((entry as Dictionary).get("item_id", "")) if entry is Dictionary else ""
 
 
 func _fail(message: String) -> void:
