@@ -15,6 +15,7 @@ const SPECIES_IDS := [
 	"trailpup", "veridian",
 ]
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
+const BODY := preload("res://scripts/creatures/creature_body.gd")
 const OUT := "res://shots/_shiny_pairs.png"
 
 const SPACING := 2.6
@@ -52,7 +53,12 @@ func _run() -> void:
 	for id in SPECIES_IDS:
 		for is_shiny in [false, true]:
 			var creature := CREATURE_SCENE.instantiate()
+			# The packed scene is a bare CharacterBody3D; the body script is
+			# attached at spawn time by whoever builds it (see smoke_art.gd,
+			# which does exactly this before calling setup()).
+			creature.set_script(BODY)
 			world.add_child(creature)
+			creature.set_physics_process(false)
 			creature.call("setup", id, is_shiny)
 			creature.set("global_position", Vector3(x, 0.0, 0.0))
 			x += SPACING
