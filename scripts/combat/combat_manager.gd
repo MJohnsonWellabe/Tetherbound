@@ -660,7 +660,17 @@ func _drive_player_creature() -> void:
 	var basis_value := Basis.IDENTITY
 	if _camera_rig != null and _camera_rig.has_method("planar_basis"):
 		basis_value = _camera_rig.call("planar_basis")
-	_ally_body.call("request_move", basis_value * Vector3(input.x, 0.0, input.y))
+	var direction: Vector3 = basis_value * Vector3(input.x, 0.0, input.y)
+	# A Swift Tonic (creature_instance.buff_scale("speed")) drives the body
+	# faster for its ninety seconds; at 1.0 the default-speed path is taken so
+	# an unbuffed fight runs exactly the code it always did.
+	var creature_for_speed := active_creature()
+	var speed_scale: float = float(creature_for_speed.call("buff_scale", "speed")) \
+			if creature_for_speed != null else 1.0
+	if speed_scale != 1.0 and _ally_body.has_method("base_speed"):
+		_ally_body.call("request_move", direction, float(_ally_body.call("base_speed")) * speed_scale)
+	else:
+		_ally_body.call("request_move", direction)
 
 
 func _read_player_input() -> void:

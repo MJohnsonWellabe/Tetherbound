@@ -308,6 +308,14 @@ func advance_day() -> int:
 ## this path, and none of them should ever see an error for it.
 func _process(delta: float) -> void:
 	_watch_pending_catch()
+	# Tonic clocks (creature_instance.gd::tick_buffs). Ticked here rather than
+	# from combat so a tonic runs down in and out of a fight alike -- "drink it
+	# before the fight you drank it for", never a paused stockpile. Paused
+	# menus pause the tree and this with it, so reading the backpack costs no
+	# tonic time.
+	if party != null:
+		for member: Variant in (party.call("members") as Array):
+			(member as RefCounted).call("tick_buffs", delta)
 	var progression_revision: int = int(progression.get("revision"))
 	if progression_revision != _last_progression_revision:
 		_last_progression_revision = progression_revision

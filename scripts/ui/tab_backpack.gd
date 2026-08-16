@@ -137,6 +137,11 @@ var _targeting_tm: String = ""
 ## growing a fourth one.
 var _targeting_elixir: String = ""
 
+## Tonics: the item id being targeted, or "". Fourth user of the one picker --
+## a tonic asks the same "which of yours?" question a heal, a TM and an elixir
+## already ask, and eligibility is simply "not fainted".
+var _targeting_tonic: String = ""
+
 ## TM/move lookups, loaded on first use and kept. `tm_db.gd` owns the
 ## compatibility list and `move_db.gd` owns power/type/slot; this screen reads
 ## both and duplicates neither (OF29's brief: reconcile, don't duplicate).
@@ -172,6 +177,7 @@ func build() -> void:
 	_targeting_revive = 0.0
 	_targeting_tm = ""
 	_targeting_elixir = ""
+	_targeting_tonic = ""
 	_confirming = -1
 
 	var config := _config()
@@ -629,6 +635,16 @@ func _read_use() -> void:
 		say("Ate %s." % str(db.call("item_name", id)))
 		return
 
+	# Tonics: a timed buff picks its drinker through the same picker again.
+	if (db.call("definition", id) as Dictionary).has("creature_buff"):
+		_targeting_tonic = id
+		_open_target_picker(
+			0.0, 0.0, "",
+			"Nobody can drink that right now.",
+			"Who drinks it? It wears off."
+		)
+		return
+
 	# D47: an elixir picks its drinker the same way a TM picks its student.
 	# Placed ahead of the TM branch only because `kind` is checked in order;
 	# the two are mutually exclusive kinds and neither shadows the other.
@@ -947,6 +963,9 @@ func _elixir_headroom(creature: RefCounted) -> int:
 func _eligible(creature: RefCounted, heal: float, revive: float, tm: String) -> bool:
 	if creature == null:
 		return false
+	if not _targeting_tonic.is_empty():
+		# Any living creature can drink a tonic; a fainted one cannot.
+		return not bool(creature.get("fainted"))
 	if not _targeting_elixir.is_empty():
 		# Any living creature can drink one; the only refusal is a stat that
 		# has already taken all the elixir points it will ever hold.
@@ -967,6 +986,8 @@ func _eligible(creature: RefCounted, heal: float, revive: float, tm: String) -> 
 func _ineligible_reason(creature: RefCounted, heal: float, revive: float, tm: String) -> String:
 	if creature == null:
 		return "empty"
+	if not _targeting_tonic.is_empty():
+		return "fainted" if bool(creature.get("fainted")) else ""
 	if not _targeting_elixir.is_empty():
 		if bool(creature.get("fainted")):
 			return "fainted"
@@ -1144,6 +1165,24 @@ func _on_target_row(index: int) -> void:
 		_end_targeting()
 		return
 	var id := str(stack.get("id", ""))
+
+	if not _targeting_tonic.is_empty():
+		var tonic := (db.call("definition", id) as Dictionary).get("creature_buff", {}) as Dictionary
+		if not bool(creature.call("apply_buff",
+				str(tonic.get("id", id)), str(tonic.get("stat", "")),
+				float(tonic.get("scale", 0.0)), float(tonic.get("duration_s", 0.0)))):
+			# Bad data (no stat, zero scale) -- refuse without spending, same
+			# defensive dead-end guard every branch below keeps.
+			say("That tonic isn't mixed right.")
+			_end_targeting()
+			return
+		inventory.call("remove", id, 1)
+		say("%s drank the %s. %s for %ds." % [
+			str(creature.call("label")), str(db.call("item_name", id)),
+			str(tonic.get("stat", "")).capitalize(), int(tonic.get("duration_s", 0))
+		])
+		_end_targeting()
+		return
 
 	if not _targeting_elixir.is_empty():
 		var definition := db.call("definition", id) as Dictionary

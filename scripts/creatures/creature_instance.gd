@@ -443,7 +443,8 @@ func bond_nodes(cfg: Dictionary) -> int:
 ## §12: "Bond increases through fighting together" needs fighting to actually
 ## pay bond back, not just take it in.
 func effective_attack(cfg: Dictionary) -> float:
-	return attack * PROGRESSION.bond_stat_scale(bond_nodes(cfg), "attack_scale", cfg)
+	return attack * PROGRESSION.bond_stat_scale(bond_nodes(cfg), "attack_scale", cfg) \
+		* buff_scale("attack")
 
 
 ## Defence for one hit taken: bond's `defence_scale`, then a "survivability"
@@ -452,10 +453,69 @@ func effective_attack(cfg: Dictionary) -> float:
 ## bonded with yet (see `bond_stat_scale`'s own comment); the ability is the
 ## same — it only ever adds, never subtracts.
 func effective_defence(cfg: Dictionary, is_best: bool = false, ability: Dictionary = {}) -> float:
-	var scaled := defence * PROGRESSION.bond_stat_scale(bond_nodes(cfg), "defence_scale", cfg)
+	var scaled := defence * PROGRESSION.bond_stat_scale(bond_nodes(cfg), "defence_scale", cfg) \
+		* buff_scale("defence")
 	if is_best and str(ability.get("kind", "")) == "survivability":
 		scaled *= 1.0 + float(ability.get("value", 0.0))
 	return scaled
+
+
+## --- tonics: timed buffs (the potions board's temporary half) --------------
+##
+## The other half of the owner's "both, permanent stays rare" potion decision
+## (D47 records the permanent half). A tonic multiplies ONE stat for a bounded
+## number of seconds and then is gone -- mirroring the shape
+## `player_vitals.gd::active_buffs` already uses for food, so the two buff
+## systems in the game read the same.
+##
+## Entries: `{id, stat, scale, remaining_s}`. `stat` is "attack" / "defence" /
+## "speed" -- attack and defence multiply into `effective_attack`/`effective_
+## defence` above; "speed" is read by combat_manager when it drives the body.
+## Re-drinking the same tonic REFRESHES its clock rather than stacking its
+## multiplier (same rule as food buffs): stacking is how a mandatory
+## pre-fight buff ritual is born, and the owner's brief forbade exactly that.
+##
+## DELIBERATELY NOT SAVED. A timed buff dying on quit is the honest reading of
+## "temporary", it keeps the save format still, and nobody reloads mid-battle
+## to preserve ninety seconds of tonic.
+var active_buffs: Array[Dictionary] = []
+
+
+## Apply (or refresh) a timed buff. Refuses garbage quietly: a scale of <= 0
+## or an empty stat would make a fight silently wrong from one bad data entry.
+func apply_buff(id: String, stat: String, scale: float, duration_s: float) -> bool:
+	if id.is_empty() or stat.is_empty() or scale <= 0.0 or duration_s <= 0.0:
+		return false
+	for entry in active_buffs:
+		if str(entry.get("id", "")) == id:
+			entry["stat"] = stat
+			entry["scale"] = scale
+			entry["remaining_s"] = duration_s
+			return true
+	active_buffs.append({"id": id, "stat": stat, "scale": scale, "remaining_s": duration_s})
+	return true
+
+
+## Age every buff; expired ones drop out. Called from GameState._process for
+## every party member, so a tonic runs down in and out of combat alike --
+## "drink it before the fight you drank it for", never a paused stockpile.
+func tick_buffs(delta: float) -> void:
+	if active_buffs.is_empty():
+		return
+	for i in range(active_buffs.size() - 1, -1, -1):
+		active_buffs[i]["remaining_s"] = float(active_buffs[i].get("remaining_s", 0.0)) - delta
+		if float(active_buffs[i]["remaining_s"]) <= 0.0:
+			active_buffs.remove_at(i)
+
+
+## Product of every live buff on `stat`. 1.0 with none -- the do-nothing
+## default every existing call site gets for free.
+func buff_scale(stat: String) -> float:
+	var scale := 1.0
+	for entry in active_buffs:
+		if str(entry.get("stat", "")) == stat:
+			scale *= float(entry.get("scale", 1.0))
+	return scale
 
 
 ## Multiplier on a landed quick attack's energy gain. 1.0 unless this creature

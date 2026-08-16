@@ -500,9 +500,55 @@
       "description": "Green, and it smells like the meadow after rain. It raises the ceiling rather than filling the cup -- a creature drinks one and can hold more from then on, but walks away no more healed than it was.",
       "elixir_stat": "hp",
       "elixir_points": 12
+    },
+    "swift_tonic": {
+      "name": "Swift Tonic",
+      "kind": "consumable",
+      "stack": 5,
+      "colour": "#d9a520",
+      "icon": "res://assets/ui/icons/items/potion_small.png",
+      "blurb": "Temporary. Your creature moves faster, for a couple of minutes.",
+      "description": "Bright and fizzing, and it goes to the legs. The creature that drinks it circles faster, closes faster and disengages faster for about two minutes -- then it is gone, and so is the edge.",
+      "creature_buff": {
+        "id": "swift_tonic",
+        "stat": "speed",
+        "scale": 1.15,
+        "duration_s": 120
+      }
+    },
+    "attack_tonic": {
+      "name": "Attack Tonic",
+      "kind": "consumable",
+      "stack": 5,
+      "colour": "#c2452f",
+      "icon": "res://assets/ui/icons/items/potion_small.png",
+      "blurb": "Temporary. Your creature hits harder, for a minute and a half.",
+      "description": "Tastes of iron filings and dares. Every blow the drinker lands for the next minute and a half carries extra weight; when it fades, it fades completely. Drink it for the fight in front of you, not the one you might meet.",
+      "creature_buff": {
+        "id": "attack_tonic",
+        "stat": "attack",
+        "scale": 1.2,
+        "duration_s": 90
+      }
+    },
+    "stoneguard_brew": {
+      "name": "Stoneguard Brew",
+      "kind": "consumable",
+      "stack": 5,
+      "colour": "#5b6b74",
+      "icon": "res://assets/ui/icons/items/potion_small.png",
+      "blurb": "Temporary. Your creature takes hits better, for a minute and a half.",
+      "description": "Grey, gritty, and it settles the nerves like a wall settles wind. Hide and feather sit heavier on the drinker for a minute and a half -- long enough for one hard fight, never long enough to live behind.",
+      "creature_buff": {
+        "id": "stoneguard_brew",
+        "stat": "defence",
+        "scale": 1.2,
+        "duration_s": 90
+      }
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",
   "_comment_elixirs": "D47. `kind: \"elixir\"` is a PERMANENT stat gain spent on one creature, and it is the one thing in this file that is not reversible -- every other consumable heals, feeds or revives. `elixir_stat` is hp/attack/defence and `elixir_points` is raw stat points, capped per creature by data/config/progression.json's `elixirs.cap_per_stat`. They deliberately do NOT appear in Mira's stock (data/config/trade.json): the owner asked for permanent boosters to stay rare, and anything purchasable is only as rare as your coin pile. They belong in the world -- a dungeon, a captain, a stronghold. They share the potion icon for now rather than blocking on new art (D24: no new asset family for three items); tools/gen_item_icons.py is where a bespoke one would go.",
-  "_comment_saddle": "R6.2. ONE generic saddle for every mount, never a saddle per species — the backlog brief's own words, 'a generic saddle ... and no species-specific saddle clutter'. Which creature it fits is the CREATURE's business (species.json's `rideable.requires_item`), so a second mount at R8.5 either wants this same saddle or names its own tack there, and either way nothing changes here. `kind: gear` rather than `material`: it is a thing you own and use, like an orb, not a thing you spend. It is never consumed by riding and there is no durability on it — `scripts/world/riding_controller.gd::_has_tack()` only ever ASKS whether one is in the satchel. Icon deliberately points at `saddle_frame.png`: the frame is what a saddle is built on and the silhouette is right, and CLAUDE.md's asset rules say to source coherently rather than mint a near-duplicate icon for the sake of a distinct filename. A dedicated icon is a clean later swap in this one line. [Moved out of the `items` object: every other entry in there is an item dictionary, and tests/test_item_icons.gd casts each one, so a bare string inside it threw a cast error on three separate tests. Top level is where every other _comment in this file already sits.]"
+  "_comment_saddle": "R6.2. ONE generic saddle for every mount, never a saddle per species — the backlog brief's own words, 'a generic saddle ... and no species-specific saddle clutter'. Which creature it fits is the CREATURE's business (species.json's `rideable.requires_item`), so a second mount at R8.5 either wants this same saddle or names its own tack there, and either way nothing changes here. `kind: gear` rather than `material`: it is a thing you own and use, like an orb, not a thing you spend. It is never consumed by riding and there is no durability on it — `scripts/world/riding_controller.gd::_has_tack()` only ever ASKS whether one is in the satchel. Icon deliberately points at `saddle_frame.png`: the frame is what a saddle is built on and the silhouette is right, and CLAUDE.md's asset rules say to source coherently rather than mint a near-duplicate icon for the sake of a distinct filename. A dedicated icon is a clean later swap in this one line. [Moved out of the `items` object: every other entry in there is an item dictionary, and tests/test_item_icons.gd casts each one, so a bare string inside it threw a cast error on three separate tests. Top level is where every other _comment in this file already sits.]",
+  "_comment_tonics": "The potions board's TEMPORARY half (the permanent half is D47's elixirs). A `creature_buff` block is a timed multiplier on ONE creature stat -- applied through creature_instance.gd::apply_buff, ticked down by GameState._process, multiplied into effective_attack/effective_defence (or the combat drive speed), and gone when the clock runs out. Re-drinking refreshes the clock, never stacks the multiplier -- the owner's brief forbade mandatory buff maintenance and stacking is how that ritual is born. NOT saved: a timed buff dying on quit is the honest reading of temporary. Sold by Mira at modest prices -- tonics are the RENEWABLE economy hook, elixirs stay unsold and rare. Board names where the board had them (Swift Tonic, Stoneguard Brew). They share the potion icon for now (D24: no new asset family for three items)."
 }

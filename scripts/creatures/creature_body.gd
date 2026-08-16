@@ -591,6 +591,12 @@ func facing() -> Vector3:
 
 ## Ask to move in a world-space direction this frame. Must be called every frame
 ## the creature should be moving; see `_requested`.
+## The species' own config speed, for a caller that wants to scale it (a
+## tonic) without re-reading the config or reaching into `_speed`.
+func base_speed() -> float:
+	return _speed
+
+
 func request_move(direction: Vector3, speed: float = -1.0) -> void:
 	_requested = Vector3(direction.x, 0.0, direction.z)
 	if _requested.length() > 1.0:

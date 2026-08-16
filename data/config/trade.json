@@ -90,6 +90,21 @@
           "buy": 300,
           "sell": 100,
           "stock": 1
+        },
+        "swift_tonic": {
+          "buy": 35,
+          "sell": 11,
+          "stock": 4
+        },
+        "attack_tonic": {
+          "buy": 45,
+          "sell": 15,
+          "stock": 4
+        },
+        "stoneguard_brew": {
+          "buy": 45,
+          "sell": 15,
+          "stock": 4
         }
       }
     }

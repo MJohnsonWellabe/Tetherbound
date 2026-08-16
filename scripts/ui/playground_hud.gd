@@ -1274,6 +1274,35 @@ func _use_hotbar_slot(slot_index: int) -> void:
 		_show_hotbar_message("Ate %s." % str(db.call("item_name", id)))
 		return
 
+	# A tonic from the bar goes to the first standing party member -- the
+	# creature the recall button would send out, which is who a player buffing
+	# from the field means. The backpack's target picker stays the way to
+	# choose somebody else.
+	var tonic := definition.get("creature_buff", {}) as Dictionary
+	if not tonic.is_empty():
+		if _party == null or int(_party.call("size")) == 0:
+			_show_hotbar_message("Nobody on the belt yet.")
+			return
+		var drinker: RefCounted = null
+		for i in int(_party.call("size")):
+			var member: RefCounted = _party.call("at", i)
+			if member != null and not bool(member.get("fainted")):
+				drinker = member
+				break
+		if drinker == null:
+			_show_hotbar_message("Nobody standing to drink it.")
+			return
+		if not bool(drinker.call("apply_buff",
+				str(tonic.get("id", id)), str(tonic.get("stat", "")),
+				float(tonic.get("scale", 0.0)), float(tonic.get("duration_s", 0.0)))):
+			_show_hotbar_message("That tonic isn't mixed right.")
+			return
+		inventory.call("remove", id, 1)
+		_show_hotbar_message("%s drank the %s." % [
+			str(drinker.call("label")), str(db.call("item_name", id))
+		])
+		return
+
 	if heal <= 0.0 and revive_fraction <= 0.0:
 		_show_hotbar_message("%s is not something you can use here." % str(db.call("item_name", id)))
 		return
