@@ -316,6 +316,119 @@ neither instruction arrives while they are still indoors.
 
 ---
 
+## Phase -1.45 — measured performance, and what three blind reviews found
+
+Filed 2026-08-16 by the coordinating session. Everything here is measured, not
+suspected; the numbers are in each item.
+
+### PERF1 — `road_polylines()` is rebuilt on every call and nothing caches it
+`model: sonnet` · `tests: run_tests, smoke_playground` · `area: terrain`
+**In flight.** `playground_heightfield.gd::road_polylines()` (~1116) rebuilds the
+entire road set from `_config` every call — iterating `paths.routes`,
+`spokes.routes` and `crossings`, allocating a fresh `PackedVector2Array` per
+route. `path_factor()` calls it every time, and measured **56.7 µs against
+`drain_factor`'s 6.5 µs** for the same shape of query. `_river_segments` a few
+lines above **is** cached, with a header saying re-reading the dict inside the
+bake loop "is the difference between a bake that takes minutes and one that does
+not finish." The lesson was learned for the river and never applied to the roads.
+
+Hit by: the water build, all 23,707 scatter placements, the terrain bake twice
+per pixel, and `map_baker` across 262,144 pixels **on the player's first launch**.
+
+**Cache the parse, not the result.** `scatter_rules._consider` gates on
+`path_factor` with per-instance jitter, so a returned value that differs in the
+last bits moves placements near roads. Acceptance is a placement-identity check:
+same count, same positions, same order.
+
+### PERF2 — the water build is 137 s of a 3 m 08 s boot
+`model: sonnet` · `tests: smoke_playground, run_tests` · `area: terrain`
+Measured from `user://boot_log.txt`, which timestamps every startup phase and
+which nobody had read: water **137 s**, vegetation scatter **45 s**, everything
+else ~6 s. `water.gd` grid-scans for the shoreline at 4 m steps calling
+`height_at` per cell, twice over (`:122-124` and `:169-170`), and `height_at`
+costs **230 µs**.
+
+**This is very likely `PT-18`'s answer** ("boot cost rose sharply"), which has
+been open and uninvestigated. Do PERF1 first — it may take a large bite out of
+this one for free. Re-measure from the boot log before and after; do not guess.
+
+### CAP1 — a capture scene for interiors, so a room does not cost a world
+`model: sonnet` · `tests: none` · `area: perf`
+`PT-03` spent **24–32 minutes booting the whole Meadows** — terrain, 23,707
+scatter instances, the village — to photograph the inside of one room. Every
+future interior task pays that, which is the kind of cost that quietly stops
+people taking frames at all. A scene that instantiates only the interior under
+test plus its camera profile would boot in seconds. `grandpa_house.gd`'s
+kit-owns-the-exterior/script-owns-everything-else split is what makes this
+possible; `tools/capture_loft_exit.gd` is the worked example to generalise.
+
+### OW5A-rework — the corridor layout, against five review findings
+`model: opus` · `tests: none` · `area: terrain`
+`ralph/OW5A` is committed and **held unpushed**. Its band table recomputes exact
+and the trail geometry is sound; five findings must be answered first.
+
+1. **The footprint is not region-aligned.** Terrain3D places regions on an
+   integer lattice, so at 512 m per region the boundaries fall at −1024, −512, 0,
+   +512. A 1536 m width centred on origin straddles four columns — **64 regions,
+   not 48**, with 256 m of unfilled ground at each edge. The proposed validator
+   fix (`% (region_size * vertex_spacing)`) does **not** catch it: 1536 % 512 == 0.
+   It tests extent, not origin alignment. Aligned widths are 1024, 2048, or 1536
+   offset off-centre.
+2. **The bake unit cost validates against a figure not in the repo.** It claims
+   three recorded times (5.5 / 12 / 15) and confirms "the 12". Only 5.5 and 15
+   exist. Every bake projection rests on it.
+3. **"Cost scales with pixel count and nothing else" is false** — see `PERF1`.
+   Both probe tiles paid the full uncached road scan, so the experiment cannot
+   detect content scaling, and the layout then proposes adding 81+ trail segments
+   to that same inner loop.
+4. **Carve safety used the steepest 0.1 m difference, not the sustained wall.**
+   The repo already records those spoke walls at 57–66° (`severed_spokes.gd:24`,
+   `smoke_riding.gd:163`); the probe reported 79–81° for the same carve. Real
+   margin over the 60° ridden limit is nearer 5° than 15°.
+5. **The map system is absent from all three documents.** `map_baker.gd`
+   `HALF_SPAN 256`, `minimap.gd` `WORLD_HALF 256`, and `map_state.gd`'s
+   `GRID`/`CELL`/`ORIGIN` — the last **persisted to the save file**, so changing
+   the world extent is a save-format change requiring the full suite.
+
+### PT-03-remainder — the stair affordance failed its blind pass
+`model: fable` · `tests: smoke_opening` · `area: village`
+`PT-03`'s root cause is correct and settled — the loft slab occludes every tread
+from a standing eye, so no light could ever have worked, and `D52` records the
+measured sightlines. **The affordance does not.** A blind critic given the pair
+unlabelled: *"a post is not an exit — it doesn't say down, it doesn't say
+through, it doesn't say walkable. 0/10 before, 2/10 after. That is not the
+difference between lost and found."* A frame aimed **straight down the −51°
+bearing at the stair head** still shows no treads, no descending rail and no
+opening — so this is not "the player is facing the wrong way."
+
+The evidence says the honest question is not a stronger rail but whether **the
+loft slab's edge has to change shape** — a cut-back, a visible stairwell
+opening, or the camera bias that was rejected. That is a decision about the
+room, and it is the owner's.
+
+Also open from the same pass, and separate: the interior camera profile spends
+the bottom half of frame on empty floor with the player's head at the very
+bottom edge. Predates this item.
+
+### OW1-remainder — the backpack's remaining legibility defects
+`model: sonnet` · `tests: smoke_menu` · `area: ui`
+From the blind usability pass, judged at 40% scale as a seven-inch proxy. Two
+are genuine defects rather than opinions: **nothing shows *what* you are
+holding** (the source tile keeps its full count, no ghost, no cursor — so a
+player who misses the text thinks nothing happened), and **the quick bar gives
+all five chips the same cyan** while a stack is held, so "cursor is here" and
+"valid target" are the same colour — `_refresh_quick_bar()`'s
+`_slot_style(_bar_focused == i or _held >= 0)`, a two-line fix.
+
+The rest: Escape silently stops meaning Close while holding; the 1–5 badges are
+4–5 px and the font renders "4" like a Cyrillic Ч; "6 of 24 slots used" and
+"GEAR" are unreadable at 40%; the held state is announced in four places; "6
+Orb" should be "6 Orbs"; the screen is Backpack while the grid inside is
+Satchel; and `Menu + View held, or F10 Reset all controls` is a leftover from a
+controls screen sitting in an inventory footer.
+
+---
+
 ## Phase -1.4 — the blind playtest's open findings (2026-08-15/16)
 
 Full record in `docs/reviews/2026-08-15-full-blind-playtest/`. The six repairs
