@@ -501,9 +501,34 @@
         "inner": 5.0,
         "strength": 0.5,
         "_why": "the last one standing before the run leaves the quarry region -- weakest, so the damage visibly fades with distance from the site rather than stopping at a line"
+      },
+      {
+        "id": "relay_core",
+        "centre": [104.5, 23.1],
+        "radius": 46.0,
+        "inner": 20.0,
+        "strength": 1.0,
+        "_why": "SE23, and D41's own words applied: the relay is the largest LIVE station in the chapter, so this is the worst ground the player has seen -- full strength against the quarry head's 0.85, and a 46m radius against its 24m, with a 20m fully-dead core the whole compound sits inside. This block's own header says how a later station is meant to get worse: by WIDENING the radii, not by inventing a new grammar. That is exactly what these three entries do. Centre is the apparatus pad itself (scripts/world/tether_relay.gd's site frame, s=+7 t=-9 off [108,34]), because the machine is what is doing it."
+      },
+      {
+        "id": "relay_yard",
+        "centre": [108.0, 34.0],
+        "radius": 34.0,
+        "inner": 12.0,
+        "strength": 0.92,
+        "_why": "the compound's own yard -- the ground the trainer fights happen on. Barely below the core so the whole enclosure reads as one dead site rather than as a bald ring around a machine"
+      },
+      {
+        "id": "relay_approach",
+        "centre": [99.0, 45.0],
+        "radius": 28.0,
+        "inner": 8.0,
+        "strength": 0.72,
+        "_why": "the road in, where the outer picket stands. Weakest of the three, so the damage is already visible before the compound is -- the argument for disabling the console is made on the walk up to it, without a line of dialogue"
       }
     ]
   },
+  "_comment_drains_relay_bake": "HONEST PARTIAL, SE23. The three `relay_*` stations above are authored here, in the one place drains are authored, and `playground_heightfield.drain_factor()` reads them like every other station. TWO of that function's three consumers are already live from this edit alone: `scatter_rules.gd` thins the vegetation at run time (the ground around the relay is genuinely bald the moment the game boots) and anything else asking the function gets the right answer. The THIRD -- the bake's colour map and control map -- is an OFFLINE artefact produced by `build_playground_terrain.gd`, and it has NOT been re-baked with these stations in it: another agent held the terrain lease when this landed and a full re-bake would have collided with their work. So the discoloured earth is not yet in the baked textures. `data/config/tether_relay.json`'s `dead_ground` block stands in for it meanwhile, driven by this very same drain_factor() so it ends on exactly the contour the bake will -- and that block's `enabled` MUST be set false the first time the terrain is re-baked, or the site gets tinted twice.",
   "_comment_spokes": "SA4. Seven old roads leaving the Meadows, each severed. Spec 1E ('the Meadows perimeter should visibly contain seven outward routes') and 29 ('Team Tether did not build seven random dead-end roads. They severed existing connections'). The layout rule that follows from 29 is the whole reason this is data and not seven hand-placed props: a spoke is a ROAD that runs the full way out from the village square and then STOPS at something the world can show, with land still visible past it. Never a wall built across a bearing. Bearings were chosen against the geography that already exists rather than spaced evenly on a compass -- the water spoke leaves through the valley the pond already sits in, the fire spoke climbs toward `rises.peaks[1]`, the air spoke runs onto `rises.peaks[0]`'s flank -- so the blockers stand where the ground already justifies them. HARD RULE, from the backlog item and spec 19: nothing here may ever explain itself with UI text. The signs are old destination fingerposts (29's 'old signs'), naming where the road USED to go; none of them says the road is closed.",
   "_comment_spokes_radius": "Blockers sit at ~160-200m from the origin, INSIDE `world_perimeter.gd`'s 235m boundary ring, not astride it. Two reasons. The ring is one continuous ground-sampled polyline whose collision boxes are generated from the same points (see that file's OF7 header) -- cutting seven openings into it to put a blocker in each is a rebuild of a system that was rebuilt once already because it was not continuous. And a severed road reads better with meadow still running past it: the player walks up to the gorge, sees the roadbed resume on the far rim, and the boundary they eventually reach off to the side is an ordinary field edge rather than the story. TUNABLE.",
   "_comment_spokes_schema": "Per entry: `id` (node name and log key), `type` (the biome the road pointed at -- data only, nothing reads it yet), `bearing_deg` (atan2(z,x) in degrees, recorded so the layout is auditable without re-deriving it from the points), `road` (polyline in world metres from the village square outward; unioned into `paths` by playground_heightfield so the bake paints real soil along it, the scatter keeps vegetation off it, and path-anchored stone scatter follows it -- WITHOUT adding an arm to the village junction signpost, which reads `paths.routes` only), `sign` (optional; one fingerpost through signpost.gd's `routes_override`, same object as `paths.trailheads`), `blocker` (`kind` plus that kind's own fields), and `built` (false = authored but not yet standing; severed_spokes.gd skips it). Blocker kinds: `gorge` and `collapsed_bridge` both carry a `carve` and are cut into the TERRAIN at bake time; `rockslide` is props and collision only and needs no re-bake.",

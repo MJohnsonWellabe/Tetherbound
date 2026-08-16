@@ -33,6 +33,7 @@ const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
 const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
 const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
 const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
+const TETHER_RELAY := preload("res://scripts/world/tether_relay.gd")
 const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
 const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
@@ -580,6 +581,17 @@ func _build_settlement() -> void:
 	quarry.name = "OldQuarry"
 	add_child(quarry)
 	quarry.call("build", self)
+
+	# SE23: the Tether Relay Station further along the same bearing the
+	# quarry's conduit run leaves on. After the quarry because that is the
+	# order §32's reveal ladder puts them in and the order the player meets
+	# them; neither touches the other. The people on it are SE25/SE27's
+	# (data/config/relay_site.json), placed by the ordinary NPC/trainer
+	# placers, not by this.
+	var relay: Node3D = TETHER_RELAY.new()
+	relay.name = "TetherRelay"
+	add_child(relay)
+	relay.call("build", self)
 
 	# SA4: the severed outward roads. Before the boundary ring because they
 	# stand INSIDE it (~160-200m out) and are the thing the player is meant to

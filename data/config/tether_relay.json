@@ -1,0 +1,143 @@
+{
+  "_comment": "SE23 — the Tether Relay Station, spec §3 Band 3 and §32 rung 3. What STANDS at the relay, read by scripts/world/tether_relay.gd. The first mini-stronghold: a natural site partly industrialised, a compact traversal-and-combat site, and the moment Team Tether stops being something Grandpa described. Deliberately NOT everything about the place — the people on it are data/config/relay_site.json and data/config/trainers.json (SE25/SE27), the drained ground is terrain_playground.json's `drains` block, and the named region on the map is map_landmarks.json. Each of those files already owns its kind of thing. ALL POSITIONS AND SIZES TUNABLE.",
+
+  "_comment_site": "The site coordinate is ADOPTED, not chosen. data/config/relay_site.json (SE25/SE27) picked [108,34] on the Old Quarry's own conduit bearing toward the stronghold and asked SE23 in writing to adopt it rather than name a second one. If the site ever moves, it moves THERE and here together, along with the four trainer positions derived from it.",
+
+  "site": {
+    "centre": [108.0, 34.0],
+    "approach_bearing_deg": -34.4,
+    "_frame": "Everything below is authored in the site's OWN frame: `s` runs along the approach bearing (positive = deeper in, the direction the conduits already walk toward the stronghold), `t` runs across it, both in metres. tether_relay.gd converts with u = (0.565,-0.826) and p = (-u.z, u.x). Authoring in world XZ instead would make every tuning nudge a two-number trigonometry problem, and the five people SE25/SE27 stood up here are all within 1m of t=0 — the road IS the axis, so the axis is the frame.",
+    "_ground": "Probed with the real heightfield (tools/_probe_relay_site.gd). The site is a gentle south-east-facing shoulder: ground runs -5.6m at s=-24 up to -1.0m at s=+20, about 6 degrees along the approach, with a further ~2m fall toward +t. Nothing here needed a terrain flat; every wall, leg and pad is seated on its own sampled ground."
+  },
+
+  "_comment_walls": "The compound. Team Tether's own masonry grammar, borrowed wholesale from severed_spokes.gd (`_ground_wall`, the stone material, the oxblood faction accent) rather than reimplemented — D24's 'one prop family' applied to the faction's buildings the same way the pylons already apply it to its hardware. PARTLY industrialised is the brief, so this is not a sealed box: a real wall across the approach face with the gate in it, flanks running back to enclose the yard, and an OPEN back where the compound simply gives out onto the drained ground. The player is meant to arrive at a front door, not to be locked in a room.",
+  "walls": [
+    {
+      "id": "front_west",
+      "from": [-14.0, -16.0],
+      "to": [-14.0, -3.4],
+      "height": 4.2,
+      "thickness": 1.7,
+      "_why": "the approach face, west of the gate opening; its inner end is the gate's own west pier"
+    },
+    { "id": "front_east", "from": [-14.0, 3.4], "to": [-14.0, 16.0], "height": 4.2, "thickness": 1.7 },
+    {
+      "id": "flank_west",
+      "from": [-14.0, -16.0],
+      "to": [10.0, -16.0],
+      "height": 2.6,
+      "thickness": 1.2,
+      "_why": "lower than the front: a yard fence, not a rampart. It also passes under the west conduit run, which is the read — the wall was built around hardware that was already here."
+    },
+    { "id": "flank_east", "from": [-14.0, 16.0], "to": [10.0, 16.0], "height": 2.6, "thickness": 1.2 }
+  ],
+
+  "_comment_gate": "OPEN, and that is the whole difference between this and the sealed gates on the severed spokes. A spoke gate's shut leaves are the message there; here the message is that Team Tether does not expect anyone to walk up this road, so the road runs straight through. Piers, a lintel and the faction colour on the lintel band; no leaves, nothing to unlock, no prompt.",
+  "gate": {
+    "at": [-14.0, 0.0],
+    "opening": 6.8,
+    "pier_width": 2.2,
+    "pier_depth": 2.6,
+    "pier_height": 7.2,
+    "lintel_height": 1.5
+  },
+
+  "_comment_decks": "The traversal. The apparatus pad stands 2.3m clear of the yard on solid legs, so the console is NOT reachable by walking at it — the player takes the ramp off the yard's west side, crosses the gantry, and steps onto the pad. That is the whole 'compact traversal challenge' the item asks for, and it is deliberately small: a mini-stronghold, not a dungeon (SD17 owns the dungeon). Deck heights are ABSOLUTE world Y, not heights above ground, because a walkway whose pieces each floated over their own sampled ground would step up and down along its length. The numbers come from the probe: yard ground runs about -4.6 at the gate to -2.2 at the pad, so a deck at +0.1 stands 2.3-4.7m over it.",
+  "decks": [
+    {
+      "id": "gantry",
+      "at": [-2.0, -11.0],
+      "size": [8.0, 3.2],
+      "deck_y": 0.1,
+      "legs": [[1, -1], [1, 1]],
+      "_comment_legs": "EAST END ONLY. Which corners get a leg, in the deck's own signed frame. The gantry's west end is where the ramp arrives and a leg there stands inside the ramp's own 3.2m width — a pillar in the middle of the only route to the console. The smoke test found that on the first build (the player climbed to within a metre of the deck and stopped) and this is the fix; the west end is carried by the ramp structure it butts into.",
+      "_why": "the walkway between the ramp head and the pad; 3.2m wide, which is comfortably walkable with a controller and still reads as industrial catwalk rather than as a road. Held well off the road axis (every one of SE25/SE27's five people stands within 1m of t=0) so the yard the fights happen in is clear floor."
+    },
+    {
+      "id": "pad",
+      "at": [7.0, -9.0],
+      "size": [10.0, 10.0],
+      "deck_y": 0.1,
+      "_why": "the apparatus pad itself — the grounding base of the hero object, and the floor the console stands on. Abuts the gantry's east end at s=+2, so the two decks read as one raised level."
+    }
+  ],
+
+  "_comment_ramps": "One ramp, run diagonally so it is long enough to be gentle: 9.6m of run for 4.3m of rise is about 24 degrees, well inside the player's 45-degree floor_max_angle with room for the framerate to wobble. A ramp at the limit is a ramp that sometimes refuses, and this is the ONLY route to the console. Its head lands on the gantry's west end rather than beside it.",
+  "ramps": [
+    { "id": "yard_stair", "from": [-12.5, -5.0], "to": [-5.5, -11.5], "width": 3.2, "deck_y": 0.1 }
+  ],
+
+  "_comment_apparatus": "*** THE SEAM FOR THE HERO ASSET. READ THIS BEFORE TOUCHING THE MASSING BELOW. ***\n\n`docs/art/reference/14_Relay_Apparatus.png` is the owner-supplied board for this object (2026-08-11, labelled Band 3, drawn for exactly this item). It is one of the THREE hero objects D24 reserves Meshy for, alongside the Tether Energy Pylon (already generated, SF33) and the Legendary Tether Machine. The generation itself is a separate, OWNER-GATED task in the `art` lane and was NOT done here: this build had no Meshy access, and CLAUDE.md's rule is that a hero object is not improvised from scratch as if it were the final asset.\n\nWhat stands here instead is a PLACEHOLDER MASSING, built from primitives wearing the materials severed_spokes.gd already defines (the medieval stone sheet, the oxblood faction accent, the reserved tether teal). It is laid out as the board's own five labelled subassemblies, in the board's own order, so that when the GLB lands the swap is one-for-one and each generated part has exactly one thing here to replace:\n\n  grounding_base    the plinth and its splayed feet\n  tether_core       the central column\n  conductor_ring    the rings around it (the board's 'core and rings serviceable')\n  conductor_arms    the arms out to the manifolds ('conductor arms ... replaceable')\n  output_manifolds  the boxes the conduit runs land on\n  console           the control console — the thing the player disables\n\nHOW TO DO THE SWAP. tether_relay.gd::_build_apparatus is the only reader of this block; every subassembly it builds is a child of the `ApparatusSeam` node and nothing outside that node depends on any of them EXCEPT the console, which is found by name (`Console`) and carries the interactable. Drop the generated scene in as `ApparatusSeam`'s single child, keep a node named `Console` on it at roughly the console's authored position, delete the `massing` block below, and nothing else in the codebase has to change.",
+  "apparatus": {
+    "at": [7.0, -9.0],
+    "deck_y": 0.1,
+    "massing": {
+      "grounding_base": { "radius": 3.4, "height": 0.7, "feet": 6, "foot_length": 1.6 },
+      "tether_core": { "radius": 0.85, "height": 6.4 },
+      "conductor_ring": { "rings": 3, "radius": 2.3, "thickness": 0.28, "lowest_y": 1.9, "spacing": 1.5 },
+      "conductor_arms": { "arms": 4, "length": 3.2, "thickness": 0.3, "y": 3.1 },
+      "output_manifolds": { "count": 4, "size": [1.3, 1.5, 1.3], "radius": 3.6 }
+    },
+    "console": {
+      "at": [2.9, -9.0],
+      "_why_here": "on the pad's western edge, facing back down the gantry — so it is the first thing on the pad the player meets after the crossing, and it is legible (a teal face on a pad of stone and oxblood) from the gantry's far end. Clear of the grounding base, whose 3.4m plinth starts at s=+3.6.",
+      "yaw_offset_deg": 180.0,
+      "size": [1.6, 1.15, 0.9],
+      "label": "Disable the relay console",
+      "flag": "relay_disabled",
+      "_comment_flag": "SB9's flat flag store (autoload/progression_state.gd). One-way: once set, the prompt goes away and the conduits stay dead across a save/load, because the flag is what the state is read from, not the node.",
+      "requires_flag": "",
+      "_comment_requires_flag": "SEAM FOR SE25. Set this to `relay_captain_defeated` — the flag data/config/trainers.json's `relay_captain` sets — once SE25 has landed, and the console will refuse until the captain is beaten. Left EMPTY on purpose while SE25 is unmerged: a gate on a flag that nothing in this branch can set is a station the player cannot finish. The mechanism is built and tested (tests/smoke_relay.gd sets it and checks the refusal), only the value is waiting.",
+      "refused_message": "The console is live and guarded. Whoever is running this station is still standing.",
+      "done_message": "The relay goes quiet. Every conduit on the site dies with it."
+    }
+  },
+
+  "_comment_conduits": "Three runs converging on the pad, on SF33's Tether Energy Pylon and its sagging conduit spans — the same builder old_quarry.gd already borrows, for the same reason (see that file's header: a second implementation would be a second set of the same bugs). The story they tell is the point of the whole site. At the quarry, one line of lit pylons walks away over a hill. Here, three of them ARRIVE, and something is standing at the end of them. Every pylon is lit until the console goes off.\n\nHeight is 6.4 rather than the quarry's 4.6 so the spans clear the gantry deck: a cable strung at the shorter height would pass UNDER a walkway 2.8m over the ground, which reads as a broken prop rather than as infrastructure the compound was built around.",
+  "conduits": {
+    "height": 6.4,
+    "runs": [
+      {
+        "id": "west_run",
+        "_why": "the run in from the approach side — the same bearing the quarry's own line left on. This is the line the player has been following since Band 2, and it ends here.",
+        "list": [
+          { "at": [-26.0, -28.0], "lit": true },
+          { "at": [-18.0, -22.0], "lit": true },
+          { "at": [-10.0, -19.0], "lit": true },
+          { "at": [0.5, -14.5], "lit": true }
+        ]
+      },
+      {
+        "id": "east_run",
+        "_why": "in from the east flank, crossing the wall line — the compound was built around hardware that was already standing",
+        "list": [
+          { "at": [26.0, -4.0], "lit": true },
+          { "at": [19.0, -7.0], "lit": true },
+          { "at": [14.5, -9.0], "lit": true }
+        ]
+      },
+      {
+        "id": "south_run",
+        "list": [
+          { "at": [4.0, -28.0], "lit": true },
+          { "at": [5.0, -21.0], "lit": true },
+          { "at": [6.0, -16.5], "lit": true }
+        ]
+      }
+    ]
+  },
+
+  "_comment_dead_ground": "D41, at full strength, and an HONEST PARTIAL. The authored source for the drain is terrain_playground.json's `drains.stations` (this branch adds three entries there, the strongest 1.0 against the quarry head station's 0.85), and `playground_heightfield.drain_factor()` is what every consumer asks. Two of its three consumers work immediately from that edit: `scatter_rules.gd` thins the vegetation at run time, so the ground around the relay is genuinely bald. The third does NOT — the bake's colour and control maps are offline artefacts (build_playground_terrain.gd) and a sibling agent holds the terrain lease, so the DISCOLOURED earth is not yet in the baked textures. `apron` below stands in for it in the meantime: a ground-hugging skin whose alpha is driven by the very same drain_factor(), so it ends on exactly the same contour the bake will. SET `enabled` TO FALSE the moment the terrain is re-baked with these stations in it, or the site will be tinted twice.",
+  "dead_ground": {
+    "enabled": true,
+    "radius": 46.0,
+    "cell": 3.0,
+    "lift": 0.09,
+    "tint": "#a89d84",
+    "max_alpha": 0.72,
+    "_comment_tint": "Deliberately close to terrain_playground.json's own `drains.tint` (#bfb6a0), a shade further down because this skin ADDS over an untinted bake where the bake's own tint MULTIPLIES the albedo. Desaturated warm grey: sun-killed ground, not ash. TUNABLE.",
+    "_comment_lift": "Metres above the sampled ground. Small enough not to read as a floating sheet, large enough that a 3m cell over 6-degree ground never lets the terrain poke through."
+  },
+
+  "_comment_props": "The site's loose gear — crates, barrels, tooling — belongs in data/config/props.json as a `relay_station` cluster, placed by props.gd like every other cluster, and is deliberately NOT duplicated here. That cluster is not authored yet (props.json's own header says the same of `quarry_station`): a prop-placement pass is its own item and the station reads without it. Nothing in this file or in tether_relay.gd will need to change when it lands."
+}

@@ -764,6 +764,79 @@ jobs:
         # obtainable, and the story reward pays exactly once.
         run: godot --headless --path . --script tests/smoke_warrens.gd
 
+  verify-relay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}
+
+      - name: Install Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
+          mkdir -p ~/godot-bin
+          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp
+          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
+          chmod +x ~/godot-bin/godot
+
+          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q /tmp/templates.tpz -d /tmp
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          mkdir -p "$(dirname "$TEMPLATE_DIR")"
+          mv /tmp/templates "$TEMPLATE_DIR"
+
+      - name: Add Godot to PATH
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Cache the import artifacts
+        uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
+          restore-keys: import-${{ env.GODOT_VERSION }}-
+
+      - name: Import project (cold)
+        run: godot --headless --path . --import || true
+
+      - name: Import project (verify)
+        # The authoritative import check, in one pass rather than two — see
+        # verify-unit-tests' copy of this step for the full reasoning.
+        run: |
+          set -euo pipefail
+          godot --headless --path . --import 2>&1 | tee /tmp/import.log
+          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
+            echo "::error::import produced script or resource errors"
+            exit 1
+          fi
+
+      - name: Smoke-test the Tether Relay Station
+        # SE23. Boots the real world and walks the first mini-stronghold.
+        # Asserts what no unit test can see: the gate is open and the compound
+        # is enterable, the raised gantry and apparatus pad are floors a
+        # CharacterBody3D stands on at the authored height, the ramp is the
+        # route to the console and the pad cannot be climbed from the yard,
+        # the console sets its flag exactly once and is one-way, every lit
+        # conduit dies with it, the `requires_flag` seam SE25 will use refuses
+        # while unset, and D41's drained ground is present and worse here than
+        # at the quarry. The first build put a gantry leg inside the ramp's
+        # own width and this test is what found it — a player who climbed to
+        # within a metre of the only route in and stopped.
+        run: godot --headless --path . --script tests/smoke_relay.gd
+
   verify-trainer-battle:
     runs-on: ubuntu-latest
     timeout-minutes: 10
