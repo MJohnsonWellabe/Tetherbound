@@ -58,39 +58,68 @@ mouse_filter = 2
 ; pixel count tuned against one quiet screenshot. Moving the whole panel up
 ; again preserves its own height and every slot's internal layout untouched,
 ; the same technique the first fix used.
-[node name="HotbarPanel" type="PanelContainer" parent="Root"]
+; OW8. Third report of the same overlap, after two fixes that both moved
+; offsets: the recall/put-away prompt rendering on top of the hotbar. Both
+; earlier passes tuned a static gap (26px, then another 20px) against this
+; panel's QUIET height, and both were defeated the same way -- Margin/Layout/
+; Message is `visible = false` most of the time and joins the VBoxContainer as
+; a real row the instant a hotbar slot answers, measured growing the panel 30px
+; and eating the gap.
+;
+; A third number would have been a third guess. Instead both controls now live
+; in this one bottom-anchored container, stacked. A VBoxContainer lays its
+; children out in sequence with a fixed separation, so neither can be
+; positioned into the other AT ALL -- the hotbar growing a message row pushes
+; the prompt, and a prompt that wraps to three lines pushes nothing into the
+; hotbar. There is no arithmetic left to get wrong, which is why
+; `playground_hud.gd::_reflow_prompt` and its PROMPT_GAP/PROMPT_HEIGHT
+; constants are gone with this.
+;
+; grow_vertical = 0 (BEGIN) with alignment = 2 (END): the stack hugs the
+; bottom edge and grows UPWARD into empty screen, rather than downward off it.
+[node name="BottomDock" type="VBoxContainer" parent="Root"]
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = -257.0
+offset_left = -400.0
 offset_top = -300.0
-offset_right = 257.0
-offset_bottom = -190.0
+offset_right = 400.0
+offset_bottom = -96.0
 grow_horizontal = 2
+grow_vertical = 0
+alignment = 2
+mouse_filter = 2
+theme_override_constants/separation = 30
+
+; SHRINK_CENTER so the panel keeps its own content width inside the wider dock
+; instead of stretching to the prompt's 800.
+[node name="HotbarPanel" type="PanelContainer" parent="Root/BottomDock"]
+custom_minimum_size = Vector2(514, 0)
+size_flags_horizontal = 4
 mouse_filter = 2
 
-[node name="Margin" type="MarginContainer" parent="Root/HotbarPanel"]
+[node name="Margin" type="MarginContainer" parent="Root/BottomDock/HotbarPanel"]
 mouse_filter = 2
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 10
 
-[node name="Layout" type="VBoxContainer" parent="Root/HotbarPanel/Margin"]
+[node name="Layout" type="VBoxContainer" parent="Root/BottomDock/HotbarPanel/Margin"]
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="Slots" type="HBoxContainer" parent="Root/HotbarPanel/Margin/Layout"]
+[node name="Slots" type="HBoxContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout"]
 mouse_filter = 2
 theme_override_constants/separation = 14
 alignment = 1
 
-[node name="Slot1" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+[node name="Slot1" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
 custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
 
-[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot1"]
+[node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot1"]
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
@@ -101,11 +130,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Slot2" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+[node name="Slot2" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
 custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
 
-[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot2"]
+[node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot2"]
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
@@ -116,11 +145,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Slot3" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+[node name="Slot3" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
 custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
 
-[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot3"]
+[node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot3"]
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
@@ -131,11 +160,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Slot4" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+[node name="Slot4" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
 custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
 
-[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot4"]
+[node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot4"]
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
@@ -146,11 +175,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Slot5" type="PanelContainer" parent="Root/HotbarPanel/Margin/Layout/Slots"]
+[node name="Slot5" type="PanelContainer" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots"]
 custom_minimum_size = Vector2(86, 64)
 mouse_filter = 2
 
-[node name="Label" type="RichTextLabel" parent="Root/HotbarPanel/Margin/Layout/Slots/Slot5"]
+[node name="Label" type="RichTextLabel" parent="Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot5"]
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 13
 bbcode_enabled = true
@@ -161,23 +190,15 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="Message" type="Label" parent="Root/HotbarPanel/Margin/Layout"]
+[node name="Message" type="Label" parent="Root/BottomDock/HotbarPanel/Margin/Layout"]
 visible = false
 mouse_filter = 2
 theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 text = ""
 
-[node name="Prompt" type="RichTextLabel" parent="Root"]
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = -400.0
-offset_top = -140.0
-offset_right = 400.0
-offset_bottom = -96.0
-grow_horizontal = 2
+[node name="Prompt" type="RichTextLabel" parent="Root/BottomDock"]
+size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 28
 horizontal_alignment = 1

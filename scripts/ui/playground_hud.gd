@@ -101,8 +101,12 @@ const HOTBAR_MESSAGE_SECONDS := 2.2
 ## changed height, which the hotbar does every time its message row appears.
 ## Stating the GAP instead and deriving the prompt from it is the same look with
 ## the relationship written down. TUNABLE.
-const PROMPT_GAP := 30.0
-const PROMPT_HEIGHT := 44.0
+## OW8: the gap is now `Root/BottomDock`'s own `separation` in the scene, not a
+## number this script applies to the prompt's offsets. Third report of the same
+## overlap, after two passes that each tuned a static gap and were each defeated
+## by the hotbar's hidden Message row joining its VBox and growing the panel
+## 30px. A VBoxContainer owning both controls cannot lay them into each other at
+## any height, so there is no gap left to compute here.
 
 ## Owner directive, playtest pass: "name some of the areas and uncover them
 ## like fortnite maps do." `map_state.gd::take_pending_region_announcement()`
@@ -162,24 +166,24 @@ var _pad_connected_for := 0.0
 var _max_raw_axis_seen := 0.0
 
 @onready var _root: Control = $Root
-@onready var _prompt_label: RichTextLabel = $Root/Prompt
+@onready var _prompt_label: RichTextLabel = $Root/BottomDock/Prompt
 @onready var _debug_readout: Label = $Root/DebugReadout
 @onready var _hotbar_chips: Array[PanelContainer] = [
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot1,
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot2,
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot3,
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot4,
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot5,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot1,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot2,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot3,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot4,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot5,
 ]
 @onready var _hotbar_slots: Array[RichTextLabel] = [
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot1/Label,
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot2/Label,
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot3/Label,
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot4/Label,
-	$Root/HotbarPanel/Margin/Layout/Slots/Slot5/Label,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot1/Label,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot2/Label,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot3/Label,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot4/Label,
+	$Root/BottomDock/HotbarPanel/Margin/Layout/Slots/Slot5/Label,
 ]
-@onready var _hotbar_panel: PanelContainer = $Root/HotbarPanel
-@onready var _hotbar_message: Label = $Root/HotbarPanel/Margin/Layout/Message
+@onready var _hotbar_panel: PanelContainer = $Root/BottomDock/HotbarPanel
+@onready var _hotbar_message: Label = $Root/BottomDock/HotbarPanel/Margin/Layout/Message
 
 var _hotbar_last_text: Array[String] = ["", "", "", "", ""]
 var _hotbar_message_until := 0.0
@@ -268,8 +272,6 @@ func _ready() -> void:
 	# Placed FROM the hotbar rather than beside it. `resized` is the hook that
 	# matters: the panel's height changes whenever its message row appears, and
 	# nothing else fires on that.
-	_hotbar_panel.resized.connect(_reflow_prompt)
-	_reflow_prompt.call_deferred()
 
 	UITokens.make_text_legible(_prompt_label)
 	UITokens.make_text_legible(_hotbar_message)
@@ -299,26 +301,8 @@ func _ready() -> void:
 	UITokens.make_text_legible(_root)
 
 
-## Sit the context prompt PROMPT_GAP below whatever the hotbar's bottom edge
-## actually is this frame.
-##
-## Both controls are anchored to the screen bottom, so the arithmetic is done in
-## that same space: the panel's real rect minus the root's height gives its
-## bottom edge as a negative offset from the bottom of the screen, directly
-## comparable with the prompt's own offsets. The rect is read rather than the
-## panel's `offset_bottom` because a Control forced past its minimum size grows
-## its cached rect and never writes the growth back to its offsets — which is
-## precisely the drift that made the hand-measured gap wrong.
-func _reflow_prompt() -> void:
-	if _hotbar_panel == null or _prompt_label == null or _root == null:
-		return
-	var hotbar_bottom := _hotbar_panel.position.y + _hotbar_panel.size.y - _root.size.y
-	_prompt_label.offset_top = hotbar_bottom + PROMPT_GAP
-	_prompt_label.offset_bottom = _prompt_label.offset_top + PROMPT_HEIGHT
-
-
 func _style_hotbar() -> void:
-	$Root/HotbarPanel.add_theme_stylebox_override("panel", UITokens.panel_box())
+	$Root/BottomDock/HotbarPanel.add_theme_stylebox_override("panel", UITokens.panel_box())
 	for chip in _hotbar_chips:
 		chip.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 

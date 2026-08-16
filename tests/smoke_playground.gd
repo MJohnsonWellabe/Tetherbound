@@ -437,11 +437,11 @@ func _the_recall_prompt_never_overlaps_the_hotbar(world: Node) -> Array[String]:
 		return ["missing PlaygroundHUD/EncounterDirector/Game; " +
 			"cannot drive the recall prompt check"] as Array[String]
 
-	var hotbar: Control = hud.get_node_or_null(^"Root/HotbarPanel") as Control
-	var prompt_label: RichTextLabel = hud.get_node_or_null(^"Root/Prompt") as RichTextLabel
-	var message: Label = hud.get_node_or_null(^"Root/HotbarPanel/Margin/Layout/Message") as Label
+	var hotbar: Control = hud.find_child("HotbarPanel", true, false) as Control
+	var prompt_label: RichTextLabel = hud.find_child("Prompt", true, false) as RichTextLabel
+	var message: Label = hud.find_child("Message", true, false) as Label
 	if hotbar == null or prompt_label == null or message == null:
-		return ["PlaygroundHUD is missing Root/HotbarPanel, Root/Prompt or the hotbar Message row"] \
+		return ["PlaygroundHUD is missing HotbarPanel, Prompt or the hotbar Message row"] \
 			as Array[String]
 
 	var party: RefCounted = game.get("party")

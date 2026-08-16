@@ -165,7 +165,7 @@ func _the_combat_buttons_say_something_outside_a_fight() -> void:
 		return
 	var game := root.get_node_or_null(^"Game")
 	var hud := _world.get_node_or_null(^"PlaygroundHUD")
-	var message := hud.get_node_or_null(^"Root/HotbarPanel/Margin/Layout/Message") as Label \
+	var message := hud.find_child("Message", true, false) as Label \
 			if hud != null else null
 	if game == null or message == null:
 		_fail("no Game autoload or no HUD message strip; the refusal has nowhere to be said")
