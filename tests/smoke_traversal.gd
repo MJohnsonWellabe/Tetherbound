@@ -343,7 +343,7 @@ const BRIDGE_BLOCKED_M := 0.0
 
 func _check_south_bridge(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
 	await _check_gated_crossing(world, player, failures,
-		^"SouthBridge", "the South Bridge", "south_bridge_key", "south_bridge_open")
+		NodePath("SouthBridge"), "the South Bridge", "south_bridge_key", "south_bridge_open")
 
 
 ## SE22: the Old Mill Crossing, the only way over SE21's river. Same
@@ -352,11 +352,11 @@ func _check_south_bridge(world: Node, player: CharacterBody3D, failures: Array[S
 ## a second copy of this walk would be a second thing to keep in step.
 func _check_mill_crossing(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
 	await _check_gated_crossing(world, player, failures,
-		^"MillCrossing", "the Old Mill Crossing", "mill_bridge_gear", "mill_crossing_restored")
+		NodePath("MillCrossing"), "the Old Mill Crossing", "mill_bridge_gear", "mill_crossing_restored")
 
 
 func _check_gated_crossing(world: Node, player: CharacterBody3D, failures: Array[String],
-		node_name: StringName, label: String, key_item: String, flag: String) -> void:
+		node_name: NodePath, label: String, key_item: String, flag: String) -> void:
 	var bridge: Node3D = world.get_node_or_null(node_name) as Node3D
 	if bridge == null:
 		failures.append("no %s in the scene; %s is not built" % [node_name, label])
