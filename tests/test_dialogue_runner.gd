@@ -399,6 +399,122 @@ func test_every_conversation_a_villager_can_open_really_exists() -> void:
 			assert_true(RUNNER.has(id), "%s would open '%s', which no dialogue file defines" % [who, id])
 
 
+## --- OW9: the Quarry Foreman hands over the hammer, second speaker's build beat
+##
+## Owner: "Someone at the beginning needs to tell you to go gather materials to
+## build things like orbs. Someone else will need to tell you to get wood and
+## build a base camp. They should probably give you a hammer and recipe."
+##
+## The gather half is Tam's, already covered above. This is the build half --
+## the same route (a one-time `give:`+`flag:` line, chosen by `greeting_when`)
+## used by a second speaker, the Quarry Foreman, because CLAUDE.md says not to
+## add a new NPC when an existing one fits and he is otherwise empty-handed.
+##
+## What has to be true and is not automatic: the Foreman must not offer the
+## hammer before Tam has actually taught the orb recipe -- the owner named the
+## two speakers IN ORDER, and the square is free-roam, so nothing stops a
+## player walking to the Foreman first unless the branch itself waits on
+## Tam's own flag. That is the test that fails on `main`, where the Foreman
+## has no such branch at all and `greeting_for()` never returns anything but
+## his plain greeting or (post-victory) `village_quarry_foreman_freed`.
+
+const FOREMAN_HAMMER_CONVERSATION := "village_quarry_foreman_hammer"
+const HAMMER_FLAG := "camp_hammer_given"
+
+
+## Loaded from the real config rather than hand-built, the same reason
+## `smoke_village_smith.gd::_tam()` reads the real file: what is being proven
+## is that the ACTUAL Foreman entry in village_npcs.json is wired this way, not
+## that a wiring like this is possible in the abstract.
+func _foreman() -> Dictionary:
+	var file := FileAccess.open("res://data/config/village_npcs.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return {}
+	for entry: Variant in ((parsed as Dictionary).get("villagers", []) as Array):
+		if entry is Dictionary and str((entry as Dictionary).get("name", "")) == "Quarry Foreman":
+			return entry as Dictionary
+	return {}
+
+
+## The ordering half of the done-when: gather before build. A fresh save, and
+## a save where the player has met Tam's tools but not yet heard the orb
+## recipe, must both still get the Foreman's ordinary greeting -- the build
+## handover is not offered on Tam's FIRST flag either, only his second.
+func test_the_foreman_says_nothing_about_the_hammer_before_tams_gather_beat() -> void:
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	var foreman := _foreman()
+	assert_ne(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION,
+		"a fresh save should not be offered the hammer before Tam has taught the orb recipe")
+
+	progression.set_flag(TOOLS_FLAG)
+	assert_ne(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION,
+		"Tam's tools alone (without the orb recipe) should not unlock the Foreman's hammer")
+
+
+## The other half: once the gather beat has actually happened, the build beat
+## is real and reachable.
+func test_the_foreman_offers_the_hammer_once_tams_gather_beat_has_happened() -> void:
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	progression.set_flag(TOOLS_FLAG)
+	progression.set_flag(RECIPE_FLAG)
+	assert_eq(VILLAGE_NPCS.greeting_for(_foreman(), progression), FOREMAN_HAMMER_CONVERSATION,
+		"once Tam has taught the orb recipe, the Foreman should offer the hammer")
+
+
+## The one-time half, same shape as Tam's own test above.
+func test_the_hammer_is_offered_once_and_then_never_again() -> void:
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	progression.set_flag(RECIPE_FLAG)
+	var foreman := _foreman()
+	assert_eq(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION)
+
+	# What the conversation itself does on the line that gives it.
+	progression.set_flag(HAMMER_FLAG)
+	assert_ne(VILLAGE_NPCS.greeting_for(foreman, progression), FOREMAN_HAMMER_CONVERSATION,
+		"the hammer handover must never be offered twice")
+
+
+## Once spent, the Foreman falls back to being a villager with nothing to give
+## -- not a mute, and (unlike Tam) not challengeable either; he was never made
+## a Band-1 trainer.
+func test_after_the_hammer_the_foreman_is_a_villager_again() -> void:
+	var progression: RefCounted = PROGRESSION_STATE.new()
+	progression.set_flag(RECIPE_FLAG)
+	progression.set_flag(HAMMER_FLAG)
+	assert_eq(VILLAGE_NPCS.greeting_for(_foreman(), progression), "village_quarry_foreman")
+
+
+func test_the_hammer_handover_gives_a_hammer_and_records_it_on_the_same_line() -> void:
+	var effects := _effects_of(FOREMAN_HAMMER_CONVERSATION)
+	assert_true(effects.has("give:hammer:1"),
+		"the Foreman should give a hammer; got %s" % str(effects))
+	assert_eq(effects.count("give:hammer:1"), 1, "one hammer, once")
+
+	var lines: Array = (RUNNER.table().get(FOREMAN_HAMMER_CONVERSATION, {}) as Dictionary).get("lines", [])
+	var found := false
+	for raw: Variant in lines:
+		if not raw is Dictionary:
+			continue
+		var line_effects: Array = ((raw as Dictionary).get("effects", []) as Array)
+		if line_effects.has("give:hammer:1"):
+			found = true
+			assert_true(line_effects.has("flag:%s" % HAMMER_FLAG),
+				"the line that gives the hammer must also set '%s'" % HAMMER_FLAG)
+	assert_true(found, "no line in '%s' gives the hammer at all" % FOREMAN_HAMMER_CONVERSATION)
+
+
+## `hammer` is REUSE, not a new item -- R2.1 shipped it with nothing that gave
+## it out yet. This is that gift, and it should not become a second one under
+## another name.
+func test_the_hammer_given_is_the_real_hammer_item() -> void:
+	var db: RefCounted = ITEM_DB.new()
+	assert_true(db.has("hammer"), "items.json should already define 'hammer'")
+	assert_eq(db.kind("hammer"), "tool", "the hammer should be a tool like the rest of Tam's set")
+
+
 ## --- OF31/D39: Mira the merchant, Oskar the creature trader -------------------
 ##
 ## The same split OF30 drew: the WIRING (a `shop:` effect actually opening a

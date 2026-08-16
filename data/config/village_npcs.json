@@ -142,6 +142,12 @@
       "_why": "west of the workshop (EV6; was the big barn), clear of every structure and villager by 8m+ -- NP3, spec sec35. No built quarry to stand him at yet (SD16), so the square is where he waits.",
       "greeting_when": [
         {
+          "if_flag": "recipe_orb_basic",
+          "unless_flag": "camp_hammer_given",
+          "conversation": "village_quarry_foreman_hammer",
+          "_why": "OW9 (owner: \"Someone else will need to tell you to get wood and build a base camp. They should probably give you a hammer and recipe.\"). Second use of OF30's one-time-gift route (D43): `give:hammer:1` and `flag:camp_hammer_given` on the same line in data/dialogue/village.json. The Foreman rather than a fourth villager -- CLAUDE.md's 'no new NPCs if an existing one fits', and he already stands in the square with nothing to hand over (his only other branch is `legendary_freed`, flavour-only). Gated `if_flag: recipe_orb_basic` -- Tam's OWN second flag, not one of the Foreman's -- because the owner named the two speakers IN ORDER, gather then build, and the square is free-roam: a player can walk to the Foreman before Tam. Waiting on Tam's flag is what makes the order real regardless of which villager is greeted first, the same way SC12's challenge branches wait on `tam_tools_given`+`recipe_orb_basic` rather than trusting the player's path. AHEAD of `legendary_freed` below for the reason Tam's own gift branches are ahead of his: a player who reaches the stronghold without having collected the hammer must still be able to (D43/Tam's `_why` makes the same argument)."
+        },
+        {
           "if_flag": "legendary_freed",
           "conversation": "village_quarry_foreman_freed",
           "_why": "SG46. The foreman's ground is the one D45 says stays baked and partly unhealed, so he is the character who says so out loud -- the honest remainder spoken by the person standing on it. His first `greeting_when` list; the standing greeting is untouched and is still the fallback."
