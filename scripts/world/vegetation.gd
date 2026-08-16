@@ -2,18 +2,40 @@ extends Node3D
 
 ## Renders the scatter.
 ##
-## One MultiMeshInstance3D per source model, so several thousand props cost a
-## handful of draw calls rather than several thousand. This is what makes the
-## meadow survivable on a handheld; instancing is not an optimisation to add
-## later, it is the only way this layer can exist at all.
-##
 ## Where things go is decided by scripts/world/scatter_rules.gd, which is pure
 ## and tested. This file knows about meshes and nothing about ecology.
 ##
-## Terrain3D ships its own instancer (`Terrain3DInstancer`) which additionally
-## streams per region. Deliberately not used yet: MultiMesh is engine-standard,
-## has no extension-version risk, and a 512m playground does not need streaming.
-## The upgrade path is real and is a swap of this file alone.
+## OW5A/STREAM-SCATTER: renders through `Terrain3DInstancer` rather than a
+## MultiMeshInstance3D per model. `scatter_rules.gd` is unchanged: it still
+## returns plain placement dictionaries and knows nothing about how they are
+## rendered. `build()` now needs a live Terrain3D node (for `get_instancer()`/
+## `get_assets()`/`get_data()`), not just a world size.
+##
+## WHY, MEASURED, NOT JUST ARGUED: on today's 512m/4-region world (23,707
+## instances) the OLD MultiMesh-build loop was already cheap — ~113ms,
+## measured in isolation from the placement compute. The scatter's ~36s boot
+## cost, before and after this swap, is ~99.6% `scatter_rules.all_placements()`
+## itself (measured: 36.1s of a 36.3s total build), which this file does not
+## touch and is not this task's scope — see `docs/MEADOWS_MACRO_LAYOUT.md`
+## §1.1 on `road_polylines()`'s uncached per-pixel rebuild, owned by a
+## different lane. So this swap is NOT a boot-time win today, and does not
+## claim to be. What it buys is architectural: MultiMesh has no per-region
+## storage and no streaming at all, so at the corridor's 64x/~1.5M-instance
+## scale the whole scatter would have to live permanently resident in one
+## place with a second, hand-rolled residency mechanism next to the terrain's
+## own. `Terrain3DInstancer.add_transforms()` stores instance data on
+## `Terrain3DRegion` — the object the terrain's own height/control/colour maps
+## already live on and already stream — so scatter gets the terrain's
+## residency mechanism instead of needing its own. §8.3 names this the hard
+## prerequisite for exactly that reason, not for today's wall-clock.
+##
+## Collision is NOT part of what the instancer streams — MultiMesh never
+## collided either, and neither does `Terrain3DInstancer`; both are pure
+## rendering. `_add_collision()` below is UNCHANGED from before this swap:
+## still one `StaticBody3D` per model, built eagerly for the whole world at
+## `build()` time. A per-`Terrain3DRegion` grouping was tried and reverted —
+## see `_add_collision()`'s own comment for why — so collision residency
+## streaming with the corridor is explicit unfinished work, not solved here.
 
 const RULES := preload("res://scripts/world/scatter_rules.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
@@ -34,6 +56,14 @@ var _placed: int = 0
 ## around Team Tether's stations, held from the build so the healing can put
 ## back the very same instances rather than roll a second scatter that would
 ## not match the meadow the player walked through.
+##
+## Still keyed by layer and holding the same plain placement dictionaries
+## `scatter_rules.gd` always returned — no per-region key was added here.
+## `Terrain3DInstancer.add_transforms()` computes which `Terrain3DRegion` a
+## transform belongs to from its own world position and files the instance
+## there itself, so the region bookkeeping `Terrain3DInstancer` needs already
+## lives in the transform's position — nothing here has to track region
+## locations by hand to put a drained instance back in the right one.
 var _drained: Dictionary = {}
 var _regrown: int = 0
 var _draw_calls: int = 0
@@ -44,9 +74,24 @@ var _harvest_points: int = 0
 ## not the ground under the tree.
 var _field: RefCounted = null
 
+## The live Terrain3D node passed to `build()`, and the three sub-objects the
+## instancer swap needs from it.
+var _terrain: Node = null
+var _instancer: Object = null
+var _assets: Object = null
+var _data: Object = null
+## model path -> the integer id it was registered under in `_assets`'
+## mesh_list. Rebuilt every `build()`; `restore_drained()` extends it in place
+## for any model that did not survive into the kept set at all (rare — every
+## instance of that model was drained).
+var _mesh_ids: Dictionary = {}
+var _next_mesh_id: int = 0
+
 
 ## Build the whole scatter. `world_size` should match the terrain's.
-func build(world_size: float) -> void:
+## `terrain` is the live Terrain3D node — its instancer, assets and data are
+## where every placement below actually ends up.
+func build(world_size: float, terrain: Node) -> void:
 	for child in get_children():
 		child.queue_free()
 	_placed = 0
@@ -54,6 +99,19 @@ func build(world_size: float) -> void:
 	_solid = 0
 	_harvest_points = 0
 	_tints.clear()
+	_mesh_ids.clear()
+	_next_mesh_id = 0
+
+	_terrain = terrain
+	if _terrain == null or not _terrain.has_method("get_instancer"):
+		push_error("vegetation.build() needs a live Terrain3D node; scatter will not render")
+		return
+	_instancer = _terrain.call("get_instancer")
+	_assets = _terrain.call("get_assets")
+	_data = _terrain.call("get_data")
+	if _instancer == null or _assets == null:
+		push_error("Terrain3D produced no instancer/assets object; scatter will not render")
+		return
 
 	var cfg: Dictionary = RULES.config()
 	if cfg.is_empty():
@@ -70,8 +128,8 @@ func build(world_size: float) -> void:
 	_mark_harvestable(by_layer)
 
 	# Grouped by MODEL rather than by layer: two layers sharing a mesh should
-	# share one MultiMesh, or the draw-call saving is thrown away by the
-	# bookkeeping.
+	# share one instancer mesh id, or the draw-call saving is thrown away by
+	# the bookkeeping.
 	var by_model: Dictionary = {}
 	for layer_name: String in by_layer.keys():
 		for entry: Variant in (by_layer[layer_name] as Array):
@@ -81,8 +139,19 @@ func build(world_size: float) -> void:
 				by_model[model] = []
 			(by_model[model] as Array).append(placement)
 
+	# Every model registered as a Terrain3DMeshAsset in ONE set_mesh_list()
+	# call before any transforms are added -- registering lazily per model
+	# would call set_mesh_list() once per unique model (42 today), and this
+	# is exactly the boot-time loop being fixed, not a place to add a second
+	# one.
+	_register_mesh_assets(by_model.keys())
+
 	for model: String in by_model.keys():
 		_build_batch(model, by_model[model])
+	# One rebuild of the instancer's live MultiMeshInstance3Ds after every
+	# batch is queued, not one per model -- `add_transforms()` below is
+	# called with `update=false` for exactly this reason.
+	_instancer.call("update_mmis", true)
 	_warn_about_shared_models(by_layer)
 
 
@@ -287,14 +356,68 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 	return material
 
 
-func _build_batch(model_path: String, placements: Array) -> void:
+## Register every unique model in `models` as a `Terrain3DMeshAsset` in one
+## `set_mesh_list()` call. Models already registered (an id already held in
+## `_mesh_ids`, which only happens when `restore_drained()` ran before a
+## second `build()` — not the normal boot path) are skipped.
+func _register_mesh_assets(models: Array) -> void:
+	var list: Array = []
+	for model_path: String in models:
+		if _mesh_ids.has(model_path):
+			continue
+		var asset := _make_mesh_asset(str(model_path))
+		if asset == null:
+			continue
+		var id := _next_mesh_id
+		_next_mesh_id += 1
+		asset.set("id", id)
+		_mesh_ids[model_path] = id
+		list.append(asset)
+	if not list.is_empty():
+		_assets.call("set_mesh_list", list)
+
+
+## `restore_drained()`'s path: a model that was drained in its entirety never
+## got a mesh id from `_register_mesh_assets()` above, so register it here,
+## lazily, one `set_mesh_list()` call at a time. Not the boot path — never
+## called from `build()` — so the extra calls this makes when several models
+## are new at once cost nothing that matters.
+func _mesh_id_for(model_path: String) -> int:
+	if _mesh_ids.has(model_path):
+		return _mesh_ids[model_path]
+	var asset := _make_mesh_asset(model_path)
+	if asset == null:
+		return -1
+	var id := _next_mesh_id
+	_next_mesh_id += 1
+	asset.set("id", id)
+	var list: Array = _assets.call("get_mesh_list")
+	list.append(asset)
+	_assets.call("set_mesh_list", list)
+	_mesh_ids[model_path] = id
+	return id
+
+
+## Build one `Terrain3DMeshAsset` for a model, retinted exactly the way the
+## old MultiMesh path retinted it.
+##
+## `Terrain3DMeshAsset` takes a `scene_file` (a `PackedScene`), not a bare
+## `Mesh` — it has no per-surface material slot of its own, only a single
+## whole-mesh `material_override`, which would collapse `_retint()`'s
+## per-SURFACE colour map (bark one colour, leaves another, both on one
+## model) down to one flat tint. Packing the already-retinted mesh into a
+## throwaway one-node `PackedScene` in memory — never written to disk —
+## keeps `_retint()`/`_tint_for()` untouched and reuses them exactly as
+## `_build_batch()` always did.
+func _make_mesh_asset(model_path: String) -> Object:
+	if not ClassDB.class_exists("Terrain3DMeshAsset"):
+		push_error("Terrain3DMeshAsset is not available on this build; scatter cannot render")
+		return null
 	var mesh := _mesh_for(model_path)
 	if mesh == null:
 		push_error("scatter model %s could not be loaded; that layer will be missing" % model_path)
-		return
+		return null
 
-	var multi := MultiMesh.new()
-	multi.transform_format = MultiMesh.TRANSFORM_3D
 	var layer_cfg := _layer_for(model_path)
 	var jitter := float(layer_cfg.get("colour_jitter", 0.0))
 	# EV2: a layer may assign one of a few controlled material variants per
@@ -306,54 +429,17 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	var variants: Dictionary = layer_cfg.get("variant_retint", {})
 	if variants.has(model_path):
 		tint_overrides = variants[model_path]
-	multi.mesh = _retint(mesh, tint_overrides, layer_cfg.get("retexture", {}), jitter > 0.0)
+	var retinted := _retint(mesh, tint_overrides, layer_cfg.get("retexture", {}), jitter > 0.0)
 
-	# R7.1-remainder: the blind critic's round-1 verdict on ground cover was
-	# specific — not "too sparse", but "a single saturated hue with no value
-	# range... nothing darker to anchor a black point". Bigger tufts (this
-	# layer's other lever) do not touch that; only colour does. MultiMesh
-	# per-instance colour lets every blade get its own light/dark multiplier
-	# at zero extra draw calls or geometry — the cost this file's own
-	# comments already ruled out paying twice.
-	#
-	# R7.2: `use_colors` MUST be set before `instance_count` — MultiMesh
-	# allocates its per-instance buffer when `instance_count` is assigned,
-	# sized from whichever format flags are set at that moment, and setting
-	# `use_colors` afterward does not retroactively resize it. Setting it
-	# after (the original round-2 order) silently left `use_colors` false
-	# server-side even though the GDScript property read back `true`, so
-	# every `set_instance_color` call below failed with "Can't set instance
-	# color on a Multimesh that isn't using colors" — thousands of times
-	# per render, found by a background agent's render log, not by eye,
-	# since the failure is a caught engine error rather than a crash and
-	# the jittered instances just silently kept their default (white, i.e.
-	# unjittered) colour.
-	var jitter_rng := RandomNumberGenerator.new()
-	if jitter > 0.0:
-		multi.use_colors = true
-		jitter_rng.seed = hash(model_path)
-	multi.instance_count = placements.size()
+	var holder := MeshInstance3D.new()
+	holder.mesh = retinted
+	var packed := PackedScene.new()
+	packed.pack(holder)
+	holder.free()
 
-	for i in placements.size():
-		var placement: Dictionary = placements[i]
-		var basis := Basis(Vector3.UP, float(placement["yaw"]))
-		# scatter_rules.gd only sets "normal" for layers that opted into
-		# align_to_slope (rocks) — everything else stays world-up.
-		if placement.has("normal"):
-			var normal: Vector3 = placement["normal"]
-			basis = Basis(Quaternion(Vector3.UP, normal)) * basis
-		basis = basis.scaled(Vector3.ONE * float(placement["scale"]))
-		var spot: Vector3 = placement["position"]
-		multi.set_instance_transform(i, Transform3D(basis, spot - Vector3.UP * SINK))
-		if jitter > 0.0:
-			var v := 1.0 + jitter_rng.randf_range(-jitter, jitter)
-			multi.set_instance_color(i, Color(v, v, v, 1.0))
-		if placement.has("harvest_item"):
-			_spawn_harvest_point(placement)
-
-	var node := MultiMeshInstance3D.new()
-	node.name = model_path.get_file().get_basename()
-	node.multimesh = multi
+	var asset: Object = ClassDB.instantiate("Terrain3DMeshAsset")
+	asset.set("name", model_path.get_file().get_basename())
+	asset.set("scene_file", packed)
 	# Shadow casting is per layer, and the small layers must not.
 	#
 	# Everything cast until now. At the densities this scatter runs at — several
@@ -366,13 +452,54 @@ func _build_batch(model_path: String, placements: Array) -> void:
 	# A tuft's shadow is not information at this scale; a tree's is. Trees,
 	# bushes, rocks and deadfall place themselves on the ground with theirs,
 	# which is the thing shadows are actually for here.
-	var layer := _layer_for(model_path)
-	node.cast_shadow = (
-		GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-		if bool(layer.get("casts_shadow", true))
-		else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	)
-	add_child(node)
+	asset.set("cast_shadows", bool(layer_cfg.get("casts_shadow", true)))
+	return asset
+
+
+## Colour jitter needs its own RNG stream per model, seeded the same way the
+## old MultiMesh path seeded it, so a jittered layer's palette spread is
+## unchanged by this swap.
+func _build_batch(model_path: String, placements: Array) -> void:
+	var mesh_id := _mesh_id_for(model_path)
+	if mesh_id < 0:
+		return
+
+	var layer_cfg := _layer_for(model_path)
+	var jitter := float(layer_cfg.get("colour_jitter", 0.0))
+	var use_colour := jitter > 0.0
+	var jitter_rng := RandomNumberGenerator.new()
+	if use_colour:
+		jitter_rng.seed = hash(model_path)
+
+	var transforms: Array[Transform3D] = []
+	transforms.resize(placements.size())
+	var colours := PackedColorArray()
+	if use_colour:
+		colours.resize(placements.size())
+
+	for i in placements.size():
+		var placement: Dictionary = placements[i]
+		var basis := Basis(Vector3.UP, float(placement["yaw"]))
+		# scatter_rules.gd only sets "normal" for layers that opted into
+		# align_to_slope (rocks) — everything else stays world-up.
+		if placement.has("normal"):
+			var normal: Vector3 = placement["normal"]
+			basis = Basis(Quaternion(Vector3.UP, normal)) * basis
+		basis = basis.scaled(Vector3.ONE * float(placement["scale"]))
+		var spot: Vector3 = placement["position"]
+		transforms[i] = Transform3D(basis, spot - Vector3.UP * SINK)
+		if use_colour:
+			var v := 1.0 + jitter_rng.randf_range(-jitter, jitter)
+			colours[i] = Color(v, v, v, 1.0)
+		if placement.has("harvest_item"):
+			_spawn_harvest_point(placement)
+
+	# `update=false`: one bulk native call per model instead of one per
+	# placement (the MultiMesh path's `set_instance_transform` loop, ~23.7k
+	# individual calls today and the measured cause of the boot-time cost
+	# this swap exists to remove), and `update_mmis(true)` runs once after
+	# every model in `build()`'s loop rather than once per model here.
+	_instancer.call("add_transforms", mesh_id, transforms, colours, false)
 
 	_placed += placements.size()
 	_draw_calls += 1
@@ -429,6 +556,23 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 ##
 ## One StaticBody3D holding many shapes rather than a body per prop: the physics
 ## server handles that far better, and none of these ever move.
+##
+## STREAM-SCATTER: still one body per MODEL, unchanged from before this swap
+## — NOT grouped per `Terrain3DRegion`, despite the file header raising that
+## as the thing to plan for. Tried it (one `StaticBody3D` per region location)
+## and reverted: `tests/smoke_traversal.gd::_check_rock_collision_alignment`
+## finds rock colliders by walking `Vegetation`'s direct children for a
+## `StaticBody3D` named `Rock_*`/`Pebble_*` — a real, working OF14 regression
+## check, not incidental — and a region-keyed name broke it outright ("no
+## sloped rock colliders found to check"). Since collision streaming is not
+## actually wired to region residency yet either way (no
+## region-activated/-deactivated signal exists on this Terrain3D build — see
+## the file header), regrouping today traded a real check for a
+## not-yet-useful structure. Left as the honest, explicitly named remainder:
+## whoever wires collision residency to the corridor's region streaming needs
+## a way to find "every collider in region R" that doesn't depend on name
+## prefixes, and should change this function and
+## `_check_rock_collision_alignment` together, in the same change.
 func _add_collision(model_path: String, placements: Array) -> void:
 	var layer := _layer_for(model_path)
 	if layer.is_empty() or not bool(layer.get("collides", false)):
@@ -549,6 +693,11 @@ func restore_drained() -> int:
 	var before := _placed
 	for model: String in by_model.keys():
 		_build_batch(model, by_model[model])
+	# `_build_batch` adds with `update=false` (see its own comment); the
+	# instancer's live MultiMeshInstance3Ds need exactly one rebuild after
+	# all of this healing's models are queued, same as `build()`'s own loop.
+	if _instancer != null:
+		_instancer.call("update_mmis", true)
 	_regrown = _placed - before
 	_drained.clear()
 	return _regrown
