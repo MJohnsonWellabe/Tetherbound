@@ -55,13 +55,32 @@ const SPROUT_MODEL := "%s/Grass_Common_Short.gltf" % NATURE_DIR
 ## comment records for its loft beam. TUNABLE.
 const COL_FALLOW := Color("#6b6446")
 const COL_TILLED := Color("#4a3524")
+const COL_EDGE := Color("#6b4f30")
 
 ## Metres. The bed itself, and how proud of the ground it sits -- enough to
 ## read as a raised seedbed from standing height, low enough that the player
 ## walks over it rather than onto it (no collider: a farm you trip on is a
 ## farm you stop visiting).
-const BED_SIZE := Vector2(1.5, 1.5)
-const BED_HEIGHT := 0.08
+##
+## Round 1 of the visual pass had this at 1.5 x 1.5 x 0.08, and the frames
+## showed exactly what that costs: at 0.08m a bed has no visible SIDE, so it
+## renders as a brown rectangle painted onto the grass rather than as turned
+## earth. Raised, and given the timber lip and furrow ridges below, so the
+## thing has a thickness and a direction you can read from standing height.
+const BED_SIZE := Vector2(1.4, 1.4)
+const BED_HEIGHT := 0.16
+const EDGE_T := 0.09
+const EDGE_H := 0.22
+const FURROWS := 3
+const FURROW_H := 0.07
+
+## Model scales, per state. Round 1's ripe bush at 1.0 measured wider than its
+## own 1.5m bed: six of them merged into one continuous flowering hedge
+## against the farmhouse wall, so the frames showed a garden border and not a
+## farm — no rows, no plots, no soil. A crop has to sit IN its bed for six
+## beds to read as six.
+const RIPE_SCALE := 0.5
+const SPROUT_SCALE := 0.3
 
 const PROMPT_RADIUS := 2.0
 const PROMPT_HEIGHT := 0.9
@@ -96,6 +115,7 @@ func setup(index: int, config: Dictionary) -> void:
 	_soil.mesh = box
 	_soil.position = Vector3(0.0, BED_HEIGHT * 0.5, 0.0)
 	add_child(_soil)
+	_build_edging()
 
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
@@ -182,6 +202,56 @@ func _refresh() -> void:
 	_prompt.set("actionable", FARM_LOGIC.is_actionable(plot, day, has_hoe, seeds))
 
 
+## Four boards round the rim of the bed, standing proud of the soil.
+##
+## Built once and never redrawn: the frame of a bed does not change with what
+## is growing in it, and it is what makes a FALLOW bed still read as somebody's
+## plot rather than as a patch of dead grass — which matters, because fallow is
+## the state a player meets the farm in before they own a hoe.
+func _build_edging() -> void:
+	var half := BED_SIZE * 0.5
+	for spec: Array in [
+		[Vector3(BED_SIZE.x + EDGE_T * 2.0, EDGE_H, EDGE_T), Vector3(0.0, 0.0, half.y + EDGE_T * 0.5)],
+		[Vector3(BED_SIZE.x + EDGE_T * 2.0, EDGE_H, EDGE_T), Vector3(0.0, 0.0, -half.y - EDGE_T * 0.5)],
+		[Vector3(EDGE_T, EDGE_H, BED_SIZE.y), Vector3(half.x + EDGE_T * 0.5, 0.0, 0.0)],
+		[Vector3(EDGE_T, EDGE_H, BED_SIZE.y), Vector3(-half.x - EDGE_T * 0.5, 0.0, 0.0)],
+	]:
+		var mesh := MeshInstance3D.new()
+		var board := BoxMesh.new()
+		board.size = spec[0] as Vector3
+		mesh.mesh = board
+		mesh.material_override = _material(COL_EDGE)
+		mesh.position = (spec[1] as Vector3) + Vector3.UP * (EDGE_H * 0.5)
+		add_child(mesh)
+
+
+## Parallel ridges across a worked bed: the difference between "brown" and
+## "turned over". Cleared and rebuilt with the plant, because a FALLOW bed has
+## no furrows in it — that is the whole visual difference between unworked
+## ground and a seedbed, and round 1 had none.
+func _build_furrows() -> void:
+	var pitch := BED_SIZE.y / float(FURROWS + 1)
+	for i in FURROWS:
+		var mesh := MeshInstance3D.new()
+		var ridge := BoxMesh.new()
+		ridge.size = Vector3(BED_SIZE.x * 0.92, FURROW_H, pitch * 0.42)
+		mesh.mesh = ridge
+		mesh.material_override = _material(COL_EDGE)
+		mesh.position = Vector3(
+			0.0, BED_HEIGHT + FURROW_H * 0.35, -BED_SIZE.y * 0.5 + pitch * float(i + 1))
+		_plant_holder().add_child(mesh)
+
+
+## Everything that changes with the state hangs off one node, so `_redraw` can
+## clear the lot without tracking each piece.
+func _plant_holder() -> Node3D:
+	if _plant == null or not is_instance_valid(_plant):
+		_plant = Node3D.new()
+		_plant.name = "Growth"
+		add_child(_plant)
+	return _plant
+
+
 func _redraw(state: String) -> void:
 	_soil.material_override = _material(
 		COL_TILLED if state != FARM_LOGIC.FALLOW else COL_FALLOW)
@@ -189,16 +259,19 @@ func _redraw(state: String) -> void:
 	if _plant != null and is_instance_valid(_plant):
 		_plant.queue_free()
 	_plant = null
+	if state == FARM_LOGIC.FALLOW:
+		return
+	_build_furrows()
 
 	var model := ""
 	var model_scale := 1.0
 	match state:
 		FARM_LOGIC.SOWN:
 			model = SPROUT_MODEL
-			model_scale = 0.55
+			model_scale = SPROUT_SCALE
 		FARM_LOGIC.RIPE:
 			model = RIPE_MODEL
-			model_scale = 1.0
+			model_scale = RIPE_SCALE
 	if model.is_empty() or not ResourceLoader.exists(model):
 		return
 
@@ -214,8 +287,7 @@ func _redraw(state: String) -> void:
 	wrapper.add_child((resource as PackedScene).instantiate())
 	wrapper.scale = Vector3.ONE * model_scale
 	wrapper.position = Vector3(0.0, BED_HEIGHT, 0.0)
-	_plant = wrapper
-	add_child(_plant)
+	_plant_holder().add_child(wrapper)
 
 
 func _material(colour: Color) -> StandardMaterial3D:
