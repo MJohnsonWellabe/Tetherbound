@@ -102,3 +102,61 @@ objects now exist. `smoke_stronghold` measures the machine at 16.6 × 15.0 ×
 - **No further Meshy generation is licensed for the Meadows.** The Warden's
   face is the one outstanding art request and it needs owner reference art
   before a single credit is spent.
+
+## Addendum — the Warden, 2026-08-16
+
+The owner supplied his character sheet the same day
+(`docs/art/reference/16_Warden_Aldis_Character.png`), lifting the one blocker
+that had stood since `R8.3`.
+
+**Board 16 supersedes board 06 for the Warden.** Board 06 draws a masked
+soldier whose face is hidden behind a hard visor and a plate over nose and
+mouth; board 16 draws a bare, bearded, human face with a green marking painted
+across the eyes in the shape of a domino mask, level with the skin. The
+generation prompts in `meshy.py` were tuned hard against board 06 — including a
+capitalised demand for the mask as raised geometry — and have been rewritten
+against 16. The one thing carried forward unchanged is the **value break**:
+board 06's gate review failed this character at distance ("at 300px he is a
+vertical green rectangle"), board 16 is green on green too, and its answer is
+the pale cream fur mantle, so that stays stated LARGE and PALE.
+
+### What was done
+
+Board 16's four head views — front, 3/4, side profile, **and back of head** —
+are cut into `assets/creatures/tetherbound/warden_head/reference/`.
+`meshy.py::cmd_head` exists precisely because a whole-figure pass cannot
+resolve an eye socket, but it could only ever send ONE crop and admitted the
+cost in its own docstring: *"the generator invents the back of the skull"*.
+Board 16 draws the back of the skull, so the head goes through the ordinary
+four-view `generate` path instead — strictly more information for the same
+money.
+
+The head generated well on the second attempt. **The first attempt failed the
+same way board 15 nearly did**: the crops ran down to the chest, and all three
+candidates came back as full standing figures with tiny blank heads, because
+image-to-3D follows its pictures over its words and "HEAD AND NECK ONLY" in
+capitals lost to four pictures containing shoulders and a fur mantle. Cropping
+to the jaw line fixed it, and the faces now carry brows, lids, a real nose and
+a beard. Candidate `e` is the best of three.
+
+### What was NOT done, and why
+
+**A retexture of the existing body was tried first and rejected.** Aiming
+`meshy.py texture` at board 16 drained the colour out of him — no gold trim, a
+grey-green coat, a dulled cream cape, and a face no better than before. The
+original model was never overwritten and the attempt is not in the tree.
+
+**The head is not installed.** Installing it means `graft_head.py` →
+`cleanup_mesh.py` → rig → procedural clips → grade → install → in-engine
+validate, and the graft has to happen on the **pre-rig** body. That raw body is
+not in this container (`assets_raw/` is gitignored and was never carried
+across), so the only warden mesh here is `warden_lod0.glb`, which is rigged and
+animated and working in the game. Grafting onto that destroys the rig.
+
+So the honest state is: **the Warden's face is generated and judged, and the
+swap is a full character-pipeline run rather than a finishing touch.** What is
+committed is everything that run needs and does not have to be redone — the
+board, the four head crops, the board-16 prompts, and the head-only crop rule
+that took two attempts to find. What remains is body → graft → remesh → rig →
+animate → install. Blender is required for it and is NOT part of this image; it
+was installed ad hoc here (`apt-get install blender`).

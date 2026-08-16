@@ -123,7 +123,11 @@ NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weap
             "sword, staff, gun, cape, robe, extra fingers, fused fingers, "
             "noisy surface detail, wet plastic shading, "
             "text, watermark, multiple people, base, pedestal")
-HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "grunt"}
+## `warden_head` is the Warden's head as its own subject (board 16). It is a
+## HUMAN for negative-prompt purposes -- the creature list bans "humanoid
+## anatomy" and would tell the generator to fight the thing being made.
+HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "grunt",
+          "warden_head"}
 
 ## The three hero objects D24 reserves Meshy for are STRUCTURES, and both the
 ## creature and human lists ban "base, pedestal" — which, sent with the Tether
@@ -377,27 +381,56 @@ SPECIES_PROMPTS = {
     # tight: the two capitalised clauses are the two things every round-1
     # candidate got wrong, and they go first.
     "warden": (
-        # Round 3. Round 2 fixed the pose and produced a clean coat, and the
-        # gate review then failed it on three counts: a slim waist-cinched
-        # CLOSED frock coat where the board has a broad heavy officer in an
-        # OPEN greatcoat, no cape at all, and — worst — "the face is a texture,
-        # not a mask ... a soft green splodge airbrushed across bare skin".
-        # It also failed him at distance: "coat, trousers, boots, hair and face
-        # markings all sit in one narrow green hue at essentially one value ...
-        # at 300px he is a vertical green rectangle". So the cream cape and
-        # cream fur ruff are stated as LARGE and PALE — they are the only
-        # value break the design has — and the mask is demanded as raised
-        # geometry rather than as a marking.
-        "stylised human man, BROAD HEAVY commanding officer, wide shoulders, "
-        "thick chest, not slim. BOTH ARMS HANG AT HIS SIDES clear of the body, "
-        "five fingers per gloved hand. HIS FACE IS COVERED BY RAISED SCULPTED "
-        "GEOMETRY: a hard visor band standing proud across the brow and a "
-        "fitted cloth wrap over nose and mouth, hard edged, thick, casting "
-        "shadow. Dark green officer's greatcoat worn OPEN, LARGE PALE CREAM "
-        "fur ruff heaped at the collar, LONG SPLIT PALE CREAM CAPE to the "
-        "ankles, cream inner vest, two LARGE BROWN leather hip pouches, wide "
-        "belt, dark trousers, ankle boots. Seven heads tall"),
+        # SUPERSEDED BY BOARD 16 (2026-08-16). Everything above this entry's
+        # older comment block was tuned against board 06, where the Warden is a
+        # masked soldier whose face is hidden behind a hard visor and a mask
+        # plate over nose and mouth. The owner supplied a dedicated character
+        # sheet -- docs/art/reference/16_Warden_Aldis_Character.png -- and it
+        # is a DIFFERENT AND BETTER DESIGN: the face is bare and human, with a
+        # short beard and a green MARKING painted across the eyes in the shape
+        # of a domino mask, not a plate standing off the skin. The board is the
+        # owner's later word and wins, the same way D23 makes the newer brief
+        # win elsewhere.
+        #
+        # The one thing carried forward unchanged is the VALUE BREAK. Board
+        # 06's gate review failed this character at distance -- "coat,
+        # trousers, boots, hair and face markings all sit in one narrow green
+        # hue at essentially one value ... at 300px he is a vertical green
+        # rectangle" -- and board 16 has the same risk, being green on green.
+        # Its answer is the pale cream fur mantle, so that is stated LARGE and
+        # PALE here for exactly the reason it was before.
+        "stylised human man, BROAD HEAVY officer, wide shoulders, thick chest. "
+        "BOTH ARMS HANG AT HIS SIDES clear of the body, five fingers per hand. "
+        "BARE HUMAN FACE, no helmet, no mask plate: deep eye sockets with lids "
+        "and heavy brows, projecting nose, short dark BEARD, and a flat GREEN "
+        "PAINTED MARKING across the eyes like a domino mask, level with the "
+        "skin. Short swept-back GREEN hair. Dark forest-green coat with gold "
+        "botanical trim, LARGE PALE CREAM FUR MANTLE heaped over both "
+        "shoulders, wide belt, dark trousers, tall boots. Seven heads tall"),
     # Board 06's Veridian Stag, likewise owner-approved as the legendary.
+    # BOARD 16, the Warden's head as its own subject.
+    #
+    # cmd_head exists because nine humanoid candidates came back with "no face
+    # on any of the three ... a featureless ovoid with hair over it", and its
+    # diagnosis is resolution allocation: at a 30k budget over a standing
+    # figure, an eye socket is smaller than the triangles available. It fixes
+    # that by generating the head alone -- but it could only ever send ONE crop,
+    # and said so in its own docstring: "the generator invents the back of the
+    # skull".
+    #
+    # Board 16 draws the back of the skull, and the front, and the 3/4, and the
+    # profile, all at one scale. So this goes through the ordinary four-view
+    # `generate` path rather than through cmd_head, which is strictly more
+    # information for the same money. The face is described as BARE with a
+    # PAINTED marking, because board 16 supersedes board 06's visored soldier.
+    "warden_head": (
+        "stylised man's HEAD AND NECK ONLY, bust, no body, no shoulders. BARE "
+        "HUMAN FACE: deep EYE SOCKETS with lids, heavy brows, projecting nose, "
+        "cut mouth, short dark BEARD and moustache along a strong jaw. A flat "
+        "GREEN PAINTED MARKING across the eyes and the bridge of the nose, "
+        "shaped like a domino mask and LEVEL WITH THE SKIN -- paint, never a "
+        "plate and never a visor standing off the face. Short swept-back "
+        "spiky GREEN hair, ears, mature man in his forties"),
     "veridian": (
         "majestic large forest stag guardian, four-legged deer anatomy, "
         "ENORMOUS branching antlers of twisted woody branches with green "
