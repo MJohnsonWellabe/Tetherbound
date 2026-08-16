@@ -840,13 +840,97 @@
       ],
       "_why_colliders": "OF31/D39. Mira's shop is inside this cottage, so it stops being a solid AABB brick and gets authored walls with a real hole in them -- the same thing the workshop's arch bay already needed, and the same shape of answer. The kit puts this cottage's wall lines on x=+-2 and z=+-3 (4m x 6m, walls 3.12 tall) and the front doorway module at x=1 with a 1.6m clear opening, so the front wall is authored as two pieces and a lintel around x in [0.2, 1.8] and the player walks in. The roof box is the workshop's trick too: its bottom sits at the wall top, so it keeps the camera arm and any jump out of the roof shell without blocking anything walkable. Everything inside -- floor, counter, shelf, light -- is scripts/world/shop_interior.gd, attached by village.gd from village.json's `interior` key, exactly as grandpa_house.gd keeps its own interior out of its recipe.",
       "colliders": [
-        { "at": [-2.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "west wall (local -x)" },
-        { "at": [2.0, 1.56, 0.0], "size": [0.45, 3.12, 6.4], "_why": "east wall (local +x)" },
-        { "at": [0.0, 1.56, -3.0], "size": [4.4, 3.12, 0.45], "_why": "back wall" },
-        { "at": [-1.0, 1.56, 3.0], "size": [2.4, 3.12, 0.45], "_why": "front, left of the doorway (x -2.2 to 0.2)" },
-        { "at": [2.0, 1.56, 3.0], "size": [0.4, 3.12, 0.45], "_why": "front, the short return right of the doorway (x 1.8 to 2.2)" },
-        { "at": [1.0, 2.71, 3.0], "size": [1.6, 0.82, 0.45], "_why": "the lintel over the 2.3m doorway; below it is the way in" },
-        { "at": [0.0, 4.1, 0.0], "size": [4.4, 2.2, 6.4], "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on" }
+        {
+          "at": [
+            -2.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            6.4
+          ],
+          "_why": "west wall (local -x)"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            0.0
+          ],
+          "size": [
+            0.45,
+            3.12,
+            6.4
+          ],
+          "_why": "east wall (local +x)"
+        },
+        {
+          "at": [
+            0.0,
+            1.56,
+            -3.0
+          ],
+          "size": [
+            4.4,
+            3.12,
+            0.45
+          ],
+          "_why": "back wall"
+        },
+        {
+          "at": [
+            -1.0,
+            1.56,
+            3.0
+          ],
+          "size": [
+            2.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front, left of the doorway (x -2.2 to 0.2)"
+        },
+        {
+          "at": [
+            2.0,
+            1.56,
+            3.0
+          ],
+          "size": [
+            0.4,
+            3.12,
+            0.45
+          ],
+          "_why": "front, the short return right of the doorway (x 1.8 to 2.2)"
+        },
+        {
+          "at": [
+            1.0,
+            2.71,
+            3.0
+          ],
+          "size": [
+            1.6,
+            0.82,
+            0.45
+          ],
+          "_why": "the lintel over the 2.3m doorway; below it is the way in"
+        },
+        {
+          "at": [
+            0.0,
+            4.1,
+            0.0
+          ],
+          "size": [
+            4.4,
+            2.2,
+            6.4
+          ],
+          "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on"
+        }
       ],
       "retint": {
         "MI_WindowGlass": {
@@ -2204,123 +2288,1542 @@
       "_why_retint": "warm pane instead of a black hole -- same colour every other building in the square carries"
     },
     "castle": {
-      "_why": "OF4-rebuild (D28): landmark.gd's procedural-primitive silhouette retired in favour of a real assembled fortress, composed from BG2's Quaternius Modular Medieval Building Pack (assets/buildings/quaternius_castle -- OBJ+MTL, CC0, same publisher/art language as the Medieval Village MegaKit this file already draws from, D24's one-village-family rule treated as a fortification extension of it per BG2's own note). South wall (z=-8.448) faces the two viewpoints the site is actually seen from now that OF13 moved it out of sight of the village square and Rise path (capture_wayfinding.gd's silhouette-close/silhouette-approach, both looking north from due south with no rotation on landmark.gd's own placement) -- the gate and the tallest keep tower both sit on that face. Two courses (Wall+TallWall family) on every run for real height; a mixed set of towers (2.02m gatehouse flankers up to a 6.20m stacked keep) so the skyline is not one part repeated. landmark.gd places this prefab on a stone plinth that absorbs the site's own measured ~1.5m of local terrain relief -- every module's own y=0 here means the plinth's own top, not raw ground.",
+      "_why": "RE-MASSED 2026-08-16, owner directive (second playtest): the OF4-rebuild castle read as 'toys in a field' -- 23x17m, 3.9m walls, 6.2m tallest tower against a 1.8m player -- and the owner asked for concept-board scale (docs/reference/owner-board-2026-08-15-*.png, castle panels), rebuilt IN PLACE so the stronghold complex behind it (stronghold.json's five chambers, gauntlet and climax, all sited against this footprint's south edge) stands exactly where it was. The south curtain keeps the shipped gate line z=-8.448 for that reason. Footprint 36x40m on the wall centrelines -- the terrain chose that bound, not timidity: the Rise flank climbs +34m twenty metres west of the wall and the heightfield ends ~30m east (measured, probe grid 2026-08-16), so HEIGHT carries the scale instead: 10.2m two-course curtains at module scale 2.6, 19.4m corner towers, 14.2m twin gatehouse flankers, and a ~29m keep. Generated layout (uniform runs), authored landmarks -- the same author-time-recipe philosophy as before, with the generator's constants recorded here.",
+      "_why_colliders": "The old castle had NO colliders anywhere -- you walked through the walls of the endgame landmark. Every wall run, tower and the keep now carries a box in `colliders`, the same {at,size} local-space format village.gd already consumes; landmark.gd builds the StaticBody. The gate bay is deliberately OPEN (the passage is real now, the courtyard is walkable plinth, and the gate-shadow slab is retired), and the plinth + entry ramp colliders are landmark.gd's own, since both are its geometry.",
       "_why_course_seam": "OF4-gate-arch (2026-08-13): the upper course sits at y=1.408, not the 1.549 OF4-rebuild shipped. 1.549 is WallBricks' full height INCLUDING its crenellations, and every wall variant in this kit is crenellated -- so stacking a second course on the first left the lower course's crenel notches (that module is solid to y=1.408 and open from 1.408 to 1.563) as a continuous row of daylight slots punched straight through the curtain at mid-height: in the gate-side frames it read as a dotted bright line running the whole wall, and again on the far wall seen through the gate itself. Seating the upper course at 1.408 buries those notches behind it. Costs 0.14m of wall height (3.90m -> 3.76m) and turns the lower parapet into a proud string course, which is what a two-course curtain wants to look like anyway.",
       "_why_retint": "every material in the kit's own MTLs (LightRock/DarkRock/Black/Celing/LightWood/Banner, all variants) exports at the same placeholder grey Kd (0.64,0.64,0.64) -- a real gap in this particular pack's Blender export, confirmed directly against the OBJ/MTL text, not a design choice. Retint gives each material-name slot the stone/timber/iron/heraldic tone its name implies, the same surface-name convention village.gd's own retint (MI_WindowGlass above) already uses.",
       "modules": [
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-10.752, 0.0, -8.448], "yaw_deg": 0.0, "_why": "south wall (faces the camera at both viewpoints the site is seen from), two courses" },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-10.752, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-9.216, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-9.216, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-7.68, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-7.68, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-6.144, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-6.144, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-4.608, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-4.608, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-3.072, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-3.072, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-1.536, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-1.536, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallEntrance", "dir": "res://assets/buildings/quaternius_castle", "at": [0.0, 0.0, -8.448], "yaw_deg": 0.0, "scale": 1.72, "_why": "THE GATE -- one module, one arch, full curtain height. OF4-gate-arch (2026-08-13) replaced the stacked WallEntranceBricks(y=0)+TallWallEntrance(y=1.549) pair that OF4-rebuild shipped here. Direct polygon measurement of both OBJs (not the vertex-bounds measurement round 3 made, which only compared bounding boxes) shows the two modules carry the SAME arch profile -- identical 15-gon outer plate, opening x=+-0.445, springing at y=0.21, apex y=0.98 -- so they were never a profile mismatch. They are two ALTERNATIVE doorway walls, each with its own complete self-contained arch at its own base. Stacked, they cut TWO separate 0.98m arches into the wall 1.549m apart with a solid band between them, which is what read as a jagged/broken opening; the differing bounding-box z (WallEntranceBricks' whole mesh is authored 0.153m off-origin in z) additionally set the lower arch 0.212m proud of the upper one, so the two holes did not even sit in the same plane. Fix: use ONE module for the whole gate bay, uniformly scaled 1.72 so it stands 4.04m (its own authored 2.347m x 1.72) against the 3.90m two-course curtain either side -- a single clean arch 1.53m wide x 1.69m tall, and a gate block that rises just above the parapet the way a gatehouse should. Uniform, not stretched: this module is the kit's PLAIN wall variant (no brick relief -- its Bricks-variant siblings have it, TallWallEntrance does not), so scaling it changes no surface detail. The scaled block's cross-section (z -0.316..0.413) fully contains the neighbouring bays' (z -0.243..0.316) where its extra 0.54m of width overlaps them, so the overlap is swallowed rather than z-fighting, and 1.72 rather than 1.662 (which would be exactly curtain height) specifically so the gate's top face is NOT coplanar with the neighbours' merlon tops. Round 4's dead end (drop to a single-course opening) is not repeated here: this is a single course that is taller than the wall, not shorter than it." },
-        { "module": "TallWallEntrance", "dir": "res://assets/buildings/quaternius_castle", "at": [0.0, 0.0, -7.83], "yaw_deg": 0.0, "scale": 1.72, "_why": "the gate passage's inner ring -- a second copy of the gate module 0.618m behind the first (a 0.014m overlap rather than an abutment, so no coplanar faces z-fight and no daylight line opens between them). OF4-gate-arch round 1: a blind critic looking at the single-ring version said the opening 'reads as bricked up ... a hole cut in one wall revealing a second wall', because a one-module-thick cut is 0.63m deep and shows the sunlit courtyard and the far curtain's inner face straight through at almost the same value as the wall around it. Two rings give the arch a 1.25m reveal with its own self-shadowed soffit and jambs, which is what makes an opening read as a passage instead of a panel. landmark.gd::_build_gate_shadow closes the far end of it." },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [1.536, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [1.536, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [3.072, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [3.072, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [4.608, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [4.608, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [6.144, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [6.144, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [7.68, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [7.68, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [9.216, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [9.216, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [10.752, 0.0, -8.448], "yaw_deg": 0.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [10.752, 1.408, -8.448], "yaw_deg": 0.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-10.752, 0.0, 8.448], "yaw_deg": 180.0, "_why": "north wall, the hillside-facing back of the enclosure, no gate" },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-10.752, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-9.216, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-9.216, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-7.68, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-7.68, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-6.144, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-6.144, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-4.608, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-4.608, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-3.072, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-3.072, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-1.536, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-1.536, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [0.0, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [0.0, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [1.536, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [1.536, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [3.072, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [3.072, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [4.608, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [4.608, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [6.144, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [6.144, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [7.68, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [7.68, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [9.216, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [9.216, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [10.752, 0.0, 8.448], "yaw_deg": 180.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [10.752, 1.408, 8.448], "yaw_deg": 180.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, -7.68], "yaw_deg": 90.0, "_why": "west curtain wall" },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, -7.68], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, -7.68], "yaw_deg": -90.0, "_why": "east curtain wall" },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, -7.68], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, -6.144], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, -6.144], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, -6.144], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, -6.144], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, -4.608], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, -4.608], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, -4.608], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, -4.608], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, -3.072], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, -3.072], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, -3.072], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, -3.072], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, -1.536], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, -1.536], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, -1.536], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, -1.536], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, 0.0], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, 0.0], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, 0.0], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, 0.0], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, 1.536], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, 1.536], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, 1.536], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, 1.536], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, 3.072], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, 3.072], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, 3.072], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, 3.072], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, 4.608], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, 4.608], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, 4.608], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, 4.608], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, 6.144], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, 6.144], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, 6.144], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, 6.144], "yaw_deg": -90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, 7.68], "yaw_deg": 90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 1.408, 7.68], "yaw_deg": 90.0 },
-        { "module": "WallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, 7.68], "yaw_deg": -90.0 },
-        { "module": "TallWallBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 1.408, 7.68], "yaw_deg": -90.0 },
-        { "module": "LargeSquareTowerBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, -8.448], "yaw_deg": 0.0, "_why": "SW keep base, front-left -- tallest corner, camera-facing" },
-        { "module": "SmallSquareTowerBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 4.17, -8.448], "yaw_deg": 0.0, "_why": "SW keep second stage -- stacked, 4.17+2.03 = 6.20m total, four different corner pieces at four different heights so the skyline is not one part repeated" },
-        { "module": "PointyTower", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, -8.448], "yaw_deg": 0.0, "_why": "SE spire, front-right -- single piece, 5.39m, a different silhouette from the square keep" },
-        { "module": "LargeTower", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, 8.448], "yaw_deg": 0.0, "_why": "NW back corner -- round profile, 4.50m" },
-        { "module": "LargeSimpleTower", "dir": "res://assets/buildings/quaternius_castle", "at": [11.52, 0.0, 8.448], "yaw_deg": 0.0, "_why": "NE back corner -- round profile, 3.69m, the shortest corner" },
-        { "module": "SmallSquareTower", "dir": "res://assets/buildings/quaternius_castle", "at": [-1.85, 0.0, -8.948], "yaw_deg": 0.0, "_why": "west gatehouse flanker, 2.02m, pulled proud of the wall line so it reads as a tower, not thicker wall. OF4-gate-arch moved it in from -3.072 to sit hard against the rescaled gate block (half-width 1.308) with a 0.12m gap, so the pair actually frames the archway instead of standing two bays away from it -- its inner edge (-1.434) still clears the arch opening (-0.765) by 0.67m, so it never crops the arch" },
-        { "module": "SmallSquareTower", "dir": "res://assets/buildings/quaternius_castle", "at": [1.85, 0.0, -8.948], "yaw_deg": 0.0, "_why": "east gatehouse flanker, 2.02m, moved in with its twin (OF4-gate-arch)" },
-        { "module": "SimpleTowerBricks", "dir": "res://assets/buildings/quaternius_castle", "at": [-11.52, 0.0, 0.0], "yaw_deg": 0.0, "_why": "west wall midpoint turret, 2.66m, breaks the long run" },
-        { "module": "Banner", "dir": "res://assets/buildings/quaternius_castle", "at": [-1.85, 2.02, -8.948], "yaw_deg": 20.0, "_why": "flies from the west gatehouse flanker's own top -- moved with it (OF4-gate-arch)" }
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -12.006,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -12.006,
+            3.661,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -8.013,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -8.013,
+            3.661,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -4.019,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -4.019,
+            3.661,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            7.962,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            7.962,
+            3.661,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            11.955,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            11.955,
+            3.661,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            15.949,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            15.949,
+            3.661,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            19.942,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            19.942,
+            3.661,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -12.006,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -12.006,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -8.013,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -8.013,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -4.019,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -4.019,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -0.026,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -0.026,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            3.968,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            3.968,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            7.962,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            7.962,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            11.955,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            11.955,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            15.949,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            15.949,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            19.942,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            19.942,
+            3.661,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            -4.454
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            -4.454
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            -0.461
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            -0.461
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            3.533
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            3.533
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            7.526
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            7.526
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            11.52
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            11.52
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            15.514
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            15.514
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            19.507
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            19.507
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            23.501
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            23.501
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            27.494
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            3.661,
+            27.494
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            -4.454
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            -4.454
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            -0.461
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            -0.461
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            3.533
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            3.533
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            7.526
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            7.526
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            11.52
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            11.52
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            15.514
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            15.514
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            19.507
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            19.507
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            23.501
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            23.501
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "WallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            27.494
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            3.661,
+            27.494
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.6
+        },
+        {
+          "module": "TallWallEntrance",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 4.472,
+          "_why": "THE GATE, one arch, full curtain height -- the shipped single-module arch (OF4-gate-arch) carried up with the wall scale. Two rings below give the passage its reveal; the far end is OPEN now (the courtyard is real, walkable plinth), so landmark.gd's gate-shadow slab is retired."
+        },
+        {
+          "module": "TallWallEntrance",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            0.0,
+            -6.841
+          ],
+          "yaw_deg": 0.0,
+          "scale": 4.472
+        },
+        {
+          "module": "PointyTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.6,
+          "_why": "corner tower -- 19.4m, the board's multiple-towers silhouette"
+        },
+        {
+          "module": "PointyTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.6
+        },
+        {
+          "module": "PointyTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.6
+        },
+        {
+          "module": "PointyTower",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.6
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -3.6,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.4,
+          "_why": "gatehouse flanker -- 14.2m twin masses astride the gate, the board's gatehouse read"
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            7.6,
+            0.0,
+            -8.448
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.4
+        },
+        {
+          "module": "SimpleTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -16.0,
+            0.0,
+            11.8
+          ],
+          "yaw_deg": 90.0,
+          "scale": 3.0
+        },
+        {
+          "module": "SimpleTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            20.0,
+            0.0,
+            11.8
+          ],
+          "yaw_deg": 270.0,
+          "scale": 3.0
+        },
+        {
+          "module": "SimpleTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            0.0,
+            32.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 3.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -4.144,
+            0.0,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -4.144,
+            3.06,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -4.144,
+            0.0,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -4.144,
+            3.06,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -1.072,
+            0.0,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -1.072,
+            3.06,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -1.072,
+            0.0,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -1.072,
+            3.06,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            0.0,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            3.06,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            0.0,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            3.06,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            5.072,
+            0.0,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            5.072,
+            3.06,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            5.072,
+            0.0,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            5.072,
+            3.06,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            8.144,
+            0.0,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            8.144,
+            3.06,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            8.144,
+            0.0,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            8.144,
+            3.06,
+            26.0
+          ],
+          "yaw_deg": 180.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -5.0,
+            0.0,
+            16.928
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -5.0,
+            3.06,
+            16.928
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            9.0,
+            0.0,
+            16.928
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            9.0,
+            3.06,
+            16.928
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -5.0,
+            0.0,
+            20.0
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -5.0,
+            3.06,
+            20.0
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            9.0,
+            0.0,
+            20.0
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            9.0,
+            3.06,
+            20.0
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -5.0,
+            0.0,
+            23.072
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -5.0,
+            3.06,
+            23.072
+          ],
+          "yaw_deg": 90.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            9.0,
+            0.0,
+            23.072
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.0
+        },
+        {
+          "module": "TallWallBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            9.0,
+            3.06,
+            23.072
+          ],
+          "yaw_deg": 270.0,
+          "scale": 2.0
+        },
+        {
+          "module": "LargeSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            0.0,
+            20.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 5.2,
+          "_why": "THE KEEP -- 21.7m square mass with a 7.7m cap above it: ~29m total, the tower that owns the skyline from every approach. The board's composition is a keep dominating layered walls; height carries the scale the terrain would not give the footprint (the Rise flank climbs +34m twenty metres west of the wall, and the heightfield ends ~30m east -- measured, tools/_probe pattern, 2026-08-16)."
+        },
+        {
+          "module": "SmallSquareTowerBricks",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            2.0,
+            21.684,
+            20.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 3.8
+        },
+        {
+          "module": "WatchTowerWRoof",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -5.0,
+            0.0,
+            14.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.2
+        },
+        {
+          "module": "WatchTowerWRoof",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            9.0,
+            0.0,
+            26.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.2
+        },
+        {
+          "module": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            -3.6,
+            10.5,
+            -9.648
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.2,
+          "_why": "gatehouse banners -- occupation, visible from the approach"
+        },
+        {
+          "module": "Banner",
+          "dir": "res://assets/buildings/quaternius_castle",
+          "at": [
+            7.6,
+            10.5,
+            -9.648
+          ],
+          "yaw_deg": 0.0,
+          "scale": 2.2,
+          "_why": "gatehouse banners -- occupation, visible from the approach"
+        }
+      ],
+      "colliders": [
+        {
+          "at": [
+            -8.8,
+            5.2,
+            -8.45
+          ],
+          "size": [
+            16.4,
+            10.4,
+            1.6
+          ]
+        },
+        {
+          "at": [
+            12.8,
+            5.2,
+            -8.45
+          ],
+          "size": [
+            16.4,
+            10.4,
+            1.6
+          ]
+        },
+        {
+          "at": [
+            2.0,
+            5.2,
+            32.0
+          ],
+          "size": [
+            38.0,
+            10.4,
+            1.6
+          ]
+        },
+        {
+          "at": [
+            -16.0,
+            5.2,
+            11.78
+          ],
+          "size": [
+            1.6,
+            10.4,
+            42.45
+          ]
+        },
+        {
+          "at": [
+            20.0,
+            5.2,
+            11.78
+          ],
+          "size": [
+            1.6,
+            10.4,
+            42.45
+          ]
+        },
+        {
+          "at": [
+            -16.0,
+            10.0,
+            -8.45
+          ],
+          "size": [
+            4.6,
+            20.0,
+            4.6
+          ]
+        },
+        {
+          "at": [
+            20.0,
+            10.0,
+            -8.45
+          ],
+          "size": [
+            4.6,
+            20.0,
+            4.6
+          ]
+        },
+        {
+          "at": [
+            -16.0,
+            10.0,
+            32.0
+          ],
+          "size": [
+            4.6,
+            20.0,
+            4.6
+          ]
+        },
+        {
+          "at": [
+            20.0,
+            10.0,
+            32.0
+          ],
+          "size": [
+            4.6,
+            20.0,
+            4.6
+          ]
+        },
+        {
+          "at": [
+            -3.6,
+            7.2,
+            -8.45
+          ],
+          "size": [
+            4.4,
+            14.4,
+            4.4
+          ]
+        },
+        {
+          "at": [
+            7.6,
+            7.2,
+            -8.45
+          ],
+          "size": [
+            4.4,
+            14.4,
+            4.4
+          ]
+        },
+        {
+          "at": [
+            2.0,
+            3.1,
+            14.0
+          ],
+          "size": [
+            15.4,
+            6.2,
+            1.2
+          ]
+        },
+        {
+          "at": [
+            2.0,
+            3.1,
+            26.0
+          ],
+          "size": [
+            15.4,
+            6.2,
+            1.2
+          ]
+        },
+        {
+          "at": [
+            -5.0,
+            3.1,
+            20.0
+          ],
+          "size": [
+            1.2,
+            6.2,
+            13.2
+          ]
+        },
+        {
+          "at": [
+            9.0,
+            3.1,
+            20.0
+          ],
+          "size": [
+            1.2,
+            6.2,
+            13.2
+          ]
+        },
+        {
+          "at": [
+            2.0,
+            14.7,
+            20.0
+          ],
+          "size": [
+            7.4,
+            29.4,
+            7.4
+          ]
+        }
       ],
       "retint": {
         "LightRock": "#786d5e",
@@ -2336,8 +3839,7 @@
         "LightWood": "#7a5c39",
         "Banner": "#7a2430"
       }
-    }
-,
+    },
     "road_gate_leaf": {
       "_why": "SA7's gate leaf, rebuilt in the kit's own fencing after EV6 retired the farm pack out from under road_gate.gd's Fence2 (the retirement left the model load failing, so the gate never built: no collider, no prompt, smoke_opening red). Two segments wide (~4.1m, spans the road) and two courses tall (~1.4m, a corral gate rather than a knee-high rail), the upper course flipped so the post rhythm reads built rather than tiled. road_gate.gd owns position, collision, the latch box and the swing -- this is only the leaf, so it authors no colliders.",
       "modules": [
@@ -3608,84 +5110,527 @@
     "south_bridge": {
       "_why": "SC14, spec 3 Gate 1. The same timber-deck-on-stone-abutments language as `footbridge` above (bible sec12), stretched to carry the south gully's 14m clear span instead of a 0.7m stream channel: seven deck slabs from -7 to +7, a stone landing on each rim at +-8, and the kit's exterior border capping each approach. Nothing new -- every module is one the settlement already stands on (D24, one village family). scripts/world/south_bridge.gd owns where it sits, what height it sits at and the gate across it; this is only the span. Deliberately NOT a scaled copy of `footbridge`: a prefab scaled 2.3x would scale its plank thickness and rail height with it, and the result reads as a toy bridge photographed close up.",
       "modules": [
-        { "module": "Floor_WoodDark", "at": [-6.0, 0.1, 0.0], "_why": "timber deck, seven kit floor slabs spanning the gully" },
-        { "module": "Floor_WoodDark", "at": [-4.0, 0.1, 0.0] },
-        { "module": "Floor_WoodDark", "at": [-2.0, 0.1, 0.0] },
-        { "module": "Floor_WoodDark", "at": [0.0, 0.1, 0.0] },
-        { "module": "Floor_WoodDark", "at": [2.0, 0.1, 0.0] },
-        { "module": "Floor_WoodDark", "at": [4.0, 0.1, 0.0] },
-        { "module": "Floor_WoodDark", "at": [6.0, 0.1, 0.0] },
-        { "module": "Prop_WoodenFence_Single", "at": [-6.0, 0.12, 0.95], "_why": "rails, the kit fence at deck height" },
-        { "module": "Prop_WoodenFence_Single", "at": [-4.0, 0.12, 0.95] },
-        { "module": "Prop_WoodenFence_Single", "at": [-2.0, 0.12, 0.95] },
-        { "module": "Prop_WoodenFence_Single", "at": [0.0, 0.12, 0.95] },
-        { "module": "Prop_WoodenFence_Single", "at": [2.0, 0.12, 0.95] },
-        { "module": "Prop_WoodenFence_Single", "at": [4.0, 0.12, 0.95] },
-        { "module": "Prop_WoodenFence_Single", "at": [6.0, 0.12, 0.95] },
-        { "module": "Prop_WoodenFence_Single", "at": [-6.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Prop_WoodenFence_Single", "at": [-4.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Prop_WoodenFence_Single", "at": [-2.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Prop_WoodenFence_Single", "at": [0.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Prop_WoodenFence_Single", "at": [2.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Prop_WoodenFence_Single", "at": [4.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Prop_WoodenFence_Single", "at": [6.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Prop_WoodenFence_Single", "at": [-8.0, 0.12, 0.95], "_why": "the parapet carries on over each stone landing, which is also what stops a player stepping onto the deck from the side PAST the gate -- see the rail colliders below" },
-        { "module": "Prop_WoodenFence_Single", "at": [8.0, 0.12, 0.95] },
-        { "module": "Prop_WoodenFence_Single", "at": [-8.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Prop_WoodenFence_Single", "at": [8.0, 0.12, -0.95], "yaw_deg": 180.0 },
-        { "module": "Floor_UnevenBrick", "at": [-8.0, 0.02, 0.0], "_why": "the stone abutment landing on each rim" },
-        { "module": "Floor_UnevenBrick", "at": [8.0, 0.02, 0.0] },
-        { "module": "Prop_ExteriorBorder_Straight1", "at": [-9.0, 0.0, 0.0], "yaw_deg": -90.0 },
-        { "module": "Prop_ExteriorBorder_Straight2", "at": [9.0, 0.0, 0.0], "yaw_deg": 90.0 }
+        {
+          "module": "Floor_WoodDark",
+          "at": [
+            -6.0,
+            0.1,
+            0.0
+          ],
+          "_why": "timber deck, seven kit floor slabs spanning the gully"
+        },
+        {
+          "module": "Floor_WoodDark",
+          "at": [
+            -4.0,
+            0.1,
+            0.0
+          ]
+        },
+        {
+          "module": "Floor_WoodDark",
+          "at": [
+            -2.0,
+            0.1,
+            0.0
+          ]
+        },
+        {
+          "module": "Floor_WoodDark",
+          "at": [
+            0.0,
+            0.1,
+            0.0
+          ]
+        },
+        {
+          "module": "Floor_WoodDark",
+          "at": [
+            2.0,
+            0.1,
+            0.0
+          ]
+        },
+        {
+          "module": "Floor_WoodDark",
+          "at": [
+            4.0,
+            0.1,
+            0.0
+          ]
+        },
+        {
+          "module": "Floor_WoodDark",
+          "at": [
+            6.0,
+            0.1,
+            0.0
+          ]
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -6.0,
+            0.12,
+            0.95
+          ],
+          "_why": "rails, the kit fence at deck height"
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -4.0,
+            0.12,
+            0.95
+          ]
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -2.0,
+            0.12,
+            0.95
+          ]
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            0.0,
+            0.12,
+            0.95
+          ]
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            2.0,
+            0.12,
+            0.95
+          ]
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            4.0,
+            0.12,
+            0.95
+          ]
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            6.0,
+            0.12,
+            0.95
+          ]
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -6.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -4.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -2.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            0.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            2.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            4.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            6.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -8.0,
+            0.12,
+            0.95
+          ],
+          "_why": "the parapet carries on over each stone landing, which is also what stops a player stepping onto the deck from the side PAST the gate -- see the rail colliders below"
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            8.0,
+            0.12,
+            0.95
+          ]
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            -8.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            8.0,
+            0.12,
+            -0.95
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -8.0,
+            0.02,
+            0.0
+          ],
+          "_why": "the stone abutment landing on each rim"
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            8.0,
+            0.02,
+            0.0
+          ]
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -9.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": -90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            9.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 90.0
+        }
       ],
       "colliders": [
         {
-          "at": [0.0, 0.0, 0.0],
-          "size": [18.4, 0.24, 2.1],
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            18.4,
+            0.24,
+            2.1
+          ],
           "_why": "the walkable deck and both landings; top at 0.12 = deck surface. Reaches +-9.2, comfortably past the gully's own zero-depth contour at +-7.0, so the span always lands on solid rim"
         },
         {
-          "at": [0.0, 0.55, 0.95],
-          "size": [17.2, 0.9, 0.14],
+          "at": [
+            0.0,
+            0.55,
+            0.95
+          ],
+          "size": [
+            17.2,
+            0.9,
+            0.14
+          ],
           "_why": "rail, run out to +-8.6 so it covers the stone landings too. This is load-bearing for the gate, not decoration: the deck sits barely 0.12m above the levelled abutments, so a rail that stopped at the timber (+-7.15) would leave a step-on-from-the-side gap between it and a gate standing further out, and the whole crossing could be walked around the leaf in one sidestep"
         },
-        { "at": [0.0, 0.55, -0.95], "size": [17.2, 0.9, 0.14], "_why": "rail" }
+        {
+          "at": [
+            0.0,
+            0.55,
+            -0.95
+          ],
+          "size": [
+            17.2,
+            0.9,
+            0.14
+          ],
+          "_why": "rail"
+        }
       ]
     },
     "quarry_foundation": {
       "_why": "SD16, spec §3 Band 2's 'old foundations'. A building the meadow has taken back: a brick floor, one long wall course and two stub returns, all of them the SAME `Wall_UnevenBrick_Straight` the village's own cottages are built from (D24) but SUNK so only the bottom metre stands. That is the whole trick and it is deliberate -- a ruin drawn from the same family as the living buildings is what makes the quarry read as older than the village rather than as a different game's asset pack. Vines on the standing course, brick rubble where the rest of it went.",
       "_comment_sink": "The kit's walls are 3.12m tall with their origin at the base, so y = -2.1 leaves ~1.0m proud and y = -2.45 leaves ~0.67m. Sinking rather than modelling a broken top edge: the kit ships no ruined pieces, and a wall cut off by the ground plane reads as a buried course, which is what an old foundation IS.",
       "modules": [
-        { "module": "Floor_UnevenBrick", "at": [-2.0, 0.03, -1.0], "_why": "the floor slab, 6x4m of it" },
-        { "module": "Floor_UnevenBrick", "at": [0.0, 0.03, -1.0] },
-        { "module": "Floor_UnevenBrick", "at": [2.0, 0.03, -1.0] },
-        { "module": "Floor_UnevenBrick", "at": [-2.0, 0.03, 1.0] },
-        { "module": "Floor_UnevenBrick", "at": [0.0, 0.03, 1.0] },
-        { "module": "Floor_UnevenBrick", "at": [2.0, 0.03, 1.0] },
-        { "module": "Wall_UnevenBrick_Straight", "at": [-2.0, -2.1, -2.0], "yaw_deg": 180.0, "_why": "the one long course still standing, knee-to-waist high" },
-        { "module": "Wall_UnevenBrick_Straight", "at": [0.0, -2.25, -2.0], "yaw_deg": 180.0 },
-        { "module": "Wall_UnevenBrick_Straight", "at": [2.0, -2.45, -2.0], "yaw_deg": 180.0, "_why": "sinking further along the run, so the course dies away instead of ending square" },
-        { "module": "Wall_UnevenBrick_Straight", "at": [-3.0, -2.35, -1.0], "yaw_deg": -90.0, "_why": "a stub return at each end -- two walls meeting is what says building rather than wall" },
-        { "module": "Wall_UnevenBrick_Straight", "at": [3.0, -2.55, 1.0], "yaw_deg": 90.0 },
-        { "module": "Prop_ExteriorBorder_Straight1", "at": [-1.0, 0.0, 2.1], "yaw_deg": 0.0, "_why": "the open side's own sill, where the fourth wall went" },
-        { "module": "Prop_ExteriorBorder_Straight2", "at": [1.0, 0.0, 2.1], "yaw_deg": 0.0 },
-        { "module": "Prop_Brick1", "at": [-3.4, 0.0, 2.4], "yaw_deg": 25.0, "_why": "rubble from the courses that went" },
-        { "module": "Prop_Brick2", "at": [2.6, 0.0, 2.6], "yaw_deg": -40.0 },
-        { "module": "Prop_Brick1", "at": [3.6, 0.0, -1.8], "yaw_deg": 70.0 },
-        { "module": "Prop_Vine1", "at": [-2.0, -1.2, -2.0], "yaw_deg": 180.0, "_why": "growing over the standing course" },
-        { "module": "Prop_Vine2", "at": [0.0, -1.35, -2.0], "yaw_deg": 180.0 }
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -2.0,
+            0.03,
+            -1.0
+          ],
+          "_why": "the floor slab, 6x4m of it"
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            0.0,
+            0.03,
+            -1.0
+          ]
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            2.0,
+            0.03,
+            -1.0
+          ]
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            -2.0,
+            0.03,
+            1.0
+          ]
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            0.0,
+            0.03,
+            1.0
+          ]
+        },
+        {
+          "module": "Floor_UnevenBrick",
+          "at": [
+            2.0,
+            0.03,
+            1.0
+          ]
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -2.0,
+            -2.1,
+            -2.0
+          ],
+          "yaw_deg": 180.0,
+          "_why": "the one long course still standing, knee-to-waist high"
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            0.0,
+            -2.25,
+            -2.0
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            2.0,
+            -2.45,
+            -2.0
+          ],
+          "yaw_deg": 180.0,
+          "_why": "sinking further along the run, so the course dies away instead of ending square"
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            -3.0,
+            -2.35,
+            -1.0
+          ],
+          "yaw_deg": -90.0,
+          "_why": "a stub return at each end -- two walls meeting is what says building rather than wall"
+        },
+        {
+          "module": "Wall_UnevenBrick_Straight",
+          "at": [
+            3.0,
+            -2.55,
+            1.0
+          ],
+          "yaw_deg": 90.0
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight1",
+          "at": [
+            -1.0,
+            0.0,
+            2.1
+          ],
+          "yaw_deg": 0.0,
+          "_why": "the open side's own sill, where the fourth wall went"
+        },
+        {
+          "module": "Prop_ExteriorBorder_Straight2",
+          "at": [
+            1.0,
+            0.0,
+            2.1
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_Brick1",
+          "at": [
+            -3.4,
+            0.0,
+            2.4
+          ],
+          "yaw_deg": 25.0,
+          "_why": "rubble from the courses that went"
+        },
+        {
+          "module": "Prop_Brick2",
+          "at": [
+            2.6,
+            0.0,
+            2.6
+          ],
+          "yaw_deg": -40.0
+        },
+        {
+          "module": "Prop_Brick1",
+          "at": [
+            3.6,
+            0.0,
+            -1.8
+          ],
+          "yaw_deg": 70.0
+        },
+        {
+          "module": "Prop_Vine1",
+          "at": [
+            -2.0,
+            -1.2,
+            -2.0
+          ],
+          "yaw_deg": 180.0,
+          "_why": "growing over the standing course"
+        },
+        {
+          "module": "Prop_Vine2",
+          "at": [
+            0.0,
+            -1.35,
+            -2.0
+          ],
+          "yaw_deg": 180.0
+        }
       ],
       "colliders": [
-        { "at": [0.0, 0.45, -2.0], "size": [6.2, 0.9, 0.35], "_why": "the standing course -- low enough to see over, solid enough to stop a walk through" },
-        { "at": [-3.0, 0.3, -1.0], "size": [0.35, 0.6, 2.1], "_why": "stub return" },
-        { "at": [3.0, 0.2, 1.0], "size": [0.35, 0.4, 2.1], "_why": "stub return, the lower one" }
+        {
+          "at": [
+            0.0,
+            0.45,
+            -2.0
+          ],
+          "size": [
+            6.2,
+            0.9,
+            0.35
+          ],
+          "_why": "the standing course -- low enough to see over, solid enough to stop a walk through"
+        },
+        {
+          "at": [
+            -3.0,
+            0.3,
+            -1.0
+          ],
+          "size": [
+            0.35,
+            0.6,
+            2.1
+          ],
+          "_why": "stub return"
+        },
+        {
+          "at": [
+            3.0,
+            0.2,
+            1.0
+          ],
+          "size": [
+            0.35,
+            0.4,
+            2.1
+          ],
+          "_why": "stub return, the lower one"
+        }
       ]
     },
     "south_bridge_gate": {
       "_why": "SC14's leaf: `road_gate_leaf` above at ONE segment instead of two, because it shuts a 2.1m bridge deck rather than a 4.1m road. Same construction and same reason for it -- kit fencing, two courses, the upper one flipped so the post rhythm reads built rather than tiled. Authors no colliders: scripts/world/south_bridge.gd owns the collision, the padlock and the swing, exactly as road_gate.gd does for its own leaf.",
       "modules": [
-        { "module": "Prop_WoodenFence_Single", "at": [0.0, 0.0, 0.0], "yaw_deg": 0.0 },
-        { "module": "Prop_WoodenFence_Extension2", "at": [0.0, 0.62, 0.0], "yaw_deg": 180.0 }
+        {
+          "module": "Prop_WoodenFence_Single",
+          "at": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "module": "Prop_WoodenFence_Extension2",
+          "at": [
+            0.0,
+            0.62,
+            0.0
+          ],
+          "yaw_deg": 180.0
+        }
       ]
     }
   }

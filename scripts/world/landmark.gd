@@ -85,13 +85,32 @@ const CASTLE_PREFAB := "castle"
 ## read as a rock crag instead of built stone once flat-filled; kept here
 ## even though the plinth is shaded now, since there is no reason to
 ## reintroduce a slope that was already rejected on its own merits.
-const PLINTH_TOP := 1.8
-const PLINTH_BOTTOM := -1.1
-## Half-extents, a small margin past the castle prefab's own wall centrelines
-## (x +-11.52, z +-8.448 in building_prefabs.json) so the walls stand ON the
-## plinth rather than at its exact edge.
-const PLINTH_HALF_X := 13.0
-const PLINTH_HALF_Z := 10.0
+## RE-MASS 2026-08-16 (owner directive; see the castle prefab's own _why in
+## building_prefabs.json): the plinth grew with the castle -- 40x44m,
+## asymmetric on purpose. The SOUTH edge stays exactly where OF4-rebuild put
+## it (local z -10, world -154.4) because the stronghold complex was sited
+## against it; all growth goes north/east/west inside the envelope the
+## terrain probe allowed. TOP/BOTTOM re-measured over the NEW footprint
+## (probe grid, 2026-08-16): highest relief inside it +3.5m, lowest -1.5m,
+## so 4.2 clears the high corner and -2.5 keeps the exposed face a built
+## revetment on the falling side. The plinth is also a real STATIC BODY now
+## -- the whole castle was walk-through before.
+const PLINTH_TOP := 4.2
+const PLINTH_BOTTOM := -2.5
+## Centre and half-extents of the grown footprint: x -18..+22, z -10..+34
+## local. A margin past the new wall centrelines (x -16..+20, z -8.448..+32).
+const PLINTH_CENTRE := Vector3(2.0, 0.0, 12.0)
+const PLINTH_HALF_X := 20.0
+const PLINTH_HALF_Z := 22.0
+
+## The way in. The gate arch is real and OPEN now (the shadow slab is
+## retired), and the courtyard floor is the plinth top -- which sits
+## PLINTH_TOP above the ground, so a ramp runs down from the gate to the
+## grass on the south side. 11m of run over 4.2m of rise is ~21 degrees,
+## comfortably under the 45 the player walks. It ends 4m clear of the
+## Legendary Chamber's box (z -169.4 world; the ramp foot reaches -165.4).
+const RAMP_RUN := 11.0
+const RAMP_WIDTH := 6.0
 
 ## A stone tone distinct from (darker than) the castle's own retinted
 ## LightRock/DarkRock -- the foundation should read as a different, older
@@ -143,7 +162,8 @@ func build(world: Node) -> void:
 	castle.position = Vector3(0.0, PLINTH_TOP, 0.0)
 	add_child(castle)
 
-	_build_gate_shadow()
+	_build_castle_colliders(prefabs)
+	_build_ramp()
 
 
 ## A simple vertical-faced stone podium the whole castle stands on --
@@ -161,8 +181,76 @@ func _build_plinth() -> void:
 	mat.roughness = 0.95
 	box.material = mat
 	plinth.mesh = box
-	plinth.position = Vector3(0.0, (PLINTH_TOP + PLINTH_BOTTOM) * 0.5, 0.0)
+	plinth.position = PLINTH_CENTRE + Vector3(0.0, (PLINTH_TOP + PLINTH_BOTTOM) * 0.5, 0.0)
 	add_child(plinth)
+
+	# The courtyard floor and the foundation the player can stand against.
+	var body := StaticBody3D.new()
+	body.name = "PlinthBody"
+	var shape := CollisionShape3D.new()
+	var solid := BoxShape3D.new()
+	solid.size = box.size
+	shape.shape = solid
+	body.add_child(shape)
+	add_child(body)
+	body.position = plinth.position
+
+
+## The prefab's own collider list (the {at,size} local-space format
+## village.gd already consumes), built under one StaticBody at the castle's
+## transform. The old castle carried none -- the endgame landmark was
+## walk-through -- and this is half of what "not a prop" means.
+func _build_castle_colliders(prefabs: RefCounted) -> void:
+	var boxes: Array = prefabs.call("colliders", CASTLE_PREFAB)
+	if boxes.is_empty():
+		return
+	var body := StaticBody3D.new()
+	body.name = "CastleBody"
+	for entry: Variant in boxes:
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var at: Array = spec.get("at", [0.0, 0.0, 0.0])
+		var size: Array = spec.get("size", [1.0, 1.0, 1.0])
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(float(size[0]), float(size[1]), float(size[2]))
+		shape.shape = box
+		shape.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+		body.add_child(shape)
+	add_child(body)
+	body.position = Vector3(0.0, PLINTH_TOP, 0.0)
+
+
+## The stone ramp from the grass up to the open gate: one rotated box, mesh
+## and collider in the same body, plinth-coloured so it reads as part of the
+## foundation.
+func _build_ramp() -> void:
+	var rise := PLINTH_TOP
+	var length := sqrt(RAMP_RUN * RAMP_RUN + rise * rise)
+	var angle := atan2(rise, RAMP_RUN)
+
+	var body := StaticBody3D.new()
+	body.name = "GateRamp"
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(RAMP_WIDTH, 0.8, length)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = PLINTH_COLOUR
+	mat.roughness = 0.95
+	box.material = mat
+	mesh.mesh = box
+	body.add_child(mesh)
+	var shape := CollisionShape3D.new()
+	var solid := BoxShape3D.new()
+	solid.size = box.size
+	shape.shape = solid
+	body.add_child(shape)
+	add_child(body)
+	# Centred on the slope from the gate sill (local z -10 at plinth top) down
+	# to the grass at z -10-RAMP_RUN. Gate bay sits at local x +2.
+	body.position = Vector3(2.0, PLINTH_TOP - rise * 0.5 - 0.2, -10.0 - RAMP_RUN * 0.5)
+	body.rotation.x = -angle
 
 
 ## The far end of the gate passage: a plain dark slab standing across the
@@ -199,6 +287,9 @@ const GATE_SHADOW_SIZE := Vector3(3.0, 3.0, 0.4)
 const GATE_SHADOW_AT := Vector3(0.0, 0.0, -7.35)
 
 
+## Retired by the 2026-08-16 re-mass: the gate passage is genuinely open now
+## (walkable courtyard behind it), so closing its far end with a shadow slab
+## would wall up a doorway that finally works. Kept for the history above.
 func _build_gate_shadow() -> void:
 	var slab := MeshInstance3D.new()
 	slab.name = "GatePassageShadow"
