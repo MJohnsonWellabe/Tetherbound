@@ -62,7 +62,7 @@ func test_mark_visited_reveals_a_plausible_area_and_returns_true() -> void:
 	# pi * 45^2 / 16 (cell area) ~= 397.6 cells; a generous band around it
 	# catches a badly wrong radius or an off-by-one in the cell math without
 	# being pinned to the exact discretisation.
-	var revealed := int(round(map.discovered_fraction() * float(MAP_STATE.GRID * MAP_STATE.GRID)))
+	var revealed := int(round(map.discovered_fraction() * float(MAP_STATE.grid_x() * MAP_STATE.grid_z())))
 	assert_between(float(revealed), 350.0, 450.0,
 		"revealed cell count %d is not plausible for a %.0fm radius" % [revealed, map.reveal_radius])
 
@@ -222,7 +222,7 @@ func test_load_data_with_an_empty_dictionary_is_a_working_fresh_state() -> void:
 func test_a_corrupted_visited_grid_is_discarded_without_crashing() -> void:
 	map.mark_visited(Vector3(100.0, 0.0, 100.0))
 	var data: Dictionary = map.save_data()
-	# Wrong length -- three bytes instead of GRID*GRID.
+	# Wrong length -- three bytes instead of grid_x() * grid_z().
 	data["visited_b64"] = Marshalls.raw_to_base64(PackedByteArray([1, 2, 3]))
 
 	map.load_data(data)
@@ -232,6 +232,67 @@ func test_a_corrupted_visited_grid_is_discarded_without_crashing() -> void:
 	assert_false(map.is_discovered(Vector3(100.0, 0.0, 100.0)))
 	# The grid must still be USABLE, not merely empty.
 	assert_true(map.mark_visited(Vector3(100.0, 0.0, 100.0)))
+
+
+# --- save-format grid descriptor (§8.6a) ------------------------------------
+#
+# The fog grid used to be hard-coded (GRID/CELL/ORIGIN consts); it is now
+# derived from terrain_playground.json, and the save payload carries an
+# explicit descriptor of the geometry it was written under. These tests
+# cover the two cases MEADOWS_MACRO_LAYOUT.md §8.6a calls out by name: an OLD
+# save (no descriptor at all) must still load its fog on a world that has not
+# resized, and a save whose descriptor does NOT match this build's current
+# grid must be discarded even when the raw byte length happens to match —
+# the "dangerous case" a length-only check cannot detect.
+
+func test_save_data_carries_a_grid_descriptor_matching_the_live_grid() -> void:
+	var data: Dictionary = map.save_data()
+	assert_eq(int(data.get("grid_x")), MAP_STATE.grid_x())
+	assert_eq(int(data.get("grid_z")), MAP_STATE.grid_z())
+	assert_almost_eq(float(data.get("cell")), MAP_STATE.CELL)
+	assert_eq(Vector2(float(data.get("origin_x")), float(data.get("origin_z"))), MAP_STATE.origin())
+
+
+func test_an_old_save_with_no_descriptor_still_loads_fog_on_an_unresized_world() -> void:
+	map.mark_visited(Vector3(100.0, 0.0, 100.0))
+	var data: Dictionary = map.save_data()
+	# Simulate a save written before the descriptor fields existed.
+	data.erase("grid_x")
+	data.erase("grid_z")
+	data.erase("cell")
+	data.erase("origin_x")
+	data.erase("origin_z")
+
+	var loaded: RefCounted = MAP_STATE.new()
+	loaded.configure(_config())
+	loaded.load_data(data)
+
+	assert_true(loaded.is_discovered(Vector3(100.0, 0.0, 100.0)),
+		"an old save without a descriptor must not lose fog on a world that has not resized")
+	assert_almost_eq(loaded.discovered_fraction(), map.discovered_fraction())
+
+
+func test_a_descriptor_that_disagrees_with_the_live_grid_is_discarded_even_at_the_right_length() -> void:
+	map.mark_visited(Vector3(100.0, 0.0, 100.0))
+	var data: Dictionary = map.save_data()
+	# Byte length is untouched (still exactly grid_x() * grid_z()) -- only the
+	# geometry the bytes are supposed to describe has changed. A length-only
+	# check would accept this and silently reveal the wrong ground.
+	data["grid_x"] = MAP_STATE.grid_x()
+	data["grid_z"] = MAP_STATE.grid_z()
+	data["cell"] = MAP_STATE.CELL * 4.0
+	data["origin_x"] = MAP_STATE.origin().x - 999.0
+	data["origin_z"] = MAP_STATE.origin().y
+
+	var loaded: RefCounted = MAP_STATE.new()
+	loaded.configure(_config())
+	loaded.load_data(data)
+
+	assert_almost_eq(loaded.discovered_fraction(), 0.0, 0.0001,
+		"a geometry mismatch must reset fog even when the byte array's length still matches")
+	assert_false(loaded.is_discovered(Vector3(100.0, 0.0, 100.0)))
+	# Still a WORKING fresh grid, not just an empty one.
+	assert_true(loaded.mark_visited(Vector3(100.0, 0.0, 100.0)))
 
 
 # --- named regions -----------------------------------------------------------

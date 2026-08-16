@@ -11,9 +11,10 @@ Minimap and full map read from one shared data layer, `MapState` — a plain
 `RefCounted`, held as `Game.map` alongside the party and inventory `D14`
 already put on the one autoload. It owns three things (spec §6A.13):
 
-1. **Fog-of-war discovery** — a 128×128 cell grid over the ±256m playground
-   world, with a ~45m reveal radius around the player as they move.
-   Tunable.
+1. **Fog-of-war discovery** — a cell grid derived from
+   `data/config/terrain_playground.json`'s world bounds (today, that's
+   128×128 cells of `CELL` 4.0 over the ±256m playground world), with a
+   ~45m reveal radius around the player as they move. Tunable.
 2. **Discovered landmarks** — sourced from `data/config/map_landmarks.json`,
    data-driven so a new Band 1–4 landmark (`D23`'s progression bands) joins
    the map with a JSON entry, not a code change.
@@ -79,3 +80,36 @@ picture for a one-time cost instead of a per-frame one.
 Nothing existed to supersede — there was no minimap and no map database
 before this. It does commit the eventual full map (`GAME_DESIGN.md` §23) to
 share `MapState` rather than growing its own discovery tracking later.
+
+## Amendment — the grid is derived, not hard-coded (2026-08-16)
+
+Point 1 above said "a 128×128 cell grid over the ±256m playground world" as
+if those numbers were the decision. They were never the decision — the
+decision was one shared fog grid, however sized. 128, 4.0 and ±256 were just
+today's world (`terrain_playground.json`'s `world_size` 512), copied into
+`autoload/map_state.gd` as the constants `GRID`, `CELL` and `ORIGIN`.
+
+`D50` makes the Meadows an 8192×2048m corridor, not a 512m square, and
+`docs/MEADOWS_MACRO_LAYOUT.md` §8.6 found three files that had each quietly
+copied the ±256m assumption in as a hard-coded constant, `map_state.gd`
+among them. Left alone, fixing the world size would have meant silently
+editing `GRID`, `CELL` and `ORIGIN` to match — the same failure mode `D09`
+already named for terrain height, here applied to the map instead.
+
+`map_state.gd` now derives `GRID_X`, `GRID_Z` and `ORIGIN` from
+`terrain_playground.json`'s world bounds at runtime; `CELL` stays a tunable
+constant, unchanged at 4.0. Nothing about today's behaviour changes — the
+world is still 512m square today, so the grid is still exactly 128×128 over
+±256m — but a future world-size change now moves the grid with it instead of
+requiring someone to remember this file exists.
+
+Per `MEADOWS_MACRO_LAYOUT.md` §8.6(a): the fog grid is persisted
+(`visited_b64` in the save file), and `load_data()` only ever checked the
+byte array's length, not its geometry. A `GRID × GRID` array that keeps the
+same length but changes what `CELL` or `ORIGIN` mean would load without
+error and silently reveal the wrong part of a resized world. The save
+payload now carries an explicit grid descriptor (`grid_x`, `grid_z`, cell
+size, origin) alongside `visited_b64`, so a future geometry change can
+detect the mismatch and reset fog cleanly instead of misreading it. An old
+save with no descriptor at all still loads correctly today, via the
+existing length check — the dimensions it was saved with haven't changed.

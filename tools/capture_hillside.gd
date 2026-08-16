@@ -47,14 +47,16 @@ const VIEWPOINTS := [
 		# the sky — this is the "all over the dome" framing the critic used.
 		# Eye sits east of the peak looking back west, so the visible near
 		# flank is the same east-facing slope every other viewpoint here
-		# samples. MUST stay inside the baked world (+-256m, world_size 512
-		# in terrain_playground.json): an eye past the edge parks the player
+		# samples. MUST stay inside the baked world (+-half of `world_size`
+		# in terrain_playground.json (512 today, so +-256m) — see
+		# `_world_half_extent()`, checked for every viewpoint below, not
+		# just asserted here: an eye past the edge parks the player
 		# out of bounds too (this file parks at VIEWPOINTS[0]'s own XZ,
 		# survey.gd's own fix for the same problem) and broke Terrain3D's
 		# streaming for the WHOLE run, not just this one frame — the exact
 		# "camera sat below the terrain, world-noise backdrop, floating
 		# vegetation" failure survey.gd's header already documents. x=235
-		# leaves 21m of margin.
+		# leaves 21m of margin against today's 256m half-extent.
 		"name": "dome-overview",
 		"eye": Vector2(235.0, -90.0), "eye_h": 6.0,
 		"target": Vector2(140.0, -90.0), "target_h": 20.0,
@@ -85,8 +87,40 @@ func _init() -> void:
 	_run()
 
 
+## Half the baked world's span in metres, derived from `world_size` in
+## terrain_playground.json the same way build_playground_terrain.gd computes
+## it (`int(config.get("world_size", 512))`), not a second hard-coded 256.
+## world_size names one full square span, so half of it is the distance from
+## the origin to every edge alike.
+func _world_half_extent() -> float:
+	var config := HEIGHTFIELD.load_config()
+	var world_size := int(config.get("world_size", 512))
+	return world_size / 2.0
+
+
+## Fails loudly, before a single frame is spent, rather than silently baking
+## a broken survey run — see VIEWPOINTS[0]'s own comment for what one
+## out-of-bounds eye did to Terrain3D's streaming for the WHOLE run last time.
+func _check_viewpoints_in_bounds(half_extent: float) -> bool:
+	var ok := true
+	for entry: Variant in VIEWPOINTS:
+		var view: Dictionary = entry
+		var name: String = str(view["name"])
+		for key in ["eye", "target"]:
+			var point: Vector2 = view[key]
+			if absf(point.x) > half_extent or absf(point.y) > half_extent:
+				push_error("%s: %s %s is outside the baked world (+-%.1fm)" % [name, key, point, half_extent])
+				ok = false
+	return ok
+
+
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+
+	var half_extent := _world_half_extent()
+	if not _check_viewpoints_in_bounds(half_extent):
+		quit(1)
+		return
 
 	var packed: PackedScene = load(SCENE)
 	if packed == null:

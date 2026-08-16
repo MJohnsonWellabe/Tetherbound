@@ -27,8 +27,8 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 ## OF26. Only for its `DEBUG_TELEPORT_CLEARANCE` const, the same "preload the
-## script, read the const off it" idiom `scripts/ui/tab_map.gd` already uses
-## for `MAP_STATE.CELL`/`MAP_STATE.GRID`.
+## script, read the const/static func off it" idiom `scripts/ui/tab_map.gd`
+## already uses for `MAP_STATE.CELL`/`MAP_STATE.grid_x()`.
 const GAME_STATE := preload("res://autoload/game_state.gd")
 const SETTLE_FRAMES := 240
 

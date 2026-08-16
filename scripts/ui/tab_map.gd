@@ -16,11 +16,17 @@ extends "res://scripts/ui/menu_tab.gd"
 ## is no documented in-fiction compass, so this is a naming convenience, not a
 ## rule anyone could get wrong.
 ##
-## FIXED VIEW, NO PAN/ZOOM (v1). `MapState`'s grid is 128 cells at 4m —
-## 512x512m — and every landmark in `data/config/map_landmarks.json` sits well
-## inside that box: the whole Meadows already fits one screen at a glance, so
-## fitting the world to the panel is not a corner cut, it is the actual right
-## answer for a biome this size. Free pan/zoom was considered and set aside
+## FIXED VIEW, NO PAN/ZOOM (v1). `MapState`'s grid is today 128 cells at 4m —
+## 512x512m, derived from `terrain_playground.json` rather than hard-coded
+## (`docs/MEADOWS_MACRO_LAYOUT.md` §8.6) — and every landmark in
+## `data/config/map_landmarks.json` sits well inside that box: the whole
+## Meadows already fits one screen at a glance, so fitting the world to the
+## panel is not a corner cut, it is the actual right answer for a biome this
+## size. THIS STOPS BEING TRUE the day the corridor world lands (`D50`:
+## 8192x2048m) — an un-panned, un-zoomed view of a world that long reduces
+## every landmark to a sliver of pixels, which is exactly why pan/zoom is
+## real, not-yet-built future work rather than a permanently deferred one;
+## nothing here tries to solve that today. Free pan/zoom was considered and set aside
 ## for a real reason, not laziness: every existing in-menu directional read
 ## (`tab_backpack.gd`, `tab_creatures.gd`) rides Godot's `ui_*` focus-navigation
 ## actions, which this canvas cannot also repurpose as a pan axis without
@@ -279,12 +285,24 @@ func _draw_map(canvas: Control) -> void:
 	if rect_size.x <= 0.0 or rect_size.y <= 0.0:
 		return
 
-	# Letterbox to a centered square: the world is 512x512m (square), the
-	# panel usually is not, and stretching x/y independently would visibly
-	# warp the landmark layout relative to the terrain bake beneath it.
-	var side: float = minf(rect_size.x, rect_size.y)
-	var map_origin := Vector2((rect_size.x - side) * 0.5, (rect_size.y - side) * 0.5)
-	var map_rect := Rect2(map_origin, Vector2(side, side))
+	# Letterbox to a centered rect matching the WORLD's own aspect ratio, not
+	# a bare square — stretching x/y independently would visibly warp the
+	# landmark layout relative to the terrain bake beneath it, and that ratio
+	# is only 1:1 (a square) because today's world happens to be square. The
+	# aspect is read from `MapState`'s own derived grid (`docs/MEADOWS_MACRO_
+	# LAYOUT.md` §8.6), so this stops assuming a square the moment the world
+	# does.
+	var world_span_x: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
+	var world_span_z: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
+	var aspect: float = world_span_x / maxf(world_span_z, 0.001)
+
+	var map_size: Vector2
+	if rect_size.x / maxf(rect_size.y, 0.001) > aspect:
+		map_size = Vector2(rect_size.y * aspect, rect_size.y) # panel wider than the world: height-constrained
+	else:
+		map_size = Vector2(rect_size.x, rect_size.x / aspect) # panel taller than the world: width-constrained
+	var map_origin := Vector2((rect_size.x - map_size.x) * 0.5, (rect_size.y - map_size.y) * 0.5)
+	var map_rect := Rect2(map_origin, map_size)
 
 	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), UITokens.BG_DEEP)
 
@@ -490,14 +508,19 @@ func _facing_yaw(world: Node, player: Node3D) -> float:
 
 
 ## World (x, z) -> a point inside `map_rect`, using the same grid `MapState`
-## fogs (`MAP_STATE.ORIGIN`/`CELL`/`GRID` — the const-on-a-preloaded-script
-## read `tab_creatures.gd` already uses for `PARTY.MAX_CREATURES`), so a landmark and
-## the fog cell under it can never drift apart.
+## fogs (`MAP_STATE.CELL`/`grid_x()`/`grid_z()`/`origin()` — the const/static-
+## func-on-a-preloaded-script read `tab_creatures.gd` already uses for
+## `PARTY.MAX_CREATURES`), so a landmark and the fog cell under it can never
+## drift apart. Separate spans per axis, not one shared square span — §8.6
+## rejects the square assumption for the world itself, and `map_rect` is now
+## letterboxed to the same non-square aspect (`_draw_map` above), so both
+## sides of this mapping already agree the world need not be square.
 func _world_to_canvas(pos: Vector2, map_rect: Rect2) -> Vector2:
-	var span: float = float(MAP_STATE.CELL) * float(MAP_STATE.GRID)
-	var origin: Vector2 = MAP_STATE.ORIGIN
-	var nx: float = clampf((pos.x - origin.x) / span, 0.0, 1.0)
-	var nz: float = clampf((pos.y - origin.y) / span, 0.0, 1.0)
+	var span_x: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_x())
+	var span_z: float = float(MAP_STATE.CELL) * float(MAP_STATE.grid_z())
+	var origin: Vector2 = MAP_STATE.origin()
+	var nx: float = clampf((pos.x - origin.x) / span_x, 0.0, 1.0)
+	var nz: float = clampf((pos.y - origin.y) / span_z, 0.0, 1.0)
 	return map_rect.position + Vector2(nx * map_rect.size.x, nz * map_rect.size.y)
 
 
@@ -561,12 +584,13 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 	if _fog_tex != null and revision == _fog_tex_revision:
 		return _fog_tex
 
-	var grid: int = int(map_state.call("cell_grid_size"))
-	if grid <= 0:
+	var grid_x: int = int(map_state.call("cell_grid_x"))
+	var grid_z: int = int(map_state.call("cell_grid_z"))
+	if grid_x <= 0 or grid_z <= 0:
 		return null
-	var image := Image.create(grid, grid, false, Image.FORMAT_RGBA8)
-	for iz in grid:
-		for ix in grid:
+	var image := Image.create(grid_x, grid_z, false, Image.FORMAT_RGBA8)
+	for iz in grid_z:
+		for ix in grid_x:
 			var discovered: bool = bool(map_state.call("cell_at", ix, iz))
 			image.set_pixel(ix, iz, FOG_DISCOVERED if discovered else FOG_UNDISCOVERED)
 	_fog_tex = ImageTexture.create_from_image(image)

@@ -27,8 +27,24 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots/_perimeter"
 const SETTLE_FRAMES := 240
-const RADIUS := 235.0
-const SEGMENTS := 40
+
+## RADIUS/SEGMENTS read from world_perimeter.gd itself rather than copied —
+## this file used to carry its own `RADIUS := 235.0` / `SEGMENTS := 40`, a
+## second hard-coded copy of the ring it photographs. world_perimeter.gd is
+## the one place that answers "how big is the ring"; this preload keeps it
+## that way instead of adding a second answer that can drift from the first.
+##
+## docs/decisions/D51 deletes this ring outright for a rectangular corridor
+## boundary and, in the same breath, obsoletes this whole capture tool ("a
+## tool that orbits a radius has nothing to orbit once the boundary is two
+## 8 km polylines") — this file needs rewriting as a traverse then, not
+## re-tuning now. Until that lands, the ring these constants describe is
+## still the one in the game, so this preload keeps this file honest about
+## it instead of quietly drifting from world_perimeter.gd if RADIUS/SEGMENTS
+## ever change there.
+const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
+const RADIUS := WORLD_PERIMETER.RADIUS
+const SEGMENTS := WORLD_PERIMETER.SEGMENTS
 
 var _world: Node = null
 var _camera: Camera3D = null

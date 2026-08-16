@@ -33,8 +33,27 @@ extends RefCounted
 ## need this to become a per-region lookup.
 
 const TERRAIN_CONFIG_PATH := "res://data/config/terrain_playground.json"
-const HALF_SPAN := 256.0 ## World spans ±256m (`terrain_playground.json`'s `world_size` 512).
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const WORLD_EXTENT := preload("res://scripts/world/world_extent.gd")
+
+## PER-REGION/PER-BAND BAKE — DEFERRED, NOT SKIPPED. `docs/MEADOWS_MACRO_
+## LAYOUT.md` §8.6(b) calls the whole-world bake becoming per-region/per-band
+## (or a committed pre-baked asset) the "second hard prerequisite" before the
+## corridor lands: at the corridor's pixel density this walks 16.78M pixels
+## on the player's own machine, on first launch. That is NOT done here. This
+## pass only removes the hard-coded ±256m assumption everywhere the map
+## system carries it — `bake()` below now takes an explicit `bounds`
+## rectangle instead of a baked-in half-span, which is the precondition for a
+## future per-region caller (pass a sub-rectangle, get that region's texture)
+## but does not itself add region-splitting, incremental baking, or
+## band-crossing triggers. §8.5 sequences those with the footprint change
+## itself (`OW5B`), because there is exactly one region-count today (the
+## current world is 512m over a 256m `region_size`, i.e. already more than
+## one region) and no reason yet to build a system against a world that has
+## not resized — the corridor's actual region count, and whether the honest
+## answer is "bake per-region" or "ship the PNG as a committed asset" (§8.6b
+## raises both), is a decision for whoever lands `OW5B`, not one to guess at
+## here on a world this bake still finishes in a fraction of a second.
 
 ## Owner playtest report: "can we put paths and structures onto the mini
 ## map." Before this, the bake coloured purely by height/slope -- a real
@@ -61,16 +80,26 @@ static var last_bake_was_cache_hit := false
 
 
 ## Samples `world.call("ground_height_at", x, z)` on a `resolution`² grid
-## across the full ±256m playground and colours each pixel by height/slope.
-## `world` is typed `Object`, not `Node`, deliberately: it only needs to
-## answer `ground_height_at`, and `tests/test_map_baker.gd` exercises this
-## with a bare `RefCounted` fake — no scene tree, no Terrain3D — so this
-## stays testable headlessly the same way the rest of the pure-logic layer
-## (`playground_heightfield.gd`, `map_state.gd`) already is. The real caller
-## (`tools/capture_minimap.gd`) passes the actual playground `Node`, which is
-## an `Object` too.
-static func bake(world: Object, resolution: int = 512) -> ImageTexture:
-	var step := (HALF_SPAN * 2.0) / float(resolution)
+## across `bounds` (default: the whole playground, per `world_extent.gd`) and
+## colours each pixel by height/slope. `world` is typed `Object`, not `Node`,
+## deliberately: it only needs to answer `ground_height_at`, and
+## `tests/test_map_baker.gd` exercises this with a bare `RefCounted` fake —
+## no scene tree, no Terrain3D — so this stays testable headlessly the same
+## way the rest of the pure-logic layer (`playground_heightfield.gd`,
+## `map_state.gd`) already is. The real caller (`tools/capture_minimap.gd`)
+## passes the actual playground `Node`, which is an `Object` too.
+##
+## `bounds`, when given, is `{min_x, max_x, min_z, max_z}` — a sub-rectangle
+## of the world rather than the whole thing, for a future per-region caller
+## (see the DEFERRED note above this function's const block). Square by
+## construction when omitted (today's world), so `resolution × resolution`
+## pixels stay 1:1 with world metres exactly as before.
+static func bake(world: Object, resolution: int = 512, bounds: Dictionary = {}) -> ImageTexture:
+	var extent := bounds if not bounds.is_empty() else WORLD_EXTENT.bounds()
+	var min_x: float = float(extent.get("min_x", 0.0))
+	var min_z: float = float(extent.get("min_z", 0.0))
+	var step_x := (float(extent.get("max_x", 0.0)) - min_x) / float(resolution)
+	var step_z := (float(extent.get("max_z", 0.0)) - min_z) / float(resolution)
 
 	var heights := PackedFloat32Array()
 	heights.resize(resolution * resolution)
@@ -82,9 +111,9 @@ static func bake(world: Object, resolution: int = 512) -> ImageTexture:
 	# shading pass below can read already-sampled neighbours instead of
 	# calling back into `world` a second time per pixel.
 	for iz in resolution:
-		var z := -HALF_SPAN + (float(iz) + 0.5) * step
+		var z := min_z + (float(iz) + 0.5) * step_z
 		for ix in resolution:
-			var x := -HALF_SPAN + (float(ix) + 0.5) * step
+			var x := min_x + (float(ix) + 0.5) * step_x
 			var h: float = world.call("ground_height_at", x, z)
 			if is_nan(h):
 				h = 0.0
@@ -107,9 +136,9 @@ static func bake(world: Object, resolution: int = 512) -> ImageTexture:
 	var heightfield: RefCounted = HEIGHTFIELD.new()
 
 	for iz in resolution:
-		var z := -HALF_SPAN + (float(iz) + 0.5) * step
+		var z := min_z + (float(iz) + 0.5) * step_z
 		for ix in resolution:
-			var x := -HALF_SPAN + (float(ix) + 0.5) * step
+			var x := min_x + (float(ix) + 0.5) * step_x
 			var h := heights[iz * resolution + ix]
 			var h_east := heights[iz * resolution + mini(ix + 1, resolution - 1)]
 			var h_south := heights[mini(iz + 1, resolution - 1) * resolution + ix]
@@ -117,9 +146,12 @@ static func bake(world: Object, resolution: int = 512) -> ImageTexture:
 			var colour := _colour_for(h, water_level, land_floor, max_height, meadow_green, pale_high)
 
 			# Slope shading: finite difference against the +x/+z neighbours,
-			# darkened by up to ~25% on the steepest ground sampled.
+			# darkened by up to ~25% on the steepest ground sampled. Averaged
+			# over both axes' step so a non-square `bounds` (a future
+			# per-region call) does not skew the darkening toward whichever
+			# axis has the coarser step.
 			var slope := absf(h_east - h) + absf(h_south - h)
-			var darken := clampf(slope / (step * 6.0), 0.0, 0.25)
+			var darken := clampf(slope / (((step_x + step_z) * 0.5) * 6.0), 0.0, 0.25)
 			colour = colour.darkened(darken)
 
 			# Paths/structures, on top of the height ramp -- never under
