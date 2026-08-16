@@ -14,7 +14,8 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Meadow Keeper's what they call me around here — somebody's got to look after what grows out there, garden rows included. The meadow has opinions about strangers, mind.",
-        "That workshop's mended every tool this village ever broke. Still smells of iron and oak shavings."
+        "That workshop's mended every tool this village ever broke. Still smells of iron and oak shavings.",
+        "Something's wrong with the ground out past the south crossing. Rows won't take there anymore — same seed, same season, and it comes up grey and thin. I've stopped trying."
       ]
     },
     "village_mira_shop_intro": {
@@ -72,7 +73,8 @@
       "lines": [
         "Bridgehand's my trade — I keep the old crossing south of here in one piece, when it lets me. Team Tether's been sniffing round it lately, which helps nobody.",
         "Well rope's been fraying since the spring thaw. Nobody's got round to it.",
-        "You're the one staying with old Elias, aren't you? Whole square knows by now."
+        "You're the one staying with old Elias, aren't you? Whole square knows by now.",
+        "They pay in coin and they pay on time, and I don't ask what the masts are for. Only — the verge by the south road used to be waist high. You've seen it."
       ]
     },
     "village_oskar_trade_intro": {
@@ -127,7 +129,8 @@
       "lines": [
         "Field Scout, that's me — I track what's out there before it tracks you. Watch a creature's temper as much as its size; the placid-looking ones surprise you most.",
         "Careful on the yard fence, the post on the end is looser than it looks.",
-        "Good road out to the meadow from here. Watch for the bramblebun, it startles easy."
+        "Good road out to the meadow from here. Watch for the bramblebun, it startles easy.",
+        "Word of advice for out east: the grass by Tether's roadworks is dead flat and the creatures know it. Nothing dens within a hundred paces of those masts. I'd trust them over a surveyor."
       ]
     },
     "village_tam_tools": {
@@ -184,7 +187,8 @@
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "Foreman by trade, though there's no quarry to run yet — Team Tether's been working the old rootstone seams south of here longer than anyone local has.",
-        "Give it time. Stone doesn't go anywhere. Neither do I."
+        "Give it time. Stone doesn't go anywhere. Neither do I.",
+        "You want the honest version? Every seam they've run a line off has gone bad above ground within the month. Grass first, then the scrub, then it's bare. They tell me that's the weather."
       ]
     },
     "village_rescued_ranger": {
@@ -219,5 +223,6 @@
         "There you go. The old key still turns."
       ]
     }
-  }
+  },
+  "_comment_se30": "SE30 (spec Sec32's reveal ladder, plus D41's own new rung). The ladder is: villagers know travel and trade are controlled AND that the ground near Team Tether's works is dying, without knowing why; the quarry shows conduits; the relay shows energy routed and an investigator held; the rescued captive knows the separation is MADE and that power runs toward the stronghold, and no further; the Upper Meadows shows the scale of it; and the stronghold, and nowhere before it, names the legendary as the source. The drain lines added to Mira/Tam/Oskar/the foreman are the rung D41 created and nobody had spoken: the world had 2737 painted pixels of dying ground and not one line of dialogue admitting it. Each speaker reports what their own trade would notice -- rows that won't take, creatures that won't den, seams that go bad, a verge that used to be waist high -- and none of them offers a cause. tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces the top of the ladder across every dialogue file, not just the captive's."
 }

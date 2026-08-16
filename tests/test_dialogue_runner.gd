@@ -808,6 +808,100 @@ func test_the_captive_gives_the_testimony_the_spec_asks_for() -> void:
 		"the captive never says which way the power flows")
 
 
+## SE30 widens the captive's own rule to the WHOLE cast. §32 puts the
+## legendary's reveal inside the stronghold and nowhere earlier, and by this
+## point the Meadows has four dialogue files and roughly thirty
+## conversations -- villagers, the blacksmith, the merchant, three village
+## trainers, four Team Tether personnel and the captive. Trusting thirty
+## conversations to a comment is exactly how a spoiler gets written by the
+## eleventh person to touch the files. Every conversation any of them can
+## open before the stronghold is checked here, so a future line naming the
+## legendary fails the build rather than the chapter.
+##
+## The stronghold's own dialogue (SG40's reveal, R8.3's Warden) is where
+## those words belong. If a file is added for them it must be named in
+## STRONGHOLD_FILES below, which is the ONE place the exemption lives.
+const DIALOGUE_FILES := [
+	"res://data/dialogue/village.json",
+	"res://data/dialogue/relay.json",
+	"res://data/dialogue/trainers.json",
+	"res://data/dialogue/opening.json",
+]
+
+## Dialogue that is allowed to name it, because it happens at or after the
+## reveal. Empty until SG40/R8.3 land.
+const STRONGHOLD_FILES: Array[String] = []
+
+
+func test_no_dialogue_before_the_stronghold_names_the_legendary() -> void:
+	var checked := 0
+	for path: String in DIALOGUE_FILES:
+		if STRONGHOLD_FILES.has(path):
+			continue
+		var spoken := _all_spoken_in(path)
+		assert_ne(spoken.strip_edges(), "", "no spoken lines found in %s" % path)
+		checked += 1
+		var lowered := spoken.to_lower()
+		for word: String in FORBIDDEN_WORDS:
+			assert_false(lowered.contains(word),
+				"a character in %s says '%s'; §32 puts that reveal in the stronghold, and this is read before it"
+					% [path, word])
+	assert_true(checked >= 4, "expected to scan every pre-stronghold dialogue file, scanned %d" % checked)
+
+
+## Every SPOKEN line in a dialogue file, and only the spoken lines. The
+## `_comment` fields in these files discuss the rule itself ("the captive
+## never names the legendary"), so a whole-file text scan flags the very
+## comment that documents the rule — caught by running exactly that scan
+## before this helper existed.
+func _all_spoken_in(path: String) -> String:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return ""
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not (parsed is Dictionary):
+		return ""
+	var root: Dictionary = parsed
+	var conversations: Dictionary = root.get("conversations", root)
+	var spoken := ""
+	for id: String in conversations.keys():
+		if id.begins_with("_"):
+			continue
+		var entry: Variant = conversations[id]
+		if not (entry is Dictionary):
+			continue
+		for line: Variant in (entry as Dictionary).get("lines", []):
+			# A line is either the spoken string itself or a dictionary
+			# carrying it alongside effects; both shapes ship today.
+			if line is String:
+				spoken += " " + (line as String)
+			elif line is Dictionary:
+				spoken += " " + str((line as Dictionary).get("text", ""))
+	return spoken
+
+
+## The other half of SE30: the ladder's LOWER rungs have to actually be
+## spoken, or the reveal has nothing to climb from. D41 made the drain canon
+## and SD16/SE23 painted it into the world; before SE30 not one villager
+## mentioned it, so a player could cross a hundred metres of dying ground and
+## never hear a soul admit it existed.
+func test_the_villagers_report_the_dying_ground_without_explaining_it() -> void:
+	var spoken := ""
+	for id: String in ["village_mira", "village_tam", "village_oskar", "village_quarry_foreman"]:
+		spoken += _spoken_text(id)
+	var lowered := spoken.to_lower()
+	var symptoms := 0
+	for phrase: String in ["grey and thin", "dead flat", "gone bad", "waist high", "bare", "won't take"]:
+		if lowered.contains(phrase):
+			symptoms += 1
+	assert_true(symptoms >= 3,
+		"the villagers barely mention the drained ground (%d symptom phrases); D41's rung is not laid in" % symptoms)
+	# ...and none of them explains it. Knowing WHY is the captive's rung.
+	for phrase: String in ["draining", "drains the", "siphon", "pulling power"]:
+		assert_false(lowered.contains(phrase),
+			"a villager says '%s' -- they report the symptom, they do not know the cause (§32)" % phrase)
+
+
 func _named_villager(who: String) -> Dictionary:
 	var file := FileAccess.open("res://data/config/village_npcs.json", FileAccess.READ)
 	if file == null:
