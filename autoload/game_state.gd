@@ -219,6 +219,20 @@ var _menu: CanvasLayer = null
 const _DISCOVERY_INTERVAL_S := 0.5
 var _discovery_elapsed: float = 0.0
 
+## PT-23. `scripts/build/camp.gd` was the sole caller of `autosave_slot()`
+## in the whole codebase -- building a camp is a mid-session action, so a
+## new player who has not built anything yet has NO autosave at all for
+## their entire first session. Day rollover (`advance_day()` below) was the
+## other candidate hook, but `advance_day()` is ALSO only ever called from
+## that same camp-rest path today, so tying autosave to it would just be the
+## identical gap wearing a different name. A plain real-time cadence is the
+## one hook that fires no matter what the player has or hasn't built or
+## rested at yet. Tunable: 3 minutes is short enough to save most of a
+## first session's early progress, long enough not to be a per-frame cost
+## (see `_tick_autosave()`).
+const _AUTOSAVE_FALLBACK_INTERVAL_S := 180.0
+var _autosave_elapsed: float = 0.0
+
 ## Device the LAST real input came from, for `input_glyph.gd`'s icon choice
 ## (bible sec18 wants live switching as the player's hands move; `HD1`'s
 ## reproduction case was a keyboard/mouse player who still saw gamepad
@@ -301,12 +315,25 @@ func advance_day() -> int:
 	return day
 
 
+## PT-23 fallback autosave. Separate from the rest of `_process()` so a test
+## can drive it in isolation without also standing up `progression`/
+## `quest_log`/etc. the way a full `_process()` tick would demand -- see
+## `tests/test_autosave_fallback.gd`.
+func _tick_autosave(delta: float) -> void:
+	_autosave_elapsed += delta
+	if _autosave_elapsed < _AUTOSAVE_FALLBACK_INTERVAL_S:
+		return
+	_autosave_elapsed = 0.0
+	save_game(autosave_slot())
+
+
 ## Fog-of-war discovery, throttled to `_DISCOVERY_INTERVAL_S`. Silently does
 ## nothing when no player can be found — a test scene, the menu-only boot
 ## screen, or a smoke test that instances the world without going through
 ## `SceneTree.change_scene_to` (and so never becomes `current_scene`) all hit
 ## this path, and none of them should ever see an error for it.
 func _process(delta: float) -> void:
+	_tick_autosave(delta)
 	_watch_pending_catch()
 	# Tonic clocks (creature_instance.gd::tick_buffs). Ticked here rather than
 	# from combat so a tonic runs down in and out of a fight alike -- "drink it
@@ -545,7 +572,14 @@ func save_game(slot: int) -> bool:
 ## this is the one seam that does, right before every write. Mirrors
 ## `load_game`'s own "ask build_placer.gd" pattern below, just in reverse.
 func _sync_placed_building_state() -> void:
-	for node in get_tree().get_nodes_in_group("build_placer"):
+	# Guarded the same way `_find_player()` guards its own `get_tree()` call:
+	# a `GameState` not in any tree (a headless test, PT-23's own
+	# `_tick_autosave` exercised in isolation) has no scene to sync FROM, so
+	# there is nothing to do rather than something to crash on.
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("build_placer"):
 		if node.has_method("sync_state_to_game"):
 			node.call("sync_state_to_game", self)
 
@@ -554,7 +588,12 @@ func _sync_placed_building_state() -> void:
 ## satchels — `player_death.gd` is the group's owner, not `build_placer.gd`,
 ## since a satchel is not a placed building (the player never built it).
 func _sync_death_satchel_state() -> void:
-	for node in get_tree().get_nodes_in_group("player_death"):
+	# Same "nothing to sync from without a tree" guard as
+	# `_sync_placed_building_state()` above.
+	var tree := get_tree()
+	if tree == null:
+		return
+	for node in tree.get_nodes_in_group("player_death"):
 		if node.has_method("sync_state_to_game"):
 			node.call("sync_state_to_game", self)
 
