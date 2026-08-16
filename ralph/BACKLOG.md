@@ -44,16 +44,35 @@ Owner, 2026-08-16: *"the inputs don't know how to read menus. so if I have a men
 up and hit a dpad button, it still reads the hot bar control not to the menu. it
 tries to use a potion or whatever rather than move on the menu."*
 
-**Game-breaking, and confirmed in code — this is a missing gate, not a mystery.**
-`playground_hud.gd::_read_hotbar_input` (1161) has exactly two gates: a fight is
-running, and the interaction arbiter's `enabled` flag is false. That flag covers
-the *story* modals only — a conversation, the naming prompt, the starter picker,
-set by `sequence_director.gd::_refresh_lockout`. **Nothing gates it on the pause
-shell, the backpack, or any tab being open.** So with a menu up, combat idle and
-the arbiter enabled, a d-pad press fires `hotbar_2`/`hotbar_3` and
-`_use_hotbar_slot()` spends whatever is in that slot. `_read_world_hotkeys`
-(1373) has the same two gates plus `_build_menu_is_open()`, so it leaks the same
-way for `use_tool` and `build_open`.
+**Game-breaking. The mechanism below is PARTLY WRONG and was corrected by
+measurement before anyone worked it — read the correction before the claim.**
+
+The original filing said: `playground_hud.gd::_read_hotbar_input` (1161) has
+exactly two gates — a fight is running, and the interaction arbiter's `enabled`
+flag is false, which covers the *story* modals only (a conversation, the naming
+prompt, the starter picker, set by `sequence_director.gd::_refresh_lockout`) —
+so nothing gates it on a panel being open and a d-pad press spends a hotbar slot.
+`_read_world_hotkeys` (1373) has the same two gates plus `_build_menu_is_open()`.
+
+**Those two gaps are real. The conclusion drawn from them was not.** A probe
+booted the real world, opened the backpack tab, injected a real `hotbar_2` press
+and watched the potion count: **5 → 5, no leak.** `game_menu.gd::open()` pauses
+the tree, and `PlaygroundHUD` (`scenes/ui/playground_hud.tscn`) declares no
+`process_mode`, so it inherits `PAUSABLE` and `_process` does not run at all
+while the pause shell is up. **The pause shell is covered by the pause, not by
+the gates.**
+
+So the owner's bug is a panel that does **not** pause the tree. Candidates, in
+the order worth probing: the build menu, an interact/dialogue panel, the naming
+prompt, the starter picker, the combat HUD. **Reproduce it and name the panel
+before writing a fix** — this phase's header exists because three of these
+reports have been "fixed" before against a guessed mechanism.
+
+Also struck from the original filing: the blind playtest's
+"stray-confirm-picked-up-an-orb-stack" was cited as evidence of a leak. It is
+not. That press is `ui_accept`, which under the pause shell is the backpack's own
+move verb behaving as designed but silently — i.e. it is `OW1`'s symptom, not
+this one's. `OW4` may still be related; that is untested.
 
 `combat_hud.gd:725-737` documents the mirror of this leak and calls it "a
 documented, pre-existing gap." **Half of that comment is now stale** — it claims
