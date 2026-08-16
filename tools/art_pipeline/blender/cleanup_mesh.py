@@ -45,6 +45,15 @@ from mathutils import Vector
 
 MERGE_DISTANCE = 0.0008          # metres at normalised scale; welds seams, not features
 DEBRIS_FRACTION = 0.005          # match inspect_glb.py
+## Voxel size = longest axis / this. 220 was tuned on the creature roster --
+## compact solid animals, where ~9mm voxels on a 2m subject keep toes and ears.
+## It is WRONG for a figure in cloth: the Warden's greatcoat, cape and fur
+## mantle are thin panels, and a voxel coarser than the panel is thick simply
+## deletes the middle of it. His first two graft attempts came out as lace,
+## with the head and boots (solid volumes) perfectly intact and every garment
+## perforated -- which is the signature of this number being too low rather
+## than of a bad graft. Overridable per-model with --voxel-divisor; the default
+## stays 220 so nothing already built moves.
 VOXEL_DETAIL_DIVISOR = 220.0     # voxel size = longest axis / this; ~220 keeps toes
 SMOOTH_ITERATIONS = 2
 DEFAULT_TARGET_TRIS = 28_000     # just under inspect_glb.BUDGET_TRIANGLES
@@ -128,8 +137,8 @@ def merge_and_deburr(body: bpy.types.Object) -> tuple[int, int]:
     return merged, len(doomed)
 
 
-def voxel_remesh(body: bpy.types.Object) -> None:
-    body.data.remesh_voxel_size = longest_axis(body) / VOXEL_DETAIL_DIVISOR
+def voxel_remesh(body: bpy.types.Object, divisor: float = VOXEL_DETAIL_DIVISOR) -> None:
+    body.data.remesh_voxel_size = longest_axis(body) / divisor
     bpy.context.view_layer.objects.active = body
     bpy.ops.object.voxel_remesh()
 
@@ -155,6 +164,19 @@ def main() -> None:
     model = pathlib.Path(args[0]).resolve()
     out = pathlib.Path(option(args, "--out", model.with_name("clean.glb"))).resolve()
     target = int(option(args, "--target-tris", DEFAULT_TARGET_TRIS))
+    divisor = float(option(args, "--voxel-divisor", VOXEL_DETAIL_DIVISOR))
+    # --skip-voxel: merge, deburr and decimate, but do NOT voxel remesh.
+    #
+    # The remesh has one job -- turn interpenetrating loose parts into a single
+    # manifold skin so BLENDER'S BONE-HEAT weighting can solve. Humanoids in
+    # this project do not use bone heat: finish.py rig --kind humanoid calls out
+    # to Meshy's auto-rigger, which takes loose parts happily. So for a humanoid
+    # the remesh is a cost with no benefit, and on the Warden it was a large
+    # cost: his grafted mesh renders perfectly, and the remesh turned his coat,
+    # cape and mantle into lace at every voxel size tried (finer made it worse,
+    # which is how it was finally pinned on the remesh rather than on thin
+    # walls). Decimation alone preserves the topology it is given.
+    skip_voxel = "--skip-voxel" in args
 
     load(model)
     body = join_all()
@@ -174,7 +196,8 @@ def main() -> None:
 
     before_tris = sum(len(p.vertices) - 2 for p in body.data.polygons)
     merged, debris = merge_and_deburr(body)
-    voxel_remesh(body)
+    if not skip_voxel:
+        voxel_remesh(body, divisor)
     decimate_to(body, target)
     bpy.ops.object.shade_smooth()
 
@@ -186,7 +209,7 @@ def main() -> None:
 
     print(f"\n{model.name}: {before_tris:,} tris -> {after_tris:,}")
     print(f"  {merged} duplicate verts merged, {debris} debris verts removed, "
-          f"voxel-remeshed to one manifold surface")
+          f"{'decimated only (--skip-voxel)' if skip_voxel else f'voxel-remeshed to one manifold surface (divisor {divisor:g})'}")
     print(f"  -> {out}")
 
 

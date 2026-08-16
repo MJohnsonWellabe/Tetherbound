@@ -124,6 +124,30 @@
       },
       "_comment": "NOT a prop -- the Warden's HEAD, cut with the prop tool because the tool is about explicit boxes and board 16 is not laid out as a creature turnaround row either. The board's own top row: FRONT, 3/4 VIEW, SIDE PROFILE, BACK OF HEAD, at one scale, captions at y~460 cleared. TETHERBOUND_3D_ART_PIPELINE.md section 25's hardest-won rule is `generate heads separately' -- a whole-figure pass at 30k polys cannot resolve an eye socket -- and meshy.py::cmd_head says nine humanoid candidates failed that way. cmd_head could only ever feed ONE crop and admitted its cost in its own docstring: `the generator invents the back of the skull'. Board 16 draws the back of the skull, so it no longer has to.",
       "_comment_head_only": "TIGHTENED to the HEAD ALONE. The first boxes ran down to the chest, and all three candidates came back as FULL STANDING FIGURES with tiny featureless heads -- image-to-3D follows its pictures over its words, and 'HEAD AND NECK ONLY' in capitals lost to four pictures containing shoulders, a fur mantle and a coat. Exactly the lesson board 15's occupant taught one asset earlier: if the images must not show it, crop it out rather than ask for it to be ignored. These boxes stop at the jaw-and-neck line."
+    },
+    "warden_body": {
+      "file": "16_Warden_Aldis_Character.png",
+      "background": [
+        246,
+        244,
+        239
+      ],
+      "pad": 300,
+      "views": {
+        "front": [
+          762,
+          745,
+          884,
+          1030
+        ],
+        "back": [
+          940,
+          745,
+          1058,
+          1030
+        ]
+      },
+      "_comment": "Board 16's FULL BODY SILHOUETTE panel, which is not a silhouette at all -- it is a clean front-and-back turnaround of the whole figure at one scale, with the ~1.85m bar beside it. Two views is meshy.py's documented minimum. The head is left in frame deliberately: cropping the body at the neck would lose the shoulder line, and the head this body ships with is thrown away by graft_head.py anyway. NOTE the staff in the front view -- NEGATIVE_HUMAN bans `staff` and that ban is kept ON PURPOSE here even though the drawing shows one, because the Warden needs no staff prop in game and a staff fused into the mesh is unusable. That is the opposite of the DROP_FOR_SPECIES case: there the ban fought the subject's own signature, here it fights an accessory we do not want."
     }
   }
 }

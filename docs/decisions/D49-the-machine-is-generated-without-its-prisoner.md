@@ -161,7 +161,55 @@ that took two attempts to find. What remains is body → graft → remesh → ri
 animate → install. Blender is required for it and is NOT part of this image; it
 was installed ad hoc here (`apt-get install blender`).
 
-### Three routes tried, and why the fourth is the right one
+### The fourth route was taken, and the Warden is rebuilt
+
+The owner said "run the character pipeline, redo Meshy if you need to, just
+finish this work." He is finished and installed.
+
+**Body** generated from board 16's own FULL BODY SILHOUETTE panel — which is
+not a silhouette but a clean front-and-back turnaround at one scale. Candidate
+`b` of three won on one specific thing: `NEGATIVE_HUMAN` bans `staff`, the
+board draws him holding one, and `b` is the candidate where the ban took. That
+ban is deliberate and is the *opposite* of the `DROP_FOR_SPECIES` case — there
+a shared negative fought a creature's own signature, here it removes an
+accessory the game has no use for.
+
+**Head** grafted from the separately-generated `warden_head` candidate `e`,
+then textured against board 16, auto-rigged at 1.85 m, and animated with the
+five gameplay clips `animate_humanoid.py` bakes (idle, walk, sprint, jump,
+throw) — the same five `data/config/art.json` already asked for, so nothing
+downstream changed.
+
+### Two tools grew a flag each, and both were earned by a visible defect
+
+- **`cleanup_mesh.py --skip-voxel`.** The voxel remesh turned his coat, cape
+  and mantle into lace at every voxel size tried, and *finer voxels made it
+  worse* — which is how it was finally pinned on the remesh rather than on thin
+  walls. Rendering the intermediate settled it: the grafted mesh is perfect and
+  the remeshed one is holed. The remesh exists to weld loose parts into a
+  manifold for **Blender's bone-heat weighting**, and humanoids in this project
+  do not use bone heat — `finish.py rig --kind humanoid` calls Meshy's
+  auto-rigger, which takes loose parts happily. So for a humanoid the remesh is
+  all cost and no benefit. Decimation alone gets to 30k with the topology
+  intact.
+- **`graft_head.py --drop`.** The first install had a neck the owner called
+  *"comically long"*. The body's own neck stump and the grafted bust's neck
+  stack, and neither existing lever shortens that: `--overlap` moves the CUT,
+  so raising it keeps MORE neck, and negative values lift the head clean off
+  the shoulders (both rendered and looked at). `--drop` translates the placed
+  head down into the collar. **0.45 head-heights** put his jaw on the fur.
+
+Final recipe, for whoever rebuilds him next:
+
+    graft_head.py  --head-fraction 0.18 --overlap 0.15 --drop 0.45
+    cleanup_mesh.py --target-tris 30000 --skip-voxel
+    meshy.py texture warden <mesh> --style-from warden_body --resolution 2k
+    meshy.py rig <textured> --height 1.85
+    animate_humanoid.py
+
+953 tests pass, `smoke_art` and `smoke_boss` both green.
+
+### The three routes that did not work, kept because they cost real time
 
 1. **Retexture the shipped body against board 16.** Rejected: it drained the
    colour, lost the gold trim, dulled the cream cape, and the face came back no
@@ -180,20 +228,6 @@ was installed ad hoc here (`apt-get install blender`).
    generated, solid, PRE-RIG body, and every other character in this project
    went through it in that state.
 
-**The fourth route, and the one to take: run the Warden through the character
-pipeline once more as if he were new.** Generate his BODY from board 16, pick a
-winner, graft the head that is already good, remesh, texture, rig, animate,
-install, validate. That is the same run Terrapup, the trainer, Grandpa and the
-villagers each had, and it is the only one of the four that does not fight the
-tools.
-
-It is a proper job — a few hundred credits and its own verification pass — and
-it REPLACES a working, rigged, animated in-game asset, so it deserves its own
-task rather than being tacked onto the end of an unrelated one. What is
-committed here means it starts from the interesting part: board 16 is vendored,
-the four head crops are cut, the head-only crop rule is written down, the
-board-16 body and head prompts are in `meshy.py`, and the head candidates are
-generated and judged.
-
-**The current Warden is untouched and still works.** That was deliberate at
-every step: nothing was installed that had not been rendered and looked at.
+**The fourth route was the one taken** — see above. Note that route 2's
+failure was misdiagnosed at first as thin-wall loss and blamed on the graft;
+it was the remesh, and `--skip-voxel` is the fix.

@@ -127,7 +127,7 @@ NEGATIVE_HUMAN = ("photorealistic skin, realistic human proportions, armor, weap
 ## HUMAN for negative-prompt purposes -- the creature list bans "humanoid
 ## anatomy" and would tell the generator to fight the thing being made.
 HUMANS = {"trainer", "grandpa", "warden", "villager_female", "villager_male", "grunt",
-          "warden_head"}
+          "warden_head", "warden_body"}
 
 ## The three hero objects D24 reserves Meshy for are STRUCTURES, and both the
 ## creature and human lists ban "base, pedestal" — which, sent with the Tether
@@ -408,6 +408,23 @@ SPECIES_PROMPTS = {
         "botanical trim, LARGE PALE CREAM FUR MANTLE heaped over both "
         "shoulders, wide belt, dark trousers, tall boots. Seven heads tall"),
     # Board 06's Veridian Stag, likewise owner-approved as the legendary.
+    # BOARD 16's body turnaround. The BODY only -- graft_head.py throws this
+    # figure's head away and puts the separately-generated one on, so nothing
+    # here describes a face. What it must get right is the SILHOUETTE and the
+    # value break: a heavy officer in a long open greatcoat with a large pale
+    # cream fur mantle, which is the only bright note in an otherwise green
+    # design and the reason he reads at 300px at all.
+    #
+    # NO STAFF. The board draws one in his hand and NEGATIVE_HUMAN bans it; the
+    # ban is deliberate here (see prop_views.json's warden_body comment).
+    "warden_body": (
+        "stylised human man, BROAD HEAVY commanding officer, wide shoulders, "
+        "thick chest, not slim, standing straight. BOTH ARMS HANG AT HIS SIDES "
+        "clear of the body, EMPTY GLOVED HANDS holding nothing, five fingers "
+        "each. Long DARK FOREST-GREEN officer's greatcoat worn open over a "
+        "tunic, gold botanical trim and gold edging, LARGE PALE CREAM FUR "
+        "MANTLE heaped across both shoulders, wide brown belt with pouches, "
+        "dark trousers, tall heavy boots. Seven heads tall"),
     # BOARD 16, the Warden's head as its own subject.
     #
     # cmd_head exists because nine humanoid candidates came back with "no face

@@ -1,11 +1,11 @@
 {
-  "_comment": "Presentation. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'too dark', 'the grass is the wrong green', 'the creatures don't move enough' — every one of those has to be answerable by editing this file rather than by editing a scene.",
+  "_comment": "Presentation. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'too dark', 'the grass is the wrong green', 'the creatures don't move enough' \u2014 every one of those has to be answerable by editing this file rather than by editing a scene.",
   "_comment_scale": "Nothing here sets a collider or a hit range. Art is fitted to the gameplay size the species and the controller already declare; if a value in this file could change how far an attack reaches, it is in the wrong file.",
   "trainer": {
     "model": "res://assets/characters/trainer/trainer_lod0.glb",
     "_comment_height": "Metres, matched to the CharacterBody3D capsule in scenes/player/player.tscn. The model is measured and scaled to this, so a replacement of any size drops in without touching the scene.",
     "height": 1.8,
-    "_comment_yaw": "Degrees of correction for which way the source model faces. Verified from a survey frame, not assumed — there is no convention across asset packs.",
+    "_comment_yaw": "Degrees of correction for which way the source model faces. Verified from a survey frame, not assumed \u2014 there is no convention across asset packs.",
     "model_yaw": 0.0,
     "_comment_clips": "Five clips, authored by tools/art_pipeline/blender/animate_humanoid.py and baked into the .glb, so the role and the clip name are the same string and nothing is retargeted. MQ1A rebuilt them as key-pose authored cycles (contact/loading/mid-stance/toe-off/whip/mid-swing/reach through a cyclic spline, on render-verified bone axes) with pelvis rotation, chest counter-rotation and head stabilisation.",
     "clips": {
@@ -15,12 +15,12 @@
       "jump": "jump",
       "throw": "throw"
     },
-    "_comment_gait_speeds": "OF5, TUNABLE. Metres per second each gait clip was AUTHORED for — animate_humanoid.py derives the cycle length and stride from these so a planted foot sweeps back under the body at the same speed the controller drives it. trainer_model.gd scales playback by actual ground speed / this value (clamped 0.5-1.4x in character_model.gd), so cadence stays honest through acceleration, slopes and any movement.json retune. If locomotion speeds are retuned by more than the clamp covers, re-bake the clips against the new numbers rather than widening the clamp: past ~1.4x a gait reads as frantic, not fast.",
+    "_comment_gait_speeds": "OF5, TUNABLE. Metres per second each gait clip was AUTHORED for \u2014 animate_humanoid.py derives the cycle length and stride from these so a planted foot sweeps back under the body at the same speed the controller drives it. trainer_model.gd scales playback by actual ground speed / this value (clamped 0.5-1.4x in character_model.gd), so cadence stays honest through acceleration, slopes and any movement.json retune. If locomotion speeds are retuned by more than the clamp covers, re-bake the clips against the new numbers rather than widening the clamp: past ~1.4x a gait reads as frantic, not fast.",
     "gait_reference_speeds": {
       "walk": 5.0,
       "sprint": 8.6
     },
-    "_comment_libraries": "Empty now, and kept as a key because the merge path still works. KayKit's Ranger needed it: that character ships a rig with zero clips and the motion in shared libraries. This model carries its own clips. Its skeleton is also NOT KayKit's — KayKit's character is about two heads tall and sheet 04's trainer is 6.25, so neither the weights nor the clips transfer between them.",
+    "_comment_libraries": "Empty now, and kept as a key because the merge path still works. KayKit's Ranger needed it: that character ships a rig with zero clips and the motion in shared libraries. This model carries its own clips. Its skeleton is also NOT KayKit's \u2014 KayKit's character is about two heads tall and sheet 04's trainer is 6.25, so neither the weights nor the clips transfer between them.",
     "animation_libraries": [],
     "_comment_model": "Sheet 04's trainer, produced through tools/art_pipeline. The body and the head were generated separately and grafted: nine whole-figure candidates across three rounds all came back with a blank ovoid for a face, because at a 30k budget spread over a standing figure an eye socket is smaller than the triangles available to describe it."
   },
@@ -32,7 +32,7 @@
     "ground_bottom_colour": "#4a5648",
     "sun_angle_max_deg": 24.0,
     "sun_curve": 0.18,
-    "_comment_panorama": "An HDRI panorama, when the time of day names one. The procedural gradient below is the FALLBACK and stays because a missing texture should degrade to the old sky rather than to a black void. The critic measured the procedural sky's horizontal variation at 0.020 against Palworld's 0.140-0.289 and said the build sky 'contributes nothing' — a ProceduralSkyMaterial can make a vertical gradient and a soft sun blob and nothing else, ever. No amount of tuning puts a cloud in it.",
+    "_comment_panorama": "An HDRI panorama, when the time of day names one. The procedural gradient below is the FALLBACK and stays because a missing texture should degrade to the old sky rather than to a black void. The critic measured the procedural sky's horizontal variation at 0.020 against Palworld's 0.140-0.289 and said the build sky 'contributes nothing' \u2014 a ProceduralSkyMaterial can make a vertical gradient and a soft sun blob and nothing else, ever. No amount of tuning puts a cloud in it.",
     "_comment_panorama_ev8": "EV8. day.hdr named here was pulled: a static equirect photo has its OWN baked-in sun position, unrelated to this file's sun.pitch_deg/yaw_deg, so whichever way a viewpoint faces, the photographed sky and the actual DirectionalLight3D can disagree about where the light is coming from. That is exactly what a blind pass caught -- one viewpoint's sky read as dusk while its own ground lit as bright midday, in the same frame, both driven by the same 'day' preset. The procedural gradient has no such seam: its glow is generated from the real sun direction, so it agrees with the ground in every direction, not just the survey's five. Costs the cloud detail the panorama bought; buys back the 'one sky/fog treatment shared everywhere' EV8 exists to deliver. TUNABLE -- naming a panorama here is legitimate again once one exists whose baked sun can be kept in sync, or once multiple panoramas are matched to sun position by heading.",
     "panorama": ""
   },
@@ -45,7 +45,7 @@
     "shadow_max_distance": 220.0,
     "_comment_shadow": "Normal bias fights the acne that a heightmap terrain produces at grazing angles. Raise it if the ground looks striped; lower it if small props stop casting.",
     "shadow_normal_bias": 2.0,
-    "_comment_energy": "Bright. The first pass at real lighting overshot into gloom: the arena went near-black and the creatures stopped being readable, which is a worse failure than the flat lighting it replaced. Value RANGE was the goal — bright sun, real shadows — not darkness.",
+    "_comment_energy": "Bright. The first pass at real lighting overshot into gloom: the arena went near-black and the creatures stopped being readable, which is a worse failure than the flat lighting it replaced. Value RANGE was the goal \u2014 bright sun, real shadows \u2014 not darkness.",
     "_comment_pitch_r9_4": "R9.4. Was -52. The blind critic found frames 01-04 'effectively flat-lit' -- boosting contrast 3x revealed almost no terrain form -- while frame 05, the only low-sun frame, was 'by a wide margin the best-lit frame in the set' and the only one whose value statistics land inside the references' range. Dropped to -44 rather than to 05's -13: the original comment's reason for a high sun is real (long raking shadows hide the opponent under a top-down-ish combat camera) and this keeps shadows short while giving slopes a lit and a shaded side. TUNABLE, and the thing to re-check first if combat readability regresses."
   },
   "environment": {
@@ -57,7 +57,7 @@
     "_comment_exposure_ev4_lighting": "EV4-textures-lighting. Was 1.22. Three blind-critic rounds on EV4-textures's own path frames independently named a blown-white sunlit path and (separately) an unmotivated dark diagonal band, and it took both diag_shadow_band.gd and diag_slope_check.gd (scratch, not shipped) to separate two different causes hiding under one description. `square-convergence`'s band IS a real occlusion shadow -- confirmed by toggling sun.shadow_enabled off, which removed it -- from the Barn 6m from that viewpoint's camera; raising directional_shadow/size back to 4096 changed nothing (pixel-identical edge), which rules out SA1's atlas cut as the cause. `grandpas-house-route`'s flanking bands are NOT a shadow at all -- identical with shadow_enabled true or false, identical with SSAO on or off, and the ground there measures dead flat (slope_degrees_at = 0.0 across the whole sampled width, confirmed with the heightfield's own function, no scene load needed). That one is pure contrast: ordinary grass at luma ~70-100 sitting next to a path blown to ~190-200 reads as 'a shadow with no caster' even though the grass itself is unremarkable. Fixing the blown highlight therefore addresses both: `near_luma` (tools/frame_stats.py, mean luma of the bottom 15% of frame) measured 0.692 on grandpas-house-route against Palworld's own 0.492-0.600, and the sunlit path itself sampled at ~197/255. A modest exposure trim did almost nothing (1.22 -> 0.95 moved the path 0/255 -- ACES's shoulder is that flat up here); it took a real cut to 0.6 to bring the path to ~151/255, inside the Palworld range. TUNABLE, and the first thing to revisit if 'day' reads dim elsewhere.",
     "_comment_ambient_ev4_lighting": "EV4-textures-lighting. Was 1.02. The Barn's real shadow measured near-black (luma 10-20/255) at its darkest, well under any reference near-field value -- lifting ambient is the one lever that reaches it without touching the sunlit path much (measured: tripling ambient moved the sunlit path only ~197->215, but moved the shadow floor ~15->40, because ambient is a much larger fraction of what a SHADOWED point receives). Went with a smaller, safer step than that -- 1.02 -> 1.5, not 3x -- because a big ambient increase measurably crept back into the sunlit path too once combined with the exposure cut above (both scale the same HDR value before tonemap), which would have undone the highlight fix. Left the shadow darker than ideal rather than fight that tradeoff further; see the EV4-textures-lighting DONE.md entry for what a blind pass said after this.",
     "_comment_fog": "Very light, and warm rather than grey. It exists to separate near hills from far ones; at any strength where you notice it as fog, it is too strong.",
-    "_comment_fog_measured": "Halved from 0.0022. At the old density the blind critic measured `03-rise-overlook` at mean saturation 0.235 against 0.51 for a frame in the same biome, and said fog was 'eating the world rather than describing depth' — every object past ~150m a grey stamp. The reference does the same job with comparable haze and keeps a saturated tree band in front of it, so the fix is less fog, not less distance.",
+    "_comment_fog_measured": "Halved from 0.0022. At the old density the blind critic measured `03-rise-overlook` at mean saturation 0.235 against 0.51 for a frame in the same biome, and said fog was 'eating the world rather than describing depth' \u2014 every object past ~150m a grey stamp. The reference does the same job with comparable haze and keeps a saturated tree band in front of it, so the fix is less fog, not less distance.",
     "fog_enabled": true,
     "_comment_fog_colour_ev8": "EV8. Was #cdd0c6, which does not match sky.horizon_colour (#b9c8cf) above. fog_sky_affect is 0 on purpose (see below), so the sky is never fogged -- which means the fog colour and the horizon colour are the ONLY two things that have to agree for terrain fading into the distance to meet the sky without a seam. A blind pass caught the mismatch as a hard pale band sitting in the middle of a frame, well short of the true horizon: distant terrain fogs to #cdd0c6 while the sky right above it sits at #b9c8cf, and the two visibly disagree. Matched to horizon_colour exactly.",
     "fog_colour": "#b9c8cf",
@@ -66,7 +66,7 @@
     "ssao_enabled": true,
     "ssao_intensity": 1.6,
     "ssao_radius": 1.2,
-    "_comment_ambient": "Sky ambient with a real colour underneath it. `sky_contribution` blends between the two. Quadrupling ambient energy with pure sky ambient moved the survey frames by NOTHING — sky radiance does not reach the terrain under the Compatibility renderer the harness is forced to use — while an explicit colour lifted the shaded ground by 55%. Specifying both means shaded ground is filled under either renderer, and 'shadows are filled by this much of this colour' is a decision somebody made rather than a side effect of a procedural sky.",
+    "_comment_ambient": "Sky ambient with a real colour underneath it. `sky_contribution` blends between the two. Quadrupling ambient energy with pure sky ambient moved the survey frames by NOTHING \u2014 sky radiance does not reach the terrain under the Compatibility renderer the harness is forced to use \u2014 while an explicit colour lifted the shaded ground by 55%. Specifying both means shaded ground is filled under either renderer, and 'shadows are filled by this much of this colour' is a decision somebody made rather than a side effect of a procedural sky.",
     "ambient_colour": "#a8bccc",
     "ambient_sky_contribution": 0.5,
     "aerial_perspective": 0.35,
@@ -75,7 +75,7 @@
     "_comment_exposure_r9_4": "R9.4 round 2. Was 1.05. Round 1 dropped the ground albedo (grass tint) AND cut ambient 1.25 -> 0.95 at the same time, and the two stacked: near-field luminance went 0.526 -> 0.271 and the open meadow read murky rather than merely un-blown-out. Exposure is the right knob to give it back, because it scales everything uniformly and so costs none of the desaturation the tint bought -- unlike raising ambient again, which would re-flatten the shadows that were the point. TUNABLE."
   },
   "_comment_times": "Named hours. Each states ONLY what it changes; everything else comes from the blocks above. `hour` (0-24) is when scripts/world/day_cycle.gd treats this as the active preset -- see R5.1.",
-  "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it — 46.8% of the image pixel-for-pixel the same — because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",
+  "_comment_times_why": "The previous survey shipped a frame called `05-spawn-low-sun` whose sky was BIT-IDENTICAL to the midday frame beside it \u2014 46.8% of the image pixel-for-pixel the same \u2014 because dropping the sun meant rotating a DirectionalLight3D and nothing else. The sun disc, sky gradient, horizon haze and fog all stayed at noon. The key art board asks for 'day and night create different moods'; a sky that does not move with the sun cannot give one. So the hour is one value and everything derives from it. Nothing should reach for the Sun node directly again.",
   "_comment_day_cycle": "TUNABLE (CLAUDE.md 'Tunable Values'): how fast the clock runs and when the world counts as genuinely dark, for scripts/world/day_cycle.gd. No gameplay reads these yet -- R5.1 is presentation only, matching GAME_DESIGN.md 24's 'do not just add levels to every creature at night'; nocturnal spawn rules are a later, separate decision.",
   "day_length_seconds": 600.0,
   "dark_from_hour": 20.0,
@@ -150,9 +150,9 @@
       }
     }
   },
-  "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips — faking motion on top of that would fight the animation.",
+  "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips \u2014 faking motion on top of that would fight the animation.",
   "grandpa": {
-    "_comment": "Grandpa Elias. He stands where he is put and talks — beat 3 of docs/OPENING_SEQUENCE.md — so `idle` is the only clip he needs today. The other four ship with him because they cost nothing to author on the same skeleton and he will eventually walk.",
+    "_comment": "Grandpa Elias. He stands where he is put and talks \u2014 beat 3 of docs/OPENING_SEQUENCE.md \u2014 so `idle` is the only clip he needs today. The other four ship with him because they cost nothing to author on the same skeleton and he will eventually walk.",
     "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
     "height": 1.72,
     "_comment_height": "Shorter than the 1.8m trainer. He is an old man and the silhouette should say so before the dialogue does.",
@@ -181,7 +181,7 @@
     "tint": "#ffffff",
     "hair": {
       "visible": true,
-      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour, not a whole-body hue shift (spec §21). villager_female's real hair_ponytail mesh (NP7) is the one part of this rig `tint` does NOT also multiply, so it is the actual per-material differentiator spec §21 asks for. Warm chestnut, distinct from smith's and ranger's below.",
+      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour, not a whole-body hue shift (spec \u00a721). villager_female's real hair_ponytail mesh (NP7) is the one part of this rig `tint` does NOT also multiply, so it is the actual per-material differentiator spec \u00a721 asks for. Warm chestnut, distinct from smith's and ranger's below.",
       "color": "#5c3a22"
     },
     "clips": {
@@ -229,7 +229,7 @@
     "tint": "#ffffff",
     "hair": {
       "visible": true,
-      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour (spec §21). Silver-grey, distinct from farmer's and ranger's.",
+      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour (spec \u00a721). Silver-grey, distinct from farmer's and ranger's.",
       "color": "#8a8578"
     },
     "clips": {
@@ -276,7 +276,7 @@
     "tint": "#ffffff",
     "hair": {
       "visible": true,
-      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour (spec §21). Deep auburn -- chosen to contrast against this rig's own pale tan wardrobe tint as well as against farmer's and smith's hair above; a blonde close to the tint's own hue would have stopped reading as a separate feature.",
+      "_comment_color": "Owner playtest report: NPCs should differ primarily by hair colour (spec \u00a721). Deep auburn -- chosen to contrast against this rig's own pale tan wardrobe tint as well as against farmer's and smith's hair above; a blonde close to the tint's own hue would have stopped reading as a separate feature.",
       "color": "#7a3c22"
     },
     "clips": {
@@ -294,8 +294,8 @@
     "animation_libraries": []
   },
   "warden": {
-    "_comment": "The Warden of the Meadows, the biome's final boss. Board 06 used directly, per the owner lifting the earlier override (docs/art/REFERENCE_CANON.md). He does not appear in the first fifteen minutes; he is here so the biome's end is not a stand-in.",
-    "_comment_face": "His face is a painted mask, not modelled features. That is the art, not a shortcut: board 06 masks him, and asking the generator for a hard visor plays to what it can actually do after nine whole-figure candidates came back with blank ovoids.",
+    "_comment": "The Warden of the Meadows, the biome's final boss. REBUILT 2026-08-16 from the owner's dedicated character sheet, docs/art/reference/16_Warden_Aldis_Character.png, which supersedes board 06 for this character (D49). Body generated from board 16's own front/back turnaround, head generated SEPARATELY from its four head views and grafted on, then textured, auto-rigged and animated through the ordinary character pipeline.",
+    "_comment_face": "HIS FACE IS MODELLED NOW, and that is the whole point of the rebuild. It used to be a painted mask on a blank ovoid -- board 06 masks him, and asking the generator for a hard visor was the best available answer after nine whole-figure candidates came back featureless. Board 16 draws a bare bearded face with a green marking painted across the eyes, and generating the HEAD ALONE from its four head views (front, 3/4, profile, back of skull) produced real brows, lids, a nose and a beard on the second attempt. The first attempt failed because the crops still included shoulders and the generator built whole figures -- it follows its pictures over its words, the same lesson board 15's occupant taught. Crops are cut to the jaw line now; see tools/art_pipeline/prop_views.json.",
     "model": "res://assets/characters/warden/warden_lod0.glb",
     "height": 1.85,
     "model_yaw": 0.0,
@@ -311,6 +311,7 @@
       "walk": 5.0,
       "sprint": 8.6
     },
-    "animation_libraries": []
+    "animation_libraries": [],
+    "_comment_neck": "`graft_head.py --drop` exists because of this character. The first install had a neck the owner called `comically long`: the body's own neck stump and the grafted bust's neck stack up, and neither --overlap nor --head-fraction shortens that -- overlap moves the CUT, so raising it keeps MORE neck and negative values lift the head clean off the shoulders. --drop translates the placed head down into the collar. 0.45 head-heights is what put his jaw on the fur."
   }
 }

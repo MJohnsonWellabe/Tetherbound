@@ -2,7 +2,7 @@
 
     blender --background --python tools/art_pipeline/blender/graft_head.py \
             -- <body.glb> --head <bust.glb> --out <grafted.glb> \
-            [--head-fraction 0.20] [--head-yaw 0] [--overlap 0.35]
+            [--head-fraction 0.20] [--head-yaw 0] [--overlap 0.35] [--drop 0.0]
 
 ## Why this exists
 
@@ -168,6 +168,7 @@ def main() -> None:
     out = pathlib.Path(option(args, "--out", body_path.with_name("grafted.glb"))).resolve()
     fraction = float(option(args, "--head-fraction", HEAD_FRACTION))
     overlap = float(option(args, "--overlap", OVERLAP))
+    drop = float(option(args, "--drop", 0.0))
     yaw = math.radians(float(option(args, "--head-yaw", 0.0)))
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -213,13 +214,24 @@ def main() -> None:
     # over a subset, so the cut plane can be stated in final world terms and
     # there is no index bookkeeping between a filtered array and the mesh.
     bust_points[:, :2] = (bust_points[:, :2] - bust_centre) * scale + body_centre
-    bust_points[:, 2] = (bust_points[:, 2] - bust_neck_z) * scale + neck_z
+    # --head-drop sinks the whole head DOWN into the collar, in head-heights.
+    #
+    # `overlap` cannot do this and it was the first thing tried: it moves the
+    # CUT, not the head, so raising it keeps more of the bust's own neck and
+    # makes the problem worse, while negative values lift the head clean off
+    # the shoulders. What was actually wrong on the Warden is that the body's
+    # neck stump and the bust's neck stack, and the owner's word for the result
+    # was "comically long". This translates the placed head down so the jaw
+    # meets the collar, which is the only lever that shortens the visible neck
+    # without touching either mesh.
+    bust_points[:, 2] = ((bust_points[:, 2] - bust_neck_z) * scale + neck_z
+                         - target_head * drop)
     write_coordinates(bust, bust_points)
 
     # Everything above the cut is head plus a collar of neck that reaches down
     # into the body's stump by `overlap` head-heights — that shared volume is
     # what the voxel remesh fuses.
-    cut_z = neck_z - target_head * overlap
+    cut_z = neck_z - target_head * (overlap + drop)
     if (bust_points[:, 2] > cut_z).sum() < 100:
         raise SystemExit("head cut left almost nothing; check --overlap")
     delete_where(bust, lambda co: co.z <= cut_z)

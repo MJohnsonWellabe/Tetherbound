@@ -2,19 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db8udxvbj1cqn"
-path="res://.godot/imported/warden_lod0_texture_0.png-bb3c9539e37b79505839459269ebf975.ctex"
+uid="uid://cyj38rkxwua8p"
+path="res://.godot/imported/front.png-47bff472756ae43f3dcc38fc26fce9c3.ctex"
 metadata={
 "vram_texture": false
-}
-generator_parameters={
-"md5": "194d017ebb5fd91fac7eacde3c5d2f4e"
 }
 
 [deps]
 
-source_file="res://assets/characters/warden/warden_lod0_texture_0.png"
-dest_files=["res://.godot/imported/warden_lod0_texture_0.png-bb3c9539e37b79505839459269ebf975.ctex"]
+source_file="res://assets/creatures/tetherbound/warden_body/reference/front.png"
+dest_files=["res://.godot/imported/front.png-47bff472756ae43f3dcc38fc26fce9c3.ctex"]
 
 [params]
 
@@ -26,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
