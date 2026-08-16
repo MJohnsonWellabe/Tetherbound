@@ -56,6 +56,7 @@ func _run() -> void:
 		_report()
 		return
 
+	await _the_combat_buttons_say_something_outside_a_fight()
 	await _walk_to_the_wild_creature()
 	await _engage()
 	if not bool(_manager.call("is_fighting")):
@@ -144,6 +145,70 @@ func _collect_nodes() -> bool:
 		_wild.global_position.x, _wild.global_position.y, _wild.global_position.z
 	])
 	return true
+
+
+## Do the fight buttons admit they are doing nothing?
+##
+## `combat_manager.gd::_read_player_input()` is only reachable from
+## `_tick_active()`, so with no fight running quick attack, charged attack and
+## the orb throw produced no animation, no message and no orb spent. A blind
+## playtest pressed all three, got absolute silence, and read them as broken
+## buttons rather than as unavailable ones.
+##
+## Driven with the real actions and read off the HUD's own message strip, not
+## off the manager: the claim being tested is "the player is told", and a check
+## that drained `Game.take_pending_world_message()` itself would pass on a
+## message that never reached the screen.
+func _the_combat_buttons_say_something_outside_a_fight() -> void:
+	if bool(_manager.call("is_fighting")):
+		_fail("a fight is already running before the engage step; this check is measuring the wrong state")
+		return
+	var game := root.get_node_or_null(^"Game")
+	var hud := _world.get_node_or_null(^"PlaygroundHUD")
+	var message := hud.get_node_or_null(^"Root/HotbarPanel/Margin/Layout/Message") as Label \
+			if hud != null else null
+	if game == null or message == null:
+		_fail("no Game autoload or no HUD message strip; the refusal has nowhere to be said")
+		return
+
+	var quick := await _refusal_after(game, message, "combat_quick")
+	if quick.is_empty():
+		_fail("pressed `combat_quick` with no fight running and nothing was said at all")
+	else:
+		print("outside a fight, combat_quick says: '%s'" % quick)
+
+	var throw := await _refusal_after(game, message, "combat_throw")
+	if throw.is_empty():
+		_fail("pressed `combat_throw` with no fight running and nothing was said at all")
+	else:
+		print("outside a fight, combat_throw says: '%s'" % throw)
+
+	# The other half of the contract. LMB/RMB and LT/RT are also
+	# build_place/build_cancel and build_rotate_left/right (project.godot), so a
+	# refusal that fired while a piece was armed would talk over the build
+	# placer on every rotate.
+	game.set("pending_build", "camp")
+	var while_building := await _refusal_after(game, message, "combat_quick")
+	game.set("pending_build", "")
+	if not while_building.is_empty():
+		_fail("with a build armed, `combat_quick` still said '%s'; that press belongs to the placer"
+			% while_building)
+	else:
+		print("with a build armed, the same press stays quiet")
+
+
+## Press one action from a clean slate and hand back whatever the HUD then says.
+func _refusal_after(game: Node, message: Label, action: String) -> String:
+	game.call("take_pending_world_message")
+	message.text = ""
+	message.visible = false
+	for i in 3:
+		await physics_frame
+
+	await _press(action)
+	for i in 10:
+		await physics_frame
+	return str(message.text) if message.visible else ""
 
 
 ## Walk over and stand next to it, rather than teleporting. Reaching the creature

@@ -162,7 +162,6 @@ var _moves: RefCounted = null
 func _ready() -> void:
 	_rng.randomize()
 	_moves = MOVE_DB.new()
-	set_physics_process(false)
 
 	_throw = THROW_AIM.new()
 	_throw.name = "ThrowAim"
@@ -279,7 +278,6 @@ func begin(
 	_take_camera()
 
 	state = State.ACTIVE
-	set_physics_process(true)
 	entered.emit()
 	state_changed.emit()
 	return true
@@ -418,6 +416,13 @@ func _release_camera() -> void:
 
 ## --- the loop -------------------------------------------------------------
 
+## Ticks in every state now, including INACTIVE.
+##
+## `_ready()` and `_finish()` used to `set_physics_process(false)`, which is why
+## the INACTIVE branch below was a bare `pass` that nothing could ever have
+## reached: with no fight running this node did not run at all. That was a real
+## saving of nothing — the branch is three `is_action_just_pressed` polls — and
+## it is what made the fight buttons silent rather than merely unavailable.
 func _physics_process(delta: float) -> void:
 	match state:
 		State.ACTIVE:
@@ -427,7 +432,65 @@ func _physics_process(delta: float) -> void:
 			if _resolve_timer <= 0.0:
 				_finish()
 		_:
-			pass
+			_refuse_combat_input()
+
+
+## Say something when a fight button is pressed and there is no fight.
+##
+## `_read_player_input()` only ever runs from `_tick_active()`, so outside an
+## encounter quick attack, charged attack and the orb throw produced no
+## animation, no message and no orb spent — three buttons that read as broken
+## rather than as unavailable. A blind playtest pressed all three repeatedly and
+## concluded the build was faulty.
+##
+## Answered through `Game.push_world_message()`, the one-shot toast
+## `harvest_node.gd` already refuses a wrong-tool gather through, rather than a
+## new UI; `game_menu.gd::_flash_refusal()` is the same idea on the menu's side
+## of the screen.
+##
+## Deliberately NOT extended to RESOLVING. That state lasts about a second while
+## the outcome banner is up and the player is watching a fight end, which is not
+## the "is this button broken?" moment this exists for.
+func _refuse_combat_input() -> void:
+	# Nothing pressed is the case on very nearly every frame, so it is answered
+	# before any node lookup.
+	var throwing := Input.is_action_just_pressed("combat_throw")
+	var attacking := Input.is_action_just_pressed("combat_quick") \
+			or Input.is_action_just_pressed("combat_charged")
+	if not throwing and not attacking:
+		return
+
+	# Every one of these buttons is shared with something else (project.godot),
+	# and a refusal that fires on top of the other thing is worse than silence.
+	#
+	#   LMB / RMB  -> build_place / build_cancel
+	#   LT / RT    -> build_rotate_left / build_rotate_right
+	#
+	# All four only mean anything with a placement armed, so one check covers
+	# them. `torch_place` is the exception that needs its own: it shares RT with
+	# `combat_quick` outright and arms the ground torch on the same press, so
+	# that press is not an inert button at all.
+	if Input.is_action_just_pressed("torch_place"):
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	if str(game.get("pending_build")) != "":
+		return
+
+	# The same "the player does not have free run of the world" gate
+	# `playground_hud.gd::_world_hotkeys_enabled()` uses. A conversation, a
+	# naming prompt or a fade puts the arbiter to sleep, and a refusal toast
+	# under an open dialogue box is noise about a button nobody pressed for
+	# this. No arbiter at all (a stripped test scene) reads as permissive.
+	var arbiter := get_tree().get_first_node_in_group("interaction_arbiter")
+	if arbiter != null and arbiter.has_method("enabled") and not bool(arbiter.call("enabled")):
+		return
+
+	if throwing:
+		game.call("push_world_message", "Can't throw an orb outside a fight.")
+	else:
+		game.call("push_world_message", "Can't attack outside a fight.")
 
 
 func _tick_active(delta: float) -> void:
@@ -1052,7 +1115,6 @@ func _begin_resolve(outcome: String) -> void:
 
 func _finish() -> void:
 	state = State.INACTIVE
-	set_physics_process(false)
 
 	_throw.call("disarm")
 	if _ally_body != null:
